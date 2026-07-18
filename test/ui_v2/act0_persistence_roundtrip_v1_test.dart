@@ -5,12 +5,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 
 void main() {
   const progressKey = 'act0_shell_progress_v1';
 
-  Widget host() => const MaterialApp(
-    home: Act0ShellPreviewScreenV1(showPlacementOnStart: false),
+  Widget host({Act0UtcClockV1? clock}) => MaterialApp(
+    home: Act0ShellPreviewScreenV1(
+      showPlacementOnStart: false,
+      clock: clock ?? const Act0SystemUtcClockV1(),
+    ),
   );
 
   testWidgets('Act0 persistence restores a deterministic current snapshot', (
@@ -101,5 +105,90 @@ void main() {
     await tester.pumpWidget(host());
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
+  });
+
+  testWidgets('schema-16 evidence migrates without fabricated timestamps', (
+    tester,
+  ) async {
+    final snapshot = <String, Object>{
+      'schemaVersion': 16,
+      'completedTaskIds': <String>[],
+      'skippedTaskIds': <String>[],
+      'completedLessonIds': <String>[],
+      'selectedWorldId': 'world_1',
+      'selectedLessonId': 'fold_check_call_raise',
+      'selectedTaskId': 'actions_check_drill',
+      'earnedXp': 0,
+      'learningEvidenceHistory': <Object>[
+        <String, Object>{
+          'schemaVersion': 1,
+          'recordId': 'legacy-miss',
+          'createdOrder': 1,
+          'worldId': 'world_1',
+          'lessonId': 'fold_check_call_raise',
+          'taskId': 'actions_check_drill',
+          'choiceId': 'fold',
+          'expectedChoiceId': 'check',
+          'isCorrect': false,
+          'errorType': 'missed_action_read',
+          'conceptFamilyId': 'no_bet_yet',
+          'repairFocusId': 'no_bet_yet',
+          'skillAtomId': 'action_read',
+          'decisionTimeBucket': '3_to_10s',
+          'resultKind': 'incorrect',
+          'sessionId': 'session_v1|1',
+        },
+      ],
+    };
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      progressKey: jsonEncode(snapshot),
+    });
+
+    await tester.pumpWidget(
+      host(clock: Act0FixedUtcClockV1(DateTime.utc(2026, 7, 18))),
+    );
+    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    final dynamic state = tester.state(find.byType(Act0ShellPreviewScreenV1));
+    final retention =
+        state.debugDurableRetentionPayloadV1() as List<Map<String, Object?>>;
+    expect(retention, hasLength(1));
+    expect(retention.single['incorrectCount'], 1);
+    expect(retention.single['hasLegacyUnspacedEvidence'], isTrue);
+    expect(retention.single, isNot(contains('nextDueAtUtc')));
+    expect(retention.single, isNot(contains('lastRecordedAtUtc')));
+
+    state.debugPersistProgressV1();
+    await tester.pump(const Duration(milliseconds: 100));
+    final prefs = await SharedPreferences.getInstance();
+    final migrated =
+        jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
+    expect(migrated['schemaVersion'], 17);
+    expect(migrated['durableRetentionHistory'], hasLength(1));
+    expect(
+      migrated['learningEvidenceHistory'][0],
+      isNot(contains('recordedAtUtc')),
+    );
+  });
+
+  testWidgets('clean install writes schema 17 with explicit defaults', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+    await tester.pumpWidget(
+      host(clock: Act0FixedUtcClockV1(DateTime.utc(2026, 7, 18))),
+    );
+    await tester.pumpAndSettle();
+    final dynamic state = tester.state(find.byType(Act0ShellPreviewScreenV1));
+
+    state.debugPersistProgressV1();
+    await tester.pump(const Duration(milliseconds: 100));
+    final prefs = await SharedPreferences.getInstance();
+    final stored =
+        jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
+    expect(stored['schemaVersion'], 17);
+    expect(stored['learningEvidenceHistory'], isEmpty);
+    expect(stored['durableRetentionHistory'], isEmpty);
   });
 }

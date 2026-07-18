@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_fix_proof_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_transfer_measurement_v1.dart';
@@ -177,7 +178,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(
-          find.text('Repair proof banks the next time you fix one.'),
+          find.text('Repair result saves the next time you fix one.'),
           findsOneWidget,
         );
         expect(
@@ -269,7 +270,7 @@ void main() {
           findsOneWidget, // the milestone icon only, no proof icon
         );
         expect(
-          find.text('Repair proof banks the next time you fix one.'),
+          find.text('Repair result saves the next time you fix one.'),
           findsOneWidget,
         );
       });
@@ -705,6 +706,8 @@ Act0FixProofProjectionV1 _bankedFixProof(
                 decisionTimeBucket: 'under_3s',
                 resultKind: 'incorrect',
                 sessionId: 'session_1',
+                recordedAtUtc: DateTime.utc(2025, 12, 30),
+                reviewKind: Act0ReviewKindV1.initialAssessment,
               ),
               Act0LearningEvidenceRecordV1(
                 recordId: 'record_2',
@@ -722,6 +725,27 @@ Act0FixProofProjectionV1 _bankedFixProof(
                 decisionTimeBucket: 'under_3s',
                 resultKind: 'correct',
                 sessionId: 'session_3',
+                recordedAtUtc: DateTime.utc(2026, 1, 1),
+                reviewKind: Act0ReviewKindV1.alternateSameSignal,
+              ),
+              Act0LearningEvidenceRecordV1(
+                recordId: 'record_3',
+                createdOrder: 6,
+                worldId: 'world_1',
+                lessonId: 'fold_check_call_raise',
+                taskId: 'actions_call_drill',
+                choiceId: 'call',
+                expectedChoiceId: 'call',
+                isCorrect: true,
+                errorType: 'none',
+                conceptFamilyId: 'no_bet_yet',
+                repairFocusId: 'no_bet_yet',
+                skillAtomId: 'action_read',
+                decisionTimeBucket: 'under_3s',
+                resultKind: 'correct',
+                sessionId: 'session_4',
+                recordedAtUtc: DateTime.utc(2026, 1, 1, 12),
+                reviewKind: Act0ReviewKindV1.alternateSameSignal,
               ),
             ],
           ),

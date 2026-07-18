@@ -39,17 +39,17 @@ silently converted to a closure; an opportunity is never counted as a defect.
 | AG-VUX-F13 | CONFIRMED_P3: Welcome feels like World 0 | Map/onboarding audit; `11715b50` | Entry/Welcome owners | Later route/placement closure | CLOSED_FIXED | Current cold-start Act0 Home and placement-forward contracts separate Welcome/onboarding from world progression. |
 | AG-VUX-F14 | Competitive gap: premium value preview subtle | Commercial audit; `11715b50` | Monetization route | Not release scope | CLOSED_INTENTIONAL | `FUTURE_CAPABILITY`; no paid-depth contract is admitted by this freeze. |
 | AG-VUX-F15 | STRATEGIC: personalized Day-2 return reason | Retention audit; `11715b50` | Return/personalization owner | AI Personalization later | CLOSED_INTENTIONAL | `FUTURE_CAPABILITY`; no false Day-2 claim is made by the current shell. |
-| CL-LRN-F01 | CONFIRMED_P1: no time-based spaced repetition | Evidence record has no timestamp; `11715b50` | Evidence/repair-memory projections; reproducible | Retention capability | PRODUCT_DEBT_CONFIRMED | `Act0LearningEvidenceRecordV1` has order/session but no event time; no due projection exists; same-session correct can clear active repair. `CURRENT_RELEASE_SCOPE`; repair family `durable retention and due recheck`. |
+| CL-LRN-F01 | CONFIRMED_P1: no time-based spaced repetition | Evidence record has no timestamp; `11715b50` | Evidence/retention projections | Retention capability | CLOSED_FIXED | Schema 17 persists injected UTC event time and review kind; the canonical state machine schedules 24h, 72h, and 7d checks through the existing Review route. Legacy evidence remains untimestamped and claim-safe. See `DURABLE_RETENTION_TRANSFER_CONTRACT_v1.md`. |
 | CL-LRN-F02 | CONFIRMED_P1: W7 one-lesson depth cliff | `_visibleCardRangeContinuationLessons`; `11715b50` | `act0_shell_state_v1`; reproducible | Current route content | PRODUCT_DEBT_CONFIRMED | Current list contains only `_w7VisibleCardComboDensityLesson`; generated task specs do not make multiple learner-visible lessons. `CURRENT_RELEASE_SCOPE`; `W7 authored lesson-depth`. |
 | CL-LRN-F03 | CONFIRMED_P2: generic error taxonomy | Six atoms/table-read; `11715b50` | `act0_concept_error_contract_v1.dart`; 291-task/466-option census | AI personalization dependency | CLOSED_FIXED | Canonical decision evidence now uses 20 source-owned misconception ids across all 466 incorrect options; zero options lack repair intent. Legacy generic string values remain readable without schema change. Full inventory: `CONCEPT_ERROR_REPAIR_INTEGRITY_V1.md`. |
 | CL-LRN-F04 | CONFIRMED_P2: W7 authoring metadata leaks | W7 spec projection; `11715b50` | W7 spec runner; reproducible | Current route content | CLOSED_FIXED | Learner-facing title, hint, feedback title, theory title, and focus labels now use intentional beginner copy. `learningPurpose` and `conceptFamilyId` remain internal authored metadata and the deterministic learner-surface guard rejects the leaked family id. |
 | CL-LRN-F05 | CONFIRMED_P2: repair mapping minority coverage | mapping switch; `11715b50` | Complete 34-row registry and repair resolver | Current route loop | CLOSED_FIXED | All 34 prior gaps are explicit: 20 alternate same-signal targets and 14 guarded intentional exact replays, with zero unresolved or unrecorded fallbacks. `blinds_review` now asks and marks UTG as the first preflop actor; its exact replay is launchable. Different-target coverage remains 277/291 (95.2%). |
-| CL-LRN-F06 | CONFIRMED_P2: binary decisions inflate mastery | complete 121-row adjudication; `6eb79805` | `DECISION_DISCRIMINATION_V1.md`; assessed-row guard | Current route curriculum | CLOSED_INTENTIONAL | Every canonical two-option assessment is individually adjudicated. All 121 are source-proven inherently binary at their route point; no third misconception is both already introduced and compatible with the task/repair contract. Census remains 121/291 two, 165/291 three, 5/291 four; checkpoints 12/37 and repair targets 8/16; correct positions 112/115/62/2, longest run 3. No filler option or fingerprint change is admitted. Next Top-1: Durable Retention & Transfer (F01/F08/F11). |
+| CL-LRN-F06 | CONFIRMED_P2: binary decisions inflate mastery | complete 121-row adjudication; `6eb79805` | `DECISION_DISCRIMINATION_V1.md`; assessed-row guard | Current route curriculum | CLOSED_INTENTIONAL | Every canonical two-option assessment is individually adjudicated. All 121 are source-proven inherently binary at their route point; no third misconception is both already introduced and compatible with the task/repair contract. Census remains 121/291 two, 165/291 three, 5/291 four; checkpoints 12/37 and repair targets 8/16; correct positions 112/115/62/2, longest run 3. No filler option or fingerprint change is admitted. Next Top-1: W7 Depth Authority (F02). |
 | CL-LRN-F07 | CONFIRMED_P2: late worlds favor recall | W9-W12 samples; `11715b50` | W9-W12 route tasks; reproducible | Content-depth decision | CLOSED_FALSE_POSITIVE | The canonical W9-W12 census finds 58 assessed rows: 29 table-action decisions and 29 table-clue/range inferences; all require visible table state and none classify as terminology-only recall. This does not prove broad curriculum quality, but it falsifies the asserted recall dominance. |
-| CL-LRN-F08 | CONFIRMED_P3: immutable first-vs-latest transfer | transfer bucket; `11715b50` | Transfer measurement; reproducible | Learning-claim integrity | PRODUCT_DEBT_CONFIRMED | Current algorithm sorts by `createdOrder`, compares first to last only, rejects duplicate order, has no time separation; early miss/success streak and late miss both retain these limitations. `CURRENT_RELEASE_SCOPE`; `transfer verdict policy`. |
+| CL-LRN-F08 | CONFIRMED_P3: immutable first-vs-latest transfer | transfer bucket; `11715b50` | Transfer measurement | Learning-claim integrity | CLOSED_FIXED | Recent timestamped evidence now requires 24h separation plus task/session diversity and yields insufficient, recovered-not-durable, improving, stable, regressing, or mixed. Equal-time ordering is deterministic. |
 | CL-LRN-F09 | CONFIRMED_P3: inverted/negative prompts | W4 examples; `11715b50` | Content state owner; reproducible | Current curriculum | CLOSED_FIXED | `w4_value_missed` now asks directly which action collects value from worse hands. It preserves the two-option decision, task id, correct option position, and repair identity while making `bet_half` the poker-correct positive answer. |
 | CL-LRN-F10 | CONFIRMED_P3: W1 trivial/UI-referential items | hero badge question; `11715b50` | `_meetTableRunner`; reproducible | First-session learning | CLOSED_FIXED | First-table assessments now require preflop-order reading and learner-identity-versus-seat-role inference; they no longer ask learners merely to repeat the visible You/Hero badge. Task ids and option positions remain compatible. |
-| CL-LRN-F11 | CONFIRMED_P3: one correct clears repeat-miss family | repair memory; `11715b50` | Repair-memory projection; reproducible | Retention/selection | PRODUCT_DEBT_CONFIRMED | `resolutionState` is cleared whenever latest record is correct despite preserved `incorrectCount`; future active selection excludes it. `CURRENT_RELEASE_SCOPE`; `durable retention and due recheck`. |
+| CL-LRN-F11 | CONFIRMED_P3: one correct clears repeat-miss family | repair memory; `11715b50` | Retention/due selection | Retention/selection | CLOSED_FIXED | One recovery schedules a future due recheck; repeated misses remain preserved through recovery and lapse. Due selection is earliest-due, severity, concept, then task, and launches the existing Review/runner route. |
 | CL-LRN-F12 | CONFIRMED_P4: naming/alias hazards | alias runner names; `11715b50` | State authoring names | Maintenance risk | CLOSED_INTENTIONAL | Not learner-visible by itself; `POST_HUMAN_TECHNICAL_RISK` with owner-aligned extraction/renaming only when touching content. |
 | CL-LRN-F13 | HUMAN hypothesis: W8-W9 jargon ramp | static content; `11715b50` | W8-W9 content | Human evidence | CURRENT_SOURCE_VERIFICATION_REQUIRED | Source confirms terms but not novice tolerance, latency, or quitting; preserve as `HUMAN_QA_REQUIRED`. |
 | CL-LRN-F14 | HUMAN hypothesis: recap feels filler | static content; `11715b50` | Recap runners | Human evidence | CURRENT_SOURCE_VERIFICATION_REQUIRED | Source confirms recap reuse but not learner perception; preserve as `HUMAN_QA_REQUIRED`. |
@@ -99,9 +99,10 @@ post-Human technical-risk row** (F12), **2 strategic-opportunity rows**
 (F15/F16), and **5 closed current-source rows** (F03/F04/F07/F09/F10). Human
 uncertainty is not counted as factual source closure.
 
-Current confirmed product debt is CL-LRN-F01/F02/F06/F08/F11. F02
-remains open because no authority supplies a minimum W7 lesson count; this
-wave does not invent one.
+Current confirmed product debt from this learning group is CL-LRN-F02 only.
+F01/F08/F11 are closed by Durable Retention & Transfer v1; F02 remains open
+because no authority supplies a minimum W7 lesson count, and no lesson count is
+invented here.
 
 ### Learning-content inventory notes
 
@@ -122,30 +123,33 @@ wave does not invent one.
 
 ### Next Top-1 selection
 
-1. **Decision Discrimination — selected.** F06 affects 121 binary assessments,
-   is a direct learning-quality and future-personalization prerequisite, and is
-   deterministically testable without a persistence migration.
-2. **Durable Retention & Transfer — waits.** F01/F08/F11 require time,
-   persistence, selection policy, and learning-claim architecture.
-3. **W7 Depth Authority — waits.** F02 still lacks an authoritative
+1. **Decision Discrimination — CLOSED_INTENTIONAL.** All 121 binary rows are
+   source-proven two-state at their route point; no filler option was admitted.
+2. **Durable Retention & Transfer — CLOSED_FIXED.** F01/F08/F11 now have a
+   deterministic UTC, persistence, selection, Review, transfer, and claim-safe
+   architecture.
+3. **W7 Depth Authority — selected next.** F02 still lacks an authoritative
    outcome-based minimum-depth contract; no arbitrary lesson count is inferred.
 
 Project-level freeze is **not allowed**. No Final Deep Independent Audit, Human
 Novice Proof, or AI Personalization work starts from this record. The selected
-Top-1 is **Decision Discrimination v1**. It must adjudicate the 121 current
-two-option assessments without mass option inflation or changes to route,
-progression, W7 depth, retention, or telemetry/persistence schemas.
+next Top-1 is **W7 Depth Authority (CL-LRN-F02)**, which must establish an
+outcome-based content-depth authority before any authored W7 expansion.
 
 ### Copyable next goal
 
-> GOAL: DECISION DISCRIMINATION V1. Starting from the published Concept Error &
-> Repair Integrity contract, census all 121 canonical two-option assessments and
-> classify each as inherently binary, safely enrichable, or authority-blocked.
-> Improve only source-proven discrimination weakness with concept-equivalent,
-> poker-correct distractors; preserve task/correct-answer identities, route,
-> progression, repair/recheck, Review, telemetry event names, persistence
-> schemas, W7 depth, and all unrelated evidence. Do not mass-add options, infer
-> new concepts, start retention/transfer policy, Human QA, Final Deep Audit, or
-> AI Personalization. Re-adjudicate every affected fingerprint row and publish
-> only after focused, census, selected-route, fast, release, analyzer, graph,
-> diff, and repository-hygiene gates pass.
+> GOAL: W7 DEPTH AUTHORITY V1. Starting from the published Durable Retention &
+> Transfer contract and CL-LRN-F02, establish an outcome-based minimum-depth
+> authority for the learner-visible W7 route before changing authored content.
+> Reconcile Master Plan intent, current W7 route/task truth, W6->W7 and W7->W8
+> seams, prerequisite knowledge, transfer/repair coverage, and novice cognitive
+> load. Define measurable admission criteria for concept progression, varied
+> table evidence, misconception discrimination, repair/recheck, spaced transfer,
+> payoff, and route pacing; do not infer an arbitrary lesson count. Implement
+> only the smallest bounded W7 packet the new authority admits, if any, while
+> preserving W1-W6/W8-W12 content, task identities unless explicitly
+> adjudicated, schema 17, telemetry names/cardinality, Review, payoffs, route
+> locks, and all unrelated evidence. Do not begin Human QA, Final Deep Audit, AI
+> Personalization, visual redesign, monetization, or W8+ expansion. Publish only
+> after focused content/correctness, repair, fingerprint, selected-route, fast,
+> release, analyzer, Graphify, diff, and repository-hygiene gates pass.

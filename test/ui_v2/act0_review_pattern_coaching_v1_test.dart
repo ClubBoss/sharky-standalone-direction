@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_transfer_measurement_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
@@ -174,6 +175,7 @@ void main() {
           order: 1,
           taskId: 'actions_legal_context',
           sessionId: 'session_a',
+          recordedAtUtc: DateTime.utc(2025, 12, 30),
         ),
         _record(
           order: 3,
@@ -182,6 +184,16 @@ void main() {
           isCorrect: true,
           resultKind: 'correct',
           errorType: 'none',
+          recordedAtUtc: DateTime.utc(2026, 1, 1),
+        ),
+        _record(
+          order: 4,
+          taskId: 'actions_call_drill',
+          sessionId: 'session_c',
+          isCorrect: true,
+          resultKind: 'correct',
+          errorType: 'none',
+          recordedAtUtc: DateTime.utc(2026, 1, 1, 12),
         ),
       ],
     );
@@ -408,6 +420,7 @@ Act0LearningEvidenceRecordV1 _record({
   bool isCorrect = false,
   String resultKind = 'incorrect',
   String errorType = 'missed_action_read',
+  DateTime? recordedAtUtc,
 }) {
   return Act0LearningEvidenceRecordV1(
     recordId: 'record_$order',
@@ -425,6 +438,8 @@ Act0LearningEvidenceRecordV1 _record({
     decisionTimeBucket: '3_to_10s',
     resultKind: resultKind,
     sessionId: sessionId,
+    recordedAtUtc: recordedAtUtc ?? DateTime.utc(2026, 1, order),
+    reviewKind: Act0ReviewKindV1.initialAssessment,
   );
 }
 

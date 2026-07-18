@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_fix_proof_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_transfer_measurement_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_v1.dart';
@@ -118,12 +119,21 @@ void main() {
           order: 1,
           taskId: 'actions_legal_context',
           sessionId: 'session_1',
+          recordedAtUtc: DateTime.utc(2025, 12, 30),
         ),
         _learningRecord(
           order: 5,
           taskId: 'actions_check_drill',
           sessionId: 'session_3',
           isCorrect: true,
+          recordedAtUtc: DateTime.utc(2026, 1, 1),
+        ),
+        _learningRecord(
+          order: 6,
+          taskId: 'actions_call_drill',
+          sessionId: 'session_4',
+          isCorrect: true,
+          recordedAtUtc: DateTime.utc(2026, 1, 1, 12),
         ),
       ],
     );
@@ -142,8 +152,8 @@ void main() {
       projection.proofs.single.proofState,
       act0FixProofStateReinforcedByLaterEvidenceV1,
     );
-    expect(projection.proofs.single.laterEvidenceSessionId, 'session_3');
-    expect(projection.proofs.single.laterEvidenceOrder, 5);
+    expect(projection.proofs.single.laterEvidenceSessionId, 'session_4');
+    expect(projection.proofs.single.laterEvidenceOrder, 6);
     expect(
       projection.proofs.single.transferVerdict,
       act0LearningTransferImprovedV1,
@@ -532,6 +542,7 @@ Act0LearningEvidenceRecordV1 _learningRecord({
   String conceptFamilyId = 'no_bet_yet',
   String taskId = 'actions_legal_context',
   bool isCorrect = false,
+  DateTime? recordedAtUtc,
 }) {
   return Act0LearningEvidenceRecordV1(
     recordId: 'record_$order',
@@ -549,5 +560,7 @@ Act0LearningEvidenceRecordV1 _learningRecord({
     decisionTimeBucket: 'under_3s',
     resultKind: isCorrect ? 'correct' : 'incorrect',
     sessionId: sessionId,
+    recordedAtUtc: recordedAtUtc ?? DateTime.utc(2026, 1, order),
+    reviewKind: Act0ReviewKindV1.initialAssessment,
   );
 }

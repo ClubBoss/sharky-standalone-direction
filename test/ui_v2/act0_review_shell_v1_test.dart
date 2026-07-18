@@ -5,6 +5,7 @@ import 'package:poker_analyzer/services/session_drill_recheck_user_launch_consum
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/canonical_launcher_api_v1.dart';
 
 void main() {
@@ -13,6 +14,8 @@ void main() {
     List<Act0ReviewMistakeHistoryItemV1> historyItems =
         const <Act0ReviewMistakeHistoryItemV1>[],
     ValueChanged<Act0MistakeCardV1>? onFixMistake,
+    List<Act0DueReviewItemV1> dueReviewItems = const <Act0DueReviewItemV1>[],
+    ValueChanged<Act0DueReviewItemV1>? onStartDueReview,
     VoidCallback? onOpenLearn,
   }) {
     return MaterialApp(
@@ -24,6 +27,8 @@ void main() {
           onFixMistake: onFixMistake ?? (_) {},
           onReplayFixedMistake: (_) {},
           mistakeHistoryItems: historyItems,
+          dueReviewItems: dueReviewItems,
+          onStartDueReview: onStartDueReview,
           onOpenLearn: onOpenLearn,
         ),
       ),
@@ -815,5 +820,45 @@ void main() {
     expect(find.text('Action read'), findsOneWidget);
     expect(find.text('Repair this clue'), findsNothing);
     expect(find.text('Your active repair is waiting on Home.'), findsNothing);
+  });
+
+  testWidgets('Due spaced item reuses Review and launches one callback', (
+    tester,
+  ) async {
+    var launchCount = 0;
+    final dueItem = Act0DueReviewItemV1(
+      conceptFamilyId: 'no_bet_yet',
+      worldId: 'world_1',
+      lessonId: 'fold_check_call_raise',
+      taskId: 'actions_check_drill',
+      nextDueAtUtc: DateTime.utc(2026, 7, 18),
+      repeatedMissCount: 2,
+      lapseCount: 0,
+    );
+    await tester.pumpWidget(
+      reviewHost(
+        const Act0ReviewStateV1(
+          title: 'Review',
+          subtitle: 'Repair the clue that slipped.',
+          weaknessLabel: 'Action read',
+          reason: '',
+          stats: <Act0ReviewStatV1>[],
+          chosenLabel: 'Bet',
+          betterLabel: 'Check',
+        ),
+        dueReviewItems: <Act0DueReviewItemV1>[dueItem],
+        onStartDueReview: (_) => launchCount += 1,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const Key('act0_shell_review_due_spaced_item')),
+      findsOneWidget,
+    );
+    await tester.tap(
+      find.byKey(const Key('act0_shell_review_start_due_spaced_item')),
+    );
+    expect(launchCount, 1);
   });
 }

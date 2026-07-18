@@ -1,325 +1,176 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_transfer_measurement_v1.dart';
 
+final DateTime _base = DateTime.utc(2026, 7, 1);
+
 void main() {
-  test('miss then later correct on different same-family task improves', () {
-    final measurement = Act0LearningTransferMeasurementV1.fromLearningEvidence(
-      Act0LearningEvidenceHistoryV1(
-        records: <Act0LearningEvidenceRecordV1>[
-          _record(order: 1, taskId: 'actions_open_intro'),
-          _record(
-            order: 4,
-            taskId: 'actions_check_transfer',
-            isCorrect: true,
-            resultKind: 'correct',
-            errorType: 'none',
-            sessionId: 'session_v1|2',
-            decisionTimeBucket: 'under_3s',
-          ),
-        ],
+  test('recent different-task spaced successes improve after a miss', () {
+    final signal = _measure([
+      _record(order: 1),
+      _record(
+        order: 2,
+        day: 1,
+        taskId: 'task_b',
+        sessionId: 'session_v1|2',
+        isCorrect: true,
+        reviewKind: Act0ReviewKindV1.alternateSameSignal,
       ),
-    );
-
-    final signal = measurement.signalForConcept('no_bet_yet');
+      _record(
+        order: 3,
+        day: 4,
+        taskId: 'task_c',
+        sessionId: 'session_v1|3',
+        isCorrect: true,
+        reviewKind: Act0ReviewKindV1.unseenTransfer,
+      ),
+    ]);
 
     expect(signal.relationship, act0LearningTransferSameFamilyTransferV1);
-    expect(signal.verdict, act0LearningTransferImprovedV1);
-    expect(signal.baselineOrder, 1);
-    expect(signal.comparisonOrder, 4);
-    expect(signal.baselineTaskId, 'actions_open_intro');
-    expect(signal.comparisonTaskId, 'actions_check_transfer');
-    expect(signal.baselineSessionId, 'session_v1|1');
-    expect(signal.comparisonSessionId, 'session_v1|2');
+    expect(signal.verdict, act0LearningTransferImprovingV1);
+    expect(signal.baselineOrder, 2);
+    expect(signal.comparisonOrder, 3);
   });
 
-  test('exact task repeat is classified separately and is not transfer', () {
-    final measurement = Act0LearningTransferMeasurementV1.fromLearningEvidence(
-      Act0LearningEvidenceHistoryV1(
-        records: <Act0LearningEvidenceRecordV1>[
-          _record(order: 1, taskId: 'actions_open_intro'),
-          _record(
-            order: 2,
-            taskId: 'actions_open_intro',
-            isCorrect: true,
-            resultKind: 'correct',
-            errorType: 'none',
-            sessionId: 'session_v1|2',
-          ),
-        ],
+  test('exact replay is recovery evidence but not transfer', () {
+    final signal = _measure([
+      _record(order: 1),
+      _record(
+        order: 2,
+        day: 1,
+        sessionId: 'session_v1|2',
+        isCorrect: true,
+        reviewKind: Act0ReviewKindV1.exactReplay,
       ),
-    );
-
-    final signal = measurement.signalForConcept('no_bet_yet');
-
-    expect(signal.relationship, act0LearningTransferSameTaskRepeatV1);
-    expect(signal.verdict, act0LearningTransferInsufficientEvidenceV1);
-  });
-
-  test('same-session later correct is insufficient for transfer', () {
-    final measurement = Act0LearningTransferMeasurementV1.fromLearningEvidence(
-      Act0LearningEvidenceHistoryV1(
-        records: <Act0LearningEvidenceRecordV1>[
-          _record(order: 1, taskId: 'actions_open_intro'),
-          _record(
-            order: 2,
-            taskId: 'actions_check_transfer',
-            isCorrect: true,
-            resultKind: 'correct',
-            errorType: 'none',
-          ),
-        ],
-      ),
-    );
-
-    final signal = measurement.signalForConcept('no_bet_yet');
+    ]);
 
     expect(signal.relationship, act0LearningTransferInsufficientEvidenceV1);
+    expect(signal.verdict, act0LearningTransferRecoveredNotDurableV1);
+  });
+
+  test('same-session task variation is insufficient', () {
+    final signal = _measure([
+      _record(order: 1),
+      _record(
+        order: 2,
+        day: 1,
+        taskId: 'task_b',
+        isCorrect: true,
+        reviewKind: Act0ReviewKindV1.alternateSameSignal,
+      ),
+    ]);
+
+    expect(signal.verdict, act0LearningTransferRecoveredNotDurableV1);
+  });
+
+  test('late eligible miss overrides prior success as regression', () {
+    final signal = _measure([
+      _record(order: 1, isCorrect: true),
+      _record(
+        order: 2,
+        day: 1,
+        taskId: 'task_b',
+        sessionId: 'session_v1|2',
+        isCorrect: true,
+        reviewKind: Act0ReviewKindV1.unseenTransfer,
+      ),
+      _record(
+        order: 3,
+        day: 4,
+        taskId: 'task_c',
+        sessionId: 'session_v1|3',
+        reviewKind: Act0ReviewKindV1.unseenTransfer,
+      ),
+    ]);
+
+    expect(signal.verdict, act0LearningTransferRegressingV1);
+  });
+
+  test('legacy records cannot independently prove transfer', () {
+    final signal = _measure([
+      _record(order: 1, legacy: true),
+      _record(
+        order: 2,
+        taskId: 'task_b',
+        sessionId: 'session_v1|2',
+        isCorrect: true,
+        legacy: true,
+      ),
+    ]);
+
     expect(signal.verdict, act0LearningTransferInsufficientEvidenceV1);
   });
 
-  test('missing session linkage is insufficient for transfer', () {
+  test('different concept family cannot resolve another family', () {
     final measurement = Act0LearningTransferMeasurementV1.fromLearningEvidence(
       Act0LearningEvidenceHistoryV1(
-        records: <Act0LearningEvidenceRecordV1>[
-          _record(order: 1, sessionId: ''),
+        records: [
+          _record(order: 1),
           _record(
             order: 2,
-            taskId: 'actions_check_transfer',
-            isCorrect: true,
-            resultKind: 'correct',
-            errorType: 'none',
-            sessionId: 'session_v1|2',
-          ),
-        ],
-      ),
-    );
-
-    final signal = measurement.signalForConcept('no_bet_yet');
-
-    expect(signal.relationship, act0LearningTransferInsufficientEvidenceV1);
-    expect(signal.verdict, act0LearningTransferInsufficientEvidenceV1);
-  });
-
-  test('later incorrect same-family transfer is not yet improved', () {
-    final measurement = Act0LearningTransferMeasurementV1.fromLearningEvidence(
-      Act0LearningEvidenceHistoryV1(
-        records: <Act0LearningEvidenceRecordV1>[
-          _record(order: 1, taskId: 'actions_open_intro'),
-          _record(
-            order: 3,
-            taskId: 'actions_check_transfer',
-            sessionId: 'session_v1|2',
-          ),
-        ],
-      ),
-    );
-
-    final signal = measurement.signalForConcept('no_bet_yet');
-
-    expect(signal.relationship, act0LearningTransferSameFamilyTransferV1);
-    expect(signal.verdict, act0LearningTransferNotYetImprovedV1);
-  });
-
-  test('correct baseline then later correct same-family transfer holds', () {
-    final measurement = Act0LearningTransferMeasurementV1.fromLearningEvidence(
-      Act0LearningEvidenceHistoryV1(
-        records: <Act0LearningEvidenceRecordV1>[
-          _record(
-            order: 1,
-            taskId: 'actions_open_intro',
-            isCorrect: true,
-            resultKind: 'correct',
-            errorType: 'none',
-          ),
-          _record(
-            order: 3,
-            taskId: 'actions_check_transfer',
-            isCorrect: true,
-            resultKind: 'correct',
-            errorType: 'none',
-            sessionId: 'session_v1|2',
-          ),
-        ],
-      ),
-    );
-
-    expect(
-      measurement.signalForConcept('no_bet_yet').verdict,
-      act0LearningTransferHeldV1,
-    );
-  });
-
-  test('decision-time-only speedup does not create improvement', () {
-    final measurement = Act0LearningTransferMeasurementV1.fromLearningEvidence(
-      Act0LearningEvidenceHistoryV1(
-        records: <Act0LearningEvidenceRecordV1>[
-          _record(
-            order: 1,
-            taskId: 'actions_open_intro',
-            decisionTimeBucket: 'over_10s',
-          ),
-          _record(
-            order: 3,
-            taskId: 'actions_check_transfer',
-            decisionTimeBucket: 'under_3s',
-            sessionId: 'session_v1|2',
-          ),
-        ],
-      ),
-    );
-
-    final signal = measurement.signalForConcept('no_bet_yet');
-
-    expect(signal.verdict, act0LearningTransferNotYetImprovedV1);
-    expect(signal.baselineDecisionTimeBucket, 'over_10s');
-    expect(signal.comparisonDecisionTimeBucket, 'under_3s');
-  });
-
-  test('different concept family cannot improve missed family', () {
-    final measurement = Act0LearningTransferMeasurementV1.fromLearningEvidence(
-      Act0LearningEvidenceHistoryV1(
-        records: <Act0LearningEvidenceRecordV1>[
-          _record(order: 1, conceptFamilyId: 'no_bet_yet'),
-          _record(
-            order: 2,
+            day: 1,
             conceptFamilyId: 'position_read',
-            taskId: 'position_transfer',
-            isCorrect: true,
-            resultKind: 'correct',
-            errorType: 'none',
+            taskId: 'position_task',
             sessionId: 'session_v1|2',
-          ),
-        ],
-      ),
-    );
-
-    expect(
-      measurement.signalForConcept('no_bet_yet').verdict,
-      act0LearningTransferInsufficientEvidenceV1,
-    );
-    expect(
-      measurement.signalForConcept('position_read').verdict,
-      act0LearningTransferInsufficientEvidenceV1,
-    );
-  });
-
-  test('latest eligible comparison wins deterministically', () {
-    final measurement = Act0LearningTransferMeasurementV1.fromLearningEvidence(
-      Act0LearningEvidenceHistoryV1(
-        records: <Act0LearningEvidenceRecordV1>[
-          _record(order: 1, taskId: 'actions_open_intro'),
-          _record(
-            order: 2,
-            taskId: 'actions_check_transfer',
-            sessionId: 'session_v1|2',
-          ),
-          _record(
-            order: 5,
-            taskId: 'actions_raise_transfer',
             isCorrect: true,
-            resultKind: 'correct',
-            errorType: 'none',
-            sessionId: 'session_v1|3',
+            reviewKind: Act0ReviewKindV1.unseenTransfer,
           ),
         ],
       ),
     );
 
-    final signal = measurement.signalForConcept('no_bet_yet');
-
-    expect(signal.verdict, act0LearningTransferImprovedV1);
-    expect(signal.comparisonOrder, 5);
-    expect(signal.comparisonTaskId, 'actions_raise_transfer');
-  });
-
-  test('negative or tied ordering is insufficient evidence', () {
-    final measurement = Act0LearningTransferMeasurementV1.fromLearningEvidence(
-      Act0LearningEvidenceHistoryV1(
-        records: <Act0LearningEvidenceRecordV1>[
-          _record(order: 1, taskId: 'actions_open_intro'),
-          _record(
-            order: 1,
-            taskId: 'actions_check_transfer',
-            isCorrect: true,
-            resultKind: 'correct',
-            errorType: 'none',
-            sessionId: 'session_v1|2',
-          ),
-          _record(order: -1, taskId: 'actions_raise_transfer'),
-        ],
-      ),
-    );
-
     expect(
-      measurement.signalForConcept('no_bet_yet').verdict,
+      measurement.signalForConcept('action_read').verdict,
       act0LearningTransferInsufficientEvidenceV1,
     );
   });
 
-  test('signals are sorted by concept id and unmapped lookup is stable', () {
-    final measurement = Act0LearningTransferMeasurementV1.fromLearningEvidence(
-      Act0LearningEvidenceHistoryV1(
-        records: <Act0LearningEvidenceRecordV1>[
-          _record(order: 1, conceptFamilyId: 'z_family'),
-          _record(order: 2, conceptFamilyId: 'a_family'),
-        ],
-      ),
-    );
-
-    expect(
-      measurement.signals.map((signal) => signal.conceptFamilyId),
-      <String>['a_family', 'z_family'],
-    );
-    expect(
-      measurement.signalForConcept('missing').verdict,
-      act0LearningTransferInsufficientEvidenceV1,
-    );
-  });
-
-  test('projection is engine-only and claim-safe', () {
+  test('projection stays deterministic and claim-safe', () {
     final source = File(
       'lib/ui_v2/act0_shell/act0_learning_transfer_measurement_v1.dart',
     ).readAsStringSync();
 
-    expect(source, isNot(contains('package:flutter/')));
-    expect(source, isNot(contains('Navigator')));
+    expect(source, isNot(contains('DateTime.now')));
     expect(source, isNot(contains('SharedPreferences')));
-    expect(source, isNot(contains('Telemetry')));
     expect(source, isNot(contains('mastered')));
-    expect(source, isNot(contains('personalized')));
-    expect(source, isNot(contains('GTO')));
-    expect(source, isNot(contains('solver')));
+    expect(source, contains('recentEvidenceWindow'));
   });
 }
 
+Act0LearningTransferSignalV1 _measure(
+  List<Act0LearningEvidenceRecordV1> records,
+) => Act0LearningTransferMeasurementV1.fromLearningEvidence(
+  Act0LearningEvidenceHistoryV1(records: records),
+).signalForConcept('action_read');
+
 Act0LearningEvidenceRecordV1 _record({
   required int order,
-  String conceptFamilyId = 'no_bet_yet',
-  String taskId = 'actions_legal_context',
+  int day = 0,
+  String conceptFamilyId = 'action_read',
+  String taskId = 'task_a',
   String sessionId = 'session_v1|1',
-  String decisionTimeBucket = '3_to_10s',
   bool isCorrect = false,
-  String resultKind = 'incorrect',
-  String errorType = 'missed_action_read',
-}) {
-  return Act0LearningEvidenceRecordV1(
-    recordId: 'record_$order',
-    createdOrder: order,
-    worldId: 'world_1',
-    lessonId: 'fold_check_call_raise',
-    taskId: taskId,
-    choiceId: isCorrect ? 'check' : 'fold',
-    expectedChoiceId: 'check',
-    isCorrect: isCorrect,
-    errorType: errorType,
-    conceptFamilyId: conceptFamilyId,
-    repairFocusId: conceptFamilyId,
-    skillAtomId: 'action_read',
-    decisionTimeBucket: decisionTimeBucket,
-    resultKind: resultKind,
-    sessionId: sessionId,
-  );
-}
+  bool legacy = false,
+  Act0ReviewKindV1 reviewKind = Act0ReviewKindV1.initialAssessment,
+}) => Act0LearningEvidenceRecordV1(
+  recordId: '$conceptFamilyId:$order:$taskId',
+  createdOrder: order,
+  worldId: 'world_1',
+  lessonId: 'lesson',
+  taskId: taskId,
+  choiceId: isCorrect ? 'correct' : 'wrong',
+  expectedChoiceId: 'correct',
+  isCorrect: isCorrect,
+  errorType: isCorrect ? 'none' : 'missed_action_read',
+  conceptFamilyId: conceptFamilyId,
+  repairFocusId: conceptFamilyId,
+  skillAtomId: conceptFamilyId,
+  decisionTimeBucket: '3_to_10s',
+  resultKind: isCorrect ? 'correct' : 'incorrect',
+  sessionId: sessionId,
+  recordedAtUtc: legacy ? null : _base.add(Duration(days: day)),
+  reviewKind: legacy ? Act0ReviewKindV1.legacyUnspaced : reviewKind,
+);

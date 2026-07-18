@@ -713,13 +713,14 @@ The remaining gap is now narrow and explicit.
 5. **Value/trial is still preview-grade, not deterministic commerce truth.**
    Upgrade timing is improved, but restore/purchase/trial-expiry truth is not
    yet closed.
-6. **Retention pacing is partially governed, but monthly framing is still deferred.**
+6. **Bounded retention pacing is governed; monthly framing is still deferred.**
    The route now has an explicit daily training checklist, advisory weekly
-   focus, world-end mastery direction, done-for-today closure, repair-first
-   return, and spaced resurfacing signals. What is still not locked is the
-   longer-horizon monthly framing; user-facing UX should stay daily-first and
-   avoid scary `30-day plan` obligation language until a richer monthly layer
-   is proven safe.
+   focus, world-end direction, done-for-today closure, repair-first return, and
+   deterministic 24h/72h/7d spaced resurfacing through the existing Review
+   route. Same-session repair remains non-durable, and legacy evidence receives
+   no fabricated time. What is still not locked is the longer-horizon monthly
+   framing; user-facing UX should stay daily-first and avoid scary `30-day plan`
+   obligation language until a richer monthly layer is proven safe.
 7. **Architecture simplicity is still below product quality.**
    The route is green, but the biggest Act0 files are still too large to call
    the system fully mature.

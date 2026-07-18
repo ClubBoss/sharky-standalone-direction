@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_fix_proof_projection_v1.dart';
@@ -191,6 +192,8 @@ void main() {
           decisionTimeBucket: 'under_3s',
           resultKind: 'incorrect',
           sessionId: 'session_1',
+          recordedAtUtc: DateTime.utc(2025, 12, 30),
+          reviewKind: Act0ReviewKindV1.initialAssessment,
         ),
         Act0LearningEvidenceRecordV1(
           recordId: 'record_2',
@@ -208,6 +211,27 @@ void main() {
           decisionTimeBucket: 'under_3s',
           resultKind: 'correct',
           sessionId: 'session_3',
+          recordedAtUtc: DateTime.utc(2026, 1, 1),
+          reviewKind: Act0ReviewKindV1.alternateSameSignal,
+        ),
+        Act0LearningEvidenceRecordV1(
+          recordId: 'record_3',
+          createdOrder: 6,
+          worldId: 'world_1',
+          lessonId: 'fold_check_call_raise',
+          taskId: 'actions_call_drill',
+          choiceId: 'call',
+          expectedChoiceId: 'call',
+          isCorrect: true,
+          errorType: 'none',
+          conceptFamilyId: 'no_bet_yet',
+          repairFocusId: 'no_bet_yet',
+          skillAtomId: 'action_read',
+          decisionTimeBucket: 'under_3s',
+          resultKind: 'correct',
+          sessionId: 'session_4',
+          recordedAtUtc: DateTime.utc(2026, 1, 1, 12),
+          reviewKind: Act0ReviewKindV1.alternateSameSignal,
         ),
       ],
     );
@@ -736,6 +760,7 @@ void main() {
                     order: 0,
                     taskId: 'actions_legal_context',
                     sessionId: 'session_1',
+                    recordedAtUtc: DateTime.utc(2025, 12, 30),
                   ),
                   _learningRecord(
                     order: 3,
@@ -744,6 +769,16 @@ void main() {
                     isCorrect: true,
                     resultKind: 'correct',
                     errorType: 'none',
+                    recordedAtUtc: DateTime.utc(2026, 1, 1),
+                  ),
+                  _learningRecord(
+                    order: 4,
+                    taskId: 'actions_call_drill',
+                    sessionId: 'session_3',
+                    isCorrect: true,
+                    resultKind: 'correct',
+                    errorType: 'none',
+                    recordedAtUtc: DateTime.utc(2026, 1, 1, 12),
                   ),
                 ],
               ),
@@ -752,7 +787,7 @@ void main() {
       final observation =
           Act0SharkyImprovementObservationProjectionV1.fromFixProof(
             fixProof,
-            completedSessionId: 'session_2',
+            completedSessionId: 'session_3',
           );
 
       await _pumpSummary(
@@ -1124,6 +1159,7 @@ Act0LearningEvidenceRecordV1 _learningRecord({
   bool isCorrect = false,
   String resultKind = 'incorrect',
   String errorType = 'missed_action_read',
+  DateTime? recordedAtUtc,
 }) {
   return Act0LearningEvidenceRecordV1(
     recordId: 'record_$order',
@@ -1141,6 +1177,9 @@ Act0LearningEvidenceRecordV1 _learningRecord({
     decisionTimeBucket: '3_to_10s',
     resultKind: resultKind,
     sessionId: sessionId,
+    recordedAtUtc:
+        recordedAtUtc ?? DateTime.utc(2026, 1, 1).add(Duration(days: order)),
+    reviewKind: Act0ReviewKindV1.initialAssessment,
   );
 }
 

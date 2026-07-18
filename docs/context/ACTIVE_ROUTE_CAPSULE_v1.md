@@ -121,9 +121,13 @@ its one-lesson depth remains blocked by absent minimum-depth authority. W1
 first-table tasks now require table-order/identity inference and W4 value copy
 uses a direct positive decision. Decision Discrimination v1 is
 CLOSED_INTENTIONAL: its complete 121-row audit admitted no filler third option
-because every binary row is source-proven two-state at its route point. The
-next Top-1 is Durable Retention & Transfer (CL-LRN-F01/F08/F11); Human Novice
-Proof, Final Deep Independent Audit, and AI Personalization are still blocked.
+because every binary row is source-proven two-state at its route point. Durable
+Retention & Transfer v1 is CLOSED_FIXED for CL-LRN-F01/F08/F11: timestamped
+schema-17 evidence drives 24h/72h/7d due stages, repeated misses survive
+recovery/lapse, recent spaced evidence owns transfer verdicts, and due work
+launches through the existing Review route. The next Top-1 is W7 Depth
+Authority (CL-LRN-F02); Human Novice Proof, Final Deep Independent Audit, and AI
+Personalization are still blocked.
 
 The W1-W6 Final Learner-Truth Audit (`docs/_reviews/w1_w6_final_learner_truth_audit_v1.md`)
 closed with `w1_w6_final_gate_repair_program_ready`, producing the grouped

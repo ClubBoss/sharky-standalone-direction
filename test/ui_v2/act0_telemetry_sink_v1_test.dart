@@ -577,6 +577,7 @@ void main() {
       expect(userChoice['route_source_owner'], 'act0_runner');
       expect(userChoice['drill_kind'], 'decision');
       expect(userChoice['attempt_id'], isA<String>());
+      expect(userChoice['review_kind'], 'initialAssessment');
       expect(userChoice['time_to_decision_ms'], isA<int>());
       expect(userChoice['acceptable_action_ids'], <String>['call', 'raise']);
       expect(userChoice['option_quality'], 'correct');
@@ -599,6 +600,7 @@ void main() {
         'route_source_owner',
         'drill_kind',
         'attempt_id',
+        'review_kind',
         'time_to_decision_ms',
         'street_v1',
         'acceptable_action_ids',
@@ -675,6 +677,7 @@ void main() {
             selectedTaskId: task.taskId,
             selectedTaskFamily: task.resolvedTaskFamily,
             telemetrySink: sink,
+            reviewKindId: 'spacedReview',
             onBack: () {},
             onContinueTheory: () {},
             onChooseOption: (_) {},
@@ -690,6 +693,17 @@ void main() {
     final canonicalDecision = sink.events.firstWhere(
       (event) => event.name == 'decision_made',
     );
+    final userChoice = sink.events.singleWhere(
+      (event) => event.name == 'user_choice',
+    );
+    expect(
+      sink.events.where((event) => event.name == 'decision_made'),
+      hasLength(1),
+    );
+    expect(userChoice.fields['correct'], isTrue);
+    expect(userChoice.fields['error_type'], 'none');
+    expect(userChoice.fields['time_to_decision_ms'], isA<int>());
+    expect(userChoice.fields['review_kind'], 'spacedReview');
     expect(canonicalDecision.fields['world_id'], 'world_1');
     expect(canonicalDecision.fields['lesson_id'], 'fold_check_call_raise');
     expect(canonicalDecision.fields['task_id'], 'actions_raise_drill');
@@ -699,6 +713,7 @@ void main() {
     expect(canonicalDecision.fields['is_correct'], isTrue);
     expect(canonicalDecision.fields['error_type'], 'none');
     expect(canonicalDecision.fields['source_surface'], 'act0_runner');
+    expect(canonicalDecision.fields['review_kind'], 'spacedReview');
     expect(
       canonicalDecision.fields['time_to_decision_ms'],
       anyOf(isA<int>(), isNull),

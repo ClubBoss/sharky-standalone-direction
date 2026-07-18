@@ -10,6 +10,15 @@ Status: HISTORICAL_CANDIDATE_FREEZE_RECORD — superseded for original-package a
 
 ## Current convergence addendum — Concept Error & Repair Integrity v1
 
+The active retention follow-on contract is
+`docs/plan/DURABLE_RETENTION_TRANSFER_CONTRACT_v1.md`. It adds a deterministic
+UTC clock, schema-17 timestamp/review-kind persistence, 24h/72h/7d due stages,
+repeat-miss-preserving lapse behavior, recent-evidence transfer verdicts, and a
+minimal due affordance on the existing Review route. This closes
+CL-LRN-F01/F08/F11 without claiming Human learning effect or opening W7 depth.
+The next Top-1 is W7 Depth Authority (CL-LRN-F02); Human Novice Proof, Final
+Deep Independent Audit, and AI Personalization remain blocked.
+
 The active follow-on contract is
 `docs/plan/CONCEPT_ERROR_REPAIR_INTEGRITY_V1.md`. Canonical wrong-decision
 evidence now resolves all 466 incorrect options to 20 source-owned concept ids;
