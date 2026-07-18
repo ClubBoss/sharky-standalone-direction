@@ -1,12 +1,14 @@
 # Active Act0 Route Authority Hardening v1
 
-Status: CLOSED — source-truth/release-boundary hardening.
+Status: PUBLISHED FOR ADMISSION — draft PR #27; CI baseline repair is tracked
+separately in draft PR #28.
 
 ## Scope and baseline
 
 - Repository: `/Users/elmarsalimzade/Sharky_1.0`
-- Immutable audit tag: `act0-final-deterministic-candidate-v1` ->
-  `5b95cee0493cbb2057f471bad48fa2a73677a3ae`
+- Immutable audit tag object: `act0-final-deterministic-candidate-v1` ->
+  `c73a2371a9351d10f085bbb8fd70298cb6d6913e`, dereferencing to candidate
+  commit `5b95cee0493cbb2057f471bad48fa2a73677a3ae`
 - Preflight: `HEAD` and `origin/main` were both that SHA; the tag was not moved.
 - Working branch: `codex/act0-route-authority-hardening-v1` in an isolated
   worktree. Pre-existing untracked evidence remains only in the canonical
@@ -121,11 +123,33 @@ Passed:
 No Computer Use, visual suite, content expansion, or campaign rewiring was
 run or authorized.
 
-Repository end state: the isolated branch contains only this artifact, the
-active-boundary pointer, the AppRoot comment/test reconciliation, and the two
-bounded shell changes/tests. It is uncommitted and ready for a small reviewable
-PR; the immutable baseline tag and canonical-checkout untracked evidence were
-not modified.
+## CI admission reconciliation
+
+- Draft PR #27 is `https://github.com/ClubBoss/sharky-standalone-direction/pull/27`
+  at head `1b5d4895fc1d8c50a09f28ec7393b675b42ec43d`, based on
+  `5b95cee0493cbb2057f471bad48fa2a73677a3ae`.
+- Clean worktrees reproduced the same R5 World 3 validator failure on both
+  base and head: `w3.s10` has an admitted four-drill checkpoint while the
+  stale guard allowed at most three, and its three existing transfer intents
+  were absent from the validator allowlist. This is baseline CI debt, not a
+  PR #27 regression.
+- Tier A also used a universal 30-second command timeout, which timed out
+  analysis and nested gates in GitHub Actions. The focused repair-intent test
+  was the only deterministic functional failure and is caused by the same
+  stale intent allowlist.
+- `TestSprite Pre-Check` reported the external status `No tests detected` with
+  no target URL. It has no PR #27 code-level failure log.
+- The independent remediation is draft PR #28:
+  `https://github.com/ClubBoss/sharky-standalone-direction/pull/28`, head
+  `288390d6`. It changes only the validator cap, World 3 intent allowlist, and
+  Tier A timeout. Its CI result remains the admission authority.
+
+Repository end state: this isolated branch was committed and pushed as
+`1b5d4895fc1d8c50a09f28ec7393b675b42ec43d` for draft PR #27. It contains only
+this artifact, the active-boundary pointer, the AppRoot comment/test
+reconciliation, and the two bounded shell changes/tests. PR #27 is not merged,
+no green CI claim is made here, and neither the immutable baseline tag nor the
+canonical-checkout untracked evidence was modified.
 
 Recommended next product layer: first publish a new immutable candidate for
 this release-behavior change, then follow the current Master Plan's admitted
