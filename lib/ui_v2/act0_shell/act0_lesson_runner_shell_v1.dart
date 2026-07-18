@@ -1041,6 +1041,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.actionRecommendation,
     this.actionPayoff,
     this.telemetrySink,
+    this.reviewKindId = 'initialAssessment',
     this.lowerSurfacePrototypeState,
     this.accessibilityPrototypeStep,
     this.onAccessibilityPrototypeStepChanged,
@@ -1080,6 +1081,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final Act0ActionRecommendationV1? actionRecommendation;
   final Act0ActionSessionPayoffV1? actionPayoff;
   final Act0TelemetrySinkV1? telemetrySink;
+  final String reviewKindId;
   final Act0LowerSurfacePrototypeStateV1? lowerSurfacePrototypeState;
   final Act0AccessibilityPrototypeStepV1? accessibilityPrototypeStep;
   final ValueChanged<Act0AccessibilityPrototypeStepV1>?
@@ -1313,6 +1315,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           'route_source_owner': 'act0_runner',
           'drill_kind': projection.drillKind,
           'attempt_id': projection.attemptId,
+          'review_kind': widget.reviewKindId,
           if (timeToDecisionMs != null)
             'time_to_decision_ms': timeToDecisionMs < 0 ? 0 : timeToDecisionMs,
           if (projection.boardCardIds.isNotEmpty)
@@ -1381,6 +1384,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             'street_v1': projection.streetLabel,
           'route_source_owner': 'act0_runner',
           'attempt_id': projection.attemptId,
+          'review_kind': widget.reviewKindId,
           'time_to_decision_ms': timeToDecisionMs,
           'source_surface': 'act0_runner',
           'attemptOrdinal': 1,

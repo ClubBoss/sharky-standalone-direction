@@ -11,6 +11,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_family_state_founda
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_cross_session_profile_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_fix_proof_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_first_start_preferences_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
@@ -1014,6 +1016,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
     this.debugHarnessEntry,
     this.telemetrySink,
     this.debugSessionDrillRecheckQueueItemsV1,
+    this.clock = const Act0SystemUtcClockV1(),
     // Dev2 is now the canonical detached Act0 shell. The classic variant stays
     // available for explicit fallback comparisons.
     this.tableVisualVariant = Act0ShellTableVisualVariantV1.refinedDev2,
@@ -1027,6 +1030,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
   final Act0TelemetrySinkV1? telemetrySink;
   final List<SessionDrillRecheckLaunchQueueItemV1>?
   debugSessionDrillRecheckQueueItemsV1;
+  final Act0UtcClockV1 clock;
   final Act0ShellTableVisualVariantV1 tableVisualVariant;
 
   @override
@@ -1040,6 +1044,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   Act0CompletedDecisionV1? _latestCompletedDecisionV1;
   Act0LearningEvidenceHistoryV1 _learningEvidenceHistoryV1 =
       const Act0LearningEvidenceHistoryV1();
+  Act0DurableRetentionHistoryV1 _durableRetentionHistoryV1 =
+      const Act0DurableRetentionHistoryV1();
+  Act0ReviewKindV1? _pendingReviewKindV1;
   Act0ReviewMistakeHistoryV1 _reviewMistakeHistoryV1 =
       const Act0ReviewMistakeHistoryV1();
   Act0ReviewResolutionReceiptHistoryV1 _reviewResolutionReceiptHistoryV1 =
@@ -1335,6 +1342,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _conceptFamilyStateHistoryV1.toPayload(),
     );
   }
+
+  @visibleForTesting
+  List<Map<String, Object?>> debugDurableRetentionPayloadV1() {
+    return List<Map<String, Object?>>.unmodifiable(
+      _durableRetentionHistoryV1.refreshedAt(widget.clock.nowUtc()).toPayload(),
+    );
+  }
+
+  @visibleForTesting
+  void debugPersistProgressV1() => _persistProgress();
 
   @visibleForTesting
   Map<String, Object?> debugSessionIdentityStatePayloadV1() {
@@ -3319,6 +3336,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       parsed.firstValueReturnCarry,
       state: state,
     );
+    final restoredDurableRetention =
+        parsed.durableRetentionHistory.families.isEmpty
+        ? Act0DurableRetentionHistoryV1.fromLearningEvidence(
+            parsed.learningEvidenceHistory,
+          )
+        : parsed.durableRetentionHistory;
     setState(() {
       _completedTaskIds = completedTaskIds;
       _completedLessonIds = completedLessonIds;
@@ -3336,6 +3359,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ..clear()
         ..addAll(parsed.recentSkillGains.take(6));
       _learningEvidenceHistoryV1 = parsed.learningEvidenceHistory;
+      _durableRetentionHistoryV1 = restoredDurableRetention.refreshedAt(
+        widget.clock.nowUtc(),
+      );
       _reviewMistakeHistoryV1 = parsed.reviewMistakeHistory;
       _reviewResolutionReceiptHistoryV1 = parsed.reviewResolutionReceiptHistory;
       _conceptFamilyStateHistoryV1 = parsed.conceptFamilyStateHistory;
@@ -3562,6 +3588,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       transferMeasurement:
           Act0LearningTransferMeasurementV1.fromLearningEvidence(
             _learningEvidenceHistoryV1,
+            retentionHistory: _durableRetentionHistoryV1,
           ),
     );
   }
@@ -3573,6 +3600,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       transferMeasurement:
           Act0LearningTransferMeasurementV1.fromLearningEvidence(
             _learningEvidenceHistoryV1,
+            retentionHistory: _durableRetentionHistoryV1,
           ),
     );
   }
@@ -3669,6 +3697,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       dismissedHomeHandoffDay: _dismissedHomeHandoffDay,
       firstValueReturnCarry: _firstValueReceiptCarry,
       learningEvidenceHistory: _learningEvidenceHistoryV1,
+      durableRetentionHistory: _durableRetentionHistoryV1.refreshedAt(
+        widget.clock.nowUtc(),
+      ),
       reviewMistakeHistory: _reviewMistakeHistoryV1,
       reviewResolutionReceiptHistory: _reviewResolutionReceiptHistoryV1,
       conceptFamilyStateHistory: _conceptFamilyStateHistoryV1,
@@ -3692,11 +3723,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   void _appendLearningEvidenceV1(Act0CompletedDecisionV1 decision) {
+    final recordedAtUtc = widget.clock.nowUtc();
+    final reviewKind = _reviewKindForDecisionV1(decision);
+    final wasAlreadyRecorded = _learningEvidenceHistoryV1.records.any(
+      (record) => record.recordId == decision.attemptKey,
+    );
     _learningEvidenceHistoryV1 = _learningEvidenceHistoryV1
         .appendCompletedDecision(
           decision,
           runKey: _activeLearningEvidenceRunKeyV1,
           sessionId: _sessionIdentityStateV1.currentActiveSessionId,
+          recordedAtUtc: recordedAtUtc,
+          reviewKind: reviewKind,
         );
     _reviewMistakeHistoryV1 = _reviewMistakeHistoryV1.appendCompletedDecision(
       decision,
@@ -3710,10 +3748,71 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           (record) => record?.recordId == decision.attemptKey,
           orElse: () => null,
         );
-    if (latestRecord != null) {
+    if (latestRecord != null && !wasAlreadyRecorded) {
       _conceptFamilyStateHistoryV1 = _conceptFamilyStateHistoryV1
           .appendLearningEvidence(latestRecord);
+      _durableRetentionHistoryV1 = _durableRetentionHistoryV1
+          .applyEvidence(latestRecord)
+          .refreshedAt(recordedAtUtc);
     }
+    _pendingReviewKindV1 = null;
+  }
+
+  Act0ReviewKindV1 _reviewKindForDecisionV1(Act0CompletedDecisionV1 decision) {
+    final routed = _routeReviewKindForTaskIdV1(decision.taskId);
+    if (routed != Act0ReviewKindV1.initialAssessment) {
+      return routed;
+    }
+    final conceptFamilyId =
+        <String?>[
+              decision.conceptFamilyId,
+              decision.repairFocusId,
+              decision.skillAtomId,
+              decision.errorType,
+            ]
+            .map((value) => value?.trim() ?? '')
+            .firstWhere(
+              (value) => value.isNotEmpty && value != 'none',
+              orElse: () => '',
+            );
+    if (conceptFamilyId.isNotEmpty) {
+      final priorFamilyRecords = _learningEvidenceHistoryV1.records.where(
+        (record) =>
+            act0ConceptFamilyIdForDurableEvidenceV1(record) == conceptFamilyId,
+      );
+      if (priorFamilyRecords.isNotEmpty &&
+          priorFamilyRecords.every(
+            (record) => record.taskId != decision.taskId,
+          )) {
+        return Act0ReviewKindV1.unseenTransfer;
+      }
+    }
+    return Act0ReviewKindV1.initialAssessment;
+  }
+
+  Act0ReviewKindV1 _routeReviewKindForTaskIdV1(String rawTaskId) {
+    final pending = _pendingReviewKindV1;
+    if (pending != null) {
+      return pending;
+    }
+    final taskId = rawTaskId.trim();
+    final sourceTaskId = _activeRepairSourceTaskId?.trim() ?? '';
+    if (_activeRepairTaskId == taskId) {
+      if (sourceTaskId.isEmpty || sourceTaskId == taskId) {
+        return Act0ReviewKindV1.exactReplay;
+      }
+      return Act0ReviewKindV1.alternateSameSignal;
+    }
+    final request = _activePracticeRepairQueueRequestV1;
+    if (request != null && request.repairTaskId == taskId) {
+      return request.sourceTaskId == request.repairTaskId
+          ? Act0ReviewKindV1.exactReplay
+          : Act0ReviewKindV1.alternateSameSignal;
+    }
+    if (_activeSameSignalRecheckTaskId == taskId) {
+      return Act0ReviewKindV1.originalSourceRecheck;
+    }
+    return Act0ReviewKindV1.initialAssessment;
   }
 
   void _recordLearningRunDecisionV1(Act0CompletedDecisionV1 decision) {
@@ -5294,6 +5393,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   });
                                 },
                                 telemetrySink: _sessionAwareTelemetrySinkV1(),
+                                reviewKindId: _routeReviewKindForTaskIdV1(
+                                  playSelectedTask?.taskId ?? '',
+                                ).name,
                                 theoryRecallStep: theoryRecallStep,
                                 framingProfile: runnerFramingProfile,
                                 tableVisualVariant: widget.tableVisualVariant,
@@ -5332,6 +5434,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _activeRepairTaskId ==
                                     playSelectedTask.taskId,
                                 onBack: () => setState(() {
+                                  _pendingReviewKindV1 = null;
                                   if (_placementDiagnosticActive) {
                                     _placementDiagnosticActive = false;
                                     _showPlacement = true;
@@ -5836,6 +5939,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                               patternCoachingProjection:
                                   _reviewPatternCoachingProjectionV1(),
                             ).items,
+                        dueReviewItems: _durableRetentionHistoryV1.dueItemsAt(
+                          widget.clock.nowUtc(),
+                        ),
+                        onStartDueReview: (item) => setState(() {
+                          _startDueReviewItemV1(item);
+                        }),
                         onStartSessionDrillRecheck: (item) {
                           unawaited(
                             pushSessionDrillRecheckLaunchV1(context, item),
@@ -6234,8 +6343,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         label: _copyV1(en: 'Quick fix', ru: 'Лёгкий повтор'),
         title: _copyV1(en: 'Review a quick fix', ru: 'Сделай лёгкий повтор'),
         subtitle: _copyV1(
-          en: 'You already brought this spot back under control. One light review keeps it stable.',
-          ru: 'Этот спот уже снова под контролем. Один лёгкий повтор поможет его закрепить.',
+          en: 'You repaired this spot once. A later spaced review can show whether it holds.',
+          ru: 'Ты один раз исправил этот спот. Позже повтор с интервалом покажет, удержалось ли чтение.',
         ),
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.reviewQuickFix,
@@ -6641,6 +6750,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       transferMeasurement:
           Act0LearningTransferMeasurementV1.fromLearningEvidence(
             _learningEvidenceHistoryV1,
+            retentionHistory: _durableRetentionHistoryV1,
           ),
     );
     return reason.copyLine;
@@ -9376,6 +9486,37 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _persistProgress();
   }
 
+  void _startDueReviewItemV1(Act0DueReviewItemV1 item) {
+    final state = widget.state ?? Act0ShellStateV1.sample;
+    final world = state.worlds.cast<Act0WorldCardV1?>().firstWhere(
+      (candidate) => candidate?.worldId == item.worldId,
+      orElse: () => null,
+    );
+    if (world == null) {
+      return;
+    }
+    final lessonExists = world.lessons.any(
+      (lesson) => lesson.lessonId == item.lessonId,
+    );
+    if (!lessonExists) {
+      return;
+    }
+    final lesson = _lessonById(world.lessons, item.lessonId);
+    if (!lesson.taskList.any((task) => task.taskId == item.taskId)) {
+      return;
+    }
+    _pendingReviewKindV1 = Act0ReviewKindV1.spacedReview;
+    _startTaskByIds(
+      world,
+      item.lessonId,
+      item.taskId,
+      skipTeaching: true,
+      allowDrillBypass: true,
+      evidenceRunKind: 'spaced_review',
+      evidenceStartedBy: 'review_due',
+    );
+  }
+
   void _startLearningEvidenceRunV1({
     required String worldId,
     required String lessonId,
@@ -10806,11 +10947,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           ? ''
           : _copyV1(
               en: _resolvedMistakeTaskIds.length == 1
-                  ? '1 spot stabilized'
-                  : '${_resolvedMistakeTaskIds.length} spots stabilized',
+                  ? '1 spot repaired'
+                  : '${_resolvedMistakeTaskIds.length} spots repaired',
               ru: _resolvedMistakeTaskIds.length == 1
-                  ? '1 спот закреплён'
-                  : '${_resolvedMistakeTaskIds.length} спота закреплены',
+                  ? '1 спот исправлен'
+                  : '${_resolvedMistakeTaskIds.length} спота исправлены',
             ),
     );
   }
@@ -12940,6 +13081,7 @@ class _Act0PersistedProgressV1 {
     this.dismissedHomeHandoffDay = '',
     this.firstValueReturnCarry,
     this.learningEvidenceHistory = const Act0LearningEvidenceHistoryV1(),
+    this.durableRetentionHistory = const Act0DurableRetentionHistoryV1(),
     this.reviewMistakeHistory = const Act0ReviewMistakeHistoryV1(),
     this.reviewResolutionReceiptHistory =
         const Act0ReviewResolutionReceiptHistoryV1(),
@@ -12974,6 +13116,7 @@ class _Act0PersistedProgressV1 {
   final String dismissedHomeHandoffDay;
   final _Act0FirstValueReceiptCarryV1? firstValueReturnCarry;
   final Act0LearningEvidenceHistoryV1 learningEvidenceHistory;
+  final Act0DurableRetentionHistoryV1 durableRetentionHistory;
   final Act0ReviewMistakeHistoryV1 reviewMistakeHistory;
   final Act0ReviewResolutionReceiptHistoryV1 reviewResolutionReceiptHistory;
   final Act0ConceptFamilyStateHistoryV1 conceptFamilyStateHistory;
@@ -12992,7 +13135,7 @@ class _Act0PersistedProgressV1 {
     final sortedOpenRepairIntents = openRepairIntents.toList(growable: false)
       ..sort((a, b) => a.sourceTaskId.compareTo(b.sourceTaskId));
     return jsonEncode(<String, Object>{
-      'schemaVersion': 16,
+      'schemaVersion': 17,
       'completedTaskIds': sortedTaskIds,
       'skippedTaskIds': sortedSkippedTaskIds,
       'completedLessonIds': sortedLessonIds,
@@ -13029,6 +13172,7 @@ class _Act0PersistedProgressV1 {
       'dismissedHomeHandoffKey': dismissedHomeHandoffKey,
       'dismissedHomeHandoffDay': dismissedHomeHandoffDay,
       'learningEvidenceHistory': learningEvidenceHistory.toPayload(),
+      'durableRetentionHistory': durableRetentionHistory.toPayload(),
       'reviewMistakeHistory': reviewMistakeHistory.toPayload(),
       'reviewResolutionReceipts': reviewResolutionReceiptHistory.toPayload(),
       'conceptFamilyStateHistory': conceptFamilyStateHistory.toPayload(),
@@ -13055,7 +13199,7 @@ class _Act0PersistedProgressV1 {
     }
     final map = decoded.cast<String, Object?>();
     final schemaVersion = map['schemaVersion'];
-    // Accept v1-v16 as the shell snapshot evolves.
+    // Accept v1-v17 as the shell snapshot evolves.
     if (schemaVersion != 1 &&
         schemaVersion != 2 &&
         schemaVersion != 3 &&
@@ -13071,7 +13215,8 @@ class _Act0PersistedProgressV1 {
         schemaVersion != 13 &&
         schemaVersion != 14 &&
         schemaVersion != 15 &&
-        schemaVersion != 16) {
+        schemaVersion != 16 &&
+        schemaVersion != 17) {
       return null;
     }
     final completedTaskIds = _stringSet(map['completedTaskIds']);
@@ -13135,6 +13280,9 @@ class _Act0PersistedProgressV1 {
           map['learningEvidenceHistory'],
         ) ??
         const Act0LearningEvidenceHistoryV1();
+    final durableRetentionHistory = Act0DurableRetentionHistoryV1.tryParse(
+      map['durableRetentionHistory'],
+    );
     final reviewMistakeHistory =
         Act0ReviewMistakeHistoryV1.tryParse(map['reviewMistakeHistory']) ??
         const Act0ReviewMistakeHistoryV1();
@@ -13189,6 +13337,7 @@ class _Act0PersistedProgressV1 {
       dismissedHomeHandoffDay: dismissedHomeHandoffDay,
       firstValueReturnCarry: firstValueReturnCarry,
       learningEvidenceHistory: learningEvidenceHistory,
+      durableRetentionHistory: durableRetentionHistory,
       reviewMistakeHistory: reviewMistakeHistory,
       reviewResolutionReceiptHistory: reviewResolutionReceiptHistory,
       conceptFamilyStateHistory: conceptFamilyStateHistory,

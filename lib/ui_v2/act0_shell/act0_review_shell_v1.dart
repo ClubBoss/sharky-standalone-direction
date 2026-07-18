@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/services/session_drill_recheck_launch_queue_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_copy_guard_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
@@ -39,6 +40,8 @@ class Act0ReviewShellV1 extends StatelessWidget {
         const <SessionDrillRecheckLaunchQueueItemV1>[],
     this.onStartSessionDrillRecheck,
     this.mistakeHistoryItems = const <Act0ReviewMistakeHistoryItemV1>[],
+    this.dueReviewItems = const <Act0DueReviewItemV1>[],
+    this.onStartDueReview,
     this.onOpenLearn,
   });
 
@@ -52,6 +55,8 @@ class Act0ReviewShellV1 extends StatelessWidget {
   final ValueChanged<SessionDrillRecheckLaunchQueueItemV1>?
   onStartSessionDrillRecheck;
   final List<Act0ReviewMistakeHistoryItemV1> mistakeHistoryItems;
+  final List<Act0DueReviewItemV1> dueReviewItems;
+  final ValueChanged<Act0DueReviewItemV1>? onStartDueReview;
   final VoidCallback? onOpenLearn;
 
   @override
@@ -74,6 +79,15 @@ class Act0ReviewShellV1 extends StatelessWidget {
         _SessionDrillRecheckQueueCardV1(
           item: sessionDrillRecheckQueueItems.first,
           onStart: onStartSessionDrillRecheck!,
+        ),
+        const SizedBox(height: Act0ShellTokensV1.gapMd),
+      ],
+      if (review.mistakes.isEmpty &&
+          dueReviewItems.isNotEmpty &&
+          onStartDueReview != null) ...[
+        _DueReviewCardV1(
+          item: dueReviewItems.first,
+          onStart: onStartDueReview!,
         ),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
       ],
@@ -276,6 +290,46 @@ class Act0ReviewShellV1 extends StatelessWidget {
         }
         return SingleChildScrollView(child: content);
       },
+    );
+  }
+}
+
+class _DueReviewCardV1 extends StatelessWidget {
+  const _DueReviewCardV1({required this.item, required this.onStart});
+
+  final Act0DueReviewItemV1 item;
+  final ValueChanged<Act0DueReviewItemV1> onStart;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('act0_shell_review_due_spaced_item'),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      decoration: Act0ShellTokensV1.surfaceDecoration(
+        color: Act0VisualCanonV1.greenTable.withOpacity(0.07),
+        borderColor: Act0VisualCanonV1.greenTable.withOpacity(0.18),
+        glow: false,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Ready to recheck', style: Act0ShellTokensV1.sectionTitle),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            'A repaired clue is due for a spaced review.',
+            style: Act0ShellTokensV1.muted,
+          ),
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: FilledButton(
+              key: const Key('act0_shell_review_start_due_spaced_item'),
+              onPressed: () => onStart(item),
+              child: const Text('Review now'),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

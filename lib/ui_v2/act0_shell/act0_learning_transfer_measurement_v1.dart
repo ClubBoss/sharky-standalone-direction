@@ -1,3 +1,5 @@
+import 'act0_durable_learning_time_contract_v1.dart';
+import 'act0_durable_retention_contract_v1.dart';
 import 'act0_learning_evidence_contract_v1.dart';
 
 const String act0LearningTransferSameFamilyTransferV1 =
@@ -6,9 +8,17 @@ const String act0LearningTransferSameTaskRepeatV1 = 'same_task_repeat_v1';
 const String act0LearningTransferInsufficientEvidenceV1 =
     'insufficient_evidence_v1';
 
-const String act0LearningTransferImprovedV1 = 'improved_v1';
-const String act0LearningTransferHeldV1 = 'held_v1';
-const String act0LearningTransferNotYetImprovedV1 = 'not_yet_improved_v1';
+const String act0LearningTransferRecoveredNotDurableV1 =
+    'recovered_not_durable_v1';
+const String act0LearningTransferImprovingV1 = 'improving_v1';
+const String act0LearningTransferStableV1 = 'stable_v1';
+const String act0LearningTransferRegressingV1 = 'regressing_v1';
+const String act0LearningTransferMixedV1 = 'mixed_v1';
+
+// Source-compatible aliases for existing deterministic consumers.
+const String act0LearningTransferImprovedV1 = act0LearningTransferImprovingV1;
+const String act0LearningTransferHeldV1 = act0LearningTransferStableV1;
+const String act0LearningTransferNotYetImprovedV1 = act0LearningTransferMixedV1;
 
 class Act0LearningTransferMeasurementV1 {
   const Act0LearningTransferMeasurementV1({required this.signals});
@@ -16,26 +26,28 @@ class Act0LearningTransferMeasurementV1 {
   final List<Act0LearningTransferSignalV1> signals;
 
   factory Act0LearningTransferMeasurementV1.fromLearningEvidence(
-    Act0LearningEvidenceHistoryV1 history,
-  ) {
-    final buckets = <String, _Act0LearningTransferBucketV1>{};
+    Act0LearningEvidenceHistoryV1 history, {
+    Act0DurableRetentionHistoryV1? retentionHistory,
+  }) {
+    final retention =
+        retentionHistory ??
+        Act0DurableRetentionHistoryV1.fromLearningEvidence(history);
+    final buckets = <String, List<Act0LearningEvidenceRecordV1>>{};
     for (final record in history.records) {
-      final conceptFamilyId = _conceptFamilyId(record);
+      final conceptFamilyId = act0ConceptFamilyIdForDurableEvidenceV1(record);
       if (conceptFamilyId.isEmpty || conceptFamilyId == 'none') {
         continue;
       }
-      buckets
-          .putIfAbsent(
-            conceptFamilyId,
-            () => _Act0LearningTransferBucketV1(conceptFamilyId),
-          )
-          .add(record);
+      buckets.putIfAbsent(conceptFamilyId, () => []).add(record);
     }
-    final signals =
-        buckets.values
-            .map((bucket) => bucket.toSignal())
-            .toList(growable: false)
-          ..sort((a, b) => a.conceptFamilyId.compareTo(b.conceptFamilyId));
+    final signals = <Act0LearningTransferSignalV1>[
+      for (final entry in buckets.entries)
+        _signalForRecords(
+          entry.key,
+          entry.value,
+          retention.familyById(entry.key),
+        ),
+    ]..sort((a, b) => a.conceptFamilyId.compareTo(b.conceptFamilyId));
     return Act0LearningTransferMeasurementV1(
       signals: List<Act0LearningTransferSignalV1>.unmodifiable(signals),
     );
@@ -43,9 +55,6 @@ class Act0LearningTransferMeasurementV1 {
 
   Act0LearningTransferSignalV1 signalForConcept(String conceptFamilyId) {
     final id = conceptFamilyId.trim();
-    if (id.isEmpty) {
-      return Act0LearningTransferSignalV1.insufficient(id);
-    }
     for (final signal in signals) {
       if (signal.conceptFamilyId == id) {
         return signal;
@@ -68,23 +77,24 @@ class Act0LearningTransferSignalV1 {
     required this.comparisonSessionId,
     required this.baselineDecisionTimeBucket,
     required this.comparisonDecisionTimeBucket,
+    this.eligibleEvidenceCount = 0,
+    this.recentWindowCount = 0,
   });
 
-  factory Act0LearningTransferSignalV1.insufficient(String conceptFamilyId) {
-    return Act0LearningTransferSignalV1(
-      conceptFamilyId: conceptFamilyId,
-      relationship: act0LearningTransferInsufficientEvidenceV1,
-      verdict: act0LearningTransferInsufficientEvidenceV1,
-      baselineOrder: null,
-      comparisonOrder: null,
-      baselineTaskId: '',
-      comparisonTaskId: '',
-      baselineSessionId: '',
-      comparisonSessionId: '',
-      baselineDecisionTimeBucket: '',
-      comparisonDecisionTimeBucket: '',
-    );
-  }
+  factory Act0LearningTransferSignalV1.insufficient(String conceptFamilyId) =>
+      Act0LearningTransferSignalV1(
+        conceptFamilyId: conceptFamilyId,
+        relationship: act0LearningTransferInsufficientEvidenceV1,
+        verdict: act0LearningTransferInsufficientEvidenceV1,
+        baselineOrder: null,
+        comparisonOrder: null,
+        baselineTaskId: '',
+        comparisonTaskId: '',
+        baselineSessionId: '',
+        comparisonSessionId: '',
+        baselineDecisionTimeBucket: '',
+        comparisonDecisionTimeBucket: '',
+      );
 
   final String conceptFamilyId;
   final String relationship;
@@ -97,122 +107,193 @@ class Act0LearningTransferSignalV1 {
   final String comparisonSessionId;
   final String baselineDecisionTimeBucket;
   final String comparisonDecisionTimeBucket;
+  final int eligibleEvidenceCount;
+  final int recentWindowCount;
 }
 
-class _Act0LearningTransferBucketV1 {
-  _Act0LearningTransferBucketV1(this.conceptFamilyId);
-
-  final String conceptFamilyId;
-  final List<Act0LearningEvidenceRecordV1> _records =
-      <Act0LearningEvidenceRecordV1>[];
-
-  void add(Act0LearningEvidenceRecordV1 record) {
-    _records.add(record);
+Act0LearningTransferSignalV1 _signalForRecords(
+  String conceptFamilyId,
+  List<Act0LearningEvidenceRecordV1> records,
+  Act0DurableRetentionFamilyV1? retention,
+) {
+  final eligible = records.where(_eligibleForTransferTrend).toList()
+    ..sort(_compareEvidenceTimeThenOrder);
+  final recoveryOnly = _hasRecoveryWithoutDurability(retention, records);
+  if (!_hasAdequateTimingAndDiversity(eligible)) {
+    final signal = _signalFromPair(
+      conceptFamilyId,
+      eligible,
+      recoveryOnly
+          ? act0LearningTransferRecoveredNotDurableV1
+          : act0LearningTransferInsufficientEvidenceV1,
+    );
+    return signal;
   }
 
-  Act0LearningTransferSignalV1 toSignal() {
-    if (_records.length < 2 || _hasUnsafeOrdering(_records)) {
-      return Act0LearningTransferSignalV1.insufficient(conceptFamilyId);
-    }
-    final ordered = <Act0LearningEvidenceRecordV1>[..._records]
-      ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));
-    final baseline = ordered.first;
-    final comparison = ordered
-        .where((record) => record.createdOrder > baseline.createdOrder)
-        .lastOrNull;
-    if (comparison == null) {
-      return Act0LearningTransferSignalV1.insufficient(conceptFamilyId);
-    }
-    final relationship = _relationship(baseline, comparison);
-    final verdict = relationship == act0LearningTransferSameFamilyTransferV1
-        ? _verdict(baseline, comparison)
-        : act0LearningTransferInsufficientEvidenceV1;
-    return Act0LearningTransferSignalV1(
-      conceptFamilyId: conceptFamilyId,
-      relationship: relationship,
-      verdict: verdict,
-      baselineOrder: baseline.createdOrder,
-      comparisonOrder: comparison.createdOrder,
-      baselineTaskId: baseline.taskId,
-      comparisonTaskId: comparison.taskId,
-      baselineSessionId: baseline.sessionId,
-      comparisonSessionId: comparison.sessionId,
-      baselineDecisionTimeBucket: baseline.decisionTimeBucket,
-      comparisonDecisionTimeBucket: comparison.decisionTimeBucket,
+  final recentStart =
+      eligible.length > Act0DurableLearningTimingV1.recentEvidenceWindow
+      ? eligible.length - Act0DurableLearningTimingV1.recentEvidenceWindow
+      : 0;
+  final recent = eligible.sublist(recentStart);
+  final latest = recent.last;
+  final earlier = eligible.take(eligible.length - 1);
+  final hasEarlierCorrect = earlier.any((record) => record.isCorrect);
+  final hasEarlierMiss = earlier.any((record) => !record.isCorrect);
+  final recentCorrect = recent.where((record) => record.isCorrect).length;
+  final recentMisses = recent.length - recentCorrect;
+
+  final String verdict;
+  if (!latest.isCorrect && hasEarlierCorrect) {
+    verdict = act0LearningTransferRegressingV1;
+  } else if (retention?.retentionState == Act0RetentionStateV1.durable &&
+      latest.isCorrect &&
+      recent.reversed.take(2).every((record) => record.isCorrect)) {
+    verdict = act0LearningTransferStableV1;
+  } else if (latest.isCorrect &&
+      hasEarlierMiss &&
+      recent.length >= 2 &&
+      recent.reversed.take(2).every((record) => record.isCorrect)) {
+    verdict = act0LearningTransferImprovingV1;
+  } else if (recentCorrect > 0 && recentMisses > 0) {
+    verdict = act0LearningTransferMixedV1;
+  } else if (recoveryOnly) {
+    verdict = act0LearningTransferRecoveredNotDurableV1;
+  } else if (recentMisses == 0 && _hasTwoSpacedSuccesses(recent)) {
+    verdict = act0LearningTransferStableV1;
+  } else {
+    verdict = act0LearningTransferMixedV1;
+  }
+  return _signalFromPair(conceptFamilyId, recent, verdict);
+}
+
+bool _eligibleForTransferTrend(Act0LearningEvidenceRecordV1 record) {
+  if (record.recordedAtUtc == null) {
+    return false;
+  }
+  return record.reviewKind != Act0ReviewKindV1.legacyUnspaced &&
+      record.reviewKind != Act0ReviewKindV1.immediateRepair &&
+      record.reviewKind != Act0ReviewKindV1.exactReplay;
+}
+
+bool _hasAdequateTimingAndDiversity(
+  List<Act0LearningEvidenceRecordV1> records,
+) {
+  if (records.length < 2) {
+    return false;
+  }
+  final taskIds = records
+      .map((record) => record.taskId.trim())
+      .where((id) => id.isNotEmpty)
+      .toSet();
+  if (taskIds.length < 2) {
+    return false;
+  }
+  final sessionIds = records
+      .map((record) => record.sessionId.trim())
+      .where((id) => id.isNotEmpty)
+      .toSet();
+  if (sessionIds.length < 2) {
+    return false;
+  }
+  final first = records.first.recordedAtUtc!;
+  final last = records.last.recordedAtUtc!;
+  return last.difference(first) >=
+      Act0DurableLearningTimingV1.minimumTransferSeparation;
+}
+
+bool _hasRecoveryWithoutDurability(
+  Act0DurableRetentionFamilyV1? retention,
+  List<Act0LearningEvidenceRecordV1> records,
+) {
+  if (retention != null &&
+      (retention.retentionState ==
+              Act0RetentionStateV1.recoveredPendingSpacedReview ||
+          retention.retentionState == Act0RetentionStateV1.due ||
+          retention.retentionState == Act0RetentionStateV1.lapsed ||
+          retention.retentionState == Act0RetentionStateV1.needsRepair)) {
+    return records.any(
+      (record) => record.isCorrect && record.recordedAtUtc != null,
     );
   }
+  final ordered = [...records]..sort(_compareEvidenceTimeThenOrder);
+  final firstMiss = ordered.indexWhere((record) => !record.isCorrect);
+  return firstMiss >= 0 &&
+      ordered
+          .skip(firstMiss + 1)
+          .any((record) => record.isCorrect && record.recordedAtUtc != null);
 }
 
-bool _hasUnsafeOrdering(List<Act0LearningEvidenceRecordV1> records) {
-  final seenOrders = <int>{};
-  for (final record in records) {
-    if (record.createdOrder < 0 || !seenOrders.add(record.createdOrder)) {
-      return true;
-    }
+bool _hasTwoSpacedSuccesses(List<Act0LearningEvidenceRecordV1> records) {
+  final correct = records.where((record) => record.isCorrect).toList();
+  if (correct.length < 2) {
+    return false;
   }
-  return false;
+  return correct.last.recordedAtUtc!.difference(
+        correct[correct.length - 2].recordedAtUtc!,
+      ) >=
+      Act0DurableLearningTimingV1.minimumTransferSeparation;
 }
 
-String _relationship(
-  Act0LearningEvidenceRecordV1 baseline,
-  Act0LearningEvidenceRecordV1 comparison,
+Act0LearningTransferSignalV1 _signalFromPair(
+  String conceptFamilyId,
+  List<Act0LearningEvidenceRecordV1> records,
+  String verdict,
 ) {
-  final baselineTaskId = baseline.taskId.trim();
-  final comparisonTaskId = comparison.taskId.trim();
-  final baselineSessionId = baseline.sessionId.trim();
-  final comparisonSessionId = comparison.sessionId.trim();
-  if (baselineTaskId.isEmpty ||
-      comparisonTaskId.isEmpty ||
-      baselineSessionId.isEmpty ||
-      comparisonSessionId.isEmpty ||
-      baselineSessionId == comparisonSessionId) {
-    return act0LearningTransferInsufficientEvidenceV1;
+  if (records.isEmpty) {
+    return Act0LearningTransferSignalV1(
+      conceptFamilyId: conceptFamilyId,
+      relationship: act0LearningTransferInsufficientEvidenceV1,
+      verdict: verdict,
+      baselineOrder: null,
+      comparisonOrder: null,
+      baselineTaskId: '',
+      comparisonTaskId: '',
+      baselineSessionId: '',
+      comparisonSessionId: '',
+      baselineDecisionTimeBucket: '',
+      comparisonDecisionTimeBucket: '',
+    );
   }
-  if (baselineTaskId == comparisonTaskId) {
-    return act0LearningTransferSameTaskRepeatV1;
-  }
-  return act0LearningTransferSameFamilyTransferV1;
+  final comparison = records.last;
+  final baseline = records.length > 1 ? records[records.length - 2] : null;
+  final relationship = baseline == null
+      ? act0LearningTransferInsufficientEvidenceV1
+      : baseline.taskId == comparison.taskId
+      ? act0LearningTransferSameTaskRepeatV1
+      : act0LearningTransferSameFamilyTransferV1;
+  return Act0LearningTransferSignalV1(
+    conceptFamilyId: conceptFamilyId,
+    relationship: relationship,
+    verdict: verdict,
+    baselineOrder: baseline?.createdOrder,
+    comparisonOrder: comparison.createdOrder,
+    baselineTaskId: baseline?.taskId ?? '',
+    comparisonTaskId: comparison.taskId,
+    baselineSessionId: baseline?.sessionId ?? '',
+    comparisonSessionId: comparison.sessionId,
+    baselineDecisionTimeBucket: baseline?.decisionTimeBucket ?? '',
+    comparisonDecisionTimeBucket: comparison.decisionTimeBucket,
+    eligibleEvidenceCount: records.length,
+    recentWindowCount: records.length,
+  );
 }
 
-String _verdict(
-  Act0LearningEvidenceRecordV1 baseline,
-  Act0LearningEvidenceRecordV1 comparison,
+int _compareEvidenceTimeThenOrder(
+  Act0LearningEvidenceRecordV1 a,
+  Act0LearningEvidenceRecordV1 b,
 ) {
-  if (!baseline.isCorrect && comparison.isCorrect) {
-    return act0LearningTransferImprovedV1;
+  final aTime = a.recordedAtUtc;
+  final bTime = b.recordedAtUtc;
+  if (aTime == null && bTime != null) {
+    return -1;
   }
-  if (baseline.isCorrect && comparison.isCorrect) {
-    return act0LearningTransferHeldV1;
+  if (aTime != null && bTime == null) {
+    return 1;
   }
-  return act0LearningTransferNotYetImprovedV1;
-}
-
-String _conceptFamilyId(Act0LearningEvidenceRecordV1 record) {
-  final conceptFamilyId = record.conceptFamilyId.trim();
-  if (conceptFamilyId.isNotEmpty) {
-    return conceptFamilyId;
+  final time = aTime == null ? 0 : aTime.compareTo(bTime!);
+  if (time != 0) {
+    return time;
   }
-  final repairFocusId = record.repairFocusId.trim();
-  if (repairFocusId.isNotEmpty) {
-    return repairFocusId;
-  }
-  final skillAtomId = record.skillAtomId.trim();
-  if (skillAtomId.isNotEmpty) {
-    return skillAtomId;
-  }
-  return record.errorType.trim();
-}
-
-extension _Act0LearningTransferIterableX<T> on Iterable<T> {
-  T? get lastOrNull {
-    final iterator = this.iterator;
-    if (!iterator.moveNext()) {
-      return null;
-    }
-    var value = iterator.current;
-    while (iterator.moveNext()) {
-      value = iterator.current;
-    }
-    return value;
-  }
+  final order = a.createdOrder.compareTo(b.createdOrder);
+  return order != 0 ? order : a.recordId.compareTo(b.recordId);
 }

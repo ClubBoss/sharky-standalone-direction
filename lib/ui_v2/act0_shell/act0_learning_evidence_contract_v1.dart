@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_family_repair_memory_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_candidate_practice_mapper_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
 
 const String act0SessionSummaryRepairLifecycleNoSignalV1 = 'no_signal_v1';
@@ -22,6 +23,8 @@ Act0LearningEvidenceRecordV1? act0LearningEvidenceRecordFromCompletedDecisionV1(
   required int createdOrder,
   Act0EvidenceRunKeyV1? runKey,
   String sessionId = '',
+  DateTime? recordedAtUtc,
+  Act0ReviewKindV1 reviewKind = Act0ReviewKindV1.legacyUnspaced,
 }) {
   final worldId = decision.worldId?.trim();
   final lessonId = decision.lessonId.trim();
@@ -54,6 +57,7 @@ Act0LearningEvidenceRecordV1? act0LearningEvidenceRecordFromCompletedDecisionV1(
     worldId: worldId,
     lessonId: lessonId,
     taskId: taskId,
+    sourceTaskId: decision.sourceTaskId.trim(),
     choiceId: choiceId,
     expectedChoiceId: expectedChoiceId,
     isCorrect: decision.isCorrect,
@@ -70,6 +74,8 @@ Act0LearningEvidenceRecordV1? act0LearningEvidenceRecordFromCompletedDecisionV1(
     sourceLessonId: runKey?.lessonId ?? '',
     startedBy: runKey?.startedBy ?? '',
     sessionId: sessionId.trim(),
+    recordedAtUtc: recordedAtUtc?.toUtc(),
+    reviewKind: reviewKind,
   );
 }
 
@@ -168,6 +174,7 @@ class Act0LearningEvidenceRecordV1 {
     required this.worldId,
     required this.lessonId,
     required this.taskId,
+    this.sourceTaskId = '',
     required this.choiceId,
     required this.expectedChoiceId,
     required this.isCorrect,
@@ -184,6 +191,8 @@ class Act0LearningEvidenceRecordV1 {
     this.sourceLessonId = '',
     this.startedBy = '',
     this.sessionId = '',
+    this.recordedAtUtc,
+    this.reviewKind = Act0ReviewKindV1.legacyUnspaced,
   });
 
   final int schemaVersion;
@@ -192,6 +201,7 @@ class Act0LearningEvidenceRecordV1 {
   final String worldId;
   final String lessonId;
   final String taskId;
+  final String sourceTaskId;
   final String choiceId;
   final String expectedChoiceId;
   final bool isCorrect;
@@ -208,6 +218,8 @@ class Act0LearningEvidenceRecordV1 {
   final String sourceLessonId;
   final String startedBy;
   final String sessionId;
+  final DateTime? recordedAtUtc;
+  final Act0ReviewKindV1 reviewKind;
 
   Map<String, Object?> toPayload() {
     final payload = <String, Object?>{
@@ -217,6 +229,7 @@ class Act0LearningEvidenceRecordV1 {
       'worldId': worldId,
       'lessonId': lessonId,
       'taskId': taskId,
+      if (sourceTaskId.isNotEmpty) 'sourceTaskId': sourceTaskId,
       'choiceId': choiceId,
       'expectedChoiceId': expectedChoiceId,
       'isCorrect': isCorrect,
@@ -248,6 +261,10 @@ class Act0LearningEvidenceRecordV1 {
     if (sessionId.isNotEmpty) {
       payload['sessionId'] = sessionId;
     }
+    if (recordedAtUtc != null) {
+      payload['recordedAtUtc'] = act0UtcStorageStringV1(recordedAtUtc!);
+      payload['reviewKind'] = reviewKind.name;
+    }
     return payload;
   }
 
@@ -262,6 +279,7 @@ class Act0LearningEvidenceRecordV1 {
     final worldId = _requiredString(map['worldId']);
     final lessonId = _requiredString(map['lessonId']);
     final taskId = _requiredString(map['taskId']);
+    final sourceTaskId = _optionalString(map['sourceTaskId']);
     final choiceId = _requiredString(map['choiceId']);
     final expectedChoiceId = _requiredString(map['expectedChoiceId']);
     final errorType = _requiredString(map['errorType']);
@@ -280,6 +298,10 @@ class Act0LearningEvidenceRecordV1 {
     final sourceLessonId = _optionalString(map['sourceLessonId']);
     final startedBy = _optionalString(map['startedBy']);
     final sessionId = _optionalString(map['sessionId']);
+    final recordedAtUtc = act0TryParseUtcV1(map['recordedAtUtc']);
+    final reviewKind = map.containsKey('reviewKind')
+        ? act0EnumByNameV1(Act0ReviewKindV1.values, map['reviewKind'])
+        : Act0ReviewKindV1.legacyUnspaced;
     if (schemaVersion != 1 ||
         createdOrder == null ||
         recordId == null ||
@@ -297,7 +319,10 @@ class Act0LearningEvidenceRecordV1 {
         !_resultKinds.contains(resultKind) ||
         (isCorrect && resultKind != 'correct') ||
         (!isCorrect && resultKind == 'correct') ||
-        (isCorrect && errorType != 'none')) {
+        (isCorrect && errorType != 'none') ||
+        reviewKind == null ||
+        (recordedAtUtc == null &&
+            reviewKind != Act0ReviewKindV1.legacyUnspaced)) {
       return null;
     }
     return Act0LearningEvidenceRecordV1(
@@ -306,6 +331,7 @@ class Act0LearningEvidenceRecordV1 {
       worldId: worldId,
       lessonId: lessonId,
       taskId: taskId,
+      sourceTaskId: sourceTaskId,
       choiceId: choiceId,
       expectedChoiceId: expectedChoiceId,
       isCorrect: isCorrect,
@@ -322,6 +348,8 @@ class Act0LearningEvidenceRecordV1 {
       sourceLessonId: sourceLessonId,
       startedBy: startedBy,
       sessionId: sessionId,
+      recordedAtUtc: recordedAtUtc,
+      reviewKind: reviewKind,
     );
   }
 
@@ -334,6 +362,7 @@ class Act0LearningEvidenceRecordV1 {
       other.worldId == worldId &&
       other.lessonId == lessonId &&
       other.taskId == taskId &&
+      other.sourceTaskId == sourceTaskId &&
       other.choiceId == choiceId &&
       other.expectedChoiceId == expectedChoiceId &&
       other.isCorrect == isCorrect &&
@@ -349,7 +378,9 @@ class Act0LearningEvidenceRecordV1 {
       other.sourceWorldId == sourceWorldId &&
       other.sourceLessonId == sourceLessonId &&
       other.startedBy == startedBy &&
-      other.sessionId == sessionId;
+      other.sessionId == sessionId &&
+      other.recordedAtUtc == recordedAtUtc &&
+      other.reviewKind == reviewKind;
 
   @override
   int get hashCode => Object.hashAll(<Object?>[
@@ -359,6 +390,7 @@ class Act0LearningEvidenceRecordV1 {
     worldId,
     lessonId,
     taskId,
+    sourceTaskId,
     choiceId,
     expectedChoiceId,
     isCorrect,
@@ -375,6 +407,8 @@ class Act0LearningEvidenceRecordV1 {
     sourceLessonId,
     startedBy,
     sessionId,
+    recordedAtUtc,
+    reviewKind,
   ]);
 }
 
@@ -660,6 +694,8 @@ class Act0LearningEvidenceHistoryV1 {
     Act0CompletedDecisionV1 decision, {
     Act0EvidenceRunKeyV1? runKey,
     String sessionId = '',
+    DateTime? recordedAtUtc,
+    Act0ReviewKindV1 reviewKind = Act0ReviewKindV1.legacyUnspaced,
   }) {
     if (records.any((record) => record.recordId == decision.attemptKey)) {
       return this;
@@ -676,6 +712,8 @@ class Act0LearningEvidenceHistoryV1 {
       createdOrder: createdOrder,
       runKey: runKey,
       sessionId: sessionId,
+      recordedAtUtc: recordedAtUtc,
+      reviewKind: reviewKind,
     );
     return record == null ? this : append(record);
   }
