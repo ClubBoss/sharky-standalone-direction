@@ -6818,6 +6818,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         'personalized_next_step_opened',
         <String, Object?>{'surface': surface, ...nextStep.toTelemetryPayload()},
       );
+    } else if (surface == 'home') {
+      _startHomeNextAction(selectedWorld);
+      return;
     }
     if (nextStep.recommendedAction == 'spaced_review') {
       final due = _durableRetentionHistoryV1
