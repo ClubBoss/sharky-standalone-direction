@@ -7250,6 +7250,12 @@ List<Act0CardStateV1> _w7VisibleBoardCardsForSpecV1(
         Act0CardStateV1(rank: '7', suit: 'c'),
         Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
       ];
+    case 'visible_card_combo_density_transfer_check':
+      return const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: 'J', suit: 'c'),
+        Act0CardStateV1(rank: '5', suit: 'd', tone: Act0CardToneV1.red),
+      ];
     default:
       return _flopA72Cards;
   }

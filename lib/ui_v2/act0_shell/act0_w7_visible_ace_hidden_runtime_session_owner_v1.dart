@@ -332,9 +332,9 @@ const List<Act0W7VisibleAceHiddenTaskSpecV1> act0W7VisibleAceHiddenTaskSpecsV1 =
         skillAtomId: 'w7_combo_density_transfer_check',
         errorType: 'missed_visible_card_combo_density_transfer',
         drillKind: 'combo_density_transfer_choice_v1',
-        boardContext: 'A72 rainbow vs K84 rainbow vs 772 rainbow',
+        boardContext: 'QJ5 rainbow',
         learningPurpose:
-            'Transfer visible-card reduction across ranks and paired boards.',
+            'Transfer visible-card reduction to an unseen board structure.',
         expectedChoiceId: 'visible_rank_reduces_matching_rank_combos',
         choiceIds: <String>[
           'visible_rank_increases_matching_rank_combos',
@@ -343,34 +343,33 @@ const List<Act0W7VisibleAceHiddenTaskSpecV1> act0W7VisibleAceHiddenTaskSpecsV1 =
           'visible_rank_reduces_matching_rank_combos',
         ],
         learnerPrompt:
-            'Across A72 rainbow, K84 rainbow, and 772 rainbow, what shared '
-            'idea should you use when a rank is already visible?',
+            'On QJ5 rainbow, a queen is already visible. What is the safest '
+            'range-thinking read?',
         choiceLabels: <String, String>{
           'visible_rank_reduces_matching_rank_combos':
-              'The visible rank reduces matching-rank combinations without '
-              'showing one exact hand.',
+              'There are fewer queen-containing combinations, but no exact '
+              'hand is proved.',
           'visible_rank_increases_matching_rank_combos':
-              'The visible rank creates more matching-rank combinations.',
+              'The visible queen creates more queen-containing combinations.',
           'only_board_low_cards_matter':
-              'Paired boards matter, but high cards do not.',
+              'Only paired boards change which rank combinations remain.',
           'visible_cards_show_exact_hand':
-              'Visible cards identify the strongest exact hand first.',
+              'The visible queen identifies the opponent\'s exact hand first.',
         },
         feedbackReason:
-            'A visible card of a rank is unavailable to private hands, so '
-            'matching-rank combinations become fewer across boards. On 772, '
-            'the sevens are reduced too, but that still does not prove one '
-            'exact hand.',
+            'The queen on the board is unavailable to private hands, so fewer '
+            'queen-containing combinations remain. That narrows a range; it '
+            'does not identify one exact hand.',
         incorrectFeedback: <String, String>{
           'visible_rank_increases_matching_rank_combos':
-              'Visible cards are already used, so they reduce matching-rank '
+              'The visible queen is already used, so it reduces matching-rank '
               'private hand combinations.',
           'only_board_low_cards_matter':
-              'Paired boards matter, but high visible cards also change '
-              'available combinations.',
+              'Any visible rank can change available matching-rank '
+              'combinations; a board does not need to be paired.',
           'visible_cards_show_exact_hand':
-              'Visible cards change counts; they do not identify the exact '
-              'hand first.',
+              'Visible cards change available counts; they do not identify an '
+              'exact hand.',
         },
         practiceCtaAllowed: false,
         mapperNoTargetReason: 'w7_route_locked_no_safe_practice_target_v1',

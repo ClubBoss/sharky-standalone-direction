@@ -76,24 +76,27 @@ void main() {
   });
 
   test(
-    'W7 visible-card transfer independently assesses paired-board logic',
+    'W7 visible-card transfer uses an unseen board and preserves exact-hand safety',
     () {
       final owner = const Act0W7VisibleAceHiddenRuntimeSessionOwnerV1();
       final transfer = owner.taskSpecs.singleWhere(
         (spec) => spec.taskId == 'visible_card_combo_density_transfer_check',
       );
 
-      expect(transfer.boardContext, contains('772'));
-      expect(transfer.learnerPrompt, contains('772'));
+      expect(transfer.boardContext, 'QJ5 rainbow');
+      expect(transfer.learnerPrompt, contains('QJ5'));
       expect(
         transfer.choiceLabels[transfer.expectedChoiceId],
-        contains('matching-rank combinations'),
+        allOf(
+          contains('queen-containing combinations'),
+          contains('no exact hand'),
+        ),
       );
       expect(
         transfer.feedbackReason,
         allOf(
-          contains('matching-rank'),
-          contains('does not prove one exact hand'),
+          contains('narrows a range'),
+          contains('does not identify one exact hand'),
         ),
       );
       expect(
