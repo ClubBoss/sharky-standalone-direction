@@ -127,6 +127,12 @@ machine contract was updated only after this row-level comparison.
 
 ## Scope boundary and freeze decision
 
+## W7 Depth Authority v1 adjudication
+
+The W7 transfer row `world_7/range_thinking_lite_combo_density/visible_card_combo_density_transfer_check` is the only serialized-row change in the W7 Depth Authority repair. Its prior A72/K84/772 comparison was replaced by an unseen QJ5 rainbow decision. The task id, phase, transfer family, four-option shape, correct id `visible_rank_reduces_matching_rank_combos`, correct index 3, and repair/error ownership remain unchanged; only the learner-visible board and reasoning copy changed. This preserves the 291-row count and every W1-W6/W8-W12 row.
+
+The pinned state-input SHA-256 is `2502f955068feeca0a26bd67ff02b81db6d0786f36bf78195c5911c6ceda6a6c`; the 291-row content fingerprint is `1318f99a5430f45fe18c9cf64dd3f583dc21a49b7dc98482ae167031d139e959`. This is an admitted content repair, not a route, persistence, telemetry, repair-family, or option-position change.
+
 This re-adjudication closes the stale 291-row proof gap and the published
 first-session identity geometry repair closes its product debt. It does not
 reconcile independent audit packets beyond their source-ID crosswalk, prove

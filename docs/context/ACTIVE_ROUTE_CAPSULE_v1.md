@@ -125,9 +125,11 @@ because every binary row is source-proven two-state at its route point. Durable
 Retention & Transfer v1 is CLOSED_FIXED for CL-LRN-F01/F08/F11: timestamped
 schema-17 evidence drives 24h/72h/7d due stages, repeated misses survive
 recovery/lapse, recent spaced evidence owns transfer verdicts, and due work
-launches through the existing Review route. The next Top-1 is W7 Depth
-Authority (CL-LRN-F02); Human Novice Proof, Final Deep Independent Audit, and AI
-Personalization are still blocked.
+launches through the existing Review route. W7 Depth Authority (CL-LRN-F02) is
+`CLOSED_FIXED`: its outcome contract admits one visible lesson because
+A72/K84/772/QJ5 supply distinct assessment and QJ5 is an unseen transfer board.
+The next Top-1 is Final Deterministic Convergence Packet Refresh; Human Novice
+Proof, Final Deep Independent Audit, and AI Personalization are still blocked.
 
 The W1-W6 Final Learner-Truth Audit (`docs/_reviews/w1_w6_final_learner_truth_audit_v1.md`)
 closed with `w1_w6_final_gate_repair_program_ready`, producing the grouped

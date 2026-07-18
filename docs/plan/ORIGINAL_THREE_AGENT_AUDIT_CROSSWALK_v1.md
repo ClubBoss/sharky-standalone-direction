@@ -40,7 +40,7 @@ silently converted to a closure; an opportunity is never counted as a defect.
 | AG-VUX-F14 | Competitive gap: premium value preview subtle | Commercial audit; `11715b50` | Monetization route | Not release scope | CLOSED_INTENTIONAL | `FUTURE_CAPABILITY`; no paid-depth contract is admitted by this freeze. |
 | AG-VUX-F15 | STRATEGIC: personalized Day-2 return reason | Retention audit; `11715b50` | Return/personalization owner | AI Personalization later | CLOSED_INTENTIONAL | `FUTURE_CAPABILITY`; no false Day-2 claim is made by the current shell. |
 | CL-LRN-F01 | CONFIRMED_P1: no time-based spaced repetition | Evidence record has no timestamp; `11715b50` | Evidence/retention projections | Retention capability | CLOSED_FIXED | Schema 17 persists injected UTC event time and review kind; the canonical state machine schedules 24h, 72h, and 7d checks through the existing Review route. Legacy evidence remains untimestamped and claim-safe. See `DURABLE_RETENTION_TRANSFER_CONTRACT_v1.md`. |
-| CL-LRN-F02 | CONFIRMED_P1: W7 one-lesson depth cliff | `_visibleCardRangeContinuationLessons`; `11715b50` | `act0_shell_state_v1`; reproducible | Current route content | PRODUCT_DEBT_CONFIRMED | Current list contains only `_w7VisibleCardComboDensityLesson`; generated task specs do not make multiple learner-visible lessons. `CURRENT_RELEASE_SCOPE`; `W7 authored lesson-depth`. |
+| CL-LRN-F02 | CONFIRMED_P1: W7 one-lesson depth cliff | `_visibleCardRangeContinuationLessons`; `11715b50` | `act0_shell_state_v1`; re-verified | Current route content | CLOSED_FIXED | `W7_DEPTH_AUTHORITY_V1.md` replaces lesson count with mandatory outcomes. The one visible lesson has distinct A72/K84/772/QJ5 decisions, a paired-board assessment, unseen QJ5 transfer, same-signal repair, original-source recheck, schema-17 evidence, and a bounded payoff claim. |
 | CL-LRN-F03 | CONFIRMED_P2: generic error taxonomy | Six atoms/table-read; `11715b50` | `act0_concept_error_contract_v1.dart`; 291-task/466-option census | AI personalization dependency | CLOSED_FIXED | Canonical decision evidence now uses 20 source-owned misconception ids across all 466 incorrect options; zero options lack repair intent. Legacy generic string values remain readable without schema change. Full inventory: `CONCEPT_ERROR_REPAIR_INTEGRITY_V1.md`. |
 | CL-LRN-F04 | CONFIRMED_P2: W7 authoring metadata leaks | W7 spec projection; `11715b50` | W7 spec runner; reproducible | Current route content | CLOSED_FIXED | Learner-facing title, hint, feedback title, theory title, and focus labels now use intentional beginner copy. `learningPurpose` and `conceptFamilyId` remain internal authored metadata and the deterministic learner-surface guard rejects the leaked family id. |
 | CL-LRN-F05 | CONFIRMED_P2: repair mapping minority coverage | mapping switch; `11715b50` | Complete 34-row registry and repair resolver | Current route loop | CLOSED_FIXED | All 34 prior gaps are explicit: 20 alternate same-signal targets and 14 guarded intentional exact replays, with zero unresolved or unrecorded fallbacks. `blinds_review` now asks and marks UTG as the first preflop actor; its exact replay is launchable. Different-target coverage remains 277/291 (95.2%). |
@@ -99,10 +99,10 @@ post-Human technical-risk row** (F12), **2 strategic-opportunity rows**
 (F15/F16), and **5 closed current-source rows** (F03/F04/F07/F09/F10). Human
 uncertainty is not counted as factual source closure.
 
-Current confirmed product debt from this learning group is CL-LRN-F02 only.
-F01/F08/F11 are closed by Durable Retention & Transfer v1; F02 remains open
-because no authority supplies a minimum W7 lesson count, and no lesson count is
-invented here.
+No confirmed deterministic product debt remains from this learning group.
+F01/F08/F11 are closed by Durable Retention & Transfer v1; F02 is
+`CLOSED_FIXED` by the outcome-based W7 authority without inventing a lesson
+count.
 
 ### Learning-content inventory notes
 

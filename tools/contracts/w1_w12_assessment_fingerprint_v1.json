@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "generator": "test/guards/w1_w12_answer_position_distribution_contract_test.dart::_contentFingerprint",
-  "baselineHead": "faeb1508",
+  "baselineHead": "ff37ac58316ff4279866af59745ce6254667f04f",
   "rowCount": 291,
-  "fingerprint": "1f11f46f766ede8a967a1044a9a8ac280a29e681c066d2a6d5b277ab1b767d91",
+  "fingerprint": "1318f99a5430f45fe18c9cf64dd3f583dc21a49b7dc98482ae167031d139e959",
   "inputs": [
     {
       "path": "lib/ui_v2/act0_shell/act0_shell_state_v1.dart",
-      "sha256": "77a393090fddb28d51b5f1e33b54e42d27763ac690a34145d4a0b1f8b01e383e"
+      "sha256": "2502f955068feeca0a26bd67ff02b81db6d0786f36bf78195c5911c6ceda6a6c"
     }
   ],
   "previousValidBaseline": {

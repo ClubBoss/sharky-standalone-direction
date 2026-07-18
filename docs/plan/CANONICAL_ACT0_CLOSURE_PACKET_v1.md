@@ -16,7 +16,9 @@ UTC clock, schema-17 timestamp/review-kind persistence, 24h/72h/7d due stages,
 repeat-miss-preserving lapse behavior, recent-evidence transfer verdicts, and a
 minimal due affordance on the existing Review route. This closes
 CL-LRN-F01/F08/F11 without claiming Human learning effect or opening W7 depth.
-The next Top-1 is W7 Depth Authority (CL-LRN-F02); Human Novice Proof, Final
+W7 Depth Authority is now `CLOSED_FIXED`: its QJ5 unseen-board transfer closes
+the sole mandatory depth gap without adding a lesson-count rule. The next Top-1
+is Final Deterministic Convergence Packet Refresh; Human Novice Proof, Final
 Deep Independent Audit, and AI Personalization remain blocked.
 
 The active follow-on contract is
