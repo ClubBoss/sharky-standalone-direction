@@ -565,22 +565,9 @@ class _EntryGate extends StatefulWidget {
 }
 
 class _EntryGateState extends State<_EntryGate> {
-  // Entry Matrix (production parity reference):
-  // 1) AppRoot (_EntryGate) -> Act0ShellPreviewScreenV1
-  //    file: lib/ui_v2/app_root.dart (build, canonical detached dev branch)
-  // 2) Legacy intake/map surfaces remain donor/archive truth only.
-  // 3) Today Plan START/CONTINUE (today_plan_start_cta) -> World1FoundationsMicroTaskRunnerScreen
-  //    file: lib/ui_v2/screens/universal_intake_plan_screen.dart
-  // 4) Today Plan OPEN MAP (today_plan_open_map_cta) -> UiV2ProgressMapScreenV2
-  //    file: lib/ui_v2/screens/universal_intake_plan_screen.dart
-  // 5) Map NEXT PACK (world_campaign_next_pack_cta) -> World1FoundationsMicroTaskRunnerScreen
-  //    file: lib/ui_v2/map/ui_v2_progress_map_screen_v2.dart
-  // 6) Map world node (world_campaign_open_N) -> world_detail_sheet_v1 ->
-  //    world_detail_primary_cta_v1 -> World1FoundationsMicroTaskRunnerScreen
-  //    file: lib/ui_v2/map/ui_v2_progress_map_screen_v2.dart
-  // 7) Store parity harness mirrors (4)+(6) via deterministic bounded pumps
-  //    file: tools/modern_table_screenshot_v1.dart
-  // NOTE: production map and today-plan primary CTAs are aligned to modern runner.
+  // Production entry is AppRoot -> _EntryGate -> Act0ShellPreviewScreenV1.
+  // See docs/_reviews/active_act0_route_authority_hardening_v1.md before
+  // treating campaign or compatibility surfaces as a production entry.
   bool _checked = false;
   bool _entryReady = false;
   bool _showPlacementOnStart = true;

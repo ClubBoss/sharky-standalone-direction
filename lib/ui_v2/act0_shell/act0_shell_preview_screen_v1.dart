@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart' show kReleaseMode, visibleForTesting;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -61,6 +62,9 @@ import 'package:poker_analyzer/ui_v2/visual/ui_haptics_v1.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
 import 'package:poker_analyzer/services/session_drill_recheck_launch_queue_v1.dart';
 import 'package:poker_analyzer/services/session_drill_recheck_user_launch_consumer_v1.dart';
+
+@visibleForTesting
+bool act0DevMenuEnabledV1({required bool isReleaseMode}) => !isReleaseMode;
 
 ({String worldId, String lessonId, String taskId, String mappingType})?
 act0FirstValueSameSignalRepMappingV1({
@@ -4984,7 +4988,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           _blockCompletionSummary = null;
                         }),
                         sharkyOverride: _homeSharkyOverride(),
-                        onOpenDevMenu: _openDevMenu,
+                        onOpenDevMenu:
+                            act0DevMenuEnabledV1(isReleaseMode: kReleaseMode)
+                            ? _openDevMenu
+                            : null,
                         completionEarnedStreak: _streakSaveEarned(),
                         onStartDailyDrill: _dailyCompletedRepCount < 3
                             ? () => setState(() {
@@ -8840,10 +8847,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Act0PlacementResultV1 _buildPlacementResult() {
-    final profileScore = _placementQuestionsV1.fold<int>(
-      0,
-      (sum, question) => sum + _placementQuestionScore(question),
-    );
     final diagnosticTotal = _placementDiagnosticSpotsV1.length;
     final foundationTotal = _placementDiagnosticSpotsV1
         .where((spot) => spot.isFoundation)
@@ -9046,20 +9049,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     _placementAnswerIds[question.questionId] = selectedIds;
-  }
-
-  int _placementQuestionScore(Act0PlacementQuestionV1 question) {
-    final selectedIds = _placementAnswerIds[question.questionId];
-    if (selectedIds == null || selectedIds.isEmpty) {
-      return 0;
-    }
-    var score = 0;
-    for (final option in question.options) {
-      if (selectedIds.contains(option.optionId) && option.score > score) {
-        score = option.score;
-      }
-    }
-    return score;
   }
 
   Act0PlacementQuestionV1? _placementQuestionById(String questionId) {
