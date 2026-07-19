@@ -63,6 +63,21 @@ concurrent Flutter builds and did not produce `Runner.app/Runner`. Per the
 one-retry control-plane breaker, no second GUI attempt was made. Therefore no
 app-container JSONL file, GUI walkthrough, or phone acceptance claim exists.
 
+## CI and repository state
+
+Draft PR #32 is open against `main` at commit
+`6c3f6a4fa7fa942b837bdc20f045adbf144dcd34`; its remote branch matches local
+HEAD. Repository-owned CI is green: Theory/verify, Health, R5 release gate,
+and Tier A active/release all passed. Tier B/C/D and L2 are conditional skips.
+The external TestSprite pre-check failed and remains non-required.
+
+| File family | Disposition |
+| --- | --- |
+| `act0_lesson_runner_shell_v1.dart` | Removes raw board-card and visible table-signal projection. |
+| `act0_shell_preview_screen_v1.dart` | Removes visible table-signal projection from repair/recommendation events. |
+| `act0_telemetry_sink_v1_test.dart` | Guards the forbidden fields and retains controlled street attribution. |
+| Telemetry map, route capsule, Alpha reviews | Reconcile current owner, privacy, CI, and GUI-blocked admission truth. |
+
 ## Non-claims
 
 No vendor analytics, network export, identity, ML, dashboard, schema migration,
