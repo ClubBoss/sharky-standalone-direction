@@ -6416,8 +6416,12 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final usesSharedAccessibilitySurface =
         streamlinedDirectDecisionFeedback && isCompactRefinedFeedback;
     final isExactReplayRepair =
-        repairResultReceiptLine?.trim().toLowerCase().startsWith('replay ') ??
-        false;
+        repairResultReceiptLine?.trim().toLowerCase().startsWith('replay ') ==
+            true ||
+        repairResultReceiptLine?.trim() ==
+            'Fix landed: you handled this spot correctly.' ||
+        repairResultReceiptLine?.trim() ==
+            'This spot still needs one more careful rep.';
     Widget buildContinueAction() {
       return Row(
         children: [

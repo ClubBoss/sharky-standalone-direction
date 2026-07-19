@@ -8700,9 +8700,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     required Act0LessonTaskV1 selectedTask,
     required Act0RunnerOptionV1 option,
   }) {
-    if (_activeRepairTaskId != selectedTask.taskId) {
-      return null;
-    }
+    return _repairReceiptForOptionV1(
+      selectedTask: selectedTask,
+      option: option,
+    )?.visibleCopy;
+  }
+
+  Act0LearningReceiptV1? _repairReceiptForOptionV1({
+    required Act0LessonTaskV1 selectedTask,
+    required Act0RunnerOptionV1 option,
+  }) {
+    if (_activeRepairTaskId != selectedTask.taskId) return null;
     final sourceTaskId = _activeRepairSourceTaskId ?? selectedTask.taskId;
     final intent = _openRepairIntentBySourceTaskId[sourceTaskId];
     final clueLabel = intent?.missedSignalLabel ?? '';
@@ -8731,27 +8739,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         current,
       ],
       learningEvidence: _learningEvidenceHistoryV1,
-    ).visibleCopy;
+      conceptFamilyId: intent?.missedSignalId ?? '',
+      isExactReplay:
+          sourceTaskId == selectedTask.taskId ||
+          act0IsExactRepairMappingTypeV1(intent?.mappingType ?? ''),
+    );
   }
 
   List<String> _repairSessionSummaryLinesForOptionV1({
     required Act0LessonTaskV1 selectedTask,
     required Act0RunnerOptionV1 option,
   }) {
-    if (_activeRepairTaskId != selectedTask.taskId) {
-      return const <String>[];
-    }
-    final sourceTaskId = _activeRepairSourceTaskId ?? selectedTask.taskId;
-    final intent = _openRepairIntentBySourceTaskId[sourceTaskId];
-    final exactReplay =
-        sourceTaskId == selectedTask.taskId ||
-        act0IsExactRepairMappingTypeV1(intent?.mappingType ?? '');
-    final clueLabel = intent?.missedSignalLabel ?? '';
-    return act0RepairSessionSummaryCopyGuardLinesV1(
-      repaired: option.isCorrect,
-      exactReplay: exactReplay,
-      clueLabel: clueLabel,
-    );
+    return _repairReceiptForOptionV1(
+          selectedTask: selectedTask,
+          option: option,
+        )?.sessionSummaryLines ??
+        const <String>[];
   }
 
   void _captureFirstValueReceiptCarryV1({

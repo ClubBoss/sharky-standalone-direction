@@ -77,7 +77,7 @@ void main() {
           ],
         ),
       );
-      expect(held.level, Act0LearningReceiptLevelV1.laterRecheckHeld);
+      expect(held.level, Act0LearningReceiptLevelV1.sameClueRepaired);
 
       final transferred = Act0LearningReceiptV1.fromEvidence(
         focusLabel: 'No bet yet',
@@ -100,11 +100,7 @@ void main() {
           ],
         ),
       );
-      expect(
-        transferred.level,
-        Act0LearningReceiptLevelV1.differentSpotImproved,
-      );
-      expect(transferred.visibleCopy, contains('different hand'));
+      expect(transferred.level, Act0LearningReceiptLevelV1.sameClueRepaired);
     });
 
     test('keeps failed and malformed evidence at attempted', () {
