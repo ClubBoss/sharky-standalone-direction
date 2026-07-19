@@ -41,6 +41,16 @@ legacy route-import test remains unrelated debt.
 Complete real-GUI Action qualification remains pending; deterministic Action
 capability evidence must not be presented as that learner-route result.
 
+## Telemetry Subwave 4 — 2026-07-20
+
+`BOUNDED_LEARNING_LOOP_TELEMETRY_V1 — CLOSED_FIXED` after the local owner
+projection removed raw board-card IDs and learner-facing table-signal labels.
+The deterministic Profile A/Profile B and full Alpha trace suites remain green.
+The one allowed installed-app attempt is blocked by the local Xcode/Flutter
+concurrent-build stall, so `MINIMAL_E2E_ALPHA_CAPABILITY_V1 — MACHINE_VERIFIED;
+LIVE_GUI_PROOF_PENDING` remains the only truthful Alpha capability status. No
+runtime HNP JSONL or Computer Use claim exists for this subwave.
+
 Historical active task: **Learning Run Boundary + Session Payoff v1 — ADMITTED**
 at `ff032893` / `8cb4c790`. The owner-approved Learning Run is the only
 run-level lifecycle: it begins on the first canonical Action or BTN position

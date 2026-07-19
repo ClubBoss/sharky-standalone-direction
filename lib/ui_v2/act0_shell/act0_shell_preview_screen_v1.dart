@@ -1579,7 +1579,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'sourceTaskId': mistake.taskId,
       'skillAtomId': _repairSkillAtomIdV1(mistake.weaknessLabel),
       'missedSignal': _repairMissedSignalV1(mistake),
-      'tableSignal': _repairMissedSignalV1(mistake),
       'createdFrom': 'mistake',
       'status': 'open',
     });
@@ -1597,7 +1596,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'targetTaskId': targetTaskId,
       'skillAtomId': _repairSkillAtomIdV1(mistake.weaknessLabel),
       'missedSignal': _repairMissedSignalV1(mistake),
-      'tableSignal': _repairMissedSignalV1(mistake),
       'createdFrom': 'mistake',
       'status': 'in_progress',
       'mappingType': mappingType,
@@ -1617,7 +1615,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'targetTaskId': targetTaskId,
       'skillAtomId': _repairSkillAtomIdV1(record?.weaknessLabel ?? ''),
       'missedSignal': _repairMissedSignalFromRecordV1(record),
-      'tableSignal': _repairMissedSignalFromRecordV1(record),
       'createdFrom': 'mistake',
       'status': repaired ? 'repaired' : 'open',
       'outcome': repaired ? 'repaired' : 'needs_repair',
@@ -1839,7 +1836,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'nextRepId': carry.nextRepId,
       'receiptOutcome': carry.outcomeId,
       'feedbackSignal': carry.sourceSignalId,
-      'tableSignal': carry.sourceSignalLabel,
       'mappedTargetTaskId': target.taskId,
       'mappingType': target.mappingType,
     });

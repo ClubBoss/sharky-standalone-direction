@@ -524,6 +524,8 @@ void main() {
       expect(event.fields.containsKey('feedbackReason'), isFalse);
       expect(event.fields.containsKey('optionLabel'), isFalse);
       expect(event.fields.containsKey('handHistory'), isFalse);
+      expect(event.fields.containsKey('board_card_ids'), isFalse);
+      expect(event.fields.containsKey('tableSignal'), isFalse);
       expect(event.fields.values, isNot(contains('Daily set complete')));
       expect(event.fields.values, isNot(contains('Repair this spot')));
       expect(event.fields.values, isNot(contains('Three short reps landed.')));
@@ -869,17 +871,13 @@ void main() {
       );
       expect(userChoice.fields['worldId'], 'world_5');
       expect(userChoice.fields['taskId'], 'board_texture_basics_w5_dry_board');
-      expect(userChoice.fields['board_card_ids'], <String>['Kc', '7d', '2s']);
+      expect(userChoice.fields, isNot(contains('board_card_ids')));
       expect(userChoice.fields['street_v1'], 'Flop');
 
       final canonicalDecision = sink.events.firstWhere(
         (event) => event.name == 'decision_made',
       );
-      expect(canonicalDecision.fields['board_card_ids'], <String>[
-        'Kc',
-        '7d',
-        '2s',
-      ]);
+      expect(canonicalDecision.fields, isNot(contains('board_card_ids')));
       expect(canonicalDecision.fields['street_v1'], 'Flop');
 
       expectNoForbiddenTelemetryFieldsV1(sink.events);

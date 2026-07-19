@@ -3,7 +3,39 @@
 Status: ACTIVE CONTRACT MAP
 Purpose: define the minimum W1-W12 learning-event contract before any broad
 telemetry implementation.
-Last updated: 2026-05-21
+Last updated: 2026-07-20
+
+## Subwave 4 current closure
+
+`BOUNDED_LEARNING_LOOP_TELEMETRY_V1 — CLOSED_FIXED`
+
+The active owner remains `Act0TelemetrySinkV1`: the lesson runner owns task
+exposure, choices, results, and feedback; `Act0ShellPreviewScreenV1` owns
+route/session, repair, recheck, payoff, recommendation, and explicit exit.
+`AppRoot` supplies `Act0HnpTelemetrySinkV1` only for a non-release build with
+`--dart-define=HNP_TELEMETRY=true`. That sink is local-only, keeps at most 256
+events, writes one complete JSON object per line to
+`act0_hnp_trace_v1.jsonl`, and ignores write failures.
+
+The selected Profile B trace is: `session_start` -> `lesson_started` ->
+`task_shown` -> wrong `fold` decision/result/feedback on
+`actions_check_drill` (`missed_action_read`) -> `repair_started` -> repair
+decision/result/completion -> `recheck_started` -> recheck decision/result ->
+receipt/payoff -> personalized next-step selected/opened -> one
+`session_exited`. Rebuilds do not re-emit presentation lifecycle, Back returns
+to Learn without exit, and restart drops the local run without stale payoff.
+
+All payloads are a safe projection of technical IDs, controlled outcome/error
+enums, route source, counters, and bounded timing. Raw board-card IDs and
+learner-facing table-signal labels are deliberately excluded, as are copy,
+option labels, raw feedback reasons, identity, exact time, monetization, and
+network/export fields. `street_v1` remains an enum-like street category, not a
+card or board payload.
+
+The installed Simulator proof build was blocked locally by an Xcode/Flutter
+concurrent-build stall after the CocoaPods specs refresh; no runtime JSONL or
+GUI claim is made by this map. See
+`docs/_reviews/alpha_telemetry_live_admission_v1.md`.
 
 ## Authority
 

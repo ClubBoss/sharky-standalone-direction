@@ -1319,8 +1319,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           'review_kind': widget.reviewKindId,
           if (timeToDecisionMs != null)
             'time_to_decision_ms': timeToDecisionMs < 0 ? 0 : timeToDecisionMs,
-          if (projection.boardCardIds.isNotEmpty)
-            'board_card_ids': projection.boardCardIds,
           if (projection.streetLabel.isNotEmpty)
             'street_v1': projection.streetLabel,
           'acceptable_action_ids': projection.acceptableActionIds,
@@ -1379,8 +1377,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             'repairTargetTaskId': projection.repairTargetTaskId,
           if (projection.repairTargetTaskId != null)
             'repair_target_task_id': projection.repairTargetTaskId,
-          if (projection.boardCardIds.isNotEmpty)
-            'board_card_ids': projection.boardCardIds,
           if (projection.streetLabel.isNotEmpty)
             'street_v1': projection.streetLabel,
           'route_source_owner': 'act0_runner',
@@ -1462,8 +1458,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             'result': selectedOption.isCorrect ? 'correct' : 'incorrect',
           if (feedbackSignalProof != null)
             'feedbackSignal': feedbackSignalProof.signalId,
-          if (feedbackSignalProof != null)
-            'tableSignal': feedbackSignalProof.label,
           if (skillReceipt != null) 'skillReceiptId': skillReceipt.receiptId,
           if (skillReceipt != null) 'skillAtomId': skillReceipt.skillAtomId,
           if (skillReceipt != null) 'nextRepId': skillReceipt.nextRepId,
@@ -1530,16 +1524,12 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             'repairTargetTaskId': projection.repairTargetTaskId,
           if (projection.repairTargetTaskId != null)
             'repair_target_task_id': projection.repairTargetTaskId,
-          if (projection.boardCardIds.isNotEmpty)
-            'board_card_ids': projection.boardCardIds,
           if (projection.streetLabel.isNotEmpty)
             'street_v1': projection.streetLabel,
           'drill_kind': projection.drillKind,
           'attempt_id': projection.attemptId,
           if (feedbackSignalProof != null)
             'feedbackSignal': feedbackSignalProof.signalId,
-          if (feedbackSignalProof != null)
-            'tableSignal': feedbackSignalProof.label,
           if (skillReceipt != null) 'skillReceiptId': skillReceipt.receiptId,
           if (skillReceipt != null) 'skillAtomId': skillReceipt.skillAtomId,
           if (skillReceipt != null) 'nextRepId': skillReceipt.nextRepId,
