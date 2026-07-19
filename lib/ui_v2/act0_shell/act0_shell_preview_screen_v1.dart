@@ -20,6 +20,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_run_payoff_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_receipt_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_transfer_measurement_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_last_session_return_reason_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -8699,19 +8700,49 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     required Act0LessonTaskV1 selectedTask,
     required Act0RunnerOptionV1 option,
   }) {
-    if (_activeRepairTaskId != selectedTask.taskId) {
-      return null;
-    }
+    return _repairReceiptForOptionV1(
+      selectedTask: selectedTask,
+      option: option,
+    )?.visibleCopy;
+  }
+
+  Act0LearningReceiptV1? _repairReceiptForOptionV1({
+    required Act0LessonTaskV1 selectedTask,
+    required Act0RunnerOptionV1 option,
+  }) {
+    if (_activeRepairTaskId != selectedTask.taskId) return null;
     final sourceTaskId = _activeRepairSourceTaskId ?? selectedTask.taskId;
     final intent = _openRepairIntentBySourceTaskId[sourceTaskId];
-    final exactReplay =
-        sourceTaskId == selectedTask.taskId ||
-        act0IsExactRepairMappingTypeV1(intent?.mappingType ?? '');
     final clueLabel = intent?.missedSignalLabel ?? '';
-    return act0RepairResultReceiptCopyGuardLineV1(
-      repaired: option.isCorrect,
-      exactReplay: exactReplay,
-      clueLabel: clueLabel,
+    final current = Act0RepairOutcomeV1(
+      sourceTaskId: sourceTaskId,
+      repairTaskId: selectedTask.taskId,
+      repairFocusKey: intent?.missedSignalId ?? '',
+      queueItemId: 'visible_receipt_$_repairOutcomeSequenceV1',
+      targetWorldId: '',
+      targetLessonId: '',
+      targetTaskId: selectedTask.taskId,
+      selectedChoiceId: option.id,
+      correctChoiceId: option.isCorrect ? option.id : '',
+      isCorrect: option.isCorrect,
+      outcomeState: option.isCorrect
+          ? act0RepairOutcomeStateCorrectV1
+          : act0RepairOutcomeStateStillNeedsRepV1,
+      sequence: _repairOutcomeSequenceV1,
+      sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+    );
+    return Act0LearningReceiptV1.fromEvidence(
+      focusLabel: clueLabel,
+      sourceTaskId: sourceTaskId,
+      repairOutcomes: <Act0RepairOutcomeV1>[
+        ..._repairOutcomeProjectionV1.outcomes,
+        current,
+      ],
+      learningEvidence: _learningEvidenceHistoryV1,
+      conceptFamilyId: intent?.missedSignalId ?? '',
+      isExactReplay:
+          sourceTaskId == selectedTask.taskId ||
+          act0IsExactRepairMappingTypeV1(intent?.mappingType ?? ''),
     );
   }
 
@@ -8719,20 +8750,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     required Act0LessonTaskV1 selectedTask,
     required Act0RunnerOptionV1 option,
   }) {
-    if (_activeRepairTaskId != selectedTask.taskId) {
-      return const <String>[];
-    }
-    final sourceTaskId = _activeRepairSourceTaskId ?? selectedTask.taskId;
-    final intent = _openRepairIntentBySourceTaskId[sourceTaskId];
-    final exactReplay =
-        sourceTaskId == selectedTask.taskId ||
-        act0IsExactRepairMappingTypeV1(intent?.mappingType ?? '');
-    final clueLabel = intent?.missedSignalLabel ?? '';
-    return act0RepairSessionSummaryCopyGuardLinesV1(
-      repaired: option.isCorrect,
-      exactReplay: exactReplay,
-      clueLabel: clueLabel,
-    );
+    return _repairReceiptForOptionV1(
+          selectedTask: selectedTask,
+          option: option,
+        )?.sessionSummaryLines ??
+        const <String>[];
   }
 
   void _captureFirstValueReceiptCarryV1({
