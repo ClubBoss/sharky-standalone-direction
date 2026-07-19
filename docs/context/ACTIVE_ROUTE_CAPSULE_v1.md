@@ -68,6 +68,36 @@ Allowed work is deterministic personalization, same-signal repair/recheck,
 payoff, bounded learning-loop telemetry, and canonical route proof. Visual
 polish, Premium Motion, tablet optimization, unrelated legacy-route repair,
 broad refactors, and new dependencies remain deferred.
+
+## Minimal Live End-to-End Alpha Scenario v1 — 2026-07-19
+
+Baseline: `0081d80851be81c324662b034dc6aa08e2a4c128` (`origin/main`, PR #30,
+`CAUSAL_FEEDBACK_DURABLE_LEARNING_RECEIPT_V1 — CLOSED_FIXED`). PR #29 merge
+`c00df374b84b63d757fe716f7c0e6fbead01d72c` is likewise
+`PERSONALIZED_NEXT_STEP_AUTHORITY_V1 — CLOSED_FIXED`.
+
+Route truth remains deliberately split:
+
+- `alpha_fresh_install_first_lesson_v1`: a fresh learner lands at First Table
+  Guide with `0/9` progress; Action is locked and first-lesson completion moves
+  truthfully to the next first-lesson step.
+- `alpha_action_repair_recovery_unlocked_v2`: only a persisted,
+  production-equivalent completion of `what_poker_is`, `what_poker_is_content`,
+  `cards_ranks_suits`, and `your_first_hand` unlocks Action. Its selected live
+  scenario is `actions_theory` -> wrong `fold` on `actions_check_drill`
+  (`missed_action_read`) -> `w1_action_words_check_v1` same-signal repair ->
+  valid recheck -> recovered receipt/payoff -> truthful Home next step and
+  explicit safe exit.
+
+The deterministic owner cone is green on this baseline, including fresh-route
+truth, visible-control Action replay, ordered one-session telemetry, receipt /
+payoff agreement, personalized-next-step agreement, and compact/tall/large
+raster acceptance. Real Simulator GUI proof is pending local control-plane
+stability; this is not a claim that fresh install reaches Action and does not
+open telemetry closure. Forbidden scope is unchanged: no early unlock, ML,
+remote AI, Modern Table, visual redesign, mascot, Premium Motion, content
+expansion, new dependency, or broad telemetry work. See
+`docs/_reviews/minimal_live_e2e_alpha_scenario_v1.md`.
 Verified active route artifact:
 `docs/_reviews/w1_w6_repair_wave5_telemetry_repair_proof_v1.md`.
 Refresh trigger: every committed route, phase, immediate-task, or forbidden-scope change.
