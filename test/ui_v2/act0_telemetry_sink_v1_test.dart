@@ -1563,6 +1563,25 @@ void main() {
         sink.events.where((event) => event.name == 'session_exited'),
         hasLength(1),
       );
+      final actionErrorEvents = sink.events.where((event) {
+        final errorType = event.fields['error_type'];
+        return errorType is String &&
+            errorType.isNotEmpty &&
+            errorType != 'none';
+      });
+      expect(actionErrorEvents, isNotEmpty);
+      expect(
+        actionErrorEvents.every(
+          (event) => event.fields['error_type'] == 'misread_action_legality',
+        ),
+        isTrue,
+      );
+      expect(
+        sink.events.any(
+          (event) => event.fields['error_type'] == 'missed_action_read',
+        ),
+        isFalse,
+      );
       expectNoForbiddenTelemetryFieldsV1(sink.events);
       _writeAlphaQaTraceV1(sink.events);
     },

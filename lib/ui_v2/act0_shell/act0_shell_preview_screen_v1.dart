@@ -3811,7 +3811,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           taskId: decision.taskId,
           skillId: 'action_read',
           firstAttemptCorrect: first.isCorrect,
-          errorType: first.isCorrect ? 'none' : 'missed_action_read',
+          errorType: first.isCorrect
+              ? 'none'
+              : act0ActionLearningSequenceV1.repairErrorType,
           repairAttempted:
               _actionPersonalizationStateV1.repairSucceeded ||
               _actionPersonalizationStateV1.hasRepairFailure,
