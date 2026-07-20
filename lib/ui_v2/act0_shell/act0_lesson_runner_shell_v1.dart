@@ -1278,7 +1278,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
 
   void _maybeEmitUserChoiceTelemetry(
     Act0RunnerOptionV1 option, {
-    required int? timeToDecisionMs,
+    required String decisionTimeBucket,
   }) {
     final key =
         '${widget.selectedWorldId ?? ''}|$_stableLessonTelemetryId|$_stableTaskTelemetryId|${widget.runner.phase.name}|${option.id}';
@@ -1287,11 +1287,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     }
     _userChoiceTelemetryKey = key;
     final projection = _decisionTelemetryProjectionV1(option);
-    final decisionTimeBucket = _decisionTimeBucketV1(
-      _decisionTelemetryStopwatch.isRunning
-          ? _decisionTelemetryStopwatch.elapsed
-          : Duration.zero,
-    );
     _decisionTelemetryStopwatch.stop();
     _recordTelemetry(
       Act0TelemetryEventV1(
@@ -1317,8 +1312,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           'drill_kind': projection.drillKind,
           'attempt_id': projection.attemptId,
           'review_kind': widget.reviewKindId,
-          if (timeToDecisionMs != null)
-            'time_to_decision_ms': timeToDecisionMs < 0 ? 0 : timeToDecisionMs,
           if (projection.streetLabel.isNotEmpty)
             'street_v1': projection.streetLabel,
           'acceptable_action_ids': projection.acceptableActionIds,
@@ -1330,9 +1323,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     );
   }
 
-  void _emitCanonicalDecisionMadeTelemetryV1({
-    required Act0RunnerOptionV1 option,
-    required int? timeToDecisionMs,
+  void _emitCanonicalDecisionMadeTelemetryV1(
+    Act0RunnerOptionV1 option, {
+    required String decisionTimeBucket,
   }) {
     final projection = _decisionTelemetryProjectionV1(option);
     _recordTelemetry(
@@ -1382,7 +1375,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           'route_source_owner': 'act0_runner',
           'attempt_id': projection.attemptId,
           'review_kind': widget.reviewKindId,
-          'time_to_decision_ms': timeToDecisionMs,
+          'decisionTimeBucket': decisionTimeBucket,
           'source_surface': 'act0_runner',
           'attemptOrdinal': 1,
           'attempt_ordinal': 1,
@@ -1472,14 +1465,19 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
   }
 
   void _handleChooseOptionTelemetry(Act0RunnerOptionV1 option) {
-    final timeToDecisionMs = _decisionTelemetryStopwatch.isRunning
-        ? _decisionTelemetryStopwatch.elapsedMilliseconds
-        : null;
+    final telemetryDecisionTimeBucket = _decisionTimeBucketV1(
+      _decisionTelemetryStopwatch.isRunning
+          ? _decisionTelemetryStopwatch.elapsed
+          : Duration.zero,
+    );
     final decisionTimeBucket = _completedDecisionTimeBucket();
-    _maybeEmitUserChoiceTelemetry(option, timeToDecisionMs: timeToDecisionMs);
+    _maybeEmitUserChoiceTelemetry(
+      option,
+      decisionTimeBucket: telemetryDecisionTimeBucket,
+    );
     _emitCanonicalDecisionMadeTelemetryV1(
-      option: option,
-      timeToDecisionMs: timeToDecisionMs,
+      option,
+      decisionTimeBucket: telemetryDecisionTimeBucket,
     );
     final feedbackSignalProof = _feedbackSignalProofForRunnerV1(
       runner: widget.runner.copyWith(selectedOptionId: option.id),
@@ -1634,18 +1632,21 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       (candidate) => candidate?.seatId == seatId,
       orElse: () => null,
     );
-    final timeToDecisionMs =
-        option != null && _decisionTelemetryStopwatch.isRunning
-        ? _decisionTelemetryStopwatch.elapsedMilliseconds
+    final elapsed = option != null && _decisionTelemetryStopwatch.isRunning
+        ? _decisionTelemetryStopwatch.elapsed
         : null;
-    final decisionTimeBucket = timeToDecisionMs == null
+    final decisionTimeBucket = elapsed == null
         ? null
-        : _decisionTimeBucketV1(Duration(milliseconds: timeToDecisionMs));
+        : _decisionTimeBucketV1(elapsed);
     if (option != null) {
-      _maybeEmitUserChoiceTelemetry(option, timeToDecisionMs: timeToDecisionMs);
+      final telemetryDecisionTimeBucket = decisionTimeBucket ?? 'unknown';
+      _maybeEmitUserChoiceTelemetry(
+        option,
+        decisionTimeBucket: telemetryDecisionTimeBucket,
+      );
       _emitCanonicalDecisionMadeTelemetryV1(
-        option: option,
-        timeToDecisionMs: timeToDecisionMs,
+        option,
+        decisionTimeBucket: telemetryDecisionTimeBucket,
       );
     }
     widget.onChooseSeat?.call(seatId);

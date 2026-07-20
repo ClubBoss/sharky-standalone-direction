@@ -62,7 +62,7 @@ clean reads, repaired same-signal rechecks, and unresolved evidence without
 claiming long-term mastery. Runner Back returns to Learn without closing it;
 the Home tab closes it once, either showing the bounded payoff or safely
 skipping it for insufficient evidence. The scope remains only
-`missed_action_read` and `missed_table_position_read`; no Modern Table, profile,
+`misread_action_legality` and `missed_table_position_read`; no Modern Table, profile,
 cross-day state, dashboard, or AI/adaptive work is admitted.
 
 The active
@@ -72,7 +72,8 @@ W1 Action sequence uses `Act0ShellPreviewScreenV1` for entry/progression,
 `Act0ActionSequencePersonalizationPolicyV1` for deterministic rules,
 `Act0ActionSessionPayoffPolicyV1` for payoff, and `Act0TelemetrySinkV1` for
 bounded local telemetry. Its same-signal contract is
-`w1_action_words_check_v1` / `missed_action_read`.
+`w1_action_words_check_v1` / `misread_action_legality` (`missed_action_read`
+remains a legacy compatibility alias).
 The visual/runtime foundation and Modern Table are locked (Maintenance Mode).
 Allowed work is deterministic personalization, same-signal repair/recheck,
 payoff, bounded learning-loop telemetry, and canonical route proof. Visual
@@ -95,7 +96,7 @@ Route truth remains deliberately split:
   production-equivalent completion of `what_poker_is`, `what_poker_is_content`,
   `cards_ranks_suits`, and `your_first_hand` unlocks Action. Its selected live
   scenario is `actions_theory` -> wrong `fold` on `actions_check_drill`
-  (`missed_action_read`) -> `w1_action_words_check_v1` same-signal repair ->
+  (`misread_action_legality`) -> `w1_action_words_check_v1` same-signal repair ->
   valid recheck -> recovered receipt/payoff -> truthful Home next step and
   explicit safe exit.
 

@@ -1577,8 +1577,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'schemaVersion': 1,
       'repairItemId': 'repair:${mistake.taskId}',
       'sourceTaskId': mistake.taskId,
-      'skillAtomId': _repairSkillAtomIdV1(mistake.weaknessLabel),
-      'missedSignal': _repairMissedSignalV1(mistake),
       'createdFrom': 'mistake',
       'status': 'open',
     });
@@ -1594,8 +1592,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'repairItemId': 'repair:${mistake.taskId}',
       'sourceTaskId': mistake.taskId,
       'targetTaskId': targetTaskId,
-      'skillAtomId': _repairSkillAtomIdV1(mistake.weaknessLabel),
-      'missedSignal': _repairMissedSignalV1(mistake),
       'createdFrom': 'mistake',
       'status': 'in_progress',
       'mappingType': mappingType,
@@ -1613,42 +1609,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'repairItemId': 'repair:$sourceTaskId',
       'sourceTaskId': sourceTaskId,
       'targetTaskId': targetTaskId,
-      'skillAtomId': _repairSkillAtomIdV1(record?.weaknessLabel ?? ''),
-      'missedSignal': _repairMissedSignalFromRecordV1(record),
       'createdFrom': 'mistake',
       'status': repaired ? 'repaired' : 'open',
       'outcome': repaired ? 'repaired' : 'needs_repair',
       'correct': repaired,
     });
-  }
-
-  String _repairSkillAtomIdV1(String label) {
-    final normalized = label
-        .toLowerCase()
-        .replaceAll(RegExp(r'[^a-z0-9]+'), '_')
-        .replaceAll(RegExp(r'^_+|_+$'), '');
-    return normalized.isEmpty ? 'repair_skill' : normalized;
-  }
-
-  String _repairMissedSignalV1(Act0MistakeCardV1 mistake) {
-    if (mistake.contextLabels.isNotEmpty) {
-      return mistake.contextLabels.first;
-    }
-    return mistake.weaknessLabel.trim().isEmpty
-        ? 'Unknown signal'
-        : mistake.weaknessLabel;
-  }
-
-  String _repairMissedSignalFromRecordV1(_Act0MistakeRecordV1? record) {
-    if (record == null) {
-      return 'Unknown signal';
-    }
-    if (record.contextLabels.isNotEmpty) {
-      return record.contextLabels.first;
-    }
-    return record.weaknessLabel.trim().isEmpty
-        ? 'Unknown signal'
-        : record.weaknessLabel;
   }
 
   void _emitRepairStartedTelemetryV1({

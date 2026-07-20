@@ -32,7 +32,7 @@
   "expected_path": {
     "wrong_choice_id": "fold",
     "correct_choice_id": "check",
-    "error_type": "missed_action_read",
+    "error_type": "misread_action_legality",
     "repair_task_id": "actions_check_drill",
     "recheck_task_id": "actions_check_drill",
     "payoff": "recoveredSuccess",
@@ -78,7 +78,7 @@
     "modern_table_boundary": "No changed path under lib/ui_v2/table or a legacy Modern Table owner in the tested commit."
   },
   "allowed_variation": [
-    "time_to_decision value or bucket",
+    "bounded decisionTimeBucket",
     "visual pixels outside geometry assertions",
     "non-required telemetry events"
   ],

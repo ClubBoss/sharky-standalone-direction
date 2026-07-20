@@ -25,20 +25,23 @@ Status: `PUBLISHED FOR ADMISSION`
 | Recommendation/exit | next-step selected/opened, `session_exited` | preview shell | controlled mapping and session ID | exit once; Back/rebuild/restart do not duplicate |
 
 Selected Profile B order: `actions_theory` -> wrong `fold` on
-`actions_check_drill` (`missed_action_read`) -> same-signal
+`actions_check_drill` (`misread_action_legality`) -> same-signal
 `w1_action_words_check_v1` repair -> valid recheck -> recovered receipt/payoff
 -> truthful next step -> explicit Home exit.
 
 ## Implemented telemetry repair
 
-The existing lifecycle instrumentation was complete. The real gap was its
-payload projection: generic runner events could include `board_card_ids`, and
-feedback/repair/recommendation events could include learner-facing
-`tableSignal` text. Both fields are now absent from the local telemetry path.
-The focused sink test enforces their absence alongside existing copy/identity
-guards. This is a privacy projection repair only; no route, persistence schema,
-event vocabulary, progression gate, vendor, network, or release behavior
-changed.
+The existing lifecycle instrumentation was complete. The payload projection
+now excludes `board_card_ids`, learner-facing table/context/weakness labels,
+and label-derived repair-item `skillAtomId` values. Copy-derived slugs are not
+telemetry IDs. Exact `time_to_decision_ms` values are also absent; the bounded
+`decisionTimeBucket` remains the only decision-time field. Canonical task,
+repair, signal, and error IDs retain technical attribution. The selected W1
+error is `misread_action_legality`; `missed_action_read` is legacy parse
+compatibility only. The focused sink test
+enforces these boundaries alongside existing copy/identity guards. This is a
+privacy projection repair only; no route, persistence schema, event vocabulary,
+progression gate, vendor, network, or release behavior changed.
 
 ## Deterministic proof
 
@@ -65,24 +68,23 @@ app-container JSONL file, GUI walkthrough, or phone acceptance claim exists.
 
 ## CI and repository state
 
-Draft PR #32 is open against `main` at commit
-`6c3f6a4fa7fa942b837bdc20f045adbf144dcd34`; its remote branch matches local
-HEAD. Repository-owned CI is green: Theory/verify, Health, R5 release gate,
-and Tier A active/release all passed. Tier B/C/D and L2 are conditional skips.
-The external TestSprite pre-check failed and remains non-required.
+Implementation commit and final branch head are recorded by the PR metadata
+and repository-owned checks. Tier B/C/D and L2 are conditional skips; the
+external TestSprite pre-check is non-required.
 
 | File family | Disposition |
 | --- | --- |
-| `act0_lesson_runner_shell_v1.dart` | Removes raw board-card and visible table-signal projection. |
-| `act0_shell_preview_screen_v1.dart` | Removes visible table-signal projection from repair/recommendation events. |
-| `act0_telemetry_sink_v1_test.dart` | Guards the forbidden fields and retains controlled street attribution. |
+| `act0_lesson_runner_shell_v1.dart` | Removes raw board-card, exact timing, and visible table-signal projection. |
+| `act0_shell_preview_screen_v1.dart` | Removes label-derived repair-item signal and skill-atom projection. |
+| `act0_telemetry_sink_v1_test.dart` | Guards forbidden payload values/fields and retains controlled street/bucket attribution. |
 | Telemetry map, route capsule, Alpha reviews | Reconcile current owner, privacy, CI, and GUI-blocked admission truth. |
 
 ## Non-claims
 
 No vendor analytics, network export, identity, ML, dashboard, schema migration,
 release privacy policy, curriculum change, visual work, Modern Table work, or
-Alpha admission is claimed.
+Alpha admission is claimed. Roll back by reverting the final PR #32 squash
+merge.
 
 Exact status:
 

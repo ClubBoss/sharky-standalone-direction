@@ -19,7 +19,7 @@ events, writes one complete JSON object per line to
 
 The selected Profile B trace is: `session_start` -> `lesson_started` ->
 `task_shown` -> wrong `fold` decision/result/feedback on
-`actions_check_drill` (`missed_action_read`) -> `repair_started` -> repair
+`actions_check_drill` (`misread_action_legality`) -> `repair_started` -> repair
 decision/result/completion -> `recheck_started` -> recheck decision/result ->
 receipt/payoff -> personalized next-step selected/opened -> one
 `session_exited`. Rebuilds do not re-emit presentation lifecycle, Back returns
@@ -27,10 +27,15 @@ to Learn without exit, and restart drops the local run without stale payoff.
 
 All payloads are a safe projection of technical IDs, controlled outcome/error
 enums, route source, counters, and bounded timing. Raw board-card IDs and
-learner-facing table-signal labels are deliberately excluded, as are copy,
-option labels, raw feedback reasons, identity, exact time, monetization, and
-network/export fields. `street_v1` remains an enum-like street category, not a
-card or board payload.
+learner-facing table, context, and weakness labels are deliberately excluded;
+copy-derived slugs are not telemetry IDs. Exact decision milliseconds are not
+emitted: `decisionTimeBucket` is the sole decision-time projection. Copy,
+option labels, raw feedback reasons, identity, monetization, and network/export
+fields remain forbidden. `street_v1` remains an enum-like street category, not
+a card or board payload. Canonical task, repair, and signal IDs provide any
+required technical attribution. For this route, `misread_action_legality` is
+the canonical emitted error ID; `missed_action_read` remains readable only as
+a legacy compatibility alias.
 
 The installed Simulator proof build was blocked locally by an Xcode/Flutter
 concurrent-build stall after the CocoaPods specs refresh; no runtime JSONL or

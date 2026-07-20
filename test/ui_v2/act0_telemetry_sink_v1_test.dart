@@ -526,6 +526,8 @@ void main() {
       expect(event.fields.containsKey('handHistory'), isFalse);
       expect(event.fields.containsKey('board_card_ids'), isFalse);
       expect(event.fields.containsKey('tableSignal'), isFalse);
+      expect(event.fields.containsKey('missedSignal'), isFalse);
+      expect(event.fields.containsKey('time_to_decision_ms'), isFalse);
       expect(event.fields.values, isNot(contains('Daily set complete')));
       expect(event.fields.values, isNot(contains('Repair this spot')));
       expect(event.fields.values, isNot(contains('Three short reps landed.')));
@@ -605,7 +607,7 @@ void main() {
       expect(userChoice['drill_kind'], 'decision');
       expect(userChoice['attempt_id'], isA<String>());
       expect(userChoice['review_kind'], 'initialAssessment');
-      expect(userChoice['time_to_decision_ms'], isA<int>());
+      expect(userChoice, isNot(contains('time_to_decision_ms')));
       expect(userChoice['acceptable_action_ids'], <String>['call', 'raise']);
       expect(userChoice['option_quality'], 'correct');
       expect(
@@ -628,7 +630,6 @@ void main() {
         'drill_kind',
         'attempt_id',
         'review_kind',
-        'time_to_decision_ms',
         'street_v1',
         'acceptable_action_ids',
         'option_quality',
@@ -729,7 +730,7 @@ void main() {
     );
     expect(userChoice.fields['correct'], isTrue);
     expect(userChoice.fields['error_type'], 'none');
-    expect(userChoice.fields['time_to_decision_ms'], isA<int>());
+    expect(userChoice.fields, isNot(contains('time_to_decision_ms')));
     expect(userChoice.fields['review_kind'], 'spacedReview');
     expect(canonicalDecision.fields['world_id'], 'world_1');
     expect(canonicalDecision.fields['lesson_id'], 'fold_check_call_raise');
@@ -741,10 +742,7 @@ void main() {
     expect(canonicalDecision.fields['error_type'], 'none');
     expect(canonicalDecision.fields['source_surface'], 'act0_runner');
     expect(canonicalDecision.fields['review_kind'], 'spacedReview');
-    expect(
-      canonicalDecision.fields['time_to_decision_ms'],
-      anyOf(isA<int>(), isNull),
-    );
+    expect(canonicalDecision.fields, isNot(contains('time_to_decision_ms')));
 
     expectNoForbiddenTelemetryFieldsV1(sink.events);
   });
@@ -811,7 +809,7 @@ void main() {
     expect(userChoice.fields['route_source_owner'], 'act0_runner');
     expect(userChoice.fields['drill_kind'], 'decision');
     expect(userChoice.fields['attempt_id'], isA<String>());
-    expect(userChoice.fields['time_to_decision_ms'], isA<int>());
+    expect(userChoice.fields, isNot(contains('time_to_decision_ms')));
     expect(
       userChoice.fields['decisionTimeBucket'],
       isIn(<Object?>['under_3s', '3_to_10s', 'over_10s', 'unknown']),
@@ -837,7 +835,11 @@ void main() {
       canonicalDecision.fields['attempt_id'],
       userChoice.fields['attempt_id'],
     );
-    expect(canonicalDecision.fields['time_to_decision_ms'], isA<int>());
+    expect(
+      canonicalDecision.fields['decisionTimeBucket'],
+      isIn(<Object?>['under_3s', '3_to_10s', 'over_10s', 'unknown']),
+    );
+    expect(canonicalDecision.fields, isNot(contains('time_to_decision_ms')));
 
     final result = sink.events.firstWhere(
       (event) => event.name == 'task_result',
@@ -933,8 +935,8 @@ void main() {
         );
         expect(userChoice['attempt_id'], isA<String>(), reason: path.taskId);
         expect(
-          userChoice['time_to_decision_ms'],
-          isA<int>(),
+          userChoice,
+          isNot(contains('time_to_decision_ms')),
           reason: path.taskId,
         );
 
@@ -1110,6 +1112,8 @@ void main() {
       expect(repairItem['targetTaskId'], repairStart['repairTaskId']);
       expect(repairItem['outcome'], 'repaired');
       expect(repairItem['correct'], isTrue);
+      expect(repairItem, isNot(contains('missedSignal')));
+      expect(repairItem, isNot(contains('skillAtomId')));
 
       expectNoForbiddenTelemetryFieldsV1(sink.events);
     },
