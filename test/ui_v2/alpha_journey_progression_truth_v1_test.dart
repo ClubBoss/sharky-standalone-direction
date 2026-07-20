@@ -272,4 +272,66 @@ void main() {
       );
     },
   );
+
+  testWidgets(
+    'Profile B uses Learn and the visible theory Continue to persist the Action decision target',
+    (tester) async {
+      await seedValidActionPrecondition();
+      await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
+
+      final lesson = find.byKey(
+        const Key('act0_shell_lesson_Fold, check, call, raise'),
+      );
+      await tester.ensureVisible(lesson);
+      await tester.tap(lesson);
+      await tester.pumpAndSettle();
+      final theoryStep = find.byKey(
+        const Key('act0_shell_lesson_step_actions_theory'),
+      );
+      await tester.scrollUntilVisible(
+        theoryStep,
+        120,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(theoryStep);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_shell_selected_lesson_cta')));
+      await tester.pumpAndSettle();
+
+      for (var tap = 0; tap < 12; tap++) {
+        final runner = tester.widget<Act0LessonRunnerShellV1>(
+          find.byType(Act0LessonRunnerShellV1),
+        );
+        final correct = runner.runner.options.firstWhere(
+          (option) => option.isCorrect,
+        );
+        final answer = find.byKey(Key('act0_shell_option_${correct.id}'));
+        if (runner.selectedTaskId == 'actions_theory' &&
+            answer.evaluate().isNotEmpty) {
+          await tester.ensureVisible(answer);
+          await tester.pumpAndSettle();
+          await tester.tap(answer);
+          await tester.pumpAndSettle();
+          await tester.tap(
+            find.byKey(const Key('act0_shell_feedback_continue_cta')),
+          );
+          await tester.pumpAndSettle();
+          break;
+        }
+        await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
+        await tester.pumpAndSettle();
+      }
+
+      final decisionRunner = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(decisionRunner.selectedTaskId, 'actions_check_drill');
+      final preferences = await SharedPreferences.getInstance();
+      final persisted =
+          jsonDecode(preferences.getString(_progressKey)!)
+              as Map<String, dynamic>;
+      expect(persisted['selectedTaskId'], 'actions_check_drill');
+      expect(persisted['completedTaskIds'], contains('actions_theory'));
+    },
+  );
 }

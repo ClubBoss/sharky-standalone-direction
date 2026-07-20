@@ -10,9 +10,9 @@ void main() {
       expect(sequence!.practiceTaskId, 'actions_check_drill');
       expect(sequence.repairTaskId, 'actions_check_drill');
       expect(sequence.recheckTaskId, 'actions_check_drill');
-      expect(sequence.repairErrorType, 'missed_action_read');
+      expect(sequence.repairErrorType, 'misread_action_legality');
       expect(
-        sequence.repairTargetForErrorType('missed_action_read'),
+        sequence.repairTargetForErrorType('misread_action_legality'),
         'actions_check_drill',
       );
       expect(sequence.repairTargetForErrorType('unknown'), isNull);

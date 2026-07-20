@@ -3304,6 +3304,7 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
                     ),
                     child: isReview
                         ? Column(
+                            key: const Key('act0_shell_feedback_card'),
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(

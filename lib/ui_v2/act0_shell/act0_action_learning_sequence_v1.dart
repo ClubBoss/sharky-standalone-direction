@@ -50,7 +50,7 @@ const act0ActionLearningSequenceV1 = Act0ActionLearningSequenceV1(
   practiceTaskId: 'actions_check_drill',
   repairTaskId: 'actions_check_drill',
   recheckTaskId: 'actions_check_drill',
-  repairErrorType: 'missed_action_read',
+  repairErrorType: 'misread_action_legality',
   tableContextKey: 'w1_action_words_no_bet_read_v1',
   tableContextRelation: 'related_read',
   geometryPolicyId: 'w1_action_sequence_compact_v1',

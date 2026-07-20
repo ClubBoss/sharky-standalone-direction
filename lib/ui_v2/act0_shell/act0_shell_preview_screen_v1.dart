@@ -5499,6 +5499,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   )) {
                                     return;
                                   }
+                                  if (_advanceActionTheoryToDecisionV1(
+                                    selectedLesson: selectedLesson,
+                                    selectedTask: playSelectedTask,
+                                  )) {
+                                    return;
+                                  }
                                   _advanceAfterTask(
                                     selectedWorld,
                                     selectedLesson,
@@ -12286,6 +12292,27 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _learnDetailWorldId = null;
     _showWorldMenu = false;
     _persistProgress();
+  }
+
+  /// The admitted Action journey deliberately skips the adjacent broad legal
+  /// context node after its theory opener. Its first decision is the explicit
+  /// same-signal sequence target, not the generic task-list successor.
+  bool _advanceActionTheoryToDecisionV1({
+    required Act0LessonCardV1 selectedLesson,
+    required Act0LessonTaskV1 selectedTask,
+  }) {
+    final sequence = act0ActionLearningSequenceForTaskV1(selectedTask.taskId);
+    if (sequence == null || selectedTask.taskId != sequence.theoryTaskId) {
+      return false;
+    }
+    final decisionTask = _taskById(selectedLesson, sequence.practiceTaskId);
+    _selectedTaskId = decisionTask.taskId;
+    _activeActionSequenceStageV1 = Act0ActionSequenceStageV1.decision;
+    _phase = decisionTask.phase;
+    _selectedOptionId = null;
+    _teachingStepIndex = 0;
+    _persistProgress();
+    return true;
   }
 
   void _normalizeSelection(List<Act0WorldCardV1> worlds) {
