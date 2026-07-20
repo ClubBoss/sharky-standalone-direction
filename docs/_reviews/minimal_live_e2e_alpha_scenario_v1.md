@@ -55,10 +55,14 @@ the canonical raster capture has no required-CTA failure.
 
 ## Computer Use
 
-Simulator `iPhone 17 Pro Max — iOS 26.2` booted, but Sharky was not installed
-and the local Flutter control plane retained overlapping long-running test
-workers after aggregate validation. No learner state was injected and no second
-GUI retry was attempted. Real-GUI admission is therefore **pending**, not
+Subwave 4 retried the required non-release proof build with
+`--dart-define=HNP_TELEMETRY=true` on the booted `iPhone 17 Pro Max — iOS
+26.2`. The first build exposed a stale local CocoaPods specs cache for pinned
+`Sentry/HybridSDK 8.58.3`; after the one standard specs refresh, Xcode reported
+concurrent Flutter builds and the active build remained stalled without a
+`Runner` executable. The process was stopped under the one-retry circuit
+breaker. No learner state was injected, no GUI control was exercised, and no
+runtime JSONL file was extracted. Real-GUI admission remains **pending**, not
 claimed; deterministic capability proof remains valid.
 
 ## Change matrix and non-claims

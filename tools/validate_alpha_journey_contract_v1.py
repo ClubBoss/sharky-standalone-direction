@@ -119,7 +119,7 @@ def validate_contract(contract_path: Path, expected_version: int, expected_kind:
     for key, value in expected.items():
         if ids.get(key) != value:
             raise SystemExit(f"P1 contract {key} must be {value!r}")
-    if contract["expected_path"].get("error_type") != "missed_action_read":
+    if contract["expected_path"].get("error_type") != "misread_action_legality":
         raise SystemExit("P1 contract error type drift")
     if contract["expected_path"].get("payoff") != "recoveredSuccess":
         raise SystemExit("P1 contract payoff drift")
@@ -223,10 +223,12 @@ def validate_trace(trace_path: Path, contract: dict, replay_source: Path) -> dic
         and field_value(event, "selected_action") == contract["expected_path"]["wrong_choice_id"]
         and field_value(event, "is_correct") is False
         and field_value(event, "error_type", "errorType") == contract["expected_path"]["error_type"]
-        and isinstance(field_value(event, "time_to_decision_ms"), int)
+        and field_value(event, "decisionTimeBucket")
+        in {"under_3s", "3_to_10s", "over_10s", "unknown"}
+        and "time_to_decision_ms" not in event.get("fields", {})
     ]
     if not wrong_events:
-        raise SystemExit("P1 wrong decision classification or time-to-decision proof is absent")
+        raise SystemExit("P1 wrong decision classification or bounded time-to-decision proof is absent")
     repair_started = [event for event in events if event.get("name") == "repair_started"]
     repair_completed = [event for event in events if event.get("name") == "repair_completed"]
     recheck_started = [event for event in events if event.get("name") == "recheck_started"]
