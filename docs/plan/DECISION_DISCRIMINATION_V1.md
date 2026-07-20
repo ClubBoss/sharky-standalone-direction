@@ -178,4 +178,4 @@ CL-LRN-F06 is CLOSED_INTENTIONAL: the census is complete and no safe source-back
 
 ## Next Top-1 selection
 
-**Durable Retention & Transfer (CL-LRN-F01 / CL-LRN-F08 / CL-LRN-F11)** is the single next Top-1. It has higher learner EV and prerequisite value for future AI Personalization than an invented distractor program, while its policy and human-evidence dependencies require a separately admitted capability mission. W7 depth authority remains blocked by missing minimum-depth authority. There are no remaining decision-discrimination authority gaps from this review.
+At this review's point in the sequence, **Durable Retention & Transfer (CL-LRN-F01 / CL-LRN-F08 / CL-LRN-F11)** was the single next Top-1. It later closed, as did W7 Depth Authority. This preserved decision-discrimination review does not select the current wave; there are no remaining decision-discrimination authority gaps from this review.

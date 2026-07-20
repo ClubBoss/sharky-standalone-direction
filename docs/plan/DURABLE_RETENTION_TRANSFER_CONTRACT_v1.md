@@ -172,10 +172,10 @@ tests prove the integration seams.
   gates replaces immutable first-versus-latest transfer.
 - CL-LRN-F11 — `CLOSED_FIXED`: a single recovery remains scheduled for a due
   recheck and repeated misses survive recovery and lapse.
-- CL-LRN-F02 — `PRODUCT_DEBT_CONFIRMED`: W7 still has one learner-visible
-  lesson and no authority supplies an outcome-based minimum-depth contract.
+- CL-LRN-F02 — historically `PRODUCT_DEBT_CONFIRMED`; W7 Depth Authority later
+  closed the mandatory outcome gap without inferring a lesson-count rule.
 
-The next Top-1 is **W7 Depth Authority (CL-LRN-F02)**. It requires a separate
-authority-setting mission; this contract does not infer a lesson count or open
-W7 content work. Human Novice Proof, Final Deep Independent Audit, and AI
-Personalization remain blocked.
+At this contract's point in the sequence, the next Top-1 was **W7 Depth
+Authority (CL-LRN-F02)**. It subsequently closed, followed by deterministic
+convergence and the local Final Deep Independent Audit. This historical
+contract does not select the current wave.

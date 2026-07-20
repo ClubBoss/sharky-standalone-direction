@@ -194,8 +194,10 @@ recovery/lapse, recent spaced evidence owns transfer verdicts, and due work
 launches through the existing Review route. W7 Depth Authority (CL-LRN-F02) is
 `CLOSED_FIXED`: its outcome contract admits one visible lesson because
 A72/K84/772/QJ5 supply distinct assessment and QJ5 is an unseen transfer board.
-The next Top-1 is Final Deterministic Convergence Packet Refresh; Human Novice
-Proof, Final Deep Independent Audit, and AI Personalization are still blocked.
+At this historical checkpoint, the next Top-1 was Final Deterministic
+Convergence Packet Refresh. That packet subsequently selected the local Final
+Deep Independent Audit; this retained checkpoint does not select the current
+wave.
 
 The W1-W6 Final Learner-Truth Audit (`docs/_reviews/w1_w6_final_learner_truth_audit_v1.md`)
 closed with `w1_w6_final_gate_repair_program_ready`, producing the grouped
