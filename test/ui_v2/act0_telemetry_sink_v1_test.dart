@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_hnp_trace_file_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
@@ -16,7 +17,22 @@ class _ThrowingTelemetrySinkV1 implements Act0TelemetrySinkV1 {
   }
 }
 
+class _MemoryHnpTraceFileStoreV1 implements Act0HnpTraceFileStoreV1 {
+  String contents = '';
+
+  @override
+  Future<String> getPath() async => '/local/act0_hnp_trace_v1.jsonl';
+
+  @override
+  Future<void> replace(String jsonl) async {
+    contents = jsonl;
+  }
+}
+
 const _alphaQaTracePathV1 = String.fromEnvironment('ALPHA_QA_TRACE_PATH');
+const _actionHnpPhysicalTracePathV1 = String.fromEnvironment(
+  'ACTION_HNP_PHYSICAL_TRACE_PATH',
+);
 const _actionPreconditionFixturePathV1 =
     'tools/contracts/alpha_action_capability_prerequisite_progression_v1.json';
 
@@ -51,6 +67,13 @@ void _writeAlphaQaTraceV1(List<Act0TelemetryEventV1> events) {
         }) +
         '\n',
   );
+}
+
+void _writeActionHnpPhysicalTraceV1(String jsonl) {
+  if (_actionHnpPhysicalTracePathV1.isEmpty) return;
+  final file = File(_actionHnpPhysicalTracePathV1);
+  file.parent.createSync(recursive: true);
+  file.writeAsStringSync(jsonl);
 }
 
 void main() {
@@ -556,7 +579,13 @@ void main() {
       expect(event.fields.containsKey('board_card_ids'), isFalse);
       expect(event.fields.containsKey('tableSignal'), isFalse);
       expect(event.fields.containsKey('missedSignal'), isFalse);
+      expect(event.fields.containsKey('tableContextKey'), isFalse);
+      expect(event.fields.containsKey('table_context_key'), isFalse);
       expect(event.fields.containsKey('time_to_decision_ms'), isFalse);
+      expect(
+        jsonEncode(event.fields),
+        isNot(contains('w1_action_words_no_bet_read_v1')),
+      );
       expect(event.fields.values, isNot(contains('Daily set complete')));
       expect(event.fields.values, isNot(contains('Repair this spot')));
       expect(event.fields.values, isNot(contains('Three short reps landed.')));
@@ -1473,7 +1502,8 @@ void main() {
   testWidgets(
     'unlocked Action capability journey completes the alpha loop with ordered safe telemetry',
     (tester) async {
-      final sink = Act0InMemoryTelemetrySinkV1();
+      final store = _MemoryHnpTraceFileStoreV1();
+      final sink = Act0HnpTelemetrySinkV1(fileStore: store);
       await tester.binding.setSurfaceSize(const Size(430, 932));
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -1583,6 +1613,49 @@ void main() {
         isFalse,
       );
       expectNoForbiddenTelemetryFieldsV1(sink.events);
+      await sink.flushExport();
+      final physicalEvents = store.contents
+          .trimRight()
+          .split('\n')
+          .map((line) => jsonDecode(line) as Map<String, dynamic>)
+          .toList(growable: false);
+      expect(physicalEvents, hasLength(sink.events.length));
+      expect(
+        physicalEvents.map((event) => event['name']),
+        containsAll(<String>[
+          'user_choice',
+          'task_result',
+          'repair_started',
+          'repair_completed',
+          'recheck_started',
+          'recheck_result',
+          'action_payoff_generated',
+          'session_exited',
+        ]),
+      );
+      for (final event in physicalEvents) {
+        final fields = event['fields'] as Map<String, dynamic>;
+        expect(fields, isNot(contains('tableContextKey')));
+        expect(fields, isNot(contains('table_context_key')));
+        expect(
+          jsonEncode(fields),
+          isNot(contains('w1_action_words_no_bet_read_v1')),
+        );
+      }
+      final physicalChoice =
+          physicalEvents.firstWhere(
+                (event) => event['name'] == 'user_choice',
+              )['fields']
+              as Map<String, dynamic>;
+      final physicalResult =
+          physicalEvents.firstWhere(
+                (event) => event['name'] == 'task_result',
+              )['fields']
+              as Map<String, dynamic>;
+      expect(physicalChoice['choiceId'], 'fold');
+      expect(physicalChoice['decisionTimeBucket'], isA<String>());
+      expect(physicalResult['errorType'], 'misread_action_legality');
+      _writeActionHnpPhysicalTraceV1(store.contents);
       _writeAlphaQaTraceV1(sink.events);
     },
   );

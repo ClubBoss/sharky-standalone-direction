@@ -105,6 +105,41 @@ void main() {
   );
 
   test(
+    'HNP JSONL retains permitted Action telemetry projection fields',
+    () async {
+      final store = _MemoryFileStoreV1();
+      final sink = Act0HnpTelemetrySinkV1(fileStore: store);
+      sink.record(
+        const Act0TelemetryEventV1(
+          name: 'task_result',
+          fields: <String, Object?>{
+            'taskId': 'actions_check_drill',
+            'choiceId': 'fold',
+            'result': 'incorrect',
+            'errorType': 'misread_action_legality',
+            'decisionTimeBucket': '3_to_10s',
+          },
+        ),
+      );
+
+      await sink.flushExport();
+      final physical =
+          jsonDecode(store.contents.trim()) as Map<String, dynamic>;
+      final fields = physical['fields'] as Map<String, dynamic>;
+      expect(fields['choiceId'], 'fold');
+      expect(fields['result'], 'incorrect');
+      expect(fields['errorType'], 'misread_action_legality');
+      expect(fields['decisionTimeBucket'], '3_to_10s');
+      expect(fields, isNot(contains('tableContextKey')));
+      expect(fields, isNot(contains('table_context_key')));
+      expect(
+        jsonEncode(fields),
+        isNot(contains('w1_action_words_no_bet_read_v1')),
+      );
+    },
+  );
+
+  test(
     'HNP JSONL retention and replacement lifecycle are deterministic',
     () async {
       final store = _MemoryFileStoreV1();

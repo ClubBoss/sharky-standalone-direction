@@ -11952,7 +11952,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _recordTelemetryEventV1('action_sequence_repair_entry', <String, Object?>{
         'schemaVersion': 1,
         'sequenceId': sequence.sequenceId,
-        'tableContextKey': sequence.tableContextKey,
         'sourceTaskId': selectedTask.taskId,
         'errorType': sequence.repairErrorType,
         'repairTaskId': repairTaskId,
@@ -11985,14 +11984,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         'source_task_id': sequence.practiceTaskId,
         'repair_task_id': sequence.repairTaskId,
         'recheck_task_id': sequence.recheckTaskId,
-        'table_context_key': sequence.tableContextKey,
       });
       _recordTelemetryEventV1(
         'action_sequence_recheck_entry',
         <String, Object?>{
           'schemaVersion': 1,
           'sequenceId': sequence.sequenceId,
-          'tableContextKey': sequence.tableContextKey,
           'repairTaskId': sequence.repairTaskId,
           'recheckTaskId': sequence.recheckTaskId,
         },
@@ -12008,7 +12005,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         'sequence_id': sequence.sequenceId,
         'source_task_id': sequence.practiceTaskId,
         'recheck_task_id': sequence.recheckTaskId,
-        'table_context_key': sequence.tableContextKey,
         'result': correct ? 'correct' : 'incorrect',
       });
       if (!correct) {
@@ -12026,7 +12022,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _recordTelemetryEventV1('action_sequence_completed', <String, Object?>{
         'schemaVersion': 1,
         'sequenceId': sequence.sequenceId,
-        'tableContextKey': sequence.tableContextKey,
         'completionTaskId': selectedTask.taskId,
       });
       _emitRecheckCompletedTelemetryV1(
@@ -12041,7 +12036,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _recordTelemetryEventV1('action_sequence_completed', <String, Object?>{
         'schemaVersion': 1,
         'sequenceId': sequence.sequenceId,
-        'tableContextKey': sequence.tableContextKey,
         'completionTaskId': selectedTask.taskId,
       });
     }
