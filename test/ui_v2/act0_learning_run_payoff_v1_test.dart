@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_run_payoff_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_position_personalization_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_price_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
@@ -504,5 +506,123 @@ void main() {
       );
       expect(find.byKey(const Key('act0_learning_run_payoff')), findsNothing);
     },
+  );
+
+  testWidgets('abandoning an open repair bridge to Home closes the run', (
+    tester,
+  ) async {
+    final sink = Act0InMemoryTelemetrySinkV1();
+    await _pumpPriceMissAndReturnToLearn(tester, sink);
+
+    await tester.tap(
+      find.descendant(
+        of: find.byKey(const Key('act0_shell_bottom_nav')),
+        matching: find.text('Home'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      sink.events.where((event) => event.name == 'learning_run_closed'),
+      hasLength(1),
+    );
+    expect(
+      sink.events.where(
+        (event) => event.name == 'session_payoff_skipped_insufficient_evidence',
+      ),
+      hasLength(1),
+    );
+    expect(
+      sink.events.where(
+        (event) => event.name == 'learning_run_outcome_recorded',
+      ),
+      isEmpty,
+    );
+  });
+
+  testWidgets('an unrelated Practice group closes the pending repair run', (
+    tester,
+  ) async {
+    final sink = Act0InMemoryTelemetrySinkV1();
+    await _pumpPriceMissAndReturnToLearn(tester, sink);
+
+    await tester.tap(
+      find.descendant(
+        of: find.byKey(const Key('act0_shell_bottom_nav')),
+        matching: find.text('Practice'),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      sink.events.where((event) => event.name == 'learning_run_closed'),
+      isEmpty,
+    );
+
+    final playShell = tester.widget<Act0PlayShellV1>(
+      find.byType(Act0PlayShellV1),
+    );
+    final unrelatedGroup = playShell.groups.firstWhere(
+      (group) => group.isEnabled && group.groupId != 'weak_spots',
+    );
+    playShell.onStartGroup(unrelatedGroup);
+    await tester.pumpAndSettle();
+
+    expect(
+      sink.events.where((event) => event.name == 'learning_run_closed'),
+      hasLength(1),
+    );
+    expect(
+      sink.events.where(
+        (event) => event.name == 'session_payoff_skipped_insufficient_evidence',
+      ),
+      hasLength(1),
+    );
+  });
+}
+
+Future<void> _pumpPriceMissAndReturnToLearn(
+  WidgetTester tester,
+  Act0InMemoryTelemetrySinkV1 sink,
+) async {
+  await tester.binding.setSurfaceSize(const Size(430, 932));
+  addTearDown(() => tester.binding.setSurfaceSize(null));
+  await tester.pumpWidget(
+    MaterialApp(
+      locale: const Locale('en'),
+      supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+      localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      home: Act0ShellPreviewScreenV1(
+        initialTab: Act0ShellTabV1.learn,
+        initialPhase: Act0LessonPhaseV1.drill,
+        showPlacementOnStart: false,
+        state: Act0ShellStateV1.sample,
+        telemetrySink: sink,
+        debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+          mode: Act0ControlledDemoCaptureModeV1.directState,
+          surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
+          worldId: Act0PricePersonalizationV1.worldId,
+          lessonId: Act0PricePersonalizationV1.lessonId,
+          taskId: Act0PricePersonalizationV1.sourceTaskId,
+        ),
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+  final runner = tester.widget<Act0LessonRunnerShellV1>(
+    find.byType(Act0LessonRunnerShellV1),
+  );
+  final wrong = runner.runner.options.firstWhere((option) => !option.isCorrect);
+  await tester.tap(find.byKey(Key('act0_shell_option_${wrong.id}')));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+  await tester.pumpAndSettle();
+  expect(find.byKey(const Key('act0_shell_learn_screen')), findsOneWidget);
+  expect(
+    sink.events.where((event) => event.name == 'learning_run_started'),
+    hasLength(1),
   );
 }
