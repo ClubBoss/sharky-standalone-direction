@@ -1,33 +1,33 @@
 # Active Route Capsule v1
 
-Status: LOCAL-ONLY PRE-AUDIT EXECUTION CAPSULE. This reconciliation is
-unpublished and applies only to `local/final-deep-independent-audit-v1`; it
-does not claim remote publication, CI admission, or a moved tag.
+Status: ACTIVE POST-MERGE EXECUTION CAPSULE.
 
-The Master Plan is the higher-priority route-order authority. Learning
-Integrity Foundation v1 and W7 Depth Authority are closed. Final Deep
-Independent Audit is the immediate executable local wave from the frozen audit
-candidate; AI Personalization Layer v1 remains the strategic macro stage, with
-its implementation downstream. GitHub publication/CI remains externally
-blocked and does not make deterministic product validation fail. Historical
-next-wave statements retained below are superseded by this paragraph and the
-Master Plan.
+## Current authority — 2026-07-22
 
-Current convergence override: PRODUCT_SOURCE_BASELINE is
-`40babdeb97d1464c1977f2b5470c5aa05d042d80`. It is the exact validated
-product source/content/test/runtime state, not a claim about the current
-mutable `main` tip. FREEZE_PUBLICATION_BASELINE is the corrected docs-only
-publication commit. IMMUTABLE_AUDIT_BASELINE_TAG is
-`act0-final-deterministic-candidate-v1`; the clean-room auditor must checkout
-the exact commit resolved by `refs/tags/act0-final-deterministic-candidate-v1`,
-never an unspecified `main` or the product-source baseline alone. The sole
-next Top-1 is **FINAL DEEP INDEPENDENT AUDIT**. Its immutable candidate tag is
-present locally; this branch performs the authorized local audit only. Do not
-begin Human Novice Proof or AI Personalization implementation. See
-`docs/plan/FINAL_DETERMINISTIC_CONVERGENCE_PACKET_V1.md` and
-`docs/plan/CANDIDATE_FREEZE_MANIFEST_V1.md`.
-Freshness date: 2026-07-18 (Learning Content Integrity v1A working state;
-published HEAD recorded after its bounded commits).
+The canonical branch is `main` at `6b6a6894909e780a17ca072eeff14fee9d8efbc4`,
+which equals `origin/main`. It merges reviewed Action continuity `76b175eb`,
+effective Action-HNP privacy `75727018`, and effective onboarding `76c62aa9`
+through `f5b5a702`, `d70ad7c5`, and `6b6a6894`. Action theory-to-decision
+continuity is integrated; active Action errors use `misread_action_legality`;
+the physical HNP JSONL excludes the forbidden Action context projection while
+retaining required learning-loop events; and Onboarding Density & Confidence
+Wave 1 is integrated. Claude Design: `WAVE1_VISUAL_ACCEPTED_WITH_NONBLOCKING_P3`.
+Independent source review and required remote product CI passed. Original PRs
+#35/#34 were superseded only by stale GitHub synthetic PR state; replacements
+#36/#37 preserved their reviewed heads.
+
+The one active strategic stage is **AI Personalization Layer v1**. Its fixed
+sequence is deterministic rule-based personalization, Learning Effect / Training
+Flow, a minimal live End-to-End Alpha scenario, bounded learning-loop telemetry
+closure, then Alpha admission evidence. Human Novice Proof has not occurred;
+screenshots and AI review are not Human Novice evidence. Modern Table remains
+Maintenance Mode; Premium Motion and further visual waves are deferred; the
+screenshot pipeline remains audit/regression evidence only. No ML, remote AI,
+dashboard, broad telemetry refactor, or visual redesign is admitted.
+
+Historical pre-merge audit/freeze statements below are retained as evidence but
+superseded for execution by this section and `docs/plan/MASTER_PLAN_v3.0.md`.
+Freshness date: 2026-07-22 (post-merge canonical-main reconciliation).
 Verified branch state: the W1-W6 Final Learner-Truth Audit, its grouped
 repair program Waves 1-5, and the W1-W6 runtime integrity gate are closed and
 integrated into `main`;
@@ -78,8 +78,7 @@ skipping it for insufficient evidence. The scope remains only
 `misread_action_legality` and `missed_table_position_read`; no Modern Table, profile,
 cross-day state, dashboard, or AI/adaptive work is admitted.
 
-The active
-The active
+Historical owner record:
 W1 Action sequence uses `Act0ShellPreviewScreenV1` for entry/progression,
 `Act0LessonRunnerShellV1` for theory/decision/feedback,
 `Act0ActionSequencePersonalizationPolicyV1` for deterministic rules,
@@ -151,16 +150,14 @@ is `LEARNING_SURFACE_COMPOSITION_STABILITY_ADMITTED`, not the stale Wave 2E
 label. The authoritative release-scope disposition ledger is
 `docs/plan/KNOWN_DEBT_ZEROING_AND_CLOSURE_PACKET_LEDGER_v1.md`.
 
-## Current Active Phase
+## Superseded Pre-Merge Phase Record
 
-**AI Personalization Layer v1 remains the strategic stage.** Before its next
-capability wave, Closure Packet Completion v1 must consolidate the remaining
-release/build and end-to-end proof index. Final Deep Independent Audit, Human
-Novice Proof, and AI Personalization implementation remain downstream. Telemetry stays
-limited to the learning loop: user choice, correctness, error type, time to
-decision, feedback, repair, recheck, payoff, and session completion/exit.
-Premium Motion remains deferred. The missing legacy route-import test remains
-unrelated debt.
+This checkpoint predates canonical main `6b6a6894`; its former immediate-audit
+and downstream-personalization statements are historical only. The active stage
+is the opening **AI Personalization Layer v1** authority. Telemetry remains
+limited to user choice, correctness, error type, decision-time bucket, feedback,
+repair, recheck, payoff, and session completion/exit. Premium Motion remains
+deferred, and the missing legacy route-import test remains unrelated debt.
 
 **Convergence baseline — RECONCILIATION REOPENED FOR LEARNING DEBT.** The baseline-pinned
 index is `docs/plan/CANONICAL_ACT0_CLOSURE_PACKET_v1.md`. `d19ffad4` repairs
@@ -173,9 +170,8 @@ This formerly permitted candidate freeze only. Direct reconciliation of the
 complete original Antigravity, Claude, and Codex packages at `cf0b4c8b` found
 source-reproducible learning debt (notably retention timing, W7 depth/metadata,
 error taxonomy, transfer, and first-table authenticity). See
-`ORIGINAL_THREE_AGENT_AUDIT_CROSSWALK_v1.md`. Final Deep Independent Audit,
-Human Novice Proof, and AI Personalization remain downstream and are not
-started here.
+`ORIGINAL_THREE_AGENT_AUDIT_CROSSWALK_v1.md`. The statements in this paragraph
+are retained pre-merge evidence only and do not select the current wave.
 
 **Concept Error & Repair Integrity v1.** The 291-row/466-incorrect-option
 canonical census now uses 20 source-owned concept-error ids with zero
