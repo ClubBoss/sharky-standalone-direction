@@ -52,6 +52,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_sequence_personaliza
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_session_payoff_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_price_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_position_personalization_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_starting_hand_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_improvement_observation_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -3832,6 +3833,37 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       );
       return;
     }
+    if (Act0StartingHandPersonalizationV1.isCanonicalSourceTask(
+      decision.taskId,
+    )) {
+      if (_routeReviewKindForTaskIdV1(decision.taskId) !=
+          Act0ReviewKindV1.initialAssessment) {
+        return;
+      }
+      _recordLearningRunOutcomeV1(
+        Act0LearningRunOutcomeV1(
+          outcomeId: 'starting_hand:${decision.attemptKey}',
+          lessonId: decision.lessonId,
+          taskId: decision.taskId,
+          skillId: Act0StartingHandPersonalizationV1.skillId,
+          firstAttemptCorrect: decision.isCorrect,
+          errorType: decision.isCorrect
+              ? 'none'
+              : Act0StartingHandPersonalizationV1.errorType,
+          repairAttempted: false,
+          recheckResult: null,
+          finalOutcome: decision.isCorrect
+              ? Act0LearningRunFinalOutcomeV1.masteredFirstTry
+              : Act0LearningRunFinalOutcomeV1.incomplete,
+          missedSignal: Act0StartingHandPersonalizationV1.missedSignalId,
+          recommendationSignal: 'compare_seat_and_action_frame',
+          eventOrder: _nextLearningRunEventOrderV1(),
+        ),
+        userChoice: decision.selectedId,
+        timeToDecision: decision.decisionTimeBucket,
+      );
+      return;
+    }
     if (!Act0PositionPersonalizationV1.isCanonicalSourceTask(decision.taskId)) {
       if (!Act0PricePersonalizationV1.isCanonicalSourceTask(decision.taskId)) {
         return;
@@ -3914,6 +3946,42 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             : Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
         missedSignal: Act0PositionPersonalizationV1.missedSignalId,
         recommendationSignal: 'find_button_before_late_position',
+        eventOrder: _nextLearningRunEventOrderV1(),
+      ),
+    );
+  }
+
+  void _recordLearningRunStartingHandRecheckV1({required bool recheckCorrect}) {
+    final run = _learningRunV1;
+    if (run == null) {
+      return;
+    }
+    Act0LearningRunOutcomeV1? source;
+    for (final outcome in run.outcomes.reversed) {
+      if (outcome.skillId == Act0StartingHandPersonalizationV1.skillId &&
+          outcome.taskId == Act0StartingHandPersonalizationV1.sourceTaskId) {
+        source = outcome;
+        break;
+      }
+    }
+    if (source == null || source.firstAttemptCorrect) {
+      return;
+    }
+    _recordLearningRunOutcomeV1(
+      Act0LearningRunOutcomeV1(
+        outcomeId: source.outcomeId,
+        lessonId: source.lessonId,
+        taskId: source.taskId,
+        skillId: source.skillId,
+        firstAttemptCorrect: false,
+        errorType: Act0StartingHandPersonalizationV1.errorType,
+        repairAttempted: true,
+        recheckResult: recheckCorrect,
+        finalOutcome: recheckCorrect
+            ? Act0LearningRunFinalOutcomeV1.recoveredAfterRepair
+            : Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
+        missedSignal: Act0StartingHandPersonalizationV1.missedSignalId,
+        recommendationSignal: 'compare_seat_and_action_frame',
         eventOrder: _nextLearningRunEventOrderV1(),
       ),
     );
@@ -4014,12 +4082,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     final next = run.record(outcome);
     _learningRunV1 = next;
-    // Position/Price incomplete observations remain internal so a matching
-    // Practice repair projects one normalized terminal row. Other families
-    // retain their existing telemetry contract.
+    // Canonical repair-bridge incomplete observations remain internal so a
+    // matching Practice repair projects one normalized terminal row. Other
+    // families retain their existing telemetry contract.
     final terminalOnlyRepairBridge =
         outcome.skillId == Act0PositionPersonalizationV1.skillId ||
-        outcome.skillId == Act0PricePersonalizationV1.skillId;
+        outcome.skillId == Act0PricePersonalizationV1.skillId ||
+        outcome.skillId == Act0StartingHandPersonalizationV1.skillId;
     if (!outcome.isMeaningful && terminalOnlyRepairBridge) {
       return;
     }
@@ -9799,6 +9868,30 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final recordingPracticeQueueRepair =
         practiceQueueRepairRequest != null &&
         practiceQueueRepairRequest.repairTaskId == selectedTask.taskId;
+    if (!option.isCorrect) {
+      Act0StartingHandPersonalizationCaseV1? startingHandCase;
+      for (final intent in _activeRepairIntentsV1()) {
+        if (intent.targetTaskId != selectedTask.taskId) {
+          continue;
+        }
+        startingHandCase = Act0StartingHandPersonalizationV1.fromRepairIntent(
+          intent,
+        );
+        if (startingHandCase != null) {
+          break;
+        }
+      }
+      if (startingHandCase != null) {
+        _recordLearningRunStartingHandRecheckV1(recheckCorrect: false);
+        _recordTelemetryEventV1(
+          'starting_hand_personalization_recheck',
+          startingHandCase.telemetryFields(
+            attemptPhase: 'recheck',
+            finalLearningOutcome: startingHandCase.failedRecheckOutcome,
+          ),
+        );
+      }
+    }
     if (recordingPracticeQueueRepair) {
       _appendPracticeQueueRepairOutcomeV1(
         request: practiceQueueRepairRequest,
@@ -9907,6 +10000,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           priceCase.telemetryFields(
             attemptPhase: 'decision',
             finalLearningOutcome: priceCase.cleanPayoffOutcome,
+          ),
+        );
+      }
+      if (Act0StartingHandPersonalizationV1.isCanonicalSourceTask(
+            selectedTask.taskId,
+          ) &&
+          _routeReviewKindForTaskIdV1(selectedTask.taskId) ==
+              Act0ReviewKindV1.initialAssessment) {
+        const startingHandCase = Act0StartingHandPersonalizationCaseV1();
+        _recordTelemetryEventV1(
+          'starting_hand_personalization_payoff',
+          startingHandCase.telemetryFields(
+            attemptPhase: 'decision',
+            finalLearningOutcome: startingHandCase.cleanPayoffOutcome,
           ),
         );
       }
@@ -10095,6 +10202,25 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ),
       );
     }
+    final startingHandIntent =
+        _openRepairIntentBySourceTaskId[request.sourceTaskId];
+    final startingHandCase = startingHandIntent == null
+        ? null
+        : Act0StartingHandPersonalizationV1.fromRepairIntent(
+            startingHandIntent,
+          );
+    if (startingHandCase != null) {
+      _recordLearningRunStartingHandRecheckV1(recheckCorrect: option.isCorrect);
+      if (!option.isCorrect) {
+        _recordTelemetryEventV1(
+          'starting_hand_personalization_recheck',
+          startingHandCase.telemetryFields(
+            attemptPhase: 'recheck',
+            finalLearningOutcome: startingHandCase.failedRecheckOutcome,
+          ),
+        );
+      }
+    }
     _reviewResolutionReceiptHistoryV1 =
         reviewResolutionReceiptHistoryFromSourcesV1(
           reviewMistakeHistory: _reviewMistakeHistoryV1,
@@ -10248,6 +10374,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         },
       );
     }
+    final startingHandCase = Act0StartingHandPersonalizationV1.fromRepairIntent(
+      intent,
+    );
+    if (startingHandCase != null) {
+      _recordTelemetryEventV1(
+        'starting_hand_personalization_classified',
+        <String, Object?>{
+          ...startingHandCase.telemetryFields(
+            attemptPhase: 'decision',
+            finalLearningOutcome: 'repair_required',
+          ),
+          'user_choice': intent.choiceId,
+          'correctness': false,
+        },
+      );
+    }
     _appendRepairIntentAuditEntryV1(
       _Act0RepairIntentAuditEntryV1(
         transition: 'intent_created',
@@ -10304,6 +10446,24 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           priceCase.telemetryFields(
             attemptPhase: 'payoff',
             finalLearningOutcome: priceCase.successfulPayoffOutcome,
+          ),
+        );
+      }
+      final startingHandCase =
+          Act0StartingHandPersonalizationV1.fromRepairIntent(intent);
+      if (startingHandCase != null && completedMappedTarget) {
+        _recordTelemetryEventV1(
+          'starting_hand_personalization_recheck',
+          startingHandCase.telemetryFields(
+            attemptPhase: 'recheck',
+            finalLearningOutcome: startingHandCase.successfulPayoffOutcome,
+          ),
+        );
+        _recordTelemetryEventV1(
+          'starting_hand_personalization_payoff',
+          startingHandCase.telemetryFields(
+            attemptPhase: 'payoff',
+            finalLearningOutcome: startingHandCase.successfulPayoffOutcome,
           ),
         );
       }
