@@ -287,48 +287,10 @@ class Act0PlacementShellV1 extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        key: const Key(
-                          'act0_shell_placement_route_check_frame',
-                        ),
-                        padding: const EdgeInsets.all(Act0ShellTokensV1.gapSm),
-                        decoration: Act0ShellTokensV1.surfaceDecoration(
-                          color: Act0ShellTokensV1.surface2.withValues(
-                            alpha: 0.52,
-                          ),
-                          borderColor: Act0ShellTokensV1.primary.withValues(
-                            alpha: 0.12,
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const _PlacementBrandBeatV1(),
-                            const SizedBox(height: Act0ShellTokensV1.gapSm),
-                            _PlacementHeroV1(
-                              title: _placementCopyV1(
-                                context,
-                                en: 'Find your start',
-                                ru: 'Найди свой старт',
-                              ),
-                              subtitle: _placementCopyV1(
-                                context,
-                                en: 'Answer two quick questions. Then Sharky opens the first useful hand.',
-                                ru: 'Ответь на два коротких вопроса. Затем Шарки откроет первую полезную раздачу.',
-                              ),
-                            ),
-                            const SizedBox(height: Act0ShellTokensV1.gapSm),
-                            _PlacementLaunchPathV1(
-                              currentStep:
-                                  showIntro ||
-                                      currentQuestionIndex < questions.length
-                                  ? _PlacementLaunchStepV1.answer
-                                  : _PlacementLaunchStepV1.quickCheck,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: Act0ShellTokensV1.gapMd),
+                      if (showIntro) ...[
+                        const _PlacementBrandBeatV1(),
+                        const SizedBox(height: Act0ShellTokensV1.gapMd),
+                      ],
                       AnimatedSwitcher(
                         duration: const Duration(milliseconds: 360),
                         reverseDuration: const Duration(milliseconds: 220),
@@ -921,21 +883,10 @@ class _PlacementIntroViewV1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            _placementAtomV1(
-              context,
-              'placement_intro_route_check',
-              fallback: 'Route check',
-            ),
-            style: Act0ShellTokensV1.label.copyWith(
-              color: Act0ShellTokensV1.primary,
-            ),
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(
             _placementCopyV1(
               context,
-              en: 'Fast start, no exam.',
-              ru: 'Быстрый старт без экзамена.',
+              en: 'Find your start',
+              ru: 'Найди свой старт',
             ),
             style: Act0ShellTokensV1.screenTitle,
           ),
@@ -943,38 +894,11 @@ class _PlacementIntroViewV1 extends StatelessWidget {
           Text(
             _placementCopyV1(
               context,
-              en: 'No long setup before the first hand.',
-              ru: 'Без долгой настройки перед первой раздачей.',
-            ),
-            key: const Key('act0_shell_placement_intro_support'),
-            style: Act0ShellTokensV1.muted,
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          _PlacementLaunchSupportCardV1(
-            key: const Key('act0_shell_placement_intro_preview'),
-            tone: Act0ShellTokensV1.primary,
-            title: _placementCopyV1(
-              context,
               en: 'No exam. Just your starting point.',
               ru: 'Без экзамена. Только твоя точка старта.',
             ),
-            body: _placementCopyV1(
-              context,
-              en: 'Two answers and one short check are enough to open the first hand.',
-              ru: 'Двух ответов и короткого чека достаточно, чтобы открыть первую раздачу.',
-            ),
-            chips: <String>[
-              _placementCopyV1(
-                context,
-                en: 'Beginner-safe',
-                ru: 'Безопасно для новичка',
-              ),
-              _placementCopyV1(
-                context,
-                en: 'Fast handoff',
-                ru: 'Быстрый переход',
-              ),
-            ],
+            key: const Key('act0_shell_placement_intro_support'),
+            style: Act0ShellTokensV1.muted,
           ),
         ],
       ),

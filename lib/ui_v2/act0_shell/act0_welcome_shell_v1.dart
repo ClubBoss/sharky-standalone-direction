@@ -82,7 +82,7 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
       Act0WelcomeBeatV1.intro => _WelcomeTextBeatV1(
         beatIndex: 1,
         beatCount: 3,
-        title: _atomV1('welcome_intro_title', fallback: 'Find your start'),
+        title: _atomV1('welcome_intro_title', fallback: 'Try one table read'),
         eyebrow: _atomV1('welcome_intro_eyebrow', fallback: 'Welcome'),
         line: _atomV1(
           'welcome_intro_line',
@@ -100,10 +100,13 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         replayMode: widget.replayMode,
         onClose: widget.onClose,
         visual: _WelcomeVisualPreviewCardV1(
-          title: _copyV1(en: 'First hand after', ru: 'Потом первая раздача'),
+          title: _copyV1(en: 'Your first table read', ru: 'Первый рид стола'),
           accent: Act0ShellTokensV1.primary,
-          bridge: _WelcomeLaunchPathV1(copy: _copyV1),
-          child: _WelcomeLoopStripV1(copy: _copyV1),
+          line: _copyV1(
+            en: 'Start with one clear table decision.',
+            ru: 'Начни с одного понятного решения за столом.',
+          ),
+          child: const SizedBox.shrink(),
         ),
         ctaLabel: 'Try one table read',
         onNext: () => setState(() => _beat = Act0WelcomeBeatV1.demoSpot),
@@ -177,10 +180,7 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
           ),
           child: Container(
             key: const Key('act0_shell_welcome_handoff_proof_block'),
-            child: _WelcomeLaunchPathV1(
-              copy: ({required String en, required String ru}) =>
-                  _copyV1(en: en, ru: ru),
-            ),
+            child: const SizedBox.shrink(),
           ),
         ),
         ctaLabel: _copyV1(
@@ -526,7 +526,6 @@ class _WelcomeVisualPreviewCardV1 extends StatelessWidget {
     required this.title,
     required this.accent,
     required this.child,
-    this.bridge,
     this.line,
     this.detail,
     this.previewKey = const Key('act0_shell_welcome_visual_preview'),
@@ -535,7 +534,6 @@ class _WelcomeVisualPreviewCardV1 extends StatelessWidget {
   final String title;
   final Color accent;
   final Widget child;
-  final Widget? bridge;
   final String? line;
   final String? detail;
   final Key previewKey;
@@ -551,10 +549,6 @@ class _WelcomeVisualPreviewCardV1 extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (bridge != null) ...[
-            bridge!,
-            const SizedBox(height: Act0ShellTokensV1.gapMd),
-          ],
           Text(title, style: Act0ShellTokensV1.label.copyWith(color: accent)),
           if (child is! SizedBox) ...[
             const SizedBox(height: Act0ShellTokensV1.gapMd),
