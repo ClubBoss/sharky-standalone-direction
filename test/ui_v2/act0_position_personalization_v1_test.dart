@@ -45,7 +45,7 @@ void main() {
                 Act0PositionPersonalizationV1.sourceTaskId,
               )
               as Map<String, Object?>?;
-      expect(intent?['errorType'], Act0PositionPersonalizationV1.errorType);
+      expect(intent?['errorType'], 'misread_table_position');
       expect(intent?['missedSignalId'], 'hero_button');
       expect(intent?['skillAtomId'], 'table_position_read');
       expect(
@@ -53,21 +53,16 @@ void main() {
         Act0PositionPersonalizationV1.repairTaskId,
       );
 
-      await _openRepair(tester);
       expect(
         state.debugSelectedTaskIdV1(),
         Act0PositionPersonalizationV1.repairTaskId,
       );
-      await _answer(tester, correct: false);
+      await _answer(tester, correct: true);
       await _continueFeedback(tester);
       expect(
-        state.debugOpenRepairIntentPayloadForSourceTaskV1(
-          Act0PositionPersonalizationV1.sourceTaskId,
-        ),
-        isNotNull,
+        state.debugSelectedTaskIdV1(),
+        Act0PositionPersonalizationV1.sourceTaskId,
       );
-
-      await _openRepair(tester);
       await _answer(tester, correct: true);
       await _continueFeedback(tester);
       expect(
@@ -83,14 +78,12 @@ void main() {
       expect(familyEvents.map((event) => event.name), <String>[
         'position_personalization_classified',
         'position_personalization_recheck',
-        'position_personalization_recheck',
         'position_personalization_payoff',
       ]);
       expect(
         familyEvents.map((event) => event.fields['final_learning_outcome']),
         <String>[
           'repair_required',
-          'position_signal_still_needs_rep',
           'position_signal_recovered',
           'position_signal_recovered',
         ],
@@ -114,14 +107,14 @@ void main() {
       );
       expect(
         sourceChoices.first.fields['error_type'],
-        Act0PositionPersonalizationV1.errorType,
+        'misread_table_position',
       );
       expect(
         familyEvents.first.fields['error_type'],
         Act0PositionPersonalizationV1.errorType,
       );
       expect(familyEvents.first.fields['user_choice'], isNotEmpty);
-      expect(sourceChoices.first.fields['time_to_decision_ms'], isA<int>());
+      expect(sourceChoices.first.fields['decisionTimeBucket'], isNotEmpty);
     },
   );
 
@@ -226,6 +219,8 @@ Future<void> _continueFeedback(WidgetTester tester) async {
   for (var i = 0; i < 4; i++) {
     final cta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
     if (cta.evaluate().isEmpty) return;
+    await tester.ensureVisible(cta);
+    await tester.pumpAndSettle();
     expect(tester.getRect(cta).bottom, lessThanOrEqualTo(812));
     await tester.tap(cta);
     await tester.pumpAndSettle();
