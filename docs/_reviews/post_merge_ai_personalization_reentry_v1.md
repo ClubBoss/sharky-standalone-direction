@@ -47,7 +47,14 @@ Deferred, not competitors: Hub visual differentiation, feedback animation, new S
 
 ### Learner problem, route, and owner map
 
-The learner can see a medium preflop hand and facing action yet continue on hope instead of hand/seat/frame evidence. Source: `world_2` / `hand_discipline_apply` / `apply_hj_decision`. Approved same-signal target: `world_2` / `continue_or_let_go` / `continue_or_let_go_medium_call_or_fold`. Existing route: Act0 Learn runner -> feedback -> repair -> recheck -> generic payoff/return. This does not alter fresh-install gating.
+The learner can overplay or misclassify a medium starting hand by ignoring its
+seat and action frame. The selected source specifically asks whether KQo in HJ
+is a clean open: `world_2` / `hand_discipline_apply` /
+`apply_hj_decision`. The approved same-concept repair target is a distinct
+authored decision: `world_2` / `continue_or_let_go` /
+`continue_or_let_go_medium_call_or_fold`. Existing route: Act0 Learn runner ->
+feedback -> repair -> recheck -> generic payoff/return. This does not alter
+fresh-install gating.
 
 Source owners:
 
@@ -61,9 +68,32 @@ Source owners:
 
 ### Implementation-ready contract
 
-Add one typed W2 adapter following the Position/Price pattern only when the resolved intent exactly matches source world/lesson/task, canonical error, W2 discipline skill/signal, target world/lesson/task, and `mappingType == repair`. It accepts no profile history, remote data, raw milliseconds, or mutable copy. A nonmatching intent falls back to the existing resolver rather than being reclassified.
+Source frame is fixed: K♦ Q♣, Hero in HJ, and an unopened pot; the authored
+source action is `raise` and its correct feedback is `HJ open is clean.`. Its
+wrong-source feedback may focus on the medium hand bucket, HJ, and the opening
+opportunity; it must not borrow a facing-action clue from the repair target.
 
-Rules: correct first decision yields `hand_discipline_read_cleanly`; an incorrect source decision names the medium hand, HJ, and facing-action clue and starts the approved target; a correct recheck yields `hand_discipline_recovered`; a failed recheck yields `hand_discipline_still_needs_rep`. These are current-session outcomes, never mastery labels. Generic Learning Run keeps unresolved evidence above recovered then clean evidence; the existing Home/Learn receipt owns continuation. No new surface, tab, dashboard, or profile card.
+Repair frame is separately fixed: CO has opened 2.5 BB, Hero is BTN with K♦ Q♣,
+and the authored target action is `call`. Its clue is playable KQo in position
+against the CO open. It tests the same discipline concept in its own frame and
+does not rewrite source-task truth.
+
+The proposed typed-adapter sequence ID is
+`w2_starting_hand_discipline_repair_v1`. It may admit only the observed tuple:
+`world_2` / `hand_discipline_apply` / `apply_hj_decision`;
+`misread_starting_hand_discipline`; skill `table_read`; missed signal
+`hero_seat`; target `world_2` / `continue_or_let_go` /
+`continue_or_let_go_medium_call_or_fold`; and `mappingType == repair`.
+The observed reason code is `same_signal_table_read_hero_seat`. It accepts no
+profile history, remote data, raw milliseconds, or mutable copy. A nonmatching
+intent falls back to the existing resolver rather than being reclassified.
+
+Feedback semantics are stable and evidence-based; mutable learner copy is not
+classification input. Correct-first, recovered, and still-needs-rep outputs
+remain current-session outcomes, never mastery claims. Generic Learning Run
+keeps unresolved evidence above recovered then clean evidence; the existing
+Home/Learn receipt owns continuation. No new surface, tab, dashboard, or
+profile card.
 
 Persistence is session-scoped for the adapter. Existing durable repair/concept evidence may flow through its present contract; add no personalization profile, cross-day model, or recommendation history.
 
@@ -75,7 +105,13 @@ Preserve ordered existing events: `user_choice`, decision and `task_result` (cho
 
 UI impact is existing feedback/repair/recheck/payoff/continuation only; preserve route, scoring, authored tasks, and correct answers. Forbidden: fresh unlock changes, Modern Table, visual redesign, ML/remote service, dashboard, new persistence, telemetry refactor, another family, W5+ work, Human Novice, or release claims.
 
-Required deterministic tests: typed-adapter admission/rejection; correct-first; wrong -> feedback -> repair -> successful recheck; wrong -> failed recheck; duplicate/replay/incomplete handling; Learning Run payoff precedence; return recommendation agreement; bounded telemetry/physical HNP projection. Re-run Action, Position, Price, and fresh/unlocked route regressions.
+Required deterministic tests: exact generated intent tuple; source
+correct-first; source miss -> approved target; successful target ->
+original-source recheck; failed target/recheck handling; source and target
+authored truth unchanged; no duplicate lifecycle event; bounded physical HNP
+projection; typed-adapter admission/rejection; Learning Run payoff precedence;
+and return recommendation agreement. Re-run Action, Position, Price, and
+fresh/unlocked route regressions.
 
 Native evidence after implementation: real Act0 route traversal at compact, tall, and large phone sizes showing the W2 loop, plus HNP-enabled local JSONL validation with its named dart-define. It is machine/native evidence only.
 
