@@ -157,7 +157,13 @@ count.
   concepts but specifies no minimum lesson count or structural threshold;
   `W7_DEPTH_BLOCKED_BY_CONTENT_AUTHORITY` is therefore preserved.
 
-### Next Top-1 selection
+### Historical next Top-1 selection (superseded)
+
+This selection was correct at the crosswalk's published baseline. W7 Depth
+Authority subsequently closed at `40babdeb97d1464c1977f2b5470c5aa05d042d80`,
+and the immutable convergence candidate selects Final Deep Independent Audit.
+This preserved historical section does not select the current wave; the Master
+Plan owns current route order.
 
 1. **Decision Discrimination — CLOSED_INTENTIONAL.** All 121 binary rows are
    source-proven two-state at their route point; no filler option was admitted.
@@ -167,10 +173,11 @@ count.
 3. **W7 Depth Authority — selected next.** F02 still lacks an authoritative
    outcome-based minimum-depth contract; no arbitrary lesson count is inferred.
 
-Project-level freeze is **not allowed**. No Final Deep Independent Audit, Human
-Novice Proof, or AI Personalization work starts from this record. The selected
-next Top-1 is **W7 Depth Authority (CL-LRN-F02)**, which must establish an
-outcome-based content-depth authority before any authored W7 expansion.
+At this historical point, project-level freeze was **not allowed**. No Final
+Deep Independent Audit, Human Novice Proof, or AI Personalization work started
+from this record. The then-selected next Top-1 was **W7 Depth Authority
+(CL-LRN-F02)**, which subsequently established its outcome-based depth
+authority.
 
 ### Copyable next goal
 

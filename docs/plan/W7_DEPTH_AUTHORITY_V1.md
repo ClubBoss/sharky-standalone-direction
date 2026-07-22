@@ -63,7 +63,7 @@ The canonical count remains 291. Exactly one serialized assessed row changed: `w
 
 ## CL-LRN-F02 and terminal ledger
 
-`CL-LRN-F02: CLOSED_FIXED`. The baseline had one mandatory gap (unseen transfer); the bounded replacement closes it without asserting a lesson-count rule. Next Top-1: **FINAL DETERMINISTIC CONVERGENCE PACKET REFRESH**. It may reconcile and pin current findings, but must not begin Final Deep Independent Audit, Human Novice Proof, or AI Personalization.
+`CL-LRN-F02: CLOSED_FIXED`. The baseline had one mandatory gap (unseen transfer); the bounded replacement closes it without asserting a lesson-count rule. The then-next Top-1 was **FINAL DETERMINISTIC CONVERGENCE PACKET REFRESH**. That refresh subsequently froze the candidate for Final Deep Independent Audit; this historical authority does not select the current wave.
 
 | Item | disposition |
 | --- | --- |

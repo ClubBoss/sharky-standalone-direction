@@ -1,6 +1,18 @@
 # Active Route Capsule v1
 
-Status: ACTIVE route capsule for compact Sharky agent context.
+Status: LOCAL-ONLY PRE-AUDIT EXECUTION CAPSULE. This reconciliation is
+unpublished and applies only to `local/final-deep-independent-audit-v1`; it
+does not claim remote publication, CI admission, or a moved tag.
+
+The Master Plan is the higher-priority route-order authority. Learning
+Integrity Foundation v1 and W7 Depth Authority are closed. Final Deep
+Independent Audit is the immediate executable local wave from the frozen audit
+candidate; AI Personalization Layer v1 remains the strategic macro stage, with
+its implementation downstream. GitHub publication/CI remains externally
+blocked and does not make deterministic product validation fail. Historical
+next-wave statements retained below are superseded by this paragraph and the
+Master Plan.
+
 Current convergence override: PRODUCT_SOURCE_BASELINE is
 `40babdeb97d1464c1977f2b5470c5aa05d042d80`. It is the exact validated
 product source/content/test/runtime state, not a claim about the current
@@ -9,10 +21,11 @@ publication commit. IMMUTABLE_AUDIT_BASELINE_TAG is
 `act0-final-deterministic-candidate-v1`; the clean-room auditor must checkout
 the exact commit resolved by `refs/tags/act0-final-deterministic-candidate-v1`,
 never an unspecified `main` or the product-source baseline alone. The sole
-next Top-1 is **FINAL DEEP INDEPENDENT AUDIT**, blocked until this correction is
-published and tagged; do not begin it here, Human Novice Proof, or AI
-Personalization. See `docs/plan/FINAL_DETERMINISTIC_CONVERGENCE_PACKET_V1.md`
-and `docs/plan/CANDIDATE_FREEZE_MANIFEST_V1.md`.
+next Top-1 is **FINAL DEEP INDEPENDENT AUDIT**. Its immutable candidate tag is
+present locally; this branch performs the authorized local audit only. Do not
+begin Human Novice Proof or AI Personalization implementation. See
+`docs/plan/FINAL_DETERMINISTIC_CONVERGENCE_PACKET_V1.md` and
+`docs/plan/CANDIDATE_FREEZE_MANIFEST_V1.md`.
 Freshness date: 2026-07-18 (Learning Content Integrity v1A working state;
 published HEAD recorded after its bounded commits).
 Verified branch state: the W1-W6 Final Learner-Truth Audit, its grouped
@@ -181,8 +194,10 @@ recovery/lapse, recent spaced evidence owns transfer verdicts, and due work
 launches through the existing Review route. W7 Depth Authority (CL-LRN-F02) is
 `CLOSED_FIXED`: its outcome contract admits one visible lesson because
 A72/K84/772/QJ5 supply distinct assessment and QJ5 is an unseen transfer board.
-The next Top-1 is Final Deterministic Convergence Packet Refresh; Human Novice
-Proof, Final Deep Independent Audit, and AI Personalization are still blocked.
+At this historical checkpoint, the next Top-1 was Final Deterministic
+Convergence Packet Refresh. That packet subsequently selected the local Final
+Deep Independent Audit; this retained checkpoint does not select the current
+wave.
 
 The W1-W6 Final Learner-Truth Audit (`docs/_reviews/w1_w6_final_learner_truth_audit_v1.md`)
 closed with `w1_w6_final_gate_repair_program_ready`, producing the grouped

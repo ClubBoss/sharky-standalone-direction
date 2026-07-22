@@ -40,9 +40,10 @@ repeat-miss-preserving lapse behavior, recent-evidence transfer verdicts, and a
 minimal due affordance on the existing Review route. This closes
 CL-LRN-F01/F08/F11 without claiming Human learning effect or opening W7 depth.
 W7 Depth Authority is now `CLOSED_FIXED`: its QJ5 unseen-board transfer closes
-the sole mandatory depth gap without adding a lesson-count rule. The next Top-1
-is Final Deterministic Convergence Packet Refresh; Human Novice Proof, Final
-Deep Independent Audit, and AI Personalization remain blocked.
+the sole mandatory depth gap without adding a lesson-count rule. At this
+packet's point in the sequence, the next Top-1 was Final Deterministic
+Convergence Packet Refresh. That refresh later selected Final Deep Independent
+Audit; this historical packet does not select the current wave.
 
 The active follow-on contract is
 `docs/plan/CONCEPT_ERROR_REPAIR_INTEGRITY_V1.md`. Canonical wrong-decision

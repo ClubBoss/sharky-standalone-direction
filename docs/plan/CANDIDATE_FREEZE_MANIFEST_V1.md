@@ -41,9 +41,12 @@ a future candidate must use a new versioned tag and refreshed manifest.
 Selected canonical route gate and all 14 selected guards passed. Release gate,
 analyzer, source validation, Graphify hook, and diff checks passed. Full-suite
 policy was OFF by default. See FINAL_DETERMINISTIC_CONVERGENCE_PACKET_V1.md.
-Final Deep Independent Audit remains the next Top-1 but is blocked until this
-manifest correction is committed, pushed, and immutably tagged. Human Novice
-Proof and AI Personalization remain downstream and unstarted.
+At publication, Final Deep Independent Audit was blocked until this manifest
+correction was committed, pushed, and immutably tagged. The immutable tag is
+available in this checkout. A later local-only reconciliation may begin the
+read-only audit from a new local baseline, while GitHub publication/CI remains
+external. Human Novice Proof and AI Personalization implementation remain
+downstream and unstarted.
 
 ## Human hypotheses
 
