@@ -1,4 +1,5 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_sequence_personalization_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1.dart';
 
 enum Act0ActionPayoffTypeV1 { cleanSuccess, recoveredSuccess, unresolvedSkill }
 
@@ -50,7 +51,7 @@ class Act0ActionSessionPayoffPolicyV1 {
         recommendation: recommendation,
         type: Act0ActionPayoffTypeV1.recoveredSuccess,
         initialOutcome: 'incorrect',
-        errorType: 'missed_action_read',
+        errorType: act0ActionLearningSequenceV1.repairErrorType,
         proofStatement:
             'You missed the no-bet read, repaired it, and passed the recheck.',
         meaningStatement:
@@ -79,7 +80,9 @@ class Act0ActionSessionPayoffPolicyV1 {
       recommendation: recommendation,
       type: Act0ActionPayoffTypeV1.unresolvedSkill,
       initialOutcome: initialMissed ? 'incorrect' : 'unknown',
-      errorType: initialMissed ? 'missed_action_read' : 'none',
+      errorType: initialMissed
+          ? act0ActionLearningSequenceV1.repairErrorType
+          : 'none',
       proofStatement: repeated
           ? 'The no-bet read was missed again.'
           : 'The no-bet read is not stable yet.',

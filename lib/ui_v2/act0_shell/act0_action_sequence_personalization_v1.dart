@@ -17,7 +17,8 @@ class Act0ActionSequenceLearnerStateV1 {
   int get missedActionReadCount => outcomes
       .where(
         (outcome) =>
-            !outcome.isCorrect && outcome.errorType == 'missed_action_read',
+            !outcome.isCorrect &&
+            outcome.errorType == act0ActionLearningSequenceV1.repairErrorType,
       )
       .length;
 
@@ -152,7 +153,7 @@ class Act0ActionSequencePersonalizationPolicyV1 {
       return _repair(
         Act0ActionRecommendationReasonV1.repeatedError,
         'You missed the no-bet read again. Reinforce action order before moving on.',
-        'missed_action_read_count=${state.missedActionReadCount}',
+        'misread_action_legality_count=${state.missedActionReadCount}',
       );
     }
     final latest = state.latestOutcome;
@@ -160,7 +161,7 @@ class Act0ActionSequencePersonalizationPolicyV1 {
       return _repair(
         Act0ActionRecommendationReasonV1.recentError,
         'You missed the no-bet read. Repair it now while the clue is fresh.',
-        'error_type=missed_action_read',
+        'error_type=${act0ActionLearningSequenceV1.repairErrorType}',
       );
     }
     return _next(

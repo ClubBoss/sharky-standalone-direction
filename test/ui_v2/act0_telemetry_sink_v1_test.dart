@@ -175,32 +175,61 @@ void main() {
   Future<void> advanceCurrentRunnerToDrillV1(WidgetTester tester) async {
     await advanceRunnerUntilV1(
       tester,
-      () =>
-          find
-              .byKey(const Key('act0_shell_action_panel'))
-              .evaluate()
-              .isNotEmpty ||
-          find
-              .byKey(const Key('act0_shell_option_raise'))
-              .evaluate()
-              .isNotEmpty ||
-          find
-              .byKey(const Key('act0_shell_option_check'))
-              .evaluate()
-              .isNotEmpty ||
-          find
-              .byKey(const Key('act0_shell_option_call'))
-              .evaluate()
-              .isNotEmpty ||
-          find
-              .byKey(const Key('act0_shell_option_fold'))
-              .evaluate()
-              .isNotEmpty ||
-          find
-              .byKey(const Key('act0_shell_seat_tap_prompt'))
-              .evaluate()
-              .isNotEmpty,
+      () {
+        final runner = tester.widget<Act0LessonRunnerShellV1>(
+          find.byType(Act0LessonRunnerShellV1),
+        );
+        if (runner.selectedTaskId == 'actions_theory') {
+          return false;
+        }
+        return find
+                .byKey(const Key('act0_shell_action_panel'))
+                .evaluate()
+                .isNotEmpty ||
+            find
+                .byKey(const Key('act0_shell_option_raise'))
+                .evaluate()
+                .isNotEmpty ||
+            find
+                .byKey(const Key('act0_shell_option_check'))
+                .evaluate()
+                .isNotEmpty ||
+            find
+                .byKey(const Key('act0_shell_option_call'))
+                .evaluate()
+                .isNotEmpty ||
+            find
+                .byKey(const Key('act0_shell_option_fold'))
+                .evaluate()
+                .isNotEmpty ||
+            find
+                .byKey(const Key('act0_shell_seat_tap_prompt'))
+                .evaluate()
+                .isNotEmpty;
+      },
       failureMessage: 'Runner did not advance into a drill prompt.',
+      maxTaps: 12,
+    );
+  }
+
+  Future<void> advanceActionTheoryToCanonicalDecisionV1(
+    WidgetTester tester,
+  ) async {
+    await advanceRunnerUntilV1(
+      tester,
+      () {
+        final runner = tester.widget<Act0LessonRunnerShellV1>(
+          find.byType(Act0LessonRunnerShellV1),
+        );
+        return runner.selectedLessonId == 'fold_check_call_raise' &&
+            runner.selectedTaskId == 'actions_check_drill' &&
+            runner.runner.phase == Act0LessonPhaseV1.drill &&
+            find
+                .byKey(const Key('act0_shell_option_check'))
+                .evaluate()
+                .isNotEmpty;
+      },
+      failureMessage: 'Action theory did not reach actions_check_drill.',
       maxTaps: 12,
     );
   }
@@ -957,12 +986,21 @@ void main() {
     'Act0 runner emits one safe feedback_viewed event from the real feedback path',
     (tester) async {
       final sink = Act0InMemoryTelemetrySinkV1();
+      await tester.binding.setSurfaceSize(const Size(430, 932));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
 
       await startActionsTheoryFromLearnV1(tester, telemetrySink: sink);
-      await advanceCurrentRunnerToDrillV1(tester);
+      await advanceActionTheoryToCanonicalDecisionV1(tester);
+      expect(
+        tester
+            .widget<Act0LessonRunnerShellV1>(
+              find.byType(Act0LessonRunnerShellV1),
+            )
+            .selectedTaskId,
+        'actions_check_drill',
+      );
       await answerVisiblePromptCorrectlyV1(tester);
       await tester.pumpAndSettle();
-
       expect(find.byKey(const Key('act0_shell_feedback_card')), findsOneWidget);
 
       final feedbackViewedEvents = sink.events
@@ -974,7 +1012,7 @@ void main() {
       expect(feedbackViewed['schemaVersion'], 1);
       expect(feedbackViewed['worldId'], 'world_1');
       expect(feedbackViewed['lessonId'], 'fold_check_call_raise');
-      expect(feedbackViewed['taskId'], 'actions_legal_context');
+      expect(feedbackViewed['taskId'], 'actions_check_drill');
       expect(feedbackViewed['result'], 'correct');
       expect(feedbackViewed['attemptOrdinal'], 1);
 
@@ -1344,11 +1382,13 @@ void main() {
   testWidgets('Act0 feedback telemetry stays non-blocking when sink throws', (
     tester,
   ) async {
+    await tester.binding.setSurfaceSize(const Size(430, 932));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
     await startActionsTheoryFromLearnV1(
       tester,
       telemetrySink: _ThrowingTelemetrySinkV1(),
     );
-    await advanceCurrentRunnerToDrillV1(tester);
+    await advanceActionTheoryToCanonicalDecisionV1(tester);
     await answerVisiblePromptCorrectlyV1(tester);
     await tester.pumpAndSettle();
 
@@ -1390,7 +1430,7 @@ void main() {
         (event) => event.name == 'recommendation_generated',
       );
       expect(generated.fields['sequence_id'], 'w1_action_words_check_v1');
-      expect(generated.fields['error_type'], 'missed_action_read');
+      expect(generated.fields['error_type'], 'misread_action_legality');
       expect(generated.fields['recommendation_reason'], 'recentError');
       expect(generated.fields['source_attempt_key'], isA<String>());
 
@@ -1438,10 +1478,7 @@ void main() {
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
       await startActionsTheoryFromLearnV1(tester, telemetrySink: sink);
-      await advanceCurrentRunnerToDrillV1(tester);
-      await answerVisiblePromptCorrectlyV1(tester);
-      await continueVisibleFeedbackV1(tester);
-      await advanceCurrentRunnerToDrillV1(tester);
+      await advanceActionTheoryToCanonicalDecisionV1(tester);
 
       expect(
         sink.events.where(
@@ -1525,6 +1562,25 @@ void main() {
       expect(
         sink.events.where((event) => event.name == 'session_exited'),
         hasLength(1),
+      );
+      final actionErrorEvents = sink.events.where((event) {
+        final errorType = event.fields['error_type'];
+        return errorType is String &&
+            errorType.isNotEmpty &&
+            errorType != 'none';
+      });
+      expect(actionErrorEvents, isNotEmpty);
+      expect(
+        actionErrorEvents.every(
+          (event) => event.fields['error_type'] == 'misread_action_legality',
+        ),
+        isTrue,
+      );
+      expect(
+        sink.events.any(
+          (event) => event.fields['error_type'] == 'missed_action_read',
+        ),
+        isFalse,
       );
       expectNoForbiddenTelemetryFieldsV1(sink.events);
       _writeAlphaQaTraceV1(sink.events);
