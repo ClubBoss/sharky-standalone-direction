@@ -5798,6 +5798,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     return;
                                   }
                                   if (_completeSameSignalRecheckV1(
+                                    selectedWorld: selectedWorld,
+                                    selectedLesson: selectedLesson,
                                     selectedTask: playSelectedTask,
                                     runner: playRunner,
                                   )) {
@@ -8624,6 +8626,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   bool _completeSameSignalRecheckV1({
+    required Act0WorldCardV1 selectedWorld,
+    required Act0LessonCardV1 selectedLesson,
     required Act0LessonTaskV1 selectedTask,
     required Act0RunnerStateV1 runner,
   }) {
@@ -8645,17 +8649,38 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       completedCorrectly: correct,
       successfulRecheckCount: correct ? 1 : 0,
     );
-    if (correct) {
-      _completeCurrentTask(selectedTask);
-    }
     _activeSameSignalRecheckTaskId = null;
     _activeSameSignalRecheckSourceTaskId = null;
-    _selectedOptionId = null;
-    _phase = Act0LessonPhaseV1.theory;
-    _teachingStepIndex = 0;
+    if (!correct) {
+      // An unresolved recheck must not advance the parent lesson. This
+      // inline recheck is only ever launched from the feedback CTA's own
+      // "Try same clue" flow, so a miss here falls back to Review the same
+      // way the pre-existing repair-completion branch already does.
+      _selectedOptionId = null;
+      _phase = Act0LessonPhaseV1.theory;
+      _teachingStepIndex = 0;
+      _returnToPlayHubOnBack = false;
+      _showPlayHub = true;
+      _tab = Act0ShellTabV1.review;
+      return true;
+    }
+    _completeCurrentTask(selectedTask);
     _returnToPlayHubOnBack = false;
-    _showPlayHub = true;
-    _tab = Act0ShellTabV1.review;
+    if (_maybeStartLessonWrapUpRetry(selectedLesson)) {
+      return true;
+    }
+    if (_maybeShowBlockCompletionSummary(
+      selectedWorld: selectedWorld,
+      selectedLesson: selectedLesson,
+      selectedTask: selectedTask,
+    )) {
+      _selectedOptionId = null;
+      _teachingStepIndex = 0;
+      return true;
+    }
+    _advanceAfterTask(selectedWorld, selectedLesson);
+    _selectedOptionId = null;
+    _teachingStepIndex = 0;
     return true;
   }
 
