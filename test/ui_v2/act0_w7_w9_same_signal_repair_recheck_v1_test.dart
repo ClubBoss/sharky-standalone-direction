@@ -399,6 +399,62 @@ void main() {
       reason: 'an incorrect recheck must never emit a recovered claim',
     );
   });
+
+  testWidgets('canonical intentional-exact-replay recheck on blinds_last_actor '
+      'advances to the authored next task blinds_postflop_button', (
+    tester,
+  ) async {
+    final sink = Act0InMemoryTelemetrySinkV1();
+    await _pumpHost(
+      tester,
+      state: Act0ShellStateV1.sample,
+      sink: sink,
+      worldId: 'world_1',
+      lessonId: 'blinds_action_order',
+      taskId: 'blinds_last_actor',
+    );
+
+    // blinds_last_actor is a seat-tap task ("Tap BB."), not an
+    // option-button task, and the debug harness already lands past
+    // teaching, so each answer is a direct seat tap.
+    await _answerSeat(tester, 'sb');
+    expect(find.text('Try same clue'), findsOneWidget);
+
+    await _continueFeedback(tester);
+    expect(
+      _activeTaskId(tester),
+      'blinds_last_actor',
+      reason:
+          'intentional-exact-replay repair for blinds_last_actor targets '
+          'the source task itself',
+    );
+
+    await _answerSeat(tester, 'bb');
+    await _continueFeedback(tester);
+    expect(
+      _activeTaskId(tester),
+      'blinds_last_actor',
+      reason: 'the source recheck is again blinds_last_actor itself',
+    );
+
+    await _answerSeat(tester, 'bb');
+    await _continueFeedback(tester);
+
+    expect(
+      _activeTaskId(tester),
+      'blinds_postflop_button',
+      reason:
+          'a successful exact-replay recheck must advance to the '
+          'authored next task in blinds_action_order, not force Review',
+    );
+    expect(find.byType(Act0LessonRunnerShellV1), findsOneWidget);
+    expect(find.byType(Act0ReviewShellV1), findsNothing);
+    expect(
+      sink.events.where((event) => event.name == 'recheck_completed'),
+      hasLength(1),
+      reason: 'exactly one recheck completion event, no duplicate',
+    );
+  });
 }
 
 class _SameSignalRouteCaseV1 {
@@ -673,6 +729,15 @@ Future<void> _answerOption(WidgetTester tester, String optionId) async {
   final option = find.byKey(Key('act0_shell_option_$optionId'));
   expect(option, findsOneWidget);
   await tester.tap(option);
+  await tester.pumpAndSettle();
+}
+
+/// Answers a seat-tap task (e.g. "Tap BB.") by tapping the seat directly,
+/// as opposed to [_answerOption]'s option-button submission.
+Future<void> _answerSeat(WidgetTester tester, String seatId) async {
+  final seat = find.byKey(Key('act0_shell_seat_tap_$seatId'));
+  expect(seat, findsOneWidget);
+  await tester.tap(seat);
   await tester.pumpAndSettle();
 }
 
