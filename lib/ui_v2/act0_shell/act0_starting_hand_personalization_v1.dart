@@ -44,7 +44,7 @@ class Act0StartingHandPersonalizationV1 {
 class Act0StartingHandPersonalizationCaseV1 {
   const Act0StartingHandPersonalizationCaseV1();
 
-  String get feedbackMappingId => 'w2_hj_kqo_open_feedback_v1';
+  String get feedbackMappingId => 'w2_hand_discipline_feedback_v1';
   String get feedbackFocus =>
       'KQo in HJ is a clean open when the pot is unopened.';
   String get repairStrategyId => 'compare_seat_and_action_frame_v1';

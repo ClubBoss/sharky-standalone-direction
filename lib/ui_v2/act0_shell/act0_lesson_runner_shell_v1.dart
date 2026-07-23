@@ -1031,6 +1031,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.repairReasonLine,
     this.repairResultReceiptLine,
     this.repairOutcomeProofLine,
+    this.forceShowRepairOutcomeProof = false,
     this.repairSessionSummaryLines = const <String>[],
     this.feedbackForwardCtaLabel,
     this.suppressFeedbackRepairFocus = false,
@@ -1071,6 +1072,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final String? repairReasonLine;
   final String? repairResultReceiptLine;
   final String? repairOutcomeProofLine;
+  final bool forceShowRepairOutcomeProof;
   final List<String> repairSessionSummaryLines;
   final String? feedbackForwardCtaLabel;
   final bool suppressFeedbackRepairFocus;
@@ -2647,6 +2649,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       repairReasonLine: widget.repairReasonLine,
       repairResultReceiptLine: widget.repairResultReceiptLine,
       repairOutcomeProofLine: widget.repairOutcomeProofLine,
+      forceShowRepairOutcomeProof: widget.forceShowRepairOutcomeProof,
       repairSessionSummaryLines: widget.repairSessionSummaryLines,
       forwardCtaLabel: widget.feedbackForwardCtaLabel,
       suppressRepairFocus: widget.suppressFeedbackRepairFocus,
@@ -6168,6 +6171,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.repairReasonLine,
     this.repairResultReceiptLine,
     this.repairOutcomeProofLine,
+    this.forceShowRepairOutcomeProof = false,
     this.repairSessionSummaryLines = const <String>[],
     this.forwardCtaLabel,
     this.suppressRepairFocus = false,
@@ -6199,6 +6203,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final String? repairReasonLine;
   final String? repairResultReceiptLine;
   final String? repairOutcomeProofLine;
+  final bool forceShowRepairOutcomeProof;
   final List<String> repairSessionSummaryLines;
   final String? forwardCtaLabel;
   final bool suppressRepairFocus;
@@ -6379,7 +6384,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         isCompactRefinedFeedback && hasProofEarnedState;
     final shouldShowReceiptProof =
         !rapidMode &&
-        !isFocusedCompactProofFeedback &&
+        (!isFocusedCompactProofFeedback || forceShowRepairOutcomeProof) &&
         receiptTitle.isNotEmpty &&
         (!isWrong || hasRepairOutcomeProof);
     final receiptNextLine = skillReceipt == null

@@ -31,6 +31,12 @@ void main() {
         'KQo in HJ is a clean open when the pot is unopened.',
       );
       expect(family.repairStrategyId, 'compare_seat_and_action_frame_v1');
+      expect(family.feedbackMappingId, 'w2_hand_discipline_feedback_v1');
+      final normalizedFeedbackMappingId = family.feedbackMappingId
+          .toLowerCase();
+      for (final forbidden in <String>['kqo', 'hj', 'open']) {
+        expect(normalizedFeedbackMappingId, isNot(contains(forbidden)));
+      }
       expect(
         family.recheckMappingId,
         'same_starting_hand_discipline_signal_v1',
@@ -114,14 +120,38 @@ void main() {
   );
 
   testWidgets(
-    'W2 miss launches only the approved target and recovers with ordered bounded telemetry',
+    'W2 repair remains incomplete until the original-source recheck recovers it',
     (tester) async {
       final sink = Act0InMemoryTelemetrySinkV1();
-      await _pumpStartingHandTask(tester, sink);
+      await _pumpStartingHandTask(
+        tester,
+        sink,
+        initialTab: Act0ShellTabV1.learn,
+      );
 
       await _answer(tester, correct: false);
-      await _continueFeedback(tester);
-
+      expect(
+        sink.events.where((event) => event.name == 'learning_run_started'),
+        hasLength(1),
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'learning_run_outcome_recorded',
+        ),
+        isEmpty,
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name.startsWith('learning_effect_delta_'),
+        ),
+        isEmpty,
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'starting_hand_personalization_classified',
+        ),
+        hasLength(1),
+      );
       final state =
           tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
       final intent =
@@ -148,7 +178,8 @@ void main() {
         'reasonCode': 'same_signal_table_read_hero_seat',
       });
 
-      await _openRepair(tester);
+      await tester.tap(find.text('Try same clue'));
+      await tester.pumpAndSettle();
       expect(
         state.debugSelectedTaskIdV1(),
         Act0StartingHandPersonalizationV1.repairTaskId,
@@ -158,18 +189,6 @@ void main() {
       );
       expect(runner.runner.caption, 'CO opened. Hero is BTN with KQo.');
 
-      await _answer(tester, correct: false);
-      await _continueFeedback(tester);
-      final failedRepairIntent =
-          state.debugOpenRepairIntentPayloadForSourceTaskV1(
-                Act0StartingHandPersonalizationV1.sourceTaskId,
-              )
-              as Map<String, Object?>?;
-      expect(failedRepairIntent, isNotNull);
-      expect(failedRepairIntent?['skillAtomId'], 'table_read');
-      expect(failedRepairIntent?['missedSignalId'], 'hero_seat');
-
-      await _openRepair(tester);
       await _answer(tester, correct: true);
       await _continueFeedback(tester);
       expect(
@@ -178,58 +197,106 @@ void main() {
         ),
         isNull,
       );
+      expect(
+        state.debugSelectedTaskIdV1(),
+        Act0StartingHandPersonalizationV1.sourceTaskId,
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'learning_run_outcome_recorded',
+        ),
+        isEmpty,
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name.startsWith('learning_effect_delta_'),
+        ),
+        isEmpty,
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'starting_hand_personalization_recheck',
+        ),
+        isEmpty,
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'starting_hand_personalization_payoff',
+        ),
+        isEmpty,
+      );
 
-      final familyEvents = sink.events
+      await _answer(tester, correct: true);
+      final outcomes = sink.events
+          .where((event) => event.name == 'learning_run_outcome_recorded')
+          .toList(growable: false);
+      expect(outcomes, hasLength(1));
+      expect(outcomes.single.fields['task_id'], 'apply_hj_decision');
+      expect(outcomes.single.fields['repair_attempted'], isTrue);
+      expect(outcomes.single.fields['recheck_result'], isTrue);
+      expect(outcomes.single.fields['outcome_type'], 'recoveredAfterRepair');
+      final rechecks = sink.events
           .where(
-            (event) => event.name.startsWith('starting_hand_personalization_'),
+            (event) => event.name == 'starting_hand_personalization_recheck',
           )
           .toList(growable: false);
-      expect(familyEvents.map((event) => event.name), <String>[
-        'starting_hand_personalization_classified',
-        'starting_hand_personalization_recheck',
-        'starting_hand_personalization_recheck',
-        'starting_hand_personalization_payoff',
-      ]);
+      final payoffs = sink.events
+          .where(
+            (event) => event.name == 'starting_hand_personalization_payoff',
+          )
+          .toList(growable: false);
+      expect(rechecks, hasLength(1));
+      expect(payoffs, hasLength(1));
       expect(
-        familyEvents.map((event) => event.fields['final_learning_outcome']),
-        <String>[
-          'repair_required',
-          'hand_discipline_still_needs_rep',
-          'hand_discipline_recovered',
-          'hand_discipline_recovered',
-        ],
+        rechecks.single.fields['final_learning_outcome'],
+        'hand_discipline_recovered',
       );
-      for (final event in familyEvents) {
-        expect(
-          event.fields.keys,
-          containsAll(<String>[
-            'schemaVersion',
-            'sequence_id',
-            'lesson_id',
-            'task_id',
-            'skill_id',
-            'error_type',
-            'missed_signal_id',
-            'attempt_phase',
-            'feedback_mapping_id',
-            'repair_strategy',
-            'recheck_mapping_id',
-            'final_learning_outcome',
-          ]),
-        );
-        final physicalProjection = jsonEncode(event.fields);
-        for (final forbidden in <String>[
-          'Kd',
-          'Qc',
-          'KQo',
-          'HJ open is clean.',
-          'CO opened',
-          'tableContextKey',
-          'table_context_key',
-        ]) {
-          expect(physicalProjection, isNot(contains(forbidden)));
-        }
+      expect(
+        payoffs.single.fields['final_learning_outcome'],
+        'hand_discipline_recovered',
+      );
+      expect(
+        rechecks.single.fields['feedback_mapping_id'],
+        'w2_hand_discipline_feedback_v1',
+      );
+      expect(
+        payoffs.single.fields['feedback_mapping_id'],
+        'w2_hand_discipline_feedback_v1',
+      );
+      final physicalFamilyTelemetry = jsonEncode(<Object?>[
+        rechecks.single.fields,
+        payoffs.single.fields,
+      ]).toLowerCase();
+      for (final forbidden in <String>[
+        'kqo',
+        '"kd"',
+        '"qc"',
+        'co opened',
+        'hero is btn',
+        'hj open',
+        'you missed hero',
+        'tablecontextkey',
+        'table_context_key',
+      ]) {
+        expect(physicalFamilyTelemetry, isNot(contains(forbidden)));
       }
+      expect(
+        sink.events.where(
+          (event) => event.name == 'learning_effect_delta_viewed',
+        ),
+        hasLength(1),
+      );
+      await _continueFeedback(tester);
+      expect(
+        sink.events.where((event) => event.name == 'recheck_result'),
+        hasLength(1),
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'learning_effect_delta_completed',
+        ),
+        hasLength(1),
+      );
     },
   );
 
@@ -273,7 +340,6 @@ void main() {
       );
 
       await _answer(tester, correct: false);
-      await _continueFeedback(tester);
       final state =
           tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
       final failedRepairIntent =
@@ -291,7 +357,20 @@ void main() {
         isEmpty,
       );
 
-      await _openRepair(tester);
+      await tester.tap(find.text('Try same clue'));
+      await tester.pumpAndSettle();
+      await _answer(tester, correct: true);
+      await _continueFeedback(tester);
+      expect(
+        state.debugSelectedTaskIdV1(),
+        Act0StartingHandPersonalizationV1.sourceTaskId,
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'learning_run_outcome_recorded',
+        ),
+        isEmpty,
+      );
       await _answer(tester, correct: false);
       await _continueFeedback(tester);
       expect(
@@ -310,53 +389,27 @@ void main() {
         outcomes.single.fields['recommendation_signal'],
         'compare_seat_and_action_frame',
       );
-    },
-  );
-
-  testWidgets(
-    'W2 matching Practice bridge records one recovered Learning Run outcome',
-    (tester) async {
-      final sink = Act0InMemoryTelemetrySinkV1();
-      await _pumpStartingHandTask(
-        tester,
-        sink,
-        initialTab: Act0ShellTabV1.learn,
+      final rechecks = sink.events
+          .where(
+            (event) => event.name == 'starting_hand_personalization_recheck',
+          )
+          .toList(growable: false);
+      expect(rechecks, hasLength(1));
+      expect(
+        rechecks.single.fields['final_learning_outcome'],
+        'hand_discipline_still_needs_rep',
       );
-
-      await _answer(tester, correct: false);
       expect(
         sink.events.where(
-          (event) => event.name == 'learning_run_outcome_recorded',
+          (event) => event.name == 'starting_hand_personalization_payoff',
         ),
         isEmpty,
       );
-
-      await _openRepair(tester);
-      await _answer(tester, correct: true);
-
-      final outcomes = sink.events
-          .where((event) => event.name == 'learning_run_outcome_recorded')
-          .toList(growable: false);
-      expect(outcomes, hasLength(1));
-      expect(outcomes.single.fields['outcome_type'], 'recoveredAfterRepair');
-      expect(outcomes.single.fields['skill_id'], 'table_read');
-      expect(outcomes.single.fields['repair_attempted'], isTrue);
-      expect(outcomes.single.fields['recheck_result'], isTrue);
-      expect(outcomes.single.fields['missed_signal'], 'hero_seat');
       expect(
-        outcomes.single.fields['recommendation_signal'],
-        'compare_seat_and_action_frame',
-      );
-
-      final payoffs = sink.events
-          .where(
-            (event) => event.name == 'starting_hand_personalization_payoff',
-          )
-          .toList(growable: false);
-      expect(payoffs, hasLength(1));
-      expect(
-        payoffs.single.fields['final_learning_outcome'],
-        'hand_discipline_recovered',
+        sink.events.where(
+          (event) => event.name.startsWith('learning_effect_delta_'),
+        ),
+        isEmpty,
       );
     },
   );
@@ -519,6 +572,8 @@ Future<void> _continueFeedback(WidgetTester tester) async {
   for (var i = 0; i < 4; i++) {
     final cta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
     if (cta.evaluate().isEmpty) return;
+    await tester.ensureVisible(cta);
+    await tester.pumpAndSettle();
     expect(tester.getRect(cta).bottom, lessThanOrEqualTo(812));
     await tester.tap(cta);
     await tester.pumpAndSettle();
