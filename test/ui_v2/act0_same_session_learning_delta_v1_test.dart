@@ -155,121 +155,112 @@ void main() {
     });
   });
 
-  testWidgets(
-    'canonical persisted W2 recovery shows one delta on the source recheck '
-    'feedback, keeps the CTA reachable, emits once, then closes the run '
-    'normally through Review',
-    (tester) async {
-      final sink = Act0InMemoryTelemetrySinkV1();
-      _seedW2ApplyPrecondition();
-      await _pumpW2Route(tester, sink);
+  testWidgets('completed-lesson W2 replay shows one delta on the source recheck '
+      'feedback, keeps the CTA reachable, emits once, then closes the run '
+      'normally through Review', (tester) async {
+    final sink = Act0InMemoryTelemetrySinkV1();
+    _seedW2ApplyPrecondition(sourceCompleted: true);
+    await _pumpW2Route(tester, sink);
 
-      await tester.tap(find.text('Start'));
-      await tester.pumpAndSettle();
-      await _answerW2Route(tester, correct: false);
-      await _openW2Repair(tester);
-      await _answerW2Route(tester, correct: true);
-      await _continueW2Feedback(tester);
+    await _openCompletedW2SourceReplay(tester);
+    await _answerW2Route(tester, correct: false);
+    await tester.tap(find.text('Try same clue'));
+    await tester.pumpAndSettle();
+    await _answerW2Route(tester, correct: true);
+    await _continueW2Feedback(tester);
 
-      await tester.tap(find.text('Learn').last);
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Start'));
-      await tester.pumpAndSettle();
+    // Correct source recheck: the delta should render on this terminal
+    // feedback screen, before Review closes the Learning Run.
+    await _answerW2Route(tester, correct: true);
+    await tester.pumpAndSettle();
 
-      // Correct source recheck: the delta should render on this terminal
-      // feedback screen, before Review closes the Learning Run.
-      await _answerW2Route(tester, correct: true);
-      await tester.pumpAndSettle();
+    expect(
+      find.byKey(const Key('act0_shell_repair_outcome_proof_line')),
+      findsOneWidget,
+    );
+    expect(
+      find.text(
+        "You missed Hero's seat first. On the recheck, you used it correctly.",
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_repair_outcome_proof_title')),
+      findsOneWidget,
+    );
+    expect(find.text('Repair landed'), findsOneWidget);
 
-      expect(
-        find.byKey(const Key('act0_shell_repair_outcome_proof_line')),
-        findsOneWidget,
-      );
-      expect(
-        find.text(
-          "You missed Hero's seat first. On the recheck, you used it correctly.",
-        ),
-        findsOneWidget,
-      );
-      expect(
-        find.byKey(const Key('act0_shell_repair_outcome_proof_title')),
-        findsOneWidget,
-      );
-      expect(find.text('Repair landed'), findsOneWidget);
+    final viewedAfterFirstRender = sink.events
+        .where((event) => event.name == 'learning_effect_delta_viewed')
+        .toList(growable: false);
+    expect(viewedAfterFirstRender, hasLength(1));
 
-      final viewedAfterFirstRender = sink.events
-          .where((event) => event.name == 'learning_effect_delta_viewed')
-          .toList(growable: false);
-      expect(viewedAfterFirstRender, hasLength(1));
+    // Rebuild without a code change must not duplicate the viewed event.
+    await tester.pump();
+    final viewedAfterRebuild = sink.events
+        .where((event) => event.name == 'learning_effect_delta_viewed')
+        .toList(growable: false);
+    expect(viewedAfterRebuild, hasLength(1));
+    expect(viewedAfterRebuild.single.fields, <String, Object?>{
+      'schemaVersion': 1,
+      'delta_kind': 'same_session_recovery',
+      'outcome_type': 'recovered_after_repair',
+      'skill_id': 'table_read',
+      'missed_signal_id': 'hero_seat',
+      'surface': 'source_recheck_feedback',
+      'evidence_count': 1,
+    });
 
-      // Rebuild without a code change must not duplicate the viewed event.
-      await tester.pump();
-      final viewedAfterRebuild = sink.events
-          .where((event) => event.name == 'learning_effect_delta_viewed')
-          .toList(growable: false);
-      expect(viewedAfterRebuild, hasLength(1));
-      expect(viewedAfterRebuild.single.fields, <String, Object?>{
-        'schemaVersion': 1,
-        'delta_kind': 'same_session_recovery',
-        'outcome_type': 'recovered_after_repair',
-        'skill_id': 'table_read',
-        'missed_signal_id': 'hero_seat',
-        'surface': 'source_recheck_feedback',
-        'evidence_count': 1,
-      });
+    final cta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+    expect(cta, findsOneWidget);
+    await tester.ensureVisible(cta);
+    await tester.pumpAndSettle();
+    expect(
+      tester.getRect(cta).bottom,
+      lessThanOrEqualTo(
+        tester.view.physicalSize.height / tester.view.devicePixelRatio,
+      ),
+    );
+    await tester.tap(cta);
+    await tester.pumpAndSettle();
 
-      final cta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
-      expect(cta, findsOneWidget);
-      await tester.ensureVisible(cta);
-      await tester.pumpAndSettle();
-      expect(
-        tester.getRect(cta).bottom,
-        lessThanOrEqualTo(
-          tester.view.physicalSize.height / tester.view.devicePixelRatio,
-        ),
-      );
-      await tester.tap(cta);
-      await tester.pumpAndSettle();
+    final completed = sink.events
+        .where((event) => event.name == 'learning_effect_delta_completed')
+        .toList(growable: false);
+    expect(completed, hasLength(1));
+    expect(completed.single.fields, viewedAfterRebuild.single.fields);
 
-      final completed = sink.events
-          .where((event) => event.name == 'learning_effect_delta_completed')
-          .toList(growable: false);
-      expect(completed, hasLength(1));
-      expect(completed.single.fields, viewedAfterRebuild.single.fields);
+    // Production route continues to Review and does not show a
+    // Session Summary claim for this delta.
+    expect(
+      find.byKey(const Key('act0_shell_repair_outcome_proof_line')),
+      findsNothing,
+    );
+    expect(find.text('You corrected this read'), findsNothing);
 
-      // Production route continues to Review and does not show a
-      // Session Summary claim for this delta.
-      expect(
-        find.byKey(const Key('act0_shell_repair_outcome_proof_line')),
-        findsNothing,
-      );
-      expect(find.text('You corrected this read'), findsNothing);
-
-      final outcomes = sink.events
-          .where((event) => event.name == 'learning_run_outcome_recorded')
-          .toList(growable: false);
-      final recoveredOutcomes = outcomes
-          .where(
-            (event) => event.fields['outcome_type'] == 'recoveredAfterRepair',
-          )
-          .toList(growable: false);
-      expect(recoveredOutcomes, hasLength(1));
-      expect(recoveredOutcomes.single.fields['skill_id'], 'table_read');
-      expect(recoveredOutcomes.single.fields['repair_attempted'], isTrue);
-      expect(recoveredOutcomes.single.fields['recheck_result'], isTrue);
-      expect(recoveredOutcomes.single.fields['missed_signal'], 'hero_seat');
-    },
-  );
+    final outcomes = sink.events
+        .where((event) => event.name == 'learning_run_outcome_recorded')
+        .toList(growable: false);
+    final recoveredOutcomes = outcomes
+        .where(
+          (event) => event.fields['outcome_type'] == 'recoveredAfterRepair',
+        )
+        .toList(growable: false);
+    expect(recoveredOutcomes, hasLength(1));
+    expect(recoveredOutcomes.single.fields['skill_id'], 'table_read');
+    expect(recoveredOutcomes.single.fields['repair_attempted'], isTrue);
+    expect(recoveredOutcomes.single.fields['recheck_result'], isTrue);
+    expect(recoveredOutcomes.single.fields['missed_signal'], 'hero_seat');
+  });
 
   testWidgets(
     'a clean correct-first task shows no delta on its recheck feedback',
     (tester) async {
       final sink = Act0InMemoryTelemetrySinkV1();
-      _seedW2ApplyPrecondition();
+      _seedW2ApplyPrecondition(sourceCompleted: true);
       await _pumpW2Route(tester, sink);
 
-      await tester.tap(find.text('Start'));
-      await tester.pumpAndSettle();
+      await _openCompletedW2SourceReplay(tester);
       await _answerW2Route(tester, correct: true);
       await tester.pumpAndSettle();
 
@@ -313,7 +304,7 @@ Act0LearningRunOutcomeV1 _outcome({
   eventOrder: order,
 );
 
-void _seedW2ApplyPrecondition() {
+void _seedW2ApplyPrecondition({bool sourceCompleted = false}) {
   final state = Act0ShellStateV1.sample;
   final world = state.worldById(Act0StartingHandPersonalizationV1.worldId);
   final worldIndex = state.worlds.indexWhere(
@@ -340,6 +331,10 @@ void _seedW2ApplyPrecondition() {
       ...lesson.taskList.map((task) => task.taskId),
     ...targetLesson.taskList.take(sourceTaskIndex).map((task) => task.taskId),
   ];
+  if (sourceCompleted) {
+    completedLessons.add(targetLesson.lessonId);
+    completedTasks.addAll(targetLesson.taskList.map((task) => task.taskId));
+  }
   final progressPayload = <String, Object>{
     'schemaVersion': 17,
     'completedTaskIds': completedTasks,
@@ -361,7 +356,7 @@ Future<void> _pumpW2Route(
   WidgetTester tester,
   Act0InMemoryTelemetrySinkV1 sink,
 ) async {
-  tester.view.physicalSize = const Size(375, 812);
+  tester.view.physicalSize = const Size(375, 1000);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
@@ -382,6 +377,29 @@ Future<void> _pumpW2Route(
       ),
     ),
   );
+  await tester.pumpAndSettle();
+}
+
+Future<void> _openCompletedW2SourceReplay(WidgetTester tester) async {
+  await tester.tap(find.text('All lessons'));
+  await tester.pumpAndSettle();
+  final lesson = find.text('Discipline at the table');
+  await tester.ensureVisible(lesson);
+  await tester.tap(lesson);
+  await tester.pumpAndSettle();
+  final sourceTask = find.text('HJ, medium hand');
+  final learnScroll = find.descendant(
+    of: find.byKey(const Key('act0_shell_learn_screen')),
+    matching: find.byType(Scrollable),
+  );
+  await tester.drag(learnScroll, const Offset(0, -520));
+  await tester.pumpAndSettle();
+  await tester.tap(sourceTask);
+  await tester.pumpAndSettle();
+  final replay = find.byKey(const Key('act0_shell_selected_lesson_cta'));
+  await tester.ensureVisible(replay);
+  await tester.tap(replay);
+  tester.view.physicalSize = const Size(375, 812);
   await tester.pumpAndSettle();
 }
 
@@ -418,6 +436,8 @@ Future<void> _continueW2Feedback(WidgetTester tester) async {
   for (var i = 0; i < 4; i++) {
     final cta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
     if (cta.evaluate().isEmpty) return;
+    await tester.ensureVisible(cta);
+    await tester.pumpAndSettle();
     await tester.tap(cta);
     await tester.pumpAndSettle();
   }

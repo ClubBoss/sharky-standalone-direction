@@ -3923,14 +3923,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
   }
 
-  void _recordLearningRunPositionRecheckV1({required bool recheckCorrect}) {
+  void _recordLearningRunSourceRecheckV1({
+    required String sourceTaskId,
+    required bool recheckCorrect,
+  }) {
     final run = _learningRunV1;
     if (run == null) {
       return;
     }
+    final normalizedSourceTaskId = sourceTaskId.trim();
+    if (normalizedSourceTaskId.isEmpty) {
+      return;
+    }
     Act0LearningRunOutcomeV1? source;
     for (final outcome in run.outcomes.reversed) {
-      if (outcome.skillId == Act0PositionPersonalizationV1.skillId) {
+      if (outcome.taskId == normalizedSourceTaskId &&
+          !outcome.firstAttemptCorrect &&
+          outcome.finalOutcome == Act0LearningRunFinalOutcomeV1.incomplete) {
         source = outcome;
         break;
       }
@@ -3945,85 +3954,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         taskId: source.taskId,
         skillId: source.skillId,
         firstAttemptCorrect: false,
-        errorType: Act0PositionPersonalizationV1.errorType,
+        errorType: source.errorType,
         repairAttempted: true,
         recheckResult: recheckCorrect,
         finalOutcome: recheckCorrect
             ? Act0LearningRunFinalOutcomeV1.recoveredAfterRepair
             : Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
-        missedSignal: Act0PositionPersonalizationV1.missedSignalId,
-        recommendationSignal: 'find_button_before_late_position',
-        eventOrder: _nextLearningRunEventOrderV1(),
-      ),
-    );
-  }
-
-  void _recordLearningRunStartingHandRecheckV1({required bool recheckCorrect}) {
-    final run = _learningRunV1;
-    if (run == null) {
-      return;
-    }
-    Act0LearningRunOutcomeV1? source;
-    for (final outcome in run.outcomes.reversed) {
-      if (outcome.skillId == Act0StartingHandPersonalizationV1.skillId &&
-          outcome.taskId == Act0StartingHandPersonalizationV1.sourceTaskId) {
-        source = outcome;
-        break;
-      }
-    }
-    if (source == null || source.firstAttemptCorrect) {
-      return;
-    }
-    _recordLearningRunOutcomeV1(
-      Act0LearningRunOutcomeV1(
-        outcomeId: source.outcomeId,
-        lessonId: source.lessonId,
-        taskId: source.taskId,
-        skillId: source.skillId,
-        firstAttemptCorrect: false,
-        errorType: Act0StartingHandPersonalizationV1.errorType,
-        repairAttempted: true,
-        recheckResult: recheckCorrect,
-        finalOutcome: recheckCorrect
-            ? Act0LearningRunFinalOutcomeV1.recoveredAfterRepair
-            : Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
-        missedSignal: Act0StartingHandPersonalizationV1.missedSignalId,
-        recommendationSignal: 'compare_seat_and_action_frame',
-        eventOrder: _nextLearningRunEventOrderV1(),
-      ),
-    );
-  }
-
-  void _recordLearningRunPriceRecheckV1({required bool recheckCorrect}) {
-    final run = _learningRunV1;
-    if (run == null) {
-      return;
-    }
-    Act0LearningRunOutcomeV1? source;
-    for (final outcome in run.outcomes.reversed) {
-      if (outcome.skillId == Act0PricePersonalizationV1.skillId) {
-        source = outcome;
-        break;
-      }
-    }
-    if (source == null || source.firstAttemptCorrect) {
-      return;
-    }
-    _recordLearningRunOutcomeV1(
-      Act0LearningRunOutcomeV1(
-        outcomeId: source.outcomeId,
-        lessonId: source.lessonId,
-        taskId: source.taskId,
-        skillId: source.skillId,
-        firstAttemptCorrect: false,
-        errorType: Act0PricePersonalizationV1.errorType,
-        repairAttempted: true,
-        recheckResult: recheckCorrect,
-        finalOutcome: recheckCorrect
-            ? Act0LearningRunFinalOutcomeV1.recoveredAfterRepair
-            : Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
-        missedSignal: Act0PricePersonalizationV1.missedSignalId,
-        recommendationSignal: 'compare_pot_to_call',
+        missedSignal: source.missedSignal,
+        recommendationSignal: source.recommendationSignal,
         eventOrder: _nextLearningRunEventOrderV1(),
       ),
     );
@@ -5852,6 +5790,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       repaired: repaired,
                                       record: repairSourceRecord,
                                     );
+                                    final startsSourceRecheck =
+                                        _activeSameSignalFeedbackRepairV1 ||
+                                        _isPracticeQueueRepairAnswerV1(
+                                          playSelectedTask,
+                                        );
                                     if (repaired) {
                                       _clearMatchedOpenRepairIntentV1(
                                         sourceTaskId: repairSourceTaskId,
@@ -5863,7 +5806,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                             playSelectedTask.taskId,
                                       );
                                       _completeCurrentTask(playSelectedTask);
-                                      if (_activeSameSignalFeedbackRepairV1 &&
+                                      if (startsSourceRecheck &&
                                           _startSameSignalRecheckV1(
                                             selectedWorld: selectedWorld,
                                             sourceTaskId: repairSourceTaskId,
@@ -9919,30 +9862,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final recordingPracticeQueueRepair =
         practiceQueueRepairRequest != null &&
         practiceQueueRepairRequest.repairTaskId == selectedTask.taskId;
-    if (!option.isCorrect) {
-      Act0StartingHandPersonalizationCaseV1? startingHandCase;
-      for (final intent in _activeRepairIntentsV1()) {
-        if (intent.targetTaskId != selectedTask.taskId) {
-          continue;
-        }
-        startingHandCase = Act0StartingHandPersonalizationV1.fromRepairIntent(
-          intent,
-        );
-        if (startingHandCase != null) {
-          break;
-        }
-      }
-      if (startingHandCase != null) {
-        _recordLearningRunStartingHandRecheckV1(recheckCorrect: false);
-        _recordTelemetryEventV1(
-          'starting_hand_personalization_recheck',
-          startingHandCase.telemetryFields(
-            attemptPhase: 'recheck',
-            finalLearningOutcome: startingHandCase.failedRecheckOutcome,
-          ),
-        );
-      }
-    }
     if (recordingPracticeQueueRepair) {
       _appendPracticeQueueRepairOutcomeV1(
         request: practiceQueueRepairRequest,
@@ -9950,6 +9869,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         option: option,
       );
       return;
+    }
+    if (_activeSameSignalRecheckTaskId == selectedTask.taskId) {
+      _recordLearningRunSourceRecheckV1(
+        sourceTaskId:
+            _activeSameSignalRecheckSourceTaskId ?? selectedTask.taskId,
+        recheckCorrect: option.isCorrect,
+      );
     }
     final repairSourceTaskId = _activeRepairTaskId == selectedTask.taskId
         ? (_activeRepairSourceTaskId ?? selectedTask.taskId)
@@ -10220,58 +10146,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       repairTaskId: request.repairTaskId,
       repaired: option.isCorrect,
     );
-    final positionIntent =
-        _openRepairIntentBySourceTaskId[request.sourceTaskId];
-    final positionCase = positionIntent == null
-        ? null
-        : _positionCaseForIntentV1(positionIntent);
-    if (positionCase != null) {
-      _recordLearningRunPositionRecheckV1(recheckCorrect: option.isCorrect);
-      _recordTelemetryEventV1(
-        'position_personalization_recheck',
-        positionCase.telemetryFields(
-          attemptPhase: 'recheck',
-          finalLearningOutcome: option.isCorrect
-              ? positionCase.successfulPayoffOutcome
-              : positionCase.failedRecheckOutcome,
-        ),
-      );
-    }
-    final priceIntent = _openRepairIntentBySourceTaskId[request.sourceTaskId];
-    final priceCase = priceIntent == null
-        ? null
-        : _priceCaseForIntentV1(priceIntent);
-    if (priceCase != null) {
-      _recordLearningRunPriceRecheckV1(recheckCorrect: option.isCorrect);
-      _recordTelemetryEventV1(
-        'price_personalization_recheck',
-        priceCase.telemetryFields(
-          attemptPhase: 'recheck',
-          finalLearningOutcome: option.isCorrect
-              ? priceCase.successfulPayoffOutcome
-              : priceCase.failedRecheckOutcome,
-        ),
-      );
-    }
-    final startingHandIntent =
-        _openRepairIntentBySourceTaskId[request.sourceTaskId];
-    final startingHandCase = startingHandIntent == null
-        ? null
-        : Act0StartingHandPersonalizationV1.fromRepairIntent(
-            startingHandIntent,
-          );
-    if (startingHandCase != null) {
-      _recordLearningRunStartingHandRecheckV1(recheckCorrect: option.isCorrect);
-      if (!option.isCorrect) {
-        _recordTelemetryEventV1(
-          'starting_hand_personalization_recheck',
-          startingHandCase.telemetryFields(
-            attemptPhase: 'recheck',
-            finalLearningOutcome: startingHandCase.failedRecheckOutcome,
-          ),
-        );
-      }
-    }
     _reviewResolutionReceiptHistoryV1 =
         reviewResolutionReceiptHistoryFromSourcesV1(
           reviewMistakeHistory: _reviewMistakeHistoryV1,
@@ -10498,58 +10372,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         completedTaskId == intent.sourceTaskId;
     final completedMappedTarget = completedTaskId == intent.targetTaskId;
     if (completedExactReplay || completedMappedTarget) {
-      final positionCase = _positionCaseForIntentV1(intent);
-      if (positionCase != null && completedMappedTarget) {
-        _recordTelemetryEventV1(
-          'position_personalization_recheck',
-          positionCase.telemetryFields(
-            attemptPhase: 'recheck',
-            finalLearningOutcome: positionCase.successfulPayoffOutcome,
-          ),
-        );
-        _recordTelemetryEventV1(
-          'position_personalization_payoff',
-          positionCase.telemetryFields(
-            attemptPhase: 'payoff',
-            finalLearningOutcome: positionCase.successfulPayoffOutcome,
-          ),
-        );
-      }
-      final priceCase = _priceCaseForIntentV1(intent);
-      if (priceCase != null && completedMappedTarget) {
-        _recordTelemetryEventV1(
-          'price_personalization_recheck',
-          priceCase.telemetryFields(
-            attemptPhase: 'recheck',
-            finalLearningOutcome: priceCase.successfulPayoffOutcome,
-          ),
-        );
-        _recordTelemetryEventV1(
-          'price_personalization_payoff',
-          priceCase.telemetryFields(
-            attemptPhase: 'payoff',
-            finalLearningOutcome: priceCase.successfulPayoffOutcome,
-          ),
-        );
-      }
-      final startingHandCase =
-          Act0StartingHandPersonalizationV1.fromRepairIntent(intent);
-      if (startingHandCase != null && completedMappedTarget) {
-        _recordTelemetryEventV1(
-          'starting_hand_personalization_recheck',
-          startingHandCase.telemetryFields(
-            attemptPhase: 'recheck',
-            finalLearningOutcome: startingHandCase.successfulPayoffOutcome,
-          ),
-        );
-        _recordTelemetryEventV1(
-          'starting_hand_personalization_payoff',
-          startingHandCase.telemetryFields(
-            attemptPhase: 'payoff',
-            finalLearningOutcome: startingHandCase.successfulPayoffOutcome,
-          ),
-        );
-      }
       _openRepairIntentBySourceTaskId.remove(sourceTaskId);
       _multiRepairQueueV1 = Act0MultiRepairQueueV1(
         entries: List<Act0MultiRepairQueueEntryV1>.unmodifiable(
