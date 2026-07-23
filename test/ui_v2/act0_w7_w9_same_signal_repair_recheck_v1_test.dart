@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
@@ -176,6 +177,16 @@ void main() {
         sink.events.where((event) => event.name == 'lesson_complete'),
         isEmpty,
       );
+      // Route isolation: the Practice repair queue (Review/Practice-origin)
+      // never engages the inline feedback-CTA same-signal recheck machine.
+      expect(
+        sink.events.where((event) => event.name == 'recheck_started'),
+        isEmpty,
+      );
+      expect(
+        sink.events.where((event) => event.name == 'recheck_completed'),
+        isEmpty,
+      );
     },
   );
 
@@ -269,6 +280,181 @@ void main() {
       );
     },
   );
+
+  testWidgets(
+    'inline same-signal recheck success advances the parent lesson instead '
+    'of forcing Review',
+    (tester) async {
+      final sink = Act0InMemoryTelemetrySinkV1();
+      await _pumpHost(
+        tester,
+        state: _stateWithCanonicalSourceRouteTargetAndNextStepV1(
+          worldId: 'world_1',
+          sourceLessonId: 'what_poker_is',
+          sourceTaskId: 'what_poker_is_table_read_transfer',
+          sourceRunner: _sourceRunner(
+            lessonId: 'what_poker_is_table_read_transfer',
+            signalLabel: 'Board cards',
+          ),
+          targetLessonId: 'cards_ranks_suits',
+          targetTaskId: 'cards_ranks_suits_board_count',
+          nextStepTaskId: 'what_poker_is_find_hero',
+          nextStepRunner: _sourceRunner(
+            lessonId: 'what_poker_is_find_hero',
+            signalLabel: 'Hero seat',
+          ),
+        ),
+        sink: sink,
+        worldId: 'world_1',
+        lessonId: 'what_poker_is',
+        taskId: 'what_poker_is_table_read_transfer',
+      );
+
+      await _advanceToAnswer(tester);
+      await _answerOption(tester, 'ignore_signal');
+      expect(find.text('Try same clue'), findsOneWidget);
+      await _continueFeedback(tester);
+      expect(_activeTaskId(tester), 'cards_ranks_suits_board_count');
+
+      await _advanceToAnswer(tester);
+      await _answerCorrectly(tester);
+      await _continueFeedback(tester);
+      expect(_activeTaskId(tester), 'what_poker_is_table_read_transfer');
+
+      await _advanceToAnswer(tester);
+      await _answerCorrectly(tester);
+      await _continueFeedback(tester);
+
+      expect(
+        _activeTaskId(tester),
+        'what_poker_is_find_hero',
+        reason:
+            'a successful inline recheck must advance to the next '
+            'unfinished step in the same lesson, not force Review',
+      );
+      expect(find.byType(Act0LessonRunnerShellV1), findsOneWidget);
+      expect(find.byType(Act0ReviewShellV1), findsNothing);
+      expect(
+        sink.events.where((event) => event.name == 'recheck_completed'),
+        hasLength(1),
+      );
+    },
+  );
+
+  testWidgets('incorrect inline same-signal recheck remains unresolved without '
+      'advancing the lesson', (tester) async {
+    final sink = Act0InMemoryTelemetrySinkV1();
+    await _pumpHost(
+      tester,
+      state: _stateWithCanonicalSourceRouteTargetAndNextStepV1(
+        worldId: 'world_1',
+        sourceLessonId: 'what_poker_is',
+        sourceTaskId: 'what_poker_is_table_read_transfer',
+        sourceRunner: _sourceRunner(
+          lessonId: 'what_poker_is_table_read_transfer',
+          signalLabel: 'Board cards',
+        ),
+        targetLessonId: 'cards_ranks_suits',
+        targetTaskId: 'cards_ranks_suits_board_count',
+        nextStepTaskId: 'what_poker_is_find_hero',
+        nextStepRunner: _sourceRunner(
+          lessonId: 'what_poker_is_find_hero',
+          signalLabel: 'Hero seat',
+        ),
+      ),
+      sink: sink,
+      worldId: 'world_1',
+      lessonId: 'what_poker_is',
+      taskId: 'what_poker_is_table_read_transfer',
+    );
+
+    await _advanceToAnswer(tester);
+    await _answerOption(tester, 'ignore_signal');
+    await _continueFeedback(tester);
+    expect(_activeTaskId(tester), 'cards_ranks_suits_board_count');
+
+    await _advanceToAnswer(tester);
+    await _answerCorrectly(tester);
+    await _continueFeedback(tester);
+    expect(_activeTaskId(tester), 'what_poker_is_table_read_transfer');
+
+    await _advanceToAnswer(tester);
+    await _answerWrongly(tester);
+    await _continueFeedback(tester);
+
+    expect(
+      _activeTaskId(tester),
+      isNot('what_poker_is_find_hero'),
+      reason: 'an unresolved recheck must not advance the parent lesson',
+    );
+    expect(find.byType(Act0ReviewShellV1), findsOneWidget);
+    final recoveredEvents = sink.events.where(
+      (event) =>
+          event.name == 'recheck_completed' &&
+          event.fields['result'] == 'correct',
+    );
+    expect(
+      recoveredEvents,
+      isEmpty,
+      reason: 'an incorrect recheck must never emit a recovered claim',
+    );
+  });
+
+  testWidgets('canonical intentional-exact-replay recheck on blinds_last_actor '
+      'advances to the authored next task blinds_postflop_button', (
+    tester,
+  ) async {
+    final sink = Act0InMemoryTelemetrySinkV1();
+    await _pumpHost(
+      tester,
+      state: Act0ShellStateV1.sample,
+      sink: sink,
+      worldId: 'world_1',
+      lessonId: 'blinds_action_order',
+      taskId: 'blinds_last_actor',
+    );
+
+    // blinds_last_actor is a seat-tap task ("Tap BB."), not an
+    // option-button task, and the debug harness already lands past
+    // teaching, so each answer is a direct seat tap.
+    await _answerSeat(tester, 'sb');
+    expect(find.text('Try same clue'), findsOneWidget);
+
+    await _continueFeedback(tester);
+    expect(
+      _activeTaskId(tester),
+      'blinds_last_actor',
+      reason:
+          'intentional-exact-replay repair for blinds_last_actor targets '
+          'the source task itself',
+    );
+
+    await _answerSeat(tester, 'bb');
+    await _continueFeedback(tester);
+    expect(
+      _activeTaskId(tester),
+      'blinds_last_actor',
+      reason: 'the source recheck is again blinds_last_actor itself',
+    );
+
+    await _answerSeat(tester, 'bb');
+    await _continueFeedback(tester);
+
+    expect(
+      _activeTaskId(tester),
+      'blinds_postflop_button',
+      reason:
+          'a successful exact-replay recheck must advance to the '
+          'authored next task in blinds_action_order, not force Review',
+    );
+    expect(find.byType(Act0LessonRunnerShellV1), findsOneWidget);
+    expect(find.byType(Act0ReviewShellV1), findsNothing);
+    expect(
+      sink.events.where((event) => event.name == 'recheck_completed'),
+      hasLength(1),
+      reason: 'exactly one recheck completion event, no duplicate',
+    );
+  });
 }
 
 class _SameSignalRouteCaseV1 {
@@ -388,6 +574,73 @@ Act0ShellStateV1 _stateWithCanonicalSourceAndRouteTarget({
   return _stateForWorld(world, selectedLessonId: sourceLessonId);
 }
 
+/// Same as [_stateWithCanonicalSourceAndRouteTarget], but the source lesson
+/// carries a second, still-unfinished task after the recheck source task so
+/// tests can assert that a successful inline recheck advances the lesson
+/// instead of forcing Review.
+Act0ShellStateV1 _stateWithCanonicalSourceRouteTargetAndNextStepV1({
+  required String worldId,
+  required String sourceLessonId,
+  required String sourceTaskId,
+  required Act0RunnerStateV1 sourceRunner,
+  required String targetLessonId,
+  required String targetTaskId,
+  required String nextStepTaskId,
+  required Act0RunnerStateV1 nextStepRunner,
+}) {
+  final sample = Act0ShellStateV1.sample;
+  final baseWorld = sample.worldById(worldId);
+  final targetBaseLesson = baseWorld.lessons.firstWhere(
+    (lesson) => lesson.lessonId == targetLessonId,
+  );
+  final targetTask = targetBaseLesson.taskList.firstWhere(
+    (task) => task.taskId == targetTaskId,
+  );
+  final sourceLesson = Act0LessonCardV1(
+    lessonId: sourceLessonId,
+    title: sourceLessonId,
+    subtitle: 'Same-signal source',
+    state: Act0LessonStateV1.current,
+    phaseLabel: 'Source',
+    primaryCtaLabel: 'Open lesson',
+    isSelectable: true,
+    isLocked: false,
+    rewardXp: 1,
+    runner: sourceRunner,
+    tasks: <Act0LessonTaskV1>[
+      Act0LessonTaskV1(
+        taskId: sourceTaskId,
+        title: sourceTaskId,
+        phase: Act0LessonPhaseV1.drill,
+        runner: sourceRunner,
+        rewardXp: 1,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+      Act0LessonTaskV1(
+        taskId: nextStepTaskId,
+        title: nextStepTaskId,
+        phase: Act0LessonPhaseV1.drill,
+        runner: nextStepRunner,
+        rewardXp: 1,
+        stepKind: Act0LessonStepKindV1.practice,
+      ),
+    ],
+  );
+  final targetLesson = targetBaseLesson.copyWith(
+    state: Act0LessonStateV1.current,
+    isSelectable: true,
+    isLocked: false,
+    tasks: <Act0LessonTaskV1>[targetTask],
+  );
+  final world = baseWorld.copyWith(
+    status: Act0WorldStateV1.current,
+    isSelectable: true,
+    isLocked: false,
+    lessons: <Act0LessonCardV1>[sourceLesson, targetLesson],
+  );
+  return _stateForWorld(world, selectedLessonId: sourceLessonId);
+}
+
 Act0ShellStateV1 _stateForWorld(
   Act0WorldCardV1 world, {
   required String selectedLessonId,
@@ -476,6 +729,15 @@ Future<void> _answerOption(WidgetTester tester, String optionId) async {
   final option = find.byKey(Key('act0_shell_option_$optionId'));
   expect(option, findsOneWidget);
   await tester.tap(option);
+  await tester.pumpAndSettle();
+}
+
+/// Answers a seat-tap task (e.g. "Tap BB.") by tapping the seat directly,
+/// as opposed to [_answerOption]'s option-button submission.
+Future<void> _answerSeat(WidgetTester tester, String seatId) async {
+  final seat = find.byKey(Key('act0_shell_seat_tap_$seatId'));
+  expect(seat, findsOneWidget);
+  await tester.tap(seat);
   await tester.pumpAndSettle();
 }
 
