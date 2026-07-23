@@ -31,6 +31,12 @@ void main() {
         'KQo in HJ is a clean open when the pot is unopened.',
       );
       expect(family.repairStrategyId, 'compare_seat_and_action_frame_v1');
+      expect(family.feedbackMappingId, 'w2_hand_discipline_feedback_v1');
+      final normalizedFeedbackMappingId = family.feedbackMappingId
+          .toLowerCase();
+      for (final forbidden in <String>['kqo', 'hj', 'open']) {
+        expect(normalizedFeedbackMappingId, isNot(contains(forbidden)));
+      }
       expect(
         family.recheckMappingId,
         'same_starting_hand_discipline_signal_v1',
@@ -249,17 +255,28 @@ void main() {
         payoffs.single.fields['final_learning_outcome'],
         'hand_discipline_recovered',
       );
+      expect(
+        rechecks.single.fields['feedback_mapping_id'],
+        'w2_hand_discipline_feedback_v1',
+      );
+      expect(
+        payoffs.single.fields['feedback_mapping_id'],
+        'w2_hand_discipline_feedback_v1',
+      );
       final physicalFamilyTelemetry = jsonEncode(<Object?>[
         rechecks.single.fields,
         payoffs.single.fields,
-      ]);
+      ]).toLowerCase();
       for (final forbidden in <String>[
-        'KQo',
-        'Kd',
-        'Qc',
-        'Hero seat',
-        'caption',
-        'context',
+        'kqo',
+        '"kd"',
+        '"qc"',
+        'co opened',
+        'hero is btn',
+        'hj open',
+        'you missed hero',
+        'tablecontextkey',
+        'table_context_key',
       ]) {
         expect(physicalFamilyTelemetry, isNot(contains(forbidden)));
       }
