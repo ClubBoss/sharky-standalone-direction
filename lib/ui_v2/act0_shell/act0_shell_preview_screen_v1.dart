@@ -22,6 +22,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_run_payoff_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_receipt_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_transfer_measurement_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_same_session_learning_delta_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_last_session_return_reason_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_placement_shell_v1.dart';
@@ -1069,6 +1070,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   int _learningRunOrdinalV1 = 0;
   int _learningRunEventOrderV1 = 0;
   final Set<String> _learningRunOutcomeTelemetryKeysV1 = <String>{};
+  final Set<String> _sameSessionLearningDeltaViewedIdsV1 = <String>{};
+  final Set<String> _sameSessionLearningDeltaCompletedIdsV1 = <String>{};
   final Set<String> _personalizedNextStepShownTelemetryKeysV1 = <String>{};
   bool _debugReviewEmptyV1 = false;
   static const String _progressPrefsKey = 'act0_shell_progress_v1';
@@ -1173,6 +1176,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     String name,
     Map<String, Object?> fields,
   ) {
+    if (name == 'learning_effect_delta_viewed' ||
+        name == 'learning_effect_delta_completed') {
+      return fields;
+    }
     if (fields.containsKey('sessionId') || fields.containsKey('session_id')) {
       return fields;
     }
@@ -4749,6 +4756,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final playSelectedTask = isPlayTab
         ? _taskById(selectedLesson, _selectedTaskId)
         : null;
+    final sameSessionLearningDelta =
+        playSelectedTask != null &&
+            _activeRepairTaskId != playSelectedTask.taskId
+        ? _sameSessionLearningDeltaForTaskV1(playSelectedTask.taskId)
+        : null;
+    if (sameSessionLearningDelta != null) {
+      final deltaToEmit = sameSessionLearningDelta;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _emitSameSessionLearningDeltaViewedV1(deltaToEmit);
+      });
+    }
     final playTaskAlreadyCompleted =
         playSelectedTask != null &&
         _completedTaskIds.contains(playSelectedTask.taskId);
@@ -5520,7 +5539,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _activeRepairTaskId ==
                                         playSelectedTask?.taskId
                                     ? _repairOutcomeProofLineV1()
-                                    : null,
+                                    : sameSessionLearningDelta?.line,
+                                forceShowRepairOutcomeProof:
+                                    sameSessionLearningDelta != null,
                                 repairSessionSummaryLines:
                                     _activeRepairTaskId ==
                                         playSelectedTask?.taskId
@@ -5756,6 +5777,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 actionPayoff:
                                     _actionPayoffForActiveSequenceV1(),
                                 onContinueReview: () => setState(() {
+                                  if (sameSessionLearningDelta != null) {
+                                    _emitSameSessionLearningDeltaCompletedV1(
+                                      sameSessionLearningDelta,
+                                    );
+                                  }
                                   _recordActionRecommendationAcceptedV1();
                                   if (_placementDiagnosticActive) {
                                     final spot = _placementDiagnosticSpotsV1
@@ -10291,6 +10317,38 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _repairOutcomeProjectionV1,
     ).proof;
     return proof?.detail;
+  }
+
+  Act0SameSessionLearningDeltaV1? _sameSessionLearningDeltaForTaskV1(
+    String? taskId,
+  ) {
+    final normalizedTaskId = taskId?.trim() ?? '';
+    if (normalizedTaskId.isEmpty) return null;
+    final delta = Act0SameSessionLearningDeltaProjectionV1.fromLearningRun(
+      _learningRunV1,
+    ).primaryDelta;
+    if (delta == null || delta.sourceTaskId != normalizedTaskId) return null;
+    return delta;
+  }
+
+  void _emitSameSessionLearningDeltaViewedV1(
+    Act0SameSessionLearningDeltaV1 delta,
+  ) {
+    if (!_sameSessionLearningDeltaViewedIdsV1.add(delta.deltaId)) return;
+    _recordTelemetryEventV1(
+      'learning_effect_delta_viewed',
+      delta.telemetryFields,
+    );
+  }
+
+  void _emitSameSessionLearningDeltaCompletedV1(
+    Act0SameSessionLearningDeltaV1 delta,
+  ) {
+    if (!_sameSessionLearningDeltaCompletedIdsV1.add(delta.deltaId)) return;
+    _recordTelemetryEventV1(
+      'learning_effect_delta_completed',
+      delta.telemetryFields,
+    );
   }
 
   bool _isPracticeQueueRepairAnswerV1(Act0LessonTaskV1 selectedTask) {
