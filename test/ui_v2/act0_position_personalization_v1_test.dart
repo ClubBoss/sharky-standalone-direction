@@ -33,7 +33,7 @@ void main() {
     'W3 BTN miss repairs and rechecks the hero-button signal with ordered telemetry',
     (tester) async {
       final sink = Act0InMemoryTelemetrySinkV1();
-      await _pumpPositionTask(tester, sink);
+      await _pumpPositionTask(tester, sink, initialTab: Act0ShellTabV1.learn);
 
       await _answer(tester, correct: false);
       await _continueFeedback(tester);
@@ -59,6 +59,18 @@ void main() {
       );
       await _answer(tester, correct: true);
       await _continueFeedback(tester);
+      expect(
+        sink.events.where(
+          (event) => event.name == 'learning_run_outcome_recorded',
+        ),
+        isEmpty,
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'position_personalization_recheck',
+        ),
+        isEmpty,
+      );
       expect(
         state.debugSelectedTaskIdV1(),
         Act0PositionPersonalizationV1.sourceTaskId,
@@ -115,6 +127,56 @@ void main() {
       );
       expect(familyEvents.first.fields['user_choice'], isNotEmpty);
       expect(sourceChoices.first.fields['decisionTimeBucket'], isNotEmpty);
+      final outcomes = sink.events
+          .where(
+            (event) =>
+                event.name == 'learning_run_outcome_recorded' &&
+                event.fields['outcome_type'] == 'recoveredAfterRepair',
+          )
+          .toList(growable: false);
+      expect(outcomes, hasLength(1));
+      expect(outcomes.single.fields['outcome_type'], 'recoveredAfterRepair');
+    },
+  );
+
+  testWidgets(
+    'W3 failed source recheck emits one family failure and no payoff',
+    (tester) async {
+      final sink = Act0InMemoryTelemetrySinkV1();
+      await _pumpPositionTask(tester, sink, initialTab: Act0ShellTabV1.learn);
+
+      await _answer(tester, correct: false);
+      await _continueFeedback(tester);
+      await _answer(tester, correct: true);
+      await _continueFeedback(tester);
+      await _answer(tester, correct: false);
+      await _continueFeedback(tester);
+
+      final outcomes = sink.events
+          .where((event) => event.name == 'learning_run_outcome_recorded')
+          .toList(growable: false);
+      expect(outcomes, hasLength(1));
+      expect(outcomes.single.fields['outcome_type'], 'stillNeedsPractice');
+      final rechecks = sink.events
+          .where((event) => event.name == 'position_personalization_recheck')
+          .toList(growable: false);
+      expect(rechecks, hasLength(1));
+      expect(
+        rechecks.single.fields['final_learning_outcome'],
+        'position_signal_still_needs_rep',
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'position_personalization_payoff',
+        ),
+        isEmpty,
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name.startsWith('learning_effect_delta_'),
+        ),
+        isEmpty,
+      );
     },
   );
 
@@ -165,8 +227,9 @@ Act0RepairIntentV1 _intent({
 
 Future<void> _pumpPositionTask(
   WidgetTester tester,
-  Act0InMemoryTelemetrySinkV1 sink,
-) async {
+  Act0InMemoryTelemetrySinkV1 sink, {
+  Act0ShellTabV1 initialTab = Act0ShellTabV1.play,
+}) async {
   tester.view.physicalSize = const Size(375, 812);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
@@ -181,7 +244,7 @@ Future<void> _pumpPositionTask(
         GlobalWidgetsLocalizations.delegate,
       ],
       home: Act0ShellPreviewScreenV1(
-        initialTab: Act0ShellTabV1.play,
+        initialTab: initialTab,
         initialPhase: Act0LessonPhaseV1.drill,
         showPlacementOnStart: false,
         state: Act0ShellStateV1.sample,

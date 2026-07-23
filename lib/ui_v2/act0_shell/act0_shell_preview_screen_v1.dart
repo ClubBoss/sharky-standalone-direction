@@ -3923,17 +3923,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
   }
 
-  void _recordLearningRunSourceRecheckV1({
+  Act0LearningRunOutcomeV1? _recordLearningRunSourceRecheckV1({
     required String sourceTaskId,
     required bool recheckCorrect,
   }) {
     final run = _learningRunV1;
     if (run == null) {
-      return;
+      return null;
     }
     final normalizedSourceTaskId = sourceTaskId.trim();
     if (normalizedSourceTaskId.isEmpty) {
-      return;
+      return null;
     }
     Act0LearningRunOutcomeV1? source;
     for (final outcome in run.outcomes.reversed) {
@@ -3945,26 +3945,98 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       }
     }
     if (source == null || source.firstAttemptCorrect) {
+      return null;
+    }
+    final finalized = Act0LearningRunOutcomeV1(
+      outcomeId: source.outcomeId,
+      lessonId: source.lessonId,
+      taskId: source.taskId,
+      skillId: source.skillId,
+      firstAttemptCorrect: false,
+      errorType: source.errorType,
+      repairAttempted: true,
+      recheckResult: recheckCorrect,
+      finalOutcome: recheckCorrect
+          ? Act0LearningRunFinalOutcomeV1.recoveredAfterRepair
+          : Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
+      missedSignal: source.missedSignal,
+      recommendationSignal: source.recommendationSignal,
+      eventOrder: _nextLearningRunEventOrderV1(),
+    );
+    _recordLearningRunOutcomeV1(finalized);
+    return finalized;
+  }
+
+  void _emitPersonalizationFamilySourceRecheckTelemetryV1({
+    required Act0LearningRunOutcomeV1 finalized,
+  }) {
+    final sourceTaskId = finalized.taskId;
+    final recheckCorrect = finalized.recheckResult == true;
+    if (sourceTaskId == Act0PositionPersonalizationV1.sourceTaskId) {
+      const family = Act0PositionPersonalizationCaseV1();
+      _recordTelemetryEventV1(
+        'position_personalization_recheck',
+        family.telemetryFields(
+          attemptPhase: 'recheck',
+          finalLearningOutcome: recheckCorrect
+              ? family.successfulPayoffOutcome
+              : family.failedRecheckOutcome,
+        ),
+      );
+      if (recheckCorrect) {
+        _recordTelemetryEventV1(
+          'position_personalization_payoff',
+          family.telemetryFields(
+            attemptPhase: 'payoff',
+            finalLearningOutcome: family.successfulPayoffOutcome,
+          ),
+        );
+      }
       return;
     }
-    _recordLearningRunOutcomeV1(
-      Act0LearningRunOutcomeV1(
-        outcomeId: source.outcomeId,
-        lessonId: source.lessonId,
-        taskId: source.taskId,
-        skillId: source.skillId,
-        firstAttemptCorrect: false,
-        errorType: source.errorType,
-        repairAttempted: true,
-        recheckResult: recheckCorrect,
-        finalOutcome: recheckCorrect
-            ? Act0LearningRunFinalOutcomeV1.recoveredAfterRepair
-            : Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
-        missedSignal: source.missedSignal,
-        recommendationSignal: source.recommendationSignal,
-        eventOrder: _nextLearningRunEventOrderV1(),
-      ),
-    );
+    if (sourceTaskId == Act0PricePersonalizationV1.sourceTaskId) {
+      const family = Act0PricePersonalizationCaseV1();
+      _recordTelemetryEventV1(
+        'price_personalization_recheck',
+        family.telemetryFields(
+          attemptPhase: 'recheck',
+          finalLearningOutcome: recheckCorrect
+              ? family.successfulPayoffOutcome
+              : family.failedRecheckOutcome,
+        ),
+      );
+      if (recheckCorrect) {
+        _recordTelemetryEventV1(
+          'price_personalization_payoff',
+          family.telemetryFields(
+            attemptPhase: 'payoff',
+            finalLearningOutcome: family.successfulPayoffOutcome,
+          ),
+        );
+      }
+      return;
+    }
+    if (sourceTaskId == Act0StartingHandPersonalizationV1.sourceTaskId) {
+      const family = Act0StartingHandPersonalizationCaseV1();
+      _recordTelemetryEventV1(
+        'starting_hand_personalization_recheck',
+        family.telemetryFields(
+          attemptPhase: 'recheck',
+          finalLearningOutcome: recheckCorrect
+              ? family.successfulPayoffOutcome
+              : family.failedRecheckOutcome,
+        ),
+      );
+      if (recheckCorrect) {
+        _recordTelemetryEventV1(
+          'starting_hand_personalization_payoff',
+          family.telemetryFields(
+            attemptPhase: 'payoff',
+            finalLearningOutcome: family.successfulPayoffOutcome,
+          ),
+        );
+      }
+    }
   }
 
   int _nextLearningRunEventOrderV1() => ++_learningRunEventOrderV1;
@@ -9871,11 +9943,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     if (_activeSameSignalRecheckTaskId == selectedTask.taskId) {
-      _recordLearningRunSourceRecheckV1(
+      final finalized = _recordLearningRunSourceRecheckV1(
         sourceTaskId:
             _activeSameSignalRecheckSourceTaskId ?? selectedTask.taskId,
         recheckCorrect: option.isCorrect,
       );
+      if (finalized != null) {
+        _emitPersonalizationFamilySourceRecheckTelemetryV1(
+          finalized: finalized,
+        );
+      }
     }
     final repairSourceTaskId = _activeRepairTaskId == selectedTask.taskId
         ? (_activeRepairSourceTaskId ?? selectedTask.taskId)

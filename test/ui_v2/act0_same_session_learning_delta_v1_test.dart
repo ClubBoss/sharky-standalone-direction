@@ -169,6 +169,19 @@ void main() {
     await _answerW2Route(tester, correct: true);
     await _continueW2Feedback(tester);
 
+    expect(
+      sink.events.where(
+        (event) => event.name == 'starting_hand_personalization_recheck',
+      ),
+      isEmpty,
+    );
+    expect(
+      sink.events.where(
+        (event) => event.name == 'starting_hand_personalization_payoff',
+      ),
+      isEmpty,
+    );
+
     // Correct source recheck: the delta should render on this terminal
     // feedback screen, before Review closes the Learning Run.
     await _answerW2Route(tester, correct: true);
@@ -194,6 +207,18 @@ void main() {
         .where((event) => event.name == 'learning_effect_delta_viewed')
         .toList(growable: false);
     expect(viewedAfterFirstRender, hasLength(1));
+    expect(
+      sink.events.where(
+        (event) => event.name == 'starting_hand_personalization_recheck',
+      ),
+      hasLength(1),
+    );
+    expect(
+      sink.events.where(
+        (event) => event.name == 'starting_hand_personalization_payoff',
+      ),
+      hasLength(1),
+    );
 
     // Rebuild without a code change must not duplicate the viewed event.
     await tester.pump();
@@ -201,6 +226,12 @@ void main() {
         .where((event) => event.name == 'learning_effect_delta_viewed')
         .toList(growable: false);
     expect(viewedAfterRebuild, hasLength(1));
+    expect(
+      sink.events.where(
+        (event) => event.name == 'starting_hand_personalization_recheck',
+      ),
+      hasLength(1),
+    );
     expect(viewedAfterRebuild.single.fields, <String, Object?>{
       'schemaVersion': 1,
       'delta_kind': 'same_session_recovery',

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -138,6 +140,12 @@ void main() {
         ),
         isEmpty,
       );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'starting_hand_personalization_classified',
+        ),
+        hasLength(1),
+      );
       final state =
           tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
       final intent =
@@ -199,6 +207,18 @@ void main() {
         ),
         isEmpty,
       );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'starting_hand_personalization_recheck',
+        ),
+        isEmpty,
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'starting_hand_personalization_payoff',
+        ),
+        isEmpty,
+      );
 
       await _answer(tester, correct: true);
       final outcomes = sink.events
@@ -209,6 +229,40 @@ void main() {
       expect(outcomes.single.fields['repair_attempted'], isTrue);
       expect(outcomes.single.fields['recheck_result'], isTrue);
       expect(outcomes.single.fields['outcome_type'], 'recoveredAfterRepair');
+      final rechecks = sink.events
+          .where(
+            (event) => event.name == 'starting_hand_personalization_recheck',
+          )
+          .toList(growable: false);
+      final payoffs = sink.events
+          .where(
+            (event) => event.name == 'starting_hand_personalization_payoff',
+          )
+          .toList(growable: false);
+      expect(rechecks, hasLength(1));
+      expect(payoffs, hasLength(1));
+      expect(
+        rechecks.single.fields['final_learning_outcome'],
+        'hand_discipline_recovered',
+      );
+      expect(
+        payoffs.single.fields['final_learning_outcome'],
+        'hand_discipline_recovered',
+      );
+      final physicalFamilyTelemetry = jsonEncode(<Object?>[
+        rechecks.single.fields,
+        payoffs.single.fields,
+      ]);
+      for (final forbidden in <String>[
+        'KQo',
+        'Kd',
+        'Qc',
+        'Hero seat',
+        'caption',
+        'context',
+      ]) {
+        expect(physicalFamilyTelemetry, isNot(contains(forbidden)));
+      }
       expect(
         sink.events.where(
           (event) => event.name == 'learning_effect_delta_viewed',
@@ -225,12 +279,6 @@ void main() {
           (event) => event.name == 'learning_effect_delta_completed',
         ),
         hasLength(1),
-      );
-      expect(
-        sink.events.where(
-          (event) => event.name == 'starting_hand_personalization_payoff',
-        ),
-        isEmpty,
       );
     },
   );
@@ -323,6 +371,28 @@ void main() {
       expect(
         outcomes.single.fields['recommendation_signal'],
         'compare_seat_and_action_frame',
+      );
+      final rechecks = sink.events
+          .where(
+            (event) => event.name == 'starting_hand_personalization_recheck',
+          )
+          .toList(growable: false);
+      expect(rechecks, hasLength(1));
+      expect(
+        rechecks.single.fields['final_learning_outcome'],
+        'hand_discipline_still_needs_rep',
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'starting_hand_personalization_payoff',
+        ),
+        isEmpty,
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name.startsWith('learning_effect_delta_'),
+        ),
+        isEmpty,
       );
     },
   );

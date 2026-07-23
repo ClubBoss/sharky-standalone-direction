@@ -42,7 +42,7 @@ void main() {
     'W4 price miss repairs and rechecks the Pot / to call signal with ordered telemetry',
     (tester) async {
       final sink = Act0InMemoryTelemetrySinkV1();
-      await _pumpPriceTask(tester, sink);
+      await _pumpPriceTask(tester, sink, initialTab: Act0ShellTabV1.learn);
 
       await _answer(tester, correct: false);
       await _continueFeedback(tester);
@@ -65,6 +65,24 @@ void main() {
       );
       await _answer(tester, correct: true);
       await _continueFeedback(tester);
+      expect(
+        sink.events.where(
+          (event) => event.name == 'learning_run_outcome_recorded',
+        ),
+        isEmpty,
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'price_personalization_recheck',
+        ),
+        isEmpty,
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'price_personalization_payoff',
+        ),
+        isEmpty,
+      );
       expect(
         state.debugSelectedTaskIdV1(),
         Act0PricePersonalizationV1.sourceTaskId,
@@ -113,6 +131,15 @@ void main() {
       );
       expect(choices.first.fields['error_type'], 'misread_bet_price');
       expect(choices.first.fields['decisionTimeBucket'], isNotEmpty);
+      final outcomes = sink.events
+          .where(
+            (event) =>
+                event.name == 'learning_run_outcome_recorded' &&
+                event.fields['outcome_type'] == 'recoveredAfterRepair',
+          )
+          .toList(growable: false);
+      expect(outcomes, hasLength(1));
+      expect(outcomes.single.fields['outcome_type'], 'recoveredAfterRepair');
     },
   );
 
@@ -140,74 +167,111 @@ void main() {
     },
   );
 
-  testWidgets('W4 price recheck records one normalized Learning Run outcome', (
-    tester,
-  ) async {
-    final sink = Act0InMemoryTelemetrySinkV1();
-    await _pumpPriceTask(tester, sink, initialTab: Act0ShellTabV1.learn);
+  testWidgets(
+    'W4 failed source recheck records one unresolved Learning Run outcome',
+    (tester) async {
+      final sink = Act0InMemoryTelemetrySinkV1();
+      await _pumpPriceTask(tester, sink, initialTab: Act0ShellTabV1.learn);
 
-    await _answer(tester, correct: false);
-    expect(
-      sink.events.where(
-        (event) => event.name == 'learning_run_outcome_recorded',
-      ),
-      isEmpty,
-    );
-    await _openRepair(tester);
-    final state =
-        tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
-    expect(
-      state.debugSelectedTaskIdV1(),
-      Act0PricePersonalizationV1.repairTaskId,
-    );
-    expect(
-      sink.events.where((event) => event.name == 'learning_run_closed'),
-      isEmpty,
-    );
-    await _answer(tester, correct: true);
-    await _continueFeedback(tester);
-
-    final outcomes = sink.events
-        .where((event) => event.name == 'learning_run_outcome_recorded')
-        .toList(growable: false);
-    expect(outcomes, hasLength(1));
-    expect(outcomes.single.fields['outcome_type'], 'recoveredAfterRepair');
-    expect(outcomes.single.fields['skill_id'], 'price_read');
-    expect(outcomes.single.fields['repair_attempted'], isTrue);
-    expect(outcomes.single.fields['recheck_result'], isTrue);
-    expect(outcomes.single.fields['missed_signal'], 'pot_to_call');
-    expect(
-      outcomes.single.fields['recommendation_signal'],
-      'compare_pot_to_call',
-    );
-  });
-
-  testWidgets('W4 failed repair records one unresolved Learning Run outcome', (
-    tester,
-  ) async {
-    final sink = Act0InMemoryTelemetrySinkV1();
-    await _pumpPriceTask(tester, sink, initialTab: Act0ShellTabV1.learn);
-
-    await _answer(tester, correct: false);
-    await _openRepair(tester);
-    await _answer(tester, correct: false);
-
-    final outcomes = sink.events
-        .where((event) => event.name == 'learning_run_outcome_recorded')
-        .toList(growable: false);
-    expect(outcomes, hasLength(1));
-    expect(outcomes.single.fields['outcome_type'], 'stillNeedsPractice');
-    expect(outcomes.single.fields['repair_attempted'], isTrue);
-    expect(outcomes.single.fields['recheck_result'], isFalse);
-    final state =
-        tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
-    expect(
-      state.debugOpenRepairIntentPayloadForSourceTaskV1(
+      await _answer(tester, correct: false);
+      expect(
+        sink.events.where(
+          (event) => event.name == 'learning_run_outcome_recorded',
+        ),
+        isEmpty,
+      );
+      await _continueFeedback(tester);
+      final state =
+          tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+      expect(
+        state.debugSelectedTaskIdV1(),
+        Act0PricePersonalizationV1.repairTaskId,
+      );
+      await _answer(tester, correct: true);
+      await _continueFeedback(tester);
+      expect(
+        state.debugSelectedTaskIdV1(),
         Act0PricePersonalizationV1.sourceTaskId,
-      ),
-      isNotNull,
-    );
-  });
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'learning_run_outcome_recorded',
+        ),
+        isEmpty,
+      );
+      await _answer(tester, correct: false);
+      await _continueFeedback(tester);
+
+      final outcomes = sink.events
+          .where((event) => event.name == 'learning_run_outcome_recorded')
+          .toList(growable: false);
+      expect(outcomes, hasLength(1));
+      expect(outcomes.single.fields['outcome_type'], 'stillNeedsPractice');
+      expect(outcomes.single.fields['skill_id'], 'price_read');
+      expect(outcomes.single.fields['repair_attempted'], isTrue);
+      expect(outcomes.single.fields['recheck_result'], isFalse);
+      expect(outcomes.single.fields['missed_signal'], 'pot_to_call');
+      final rechecks = sink.events
+          .where((event) => event.name == 'price_personalization_recheck')
+          .toList(growable: false);
+      expect(rechecks, hasLength(1));
+      expect(
+        rechecks.single.fields['final_learning_outcome'],
+        'price_signal_still_needs_rep',
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'price_personalization_payoff',
+        ),
+        isEmpty,
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name.startsWith('learning_effect_delta_'),
+        ),
+        isEmpty,
+      );
+    },
+  );
+
+  testWidgets(
+    'W4 failed repair remains incomplete without family terminal events',
+    (tester) async {
+      final sink = Act0InMemoryTelemetrySinkV1();
+      await _pumpPriceTask(tester, sink, initialTab: Act0ShellTabV1.learn);
+
+      await _answer(tester, correct: false);
+      await _openRepair(tester);
+      await _answer(tester, correct: false);
+
+      expect(
+        sink.events.where(
+          (event) => event.name == 'learning_run_outcome_recorded',
+        ),
+        isEmpty,
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'price_personalization_recheck',
+        ),
+        isEmpty,
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'price_personalization_payoff',
+        ),
+        isEmpty,
+      );
+      final state =
+          tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+      expect(
+        state.debugOpenRepairIntentPayloadForSourceTaskV1(
+          Act0PricePersonalizationV1.sourceTaskId,
+        ),
+        isNotNull,
+      );
+    },
+  );
 }
 
 Act0RepairIntentV1 _intent({
