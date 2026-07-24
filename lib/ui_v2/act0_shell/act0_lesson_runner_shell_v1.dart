@@ -1032,6 +1032,8 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.repairResultReceiptLine,
     this.repairOutcomeProofLine,
     this.forceShowRepairOutcomeProof = false,
+    this.repairContinuesToSourceRecheck = false,
+    this.isSourceRecheckAttempt = false,
     this.repairSessionSummaryLines = const <String>[],
     this.feedbackForwardCtaLabel,
     this.suppressFeedbackRepairFocus = false,
@@ -1073,6 +1075,8 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final String? repairResultReceiptLine;
   final String? repairOutcomeProofLine;
   final bool forceShowRepairOutcomeProof;
+  final bool repairContinuesToSourceRecheck;
+  final bool isSourceRecheckAttempt;
   final List<String> repairSessionSummaryLines;
   final String? feedbackForwardCtaLabel;
   final bool suppressFeedbackRepairFocus;
@@ -2650,6 +2654,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       repairResultReceiptLine: widget.repairResultReceiptLine,
       repairOutcomeProofLine: widget.repairOutcomeProofLine,
       forceShowRepairOutcomeProof: widget.forceShowRepairOutcomeProof,
+      repairContinuesToSourceRecheck: widget.repairContinuesToSourceRecheck,
+      isSourceRecheckAttempt: widget.isSourceRecheckAttempt,
       repairSessionSummaryLines: widget.repairSessionSummaryLines,
       forwardCtaLabel: widget.feedbackForwardCtaLabel,
       suppressRepairFocus: widget.suppressFeedbackRepairFocus,
@@ -3823,16 +3829,11 @@ class _RunnerActionDockV1 extends StatelessWidget {
         : effectiveDockBody;
     final stageComposedDockBody = switch (lowerStageProfile) {
       _RunnerLowerStageProfileV1.compactFeedback => LayoutBuilder(
-        builder: (context, constraints) => constraints.hasBoundedHeight
-            ? SizedBox.expand(
-                key: const Key('act0_shell_lower_stage_compact_feedback'),
-                child: integratedDockBody,
-              )
-            : Align(
-                key: const Key('act0_shell_lower_stage_compact_feedback'),
-                alignment: Alignment.topCenter,
-                child: integratedDockBody,
-              ),
+        builder: (context, constraints) => Align(
+          key: const Key('act0_shell_lower_stage_compact_feedback'),
+          alignment: Alignment.topCenter,
+          child: integratedDockBody,
+        ),
       ),
       _RunnerLowerStageProfileV1.decision => SizedBox.expand(
         key: const Key('act0_shell_lower_stage_decision'),
@@ -3861,16 +3862,11 @@ class _RunnerActionDockV1 extends StatelessWidget {
                 child: integratedDockBody,
               ),
       _RunnerLowerStageProfileV1.expandedFeedback => LayoutBuilder(
-        builder: (context, constraints) => constraints.hasBoundedHeight
-            ? SizedBox.expand(
-                key: const Key('act0_shell_lower_stage_expanded_feedback'),
-                child: integratedDockBody,
-              )
-            : Align(
-                key: const Key('act0_shell_lower_stage_expanded_feedback'),
-                alignment: Alignment.topCenter,
-                child: integratedDockBody,
-              ),
+        builder: (context, constraints) => Align(
+          key: const Key('act0_shell_lower_stage_expanded_feedback'),
+          alignment: Alignment.topCenter,
+          child: integratedDockBody,
+        ),
       ),
       _RunnerLowerStageProfileV1.accessibility => SizedBox.expand(
         key: const Key('act0_shell_lower_stage_accessibility'),
@@ -3925,7 +3921,12 @@ class _RunnerActionDockV1 extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.fromLTRB(
                 pageX,
-                compactAnswerListDecision ? 3 : Act0ShellTokensV1.gapSm,
+                compactAnswerListDecision
+                    ? 3
+                    : lowerStageProfile ==
+                          _RunnerLowerStageProfileV1.compactFeedback
+                    ? 4
+                    : Act0ShellTokensV1.gapSm,
                 pageX,
                 stageBottomPadding,
               ),
@@ -6172,6 +6173,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.repairResultReceiptLine,
     this.repairOutcomeProofLine,
     this.forceShowRepairOutcomeProof = false,
+    this.repairContinuesToSourceRecheck = false,
+    this.isSourceRecheckAttempt = false,
     this.repairSessionSummaryLines = const <String>[],
     this.forwardCtaLabel,
     this.suppressRepairFocus = false,
@@ -6204,6 +6207,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final String? repairResultReceiptLine;
   final String? repairOutcomeProofLine;
   final bool forceShowRepairOutcomeProof;
+  final bool repairContinuesToSourceRecheck;
+  final bool isSourceRecheckAttempt;
   final List<String> repairSessionSummaryLines;
   final String? forwardCtaLabel;
   final bool suppressRepairFocus;
@@ -6306,9 +6311,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         : isRepairFocusState
         ? 'Practice the clue'
         : primaryResultLabel;
-    final stateDetail = isRecoveredSourceRecheck
-        ? 'You used the original table clue correctly on the recheck.'
-        : isRepairFocusState
+    final stateDetail = isRepairFocusState
         ? 'This practice hand keeps the missed clue in view.'
         : isWrong
         ? 'Start with the table clue, then choose the action.'
@@ -6316,7 +6319,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     // Sharky coaches a miss and acknowledges proven recovery only. Ordinary
     // correct and repair feedback keep the learning scene calm.
     final showSharkyCompanion =
-        !isCompactRefinedFeedback && (isWrong || isRecoveredSourceRecheck);
+        isRecoveredSourceRecheck || (!isCompactRefinedFeedback && isWrong);
     final showVerdictTitle = resolvedTitle.isNotEmpty;
     final actionPrefix = act0RuntimeFeedbackActionPrefixV1(
       context,
@@ -6379,7 +6382,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         : firstValueReceiptLine?.trim();
     final receiptSplitIndex = fallbackReceiptLine?.indexOf('. Next:') ?? -1;
     final receiptTitle = isRecoveredSourceRecheck
-        ? 'Original read proven'
+        ? ''
         : hasRepairOutcomeProof
         ? 'Repair landed'
         : repairReceiptLine.isNotEmpty
@@ -6407,7 +6410,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final shouldShowReceiptProof =
         !rapidMode &&
         (!isFocusedCompactProofFeedback || forceShowRepairOutcomeProof) &&
-        receiptTitle.isNotEmpty &&
+        (receiptTitle.isNotEmpty ||
+            (isRecoveredSourceRecheck && receiptDetail.isNotEmpty)) &&
         (!isWrong || hasRepairOutcomeProof);
     final receiptNextLine = skillReceipt == null
         ? ''
@@ -6464,8 +6468,12 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                 forwardCtaLabel ??
                     (isRecoveredSourceRecheck
                         ? 'Continue'
+                        : isWrong && isSourceRecheckAttempt
+                        ? 'Continue to Review'
                         : repairReceiptLine.isNotEmpty && !isWrong
-                        ? 'Check original read'
+                        ? repairContinuesToSourceRecheck
+                              ? 'Check original read'
+                              : 'Continue to Review'
                         : isWrong || isRepairFocusState
                         ? isExactReplayRepair
                               ? 'Try this spot again'
@@ -6581,7 +6589,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                         key: feedbackSharkySlotKey,
                         mood: sharkyMood,
                         tone: sharkyTone,
-                        size: refined ? 46 : 50,
+                        size: isCompactRefinedFeedback
+                            ? 30
+                            : (refined ? 46 : 50),
                       ),
                       const SizedBox(width: 8),
                     ] else if (!isCompactRefinedFeedback) ...[
@@ -6831,27 +6841,29 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              receiptTitle,
-                              key: repairReceiptLine.isNotEmpty
-                                  ? const Key(
-                                      'act0_shell_repair_result_receipt_title',
-                                    )
-                                  : hasRepairOutcomeProof
-                                  ? const Key(
-                                      'act0_shell_repair_outcome_proof_title',
-                                    )
-                                  : null,
-                              style: Act0ShellTokensV1.label.copyWith(
-                                color: Act0ShellTokensV1.primary,
-                                fontSize: isCompactRefinedFeedback
-                                    ? 10.0
-                                    : 10.5,
-                                fontWeight: FontWeight.w800,
+                            if (receiptTitle.isNotEmpty)
+                              Text(
+                                receiptTitle,
+                                key: repairReceiptLine.isNotEmpty
+                                    ? const Key(
+                                        'act0_shell_repair_result_receipt_title',
+                                      )
+                                    : hasRepairOutcomeProof
+                                    ? const Key(
+                                        'act0_shell_repair_outcome_proof_title',
+                                      )
+                                    : null,
+                                style: Act0ShellTokensV1.label.copyWith(
+                                  color: Act0ShellTokensV1.primary,
+                                  fontSize: isCompactRefinedFeedback
+                                      ? 10.0
+                                      : 10.5,
+                                  fontWeight: FontWeight.w800,
+                                ),
                               ),
-                            ),
                             if (receiptDetail.isNotEmpty) ...[
-                              const SizedBox(height: 4),
+                              if (receiptTitle.isNotEmpty)
+                                const SizedBox(height: 4),
                               Text(
                                 receiptDetail,
                                 key: repairReceiptLine.isNotEmpty

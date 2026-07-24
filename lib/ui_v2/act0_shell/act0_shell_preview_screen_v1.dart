@@ -5552,6 +5552,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     : sameSessionLearningDelta?.line,
                                 forceShowRepairOutcomeProof:
                                     sameSessionLearningDelta != null,
+                                repairContinuesToSourceRecheck:
+                                    _activeRepairTaskId ==
+                                        playSelectedTask?.taskId &&
+                                    (_activeSameSignalFeedbackRepairV1 ||
+                                        _isPracticeQueueRepairAnswerV1(
+                                          playSelectedTask!,
+                                        )),
+                                isSourceRecheckAttempt:
+                                    _activeSameSignalRecheckTaskId ==
+                                    playSelectedTask?.taskId,
                                 repairSessionSummaryLines:
                                     _activeRepairTaskId ==
                                         playSelectedTask?.taskId

@@ -13,6 +13,61 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  Future<void> pumpFeedbackAt(
+    WidgetTester tester, {
+    required Size size,
+    required double textScale,
+    required String state,
+  }) async {
+    tester.view.physicalSize = size;
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final recovered = state == 'recovered';
+    final wrong = state == 'wrong';
+    final repair = state == 'repair';
+    await tester.pumpWidget(
+      MaterialApp(
+        home: MediaQuery(
+          data: MediaQueryData(
+            size: size,
+            textScaler: TextScaler.linear(textScale),
+          ),
+          child: Scaffold(
+            body: Act0FeedbackShellV1(
+              title: wrong ? 'Good spot to fix.' : 'Correct.',
+              reason: 'The table clue keeps the next action clear.',
+              quality: wrong
+                  ? Act0FeedbackQualityV1.wrong
+                  : Act0FeedbackQualityV1.correct,
+              sharkyLine: 'Keep the table clue in view.',
+              sharkyMood: wrong
+                  ? Act0SharkyMoodV1.repair
+                  : Act0SharkyMoodV1.celebrate,
+              selectedLabel: wrong ? 'Fold' : 'Check',
+              preferredLabel: 'Check',
+              betterLabel: 'Check',
+              refined: true,
+              repairReasonLine: wrong
+                  ? 'This next hand keeps the missed table clue in view.'
+                  : null,
+              repairResultReceiptLine: repair
+                  ? 'Repair fixed: you caught the table clue.'
+                  : null,
+              repairContinuesToSourceRecheck: repair,
+              repairOutcomeProofLine: recovered
+                  ? "You missed Hero's seat first. On the recheck, you used it correctly."
+                  : null,
+              forceShowRepairOutcomeProof: recovered,
+              onContinue: () {},
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+  }
+
   testWidgets('wrong feedback uses primary result block and table clue proof', (
     tester,
   ) async {
@@ -139,6 +194,50 @@ void main() {
     expect(find.text('Button.'), findsOneWidget);
     expect(tester.getSize(clueFinder).height, lessThan(18));
   });
+
+  testWidgets(
+    'responsive feedback matrix keeps intrinsic cards and reachable CTAs',
+    (tester) async {
+      const matrix = <(Size, double)>[
+        (Size(375, 812), 1.0),
+        (Size(375, 812), 1.4),
+        (Size(402, 874), 1.0),
+        (Size(402, 874), 1.4),
+        (Size(440, 956), 1.0),
+        (Size(440, 956), 1.4),
+      ];
+      const states = <String>['wrong', 'repair', 'recovered', 'correct-first'];
+
+      for (final configuration in matrix) {
+        for (final state in states) {
+          await pumpFeedbackAt(
+            tester,
+            size: configuration.$1,
+            textScale: configuration.$2,
+            state: state,
+          );
+          expect(
+            tester.takeException(),
+            isNull,
+            reason: '$configuration $state',
+          );
+          final card = find.byKey(const Key('act0_shell_feedback_card'));
+          final cta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+          expect(card, findsOneWidget);
+          expect(cta, findsOneWidget);
+          expect(
+            tester.getSize(card).height,
+            lessThan(configuration.$1.height),
+          );
+          expect(
+            tester.getRect(cta).bottom,
+            lessThanOrEqualTo(configuration.$1.height),
+            reason: '$configuration $state',
+          );
+        }
+      }
+    },
+  );
 
   testWidgets('correct feedback shows skill proof before proof reward', (
     tester,
@@ -457,7 +556,11 @@ void main() {
       ),
     );
 
-    expect(find.text('Original read proven'), findsNWidgets(2));
+    expect(find.text('Original read proven'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_repair_outcome_proof_title')),
+      findsNothing,
+    );
     expect(
       find.byKey(const Key('act0_shell_feedback_sharky_slot_proof_earned')),
       findsOneWidget,
@@ -483,6 +586,7 @@ void main() {
               betterLabel: 'Check',
               repairResultReceiptLine:
                   'Repair fixed: you caught the no-bet-yet clue.',
+              repairContinuesToSourceRecheck: true,
               onContinue: () {},
             ),
           ),
@@ -496,6 +600,123 @@ void main() {
         find.byKey(const Key('act0_shell_feedback_sharky_slot_proof_earned')),
         findsNothing,
       );
+    },
+  );
+
+  testWidgets('repair CTA names only its actual next destination', (
+    tester,
+  ) async {
+    Future<void> pumpFeedback({
+      required bool directSourceRecheck,
+      required bool failedSourceRecheck,
+    }) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0FeedbackShellV1(
+              title: failedSourceRecheck ? 'Still missed.' : 'Repair fixed.',
+              reason: 'The table clue is visible again.',
+              quality: failedSourceRecheck
+                  ? Act0FeedbackQualityV1.wrong
+                  : Act0FeedbackQualityV1.correct,
+              sharkyLine: 'Keep the clue in view.',
+              sharkyMood: Act0SharkyMoodV1.repair,
+              selectedLabel: 'Fold',
+              preferredLabel: 'Check',
+              betterLabel: 'Check',
+              repairResultReceiptLine: failedSourceRecheck
+                  ? null
+                  : 'Repair fixed: you caught the table clue.',
+              repairContinuesToSourceRecheck: directSourceRecheck,
+              isSourceRecheckAttempt: failedSourceRecheck,
+              onContinue: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    await pumpFeedback(directSourceRecheck: true, failedSourceRecheck: false);
+    expect(find.text('Check original read'), findsOneWidget);
+
+    await pumpFeedback(directSourceRecheck: false, failedSourceRecheck: false);
+    expect(find.text('Continue to Review'), findsOneWidget);
+    expect(find.text('Check original read'), findsNothing);
+
+    await pumpFeedback(directSourceRecheck: false, failedSourceRecheck: true);
+    expect(find.text('Continue to Review'), findsOneWidget);
+  });
+
+  testWidgets('compact recovered feedback keeps a restrained Sharky marker', (
+    tester,
+  ) async {
+    await pumpCompactRunner(
+      tester,
+      MaterialApp(
+        home: Scaffold(
+          body: Act0FeedbackShellV1(
+            title: 'Correct.',
+            reason: 'Hero\'s seat is the table clue.',
+            quality: Act0FeedbackQualityV1.correct,
+            sharkyLine: 'You checked the original read.',
+            sharkyMood: Act0SharkyMoodV1.celebrate,
+            selectedLabel: 'Continue',
+            preferredLabel: 'Continue',
+            betterLabel: 'Continue',
+            refined: true,
+            repairOutcomeProofLine:
+                "You missed Hero's seat first. On the recheck, you used it correctly.",
+            forceShowRepairOutcomeProof: true,
+            onContinue: () {},
+          ),
+        ),
+      ),
+    );
+
+    final sharky = find.byKey(
+      const Key('act0_shell_feedback_sharky_slot_proof_earned'),
+    );
+    expect(sharky, findsOneWidget);
+    expect(tester.getSize(sharky).height, lessThanOrEqualTo(30));
+    expect(find.text('Original read proven'), findsOneWidget);
+  });
+
+  testWidgets(
+    'recovered feedback uses the existing reveal and honors reduced motion',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: MediaQuery(
+            data: const MediaQueryData(disableAnimations: true),
+            child: Scaffold(
+              body: Act0FeedbackShellV1(
+                title: 'Correct.',
+                reason: 'Hero\'s seat is the table clue.',
+                quality: Act0FeedbackQualityV1.correct,
+                sharkyLine: 'You checked the original read.',
+                sharkyMood: Act0SharkyMoodV1.celebrate,
+                selectedLabel: 'Continue',
+                preferredLabel: 'Continue',
+                betterLabel: 'Continue',
+                repairOutcomeProofLine:
+                    "You missed Hero's seat first. On the recheck, you used it correctly.",
+                forceShowRepairOutcomeProof: true,
+                onContinue: () {},
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(
+        find.byKey(const Key('act0_shell_feedback_card_motion_reveal')),
+        findsOneWidget,
+      );
+      expect(find.byType(AnimatedScale), findsNothing);
+      expect(find.byType(AnimatedSlide), findsNothing);
+      expect(find.byType(AnimatedOpacity), findsNothing);
     },
   );
 

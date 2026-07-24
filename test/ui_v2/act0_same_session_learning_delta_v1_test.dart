@@ -156,8 +156,8 @@ void main() {
   });
 
   testWidgets('completed-lesson W2 replay shows one delta on the source recheck '
-      'feedback, keeps the CTA reachable, emits once, then closes the run '
-      'normally through Review', (tester) async {
+      'feedback, keeps the CTA reachable, emits once, then advances to the '
+      'next authored task', (tester) async {
     final sink = Act0InMemoryTelemetrySinkV1();
     _seedW2ApplyPrecondition(sourceCompleted: true);
     await _pumpW2Route(tester, sink);
@@ -199,9 +199,9 @@ void main() {
     );
     expect(
       find.byKey(const Key('act0_shell_repair_outcome_proof_title')),
-      findsOneWidget,
+      findsNothing,
     );
-    expect(find.text('Original read proven'), findsNWidgets(2));
+    expect(find.text('Original read proven'), findsOneWidget);
 
     final viewedAfterFirstRender = sink.events
         .where((event) => event.name == 'learning_effect_delta_viewed')
@@ -261,13 +261,19 @@ void main() {
     expect(completed, hasLength(1));
     expect(completed.single.fields, viewedAfterRebuild.single.fields);
 
-    // Production route continues to Review and does not show a
-    // Session Summary claim for this delta.
+    // Production route advances to the next authored W2 hand and does not
+    // show a Session Summary claim for this delta.
     expect(
       find.byKey(const Key('act0_shell_repair_outcome_proof_line')),
       findsNothing,
     );
     expect(find.text('You corrected this read'), findsNothing);
+    expect(
+      tester
+          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
+          .selectedTaskId,
+      'apply_recap',
+    );
 
     final outcomes = sink.events
         .where((event) => event.name == 'learning_run_outcome_recorded')
