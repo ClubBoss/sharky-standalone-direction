@@ -6224,6 +6224,10 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final repairReceiptLine = repairResultReceiptLine?.trim() ?? '';
     final repairOutcomeProofLine = this.repairOutcomeProofLine?.trim() ?? '';
     final hasRepairOutcomeProof = repairOutcomeProofLine.isNotEmpty;
+    // Repair success remains partial. Only the explicit source-recheck
+    // projection can make the stronger recovery claim.
+    final isRecoveredSourceRecheck =
+        hasRepairOutcomeProof && forceShowRepairOutcomeProof;
     final hasProofEarnedState =
         hasRepairOutcomeProof ||
         repairReceiptLine.toLowerCase().startsWith('repair fixed:') ||
@@ -6246,7 +6250,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                 fullViewportHeight <= 980));
     const missedCueTone = Color(0xFF90A4C7);
     final tone = hasProofEarnedState
-        ? Act0VisualCanonV1.greenTable
+        ? Act0ShellTokensV1.gold
         : isRepairFocusState
         ? Act0ShellTokensV1.gold
         : isWrong
@@ -6269,7 +6273,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               ? const Key('act0_shell_feedback_icon_suboptimal')
               : const Key('act0_shell_feedback_icon_correct'));
     final sharkyTone = hasProofEarnedState
-        ? Act0VisualCanonV1.greenTable
+        ? Act0ShellTokensV1.gold
         : isWrong
         ? missedCueTone
         : isSuboptimal
@@ -6297,6 +6301,22 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       quality: quality,
       repairReceiptLine: repairResultReceiptLine,
     );
+    final stateLabel = isRecoveredSourceRecheck
+        ? 'Original read proven'
+        : isRepairFocusState
+        ? 'Practice the clue'
+        : primaryResultLabel;
+    final stateDetail = isRecoveredSourceRecheck
+        ? 'You used the original table clue correctly on the recheck.'
+        : isRepairFocusState
+        ? 'This practice hand keeps the missed clue in view.'
+        : isWrong
+        ? 'Start with the table clue, then choose the action.'
+        : '';
+    // Sharky coaches a miss and acknowledges proven recovery only. Ordinary
+    // correct and repair feedback keep the learning scene calm.
+    final showSharkyCompanion =
+        !isCompactRefinedFeedback && (isWrong || isRecoveredSourceRecheck);
     final showVerdictTitle = resolvedTitle.isNotEmpty;
     final actionPrefix = act0RuntimeFeedbackActionPrefixV1(
       context,
@@ -6358,7 +6378,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         ? repairReceiptLine
         : firstValueReceiptLine?.trim();
     final receiptSplitIndex = fallbackReceiptLine?.indexOf('. Next:') ?? -1;
-    final receiptTitle = hasRepairOutcomeProof
+    final receiptTitle = isRecoveredSourceRecheck
+        ? 'Original read proven'
+        : hasRepairOutcomeProof
         ? 'Repair landed'
         : repairReceiptLine.isNotEmpty
         ? 'Repair result'
@@ -6440,8 +6462,10 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               ),
               child: Text(
                 forwardCtaLabel ??
-                    (hasProofEarnedState
-                        ? 'Save this read'
+                    (isRecoveredSourceRecheck
+                        ? 'Continue'
+                        : repairReceiptLine.isNotEmpty && !isWrong
+                        ? 'Check original read'
                         : isWrong || isRepairFocusState
                         ? isExactReplayRepair
                               ? 'Try this spot again'
@@ -6480,7 +6504,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         ? const Key('act0_shell_feedback_sharky_slot_wrong')
         : const Key('act0_shell_feedback_sharky_slot_proof');
     final companionRoleLabel = hasProofEarnedState
-        ? 'Repair landed'
+        ? isRecoveredSourceRecheck
+              ? 'Original read proven'
+              : 'Repair landed'
         : isRepairFocusState
         ? 'Repair focus'
         : isSuboptimal
@@ -6550,7 +6576,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (!isCompactRefinedFeedback) ...[
+                    if (showSharkyCompanion) ...[
                       Act0SharkyMascotV1(
                         key: feedbackSharkySlotKey,
                         mood: sharkyMood,
@@ -6558,12 +6584,28 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                         size: refined ? 46 : 50,
                       ),
                       const SizedBox(width: 8),
+                    ] else if (!isCompactRefinedFeedback) ...[
+                      Container(
+                        key: const Key('act0_shell_feedback_state_mark'),
+                        width: refined ? 42 : 46,
+                        height: refined ? 42 : 46,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: tone.withValues(alpha: 0.10),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: tone.withValues(alpha: 0.30),
+                          ),
+                        ),
+                        child: Icon(icon, color: tone, size: refined ? 21 : 23),
+                      ),
+                      const SizedBox(width: 8),
                     ],
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (!rapidMode && primaryResultLabel.isNotEmpty) ...[
+                          if (!rapidMode && stateLabel.isNotEmpty) ...[
                             KeyedSubtree(
                               key: const Key(
                                 'act0_shell_feedback_primary_result_block',
@@ -6573,7 +6615,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                                   'act0_shell_feedback_primary_result_label',
                                 ),
                                 child: Text(
-                                  primaryResultLabel,
+                                  stateLabel,
                                   key: const Key(
                                     'act0_shell_feedback_rhythm_verdict',
                                   ),
@@ -6592,13 +6634,17 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                             const SizedBox(height: 1),
                           ],
                           if (!isCompactRefinedFeedback &&
-                              reactionLine.isNotEmpty)
+                              (stateDetail.isNotEmpty ||
+                                  (showSharkyCompanion &&
+                                      reactionLine.isNotEmpty)))
                             KeyedSubtree(
                               key: const Key(
                                 'act0_shell_feedback_companion_role',
                               ),
                               child: Text(
-                                '$companionRoleLabel · $reactionLine',
+                                stateDetail.isNotEmpty
+                                    ? stateDetail
+                                    : '$companionRoleLabel · $reactionLine',
                                 key: const Key(
                                   'act0_shell_sharky_outcome_reaction',
                                 ),

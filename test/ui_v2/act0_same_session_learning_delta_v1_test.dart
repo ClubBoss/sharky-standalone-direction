@@ -201,7 +201,7 @@ void main() {
       find.byKey(const Key('act0_shell_repair_outcome_proof_title')),
       findsOneWidget,
     );
-    expect(find.text('Repair landed'), findsOneWidget);
+    expect(find.text('Original read proven'), findsNWidgets(2));
 
     final viewedAfterFirstRender = sink.events
         .where((event) => event.name == 'learning_effect_delta_viewed')
