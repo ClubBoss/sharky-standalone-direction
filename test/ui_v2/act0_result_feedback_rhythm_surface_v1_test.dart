@@ -4,12 +4,73 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
-  Future<void> pumpCompactRunner(WidgetTester tester, Widget widget) async {
-    tester.view.physicalSize = const Size(375, 812);
+  Future<void> pumpCompactRunner(
+    WidgetTester tester,
+    Widget widget, {
+    Size size = const Size(375, 812),
+  }) async {
+    tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(widget);
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> pumpFeedbackAt(
+    WidgetTester tester, {
+    required Size size,
+    required double textScale,
+    required String state,
+  }) async {
+    tester.view.physicalSize = size;
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final recovered = state == 'recovered';
+    final failedSourceRecheck = state == 'failed-recheck';
+    final wrong = state == 'wrong' || failedSourceRecheck;
+    final repair = state == 'repair';
+    await tester.pumpWidget(
+      MaterialApp(
+        home: MediaQuery(
+          data: MediaQueryData(
+            size: size,
+            textScaler: TextScaler.linear(textScale),
+          ),
+          child: Scaffold(
+            body: Act0FeedbackShellV1(
+              title: wrong ? 'Good spot to fix.' : 'Correct.',
+              reason: 'The table clue keeps the next action clear.',
+              quality: wrong
+                  ? Act0FeedbackQualityV1.wrong
+                  : Act0FeedbackQualityV1.correct,
+              sharkyLine: 'Keep the table clue in view.',
+              sharkyMood: wrong
+                  ? Act0SharkyMoodV1.repair
+                  : Act0SharkyMoodV1.celebrate,
+              selectedLabel: wrong ? 'Fold' : 'Check',
+              preferredLabel: 'Check',
+              betterLabel: 'Check',
+              refined: true,
+              repairReasonLine: wrong
+                  ? 'This next hand keeps the missed table clue in view.'
+                  : null,
+              repairResultReceiptLine: repair
+                  ? 'Repair fixed: you caught the table clue.'
+                  : null,
+              repairContinuesToSourceRecheck: repair,
+              isSourceRecheckAttempt: failedSourceRecheck,
+              repairOutcomeProofLine: recovered
+                  ? "You missed Hero's seat first. On the recheck, you used it correctly."
+                  : null,
+              forceShowRepairOutcomeProof: recovered,
+              onContinue: () {},
+            ),
+          ),
+        ),
+      ),
+    );
     await tester.pumpAndSettle();
   }
 
@@ -140,6 +201,61 @@ void main() {
     expect(tester.getSize(clueFinder).height, lessThan(18));
   });
 
+  testWidgets(
+    'responsive feedback matrix keeps intrinsic cards and reachable CTAs',
+    (tester) async {
+      const matrix = <(Size, double)>[
+        (Size(375, 812), 1.0),
+        (Size(375, 812), 1.4),
+        (Size(402, 874), 1.0),
+        (Size(402, 874), 1.4),
+        (Size(440, 956), 1.0),
+        (Size(440, 956), 1.4),
+      ];
+      const states = <String>[
+        'wrong',
+        'repair',
+        'recovered',
+        'failed-recheck',
+        'correct-first',
+      ];
+
+      for (final configuration in matrix) {
+        for (final state in states) {
+          await pumpFeedbackAt(
+            tester,
+            size: configuration.$1,
+            textScale: configuration.$2,
+            state: state,
+          );
+          expect(
+            tester.takeException(),
+            isNull,
+            reason: '$configuration $state',
+          );
+          final card = find.byKey(const Key('act0_shell_feedback_card'));
+          final cta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+          expect(card, findsOneWidget);
+          expect(cta, findsOneWidget);
+          expect(
+            tester.getSize(card).height,
+            lessThan(configuration.$1.height),
+          );
+          expect(
+            tester.getRect(card).top,
+            greaterThanOrEqualTo(0),
+            reason: '$configuration $state keeps the feedback header in view',
+          );
+          expect(
+            tester.getRect(cta).bottom,
+            lessThanOrEqualTo(configuration.$1.height),
+            reason: '$configuration $state',
+          );
+        }
+      }
+    },
+  );
+
   testWidgets('correct feedback shows skill proof before proof reward', (
     tester,
   ) async {
@@ -191,6 +307,38 @@ void main() {
         .getTopLeft(find.byKey(const Key('act0_shell_completion_toast')))
         .dy;
     expect(receiptTop, lessThan(xpTop));
+  });
+
+  testWidgets('correct-first stays calm without a Sharky reward treatment', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0FeedbackShellV1(
+            title: 'Correct.',
+            reason: 'You used the visible table clue.',
+            quality: Act0FeedbackQualityV1.correct,
+            sharkyLine: 'Good read.',
+            sharkyMood: Act0SharkyMoodV1.happy,
+            selectedLabel: 'Check',
+            preferredLabel: 'Check',
+            betterLabel: 'Check',
+            onContinue: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Correct read'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_feedback_sharky_slot_proof')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_feedback_sharky_slot_proof_earned')),
+      findsNothing,
+    );
   });
 
   testWidgets('wrong repair feedback keeps one teaching block before the CTA', (
@@ -400,6 +548,199 @@ void main() {
     expect(find.textContaining('completed'), findsNothing);
     expect(find.textContaining('mastered'), findsNothing);
   });
+
+  testWidgets('canonical source recheck makes recovery distinct and bounded', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0FeedbackShellV1(
+            title: 'Correct.',
+            reason: 'Hero\'s seat is the table clue.',
+            quality: Act0FeedbackQualityV1.correct,
+            sharkyLine: 'You checked the original read.',
+            sharkyMood: Act0SharkyMoodV1.celebrate,
+            selectedLabel: 'Continue',
+            preferredLabel: 'Continue',
+            betterLabel: 'Continue',
+            repairOutcomeProofLine:
+                "You missed Hero's seat first. On the recheck, you used it correctly.",
+            forceShowRepairOutcomeProof: true,
+            onContinue: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Original read proven'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_repair_outcome_proof_title')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_feedback_sharky_slot_proof_earned')),
+      findsOneWidget,
+    );
+    expect(find.widgetWithText(FilledButton, 'Continue'), findsOneWidget);
+    expect(find.textContaining('mastered'), findsNothing);
+  });
+
+  testWidgets(
+    'repair success remains partial and points to the source recheck',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0FeedbackShellV1(
+              title: 'Repair fixed.',
+              reason: 'The table clue is visible again.',
+              quality: Act0FeedbackQualityV1.correct,
+              sharkyLine: 'Good repair.',
+              sharkyMood: Act0SharkyMoodV1.celebrate,
+              selectedLabel: 'Check',
+              preferredLabel: 'Check',
+              betterLabel: 'Check',
+              repairResultReceiptLine:
+                  'Repair fixed: you caught the no-bet-yet clue.',
+              repairContinuesToSourceRecheck: true,
+              onContinue: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Repair landed'), findsOneWidget);
+      expect(find.text('Check original read'), findsOneWidget);
+      expect(find.text('Original read proven'), findsNothing);
+      expect(
+        find.byKey(const Key('act0_shell_feedback_sharky_slot_proof_earned')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets('repair CTA names only its actual next destination', (
+    tester,
+  ) async {
+    Future<void> pumpFeedback({
+      required bool directSourceRecheck,
+      required bool failedSourceRecheck,
+    }) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0FeedbackShellV1(
+              title: failedSourceRecheck ? 'Still missed.' : 'Repair fixed.',
+              reason: 'The table clue is visible again.',
+              quality: failedSourceRecheck
+                  ? Act0FeedbackQualityV1.wrong
+                  : Act0FeedbackQualityV1.correct,
+              sharkyLine: 'Keep the clue in view.',
+              sharkyMood: Act0SharkyMoodV1.repair,
+              selectedLabel: 'Fold',
+              preferredLabel: 'Check',
+              betterLabel: 'Check',
+              repairResultReceiptLine: failedSourceRecheck
+                  ? null
+                  : 'Repair fixed: you caught the table clue.',
+              repairContinuesToSourceRecheck: directSourceRecheck,
+              isSourceRecheckAttempt: failedSourceRecheck,
+              onContinue: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    await pumpFeedback(directSourceRecheck: true, failedSourceRecheck: false);
+    expect(find.text('Check original read'), findsOneWidget);
+
+    await pumpFeedback(directSourceRecheck: false, failedSourceRecheck: false);
+    expect(find.text('Continue to Review'), findsOneWidget);
+    expect(find.text('Check original read'), findsNothing);
+
+    await pumpFeedback(directSourceRecheck: false, failedSourceRecheck: true);
+    expect(find.text('Original read needs one more rep'), findsOneWidget);
+    expect(find.text('Continue to Review'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_feedback_icon_wrong')),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('compact recovered feedback keeps a restrained Sharky marker', (
+    tester,
+  ) async {
+    await pumpCompactRunner(
+      tester,
+      MaterialApp(
+        home: Scaffold(
+          body: Act0FeedbackShellV1(
+            title: 'Correct.',
+            reason: 'Hero\'s seat is the table clue.',
+            quality: Act0FeedbackQualityV1.correct,
+            sharkyLine: 'You checked the original read.',
+            sharkyMood: Act0SharkyMoodV1.celebrate,
+            selectedLabel: 'Continue',
+            preferredLabel: 'Continue',
+            betterLabel: 'Continue',
+            refined: true,
+            repairOutcomeProofLine:
+                "You missed Hero's seat first. On the recheck, you used it correctly.",
+            forceShowRepairOutcomeProof: true,
+            onContinue: () {},
+          ),
+        ),
+      ),
+    );
+
+    final sharky = find.byKey(
+      const Key('act0_shell_feedback_sharky_slot_proof_earned'),
+    );
+    expect(sharky, findsOneWidget);
+    expect(tester.getSize(sharky).height, lessThanOrEqualTo(30));
+    expect(find.text('Original read proven'), findsOneWidget);
+  });
+
+  testWidgets(
+    'recovered feedback uses the existing reveal and honors reduced motion',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: MediaQuery(
+            data: const MediaQueryData(disableAnimations: true),
+            child: Scaffold(
+              body: Act0FeedbackShellV1(
+                title: 'Correct.',
+                reason: 'Hero\'s seat is the table clue.',
+                quality: Act0FeedbackQualityV1.correct,
+                sharkyLine: 'You checked the original read.',
+                sharkyMood: Act0SharkyMoodV1.celebrate,
+                selectedLabel: 'Continue',
+                preferredLabel: 'Continue',
+                betterLabel: 'Continue',
+                repairOutcomeProofLine:
+                    "You missed Hero's seat first. On the recheck, you used it correctly.",
+                forceShowRepairOutcomeProof: true,
+                onContinue: () {},
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(
+        find.byKey(const Key('act0_shell_feedback_card_motion_reveal')),
+        findsOneWidget,
+      );
+      expect(find.byType(AnimatedScale), findsNothing);
+      expect(find.byType(AnimatedSlide), findsNothing);
+      expect(find.byType(AnimatedOpacity), findsNothing);
+    },
+  );
 
   testWidgets('repair outcome proof renders nothing when absent', (
     tester,
@@ -672,6 +1013,58 @@ void main() {
 
       expect(tableBottom, lessThan(rhythmTop));
       expect(promptTop, lessThan(actionTop));
+    },
+  );
+
+  testWidgets(
+    'native compact miss keeps Practice the clue below the table seam',
+    (tester) async {
+      final world = Act0ShellStateV1.sample.worldById('world_2');
+      final lesson = world.lessons.firstWhere(
+        (candidate) => candidate.lessonId == 'hand_discipline_apply',
+      );
+      final task = lesson.taskList.firstWhere(
+        (candidate) => candidate.taskId == 'apply_hj_decision',
+      );
+      final wrong = task.runner.copyWith(
+        phase: Act0LessonPhaseV1.review,
+        selectedOptionId: 'fold',
+      );
+
+      await pumpCompactRunner(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: wrong,
+              selectedTaskId: task.taskId,
+              selectedTaskFamily: task.resolvedTaskFamily,
+              repairReasonLine:
+                  'This rep repeats the same clue. Before choosing, name the table clue first.',
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+        size: const Size(393, 852),
+      );
+
+      final table = find.byKey(const Key('act0_shell_table'));
+      final verdict = find.byKey(
+        const Key('act0_shell_feedback_rhythm_verdict'),
+      );
+      final cta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+      expect(table, findsOneWidget);
+      expect(verdict, findsOneWidget);
+      expect(cta, findsOneWidget);
+      expect(
+        tester.getRect(table).bottom,
+        lessThanOrEqualTo(tester.getRect(verdict).top),
+        reason: 'Practice the clue must not intersect the table seam.',
+      );
+      expect(tester.getRect(cta).bottom, lessThanOrEqualTo(852));
     },
   );
 }

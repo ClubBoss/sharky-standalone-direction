@@ -1013,6 +1013,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.selectedWorldId,
     this.selectedLessonId,
     this.selectedTaskId,
+    this.selectedTaskTitle,
     this.selectedTaskFamily,
     this.tablePresentation = Act0TaskTablePresentationV1.legacy,
     this.theoryRecallStep,
@@ -1032,6 +1033,8 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.repairResultReceiptLine,
     this.repairOutcomeProofLine,
     this.forceShowRepairOutcomeProof = false,
+    this.repairContinuesToSourceRecheck = false,
+    this.isSourceRecheckAttempt = false,
     this.repairSessionSummaryLines = const <String>[],
     this.feedbackForwardCtaLabel,
     this.suppressFeedbackRepairFocus = false,
@@ -1054,6 +1057,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final String? selectedWorldId;
   final String? selectedLessonId;
   final String? selectedTaskId;
+  final String? selectedTaskTitle;
   final Act0TaskFamilyV1? selectedTaskFamily;
   final Act0TaskTablePresentationV1 tablePresentation;
   final Act0TeachingStepV1? theoryRecallStep;
@@ -1073,6 +1077,8 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final String? repairResultReceiptLine;
   final String? repairOutcomeProofLine;
   final bool forceShowRepairOutcomeProof;
+  final bool repairContinuesToSourceRecheck;
+  final bool isSourceRecheckAttempt;
   final List<String> repairSessionSummaryLines;
   final String? feedbackForwardCtaLabel;
   final bool suppressFeedbackRepairFocus;
@@ -2397,7 +2403,15 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     final lateRouteTableSignal = act0LateRouteTableSignalForWorldNumberV1(
       widget.worldNumber,
     );
-    final taskRailLabel = bottomContext.taskLabel;
+    // The original source task is intentionally replayed after a mapped
+    // repair. Keep that identity visible so it cannot read as another
+    // authored hand before its result finalizes.
+    final selectedTaskTitle = widget.selectedTaskTitle?.trim() ?? '';
+    final taskRailLabel = widget.isSourceRecheckAttempt
+        ? 'Original read recheck'
+        : selectedTaskTitle.isNotEmpty
+        ? selectedTaskTitle
+        : bottomContext.taskLabel;
     final theoryCoachLine = act0RuntimeTheoryCoachLineV1(
       context,
       authoredLine: runner.sharky.preSessionLine,
@@ -2650,6 +2664,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       repairResultReceiptLine: widget.repairResultReceiptLine,
       repairOutcomeProofLine: widget.repairOutcomeProofLine,
       forceShowRepairOutcomeProof: widget.forceShowRepairOutcomeProof,
+      repairContinuesToSourceRecheck: widget.repairContinuesToSourceRecheck,
+      isSourceRecheckAttempt: widget.isSourceRecheckAttempt,
       repairSessionSummaryLines: widget.repairSessionSummaryLines,
       forwardCtaLabel: widget.feedbackForwardCtaLabel,
       suppressRepairFocus: widget.suppressFeedbackRepairFocus,
@@ -2663,7 +2679,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     Widget buildRunnerActionDock() {
       return _RunnerActionDockV1(
         pageX: pageX,
-        taskRailLabel: isRefinedDev2 || compactAnswerListDecision
+        taskRailLabel:
+            compactAnswerListDecision ||
+                (isRefinedDev2 && widget.selectedTaskId != 'apply_recap')
             ? null
             : taskRailLabel,
         sizingPresets: runner.sizingConfig.isEnabled
@@ -3169,6 +3187,17 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                   ),
                   compactBottomDockClearance: compactBottomDockClearance,
                 );
+                // A compact wrong/repair feedback surface owns its measured
+                // minimum lane before the table receives the remainder. The
+                // shared allocation path previously reserved only ordinary
+                // answer demand, allowing the table to occlude this heading.
+                final lowerSurfaceDemand =
+                    isReview && usesCompactRepairFeedbackDock
+                    ? math.max(
+                        normalLowerSurfaceDemand,
+                        _runnerRepairFeedbackDockTargetLowerSlotHeightV1,
+                      )
+                    : normalLowerSurfaceDemand;
                 // The normal route keeps its accepted width-derived table
                 // whenever its actual lower content fits. This is deliberately
                 // not the former 405 px worst-case reserve: a theory rail or
@@ -3184,7 +3213,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                           isRefinedDev2: isRefinedDev2,
                           compactTableStageTopInset: compactTableStageTopInset,
                         ) -
-                        normalLowerSurfaceDemand,
+                        lowerSurfaceDemand,
                   ),
                 );
                 final stageHeight =
@@ -3823,16 +3852,11 @@ class _RunnerActionDockV1 extends StatelessWidget {
         : effectiveDockBody;
     final stageComposedDockBody = switch (lowerStageProfile) {
       _RunnerLowerStageProfileV1.compactFeedback => LayoutBuilder(
-        builder: (context, constraints) => constraints.hasBoundedHeight
-            ? SizedBox.expand(
-                key: const Key('act0_shell_lower_stage_compact_feedback'),
-                child: integratedDockBody,
-              )
-            : Align(
-                key: const Key('act0_shell_lower_stage_compact_feedback'),
-                alignment: Alignment.topCenter,
-                child: integratedDockBody,
-              ),
+        builder: (context, constraints) => Align(
+          key: const Key('act0_shell_lower_stage_compact_feedback'),
+          alignment: Alignment.topCenter,
+          child: integratedDockBody,
+        ),
       ),
       _RunnerLowerStageProfileV1.decision => SizedBox.expand(
         key: const Key('act0_shell_lower_stage_decision'),
@@ -3861,16 +3885,11 @@ class _RunnerActionDockV1 extends StatelessWidget {
                 child: integratedDockBody,
               ),
       _RunnerLowerStageProfileV1.expandedFeedback => LayoutBuilder(
-        builder: (context, constraints) => constraints.hasBoundedHeight
-            ? SizedBox.expand(
-                key: const Key('act0_shell_lower_stage_expanded_feedback'),
-                child: integratedDockBody,
-              )
-            : Align(
-                key: const Key('act0_shell_lower_stage_expanded_feedback'),
-                alignment: Alignment.topCenter,
-                child: integratedDockBody,
-              ),
+        builder: (context, constraints) => Align(
+          key: const Key('act0_shell_lower_stage_expanded_feedback'),
+          alignment: Alignment.topCenter,
+          child: integratedDockBody,
+        ),
       ),
       _RunnerLowerStageProfileV1.accessibility => SizedBox.expand(
         key: const Key('act0_shell_lower_stage_accessibility'),
@@ -3925,7 +3944,12 @@ class _RunnerActionDockV1 extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.fromLTRB(
                 pageX,
-                compactAnswerListDecision ? 3 : Act0ShellTokensV1.gapSm,
+                compactAnswerListDecision
+                    ? 3
+                    : lowerStageProfile ==
+                          _RunnerLowerStageProfileV1.compactFeedback
+                    ? 4
+                    : Act0ShellTokensV1.gapSm,
                 pageX,
                 stageBottomPadding,
               ),
@@ -6172,6 +6196,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.repairResultReceiptLine,
     this.repairOutcomeProofLine,
     this.forceShowRepairOutcomeProof = false,
+    this.repairContinuesToSourceRecheck = false,
+    this.isSourceRecheckAttempt = false,
     this.repairSessionSummaryLines = const <String>[],
     this.forwardCtaLabel,
     this.suppressRepairFocus = false,
@@ -6204,6 +6230,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final String? repairResultReceiptLine;
   final String? repairOutcomeProofLine;
   final bool forceShowRepairOutcomeProof;
+  final bool repairContinuesToSourceRecheck;
+  final bool isSourceRecheckAttempt;
   final List<String> repairSessionSummaryLines;
   final String? forwardCtaLabel;
   final bool suppressRepairFocus;
@@ -6224,6 +6252,11 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final repairReceiptLine = repairResultReceiptLine?.trim() ?? '';
     final repairOutcomeProofLine = this.repairOutcomeProofLine?.trim() ?? '';
     final hasRepairOutcomeProof = repairOutcomeProofLine.isNotEmpty;
+    // Repair success remains partial. Only the explicit source-recheck
+    // projection can make the stronger recovery claim.
+    final isRecoveredSourceRecheck =
+        hasRepairOutcomeProof && forceShowRepairOutcomeProof;
+    final isFailedSourceRecheck = isWrong && isSourceRecheckAttempt;
     final hasProofEarnedState =
         hasRepairOutcomeProof ||
         repairReceiptLine.toLowerCase().startsWith('repair fixed:') ||
@@ -6246,7 +6279,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                 fullViewportHeight <= 980));
     const missedCueTone = Color(0xFF90A4C7);
     final tone = hasProofEarnedState
-        ? Act0VisualCanonV1.greenTable
+        ? Act0ShellTokensV1.gold
         : isRepairFocusState
         ? Act0ShellTokensV1.gold
         : isWrong
@@ -6269,7 +6302,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               ? const Key('act0_shell_feedback_icon_suboptimal')
               : const Key('act0_shell_feedback_icon_correct'));
     final sharkyTone = hasProofEarnedState
-        ? Act0VisualCanonV1.greenTable
+        ? Act0ShellTokensV1.gold
         : isWrong
         ? missedCueTone
         : isSuboptimal
@@ -6297,6 +6330,24 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       quality: quality,
       repairReceiptLine: repairResultReceiptLine,
     );
+    final stateLabel = isRecoveredSourceRecheck
+        ? 'Original read proven'
+        : isFailedSourceRecheck
+        ? 'Original read needs one more rep'
+        : isRepairFocusState
+        ? 'Practice the clue'
+        : primaryResultLabel;
+    final stateDetail = isFailedSourceRecheck
+        ? 'This was the original hand. Review the clue before the next practice.'
+        : isRepairFocusState
+        ? 'This practice hand keeps the missed clue in view.'
+        : isWrong
+        ? 'Start with the table clue, then choose the action.'
+        : '';
+    // Sharky coaches a miss and acknowledges proven recovery only. Ordinary
+    // correct and repair feedback keep the learning scene calm.
+    final showSharkyCompanion =
+        isRecoveredSourceRecheck || (!isCompactRefinedFeedback && isWrong);
     final showVerdictTitle = resolvedTitle.isNotEmpty;
     final actionPrefix = act0RuntimeFeedbackActionPrefixV1(
       context,
@@ -6358,7 +6409,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         ? repairReceiptLine
         : firstValueReceiptLine?.trim();
     final receiptSplitIndex = fallbackReceiptLine?.indexOf('. Next:') ?? -1;
-    final receiptTitle = hasRepairOutcomeProof
+    final receiptTitle = isRecoveredSourceRecheck
+        ? ''
+        : hasRepairOutcomeProof
         ? 'Repair landed'
         : repairReceiptLine.isNotEmpty
         ? 'Repair result'
@@ -6385,7 +6438,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final shouldShowReceiptProof =
         !rapidMode &&
         (!isFocusedCompactProofFeedback || forceShowRepairOutcomeProof) &&
-        receiptTitle.isNotEmpty &&
+        (receiptTitle.isNotEmpty ||
+            (isRecoveredSourceRecheck && receiptDetail.isNotEmpty)) &&
         (!isWrong || hasRepairOutcomeProof);
     final receiptNextLine = skillReceipt == null
         ? ''
@@ -6440,8 +6494,14 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               ),
               child: Text(
                 forwardCtaLabel ??
-                    (hasProofEarnedState
-                        ? 'Save this read'
+                    (isRecoveredSourceRecheck
+                        ? 'Continue'
+                        : isWrong && isSourceRecheckAttempt
+                        ? 'Continue to Review'
+                        : repairReceiptLine.isNotEmpty && !isWrong
+                        ? repairContinuesToSourceRecheck
+                              ? 'Check original read'
+                              : 'Continue to Review'
                         : isWrong || isRepairFocusState
                         ? isExactReplayRepair
                               ? 'Try this spot again'
@@ -6480,7 +6540,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         ? const Key('act0_shell_feedback_sharky_slot_wrong')
         : const Key('act0_shell_feedback_sharky_slot_proof');
     final companionRoleLabel = hasProofEarnedState
-        ? 'Repair landed'
+        ? isRecoveredSourceRecheck
+              ? 'Original read proven'
+              : 'Repair landed'
         : isRepairFocusState
         ? 'Repair focus'
         : isSuboptimal
@@ -6550,12 +6612,30 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (!isCompactRefinedFeedback) ...[
+                    if (showSharkyCompanion) ...[
                       Act0SharkyMascotV1(
                         key: feedbackSharkySlotKey,
                         mood: sharkyMood,
                         tone: sharkyTone,
-                        size: refined ? 46 : 50,
+                        size: isCompactRefinedFeedback
+                            ? 30
+                            : (refined ? 46 : 50),
+                      ),
+                      const SizedBox(width: 8),
+                    ] else if (!isCompactRefinedFeedback) ...[
+                      Container(
+                        key: const Key('act0_shell_feedback_state_mark'),
+                        width: refined ? 42 : 46,
+                        height: refined ? 42 : 46,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: tone.withValues(alpha: 0.10),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: tone.withValues(alpha: 0.30),
+                          ),
+                        ),
+                        child: Icon(icon, color: tone, size: refined ? 21 : 23),
                       ),
                       const SizedBox(width: 8),
                     ],
@@ -6563,7 +6643,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (!rapidMode && primaryResultLabel.isNotEmpty) ...[
+                          if (!rapidMode && stateLabel.isNotEmpty) ...[
                             KeyedSubtree(
                               key: const Key(
                                 'act0_shell_feedback_primary_result_block',
@@ -6573,7 +6653,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                                   'act0_shell_feedback_primary_result_label',
                                 ),
                                 child: Text(
-                                  primaryResultLabel,
+                                  stateLabel,
                                   key: const Key(
                                     'act0_shell_feedback_rhythm_verdict',
                                   ),
@@ -6592,13 +6672,17 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                             const SizedBox(height: 1),
                           ],
                           if (!isCompactRefinedFeedback &&
-                              reactionLine.isNotEmpty)
+                              (stateDetail.isNotEmpty ||
+                                  (showSharkyCompanion &&
+                                      reactionLine.isNotEmpty)))
                             KeyedSubtree(
                               key: const Key(
                                 'act0_shell_feedback_companion_role',
                               ),
                               child: Text(
-                                '$companionRoleLabel · $reactionLine',
+                                stateDetail.isNotEmpty
+                                    ? stateDetail
+                                    : '$companionRoleLabel · $reactionLine',
                                 key: const Key(
                                   'act0_shell_sharky_outcome_reaction',
                                 ),
@@ -6785,27 +6869,29 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              receiptTitle,
-                              key: repairReceiptLine.isNotEmpty
-                                  ? const Key(
-                                      'act0_shell_repair_result_receipt_title',
-                                    )
-                                  : hasRepairOutcomeProof
-                                  ? const Key(
-                                      'act0_shell_repair_outcome_proof_title',
-                                    )
-                                  : null,
-                              style: Act0ShellTokensV1.label.copyWith(
-                                color: Act0ShellTokensV1.primary,
-                                fontSize: isCompactRefinedFeedback
-                                    ? 10.0
-                                    : 10.5,
-                                fontWeight: FontWeight.w800,
+                            if (receiptTitle.isNotEmpty)
+                              Text(
+                                receiptTitle,
+                                key: repairReceiptLine.isNotEmpty
+                                    ? const Key(
+                                        'act0_shell_repair_result_receipt_title',
+                                      )
+                                    : hasRepairOutcomeProof
+                                    ? const Key(
+                                        'act0_shell_repair_outcome_proof_title',
+                                      )
+                                    : null,
+                                style: Act0ShellTokensV1.label.copyWith(
+                                  color: Act0ShellTokensV1.primary,
+                                  fontSize: isCompactRefinedFeedback
+                                      ? 10.0
+                                      : 10.5,
+                                  fontWeight: FontWeight.w800,
+                                ),
                               ),
-                            ),
                             if (receiptDetail.isNotEmpty) ...[
-                              const SizedBox(height: 4),
+                              if (receiptTitle.isNotEmpty)
+                                const SizedBox(height: 4),
                               Text(
                                 receiptDetail,
                                 key: repairReceiptLine.isNotEmpty
@@ -10066,10 +10152,13 @@ const double _runnerRepairEnvelopeMinLowerSlotHeightV1 = 320;
 const double _runnerRepairEnvelopeTargetLowerSlotHeightV1 = 420;
 const double _runnerRepairEnvelopeTargetLowerSlotShareV1 = 0.40;
 const double _runnerRepairEnvelopeMaxLowerSlotShareV1 = 0.46;
-const double _runnerRepairFeedbackDockMinLowerSlotHeightV1 = 280;
-const double _runnerRepairFeedbackDockTargetLowerSlotHeightV1 = 320;
+// The miss/repair header is part of the learning proof, not expendable scroll
+// content. Reserve enough of a compact phone for it to clear the table seam
+// while keeping the action CTA in the same viewport.
+const double _runnerRepairFeedbackDockMinLowerSlotHeightV1 = 360;
+const double _runnerRepairFeedbackDockTargetLowerSlotHeightV1 = 420;
 const double _runnerRepairFeedbackDockTargetLowerSlotShareV1 = 0.40;
-const double _runnerRepairFeedbackDockMaxLowerSlotShareV1 = 0.44;
+const double _runnerRepairFeedbackDockMaxLowerSlotShareV1 = 0.52;
 const double _runnerCompactSeatTapMinLowerSlotHeightV1 = 220;
 const double _runnerCompactSeatTapTargetLowerSlotHeightV1 = 248;
 const double _runnerCompactSeatTapMaxLowerSlotShareV1 = 0.38;
