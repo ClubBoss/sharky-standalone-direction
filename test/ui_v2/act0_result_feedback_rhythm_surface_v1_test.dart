@@ -4,8 +4,12 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
-  Future<void> pumpCompactRunner(WidgetTester tester, Widget widget) async {
-    tester.view.physicalSize = const Size(375, 812);
+  Future<void> pumpCompactRunner(
+    WidgetTester tester,
+    Widget widget, {
+    Size size = const Size(375, 812),
+  }) async {
+    tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
@@ -1009,6 +1013,58 @@ void main() {
 
       expect(tableBottom, lessThan(rhythmTop));
       expect(promptTop, lessThan(actionTop));
+    },
+  );
+
+  testWidgets(
+    'native compact miss keeps Practice the clue below the table seam',
+    (tester) async {
+      final world = Act0ShellStateV1.sample.worldById('world_2');
+      final lesson = world.lessons.firstWhere(
+        (candidate) => candidate.lessonId == 'hand_discipline_apply',
+      );
+      final task = lesson.taskList.firstWhere(
+        (candidate) => candidate.taskId == 'apply_hj_decision',
+      );
+      final wrong = task.runner.copyWith(
+        phase: Act0LessonPhaseV1.review,
+        selectedOptionId: 'fold',
+      );
+
+      await pumpCompactRunner(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: wrong,
+              selectedTaskId: task.taskId,
+              selectedTaskFamily: task.resolvedTaskFamily,
+              repairReasonLine:
+                  'This rep repeats the same clue. Before choosing, name the table clue first.',
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+        size: const Size(393, 852),
+      );
+
+      final table = find.byKey(const Key('act0_shell_table'));
+      final verdict = find.byKey(
+        const Key('act0_shell_feedback_rhythm_verdict'),
+      );
+      final cta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+      expect(table, findsOneWidget);
+      expect(verdict, findsOneWidget);
+      expect(cta, findsOneWidget);
+      expect(
+        tester.getRect(table).bottom,
+        lessThanOrEqualTo(tester.getRect(verdict).top),
+        reason: 'Practice the clue must not intersect the table seam.',
+      );
+      expect(tester.getRect(cta).bottom, lessThanOrEqualTo(852));
     },
   );
 }

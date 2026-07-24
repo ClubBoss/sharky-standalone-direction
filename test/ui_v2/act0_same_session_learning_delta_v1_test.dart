@@ -334,13 +334,13 @@ void main() {
       sink.events.where((event) => event.name == 'learning_run_started'),
       hasLength(1),
     );
-    expect(
-      sink.events.where(
-        (event) => event.name == 'learning_run_outcome_recorded',
-      ),
-      isEmpty,
-      reason: 'The source miss is held open until its original read resolves.',
-    );
+    final sourceOutcomes = sink.events
+        .where((event) => event.name == 'learning_run_outcome_recorded')
+        .toList(growable: false);
+    expect(sourceOutcomes, hasLength(1));
+    expect(sourceOutcomes.single.fields['task_id'], 'apply_hj_decision');
+    expect(sourceOutcomes.single.fields['outcome_type'], 'incomplete');
+    expect(sourceOutcomes.single.fields['repair_attempted'], isFalse);
     final missTableBottom = tester
         .getRect(find.byKey(const Key('act0_shell_table')))
         .bottom;
@@ -368,7 +368,8 @@ void main() {
       sink.events.where(
         (event) => event.name == 'learning_run_outcome_recorded',
       ),
-      isEmpty,
+      hasLength(1),
+      reason: 'Repair updates the source outcome without duplicating it.',
     );
     await _continueW2Feedback(tester);
     final recheckTableBottom = tester
@@ -386,14 +387,22 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Original read proven'), findsOneWidget);
-    final recoveredOutcomes = sink.events
+    final rechecks = sink.events
         .where(
           (event) =>
-              event.name == 'learning_run_outcome_recorded' &&
-              event.fields['outcome_type'] == 'recoveredAfterRepair',
+              event.name == 'starting_hand_personalization_recheck' &&
+              event.fields['final_learning_outcome'] ==
+                  'hand_discipline_recovered',
         )
         .toList(growable: false);
-    expect(recoveredOutcomes, hasLength(1));
+    expect(rechecks, hasLength(1));
+    expect(
+      sink.events.where(
+        (event) => event.name == 'learning_run_outcome_recorded',
+      ),
+      hasLength(1),
+      reason: 'The finalized recheck keeps one source outcome identity.',
+    );
     expect(
       sink.events.where(
         (event) => event.name == 'learning_effect_delta_viewed',

@@ -10142,10 +10142,10 @@ const double _runnerRepairEnvelopeMaxLowerSlotShareV1 = 0.46;
 // The miss/repair header is part of the learning proof, not expendable scroll
 // content. Reserve enough of a compact phone for it to clear the table seam
 // while keeping the action CTA in the same viewport.
-const double _runnerRepairFeedbackDockMinLowerSlotHeightV1 = 320;
-const double _runnerRepairFeedbackDockTargetLowerSlotHeightV1 = 360;
+const double _runnerRepairFeedbackDockMinLowerSlotHeightV1 = 360;
+const double _runnerRepairFeedbackDockTargetLowerSlotHeightV1 = 420;
 const double _runnerRepairFeedbackDockTargetLowerSlotShareV1 = 0.40;
-const double _runnerRepairFeedbackDockMaxLowerSlotShareV1 = 0.48;
+const double _runnerRepairFeedbackDockMaxLowerSlotShareV1 = 0.52;
 const double _runnerCompactSeatTapMinLowerSlotHeightV1 = 220;
 const double _runnerCompactSeatTapTargetLowerSlotHeightV1 = 248;
 const double _runnerCompactSeatTapMaxLowerSlotShareV1 = 0.38;

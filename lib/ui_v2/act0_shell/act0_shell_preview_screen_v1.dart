@@ -1067,6 +1067,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   Act0LearningRunStateV1? _learningRunV1;
   Act0LearningRunPayoffV1? _pendingLearningRunPayoffV1;
   bool _learningRunLearnVisitActiveV1 = false;
+  bool _learningRunProductionLearnVisitV1 = false;
   int _learningRunOrdinalV1 = 0;
   int _learningRunEventOrderV1 = 0;
   final Set<String> _learningRunOutcomeTelemetryKeysV1 = <String>{};
@@ -4106,11 +4107,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         outcome.skillId == Act0PositionPersonalizationV1.skillId ||
         outcome.skillId == Act0PricePersonalizationV1.skillId ||
         outcome.skillId == Act0StartingHandPersonalizationV1.skillId;
-    if (!outcome.isMeaningful && terminalOnlyRepairBridge) {
+    if (!outcome.isMeaningful &&
+        terminalOnlyRepairBridge &&
+        !_learningRunProductionLearnVisitV1) {
       return;
     }
-    final telemetryKey =
-        '${next.runId}|${outcome.outcomeId}|${outcome.finalOutcome.name}|${outcome.recheckResult}';
+    // A production Learn visit records its source observation immediately.
+    // Its recheck replaces the same run outcome in state, so it must not emit
+    // a second source-outcome row for the same attempt.
+    final telemetryKey = '${next.runId}|${outcome.outcomeId}';
     if (!_learningRunOutcomeTelemetryKeysV1.add(telemetryKey)) {
       return;
     }
@@ -4140,6 +4145,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final active = _learningRunV1;
     if (active == null) {
       _learningRunLearnVisitActiveV1 = false;
+      _learningRunProductionLearnVisitV1 = false;
       return;
     }
     final closed = active.close(
@@ -4175,6 +4181,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       );
       _learningRunV1 = null;
       _learningRunLearnVisitActiveV1 = false;
+      _learningRunProductionLearnVisitV1 = false;
       return;
     }
     _recordTelemetryEventV1('session_payoff_generated', <String, Object?>{
@@ -4227,6 +4234,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   // the run.
   void _activateLearnVisitEligibilityV1() {
     _learningRunLearnVisitActiveV1 = true;
+    _learningRunProductionLearnVisitV1 = true;
   }
 
   void _completeLearningRunPayoffV1() {
@@ -4241,6 +4249,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _learningRunV1 = null;
     _pendingLearningRunPayoffV1 = null;
     _learningRunLearnVisitActiveV1 = false;
+    _learningRunProductionLearnVisitV1 = false;
     _learningRunOutcomeTelemetryKeysV1.clear();
   }
 
@@ -5618,9 +5627,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   }
                                   if (_returnToPlayHubOnBack) {
                                     _showPlayHub = true;
-                                    if (_tab == Act0ShellTabV1.learn) {
-                                      _activateLearnVisitEligibilityV1();
-                                    }
                                   } else {
                                     _emitSessionExitedTelemetryV1(
                                       sourceSurface: 'act0_runner_back',
