@@ -2401,7 +2401,12 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     final lateRouteTableSignal = act0LateRouteTableSignalForWorldNumberV1(
       widget.worldNumber,
     );
-    final taskRailLabel = bottomContext.taskLabel;
+    // The original source task is intentionally replayed after a mapped
+    // repair. Keep that identity visible so it cannot read as another
+    // authored hand before its result finalizes.
+    final taskRailLabel = widget.isSourceRecheckAttempt
+        ? 'Original read recheck'
+        : bottomContext.taskLabel;
     final theoryCoachLine = act0RuntimeTheoryCoachLineV1(
       context,
       authoredLine: runner.sharky.preSessionLine,
@@ -6233,6 +6238,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     // projection can make the stronger recovery claim.
     final isRecoveredSourceRecheck =
         hasRepairOutcomeProof && forceShowRepairOutcomeProof;
+    final isFailedSourceRecheck = isWrong && isSourceRecheckAttempt;
     final hasProofEarnedState =
         hasRepairOutcomeProof ||
         repairReceiptLine.toLowerCase().startsWith('repair fixed:') ||
@@ -6308,10 +6314,14 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     );
     final stateLabel = isRecoveredSourceRecheck
         ? 'Original read proven'
+        : isFailedSourceRecheck
+        ? 'Original read needs one more rep'
         : isRepairFocusState
         ? 'Practice the clue'
         : primaryResultLabel;
-    final stateDetail = isRepairFocusState
+    final stateDetail = isFailedSourceRecheck
+        ? 'This was the original hand. Review the clue before the next practice.'
+        : isRepairFocusState
         ? 'This practice hand keeps the missed clue in view.'
         : isWrong
         ? 'Start with the table clue, then choose the action.'

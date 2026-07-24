@@ -24,7 +24,8 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     final recovered = state == 'recovered';
-    final wrong = state == 'wrong';
+    final failedSourceRecheck = state == 'failed-recheck';
+    final wrong = state == 'wrong' || failedSourceRecheck;
     final repair = state == 'repair';
     await tester.pumpWidget(
       MaterialApp(
@@ -55,6 +56,7 @@ void main() {
                   ? 'Repair fixed: you caught the table clue.'
                   : null,
               repairContinuesToSourceRecheck: repair,
+              isSourceRecheckAttempt: failedSourceRecheck,
               repairOutcomeProofLine: recovered
                   ? "You missed Hero's seat first. On the recheck, you used it correctly."
                   : null,
@@ -206,7 +208,13 @@ void main() {
         (Size(440, 956), 1.0),
         (Size(440, 956), 1.4),
       ];
-      const states = <String>['wrong', 'repair', 'recovered', 'correct-first'];
+      const states = <String>[
+        'wrong',
+        'repair',
+        'recovered',
+        'failed-recheck',
+        'correct-first',
+      ];
 
       for (final configuration in matrix) {
         for (final state in states) {
@@ -645,7 +653,12 @@ void main() {
     expect(find.text('Check original read'), findsNothing);
 
     await pumpFeedback(directSourceRecheck: false, failedSourceRecheck: true);
+    expect(find.text('Original read needs one more rep'), findsOneWidget);
     expect(find.text('Continue to Review'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_feedback_icon_wrong')),
+      findsOneWidget,
+    );
   });
 
   testWidgets('compact recovered feedback keeps a restrained Sharky marker', (

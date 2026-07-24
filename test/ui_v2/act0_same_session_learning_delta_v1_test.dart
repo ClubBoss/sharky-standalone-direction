@@ -164,10 +164,24 @@ void main() {
 
     await _openCompletedW2SourceReplay(tester);
     await _answerW2Route(tester, correct: false);
+
+    final sourceMissTable = find.byKey(const Key('act0_shell_table'));
+    final sourceMissFeedback = find.byKey(
+      const Key('act0_shell_feedback_card'),
+    );
+    expect(sourceMissTable, findsOneWidget);
+    expect(sourceMissFeedback, findsOneWidget);
+    final tableBottom = tester.getRect(sourceMissTable).bottom;
+    final feedbackTop = tester.getRect(sourceMissFeedback).top;
+    expect(feedbackTop, greaterThanOrEqualTo(tableBottom));
+    expect(feedbackTop - tableBottom, lessThanOrEqualTo(48));
+
     await tester.tap(find.text('Try same clue'));
     await tester.pumpAndSettle();
     await _answerW2Route(tester, correct: true);
     await _continueW2Feedback(tester);
+
+    expect(find.text('Original read recheck'), findsOneWidget);
 
     expect(
       sink.events.where(
@@ -311,6 +325,43 @@ void main() {
         ),
         isEmpty,
       );
+    },
+  );
+
+  testWidgets(
+    'failed W2 source recheck stays unrewarded and returns to Review',
+    (tester) async {
+      final sink = Act0InMemoryTelemetrySinkV1();
+      _seedW2ApplyPrecondition(sourceCompleted: true);
+      await _pumpW2Route(tester, sink);
+
+      await _openCompletedW2SourceReplay(tester);
+      await _answerW2Route(tester, correct: false);
+      await tester.tap(find.text('Try same clue'));
+      await tester.pumpAndSettle();
+      await _answerW2Route(tester, correct: true);
+      await _continueW2Feedback(tester);
+      await _answerW2Route(tester, correct: false);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Original read needs one more rep'), findsOneWidget);
+      expect(find.text('Continue to Review'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_repair_outcome_proof_line')),
+        findsNothing,
+      );
+      expect(
+        sink.events.where(
+          (event) => event.name == 'learning_effect_delta_viewed',
+        ),
+        isEmpty,
+      );
+
+      await tester.tap(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('act0_shell_review_screen')), findsOneWidget);
     },
   );
 }
