@@ -2406,11 +2406,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     // The original source task is intentionally replayed after a mapped
     // repair. Keep that identity visible so it cannot read as another
     // authored hand before its result finalizes.
+    final selectedTaskTitle = widget.selectedTaskTitle?.trim() ?? '';
     final taskRailLabel = widget.isSourceRecheckAttempt
         ? 'Original read recheck'
-        : widget.selectedTaskId == 'apply_recap' &&
-              (widget.selectedTaskTitle?.trim().isNotEmpty ?? false)
-        ? widget.selectedTaskTitle!
+        : selectedTaskTitle.isNotEmpty
+        ? selectedTaskTitle
         : bottomContext.taskLabel;
     final theoryCoachLine = act0RuntimeTheoryCoachLineV1(
       context,
@@ -2679,7 +2679,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     Widget buildRunnerActionDock() {
       return _RunnerActionDockV1(
         pageX: pageX,
-        taskRailLabel: isRefinedDev2 || compactAnswerListDecision
+        taskRailLabel:
+            compactAnswerListDecision ||
+                (isRefinedDev2 && widget.selectedTaskId != 'apply_recap')
             ? null
             : taskRailLabel,
         sizingPresets: runner.sizingConfig.isEnabled
@@ -3185,6 +3187,17 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                   ),
                   compactBottomDockClearance: compactBottomDockClearance,
                 );
+                // A compact wrong/repair feedback surface owns its measured
+                // minimum lane before the table receives the remainder. The
+                // shared allocation path previously reserved only ordinary
+                // answer demand, allowing the table to occlude this heading.
+                final lowerSurfaceDemand =
+                    isReview && usesCompactRepairFeedbackDock
+                    ? math.max(
+                        normalLowerSurfaceDemand,
+                        _runnerRepairFeedbackDockTargetLowerSlotHeightV1,
+                      )
+                    : normalLowerSurfaceDemand;
                 // The normal route keeps its accepted width-derived table
                 // whenever its actual lower content fits. This is deliberately
                 // not the former 405 px worst-case reserve: a theory rail or
@@ -3200,7 +3213,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                           isRefinedDev2: isRefinedDev2,
                           compactTableStageTopInset: compactTableStageTopInset,
                         ) -
-                        normalLowerSurfaceDemand,
+                        lowerSurfaceDemand,
                   ),
                 );
                 final stageHeight =

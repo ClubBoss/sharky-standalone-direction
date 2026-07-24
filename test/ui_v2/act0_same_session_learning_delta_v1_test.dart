@@ -420,6 +420,7 @@ void main() {
     );
     expect(runner.selectedTaskId, 'apply_recap');
     expect(runner.selectedTaskTitle, 'Discipline holds');
+    expect(find.text('Discipline holds'), findsOneWidget);
   });
 
   testWidgets(
