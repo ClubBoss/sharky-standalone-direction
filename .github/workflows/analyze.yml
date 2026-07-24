@@ -60,7 +60,7 @@ jobs:
           cat <<'EOF' >> $GITHUB_STEP_SUMMARY
           ## Tiered verification summary
           - **Tier 0**: `./tools/run_table_first_tiers.sh 0`
-          - **Tier 1**: `./tools/run_table_first_tiers.sh 1` (guards: `test/table_first_order_guard_test.dart`, `test/theory_session_routing_test.dart`, `test/lesson_numeric_invariant_test.dart`)
+          - **Tier 1**: `./tools/run_table_first_tiers.sh 1` (the current World1 selected-test authority)
           - **Manual Tier 2**: `TIER2_TIMEOUT=300 ./tools/run_table_first_tiers.sh 2`
           - **Docs**: See `docs/table_first_lessons.md` -> "Table-first Verification Workflow"
           - **Manifest**: `./tools/tier_coverage_manifest.json` defines the Tier 1 guard list
