@@ -6229,6 +6229,10 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         repairReceiptLine.toLowerCase().startsWith('repair fixed:') ||
         repairReceiptLine.toLowerCase().startsWith('replay fixed:') ||
         repairReceiptLine.toLowerCase().startsWith('fix landed:');
+    // Only the source-recheck delta proves the learner used the repaired read
+    // on the original spot. A repair result is deliberately a smaller claim.
+    final hasOriginalReadProof =
+        hasRepairOutcomeProof && forceShowRepairOutcomeProof;
     final media = MediaQuery.of(context);
     final view = View.of(context);
     final fullViewportHeight = view.physicalSize.height / view.devicePixelRatio;
@@ -6296,6 +6300,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final primaryResultLabel = _feedbackPrimaryResultLabelV1(
       quality: quality,
       repairReceiptLine: repairResultReceiptLine,
+      hasOriginalReadProof: hasOriginalReadProof,
     );
     final showVerdictTitle = resolvedTitle.isNotEmpty;
     final actionPrefix = act0RuntimeFeedbackActionPrefixV1(
@@ -6358,7 +6363,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         ? repairReceiptLine
         : firstValueReceiptLine?.trim();
     final receiptSplitIndex = fallbackReceiptLine?.indexOf('. Next:') ?? -1;
-    final receiptTitle = hasRepairOutcomeProof
+    final receiptTitle = hasOriginalReadProof
+        ? 'Original read proven'
+        : hasRepairOutcomeProof
         ? 'Repair landed'
         : repairReceiptLine.isNotEmpty
         ? 'Repair result'
@@ -7423,7 +7430,11 @@ String _humanizedFeedbackProofLineV1(String proofLine) {
 String _feedbackPrimaryResultLabelV1({
   required Act0FeedbackQualityV1 quality,
   required String? repairReceiptLine,
+  required bool hasOriginalReadProof,
 }) {
+  if (hasOriginalReadProof) {
+    return 'Original read proven';
+  }
   final receipt = repairReceiptLine?.trim().toLowerCase() ?? '';
   if (receipt.startsWith('repair fixed:')) {
     return 'Repair landed';
