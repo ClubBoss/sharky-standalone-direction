@@ -1013,6 +1013,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.selectedWorldId,
     this.selectedLessonId,
     this.selectedTaskId,
+    this.selectedTaskTitle,
     this.selectedTaskFamily,
     this.tablePresentation = Act0TaskTablePresentationV1.legacy,
     this.theoryRecallStep,
@@ -1056,6 +1057,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final String? selectedWorldId;
   final String? selectedLessonId;
   final String? selectedTaskId;
+  final String? selectedTaskTitle;
   final Act0TaskFamilyV1? selectedTaskFamily;
   final Act0TaskTablePresentationV1 tablePresentation;
   final Act0TeachingStepV1? theoryRecallStep;
@@ -2406,6 +2408,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     // authored hand before its result finalizes.
     final taskRailLabel = widget.isSourceRecheckAttempt
         ? 'Original read recheck'
+        : widget.selectedTaskId == 'apply_recap' &&
+              (widget.selectedTaskTitle?.trim().isNotEmpty ?? false)
+        ? widget.selectedTaskTitle!
         : bottomContext.taskLabel;
     final theoryCoachLine = act0RuntimeTheoryCoachLineV1(
       context,
@@ -10134,10 +10139,13 @@ const double _runnerRepairEnvelopeMinLowerSlotHeightV1 = 320;
 const double _runnerRepairEnvelopeTargetLowerSlotHeightV1 = 420;
 const double _runnerRepairEnvelopeTargetLowerSlotShareV1 = 0.40;
 const double _runnerRepairEnvelopeMaxLowerSlotShareV1 = 0.46;
-const double _runnerRepairFeedbackDockMinLowerSlotHeightV1 = 280;
-const double _runnerRepairFeedbackDockTargetLowerSlotHeightV1 = 320;
+// The miss/repair header is part of the learning proof, not expendable scroll
+// content. Reserve enough of a compact phone for it to clear the table seam
+// while keeping the action CTA in the same viewport.
+const double _runnerRepairFeedbackDockMinLowerSlotHeightV1 = 320;
+const double _runnerRepairFeedbackDockTargetLowerSlotHeightV1 = 360;
 const double _runnerRepairFeedbackDockTargetLowerSlotShareV1 = 0.40;
-const double _runnerRepairFeedbackDockMaxLowerSlotShareV1 = 0.44;
+const double _runnerRepairFeedbackDockMaxLowerSlotShareV1 = 0.48;
 const double _runnerCompactSeatTapMinLowerSlotHeightV1 = 220;
 const double _runnerCompactSeatTapTargetLowerSlotHeightV1 = 248;
 const double _runnerCompactSeatTapMaxLowerSlotShareV1 = 0.38;

@@ -238,6 +238,11 @@ void main() {
             lessThan(configuration.$1.height),
           );
           expect(
+            tester.getRect(card).top,
+            greaterThanOrEqualTo(0),
+            reason: '$configuration $state keeps the feedback header in view',
+          );
+          expect(
             tester.getRect(cta).bottom,
             lessThanOrEqualTo(configuration.$1.height),
             reason: '$configuration $state',

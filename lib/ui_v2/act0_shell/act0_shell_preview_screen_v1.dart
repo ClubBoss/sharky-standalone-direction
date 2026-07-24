@@ -4222,6 +4222,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     });
   }
 
+  // A normal Learn entry may happen from Home or Runner Back. Eligibility is
+  // lazy: the first eligible decision, not this navigation transition, creates
+  // the run.
+  void _activateLearnVisitEligibilityV1() {
+    _learningRunLearnVisitActiveV1 = true;
+  }
+
   void _completeLearningRunPayoffV1() {
     final run = _learningRunV1;
     if (run != null) {
@@ -5077,7 +5084,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         }),
                         onOpenLearnContext: () => setState(() {
                           final lesson = _firstPlayableLesson(selectedWorld);
-                          _learningRunLearnVisitActiveV1 = true;
+                          _activateLearnVisitEligibilityV1();
                           _tab = Act0ShellTabV1.learn;
                           _showPlayHub = true;
                           _returnToPlayHubOnBack = false;
@@ -5509,6 +5516,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 selectedWorldId: selectedWorld.worldId,
                                 selectedLessonId: selectedLesson.lessonId,
                                 selectedTaskId: playSelectedTask?.taskId,
+                                selectedTaskTitle: playSelectedTask == null
+                                    ? null
+                                    : _localizedTaskTitleV1(playSelectedTask),
                                 selectedTaskFamily:
                                     playSelectedTask?.resolvedTaskFamily,
                                 tablePresentation:
@@ -5608,10 +5618,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   }
                                   if (_returnToPlayHubOnBack) {
                                     _showPlayHub = true;
+                                    if (_tab == Act0ShellTabV1.learn) {
+                                      _activateLearnVisitEligibilityV1();
+                                    }
                                   } else {
                                     _emitSessionExitedTelemetryV1(
                                       sourceSurface: 'act0_runner_back',
                                     );
+                                    _activateLearnVisitEligibilityV1();
                                     _tab = Act0ShellTabV1.learn;
                                   }
                                 }),
@@ -6203,7 +6217,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                   _placementHandoffActive = false;
                 }
                 if (tab == Act0ShellTabV1.learn) {
-                  _learningRunLearnVisitActiveV1 = true;
+                  _activateLearnVisitEligibilityV1();
                   final learnLesson = _firstPlayableLesson(selectedWorld);
                   _seedLearnRouteFocusV1(
                     lessonId: learnLesson.lessonId,

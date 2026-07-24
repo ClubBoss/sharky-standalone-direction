@@ -304,6 +304,115 @@ void main() {
     expect(recoveredOutcomes.single.fields['missed_signal'], 'hero_seat');
   });
 
+  testWidgets('Home runner Back preserves the lazy Learn visit for a completed '
+      'W2 replay', (tester) async {
+    final sink = Act0InMemoryTelemetrySinkV1();
+    _seedW2ApplyPrecondition(sourceCompleted: true);
+    await _pumpW2HomeRoute(tester, sink);
+
+    expect(
+      sink.events.where(
+        (event) => event.name == 'learning_run_outcome_recorded',
+      ),
+      isEmpty,
+    );
+    await tester.tap(find.byKey(const Key('act0_shell_home_v6_primary_cta')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('act0_shell_learn_screen')), findsOneWidget);
+    expect(
+      sink.events.where(
+        (event) => event.name == 'learning_run_outcome_recorded',
+      ),
+      isEmpty,
+    );
+
+    await _openCompletedW2SourceReplay(tester);
+    await _answerW2Route(tester, correct: false);
+    expect(
+      sink.events.where((event) => event.name == 'learning_run_started'),
+      hasLength(1),
+    );
+    expect(
+      sink.events.where(
+        (event) => event.name == 'learning_run_outcome_recorded',
+      ),
+      isEmpty,
+      reason: 'The source miss is held open until its original read resolves.',
+    );
+    final missTableBottom = tester
+        .getRect(find.byKey(const Key('act0_shell_table')))
+        .bottom;
+    final missVerdictTop = tester
+        .getRect(find.byKey(const Key('act0_shell_feedback_rhythm_verdict')))
+        .top;
+    final missCta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+    expect(
+      missVerdictTop,
+      greaterThanOrEqualTo(missTableBottom),
+      reason: 'Practice the clue must clear the table-to-feedback seam.',
+    );
+    expect(tester.getRect(missCta).bottom, lessThanOrEqualTo(812));
+    await tester.tap(find.text('Try same clue'));
+    await tester.pumpAndSettle();
+    await _answerW2Route(tester, correct: true);
+    expect(
+      sink.events.where(
+        (event) => event.name == 'learning_effect_delta_viewed',
+      ),
+      isEmpty,
+      reason: 'A repair is not a payoff until the source read is rechecked.',
+    );
+    expect(
+      sink.events.where(
+        (event) => event.name == 'learning_run_outcome_recorded',
+      ),
+      isEmpty,
+    );
+    await _continueW2Feedback(tester);
+    final recheckTableBottom = tester
+        .getRect(find.byKey(const Key('act0_shell_table')))
+        .bottom;
+    final recheckDockTop = tester
+        .getRect(find.byKey(const Key('act0_shell_runner_action_dock')))
+        .top;
+    expect(
+      recheckDockTop - recheckTableBottom,
+      lessThanOrEqualTo(32),
+      reason: 'The original-read recheck must not leave a dead band.',
+    );
+    await _answerW2Route(tester, correct: true);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Original read proven'), findsOneWidget);
+    final recoveredOutcomes = sink.events
+        .where(
+          (event) =>
+              event.name == 'learning_run_outcome_recorded' &&
+              event.fields['outcome_type'] == 'recoveredAfterRepair',
+        )
+        .toList(growable: false);
+    expect(recoveredOutcomes, hasLength(1));
+    expect(
+      sink.events.where(
+        (event) => event.name == 'learning_effect_delta_viewed',
+      ),
+      hasLength(1),
+    );
+    final recoveredContinue = find.byKey(
+      const Key('act0_shell_feedback_continue_cta'),
+    );
+    await tester.ensureVisible(recoveredContinue);
+    await tester.tap(recoveredContinue);
+    await tester.pumpAndSettle();
+    final runner = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(runner.selectedTaskId, 'apply_recap');
+    expect(runner.selectedTaskTitle, 'Discipline holds');
+  });
+
   testWidgets(
     'a clean correct-first task shows no delta on its recheck feedback',
     (tester) async {
@@ -460,6 +569,33 @@ Future<void> _pumpW2Route(
       home: Act0ShellPreviewScreenV1(
         initialTab: Act0ShellTabV1.learn,
         initialPhase: Act0LessonPhaseV1.drill,
+        showPlacementOnStart: false,
+        telemetrySink: sink,
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
+Future<void> _pumpW2HomeRoute(
+  WidgetTester tester,
+  Act0InMemoryTelemetrySinkV1 sink,
+) async {
+  tester.view.physicalSize = const Size(375, 1000);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
+  await tester.pumpWidget(
+    MaterialApp(
+      locale: const Locale('en'),
+      supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+      localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      home: Act0ShellPreviewScreenV1(
+        initialTab: Act0ShellTabV1.home,
         showPlacementOnStart: false,
         telemetrySink: sink,
       ),
