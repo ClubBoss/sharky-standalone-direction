@@ -2,6 +2,39 @@
 
 Status: ACTIVE POST-MERGE EXECUTION CAPSULE.
 
+## Current authority — 2026-07-24
+
+`main` is `8e2c6d967afcdf50e35a09b37c974eb9fc9bbe70`, the merge commit for
+PR #41. Same-Session Learning Effect v1 is **CLOSED / MERGED / NATIVE PROVEN /
+TELEMETRY PROVEN / PRIVACY PROVEN**. Original-source recheck owns terminal
+recovery; Position, Price, and Starting-Hand telemetry remain route-neutral,
+with successful source recheck producing one generic recovery, one family
+recheck, one family payoff, and one viewed/completed delta pair. The safe
+Starting-Hand feedback mapping is `w2_hand_discipline_feedback_v1`; PR #40
+lesson continuation is preserved. Human Novice Proof was not performed.
+
+Modern Table remains in permanent Maintenance Mode, and screenshots remain
+audit/regression-only evidence. Current visual findings are inputs, not
+authorization to reopen closed table-material polish.
+
+The next active macro focus is **Learning Surface UX/UI Convergence**:
+
+1. progression and CTA reachability;
+2. Theory / Decision / Correct / Wrong composition;
+3. Repair and source-recheck hierarchy;
+4. recovered-result and reward moment;
+5. Review IA and actionable reps;
+6. Session Summary and progress semantics;
+7. compact/responsive learning surfaces;
+8. mascot participation and emotional states;
+9. motion and animation language; and
+10. cross-screen visual cohesion.
+
+No visual implementation begins through this closure. Human Novice Proof
+remains downstream. Deferred P4 wording debt: a focused Same-Session test
+title/comment mentions Review although canonical continuation advances to the
+next authored W2 hand; carry it only into future bounded test maintenance.
+
 ## Current authority — 2026-07-22
 
 The canonical branch is `main` at `6b6a6894909e780a17ca072eeff14fee9d8efbc4`,
