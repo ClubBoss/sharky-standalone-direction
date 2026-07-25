@@ -8,12 +8,12 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical HEAD | `f3a40782194eb91595e9c36f235a3aa2314d2a90` |
+| Canonical HEAD | `190721a5dfa86ad65b716c071fcc09371857d35f` |
 | Campaign version | v1 |
 | Umbrella stage | **Pre-Human Node 5 — Canonical Contract and Test Authority Restoration** |
-| Active sub-packet | **PHP-3A — scenario-seat-state single-carrier pilot** |
-| Status | **ACTIVE_PARTIAL — scenario-seat-state pilot** |
-| Latest admitted PR | **#61** |
+| Active sub-packet | **PHP-3B — World1 host/route contract family extraction** |
+| Status | **ACTIVE_PARTIAL — PHP-3B candidate: two current-owner carriers admitted; two archive-typed carriers preserved unchanged** |
+| Latest admitted PR | **#62** |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **CLASSIFIED** — 53 files: required 0; stale 2; active-nonblocking 5; archived 7; quarantined 29; unresolved-unique 10. Full ledger: `docs/_reviews/php0_canonical_adjacent_red_guard_triage_v1.md` |
 | F-18 | **STALE_TEST** — exact pre-F-16-to-head trail disproves PR #51/#52 causation; owner is compact-decision test fixture / retired teaching-step assertion |
@@ -21,11 +21,11 @@ here; update only the fields below.
 | Sharky production integration | **PENDING** (PHP-6) |
 | PHP-1 stale assertions | **2** — phase-7 campaign wording; compact-decision retired teaching-step expectation |
 | F-16 non-weakening review | **NON_WEAKENING** — seven stale-test groups (#4, #5, #6, #7–9, #11, #12) independently re-derived |
-| PHP-3 admitted carriers | **1** |
-| PHP-3 unresolved carriers | **76** |
-| PHP-3 nine-path residual | **76** |
+| PHP-3 admitted carriers | **3** |
+| PHP-3 unresolved carriers | **74** |
+| PHP-3 nine-path residual | **74** |
 | Recommended next packet | **PHP-3** — bounded family extraction |
-| Next authorization | **ACTIVE** — one PHP-3 carrier / one PR maximum |
+| Next authorization | **ACTIVE** — PHP-3B is bounded to this candidate; PHP-4 and Human remain unauthorized |
 | Autonomous window | **one packet / maximum one merged PR** |
 | Human Proof | **NOT AUTHORIZED** |
 | `PRE_HUMAN_READY` | **NOT MET** |
@@ -52,7 +52,7 @@ Product severity resolves in PHP-0.
 | PHP-0 Canonical-Adjacent Red-Guard Triage | Node 5 | **CLOSED_CLASSIFIED** |
 | PHP-1 Stale Contract Repair + F-16 Non-Weakening Verification | Node 5 | **CLOSED_NON_WEAKENING** |
 | PHP-2 Legacy Corpus Ownership Disposition | Node 5 | **CLOSED_DISPOSED_WITH_PHP3_HANDOFFS — retired 68; handoffs 77; eligible residual 0; unexplained 0** |
-| PHP-3 Canonical Test Classification and Manifest | Node 5 | **ACTIVE_PARTIAL — scenario-seat-state pilot** |
+| PHP-3 Canonical Test Classification and Manifest | Node 5 | **ACTIVE_PARTIAL — PHP-3B World1 host/route extraction; 3 admitted, 74 unresolved, 0 unexplained** |
 | PHP-4 Canonical Full-Lane CI Authority | Node 5 | NOT_PREAUTHORIZED |
 | PHP-5 Premium Motion & Ceremony Completion | — | NOT_PREAUTHORIZED |
 | PHP-6 Sharky Production Integration & Completeness Proof | — | NOT_PREAUTHORIZED |
