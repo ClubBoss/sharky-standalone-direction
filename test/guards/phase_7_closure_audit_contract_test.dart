@@ -91,7 +91,7 @@ void main() {
     );
     expect(
       campaignState,
-      contains('PHP-2 — Legacy Corpus Ownership Disposition, Batch 1'),
+      contains('PHP-2 — Legacy Corpus Ownership Disposition, Batch 2'),
     );
     expect(
       campaignState,

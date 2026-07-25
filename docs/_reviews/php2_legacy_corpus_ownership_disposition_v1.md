@@ -36,7 +36,8 @@ The local noncommitted inventory is `/tmp/php2_candidates.txt`: sorted `test/**/
 | Mandatory PHP-3 preservation carriers | 2 |
 | Batch 1 deleted | 50 |
 | Batch 1 relocated / retained / handoff / blocked | 0 / 0 / 0 / 0 |
-| Tier-B-to-D retired | 22 |
+| Batch 2 deleted / retained / handoff / blocked | 18 / 0 / 30 / 0 |
+| Tier-B-to-D retired | 40 |
 | Tier-C-to-D retired | 0 |
 | Current Tier-D tombstones | 22 |
 
@@ -182,11 +183,117 @@ Local Batch-1 evidence:
 
 Only PHP-2 candidate tests, approved Tier-B/C/D manifest artifacts, the validator/README, this review artifact, and campaign state are mutable. No frozen historical evidence, workflow, product, content, telemetry, visual, motion, Sharky, Modern Table, PHP-3/PHP-4, native, or Human Proof work is included.
 
-## 18. Final verdict
+## 18. Batch 2 strengthened Tier-B ownership disposition
+
+Batch 2 begins from admitted canonical 04c954821280c46dea5ce1bc1052f1933bd94fac
+(PR #59), with 95 absolute importers and 48 current Tier-B candidates. This
+pass does not infer retirement from a removed import or Tier-B membership.
+
+### 18.1 Intentional-retirement and replacement dispositions
+
+| Files | Exact asserted contract | Current semantic result | Disposition |
+| --- | --- | --- | --- |
+| map_rhythm_rules_v1, map_top_bar_narrow_layout, map_top_leak_context_label, progress_map_route_v1, today_plan_routing_reason, world1_map_extreme_widths, world1_map_node_states, world1_map_path_layout_narrow_wide | review/continue wording, map route flags, and map presentation/layout | each assertion belongs only to UiV2ProgressMapScreenV2 or its helpers; the map is reference-only and Act0 owns canonical entry | DELETE_ARCHIVED_NONCANONICAL |
+| modern_table_blind_level_entry, modern_table_seat_visual_profile | legacy table blind/ante and embedded seat-profile visual grammar | retired legacy table surface only; no active learner route owner | DELETE_ARCHIVED_NONCANONICAL |
+| modern_table_topology_entry | 2/3/4/5/6/9/10 table topology rendering | semantic replacement: test/ui_v2/runner/canonical_table_topology_contract_v1_test.dart covers deterministic profile and slot semantics; old widget render is retired | DELETE_ARCHIVED_NONCANONICAL |
+| runner/shared_embedded_table_visual_family_propagation | visual-family propagation across removed World1/session-drill runners | all asserted hosts are removed legacy runtime surfaces | DELETE_ARCHIVED_NONCANONICAL |
+| runner/world1_direct_launch_seat_alias | removed runner seat-alias placement and table-practice chrome | only removed World1 runner surface; Act0 is canonical | DELETE_ARCHIVED_NONCANONICAL |
+| runner/world1_modern_table_adapter, runner/world1_modern_table_blind_truth, runner/world1_shared_embedded_table_family_migration | removed runner's adapter mapping and embedded-table visual/price grammar | only removed runner/table composition; no active adapter owner | DELETE_ARCHIVED_NONCANONICAL |
+| seat_layout_modes_v1 | removed runner debug pack-id seat-layout selector | only removed runner debug helper | DELETE_ARCHIVED_NONCANONICAL |
+| ui_v2_session_result_screen_contract | detached legacy result screen and its noncanonical continue behavior | exact retired ui_v2/legacy owner; current result grammar has a separate owner | DELETE_ARCHIVED_NONCANONICAL |
+
+### 18.2 Preserved PHP-3 carriers
+
+These Tier-B files are not deleted. Their removed import is a broken bridge, but
+their assertions exercise a current source contract or learner-facing
+correctness, progression, feedback, accessibility, visual, or smoke semantic.
+Focused semantic search found no same-contract replacement; PHP-2 therefore
+records a handoff rather than rewriting or weakening them.
+
+| Files | Exact surviving contract | Current source / search result | Disposition |
+| --- | --- | --- | --- |
+| runner/canonical_terminal_world1_runtime_config_v1, runner/world1_canonical_host_adapter_v1, runner/world1_foundations_runner_progression_chrome_adapter_v1, world1_foundations_runner_route_v1 | World1 host configuration, launch identity, progression chrome, and route argument preservation | live ui_v2/runner host/config contracts; no same-contract replacement | HANDOFF_TO_PHP3_UNIQUE_CONTRACT |
+| scenario_seat_state_contract | scenario occupancy validation and blind-level serialization | live ScenarioSpecV1 engine correctness; integration coverage does not assert the failure and round-trip cases | HANDOFF_TO_PHP3_UNIQUE_CONTRACT |
+| session_drill_player_bet_sizing, session_drill_player_board_tap, session_drill_player_board_texture, session_drill_player_hand_chain, session_drill_player_initiative, session_drill_player_position_thinking, session_drill_player_projection_invariant_spine, session_drill_player_runner_stress_benchmark_acceptance, session_drill_player_seat_info_density_rendered_quality, session_drill_player_seat_tap, session_drill_player_spatial_runtime_bundle | drill specification correctness plus feedback, hand-chain, table projection, seat/board interaction, and rendered-quality semantics | live DrillRuntimeAdapterV1, drill contracts, scenario engine, and canonical topology inputs; no one-for-one active replacement | HANDOFF_TO_PHP3_UNIQUE_CONTRACT |
+| session_drill_player_world2_live_layout, session_drill_player_world2_source_projection, session_drill_player_world3_continuation_slice, session_drill_player_world3_front_slice, session_drill_player_world3_hand_chain_surface, session_drill_player_world3_mid_tail_rendered_quality, session_drill_player_world3_tail_capstone_rendered_quality, session_drill_player_world3_tail_slice, session_drill_player_world9_exploit_synthesis_rendered_quality, session_drill_player_world9_position_spatial_rendered_quality, session_drill_player_world9_surface | World2/3/9 authored drill/source-projection and rendered-semantic contracts | live drill/content source contracts; no exact replacement test found | HANDOFF_TO_PHP3_UNIQUE_CONTRACT |
+| session_result_screen_contract | current result continuation, personalization, persistence/progression framing | live SessionResultScreen, recommendation, outcome, and telemetry-adjacent services; onboarding-payoff coverage is complementary, not equivalent | HANDOFF_TO_PHP3_UNIQUE_CONTRACT |
+| ui_v2_accessibility_touch | touch-target, large-text, and error-free accessibility across map/settings/modules | current settings/modules accessibility survives; existing World1 a11y coverage is not equivalent | HANDOFF_TO_PHP3_UNIQUE_CONTRACT |
+| ui_v2_smoke | non-map league smoke alongside retired-map smoke | live league smoke assertion survives and must be extracted before old map assertion retires | HANDOFF_TO_PHP3_UNIQUE_CONTRACT |
+
+Batch 2 has 18 intentional-retirement proofs, one semantic replacement proof,
+and 30 new PHP-3 handoffs. High-risk spot-check: session_result_screen_contract
+asserts current result, personalization, continuation, and
+persistence/progression behavior, so it is preserved despite its legacy import.
+
+Tier-D ledger paths: test/ui_v2/map_rhythm_rules_v1_test.dart;
+test/ui_v2/map_top_bar_narrow_layout_test.dart;
+test/ui_v2/map_top_leak_context_label_contract_test.dart;
+test/ui_v2/modern_table_blind_level_entry_test.dart;
+test/ui_v2/modern_table_seat_visual_profile_test.dart;
+test/ui_v2/modern_table_topology_entry_test.dart;
+test/ui_v2/progress_map_route_v1_test.dart;
+test/ui_v2/runner/shared_embedded_table_visual_family_propagation_test.dart;
+test/ui_v2/runner/world1_direct_launch_seat_alias_contract_test.dart;
+test/ui_v2/runner/world1_modern_table_adapter_v1_test.dart;
+test/ui_v2/runner/world1_modern_table_blind_truth_contract_test.dart;
+test/ui_v2/runner/world1_shared_embedded_table_family_migration_test.dart;
+test/ui_v2/seat_layout_modes_v1_test.dart;
+test/ui_v2/today_plan_routing_reason_contract_test.dart;
+test/ui_v2/ui_v2_session_result_screen_contract_test.dart;
+test/ui_v2/world1_map_extreme_widths_contract_test.dart;
+test/ui_v2/world1_map_node_states_contract_test.dart;
+test/ui_v2/world1_map_path_layout_narrow_wide_test.dart.
+
+| File | Evidence | Disposition |
+| --- | --- | --- |
+| `test/ui_v2/map_rhythm_rules_v1_test.dart` | Batch 2 path evidence | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/map_top_bar_narrow_layout_test.dart` | Batch 2 path evidence | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/map_top_leak_context_label_contract_test.dart` | Batch 2 path evidence | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/modern_table_blind_level_entry_test.dart` | Batch 2 path evidence | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/modern_table_seat_visual_profile_test.dart` | Batch 2 path evidence | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/modern_table_topology_entry_test.dart` | Batch 2 path evidence | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/progress_map_route_v1_test.dart` | Batch 2 path evidence | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/runner/shared_embedded_table_visual_family_propagation_test.dart` | Batch 2 path evidence | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/runner/world1_direct_launch_seat_alias_contract_test.dart` | Batch 2 path evidence | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/runner/world1_modern_table_adapter_v1_test.dart` | Batch 2 path evidence | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/runner/world1_modern_table_blind_truth_contract_test.dart` | Batch 2 path evidence | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/runner/world1_shared_embedded_table_family_migration_test.dart` | Batch 2 path evidence | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/seat_layout_modes_v1_test.dart` | Batch 2 path evidence | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/today_plan_routing_reason_contract_test.dart` | Batch 2 path evidence | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/ui_v2_session_result_screen_contract_test.dart` | Batch 2 path evidence | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/world1_map_extreme_widths_contract_test.dart` | Batch 2 path evidence | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/world1_map_node_states_contract_test.dart` | Batch 2 path evidence | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/world1_map_path_layout_narrow_wide_test.dart` | Batch 2 path evidence | `DELETE_ARCHIVED_NONCANONICAL` |
+
+| File | Batch | Owner | Current source | Unique-contract assessment | Disposition |
+| --- | --- | --- | --- | --- | --- |
+| `test/ui_v2/map_rhythm_rules_v1_test.dart` | B2 | retired | no active owner | no unique current contract | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/map_top_bar_narrow_layout_test.dart` | B2 | retired | no active owner | no unique current contract | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/map_top_leak_context_label_contract_test.dart` | B2 | retired | no active owner | no unique current contract | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/modern_table_blind_level_entry_test.dart` | B2 | retired | no active owner | no unique current contract | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/modern_table_seat_visual_profile_test.dart` | B2 | retired | no active owner | no unique current contract | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/modern_table_topology_entry_test.dart` | B2 | retired | no active owner | no unique current contract | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/progress_map_route_v1_test.dart` | B2 | retired | no active owner | no unique current contract | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/runner/shared_embedded_table_visual_family_propagation_test.dart` | B2 | retired | no active owner | no unique current contract | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/runner/world1_direct_launch_seat_alias_contract_test.dart` | B2 | retired | no active owner | no unique current contract | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/runner/world1_modern_table_adapter_v1_test.dart` | B2 | retired | no active owner | no unique current contract | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/runner/world1_modern_table_blind_truth_contract_test.dart` | B2 | retired | no active owner | no unique current contract | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/runner/world1_shared_embedded_table_family_migration_test.dart` | B2 | retired | no active owner | no unique current contract | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/seat_layout_modes_v1_test.dart` | B2 | retired | no active owner | no unique current contract | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/today_plan_routing_reason_contract_test.dart` | B2 | retired | no active owner | no unique current contract | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/ui_v2_session_result_screen_contract_test.dart` | B2 | retired | no active owner | no unique current contract | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/world1_map_extreme_widths_contract_test.dart` | B2 | retired | no active owner | no unique current contract | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/world1_map_node_states_contract_test.dart` | B2 | retired | no active owner | no unique current contract | `DELETE_ARCHIVED_NONCANONICAL` |
+| `test/ui_v2/world1_map_path_layout_narrow_wide_test.dart` | B2 | retired | no active owner | no unique current contract | `DELETE_ARCHIVED_NONCANONICAL` |
+
+After Batch 2: absolute nine-path census 95 -> 77; mandatory PHP-3 handoffs
+remain 2 and new PHP-3 handoffs are 30; PHP-2-eligible residual is 45.
+
+## 19. Final verdict
 
 Pending.
 
-## 19. Context-cost record
+## 20. Context-cost record
 
 - Budget: standard.
 - Authority: campaign state, original PHP-2 brief, both owner addenda, PHP-0/PHP-1 records, manifest validator, exact candidate imports.
