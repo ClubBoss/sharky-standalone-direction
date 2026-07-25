@@ -8,12 +8,12 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical HEAD | 04c954821280c46dea5ce1bc1052f1933bd94fac |
+| Canonical HEAD | 875c08e897a9a464f558f961e9507a2497b2f38b |
 | Campaign version | v1 |
 | Umbrella stage | **Pre-Human Node 5 — Canonical Contract and Test Authority Restoration** |
-| Active sub-packet | **PHP-2 — Legacy Corpus Ownership Disposition, Batch 2** |
-| Status | **ACTIVE — owner-authorized up to three sequential PRs** |
-| Latest admitted PR | **#59** |
+| Active sub-packet | **PHP-2 — Legacy Corpus Ownership Disposition, terminal Batch 3** |
+| Status | **PHP2_CLOSED_DISPOSED_WITH_PHP3_HANDOFFS** |
+| Latest admitted PR | **#60** |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **CLASSIFIED** — 53 files: required 0; stale 2; active-nonblocking 5; archived 7; quarantined 29; unresolved-unique 10. Full ledger: `docs/_reviews/php0_canonical_adjacent_red_guard_triage_v1.md` |
 | F-18 | **STALE_TEST** — exact pre-F-16-to-head trail disproves PR #51/#52 causation; owner is compact-decision test fixture / retired teaching-step assertion |
@@ -21,9 +21,9 @@ here; update only the fields below.
 | Sharky production integration | **PENDING** (PHP-6) |
 | PHP-1 stale assertions | **2** — phase-7 campaign wording; compact-decision retired teaching-step expectation |
 | F-16 non-weakening review | **NON_WEAKENING** — seven stale-test groups (#4, #5, #6, #7–9, #11, #12) independently re-derived |
-| Recommended next packet | **PHP-2 Batch 2** — strengthened Tier-B ownership disposition |
-| Next authorization | **PHP-2 active** — up to three sequential merged PRs; PHP-3 extraction remains unauthorized |
-| Autonomous window | **PHP-2 / maximum three merged PRs** |
+| Recommended next packet | **PHP-3** — canonical test extraction and manifest, pending owner gateway |
+| Next authorization | **PENDING_OWNER_GATEWAY** — PHP-3 extraction remains unauthorized |
+| Autonomous window | **CLOSED — PHP-2 three-PR window consumed** |
 | Human Proof | **NOT AUTHORIZED** |
 | `PRE_HUMAN_READY` | **NOT MET** |
 | `HUMAN_PROVEN_10_OF_10_CANDIDATE` | **NOT MET** |
@@ -48,8 +48,8 @@ Product severity resolves in PHP-0.
 | --- | --- | --- |
 | PHP-0 Canonical-Adjacent Red-Guard Triage | Node 5 | **CLOSED_CLASSIFIED** |
 | PHP-1 Stale Contract Repair + F-16 Non-Weakening Verification | Node 5 | **CLOSED_NON_WEAKENING** |
-| PHP-2 Legacy Corpus Ownership Disposition | Node 5 | **ACTIVE — Batch 2; Batch 1 disposed 50; absolute residual 95; two mandatory PHP-3 handoffs; up to three PRs** |
-| PHP-3 Canonical Test Classification and Manifest | Node 5 | NOT_PREAUTHORIZED |
+| PHP-2 Legacy Corpus Ownership Disposition | Node 5 | **CLOSED_DISPOSED_WITH_PHP3_HANDOFFS — retired 68; handoffs 77; eligible residual 0; unexplained 0** |
+| PHP-3 Canonical Test Classification and Manifest | Node 5 | **PENDING_OWNER_GATEWAY** |
 | PHP-4 Canonical Full-Lane CI Authority | Node 5 | NOT_PREAUTHORIZED |
 | PHP-5 Premium Motion & Ceremony Completion | — | NOT_PREAUTHORIZED |
 | PHP-6 Sharky Production Integration & Completeness Proof | — | NOT_PREAUTHORIZED |
