@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/engine/scenario_replayer_fsm_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/modern_table_screen_v1.dart';
 
 void main() {
   test('ScenarioSpecV1 derives folded seats from zero stacks by default', () {
@@ -119,57 +117,6 @@ void main() {
         ),
       ).validate(),
       throwsArgumentError,
-    );
-  });
-
-  testWidgets('ModernTableScreenV1 distinguishes folded and empty seats', (
-    tester,
-  ) async {
-    final spec = ScenarioSpecV1(
-      seatCount: 3,
-      heroSeat: 0,
-      initialStacks: const [900, 400, 0],
-      seatOccupancies: const <ScenarioSeatOccupancyV1>[
-        ScenarioSeatOccupancyV1.active,
-        ScenarioSeatOccupancyV1.folded,
-        ScenarioSeatOccupancyV1.empty,
-      ],
-      actingSeatStart: 0,
-      decisionNodeV1: const DecisionNodeV1(
-        street: Street.flop,
-        legalActions: ['hero', 'villain'],
-        solutionBestAction: 'hero',
-      ),
-    );
-
-    await tester.pumpWidget(
-      MaterialApp(home: ModernTableScreenV1(scenarioSpec: spec)),
-    );
-    await tester.pumpAndSettle(const Duration(seconds: 1));
-
-    expect(
-      find.byKey(const Key('modern_table_seat_stack_pill_P2')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const Key('modern_table_seat_stack_pill_P3')),
-      findsNothing,
-    );
-    expect(find.byKey(const Key('modern_table_seat_empty_2')), findsOneWidget);
-
-    final foldedSurface = tester.widget<Container>(
-      find.byKey(const Key('modern_table_seat_surface_1')),
-    );
-    final emptySurface = tester.widget<Container>(
-      find.byKey(const Key('modern_table_seat_surface_2')),
-    );
-    final foldedDecoration = foldedSurface.decoration as BoxDecoration;
-    final emptyDecoration = emptySurface.decoration as BoxDecoration;
-    final foldedBorder = foldedDecoration.border as Border;
-    final emptyBorder = emptyDecoration.border as Border;
-    expect(
-      emptyBorder.top.color.opacity,
-      lessThan(foldedBorder.top.color.opacity),
     );
   });
 }

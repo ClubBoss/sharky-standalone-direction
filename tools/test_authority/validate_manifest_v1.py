@@ -17,6 +17,9 @@ KNOWN_TIER_C_MANIFEST = MANIFEST_DIR / "known_tier_c_residuals.txt"
 PHP2_REVIEW_ARTIFACT = (
     ROOT / "docs" / "_reviews" / "php2_legacy_corpus_ownership_disposition_v1.md"
 )
+PHP3_REVIEW_ARTIFACT = (
+    ROOT / "docs" / "_reviews" / "php3_canonical_contract_extraction_and_manifest_v1.md"
+)
 FROZEN_POST_SHIM_SHA256 = (
     "6ed420cdd53bc08790c27b6581f7dcc3fead04c43b295d8e2458bd45a394cfce"
 )
@@ -95,20 +98,30 @@ def _require_artifact_measurements(text: str) -> None:
             raise AssertionError(f"missing frozen measurement count: {label}={value}")
 
 
-def _php2_retired_paths() -> set[str]:
-    if not PHP2_REVIEW_ARTIFACT.exists():
+def _retired_paths_from_ledger(artifact: Path, dispositions: set[str]) -> set[str]:
+    if not artifact.exists():
         return set()
     retired: set[str] = set()
-    for raw in PHP2_REVIEW_ARTIFACT.read_text().splitlines():
+    for raw in artifact.read_text().splitlines():
         if not raw.startswith("| `test/"):
             continue
         cells = [cell.strip() for cell in raw.strip().strip("|").split("|")]
         if len(cells) < 6:
             continue
         path = cells[0].strip("`")
-        if "`DELETE_ARCHIVED_NONCANONICAL`" in raw:
+        if any(f"`{disposition}`" in raw for disposition in dispositions):
             retired.add(path)
     return retired
+
+
+def _ledger_retired_paths() -> set[str]:
+    return _retired_paths_from_ledger(
+        PHP2_REVIEW_ARTIFACT,
+        {"DELETE_ARCHIVED_NONCANONICAL"},
+    ) | _retired_paths_from_ledger(
+        PHP3_REVIEW_ARTIFACT,
+        {"EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED"},
+    )
 
 
 def validate() -> dict[str, object]:
@@ -132,7 +145,7 @@ def validate() -> dict[str, object]:
     tier_d_set = set(tier_d)
     known_tier_c_set = set(known_tier_c)
     overlap = sorted(tier_b_set & tier_c_set)
-    php2_retired = _php2_retired_paths()
+    ledger_retired = _ledger_retired_paths()
     retired_tier_b = tier_d_set & observed_b_set
     retired_tier_c = tier_d_set & observed_c_set
     observed_tier_b_missing = sorted(observed_b_set - tier_b_set - retired_tier_b)
@@ -152,7 +165,7 @@ def validate() -> dict[str, object]:
     tier_d_existing_paths = sorted(
         path for path in tier_d if path.startswith("test/") and (ROOT / path).exists()
     )
-    tier_d_missing_ledger_evidence = sorted(tier_d_set - php2_retired)
+    tier_d_missing_ledger_evidence = sorted(tier_d_set - ledger_retired)
     unexpected_tier_d_paths = sorted(tier_d_set - observed_b_set - observed_c_set)
     unexplained_historical_disappearance = sorted(
         (observed_b_set | observed_c_set) - tier_b_set - tier_c_set - tier_d_set
@@ -217,7 +230,7 @@ def validate() -> dict[str, object]:
         )
     if tier_d_missing_ledger_evidence:
         failures.append(
-            "Tier D paths lack PHP-2 DELETE_ARCHIVED_NONCANONICAL evidence: "
+            "Tier D paths lack approved PHP-2/PHP-3 ledger evidence: "
             f"{tier_d_missing_ledger_evidence[:10]}"
         )
     if unexpected_tier_d_paths:
