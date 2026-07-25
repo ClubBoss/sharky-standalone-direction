@@ -175,6 +175,19 @@ Do not use the readiness reference as the default bottleneck selector for day-to
   historical proof consolidation, not authority to erase the original-package
   learning findings. Final Deep Independent Audit and Human Novice Proof remain
   later gates.
+- Freshness correction (2026-07-25): the bullet above is baseline-pinned to
+  `40babdeb…` / tag `act0-final-deterministic-candidate-v1` and is historical. The
+  AI Personalization Layer v1 sequence that deferred the audit is now complete
+  (Alpha Learning Loop v1 ADMITTED), so the FINAL DEEP INDEPENDENT AUDIT gate came
+  due and was executed at `4563ce2d`:
+  `docs/_reviews/final_deep_independent_audit_current_head_v1.md` —
+  **FINAL_DEEP_INDEPENDENT_AUDIT_BLOCKED** on F-16, 12 reproduced Act0-canonical
+  contract failures on surfaces recorded as CLOSED, plus F-15, 125 test files that
+  cannot compile. Root cause: every gate in use is a selected-subset lane; none runs
+  `test/ui_v2` / `test/guards` in full. The next legal capability is Pre-Human
+  Node 5 — Canonical Guard-Lane Truth Restoration (audit §14); Premium Motion &
+  Ceremony Completion follows it. Human Novice Proof remains NOT PERFORMED and
+  downstream.
 
 ## Product 100
 
@@ -583,6 +596,17 @@ Wave 3.9.2 adds implementation control for this route:
 - "no blocker found" is not an excellence-wave success condition;
 - Store/Public Readiness remains delayed until the matrix rows for Waves
   3.10-3.15 are closed or explicitly blocked.
+
+Freshness correction (2026-07-25, Final Deep Independent Audit at `4563ce2d`):
+Waves 3.10-3.15 below are **no longer deferred — all six landed on 2026-06-27**,
+before Alpha learning-loop admission (2026-07-13). Five are `CLOSED_PROVEN` with
+implementation verified in production source at head; Wave 3.10 Premium Motion
+Moments is `PARTIALLY_LANDED` (its Street Replay reveal moment was removed by
+`21b4abd0`). The list is retained as historical route evidence; for current wave
+status use
+`docs/_reviews/final_deep_independent_audit_current_head_v1.md` §9. The
+"Premium Motion Moments v1 is deferred" wording in Immediate execution rule 4
+below is stale for the same reason.
 
 Previously planned excellence order (deferred until after Alpha learning-loop
 admission):

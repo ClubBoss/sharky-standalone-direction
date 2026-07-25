@@ -2,6 +2,51 @@
 
 Status: ACTIVE POST-MERGE EXECUTION CAPSULE.
 
+## Current authority — 2026-07-25 (Final Deep Independent Audit)
+
+Final Deep Independent Audit — Current Head v1 is **BLOCKED** on exact baseline
+`4563ce2d2091ec3dc92734b616b90b87f016b16d`, published at
+`docs/_reviews/final_deep_independent_audit_current_head_v1.md`. It was performed
+by an independent agent, changed no product source, and performed no Human Novice
+Proof. It confirms valid telemetry/privacy, intact frozen surfaces, sound canonical
+route ownership, and an independently re-run 291-task / 466-incorrect-option content
+census (option distribution 121/165/5, zero/one-option rows absent).
+
+**It blocks on F-16: 12 reproduced Act0-canonical contract failures at head**, on
+surfaces recorded as CLOSED — including a P1 Visual UX copy contract, Sharky
+acknowledgement idempotency, the repair-receipt improvement copy, and the
+band-transition proof icon. Root cause of the blind spot: every gate in use
+(required CI, `fast_loop_world1_v1.sh`, `release_gate_world1.sh`) is a
+selected-subset lane, and none compiles or runs `test/ui_v2` / `test/guards` in
+full. A separate finding, F-15, records 125 test files that cannot compile because
+they still import pre-archive `lib/ui_v2/runner/` and `lib/ui_v2/screens/` paths.
+
+**No implementation was performed.** The next node is the bounded repair packet in
+§14 of the audit: adjudicate and repair the 12 canonical failures, restore the 125
+legacy imports, then add a gate that actually runs these directories in full.
+
+Three current-authority corrections it also publishes:
+
+1. **Waves 3.10-3.15 are not deferred.** All six landed on 2026-06-27, sixteen days
+   before Alpha admission (2026-07-13). Five are `CLOSED_PROVEN` at head; Wave 3.10
+   Premium Motion Moments is `PARTIALLY_LANDED` because its fourth moment (Street
+   Replay reveal, `act0_shell_street_replay_step_motion_$i`) was added by `d0c4b9fe`
+   and silently removed by `21b4abd0`. Capability truth outranks wave naming.
+2. **`docs/PROJECT_RULES_VFINAL.md` does not exist** and never has. `AGENTS.md` is
+   the sole active workflow authority; documents citing the missing file should be
+   corrected as they are touched.
+3. **Node 4 `DEFERRED_OUTSIDE_PRE_HUMAN` is split truthfully.** Future
+   visual/motion/Sharky rows (GR-11, GR-14, GR-16) are
+   `DEFERRED_TO_LATER_PRE_HUMAN_NODE`, not outside pre-Human, because the owner
+   decision names required Sharky integration and required motion/ceremony as
+   mandatory pre-Human blocks.
+
+The next legal capability is **Pre-Human Node 5 — Canonical Guard-Lane Truth
+Restoration** (audit §14). Premium Motion & Ceremony Completion follows it; its
+remaining scope is the removed Street Replay reveal plus active guards for
+proof-loop motion moments 2-4. Human Novice Proof remains downstream and
+NOT PERFORMED.
+
 ## Current authority — 2026-07-25
 
 Node 4 Visual Ledger Reconciliation is **CLOSED** on evidence baseline
