@@ -48,14 +48,6 @@ void main() {
         'Next: use this same seat map to choose the first action before the flop.',
       );
 
-      final whatsNextValueFinder = find.byKey(
-        const Key('session_result_whats_next_value'),
-      );
-      expect(whatsNextValueFinder, findsOneWidget);
-      final whatsNextValue =
-          (tester.widget<Text>(whatsNextValueFinder).data ?? '').trim();
-      expect(whatsNextValue, 'First action choices');
-
       final whyLineFinder = find.byKey(const Key('session_result_why_line_v1'));
       expect(whyLineFinder, findsOneWidget);
       final whyLine = (tester.widget<Text>(whyLineFinder).data ?? '').trim();

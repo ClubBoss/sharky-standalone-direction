@@ -31,11 +31,7 @@ class Act0W10BetPurposeHiddenRuntimeSessionOwnerV1 {
     required String attemptKey,
     required String decisionTimeBucket,
   }) {
-    final spec = _taskSpecFor(
-      worldId: 'world_10',
-      lessonId: 'player_type_basics',
-      taskId: taskId ?? taskSpec.taskId,
-    );
+    final spec = _taskSpecById(taskId ?? taskSpec.taskId);
     if (spec == null) {
       throw ArgumentError.value(taskId ?? taskSpec.taskId, 'taskId');
     }
@@ -72,11 +68,7 @@ class Act0W10BetPurposeHiddenRuntimeSessionOwnerV1 {
     required String attemptKey,
     required String decisionTimeBucket,
   }) {
-    final spec = _taskSpecFor(
-      worldId: 'world_10',
-      lessonId: 'player_type_basics',
-      taskId: taskId ?? taskSpec.taskId,
-    );
+    final spec = _taskSpecById(taskId ?? taskSpec.taskId);
     if (spec == null) {
       throw ArgumentError.value(taskId ?? taskSpec.taskId, 'taskId');
     }
@@ -110,6 +102,16 @@ class Act0W10BetPurposeHiddenRuntimeSessionOwnerV1 {
       if (spec.worldId == cleanWorldId &&
           spec.lessonId == cleanLessonId &&
           spec.taskId == cleanTaskId) {
+        return spec;
+      }
+    }
+    return null;
+  }
+
+  Act0W10BetPurposeHiddenTaskSpecV1? _taskSpecById(String taskId) {
+    final cleanTaskId = taskId.trim();
+    for (final spec in taskSpecs) {
+      if (spec.taskId == cleanTaskId) {
         return spec;
       }
     }

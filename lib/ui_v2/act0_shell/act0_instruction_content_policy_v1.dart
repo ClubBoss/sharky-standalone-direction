@@ -52,10 +52,14 @@ List<String> act0BuildInstructionBlocksV1({
   }
 
   if (compact) {
-    return _groupCompactLearningRailSentencesV1(<String>[
-      for (final sentence in sentences)
-        ..._splitMeaningfulCompactSentenceV1(sentence),
-    ]);
+    return _groupCompactLearningRailSentencesV1(
+      <String>[
+        for (final sentence in sentences)
+          ..._splitMeaningfulCompactSentenceV1(sentence),
+      ],
+      maxSentencesPerSegment:
+          Act0InstructionContentPolicyV1.maxSentencesPerSegment,
+    );
   }
 
   final segments = <String>[];
@@ -97,6 +101,69 @@ List<String> act0BuildLearningRailSupportSegmentsV1({
   final fallback = focusLabels.take(2).join(' · ');
   final source = hasHint ? hint : fallback;
   return act0BuildInstructionBlocksV1(text: source, compact: compact);
+}
+
+/// Non-instruction support surfaces (including repair receipts and focused
+/// return reasons) keep their established compact grouping contract.
+List<String> act0BuildSupportingCopyBlocksV1({
+  required String text,
+  required bool compact,
+}) {
+  final explicitParagraphs = text
+      .split(RegExp(r'\n\s*\n'))
+      .map((part) => part.trim())
+      .where((part) => part.isNotEmpty)
+      .toList();
+  if (explicitParagraphs.length > 1) {
+    return <String>[
+      for (final paragraph in explicitParagraphs)
+        ...act0BuildSupportingCopyBlocksV1(text: paragraph, compact: compact),
+    ];
+  }
+  final normalized = text.replaceAll(RegExp(r'\s+'), ' ').trim();
+  if (normalized.isEmpty) {
+    return const <String>[];
+  }
+  final sentences = normalized
+      .split(RegExp(r'(?<=[.!?])\s+'))
+      .map((part) => part.trim())
+      .where((part) => part.isNotEmpty)
+      .toList();
+  if (sentences.length <= 1) {
+    return <String>[normalized];
+  }
+  if (compact) {
+    return _groupCompactLearningRailSentencesV1(<String>[
+      for (final sentence in sentences)
+        ..._splitMeaningfulCompactSentenceV1(sentence),
+    ]);
+  }
+  final segments = <String>[];
+  final buffer = StringBuffer();
+  void flush() {
+    final value = buffer.toString().trim();
+    if (value.isNotEmpty) {
+      segments.add(value);
+    }
+    buffer.clear();
+  }
+
+  for (final sentence in sentences) {
+    final candidate = buffer.isEmpty
+        ? sentence
+        : '${buffer.toString().trim()} $sentence';
+    if (buffer.isNotEmpty &&
+        candidate.length >
+            Act0InstructionContentPolicyV1.regularTargetSegmentLength) {
+      flush();
+    }
+    if (buffer.isNotEmpty) {
+      buffer.write(' ');
+    }
+    buffer.write(sentence);
+  }
+  flush();
+  return segments.isEmpty ? <String>[normalized] : segments;
 }
 
 List<Act0InstructionContentAuditIssueV1> act0AuditInstructionBlockV1({
@@ -151,9 +218,11 @@ List<Act0InstructionContentAuditIssueV1> act0AuditInstructionBlockV1({
 List<String> _groupCompactLearningRailSentencesV1(
   List<String> sentences, {
   int targetLength = Act0InstructionContentPolicyV1.compactTargetSegmentLength,
+  int? maxSentencesPerSegment,
 }) {
   final segments = <String>[];
   final buffer = StringBuffer();
+  var bufferedSentenceCount = 0;
 
   void flush() {
     final value = buffer.toString().trim();
@@ -161,19 +230,24 @@ List<String> _groupCompactLearningRailSentencesV1(
       segments.add(value);
     }
     buffer.clear();
+    bufferedSentenceCount = 0;
   }
 
   for (final sentence in sentences) {
     final candidate = buffer.isEmpty
         ? sentence
         : '${buffer.toString().trim()} $sentence';
-    if (buffer.isNotEmpty && candidate.length > targetLength) {
+    if (buffer.isNotEmpty &&
+        (candidate.length > targetLength ||
+            (maxSentencesPerSegment != null &&
+                bufferedSentenceCount >= maxSentencesPerSegment))) {
       flush();
     }
     if (buffer.isNotEmpty) {
       buffer.write(' ');
     }
     buffer.write(sentence);
+    bufferedSentenceCount += 1;
   }
   flush();
 

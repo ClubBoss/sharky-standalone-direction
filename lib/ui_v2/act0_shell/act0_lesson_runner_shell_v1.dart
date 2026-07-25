@@ -2296,13 +2296,19 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     // pages. This reuses the content policy's bounded segments but includes
     // the prompt in the same page stream, so no content is hidden behind a
     // rail scroll view.
-    final learningRailPages = act0BuildInstructionBlocksV1(
-      text: <String>[
-        prompt,
-        hint,
-      ].where((line) => line.trim().isNotEmpty).join(' '),
-      compact: isRefinedDev2,
-    );
+    final learningRailText = <String>[
+      prompt,
+      hint,
+    ].where((line) => line.trim().isNotEmpty).join(' ');
+    final learningRailPages = runner.phase == Act0LessonPhaseV1.theory
+        ? act0BuildInstructionBlocksV1(
+            text: learningRailText,
+            compact: isRefinedDev2,
+          )
+        : act0BuildSupportingCopyBlocksV1(
+            text: learningRailText,
+            compact: isRefinedDev2,
+          );
     final effectiveLearningRailPages = learningRailPages.isNotEmpty
         ? learningRailPages
         : learningRailSupportSegments;
@@ -13625,7 +13631,10 @@ _DecisionHintV1? _resolveDecisionHintV1({
     fullIdeaTitle: fullIdeaStep?.title.trim() ?? '',
     fullIdeaBlocks: fullIdeaStep == null
         ? const <String>[]
-        : act0BuildInstructionBlocksV1(text: fullIdeaStep.body, compact: true),
+        : act0BuildSupportingCopyBlocksV1(
+            text: fullIdeaStep.body,
+            compact: true,
+          ),
   );
 }
 
