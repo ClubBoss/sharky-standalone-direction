@@ -2,22 +2,35 @@
 
 Status: ACTIVE POST-MERGE EXECUTION CAPSULE.
 
-## Current authority — 2026-07-24
+## Current authority — 2026-07-25
 
-`main` is `8e2c6d967afcdf50e35a09b37c974eb9fc9bbe70`, the merge commit for
-PR #41. Same-Session Learning Effect v1 is **CLOSED / MERGED / NATIVE PROVEN /
-TELEMETRY PROVEN / PRIVACY PROVEN**. Original-source recheck owns terminal
-recovery; Position, Price, and Starting-Hand telemetry remain route-neutral,
-with successful source recheck producing one generic recovery, one family
-recheck, one family payoff, and one viewed/completed delta pair. The safe
-Starting-Hand feedback mapping is `w2_hand_discipline_feedback_v1`; PR #40
-lesson continuation is preserved. Human Novice Proof was not performed.
+`main` is `660399ac70758de83e031141580e2584795f07a7`, equal to
+`origin/main`. PR #45 restored and independently verified canonical CI
+coverage. PR #41 remains **CLOSED / MERGED / NATIVE PROVEN / TELEMETRY PROVEN /
+PRIVACY PROVEN**: original-source recheck owns terminal recovery; Position,
+Price, and Starting-Hand telemetry remain route-neutral, with successful source
+recheck producing one generic recovery, one family recheck, one family payoff,
+and one viewed/completed delta pair. PR #44 separately proves the canonical W2
+feedback/recovery visual route natively, including the recovered and failed
+recheck outcomes. The safe Starting-Hand feedback mapping is
+`w2_hand_discipline_feedback_v1`; PR #40 lesson continuation is preserved.
+
+Learning payoff / Review / Session Summary is closed on the existing Act0
+owners. The learning-run payoff remains the sole run-level lifecycle and
+Session Summary remains a read-only consumer of structured proof. PR #46
+restored full deterministic repair-lifecycle coverage by selecting the existing
+bottom-nav Practice control rather than an ambiguous visible label; it made no
+runtime, telemetry, persistence, copy, or visual change. Human Novice Proof
+was not performed.
 
 Modern Table remains in permanent Maintenance Mode, and screenshots remain
 audit/regression-only evidence. Current visual findings are inputs, not
 authorization to reopen closed table-material polish.
 
-The next active macro focus is **Learning Surface UX/UI Convergence**:
+The next active macro focus is **Visual Ledger Reconciliation**. Reconcile the
+current visual evidence before reopening any frozen surface, then address only
+confirmed pre-Human defects through their existing owners. The broader learning
+surface convergence areas remain the ordered evaluation lens:
 
 1. progression and CTA reachability;
 2. Theory / Decision / Correct / Wrong composition;
