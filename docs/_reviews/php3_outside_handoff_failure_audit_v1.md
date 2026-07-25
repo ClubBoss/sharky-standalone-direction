@@ -27,7 +27,9 @@ be represented as a reconstructed historical list.
 ## Original 39-path classification
 
 All rows are non-blocking for PHP-3 carrier extraction. `Tier` is the
-test-authority membership at audit time; every row was absent/unclassified.
+test-authority membership at audit time. Most rows were absent/unclassified;
+`test/ui_v2/runner/world1_seat_quiz_feedback_copy_v1_test.dart` was the sole
+Tier-B member in this 39-path set.
 
 | Path | Failure | Classification | Direct owner | Tier | PHP-3 blocker | Next action |
 | --- | --- | --- | --- | --- | --- | --- |
