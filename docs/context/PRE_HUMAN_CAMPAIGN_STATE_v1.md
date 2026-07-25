@@ -8,12 +8,12 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical HEAD | `190721a5dfa86ad65b716c071fcc09371857d35f` |
+| Canonical HEAD | `03cc8ac8c71a072e842b159fdfffac1b8b09e0cf` |
 | Campaign version | v1 |
 | Umbrella stage | **Pre-Human Node 5 — Canonical Contract and Test Authority Restoration** |
-| Active sub-packet | **PHP-3B — World1 host/route contract family extraction** |
-| Status | **ACTIVE_PARTIAL — PHP-3B candidate: two current-owner carriers admitted; two archive-typed carriers preserved unchanged** |
-| Latest admitted PR | **#62** |
+| Active sub-packet | **PHP-3C — outside-handoff authority debt disposition** |
+| Status | **ACTIVE_PARTIAL — PHP-3C candidate: outside-handoff audit published; three noncarrier legacy tests retired** |
+| Latest admitted PR | **#63** |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **CLASSIFIED** — 53 files: required 0; stale 2; active-nonblocking 5; archived 7; quarantined 29; unresolved-unique 10. Full ledger: `docs/_reviews/php0_canonical_adjacent_red_guard_triage_v1.md` |
 | F-18 | **STALE_TEST** — exact pre-F-16-to-head trail disproves PR #51/#52 causation; owner is compact-decision test fixture / retired teaching-step assertion |
@@ -24,8 +24,8 @@ here; update only the fields below.
 | PHP-3 admitted carriers | **3** |
 | PHP-3 unresolved carriers | **74** |
 | PHP-3 nine-path residual | **74** |
-| Recommended next packet | **PHP-3** — bounded family extraction |
-| Next authorization | **ACTIVE** — PHP-3B is bounded to this candidate; PHP-4 and Human remain unauthorized |
+| Recommended next packet | **PHP-3** — bounded carrier extraction |
+| Next authorization | **ACTIVE** — PHP-3C is bounded to this candidate; PHP-4 and Human remain unauthorized |
 | Autonomous window | **one packet / maximum one merged PR** |
 | Human Proof | **NOT AUTHORIZED** |
 | `PRE_HUMAN_READY` | **NOT MET** |
@@ -52,7 +52,7 @@ Product severity resolves in PHP-0.
 | PHP-0 Canonical-Adjacent Red-Guard Triage | Node 5 | **CLOSED_CLASSIFIED** |
 | PHP-1 Stale Contract Repair + F-16 Non-Weakening Verification | Node 5 | **CLOSED_NON_WEAKENING** |
 | PHP-2 Legacy Corpus Ownership Disposition | Node 5 | **CLOSED_DISPOSED_WITH_PHP3_HANDOFFS — retired 68; handoffs 77; eligible residual 0; unexplained 0** |
-| PHP-3 Canonical Test Classification and Manifest | Node 5 | **ACTIVE_PARTIAL — PHP-3B World1 host/route extraction; 3 admitted, 74 unresolved, 0 unexplained** |
+| PHP-3 Canonical Test Classification and Manifest | Node 5 | **ACTIVE_PARTIAL — PHP-3C outside-handoff disposition; carriers remain 3 admitted, 74 unresolved, 0 unexplained** |
 | PHP-4 Canonical Full-Lane CI Authority | Node 5 | NOT_PREAUTHORIZED |
 | PHP-5 Premium Motion & Ceremony Completion | — | NOT_PREAUTHORIZED |
 | PHP-6 Sharky Production Integration & Completeness Proof | — | NOT_PREAUTHORIZED |

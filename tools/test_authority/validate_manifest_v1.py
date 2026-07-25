@@ -120,7 +120,10 @@ def _ledger_retired_paths() -> set[str]:
         {"DELETE_ARCHIVED_NONCANONICAL"},
     ) | _retired_paths_from_ledger(
         PHP3_REVIEW_ARTIFACT,
-        {"EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED"},
+        {
+            "ARCHIVED_NONCANONICAL_TEST_RETIRED",
+            "EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED",
+        },
     )
 
 
