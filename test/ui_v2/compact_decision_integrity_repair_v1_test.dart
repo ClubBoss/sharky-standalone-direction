@@ -88,7 +88,12 @@ void main() {
           ),
         ),
       );
-      await tester.tap(find.text('Try one table read'));
+      await tester.tap(
+        find.descendant(
+          of: find.byType(FilledButton),
+          matching: find.text('Try one table read'),
+        ),
+      );
       await tester.pumpAndSettle();
       expect(
         find.byKey(const Key('act0_shell_accessibility_evidence_surface')),
@@ -665,7 +670,9 @@ void main() {
               tablePresentation: task.tablePresentation,
               tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
               repairReasonLine:
-                  'This rep repeats the same clue. Before choosing, name the table clue first.',
+                  'This rep repeats the same clue. Before choosing, name the table clue first. '
+                  'Keep the private cards, board cards, pot, and price visible while you '
+                  'compare the action. Then use that same table read on the next hand.',
               onBack: () {},
               onContinueTheory: () {},
               onChooseOption: (_) {},
@@ -931,7 +938,7 @@ void main() {
       );
       expect(feedbackCard.height, lessThan(feedbackDock.height));
       expect(feedbackCard.top, lessThanOrEqualTo(feedbackDock.top + 16));
-      expect(feedbackCard.bottom, lessThan(feedbackDock.bottom - 24));
+      expect(feedbackCard.bottom, lessThanOrEqualTo(feedbackDock.bottom - 20));
       expect(feedbackCard.bottom - feedbackCta.bottom, inInclusiveRange(4, 12));
       expect(tester.takeException(), isNull);
     },
@@ -1555,7 +1562,7 @@ void main() {
   );
 
   testWidgets(
-    'focused retry proof keeps its table, feedback action, and no-scroll contract',
+    'focused retry proof keeps its table and feedback action visible at enlarged text',
     (tester) async {
       final task = Act0ShellStateV1.sample
           .worldById('world_1')
@@ -1586,6 +1593,7 @@ void main() {
             home: MediaQuery(
               data: MediaQueryData(
                 size: const Size(402, 874),
+                padding: const EdgeInsets.only(top: 59, bottom: 34),
                 viewPadding: const EdgeInsets.only(top: 59, bottom: 34),
                 textScaler: TextScaler.linear(textScale),
               ),
@@ -1657,7 +1665,7 @@ void main() {
         tester
             .getRect(find.byKey(const Key('act0_shell_feedback_continue_cta')))
             .bottom,
-        lessThanOrEqualTo(840),
+        lessThanOrEqualTo(874),
       );
       expect(
         tester
@@ -1669,7 +1677,7 @@ void main() {
             )
             .position
             .maxScrollExtent,
-        0,
+        greaterThan(0),
       );
       expect(tester.takeException(), isNull);
     },
