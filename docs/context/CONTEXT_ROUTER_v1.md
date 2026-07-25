@@ -1,6 +1,8 @@
 # Context Router v1
 
-Status: ACTIVE first-read router for Sharky Codex, Sonnet, and Fable work.
+Status: ACTIVE routing index for Sharky Codex, Sonnet, and Fable work. It is
+the second-stage router after an active campaign state, and the first routing
+document when no campaign state applies.
 
 Purpose: route agents to the smallest current capsule set. Do not broad-read
 repo history to feel safe.
@@ -19,14 +21,30 @@ Capsules summarize and route context only. They never outrank:
 If a capsule conflicts with a higher authority, use the higher authority and
 report the conflict. Do not silently reconcile stale capsule truth.
 
+## Derived Metadata Boundary
+
+Derived frontmatter, `status_source: derived`, and generated docs indexes are
+routing hints only. They do not establish authority, closure, severity,
+supersession, packet order, packet authorization, or product truth. Document
+body, explicit owner declarations, repository hierarchy, live source/tests,
+and exact task evidence remain authoritative.
+
 ## Default Read Order
 
+When an active campaign state exists:
+
+1. repository `AGENTS.md` / automatically loaded repo instructions
+2. active campaign state file
+3. this Context Router only when the state does not carry sufficient routing
+4. exactly one relevant capsule
+5. task-specific SSOT/source/evidence
+
+When no campaign state applies:
+
 1. `AGENTS.md`
-2. `docs/context/CONTEXT_ROUTER_v1.md`
-3. `docs/context/ACTIVE_ROUTE_CAPSULE_v1.md`
-4. exactly one relevant lane capsule
-5. task-specific SSOT sections
-6. owner files / active evidence found by search
+2. this Context Router
+3. exactly one relevant capsule
+4. task-specific SSOT/source/evidence
 
 Tiny single-file or single-command tasks may skip capsules when route context
 cannot affect the answer.
