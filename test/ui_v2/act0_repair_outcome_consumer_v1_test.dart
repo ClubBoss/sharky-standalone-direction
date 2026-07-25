@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_fix_proof_projection_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_transfer_measurement_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
@@ -387,7 +388,7 @@ Act0FixProofProjectionV1 _reinforcedFixProof() {
         laterEvidenceSessionId: 'session_later',
         laterEvidenceTaskId: 'actions_check_drill',
         laterEvidenceOrder: 5,
-        transferVerdict: 'improved_v1',
+        transferVerdict: act0LearningTransferImprovedV1,
         bankedAtOrder: 2,
         messageKey: 'fix_proof_reinforced_v1',
       ),

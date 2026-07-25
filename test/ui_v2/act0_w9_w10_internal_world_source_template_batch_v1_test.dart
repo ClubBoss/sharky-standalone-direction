@@ -147,10 +147,10 @@ void main() {
     test('contains a coherent four-task hidden learning arc', () {
       expect(owner.taskSpecs, hasLength(4));
       expect(owner.taskSpecs.map((task) => task.taskId), <String>[
-        'clear_value_bet_recognition_intro',
-        'clear_bluff_intention_recognition_intro',
-        'thin_value_caution_lite',
-        'bet_purpose_transfer_check',
+        'w10_player_tendency_tag_hidden',
+        'w10_adjustment_lever_hidden',
+        'w10_sample_guardrail_hidden',
+        'w10_player_adjustment_transfer_hidden',
       ]);
 
       final purposes = owner.taskSpecs
@@ -159,13 +159,9 @@ void main() {
       expect(purposes, hasLength(4));
       for (final task in owner.taskSpecs) {
         expect(task.worldId, 'world_10');
-        expect(task.lessonId, 'value_bluff_intuition_lite');
-        expect(task.conceptFamilyId, 'w10_bet_purpose_value_bluff');
-        expect(task.practiceCtaAllowed, isFalse);
-        expect(
-          task.mapperNoTargetReason,
-          'w10_route_locked_no_safe_practice_target_v1',
-        );
+        expect(task.conceptFamilyId, 'w10_player_adjustment');
+        expect(task.practiceCtaAllowed, isTrue);
+        expect(task.mapperNoTargetReason, isEmpty);
       }
     });
 
@@ -227,7 +223,7 @@ void main() {
       _expectConsumableEvidence(
         history: history,
         taskSpecs: owner.taskSpecs,
-        conceptFamilyId: 'w10_bet_purpose_value_bluff',
+        conceptFamilyId: 'w10_player_adjustment',
       );
     });
 
@@ -236,8 +232,8 @@ void main() {
         () => harness.submitChoice(
           history: const Act0LearningEvidenceHistoryV1(),
           worldId: 'world_10',
-          lessonId: 'value_bluff_intuition_lite',
-          taskId: 'clear_value_bet_recognition_intro',
+          lessonId: 'player_type_basics',
+          taskId: 'w10_player_tendency_tag_hidden',
           selectedChoiceId: 'unknown_choice',
           attemptKey: 'unknown_choice_attempt',
           decisionTimeBucket: 'under_3s',
@@ -250,9 +246,9 @@ void main() {
         harness.submitChoice(
           history: const Act0LearningEvidenceHistoryV1(),
           worldId: 'world_10',
-          lessonId: 'value_bluff_intuition_lite',
-          taskId: 'clear_value_bet_recognition_intro',
-          selectedChoiceId: 'bet_to_make_better_fold',
+          lessonId: 'player_type_basics',
+          taskId: 'w10_player_tendency_tag_hidden',
+          selectedChoiceId: 'loose_passive_caller',
           attemptKey: 'purpose_miss',
           decisionTimeBucket: 'under_3s',
         ),
@@ -260,8 +256,8 @@ void main() {
       final mapped = mapAct0ConceptCandidateToPracticeLaunchRequestV1(
         candidate,
       );
-      expect(mapped.isMapped, isFalse);
-      expect(mapped.request, isNull);
+      expect(mapped.isMapped, isTrue);
+      expect(mapped.request?.targetTaskId, 'w10_loose_passive_tag');
     });
 
     test('learning arc copy is beginner readable and claim safe', () {

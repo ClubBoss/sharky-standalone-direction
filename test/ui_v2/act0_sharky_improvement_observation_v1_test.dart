@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_fix_proof_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_transfer_measurement_v1.dart';
@@ -294,6 +295,10 @@ Act0LearningEvidenceRecordV1 _learningRecord({
     decisionTimeBucket: '3_to_10s',
     resultKind: isCorrect ? 'correct' : 'incorrect',
     sessionId: sessionId,
+    recordedAtUtc: DateTime.utc(2026, 1, order),
+    reviewKind: isCorrect
+        ? Act0ReviewKindV1.unseenTransfer
+        : Act0ReviewKindV1.initialAssessment,
   );
 }
 

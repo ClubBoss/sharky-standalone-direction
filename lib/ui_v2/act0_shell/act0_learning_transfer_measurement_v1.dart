@@ -149,10 +149,7 @@ Act0LearningTransferSignalV1 _signalForRecords(
       latest.isCorrect &&
       recent.reversed.take(2).every((record) => record.isCorrect)) {
     verdict = act0LearningTransferStableV1;
-  } else if (latest.isCorrect &&
-      hasEarlierMiss &&
-      recent.length >= 2 &&
-      recent.reversed.take(2).every((record) => record.isCorrect)) {
+  } else if (latest.isCorrect && hasEarlierMiss) {
     verdict = act0LearningTransferImprovingV1;
   } else if (recentCorrect > 0 && recentMisses > 0) {
     verdict = act0LearningTransferMixedV1;
