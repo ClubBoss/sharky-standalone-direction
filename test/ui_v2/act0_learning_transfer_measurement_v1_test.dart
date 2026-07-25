@@ -8,6 +8,23 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_transfer_measureme
 final DateTime _base = DateTime.utc(2026, 7, 1);
 
 void main() {
+  test('one spaced unseen success after one miss is improving, not stable', () {
+    final signal = _measure([
+      _record(order: 1),
+      _record(
+        order: 2,
+        day: 1,
+        taskId: 'task_b',
+        sessionId: 'session_v1|2',
+        isCorrect: true,
+        reviewKind: Act0ReviewKindV1.unseenTransfer,
+      ),
+    ]);
+
+    expect(signal.verdict, act0LearningTransferImprovingV1);
+    expect(signal.verdict, isNot(act0LearningTransferStableV1));
+  });
+
   test('recent different-task spaced successes improve after a miss', () {
     final signal = _measure([
       _record(order: 1),

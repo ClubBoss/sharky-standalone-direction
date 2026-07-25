@@ -187,8 +187,24 @@ void main() {
       expect(
         owner.supports(
           worldId: 'world_9',
-          lessonId: 'value_bluff_intuition_lite',
+          lessonId: owner.taskSpecs.first.lessonId,
           taskId: owner.taskSpecs.first.taskId,
+        ),
+        isFalse,
+      );
+      expect(
+        owner.supports(
+          worldId: 'world_10',
+          lessonId: 'wrong_w10_lesson',
+          taskId: owner.taskSpecs.first.taskId,
+        ),
+        isFalse,
+      );
+      expect(
+        owner.supports(
+          worldId: 'world_10',
+          lessonId: owner.taskSpecs.first.lessonId,
+          taskId: 'unowned_w10_task',
         ),
         isFalse,
       );
@@ -258,6 +274,40 @@ void main() {
       );
       expect(mapped.isMapped, isTrue);
       expect(mapped.request?.targetTaskId, 'w10_loose_passive_tag');
+    });
+
+    test('rejects an admitted task outside its authored route', () {
+      final task = owner.taskSpecs.first;
+      for (final route in <({String worldId, String lessonId, String taskId})>[
+        (
+          worldId: 'world_9',
+          lessonId: task.lessonId,
+          taskId: task.taskId,
+        ),
+        (
+          worldId: task.worldId,
+          lessonId: 'wrong_w10_lesson',
+          taskId: task.taskId,
+        ),
+        (
+          worldId: task.worldId,
+          lessonId: task.lessonId,
+          taskId: 'unowned_w10_task',
+        ),
+      ]) {
+        expect(
+          () => harness.submitChoice(
+            history: const Act0LearningEvidenceHistoryV1(),
+            worldId: route.worldId,
+            lessonId: route.lessonId,
+            taskId: route.taskId,
+            selectedChoiceId: task.expectedChoiceId,
+            attemptKey: 'invalid_route_attempt',
+            decisionTimeBucket: 'under_3s',
+          ),
+          throwsArgumentError,
+        );
+      }
     });
 
     test('learning arc copy is beginner readable and claim safe', () {

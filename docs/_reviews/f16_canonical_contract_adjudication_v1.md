@@ -79,7 +79,7 @@ correctly reported `STALE_FINGERPRINT`. Re-adjudicated in
 - row count **291 — unchanged**;
 - assessed-row fingerprint `1318f99a…` — **unchanged** (the second assertion never
   failed, proving the edit touched no assessed row or option);
-- input SHA `2502f955…` → `a54c7b10…`, previous baseline retained.
+- input SHA `2502f955…` → `a54c7b10…` → `bf13893f…`, previous baseline retained.
 
 This is source drift in teaching copy only, provably not an assessment change.
 
@@ -88,7 +88,7 @@ This is source drift in teaching copy only, provably not an assessment change.
 | Check | Result |
 | --- | --- |
 | `flutter analyze` | PASS — no issues |
-| F-16 focused suite | PASS — 81 tests across instruction, Tier A, receipts/enrichment, W9/W10, subtitle, and next-value owners |
+| F-16 focused suite | PASS — instruction, Tier A, receipts/enrichment, W9/W10, subtitle, next-value, and transfer owners |
 | `act0_repair_intent_resolver_v1_test` (Tier A) | PASS 21/21 |
 | `graphify hook-check` | PASS (graph query unavailable because this clean worktree has no `graphify-out/graph.json`) |
 | `git diff --check` | PASS |

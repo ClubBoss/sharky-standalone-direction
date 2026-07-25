@@ -7,7 +7,7 @@
   "inputs": [
     {
       "path": "lib/ui_v2/act0_shell/act0_shell_state_v1.dart",
-      "sha256": "a54c7b1078dc93e867778361991cda2599f286b8f0dfde8c0e39e1a414dc30ca"
+      "sha256": "bf13893f8fdc577181757357d54b34fe1980530c0d392a61613f042abb7573ee"
     }
   ],
   "previousValidBaseline": {
