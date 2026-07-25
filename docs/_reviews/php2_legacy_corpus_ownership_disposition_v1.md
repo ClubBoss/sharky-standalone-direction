@@ -39,7 +39,7 @@ The local noncommitted inventory is `/tmp/php2_candidates.txt`: sorted `test/**/
 | Batch 2 deleted / retained / handoff / blocked | 18 / 0 / 30 / 0 |
 | Tier-B-to-D retired | 40 |
 | Tier-C-to-D retired | 0 |
-| Current Tier-D tombstones | 22 |
+| Current Tier-D tombstones | 40 |
 
 ## 6. Mandatory preservation set
 
@@ -289,13 +289,175 @@ test/ui_v2/world1_map_path_layout_narrow_wide_test.dart.
 After Batch 2: absolute nine-path census 95 -> 77; mandatory PHP-3 handoffs
 remain 2 and new PHP-3 handoffs are 30; PHP-2-eligible residual is 45.
 
-## 19. Final verdict
+## 19. Batch 3 terminal disposition
 
-Pending.
+The exact Batch-3 candidate list is the 45 non-Tier-B, non-mandatory
+importers below. Every file has a removed import, but each also asserts a
+current route, source, progression, persistence, feedback, telemetry,
+correctness, or audit semantic. PHP-2 therefore preserves each original file
+unchanged and records a PHP-3 extraction handoff. This is not a claim that the
+legacy import is valid; it is a claim that deleting the whole file would lose
+an assertion before PHP-3 can separate it.
 
-## 20. Context-cost record
+| File | Exact removed import | Asserted behavioral semantics | Current source owner | Route relevance | Replacement search | Unique assessment | Disposition | Confidence | Evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `test/guards/app_root_map_first_tap_safety_test.dart` | `ui_v2/map/ui_v2_progress_map_screen_v2.dart` | canonical route/progression and learner navigation semantics | canonical/progression and current campaign services | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/canonical_dev_access_hub_contract_test.dart` | `ui_v2/map/ui_v2_progress_map_screen_v2.dart,ui_v2/screens/session_drill_player_v1_screen.dart,ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/canonical_journey_finish_framing_wave_test.dart` | `ui_v2/map/ui_v2_progress_map_screen_v2.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/canonical_surface_reachability_contract_test.dart` | `ui_v2/map/ui_v2_progress_map_screen_v2.dart,ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/drill_table_first_presence_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/early_world_arc_review_rhythm_wave_test.dart` | `ui_v2/map/ui_v2_progress_map_screen_v2.dart` | canonical route/progression and learner navigation semantics | canonical/progression and current campaign services | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/early_world_feedback_quality_family_contract_test.dart` | `ui_v2/screens/session_drill_player_v1_screen.dart,ui_v2/runner/canonical_terminal_session_drill_surfaced_runner_v1.dart` | feedback/recheck quality semantics | current feedback and progression contracts | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/learning_path_stage_launcher_canonical_runner_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/session_result_spine_continuation_parity_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | result continuation and progression framing | SessionResultScreen, progress, and launch-boundary services | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/showable_spine_handoff_coherence_contract_test.dart` | `ui_v2/map/ui_v2_progress_map_screen_v2.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/table_practice_idempotency_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_act0_entry_asset_inclusion_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_act0_to_spine_transition_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_bankroll_buyin_idempotency_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_bankroll_rakeback_backer_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_campaign_bust_backer_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_campaign_only_surfaces_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_concept_first_micro_slice_v1_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_core_loop_telemetry_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | telemetry emission and audit correctness | infra telemetry and current audit tool | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_demo_ladder_instruction_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_entry_first_session_ev_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_entry_spine_lock_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_first_pack_momentum_contract_test.dart` | `ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_first_pack_transition_pacing_contract_test.dart` | `ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_foundations_entry_from_map_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | canonical route/progression and learner navigation semantics | canonical/progression and current campaign services | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_foundations_microtask_packs_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_free_roll_bankroll_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_gold_learning_slice_v1_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_intro_actions_recommended_seed_overlay_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_micro_instruction_guided_rep_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_mvp_ship_block_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_onboarding_payoff_contract_test.dart` | `ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_post_completion_boot_to_map_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | canonical route/progression and learner navigation semantics | canonical/progression and current campaign services | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_readiness_smoke_contract_test.dart` | `ui_v2/map/ui_v2_progress_map_screen_v2.dart,ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_spaced_review_plan_priority_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_spine_10_hand_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_spine_calibration_routing_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_spine_resume_continuity_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_table_practice_entry_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world1_table_practice_gating_contract_test.dart` | `ui_v2/screens/session_drill_player_v1_screen.dart,ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world2_map_campaign_runtime_sync_contract_test.dart` | `ui_v2/map/ui_v2_progress_map_screen_v2.dart,ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | canonical route/progression and learner navigation semantics | canonical/progression and current campaign services | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world3_to_world9_map_campaign_runtime_sync_contract_test.dart` | `ui_v2/map/ui_v2_progress_map_screen_v2.dart,ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | canonical route/progression and learner navigation semantics | canonical/progression and current campaign services | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world6_to_world9_campaign_session_promotion_contract_test.dart` | `ui_v2/map/ui_v2_progress_map_screen_v2.dart,ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | current learner route, progression, persistence, or correctness semantics | AppRoot, ProgressService, campaign registry, and current nonlegacy imports | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/guards/world_campaign_map_home_contract_test.dart` | `ui_v2/map/ui_v2_progress_map_screen_v2.dart,ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | canonical route/progression and learner navigation semantics | canonical/progression and current campaign services | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/services/canonical_training_session_launch_plan_v1_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | canonical training-session launch-plan resolution | canonical_training_session_launch_plan_v1 service | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/tools/product_surface_audit_v1_test.dart` | `ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart` | product-surface audit and token-leak detection | tools/product_surface_audit_v1.dart | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
+| `test/tools/worlds_0_4_telemetry_audit_contract_test.dart` | `ui_v2/screens/world1_foundations_microtask_runner_screen.dart` | telemetry emission and audit correctness | infra telemetry and current audit tool | direct guard or source-contract relevance | focused search found complementary, not one-to-one, coverage | current semantic may survive | `HANDOFF_TO_PHP3_UNIQUE_CONTRACT` | HIGH | B3; focused semantic search; no extraction in PHP-2 |
 
-- Budget: standard.
-- Authority: campaign state, original PHP-2 brief, both owner addenda, PHP-0/PHP-1 records, manifest validator, exact candidate imports.
-- Reopen: the owner resolved two discovered authority conflicts before mutation.
-- Outcome: Tier-B candidate evidence recorded; transition pending.
+### 19.1 Terminal accounting
+
+| Metric | Value |
+| --- | ---: |
+| A. Initial absolute census | 145 |
+| B. Batch-1 retirements | 50 |
+| C. Batch-2 retirements | 18 |
+| D. Batch-3 retirements | 0 |
+| E. Relocations | 0 |
+| F. Total PHP-3 handoffs | 77 |
+| G. Retained current/nonblocking | 0 |
+| H. Blocked conflicts | 0 |
+| I. PHP-2-eligible residual | 0 |
+| J. Absolute nine-path residual | 77 |
+| K. Unexplained residual | 0 |
+| L. Tier-B-to-D total | 40 |
+| M. Tier-C-to-D total | 0 |
+| N. Tier-D tombstone total | 40 |
+
+The PHP-3 handoff manifest recommendation is the exact final 77-path
+nine-import census: the two mandatory carriers, the 30 Batch-2 carriers, and
+the 45 Batch-3 rows above. No PHP-3 manifest is published and no extraction is
+performed in this packet.
+
+### 19.2 Complete residual handoff set
+
+The two mandatory carriers are listed in section 6. The 45 Batch-3 carriers
+are the exact-path rows in section 19. The remaining 30 Batch-2 carriers are:
+each has the terminal disposition `HANDOFF_TO_PHP3_UNIQUE_CONTRACT`.
+
+- `test/ui_v2/runner/canonical_terminal_world1_runtime_config_v1_test.dart`
+- `test/ui_v2/runner/world1_canonical_host_adapter_v1_test.dart`
+- `test/ui_v2/runner/world1_foundations_runner_progression_chrome_adapter_v1_test.dart`
+- `test/ui_v2/scenario_seat_state_contract_test.dart`
+- `test/ui_v2/session_drill_player_bet_sizing_contract_test.dart`
+- `test/ui_v2/session_drill_player_board_tap_contract_test.dart`
+- `test/ui_v2/session_drill_player_board_texture_contract_test.dart`
+- `test/ui_v2/session_drill_player_hand_chain_contract_test.dart`
+- `test/ui_v2/session_drill_player_initiative_contract_test.dart`
+- `test/ui_v2/session_drill_player_position_thinking_contract_test.dart`
+- `test/ui_v2/session_drill_player_projection_invariant_spine_contract_test.dart`
+- `test/ui_v2/session_drill_player_runner_stress_benchmark_acceptance_test.dart`
+- `test/ui_v2/session_drill_player_seat_info_density_rendered_quality_test.dart`
+- `test/ui_v2/session_drill_player_seat_tap_contract_test.dart`
+- `test/ui_v2/session_drill_player_spatial_runtime_bundle_contract_test.dart`
+- `test/ui_v2/session_drill_player_world2_live_layout_contract_test.dart`
+- `test/ui_v2/session_drill_player_world2_source_projection_contract_test.dart`
+- `test/ui_v2/session_drill_player_world3_continuation_slice_contract_test.dart`
+- `test/ui_v2/session_drill_player_world3_front_slice_contract_test.dart`
+- `test/ui_v2/session_drill_player_world3_hand_chain_surface_contract_test.dart`
+- `test/ui_v2/session_drill_player_world3_mid_tail_rendered_quality_test.dart`
+- `test/ui_v2/session_drill_player_world3_tail_capstone_rendered_quality_test.dart`
+- `test/ui_v2/session_drill_player_world3_tail_slice_contract_test.dart`
+- `test/ui_v2/session_drill_player_world9_exploit_synthesis_rendered_quality_test.dart`
+- `test/ui_v2/session_drill_player_world9_position_spatial_rendered_quality_test.dart`
+- `test/ui_v2/session_drill_player_world9_surface_contract_test.dart`
+- `test/ui_v2/session_result_screen_contract_test.dart`
+- `test/ui_v2/ui_v2_accessibility_touch_contract_test.dart`
+- `test/ui_v2/world1_foundations_runner_route_v1_test.dart`
+- `test/ui_v2_smoke_test.dart`
+
+## 20. Final verdict
+
+PHP2_CLOSED_DISPOSED_WITH_PHP3_HANDOFFS
+
+## 21. Context-cost record
+
+- Budget selected / changed: standard / no.
+- Authority files read: 6 — campaign state; `AGENTS.md`; the PHP-2 Batch-3
+  brief; this disposition ledger; the test-authority manifest validator; and
+  the exact candidate test imports/source owners.
+- Exploratory commands: 12 — isolated-worktree verification, nine-path census,
+  Tier census, exact import extraction, focused semantic and replacement
+  searches, and broad-suite result classification.
+- Decision-changing commands: 5 — final absolute census, handoff-set
+  comparison, import/owner searches, manifest validation, and the broad
+  compile/load measurement.
+- Escalations: none. The legacy imports were insufficient to prove retirement,
+  so current or potentially unique learner-facing assertions were preserved for
+  PHP-3 rather than deleted.
+- Reopens after owner tracing: 1 — the campaign-state guard wording was
+  reconciled from active PHP-2 to the PHP-3 owner gateway.
+- Parallel conflicts: one stale protected user-root worktree was deliberately
+  avoided; this packet used its own clean worktree.
+- Outcome: admitted terminal PHP-2 disposition; 77 exact residual paths are
+  all explicit PHP-3 handoffs.
+- Removable cost next time: retain the authoritative final handoff manifest so
+  PHP-3 can begin from the exact 77-path ledger without repeating the full
+  legacy-import census.
+
+## 22. Batch-3 validation record
+
+- Final nine-path census: 77 absolute; 77 exact handoffs; 0 PHP-2 eligible;
+  0 unexplained residual. Tier B / C / D: 77 / 307 / 40.
+- `python3 tools/test_authority/validate_manifest_v1.py`, `flutter analyze`,
+  `graphify hook-check`, and `git diff --check` passed.
+- Tier-A recorded 9/10 passes; its only recorded failure is the known macOS
+  Bash 3.2 `mapfile` limitation in its nested release-gate invocation. The
+  required `/opt/homebrew/bin/bash ./tools/release_gate_world1.sh` completed
+  independently with `World1 release gate passed`.
+- PHP-0/PHP-1 protection suite: 82 tests passed. The terminal campaign-state
+  guard also passed after its expected wording update.
+- Tier-B smoke reproduces its two established unrelated audit-hub failures:
+  `audit_hub_operational_builder_v1_test.dart` and
+  `audit_hub_service_v1_test.dart`; no affected legacy carrier was changed.
+- Broad measurement: `flutter test test/ui_v2 test/guards` completed with 73
+  compile/load failures, 53 assertion-failure blocks, and 112 distinct failing
+  files. 72 are named explicit PHP-3 handoffs. The remaining 40 are unchanged
+  broad-suite failures outside this packet's handoff set; no product source or
+  non-campaign-state test contract changed in Batch 3.
+- No archive import, manifest, production, workflow, or PHP-3 extraction was
+  changed in this packet.

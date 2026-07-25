@@ -91,11 +91,13 @@ void main() {
     );
     expect(
       campaignState,
-      contains('PHP-2 — Legacy Corpus Ownership Disposition, Batch 2'),
+      contains('PHP-2 — Legacy Corpus Ownership Disposition, terminal Batch 3'),
     );
     expect(
       campaignState,
-      contains('PHP-2 active** — up to three sequential merged PRs'),
+      contains(
+        'PENDING_OWNER_GATEWAY** — PHP-3 extraction remains unauthorized',
+      ),
     );
     expect(campaignState, contains('F-17 | **CLASSIFIED**'));
     expect(campaignState, contains('F-18 | **STALE_TEST**'));
