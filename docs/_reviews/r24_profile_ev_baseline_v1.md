@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R24 Profile EV Baseline v1
 
 ## 1) Scope and Evidence Sources

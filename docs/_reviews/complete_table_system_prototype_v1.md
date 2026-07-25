@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Complete Theory-to-Task Table System Prototype v1
 
 ## 1. Terminal verdict

@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-07-07"
+baseline: "8dd5feea6fa7"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Final W1-W12 Holistic Product, Learning, Journey, and Visual Synthesis v1
 
 Model: Claude Sonnet 5. Effort: High. Escalation to Opus: not performed — no

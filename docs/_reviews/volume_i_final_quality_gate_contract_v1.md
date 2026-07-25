@@ -1,3 +1,10 @@
+---
+status: "volume_i_final_quality_gate_contract_landed"
+status_source: "derived"
+baseline: "1d5c449c5388"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I Final Quality Gate Contract v1
 
 ## 1. Verdict

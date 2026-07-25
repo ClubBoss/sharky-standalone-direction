@@ -1,3 +1,9 @@
+---
+status: "wave3_12_world1_completion_payoff_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 3.12 - World 1 Completion Payoff v1
 
 ## 1. Verdict

@@ -1,3 +1,9 @@
+---
+status: "wave3_10_premium_motion_moments_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 3.10 - Premium Motion Moments v1
 
 ## 1. Verdict

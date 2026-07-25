@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-06-23"
+baseline: "6e4152e6fb2a"
+generated_by: "docs_frontmatter_v1"
+---
+
 # First-Week Proof Readiness Recheck v1
 
 - Date: 2026-06-23

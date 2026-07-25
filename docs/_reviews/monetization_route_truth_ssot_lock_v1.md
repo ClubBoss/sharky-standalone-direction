@@ -1,3 +1,10 @@
+---
+status: "docs-only SSOT consolidation"
+status_source: "derived"
+doc_date: "2026-06-18"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Monetization / Route Truth SSOT Lock v1
 
 Status: docs-only SSOT consolidation

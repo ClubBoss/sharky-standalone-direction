@@ -1,3 +1,10 @@
+---
+status: "repo_integration_volume_i_claude_gap_audit_packet_stage0_passed"
+status_source: "derived"
+baseline: "2da84884c3d6"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration Volume I Claude Gap Audit Packet v29
 
 ## 1. Verdict

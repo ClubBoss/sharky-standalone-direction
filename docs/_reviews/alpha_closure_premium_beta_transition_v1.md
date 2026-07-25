@@ -1,3 +1,9 @@
+---
+status: "alpha_closed_premium_beta_active"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Alpha Closure / Premium Beta Transition v1
 
 ## 1. Verdict

@@ -1,3 +1,9 @@
+---
+status: "current_session_evidence_contract_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Learning Evidence / Session Outcome Data Contract Audit v1
 
 ## 1. Verdict

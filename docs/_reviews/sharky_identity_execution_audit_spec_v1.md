@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "c5ae81bffc0a"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Sharky Identity Execution Audit / Spec v1
 
 Terminal verdict: `sharky_identity_execution_blocked_on_production_art_direction_and_on_identity_fallback_pack`

@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "39257bdf725b"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Post-Practice Static Surface Re-Rank v1
 
 Terminal verdict: `post_practice_static_rerank_feedback_session_closure_c2_is_next_non_sharky_wave`

@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "0a545ee29630"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Surface Role / CTA Coherence Audit v1
 
 ## Scope

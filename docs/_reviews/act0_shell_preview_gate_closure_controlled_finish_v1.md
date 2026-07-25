@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 Shell Preview Gate Closure - Controlled Finish v1
 
 ## 1. Starting Broad Status

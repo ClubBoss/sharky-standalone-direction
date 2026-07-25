@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 Preview Remaining Failure Truth Audit v2
 
 ## 1. Wave Admission

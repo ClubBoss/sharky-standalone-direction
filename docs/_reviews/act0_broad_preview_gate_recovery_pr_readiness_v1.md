@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 Broad Preview Gate Recovery PR Readiness v1
 
 ## 1. Files changed in the total recovery diff

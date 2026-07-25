@@ -1,3 +1,10 @@
+---
+status: "PUBLISHED FOR ADMISSION"
+status_source: "derived"
+baseline: "0081d80851be"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Minimal Live End-to-End Alpha Scenario v1
 
 Status: `PUBLISHED FOR ADMISSION`

@@ -1,3 +1,9 @@
+---
+status: "campaign_source_contract_ready_no_code"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W11 Campaign-Source Ownership Contract v1
 
 ## 1. Verdict

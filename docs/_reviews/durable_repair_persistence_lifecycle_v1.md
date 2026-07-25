@@ -1,3 +1,9 @@
+---
+status: "durable_repair_persistence_lifecycle_landed_existing_owner"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Durable Repair Persistence and Repeated Candidate Lifecycle v1
 
 ## 1. Verdict

@@ -1,3 +1,9 @@
+---
+status: "beta_surface_cleanup_ready_with_remaining_drill_blocker"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Beta Surface Cleanup Wave v1
 
 ## 1. Verdict

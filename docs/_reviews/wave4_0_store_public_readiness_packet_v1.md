@@ -1,3 +1,10 @@
+---
+status: "wave4_0_store_public_readiness_packet_ready"
+status_source: "derived"
+baseline: "753f625dccc8"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 4.0 - Store / Public Readiness Packet v1
 
 ## 1. Verdict

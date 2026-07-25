@@ -1,3 +1,9 @@
+---
+status: "wave4_3_premium_reward_session_summary_payoff_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 4.3 - Premium Reward & Session Summary Payoff v1
 
 ## 1. Verdict

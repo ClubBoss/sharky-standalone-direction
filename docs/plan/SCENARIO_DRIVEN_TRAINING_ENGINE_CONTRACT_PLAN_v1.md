@@ -1,3 +1,10 @@
+---
+status: "SSOT-lite"
+status_source: "derived"
+doc_date: "2026-03-09"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Scenario-Driven Training Engine / Contract Plan v1
 Status: SSOT-lite
 Purpose: Record the next architecture pivot after the first bounded World 2 bridge block so future rollout can move from scattered per-slice UI logic toward one canonical scenario-driven training system.

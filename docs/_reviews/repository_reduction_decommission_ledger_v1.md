@@ -1,3 +1,12 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-05-09"
+baseline: "0c922689cf41"
+superseded_by: "claude_ux_v2_wave1_closure_proof.md"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repository Reduction Decommission Ledger v1
 
 Base HEAD: `0c922689cf41f3c31d22ce046bf16455d6fa66f7`

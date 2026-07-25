@@ -1,3 +1,10 @@
+---
+status: "terminal_copy_leak_fixed"
+status_source: "derived"
+baseline: "cbbebdea4138"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Terminal Evidence Refresh + Copy Leak Verification v1
 
 ## 1. Verdict

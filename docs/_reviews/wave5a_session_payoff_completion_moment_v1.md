@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "d98a51981727"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 5A - Session Payoff / Completion Moment Lift
 
 ## 1. Executive verdict

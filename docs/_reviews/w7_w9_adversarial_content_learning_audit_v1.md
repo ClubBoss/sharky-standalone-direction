@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-07-08"
+baseline: "a40bf6d82c8e"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7-W9 Adversarial Content and Learning-Quality Audit v1
 
 Date: 2026-07-08

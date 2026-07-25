@@ -1,3 +1,10 @@
+---
+status: "LOCAL-ONLY / UNPUBLISHED. All rows are evidence-based at `FINAL_DEEP_AUDIT_LOCAL_BASELINE` `6c786a0060fff24b3c6def104846"
+status_source: "derived"
+baseline: "6c786a0060ff"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Final Deep Independent Audit Finding Ledger v1
 
 Status: LOCAL-ONLY / UNPUBLISHED. All rows are evidence-based at `FINAL_DEEP_AUDIT_LOCAL_BASELINE` `6c786a0060fff24b3c6def10484612fad2be54be`.

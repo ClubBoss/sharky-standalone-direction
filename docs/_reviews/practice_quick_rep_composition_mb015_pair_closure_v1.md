@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "4a463cad"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Practice Quick-Rep Composition / MB-015 Pair Closure v1
 
 Terminal verdict: `practice_quick_rep_locked_shelf_compaction_implemented`

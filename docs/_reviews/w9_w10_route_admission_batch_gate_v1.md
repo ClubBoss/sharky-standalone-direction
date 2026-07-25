@@ -1,3 +1,10 @@
+---
+status: "w9_w10_route_admission_batch_landed"
+status_source: "derived"
+baseline: "b749a61273a1"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W9-W10 Route Admission Batch Gate v1
 
 ## 1. Verdict

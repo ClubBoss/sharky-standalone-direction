@@ -1,3 +1,11 @@
+---
+status: "ACTIVE visual/proof capsule"
+status_source: "derived"
+doc_date: "2026-07-04"
+baseline: "beb7aabc64c6"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Visual Proof Capsule v1
 
 Status: ACTIVE visual/proof capsule.

@@ -1,3 +1,10 @@
+---
+status: "ACCEPTED"
+status_source: "derived"
+doc_date: "2026-06-28"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W2 Canonical Certification Pilot v1
 
 Status: ACCEPTED.

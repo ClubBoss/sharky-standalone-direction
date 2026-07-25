@@ -1,3 +1,10 @@
+---
+status: "w1_w6_repair_wave1_beginner_truth_closed"
+status_source: "derived"
+baseline: "ecddf8e15d95"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Repair Wave 1 - Beginner Vocabulary Order + First-Table Assessment Validity
 
 Verdict: `w1_w6_repair_wave1_beginner_truth_closed`

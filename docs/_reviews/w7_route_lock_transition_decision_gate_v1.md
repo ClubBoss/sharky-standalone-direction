@@ -1,3 +1,10 @@
+---
+status: "w7_route_lock_transition_decision_visible_locked_preview"
+status_source: "derived"
+baseline: "d8f73cd6"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7 Route Lock Transition Decision Gate v1
 
 ## 1. Verdict

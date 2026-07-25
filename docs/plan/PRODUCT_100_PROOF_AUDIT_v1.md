@@ -1,3 +1,10 @@
+---
+status: "ACTIVE"
+status_source: "derived"
+doc_date: "2026-05-14"
+generated_by: "docs_frontmatter_v1"
+---
+
 # PRODUCT_100_PROOF_AUDIT_v1
 
 Status: ACTIVE

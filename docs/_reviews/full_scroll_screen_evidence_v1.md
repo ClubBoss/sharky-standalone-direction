@@ -1,3 +1,9 @@
+---
+status: "full_scroll_evidence_lane_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Full-Scroll Screen Evidence v1
 
 ## Verdict

@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "b53840561"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R21 Launch Checklist v1 (Authoritative Go/No-Go)
 
 ## 1) Launch Thesis

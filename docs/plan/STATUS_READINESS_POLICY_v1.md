@@ -1,3 +1,10 @@
+---
+status: "SSOT-lite"
+status_source: "derived"
+doc_date: "2026-03-09"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Status / Readiness Policy v1
 Status: SSOT-lite
 Purpose: Record the canonical meaning and promotion discipline for the status and readiness labels already used across truth-map, Dev Hub, and planning layers.

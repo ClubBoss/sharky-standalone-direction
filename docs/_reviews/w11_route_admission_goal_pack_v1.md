@@ -1,3 +1,9 @@
+---
+status: "blocked_fixture_source_gap"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W11 Route Admission Goal Pack v1
 
 ## 1. Verdict

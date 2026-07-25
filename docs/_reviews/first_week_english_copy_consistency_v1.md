@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # First-Week English Copy Consistency v1
 
 - Branch: `codex/act0-learn-route-clarity-v1`

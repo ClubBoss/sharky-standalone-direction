@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "a995c6952207"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration - W7 Completion Pack Sync v22
 
 ## Verdict

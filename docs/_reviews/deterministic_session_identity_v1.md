@@ -1,3 +1,10 @@
+---
+status: "deterministic_session_identity_landed_with_bounded_events"
+status_source: "derived"
+baseline: "d374c8751623"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Deterministic Session Identity v1
 
 ## 1. Verdict

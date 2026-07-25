@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Sharky Poker — Full UI/UX/Visual 10/10 Deconstruction (v1)
 
 **Objective:** Full deconstruction of the current build against a 10/10 bar — visual, UX, table/gameplay, feedback loop, Sharky companion, onboarding, navigation, cognitive load, typography, spacing, touch ergonomics, motion gaps, emotional payoff, premium impression, beginner trust, commercial impression. Not a Human QA substitute; not a launch-readiness claim.

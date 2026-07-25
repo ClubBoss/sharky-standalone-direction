@@ -1,3 +1,10 @@
+---
+status: "human_qa_premium_beta_proof_checklist_landed"
+status_source: "derived"
+baseline: "fded17d6"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Human QA Premium Beta Proof Checklist v1
 
 ## 1. Verdict

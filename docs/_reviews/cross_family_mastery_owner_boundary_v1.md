@@ -1,3 +1,10 @@
+---
+status: "local owner-boundary contract; no product implementation"
+status_source: "derived"
+doc_date: "2026-06-24"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Cross-Family Mastery Owner Boundary v1
 
 Date: 2026-06-24

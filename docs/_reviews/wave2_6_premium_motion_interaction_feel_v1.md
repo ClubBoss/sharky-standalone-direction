@@ -1,3 +1,11 @@
+---
+status: "wave2_6_premium_motion_interaction_feel_ready"
+status_source: "derived"
+doc_date: "2026-06-26"
+baseline: "6638b0aa6d4c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 2.6 - Premium Motion & Interaction Feel v1
 
 Date: 2026-06-26

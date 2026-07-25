@@ -1,3 +1,9 @@
+---
+status: "w11_visibility_planned_continuation_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W11 Volume I Admission Goal Pack v1
 
 ## 1. Verdict

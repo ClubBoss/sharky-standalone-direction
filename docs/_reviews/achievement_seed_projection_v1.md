@@ -1,3 +1,9 @@
+---
+status: "achievement_seed_projection_data_only_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Achievement Seed Projection v1
 
 ## 1. Verdict

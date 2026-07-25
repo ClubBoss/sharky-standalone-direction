@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W10-W12 Adversarial Content and Learning-Quality Audit v1
 
 Model: Claude Sonnet 5. Effort: High. Escalation to Opus: not performed (no unresolved pedagogical contradiction found in the packet).

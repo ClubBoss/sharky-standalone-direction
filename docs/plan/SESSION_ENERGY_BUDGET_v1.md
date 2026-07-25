@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # SESSION_ENERGY_BUDGET_v1
 
 ## Purpose

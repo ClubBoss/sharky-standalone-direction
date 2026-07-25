@@ -1,3 +1,10 @@
+---
+status: "wave3_3_runner_text_zone_feedback_clarity_no_code_needed"
+status_source: "derived"
+baseline: "a8080f25315c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 3.3 - Runner Text Zone & Feedback Clarity Final Pass v1
 
 ## 1. Verdict

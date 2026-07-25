@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "03f8ab2f5"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R29 Execution Continuity Closeout Audit v1
 
 ## 1) Milestone purpose/scope recap

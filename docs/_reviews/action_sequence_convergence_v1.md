@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "c3dc4056"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Action sequence convergence v1
 
 ## Terminal verdict

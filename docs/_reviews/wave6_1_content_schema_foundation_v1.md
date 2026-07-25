@@ -1,3 +1,9 @@
+---
+status: "wave6_1_schema_foundation_docs_only_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 6.1 - Content Schema Foundation v1
 
 ## 1. Verdict

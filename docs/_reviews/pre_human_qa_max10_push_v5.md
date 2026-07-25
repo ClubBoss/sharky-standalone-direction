@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "5d2b8583ca4c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Pre-Human-QA Max-10 Push v5
 
 ## 1. Executive verdict

@@ -1,3 +1,11 @@
+---
+status: "docs-only canonical ownership and evidence-admission review. No"
+status_source: "derived"
+doc_date: "2026-07-08"
+baseline: "1a7548a82bc0"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Canonical Ownership Map v1
 
 Date: 2026-07-08

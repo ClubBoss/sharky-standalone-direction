@@ -1,3 +1,10 @@
+---
+status: "w1_w6_ready_for_bounded_wave4_then_human_qa"
+status_source: "derived"
+baseline: "cdf89b9e5e97"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Post-Repair Canonical Re-Score v1
 
 Verdict: `w1_w6_ready_for_bounded_wave4_then_human_qa`

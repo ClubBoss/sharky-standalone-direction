@@ -1,3 +1,9 @@
+---
+status: "repair_loop_copy_pass_ready_skill_snapshot_gated"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repair Loop Copy / Claim-Safety Pass v1
 
 ## 1. Verdict

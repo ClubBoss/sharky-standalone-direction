@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-06-18"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 Shell Preview Contract Split v1b - Learn Route Harness
 
 Date: 2026-06-18

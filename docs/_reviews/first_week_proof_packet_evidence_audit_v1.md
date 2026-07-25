@@ -1,3 +1,10 @@
+---
+status: "Choose **B: add one narrow capture-lane state group** before a broad Surface"
+status_source: "derived"
+baseline: "c8e87f2256f9"
+generated_by: "docs_frontmatter_v1"
+---
+
 # First-Week Proof Packet Evidence Audit v1
 
 ## Scope

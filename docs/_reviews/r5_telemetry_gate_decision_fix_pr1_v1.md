@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R5 Telemetry Gate Decision Fix PR1 v1
 
 ## 1. PR #1 CI status

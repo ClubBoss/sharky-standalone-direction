@@ -1,3 +1,10 @@
+---
+status: "w1_w6_wave3_canonical_repair_recheck_coverage_implemented"
+status_source: "derived"
+baseline: "b188f29d777e"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Wave 3 Canonical Repair/Recheck Coverage v1
 
 Verdict: `w1_w6_wave3_canonical_repair_recheck_coverage_implemented`

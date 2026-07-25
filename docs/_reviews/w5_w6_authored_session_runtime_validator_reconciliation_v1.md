@@ -1,3 +1,9 @@
+---
+status: "w5_w6_authored_session_contract_reconciliation_complete"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W5-W6 Authored-Session Runtime and Validator Contract Reconciliation v1
 
 ## Verdict

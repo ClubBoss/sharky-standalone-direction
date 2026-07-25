@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-06-19"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Docs SSOT Route / Monetization Locks Clean PR v1
 
 ## 1. Branch and base commit

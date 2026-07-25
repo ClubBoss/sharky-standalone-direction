@@ -1,3 +1,9 @@
+---
+status: "wave5_2_w7_w10_current_campaign_status_alignment_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 5.2 Follow-up - W7-W10 Current Campaign Status Alignment v1
 
 ## 1. Verdict

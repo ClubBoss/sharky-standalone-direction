@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-07-08"
+baseline: "7425a17a2862"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7-W9 Canonical Route Admission Recheck v2
 
 Date: 2026-07-08

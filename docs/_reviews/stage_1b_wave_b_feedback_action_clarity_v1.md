@@ -1,3 +1,10 @@
+---
+status: "Stage 1B Wave B learner-facing feedback/action-model clarity is implemented for the admitted W4/W5 scope only"
+status_source: "derived"
+baseline: "f6e8f0e31d6a"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Stage 1B Wave B Feedback and Action-Model Clarity v1
 
 ## Verdict

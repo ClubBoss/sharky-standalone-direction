@@ -1,3 +1,10 @@
+---
+status: "ACTIVE RECALIBRATION"
+status_source: "derived"
+doc_date: "2026-05-06"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Product Scorecard Recalibration 2026-05-06 v1
 
 Status: ACTIVE RECALIBRATION

@@ -1,3 +1,10 @@
+---
+status: "ACTIVE"
+status_source: "derived"
+doc_date: "2026-05-22"
+generated_by: "docs_frontmatter_v1"
+---
+
 # FULL_PRODUCT_READINESS_LEDGER_v1
 
 Status: ACTIVE

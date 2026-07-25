@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Top-1 UX/Product Lift PR1b Cleanup v1
 
 ## 1. Summary

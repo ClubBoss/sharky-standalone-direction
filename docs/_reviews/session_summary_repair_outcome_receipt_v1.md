@@ -1,3 +1,9 @@
+---
+status: "session_summary_repair_receipt_read_only_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Session Summary Repair Outcome Receipt v1
 
 ## 1. Verdict

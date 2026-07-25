@@ -1,3 +1,10 @@
+---
+status: "term_introduction_glossary_ready_with_optional_gaps"
+status_source: "derived"
+baseline: "739bdbb6"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Term Introduction / Glossary Audit v1
 
 ## 1. Verdict

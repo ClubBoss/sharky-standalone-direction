@@ -1,3 +1,10 @@
+---
+status: "store_asset_capture_polish_ready"
+status_source: "derived"
+baseline: "ecd77e725bef"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Store Asset Capture Polish / Evidence Pack v1
 
 ## 1. Verdict

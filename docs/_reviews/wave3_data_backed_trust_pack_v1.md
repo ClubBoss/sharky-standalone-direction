@@ -1,3 +1,9 @@
+---
+status: "wave3_trust_pack_ready_profile_projection_next"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 3 Data-Backed Trust Pack v1
 
 ## 1. Verdict

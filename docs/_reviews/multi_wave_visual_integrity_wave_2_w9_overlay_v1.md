@@ -1,3 +1,9 @@
+---
+status: "green__w9_center_overlay_collision_repaired"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Multi-Wave Visual Integrity — Wave 2 W9 Table Overlay
 
 ## Verdict

@@ -1,3 +1,10 @@
+---
+status: "ACTIVE"
+status_source: "derived"
+doc_date: "2026-05-07"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Sharky Implementation And Skill Growth Policy v1
 
 Status: ACTIVE

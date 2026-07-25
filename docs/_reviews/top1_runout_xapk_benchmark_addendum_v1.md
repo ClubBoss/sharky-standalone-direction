@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-06-19"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Top-1 Runout XAPK Benchmark Addendum v1
 
 Date: 2026-06-19

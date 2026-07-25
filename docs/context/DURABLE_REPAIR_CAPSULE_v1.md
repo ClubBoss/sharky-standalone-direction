@@ -1,3 +1,9 @@
+---
+status: "SUPERSEDED pointer"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Durable Repair Capsule v1
 
 Status: SUPERSEDED pointer.

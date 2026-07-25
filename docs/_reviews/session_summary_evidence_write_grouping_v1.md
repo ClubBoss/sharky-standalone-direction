@@ -1,3 +1,9 @@
+---
+status: "session_grouping_write_path_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Session Summary Evidence Write Grouping v1
 
 ## 1. Verdict

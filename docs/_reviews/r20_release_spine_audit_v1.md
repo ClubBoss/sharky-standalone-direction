@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R20 Release Spine Audit v1 (Ship-Critical Gap Cut)
 
 ## 1) Current Release Thesis

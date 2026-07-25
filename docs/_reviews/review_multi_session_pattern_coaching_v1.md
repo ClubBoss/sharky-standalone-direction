@@ -1,3 +1,9 @@
+---
+status: "review_multi_session_pattern_coaching_landed_with_bounded_consumer"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Review Multi-Session Pattern Coaching v1
 
 ## 1. Verdict

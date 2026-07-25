@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R63 Action-Mode Guidance Closeout Audit v1
 
 ## Milestone purpose/scope recap

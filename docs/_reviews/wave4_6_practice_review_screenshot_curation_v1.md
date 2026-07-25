@@ -1,3 +1,9 @@
+---
+status: "wave4_6_practice_review_screenshot_curation_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 4.6 - Practice Review Active-State & Public Screenshot Curation v1
 
 ## 1. Verdict

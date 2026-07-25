@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-06-19"
+baseline: "c19bb11c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Full Surface 10 UX UI Coherence Gate v1
 
 Date: 2026-06-19

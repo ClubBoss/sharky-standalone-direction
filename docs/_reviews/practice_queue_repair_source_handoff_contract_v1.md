@@ -1,3 +1,9 @@
+---
+status: "practice_queue_source_handoff_data_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Practice Queue Repair Source Handoff Contract v1
 
 ## 1. Verdict

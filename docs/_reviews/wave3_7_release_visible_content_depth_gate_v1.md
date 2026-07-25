@@ -1,3 +1,9 @@
+---
+status: "wave3_7_release_visible_content_depth_gate_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 3.7 - Release-Visible Content Depth Gate v1
 
 ## 1. Verdict

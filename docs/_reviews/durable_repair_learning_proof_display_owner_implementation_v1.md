@@ -1,3 +1,9 @@
+---
+status: "durable_repair_learning_proof_display_owner_landed_session_summary"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Durable Repair Learning Proof Display Owner Implementation v1
 
 ## 1. Verdict

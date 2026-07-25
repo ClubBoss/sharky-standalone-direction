@@ -1,3 +1,10 @@
+---
+status: "stage_1b_wave_d0_closed_current_board_fit_repair_authority_reconciled"
+status_source: "derived"
+baseline: "b6327304970a"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Stage 1B Wave D0 — W6.s01 Repair Authority Reconciliation v1
 
 Status: `stage_1b_wave_d0_closed_current_board_fit_repair_authority_reconciled`

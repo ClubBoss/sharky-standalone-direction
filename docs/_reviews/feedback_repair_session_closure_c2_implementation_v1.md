@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "4457706c9581"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Feedback / Repair / Session Closure C2 Implementation Gate v1
 
 Terminal verdict: `c2_fresh_evidence_confirms_shared_dead_space_but_bounded_source_implementation_deferred_pending_runner_action_dock_allocation_spec`

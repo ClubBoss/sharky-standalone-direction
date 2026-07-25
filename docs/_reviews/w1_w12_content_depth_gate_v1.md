@@ -1,3 +1,10 @@
+---
+status: "w1_w12_content_depth_ready_with_optional_gaps"
+status_source: "derived"
+baseline: "595cadd0"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W12 Content Depth Gate v1
 
 ## 1. Verdict

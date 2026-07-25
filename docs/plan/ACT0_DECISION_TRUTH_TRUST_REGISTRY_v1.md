@@ -1,3 +1,9 @@
+---
+status: "ACTIVE"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # ACT0_DECISION_TRUTH_TRUST_REGISTRY_v1
 
 Status: ACTIVE

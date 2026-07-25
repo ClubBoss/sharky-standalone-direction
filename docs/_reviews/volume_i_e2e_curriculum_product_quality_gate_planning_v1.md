@@ -1,3 +1,10 @@
+---
+status: "ready_to_execute_full_w1_w12_quality_gate"
+status_source: "derived"
+baseline: "05bd3fa4da73"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I End-to-End Curriculum & Product Quality Gate Planning v1
 
 ## 1. Verdict

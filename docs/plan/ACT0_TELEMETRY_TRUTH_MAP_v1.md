@@ -1,3 +1,10 @@
+---
+status: "ACTIVE CONTRACT MAP"
+status_source: "derived"
+doc_date: "2026-07-20"
+generated_by: "docs_frontmatter_v1"
+---
+
 # ACT0_TELEMETRY_TRUTH_MAP_v1
 
 Status: ACTIVE CONTRACT MAP

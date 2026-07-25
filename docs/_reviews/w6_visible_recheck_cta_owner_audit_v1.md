@@ -1,3 +1,11 @@
+---
+status: "visible-owner audit; no product/UI/route/telemetry/content change"
+status_source: "derived"
+doc_date: "2026-06-23"
+baseline: "ff46680d67cc"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W6 Visible Recheck CTA Owner Audit v1
 
 Date: 2026-06-23

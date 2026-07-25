@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "31ac1addbb90"
+generated_by: "docs_frontmatter_v1"
+---
+
 # PHP-0 Canonical-Adjacent Red-Guard Triage v1
 
 ## 1. Exact baseline

@@ -1,3 +1,9 @@
+---
+status: "durable_repair_practice_queue_admission_blocked_by_mapping_owner"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Durable Repair Practice Queue Admission Decision v1
 
 ## 1. Verdict

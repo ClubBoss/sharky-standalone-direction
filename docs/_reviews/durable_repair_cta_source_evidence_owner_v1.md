@@ -1,3 +1,9 @@
+---
+status: "durable_repair_cta_source_evidence_owner_landed"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Durable Repair CTA Source Evidence Owner v1
 
 ## 1. Verdict

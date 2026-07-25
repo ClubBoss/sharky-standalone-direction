@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "aa0f8d241ff4"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Table Decision Compact Layout Contract Audit v1
 
 Terminal verdict: `compact_portrait_table_decision_allocation_contract_mapped_repair_wave_ready`

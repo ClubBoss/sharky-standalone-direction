@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # World 2 Mixed Multi-Step Contract v1
 
 Purpose:

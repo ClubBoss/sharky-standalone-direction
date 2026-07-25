@@ -1,3 +1,10 @@
+---
+status: "session_summary_proof_reveal_micro_motion_landed"
+status_source: "derived"
+baseline: "20d643b2"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Session Summary Proof Reveal Micro-Motion v1
 
 ## 1. Verdict

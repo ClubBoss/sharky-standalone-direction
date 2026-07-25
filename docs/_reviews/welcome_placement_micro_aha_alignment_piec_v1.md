@@ -1,3 +1,10 @@
+---
+status: "retain the short two-question placement contract and its beginner"
+status_source: "derived"
+baseline: "86512b2b0b4c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Welcome / Placement Micro-Aha Alignment v1
 
 ## Scope

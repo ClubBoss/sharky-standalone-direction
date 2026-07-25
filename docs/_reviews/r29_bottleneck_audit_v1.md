@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "67dd20126"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R29 Bottleneck Audit v1 (Post-R28 Weakest-Link Decision)
 
 ## 1) Candidate bottlenecks compared

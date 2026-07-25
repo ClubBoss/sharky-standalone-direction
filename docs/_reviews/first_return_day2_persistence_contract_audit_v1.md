@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # First Return / Day 2 Persistence Contract Audit v1
 
 ## Scope

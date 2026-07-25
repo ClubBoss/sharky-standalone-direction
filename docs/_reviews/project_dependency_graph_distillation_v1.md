@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-06-23"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Project Dependency Graph Distillation v1
 
 ## 1. Scope and status

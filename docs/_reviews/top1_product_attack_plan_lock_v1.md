@@ -1,3 +1,10 @@
+---
+status: "docs-only strategic SSOT consolidation"
+status_source: "derived"
+doc_date: "2026-06-18"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Top-1 Product Attack Plan SSOT Lock v1
 
 Status: docs-only strategic SSOT consolidation

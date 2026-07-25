@@ -1,3 +1,9 @@
+---
+status: "profile_evidence_projection_data_only_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Profile Evidence Projection v1
 
 ## 1. Verdict

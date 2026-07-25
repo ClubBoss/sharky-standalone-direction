@@ -1,3 +1,9 @@
+---
+status: "ACTIVE repo sync/checkpoint capsule"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Hygiene Capsule v1
 
 Status: ACTIVE repo sync/checkpoint capsule.

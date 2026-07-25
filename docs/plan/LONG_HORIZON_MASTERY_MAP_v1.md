@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # LONG_HORIZON_MASTERY_MAP_v1
 
 ## Purpose

@@ -1,3 +1,10 @@
+---
+status: "w7_hidden_evidence_consumption_internal_harness_landed"
+status_source: "derived"
+baseline: "5839abdb"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7 Hidden Evidence Consumption + Internal Harness v1
 
 ## 1. Verdict

@@ -1,3 +1,10 @@
+---
+status: "CLOSED (shipped)"
+status_source: "derived"
+doc_date: "2026-03-06"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R8 Track Specialization Audit v1
 
 Date: 2026-03-06

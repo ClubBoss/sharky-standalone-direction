@@ -1,3 +1,10 @@
+---
+status: "repo_integration_w7_hidden_runtime_owner_implementation_passed_pushed_main"
+status_source: "derived"
+baseline: "5839abdb"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration - W7 Hidden Runtime Owner Implementation v20
 
 ## Verdict

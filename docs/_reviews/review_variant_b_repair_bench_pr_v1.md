@@ -1,3 +1,10 @@
+---
+status: "review_variant_b_repair_bench_landed"
+status_source: "derived"
+baseline: "463c9c0d13bd"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Review Variant B Repair Bench PR v1
 
 ## 1. Verdict

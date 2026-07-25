@@ -1,3 +1,9 @@
+---
+status: "wave3_5_premium_transition_replay_motion_no_code_needed"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 3.5 - Premium Transition & Replay Motion System v1
 
 ## 1. Verdict

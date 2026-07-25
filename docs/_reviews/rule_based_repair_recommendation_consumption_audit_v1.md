@@ -1,3 +1,9 @@
+---
+status: "existing_consumption_sufficient_no_change"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Rule-Based Repair Recommendation Consumption Audit v1
 
 ## 1. Verdict

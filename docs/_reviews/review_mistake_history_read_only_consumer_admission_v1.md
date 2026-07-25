@@ -1,3 +1,9 @@
+---
+status: "review_history_read_only_ui_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Review Mistake-History Read-Only Consumer Admission v1
 
 ## 1. Verdict

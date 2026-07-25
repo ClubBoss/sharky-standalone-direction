@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Content Depth / Term Introduction / Drill Coverage Audit v1
 
 ## Scope

@@ -1,3 +1,9 @@
+---
+status: "onboarding_handoff_simplification_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Onboarding Handoff Simplification v1
 
 ## 1. Verdict

@@ -1,3 +1,9 @@
+---
+status: "Deferred product canon"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Progress Signal Derivation v1
 
 Status: Deferred product canon  

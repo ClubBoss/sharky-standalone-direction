@@ -1,3 +1,9 @@
+---
+status: "current_focus_recommendation_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # AI Personalization / Rule-Based Repair Layer v1
 
 ## 1. Verdict

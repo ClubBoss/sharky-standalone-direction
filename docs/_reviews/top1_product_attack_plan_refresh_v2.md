@@ -1,3 +1,10 @@
+---
+status: "top1_refresh_ready_post_repair_loop_copy"
+status_source: "derived"
+baseline: "a92bbdd7"
+generated_by: "docs_frontmatter_v1"
+---
+
 # TOP1 Product Attack Plan Refresh v2
 
 ## 1. Verdict

@@ -1,3 +1,10 @@
+---
+status: "baseline_guard_debt_partially_repaired_wave4_blocked"
+status_source: "derived"
+baseline: "0e913732178c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Baseline Guard Debt Repair Ledger v1
 
 Status: `baseline_guard_debt_partially_repaired_wave4_blocked`

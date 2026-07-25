@@ -1,3 +1,11 @@
+---
+status: "docs-only canonical deep-learning audit. No product, content, test,"
+status_source: "derived"
+doc_date: "2026-07-08"
+baseline: "f5a64718bccf"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W4-W6 Canonical Deep Learning Audit v1
 
 Date: 2026-07-08

@@ -1,3 +1,10 @@
+---
+status: "PROGRAM_CONTRACT_DEFINED / EXECUTION_NOT_STARTED"
+status_source: "derived"
+baseline: "0b607a5c8516"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Full W1-W12 Claude 10/10 Audit Program v1
 
 ## 1. Status and authority

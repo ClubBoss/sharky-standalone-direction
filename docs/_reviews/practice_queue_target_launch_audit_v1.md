@@ -1,3 +1,9 @@
+---
+status: "practice_queue_active_repair_launch_proven"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Practice Queue Target Launch Audit v1
 
 ## 1. Verdict

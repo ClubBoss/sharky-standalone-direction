@@ -1,3 +1,10 @@
+---
+status: "REVIEW ARTIFACT"
+status_source: "derived"
+baseline: "a91e1b5f"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Outcome Repair Verification / Local Cleanup v1
 
 Status: REVIEW ARTIFACT.

@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "19fb45ae7b0a"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7-W9 Canonical Route Ownership And Learner-Reachability Admission Audit v1
 
 ## 1. Executive Verdict

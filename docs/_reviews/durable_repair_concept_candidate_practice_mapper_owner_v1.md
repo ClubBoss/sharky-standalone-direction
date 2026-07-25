@@ -1,3 +1,9 @@
+---
+status: "durable_repair_concept_candidate_mapper_landed_partial_allowlist"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Durable Repair Concept Candidate Practice Mapper Owner v1
 
 ## 1. Verdict

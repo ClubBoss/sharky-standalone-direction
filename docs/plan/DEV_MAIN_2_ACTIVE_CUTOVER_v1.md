@@ -1,3 +1,10 @@
+---
+status: "ACTIVE"
+status_source: "derived"
+doc_date: "2026-04-30"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Dev Main 2.0 Active Cutover v1
 Status: ACTIVE
 Purpose: define the current working-surface policy now that learner-facing product work should route through the detached `dev` shell by default and `main` should no longer be treated as an active product surface.

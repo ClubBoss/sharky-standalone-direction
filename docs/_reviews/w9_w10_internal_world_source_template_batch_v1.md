@@ -1,3 +1,10 @@
+---
+status: "w9_w10_internal_world_source_template_batch_integrated"
+status_source: "derived"
+baseline: "f9d7f531560e"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W9-W10 Internal World Source Template Batch v1
 
 ## 1. Verdict

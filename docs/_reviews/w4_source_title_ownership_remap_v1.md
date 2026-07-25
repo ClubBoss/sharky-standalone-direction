@@ -1,3 +1,10 @@
+---
+status: "w4_source_title_ownership_recommends_title_job_plan"
+status_source: "derived"
+baseline: "bc76b5c9"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W4 Source/Title Ownership Remap v1
 
 Branch: `codex/w4-source-title-ownership-remap-v1`.

@@ -1,3 +1,9 @@
+---
+status: "wave3_11_personalized_return_reason_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 3.11 - Personalized Return Reason v1
 
 ## 1. Verdict

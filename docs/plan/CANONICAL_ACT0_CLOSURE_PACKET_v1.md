@@ -1,3 +1,10 @@
+---
+status: "CURRENT DETERMINISTIC CLOSURE PACKET \u2014 PRODUCT_SOURCE_BASELINE"
+status_source: "derived"
+baseline: "40babdeb97d1"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Canonical Act0 Closure Packet v1
 
 Status: CURRENT DETERMINISTIC CLOSURE PACKET — PRODUCT_SOURCE_BASELINE

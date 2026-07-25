@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "5f4f4a2d"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Home Next-Best-Action Integration Wave v1
 
 ## 1. Branch / base commit

@@ -1,3 +1,10 @@
+---
+status: "session_summary_gold_containment_landed"
+status_source: "derived"
+baseline: "9a7150adde92"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Session Summary Gold Containment PR v1
 
 ## 1. Verdict

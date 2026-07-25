@@ -1,3 +1,10 @@
+---
+status: "w7_w12_admission_planning_landed"
+status_source: "derived"
+baseline: "c24820a4"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7-W12 Admission Planning Durable Repair Compatible v1
 
 ## 1. Verdict

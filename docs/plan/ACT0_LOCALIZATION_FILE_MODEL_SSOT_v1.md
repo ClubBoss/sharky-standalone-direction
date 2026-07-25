@@ -1,3 +1,10 @@
+---
+status: "ACTIVE"
+status_source: "derived"
+doc_date: "2026-05-21"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 Localization File Model SSOT v1
 
 Status: ACTIVE  

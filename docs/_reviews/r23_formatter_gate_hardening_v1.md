@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "adac5f546"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R23 Formatter Gate Hardening v1
 
 ## Scope

@@ -1,3 +1,9 @@
+---
+status: "diagnosed_with_tiny_fix"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Shared Home Overflow Regression Triage v1
 
 ## 1. Verdict

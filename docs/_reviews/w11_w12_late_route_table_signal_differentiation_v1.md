@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "62d23f2fe716"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W11/W12 Late-Route Table Signal Differentiation v1
 
 Terminal verdict: `w11_w12_late_route_table_signal_differentiation_v1_complete`

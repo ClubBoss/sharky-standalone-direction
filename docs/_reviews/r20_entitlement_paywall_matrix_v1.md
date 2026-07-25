@@ -1,3 +1,9 @@
+---
+status: "Launch-safe for current launch-critical routing surfaces; blocked by missing-proof/design-hardening only if launch requi"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R20 Entitlement/Paywall Interaction Matrix v1
 
 ## Scope

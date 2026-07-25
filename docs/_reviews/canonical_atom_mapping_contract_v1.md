@@ -1,3 +1,10 @@
+---
+status: "local mapping contract; no product implementation"
+status_source: "derived"
+doc_date: "2026-06-24"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Canonical Atom Mapping Contract v1
 
 Date: 2026-06-24

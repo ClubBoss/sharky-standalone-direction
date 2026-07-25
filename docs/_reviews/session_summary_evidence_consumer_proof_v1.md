@@ -1,3 +1,9 @@
+---
+status: "session_summary_adapter_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Session Summary Evidence Consumer Proof v1
 
 ## 1. Verdict

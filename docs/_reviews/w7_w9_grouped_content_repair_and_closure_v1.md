@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "299ea751800d"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7-W9 Grouped Content Repair and Closure v1
 
 ## Objective

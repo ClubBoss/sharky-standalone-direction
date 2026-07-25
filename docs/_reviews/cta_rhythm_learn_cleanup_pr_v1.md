@@ -1,3 +1,10 @@
+---
+status: "cta_rhythm_learn_cleanup_landed"
+status_source: "derived"
+baseline: "611f413625e5"
+generated_by: "docs_frontmatter_v1"
+---
+
 # CTA Rhythm + Learn Cleanup PR v1
 
 ## 1. Verdict

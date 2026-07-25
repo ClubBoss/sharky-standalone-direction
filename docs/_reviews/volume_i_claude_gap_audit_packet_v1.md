@@ -1,3 +1,9 @@
+---
+status: "volume_i_claude_gap_audit_packet_landed"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I Claude Gap Audit Packet v1
 
 ## 1. Verdict

@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R94 First-User Visible Smart-Learning Copy/Pedagogy Refinement Closeout v1
 
 ## Purpose and bounded scope

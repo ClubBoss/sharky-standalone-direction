@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-07-07"
+baseline: "7e9e783a255c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Pre-Human-QA Full-Depth Perfection Ledger v1
 
 Model: Claude Sonnet 5. Effort: High. Escalation to Opus: not performed — the

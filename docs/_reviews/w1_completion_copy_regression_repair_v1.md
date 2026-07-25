@@ -1,3 +1,10 @@
+---
+status: "w1_completion_copy_regression_repaired"
+status_source: "derived"
+baseline: "54e9199d3a89"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1 Completion Copy Regression Repair v1
 
 ## 1. Verdict

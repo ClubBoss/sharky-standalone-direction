@@ -1,3 +1,11 @@
+---
+status: "proceed_to_claude_top1_challenger"
+status_source: "derived"
+doc_date: "2026-06-26"
+baseline: "83ee71366264"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 2.7 - Active Shell Visual Premium Proof v1
 
 Date: 2026-06-26

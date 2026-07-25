@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-06-19"
+superseded_by: "top1_product_attack_plan_refresh_v2.md"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Top-1 Product Attack Plan Deep Operating Map Refinement v1
 
 Date: 2026-06-19

@@ -1,3 +1,10 @@
+---
+status: "ACCEPTED certification review artifact"
+status_source: "derived"
+doc_date: "2026-06-28"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1 8.0 Certification Review v1
 
 Status: ACCEPTED certification review artifact.

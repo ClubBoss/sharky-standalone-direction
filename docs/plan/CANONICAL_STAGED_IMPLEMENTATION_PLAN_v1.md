@@ -1,3 +1,10 @@
+---
+status: "SSOT-lite"
+status_source: "derived"
+doc_date: "2026-03-09"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Canonical Staged Implementation Plan v1
 Status: SSOT-lite
 Purpose: Record the agreed implementation order before unified registry/system-map work begins.

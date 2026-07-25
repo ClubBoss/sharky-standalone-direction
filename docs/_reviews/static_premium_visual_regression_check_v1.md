@@ -1,3 +1,10 @@
+---
+status: "static_premium_visual_regression_passed"
+status_source: "derived"
+baseline: "1370d5126ced"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Static Premium Visual Regression Check v1
 
 ## 1. Verdict

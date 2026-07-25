@@ -1,3 +1,9 @@
+---
+status: "durable_evidence_contract_only_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Durable Act0 Learning Evidence Persistence Contract v1
 
 ## 1. Verdict

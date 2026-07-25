@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "b3e995e57320"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Profile Proof Identity / MB-024 Gate v1
 
 Terminal verdict: `profile_proof_identity_mb024_v1_implemented_with_capture_debt`

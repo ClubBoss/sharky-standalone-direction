@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "67dd20126"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R28 Personalization Closeout Audit v1
 
 ## 1) Milestone purpose/scope recap

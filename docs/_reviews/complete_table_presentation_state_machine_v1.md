@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "7b5d581b"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Complete Table Presentation State Machine and Theory Geometry Reassessment v1
 
 ## 1. Terminal verdict

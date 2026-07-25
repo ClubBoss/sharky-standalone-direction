@@ -1,3 +1,10 @@
+---
+status: "proof_progression_capsules_refreshed"
+status_source: "derived"
+baseline: "2472b68c7ff0"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Proof Progression Capsule Refresh v1
 
 ## 1. Verdict

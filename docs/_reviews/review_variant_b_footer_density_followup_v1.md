@@ -1,3 +1,10 @@
+---
+status: "review_footer_density_followup_landed"
+status_source: "derived"
+baseline: "3b90b8957588"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Review Variant B Footer & Density Visual Follow-up v1
 
 ## 1. Verdict

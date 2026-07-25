@@ -1,3 +1,9 @@
+---
+status: "home_dedupe_reward_hierarchy_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Home De-dupe / Reward Hierarchy v1
 
 ## Verdict

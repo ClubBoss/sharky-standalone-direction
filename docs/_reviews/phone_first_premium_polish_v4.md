@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "2998357c8699"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Phone-First Premium Polish v4
 
 ## 1. Executive verdict

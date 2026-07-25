@@ -1,3 +1,9 @@
+---
+status: "packaging_contract_ready_with_copy_recommendation"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Value-Before-Paywall Packaging Contract v1
 
 ## 1. Verdict

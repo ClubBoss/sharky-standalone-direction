@@ -1,3 +1,10 @@
+---
+status: "ACTIVE"
+status_source: "derived"
+doc_date: "2026-05-20"
+generated_by: "docs_frontmatter_v1"
+---
+
 # ACT0_PRODUCT_100_EXECUTION_ROUTE_v1
 
 Status: ACTIVE

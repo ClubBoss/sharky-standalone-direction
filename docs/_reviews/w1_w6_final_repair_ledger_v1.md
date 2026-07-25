@@ -1,3 +1,10 @@
+---
+status: "final_learner_truth_ledger_ready"
+status_source: "derived"
+baseline: "a21971a607fa"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Final Repair Ledger v1
 
 Status: `final_learner_truth_ledger_ready`

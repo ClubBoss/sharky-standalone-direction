@@ -1,3 +1,10 @@
+---
+status: "w4_title_job_realignment_pr2_deferred_runtime_change"
+status_source: "derived"
+baseline: "5e6f22d4"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W4 Title/Job Realignment PR2 v1
 
 Branch: `codex/w4-title-job-realignment-pr2-v1`.

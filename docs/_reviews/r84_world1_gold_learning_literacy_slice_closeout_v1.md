@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R84 World1 Gold Learning Literacy Slice v1 Closeout
 
 ## Purpose and bounded scope

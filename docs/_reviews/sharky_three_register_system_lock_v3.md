@@ -1,3 +1,10 @@
+---
+status: "THREE_REGISTER_ICONIC_COMPANION_SELECTED"
+status_source: "derived"
+doc_date: "2026-07-04"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Sharky Three-Register System Lock v3
 
 Date: 2026-07-04

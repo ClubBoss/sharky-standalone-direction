@@ -1,3 +1,10 @@
+---
+status: "decision_ready_no_code"
+status_source: "derived"
+doc_date: "2026-06-24"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Daily Repair Depth / Mastery Loop Decision v1
 
 Date: 2026-06-24

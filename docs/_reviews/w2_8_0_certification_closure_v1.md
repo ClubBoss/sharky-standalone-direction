@@ -1,3 +1,10 @@
+---
+status: "ACCEPTED - bounded 8.0 certification closure passed"
+status_source: "derived"
+doc_date: "2026-06-29"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W2 8.0 Certification Closure v1
 
 Status: ACCEPTED - bounded 8.0 certification closure passed.

@@ -1,3 +1,10 @@
+---
+status: "phase_6_closed_with_optional_gaps"
+status_source: "derived"
+baseline: "8cc2c487"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Phase 6 Closure Audit v1
 
 ## 1. Verdict

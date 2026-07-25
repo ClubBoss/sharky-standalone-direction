@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-06-23"
+baseline: "c3cb477b8a70"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W6 Cross-Family Route Contract v1
 
 Date: 2026-06-23

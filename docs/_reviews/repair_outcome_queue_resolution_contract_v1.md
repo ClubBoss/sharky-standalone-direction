@@ -1,3 +1,9 @@
+---
+status: "blocked_repair_outcome_source_link_missing"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repair Outcome / Queue Resolution Contract v1
 
 ## 1. Verdict

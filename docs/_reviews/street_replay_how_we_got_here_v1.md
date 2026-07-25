@@ -1,3 +1,9 @@
+---
+status: "street_replay_how_we_got_here_landed_with_bounded_consumer"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Street Replay / How We Got Here v1
 
 ## 1. Verdict

@@ -1,3 +1,9 @@
+---
+status: "wave3_6_profile_identity_progress_proof_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 3.6 - Profile Identity & Progress Proof v1
 
 ## 1. Verdict

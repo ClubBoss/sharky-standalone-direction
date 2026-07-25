@@ -1,3 +1,10 @@
+---
+status: "w7_route_entry_stale_policy_landed_mapper_cta_blocked"
+status_source: "derived"
+baseline: "df0b8ef25e84"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7 Route Entry + Stale Continuation Policy Bundle v1
 
 ## 1. Verdict

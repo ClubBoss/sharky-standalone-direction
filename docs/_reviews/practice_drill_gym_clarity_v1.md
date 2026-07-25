@@ -1,3 +1,9 @@
+---
+status: "practice_drill_gym_clarity_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Practice Drill Gym Clarity v1
 
 ## 1. Verdict

@@ -1,3 +1,9 @@
+---
+status: "w1_world_coverage_pilot_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1 World Coverage Expansion Pilot v1
 
 ## 1. Verdict

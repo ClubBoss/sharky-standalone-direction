@@ -1,3 +1,9 @@
+---
+status: "surface_contract_ready_with_copy_contract"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I Surface Contract Tiny Slice v1
 
 ## 1. Verdict

@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "a8edf2fc"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Full Surface UX/UI Coherence Audit v1
 
 ## Scope

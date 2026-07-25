@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-06-24"
+generated_by: "docs_frontmatter_v1"
+---
+
 # PR1 Review: De-duplicate IA + Clean Up Feedback Pacing
 
 **Date:** 2026-06-24

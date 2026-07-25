@@ -1,3 +1,9 @@
+---
+status: "NOT ADMITTED \u2014 provisional neutral Alpha fallback only"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Sharky Production System v1
 
 Status: NOT ADMITTED — provisional neutral Alpha fallback only.

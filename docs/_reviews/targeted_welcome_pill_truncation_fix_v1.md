@@ -1,3 +1,10 @@
+---
+status: "welcome_pill_truncation_fixed"
+status_source: "derived"
+baseline: "941c2e7f667c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Targeted Welcome Pill Truncation Fix v1
 
 ## 1. Verdict

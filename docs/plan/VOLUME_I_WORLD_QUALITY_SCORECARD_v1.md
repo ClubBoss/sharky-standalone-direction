@@ -1,3 +1,10 @@
+---
+status: "ACTIVE"
+status_source: "derived"
+doc_date: "2026-05-06"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I World Quality Scorecard v1
 
 Status: ACTIVE

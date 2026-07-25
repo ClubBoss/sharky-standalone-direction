@@ -1,3 +1,10 @@
+---
+status: "repo_integration_learning_proof_display_passed_pushed_main"
+status_source: "derived"
+baseline: "c24820a4"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration Learning Proof Display v9
 
 ## 1. Verdict

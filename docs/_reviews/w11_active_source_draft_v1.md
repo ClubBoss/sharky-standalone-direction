@@ -1,3 +1,9 @@
+---
+status: "w11_source_draft_ready_no_route"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W11 Active Source Draft v1
 
 ## 1. Verdict

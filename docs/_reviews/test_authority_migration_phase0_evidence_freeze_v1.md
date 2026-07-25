@@ -1,3 +1,10 @@
+---
+status: "EVIDENCE FREEZE. Branch source: canonical `main` plus donor machine log. No product behavior migration is implemented he"
+status_source: "derived"
+baseline: "c2987f9db007"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Test Authority Migration Phase 0 Evidence Freeze v1
 
 Status: EVIDENCE FREEZE. Branch source: canonical `main` plus donor machine log. No product behavior migration is implemented here.

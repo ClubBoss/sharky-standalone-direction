@@ -1,3 +1,11 @@
+---
+status: "CLOSED \u2014 no admitted pre-Human P0/P1/P2 product defect remains"
+status_source: "derived"
+doc_date: "2026-07-25"
+baseline: "00073f132ba6"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Node 4 Visual Ledger Reconciliation v1
 
 Status: CLOSED — no admitted pre-Human P0/P1/P2 product defect remains.

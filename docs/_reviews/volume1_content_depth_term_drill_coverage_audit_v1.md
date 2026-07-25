@@ -1,3 +1,10 @@
+---
+status: "volume1_content_audit_bounded_p1_wave_recommended"
+status_source: "derived"
+baseline: "7aa217e13274"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I Content Depth / Term Introduction / Drill Coverage Audit v1
 
 ## 1. Verdict

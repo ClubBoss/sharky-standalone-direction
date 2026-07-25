@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Table identity policy — Wave C marker completion
 
 Wave C is green. `_resolveSeatMarkerDisplayV1` now accepts the transported `Act0TableIdentityPolicyV1` and gates only the dealer marker. `currentProduction` preserves its existing marker list; `learnerOnly` and `learnerPosition` omit the dealer marker; `learnerPositionAndDealerOrder` retains exactly one dealer marker. Poker-state `isDealerButton`, labels, seats, and geometry are unchanged.

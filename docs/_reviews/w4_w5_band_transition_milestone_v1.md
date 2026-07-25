@@ -1,3 +1,10 @@
+---
+status: "w4_w5_band_transition_milestone_landed"
+status_source: "derived"
+baseline: "c2efb1f9"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W4->W5 Band Transition Milestone v1
 
 ## 1. Verdict

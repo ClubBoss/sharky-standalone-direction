@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Final Theory Geometry Adjudication and Identity Seam v1
 
 ## 1. Terminal verdict

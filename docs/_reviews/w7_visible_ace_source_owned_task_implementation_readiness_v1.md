@@ -1,3 +1,10 @@
+---
+status: "w7_visible_ace_source_owned_task_readiness_landed"
+status_source: "derived"
+baseline: "29bf282d"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7 Visible Ace Source-Owned Task Implementation Readiness v1
 
 ## 1. Verdict

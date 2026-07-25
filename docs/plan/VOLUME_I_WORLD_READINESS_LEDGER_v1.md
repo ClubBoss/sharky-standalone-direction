@@ -1,3 +1,10 @@
+---
+status: "ACTIVE control-plane ledger for W1-W12 launch readiness"
+status_source: "derived"
+doc_date: "2026-06-28"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I World Readiness Ledger v1
 
 Status: ACTIVE control-plane ledger for W1-W12 launch readiness.

@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "741b8cba9217"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Top-1 Route Recalibration After Day 2 Proof v1
 
 ## Scope

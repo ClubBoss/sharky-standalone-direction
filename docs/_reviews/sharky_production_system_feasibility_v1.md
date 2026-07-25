@@ -1,3 +1,9 @@
+---
+status: "architecture-only; product integration blocked by Gate 0 C"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Sharky Production System v1 — Feasibility
 
 Status: architecture-only; product integration blocked by Gate 0 C.

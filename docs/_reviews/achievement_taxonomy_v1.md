@@ -1,3 +1,9 @@
+---
+status: "achievement_taxonomy_ready_existing_seeds_aligned"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Achievement Taxonomy v1
 
 ## 1. Verdict

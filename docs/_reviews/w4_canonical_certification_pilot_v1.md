@@ -1,3 +1,10 @@
+---
+status: "w4_canonical_certification_blocked_by_route_title_gap"
+status_source: "derived"
+baseline: "f731226c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W4 Canonical Certification Pilot v1
 
 Branch: `codex/w4-canonical-certification-pilot-v1`.

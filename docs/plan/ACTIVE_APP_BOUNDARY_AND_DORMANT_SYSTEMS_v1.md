@@ -1,3 +1,9 @@
+---
+status: "ACTIVE"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # ACTIVE_APP_BOUNDARY_AND_DORMANT_SYSTEMS_v1
 Status: ACTIVE
 Purpose: prevent active product work from drifting into dormant, legacy, or

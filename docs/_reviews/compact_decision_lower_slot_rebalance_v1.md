@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "b6d2ec67c258"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Compact Decision Lower-Slot Rebalance v1
 
 Terminal verdict: `compact_decision_lower_slot_rebalance_v1_accepted`

@@ -1,3 +1,10 @@
+---
+status: "local, test-only comparison. No canonical route, production default,"
+status_source: "derived"
+baseline: "95ddb32f"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Table Presentation Contract Prototype v1
 
 Status: local, test-only comparison. No canonical route, production default,

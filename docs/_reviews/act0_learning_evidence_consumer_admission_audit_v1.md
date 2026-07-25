@@ -1,3 +1,9 @@
+---
+status: "blocked_needs_session_grouping"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 Learning Evidence Consumer Admission Audit v1
 
 ## 1. Verdict

@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-05-13"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 Architecture Split Roadmap (Wave F Prep)
 
 **Goal:**

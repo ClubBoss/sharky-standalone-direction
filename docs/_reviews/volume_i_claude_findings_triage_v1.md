@@ -1,3 +1,9 @@
+---
+status: "volume_i_claude_findings_triage_ev_backlog_landed"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I Claude Findings Triage v1
 
 ## 1. Verdict

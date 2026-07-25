@@ -1,3 +1,10 @@
+---
+status: "w1_w12_internal_source_certified"
+status_source: "derived"
+baseline: "d7b1317a96ec"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W12 Internal Source Checkpoint v1
 
 ## 1. Verdict

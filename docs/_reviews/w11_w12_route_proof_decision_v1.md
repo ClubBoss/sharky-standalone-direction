@@ -1,3 +1,9 @@
+---
+status: "w11_first_route_proof_recommended"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W11-W12 Route Proof Decision v1
 
 ## 1. Verdict

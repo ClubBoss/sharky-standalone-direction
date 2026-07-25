@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "7b5d581b"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Stable Table Lesson Architecture and Interaction Audit v1
 
 ## 1. Terminal verdict

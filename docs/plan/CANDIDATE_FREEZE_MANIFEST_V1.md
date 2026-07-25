@@ -1,3 +1,10 @@
+---
+status: "IMMUTABLE ADMITTED CANDIDATE"
+status_source: "derived"
+baseline: "40babdeb97d1"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Candidate Freeze Manifest v1
 
 Status: IMMUTABLE ADMITTED CANDIDATE

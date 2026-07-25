@@ -1,3 +1,10 @@
+---
+status: "PUBLISHED CONTRACT; the bounded Blinds Action-Order Truth Repair closes"
+status_source: "derived"
+baseline: "e5a83a788647"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Concept Error & Repair Integrity v1
 
 Status: PUBLISHED CONTRACT; the bounded Blinds Action-Order Truth Repair closes

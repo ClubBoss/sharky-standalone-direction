@@ -1,3 +1,10 @@
+---
+status: "REVIEW ARTIFACT"
+status_source: "derived"
+baseline: "d91c694f"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W4-W5 Canonical Coverage Expansion PR2 v1
 
 Status: REVIEW ARTIFACT.

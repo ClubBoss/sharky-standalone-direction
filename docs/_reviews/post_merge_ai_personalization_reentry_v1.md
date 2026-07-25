@@ -1,3 +1,10 @@
+---
+status: "implementation-ready planning record; no product implementation in this"
+status_source: "derived"
+baseline: "6b6a6894909e"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Post-Merge AI Personalization Re-entry v1
 
 Status: implementation-ready planning record; no product implementation in this

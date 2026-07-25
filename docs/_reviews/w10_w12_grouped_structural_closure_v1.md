@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "e80e7998ab50"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W10-W12 Grouped Structural Closure v1
 
 ## 1. Objective

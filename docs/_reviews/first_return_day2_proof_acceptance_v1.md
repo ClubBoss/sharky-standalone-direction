@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "90df4979"
+generated_by: "docs_frontmatter_v1"
+---
+
 # First Return / Day 2 Proof Acceptance v1
 
 ## Scope

@@ -1,3 +1,9 @@
+---
+status: "drill_readiness_beta_proof_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Drill Readiness / Beta Proof Wave v1
 
 ## 1. Verdict

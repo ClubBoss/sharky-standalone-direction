@@ -1,3 +1,10 @@
+---
+status: "design/spec-only"
+status_source: "derived"
+doc_date: "2026-06-18"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Entitlement Ledger Consolidation Design v1
 
 Status: design/spec-only

@@ -1,3 +1,9 @@
+---
+status: "ssot_ready_no_code"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # 36-World Curriculum SSOT Contract v1
 
 ## 1. Verdict

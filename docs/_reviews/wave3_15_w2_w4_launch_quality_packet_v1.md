@@ -1,3 +1,9 @@
+---
+status: "wave3_15_w2_w4_launch_quality_packet_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 3.15 - W2-W4 Launch Quality Packet v1
 
 ## 1. Verdict

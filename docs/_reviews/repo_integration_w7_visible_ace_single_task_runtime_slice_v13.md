@@ -1,3 +1,10 @@
+---
+status: "repo_integration_w7_visible_ace_single_task_runtime_slice_passed_pushed_main"
+status_source: "derived"
+baseline: "4c932c40"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration - W7 Visible Ace Single Task Runtime Slice v13
 
 ## Verdict

@@ -1,3 +1,10 @@
+---
+status: "ACTIVE"
+status_source: "derived"
+doc_date: "2026-05-10"
+generated_by: "docs_frontmatter_v1"
+---
+
 # LAUNCH_SURFACE_MECHANISM_v1
 
 Status: ACTIVE

@@ -1,3 +1,11 @@
+---
+status: "tier_b_high_leverage_repair_wave_closed_at_honest_ceiling"
+status_source: "derived"
+doc_date: "2026-07-07"
+baseline: "e6d176aa3ba3"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Tier B High-Leverage Repair Wave v1
 
 Status: `tier_b_high_leverage_repair_wave_closed_at_honest_ceiling`

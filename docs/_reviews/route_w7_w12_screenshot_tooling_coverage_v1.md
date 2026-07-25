@@ -1,3 +1,11 @@
+---
+status: "partial_route_w7_w12_packet_generated"
+status_source: "derived"
+doc_date: "2026-07-01"
+baseline: "05bd3fa4da73"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Route W7-W12 Screenshot Tooling Coverage v1
 
 Date: 2026-07-01

@@ -1,3 +1,9 @@
+---
+status: "ACTIVE route-truth correction"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Canonical Journey Truth & Progression Integrity v1
 
 Status: ACTIVE route-truth correction.

@@ -1,3 +1,10 @@
+---
+status: "fresh_premium_reality_recapture_pack_ready"
+status_source: "derived"
+baseline: "fa7d7b4ab6f7"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 4.7 - Fresh Premium Reality Recapture Pack v1
 
 ## 1. Verdict

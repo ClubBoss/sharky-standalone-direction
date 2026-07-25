@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-07-06"
+baseline: "39aef078"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Mascot Visual Stream Deferral v1
 
 Date: 2026-07-06

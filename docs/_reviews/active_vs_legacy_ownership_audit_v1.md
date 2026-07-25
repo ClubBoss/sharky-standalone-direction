@@ -1,3 +1,11 @@
+---
+status: "advisory ownership audit, not cleanup authority"
+status_source: "derived"
+doc_date: "2026-06-23"
+baseline: "319be6a7ddd6"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Active vs Legacy Ownership Audit v1
 
 Date: 2026-06-23

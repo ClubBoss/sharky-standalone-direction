@@ -1,3 +1,10 @@
+---
+status: "SSOT-lite"
+status_source: "derived"
+doc_date: "2026-03-09"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Canonical ID / Naming / Registry Conventions v1
 Status: SSOT-lite
 Purpose: Record the identifier, naming, and registry conventions that future rollout should follow so IDs, files, statuses, and registry entries do not drift into inconsistent forms.

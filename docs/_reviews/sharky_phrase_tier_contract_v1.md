@@ -1,3 +1,10 @@
+---
+status: "sharky_phrase_tier_contract_landed_with_bounded_migration"
+status_source: "derived"
+baseline: "156dcebe6140"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Sharky Phrase Tier Contract v1
 
 ## 1. Verdict

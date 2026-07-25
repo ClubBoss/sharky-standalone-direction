@@ -1,3 +1,9 @@
+---
+status: "l2_l3_content_validator_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # L2/L3 Content Validator Expansion v1
 
 ## 1. Verdict

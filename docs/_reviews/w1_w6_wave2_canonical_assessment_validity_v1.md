@@ -1,3 +1,10 @@
+---
+status: "w1_w6_wave2_canonical_assessment_validity_implemented"
+status_source: "derived"
+baseline: "9a291b11662c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Wave 2 Canonical Assessment Validity v1
 
 Verdict: `w1_w6_wave2_canonical_assessment_validity_implemented`

@@ -1,3 +1,10 @@
+---
+status: "ACTIVE REFERENCE"
+status_source: "derived"
+doc_date: "2026-05-06"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Old Main Contract Migration Map v1
 
 Status: ACTIVE REFERENCE

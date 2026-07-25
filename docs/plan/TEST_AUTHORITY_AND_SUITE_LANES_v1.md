@@ -1,3 +1,9 @@
+---
+status: "PROPOSED CANONICAL TEST AUTHORITY MANIFEST. Phase 0 only; no CI partition has been implemented"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # TEST_AUTHORITY_AND_SUITE_LANES_v1
 
 Status: PROPOSED CANONICAL TEST AUTHORITY MANIFEST. Phase 0 only; no CI partition has been implemented.

@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "859b655c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 Learn Route Clarity v1
 
 - Branch/base: `codex/act0-learn-route-clarity-v1` from local merged-PR head `859b655c`.

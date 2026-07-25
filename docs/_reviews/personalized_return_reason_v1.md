@@ -1,3 +1,10 @@
+---
+status: "personalized_return_reason_landed_with_bounded_consumer"
+status_source: "derived"
+baseline: "1f46377b55a7"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Personalized Return Reason v1
 
 ## 1. Verdict

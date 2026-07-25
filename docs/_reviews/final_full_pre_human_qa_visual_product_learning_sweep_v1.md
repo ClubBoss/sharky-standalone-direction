@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-07-09"
+baseline: "4b7712623c00"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Final Full Pre-Human-QA Visual/Product/Copy/Learning-Readiness Sweep v1
 
 Date: 2026-07-09

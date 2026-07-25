@@ -1,3 +1,10 @@
+---
+status: "independent source-and-evidence audit only. No production UI, route,"
+status_source: "derived"
+baseline: "55024b4a60be"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Independent Table Presentation Architecture Audit v1
 
 Status: independent source-and-evidence audit only. No production UI, route,

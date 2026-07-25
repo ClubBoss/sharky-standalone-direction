@@ -1,3 +1,10 @@
+---
+status: "COMPLETE \u2014 bounded implementation evidence recorded"
+status_source: "derived"
+baseline: "21ee575b8431"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Home Proof / Momentum Pass v1
 
 Status: COMPLETE — bounded implementation evidence recorded.

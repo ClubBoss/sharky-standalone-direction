@@ -1,3 +1,11 @@
+---
+status: "resolution-policy audit; no product code change"
+status_source: "derived"
+doc_date: "2026-06-23"
+baseline: "bc9468cbb273"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W6 Recheck Resolution Policy Audit v1
 
 Date: 2026-06-23

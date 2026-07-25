@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R35 Content/Explanation Closeout Audit v1
 
 ## 1) Milestone purpose/scope recap

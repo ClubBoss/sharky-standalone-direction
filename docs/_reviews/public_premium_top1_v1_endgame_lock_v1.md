@@ -1,3 +1,10 @@
+---
+status: "public_premium_top1_v1_endgame_lock_ready"
+status_source: "derived"
+doc_date: "2026-06-27"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Public Premium TOP1 v1 Endgame Lock v1
 
 ## 1. Verdict

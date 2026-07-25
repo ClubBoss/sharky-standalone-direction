@@ -1,3 +1,10 @@
+---
+status: "w11_w12_metadata_source_proof_bridge_complete"
+status_source: "derived"
+baseline: "fed0c4caf7d5"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W11-W12 Metadata Source-Proof Bridge v1
 
 ## Verdict

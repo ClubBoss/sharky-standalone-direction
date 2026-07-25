@@ -1,3 +1,11 @@
+---
+status: "owner_split_plan_ready_with_c_assertion_fix"
+status_source: "derived"
+doc_date: "2026-07-02"
+baseline: "05bd3fa4da73"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Dirty Worktree Owner Split v1
 
 Date: 2026-07-02

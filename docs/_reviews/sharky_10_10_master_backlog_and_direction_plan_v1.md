@@ -1,3 +1,10 @@
+---
+status: "REVIEW / PLANNING ARTIFACT - docs-only synthesis"
+status_source: "derived"
+baseline: "485e773c5406"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Sharky 10/10 Master Backlog And Direction Plan v1
 
 Status: REVIEW / PLANNING ARTIFACT - docs-only synthesis.

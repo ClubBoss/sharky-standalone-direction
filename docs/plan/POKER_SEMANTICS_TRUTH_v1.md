@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # POKER_SEMANTICS_TRUTH_v1
 
 ## Purpose

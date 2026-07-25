@@ -1,3 +1,9 @@
+---
+status: "w7_w12_table_context_ready_with_optional_gaps"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7-W12 Table-Context Readiness Audit v1
 
 ## 1. Verdict

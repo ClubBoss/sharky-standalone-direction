@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "d4238882ef04"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Pre-Human-QA Surface Confidence Lift v1
 
 ## Scope

@@ -1,3 +1,10 @@
+---
+status: "PUBLISHED FOR ADMISSION"
+status_source: "derived"
+baseline: "dc52c2264135"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Alpha Telemetry Live Admission v1
 
 Status: `PUBLISHED FOR ADMISSION`

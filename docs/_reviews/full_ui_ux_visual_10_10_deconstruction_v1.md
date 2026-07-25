@@ -1,3 +1,10 @@
+---
+status: "REVIEW ARTIFACT - docs-only, static visual evidence"
+status_source: "derived"
+baseline: "485e773c5406"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Full UI/UX Visual 10/10 Deconstruction v1
 
 Status: REVIEW ARTIFACT - docs-only, static visual evidence.

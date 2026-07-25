@@ -1,3 +1,10 @@
+---
+status: "SSOT-lite"
+status_source: "derived"
+doc_date: "2026-03-09"
+generated_by: "docs_frontmatter_v1"
+---
+
 # QA / Acceptance Ladder v1
 Status: SSOT-lite
 Purpose: Record the canonical acceptance and verification discipline for current milestone types so future rollout uses explicit evidence rules instead of ad hoc habits.

@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Learning Truth & Feedback Audit Packet v1
 
 ## 1) Purpose

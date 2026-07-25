@@ -1,3 +1,10 @@
+---
+status: "REVIEW ARTIFACT"
+status_source: "derived"
+baseline: "e4858b01"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W4-W5 Certification / Payoff Gate v1
 
 Status: REVIEW ARTIFACT.

@@ -1,3 +1,9 @@
+---
+status: "w12_surface_truth_proven_screenshot_deferred"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W12 Route Surface Proof v1
 
 ## Verdict

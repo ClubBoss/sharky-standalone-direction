@@ -1,3 +1,11 @@
+---
+status: "owner_patch_sequence_applied_and_committed"
+status_source: "derived"
+doc_date: "2026-07-02"
+baseline: "05bd3fa4da73"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Apply Owner Patch Sequence A-B-C-D v1
 
 Date: 2026-07-02

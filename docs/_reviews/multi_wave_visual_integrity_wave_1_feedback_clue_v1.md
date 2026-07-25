@@ -1,3 +1,9 @@
+---
+status: "green__feedback_clue_presentation_repaired"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Multi-Wave Visual Integrity — Wave 1 Feedback Clue
 
 ## Verdict

@@ -1,3 +1,9 @@
+---
+status: "review_history_contract_docs_only_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Review Mistake-History Data Contract v1
 
 ## 1. Verdict

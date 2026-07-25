@@ -1,3 +1,9 @@
+---
+status: "green__visible_step_progress_scope_clarified"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Multi-Wave Visual Integrity — Wave 3 Progress Scope
 
 ## Verdict

@@ -1,3 +1,10 @@
+---
+status: "premium_motion_first_impression_audit_landed"
+status_source: "derived"
+baseline: "664f3762"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Premium Motion and First Impression Audit v1
 
 ## 1. Verdict

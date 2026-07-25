@@ -1,3 +1,9 @@
+---
+status: "ACTIVE"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # RUSSIAN LOCALIZATION ROLLOUT v1
 
 Status: ACTIVE  

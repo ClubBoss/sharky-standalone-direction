@@ -1,3 +1,11 @@
+---
+status: "pre_human_repairs_and_p2_adjudication_landed"
+status_source: "derived"
+doc_date: "2026-07-01"
+baseline: "05bd3fa4da73"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I Pre-Human QA Actionable Gap Repair + P2 Adjudication Pack v1
 
 Date: 2026-07-01

@@ -1,3 +1,9 @@
+---
+status: "wave4_5_motion_evidence_repair_feel_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 4.5 - Motion Evidence & Repair Feel v1
 
 ## 1. Verdict

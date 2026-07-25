@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Feedback / Repair / Session Closure C2 Design Spec v1
 
 Terminal verdict: `feedback_repair_session_closure_c2_scope_confirmed_wrong_feedback_and_repair_focus_dead_space_plus_session_summary_rhythm_is_highest_ev_bounded_wave_terminal_chip_and_session_repair_deferred_on_evidence_gap`

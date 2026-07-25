@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R85 World1 Gold Learning Literacy Cluster v1 Closeout
 
 ## Purpose and bounded scope

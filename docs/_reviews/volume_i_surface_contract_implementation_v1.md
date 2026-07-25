@@ -1,3 +1,9 @@
+---
+status: "implemented_surface_contract"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I Surface Contract Implementation v1
 
 ## 1. Verdict

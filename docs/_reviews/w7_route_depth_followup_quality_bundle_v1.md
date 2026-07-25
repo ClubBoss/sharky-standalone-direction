@@ -1,3 +1,10 @@
+---
+status: "w7_route_depth_followup_quality_landed_followup_tasks"
+status_source: "derived"
+baseline: "40fc16962877"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7 Route Depth + Follow-up Quality Bundle v1
 
 ## 1. Verdict

@@ -1,3 +1,10 @@
+---
+status: "deep_teal_green_felt_landed"
+status_source: "derived"
+baseline: "2329f35abc0a"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Deep Teal-Green Felt Token PR v1
 
 ## 1. Verdict

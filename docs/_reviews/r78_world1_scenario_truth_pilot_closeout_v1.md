@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R78 World1 Scenario Truth Pilot Closeout v1
 
 ## Milestone purpose/scope recap

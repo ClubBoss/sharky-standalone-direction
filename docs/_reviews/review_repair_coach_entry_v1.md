@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "e54cb6ff35f6"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 Review Repair-Coach Entry v1
 
 ## Scope and design checkpoint

@@ -1,3 +1,9 @@
+---
+status: "implemented_term_batch_with_density_proof"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Term & Drill Trust Batch v1
 
 ## 1. Verdict

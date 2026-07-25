@@ -1,3 +1,9 @@
+---
+status: "wave3_0_review_pattern_coaching_lite_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 3.0 - Review Pattern Coaching Lite v1
 
 ## 1. Verdict

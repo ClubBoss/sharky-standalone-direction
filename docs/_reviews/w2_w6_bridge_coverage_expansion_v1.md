@@ -1,3 +1,9 @@
+---
+status: "w2_w6_bridge_coverage_expansion_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W2-W6 Bridge Coverage Expansion v1
 
 ## 1. Verdict

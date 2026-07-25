@@ -1,3 +1,10 @@
+---
+status: "queue_resolution_contract_landed_with_bounded_coverage"
+status_source: "derived"
+baseline: "e8d60c616d27"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Queue Resolution Contract v1
 
 ## 1. Verdict

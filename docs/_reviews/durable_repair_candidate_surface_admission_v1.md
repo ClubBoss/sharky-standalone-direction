@@ -1,3 +1,9 @@
+---
+status: "durable_repair_candidate_surface_landed_session_summary"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Durable Repair Candidate Surface Admission v1
 
 ## 1. Verdict

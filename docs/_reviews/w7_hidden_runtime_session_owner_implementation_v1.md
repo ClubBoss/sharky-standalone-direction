@@ -1,3 +1,10 @@
+---
+status: "w7_hidden_runtime_session_owner_implementation_landed"
+status_source: "derived"
+baseline: "1be15064"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7 Hidden Runtime Session Owner Implementation v1
 
 ## 1. Verdict

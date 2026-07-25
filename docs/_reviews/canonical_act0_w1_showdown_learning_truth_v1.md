@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "7c498dcbafc3"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Canonical Act0 W1 Showdown Learning-Truth Audit v1
 
 Agent: Claude (Opus effort tier). Status: docs-only source-evidence audit. No

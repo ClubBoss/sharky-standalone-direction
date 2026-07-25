@@ -1,3 +1,11 @@
+---
+status: "w7_w9_completion_payoff_closed"
+status_source: "derived"
+doc_date: "2026-07-08"
+baseline: "8c17bd942b77"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7-W9 Completion Payoff v1
 
 Date: 2026-07-08

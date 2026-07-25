@@ -1,3 +1,10 @@
+---
+status: "w7_route_copy_lock_transition_stage0_passed"
+status_source: "derived"
+baseline: "5eda72ce6cc0"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration W7 Route Copy Lock Transition v33
 
 ## 1. Verdict

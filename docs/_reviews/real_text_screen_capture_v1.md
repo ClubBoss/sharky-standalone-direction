@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "2847c0cd27bf"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Real-Text Act0 Screen Capture v1
 
 - Main reference: `2847c0cd27bf14c7e3cf7e4a486e165cd4de4df1`.

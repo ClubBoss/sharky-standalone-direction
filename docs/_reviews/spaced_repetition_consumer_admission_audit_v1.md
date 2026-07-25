@@ -1,3 +1,10 @@
+---
+status: "spaced_repetition_consumer_deferred_engine_ready"
+status_source: "derived"
+baseline: "115e1bc7830d"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Spaced Repetition Consumer Admission Audit v1
 
 ## 1. Verdict

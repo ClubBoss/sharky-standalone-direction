@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R5 Critical Contract Stale Map Runner Gate Fix PR1 v1
 
 ## 1. PR #1 status

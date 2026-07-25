@@ -1,3 +1,9 @@
+---
+status: "feedback_summary_tone_density_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Feedback + Session Summary Tone/Density v1
 
 ## Verdict

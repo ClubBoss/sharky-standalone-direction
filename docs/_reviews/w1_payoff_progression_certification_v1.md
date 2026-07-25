@@ -1,3 +1,11 @@
+---
+status: "ACCEPTED - technical certification passed"
+status_source: "derived"
+doc_date: "2026-06-28"
+baseline: "3cdda8d8"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1 Payoff/Progression Certification v1
 
 Status: ACCEPTED - technical certification passed.

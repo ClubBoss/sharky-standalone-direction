@@ -1,3 +1,10 @@
+---
+status: "repo_integration_w7_route_runtime_owner_decision_passed_pushed_main"
+status_source: "derived"
+baseline: "1c1ef8bd"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration - W7 Route Runtime Owner Decision v18
 
 ## Verdict

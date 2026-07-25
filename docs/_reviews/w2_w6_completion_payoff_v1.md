@@ -1,3 +1,11 @@
+---
+status: "w2_w6_completion_payoff_landed_with_shared_surface"
+status_source: "derived"
+doc_date: "2026-07-03"
+baseline: "f58687609e05"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W2-W6 Completion Payoff v1
 
 ## 1. Verdict

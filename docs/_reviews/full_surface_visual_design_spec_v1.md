@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "c35352866d5d"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Full Surface Visual Design Spec v1
 
 ## 1. Scope

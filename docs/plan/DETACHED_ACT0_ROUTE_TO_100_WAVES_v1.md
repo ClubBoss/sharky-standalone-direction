@@ -1,3 +1,9 @@
+---
+status: "active detached-shell execution plan"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Detached Act0 Route to 100 Waves v1
 
 Status: active detached-shell execution plan.

@@ -1,3 +1,10 @@
+---
+status: "proof_progression_capsules_advanced_workflow_fixed"
+status_source: "derived"
+baseline: "99783a3da9fc"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Proof Progression Capsule Advance + Workflow Fix v1
 
 ## 1. Verdict

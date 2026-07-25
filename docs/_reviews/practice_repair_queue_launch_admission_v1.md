@@ -1,3 +1,9 @@
+---
+status: "blocked_queue_launch_route_contract_missing"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Practice Repair Queue Launch Admission v1
 
 ## 1. Verdict

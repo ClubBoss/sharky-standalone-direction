@@ -1,3 +1,10 @@
+---
+status: "volume_i_pre_route_naming_copy_capstone_contract_stage0_passed"
+status_source: "derived"
+baseline: "b391a110b231"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration Volume I Pre-Route Contract v31
 
 ## 1. Verdict

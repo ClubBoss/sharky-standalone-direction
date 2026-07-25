@@ -1,3 +1,10 @@
+---
+status: "repo_integration_durable_repair_stack_passed_pushed_main"
+status_source: "derived"
+baseline: "d82295b3"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration Durable Repair Stack v3
 
 ## 1. Verdict

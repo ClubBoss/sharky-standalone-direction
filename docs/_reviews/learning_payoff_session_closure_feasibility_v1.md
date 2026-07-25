@@ -1,3 +1,9 @@
+---
+status: "Gate B admitted"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Learning Payoff / Session Closure v1 — Feasibility
 
 Status: Gate B admitted.

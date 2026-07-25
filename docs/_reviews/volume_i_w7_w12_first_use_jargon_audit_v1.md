@@ -1,3 +1,11 @@
+---
+status: "accepted local audit artifact for the pre-Human-QA repair pack"
+status_source: "derived"
+doc_date: "2026-07-01"
+baseline: "05bd3fa4da73"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I W7-W12 First-Use Jargon Audit v1
 
 Status: accepted local audit artifact for the pre-Human-QA repair pack.

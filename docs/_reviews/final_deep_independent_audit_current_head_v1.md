@@ -1,3 +1,11 @@
+---
+status: "FINAL_DEEP_INDEPENDENT_AUDIT_BLOCKED"
+status_source: "derived"
+doc_date: "2026-07-25"
+baseline: "4563ce2d2091"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Final Deep Independent Audit — Current Head v1
 
 Status: **FINAL_DEEP_INDEPENDENT_AUDIT_BLOCKED**

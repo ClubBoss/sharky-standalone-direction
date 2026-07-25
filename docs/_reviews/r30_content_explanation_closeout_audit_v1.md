@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "7dd59b06c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R30 Content/Explanation Closeout Audit v1
 
 ## 1) Milestone purpose/scope recap

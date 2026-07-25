@@ -1,3 +1,11 @@
+---
+status: "dirty_main_candidates_fully_adjudicated_safe_to_release"
+status_source: "derived"
+doc_date: "2026-07-03"
+baseline: "4d424a8b6215"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Dirty Main Candidate Progress Adjudication v1
 
 Date: 2026-07-03

@@ -1,3 +1,9 @@
+---
+status: "wave5_2_conflicting_truth_requires_follow_up"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 5.2 - W7-W12 Route Truth Reconciliation v1
 
 ## 1. Verdict

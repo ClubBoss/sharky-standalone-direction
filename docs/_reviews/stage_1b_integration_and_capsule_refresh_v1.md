@@ -1,3 +1,11 @@
+---
+status: "stage_1b_integrated_capsules_refreshed_main_green"
+status_source: "derived"
+doc_date: "2026-07-06"
+baseline: "e467090960d4"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Stage 1B Integration + Context Capsule Refresh v1
 
 Status: `stage_1b_integrated_capsules_refreshed_main_green`

@@ -1,3 +1,9 @@
+---
+status: "implemented_glossary_scanner_terms"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Glossary Scanner Tiny Slice v1
 
 ## 1. Verdict

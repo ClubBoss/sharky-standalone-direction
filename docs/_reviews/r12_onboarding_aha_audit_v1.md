@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R12 Onboarding + Aha Audit v1
 
 ## Summary of shipped scope (R12)

@@ -1,3 +1,9 @@
+---
+status: "wave5_1_canonical_telemetry_instrumentation_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 5.1 - Canonical Telemetry Instrumentation v1
 
 ## 1. Verdict

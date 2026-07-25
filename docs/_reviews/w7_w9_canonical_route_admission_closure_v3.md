@@ -1,3 +1,11 @@
+---
+status: "passed"
+status_source: "derived"
+doc_date: "2026-07-08"
+baseline: "5890f2c18870"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7-W9 Canonical Route Admission Closure v3
 
 Date: 2026-07-08

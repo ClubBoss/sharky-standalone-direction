@@ -1,3 +1,10 @@
+---
+status: "ACTIVE long-horizon execution ledger after Volume I Launch Scope Rebaseline v1"
+status_source: "derived"
+doc_date: "2026-06-28"
+generated_by: "docs_frontmatter_v1"
+---
+
 # TOP1 Long-Horizon 100% Completion Route v1
 
 Status: ACTIVE long-horizon execution ledger after Volume I Launch Scope Rebaseline v1.

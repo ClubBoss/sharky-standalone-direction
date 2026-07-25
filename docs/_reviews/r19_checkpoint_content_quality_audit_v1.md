@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "85cc8ea92"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R19 Checkpoint Content Quality Audit v1
 
 ## Purpose and Scope

@@ -1,3 +1,11 @@
+---
+status: "repository_hygiene_context_cost_reduction_closed_push_ready"
+status_source: "derived"
+doc_date: "2026-05-25"
+baseline: "fbe670f06fed"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repository Hygiene + Context Cost Reduction v1
 
 ## 1. Verdict

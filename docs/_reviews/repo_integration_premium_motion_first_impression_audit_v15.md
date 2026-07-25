@@ -1,3 +1,10 @@
+---
+status: "repo_integration_premium_motion_first_impression_audit_passed_pushed_main"
+status_source: "derived"
+baseline: "20d643b2"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration - Premium Motion First Impression Audit v15
 
 ## Verdict

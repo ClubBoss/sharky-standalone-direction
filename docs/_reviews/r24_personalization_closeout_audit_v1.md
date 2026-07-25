@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "238b91e73"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R24 Personalization Closeout Audit v1
 
 ## 1) Milestone purpose/scope recap

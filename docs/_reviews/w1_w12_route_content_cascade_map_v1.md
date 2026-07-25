@@ -1,3 +1,10 @@
+---
+status: "w1_w12_cascade_map_ready"
+status_source: "derived"
+doc_date: "2026-06-29"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W12 Route/Content Cascade Map v1
 
 Branch: `codex/w1-w12-route-content-cascade-map-v1`.

@@ -1,3 +1,9 @@
+---
+status: "Do not surface a unit as if it were more complete than it is"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Content Factory Release Gate v1
 
 Purpose:

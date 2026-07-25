@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "eae027d3431e"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Review Repair Queue Multi-Family Display v1
 
 - Branch: `main`

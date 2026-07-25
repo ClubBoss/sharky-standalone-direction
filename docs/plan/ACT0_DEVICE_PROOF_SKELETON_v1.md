@@ -1,3 +1,9 @@
+---
+status: "ACTIVE"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # ACT0_DEVICE_PROOF_SKELETON_v1
 
 Status: ACTIVE

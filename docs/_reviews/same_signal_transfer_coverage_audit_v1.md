@@ -1,3 +1,10 @@
+---
+status: "same_signal_transfer_coverage_ready_with_optional_gaps"
+status_source: "derived"
+baseline: "a302bf39"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Same-Signal / Transfer Coverage Audit v1
 
 ## 1. Verdict

@@ -1,3 +1,9 @@
+---
+status: "audit_ready_with_prioritized_gaps"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Content Depth / Term Introduction / Drill Coverage Audit v1
 
 ## 1. Verdict

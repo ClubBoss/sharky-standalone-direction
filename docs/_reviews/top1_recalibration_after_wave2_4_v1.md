@@ -1,3 +1,11 @@
+---
+status: "top1_recalibration_after_wave2_4_ready"
+status_source: "derived"
+doc_date: "2026-06-26"
+baseline: "6501e0ec270f"
+generated_by: "docs_frontmatter_v1"
+---
+
 # TOP1 Recalibration After Wave 2.4 v1
 
 Date: 2026-06-26

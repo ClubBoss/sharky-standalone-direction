@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R82 World1 Gold Learning Cluster v1 Closeout
 
 ## Purpose and bounded scope

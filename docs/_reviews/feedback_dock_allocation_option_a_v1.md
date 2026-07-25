@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "383cd7a6"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Feedback Dock Allocation — Option A v1
 
 Terminal verdict: `option_a_feedback_dock_allocation_landed_wrong_feedback_and_repair_focus_now_use_a_smaller_fixed_repair_learning_dock_with_receded_table_context_controls_preserved`

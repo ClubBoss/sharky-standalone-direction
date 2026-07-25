@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-06-23"
+baseline: "fb02a68220c8"
+generated_by: "docs_frontmatter_v1"
+---
+
 # First-Week Learning Proof Packet v1
 
 - Date: 2026-06-23

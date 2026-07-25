@@ -1,3 +1,9 @@
+---
+status: "wave3_9_2_top1_10_out_of_10_backcast_matrix_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 3.9.2 - TOP1 10/10 Backcast Matrix Addendum v1
 
 ## 1. Verdict

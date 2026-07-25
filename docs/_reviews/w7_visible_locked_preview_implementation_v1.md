@@ -1,3 +1,10 @@
+---
+status: "w7_visible_locked_preview_landed_tests_only"
+status_source: "derived"
+baseline: "c735a62a"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7 Visible Locked Preview Implementation v1
 
 ## 1. Verdict
