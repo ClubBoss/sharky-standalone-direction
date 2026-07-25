@@ -4,8 +4,20 @@ Status: ACTIVE POST-MERGE EXECUTION CAPSULE.
 
 ## Current authority — 2026-07-25
 
-`main` is `660399ac70758de83e031141580e2584795f07a7`, equal to
-`origin/main`. PR #45 restored and independently verified canonical CI
+Node 4 Visual Ledger Reconciliation is **CLOSED** on evidence baseline
+`00073f132ba68aa704b8e39152aa4ac6cadec79c` after PR #47
+(`2ec31bec`) and the one bounded Node 4 test-proof repair, PR #48
+(`00073f13`). The current reconciliation is recorded in
+`docs/_reviews/node4_visual_ledger_reconciliation_v1.md`: it found no
+remaining open Act0 visual P0/P1/P2 defect, no fresh frozen-surface regression,
+and no authorization for visual redesign. Its only regression was a stale
+compact visual test fixture; PR #48 aligns it with the production enlarged-text
+scroll contract without changing production source. Human Novice Proof was not
+performed and no new native-evidence claim was made. The next legal node must
+be selected from the current Master Plan after this documentation publication.
+
+`main` was `660399ac70758de83e031141580e2584795f07a7` before this campaign
+segment. PR #45 restored and independently verified canonical CI
 coverage. PR #41 remains **CLOSED / MERGED / NATIVE PROVEN / TELEMETRY PROVEN /
 PRIVACY PROVEN**: original-source recheck owns terminal recovery; Position,
 Price, and Starting-Hand telemetry remain route-neutral, with successful source
@@ -27,9 +39,7 @@ Modern Table remains in permanent Maintenance Mode, and screenshots remain
 audit/regression-only evidence. Current visual findings are inputs, not
 authorization to reopen closed table-material polish.
 
-The next active macro focus is **Visual Ledger Reconciliation**. Reconcile the
-current visual evidence before reopening any frozen surface, then address only
-confirmed pre-Human defects through their existing owners. The broader learning
+The broader learning
 surface convergence areas remain the ordered evaluation lens:
 
 1. progression and CTA reachability;
@@ -43,8 +53,7 @@ surface convergence areas remain the ordered evaluation lens:
 9. motion and animation language; and
 10. cross-screen visual cohesion.
 
-No visual implementation begins through this closure. Human Novice Proof
-remains downstream. Deferred P4 wording debt: a focused Same-Session test
+Human Novice Proof remains downstream. Deferred P4 wording debt: a focused Same-Session test
 title/comment mentions Review although canonical continuation advances to the
 next authored W2 hand; carry it only into future bounded test maintenance.
 
