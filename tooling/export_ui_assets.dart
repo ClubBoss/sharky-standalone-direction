@@ -180,7 +180,6 @@ Future<void> main(List<String> args) async {
 
   // Write manifest
   final manifest = <String, dynamic>{
-    'generated_at': DateTime.now().millisecondsSinceEpoch ~/ 1000,
     'files': filesList,
     'sizes': sortedSizes,
     'sizes_gzip': sortedSizesGzip,

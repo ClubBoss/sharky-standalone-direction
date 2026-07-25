@@ -4,6 +4,12 @@ on:
   push:
     branches: [main, fix/content-ci-structure, 'chore/**']
   workflow_dispatch:
+    inputs:
+      run_tier2:
+        description: Run the manual Tier 2 checkpoint
+        required: false
+        default: false
+        type: boolean
 concurrency:
   group: analyze-${{ github.ref }}
   cancel-in-progress: true
@@ -16,10 +22,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
           submodules: false
-      - name: Unshallow (fallback)
-        run: git fetch --prune --unshallow --tags || true
 
       - uses: subosito/flutter-action@v2
         with:
@@ -49,6 +53,8 @@ jobs:
           chmod +x tools/guard_stray_dirs.sh || true
           [ -x tools/guard_stray_dirs.sh ] && tools/guard_stray_dirs.sh || echo "guard script not present, skipping"
       - name: Tier 0 (format + analyze)
+        env:
+          TIER0_BASE: ${{ github.event.before }}
         run: bash ./tools/run_table_first_tiers.sh 0
 
       - name: Tier 1 (guard tests)
@@ -60,7 +66,7 @@ jobs:
           cat <<'EOF' >> $GITHUB_STEP_SUMMARY
           ## Tiered verification summary
           - **Tier 0**: `./tools/run_table_first_tiers.sh 0`
-          - **Tier 1**: `./tools/run_table_first_tiers.sh 1` (guards: `test/table_first_order_guard_test.dart`, `test/theory_session_routing_test.dart`, `test/lesson_numeric_invariant_test.dart`)
+          - **Tier 1**: `./tools/run_table_first_tiers.sh 1` (the current World1 selected-test authority)
           - **Manual Tier 2**: `TIER2_TIMEOUT=300 ./tools/run_table_first_tiers.sh 2`
           - **Docs**: See `docs/table_first_lessons.md` -> "Table-first Verification Workflow"
           - **Manifest**: `./tools/tier_coverage_manifest.json` defines the Tier 1 guard list
@@ -68,14 +74,14 @@ jobs:
 
   tier2-checkpoint:
     name: Tier 2 Checkpoint (manual)
-    if: ${{ github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_tier2 }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
           submodules: false
       - name: Ensure runner is executable
         run: chmod +x ./tools/run_table_first_tiers.sh

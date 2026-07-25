@@ -34,18 +34,9 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.35.0'
           channel: stable
           cache: true
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          cache: true
-        with: { fetch-depth: 0 }
-
-      - name: Set up Dart
-        uses: dart-lang/setup-dart@v1
-        with: { sdk: "3.9.0" }
 
       - run: dart --version
 
@@ -60,24 +51,14 @@ jobs:
         run: flutter pub get
 
       - name: Format check (CLI only)
-        run: dart format --output=none --set-exit-if-changed bin test/ev tooling
+        run: dart format --output=none --set-exit-if-changed bin tooling
 
       - name: Analyze (CLI only)
-        run: flutter analyze bin test/ev tooling
+        run: flutter analyze bin tooling
 
-      # Только pure-Dart тесты, исключаем quarantine и Flutter smoke
-      - name: Unit tests (CLI only)
-        run: |
-          if [ -d test/ev ]; then
-            dart test test/ev -x quarantine -r expanded
-          else
-            echo "SKIP: test/ev not present"
-          fi
-          if [ -f test/content_audit_smoke_test.dart ]; then
-            dart test test/content_audit_smoke_test.dart -r expanded
-          else
-            echo "SKIP: test/content_audit_smoke_test.dart not present"
-          fi
+      # test/ev and content_audit_smoke_test are Tier C under the executable
+      # test-authority SSOT. Their scheduled diagnostic lane remains the only
+      # owner for non-blocking historical coverage.
 
       # Аудит контента только при изменениях в content/**
       - name: content audit (only if content changed)

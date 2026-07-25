@@ -294,9 +294,8 @@ void main() {
       : (manifest['files_count'] is num
             ? (manifest['files_count'] as num).toInt()
             : 0);
-  final generatedAt = getNum(manifest, 'generated_at');
   final footer =
-      'Bundle: files=${filesCount == 0 ? '-' : filesCount} • bytes=${getNum(manifest, 'total_bytes')} • gzip=$sizesG • modules=${getNum(counts, 'modules')} • tokens=${getNum(counts, 'tokens')} • spot_kinds=${getNum(counts, 'spot_kinds')} • i18n=${getNum(counts, 'i18n_keys')} • telemetry=${getNum(counts, 'telemetry_events')} • generated_at=$generatedAt';
+      'Bundle: files=${filesCount == 0 ? '-' : filesCount} • bytes=${getNum(manifest, 'total_bytes')} • gzip=$sizesG • modules=${getNum(counts, 'modules')} • tokens=${getNum(counts, 'tokens')} • spot_kinds=${getNum(counts, 'spot_kinds')} • i18n=${getNum(counts, 'i18n_keys')} • telemetry=${getNum(counts, 'telemetry_events')}';
   html.writeln('<div class="footer">${_esc(footer)}</div>');
 
   Directory('build').createSync(recursive: true);

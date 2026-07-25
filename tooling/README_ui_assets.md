@@ -25,4 +25,9 @@ additional dependencies are required.
 - Local check: `make ui-assets-verify`
 - Included in `make green-run`
 
+Per-file limits are an accepted generated baseline plus small explicit
+engineering headroom. When an accepted asset changes, measure a clean,
+deterministic export and update only that asset's limit; do not use a blanket
+multiplier or silently exclude the asset from the bundle.
+
 Note: CI Job Summary includes a "UI assets" size table (raw bytes and gzip bytes when available) for quick review after runs.
