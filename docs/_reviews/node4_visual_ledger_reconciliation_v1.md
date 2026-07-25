@@ -28,7 +28,7 @@ Act0 runtime owner diff from PR #44 through this baseline is empty.
 | `docs/plan/PROJECT_TOPOLOGY_AND_TRUTH_MAP_v1.md` | current main | primary hierarchy | SSOT routing | active; determines that Master Plan outranks capsules and reviews |
 | `docs/plan/MASTER_PLAN_v3.0.md` | current main | active execution SSOT | Act0 order, device policy | active; tablet is deferred/non-blocking and visual redesign is not admitted |
 | `docs/context/ACTIVE_ROUTE_CAPSULE_v1.md` | PR #47 / current main | execution capsule | Node sequence, frozen surfaces | active; superseded by this capsule update for Node 4 state |
-| `docs/PROJECT_RULES_VFINAL.md` and `AGENTS.md` | current main | workflow authority | evidence, route, test policy | active |
+| `AGENTS.md` | current main | workflow authority | evidence, route, test policy | active. Correction (2026-07-25 audit): this row previously also cited `docs/PROJECT_RULES_VFINAL.md`, which does not exist at any commit in this repository. `AGENTS.md` is the sole active workflow authority. |
 | `docs/context/VISUAL_PROOF_CAPSULE_v1.md` | Jul 2026 capsule | active evidence boundary | visual proof / frozen surfaces | active boundary; older captures are context, not current defect proof |
 | `docs/plan/CANONICAL_ACT0_CLOSURE_PACKET_v1.md` | deterministic closure packet | current closure crosswalk | 35 source records | active closure evidence for named records, not a standalone roadmap |
 | `docs/plan/KNOWN_DEBT_ZEROING_AND_CLOSURE_PACKET_LEDGER_v1.md` | later closure ledger | current closure evidence | content, device, compact and route debt | active closure evidence |
@@ -95,6 +95,19 @@ severity vocabulary ends at P3.
 | GR-09, GR-10, GR-12, GR-17 supplemental aliases | later nonreproducible visual allegations | current route captures and closure evidence / named owners | P2-P3 / trust, cosmetic | closed; aliases are not separate canonical records | DISPROVED |
 | GR-11, GR-14, GR-16 supplemental aliases | future visual/motion/Sharky work | no fresh regression; future owner families / motion or Sharky owner | P3 / premium perception | future legal node; aliases are not separate canonical records | DEFERRED_OUTSIDE_PRE_HUMAN |
 | N4-R01 (Node 4 discovery) | stale compact visual regression fixture | PR #48 focused test repair; production's intentional enlarged-text scroll is asserted / test owner | P2 / accessibility regression control | Node 4 repair | REGRESSION |
+
+### Disposition terminology correction (2026-07-25 Final Deep Independent Audit)
+
+`DEFERRED_OUTSIDE_PRE_HUMAN` above is a mixed bucket. It is split truthfully in
+`docs/_reviews/final_deep_independent_audit_current_head_v1.md` §11 into
+`OUTSIDE_PRE_HUMAN`, `HUMAN_BOUND_EVIDENCE`, and
+`DEFERRED_TO_LATER_PRE_HUMAN_NODE`. The material correction: **GR-11, GR-14, and
+GR-16 (future visual/motion/Sharky work) are `DEFERRED_TO_LATER_PRE_HUMAN_NODE`,
+not outside pre-Human** — the standing owner decision names required Sharky
+production integration and required motion/touch/ceremony as mandatory pre-Human
+blocks. This corrects terminology only; no mechanical closure in this ledger is
+reopened, and its "no remaining open Act0 visual P0/P1/P2" result stands at
+`4563ce2d`.
 
 Original ledger aliases that name the same underlying item are intentionally
 counted once in the summary below; `DUPLICATE` records only resolve duplicated
