@@ -20,7 +20,15 @@ void main() {
       'lib/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart',
     ).readAsStringSync();
 
-    expect(learnSource, contains('Start Volume I'));
+    // Superseded by `5c356710 fix: remove bounded Volume I copy overclaims`,
+    // which deliberately retired the `Start Volume I` CTA string, and by the
+    // Wave 3.9 English-first/RU boundary, which moved Learn copy behind the
+    // `_learnCopyV1(en:, ru:)` localization seam. The P1 substance is
+    // unchanged: the Volume rail must name Volume I concretely through the
+    // localization seam and must not reintroduce the vague route overclaim.
+    expect(learnSource, contains("en: 'Volume I'"));
+    expect(learnSource, contains("en: 'Foundations'"));
+    expect(learnSource, isNot(contains('Start Volume I')));
     expect(learnSource, isNot(contains('The 36-world path starts here')));
 
     expect(welcomeSource, isNot(contains('Your first lesson is ready')));
