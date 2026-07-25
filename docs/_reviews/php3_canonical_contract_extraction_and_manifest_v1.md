@@ -137,3 +137,62 @@ exact-head CI remain pending.
   overlapping mutable owner.
 - Outcome: candidate prepared; focused test and manifest authority pass.
 - One removable cost for the next comparable packet: retain this exact map.
+
+## 17. PHP-3B World1 host/route contract family extraction
+
+### Starting baseline and scope
+
+- Published `origin/main`: `190721a5dfa86ad65b716c071fcc09371857d35f`.
+- Latest admitted PR: `#62`.
+- Candidate branch: `codex/php3b-world1-host-route-contracts-v1`.
+- Starting PHP-3 counts: admitted 1, unresolved 76, nine-path residual 76,
+  unexplained 0.
+- Production changes: none. The only processed originals are the four named
+  World1 carriers; the other 72 unresolved handoffs remain untouched.
+
+### Carrier mapping and retirement decision
+
+| Original carrier | Assertion family | Current owner | Replacement | Disposition | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| `test/ui_v2/runner/world1_canonical_host_adapter_v1_test.dart` | World1 resolved launch mode, selected pack steps, bootstrap flags, and deterministic session identity | `lib/ui_v2/runner/world1_canonical_host_state_entry_adapter_v1.dart` and `world1_canonical_host_adapter_v1.dart` | `test/ui_v2/runner/canonical_world1_host_route_contract_v1_test.dart` test 1 | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | exact state and identity assertions pass |
+| `test/ui_v2/runner/world1_foundations_runner_progression_chrome_adapter_v1_test.dart` | Early-pack payoff/status/next-session copy, campaign chrome, and shared grammar adoption | `lib/ui_v2/runner/world1_foundations_runner_progression_chrome_adapter_v1.dart` and `shared_learner_host_grammar_v1.dart` | replacement test 2 | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | exact progression/chrome assertions pass |
+| `test/ui_v2/runner/canonical_terminal_world1_runtime_config_v1_test.dart` | Runtime payload instruction-source identity | archive-only public type surface | unchanged original carrier | Preserved unchanged; not admitted | retained in Tier B |
+| `test/ui_v2/world1_foundations_runner_route_v1_test.dart` | Route-to-runner argument forwarding, including instruction-source identity | archive-only observable runner type | unchanged original carrier | Preserved unchanged; not admitted | retained in Tier B |
+
+The two admitted mappings preserve every current-owner assertion family with
+exact values. The two non-admitted carriers were not converted to a proxy: the
+instruction-source identity assertion remains intact in its original carrier.
+This is a bounded partial family extraction, not a claim that the archive-typed
+route boundary has been repaired.
+
+### Manifest transition and census
+
+The two admitted originals moved from Tier B to Tier D with the existing
+PHP-3 disposition `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED`. Tier B is 74;
+Tier D is 43. The exact candidate paths therefore have admitted 3, unresolved
+74, nine-path residual 74, and unexplained 0. No validator change is required:
+the PHP-3A disposition model already accepts this atomic transition.
+
+### Focused proof
+
+- `flutter test test/ui_v2/runner/canonical_world1_host_route_contract_v1_test.dart -r compact`: 2/2 passed.
+- The exact PHP-0/PHP-1 selection used by PR #62 (nine named files, 79
+  assertions) passed after the Phase 7 state-label guard advanced from PHP-3A
+  to PHP-3B.
+- `flutter analyze`, Tier A, affected Tier B, `graphify hook-check`,
+  `./tools/fast_loop_world1_v1.sh`, and
+  `/opt/homebrew/bin/bash ./tools/release_gate_world1.sh` passed.
+- Original retirement proof for each admitted carrier: source absent, absent
+  from Tier B, and present exactly once in Tier D.
+- The preserved carriers remain present in source and Tier B.
+
+### Context-cost record
+
+- Budget selected / changed: light / no.
+- Authority and owner files read: supplied PHP-3B brief; campaign state;
+  PHP-2 handoff ledger; PHP-3A ledger; the four carriers; current host,
+  progression, grammar, and route owners; Tier B/D manifests and validator.
+- Decision-changing finding: `RunnerInstructionSourceV1` is declared only in
+  `lib/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart`.
+- Reopens after owner tracing: 0. Production, CI, dependency, PHP-4, and Human
+  scope remained untouched.

@@ -91,12 +91,12 @@ void main() {
     );
     expect(
       campaignState,
-      contains('PHP-3A — scenario-seat-state single-carrier pilot'),
+      contains('PHP-3B — World1 host/route contract family extraction'),
     );
     expect(
       campaignState,
       contains(
-        'ACTIVE** — one PHP-3 carrier / one PR maximum',
+        'ACTIVE** — PHP-3B is bounded to this candidate; PHP-4 and Human remain unauthorized',
       ),
     );
     expect(campaignState, contains('F-17 | **CLASSIFIED**'));
