@@ -155,6 +155,7 @@ jobs:
           fi
 
       - name: Export beta bundle
+        if: steps.diff.outputs.relevant_changed == 'true'
         run: |
           if [ -f tooling/export_beta_bundle.dart ]; then
             dart run tooling/export_beta_bundle.dart --out build/beta_bundle.zip
