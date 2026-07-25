@@ -91,12 +91,12 @@ void main() {
     );
     expect(
       campaignState,
-      contains('PHP-2 — Legacy Corpus Ownership Disposition, terminal Batch 3'),
+      contains('PHP-3A — scenario-seat-state single-carrier pilot'),
     );
     expect(
       campaignState,
       contains(
-        'PENDING_OWNER_GATEWAY** — PHP-3 extraction remains unauthorized',
+        'ACTIVE** — one PHP-3 carrier / one PR maximum',
       ),
     );
     expect(campaignState, contains('F-17 | **CLASSIFIED**'));
