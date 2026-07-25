@@ -2,6 +2,32 @@
 
 Status: ACTIVE POST-MERGE EXECUTION CAPSULE.
 
+## Current-execution freshness note — 2026-07-25 (campaign publication)
+
+Exact-head remeasurement at `52034abb` **decomposed Pre-Human Node 5 into
+operational sub-packets without changing its product purpose and without
+reopening any previously closed capability.** Node 5 remains the umbrella
+capability, now named *Canonical Contract and Test Authority Restoration*, with
+sub-packets PHP-0 (Canonical-Adjacent Red-Guard Triage), PHP-1 (Confirmed
+Canonical Guard Repair), PHP-2 (Legacy Corpus Ownership Disposition), PHP-3
+(Canonical Test Classification and Manifest), and PHP-4 (Canonical Full-Lane CI
+Authority).
+
+Two current-evidence corrections this note carries: **F-16 is CLOSED**
+(independently reverified at head, 62/62), and the full `test/ui_v2` +
+`test/guards` run at head reports 1810 passed / 239 failed — 128 compile
+failures plus an assertion-evidence pool of 111 failures across 53 files
+(**F-17**, not 111 product defects), plus one reproduced compact teaching-copy
+absence with **causation unproven** (**F-18**, attributed to no commit).
+
+The Sharky visual direction is **supplied** (`SHARKY_VISUAL_LOCK_V1`); required
+Sharky production integration remains mandatory before Human Novice Proof. The
+next authorized window is **PHP-0 only**; Human Novice Proof remains NOT
+PERFORMED and downstream.
+
+Campaign plan: `docs/plan/PRE_HUMAN_AND_HUMAN_PROVEN_CAMPAIGN_v1.md`.
+Campaign state: `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`.
+
 ## Current authority — 2026-07-25 (Final Deep Independent Audit)
 
 Final Deep Independent Audit — Current Head v1 is **BLOCKED** on exact baseline
