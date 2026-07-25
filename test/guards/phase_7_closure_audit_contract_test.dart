@@ -91,9 +91,11 @@ void main() {
     );
     expect(
       campaignState,
-      contains(
-        'PHP-1 — Stale Contract Repair + F-16 Non-Weakening Verification',
-      ),
+      contains('PHP-2 — Legacy Corpus Ownership Disposition, Batch 1'),
+    );
+    expect(
+      campaignState,
+      contains('PHP-2 active** — up to three sequential merged PRs'),
     );
     expect(campaignState, contains('F-17 | **CLASSIFIED**'));
     expect(campaignState, contains('F-18 | **STALE_TEST**'));
