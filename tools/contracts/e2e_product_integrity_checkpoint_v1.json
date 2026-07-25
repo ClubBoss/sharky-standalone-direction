@@ -1,0 +1,79 @@
+{
+  "schema": "act0_e2e_product_integrity_checkpoint_v1",
+  "contract_version": 1,
+  "fixture_id": "e2e_product_integrity_checkpoint_progressed_replay_v1",
+  "fresh_user_proof": "alpha_fresh_install_first_lesson_v1",
+  "darwin_legacy_shared_preferences_fixture": {
+    "storage_api": "SharedPreferences.getInstance",
+    "native_prefix": "flutter.",
+    "entries": [
+      {
+        "dart_key": "onboardingCompleted",
+        "native_key": "flutter.onboardingCompleted",
+        "value_type": "bool",
+        "value": true
+      },
+      {
+        "dart_key": "onboarding_complete",
+        "native_key": "flutter.onboarding_complete",
+        "value_type": "bool",
+        "value": true
+      },
+      {
+        "dart_key": "intake_completed_v1",
+        "native_key": "flutter.intake_completed_v1",
+        "value_type": "bool",
+        "value": true
+      },
+      {
+        "dart_key": "act0_welcome_completed_v1",
+        "native_key": "flutter.act0_welcome_completed_v1",
+        "value_type": "bool",
+        "value": true
+      },
+      {
+        "dart_key": "act0_shell_progress_v1",
+        "native_key": "flutter.act0_shell_progress_v1",
+        "value_type": "string_json"
+      }
+    ]
+  },
+  "route": [
+    "Learn",
+    "replay W3 Position through visible Learn UI",
+    "fresh Position decision and normal completion",
+    "return Learn with same Learning Run",
+    "enter current W4 Price through visible Learn UI",
+    "fresh Price decision and normal completion",
+    "explicit Learn to Home",
+    "Learning Run payoff",
+    "payoff completion",
+    "clean Home and subsequent Learn"
+  ],
+  "attempts": {
+    "position": {
+      "lesson_id": "position_six_seats",
+      "source_task_id": "position_six_seats_positions_button",
+      "error_type": "missed_table_position_read",
+      "signal": "hero_button",
+      "allowed_outcomes": ["recoveredAfterRepair", "stillNeedsPractice", "masteredFirstTry"]
+    },
+    "price": {
+      "lesson_id": "call_price",
+      "source_task_id": "w4_bad_price_fold",
+      "error_type": "missed_price_read",
+      "signal": "pot_to_call",
+      "allowed_outcomes": ["recoveredAfterRepair", "stillNeedsPractice", "masteredFirstTry"]
+    }
+  },
+  "required_invariants": [
+    "replay is entered through visible Learn UI",
+    "replay creates a current-attempt telemetry identity and imports no historical outcome",
+    "replay does not remove completed progression",
+    "current Price lesson is uncompleted before entry and completes normally",
+    "Position and Price share one Learning Run run_id",
+    "explicit Learn to Home closes the run exactly once",
+    "payoff focus uses only current-run outcomes",
+    "payoff completion clears run-local state"
+  ]
+}

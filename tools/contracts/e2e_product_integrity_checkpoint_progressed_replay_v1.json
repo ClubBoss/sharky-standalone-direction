@@ -1,0 +1,65 @@
+{
+  "schema": "act0_progression_fixture_v1",
+  "fixture_id": "e2e_product_integrity_checkpoint_progressed_replay_v1",
+  "fixture_version": 1,
+  "source": "production_equivalent_persisted_progression",
+  "completed_lesson_ids_by_world": {
+    "world_1": [
+      "what_poker_is",
+      "what_poker_is_content",
+      "cards_ranks_suits",
+      "your_first_hand",
+      "fold_check_call_raise",
+      "blinds_action_order",
+      "positions",
+      "hand_rankings_table",
+      "showdown_winning"
+    ],
+    "world_2": [
+      "hand_discipline_buckets",
+      "fold_discipline",
+      "weak_ace_warning",
+      "continue_or_let_go",
+      "hand_discipline_apply",
+      "discipline_checkpoint"
+    ],
+    "world_3": [
+      "position_six_seats",
+      "button_advantage",
+      "early_vs_late",
+      "same_hand_different_seat",
+      "position_apply",
+      "position_checkpoint"
+    ],
+    "world_4": [
+      "why_bets_happen",
+      "value_bets",
+      "bluff_pressure",
+      "protection_and_denial"
+    ]
+  },
+  "target": {
+    "replay": {
+      "world_id": "world_3",
+      "lesson_id": "position_six_seats",
+      "task_id": "position_six_seats_positions_button",
+      "source_task_id": "position_six_seats_positions_button"
+    },
+    "current": {
+      "world_id": "world_4",
+      "lesson_id": "call_price",
+      "task_id": "w4_price_intro",
+      "source_task_id": "w4_bad_price_fold"
+    }
+  },
+  "constraints": {
+    "all_tasks_for_completed_lessons_completed": true,
+    "replay_lesson_is_canonically_completed_and_selectable": true,
+    "current_lesson_and_all_its_tasks_are_uncompleted": true,
+    "no_active_learning_run": true,
+    "no_current_attempt_outcome": true,
+    "no_feedback_repair_recheck_or_payoff_state": true,
+    "allows_dev_or_debug_shortcut": false,
+    "allows_intermediate_personalization_state": false
+  }
+}

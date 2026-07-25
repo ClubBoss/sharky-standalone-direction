@@ -9823,7 +9823,7 @@ final _flushRankRunner = _readBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Flush means same suit.',
       body:
-          'Hero uses five hearts for a flush, while CO only reaches a 7-8-9-T-J straight. This is an ace-high flush, not a royal flush, because the hearts do not run T-J-Q-K-A together. Flushes rank above straights because they are rarer: roughly 5,100 flush combinations exist in a deck versus about 10,200 straights. Rarer combinations rank higher.',
+          'Hero uses five hearts for a flush. CO only reaches a 7-8-9-T-J straight. This is an ace-high flush, not a royal flush, because the hearts do not run T-J-Q-K-A. Flushes rank above straights because they are rarer: roughly 5,100 combinations versus about 10,200.',
       focusLabels: <String>[
         'Same suit',
         'Ace-high flush',
