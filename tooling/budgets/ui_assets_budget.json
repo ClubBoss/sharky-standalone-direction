@@ -1,5 +1,5 @@
 {
-  "total_max_bytes": 250000,
+  "total_max_bytes": 41000,
   "files": {
     "badges.json": 6400,
     "i18n/en.json": 2000,

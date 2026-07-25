@@ -59,9 +59,10 @@ jobs:
 
       - name: Run pure Dart smoke tests
         run: |
-          # Keep this lane to tests that are owned by the current pure-Dart
-          # surface. Legacy SpotKind-map assertions remain cataloged outside
-          # this workflow rather than blocking the Flutter package graph.
+          # The three legacy SpotKind-map tests remain in the executable Tier C
+          # quarantine manifest under the current test-authority SSOT. They
+          # are known failing historical assertions and are intentionally not
+          # release-gating pure-smoke coverage.
           for test_path in \
             test/guard_single_site_test.dart \
             test/spotkind_enum_discipline_test.dart \

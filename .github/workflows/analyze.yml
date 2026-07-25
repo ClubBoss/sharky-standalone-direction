@@ -22,10 +22,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
           submodules: false
-      - name: Unshallow (fallback)
-        run: git fetch --prune --unshallow --tags || true
 
       - uses: subosito/flutter-action@v2
         with:
@@ -55,6 +53,8 @@ jobs:
           chmod +x tools/guard_stray_dirs.sh || true
           [ -x tools/guard_stray_dirs.sh ] && tools/guard_stray_dirs.sh || echo "guard script not present, skipping"
       - name: Tier 0 (format + analyze)
+        env:
+          TIER0_BASE: ${{ github.event.before }}
         run: bash ./tools/run_table_first_tiers.sh 0
 
       - name: Tier 1 (guard tests)
@@ -81,7 +81,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
           submodules: false
       - name: Ensure runner is executable
         run: chmod +x ./tools/run_table_first_tiers.sh

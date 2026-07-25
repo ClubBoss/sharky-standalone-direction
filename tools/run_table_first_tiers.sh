@@ -33,13 +33,40 @@ run_cmd_tier2() {
   perl -e 'alarm shift; exec @ARGV' "${timeout}" bash -c -- "${cmd}"
 }
 
+resolve_tier0_base() {
+  local configured_base="${TIER0_BASE:-}"
+  local merge_base
+
+  if [[ -n "${configured_base}" &&
+    ! "${configured_base}" =~ ^0+$ &&
+    $(git cat-file -t "${configured_base}^{commit}" 2>/dev/null) == "commit" ]]; then
+    printf '%s\n' "${configured_base}"
+    return
+  fi
+
+  if git show-ref --verify --quiet refs/remotes/origin/main; then
+    merge_base="$(git merge-base origin/main HEAD)"
+    if [[ "${merge_base}" != "$(git rev-parse HEAD)" ]]; then
+      printf '%s\n' "${merge_base}"
+      return
+    fi
+  fi
+
+  git rev-parse --verify HEAD^ 2>/dev/null || true
+}
+
 run_tier0() {
   local -a changed_dart_files=()
+  local tier0_base
 
-  if git rev-parse --verify HEAD^ >/dev/null 2>&1; then
+  tier0_base="$(resolve_tier0_base)"
+  if [[ -n "${tier0_base}" ]]; then
+    echo "Tier 0 baseline: ${tier0_base}"
     while IFS= read -r path; do
       [[ -n "${path}" && -f "${path}" ]] && changed_dart_files+=("${path}")
-    done < <(git diff --name-only HEAD^ HEAD -- '*.dart')
+    done < <(git diff --name-only "${tier0_base}" HEAD -- '*.dart')
+  else
+    echo "Tier 0: no baseline commit available; skipping changed-file format check"
   fi
 
   if [[ ${#changed_dart_files[@]} -gt 0 ]]; then
