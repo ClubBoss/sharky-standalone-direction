@@ -230,19 +230,27 @@ This project has a knowledge graph at graphify-out/ with god nodes, community st
 
 When the user types `/graphify`, invoke the `skill` tool with `skill: "graphify"` before doing anything else.
 
-**Measured coverage (2026-07-25) — know this before relying on the graph.**
-The graph covers `lib/` well (61,946 nodes) and `docs/` partially (6,128), but
-**`test/` has only 22 nodes** and `tools/` 16. So:
+**Verify the graph before relying on it.** Two independent failure modes have
+both produced silently useless results here:
 
-- **Use it for `lib/` questions** — ownership, consumers, symbol relationships.
-  `graphify affected "<symbol>"` (reverse traversal) is the most under-used
-  command and is usually cheaper than a grep sweep.
-- **Do not gate test-, docs-, or contract-ownership work on it.** "Which test
-  owns which contract" is not answerable from the graph today; grep directly.
-- **Check freshness first.** `graphify-out/graph.json` carries
-  `built_at_commit`; compare it to HEAD. On 2026-07-25 it was **750 commits
-  stale**, which silently produced useless query results. If it is stale and the
-  task depends on graph truth, run `graphify update .` or skip the graph and say so.
+- **Freshness.** `graphify-out/graph.json` carries `built_at_commit`; compare it
+  to HEAD. On 2026-07-25 it was **750 commits stale**. Run `graphify update .`
+  when the task depends on graph truth, or skip the graph and say which reason
+  applied.
+- **Coverage.** Census `source_file` prefixes before trusting a result. Vendored
+  trees are indexed too (a rebuild pulled in ~90K `ios/Pods` nodes, larger than
+  `lib/`), and they surface for unrelated questions.
+
+Stable limitations that a rebuild does **not** fix:
+
+- **No string-literal or widget-key edges** — so "which test guards which
+  contract/key" is not answerable from the graph. Grep directly.
+- **Queries are keyword-based, not natural language** — phrase them as
+  identifiers, not sentences.
+
+Use it for what it is good at: `lib/` symbol ownership, consumers, and
+relationships, where `graphify affected "<symbol>"` often beats a grep sweep.
+The `sharky-context-economy` skill carries the verification snippets.
 
 Rules:
 - Graphify is navigation and dependency-safety tooling only. It is advisory and never overrides the active SSOT docs, roadmap, product scope, or user instructions.

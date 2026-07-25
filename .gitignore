@@ -92,6 +92,7 @@ DerivedData/
 /android/app/debug
 /android/app/profile
 /android/app/release
+/ios/Pods/
 /macos/Pods/
 /windows/flutter/ephemeral/
 /windows/flutter/ephemeral/.plugin_symlinks/

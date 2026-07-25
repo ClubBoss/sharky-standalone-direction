@@ -73,17 +73,37 @@ Ask before every whole-file read: **which 40 lines answer the question?**
 
 ## 4. Graphify boundaries
 
-Measured graph coverage: `lib/` 61,946 nodes · `docs/` 6,128 · **`test/` 22** ·
-`tools/` 16.
-
-- **Good for:** `lib/` ownership, consumers, symbol relationships. `graphify affected "<symbol>"` (reverse traversal) is the most under-used command.
-- **Useless for:** "which test owns which contract", doc authority, contract ownership. Grep directly; do not spend a call proving it cannot answer.
-- **Always check freshness:** `graphify-out/graph.json` carries `built_at_commit`. It was found **750 commits stale**, which silently produced junk results in two sessions. Compare to HEAD before trusting anything; run `graphify update .` or skip and say so.
+**Always check freshness and coverage before trusting the graph** — both have
+silently produced junk results here.
 
 ```bash
-python3 -c "import json;g=json.load(open('graphify-out/graph.json'));print(g.get('built_at_commit'))"
+python3 -c "
+import json,collections
+g=json.load(open('graphify-out/graph.json'))
+print('built_at_commit:',g.get('built_at_commit'),' nodes:',len(g['nodes']))
+c=collections.Counter((n.get('source_file') or '').split('/')[0] for n in g['nodes'])
+print(c.most_common(6))"
 git rev-parse HEAD
 ```
+
+### What it is good for
+
+`lib/` symbol ownership, consumers, relationships. `graphify affected "<symbol>"`
+(reverse traversal) is the most under-used command and often beats a grep sweep.
+
+### Stable limitations — these do not change with a rebuild
+
+- **No string-literal or widget-key edges.** `graphify query "act0_shell_street_replay_step"` returns *"No matching nodes found"* even when that key is live in `lib/`. So **"which test guards which contract/key" is not answerable from the graph** — grep directly, and do not spend a call proving it cannot answer.
+- **Query parsing is keyword-based, not natural language.** Asking *"which test guards street replay step motion"* seeded the traversal on the word `Which` and returned unrelated gRPC files. Phrase queries as **identifiers**, not sentences.
+- **Vendored trees pollute results.** A fresh rebuild pulled in `ios/Pods` — ~90K nodes of vendored gRPC/Firebase C++, larger than `lib/` itself — and those nodes surfaced first for unrelated questions. graphify walks the filesystem, not git, so untracked vendor directories still get indexed. Check the coverage census above before believing a result.
+
+### The failure mode to remember (2026-07-25)
+
+The graph was **750 commits stale** and had **22 `test/` nodes**, while a
+mandatory hook required consulting it before any grep or read. Two sessions paid
+for calls that could not answer, and a rebuild fixed freshness (`test/` → ~9,000
+nodes) without fixing the string-literal limitation. **A tool being installed is
+not evidence it covers your question.**
 
 ## 5. Model routing per packet class
 
