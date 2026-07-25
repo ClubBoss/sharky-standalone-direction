@@ -154,16 +154,33 @@ exact-head CI remain pending.
 
 | Original carrier | Assertion family | Current owner | Replacement | Disposition | Evidence |
 | --- | --- | --- | --- | --- | --- |
-| `test/ui_v2/runner/world1_canonical_host_adapter_v1_test.dart` | World1 resolved launch mode, selected pack steps, bootstrap flags, and deterministic session identity | `lib/ui_v2/runner/world1_canonical_host_state_entry_adapter_v1.dart` and `world1_canonical_host_adapter_v1.dart` | `test/ui_v2/runner/canonical_world1_host_route_contract_v1_test.dart` test 1 | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | exact state and identity assertions pass |
-| `test/ui_v2/runner/world1_foundations_runner_progression_chrome_adapter_v1_test.dart` | Early-pack payoff/status/next-session copy, campaign chrome, and shared grammar adoption | `lib/ui_v2/runner/world1_foundations_runner_progression_chrome_adapter_v1.dart` and `shared_learner_host_grammar_v1.dart` | replacement test 2 | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | exact progression/chrome assertions pass |
+| `test/ui_v2/runner/world1_canonical_host_adapter_v1_test.dart` — `world1 canonical host adapter consumes canonical runtime config defaults` | explicit runtime config title, mode, start index, and hints | `canonical_terminal_host_contract_v1.dart` | replacement test 1 | `EXTRACTED_TO_CURRENT_OWNER` | exact title resolver, `campaign_spine`, index 3, and true hints pass without an archive import |
+| `test/ui_v2/runner/world1_canonical_host_adapter_v1_test.dart` — `world1 canonical resolved host launch uses resolved mode and bootstrap flags` | mode, marker, chosen steps, initial index, four bootstrap flags | `world1_canonical_host_state_entry_adapter_v1.dart` | replacement test 2 | `EXTRACTED_TO_CURRENT_OWNER` | exact values pass |
+| `test/ui_v2/runner/world1_canonical_host_adapter_v1_test.dart` — `world1 canonical host session identity tracks session reset inputs` | reset identity at indices 0 and 2 | `world1_canonical_host_adapter_v1.dart` | replacement test 2 | `EXTRACTED_TO_CURRENT_OWNER` | both exact identities pass |
+| `test/ui_v2/runner/world1_foundations_runner_progression_chrome_adapter_v1_test.dart` — `early World 1 act0 packs resolve capability-aware payoff copy` | three exact payoff, status, and next-session families | `world1_foundations_runner_progression_chrome_adapter_v1.dart` | replacement test 3 | `EXTRACTED_TO_CURRENT_OWNER` | exact current adapter values pass |
+| `test/ui_v2/runner/world1_foundations_runner_progression_chrome_adapter_v1_test.dart` — `campaign-pack adapter resolves canonical world1 chrome` | campaign title, status, payoff, and next session | progression chrome adapter | replacement test 3 | `EXTRACTED_TO_CURRENT_OWNER` | exact current adapter values pass |
+| `test/ui_v2/runner/world1_foundations_runner_progression_chrome_adapter_v1_test.dart` — `campaign-pack runner surfaces canonical title and status chrome` | rendered campaign title, status, prompt, and old direct-widget keys | active `CanonicalLauncherV1` / `CanonicalTerminalRunnerSurfaceV1` route | replacement test 4 for title, status, and prompt; direct-widget key fixtures retired | `EXTRACTED_TO_CURRENT_OWNER` | current route renders exact title/status and prompt; the archive-era capsule/support keys are not rendered on that route |
+| `test/ui_v2/runner/world1_foundations_runner_progression_chrome_adapter_v1_test.dart` — `campaign spine slice surfaces canonical prompt and support primitives from shared grammar` | grammar adoption plus direct-widget capsule/support key fixture | `shared_learner_host_grammar_v1.dart`; old direct screen fixture | replacement test 3 for grammar; rendered key fixture retired | `LEGACY_WIRING_RETIRED_AFTER_EXTRACTION` | pure grammar remains current; no weaker rendered proxy is claimed |
 | `test/ui_v2/runner/canonical_terminal_world1_runtime_config_v1_test.dart` | Runtime payload instruction-source identity | archive-only public type surface | unchanged original carrier | Preserved unchanged; not admitted | retained in Tier B |
 | `test/ui_v2/world1_foundations_runner_route_v1_test.dart` | Route-to-runner argument forwarding, including instruction-source identity | archive-only observable runner type | unchanged original carrier | Preserved unchanged; not admitted | retained in Tier B |
 
-The two admitted mappings preserve every current-owner assertion family with
-exact values. The two non-admitted carriers were not converted to a proxy: the
-instruction-source identity assertion remains intact in its original carrier.
-This is a bounded partial family extraction, not a claim that the archive-typed
-route boundary has been repaired.
+| Retired original path | Prior owner | Current owner | Replacement ledger | Manifest disposition | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| `test/ui_v2/runner/world1_canonical_host_adapter_v1_test.dart` | Tier B maintained support | current host config/state owners above | three-test mapping above | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | all current assertion families map to replacement tests 1–2 |
+| `test/ui_v2/runner/world1_foundations_runner_progression_chrome_adapter_v1_test.dart` | Tier B maintained support | current progression/grammar/launcher owners above | four-test mapping above | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | current semantics extracted; legacy key wiring explicitly retired |
+
+The host-adapter mapping is complete across all three original tests. The
+progression mapping separates current adapter/route semantics from the old
+direct-widget fixture: `ui_v2/screens/world1_foundations_microtask_runner_screen.dart`
+is absent, and the only class implementation is under
+`lib/archive/legacy_runners/`. The active canonical route reaches that
+presenter through `CanonicalTerminalRunnerSurfaceV1`, but its actual rendered
+surface has the exact title/status and prompt while not rendering the old
+`microtask_runner_prompt_capsule_v1` or `microtask_scene_support_lane_v1`
+keys. Those two key assertions are therefore retired legacy wiring, not
+relabelled as current rendered proof. The two non-admitted carriers remain
+unchanged: their instruction-source identity assertion stays in its original
+carrier.
 
 ### Manifest transition and census
 
@@ -175,7 +192,7 @@ the PHP-3A disposition model already accepts this atomic transition.
 
 ### Focused proof
 
-- `flutter test test/ui_v2/runner/canonical_world1_host_route_contract_v1_test.dart -r compact`: 2/2 passed.
+- `flutter test test/ui_v2/runner/canonical_world1_host_route_contract_v1_test.dart -r compact`: 4/4 passed.
 - The exact PHP-0/PHP-1 selection used by PR #62 (nine named files, 79
   assertions) passed after the Phase 7 state-label guard advanced from PHP-3A
   to PHP-3B.
