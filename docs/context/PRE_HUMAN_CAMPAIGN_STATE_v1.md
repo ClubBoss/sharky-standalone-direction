@@ -1,5 +1,7 @@
 # Pre-Human Campaign State v1
 
+Status: ACTIVE campaign state — **first read** for any campaign session.
+
 Compact machine-readable campaign state. **One screen only.** Full plan:
 `docs/plan/PRE_HUMAN_AND_HUMAN_PROVEN_CAMPAIGN_v1.md`. Do not duplicate the plan
 here; update only the fields below.

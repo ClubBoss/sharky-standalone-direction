@@ -2,7 +2,17 @@
 
 ## Quick Orientation
 
-For project navigation and SSOT authority:
+**State file first.** Read `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` before
+anything else while a campaign is active: it carries canonical HEAD, umbrella
+stage, active packet, finding statuses, and what is authorized. It is one screen.
+Escalate to the documents below **only** when the task needs authority the state
+file does not carry, or when its facts conflict with live source/tests — then
+report the conflict. Do not read the full authority stack "for context".
+
+For token-efficient reading recipes, evidence-run patterns, and per-packet model
+routing, invoke the `sharky-context-economy` skill.
+
+For project navigation and SSOT authority (escalation order):
 - Read `docs/context/CONTEXT_ROUTER_v1.md` before broad-reading docs; use it
   to select the narrow lane capsule and token budget for the task.
 - Read `docs/plan/PROJECT_TOPOLOGY_AND_TRUTH_MAP_v1.md` first (defines doc hierarchy)
@@ -196,7 +206,15 @@ or team activity justifies them.
 Use High reasoning only for SSOT, architecture, shared-owner redesign, major
 vertical integration, and high-risk admission; Medium for bounded
 implementation/owner tracing/focused repair; Low or Minimal for deterministic
-packaging, formatting, simple tests, and publication. Avoid broad reads,
+packaging, formatting, simple tests, and publication.
+
+Packet-class routing (a precise DoD is what makes a cheaper model safe — route
+on decision content, never on packet size): **adjudication, contract verdicts,
+severity, and admission** stay on the top model; **bounded owner repair with a
+named owner** takes the mid model; **mechanical batch work** (file-by-file
+disposition, formatting, lane wiring, publication) takes the cheapest model that
+can follow the DoD. If a packet still needs a judgement call, it is not
+mechanical — do not route it down. Avoid broad reads,
 repeated evidence matrices before final gates, unnecessary tablet work,
 speculative refactors, dependencies without direct EV, duplicate documents,
 tests-for-tests, and reports that do not change a decision.
@@ -212,11 +230,25 @@ This project has a knowledge graph at graphify-out/ with god nodes, community st
 
 When the user types `/graphify`, invoke the `skill` tool with `skill: "graphify"` before doing anything else.
 
+**Measured coverage (2026-07-25) — know this before relying on the graph.**
+The graph covers `lib/` well (61,946 nodes) and `docs/` partially (6,128), but
+**`test/` has only 22 nodes** and `tools/` 16. So:
+
+- **Use it for `lib/` questions** — ownership, consumers, symbol relationships.
+  `graphify affected "<symbol>"` (reverse traversal) is the most under-used
+  command and is usually cheaper than a grep sweep.
+- **Do not gate test-, docs-, or contract-ownership work on it.** "Which test
+  owns which contract" is not answerable from the graph today; grep directly.
+- **Check freshness first.** `graphify-out/graph.json` carries
+  `built_at_commit`; compare it to HEAD. On 2026-07-25 it was **750 commits
+  stale**, which silently produced useless query results. If it is stale and the
+  task depends on graph truth, run `graphify update .` or skip the graph and say so.
+
 Rules:
 - Graphify is navigation and dependency-safety tooling only. It is advisory and never overrides the active SSOT docs, roadmap, product scope, or user instructions.
-- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- For `lib/` codebase questions, prefer `graphify query "<question>"`, `graphify affected "<symbol>"`, `graphify path "<A>" "<B>"`, or `graphify explain "<concept>"` when the graph is fresh. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
 - Dirty graphify-out/ files are expected after hooks or incremental updates; dirty graph files are not a reason to skip graphify. Never commit generated graph output.
 - Use `graphify hook-check` as the lightweight validation check. Run a full `graphify update .` only when explicitly needed for graph freshness or when a task requires it; do not run expensive graph generation every turn.
-- Only skip graphify if the task is about stale or incorrect graph output, or the user explicitly says not to use it.
+- Skip graphify when the graph is stale, when the task is about test/contract ownership or doc authority, when the task is about stale or incorrect graph output, or when the user says not to use it. Say which reason applied.
 - If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
 - Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
