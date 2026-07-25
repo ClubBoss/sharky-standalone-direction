@@ -91,12 +91,12 @@ void main() {
     );
     expect(
       campaignState,
-      contains('PHP-3B — World1 host/route contract family extraction'),
+      contains('PHP-3C — outside-handoff authority debt disposition'),
     );
     expect(
       campaignState,
       contains(
-        'ACTIVE** — PHP-3B is bounded to this candidate; PHP-4 and Human remain unauthorized',
+        'ACTIVE** — PHP-3C is bounded to this candidate; PHP-4 and Human remain unauthorized',
       ),
     );
     expect(campaignState, contains('F-17 | **CLASSIFIED**'));

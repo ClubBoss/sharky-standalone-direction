@@ -41,7 +41,6 @@ test/ui_v2/act0_w4_w7_owner_contract_decomposition_v1_test.dart
 test/ui_v2/drill_runner_host_contract_alignment_test.dart
 test/ui_v2/modern_table_entry_test.dart
 test/ui_v2/runner/canonical_terminal_world1_runtime_config_v1_test.dart
-test/ui_v2/runner/world1_seat_quiz_feedback_copy_v1_test.dart
 test/ui_v2/session_drill_player_bet_sizing_contract_test.dart
 test/ui_v2/session_drill_player_board_tap_contract_test.dart
 test/ui_v2/session_drill_player_board_texture_contract_test.dart

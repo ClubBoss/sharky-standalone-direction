@@ -41,3 +41,4 @@ test/ui_v2/ui_v2_session_result_screen_contract_test.dart
 test/ui_v2/world1_map_extreme_widths_contract_test.dart
 test/ui_v2/world1_map_node_states_contract_test.dart
 test/ui_v2/world1_map_path_layout_narrow_wide_test.dart
+test/ui_v2/runner/world1_seat_quiz_feedback_copy_v1_test.dart

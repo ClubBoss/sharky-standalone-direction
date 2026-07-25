@@ -213,3 +213,20 @@ the PHP-3A disposition model already accepts this atomic transition.
   `lib/archive/legacy_runners/world1_foundations_microtask_runner_surface_v1.dart`.
 - Reopens after owner tracing: 0. Production, CI, dependency, PHP-4, and Human
   scope remained untouched.
+
+## 18. PHP-3C outside-handoff authority debt disposition
+
+The full, independently reconciled 39-path record is
+`docs/_reviews/php3_outside_handoff_failure_audit_v1.md`; this ledger does not
+duplicate it. PHP-3 carrier accounting remains admitted 3, unresolved 74,
+nine-path residual 74, unexplained 0.
+
+| File | Prior authority | Current owner result | Scope result | Disposition | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| `test/guards/world1_branch_unlock_contract_test.dart` | absent/unclassified outside-handoff guard | Progress Map-only assertion; canonical entry is Act0 | no current route seam | `ARCHIVED_NONCANONICAL_TEST_RETIRED` | absent Progress Map source |
+| `test/guards/world1_checkpoint_locked_contract_test.dart` | absent/unclassified outside-handoff guard | Progress Map-only assertion; canonical entry is Act0 | no current route seam | `ARCHIVED_NONCANONICAL_TEST_RETIRED` | absent Progress Map source |
+| `test/ui_v2/runner/world1_seat_quiz_feedback_copy_v1_test.dart` | Tier B maintained support | no live non-archive runtime importer; source retained as orphaned deferred debt | archive-only runtime consumer | `ARCHIVED_NONCANONICAL_TEST_RETIRED` | old `generic` enum expectation and stale copy mismatch |
+
+The first two paths were not Tier-B members. The seat-quiz original moves from
+Tier B to Tier D, and the validator accepts this exact archival disposition in
+addition to current-owner extraction. This is not a replacement-test claim.
