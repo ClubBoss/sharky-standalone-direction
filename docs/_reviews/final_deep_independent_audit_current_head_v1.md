@@ -264,7 +264,7 @@ reimplemented merely because its numbered PR was never created.
 | F-12 | Node 4 ALI-NATIVE-SHARED-001 | dormant owner | n/a | P3 | dormant preflop list, no canonical Act0 consumer | noncanonical | — | — | noncanonical | **OUTSIDE_PRE_HUMAN** |
 | F-13 | Wave 3.15 | evidence tooling | deterministic | P3 | no dedicated W2 capture lane in `screen_review_fast_v1.sh` | Wave 3.15 accepted gap; reviewer-friction only | tooling owner | none | tooling | **DEFERRED_TO_LATER_PRE_HUMAN_NODE** |
 | F-14 | ACTIVE_ROUTE_CAPSULE | test owner | deterministic | P4→P3 | Same-Session test title mentions Review although continuation advances to the next authored W2 hand | pre-recorded wording debt | test owner | none | future test maintenance | **DEFERRED_TO_LATER_PRE_HUMAN_NODE** |
-| **F-15** | this audit | legacy/archive boundary owner (**non-canonical**) | deterministic, 100% | **P2 (non-canonical)** | No direct learner impact and no canonical Act0 contract affected. But the legacy/compatibility training flow is live-wired and learner-reachable (topology map §2), and the boundary guards that topology map §7 calls "intentional" protection for it are silently inert. | **125 test files** in `test/ui_v2` + `test/guards` import **9 `lib/` paths that no longer exist**, so they fail to compile. All 9 are legacy/archived (`ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart`, `.../canonical_terminal_session_drill_surfaced_runner_v1.dart`, `.../world1_modern_table_adapter_v1.dart`, `.../shared_embedded_table_visual_family_v1.dart`, `ui_v2/screens/modern_table_screen_v1.dart`, `.../session_drill_player_v1_screen.dart`, `.../world1_foundations_microtask_runner_screen.dart`, `ui_v2/legacy/ui_v2_session_result_screen.dart`, `ui_v2/map/ui_v2_progress_map_screen_v2.dart`). **Zero are Act0-canonical.** The symbols moved to `lib/archive/legacy_runners/` without updating importers. Broad run: `flutter test test/ui_v2 test/guards` → **1797 passed / 250 failed**. | Claude Code | none | **DEFERRED_TO_LATER_PRE_HUMAN_NODE** | **OPEN_REPRODUCED** |
+| **F-15** | this audit | legacy/archive boundary owner (**non-canonical**) | deterministic, 100% | **P2 (non-canonical)** | No direct learner impact and no canonical Act0 contract affected. The correct disposition for most of this corpus is `ARCHIVED_NONCANONICAL`, not revival; see §14 Part 2. | **125 test files** in `test/ui_v2` + `test/guards` import **9 `lib/` paths that no longer exist**, so they fail to compile. All 9 are legacy/archived (`ui_v2/runner/world1_foundations_microtask_runner_surface_v1.dart`, `.../canonical_terminal_session_drill_surfaced_runner_v1.dart`, `.../world1_modern_table_adapter_v1.dart`, `.../shared_embedded_table_visual_family_v1.dart`, `ui_v2/screens/modern_table_screen_v1.dart`, `.../session_drill_player_v1_screen.dart`, `.../world1_foundations_microtask_runner_screen.dart`, `ui_v2/legacy/ui_v2_session_result_screen.dart`, `ui_v2/map/ui_v2_progress_map_screen_v2.dart`). **Zero are Act0-canonical.** The symbols moved to `lib/archive/legacy_runners/` without updating importers. Broad run: `flutter test test/ui_v2 test/guards` → **1797 passed / 250 failed**. | Claude Code | none | **DEFERRED_TO_LATER_PRE_HUMAN_NODE** | **OPEN_REPRODUCED** |
 
 ### F-15 — why previous evidence missed it
 
@@ -306,8 +306,25 @@ guard that cannot fail.** It is a larger, precisely quantified instance of the
 | P3 | 5 | 0 | F-01, F-02, F-03, F-04, F-05 |
 
 **Stated plainly:** the audit does **not** clear the "no open canonical P0/P1/P2"
-bar. F-16 is an open canonical P1 + P2 family of 12 reproduced contract failures.
-F-15 is an open non-canonical P2. This is the basis for the BLOCKED verdict in §13.
+bar. F-16 is an open canonical family of 12 reproduced contract failures. F-15 is an
+open non-canonical P2. This is the basis for the BLOCKED verdict in §13.
+
+**Severity language — precise claim boundary.** What is established, and what is not:
+
+- **Established:** all 12 failures are reproduced deterministically at exact head,
+  each re-confirmed in isolation. Their *test assertions* carry P1/P2 contract
+  significance — one is an explicitly named P1 copy contract, the rest sit on
+  learning-loop and copy contracts recorded as CLOSED.
+- **Not established:** that all 12 are already-proven user-visible product
+  regressions. **Product severity is provisional** until item-by-item source
+  adjudication determines, per item, whether production regressed or the test
+  asserts a retired contract.
+- **Why this still blocks:** an active canonical contract cannot remain red. The
+  audit blocks because canonical contract authority is currently untruthful — the
+  red state is unexplained — not because 12 learner-visible regressions are proven.
+
+The severities in the table above are therefore *contract-significance* severities.
+They may resolve downward for any item adjudicated `STALE_TEST`.
 
 Every P0/P1/P2 claim required direct current-head evidence. No preference-level
 premium polish is promoted above P3.
@@ -436,9 +453,28 @@ contract verdict. Highest priority: #12 (P1 copy contract), #10 (Sharky
 acknowledgement idempotency), #6 (repair-receipt copy), #4–5 (band-transition proof
 icon), because these sit on surfaces recorded as CLOSED.
 
-**Part 2 — restore guard-lane integrity (F-15).** Repoint the 125 legacy-import test
-files at `lib/archive/legacy_runners/…`, or explicitly decommission those whose
-contracts are genuinely retired, with a recorded contract verdict per family.
+**Part 2 — dispose of the F-15 legacy corpus by ownership, not by compilation.**
+
+Explicitly **not** the instruction: "restore or repoint all 125 legacy imports."
+Making a broad directory command green is not a goal, and green compilation is not
+evidence of contract ownership.
+
+Instead:
+
+- classify the affected corpus by **current ownership**;
+- migrate or repair **only** tests proven to own a current canonical contract that
+  has no active canonical replacement;
+- archived/noncanonical tests must **not** be revived merely to satisfy a broad
+  directory command — the correct disposition for most of this corpus is
+  `ARCHIVED_NONCANONICAL`;
+- **no dormant runner, archived Modern Table owner, or legacy progression system may
+  become active authority through this repair.** Reviving a legacy guard would
+  promote an archived runtime to canonical evidence, which is the opposite of the
+  intended outcome.
+
+Where a unique current contract is found inside an archived-owner test, extract it
+into an owner-aligned focused test against the current production owner, and drop
+the archived-runner dependency rather than repointing to it.
 
 **Part 3 — close the blind spot that caused all of this (F-01, F-02, F-16).** Add a
 gate that actually compiles and runs `test/ui_v2` and `test/guards` in full, so
