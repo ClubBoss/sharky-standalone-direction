@@ -457,8 +457,11 @@ void main() {
       );
       await tester.pumpAndSettle();
 
+      // The selected theory route owns the compact runner prompt. The authored
+      // teaching step containing "Same scan, different spot." is not selected
+      // by this fixture; its learner-visible instruction policy is guarded in
+      // act0_instruction_content_policy_v1_test.dart.
       expect(find.text('Read the table first'), findsOneWidget);
-      expect(find.textContaining('Same scan, different spot.'), findsOneWidget);
       expect(
         find.ancestor(
           of: find.byKey(const Key('act0_shell_learning_rail_content_lane')),

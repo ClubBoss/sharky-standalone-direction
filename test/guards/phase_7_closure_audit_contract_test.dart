@@ -8,6 +8,9 @@ void main() {
   const learningRepairCapsulePath =
       'docs/context/LEARNING_REPAIR_CAPSULE_v1.md';
   const targetedRepairPath = 'docs/_reviews/targeted_content_repairs_v1.md';
+  const campaignPlanPath =
+      'docs/plan/PRE_HUMAN_AND_HUMAN_PROVEN_CAMPAIGN_v1.md';
+  const campaignStatePath = 'docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md';
 
   test('Phase 7 closure audit records final route-safe disposition', () {
     final reviewFile = File(reviewPath);
@@ -76,24 +79,34 @@ void main() {
     );
   });
 
-  test('capsules advance to Phase 8 without opening forbidden scopes', () {
+  test('campaign authority advances without reopening closed scopes', () {
     final activeRoute = File(activeRouteCapsulePath).readAsStringSync();
     final learningRepair = File(learningRepairCapsulePath).readAsStringSync();
+    final campaignPlan = File(campaignPlanPath).readAsStringSync();
+    final campaignState = File(campaignStatePath).readAsStringSync();
 
     expect(
-      activeRoute,
+      campaignPlan,
+      contains('Canonical Contract and Test Authority Restoration'),
+    );
+    expect(
+      campaignState,
       contains(
-        'Verified active route artifact: '
-        '`docs/_reviews/sharky_character_growth_evidence_pack_v1.md`',
+        'PHP-1 — Stale Contract Repair + F-16 Non-Weakening Verification',
       ),
     );
+    expect(campaignState, contains('F-17 | **CLASSIFIED**'));
+    expect(campaignState, contains('F-18 | **STALE_TEST**'));
+    expect(campaignState, contains('Human Proof | **NOT AUTHORIZED**'));
     expect(activeRoute, contains('Phase 7 - Content & Correctness is CLOSED'));
-    expect(activeRoute, contains('Phase 8 - Motion is active'));
-    expect(activeRoute, contains('Motion Direction System v1'));
-    expect(activeRoute, contains('Phase 7 Closure Audit - CLOSED'));
-    expect(activeRoute, contains('Sharky Micro-Animations v1 - BLOCKED'));
-    expect(activeRoute, contains('7. Content & Correctness - CLOSED'));
-    expect(activeRoute, contains('8. Motion - ACTIVE'));
+    expect(
+      activeRoute,
+      contains('reopening any previously closed capability.**'),
+    );
+    expect(
+      activeRoute,
+      contains('Modern Table remains in permanent Maintenance Mode'),
+    );
 
     expect(learningRepair, contains('phase_7_closed_with_explicit_deferrals'));
     expect(learningRepair, contains('no unresolved Phase 7 blocker'));
