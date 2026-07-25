@@ -8,19 +8,21 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical HEAD | `31ac1addbb9094b1074f266d678845b9dd1e9d47` |
+| Canonical HEAD | `e765ec0d58bc575d66dc60f8bd96d9b7a46aa0c2` |
 | Campaign version | v1 |
 | Umbrella stage | **Pre-Human Node 5 — Canonical Contract and Test Authority Restoration** |
-| Active sub-packet | **PHP-0 — Canonical-Adjacent Red-Guard Triage** |
-| Status | **CLOSED_CLASSIFIED_PENDING_MERGE** |
-| Latest admitted PR | **#53** |
-| F-16 | **CLOSED** (independently reverified at head, 62/62) |
+| Active sub-packet | **PHP-1 — Stale Contract Repair + F-16 Non-Weakening Verification** |
+| Status | **CLOSED_NON_WEAKENING — PENDING_EXACT_HEAD_CI** |
+| Latest admitted PR | **#55** |
+| F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **CLASSIFIED** — 53 files: required 0; stale 2; active-nonblocking 5; archived 7; quarantined 29; unresolved-unique 10. Full ledger: `docs/_reviews/php0_canonical_adjacent_red_guard_triage_v1.md` |
 | F-18 | **STALE_TEST** — exact pre-F-16-to-head trail disproves PR #51/#52 causation; owner is compact-decision test fixture / retired teaching-step assertion |
 | Sharky owner decision | **SUPPLIED** — `SHARKY_VISUAL_LOCK_V1` (refined C) |
 | Sharky production integration | **PENDING** (PHP-6) |
-| Next authorized packet | **PENDING_OWNER_GATEWAY** — PHP-3 recommended for unresolved unique contracts |
-| Following packet | **PENDING_OWNER_GATEWAY** — PHP-2 known-owner disposition |
+| PHP-1 stale assertions | **2** — phase-7 campaign wording; compact-decision retired teaching-step expectation |
+| F-16 non-weakening review | **NON_WEAKENING** — seven stale-test groups (#4, #5, #6, #7–9, #11, #12) independently re-derived |
+| Recommended next packet | **PENDING_OWNER_GATEWAY** — owner to select PHP-2 or PHP-3 |
+| Next authorization | **PENDING_OWNER_GATEWAY** |
 | Autonomous window | **one packet / maximum one merged PR** |
 | Human Proof | **NOT AUTHORIZED** |
 | `PRE_HUMAN_READY` | **NOT MET** |
@@ -44,8 +46,8 @@ Product severity resolves in PHP-0.
 
 | Packet | Stage | Status |
 | --- | --- | --- |
-| PHP-0 Canonical-Adjacent Red-Guard Triage | Node 5 | **CLOSED_CLASSIFIED_PENDING_MERGE** |
-| PHP-1 Confirmed Canonical Guard Repair | Node 5 | NOT_PREAUTHORIZED |
+| PHP-0 Canonical-Adjacent Red-Guard Triage | Node 5 | **CLOSED_CLASSIFIED** |
+| PHP-1 Stale Contract Repair + F-16 Non-Weakening Verification | Node 5 | **CLOSED_NON_WEAKENING — PENDING_EXACT_HEAD_CI** |
 | PHP-2 Legacy Corpus Ownership Disposition | Node 5 | NOT_PREAUTHORIZED |
 | PHP-3 Canonical Test Classification and Manifest | Node 5 | NOT_PREAUTHORIZED |
 | PHP-4 Canonical Full-Lane CI Authority | Node 5 | NOT_PREAUTHORIZED |
@@ -60,8 +62,12 @@ emergency ceiling, never a target.**
 
 ## Update rule
 
-Each packet close updates only: canonical HEAD, latest admitted PR, the changed
-finding statuses, the changed severity counts, the packet ledger row, and the
-next-authorized/following-packet fields. Any packet may be **eliminated** if
+Each packet records the exact canonical baseline from which its branch was
+created. The final merge SHA belongs in the packet report and GitHub; the next
+packet reconciles this state file to that admitted merge SHA at mission start.
+No docs-only PR is required solely to write a merge SHA that did not exist
+before merge. Each packet close updates only: canonical HEAD, latest admitted
+PR, the changed finding statuses, the changed severity counts, the packet
+ledger row, and the next-authorized/following-packet fields. Any packet may be **eliminated** if
 triage proves it unnecessary — record `CLOSED_UNNECESSARY` with the proving
 evidence rather than executing it for completeness.
