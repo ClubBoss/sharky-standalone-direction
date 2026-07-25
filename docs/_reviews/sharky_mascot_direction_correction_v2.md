@@ -1,3 +1,10 @@
+---
+status: "DUAL_REGISTER_ICONIC_COMPANION_SELECTED"
+status_source: "derived"
+doc_date: "2026-07-04"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Sharky Mascot Direction Correction v2
 
 Date: 2026-07-04

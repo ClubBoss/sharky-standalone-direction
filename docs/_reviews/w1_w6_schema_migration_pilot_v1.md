@@ -1,3 +1,9 @@
+---
+status: "w1_w6_schema_migration_pilot_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Schema Migration Pilot v1
 
 ## 1. Verdict

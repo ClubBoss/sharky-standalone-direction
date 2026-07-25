@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-03-05"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R7 Worlds 1-10 Canonical Audit v1
 
 Date: 2026-03-05

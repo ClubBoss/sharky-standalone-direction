@@ -1,3 +1,11 @@
+---
+status: "ACCEPTED decision artifact"
+status_source: "derived"
+doc_date: "2026-06-28"
+baseline: "547625a3"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W2-W6 Canonical/Bridge Decision v1
 
 Status: ACCEPTED decision artifact.

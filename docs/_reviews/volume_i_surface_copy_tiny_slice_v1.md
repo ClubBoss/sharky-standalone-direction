@@ -1,3 +1,9 @@
+---
+status: "copy_contract_ready_with_copy_patch_recommendation"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I Surface Copy Tiny Slice v1
 
 ## 1. Verdict

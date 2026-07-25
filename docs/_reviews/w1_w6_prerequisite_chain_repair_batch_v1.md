@@ -1,3 +1,10 @@
+---
+status: "REVIEW ARTIFACT"
+status_source: "derived"
+baseline: "53e11f1f"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Prerequisite Chain Repair Batch v1
 
 Status: REVIEW ARTIFACT.

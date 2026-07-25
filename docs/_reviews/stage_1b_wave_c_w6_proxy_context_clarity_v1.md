@@ -1,3 +1,10 @@
+---
+status: "stage_1b_wave_c_render_mismatch_repaired"
+status_source: "derived"
+baseline: "1cfe6a12a71c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Stage 1B Wave C — W6 Proxy-Context and Independent Decision Clarity v1
 
 Status: stage_1b_wave_c_render_mismatch_repaired

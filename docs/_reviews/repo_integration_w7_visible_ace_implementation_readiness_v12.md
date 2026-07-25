@@ -1,3 +1,10 @@
+---
+status: "repo_integration_w7_visible_ace_implementation_readiness_passed_pushed_main"
+status_source: "derived"
+baseline: "c2635119"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration - W7 Visible Ace Implementation Readiness v12
 
 ## Verdict

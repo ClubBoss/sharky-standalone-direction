@@ -1,3 +1,10 @@
+---
+status: "docs-only planning correction"
+status_source: "derived"
+baseline: "5bb982f2a5bf"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Canonical Route Ownership Closure Gate SSOT Update v1
 
 Status: docs-only planning correction.

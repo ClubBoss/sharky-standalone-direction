@@ -1,3 +1,9 @@
+---
+status: "spaced_repetition_engine_landed_engine_only"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Spaced Repetition Engine v1
 
 ## Verdict

@@ -1,3 +1,10 @@
+---
+status: "w6_canonical_coverage_expansion_pr2_ready_with_source_repair"
+status_source: "derived"
+baseline: "97bdc4e1"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W6 Canonical Coverage Expansion PR2 v1
 
 ## 1. Verdict

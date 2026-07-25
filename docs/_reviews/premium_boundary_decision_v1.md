@@ -1,3 +1,9 @@
+---
+status: "boundary_decision_ready_no_code"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Premium Boundary Decision v1
 
 ## 1. Verdict

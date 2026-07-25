@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Stage 1B Wave A W5 Route / Content Truth v1
 
 ## Owner decision

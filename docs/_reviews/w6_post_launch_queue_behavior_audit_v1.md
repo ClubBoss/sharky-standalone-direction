@@ -1,3 +1,11 @@
+---
+status: "post-launch lifecycle audit; no product code change"
+status_source: "derived"
+doc_date: "2026-06-23"
+baseline: "d3955e693eae"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W6 Post-Launch Queue Behavior Audit v1
 
 Date: 2026-06-23

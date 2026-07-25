@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-06-20"
+baseline: "744dfe32"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 Surface Coherence Map v1
 
 ## 1. Date / Branch / Base Commit

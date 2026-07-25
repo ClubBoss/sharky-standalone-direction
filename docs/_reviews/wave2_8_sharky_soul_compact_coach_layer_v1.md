@@ -1,3 +1,9 @@
+---
+status: "wave2_8_sharky_soul_compact_coach_layer_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 2.8 - Sharky Soul / Compact Coach Layer v1
 
 ## 1. Verdict

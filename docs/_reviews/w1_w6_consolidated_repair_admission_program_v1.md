@@ -1,3 +1,10 @@
+---
+status: "w1_w6_consolidated_repair_program_ready"
+status_source: "derived"
+baseline: "43a8889f643d"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Consolidated Repair Admission Program v1
 
 Verdict: `w1_w6_consolidated_repair_program_ready`

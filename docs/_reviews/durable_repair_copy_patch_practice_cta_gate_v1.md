@@ -1,3 +1,9 @@
+---
+status: "durable_repair_copy_patch_landed_cta_deferred"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Durable Repair Copy Patch + Practice CTA Gate v1
 
 ## 1. Verdict

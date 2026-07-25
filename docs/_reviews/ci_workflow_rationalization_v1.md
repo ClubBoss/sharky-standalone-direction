@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # CI Workflow Rationalization v1
 
 ## 1. Base commit

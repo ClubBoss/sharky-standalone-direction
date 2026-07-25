@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "7e9e783a255c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Pre-Human-QA Screenshot Evidence Pipeline Repair v2
 
 ## 1. Executive verdict

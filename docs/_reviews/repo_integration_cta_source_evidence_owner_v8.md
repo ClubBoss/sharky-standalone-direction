@@ -1,3 +1,10 @@
+---
+status: "repo_integration_cta_source_evidence_owner_passed_pushed_main"
+status_source: "derived"
+baseline: "60a3c1cec961"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration CTA Source Evidence Owner v8
 
 ## 1. Verdict

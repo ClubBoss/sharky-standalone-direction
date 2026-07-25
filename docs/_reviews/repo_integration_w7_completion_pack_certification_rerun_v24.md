@@ -1,3 +1,10 @@
+---
+status: "stage0_repo_hygiene_passed_certification_rerun_unblocked"
+status_source: "derived"
+baseline: "cfcd8fcb55d7"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration W7 Completion Pack Certification Rerun v24
 
 ## 1. Verdict

@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 Shell Preview Contract Split v1e - Review Repair Harness
 
 ## Wave Admission

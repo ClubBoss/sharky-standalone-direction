@@ -1,3 +1,10 @@
+---
+status: "repo_integration_w7_range_thinking_lite_admission_packet_passed_pushed_main"
+status_source: "derived"
+baseline: "57dbdea9"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration - W7 Range Thinking Lite Admission Packet v10
 
 ## Verdict

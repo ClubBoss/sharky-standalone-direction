@@ -1,3 +1,9 @@
+---
+status: "session_summary_fixes_banked_label_ready_local_only"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Session Summary Fixes Banked Label v1
 
 ## 1. Verdict

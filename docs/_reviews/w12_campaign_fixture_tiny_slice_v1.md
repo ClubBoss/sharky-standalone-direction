@@ -1,3 +1,9 @@
+---
+status: "w12_fixture_ready_no_route"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W12 Campaign Fixture Tiny Slice v1
 
 ## Verdict

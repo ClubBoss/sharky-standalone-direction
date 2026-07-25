@@ -1,3 +1,9 @@
+---
+status: "profile_evidence_read_only_ui_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Profile Evidence Consumer Admission v1
 
 ## 1. Verdict

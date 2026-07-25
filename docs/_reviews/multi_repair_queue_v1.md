@@ -1,3 +1,10 @@
+---
+status: "multi_repair_queue_landed_with_single_visible_consumer"
+status_source: "derived"
+baseline: "80b5adb86267"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Multi-Repair Queue v1
 
 ## 1. Verdict

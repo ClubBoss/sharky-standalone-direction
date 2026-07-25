@@ -1,3 +1,10 @@
+---
+status: "w6_range_bucket_pilot_review_passed_recommends_pr2"
+status_source: "derived"
+baseline: "4aacba23"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W6 Range Bucket Pilot Review + Repair-If-Needed v1
 
 ## 1. Verdict

@@ -1,3 +1,9 @@
+---
+status: "w7_range_thinking_lite_admission_packet_landed"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7 Range Thinking Lite Concept-Family Admission Packet v1
 
 ## 1. Verdict

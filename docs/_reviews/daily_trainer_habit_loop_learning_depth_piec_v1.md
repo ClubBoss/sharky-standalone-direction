@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Daily Trainer / Habit Loop Expansion and Learning Depth PIEC v1
 
 ## Scope

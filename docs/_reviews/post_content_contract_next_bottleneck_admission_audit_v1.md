@@ -1,3 +1,11 @@
+---
+status: "no_executable_wave_preserve_freeze"
+status_source: "derived"
+doc_date: "2026-07-03"
+baseline: "c81952628cbb"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Post-Content-Contract Next Bottleneck Admission Audit v1
 
 ## 1. Verdict

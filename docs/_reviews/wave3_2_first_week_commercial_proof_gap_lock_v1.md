@@ -1,3 +1,10 @@
+---
+status: "wave3_2_first_week_commercial_proof_gap_lock_ready"
+status_source: "derived"
+baseline: "931498e26c75"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 3.2 - First-Week Commercial Proof & Gap Lock v1
 
 ## 1. Verdict

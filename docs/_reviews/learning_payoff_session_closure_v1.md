@@ -1,3 +1,9 @@
+---
+status: "Learning Payoff / Session Closure v1 \u2014 CLOSED"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Learning Payoff / Session Closure v1
 
 Status: Learning Payoff / Session Closure v1 — CLOSED.

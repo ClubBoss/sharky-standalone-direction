@@ -1,3 +1,9 @@
+---
+status: "w11_source_contract_ready_with_transition_policy"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W10-to-W11 Transition & W11 Active Source Contract v1
 
 ## 1. Verdict

@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R71 Authoritative Surface Audit Closeout v1
 
 ## Milestone purpose/scope recap

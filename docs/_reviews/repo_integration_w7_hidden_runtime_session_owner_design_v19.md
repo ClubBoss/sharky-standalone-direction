@@ -1,3 +1,10 @@
+---
+status: "repo_integration_w7_hidden_runtime_owner_design_passed_pushed_main"
+status_source: "derived"
+baseline: "1be15064"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration - W7 Hidden Runtime Owner Design v19
 
 ## Verdict

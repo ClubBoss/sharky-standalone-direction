@@ -1,3 +1,10 @@
+---
+status: "REVIEW ARTIFACT"
+status_source: "derived"
+baseline: "3ae39713"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Learning Outcome Guarantee Independent Audit v1
 
 Status: REVIEW ARTIFACT.

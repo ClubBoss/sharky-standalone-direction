@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Session-Drill Repair Receipt Persistence v1
 
 ## Scope

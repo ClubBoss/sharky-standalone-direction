@@ -1,3 +1,10 @@
+---
+status: "ACTIVE validation rules for Content Schema Foundation v1"
+status_source: "derived"
+doc_date: "2026-06-28"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Content Schema Validation Rules v1
 
 Status: ACTIVE validation rules for Content Schema Foundation v1.

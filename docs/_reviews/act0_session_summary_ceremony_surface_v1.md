@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "d7a0a349"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 Session Summary Ceremony Surface v1
 
 ## 1. Branch and base commit

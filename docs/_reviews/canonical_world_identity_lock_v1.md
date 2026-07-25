@@ -1,3 +1,10 @@
+---
+status: "canonical_world_identity_locked"
+status_source: "derived"
+baseline: "5d3f77880cc8"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Canonical World Identity Lock v1
 
 Status: `canonical_world_identity_locked`

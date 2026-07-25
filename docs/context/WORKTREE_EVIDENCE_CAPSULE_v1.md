@@ -1,3 +1,11 @@
+---
+status: "ACTIVE worktree/evidence capsule"
+status_source: "derived"
+doc_date: "2026-07-07"
+baseline: "38c7de59303a"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Worktree Evidence Capsule v1
 
 Status: ACTIVE worktree/evidence capsule.

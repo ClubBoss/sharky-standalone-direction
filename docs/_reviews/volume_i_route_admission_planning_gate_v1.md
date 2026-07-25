@@ -1,3 +1,10 @@
+---
+status: "volume_i_route_admission_planning_gate_landed_route_blocked"
+status_source: "derived"
+baseline: "321dba244a2b"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I Route Admission Planning Gate v1
 
 ## 1. Identity

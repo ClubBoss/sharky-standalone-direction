@@ -1,3 +1,10 @@
+---
+status: "CURRENT_AND_VALID after Learning Content Integrity v1A (published-head"
+status_source: "derived"
+baseline: "7f77def08b35"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W12 Assessment Fingerprint Adjudication v1
 
 Status: CURRENT_AND_VALID after Learning Content Integrity v1A (published-head

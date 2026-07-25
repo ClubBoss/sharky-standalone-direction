@@ -1,3 +1,11 @@
+---
+status: "proven"
+status_source: "derived"
+doc_date: "2026-06-19"
+baseline: "9b3ec313"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Compact First-Week Proof Packet v1
 
 Date: 2026-06-19

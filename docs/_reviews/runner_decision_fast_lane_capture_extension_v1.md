@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Runner Decision Fast-Lane Capture Extension v1
 
 ## Scope

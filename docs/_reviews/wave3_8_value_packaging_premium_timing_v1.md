@@ -1,3 +1,9 @@
+---
+status: "wave3_8_value_packaging_premium_timing_no_code_needed"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 3.8 - Value Packaging / Premium Timing v1
 
 ## 1. Verdict

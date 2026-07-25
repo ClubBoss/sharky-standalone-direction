@@ -1,3 +1,9 @@
+---
+status: "blocked_missing_w11_source"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W11 Route Proof Tiny Slice v1
 
 ## 1. Verdict

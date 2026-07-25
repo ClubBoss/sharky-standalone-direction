@@ -1,3 +1,10 @@
+---
+status: "w1_w6_repair_wave2_feedback_completeness_closed"
+status_source: "derived"
+baseline: "924555c6005e"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Repair Wave 2 Feedback Completeness Closure v1
 
 ## 1. Verdict

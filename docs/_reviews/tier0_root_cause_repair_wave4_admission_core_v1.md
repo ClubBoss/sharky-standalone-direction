@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "c597ca1ab76a"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Tier0 Root-Cause Repair + Wave 4 Admission Core v1
 
 Status:

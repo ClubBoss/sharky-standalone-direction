@@ -1,3 +1,10 @@
+---
+status: "accepted_with_minor_residue"
+status_source: "derived"
+baseline: "be4d94694bc1"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Commercial Screenshot / Renderer Acceptance v1
 
 ## Verdict

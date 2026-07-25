@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "7ea40d882f14"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Feedback / Repair / Session Closure Hierarchy Gate v1
 
 Terminal verdict: `feedback_hierarchy_bounded_wrong_feedback_context_recession_implemented`

@@ -1,3 +1,10 @@
+---
+status: "repo_integration_mainline_sync_passed_pushed_main"
+status_source: "derived"
+baseline: "53e11f1f633d"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration Mainline Sync Checkpoint v1
 
 ## 1. Verdict

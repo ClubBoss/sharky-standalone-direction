@@ -1,3 +1,9 @@
+---
+status: "repair_outcome_local_proof_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repair Outcome Consumer / Local Proof Surface v1
 
 ## 1. Verdict

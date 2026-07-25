@@ -1,3 +1,10 @@
+---
+status: "act0_preview_decomposed_wave4_admission_lane_restored"
+status_source: "derived"
+baseline: "5d3f77880cc8"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 Preview Contract Decomposition + Wave 4 Admission v1
 
 Status: `act0_preview_decomposed_wave4_admission_lane_restored`

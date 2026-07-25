@@ -1,3 +1,10 @@
+---
+status: "REVIEW ARTIFACT"
+status_source: "derived"
+baseline: "4a0fdf847259"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1 Showdown Canonical Route Admission Gate v1
 
 Status: REVIEW ARTIFACT.

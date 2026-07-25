@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R70 Blindspot and Action Seam Closeout Audit v1
 
 ## Milestone purpose/scope recap

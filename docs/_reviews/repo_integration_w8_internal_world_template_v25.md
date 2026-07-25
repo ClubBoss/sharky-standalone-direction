@@ -1,3 +1,10 @@
+---
+status: "stage0_repo_hygiene_passed_w8_template_unblocked"
+status_source: "derived"
+baseline: "eab174f6613c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration W8 Internal World Template v25
 
 ## 1. Verdict

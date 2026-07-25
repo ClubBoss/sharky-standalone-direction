@@ -1,3 +1,10 @@
+---
+status: "ACTIVE source-truth reconciliation. Published baseline reviewed:"
+status_source: "derived"
+baseline: "cf0b4c8b4abd"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Original Three-Agent Audit Crosswalk v1
 
 Status: ACTIVE source-truth reconciliation. Published baseline reviewed:

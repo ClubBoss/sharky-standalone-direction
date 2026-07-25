@@ -1,3 +1,10 @@
+---
+status: "concept_family_state_foundation_landed_with_bounded_coverage"
+status_source: "derived"
+baseline: "f3ccddb24d9f"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Concept Family State Foundation v1
 
 ## 1. Verdict

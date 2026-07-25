@@ -1,3 +1,10 @@
+---
+status: "REVIEW ARTIFACT"
+status_source: "derived"
+baseline: "3d5ee26d"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W6 Bounded Certification Closure v1
 
 Status: REVIEW ARTIFACT.

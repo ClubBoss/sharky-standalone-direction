@@ -1,3 +1,11 @@
+---
+status: "w1_w6_repair_wave5_telemetry_repair_proof_closed"
+status_source: "derived"
+doc_date: "2026-07-07"
+baseline: "11ff0585d845"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Repair Wave 5 Telemetry Repair Proof v1
 
 Date: 2026-07-07

@@ -1,3 +1,9 @@
+---
+status: "volume_i_launch_scope_rebaseline_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I Launch Scope Rebaseline v1
 
 ## 1. Verdict

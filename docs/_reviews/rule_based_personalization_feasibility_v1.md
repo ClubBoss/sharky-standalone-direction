@@ -1,3 +1,9 @@
+---
+status: "Gate B admitted"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Rule-Based AI Personalization v1 — Feasibility
 
 Status: Gate B admitted.

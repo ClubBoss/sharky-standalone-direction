@@ -1,3 +1,9 @@
+---
+status: "profile_compression_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Profile Compression / Evidence-Safe Cleanup v1
 
 ## 1. Verdict

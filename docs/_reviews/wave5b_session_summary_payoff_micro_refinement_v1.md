@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "44faa7808f2d"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 5B - Session Summary Payoff Copy / Hierarchy Micro-Refinement
 
 ## 1. Executive verdict

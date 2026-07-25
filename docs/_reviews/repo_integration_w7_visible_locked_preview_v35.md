@@ -1,3 +1,10 @@
+---
+status: "w7_visible_locked_preview_stage0_passed"
+status_source: "derived"
+baseline: "5bfe52facaa9"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration W7 Visible Locked Preview v35
 
 ## 1. Verdict

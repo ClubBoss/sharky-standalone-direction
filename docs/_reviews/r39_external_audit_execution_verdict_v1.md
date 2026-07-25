@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R39 External Audit Execution Verdict v1
 
 ## 1) Ranked candidate classes

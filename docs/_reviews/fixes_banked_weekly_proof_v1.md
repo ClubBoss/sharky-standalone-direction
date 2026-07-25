@@ -1,3 +1,10 @@
+---
+status: "fixes_banked_weekly_proof_landed_with_recent_session_window"
+status_source: "derived"
+baseline: "4d358bf97e50"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Fixes Banked / Weekly Proof v1
 
 ## 1. Verdict

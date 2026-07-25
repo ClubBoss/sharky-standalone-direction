@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # First Table Guide Content Decision + Repair v1
 
 ## 1. Current broad status

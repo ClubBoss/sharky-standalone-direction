@@ -1,3 +1,10 @@
+---
+status: "w7_visible_ace_evidence_consumption_audit_landed"
+status_source: "derived"
+baseline: "4c932c40"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7 Visible Ace Evidence Consumption Audit v1
 
 ## 1. Verdict

@@ -1,3 +1,9 @@
+---
+status: "wave6_2_content_validation_rules_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 6.2 - Content Validation Rules v1
 
 ## 1. Verdict

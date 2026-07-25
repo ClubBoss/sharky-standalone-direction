@@ -1,3 +1,10 @@
+---
+status: "stage_1b_wave_d_closed"
+status_source: "derived"
+baseline: "206c9fdf9093"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Stage 1B Wave D — Minimum Same-Signal Repair v1
 
 Status: `stage_1b_wave_d_closed`

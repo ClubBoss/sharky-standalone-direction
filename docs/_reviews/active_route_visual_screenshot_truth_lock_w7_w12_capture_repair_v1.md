@@ -1,3 +1,11 @@
+---
+status: "legacy_capture_false_positive_truth_lock_landed"
+status_source: "derived"
+doc_date: "2026-07-01"
+baseline: "05bd3fa4da73"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Active Route Visual Screenshot Truth Lock W7-W12 Capture Repair v1
 
 Date: 2026-07-01

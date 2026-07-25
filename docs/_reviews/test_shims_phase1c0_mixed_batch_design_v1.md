@@ -1,3 +1,10 @@
+---
+status: "EVIDENCE FREEZE. This artifact designs Phase 1C implementation batches only; it does not modify tests, production code, "
+status_source: "derived"
+baseline: "79104b41c78d"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Test Shims Phase 1C0 Mixed Batch Design v1
 
 Status: EVIDENCE FREEZE. This artifact designs Phase 1C implementation batches only; it does not modify tests, production code, tooling, CI, content, routes, or `lib/testing/test_shims.dart`.

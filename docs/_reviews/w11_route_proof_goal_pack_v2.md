@@ -1,3 +1,10 @@
+---
+status: "w11_route_backed_not_learner_visible"
+status_source: "derived"
+baseline: "f88354541133"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W11 Route Proof Goal Pack v2
 
 ## 1. Verdict

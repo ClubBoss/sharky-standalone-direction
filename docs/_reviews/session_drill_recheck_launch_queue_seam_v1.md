@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Session-Drill Recheck Launch/Queue Seam v1
 
 ## Scope

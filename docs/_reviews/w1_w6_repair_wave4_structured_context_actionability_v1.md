@@ -1,3 +1,10 @@
+---
+status: "w1_w6_repair_wave4_structured_context_actionability_closed"
+status_source: "derived"
+baseline: "1105620f91cc"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Repair Wave 4: Structured Table Context + Mobile Actionability v1
 
 Verdict: `w1_w6_repair_wave4_structured_context_actionability_closed`

@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 W4-W7 Owner Contract Decomposition v1
 
 ## Accepted Contract

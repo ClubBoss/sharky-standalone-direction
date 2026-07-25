@@ -1,3 +1,11 @@
+---
+status: "w1_w6_runtime_bundle_integrity_closed_wave5_admitted"
+status_source: "derived"
+doc_date: "2026-07-07"
+baseline: "00e0867cd76e"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Runtime Bundle + Build Integrity Gate v1
 
 Date: 2026-07-07

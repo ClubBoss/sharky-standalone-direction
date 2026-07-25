@@ -1,3 +1,11 @@
+---
+status: "CLOSED"
+status_source: "derived"
+doc_date: "2026-07-03"
+baseline: "36675160bafa"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W12 Poker Correctness Review v1
 
 Status: CLOSED.

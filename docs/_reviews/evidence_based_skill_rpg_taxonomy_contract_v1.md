@@ -1,3 +1,9 @@
+---
+status: "skill_rpg_taxonomy_ready_with_partial_sources"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Evidence-Based Skill/RPG Taxonomy Contract v1
 
 ## 1. Verdict

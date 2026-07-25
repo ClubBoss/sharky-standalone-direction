@@ -1,3 +1,9 @@
+---
+status: "READY FOR EXECUTION UNDER `SHARKY_IMPLEMENTATION_AND_SKILL_GROWTH_POLICY_v1.md"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Sharky Visual & Skill Upgrade — Master Plan v1
 
 **Status:** READY FOR EXECUTION UNDER `SHARKY_IMPLEMENTATION_AND_SKILL_GROWTH_POLICY_v1.md`

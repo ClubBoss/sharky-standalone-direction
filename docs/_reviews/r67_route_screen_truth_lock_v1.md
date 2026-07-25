@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R67 Route/Screen Truth-Lock Closeout v1
 
 ## Canonical first-user route (locked)

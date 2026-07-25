@@ -1,3 +1,9 @@
+---
+status: "factory_import_export_mvp_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Tiny Content Factory Import/Export MVP v1
 
 ## 1. Verdict

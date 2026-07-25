@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-06-23"
+baseline: "50f094f1ca69"
+generated_by: "docs_frontmatter_v1"
+---
+
 # First-Week Content Depth / Term / Drill Coverage Audit v1
 
 - Date: 2026-06-23

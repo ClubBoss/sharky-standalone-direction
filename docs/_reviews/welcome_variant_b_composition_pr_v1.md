@@ -1,3 +1,10 @@
+---
+status: "welcome_variant_b_composition_landed"
+status_source: "derived"
+baseline: "3d586d537035"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Welcome Variant B Composition PR v1
 
 ## Verdict

@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R52 R53 Direction Lock v1
 
 ## 1) Narrowed A-candidate (learning-truth/content-integrity)

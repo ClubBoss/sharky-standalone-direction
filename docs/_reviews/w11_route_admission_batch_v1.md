@@ -1,3 +1,9 @@
+---
+status: "blocked_route_registration_conflict"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W11 Route Admission Batch v1
 
 ## 1. Verdict

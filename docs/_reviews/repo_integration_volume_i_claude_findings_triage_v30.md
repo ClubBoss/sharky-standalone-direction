@@ -1,3 +1,10 @@
+---
+status: "volume_i_claude_findings_triage_stage0_passed"
+status_source: "derived"
+baseline: "d3068ee90d3b"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration Volume I Claude Findings Triage v30
 
 ## 1. Verdict

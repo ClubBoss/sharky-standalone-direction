@@ -1,3 +1,10 @@
+---
+status: "w11_route_admission_landed_with_transfer_depth"
+status_source: "derived"
+baseline: "3ce9117d30a4"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W11 Route Admission + Transfer Depth Gate v1
 
 ## 1. Verdict

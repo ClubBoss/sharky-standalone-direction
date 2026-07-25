@@ -1,3 +1,10 @@
+---
+status: "LOCAL-ONLY REPAIR RECORD"
+status_source: "derived"
+baseline: "6d758c702616"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Action HNP Telemetry Privacy Repair v1
 
 Status: LOCAL-ONLY REPAIR RECORD

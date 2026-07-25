@@ -1,3 +1,9 @@
+---
+status: "session_summary_visible_consumer_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Session Summary Visible Consumer v1
 
 ## 1. Verdict

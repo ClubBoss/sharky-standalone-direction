@@ -1,3 +1,11 @@
+---
+status: "w8_w9_canonical_identity_reconciled"
+status_source: "derived"
+doc_date: "2026-07-08"
+baseline: "2ed4c2755e72"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W8/W9 Canonical Identity Ownership Reconciliation v1
 
 Date: 2026-07-08

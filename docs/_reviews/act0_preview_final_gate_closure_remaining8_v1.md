@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 Preview Final Gate Closure - Remaining 8 Controlled Pass v1
 
 ## 1. Current broad status

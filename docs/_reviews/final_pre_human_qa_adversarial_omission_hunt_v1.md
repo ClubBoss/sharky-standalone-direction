@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-07-09"
+baseline: "7e9e783a255c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Final Pre-Human-QA Adversarial Omission Hunt v1
 
 Date: 2026-07-09

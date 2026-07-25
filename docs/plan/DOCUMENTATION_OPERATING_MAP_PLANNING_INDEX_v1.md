@@ -1,3 +1,10 @@
+---
+status: "SSOT-lite"
+status_source: "derived"
+doc_date: "2026-03-09"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Documentation Operating Map / Planning Index v1
 Status: SSOT-lite
 Purpose: Provide one lightweight entry point to the current planning canon so the docs operate as a usable system instead of a scattered folder.

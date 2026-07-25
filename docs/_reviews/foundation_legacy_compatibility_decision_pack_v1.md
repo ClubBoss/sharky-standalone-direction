@@ -1,3 +1,9 @@
+---
+status: "keep_legacy_now_adapter_later"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Foundation Legacy Compatibility Decision Pack v1
 
 ## 1. Verdict

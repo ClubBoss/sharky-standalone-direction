@@ -1,3 +1,10 @@
+---
+status: "repo_integration_context_capsule_sync_passed_pushed_main"
+status_source: "derived"
+baseline: "df2103719377"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration Context Capsule Sync v2
 
 ## 1. Verdict

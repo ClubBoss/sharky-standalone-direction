@@ -1,3 +1,10 @@
+---
+status: "repo_integration_learning_transfer_measurement_passed_pushed_main"
+status_source: "derived"
+baseline: "192bf135"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration Learning Transfer Measurement v6
 
 ## 1. Verdict

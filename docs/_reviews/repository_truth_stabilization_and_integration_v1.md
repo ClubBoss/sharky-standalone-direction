@@ -1,3 +1,11 @@
+---
+status: "repository_truth_stabilized_main_green_wave4_ready"
+status_source: "derived"
+doc_date: "2026-05-13"
+baseline: "bd066b769b88"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repository Truth Stabilization + Baseline Repair + Integration/Push v1
 
 ## 1. Verdict

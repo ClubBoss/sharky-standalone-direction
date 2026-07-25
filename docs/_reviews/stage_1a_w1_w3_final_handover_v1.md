@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "cb1d2e0e3f3c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Stage 1A W1-W3 Final Handover v1
 
 ## 1. Final verdict

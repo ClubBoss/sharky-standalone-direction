@@ -1,3 +1,9 @@
+---
+status: "session_summary_named_capture_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Session Summary Copy/Visual Acceptance v1
 
 ## 1. Verdict

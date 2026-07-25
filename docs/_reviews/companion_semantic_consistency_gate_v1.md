@@ -1,3 +1,10 @@
+---
+status: "companion_semantic_consistency_passed"
+status_source: "derived"
+baseline: "999ddc9b326f"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Companion Semantic Consistency Gate v1
 
 ## 1. Verdict

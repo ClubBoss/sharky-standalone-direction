@@ -1,3 +1,10 @@
+---
+status: "local metadata admission contract; no runtime or content implementation"
+status_source: "derived"
+doc_date: "2026-06-24"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Canonical Source Target Metadata Contract v1
 
 Date: 2026-06-24

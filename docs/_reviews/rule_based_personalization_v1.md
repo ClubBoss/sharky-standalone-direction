@@ -1,3 +1,9 @@
+---
+status: "Rule-Based AI Personalization v1 \u2014 CLOSED"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Rule-Based AI Personalization v1 — Pilot Review
 
 Status: Rule-Based AI Personalization v1 — CLOSED.

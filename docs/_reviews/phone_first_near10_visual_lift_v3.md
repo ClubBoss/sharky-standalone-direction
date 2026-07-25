@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "e98f4a08720e"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Phone-First Near-10 Visual Lift v3
 
 ## 1. Executive verdict

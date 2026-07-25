@@ -1,3 +1,9 @@
+---
+status: "wave3_4_achievement_visual_language_icons_no_code_needed"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 3.4 - Achievement Visual Language / Icons v1
 
 ## 1. Verdict

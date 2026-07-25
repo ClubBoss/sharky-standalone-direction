@@ -1,3 +1,10 @@
+---
+status: "evidence and source tracing only. No product source, UI, route, progression, telemetry, Sharky, motion, tablet, or readi"
+status_source: "derived"
+baseline: "6906fdfeca18"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Current-Main Visual Evidence / Fixture Trace v1
 
 Status: evidence and source tracing only. No product source, UI, route, progression, telemetry, Sharky, motion, tablet, or readiness artifact changed.

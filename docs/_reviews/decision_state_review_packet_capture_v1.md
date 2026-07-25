@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "682634c2b142"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Decision-State Review Packet Capture v1
 
 ## Scope

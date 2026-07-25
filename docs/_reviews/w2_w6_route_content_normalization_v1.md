@@ -1,3 +1,10 @@
+---
+status: "w2_w6_normalization_docs_only_ready"
+status_source: "derived"
+baseline: "698a17dc2bc0"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W2-W6 Route/Content Normalization v1
 
 ## 1. Verdict

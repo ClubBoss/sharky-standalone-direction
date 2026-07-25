@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R51 Post-R50 Decision Lock v1
 
 ## 1) A/B/C matrix

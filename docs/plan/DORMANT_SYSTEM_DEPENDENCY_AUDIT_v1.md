@@ -1,3 +1,10 @@
+---
+status: "ACTIVE"
+status_source: "derived"
+doc_date: "2026-05-13"
+generated_by: "docs_frontmatter_v1"
+---
+
 # DORMANT_SYSTEM_DEPENDENCY_AUDIT_v1
 Status: ACTIVE
 Purpose: classify large non-route repository families before any archival or

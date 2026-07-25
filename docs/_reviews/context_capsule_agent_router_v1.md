@@ -1,3 +1,9 @@
+---
+status: "context_capsule_agent_router_created"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Context Capsule Agent Router v1
 
 ## Verdict

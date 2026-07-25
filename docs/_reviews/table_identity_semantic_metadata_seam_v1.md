@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Table Identity Semantic Metadata Seam v1
 
 ## 1. Chosen metadata owner

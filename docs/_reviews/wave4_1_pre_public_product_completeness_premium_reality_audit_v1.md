@@ -1,3 +1,9 @@
+---
+status: "needs_p1_product_completeness_before_public_packaging"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 4.1 - Pre-Public Product Completeness & Premium Reality Audit v1
 
 ## 1. Verdict

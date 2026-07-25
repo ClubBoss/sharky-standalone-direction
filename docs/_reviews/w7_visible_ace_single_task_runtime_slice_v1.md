@@ -1,3 +1,10 @@
+---
+status: "w7_visible_ace_single_task_runtime_slice_landed"
+status_source: "derived"
+baseline: "c2635119"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7 Visible Ace Single Task Runtime Slice v1
 
 ## 1. Verdict

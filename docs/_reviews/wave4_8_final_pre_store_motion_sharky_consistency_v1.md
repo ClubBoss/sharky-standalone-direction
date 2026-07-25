@@ -1,3 +1,9 @@
+---
+status: "wave4_8_final_pre_store_micro_fix_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 4.8 - Final Pre-Store Micro-Fix: Motion Media & Sharky Consistency v1
 
 ## 1. Verdict

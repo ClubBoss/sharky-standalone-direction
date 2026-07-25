@@ -1,3 +1,11 @@
+---
+status: "sharky_visual_consistency_foundation_landed"
+status_source: "derived"
+doc_date: "2026-07-02"
+baseline: "e37361a33bb6"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Sharky Visual Consistency Foundation v1
 
 ## 1. Verdict

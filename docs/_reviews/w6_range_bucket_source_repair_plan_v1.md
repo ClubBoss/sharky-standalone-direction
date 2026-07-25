@@ -1,3 +1,10 @@
+---
+status: "REVIEW ARTIFACT"
+status_source: "derived"
+baseline: "a7da9de6"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W6 Range Bucket Source Repair Plan v1
 
 Status: REVIEW ARTIFACT.

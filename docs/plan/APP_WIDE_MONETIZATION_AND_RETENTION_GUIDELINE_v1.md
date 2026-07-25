@@ -1,3 +1,10 @@
+---
+status: "ACTIVE"
+status_source: "derived"
+doc_date: "2026-05-06"
+generated_by: "docs_frontmatter_v1"
+---
+
 # App-Wide Monetization And Retention Guideline v1
 
 Status: ACTIVE

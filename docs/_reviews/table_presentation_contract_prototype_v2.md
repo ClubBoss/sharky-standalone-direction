@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "b1e9a11c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Table Presentation Contract Prototype V2
 
 ## 1. Terminal verdict

@@ -1,3 +1,9 @@
+---
+status: "review_history_projection_data_only_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Review Mistake-History Unresolved Projection v1
 
 ## 1. Verdict

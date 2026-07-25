@@ -1,3 +1,10 @@
+---
+status: "ACTIVE CONTINUATION SNAPSHOT"
+status_source: "derived"
+doc_date: "2026-05-20"
+generated_by: "docs_frontmatter_v1"
+---
+
 # ACT0_EXECUTION_SNAPSHOT_2026_05_14_v1
 
 Status: ACTIVE CONTINUATION SNAPSHOT

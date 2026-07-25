@@ -1,3 +1,10 @@
+---
+status: "repo_integration_w7_visible_ace_evidence_consumption_audit_passed_pushed_main"
+status_source: "derived"
+baseline: "664f3762"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration - W7 Visible Ace Evidence Consumption Audit v14
 
 ## Verdict

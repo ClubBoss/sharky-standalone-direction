@@ -1,3 +1,9 @@
+---
+status: "w11_w12_metadata_only_source_proof_wave_recommended"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W11-W12 Active Content Source-Proof Reconciliation Audit v1
 
 ## 1. Verdict

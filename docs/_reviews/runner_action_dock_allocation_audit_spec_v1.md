@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "1bec2dff"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Runner Action-Dock Allocation Audit / Spec v1
 
 Terminal verdict: `runner_action_dock_allocation_audit_confirms_wrong_feedback_and_repair_focus_share_fixed_lower_slot_dead_space_while_session_summary_is_a_separate_scaffold_scroll_safe_area_wave`

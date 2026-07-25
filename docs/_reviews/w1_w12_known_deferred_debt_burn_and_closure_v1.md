@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "d7ce93751888"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W12 Known Deferred Debt Burn and Closure v1
 
 ## 1. Objective.

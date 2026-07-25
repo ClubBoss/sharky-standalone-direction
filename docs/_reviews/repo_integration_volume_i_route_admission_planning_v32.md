@@ -1,3 +1,10 @@
+---
+status: "volume_i_route_admission_planning_gate_stage0_passed"
+status_source: "derived"
+baseline: "a373533a53c7"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration Volume I Route Admission Planning v32
 
 ## 1. Verdict

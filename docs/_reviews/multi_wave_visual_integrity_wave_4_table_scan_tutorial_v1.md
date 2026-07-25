@@ -1,3 +1,9 @@
+---
+status: "evidence_only__current_source_does_not_reproduce_wts_01"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Multi-Wave Visual Integrity — Wave 4 Welcome Table-Scan Tutorial
 
 ## Verdict

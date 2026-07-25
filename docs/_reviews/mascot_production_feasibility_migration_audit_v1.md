@@ -1,3 +1,11 @@
+---
+status: "mascot_feasibility_audit_complete"
+status_source: "derived"
+doc_date: "2026-07-03"
+baseline: "08bb7bad"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Mascot Production Feasibility & Migration Audit v1
 
 Date: 2026-07-03

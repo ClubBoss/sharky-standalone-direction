@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Action sequence convergence feasibility v1
 
 ## Gate 0 corrected classification

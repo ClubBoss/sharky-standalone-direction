@@ -1,3 +1,10 @@
+---
+status: "repo_integration_w7_hidden_evidence_harness_passed_pushed_main"
+status_source: "derived"
+baseline: "33c1d12c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration - W7 Hidden Evidence Harness v21
 
 ## Verdict

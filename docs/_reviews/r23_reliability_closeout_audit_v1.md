@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "0a03ab6a0"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R23 Reliability Closeout Audit v1
 
 ## 1) Milestone Purpose and Scope Recap

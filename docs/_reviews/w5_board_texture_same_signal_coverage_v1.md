@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-06-23"
+baseline: "cd78be4500b8"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W5 Board Texture Same-Signal Coverage v1
 
 - Date: 2026-06-23

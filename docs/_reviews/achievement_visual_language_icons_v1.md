@@ -1,3 +1,11 @@
+---
+status: "achievement_visual_language_icons_landed_with_bounded_consumers"
+status_source: "derived"
+doc_date: "2026-07-03"
+baseline: "4a9bdf29ed88"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Achievement Visual Language / Icons v1
 
 ## 1. Verdict

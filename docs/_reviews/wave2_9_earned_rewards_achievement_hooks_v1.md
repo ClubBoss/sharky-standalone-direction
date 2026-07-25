@@ -1,3 +1,9 @@
+---
+status: "wave2_9_earned_rewards_achievement_hooks_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 2.9 - Earned Rewards / Achievement Hooks v1
 
 ## 1. Verdict

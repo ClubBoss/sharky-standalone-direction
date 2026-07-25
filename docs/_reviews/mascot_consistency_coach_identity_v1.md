@@ -1,3 +1,9 @@
+---
+status: "mascot_consistency_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Mascot Consistency / Coach Identity v1
 
 ## Verdict

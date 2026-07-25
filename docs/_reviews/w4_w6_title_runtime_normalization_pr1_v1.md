@@ -1,3 +1,10 @@
+---
+status: "w4_w6_title_runtime_normalization_pr1_ready"
+status_source: "derived"
+baseline: "b89b2ec8"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W4-W6 Title/Runtime Normalization PR1 v1
 
 Branch: `codex/w4-w6-title-runtime-normalization-pr1-v1`.

@@ -1,3 +1,10 @@
+---
+status: "repo_integration_durable_repair_lifecycle_passed_pushed_main"
+status_source: "derived"
+baseline: "b633ea79"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration Durable Repair Lifecycle v5
 
 ## 1. Verdict

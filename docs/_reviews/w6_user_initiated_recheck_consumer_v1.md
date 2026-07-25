@@ -1,3 +1,11 @@
+---
+status: "minimal route-launch consumer; no visible Act0 queue consumer"
+status_source: "derived"
+doc_date: "2026-06-23"
+baseline: "290d99fe7585"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W6 User-Initiated Recheck Consumer v1
 
 Date: 2026-06-23

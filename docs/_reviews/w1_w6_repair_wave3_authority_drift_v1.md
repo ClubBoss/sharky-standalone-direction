@@ -1,3 +1,10 @@
+---
+status: "w1_w6_repair_wave3_authority_drift_closed"
+status_source: "derived"
+baseline: "013beb9b6795"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Repair Wave 3 Authority Drift Closure v1
 
 ## 1. Verdict

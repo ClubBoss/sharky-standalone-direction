@@ -1,3 +1,10 @@
+---
+status: "architecture/source-ownership audit only. No production source, route,"
+status_source: "derived"
+baseline: "55024b4a60be"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Shared Table Presentation Seam Audit v1
 
 Status: architecture/source-ownership audit only. No production source, route,

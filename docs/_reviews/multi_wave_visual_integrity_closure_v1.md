@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "55024b4a60be"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Multi-Wave Visual Integrity Closure v1
 
 ## Terminal verdict

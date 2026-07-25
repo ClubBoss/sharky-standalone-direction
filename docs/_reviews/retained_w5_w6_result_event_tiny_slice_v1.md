@@ -1,3 +1,10 @@
+---
+status: "implemented"
+status_source: "derived"
+doc_date: "2026-06-24"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Retained W5/W6 Result Event Tiny Slice v1
 
 Date: 2026-06-24

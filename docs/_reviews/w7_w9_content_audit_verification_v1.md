@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-07-08"
+baseline: "299ea751800d"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7-W9 Content Audit Verification v1
 
 Date: 2026-07-08

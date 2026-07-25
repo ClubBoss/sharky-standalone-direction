@@ -1,3 +1,9 @@
+---
+status: "practice_repair_queue_consumer_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Practice Repair Queue Consumer Admission v1
 
 ## 1. Verdict

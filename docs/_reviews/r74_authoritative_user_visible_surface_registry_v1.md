@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R74 Authoritative User-Visible Surface Registry v1
 
 ## Milestone purpose/scope recap

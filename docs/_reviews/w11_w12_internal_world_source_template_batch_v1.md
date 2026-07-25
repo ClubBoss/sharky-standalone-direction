@@ -1,3 +1,10 @@
+---
+status: "w11_w12_internal_world_source_template_batch_landed"
+status_source: "derived"
+baseline: "4120d78710c1"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W11-W12 Internal World Source Template Batch v1
 
 ## 1. Verdict

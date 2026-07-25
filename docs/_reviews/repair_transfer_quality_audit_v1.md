@@ -1,3 +1,10 @@
+---
+status: "audit-only transfer-quality review"
+status_source: "derived"
+doc_date: "2026-06-18"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repair Transfer Quality Audit v1
 
 Status: audit-only transfer-quality review

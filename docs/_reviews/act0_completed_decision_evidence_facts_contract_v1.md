@@ -1,3 +1,9 @@
+---
+status: "completed_decision_evidence_facts_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 Completed Decision Evidence Facts Contract v1
 
 ## 1. Verdict

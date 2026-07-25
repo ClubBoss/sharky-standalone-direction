@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "464f915f1"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R22 Post-Launch Execution Focus v1
 
 ## What R22 Found

@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "c1ffe04b"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W12 End-to-End Pattern Replay Goal Pack v1
 
 ## 1. Final verdict

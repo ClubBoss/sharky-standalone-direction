@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "8afedae44510"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Final W1-W12 Answer-Position Repair And Machine Closure v1
 
 ## 1. Objective

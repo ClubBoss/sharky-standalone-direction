@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "2847c0cd27bf"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Screenshot Tooling Inventory v1
 
 - Main commit: `2847c0cd27bf14c7e3cf7e4a486e165cd4de4df1`.

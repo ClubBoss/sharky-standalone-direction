@@ -1,3 +1,10 @@
+---
+status: "source-inspection adjudication only. No product repair, capture, or route work was performed"
+status_source: "derived"
+baseline: "447cdefbc4f2"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Claude Exhaustive Visual Audit Adjudication / Canonical Repair Ledger v1
 
 Status: source-inspection adjudication only. No product repair, capture, or route work was performed.

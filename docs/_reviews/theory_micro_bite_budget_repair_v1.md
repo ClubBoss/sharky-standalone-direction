@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Theory Micro-Bite Budget Repair v1
 
 ## 1. Current broad status

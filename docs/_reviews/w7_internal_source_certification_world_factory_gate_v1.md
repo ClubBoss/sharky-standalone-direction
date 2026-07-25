@@ -1,3 +1,10 @@
+---
+status: "w7_internal_source_certified_world_factory_landed"
+status_source: "derived"
+baseline: "129e789e59f4"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7 Internal Source Certification + World Factory Gate v1
 
 ## 1. Verdict

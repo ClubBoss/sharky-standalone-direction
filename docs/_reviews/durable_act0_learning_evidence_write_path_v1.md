@@ -1,3 +1,10 @@
+---
+status: "durable_evidence_write_path_ready"
+status_source: "derived"
+baseline: "0f62fd2b"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Durable Act0 Learning Evidence Write Path v1
 
 ## 1. Verdict

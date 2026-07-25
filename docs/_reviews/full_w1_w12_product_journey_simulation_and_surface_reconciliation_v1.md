@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-07-08"
+baseline: "738a78304009"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Full W1-W12 Product Journey Simulation and Surface Reconciliation v1
 
 Date: 2026-07-08

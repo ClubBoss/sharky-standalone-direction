@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Alpha Journey QA execution capsule v1
 
 Use this exact compact context for a fresh Alpha QA run. Replace bracketed values

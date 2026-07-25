@@ -1,3 +1,10 @@
+---
+status: "w7_completion_pack_recovery_integrated"
+status_source: "derived"
+baseline: "831df4f4f595"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration W7 Completion Pack Recovery v23
 
 ## 1. Verdict

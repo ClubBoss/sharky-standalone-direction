@@ -1,3 +1,10 @@
+---
+status: "ACTIVE convergence ledger"
+status_source: "derived"
+baseline: "2e86b4c35d7c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Known-Debt Zeroing and Closure-Packet Ledger v1
 
 Status: ACTIVE convergence ledger

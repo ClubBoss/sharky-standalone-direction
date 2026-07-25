@@ -1,3 +1,10 @@
+---
+status: "claude_ux_v2_wave2_closed_ready_for_wave3_decision"
+status_source: "derived"
+baseline: "4fd5bef3"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Claude UX/UI v2 Wave 2 Closure / Recheck
 
 ## 1. Verdict

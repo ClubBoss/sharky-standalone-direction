@@ -1,3 +1,9 @@
+---
+status: "accepted_with_route_gaps"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # World 7-12 Route Truth Audit v1
 
 ## 1. Verdict

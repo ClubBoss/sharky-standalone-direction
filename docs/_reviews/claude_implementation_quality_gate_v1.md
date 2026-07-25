@@ -1,3 +1,10 @@
+---
+status: "claude_implementation_quality_accepted_with_bounded_repairs"
+status_source: "derived"
+baseline: "80e0cd5b"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Claude Implementation Quality Gate v1
 
 ## 1. Verdict

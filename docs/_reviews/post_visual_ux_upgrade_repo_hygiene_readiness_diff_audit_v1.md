@@ -1,3 +1,11 @@
+---
+status: "needs_dirty_worktree_owner_split"
+status_source: "derived"
+doc_date: "2026-07-02"
+baseline: "05bd3fa4da73"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Post-Visual-UX-Upgrade Repo Hygiene + Readiness Diff Audit v1
 
 Date: 2026-07-02

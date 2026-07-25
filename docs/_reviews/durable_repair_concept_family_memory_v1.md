@@ -1,3 +1,9 @@
+---
+status: "durable_repair_concept_family_memory_landed_engine_only"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Durable Repair Concept Family Memory v1
 
 ## 1. Verdict

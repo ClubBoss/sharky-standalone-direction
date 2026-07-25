@@ -1,3 +1,10 @@
+---
+status: "w7_route_copy_lock_transition_slice_landed"
+status_source: "derived"
+baseline: "ce44650469e1"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7 Route Copy Lock Transition Slice v1
 
 ## 1. Verdict

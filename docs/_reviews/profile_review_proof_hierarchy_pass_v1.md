@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "9a9f087dbd4f"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Profile / Review Proof Hierarchy Pass v1
 
 ## Scope

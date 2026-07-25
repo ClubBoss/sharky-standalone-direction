@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "acd4acb27de4"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Sharky Character & Coaching Presence PIEC v1
 
 ## Scope

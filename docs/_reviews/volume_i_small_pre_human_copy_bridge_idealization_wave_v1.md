@@ -1,3 +1,10 @@
+---
+status: "small_copy_bridge_idealization_landed"
+status_source: "derived"
+baseline: "05bd3fa4da73"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I Small Pre-Human Copy Bridge Idealization Wave v1
 
 ## 1. Verdict

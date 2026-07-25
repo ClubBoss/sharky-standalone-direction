@@ -1,3 +1,9 @@
+---
+status: "implemented_metadata_expansion_null_canonical"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Canonical Source Target Metadata Expansion v2
 
 ## 1. Verdict

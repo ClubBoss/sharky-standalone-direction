@@ -1,3 +1,10 @@
+---
+status: "sharky_companion_states_landed_with_bounded_consumers"
+status_source: "derived"
+baseline: "81f9ee6e0486"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Sharky Companion States v1
 
 ## 1. Verdict

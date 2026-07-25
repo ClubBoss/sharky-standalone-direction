@@ -1,3 +1,10 @@
+---
+status: "REVIEW ARTIFACT"
+status_source: "derived"
+baseline: "63f46b69"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W6 Payoff/Progression Repair v1
 
 Status: REVIEW ARTIFACT.

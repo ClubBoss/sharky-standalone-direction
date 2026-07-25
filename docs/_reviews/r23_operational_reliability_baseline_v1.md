@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "464f915f1"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R23 Operational Reliability Baseline v1
 
 ## 1) Scope and Evidence Sources

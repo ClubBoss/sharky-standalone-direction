@@ -1,3 +1,9 @@
+---
+status: "durable_repair_candidate_resolution_contract_landed_engine_only"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Durable Repair Candidate Resolution Contract v1
 
 ## 1. Verdict

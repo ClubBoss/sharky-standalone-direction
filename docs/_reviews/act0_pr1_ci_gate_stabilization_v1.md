@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 PR1 CI Gate Stabilization v1
 
 ## 1. PR #1 Status

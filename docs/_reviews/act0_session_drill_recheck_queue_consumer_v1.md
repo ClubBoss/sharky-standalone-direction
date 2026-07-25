@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 Session-Drill Recheck Queue Consumer v1
 
 ## Scope

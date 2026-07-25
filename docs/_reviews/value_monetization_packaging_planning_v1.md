@@ -1,3 +1,10 @@
+---
+status: "planning/audit only"
+status_source: "derived"
+doc_date: "2026-06-18"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Value / Monetization Packaging Planning v1
 
 Status: planning/audit only

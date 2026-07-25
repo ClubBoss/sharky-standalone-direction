@@ -1,3 +1,9 @@
+---
+status: "blocked_projection_to_route_shape_gap"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W11 Route Proof Goal Pack v1
 
 ## 1. Verdict

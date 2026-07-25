@@ -1,3 +1,10 @@
+---
+status: "w8_internal_world_source_template_landed_four_task"
+status_source: "derived"
+baseline: "6276e914d37f"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W8 Internal World Source Template v1
 
 ## 1. Verdict

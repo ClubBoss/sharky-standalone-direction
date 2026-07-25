@@ -1,3 +1,9 @@
+---
+status: "completed_decision_callback_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 Completed Decision Callback Contract v1
 
 ## 1. Verdict

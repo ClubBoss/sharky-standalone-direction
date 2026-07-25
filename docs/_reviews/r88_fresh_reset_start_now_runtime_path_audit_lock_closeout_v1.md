@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R88 Fresh Reset / Start Now Runtime Path Audit and Lock Closeout v1
 
 ## Purpose and bounded scope

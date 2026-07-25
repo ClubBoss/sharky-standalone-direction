@@ -1,3 +1,10 @@
+---
+status: "w7_completion_pack_landed_four_task"
+status_source: "derived"
+baseline: "33c1d12c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7 Range Thinking Lite Completion Pack v1
 
 ## 1. Verdict

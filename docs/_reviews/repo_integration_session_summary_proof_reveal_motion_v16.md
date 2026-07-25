@@ -1,3 +1,10 @@
+---
+status: "repo_integration_session_summary_proof_reveal_motion_passed_pushed_main"
+status_source: "derived"
+baseline: "fded17d6"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration - Session Summary Proof Reveal Motion v16
 
 ## Verdict

@@ -1,3 +1,9 @@
+---
+status: "docs-only audit. No source changes in this wave"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Hub Surface Coherence Audit / Plan v1
 
 Status: docs-only audit. No source changes in this wave.

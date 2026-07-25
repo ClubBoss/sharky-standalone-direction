@@ -1,3 +1,9 @@
+---
+status: "wave3_13_sharky_growth_companion_tone_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 3.13 - Sharky Growth / Companion Tone v1
 
 ## 1. Verdict

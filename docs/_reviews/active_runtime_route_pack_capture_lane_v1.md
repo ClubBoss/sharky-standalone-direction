@@ -1,3 +1,10 @@
+---
+status: "active_runtime_route_pack_visual_packet_generated"
+status_source: "derived"
+baseline: "05bd3fa4da73"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Active Runtime Route-Pack Capture Lane v1
 
 ## Verdict

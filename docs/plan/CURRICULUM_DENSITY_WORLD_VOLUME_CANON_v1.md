@@ -1,3 +1,10 @@
+---
+status: "SSOT-lite"
+status_source: "derived"
+doc_date: "2026-03-09"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Curriculum Density / World Volume Canon v1
 Status: SSOT-lite
 Purpose: Record the minimum world-density expectations so the long-term ladder does not collapse into worlds that are technically mapped but too thin to deliver real learning depth, retention, and progression.

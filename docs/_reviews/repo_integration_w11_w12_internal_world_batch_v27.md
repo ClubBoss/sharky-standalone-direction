@@ -1,3 +1,10 @@
+---
+status: "repo_integration_w11_w12_internal_world_batch_stage0_passed"
+status_source: "derived"
+baseline: "6703c3f51270"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration W11-W12 Internal World Batch v27
 
 ## 1. Verdict

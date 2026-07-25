@@ -1,3 +1,10 @@
+---
+status: "ACCEPTED - conditional certification gate passed"
+status_source: "derived"
+doc_date: "2026-06-29"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W2 8.0 Certification Review / Correctness-Payoff Gate v1
 
 Status: ACCEPTED - conditional certification gate passed.

@@ -1,3 +1,10 @@
+---
+status: "ACTIVE CONTROLLED-DEMO PACKET"
+status_source: "derived"
+doc_date: "2026-05-21"
+generated_by: "docs_frontmatter_v1"
+---
+
 # CONTROLLED_DEMO_PROOF_PACKET_v1
 
 Status: ACTIVE CONTROLLED-DEMO PACKET

@@ -1,3 +1,10 @@
+---
+status: "context_capsules_refreshed_and_ready"
+status_source: "derived"
+baseline: "f9a1909f70ae"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Context Capsule Bounded Refresh v1
 
 ## 1. Verdict

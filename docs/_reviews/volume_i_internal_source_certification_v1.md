@@ -1,3 +1,9 @@
+---
+status: "w1_w12_internal_source_certified"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I Internal Source Certification v1
 
 ## 1. Verdict

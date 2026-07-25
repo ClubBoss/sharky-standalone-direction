@@ -1,3 +1,11 @@
+---
+status: "architecture audit; no route, runtime, UI, telemetry, content, or"
+status_source: "derived"
+doc_date: "2026-06-23"
+baseline: "79fa6802f450"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W6 Cross-Family Route-Contract Prerequisite Audit v1
 
 Date: 2026-06-23

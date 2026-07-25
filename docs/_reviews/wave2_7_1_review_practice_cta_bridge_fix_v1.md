@@ -1,3 +1,9 @@
+---
+status: "wave2_7_1_review_practice_cta_bridge_fix_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 2.7.1 - Review Practice CTA Bridge Fix v1
 
 ## 1. Verdict

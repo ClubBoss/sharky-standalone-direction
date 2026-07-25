@@ -1,3 +1,10 @@
+---
+status: "volume_i_pre_route_naming_copy_capstone_contract_landed_with_tests"
+status_source: "derived"
+baseline: "b391a110b231"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I Pre-Route Naming Copy Capstone Contract v1
 
 ## 1. Verdict

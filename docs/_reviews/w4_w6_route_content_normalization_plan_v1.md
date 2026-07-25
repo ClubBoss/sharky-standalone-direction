@@ -1,3 +1,10 @@
+---
+status: "w4_w6_normalization_ready_with_ssot_cleanup"
+status_source: "derived"
+baseline: "d148d3dd"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W4-W6 Route/Content Normalization Plan v1
 
 Branch: `codex/w4-w6-route-content-normalization-plan-v1`.

@@ -1,3 +1,10 @@
+---
+status: "cross_session_proof_profile_landed_with_bounded_consumer"
+status_source: "derived"
+baseline: "c79505dd9825"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Cross-Session Proof Profile v1
 
 ## 1. Verdict

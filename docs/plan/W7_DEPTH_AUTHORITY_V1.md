@@ -1,3 +1,9 @@
+---
+status: "CURRENT. Published after the bounded W7 transfer repair"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7 Depth Authority v1
 
 Status: CURRENT. Published after the bounded W7 transfer repair.

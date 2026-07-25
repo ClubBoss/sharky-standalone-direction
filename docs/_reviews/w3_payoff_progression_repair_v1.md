@@ -1,3 +1,10 @@
+---
+status: "ACCEPTED - technical payoff/progression repair ready for closure"
+status_source: "derived"
+doc_date: "2026-06-29"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W3 Payoff/Progression Repair v1
 
 Status: ACCEPTED - technical payoff/progression repair ready for closure.

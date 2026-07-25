@@ -1,3 +1,10 @@
+---
+status: "PUBLISHED FOR ADMISSION"
+status_source: "derived"
+baseline: "5e2727b0101d"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Action theory live-route repair v1
 
 Status: PUBLISHED FOR ADMISSION

@@ -1,3 +1,9 @@
+---
+status: "closed"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7-W9 Same-Signal Repair/Recheck v1
 
 Status: closed

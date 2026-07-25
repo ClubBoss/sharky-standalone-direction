@@ -1,3 +1,10 @@
+---
+status: "stage0_repo_hygiene_passed_w9_w10_batch_unblocked"
+status_source: "derived"
+baseline: "ad8451804ae6"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration W9-W10 Internal World Batch v26
 
 ## 1. Verdict

@@ -1,3 +1,10 @@
+---
+status: "small_idealization_copy_wave_recommended"
+status_source: "derived"
+doc_date: "2026-07-01"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I 10/10 Gap Register & Pre-Human Idealization Plan v1
 
 Date: 2026-07-01

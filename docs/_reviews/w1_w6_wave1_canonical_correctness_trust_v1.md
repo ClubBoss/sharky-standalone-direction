@@ -1,3 +1,10 @@
+---
+status: "w1_w6_wave1_canonical_correctness_trust_implemented"
+status_source: "derived"
+baseline: "d0a3a3eabfde"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Wave 1 Canonical Correctness and Trust v1
 
 Verdict: `w1_w6_wave1_canonical_correctness_trust_implemented`

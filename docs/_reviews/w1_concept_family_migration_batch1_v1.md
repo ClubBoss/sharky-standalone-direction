@@ -1,3 +1,10 @@
+---
+status: "ACCEPTED implementation artifact"
+status_source: "derived"
+doc_date: "2026-06-28"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1 Concept Family Migration Batch 1 v1
 
 Status: ACCEPTED implementation artifact.

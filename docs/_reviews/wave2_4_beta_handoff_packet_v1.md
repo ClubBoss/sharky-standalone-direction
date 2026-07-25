@@ -1,3 +1,11 @@
+---
+status: "wave2_4_beta_handoff_packet_ready"
+status_source: "derived"
+doc_date: "2026-06-26"
+baseline: "80082e0ec78e"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 2.4 - Beta Handoff Packet v1
 
 Date: 2026-06-26

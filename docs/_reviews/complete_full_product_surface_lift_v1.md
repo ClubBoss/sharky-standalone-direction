@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "7f77def08b35"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Complete Full Product Surface Lift v1
 
 ## 1. Executive verdict

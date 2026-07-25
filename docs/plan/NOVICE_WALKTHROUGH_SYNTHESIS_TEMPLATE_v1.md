@@ -1,3 +1,10 @@
+---
+status: "ACTIVE"
+status_source: "derived"
+doc_date: "2026-05-13"
+generated_by: "docs_frontmatter_v1"
+---
+
 # NOVICE_WALKTHROUGH_SYNTHESIS_TEMPLATE_v1
 
 Status: ACTIVE

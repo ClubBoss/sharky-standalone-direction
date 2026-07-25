@@ -1,3 +1,10 @@
+---
+status: "ADMITTED deterministic product packet. PRODUCT_SOURCE_BASELINE is"
+status_source: "derived"
+baseline: "40babdeb97d1"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Final Deterministic Convergence Packet v1
 
 Status: ADMITTED deterministic product packet. PRODUCT_SOURCE_BASELINE is

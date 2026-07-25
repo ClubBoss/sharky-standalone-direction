@@ -1,3 +1,11 @@
+---
+status: "focused_visual_ux_fix_wave_recommended"
+status_source: "derived"
+doc_date: "2026-07-01"
+baseline: "05bd3fa4da73"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Full Pre-Human Visual UX Audit v2 — 10/10 Gap Register v1
 
 Date: 2026-07-01

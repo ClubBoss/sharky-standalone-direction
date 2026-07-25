@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R22 Stabilization Plan v1 (Bounded, Deterministic)
 
 ## 1) Candidate Stabilization Items

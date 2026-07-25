@@ -1,3 +1,10 @@
+---
+status: "w12_route_admission_landed_with_review_payoff_repair"
+status_source: "derived"
+baseline: "4ac34ab49baf"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W12 Route Admission + Review Payoff Gate v1
 
 ## 1. Verdict

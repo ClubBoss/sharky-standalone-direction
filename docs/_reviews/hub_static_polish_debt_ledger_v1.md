@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "191ef0abffbf"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Hub Static Polish Debt Ledger / Final Hub Return Plan v1
 
 Terminal verdict: `hub_static_polish_debt_reconciled_next_owner_layer_selected`

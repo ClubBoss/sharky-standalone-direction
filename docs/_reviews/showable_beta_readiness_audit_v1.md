@@ -1,3 +1,9 @@
+---
+status: "showable_beta_ready_with_p0_blockers"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Showable Beta Readiness Audit v1
 
 ## 1. Verdict

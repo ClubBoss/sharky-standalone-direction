@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-07-14"
+baseline: "be887aefd81f"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Active Learner Integrity Audit v1
 
 - Status: admitted — native Act0 static audit cycle closed with non-blocking dormant-code debt (Revision 4)

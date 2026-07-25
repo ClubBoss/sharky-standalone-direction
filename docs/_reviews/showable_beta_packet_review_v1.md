@@ -1,3 +1,10 @@
+---
+status: "showable_beta_packet_review_ready_for_claude"
+status_source: "derived"
+baseline: "e5e3b608c41f"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Showable Beta Packet Review / Readiness Closure v1
 
 ## 1. Verdict

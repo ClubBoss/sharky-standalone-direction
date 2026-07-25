@@ -1,3 +1,10 @@
+---
+status: "repo_integration_w7_visible_ace_task_owner_design_passed_pushed_main"
+status_source: "derived"
+baseline: "29bf282d"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration - W7 Visible Ace Task Owner Design v11
 
 ## Verdict

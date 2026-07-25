@@ -1,3 +1,10 @@
+---
+status: "TOP1 is now discoverable from the core orientation chain"
+status_source: "derived"
+doc_date: "2026-06-19"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Top-1 Document Discoverability Link v1
 
 Date: 2026-06-19

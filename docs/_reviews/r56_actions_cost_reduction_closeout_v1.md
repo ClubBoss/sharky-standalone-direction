@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R56 Actions Cost Reduction Closeout v1
 
 ## Workflow inventory summary

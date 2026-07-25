@@ -1,3 +1,10 @@
+---
+status: "The local Claude review bundle is ready to upload. This was a packaging-only"
+status_source: "derived"
+doc_date: "2026-07-10"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Claude Table Presentation Review Bundle v1
 
 ## Verdict

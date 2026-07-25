@@ -1,3 +1,10 @@
+---
+status: "mixed_w5_w6_reconciliation_required"
+status_source: "derived"
+baseline: "b6f7674789b2"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Post-Content-Repair Route Reassessment + W5/W6 Scanner Debt Triage v1
 
 ## 1. Verdict

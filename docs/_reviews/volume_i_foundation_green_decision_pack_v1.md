@@ -1,3 +1,9 @@
+---
+status: "volume_i_foundation_green_planned_tail_ok"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I Foundation Green Decision Pack v1
 
 ## 1. Verdict

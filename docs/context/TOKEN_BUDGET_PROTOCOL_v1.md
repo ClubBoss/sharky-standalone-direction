@@ -1,3 +1,9 @@
+---
+status: "ACTIVE token discipline protocol for Sharky agents"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Token Budget Protocol v1
 
 Status: ACTIVE token discipline protocol for Sharky agents.

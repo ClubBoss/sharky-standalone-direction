@@ -1,3 +1,9 @@
+---
+status: "beta_trust_payoff_polish_ready_for_handoff"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Beta Trust & Payoff Polish v1
 
 ## 1. Verdict

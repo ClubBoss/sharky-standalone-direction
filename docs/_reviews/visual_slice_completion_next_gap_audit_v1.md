@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "8c73fc48109b"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Visual Slice Completion / Next 10-10 Gap Audit v1
 
 ## Scope

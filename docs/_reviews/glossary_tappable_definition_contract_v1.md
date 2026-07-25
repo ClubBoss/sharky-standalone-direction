@@ -1,3 +1,9 @@
+---
+status: "glossary_contract_ready_with_scanner_recommendation"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Glossary / Tappable Definition Contract v1
 
 ## 1. Verdict

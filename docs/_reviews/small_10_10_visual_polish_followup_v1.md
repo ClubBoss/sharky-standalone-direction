@@ -1,3 +1,10 @@
+---
+status: "small_10_10_polish_landed_with_watchlist"
+status_source: "derived"
+baseline: "27de3139513f"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Small 10/10 Visual Polish Follow-Up v1
 
 ## 1. Verdict

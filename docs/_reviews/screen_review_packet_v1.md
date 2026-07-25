@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Screen Review Packet v1
 
 - Purpose: package a native real-text Act0 screen-review group into one review image plus a zip archive.

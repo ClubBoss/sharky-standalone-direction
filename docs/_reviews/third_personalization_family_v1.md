@@ -1,3 +1,10 @@
+---
+status: "ADMITTED, pending normal publication"
+status_source: "derived"
+baseline: "3d6d29e8"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Third Personalization Family v1
 
 Status: ADMITTED, pending normal publication

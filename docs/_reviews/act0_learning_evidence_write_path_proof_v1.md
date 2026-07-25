@@ -1,3 +1,9 @@
+---
+status: "documentation_only_write_path_blocked"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Act0 Learning Evidence Write-Path Proof v1
 
 ## 1. Verdict

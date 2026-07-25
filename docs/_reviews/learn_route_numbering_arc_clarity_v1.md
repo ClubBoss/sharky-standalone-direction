@@ -1,3 +1,9 @@
+---
+status: "learn_copy_only_route_clarity_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Learn Route Numbering / Arc Clarity v1
 
 ## 1. Verdict

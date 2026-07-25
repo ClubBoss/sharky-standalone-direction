@@ -1,3 +1,9 @@
+---
+status: "wave6_3_content_factory_mvp_l1_sample_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 6.3 - Content Factory MVP / L1 Migrated Sample Pilot v1
 
 ## 1. Verdict

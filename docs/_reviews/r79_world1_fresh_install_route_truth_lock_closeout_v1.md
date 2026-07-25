@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R79 World1 Fresh-Install Route Truth Lock Closeout v1
 
 ## Purpose and scope

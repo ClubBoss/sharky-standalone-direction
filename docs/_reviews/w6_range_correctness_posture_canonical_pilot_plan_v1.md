@@ -1,3 +1,9 @@
+---
+status: "REVIEW ARTIFACT"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W6 Range Correctness Posture + Canonical Pilot Plan v1
 
 Status: REVIEW ARTIFACT.

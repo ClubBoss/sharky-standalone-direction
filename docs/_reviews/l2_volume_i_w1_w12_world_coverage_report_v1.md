@@ -1,3 +1,9 @@
+---
+status: "l2_volume_i_blocked_by_route_content_truth"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # L2 Volume I W1-W12 World Coverage Report v1
 
 ## 1. Verdict

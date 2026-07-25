@@ -1,3 +1,9 @@
+---
+status: "accepted"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 First-Week Content Trust Pass v1
 
 ## Verdict

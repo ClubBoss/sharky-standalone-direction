@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "bd30fd3e"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 2B Feedback Semantics Cleanup v1
 
 ## 1. Executive Verdict

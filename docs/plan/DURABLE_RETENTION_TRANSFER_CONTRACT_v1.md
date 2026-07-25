@@ -1,3 +1,10 @@
+---
+status: "ACTIVE CANONICAL ACT0 LEARNING CONTRACT"
+status_source: "derived"
+baseline: "fa74f50fe6e8"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Durable Retention & Transfer Contract v1
 
 Status: ACTIVE CANONICAL ACT0 LEARNING CONTRACT

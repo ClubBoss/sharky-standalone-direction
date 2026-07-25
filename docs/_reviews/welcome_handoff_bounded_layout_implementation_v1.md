@@ -1,3 +1,10 @@
+---
+status: "welcome_handoff_weighted_layout_landed"
+status_source: "derived"
+baseline: "51e3803f41f9"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Welcome Handoff Bounded Layout Implementation v1
 
 ## 1. Verdict

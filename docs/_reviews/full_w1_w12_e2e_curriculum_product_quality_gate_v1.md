@@ -1,3 +1,10 @@
+---
+status: "ready_for_human_qa_readiness_pack_after_gate"
+status_source: "derived"
+baseline: "05bd3fa4da73"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Full W1-W12 End-to-End Curriculum & Product Quality Gate v1
 
 ## 1. Verdict

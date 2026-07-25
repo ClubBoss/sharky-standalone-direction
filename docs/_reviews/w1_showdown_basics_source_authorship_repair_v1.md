@@ -1,3 +1,10 @@
+---
+status: "REVIEW ARTIFACT"
+status_source: "derived"
+baseline: "7a16d387"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1 Showdown Basics Source/Authorship Repair v1
 
 Status: REVIEW ARTIFACT.

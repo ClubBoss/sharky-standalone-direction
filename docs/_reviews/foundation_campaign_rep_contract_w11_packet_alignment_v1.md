@@ -1,3 +1,9 @@
+---
+status: "foundation_contract_and_w11_packet_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Foundation Campaign Rep Contract + W11 Packet Alignment v1
 
 ## 1. Verdict

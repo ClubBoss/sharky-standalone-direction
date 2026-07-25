@@ -1,3 +1,10 @@
+---
+status: "LOCAL-ONLY SESSION PROTOCOL. This document prepares a real moderated"
+status_source: "derived"
+baseline: "5e2727b0101d"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Human Novice Proof Protocol v1
 
 Status: LOCAL-ONLY SESSION PROTOCOL. This document prepares a real moderated

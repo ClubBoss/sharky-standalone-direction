@@ -1,3 +1,9 @@
+---
+status: "diagnosed_with_tiny_harness_fix"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Archived Map Key Harness Triage v1
 
 ## 1. Verdict

@@ -1,3 +1,10 @@
+---
+status: "durable_repair_learning_proof_display_owner_decision_only"
+status_source: "derived"
+baseline: "60a3c1ce"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Durable Repair Learning Proof Display Owner Decision v1
 
 ## 1. Verdict

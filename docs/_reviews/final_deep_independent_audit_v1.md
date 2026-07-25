@@ -1,3 +1,10 @@
+---
+status: "LOCAL-ONLY / READ-ONLY / UNPUBLISHED"
+status_source: "derived"
+baseline: "6c786a0060ff"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Final Deep Independent Audit v1
 
 Status: LOCAL-ONLY / READ-ONLY / UNPUBLISHED.

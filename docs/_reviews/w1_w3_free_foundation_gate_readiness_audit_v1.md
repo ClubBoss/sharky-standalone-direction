@@ -1,3 +1,10 @@
+---
+status: "docs/code/content audit only"
+status_source: "derived"
+doc_date: "2026-06-18"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W3 Free Foundation Density / W4-W5 Gate Readiness Audit v1
 
 Status: docs/code/content audit only

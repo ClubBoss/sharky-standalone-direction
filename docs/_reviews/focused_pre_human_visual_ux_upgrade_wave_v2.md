@@ -1,3 +1,11 @@
+---
+status: "focused_visual_ux_upgrade_landed_with_verification_deferrals"
+status_source: "derived"
+doc_date: "2026-07-02"
+baseline: "05bd3fa4da73"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Focused Pre-Human Visual UX Upgrade Wave v2
 
 Date: 2026-07-02

@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "a3457ab4e"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R18 Mastery & Checkpoints UX Audit v1
 
 ## Purpose and Scope

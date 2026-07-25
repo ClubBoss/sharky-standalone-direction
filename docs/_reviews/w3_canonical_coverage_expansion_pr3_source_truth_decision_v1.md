@@ -1,3 +1,10 @@
+---
+status: "Accepted"
+status_source: "derived"
+doc_date: "2026-06-29"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W3 Canonical Coverage Expansion PR3 / Source-Truth Decision v1
 
 Status: Accepted.

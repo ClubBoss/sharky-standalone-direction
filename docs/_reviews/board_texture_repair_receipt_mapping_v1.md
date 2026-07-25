@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "8301abd244a7"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Board Texture Repair Receipt Mapping v1
 
 - Branch: `main`

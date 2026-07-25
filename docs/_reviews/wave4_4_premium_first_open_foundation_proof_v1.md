@@ -1,3 +1,9 @@
+---
+status: "wave4_4_premium_first_open_foundation_proof_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 4.4 - Premium First-Open & W1-W4 Foundation Proof v1
 
 ## 1. Verdict

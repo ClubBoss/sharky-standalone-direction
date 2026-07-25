@@ -1,3 +1,9 @@
+---
+status: "w10_to_w11_policy_ready_handoff_deferred"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W10-to-W11 Transition Policy Tiny Slice v1
 
 ## 1. Verdict

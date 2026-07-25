@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "3974cca3"
+generated_by: "docs_frontmatter_v1"
+---
+
 # First-Week Proof Packet Acceptance v1
 
 ## Scope

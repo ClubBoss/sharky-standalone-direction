@@ -1,3 +1,11 @@
+---
+status: "pre_qa_layout_and_proof_repair_complete_human_qa_ready"
+status_source: "derived"
+doc_date: "2026-07-08"
+baseline: "17f153902f48"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Final Pre-QA Layout and Proof Repair v1
 
 Date: 2026-07-08

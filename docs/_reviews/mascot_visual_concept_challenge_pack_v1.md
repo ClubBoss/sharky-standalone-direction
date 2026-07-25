@@ -1,3 +1,12 @@
+---
+status: "mascot_visual_challenge_pack_ready"
+status_source: "derived"
+doc_date: "2026-07-03"
+baseline: "59393cee"
+superseded_by: "docs/_reviews/sharky_three_register_system_lock_v3.md"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Mascot Visual Concept Challenge Pack v1
 
 Date: 2026-07-03

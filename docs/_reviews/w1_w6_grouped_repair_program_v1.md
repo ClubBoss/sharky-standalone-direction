@@ -1,3 +1,9 @@
+---
+status: "grouped_repair_program_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Grouped Repair Program v1
 
 Status: `grouped_repair_program_ready`

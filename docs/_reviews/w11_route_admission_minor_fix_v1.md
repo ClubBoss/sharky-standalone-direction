@@ -1,3 +1,9 @@
+---
+status: "w11_runtime_contract_ready_for_route_proof"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W11 Route Admission Minor Fix v1
 
 ## 1. Verdict

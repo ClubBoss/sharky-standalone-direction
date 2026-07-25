@@ -1,3 +1,9 @@
+---
+status: "accepted_with_minor_readability_residue"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I Surface Screenshot Proof v1
 
 ## 1. Verdict

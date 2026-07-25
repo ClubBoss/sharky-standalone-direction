@@ -1,3 +1,10 @@
+---
+status: "w7_route_runtime_owner_tiny_playable_admission_blocked_by_runtime_owner"
+status_source: "derived"
+baseline: "bac31c4d"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7 Route Runtime Owner Tiny Playable Admission v1
 
 ## 1. Verdict

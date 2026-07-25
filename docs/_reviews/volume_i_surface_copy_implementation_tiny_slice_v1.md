@@ -1,3 +1,9 @@
+---
+status: "implemented_copy_only"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I Surface Copy Implementation Tiny Slice v1
 
 ## 1. Verdict

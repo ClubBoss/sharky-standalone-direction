@@ -1,3 +1,10 @@
+---
+status: "w7_selective_route_entry_blocked_by_stale_resume_dependency"
+status_source: "derived"
+baseline: "aeaf3a154880"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W7 Selective Route Entry Readiness Bundle v1
 
 ## 1. Verdict

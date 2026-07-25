@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "605d57c697ac"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Full Static Surface 10/10 Re-Audit / Repair Queue v1
 
 Terminal verdict: `pre_human_qa_static_surface_reaudit_complete_evidence_pipeline_repair_is_next_non_sharky_gate`

@@ -1,3 +1,9 @@
+---
+status: "w12_route_proof_ready_non_visible"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W12 Route Proof Goal Pack v1
 
 ## Verdict

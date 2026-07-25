@@ -1,3 +1,10 @@
+---
+status: "repository_reduction_dead_system_decommission_closed_push_ready"
+status_source: "derived"
+baseline: "0c922689cf41"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repository Reduction + Dead-System Decommission v1
 
 ## 1. Verdict

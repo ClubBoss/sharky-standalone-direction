@@ -1,3 +1,9 @@
+---
+status: "implemented_metadata_null_canonical`. The catalog is a reviewed, read-only"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Canonical Source Target Metadata Tiny Slice v1
 
 ## 1. Verdict

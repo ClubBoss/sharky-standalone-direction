@@ -1,3 +1,10 @@
+---
+status: "foundation_developing_phrase_sets_landed_with_bounded_migration"
+status_source: "derived"
+baseline: "bc1598b9d3e8"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Foundation + Developing Phrase Sets v1
 
 ## 1. Verdict

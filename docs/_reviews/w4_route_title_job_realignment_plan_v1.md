@@ -1,3 +1,10 @@
+---
+status: "w4_route_title_job_recommends_title_change_later"
+status_source: "derived"
+baseline: "9438f246"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W4 Route Title/Job Realignment Plan v1
 
 Branch: `codex/w4-route-title-job-realignment-plan-v1`.

@@ -1,3 +1,10 @@
+---
+status: "w8_route_admission_landed_with_depth_copy"
+status_source: "derived"
+baseline: "d24d84a07225"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W8 Route Admission + Depth Gate Bundle v1
 
 ## 1. Verdict

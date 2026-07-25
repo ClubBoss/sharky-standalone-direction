@@ -1,3 +1,10 @@
+---
+status: "repo_integration_w1_w12_internal_source_checkpoint_stage0_passed"
+status_source: "derived"
+baseline: "8e06ad38a20c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration W1-W12 Internal Source Checkpoint v28
 
 ## 1. Verdict

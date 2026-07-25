@@ -1,3 +1,10 @@
+---
+status: "repo_integration_actionable_durable_repair_loop_passed_pushed_main"
+status_source: "derived"
+baseline: "0cf1a4a0"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration Actionable Durable Repair Loop v4
 
 ## 1. Verdict

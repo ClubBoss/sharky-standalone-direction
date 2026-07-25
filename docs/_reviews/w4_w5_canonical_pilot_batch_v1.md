@@ -1,3 +1,10 @@
+---
+status: "w4_w5_canonical_pilot_batch_ready"
+status_source: "derived"
+baseline: "3b4d0bbf"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W4-W5 Canonical Pilot Batch v1
 
 Branch: `codex/w4-w5-canonical-pilot-batch-v1`.

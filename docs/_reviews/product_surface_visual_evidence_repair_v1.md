@@ -1,3 +1,11 @@
+---
+status: "product_surface_visual_repair_landed_with_explicit_structural_deferrals"
+status_source: "derived"
+doc_date: "2026-07-03"
+baseline: "d823227dbc15"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Product Surface & Visual Evidence Repair v1
 
 Date: 2026-07-03

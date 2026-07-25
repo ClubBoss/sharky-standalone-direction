@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "37c88f65fb40"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Review Preview Baseline Repair v1
 
 - Branch/base: `codex/review-preview-baseline-repair-v1` from `37c88f65fb403e443c0628053f3166d8291222c2`.

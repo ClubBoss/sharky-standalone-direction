@@ -1,3 +1,9 @@
+---
+status: "wave3_14_competitive_wedge_pass_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 3.14 - Competitive Wedge Pass v1
 
 ## 1. Verdict

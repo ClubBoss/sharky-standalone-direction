@@ -1,3 +1,10 @@
+---
+status: "CLOSED \u2014 12 of 12 adjudicated and closed"
+status_source: "derived"
+baseline: "1e99912e0a73"
+generated_by: "docs_frontmatter_v1"
+---
+
 # F-16 Canonical Contract Adjudication v1
 
 Status: **CLOSED — 12 of 12 adjudicated and closed.**

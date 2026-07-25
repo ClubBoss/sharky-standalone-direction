@@ -1,3 +1,10 @@
+---
+status: "wave3_9_english_first_ru_localization_boundary_ready"
+status_source: "derived"
+doc_date: "2026-06-27"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 3.9 - English-First / RU Localization Boundary v1
 
 ## 1. Verdict

@@ -1,3 +1,9 @@
+---
+status: "session_grouping_contract_only_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Session Summary Evidence Grouping Contract v1
 
 ## 1. Verdict

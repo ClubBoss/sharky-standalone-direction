@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "47cfe21a4"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R90 Post-Topology-Fix Visible Path Verification Closeout v1
 
 ## Purpose and bounded scope

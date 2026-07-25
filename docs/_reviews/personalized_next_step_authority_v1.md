@@ -1,3 +1,10 @@
+---
+status: "PUBLISHED FOR ADMISSION"
+status_source: "derived"
+baseline: "ae51ae5f87cc"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Personalized Next-Step Authority v1
 
 Status: PUBLISHED FOR ADMISSION

@@ -1,3 +1,10 @@
+---
+status: "docs-only canonical route admission review"
+status_source: "derived"
+baseline: "20dda460ce90"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W6 Repair-Recheck Canonical Admission Gate v1
 
 Status: docs-only canonical route admission review.

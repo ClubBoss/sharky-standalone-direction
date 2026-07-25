@@ -1,3 +1,10 @@
+---
+status: "sharky_visual_growth_evolution_landed_with_bounded_consumers"
+status_source: "derived"
+baseline: "e7d3c8143581"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Sharky Visual Growth / Evolution v1
 
 ## 1. Verdict

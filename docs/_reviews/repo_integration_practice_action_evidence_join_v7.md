@@ -1,3 +1,10 @@
+---
+status: "repo_integration_practice_action_evidence_join_passed_pushed_main"
+status_source: "derived"
+baseline: "d9167c33"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration Practice Action Evidence Join v7
 
 ## 1. Verdict

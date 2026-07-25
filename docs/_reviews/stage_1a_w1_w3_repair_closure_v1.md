@@ -1,3 +1,10 @@
+---
+status: "Recommended Stage 1A batch verdict: `batch_closed_after_bounded_repairs"
+status_source: "derived"
+baseline: "cb1d2e0e3f3c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Stage 1A W1-W3 Repair Closure v1
 
 ## 1. Verdict

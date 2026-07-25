@@ -1,3 +1,9 @@
+---
+status: "fixes_banked_session_only_contract_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Fixes You've Banked / Proof Home Contract v1
 
 ## 1. Verdict

@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "05940500e1d1"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Real-Text Evidence Integrity — Wave A v1
 
 Terminal verdict: `real_text_evidence_integrity_wave_a_revalidated_existing_pipeline_no_product_or_tool_source_change`

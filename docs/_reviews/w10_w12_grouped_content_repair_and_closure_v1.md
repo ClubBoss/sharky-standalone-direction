@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "57036376c697"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W10-W12 Grouped Content Repair and Closure v1
 
 ## 1. Objective

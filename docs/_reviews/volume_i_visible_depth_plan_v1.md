@@ -1,3 +1,9 @@
+---
+status: "plan_ready_with_surface_contract"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Volume I Visible Depth Plan v1
 
 ## 1. Verdict

@@ -1,3 +1,10 @@
+---
+status: "PUBLISHED FOR ADMISSION"
+status_source: "derived"
+baseline: "c00df374b84b"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Causal Feedback & Durable Learning Receipt v1
 
 Status: PUBLISHED FOR ADMISSION

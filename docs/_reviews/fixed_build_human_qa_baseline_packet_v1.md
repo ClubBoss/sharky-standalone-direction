@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-07-09"
+baseline: "4ac0c279678a"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Fixed-Build Human QA Baseline Packet v1
 
 Date: 2026-07-09

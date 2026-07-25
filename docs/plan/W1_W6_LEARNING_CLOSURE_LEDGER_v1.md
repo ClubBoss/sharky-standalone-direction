@@ -1,3 +1,10 @@
+---
+status: "Waves 1-3 implemented and canonical-only source re-score complete"
+status_source: "derived"
+baseline: "cdf89b9e"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Learning Closure Ledger v1
 
 Source review: `docs/_reviews/w1_w6_deep_learning_reconciliation_v1.md`

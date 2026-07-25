@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "3c4268b3378b"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Welcome First-Start Visual Acceptance v1
 
 ## Scope

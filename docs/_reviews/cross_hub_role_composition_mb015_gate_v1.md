@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Cross-Hub Role Composition / MB-015 Gate v1
 
 Terminal verdict: `mb015_review_repair_rail_compaction_implemented`

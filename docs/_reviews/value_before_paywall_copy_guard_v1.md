@@ -1,3 +1,9 @@
+---
+status: "copy_guard_ready_with_legacy_allowlist"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Value-Before-Paywall Copy Guard v1
 
 ## 1. Verdict

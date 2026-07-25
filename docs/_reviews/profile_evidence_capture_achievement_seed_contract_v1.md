@@ -1,3 +1,9 @@
+---
+status: "profile_evidence_capture_and_achievement_contract_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Profile Evidence Capture + Achievement Seed Contract v1
 
 ## 1. Verdict

@@ -1,3 +1,10 @@
+---
+status: "LOCAL-ONLY / UNPUBLISHED. This record reconciles execution wording for"
+status_source: "derived"
+baseline: "76b175eb064d"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Local Pre-Audit Authority Reconciliation v1
 
 Status: LOCAL-ONLY / UNPUBLISHED. This record reconciles execution wording for

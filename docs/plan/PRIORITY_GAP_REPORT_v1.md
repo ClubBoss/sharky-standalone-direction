@@ -1,3 +1,9 @@
+---
+status: "SSOT-lite planning canon"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Priority Gap Report v1
 
 Status: SSOT-lite planning canon  

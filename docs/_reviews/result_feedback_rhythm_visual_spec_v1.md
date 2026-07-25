@@ -1,3 +1,11 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-06-19"
+baseline: "23de8047"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Result Feedback Rhythm Visual Spec v1
 
 Date: 2026-06-19

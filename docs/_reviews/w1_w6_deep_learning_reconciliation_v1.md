@@ -1,3 +1,10 @@
+---
+status: "docs-only reconciliation audit. No product code, content, test, or"
+status_source: "derived"
+baseline: "873304137d46"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Deep Learning Reconciliation and Learner-Truth Closure Audit v1
 
 Agent: Claude. Model: Opus effort tier (session model: Sonnet 5).

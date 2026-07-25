@@ -1,3 +1,10 @@
+---
+status: "ACCEPTED implementation artifact"
+status_source: "derived"
+doc_date: "2026-06-28"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1 Coverage Expansion PR2 v1
 
 Status: ACCEPTED implementation artifact.

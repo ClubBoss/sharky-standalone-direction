@@ -1,3 +1,10 @@
+---
+status: "approved before PR"
+status_source: "derived"
+baseline: "744dfe32"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Practice Repair-Reinforcement Entry v1
 
 ## Branch / Base Commit

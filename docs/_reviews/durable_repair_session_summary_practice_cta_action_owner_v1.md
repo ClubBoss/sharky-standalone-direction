@@ -1,3 +1,9 @@
+---
+status: "durable_repair_session_summary_practice_cta_landed_existing_action_owner"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Durable Repair Session Summary Practice CTA Action Owner v1
 
 ## 1. Verdict

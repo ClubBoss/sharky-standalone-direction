@@ -1,3 +1,9 @@
+---
+status: "CLOSED_VERIFIED_PASS - no source-proven enrichment is admitted"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Decision Discrimination v1
 
 Status: CLOSED_VERIFIED_PASS - no source-proven enrichment is admitted.

@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+doc_date: "2026-06-18"
+generated_by: "docs_frontmatter_v1"
+---
+
 # AI Personalization / Rule-Based Repair Discovery v1
 
 Date: 2026-06-18

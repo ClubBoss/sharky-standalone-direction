@@ -1,3 +1,11 @@
+---
+status: "minimal Review-owned queue card; local only until pushed"
+status_source: "derived"
+doc_date: "2026-06-23"
+baseline: "4804ebe6723c"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W6 Visible Recheck Queue Card v1
 
 Date: 2026-06-23

@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "a554875f"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 6B - W12 Terminal Payoff / Volume I Closure Moment
 
 ## 1. Executive verdict

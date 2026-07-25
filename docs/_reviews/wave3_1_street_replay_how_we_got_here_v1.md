@@ -1,3 +1,9 @@
+---
+status: "wave3_1_street_replay_how_we_got_here_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 3.1 - Street Replay / How We Got Here v1
 
 ## 1. Verdict

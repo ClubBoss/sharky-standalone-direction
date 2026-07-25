@@ -1,3 +1,9 @@
+---
+status: "w1_w6_consolidation_docs_only_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Migration Coverage Consolidation v1
 
 ## 1. Verdict

@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R92 Real-Device False-Positive Render Audit/Fix Closeout v1
 
 ## Purpose and bounded scope

@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "4910260f"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Task-owned corrected-T1 pilots v1
 
 ## Terminal verdict

@@ -1,3 +1,11 @@
+---
+status: "CLOSED"
+status_source: "derived"
+doc_date: "2026-07-03"
+baseline: "6f1311aa47b3"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Targeted Same-Signal / Transfer Repairs v1
 
 Status: CLOSED.

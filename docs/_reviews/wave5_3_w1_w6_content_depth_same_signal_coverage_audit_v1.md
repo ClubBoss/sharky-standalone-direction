@@ -1,3 +1,9 @@
+---
+status: "wave5_3_content_depth_risk_requires_schema_first"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 5.3 - W1-W6 Content Depth / Same-Signal Coverage Audit v1
 
 ## 1. Verdict

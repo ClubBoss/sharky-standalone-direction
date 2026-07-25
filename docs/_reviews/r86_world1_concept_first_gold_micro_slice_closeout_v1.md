@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R86 World1 Concept-First Gold Micro-Slice v1 Closeout
 
 ## Purpose and bounded scope

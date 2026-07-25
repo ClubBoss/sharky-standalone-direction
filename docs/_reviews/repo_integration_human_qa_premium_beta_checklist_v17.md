@@ -1,3 +1,10 @@
+---
+status: "repo_integration_human_qa_premium_beta_checklist_passed_pushed_main"
+status_source: "derived"
+baseline: "bac31c4d"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration - Human QA Premium Beta Checklist v17
 
 ## Verdict

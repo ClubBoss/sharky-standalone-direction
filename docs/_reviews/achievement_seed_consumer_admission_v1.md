@@ -1,3 +1,10 @@
+---
+status: "achievement_seed_read_only_ui_ready"
+status_source: "derived"
+baseline: "d57632f06c76"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Achievement Seed Consumer Admission v1
 
 ## 1. Verdict

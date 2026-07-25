@@ -1,3 +1,10 @@
+---
+status: "w7_route_lock_transition_decision_stage0_passed"
+status_source: "derived"
+baseline: "3d79e6d09e3a"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Repo Integration W7 Route Lock Transition Decision v34
 
 ## 1. Verdict

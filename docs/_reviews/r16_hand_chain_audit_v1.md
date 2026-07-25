@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "227956fab"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R16 Hand Chain Audit v1
 
 ## What shipped

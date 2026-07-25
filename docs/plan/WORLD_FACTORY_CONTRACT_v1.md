@@ -1,3 +1,9 @@
+---
+status: "ACTIVE internal source-template contract after W7 certification"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # World Factory Contract v1
 
 Status: ACTIVE internal source-template contract after W7 certification.

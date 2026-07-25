@@ -1,3 +1,9 @@
+---
+status: "wave4_2_premium_identity_claim_cleanup_ready"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Wave 4.2 - Premium Identity & Claim Cleanup v1
 
 ## 1. Verdict

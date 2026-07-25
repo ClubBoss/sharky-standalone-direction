@@ -1,3 +1,10 @@
+---
+status: "w1_w6_final_gate_repair_program_ready"
+status_source: "derived"
+baseline: "a21971a607fa"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W1-W6 Final Learner-Truth Audit + AI-Simulated QA Gate v1
 
 Status: `w1_w6_final_gate_repair_program_ready`

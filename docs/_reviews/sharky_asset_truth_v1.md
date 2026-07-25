@@ -1,3 +1,9 @@
+---
+status: "undeclared"
+status_source: "absent"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Sharky Asset Truth v1
 
 ## Gate 0 verdict: C — no approved production-ready canonical asset family

@@ -1,3 +1,9 @@
+---
+status: "content/explanation remains top bottleneck"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # R34 Weakest-Link Decision v1
 
 ## 1) Candidate matrix

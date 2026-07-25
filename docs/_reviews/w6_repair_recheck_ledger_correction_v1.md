@@ -1,3 +1,10 @@
+---
+status: "w6_repair_recheck_ledger_corrected_to_canonical_truth"
+status_source: "derived"
+baseline: "158a53eec4d0"
+generated_by: "docs_frontmatter_v1"
+---
+
 # W6 Repair-Recheck Ledger Correction v1
 
 Verdict: `w6_repair_recheck_ledger_corrected_to_canonical_truth`

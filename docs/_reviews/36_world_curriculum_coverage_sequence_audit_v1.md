@@ -1,3 +1,9 @@
+---
+status: "accepted_with_known_gaps"
+status_source: "derived"
+generated_by: "docs_frontmatter_v1"
+---
+
 # 36-World Curriculum Coverage & Sequence Audit v1
 
 ## 1. Verdict

@@ -1,3 +1,10 @@
+---
+status: "undeclared"
+status_source: "absent"
+baseline: "457525df38e0"
+generated_by: "docs_frontmatter_v1"
+---
+
 # Final W1-W12 Canonical-Only Closure Audit v1
 
 ## 1. Executive Verdict
