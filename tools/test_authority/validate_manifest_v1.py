@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -13,12 +14,15 @@ TIER_B_MANIFEST = MANIFEST_DIR / "tier_b_maintained_support.txt"
 TIER_C_MANIFEST = MANIFEST_DIR / "tier_c_quarantine.txt"
 TIER_D_MANIFEST = MANIFEST_DIR / "tier_d_retired.txt"
 KNOWN_TIER_C_MANIFEST = MANIFEST_DIR / "known_tier_c_residuals.txt"
+PHP2_REVIEW_ARTIFACT = (
+    ROOT / "docs" / "_reviews" / "php2_legacy_corpus_ownership_disposition_v1.md"
+)
+FROZEN_POST_SHIM_SHA256 = (
+    "6ed420cdd53bc08790c27b6581f7dcc3fead04c43b295d8e2458bd45a394cfce"
+)
 
 EXPECTED_OBSERVED_TIER_B_COUNT = 117
 EXPECTED_OBSERVED_TIER_C_COUNT = 304
-EXPECTED_EXECUTABLE_TIER_B_COUNT = 117
-EXPECTED_EXECUTABLE_TIER_C_COUNT = 307
-EXPECTED_TIER_D_COUNT = 0
 EXPECTED_OBSERVED_UNIQUE_NON_GREEN = 421
 EXPECTED_MEASUREMENT_COUNTS = {
     "Started": "3519",
@@ -91,9 +95,26 @@ def _require_artifact_measurements(text: str) -> None:
             raise AssertionError(f"missing frozen measurement count: {label}={value}")
 
 
+def _php2_retired_paths() -> set[str]:
+    if not PHP2_REVIEW_ARTIFACT.exists():
+        return set()
+    retired: set[str] = set()
+    for raw in PHP2_REVIEW_ARTIFACT.read_text().splitlines():
+        if not raw.startswith("| `test/"):
+            continue
+        cells = [cell.strip() for cell in raw.strip().strip("|").split("|")]
+        if len(cells) < 6:
+            continue
+        path = cells[0].strip("`")
+        if "`DELETE_ARCHIVED_NONCANONICAL`" in raw:
+            retired.add(path)
+    return retired
+
+
 def validate() -> dict[str, object]:
     artifact_text = POST_SHIM_ARTIFACT.read_text()
     _require_artifact_measurements(artifact_text)
+    frozen_sha256 = hashlib.sha256(POST_SHIM_ARTIFACT.read_bytes()).hexdigest()
     observed = _parse_observed_inventory()
     observed_b = sorted(path for path, tier in observed.items() if tier == "Tier B")
     observed_c = sorted(path for path, tier in observed.items() if tier == "Tier C")
@@ -111,19 +132,30 @@ def validate() -> dict[str, object]:
     tier_d_set = set(tier_d)
     known_tier_c_set = set(known_tier_c)
     overlap = sorted(tier_b_set & tier_c_set)
-    observed_tier_b_missing = sorted(observed_b_set - tier_b_set)
+    php2_retired = _php2_retired_paths()
+    retired_tier_b = tier_d_set & observed_b_set
+    retired_tier_c = tier_d_set & observed_c_set
+    observed_tier_b_missing = sorted(observed_b_set - tier_b_set - retired_tier_b)
     observed_tier_b_extra = sorted(tier_b_set - observed_b_set)
-    observed_tier_c_missing = sorted(observed_c_set - tier_c_set)
+    observed_tier_c_missing = sorted(observed_c_set - tier_c_set - retired_tier_c)
     executable_tier_c_extra = sorted(tier_c_set - observed_c_set)
     missing_known_registry = sorted(KNOWN_TIER_C_RESIDUALS - known_tier_c_set)
     unexpected_known_registry = sorted(known_tier_c_set - KNOWN_TIER_C_RESIDUALS)
     known_missing_from_executable_tier_c = sorted(KNOWN_TIER_C_RESIDUALS - tier_c_set)
     known_unreached_missing = sorted(KNOWN_UNREACHED_TIER_C - tier_c_set)
     known_unreached_extra = sorted(set(executable_tier_c_extra) - KNOWN_UNREACHED_TIER_C)
-    deleted_paths = sorted(
+    missing_executable_paths = sorted(
         path
-        for path in tier_b + tier_c + tier_d
+        for path in tier_b + tier_c
         if path.startswith("test/") and not (ROOT / path).exists()
+    )
+    tier_d_existing_paths = sorted(
+        path for path in tier_d if path.startswith("test/") and (ROOT / path).exists()
+    )
+    tier_d_missing_ledger_evidence = sorted(tier_d_set - php2_retired)
+    unexpected_tier_d_paths = sorted(tier_d_set - observed_b_set - observed_c_set)
+    unexplained_historical_disappearance = sorted(
+        (observed_b_set | observed_c_set) - tier_b_set - tier_c_set - tier_d_set
     )
 
     observed_tier_b_exact_set_match = not observed_tier_b_missing and not observed_tier_b_extra
@@ -140,12 +172,11 @@ def validate() -> dict[str, object]:
         failures.append(f"observed Tier B expected 117, got {len(observed_b)}")
     if len(observed_c) != EXPECTED_OBSERVED_TIER_C_COUNT:
         failures.append(f"observed Tier C expected 304, got {len(observed_c)}")
-    if len(tier_b) != EXPECTED_EXECUTABLE_TIER_B_COUNT:
-        failures.append(f"executable Tier B expected 117, got {len(tier_b)}")
-    if len(tier_c) != EXPECTED_EXECUTABLE_TIER_C_COUNT:
-        failures.append(f"executable Tier C expected 307, got {len(tier_c)}")
-    if len(tier_d) != EXPECTED_TIER_D_COUNT:
-        failures.append(f"Tier D expected 0, got {len(tier_d)}")
+    if frozen_sha256 != FROZEN_POST_SHIM_SHA256:
+        failures.append(
+            "frozen post-shim artifact bytes changed: "
+            f"expected={FROZEN_POST_SHIM_SHA256} got={frozen_sha256}"
+        )
     if duplicates:
         failures.append(f"duplicate manifest paths: {duplicates[:10]}")
     if not observed_tier_b_exact_set_match:
@@ -171,10 +202,33 @@ def validate() -> dict[str, object]:
         )
     if overlap:
         failures.append(f"tier_b/tier_c overlap: {overlap[:10]}")
-    if tier_d_set:
-        failures.append(f"Tier D should be empty: {sorted(tier_d_set)[:10]}")
-    if deleted_paths:
-        failures.append(f"manifest paths do not exist: {deleted_paths[:10]}")
+    if tier_d_set & tier_b_set or tier_d_set & tier_c_set:
+        failures.append(
+            "Tier D overlaps executable manifest: "
+            f"{sorted((tier_d_set & tier_b_set) | (tier_d_set & tier_c_set))[:10]}"
+        )
+    if missing_executable_paths:
+        failures.append(
+            f"executable manifest paths do not exist: {missing_executable_paths[:10]}"
+        )
+    if tier_d_existing_paths:
+        failures.append(
+            f"Tier D tombstones still exist in working tree: {tier_d_existing_paths[:10]}"
+        )
+    if tier_d_missing_ledger_evidence:
+        failures.append(
+            "Tier D paths lack PHP-2 DELETE_ARCHIVED_NONCANONICAL evidence: "
+            f"{tier_d_missing_ledger_evidence[:10]}"
+        )
+    if unexpected_tier_d_paths:
+        failures.append(
+            f"Tier D paths are absent from frozen historical inventory: {unexpected_tier_d_paths[:10]}"
+        )
+    if unexplained_historical_disappearance:
+        failures.append(
+            "historical paths disappeared without executable or Tier-D accounting: "
+            f"{unexplained_historical_disappearance[:10]}"
+        )
 
     result = {
         "observed_tier_b_exact_set_match": observed_tier_b_exact_set_match,
@@ -184,7 +238,10 @@ def validate() -> dict[str, object]:
         "observed_tier_c_count": len(observed_c),
         "executable_tier_b_count": len(tier_b),
         "executable_tier_c_count": len(tier_c),
-        "executable_tier_d_count": len(tier_d),
+        "tier_d_tombstone_count": len(tier_d),
+        "tier_b_to_d_retired_count": len(retired_tier_b),
+        "tier_c_to_d_retired_count": len(retired_tier_c),
+        "frozen_post_shim_sha256": frozen_sha256,
         "observed_tier_b_missing": observed_tier_b_missing,
         "observed_tier_b_extra": observed_tier_b_extra,
         "observed_tier_c_missing": observed_tier_c_missing,
@@ -193,7 +250,10 @@ def validate() -> dict[str, object]:
         "known_residuals_missing_from_executable_tier_c": known_missing_from_executable_tier_c,
         "tier_b_tier_c_overlap": len(overlap),
         "duplicates": duplicates,
-        "missing_paths": deleted_paths,
+        "missing_executable_paths": missing_executable_paths,
+        "tier_d_existing_paths": tier_d_existing_paths,
+        "tier_d_missing_ledger_evidence": tier_d_missing_ledger_evidence,
+        "unexplained_historical_disappearance": unexplained_historical_disappearance,
     }
     if failures:
         raise AssertionError(json.dumps({"failures": failures, **result}, indent=2))
