@@ -714,7 +714,12 @@ Future<void> _openPractice(WidgetTester tester) async {
     await tester.tap(runnerBack);
     await tester.pumpAndSettle();
   }
-  await tester.tap(find.text('Practice'));
+  final practiceTab = find.descendant(
+    of: find.byKey(const Key('act0_shell_bottom_nav')),
+    matching: find.text('Practice'),
+  );
+  await tester.ensureVisible(practiceTab);
+  await tester.tap(practiceTab, warnIfMissed: false);
   await tester.pumpAndSettle();
 }
 
