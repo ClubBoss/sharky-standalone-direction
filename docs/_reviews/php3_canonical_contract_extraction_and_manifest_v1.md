@@ -230,3 +230,20 @@ nine-path residual 74, unexplained 0.
 The first two paths were not Tier-B members. The seat-quiz original moves from
 Tier B to Tier D, and the validator accepts this exact archival disposition in
 addition to current-owner extraction. This is not a replacement-test claim.
+
+## 19. PHP-3 Wave 1 drill-decision safe-subset extraction
+
+Starting baseline: `594529efdcc5714b3e874b898bf16e5a8437de54` (PR #65 merge).
+The 28-title census and live-owner diagnostic are recorded in
+`/tmp/PHP3_WAVE1_DRILL_DECISION_READJUDICATION_v2.md` (local evidence only).
+
+| Retired original | Prior owner | Current owner | Replacement | Disposition | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| `test/ui_v2/session_drill_player_initiative_contract_test.dart` | Tier B maintained support | canonical session-drill route | `test/ui_v2/runner/canonical_session_drill_initiative_contract_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | Both titles run through `CanonicalLauncherV1.sessionDrill`; choice determinism, source facts, rendered feedback, supplements, recap, and progression are retained. |
+| `test/ui_v2/session_drill_player_position_thinking_contract_test.dart` | Tier B maintained support | canonical session-drill route plus seat-context scenario-state owner | `test/ui_v2/runner/canonical_session_drill_position_thinking_contract_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | Both titles run through the canonical launcher; street/player/seat source facts, folded and empty state, table presence, failure grammar, and progression are retained. The removed `modern_table_seat_empty_3` assertion was stale presentation wiring; the current source-empty contract and canonical seat-context scenario-state owner retain the semantic occupancy proof. |
+
+The two board-texture and twenty-two bet-sizing titles remain Tier B. They are
+not silently retired: their diagnostic failures require a separate bounded
+owner packet. This PR admits two carriers, so PHP-3 arithmetic becomes admitted
+`5`, unresolved `72`, residual `72`, unexplained `0`. No production or Modern
+Table source changed.
