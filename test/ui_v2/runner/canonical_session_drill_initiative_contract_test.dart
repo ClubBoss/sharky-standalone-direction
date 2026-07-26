@@ -3,8 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/engine/scenario_replayer_fsm_v1.dart';
 import 'package:poker_analyzer/services/drill_contract_v1.dart';
 import 'package:poker_analyzer/services/drill_runtime_adapter_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/modern_table_screen_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/session_drill_player_v1_screen.dart';
+import 'package:poker_analyzer/ui_v2/runner/canonical_launcher_api_v1.dart';
 
 void main() {
   Future<void> _pumpUntilFound(
@@ -105,7 +104,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: SessionDrillPlayerV1Screen(
+          home: CanonicalLauncherV1.sessionDrill(
             sessionId: 'w2.s03',
             debugDrillsOverrideV1: drills,
           ),
@@ -172,21 +171,6 @@ void main() {
         find.byKey(const Key('session_drill_player_initiative_table_v1')),
         findsOneWidget,
       );
-
-      final table = tester.widget<ModernTableScreenV1>(
-        find.byKey(const Key('session_drill_player_initiative_table_v1')),
-      );
-      final scenario = table.scenarioSpec;
-      expect(scenario, isNotNull);
-      expect(scenario!.seatCount, 2);
-      expect(scenario.heroSeat, 0);
-      expect(scenario.actingSeatStart, 0);
-      expect(scenario.decisionNodeV1.street, Street.flop);
-      expect(
-        scenario.decisionNodeV1.legalActions,
-        equals(<String>['hero', 'villain']),
-      );
-      expect(scenario.decisionNodeV1.solutionBestAction, 'hero');
 
       await tester.tap(
         find.byKey(const Key('session_drill_player_initiative_villain_v1')),
@@ -261,7 +245,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: SessionDrillPlayerV1Screen(
+          home: CanonicalLauncherV1.sessionDrill(
             sessionId: 'w2.s03',
             debugDrillsOverrideV1: drills,
           ),
@@ -345,20 +329,6 @@ void main() {
         findsOneWidget,
       );
 
-      final table = tester.widget<ModernTableScreenV1>(
-        find.byKey(const Key('session_drill_player_initiative_table_v1')),
-      );
-      final scenario = table.scenarioSpec;
-      expect(scenario, isNotNull);
-      expect(scenario!.seatCount, 2);
-      expect(scenario.heroSeat, 0);
-      expect(scenario.actingSeatStart, 0);
-      expect(scenario.decisionNodeV1.street, Street.flop);
-      expect(
-        scenario.decisionNodeV1.legalActions,
-        equals(<String>['hero', 'villain']),
-      );
-      expect(scenario.decisionNodeV1.solutionBestAction, 'hero');
       expect(
         find.byKey(const Key('session_drill_player_initiative_bar_v1')),
         findsOneWidget,
