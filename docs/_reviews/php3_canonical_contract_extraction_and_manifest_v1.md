@@ -247,3 +247,20 @@ not silently retired: their diagnostic failures require a separate bounded
 owner packet. This PR admits two carriers, so PHP-3 arithmetic becomes admitted
 `5`, unresolved `72`, residual `72`, unexplained `0`. No production or Modern
 Table source changed.
+
+## 20. PHP-3 Wave 1 authored-projection bounded repair and extraction
+
+Starting baseline: `bb5f235b70ad2246c8b64a45dfd442fa42ec8281`.
+
+| Retired original | Prior owner | Current owner | Replacement | Disposition | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| `test/ui_v2/session_drill_player_world2_source_projection_contract_test.dart` | Tier B maintained support | canonical session-drill route | `test/ui_v2/runner/canonical_session_drill_world2_source_projection_contract_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | canonical phone fixture, current bounded geometry, rendered cards/seat semantics, and ephemeral optional-defaults test fixture pass |
+| `test/ui_v2/session_drill_player_world3_continuation_slice_contract_test.dart` | Tier B maintained support | canonical session-drill route | `test/ui_v2/runner/canonical_session_drill_world3_continuation_slice_contract_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | continuation surface and three-step completion pass |
+| `test/ui_v2/session_drill_player_world3_front_slice_contract_test.dart` | Tier B maintained support | canonical session-drill route | `test/ui_v2/runner/canonical_session_drill_world3_front_slice_contract_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | front surface and three-step completion pass |
+| `test/ui_v2/session_drill_player_world3_hand_chain_surface_contract_test.dart` | Tier B maintained support | canonical session-drill route | `test/ui_v2/runner/canonical_session_drill_world3_hand_chain_surface_contract_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | rendered hand-chain progression passes |
+| `test/ui_v2/session_drill_player_world3_tail_slice_contract_test.dart` | Tier B maintained support | canonical session-drill route and shared frame | `test/ui_v2/runner/canonical_session_drill_world3_tail_slice_contract_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | supported 800x560 completion fixture passes with the shared top-region scroll repair and no overflow |
+| `test/ui_v2/session_drill_player_world9_surface_contract_test.dart` | Tier B maintained support | canonical session-drill route | `test/ui_v2/runner/canonical_session_drill_world9_surface_contract_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | current stacked seat IDs and non-duplicated blind-role presentation pass |
+
+This admits six carriers. PHP-3 arithmetic is admitted `11`, unresolved `66`,
+residual `66`, unexplained `0`. The only production repair is the shared-frame
+overflow fix; Modern Table source is unchanged.

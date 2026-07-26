@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:poker_analyzer/engine/scenario_replayer_fsm_v1.dart';
 import 'package:poker_analyzer/services/drill_runtime_adapter_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/modern_table_screen_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/session_drill_player_v1_screen.dart';
+import 'package:poker_analyzer/ui_v2/runner/canonical_launcher_api_v1.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -24,12 +22,13 @@ void main() {
   }
 
   testWidgets(
-    'w3 early repaired hand-chain sessions surface embedded table state instead of text-only mode',
+    'w3.s01-w3.s03 surface the front framework slice on the embedded hand-chain seam',
     (tester) async {
       final adapter = const DrillRuntimeAdapterV1();
       final expectedHeroCards = <String, List<String>>{
         'w3.s01': <String>['A♠', 'K♦'],
-        'w3.s07': <String>['K♥', 'J♦'],
+        'w3.s02': <String>['K♠', 'J♠'],
+        'w3.s03': <String>['A♠', 'Q♠'],
       };
 
       for (final entry in expectedHeroCards.entries) {
@@ -41,7 +40,7 @@ void main() {
 
         await tester.pumpWidget(
           MaterialApp(
-            home: SessionDrillPlayerV1Screen(
+            home: CanonicalLauncherV1.sessionDrill(
               sessionId: entry.key,
               debugDrillsOverrideV1: drills,
             ),
@@ -59,42 +58,33 @@ void main() {
           findsOneWidget,
         );
         expect(
-          find.byKey(const Key('session_drill_player_hand_chain_table_v1')),
+          find.byKey(const Key('modern_table_scene_board_state')),
           findsOneWidget,
         );
-        expect(find.byType(ModernTableScreenV1), findsOneWidget);
+
+        expect(find.text('Board state · PREFLOP'), findsOneWidget);
         expect(
-          find.byKey(const Key('modern_table_scene_board_state')),
+          find.descendant(
+            of: find.byKey(const Key('modern_table_hero_cards')),
+            matching: find.text(entry.value.first),
+          ),
           findsOneWidget,
         );
-
-        final table = tester.widget<ModernTableScreenV1>(
-          find.byKey(const Key('session_drill_player_hand_chain_table_v1')),
-        );
-        expect(table.scenarioSpec, isNotNull);
-        expect(table.scenarioSpec!.decisionNodeV1.street, Street.preflop);
-        expect(table.scenarioSpec!.decisionNodeV1.legalActions, isNotEmpty);
-        expect(table.debugHeroCardLabels, equals(entry.value));
-
-        final boardStateLabel = tester.widget<Text>(
-          find.byKey(const Key('modern_table_scene_board_state')),
-        );
-        expect(boardStateLabel.data, 'Board state · PREFLOP');
       }
     },
   );
 
   testWidgets(
-    'w3.s07 embedded table follows repaired hand-chain step progression',
+    'w3.s03 mixed checkpoint completes as a three-step preflop framework chain',
     (tester) async {
       final drills = (await tester.runAsync(
-        () => const DrillRuntimeAdapterV1().loadSessionDrills('w3.s07'),
+        () => const DrillRuntimeAdapterV1().loadSessionDrills('w3.s03'),
       ))!;
 
       await tester.pumpWidget(
         MaterialApp(
-          home: SessionDrillPlayerV1Screen(
-            sessionId: 'w3.s07',
+          home: CanonicalLauncherV1.sessionDrill(
+            sessionId: 'w3.s03',
             debugDrillsOverrideV1: drills,
           ),
         ),
@@ -104,33 +94,31 @@ void main() {
         find.byKey(const Key('session_drill_player_hand_chain_table_v1')),
       );
 
-      var table = tester.widget<ModernTableScreenV1>(
-        find.byKey(const Key('session_drill_player_hand_chain_table_v1')),
-      );
-      expect(table.debugHeroCardLabels, equals(const <String>['K♥', 'J♦']));
-      expect(table.scenarioSpec!.decisionNodeV1.street, Street.preflop);
-
+      expect(find.textContaining('cutoff with AQs'), findsOneWidget);
       await tester.tap(
         find.byKey(
           const Key('session_drill_player_hand_chain_action_raise_v1'),
         ),
       );
       await tester.pump();
+
+      expect(find.textContaining('button with KQo'), findsOneWidget);
       await tester.tap(
-        find.byKey(const Key('session_drill_player_hand_chain_action_fold_v1')),
+        find.byKey(const Key('session_drill_player_hand_chain_action_call_v1')),
       );
       await tester.pump();
 
-      table = tester.widget<ModernTableScreenV1>(
-        find.byKey(const Key('session_drill_player_hand_chain_table_v1')),
+      expect(find.textContaining('big blind with J7o'), findsOneWidget);
+      await tester.tap(
+        find.byKey(const Key('session_drill_player_hand_chain_action_fold_v1')),
       );
-      expect(table.debugHeroCardLabels, equals(const <String>['8♣', '6♦']));
-      expect(table.scenarioSpec!.decisionNodeV1.street, Street.preflop);
+      await tester.pumpAndSettle();
 
-      final boardStateLabel = tester.widget<Text>(
-        find.byKey(const Key('modern_table_scene_board_state')),
+      expect(
+        find.byKey(const Key('session_drill_player_hand_chain_action_bar_v1')),
+        findsNothing,
       );
-      expect(boardStateLabel.data, 'Board state · PREFLOP');
+      expect(find.text('Session complete'), findsOneWidget);
     },
   );
 }

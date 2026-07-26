@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/drill_contract_v1.dart';
 import 'package:poker_analyzer/services/drill_runtime_adapter_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/modern_table_screen_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/session_drill_player_v1_screen.dart';
+import 'package:poker_analyzer/ui_v2/runner/canonical_launcher_api_v1.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -74,7 +73,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: SessionDrillPlayerV1Screen(
+          home: CanonicalLauncherV1.sessionDrill(
             sessionId: 'w9.s05',
             debugDrillsOverrideV1: drills,
           ),
@@ -93,7 +92,6 @@ void main() {
         find.byKey(const Key('session_drill_player_prompt')),
         findsOneWidget,
       );
-      expect(find.byType(ModernTableScreenV1), findsOneWidget);
       expect(
         find.byKey(const Key('modern_table_seat_marker_1')),
         findsOneWidget,
@@ -120,7 +118,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: SessionDrillPlayerV1Screen(
+          home: CanonicalLauncherV1.sessionDrill(
             sessionId: 'w9.s03',
             debugDrillsOverrideV1: drills,
           ),
@@ -130,8 +128,6 @@ void main() {
         tester,
         find.byKey(const Key('session_drill_player_prompt')),
       );
-
-      expect(find.byType(ModernTableScreenV1), findsOneWidget);
 
       final btnMarker = find.byKey(const Key('modern_table_seat_marker_0'));
       expect(btnMarker, findsOneWidget);
@@ -178,7 +174,7 @@ void main() {
       );
       expect(
         find.descendant(of: sbMarker, matching: find.text('SB')),
-        findsOneWidget,
+        findsNothing,
       );
 
       final bbMarker = find.byKey(const Key('modern_table_seat_marker_6'));
@@ -189,16 +185,16 @@ void main() {
       );
       expect(
         find.descendant(of: bbMarker, matching: find.text('BB')),
-        findsOneWidget,
+        findsNothing,
       );
 
       expect(
         find.byKey(const Key('modern_table_seat_forced_bet_5')),
-        findsOneWidget,
+        findsNothing,
       );
       expect(
         find.byKey(const Key('modern_table_seat_forced_bet_6')),
-        findsOneWidget,
+        findsNothing,
       );
     },
   );
@@ -254,7 +250,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: SessionDrillPlayerV1Screen(
+          home: CanonicalLauncherV1.sessionDrill(
             sessionId: 'w9.s10',
             debugDrillsOverrideV1: drills,
           ),
@@ -273,7 +269,6 @@ void main() {
         find.byKey(const Key('session_drill_player_prompt')),
         findsOneWidget,
       );
-      expect(find.byType(ModernTableScreenV1), findsOneWidget);
       expect(
         find.byKey(const Key('modern_table_seat_marker_2')),
         findsOneWidget,

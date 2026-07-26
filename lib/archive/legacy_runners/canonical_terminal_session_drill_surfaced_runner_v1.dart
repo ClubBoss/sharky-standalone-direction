@@ -4959,7 +4959,8 @@ class _CanonicalTerminalSessionDrillSurfacedRunnerV1State
   }) {
     return SharedLearnerTableAdjacentFrameV1(
       topRegion: topSection,
-      viewportRegion: Expanded(child: embeddedTable),
+      viewportRegion: embeddedTable,
+      expandViewport: true,
       bottomRegion: Column(
         mainAxisSize: MainAxisSize.min,
         children: _buildBottomSectionContinuationChildrenV1(

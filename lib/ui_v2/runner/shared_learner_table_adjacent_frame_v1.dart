@@ -6,6 +6,7 @@ class SharedLearnerTableAdjacentFrameV1 extends StatelessWidget {
     this.topRegion,
     required this.viewportRegion,
     this.bottomRegion,
+    this.expandViewport = false,
     this.mainAxisSize = MainAxisSize.max,
     this.crossAxisAlignment = CrossAxisAlignment.center,
   });
@@ -13,6 +14,7 @@ class SharedLearnerTableAdjacentFrameV1 extends StatelessWidget {
   final Widget? topRegion;
   final Widget viewportRegion;
   final Widget? bottomRegion;
+  final bool expandViewport;
   final MainAxisSize mainAxisSize;
   final CrossAxisAlignment crossAxisAlignment;
 
@@ -22,8 +24,15 @@ class SharedLearnerTableAdjacentFrameV1 extends StatelessWidget {
       mainAxisSize: mainAxisSize,
       crossAxisAlignment: crossAxisAlignment,
       children: [
-        if (topRegion != null) topRegion!,
-        viewportRegion,
+        if (topRegion != null)
+          if (expandViewport)
+            Flexible(
+              fit: FlexFit.loose,
+              child: SingleChildScrollView(child: topRegion!),
+            )
+          else
+            topRegion!,
+        if (expandViewport) Expanded(child: viewportRegion) else viewportRegion,
         if (bottomRegion != null) bottomRegion!,
       ],
     );
