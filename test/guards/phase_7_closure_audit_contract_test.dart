@@ -91,28 +91,23 @@ void main() {
     );
     expect(
       campaignState,
-      contains('Canonical HEAD | `bb5f235b70ad2246c8b64a45dfd442fa42ec8281`'),
+      contains('Canonical HEAD | `9574b6c896b49069290c9189c0b3587c60377570`'),
     );
     expect(
       campaignState,
       contains('PHP-3 Autonomous Layered Closure Campaign — Wave 1'),
     );
-    expect(campaignState, contains('Latest admitted PR | **#67**'));
-    expect(campaignState, contains('PHP-3 admitted carriers | **11**'));
-    expect(campaignState, contains('PHP-3 unresolved carriers | **66**'));
-    expect(campaignState, contains('PHP-3 nine-path residual | **66**'));
+    expect(campaignState, contains('Latest admitted PR | **#70**'));
+    expect(campaignState, contains('PHP-3 admitted carriers | **14**'));
+    expect(campaignState, contains('PHP-3 unresolved carriers | **63**'));
+    expect(campaignState, contains('PHP-3 nine-path residual | **63**'));
     expect(
       campaignState,
       contains(
-        'maximum three sequential extraction PRs / maximum one open PR at a time',
+        'all three authorized extraction slots consumed / no further autonomous packet',
       ),
     );
-    expect(
-      campaignState,
-      contains(
-        'ACTIVE** — PHP-3 Wave 1 only; PHP-4 and Human remain unauthorized',
-      ),
-    );
+    expect(campaignState, contains('PHP-4 and Human remain unauthorized'));
     expect(campaignState, contains('F-17 | **CLASSIFIED**'));
     expect(campaignState, contains('F-18 | **STALE_TEST**'));
     expect(campaignState, contains('Human Proof | **NOT AUTHORIZED**'));
