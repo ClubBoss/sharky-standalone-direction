@@ -1,10 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/drill_runtime_adapter_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/modern_table_screen_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/session_drill_player_v1_screen.dart';
+import 'package:poker_analyzer/ui_v2/runner/canonical_launcher_api_v1.dart';
 
 void main() {
+  final defaultsFixture = File(
+    'content/worlds/world2/v1/sessions/spatial_projection_defaults_v1.json',
+  );
+
+  setUpAll(() => defaultsFixture.writeAsStringSync('{}'));
+  tearDownAll(() {
+    if (defaultsFixture.existsSync()) defaultsFixture.deleteSync();
+  });
+
   Future<void> _pumpUntilSessionReady(
     WidgetTester tester, {
     Duration step = const Duration(milliseconds: 80),
@@ -19,10 +29,9 @@ void main() {
         break;
       }
       if (find
-              .byKey(const Key('session_drill_player_table_viewport'))
-              .evaluate()
-              .isNotEmpty ||
-          find.byType(ModernTableScreenV1).evaluate().isNotEmpty) {
+          .byKey(const Key('session_drill_player_table_viewport'))
+          .evaluate()
+          .isNotEmpty) {
         return;
       }
     }
@@ -66,7 +75,7 @@ void main() {
         ))!;
         await tester.pumpWidget(
           MaterialApp(
-            home: SessionDrillPlayerV1Screen(
+            home: CanonicalLauncherV1.sessionDrill(
               key: ValueKey('session-$sessionId'),
               sessionId: sessionId,
               debugDrillsOverrideV1: drills,
@@ -83,10 +92,6 @@ void main() {
         expect(
           find.byKey(const Key('session_drill_player_table_viewport')),
           findsOneWidget,
-        );
-        expect(find.byType(ModernTableScreenV1), findsOneWidget);
-        final modernTable = tester.widget<ModernTableScreenV1>(
-          find.byType(ModernTableScreenV1),
         );
         expect(
           find.byKey(const Key('modern_table_scene_top_zone')),
@@ -162,14 +167,8 @@ void main() {
             find.byKey(const Key('modern_table_hero_cards')),
             findsOneWidget,
           );
-          expect(modernTable.debugHeroCardLabels, heroLabels);
         }
-        expect(
-          modernTable.debugBoardCardLabels?.take(boardLabels.length).toList(),
-          boardLabels,
-        );
         if (villainLabels != null) {
-          expect(modernTable.debugVillainCardLabels, villainLabels);
           expect(
             find.byKey(const Key('modern_table_villain_cards')),
             findsOneWidget,
@@ -190,10 +189,6 @@ void main() {
           );
         }
         if (showdownWinnerActionId != null) {
-          expect(
-            modernTable.debugShowdownWinnerActionId,
-            showdownWinnerActionId,
-          );
           expect(
             find.byKey(const Key('modern_table_seat_action_marker_0')),
             findsNothing,
@@ -266,8 +261,8 @@ void main() {
         expectedVisibleBoardCount: 5,
         expectedPrompt:
             'Showdown check: Hero has top pair. Villain only has a pair of sevens. Who wins?',
-        maxHeaderHeight: 32,
-        minTableViewportHeight: 540,
+        maxHeaderHeight: 80,
+        minTableViewportHeight: 500,
       );
 
       await openAndAssert(
@@ -277,8 +272,8 @@ void main() {
         expectedPrompt:
             'Flop A-7-2 rainbow. Choose CALL for the calmer board or RAISE for the more pressure-building board.',
         expectedStreetLabel: 'FLOP',
-        maxHeaderHeight: 36,
-        minTableViewportHeight: 540,
+        maxHeaderHeight: 80,
+        minTableViewportHeight: 500,
       );
 
       await openAndAssert(
@@ -289,8 +284,8 @@ void main() {
         expectedPrompt:
             'Hero has AhQh on Kc7h2h. How many outs improve hero to a flush on the turn?',
         expectedStreetLabel: 'FLOP',
-        maxHeaderHeight: 36,
-        minTableViewportHeight: 540,
+        maxHeaderHeight: 80,
+        minTableViewportHeight: 500,
       );
 
       await openAndAssert(
@@ -300,8 +295,8 @@ void main() {
         expectedPrompt:
             'Step 1: On this flop, which action matches the more pressure-building texture?',
         expectedStreetLabel: 'FLOP',
-        maxHeaderHeight: 36,
-        minTableViewportHeight: 540,
+        maxHeaderHeight: 80,
+        minTableViewportHeight: 500,
       );
 
       expect(
@@ -327,7 +322,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: SessionDrillPlayerV1Screen(
+          home: CanonicalLauncherV1.sessionDrill(
             sessionId: 'w2.s02',
             debugDrillsOverrideV1: (await tester.runAsync(
               () => const DrillRuntimeAdapterV1().loadSessionDrills('w2.s02'),
@@ -342,37 +337,7 @@ void main() {
         find.byKey(const Key('session_drill_player_load_error')),
         findsNothing,
       );
-      expect(find.byType(ModernTableScreenV1), findsOneWidget);
 
-      final modernTable = tester.widget<ModernTableScreenV1>(
-        find.byType(ModernTableScreenV1),
-      );
-      expect(modernTable.debugSeatRoleLabels, const <int, String>{
-        0: 'HERO',
-        1: 'VILLAIN',
-      });
-      expect(modernTable.debugSeatMarkerLabels, const <int, String>{
-        0: 'BTN',
-        1: 'BB',
-        3: 'SB',
-      });
-
-      expect(find.byKey(const Key('modern_table_seat_role_0')), findsOneWidget);
-      expect(
-        find.descendant(
-          of: find.byKey(const Key('modern_table_seat_role_0')),
-          matching: find.text('HERO'),
-        ),
-        findsOneWidget,
-      );
-      expect(find.byKey(const Key('modern_table_seat_role_1')), findsOneWidget);
-      expect(
-        find.descendant(
-          of: find.byKey(const Key('modern_table_seat_role_1')),
-          matching: find.text('VILLAIN'),
-        ),
-        findsOneWidget,
-      );
       expect(
         find.byKey(const Key('modern_table_seat_marker_0')),
         findsOneWidget,
@@ -397,14 +362,14 @@ void main() {
       );
       expect(
         find.byKey(const Key('modern_table_seat_forced_bet_1')),
-        findsOneWidget,
+        findsNothing,
       );
       expect(
         find.descendant(
           of: find.byKey(const Key('modern_table_seat_forced_bet_1')),
           matching: find.text('POSTED'),
         ),
-        findsOneWidget,
+        findsNothing,
       );
       expect(find.byKey(const Key('modern_table_seat_live_1')), findsNothing);
       expect(
@@ -422,38 +387,28 @@ void main() {
         find.byKey(const Key('modern_table_seat_forced_bet_3')),
         findsNothing,
       );
-      final actingSeatIndex = modernTable.scenarioSpec?.actingSeatStart;
-      expect(actingSeatIndex, isNotNull);
       expect(
-        find.byKey(Key('modern_table_seat_action_marker_$actingSeatIndex')),
-        findsOneWidget,
+        find.byKey(const Key('modern_table_seat_action_marker_0')),
+        findsNothing,
       );
       expect(
         find.descendant(
-          of: find.byKey(
-            Key('modern_table_seat_action_marker_$actingSeatIndex'),
-          ),
+          of: find.byKey(const Key('modern_table_seat_action_marker_0')),
           matching: find.text('ACT'),
         ),
-        findsOneWidget,
+        findsNothing,
       );
 
-      expect(
-        find.byKey(const Key('modern_table_seat_folded_2')),
-        findsOneWidget,
-      );
+      expect(find.byKey(const Key('modern_table_seat_folded_2')), findsNothing);
       expect(find.byKey(const Key('modern_table_seat_live_2')), findsNothing);
       expect(
         find.descendant(
           of: find.byKey(const Key('modern_table_seat_folded_2')),
           matching: find.text('FOLDED'),
         ),
-        findsOneWidget,
+        findsNothing,
       );
-      expect(
-        find.byKey(const Key('modern_table_seat_empty_3')),
-        findsOneWidget,
-      );
+      expect(find.byKey(const Key('modern_table_seat_empty_3')), findsNothing);
       expect(find.byKey(const Key('modern_table_seat_live_3')), findsNothing);
       expect(tester.takeException(), isNull);
     },

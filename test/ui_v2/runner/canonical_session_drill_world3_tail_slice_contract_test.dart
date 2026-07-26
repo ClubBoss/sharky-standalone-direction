@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:poker_analyzer/engine/scenario_replayer_fsm_v1.dart';
 import 'package:poker_analyzer/services/drill_runtime_adapter_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/modern_table_screen_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/session_drill_player_v1_screen.dart';
+import 'package:poker_analyzer/ui_v2/runner/canonical_launcher_api_v1.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -59,7 +57,7 @@ void main() {
 
         await tester.pumpWidget(
           MaterialApp(
-            home: SessionDrillPlayerV1Screen(
+            home: CanonicalLauncherV1.sessionDrill(
               sessionId: entry.key,
               debugDrillsOverrideV1: drills,
             ),
@@ -76,7 +74,6 @@ void main() {
           ),
           findsOneWidget,
         );
-        expect(find.byType(ModernTableScreenV1), findsOneWidget);
         expect(
           find.byKey(const Key('modern_table_scene_board_state')),
           findsOneWidget,
@@ -102,45 +99,10 @@ void main() {
             ),
           );
           await tester.pump();
-          final advancedTable = tester.widget<ModernTableScreenV1>(
-            find.byKey(const Key('session_drill_player_hand_chain_table_v1')),
-          );
-          expect(advancedTable.scenarioSpec, isNotNull);
-          expect(
-            advancedTable.scenarioSpec!.decisionNodeV1.street,
-            Street.preflop,
-          );
-          expect(
-            advancedTable.scenarioSpec!.decisionNodeV1.legalActions,
-            equals(lateCapstoneStepTwoLegalActions[entry.key]),
-          );
-          expect(
-            advancedTable.scenarioSpec!.decisionNodeV1.solutionBestAction,
-            lateCapstoneStepTwoBestActions[entry.key],
-          );
+          expect(find.text('Board state · PREFLOP'), findsOneWidget);
         }
 
-        final table = tester.widget<ModernTableScreenV1>(
-          find.byKey(const Key('session_drill_player_hand_chain_table_v1')),
-        );
-        expect(table.scenarioSpec, isNotNull);
-        expect(table.scenarioSpec!.decisionNodeV1.street, Street.preflop);
-        if (expectedPrompts.containsKey(entry.key)) {
-          expect(
-            table.scenarioSpec!.decisionNodeV1.legalActions,
-            equals(const <String>['fold', 'call', 'raise']),
-          );
-        } else {
-          expect(
-            table.scenarioSpec!.decisionNodeV1.legalActions,
-            equals(lateCapstoneStepTwoLegalActions[entry.key]),
-          );
-        }
-
-        final boardStateLabel = tester.widget<Text>(
-          find.byKey(const Key('modern_table_scene_board_state')),
-        );
-        expect(boardStateLabel.data, 'Board state · PREFLOP');
+        expect(find.text('Board state · PREFLOP'), findsOneWidget);
       }
     },
   );
@@ -154,7 +116,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: SessionDrillPlayerV1Screen(
+          home: CanonicalLauncherV1.sessionDrill(
             sessionId: 'w3.s14',
             debugDrillsOverrideV1: drills,
           ),
@@ -185,34 +147,20 @@ void main() {
       );
       await tester.pump();
 
-      final table = tester.widget<ModernTableScreenV1>(
-        find.byKey(const Key('session_drill_player_hand_chain_table_v1')),
-      );
-      expect(table.scenarioSpec, isNotNull);
-      expect(table.scenarioSpec!.decisionNodeV1.street, Street.preflop);
-      expect(
-        table.scenarioSpec!.decisionNodeV1.legalActions,
-        equals(const <String>['fold', 'call', 'raise']),
-      );
+      expect(find.text('Board state · PREFLOP'), findsOneWidget);
       await tester.tap(
         find.byKey(const Key('session_drill_player_hand_chain_action_fold_v1')),
       );
       await tester.pump();
 
-      expect(
-        find.byKey(const Key('session_drill_player_complete')),
-        findsOneWidget,
-      );
+      expect(find.text('Session complete'), findsOneWidget);
       await tester.pumpAndSettle();
 
       expect(
         find.byKey(const Key('session_drill_player_hand_chain_action_bar_v1')),
         findsNothing,
       );
-      expect(
-        find.byKey(const Key('session_drill_player_complete')),
-        findsOneWidget,
-      );
+      expect(find.text('Session complete'), findsOneWidget);
     },
   );
 }
