@@ -264,3 +264,39 @@ Starting baseline: `bb5f235b70ad2246c8b64a45dfd442fa42ec8281`.
 This admits six carriers. PHP-3 arithmetic is admitted `11`, unresolved `66`,
 residual `66`, unexplained `0`. The only production repair is the shared-frame
 overflow fix; Modern Table source is unchanged.
+
+## 21. PHP-3 Wave 1 final interaction-owner extraction
+
+Starting canonical baseline: PR #70 merge `9574b6c896b49069290c9189c0b3587c60377570`.
+Starting arithmetic: admitted `11`, unresolved `66`, residual `66`, unexplained `0`.
+
+Two independent inventory methods agree on the selected carrier list:
+
+1. Tier-B manifest paths: `session_drill_player_board_tap_contract_test.dart`,
+   `session_drill_player_seat_tap_contract_test.dart`, and
+   `session_drill_player_projection_invariant_spine_contract_test.dart`.
+2. Source title census: board tap (2), seat tap (2), projection invariant spine
+   (1), for five ordered titles; source `expect` census is 17, 17, and 3,
+   respectively, for 37 assertion calls.
+
+| Retired original | Prior owner | Title/assertion family | Current owner and equal-or-stronger executable replacement | Disposition | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| `test/ui_v2/session_drill_player_board_tap_contract_test.dart` | Tier B maintained support | symbolic board-slot feedback; authored World-2 board scene | `test/ui_v2/runner/session_drill_canonical_corrective_feedback_v1_test.dart` and `test/ui_v2/runner/session_drill_spatial_projection_contract_v1_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | current corrective feedback proves exact board-slot answer/notice grammar; spatial owner proves board-card payload gate |
+| `test/ui_v2/session_drill_player_seat_tap_contract_test.dart` | Tier B maintained support | symbolic seat-role/id feedback; authored World-2 seat scene | `test/ui_v2/runner/session_drill_canonical_corrective_feedback_v1_test.dart` and `test/ui_v2/runner/session_drill_spatial_projection_contract_v1_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | current corrective feedback proves exact BTN answer/notice grammar; spatial owner proves seat-anchor payload and host gate |
+| `test/ui_v2/session_drill_player_projection_invariant_spine_contract_test.dart` | Tier B maintained support | contradictory empty-blind truth is rejected before projected scenario render | `test/services/session_drill_projection_truth_invariant_spine_v1_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | current service owner proves coherent truth, empty villain rejection, and exact empty-blind rejection |
+
+The original files directly import deleted screen/runner paths and cannot compile.
+Their Modern Table callback inspection is retired wiring, not replaced with a
+proxy. The public current owners above retain the behavioral contracts without a
+Modern Table change, runner migration, or production change.
+
+Final Wave-1 arithmetic: admitted `14`, unresolved `63`, residual `63`,
+unexplained `0`. All three authorized extraction slots are consumed.
+
+Focused current-owner tests, manifest validation, Phase-7 state guard, Tier A,
+affected Tier B, analyzer, Graphify hook check, fast loop, and release gate
+pass. The one terminal `flutter test test/ui_v2 test/guards` run reports two
+unrelated pre-existing Wave-4 premium-copy failures in
+`wave4_2_premium_identity_claim_cleanup_v1_test.dart`; neither owner nor test
+is in this deletion-only diff. No broad test rerun is performed after this
+ledger correction.
