@@ -91,13 +91,25 @@ void main() {
     );
     expect(
       campaignState,
-      contains('PHP-3C — outside-handoff authority debt disposition'),
+      contains('Canonical HEAD | `c1d8ce993f57ecb9150de12475ef848c43fcb206`'),
     );
     expect(
       campaignState,
+      contains('PHP-3 Autonomous Layered Closure Campaign — Wave 1'),
+    );
+    expect(campaignState, contains('Latest admitted PR | **#64**'));
+    expect(campaignState, contains('PHP-3 admitted carriers | **3**'));
+    expect(campaignState, contains('PHP-3 unresolved carriers | **74**'));
+    expect(campaignState, contains('PHP-3 nine-path residual | **74**'));
+    expect(
+      campaignState,
       contains(
-        'ACTIVE** — PHP-3C is bounded to this candidate; PHP-4 and Human remain unauthorized',
+        'maximum three sequential extraction PRs / maximum one open PR at a time',
       ),
+    );
+    expect(
+      campaignState,
+      contains('ACTIVE** — PHP-3 Wave 1 only; PHP-4 and Human remain unauthorized'),
     );
     expect(campaignState, contains('F-17 | **CLASSIFIED**'));
     expect(campaignState, contains('F-18 | **STALE_TEST**'));

@@ -300,7 +300,11 @@ classification.
 
 After PHP-0, a later window may carry up to **two merged PRs** when the next
 owners are already known, no independent gateway intervenes, exact-head CI is
-green, and the campaign state file explicitly authorizes the next packet.
+green, and the campaign state file explicitly authorizes the next packet. After
+a gateway, the campaign state may explicitly authorize a bounded multi-PR wave.
+PHP-3 Wave 1 is the current exception, capped at three sequential extraction
+PRs with one PR open at a time; this exception does not automatically apply to
+future packets.
 
 ### 4.2 Packet definitions
 
@@ -359,6 +363,24 @@ green, and the campaign state file explicitly authorizes the next packet.
 - **Fit test:** two coupled families (test authority, archive boundary); no owner decision; 1–2 PRs; mechanical.
 
 #### PHP-3 — Canonical Test Classification and Manifest  *(Node 5)*
+
+##### Execution update — 2026-07-26: PHP-3 Wave 1 authorization reconciliation
+
+The original one-PR estimate assumed the unique-contract set might be small or
+empty. Published PHP-2/PHP-3 evidence instead establishes 77 original handoffs,
+3 admitted carriers, 74 unresolved carriers, and multiple distinct owner
+families. The original estimate is therefore no longer operationally valid.
+
+PHP-3 Autonomous Layered Closure Campaign — Wave 1 is explicitly authorized
+for up to three sequential extraction PRs, with only one PR open at a time.
+Each PR must reconcile to the latest admitted `origin/main`, use
+owner-homogeneous families, satisfy required exact-head CI before merge, and
+target at least eight carrier admissions for a normal later-family PR. The
+Wave-1 no-weakening and circuit-breaker rules remain mandatory.
+
+This evidence-driven batching correction does not authorize PHP-4, alter the
+product roadmap, reopen Modern Table, permit visual, Motion, Sharky, native, or
+Human scope, or allow mixed-owner batches merely to reduce PR count.
 
 - **Findings closed:** the `UNRESOLVED_UNIQUE_CONTRACT` subset of F-17; F-15 remainder.
 - **Executable DoD:**
