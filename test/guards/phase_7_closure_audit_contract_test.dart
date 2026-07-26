@@ -91,24 +91,21 @@ void main() {
     );
     expect(
       campaignState,
-      contains('Canonical HEAD | `9574b6c896b49069290c9189c0b3587c60377570`'),
+      contains('Canonical HEAD | `2c640be080f4ab4cd25a9f03c82106c2aee981b7`'),
     );
-    expect(
-      campaignState,
-      contains('PHP-3 Autonomous Layered Closure Campaign — Wave 1'),
-    );
-    expect(campaignState, contains('Latest admitted PR | **#70**'));
-    expect(campaignState, contains('PHP-3 admitted carriers | **14**'));
-    expect(campaignState, contains('PHP-3 unresolved carriers | **63**'));
-    expect(campaignState, contains('PHP-3 nine-path residual | **63**'));
     expect(
       campaignState,
       contains(
-        'all three authorized extraction slots consumed / no further autonomous packet',
+        'PHP-3 F-17 Current-Owner Repair and Manifest Completeness Closure',
       ),
     );
+    expect(campaignState, contains('Latest admitted PR | **#71**'));
+    expect(campaignState, contains('PHP-3 admitted carriers | **14**'));
+    expect(campaignState, contains('PHP-3 unresolved carriers | **68**'));
+    expect(campaignState, contains('PHP-3 nine-path residual | **68**'));
+    expect(campaignState, contains('One F-17 owner-repair PR; no PHP-4 work'));
     expect(campaignState, contains('PHP-4 and Human remain unauthorized'));
-    expect(campaignState, contains('F-17 | **CLASSIFIED**'));
+    expect(campaignState, contains('F-17 | **PARTIALLY CLOSED IN PHP-3**'));
     expect(campaignState, contains('F-18 | **STALE_TEST**'));
     expect(campaignState, contains('Human Proof | **NOT AUTHORIZED**'));
     expect(activeRoute, contains('Phase 7 - Content & Correctness is CLOSED'));

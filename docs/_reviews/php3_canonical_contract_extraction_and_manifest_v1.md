@@ -300,3 +300,37 @@ unrelated pre-existing Wave-4 premium-copy failures in
 `wave4_2_premium_identity_claim_cleanup_v1_test.dart`; neither owner nor test
 is in this deletion-only diff. No broad test rerun is performed after this
 ledger correction.
+
+## 22. PHP-3 F-17 current-owner repair and manifest completeness closure
+
+Starting baseline: PR #71 merge `2c640be080f4ab4cd25a9f03c82106c2aee981b7`.
+The historical Wave-1 state is corrected to admitted `14`, unresolved `62`,
+residual `62`, unexplained `0`; the PHP-3C non-admission retirement accounts
+for the otherwise stale one-count narrative discrepancy.
+
+The six F-17 `UNRESOLVED_UNIQUE_CONTRACT` guards below were absent from the
+frozen F-15 inventory, but are current executable guards, not archive carriers.
+Each is `CURRENT_CANONICAL_STALE_ASSERTION`: current source history replaced the
+expectation, route, or copy while retaining the decision-controlling semantic.
+They are added to Tier B as six distinct F-17 carrier keys; none is a
+Tier-B-to-D extraction admission.
+
+| File | Current owner | Current contract retained | Carrier key | Tier |
+| --- | --- | --- | --- | --- |
+| `test/guards/early_world_feedback_quality_family_contract_test.dart` | canonical corrective-feedback seam | source-driven `STRONG` range label and active feedback owner | `F17:early-feedback-quality` | B |
+| `test/guards/showable_spine_handoff_coherence_contract_test.dart` | progression route story + session result | active result prose resolves through the canonical story seam | `F17:showable-spine-handoff` | B |
+| `test/guards/targeted_content_repairs_contract_test.dart` | active W5/W10/W11 content authorities | observational texture/connected-board and bounded W10 copy | `F17:targeted-content-repairs` | B |
+| `test/guards/w10_to_w11_transition_policy_contract_test.dart` | W10→W11 policy + campaign registry | admitted W12 packs and no W13 unlock | `F17:w10-w11-transition-policy` | B |
+| `test/ui_v2/session_summary_gold_containment_v1_test.dart` | Act0 session summary | gold containment, saved-read payoff, Sharky ceremony | `F17:session-summary-gold-containment` | B |
+| `test/ui_v2/wave4_2_premium_identity_claim_cleanup_v1_test.dart` | Act0 feedback/session summary | no XP/Level economy, `Read banked`, `Local read saved` | `F17:premium-identity-proof-copy` | B |
+
+No product, Modern Table, visual-system, or curriculum source changed. The
+exact current text is supported by `e3b4eabd`, `44faa780`, and `57036376`; it
+is not attributed to Wave-1 PRs #67, #70, or #71. Post-reconciliation
+arithmetic is admitted `14`, unresolved `68`, residual `68`, unexplained `0`:
+the six paths are newly ledgered residual guards, not extraction admissions.
+The F-15 carrier population remains 77 (14 admitted + 62 residual + 1
+non-admission archival retirement); adding six distinct F-17 keys produces a
+total PHP-3-owned population of 83, with zero duplicate keys and zero missing
+owned files. The nine session-drill Wave-2 carriers remain unmodified. PHP-4,
+Human, Visual Completion, and Modern Table work remain unauthorized.

@@ -128,7 +128,7 @@ void main() {
       expect(rangeBucketFeedback!.detailText, isNot('Incorrect.'));
       expect(
         rangeBucketFeedback.detailText,
-        'Better line: RAISE. FOLD is weaker here.',
+        'Better line: STRONG. FOLD is weaker here.',
       );
       expect(rangeBucketFeedback.whyText, startsWith('Notice:'));
       expect(rangeBucketFeedback.whyText, contains('Next time:'));
@@ -136,33 +136,18 @@ void main() {
   );
 
   test(
-    'active session fail surfaces route admitted families through the shared seam',
+    'canonical corrective-feedback owner remains the active fail-feedback seam',
     () {
-      final playerSource = File(
-        'lib/ui_v2/screens/session_drill_player_v1_screen.dart',
-      ).readAsStringSync();
-      final surfacedRunnerSource = File(
-        'lib/ui_v2/runner/canonical_terminal_session_drill_surfaced_runner_v1.dart',
+      final correctiveSource = File(
+        'lib/ui_v2/runner/session_drill_canonical_corrective_feedback_v1.dart',
       ).readAsStringSync();
 
       expect(
-        playerSource,
-        contains('CanonicalTerminalSessionDrillSurfacedRunnerV1('),
-      );
-
-      expect(
-        surfacedRunnerSource,
+        correctiveSource,
         contains('resolveSessionDrillCanonicalCorrectiveFeedbackV1('),
       );
-      expect(
-        surfacedRunnerSource,
-        contains('correctiveFeedbackV1?.detailText'),
-      );
-      expect(surfacedRunnerSource, contains('correctiveFeedbackV1?.whyText'));
-      expect(
-        surfacedRunnerSource,
-        contains('chosenEventV1: _lastChosenEventV1'),
-      );
+      expect(correctiveSource, contains('DrillKindV1.rangeBucketClassifier'));
+      expect(correctiveSource, contains('_preferredTeachingTextV1('));
     },
   );
 

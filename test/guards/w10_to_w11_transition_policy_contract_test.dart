@@ -10,7 +10,7 @@ const _progressServicePath = 'lib/services/progress_service.dart';
 
 void main() {
   test(
-    'W10 to W11 transition policy enables handoff without W12 or W13 unlock',
+    'W10 to W11 transition policy enables the admitted W12 handoff without W13 unlock',
     () {
       const proof = W11RouteBackedProofV1(
         routeId: kW11SourceRouteProofIdV1,
@@ -44,8 +44,13 @@ void main() {
       );
       expect(
         kCampaignPackIdsV1.where((id) => id.startsWith('world12_')),
-        isEmpty,
-        reason: 'Transition policy must not add active W12 campaign packs.',
+        const <String>[
+          'world12_spine_campaign_v1',
+          'world12_spine_followup_v1_b0',
+          'world12_spine_followup_v1_b1',
+          'world12_spine_followup_v1_b2',
+        ],
+        reason: 'The active route must admit the canonical W12 payoff packs.',
       );
 
       final progressSource = File(_progressServicePath).readAsStringSync();
