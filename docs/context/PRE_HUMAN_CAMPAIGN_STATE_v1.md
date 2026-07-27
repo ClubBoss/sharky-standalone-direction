@@ -33,7 +33,10 @@ here; update only the fields below.
 | `PRE_HUMAN_READY` | **NOT MET** |
 | `HUMAN_PROVEN_10_OF_10_CANDIDATE` | **NOT MET** |
 
-## Open canonical severity counts (at `52034abb`)
+## Historical canonical severity snapshot (at `52034abb`)
+
+**HISTORICAL SNAPSHOT — NOT CURRENT DISPATCH AUTHORITY.** These preserved
+severity counts are not recalculated here and do not alter the PHP-5 dispatch.
 
 | Severity | Count | IDs |
 | --- | ---: | --- |
@@ -54,7 +57,7 @@ Product severity resolves in PHP-0.
 | PHP-0 Canonical-Adjacent Red-Guard Triage | Node 5 | **CLOSED_CLASSIFIED** |
 | PHP-1 Stale Contract Repair + F-16 Non-Weakening Verification | Node 5 | **CLOSED_NON_WEAKENING** |
 | PHP-2 Legacy Corpus Ownership Disposition | Node 5 | **CLOSED_DISPOSED_WITH_PHP3_HANDOFFS — retired 68; handoffs 77; eligible residual 0; unexplained 0** |
-| PHP-3 Canonical Test Classification and Manifest | Node 5 | **WAVE-2 CURRENT-OWNER CANDIDATE — PR #72 admitted F-17 repair; nine stale session-drill carriers extracted to live canonical tests, candidate 23/59/59/0; PHP-4 and Human remain unauthorized pending gates** |
+| PHP-3 Canonical Test Classification and Manifest | Node 5 | **HISTORICAL TERMINAL DISPOSITION — NOT CURRENT DISPATCH AUTHORITY.** At PR #72, nine stale session-drill carriers were extracted to live canonical tests (candidate 23/59/59/0). PHP-4 subsequently closed in PR #76; PHP-3 is not reopened. |
 | PHP-4 Canonical Full-Lane CI Authority | Node 5 | **CLOSED — `PHP4_MANIFEST_DRIVEN_CANONICAL_AUTHORITY_CLOSED`; PR #76 merge `edee622eaf3cfdba2f8472b766ef8c4b5532d0ec`; Tier A + terminal Tier B positive authority, Tier C structural only** |
 | PHP-5 Premium Motion & Ceremony Completion | — | **NEXT_AUTHORIZED_PACKET** |
 | PHP-6 Sharky Production Integration & Completeness Proof | — | NOT_PREAUTHORIZED |
