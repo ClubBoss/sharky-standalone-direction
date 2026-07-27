@@ -60,9 +60,14 @@ generated_by: "docs_frontmatter_v1"
 
 ## Supported v1 scope
 
-- Group: `core`
+- Groups: `core` and `sharky_evidence`
 - Device: `compact`
 - Surfaces: Home, Learn, Practice, Review, Profile
+
+`sharky_evidence` captures the actual shared companion renderer at its three
+deterministic PHP-6 proof rows: Developing (neutral state plus Developing
+growth treatment), improve, and milestone. It is component evidence, not a
+synthetic route claim or a substitute for a learner traversal.
 
 ## Lane differences
 

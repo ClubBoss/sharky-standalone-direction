@@ -20,7 +20,7 @@ void main() {
       expect(
         shell,
         contains(
-          '<alpha_journey|core|runner|first_week|day2_return|profile_evidence|full_scroll|route_w7_w12|active_route_w7_w12|presentation_closure|review_return> <compact|tall_phone|large_phone|tablet|iphone17_class>',
+          '<alpha_journey|core|runner|first_week|day2_return|profile_evidence|sharky_evidence|full_scroll|route_w7_w12|active_route_w7_w12|presentation_closure|review_return> <compact|tall_phone|large_phone|tablet|iphone17_class>',
         ),
       );
       expect(capture, contains("'tall_phone': Size(390, 844)"));
@@ -29,6 +29,8 @@ void main() {
       expect(capture, contains("'alpha_journey': <_CaptureSurfaceV1>["));
       expect(capture, contains("'presentation_closure'"));
       expect(capture, contains("'review_return'"));
+      expect(capture, contains("'sharky_evidence': <_CaptureSurfaceV1>["));
+      expect(capture, contains('captureSharkyState'));
       expect(capture, contains("'review_full_shell_authority'"));
       expect(
         capture,

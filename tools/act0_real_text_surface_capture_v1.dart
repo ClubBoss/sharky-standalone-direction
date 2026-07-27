@@ -33,11 +33,15 @@ class _CaptureSurfaceV1 {
     this.name,
     this.debugSurface, {
     this.scrollViewport = 'top',
+    this.sharkyState,
+    this.growthStage,
   });
 
   final String name;
   final String debugSurface;
   final String scrollViewport;
+  final String? sharkyState;
+  final String? growthStage;
 }
 
 class _RouteCaptureSurfaceV1 {
@@ -124,6 +128,26 @@ const _captureGroupsV1 = <String, List<_CaptureSurfaceV1>>{
       'profile_evidence',
       'profileEvidence',
       scrollViewport: 'mid',
+    ),
+  ],
+  'sharky_evidence': <_CaptureSurfaceV1>[
+    _CaptureSurfaceV1(
+      'developing',
+      'not_applicable',
+      sharkyState: 'neutral',
+      growthStage: 'developing',
+    ),
+    _CaptureSurfaceV1(
+      'improve',
+      'not_applicable',
+      sharkyState: 'improve',
+      growthStage: 'foundation',
+    ),
+    _CaptureSurfaceV1(
+      'milestone',
+      'not_applicable',
+      sharkyState: 'milestone',
+      growthStage: 'foundation',
     ),
   ],
   'full_scroll': <_CaptureSurfaceV1>[
@@ -739,8 +763,9 @@ Map<String, String> _sourceBySurfaceV1({
   if (captureSurfaces != null) {
     return <String, String>{
       for (final capture in captureSurfaces)
-        capture.name:
-            'Act0ControlledDemoCaptureSurfaceV1.${capture.debugSurface}',
+        capture.name: capture.sharkyState == null
+            ? 'Act0ControlledDemoCaptureSurfaceV1.${capture.debugSurface}'
+            : 'Act0SharkyCompanionAvatarV1.${capture.sharkyState}',
     };
   }
   if (activeRouteCaptureSurfaces != null) {
@@ -819,6 +844,15 @@ String _flutterTestSource(
     final index = entry.$1;
     final capture = entry.$2;
     final screen = capture.name.split('.').first;
+    if (capture.sharkyState != null) {
+      return '''
+    await captureSharkyState(
+      tester,
+      '$device.${capture.name}.png',
+      Act0SharkyCompanionStateV1.${capture.sharkyState},
+      Act0SharkyGrowthStageV1.${capture.growthStage},
+    );''';
+    }
     return '''
     await captureSurface(
       tester,
@@ -842,6 +876,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -1124,6 +1160,7 @@ void main() {
     required String scrollViewport,
     required int captureOrder,
   }
+
   ) async {
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
@@ -1159,6 +1196,48 @@ void main() {
         ...scrollMetadata,
       });
     }
+  }
+
+  Future<void> captureSharkyState(
+    WidgetTester tester,
+    String fileName,
+    Act0SharkyCompanionStateV1 state,
+    Act0SharkyGrowthStageV1 growthStage,
+  ) async {
+    tester.view.physicalSize = viewportSize;
+    tester.view.devicePixelRatio = 1.0;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(fontFamily: 'Roboto'),
+        home: RepaintBoundary(
+          key: const Key('act0_real_text_capture_boundary'),
+          child: Scaffold(
+            body: Center(
+              child: Act0SharkyCompanionAvatarV1(
+                state: state,
+                size: 92,
+                growthStage: growthStage,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 900));
+    final boundary = tester.renderObject<RenderRepaintBoundary>(
+      find.byKey(const Key('act0_real_text_capture_boundary')),
+    );
+    final byteData = await tester.runAsync(() async {
+      final image = await boundary.toImage(pixelRatio: 2.0);
+      return image.toByteData(format: ui.ImageByteFormat.png);
+    });
+    if (byteData == null) {
+      throw StateError('Failed to capture Sharky screenshot for ' + fileName);
+    }
+    File('\${outputDir.path}/' + fileName).writeAsBytesSync(
+      Uint8List.view(byteData.buffer),
+    );
   }
 
   testWidgets('capture real-text Act0 $group review surfaces', (tester) async {
@@ -2469,6 +2548,6 @@ $captureStatements
 
 void _printUsageV1() {
   stderr.writeln(
-    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <alpha_journey|core|runner|first_week|day2_return|profile_evidence|full_scroll|route_w7_w12|active_route_w7_w12> <compact|tall_phone|large_phone|tablet>',
+    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <alpha_journey|core|runner|first_week|day2_return|profile_evidence|sharky_evidence|full_scroll|route_w7_w12|active_route_w7_w12> <compact|tall_phone|large_phone|tablet>',
   );
 }
