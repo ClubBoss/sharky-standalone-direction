@@ -7,6 +7,29 @@ Campaign baseline: `52034abb6f614b907b2d9277eeca5e1f642b92f9` (`main` == `origin
 Authoring agent: Claude Code (planning + targeted verification only)
 Human Novice Proof: **NOT PERFORMED**
 
+## Current execution correction — 2026-07-27 (post-PR #79, fresh PHP-6 dispatch)
+
+PR #79 merged as `e91c0ea8939ff2e3c8f8cc6b2ecdf71235da4e35` and publishes PHP-5
+closure (PR #78 merge `71fda1d5be2dae3771599e8b674ab0d8229aa633`) to
+`origin/main`. A fresh dispatch mission compared PHP-6 (Sharky Production
+Integration & Completeness Proof), PHP-7 (Screen-Role & Visual-Hierarchy
+Emphasis Proof), and PHP-8 (Evidence & Accessibility Lane Completeness)
+against learner-visible EV, dependency order, owner clarity, and regression
+risk, and **authorizes PHP-6** as the exact next executable packet, split into
+**Packet 6A** (state-reachability matrix, continuity, small-size identity,
+reduced-motion proof, SHK-CREST-01 verification-only reconciliation) and
+**Packet 6B** (the three deterministic-capture gaps, bounded fallback
+migration, regression/release-gate proof, PHP-6 closure). Both packets use
+only the owner-supplied direction (`SHARKY_VISUAL_LOCK_V1` / refined C, OD-03b)
+and generate no new art; SHK-CREST-01 (§7.5, OD-03d) remains genuinely active
+and unresolved but blocks neither packet, since crest-dependent asset
+production is outside both packets' DoD. PHP-7 and PHP-8 remain
+**NOT_PREAUTHORIZED**; this correction does not reopen or resequence them. For
+first-read dispatch use `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`; this
+document remains the packet-specific plan and its PHP-6 DoD (§4.2/§4.3, lines
+430–443) is the exact executable scope for this dispatch — unchanged by this
+correction, only activated.
+
 ## Current execution correction — 2026-07-27 (post-PR #76)
 
 PR #76 merged as `edee622eaf3cfdba2f8472b766ef8c4b5532d0ec` and closes PHP-4 as
