@@ -9,14 +9,14 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical HEAD | `dd082926221b1e08f76e5de62db7803904af676e` |
-| Authority freshness | 2026-07-27 — post-PR #80 PHP-6 fresh dispatch; corridor extension |
+| Canonical HEAD | `b00d786af0ae84a1ac8530d93f078c8a1c5d83fa` |
+| Authority freshness | 2026-07-27 — PHP-6 PR #82 merged; PHP-7 compact hierarchy proof reconciled for publication |
 | Campaign version | v1 |
 | Corridor | **`ROLLING_CORRIDOR_PHP6_TO_PHP8_V1`** — PHP-6 unconditionally authorized; PHP-7 and PHP-8 conditionally preauthorized behind their own transition gates (see Current dispatch boundaries); PHP-9 remains `NOT_PREAUTHORIZED`. The corridor exists so Codex can move PHP-6 → gate → PHP-7-or-`CLOSED_UNNECESSARY` → gate → PHP-8-or-`CLOSED_UNNECESSARY` → one terminal corridor report without returning for a fresh dispatch between waves. |
-| Umbrella stage | **Pre-Human Node 6 — Sharky Production Integration & Completeness Proof — AUTHORIZED (Wave A of the corridor)** |
-| Active sub-packet | **PHP-6, Packet 6A (Reachability, Continuity, Reduced-Motion Proof)** |
-| Status | **PHP6_SHARKY_PRODUCTION_INTEGRATION_AUTHORIZED — dispatch published, not yet executed. Corridor gates for PHP-7/PHP-8 published, not yet evaluated.** |
-| Latest admitted PR | **#80** (dispatch publication); corridor dispatch PR tracked separately below |
+| Umbrella stage | **Pre-Human Node 6 — rolling corridor Wave B complete; Wave C gate pending publication** |
+| Active sub-packet | **PHP-7, Packet 7A (compact hierarchy and role proof)** |
+| Status | **PHP6_CLOSED_WITH_EXTERNAL_ASSET_INPUT_REQUIRED — PR #82 merge `b00d786af0ae84a1ac8530d93f078c8a1c5d83fa`; PHP7_CLOSED_PROVEN is ready to merge. PHP-8 transition gate is next.** |
+| Latest admitted PR | **#82** (PHP-6 production integration proof) |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **PARTIALLY CLOSED IN PHP-3** — six PHP-3-owned unique current guards are current-contract reconciled and Tier-B ledgered; four differently owned unresolved-unique files remain. |
 | F-18 | **STALE_TEST** — exact pre-F-16-to-head trail disproves PR #51/#52 causation; owner is compact-decision test fixture / retired teaching-step assertion |
@@ -62,8 +62,8 @@ Product severity resolves in PHP-0.
 | PHP-3 Canonical Test Classification and Manifest | Node 5 | **HISTORICAL TERMINAL DISPOSITION — NOT CURRENT DISPATCH AUTHORITY.** At PR #72, nine stale session-drill carriers were extracted to live canonical tests (candidate 23/59/59/0). PHP-4 subsequently closed in PR #76; PHP-3 is not reopened. |
 | PHP-4 Canonical Full-Lane CI Authority | Node 5 | **CLOSED — `PHP4_MANIFEST_DRIVEN_CANONICAL_AUTHORITY_CLOSED`; PR #76 merge `edee622eaf3cfdba2f8472b766ef8c4b5532d0ec`; Tier A + terminal Tier B positive authority, Tier C structural only** |
 | PHP-5 Premium Motion & Ceremony Completion | — | **CLOSED — PR #78 merge `71fda1d5be2dae3771599e8b674ab0d8229aa633`; publication PR #79 merge `e91c0ea8939ff2e3c8f8cc6b2ecdf71235da4e35`; Street Replay step reveal restored through the shared tokenized proof reveal; active guards cover all four canonical moments, reduced-motion bypass, rebuild stability, and CTA safety.** |
-| PHP-6 Sharky Production Integration & Completeness Proof | Node 6, Corridor Wave A | **UNCONDITIONALLY AUTHORIZED. Packet 6A (reachability/continuity/reduced-motion) then Packet 6B (deterministic captures/fallback migration/release gate). No new art; SHK-CREST-01 stays active and unresolved. Terminal disposition must be one of `PHP6_CLOSED_INTEGRATED`, `PHP6_CLOSED_WITH_EXTERNAL_ASSET_INPUT_REQUIRED`, or `PHP6_BLOCKED_OWNER_DECISION`.** |
-| PHP-7 Screen-Role & Visual-Hierarchy Emphasis Proof | Node 6, Corridor Wave B | **CONDITIONALLY PREAUTHORIZED — auto-enters only if KEY 7.1–7.4 all pass (see Current dispatch boundaries). Packet 7A (bounded role/hierarchy census, classify `PHP7_EXECUTION_REQUIRED` / `PHP7_CLOSED_UNNECESSARY` / `PHP7_DEFERRED_OWNER_DECISION`); Packet 7B only if 7A proves a real gap.** |
+| PHP-6 Sharky Production Integration & Completeness Proof | Node 6, Corridor Wave A | **CLOSED_WITH_EXTERNAL_ASSET_INPUT_REQUIRED — PR #82 merge `b00d786af0ae84a1ac8530d93f078c8a1c5d83fa`; runtime integration and deterministic proof are complete, while the admitted state-art rows remain externally supplied.** |
+| PHP-7 Screen-Role & Visual-Hierarchy Emphasis Proof | Node 6, Corridor Wave B | **CLOSED_PROVEN pending this packet's merge — compact 360 x 640 core capture and refreshed current-owner role/hierarchy guard pass; no learner-visible hierarchy repair or redesign required.** |
 | PHP-8 Evidence & Accessibility Lane Completeness | Node 6, Corridor Wave C | **CONDITIONALLY PREAUTHORIZED — auto-enters only if KEY 8.1–8.4 all pass (see Current dispatch boundaries). Packet 8A (evidence/accessibility census, classify `PHP8_EXECUTION_REQUIRED` / `PHP8_CLOSED_UNNECESSARY` / `PHP8_DEFERRED_HUMAN_EVIDENCE`); Packet 8B only if 8A proves real gaps. Corridor ends after PHP-8's terminal disposition.** |
 | PHP-9 `PRE_HUMAN_READY` Admission | — | NOT_PREAUTHORIZED — never auto-entered by this corridor |
 
