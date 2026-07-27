@@ -137,6 +137,11 @@ SURFACE_GROUPS = {
         ("volume_i_terminal_review_table", "Volume I terminal review table"),
         ("terminal_no_w13_copy_detail", "Terminal no-W13 copy detail"),
     ),
+    "w2_fast": (
+        ("w2_apply_table", "W2 - apply table"),
+        ("w2_apply_copy_detail", "W2 - apply copy detail"),
+        ("w2_recap_table", "W2 - recap table"),
+    ),
     "presentation_closure_v1": (
         ("normal_three_option_decision", "Normal three-option decision"),
         ("correct_feedback", "Correct feedback"),
@@ -407,6 +412,8 @@ def _source_command(group: str) -> str:
         return "./tools/screen_review_fast_v1.sh route_w7_w12 compact"
     if group == "active_route_w7_w12_fast":
         return "./tools/screen_review_fast_v1.sh active_route_w7_w12 compact"
+    if group == "w2_fast":
+        return "./tools/screen_review_fast_v1.sh w2 compact"
     return f"./tools/screen_review_v1.sh {group} compact"
 
 
@@ -416,6 +423,8 @@ def _scenario_family(group: str) -> str:
         return "late_route_w7_w12_visual_coverage"
     if group == "active_route_w7_w12_fast":
         return "active_runtime_late_route_w7_w12_visual_coverage"
+    if group == "w2_fast":
+        return "active_runtime_w2_visual_coverage"
     if group == "sharky_evidence_fast":
         return "sharky_component_deterministic_evidence"
     return "act0_fast_screen_review"

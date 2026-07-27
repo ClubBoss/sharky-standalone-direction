@@ -347,6 +347,12 @@ const _activeRouteW7W12CaptureSurfacesV1 = <_ActiveRouteCaptureSurfaceV1>[
   ),
 ];
 
+const _activeRouteW2CaptureSurfacesV1 = <_ActiveRouteCaptureSurfaceV1>[
+  _ActiveRouteCaptureSurfaceV1('w2_apply_table', 2, 0, 'table'),
+  _ActiveRouteCaptureSurfaceV1('w2_apply_copy_detail', 2, 0, 'copy_detail'),
+  _ActiveRouteCaptureSurfaceV1('w2_recap_table', 2, 1, 'table'),
+];
+
 void main(List<String> args) async {
   if (args.contains('--help') || args.contains('-h')) {
     _printUsageV1();
@@ -373,6 +379,8 @@ void main(List<String> args) async {
       : null;
   final activeRouteCaptureSurfaces = group == 'active_route_w7_w12'
       ? _activeRouteW7W12CaptureSurfacesV1
+      : group == 'w2'
+      ? _activeRouteW2CaptureSurfacesV1
       : null;
   final targetedSurfaces = group == 'presentation_closure'
       ? _presentationClosureSurfacesV1
@@ -2548,6 +2556,6 @@ $captureStatements
 
 void _printUsageV1() {
   stderr.writeln(
-    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <alpha_journey|core|runner|first_week|day2_return|profile_evidence|sharky_evidence|full_scroll|route_w7_w12|active_route_w7_w12> <compact|tall_phone|large_phone|tablet>',
+    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <alpha_journey|core|runner|first_week|day2_return|profile_evidence|sharky_evidence|full_scroll|route_w7_w12|active_route_w7_w12|w2> <compact|tall_phone|large_phone|tablet>',
   );
 }

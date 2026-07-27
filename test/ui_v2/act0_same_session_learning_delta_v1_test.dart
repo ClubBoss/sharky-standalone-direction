@@ -155,7 +155,7 @@ void main() {
     });
   });
 
-  testWidgets('completed-lesson W2 replay shows one delta on the source recheck '
+  testWidgets('completed-lesson W2 source recheck shows one delta and '
       'feedback, keeps the CTA reachable, emits once, then advances to the '
       'next authored task', (tester) async {
     final sink = Act0InMemoryTelemetrySinkV1();
