@@ -8,7 +8,12 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-MANIFEST_DIR = ROOT / "tools" / "test_authority" / "manifests"
+MANIFEST_DIR = Path(
+    os.environ.get(
+        "TEST_AUTHORITY_MANIFEST_DIR",
+        ROOT / "tools" / "test_authority" / "manifests",
+    )
+)
 SUMMARY_DIR = ROOT / "build" / "test_authority"
 
 LANES = {
