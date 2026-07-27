@@ -78,12 +78,12 @@ void main() {
         find.byKey(const Key('act0_shell_session_summary_hero_payoff')),
         findsOneWidget,
       );
-      expect(find.text('First read banked.'), findsOneWidget);
+      expect(find.text('One clean table read is saved.'), findsOneWidget);
       expect(
         find.byKey(const Key('act0_shell_session_summary_payoff_sharky')),
         findsOneWidget,
       );
-      expect(find.text('Collected proof'), findsOneWidget);
+      expect(find.text('Collected read'), findsOneWidget);
       expect(
         find.byKey(const Key('act0_shell_block_summary_continue_cta')),
         findsOneWidget,

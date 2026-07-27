@@ -102,7 +102,7 @@ void main() {
       );
       expect(find.textContaining('XP'), findsNothing);
       expect(find.textContaining('Level'), findsNothing);
-      expect(find.text('Proof banked'), findsOneWidget);
+      expect(find.text('Read banked'), findsOneWidget);
       expect(find.text('Table read improved'), findsOneWidget);
     },
   );
@@ -143,7 +143,7 @@ void main() {
       expect(find.textContaining('XP'), findsNothing);
       expect(find.textContaining('Level'), findsNothing);
       expect(find.text('One clean read'), findsOneWidget);
-      expect(find.text('Local proof saved'), findsOneWidget);
+      expect(find.text('Local read saved'), findsOneWidget);
     },
   );
 }

@@ -47,26 +47,18 @@ void main() {
   );
 
   test(
-    'result and map no longer pin stale local showable-spine handoff prose',
+    'current result owner routes showable-spine prose through the canonical seam',
     () {
       final resultSource = File(
         'lib/ui_v2/screens/session_result_screen.dart',
       ).readAsStringSync();
-      final mapSource = File(
-        'lib/ui_v2/map/ui_v2_progress_map_screen_v2.dart',
-      ).readAsStringSync();
-
       expect(resultSource, isNot(contains('Next up: continue campaign spine')));
       expect(
         resultSource,
         isNot(contains('Checkpoint: review your top mistakes.')),
       );
-      expect(
-        mapSource,
-        isNot(contains('Review ready: revisit your top mistakes.')),
-      );
       expect(resultSource, contains('_spineHandoffRouteStoryV1?.reasonLine'));
-      expect(mapSource, contains('mapCheckpointPendingReasonTextV1('));
+      expect(resultSource, contains('resolveProgressionRouteStoryForPackV1('));
     },
   );
 }

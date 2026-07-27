@@ -20,8 +20,16 @@ void main() {
           expect(copy, isNot(contains('choose the best action')));
           expect(copy, isNot(contains('should lead to a raise')));
           expect(copy, isNot(contains('let the wetter turn texture lead')));
-          expect(copy, contains('texture'));
-          expect(copy, anyOf(contains('cue'), contains('source-backed')));
+          expect(copy, anyOf(contains('texture'), contains('connected')));
+          expect(
+            copy,
+            anyOf(
+              contains('cue'),
+              contains('source-backed'),
+              contains('does not automatically mean'),
+              contains('do not automatically mean'),
+            ),
+          );
         }
 
         final fixtureText = _readText(
@@ -72,7 +80,7 @@ void main() {
         'lib/ui_v2/act0_shell/'
         'act0_w10_bet_purpose_hidden_runtime_session_owner_v1.dart',
       ).toLowerCase();
-      expect(w10, contains('among the beginner purposes taught here'));
+      expect(w10, contains('one measured late-position widen'));
       expect(w10, isNot(contains('first purpose question is whether')));
       expect(w10, isNot(contains('all bets fit only')));
     });

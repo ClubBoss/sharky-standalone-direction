@@ -47,6 +47,14 @@ KNOWN_UNREACHED_TIER_C = {
     "test/widgets/export_csv_button_test.dart",
     "test/widgets/review_path_card_test.dart",
 }
+PHP3_F17_TIER_B_PATHS = {
+    "test/guards/early_world_feedback_quality_family_contract_test.dart",
+    "test/guards/showable_spine_handoff_coherence_contract_test.dart",
+    "test/guards/targeted_content_repairs_contract_test.dart",
+    "test/guards/w10_to_w11_transition_policy_contract_test.dart",
+    "test/ui_v2/session_summary_gold_containment_v1_test.dart",
+    "test/ui_v2/wave4_2_premium_identity_claim_cleanup_v1_test.dart",
+}
 
 
 def _read_manifest(path: Path) -> tuple[list[str], list[str]]:
@@ -153,6 +161,10 @@ def validate() -> dict[str, object]:
     retired_tier_c = tier_d_set & observed_c_set
     observed_tier_b_missing = sorted(observed_b_set - tier_b_set - retired_tier_b)
     observed_tier_b_extra = sorted(tier_b_set - observed_b_set)
+    unexpected_tier_b_extra = sorted(
+        set(observed_tier_b_extra) - PHP3_F17_TIER_B_PATHS
+    )
+    missing_php3_f17_tier_b = sorted(PHP3_F17_TIER_B_PATHS - tier_b_set)
     observed_tier_c_missing = sorted(observed_c_set - tier_c_set - retired_tier_c)
     executable_tier_c_extra = sorted(tier_c_set - observed_c_set)
     missing_known_registry = sorted(KNOWN_TIER_C_RESIDUALS - known_tier_c_set)
@@ -174,7 +186,11 @@ def validate() -> dict[str, object]:
         (observed_b_set | observed_c_set) - tier_b_set - tier_c_set - tier_d_set
     )
 
-    observed_tier_b_exact_set_match = not observed_tier_b_missing and not observed_tier_b_extra
+    observed_tier_b_exact_set_match = (
+        not observed_tier_b_missing
+        and not unexpected_tier_b_extra
+        and not missing_php3_f17_tier_b
+    )
     observed_tier_c_exact_set_match = not observed_tier_c_missing
     known_residuals_subset_of_executable_tier_c = not known_missing_from_executable_tier_c
     tier_c_known_unreached_additions = sorted(tier_c_set - observed_c_set)
@@ -197,7 +213,10 @@ def validate() -> dict[str, object]:
         failures.append(f"duplicate manifest paths: {duplicates[:10]}")
     if not observed_tier_b_exact_set_match:
         failures.append(
-            f"observed Tier B drift: missing={observed_tier_b_missing[:10]} extra={observed_tier_b_extra[:10]}"
+            "observed Tier B drift: "
+            f"missing={observed_tier_b_missing[:10]} "
+            f"unexpected_extra={unexpected_tier_b_extra[:10]} "
+            f"missing_php3_f17={missing_php3_f17_tier_b[:10]}"
         )
     if not observed_tier_c_exact_set_match:
         failures.append(f"observed Tier C missing from executable manifest: {observed_tier_c_missing[:10]}")
@@ -260,6 +279,9 @@ def validate() -> dict[str, object]:
         "frozen_post_shim_sha256": frozen_sha256,
         "observed_tier_b_missing": observed_tier_b_missing,
         "observed_tier_b_extra": observed_tier_b_extra,
+        "php3_f17_tier_b_count": len(PHP3_F17_TIER_B_PATHS),
+        "php3_f17_tier_b_missing": missing_php3_f17_tier_b,
+        "unexpected_tier_b_extra": unexpected_tier_b_extra,
         "observed_tier_c_missing": observed_tier_c_missing,
         "tier_c_known_unreached_additions": tier_c_known_unreached_additions,
         "known_residuals_subset_of_executable_tier_c": known_residuals_subset_of_executable_tier_c,
