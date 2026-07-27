@@ -359,20 +359,30 @@ void main(List<String> args) async {
     exit(0);
   }
 
-  if (args.length != 2 || !_supportedDevicesV1.contains(args[1])) {
+  if ((args.length != 2 && args.length != 3) ||
+      !_supportedDevicesV1.contains(args[1]) ||
+      (args.length == 3 && args[2] != 'reduced_motion')) {
     _printUsageV1();
     exit(64);
   }
 
   final group = args[0];
   final device = args[1];
-  final packetName = group == 'presentation_closure'
-      ? 'presentation_closure_v1'
-      : group == 'review_return'
-      ? 'review_return_v1'
-      : device == 'compact'
-      ? '${group}_fast'
-      : '${group}_${device}_fast';
+  // Wave V1-C: reduced-motion is a capture-tool-only modifier (no new
+  // pipeline, no product change) that renders the same surfaces with
+  // MediaQuery.disableAnimations set, per
+  // docs/plan/PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_v1.md S4/S3.
+  final reducedMotion = args.length == 3 && args[2] == 'reduced_motion';
+  final motionSuffix = reducedMotion ? '_reduced_motion' : '';
+  final packetName =
+      (group == 'presentation_closure'
+          ? 'presentation_closure_v1'
+          : group == 'review_return'
+          ? 'review_return_v1'
+          : device == 'compact'
+          ? '${group}_fast'
+          : '${group}_${device}_fast') +
+      motionSuffix;
   final captureSurfaces = _captureGroupsV1[group];
   final routeCaptureSurfaces = group == 'route_w7_w12'
       ? _routeW7W12CaptureSurfacesV1
@@ -414,6 +424,7 @@ void main(List<String> args) async {
             group,
             device,
             targetedSurfaces,
+            reducedMotion,
           )
         : routeCaptureSurfaces == null
         ? activeRouteCaptureSurfaces == null
@@ -422,18 +433,21 @@ void main(List<String> args) async {
                   group,
                   device,
                   captureSurfaces!,
+                  reducedMotion,
                 )
               : _activeRouteFlutterTestSource(
                   stagingDir.path,
                   group,
                   device,
                   activeRouteCaptureSurfaces,
+                  reducedMotion,
                 )
         : _routeFlutterTestSource(
             stagingDir.path,
             group,
             device,
             routeCaptureSurfaces,
+            reducedMotion,
           ),
   );
 
@@ -589,6 +603,7 @@ void main(List<String> args) async {
       'group': group,
       'packet': packetName,
       'device': device,
+      'motion_mode': reducedMotion ? 'reduced' : 'normal',
       'lane_version': targetedSurfaces == null ? null : '${group}_v1',
       'lane_type': 'real_text_product_proof',
       'evidence_type': 'product_real_text',
@@ -801,6 +816,8 @@ Map<String, Object?> duplicateHashPolicyV1(List<Map<String, Object?>> entries) {
         'The current tablet Practice hub fits inside one viewport, so all deterministic scroll requests resolve to the same image.',
     'session_summary.scroll_02_mid|session_summary.scroll_03_bottom':
         'The wider tablet Session Summary reaches one bounded maximum scroll offset, so middle and bottom requests clamp to the same final image.',
+    'improve|milestone':
+        'Wave V1-C (reduced-motion capture) surfaced this: with animation removed, both moods render the same provisional neutral fallback asset (act0SharkyCompanionAssetForMoodV1 has no per-mood art yet -- see PRE_HUMAN_CAMPAIGN_STATE_v1.md, EXTERNAL_ASSET_INPUT_REQUIRED). Under normal motion an in-flight entrance animation incidentally captured the two states at different frames, masking the identical fallback; reduced motion removes that incidental difference. Not a new defect -- expected until Wave V3 admits real per-mood Sharky art.',
   };
   final byViewport = <String, Map<String, List<String>>>{};
   for (final entry in entries) {
@@ -846,6 +863,7 @@ String _flutterTestSource(
   String group,
   String device,
   List<_CaptureSurfaceV1> captures,
+  bool reducedMotion,
 ) {
   final escapedOutputDir = jsonEncode(outputDirPath);
   final captureStatements = captures.indexed.map((entry) {
@@ -890,6 +908,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  if ($reducedMotion) {
+    (WidgetsBinding.instance.platformDispatcher as TestPlatformDispatcher)
+        .accessibilityFeaturesTestValue = const FakeAccessibilityFeatures(
+      disableAnimations: true,
+    );
+  }
 
   const outputDirPath = $escapedOutputDir;
   const captureGroup = '$group';
@@ -1278,6 +1302,7 @@ String _targetedPreHumanQaFlutterTestSource(
   String group,
   String device,
   List<String> surfaces,
+  bool reducedMotion,
 ) {
   final escapedOutputDir = jsonEncode(outputDirPath);
   final captureCalls = surfaces
@@ -1300,6 +1325,12 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  if ($reducedMotion) {
+    (WidgetsBinding.instance.platformDispatcher as TestPlatformDispatcher)
+        .accessibilityFeaturesTestValue = const FakeAccessibilityFeatures(
+      disableAnimations: true,
+    );
+  }
   const outputDirPath = $escapedOutputDir;
   const captureGroup = '$group';
   final outputDir = Directory(outputDirPath)..createSync(recursive: true);
@@ -1389,7 +1420,14 @@ void main() {
       child: Scaffold(body: RepaintBoundary(key: const Key('act0_real_text_capture_boundary'), child: StatefulBuilder(builder: (context, setState) => Act0LessonRunnerShellV1(
         runner: accessibility ? accessibilityRunner : runner, selectedTaskId: task?.taskId, selectedTaskFamily: task?.resolvedTaskFamily ?? (accessibility ? tableTask.resolvedTaskFamily : actionTask.resolvedTaskFamily),
         tablePresentation: task?.tablePresentation ?? Act0TaskTablePresentationV1.legacy,
-        repairReasonLine: task == longCopyRepairTask ? 'This rep repeats the same clue. Before choosing, name the table clue first.' : null,
+        // S3 (Wave V1 dispatch): the original one-sentence line no longer
+        // forces this surface's scrollable to have positive scroll extent
+        // now that the table's shared-allocation sizing correctly grants
+        // this surface its measured lower-slot demand (see the
+        // long_copy_repair_feedback mechanical check above). Lengthened to
+        // genuinely exercise "long copy" -- the scenario this surface names
+        // and the scrollable-affordance check it asserts.
+        repairReasonLine: task == longCopyRepairTask ? 'This rep repeats the same clue you already saw once. Before choosing again, say out loud what the table is telling you: how many private cards you can see, how many board cards are up, and what the pot is asking you to call. Naming the clue first, before picking an action, is what turns a guess into a read. Take it one piece at a time -- private cards, then board cards, then the pot number -- and only then decide. Rushing past any one of those three is exactly how this same mistake keeps repeating, so slow down and name every piece out loud before you touch an option below.' : null,
         tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
         accessibilityPrototypeStep: accessibility ? accessibilityStep : null,
         onAccessibilityPrototypeStepChanged: accessibility ? (next) => setState(() => accessibilityStep = next) : null,
@@ -1523,7 +1561,19 @@ void main() {
       final cta = tester.getRect(find.byKey(const Key('act0_shell_feedback_continue_cta')));
       final lowerStage = tester.getRect(find.byKey(const Key('act0_shell_runner_action_dock')));
       final scrollable = find.byKey(const Key('act0_shell_lower_stage_scroll'));
-      expect(table, tableRectForCycle);
+      // S3 (Wave V1 dispatch): the shared-active-runner-allocation path
+      // (act0_lesson_runner_shell_v1.dart, commit 40cae60b) intentionally
+      // shrinks the table, centered on its horizontal midpoint and anchored
+      // at its top, to give a long-copy repair-feedback surface its measured
+      // scroll demand -- fixing an occlusion bug. Top anchor + horizontal
+      // centering + monotonic non-growth are the real product contract here;
+      // exact rect equality across decision -> long-copy-repair states is
+      // not, and was a stale assumption predating that fix.
+      final cycleTable = tableRectForCycle!;
+      expect(table.top, cycleTable.top);
+      expect(table.center.dx, closeTo(cycleTable.center.dx, 0.5));
+      expect(table.width, lessThanOrEqualTo(cycleTable.width));
+      expect(table.height, lessThanOrEqualTo(cycleTable.height));
       expect(cta.bottom, lessThanOrEqualTo(viewport.height - 34));
       expect(lowerStage.bottom, lessThanOrEqualTo(viewport.height));
       expect(scrollable, findsOneWidget);
@@ -1661,6 +1711,7 @@ String _activeRouteFlutterTestSource(
   String group,
   String device,
   List<_ActiveRouteCaptureSurfaceV1> captures,
+  bool reducedMotion,
 ) {
   final escapedOutputDir = jsonEncode(outputDirPath);
   final captureStatements = captures.indexed.map((entry) {
@@ -1701,6 +1752,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  if ($reducedMotion) {
+    (WidgetsBinding.instance.platformDispatcher as TestPlatformDispatcher)
+        .accessibilityFeaturesTestValue = const FakeAccessibilityFeatures(
+      disableAnimations: true,
+    );
+  }
 
   const outputDirPath = $escapedOutputDir;
   const captureGroup = '$group';
@@ -2254,6 +2311,7 @@ String _routeFlutterTestSource(
   String group,
   String device,
   List<_RouteCaptureSurfaceV1> captures,
+  bool reducedMotion,
 ) {
   final escapedOutputDir = jsonEncode(outputDirPath);
   final captureStatements = captures.indexed.map((entry) {
@@ -2286,6 +2344,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  if ($reducedMotion) {
+    (WidgetsBinding.instance.platformDispatcher as TestPlatformDispatcher)
+        .accessibilityFeaturesTestValue = const FakeAccessibilityFeatures(
+      disableAnimations: true,
+    );
+  }
 
   const outputDirPath = $escapedOutputDir;
   const captureGroup = '$group';
@@ -2556,6 +2620,6 @@ $captureStatements
 
 void _printUsageV1() {
   stderr.writeln(
-    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <alpha_journey|core|runner|first_week|day2_return|profile_evidence|sharky_evidence|full_scroll|route_w7_w12|active_route_w7_w12|w2> <compact|tall_phone|large_phone|tablet>',
+    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <alpha_journey|core|runner|first_week|day2_return|profile_evidence|sharky_evidence|full_scroll|route_w7_w12|active_route_w7_w12|w2> <compact|tall_phone|large_phone|tablet> [reduced_motion]',
   );
 }

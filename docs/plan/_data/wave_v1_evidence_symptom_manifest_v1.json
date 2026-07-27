@@ -1,0 +1,139 @@
+{
+  "schema": "pre_human_visual_completion_wave_v1_evidence_symptom_manifest_v1",
+  "wave": "V1",
+  "dispatch_pr": 88,
+  "dispatch_merge_sha": "1afb94f247e5fe7725d0c83846cf805ee5df26f5",
+  "candidate_baseline_note": "Evidence rows below are commit-pinned individually via each row's own lane-#1 manifest git_commit field, generated locally under output/ (not committed). This document records the aggregate result, not the raw images.",
+  "acquisition_matrix": {
+    "groups_captured": [
+      "alpha_journey", "core", "first_week", "day2_return", "profile_evidence",
+      "sharky_evidence", "full_scroll", "review_return", "active_route_w7_w12",
+      "w2", "presentation_closure"
+    ],
+    "groups_intentionally_skipped": [
+      {"group": "route_w7_w12", "reason": "Historical/superseded route (legacy_archive_runner_used=true, invalid_for_final_visual_ux_judgment=true per the tool's own manifest fields). Per Wave V1 scope: do not capture historical routes merely because a group exists."}
+    ],
+    "devices_exercised": ["compact", "tall_phone", "large_phone"],
+    "device_coverage_note": "presentation_closure and review_return packet naming does not vary by device (packetName is fixed regardless of device arg), so only the most recent device's images survive on disk per run under the current tooling. All three devices were independently verified to pass the capture+assertion pipeline; this is a tooling/output-path characteristic (recorded as a tooling-artifact symptom below), not a capture failure.",
+    "acquisition_method_verdict": "Lane #1 (act0_real_text_surface_capture_v1.dart / screen_review_fast_v1.sh) confirmed as primary evidence tier, consistent with the strategy checkpoint. No new acquisition method was introduced beyond the authorized reduced-motion modifier.",
+    "total_capture_invocations": 27,
+    "capture_failures_before_repair": 1,
+    "capture_failures_after_repair": 0
+  },
+  "reduced_motion": {
+    "implementation": "tools/act0_real_text_surface_capture_v1.dart accepts an optional 3rd CLI arg 'reduced_motion'; all 4 internal test-source generators set WidgetsBinding.instance.platformDispatcher.accessibilityFeaturesTestValue = FakeAccessibilityFeatures(disableAnimations: true) when set. Manifest gains a 'motion_mode' field ('normal'|'reduced'). Output packet directory gets a '_reduced_motion' suffix so normal and reduced captures do not collide.",
+    "exercised_on": ["core (compact)", "presentation_closure (compact)", "sharky_evidence (compact)"],
+    "result": "All three pass. Reduced-motion capture surfaced one new (expected) duplicate-hash pair in sharky_evidence (improve|milestone) caused by removing an incidental animation-phase difference between two states that already share the same provisional fallback asset; added to the tool's intentional_same_state_allowlist with an explicit reason. Not a new product defect -- confirms the already-tracked EXTERNAL_ASSET_INPUT_REQUIRED Sharky-art gap more precisely than normal-motion capture did.",
+    "no_new_pipeline": true
+  },
+  "s3_disposition": {
+    "classification": "STALE_FIXTURE",
+    "reproduction": "dart run tools/act0_real_text_surface_capture_v1.dart presentation_closure compact reproduced the exact reported mismatch at the fresh Wave V1 baseline: Expected Rect.fromLTRB(45.4,46.0,356.6,586.2) vs Actual Rect.fromLTRB(83.5,46.0,318.5,454.0), identical to the strategy checkpoint's report at the prior baseline.",
+    "root_cause": "The failing assertion (long_copy_repair_feedback: expect(table, tableRectForCycle)) requires the practice table to be byte-identical in position and size between the four-option decision state and the long-copy repair-feedback state. That assertion was added in commit 8b83d4ac (2026-07-16). Nine days later, commit 40cae60b (2026-07-25, \"fix(learning): close native feedback parity\") intentionally introduced shared-active-runner-allocation logic that lets the table shrink -- centered on its horizontal midpoint, anchored at its top -- to grant a long-copy repair-feedback surface its measured lower-slot demand, fixing a real occlusion bug where the table could cover the repair heading. The exact-equality assertion was never updated to match. The strict 'table never moves' contract that assertion assumed only actually applies to a different, unused code path (_TaskOwnedStablePracticePresentationV1, explicitly gated on !usesSharedActiveRunnerAllocation).",
+    "owner_family": "Capture-tool fixture only (tools/act0_real_text_surface_capture_v1.dart). No lib/ui_v2/act0_shell product code was changed -- the product's shared-allocation table-shrink behavior is confirmed intentional and correct.",
+    "fix": "Replaced the exact-rect-equality assertion with the real invariant the current design guarantees: table.top unchanged, table.center.dx unchanged (within 0.5px), width/height monotonically non-increasing. Also lengthened the long-copy repair-feedback fixture's repairReasonLine (previously ~90 characters, insufficient under the current generously-sized lower dock to ever force a scroll) so the surface's own named scenario -- and its scrollable-overflow assertion -- is genuinely exercised again.",
+    "verification": "presentation_closure lane passes at compact/tall_phone/large_phone after the fix. Full ./tools/release_gate_world1.sh passes (97 tests, fast loop, gate green).",
+    "forbidden_scope_respected": "No composition redesign, no shared-shell work, no Sharky assets, no Modern Table changes. Fix is confined to the capture tool's own fixture assertions and fixture text."
+  },
+  "simulator_parity": {
+    "tooling_used": "tools/capture_act0_screens_v1.sh, unmodified in the repository (only surfaces: home|learn|practice|review|profile). Local one-time uncommitted device-name substitution was required: the script hardcodes 'iPhone 17', which is not an available simulator runtime on this machine; iPhone 16 Pro (already booted) was substituted for the session and the temporary copy was deleted afterward -- no committed tooling change.",
+    "states_captured": ["home", "learn", "review"],
+    "states_not_reachable": ["incorrect feedback/repair", "session summary/milestone or 1.4x accessibility state -- this simpler simulator script does not expose those surfaces"],
+    "comparison_result": "For home/learn/review: correct screen/state identity, visible real text, correct fonts/asset loading, respected safe area, matching major geometry and CTA placement, correct scrollability, reachable bottom content, and no unexpected platform chrome, consistent with lane #1's equivalent captures.",
+    "disposition": "PARITY_PARTIAL",
+    "disposition_reason": "Lane #1 is confirmed reliable for composition/text/CTA/safe-area claims on every risk class actually reachable by the existing simulator tooling. The feedback/repair and milestone/accessibility risk classes were not independently spot-checked on a real device this wave because the existing capture_act0_screens_v1.sh does not expose those surfaces -- a tooling gap, not a parity failure. Future evidence rules should not claim device-verified parity for those two states specifically until the simulator script (or a successor) can reach them."
+  },
+  "symptom_ledger": [
+    {
+      "id": "S1",
+      "screens": ["core/review_empty (compact)", "alpha_journey/entry_placement (compact)", "alpha_journey/welcome (compact)"],
+      "severity": "P2",
+      "category": "dead_space",
+      "learner_visible_impact": "Screen reads as unfinished/empty on a learning app; the zero-content and onboarding-entry branches leave 30-40% of the compact viewport blank below the last element.",
+      "tier": "compositional",
+      "repeated_screen_count": 3,
+      "independently_owned_screen_count": 2,
+      "root_cause_cluster": "Weak vertical-allocation grammar for empty/low-content states -- no shared minimum-fill or centering contract; each screen composes its own vertical stack.",
+      "causal_owner": "lib/ui_v2/act0_shell composition layer -- specifically the review zero-state branch and the onboarding/welcome template branch (two distinct owner families, not one).",
+      "confidence": "high -- directly observed in fresh commit-pinned lane-#1 captures this wave, confirming the strategy checkpoint's original review_empty finding and adding one new owner family (onboarding).",
+      "recommended_repair_model": "Model 3 (narrow vertical-allocation grammar: min-fill or center-with-secondary-element rule), applied to exactly these two owner families. Two independently-owned families is below the 3+ threshold the strategy set for the Model 1 shared-shell fallback.",
+      "evidence": "output/screen_review/current/core_fast/compact.review_empty.png; output/screen_review/current/alpha_journey_fast contact sheet (Entry/placement, Welcome panels), both local-only, git_commit 1afb94f2."
+    },
+    {
+      "id": "S3",
+      "screens": ["presentation_closure/long_copy_repair_feedback (compact/tall_phone/large_phone)"],
+      "severity": "P2 (accessibility-lane acquisition gap, now closed)",
+      "category": "stale_fixture",
+      "learner_visible_impact": "None -- confirmed no product regression. The capture lane itself was blind to this surface until repaired.",
+      "tier": "runtime/device (acquisition)",
+      "repeated_screen_count": 1,
+      "independently_owned_screen_count": 1,
+      "root_cause_cluster": "Evidence-tooling fixture drift after an intentional, later product fix (see S3 disposition above).",
+      "causal_owner": "tools/act0_real_text_surface_capture_v1.dart (fixture only).",
+      "confidence": "high -- dated git history directly shows the fixture assertion (8b83d4ac) predates the intentional product fix (40cae60b) it now conflicts with.",
+      "recommended_repair_model": "N/A -- closed this wave via fixture correction.",
+      "evidence": "Reproduction transcript and fixed passing run, this wave; git log -L on both commits."
+    },
+    {
+      "id": "S4",
+      "screens": ["all lane-#1 groups"],
+      "severity": "P3 (now closed)",
+      "category": "reduced_motion_issue",
+      "learner_visible_impact": "None -- acquisition-tooling gap only, product already had the reduced-motion seam.",
+      "tier": "runtime/device (acquisition)",
+      "repeated_screen_count": 0,
+      "independently_owned_screen_count": 0,
+      "root_cause_cluster": "No reduced-motion capture mode existed anywhere in tooling.",
+      "causal_owner": "Evidence tooling.",
+      "confidence": "high",
+      "recommended_repair_model": "N/A -- closed this wave; reduced-motion modifier implemented and exercised on 3 surfaces.",
+      "evidence": "See reduced_motion section above."
+    },
+    {
+      "id": "S5",
+      "screens": ["sharky_evidence/improve (compact)", "sharky_evidence/milestone (compact)"],
+      "severity": "P3",
+      "category": "tooling_artifact",
+      "learner_visible_impact": "None new -- both moods already render the same provisional fallback asset per the standing EXTERNAL_ASSET_INPUT_REQUIRED disposition (PRE_HUMAN_CAMPAIGN_STATE_v1.md). Reduced-motion capture simply made this precise instead of masked by incidental animation-phase timing.",
+      "tier": "brand/emotional (acquisition-visible only)",
+      "repeated_screen_count": 2,
+      "independently_owned_screen_count": 0,
+      "root_cause_cluster": "Sharky mood art not yet produced (Wave V3, external asset input).",
+      "causal_owner": "Sharky asset production (out of Wave V1 scope).",
+      "confidence": "high",
+      "recommended_repair_model": "N/A for Wave V1/V2 -- resolved only by Wave V3 asset production. Allowlisted so the reduced-motion lane doesn't hard-fail on an already-known, already-tracked gap.",
+      "evidence": "sharky_evidence contact sheet, this wave; PRE_HUMAN_CAMPAIGN_STATE_v1.md Sharky production integration row."
+    },
+    {
+      "id": "S6",
+      "screens": ["presentation_closure (all devices)", "review_return (all devices)"],
+      "severity": "P3",
+      "category": "tooling_artifact",
+      "learner_visible_impact": "None -- evidence-retention characteristic only.",
+      "tier": "runtime/device (acquisition)",
+      "repeated_screen_count": 2,
+      "independently_owned_screen_count": 0,
+      "root_cause_cluster": "packetName for these two targeted groups does not vary by device, so successive device runs overwrite the same output directory; only the most recently run device's images are retained on disk at any moment.",
+      "causal_owner": "Evidence tooling (packet-naming convention).",
+      "confidence": "high -- directly observed switching devices this wave.",
+      "recommended_repair_model": "N/A for Wave V1 (no new pipeline authorized) -- worth a v2 tooling refinement (device-suffixed packet names for these two groups) in a future evidence-acquisition wave, not this checkpoint.",
+      "evidence": "Direct observation running presentation_closure at compact/tall_phone/large_phone this wave."
+    }
+  ],
+  "no_new_symptoms_found_in": [
+    "first_week", "day2_return", "profile_evidence", "full_scroll",
+    "core (home, learn, learn_detail, practice, profile, review)",
+    "active_route_w7_w12", "w2"
+  ],
+  "systemic_verdict": {
+    "claim": "BOUNDED, NOT SYSTEMIC",
+    "basis": "The full canonical screen/state matrix (11 groups, up to 3 device classes each, 27 capture invocations) was recaptured fresh at the Wave V1 baseline. Exactly one repair-worthy compositional symptom class was found (S1, dead space), affecting 2 independently-owned owner families (Review zero-state, onboarding/welcome template) across 3 screens. No new symptom was found in any of the 8 other capture groups spanning home, learn, practice, profile, full first-week/day2-return journeys, active W7-W12 route surfaces, or W2. This satisfies Correction 2's requirement: the full matrix, not a bounded sample, was the basis for this verdict."
+  },
+  "v2_model_selection": {
+    "selected": "V2_MODEL_3_NARROW_GRAMMAR",
+    "reason": "S1 affects exactly 2 independently-owned screens (Review zero-state, onboarding/welcome template) sharing one bounded vertical-allocation root cause. This is below the 3+ independently-owned-screen threshold the strategy set for the Model 1 shared-shell fallback (PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_v1.md §9). No other repair-worthy symptom was found in the full re-audited matrix."
+  },
+  "php9_status": "NOT_PREAUTHORIZED",
+  "human_proof_status": "NOT_AUTHORIZED",
+  "modern_table_status": "MAINTENANCE_MODE_UNCHANGED_NOT_TOUCHED"
+}
