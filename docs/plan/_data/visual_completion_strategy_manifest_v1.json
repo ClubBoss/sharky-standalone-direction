@@ -1,0 +1,77 @@
+{
+  "schema": "pre_human_visual_completion_strategy_manifest_v1",
+  "baseline_sha": "de3f0ce2398601ab557af05b18fcff8a07279cfa",
+  "vs0_merge_sha": "432c9f47",
+  "publication2_pr": null,
+  "owner_directives": {
+    "VISUAL_SYSTEM_COMPLETENESS": "NOT_CLOSED",
+    "VISUAL_COMPLETION_OPERATING_MODEL": "RESOLVED_THIS_DOC",
+    "VISUAL_STATE_ACQUISITION_OPERATING_MODEL": "RESOLVED_THIS_DOC",
+    "PRE_HUMAN_VISUAL_COMPLETION_STRATEGY": "TERMINAL_THIS_PUBLICATION"
+  },
+  "screen_state_inventory": [
+    {"screen": "home", "device_coverage": ["compact", "tall_phone", "large_phone"], "recaptured_this_session": true},
+    {"screen": "learn_detail", "device_coverage": ["compact", "tall_phone", "large_phone"], "recaptured_this_session": true},
+    {"screen": "practice", "device_coverage": ["compact", "tall_phone", "large_phone"], "recaptured_this_session": true},
+    {"screen": "review_populated", "device_coverage": ["compact"], "recaptured_this_session": false},
+    {"screen": "review_empty", "device_coverage": ["compact"], "recaptured_this_session": true, "symptom": "S1_dead_space"},
+    {"screen": "profile", "device_coverage": ["compact", "tall_phone", "large_phone"], "recaptured_this_session": true},
+    {"screen": "presentation_closure_group", "device_coverage": ["compact"], "recaptured_this_session": true, "capture_status": "FAILED", "symptom": "S3_geometry_mismatch"},
+    {"screen": "welcome_placement", "device_coverage": ["compact"], "recaptured_this_session": false},
+    {"screen": "session_summary_milestone", "device_coverage": [], "recaptured_this_session": false},
+    {"screen": "sharky_states", "device_coverage": [], "recaptured_this_session": false, "note": "six rows EXTERNAL_ASSET_INPUT_REQUIRED, unchanged"},
+    {"screen": "modern_table_in_route", "device_coverage": [], "recaptured_this_session": false, "note": "Maintenance Mode, not touched"}
+  ],
+  "acquisition_methods": [
+    {"id": 1, "file": "tools/act0_real_text_surface_capture_v1.dart", "category": "C", "real_shell": true, "real_text": true, "deterministic": true, "commit_pinned": true, "verdict": "primary_evidence_tier"},
+    {"id": 2, "file": "tools/act0_product_100_proof_capture_v1.dart", "category": "B", "real_shell": true, "real_text": false, "deterministic": true, "commit_pinned": true, "verdict": "layout_geometry_only"},
+    {"id": 3, "file": "tools/act0_motion_evidence_capture_v1.dart", "category": "B", "real_shell": true, "real_text": true, "deterministic": true, "commit_pinned": false, "verdict": "motion_timing_only"},
+    {"id": 4, "file": "tools/world_screenshot_evidence_capture_v1.dart", "category": "B", "real_shell": false, "real_text": true, "deterministic": true, "commit_pinned": false, "verdict": "legacy_low_trust"},
+    {"id": 5, "file": "tools/world_screenshot_evidence_audit_v1.dart", "category": "A", "real_shell": null, "real_text": null, "deterministic": true, "commit_pinned": null, "verdict": "code_only_no_visual_value"},
+    {"id": 6, "file": "tools/modern_table_screenshot_v1.dart", "category": "B", "real_shell": "mixed", "real_text": true, "deterministic": true, "commit_pinned": false, "verdict": "modern_table_maintenance_only"},
+    {"id": 7, "file": "tools/capture_act0_screens_v1.sh", "category": "D", "real_shell": true, "real_text": true, "deterministic": false, "commit_pinned": false, "verdict": "high_fidelity_spot_check_only"},
+    {"id": 8, "file": "tools/act0_controlled_demo_capture_v1.sh", "category": "G", "real_shell": true, "real_text": true, "deterministic": "mostly", "commit_pinned": false, "verdict": "web_hybrid_smoke_only"},
+    {"id": 9, "file": "tools/checkpoint_world1_v1_capture.sh", "category": "N/A", "verdict": "not_a_visual_tool"}
+  ],
+  "category_coverage": {
+    "A_code_only": "covered",
+    "B_widget_render": "covered_but_mostly_non_real_text_or_legacy",
+    "C_deterministic_in_app_capture": "covered_and_strongest",
+    "D_simulator_automation": "covered_slow_nondeterministic",
+    "E_physical_device": "no_tooling",
+    "F_external_device_cloud": "no_tooling",
+    "G_hybrid": "one_lane_moderate_trust"
+  },
+  "root_cause_clusters": [
+    {"id": "S1", "summary": "review_empty dead space below content", "owner_family": "lib/ui_v2/act0_shell composition layer", "fix_before_human_proof": true, "scope": "bounded"},
+    {"id": "S2", "summary": "CTA renders as black bar in raw (unrepaired) capture output", "owner_family": "evidence tooling only", "fix_before_human_proof": false, "scope": "no_action_documented_only"},
+    {"id": "S3", "summary": "presentation_closure lane fails geometry assertion at pinned baseline", "owner_family": "presentation_closure fixture + affected screen owner", "fix_before_human_proof": true, "scope": "needs_classification_wave_v1"},
+    {"id": "S4", "summary": "no reduced-motion capture mode exists", "owner_family": "evidence tooling", "fix_before_human_proof": false, "scope": "tooling_addition_wave_v1"}
+  ],
+  "operating_models_scorecard": {
+    "1_shared_composition_shell": 7.1,
+    "2_template_families": 6.7,
+    "3_vertical_allocation_grammar": 7.4,
+    "4_interaction_affordance_layer": 6.6,
+    "5_selective_rebuild": 6.9,
+    "6_deep_layout_rebase": 4.6,
+    "7_multimodal_audit_process": 7.5
+  },
+  "recommendation": {
+    "primary": "model_7_process_governing_model_3_code_fix",
+    "fallback": "model_1_shared_shell_if_3plus_independent_repeats_found_in_wave_v1",
+    "disqualified": "model_6_deep_layout_rebase"
+  },
+  "sharky_asset_ordering": "after_wave_v2_layout_grammar_lands",
+  "shk_crest_01": "unresolved_blocks_crest_rows_only",
+  "human_proof_ordering": "strategy_before_human_no_diagnostic_session_recommended",
+  "corridor": {
+    "wave_v1": {"scope": "evidence completion + S3 classification + reduced-motion capture tooling", "token_budget": "40000-70000"},
+    "wave_v2": {"scope": "conditional: model 3 narrow fix, or model 1 shell fallback", "token_budget": "60000-180000"},
+    "wave_v3": {"scope": "Sharky six-row asset production, gated on SHK-CREST-01 for crest rows", "token_budget": "30000-60000"}
+  },
+  "downstream_prompts": ["wave_v1_evidence_completion", "claude_design_asset_spec_wave_v3", "codex_wave_v2_implementation"],
+  "php9_status": "NOT_PREAUTHORIZED",
+  "human_proof_status": "NOT_AUTHORIZED",
+  "modern_table_status": "MAINTENANCE_MODE_UNCHANGED"
+}

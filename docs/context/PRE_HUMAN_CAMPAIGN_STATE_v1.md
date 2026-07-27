@@ -9,15 +9,15 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical HEAD | `de3f0ce2398601ab557af05b18fcff8a07279cfa` |
-| Authority freshness | 2026-07-27 — ROLLING_CORRIDOR_PHP6_TO_PHP8_V1 terminal publication (PR #85) reconciled; PRE_HUMAN_VISUAL_COMPLETION_STRATEGY checkpoint admitted (this update) |
+| Canonical HEAD | `432c9f47e65cd79ed1eb113a952d9fc077468f15` (pending: this Publication 2 merge SHA, to be reconciled by the next session) |
+| Authority freshness | 2026-07-27 — PRE_HUMAN_VISUAL_COMPLETION_STRATEGY checkpoint reached TERMINAL closure and published (`docs/plan/PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_v1.md`) |
 | Campaign version | v1 |
 | Corridor | **`ROLLING_CORRIDOR_PHP6_TO_PHP8_V1`** — **CLOSED/HISTORICAL.** PHP-6, PHP-7, and PHP-8 are terminally closed and published (PR #85). The corridor is not reopened; its wave-by-wave authorization language below is historical record only. PHP-9 remains `NOT_PREAUTHORIZED`. |
-| Umbrella stage | **Pre-Human Node 6 — rolling corridor terminally closed; PRE_HUMAN_VISUAL_COMPLETION_STRATEGY checkpoint active** |
-| Active sub-packet | **PRE_HUMAN_VISUAL_COMPLETION_STRATEGY (packets VS-0 → VS-3) — PHP-9 remains NOT_PREAUTHORIZED** |
-| Status | **ROLLING_CORRIDOR_PHP6_TO_PHP8_COMPLETED and terminally published (PR #85). PRE_HUMAN_VISUAL_COMPLETION_STRATEGY is now the active checkpoint gating PHP-9 and Human Novice Proof. Human remains NOT AUTHORIZED.** |
-| Latest admitted PR | **#85** (terminal corridor publication) |
-| Owner visual directives | **VISUAL_SYSTEM_COMPLETENESS: NOT CLOSED** — active learner-facing screens are not yet proven to form a complete, cohesive, premium full-screen visual system; PHP-7 closed only its narrow role/hierarchy contract. **VISUAL_COMPLETION_OPERATING_MODEL: PENDING** — no proven method yet carries visual work from current-state acquisition through terminal visual closure. **VISUAL_STATE_ACQUISITION_OPERATING_MODEL: PENDING** — no proven cost-efficient, fresh, stable method yet obtains all important current screen states. **PRE_HUMAN_VISUAL_COMPLETION_STRATEGY: REQUIRED** — this checkpoint is mandatory before PHP-9 admission or Human Novice Proof. None of these directives authorize broad redesign, Modern Table changes, or new Sharky art. |
+| Umbrella stage | **Pre-Human Node 6 — rolling corridor terminally closed; PRE_HUMAN_VISUAL_COMPLETION_STRATEGY checkpoint TERMINAL** |
+| Active sub-packet | **None active. Next legal capability is Wave V1 of the strategy's three-wave corridor (`docs/plan/PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_v1.md` §13) — not PHP-9.** |
+| Status | **ROLLING_CORRIDOR_PHP6_TO_PHP8_COMPLETED (PR #85) and PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_COMPLETED (this publication). Human remains NOT AUTHORIZED.** |
+| Latest admitted PR | **Publication 2 of the visual completion strategy** (see this file's git history for the exact PR/merge SHA once recorded next session) |
+| Owner visual directives | **VISUAL_SYSTEM_COMPLETENESS: NOT CLOSED — not yet proven repository-wide** (one bounded symptom S1 and one acquisition/possible-accessibility gap S3 found; two screens inspected were clean — see strategy doc §5). **VISUAL_COMPLETION_OPERATING_MODEL: RESOLVED** — primary recommendation Model 7 (multimodal-audit process) governing Model 3 (vertical-allocation grammar fix), fallback Model 1 (shared shell) if Wave V1 proves 3+ independent repeats. **VISUAL_STATE_ACQUISITION_OPERATING_MODEL: RESOLVED** — existing lane `tools/act0_real_text_surface_capture_v1.dart` (`screen_review_fast_v1.sh`) confirmed as the primary evidence tier; no new tooling authorized. **PRE_HUMAN_VISUAL_COMPLETION_STRATEGY: TERMINAL** — see `docs/plan/PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_v1.md`. None of this authorizes broad redesign, Modern Table changes, or new Sharky art; Wave V1–V3 of the strategy's corridor are the next legal capability, still docs/evidence/bounded-only until each wave's own gate passes. |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **PARTIALLY CLOSED IN PHP-3** — six PHP-3-owned unique current guards are current-contract reconciled and Tier-B ledgered; four differently owned unresolved-unique files remain. |
 | F-18 | **STALE_TEST** — exact pre-F-16-to-head trail disproves PR #51/#52 causation; owner is compact-decision test fixture / retired teaching-step assertion |
@@ -29,9 +29,9 @@ here; update only the fields below.
 | PHP-3 admitted carriers | **23 candidate** |
 | PHP-3 unresolved carriers | **59 candidate** |
 | PHP-3 nine-path residual | **59 candidate** |
-| Recommended next packet | **Packet VS-0 (this update) → VS-1 visual-state acquisition truth → VS-2 systemic root-cause analysis → VS-3 operating-model comparison and recommendation → Publication 2 strategy report. PHP-9 is not the next packet.** |
-| Next authorization | **PRE_HUMAN_VISUAL_COMPLETION_STRATEGY (packets VS-0–VS-3): AUTHORIZED, docs/evidence-only, no product implementation. PHP-9: remains NOT_PREAUTHORIZED — the strategy checkpoint must reach terminal closure first. Human Novice Proof: remains NOT AUTHORIZED.** |
-| Autonomous window | **OPEN for the PRE_HUMAN_VISUAL_COMPLETION_STRATEGY checkpoint (VS-0 → VS-1 → VS-2 → VS-3 → Publication 2), from canonical HEAD `de3f0ce2…`, subject to the global stop rule below. Historical corridor autonomous window (PHP-6 → PHP-7 gate → PHP-8 gate) is CLOSED — it completed and is not reopened. CLOSED beyond the strategy checkpoint — PHP-9 is never auto-entered by this checkpoint.** |
+| Recommended next packet | **Wave V1 of the visual completion corridor (`docs/plan/PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_v1.md` §13) — evidence-matrix completion, S3 classification, reduced-motion capture tooling. PHP-9 is not the next packet.** |
+| Next authorization | **Wave V1: AUTHORIZED per the strategy's downstream prompt #1, docs/evidence + one bounded diagnostic fix only. Wave V2/V3: CONDITIONALLY PREAUTHORIZED behind Wave V1's findings (see strategy §13). PHP-9: remains NOT_PREAUTHORIZED. Human Novice Proof: remains NOT AUTHORIZED.** |
+| Autonomous window | **CLOSED at this publication.** The PRE_HUMAN_VISUAL_COMPLETION_STRATEGY checkpoint (VS-0 → Publication 2) completed and is not reopened. Wave V1 of the new corridor requires its own fresh dispatch using downstream prompt #1 in the strategy doc — this state file does not pre-open an autonomous window across the V1–V3 corridor the way the historical PHP-6–8 corridor did, because each wave here is evidence-conditional on the prior wave's findings (see strategy §13). |
 | Human Proof | **NOT AUTHORIZED** |
 | `PRE_HUMAN_READY` | **NOT MET** |
 | `HUMAN_PROVEN_10_OF_10_CANDIDATE` | **NOT MET** |
@@ -66,7 +66,7 @@ Product severity resolves in PHP-0.
 | PHP-6 Sharky Production Integration & Completeness Proof | Node 6, Corridor Wave A | **CLOSED_WITH_EXTERNAL_ASSET_INPUT_REQUIRED — PR #82 merge `b00d786af0ae84a1ac8530d93f078c8a1c5d83fa`; runtime integration and deterministic proof are complete, while the admitted state-art rows remain externally supplied.** |
 | PHP-7 Screen-Role & Visual-Hierarchy Emphasis Proof | Node 6, Corridor Wave B | **CLOSED_PROVEN — PR #83 merge `194b2f14709b012db8af73921cd41315e0cf7053`; compact hierarchy and six-surface role proof passed without redesign.** |
 | PHP-8 Evidence & Accessibility Lane Completeness | Node 6, Corridor Wave C | **CLOSED_PROVEN — PR #84 merge `cc1562db0b53a4e86fd9249f220df7e65bf0914e`; W2 active-runtime capture and named accessibility sweep are green.** |
-| PRE_HUMAN_VISUAL_COMPLETION_STRATEGY | Node 6, post-corridor checkpoint | **ACTIVE — VS-0 authority reconciliation in progress (this update); VS-1/VS-2/VS-3 and Publication 2 pending. Terminal before PHP-9 or Human Novice Proof.** |
+| PRE_HUMAN_VISUAL_COMPLETION_STRATEGY | Node 6, post-corridor checkpoint | **TERMINAL — PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_COMPLETED. VS-0 (PR #86, `432c9f47`) and Publication 2 (`docs/plan/PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_v1.md`) both merged. Selected: Model 7 process governing Model 3 code fix, fallback Model 1. Next legal capability is Wave V1, not PHP-9.** |
 | PHP-9 `PRE_HUMAN_READY` Admission | — | NOT_PREAUTHORIZED — never auto-entered by the corridor or by the visual completion strategy checkpoint |
 
 PR targets: Node 5 ≈ **4–7**; full machine horizon ≈ **8–12**; **16 is a hard
