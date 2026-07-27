@@ -9,14 +9,14 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical HEAD | `432c9f47e65cd79ed1eb113a952d9fc077468f15` (pending: this Publication 2 merge SHA, to be reconciled by the next session) |
-| Authority freshness | 2026-07-27 — PRE_HUMAN_VISUAL_COMPLETION_STRATEGY checkpoint reached TERMINAL closure and published (`docs/plan/PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_v1.md`) |
+| Canonical HEAD | `a27366e6f6f4a25e6862a053945be6a5f4a421cd` (PR #87 merge — reconciled by the Wave V1 dispatch, `docs/plan/PRE_HUMAN_VISUAL_COMPLETION_WAVE_V1_DISPATCH_v1.md`) |
+| Authority freshness | 2026-07-27 — PRE_HUMAN_VISUAL_COMPLETION_STRATEGY checkpoint reached TERMINAL closure and published (`docs/plan/PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_v1.md`); Wave V1 dispatched same day |
 | Campaign version | v1 |
 | Corridor | **`ROLLING_CORRIDOR_PHP6_TO_PHP8_V1`** — **CLOSED/HISTORICAL.** PHP-6, PHP-7, and PHP-8 are terminally closed and published (PR #85). The corridor is not reopened; its wave-by-wave authorization language below is historical record only. PHP-9 remains `NOT_PREAUTHORIZED`. |
-| Umbrella stage | **Pre-Human Node 6 — rolling corridor terminally closed; PRE_HUMAN_VISUAL_COMPLETION_STRATEGY checkpoint TERMINAL** |
-| Active sub-packet | **None active. Next legal capability is Wave V1 of the strategy's three-wave corridor (`docs/plan/PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_v1.md` §13) — not PHP-9.** |
-| Status | **ROLLING_CORRIDOR_PHP6_TO_PHP8_COMPLETED (PR #85) and PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_COMPLETED (this publication). Human remains NOT AUTHORIZED.** |
-| Latest admitted PR | **Publication 2 of the visual completion strategy** (see this file's git history for the exact PR/merge SHA once recorded next session) |
+| Umbrella stage | **Pre-Human Node 6 — rolling corridor terminally closed; PRE_HUMAN_VISUAL_COMPLETION_STRATEGY checkpoint TERMINAL; Wave V1 ACTIVE** |
+| Active sub-packet | **Wave V1 of the strategy's three-wave corridor (`docs/plan/PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_v1.md` §13, dispatched via `docs/plan/PRE_HUMAN_VISUAL_COMPLETION_WAVE_V1_DISPATCH_v1.md`) — not PHP-9.** |
+| Status | **ROLLING_CORRIDOR_PHP6_TO_PHP8_COMPLETED (PR #85), PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_COMPLETED (PR #87), Wave V1 dispatch ACTIVE (this publication). Human remains NOT AUTHORIZED.** |
+| Latest admitted PR | **#87** — Publication 2 of the visual completion strategy, merge `a27366e6f6f4a25e6862a053945be6a5f4a421cd` |
 | Owner visual directives | **VISUAL_SYSTEM_COMPLETENESS: NOT CLOSED — not yet proven repository-wide** (one bounded symptom S1 and one acquisition/possible-accessibility gap S3 found; two screens inspected were clean — see strategy doc §5). **VISUAL_COMPLETION_OPERATING_MODEL: RESOLVED** — primary recommendation Model 7 (multimodal-audit process) governing Model 3 (vertical-allocation grammar fix), fallback Model 1 (shared shell) if Wave V1 proves 3+ independent repeats. **VISUAL_STATE_ACQUISITION_OPERATING_MODEL: RESOLVED** — existing lane `tools/act0_real_text_surface_capture_v1.dart` (`screen_review_fast_v1.sh`) confirmed as the primary evidence tier; no new tooling authorized. **PRE_HUMAN_VISUAL_COMPLETION_STRATEGY: TERMINAL** — see `docs/plan/PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_v1.md`. None of this authorizes broad redesign, Modern Table changes, or new Sharky art; Wave V1–V3 of the strategy's corridor are the next legal capability, still docs/evidence/bounded-only until each wave's own gate passes. |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **PARTIALLY CLOSED IN PHP-3** — six PHP-3-owned unique current guards are current-contract reconciled and Tier-B ledgered; four differently owned unresolved-unique files remain. |
@@ -30,8 +30,8 @@ here; update only the fields below.
 | PHP-3 unresolved carriers | **59 candidate** |
 | PHP-3 nine-path residual | **59 candidate** |
 | Recommended next packet | **Wave V1 of the visual completion corridor (`docs/plan/PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_v1.md` §13) — evidence-matrix completion, S3 classification, reduced-motion capture tooling. PHP-9 is not the next packet.** |
-| Next authorization | **Wave V1: AUTHORIZED per the strategy's downstream prompt #1, docs/evidence + one bounded diagnostic fix only. Wave V2/V3: CONDITIONALLY PREAUTHORIZED behind Wave V1's findings (see strategy §13). PHP-9: remains NOT_PREAUTHORIZED. Human Novice Proof: remains NOT AUTHORIZED.** |
-| Autonomous window | **CLOSED at this publication.** The PRE_HUMAN_VISUAL_COMPLETION_STRATEGY checkpoint (VS-0 → Publication 2) completed and is not reopened. Wave V1 of the new corridor requires its own fresh dispatch using downstream prompt #1 in the strategy doc — this state file does not pre-open an autonomous window across the V1–V3 corridor the way the historical PHP-6–8 corridor did, because each wave here is evidence-conditional on the prior wave's findings (see strategy §13). |
+| Next authorization | **Wave V1: ACTIVE, dispatched via `docs/plan/PRE_HUMAN_VISUAL_COMPLETION_WAVE_V1_DISPATCH_v1.md`, docs/evidence + one bounded diagnostic fix only. Wave V2/V3: CONDITIONALLY PREAUTHORIZED behind Wave V1's findings (see strategy §13) — not yet entered. PHP-9: remains NOT_PREAUTHORIZED. Human Novice Proof: remains NOT AUTHORIZED.** |
+| Autonomous window | **OPEN for Wave V1 only**, per `docs/plan/PRE_HUMAN_VISUAL_COMPLETION_WAVE_V1_DISPATCH_v1.md`. Does not pre-open Wave V2 or Wave V3 — each remains evidence-conditional on the prior wave's findings (see strategy §13). |
 | Human Proof | **NOT AUTHORIZED** |
 | `PRE_HUMAN_READY` | **NOT MET** |
 | `HUMAN_PROVEN_10_OF_10_CANDIDATE` | **NOT MET** |
@@ -66,8 +66,9 @@ Product severity resolves in PHP-0.
 | PHP-6 Sharky Production Integration & Completeness Proof | Node 6, Corridor Wave A | **CLOSED_WITH_EXTERNAL_ASSET_INPUT_REQUIRED — PR #82 merge `b00d786af0ae84a1ac8530d93f078c8a1c5d83fa`; runtime integration and deterministic proof are complete, while the admitted state-art rows remain externally supplied.** |
 | PHP-7 Screen-Role & Visual-Hierarchy Emphasis Proof | Node 6, Corridor Wave B | **CLOSED_PROVEN — PR #83 merge `194b2f14709b012db8af73921cd41315e0cf7053`; compact hierarchy and six-surface role proof passed without redesign.** |
 | PHP-8 Evidence & Accessibility Lane Completeness | Node 6, Corridor Wave C | **CLOSED_PROVEN — PR #84 merge `cc1562db0b53a4e86fd9249f220df7e65bf0914e`; W2 active-runtime capture and named accessibility sweep are green.** |
-| PRE_HUMAN_VISUAL_COMPLETION_STRATEGY | Node 6, post-corridor checkpoint | **TERMINAL — PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_COMPLETED. VS-0 (PR #86, `432c9f47`) and Publication 2 (`docs/plan/PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_v1.md`) both merged. Selected: Model 7 process governing Model 3 code fix, fallback Model 1. Next legal capability is Wave V1, not PHP-9.** |
-| PHP-9 `PRE_HUMAN_READY` Admission | — | NOT_PREAUTHORIZED — never auto-entered by the corridor or by the visual completion strategy checkpoint |
+| PRE_HUMAN_VISUAL_COMPLETION_STRATEGY | Node 6, post-corridor checkpoint | **TERMINAL — PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_COMPLETED. VS-0 (PR #86, `432c9f47`) and Publication 2 (PR #87, merge `a27366e6f6f4a25e6862a053945be6a5f4a421cd`) both merged. Selected: Model 7 process governing Model 3 code fix, fallback Model 1. Next legal capability is Wave V1, not PHP-9.** |
+| Wave V1 (visual completion corridor) | Node 6, corridor Wave 1 of 3 | **ACTIVE — dispatched this publication via `docs/plan/PRE_HUMAN_VISUAL_COMPLETION_WAVE_V1_DISPATCH_v1.md` (backfilled Top-3 decision record confirms Wave V1 as Top-1 over Sharky art production and PHP-9/Human admission). Scope: evidence-matrix completion, S3 classification/closure, reduced-motion capture tooling, symptom ledger, Wave V2 model selection. Wave V2/V3 not entered.** |
+| PHP-9 `PRE_HUMAN_READY` Admission | — | NOT_PREAUTHORIZED — never auto-entered by the corridor, the visual completion strategy checkpoint, or Wave V1 |
 
 PR targets: Node 5 ≈ **4–7**; full machine horizon ≈ **8–12**; **16 is a hard
 emergency ceiling, never a target.**
