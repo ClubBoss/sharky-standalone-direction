@@ -8,12 +8,12 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical HEAD | `2c640be080f4ab4cd25a9f03c82106c2aee981b7` |
+| Canonical HEAD | `8075e088cf15ab852917489b4e9a2b54d33b9204` |
 | Campaign version | v1 |
 | Umbrella stage | **Pre-Human Node 5 — Canonical Contract and Test Authority Restoration** |
-| Active sub-packet | **PHP-3 F-17 Current-Owner Repair and Manifest Completeness Closure** |
-| Status | **ACTIVE_PARTIAL — historical Wave-1 correction is 14 admitted/62 unresolved/62 residual/0 unexplained; six PHP-3-owned F-17 Tier-B guards are reconciled, yielding 14 admitted/68 unresolved/68 residual/0 unexplained; nine session-drill carriers remain untouched** |
-| Latest admitted PR | **#71** |
+| Active sub-packet | **PHP-3 Wave 2 session-drill current-owner extraction** |
+| Status | **ACTIVE_CANDIDATE — PR #72 repairs F-17 current-owner truth; Wave 2 extracts nine stale session-drill carriers through live canonical-owner tests, candidate 23 admitted/59 unresolved/59 residual/0 unexplained** |
+| Latest admitted PR | **#72** |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **PARTIALLY CLOSED IN PHP-3** — six PHP-3-owned unique current guards are current-contract reconciled and Tier-B ledgered; four differently owned unresolved-unique files remain. |
 | F-18 | **STALE_TEST** — exact pre-F-16-to-head trail disproves PR #51/#52 causation; owner is compact-decision test fixture / retired teaching-step assertion |
@@ -21,12 +21,12 @@ here; update only the fields below.
 | Sharky production integration | **PENDING** (PHP-6) |
 | PHP-1 stale assertions | **2** — phase-7 campaign wording; compact-decision retired teaching-step expectation |
 | F-16 non-weakening review | **NON_WEAKENING** — seven stale-test groups (#4, #5, #6, #7–9, #11, #12) independently re-derived |
-| PHP-3 admitted carriers | **14** |
-| PHP-3 unresolved carriers | **68** |
-| PHP-3 nine-path residual | **68** |
-| Recommended next packet | **PHP-3 Wave 2 session-drill extraction** — only after this candidate is admitted; PHP-4 remains unauthorized. |
-| Next authorization | **PHP-3 F-17 candidate pending merge** — PHP-4 and Human remain unauthorized |
-| Autonomous window | **One F-17 owner-repair PR; no PHP-4 work** |
+| PHP-3 admitted carriers | **23 candidate** |
+| PHP-3 unresolved carriers | **59 candidate** |
+| PHP-3 nine-path residual | **59 candidate** |
+| Recommended next packet | **Conditional PHP-4 candidate** — only after Wave-2 deterministic, independent review, and exact-head CI admission; Human remains unauthorized. |
+| Next authorization | **PHP-3 Wave-2 candidate pending merge** — PHP-4 and Human remain unauthorized |
+| Autonomous window | **One Wave-2 extraction PR; PHP-4 only on exact gate admission** |
 | Human Proof | **NOT AUTHORIZED** |
 | `PRE_HUMAN_READY` | **NOT MET** |
 | `HUMAN_PROVEN_10_OF_10_CANDIDATE` | **NOT MET** |
@@ -52,7 +52,7 @@ Product severity resolves in PHP-0.
 | PHP-0 Canonical-Adjacent Red-Guard Triage | Node 5 | **CLOSED_CLASSIFIED** |
 | PHP-1 Stale Contract Repair + F-16 Non-Weakening Verification | Node 5 | **CLOSED_NON_WEAKENING** |
 | PHP-2 Legacy Corpus Ownership Disposition | Node 5 | **CLOSED_DISPOSED_WITH_PHP3_HANDOFFS — retired 68; handoffs 77; eligible residual 0; unexplained 0** |
-| PHP-3 Canonical Test Classification and Manifest | Node 5 | **F-17 CURRENT-OWNER CANDIDATE — Wave-1 historical correction 14/62/62/0; six current F-17 guards added to Tier B, candidate 14/68/68/0; nine session-drill carriers untouched; PHP-4 and Human remain unauthorized** |
+| PHP-3 Canonical Test Classification and Manifest | Node 5 | **WAVE-2 CURRENT-OWNER CANDIDATE — PR #72 admitted F-17 repair; nine stale session-drill carriers extracted to live canonical tests, candidate 23/59/59/0; PHP-4 and Human remain unauthorized pending gates** |
 | PHP-4 Canonical Full-Lane CI Authority | Node 5 | NOT_PREAUTHORIZED |
 | PHP-5 Premium Motion & Ceremony Completion | — | NOT_PREAUTHORIZED |
 | PHP-6 Sharky Production Integration & Completeness Proof | — | NOT_PREAUTHORIZED |

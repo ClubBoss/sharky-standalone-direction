@@ -334,3 +334,29 @@ non-admission archival retirement); adding six distinct F-17 keys produces a
 total PHP-3-owned population of 83, with zero duplicate keys and zero missing
 owned files. The nine session-drill Wave-2 carriers remain unmodified. PHP-4,
 Human, Visual Completion, and Modern Table work remain unauthorized.
+
+## 23. PHP-3 Wave 2 live session-drill extraction
+
+Starting canonical baseline: PR #72 merge `8075e088cf15ab852917489b4e9a2b54d33b9204`.
+Starting arithmetic: admitted `14`, unresolved `68`, residual `68`, unexplained `0`.
+
+The nine retired files imported deleted screen/runner owners or inspected legacy
+implementation callbacks. Their replacements pump `CanonicalLauncherV1.sessionDrill`
+through the live session runtime; no production, Modern Table, visual-system, or
+curriculum source changes are made.
+
+| Retired original | Prior owner | Current owner | Replacement | Disposition | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| `test/ui_v2/session_drill_player_hand_chain_contract_test.dart` | deleted screen owner | canonical session-drill route | `canonical_session_drill_world3_hand_chain_surface_contract_test.dart`, `canonical_session_drill_world3_continuation_slice_contract_test.dart`, and `canonical_session_drill_world3_tail_slice_contract_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | live W3 early, continuation, and tail hand-chain table/action progression |
+| `test/ui_v2/session_drill_player_runner_stress_benchmark_acceptance_test.dart` | deleted runner owner | canonical session-drill route | `canonical_session_drill_phone_quality_contract_test.dart` and `canonical_session_drill_world2_source_projection_contract_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | live W2 phone prompt/table/support-lane order and no-overflow surface |
+| `test/ui_v2/session_drill_player_seat_info_density_rendered_quality_test.dart` | deleted runner owner | canonical session-drill route | `canonical_session_drill_phone_quality_contract_test.dart` and `canonical_session_drill_world2_source_projection_contract_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | live W2 phone seat label/state visibility; stale legacy chip geometry is not retained as a proxy |
+| `test/ui_v2/session_drill_player_spatial_runtime_bundle_contract_test.dart` | deleted screen owner | canonical spatial projection | `session_drill_spatial_projection_contract_v1_test.dart` and `session_drill_canonical_spatial_scenario_state_v1_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | current spatial payload and scenario-state projection |
+| `test/ui_v2/session_drill_player_world2_live_layout_contract_test.dart` | deleted screen/runner owner | canonical session-drill route | `canonical_session_drill_world2_source_projection_contract_test.dart` and `canonical_session_drill_phone_quality_contract_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | live canonical W2 layout/source facts at phone size |
+| `test/ui_v2/session_drill_player_world3_mid_tail_rendered_quality_test.dart` | deleted runner owner | canonical session-drill route | `canonical_session_drill_world3_continuation_slice_contract_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | live W3 continuation progression |
+| `test/ui_v2/session_drill_player_world3_tail_capstone_rendered_quality_test.dart` | deleted runner owner | canonical session-drill route | `canonical_session_drill_world3_tail_slice_contract_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | live W3 tail completion |
+| `test/ui_v2/session_drill_player_world9_exploit_synthesis_rendered_quality_test.dart` | deleted runner owner | canonical session-drill route | `canonical_session_drill_world9_surface_contract_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | live W9 authored exploit synthesis and no-placeholder proof |
+| `test/ui_v2/session_drill_player_world9_position_spatial_rendered_quality_test.dart` | deleted runner owner | canonical session-drill route | `canonical_session_drill_world9_surface_contract_test.dart` and `canonical_session_drill_phone_quality_contract_test.dart` | `EXTRACTED_TO_CURRENT_OWNER_AND_TOMBSTONED` | live W9 position markers and phone spatial truth |
+
+Wave-2 candidate arithmetic is admitted `23`, unresolved `59`, residual `59`,
+unexplained `0`, for the unchanged owned population of `83`. PHP-4 remains
+conditional on this candidate's complete deterministic, review, and CI gates.
