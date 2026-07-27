@@ -317,7 +317,7 @@ Tier-B-to-D extraction admission.
 
 | File | Current owner | Current contract retained | Carrier key | Tier |
 | --- | --- | --- | --- | --- |
-| `test/guards/early_world_feedback_quality_family_contract_test.dart` | canonical corrective-feedback seam | source-driven `STRONG` range label and active feedback owner | `F17:early-feedback-quality` | B |
+| `test/guards/early_world_feedback_quality_family_contract_test.dart` | Act0 learner route (`Act0ShellPreviewScreenV1` → `Act0LessonRunnerShellV1` → `Act0CausalFeedbackV1`) | active wrong decision surfaces a non-generic reason, selected weaker response, preferred correction, and next-clue instruction; archived session-drill helper is not claimed as active owner | `F17:early-feedback-quality` | B |
 | `test/guards/showable_spine_handoff_coherence_contract_test.dart` | progression route story + session result | active result prose resolves through the canonical story seam | `F17:showable-spine-handoff` | B |
 | `test/guards/targeted_content_repairs_contract_test.dart` | active W5/W10/W11 content authorities | observational texture/connected-board and bounded W10 copy | `F17:targeted-content-repairs` | B |
 | `test/guards/w10_to_w11_transition_policy_contract_test.dart` | W10→W11 policy + campaign registry | admitted W12 packs and no W13 unlock | `F17:w10-w11-transition-policy` | B |
