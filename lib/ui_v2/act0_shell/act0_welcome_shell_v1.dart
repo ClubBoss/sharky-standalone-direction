@@ -299,7 +299,7 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
                         Spacer(
                           flex: tabletLayout
                               ? (centerContent ? 20 : 20)
-                              : (centerContent ? 65 : 45),
+                              : (centerContent ? 65 : 50),
                         ),
                         Center(
                           child: SizedBox(
@@ -317,7 +317,7 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
                         Spacer(
                           flex: tabletLayout
                               ? (centerContent ? 8 : 8)
-                              : (centerContent ? 20 : 55),
+                              : (centerContent ? 20 : 50),
                         ),
                         if (ctaBridgeLine != null &&
                             ctaBridgeLine!.trim().isNotEmpty) ...[
