@@ -9,13 +9,13 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical HEAD | `edee622eaf3cfdba2f8472b766ef8c4b5532d0ec` |
-| Authority freshness | 2026-07-27 — post-PR #76 reconciliation |
+| Canonical HEAD | `71fda1d5be2dae3771599e8b674ab0d8229aa633` |
+| Authority freshness | 2026-07-27 — post-PR #78 PHP-5 closure |
 | Campaign version | v1 |
 | Umbrella stage | **Pre-Human Node 5 — Canonical Contract and Test Authority Restoration — CLOSED** |
-| Active sub-packet | **None — PHP-4 closed Node 5** |
-| Status | **PHP4_MANIFEST_DRIVEN_CANONICAL_AUTHORITY_CLOSED — PR #76 merged** |
-| Latest admitted PR | **#76** |
+| Active sub-packet | **None — PHP-5 closed; no subsequent packet admitted** |
+| Status | **PHP5_PREMIUM_MOTION_AND_CEREMONY_CLOSED — PR #78 merged** |
+| Latest admitted PR | **#78** |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **PARTIALLY CLOSED IN PHP-3** — six PHP-3-owned unique current guards are current-contract reconciled and Tier-B ledgered; four differently owned unresolved-unique files remain. |
 | F-18 | **STALE_TEST** — exact pre-F-16-to-head trail disproves PR #51/#52 causation; owner is compact-decision test fixture / retired teaching-step assertion |
@@ -26,9 +26,9 @@ here; update only the fields below.
 | PHP-3 admitted carriers | **23 candidate** |
 | PHP-3 unresolved carriers | **59 candidate** |
 | PHP-3 nine-path residual | **59 candidate** |
-| Recommended next packet | **PHP-5 Premium Motion & Ceremony Completion** |
-| Next authorization | **ACTIVE — PHP-5 Premium Motion & Ceremony Completion** |
-| Autonomous window | **PHP-5 only; do not begin PHP-6 or later packets** |
+| Recommended next packet | **PHP-6 Sharky Production Integration & Completeness Proof — requires fresh dispatch** |
+| Next authorization | **NONE — PHP-6 through PHP-9 remain NOT_PREAUTHORIZED** |
+| Autonomous window | **CLOSED — do not begin PHP-6 or later packets without fresh authorization** |
 | Human Proof | **NOT AUTHORIZED** |
 | `PRE_HUMAN_READY` | **NOT MET** |
 | `HUMAN_PROVEN_10_OF_10_CANDIDATE` | **NOT MET** |
@@ -59,7 +59,7 @@ Product severity resolves in PHP-0.
 | PHP-2 Legacy Corpus Ownership Disposition | Node 5 | **CLOSED_DISPOSED_WITH_PHP3_HANDOFFS — retired 68; handoffs 77; eligible residual 0; unexplained 0** |
 | PHP-3 Canonical Test Classification and Manifest | Node 5 | **HISTORICAL TERMINAL DISPOSITION — NOT CURRENT DISPATCH AUTHORITY.** At PR #72, nine stale session-drill carriers were extracted to live canonical tests (candidate 23/59/59/0). PHP-4 subsequently closed in PR #76; PHP-3 is not reopened. |
 | PHP-4 Canonical Full-Lane CI Authority | Node 5 | **CLOSED — `PHP4_MANIFEST_DRIVEN_CANONICAL_AUTHORITY_CLOSED`; PR #76 merge `edee622eaf3cfdba2f8472b766ef8c4b5532d0ec`; Tier A + terminal Tier B positive authority, Tier C structural only** |
-| PHP-5 Premium Motion & Ceremony Completion | — | **NEXT_AUTHORIZED_PACKET** |
+| PHP-5 Premium Motion & Ceremony Completion | — | **CLOSED — PR #78 merge `71fda1d5be2dae3771599e8b674ab0d8229aa633`; Street Replay step reveal restored through the shared tokenized proof reveal; active guards cover all four canonical moments, reduced-motion bypass, rebuild stability, and CTA safety.** |
 | PHP-6 Sharky Production Integration & Completeness Proof | — | NOT_PREAUTHORIZED |
 | PHP-7 Screen-Role & Visual-Hierarchy Emphasis Proof | — | NOT_PREAUTHORIZED |
 | PHP-8 Evidence & Accessibility Lane Completeness | — | NOT_PREAUTHORIZED |
@@ -73,19 +73,19 @@ emergency ceiling, never a target.**
 Controlling plan: `docs/plan/MASTER_PLAN_v3.0.md`; packet-specific plan:
 `docs/plan/PRE_HUMAN_AND_HUMAN_PROVEN_CAMPAIGN_v1.md` (§4.1 and PHP-5).
 
-- **ROUTE_A:** PHP-4 closed Pre-Human Node 5. The exact next authorized packet
-  is **PHP-5 Premium Motion & Ceremony Completion**.
-- **Forbidden in the PHP-5 dispatch:** Human Novice Proof (still **NOT
-  AUTHORIZED**); Modern Table work (permanent Maintenance Mode); PHP-6 through
-  PHP-9; AI Personalization work; Waves 3.10–3.15 as independently active
-  waves; and any product/runtime change in this governance PR.
-- The older `AI Personalization Layer v1 — ACTIVE` declarations and standalone
-  current-wave framing for Waves 3.10–3.15 are historical/superseded. AI
-  Personalization Layer v1 is **COMPLETED**; Waves 3.10–3.15 are historical
-  route evidence, with the Wave 3.10 remainder owned by PHP-5.
-- Terminal conditions for PHP-5 are the packet plan's existing motion,
-  reduced-motion, tap-safety, active-guard, and PHP-4-lane requirements. This
-  state file authorizes dispatch only; it does not alter that packet DoD.
+- **PHP-5 closure:** PR #78 restored the Street Replay reveal through the
+  existing shared proof-reveal primitive and token vocabulary, and promoted
+  active guards for the Session Summary proof hero plus the Street Replay
+  moment. Focused motion tests, analyzer, fast loop, the PHP-4 canonical lane,
+  and required exact-head CI are green. The bounded runtime attempt launched
+  the exact candidate but Computer Use input failed (`noWindowsAvailable`), so
+  runtime motion evidence is R0 nonblocking tooling evidence, not a passed
+  visual assertion.
+- **No automatic successor:** PHP-6 is the next ordered packet in the campaign
+  plan but is **NOT_PREAUTHORIZED**. Human Novice Proof remains **NOT
+  AUTHORIZED**; Modern Table remains in permanent Maintenance Mode; PHP-6
+  through PHP-9, AI Personalization work, and Waves 3.10–3.15 as independently
+  active waves remain forbidden until a fresh dispatch admits one packet.
 
 ## Update rule
 
