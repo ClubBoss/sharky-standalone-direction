@@ -28,8 +28,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  tier-a:
-    name: Tier A active/release
+  canonical-authority:
+    name: Canonical authority (Tier A + terminal Tier B)
     if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && (inputs.lane == 'tier-a' || inputs.lane == 'all-diagnostic')) }}
     runs-on: ubuntu-latest
     steps:
@@ -40,8 +40,7 @@ jobs:
           flutter-version: '3.35.0'
           cache: true
       - run: flutter pub get
-      - run: ./tools/test_authority_validate_v1.sh
-      - run: ./tools/test_authority_tier_a_v1.sh
+      - run: ./tools/test_authority_canonical_lane_v1.sh
 
   tier-b:
     name: Tier B maintained support
