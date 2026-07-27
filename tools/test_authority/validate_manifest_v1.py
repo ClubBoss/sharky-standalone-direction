@@ -2,17 +2,24 @@
 import argparse
 import hashlib
 import json
+import os
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-MANIFEST_DIR = ROOT / "tools" / "test_authority" / "manifests"
+MANIFEST_DIR = Path(
+    os.environ.get(
+        "TEST_AUTHORITY_MANIFEST_DIR",
+        ROOT / "tools" / "test_authority" / "manifests",
+    )
+)
 POST_SHIM_ARTIFACT = (
     ROOT / "docs" / "_reviews" / "post_shim_global_suite_remeasurement_v1.md"
 )
 TIER_B_MANIFEST = MANIFEST_DIR / "tier_b_maintained_support.txt"
 TIER_C_MANIFEST = MANIFEST_DIR / "tier_c_quarantine.txt"
 TIER_D_MANIFEST = MANIFEST_DIR / "tier_d_retired.txt"
+TIER_C_RECORDS = MANIFEST_DIR / "tier_c_quarantine_records_v1.json"
 KNOWN_TIER_C_MANIFEST = MANIFEST_DIR / "known_tier_c_residuals.txt"
 PHP2_REVIEW_ARTIFACT = (
     ROOT / "docs" / "_reviews" / "php2_legacy_corpus_ownership_disposition_v1.md"
@@ -55,6 +62,23 @@ PHP3_F17_TIER_B_PATHS = {
     "test/ui_v2/session_summary_gold_containment_v1_test.dart",
     "test/ui_v2/wave4_2_premium_identity_claim_cleanup_v1_test.dart",
 }
+TIER_C_OWNER_KINDS = {"current", "historical", "decision_authority"}
+TIER_C_REASON_CODES = {
+    "HISTORICAL_TOOLING_SUPPORT",
+    "DORMANT_ARCHITECTURE_CONTRACT",
+    "RETIRED_ROUTE_OR_FIXTURE",
+    "NONCANONICAL_AUDIT_HUB",
+    "SUPERSEDED_CONTENT_GUARD",
+    "DUPLICATE_CURRENT_OWNER_PROOF",
+    "LEGACY_ENGINE_OUTSIDE_ACTIVE_ROUTE",
+    "MANUAL_OR_OFFLINE_TOOLING",
+    "OTHER_EXPLICITLY_EVIDENCED",
+}
+GENERIC_TIER_C_VALUES = {
+    "unknown", "historical/quarantine owner review", "legacy", "miscellaneous",
+    "tbd", "generic support", "none", "never", "review later",
+    "noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+}
 
 
 def _read_manifest(path: Path) -> tuple[list[str], list[str]]:
@@ -72,6 +96,56 @@ def _read_manifest(path: Path) -> tuple[list[str], list[str]]:
         seen.add(line)
         entries.append(line)
     return entries, duplicates
+
+
+def _is_generic(value: str) -> bool:
+    return value.strip().lower() in GENERIC_TIER_C_VALUES
+
+
+def _read_tier_c_records() -> tuple[set[str], set[str], list[str]]:
+    if not TIER_C_RECORDS.exists():
+        return set(), set(), [f"missing Tier C quarantine records: {TIER_C_RECORDS.relative_to(ROOT)}"]
+    payload = json.loads(TIER_C_RECORDS.read_text())
+    if payload.get("schema_version") != 2:
+        return set(), set(), ["Tier C quarantine records must use schema_version 2"]
+    records = payload.get("records", [])
+    paths: set[str] = set()
+    identities: set[str] = set()
+    failures: list[str] = []
+    for index, record in enumerate(records):
+        if not isinstance(record, dict):
+            failures.append(f"Tier C record {index} is not an object")
+            continue
+        path = record.get("path")
+        if not isinstance(path, str) or not path:
+            failures.append(f"Tier C record {index} missing path")
+            continue
+        if path in paths:
+            failures.append(f"duplicate Tier C path record: {path}")
+        paths.add(path)
+        for field in ("carrier_identity", "owner_kind", "owner", "owner_evidence", "reason_code", "reason", "disposition_evidence", "reentry_condition"):
+            if not isinstance(record.get(field), str) or not record[field].strip():
+                failures.append(f"Tier C record {path} missing {field}")
+        identity = record.get("carrier_identity", "")
+        expected_identity = "path-sha256:" + hashlib.sha256(path.encode()).hexdigest()
+        if identity in identities:
+            failures.append(f"duplicate Tier C carrier identity: {identity}")
+        identities.add(identity)
+        if identity != expected_identity:
+            failures.append(f"Tier C record {path} has noncanonical carrier identity")
+        if record.get("owner_kind") not in TIER_C_OWNER_KINDS:
+            failures.append(f"Tier C record {path} has unsupported owner_kind")
+        if record.get("reason_code") not in TIER_C_REASON_CODES:
+            failures.append(f"Tier C record {path} has unsupported reason_code")
+        for field in ("owner", "reason", "owner_evidence", "disposition_evidence", "reentry_condition"):
+            value = record.get(field, "")
+            if isinstance(value, str) and _is_generic(value):
+                failures.append(f"Tier C record {path} has generic {field}")
+        for field in ("owner_evidence", "disposition_evidence"):
+            value = record.get(field, "")
+            if isinstance(value, str) and "#" not in value:
+                failures.append(f"Tier C record {path} has non-specific {field}")
+    return paths, identities, failures
 
 
 def _parse_observed_inventory() -> dict[str, str]:
@@ -146,6 +220,7 @@ def validate() -> dict[str, object]:
     tier_b, tier_b_duplicates = _read_manifest(TIER_B_MANIFEST)
     tier_c, tier_c_duplicates = _read_manifest(TIER_C_MANIFEST)
     tier_d, tier_d_duplicates = _read_manifest(TIER_D_MANIFEST)
+    tier_c_record_paths, tier_c_record_identities, tier_c_record_failures = _read_tier_c_records()
     known_tier_c, known_duplicates = _read_manifest(KNOWN_TIER_C_MANIFEST)
     duplicates = tier_b_duplicates + tier_c_duplicates + tier_d_duplicates + known_duplicates
 
@@ -156,10 +231,22 @@ def validate() -> dict[str, object]:
     tier_d_set = set(tier_d)
     known_tier_c_set = set(known_tier_c)
     overlap = sorted(tier_b_set & tier_c_set)
+    tier_a_paths = set(PHP3_F17_TIER_B_PATHS)
+    tier_a_tier_c_overlap = sorted(tier_a_paths & tier_c_set)
+    all_manifest_paths = tier_b + tier_c + tier_d
+    all_carrier_identities = [
+        "path-sha256:" + hashlib.sha256(path.encode()).hexdigest()
+        for path in all_manifest_paths
+    ]
+    duplicate_carrier_identities = sorted(
+        {identity for identity in all_carrier_identities if all_carrier_identities.count(identity) > 1}
+    )
     ledger_retired = _ledger_retired_paths()
     retired_tier_b = tier_d_set & observed_b_set
     retired_tier_c = tier_d_set & observed_c_set
-    observed_tier_b_missing = sorted(observed_b_set - tier_b_set - retired_tier_b)
+    observed_tier_b_missing = sorted(
+        observed_b_set - tier_b_set - retired_tier_b - tier_c_set
+    )
     observed_tier_b_extra = sorted(tier_b_set - observed_b_set)
     unexpected_tier_b_extra = sorted(
         set(observed_tier_b_extra) - PHP3_F17_TIER_B_PATHS
@@ -220,12 +307,20 @@ def validate() -> dict[str, object]:
         )
     if not observed_tier_c_exact_set_match:
         failures.append(f"observed Tier C missing from executable manifest: {observed_tier_c_missing[:10]}")
-    if executable_tier_c_extra != sorted(KNOWN_UNREACHED_TIER_C):
+    if known_unreached_missing:
+        failures.append(f"known unreached Tier C paths missing: {known_unreached_missing[:10]}")
+    if tier_c_record_failures:
+        failures.extend(tier_c_record_failures[:10])
+    if tier_c_record_paths != tier_c_set:
         failures.append(
-            "Tier C executable extra-over-observed set mismatch: "
-            f"missing_known_unreached={known_unreached_missing[:10]} "
-            f"unexpected={known_unreached_extra[:10]}"
+            "Tier C quarantine record drift: "
+            f"missing={sorted(tier_c_set - tier_c_record_paths)[:10]} "
+            f"unexpected={sorted(tier_c_record_paths - tier_c_set)[:10]}"
         )
+    if tier_a_tier_c_overlap:
+        failures.append(f"Tier C path leaks into Tier A: {tier_a_tier_c_overlap[:10]}")
+    if duplicate_carrier_identities:
+        failures.append(f"duplicate carrier identity across manifest tiers: {duplicate_carrier_identities[:10]}")
     if missing_known_registry or unexpected_known_registry:
         failures.append(
             f"known residual registry drift: missing={missing_known_registry[:10]} "
@@ -287,6 +382,10 @@ def validate() -> dict[str, object]:
         "known_residuals_subset_of_executable_tier_c": known_residuals_subset_of_executable_tier_c,
         "known_residuals_missing_from_executable_tier_c": known_missing_from_executable_tier_c,
         "tier_b_tier_c_overlap": len(overlap),
+        "tier_a_tier_c_overlap": tier_a_tier_c_overlap,
+        "tier_c_record_count": len(tier_c_record_paths),
+        "tier_c_carrier_identity_count": len(tier_c_record_identities),
+        "duplicate_carrier_identities": duplicate_carrier_identities,
         "duplicates": duplicates,
         "missing_executable_paths": missing_executable_paths,
         "tier_d_existing_paths": tier_d_existing_paths,

@@ -8,12 +8,12 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical HEAD | `8075e088cf15ab852917489b4e9a2b54d33b9204` |
+| Canonical HEAD | `d4fe9d30ee4206b3830f9904c6d891d41c354b7b` |
 | Campaign version | v1 |
 | Umbrella stage | **Pre-Human Node 5 — Canonical Contract and Test Authority Restoration** |
-| Active sub-packet | **PHP-3 Wave 2 session-drill current-owner extraction** |
-| Status | **ACTIVE_CANDIDATE — PR #72 repairs F-17 current-owner truth; Wave 2 extracts nine stale session-drill carriers through live canonical-owner tests, candidate 23 admitted/59 unresolved/59 residual/0 unexplained** |
-| Latest admitted PR | **#72** |
+| Active sub-packet | **PHP-3 Tier-B assertion closure — manifest disposition wave** |
+| Status | **ACTIVE — PR #74 merged; PHP-4 is AUTHORIZED_AFTER_TERMINAL_TIER_B_GREEN under manifest-driven canonical authority** |
+| Latest admitted PR | **#74** |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **PARTIALLY CLOSED IN PHP-3** — six PHP-3-owned unique current guards are current-contract reconciled and Tier-B ledgered; four differently owned unresolved-unique files remain. |
 | F-18 | **STALE_TEST** — exact pre-F-16-to-head trail disproves PR #51/#52 causation; owner is compact-decision test fixture / retired teaching-step assertion |
@@ -25,7 +25,7 @@ here; update only the fields below.
 | PHP-3 unresolved carriers | **59 candidate** |
 | PHP-3 nine-path residual | **59 candidate** |
 | Recommended next packet | **Conditional PHP-4 candidate** — only after Wave-2 deterministic, independent review, and exact-head CI admission; Human remains unauthorized. |
-| Next authorization | **PHP-3 Wave-2 candidate pending merge** — PHP-4 and Human remain unauthorized |
+| Next authorization | **ACTIVE** — terminal Tier-B closure, then PHP-4; Human remains unauthorized |
 | Autonomous window | **One Wave-2 extraction PR; PHP-4 only on exact gate admission** |
 | Human Proof | **NOT AUTHORIZED** |
 | `PRE_HUMAN_READY` | **NOT MET** |
@@ -53,7 +53,7 @@ Product severity resolves in PHP-0.
 | PHP-1 Stale Contract Repair + F-16 Non-Weakening Verification | Node 5 | **CLOSED_NON_WEAKENING** |
 | PHP-2 Legacy Corpus Ownership Disposition | Node 5 | **CLOSED_DISPOSED_WITH_PHP3_HANDOFFS — retired 68; handoffs 77; eligible residual 0; unexplained 0** |
 | PHP-3 Canonical Test Classification and Manifest | Node 5 | **WAVE-2 CURRENT-OWNER CANDIDATE — PR #72 admitted F-17 repair; nine stale session-drill carriers extracted to live canonical tests, candidate 23/59/59/0; PHP-4 and Human remain unauthorized pending gates** |
-| PHP-4 Canonical Full-Lane CI Authority | Node 5 | NOT_PREAUTHORIZED |
+| PHP-4 Canonical Full-Lane CI Authority | Node 5 | **AUTHORIZED_AFTER_TERMINAL_TIER_B_GREEN — Tier A + terminal Tier B positive authority; Tier C structural only** |
 | PHP-5 Premium Motion & Ceremony Completion | — | NOT_PREAUTHORIZED |
 | PHP-6 Sharky Production Integration & Completeness Proof | — | NOT_PREAUTHORIZED |
 | PHP-7 Screen-Role & Visual-Hierarchy Emphasis Proof | — | NOT_PREAUTHORIZED |
