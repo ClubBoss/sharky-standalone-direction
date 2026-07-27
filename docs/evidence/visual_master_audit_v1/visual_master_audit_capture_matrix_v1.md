@@ -1,0 +1,96 @@
+# Visual Master Audit Capture Matrix v1
+
+Candidate: `35b70a5bb3ec65ebf3800a3a8598970ebc45eb0a`
+
+Rows: **86**; LIVE_PRODUCTION: **44**; SYNTHETIC: **42**.
+
+Synthetic rows are reference-only and may not close production visual quality claims.
+
+| State | Device | Phase | Status | Renderer | SHA-256 |
+| --- | --- | --- | --- | --- | --- |
+| runner.theory.hand_rankings | compact | theory | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `99f3cdcc6d04d3b8657bc4b9594058a9549d204b4b6b69f10c9ab025bc947836` |
+| runner.table_read.live | compact | table_reading_prompt | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `a9ee0d6a8a7c43f9c8bd00e907b3f64692ac905b52b66a7759631f56848ec683` |
+| runner.table_read.recheck.live | compact | recheck | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `8fc098761bc163921a84d545ee6446babd0b00deec2ba7f7183d49599c7bef70` |
+| runner.action_selection.live | compact | action_selection | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `753504ac4045388bab63270c319ac976c230ca6d54c34969819cf0d89b16b156` |
+| runner.seat_selection.vrt02 | compact | seat_selection | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `7b73bbbf7da871481bfee6c847cc9a0e084853fcfc5644c35f6dd602f9f74c72` |
+| runner.seat_selection.vrt02_correct | compact | correct_feedback | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `7ee1a7567ef63ddcbe20276dbb705c55a84e46b75c088b8eb9ab823aa2234ddb` |
+| runner.seat_selection.vrt02_incorrect | compact | incorrect_feedback | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `426bf40f8d8b5beb729765aa13bec2bbc8454ecefcff1d72e796f51287c1075d` |
+| runner.world3_seat_derivative | compact | seat_selection_derivative | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `cca401245d7aba91b31d797b57c404b799f47cbc583e2be0b60aeb8d5165969f` |
+| runner.hand_comparison.live | compact | non_table_decision | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `548dadf6efb2269a26033d27064ce5aef8f1984db3d084a9b4f9103f7a9e320f` |
+| runner.showdown.live | compact | table_reading_prompt | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `f460ea89fcd0cfdbc5b70649c84a822cd04988c4e27e08531f2fa1a24a30715e` |
+| runner.completion.review | compact | lesson_completion | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `775d0d5b2ed0b7ab50d4626daf351091fadf1ebcf2865397c7c7c0d964be5965` |
+| runner.theory.hand_rankings | iphone17_class | theory | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `01984a62df60a4cfa091df86508deda17d2343dae0864e67c0d26fd8e8e857e0` |
+| runner.table_read.live | iphone17_class | table_reading_prompt | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `6f0e0c08f51f06d343d06beb2ac5aaf51f6e169debaa4949b750364d09f34722` |
+| runner.table_read.recheck.live | iphone17_class | recheck | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `8a7630b93c7b12791d9c20a3a36b7387579d2bb1109667118587fb9fd2aa370b` |
+| runner.action_selection.live | iphone17_class | action_selection | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `d5d1501e064e255ac94815793a3a845c8249b36199b84c28ae565e776d306157` |
+| runner.seat_selection.vrt02 | iphone17_class | seat_selection | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `aee6bf4780825be3e802e18072ddc7437164a033da447c1dc1d7e564ce73599e` |
+| runner.seat_selection.vrt02_correct | iphone17_class | correct_feedback | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `efaabc34a82f0dcfcb89cd9d8767d0617164400912398c9402b15755449cb9d5` |
+| runner.seat_selection.vrt02_incorrect | iphone17_class | incorrect_feedback | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `4fab764aaf63003758ea1d8305f6d990c585842c91c0f0798210689cacd49cc4` |
+| runner.world3_seat_derivative | iphone17_class | seat_selection_derivative | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `16c84a19f72970bd4f66e469bc4f8f204abd9b0852e908a60642839a42416ffe` |
+| runner.hand_comparison.live | iphone17_class | non_table_decision | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `f2d81d46ff8dbb40ffbc6f276f19d93c3aa355b09a13772e9a728ff3fcf09439` |
+| runner.showdown.live | iphone17_class | table_reading_prompt | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `23bb493e976513dc8b48a04823fac7683105757a8fb5e8c141250276a09433d7` |
+| runner.completion.review | iphone17_class | lesson_completion | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `50bc157f40ded9cd4d4ec4840105c21bb1a0720e6c74cff5e6593cf1f1757ee0` |
+| runner.theory.hand_rankings | large_phone | theory | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `f159ad633f540189ac3bb2d7b2495dd191edc759baf9ad9de873b5373b1ea656` |
+| runner.table_read.live | large_phone | table_reading_prompt | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `1dc50cfbe082378288d567b15153b19d0d65610d10e5492e651b2cd4ad924154` |
+| runner.table_read.recheck.live | large_phone | recheck | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `057aa49efaf0cd292e79d9014520c872938aa38973a588e8c787bf2b7c306607` |
+| runner.action_selection.live | large_phone | action_selection | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `ef59549e46a316ebaf432d223e579f136d5e5787ae3335332102160daae9f43b` |
+| runner.seat_selection.vrt02 | large_phone | seat_selection | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `ff0ed7ddff1bbf051e1f95ed820246f9cabd8ca90adeebc0d0a954b9117c3d77` |
+| runner.seat_selection.vrt02_correct | large_phone | correct_feedback | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `4db994aaac3c4fb17ef88e7deda9c073a72bd70ce76fa2e0ceacddc2bf71a0b1` |
+| runner.seat_selection.vrt02_incorrect | large_phone | incorrect_feedback | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `819f0fd3dcfb4c702baa3d64dd1dc587c9ec6206510ec4d91822a87b3b12d25d` |
+| runner.world3_seat_derivative | large_phone | seat_selection_derivative | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `aa7dd20a8ed74f9ebea47902a17071d8ed64f6e819042af72053dc26e3ebe40e` |
+| runner.hand_comparison.live | large_phone | non_table_decision | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `4a63a18321a3c2d29cfb09c2d93bd6bcd49c22d1cc48e75dfaabfa971189f1d2` |
+| runner.showdown.live | large_phone | table_reading_prompt | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `d8aeca70ef78c386b159c25ccd0b9b27445bcc93e825ebd5e3698ba00c58b93a` |
+| runner.completion.review | large_phone | lesson_completion | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `54b7e6d083b123965e4eb7c01a3b029a11086ba3b0f8b7edad041873764de716` |
+| runner.theory.hand_rankings | tall_phone | theory | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `01984a62df60a4cfa091df86508deda17d2343dae0864e67c0d26fd8e8e857e0` |
+| runner.table_read.live | tall_phone | table_reading_prompt | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `6f0e0c08f51f06d343d06beb2ac5aaf51f6e169debaa4949b750364d09f34722` |
+| runner.table_read.recheck.live | tall_phone | recheck | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `8a7630b93c7b12791d9c20a3a36b7387579d2bb1109667118587fb9fd2aa370b` |
+| runner.action_selection.live | tall_phone | action_selection | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `d5d1501e064e255ac94815793a3a845c8249b36199b84c28ae565e776d306157` |
+| runner.seat_selection.vrt02 | tall_phone | seat_selection | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `aee6bf4780825be3e802e18072ddc7437164a033da447c1dc1d7e564ce73599e` |
+| runner.seat_selection.vrt02_correct | tall_phone | correct_feedback | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `efaabc34a82f0dcfcb89cd9d8767d0617164400912398c9402b15755449cb9d5` |
+| runner.seat_selection.vrt02_incorrect | tall_phone | incorrect_feedback | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `4fab764aaf63003758ea1d8305f6d990c585842c91c0f0798210689cacd49cc4` |
+| runner.world3_seat_derivative | tall_phone | seat_selection_derivative | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `16c84a19f72970bd4f66e469bc4f8f204abd9b0852e908a60642839a42416ffe` |
+| runner.hand_comparison.live | tall_phone | non_table_decision | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `f2d81d46ff8dbb40ffbc6f276f19d93c3aa355b09a13772e9a728ff3fcf09439` |
+| runner.showdown.live | tall_phone | table_reading_prompt | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `23bb493e976513dc8b48a04823fac7683105757a8fb5e8c141250276a09433d7` |
+| runner.completion.review | tall_phone | lesson_completion | LIVE_PRODUCTION | Act0LessonRunnerShellV1 | `50bc157f40ded9cd4d4ec4840105c21bb1a0720e6c74cff5e6593cf1f1757ee0` |
+| synthetic.alpha_journey.placement | compact | placement | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `45f3584e629f773ace357234040cd13b73e0725bc077f06623f8601c4d15b01d` |
+| synthetic.alpha_journey.welcome | compact | welcome | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `696e0e48817461f540e84fabb7b77e24a8f46ea4cc2269f618db873d41ba757f` |
+| synthetic.alpha_journey.home | compact | home | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `a1664ae209d336c617a2b0059e83f730835835a3239720be410218273e7f1876` |
+| synthetic.alpha_journey.learn | compact | learn | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `84b601dbb846e3bfe0c034919be732c1de1683380346fcd88390a7a0dea95d4d` |
+| synthetic.alpha_journey.learn_detail | compact | learn_detail | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `34c1c760636766abc072a4f400a76f466088c59c1722a9230f628ab196314f41` |
+| synthetic.alpha_journey.play | compact | play | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `3f3036193a52c5a4f016d5a0d5a826fb4942200236afdb5e39bc7fb4a39caec4` |
+| synthetic.alpha_journey.feedback | compact | feedback | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `fd085764dfa25557d3f9718d87b038ff4e415ee4bd03f18928dca1b9f073dad5` |
+| synthetic.alpha_journey.practice_repair | compact | practice_repair | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `ccb6ec87ec2f5ab1da8facd6d24671c98b2c2a1afed2b52e2e9eeefa39b7f8f3` |
+| synthetic.alpha_journey.completion_payoff | compact | completion_payoff | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `569dd8751acc7db15c87fb9ec1ec42cb2c55f91a4c5ae9e771a5f0bf592e5ab9` |
+| synthetic.alpha_journey.summary | compact | summary | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `7d499e1377ce3b1136156153b1d73d64dc0de8b1483de9dcb3098a1109be2ade` |
+| synthetic.alpha_journey.review_profile | compact | review_profile | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `4120c9c285cd19c987186c082ba5ae06573d4952e59007083248f24fb000daa9` |
+| synthetic.alpha_journey.w12_terminal | compact | w12_terminal | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `9dc760f657fbd3e02207f3c6543012760bf449264cbc1882eff67927ccc0684e` |
+| synthetic.core.home | compact | home | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `752cd8272ebbe43e544b2db7c1b125847fd408b20f1facc28a9dbc42c9d973d5` |
+| synthetic.core.learn | compact | learn | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `84b601dbb846e3bfe0c034919be732c1de1683380346fcd88390a7a0dea95d4d` |
+| synthetic.core.learn_detail | compact | learn_detail | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `34c1c760636766abc072a4f400a76f466088c59c1722a9230f628ab196314f41` |
+| synthetic.core.practice | compact | practice | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `f1d1a40605efe92f25befd8501357fcd572a71dc81ee8def98f13343e02c8ede` |
+| synthetic.core.review_empty | compact | review_empty | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `e97fe679cea43031aa0460d6efc1e1663ff6a7456a85757992b63a6bb7f330c0` |
+| synthetic.core.review | compact | review | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `a248c7f7bc0a4b1d38d2bd281a40a545e8e9b43dde1176754b8a7c7b52893966` |
+| synthetic.core.profile | compact | profile | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `c14d5597713ad1e5cfb36da33ca8fb3b743c0c0e721ab38ebb8c22ba72507109` |
+| synthetic.day2_return.open_repair_source | compact | open_repair_source | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `241f2aa093c9c15c8f1d75710723cc1e72380b597fb2b117c110472ea1137631` |
+| synthetic.day2_return.return_home | compact | return_home | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `1711ba93e22eb3ecebcae39cec078c03ec139fa81eb1c193e02cac356ea88e87` |
+| synthetic.day2_return.practice_repair_target | compact | practice_repair_target | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `ccb6ec87ec2f5ab1da8facd6d24671c98b2c2a1afed2b52e2e9eeefa39b7f8f3` |
+| synthetic.day2_return.review_continuation | compact | review_continuation | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `6b3f29977ace7c783de244e66e3e3177248b2a968b8dff6ab77c4585a5a6ca9e` |
+| synthetic.day2_return.profile_not_clear | compact | profile_not_clear | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `aa29bfd09c583b63acf639937be038eb6cfa76d7ef89a149168ee364b5ea43f3` |
+| synthetic.first_week.placement | compact | placement | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `45f3584e629f773ace357234040cd13b73e0725bc077f06623f8601c4d15b01d` |
+| synthetic.first_week.welcome_decision | compact | welcome_decision | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `ece1b67bdf8947a2a9f66a661815a62ad010d278823045c8724985bb2a4c5e5a` |
+| synthetic.first_week.welcome_feedback | compact | welcome_feedback | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `d484f9c35cace2d40aa3532b18d0497d16c0682cbd01001bee702063abe9fcf0` |
+| synthetic.first_week.welcome_handoff | compact | welcome_handoff | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `c40eee7e1efc74589d292088cc6b710cb05eb9b9a109fce3b986c21a2e443682` |
+| synthetic.first_week.decision | compact | decision | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `3f3036193a52c5a4f016d5a0d5a826fb4942200236afdb5e39bc7fb4a39caec4` |
+| synthetic.first_week.correct_feedback | compact | correct_feedback | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `08b032d7fc054129c9494e2cd6de1ada232cfcc511546987ddee4a5cf184fb1b` |
+| synthetic.first_week.wrong_feedback | compact | wrong_feedback | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `fd085764dfa25557d3f9718d87b038ff4e415ee4bd03f18928dca1b9f073dad5` |
+| synthetic.first_week.repair_focus | compact | repair_focus | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `241f2aa093c9c15c8f1d75710723cc1e72380b597fb2b117c110472ea1137631` |
+| synthetic.first_week.repair_result | compact | repair_result | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `e0eb3eea1d723d332297b2486bf41c5fa53326ea41d7cf381a615b88799c5b44` |
+| synthetic.first_week.session_repair | compact | session_repair | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `241f2aa093c9c15c8f1d75710723cc1e72380b597fb2b117c110472ea1137631` |
+| synthetic.first_week.session_summary | compact | session_summary | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `7d499e1377ce3b1136156153b1d73d64dc0de8b1483de9dcb3098a1109be2ade` |
+| synthetic.first_week.review_handoff | compact | review_handoff | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `a248c7f7bc0a4b1d38d2bd281a40a545e8e9b43dde1176754b8a7c7b52893966` |
+| synthetic.first_week.profile_return | compact | profile_return | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `c14d5597713ad1e5cfb36da33ca8fb3b743c0c0e721ab38ebb8c22ba72507109` |
+| synthetic.review_return.review_list | compact | review_list | SYNTHETIC | Act0ReviewShellV1.production_callback_fixture | `9fa891993cf7547a137608ae218f31608f10d994a1872bd3714ba2981408068b` |
+| synthetic.review_return.review_focused_rep | compact | review_focused_rep | SYNTHETIC | Act0ReviewShellV1.production_callback_fixture | `bcdacc590b33e50108398a33ea7627fe18762a28deef379c743c91d5a68e7ac6` |
+| synthetic.review_return.review_feedback | compact | review_feedback | SYNTHETIC | Act0ReviewShellV1.production_callback_fixture | `f04fb9d5a498800ac25822a19b84570ee612fa518d74904566fec13fe46e5d86` |
+| synthetic.review_return.review_return_updated | compact | review_return_updated | SYNTHETIC | Act0ReviewShellV1.production_callback_fixture | `db24233a35e26a748f8e7f7f81425d7de813314d715b85d12cb6e4c8109bd99b` |
+| synthetic.review_return.review_full_shell_authority | compact | review_full_shell_authority | SYNTHETIC | Act0ShellPreviewScreenV1.controlled_demo | `3a2ca2e2d9738c2b8bbb09c10651641e808bf5c17ec221b075817033f8eb9897` |
