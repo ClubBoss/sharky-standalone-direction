@@ -9,13 +9,14 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical HEAD | `e91c0ea8939ff2e3c8f8cc6b2ecdf71235da4e35` |
-| Authority freshness | 2026-07-27 — post-PR #79 PHP-5 closure publication; fresh PHP-6 dispatch |
+| Canonical HEAD | `dd082926221b1e08f76e5de62db7803904af676e` |
+| Authority freshness | 2026-07-27 — post-PR #80 PHP-6 fresh dispatch; corridor extension |
 | Campaign version | v1 |
-| Umbrella stage | **Pre-Human Node 6 — Sharky Production Integration & Completeness Proof — AUTHORIZED** |
+| Corridor | **`ROLLING_CORRIDOR_PHP6_TO_PHP8_V1`** — PHP-6 unconditionally authorized; PHP-7 and PHP-8 conditionally preauthorized behind their own transition gates (see Current dispatch boundaries); PHP-9 remains `NOT_PREAUTHORIZED`. The corridor exists so Codex can move PHP-6 → gate → PHP-7-or-`CLOSED_UNNECESSARY` → gate → PHP-8-or-`CLOSED_UNNECESSARY` → one terminal corridor report without returning for a fresh dispatch between waves. |
+| Umbrella stage | **Pre-Human Node 6 — Sharky Production Integration & Completeness Proof — AUTHORIZED (Wave A of the corridor)** |
 | Active sub-packet | **PHP-6, Packet 6A (Reachability, Continuity, Reduced-Motion Proof)** |
-| Status | **PHP6_SHARKY_PRODUCTION_INTEGRATION_AUTHORIZED — dispatch published, not yet executed** |
-| Latest admitted PR | **#79** (governance/product PRs); dispatch publication PR tracked separately below |
+| Status | **PHP6_SHARKY_PRODUCTION_INTEGRATION_AUTHORIZED — dispatch published, not yet executed. Corridor gates for PHP-7/PHP-8 published, not yet evaluated.** |
+| Latest admitted PR | **#80** (dispatch publication); corridor dispatch PR tracked separately below |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **PARTIALLY CLOSED IN PHP-3** — six PHP-3-owned unique current guards are current-contract reconciled and Tier-B ledgered; four differently owned unresolved-unique files remain. |
 | F-18 | **STALE_TEST** — exact pre-F-16-to-head trail disproves PR #51/#52 causation; owner is compact-decision test fixture / retired teaching-step assertion |
@@ -27,9 +28,9 @@ here; update only the fields below.
 | PHP-3 admitted carriers | **23 candidate** |
 | PHP-3 unresolved carriers | **59 candidate** |
 | PHP-3 nine-path residual | **59 candidate** |
-| Recommended next packet | **Packet 6A, then Packet 6B (this dispatch); PHP-7/PHP-8 remain queued, not authorized** |
-| Next authorization | **PHP-6 (Packets 6A, 6B) AUTHORIZED by this dispatch. PHP-7, PHP-8, PHP-9 remain NOT_PREAUTHORIZED.** |
-| Autonomous window | **OPEN for PHP-6 (Packets 6A and 6B only), from canonical HEAD `e91c0ea8…` through complete PHP-6 closure. CLOSED for PHP-7 and later.** |
+| Recommended next packet | **Packet 6A, then Packet 6B; then evaluate the PHP-7 transition gate (§ corridor), then the PHP-8 transition gate** |
+| Next authorization | **PHP-6 (Packets 6A, 6B): UNCONDITIONALLY AUTHORIZED. PHP-7: CONDITIONALLY PREAUTHORIZED — enters automatically only if all of KEY 7.1–7.4 pass at PHP-6 terminal disposition. PHP-8: CONDITIONALLY PREAUTHORIZED — enters automatically only if all of KEY 8.1–8.4 pass at PHP-7 terminal disposition. PHP-9 remains NOT_PREAUTHORIZED.** |
+| Autonomous window | **OPEN for the full corridor (PHP-6 → PHP-7 gate → PHP-8 gate → terminal corridor report), from canonical HEAD `dd082926…`, subject to the transition gates and the global stop rule below. CLOSED beyond PHP-8 — PHP-9 is never auto-entered.** |
 | Human Proof | **NOT AUTHORIZED** |
 | `PRE_HUMAN_READY` | **NOT MET** |
 | `HUMAN_PROVEN_10_OF_10_CANDIDATE` | **NOT MET** |
@@ -61,10 +62,10 @@ Product severity resolves in PHP-0.
 | PHP-3 Canonical Test Classification and Manifest | Node 5 | **HISTORICAL TERMINAL DISPOSITION — NOT CURRENT DISPATCH AUTHORITY.** At PR #72, nine stale session-drill carriers were extracted to live canonical tests (candidate 23/59/59/0). PHP-4 subsequently closed in PR #76; PHP-3 is not reopened. |
 | PHP-4 Canonical Full-Lane CI Authority | Node 5 | **CLOSED — `PHP4_MANIFEST_DRIVEN_CANONICAL_AUTHORITY_CLOSED`; PR #76 merge `edee622eaf3cfdba2f8472b766ef8c4b5532d0ec`; Tier A + terminal Tier B positive authority, Tier C structural only** |
 | PHP-5 Premium Motion & Ceremony Completion | — | **CLOSED — PR #78 merge `71fda1d5be2dae3771599e8b674ab0d8229aa633`; publication PR #79 merge `e91c0ea8939ff2e3c8f8cc6b2ecdf71235da4e35`; Street Replay step reveal restored through the shared tokenized proof reveal; active guards cover all four canonical moments, reduced-motion bypass, rebuild stability, and CTA safety.** |
-| PHP-6 Sharky Production Integration & Completeness Proof | Node 6 | **AUTHORIZED — this dispatch. Packet 6A (reachability/continuity/reduced-motion) then Packet 6B (deterministic captures/fallback migration/release gate). No new art; SHK-CREST-01 stays active and unresolved.** |
-| PHP-7 Screen-Role & Visual-Hierarchy Emphasis Proof | — | NOT_PREAUTHORIZED — queued after PHP-6 closes |
-| PHP-8 Evidence & Accessibility Lane Completeness | — | NOT_PREAUTHORIZED — queued after PHP-6 closes |
-| PHP-9 `PRE_HUMAN_READY` Admission | — | NOT_PREAUTHORIZED |
+| PHP-6 Sharky Production Integration & Completeness Proof | Node 6, Corridor Wave A | **UNCONDITIONALLY AUTHORIZED. Packet 6A (reachability/continuity/reduced-motion) then Packet 6B (deterministic captures/fallback migration/release gate). No new art; SHK-CREST-01 stays active and unresolved. Terminal disposition must be one of `PHP6_CLOSED_INTEGRATED`, `PHP6_CLOSED_WITH_EXTERNAL_ASSET_INPUT_REQUIRED`, or `PHP6_BLOCKED_OWNER_DECISION`.** |
+| PHP-7 Screen-Role & Visual-Hierarchy Emphasis Proof | Node 6, Corridor Wave B | **CONDITIONALLY PREAUTHORIZED — auto-enters only if KEY 7.1–7.4 all pass (see Current dispatch boundaries). Packet 7A (bounded role/hierarchy census, classify `PHP7_EXECUTION_REQUIRED` / `PHP7_CLOSED_UNNECESSARY` / `PHP7_DEFERRED_OWNER_DECISION`); Packet 7B only if 7A proves a real gap.** |
+| PHP-8 Evidence & Accessibility Lane Completeness | Node 6, Corridor Wave C | **CONDITIONALLY PREAUTHORIZED — auto-enters only if KEY 8.1–8.4 all pass (see Current dispatch boundaries). Packet 8A (evidence/accessibility census, classify `PHP8_EXECUTION_REQUIRED` / `PHP8_CLOSED_UNNECESSARY` / `PHP8_DEFERRED_HUMAN_EVIDENCE`); Packet 8B only if 8A proves real gaps. Corridor ends after PHP-8's terminal disposition.** |
+| PHP-9 `PRE_HUMAN_READY` Admission | — | NOT_PREAUTHORIZED — never auto-entered by this corridor |
 
 PR targets: Node 5 ≈ **4–7**; full machine horizon ≈ **8–12**; **16 is a hard
 emergency ceiling, never a target.**
@@ -72,61 +73,156 @@ emergency ceiling, never a target.**
 ## Current dispatch boundaries
 
 Controlling plan: `docs/plan/MASTER_PLAN_v3.0.md`; packet-specific plan:
-`docs/plan/PRE_HUMAN_AND_HUMAN_PROVEN_CAMPAIGN_v1.md` (§4.2/§4.3 PHP-6; §7.5
-OD-03/OD-03b/OD-03c/OD-03d and SHK-CREST-01).
+`docs/plan/PRE_HUMAN_AND_HUMAN_PROVEN_CAMPAIGN_v1.md` (§4.2/§4.3 PHP-6/PHP-7/
+PHP-8; §7.5 OD-03/OD-03b/OD-03c/OD-03d and SHK-CREST-01).
 
-- **PHP-5 closure (historical):** PR #78 restored the Street Replay reveal
-  through the existing shared proof-reveal primitive and token vocabulary, and
-  promoted active guards for the Session Summary proof hero plus the Street
-  Replay moment. Focused motion tests, analyzer, fast loop, the PHP-4 canonical
-  lane, and required exact-head CI are green. The bounded runtime attempt
-  launched the exact candidate but Computer Use input failed
-  (`noWindowsAvailable`), so runtime motion evidence is R0 nonblocking tooling
-  evidence, not a passed visual assertion. PR #79 published PHP-5 closure to
-  `origin/main` at `e91c0ea8939ff2e3c8f8cc6b2ecdf71235da4e35`.
-- **Fresh dispatch: PHP-6 authorized.** Top-3 comparison (PHP-6 Sharky
-  Production Integration & Completeness Proof vs PHP-7 Screen-Role &
-  Visual-Hierarchy Emphasis Proof vs PHP-8 Evidence & Accessibility Lane
-  Completeness) selected **PHP-6** as Top-1: it is the only OD-03 mandatory
-  pre-Human block still open with a supplied (not exploratory) owner direction,
-  the current active-route code proves the learner-visible gap directly
-  (`act0SharkyCompanionAssetForMoodV1` returns one static fallback asset for
-  every Sharky mood — happy, repair, celebrate, thinking, neutral all render
-  visually identical art across Home, Learn, Review, Profile, and the lesson
-  runner), and the packet plan's own fit test (§4.3) scores it bounded — one
-  owner family, DoD free of any owner decision with art excluded, salvage
-  boundary clear. PHP-7 may close as a nonissue on its own first proof and
-  PHP-8 is evidence-tooling/reviewer-friction work; both wait behind PHP-6's
-  mandatory OD-03c block and neither is a prerequisite for it.
-- **PHP-6 decomposition (this dispatch):** split into **Packet 6A**
+### `ROLLING_CORRIDOR_PHP6_TO_PHP8_V1`
+
+This dispatch replaces the prior one-wave-at-a-time pattern (PHP-6 → closure →
+fresh dispatch → PHP-7 → closure → fresh dispatch → PHP-8) with one rolling
+corridor: **PHP-6 → transition gate → PHP-7 or `CLOSED_UNNECESSARY` →
+transition gate → PHP-8 or `CLOSED_UNNECESSARY` → one terminal corridor
+report.** The corridor does not blindly require all three implementation
+waves — PHP-7 and PHP-8 may each close as unnecessary on their own first proof
+without implementing anything.
+
+- **Wave A — PHP-6 Sharky Production Integration & Completeness Proof:**
+  **UNCONDITIONALLY AUTHORIZED.** Unchanged from PR #80: Packet 6A
   (state-reachability matrix across all six Sharky states and both growth
   stages, same-character continuity, 16dp/34dp small-size identity,
   reduced-motion proof, SHK-CREST-01 verification-only reconciliation — no new
-  art) and **Packet 6B** (the three recorded deterministic-capture gaps —
+  art) then Packet 6B (the three recorded deterministic-capture gaps —
   Developing, improve, milestone — fallback migration limited to rows with an
   existing production-ready asset, explicit `EXTERNAL_ASSET_INPUT_REQUIRED`
-  rows for the rest, regression/release-gate proof, and PHP-6 closure
-  publication). This matches the plan's documented salvage boundary ("the
-  reachability matrix is valuable without the captures; each capture and each
-  proof is independent") and stays within its 1–2 PR fit-test ceiling.
-- **SHK-CREST-01 disposition:** genuinely active, not stale — refined C's
-  small soft front crest clause and the approved
+  rows for the rest, regression/release-gate proof, PHP-6 closure). PHP-6 must
+  publish exactly one terminal outcome:
+  - **`PHP6_CLOSED_INTEGRATED`** — every in-scope reachable row has a
+    production-ready admitted asset, fallback migration is complete,
+    deterministic evidence is reproducible, continuity/small-size identity are
+    proven, no unresolved external-asset input affects an in-scope state.
+  - **`PHP6_CLOSED_WITH_EXTERNAL_ASSET_INPUT_REQUIRED`** — integration,
+    reachability, and proof are complete for all existing admitted assets, but
+    one or more in-scope rows lack production-ready admitted art; no fake or
+    generated replacement is introduced; every missing row and the exact
+    remaining learner-visible limitation is stated explicitly. Valid, bounded,
+    and must never be described as full Sharky visual completeness.
+  - **`PHP6_BLOCKED_OWNER_DECISION`** — only when SHK-CREST-01 or another
+    active visual-authority conflict becomes decision-controlling for work
+    PHP-6 actually requires, with no art-independent completion path
+    remaining. Not used merely because an asset is absent.
+
+- **Wave B — PHP-7 Screen-Role & Visual-Hierarchy Emphasis Proof:**
+  **CONDITIONALLY PREAUTHORIZED.** Auto-enters only when all four transition
+  keys pass at PHP-6's terminal disposition:
+  - **KEY 7.1 PHP-6 terminal:** PHP-6 closed as `PHP6_CLOSED_INTEGRATED` or
+    `PHP6_CLOSED_WITH_EXTERNAL_ASSET_INPUT_REQUIRED`.
+  - **KEY 7.2 authority stable:** this corridor dispatch is still first-read
+    authority on `origin/main`; no external merge changed Master Plan,
+    campaign state, PHP-7 authority, or Modern Table policy (unrelated source
+    merges may be rebased past if they don't alter authority).
+  - **KEY 7.3 no global R3:** no owner decision blocks all PHP-7 work
+    (SHK-CREST-01 may remain deferred if PHP-7 needs no crest-dependent art).
+  - **KEY 7.4 PHP-7 gap census:** a bounded first proof against PHP-7's exact
+    contract (§4.2/§4.3) classifies it as `PHP7_EXECUTION_REQUIRED` (a
+    reproducible learner-visible screen-role/hierarchy gap exists in the
+    authorized owner family), `PHP7_CLOSED_UNNECESSARY` (current main already
+    satisfies PHP-7's DoD — no cosmetic work invented to avoid this), or
+    `PHP7_DEFERRED_OWNER_DECISION` (a true owner decision blocks PHP-7 while
+    PHP-8 stays independent).
+  Decomposition: **Packet 7A** (census the exact PHP-7 surfaces, prove
+  role/hierarchy/CTA/compact-phone truth, classify) and **Packet 7B**
+  (bounded repair only if 7A proves a real gap — minimum owner cone, active
+  guards, deterministic evidence, analyzer, canonical lane, release gate,
+  terminal disposition). One PR if proof and bounded repair share one owner
+  cone. Constraints: one bounded owner family, distinct screen roles, one
+  dominant action per surface, no broad redesign, no Modern Table changes, no
+  reopening closed surfaces without reproducible evidence, no mascot
+  saturation, no new visual system, no decorative polish for its own sake.
+
+- **Wave C — PHP-8 Evidence & Accessibility Lane Completeness:**
+  **CONDITIONALLY PREAUTHORIZED.** Auto-enters only when all four transition
+  keys pass at PHP-7's terminal disposition:
+  - **KEY 8.1 prior terminal:** PHP-6 is terminal and PHP-7 is
+    `PHP7_CLOSED_PROVEN`, `PHP7_CLOSED_UNNECESSARY`, or
+    `PHP7_DEFERRED_OWNER_DECISION` only if PHP-8 is demonstrably independent.
+  - **KEY 8.2 authority stable:** the corridor remains current authority; no
+    new merge changes the route; Human remains NOT AUTHORIZED; Modern Table
+    remains Maintenance Mode.
+  - **KEY 8.3 no global R3:** no unresolved decision blocks every remaining
+    PHP-8 owner family.
+  - **KEY 8.4 evidence/accessibility gap census:** a bounded census against
+    PHP-8's exact contract (§4.2/§4.3) classifies it as
+    `PHP8_EXECUTION_REQUIRED` (a real evidence-lane or accessibility gap
+    affects supported-phone acceptance, external review confidence, or
+    current learner access — never tests-for-tests), `PHP8_CLOSED_UNNECESSARY`
+    (all PHP-8 DoD rows already satisfied), or `PHP8_DEFERRED_HUMAN_EVIDENCE`
+    (deterministic work complete but one Human-only assertion remains).
+  Decomposition: **Packet 8A** (enumerate exact DoD rows, map each to current
+  evidence, classify real gaps vs. already-proven rows, select only causal
+  work) and **Packet 8B** (bounded closure only if 8A proves real gaps —
+  repair, updated active evidence, deterministic supported-phone proof,
+  canonical lane, release gate, terminal disposition). Constraints: supported
+  phones only (compact/tall/large; tablet stays deferred/nonblocking unless
+  current authority says otherwise), accessibility work must map to a real
+  user/reviewer failure mode, evidence tooling reuses existing infrastructure,
+  no new screenshot system, no meta-tests, no broad semantics refactor, no
+  Modern Table work without concrete regression, no Human Novice Proof
+  execution. The corridor ends after PHP-8's terminal disposition.
+
+- **Four available actions per wave:** **EXECUTE** (real authorized gap —
+  implement, validate, merge), **CLOSE_UNNECESSARY** (fresh evidence proves
+  the full packet DoD already satisfied — publish evidence, continue),
+  **REPAIR_AND_CONTINUE** (an R0/R1/R2 problem — repair automatically,
+  continue), **DEFER_AND_CONTINUE** (a true local owner/Human decision blocks
+  one wave while the next is independent — record the deferred item,
+  continue). No fifth action returning an ordinary intermediate status to the
+  operator is authorized.
+
+- **Global stop rule:** return before corridor completion only when **both**
+  hold: (1) a genuine R3 conflict exists — incompatible active SSOT, a
+  product/visual owner decision required, unauthorized architecture/
+  dependency, Human evidence that is decision-controlling, or a Modern Table
+  boundary violation; **and** (2) that conflict blocks every remaining
+  independent wave in the corridor. A blocker local to PHP-6 does not
+  automatically block PHP-7; a blocker local to PHP-7 does not automatically
+  block PHP-8.
+
+- **External asset input policy:** no new Sharky art is authorized anywhere in
+  this corridor. When a required production-ready asset is absent: do not
+  generate or fake it; record `EXTERNAL_ASSET_INPUT_REQUIRED`; identify the
+  exact state/size/surface affected and whether the limitation blocks only
+  visual completeness or blocks functional integration; continue to
+  independent work. Claude Design is not invoked during corridor execution; a
+  bounded Claude Design asset-production mission may be recommended only in
+  the terminal corridor macro report, and only if it is then the highest-EV
+  remaining block.
+
+- **Publication policy:** one active implementation PR at a time; implement/
+  verify a coherent packet, merge, reconcile its exact merge SHA in the next
+  packet's first authority update, continue — avoid a standalone docs-only
+  closure PR after every packet. A standalone closure PR is justified only
+  when the next transition cannot legally begin without it, a packet closes
+  as unnecessary/deferred with no product PR, or the entire corridor is
+  terminal. After PHP-8's terminal disposition, publish one terminal corridor
+  closure with all exact merge SHAs and dispositions.
+
+- **SHK-CREST-01 disposition (unchanged):** genuinely active, not stale —
+  refined C's small soft front crest clause and the approved
   `sharky_canonical_character_package_v1_1` no-crest rank-1 authority remain in
-  direct, unresolved contradiction (OD-03d). It is **not** resolved by this
-  dispatch and the owner is **not** asked the same question again, because
-  PHP-6 as authorized here generates no new art and touches no crest-dependent
-  asset — the one packet SHK-CREST-01 could block is out of scope for this
-  wave by the packets' own DoD.
-- **Claude Design subtask:** **NOT authorized.** The canonical visual lock is
-  supplied and PHP-6's DoD is integration-only; no fresh evidence in this
-  dispatch shows a production-ready canonical asset is missing for any
-  in-scope row (absent-asset rows are recorded, not faked, per VIS-DEC-03 /
-  SHK-ASSET-01).
-- **Boundaries preserved:** Human Novice Proof remains **NOT AUTHORIZED**;
-  Modern Table remains in permanent Maintenance Mode and is not touched by
-  PHP-6; PHP-7 and PHP-8 remain queued and **NOT_PREAUTHORIZED**; PHP-9 remains
-  NOT_PREAUTHORIZED; no monetization, redesign, AI/persona, or dashboard/XP/
-  economy scope is opened by this dispatch.
+  direct, unresolved contradiction (OD-03d). Not resolved by this dispatch;
+  the owner is not asked the same question again, because no wave in this
+  corridor generates new art.
+
+- **Claude Design subtask:** **NOT authorized** for corridor execution. The
+  canonical visual lock is supplied and all three waves are integration/proof
+  only; no fresh evidence shows a production-ready canonical asset is missing
+  for any in-scope row (absent-asset rows are recorded, not faked).
+
+- **Boundaries preserved throughout the corridor:** Human Novice Proof remains
+  **NOT AUTHORIZED**; Modern Table remains in permanent Maintenance Mode and
+  is not touched by any wave; PHP-9 remains **NOT_PREAUTHORIZED** and is never
+  auto-entered by this corridor; no monetization, redesign, AI/persona, or
+  dashboard/XP/economy scope is opened.
 
 ## Update rule
 

@@ -7,6 +7,30 @@ Campaign baseline: `52034abb6f614b907b2d9277eeca5e1f642b92f9` (`main` == `origin
 Authoring agent: Claude Code (planning + targeted verification only)
 Human Novice Proof: **NOT PERFORMED**
 
+## Current execution correction — 2026-07-27 (post-PR #80, PHP-6→PHP-8 rolling corridor)
+
+PR #80 merged as `dd082926221b1e08f76e5de62db7803904af676e` and publishes the
+fresh PHP-6 dispatch (below). This correction extends that single-wave
+dispatch into **`ROLLING_CORRIDOR_PHP6_TO_PHP8_V1`** so PHP-6, PHP-7, and
+PHP-8 can move through governance without a fresh dispatch chat between each:
+PHP-6 → transition gate → PHP-7 or `CLOSED_UNNECESSARY` → transition gate →
+PHP-8 or `CLOSED_UNNECESSARY` → one terminal corridor report. PHP-6 remains
+**unconditionally authorized** exactly as PR #80 defined it (§4.2/§4.3, lines
+430–443), with a required terminal disposition of one of
+`PHP6_CLOSED_INTEGRATED`, `PHP6_CLOSED_WITH_EXTERNAL_ASSET_INPUT_REQUIRED`, or
+`PHP6_BLOCKED_OWNER_DECISION`. PHP-7 (§4.2/§4.3, lines 445–452) and PHP-8
+(§4.2/§4.3, lines 454–461) become **conditionally preauthorized**: each
+auto-enters only after its predecessor reaches a valid terminal disposition
+and its own four transition keys (prior-terminal, authority-stable, no-global-
+R3, gap-census) all pass — see `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`
+for the exact gate text, which is the operative authority. This does **not**
+reopen the Top-3 EV selection already performed for PHP-6, does not authorize
+new Sharky art in any wave, and does not admit PHP-9 — PHP-9 is never
+auto-entered by this corridor regardless of how PHP-6/7/8 close. For
+first-read dispatch use `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`; this
+document remains the packet-specific plan and the PHP-6/PHP-7/PHP-8 DoD text
+already in §4.2/§4.3 is unchanged — only its authorization state changes.
+
 ## Current execution correction — 2026-07-27 (post-PR #79, fresh PHP-6 dispatch)
 
 PR #79 merged as `e91c0ea8939ff2e3c8f8cc6b2ecdf71235da4e35` and publishes PHP-5
