@@ -188,6 +188,16 @@ Do not use the readiness reference as the default bottleneck selector for day-to
   Node 5 — Canonical Guard-Lane Truth Restoration (audit §14); Premium Motion &
   Ceremony Completion follows it. Human Novice Proof remains NOT PERFORMED and
   downstream.
+- Current execution correction (2026-07-27, post-PR #76 merge
+  `edee622eaf3cfdba2f8472b766ef8c4b5532d0ec`):
+  **`PHP4_MANIFEST_DRIVEN_CANONICAL_AUTHORITY_CLOSED` closes Pre-Human Node 5.**
+  **ROUTE_A** is active: the exact next authorized packet is **PHP-5 Premium
+  Motion & Ceremony Completion**. AI Personalization Layer v1 is completed;
+  Waves 3.10–3.15 are historical route evidence, not separately active current
+  work (the Wave 3.10 remainder is owned by PHP-5). Human Novice Proof remains
+  NOT AUTHORIZED and Modern Table remains in Maintenance Mode. The campaign
+  state is the single first-read dispatch authority:
+  `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`.
 
 ## Product 100
 
@@ -597,7 +607,7 @@ Wave 3.9.2 adds implementation control for this route:
 - Store/Public Readiness remains delayed until the matrix rows for Waves
   3.10-3.15 are closed or explicitly blocked.
 
-Freshness correction (2026-07-25, Final Deep Independent Audit at `4563ce2d`):
+Historical route correction (2026-07-25, Final Deep Independent Audit at `4563ce2d`):
 Waves 3.10-3.15 below are **no longer deferred — all six landed on 2026-06-27**,
 before Alpha learning-loop admission (2026-07-13). Five are `CLOSED_PROVEN` with
 implementation verified in production source at head; Wave 3.10 Premium Motion
@@ -646,7 +656,8 @@ Why this order:
 - Commercial screenshot, store, public readiness, and challenger gates should
   follow the excellence packet, not substitute for it.
 
-Immediate execution rule:
+Historical immediate execution rule (superseded for current packet dispatch by
+the 2026-07-27 post-PR-76 correction above):
 
 1. Treat Waves 1 and 2.1-2.4 as closed unless concrete evidence reopens one
    exact owner family.

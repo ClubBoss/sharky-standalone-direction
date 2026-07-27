@@ -1,6 +1,7 @@
 # Pre-Human Campaign State v1
 
-Status: ACTIVE campaign state — **first read** for any campaign session.
+Status: ACTIVE campaign state — **single first-read dispatch authority** for any
+campaign session.
 
 Compact machine-readable campaign state. **One screen only.** Full plan:
 `docs/plan/PRE_HUMAN_AND_HUMAN_PROVEN_CAMPAIGN_v1.md`. Do not duplicate the plan
@@ -8,12 +9,13 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical HEAD | `d4fe9d30ee4206b3830f9904c6d891d41c354b7b` |
+| Canonical HEAD | `edee622eaf3cfdba2f8472b766ef8c4b5532d0ec` |
+| Authority freshness | 2026-07-27 — post-PR #76 reconciliation |
 | Campaign version | v1 |
-| Umbrella stage | **Pre-Human Node 5 — Canonical Contract and Test Authority Restoration** |
-| Active sub-packet | **PHP-3 Tier-B assertion closure — manifest disposition wave** |
-| Status | **ACTIVE — PR #74 merged; PHP-4 is AUTHORIZED_AFTER_TERMINAL_TIER_B_GREEN under manifest-driven canonical authority** |
-| Latest admitted PR | **#74** |
+| Umbrella stage | **Pre-Human Node 5 — Canonical Contract and Test Authority Restoration — CLOSED** |
+| Active sub-packet | **None — PHP-4 closed Node 5** |
+| Status | **PHP4_MANIFEST_DRIVEN_CANONICAL_AUTHORITY_CLOSED — PR #76 merged** |
+| Latest admitted PR | **#76** |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **PARTIALLY CLOSED IN PHP-3** — six PHP-3-owned unique current guards are current-contract reconciled and Tier-B ledgered; four differently owned unresolved-unique files remain. |
 | F-18 | **STALE_TEST** — exact pre-F-16-to-head trail disproves PR #51/#52 causation; owner is compact-decision test fixture / retired teaching-step assertion |
@@ -24,14 +26,17 @@ here; update only the fields below.
 | PHP-3 admitted carriers | **23 candidate** |
 | PHP-3 unresolved carriers | **59 candidate** |
 | PHP-3 nine-path residual | **59 candidate** |
-| Recommended next packet | **Conditional PHP-4 candidate** — only after Wave-2 deterministic, independent review, and exact-head CI admission; Human remains unauthorized. |
-| Next authorization | **ACTIVE** — terminal Tier-B closure, then PHP-4; Human remains unauthorized |
-| Autonomous window | **One Wave-2 extraction PR; PHP-4 only on exact gate admission** |
+| Recommended next packet | **PHP-5 Premium Motion & Ceremony Completion** |
+| Next authorization | **ACTIVE — PHP-5 Premium Motion & Ceremony Completion** |
+| Autonomous window | **PHP-5 only; do not begin PHP-6 or later packets** |
 | Human Proof | **NOT AUTHORIZED** |
 | `PRE_HUMAN_READY` | **NOT MET** |
 | `HUMAN_PROVEN_10_OF_10_CANDIDATE` | **NOT MET** |
 
-## Open canonical severity counts (at `52034abb`)
+## Historical canonical severity snapshot (at `52034abb`)
+
+**HISTORICAL SNAPSHOT — NOT CURRENT DISPATCH AUTHORITY.** These preserved
+severity counts are not recalculated here and do not alter the PHP-5 dispatch.
 
 | Severity | Count | IDs |
 | --- | ---: | --- |
@@ -52,9 +57,9 @@ Product severity resolves in PHP-0.
 | PHP-0 Canonical-Adjacent Red-Guard Triage | Node 5 | **CLOSED_CLASSIFIED** |
 | PHP-1 Stale Contract Repair + F-16 Non-Weakening Verification | Node 5 | **CLOSED_NON_WEAKENING** |
 | PHP-2 Legacy Corpus Ownership Disposition | Node 5 | **CLOSED_DISPOSED_WITH_PHP3_HANDOFFS — retired 68; handoffs 77; eligible residual 0; unexplained 0** |
-| PHP-3 Canonical Test Classification and Manifest | Node 5 | **WAVE-2 CURRENT-OWNER CANDIDATE — PR #72 admitted F-17 repair; nine stale session-drill carriers extracted to live canonical tests, candidate 23/59/59/0; PHP-4 and Human remain unauthorized pending gates** |
-| PHP-4 Canonical Full-Lane CI Authority | Node 5 | **AUTHORIZED_AFTER_TERMINAL_TIER_B_GREEN — Tier A + terminal Tier B positive authority; Tier C structural only** |
-| PHP-5 Premium Motion & Ceremony Completion | — | NOT_PREAUTHORIZED |
+| PHP-3 Canonical Test Classification and Manifest | Node 5 | **HISTORICAL TERMINAL DISPOSITION — NOT CURRENT DISPATCH AUTHORITY.** At PR #72, nine stale session-drill carriers were extracted to live canonical tests (candidate 23/59/59/0). PHP-4 subsequently closed in PR #76; PHP-3 is not reopened. |
+| PHP-4 Canonical Full-Lane CI Authority | Node 5 | **CLOSED — `PHP4_MANIFEST_DRIVEN_CANONICAL_AUTHORITY_CLOSED`; PR #76 merge `edee622eaf3cfdba2f8472b766ef8c4b5532d0ec`; Tier A + terminal Tier B positive authority, Tier C structural only** |
+| PHP-5 Premium Motion & Ceremony Completion | — | **NEXT_AUTHORIZED_PACKET** |
 | PHP-6 Sharky Production Integration & Completeness Proof | — | NOT_PREAUTHORIZED |
 | PHP-7 Screen-Role & Visual-Hierarchy Emphasis Proof | — | NOT_PREAUTHORIZED |
 | PHP-8 Evidence & Accessibility Lane Completeness | — | NOT_PREAUTHORIZED |
@@ -62,6 +67,25 @@ Product severity resolves in PHP-0.
 
 PR targets: Node 5 ≈ **4–7**; full machine horizon ≈ **8–12**; **16 is a hard
 emergency ceiling, never a target.**
+
+## Current dispatch boundaries
+
+Controlling plan: `docs/plan/MASTER_PLAN_v3.0.md`; packet-specific plan:
+`docs/plan/PRE_HUMAN_AND_HUMAN_PROVEN_CAMPAIGN_v1.md` (§4.1 and PHP-5).
+
+- **ROUTE_A:** PHP-4 closed Pre-Human Node 5. The exact next authorized packet
+  is **PHP-5 Premium Motion & Ceremony Completion**.
+- **Forbidden in the PHP-5 dispatch:** Human Novice Proof (still **NOT
+  AUTHORIZED**); Modern Table work (permanent Maintenance Mode); PHP-6 through
+  PHP-9; AI Personalization work; Waves 3.10–3.15 as independently active
+  waves; and any product/runtime change in this governance PR.
+- The older `AI Personalization Layer v1 — ACTIVE` declarations and standalone
+  current-wave framing for Waves 3.10–3.15 are historical/superseded. AI
+  Personalization Layer v1 is **COMPLETED**; Waves 3.10–3.15 are historical
+  route evidence, with the Wave 3.10 remainder owned by PHP-5.
+- Terminal conditions for PHP-5 are the packet plan's existing motion,
+  reduced-motion, tap-safety, active-guard, and PHP-4-lane requirements. This
+  state file authorizes dispatch only; it does not alter that packet DoD.
 
 ## Update rule
 

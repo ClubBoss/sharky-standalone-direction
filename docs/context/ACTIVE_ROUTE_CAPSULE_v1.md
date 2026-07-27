@@ -2,6 +2,25 @@
 
 Status: ACTIVE POST-MERGE EXECUTION CAPSULE.
 
+## Supersession — 2026-07-27 (post-PR #76)
+
+`docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` is the **single first-read
+dispatch authority** while this campaign is active. It records the canonical
+post-PR-76 head, the closed Node-5 verdict, and the exact next authorized
+packet. This capsule remains supporting route detail only.
+
+PHP-4 closed Pre-Human Node 5 under
+`PHP4_MANIFEST_DRIVEN_CANONICAL_AUTHORITY_CLOSED`. The exact next authorized
+packet is **PHP-5 Premium Motion & Ceremony Completion**. Human Novice Proof
+remains **NOT AUTHORIZED**; Modern Table remains in permanent Maintenance Mode.
+No product/runtime work is authorized by this reconciliation.
+
+The earlier `AI Personalization Layer v1 — ACTIVE` declarations and the
+standalone-current framing of Waves 3.10–3.15 below are historical/superseded:
+AI Personalization Layer v1 is completed, Waves 3.10–3.15 are retained as
+historical route evidence, and the Wave 3.10 remainder is scoped through
+PHP-5 rather than as an independent active wave.
+
 ## Current-execution freshness note — 2026-07-25 (campaign publication)
 
 Exact-head remeasurement at `52034abb` **decomposed Pre-Human Node 5 into

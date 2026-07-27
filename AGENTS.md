@@ -3,8 +3,10 @@
 ## Quick Orientation
 
 **State file first.** Read `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` before
-anything else while a campaign is active: it carries canonical HEAD, umbrella
-stage, active packet, finding statuses, and what is authorized. It is one screen.
+anything else while a campaign is active. It is the single first-read dispatch
+authority: it carries canonical HEAD, umbrella stage, active packet, exact next
+authorized packet, finding statuses, forbidden scope, and terminal conditions.
+It is one screen.
 Escalate to the documents below **only** when the task needs authority the state
 file does not carry, or when its facts conflict with live source/tests — then
 report the conflict. Do not read the full authority stack "for context".
