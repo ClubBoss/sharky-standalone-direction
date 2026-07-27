@@ -34,7 +34,7 @@ void main() {
     expect(
       content,
       contains(
-        '`test/ui_v2/session_drill_player_board_texture_contract_test.dart`',
+        '`test/ui_v2/runner/canonical_session_drill_position_thinking_contract_test.dart`',
       ),
     );
     expect(
