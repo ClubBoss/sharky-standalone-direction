@@ -360,3 +360,43 @@ curriculum source changes are made.
 Wave-2 candidate arithmetic is admitted `23`, unresolved `59`, residual `59`,
 unexplained `0`, for the unchanged owned population of `83`. PHP-4 remains
 conditional on this candidate's complete deterministic, review, and CI gates.
+
+## 24. PHP-3 terminal Tier-B archive-import blocker disposition
+
+Starting canonical baseline: PR #73 merge `633c9e2220a2b02c60020ff43a0aa16da857839c`.
+
+The four remaining Tier-B compile blockers are retired to Tier D as
+`ARCHIVED_NONCANONICAL_TEST_RETIRED`. They exercise dormant Modern Table,
+deleted session-drill screen, or legacy result-screen owners, while the current
+Act0/session-drill authority already owns the retained behavior. No production,
+Modern Table, visual-system, or curriculum source changes are made.
+
+| Retired original | Prior owner | Current owner | Current authority already covering the contract | Disposition | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| `test/ui_v2/modern_table_entry_test.dart` | archive-only `ModernTableScreenV1` | Act0 route | Modern Table is maintenance-mode, not active authority | `ARCHIVED_NONCANONICAL_TEST_RETIRED` | archived import loads, then 21 legacy-surface assertions fail; no active importer |
+| `test/ui_v2/session_drill_player_bet_sizing_contract_test.dart` | deleted session-drill screen and Modern Table | canonical session-drill route | current `DrillRuntimeAdapterV1` content contracts | `ARCHIVED_NONCANONICAL_TEST_RETIRED` | deleted screen imports prevent loading; canonical route owns active decision/feedback semantics |
+| `test/ui_v2/session_drill_player_board_texture_contract_test.dart` | deleted session-drill screen and Modern Table | canonical session-drill spatial projection | corrective-feedback contracts | `ARCHIVED_NONCANONICAL_TEST_RETIRED` | deleted screen imports prevent loading; legacy table widget assertions are not active-route authority |
+| `test/ui_v2/session_result_screen_contract_test.dart` | legacy result/runner and deleted session-drill owners | Act0 session-summary | canonical runner continuation contracts | `ARCHIVED_NONCANONICAL_TEST_RETIRED` | deleted screen and runner imports prevent loading; legacy result surface is outside the Act0 boundary |
+
+After the four supplied dispositions, arithmetic is admitted `23`, unresolved
+`55`, residual `55`, non-admission archival retirements `5`, unexplained `0`,
+population `83`.
+The complete Tier-B manifest has no archive/reference-only owner imports and
+is eligible for the PHP-4 entry-gate validation.
+
+## 25. PHP-3 terminal compile-census reconciliation
+
+The complete Tier-B invocation also exposed four non-supplied compile-failing
+carriers. Each is an obsolete map or legacy World-1 runner test, and each is
+retired to Tier D as `ARCHIVED_NONCANONICAL_TEST_RETIRED`; no new carrier is
+admitted and no product owner changes.
+
+| Retired original | Prior owner | Current owner | Current authority | Disposition | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| `test/ui_v2/runner/canonical_terminal_world1_runtime_config_v1_test.dart` | deleted World-1 runner types | canonical terminal host | canonical terminal runtime-config guards | `ARCHIVED_NONCANONICAL_TEST_RETIRED` | missing deleted types prevent compilation |
+| `test/ui_v2/world1_foundations_runner_route_v1_test.dart` | deleted World-1 runner screen | canonical World-1 host route | `canonical_world1_host_route_contract_v1_test.dart` | `ARCHIVED_NONCANONICAL_TEST_RETIRED` | missing deleted types prevent compilation |
+| `test/ui_v2/ui_v2_accessibility_touch_contract_test.dart` | deleted progress map | Act0 shell/settings owners | active Act0 accessibility and shell guards | `ARCHIVED_NONCANONICAL_TEST_RETIRED` | missing map import prevents compilation |
+| `test/ui_v2_smoke_test.dart` | deleted progress map | Act0 shell and current module surfaces | active app-root/shell smoke guards | `ARCHIVED_NONCANONICAL_TEST_RETIRED` | missing map import prevents compilation |
+
+Terminal PHP-3 arithmetic is admitted `23`, unresolved `51`, residual `51`,
+non-admission archival retirements `9`, unexplained `0`, population `83`.
