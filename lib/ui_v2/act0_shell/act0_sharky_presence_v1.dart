@@ -613,14 +613,25 @@ class Act0SharkyPresenceMascotV1 extends StatefulWidget {
 
 class _Act0SharkyPresenceMascotV1State extends State<Act0SharkyPresenceMascotV1>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 2400),
-  )..forward();
+  AnimationController? _controller;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (MediaQuery.of(context).disableAnimations) {
+      _controller?.dispose();
+      _controller = null;
+      return;
+    }
+    _controller ??= AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2400),
+    )..forward();
+  }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -633,14 +644,46 @@ class _Act0SharkyPresenceMascotV1State extends State<Act0SharkyPresenceMascotV1>
       Act0SharkyMoodV1.thinking => (scale: 0.018, tilt: 0.025, lift: 1.5),
       Act0SharkyMoodV1.neutral => (scale: 0.014, tilt: 0.0, lift: 1.2),
     };
+    final mascotImage = Image.asset(
+      act0SharkyCompanionAssetForMoodV1(widget.mood),
+      key: Key('act0_shell_sharky_presence_mascot_${widget.mood.name}'),
+      fit: BoxFit.contain,
+      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+        if (wasSynchronouslyLoaded || frame != null) {
+          return child;
+        }
+        return _SharkyMascotAssetFallbackV1(
+          mood: widget.mood,
+          tone: widget.tone,
+          size: widget.size,
+        );
+      },
+      errorBuilder: (context, error, stackTrace) {
+        return _SharkyMascotAssetFallbackV1(
+          mood: widget.mood,
+          tone: widget.tone,
+          size: widget.size,
+        );
+      },
+    );
+    if (MediaQuery.of(context).disableAnimations) {
+      return SizedBox(
+        key: const Key('act0_shell_sharky_presence_mascot'),
+        width: widget.size,
+        height: widget.size,
+        child: mascotImage,
+      );
+    }
+    final controller = _controller!;
     return SizedBox(
       key: const Key('act0_shell_sharky_presence_mascot'),
       width: widget.size,
       height: widget.size,
       child: AnimatedBuilder(
-        animation: _controller,
+        key: const Key('act0_shell_sharky_presence_motion'),
+        animation: controller,
         builder: (context, child) {
-          final t = _act0SharkyPresencePhaseV1(_controller.value);
+          final t = _act0SharkyPresencePhaseV1(controller.value);
           final centered = ((t - 0.5) * 2).clamp(-1.0, 1.0);
           return Transform.translate(
             offset: Offset(0, -motion.lift * t),
@@ -653,28 +696,7 @@ class _Act0SharkyPresenceMascotV1State extends State<Act0SharkyPresenceMascotV1>
             ),
           );
         },
-        child: Image.asset(
-          act0SharkyCompanionAssetForMoodV1(widget.mood),
-          key: Key('act0_shell_sharky_presence_mascot_${widget.mood.name}'),
-          fit: BoxFit.contain,
-          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-            if (wasSynchronouslyLoaded || frame != null) {
-              return child;
-            }
-            return _SharkyMascotAssetFallbackV1(
-              mood: widget.mood,
-              tone: widget.tone,
-              size: widget.size,
-            );
-          },
-          errorBuilder: (context, error, stackTrace) {
-            return _SharkyMascotAssetFallbackV1(
-              mood: widget.mood,
-              tone: widget.tone,
-              size: widget.size,
-            );
-          },
-        ),
+        child: mascotImage,
       ),
     );
   }

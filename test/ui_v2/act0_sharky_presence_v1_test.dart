@@ -175,9 +175,7 @@ void main() {
               state == Act0SharkyCompanionStateV1.improve ||
               state == Act0SharkyCompanionStateV1.milestone;
           expect(
-            find.byKey(
-              const Key('act0_shell_sharky_mascot_frame_accent_ring'),
-            ),
+            find.byKey(const Key('act0_shell_sharky_mascot_frame_accent_ring')),
             expectRing ? findsOneWidget : findsNothing,
             reason: 'state $state ring mismatch',
           );
@@ -185,16 +183,49 @@ void main() {
       },
     );
 
-    testWidgets('every state resolves to an existing approved mood asset', (
-      tester,
-    ) async {
-      for (final state in Act0SharkyCompanionStateV1.values) {
-        final mood = act0SharkyMoodForCompanionStateV1(state);
-        expect(
-          act0SharkyCompanionAssetForMoodV1(mood),
-          startsWith('assets/images/mascot/sharky_'),
-        );
-      }
-    });
+    testWidgets(
+      'every state resolves to the declared admitted fallback asset',
+      (tester) async {
+        for (final state in Act0SharkyCompanionStateV1.values) {
+          final mood = act0SharkyMoodForCompanionStateV1(state);
+          expect(
+            act0SharkyCompanionAssetForMoodV1(mood),
+            'assets/images/mascot/sharky_neutral_fallback_v1.png',
+          );
+        }
+      },
+    );
+
+    testWidgets(
+      'reduced motion keeps every Sharky mood visible without a motion builder',
+      (tester) async {
+        for (final mood in Act0SharkyMoodV1.values) {
+          await tester.pumpWidget(
+            MediaQuery(
+              data: const MediaQueryData(disableAnimations: true),
+              child: MaterialApp(
+                home: Scaffold(
+                  body: Act0SharkyPresenceMascotV1(
+                    mood: mood,
+                    tone: act0SharkyToneForMoodV1(mood),
+                  ),
+                ),
+              ),
+            ),
+          );
+          await tester.pump();
+
+          expect(
+            find.byKey(Key('act0_shell_sharky_presence_mascot_${mood.name}')),
+            findsOneWidget,
+          );
+          expect(
+            find.byKey(const Key('act0_shell_sharky_presence_motion')),
+            findsNothing,
+          );
+          expect(tester.takeException(), isNull);
+        }
+      },
+    );
   });
 }

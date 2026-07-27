@@ -74,6 +74,11 @@ SURFACE_GROUPS = {
     "profile_evidence_fast": (
         ("profile_evidence", "Profile evidence signal"),
     ),
+    "sharky_evidence_fast": (
+        ("developing", "Developing growth treatment"),
+        ("improve", "Improvement state"),
+        ("milestone", "Milestone state"),
+    ),
     "full_scroll_fast": (
         ("home.scroll_01_top", "Home - top"),
         ("home.scroll_02_mid", "Home - middle"),
@@ -161,7 +166,7 @@ MUTED = (142, 159, 181)
 def main(argv: list[str]) -> int:
     if len(argv) not in (2, 3, 4) or argv[1] != "current":
         print(
-            "Usage: ./tools/package_screen_review_v1.sh current [core|core_fast|runner_fast|first_week_fast|day2_return_fast|profile_evidence_fast|full_scroll_fast] [capture_dir]",
+            "Usage: ./tools/package_screen_review_v1.sh current [core|core_fast|runner_fast|first_week_fast|day2_return_fast|profile_evidence_fast|sharky_evidence_fast|full_scroll_fast] [capture_dir]",
             file=sys.stderr,
         )
         return 64
@@ -394,6 +399,8 @@ def _source_command(group: str) -> str:
         return "./tools/screen_review_fast_v1.sh day2_return compact"
     if group == "profile_evidence_fast":
         return "./tools/screen_review_fast_v1.sh profile_evidence compact"
+    if group == "sharky_evidence_fast":
+        return "./tools/screen_review_fast_v1.sh sharky_evidence compact"
     if group == "full_scroll_fast":
         return "./tools/screen_review_fast_v1.sh full_scroll compact"
     if group == "route_w7_w12_fast":
@@ -409,6 +416,8 @@ def _scenario_family(group: str) -> str:
         return "late_route_w7_w12_visual_coverage"
     if group == "active_route_w7_w12_fast":
         return "active_runtime_late_route_w7_w12_visual_coverage"
+    if group == "sharky_evidence_fast":
+        return "sharky_component_deterministic_evidence"
     return "act0_fast_screen_review"
 
 
