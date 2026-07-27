@@ -9,15 +9,15 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical HEAD | `1da7d34833fc3254fa7ece6ba3ecd77b5cfc8d6b` (Wave V2 product/evidence PR #92 merge; terminal publication pending) |
-| Authority freshness | 2026-07-28 — Wave V1 is terminal; Wave V2 has a fresh dispatch at this exact baseline. |
+| Canonical HEAD | `20b7cc8d58f4ea9f9593adbbb37ed4757f358ed6` (Wave V2 terminal publication, PR #93) — reconciled by `PRE_HUMAN_ACTIVE_ROUTE_VISUAL_REALITY_AND_CORRIDOR_v1.md`, merge SHA recorded at that PR's merge. |
+| Authority freshness | Reconciled by `docs/plan/PRE_HUMAN_ACTIVE_ROUTE_VISUAL_REALITY_AND_CORRIDOR_v1.md` — Wave V2 is terminal (not "fresh dispatch pending"); Wave A (lesson-runner composition foundation) is the next authorized capability. |
 | Campaign version | v1 |
 | Corridor | **`ROLLING_CORRIDOR_PHP6_TO_PHP8_V1`** — **CLOSED/HISTORICAL.** PHP-6, PHP-7, and PHP-8 are terminally closed and published (PR #85). The corridor is not reopened; its wave-by-wave authorization language below is historical record only. PHP-9 remains `NOT_PREAUTHORIZED`. |
-| Umbrella stage | **Pre-Human Node 6 — Wave V2 terminal (`V2_MODEL_3_NARROW_GRAMMAR`); Wave V3 remains gated.** |
-| Active sub-packet | **None active. Wave V2 product repair is merged; this terminal publication records its evidence.** |
-| Status | **WAVE_V2_CLOSED_PROVEN — PR #91 dispatch and PR #92 product/evidence merged. Human remains NOT AUTHORIZED.** |
-| Latest admitted PR | **#92** — Wave V2 product/evidence, merge `1da7d34833fc3254fa7ece6ba3ecd77b5cfc8d6b` |
-| Owner visual directives | **VISUAL_SYSTEM_COMPLETENESS: NOT CLOSED** — Wave V1 recaptured the full canonical matrix (11 groups, 3 devices) and confirmed exactly one repair-worthy symptom class (S1, dead space) in 2 independently-owned owner families; systemic verdict is BOUNDED, NOT SYSTEMIC (not yet CLOSED — that requires Wave V2's fix landing and re-verification). **VISUAL_COMPLETION_OPERATING_MODEL: Wave V2 model selected — `V2_MODEL_3_NARROW_GRAMMAR`** (2 owner families, below the 3+ threshold for the Model 1 shared-shell fallback). **VISUAL_STATE_ACQUISITION_OPERATING_MODEL: extended** — lane `tools/act0_real_text_surface_capture_v1.dart` (`screen_review_fast_v1.sh`) remains primary; Wave V1 added an authorized reduced-motion capture modifier (no new pipeline). **S3 (presentation_closure acquisition gap): CLOSED — STALE_FIXTURE**, fixture-only fix, no product code changed. None of this authorizes broad redesign, Modern Table changes, or new Sharky art; Wave V2 (Model 3, narrow) is the next legal capability, still requires its own fresh dispatch/execution — not auto-entered by this report. |
+| Umbrella stage | **Pre-Human Node 6 — Active-Route Visual Reality Corridor, Wave A authorized (lesson-runner composition foundation); Wave B/C conditionally preauthorized; Wave V3 (Sharky) remains gated behind Wave B+owner acceptance+SHK-CREST-01.** |
+| Active sub-packet | **Wave A — lesson-runner vertical-allocation + interaction-affordance + zoning contracts, per `PRE_HUMAN_ACTIVE_ROUTE_VISUAL_REALITY_AND_CORRIDOR_v1.md` §7.** |
+| Status | **ACTIVE_ROUTE_VISUAL_REALITY_CORRIDOR_PUBLISHED — Wave V2 (`V2_MODEL_3_CLOSED_PROVEN`) retained as valid bounded local repair, not reopened. VRT-02 owner evidence reconciled; prior BOUNDED/NOT_SYSTEMIC verdict is superseded by this corridor's evidence that the dead-space root cause repeats in a 3rd independently-owned family. Human remains NOT AUTHORIZED.** |
+| Latest admitted PR | **#93** — Wave V2 terminal publication, merge `20b7cc8d58f4ea9f9593adbbb37ed4757f358ed6`; this corridor's own publication PR/SHA recorded at merge. |
+| Owner visual directives | **VISUAL_SYSTEM_COMPLETENESS: NOT CLOSED** — VRT-02 (owner actual-device evidence) proved the dead-space/weak-vertical-allocation root cause Wave V1 named as S1 repeats in a 3rd independently-owned owner family (lesson-runner shared-allocation action dock), crossing the pre-declared 3+ threshold, plus two related defect classes (seat interaction-affordance, table/instruction visual-island separation) in the same owner family. **VISUAL_COMPLETION_OPERATING_MODEL: reselected — shared vertical-allocation + interaction-affordance contract**, scoped to the lesson-runner composition layer only (not a full app-wide shared shell), per `PRE_HUMAN_ACTIVE_ROUTE_VISUAL_REALITY_AND_CORRIDOR_v1.md` §5-6. **VISUAL_STATE_ACQUISITION_OPERATING_MODEL: gap identified** — lane #1's table-read/table-decision surfaces render only synthetic placement fixtures, never live campaign-pack drill/practice runners (`CAPTURE_COVERAGE_GAP` + `MANIFEST_CLASSIFICATION_GAP`); Wave B adds a lane-#1 group for representative live drill runners. None of this authorizes broad redesign beyond the lesson-runner owner family, Modern Table changes, or new Sharky art; Wave A is the next legal capability, authorized by this corridor's dispatch. |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **PARTIALLY CLOSED IN PHP-3** — six PHP-3-owned unique current guards are current-contract reconciled and Tier-B ledgered; four differently owned unresolved-unique files remain. |
 | F-18 | **STALE_TEST** — exact pre-F-16-to-head trail disproves PR #51/#52 causation; owner is compact-decision test fixture / retired teaching-step assertion |
@@ -29,9 +29,9 @@ here; update only the fields below.
 | PHP-3 admitted carriers | **23 candidate** |
 | PHP-3 unresolved carriers | **59 candidate** |
 | PHP-3 nine-path residual | **59 candidate** |
-| Recommended next packet | **Wave V3 remains gated pending owner review of the local-only V2 bundle and its separate brand/emotional scope. PHP-9 is not the next packet.** |
-| Next authorization | **No automatic entry. Wave V3 remains gated; PHP-9 remains NOT_PREAUTHORIZED; Human Novice Proof remains NOT AUTHORIZED.** |
-| Autonomous window | **CLOSED — Wave V2 terminal.** |
+| Recommended next packet | **Wave A of the Active-Route Visual Reality Corridor (lesson-runner composition foundation). Wave V3 (Sharky) remains gated behind that corridor's Wave B. PHP-9 is not the next packet.** |
+| Next authorization | **Wave A auto-authorized by this dispatch. Wave B conditionally preauthorized per corridor entry gates. Wave V3/Sharky remains gated; PHP-9 remains NOT_PREAUTHORIZED; Human Novice Proof remains NOT AUTHORIZED.** |
+| Autonomous window | **OPEN — Wave A of the Active-Route Visual Reality Corridor, per its own entry gate and stop rule.** |
 | Human Proof | **NOT AUTHORIZED** |
 | `PRE_HUMAN_READY` | **NOT MET** |
 | `HUMAN_PROVEN_10_OF_10_CANDIDATE` | **NOT MET** |
@@ -68,8 +68,9 @@ Product severity resolves in PHP-0.
 | PHP-8 Evidence & Accessibility Lane Completeness | Node 6, Corridor Wave C | **CLOSED_PROVEN — PR #84 merge `cc1562db0b53a4e86fd9249f220df7e65bf0914e`; W2 active-runtime capture and named accessibility sweep are green.** |
 | PRE_HUMAN_VISUAL_COMPLETION_STRATEGY | Node 6, post-corridor checkpoint | **TERMINAL — PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_COMPLETED. VS-0 (PR #86, `432c9f47`) and Publication 2 (PR #87, merge `a27366e6f6f4a25e6862a053945be6a5f4a421cd`) both merged. Selected: Model 7 process governing Model 3 code fix, fallback Model 1. Next legal capability is Wave V1, not PHP-9.** |
 | Wave V1 (visual completion corridor) | Node 6, corridor Wave 1 of 3 | **TERMINAL — WAVE_V1_COMPLETED. Dispatch PR #88 (`1afb94f2`); implementation/evidence PR #89 (`daa42e0f`) closed S3 as STALE_FIXTURE, added reduced-motion capture, published the full symptom ledger; terminal report `docs/plan/PRE_HUMAN_VISUAL_COMPLETION_WAVE_V1_REPORT_v1.md` selects `V2_MODEL_3_NARROW_GRAMMAR`. Systemic verdict: BOUNDED, NOT SYSTEMIC. Wave V2/V3 not entered.** |
-| Wave V2 (visual completion corridor) | Node 6, corridor Wave 2 of 3 | **CLOSED_PROVEN — PR #91 dispatch `48bdf2ec`; PR #92 product/evidence `1da7d348`. `LOCAL_EQUIVALENT_RULE` repaired Review low-content bench and onboarding/welcome allocation without a shared shell, Modern Table, Sharky art, or a third owner.** |
-| PHP-9 `PRE_HUMAN_READY` Admission | — | NOT_PREAUTHORIZED — never auto-entered by the corridor, the visual completion strategy checkpoint, or Wave V1 |
+| Wave V2 (visual completion corridor) | Node 6, corridor Wave 2 of 3 | **CLOSED_PROVEN — PR #91 dispatch `48bdf2ec`; PR #92 product/evidence `1da7d348`; terminal publication PR #93 `20b7cc8d`. `LOCAL_EQUIVALENT_RULE` repaired Review low-content bench and onboarding/welcome allocation without a shared shell, Modern Table, Sharky art, or a third owner. Retained as valid — not reopened.** |
+| Active-Route Visual Reality Corridor | Node 6, new 3-wave corridor | **Wave A AUTHORIZED, Wave B/C CONDITIONALLY PREAUTHORIZED — dispatch `docs/plan/PRE_HUMAN_ACTIVE_ROUTE_VISUAL_REALITY_AND_CORRIDOR_v1.md`, merge SHA recorded at this publication's merge. Reconciles VRT-02 owner evidence: dead-space root cause repeats in a 3rd independently-owned family (lesson-runner action dock), crossing the 3+ shared-shell-fallback threshold; scoped to the lesson-runner composition layer only.** |
+| PHP-9 `PRE_HUMAN_READY` Admission | — | NOT_PREAUTHORIZED — never auto-entered by the corridor, the visual completion strategy checkpoint, Wave V1, Wave V2, or this new corridor |
 
 PR targets: Node 5 ≈ **4–7**; full machine horizon ≈ **8–12**; **16 is a hard
 emergency ceiling, never a target.**
