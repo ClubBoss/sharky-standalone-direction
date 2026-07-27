@@ -7,6 +7,17 @@ Campaign baseline: `52034abb6f614b907b2d9277eeca5e1f642b92f9` (`main` == `origin
 Authoring agent: Claude Code (planning + targeted verification only)
 Human Novice Proof: **NOT PERFORMED**
 
+## Current execution correction — 2026-07-27 (post-PR #76)
+
+PR #76 merged as `edee622eaf3cfdba2f8472b766ef8c4b5532d0ec` and closes PHP-4 as
+`PHP4_MANIFEST_DRIVEN_CANONICAL_AUTHORITY_CLOSED`. Therefore **ROUTE_A** is
+current: PHP-4 closes Pre-Human Node 5 and **PHP-5 Premium Motion & Ceremony
+Completion** is the exact next authorized packet. This is an explicit dispatch
+gate, not authority to begin PHP-6 through PHP-9 or Human Novice Proof. Modern
+Table remains in Maintenance Mode. For first-read dispatch use
+`docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`; this document remains the
+packet-specific plan.
+
 Headline result of this planning pass: the Final Deep Independent Audit's
 blocking family (**F-16**) is closed and independently re-verified at head
 (62/62), **but the first full run of `test/ui_v2` + `test/guards` at head reports
@@ -254,8 +265,8 @@ Remaining Horizon A capabilities (outside Node 5, ordered after it)
 | **PHP-1** | Node 5 | Confirmed Canonical Guard Repair | test authority; named canonical Act0 owners | 1–2 | small–medium | Repairs only what PHP-0 *proved* canonical, and re-derives the seven F-16 `STALE_TEST` verdicts. Cannot be scoped before PHP-0's terminal classification. |
 | **PHP-2** | Node 5 | Legacy Corpus Ownership Disposition | test authority; archive boundary | 1–2 | large (mechanical, batched) | Unblocks PHP-4. Must follow PHP-0's contract preservation. |
 | **PHP-3** | Node 5 | Canonical Test Classification and Manifest | test authority; canonical Act0 owners | 1 (may be a no-op) | small–medium | Publishes the canonical test manifest PHP-4 gates on; extracts any unique contract found inside an archived-owner file. |
-| **PHP-4** | Node 5 | Canonical Full-Lane CI Authority | CI/workflow | 1–2 | small–medium | Can only land green after PHP-2/PHP-3. Closes the root cause. |
-| **PHP-5** | — | Premium Motion & Ceremony Completion | Act0 lesson-runner motion | 1 | small | Owner-mandated pre-Human block. Sequenced after PHP-4 so its new guards run in a lane that actually executes. |
+| **PHP-4** | Node 5 | Canonical Full-Lane CI Authority | CI/workflow | 1–2 | small–medium | **CLOSED** by PR #76 (`edee622eaf3cfdba2f8472b766ef8c4b5532d0ec`) as `PHP4_MANIFEST_DRIVEN_CANONICAL_AUTHORITY_CLOSED`; closes the root cause and Node 5. |
+| **PHP-5** | — | Premium Motion & Ceremony Completion | Act0 lesson-runner motion | 1 | small | **NEXT_AUTHORIZED_PACKET.** Owner-mandated pre-Human block, sequenced after the now-closed PHP-4 so its new guards run in a lane that actually executes. |
 | **PHP-6** | — | Sharky Production Integration & Completeness Proof | Sharky presence/state seam | 1–2 | small–medium | Owner-mandated pre-Human block. Direction is supplied (§5 OD-03b); scope is integration, not exploration. |
 | **PHP-7** | — | Screen-Role & Visual-Hierarchy Emphasis Proof | Act0 Learn/Home shell | 1–2 | small | Last open P2-class learner-facing proof; may close as a nonissue. |
 | **PHP-8** | — | Evidence & Accessibility Lane Completeness | evidence tooling | 1–2 | small–medium | Reviewer-friction and Human-session prerequisites. |
