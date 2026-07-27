@@ -239,10 +239,12 @@ class Act0ReviewShellV1 extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
+        final lowContentBench =
+            activeMistake == null && queueCard.isEmpty && !hasPassiveNotes;
         final fixedLayout =
             constraints.maxHeight >= 620 &&
             constraints.maxWidth < 700 &&
-            activeMistake != null;
+            (activeMistake != null || lowContentBench);
         const topPadding = Act0ShellTokensV1.gapLg;
         final bottomPadding = fixedLayout
             ? Act0ShellTokensV1.gapLg

@@ -273,74 +273,91 @@ class Act0PlacementShellV1 extends StatelessWidget {
         key: const Key('act0_shell_placement_screen'),
         children: [
           Expanded(
-            child: ListView(
-              padding: EdgeInsets.fromLTRB(
-                pagePadding,
-                Act0ShellTokensV1.gapMd,
-                pagePadding,
-                132,
-              ),
-              children: [
-                Act0ShellTokensV1.centeredContent(
-                  context,
-                  tabletMaxWidth: 860,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (showIntro) ...[
-                        const _PlacementBrandBeatV1(),
-                        const SizedBox(height: Act0ShellTokensV1.gapMd),
-                      ],
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 360),
-                        reverseDuration: const Duration(milliseconds: 220),
-                        switchInCurve: Curves.easeOutCubic,
-                        switchOutCurve: Curves.easeInOutCubic,
-                        transitionBuilder: (child, animation) {
-                          final curved = CurvedAnimation(
-                            parent: animation,
-                            curve: Curves.easeOutCubic,
-                          );
-                          return FadeTransition(
-                            opacity: curved,
-                            child: SlideTransition(
-                              position: Tween<Offset>(
-                                begin: const Offset(0.03, 0.02),
-                                end: Offset.zero,
-                              ).animate(curved),
-                              child: child,
-                            ),
-                          );
-                        },
-                        child: showIntro
-                            ? const KeyedSubtree(
-                                key: ValueKey<String>(
-                                  'act0_shell_placement_intro',
-                                ),
-                                child: _PlacementIntroViewV1(),
-                              )
-                            : KeyedSubtree(
-                                key: ValueKey<String>(
-                                  'act0_shell_placement_body_$currentQuestionIndex',
-                                ),
-                                child: _QuestionOrDiagnosticV1(
-                                  questions: questions,
-                                  currentQuestionIndex: currentQuestionIndex,
-                                  selectedOptionIds: selectedOptionIds,
-                                  onSelectOption: onSelectOption,
-                                  onBack: onBack,
-                                ),
-                              ),
-                      ),
-                      if (showIntro &&
-                          MediaQuery.sizeOf(context).shortestSide >= 700) ...[
-                        const SizedBox(height: Act0ShellTokensV1.gapMd),
-                        _PlacementTabletFillV1(localeIsRu: localeIsRu),
-                      ],
-                    ],
-                  ),
+            child: LayoutBuilder(
+              builder: (context, viewport) => ListView(
+                padding: EdgeInsets.fromLTRB(
+                  pagePadding,
+                  Act0ShellTokensV1.gapMd,
+                  pagePadding,
+                  132,
                 ),
-              ],
+                children: [
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: showIntro
+                          ? (viewport.maxHeight - 132).clamp(
+                              0.0,
+                              double.infinity,
+                            )
+                          : 0,
+                    ),
+                    child: Act0ShellTokensV1.centeredContent(
+                      context,
+                      tabletMaxWidth: 860,
+                      child: Column(
+                        mainAxisAlignment: showIntro
+                            ? MainAxisAlignment.center
+                            : MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (showIntro) ...[
+                            const _PlacementBrandBeatV1(),
+                            const SizedBox(height: Act0ShellTokensV1.gapMd),
+                          ],
+                          AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 360),
+                            reverseDuration: const Duration(milliseconds: 220),
+                            switchInCurve: Curves.easeOutCubic,
+                            switchOutCurve: Curves.easeInOutCubic,
+                            transitionBuilder: (child, animation) {
+                              final curved = CurvedAnimation(
+                                parent: animation,
+                                curve: Curves.easeOutCubic,
+                              );
+                              return FadeTransition(
+                                opacity: curved,
+                                child: SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: const Offset(0.03, 0.02),
+                                    end: Offset.zero,
+                                  ).animate(curved),
+                                  child: child,
+                                ),
+                              );
+                            },
+                            child: showIntro
+                                ? const KeyedSubtree(
+                                    key: ValueKey<String>(
+                                      'act0_shell_placement_intro',
+                                    ),
+                                    child: _PlacementIntroViewV1(),
+                                  )
+                                : KeyedSubtree(
+                                    key: ValueKey<String>(
+                                      'act0_shell_placement_body_$currentQuestionIndex',
+                                    ),
+                                    child: _QuestionOrDiagnosticV1(
+                                      questions: questions,
+                                      currentQuestionIndex:
+                                          currentQuestionIndex,
+                                      selectedOptionIds: selectedOptionIds,
+                                      onSelectOption: onSelectOption,
+                                      onBack: onBack,
+                                    ),
+                                  ),
+                          ),
+                          if (showIntro &&
+                              MediaQuery.sizeOf(context).shortestSide >=
+                                  700) ...[
+                            const SizedBox(height: Act0ShellTokensV1.gapMd),
+                            _PlacementTabletFillV1(localeIsRu: localeIsRu),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           _PlacementFlowActionBarV1(
