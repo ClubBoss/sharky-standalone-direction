@@ -13,6 +13,7 @@ POST_SHIM_ARTIFACT = (
 TIER_B_MANIFEST = MANIFEST_DIR / "tier_b_maintained_support.txt"
 TIER_C_MANIFEST = MANIFEST_DIR / "tier_c_quarantine.txt"
 TIER_D_MANIFEST = MANIFEST_DIR / "tier_d_retired.txt"
+TIER_C_RECORDS = MANIFEST_DIR / "tier_c_quarantine_records_v1.json"
 KNOWN_TIER_C_MANIFEST = MANIFEST_DIR / "known_tier_c_residuals.txt"
 PHP2_REVIEW_ARTIFACT = (
     ROOT / "docs" / "_reviews" / "php2_legacy_corpus_ownership_disposition_v1.md"
@@ -72,6 +73,28 @@ def _read_manifest(path: Path) -> tuple[list[str], list[str]]:
         seen.add(line)
         entries.append(line)
     return entries, duplicates
+
+
+def _read_tier_c_records() -> tuple[set[str], list[str]]:
+    if not TIER_C_RECORDS.exists():
+        return set(), [f"missing Tier C quarantine records: {TIER_C_RECORDS.relative_to(ROOT)}"]
+    payload = json.loads(TIER_C_RECORDS.read_text())
+    records = payload.get("records", [])
+    paths: set[str] = set()
+    failures: list[str] = []
+    for index, record in enumerate(records):
+        if not isinstance(record, dict):
+            failures.append(f"Tier C record {index} is not an object")
+            continue
+        path = record.get("path")
+        if not isinstance(path, str) or not path:
+            failures.append(f"Tier C record {index} missing path")
+            continue
+        paths.add(path)
+        for field in ("carrier_identity", "owner", "reason", "disposition_evidence"):
+            if not isinstance(record.get(field), str) or not record[field].strip():
+                failures.append(f"Tier C record {path} missing {field}")
+    return paths, failures
 
 
 def _parse_observed_inventory() -> dict[str, str]:
@@ -146,6 +169,7 @@ def validate() -> dict[str, object]:
     tier_b, tier_b_duplicates = _read_manifest(TIER_B_MANIFEST)
     tier_c, tier_c_duplicates = _read_manifest(TIER_C_MANIFEST)
     tier_d, tier_d_duplicates = _read_manifest(TIER_D_MANIFEST)
+    tier_c_record_paths, tier_c_record_failures = _read_tier_c_records()
     known_tier_c, known_duplicates = _read_manifest(KNOWN_TIER_C_MANIFEST)
     duplicates = tier_b_duplicates + tier_c_duplicates + tier_d_duplicates + known_duplicates
 
@@ -159,7 +183,9 @@ def validate() -> dict[str, object]:
     ledger_retired = _ledger_retired_paths()
     retired_tier_b = tier_d_set & observed_b_set
     retired_tier_c = tier_d_set & observed_c_set
-    observed_tier_b_missing = sorted(observed_b_set - tier_b_set - retired_tier_b)
+    observed_tier_b_missing = sorted(
+        observed_b_set - tier_b_set - retired_tier_b - tier_c_set
+    )
     observed_tier_b_extra = sorted(tier_b_set - observed_b_set)
     unexpected_tier_b_extra = sorted(
         set(observed_tier_b_extra) - PHP3_F17_TIER_B_PATHS
@@ -220,11 +246,15 @@ def validate() -> dict[str, object]:
         )
     if not observed_tier_c_exact_set_match:
         failures.append(f"observed Tier C missing from executable manifest: {observed_tier_c_missing[:10]}")
-    if executable_tier_c_extra != sorted(KNOWN_UNREACHED_TIER_C):
+    if known_unreached_missing:
+        failures.append(f"known unreached Tier C paths missing: {known_unreached_missing[:10]}")
+    if tier_c_record_failures:
+        failures.extend(tier_c_record_failures[:10])
+    if tier_c_record_paths != tier_c_set:
         failures.append(
-            "Tier C executable extra-over-observed set mismatch: "
-            f"missing_known_unreached={known_unreached_missing[:10]} "
-            f"unexpected={known_unreached_extra[:10]}"
+            "Tier C quarantine record drift: "
+            f"missing={sorted(tier_c_set - tier_c_record_paths)[:10]} "
+            f"unexpected={sorted(tier_c_record_paths - tier_c_set)[:10]}"
         )
     if missing_known_registry or unexpected_known_registry:
         failures.append(

@@ -392,9 +392,18 @@ Human scope, or allow mixed-owner batches merely to reduce PR count.
 
 #### PHP-4 — Canonical Full-Lane CI Authority  *(Node 5)*
 
+##### Owner-admitted execution correction — manifest-driven authority
+
+`PHP4_DOD_REBASED_TO_MANIFEST_DRIVEN_CANONICAL_AUTHORITY` supersedes the
+pre-classification broad-directory/empty-quarantine wording below. The positive
+authority is executable Tier A plus terminal Tier B; Tier C is structurally
+validated with an owner/reason/disposition record but is not executed, and Tier
+D remains tombstone/reference-only. This correction preserves the Master Plan
+packet order and does not authorize Human, visual, or Modern Table work.
+
 - **Findings closed:** the root cause behind F-01, F-02, F-15, F-16, F-17, F-18.
 - **Precondition:** PHP-3's canonical test manifest is published, and PHP-2 has disposed of the archived corpus. A full-lane gate cannot land green before both.
-- **Executable DoD:** add one automatic lane that (a) compiles and (b) runs `test/ui_v2` and `test/guards` in full on every PR touching `lib/**` or `test/**`, gating on PHP-3's canonical test manifest, with a machine-readable quarantine ledger that must be **empty** at packet close. The lane must fail on a compile error, not skip it. `workflow_dispatch`-only workflows do not satisfy this DoD — `unit-tests-nightly.yml` and `full-tests-manual.yml` already run the whole suite and are exactly why this gap survived: neither ever fires automatically. Measured baseline for runtime budgeting: the full local run is **13 min 21 s** for 2049 tests.
+- **Executable DoD:** add one automatic lane that compiles and runs all Tier A plus terminal Tier B manifest entries on every PR touching `lib/**` or `test/**`; it must structurally validate Tier C/D and fail on missing paths, duplicate carriers, unexplained disappearance, archive imports in Tier A/B, or Tier C/D leakage into the positive lane. Tier C may remain nonempty only with complete owner/reason/disposition records. `workflow_dispatch`-only workflows do not satisfy this DoD.
 - **Required evidence:** workflow diff; one green run on a real PR; one deliberately induced failure proving the lane fails red (an intentionally broken import and an intentionally failing assertion, both reverted in the same PR); recorded wall-clock runtime; quarantine ledger empty.
 - **Salvage boundary:** the compile-integrity half can land before the full-assertion half; both halves are separately meaningful.
 - **Fit test:** one owner family; 1–2 PRs; no owner decision; runtime cost is the only real risk and is measured in the DoD.

@@ -1,0 +1,2399 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "path": "test/actions_subtitle_smoke_test.dart",
+      "carrier_identity": "tier_c:test/actions_subtitle_smoke_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/architecture/converter_discovery_plugin_test.dart",
+      "carrier_identity": "tier_c:test/architecture/converter_discovery_plugin_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/architecture/converter_pipeline_test.dart",
+      "carrier_identity": "tier_c:test/architecture/converter_pipeline_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/architecture/converter_registry_test.dart",
+      "carrier_identity": "tier_c:test/architecture/converter_registry_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/architecture/evaluation_queue_service_test.dart",
+      "carrier_identity": "tier_c:test/architecture/evaluation_queue_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/architecture/plugin_manager_test.dart",
+      "carrier_identity": "tier_c:test/architecture/plugin_manager_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/architecture/service_registry_test.dart",
+      "carrier_identity": "tier_c:test/architecture/service_registry_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/audit_hub_v1/audit_hub_operational_builder_v1_test.dart",
+      "carrier_identity": "tier_c:test/audit_hub_v1/audit_hub_operational_builder_v1_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/auto_mistake_tagger_engine_test.dart",
+      "carrier_identity": "tier_c:test/auto_mistake_tagger_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/auto_start_training_prompt_test.dart",
+      "carrier_identity": "tier_c:test/auto_start_training_prompt_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/auto_theory_review_engine_test.dart",
+      "carrier_identity": "tier_c:test/auto_theory_review_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/auto_theory_rewriter_test.dart",
+      "carrier_identity": "tier_c:test/auto_theory_rewriter_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/auto_theory_stage_seeder_test.dart",
+      "carrier_identity": "tier_c:test/auto_theory_stage_seeder_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/board_filtering_params_builder_test.dart",
+      "carrier_identity": "tier_c:test/board_filtering_params_builder_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/board_similarity_engine_test.dart",
+      "carrier_identity": "tier_c:test/board_similarity_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/board_street_generator_test.dart",
+      "carrier_identity": "tier_c:test/board_street_generator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/board_textures_test.dart",
+      "carrier_identity": "tier_c:test/board_textures_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/booster_cluster_engine_test.dart",
+      "carrier_identity": "tier_c:test/booster_cluster_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/booster_injection_engine_test.dart",
+      "carrier_identity": "tier_c:test/booster_injection_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/booster_mistake_backlink_engine_test.dart",
+      "carrier_identity": "tier_c:test/booster_mistake_backlink_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/booster_pack_cluster_exporter_test.dart",
+      "carrier_identity": "tier_c:test/booster_pack_cluster_exporter_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/booster_similarity_engine_test.dart",
+      "carrier_identity": "tier_c:test/booster_similarity_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/booster_smart_selector_test.dart",
+      "carrier_identity": "tier_c:test/booster_smart_selector_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/booster_thematic_tagger_test.dart",
+      "carrier_identity": "tier_c:test/booster_thematic_tagger_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/booster_theory_usage_audit_service_test.dart",
+      "carrier_identity": "tier_c:test/booster_theory_usage_audit_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/booster_variation_injector_test.dart",
+      "carrier_identity": "tier_c:test/booster_variation_injector_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/canonical_guard_test.dart",
+      "carrier_identity": "tier_c:test/canonical_guard_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/content_manifest_test.dart",
+      "carrier_identity": "tier_c:test/content_manifest_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/content_schema_test.dart",
+      "carrier_identity": "tier_c:test/content_schema_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/contracts/operational_review_packet_truth_v1_contract_test.dart",
+      "carrier_identity": "tier_c:test/contracts/operational_review_packet_truth_v1_contract_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/contracts/store_package_v1_contract_test.dart",
+      "carrier_identity": "tier_c:test/contracts/store_package_v1_contract_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/controllers/pack_run_controller_test.dart",
+      "carrier_identity": "tier_c:test/controllers/pack_run_controller_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/core/models/spot_seed/legacy_seed_adapter_test.dart",
+      "carrier_identity": "tier_c:test/core/models/spot_seed/legacy_seed_adapter_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/core/models/spot_seed/spot_seed_codec_test.dart",
+      "carrier_identity": "tier_c:test/core/models/spot_seed/spot_seed_codec_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/core/models/spot_seed/spot_seed_validator_test.dart",
+      "carrier_identity": "tier_c:test/core/models/spot_seed/spot_seed_validator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/core/texture_filter_engine_test.dart",
+      "carrier_identity": "tier_c:test/core/texture_filter_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/coverage_summary_test.dart",
+      "carrier_identity": "tier_c:test/coverage_summary_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/csv_io_test.dart",
+      "carrier_identity": "tier_c:test/csv_io_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/curriculum_consistency_test.dart",
+      "carrier_identity": "tier_c:test/curriculum_consistency_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/curriculum_next_test.dart",
+      "carrier_identity": "tier_c:test/curriculum_next_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/curriculum_overlay_guard_test.dart",
+      "carrier_identity": "tier_c:test/curriculum_overlay_guard_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/curriculum_status_guard_test.dart",
+      "carrier_identity": "tier_c:test/curriculum_status_guard_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/curriculum_structure_doc_link_test.dart",
+      "carrier_identity": "tier_c:test/curriculum_structure_doc_link_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/duplicates_only_filter_test.dart",
+      "carrier_identity": "tier_c:test/duplicates_only_filter_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/dynamic_spot_generation_test.dart",
+      "carrier_identity": "tier_c:test/dynamic_spot_generation_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/e2e/campaign_hand_loop_e2e_v1_test.dart",
+      "carrier_identity": "tier_c:test/e2e/campaign_hand_loop_e2e_v1_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/e2e_adaptive_plan_injection_test.dart",
+      "carrier_identity": "tier_c:test/e2e_adaptive_plan_injection_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/e2e_adaptive_training_planner_v2_test.dart",
+      "carrier_identity": "tier_c:test/e2e_adaptive_training_planner_v2_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/e2e_concurrency_locking_test.dart",
+      "carrier_identity": "tier_c:test/e2e_concurrency_locking_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/e2e_idempotent_retry_test.dart",
+      "carrier_identity": "tier_c:test/e2e_idempotent_retry_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/e2e_path_hardening_rollback_test.dart",
+      "carrier_identity": "tier_c:test/e2e_path_hardening_rollback_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/e2e_theory_injection_path_test.dart",
+      "carrier_identity": "tier_c:test/e2e_theory_injection_path_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/e2e_theory_injection_smoke_test.dart",
+      "carrier_identity": "tier_c:test/e2e_theory_injection_smoke_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/ev/_cli_help_smoke_test.dart",
+      "carrier_identity": "tier_c:test/ev/_cli_help_smoke_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/ev/l3_autogen_v4_smoke_test.dart",
+      "carrier_identity": "tier_c:test/ev/l3_autogen_v4_smoke_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/ev_icm_history_chart_test.dart",
+      "carrier_identity": "tier_c:test/ev_icm_history_chart_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/ev_summary_bucketize_test.dart",
+      "carrier_identity": "tier_c:test/ev_summary_bucketize_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/evaluation_executor_service_test.dart",
+      "carrier_identity": "tier_c:test/evaluation_executor_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/full_board_generator_multi_street_test.dart",
+      "carrier_identity": "tier_c:test/full_board_generator_multi_street_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/full_board_generator_service_test.dart",
+      "carrier_identity": "tier_c:test/full_board_generator_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/full_board_generator_v2_test.dart",
+      "carrier_identity": "tier_c:test/full_board_generator_v2_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/generate_from_preset_test.dart",
+      "carrier_identity": "tier_c:test/generate_from_preset_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/generate_research_prompts_test.dart",
+      "carrier_identity": "tier_c:test/generate_research_prompts_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/graph_path_template_generator_test.dart",
+      "carrier_identity": "tier_c:test/graph_path_template_generator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/graph_path_template_validator_test.dart",
+      "carrier_identity": "tier_c:test/graph_path_template_validator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/headless/training_pack_multi_output_deterministic_test.dart",
+      "carrier_identity": "tier_c:test/headless/training_pack_multi_output_deterministic_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/helpers/action_utils_test.dart",
+      "carrier_identity": "tier_c:test/helpers/action_utils_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/home_hero_surface_ssot_test.dart",
+      "carrier_identity": "tier_c:test/home_hero_surface_ssot_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/home_modules_header_ssot_test.dart",
+      "carrier_identity": "tier_c:test/home_modules_header_ssot_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/home_modules_list_container_ssot_test.dart",
+      "carrier_identity": "tier_c:test/home_modules_list_container_ssot_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/home_modules_tiles_surface_ssot_test.dart",
+      "carrier_identity": "tier_c:test/home_modules_tiles_surface_ssot_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/icm_bb_packs_smoke_test.dart",
+      "carrier_identity": "tier_c:test/icm_bb_packs_smoke_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/icm_bubble_packs_smoke_test.dart",
+      "carrier_identity": "tier_c:test/icm_bubble_packs_smoke_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/icm_ladder_packs_smoke_test.dart",
+      "carrier_identity": "tier_c:test/icm_ladder_packs_smoke_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/icm_mix_packs_smoke_test.dart",
+      "carrier_identity": "tier_c:test/icm_mix_packs_smoke_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/icm_push_ev_service_test.dart",
+      "carrier_identity": "tier_c:test/icm_push_ev_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/icm_sb_packs_smoke_test.dart",
+      "carrier_identity": "tier_c:test/icm_sb_packs_smoke_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/import_dup_hint_test.dart",
+      "carrier_identity": "tier_c:test/import_dup_hint_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/injection_block_assembler_test.dart",
+      "carrier_identity": "tier_c:test/injection_block_assembler_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/inline_theory_node_linker_test.dart",
+      "carrier_identity": "tier_c:test/inline_theory_node_linker_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/intro_theory_pack_generator_test.dart",
+      "carrier_identity": "tier_c:test/intro_theory_pack_generator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/l3_ev_model_test.dart",
+      "carrier_identity": "tier_c:test/l3_ev_model_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/l3_evaluator_rules_test.dart",
+      "carrier_identity": "tier_c:test/l3_evaluator_rules_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/l3_evaluator_weights_config_test.dart",
+      "carrier_identity": "tier_c:test/l3_evaluator_weights_config_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/l3_jsonl_export_test.dart",
+      "carrier_identity": "tier_c:test/l3_jsonl_export_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/l3_packrun_cli_test.dart",
+      "carrier_identity": "tier_c:test/l3_packrun_cli_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/l3_packrun_explain_smoke_test.dart",
+      "carrier_identity": "tier_c:test/l3_packrun_explain_smoke_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/l3_packrun_presetcounts_test.dart",
+      "carrier_identity": "tier_c:test/l3_packrun_presetcounts_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/l3_weights_presets_test.dart",
+      "carrier_identity": "tier_c:test/l3_weights_presets_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/learning_heatmap_service_test.dart",
+      "carrier_identity": "tier_c:test/learning_heatmap_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/learning_path_auto_expander_test.dart",
+      "carrier_identity": "tier_c:test/learning_path_auto_expander_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/learning_path_auto_seeder_test.dart",
+      "carrier_identity": "tier_c:test/learning_path_auto_seeder_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/learning_path_config_loader_test.dart",
+      "carrier_identity": "tier_c:test/learning_path_config_loader_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/learning_path_controller_gating_test.dart",
+      "carrier_identity": "tier_c:test/learning_path_controller_gating_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/learning_path_engine_core_test.dart",
+      "carrier_identity": "tier_c:test/learning_path_engine_core_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/learning_path_graph_orchestrator_test.dart",
+      "carrier_identity": "tier_c:test/learning_path_graph_orchestrator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/learning_path_library_generator_test.dart",
+      "carrier_identity": "tier_c:test/learning_path_library_generator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/learning_path_library_validator_test.dart",
+      "carrier_identity": "tier_c:test/learning_path_library_validator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/learning_path_orchestrator_test.dart",
+      "carrier_identity": "tier_c:test/learning_path_orchestrator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/learning_path_promoter_test.dart",
+      "carrier_identity": "tier_c:test/learning_path_promoter_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/learning_path_stage_seeder_test.dart",
+      "carrier_identity": "tier_c:test/learning_path_stage_seeder_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/learning_path_stage_template_generator_test.dart",
+      "carrier_identity": "tier_c:test/learning_path_stage_template_generator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/learning_path_stage_unlock_engine_test.dart",
+      "carrier_identity": "tier_c:test/learning_path_stage_unlock_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/learning_path_stage_unlock_engine_v2_test.dart",
+      "carrier_identity": "tier_c:test/learning_path_stage_unlock_engine_v2_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/learning_path_template_builder_test.dart",
+      "carrier_identity": "tier_c:test/learning_path_template_builder_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/learning_path_template_validator_test.dart",
+      "carrier_identity": "tier_c:test/learning_path_template_validator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/learning_path_validator_test.dart",
+      "carrier_identity": "tier_c:test/learning_path_validator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/learning_track_progress_model_test.dart",
+      "carrier_identity": "tier_c:test/learning_track_progress_model_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/lesson_search_engine_test.dart",
+      "carrier_identity": "tier_c:test/lesson_search_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/level_tag_auto_assigner_test.dart",
+      "carrier_identity": "tier_c:test/level_tag_auto_assigner_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/line_graph_builder_service_test.dart",
+      "carrier_identity": "tier_c:test/line_graph_builder_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/live_badges_test.dart",
+      "carrier_identity": "tier_c:test/live_badges_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/live_content_coverage_test.dart",
+      "carrier_identity": "tier_c:test/live_content_coverage_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/live_context_format_test.dart",
+      "carrier_identity": "tier_c:test/live_context_format_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/live_runtime_test.dart",
+      "carrier_identity": "tier_c:test/live_runtime_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/live_smoke_test.dart",
+      "carrier_identity": "tier_c:test/live_smoke_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/live_telemetry_test.dart",
+      "carrier_identity": "tier_c:test/live_telemetry_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/manual_legacy_pack_validation_test.dart",
+      "carrier_identity": "tier_c:test/manual_legacy_pack_validation_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/mini_lesson_booster_engine_test.dart",
+      "carrier_identity": "tier_c:test/mini_lesson_booster_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/mini_lesson_library_builder_test.dart",
+      "carrier_identity": "tier_c:test/mini_lesson_library_builder_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/mini_lesson_path_injector_test.dart",
+      "carrier_identity": "tier_c:test/mini_lesson_path_injector_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/mini_lesson_scheduler_test.dart",
+      "carrier_identity": "tier_c:test/mini_lesson_scheduler_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/missing_only_filter_test.dart",
+      "carrier_identity": "tier_c:test/missing_only_filter_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/mistake_categorization_engine_test.dart",
+      "carrier_identity": "tier_c:test/mistake_categorization_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/mistake_cluster_analytics_service_test.dart",
+      "carrier_identity": "tier_c:test/mistake_cluster_analytics_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/mistake_tag_classifier_test.dart",
+      "carrier_identity": "tier_c:test/mistake_tag_classifier_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/mistake_tag_cluster_service_test.dart",
+      "carrier_identity": "tier_c:test/mistake_tag_cluster_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/mistakes_only_quick_filter_test.dart",
+      "carrier_identity": "tier_c:test/mistakes_only_quick_filter_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/models/generate_missing_spots_test.dart",
+      "carrier_identity": "tier_c:test/models/generate_missing_spots_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/models/learning_path_substage_test.dart",
+      "carrier_identity": "tier_c:test/models/learning_path_substage_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/models/training_pack_template_v2_hand_group_tags_test.dart",
+      "carrier_identity": "tier_c:test/models/training_pack_template_v2_hand_group_tags_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/modern_table_audit_doc_contract_test.dart",
+      "carrier_identity": "tier_c:test/modern_table_audit_doc_contract_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/modern_table_screenshot_contract_test.dart",
+      "carrier_identity": "tier_c:test/modern_table_screenshot_contract_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/mvp_pack_library_test.dart",
+      "carrier_identity": "tier_c:test/mvp_pack_library_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/new_only_filter_test.dart",
+      "carrier_identity": "tier_c:test/new_only_filter_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/pack_augmentation_engine_test.dart",
+      "carrier_identity": "tier_c:test/pack_augmentation_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/pack_completion_stats_service_test.dart",
+      "carrier_identity": "tier_c:test/pack_completion_stats_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/pack_library_generator_test.dart",
+      "carrier_identity": "tier_c:test/pack_library_generator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/pack_library_generator_v2_test.dart",
+      "carrier_identity": "tier_c:test/pack_library_generator_v2_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/pack_run_controller_test.dart",
+      "carrier_identity": "tier_c:test/pack_run_controller_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/pack_search_engine_test.dart",
+      "carrier_identity": "tier_c:test/pack_search_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/pack_search_index_service_test.dart",
+      "carrier_identity": "tier_c:test/pack_search_index_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/pack_unlocking_rules_engine_test.dart",
+      "carrier_identity": "tier_c:test/pack_unlocking_rules_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/path_suggestion_engine_test.dart",
+      "carrier_identity": "tier_c:test/path_suggestion_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/personalization/learning_continuation_v1_test.dart",
+      "carrier_identity": "tier_c:test/personalization/learning_continuation_v1_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/phase4_precommit_all_flag_test.dart",
+      "carrier_identity": "tier_c:test/phase4_precommit_all_flag_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/phase4_regression_docs_contract_test.dart",
+      "carrier_identity": "tier_c:test/phase4_regression_docs_contract_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/phase4_regression_inset_guard_test.dart",
+      "carrier_identity": "tier_c:test/phase4_regression_inset_guard_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/plugin_loader_io_test.dart",
+      "carrier_identity": "tier_c:test/plugin_loader_io_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/presenters/completed_session_history_presenter_test.dart",
+      "carrier_identity": "tier_c:test/presenters/completed_session_history_presenter_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/push_fold_btn_cash_library_test.dart",
+      "carrier_identity": "tier_c:test/push_fold_btn_cash_library_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/push_fold_helpers_test.dart",
+      "carrier_identity": "tier_c:test/push_fold_helpers_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/quarantine/ev_end_to_end_golden_test.dart",
+      "carrier_identity": "tier_c:test/quarantine/ev_end_to_end_golden_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/quarantine/ev_enrich_jam_fold_cli_test.dart",
+      "carrier_identity": "tier_c:test/quarantine/ev_enrich_jam_fold_cli_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/quarantine/ev_rank_jam_fold_cli_help_test.dart",
+      "carrier_identity": "tier_c:test/quarantine/ev_rank_jam_fold_cli_help_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/quarantine/ev_rank_jam_fold_cli_test.dart",
+      "carrier_identity": "tier_c:test/quarantine/ev_rank_jam_fold_cli_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/quarantine/jam_fold_evaluator_test.dart",
+      "carrier_identity": "tier_c:test/quarantine/jam_fold_evaluator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/range_library_service_test.dart",
+      "carrier_identity": "tier_c:test/range_library_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/remedial_analyzer_test.dart",
+      "carrier_identity": "tier_c:test/remedial_analyzer_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/remedial_generation_controller_test.dart",
+      "carrier_identity": "tier_c:test/remedial_generation_controller_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/remedial_pack_generator_test.dart",
+      "carrier_identity": "tier_c:test/remedial_pack_generator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/review_path_recommender_test.dart",
+      "carrier_identity": "tier_c:test/review_path_recommender_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/saved_hand_service_test.dart",
+      "carrier_identity": "tier_c:test/saved_hand_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/screens/main_menu_screen_test.dart",
+      "carrier_identity": "tier_c:test/screens/main_menu_screen_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/select_duplicates_test.dart",
+      "carrier_identity": "tier_c:test/select_duplicates_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/adaptive_pack_inbox_notifier_test.dart",
+      "carrier_identity": "tier_c:test/services/adaptive_pack_inbox_notifier_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/adaptive_plan_executor_budget_test.dart",
+      "carrier_identity": "tier_c:test/services/adaptive_plan_executor_budget_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/adaptive_scheduler_service_test.dart",
+      "carrier_identity": "tier_c:test/services/adaptive_scheduler_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/adaptive_spot_scheduler_test.dart",
+      "carrier_identity": "tier_c:test/services/adaptive_spot_scheduler_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/adaptive_training_path_engine_test.dart",
+      "carrier_identity": "tier_c:test/services/adaptive_training_path_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/auto_spot_theory_injector_service_test.dart",
+      "carrier_identity": "tier_c:test/services/auto_spot_theory_injector_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/board_cluster_constraint_engine_test.dart",
+      "carrier_identity": "tier_c:test/services/board_cluster_constraint_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/booster_effectiveness_analyzer_service_test.dart",
+      "carrier_identity": "tier_c:test/services/booster_effectiveness_analyzer_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/booster_fatigue_guard_test.dart",
+      "carrier_identity": "tier_c:test/services/booster_fatigue_guard_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/booster_pack_changelog_generator_test.dart",
+      "carrier_identity": "tier_c:test/services/booster_pack_changelog_generator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/booster_pack_launcher_test.dart",
+      "carrier_identity": "tier_c:test/services/booster_pack_launcher_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/booster_path_history_service_test.dart",
+      "carrier_identity": "tier_c:test/services/booster_path_history_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/booster_theory_injector_test.dart",
+      "carrier_identity": "tier_c:test/services/booster_theory_injector_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/constraint_resolver_engine_generation_test.dart",
+      "carrier_identity": "tier_c:test/services/constraint_resolver_engine_generation_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/constraint_resolver_engine_test.dart",
+      "carrier_identity": "tier_c:test/services/constraint_resolver_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/constraint_resolver_v3_test.dart",
+      "carrier_identity": "tier_c:test/services/constraint_resolver_v3_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/dynamic_board_tagger_service_test.dart",
+      "carrier_identity": "tier_c:test/services/dynamic_board_tagger_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/goal_progress_persistence_service_test.dart",
+      "carrier_identity": "tier_c:test/services/goal_progress_persistence_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/goal_reengagement_service_test.dart",
+      "carrier_identity": "tier_c:test/services/goal_reengagement_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/icm_scenario_library_injector_test.dart",
+      "carrier_identity": "tier_c:test/services/icm_scenario_library_injector_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/inline_pack_theory_clusterer_test.dart",
+      "carrier_identity": "tier_c:test/services/inline_pack_theory_clusterer_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/learning_path_gatekeeper_service_test.dart",
+      "carrier_identity": "tier_c:test/services/learning_path_gatekeeper_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/learning_track_engine_test.dart",
+      "carrier_identity": "tier_c:test/services/learning_track_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/level2_pack_template_seeder_test.dart",
+      "carrier_identity": "tier_c:test/services/level2_pack_template_seeder_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/pack_filter_service_theme_test.dart",
+      "carrier_identity": "tier_c:test/services/pack_filter_service_theme_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/pack_fingerprint_comparer_service_test.dart",
+      "carrier_identity": "tier_c:test/services/pack_fingerprint_comparer_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/pack_import_service_test.dart",
+      "carrier_identity": "tier_c:test/services/pack_import_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/pack_library_generator_service_test.dart",
+      "carrier_identity": "tier_c:test/services/pack_library_generator_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/postflop_jam_decision_theory_linker_test.dart",
+      "carrier_identity": "tier_c:test/services/postflop_jam_decision_theory_linker_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/recap_to_drill_launcher_test.dart",
+      "carrier_identity": "tier_c:test/services/recap_to_drill_launcher_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/reward_card_renderer_service_test.dart",
+      "carrier_identity": "tier_c:test/services/reward_card_renderer_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/skill_gap_booster_service_test.dart",
+      "carrier_identity": "tier_c:test/services/skill_gap_booster_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/skill_loss_detector_test.dart",
+      "carrier_identity": "tier_c:test/services/skill_loss_detector_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/skill_tree_celebration_trigger_service_test.dart",
+      "carrier_identity": "tier_c:test/services/skill_tree_celebration_trigger_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/skill_tree_lesson_gating_service_test.dart",
+      "carrier_identity": "tier_c:test/services/skill_tree_lesson_gating_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/skill_tree_level_gate_evaluator_test.dart",
+      "carrier_identity": "tier_c:test/services/skill_tree_level_gate_evaluator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/skill_tree_path_progress_estimator_test.dart",
+      "carrier_identity": "tier_c:test/services/skill_tree_path_progress_estimator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/skill_tree_stage_state_service_test.dart",
+      "carrier_identity": "tier_c:test/services/skill_tree_stage_state_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/smart_booster_exclusion_tracker_service_test.dart",
+      "carrier_identity": "tier_c:test/services/smart_booster_exclusion_tracker_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/smart_booster_recall_engine_test.dart",
+      "carrier_identity": "tier_c:test/services/smart_booster_recall_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/smart_recap_banner_controller_test.dart",
+      "carrier_identity": "tier_c:test/services/smart_recap_banner_controller_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/smart_resuggestion_engine_test.dart",
+      "carrier_identity": "tier_c:test/services/smart_resuggestion_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/smart_theory_injection_engine_test.dart",
+      "carrier_identity": "tier_c:test/services/smart_theory_injection_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/smart_theory_recap_engine_test.dart",
+      "carrier_identity": "tier_c:test/services/smart_theory_recap_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/tag_mastery_importer_test.dart",
+      "carrier_identity": "tier_c:test/services/tag_mastery_importer_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/theory_content_service_test.dart",
+      "carrier_identity": "tier_c:test/services/theory_content_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/theory_goal_completion_notifier_test.dart",
+      "carrier_identity": "tier_c:test/services/theory_goal_completion_notifier_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/theory_lesson_meta_tag_extractor_service_test.dart",
+      "carrier_identity": "tier_c:test/services/theory_lesson_meta_tag_extractor_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/theory_library_index_test.dart",
+      "carrier_identity": "tier_c:test/services/theory_library_index_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/theory_link_auto_injector_decay_weight_test.dart",
+      "carrier_identity": "tier_c:test/services/theory_link_auto_injector_decay_weight_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/theory_milestone_unlocker_test.dart",
+      "carrier_identity": "tier_c:test/services/theory_milestone_unlocker_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/theory_recall_auto_link_injector_test.dart",
+      "carrier_identity": "tier_c:test/services/theory_recall_auto_link_injector_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/theory_recall_impact_tracker_test.dart",
+      "carrier_identity": "tier_c:test/services/theory_recall_impact_tracker_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/theory_stage_completion_watcher_test.dart",
+      "carrier_identity": "tier_c:test/services/theory_stage_completion_watcher_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/track_completion_celebration_service_test.dart",
+      "carrier_identity": "tier_c:test/services/track_completion_celebration_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/training_pack_generator_postflop_line_test.dart",
+      "carrier_identity": "tier_c:test/services/training_pack_generator_postflop_line_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/training_pack_library_differ_test.dart",
+      "carrier_identity": "tier_c:test/services/training_pack_library_differ_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/training_pack_library_exporter_test.dart",
+      "carrier_identity": "tier_c:test/services/training_pack_library_exporter_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/training_pack_template_set_expander_service_test.dart",
+      "carrier_identity": "tier_c:test/services/training_pack_template_set_expander_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/training_session_context_service_test.dart",
+      "carrier_identity": "tier_c:test/services/training_session_context_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/services/training_session_launcher_intro_lesson_test.dart",
+      "carrier_identity": "tier_c:test/services/training_session_launcher_intro_lesson_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/session_analysis_screen_test.dart",
+      "carrier_identity": "tier_c:test/session_analysis_screen_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/skill_tag_coverage_tracker_test.dart",
+      "carrier_identity": "tier_c:test/skill_tag_coverage_tracker_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/skill_targeting_recommender_test.dart",
+      "carrier_identity": "tier_c:test/skill_targeting_recommender_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/skill_tree_motivational_hint_engine_test.dart",
+      "carrier_identity": "tier_c:test/skill_tree_motivational_hint_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/smart_mini_booster_planner_test.dart",
+      "carrier_identity": "tier_c:test/smart_mini_booster_planner_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/smart_mistake_review_strategy_test.dart",
+      "carrier_identity": "tier_c:test/smart_mistake_review_strategy_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/smart_path_compiler_test.dart",
+      "carrier_identity": "tier_c:test/smart_path_compiler_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/smart_path_ux_hints_service_test.dart",
+      "carrier_identity": "tier_c:test/smart_path_ux_hints_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/smart_recap_auto_injector_test.dart",
+      "carrier_identity": "tier_c:test/smart_recap_auto_injector_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/smoke/training_pack_v2_roundtrip_test.dart",
+      "carrier_identity": "tier_c:test/smoke/training_pack_v2_roundtrip_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/smoke/weekly_summary_card_smoke_test.dart",
+      "carrier_identity": "tier_c:test/smoke/weekly_summary_card_smoke_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/smoke/win_overlays_smoke_test.dart",
+      "carrier_identity": "tier_c:test/smoke/win_overlays_smoke_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/smoke/yaml_spot_parser_smoke_test.dart",
+      "carrier_identity": "tier_c:test/smoke/yaml_spot_parser_smoke_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/spot_importer_json_modes_test.dart",
+      "carrier_identity": "tier_c:test/spot_importer_json_modes_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/spot_importer_jsonl_test.dart",
+      "carrier_identity": "tier_c:test/spot_importer_jsonl_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/spot_importer_test.dart",
+      "carrier_identity": "tier_c:test/spot_importer_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/spot_line_graph_engine_test.dart",
+      "carrier_identity": "tier_c:test/spot_line_graph_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/spot_maps_coverage_test.dart",
+      "carrier_identity": "tier_c:test/spot_maps_coverage_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/spot_specs_core_call_vs_price_test.dart",
+      "carrier_identity": "tier_c:test/spot_specs_core_call_vs_price_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/spot_specs_icm_ssot_test.dart",
+      "carrier_identity": "tier_c:test/spot_specs_icm_ssot_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/spot_specs_jamfold_helper_test.dart",
+      "carrier_identity": "tier_c:test/spot_specs_jamfold_helper_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/spot_validation_test.dart",
+      "carrier_identity": "tier_c:test/spot_validation_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/ssot_smoke_test.dart",
+      "carrier_identity": "tier_c:test/ssot_smoke_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/stack_range_filter_test.dart",
+      "carrier_identity": "tier_c:test/stack_range_filter_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/telemetry_builder_smoke_test.dart",
+      "carrier_identity": "tier_c:test/telemetry_builder_smoke_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/telemetry_builder_test.dart",
+      "carrier_identity": "tier_c:test/telemetry_builder_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/telemetry_mode_test.dart",
+      "carrier_identity": "tier_c:test/telemetry_mode_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/temp_cleanup_test.dart",
+      "carrier_identity": "tier_c:test/temp_cleanup_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/template_ev_cache_test.dart",
+      "carrier_identity": "tier_c:test/template_ev_cache_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/theory/theory_integrity_actions_test.dart",
+      "carrier_identity": "tier_c:test/theory/theory_integrity_actions_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/theory_booster_generator_test.dart",
+      "carrier_identity": "tier_c:test/theory_booster_generator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/theory_booster_injector_test.dart",
+      "carrier_identity": "tier_c:test/theory_booster_injector_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/theory_booster_pack_linker_test.dart",
+      "carrier_identity": "tier_c:test/theory_booster_pack_linker_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/theory_injection_engine_test.dart",
+      "carrier_identity": "tier_c:test/theory_injection_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/theory_lesson_review_queue_test.dart",
+      "carrier_identity": "tier_c:test/theory_lesson_review_queue_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/theory_lesson_trail_tracker_test.dart",
+      "carrier_identity": "tier_c:test/theory_lesson_trail_tracker_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/theory_pack_auto_indexer_service_test.dart",
+      "carrier_identity": "tier_c:test/theory_pack_auto_indexer_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/theory_pack_auto_tagger_test.dart",
+      "carrier_identity": "tier_c:test/theory_pack_auto_tagger_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/theory_pack_completion_estimator_test.dart",
+      "carrier_identity": "tier_c:test/theory_pack_completion_estimator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/theory_pack_generator_service_test.dart",
+      "carrier_identity": "tier_c:test/theory_pack_generator_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/theory_pack_generator_test.dart",
+      "carrier_identity": "tier_c:test/theory_pack_generator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/theory_pack_review_status_engine_test.dart",
+      "carrier_identity": "tier_c:test/theory_pack_review_status_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/theory_pack_sampler_test.dart",
+      "carrier_identity": "tier_c:test/theory_pack_sampler_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/theory_stage_auto_seeder_test.dart",
+      "carrier_identity": "tier_c:test/theory_stage_auto_seeder_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/theory_validation_engine_test.dart",
+      "carrier_identity": "tier_c:test/theory_validation_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/title_utils_test.dart",
+      "carrier_identity": "tier_c:test/title_utils_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/audit_hub_service_v1_test.dart",
+      "carrier_identity": "tier_c:test/tools/audit_hub_service_v1_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/batch_generate_test.dart",
+      "carrier_identity": "tier_c:test/tools/batch_generate_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/canonical_early_path_correctness_audit_v1_test.dart",
+      "carrier_identity": "tier_c:test/tools/canonical_early_path_correctness_audit_v1_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/canonical_trust_inspector_v1_test.dart",
+      "carrier_identity": "tier_c:test/tools/canonical_trust_inspector_v1_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/compile_path_test.dart",
+      "carrier_identity": "tier_c:test/tools/compile_path_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/content_quality_validator_v1_test.dart",
+      "carrier_identity": "tier_c:test/tools/content_quality_validator_v1_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/core_parity_proof_v1_test.dart",
+      "carrier_identity": "tier_c:test/tools/core_parity_proof_v1_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/feedback_quality_scaleout_world10_cash_generic_template_wave_test.dart",
+      "carrier_identity": "tier_c:test/tools/feedback_quality_scaleout_world10_cash_generic_template_wave_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/feedback_quality_scaleout_world10_tournament_generic_template_wave_test.dart",
+      "carrier_identity": "tier_c:test/tools/feedback_quality_scaleout_world10_tournament_generic_template_wave_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/feedback_quality_scaleout_world6_generic_template_wave_test.dart",
+      "carrier_identity": "tier_c:test/tools/feedback_quality_scaleout_world6_generic_template_wave_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/feedback_quality_scaleout_world9_generic_template_wave_test.dart",
+      "carrier_identity": "tier_c:test/tools/feedback_quality_scaleout_world9_generic_template_wave_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/operational_review_packet_v1_test.dart",
+      "carrier_identity": "tier_c:test/tools/operational_review_packet_v1_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/plugin_scaffold_test.dart",
+      "carrier_identity": "tier_c:test/tools/plugin_scaffold_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/project_readiness_epics_ssot_v1_test.dart",
+      "carrier_identity": "tier_c:test/tools/project_readiness_epics_ssot_v1_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/release_readiness_snapshot_v1_test.dart",
+      "carrier_identity": "tier_c:test/tools/release_readiness_snapshot_v1_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/runner_unification_readiness_audit_v1_test.dart",
+      "carrier_identity": "tier_c:test/tools/runner_unification_readiness_audit_v1_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/stage1a_wave2_feedback_transfer_contract_test.dart",
+      "carrier_identity": "tier_c:test/tools/stage1a_wave2_feedback_transfer_contract_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/table_projection_acceptance_audit_v1_test.dart",
+      "carrier_identity": "tier_c:test/tools/table_projection_acceptance_audit_v1_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/w1_w6_prerequisite_chain_repair_batch_v1_test.dart",
+      "carrier_identity": "tier_c:test/tools/w1_w6_prerequisite_chain_repair_batch_v1_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/w5_w6_authored_session_contract_reconciliation_v1_test.dart",
+      "carrier_identity": "tier_c:test/tools/w5_w6_authored_session_contract_reconciliation_v1_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/world0_feedback_coverage_truth_test.dart",
+      "carrier_identity": "tier_c:test/tools/world0_feedback_coverage_truth_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/world0_intro_framing_truth_alignment_test.dart",
+      "carrier_identity": "tier_c:test/tools/world0_intro_framing_truth_alignment_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/world0_pedagogical_finish_truth_alignment_test.dart",
+      "carrier_identity": "tier_c:test/tools/world0_pedagogical_finish_truth_alignment_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/world0_progression_truth_alignment_test.dart",
+      "carrier_identity": "tier_c:test/tools/world0_progression_truth_alignment_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/world0_unification_truth_alignment_test.dart",
+      "carrier_identity": "tier_c:test/tools/world0_unification_truth_alignment_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/world10_pedagogical_finish_truth_alignment_test.dart",
+      "carrier_identity": "tier_c:test/tools/world10_pedagogical_finish_truth_alignment_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/world10_session_semantic_fit_truth_test.dart",
+      "carrier_identity": "tier_c:test/tools/world10_session_semantic_fit_truth_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/world6_range_intro_wave_test.dart",
+      "carrier_identity": "tier_c:test/tools/world6_range_intro_wave_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/world7_generic_anchor_wave_guard_test.dart",
+      "carrier_identity": "tier_c:test/tools/world7_generic_anchor_wave_guard_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/tools/world_pedagogical_progression_audit_v1_test.dart",
+      "carrier_identity": "tier_c:test/tools/world_pedagogical_progression_audit_v1_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/training_history_widgets_test.dart",
+      "carrier_identity": "tier_c:test/training_history_widgets_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/training_pack_asset_loader_test.dart",
+      "carrier_identity": "tier_c:test/training_pack_asset_loader_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/training_pack_fingerprint_generator_test.dart",
+      "carrier_identity": "tier_c:test/training_pack_fingerprint_generator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/training_pack_generator_v2_test.dart",
+      "carrier_identity": "tier_c:test/training_pack_generator_v2_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/training_pack_library_theme_filter_test.dart",
+      "carrier_identity": "tier_c:test/training_pack_library_theme_filter_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/training_pack_ranking_engine_test.dart",
+      "carrier_identity": "tier_c:test/training_pack_ranking_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/training_pack_sampler_test.dart",
+      "carrier_identity": "tier_c:test/training_pack_sampler_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/training_pack_spot_yaml_test.dart",
+      "carrier_identity": "tier_c:test/training_pack_spot_yaml_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/training_pack_template_expander_full_board_test.dart",
+      "carrier_identity": "tier_c:test/training_pack_template_expander_full_board_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/training_pack_template_metadata_validator_test.dart",
+      "carrier_identity": "tier_c:test/training_pack_template_metadata_validator_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/training_pack_template_service_test.dart",
+      "carrier_identity": "tier_c:test/training_pack_template_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/training_pack_template_set_test.dart",
+      "carrier_identity": "tier_c:test/training_pack_template_set_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/training_pack_template_v2_from_json_test.dart",
+      "carrier_identity": "tier_c:test/training_pack_template_v2_from_json_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/training_pack_template_v2_to_yaml_string_test.dart",
+      "carrier_identity": "tier_c:test/training_pack_template_v2_to_yaml_string_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/training_progress_service_test.dart",
+      "carrier_identity": "tier_c:test/training_progress_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/training_progress_timeline_service_test.dart",
+      "carrier_identity": "tier_c:test/training_progress_timeline_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/training_result_test.dart",
+      "carrier_identity": "tier_c:test/training_result_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/training_spot_expander_test.dart",
+      "carrier_identity": "tier_c:test/training_spot_expander_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/ui/session_player/mvs_session_player_flop_jam_vs_bet_test.dart",
+      "carrier_identity": "tier_c:test/ui/session_player/mvs_session_player_flop_jam_vs_bet_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/ui/session_player/mvs_session_player_river_jam_vs_bet_test.dart",
+      "carrier_identity": "tier_c:test/ui/session_player/mvs_session_player_river_jam_vs_bet_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/ui/simulation_table_smoke_test.dart",
+      "carrier_identity": "tier_c:test/ui/simulation_table_smoke_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/ui_v2/drill_runner_host_contract_alignment_test.dart",
+      "carrier_identity": "tier_c:test/ui_v2/drill_runner_host_contract_alignment_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/ui_v2/theory_screen_narrow_build_test.dart",
+      "carrier_identity": "tier_c:test/ui_v2/theory_screen_narrow_build_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/ui_v2/today_plan_premium_access_text_safety_contract_test.dart",
+      "carrier_identity": "tier_c:test/ui_v2/today_plan_premium_access_text_safety_contract_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/ui_v2/universal_intake_plan_personalization_contract_test.dart",
+      "carrier_identity": "tier_c:test/ui_v2/universal_intake_plan_personalization_contract_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/undo_history/diff_engine_test.dart",
+      "carrier_identity": "tier_c:test/undo_history/diff_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/unit_id_utils_test.dart",
+      "carrier_identity": "tier_c:test/unit_id_utils_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/utils/stack_range_filter_test.dart",
+      "carrier_identity": "tier_c:test/utils/stack_range_filter_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/utils/theory_lesson_cluster_serializer_test.dart",
+      "carrier_identity": "tier_c:test/utils/theory_lesson_cluster_serializer_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/weakness_cluster_engine_test.dart",
+      "carrier_identity": "tier_c:test/weakness_cluster_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/weakness_cluster_engine_v2_test.dart",
+      "carrier_identity": "tier_c:test/weakness_cluster_engine_v2_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/weakness_review_engine_test.dart",
+      "carrier_identity": "tier_c:test/weakness_review_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/weakness_tag_resolver_test.dart",
+      "carrier_identity": "tier_c:test/weakness_tag_resolver_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/widgets/export_csv_button_test.dart",
+      "carrier_identity": "tier_c:test/widgets/export_csv_button_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/widgets/review_path_card_test.dart",
+      "carrier_identity": "tier_c:test/widgets/review_path_card_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/yaml_duplicate_detector_service_test.dart",
+      "carrier_identity": "tier_c:test/yaml_duplicate_detector_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/yaml_pack_auto_tag_engine_test.dart",
+      "carrier_identity": "tier_c:test/yaml_pack_auto_tag_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/yaml_pack_auto_tagger_test.dart",
+      "carrier_identity": "tier_c:test/yaml_pack_auto_tagger_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/yaml_pack_importer_service_test.dart",
+      "carrier_identity": "tier_c:test/yaml_pack_importer_service_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    },
+    {
+      "path": "test/yaml_pack_rating_engine_test.dart",
+      "carrier_identity": "tier_c:test/yaml_pack_rating_engine_test.dart",
+      "owner": "historical/quarantine owner review",
+      "reason": "Noncanonical quarantined support or historical residual; excluded from manifest-driven positive authority.",
+      "disposition_evidence": "docs/_reviews/post_shim_global_suite_remeasurement_v1.md"
+    }
+  ]
+}
