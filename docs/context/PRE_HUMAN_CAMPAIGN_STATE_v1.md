@@ -9,14 +9,14 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical HEAD | `b00d786af0ae84a1ac8530d93f078c8a1c5d83fa` |
-| Authority freshness | 2026-07-27 — PHP-6 PR #82 merged; PHP-7 compact hierarchy proof reconciled for publication |
+| Canonical HEAD | `cc1562db0b53a4e86fd9249f220df7e65bf0914e` |
+| Authority freshness | 2026-07-27 — PHP-6 through PHP-8 rolling corridor terminal closure reconciled |
 | Campaign version | v1 |
 | Corridor | **`ROLLING_CORRIDOR_PHP6_TO_PHP8_V1`** — PHP-6 unconditionally authorized; PHP-7 and PHP-8 conditionally preauthorized behind their own transition gates (see Current dispatch boundaries); PHP-9 remains `NOT_PREAUTHORIZED`. The corridor exists so Codex can move PHP-6 → gate → PHP-7-or-`CLOSED_UNNECESSARY` → gate → PHP-8-or-`CLOSED_UNNECESSARY` → one terminal corridor report without returning for a fresh dispatch between waves. |
-| Umbrella stage | **Pre-Human Node 6 — rolling corridor Wave B complete; Wave C gate pending publication** |
-| Active sub-packet | **PHP-7, Packet 7A (compact hierarchy and role proof)** |
-| Status | **PHP6_CLOSED_WITH_EXTERNAL_ASSET_INPUT_REQUIRED — PR #82 merge `b00d786af0ae84a1ac8530d93f078c8a1c5d83fa`; PHP7_CLOSED_PROVEN is ready to merge. PHP-8 transition gate is next.** |
-| Latest admitted PR | **#82** (PHP-6 production integration proof) |
+| Umbrella stage | **Pre-Human Node 6 — rolling corridor terminally closed** |
+| Active sub-packet | **None — PHP-9 remains NOT_PREAUTHORIZED** |
+| Status | **ROLLING_CORRIDOR_PHP6_TO_PHP8_COMPLETED — PHP-6 #82, PHP-7 #83, and PHP-8 #84 merged; Human remains NOT AUTHORIZED.** |
+| Latest admitted PR | **#84** (PHP-8 evidence and accessibility closure) |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **PARTIALLY CLOSED IN PHP-3** — six PHP-3-owned unique current guards are current-contract reconciled and Tier-B ledgered; four differently owned unresolved-unique files remain. |
 | F-18 | **STALE_TEST** — exact pre-F-16-to-head trail disproves PR #51/#52 causation; owner is compact-decision test fixture / retired teaching-step assertion |
@@ -63,8 +63,8 @@ Product severity resolves in PHP-0.
 | PHP-4 Canonical Full-Lane CI Authority | Node 5 | **CLOSED — `PHP4_MANIFEST_DRIVEN_CANONICAL_AUTHORITY_CLOSED`; PR #76 merge `edee622eaf3cfdba2f8472b766ef8c4b5532d0ec`; Tier A + terminal Tier B positive authority, Tier C structural only** |
 | PHP-5 Premium Motion & Ceremony Completion | — | **CLOSED — PR #78 merge `71fda1d5be2dae3771599e8b674ab0d8229aa633`; publication PR #79 merge `e91c0ea8939ff2e3c8f8cc6b2ecdf71235da4e35`; Street Replay step reveal restored through the shared tokenized proof reveal; active guards cover all four canonical moments, reduced-motion bypass, rebuild stability, and CTA safety.** |
 | PHP-6 Sharky Production Integration & Completeness Proof | Node 6, Corridor Wave A | **CLOSED_WITH_EXTERNAL_ASSET_INPUT_REQUIRED — PR #82 merge `b00d786af0ae84a1ac8530d93f078c8a1c5d83fa`; runtime integration and deterministic proof are complete, while the admitted state-art rows remain externally supplied.** |
-| PHP-7 Screen-Role & Visual-Hierarchy Emphasis Proof | Node 6, Corridor Wave B | **CLOSED_PROVEN pending this packet's merge — compact 360 x 640 core capture and refreshed current-owner role/hierarchy guard pass; no learner-visible hierarchy repair or redesign required.** |
-| PHP-8 Evidence & Accessibility Lane Completeness | Node 6, Corridor Wave C | **CONDITIONALLY PREAUTHORIZED — auto-enters only if KEY 8.1–8.4 all pass (see Current dispatch boundaries). Packet 8A (evidence/accessibility census, classify `PHP8_EXECUTION_REQUIRED` / `PHP8_CLOSED_UNNECESSARY` / `PHP8_DEFERRED_HUMAN_EVIDENCE`); Packet 8B only if 8A proves real gaps. Corridor ends after PHP-8's terminal disposition.** |
+| PHP-7 Screen-Role & Visual-Hierarchy Emphasis Proof | Node 6, Corridor Wave B | **CLOSED_PROVEN — PR #83 merge `194b2f14709b012db8af73921cd41315e0cf7053`; compact hierarchy and six-surface role proof passed without redesign.** |
+| PHP-8 Evidence & Accessibility Lane Completeness | Node 6, Corridor Wave C | **CLOSED_PROVEN — PR #84 merge `cc1562db0b53a4e86fd9249f220df7e65bf0914e`; W2 active-runtime capture and named accessibility sweep are green.** |
 | PHP-9 `PRE_HUMAN_READY` Admission | — | NOT_PREAUTHORIZED — never auto-entered by this corridor |
 
 PR targets: Node 5 ≈ **4–7**; full machine horizon ≈ **8–12**; **16 is a hard
