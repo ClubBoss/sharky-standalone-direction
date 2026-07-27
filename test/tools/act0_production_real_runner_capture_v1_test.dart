@@ -10,6 +10,7 @@ void main() {
     expect(source, contains('Act0ShellStateV1.sample direct task resolution'));
     expect(source, contains("'positions_early_late'"));
     expect(source, contains("'what_poker_is_table_read_recheck'"));
+    expect(source, contains("'world3_early_pressure'"));
     expect(source, contains("'content_status': 'LIVE_PRODUCTION'"));
     expect(source, isNot(contains('placementQuickCheckRunnerV1')));
     expect(source, contains("'tall_phone': Size(402, 874)"));

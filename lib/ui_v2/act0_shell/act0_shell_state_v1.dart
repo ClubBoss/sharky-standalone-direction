@@ -13585,6 +13585,28 @@ final _w3EarlySeatPressureRunner = _earlyLatePositionRunner.copyWith(
   ],
 );
 
+/// Evidence-only access to a live World 3 runner that is not materialized by
+/// the compact sample-state graph. The application does not call this helper.
+Act0LessonTaskV1? act0ProductionVisualAuditTaskSeedV1(String seedId) {
+  if (seedId != 'world3_early_pressure') {
+    return null;
+  }
+  return Act0LessonTaskV1(
+    taskId: 'early_pressure_choice',
+    title: 'Early pressure',
+    phase: Act0LessonPhaseV1.drill,
+    runner: _w3EarlySeatPressureRunner.copyWith(
+      options: _act0AuthoredCorrectOptionAtV1(
+        _w3EarlySeatPressureRunner.options,
+        correctOptionId: 'more_players_behind',
+        correctIndex: 1,
+      ),
+    ),
+    rewardXp: 9,
+    stepKind: Act0LessonStepKindV1.practice,
+  );
+}
+
 final _w3UtgPlayersBehindRepairRunner = _w3EarlySeatPressureRunner.copyWith(
   lessonId: 'w3_repair_utg_players_behind',
   caption: 'Repair: UTG has five players behind.',

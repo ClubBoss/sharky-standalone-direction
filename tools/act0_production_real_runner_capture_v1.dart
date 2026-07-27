@@ -17,8 +17,9 @@ class _Seed {
     this.lessonId,
     this.taskId,
     this.mode,
-    this.phase,
-  );
+    this.phase, {
+    this.auditSeedId,
+  });
 
   final String stateId;
   final String worldId;
@@ -26,6 +27,7 @@ class _Seed {
   final String taskId;
   final String mode;
   final String phase;
+  final String? auditSeedId;
 
   Map<String, String> toJson() => <String, String>{
     'visual_state_id': stateId,
@@ -34,6 +36,7 @@ class _Seed {
     'task_id': taskId,
     'mode': mode,
     'semantic_phase': phase,
+    if (auditSeedId != null) 'audit_seed_id': auditSeedId!,
   };
 }
 
@@ -93,6 +96,15 @@ const _seeds = <_Seed>[
     'positions_early_late',
     'incorrect',
     'incorrect_feedback',
+  ),
+  _Seed(
+    'runner.world3_seat_derivative',
+    'world_3',
+    'early_vs_late',
+    'early_pressure_choice',
+    'base',
+    'seat_selection_derivative',
+    auditSeedId: 'world3_early_pressure',
   ),
   _Seed(
     'runner.hand_comparison.live',
@@ -239,15 +251,21 @@ void main() {
     tester.platformDispatcher.systemFontFamily = 'Roboto';
     addTearDown(() { tester.view.resetPhysicalSize(); tester.view.resetDevicePixelRatio(); tester.platformDispatcher.resetSystemFontFamily(); });
     Future<void> capture(WidgetTester tester, Map<String, dynamic> seed) async {
-      final world = Act0ShellStateV1.sample.worldById(seed['world_id'] as String);
-      final lesson = world.lessons.firstWhere(
-        (item) => item.lessonId == seed['lesson_id'],
-        orElse: () => throw StateError('Missing lesson for ' + (seed['visual_state_id'] as String) + ': ' + (seed['lesson_id'] as String)),
-      );
-      final task = lesson.taskList.firstWhere(
-        (item) => item.taskId == seed['task_id'],
-        orElse: () => throw StateError('Missing task for ' + (seed['visual_state_id'] as String) + ': ' + (seed['task_id'] as String)),
-      );
+      final directSeed = seed['audit_seed_id'] as String?;
+      final task = directSeed == null
+          ? (() {
+              final world = Act0ShellStateV1.sample.worldById(seed['world_id'] as String);
+              final lesson = world.lessons.firstWhere(
+                (item) => item.lessonId == seed['lesson_id'],
+                orElse: () => throw StateError('Missing lesson for ' + (seed['visual_state_id'] as String) + ': ' + (seed['lesson_id'] as String)),
+              );
+              return lesson.taskList.firstWhere(
+                (item) => item.taskId == seed['task_id'],
+                orElse: () => throw StateError('Missing task for ' + (seed['visual_state_id'] as String) + ': ' + (seed['task_id'] as String)),
+              );
+            })()
+          : act0ProductionVisualAuditTaskSeedV1(directSeed) ??
+              (throw StateError('Missing audit seed ' + directSeed));
       final correct = task.runner.options.firstWhere((item) => item.isCorrect);
       final incorrect = task.runner.options.firstWhere((item) => !item.isCorrect, orElse: () => correct);
       final selected = seed['mode'] == 'correct' ? correct : seed['mode'] == 'incorrect' ? incorrect : null;
