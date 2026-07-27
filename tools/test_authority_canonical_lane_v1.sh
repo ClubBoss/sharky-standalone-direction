@@ -9,6 +9,13 @@ if [[ ! -f "$ROOT/pubspec.yaml" ]]; then
 fi
 cd "$ROOT"
 
+if [[ "${1:-}" == "--tier-b-proof" ]]; then
+  echo "canonical test authority: disposable positive Tier-B proof"
+  ./tools/test_authority_validate_v1.sh
+  ./tools/test_authority_tier_b_v1.sh
+  exit 0
+fi
+
 echo "canonical test authority: structural manifest validation"
 ./tools/test_authority_validate_v1.sh
 python3 tools/test_authority/validate_manifest_v1_fixtures_test.py
