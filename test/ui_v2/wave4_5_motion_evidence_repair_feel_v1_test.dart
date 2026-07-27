@@ -40,6 +40,7 @@ void main() {
         ),
       ),
     );
+    await tester.pump();
 
     expect(
       find.byKey(const Key('act0_shell_repair_system_block')),
@@ -53,9 +54,12 @@ void main() {
       find.byKey(const Key('act0_shell_repair_closure_system_card')),
       findsOneWidget,
     );
-    expect(find.text('Repair proof'), findsOneWidget);
-    expect(find.text('Repair result'), findsOneWidget);
-    expect(find.text('Session repair'), findsOneWidget);
+    expect(find.text('Result'), findsOneWidget);
+    expect(
+      find.text('Repair fixed: you caught the no-bet-yet clue.'),
+      findsOneWidget,
+    );
+    expect(find.text('Session result'), findsOneWidget);
     expect(find.textContaining('warning'), findsNothing);
     expect(find.textContaining('error'), findsNothing);
     expect(find.textContaining('XP'), findsNothing);
@@ -137,6 +141,82 @@ void main() {
     expect(find.byType(AnimatedScale), findsNothing);
   });
 
+  testWidgets(
+    'Street Replay reveals with shared motion and no rebuild replay',
+    (tester) async {
+      tester.view.physicalSize = const Size(430, 1400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(_streetReplayHost());
+      await tester.pump();
+
+      const motionKey = Key('act0_shell_street_replay_step_motion_0');
+      expect(find.byKey(motionKey), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byKey(motionKey),
+          matching: find.byType(AnimatedScale),
+        ),
+        findsOneWidget,
+      );
+
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<AnimatedScale>(
+              find.descendant(
+                of: find.byKey(motionKey),
+                matching: find.byType(AnimatedScale),
+              ),
+            )
+            .scale,
+        1.0,
+      );
+
+      await tester.pumpWidget(_streetReplayHost());
+      await tester.pump();
+      expect(
+        tester
+            .widget<AnimatedScale>(
+              find.descendant(
+                of: find.byKey(motionKey),
+                matching: find.byType(AnimatedScale),
+              ),
+            )
+            .scale,
+        1.0,
+      );
+    },
+  );
+
+  testWidgets('Street Replay reduced motion is immediately complete', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(430, 1400);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await tester.pumpWidget(_streetReplayHost(disableAnimations: true));
+    await tester.pump();
+
+    const motionKey = Key('act0_shell_street_replay_step_motion_0');
+    expect(find.byKey(motionKey), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(motionKey),
+        matching: find.byType(AnimatedScale),
+      ),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_street_replay_step_0')),
+      findsOneWidget,
+    );
+    await tester.pumpAndSettle();
+  });
+
   test('motion evidence helper documents local-only frame output', () {
     final file = File('tools/act0_motion_evidence_capture_v1.dart');
     expect(file.existsSync(), isTrue);
@@ -147,4 +227,35 @@ void main() {
     expect(source, contains('session_summary_proof_hero'));
     expect(source, contains('Generated motion evidence is local-only'));
   });
+}
+
+Widget _streetReplayHost({bool disableAnimations = false}) {
+  final task = Act0ShellStateV1.sample
+      .worldById('world_1')
+      .lessons
+      .firstWhere((lesson) => lesson.lessonId == 'your_first_hand')
+      .taskList
+      .firstWhere((task) => task.taskId == 'your_first_hand_action_trail');
+  return MaterialApp(
+    home: MediaQuery(
+      data: MediaQueryData(disableAnimations: disableAnimations),
+      child: Scaffold(
+        body: Act0LessonRunnerShellV1(
+          runner: task.runner.copyWith(
+            phase: Act0LessonPhaseV1.drill,
+            teachingStepIndex: task.runner.teachingSteps.length,
+            table: task.runner.table.copyWith(
+              activeSeatId: 'btn',
+              heroSeatId: 'btn',
+            ),
+          ),
+          tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
+          onBack: () {},
+          onContinueTheory: () {},
+          onChooseOption: (_) {},
+          onContinueReview: () {},
+        ),
+      ),
+    ),
+  );
 }

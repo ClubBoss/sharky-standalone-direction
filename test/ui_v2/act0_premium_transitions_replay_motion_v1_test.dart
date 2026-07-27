@@ -17,12 +17,13 @@ const _worldCompletionMotionKey = Key(
 const _bandTransitionMotionKey = Key(
   'act0_shell_band_transition_completion_motion_reveal',
 );
+const _sessionSummaryHeroMotionKey = Key(
+  'act0_shell_session_summary_proof_hero_motion_reveal',
+);
 const _continueCta = Key('act0_shell_block_summary_continue_cta');
 
 void main() {
-  testWidgets('world completion animates only when admitted', (
-    tester,
-  ) async {
+  testWidgets('world completion animates only when admitted', (tester) async {
     await tester.pumpWidget(_host(_worldTwoSummary()));
     await tester.pump();
 
@@ -66,49 +67,80 @@ void main() {
     expect(find.byKey(_worldCompletionMotionKey), findsNothing);
   });
 
-  testWidgets('world completion and band transition share the same motion contract', (
+  testWidgets(
+    'world completion and band transition share the same motion contract',
+    (tester) async {
+      await tester.pumpWidget(_host(_worldTwoSummary()));
+      await tester.pump();
+      final worldCompletionScale = tester.widget<AnimatedScale>(
+        find.descendant(
+          of: find.byKey(_worldCompletionMotionKey),
+          matching: find.byType(AnimatedScale),
+        ),
+      );
+      final worldCompletionSlide = tester.widget<AnimatedSlide>(
+        find.descendant(
+          of: find.byKey(_worldCompletionMotionKey),
+          matching: find.byType(AnimatedSlide),
+        ),
+      );
+
+      await tester.pumpWidget(_host(_worldFourSummary()));
+      await tester.pump();
+      final bandScale = tester.widget<AnimatedScale>(
+        find.descendant(
+          of: find.byKey(_bandTransitionMotionKey),
+          matching: find.byType(AnimatedScale),
+        ),
+      );
+      final bandSlide = tester.widget<AnimatedSlide>(
+        find.descendant(
+          of: find.byKey(_bandTransitionMotionKey),
+          matching: find.byType(AnimatedSlide),
+        ),
+      );
+
+      // Same easing curves and same details-stage duration on both surfaces -
+      // one shared contract, not two independent implementations. Only the
+      // identity-stage duration differs (band transition uses the stronger
+      // `milestone` token; ordinary completion uses `standard`), which is the
+      // one documented, bounded emphasis difference.
+      expect(worldCompletionScale.curve, bandScale.curve);
+      expect(worldCompletionSlide.curve, bandSlide.curve);
+      expect(worldCompletionSlide.duration, bandSlide.duration);
+      expect(worldCompletionScale.duration, Act0MotionTokensV1.standard);
+      expect(bandScale.duration, Act0MotionTokensV1.milestone);
+    },
+  );
+
+  testWidgets('Session Summary proof hero uses the shared reveal contract', (
     tester,
   ) async {
-    await tester.pumpWidget(_host(_worldTwoSummary()));
-    await tester.pump();
-    final worldCompletionScale = tester.widget<AnimatedScale>(
-      find.descendant(
-        of: find.byKey(_worldCompletionMotionKey),
-        matching: find.byType(AnimatedScale),
-      ),
-    );
-    final worldCompletionSlide = tester.widget<AnimatedSlide>(
-      find.descendant(
-        of: find.byKey(_worldCompletionMotionKey),
-        matching: find.byType(AnimatedSlide),
-      ),
-    );
-
     await tester.pumpWidget(_host(_worldFourSummary()));
     await tester.pump();
-    final bandScale = tester.widget<AnimatedScale>(
+
+    expect(find.byKey(_sessionSummaryHeroMotionKey), findsOneWidget);
+    final heroScales = tester
+        .widgetList<AnimatedScale>(
+          find.descendant(
+            of: find.byKey(_sessionSummaryHeroMotionKey),
+            matching: find.byType(AnimatedScale),
+          ),
+        )
+        .toList(growable: false);
+    expect(heroScales, isNotEmpty);
+    expect(
+      heroScales.map((scale) => scale.duration),
+      contains(Act0MotionTokensV1.standard),
+    );
+    await tester.pumpAndSettle();
+    final settledHeroScales = tester.widgetList<AnimatedScale>(
       find.descendant(
-        of: find.byKey(_bandTransitionMotionKey),
+        of: find.byKey(_sessionSummaryHeroMotionKey),
         matching: find.byType(AnimatedScale),
       ),
     );
-    final bandSlide = tester.widget<AnimatedSlide>(
-      find.descendant(
-        of: find.byKey(_bandTransitionMotionKey),
-        matching: find.byType(AnimatedSlide),
-      ),
-    );
-
-    // Same easing curves and same details-stage duration on both surfaces -
-    // one shared contract, not two independent implementations. Only the
-    // identity-stage duration differs (band transition uses the stronger
-    // `milestone` token; ordinary completion uses `standard`), which is the
-    // one documented, bounded emphasis difference.
-    expect(worldCompletionScale.curve, bandScale.curve);
-    expect(worldCompletionSlide.curve, bandSlide.curve);
-    expect(worldCompletionSlide.duration, bandSlide.duration);
-    expect(worldCompletionScale.duration, Act0MotionTokensV1.standard);
-    expect(bandScale.duration, Act0MotionTokensV1.milestone);
+    expect(settledHeroScales.map((scale) => scale.scale), everyElement(1.0));
   });
 
   testWidgets('reduced motion skips animation with no hidden content', (
@@ -125,6 +157,13 @@ void main() {
     expect(
       find.descendant(
         of: find.byKey(_bandTransitionMotionKey),
+        matching: find.byType(AnimatedScale),
+      ),
+      findsNothing,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(_sessionSummaryHeroMotionKey),
         matching: find.byType(AnimatedScale),
       ),
       findsNothing,
@@ -284,15 +323,18 @@ void main() {
     },
   );
 
-  test('no new arbitrary duration values on the milestone motion primitive', () {
-    // Structural guard: every Duration on the shared reveal must resolve to
-    // an Act0MotionTokensV1 constant, not a bespoke literal, matching the
-    // Motion Direction System v1 contract.
-    expect(Act0MotionTokensV1.micro, const Duration(milliseconds: 140));
-    expect(Act0MotionTokensV1.standard, const Duration(milliseconds: 260));
-    expect(Act0MotionTokensV1.emphasis, const Duration(milliseconds: 420));
-    expect(Act0MotionTokensV1.milestone, const Duration(milliseconds: 900));
-  });
+  test(
+    'no new arbitrary duration values on the milestone motion primitive',
+    () {
+      // Structural guard: every Duration on the shared reveal must resolve to
+      // an Act0MotionTokensV1 constant, not a bespoke literal, matching the
+      // Motion Direction System v1 contract.
+      expect(Act0MotionTokensV1.micro, const Duration(milliseconds: 140));
+      expect(Act0MotionTokensV1.standard, const Duration(milliseconds: 260));
+      expect(Act0MotionTokensV1.emphasis, const Duration(milliseconds: 420));
+      expect(Act0MotionTokensV1.milestone, const Duration(milliseconds: 900));
+    },
+  );
 }
 
 Act0BlockCompletionSummaryV1 _worldTwoSummary() {

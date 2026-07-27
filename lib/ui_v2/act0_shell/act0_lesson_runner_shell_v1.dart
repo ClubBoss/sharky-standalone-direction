@@ -7353,16 +7353,16 @@ class _ProofMotionRevealV1State extends State<_ProofMotionRevealV1> {
     }
     return AnimatedScale(
       scale: _settled ? 1 : 0.992,
-      duration: const Duration(milliseconds: 160),
-      curve: Curves.easeOutCubic,
+      duration: Act0MotionTokensV1.standard,
+      curve: Act0MotionTokensV1.enter,
       child: AnimatedSlide(
         offset: _settled ? Offset.zero : const Offset(0, 0.035),
-        duration: const Duration(milliseconds: 160),
-        curve: Curves.easeOutCubic,
+        duration: Act0MotionTokensV1.standard,
+        curve: Act0MotionTokensV1.enter,
         child: AnimatedOpacity(
           opacity: _settled ? 1 : 0.92,
-          duration: const Duration(milliseconds: 140),
-          curve: Curves.easeOutCubic,
+          duration: Act0MotionTokensV1.micro,
+          curve: Act0MotionTokensV1.enter,
           child: widget.child,
         ),
       ),
@@ -15057,7 +15057,10 @@ class _StreetReplayInlineV1 extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           for (var i = 0; i < visibleSteps.length; i++) ...[
-            _StreetReplayStepRowV1(step: visibleSteps[i], index: i),
+            _ProofMotionRevealV1(
+              key: Key('act0_shell_street_replay_step_motion_$i'),
+              child: _StreetReplayStepRowV1(step: visibleSteps[i], index: i),
+            ),
             if (i < visibleSteps.length - 1)
               const SizedBox(height: Act0ShellTokensV1.gapXs),
           ],
