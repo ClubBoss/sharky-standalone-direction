@@ -9,14 +9,15 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical HEAD | `cc1562db0b53a4e86fd9249f220df7e65bf0914e` |
-| Authority freshness | 2026-07-27 — PHP-6 through PHP-8 rolling corridor terminal closure reconciled |
+| Canonical HEAD | `de3f0ce2398601ab557af05b18fcff8a07279cfa` |
+| Authority freshness | 2026-07-27 — ROLLING_CORRIDOR_PHP6_TO_PHP8_V1 terminal publication (PR #85) reconciled; PRE_HUMAN_VISUAL_COMPLETION_STRATEGY checkpoint admitted (this update) |
 | Campaign version | v1 |
-| Corridor | **`ROLLING_CORRIDOR_PHP6_TO_PHP8_V1`** — PHP-6 unconditionally authorized; PHP-7 and PHP-8 conditionally preauthorized behind their own transition gates (see Current dispatch boundaries); PHP-9 remains `NOT_PREAUTHORIZED`. The corridor exists so Codex can move PHP-6 → gate → PHP-7-or-`CLOSED_UNNECESSARY` → gate → PHP-8-or-`CLOSED_UNNECESSARY` → one terminal corridor report without returning for a fresh dispatch between waves. |
-| Umbrella stage | **Pre-Human Node 6 — rolling corridor terminally closed** |
-| Active sub-packet | **None — PHP-9 remains NOT_PREAUTHORIZED** |
-| Status | **ROLLING_CORRIDOR_PHP6_TO_PHP8_COMPLETED — PHP-6 #82, PHP-7 #83, and PHP-8 #84 merged; Human remains NOT AUTHORIZED.** |
-| Latest admitted PR | **#84** (PHP-8 evidence and accessibility closure) |
+| Corridor | **`ROLLING_CORRIDOR_PHP6_TO_PHP8_V1`** — **CLOSED/HISTORICAL.** PHP-6, PHP-7, and PHP-8 are terminally closed and published (PR #85). The corridor is not reopened; its wave-by-wave authorization language below is historical record only. PHP-9 remains `NOT_PREAUTHORIZED`. |
+| Umbrella stage | **Pre-Human Node 6 — rolling corridor terminally closed; PRE_HUMAN_VISUAL_COMPLETION_STRATEGY checkpoint active** |
+| Active sub-packet | **PRE_HUMAN_VISUAL_COMPLETION_STRATEGY (packets VS-0 → VS-3) — PHP-9 remains NOT_PREAUTHORIZED** |
+| Status | **ROLLING_CORRIDOR_PHP6_TO_PHP8_COMPLETED and terminally published (PR #85). PRE_HUMAN_VISUAL_COMPLETION_STRATEGY is now the active checkpoint gating PHP-9 and Human Novice Proof. Human remains NOT AUTHORIZED.** |
+| Latest admitted PR | **#85** (terminal corridor publication) |
+| Owner visual directives | **VISUAL_SYSTEM_COMPLETENESS: NOT CLOSED** — active learner-facing screens are not yet proven to form a complete, cohesive, premium full-screen visual system; PHP-7 closed only its narrow role/hierarchy contract. **VISUAL_COMPLETION_OPERATING_MODEL: PENDING** — no proven method yet carries visual work from current-state acquisition through terminal visual closure. **VISUAL_STATE_ACQUISITION_OPERATING_MODEL: PENDING** — no proven cost-efficient, fresh, stable method yet obtains all important current screen states. **PRE_HUMAN_VISUAL_COMPLETION_STRATEGY: REQUIRED** — this checkpoint is mandatory before PHP-9 admission or Human Novice Proof. None of these directives authorize broad redesign, Modern Table changes, or new Sharky art. |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **PARTIALLY CLOSED IN PHP-3** — six PHP-3-owned unique current guards are current-contract reconciled and Tier-B ledgered; four differently owned unresolved-unique files remain. |
 | F-18 | **STALE_TEST** — exact pre-F-16-to-head trail disproves PR #51/#52 causation; owner is compact-decision test fixture / retired teaching-step assertion |
@@ -28,9 +29,9 @@ here; update only the fields below.
 | PHP-3 admitted carriers | **23 candidate** |
 | PHP-3 unresolved carriers | **59 candidate** |
 | PHP-3 nine-path residual | **59 candidate** |
-| Recommended next packet | **Packet 6A, then Packet 6B; then evaluate the PHP-7 transition gate (§ corridor), then the PHP-8 transition gate** |
-| Next authorization | **PHP-6 (Packets 6A, 6B): UNCONDITIONALLY AUTHORIZED. PHP-7: CONDITIONALLY PREAUTHORIZED — enters automatically only if all of KEY 7.1–7.4 pass at PHP-6 terminal disposition. PHP-8: CONDITIONALLY PREAUTHORIZED — enters automatically only if all of KEY 8.1–8.4 pass at PHP-7 terminal disposition. PHP-9 remains NOT_PREAUTHORIZED.** |
-| Autonomous window | **OPEN for the full corridor (PHP-6 → PHP-7 gate → PHP-8 gate → terminal corridor report), from canonical HEAD `dd082926…`, subject to the transition gates and the global stop rule below. CLOSED beyond PHP-8 — PHP-9 is never auto-entered.** |
+| Recommended next packet | **Packet VS-0 (this update) → VS-1 visual-state acquisition truth → VS-2 systemic root-cause analysis → VS-3 operating-model comparison and recommendation → Publication 2 strategy report. PHP-9 is not the next packet.** |
+| Next authorization | **PRE_HUMAN_VISUAL_COMPLETION_STRATEGY (packets VS-0–VS-3): AUTHORIZED, docs/evidence-only, no product implementation. PHP-9: remains NOT_PREAUTHORIZED — the strategy checkpoint must reach terminal closure first. Human Novice Proof: remains NOT AUTHORIZED.** |
+| Autonomous window | **OPEN for the PRE_HUMAN_VISUAL_COMPLETION_STRATEGY checkpoint (VS-0 → VS-1 → VS-2 → VS-3 → Publication 2), from canonical HEAD `de3f0ce2…`, subject to the global stop rule below. Historical corridor autonomous window (PHP-6 → PHP-7 gate → PHP-8 gate) is CLOSED — it completed and is not reopened. CLOSED beyond the strategy checkpoint — PHP-9 is never auto-entered by this checkpoint.** |
 | Human Proof | **NOT AUTHORIZED** |
 | `PRE_HUMAN_READY` | **NOT MET** |
 | `HUMAN_PROVEN_10_OF_10_CANDIDATE` | **NOT MET** |
@@ -65,7 +66,8 @@ Product severity resolves in PHP-0.
 | PHP-6 Sharky Production Integration & Completeness Proof | Node 6, Corridor Wave A | **CLOSED_WITH_EXTERNAL_ASSET_INPUT_REQUIRED — PR #82 merge `b00d786af0ae84a1ac8530d93f078c8a1c5d83fa`; runtime integration and deterministic proof are complete, while the admitted state-art rows remain externally supplied.** |
 | PHP-7 Screen-Role & Visual-Hierarchy Emphasis Proof | Node 6, Corridor Wave B | **CLOSED_PROVEN — PR #83 merge `194b2f14709b012db8af73921cd41315e0cf7053`; compact hierarchy and six-surface role proof passed without redesign.** |
 | PHP-8 Evidence & Accessibility Lane Completeness | Node 6, Corridor Wave C | **CLOSED_PROVEN — PR #84 merge `cc1562db0b53a4e86fd9249f220df7e65bf0914e`; W2 active-runtime capture and named accessibility sweep are green.** |
-| PHP-9 `PRE_HUMAN_READY` Admission | — | NOT_PREAUTHORIZED — never auto-entered by this corridor |
+| PRE_HUMAN_VISUAL_COMPLETION_STRATEGY | Node 6, post-corridor checkpoint | **ACTIVE — VS-0 authority reconciliation in progress (this update); VS-1/VS-2/VS-3 and Publication 2 pending. Terminal before PHP-9 or Human Novice Proof.** |
+| PHP-9 `PRE_HUMAN_READY` Admission | — | NOT_PREAUTHORIZED — never auto-entered by the corridor or by the visual completion strategy checkpoint |
 
 PR targets: Node 5 ≈ **4–7**; full machine horizon ≈ **8–12**; **16 is a hard
 emergency ceiling, never a target.**
@@ -76,7 +78,15 @@ Controlling plan: `docs/plan/MASTER_PLAN_v3.0.md`; packet-specific plan:
 `docs/plan/PRE_HUMAN_AND_HUMAN_PROVEN_CAMPAIGN_v1.md` (§4.2/§4.3 PHP-6/PHP-7/
 PHP-8; §7.5 OD-03/OD-03b/OD-03c/OD-03d and SHK-CREST-01).
 
-### `ROLLING_CORRIDOR_PHP6_TO_PHP8_V1`
+### `ROLLING_CORRIDOR_PHP6_TO_PHP8_V1` — CLOSED, HISTORICAL RECORD ONLY
+
+**This corridor is terminally closed and published (PR #85, merge
+`de3f0ce2398601ab557af05b18fcff8a07279cfa`).** PHP-6, PHP-7, and PHP-8 are not
+reopened. The wave/gate/autonomous-window language below describes how the
+corridor ran; it is preserved for audit trail and must not be read as a live
+authorization. The active checkpoint is
+`PRE_HUMAN_VISUAL_COMPLETION_STRATEGY` (see field table above and
+`docs/plan/PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_v1.md` once published).
 
 This dispatch replaces the prior one-wave-at-a-time pattern (PHP-6 → closure →
 fresh dispatch → PHP-7 → closure → fresh dispatch → PHP-8) with one rolling
