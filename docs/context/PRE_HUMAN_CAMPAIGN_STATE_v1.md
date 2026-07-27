@@ -9,14 +9,14 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical HEAD | `daa42e0fbd0c185e487ae7c4a51b79c218b52580` (Wave V1 implementation/evidence PR #89 merge; terminal report publication will reconcile the next merge SHA) |
-| Authority freshness | 2026-07-27 — Wave V1 of the visual completion corridor reached TERMINAL closure and published (`docs/plan/PRE_HUMAN_VISUAL_COMPLETION_WAVE_V1_REPORT_v1.md`) |
+| Canonical HEAD | `796e8af5344b57312679442a1d8ce92618b38d2b` (Wave V1 terminal-publication PR #90 merge; Wave V2 dispatch baseline) |
+| Authority freshness | 2026-07-28 — Wave V1 is terminal; Wave V2 has a fresh dispatch at this exact baseline. |
 | Campaign version | v1 |
 | Corridor | **`ROLLING_CORRIDOR_PHP6_TO_PHP8_V1`** — **CLOSED/HISTORICAL.** PHP-6, PHP-7, and PHP-8 are terminally closed and published (PR #85). The corridor is not reopened; its wave-by-wave authorization language below is historical record only. PHP-9 remains `NOT_PREAUTHORIZED`. |
-| Umbrella stage | **Pre-Human Node 6 — rolling corridor terminally closed; PRE_HUMAN_VISUAL_COMPLETION_STRATEGY checkpoint TERMINAL; Wave V1 TERMINAL (CLOSED)** |
-| Active sub-packet | **None active. Wave V1 is terminal. Next legal capability is Wave V2 (`V2_MODEL_3_NARROW_GRAMMAR`, per Wave V1's findings) — not yet executed, not PHP-9.** |
-| Status | **ROLLING_CORRIDOR_PHP6_TO_PHP8_COMPLETED (PR #85), PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_COMPLETED (PR #87), WAVE_V1_COMPLETED (PR #88 dispatch, PR #89 implementation/evidence, this publication terminal report). Human remains NOT AUTHORIZED.** |
-| Latest admitted PR | **#89** — Wave V1 implementation/evidence (S3 closure + reduced-motion capture + symptom ledger), merge `daa42e0fbd0c185e487ae7c4a51b79c218b52580` |
+| Umbrella stage | **Pre-Human Node 6 — Wave V2 (`V2_MODEL_3_NARROW_GRAMMAR`) active; Wave V1 terminal.** |
+| Active sub-packet | **Wave V2 — narrow vertical-allocation grammar repair for exactly two S1 owner families: Review zero-state and onboarding/welcome template.** |
+| Status | **WAVE_V2_ACTIVE — fresh dispatch published from `796e8af`; Model 3 only. Wave V3 remains gated. Human remains NOT AUTHORIZED.** |
+| Latest admitted PR | **#90** — Wave V1 terminal publication, merge `796e8af5344b57312679442a1d8ce92618b38d2b` |
 | Owner visual directives | **VISUAL_SYSTEM_COMPLETENESS: NOT CLOSED** — Wave V1 recaptured the full canonical matrix (11 groups, 3 devices) and confirmed exactly one repair-worthy symptom class (S1, dead space) in 2 independently-owned owner families; systemic verdict is BOUNDED, NOT SYSTEMIC (not yet CLOSED — that requires Wave V2's fix landing and re-verification). **VISUAL_COMPLETION_OPERATING_MODEL: Wave V2 model selected — `V2_MODEL_3_NARROW_GRAMMAR`** (2 owner families, below the 3+ threshold for the Model 1 shared-shell fallback). **VISUAL_STATE_ACQUISITION_OPERATING_MODEL: extended** — lane `tools/act0_real_text_surface_capture_v1.dart` (`screen_review_fast_v1.sh`) remains primary; Wave V1 added an authorized reduced-motion capture modifier (no new pipeline). **S3 (presentation_closure acquisition gap): CLOSED — STALE_FIXTURE**, fixture-only fix, no product code changed. None of this authorizes broad redesign, Modern Table changes, or new Sharky art; Wave V2 (Model 3, narrow) is the next legal capability, still requires its own fresh dispatch/execution — not auto-entered by this report. |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **PARTIALLY CLOSED IN PHP-3** — six PHP-3-owned unique current guards are current-contract reconciled and Tier-B ledgered; four differently owned unresolved-unique files remain. |
@@ -29,9 +29,9 @@ here; update only the fields below.
 | PHP-3 admitted carriers | **23 candidate** |
 | PHP-3 unresolved carriers | **59 candidate** |
 | PHP-3 nine-path residual | **59 candidate** |
-| Recommended next packet | **Wave V2 of the visual completion corridor — `V2_MODEL_3_NARROW_GRAMMAR` (vertical-allocation grammar fix for the 2 S1 owner families: Review zero-state, onboarding/welcome template). Full Codex prompt in `docs/plan/PRE_HUMAN_VISUAL_COMPLETION_WAVE_V1_REPORT_v1.md` §8. PHP-9 is not the next packet.** |
-| Next authorization | **Wave V1: TERMINAL/CLOSED (PR #88, #89, this publication). Wave V2: CONDITIONALLY PREAUTHORIZED per strategy §13, model selection now resolved (Model 3) — requires its own fresh dispatch/execution, not auto-started by this report. Wave V3: still gated behind Wave V2 terminal. PHP-9: remains NOT_PREAUTHORIZED. Human Novice Proof: remains NOT AUTHORIZED.** |
-| Autonomous window | **CLOSED at this publication.** Wave V1's window (opened by `docs/plan/PRE_HUMAN_VISUAL_COMPLETION_WAVE_V1_DISPATCH_v1.md`) is complete. Wave V2 requires its own fresh dispatch using the Codex prompt in the Wave V1 report §8 — this state file does not pre-open Wave V2's autonomous window. |
+| Recommended next packet | **Wave V2 — `V2_MODEL_3_NARROW_GRAMMAR`: local minimum-fill / center-with-support allocation rule in the two S1 owner families only. PHP-9 is not the next packet.** |
+| Next authorization | **Wave V2 only. Wave V3 remains gated behind Wave V2 terminal closure; PHP-9 remains NOT_PREAUTHORIZED; Human Novice Proof remains NOT AUTHORIZED.** |
+| Autonomous window | **OPEN for Wave V2 only.** Maximum one docs-only dispatch PR, one product/evidence PR, and one terminal authority publication PR if it cannot safely combine with the product/evidence PR. |
 | Human Proof | **NOT AUTHORIZED** |
 | `PRE_HUMAN_READY` | **NOT MET** |
 | `HUMAN_PROVEN_10_OF_10_CANDIDATE` | **NOT MET** |
@@ -68,6 +68,7 @@ Product severity resolves in PHP-0.
 | PHP-8 Evidence & Accessibility Lane Completeness | Node 6, Corridor Wave C | **CLOSED_PROVEN — PR #84 merge `cc1562db0b53a4e86fd9249f220df7e65bf0914e`; W2 active-runtime capture and named accessibility sweep are green.** |
 | PRE_HUMAN_VISUAL_COMPLETION_STRATEGY | Node 6, post-corridor checkpoint | **TERMINAL — PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_COMPLETED. VS-0 (PR #86, `432c9f47`) and Publication 2 (PR #87, merge `a27366e6f6f4a25e6862a053945be6a5f4a421cd`) both merged. Selected: Model 7 process governing Model 3 code fix, fallback Model 1. Next legal capability is Wave V1, not PHP-9.** |
 | Wave V1 (visual completion corridor) | Node 6, corridor Wave 1 of 3 | **TERMINAL — WAVE_V1_COMPLETED. Dispatch PR #88 (`1afb94f2`); implementation/evidence PR #89 (`daa42e0f`) closed S3 as STALE_FIXTURE, added reduced-motion capture, published the full symptom ledger; terminal report `docs/plan/PRE_HUMAN_VISUAL_COMPLETION_WAVE_V1_REPORT_v1.md` selects `V2_MODEL_3_NARROW_GRAMMAR`. Systemic verdict: BOUNDED, NOT SYSTEMIC. Wave V2/V3 not entered.** |
+| Wave V2 (visual completion corridor) | Node 6, corridor Wave 2 of 3 | **ACTIVE — `V2_MODEL_3_NARROW_GRAMMAR`, fresh dispatch baseline `796e8af`. Exact S1 owners: Review zero-state and onboarding/welcome template. No shared shell, no third owner, no Modern Table, no Sharky art.** |
 | PHP-9 `PRE_HUMAN_READY` Admission | — | NOT_PREAUTHORIZED — never auto-entered by the corridor, the visual completion strategy checkpoint, or Wave V1 |
 
 PR targets: Node 5 ≈ **4–7**; full machine horizon ≈ **8–12**; **16 is a hard
