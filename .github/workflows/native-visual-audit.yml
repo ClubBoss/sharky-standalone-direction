@@ -7,12 +7,6 @@ on:
         description: Candidate commit SHA to capture
         required: true
         type: string
-      capture_scope:
-        description: Native audit scope
-        required: true
-        default: six-state
-        type: choice
-        options: [six-state, full]
 
 permissions:
   contents: read
@@ -20,7 +14,7 @@ permissions:
 jobs:
   capture:
     runs-on: macos-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
         with:
@@ -33,12 +27,11 @@ jobs:
           cache: true
       - name: Install locked dependencies
         run: flutter pub get
-      - name: Run native Simulator capture
-        run: |
-          python3 tools/sharky_native_visual_audit_v1.py \
-            --scope '${{ inputs.capture_scope }}' \
-            --out output/native_visual_audit
-      - name: Upload native visual audit
+      - name: Validate row-level audit matrix
+        run: python3 tools/sharky_native_visual_audit_v1.py --preflight
+      - name: Run unified native Simulator capture
+        run: python3 tools/sharky_native_visual_audit_v1.py --out output/native_visual_audit
+      - name: Upload unified native visual audit
         uses: actions/upload-artifact@v4
         with:
           name: sharky-native-visual-audit-${{ inputs.candidate_sha }}

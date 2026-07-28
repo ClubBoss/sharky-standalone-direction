@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
-"""Native iOS Simulator transport for the Sharky visual audit.
-
-This builds one audit-enabled Runner app per invocation, changes only launch
-environment between states, waits for the app's native readiness marker, and
-captures with `simctl io screenshot`. Raw evidence stays outside git.
-"""
-
+"""One-build, row-level native iOS Simulator visual-audit transport."""
 from __future__ import annotations
 
 import argparse
@@ -16,133 +10,118 @@ import pathlib
 import subprocess
 import sys
 import time
-
+from collections import Counter, defaultdict
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 BUNDLE_ID = "com.example.pokerAnalyzer"
 MANIFEST = ROOT / "tools" / "sharky_native_visual_audit_manifest_v1.json"
+EXPECTED = {("canonical", "none"): 20, ("compact", "none"): 14,
+            ("canonical", "text_scale_1_4"): 10,
+            ("canonical", "reduced_motion"): 6, ("large", "none"): 4}
 
 
 def run(*args: str, capture: bool = False, env: dict[str, str] | None = None) -> str:
-    completed = subprocess.run(
-        args,
-        cwd=ROOT,
-        env=env,
-        text=True,
-        stdout=subprocess.PIPE if capture else None,
-        stderr=subprocess.STDOUT if capture else None,
-        check=True,
-    )
-    return completed.stdout or ""
+    result = subprocess.run(args, cwd=ROOT, env=env, text=True,
+                            stdout=subprocess.PIPE if capture else None,
+                            stderr=subprocess.STDOUT if capture else None, check=True)
+    return result.stdout or ""
 
 
 def best_effort(*args: str) -> None:
     subprocess.run(args, cwd=ROOT, text=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
-def selected_simulator() -> tuple[str, str, str]:
+def sha256(path: pathlib.Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as file:
+        for chunk in iter(lambda: file.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def validate(rows: list[dict[str, str]]) -> None:
+    counts = Counter((row["device_profile"], row["modifier"]) for row in rows)
+    tuples = [(row["state"], row["device_profile"], row["modifier"]) for row in rows]
+    errors = []
+    if len(rows) != 54: errors.append(f"total rows must be 54, found {len(rows)}")
+    if counts != EXPECTED: errors.append(f"distribution must be {EXPECTED}, found {dict(counts)}")
+    if len(set(tuples)) != len(tuples): errors.append("state/device_profile/modifier tuples must be unique")
+    if any(row["device_profile"] == "large" and row["modifier"] == "reduced_motion" for row in rows):
+        errors.append("large + reduced_motion is not admitted")
+    if not any(row["state"] == "lesson.completion" for row in rows):
+        errors.append("lesson.completion row is required")
+    if not any(row["state"] == "completion.world" for row in rows):
+        errors.append("completion.world row is required")
+    if errors: raise RuntimeError("native visual audit preflight failed: " + "; ".join(errors))
+
+
+def selected_simulator(profile: str) -> tuple[str, str, str]:
+    names = {"compact": ("iPhone SE",), "canonical": ("iPhone 17 Pro", "iPhone 16 Pro"),
+             "large": ("iPhone 17 Pro Max", "iPhone 16 Pro Max")}[profile]
     devices = json.loads(run("xcrun", "simctl", "list", "devices", "available", "-j", capture=True))
     for runtime, values in devices["devices"].items():
         for device in values:
-            if device.get("isAvailable") and device["name"].startswith("iPhone"):
+            if device.get("isAvailable") and any(device["name"].startswith(name) for name in names):
                 return device["udid"], device["name"], runtime
-    raise RuntimeError("No available iPhone Simulator runtime was found")
-
-
-def sha256(path: pathlib.Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as source:
-        for chunk in iter(lambda: source.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+    raise RuntimeError(f"No available Simulator for {profile}")
 
 
 def wait_for_ready(udid: str, state_id: str, timeout: float) -> None:
     marker = f"SHARKY_VISUAL_CAPTURE_READY:{state_id}"
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
-        output = run(
-            "xcrun", "simctl", "spawn", udid, "log", "show", "--last", "1m",
-            "--style", "compact", "--predicate", f'eventMessage CONTAINS "{marker}"',
-            capture=True,
-        )
-        if marker in output:
-            return
+        output = run("xcrun", "simctl", "spawn", udid, "log", "show", "--last", "1m",
+                     "--style", "compact", "--predicate", f'eventMessage CONTAINS "{marker}"', capture=True)
+        if marker in output: return
         time.sleep(0.25)
     raise RuntimeError(f"Timed out waiting for {marker}")
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--scope", choices=("six-state", "full"), default="six-state")
+    parser.add_argument("--preflight", action="store_true")
     parser.add_argument("--out", type=pathlib.Path, default=ROOT / "output" / "native_visual_audit")
     parser.add_argument("--ready-timeout", type=float, default=30.0)
     args = parser.parse_args()
-
     source = json.loads(MANIFEST.read_text())
-    states = [item for item in source["states"] if args.scope == "full" or item["fidelity_gate"]]
-    output = args.out.resolve()
-    raw = output / "raw"
-    raw.mkdir(parents=True, exist_ok=True)
-    build_log = output / "build.log"
-    state_log = output / "state_transitions.jsonl"
+    rows = source["rows"]
+    validate(rows)
+    if args.preflight:
+        print(json.dumps({"rows": len(rows), "distribution": {f"{k[0]}/{k[1]}": v for k, v in EXPECTED.items()}}))
+        return 0
 
-    with build_log.open("w") as log:
-        build = subprocess.run(
-            ["flutter", "build", "ios", "--simulator", "--debug", "--dart-define=SHARKY_VISUAL_AUDIT=true"],
-            cwd=ROOT, text=True, stdout=log, stderr=subprocess.STDOUT,
-        )
-    if build.returncode:
-        raise RuntimeError(f"Native audit build failed; see {build_log}")
-
+    output = args.out.resolve(); raw = output / "raw"; raw.mkdir(parents=True, exist_ok=True)
+    with (output / "build.log").open("w") as log:
+        build = subprocess.run(["flutter", "build", "ios", "--simulator", "--debug", "--dart-define=SHARKY_VISUAL_AUDIT=true"], cwd=ROOT, text=True, stdout=log, stderr=subprocess.STDOUT)
+    if build.returncode: raise RuntimeError(f"Native audit build failed; see {output / 'build.log'}")
     app = ROOT / "build" / "ios" / "iphonesimulator" / "Runner.app"
-    if not app.is_dir():
-        raise RuntimeError(f"Expected app bundle is missing: {app}")
-    udid, device_name, runtime = selected_simulator()
-    best_effort("xcrun", "simctl", "boot", udid)
-    run("xcrun", "simctl", "bootstatus", udid, "-b")
-    best_effort("xcrun", "simctl", "uninstall", udid, BUNDLE_ID)
-    run("xcrun", "simctl", "install", udid, str(app))
+    if not app.is_dir(): raise RuntimeError(f"Expected app bundle is missing: {app}")
 
-    rows = []
-    with state_log.open("w") as transitions:
-        for state in states:
-            best_effort("xcrun", "simctl", "terminate", udid, BUNDLE_ID)
-            environment = os.environ | {
-                "SIMCTL_CHILD_SHARKY_VISUAL_AUDIT_PAYLOAD": state["query"],
-                "SIMCTL_CHILD_SHARKY_VISUAL_AUDIT_STATE_ID": state["visual_state_id"],
-            }
-            run("xcrun", "simctl", "launch", udid, BUNDLE_ID, env=environment)
-            wait_for_ready(udid, state["visual_state_id"], args.ready_timeout)
-            png = raw / f'{state["visual_state_id"]}.png'
-            run("xcrun", "simctl", "io", udid, "screenshot", str(png))
-            if not png.is_file() or png.stat().st_size == 0:
-                raise RuntimeError(f"Screenshot was not created: {png}")
-            row = state | {
-                "capture_source": "NATIVE_IOS_SIMULATOR",
-                "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
-                "png": str(png.relative_to(output)),
-                "png_sha256": sha256(png),
-                "device_model": device_name,
-                "ios_runtime": runtime,
-            }
-            transitions.write(json.dumps({"event": "captured", **row}) + "\n")
-            rows.append(row)
+    simulators = {}
+    for profile in {row["device_profile"] for row in rows}:
+        udid, name, runtime = selected_simulator(profile)
+        best_effort("xcrun", "simctl", "boot", udid); run("xcrun", "simctl", "bootstatus", udid, "-b")
+        best_effort("xcrun", "simctl", "uninstall", udid, BUNDLE_ID); run("xcrun", "simctl", "install", udid, str(app))
+        simulators[profile] = {"udid": udid, "name": name, "runtime": runtime}
 
+    captured = []
+    with (output / "state_transitions.jsonl").open("w") as transitions:
+        for row in rows:
+            simulator = simulators[row["device_profile"]]; state_id = row["visual_state_id"]
+            best_effort("xcrun", "simctl", "terminate", simulator["udid"], BUNDLE_ID)
+            environment = os.environ | {"SIMCTL_CHILD_SHARKY_VISUAL_AUDIT_PAYLOAD": row["query"], "SIMCTL_CHILD_SHARKY_VISUAL_AUDIT_STATE_ID": state_id}
+            run("xcrun", "simctl", "launch", simulator["udid"], BUNDLE_ID, env=environment)
+            wait_for_ready(simulator["udid"], state_id, args.ready_timeout)
+            png = raw / f"{state_id}.png"; run("xcrun", "simctl", "io", simulator["udid"], "screenshot", str(png))
+            if not png.is_file() or png.stat().st_size == 0: raise RuntimeError(f"Missing screenshot: {png}")
+            record = row | {"capture_source": "NATIVE_IOS_SIMULATOR", "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE", "png": str(png.relative_to(output)), "png_sha256": sha256(png), "device_model": simulator["name"], "ios_runtime": simulator["runtime"]}
+            transitions.write(json.dumps({"event": "captured", **record}) + "\n"); captured.append(record)
     candidate = run("git", "rev-parse", "HEAD", capture=True).strip()
-    (output / "native_capture_manifest.json").write_text(json.dumps({
-        "schema": "sharky_native_visual_audit_v1",
-        "candidate_sha": candidate,
-        "scope": args.scope,
-        "device": {"name": device_name, "udid": udid, "runtime": runtime},
-        "rows": rows,
-    }, indent=2) + "\n")
+    (output / "native_capture_manifest.json").write_text(json.dumps({"schema": "sharky_native_visual_audit_v1", "candidate_sha": candidate, "rows": captured}, indent=2) + "\n")
     return 0
 
 
 if __name__ == "__main__":
-    try:
-        raise SystemExit(main())
+    try: raise SystemExit(main())
     except (RuntimeError, subprocess.CalledProcessError) as error:
-        print(f"native visual audit: {error}", file=sys.stderr)
-        raise SystemExit(1)
+        print(f"native visual audit: {error}", file=sys.stderr); raise SystemExit(1)
