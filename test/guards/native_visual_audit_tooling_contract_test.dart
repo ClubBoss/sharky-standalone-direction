@@ -64,5 +64,7 @@ void main() {
     expect(source, contains('total rows must be 54'));
     expect(source, contains('selected_simulator(profile)'));
     expect(source, contains('simulators[row["device_profile"]]'));
+    expect(source, contains('"iPhone 16e"'));
+    expect(source, contains('"candidate_sha": candidate'));
   });
 }

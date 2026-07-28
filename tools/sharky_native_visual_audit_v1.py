@@ -56,14 +56,22 @@ def validate(rows: list[dict[str, str]]) -> None:
 
 
 def selected_simulator(profile: str) -> tuple[str, str, str]:
-    names = {"compact": ("iPhone SE",), "canonical": ("iPhone 17 Pro", "iPhone 16 Pro"),
-             "large": ("iPhone 17 Pro Max", "iPhone 16 Pro Max")}[profile]
+    # Hosted macOS images rotate their installed Simulator catalog.  Select by
+    # profile, with bounded fallbacks in the same size class, rather than
+    # requiring one retired device name (for example, iPhone SE).
+    names = {
+        "compact": ("iPhone SE", "iPhone 16e", "iPhone 15", "iPhone 14", "iPhone 13", "iPhone 12", "iPhone 11"),
+        "canonical": ("iPhone 17 Pro", "iPhone 16 Pro", "iPhone 15 Pro", "iPhone 14 Pro", "iPhone 17", "iPhone 16", "iPhone 15", "iPhone 14"),
+        "large": ("iPhone 17 Pro Max", "iPhone 16 Pro Max", "iPhone 15 Pro Max", "iPhone 14 Pro Max", "iPhone 17 Plus", "iPhone 16 Plus", "iPhone 15 Plus", "iPhone 14 Plus"),
+    }[profile]
     devices = json.loads(run("xcrun", "simctl", "list", "devices", "available", "-j", capture=True))
     for runtime, values in devices["devices"].items():
         for device in values:
             if device.get("isAvailable") and any(device["name"].startswith(name) for name in names):
                 return device["udid"], device["name"], runtime
-    raise RuntimeError(f"No available Simulator for {profile}")
+    available = sorted({device["name"] for values in devices["devices"].values()
+                        for device in values if device.get("isAvailable")})
+    raise RuntimeError(f"No available Simulator for {profile}; available: {', '.join(available)}")
 
 
 def wait_for_ready(udid: str, state_id: str, timeout: float) -> None:
@@ -104,6 +112,7 @@ def main() -> int:
         best_effort("xcrun", "simctl", "uninstall", udid, BUNDLE_ID); run("xcrun", "simctl", "install", udid, str(app))
         simulators[profile] = {"udid": udid, "name": name, "runtime": runtime}
 
+    candidate = run("git", "rev-parse", "HEAD", capture=True).strip()
     captured = []
     with (output / "state_transitions.jsonl").open("w") as transitions:
         for row in rows:
@@ -114,9 +123,8 @@ def main() -> int:
             wait_for_ready(simulator["udid"], state_id, args.ready_timeout)
             png = raw / f"{state_id}.png"; run("xcrun", "simctl", "io", simulator["udid"], "screenshot", str(png))
             if not png.is_file() or png.stat().st_size == 0: raise RuntimeError(f"Missing screenshot: {png}")
-            record = row | {"capture_source": "NATIVE_IOS_SIMULATOR", "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE", "png": str(png.relative_to(output)), "png_sha256": sha256(png), "device_model": simulator["name"], "ios_runtime": simulator["runtime"]}
+            record = row | {"candidate_sha": candidate, "capture_source": "NATIVE_IOS_SIMULATOR", "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE", "png": str(png.relative_to(output)), "png_sha256": sha256(png), "device_model": simulator["name"], "ios_runtime": simulator["runtime"]}
             transitions.write(json.dumps({"event": "captured", **record}) + "\n"); captured.append(record)
-    candidate = run("git", "rev-parse", "HEAD", capture=True).strip()
     (output / "native_capture_manifest.json").write_text(json.dumps({"schema": "sharky_native_visual_audit_v1", "candidate_sha": candidate, "rows": captured}, indent=2) + "\n")
     return 0
 
