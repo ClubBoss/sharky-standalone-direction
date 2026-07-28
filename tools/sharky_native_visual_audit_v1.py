@@ -90,6 +90,7 @@ def main() -> int:
     parser.add_argument("--preflight", action="store_true")
     parser.add_argument("--out", type=pathlib.Path, default=ROOT / "output" / "native_visual_audit")
     parser.add_argument("--ready-timeout", type=float, default=30.0)
+    parser.add_argument("--frame-settle-seconds", type=float, default=1.5)
     args = parser.parse_args()
     source = json.loads(MANIFEST.read_text())
     rows = source["rows"]
@@ -121,6 +122,10 @@ def main() -> int:
             environment = os.environ | {"SIMCTL_CHILD_SHARKY_VISUAL_AUDIT_PAYLOAD": row["query"], "SIMCTL_CHILD_SHARKY_VISUAL_AUDIT_STATE_ID": state_id}
             run("xcrun", "simctl", "launch", simulator["udid"], BUNDLE_ID, env=environment)
             wait_for_ready(simulator["udid"], state_id, args.ready_timeout)
+            # The Dart readiness marker is emitted before UIKit presents the
+            # first complete Flutter frame on every device class.  Let that
+            # frame settle before taking the native screenshot.
+            time.sleep(args.frame_settle_seconds)
             png = raw / f"{state_id}.png"; run("xcrun", "simctl", "io", simulator["udid"], "screenshot", str(png))
             if not png.is_file() or png.stat().st_size == 0: raise RuntimeError(f"Missing screenshot: {png}")
             record = row | {"candidate_sha": candidate, "capture_source": "NATIVE_IOS_SIMULATOR", "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE", "png": str(png.relative_to(output)), "png_sha256": sha256(png), "device_model": simulator["name"], "ios_runtime": simulator["runtime"]}
