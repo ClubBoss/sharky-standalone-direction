@@ -76,12 +76,19 @@ void main() {
     expect(source, contains('log", "stream"'));
     expect(source, contains('listener.poll() is not None'));
     expect(source, contains('"log", "show", "--last", "30s"'));
-    expect(source, contains('assert_nonblank(png)'));
+    expect(source, contains('png_frame_metrics(path)'));
+    expect(source, contains('near_black_ratio'));
+    expect(source, contains('near_white_ratio'));
+    expect(source, contains('practically_uniform'));
+    expect(source, contains('near_black_blank'));
+    expect(source, contains('assert_valid_frame(png)'));
     expect(source, contains('--resume-from'));
     expect(source, contains('"resumed_rows"'));
     expect(source, contains('for attempt in (1, 2)'));
     expect(source, contains('shard_capture_manifest.json'));
     expect(source, contains('aggregate requires four shard manifests'));
+    expect(source, contains('--replace-shard-row'));
+    expect(source, contains('replacement shard must contain exactly one successful row'));
   });
 
   test('native audit tooling emits shards and rejects invalid delta selection', () {
