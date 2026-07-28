@@ -66,5 +66,7 @@ void main() {
     expect(source, contains('simulators[row["device_profile"]]'));
     expect(source, contains('"iPhone 16e"'));
     expect(source, contains('"candidate_sha": candidate'));
+    expect(source, contains('--frame-settle-seconds'));
+    expect(source, contains('time.sleep(args.frame_settle_seconds)'));
   });
 }
