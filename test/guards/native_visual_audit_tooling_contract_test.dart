@@ -67,11 +67,19 @@ void main() {
     expect(source, contains('"iPhone 16e"'));
     expect(source, contains('"candidate_sha": candidate'));
     expect(source, contains('--frame-settle-seconds'));
-    expect(source, contains('time.sleep(args.frame_settle_seconds)'));
+    expect(
+      source,
+      contains('args.frame_settle_seconds if attempt == 1 else args.frame_settle_seconds + 1.5'),
+    );
     expect(source, contains('--row-ids-file'));
     expect(source, contains('--full-checkpoint'));
     expect(source, contains('log", "stream"'));
+    expect(source, contains('listener.poll() is not None'));
+    expect(source, contains('"log", "show", "--last", "30s"'));
     expect(source, contains('assert_nonblank(png)'));
+    expect(source, contains('--resume-from'));
+    expect(source, contains('"resumed_rows"'));
+    expect(source, contains('for attempt in (1, 2)'));
     expect(source, contains('shard_capture_manifest.json'));
     expect(source, contains('aggregate requires four shard manifests'));
   });

@@ -1,0 +1,72 @@
+name: Native visual audit recovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        required: true
+        type: string
+        default: bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  recover:
+    runs-on: macos-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [canonical-normal, large-normal]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download preserved Runner and partial shard
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 30402799914 -R ClubBoss/sharky-standalone-direction -n native-audit-runner-${{ inputs.candidate_sha }} -D output
+          gh run download 30402799914 -R ClubBoss/sharky-standalone-direction -n native-audit-shard-${{ matrix.shard }}-${{ inputs.candidate_sha }} -D output/partial
+          gh run download 30402799914 -R ClubBoss/sharky-standalone-direction -n native-audit-shards-${{ inputs.candidate_sha }} -D output/shards
+      - name: Recover only failed rows
+        run: >-
+          python3 tools/sharky_native_visual_audit_v1.py
+          --row-ids-file output/shards/${{ matrix.shard }}.json
+          --app output/Runner.app
+          --resume-from output/partial
+          --out output/recovered
+          --shard ${{ matrix.shard }}
+          --candidate-sha ${{ inputs.candidate_sha }}
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-audit-recovery-${{ matrix.shard }}-${{ inputs.candidate_sha }}
+          path: output/recovered
+          if-no-files-found: warn
+          retention-days: 14
+
+  aggregate:
+    if: always()
+    needs: recover
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download preserved and recovered shards
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p output/shards
+          gh run download 30402799914 -R ClubBoss/sharky-standalone-direction -n native-audit-shard-compact-normal-${{ inputs.candidate_sha }} -D output/shards/compact
+          gh run download 30402799914 -R ClubBoss/sharky-standalone-direction -n native-audit-shard-canonical-modifiers-${{ inputs.candidate_sha }} -D output/shards/modifiers
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: native-audit-recovery-*-${{ inputs.candidate_sha }}
+          path: output/shards
+          merge-multiple: false
+      - run: python3 tools/sharky_native_visual_audit_v1.py --aggregate-shards output/shards --candidate-sha ${{ inputs.candidate_sha }} --out output/native_visual_audit
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sharky-native-visual-audit-${{ inputs.candidate_sha }}
+          path: output/native_visual_audit
+          retention-days: 14
