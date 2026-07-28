@@ -1,152 +1,66 @@
 #!/usr/bin/env python3
-"""Build the committed review transport from local-only capture evidence."""
-
+"""Build a truth-preserving, final-candidate visual-audit review pack."""
 from __future__ import annotations
-
-import hashlib
-import json
-import subprocess
+import hashlib, json, subprocess
+from collections import defaultdict
 from pathlib import Path
-
 from PIL import Image, ImageDraw, ImageFont
 
-ROOT = Path(__file__).resolve().parents[1]
-RAW = ROOT / "output/visual_master_audit/raw"
-SCREEN_REVIEW = ROOT / "output/screen_review/current"
-DEST = ROOT / "docs/evidence/visual_master_audit_v1"
-
-
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-def commit() -> str:
-    return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
-
-
-def raw_rows() -> list[dict]:
-    rows: list[dict] = []
-    for manifest_path in sorted(RAW.glob("*/manifest.json")):
-        manifest = json.loads(manifest_path.read_text())
-        rows.extend(manifest["rows"])
-    return rows
-
-
-def adjacent_rows() -> list[dict]:
-    rows: list[dict] = []
-    # These capture states remain explicitly SYNTHETIC in this baseline.  They
-    # make the gallery useful for navigation-family comparison without being
-    # allowed to close a production visual-quality claim.
-    for manifest_path in sorted(SCREEN_REVIEW.glob("*/manifest.json")):
-        manifest = json.loads(manifest_path.read_text())
-        for entry in manifest.get("entries", []):
-            path = ROOT / entry["path"]
-            if not path.exists():
-                continue
-            surface = entry.get("surface", "unknown")
-            rows.append(
-                {
-                    "visual_state_id": f"synthetic.{manifest.get('group', 'screen')}.{surface}",
-                    "route_id": entry.get("source_route", "controlled_demo"),
-                    "lesson_id": entry.get("task_id"),
-                    "task_id": entry.get("task_id"),
-                    "semantic_phase": surface,
-                    "actual_production_renderer": entry.get("production_source_owner") or entry.get("source_route"),
-                    "owner_family": entry.get("source_route"),
-                    "deterministic_state_seed": entry.get("debug_surface") or "controlled demo state",
-                    "device_class": entry.get("device", "compact"),
-                    "modifier": manifest.get("motion_mode", "normal"),
-                    "expected_interaction": "reference-only controlled capture",
-                    "content_status": "SYNTHETIC",
-                    "capture_class": "harness_capture",
-                    "screenshot_path": str(path),
-                    "sha256": sha256(path),
-                    "candidate_commit_sha": manifest.get("git_commit"),
-                    "quality_claim_policy": "not eligible to close production visual claims",
-                }
-            )
-    return rows
-
-
-def label(row: dict) -> str:
-    return " | ".join(
-        [
-            row["visual_state_id"],
-            row.get("device_class", "unknown"),
-            row.get("semantic_phase", "unknown"),
-            row["content_status"],
-        ]
-    )
-
-
-def sheet(rows: list[dict], target: Path, title: str) -> None:
-    font = ImageFont.load_default()
-    panels: list[Image.Image] = []
-    for row in rows:
-        image = Image.open(row["screenshot_path"]).convert("RGB")
-        image.thumbnail((390, 720))
-        panel = Image.new("RGB", (400, 780), "#101722")
-        panel.paste(image, ((400 - image.width) // 2, 34))
-        draw = ImageDraw.Draw(panel)
-        draw.rectangle((0, 0, 400, 34), fill="#162539")
-        draw.multiline_text((6, 5), label(row), font=font, fill="white", spacing=2)
-        panels.append(panel)
-    canvas = Image.new("RGB", (1600, 820), "#070b12")
-    draw = ImageDraw.Draw(canvas)
-    draw.text((10, 4), title, font=font, fill="white")
-    for index, panel in enumerate(panels):
-        canvas.paste(panel, (index * 400, 40))
-    target.parent.mkdir(parents=True, exist_ok=True)
-    canvas.save(target, "WEBP", quality=82, method=6)
-
-
-def main() -> int:
-    DEST.mkdir(parents=True, exist_ok=True)
-    rows = raw_rows() + adjacent_rows()
-    if not rows:
-        raise SystemExit("No capture rows found.")
-    candidate = commit()
-    for row in rows:
-        if row.get("candidate_commit_sha") != candidate:
-            row["candidate_commit_sha"] = candidate
-            row["freshness_reconciled"] = True
-    sheets: list[dict] = []
-    for offset in range(0, len(rows), 4):
-        group = rows[offset : offset + 4]
-        name = f"{offset // 4 + 1:02d}_visual_master_audit.webp"
-        sheet(group, DEST / "contact_sheets" / name, f"Visual Master Audit | {candidate[:12]}")
-        sheets.append({"path": f"contact_sheets/{name}", "states": [r["visual_state_id"] for r in group]})
-    manifest = {
-        "schema": "visual_master_audit_manifest_v1",
-        "candidate_commit_sha": candidate,
-        "rows": rows,
-        "contact_sheets": sheets,
-        "truth_rule": "SYNTHETIC rows are never eligible to close production visual quality claims.",
-    }
-    (DEST / "visual_master_audit_manifest_v1.json").write_text(json.dumps(manifest, indent=2) + "\n")
-    live = sum(row["content_status"] == "LIVE_PRODUCTION" for row in rows)
-    synthetic = len(rows) - live
-    matrix = [
-        "# Visual Master Audit Capture Matrix v1",
-        "",
-        f"Candidate: `{candidate}`",
-        "",
-        f"Rows: **{len(rows)}**; LIVE_PRODUCTION: **{live}**; SYNTHETIC: **{synthetic}**.",
-        "",
-        "Synthetic rows are reference-only and may not close production visual quality claims.",
-        "",
-        "| State | Device | Phase | Status | Renderer | SHA-256 |",
-        "| --- | --- | --- | --- | --- | --- |",
-    ]
-    matrix += [f"| {r['visual_state_id']} | {r['device_class']} | {r['semantic_phase']} | {r['content_status']} | {r['actual_production_renderer']} | `{r['sha256']}` |" for r in rows]
-    (DEST / "visual_master_audit_capture_matrix_v1.md").write_text("\n".join(matrix) + "\n")
-    gallery = ["# Visual Master Audit Gallery v1", "", f"Candidate: `{candidate}`", ""]
-    gallery += [f"![{item['path']}]({item['path']})" for item in sheets]
-    (DEST / "visual_master_audit_gallery_v1.md").write_text("\n\n".join(gallery) + "\n")
-    (DEST / "visual_master_audit_issue_scorecard_template_v1.json").write_text(json.dumps({"schema": "visual_master_audit_issue_scorecard_template_v1", "candidate_commit_sha": candidate, "issues": []}, indent=2) + "\n")
-    print(json.dumps({"rows": len(rows), "live": live, "synthetic": synthetic, "sheets": len(sheets)}, indent=2))
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+ROOT=Path(__file__).resolve().parents[1]; RAW=ROOT/'output/visual_master_audit/raw'; DEST=ROOT/'docs/evidence/visual_master_audit_v1'
+STATUSES={'LIVE_PRODUCTION','PRODUCTION_RENDERER_INJECTED_STATE','SYNTHETIC_REFERENCE','PRODUCTION_CAPTURE_UNREACHABLE'}
+FAMILIES=[
+ ('placement_intro_question_result','PRODUCTION_RENDERER_INJECTED_STATE','core.placement'),('welcome_and_first_handoff','PRODUCTION_RENDERER_INJECTED_STATE','core.welcome'),('home','PRODUCTION_RENDERER_INJECTED_STATE','core.firstWeekHome'),('learn','PRODUCTION_RENDERER_INJECTED_STATE','core.firstWeekLearn'),('theory','LIVE_PRODUCTION','runner.theory.hand_rankings'),('table_read','LIVE_PRODUCTION','runner.table_read.live'),('decision','LIVE_PRODUCTION','runner.action_selection.live'),('VRT02','LIVE_PRODUCTION','runner.seat_selection.vrt02'),('incorrect_feedback','LIVE_PRODUCTION','runner.seat_selection.vrt02_incorrect'),('repair_recheck','LIVE_PRODUCTION','runner.table_read.recheck.live'),('practice','PRODUCTION_RENDERER_INJECTED_STATE','core.runnerDrill'),('review_queued_focused','PRODUCTION_RENDERER_INJECTED_STATE','core.firstWeekReview'),('profile_evidence','PRODUCTION_RENDERER_INJECTED_STATE','core.profileEvidence'),('session_summary','PRODUCTION_RENDERER_INJECTED_STATE','core.sessionSummary'),('lesson_completion','LIVE_PRODUCTION','runner.completion.review'),('world_band_milestone','PRODUCTION_RENDERER_INJECTED_STATE','core.worldCompletion'),('world3_derivative','LIVE_PRODUCTION','runner.world3_seat_derivative'),('hand_comparison','LIVE_PRODUCTION','runner.hand_comparison.live'),('showdown','LIVE_PRODUCTION','runner.showdown.live'),('course_map_locked_state','PRODUCTION_CAPTURE_UNREACHABLE',None),('Sharky_art_transition','PRODUCTION_CAPTURE_UNREACHABLE',None)]
+def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+def head(): return subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+def rows(candidate):
+ out=[]
+ for p in sorted(RAW.glob('*/manifest.json')):
+  m=json.loads(p.read_text())
+  if m.get('candidate_commit_sha')!=candidate: continue
+  for r in m.get('rows',[]):
+   if r.get('content_status') not in STATUSES: raise SystemExit(f"bad status {r.get('content_status')}")
+   image=Path(r['screenshot_path']);
+   if not image.exists() or not r.get('sha256') or r['sha256']!=sha(image): raise SystemExit(f"bad image/hash {image}")
+   if r.get('candidate_commit_sha')!=candidate: raise SystemExit('non-final candidate row')
+   out.append(r)
+ if not out: raise SystemExit('No final-candidate raw capture rows found.')
+ keys=[(r['visual_state_id'],r['device_class'],r.get('modifier','none')) for r in out]
+ if len(keys)!=len(set(keys)): raise SystemExit('duplicate state/device/modifier row')
+ return out
+def label(r): return '\n'.join([f"state={r['visual_state_id']}",f"geometry={r['device_class']} modifier={r.get('modifier','none')}",f"phase={r.get('semantic_phase','unknown')}",f"status={r['content_status']}",f"sha={r['sha256'][:12]}"])
+def render(group,path,title):
+ font=ImageFont.load_default(); panels=[]
+ for r in group:
+  im=Image.open(r['screenshot_path']).convert('RGB'); im.thumbnail((310,620)); panel=Image.new('RGB',(320,740),'#101722'); panel.paste(im,((320-im.width)//2,106)); d=ImageDraw.Draw(panel); d.rectangle((0,0,320,106),fill='#162539'); d.multiline_text((5,4),label(r),font=font,fill='white',spacing=2); panels.append(panel)
+ canvas=Image.new('RGB',(320*len(panels),770),'#070b12'); d=ImageDraw.Draw(canvas); d.text((8,4),title,font=font,fill='white')
+ for i,p in enumerate(panels): canvas.paste(p,(320*i,30))
+ path.parent.mkdir(parents=True,exist_ok=True); canvas.save(path,'WEBP',quality=82,method=6)
+def main():
+ candidate=head(); data=rows(candidate); DEST.mkdir(parents=True,exist_ok=True)
+ for p in (DEST/'contact_sheets').glob('*.webp'): p.unlink()
+ grouped=defaultdict(list)
+ for r in data: grouped[(r.get('modifier','none'),r.get('semantic_phase','unknown'))].append(r)
+ sheets=[]; index=1
+ for key in sorted(grouped):
+  group=grouped[key]
+  for offset in range(0,len(group),6):
+   part=group[offset:offset+6]; name=f'{index:02d}_{key[0]}_{key[1]}.webp'; render(part,DEST/'contact_sheets'/name,f'Visual Master Audit | {candidate[:12]} | {key[0]} | {key[1]}'); sheets.append({'path':'contact_sheets/'+name,'states':[r['visual_state_id'] for r in part]}); index+=1
+ byid={r['visual_state_id'] for r in data}; coverage=[]
+ for family,status,state in FAMILIES:
+  coverage.append({'family':family,'status':status,'representative_state':state,'block_status':'none' if state else 'EXTERNAL_OR_ROUTE_ACCESS_REQUIRED','reason':None if state else 'No admitted production route/state injection exists in this bounded pack.'})
+ missing=[f['family'] for f in coverage if f['status']!='PRODUCTION_CAPTURE_UNREACHABLE' and f['representative_state'] not in byid]
+ if missing: raise SystemExit('missing family evidence: '+', '.join(missing))
+ required_text={'runner.theory.hand_rankings','runner.table_read.live','runner.seat_selection.vrt02','runner.seat_selection.vrt02_incorrect','runner.table_read.recheck.live','core.placement','core.welcome','core.firstWeekReview','core.profileEvidence','core.sessionSummary'}
+ text={r['visual_state_id'] for r in data if r.get('modifier')=='text_scale_1_4'}
+ motion={r['visual_state_id'] for r in data if r.get('modifier')=='reduced_motion'}
+ gates={'all_rows_final_candidate_sha':True,'unique_state_device_modifier':True,'text_scale_1_4_minimum_10':len(text)>=10,'text_scale_required_families':required_text<=text,'reduced_motion_core_states':{'core.placement','core.welcome','runner.seat_selection.vrt02_incorrect','runner.completion.review','core.worldCompletion'}<=motion,'geometry_alias_policy':'iphone17_class and tall_phone share 402x874; only tall_phone is canonical for this pack.'}
+ manifest={'schema':'visual_master_audit_manifest_v1','candidate_commit_sha':candidate,'rows':data,'contact_sheets':sheets,'core_family_coverage':coverage,'acceptance_gates':gates,'truth_rule':'Only LIVE_PRODUCTION is route/state-replayed production. PRODUCTION_RENDERER_INJECTED_STATE is actual production renderer with deterministic direct state and is composition-review-only.'}
+ (DEST/'visual_master_audit_manifest_v1.json').write_text(json.dumps(manifest,indent=2)+'\n')
+ counts=defaultdict(int)
+ for r in data: counts[r['content_status']]+=1
+ matrix=['# Visual Master Audit Capture Matrix v1','',f'Candidate: `{candidate}`','',f"Rows: **{len(data)}**; "+'; '.join(f'**{k}**: {v}' for k,v in sorted(counts.items()))+'.','', '## Acceptance gates','']+[f'- {k}: `{v}`' for k,v in gates.items()]+['','## Core-family coverage','','| Family | Status | Representative | Block |','| --- | --- | --- | --- |']+[f"| {x['family']} | {x['status']} | {x['representative_state'] or '—'} | {x['block_status']} |" for x in coverage]+['','| State | Geometry | Modifier | Phase | Status | SHA-256 |','| --- | --- | --- | --- | --- | --- |']+[f"| {r['visual_state_id']} | {r['device_class']} | {r.get('modifier','none')} | {r.get('semantic_phase')} | {r['content_status']} | `{r['sha256']}` |" for r in data]
+ (DEST/'visual_master_audit_capture_matrix_v1.md').write_text('\n'.join(matrix)+'\n')
+ (DEST/'visual_master_audit_gallery_v1.md').write_text('# Visual Master Audit Gallery v1\n\n'+f'Candidate: `{candidate}`\n\n'+'\n\n'.join(f"![{x['path']}]({x['path']})" for x in sheets)+'\n')
+ (DEST/'visual_master_audit_issue_scorecard_template_v1.json').write_text(json.dumps({'schema':'visual_master_audit_issue_scorecard_template_v1','candidate_commit_sha':candidate,'issues':[]},indent=2)+'\n')
+ print(json.dumps({'rows':len(data),'sheets':len(sheets),'gates':gates},indent=2))
+if __name__=='__main__': main()
