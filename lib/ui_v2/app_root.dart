@@ -1,6 +1,7 @@
 import 'dart:async' show unawaited;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show kReleaseMode, visibleForTesting;
 import 'package:poker_analyzer/l10n/app_localizations.dart';
 import 'package:poker_analyzer/navigation/deep_link_target_v1.dart';
@@ -22,6 +23,15 @@ const String _deepLinkTargetRaw = String.fromEnvironment(
 const String _act0NativeCaptureSurfaceRaw = String.fromEnvironment(
   'SHARKY_CAPTURE_SURFACE',
   defaultValue: '',
+);
+// This is deliberately compile-time gated: normal and release builds never
+// ask the host platform for an audit payload or alter their entry route.
+const bool _sharkyVisualAuditEnabled = bool.fromEnvironment(
+  'SHARKY_VISUAL_AUDIT',
+  defaultValue: false,
+);
+const MethodChannel _sharkyVisualAuditChannel = MethodChannel(
+  'com.clubboss.sharky/visual_audit_v1',
 );
 const bool _hnpTelemetryEnabled = bool.fromEnvironment(
   'HNP_TELEMETRY',
@@ -58,6 +68,7 @@ Act0ShellDebugHarnessEntryV1? _taskScopedCaptureEntryV1(
     worldId: worldId,
     lessonId: lessonId,
     taskId: taskId,
+    feedbackCorrect: uri.queryParameters['feedback'] == 'correct',
   );
 }
 
@@ -108,10 +119,14 @@ Act0ShellDebugHarnessEntryV1? parseAct0ControlledDemoHarnessEntryV1(Uri uri) {
         surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
       );
     case 'runner_feedback':
-      return const Act0ShellDebugHarnessEntryV1(
-        mode: Act0ControlledDemoCaptureModeV1.directState,
-        surface: Act0ControlledDemoCaptureSurfaceV1.runnerFeedback,
-      );
+      return _taskScopedCaptureEntryV1(
+            uri,
+            surface: Act0ControlledDemoCaptureSurfaceV1.runnerFeedback,
+          ) ??
+          const Act0ShellDebugHarnessEntryV1(
+            mode: Act0ControlledDemoCaptureModeV1.directState,
+            surface: Act0ControlledDemoCaptureSurfaceV1.runnerFeedback,
+          );
     case 'runner_first_correct_feedback':
       return const Act0ShellDebugHarnessEntryV1(
         mode: Act0ControlledDemoCaptureModeV1.directState,
@@ -213,6 +228,20 @@ Act0ShellDebugHarnessEntryV1? parseAct0NativeCaptureHarnessEntryV1(
     default:
       return null;
   }
+}
+
+/// Resolves a capture-only state supplied by the iOS Simulator process.
+///
+/// The payload is a URI query (for example, `act0_capture=home`). It is read
+/// only in an explicitly audit-enabled build, so it cannot affect production
+/// startup or a release build.
+@visibleForTesting
+Act0ShellDebugHarnessEntryV1? parseAct0NativeVisualAuditEntryV1(
+  String payload,
+) {
+  final trimmed = payload.trim();
+  if (trimmed.isEmpty) return null;
+  return parseAct0ControlledDemoHarnessEntryV1(Uri(query: trimmed));
 }
 
 @visibleForTesting
@@ -598,12 +627,14 @@ class _EntryGateState extends State<_EntryGate> {
     final onboardingCompleted =
         await OnboardingPreferencesService.hasCompletedOnboarding();
     final showPlacementOnStart = !onboardingCompleted;
+    final nativeVisualAuditEntry = await _readNativeVisualAuditEntry();
     final debugHarnessEntry = kReleaseMode
         ? null
         : parseAct0ControlledDemoHarnessEntryV1(Uri.base) ??
               parseAct0NativeCaptureHarnessEntryV1(
                 _act0NativeCaptureSurfaceRaw,
-              );
+              ) ??
+              nativeVisualAuditEntry;
     if (!mounted) return;
     setState(() {
       _debugHarnessEntry = debugHarnessEntry;
@@ -612,7 +643,39 @@ class _EntryGateState extends State<_EntryGate> {
           : false;
       _entryReady = true;
     });
+    if (_sharkyVisualAuditEnabled && nativeVisualAuditEntry != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        debugPrint(
+          'SHARKY_VISUAL_CAPTURE_READY:${_nativeVisualAuditStateId ?? 'unknown'}',
+        );
+      });
+    }
     await _safeStart('Deep link', _maybeHandleDeepLink);
+  }
+
+  String? _nativeVisualAuditStateId;
+  double? _nativeVisualAuditTextScale;
+  bool _nativeVisualAuditReducedMotion = false;
+
+  Future<Act0ShellDebugHarnessEntryV1?> _readNativeVisualAuditEntry() async {
+    if (!_sharkyVisualAuditEnabled || kReleaseMode) return null;
+    try {
+      final payload = await _sharkyVisualAuditChannel
+          .invokeMapMethod<String, String>('visualAuditPayload');
+      _nativeVisualAuditStateId = payload?['visual_state_id'];
+      final uri = Uri(query: payload?['query'] ?? '');
+      _nativeVisualAuditTextScale = double.tryParse(
+        uri.queryParameters['text_scale'] ?? '',
+      );
+      _nativeVisualAuditReducedMotion =
+          uri.queryParameters['reduced_motion'] == 'true';
+      return parseAct0ControlledDemoHarnessEntryV1(uri);
+    } on MissingPluginException {
+      return null;
+    } on PlatformException catch (error) {
+      debugPrint('Native visual audit payload unavailable: ${error.code}');
+      return null;
+    }
   }
 
   Future<void> _maybeHandleDeepLink() async {
@@ -628,13 +691,23 @@ class _EntryGateState extends State<_EntryGate> {
     if (!_entryReady) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-    return Act0ShellPreviewScreenV1(
+    final shell = Act0ShellPreviewScreenV1(
       debugHarnessEntry: _debugHarnessEntry,
       showPlacementOnStart: _showPlacementOnStart,
       telemetrySink: act0CanonicalTelemetrySinkV1(
         hnpEnabled: _hnpTelemetryEnabled,
         isReleaseMode: kReleaseMode,
       ),
+    );
+    if (!_sharkyVisualAuditEnabled || _debugHarnessEntry == null) return shell;
+    return MediaQuery(
+      data: MediaQuery.of(context).copyWith(
+        textScaler: _nativeVisualAuditTextScale == null
+            ? null
+            : TextScaler.linear(_nativeVisualAuditTextScale!),
+        disableAnimations: _nativeVisualAuditReducedMotion,
+      ),
+      child: shell,
     );
   }
 }
