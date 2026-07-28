@@ -1,0 +1,77 @@
+name: Native visual audit single-row recovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        required: true
+        type: string
+        default: bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  capture-one:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download preserved Runner only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download 30402799914 -R ClubBoss/sharky-standalone-direction -n native-audit-runner-${{ inputs.candidate_sha }} -D output
+      - name: Capture only the replacement row
+        run: >-
+          python3 tools/sharky_native_visual_audit_v1.py
+          --row-id vrt02.canonical.reduced_motion
+          --app output/Runner.app
+          --out output/replacement
+          --shard canonical-modifiers
+          --candidate-sha ${{ inputs.candidate_sha }}
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-audit-single-row-replacement-${{ inputs.candidate_sha }}
+          path: output/replacement
+          if-no-files-found: warn
+          retention-days: 14
+
+  aggregate:
+    if: always()
+    needs: capture-one
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download the protected 53-row evidence set
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p output/shards
+          gh run download 30402799914 -R ClubBoss/sharky-standalone-direction -n native-audit-shard-compact-normal-${{ inputs.candidate_sha }} -D output/shards/compact
+          gh run download 30402799914 -R ClubBoss/sharky-standalone-direction -n native-audit-shard-canonical-modifiers-${{ inputs.candidate_sha }} -D output/base/modifiers
+          gh run download 30406530810 -R ClubBoss/sharky-standalone-direction -n native-audit-recovery-canonical-normal-${{ inputs.candidate_sha }} -D output/shards/canonical
+          gh run download 30406530810 -R ClubBoss/sharky-standalone-direction -n native-audit-recovery-large-normal-${{ inputs.candidate_sha }} -D output/shards/large
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-audit-single-row-replacement-${{ inputs.candidate_sha }}
+          path: output/replacement
+      - name: Replace only the invalid modifier row
+        run: >-
+          python3 tools/sharky_native_visual_audit_v1.py
+          --replace-shard-row output/base/modifiers
+          --replacement-shard output/replacement
+          --out output/shards/modifiers
+          --candidate-sha ${{ inputs.candidate_sha }}
+      - name: Aggregate the exact 54 rows
+        run: >-
+          python3 tools/sharky_native_visual_audit_v1.py
+          --aggregate-shards output/shards
+          --candidate-sha ${{ inputs.candidate_sha }}
+          --out output/native_visual_audit
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sharky-native-visual-audit-repaired-${{ inputs.candidate_sha }}
+          path: output/native_visual_audit
+          retention-days: 14
