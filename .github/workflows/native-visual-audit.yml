@@ -12,11 +12,27 @@ permissions:
   contents: read
 
 jobs:
-  capture:
+  preflight:
+    runs-on: ubuntu-latest
+    outputs:
+      candidate_sha: ${{ inputs.candidate_sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 1
+      - name: Validate 54-row manifest and emit deterministic shards
+        run: python3 tools/sharky_native_visual_audit_v1.py --preflight --emit-shards output/native_audit_shards
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-audit-shards-${{ inputs.candidate_sha }}
+          path: output/native_audit_shards
+          retention-days: 14
+
+  build:
+    needs: preflight
     runs-on: macos-latest
-    # The one-build, 54-row native matrix has completed near the hosted
-    # runner's 90-minute ceiling; leave room for the verified frame settle.
-    timeout-minutes: 120
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -29,17 +45,87 @@ jobs:
           cache: true
       - name: Install locked dependencies
         run: flutter pub get
-      - name: Validate row-level audit matrix
-        run: python3 tools/sharky_native_visual_audit_v1.py --preflight
-      - name: Run unified native Simulator capture
-        run: python3 tools/sharky_native_visual_audit_v1.py --out output/native_visual_audit
-      - name: Upload unified native visual audit
+      - name: Build one audit-enabled Runner.app
+        run: python3 tools/sharky_native_visual_audit_v1.py --build-runner --app-out output/Runner.app
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-audit-runner-${{ inputs.candidate_sha }}
+          path: |
+            output/Runner.app
+            output/build.log
+          retention-days: 1
+
+  capture:
+    needs: [preflight, build]
+    runs-on: macos-latest
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - shard: canonical-normal
+          - shard: canonical-modifiers
+          - shard: compact-normal
+          - shard: large-normal
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 1
+      - name: Download build-once Runner.app
+        uses: actions/download-artifact@v4
+        with:
+          name: native-audit-runner-${{ inputs.candidate_sha }}
+          path: output
+      - name: Download shard manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: native-audit-shards-${{ inputs.candidate_sha }}
+          path: output/native_audit_shards
+      - name: Capture admitted shard with event-driven readiness
+        run: >-
+          python3 tools/sharky_native_visual_audit_v1.py
+          --row-ids-file output/native_audit_shards/${{ matrix.shard }}.json
+          --app output/Runner.app
+          --out output/native_audit_shard
+          --shard ${{ matrix.shard }}
+          --candidate-sha ${{ inputs.candidate_sha }}
+      - name: Upload resumable shard evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-audit-shard-${{ matrix.shard }}-${{ inputs.candidate_sha }}
+          path: output/native_audit_shard
+          if-no-files-found: warn
+          retention-days: 14
+
+  aggregate:
+    if: always()
+    needs: [preflight, build, capture]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 1
+      - name: Download all shard evidence
+        uses: actions/download-artifact@v4
+        with:
+          pattern: native-audit-shard-*-${{ inputs.candidate_sha }}
+          path: output/native_audit_shards
+          merge-multiple: false
+      - name: Verify and unite four shards
+        run: >-
+          python3 tools/sharky_native_visual_audit_v1.py
+          --aggregate-shards output/native_audit_shards
+          --candidate-sha ${{ inputs.candidate_sha }}
+          --out output/native_visual_audit
+      - name: Upload one unified native visual audit
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: sharky-native-visual-audit-${{ inputs.candidate_sha }}
-          path: |
-            output/native_visual_audit/raw
-            output/native_visual_audit/native_capture_manifest.json
-            output/native_visual_audit/build.log
-            output/native_visual_audit/state_transitions.jsonl
+          path: output/native_visual_audit
+          if-no-files-found: warn
           retention-days: 14
