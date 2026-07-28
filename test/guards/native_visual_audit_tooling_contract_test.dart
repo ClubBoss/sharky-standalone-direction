@@ -40,4 +40,12 @@ void main() {
       ]),
     );
   });
+
+  test('native audit transport exposes all required coverage dimensions', () {
+    final source = File('tools/sharky_native_visual_audit_v1.py').readAsStringSync();
+    expect(source, contains('--device-profile'));
+    expect(source, contains('--modifier'));
+    expect(source, contains('text_scale_1_4'));
+    expect(source, contains('reduced_motion'));
+  });
 }

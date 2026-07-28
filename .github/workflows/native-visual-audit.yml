@@ -7,12 +7,24 @@ on:
         description: Candidate commit SHA to capture
         required: true
         type: string
-      capture_scope:
+    capture_scope:
         description: Native audit scope
         required: true
         default: six-state
         type: choice
         options: [six-state, full]
+    device_profile:
+      description: Native device geometry branch
+      required: true
+      default: canonical
+      type: choice
+      options: [compact, canonical, large]
+    modifier:
+      description: Accessibility or motion modifier
+      required: true
+      default: none
+      type: choice
+      options: [none, text_scale_1_4, reduced_motion]
 
 permissions:
   contents: read
@@ -37,11 +49,13 @@ jobs:
         run: |
           python3 tools/sharky_native_visual_audit_v1.py \
             --scope '${{ inputs.capture_scope }}' \
+            --device-profile '${{ inputs.device_profile }}' \
+            --modifier '${{ inputs.modifier }}' \
             --out output/native_visual_audit
       - name: Upload native visual audit
         uses: actions/upload-artifact@v4
         with:
-          name: sharky-native-visual-audit-${{ inputs.candidate_sha }}
+          name: sharky-native-visual-audit-${{ inputs.candidate_sha }}-${{ inputs.device_profile }}-${{ inputs.modifier }}
           path: |
             output/native_visual_audit/raw
             output/native_visual_audit/native_capture_manifest.json

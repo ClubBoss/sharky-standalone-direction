@@ -40,13 +40,18 @@ def best_effort(*args: str) -> None:
     subprocess.run(args, cwd=ROOT, text=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
-def selected_simulator() -> tuple[str, str, str]:
+def selected_simulator(device_profile: str) -> tuple[str, str, str]:
+    preferred_names = {
+        "compact": ("iPhone SE",),
+        "canonical": ("iPhone 17 Pro", "iPhone 16 Pro"),
+        "large": ("iPhone 17 Pro Max", "iPhone 16 Pro Max"),
+    }[device_profile]
     devices = json.loads(run("xcrun", "simctl", "list", "devices", "available", "-j", capture=True))
     for runtime, values in devices["devices"].items():
         for device in values:
-            if device.get("isAvailable") and device["name"].startswith("iPhone"):
+            if device.get("isAvailable") and any(device["name"].startswith(name) for name in preferred_names):
                 return device["udid"], device["name"], runtime
-    raise RuntimeError("No available iPhone Simulator runtime was found")
+    raise RuntimeError(f"No available {device_profile} iPhone Simulator runtime was found")
 
 
 def sha256(path: pathlib.Path) -> str:
@@ -75,6 +80,8 @@ def wait_for_ready(udid: str, state_id: str, timeout: float) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--scope", choices=("six-state", "full"), default="six-state")
+    parser.add_argument("--device-profile", choices=("compact", "canonical", "large"), default="canonical")
+    parser.add_argument("--modifier", choices=("none", "text_scale_1_4", "reduced_motion"), default="none")
     parser.add_argument("--out", type=pathlib.Path, default=ROOT / "output" / "native_visual_audit")
     parser.add_argument("--ready-timeout", type=float, default=30.0)
     args = parser.parse_args()
@@ -98,7 +105,7 @@ def main() -> int:
     app = ROOT / "build" / "ios" / "iphonesimulator" / "Runner.app"
     if not app.is_dir():
         raise RuntimeError(f"Expected app bundle is missing: {app}")
-    udid, device_name, runtime = selected_simulator()
+    udid, device_name, runtime = selected_simulator(args.device_profile)
     best_effort("xcrun", "simctl", "boot", udid)
     run("xcrun", "simctl", "bootstatus", udid, "-b")
     best_effort("xcrun", "simctl", "uninstall", udid, BUNDLE_ID)
@@ -107,18 +114,30 @@ def main() -> int:
     rows = []
     with state_log.open("w") as transitions:
         for state in states:
+            query = state["query"]
+            if args.modifier == "text_scale_1_4" and "text_scale=" not in query:
+                query += "&text_scale=1.4"
+            if args.modifier == "reduced_motion":
+                query += "&reduced_motion=true"
+            state_id = f"{state['visual_state_id']}.{args.device_profile}"
+            if args.modifier != "none":
+                state_id = f"{state_id}.{args.modifier}"
             best_effort("xcrun", "simctl", "terminate", udid, BUNDLE_ID)
             environment = os.environ | {
-                "SIMCTL_CHILD_SHARKY_VISUAL_AUDIT_PAYLOAD": state["query"],
-                "SIMCTL_CHILD_SHARKY_VISUAL_AUDIT_STATE_ID": state["visual_state_id"],
+                "SIMCTL_CHILD_SHARKY_VISUAL_AUDIT_PAYLOAD": query,
+                "SIMCTL_CHILD_SHARKY_VISUAL_AUDIT_STATE_ID": state_id,
             }
             run("xcrun", "simctl", "launch", udid, BUNDLE_ID, env=environment)
-            wait_for_ready(udid, state["visual_state_id"], args.ready_timeout)
-            png = raw / f'{state["visual_state_id"]}.png'
+            wait_for_ready(udid, state_id, args.ready_timeout)
+            png = raw / f"{state_id}.png"
             run("xcrun", "simctl", "io", udid, "screenshot", str(png))
             if not png.is_file() or png.stat().st_size == 0:
                 raise RuntimeError(f"Screenshot was not created: {png}")
             row = state | {
+                "visual_state_id": state_id,
+                "native_route_state_seed": query,
+                "modifier": args.modifier,
+                "device_profile": args.device_profile,
                 "capture_source": "NATIVE_IOS_SIMULATOR",
                 "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
                 "png": str(png.relative_to(output)),
@@ -134,6 +153,8 @@ def main() -> int:
         "schema": "sharky_native_visual_audit_v1",
         "candidate_sha": candidate,
         "scope": args.scope,
+        "device_profile": args.device_profile,
+        "modifier": args.modifier,
         "device": {"name": device_name, "udid": udid, "runtime": runtime},
         "rows": rows,
     }, indent=2) + "\n")
