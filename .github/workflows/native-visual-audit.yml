@@ -14,7 +14,9 @@ permissions:
 jobs:
   capture:
     runs-on: macos-latest
-    timeout-minutes: 90
+    # The one-build, 54-row native matrix has completed near the hosted
+    # runner's 90-minute ceiling; leave room for the verified frame settle.
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
         with:
