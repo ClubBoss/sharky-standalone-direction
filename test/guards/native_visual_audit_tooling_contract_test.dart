@@ -63,10 +63,55 @@ void main() {
     expect(source, contains('validate(rows)'));
     expect(source, contains('total rows must be 54'));
     expect(source, contains('selected_simulator(profile)'));
-    expect(source, contains('simulators[row["device_profile"]]'));
+    expect(source, contains('a capture shard must contain exactly one device profile'));
     expect(source, contains('"iPhone 16e"'));
     expect(source, contains('"candidate_sha": candidate'));
     expect(source, contains('--frame-settle-seconds'));
     expect(source, contains('time.sleep(args.frame_settle_seconds)'));
+    expect(source, contains('--row-ids-file'));
+    expect(source, contains('--full-checkpoint'));
+    expect(source, contains('log", "stream"'));
+    expect(source, contains('assert_nonblank(png)'));
+    expect(source, contains('shard_capture_manifest.json'));
+    expect(source, contains('aggregate requires four shard manifests'));
+  });
+
+  test('native audit tooling emits shards and rejects invalid delta selection', () {
+    final temp = Directory.systemTemp.createTempSync('native-audit-tooling-');
+    addTearDown(() => temp.deleteSync(recursive: true));
+    final preflight = Process.runSync('python3', [
+      'tools/sharky_native_visual_audit_v1.py',
+      '--preflight',
+      '--emit-shards',
+      '${temp.path}/shards',
+    ]);
+    expect(preflight.exitCode, 0, reason: '${preflight.stderr}');
+    final expected = <String, int>{
+      'canonical-normal': 20,
+      'canonical-modifiers': 16,
+      'compact-normal': 14,
+      'large-normal': 4,
+    };
+    for (final entry in expected.entries) {
+      final shard = jsonDecode(File('${temp.path}/shards/${entry.key}.json').readAsStringSync()) as Map<String, dynamic>;
+      expect((shard['row_ids'] as List<dynamic>), hasLength(entry.value));
+    }
+    final subset = Process.runSync('python3', [
+      'tools/sharky_native_visual_audit_v1.py', '--row-id', 'home.canonical.normal', '--validate-selection',
+    ]);
+    expect(subset.exitCode, 0, reason: '${subset.stderr}');
+    final unknown = Process.runSync('python3', [
+      'tools/sharky_native_visual_audit_v1.py', '--row-id', 'unknown.row', '--validate-selection',
+    ]);
+    expect(unknown.exitCode, isNot(0));
+    final selfTest = Process.runSync('python3', ['tools/sharky_native_visual_audit_v1.py', '--self-test']);
+    expect(selfTest.exitCode, 0, reason: '${selfTest.stderr}');
+    final incompleteAggregate = Process.runSync('python3', [
+      'tools/sharky_native_visual_audit_v1.py',
+      '--aggregate-shards', temp.path,
+      '--candidate-sha', '0000000000000000000000000000000000000000',
+      '--out', '${temp.path}/unified',
+    ]);
+    expect(incompleteAggregate.exitCode, isNot(0));
   });
 }
