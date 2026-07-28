@@ -1004,6 +1004,7 @@ class Act0ShellDebugHarnessEntryV1 {
     this.worldId,
     this.lessonId,
     this.taskId,
+    this.feedbackCorrect = false,
   });
 
   final Act0ControlledDemoCaptureModeV1 mode;
@@ -1011,6 +1012,7 @@ class Act0ShellDebugHarnessEntryV1 {
   final String? worldId;
   final String? lessonId;
   final String? taskId;
+  final bool feedbackCorrect;
 }
 
 class Act0ShellPreviewScreenV1 extends StatefulWidget {
@@ -2592,7 +2594,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       final selectedOption = task.runner.options
           .cast<Act0RunnerOptionV1?>()
           .firstWhere(
-            (option) => option != null && !option.isCorrect,
+            (option) =>
+                option != null &&
+                (widget.debugHarnessEntry?.feedbackCorrect == true
+                    ? option.isCorrect
+                    : !option.isCorrect),
             orElse: () =>
                 task.runner.options.isEmpty ? null : task.runner.options.first,
           );

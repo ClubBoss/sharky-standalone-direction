@@ -1,0 +1,25 @@
+{
+  "schema": "sharky_native_visual_audit_state_manifest_v1",
+  "states": [
+    {"visual_state_id":"placement.normal","semantic_phase":"placement","query":"act0_capture=placement","fidelity_gate":true},
+    {"visual_state_id":"home.normal","semantic_phase":"home","query":"act0_capture=home","fidelity_gate":true},
+    {"visual_state_id":"learn.normal","semantic_phase":"learn","query":"act0_capture=learn","fidelity_gate":true},
+    {"visual_state_id":"vrt02.normal","semantic_phase":"seat_selection","query":"act0_capture=runner_drill&world=world_1&lesson=positions&task=positions_early_late","fidelity_gate":true},
+    {"visual_state_id":"vrt02.incorrect","semantic_phase":"incorrect_feedback","query":"act0_capture=runner_feedback&world=world_1&lesson=positions&task=positions_early_late","fidelity_gate":true},
+    {"visual_state_id":"vrt02.text_scale_1_4","semantic_phase":"seat_selection_text_scale_1_4","query":"act0_capture=runner_drill&world=world_1&lesson=positions&task=positions_early_late&text_scale=1.4","fidelity_gate":true},
+    {"visual_state_id":"vrt02.correct","semantic_phase":"correct_feedback","query":"act0_capture=runner_feedback&feedback=correct&world=world_1&lesson=positions&task=positions_early_late","fidelity_gate":false},
+    {"visual_state_id":"welcome.normal","semantic_phase":"welcome","query":"act0_capture=welcome","fidelity_gate":false},
+    {"visual_state_id":"review.normal","semantic_phase":"review","query":"act0_capture=review","fidelity_gate":false},
+    {"visual_state_id":"profile.evidence","semantic_phase":"profile_evidence","query":"act0_capture=profile_evidence","fidelity_gate":false},
+    {"visual_state_id":"session.summary","semantic_phase":"session_summary","query":"act0_capture=session_summary","fidelity_gate":false},
+    {"visual_state_id":"completion.world","semantic_phase":"world_completion","query":"act0_capture=world_completion","fidelity_gate":false},
+    {"visual_state_id":"runner.theory","semantic_phase":"theory","query":"act0_capture=runner_theory","fidelity_gate":false},
+    {"visual_state_id":"runner.table_read","semantic_phase":"table_read","query":"act0_capture=runner_drill&world=world_1&lesson=what_poker_is&task=what_poker_is_table_read_transfer","fidelity_gate":false},
+    {"visual_state_id":"runner.action_selection","semantic_phase":"action_selection","query":"act0_capture=runner_drill&world=world_1&lesson=fold_check_call_raise&task=actions_call_drill","fidelity_gate":false},
+    {"visual_state_id":"repair.focus","semantic_phase":"repair","query":"act0_capture=repair_focus","fidelity_gate":false},
+    {"visual_state_id":"repair.recheck","semantic_phase":"recheck","query":"act0_capture=repair_result","fidelity_gate":false},
+    {"visual_state_id":"world3.derivative","semantic_phase":"seat_selection_derivative","query":"act0_capture=runner_drill&world=world_3&lesson=early_vs_late&task=early_pressure_choice","fidelity_gate":false},
+    {"visual_state_id":"hand.comparison","semantic_phase":"hand_comparison","query":"act0_capture=runner_drill&world=world_1&lesson=hand_rankings_table&task=hand_rankings_full_house_vs_flush_drill","fidelity_gate":false},
+    {"visual_state_id":"showdown","semantic_phase":"showdown","query":"act0_capture=runner_drill&world=world_1&lesson=showdown_winning&task=showdown_best_hand_drill","fidelity_gate":false}
+  ]
+}

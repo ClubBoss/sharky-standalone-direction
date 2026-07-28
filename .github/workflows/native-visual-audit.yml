@@ -1,0 +1,50 @@
+name: Native visual audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        description: Candidate commit SHA to capture
+        required: true
+        type: string
+      capture_scope:
+        description: Native audit scope
+        required: true
+        default: six-state
+        type: choice
+        options: [six-state, full]
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 1
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+      - name: Install locked dependencies
+        run: flutter pub get
+      - name: Run native Simulator capture
+        run: |
+          python3 tools/sharky_native_visual_audit_v1.py \
+            --scope '${{ inputs.capture_scope }}' \
+            --out output/native_visual_audit
+      - name: Upload native visual audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: sharky-native-visual-audit-${{ inputs.candidate_sha }}
+          path: |
+            output/native_visual_audit/raw
+            output/native_visual_audit/native_capture_manifest.json
+            output/native_visual_audit/build.log
+            output/native_visual_audit/state_transitions.jsonl
+          retention-days: 14
