@@ -133,24 +133,30 @@ const _seeds = <_Seed>[
 ];
 
 void main(List<String> args) async {
-  if (args.length != 1 ||
+  if ((args.length != 1 && args.length != 2) ||
       !const <String>[
         'compact',
         'tall_phone',
         'large_phone',
         'iphone17_class',
-      ].contains(args.single)) {
+      ].contains(args.first) ||
+      (args.length == 2 &&
+          !const <String>[
+            'text_scale_1_4',
+            'reduced_motion',
+          ].contains(args[1]))) {
     stderr.writeln(
-      'Usage: dart run tools/act0_production_real_runner_capture_v1.dart <compact|tall_phone|large_phone|iphone17_class>',
+      'Usage: dart run tools/act0_production_real_runner_capture_v1.dart <compact|tall_phone|large_phone|iphone17_class> [text_scale_1_4|reduced_motion]',
     );
     exit(64);
   }
-  final device = args.single;
-  final packet = 'live_runner_${device}_v1';
+  final device = args.first;
+  final modifier = args.length == 2 ? args[1] : 'none';
+  final packet = 'live_runner_${device}_${modifier}_v1';
   final output = Directory('$_outputRoot/$packet')..createSync(recursive: true);
   final temp = Directory.systemTemp.createTempSync('act0_live_runner_capture_');
   final test = File('${temp.path}/capture_test.dart');
-  test.writeAsStringSync(_testSource(output.path, device));
+  test.writeAsStringSync(_testSource(output.path, device, modifier));
   final result = await Process.start(
     'flutter',
     <String>['test', test.path],
@@ -179,7 +185,7 @@ void main(List<String> args) async {
       'deterministic_state_seed':
           'Act0ShellStateV1.sample direct task resolution',
       'device_class': device,
-      'modifier': 'none',
+      'modifier': modifier,
       'expected_interaction': seed.mode == 'base'
           ? 'inspect production task state'
           : 'feedback state seeded from the production option',
@@ -195,6 +201,7 @@ void main(List<String> args) async {
           'schema': _schema,
           'candidate_commit_sha': commit,
           'device_class': device,
+          'modifier': modifier,
           'content_status_policy':
               'LIVE_PRODUCTION requires direct Act0ShellStateV1 task resolution; fixture-created runners are excluded.',
           'rows': rows,
@@ -212,7 +219,7 @@ String _sha256(File file) => Process.runSync('shasum', <String>[
   file.path,
 ]).stdout.toString().trim().split(RegExp(r'\s+')).first;
 
-String _testSource(String output, String device) {
+String _testSource(String output, String device, String modifier) {
   final calls = _seeds
       .map((seed) => "await capture(tester, ${jsonEncode(seed.toJson())});")
       .join('\n    ');
@@ -232,6 +239,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   const outputPath = ${jsonEncode(output)};
   const device = '$device';
+  const modifier = '$modifier';
   const viewports = <String, Size>{
     'compact': Size(375, 812),
     'tall_phone': Size(402, 874),
@@ -248,6 +256,10 @@ void main() {
   }
   setUpAll(loadFont);
   testWidgets('captures direct production runner seeds', (tester) async {
+    if (modifier == 'reduced_motion') {
+      (WidgetsBinding.instance.platformDispatcher as TestPlatformDispatcher)
+          .accessibilityFeaturesTestValue = const FakeAccessibilityFeatures(disableAnimations: true);
+    }
     tester.platformDispatcher.systemFontFamily = 'Roboto';
     addTearDown(() { tester.view.resetPhysicalSize(); tester.view.resetDevicePixelRatio(); tester.platformDispatcher.resetSystemFontFamily(); });
     Future<void> capture(WidgetTester tester, Map<String, dynamic> seed) async {
@@ -278,7 +290,7 @@ void main() {
       );
       tester.view.physicalSize = viewports[device]!;
       tester.view.devicePixelRatio = 1;
-      await tester.pumpWidget(MaterialApp(theme: ThemeData(fontFamily: 'Roboto'), home: MediaQuery(data: MediaQueryData(size: viewports[device]!), child: Scaffold(backgroundColor: const Color(0xFF070B12), body: RepaintBoundary(key: const Key('capture'), child: Act0LessonRunnerShellV1(runner: runner, selectedWorldId: seed['world_id'] as String, selectedLessonId: seed['lesson_id'] as String, selectedTaskId: seed['task_id'] as String, selectedTaskFamily: task.resolvedTaskFamily, tablePresentation: task.tablePresentation, onBack: () {}, onContinueTheory: () {}, onChooseOption: (_) {}, onContinueReview: () {}))))));
+      await tester.pumpWidget(MaterialApp(theme: ThemeData(fontFamily: 'Roboto'), home: MediaQuery(data: MediaQueryData(size: viewports[device]!, textScaler: modifier == 'text_scale_1_4' ? const TextScaler.linear(1.4) : const TextScaler.linear(1)), child: Scaffold(backgroundColor: const Color(0xFF070B12), body: RepaintBoundary(key: const Key('capture'), child: Act0LessonRunnerShellV1(runner: runner, selectedWorldId: seed['world_id'] as String, selectedLessonId: seed['lesson_id'] as String, selectedTaskId: seed['task_id'] as String, selectedTaskFamily: task.resolvedTaskFamily, tablePresentation: task.tablePresentation, onBack: () {}, onContinueTheory: () {}, onChooseOption: (_) {}, onContinueReview: () {}))))));
       await tester.pump(); await tester.pump(const Duration(milliseconds: 500));
       final boundary = tester.renderObject<RenderRepaintBoundary>(find.byKey(const Key('capture')));
       final data = await tester.runAsync(() async => (await boundary.toImage(pixelRatio: 2)).toByteData(format: ui.ImageByteFormat.png));
