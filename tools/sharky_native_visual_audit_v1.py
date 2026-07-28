@@ -193,6 +193,16 @@ def capture(rows: list[dict], args: argparse.Namespace) -> None:
     shard = args.shard or "delta"; requested = [row["visual_state_id"] for row in rows]; started = time.monotonic()
     manifest_path = output / "shard_capture_manifest.json"
     shard_manifest = {"schema": "sharky_native_visual_audit_shard_capture_v1", "shard": shard, "candidate_sha": candidate, "requested_rows": requested, "completed_rows": [], "rows": [], "status": "in_progress", "wall_time_seconds": 0}
+    if args.resume_from:
+        previous = json.loads((pathlib.Path(args.resume_from) / "shard_capture_manifest.json").read_text())
+        if previous.get("candidate_sha") != candidate or previous.get("requested_rows") != requested:
+            raise RuntimeError("resume shard candidate or requested-row mismatch")
+        for record in previous.get("rows", []):
+            image = pathlib.Path(args.resume_from) / record["png"]
+            if image.is_file() and sha256(image) == record.get("png_sha256"):
+                assert_nonblank(image); copied = raw / image.name; shutil.copy2(image, copied); record = dict(record); record["png"] = str(copied.relative_to(output)); shard_manifest["rows"].append(record); shard_manifest["completed_rows"].append(record["visual_state_id"])
+        shard_manifest["resumed_rows"] = list(shard_manifest["completed_rows"])
+        rows = [row for row in rows if row["visual_state_id"] not in shard_manifest["completed_rows"]]
     write_json(manifest_path, shard_manifest)
     profile = profiles.pop(); udid, name, runtime = selected_simulator(profile)
     best_effort("xcrun", "simctl", "boot", udid); run("xcrun", "simctl", "bootstatus", udid, "-b")
@@ -209,22 +219,35 @@ def capture(rows: list[dict], args: argparse.Namespace) -> None:
             listener = subprocess.Popen(["xcrun", "simctl", "spawn", udid, "log", "stream", "--style", "compact", "--predicate", f'eventMessage CONTAINS "{marker}"'], cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             selector = selectors.DefaultSelector(); selector.register(listener.stdout, selectors.EVENT_READ)
             try:
+                time.sleep(0.2)
+                if listener.poll() is not None:
+                    raise RuntimeError(f"readiness listener exited before launch for {marker}")
                 run("xcrun", "simctl", "launch", udid, BUNDLE_ID, env=environment)
                 deadline = time.monotonic() + args.ready_timeout; ready_at = None
                 while time.monotonic() < deadline and ready_at is None:
                     for _, _ in selector.select(timeout=0.5):
                         if marker in listener.stdout.readline(): ready_at = time.monotonic(); break
-                if ready_at is None: raise RuntimeError(f"Timed out waiting for event-driven readiness marker {marker}")
+                if ready_at is None:
+                    fallback = run("xcrun", "simctl", "spawn", udid, "log", "show", "--last", "30s", "--style", "compact", "--predicate", f'eventMessage CONTAINS "{marker}"', capture=True)
+                    if marker in fallback: ready_at = time.monotonic()
+                    else: raise RuntimeError(f"Timed out waiting for event-driven readiness marker {marker}")
             finally:
                 selector.close(); listener.terminate()
                 try: listener.wait(timeout=2)
                 except subprocess.TimeoutExpired: listener.kill()
-            time.sleep(args.frame_settle_seconds)
-            png = raw / f"{state_id}.png"; run("xcrun", "simctl", "io", udid, "screenshot", str(png))
-            if not png.is_file() or not png.stat().st_size: raise RuntimeError(f"Missing screenshot: {png}")
-            assert_nonblank(png); screenshot_done = time.monotonic()
+            png = raw / f"{state_id}.png"; attempts = []
+            for attempt in (1, 2):
+                time.sleep(args.frame_settle_seconds if attempt == 1 else args.frame_settle_seconds + 1.5)
+                run("xcrun", "simctl", "io", udid, "screenshot", str(png))
+                if not png.is_file() or not png.stat().st_size: raise RuntimeError(f"Missing screenshot: {png}")
+                try:
+                    assert_nonblank(png); attempts.append({"attempt": attempt, "result": "accepted"}); break
+                except RuntimeError as error:
+                    attempts.append({"attempt": attempt, "result": "blank", "error": str(error)})
+                    if attempt == 2: raise
+            screenshot_done = time.monotonic()
             timing = {"launch_started_epoch": launch_started, "readiness_seconds": round(ready_at - marker_listener_start, 3), "screenshot_seconds": round(screenshot_done - ready_at, 3), "total_row_seconds": round(screenshot_done - row_started, 3)}
-            record = row | {"candidate_sha": candidate, "capture_source": "NATIVE_IOS_SIMULATOR", "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE", "png": str(png.relative_to(output)), "png_sha256": sha256(png), "device_model": name, "ios_runtime": runtime, "timing": timing}
+            record = row | {"candidate_sha": candidate, "capture_source": "NATIVE_IOS_SIMULATOR", "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE", "png": str(png.relative_to(output)), "png_sha256": sha256(png), "device_model": name, "ios_runtime": runtime, "timing": timing, "attempts": attempts}
             transitions.write(json.dumps({"event": "captured", **record}) + "\n"); transitions.flush()
             shard_manifest["completed_rows"].append(state_id); shard_manifest["rows"].append(record); shard_manifest["wall_time_seconds"] = round(time.monotonic() - started, 3); write_json(manifest_path, shard_manifest)
         shard_manifest["status"] = "success"
@@ -271,7 +294,7 @@ def main() -> int:
     parser.add_argument("--build-runner", action="store_true"); parser.add_argument("--app-out", type=pathlib.Path)
     parser.add_argument("--row-id", action="append"); parser.add_argument("--row-ids-file", type=pathlib.Path); parser.add_argument("--family", action="append"); parser.add_argument("--full-checkpoint", action="store_true")
     parser.add_argument("--validate-selection", action="store_true"); parser.add_argument("--app", type=pathlib.Path); parser.add_argument("--out", type=pathlib.Path, default=ROOT / "output" / "native_visual_audit")
-    parser.add_argument("--shard"); parser.add_argument("--candidate-sha"); parser.add_argument("--ready-timeout", type=float, default=30.0); parser.add_argument("--frame-settle-seconds", type=float, default=1.5)
+    parser.add_argument("--shard"); parser.add_argument("--candidate-sha"); parser.add_argument("--resume-from", type=pathlib.Path); parser.add_argument("--ready-timeout", type=float, default=30.0); parser.add_argument("--frame-settle-seconds", type=float, default=1.5)
     parser.add_argument("--aggregate-shards", type=pathlib.Path); parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args(); rows = load_rows()
     if args.preflight:
