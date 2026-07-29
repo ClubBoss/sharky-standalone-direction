@@ -42,9 +42,14 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
-        with: { ref: ${{ inputs.candidate_sha }}, fetch-depth: 1 }
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 1
       - uses: subosito/flutter-action@v2
-        with: { flutter-version: '3.35.0', channel: stable, cache: true }
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
       - run: flutter pub get
       - run: python3 tools/sharky_native_visual_audit_v1.py --build-runner --app-out output/Runner.app
       - uses: actions/upload-artifact@v4
@@ -65,11 +70,17 @@ jobs:
         shard: [canonical-none, canonical-text_scale_1_4, compact-none, large-none]
     steps:
       - uses: actions/checkout@v4
-        with: { ref: ${{ inputs.candidate_sha }}, fetch-depth: 1 }
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 1
       - uses: actions/download-artifact@v4
-        with: { name: native-delta-runner-${{ inputs.candidate_sha }}, path: output }
+        with:
+          name: native-delta-runner-${{ inputs.candidate_sha }}
+          path: output
       - uses: actions/download-artifact@v4
-        with: { name: native-delta-spec-${{ inputs.candidate_sha }}, path: output }
+        with:
+          name: native-delta-spec-${{ inputs.candidate_sha }}
+          path: output
       - run: >-
           python3 tools/native_visual_delta_v1.py
           --spec output/delta_spec.json --capture-shard output/delta_shards/${{ matrix.shard }}.json
@@ -89,9 +100,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
-        with: { name: native-delta-spec-${{ inputs.candidate_sha }}, path: output }
+        with:
+          name: native-delta-spec-${{ inputs.candidate_sha }}
+          path: output
       - uses: actions/download-artifact@v4
-        with: { pattern: native-delta-shard-*-${{ inputs.candidate_sha }}, path: output/shards, merge-multiple: false }
+        with:
+          pattern: native-delta-shard-*-${{ inputs.candidate_sha }}
+          path: output/shards
+          merge-multiple: false
       - run: >-
           python3 tools/native_visual_delta_v1.py
           --spec output/delta_spec.json --aggregate-shards output/shards
