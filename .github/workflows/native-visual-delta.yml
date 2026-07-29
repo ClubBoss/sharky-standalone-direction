@@ -1,0 +1,104 @@
+name: Native visual delta
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        description: Exact product candidate SHA
+        required: true
+        type: string
+      delta_spec_json:
+        description: Explicit JSON object with an exact rows array
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    outputs:
+      candidate_sha: ${{ inputs.candidate_sha }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require and validate the exact delta specification
+        env:
+          DELTA_SPEC_JSON: ${{ inputs.delta_spec_json }}
+        run: |
+          test -n "$DELTA_SPEC_JSON"
+          mkdir -p output
+          printf '%s' "$DELTA_SPEC_JSON" > output/delta_spec.json
+          python3 tools/native_visual_delta_v1.py --spec output/delta_spec.json --emit-shards output/delta_shards
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-delta-spec-${{ inputs.candidate_sha }}
+          path: output
+          retention-days: 14
+
+  build:
+    needs: preflight
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: ${{ inputs.candidate_sha }}, fetch-depth: 1 }
+      - uses: subosito/flutter-action@v2
+        with: { flutter-version: '3.35.0', channel: stable, cache: true }
+      - run: flutter pub get
+      - run: python3 tools/sharky_native_visual_audit_v1.py --build-runner --app-out output/Runner.app
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-delta-runner-${{ inputs.candidate_sha }}
+          path: |-
+            output/Runner.app
+            output/build.log
+          retention-days: 1
+
+  capture:
+    needs: [preflight, build]
+    runs-on: macos-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [canonical-none, canonical-text_scale_1_4, compact-none, large-none]
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: ${{ inputs.candidate_sha }}, fetch-depth: 1 }
+      - uses: actions/download-artifact@v4
+        with: { name: native-delta-runner-${{ inputs.candidate_sha }}, path: output }
+      - uses: actions/download-artifact@v4
+        with: { name: native-delta-spec-${{ inputs.candidate_sha }}, path: output }
+      - run: >-
+          python3 tools/native_visual_delta_v1.py
+          --spec output/delta_spec.json --capture-shard output/delta_shards/${{ matrix.shard }}.json
+          --app output/Runner.app --out output/delta_shard --candidate-sha ${{ inputs.candidate_sha }}
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-delta-shard-${{ matrix.shard }}-${{ inputs.candidate_sha }}
+          path: output/delta_shard
+          if-no-files-found: warn
+          retention-days: 14
+
+  aggregate:
+    if: always()
+    needs: [preflight, build, capture]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: native-delta-spec-${{ inputs.candidate_sha }}, path: output }
+      - uses: actions/download-artifact@v4
+        with: { pattern: native-delta-shard-*-${{ inputs.candidate_sha }}, path: output/shards, merge-multiple: false }
+      - run: >-
+          python3 tools/native_visual_delta_v1.py
+          --spec output/delta_spec.json --aggregate-shards output/shards
+          --out output/native_visual_delta --candidate-sha ${{ inputs.candidate_sha }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sharky-native-visual-delta-${{ inputs.candidate_sha }}
+          path: output/native_visual_delta
+          if-no-files-found: warn
+          retention-days: 14
