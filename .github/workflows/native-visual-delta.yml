@@ -1,4 +1,4 @@
-name: Native visual delta
+name: Native visual delta registration refresh
 
 on:
   workflow_dispatch:
