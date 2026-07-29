@@ -13,6 +13,25 @@ void main() {
     expect(source, contains('Act0ShellTokensV1.info.withValues(alpha: 0.26)'));
   });
 
+  test(
+    'Candidate 2 distributes real short content through the lower stage',
+    () {
+      expect(source, contains('distributesShortLowerStageContent'));
+      expect(
+        source,
+        contains('fillsAvailableHeight: distributesShortLowerStageContent'),
+      );
+      expect(source, contains('distributeShortContent:'));
+      expect(source, contains('Alignment.centerLeft'));
+      expect(
+        source,
+        contains(
+          'lowerStageProfile == _RunnerLowerStageProfileV1.tableTapDecision',
+        ),
+      );
+    },
+  );
+
   test('Wave A makes selectable seats visually distinct from passive seats', () {
     expect(
       source,

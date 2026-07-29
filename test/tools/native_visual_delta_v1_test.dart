@@ -30,7 +30,7 @@ void main() {
       expect(state, contains("question: 'Which seat is later than CO?'"));
       expect(
         parseAct0NativeVisualAuditEntryV1(
-          'act0_capture=runner_drill&world=world_3&lesson=button_advantage&task=button_vs_cutoff',
+          'act0_capture=runner_drill&world=world_3&lesson=button_advantage&task=button_advantage_button_vs_cutoff',
         ),
         isNotNull,
       );

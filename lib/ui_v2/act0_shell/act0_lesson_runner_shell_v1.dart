@@ -2467,12 +2467,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           );
     final showStepIntro =
         isTeaching && runner.teachingStepIndex == 0 && runner.beatIndex > 1;
-    // First Table Guide identity teaching is the learner's initial table
-    // orientation. Its short instruction belongs at the top of the already
-    // allocated shared lower stage, with the navigation rail fixed below it.
-    // Other theory keeps its established intrinsic/bounded-scroll behavior.
-    final usesFirstSessionIdentityRail =
-        isTeaching && runner.lessonId == 'first_table_guide';
     final showTopInstructionCard = !isRefinedDev2;
     final pageX = isRefinedDev2 ? 8.0 : Act0ShellTokensV1.runnerPageX;
     final compactTableStageTopInset = 0.0;
@@ -2625,6 +2619,15 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     final lowerStageUsesAvailableHeight =
         usesSharedActiveRunnerAllocation ||
         taskCycleEnvelope.usesFixedLowerSlot;
+    // Short runner content should use the lower stage as a real sequence:
+    // prompt near the table, learner action through the middle, and the next
+    // control before the safe boundary. Overflow and enlarged-text states keep
+    // their bounded scroll behavior instead of receiving forced distribution.
+    final distributesShortLowerStageContent =
+        usesSharedActiveRunnerAllocation &&
+        lowerStageUsesAvailableHeight &&
+        !lowerStageNeedsScroll &&
+        media.textScaler.scale(1) <= 1.1;
     final showActionTrail =
         rawShowActionTrail && !taskCycleEnvelope.usesFixedLowerSlot;
     final hintCompact = compactAnswerListDecision && decisionHint != null;
@@ -2712,6 +2715,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             _showBottomLearningRail &&
             lowerStageProfile != _RunnerLowerStageProfileV1.instruction,
         fillLowerStage: lowerStageUsesAvailableHeight,
+        distributeShortContent: distributesShortLowerStageContent,
         lowerStageProfile: lowerStageProfile,
         accessibilityFeedbackSurface: isAccessibilityFlow && isReview,
         protectFixedSlotBottom:
@@ -2758,13 +2762,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                         Act0TheoryPresentationRoleV1.actionPrep ||
                     theoryPresentationRole ==
                         Act0TheoryPresentationRoleV1.recapCheck,
-                // Keep the instruction and its continuation control together
-                // when the shared envelope has spare repair-room below them.
-                // First-session identity guidance is an orientation state:
-                // its content top-aligns in the shared lower stage while the
-                // navigation footer remains fixed below it. Other theory keeps
-                // the established intrinsic/bounded-scroll contract.
-                fillsAvailableHeight: usesFirstSessionIdentityRail,
+                // Use real lower-stage geometry for short theory: the content
+                // lane and its continuation share the available height.
+                fillsAvailableHeight: distributesShortLowerStageContent,
               )
             : isTeaching
             ? FilledButton(
@@ -2798,7 +2798,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                       onRecall: widget.theoryRecallStep == null
                           ? null
                           : _openTheoryRecallSheet,
-                      fillsAvailableHeight: false,
+                      fillsAvailableHeight: distributesShortLowerStageContent,
                     )
                   : runner.sizingConfig.isEnabled
                   ? _ActionPromptPanelV1(
@@ -3759,6 +3759,7 @@ class _RunnerActionDockV1 extends StatelessWidget {
     this.protectFixedSlotBottom = false,
     this.centerBoundedLowerSurface = false,
     this.fillLowerStage = false,
+    this.distributeShortContent = false,
     this.lowerStageProfile = _RunnerLowerStageProfileV1.instruction,
     this.accessibilityFeedbackSurface = false,
   });
@@ -3776,6 +3777,7 @@ class _RunnerActionDockV1 extends StatelessWidget {
   final bool protectFixedSlotBottom;
   final bool centerBoundedLowerSurface;
   final bool fillLowerStage;
+  final bool distributeShortContent;
   final _RunnerLowerStageProfileV1 lowerStageProfile;
   final bool accessibilityFeedbackSurface;
 
@@ -3792,6 +3794,7 @@ class _RunnerActionDockV1 extends StatelessWidget {
         fillLowerStage &&
         (lowerStageProfile == _RunnerLowerStageProfileV1.instruction ||
             lowerStageProfile == _RunnerLowerStageProfileV1.decision ||
+            lowerStageProfile == _RunnerLowerStageProfileV1.tableTapDecision ||
             lowerStageProfile == _RunnerLowerStageProfileV1.accessibility);
     final double stageBottomPadding =
         lowerStageProfile == _RunnerLowerStageProfileV1.compactFeedback
@@ -3860,7 +3863,9 @@ class _RunnerActionDockV1 extends StatelessWidget {
       _RunnerLowerStageProfileV1.compactFeedback => LayoutBuilder(
         builder: (context, constraints) => Align(
           key: const Key('act0_shell_lower_stage_compact_feedback'),
-          alignment: Alignment.topCenter,
+          alignment: distributeShortContent
+              ? Alignment.center
+              : Alignment.topCenter,
           child: integratedDockBody,
         ),
       ),
@@ -3893,7 +3898,9 @@ class _RunnerActionDockV1 extends StatelessWidget {
       _RunnerLowerStageProfileV1.expandedFeedback => LayoutBuilder(
         builder: (context, constraints) => Align(
           key: const Key('act0_shell_lower_stage_expanded_feedback'),
-          alignment: Alignment.topCenter,
+          alignment: distributeShortContent
+              ? Alignment.center
+              : Alignment.topCenter,
           child: integratedDockBody,
         ),
       ),
@@ -4864,7 +4871,7 @@ class _LearningRailV1 extends StatelessWidget {
                               // this instruction. Short pages stay intrinsic
                               // and compose directly above it.
                               alignment: fillsAvailableHeight
-                                  ? Alignment.topCenter
+                                  ? Alignment.center
                                   : Alignment.bottomCenter,
                               child: contentLane,
                             ),
@@ -5977,30 +5984,73 @@ class _SeatTapPromptV1 extends StatelessWidget {
                       fontWeight: FontWeight.w900,
                     ),
                   ),
-                if (fillsAvailableHeight) const Spacer(),
-                const SizedBox(height: 5),
-                Text(
-                  isFirstTableOrientation
-                      ? 'Use the table markers, then tap.'
-                      : helperLine,
-                  key: const Key('act0_shell_seat_tap_prompt_text'),
-                  maxLines: 1,
-                  overflow: TextOverflow.fade,
-                  style: Act0ShellTokensV1.muted.copyWith(
-                    fontWeight: FontWeight.w700,
-                    fontSize: isFirstTableOrientation ? 10.6 : 12.2,
-                    height: 1.08,
+                if (fillsAvailableHeight)
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: _SeatTapPromptActionV1(
+                        isFirstTableOrientation: isFirstTableOrientation,
+                        helperLine: helperLine,
+                        recallLabel: recallLabel,
+                        onRecall: onRecall,
+                      ),
+                    ),
+                  )
+                else ...[
+                  const SizedBox(height: 5),
+                  _SeatTapPromptActionV1(
+                    isFirstTableOrientation: isFirstTableOrientation,
+                    helperLine: helperLine,
+                    recallLabel: recallLabel,
+                    onRecall: onRecall,
                   ),
-                ),
-                if (onRecall != null && recallLabel != null) ...[
-                  const SizedBox(height: 6),
-                  _TheoryRecallCtaV1(label: recallLabel!, onPressed: onRecall!),
                 ],
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _SeatTapPromptActionV1 extends StatelessWidget {
+  const _SeatTapPromptActionV1({
+    required this.isFirstTableOrientation,
+    required this.helperLine,
+    required this.recallLabel,
+    required this.onRecall,
+  });
+
+  final bool isFirstTableOrientation;
+  final String helperLine;
+  final String? recallLabel;
+  final VoidCallback? onRecall;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          isFirstTableOrientation
+              ? 'Use the table markers, then tap.'
+              : helperLine,
+          key: const Key('act0_shell_seat_tap_prompt_text'),
+          maxLines: 1,
+          overflow: TextOverflow.fade,
+          style: Act0ShellTokensV1.muted.copyWith(
+            fontWeight: FontWeight.w700,
+            fontSize: isFirstTableOrientation ? 10.6 : 12.2,
+            height: 1.08,
+          ),
+        ),
+        if (onRecall != null && recallLabel != null) ...[
+          const SizedBox(height: 6),
+          _TheoryRecallCtaV1(label: recallLabel!, onPressed: onRecall!),
+        ],
+      ],
     );
   }
 }
