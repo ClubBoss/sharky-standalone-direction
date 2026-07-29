@@ -3968,12 +3968,36 @@ class _RunnerActionDockV1 extends StatelessWidget {
       constraints: const BoxConstraints(
         minHeight: Act0ShellTokensV1.runnerActionDockMinHeight,
       ),
-      decoration: Act0ShellTokensV1.glassDecoration(top: true),
+      // Shared active-runner layouts intentionally give the lower dock the
+      // remaining stage. Make that area an authored continuation of the table
+      // rather than an unexplained field below an intrinsically short prompt.
+      // This preserves table geometry while anchoring instruction, response,
+      // and feedback to one learning plane.
+      decoration: fillLowerStage
+          ? _sharedRunnerLowerDockDecorationV1()
+          : Act0ShellTokensV1.glassDecoration(top: true),
       child: dockContent,
     );
     return visualDock;
   }
 }
+
+BoxDecoration _sharedRunnerLowerDockDecorationV1() => BoxDecoration(
+  gradient: LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: <Color>[
+      Act0ShellTokensV1.surface2.withValues(alpha: 0.94),
+      Act0ShellTokensV1.surface.withValues(alpha: 0.98),
+    ],
+  ),
+  border: Border(
+    top: BorderSide(
+      color: Act0ShellTokensV1.info.withValues(alpha: 0.26),
+      width: 1,
+    ),
+  ),
+);
 
 /// Keeps an overflowing repair body discoverable with its primary CTA already
 /// inside the safe viewport. The body scrolls upward from that stable action.
@@ -10990,9 +11014,10 @@ class _SeatNodeV1 extends StatelessWidget {
         : (refined ? Act0ShellTokensV1.textDim : Act0ShellTokensV1.textMuted);
     final borderColor = _seatBorderColorV1(seatVisualState, refined: refined);
     final ringColor = _seatRingColorV1(seatVisualState);
-    final shouldShowRing =
-        seatVisualState != _SeatVisualStateV1.passive &&
-        seatVisualState != _SeatVisualStateV1.selectable;
+    // A selectable seat is an answer control. It receives the same bounded
+    // outer affordance plane as focus states, while its cyan tone remains
+    // distinct from gold target/current-player and correctness semantics.
+    final shouldShowRing = seatVisualState != _SeatVisualStateV1.passive;
     final visibleCards = hero ? heroCards : seat.holeCards;
     final showFaceDown =
         !hero &&
@@ -13225,7 +13250,7 @@ class _MarkerDotV1 extends StatelessWidget {
           ),
           alignment: Alignment.center,
           child: const Text(
-            'BTN',
+            'D',
             style: TextStyle(
               color: Color(0xFF1E293B),
               fontSize: 7.0,

@@ -46,7 +46,7 @@ void main() {
 
       expect(source, contains('act0_shell_wave1b_hero_badge'));
       expect(source, contains('act0_shell_wave1b_button_marker'));
-      expect(source, contains('BTN'));
+      expect(source, contains("'D'"));
     },
   );
 
