@@ -5569,6 +5569,10 @@ Act0RunnerStateV1 _w7VisibleCardRunnerFromSpecV1(
   Act0W7VisibleAceHiddenTaskSpecV1 spec, {
   required Act0LessonPhaseV1 phase,
 }) {
+  final baseTable = _w6ComboCountsIntroRunner.table;
+  final heroCards = spec.taskId == 'visible_card_combo_density_transfer_check'
+      ? _heroQdQsCards
+      : baseTable.heroCards;
   return _w6ComboCountsIntroRunner.copyWith(
     lessonId: spec.taskId,
     lessonTitle: 'Visible Cards Change Ranges',
@@ -5595,9 +5599,17 @@ Act0RunnerStateV1 _w7VisibleCardRunnerFromSpecV1(
     ],
     feedbackTitle: _w7LearnerFeedbackTitleV1(spec.taskId),
     feedbackReason: spec.feedbackReason,
-    table: _w6ComboCountsIntroRunner.table.copyWith(
+    table: baseTable.copyWith(
       centerLabel: spec.boardContext,
+      heroCards: heroCards,
       boardCards: _w7VisibleBoardCardsForSpecV1(spec),
+      seats: baseTable.seats
+          .map(
+            (seat) => seat.seatId == baseTable.heroSeatId
+                ? _act0CopySeatStateV1(seat, holeCards: heroCards)
+                : seat,
+          )
+          .toList(growable: false),
     ),
     teachingSteps: <Act0TeachingStepV1>[
       Act0TeachingStepV1(
@@ -7190,6 +7202,11 @@ const _heroQqCards = <Act0CardStateV1>[
   Act0CardStateV1(rank: 'Q', suit: 's'),
 ];
 
+const _heroQdQsCards = <Act0CardStateV1>[
+  Act0CardStateV1(rank: 'Q', suit: 'd', tone: Act0CardToneV1.red),
+  Act0CardStateV1(rank: 'Q', suit: 's'),
+];
+
 const _heroA7oCards = <Act0CardStateV1>[
   Act0CardStateV1(rank: 'A', suit: 's'),
   Act0CardStateV1(rank: '7', suit: 'd', tone: Act0CardToneV1.red),
@@ -8478,9 +8495,9 @@ final _matchedChipsTransferRunner = _allInMeaningRunner.copyWith(
 final _sidePotIntroRunner = _matchedChipsTransferRunner.copyWith(
   lessonId: 'side_pot_intro',
   caption:
-      'Hero is all-in for 20 BB. CO and BB each matched Hero for 20 BB, then each added 30 BB more against each other.',
+      'Hero is all-in for 20 BB. CO and BB each contributed 50 BB total: 20 BB to match Hero, then 30 BB more against each other.',
   hint:
-      'Start with the short stack truth first. Main pot: three matched 20 BB stacks plus the 1.5 BB blinds. Side pot: the extra 30 BB from CO and 30 BB from BB.',
+      'Main pot: 20 BB each from Hero, CO, and BB, plus the folded small blind\'s 0.5 BB. The big blind\'s 1 BB is already inside BB\'s 20 BB. Side pot: 30 BB each from CO and BB.',
   question: 'Which statement is true here?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -8518,14 +8535,14 @@ final _sidePotIntroRunner = _matchedChipsTransferRunner.copyWith(
   ],
   table: _matchedChipsTransferRunner.table.copyWith(
     centerLabel: 'Hero cannot win side pot',
-    potLabel: 'Main 60 BB + blinds 1.5 BB; side 60 BB',
+    potLabel: 'Main 60.5 BB; side 60 BB',
     actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'Blinds: 1.5 BB'),
+      Act0ActionTrailItemV1(label: 'SB posts 0.5 BB, then folds'),
+      Act0ActionTrailItemV1(label: 'BB post is included in BB total'),
       Act0ActionTrailItemV1(label: 'Hero all-in 20 BB'),
-      Act0ActionTrailItemV1(label: 'CO matches Hero for 20 BB'),
-      Act0ActionTrailItemV1(label: 'BB matches Hero for 20 BB'),
-      Act0ActionTrailItemV1(label: 'CO adds 30 BB extra'),
-      Act0ActionTrailItemV1(label: 'BB adds 30 BB extra'),
+      Act0ActionTrailItemV1(label: 'CO contributes 50 BB total'),
+      Act0ActionTrailItemV1(label: 'BB contributes 50 BB total'),
+      Act0ActionTrailItemV1(label: 'CO and BB: 30 BB each to side'),
     ],
     highlightedSeatIds: const <String>['btn', 'co', 'bb'],
     seats: _matchedChipsTransferRunner.table.seats
@@ -8580,7 +8597,7 @@ final _sidePotIntroRunner = _matchedChipsTransferRunner.copyWith(
                   currentBetLabel: '50 BB',
                   bet: const Act0SeatBetStateV1(
                     kind: Act0SeatBetKindV1.raise,
-                    label: 'Side pot',
+                    label: 'Total in',
                     amountLabel: '50 BB',
                   ),
                 )
@@ -8607,7 +8624,7 @@ final _sidePotIntroRunner = _matchedChipsTransferRunner.copyWith(
                   currentBetLabel: '50 BB',
                   bet: const Act0SeatBetStateV1(
                     kind: Act0SeatBetKindV1.call,
-                    label: 'Side pot call',
+                    label: 'Total in',
                     amountLabel: '50 BB',
                   ),
                 )
@@ -8618,7 +8635,8 @@ final _sidePotIntroRunner = _matchedChipsTransferRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Main pot first, side pot second.',
-      body: 'Main: 20 BB matched + blinds. Side: CO/BB add 30 BB.',
+      body:
+          'Main: 20 BB each from Hero, CO, and BB, plus the folded SB\'s 0.5 BB. Side: CO and BB add 30 BB each.',
       focusLabels: <String>[
         'Main pot',
         'Side pot',
