@@ -1,6 +1,47 @@
 # Wave A Candidate 3 Owner Acceptance Closure v1
 
-Status: `WAVE_A_CLOSED_MERGED`
+Status:
+
+- `WAVE_A_GEOMETRY_FOUNDATION_MERGED`
+- `PREMIUM_COMPOSITION_CLOSURE_PENDING`
+
+## Owner classification correction - 2026-07-30
+
+The merged Candidate 3 remains accepted as the stable engineering foundation.
+The earlier `WAVE_A_CANDIDATE_3_OWNER_ACCEPTED`,
+`PASS_WITH_NONBLOCKING_SPACIOUSNESS`, and `WAVE_A_CLOSED` wording was broader
+than the evidence supports as a final premium-visual verdict. The corrected
+canonical classification is:
+
+- `WAVE_A_GEOMETRY_FOUNDATION_MERGED`
+- `PREMIUM_COMPOSITION_CLOSURE_PENDING`
+
+Accepted:
+
+- cycle-stable geometry;
+- responsive table scaling;
+- no crop;
+- compact reachability;
+- 1.4x collision repair;
+- semantic World-3 truth;
+- dealer / BTN / You / stack semantics;
+- telemetry non-regression.
+
+Not yet finally accepted:
+
+- whether every remaining whitespace region is compositionally intentional;
+- whether theory and short-decision reserves read as premium without technical
+  explanation;
+- whether the runner has reached its final 10/10 visual composition.
+
+Remaining whitespace is not acceptable merely because it is stable, declared,
+technically owned, nonblocking, or test-covered. Premium closure requires
+visual evidence that every empty region has a clear product function and looks
+intentional without reading an architecture report.
+
+A bounded premium-composition audit and a separate systemic blind-spot/skill
+audit are authorized next. Neither audit is implemented by this correction,
+and this authorization does not create Candidate 4.
 
 ## Accepted identity
 
@@ -12,9 +53,13 @@ Status: `WAVE_A_CLOSED_MERGED`
   `origin/main`.
 - Product mutation after owner acceptance: none.
 
-## Independent owner verdict
+## Superseded premium-closure classification
 
-Canonical classification: `WAVE_A_CANDIDATE_3_OWNER_ACCEPTED`
+The following classification records the earlier owner verdict and remains
+evidence for the accepted engineering foundation, but it is superseded for
+premium-composition closure by the 2026-07-30 correction above.
+
+Earlier classification: `WAVE_A_CANDIDATE_3_OWNER_ACCEPTED`
 
 - Static visual verdict: `PASS_WITH_NONBLOCKING_SPACIOUSNESS`
 - Temporal stability: `PASS`
@@ -56,9 +101,9 @@ Nonblocking notes:
   explicit product decision.
 - Acceptance metrics must be checked for gaming through enclosed void, split
   void, crop, or state-dependent resizing.
-- The full reusable safety policy will be designed in a separate bounded skill
-  audit after Wave A closure.
+- The full reusable safety policy will be designed in the separately authorized
+  bounded skill audit.
 
 No generalized skill, Candidate 4, new visual wave, Modern Table work,
 animation, curriculum change, telemetry change, or visual micro-polish was
-started in this closure.
+started in this correction.
