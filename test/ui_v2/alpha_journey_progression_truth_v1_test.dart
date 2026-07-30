@@ -318,6 +318,10 @@ void main() {
           await tester.pumpAndSettle();
           break;
         }
+        if (runner.selectedTaskId == 'actions_check_drill' &&
+            answer.evaluate().isNotEmpty) {
+          break;
+        }
         await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
         await tester.pumpAndSettle();
       }
