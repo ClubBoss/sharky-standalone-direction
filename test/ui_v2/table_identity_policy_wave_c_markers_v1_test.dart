@@ -48,6 +48,7 @@ void main() {
         find.byKey(const Key('act0_shell_wave1_hero_you_badge')),
         findsOneWidget,
       );
+      expect(find.text('D'), findsOneWidget);
       await pump(
         tester,
         Act0TableIdentityPolicyV1.learnerPositionAndDealerOrder,

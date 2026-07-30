@@ -96,7 +96,9 @@ void main() {
       );
 
       expect(tableRect.height, greaterThanOrEqualTo(430));
-      expect(dockRect.top - tableRect.bottom, lessThanOrEqualTo(18));
+      // The stable profile leaves 12 px of table framing plus the authored
+      // 12 px table-to-dock seam.
+      expect(dockRect.top - tableRect.bottom, closeTo(24, 0.5));
       expect(dockRect.bottom - finalOptionRect.bottom, lessThanOrEqualTo(86));
       expect(finalOptionRect.height, greaterThanOrEqualTo(44));
       expect(finalOptionRect.bottom, lessThanOrEqualTo(812));

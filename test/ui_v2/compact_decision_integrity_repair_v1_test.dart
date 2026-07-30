@@ -318,7 +318,7 @@ void main() {
       expect(
         find.descendant(
           of: find.byKey(const Key('act0_shell_marker_btn_dealer')),
-          matching: find.text('BTN'),
+          matching: find.text('D'),
         ),
         findsOneWidget,
       );
@@ -344,8 +344,9 @@ void main() {
         find.byKey(const Key('act0_shell_seat_tap_prompt_text')),
       );
       expect(prompt.top, lessThanOrEqualTo(lowerSurface.top + 16));
-      expect(prompt.height, lessThan(lowerSurface.height - 48));
-      expect(prompt.bottom, lessThanOrEqualTo(lowerSurface.bottom - 48));
+      expect(prompt.height, greaterThanOrEqualTo(lowerSurface.height - 24));
+      expect(prompt.bottom, lessThanOrEqualTo(lowerSurface.bottom));
+      expect(helper.top, greaterThan(prompt.top + 40));
       expect(helper.bottom, lessThanOrEqualTo(prompt.bottom - 8));
       expect(tester.takeException(), isNull);
     },
@@ -486,7 +487,13 @@ void main() {
 
       expect(table.bottom, closeTo(lowerStage.top, 1));
       expect(content.top, greaterThan(lowerStage.top + 24));
-      expect(footer.top - content.bottom, inInclusiveRange(0, 12));
+      expect(
+        footer.top - content.bottom,
+        inInclusiveRange(36, 120),
+        reason:
+            'Short theory must distribute content and continuation through '
+            'the real lower stage instead of leaving one ownerless field.',
+      );
       expect(continueCta.bottom, lessThanOrEqualTo(874));
       expect(tester.takeException(), isNull);
     },
@@ -633,7 +640,7 @@ void main() {
       final dock = tester.getRect(
         find.byKey(const Key('act0_shell_runner_action_dock')),
       );
-      expect(feedbackCard.top, lessThanOrEqualTo(dock.top + 16));
+      expect(feedbackCard.top, greaterThanOrEqualTo(dock.top + 24));
       expect(feedbackCard.bottom, lessThan(dock.bottom - 24));
     },
   );

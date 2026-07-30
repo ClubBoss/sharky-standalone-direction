@@ -2467,12 +2467,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           );
     final showStepIntro =
         isTeaching && runner.teachingStepIndex == 0 && runner.beatIndex > 1;
-    // First Table Guide identity teaching is the learner's initial table
-    // orientation. Its short instruction belongs at the top of the already
-    // allocated shared lower stage, with the navigation rail fixed below it.
-    // Other theory keeps its established intrinsic/bounded-scroll behavior.
-    final usesFirstSessionIdentityRail =
-        isTeaching && runner.lessonId == 'first_table_guide';
     final showTopInstructionCard = !isRefinedDev2;
     final pageX = isRefinedDev2 ? 8.0 : Act0ShellTokensV1.runnerPageX;
     final compactTableStageTopInset = 0.0;
@@ -2620,8 +2614,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             interactionMode: interactionMode,
             fillsDecisionStage: compactAnswerListDecision,
           );
-    // The background owns spare lower-surface space; the dock still receives
-    // its stable bounded allocation while child cards top-align intrinsically.
+    // The shared active runner fills one profile-stable cycle envelope while
+    // short child cards remain intrinsic inside it.
     final lowerStageUsesAvailableHeight =
         usesSharedActiveRunnerAllocation ||
         taskCycleEnvelope.usesFixedLowerSlot;
@@ -2678,6 +2672,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       onBack: null,
       rapidMode: widget.rapidReviewMode,
       streamlinedDirectDecisionFeedback: isAccessibilityFlow,
+      cycleStableEnvelope: usesSharedActiveRunnerAllocation,
       coachVoiceSeed:
           '${runner.lessonId}|${runner.beatIndex}|${runner.phase.name}|${runner.selectedOptionId ?? ''}',
       onContinue: widget.onContinueReview,
@@ -2700,18 +2695,17 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         fillCompactPromptToDock: false,
         scrollContentInEnvelope:
             (lowerStageNeedsScroll &&
-                (isDrill || isReview) &&
-                widget.lowerSurfacePrototypeState == null &&
-                !isAccessibilityFlow) ||
-            lowerStageProfile == _RunnerLowerStageProfileV1.compactFeedback ||
-            (isReview &&
-                lowerStageProfile ==
-                    _RunnerLowerStageProfileV1.expandedFeedback),
+            (isDrill || isReview) &&
+            !_showBottomLearningRail &&
+            widget.lowerSurfacePrototypeState == null &&
+            !isAccessibilityFlow &&
+            (!usesSharedActiveRunnerAllocation || !isReview)),
         centerBoundedLowerSurface:
-            usesSharedActiveRunnerAllocation &&
+            !usesSharedActiveRunnerAllocation &&
             _showBottomLearningRail &&
             lowerStageProfile != _RunnerLowerStageProfileV1.instruction,
         fillLowerStage: lowerStageUsesAvailableHeight,
+        cycleStableEnvelope: usesSharedActiveRunnerAllocation,
         lowerStageProfile: lowerStageProfile,
         accessibilityFeedbackSurface: isAccessibilityFlow && isReview,
         protectFixedSlotBottom:
@@ -2758,13 +2752,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                         Act0TheoryPresentationRoleV1.actionPrep ||
                     theoryPresentationRole ==
                         Act0TheoryPresentationRoleV1.recapCheck,
-                // Keep the instruction and its continuation control together
-                // when the shared envelope has spare repair-room below them.
-                // First-session identity guidance is an orientation state:
-                // its content top-aligns in the shared lower stage while the
-                // navigation footer remains fixed below it. Other theory keeps
-                // the established intrinsic/bounded-scroll contract.
-                fillsAvailableHeight: usesFirstSessionIdentityRail,
+                fillsAvailableHeight: usesSharedActiveRunnerAllocation,
               )
             : isTeaching
             ? FilledButton(
@@ -2855,11 +2843,12 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                     )
             : isReview
             ? Column(
-                mainAxisSize: isAccessibilityFlow
+                mainAxisSize:
+                    isAccessibilityFlow || usesSharedActiveRunnerAllocation
                     ? MainAxisSize.max
                     : MainAxisSize.min,
                 children: [
-                  if (isAccessibilityFlow)
+                  if (isAccessibilityFlow || usesSharedActiveRunnerAllocation)
                     Expanded(child: buildFeedbackShell())
                   else
                     buildFeedbackShell(),
@@ -2873,14 +2862,78 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       );
     }
 
-    Widget buildRunnerStage({double? maxTableHeight}) {
+    Widget buildRunnerStage({
+      double? maxTableHeight,
+      bool usesElasticSharedTableZone = false,
+    }) {
       return LayoutBuilder(
-        builder: (context, _) {
+        builder: (context, stageConstraints) {
           final runnerStagePadding = EdgeInsets.fromLTRB(
             pageX,
             Act0ShellTokensV1.gapSm,
             pageX,
             coupleTableToDock ? 0 : Act0ShellTokensV1.gapMd,
+          );
+          final effectiveMaxTableHeight = usesElasticSharedTableZone
+              ? math.max(
+                  0.0,
+                  stageConstraints.maxHeight -
+                      _runnerUpperStageChromeHeightV1(
+                        showTopInstructionCard: showTopInstructionCard,
+                        isRefinedDev2: isRefinedDev2,
+                        compactTableStageTopInset: compactTableStageTopInset,
+                      ) -
+                      (_sharedRunnerTableFramingInsetV1 * 2),
+                )
+              : maxTableHeight;
+          Widget tableStage = _RunnerTableStageV1(
+            table: table,
+            highlightedCardIds: mergedHighlightIds,
+            interactiveCalloutLabel: interactiveCallout,
+            onBoardCardTap: _onBoardTappedForShowdown,
+            onChooseSeat: _handleChooseSeat,
+            visualVariant: widget.tableVisualVariant,
+            showFocusBadge: !_showBottomLearningRail,
+            showRepairCallout: !_isReview,
+            playbackActiveSeatId: playbackActiveSeatId,
+            animateBetMotion: trailPlaybackEnabled,
+            betOverride: betOverride,
+            centerLabelOverride: centerStatDisplay.centerCueLabel,
+            potLabelOverride: playbackPotLabel ?? centerStatDisplay.potLabel,
+            toCallLabelOverride: centerStatDisplay.toCallLabel,
+            streetLabelOverride: playbackStreetLabel,
+            completionSummary: showCompletionToast
+                ? widget.completionSummary
+                : null,
+            selectedSeatId: selectedSeatId,
+            selectedSeatFeedbackState: selectedSeatFeedbackState,
+            compactBottomDockClearance: compactBottomDockClearance,
+            interactionMode: interactionMode,
+            framingProfile: framingProfile,
+            viewportFamily: viewportFamily,
+            lateRouteSignal: lateRouteTableSignal,
+            identityPolicy: identityPolicy,
+            maxTableHeight: effectiveMaxTableHeight,
+            lockSharedActiveTableGeometry: usesSharedActiveRunnerAllocation,
+          );
+          if (isAccessibilityFlow || usesSharedActiveRunnerAllocation) {
+            final effectiveOnFeltScale = isAccessibilityFlow
+                ? 1.0
+                : math.min(media.textScaler.scale(1), 1.2);
+            tableStage = MediaQuery(
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: TextScaler.linear(effectiveOnFeltScale)),
+              child: tableStage,
+            );
+          }
+          final tablePresentation = Opacity(
+            key: Key(
+              'act0_shell_feedback_table_context_receded_'
+              '$shouldDeemphasizeTableForRepairLearning',
+            ),
+            opacity: shouldDeemphasizeTableForRepairLearning ? 0.84 : 1,
+            child: tableStage,
           );
           final runnerStageColumn = Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -2927,91 +2980,19 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
               ],
               if (compactTableStageTopInset > 0)
                 SizedBox(height: compactTableStageTopInset),
-              if (coupleTableToDock && maxTableHeight == null) const Spacer(),
-              Center(
-                child: Opacity(
-                  key: Key(
-                    'act0_shell_feedback_table_context_receded_'
-                    '$shouldDeemphasizeTableForRepairLearning',
+              if (usesElasticSharedTableZone)
+                Expanded(
+                  child: Center(
+                    key: const Key('act0_shell_shared_runner_table_zone'),
+                    child: tablePresentation,
                   ),
-                  opacity: shouldDeemphasizeTableForRepairLearning ? 0.68 : 1,
-                  child: isAccessibilityFlow
-                      ? MediaQuery(
-                          data: MediaQuery.of(
-                            context,
-                          ).copyWith(textScaler: TextScaler.linear(1)),
-                          child: _RunnerTableStageV1(
-                            table: table,
-                            highlightedCardIds: mergedHighlightIds,
-                            interactiveCalloutLabel: interactiveCallout,
-                            onBoardCardTap: _onBoardTappedForShowdown,
-                            onChooseSeat: _handleChooseSeat,
-                            visualVariant: widget.tableVisualVariant,
-                            showFocusBadge: !_showBottomLearningRail,
-                            showRepairCallout: !_isReview,
-                            playbackActiveSeatId: playbackActiveSeatId,
-                            animateBetMotion: trailPlaybackEnabled,
-                            betOverride: betOverride,
-                            centerLabelOverride:
-                                centerStatDisplay.centerCueLabel,
-                            potLabelOverride:
-                                playbackPotLabel ?? centerStatDisplay.potLabel,
-                            toCallLabelOverride: centerStatDisplay.toCallLabel,
-                            streetLabelOverride: playbackStreetLabel,
-                            completionSummary: showCompletionToast
-                                ? widget.completionSummary
-                                : null,
-                            selectedSeatId: selectedSeatId,
-                            selectedSeatFeedbackState:
-                                selectedSeatFeedbackState,
-                            compactBottomDockClearance:
-                                compactBottomDockClearance,
-                            interactionMode: interactionMode,
-                            framingProfile: framingProfile,
-                            viewportFamily: viewportFamily,
-                            lateRouteSignal: lateRouteTableSignal,
-                            identityPolicy: identityPolicy,
-                            maxTableHeight: maxTableHeight,
-                            lockSharedActiveTableGeometry:
-                                usesSharedActiveRunnerAllocation,
-                          ),
-                        )
-                      : _RunnerTableStageV1(
-                          table: table,
-                          highlightedCardIds: mergedHighlightIds,
-                          interactiveCalloutLabel: interactiveCallout,
-                          onBoardCardTap: _onBoardTappedForShowdown,
-                          onChooseSeat: _handleChooseSeat,
-                          visualVariant: widget.tableVisualVariant,
-                          showFocusBadge: !_showBottomLearningRail,
-                          showRepairCallout: !_isReview,
-                          playbackActiveSeatId: playbackActiveSeatId,
-                          animateBetMotion: trailPlaybackEnabled,
-                          betOverride: betOverride,
-                          centerLabelOverride: centerStatDisplay.centerCueLabel,
-                          potLabelOverride:
-                              playbackPotLabel ?? centerStatDisplay.potLabel,
-                          toCallLabelOverride: centerStatDisplay.toCallLabel,
-                          streetLabelOverride: playbackStreetLabel,
-                          completionSummary: showCompletionToast
-                              ? widget.completionSummary
-                              : null,
-                          selectedSeatId: selectedSeatId,
-                          selectedSeatFeedbackState: selectedSeatFeedbackState,
-                          compactBottomDockClearance:
-                              compactBottomDockClearance,
-                          interactionMode: interactionMode,
-                          framingProfile: framingProfile,
-                          viewportFamily: viewportFamily,
-                          lateRouteSignal: lateRouteTableSignal,
-                          identityPolicy: identityPolicy,
-                          maxTableHeight: maxTableHeight,
-                          lockSharedActiveTableGeometry:
-                              usesSharedActiveRunnerAllocation,
-                        ),
-                ),
-              ),
-              if (interactiveCallout.isNotEmpty) ...[
+                )
+              else ...[
+                if (coupleTableToDock && maxTableHeight == null) const Spacer(),
+                Center(child: tablePresentation),
+              ],
+              if (!usesElasticSharedTableZone &&
+                  interactiveCallout.isNotEmpty) ...[
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
                 Container(
                   key: const Key('act0_shell_showdown_explain_line'),
@@ -3039,7 +3020,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                   ),
                 ),
               ],
-              if (showActionTrail) ...[
+              if (!usesElasticSharedTableZone && showActionTrail) ...[
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
                 _ActionTrailV1(
                   items: table.actionTrail,
@@ -3063,7 +3044,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
               padding: runnerStagePadding,
               child: runnerStageColumn,
             );
-            if (isReview) {
+            if (isReview && !usesElasticSharedTableZone) {
               return SingleChildScrollView(
                 key: const Key('act0_shell_runner_scroll'),
                 primary: false,
@@ -3185,60 +3166,47 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                final tableHeightFromWidth = _sharedActiveRunnerTableHeightV1(
-                  context,
-                  availableWidth: math.max(
-                    0,
-                    constraints.maxWidth - (pageX * 2),
-                  ),
-                  compactBottomDockClearance: compactBottomDockClearance,
+                final upperChromeHeight = _runnerUpperStageChromeHeightV1(
+                  showTopInstructionCard: showTopInstructionCard,
+                  isRefinedDev2: isRefinedDev2,
+                  compactTableStageTopInset: compactTableStageTopInset,
                 );
-                // A compact wrong/repair feedback surface owns its measured
-                // minimum lane before the table receives the remainder. The
-                // shared allocation path previously reserved only ordinary
-                // answer demand, allowing the table to occlude this heading.
-                final lowerSurfaceDemand =
-                    isReview && usesCompactRepairFeedbackDock
-                    ? math.max(
-                        normalLowerSurfaceDemand,
-                        _runnerRepairFeedbackDockTargetLowerSlotHeightV1,
-                      )
-                    : normalLowerSurfaceDemand;
-                // The normal route keeps its accepted width-derived table
-                // whenever its actual lower content fits. This is deliberately
-                // not the former 405 px worst-case reserve: a theory rail or
-                // three-choice task receives only its measured demand, while
-                // a four-answer task keeps one stable cycle demand.
-                final tableHeight = math.min(
-                  tableHeightFromWidth,
-                  math.max(
-                    0.0,
-                    constraints.maxHeight -
-                        _runnerUpperStageChromeHeightV1(
-                          showTopInstructionCard: showTopInstructionCard,
-                          isRefinedDev2: isRefinedDev2,
-                          compactTableStageTopInset: compactTableStageTopInset,
-                        ) -
-                        lowerSurfaceDemand,
-                  ),
+                final stageHeight = math.max(
+                  0.0,
+                  constraints.maxHeight - upperChromeHeight,
                 );
-                final stageHeight =
-                    _runnerUpperStageChromeHeightV1(
-                      showTopInstructionCard: showTopInstructionCard,
-                      isRefinedDev2: isRefinedDev2,
-                      compactTableStageTopInset: compactTableStageTopInset,
-                    ) +
-                    tableHeight;
-                if (stageHeight >= constraints.maxHeight) {
-                  return buildRunnerStage(maxTableHeight: tableHeight);
-                }
+                final cycleStableEnvelope =
+                    _sharedRunnerCycleStableEnvelopeHeightV1(
+                      stageHeight: stageHeight,
+                      accessibilityScale: media.textScaler.scale(1),
+                    );
+                final maxEnvelope = math.max(
+                  Act0ShellTokensV1.runnerActionDockMinHeight,
+                  constraints.maxHeight -
+                      upperChromeHeight -
+                      _sharedRunnerSeamV1 -
+                      (_sharedRunnerTableFramingInsetV1 * 2),
+                );
+                final envelopeHeight = cycleStableEnvelope.clamp(
+                  Act0ShellTokensV1.runnerActionDockMinHeight,
+                  maxEnvelope,
+                );
                 return Column(
                   children: [
-                    SizedBox(
-                      height: stageHeight,
-                      child: buildRunnerStage(maxTableHeight: tableHeight),
-                    ),
                     Expanded(
+                      child: buildRunnerStage(usesElasticSharedTableZone: true),
+                    ),
+                    SizedBox(
+                      key: const Key('act0_shell_shared_runner_seam'),
+                      height: _sharedRunnerSeamV1,
+                      width: double.infinity,
+                      child: DecoratedBox(
+                        decoration: _sharedRunnerSeamDecorationV1(),
+                      ),
+                    ),
+                    SizedBox(
+                      key: const Key('act0_shell_shared_runner_cycle_envelope'),
+                      height: envelopeHeight,
                       child: KeyedSubtree(
                         key: const Key(
                           'act0_shell_shared_runner_lower_surface',
@@ -3759,6 +3727,7 @@ class _RunnerActionDockV1 extends StatelessWidget {
     this.protectFixedSlotBottom = false,
     this.centerBoundedLowerSurface = false,
     this.fillLowerStage = false,
+    this.cycleStableEnvelope = false,
     this.lowerStageProfile = _RunnerLowerStageProfileV1.instruction,
     this.accessibilityFeedbackSurface = false,
   });
@@ -3776,6 +3745,7 @@ class _RunnerActionDockV1 extends StatelessWidget {
   final bool protectFixedSlotBottom;
   final bool centerBoundedLowerSurface;
   final bool fillLowerStage;
+  final bool cycleStableEnvelope;
   final _RunnerLowerStageProfileV1 lowerStageProfile;
   final bool accessibilityFeedbackSurface;
 
@@ -3789,10 +3759,13 @@ class _RunnerActionDockV1 extends StatelessWidget {
         ? null
         : taskRailLabel;
     final fillsLowerStage =
-        fillLowerStage &&
-        (lowerStageProfile == _RunnerLowerStageProfileV1.instruction ||
-            lowerStageProfile == _RunnerLowerStageProfileV1.decision ||
-            lowerStageProfile == _RunnerLowerStageProfileV1.accessibility);
+        cycleStableEnvelope ||
+        (fillLowerStage &&
+            (lowerStageProfile == _RunnerLowerStageProfileV1.instruction ||
+                lowerStageProfile == _RunnerLowerStageProfileV1.decision ||
+                lowerStageProfile ==
+                    _RunnerLowerStageProfileV1.tableTapDecision ||
+                lowerStageProfile == _RunnerLowerStageProfileV1.accessibility));
     final double stageBottomPadding =
         lowerStageProfile == _RunnerLowerStageProfileV1.compactFeedback
         // SafeArea has already consumed the device inset. Keep only the
@@ -3828,7 +3801,19 @@ class _RunnerActionDockV1 extends StatelessWidget {
             ),
             const SizedBox(height: Act0ShellTokensV1.gapSm),
           ],
-          if (fillDockBody) Expanded(child: child) else child,
+          if (fillDockBody)
+            Expanded(
+              child:
+                  cycleStableEnvelope &&
+                      (lowerStageProfile ==
+                              _RunnerLowerStageProfileV1.decision ||
+                          lowerStageProfile ==
+                              _RunnerLowerStageProfileV1.tableTapDecision)
+                  ? Align(alignment: Alignment.topCenter, child: child)
+                  : child,
+            )
+          else
+            child,
         ],
       ),
     );
@@ -3857,13 +3842,19 @@ class _RunnerActionDockV1 extends StatelessWidget {
           )
         : effectiveDockBody;
     final stageComposedDockBody = switch (lowerStageProfile) {
-      _RunnerLowerStageProfileV1.compactFeedback => LayoutBuilder(
-        builder: (context, constraints) => Align(
-          key: const Key('act0_shell_lower_stage_compact_feedback'),
-          alignment: Alignment.topCenter,
-          child: integratedDockBody,
-        ),
-      ),
+      _RunnerLowerStageProfileV1.compactFeedback =>
+        cycleStableEnvelope
+            ? SizedBox.expand(
+                key: const Key('act0_shell_lower_stage_compact_feedback'),
+                child: integratedDockBody,
+              )
+            : LayoutBuilder(
+                builder: (context, constraints) => Align(
+                  key: const Key('act0_shell_lower_stage_compact_feedback'),
+                  alignment: Alignment.topCenter,
+                  child: integratedDockBody,
+                ),
+              ),
       _RunnerLowerStageProfileV1.decision => SizedBox.expand(
         key: const Key('act0_shell_lower_stage_decision'),
         child: Align(alignment: Alignment.topCenter, child: integratedDockBody),
@@ -3890,13 +3881,19 @@ class _RunnerActionDockV1 extends StatelessWidget {
                 alignment: Alignment.topCenter,
                 child: integratedDockBody,
               ),
-      _RunnerLowerStageProfileV1.expandedFeedback => LayoutBuilder(
-        builder: (context, constraints) => Align(
-          key: const Key('act0_shell_lower_stage_expanded_feedback'),
-          alignment: Alignment.topCenter,
-          child: integratedDockBody,
-        ),
-      ),
+      _RunnerLowerStageProfileV1.expandedFeedback =>
+        cycleStableEnvelope
+            ? SizedBox.expand(
+                key: const Key('act0_shell_lower_stage_expanded_feedback'),
+                child: integratedDockBody,
+              )
+            : LayoutBuilder(
+                builder: (context, constraints) => Align(
+                  key: const Key('act0_shell_lower_stage_expanded_feedback'),
+                  alignment: Alignment.topCenter,
+                  child: integratedDockBody,
+                ),
+              ),
       _RunnerLowerStageProfileV1.accessibility => SizedBox.expand(
         key: const Key('act0_shell_lower_stage_accessibility'),
         child: accessibilityFeedbackSurface
@@ -4378,6 +4375,36 @@ class Act0SharkyMascotV1 extends StatelessWidget {
 
 const double _learningRailMaxHeightV1 = 148;
 const double _sharedActiveRunnerLearningRailMaxHeightV1 = 148;
+const double _sharedRunnerSeamV1 = 12;
+const double _sharedRunnerTableFramingInsetV1 = 12;
+const double _sharedRunnerEnlargedTextDockGrowthV1 = 285;
+
+double _sharedRunnerCycleStableEnvelopeHeightV1({
+  required double stageHeight,
+  required double accessibilityScale,
+}) {
+  final boundedScale = accessibilityScale.clamp(1.0, 1.4);
+  final decisionDockDemand =
+      156 + ((boundedScale - 1) * _sharedRunnerEnlargedTextDockGrowthV1);
+  final cyclePeakFraction = boundedScale >= 1.3 ? 0.50 : 0.36;
+  final cyclePeak = stageHeight * cyclePeakFraction;
+  final reserveMax = stageHeight * 0.13;
+  return math.min(cyclePeak, decisionDockDemand + reserveMax);
+}
+
+BoxDecoration _sharedRunnerSeamDecorationV1() => BoxDecoration(
+  border: Border(
+    top: BorderSide(color: Colors.white.withValues(alpha: 0.10), width: 1),
+  ),
+  gradient: LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: <Color>[
+      Act0ShellTokensV1.surface2.withValues(alpha: 0.18),
+      Act0ShellTokensV1.surface2.withValues(alpha: 0.04),
+    ],
+  ),
+);
 
 double _normalRunnerLowerSurfaceDemandV1(
   BuildContext context, {
@@ -4773,7 +4800,6 @@ class _LearningRailV1 extends StatelessWidget {
               final pageNumber =
                   activeSupportSegmentIndex.clamp(0, pageCount - 1) + 1;
               final usesBoundedContentScroll =
-                  !fillsAvailableHeight &&
                   MediaQuery.textScalerOf(context).scale(1) > 1.1;
               final contentLane = Semantics(
                 label: 'Theory page $pageNumber of $pageCount',
@@ -5953,30 +5979,73 @@ class _SeatTapPromptV1 extends StatelessWidget {
                       fontWeight: FontWeight.w900,
                     ),
                   ),
-                if (fillsAvailableHeight) const Spacer(),
-                const SizedBox(height: 5),
-                Text(
-                  isFirstTableOrientation
-                      ? 'Use the table markers, then tap.'
-                      : helperLine,
-                  key: const Key('act0_shell_seat_tap_prompt_text'),
-                  maxLines: 1,
-                  overflow: TextOverflow.fade,
-                  style: Act0ShellTokensV1.muted.copyWith(
-                    fontWeight: FontWeight.w700,
-                    fontSize: isFirstTableOrientation ? 10.6 : 12.2,
-                    height: 1.08,
+                if (fillsAvailableHeight)
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: _SeatTapPromptActionV1(
+                        isFirstTableOrientation: isFirstTableOrientation,
+                        helperLine: helperLine,
+                        recallLabel: recallLabel,
+                        onRecall: onRecall,
+                      ),
+                    ),
+                  )
+                else ...[
+                  const SizedBox(height: 5),
+                  _SeatTapPromptActionV1(
+                    isFirstTableOrientation: isFirstTableOrientation,
+                    helperLine: helperLine,
+                    recallLabel: recallLabel,
+                    onRecall: onRecall,
                   ),
-                ),
-                if (onRecall != null && recallLabel != null) ...[
-                  const SizedBox(height: 6),
-                  _TheoryRecallCtaV1(label: recallLabel!, onPressed: onRecall!),
                 ],
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _SeatTapPromptActionV1 extends StatelessWidget {
+  const _SeatTapPromptActionV1({
+    required this.isFirstTableOrientation,
+    required this.helperLine,
+    required this.recallLabel,
+    required this.onRecall,
+  });
+
+  final bool isFirstTableOrientation;
+  final String helperLine;
+  final String? recallLabel;
+  final VoidCallback? onRecall;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          isFirstTableOrientation
+              ? 'Use the table markers, then tap.'
+              : helperLine,
+          key: const Key('act0_shell_seat_tap_prompt_text'),
+          maxLines: 1,
+          overflow: TextOverflow.fade,
+          style: Act0ShellTokensV1.muted.copyWith(
+            fontWeight: FontWeight.w700,
+            fontSize: isFirstTableOrientation ? 10.6 : 12.2,
+            height: 1.08,
+          ),
+        ),
+        if (onRecall != null && recallLabel != null) ...[
+          const SizedBox(height: 6),
+          _TheoryRecallCtaV1(label: recallLabel!, onPressed: onRecall!),
+        ],
+      ],
     );
   }
 }
@@ -6210,6 +6279,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.onBack,
     this.rapidMode = false,
     this.streamlinedDirectDecisionFeedback = false,
+    this.cycleStableEnvelope = false,
     this.coachVoiceSeed,
     required this.onContinue,
   });
@@ -6244,6 +6314,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final VoidCallback? onBack;
   final bool rapidMode;
   final bool streamlinedDirectDecisionFeedback;
+  final bool cycleStableEnvelope;
   final String? coachVoiceSeed;
   final VoidCallback onContinue;
 
@@ -6471,7 +6542,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final showActionContrastEyebrow =
         !(streamlinedDirectDecisionFeedback && isCompactRefinedFeedback);
     final usesSharedAccessibilitySurface =
-        streamlinedDirectDecisionFeedback && isCompactRefinedFeedback;
+        (streamlinedDirectDecisionFeedback || cycleStableEnvelope) &&
+        isCompactRefinedFeedback;
     final isExactReplayRepair =
         repairResultReceiptLine?.trim().toLowerCase().startsWith('replay ') ==
             true ||
@@ -6755,27 +6827,57 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                         SizedBox(height: isCompactRefinedFeedback ? 2 : 3),
                       ],
                       if (showReason)
-                        Text(
-                          resolvedReason,
-                          key: const Key('act0_shell_feedback_reason'),
-                          maxLines:
-                              isCompactRefinedFeedback &&
-                                  !preserveFullCompactReason
-                              ? 2
-                              : null,
-                          overflow:
-                              isCompactRefinedFeedback &&
-                                  !preserveFullCompactReason
-                              ? TextOverflow.fade
-                              : null,
-                          style: Act0ShellTokensV1.body.copyWith(
-                            color: Act0ShellTokensV1.textMuted,
-                            fontSize: isCompactRefinedFeedback
-                                ? 11.4
-                                : (refined ? 12.0 : 12.5),
-                            height: isCompactRefinedFeedback ? 1.08 : 1.16,
-                          ),
-                        ),
+                        cycleStableEnvelope
+                            ? ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxHeight: isCompactRefinedFeedback ? 34 : 60,
+                                ),
+                                child: SingleChildScrollView(
+                                  key: const Key(
+                                    'act0_shell_feedback_explanation_scroll',
+                                  ),
+                                  primary: false,
+                                  physics: const ClampingScrollPhysics(),
+                                  child: Text(
+                                    resolvedReason,
+                                    key: const Key(
+                                      'act0_shell_feedback_reason',
+                                    ),
+                                    style: Act0ShellTokensV1.body.copyWith(
+                                      color: Act0ShellTokensV1.textMuted,
+                                      fontSize: isCompactRefinedFeedback
+                                          ? 11.4
+                                          : (refined ? 12.0 : 12.5),
+                                      height: isCompactRefinedFeedback
+                                          ? 1.08
+                                          : 1.16,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Text(
+                                resolvedReason,
+                                key: const Key('act0_shell_feedback_reason'),
+                                maxLines:
+                                    isCompactRefinedFeedback &&
+                                        !preserveFullCompactReason
+                                    ? 2
+                                    : null,
+                                overflow:
+                                    isCompactRefinedFeedback &&
+                                        !preserveFullCompactReason
+                                    ? TextOverflow.fade
+                                    : null,
+                                style: Act0ShellTokensV1.body.copyWith(
+                                  color: Act0ShellTokensV1.textMuted,
+                                  fontSize: isCompactRefinedFeedback
+                                      ? 11.4
+                                      : (refined ? 12.0 : 12.5),
+                                  height: isCompactRefinedFeedback
+                                      ? 1.08
+                                      : 1.16,
+                                ),
+                              ),
                       if (!rapidMode && nextClueLine.trim().isNotEmpty) ...[
                         SizedBox(height: isCompactRefinedFeedback ? 3 : 6),
                         Text(
@@ -9707,7 +9809,7 @@ class _Act0TableV1 extends StatelessWidget {
     };
     if (visualVariant == Act0ShellTableVisualVariantV1.refinedDev2 &&
         table.density == Act0TableDensityV1.compactLesson) {
-      tableAspect = 0.576;
+      tableAspect = lockSharedActiveTableGeometry ? 0.60 : 0.576;
     }
     if (isTablet) {
       tableAspect = switch (table.density) {
@@ -10051,24 +10153,6 @@ double _compactDockTableScaleV1(
       : compactSafeAreaTableScale;
 }
 
-double _sharedActiveRunnerTableHeightV1(
-  BuildContext context, {
-  required double availableWidth,
-  required bool compactBottomDockClearance,
-}) {
-  final tableMaxWidth =
-      (Act0ShellTokensV1.runnerTableMaxWidth + 48) *
-      _compactDockTableScaleV1(
-        context,
-        refined: true,
-        isTablet: false,
-        compactBottomDockClearance: compactBottomDockClearance,
-        density: Act0TableDensityV1.compactLesson,
-        compactAnswerListComposition: false,
-      );
-  return math.min(availableWidth, tableMaxWidth) / 0.576;
-}
-
 bool _usesCompactAnswerListCompositionV1(
   BuildContext context, {
   required bool refined,
@@ -10301,8 +10385,8 @@ List<Offset> _chipSlotsForVariant(
       if (compactBottomDockClearance) {
         return const <Offset>[
           Offset(0.50, 0.62),
-          Offset(0.12, 0.59),
-          Offset(0.14, 0.39),
+          Offset(0.20, 0.55),
+          Offset(0.22, 0.45),
           Offset(0.50, 0.29),
           Offset(0.80, 0.39),
           Offset(0.84, 0.59),
@@ -10990,9 +11074,10 @@ class _SeatNodeV1 extends StatelessWidget {
         : (refined ? Act0ShellTokensV1.textDim : Act0ShellTokensV1.textMuted);
     final borderColor = _seatBorderColorV1(seatVisualState, refined: refined);
     final ringColor = _seatRingColorV1(seatVisualState);
-    final shouldShowRing =
-        seatVisualState != _SeatVisualStateV1.passive &&
-        seatVisualState != _SeatVisualStateV1.selectable;
+    // A selectable seat is an answer control. It receives the same bounded
+    // outer affordance plane as focus states, while its cyan tone remains
+    // distinct from gold target/current-player and correctness semantics.
+    final shouldShowRing = seatVisualState != _SeatVisualStateV1.passive;
     final visibleCards = hero ? heroCards : seat.holeCards;
     final showFaceDown =
         !hero &&
@@ -11319,7 +11404,10 @@ class _SeatNodeV1 extends StatelessWidget {
       key: Key('act0_shell_seat_tap_${seat.seatId}'),
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
-      child: node,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+        child: Center(child: node),
+      ),
     );
   }
 }
@@ -13225,7 +13313,7 @@ class _MarkerDotV1 extends StatelessWidget {
           ),
           alignment: Alignment.center,
           child: const Text(
-            'BTN',
+            'D',
             style: TextStyle(
               color: Color(0xFF1E293B),
               fontSize: 7.0,
