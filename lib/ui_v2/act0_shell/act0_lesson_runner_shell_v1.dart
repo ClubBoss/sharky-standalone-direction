@@ -6704,7 +6704,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               onPressed: onContinue,
               style: Act0ShellTokensV1.premiumActionButtonStyle(
                 height: isCompactRefinedFeedback
-                    ? 34
+                    ? 44
                     : Act0ShellTokensV1.compactCtaHeight,
               ),
               child: Text(
@@ -6780,8 +6780,10 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                     5,
                     Act0ShellTokensV1.gapMd,
                     5,
-                    MediaQuery.viewPaddingOf(context).bottom +
-                        Act0ShellTokensV1.gapMd,
+                    // The runner is already inside the route-level SafeArea.
+                    // Reserving viewPadding again clips the compact feedback
+                    // CTA at enlarged text.
+                    4,
                   )
                 : EdgeInsets.all(
                     rapidMode

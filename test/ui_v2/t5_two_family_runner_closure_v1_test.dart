@@ -308,6 +308,18 @@ void main() {
       tester.getRect(find.byKey(const Key('act0_shell_table'))),
       decisionTable,
     );
+    final continueCta = tester.getRect(
+      find.byKey(const Key('act0_shell_feedback_continue_cta')),
+    );
+    expect(continueCta.height, greaterThanOrEqualTo(44));
+    expect(continueCta.bottom, lessThanOrEqualTo(778));
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('act0_shell_feedback_continue_cta')),
+        matching: find.text('Next hand'),
+      ),
+      findsOneWidget,
+    );
     expect(hitRects.every((rect) => rect.width >= 44), isTrue);
     expect(hitRects.every((rect) => rect.height >= 44), isTrue);
     expect(tester.takeException(), isNull);
