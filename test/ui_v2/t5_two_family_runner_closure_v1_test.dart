@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -311,7 +312,7 @@ void main() {
     final continueCta = tester.getRect(
       find.byKey(const Key('act0_shell_feedback_continue_cta')),
     );
-    expect(continueCta.height, greaterThanOrEqualTo(44));
+    expect(continueCta.height, greaterThanOrEqualTo(48));
     expect(continueCta.bottom, lessThanOrEqualTo(778));
     expect(
       find.descendant(
@@ -364,6 +365,124 @@ void main() {
       await tester.binding.setSurfaceSize(null);
     },
   );
+
+  testWidgets(
+    'F1 feedback CTA container and label paint stay inside every safe fold',
+    (tester) async {
+      final task = allTasks.singleWhere(
+        (task) => task.taskId == 'what_poker_is_find_hero',
+      );
+      final decision = normalizeAct0SeatTapRunnerV1(
+        task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingSteps: const <Act0TeachingStepV1>[],
+        ),
+      );
+      for (final profile in const <_Profile>[
+        _Profile(Size(375, 812), 1, 47, 34),
+        _Profile(Size(375, 812), 1.4, 47, 34),
+        _Profile(Size(402, 874), 1, 59, 34),
+        _Profile(Size(402, 874), 1.4, 59, 34),
+        _Profile(Size(430, 932), 1, 59, 34),
+        _Profile(Size(430, 932), 1.4, 59, 34),
+      ]) {
+        for (final option in <Act0RunnerOptionV1>[
+          decision.options.singleWhere((option) => option.isCorrect),
+          decision.options.firstWhere((option) => !option.isCorrect),
+        ]) {
+          final feedback = decision.copyWith(
+            phase: Act0LessonPhaseV1.review,
+            selectedOptionId: option.id,
+          );
+          await tester.binding.setSurfaceSize(profile.size);
+          await tester.pumpWidget(
+            _host(
+              feedback,
+              profile,
+              Act0RunnerCompositionFamilyV1.f1TableNative,
+            ),
+          );
+          await tester.pumpAndSettle();
+          final ctaFinder = find.byKey(
+            const Key('act0_shell_feedback_continue_cta'),
+          );
+          final cta = tester.getRect(ctaFinder);
+          final lower = tester.getRect(
+            find.byKey(const Key('act0_shell_runner_action_dock')),
+          );
+          final table = tester.getRect(
+            find.byKey(const Key('act0_shell_table')),
+          );
+          final labelPaint = _laidOutTextBounds(
+            tester,
+            const Key('act0_shell_feedback_continue_cta_label'),
+          );
+          final allocation = resolveAct0RunnerCompositionAllocationV1(
+            viewport: profile.size,
+            safeArea: EdgeInsets.only(
+              top: profile.topInset,
+              bottom: profile.bottomInset,
+            ),
+            textScale: profile.textScale,
+            family: Act0RunnerCompositionFamilyV1.f1TableNative,
+          );
+          final caseLabel =
+              '${profile.size.width}x${profile.size.height} '
+              '${profile.textScale} ${option.isCorrect ? 'correct' : 'incorrect'}';
+
+          expect(table.height, allocation.tableHeight, reason: caseLabel);
+          expect(lower.height, allocation.lowerHeight, reason: caseLabel);
+          expect(cta.height, greaterThanOrEqualTo(48), reason: caseLabel);
+          expect(lower.contains(cta.topLeft), isTrue, reason: caseLabel);
+          expect(lower.contains(cta.bottomRight), isTrue, reason: caseLabel);
+          expect(
+            cta.bottom,
+            lessThanOrEqualTo(profile.size.height - profile.bottomInset),
+            reason: caseLabel,
+          );
+          expect(
+            labelPaint.top - cta.top,
+            greaterThanOrEqualTo(4),
+            reason: caseLabel,
+          );
+          expect(
+            cta.bottom - labelPaint.bottom,
+            greaterThanOrEqualTo(4),
+            reason: caseLabel,
+          );
+          expect(cta.contains(labelPaint.topLeft), isTrue, reason: caseLabel);
+          expect(
+            cta.contains(labelPaint.bottomRight),
+            isTrue,
+            reason: caseLabel,
+          );
+          expect(ctaFinder.hitTestable(), findsOneWidget, reason: caseLabel);
+          expect(
+            find.byKey(const Key('act0_shell_lower_stage_scroll')),
+            findsNothing,
+            reason: caseLabel,
+          );
+          expect(tester.takeException(), isNull, reason: caseLabel);
+        }
+      }
+      await tester.binding.setSurfaceSize(null);
+    },
+  );
+}
+
+Rect _laidOutTextBounds(WidgetTester tester, Key key) {
+  final paragraph = tester.renderObject<RenderParagraph>(find.byKey(key));
+  final boxes = paragraph.getBoxesForSelection(
+    TextSelection(
+      baseOffset: 0,
+      extentOffset: paragraph.text.toPlainText().length,
+    ),
+  );
+  expect(boxes, isNotEmpty, reason: '$key must paint at least one glyph box');
+  final origin = paragraph.localToGlobal(Offset.zero);
+  return boxes
+      .map((box) => box.toRect().shift(origin))
+      .reduce((a, b) => a.expandToInclude(b));
 }
 
 double _maxAnswerScrollExtent(WidgetTester tester, String finalOptionId) {
