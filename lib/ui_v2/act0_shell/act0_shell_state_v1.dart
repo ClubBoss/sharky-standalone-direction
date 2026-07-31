@@ -391,6 +391,77 @@ String act0LockedWorldUnlockLabelV1(String prerequisiteTitle) {
   return 'Finish $prerequisiteTitle to open this world.';
 }
 
+/// Source-owned answer-submission semantics for the two runner compositions.
+///
+/// The table-native family is intentionally keyed by authored task identity,
+/// not inferred from incidental option fields. New table-submit tasks must be
+/// admitted here before they can receive F1 geometry.
+enum Act0RunnerCompositionFamilyV1 { f1TableNative, f2AnswerList }
+
+const Set<String> act0F1TableNativeTaskIdsV1 = <String>{
+  'what_poker_is_theory',
+  'what_poker_is_find_hero',
+  'blinds_theory',
+  'blinds_posts_drill',
+  'blinds_first_actor',
+  'blinds_last_actor',
+  'blinds_postflop_button',
+  'blinds_button_moves',
+  'blinds_review',
+  'positions_theory',
+  'positions_button',
+  'positions_utg',
+  'positions_cutoff',
+  'positions_late_seat',
+  'positions_early_late',
+  'positions_review',
+  'position_six_seats_positions_utg',
+  'position_six_seats_hj_co_contrast',
+  'position_six_seats_positions_cutoff',
+  'position_six_seats_positions_button',
+  'position_six_seats_sb_recognition',
+  'position_six_seats_bb_recognition',
+  'position_six_seats_position_repair_seat_id_btn',
+  'position_six_seats_position_repair_seat_id_utg',
+  'button_advantage_button_intro',
+  'button_advantage_find_button',
+  'button_advantage_button_last',
+  'button_advantage_button_vs_cutoff',
+  'button_advantage_position_repair_btn_last_postflop',
+  'button_advantage_button_recap',
+  'early_vs_late_w2_position_intro',
+  'early_vs_late_w2_late_position',
+  'early_vs_late_w2_early_position',
+  'early_vs_late_w2_position_recap',
+  'same_hand_different_seat_w3_same_hand_intro',
+  'same_hand_different_seat_w3_same_hand_recap',
+  'position_apply_intro',
+  'position_checkpoint_position_checkpoint_intro',
+};
+
+Act0RunnerCompositionFamilyV1 act0RunnerCompositionFamilyForTaskIdV1(
+  String taskId,
+) {
+  return act0F1TableNativeTaskIdsV1.contains(taskId.trim())
+      ? Act0RunnerCompositionFamilyV1.f1TableNative
+      : Act0RunnerCompositionFamilyV1.f2AnswerList;
+}
+
+/// Four-option answer lists are closed by default. A future compact parallel
+/// action set must be explicitly admitted here after native compact 1.4x proof.
+const Set<String> act0CompactFourActionAdmissionTaskIdsV1 = <String>{};
+
+bool act0IsAdmittedCompactFourActionTaskV1(Act0LessonTaskV1 task) {
+  if (!act0CompactFourActionAdmissionTaskIdsV1.contains(task.taskId) ||
+      task.runner.options.length != 4) {
+    return false;
+  }
+  return task.runner.options.every(
+    (option) =>
+        option.amountLabel.trim().isEmpty && option.label.trim().length <= 36,
+  );
+}
+
 class Act0LessonTaskV1 {
   const Act0LessonTaskV1({
     required this.taskId,
@@ -418,6 +489,9 @@ class Act0LessonTaskV1 {
 
   Act0TaskFamilyV1 get resolvedTaskFamily =>
       taskFamily ?? act0InferTaskFamilyV1(phase: phase, stepKind: stepKind);
+
+  Act0RunnerCompositionFamilyV1 get resolvedCompositionFamily =>
+      act0RunnerCompositionFamilyForTaskIdV1(taskId);
 }
 
 /// Source-owned table presentation behavior for one canonical task.
@@ -5630,10 +5704,8 @@ String _w7LearnerTaskTitleV1(String taskId) => switch (taskId) {
 };
 
 String _w7LearnerHintV1(String taskId) => switch (taskId) {
-  'paired_board_texture_lite_intro' =>
-    'Two sevens are already on the board. Start from what is still possible.',
-  'visible_card_combo_density_transfer_check' =>
-    'A shown rank cannot also be in a private hand.',
+  'paired_board_texture_lite_intro' => 'Start from what is still possible.',
+  'visible_card_combo_density_transfer_check' => '',
   _ => 'A shown card cannot also be in a private hand.',
 };
 

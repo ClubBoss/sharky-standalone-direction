@@ -984,6 +984,111 @@ enum Act0LowerSurfacePrototypeStateV1 {
 /// the decision; review phase remains the normal feedback owner.
 enum Act0AccessibilityPrototypeStepV1 { evidence, decision }
 
+enum Act0RunnerViewportProfileV1 { compact, canonical, large }
+
+class Act0RunnerCompositionAllocationV1 {
+  const Act0RunnerCompositionAllocationV1({
+    required this.profile,
+    required this.family,
+    required this.textScale,
+    required this.tableHeight,
+    required this.lowerHeight,
+  });
+
+  final Act0RunnerViewportProfileV1 profile;
+  final Act0RunnerCompositionFamilyV1 family;
+  final double textScale;
+  final double tableHeight;
+  final double lowerHeight;
+}
+
+Act0RunnerCompositionAllocationV1 resolveAct0RunnerCompositionAllocationV1({
+  required Size viewport,
+  required EdgeInsets safeArea,
+  required double textScale,
+  required Act0RunnerCompositionFamilyV1 family,
+}) {
+  final profile = viewport.width <= 375 && viewport.height <= 812
+      ? Act0RunnerViewportProfileV1.compact
+      : viewport.width <= 402 && viewport.height <= 874
+      ? Act0RunnerViewportProfileV1.canonical
+      : Act0RunnerViewportProfileV1.large;
+  final boundedScale = textScale.clamp(1.0, 1.4);
+  final scaleProgress = (boundedScale - 1.0) / 0.4;
+  final lowerAtOne = switch ((family, profile)) {
+    (
+      Act0RunnerCompositionFamilyV1.f1TableNative,
+      Act0RunnerViewportProfileV1.compact,
+    ) =>
+      210.0,
+    (
+      Act0RunnerCompositionFamilyV1.f1TableNative,
+      Act0RunnerViewportProfileV1.canonical,
+    ) =>
+      223.0,
+    (
+      Act0RunnerCompositionFamilyV1.f1TableNative,
+      Act0RunnerViewportProfileV1.large,
+    ) =>
+      241.0,
+    (
+      Act0RunnerCompositionFamilyV1.f2AnswerList,
+      Act0RunnerViewportProfileV1.compact,
+    ) =>
+      300.0,
+    (
+      Act0RunnerCompositionFamilyV1.f2AnswerList,
+      Act0RunnerViewportProfileV1.canonical,
+    ) =>
+      320.0,
+    (
+      Act0RunnerCompositionFamilyV1.f2AnswerList,
+      Act0RunnerViewportProfileV1.large,
+    ) =>
+      336.0,
+  };
+  final lowerAtOneFour = switch ((family, profile)) {
+    (
+      Act0RunnerCompositionFamilyV1.f1TableNative,
+      Act0RunnerViewportProfileV1.compact,
+    ) =>
+      264.0,
+    (
+      Act0RunnerCompositionFamilyV1.f1TableNative,
+      Act0RunnerViewportProfileV1.canonical,
+    ) =>
+      254.0,
+    (
+      Act0RunnerCompositionFamilyV1.f1TableNative,
+      Act0RunnerViewportProfileV1.large,
+    ) =>
+      264.0,
+    (
+      Act0RunnerCompositionFamilyV1.f2AnswerList,
+      Act0RunnerViewportProfileV1.compact ||
+          Act0RunnerViewportProfileV1.canonical ||
+          Act0RunnerViewportProfileV1.large,
+    ) =>
+      380.0,
+  };
+  final lowerHeight =
+      lowerAtOne + ((lowerAtOneFour - lowerAtOne) * scaleProgress);
+  final usableHeight = viewport.height - safeArea.vertical;
+  return Act0RunnerCompositionAllocationV1(
+    profile: profile,
+    family: family,
+    textScale: boundedScale,
+    tableHeight: math.max(
+      0.0,
+      usableHeight -
+          _runnerCompositionHeaderAndGapV1 -
+          _sharedRunnerSeamV1 -
+          lowerHeight,
+    ),
+    lowerHeight: lowerHeight,
+  );
+}
+
 enum _RunnerInteractionModeV1 { answerListDecision, tableTapDecision, feedback }
 
 /// The lower stage receives every pixel left after the locked table stage.
@@ -1050,6 +1155,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.lowerSurfacePrototypeState,
     this.accessibilityPrototypeStep,
     this.onAccessibilityPrototypeStepChanged,
+    this.compositionFamily = Act0RunnerCompositionFamilyV1.f2AnswerList,
   });
 
   final Act0RunnerStateV1 runner;
@@ -1095,6 +1201,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final Act0AccessibilityPrototypeStepV1? accessibilityPrototypeStep;
   final ValueChanged<Act0AccessibilityPrototypeStepV1>?
   onAccessibilityPrototypeStepChanged;
+  final Act0RunnerCompositionFamilyV1 compositionFamily;
 
   @override
   State<Act0LessonRunnerShellV1> createState() =>
@@ -1128,6 +1235,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
   String _learningRailSupportStepKey = '';
   bool _showTheoryPeek = false;
   bool _showFullIdeaInTheoryPeek = false;
+  late Act0RunnerCompositionFamilyV1 _compositionFamily;
+  late String _compositionTaskKey;
 
   @override
   void initState() {
@@ -1135,6 +1244,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     _syncTheoryAdvanceLock(initial: true);
     _syncRapidReviewAdvance();
     _maybeEmitTaskShownTelemetry();
+    _compositionFamily = widget.compositionFamily;
+    _compositionTaskKey = _compositionTaskIdentity(widget);
   }
 
   @override
@@ -1145,6 +1256,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     _syncRapidReviewAdvance();
     _maybeEmitTaskShownTelemetry();
     _maybeEmitFeedbackViewedTelemetry();
+    final nextCompositionTaskKey = _compositionTaskIdentity(widget);
+    if (nextCompositionTaskKey != _compositionTaskKey) {
+      _compositionTaskKey = nextCompositionTaskKey;
+      _compositionFamily = widget.compositionFamily;
+    }
     final nextKey = _interactionKey(widget.runner);
     if (_showdownInteractionKey != nextKey) {
       _actionTrailFocusedIndex = null;
@@ -1200,6 +1316,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
 
   bool get _isRefinedDev2 =>
       widget.tableVisualVariant == Act0ShellTableVisualVariantV1.refinedDev2;
+
+  String _compositionTaskIdentity(Act0LessonRunnerShellV1 value) =>
+      '${value.selectedWorldId ?? ''}|${value.selectedLessonId ?? ''}|'
+      '${value.selectedTaskId ?? value.runner.lessonId}|${value.runner.beatIndex}';
 
   bool get _isTheory => widget.runner.phase == Act0LessonPhaseV1.theory;
 
@@ -2514,11 +2634,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             ? _SeatSelectionFeedbackStateV1.confirmed
             : _SeatSelectionFeedbackStateV1.none,
     };
-    final compactAnswerListDecision = _usesCompactAnswerListDockV1(
-      context,
-      interactionMode: interactionMode,
-      framingProfile: framingProfile,
-    );
+    final compactAnswerListDecision =
+        _usesCompactAnswerListDockV1(
+          context,
+          interactionMode: interactionMode,
+          framingProfile: framingProfile,
+        ) ||
+        (isRefinedDev2 &&
+            table.density == Act0TableDensityV1.compactLesson &&
+            MediaQuery.sizeOf(context).shortestSide < 600 &&
+            _compositionFamily == Act0RunnerCompositionFamilyV1.f2AnswerList);
     final viewportPressureReason = _stableViewportPressureReasonV1(
       context,
       viewportFamily: viewportFamily,
@@ -2673,6 +2798,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       rapidMode: widget.rapidReviewMode,
       streamlinedDirectDecisionFeedback: isAccessibilityFlow,
       cycleStableEnvelope: usesSharedActiveRunnerAllocation,
+      forceCompactPhoneFeedback: usesSharedActiveRunnerAllocation,
       coachVoiceSeed:
           '${runner.lessonId}|${runner.beatIndex}|${runner.phase.name}|${runner.selectedOptionId ?? ''}',
       onContinue: widget.onContinueReview,
@@ -3096,6 +3222,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           key: Key('act0_shell_runner_interaction_${interactionMode.name}'),
         ),
         SizedBox.shrink(
+          key: Key('act0_shell_runner_composition_${_compositionFamily.name}'),
+        ),
+        SizedBox.shrink(
           key: Key('act0_shell_runner_framing_${framingProfile.name}'),
         ),
         SizedBox.shrink(
@@ -3166,35 +3295,36 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                final upperChromeHeight = _runnerUpperStageChromeHeightV1(
-                  showTopInstructionCard: showTopInstructionCard,
-                  isRefinedDev2: isRefinedDev2,
-                  compactTableStageTopInset: compactTableStageTopInset,
+                final allocation = resolveAct0RunnerCompositionAllocationV1(
+                  viewport: media.size,
+                  safeArea: media.viewPadding,
+                  textScale: media.textScaler.scale(1),
+                  family: _compositionFamily,
                 );
-                final stageHeight = math.max(
-                  0.0,
-                  constraints.maxHeight - upperChromeHeight,
+                final lowerHeight = math.min(
+                  allocation.lowerHeight,
+                  math.max(
+                    Act0ShellTokensV1.runnerActionDockMinHeight,
+                    constraints.maxHeight -
+                        _runnerCompositionHeaderAndGapV1 -
+                        _sharedRunnerSeamV1,
+                  ),
                 );
-                final cycleStableEnvelope =
-                    _sharedRunnerCycleStableEnvelopeHeightV1(
-                      stageHeight: stageHeight,
-                      accessibilityScale: media.textScaler.scale(1),
-                    );
-                final maxEnvelope = math.max(
-                  Act0ShellTokensV1.runnerActionDockMinHeight,
-                  constraints.maxHeight -
-                      upperChromeHeight -
-                      _sharedRunnerSeamV1 -
-                      (_sharedRunnerTableFramingInsetV1 * 2),
-                );
-                final envelopeHeight = cycleStableEnvelope.clamp(
-                  Act0ShellTokensV1.runnerActionDockMinHeight,
-                  maxEnvelope,
+                final tableHeight = math.min(
+                  allocation.tableHeight,
+                  math.max(
+                    0.0,
+                    constraints.maxHeight -
+                        _runnerCompositionHeaderAndGapV1 -
+                        _sharedRunnerSeamV1 -
+                        lowerHeight,
+                  ),
                 );
                 return Column(
                   children: [
-                    Expanded(
-                      child: buildRunnerStage(usesElasticSharedTableZone: true),
+                    SizedBox(
+                      height: tableHeight + _runnerCompositionHeaderAndGapV1,
+                      child: buildRunnerStage(maxTableHeight: tableHeight),
                     ),
                     SizedBox(
                       key: const Key('act0_shell_shared_runner_seam'),
@@ -3206,7 +3336,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                     ),
                     SizedBox(
                       key: const Key('act0_shell_shared_runner_cycle_envelope'),
-                      height: envelopeHeight,
+                      height: lowerHeight,
                       child: KeyedSubtree(
                         key: const Key(
                           'act0_shell_shared_runner_lower_surface',
@@ -4375,7 +4505,8 @@ class Act0SharkyMascotV1 extends StatelessWidget {
 
 const double _learningRailMaxHeightV1 = 148;
 const double _sharedActiveRunnerLearningRailMaxHeightV1 = 148;
-const double _sharedRunnerSeamV1 = 12;
+const double _runnerCompositionHeaderAndGapV1 = 48;
+const double _sharedRunnerSeamV1 = 10;
 const double _sharedRunnerTableFramingInsetV1 = 12;
 const double _sharedRunnerEnlargedTextDockGrowthV1 = 285;
 
@@ -6280,6 +6411,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.rapidMode = false,
     this.streamlinedDirectDecisionFeedback = false,
     this.cycleStableEnvelope = false,
+    this.forceCompactPhoneFeedback = false,
     this.coachVoiceSeed,
     required this.onContinue,
   });
@@ -6315,6 +6447,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final bool rapidMode;
   final bool streamlinedDirectDecisionFeedback;
   final bool cycleStableEnvelope;
+  final bool forceCompactPhoneFeedback;
   final String? coachVoiceSeed;
   final VoidCallback onContinue;
 
@@ -6348,7 +6481,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final usableHeight = media.size.height - safeVertical;
     final isCompactRefinedFeedback =
         !rapidMode &&
-        ((refined &&
+        (forceCompactPhoneFeedback ||
+            (refined &&
                 (usableHeight <= 900 ||
                     (fullViewportHeight > 900 && fullViewportHeight <= 980))) ||
             (!refined &&
@@ -6432,12 +6566,15 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       taskFamily: taskFamily,
       hasSeatTargets: hasSeatTargets,
     );
-    final actionLabel = _premiumSafeFeedbackOptionLabelV1(
+    final fullActionLabel = _premiumSafeFeedbackOptionLabelV1(
       act0RuntimeLocalizedOptionLabelV1(
         context,
         isWrong ? betterLabel : preferredLabel,
       ),
     );
+    final actionLabel = isCompactRefinedFeedback
+        ? _compactFeedbackActionLabelV1(fullActionLabel)
+        : fullActionLabel;
     final localizedContextLabels = [
       for (final label in (refined ? contextLabels.take(1) : contextLabels))
         _premiumSafeFeedbackOptionLabelV1(
@@ -6567,7 +6704,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               onPressed: onContinue,
               style: Act0ShellTokensV1.premiumActionButtonStyle(
                 height: isCompactRefinedFeedback
-                    ? 34
+                    ? 44
                     : Act0ShellTokensV1.compactCtaHeight,
               ),
               child: Text(
@@ -6643,8 +6780,10 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                     5,
                     Act0ShellTokensV1.gapMd,
                     5,
-                    MediaQuery.viewPaddingOf(context).bottom +
-                        Act0ShellTokensV1.gapMd,
+                    // The runner is already inside the route-level SafeArea.
+                    // Reserving viewPadding again clips the compact feedback
+                    // CTA at enlarged text.
+                    4,
                   )
                 : EdgeInsets.all(
                     rapidMode
@@ -7102,6 +7241,16 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     );
   }
 }
+
+String _compactFeedbackActionLabelV1(String label) => switch (label.trim()) {
+  'The visible king leaves fewer king-containing combinations.' =>
+    'Fewer king-containing hands remain.',
+  'Fewer seven-containing hands remain, but trips are still possible.' =>
+    'Fewer seven hands remain; trips are still possible.',
+  'Fewer queen-containing combinations remain; no exact hand is proved.' =>
+    'Fewer queen hands remain; exact hand unknown.',
+  _ => label,
+};
 
 class _FeedbackVerdictDividerV1 extends StatelessWidget {
   const _FeedbackVerdictDividerV1();
@@ -14229,7 +14378,7 @@ class _AnswerChoiceRowV1 extends StatelessWidget {
           borderRadius: BorderRadius.circular(18),
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              minHeight: compact ? (readableCompactHeight ? 56 : 44) : 52,
+              minHeight: compact ? (readableCompactHeight ? 56 : 48) : 52,
             ),
             child: Padding(
               padding: EdgeInsets.symmetric(
@@ -14742,6 +14891,7 @@ class _ActionPromptPanelV1 extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         buildPromptHeader(),
+        const SizedBox(height: 3),
         if (trailingContext != null) ...[
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           trailingContext!,

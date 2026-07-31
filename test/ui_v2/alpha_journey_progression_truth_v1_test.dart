@@ -170,7 +170,7 @@ void main() {
           find.byKey(Key('act0_shell_option_${option.id}')),
       ];
       final scrollable = find.byKey(const Key('act0_shell_lower_stage_scroll'));
-      expect(scrollable, findsOneWidget);
+      expect(scrollable, findsNothing);
       expect(question, findsOneWidget);
       expect(options, hasLength(runner.runner.options.length));
       expect(
@@ -181,8 +181,6 @@ void main() {
         expect(tester.getRect(option).height, greaterThanOrEqualTo(48));
         expect(tester.getSemantics(option).label, isNotEmpty);
       }
-      await tester.drag(scrollable, const Offset(0, -400));
-      await tester.pumpAndSettle();
       expect(tester.getRect(options.last).bottom, lessThanOrEqualTo(932));
       expect(tester.takeException(), isNull);
       semanticsHandle.dispose();
