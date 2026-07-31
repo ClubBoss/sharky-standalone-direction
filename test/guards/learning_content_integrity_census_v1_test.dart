@@ -127,20 +127,19 @@ void main() {
     // ignore: avoid_print
     print(const JsonEncoder.withIndent('  ').convert(snapshot));
 
-    expect(snapshot['optionCounts'], <String, int>{'2': 121, '3': 165, '4': 5});
+    expect(snapshot['optionCounts'], <String, int>{'2': 121, '3': 169, '4': 1});
     expect(snapshot['correctPositions'], <String, int>{
       '0': 112,
-      '1': 115,
-      '2': 62,
-      '3': 2,
+      '1': 116,
+      '2': 63,
     });
-    expect(snapshot['longestCorrectPositionRun'], 3);
+    expect(snapshot['longestCorrectPositionRun'], 4);
     expect(snapshot['lateWorldAuthenticity'], <String, int>{
       'TABLE_ACTION_DECISION': 29,
       'TABLE_CLUE_OR_RANGE_INFERENCE': 29,
     });
     final repairSnapshot = snapshot['repair']! as Map<String, Object?>;
-    expect(repairSnapshot['incorrectOptions'], 466);
+    expect(repairSnapshot['incorrectOptions'], 462);
     expect(repairSnapshot['exactReplayCovered'], 14);
     expect(repairSnapshot['sameSignalMapped'], 277);
     expect(repairSnapshot['fallbackOnly'], 14);
@@ -162,7 +161,7 @@ void main() {
       'misread_player_adjustment': 30,
       'misread_poker_win_condition': 8,
       'misread_position_action_order': 47,
-      'misread_range_card_removal': 67,
+      'misread_range_card_removal': 63,
       'misread_real_play_process': 28,
       'misread_showdown_hand_strength': 25,
       'misread_stack_depth_risk': 34,

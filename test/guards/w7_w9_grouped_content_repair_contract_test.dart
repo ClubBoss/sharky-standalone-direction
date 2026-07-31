@@ -84,7 +84,10 @@ void main() {
       );
 
       expect(transfer.boardContext, 'QJ5 rainbow');
-      expect(transfer.learnerPrompt, contains('QJ5'));
+      expect(
+        transfer.learnerPrompt,
+        'Three queens are visible. What can you conclude?',
+      );
       expect(
         transfer.choiceLabels[transfer.expectedChoiceId],
         allOf(

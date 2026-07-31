@@ -220,158 +220,135 @@ const Act0W7VisibleAceHiddenTaskSpecV1 act0W7VisibleAceHiddenTaskSpecV1 =
       mapperNoTargetReason: 'w7_route_locked_no_safe_practice_target_v1',
     );
 
-const List<Act0W7VisibleAceHiddenTaskSpecV1> act0W7VisibleAceHiddenTaskSpecsV1 =
-    <Act0W7VisibleAceHiddenTaskSpecV1>[
-      act0W7VisibleAceHiddenTaskSpecV1,
-      Act0W7VisibleAceHiddenTaskSpecV1(
-        worldId: 'world_7',
-        lessonId: 'range_thinking_lite_combo_density',
-        taskId: 'visible_king_combo_reduction_intro',
-        sourceTaskId: 'visible_king_combo_reduction_intro',
-        conceptFamilyId: 'w7_combo_density_visible_card_removal',
-        repairFocusId: 'w7_visible_king_combo_reduction',
-        skillAtomId: 'w7_combo_density_card_removal',
-        errorType: 'missed_visible_king_combo_reduction',
-        drillKind: 'combo_density_visible_card_choice_v1',
-        boardContext: 'K84 rainbow',
-        learningPurpose: 'Visible kings reduce king-containing combinations.',
-        expectedChoiceId: 'king_combos_reduced',
-        choiceIds: <String>[
-          'king_combos_unchanged',
-          'king_combos_reduced',
-          'king_combos_certain',
-          'king_combos_impossible',
-        ],
-        learnerPrompt:
-            'A king is already visible on K84 rainbow. What does that do to '
-            "king-containing hands in the opponent's possible range?",
-        choiceLabels: <String, String>{
-          'king_combos_reduced':
-              'There are fewer king-containing combinations left.',
-          'king_combos_unchanged':
-              'The visible king does not change king combinations.',
-          'king_combos_certain':
-              'King hands become the first range family to count.',
-          'king_combos_impossible':
-              'King hands are reduced enough to ignore the rank.',
-        },
-        feedbackReason:
-            'The visible king cannot also be in a private hand, so fewer '
-            'king-containing combinations remain possible.',
-        incorrectFeedback: <String, String>{
-          'king_combos_unchanged':
-              'Visible cards are removed from private hands, so the count '
-              'of king-containing hands changes.',
-          'king_combos_certain':
-              'Starting with king hands can be reasonable, but the visible '
-              'king changes the count instead of proving the family.',
-          'king_combos_impossible':
-              'One visible king reduces king hands, but some king-containing '
-              'hands can still exist. Reduced does not mean irrelevant.',
-        },
-        practiceCtaAllowed: false,
-        mapperNoTargetReason: 'w7_route_locked_no_safe_practice_target_v1',
-      ),
-      Act0W7VisibleAceHiddenTaskSpecV1(
-        worldId: 'world_7',
-        lessonId: 'range_thinking_lite_combo_density',
-        taskId: 'paired_board_texture_lite_intro',
-        sourceTaskId: 'paired_board_texture_lite_intro',
-        conceptFamilyId: 'w7_combo_density_visible_card_removal',
-        repairFocusId: 'w7_paired_board_combo_texture_lite',
-        skillAtomId: 'w7_combo_density_board_texture',
-        errorType: 'missed_paired_board_combo_texture',
-        drillKind: 'combo_density_board_texture_choice_v1',
-        boardContext: '772 rainbow',
-        learningPurpose:
-            'Paired boards change which strong hand combinations remain.',
-        expectedChoiceId: 'seven_combos_reduced_trips_still_possible',
-        choiceIds: <String>[
-          'all_strong_hands_removed',
-          'pair_does_not_change_combos',
-          'seven_combos_reduced_trips_still_possible',
-          'opponent_always_has_trips',
-        ],
-        learnerPrompt:
-            'On 772 rainbow, two sevens are already visible. What is the '
-            'safe range-thinking takeaway?',
-        choiceLabels: <String, String>{
-          'seven_combos_reduced_trips_still_possible':
-              'There are fewer seven-containing hands, but trips can still '
-              'exist.',
-          'all_strong_hands_removed':
-              'Most strong hands are harder to make on paired boards.',
-          'pair_does_not_change_combos':
-              'The paired board does not change hand counts.',
-          'opponent_always_has_trips':
-              'Trips matter most, so assume that family first.',
-        },
-        feedbackReason:
-            'The two visible sevens reduce seven-containing private hands, '
-            'but they do not remove every strong hand or prove one exact hand.',
-        incorrectFeedback: <String, String>{
-          'all_strong_hands_removed':
-              'Some strong hands are harder to make, but visible cards do not '
-              'remove every strong hand.',
-          'pair_does_not_change_combos':
-              'Paired visible cards change which combinations remain.',
-          'opponent_always_has_trips':
-              'Trips are important, but a paired board changes counts instead '
-              'of proving one exact hand.',
-        },
-        practiceCtaAllowed: false,
-        mapperNoTargetReason: 'w7_route_locked_no_safe_practice_target_v1',
-      ),
-      Act0W7VisibleAceHiddenTaskSpecV1(
-        worldId: 'world_7',
-        lessonId: 'range_thinking_lite_combo_density',
-        taskId: 'visible_card_combo_density_transfer_check',
-        sourceTaskId: 'visible_card_combo_density_transfer_check',
-        conceptFamilyId: 'w7_combo_density_visible_card_removal',
-        repairFocusId: 'w7_visible_card_combo_density_transfer',
-        skillAtomId: 'w7_combo_density_transfer_check',
-        errorType: 'missed_visible_card_combo_density_transfer',
-        drillKind: 'combo_density_transfer_choice_v1',
-        boardContext: 'QJ5 rainbow',
-        learningPurpose:
-            'Transfer visible-card reduction to an unseen board structure.',
-        expectedChoiceId: 'visible_rank_reduces_matching_rank_combos',
-        choiceIds: <String>[
-          'visible_rank_increases_matching_rank_combos',
-          'only_board_low_cards_matter',
-          'visible_cards_show_exact_hand',
-          'visible_rank_reduces_matching_rank_combos',
-        ],
-        learnerPrompt:
-            'On QJ5 rainbow, a queen is already visible. What is the safest '
-            'range-thinking read?',
-        choiceLabels: <String, String>{
-          'visible_rank_reduces_matching_rank_combos':
-              'There are fewer queen-containing combinations, but no exact '
-              'hand is proved.',
-          'visible_rank_increases_matching_rank_combos':
-              'The visible queen creates more queen-containing combinations.',
-          'only_board_low_cards_matter':
-              'Only paired boards change which rank combinations remain.',
-          'visible_cards_show_exact_hand':
-              'The visible queen identifies the opponent\'s exact hand first.',
-        },
-        feedbackReason:
-            'The queen on the board is unavailable to private hands, so fewer '
-            'queen-containing combinations remain. That narrows a range; it '
-            'does not identify one exact hand.',
-        incorrectFeedback: <String, String>{
-          'visible_rank_increases_matching_rank_combos':
-              'The visible queen is already used, so it reduces matching-rank '
-              'private hand combinations.',
-          'only_board_low_cards_matter':
-              'Any visible rank can change available matching-rank '
-              'combinations; a board does not need to be paired.',
-          'visible_cards_show_exact_hand':
-              'Visible cards change available counts; they do not identify an '
-              'exact hand.',
-        },
-        practiceCtaAllowed: false,
-        mapperNoTargetReason: 'w7_route_locked_no_safe_practice_target_v1',
-      ),
-    ];
+const List<Act0W7VisibleAceHiddenTaskSpecV1>
+act0W7VisibleAceHiddenTaskSpecsV1 = <Act0W7VisibleAceHiddenTaskSpecV1>[
+  act0W7VisibleAceHiddenTaskSpecV1,
+  Act0W7VisibleAceHiddenTaskSpecV1(
+    worldId: 'world_7',
+    lessonId: 'range_thinking_lite_combo_density',
+    taskId: 'visible_king_combo_reduction_intro',
+    sourceTaskId: 'visible_king_combo_reduction_intro',
+    conceptFamilyId: 'w7_combo_density_visible_card_removal',
+    repairFocusId: 'w7_visible_king_combo_reduction',
+    skillAtomId: 'w7_combo_density_card_removal',
+    errorType: 'missed_visible_king_combo_reduction',
+    drillKind: 'combo_density_visible_card_choice_v1',
+    boardContext: 'K84 rainbow',
+    learningPurpose: 'Visible kings reduce king-containing combinations.',
+    expectedChoiceId: 'king_combos_reduced',
+    choiceIds: <String>[
+      'king_combos_unchanged',
+      'king_combos_reduced',
+      'king_combos_impossible',
+    ],
+    learnerPrompt:
+        'A king is on the board. What happens to the opponent’s '
+        'king-containing hands?',
+    choiceLabels: <String, String>{
+      'king_combos_reduced':
+          'The visible king leaves fewer king-containing combinations.',
+      'king_combos_unchanged':
+          'The visible king leaves king-containing combinations unchanged.',
+      'king_combos_impossible':
+          'The visible king leaves no king-containing combinations.',
+    },
+    feedbackReason:
+        'The visible king cannot also be in a private hand, so fewer '
+        'king-containing combinations remain possible.',
+    incorrectFeedback: <String, String>{
+      'king_combos_unchanged':
+          'Visible cards are removed from private hands, so the count '
+          'of king-containing hands changes.',
+      'king_combos_impossible':
+          'One visible king reduces king hands, but some king-containing '
+          'hands can still exist. Reduced does not mean irrelevant.',
+    },
+    practiceCtaAllowed: false,
+    mapperNoTargetReason: 'w7_route_locked_no_safe_practice_target_v1',
+  ),
+  Act0W7VisibleAceHiddenTaskSpecV1(
+    worldId: 'world_7',
+    lessonId: 'range_thinking_lite_combo_density',
+    taskId: 'paired_board_texture_lite_intro',
+    sourceTaskId: 'paired_board_texture_lite_intro',
+    conceptFamilyId: 'w7_combo_density_visible_card_removal',
+    repairFocusId: 'w7_paired_board_combo_texture_lite',
+    skillAtomId: 'w7_combo_density_board_texture',
+    errorType: 'missed_paired_board_combo_texture',
+    drillKind: 'combo_density_board_texture_choice_v1',
+    boardContext: '772 rainbow',
+    learningPurpose:
+        'Paired boards change which strong hand combinations remain.',
+    expectedChoiceId: 'seven_combos_reduced_trips_still_possible',
+    choiceIds: <String>[
+      'pair_does_not_change_combos',
+      'seven_combos_reduced_trips_still_possible',
+      'opponent_always_has_trips',
+    ],
+    learnerPrompt:
+        'Two sevens are visible. What is true about the opponent’s sevens?',
+    choiceLabels: <String, String>{
+      'seven_combos_reduced_trips_still_possible':
+          'Fewer seven-containing hands remain, but trips are still possible.',
+      'pair_does_not_change_combos':
+          'The paired board leaves every seven-containing combination available.',
+      'opponent_always_has_trips':
+          'The paired board proves the opponent has trips.',
+    },
+    feedbackReason:
+        'The two visible sevens reduce seven-containing private hands, '
+        'but they do not remove every strong hand or prove one exact hand.',
+    incorrectFeedback: <String, String>{
+      'pair_does_not_change_combos':
+          'Paired visible cards change which combinations remain.',
+      'opponent_always_has_trips':
+          'Trips are important, but a paired board changes counts instead '
+          'of proving one exact hand.',
+    },
+    practiceCtaAllowed: false,
+    mapperNoTargetReason: 'w7_route_locked_no_safe_practice_target_v1',
+  ),
+  Act0W7VisibleAceHiddenTaskSpecV1(
+    worldId: 'world_7',
+    lessonId: 'range_thinking_lite_combo_density',
+    taskId: 'visible_card_combo_density_transfer_check',
+    sourceTaskId: 'visible_card_combo_density_transfer_check',
+    conceptFamilyId: 'w7_combo_density_visible_card_removal',
+    repairFocusId: 'w7_visible_card_combo_density_transfer',
+    skillAtomId: 'w7_combo_density_transfer_check',
+    errorType: 'missed_visible_card_combo_density_transfer',
+    drillKind: 'combo_density_transfer_choice_v1',
+    boardContext: 'QJ5 rainbow',
+    learningPurpose:
+        'Transfer visible-card reduction to an unseen board structure.',
+    expectedChoiceId: 'visible_rank_reduces_matching_rank_combos',
+    choiceIds: <String>[
+      'only_board_low_cards_matter',
+      'visible_cards_show_exact_hand',
+      'visible_rank_reduces_matching_rank_combos',
+    ],
+    learnerPrompt: 'Three queens are visible. What can you conclude?',
+    choiceLabels: <String, String>{
+      'visible_rank_reduces_matching_rank_combos':
+          'Fewer queen-containing combinations remain; no exact hand is proved.',
+      'only_board_low_cards_matter':
+          'Only a paired board can change how many matching-rank combinations remain.',
+      'visible_cards_show_exact_hand':
+          'The visible queens prove the opponent’s exact hand.',
+    },
+    feedbackReason:
+        'The queen on the board is unavailable to private hands, so fewer '
+        'queen-containing combinations remain. That narrows a range; it '
+        'does not identify one exact hand.',
+    incorrectFeedback: <String, String>{
+      'only_board_low_cards_matter':
+          'Any visible rank can change available matching-rank '
+          'combinations; a board does not need to be paired.',
+      'visible_cards_show_exact_hand':
+          'Visible cards change available counts; they do not identify an '
+          'exact hand.',
+    },
+    practiceCtaAllowed: false,
+    mapperNoTargetReason: 'w7_route_locked_no_safe_practice_target_v1',
+  ),
+];

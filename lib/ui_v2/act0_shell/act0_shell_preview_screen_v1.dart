@@ -5536,6 +5536,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     : _localizedTaskTitleV1(playSelectedTask),
                                 selectedTaskFamily:
                                     playSelectedTask?.resolvedTaskFamily,
+                                compositionFamily:
+                                    playSelectedTask
+                                        ?.resolvedCompositionFamily ??
+                                    Act0RunnerCompositionFamilyV1.f2AnswerList,
                                 tablePresentation:
                                     playSelectedTask?.tablePresentation ??
                                     Act0TaskTablePresentationV1.legacy,
