@@ -6566,12 +6566,15 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       taskFamily: taskFamily,
       hasSeatTargets: hasSeatTargets,
     );
-    final actionLabel = _premiumSafeFeedbackOptionLabelV1(
+    final fullActionLabel = _premiumSafeFeedbackOptionLabelV1(
       act0RuntimeLocalizedOptionLabelV1(
         context,
         isWrong ? betterLabel : preferredLabel,
       ),
     );
+    final actionLabel = isCompactRefinedFeedback
+        ? _compactFeedbackActionLabelV1(fullActionLabel)
+        : fullActionLabel;
     final localizedContextLabels = [
       for (final label in (refined ? contextLabels.take(1) : contextLabels))
         _premiumSafeFeedbackOptionLabelV1(
@@ -7236,6 +7239,16 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     );
   }
 }
+
+String _compactFeedbackActionLabelV1(String label) => switch (label.trim()) {
+  'The visible king leaves fewer king-containing combinations.' =>
+    'Fewer king-containing hands remain.',
+  'Fewer seven-containing hands remain, but trips are still possible.' =>
+    'Fewer seven hands remain; trips are still possible.',
+  'Fewer queen-containing combinations remain; no exact hand is proved.' =>
+    'Fewer queen hands remain; exact hand unknown.',
+  _ => label,
+};
 
 class _FeedbackVerdictDividerV1 extends StatelessWidget {
   const _FeedbackVerdictDividerV1();

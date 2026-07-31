@@ -314,6 +314,44 @@ void main() {
 
     await tester.binding.setSurfaceSize(null);
   });
+
+  testWidgets(
+    'compact 1.4 feedback keeps the full preferred answer and CTA above fold',
+    (tester) async {
+      final task = allTasks.singleWhere(
+        (task) => task.taskId == 'visible_king_combo_reduction_intro',
+      );
+      final wrong = task.runner.options.firstWhere(
+        (option) => !option.isCorrect,
+      );
+      final feedback = task.runner.copyWith(
+        phase: Act0LessonPhaseV1.review,
+        teachingSteps: const <Act0TeachingStepV1>[],
+        selectedOptionId: wrong.id,
+      );
+      const profile = _Profile(Size(375, 812), 1.4, 47, 34);
+      await tester.binding.setSurfaceSize(profile.size);
+      await tester.pumpWidget(
+        _host(feedback, profile, task.resolvedCompositionFamily),
+      );
+      await tester.pumpAndSettle();
+
+      final action = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_feedback_hero_action')),
+      );
+      expect(action.data, 'Fewer king-containing hands remain.');
+      expect(action.overflow, TextOverflow.fade);
+      expect(
+        tester
+            .getRect(find.byKey(const Key('act0_shell_feedback_continue_cta')))
+            .bottom,
+        lessThanOrEqualTo(778),
+      );
+      expect(tester.takeException(), isNull);
+
+      await tester.binding.setSurfaceSize(null);
+    },
+  );
 }
 
 double _maxAnswerScrollExtent(WidgetTester tester, String finalOptionId) {
