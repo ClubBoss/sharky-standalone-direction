@@ -6681,6 +6681,10 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final usesSharedAccessibilitySurface =
         (streamlinedDirectDecisionFeedback || cycleStableEnvelope) &&
         isCompactRefinedFeedback;
+    final pinsF1FeedbackCta =
+        usesSharedAccessibilitySurface &&
+        hasSeatTargets &&
+        !hasRepairTeachingBlock;
     final isExactReplayRepair =
         repairResultReceiptLine?.trim().toLowerCase().startsWith('replay ') ==
             true ||
@@ -6703,11 +6707,14 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               key: const Key('act0_shell_feedback_continue_cta'),
               onPressed: onContinue,
               style: Act0ShellTokensV1.premiumActionButtonStyle(
-                height: isCompactRefinedFeedback
+                height: pinsF1FeedbackCta
+                    ? 48
+                    : isCompactRefinedFeedback
                     ? 44
                     : Act0ShellTokensV1.compactCtaHeight,
               ),
               child: Text(
+                key: const Key('act0_shell_feedback_continue_cta_label'),
                 forwardCtaLabel ??
                     (isRecoveredSourceRecheck
                         ? 'Continue'
@@ -6730,6 +6737,11 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     }
 
     final showReason = !rapidMode && !hasRepairTeachingBlock;
+    final foldsNextClueIntoExplanation =
+        pinsF1FeedbackCta &&
+        showReason &&
+        cycleStableEnvelope &&
+        nextClueLine.trim().isNotEmpty;
     final showRepairFocus = !rapidMode && visibleRepairReasonLines.isNotEmpty;
     final showProofStack =
         !rapidMode &&
@@ -6778,7 +6790,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             padding: usesSharedAccessibilitySurface
                 ? EdgeInsets.fromLTRB(
                     5,
-                    Act0ShellTokensV1.gapMd,
+                    pinsF1FeedbackCta ? 0 : Act0ShellTokensV1.gapMd,
                     5,
                     // The runner is already inside the route-level SafeArea.
                     // Reserving viewPadding again clips the compact feedback
@@ -6969,7 +6981,11 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                         cycleStableEnvelope
                             ? ConstrainedBox(
                                 constraints: BoxConstraints(
-                                  maxHeight: isCompactRefinedFeedback ? 34 : 60,
+                                  maxHeight: pinsF1FeedbackCta
+                                      ? 20
+                                      : isCompactRefinedFeedback
+                                      ? 34
+                                      : 60,
                                 ),
                                 child: SingleChildScrollView(
                                   key: const Key(
@@ -6977,20 +6993,43 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                                   ),
                                   primary: false,
                                   physics: const ClampingScrollPhysics(),
-                                  child: Text(
-                                    resolvedReason,
-                                    key: const Key(
-                                      'act0_shell_feedback_reason',
-                                    ),
-                                    style: Act0ShellTokensV1.body.copyWith(
-                                      color: Act0ShellTokensV1.textMuted,
-                                      fontSize: isCompactRefinedFeedback
-                                          ? 11.4
-                                          : (refined ? 12.0 : 12.5),
-                                      height: isCompactRefinedFeedback
-                                          ? 1.08
-                                          : 1.16,
-                                    ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Text(
+                                        resolvedReason,
+                                        key: const Key(
+                                          'act0_shell_feedback_reason',
+                                        ),
+                                        style: Act0ShellTokensV1.body.copyWith(
+                                          color: Act0ShellTokensV1.textMuted,
+                                          fontSize: isCompactRefinedFeedback
+                                              ? 11.4
+                                              : (refined ? 12.0 : 12.5),
+                                          height: isCompactRefinedFeedback
+                                              ? 1.08
+                                              : 1.16,
+                                        ),
+                                      ),
+                                      if (foldsNextClueIntoExplanation) ...[
+                                        const SizedBox(height: 3),
+                                        Text(
+                                          nextClueLine.trim(),
+                                          key: const Key(
+                                            'act0_shell_feedback_next_clue',
+                                          ),
+                                          style: Act0ShellTokensV1.label
+                                              .copyWith(
+                                                color: tone.withValues(
+                                                  alpha: 0.9,
+                                                ),
+                                                fontSize: 10.5,
+                                                height: 1.1,
+                                              ),
+                                        ),
+                                      ],
+                                    ],
                                   ),
                                 ),
                               )
@@ -7017,7 +7056,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                                       : 1.16,
                                 ),
                               ),
-                      if (!rapidMode && nextClueLine.trim().isNotEmpty) ...[
+                      if (!rapidMode &&
+                          nextClueLine.trim().isNotEmpty &&
+                          !foldsNextClueIntoExplanation) ...[
                         SizedBox(height: isCompactRefinedFeedback ? 3 : 6),
                         Text(
                           nextClueLine.trim(),
@@ -7216,7 +7257,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   ),
                 ] else ...[
                   SizedBox(key: feedbackTreatmentKey, height: 0),
-                  if (usesSharedAccessibilitySurface)
+                  if (pinsF1FeedbackCta)
+                    SizedBox(height: 48, child: buildContinueAction())
+                  else if (usesSharedAccessibilitySurface)
                     Expanded(
                       child: Align(
                         alignment: Alignment.bottomCenter,
