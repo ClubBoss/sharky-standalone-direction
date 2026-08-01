@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
+from visual_evidence_identity_v1 import MANIFEST_SCHEMA, validate_records
 
 
 SURFACE_GROUPS = {
@@ -197,13 +198,22 @@ def main(argv: list[str]) -> int:
 
     manifest = _load_manifest(output_dir)
     device = _device_from_manifest(manifest)
-    entries = (
+    entries = _load_manifest_entries(output_dir, manifest) or (
         _load_live_runner_entries(output_dir, device)
         if group == "production_real_live"
         else _load_entries(output_dir, SURFACE_GROUPS[surface_group], device)
     )
     if not entries:
         print(f"No {device} Act0 screenshots found to package.", file=sys.stderr)
+        return 1
+
+    identity_manifest, identity_report = _join_identities(output_dir, entries, manifest)
+    identity_path = output_dir / "VISUAL_EVIDENCE_IDENTITY_MANIFEST_V1.json"
+    report_path = output_dir / "visual_evidence_identity_validation_report_v1.json"
+    identity_path.write_text(json.dumps(identity_manifest, indent=2) + "\n", encoding="utf-8")
+    report_path.write_text(json.dumps(identity_report, indent=2) + "\n", encoding="utf-8")
+    if identity_report["disposition"] != "IDENTITY_MAPPED":
+        print(json.dumps(identity_report, indent=2), file=sys.stderr)
         return 1
 
     contact_sheet = output_dir / "contact_sheet.png"
@@ -213,6 +223,9 @@ def main(argv: list[str]) -> int:
 
     _write_contact_sheet(entries, contact_sheet, device)
     metadata = _metadata(root, entries, contact_sheet, zip_path, group, manifest, device)
+    metadata["identity_manifest"] = identity_path.name
+    metadata["identity_validation_report"] = report_path.name
+    metadata["evidence_ids"] = [record["evidence_id"] for record in identity_manifest["records"]]
     readme.write_text(_readme_text(metadata), encoding="utf-8")
     index.write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
     full_scroll_metadata = output_dir / "full_scroll_meta.json"
@@ -231,6 +244,8 @@ def main(argv: list[str]) -> int:
         active_route_metadata if active_route_metadata.exists() else None,
         bounds if bounds.exists() else None,
         visual_ledger if visual_ledger.exists() else None,
+        identity_path,
+        report_path,
         zip_path,
     )
 
@@ -259,6 +274,40 @@ def _load_live_runner_entries(output_dir: Path, device: str) -> list[tuple[str, 
         surface = path.name.removeprefix(prefix).removesuffix(".png")
         entries.append((surface, surface.replace(".", " "), path))
     return entries
+
+
+def _load_manifest_entries(output_dir: Path, manifest: dict[str, object]) -> list[tuple[str, str, Path]]:
+    entries: list[tuple[str, str, Path]] = []
+    for row in manifest.get("entries", manifest.get("rows", [])):
+        if not isinstance(row, dict):
+            continue
+        surface = row.get("surface") or row.get("visual_state_id")
+        path = row.get("path") or row.get("screenshot_path")
+        if isinstance(surface, str) and isinstance(path, str):
+            candidate = output_dir / Path(path).name
+            if candidate.exists() and candidate.stat().st_size > 0:
+                entries.append((surface, surface.replace("_", " "), candidate))
+    return entries
+
+
+def _join_identities(output_dir: Path, entries: list[tuple[str, str, Path]], manifest: dict[str, object]) -> tuple[dict[str, object], dict[str, object]]:
+    """Join capture-owner identities; filenames are only file locations, never identity inputs."""
+    sidecar = output_dir / "visual_evidence_identity_v1.json"
+    if not sidecar.exists():
+        raise ValueError(f"IDENTITY_UNMAPPED: missing capture-owner sidecar {sidecar}")
+    payload = json.loads(sidecar.read_text(encoding="utf-8"))
+    records = payload.get("records")
+    if not isinstance(records, list):
+        raise ValueError("IDENTITY_UNMAPPED: sidecar records must be a list")
+    admitted = {path.name for _, _, path in entries}
+    typed_records = [record for record in records if isinstance(record, dict)]
+    report, typed_records = validate_records(
+        typed_records, output_dir, admitted_paths=admitted,
+        expected_baseline="b7db47a3145ba8653b90403a9aa48538c378cdb7",
+    )
+    by_path = {str(record["relative_png_path"]): record for record in typed_records if "relative_png_path" in record}
+    aggregate = {"schema_version": MANIFEST_SCHEMA, "capture_manifest_schema": manifest.get("schema"), "records": [by_path[path.name] for _, _, path in entries if path.name in by_path]}
+    return aggregate, report
 
 
 def _surface_group_key(group: str) -> str:
@@ -494,6 +543,8 @@ def _write_zip(
     active_route_metadata: Path | None,
     bounds: Path | None,
     visual_ledger: Path | None,
+    identity_manifest: Path,
+    identity_report: Path,
     zip_path: Path,
 ) -> None:
     with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
@@ -511,6 +562,8 @@ def _write_zip(
             archive.write(bounds, bounds.name)
         if visual_ledger is not None:
             archive.write(visual_ledger, visual_ledger.name)
+        archive.write(identity_manifest, identity_manifest.name)
+        archive.write(identity_report, identity_report.name)
         archive.write(contact_sheet, contact_sheet.name)
         archive.write(readme, readme.name)
         archive.write(index, index.name)
