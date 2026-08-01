@@ -355,10 +355,18 @@ act0FirstValueSameSignalRepMappingV1({
           'board_texture_basics',
           'board_texture_basics_w5_dry_board',
         );
-      case 'w5_disconnected_board':
-        return target('world_5', 'connected_boards', 'w5_connected_board');
-      case 'w5_connected_board':
-        return target('world_5', 'connected_boards', 'w5_disconnected_board');
+      case 'connected_boards_w5_disconnected_board':
+        return target(
+          'world_5',
+          'connected_boards',
+          'connected_boards_w5_connected_board',
+        );
+      case 'connected_boards_w5_connected_board':
+        return target(
+          'world_5',
+          'connected_boards',
+          'connected_boards_w5_disconnected_board',
+        );
     }
   }
 
