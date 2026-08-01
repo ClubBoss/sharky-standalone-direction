@@ -20,7 +20,7 @@ void main() {
       expect(
         shell,
         contains(
-          '<alpha_journey|core|runner|first_week|day2_return|profile_evidence|sharky_evidence|full_scroll|route_w7_w12|active_route_w7_w12|presentation_closure|review_return> <compact|tall_phone|large_phone|tablet|iphone17_class>',
+          '<alpha_journey|core|runner|first_week|day2_return|profile_evidence|sharky_evidence|full_scroll|route_w7_w12|active_route_w7_w12|w2|presentation_closure|review_return|production_real_live> <compact|tall_phone|large_phone|tablet|iphone17_class>',
         ),
       );
       expect(capture, contains("'tall_phone': Size(390, 844)"));
@@ -37,10 +37,8 @@ void main() {
         contains('Act0ControlledDemoCaptureSurfaceV1.firstWeekReview'),
       );
       expect(capture, contains("'iphone17_class'"));
-      expect(
-        capture,
-        contains("final packetName = group == 'presentation_closure'"),
-      );
+      expect(capture, contains("group == 'presentation_closure'"));
+      expect(capture, contains(r"'presentation_closure_${device}_v1'"));
       expect(capture, contains("'long_copy_repair_feedback'"));
       expect(capture, contains("'what_poker_is_table_read_transfer'"));
       expect(capture, contains("'hand_first_only'"));
@@ -55,6 +53,18 @@ void main() {
       expect(capture, contains("fileName.contains('learn_detail')"));
       expect(packager, contains('device = _device_from_manifest'));
       expect(packager, contains('("learn_detail", "Learn detail")'));
+      expect(
+        packager,
+        contains('("long_copy_repair_feedback", "Long-copy repair feedback")'),
+      );
+      expect(
+        packager,
+        contains(
+          '("genuine_price_task_guidance", "Accessibility price guidance")',
+        ),
+      );
+      expect(packager, contains('_load_live_runner_entries'));
+      expect(shell, contains('current production_real_live'));
       expect(
         textRepair,
         contains(

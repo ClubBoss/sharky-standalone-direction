@@ -16,7 +16,11 @@ fi
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 packet="${group}_fast"
 if [[ "$group" == "presentation_closure" ]]; then
-  packet="presentation_closure_v1"
+  if [[ "$device" == "compact" ]]; then
+    packet="presentation_closure_v1"
+  else
+    packet="presentation_closure_${device}_v1"
+  fi
 elif [[ "$group" == "review_return" ]]; then
   packet="review_return_v1"
 elif [[ "$device" != "compact" ]]; then
@@ -27,6 +31,7 @@ fi
   cd "$root"
   if [[ "$group" == "production_real_live" ]]; then
     dart run tools/act0_production_real_runner_capture_v1.dart "$device"
+    ./tools/package_screen_review_v1.sh current production_real_live "output/visual_master_audit/raw/live_runner_${device}_none_v1"
     exit 0
   fi
   dart run tools/act0_real_text_surface_capture_v1.dart "$group" "$device"
