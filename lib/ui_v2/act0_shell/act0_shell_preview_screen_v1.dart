@@ -1336,6 +1336,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String debugSelectedTaskIdV1() => _selectedTaskId;
 
   @visibleForTesting
+  String debugSelectedWorldIdV1() => _selectedWorldId;
+
+  @visibleForTesting
+  String debugSelectedLessonIdV1() => _selectedLessonId;
+
+  @visibleForTesting
+  String debugPhaseV1() => _phase.name;
+
+  @visibleForTesting
+  String? debugSelectedOptionIdV1() => _selectedOptionId;
+
+  @visibleForTesting
   Map<String, Object?> debugActiveRepairContextPayloadV1() {
     return <String, Object?>{
       if (_activeRepairSourceTaskId != null)
@@ -8563,6 +8575,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     _activeRepairTaskId = repairTaskId;
     _activeRepairSourceTaskId = isRetentionReplay ? null : sourceTaskId;
+    if (skipTeaching && launchTask.phase == Act0LessonPhaseV1.drill) {
+      _teachingStepIndex = _repairRunnerForTask(launchTask).teachingSteps.length;
+    }
     _activeSameSignalFeedbackRepairV1 = false;
     _pendingFeedbackRepairSourceTaskIdV1 = null;
     _pendingFeedbackRepairTaskIdV1 = null;

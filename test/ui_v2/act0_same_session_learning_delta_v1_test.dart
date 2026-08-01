@@ -420,7 +420,29 @@ void main() {
     );
     expect(runner.selectedTaskId, 'apply_recap');
     expect(runner.selectedTaskTitle, 'Discipline holds');
-    expect(find.text('Discipline holds'), findsOneWidget);
+    expect(runner.runner.phase, Act0LessonPhaseV1.review);
+    expect(
+      tester
+          .widget<Text>(
+            find.byKey(const Key('act0_shell_feedback_continue_cta_label')),
+          )
+          .data,
+      'Next hand',
+    );
+    expect(find.text('Original read proven'), findsNothing);
+    expect(
+      find.byKey(const Key('act0_shell_wave2_feedback_proof_earned_state')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_repair_outcome_proof_title')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_wave2_feedback_correct_state')),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets(

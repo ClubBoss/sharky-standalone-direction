@@ -354,17 +354,59 @@ void main() {
       );
       expect(action.data, 'Fewer king-containing hands remain.');
       expect(action.overflow, TextOverflow.fade);
-      expect(
-        tester
-            .getRect(find.byKey(const Key('act0_shell_feedback_continue_cta')))
-            .bottom,
-        lessThanOrEqualTo(778),
+      final cta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+      final ctaLabel = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_feedback_continue_cta_label')),
       );
+      expect(ctaLabel.overflow, isNull);
+      final ctaRect = tester.getRect(cta);
+      final labelPaint = _laidOutTextBounds(
+        tester,
+        const Key('act0_shell_feedback_continue_cta_label'),
+      );
+      expect(ctaRect.contains(labelPaint.topLeft), isTrue);
+      expect(ctaRect.contains(labelPaint.bottomRight), isTrue);
+      expect(tester.getRect(cta).bottom, lessThanOrEqualTo(778));
       expect(tester.takeException(), isNull);
 
       await tester.binding.setSurfaceSize(null);
     },
   );
+
+  testWidgets('non-shared F2 feedback keeps its original non-scroll surface', (
+    tester,
+  ) async {
+    final task = allTasks.singleWhere(
+      (task) => task.taskId == 'visible_king_combo_reduction_intro',
+    );
+    final wrong = task.runner.options.firstWhere((option) => !option.isCorrect);
+    final feedback = task.runner.copyWith(
+      phase: Act0LessonPhaseV1.review,
+      teachingSteps: const <Act0TeachingStepV1>[],
+      selectedOptionId: wrong.id,
+    );
+    const profile = _Profile(Size(768, 812), 1.4, 47, 34);
+    await tester.binding.setSurfaceSize(profile.size);
+    await tester.pumpWidget(
+      _host(feedback, profile, Act0RunnerCompositionFamilyV1.f2AnswerList),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const Key('act0_shell_feedback_proof_stack_scroll')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_feedback_receipt_scroll')),
+      findsNothing,
+    );
+    final cta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+    expect(cta.hitTestable(), findsOneWidget);
+    expect(tester.getRect(cta).bottom, lessThanOrEqualTo(778));
+    expect(tester.takeException(), isNull);
+
+    await tester.binding.setSurfaceSize(null);
+  });
 
   testWidgets(
     'F1 feedback CTA container and label paint stay inside every safe fold',

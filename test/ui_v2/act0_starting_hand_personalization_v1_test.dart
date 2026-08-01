@@ -190,6 +190,15 @@ void main() {
       expect(runner.runner.caption, 'CO opened. Hero is BTN with KQo.');
 
       await _answer(tester, correct: true);
+      _expectReachableFeedback(tester);
+      expect(
+        find.byKey(const Key('act0_shell_feedback_proof_stack_scroll')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_feedback_explanation_scroll')),
+        findsNothing,
+      );
       await _continueFeedback(tester);
       expect(
         state.debugOpenRepairIntentPayloadForSourceTaskV1(
@@ -414,6 +423,135 @@ void main() {
     },
   );
 
+  testWidgets(
+    'W2 repair CTA replaces source feedback with target controls at 1.4x',
+    (tester) async {
+      final sink = Act0InMemoryTelemetrySinkV1();
+      await _pumpStartingHandTask(
+        tester,
+        sink,
+        initialTab: Act0ShellTabV1.learn,
+        textScale: 1.4,
+      );
+      final state =
+          tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+
+      await _answer(tester, correct: false);
+      final sourceFeedback = _w2RenderTrace(tester, state, 'source_feedback');
+      expect(sourceFeedback['branch'], 'feedback', reason: '$sourceFeedback');
+
+      final cta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+      await tester.ensureVisible(cta);
+      await tester.tap(cta);
+      await tester.pump();
+      final firstFrame = _w2RenderTrace(
+        tester,
+        state,
+        'first_transition_frame',
+      );
+      await tester.pumpAndSettle();
+      final settled = _w2RenderTrace(tester, state, 'settled_transition_frame');
+
+      expect(
+        settled['selectedTaskId'],
+        Act0StartingHandPersonalizationV1.repairTaskId,
+        reason: '$sourceFeedback $firstFrame $settled',
+      );
+      expect(
+        settled['runnerTaskId'],
+        Act0StartingHandPersonalizationV1.repairTaskId,
+        reason: '$settled',
+      );
+      expect(settled['phase'], 'drill', reason: '$settled');
+      expect(settled['runnerPhase'], 'drill', reason: '$settled');
+      expect(settled['selectedOptionId'], isNull, reason: '$settled');
+      expect(settled['runnerSelectedOptionId'], isNull, reason: '$settled');
+      expect(settled['branch'], 'decision', reason: '$settled');
+      expect(settled['answerControlCount'], greaterThan(0), reason: '$settled');
+      expect(settled['feedbackCtaCount'], 0, reason: '$settled');
+      expect(tester.takeException(), isNull, reason: '$settled');
+    },
+  );
+
+  testWidgets('W2 source-to-repair-to-recheck flow remains reachable at 1.4x', (
+    tester,
+  ) async {
+    final sink = Act0InMemoryTelemetrySinkV1();
+    await _pumpStartingHandTask(
+      tester,
+      sink,
+      initialTab: Act0ShellTabV1.learn,
+      textScale: 1.4,
+    );
+    final state =
+        tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+
+    await _answer(tester, correct: false);
+    _expectReachableFeedback(tester);
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+    expect(
+      state.debugSelectedTaskIdV1(),
+      Act0StartingHandPersonalizationV1.repairTaskId,
+    );
+    expect(find.byKey(const Key('act0_shell_option_call')), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      findsNothing,
+    );
+
+    await _answer(tester, correct: true);
+    _expectReachableFeedback(tester);
+    final proofStackScroll = find.byKey(
+      const Key('act0_shell_feedback_proof_stack_scroll'),
+    );
+    expect(proofStackScroll, findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_feedback_explanation_scroll')),
+      findsNothing,
+    );
+    final ctaBottomBeforeScroll = tester
+        .getRect(find.byKey(const Key('act0_shell_feedback_continue_cta')))
+        .bottom;
+    await tester.drag(proofStackScroll, const Offset(0, -120));
+    await tester.pumpAndSettle();
+    _expectReachableFeedback(tester);
+    expect(
+      tester
+          .getRect(find.byKey(const Key('act0_shell_feedback_continue_cta')))
+          .bottom,
+      ctaBottomBeforeScroll,
+    );
+    await _continueFeedback(tester);
+    expect(
+      state.debugSelectedTaskIdV1(),
+      Act0StartingHandPersonalizationV1.sourceTaskId,
+    );
+    await _answer(tester, correct: true);
+    _expectReachableFeedback(tester);
+    await _continueFeedback(tester);
+    expect(
+      sink.events.where(
+        (event) => event.name == 'learning_run_outcome_recorded',
+      ),
+      hasLength(1),
+      reason: '${sink.events.map((event) => event.name).toList()}',
+    );
+    expect(
+      sink.events.where(
+        (event) => event.name == 'learning_effect_delta_viewed',
+      ),
+      hasLength(1),
+    );
+    expect(
+      sink.events.where(
+        (event) => event.name == 'learning_effect_delta_completed',
+      ),
+      hasLength(1),
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   test(
     'Learning Run precedence and return reason stay conservative for W2',
     () {
@@ -509,6 +647,7 @@ Future<void> _pumpStartingHandTask(
   WidgetTester tester,
   Act0InMemoryTelemetrySinkV1 sink, {
   Act0ShellTabV1 initialTab = Act0ShellTabV1.play,
+  double textScale = 1,
 }) async {
   tester.view.physicalSize = const Size(375, 812);
   tester.view.devicePixelRatio = 1;
@@ -523,23 +662,75 @@ Future<void> _pumpStartingHandTask(
         GlobalCupertinoLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      home: Act0ShellPreviewScreenV1(
-        initialTab: initialTab,
-        initialPhase: Act0LessonPhaseV1.drill,
-        showPlacementOnStart: false,
-        state: Act0ShellStateV1.sample,
-        telemetrySink: sink,
-        debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
-          mode: Act0ControlledDemoCaptureModeV1.directState,
-          surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
-          worldId: Act0StartingHandPersonalizationV1.worldId,
-          lessonId: Act0StartingHandPersonalizationV1.sourceLessonId,
-          taskId: Act0StartingHandPersonalizationV1.sourceTaskId,
+      home: MediaQuery(
+        data: MediaQueryData(
+          size: const Size(375, 812),
+          textScaler: TextScaler.linear(textScale),
+        ),
+        child: Act0ShellPreviewScreenV1(
+          initialTab: initialTab,
+          initialPhase: Act0LessonPhaseV1.drill,
+          showPlacementOnStart: false,
+          state: Act0ShellStateV1.sample,
+          telemetrySink: sink,
+          debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+            mode: Act0ControlledDemoCaptureModeV1.directState,
+            surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
+            worldId: Act0StartingHandPersonalizationV1.worldId,
+            lessonId: Act0StartingHandPersonalizationV1.sourceLessonId,
+            taskId: Act0StartingHandPersonalizationV1.sourceTaskId,
+          ),
         ),
       ),
     ),
   );
   await tester.pumpAndSettle();
+}
+
+Map<String, Object?> _w2RenderTrace(
+  WidgetTester tester,
+  dynamic state,
+  String checkpoint,
+) {
+  final runner = tester.widget<Act0LessonRunnerShellV1>(
+    find.byType(Act0LessonRunnerShellV1),
+  );
+  final answerControlCount = runner.runner.options
+      .where(
+        (option) => find
+            .byKey(Key('act0_shell_option_${option.id}'))
+            .evaluate()
+            .isNotEmpty,
+      )
+      .length;
+  final feedbackCta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+  return <String, Object?>{
+    'checkpoint': checkpoint,
+    'selectedWorldId': state.debugSelectedWorldIdV1(),
+    'selectedLessonId': state.debugSelectedLessonIdV1(),
+    'selectedTaskId': state.debugSelectedTaskIdV1(),
+    'runnerTaskId': runner.selectedTaskId,
+    'phase': state.debugPhaseV1(),
+    'runnerPhase': runner.runner.phase.name,
+    'runnerTeachingStepIndex': runner.runner.teachingStepIndex,
+    'runnerTeachingStepCount': runner.runner.teachingSteps.length,
+    'accessibilityPrototypeStep': runner.accessibilityPrototypeStep?.name,
+    'selectedOptionId': state.debugSelectedOptionIdV1(),
+    'runnerSelectedOptionId': runner.runner.selectedOptionId,
+    'activeRepair': state.debugActiveRepairContextPayloadV1(),
+    'branch': feedbackCta.evaluate().isNotEmpty ? 'feedback' : 'decision',
+    'topLevelRunnerKey': runner.key,
+    'feedbackCtaCount': feedbackCta.evaluate().length,
+    'answerControlCount': answerControlCount,
+    'feedbackCtaHitTestableCount': feedbackCta.hitTestable().evaluate().length,
+  };
+}
+
+void _expectReachableFeedback(WidgetTester tester) {
+  final cta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+  expect(cta, findsOneWidget);
+  expect(cta.hitTestable(), findsOneWidget);
+  expect(tester.getRect(cta).bottom, lessThanOrEqualTo(812));
 }
 
 Future<void> _answer(WidgetTester tester, {required bool correct}) async {
