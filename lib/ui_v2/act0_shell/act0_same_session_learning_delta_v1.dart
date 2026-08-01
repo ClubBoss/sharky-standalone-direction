@@ -121,6 +121,8 @@ _Act0LearningDeltaDescriptorV1? _descriptorForV1(
     'Hero position',
   ),
   'price_read' => const _Act0LearningDeltaDescriptorV1('the price to continue'),
+  'board_read' when missedSignalId == 'board_cards' =>
+    const _Act0LearningDeltaDescriptorV1('the visible board cards'),
   'table_read' when missedSignalId == 'hero_seat' =>
     const _Act0LearningDeltaDescriptorV1("Hero's seat"),
   _ => null,

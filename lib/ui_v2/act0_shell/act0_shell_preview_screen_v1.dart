@@ -52,6 +52,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_sequence_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_session_payoff_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_price_personalization_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_board_texture_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_position_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_starting_hand_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_improvement_observation_v1.dart';
@@ -3890,6 +3891,36 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       );
       return;
     }
+    if (Act0BoardTexturePersonalizationV1.isCanonicalSourceTask(
+      decision.taskId,
+    )) {
+      if (_routeReviewKindForTaskIdV1(decision.taskId) !=
+          Act0ReviewKindV1.initialAssessment)
+        return;
+      _recordLearningRunOutcomeV1(
+        Act0LearningRunOutcomeV1(
+          outcomeId: 'board_texture:${decision.attemptKey}',
+          lessonId: decision.lessonId,
+          taskId: decision.taskId,
+          skillId: Act0BoardTexturePersonalizationV1.skillId,
+          firstAttemptCorrect: decision.isCorrect,
+          errorType: decision.isCorrect
+              ? 'none'
+              : Act0BoardTexturePersonalizationV1.errorType,
+          repairAttempted: false,
+          recheckResult: null,
+          finalOutcome: decision.isCorrect
+              ? Act0LearningRunFinalOutcomeV1.masteredFirstTry
+              : Act0LearningRunFinalOutcomeV1.incomplete,
+          missedSignal: Act0BoardTexturePersonalizationV1.missedSignalId,
+          recommendationSignal: 'compare_board_connection',
+          eventOrder: _nextLearningRunEventOrderV1(),
+        ),
+        userChoice: decision.selectedId,
+        timeToDecision: decision.decisionTimeBucket,
+      );
+      return;
+    }
     if (!Act0PositionPersonalizationV1.isCanonicalSourceTask(decision.taskId)) {
       if (!Act0PricePersonalizationV1.isCanonicalSourceTask(decision.taskId)) {
         return;
@@ -4055,6 +4086,27 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           ),
         );
       }
+      return;
+    }
+    if (sourceTaskId == Act0BoardTexturePersonalizationV1.sourceTaskId) {
+      const family = Act0BoardTexturePersonalizationCaseV1();
+      _recordTelemetryEventV1(
+        'board_texture_personalization_recheck',
+        family.telemetryFields(
+          attemptPhase: 'recheck',
+          finalLearningOutcome: recheckCorrect
+              ? family.successfulPayoffOutcome
+              : family.failedRecheckOutcome,
+        ),
+      );
+      if (recheckCorrect)
+        _recordTelemetryEventV1(
+          'board_texture_personalization_payoff',
+          family.telemetryFields(
+            attemptPhase: 'payoff',
+            finalLearningOutcome: family.successfulPayoffOutcome,
+          ),
+        );
     }
   }
 
@@ -8576,7 +8628,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _activeRepairTaskId = repairTaskId;
     _activeRepairSourceTaskId = isRetentionReplay ? null : sourceTaskId;
     if (skipTeaching && launchTask.phase == Act0LessonPhaseV1.drill) {
-      _teachingStepIndex = _repairRunnerForTask(launchTask).teachingSteps.length;
+      _teachingStepIndex = _repairRunnerForTask(
+        launchTask,
+      ).teachingSteps.length;
     }
     _activeSameSignalFeedbackRepairV1 = false;
     _pendingFeedbackRepairSourceTaskIdV1 = null;
@@ -10126,6 +10180,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           ),
         );
       }
+      if (Act0BoardTexturePersonalizationV1.isCanonicalSourceTask(
+            selectedTask.taskId,
+          ) &&
+          _routeReviewKindForTaskIdV1(selectedTask.taskId) ==
+              Act0ReviewKindV1.initialAssessment) {
+        const boardTextureCase = Act0BoardTexturePersonalizationCaseV1();
+        _recordTelemetryEventV1(
+          'board_texture_personalization_payoff',
+          boardTextureCase.telemetryFields(
+            attemptPhase: 'decision',
+            finalLearningOutcome: boardTextureCase.cleanPayoffOutcome,
+          ),
+        );
+      }
       _refreshRetentionMemoryStatusesV1();
       _persistProgress();
       return;
@@ -10394,6 +10462,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _specializedFamilyCompatibilityIntentV1(intent),
   );
 
+  Act0BoardTexturePersonalizationCaseV1? _boardTextureCaseForIntentV1(
+    Act0RepairIntentV1 intent,
+  ) => Act0BoardTexturePersonalizationV1.fromRepairIntent(intent);
+
   String _correctOptionIdV1(Act0RunnerStateV1 runner) {
     for (final option in runner.options) {
       if (option.isCorrect) {
@@ -10471,6 +10543,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         'starting_hand_personalization_classified',
         <String, Object?>{
           ...startingHandCase.telemetryFields(
+            attemptPhase: 'decision',
+            finalLearningOutcome: 'repair_required',
+          ),
+          'user_choice': intent.choiceId,
+          'correctness': false,
+        },
+      );
+    }
+    final boardTextureCase = _boardTextureCaseForIntentV1(intent);
+    if (boardTextureCase != null) {
+      _recordTelemetryEventV1(
+        'board_texture_personalization_classified',
+        <String, Object?>{
+          ...boardTextureCase.telemetryFields(
             attemptPhase: 'decision',
             finalLearningOutcome: 'repair_required',
           ),
