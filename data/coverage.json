@@ -1,0 +1,4490 @@
+{
+  "counts": {
+    "CAPTURED_CURRENT_HEAD": 5,
+    "COVERED_BY_EQUIVALENCE": 101,
+    "NOT_RUNTIME_REACHABLE": 3,
+    "RUNTIME_REACHABLE_UNCAPTURED": 304
+  },
+  "records": [
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Typed capture surface placement.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "entry.placement",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.placement.entry"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Welcome beats are conditional state truth.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "welcome.intro",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.welcome.intro"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Canonical shell tab.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "hub.home",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.home.default"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Lesson/world path.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "hub.learn",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.learn.path"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Play is the user-facing practice hub.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "hub.practice",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.practice.default"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Explicit typed debug surface reviewEmpty.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "hub.review_empty",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.review.empty"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Repair queue availability conditional.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "hub.review_actionable",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.review.actionable"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Canonical profile tab.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "hub.profile_default",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.profile.default"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Typed debug surface profileEvidence.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "hub.profile_proof",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.profile.proof"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Typed capture surface worldCompletion.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "completion.world",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.completion.world_complete"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Typed capture surface sessionSummary.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "completion.session_summary",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.session_summary.summary"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Typed debug surface day2ReturnHome.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "return.day2_home",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.home.return"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Typed capture surface w12Terminal.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "terminal.w12",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.terminal.volume_i_terminal"
+    },
+    {
+      "dimension_records": [],
+      "rationale": "Settings is not implemented; recorded to prevent invention.",
+      "release_blocking": false,
+      "representative": null,
+      "state_id": "system.settings",
+      "status": "NOT_RUNTIME_REACHABLE",
+      "visual_contract_id": "conditional.settings.absent"
+    },
+    {
+      "dimension_records": [],
+      "rationale": "Premium/access is not implemented on the canonical Act0 route.",
+      "release_blocking": false,
+      "representative": null,
+      "state_id": "system.premium_access",
+      "status": "NOT_RUNTIME_REACHABLE",
+      "visual_contract_id": "conditional.premium_access.absent"
+    },
+    {
+      "dimension_records": [],
+      "rationale": "Loading, error, dialog, sheet, and blocking-overlay surfaces are absent from typed canonical release routing.",
+      "release_blocking": false,
+      "representative": null,
+      "state_id": "system.transient_surfaces",
+      "status": "NOT_RUNTIME_REACHABLE",
+      "visual_contract_id": "conditional.system_transient.absent"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Explicit semantic runner state; no capture is implied.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.runner.theory"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Explicit semantic runner state; no capture is implied.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.unanswered_decision",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.runner.unanswered_decision"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Explicit semantic runner state; no capture is implied.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.selected_decision",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.runner.selected_decision"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Explicit semantic runner state; no capture is implied.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.correct_feedback",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.runner.correct_feedback"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Explicit semantic runner state; no capture is implied.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.wrong_feedback",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.runner.wrong_feedback"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Explicit semantic runner state; no capture is implied.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.repair_focus",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.runner.repair_focus"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Explicit semantic runner state; no capture is implied.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.repair_decision",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.runner.repair_decision"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Explicit semantic runner state; no capture is implied.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.repair_result",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.runner.repair_result"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Explicit semantic runner state; no capture is implied.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.source_recheck",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.runner.source_recheck"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Explicit semantic runner state; no capture is implied.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.recovered",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.runner.recovered"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Explicit semantic runner state; no capture is implied.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.still_needs_practice",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.runner.still_needs_practice"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Explicit semantic runner state; no capture is implied.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.lesson_completion",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.runner.lesson_completion"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Registered conditional state; evidence remains explicit.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "welcome.decision",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.welcome.decision"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Registered conditional state; evidence remains explicit.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "welcome.feedback",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.welcome.feedback"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Registered conditional state; evidence remains explicit.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "welcome.handoff",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.welcome.handoff"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Registered conditional state; evidence remains explicit.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "hub.home_repair_priority",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.home.home_repair_priority"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Registered conditional state; evidence remains explicit.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "hub.lesson_detail",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.learn.lesson_detail"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Registered conditional state; evidence remains explicit.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "hub.practice_repair_target",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.practice.practice_repair_target"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Registered conditional state; evidence remains explicit.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "hub.review_focused_rep",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.review.review_focused_rep"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Registered conditional state; evidence remains explicit.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "hub.review_feedback",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.review.review_feedback"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Registered conditional state; evidence remains explicit.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "hub.review_updated",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.review.review_updated"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Registered conditional state; evidence remains explicit.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "hub.profile_active_repair",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.profile.profile_active_repair"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Registered conditional state; evidence remains explicit.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "completion.w4_w5_band_transition",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.completion.w4_w5_band_transition"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Registered conditional state; evidence remains explicit.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "sharky.foundation",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.sharky.foundation"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Registered conditional state; evidence remains explicit.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "sharky.developing",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.sharky.developing"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Registered conditional state; evidence remains explicit.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "sharky.improve",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.sharky.improve"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Registered conditional state; evidence remains explicit.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "sharky.milestone",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.sharky.milestone"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Registered conditional state; evidence remains explicit.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "return.day2_practice_repair",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.practice.day2_practice_repair"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Registered conditional state; evidence remains explicit.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "return.day2_review_continuation",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.review.day2_review_continuation"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "none",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "Registered conditional state; evidence remains explicit.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "return.day2_profile_repair",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "conditional.profile.day2_profile_repair"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_discipline_buckets_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0180f528d7fa867c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.weak_ace_warning_w3_dominated_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0180f528d7fa867c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.continue_or_let_go_continue_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0180f528d7fa867c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.apply_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0180f528d7fa867c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.discipline_checkpoint_checkpoint_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0180f528d7fa867c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_six_seats_positions_theory.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0180f528d7fa867c"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.what_poker_is_win_ways.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0a1f40b05df44a9c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.what_poker_is_all_in_meaning.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0a1f40b05df44a9c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.what_poker_is_matched_chips_transfer.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0a1f40b05df44a9c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.what_poker_is_live_win_transfer.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0a1f40b05df44a9c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.cards_ranks_suits_rank_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0a1f40b05df44a9c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_discipline_buckets_strong.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0a1f40b05df44a9c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_discipline_buckets_medium.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0a1f40b05df44a9c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_discipline_buckets_borderline.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0a1f40b05df44a9c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.discipline_checkpoint_checkpoint_table_discipline.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0a1f40b05df44a9c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_checkpoint_position_checkpoint_table_notice.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0a1f40b05df44a9c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w6_checkpoint_table_combo_weight.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0a1f40b05df44a9c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w7_ajs_btn_25bb_transfer.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0a1f40b05df44a9c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w7_ajs_btn_100bb_transfer.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0a1f40b05df44a9c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.what_poker_is_side_pot_intro.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0a1f40b05df44a9c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w9_m_ratio_table_window_transfer.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0a1f40b05df44a9c"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w9_bubble_table_risk_transfer.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0a1f40b05df44a9c"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.your_first_hand_turn.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0ced37365b3e9dda"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_cheap_price_marginal_call.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0ced37365b3e9dda"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_big_price_marginal_fold.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0ced37365b3e9dda"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_checkpoint_table_price.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0ced37365b3e9dda"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.outs_improvement_w5_table_outs_flush_transfer.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0ced37365b3e9dda"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.outs_improvement_w5_clean_vs_risky_out_transfer.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0ced37365b3e9dda"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.outs_improvement_w5_table_outs_straight_transfer.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0ced37365b3e9dda"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.turn_river_changes_w5_turn_texture_shift_transfer.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0ced37365b3e9dda"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w6_turn_pressure_shift_transfer.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0ced37365b3e9dda"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w11_trigger_bad_price_fold.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.0ced37365b3e9dda"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.your_first_hand_preflop.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.177a00af5a6e86c0"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_purpose_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_value_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_bluff_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_protection_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_sizing_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.board_texture_basics_w5_texture_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.connected_boards_w5_connected_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.flush_draws_w5_flush_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.straight_draws_w5_straight_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.outs_improvement_w5_outs_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w6_buckets_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w6_board_fit_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w6_pressure_lines_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w6_combo_counts_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w7_effective_stack_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w7_depth_shift_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w7_spr_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w7_format_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w9_survival_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w9_m_ratio_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w9_bubble_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w10_player_type_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w10_one_lever_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w10_guardrails_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w11_session_plan_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w11_trigger_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w11_review_loop_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w12_decision_quality_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w12_tilt_reset_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w12_confidence_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.180d26ac45740121"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_discipline_buckets_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.1bdfae00e65c96d2"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": "vei1_01244116a983f813ceac06b602ce0aa41014ec42a055d0a8e4e9ae6066241620",
+          "status": "CAPTURED_CURRENT_HEAD"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "CAPTURED_CURRENT_HEAD"
+        }
+      ],
+      "rationale": "Exact identity representative runtime contract capture.",
+      "release_blocking": false,
+      "representative": "vei1_01244116a983f813ceac06b602ce0aa41014ec42a055d0a8e4e9ae6066241620",
+      "state_id": "runner.what_poker_is_table_read_transfer.drill",
+      "status": "CAPTURED_CURRENT_HEAD",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.your_first_hand_flop.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.actions_legal_context.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.actions_call_drill.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w4_half_pot_bet.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w4_checkpoint_table_purpose_price.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.flush_draws_w5_flush_draw_find.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.flush_draws_w5_made_hand_vs_flush_draw_transfer.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.flush_draws_w5_flush_draw_recheck_transfer.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.straight_draws_w5_gutshot_draw.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.straight_draws_w5_gutshot_contrast_transfer.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w6_value_dry_board.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w6_missed_dry_board.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w6_table_bucket_notice.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w6_wrong_board.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w6_value_wet_board.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w6_turn_shift_bucket.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w6_value_range_action.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w6_bluff_candidate.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w6_missed_hand_action.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w6_table_value_line_transfer.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w6_ak_combos.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w6_pair_combos.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w6_combo_weight_compare.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.range_checkpoint_value.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.range_checkpoint_board_fit.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.range_checkpoint_combos.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w6_suited_offsuit_weight_compare.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w6_pair_vs_suited_weight_compare.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.range_checkpoint_pressure.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.visible_king_combo_reduction_intro.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.paired_board_texture_lite_intro.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.visible_card_combo_density_transfer_check.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w7_effective_stack_30bb.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w7_effective_stack_100bb.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w7_table_effective_notice.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w7_20bb_wider.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w7_100bb_tighter.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w7_40bb_middle.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w7_low_spr_commit.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w7_high_spr_room.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w7_spr4_middle.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w7_top_pair_spr2_transfer.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w7_top_pair_spr8_transfer.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w7_6max_wider.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w7_fullring_tighter.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w7_format_table_notice.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w9_cash_vs_tournament.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w9_short_stack_survival.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w9_survival_stack_tradeoff.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w9_m_ratio_red_zone.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w9_m_ratio_green_zone.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w9_m_ratio_yellow_zone.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w9_medium_stack_tighten.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w9_big_stack_leverage.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w9_bubble_short_stack.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w9_checkpoint_survival_line.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w9_checkpoint_zone_line.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w9_checkpoint_bubble_line.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w9_checkpoint_table_notice.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w10_nit_tag.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w10_loose_passive_tag.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w10_overaggressive_tag.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w10_vs_nit_open_wider.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w10_vs_caller_value_heavier.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w10_vs_sticky_defender_tighten_steals.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w10_table_value_vs_caller_transfer.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w10_overbluff_punish.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w10_underbluff_fold_more.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w10_guardrail_sample_size.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w10_checkpoint_tag_line.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w10_checkpoint_lever_line.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w10_checkpoint_guardrail_line.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w10_checkpoint_table_notice.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w11_plan_focus_choice.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w11_plan_avoid_overload.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w11_plan_table_focus_transfer.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w11_trigger_overfold_blinds.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w11_trigger_overcall_flop.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w11_trigger_small_price_continue.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w11_review_pick_leak.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w11_review_define_fix.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w11_checkpoint_plan_line.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w11_checkpoint_trigger_line.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w11_checkpoint_review_line.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w11_checkpoint_mixed_table_line.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w12_good_fold_bad_result.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w12_bad_call_good_result.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w12_after_bad_beat_reset.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w12_after_mistake_reset.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w12_assertive_not_ego.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w12_discipline_under_pressure.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w12_revenge_raise_trap.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w12_checkpoint_process_line.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w12_checkpoint_reset_line.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w12_checkpoint_discipline_line.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_transfer.drill",
+      "state_id": "runner.w12_checkpoint_full_loop_line.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.2f3073b7a5a57a07"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.what_poker_is_theory.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.33bf319f3dd15a05"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.blinds_theory.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.33bf319f3dd15a05"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.positions_theory.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.33bf319f3dd15a05"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_price_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.36b776aef0c0ac2e"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.blinds_review.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.3ac20dd45149f859"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.same_hand_different_seat_w3_same_hand_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.3ac20dd45149f859"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_good_price_call.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.418505be25c69c1f"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_bad_price_fold.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.418505be25c69c1f"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_checkpoint_price.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.418505be25c69c1f"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.turn_river_changes_w5_turn_hits.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.418505be25c69c1f"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.cards_ranks_suits_theory.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.4f241212cd67a5cb"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.blinds_posts_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.5a2237df881df6dd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.blinds_first_actor.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.5a2237df881df6dd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.blinds_last_actor.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.5a2237df881df6dd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.blinds_button_moves.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.5a2237df881df6dd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.positions_button.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.5a2237df881df6dd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.positions_utg.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.5a2237df881df6dd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.positions_cutoff.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.5a2237df881df6dd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.positions_late_seat.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.5a2237df881df6dd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.positions_early_late.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.5a2237df881df6dd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_six_seats_positions_utg.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.5a2237df881df6dd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_six_seats_hj_co_contrast.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.5a2237df881df6dd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_six_seats_positions_cutoff.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.5a2237df881df6dd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_six_seats_positions_button.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.5a2237df881df6dd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_six_seats_sb_recognition.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.5a2237df881df6dd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_six_seats_bb_recognition.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.5a2237df881df6dd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.button_advantage_find_button.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.5a2237df881df6dd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.button_advantage_button_vs_cutoff.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.5a2237df881df6dd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.early_vs_late_w2_late_position.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.5a2237df881df6dd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.early_vs_late_w2_early_position.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.5a2237df881df6dd"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.what_poker_is_pot_stack.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.64737d6db53e6373"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.your_first_hand_showdown.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.68dd9ac1d8a8a5e7"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.showdown_review.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.68dd9ac1d8a8a5e7"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.turn_river_changes_w5_street_repair.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.6a025d2e83551fbe"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": "vei1_1191d1973b06a495fc03b99398ac49496bef222210fa28c1e4c7c5e62b746b15",
+          "status": "CAPTURED_CURRENT_HEAD"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "CAPTURED_CURRENT_HEAD"
+        }
+      ],
+      "rationale": "Exact identity representative runtime contract capture.",
+      "release_blocking": false,
+      "representative": "vei1_1191d1973b06a495fc03b99398ac49496bef222210fa28c1e4c7c5e62b746b15",
+      "state_id": "runner.hand_rankings_theory.theory",
+      "status": "CAPTURED_CURRENT_HEAD",
+      "visual_contract_id": "runner.729dacb8e2f505a2"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.hand_rankings_theory.theory",
+      "state_id": "runner.showdown_theory.theory",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.729dacb8e2f505a2"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.visible_ace_combo_reduction_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.749434c8447b6980"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.fold_discipline_fold_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.76b3fb43e4d079fd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.weak_ace_warning_w3_dominated_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.76b3fb43e4d079fd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.continue_or_let_go_continue_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.76b3fb43e4d079fd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.apply_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.76b3fb43e4d079fd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.discipline_checkpoint_checkpoint_review.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.76b3fb43e4d079fd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_six_seats_positions_review.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.76b3fb43e4d079fd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_apply_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.76b3fb43e4d079fd"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_checkpoint_position_checkpoint_review.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.76b3fb43e4d079fd"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_checkpoint_review.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.901c0fba126b77f4"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": "vei1_196e7e141370e59d8e747cf6fe794ff6bb4ae05f406d12686567b9f29b6d960f",
+          "status": "CAPTURED_CURRENT_HEAD"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "CAPTURED_CURRENT_HEAD"
+        }
+      ],
+      "rationale": "Exact identity representative runtime contract capture.",
+      "release_blocking": false,
+      "representative": "vei1_196e7e141370e59d8e747cf6fe794ff6bb4ae05f406d12686567b9f29b6d960f",
+      "state_id": "runner.what_poker_is_table_read_recheck.drill",
+      "status": "CAPTURED_CURRENT_HEAD",
+      "visual_contract_id": "runner.915e710faecaeb3a"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_recheck.drill",
+      "state_id": "runner.actions_fold_drill.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.915e710faecaeb3a"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.what_poker_is_table_read_recheck.drill",
+      "state_id": "runner.w6_wet_board_repair.drill",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.915e710faecaeb3a"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.blinds_postflop_button.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.961d5efbb3856f04"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.button_advantage_button_last.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.961d5efbb3856f04"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.first_table_guide_route_roles.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.973d0bf49369d906"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.what_poker_is_review.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.973d0bf49369d906"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_six_seats_position_repair_seat_id_btn.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.974ebfaca8b7a157"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_six_seats_position_repair_seat_id_utg.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.974ebfaca8b7a157"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.what_poker_is_find_hero.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.9e6834fb6c52bfe7"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.actions_review.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.a2b817440252a861"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.first_table_guide_one_clear_choice.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.a8e5a3b8421b784d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.your_first_hand_private_cards_recheck.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.a8e5a3b8421b784d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.actions_raise_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.a8e5a3b8421b784d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.continue_or_let_go_medium_open.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.a8e5a3b8421b784d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.apply_btn_open.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.a8e5a3b8421b784d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.apply_hj_decision.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.a8e5a3b8421b784d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.button_advantage_button_open.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.a8e5a3b8421b784d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.same_hand_different_seat_position_repair_same_hand_different_seat.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.a8e5a3b8421b784d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_apply_btn_open.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.a8e5a3b8421b784d"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.cards_ranks_suits_suit_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_discipline_buckets_premium.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_discipline_buckets_trash.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.fold_discipline_early_fold.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.fold_discipline_facing_fold.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.fold_discipline_discipline_stack_protect.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.weak_ace_warning_w3_dominated_fold.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.weak_ace_warning_w3_strong_continue.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.weak_ace_warning_weak_ace_pressure_fold.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.weak_ace_warning_weak_ace_kicker_compare.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.continue_or_let_go_premium_continue.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.continue_or_let_go_weak_let_go.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.continue_or_let_go_medium_call_or_fold.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.discipline_checkpoint_checkpoint_premium.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.discipline_checkpoint_checkpoint_fold.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.discipline_checkpoint_checkpoint_borderline_continue.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.early_vs_late_early_pressure_choice.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.early_vs_late_late_info_choice.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.same_hand_different_seat_w3_same_hand_open.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.same_hand_different_seat_w3_same_hand_call.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.same_hand_different_seat_same_hand_early_fold.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.same_hand_different_seat_same_hand_late_open.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_apply_late_open.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_checkpoint_position_checkpoint_late_open.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_checkpoint_position_checkpoint_early_fold.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_checkpoint_position_checkpoint_btn_call.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b2037b5b50b6f330"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.turn_river_changes_w5_board_checkpoint.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b6465de464e177d7"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.range_checkpoint_review.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b6465de464e177d7"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.visible_card_combo_reduction_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b6465de464e177d7"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w7_stack_checkpoint.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b6465de464e177d7"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w9_checkpoint_review.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b6465de464e177d7"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w10_checkpoint_review.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b6465de464e177d7"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w11_checkpoint_review.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b6465de464e177d7"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w12_checkpoint_review.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.b6465de464e177d7"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.cards_ranks_suits_private_board.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_rankings_pair_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.showdown_foldout_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_value_purpose.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_bluff_purpose.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_value_bet.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_value_missed.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_bluff_pressure.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_bad_bluff.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_protection_bet.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_protection_check.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_small_bet.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_pot_bet.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_checkpoint_value.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.connected_boards_w5_disconnected_board.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.connected_boards_w5_connected_board.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.flush_draws_w5_no_flush_draw.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.straight_draws_w5_straight_draw_find.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.straight_draws_w5_gap_board.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.outs_improvement_w5_flush_out.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.outs_improvement_w5_straight_out.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bc03c09c9182b39d"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": "vei1_0413c6c17c3fcecc299641e6b69d02125d459a94736f593724cd0c49d5a2d7ee",
+          "status": "CAPTURED_CURRENT_HEAD"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "CAPTURED_CURRENT_HEAD"
+        }
+      ],
+      "rationale": "Exact identity representative runtime contract capture.",
+      "release_blocking": false,
+      "representative": "vei1_0413c6c17c3fcecc299641e6b69d02125d459a94736f593724cd0c49d5a2d7ee",
+      "state_id": "runner.positions_review.review",
+      "status": "CAPTURED_CURRENT_HEAD",
+      "visual_contract_id": "runner.bc5fd16e9ffb40d0"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.positions_review.review",
+      "state_id": "runner.button_advantage_button_recap.review",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.bc5fd16e9ffb40d0"
+    },
+    {
+      "rationale": "Same typed visual contract as representative state.",
+      "release_blocking": false,
+      "representative": "runner.positions_review.review",
+      "state_id": "runner.early_vs_late_w2_position_recap.review",
+      "status": "COVERED_BY_EQUIVALENCE",
+      "visual_contract_id": "runner.bc5fd16e9ffb40d0"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.cards_ranks_suits_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bf0f501e50c9eebc"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.your_first_hand_recap.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bf0f501e50c9eebc"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_rankings_review.review",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bf0f501e50c9eebc"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.button_advantage_position_repair_btn_last_postflop.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.bfd084eaa030ebb8"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.actions_theory.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.d94c12158b7ed9e7"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.what_poker_is_showdown_win.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.da6b2b5d507acc20"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.your_first_hand_river.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.da6b2b5d507acc20"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.showdown_best_hand_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.da6b2b5d507acc20"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.turn_river_changes_w5_river_draw_story_transfer.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.da6b2b5d507acc20"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w6_kicker_showdown_compare.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.da6b2b5d507acc20"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w6_board_pair_strength_compare.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.da6b2b5d507acc20"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w6_checkpoint_table_best_five.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.da6b2b5d507acc20"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w12_pretty_hand_bad_price_fold.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.da6b2b5d507acc20"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.cards_ranks_suits_board_count.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e0d36b0541ee55fa"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.cards_ranks_suits_best_five.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e0d36b0541ee55fa"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.your_first_hand_action_trail.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e0d36b0541ee55fa"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_rankings_two_pair_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e0d36b0541ee55fa"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_rankings_trips_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e0d36b0541ee55fa"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_rankings_straight_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e0d36b0541ee55fa"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_rankings_flush_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e0d36b0541ee55fa"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_rankings_full_house_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e0d36b0541ee55fa"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_rankings_quads_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e0d36b0541ee55fa"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_rankings_royal_flush_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e0d36b0541ee55fa"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_rankings_full_house_vs_flush_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e0d36b0541ee55fa"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_rankings_quads_vs_full_house_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e0d36b0541ee55fa"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_rankings_royal_vs_flush_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e0d36b0541ee55fa"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.hand_rankings_best_five_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e0d36b0541ee55fa"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.showdown_kicker_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e0d36b0541ee55fa"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.showdown_board_plays_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e0d36b0541ee55fa"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.showdown_tie_drill.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e0d36b0541ee55fa"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.turn_river_changes_w5_river_misses.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e0d36b0541ee55fa"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_purpose_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_value_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_bluff_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_protection_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_sizing_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_checkpoint_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.board_texture_basics_w5_texture_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.connected_boards_w5_connected_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.flush_draws_w5_flush_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.straight_draws_w5_straight_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.outs_improvement_w5_outs_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w6_range_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w6_board_fit_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w6_pressure_lines_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w6_combo_counts_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.range_checkpoint_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w7_effective_stack_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w7_depth_shift_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w7_spr_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w7_format_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w9_survival_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w9_m_ratio_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w9_bubble_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w9_checkpoint_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w10_player_type_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w10_one_lever_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w10_guardrails_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w10_checkpoint_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w11_session_plan_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w11_trigger_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w11_review_loop_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w11_checkpoint_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w12_decision_quality_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w12_tilt_reset_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w12_confidence_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w12_checkpoint_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e32b738fb879f6ec"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.w4_price_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e58c205f63d14a29"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.turn_river_changes_w5_street_change_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.e58c205f63d14a29"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.fold_discipline_discipline_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.f2a9120f0f9afe17"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": "vei1_75cdc7964e9eeaa158ac5f6737ce8b02a0b638371f672958c95d036c3d268149",
+          "status": "CAPTURED_CURRENT_HEAD"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "CAPTURED_CURRENT_HEAD"
+        }
+      ],
+      "rationale": "Exact identity representative runtime contract capture.",
+      "release_blocking": false,
+      "representative": "vei1_75cdc7964e9eeaa158ac5f6737ce8b02a0b638371f672958c95d036c3d268149",
+      "state_id": "runner.actions_check_drill.drill",
+      "status": "CAPTURED_CURRENT_HEAD",
+      "visual_contract_id": "runner.f9c384c1c1701ffd"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.board_texture_basics_w5_dry_board.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.fd7a16ce1d1ed72e"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.board_texture_basics_w5_wet_board.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.fd7a16ce1d1ed72e"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.apply_utg_fold.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.fda889b6852c40b1"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.early_vs_late_position_repair_utg_players_behind.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.fda889b6852c40b1"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_apply_early_fold.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.fda889b6852c40b1"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_apply_hj_fold.drill",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.fda889b6852c40b1"
+    },
+    {
+      "dimension_records": [
+        {
+          "dimension": "compact_normal",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        },
+        {
+          "dimension": "text_scale_1_4",
+          "representative": null,
+          "status": "RUNTIME_REACHABLE_UNCAPTURED"
+        }
+      ],
+      "rationale": "No exact identity matched this runtime contract.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.button_advantage_button_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.fdf1227c62f6c7b3"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.early_vs_late_w2_position_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.fdf1227c62f6c7b3"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.same_hand_different_seat_w3_same_hand_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.fdf1227c62f6c7b3"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_apply_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.fdf1227c62f6c7b3"
+    },
+    {
+      "rationale": "Representative capture missing.",
+      "release_blocking": true,
+      "representative": null,
+      "state_id": "runner.position_checkpoint_position_checkpoint_intro.theory",
+      "status": "RUNTIME_REACHABLE_UNCAPTURED",
+      "visual_contract_id": "runner.fdf1227c62f6c7b3"
+    }
+  ],
+  "schema": "visual_state_coverage_v1"
+}

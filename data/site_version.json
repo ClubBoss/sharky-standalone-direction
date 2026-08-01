@@ -1,0 +1,15 @@
+{
+  "atlas_tooling_baseline_sha": "acd04549cb6c7c68558c6578d134ae08f381d4d4",
+  "complete_hosted_asset_count": 135,
+  "evidence_baseline_sha": "b7db47a3145ba8653b90403a9aa48538c378cdb7",
+  "expected_hosted_asset_count": 135,
+  "generated_at": "2026-08-01T22:31:09.068702+00:00",
+  "registry_schema": "visual_state_atlas_registry_v2",
+  "release_failing_gap_count": 304,
+  "runtime_discovery_schema": "act0_visual_state_discovery_v2",
+  "screenshot_count": 135,
+  "site_content_hash": "03699b697704578ffe795aa287cb5dbe74473eadd97e2e95c71d23d9c0e2ece0",
+  "transition_count": 36,
+  "unique_surface_count": 89,
+  "unique_visual_contract_count": 89
+}
