@@ -115,6 +115,19 @@ Do not use the readiness reference as the default bottleneck selector for day-to
 
 ## Current post-merge status
 
+- **Current-execution correction (2026-08-01):** PR #121 closed
+  screen-evidence rendering fidelity and PR #122 landed the Visual State Atlas
+  foundation. Strict Atlas truth hardening then exposed the absence of
+  source-owned visual evidence identity. The bounded audit/regression-tooling
+  sequence is **EID-1 → VAT-1 → independent visual review**: EID-1 establishes
+  source-owned, hash-bound capture identity; VAT-1 may begin only after EID-1
+  normally merges and its identity-complete bundle validates; independent visual
+  review then creates a finite visual-closure ledger. This is not a reopening of
+  visual redesign. Modern Table remains in Maintenance Mode; the screenshot
+  pipeline remains audit/regression/AI-review only; no product visual fixes are
+  authorized until that Atlas review ledger exists; and Human Novice Proof is
+  not authorized by these tooling packets.
+
 - The proof-loop, Premium Beta productization, premium feel, compact Sharky
   soul, earned reward hook, Review Pattern Coaching Lite, public-premium
   endgame route, release-visible content gate, value packaging, and

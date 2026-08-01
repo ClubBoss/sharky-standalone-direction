@@ -2,6 +2,14 @@
 
 Status: ACTIVE POST-MERGE EXECUTION CAPSULE.
 
+## Supersession — 2026-08-01 (EID / VAT)
+
+`docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` remains the first-read dispatch
+authority. The current live sequence is **EID-1 → VAT-1 → independent visual
+review**. Older PHP and Visual Reality route sections below are retained as
+historical evidence. This tooling sequence creates no product UI or visual-fix
+authorization.
+
 ## Supersession — 2026-07-27 (post-PR #76)
 
 `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` is the **single first-read
