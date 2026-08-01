@@ -6707,7 +6707,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               key: const Key('act0_shell_feedback_continue_cta'),
               onPressed: onContinue,
               style: Act0ShellTokensV1.premiumActionButtonStyle(
-                height: pinsF1FeedbackCta
+                height: usesSharedAccessibilitySurface
                     ? 48
                     : isCompactRefinedFeedback
                     ? 44
@@ -6729,6 +6729,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                               ? 'Try this spot again'
                               : 'Try same clue'
                         : 'Next hand'),
+                maxLines: 1,
+                overflow: TextOverflow.fade,
               ),
             ),
           ),
@@ -6954,10 +6956,18 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                 ],
                 if (showProofStack) ...[
                   SizedBox(height: isCompactRefinedFeedback ? 4 : 8),
-                  Column(
-                    key: const Key('act0_shell_feedback_proof_stack'),
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: usesSharedAccessibilitySurface ? 64 : 10000,
+                    ),
+                    child: SingleChildScrollView(
+                      key: const Key('act0_shell_feedback_proof_stack_scroll'),
+                      primary: false,
+                      physics: const ClampingScrollPhysics(),
+                      child: Column(
+                        key: const Key('act0_shell_feedback_proof_stack'),
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
                       if (showActionContrast) ...[
                         _FeedbackActionContrastBlockV1(
                           actionLine: '$actionPrefix: $actionLabel',
@@ -7083,7 +7093,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                           compact: isCompactRefinedFeedback,
                         ),
                       ],
-                    ],
+                        ],
+                      ),
+                    ),
                   ),
                 ],
                 if (!rapidMode &&
@@ -7139,10 +7151,20 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   const SizedBox(height: 8),
                   const _FeedbackVerdictDividerV1(),
                   const SizedBox(height: 8),
-                  _RepairSystemProofBlockV1(
-                    cardKey: const Key('act0_shell_repair_result_system_card'),
-                    tone: Act0ShellTokensV1.primary,
-                    child: _FeedbackProofKeyWrapperV1(
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: usesSharedAccessibilitySurface ? 44 : 10000,
+                    ),
+                    child: SingleChildScrollView(
+                      key: const Key('act0_shell_feedback_receipt_scroll'),
+                      primary: false,
+                      physics: const ClampingScrollPhysics(),
+                      child: _RepairSystemProofBlockV1(
+                        cardKey: const Key(
+                          'act0_shell_repair_result_system_card',
+                        ),
+                        tone: Act0ShellTokensV1.primary,
+                        child: _FeedbackProofKeyWrapperV1(
                       proofKey: repairReceiptLine.isNotEmpty
                           ? const Key('act0_shell_repair_receipt_proof_block')
                           : hasRepairOutcomeProof
@@ -7214,6 +7236,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                               ),
                             ],
                           ],
+                        ),
+                      ),
                         ),
                       ),
                     ),

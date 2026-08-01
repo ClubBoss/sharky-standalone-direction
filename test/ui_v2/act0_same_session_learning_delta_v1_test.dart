@@ -420,7 +420,10 @@ void main() {
     );
     expect(runner.selectedTaskId, 'apply_recap');
     expect(runner.selectedTaskTitle, 'Discipline holds');
-    expect(find.text('Discipline holds'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_runner_action_dock')),
+      findsOneWidget,
+    );
   });
 
   testWidgets(
