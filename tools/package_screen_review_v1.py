@@ -146,8 +146,10 @@ SURFACE_GROUPS = {
         ("normal_three_option_decision", "Normal three-option decision"),
         ("correct_feedback", "Correct feedback"),
         ("normal_four_option_table_read", "Normal four-option table read"),
-        ("accessibility_evidence", "Accessibility table evidence"),
-        ("accessibility_answer", "Accessibility answer"),
+        ("long_copy_repair_feedback", "Long-copy repair feedback"),
+        ("direct_table_decision", "Accessibility table evidence"),
+        ("accessibility_feedback_after_answer", "Accessibility answer feedback"),
+        ("genuine_price_task_guidance", "Accessibility price guidance"),
     ),
     "review_return_v1": (
         ("review_list", "Review actionable item"),
@@ -179,7 +181,7 @@ def main(argv: list[str]) -> int:
     root = Path(__file__).resolve().parents[1]
     group = argv[2] if len(argv) >= 3 and argv[2] else DEFAULT_GROUP
     surface_group = _surface_group_key(group)
-    if surface_group not in SURFACE_GROUPS:
+    if surface_group not in SURFACE_GROUPS and group != "production_real_live":
         print(f"Unsupported screen review group: {group}", file=sys.stderr)
         return 64
 
@@ -195,7 +197,11 @@ def main(argv: list[str]) -> int:
 
     manifest = _load_manifest(output_dir)
     device = _device_from_manifest(manifest)
-    entries = _load_entries(output_dir, SURFACE_GROUPS[surface_group], device)
+    entries = (
+        _load_live_runner_entries(output_dir, device)
+        if group == "production_real_live"
+        else _load_entries(output_dir, SURFACE_GROUPS[surface_group], device)
+    )
     if not entries:
         print(f"No {device} Act0 screenshots found to package.", file=sys.stderr)
         return 1
@@ -246,7 +252,20 @@ def _load_entries(
     return entries
 
 
+def _load_live_runner_entries(output_dir: Path, device: str) -> list[tuple[str, str, Path]]:
+    prefix = f"{device}."
+    entries: list[tuple[str, str, Path]] = []
+    for path in sorted(output_dir.glob(f"{prefix}*.png")):
+        surface = path.name.removeprefix(prefix).removesuffix(".png")
+        entries.append((surface, surface.replace(".", " "), path))
+    return entries
+
+
 def _surface_group_key(group: str) -> str:
+    if group.startswith("presentation_closure_") and group.endswith("_v1"):
+        return "presentation_closure_v1"
+    if group.startswith("review_return_") and group.endswith("_v1"):
+        return "review_return_v1"
     for device in ("tablet", "tall_phone", "large_phone", "iphone17_class"):
         suffix = f"_{device}_fast"
         if group.endswith(suffix):
@@ -389,7 +408,10 @@ def _audit_policy_metadata(group: str) -> dict[str, object]:
 
 
 def _source_command(group: str) -> str:
-    for device in ("tablet", "tall_phone", "large_phone"):
+    if group.startswith("presentation_closure_") and group.endswith("_v1"):
+        device = group.removeprefix("presentation_closure_").removesuffix("_v1")
+        return f"./tools/screen_review_fast_v1.sh presentation_closure {device}"
+    for device in ("tablet", "tall_phone", "large_phone", "iphone17_class"):
         suffix = f"_{device}_fast"
         if group.endswith(suffix):
             base = group.replace(suffix, "")
@@ -414,6 +436,8 @@ def _source_command(group: str) -> str:
         return "./tools/screen_review_fast_v1.sh active_route_w7_w12 compact"
     if group == "w2_fast":
         return "./tools/screen_review_fast_v1.sh w2 compact"
+    if group == "production_real_live":
+        return "./tools/screen_review_fast_v1.sh production_real_live compact"
     return f"./tools/screen_review_v1.sh {group} compact"
 
 
