@@ -343,10 +343,18 @@ act0FirstValueSameSignalRepMappingV1({
         );
       case 'w4_protection_check':
         return target('world_4', 'protection_and_denial', 'w4_protection_bet');
-      case 'w5_dry_board':
-        return target('world_5', 'board_texture_basics', 'w5_wet_board');
-      case 'w5_wet_board':
-        return target('world_5', 'board_texture_basics', 'w5_dry_board');
+      case 'board_texture_basics_w5_dry_board':
+        return target(
+          'world_5',
+          'board_texture_basics',
+          'board_texture_basics_w5_wet_board',
+        );
+      case 'board_texture_basics_w5_wet_board':
+        return target(
+          'world_5',
+          'board_texture_basics',
+          'board_texture_basics_w5_dry_board',
+        );
       case 'w5_disconnected_board':
         return target('world_5', 'connected_boards', 'w5_connected_board');
       case 'w5_connected_board':
@@ -4176,7 +4184,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final terminalOnlyRepairBridge =
         outcome.skillId == Act0PositionPersonalizationV1.skillId ||
         outcome.skillId == Act0PricePersonalizationV1.skillId ||
-        outcome.skillId == Act0StartingHandPersonalizationV1.skillId;
+        outcome.skillId == Act0StartingHandPersonalizationV1.skillId ||
+        outcome.skillId == Act0BoardTexturePersonalizationV1.skillId;
     if (!outcome.isMeaningful &&
         terminalOnlyRepairBridge &&
         !_learningRunProductionLearnVisitV1) {

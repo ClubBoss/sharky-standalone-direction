@@ -4,8 +4,12 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.d
 class Act0BoardTexturePersonalizationV1 {
   static const String worldId = 'world_5';
   static const String lessonId = 'board_texture_basics';
-  static const String sourceTaskId = 'w5_dry_board';
-  static const String repairTaskId = 'w5_wet_board';
+  // `board_texture_basics` composes its tasks through the lesson-prefixing
+  // builder, so the runtime task identity carries the lesson prefix. The
+  // admission contract must name that runtime identity, the same way the W2
+  // repair task is named `continue_or_let_go_medium_call_or_fold`.
+  static const String sourceTaskId = 'board_texture_basics_w5_dry_board';
+  static const String repairTaskId = 'board_texture_basics_w5_wet_board';
   static const String errorType = 'misread_board_texture';
   static const String skillId = 'board_read';
   static const String missedSignalId = 'board_cards';
