@@ -1,18 +1,64 @@
 {
+  "atlas_tooling_baseline_sha": "acd04549cb6c7c68558c6578d134ae08f381d4d4",
+  "deployment_branch": "gh-pages",
+  "deployment_commit": null,
   "deployment_provider": "GitHub Pages",
-  "evidence_baseline_sha": "6268f114ceb668664ded65290d2aae459be10b75",
-  "file_count": 278,
+  "eid_tooling_baseline_sha": "29ea21b1c23da1fa398333ec4eaaa067467349e8",
+  "file_count": 281,
   "final_main_sha": "acd04549cb6c7c68558c6578d134ae08f381d4d4",
-  "generated_at_utc": "2026-08-01T22:31:44.907286+00:00",
+  "generated_at_utc": "2026-08-01T22:49:15.506436+00:00",
+  "hotfix_candidate_sha": "c39e263346ba563671bbf72f4634b69c2f38027c",
   "hotfix_merge_sha": "acd04549cb6c7c68558c6578d134ae08f381d4d4",
+  "hotfix_pr": 126,
+  "product_evidence_baseline_sha": "b7db47a3145ba8653b90403a9aa48538c378cdb7",
   "repository": "ClubBoss/sharky-standalone-direction",
-  "review_pack_sha256": "2efbada1bfb2f9eb5a6b1f395aef59674025984e3450c51ea4d99232d98cf0f8",
+  "review_pack_sha256": "a79d3ef6a26dc6092f467eb9be7f8fff6a8a30919208256cbdc6ec61ecdca810",
   "schema": "PUBLICATION_MANIFEST_V1",
   "sha256_inventory": [
     {
-      "bytes": 571,
-      "path": "index.html",
-      "sha256": "0c2d539032bf01fbeed28bfd1d1406102ae3bada8b37959649d19145c17b61f5"
+      "bytes": 10,
+      "path": ".nojekyll",
+      "sha256": "9e8143a820e13296b93d73f17df72c52e847a3d7b91f6f60aae52c8e4172f920"
+    },
+    {
+      "bytes": 1165,
+      "path": "assets/app.css",
+      "sha256": "c8cf6093882203a12c6f132cd053430fe6c46b325d5a0665eee9c41b3a677005"
+    },
+    {
+      "bytes": 3645,
+      "path": "assets/app.js",
+      "sha256": "577b00b2522078e1eb3ad228109f6599b2a655088967db09f9442db3f89dbb9c"
+    },
+    {
+      "bytes": 529730,
+      "path": "data/atlas.json",
+      "sha256": "aa27728e41cf88e600e6b3dca5628813066f50757ffdfef31428b00bcf04ad25"
+    },
+    {
+      "bytes": 160506,
+      "path": "data/coverage.json",
+      "sha256": "d9c9a4559a082de881565fb49884bd51790ff8a3a2115c539ec8ebac7db48038"
+    },
+    {
+      "bytes": 365075,
+      "path": "data/evidence_manifest.json",
+      "sha256": "d6b3f1bf0eb8861cbf7785d7f898eb2eba462f8de890fe1abb5075a10456ff0a"
+    },
+    {
+      "bytes": 383452,
+      "path": "data/runtime_discovery.json",
+      "sha256": "c27b94de1bc7cb3ffd0bc7496cdd8824d556f2e1583fb609234bc814b6979bc8"
+    },
+    {
+      "bytes": 647,
+      "path": "data/site_version.json",
+      "sha256": "e84fc6032284126661bda4f560790a579ed5a68866da2b25f987acc4b9da0c29"
+    },
+    {
+      "bytes": 18628,
+      "path": "data/transitions.json",
+      "sha256": "9fa8b5fdc64c361cf289084608a79e82173991e8d60a4d97fd3567cd911fe02d"
     },
     {
       "bytes": 268472,
@@ -1365,39 +1411,9 @@
       "sha256": "07d1ff04fea7a379289775fee2285e04a0e04d8b9374af903804a50f2069da9a"
     },
     {
-      "bytes": 529730,
-      "path": "data/atlas.json",
-      "sha256": "aa27728e41cf88e600e6b3dca5628813066f50757ffdfef31428b00bcf04ad25"
-    },
-    {
-      "bytes": 160506,
-      "path": "data/coverage.json",
-      "sha256": "d9c9a4559a082de881565fb49884bd51790ff8a3a2115c539ec8ebac7db48038"
-    },
-    {
-      "bytes": 365075,
-      "path": "data/evidence_manifest.json",
-      "sha256": "d6b3f1bf0eb8861cbf7785d7f898eb2eba462f8de890fe1abb5075a10456ff0a"
-    },
-    {
-      "bytes": 647,
-      "path": "data/site_version.json",
-      "sha256": "dcc8ba594c3ff4b1fad5c02c902f12c8749c45440a7c4545229f62a9c5306d7d"
-    },
-    {
-      "bytes": 18628,
-      "path": "data/transitions.json",
-      "sha256": "9fa8b5fdc64c361cf289084608a79e82173991e8d60a4d97fd3567cd911fe02d"
-    },
-    {
-      "bytes": 1165,
-      "path": "assets/app.css",
-      "sha256": "c8cf6093882203a12c6f132cd053430fe6c46b325d5a0665eee9c41b3a677005"
-    },
-    {
-      "bytes": 3645,
-      "path": "assets/app.js",
-      "sha256": "577b00b2522078e1eb3ad228109f6599b2a655088967db09f9442db3f89dbb9c"
+      "bytes": 571,
+      "path": "index.html",
+      "sha256": "0c2d539032bf01fbeed28bfd1d1406102ae3bada8b37959649d19145c17b61f5"
     }
   ],
   "site_version": {
@@ -1405,7 +1421,7 @@
     "complete_hosted_asset_count": 135,
     "evidence_baseline_sha": "b7db47a3145ba8653b90403a9aa48538c378cdb7",
     "expected_hosted_asset_count": 135,
-    "generated_at": "2026-08-01T22:31:09.068702+00:00",
+    "generated_at": "2026-08-01T22:47:50.934175+00:00",
     "registry_schema": "visual_state_atlas_registry_v2",
     "release_failing_gap_count": 304,
     "runtime_discovery_schema": "act0_visual_state_discovery_v2",
@@ -1415,6 +1431,6 @@
     "unique_surface_count": 89,
     "unique_visual_contract_count": 89
   },
-  "statement": "This is a non-canonical static review mirror; canonical truth remains repository source and evidence.",
-  "total_bytes": 54744773
+  "statement": "Non-canonical public review mirror. Canonical authority remains repository source, source-owned evidence identities, canonical v3 evidence, and final origin/main.",
+  "total_byte_size": 55128235
 }
