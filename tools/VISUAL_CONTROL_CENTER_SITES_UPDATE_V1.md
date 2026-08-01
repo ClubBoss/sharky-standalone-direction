@@ -9,14 +9,24 @@ SSOT.
 From the repository root:
 
 ```bash
-dart run tools/act0_visual_state_discovery_v1.dart --output=output/visual_control_center/current/runtime_discovery.json
-python3 tools/build_visual_control_center_v1.py --discovery=output/visual_control_center/current/runtime_discovery.json
 ./tools/serve_visual_control_center_v1.sh
 ```
 
 Open `http://127.0.0.1:4173`, check the evidence and tooling baselines in the
 header, then stop the server with Ctrl-C. The generated `output/` bundle is
 local-only and must not be committed.
+
+The canonical local evidence input is
+`output/visual_control_center/evidence/current/`. To use a different prepared
+local evidence set, pass `--evidence=<path>`; `--no-watch` disables polling and
+`--port=<port>` changes the local port. The wrapper runs typed discovery and
+rebuilds before serving, then polls the registry, discovery tool, and evidence
+input for changes. Each rebuild updates `site_version.json` for browser reload.
+
+The rebuild also writes the upload-ready local review package at
+`output/visual_control_center/current/review_export/SHARKY_VISUAL_REVIEW_PACK_V1.zip`.
+It contains only explicitly mapped full-resolution representatives; uncovered
+states remain explicit missing records rather than receiving filename fallback.
 
 ## Mirror lifecycle
 
