@@ -123,6 +123,19 @@ void main() {
         builderSource,
         isNot(contains('inventory_id.toLowerCase().includes')),
       );
+      final serverSource = File(
+        'tools/serve_visual_control_center_v1.sh',
+      ).readAsStringSync();
+      expect(
+        serverSource,
+        contains('VISUAL_EVIDENCE_IDENTITY_MANIFEST_V1.json'),
+      );
+      expect(serverSource, isNot(contains('MASTER_MANIFEST.json')));
+      expect(serverSource, contains('terminate_and_reap'));
+      expect(
+        serverSource,
+        contains('output/visual_control_center/evidence/current'),
+      );
       final version =
           jsonDecode(
                 File('$siteRoot/data/site_version.json').readAsStringSync(),
