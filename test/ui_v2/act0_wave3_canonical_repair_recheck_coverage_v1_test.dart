@@ -61,6 +61,49 @@ void main() {
       expect(target?.mappingType, 'repair');
     });
 
+    test(
+      'W5 connected-board misses use prefixed production task identities',
+      () {
+        final connectedBoards = Act0ShellStateV1.sample
+            .worldById('world_5')
+            .lessons
+            .firstWhere((lesson) => lesson.lessonId == 'connected_boards');
+        final taskIds = connectedBoards.taskList
+            .map((task) => task.taskId)
+            .toSet();
+        const disconnected = 'connected_boards_w5_disconnected_board';
+        const connected = 'connected_boards_w5_connected_board';
+
+        expect(taskIds, containsAll(<String>{disconnected, connected}));
+        expect(taskIds, isNot(contains('w5_disconnected_board')));
+        expect(taskIds, isNot(contains('w5_connected_board')));
+
+        final disconnectedTarget = act0FirstValueSameSignalRepMappingV1(
+          nextRepId: 'repeat_board_read',
+          skillAtomId: 'board_read',
+          sourceSignalId: 'board_cards',
+          sourceTaskId: disconnected,
+          receiptOutcome: 'repair_started',
+        );
+        final connectedTarget = act0FirstValueSameSignalRepMappingV1(
+          nextRepId: 'repeat_board_read',
+          skillAtomId: 'board_read',
+          sourceSignalId: 'board_cards',
+          sourceTaskId: connected,
+          receiptOutcome: 'repair_started',
+        );
+
+        expect(disconnectedTarget?.worldId, 'world_5');
+        expect(disconnectedTarget?.lessonId, 'connected_boards');
+        expect(disconnectedTarget?.taskId, connected);
+        expect(disconnectedTarget?.mappingType, 'repair');
+        expect(connectedTarget?.worldId, 'world_5');
+        expect(connectedTarget?.lessonId, 'connected_boards');
+        expect(connectedTarget?.taskId, disconnected);
+        expect(connectedTarget?.mappingType, 'repair');
+      },
+    );
+
     test('W6 range-bucket and action misses map inside canonical W6', () {
       final bucketTarget = act0FirstValueSameSignalRepMappingV1(
         nextRepId: 'repeat_table_read',
