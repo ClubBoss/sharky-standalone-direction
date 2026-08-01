@@ -31,6 +31,7 @@ void main() {
       expect(capture, contains("'review_return'"));
       expect(capture, contains("'sharky_evidence': <_CaptureSurfaceV1>["));
       expect(capture, contains('captureSharkyState'));
+      expect(capture, contains('warmSharkyAsset'));
       expect(capture, contains("'review_full_shell_authority'"));
       expect(
         capture,
@@ -65,6 +66,15 @@ void main() {
       );
       expect(packager, contains('_load_live_runner_entries'));
       expect(shell, contains('current production_real_live'));
+      expect(shell, contains(r'modifier="${3:-none}"'));
+      expect(shell, contains(r'"$device" "$modifier"'));
+      final production = File(
+        'tools/act0_production_real_runner_capture_v1.dart',
+      ).readAsStringSync();
+      expect(production, contains('MaterialIcons'));
+      expect(production, contains('WidgetStatePropertyAll(realTextStyle)'));
+      expect(production, contains('writeTextRepairOverlays'));
+      expect(shell, contains('screen_review_fast_text_repair_v1.py'));
       expect(
         textRepair,
         contains(

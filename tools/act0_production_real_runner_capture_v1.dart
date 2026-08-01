@@ -153,7 +153,13 @@ void main(List<String> args) async {
   final device = args.first;
   final modifier = args.length == 2 ? args[1] : 'none';
   final packet = 'live_runner_${device}_${modifier}_v1';
-  final output = Directory('$_outputRoot/$packet')..createSync(recursive: true);
+  final output = Directory('$_outputRoot/$packet');
+  // This command owns exactly one deterministic lane. Clear only that lane so
+  // a changed seed set cannot leave stale screenshots in its manifest/package.
+  if (output.existsSync()) {
+    output.deleteSync(recursive: true);
+  }
+  output.createSync(recursive: true);
   final temp = Directory.systemTemp.createTempSync('act0_live_runner_capture_');
   final test = File('${temp.path}/capture_test.dart');
   test.writeAsStringSync(_testSource(output.path, device, modifier));
@@ -254,7 +260,62 @@ void main() {
       await (FontLoader(family)..addFont(Future<ByteData>.value(ByteData.sublistView(bytes)))).load();
     }
   }
-  setUpAll(loadFont);
+  Future<void> loadFontFamily(String family, String path) async {
+    final bytes = await File(path).readAsBytes();
+    await (FontLoader(family)
+          ..addFont(Future<ByteData>.value(ByteData.sublistView(bytes))))
+        .load();
+  }
+  Future<void> loadIconFonts() async {
+    const candidates = <(String, String)>[
+      ('MaterialIcons', 'build/unit_test_assets/fonts/MaterialIcons-Regular.otf'),
+      ('CupertinoIcons', 'build/unit_test_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf'),
+      ('MaterialIcons', 'build/flutter_assets/fonts/MaterialIcons-Regular.otf'),
+      ('CupertinoIcons', 'build/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf'),
+    ];
+    final loaded = <String>{};
+    for (final candidate in candidates) {
+      if (loaded.contains(candidate.\$1) || !File(candidate.\$2).existsSync()) continue;
+      await loadFontFamily(candidate.\$1, candidate.\$2);
+      loaded.add(candidate.\$1);
+    }
+    if (!loaded.contains('MaterialIcons')) throw StateError('No local MaterialIcons font found.');
+  }
+  String colorToHex(Color color) {
+    final alpha = (color.a * 255).round().clamp(0, 255);
+    final red = (color.r * 255).round().clamp(0, 255);
+    final green = (color.g * 255).round().clamp(0, 255);
+    final blue = (color.b * 255).round().clamp(0, 255);
+    return '#'
+        '\${alpha.toRadixString(16).padLeft(2, '0')}'
+        '\${red.toRadixString(16).padLeft(2, '0')}'
+        '\${green.toRadixString(16).padLeft(2, '0')}'
+        '\${blue.toRadixString(16).padLeft(2, '0')}';
+  }
+  void writeTextRepairOverlays(WidgetTester tester, String pngPath) {
+    final overlays = <Map<String, Object?>>[];
+    for (final element in find.byType(Text).evaluate()) {
+      final widget = element.widget;
+      if (widget is! Text) continue;
+      final text = widget.data ?? widget.textSpan?.toPlainText() ?? '';
+      if (text.trim().isEmpty) continue;
+      final inherited = DefaultTextStyle.of(element).style;
+      final explicit = widget.style;
+      if (inherited.fontFamily != null || explicit?.fontFamily != null) continue;
+      final box = element.renderObject;
+      if (box is! RenderBox || !box.hasSize) continue;
+      final origin = box.localToGlobal(Offset.zero);
+      overlays.add(<String, Object?>{
+        'text': text, 'left': origin.dx, 'top': origin.dy,
+        'width': box.size.width, 'height': box.size.height,
+        'fontSize': explicit?.fontSize ?? inherited.fontSize ?? 14,
+        'fontWeight': (explicit?.fontWeight ?? inherited.fontWeight ?? FontWeight.w400).value,
+        'color': colorToHex(explicit?.color ?? inherited.color ?? Colors.white),
+      });
+    }
+    File(pngPath + '.text_overlays.json').writeAsStringSync(jsonEncode(overlays));
+  }
+  setUpAll(() async { await loadFont(); await loadIconFonts(); });
   testWidgets('captures direct production runner seeds', (tester) async {
     if (modifier == 'reduced_motion') {
       (WidgetsBinding.instance.platformDispatcher as TestPlatformDispatcher)
@@ -290,12 +351,15 @@ void main() {
       );
       tester.view.physicalSize = viewports[device]!;
       tester.view.devicePixelRatio = 1;
-      await tester.pumpWidget(MaterialApp(theme: ThemeData(fontFamily: 'Roboto'), home: MediaQuery(data: MediaQueryData(size: viewports[device]!, textScaler: modifier == 'text_scale_1_4' ? const TextScaler.linear(1.4) : const TextScaler.linear(1)), child: Scaffold(backgroundColor: const Color(0xFF070B12), body: RepaintBoundary(key: const Key('capture'), child: Act0LessonRunnerShellV1(runner: runner, selectedWorldId: seed['world_id'] as String, selectedLessonId: seed['lesson_id'] as String, selectedTaskId: seed['task_id'] as String, selectedTaskFamily: task.resolvedTaskFamily, tablePresentation: task.tablePresentation, onBack: () {}, onContinueTheory: () {}, onChooseOption: (_) {}, onContinueReview: () {}))))));
+      const realTextStyle = TextStyle(fontFamily: 'Roboto');
+      await tester.pumpWidget(MaterialApp(theme: ThemeData(fontFamily: 'Roboto', filledButtonTheme: FilledButtonThemeData(style: ButtonStyle(textStyle: WidgetStatePropertyAll(realTextStyle))), outlinedButtonTheme: OutlinedButtonThemeData(style: ButtonStyle(textStyle: WidgetStatePropertyAll(realTextStyle))), textButtonTheme: TextButtonThemeData(style: ButtonStyle(textStyle: WidgetStatePropertyAll(realTextStyle)))), home: MediaQuery(data: MediaQueryData(size: viewports[device]!, textScaler: modifier == 'text_scale_1_4' ? const TextScaler.linear(1.4) : const TextScaler.linear(1)), child: Scaffold(backgroundColor: const Color(0xFF070B12), body: RepaintBoundary(key: const Key('capture'), child: Act0LessonRunnerShellV1(runner: runner, selectedWorldId: seed['world_id'] as String, selectedLessonId: seed['lesson_id'] as String, selectedTaskId: seed['task_id'] as String, selectedTaskFamily: task.resolvedTaskFamily, tablePresentation: task.tablePresentation, onBack: () {}, onContinueTheory: () {}, onChooseOption: (_) {}, onContinueReview: () {}))))));
       await tester.pump(); await tester.pump(const Duration(milliseconds: 500));
+      final pngPath = outputPath + '/' + device + '.' + (seed['visual_state_id'] as String) + '.png';
+      writeTextRepairOverlays(tester, pngPath);
       final boundary = tester.renderObject<RenderRepaintBoundary>(find.byKey(const Key('capture')));
       final data = await tester.runAsync(() async => (await boundary.toImage(pixelRatio: 2)).toByteData(format: ui.ImageByteFormat.png));
       if (data == null) throw StateError('Unable to capture '+(seed['visual_state_id'] as String));
-      File(outputPath + '/' + device + '.' + (seed['visual_state_id'] as String) + '.png').writeAsBytesSync(Uint8List.view(data.buffer));
+      File(pngPath).writeAsBytesSync(Uint8List.view(data.buffer));
     }
     $calls
   });
