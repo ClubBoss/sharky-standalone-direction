@@ -9,15 +9,15 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical HEAD | `ca15cd46bfac6a67d18f7acfc66ec6ea57fe5011` (PR #94, Active-Route Visual Reality reconciliation publication). |
-| Authority freshness | PR #94 reconciled the VRT-02 route/capture truth. Production-real Visual Master Audit baseline acquisition is the active evidence-only capability; the prior shared-contract proposal remains a candidate, not executed. |
+| Canonical HEAD | `6726bc017384fde1ad8e6ef1625f2f5e222cc142` (PR #122, Visual State Atlas foundation). This publication PR supersedes the baseline only when normally merged. |
+| Authority freshness | **RECONCILED — `STALE_CURRENT_EXECUTION_DISPATCH`.** The former PR #94 / production-real Visual Reality dispatch predates PR #121 and PR #122 and is historical evidence, not current authorization. |
 | Campaign version | v1 |
 | Corridor | **`ROLLING_CORRIDOR_PHP6_TO_PHP8_V1`** — **CLOSED/HISTORICAL.** PHP-6, PHP-7, and PHP-8 are terminally closed and published (PR #85). The corridor is not reopened; its wave-by-wave authorization language below is historical record only. PHP-9 remains `NOT_PREAUTHORIZED`. |
-| Umbrella stage | **Pre-Human Node 6 — Active-Route Visual Reality Corridor, Wave A authorized (lesson-runner composition foundation); Wave B/C conditionally preauthorized; Wave V3 (Sharky) remains gated behind Wave B+owner acceptance+SHK-CREST-01.** |
-| Active sub-packet | **Production-real Visual Master Audit baseline acquisition — evidence tooling and temporary review transport only; no product composition contract implementation.** |
-| Status | **ACTIVE — production-real baseline acquisition is authorized. Final operating model awaits independent Visual Master Audit. PHP-9 remains NOT_PREAUTHORIZED; Human remains NOT AUTHORIZED.** |
-| Latest admitted PR | **#93** — Wave V2 terminal publication, merge `20b7cc8d58f4ea9f9593adbbb37ed4757f358ed6`; this corridor's own publication PR/SHA recorded at merge. |
-| Owner visual directives | **VISUAL_SYSTEM_COMPLETENESS: NOT CLOSED** — VRT-02 (owner actual-device evidence) proved the dead-space/weak-vertical-allocation root cause Wave V1 named as S1 repeats in a 3rd independently-owned owner family (lesson-runner shared-allocation action dock), crossing the pre-declared 3+ threshold, plus two related defect classes (seat interaction-affordance, table/instruction visual-island separation) in the same owner family. **VISUAL_COMPLETION_OPERATING_MODEL: reselected — shared vertical-allocation + interaction-affordance contract**, scoped to the lesson-runner composition layer only (not a full app-wide shared shell), per `PRE_HUMAN_ACTIVE_ROUTE_VISUAL_REALITY_AND_CORRIDOR_v1.md` §5-6. **VISUAL_STATE_ACQUISITION_OPERATING_MODEL: gap identified** — lane #1's table-read/table-decision surfaces render only synthetic placement fixtures, never live campaign-pack drill/practice runners (`CAPTURE_COVERAGE_GAP` + `MANIFEST_CLASSIFICATION_GAP`); Wave B adds a lane-#1 group for representative live drill runners. None of this authorizes broad redesign beyond the lesson-runner owner family, Modern Table changes, or new Sharky art; Wave A is the next legal capability, authorized by this corridor's dispatch. |
+| Umbrella stage | **Visual evidence audit/regression closure — source identity, Atlas truth, then independent review.** |
+| Active sub-packet | **EID-1 — Source-Owned Visual Evidence Identity Authority v1.** |
+| Status | **ACTIVE — EID-1 is the sole active implementation packet. VAT-1 is conditional; no product-fix wave is preauthorized.** |
+| Latest admitted PR | **#122** — Visual State Atlas foundation, merge `6726bc017384fde1ad8e6ef1625f2f5e222cc142`. |
+| Owner visual directives | **Execute EID-1 → VAT-1 → independent visual review → finite `VISUAL_CLOSURE_LEDGER`; admit only evidence-backed, high-EV product fixes afterward.** EID-1 permits source-owned screenshot/capture tooling, exact state/task/contract sidecars, hash-bound evidence identity, an aggregate identity manifest, an identity-complete v3 bundle, and directly owning guards only. |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **PARTIALLY CLOSED IN PHP-3** — six PHP-3-owned unique current guards are current-contract reconciled and Tier-B ledgered; four differently owned unresolved-unique files remain. |
 | F-18 | **STALE_TEST** — exact pre-F-16-to-head trail disproves PR #51/#52 causation; owner is compact-decision test fixture / retired teaching-step assertion |
@@ -29,14 +29,24 @@ here; update only the fields below.
 | PHP-3 admitted carriers | **23 candidate** |
 | PHP-3 unresolved carriers | **59 candidate** |
 | PHP-3 nine-path residual | **59 candidate** |
-| Recommended next packet | **Wave A of the Active-Route Visual Reality Corridor (lesson-runner composition foundation). Wave V3 (Sharky) remains gated behind that corridor's Wave B. PHP-9 is not the next packet.** |
-| Next authorization | **Wave A auto-authorized by this dispatch. Wave B conditionally preauthorized per corridor entry gates. Wave V3/Sharky remains gated; PHP-9 remains NOT_PREAUTHORIZED; Human Novice Proof remains NOT AUTHORIZED.** |
-| Autonomous window | **OPEN — Wave A of the Active-Route Visual Reality Corridor, per its own entry gate and stop rule.** |
+| Recommended next packet | **EID-1** — source-owned visual evidence identity only. |
+| Next authorization | **EID-1 ACTIVE. VAT-1 conditionally preauthorized only after EID-1 normally merges and its identity-complete bundle validates; independent visual review follows VAT-1.** |
+| Autonomous window | **One EID-1 tooling/evidence PR; then VAT-1 only on its explicit merge-and-validation entry gate. No product-fix wave is preauthorized.** |
 | Human Proof | **NOT AUTHORIZED** |
+| PHP-9 | **NOT_PREAUTHORIZED** |
+| Modern Table | **Maintenance Mode** |
 | `PRE_HUMAN_READY` | **NOT MET** |
 | `HUMAN_PROVEN_10_OF_10_CANDIDATE` | **NOT MET** |
 
-## Historical canonical severity snapshot (at `52034abb`)
+## Superseded historical dispatch record
+
+The production-real baseline / Active-Route Visual Reality language below is
+retained only as historical evidence. This reconciliation does not authorize
+product UI, content, navigation, telemetry, Modern Table, Sharky art, unrelated
+visual guards, screenshot recapture as a design loop, Human Novice Proof, PHP-9,
+monetization, dependencies, or workspace cleanup.
+
+### Historical canonical severity snapshot (at `52034abb`)
 
 **HISTORICAL SNAPSHOT — NOT CURRENT DISPATCH AUTHORITY.** These preserved
 severity counts are not recalculated here and do not alter the PHP-5 dispatch.
@@ -53,7 +63,7 @@ severity counts are not recalculated here and do not alter the PHP-5 dispatch.
 Severity here is *contract significance*, not proven learner-visible impact.
 Product severity resolves in PHP-0.
 
-## Packet ledger
+### Packet ledger
 
 | Packet | Stage | Status |
 | --- | --- | --- |
@@ -71,6 +81,9 @@ Product severity resolves in PHP-0.
 | Wave V2 (visual completion corridor) | Node 6, corridor Wave 2 of 3 | **CLOSED_PROVEN — PR #91 dispatch `48bdf2ec`; PR #92 product/evidence `1da7d348`; terminal publication PR #93 `20b7cc8d`. `LOCAL_EQUIVALENT_RULE` repaired Review low-content bench and onboarding/welcome allocation without a shared shell, Modern Table, Sharky art, or a third owner. Retained as valid — not reopened.** |
 | Active-Route Visual Reality Corridor | Node 6, new 3-wave corridor | **Wave A AUTHORIZED, Wave B/C CONDITIONALLY PREAUTHORIZED — dispatch `docs/plan/PRE_HUMAN_ACTIVE_ROUTE_VISUAL_REALITY_AND_CORRIDOR_v1.md`, merge SHA recorded at this publication's merge. Reconciles VRT-02 owner evidence: dead-space root cause repeats in a 3rd independently-owned family (lesson-runner action dock), crossing the 3+ shared-shell-fallback threshold; scoped to the lesson-runner composition layer only.** |
 | PHP-9 `PRE_HUMAN_READY` Admission | — | NOT_PREAUTHORIZED — never auto-entered by the corridor, the visual completion strategy checkpoint, Wave V1, Wave V2, or this new corridor |
+| EID-1 Source-Owned Visual Evidence Identity Authority v1 | Visual evidence closure | **ACTIVE — no product/UI/content/navigation/telemetry implementation.** |
+| VAT-1 Visual State Atlas Truth Hardening v1 | Visual evidence closure | **CONDITIONALLY PREAUTHORIZED — only after EID-1 normal merge and identity-complete bundle validation.** |
+| Independent visual review + `VISUAL_CLOSURE_LEDGER` | Visual evidence closure | **FOLLOWS VAT-1 — no visual-fix wave preauthorized.** |
 
 PR targets: Node 5 ≈ **4–7**; full machine horizon ≈ **8–12**; **16 is a hard
 emergency ceiling, never a target.**
