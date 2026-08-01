@@ -21,9 +21,25 @@ void main() {
       final registry = jsonDecode(File(registryPath).readAsStringSync()) as Map;
       final discovery =
           jsonDecode(File(discoveryPath).readAsStringSync()) as Map;
-      expect(registry['schema'], 'visual_state_atlas_registry_v1');
-      expect(discovery['schema'], 'act0_visual_state_discovery_v1');
+      expect(registry['schema'], 'visual_state_atlas_registry_v2');
+      expect(discovery['schema'], 'act0_visual_state_discovery_v2');
       expect((discovery['tasks'] as List).isNotEmpty, isTrue);
+      final secondPath = '$siteRoot/data/second_runtime_discovery.json';
+      final secondExport = await Process.run('dart', <String>[
+        'run',
+        'tools/act0_visual_state_discovery_v1.dart',
+        '--output=$secondPath',
+      ]);
+      expect(
+        secondExport.exitCode,
+        0,
+        reason: '${secondExport.stdout}\n${secondExport.stderr}',
+      );
+      final second = jsonDecode(File(secondPath).readAsStringSync()) as Map;
+      expect(
+        (discovery['tasks'] as List).map((task) => task['task_id']).toSet(),
+        (second['tasks'] as List).map((task) => task['task_id']).toSet(),
+      );
       final build = await Process.run('python3', <String>[
         'tools/build_visual_control_center_v1.py',
         '--discovery=$discoveryPath',
@@ -55,6 +71,15 @@ void main() {
           (record) => record['status'] == 'UNKNOWN_UNMAPPED',
         ),
         isEmpty,
+      );
+      final synthetic = (coverage['records'] as List).where(
+        (record) => record['state_id'] == 'synthetic.unmatched.contract',
+      );
+      expect(
+        synthetic,
+        isEmpty,
+        reason:
+            'Synthetic contracts are never matched by fallback; the builder only accepts explicit metadata or mappings.',
       );
       expect(
         (coverage['records'] as List).where(
@@ -89,6 +114,15 @@ void main() {
         );
       }
       expect(index, contains('HOSTED SNAPSHOT'));
+      final builderSource = File(
+        'tools/build_visual_control_center_v1.py',
+      ).readAsStringSync();
+      expect(builderSource, isNot(contains('/private/tmp')));
+      expect(builderSource, isNot(contains('evidence.images[0]')));
+      expect(
+        builderSource,
+        isNot(contains('inventory_id.toLowerCase().includes')),
+      );
       final version =
           jsonDecode(
                 File('$siteRoot/data/site_version.json').readAsStringSync(),
