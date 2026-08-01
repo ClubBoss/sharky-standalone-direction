@@ -15902,6 +15902,7 @@ final _world5DryBoardRunner = _world5TextureIntroRunner.copyWith(
       label: 'Dry',
       isCorrect: true,
       preferredLabel: 'Dry',
+      repairFocusCardIds: <String>['board_0', 'board_1', 'board_2'],
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Sharp read.',
       feedbackReason: 'Spread ranks and mixed suits make this a dry board.',
@@ -15912,6 +15913,7 @@ final _world5DryBoardRunner = _world5TextureIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Dry',
       betterAnswerLabel: 'Dry',
+      repairFocusCardIds: <String>['board_0', 'board_1', 'board_2'],
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Close call.',
       feedbackReason: 'Wet boards show more connected ranks or suit pressure.',
@@ -15930,6 +15932,7 @@ final _world5WetBoardRunner = _world5TextureIntroRunner.copyWith(
       label: 'Wet',
       isCorrect: true,
       preferredLabel: 'Wet',
+      repairFocusCardIds: <String>['board_0', 'board_1', 'board_2'],
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong choice.',
       feedbackReason:
@@ -15941,6 +15944,7 @@ final _world5WetBoardRunner = _world5TextureIntroRunner.copyWith(
       isCorrect: false,
       preferredLabel: 'Wet',
       betterAnswerLabel: 'Wet',
+      repairFocusCardIds: <String>['board_0', 'board_1', 'board_2'],
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Nearly there.',
       feedbackReason:

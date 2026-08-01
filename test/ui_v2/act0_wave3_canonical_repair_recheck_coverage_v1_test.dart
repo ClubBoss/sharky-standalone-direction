@@ -51,13 +51,13 @@ void main() {
         nextRepId: 'repeat_board_read',
         skillAtomId: 'board_read',
         sourceSignalId: 'board_cards',
-        sourceTaskId: 'w5_wet_board',
+        sourceTaskId: 'board_texture_basics_w5_wet_board',
         receiptOutcome: 'repair_started',
       );
 
       expect(target?.worldId, 'world_5');
       expect(target?.lessonId, 'board_texture_basics');
-      expect(target?.taskId, 'w5_dry_board');
+      expect(target?.taskId, 'board_texture_basics_w5_dry_board');
       expect(target?.mappingType, 'repair');
     });
 
@@ -148,17 +148,17 @@ void main() {
         final intent = _intentFor(
           sourceWorldId: 'world_5',
           sourceLessonId: 'board_texture_basics',
-          sourceTaskId: 'w5_dry_board',
+          sourceTaskId: 'board_texture_basics_w5_dry_board',
           runner: _runnerForBoardRead(),
         );
 
         expect(intent?.sourceWorldId, 'world_5');
-        expect(intent?.sourceTaskId, 'w5_dry_board');
+        expect(intent?.sourceTaskId, 'board_texture_basics_w5_dry_board');
         expect(intent?.missedSignalId, 'board_cards');
         expect(intent?.skillAtomId, 'board_read');
         expect(intent?.targetWorldId, 'world_5');
         expect(intent?.targetLessonId, 'board_texture_basics');
-        expect(intent?.targetTaskId, 'w5_wet_board');
+        expect(intent?.targetTaskId, 'board_texture_basics_w5_wet_board');
       },
     );
 
