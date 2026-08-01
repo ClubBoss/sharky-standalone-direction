@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import sys
 from collections import Counter
 from pathlib import Path
@@ -37,6 +38,17 @@ def main(argv: list[str]) -> int:
             continue
         repaired += _repair_png(png, overlay)
         overlay.unlink(missing_ok=True)
+
+    # This final real-text rendering step changes PNG bytes. Refresh only the
+    # capture-owner sidecar hashes; it never assigns or derives an identity.
+    sidecar = output_dir / "visual_evidence_identity_v1.json"
+    if sidecar.exists():
+        payload = json.loads(sidecar.read_text(encoding="utf-8"))
+        for record in payload.get("records", []):
+            relative = record.get("relative_png_path")
+            if isinstance(relative, str) and (output_dir / relative).exists():
+                record["png_sha256"] = hashlib.sha256((output_dir / relative).read_bytes()).hexdigest()
+        sidecar.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
     print(f"screen_review_fast_text_repair_v1: repaired {repaired} labels")
     return 0

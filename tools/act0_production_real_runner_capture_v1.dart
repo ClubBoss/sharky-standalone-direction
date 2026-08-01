@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:collection';
 import 'dart:io';
 
 /// Captures deterministic states from the active Act0 content graph.
@@ -8,6 +9,8 @@ import 'dart:io';
 /// [Act0ShellStateV1.sample] inside the generated test.  The harness is only a
 /// screenshot transport; it never manufactures a runner or replaces content.
 const _schema = 'production_real_runner_capture_v1';
+const _identitySchema = 'visual_evidence_identity_v1';
+const _productEvidenceBaseline = 'b7db47a3145ba8653b90403a9aa48538c378cdb7';
 const _outputRoot = 'output/visual_master_audit/raw';
 
 class _Seed {
@@ -214,6 +217,56 @@ void main(List<String> args) async {
         }) +
         '\n',
   );
+  final identities = rows.map((row) {
+    final dimensions = <String, Object?>{
+      'capture_group': 'production_real_live',
+      'capture_surface_id': row['visual_state_id'],
+      'state_id': row['visual_state_id'],
+      'task_id': row['task_id'],
+      'device_class': device,
+      'text_scale': modifier == 'text_scale_1_4' ? 1.4 : 1.0,
+      'motion_mode': modifier == 'reduced_motion' ? 'reduced' : 'normal',
+      'scroll_position': 'top',
+    };
+    final id = _sha256Text(_canonicalIdentityJson(dimensions));
+    return <String, Object?>{
+      'schema_version': _identitySchema,
+      'evidence_id': 'vei1_$id',
+      ...dimensions,
+      'relative_png_path': '$device.${row['visual_state_id']}.png',
+      'png_sha256': row['sha256'],
+      'evidence_baseline_sha': _productEvidenceBaseline,
+      'lesson_id': row['lesson_id'],
+      'world_id': row['world_id'],
+      'semantic_state': row['semantic_phase'],
+      'interaction_state': row['mode'],
+      'renderer_family': row['actual_production_renderer'],
+      'production_owner': row['owner_family'],
+      'runtime_reachable': true,
+      'capture_role': modifier == 'text_scale_1_4'
+          ? 'accessibility_representative'
+          : 'production_representative',
+      'viewport_width': 'UNKNOWN_TYPED_FIELD',
+      'viewport_height': 'UNKNOWN_TYPED_FIELD',
+      'scroll_contract': 'not_scrolled',
+      'safe_area_class': 'fixture_controlled',
+      'option_count': null,
+      'control_type': null,
+      'table_present': null,
+      'table_presentation_class': null,
+      'feedback_composition': row['semantic_phase'],
+      'repair_capable': null,
+      'recheck_capable': row['semantic_phase'] == 'recheck',
+      'completion_form': row['semantic_phase'] == 'lesson_completion'
+          ? 'lesson_completion'
+          : null,
+      'source_fixture_or_route': row['route_id'],
+      'identity_source_owner': 'act0_production_real_runner_capture_v1.dart',
+    };
+  }).toList();
+  File('${output.path}/visual_evidence_identity_v1.json').writeAsStringSync(
+    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'schema_version': _identitySchema, 'records': identities})}\n',
+  );
 }
 
 String _git(List<String> args) =>
@@ -224,6 +277,20 @@ String _sha256(File file) => Process.runSync('shasum', <String>[
   '256',
   file.path,
 ]).stdout.toString().trim().split(RegExp(r'\s+')).first;
+
+String _sha256Text(String value) {
+  final file = File(
+    '${Directory.systemTemp.path}/vei1-${DateTime.now().microsecondsSinceEpoch}.json',
+  )..writeAsStringSync(value);
+  try {
+    return _sha256(file);
+  } finally {
+    file.deleteSync();
+  }
+}
+
+String _canonicalIdentityJson(Map<String, Object?> dimensions) =>
+    jsonEncode(SplayTreeMap<String, Object?>.of(dimensions));
 
 String _testSource(String output, String device, String modifier) {
   final calls = _seeds

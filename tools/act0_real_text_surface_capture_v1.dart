@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'dart:collection';
 import 'dart:io';
-
-import 'package:crypto/crypto.dart';
 
 const _outputRootPathV1 = 'output/screen_review/current';
 const _schemaV1 = 'screen_review_fast_v1';
+const _identitySchemaV1 = 'visual_evidence_identity_v1';
+const _productEvidenceBaselineV1 = 'b7db47a3145ba8653b90403a9aa48538c378cdb7';
 const _routeVisualAuditValidityV1 = 'legacy_reference_not_for_audit';
 const _routeAllowedUseV1 = 'route_state_smoke_evidence_only';
 
@@ -561,7 +562,7 @@ void main(List<String> args) async {
           : sourceBySurface[surface],
       'path': 'output/screen_review/current/$packetName/$device.$surface.png',
       'bytes': file.lengthSync(),
-      'sha256': sha256.convert(file.readAsBytesSync()).toString(),
+      'sha256': _sha256FileV1(file),
       'git_commit': currentGitCommit,
       'git_status': currentGitStatus,
       'git_status_classification': currentGitStatusClassification,
@@ -651,6 +652,13 @@ void main(List<String> args) async {
       'note': 'Generated screenshots are local-only and uncommitted. Real-text claims are valid only for the listed device/viewports and current HEAD.',
     })}\n',
   );
+  _writeIdentitySidecarV1(
+    directory: stagingDir,
+    entries: entries,
+    group: group,
+    device: device,
+    motionMode: reducedMotion ? 'reduced' : 'normal',
+  );
 
   if (group == 'full_scroll') {
     final metadataFile = File(
@@ -680,6 +688,105 @@ void main(List<String> args) async {
 
   stdout.writeln(outputDir.path);
 }
+
+/// This is emitted by the capture owner, while the typed surface declaration
+/// and exact image bytes are both available. Packaging only joins this sidecar.
+void _writeIdentitySidecarV1({
+  required Directory directory,
+  required List<Map<String, Object?>> entries,
+  required String group,
+  required String device,
+  required String motionMode,
+}) {
+  final identities = <Map<String, Object?>>[];
+  for (final entry in entries) {
+    final surface = entry['surface']! as String;
+    final fixtureOnly = group == 'route_w7_w12';
+    final negativeAssertion = surface.contains('no_w13');
+    final png = File(
+      '${directory.path}${Platform.pathSeparator}$device.$surface.png',
+    );
+    final scroll = surface.contains('.scroll_02_')
+        ? 'middle'
+        : surface.contains('.scroll_03_')
+        ? 'bottom'
+        : 'top';
+    final dimensions = <String, Object?>{
+      'capture_group': group,
+      'capture_surface_id': entry['surface_identity'],
+      'state_id': entry['state_identity'] ?? entry['surface_identity'],
+      'task_id': entry['task_id'],
+      'device_class': device,
+      'text_scale': 1.0,
+      'motion_mode': motionMode,
+      'scroll_position': scroll,
+    };
+    final evidenceId = _sha256TextV1(_canonicalIdentityJsonV1(dimensions));
+    identities.add(<String, Object?>{
+      'schema_version': _identitySchemaV1,
+      'evidence_id': 'vei1_$evidenceId',
+      ...dimensions,
+      'relative_png_path': '$device.$surface.png',
+      'png_sha256': _sha256FileV1(png),
+      'evidence_baseline_sha': _productEvidenceBaselineV1,
+      'lesson_id': null,
+      'world_id': null,
+      'semantic_state': entry['semantic_assertions'],
+      'interaction_state': entry['presentation_mode'] ?? 'UNKNOWN_TYPED_FIELD',
+      'renderer_family': entry['source_route'],
+      'production_owner':
+          entry['production_source_owner'] ?? entry['debug_surface'],
+      'runtime_reachable': !fixtureOnly && !negativeAssertion,
+      'capture_role': negativeAssertion
+          ? 'negative_assertion'
+          : fixtureOnly
+          ? 'fixture_only'
+          : scroll == 'top'
+          ? 'production_representative'
+          : 'scroll_evidence',
+      'viewport_width': 'UNKNOWN_TYPED_FIELD',
+      'viewport_height': 'UNKNOWN_TYPED_FIELD',
+      'scroll_contract': scroll == 'top'
+          ? 'not_scrolled'
+          : 'explicit_scroll_$scroll',
+      'safe_area_class': 'fixture_controlled',
+      'option_count': null,
+      'control_type': null,
+      'table_present': null,
+      'table_presentation_class': null,
+      'feedback_composition': null,
+      'repair_capable': null,
+      'recheck_capable': null,
+      'completion_form': null,
+      'source_fixture_or_route': entry['source_route'],
+      'identity_source_owner': 'act0_real_text_surface_capture_v1.dart',
+    });
+  }
+  File(
+    '${directory.path}${Platform.pathSeparator}visual_evidence_identity_v1.json',
+  ).writeAsStringSync(
+    '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'schema_version': _identitySchemaV1, 'records': identities})}\n',
+  );
+}
+
+String _sha256FileV1(File file) => Process.runSync('shasum', <String>[
+  '-a',
+  '256',
+  file.path,
+]).stdout.toString().trim().split(RegExp(r'\s+')).first;
+String _sha256TextV1(String value) {
+  final file = File(
+    '${Directory.systemTemp.path}/vei1-${DateTime.now().microsecondsSinceEpoch}.json',
+  )..writeAsStringSync(value);
+  try {
+    return _sha256FileV1(file);
+  } finally {
+    file.deleteSync();
+  }
+}
+
+String _canonicalIdentityJsonV1(Map<String, Object?> dimensions) =>
+    jsonEncode(SplayTreeMap<String, Object?>.of(dimensions));
 
 const _supportedDevicesV1 = <String>{
   'compact',
