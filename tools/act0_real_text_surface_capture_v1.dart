@@ -1259,7 +1259,9 @@ void main() {
       ),
     );
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 900));
+    // The first asset frame is asynchronous in this isolated test harness;
+    // wait through a decoded frame before rasterizing the avatar-only lane.
+    await tester.pump(const Duration(seconds: 2));
     final boundary = tester.renderObject<RenderRepaintBoundary>(
       find.byKey(const Key('act0_real_text_capture_boundary')),
     );
@@ -1275,6 +1277,27 @@ void main() {
     );
   }
 
+  Future<void> warmSharkyAsset(WidgetTester tester) async {
+    tester.view.physicalSize = viewportSize;
+    tester.view.devicePixelRatio = 1.0;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(fontFamily: 'Roboto'),
+        home: const Center(
+          child: Act0SharkyCompanionAvatarV1(
+            state: Act0SharkyCompanionStateV1.neutral,
+            size: 92,
+            growthStage: Act0SharkyGrowthStageV1.developing,
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 900));
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+  }
+
   testWidgets('capture real-text Act0 $group review surfaces', (tester) async {
     tester.platformDispatcher.systemFontFamily = 'Roboto';
     addTearDown(() {
@@ -1282,6 +1305,10 @@ void main() {
       tester.view.resetDevicePixelRatio();
       tester.platformDispatcher.resetSystemFontFamily();
     });
+
+    if (captureGroup == 'sharky_evidence') {
+      await warmSharkyAsset(tester);
+    }
 
 $captureStatements
     if (captureGroup == 'full_scroll') {
