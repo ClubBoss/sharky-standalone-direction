@@ -115,6 +115,22 @@ Do not use the readiness reference as the default bottleneck selector for day-to
 
 ## Current post-merge status
 
+- **Current-execution correction (2026-08-02):** EID-1 (PR #124) and VAT-1
+  (PR #125) are closed, and the independent Atlas review has produced the
+  finite `VISUAL_CLOSURE_LEDGER_READY` record. The former no-product-fixes
+  before-the-ledger gate is therefore satisfied: the captured review found
+  `0` P0 and `0` P1 findings. A separate owner-requested systemic 10/10
+  deconstruction has identified one recurring high-EV Learning Effect
+  bottleneck family in the shared Act0 runner. Exactly one bounded repair is
+  admitted after this dispatch normally merges:
+  `RUNNER_LEARNING_SURFACE_GRAMMAR_V1` (Goal Wave A), covering VSC-01 through
+  VSC-04 together. This is an evidence-backed learning-surface repair, not
+  broad visual redesign. AI Personalization / Learning Effect remains the
+  strategic product direction; Modern Table remains in Maintenance Mode;
+  tablet and landscape remain deferred/non-blocking; Human QA and Human Novice
+  Proof remain unauthorized. After Wave A, reassess the Top-1 route rather
+  than automatically opening another visual wave.
+
 - **Current-execution correction (2026-08-01):** PR #121 closed
   screen-evidence rendering fidelity and PR #122 landed the Visual State Atlas
   foundation. Strict Atlas truth hardening then exposed the absence of
