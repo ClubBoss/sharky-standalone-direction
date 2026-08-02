@@ -9,19 +9,19 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical baseline | `58375ada439907bcea4caa91a4d344b334110122` (PR #131 normal merge; candidate `513134d6f97622f9dd3c3485ffb5dfbb8b66d9e6`). |
-| Authority freshness | **RECONCILED after PR #131 and post-P1 P2 source audit.** Earlier dispatch language is historical evidence, not current authorization. |
+| Canonical baseline | `c484071a3d93a72c5678fd9800be3695888343c5` (PR #133 normal merge; accepted head `bb720cd1c6bf191f82831876b4df81f1fac46b1c`). |
+| Authority freshness | **RECONCILED after PR #133 P2 closure.** Earlier P2 admission language is historical evidence, not current authorization. |
 | Campaign version | v1 |
 | Corridor | **`ROLLING_CORRIDOR_PHP6_TO_PHP8_V1`** — **CLOSED/HISTORICAL.** PHP-6, PHP-7, and PHP-8 are terminally closed and published (PR #85). The corridor is not reopened; its wave-by-wave authorization language below is historical record only. PHP-9 remains `NOT_PREAUTHORIZED`. |
 | Umbrella stage | **Learning Effect / Training Flow — current-head Top-1 convergence.** |
-| Active sub-packet | **`LEARNING_REPAIR_RECHECK_PAYOFF_CLOSURE_V1`.** |
-| Status | **ADMITTED after this reconciliation normally merges.** |
-| Latest admitted PR | **#131** — personalization consumption and next-rep guidance, merge `58375ada439907bcea4caa91a4d344b334110122`. |
+| Active sub-packet | **`MINIMAL_LIVE_ALPHA_E2E_CLOSURE_V1`.** |
+| Status | **ADMITTED — one bounded P3 distinct-outcome fresh-entry E2E PR.** |
+| Latest admitted PR | **#133** — P2 payoff closure, merge `c484071a3d93a72c5678fd9800be3695888343c5`. |
 | EID-1 | **CLOSED** — PR #124, merge `29ea21b1c23da1fa398333ec4eaaa067467349e8`. |
 | VAT-1 | **CLOSED** — PR #125, merge `6268f114ceb668664ded65290d2aae459be10b75`. |
 | Independent visual review | **CLOSED — `VISUAL_CLOSURE_LEDGER_READY`; 135/135 evidence images inspected, 0 P0, 0 P1, and no Modern Table regression confirmed.** |
 | Wave-A outcome | **`RUNNER_LEARNING_SURFACE_GRAMMAR_V1` = `CLOSED_ALREADY_PRESENT_BEFORE_DISPATCH`** — PRs #110/#114/#116 already integrated the geometry/CTA contracts; the remaining source-string guard is stale, not a product regression. |
-| Systemic product admission | **`PERSONALIZATION_CONSUMPTION_AND_NEXT_REP_V1` is CLOSED_CURRENT.** All five live families have specific shared payoff descriptors. **`LEARNING_REPAIR_RECHECK_PAYOFF_CLOSURE_V1` is admitted** to remove duplicate recovered payoff presentation and make the selected focus operational after payoff dismissal. |
+| Systemic product admission | **`PERSONALIZATION_CONSUMPTION_AND_NEXT_REP_V1` and `LEARNING_REPAIR_RECHECK_PAYOFF_CLOSURE_V1` are CLOSED_CURRENT.** P2 preserves one canonical outcome for same-source replay, resolves all five focus families to unique drills, and fails invalid focus closed. **P3 is admitted** to prove two distinct ordinary source outcomes through payoff and focused practice. |
 | Owner visual directives | **Visual work is closed/frozen.** No general Wave B, Review/Profile, tablet/landscape, mascot, motion, or broad visual work. |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **PARTIALLY CLOSED IN PHP-3** — six PHP-3-owned unique current guards are current-contract reconciled and Tier-B ledgered; four differently owned unresolved-unique files remain. |
@@ -32,8 +32,8 @@ here; update only the fields below.
 | PHP-1 stale assertions | **2** — phase-7 campaign wording; compact-decision retired teaching-step expectation |
 | F-16 non-weakening review | **NON_WEAKENING** — seven stale-test groups (#4, #5, #6, #7–9, #11, #12) independently re-derived |
 | PHP-3 / PHP-4 / PHP-5 / PHP-6 / PHP-7 / PHP-8 | **HISTORICAL/CLOSED — not reopened by this dispatch.** |
-| Recommended next packet | **`LEARNING_REPAIR_RECHECK_PAYOFF_CLOSURE_V1`.** |
-| Next authorization | **One deterministic shared-owner P2 product PR after this reconciliation normally merges and `origin/main` equals that resulting merge commit.** P3 fresh-entry E2E remains downstream. |
+| Recommended next packet | **`MINIMAL_LIVE_ALPHA_E2E_CLOSURE_V1`.** |
+| Next authorization | **One bounded P3 fresh-entry distinct-outcome E2E PR after this reconciliation normally merges and `origin/main` equals that resulting merge commit.** |
 | Autonomous window | **One bounded implementation Goal mission; preferred one PR; maximum two PRs only when the first is a separately safe behavior-preserving ownership extraction; one internal corrective pass maximum; then mandatory Top-1 reassessment.** |
 | Wave B | **NOT PREAUTHORIZED.** |
 | Human Proof | **NOT AUTHORIZED** — Human QA and Human Novice Proof are outside this dispatch. |
