@@ -2,17 +2,18 @@
 
 Status: ACTIVE POST-MERGE EXECUTION CAPSULE.
 
-## Supersession — 2026-08-02 (Runner Feedback Takeaway Composition)
+## Supersession — 2026-08-02 (P3 distinct-outcome E2E)
 
 `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` remains the first-read dispatch
-authority. Wave A is `CLOSED_ALREADY_PRESENT_BEFORE_DISPATCH`: PRs #110, #114,
-and #116 already supplied its shared runner geometry and CTA contracts. The one
-live product authorization after this reconciliation normally merges is
-**`RUNNER_FEEDBACK_TAKEAWAY_COMPOSITION_V1`**: a narrow inner feedback Learning
-Effect / semantic-hierarchy repair that preserves stable table geometry. It does
-not reopen Modern Table, broad visual polish, Review/Profile, tablet/landscape,
-mascot, motion, content, telemetry, Human QA, or Human Novice Proof. Wave B is
-not preauthorized.
+authority. `PERSONALIZATION_CONSUMPTION_AND_NEXT_REP_V1` and
+`LEARNING_REPAIR_RECHECK_PAYOFF_CLOSURE_V1` are closed on current main (PRs
+#131 and #133). The one live product authorization is
+**`MINIMAL_LIVE_ALPHA_E2E_CLOSURE_V1`**: a bounded P3 fresh-entry ordinary
+Learning Run proving two distinct meaningful source outcomes, truthful payoff,
+and the existing focused Practice-next continuation. It does not reopen Modern
+Table, visual work, Review/Profile, tablet/landscape, mascot, motion, broad
+content, telemetry, Human QA, Human Novice Proof, dependencies, or Wave B.
+The prior runner-feedback admission is historical execution context only.
 
 ## Supersession — 2026-07-27 (post-PR #76)
 

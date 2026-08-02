@@ -115,6 +115,17 @@ Do not use the readiness reference as the default bottleneck selector for day-to
 
 ## Current post-merge status
 
+- **Current-execution correction (2026-08-02, post-PR #134):**
+  `PERSONALIZATION_CONSUMPTION_AND_NEXT_REP_V1` and
+  `LEARNING_REPAIR_RECHECK_PAYOFF_CLOSURE_V1` are closed on current main
+  (PRs #131 and #133). The one active product authorization is
+  `MINIMAL_LIVE_ALPHA_E2E_CLOSURE_V1`: one bounded P3 fresh-entry ordinary
+  Learning Run proving two distinct meaningful source outcomes, truthful
+  payoff, and the existing focused Practice-next continuation. It does not
+  reopen Modern Table, visual work, broad content, telemetry, Human QA/HNP,
+  dependencies, or Wave B. Earlier runner-feedback admission wording below is
+  historical execution context and not the current packet selection.
+
 - **Current-execution correction (2026-08-02, post-PR #127):**
   `RUNNER_LEARNING_SURFACE_GRAMMAR_V1` is
   `CLOSED_ALREADY_PRESENT_BEFORE_DISPATCH`: the shared runner geometry was
