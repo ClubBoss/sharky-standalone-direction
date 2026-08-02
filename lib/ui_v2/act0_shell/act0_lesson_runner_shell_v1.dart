@@ -6676,8 +6676,6 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final showSignalProofInProofStack =
         !rapidMode && !hasRepairTeachingBlock && signalProof != null;
     final showActionContrast = actionLabel.isNotEmpty;
-    final showActionContrastEyebrow =
-        !(streamlinedDirectDecisionFeedback && isCompactRefinedFeedback);
     final usesSharedAccessibilitySurface =
         (streamlinedDirectDecisionFeedback || cycleStableEnvelope) &&
         isCompactRefinedFeedback;
@@ -6749,6 +6747,24 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             showActionContrast ||
             showReason ||
             showRepairFocus);
+    // Keep the outer cycle envelope stable, but center the complete semantic
+    // outcome only when it has no repair, proof-earned, receipt, completion,
+    // or long-copy obligation. These are state flags rather than copy heuristics.
+    final usesCohesiveShortOutcome =
+        usesSharedAccessibilitySurface &&
+        !isWrong &&
+        !isSuboptimal &&
+        !hasRepairTeachingBlock &&
+        !hasProofEarnedState &&
+        !isRecoveredSourceRecheck &&
+        !isSourceRecheckAttempt &&
+        repairReceiptLine.isEmpty &&
+        !shouldShowReceiptProof &&
+        visibleRepairSessionSummaryLines.isEmpty &&
+        completionSummary == null;
+    final showActionContrastEyebrow =
+        !(streamlinedDirectDecisionFeedback && isCompactRefinedFeedback) &&
+        !usesCohesiveShortOutcome;
     final feedbackStateKey = hasProofEarnedState
         ? const Key('act0_shell_wave2_feedback_proof_earned_state')
         : isRepairFocusState
@@ -6835,7 +6851,15 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                     ],
                   ),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              key: usesCohesiveShortOutcome
+                  ? const Key('act0_shell_feedback_cohesive_group')
+                  : null,
+              mainAxisSize: usesCohesiveShortOutcome
+                  ? MainAxisSize.max
+                  : MainAxisSize.min,
+              mainAxisAlignment: usesCohesiveShortOutcome
+                  ? MainAxisAlignment.center
+                  : MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Row(
@@ -7104,7 +7128,11 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                           ],
                         ],
                       );
-                      if (!usesSharedAccessibilitySurface) return proofStack;
+                      if (!usesSharedAccessibilitySurface ||
+                          (usesCohesiveShortOutcome &&
+                              !preserveFullCompactReason)) {
+                        return proofStack;
+                      }
                       return ConstrainedBox(
                         constraints: const BoxConstraints(maxHeight: 64),
                         child: SingleChildScrollView(
@@ -7312,6 +7340,10 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   SizedBox(key: feedbackTreatmentKey, height: 0),
                   if (pinsF1FeedbackCta)
                     SizedBox(height: 48, child: buildContinueAction())
+                  else if (usesCohesiveShortOutcome) ...[
+                    const SizedBox(height: 16),
+                    buildContinueAction(),
+                  ]
                   else if (usesSharedAccessibilitySurface)
                     Expanded(
                       child: Align(
@@ -7393,6 +7425,7 @@ class _FeedbackActionContrastBlockV1 extends StatelessWidget {
         children: [
           if (showEyebrow && eyebrow.isNotEmpty) ...[
             Text(
+              key: const Key('act0_shell_feedback_action_eyebrow'),
               eyebrow,
               style: Act0ShellTokensV1.label.copyWith(
                 color: tone,

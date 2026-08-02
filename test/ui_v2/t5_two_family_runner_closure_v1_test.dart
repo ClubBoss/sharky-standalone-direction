@@ -373,6 +373,65 @@ void main() {
     },
   );
 
+  testWidgets(
+    'short successful compact feedback keeps its conclusion and next action together',
+    (tester) async {
+      final task = allTasks.singleWhere(
+        (task) => task.taskId == 'visible_king_combo_reduction_intro',
+      );
+      final correct = task.runner.options.singleWhere(
+        (option) => option.isCorrect,
+      );
+      final feedback = task.runner.copyWith(
+        phase: Act0LessonPhaseV1.review,
+        teachingSteps: const <Act0TeachingStepV1>[],
+        selectedOptionId: correct.id,
+      );
+      for (final scale in <double>[1, 1.4]) {
+        final profile = _Profile(const Size(375, 812), scale, 47, 34);
+        await tester.binding.setSurfaceSize(profile.size);
+        await tester.pumpWidget(
+          _host(feedback, profile, task.resolvedCompositionFamily),
+        );
+        await tester.pumpAndSettle();
+
+        final conclusion = tester.getRect(
+          find.byKey(const Key('act0_shell_feedback_primary_result_block')),
+        );
+        final reason = tester.getRect(
+          find.byKey(const Key('act0_shell_feedback_reason')),
+        );
+        final nextClue = find.byKey(const Key('act0_shell_feedback_next_clue'));
+        final finalSemanticBlock = nextClue.evaluate().isEmpty
+            ? reason
+            : tester.getRect(nextClue);
+        final cta = tester.getRect(
+          find.byKey(const Key('act0_shell_feedback_continue_cta')),
+        );
+        final lower = tester.getRect(
+          find.byKey(const Key('act0_shell_runner_action_dock')),
+        );
+
+        expect(
+          find.byKey(const Key('act0_shell_feedback_cohesive_group')),
+          findsOneWidget,
+        );
+        expect(
+          find.byKey(const Key('act0_shell_feedback_action_eyebrow')),
+          findsNothing,
+        );
+        expect(cta.top - finalSemanticBlock.bottom, inInclusiveRange(8, 32));
+        expect((conclusion.top - lower.top) - (lower.bottom - cta.bottom),
+            closeTo(0, 32));
+        expect(lower.contains(cta.topLeft), isTrue);
+        expect(lower.contains(cta.bottomRight), isTrue);
+        expect(tester.takeException(), isNull);
+      }
+
+      await tester.binding.setSurfaceSize(null);
+    },
+  );
+
   testWidgets('non-shared F2 feedback keeps its original non-scroll surface', (
     tester,
   ) async {
