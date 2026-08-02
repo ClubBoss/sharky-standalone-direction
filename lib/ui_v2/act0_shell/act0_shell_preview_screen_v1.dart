@@ -4277,7 +4277,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'closure_reason': closed.closureReason,
       'meaningful_outcome_count': closed.meaningfulAttemptCount,
     });
-    final focus = payoff.unresolved ?? payoff.recovered ?? payoff.strength;
+    final focus = payoff.focus;
     if (focus != null) {
       _recordTelemetryEventV1('session_focus_selected', <String, Object?>{
         'schemaVersion': 1,
@@ -4326,6 +4326,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   void _completeLearningRunPayoffV1() {
     final run = _learningRunV1;
+    final focus = _pendingLearningRunPayoffV1?.focus;
     if (run != null) {
       _recordTelemetryEventV1('session_payoff_completed', <String, Object?>{
         'schemaVersion': 1,
@@ -4338,6 +4339,41 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _learningRunLearnVisitActiveV1 = false;
     _learningRunProductionLearnVisitV1 = false;
     _learningRunOutcomeTelemetryKeysV1.clear();
+    if (!_startLearningRunPayoffFocusV1(focus)) {
+      _tab = Act0ShellTabV1.home;
+    }
+  }
+
+  /// A payoff recommendation is only actionable when it resolves back to one
+  /// existing source-owned drill. It deliberately fails closed to Home rather
+  /// than inventing a route for ambiguous or non-drill content.
+  bool _startLearningRunPayoffFocusV1(Act0LearningRunOutcomeV1? focus) {
+    if (focus == null) return false;
+    final state = widget.state ?? Act0ShellStateV1.sample;
+    final matches = <Act0WorldCardV1>[];
+    for (final world in state.worlds) {
+      for (final lesson in world.lessons) {
+        if (lesson.lessonId == focus.lessonId &&
+            lesson.taskList.any((task) => task.taskId == focus.taskId)) {
+          matches.add(world);
+        }
+      }
+    }
+    if (matches.length != 1) return false;
+    final world = matches.single;
+    final lesson = _lessonById(world.lessons, focus.lessonId);
+    final task = _taskById(lesson, focus.taskId);
+    if (task.phase != Act0LessonPhaseV1.drill) return false;
+    _startTaskByIds(
+      world,
+      lesson.lessonId,
+      task.taskId,
+      skipTeaching: true,
+      allowDrillBypass: true,
+      evidenceRunKind: 'practice',
+      evidenceStartedBy: 'learning_run_payoff',
+    );
+    return true;
   }
 
   Future<void> _invalidatePersistedProgressWrites() async {

@@ -166,6 +166,11 @@ class Act0LearningRunPayoffV1 {
   final Act0LearningRunOutcomeV1? unresolved;
   final String nextClue;
   final String nextPractice;
+
+  /// The same outcome that owns the recommendation must own the next action.
+  /// Keeping this derivation beside the rendered claims prevents a recovered
+  /// result from being presented as a clean strength or a generic suggestion.
+  Act0LearningRunOutcomeV1? get focus => unresolved ?? recovered ?? strength;
 }
 
 /// Family-owned descriptors let the run policy stay generic as deterministic
@@ -202,7 +207,9 @@ class Act0LearningRunPayoffPolicyV1 {
     final focus = unresolved ?? recovered ?? clean;
     if (focus == null) return null;
     return Act0LearningRunPayoffV1(
-      strength: clean ?? recovered,
+      // Strength is reserved for a first-try read. A repaired result remains
+      // a distinct, truthful recovery claim.
+      strength: clean,
       recovered: recovered,
       unresolved: unresolved,
       nextClue: _clueFor(focus),
@@ -365,7 +372,7 @@ class Act0LearningRunPayoffSheetV1 extends StatelessWidget {
                       child: FilledButton(
                         key: const Key('act0_learning_run_payoff_complete_cta'),
                         onPressed: onComplete,
-                        child: const Text('Back to Home'),
+                        child: const Text('Practice next'),
                       ),
                     ),
                   ],

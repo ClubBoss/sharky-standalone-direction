@@ -163,6 +163,42 @@ void main() {
     expect(payoff.nextPractice, 'Practice one more Button read next.');
   });
 
+  test('all five admitted families keep a specific focused descriptor', () {
+    final expectedLabels = <String, String>{
+      'action_read': 'the action',
+      'table_position_read': 'table position',
+      'price_read': 'the price',
+      Act0StartingHandPersonalizationV1.skillId: 'starting-hand discipline',
+      Act0BoardTexturePersonalizationV1.skillId: 'board texture',
+    };
+    for (final entry in expectedLabels.entries) {
+      final payoff = Act0LearningRunPayoffPolicyV1.evaluate(
+        _run(<Act0LearningRunOutcomeV1>[
+          _outcome(
+            id: 'clean:${entry.key}',
+            skill: 'action_read',
+            outcome: Act0LearningRunFinalOutcomeV1.masteredFirstTry,
+          ),
+          _outcome(
+            id: 'focus:${entry.key}',
+            skill: entry.key,
+            outcome: Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
+            order: 2,
+            firstCorrect: false,
+            repaired: true,
+            recheck: false,
+          ),
+        ]),
+      )!;
+      expect(payoff.focus!.skillId, entry.key);
+      expect(
+        Act0LearningRunPayoffPolicyV1.outcomeLine(payoff.focus!),
+        contains(entry.value),
+      );
+      expect(payoff.nextClue, isNot(contains('same table clue')));
+    }
+  });
+
   testWidgets(
     'W2 and W5 source-owned families consume specific payoff guidance',
     (tester) async {
@@ -231,7 +267,7 @@ void main() {
         find.text(
           'You repaired starting-hand discipline and passed the recheck.',
         ),
-        findsNWidgets(2),
+        findsOneWidget,
       );
       expect(find.textContaining('this clue'), findsNothing);
     },
@@ -446,7 +482,9 @@ void main() {
     },
   );
 
-  testWidgets('compact payoff keeps its Home CTA reachable', (tester) async {
+  testWidgets('compact payoff keeps its focused Practice CTA reachable', (
+    tester,
+  ) async {
     var completed = false;
     final payoff = Act0LearningRunPayoffPolicyV1.evaluate(
       _run(<Act0LearningRunOutcomeV1>[
@@ -481,9 +519,53 @@ void main() {
     final cta = find.byKey(const Key('act0_learning_run_payoff_complete_cta'));
     await tester.ensureVisible(cta);
     expect(tester.getRect(cta).bottom, lessThanOrEqualTo(812));
+    expect(
+      find.descendant(of: cta, matching: find.text('Practice next')),
+      findsOneWidget,
+    );
     await tester.tap(cta);
     expect(completed, isTrue);
   });
+
+  test(
+    'recovered-only payoff has one truthful claim and a real source focus',
+    () {
+      final payoff = Act0LearningRunPayoffPolicyV1.evaluate(
+        _run(<Act0LearningRunOutcomeV1>[
+          _outcome(
+            id: 'action:1',
+            skill: 'action_read',
+            outcome: Act0LearningRunFinalOutcomeV1.recoveredAfterRepair,
+            firstCorrect: false,
+            repaired: true,
+            recheck: true,
+          ),
+          _outcome(
+            id: 'position:1',
+            skill: 'table_position_read',
+            outcome: Act0LearningRunFinalOutcomeV1.recoveredAfterRepair,
+            order: 2,
+            firstCorrect: false,
+            repaired: true,
+            recheck: true,
+          ),
+        ]),
+      )!;
+
+      expect(payoff.strength, isNull);
+      expect(payoff.recovered, isNotNull);
+      expect(payoff.unresolved, isNull);
+      expect(payoff.focus, same(payoff.recovered));
+      final source = Act0ShellStateV1.sample.worlds
+          .expand((world) => world.lessons)
+          .where((lesson) => lesson.lessonId == payoff.focus!.lessonId)
+          .single;
+      expect(
+        source.taskList.map((task) => task.taskId),
+        contains(payoff.focus!.taskId),
+      );
+    },
+  );
 
   testWidgets('opening Learn and theory alone do not start a Learning Run', (
     tester,
