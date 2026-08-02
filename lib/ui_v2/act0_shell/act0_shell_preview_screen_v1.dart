@@ -4348,26 +4348,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   /// existing source-owned drill. It deliberately fails closed to Home rather
   /// than inventing a route for ambiguous or non-drill content.
   bool _startLearningRunPayoffFocusV1(Act0LearningRunOutcomeV1? focus) {
-    if (focus == null) return false;
     final state = widget.state ?? Act0ShellStateV1.sample;
-    final matches = <Act0WorldCardV1>[];
-    for (final world in state.worlds) {
-      for (final lesson in world.lessons) {
-        if (lesson.lessonId == focus.lessonId &&
-            lesson.taskList.any((task) => task.taskId == focus.taskId)) {
-          matches.add(world);
-        }
-      }
-    }
-    if (matches.length != 1) return false;
-    final world = matches.single;
-    final lesson = _lessonById(world.lessons, focus.lessonId);
-    final task = _taskById(lesson, focus.taskId);
-    if (task.phase != Act0LessonPhaseV1.drill) return false;
+    final route = Act0LearningRunPayoffFocusResolverV1.resolve(
+      state: state,
+      focus: focus,
+    );
+    if (route == null) return false;
     _startTaskByIds(
-      world,
-      lesson.lessonId,
-      task.taskId,
+      route.world,
+      route.lesson.lessonId,
+      route.task.taskId,
       skipTeaching: true,
       allowDrillBypass: true,
       evidenceRunKind: 'practice',

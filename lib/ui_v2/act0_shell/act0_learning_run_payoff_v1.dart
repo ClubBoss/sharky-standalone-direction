@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_board_texture_personalization_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_starting_hand_personalization_v1.dart';
 
 /// A run is intentionally local to one continuous visit through Learn. It is
@@ -171,6 +172,50 @@ class Act0LearningRunPayoffV1 {
   /// Keeping this derivation beside the rendered claims prevents a recovered
   /// result from being presented as a clean strength or a generic suggestion.
   Act0LearningRunOutcomeV1? get focus => unresolved ?? recovered ?? strength;
+}
+
+/// The payoff may reopen only one existing source-owned drill. Keeping the
+/// lookup as a value resolver makes its fail-closed contract independently
+/// testable without adding another routing layer.
+class Act0LearningRunPayoffFocusRouteV1 {
+  const Act0LearningRunPayoffFocusRouteV1({
+    required this.world,
+    required this.lesson,
+    required this.task,
+  });
+
+  final Act0WorldCardV1 world;
+  final Act0LessonCardV1 lesson;
+  final Act0LessonTaskV1 task;
+}
+
+class Act0LearningRunPayoffFocusResolverV1 {
+  static Act0LearningRunPayoffFocusRouteV1? resolve({
+    required Act0ShellStateV1 state,
+    required Act0LearningRunOutcomeV1? focus,
+  }) {
+    if (focus == null) return null;
+    final matches = <Act0LearningRunPayoffFocusRouteV1>[];
+    for (final world in state.worlds) {
+      for (final lesson in world.lessons) {
+        if (lesson.lessonId != focus.lessonId) continue;
+        for (final task in lesson.taskList) {
+          if (task.taskId == focus.taskId) {
+            matches.add(
+              Act0LearningRunPayoffFocusRouteV1(
+                world: world,
+                lesson: lesson,
+                task: task,
+              ),
+            );
+          }
+        }
+      }
+    }
+    if (matches.length != 1) return null;
+    final route = matches.single;
+    return route.task.phase == Act0LessonPhaseV1.drill ? route : null;
+  }
 }
 
 /// Family-owned descriptors let the run policy stay generic as deterministic

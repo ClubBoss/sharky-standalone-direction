@@ -21,22 +21,29 @@ Act0LearningRunOutcomeV1 _outcome({
   bool firstCorrect = true,
   bool repaired = false,
   bool? recheck,
+  String? lessonId,
+  String? taskId,
 }) => Act0LearningRunOutcomeV1(
   outcomeId: id,
-  lessonId: switch (skill) {
-    'starting_hand_read' => Act0StartingHandPersonalizationV1.sourceLessonId,
-    'board_read' => Act0BoardTexturePersonalizationV1.lessonId,
-    'table_position_read' => 'position_six_seats',
-    'price_read' => 'call_price',
-    _ => 'fold_check_call_raise',
-  },
-  taskId: switch (skill) {
-    'starting_hand_read' => Act0StartingHandPersonalizationV1.sourceTaskId,
-    'board_read' => Act0BoardTexturePersonalizationV1.sourceTaskId,
-    'table_position_read' => 'position_six_seats_positions_button',
-    'price_read' => 'w4_bad_price_fold',
-    _ => 'actions_check_drill',
-  },
+  lessonId:
+      lessonId ??
+      switch (skill) {
+        'starting_hand_read' =>
+          Act0StartingHandPersonalizationV1.sourceLessonId,
+        'board_read' => Act0BoardTexturePersonalizationV1.lessonId,
+        'table_position_read' => 'position_six_seats',
+        'price_read' => 'call_price',
+        _ => 'fold_check_call_raise',
+      },
+  taskId:
+      taskId ??
+      switch (skill) {
+        'starting_hand_read' => Act0StartingHandPersonalizationV1.sourceTaskId,
+        'board_read' => Act0BoardTexturePersonalizationV1.sourceTaskId,
+        'table_position_read' => 'position_six_seats_positions_button',
+        'price_read' => 'w4_bad_price_fold',
+        _ => 'actions_check_drill',
+      },
   skillId: skill,
   firstAttemptCorrect: firstCorrect,
   errorType: firstCorrect
@@ -197,6 +204,54 @@ void main() {
       );
       expect(payoff.nextClue, isNot(contains('same table clue')));
     }
+  });
+
+  test('all five payoff focuses resolve to one canonical drill route', () {
+    final state = Act0ShellStateV1.sample;
+    for (final skill in <String>[
+      'action_read',
+      'table_position_read',
+      'price_read',
+      Act0StartingHandPersonalizationV1.skillId,
+      Act0BoardTexturePersonalizationV1.skillId,
+    ]) {
+      final focus = _outcome(
+        id: 'focus:$skill',
+        skill: skill,
+        outcome: Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
+        firstCorrect: false,
+        repaired: true,
+        recheck: false,
+      );
+      final route = Act0LearningRunPayoffFocusResolverV1.resolve(
+        state: state,
+        focus: focus,
+      );
+      expect(route, isNotNull, reason: skill);
+      expect(route!.lesson.lessonId, focus.lessonId, reason: skill);
+      expect(route.task.taskId, focus.taskId, reason: skill);
+      expect(route.task.phase, Act0LessonPhaseV1.drill, reason: skill);
+    }
+  });
+
+  test('invalid payoff focus fails closed without a task route', () {
+    final invalid = _outcome(
+      id: 'unknown:1',
+      skill: 'unknown_skill',
+      outcome: Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
+      firstCorrect: false,
+      repaired: true,
+      recheck: false,
+      lessonId: 'missing_lesson',
+      taskId: 'missing_task',
+    );
+    expect(
+      Act0LearningRunPayoffFocusResolverV1.resolve(
+        state: Act0ShellStateV1.sample,
+        focus: invalid,
+      ),
+      isNull,
+    );
   });
 
   testWidgets(
