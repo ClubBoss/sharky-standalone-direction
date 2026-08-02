@@ -6747,6 +6747,14 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             showActionContrast ||
             showReason ||
             showRepairFocus);
+    // At the standard compact scale, preserve the complete two-line table
+    // clue before the bounded accessibility scroll takes over at larger text.
+    // The extra room is limited to the shared feedback surface and does not
+    // change the table or the CTA allocation.
+    final proofStackMaxHeight =
+        showSignalProofInProofStack && media.textScaler.scale(1) <= 1.0
+        ? 75.0
+        : 64.0;
     // Keep the outer cycle envelope stable, but center the complete semantic
     // outcome only when it has no repair, proof-earned, receipt, completion,
     // or long-copy obligation. These are state flags rather than copy heuristics.
@@ -7134,7 +7142,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                         return proofStack;
                       }
                       return ConstrainedBox(
-                        constraints: const BoxConstraints(maxHeight: 64),
+                        constraints: BoxConstraints(
+                          maxHeight: proofStackMaxHeight,
+                        ),
                         child: SingleChildScrollView(
                           key: const Key(
                             'act0_shell_feedback_proof_stack_scroll',
@@ -7343,8 +7353,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   else if (usesCohesiveShortOutcome) ...[
                     const SizedBox(height: 16),
                     buildContinueAction(),
-                  ]
-                  else if (usesSharedAccessibilitySurface)
+                  ] else if (usesSharedAccessibilitySurface)
                     Expanded(
                       child: Align(
                         alignment: Alignment.bottomCenter,
