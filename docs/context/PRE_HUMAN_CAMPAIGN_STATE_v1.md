@@ -13,15 +13,16 @@ here; update only the fields below.
 | Authority freshness | **RECONCILED after EID-1, VAT-1, and independent visual-review closure.** Earlier dispatch language is historical evidence, not current authorization. |
 | Campaign version | v1 |
 | Corridor | **`ROLLING_CORRIDOR_PHP6_TO_PHP8_V1`** — **CLOSED/HISTORICAL.** PHP-6, PHP-7, and PHP-8 are terminally closed and published (PR #85). The corridor is not reopened; its wave-by-wave authorization language below is historical record only. PHP-9 remains `NOT_PREAUTHORIZED`. |
-| Umbrella stage | **Evidence-backed visual closure — shared runner learning-surface grammar.** |
-| Active sub-packet | **`RUNNER_LEARNING_SURFACE_GRAMMAR_V1` — Goal Wave A.** |
-| Status | **AUTHORIZED only after this dispatch PR normally merges.** |
+| Umbrella stage | **Post-Wave-A Learning Effect residual — runner feedback takeaway composition.** |
+| Active sub-packet | **`RUNNER_FEEDBACK_TAKEAWAY_COMPOSITION_V1`.** |
+| Status | **AUTHORIZED after this reconciliation normally merges.** |
 | Latest admitted PR | **#126** — Visual Control Center server/manifest hotfix, merge `acd04549cb6c7c68558c6578d134ae08f381d4d4`. |
 | EID-1 | **CLOSED** — PR #124, merge `29ea21b1c23da1fa398333ec4eaaa067467349e8`. |
 | VAT-1 | **CLOSED** — PR #125, merge `6268f114ceb668664ded65290d2aae459be10b75`. |
 | Independent visual review | **CLOSED — `VISUAL_CLOSURE_LEDGER_READY`; 135/135 evidence images inspected, 0 P0, 0 P1, and no Modern Table regression confirmed.** |
-| Systemic product admission | **VSC-01 through VSC-04 are admitted as one shared high-EV P2 runner learning-surface bottleneck family.** |
-| Owner visual directives | **One bounded Goal Wave A only:** shared runner vertical-budget grammar, feedback/takeaway hierarchy, deterministic state-role differentiation, and table-to-learning-surface continuity. This is an evidence-backed Learning Effect repair, not broad visual redesign. |
+| Wave-A outcome | **`RUNNER_LEARNING_SURFACE_GRAMMAR_V1` = `CLOSED_ALREADY_PRESENT_BEFORE_DISPATCH`** — PRs #110/#114/#116 already integrated the geometry/CTA contracts; the remaining source-string guard is stale, not a product regression. |
+| Systemic product admission | **`RUNNER_FEEDBACK_TAKEAWAY_COMPOSITION_V1` is admitted as one narrow Learning Effect / semantic-hierarchy repair; stable runner/table geometry is protected.** |
+| Owner visual directives | **One bounded feedback-takeaway mission only:** cohesive short outcomes, protected long/repair feedback, and behavior-owned replacement of the stale Wave-A guard. No general Wave B, Review/Profile, tablet/landscape, mascot, motion, or broad visual work. |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **PARTIALLY CLOSED IN PHP-3** — six PHP-3-owned unique current guards are current-contract reconciled and Tier-B ledgered; four differently owned unresolved-unique files remain. |
 | F-18 | **STALE_TEST** — exact pre-F-16-to-head trail disproves PR #51/#52 causation; owner is compact-decision test fixture / retired teaching-step assertion |
@@ -31,8 +32,8 @@ here; update only the fields below.
 | PHP-1 stale assertions | **2** — phase-7 campaign wording; compact-decision retired teaching-step expectation |
 | F-16 non-weakening review | **NON_WEAKENING** — seven stale-test groups (#4, #5, #6, #7–9, #11, #12) independently re-derived |
 | PHP-3 / PHP-4 / PHP-5 / PHP-6 / PHP-7 / PHP-8 | **HISTORICAL/CLOSED — not reopened by this dispatch.** |
-| Recommended next packet | **Goal Wave A — Runner Learning Surface Grammar v1.** |
-| Next authorization | **Goal Wave A only after this dispatch normally merges and `origin/main` equals that resulting merge commit.** |
+| Recommended next packet | **`RUNNER_FEEDBACK_TAKEAWAY_COMPOSITION_V1`.** |
+| Next authorization | **Feedback takeaway composition only after this reconciliation normally merges and `origin/main` equals that resulting merge commit.** |
 | Autonomous window | **One bounded implementation Goal mission; preferred one PR; maximum two PRs only when the first is a separately safe behavior-preserving ownership extraction; maximum one internal corrective visual pass; then mandatory Top-1 reassessment.** |
 | Wave B | **NOT PREAUTHORIZED.** |
 | Human Proof | **NOT AUTHORIZED** — Human QA and Human Novice Proof are outside this dispatch. |
