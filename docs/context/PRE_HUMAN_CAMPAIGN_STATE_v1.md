@@ -9,20 +9,20 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical baseline | `2d53d4aed0ceb08911da8798bb029d1a8879381e` (PR #135 normal merge). |
-| Authority freshness | **RECONCILED after PR #135.** The prior combined fresh-entry/two-source/payoff packet was overconstrained, not a product blocker. |
+| Canonical baseline | `0a93a3616c3007cb90df638bf378017804dbae69` (PR #137 normal merge). |
+| Authority freshness | **RECONCILED after PR #137.** P3 is closed; this state authorizes only the bounded W1 learner-readability repair below. |
 | Campaign version | v1 |
 | Corridor | **`ROLLING_CORRIDOR_PHP6_TO_PHP8_V1`** — **CLOSED/HISTORICAL.** PHP-6, PHP-7, and PHP-8 are terminally closed and published (PR #85). The corridor is not reopened; its wave-by-wave authorization language below is historical record only. PHP-9 remains `NOT_PREAUTHORIZED`. |
 | Umbrella stage | **Learning Effect / Training Flow — current-head Top-1 convergence.** |
-| Active sub-packet | **`P3_SPLIT_E2E_CLOSURE_V1`.** |
-| Status | **ADMITTED — one bounded P3 proof PR: fresh-entry core plus progressed payoff continuation.** |
-| Latest admitted PR | **#135** — P3 authority reconciliation, merge `2d53d4aed0ceb08911da8798bb029d1a8879381e`. |
+| Active sub-packet | **`W1_CLUE_ROW_READABILITY_REPAIR_V1`.** |
+| Status | **ADMITTED — one bounded active-route learner-readability repair PR.** |
+| Latest admitted PR | **#137** — P3 split E2E closure, accepted candidate `a7913f1157fe01e2ee5d6f23c3beb1e20b377bdb`, merge `0a93a3616c3007cb90df638bf378017804dbae69`. |
 | EID-1 | **CLOSED** — PR #124, merge `29ea21b1c23da1fa398333ec4eaaa067467349e8`. |
 | VAT-1 | **CLOSED** — PR #125, merge `6268f114ceb668664ded65290d2aae459be10b75`. |
 | Independent visual review | **CLOSED — `VISUAL_CLOSURE_LEDGER_READY`; 135/135 evidence images inspected, 0 P0, 0 P1, and no Modern Table regression confirmed.** |
 | Wave-A outcome | **`RUNNER_LEARNING_SURFACE_GRAMMAR_V1` = `CLOSED_ALREADY_PRESENT_BEFORE_DISPATCH`** — PRs #110/#114/#116 already integrated the geometry/CTA contracts; the remaining source-string guard is stale, not a product regression. |
-| Systemic product admission | **`PERSONALIZATION_CONSUMPTION_AND_NEXT_REP_V1` and `LEARNING_REPAIR_RECHECK_PAYOFF_CLOSURE_V1` are CLOSED_CURRENT.** P3 splits honest proof into `FRESH_ENTRY_CORE_E2E_V1` (repair/recheck receipt, no payoff) and `PROGRESSED_SESSION_PAYOFF_E2E_V1` (legitimate restored progress, two distinct outcomes, payoff, focused Practice-next). Same-source replay remains one canonical outcome. |
-| Owner visual directives | **Visual work is closed/frozen.** No general Wave B, Review/Profile, tablet/landscape, mascot, motion, or broad visual work. |
+| Systemic product admission | **`P3_SPLIT_E2E_CLOSURE_V1 = CLOSED_CURRENT`.** P1/P2/P3 deterministic pre-Human corridor is closed; native-device and Human QA remain unproven. |
+| Owner visual directives | **Targeted post-P3 visual audit was performed but is not final visual acceptance.** It independently confirmed one active learner-readability defect: the W1 `Clue from table` second line clips in wrong-feedback and recheck-receipt states. |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **PARTIALLY CLOSED IN PHP-3** — six PHP-3-owned unique current guards are current-contract reconciled and Tier-B ledgered; four differently owned unresolved-unique files remain. |
 | F-18 | **STALE_TEST** — exact pre-F-16-to-head trail disproves PR #51/#52 causation; owner is compact-decision test fixture / retired teaching-step assertion |
@@ -32,18 +32,22 @@ here; update only the fields below.
 | PHP-1 stale assertions | **2** — phase-7 campaign wording; compact-decision retired teaching-step expectation |
 | F-16 non-weakening review | **NON_WEAKENING** — seven stale-test groups (#4, #5, #6, #7–9, #11, #12) independently re-derived |
 | PHP-3 / PHP-4 / PHP-5 / PHP-6 / PHP-7 / PHP-8 | **HISTORICAL/CLOSED — not reopened by this dispatch.** |
-| Recommended next packet | **`P3_SPLIT_E2E_CLOSURE_V1`.** |
-| Next authorization | **One bounded P3 proof PR after this reconciliation normally merges and `origin/main` equals that resulting merge commit. No payoff threshold, progression, content, telemetry, Modern Table, or visual-policy change is authorized.** |
+| Recommended next packet | **`W1_CLUE_ROW_READABILITY_REPAIR_V1`.** |
+| Next authorization | **Admitted exactly: repair mandatory W1 clue-text clipping on the active learning route; prove compact 1.0× and 1.4× reachability; generate bounded before/after evidence. This is functional learner-readability and bounded final visual/device acceptance work, not general visual polish, Wave B, visual-policy redesign, or Modern Table work.** |
 | Autonomous window | **One bounded implementation Goal mission; preferred one PR; maximum two PRs only when the first is a separately safe behavior-preserving ownership extraction; one internal corrective pass maximum; then mandatory Top-1 reassessment.** |
-| Wave B | **NOT PREAUTHORIZED.** |
+| Wave B | **NOT PREAUTHORIZED.** No broad visual work, Review/Profile, mascot, motion, tablet/landscape, general runner redesign, copy/content/progression/payoff/telemetry/dependency changes, Modern Table changes, Atlas refresh, or Human QA/HNP is authorized. |
 | Human Proof | **NOT AUTHORIZED** — Human QA and Human Novice Proof are outside this dispatch. |
 | PHP-9 | **NOT_PREAUTHORIZED** |
 | Modern Table | **Maintenance Mode** |
-| Public visual tooling | **Frozen except ordinary post-merge evidence refresh for learner-facing pixel changes.** |
+| Public visual tooling | **Frozen except bounded local before/after evidence for `W1_CLUE_ROW_READABILITY_REPAIR_V1`; no public Atlas refresh.** |
 | `PRE_HUMAN_READY` | **NOT MET** |
 | `HUMAN_PROVEN_10_OF_10_CANDIDATE` | **NOT MET** |
 
 ## Superseded historical dispatch record
+
+After the exact W1 repair merges and is independently accepted, generate an
+exact P3 visual capture pack, then decide whether bounded Human/native QA is
+still required before Alpha acceptance.
 
 The production-real baseline / Active-Route Visual Reality language below is
 retained only as historical evidence. This reconciliation does not authorize

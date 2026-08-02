@@ -2,7 +2,30 @@
 
 Status: ACTIVE POST-MERGE EXECUTION CAPSULE.
 
-## Supersession — 2026-08-02 (P3 split E2E)
+## Supersession — 2026-08-03 (post-P3 W1 learner-readability repair)
+
+`P3_SPLIT_E2E_CLOSURE_V1` is **CLOSED_CURRENT**: PR #137 normally merged
+accepted candidate `a7913f1157fe01e2ee5d6f23c3beb1e20b377bdb` at
+`0a93a3616c3007cb90df638bf378017804dbae69`, closing the P1/P2/P3
+deterministic pre-Human corridor. Native-device and Human QA remain unproven.
+A targeted post-P3 visual audit was not final visual acceptance, but it
+independently confirmed one active learner-readability defect: the W1 `Clue
+from table` second line clips in wrong-feedback and recheck-receipt states.
+
+Exactly one bounded final visual/device acceptance repair is admitted:
+**`W1_CLUE_ROW_READABILITY_REPAIR_V1`**. It may repair mandatory clue-text
+clipping in the active Act0 learning route, preserve complete learner-readable
+feedback, prove compact 1.0× and 1.4× reachability, and generate bounded local
+before/after evidence. It is not general visual polish, Wave B, visual-policy
+redesign, or Modern Table work. It does not authorize Review/Profile, mascot,
+motion, tablet/landscape, general runner redesign, copy/content/progression/
+payoff/telemetry/dependency changes, full Atlas refresh, or Human QA/HNP.
+
+After this exact repair is independently accepted, generate an exact P3 visual
+capture pack, then decide whether bounded Human/native QA is still required
+before Alpha acceptance.
+
+## Historical supersession — 2026-08-02 (P3 split E2E)
 
 `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` remains the first-read dispatch
 authority. `PERSONALIZATION_CONSUMPTION_AND_NEXT_REP_V1` and
