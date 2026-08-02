@@ -6685,6 +6685,14 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         usesSharedAccessibilitySurface &&
         hasSeatTargets &&
         !hasRepairTeachingBlock;
+    // The shared cycle envelope deliberately stays full-height to keep table
+    // geometry stable. A short successful outcome must not use that empty
+    // space to push its next action to the opposite edge of the envelope.
+    final usesCohesiveShortOutcome =
+        usesSharedAccessibilitySurface &&
+        !isWrong &&
+        !isSuboptimal &&
+        !hasRepairTeachingBlock;
     final isExactReplayRepair =
         repairResultReceiptLine?.trim().toLowerCase().startsWith('replay ') ==
             true ||
@@ -7312,6 +7320,16 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   SizedBox(key: feedbackTreatmentKey, height: 0),
                   if (pinsF1FeedbackCta)
                     SizedBox(height: 48, child: buildContinueAction())
+                  else if (usesCohesiveShortOutcome)
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: buildContinueAction(),
+                        ),
+                      ),
+                    )
                   else if (usesSharedAccessibilitySurface)
                     Expanded(
                       child: Align(

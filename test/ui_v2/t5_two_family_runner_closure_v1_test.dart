@@ -373,6 +373,49 @@ void main() {
     },
   );
 
+  testWidgets(
+    'short successful compact feedback keeps its conclusion and next action together',
+    (tester) async {
+      final task = allTasks.singleWhere(
+        (task) => task.taskId == 'visible_king_combo_reduction_intro',
+      );
+      final correct = task.runner.options.singleWhere(
+        (option) => option.isCorrect,
+      );
+      final feedback = task.runner.copyWith(
+        phase: Act0LessonPhaseV1.review,
+        teachingSteps: const <Act0TeachingStepV1>[],
+        selectedOptionId: correct.id,
+      );
+      const profile = _Profile(Size(375, 812), 1.4, 47, 34);
+      await tester.binding.setSurfaceSize(profile.size);
+      await tester.pumpWidget(
+        _host(feedback, profile, task.resolvedCompositionFamily),
+      );
+      await tester.pumpAndSettle();
+
+      final conclusion = tester.getRect(
+        find.byKey(const Key('act0_shell_feedback_primary_result_block')),
+      );
+      final cta = tester.getRect(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      final lower = tester.getRect(
+        find.byKey(const Key('act0_shell_runner_action_dock')),
+      );
+
+      // The proof stack can carry a concise reason, but the CTA must remain
+      // visibly paired with this short successful outcome instead of being
+      // anchored at the far edge of the reserved runner envelope.
+      expect(cta.top - conclusion.bottom, lessThanOrEqualTo(96));
+      expect(lower.contains(cta.topLeft), isTrue);
+      expect(lower.contains(cta.bottomRight), isTrue);
+      expect(tester.takeException(), isNull);
+
+      await tester.binding.setSurfaceSize(null);
+    },
+  );
+
   testWidgets('non-shared F2 feedback keeps its original non-scroll surface', (
     tester,
   ) async {
