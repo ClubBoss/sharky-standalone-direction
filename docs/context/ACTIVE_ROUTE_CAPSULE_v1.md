@@ -2,13 +2,16 @@
 
 Status: ACTIVE POST-MERGE EXECUTION CAPSULE.
 
-## Supersession — 2026-08-01 (EID / VAT)
+## Supersession — 2026-08-02 (Runner Grammar Wave A)
 
 `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` remains the first-read dispatch
-authority. The current live sequence is **EID-1 → VAT-1 → independent visual
-review**. Older PHP and Visual Reality route sections below are retained as
-historical evidence. This tooling sequence creates no product UI or visual-fix
-authorization.
+authority. EID-1 (PR #124), VAT-1 (PR #125), and the independent visual review
+are closed. After this authority-dispatch PR normally merges, the one live
+product authorization is **`RUNNER_LEARNING_SURFACE_GRAMMAR_V1` — Goal Wave A**:
+an evidence-backed shared Act0 runner Learning Effect repair for VSC-01 through
+VSC-04. It does not reopen Modern Table, broad visual polish, Review/Profile,
+tablet/landscape, mascot, motion, content, telemetry, Human QA, or Human Novice
+Proof. Wave B is not preauthorized; reassess the Top-1 route after Wave A.
 
 ## Supersession — 2026-07-27 (post-PR #76)
 
