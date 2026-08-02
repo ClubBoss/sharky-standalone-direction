@@ -21,22 +21,29 @@ Act0LearningRunOutcomeV1 _outcome({
   bool firstCorrect = true,
   bool repaired = false,
   bool? recheck,
+  String? lessonId,
+  String? taskId,
 }) => Act0LearningRunOutcomeV1(
   outcomeId: id,
-  lessonId: switch (skill) {
-    'starting_hand_read' => Act0StartingHandPersonalizationV1.sourceLessonId,
-    'board_read' => Act0BoardTexturePersonalizationV1.lessonId,
-    'table_position_read' => 'position_six_seats',
-    'price_read' => 'call_price',
-    _ => 'fold_check_call_raise',
-  },
-  taskId: switch (skill) {
-    'starting_hand_read' => Act0StartingHandPersonalizationV1.sourceTaskId,
-    'board_read' => Act0BoardTexturePersonalizationV1.sourceTaskId,
-    'table_position_read' => 'position_six_seats_positions_button',
-    'price_read' => 'w4_bad_price_fold',
-    _ => 'actions_check_drill',
-  },
+  lessonId:
+      lessonId ??
+      switch (skill) {
+        'starting_hand_read' =>
+          Act0StartingHandPersonalizationV1.sourceLessonId,
+        'board_read' => Act0BoardTexturePersonalizationV1.lessonId,
+        'table_position_read' => 'position_six_seats',
+        'price_read' => 'call_price',
+        _ => 'fold_check_call_raise',
+      },
+  taskId:
+      taskId ??
+      switch (skill) {
+        'starting_hand_read' => Act0StartingHandPersonalizationV1.sourceTaskId,
+        'board_read' => Act0BoardTexturePersonalizationV1.sourceTaskId,
+        'table_position_read' => 'position_six_seats_positions_button',
+        'price_read' => 'w4_bad_price_fold',
+        _ => 'actions_check_drill',
+      },
   skillId: skill,
   firstAttemptCorrect: firstCorrect,
   errorType: firstCorrect
@@ -163,6 +170,90 @@ void main() {
     expect(payoff.nextPractice, 'Practice one more Button read next.');
   });
 
+  test('all five admitted families keep a specific focused descriptor', () {
+    final expectedLabels = <String, String>{
+      'action_read': 'the action',
+      'table_position_read': 'table position',
+      'price_read': 'the price',
+      Act0StartingHandPersonalizationV1.skillId: 'starting-hand discipline',
+      Act0BoardTexturePersonalizationV1.skillId: 'board texture',
+    };
+    for (final entry in expectedLabels.entries) {
+      final payoff = Act0LearningRunPayoffPolicyV1.evaluate(
+        _run(<Act0LearningRunOutcomeV1>[
+          _outcome(
+            id: 'clean:${entry.key}',
+            skill: 'action_read',
+            outcome: Act0LearningRunFinalOutcomeV1.masteredFirstTry,
+          ),
+          _outcome(
+            id: 'focus:${entry.key}',
+            skill: entry.key,
+            outcome: Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
+            order: 2,
+            firstCorrect: false,
+            repaired: true,
+            recheck: false,
+          ),
+        ]),
+      )!;
+      expect(payoff.focus!.skillId, entry.key);
+      expect(
+        Act0LearningRunPayoffPolicyV1.outcomeLine(payoff.focus!),
+        contains(entry.value),
+      );
+      expect(payoff.nextClue, isNot(contains('same table clue')));
+    }
+  });
+
+  test('all five payoff focuses resolve to one canonical drill route', () {
+    final state = Act0ShellStateV1.sample;
+    for (final skill in <String>[
+      'action_read',
+      'table_position_read',
+      'price_read',
+      Act0StartingHandPersonalizationV1.skillId,
+      Act0BoardTexturePersonalizationV1.skillId,
+    ]) {
+      final focus = _outcome(
+        id: 'focus:$skill',
+        skill: skill,
+        outcome: Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
+        firstCorrect: false,
+        repaired: true,
+        recheck: false,
+      );
+      final route = Act0LearningRunPayoffFocusResolverV1.resolve(
+        state: state,
+        focus: focus,
+      );
+      expect(route, isNotNull, reason: skill);
+      expect(route!.lesson.lessonId, focus.lessonId, reason: skill);
+      expect(route.task.taskId, focus.taskId, reason: skill);
+      expect(route.task.phase, Act0LessonPhaseV1.drill, reason: skill);
+    }
+  });
+
+  test('invalid payoff focus fails closed without a task route', () {
+    final invalid = _outcome(
+      id: 'unknown:1',
+      skill: 'unknown_skill',
+      outcome: Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
+      firstCorrect: false,
+      repaired: true,
+      recheck: false,
+      lessonId: 'missing_lesson',
+      taskId: 'missing_task',
+    );
+    expect(
+      Act0LearningRunPayoffFocusResolverV1.resolve(
+        state: Act0ShellStateV1.sample,
+        focus: invalid,
+      ),
+      isNull,
+    );
+  });
+
   testWidgets(
     'W2 and W5 source-owned families consume specific payoff guidance',
     (tester) async {
@@ -231,7 +322,7 @@ void main() {
         find.text(
           'You repaired starting-hand discipline and passed the recheck.',
         ),
-        findsNWidgets(2),
+        findsOneWidget,
       );
       expect(find.textContaining('this clue'), findsNothing);
     },
@@ -446,7 +537,9 @@ void main() {
     },
   );
 
-  testWidgets('compact payoff keeps its Home CTA reachable', (tester) async {
+  testWidgets('compact payoff keeps its focused Practice CTA reachable', (
+    tester,
+  ) async {
     var completed = false;
     final payoff = Act0LearningRunPayoffPolicyV1.evaluate(
       _run(<Act0LearningRunOutcomeV1>[
@@ -481,9 +574,53 @@ void main() {
     final cta = find.byKey(const Key('act0_learning_run_payoff_complete_cta'));
     await tester.ensureVisible(cta);
     expect(tester.getRect(cta).bottom, lessThanOrEqualTo(812));
+    expect(
+      find.descendant(of: cta, matching: find.text('Practice next')),
+      findsOneWidget,
+    );
     await tester.tap(cta);
     expect(completed, isTrue);
   });
+
+  test(
+    'recovered-only payoff has one truthful claim and a real source focus',
+    () {
+      final payoff = Act0LearningRunPayoffPolicyV1.evaluate(
+        _run(<Act0LearningRunOutcomeV1>[
+          _outcome(
+            id: 'action:1',
+            skill: 'action_read',
+            outcome: Act0LearningRunFinalOutcomeV1.recoveredAfterRepair,
+            firstCorrect: false,
+            repaired: true,
+            recheck: true,
+          ),
+          _outcome(
+            id: 'position:1',
+            skill: 'table_position_read',
+            outcome: Act0LearningRunFinalOutcomeV1.recoveredAfterRepair,
+            order: 2,
+            firstCorrect: false,
+            repaired: true,
+            recheck: true,
+          ),
+        ]),
+      )!;
+
+      expect(payoff.strength, isNull);
+      expect(payoff.recovered, isNotNull);
+      expect(payoff.unresolved, isNull);
+      expect(payoff.focus, same(payoff.recovered));
+      final source = Act0ShellStateV1.sample.worlds
+          .expand((world) => world.lessons)
+          .where((lesson) => lesson.lessonId == payoff.focus!.lessonId)
+          .single;
+      expect(
+        source.taskList.map((task) => task.taskId),
+        contains(payoff.focus!.taskId),
+      );
+    },
+  );
 
   testWidgets('opening Learn and theory alone do not start a Learning Run', (
     tester,
