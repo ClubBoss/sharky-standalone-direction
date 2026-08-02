@@ -115,25 +115,36 @@ Do not use the readiness reference as the default bottleneck selector for day-to
 
 ## Current post-merge status
 
-- **Current-execution correction (2026-08-03, post-PR #137):**
+- **Current-execution correction (2026-08-03, post-PR #139 closure):**
   `P3_SPLIT_E2E_CLOSURE_V1` is **CLOSED_CURRENT**. PR #137 normally merged
   accepted candidate `a7913f1157fe01e2ee5d6f23c3beb1e20b377bdb` at
   `0a93a3616c3007cb90df638bf378017804dbae69`, closing the P1/P2/P3
   deterministic pre-Human corridor. Native-device and Human QA remain
   unproven. A targeted post-P3 visual audit did not qualify as final visual
-  acceptance, but independently confirmed one active learner-readability
-  defect: the W1 `Clue from table` second line clips in wrong-feedback and
-  recheck-receipt states. Exactly one bounded repair is now admitted:
-  `W1_CLUE_ROW_READABILITY_REPAIR_V1`. It repairs mandatory clue-text clipping
-  on the active learning route, preserves full learner-readable feedback,
-  proves compact 1.0×/1.4× reachability, and generates bounded before/after
-  evidence. It is final visual/device acceptance work—not general visual
-  polish, Wave B, visual-policy redesign, or Modern Table work. It does not
-  authorize Review/Profile, mascot, motion, tablet/landscape, general runner
-  redesign, copy/content/progression/payoff/telemetry/dependency changes,
-  full Atlas refresh, or Human QA/HNP. After the repair is independently
-  accepted, generate an exact P3 visual capture pack and decide whether
-  bounded Human/native QA remains required before Alpha acceptance.
+  acceptance. `W1_CLUE_ROW_READABILITY_REPAIR_V1` is
+  **CLOSED_NO_PRODUCT_CHANGE_CAPTURE_ONLY_ARTIFACT**: valid font-backed
+  production-widget evidence did not reproduce clipping, the earlier
+  glyph-block/Atlas interpretation was invalid for that verdict, and PR #139
+  was closed unmerged with no product or test source entering main.
+
+  `FUNCTIONAL_VISUAL_REGRESSION_MAINTENANCE_RULE_V1` permits one bounded repair
+  without another per-defect authority PR only when valid deterministic or
+  native evidence reproduces a functional regression affecting mandatory text,
+  required CTA reachability, compact/safe-area usability, or the deterministic
+  screenshot pipeline. It must introduce no new visual direction, copy,
+  content, progression, payoff, telemetry, dependency, mascot, motion,
+  Review/Profile work, or broad runner redesign; stay within one coherent
+  owner, at most two production files, one PR, and one corrective pass; and
+  include rendered tests plus valid before/after evidence. Modern Table remains
+  in Maintenance Mode, a full Atlas refresh is not automatic, and invalid
+  Ahem/glyph-block/proxy evidence cannot establish a product defect. This rule
+  does not reopen Wave B or general visual work.
+
+  Exactly one non-product packet is now admitted:
+  `POST_P3_SIMULATOR_VISUAL_ACCEPTANCE_V1`. It runs the merged current app in
+  an iOS Simulator through ordinary visible controls, captures only the named
+  high-value states, and makes no product or test changes. This is black-box
+  acceptance, not Human Proven status.
 
 - **Current-execution correction (2026-08-02, post-PR #134):**
   `PERSONALIZATION_CONSUMPTION_AND_NEXT_REP_V1` and
