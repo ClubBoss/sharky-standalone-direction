@@ -2,18 +2,22 @@
 
 Status: ACTIVE POST-MERGE EXECUTION CAPSULE.
 
-## Supersession — 2026-08-02 (P3 distinct-outcome E2E)
+## Supersession — 2026-08-02 (P3 split E2E)
 
 `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` remains the first-read dispatch
 authority. `PERSONALIZATION_CONSUMPTION_AND_NEXT_REP_V1` and
 `LEARNING_REPAIR_RECHECK_PAYOFF_CLOSURE_V1` are closed on current main (PRs
 #131 and #133). The one live product authorization is
-**`MINIMAL_LIVE_ALPHA_E2E_CLOSURE_V1`**: a bounded P3 fresh-entry ordinary
-Learning Run proving two distinct meaningful source outcomes, truthful payoff,
-and the existing focused Practice-next continuation. It does not reopen Modern
-Table, visual work, Review/Profile, tablet/landscape, mascot, motion, broad
-content, telemetry, Human QA, Human Novice Proof, dependencies, or Wave B.
-The prior runner-feedback admission is historical execution context only.
+**`P3_SPLIT_E2E_CLOSURE_V1`**: a bounded two-lane proof. Fresh entry proves
+ordinary first-route feedback, same-signal repair, recheck, and truthful
+receipt without a payoff; legitimate restored progress proves two distinct
+outcomes, payoff, and focused Practice-next. The previous combined fresh-entry
+payoff requirement was overconstrained because later source families are
+locked, not because production behavior is missing. This does not reopen
+Modern Table, visual work, Review/Profile, tablet/landscape, mascot, motion,
+broad content, telemetry, Human QA, Human Novice Proof, dependencies, or Wave
+B. The next gate after both lanes is Human QA plus bounded final
+visual/device acceptance.
 
 ## Supersession — 2026-07-27 (post-PR #76)
 
