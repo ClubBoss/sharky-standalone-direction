@@ -115,6 +115,16 @@ Do not use the readiness reference as the default bottleneck selector for day-to
 
 ## Current post-merge status
 
+- **Current-execution correction (2026-08-02, post-PR #127):**
+  `RUNNER_LEARNING_SURFACE_GRAMMAR_V1` is
+  `CLOSED_ALREADY_PRESENT_BEFORE_DISPATCH`: the shared runner geometry was
+  already integrated by PRs #110, #114, and #116. The mandatory Top-1
+  reassessment admits exactly one separate Learning Effect residual,
+  `RUNNER_FEEDBACK_TAKEAWAY_COMPOSITION_V1`, for short inner feedback
+  composition and semantic hierarchy only. It preserves table/cycle geometry,
+  Modern Table Maintenance Mode, and the Human QA/HNP prohibition; it does not
+  preauthorize general Wave B or broader visual work.
+
 - **Current-execution correction (2026-08-02):** EID-1 (PR #124) and VAT-1
   (PR #125) are closed, and the independent Atlas review has produced the
   finite `VISUAL_CLOSURE_LEDGER_READY` record. The former no-product-fixes

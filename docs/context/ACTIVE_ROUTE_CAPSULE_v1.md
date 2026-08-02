@@ -2,16 +2,17 @@
 
 Status: ACTIVE POST-MERGE EXECUTION CAPSULE.
 
-## Supersession — 2026-08-02 (Runner Grammar Wave A)
+## Supersession — 2026-08-02 (Runner Feedback Takeaway Composition)
 
 `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` remains the first-read dispatch
-authority. EID-1 (PR #124), VAT-1 (PR #125), and the independent visual review
-are closed. After this authority-dispatch PR normally merges, the one live
-product authorization is **`RUNNER_LEARNING_SURFACE_GRAMMAR_V1` — Goal Wave A**:
-an evidence-backed shared Act0 runner Learning Effect repair for VSC-01 through
-VSC-04. It does not reopen Modern Table, broad visual polish, Review/Profile,
-tablet/landscape, mascot, motion, content, telemetry, Human QA, or Human Novice
-Proof. Wave B is not preauthorized; reassess the Top-1 route after Wave A.
+authority. Wave A is `CLOSED_ALREADY_PRESENT_BEFORE_DISPATCH`: PRs #110, #114,
+and #116 already supplied its shared runner geometry and CTA contracts. The one
+live product authorization after this reconciliation normally merges is
+**`RUNNER_FEEDBACK_TAKEAWAY_COMPOSITION_V1`**: a narrow inner feedback Learning
+Effect / semantic-hierarchy repair that preserves stable table geometry. It does
+not reopen Modern Table, broad visual polish, Review/Profile, tablet/landscape,
+mascot, motion, content, telemetry, Human QA, or Human Novice Proof. Wave B is
+not preauthorized.
 
 ## Supersession — 2026-07-27 (post-PR #76)
 
