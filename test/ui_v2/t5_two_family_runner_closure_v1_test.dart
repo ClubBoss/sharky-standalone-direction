@@ -387,30 +387,46 @@ void main() {
         teachingSteps: const <Act0TeachingStepV1>[],
         selectedOptionId: correct.id,
       );
-      const profile = _Profile(Size(375, 812), 1.4, 47, 34);
-      await tester.binding.setSurfaceSize(profile.size);
-      await tester.pumpWidget(
-        _host(feedback, profile, task.resolvedCompositionFamily),
-      );
-      await tester.pumpAndSettle();
+      for (final scale in <double>[1, 1.4]) {
+        final profile = _Profile(const Size(375, 812), scale, 47, 34);
+        await tester.binding.setSurfaceSize(profile.size);
+        await tester.pumpWidget(
+          _host(feedback, profile, task.resolvedCompositionFamily),
+        );
+        await tester.pumpAndSettle();
 
-      final conclusion = tester.getRect(
-        find.byKey(const Key('act0_shell_feedback_primary_result_block')),
-      );
-      final cta = tester.getRect(
-        find.byKey(const Key('act0_shell_feedback_continue_cta')),
-      );
-      final lower = tester.getRect(
-        find.byKey(const Key('act0_shell_runner_action_dock')),
-      );
+        final conclusion = tester.getRect(
+          find.byKey(const Key('act0_shell_feedback_primary_result_block')),
+        );
+        final reason = tester.getRect(
+          find.byKey(const Key('act0_shell_feedback_reason')),
+        );
+        final nextClue = find.byKey(const Key('act0_shell_feedback_next_clue'));
+        final finalSemanticBlock = nextClue.evaluate().isEmpty
+            ? reason
+            : tester.getRect(nextClue);
+        final cta = tester.getRect(
+          find.byKey(const Key('act0_shell_feedback_continue_cta')),
+        );
+        final lower = tester.getRect(
+          find.byKey(const Key('act0_shell_runner_action_dock')),
+        );
 
-      // The proof stack can carry a concise reason, but the CTA must remain
-      // visibly paired with this short successful outcome instead of being
-      // anchored at the far edge of the reserved runner envelope.
-      expect(cta.top - conclusion.bottom, lessThanOrEqualTo(96));
-      expect(lower.contains(cta.topLeft), isTrue);
-      expect(lower.contains(cta.bottomRight), isTrue);
-      expect(tester.takeException(), isNull);
+        expect(
+          find.byKey(const Key('act0_shell_feedback_cohesive_group')),
+          findsOneWidget,
+        );
+        expect(
+          find.byKey(const Key('act0_shell_feedback_action_eyebrow')),
+          findsNothing,
+        );
+        expect(cta.top - finalSemanticBlock.bottom, inInclusiveRange(8, 32));
+        expect((conclusion.top - lower.top) - (lower.bottom - cta.bottom),
+            closeTo(0, 32));
+        expect(lower.contains(cta.topLeft), isTrue);
+        expect(lower.contains(cta.bottomRight), isTrue);
+        expect(tester.takeException(), isNull);
+      }
 
       await tester.binding.setSurfaceSize(null);
     },
