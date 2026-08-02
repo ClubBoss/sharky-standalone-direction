@@ -2,28 +2,36 @@
 
 Status: ACTIVE POST-MERGE EXECUTION CAPSULE.
 
-## Supersession — 2026-08-03 (post-P3 W1 learner-readability repair)
+## Supersession — 2026-08-03 (post-PR #139 capture-only closure)
 
 `P3_SPLIT_E2E_CLOSURE_V1` is **CLOSED_CURRENT**: PR #137 normally merged
 accepted candidate `a7913f1157fe01e2ee5d6f23c3beb1e20b377bdb` at
 `0a93a3616c3007cb90df638bf378017804dbae69`, closing the P1/P2/P3
 deterministic pre-Human corridor. Native-device and Human QA remain unproven.
-A targeted post-P3 visual audit was not final visual acceptance, but it
-independently confirmed one active learner-readability defect: the W1 `Clue
-from table` second line clips in wrong-feedback and recheck-receipt states.
+`W1_CLUE_ROW_READABILITY_REPAIR_V1` is
+**CLOSED_NO_PRODUCT_CHANGE_CAPTURE_ONLY_ARTIFACT**: font-backed production
+evidence did not reproduce clipping; the earlier glyph-block/Atlas reading was
+invalid, and PR #139 closed unmerged. No candidate product or test source
+entered main; no further clue-row repair is authorized without new valid
+evidence.
 
-Exactly one bounded final visual/device acceptance repair is admitted:
-**`W1_CLUE_ROW_READABILITY_REPAIR_V1`**. It may repair mandatory clue-text
-clipping in the active Act0 learning route, preserve complete learner-readable
-feedback, prove compact 1.0× and 1.4× reachability, and generate bounded local
-before/after evidence. It is not general visual polish, Wave B, visual-policy
-redesign, or Modern Table work. It does not authorize Review/Profile, mascot,
-motion, tablet/landscape, general runner redesign, copy/content/progression/
-payoff/telemetry/dependency changes, full Atlas refresh, or Human QA/HNP.
+`FUNCTIONAL_VISUAL_REGRESSION_MAINTENANCE_RULE_V1` allows one bounded repair
+without another per-defect authority PR only for a valid deterministic/native
+reproduced functional regression in mandatory text, CTA reachability,
+compact/safe-area usability, or deterministic screenshots. It requires one
+coherent owner, at most two production files, one PR, one corrective pass,
+rendered tests, and valid before/after evidence; excludes new direction, copy,
+content, progression, payoff, telemetry, dependencies, mascot, motion,
+Review/Profile, and broad runner redesign; keeps Modern Table in Maintenance
+Mode; does not auto-authorize an Atlas refresh; and rejects invalid
+Ahem/glyph-block/proxy evidence. It does not reopen Wave B or general visual
+work.
 
-After this exact repair is independently accepted, generate an exact P3 visual
-capture pack, then decide whether bounded Human/native QA is still required
-before Alpha acceptance.
+Exactly one non-product packet is admitted:
+**`POST_P3_SIMULATOR_VISUAL_ACCEPTANCE_V1`**. Use the merged current app in an
+iOS Simulator with ordinary visible controls, capture only high-value states,
+and make no product/test/capture-harness changes. It is black-box acceptance,
+not Human Proven status.
 
 ## Historical supersession — 2026-08-02 (P3 split E2E)
 

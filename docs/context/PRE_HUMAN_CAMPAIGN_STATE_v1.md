@@ -9,20 +9,20 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical baseline | `0a93a3616c3007cb90df638bf378017804dbae69` (PR #137 normal merge). |
-| Authority freshness | **RECONCILED after PR #137.** P3 is closed; this state authorizes only the bounded W1 learner-readability repair below. |
+| Canonical baseline | `27f4d88373ffc841e8742b1957528f69ed7f6a90` (PR #138 normal merge). |
+| Authority freshness | **RECONCILED after PR #139 closure.** P3 remains closed; this state authorizes only the non-product Simulator acceptance packet below. |
 | Campaign version | v1 |
 | Corridor | **`ROLLING_CORRIDOR_PHP6_TO_PHP8_V1`** — **CLOSED/HISTORICAL.** PHP-6, PHP-7, and PHP-8 are terminally closed and published (PR #85). The corridor is not reopened; its wave-by-wave authorization language below is historical record only. PHP-9 remains `NOT_PREAUTHORIZED`. |
 | Umbrella stage | **Learning Effect / Training Flow — current-head Top-1 convergence.** |
-| Active sub-packet | **`W1_CLUE_ROW_READABILITY_REPAIR_V1`.** |
-| Status | **ADMITTED — one bounded active-route learner-readability repair PR.** |
-| Latest admitted PR | **#137** — P3 split E2E closure, accepted candidate `a7913f1157fe01e2ee5d6f23c3beb1e20b377bdb`, merge `0a93a3616c3007cb90df638bf378017804dbae69`. |
+| Active sub-packet | **`POST_P3_SIMULATOR_VISUAL_ACCEPTANCE_V1`.** |
+| Status | **ADMITTED — bounded black-box iOS Simulator acceptance; no product/test changes.** |
+| Latest admitted PR | **#138** — authority unblock, merge `27f4d88373ffc841e8742b1957528f69ed7f6a90`. |
 | EID-1 | **CLOSED** — PR #124, merge `29ea21b1c23da1fa398333ec4eaaa067467349e8`. |
 | VAT-1 | **CLOSED** — PR #125, merge `6268f114ceb668664ded65290d2aae459be10b75`. |
 | Independent visual review | **CLOSED — `VISUAL_CLOSURE_LEDGER_READY`; 135/135 evidence images inspected, 0 P0, 0 P1, and no Modern Table regression confirmed.** |
 | Wave-A outcome | **`RUNNER_LEARNING_SURFACE_GRAMMAR_V1` = `CLOSED_ALREADY_PRESENT_BEFORE_DISPATCH`** — PRs #110/#114/#116 already integrated the geometry/CTA contracts; the remaining source-string guard is stale, not a product regression. |
 | Systemic product admission | **`P3_SPLIT_E2E_CLOSURE_V1 = CLOSED_CURRENT`.** P1/P2/P3 deterministic pre-Human corridor is closed; native-device and Human QA remain unproven. |
-| Owner visual directives | **Targeted post-P3 visual audit was performed but is not final visual acceptance.** It independently confirmed one active learner-readability defect: the W1 `Clue from table` second line clips in wrong-feedback and recheck-receipt states. |
+| Owner visual directives | **`W1_CLUE_ROW_READABILITY_REPAIR_V1 = CLOSED_NO_PRODUCT_CHANGE_CAPTURE_ONLY_ARTIFACT`.** Valid font-backed production-widget evidence did not reproduce clipping; prior glyph-block/Atlas interpretation was invalid, PR #139 was closed unmerged, no PR #139 product/test source entered main, the existing 1.0x clue rendering remains current, and no further clue-row repair is authorized without new valid evidence. |
 | F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
 | F-17 | **PARTIALLY CLOSED IN PHP-3** — six PHP-3-owned unique current guards are current-contract reconciled and Tier-B ledgered; four differently owned unresolved-unique files remain. |
 | F-18 | **STALE_TEST** — exact pre-F-16-to-head trail disproves PR #51/#52 causation; owner is compact-decision test fixture / retired teaching-step assertion |
@@ -32,22 +32,22 @@ here; update only the fields below.
 | PHP-1 stale assertions | **2** — phase-7 campaign wording; compact-decision retired teaching-step expectation |
 | F-16 non-weakening review | **NON_WEAKENING** — seven stale-test groups (#4, #5, #6, #7–9, #11, #12) independently re-derived |
 | PHP-3 / PHP-4 / PHP-5 / PHP-6 / PHP-7 / PHP-8 | **HISTORICAL/CLOSED — not reopened by this dispatch.** |
-| Recommended next packet | **`W1_CLUE_ROW_READABILITY_REPAIR_V1`.** |
-| Next authorization | **Admitted exactly: repair mandatory W1 clue-text clipping on the active learning route; prove compact 1.0× and 1.4× reachability; generate bounded before/after evidence. This is functional learner-readability and bounded final visual/device acceptance work, not general visual polish, Wave B, visual-policy redesign, or Modern Table work.** |
-| Autonomous window | **One bounded implementation Goal mission; preferred one PR; maximum two PRs only when the first is a separately safe behavior-preserving ownership extraction; one internal corrective pass maximum; then mandatory Top-1 reassessment.** |
+| Recommended next packet | **`POST_P3_SIMULATOR_VISUAL_ACCEPTANCE_V1`.** |
+| Next authorization | **Admitted exactly: current merged app, ordinary visible controls, high-value iOS Simulator captures, and no product/test/capture-harness changes. This is black-box acceptance, not Human Proven status.** |
+| Functional visual maintenance | **`FUNCTIONAL_VISUAL_REGRESSION_MAINTENANCE_RULE_V1`.** One bounded repair without a new per-defect authority PR is allowed only for a valid deterministic/native reproduced functional regression affecting mandatory text, CTA reachability, compact/safe-area usability, or deterministic screenshots; one coherent owner, at most two production files, one PR, one corrective pass, rendered tests, and valid before/after evidence are mandatory. No new direction/copy/content/progression/payoff/telemetry/dependencies/mascot/motion/Review/Profile/broad runner redesign; Modern Table remains Maintenance Mode; no automatic Atlas refresh; invalid Ahem/glyph-block/proxy evidence is insufficient. This does not reopen Wave B or general visual work. |
+| Autonomous window | **One bounded non-product Simulator acceptance mission; no product/test/capture-harness changes.** |
 | Wave B | **NOT PREAUTHORIZED.** No broad visual work, Review/Profile, mascot, motion, tablet/landscape, general runner redesign, copy/content/progression/payoff/telemetry/dependency changes, Modern Table changes, Atlas refresh, or Human QA/HNP is authorized. |
 | Human Proof | **NOT AUTHORIZED** — Human QA and Human Novice Proof are outside this dispatch. |
 | PHP-9 | **NOT_PREAUTHORIZED** |
 | Modern Table | **Maintenance Mode** |
-| Public visual tooling | **Frozen except bounded local before/after evidence for `W1_CLUE_ROW_READABILITY_REPAIR_V1`; no public Atlas refresh.** |
+| Public visual tooling | **Frozen; local Simulator evidence only for `POST_P3_SIMULATOR_VISUAL_ACCEPTANCE_V1`; no public Atlas refresh.** |
 | `PRE_HUMAN_READY` | **NOT MET** |
 | `HUMAN_PROVEN_10_OF_10_CANDIDATE` | **NOT MET** |
 
 ## Superseded historical dispatch record
 
-After the exact W1 repair merges and is independently accepted, generate an
-exact P3 visual capture pack, then decide whether bounded Human/native QA is
-still required before Alpha acceptance.
+The false-positive W1 repair did not merge. The admitted Simulator packet is a
+bounded post-P3 acceptance pass; it does not prove Human or physical-device QA.
 
 The production-real baseline / Active-Route Visual Reality language below is
 retained only as historical evidence. This reconciliation does not authorize
