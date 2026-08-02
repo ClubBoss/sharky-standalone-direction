@@ -115,13 +115,33 @@ Do not use the readiness reference as the default bottleneck selector for day-to
 
 ## Current post-merge status
 
+- **Current-execution correction (2026-08-03, post-PR #137):**
+  `P3_SPLIT_E2E_CLOSURE_V1` is **CLOSED_CURRENT**. PR #137 normally merged
+  accepted candidate `a7913f1157fe01e2ee5d6f23c3beb1e20b377bdb` at
+  `0a93a3616c3007cb90df638bf378017804dbae69`, closing the P1/P2/P3
+  deterministic pre-Human corridor. Native-device and Human QA remain
+  unproven. A targeted post-P3 visual audit did not qualify as final visual
+  acceptance, but independently confirmed one active learner-readability
+  defect: the W1 `Clue from table` second line clips in wrong-feedback and
+  recheck-receipt states. Exactly one bounded repair is now admitted:
+  `W1_CLUE_ROW_READABILITY_REPAIR_V1`. It repairs mandatory clue-text clipping
+  on the active learning route, preserves full learner-readable feedback,
+  proves compact 1.0×/1.4× reachability, and generates bounded before/after
+  evidence. It is final visual/device acceptance work—not general visual
+  polish, Wave B, visual-policy redesign, or Modern Table work. It does not
+  authorize Review/Profile, mascot, motion, tablet/landscape, general runner
+  redesign, copy/content/progression/payoff/telemetry/dependency changes,
+  full Atlas refresh, or Human QA/HNP. After the repair is independently
+  accepted, generate an exact P3 visual capture pack and decide whether
+  bounded Human/native QA remains required before Alpha acceptance.
+
 - **Current-execution correction (2026-08-02, post-PR #134):**
   `PERSONALIZATION_CONSUMPTION_AND_NEXT_REP_V1` and
   `LEARNING_REPAIR_RECHECK_PAYOFF_CLOSURE_V1` are closed on current main
   (PRs #131 and #133). The one active product authorization is
   `MINIMAL_LIVE_ALPHA_E2E_CLOSURE_V1`: one bounded P3 fresh-entry ordinary
   Learning Run proving two distinct meaningful source outcomes, truthful
-  payoff, and the existing focused Practice-next continuation. It does not
+  payoff, and the existing focused Practice-next continuation. It did not
   reopen Modern Table, visual work, broad content, telemetry, Human QA/HNP,
   dependencies, or Wave B. Earlier runner-feedback admission wording below is
   historical execution context and not the current packet selection.
