@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_board_texture_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_run_payoff_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_position_personalization_v1.dart';
@@ -8,6 +9,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_price_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_starting_hand_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,11 +24,15 @@ Act0LearningRunOutcomeV1 _outcome({
 }) => Act0LearningRunOutcomeV1(
   outcomeId: id,
   lessonId: switch (skill) {
+    'starting_hand_read' => Act0StartingHandPersonalizationV1.sourceLessonId,
+    'board_read' => Act0BoardTexturePersonalizationV1.lessonId,
     'table_position_read' => 'position_six_seats',
     'price_read' => 'call_price',
     _ => 'fold_check_call_raise',
   },
   taskId: switch (skill) {
+    'starting_hand_read' => Act0StartingHandPersonalizationV1.sourceTaskId,
+    'board_read' => Act0BoardTexturePersonalizationV1.sourceTaskId,
     'table_position_read' => 'position_six_seats_positions_button',
     'price_read' => 'w4_bad_price_fold',
     _ => 'actions_check_drill',
@@ -36,6 +42,8 @@ Act0LearningRunOutcomeV1 _outcome({
   errorType: firstCorrect
       ? 'none'
       : switch (skill) {
+          'starting_hand_read' => Act0StartingHandPersonalizationV1.errorType,
+          'board_read' => Act0BoardTexturePersonalizationV1.errorType,
           'table_position_read' => 'missed_table_position_read',
           'price_read' => 'missed_price_read',
           _ => 'missed_action_read',
@@ -44,11 +52,15 @@ Act0LearningRunOutcomeV1 _outcome({
   recheckResult: recheck,
   finalOutcome: outcome,
   missedSignal: switch (skill) {
+    'starting_hand_read' => Act0StartingHandPersonalizationV1.missedSignalId,
+    'board_read' => Act0BoardTexturePersonalizationV1.missedSignalId,
     'table_position_read' => 'hero_button',
     'price_read' => 'pot_to_call',
     _ => 'no_bet_yet',
   },
   recommendationSignal: switch (skill) {
+    'starting_hand_read' => 'compare_seat_and_action_frame',
+    'board_read' => 'compare_board_connection',
     'table_position_read' => 'find_button_before_late_position',
     'price_read' => 'compare_pot_to_call',
     _ => 'read_action_order',
@@ -150,6 +162,80 @@ void main() {
     expect(payoff.unresolved!.skillId, 'table_position_read');
     expect(payoff.nextPractice, 'Practice one more Button read next.');
   });
+
+  testWidgets(
+    'W2 and W5 source-owned families consume specific payoff guidance',
+    (tester) async {
+      final payoff = Act0LearningRunPayoffPolicyV1.evaluate(
+        _run(<Act0LearningRunOutcomeV1>[
+          _outcome(
+            id: 'starting-hand:1',
+            skill: Act0StartingHandPersonalizationV1.skillId,
+            outcome: Act0LearningRunFinalOutcomeV1.recoveredAfterRepair,
+            firstCorrect: false,
+            repaired: true,
+            recheck: true,
+          ),
+          _outcome(
+            id: 'board:1',
+            skill: Act0BoardTexturePersonalizationV1.skillId,
+            outcome: Act0LearningRunFinalOutcomeV1.stillNeedsPractice,
+            order: 2,
+            firstCorrect: false,
+            repaired: true,
+            recheck: false,
+          ),
+        ]),
+      )!;
+
+      expect(
+        payoff.recovered!.skillId,
+        Act0StartingHandPersonalizationV1.skillId,
+      );
+      expect(
+        payoff.unresolved!.skillId,
+        Act0BoardTexturePersonalizationV1.skillId,
+      );
+      expect(
+        payoff.nextClue,
+        Act0BoardTexturePersonalizationV1.learningRunNextClue,
+      );
+      expect(
+        payoff.nextPractice,
+        Act0BoardTexturePersonalizationV1.learningRunNextPractice,
+      );
+      expect(
+        Act0LearningRunPayoffPolicyV1.outcomeLine(payoff.recovered!),
+        'You repaired starting-hand discipline and passed the recheck.',
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LearningRunPayoffSheetV1(
+              payoff: payoff,
+              onComplete: () {},
+            ),
+          ),
+        ),
+      );
+      expect(
+        find.text(Act0BoardTexturePersonalizationV1.learningRunNextClue),
+        findsOneWidget,
+      );
+      expect(
+        find.text(Act0BoardTexturePersonalizationV1.learningRunNextPractice),
+        findsOneWidget,
+      );
+      expect(
+        find.text(
+          'You repaired starting-hand discipline and passed the recheck.',
+        ),
+        findsNWidgets(2),
+      );
+      expect(find.textContaining('this clue'), findsNothing);
+    },
+  );
 
   test('three-skill payoff scenarios preserve evidence priority and source', () {
     final recoveredPrice = _outcome(

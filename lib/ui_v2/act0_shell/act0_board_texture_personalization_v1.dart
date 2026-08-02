@@ -14,6 +14,11 @@ class Act0BoardTexturePersonalizationV1 {
   static const String skillId = 'board_read';
   static const String missedSignalId = 'board_cards';
   static const String reasonCode = 'same_signal_board_read_board_cards';
+  static const String learningRunLabel = 'board texture';
+  static const String learningRunNextClue =
+      'Read the board cards together: connection and suits change the texture.';
+  static const String learningRunNextPractice =
+      'Practice one more board-texture read next.';
 
   static Act0BoardTexturePersonalizationCaseV1? fromRepairIntent(
     Act0RepairIntentV1 intent,

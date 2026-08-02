@@ -19,6 +19,11 @@ class Act0StartingHandPersonalizationV1 {
   static const String missedSignalId =
       act0StartingHandPersonalizationSignalIdV1;
   static const String skillId = act0StartingHandPersonalizationSkillIdV1;
+  static const String learningRunLabel = 'starting-hand discipline';
+  static const String learningRunNextClue =
+      'Check your seat and the action before judging the hand.';
+  static const String learningRunNextPractice =
+      'Practice one more seat-and-action read next.';
 
   static Act0StartingHandPersonalizationCaseV1? fromRepairIntent(
     Act0RepairIntentV1 intent,

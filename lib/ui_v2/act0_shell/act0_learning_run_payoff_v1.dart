@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_board_texture_personalization_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_starting_hand_personalization_v1.dart';
 
 /// A run is intentionally local to one continuous visit through Learn. It is
 /// not persisted and must never be read as long-term learner state.
@@ -259,24 +261,34 @@ class Act0LearningRunPayoffPolicyV1 {
     Act0LearningRunOutcomeV1 outcome,
   ) => _skillDescriptors[outcome.skillId] ?? _genericDescriptor;
 
-  static const Map<String, Act0LearningRunSkillDescriptorV1> _skillDescriptors =
-      <String, Act0LearningRunSkillDescriptorV1>{
-        'action_read': Act0LearningRunSkillDescriptorV1(
-          label: 'the action',
-          nextClue: 'Check whether a bet is already in front of you.',
-          nextPractice: 'Practice one more action-order read next.',
-        ),
-        'table_position_read': Act0LearningRunSkillDescriptorV1(
-          label: 'table position',
-          nextClue: 'Find the Button before judging who acts late.',
-          nextPractice: 'Practice one more Button read next.',
-        ),
-        'price_read': Act0LearningRunSkillDescriptorV1(
-          label: 'the price',
-          nextClue: 'Compare the pot with the amount you must call.',
-          nextPractice: 'Practice one more pot-versus-call read next.',
-        ),
-      };
+  static const Map<String, Act0LearningRunSkillDescriptorV1>
+  _skillDescriptors = <String, Act0LearningRunSkillDescriptorV1>{
+    'action_read': Act0LearningRunSkillDescriptorV1(
+      label: 'the action',
+      nextClue: 'Check whether a bet is already in front of you.',
+      nextPractice: 'Practice one more action-order read next.',
+    ),
+    'table_position_read': Act0LearningRunSkillDescriptorV1(
+      label: 'table position',
+      nextClue: 'Find the Button before judging who acts late.',
+      nextPractice: 'Practice one more Button read next.',
+    ),
+    'price_read': Act0LearningRunSkillDescriptorV1(
+      label: 'the price',
+      nextClue: 'Compare the pot with the amount you must call.',
+      nextPractice: 'Practice one more pot-versus-call read next.',
+    ),
+    Act0StartingHandPersonalizationV1.skillId: Act0LearningRunSkillDescriptorV1(
+      label: Act0StartingHandPersonalizationV1.learningRunLabel,
+      nextClue: Act0StartingHandPersonalizationV1.learningRunNextClue,
+      nextPractice: Act0StartingHandPersonalizationV1.learningRunNextPractice,
+    ),
+    Act0BoardTexturePersonalizationV1.skillId: Act0LearningRunSkillDescriptorV1(
+      label: Act0BoardTexturePersonalizationV1.learningRunLabel,
+      nextClue: Act0BoardTexturePersonalizationV1.learningRunNextClue,
+      nextPractice: Act0BoardTexturePersonalizationV1.learningRunNextPractice,
+    ),
+  };
 
   static const Act0LearningRunSkillDescriptorV1 _genericDescriptor =
       Act0LearningRunSkillDescriptorV1(
