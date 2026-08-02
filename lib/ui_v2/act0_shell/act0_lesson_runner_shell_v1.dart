@@ -6761,8 +6761,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         repairReceiptLine.isEmpty &&
         !shouldShowReceiptProof &&
         visibleRepairSessionSummaryLines.isEmpty &&
-        completionSummary == null &&
-        !preserveFullCompactReason;
+        completionSummary == null;
     final showActionContrastEyebrow =
         !(streamlinedDirectDecisionFeedback && isCompactRefinedFeedback) &&
         !usesCohesiveShortOutcome;
@@ -7130,7 +7129,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                         ],
                       );
                       if (!usesSharedAccessibilitySurface ||
-                          usesCohesiveShortOutcome) {
+                          (usesCohesiveShortOutcome &&
+                              !preserveFullCompactReason)) {
                         return proofStack;
                       }
                       return ConstrainedBox(
