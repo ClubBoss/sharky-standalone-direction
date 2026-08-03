@@ -6,15 +6,17 @@ Status: ACTIVE POST-MERGE EXECUTION CAPSULE.
 
 `POST_P3_SIMULATOR_VISUAL_ACCEPTANCE_V1` is **CLOSED_PARTIAL**: its evidence
 was sufficient to establish systemic visual inconsistency and insufficient for
-Wave 3 acceptance. `FINAL_PRODUCT_VISUAL_COHESION_V1` is now active under
-`docs/plan/FINAL_PRODUCT_VISUAL_COHESION_DESIGN_AUTHORITY_v1.md`, with exactly
-three implementation waves maximum and Wave 1 active only. Modern Table
-internals and geometry, learning semantics, content, route order, progression,
-payoff policy, telemetry, navigation IA, dependencies, and deterministic
-behaviour remain protected. Wave 1 has no screen-architecture, copy, mascot,
-motion, or public-Atlas authorization; it may only establish the shared
-foundation and repair Practice truncation when validly reproduced. Human QA and
-Human Proven status remain unclaimed.
+Wave 3 acceptance. `FINAL_PRODUCT_VISUAL_COHESION_WAVE1 = CLOSED_CURRENT`:
+PR #142 merged at `1b8063db2c58def0d749e6496fde37f0726fe2a6`, and PR #143
+merged normally at `723d732708c0ff5821affae33913d1c415490a53`, closing the
+Practice one-line clipping repair. `FINAL_PRODUCT_VISUAL_COHESION_WAVE2 =
+ACTIVE` under `docs/plan/FINAL_PRODUCT_VISUAL_COHESION_DESIGN_AUTHORITY_v1.md`.
+It owns only the shared navigation grammar and Home, Learn, Practice, Review,
+You/Profile, and world-selection surfaces. Wave 3 is not yet active. Modern
+Table internals/geometry, runner/feedback, learning semantics, content, route
+order, progression, payoff policy, telemetry, navigation IA, dependencies, and
+deterministic behaviour remain protected. The public Atlas remains frozen;
+native proof, Human QA, and Human Proven status remain unclaimed.
 
 ## Supersession — 2026-08-03 (post-PR #139 capture-only closure)
 
