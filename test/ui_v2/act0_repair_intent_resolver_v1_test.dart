@@ -214,7 +214,7 @@ void main() {
     final queue = find.byKey(const Key('act0_shell_play_repair_queue'));
     expect(queue, findsOneWidget);
     expect(
-      find.descendant(of: queue, matching: find.text('Practice this')),
+      find.descendant(of: queue, matching: find.text('Practice repair')),
       findsOneWidget,
     );
     for (final forbidden in <String>[
@@ -230,7 +230,9 @@ void main() {
       );
     }
 
-    await tester.tap(find.text('Practice this'));
+    await tester.tap(
+      find.byKey(const Key('act0_shell_play_repair_queue_item_cta')),
+    );
     await tester.pumpAndSettle();
 
     expect(_activeTaskId(tester), 'actions_check_drill');
@@ -260,7 +262,9 @@ void main() {
       await _answerOption(tester, 'fold');
 
       await _openPractice(tester);
-      await tester.tap(find.text('Practice this'));
+      await tester.tap(
+        find.byKey(const Key('act0_shell_play_repair_queue_item_cta')),
+      );
       await tester.pumpAndSettle();
       await _advanceTeachingToDrill(tester);
       await _answerCorrectly(tester);
@@ -299,7 +303,9 @@ void main() {
       'actions_legal_context',
     );
     await _openPractice(tester);
-    await tester.tap(find.text('Practice this'));
+    await tester.tap(
+      find.byKey(const Key('act0_shell_play_repair_queue_item_cta')),
+    );
     await tester.pumpAndSettle();
     await _advanceTeachingToDrill(tester);
     await _answerOption(tester, 'fold');
@@ -562,10 +568,7 @@ void main() {
     expect((state?['last_session_date'] as String?)?.isNotEmpty, isTrue);
 
     final line = _homePersonalizedReturnReasonLine(tester);
-    expect(
-      line,
-      'Resume your most recent table read.',
-    );
+    expect(line, 'Resume your most recent table read.');
 
     await _pumpHomeWithPersonalizedReason(tester, line);
     expect(
