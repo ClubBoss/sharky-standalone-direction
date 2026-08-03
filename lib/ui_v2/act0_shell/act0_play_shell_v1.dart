@@ -658,31 +658,32 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: Act0ShellTokensV1.muted,
                     ),
-                    if (primary &&
-                        consumer.items.any(
-                          _canLaunchPracticeQueueTargetV1,
-                        )) ...[
-                      const SizedBox(height: 3),
-                      Text(
-                        act0SharkyCoachLineForMomentV1(
-                          Act0SharkyCoachMomentV1.practiceCurrentFix,
-                        ),
-                        key: const Key('act0_shell_play_sharky_coach_line'),
-                        maxLines: 2,
-                        overflow: TextOverflow.visible,
-                        softWrap: true,
-                        style: Act0ShellTokensV1.sentenceSupport.copyWith(
-                          color: Act0ShellTokensV1.repairAttention,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ],
                   ],
                 ),
               ),
             ],
           ),
+          if (primary &&
+              consumer.items.any(_canLaunchPracticeQueueTargetV1)) ...[
+            const SizedBox(height: 3),
+            Padding(
+              padding: const EdgeInsets.only(left: 40),
+              child: Text(
+                act0SharkyCoachLineForMomentV1(
+                  Act0SharkyCoachMomentV1.practiceCurrentFix,
+                ),
+                key: const Key('act0_shell_play_sharky_coach_line'),
+                maxLines: 2,
+                overflow: TextOverflow.visible,
+                softWrap: true,
+                style: Act0ShellTokensV1.sentenceSupport.copyWith(
+                  color: Act0ShellTokensV1.repairAttention,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+          ],
           const SizedBox(height: Act0ShellTokensV1.gapSm),
           for (var index = 0; index < consumer.items.length; index++) ...[
             _PracticeRepairQueueRowV1(
