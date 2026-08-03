@@ -668,23 +668,28 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
           if (primary &&
               consumer.items.any(_canLaunchPracticeQueueTargetV1)) ...[
             const SizedBox(height: 3),
-            SizedBox(
-              width: double.infinity,
-              height: 11 * 1.5 * coachTextScale * coachMaxLines,
-              child: Text(
-                act0SharkyCoachLineForMomentV1(
-                  Act0SharkyCoachMomentV1.practiceCurrentFix,
+            Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 11 * 1.5 * coachTextScale * coachMaxLines,
+                    child: Text(
+                      act0SharkyCoachLineForMomentV1(
+                        Act0SharkyCoachMomentV1.practiceCurrentFix,
+                      ),
+                      key: const Key('act0_shell_play_sharky_coach_line'),
+                      maxLines: coachMaxLines,
+                      overflow: TextOverflow.clip,
+                      softWrap: true,
+                      style: Act0ShellTokensV1.sentenceSupport.copyWith(
+                        color: Act0ShellTokensV1.repairAttention,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
                 ),
-                key: const Key('act0_shell_play_sharky_coach_line'),
-                maxLines: coachMaxLines,
-                overflow: TextOverflow.clip,
-                softWrap: true,
-                style: Act0ShellTokensV1.sentenceSupport.copyWith(
-                  color: Act0ShellTokensV1.repairAttention,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
+              ],
             ),
           ],
           const SizedBox(height: Act0ShellTokensV1.gapSm),
