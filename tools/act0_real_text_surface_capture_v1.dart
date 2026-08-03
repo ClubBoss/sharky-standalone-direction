@@ -131,6 +131,22 @@ const _captureGroupsV1 = <String, List<_CaptureSurfaceV1>>{
       scrollViewport: 'mid',
     ),
   ],
+  'wave2_closure': <_CaptureSurfaceV1>[
+    _CaptureSurfaceV1('home_fresh', 'wave2HomeFresh'),
+    _CaptureSurfaceV1('home_progressed', 'wave2HomeProgressed'),
+    _CaptureSurfaceV1('home_repair_return', 'wave2HomeRepairReturn'),
+    _CaptureSurfaceV1('learn_fresh', 'wave2LearnFresh'),
+    _CaptureSurfaceV1('learn_progressed', 'wave2LearnProgressed'),
+    _CaptureSurfaceV1('practice_no_repair', 'wave2PracticeNoRepair'),
+    _CaptureSurfaceV1(
+      'practice_active_repair_hub',
+      'wave2PracticeActiveRepairHub',
+    ),
+    _CaptureSurfaceV1('review_empty', 'reviewEmpty'),
+    _CaptureSurfaceV1('review_miss', 'wave2ReviewMiss'),
+    _CaptureSurfaceV1('profile_fresh', 'wave2ProfileFresh'),
+    _CaptureSurfaceV1('profile_progressed', 'wave2ProfileProgressed'),
+  ],
   'sharky_evidence': <_CaptureSurfaceV1>[
     _CaptureSurfaceV1(
       'developing',
@@ -873,6 +889,47 @@ List<String> _unsupportedViewportClaimsV1(String device) {
 }
 
 List<String> _semanticAssertionsForSurfaceV1(String surface) {
+  const wave2Assertions = <String, List<String>>{
+    'home_fresh': <String>[
+      'home_selected',
+      'zero_completion',
+      'no_prior_proof',
+    ],
+    'home_progressed': <String>['home_selected', 'nonzero_completion'],
+    'home_repair_return': <String>[
+      'home_selected',
+      'active_repair_seeded',
+      'personalized_return_reason_visible',
+    ],
+    'learn_fresh': <String>['learn_selected', 'zero_completion'],
+    'learn_progressed': <String>['learn_selected', 'nonzero_completion'],
+    'practice_no_repair': <String>[
+      'practice_selected',
+      'repair_queue_empty',
+      'hub_visible',
+    ],
+    'practice_active_repair_hub': <String>[
+      'practice_selected',
+      'repair_queue_nonempty',
+      'hub_visible',
+      'runner_not_started',
+    ],
+    'review_empty': <String>['review_selected', 'repair_queue_empty'],
+    'review_miss': <String>['review_selected', 'active_miss_visible'],
+    'profile_fresh': <String>[
+      'profile_selected',
+      'zero_completion',
+      'no_prior_proof',
+    ],
+    'profile_progressed': <String>[
+      'profile_selected',
+      'nonzero_completion',
+      'learning_evidence_present',
+    ],
+  };
+  if (wave2Assertions[surface] case final assertions?) {
+    return <String>[...assertions, 'real_text_rendered'];
+  }
   if (surface.contains('terminal') || surface.contains('no_w13')) {
     return <String>['terminal_or_no_w13_copy_visible', 'real_text_rendered'];
   }
@@ -2762,6 +2819,6 @@ $captureStatements
 
 void _printUsageV1() {
   stderr.writeln(
-    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <alpha_journey|core|runner|first_week|day2_return|profile_evidence|sharky_evidence|full_scroll|route_w7_w12|active_route_w7_w12|w2> <compact|tall_phone|large_phone|tablet> [reduced_motion]',
+    'Usage: dart run tools/act0_real_text_surface_capture_v1.dart <alpha_journey|core|runner|first_week|day2_return|profile_evidence|wave2_closure|sharky_evidence|full_scroll|route_w7_w12|active_route_w7_w12|w2> <compact|tall_phone|large_phone|tablet> [reduced_motion]',
   );
 }

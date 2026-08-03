@@ -1012,6 +1012,16 @@ enum Act0ControlledDemoCaptureSurfaceV1 {
   day2ReviewContinuation,
   day2ProfileActiveRepair,
   profileEvidence,
+  wave2HomeFresh,
+  wave2HomeProgressed,
+  wave2HomeRepairReturn,
+  wave2LearnFresh,
+  wave2LearnProgressed,
+  wave2PracticeNoRepair,
+  wave2PracticeActiveRepairHub,
+  wave2ReviewMiss,
+  wave2ProfileFresh,
+  wave2ProfileProgressed,
 }
 
 class Act0ShellDebugHarnessEntryV1 {
@@ -1094,6 +1104,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   final Set<String> _sameSessionLearningDeltaCompletedIdsV1 = <String>{};
   final Set<String> _personalizedNextStepShownTelemetryKeysV1 = <String>{};
   bool _debugReviewEmptyV1 = false;
+  bool _debugFreshLearnerV1 = false;
   static const String _progressPrefsKey = 'act0_shell_progress_v1';
   static const int _homeHandoffDismissDays = 7;
   static const Set<String> _w5SizingDrillTaskIds = <String>{
@@ -2486,10 +2497,31 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _applyDebugDay2ProfileActiveRepairSurface(state);
       case Act0ControlledDemoCaptureSurfaceV1.profileEvidence:
         _applyDebugProfileEvidenceSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.wave2HomeFresh:
+        _applyDebugWave2HomeFreshSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.wave2HomeProgressed:
+        _applyDebugWave2HomeProgressedSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.wave2HomeRepairReturn:
+        _applyDebugDay2ReturnHomeSurface(state);
+      case Act0ControlledDemoCaptureSurfaceV1.wave2LearnFresh:
+        _applyDebugWave2LearnFreshSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.wave2LearnProgressed:
+        _applyDebugWave2LearnProgressedSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.wave2PracticeNoRepair:
+        _applyDebugWave2PracticeNoRepairSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.wave2PracticeActiveRepairHub:
+        _applyDebugWave2PracticeActiveRepairHubSurface(state);
+      case Act0ControlledDemoCaptureSurfaceV1.wave2ReviewMiss:
+        _applyDebugReviewSurface(state);
+      case Act0ControlledDemoCaptureSurfaceV1.wave2ProfileFresh:
+        _applyDebugWave2ProfileFreshSurface();
+      case Act0ControlledDemoCaptureSurfaceV1.wave2ProfileProgressed:
+        _applyDebugWave2ProfileProgressedSurface();
     }
   }
 
   void _resetDebugSurfaceChrome() {
+    _debugFreshLearnerV1 = false;
     _showPlacement = false;
     _showWelcome = false;
     _welcomeHandoffStartsRecommendedTaskV1 = false;
@@ -2581,6 +2613,104 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   void _applyDebugProfileSurface() {
     _resetDebugSurfaceChrome();
     _tab = Act0ShellTabV1.profile;
+  }
+
+  void _applyDebugWave2FreshLearnerStateV1() {
+    _resetDebugSurfaceChrome();
+    _debugFreshLearnerV1 = true;
+    _completedLessonIds.clear();
+    _completedTaskIds.clear();
+    _skippedTaskIds.clear();
+    _visibleSkippedTaskIds.clear();
+    _cleanTaskIds.clear();
+    _earnedXp = 0;
+    _persistedStreakDays = 0;
+    _lastDailyDate = '';
+    _dailyCompletedRepCount = 0;
+    _dailyCompletedTaskIds.clear();
+    _profileSkillValues.clear();
+    _recentSkillGains.clear();
+    _learningEvidenceHistoryV1 = const Act0LearningEvidenceHistoryV1();
+    _conceptFamilyStateHistoryV1 = const Act0ConceptFamilyStateHistoryV1();
+    _reviewMistakeHistoryV1 = const Act0ReviewMistakeHistoryV1();
+    _reviewResolutionReceiptHistoryV1 =
+        const Act0ReviewResolutionReceiptHistoryV1();
+  }
+
+  void _applyDebugWave2ProgressedLearnerStateV1() {
+    _applyDebugWave2FreshLearnerStateV1();
+    _debugFreshLearnerV1 = false;
+    final state = widget.state ?? Act0ShellStateV1.sample;
+    final world = state.worldById('world_1');
+    final completedLesson = _lessonById(world.lessons, 'what_poker_is');
+    final nextLesson = _lessonById(world.lessons, 'fold_check_call_raise');
+    final completedTaskIds = completedLesson.taskList
+        .map((task) => task.taskId)
+        .toSet();
+    _selectedWorldId = world.worldId;
+    _completedLessonIds.add(completedLesson.lessonId);
+    _completedTaskIds.addAll(completedTaskIds);
+    _cleanTaskIds.addAll(completedTaskIds);
+    _selectedLessonId = nextLesson.lessonId;
+    _selectedTaskId = nextLesson.taskList.first.taskId;
+    _persistedStreakDays = 3;
+  }
+
+  void _applyDebugWave2HomeFreshSurface() {
+    _applyDebugWave2FreshLearnerStateV1();
+    _tab = Act0ShellTabV1.home;
+  }
+
+  void _applyDebugWave2HomeProgressedSurface() {
+    _applyDebugWave2ProgressedLearnerStateV1();
+    _tab = Act0ShellTabV1.home;
+  }
+
+  void _applyDebugWave2LearnFreshSurface() {
+    _applyDebugWave2FreshLearnerStateV1();
+    _tab = Act0ShellTabV1.learn;
+    _seedLearnRouteFocusV1(
+      lessonId: _selectedLessonId,
+      taskId: _selectedTaskId,
+    );
+  }
+
+  void _applyDebugWave2LearnProgressedSurface() {
+    _applyDebugWave2ProgressedLearnerStateV1();
+    _tab = Act0ShellTabV1.learn;
+    _seedLearnRouteFocusV1(
+      lessonId: _selectedLessonId,
+      taskId: _selectedTaskId,
+    );
+  }
+
+  void _applyDebugWave2PracticeNoRepairSurface() {
+    _applyDebugWave2ProgressedLearnerStateV1();
+    _tab = Act0ShellTabV1.play;
+    _showPlayHub = true;
+  }
+
+  void _applyDebugWave2PracticeActiveRepairHubSurface(Act0ShellStateV1 state) {
+    if (_seedDebugDay2OpenRepairStateV1(state) == null) {
+      _applyDebugWave2PracticeNoRepairSurface();
+      return;
+    }
+    _tab = Act0ShellTabV1.play;
+    _showPlayHub = true;
+    _returnToPlayHubOnBack = false;
+  }
+
+  void _applyDebugWave2ProfileFreshSurface() {
+    _applyDebugWave2FreshLearnerStateV1();
+    _tab = Act0ShellTabV1.profile;
+  }
+
+  void _applyDebugWave2ProfileProgressedSurface() {
+    _applyDebugWave2ProgressedLearnerStateV1();
+    _applyDebugProfileEvidenceSurface();
+    _completedTaskIds.add('actions_check_drill');
+    _cleanTaskIds.add('actions_check_drill');
+    _persistedStreakDays = 3;
   }
 
   void _applyDebugRunnerSurface(
@@ -11401,7 +11531,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
     final totalAttempts = _cleanTaskIds.length + wrongAttempts;
     final accuracy = totalAttempts == 0
-        ? base.accuracyLine
+        ? _debugFreshLearnerV1
+              ? _copyV1(
+                  en: 'Practice proof starts with your first decision',
+                  ru: 'Подтверждение начнётся с первого решения',
+                )
+              : base.accuracyLine
         : '${((_cleanTaskIds.length / totalAttempts) * 100).round()}% practice accuracy';
     final perfectClearCount = _completedTaskIds.where((taskId) {
       if (!_cleanTaskIds.contains(taskId)) {
@@ -11444,7 +11579,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 : '$streakDays day streak · saved today')
           : (streakDays == 1 ? '1 day streak' : '$streakDays day streak'),
       streakDays: streakDays,
-      consistencyActiveDays: base.consistencyActiveDays,
+      consistencyActiveDays: _debugFreshLearnerV1
+          ? 0
+          : base.consistencyActiveDays,
       achievements: <Act0AchievementV1>[
         Act0AchievementV1(
           id: 'first_table_read',
@@ -11475,9 +11612,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       strongCategories: _strongCategories(),
       weakCategories: _weakCategories(),
       recentProgress: _recentProgress(),
-      recentSkillGains: _profileRecentSkillGains(base.recentSkillGains),
-      skillStats: _profileSkillStats(base.skillStats),
-      streakLast7: base.streakLast7,
+      recentSkillGains: _debugFreshLearnerV1
+          ? const <Act0SkillGainV1>[]
+          : _profileRecentSkillGains(base.recentSkillGains),
+      skillStats: _debugFreshLearnerV1
+          ? const <Act0PlacementSkillStatV1>[]
+          : _profileSkillStats(base.skillStats),
+      streakLast7: _debugFreshLearnerV1
+          ? const <bool>[false, false, false, false, false, false, false]
+          : base.streakLast7,
       recommendedFocusTitle: focusTitle,
       recommendedFocusBody: focusBody,
       recommendedFocusCtaLabel: focusCtaLabel,
@@ -12958,7 +13101,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }) {
     final xpTarget = state.xpTarget <= 0 ? 1 : state.xpTarget;
     final baseLevel = _parseLevelNumber(state.levelLabel);
-    final totalXp = state.xp + (earnedXpDelta ?? _earnedXp);
+    final totalXp =
+        (_debugFreshLearnerV1 ? 0 : state.xp) + (earnedXpDelta ?? _earnedXp);
     return _Act0ProgressSnapshotV1(
       level: baseLevel + (totalXp ~/ xpTarget),
       xp: totalXp % xpTarget,
@@ -13018,6 +13162,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   int _effectiveStreakDays(Act0ShellStateV1 base) {
+    if (_debugFreshLearnerV1) {
+      return 0;
+    }
     if (_persistedStreakDays > 0) {
       // Persisted streak is source of truth once the user has prior data
       final today = _todayDateString();

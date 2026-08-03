@@ -49,10 +49,43 @@ def sha256(path: pathlib.Path) -> str:
     return digest.hexdigest()
 
 
-def load_rows() -> list[dict]:
-    rows = json.loads(MANIFEST.read_text())["rows"]
-    validate(rows)
+def load_rows(manifest: pathlib.Path = MANIFEST) -> list[dict]:
+    payload = json.loads(manifest.read_text())
+    rows = payload["rows"]
+    if manifest.resolve() == MANIFEST.resolve():
+        validate(rows)
+    else:
+        validate_custom_manifest(payload, rows)
     return rows
+
+
+def validate_custom_manifest(payload: dict, rows: list[dict]) -> None:
+    required = {
+        "visual_state_id", "state", "semantic_phase", "device_profile",
+        "modifier", "logical_viewport", "query",
+    }
+    errors = []
+    expected_rows = payload.get("expected_rows")
+    if not isinstance(expected_rows, int) or expected_rows <= 0:
+        errors.append("expected_rows must be a positive integer")
+    elif len(rows) != expected_rows:
+        errors.append(f"total rows must be {expected_rows}, found {len(rows)}")
+    missing = [index for index, row in enumerate(rows) if not required.issubset(row)]
+    if missing:
+        errors.append(f"rows missing required fields: {missing}")
+    identities = [row.get("visual_state_id") for row in rows]
+    if len(identities) != len(set(identities)):
+        errors.append("visual_state_id values must be unique")
+    tuples = [
+        (row.get("state"), row.get("device_profile"), row.get("modifier"))
+        for row in rows
+    ]
+    if len(tuples) != len(set(tuples)):
+        errors.append("state/device_profile/modifier tuples must be unique")
+    if any(row.get("device_profile") not in {"compact", "canonical", "large"} for row in rows):
+        errors.append("custom manifest contains an unsupported device_profile")
+    if errors:
+        raise RuntimeError("native visual audit custom-manifest preflight failed: " + "; ".join(errors))
 
 
 def validate(rows: list[dict]) -> None:
@@ -359,16 +392,23 @@ def self_test(rows: list[dict]) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--manifest", type=pathlib.Path, default=MANIFEST)
     parser.add_argument("--preflight", action="store_true"); parser.add_argument("--emit-shards", type=pathlib.Path)
     parser.add_argument("--build-runner", action="store_true"); parser.add_argument("--app-out", type=pathlib.Path)
     parser.add_argument("--row-id", action="append"); parser.add_argument("--row-ids-file", type=pathlib.Path); parser.add_argument("--family", action="append"); parser.add_argument("--full-checkpoint", action="store_true")
     parser.add_argument("--validate-selection", action="store_true"); parser.add_argument("--app", type=pathlib.Path); parser.add_argument("--out", type=pathlib.Path, default=ROOT / "output" / "native_visual_audit")
     parser.add_argument("--shard"); parser.add_argument("--candidate-sha"); parser.add_argument("--resume-from", type=pathlib.Path); parser.add_argument("--ready-timeout", type=float, default=30.0); parser.add_argument("--frame-settle-seconds", type=float, default=1.5)
     parser.add_argument("--aggregate-shards", type=pathlib.Path); parser.add_argument("--replace-shard-row", type=pathlib.Path); parser.add_argument("--replacement-shard", type=pathlib.Path); parser.add_argument("--self-test", action="store_true")
-    args = parser.parse_args(); rows = load_rows()
+    args = parser.parse_args(); rows = load_rows(args.manifest.resolve())
     if args.preflight:
         if args.emit_shards: emit_shards(rows, args.emit_shards)
-        print(json.dumps({"rows": len(rows), "distribution": {f"{k[0]}/{k[1]}": v for k, v in EXPECTED.items()}})); return 0
+        distribution = Counter(
+            (row["device_profile"], row["modifier"]) for row in rows
+        )
+        print(json.dumps({"rows": len(rows), "distribution": {
+            f"{key[0]}/{key[1]}": value
+            for key, value in distribution.items()
+        }})); return 0
     if args.self_test: self_test(rows); return 0
     if args.build_runner:
         if not args.app_out: raise RuntimeError("--build-runner requires --app-out")
