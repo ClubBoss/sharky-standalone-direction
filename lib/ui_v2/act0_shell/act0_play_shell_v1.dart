@@ -321,13 +321,6 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
           title: _playCopyV1(context, 'play_title', fallback: 'Practice'),
         ),
         const SizedBox(height: 12),
-        if (recommendedRepairGroup) ...[
-          _PracticeCurrentRepValueV1(
-            title: 'Current useful rep',
-            body: widget.screenSubtitle,
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-        ],
         if (hasPrimaryRepairQueue) ...[
           _PracticeRepairQueueSectionV1(
             consumer: widget.repairQueueConsumer,
@@ -344,6 +337,7 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
             reasonLabel: recommendedRepairGroup
                 ? widget.recommendedReasonLabel
                 : null,
+            secondaryAction: hasPrimaryRepairQueue,
             onStartGroup: widget.onStartGroup,
           ),
           const SizedBox(height: Act0VisualMetricsV1.sectionGap),
@@ -472,64 +466,6 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
       'showdown' => 3,
       _ => 20 + _topicSortIndex(group),
     };
-  }
-}
-
-class _PracticeCurrentRepValueV1 extends StatelessWidget {
-  const _PracticeCurrentRepValueV1({required this.title, required this.body});
-
-  final String title;
-  final String body;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      key: const Key('act0_shell_wave2_practice_current_rep_value'),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-      decoration: BoxDecoration(
-        color: Act0ShellTokensV1.gold.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-        border: Border.all(
-          color: Act0ShellTokensV1.gold.withValues(alpha: 0.22),
-        ),
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.visibility_rounded,
-            color: Act0ShellTokensV1.gold,
-            size: 18,
-          ),
-          const SizedBox(width: Act0ShellTokensV1.gapSm),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.gold,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 0.2,
-                  ),
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  body,
-                  maxLines: 2,
-                  overflow: TextOverflow.fade,
-                  style: Act0ShellTokensV1.sentenceSupport.copyWith(
-                    color: Act0ShellTokensV1.textMuted,
-                    height: 1.12,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
 
@@ -797,28 +733,16 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                 if (_canLaunchPracticeQueueTargetV1(item) &&
                     onLaunchTarget != null) ...[
                   const SizedBox(height: 8),
-                  Align(
-                    alignment: Alignment.centerLeft,
+                  SizedBox(
+                    width: double.infinity,
                     child: _PracticeQueueCtaPressMotionV1(
-                      child: TextButton(
+                      child: FilledButton(
                         key: const Key('act0_shell_play_repair_queue_item_cta'),
                         onPressed: () => onLaunchTarget!(item.launchRequest!),
-                        style: TextButton.styleFrom(
-                          foregroundColor: Act0ShellTokensV1.primaryAction,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          minimumSize: const Size(0, 32),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        style: Act0ShellTokensV1.premiumActionButtonStyle(
+                          height: Act0ShellTokensV1.compactCtaHeight,
                         ),
-                        child: Text(
-                          'Practice this',
-                          style: Act0ShellTokensV1.label.copyWith(
-                            color: Act0ShellTokensV1.primaryAction,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
+                        child: const Text('Practice repair'),
                       ),
                     ),
                   ),
@@ -931,6 +855,7 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.reasonLabel,
+    required this.secondaryAction,
     required this.onStartGroup,
   });
 
@@ -938,6 +863,7 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
   final String title;
   final String subtitle;
   final String? reasonLabel;
+  final bool secondaryAction;
   final ValueChanged<Act0PracticeGroupV1> onStartGroup;
 
   @override
@@ -975,7 +901,7 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
           ),
           child: Container(
             key: const Key('act0_shell_play_daily_hero'),
-            constraints: const BoxConstraints(minHeight: 214),
+            constraints: BoxConstraints(minHeight: secondaryAction ? 160 : 214),
             padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
             decoration:
                 Act0ShellTokensV1.premiumActionSurfaceDecoration(
@@ -1095,19 +1021,21 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  key: const Key('act0_shell_play_v1_featured_action_cta'),
-                  width: double.infinity,
-                  child: FilledButton(
-                    key: const Key('act0_shell_play_featured_cta'),
-                    onPressed: enabled ? () => onStartGroup(group) : null,
-                    style: Act0ShellTokensV1.premiumActionButtonStyle(
-                      height: Act0VisualMetricsV1.primaryCtaHeight,
+                if (!secondaryAction) ...[
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    key: const Key('act0_shell_play_v1_featured_action_cta'),
+                    width: double.infinity,
+                    child: FilledButton(
+                      key: const Key('act0_shell_play_featured_cta'),
+                      onPressed: enabled ? () => onStartGroup(group) : null,
+                      style: Act0ShellTokensV1.premiumActionButtonStyle(
+                        height: Act0VisualMetricsV1.primaryCtaHeight,
+                      ),
+                      child: Text(_playActionLabelV1(context, group)),
                     ),
-                    child: Text(_playActionLabelV1(context, group)),
                   ),
-                ),
+                ],
               ],
             ),
           ),

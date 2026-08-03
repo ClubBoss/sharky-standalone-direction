@@ -402,6 +402,14 @@ void main() {
       expect(hero, findsOneWidget);
       expect(tester.getTopLeft(queue).dy, lessThan(tester.getTopLeft(hero).dy));
       expect(
+        find.byKey(const Key('act0_shell_wave2_practice_current_rep_value')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_play_featured_reason')),
+        findsNothing,
+      );
+      expect(
         find.descendant(of: queue, matching: find.text('Active repair first')),
         findsOneWidget,
       );
@@ -424,8 +432,19 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.descendant(of: active, matching: find.text('Practice this')),
+        find.descendant(of: active, matching: find.text('Practice repair')),
         findsOneWidget,
+      );
+      final repairCta = tester.widget<FilledButton>(
+        find.byKey(const Key('act0_shell_play_repair_queue_item_cta')),
+      );
+      expect(
+        repairCta.style?.backgroundColor?.resolve(<WidgetState>{}),
+        Act0ShellTokensV1.actionCyan,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_play_featured_cta')),
+        findsNothing,
       );
       expect(
         find.descendant(
@@ -445,7 +464,7 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.descendant(of: history, matching: find.text('Practice this')),
+        find.descendant(of: history, matching: find.text('Practice repair')),
         findsNothing,
       );
       expect(
@@ -507,7 +526,7 @@ void main() {
         onLaunchRepairQueueTarget: launched.add,
       );
 
-      await tester.tap(find.text('Practice this'));
+      await tester.tap(find.text('Practice repair'));
       await tester.pump();
 
       expect(launched, hasLength(1));
@@ -851,7 +870,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
     const coachKey = Key('act0_shell_play_sharky_coach_line');
     const queueKey = Key('act0_shell_play_repair_queue');
-    const ctaKey = Key('act0_shell_play_featured_cta');
+    const ctaKey = Key('act0_shell_play_repair_queue_item_cta');
     final phrase = act0SharkyCoachLineForMomentV1(
       Act0SharkyCoachMomentV1.practiceCurrentFix,
     );
