@@ -668,9 +668,9 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
                           Act0SharkyCoachMomentV1.practiceCurrentFix,
                         ),
                         key: const Key('act0_shell_play_sharky_coach_line'),
-                        maxLines: 1,
-                        overflow: TextOverflow.fade,
-                        softWrap: false,
+                        maxLines: 2,
+                        overflow: TextOverflow.visible,
+                        softWrap: true,
                         style: Act0ShellTokensV1.sentenceSupport.copyWith(
                           color: Act0ShellTokensV1.repairAttention,
                           fontSize: 11,
