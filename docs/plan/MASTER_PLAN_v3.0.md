@@ -115,6 +115,21 @@ Do not use the readiness reference as the default bottleneck selector for day-to
 
 ## Current post-merge status
 
+- **Current-execution correction (Final Product Visual Cohesion v1):**
+  `POST_P3_SIMULATOR_VISUAL_ACCEPTANCE_V1` is **CLOSED_PARTIAL**. Its
+  Simulator evidence established systemic visual inconsistency but is
+  insufficient for Wave 3 acceptance. `FINAL_PRODUCT_VISUAL_COHESION_V1` is
+  active with exactly three implementation waves maximum and a mandatory freeze
+  after Wave 3; Wave 1 — Visual Foundation — is active, and Waves 2 and 3 are
+  not yet active. The controlling visual authority is
+  `docs/plan/FINAL_PRODUCT_VISUAL_COHESION_DESIGN_AUTHORITY_v1.md`. Modern
+  Table internals/geometry, learning semantics, content, route order,
+  progression, payoff policy, telemetry, navigation IA, dependencies, and
+  deterministic behaviour remain protected. Target quality scores are goals,
+  not acceptance proof. Wave 1 follows the authority's Owner Execution
+  Adjudication: it does not authorize broad screen migration, full Atlas
+  refresh, Human QA, or Human Proven claims.
+
 - **Current-execution correction (2026-08-03, post-PR #139 closure):**
   `P3_SPLIT_E2E_CLOSURE_V1` is **CLOSED_CURRENT**. PR #137 normally merged
   accepted candidate `a7913f1157fe01e2ee5d6f23c3beb1e20b377bdb` at
