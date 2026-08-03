@@ -2620,6 +2620,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   void _applyDebugWave2FreshLearnerStateV1() {
     _resetDebugSurfaceChrome();
+    final state = widget.state ?? Act0ShellStateV1.sample;
+    final world = state.worldById('world_1');
+    final lesson = world.lessons.first;
+    _selectedWorldId = world.worldId;
+    _selectedLessonId = lesson.lessonId;
+    _selectedTaskId = lesson.taskList.first.taskId;
     _debugFreshLearnerV1 = true;
     _completedLessonIds.clear();
     _completedTaskIds.clear();
@@ -2633,6 +2639,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _dailyCompletedTaskIds.clear();
     _profileSkillValues.clear();
     _recentSkillGains.clear();
+    _mistakeRecords.clear();
+    _resolvedMistakeTaskIds.clear();
     _learningEvidenceHistoryV1 = const Act0LearningEvidenceHistoryV1();
     _conceptFamilyStateHistoryV1 = const Act0ConceptFamilyStateHistoryV1();
     _reviewMistakeHistoryV1 = const Act0ReviewMistakeHistoryV1();
@@ -11607,7 +11615,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         Act0AchievementV1(
           id: 'repair_queue_clear',
           label: 'Good fix',
-          locked: _openMistakes().isNotEmpty,
+          locked: _resolvedMistakeTaskIds.isEmpty,
         ),
         Act0AchievementV1(
           id: 'streak_save_earned',
@@ -11672,7 +11680,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (completedCount > 0) {
       return _copyV1(en: 'Perfect path open', ru: 'Идеал открыт');
     }
-    return _copyV1(en: 'Clean progress started', ru: 'Чистый прогресс начат');
+    return _copyV1(
+      en: 'First proof not yet earned',
+      ru: 'Первое доказательство ещё не получено',
+    );
   }
 
   Set<String> _perfectTaskIds() {

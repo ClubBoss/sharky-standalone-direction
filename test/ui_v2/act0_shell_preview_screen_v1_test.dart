@@ -301,4 +301,67 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets('Wave 2 Profile fresh is claim-safe and owns each fact once', (
+    tester,
+  ) async {
+    await pumpCompact(
+      tester,
+      wave2SurfaceHost(Act0ControlledDemoCaptureSurfaceV1.wave2ProfileFresh),
+    );
+
+    expect(find.text('Proof starts here'), findsOneWidget);
+    expect(
+      find.text('Your first clear read will appear here.'),
+      findsOneWidget,
+    );
+    expect(find.text('Recent route proof'), findsNothing);
+    expect(find.text('0 tasks complete'), findsOneWidget);
+    expect(find.text('Starting now'), findsNothing);
+    expect(find.text('Proof will appear as you learn'), findsOneWidget);
+    expect(find.textContaining('First Table Guide'), findsOneWidget);
+    expect(find.text('Clean progress started'), findsNothing);
+    expect(find.text('Clean reads are becoming a habit.'), findsNothing);
+    expect(
+      find.byKey(const Key('act0_shell_profile_hero_fact_tasks')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_profile_hero_fact_streak')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_profile_evidence_signal')),
+      findsNothing,
+    );
+  });
+
+  testWidgets('Wave 2 Profile progressed keeps real proof without repeats', (
+    tester,
+  ) async {
+    await pumpCompact(
+      tester,
+      wave2SurfaceHost(
+        Act0ControlledDemoCaptureSurfaceV1.wave2ProfileProgressed,
+      ),
+    );
+
+    expect(find.text('Recent route proof'), findsOneWidget);
+    expect(find.text('7 tasks complete'), findsOneWidget);
+    expect(find.text('3d'), findsOneWidget);
+    expect(find.text('3 day streak'), findsNothing);
+    expect(find.textContaining('Fold, check, call, raise'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_profile_evidence_signal')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_profile_hero_fact_tasks')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_profile_hero_fact_streak')),
+      findsNothing,
+    );
+  });
 }
