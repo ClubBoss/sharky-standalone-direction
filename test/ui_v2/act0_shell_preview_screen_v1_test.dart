@@ -40,6 +40,24 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  Widget wave2LearnHost(Act0ControlledDemoCaptureSurfaceV1 surface) {
+    return MaterialApp(
+      supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+      localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      home: Act0ShellPreviewScreenV1(
+        showPlacementOnStart: false,
+        debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
+          mode: Act0ControlledDemoCaptureModeV1.directState,
+          surface: surface,
+        ),
+      ),
+    );
+  }
+
   test('Canonical path root remains Act0 preview shell', () {
     final root = buildCanonicalPathRootV1();
 
@@ -104,6 +122,70 @@ void main() {
       find.text(
         'This lesson teaches one table read: what each legal action means before you choose.',
       ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('Wave 2 Learn fresh shows one current mission and one percent', (
+    tester,
+  ) async {
+    await pumpCompact(
+      tester,
+      wave2LearnHost(Act0ControlledDemoCaptureSurfaceV1.wave2LearnFresh),
+    );
+
+    final journey = find.byKey(
+      const Key('act0_shell_journey_preview_surface_v5'),
+    );
+    expect(find.text('First Table Guide'), findsOneWidget);
+    expect(
+      find.descendant(of: journey, matching: find.text('First Table Guide')),
+      findsNothing,
+    );
+    expect(find.text('0%'), findsOneWidget);
+    final routeBoard = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_learn_route_board')),
+    );
+    expect(routeBoard.data, '0 of 9 lessons');
+
+    await tester.tap(
+      find.byKey(const Key('act0_shell_learn_v5_view_full_path')),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(of: journey, matching: find.text('First Table Guide')),
+      findsNothing,
+    );
+    expect(find.text('All lessons'), findsOneWidget);
+  });
+
+  testWidgets('Wave 2 Learn progressed keeps proof without current duplicate', (
+    tester,
+  ) async {
+    await pumpCompact(
+      tester,
+      wave2LearnHost(Act0ControlledDemoCaptureSurfaceV1.wave2LearnProgressed),
+    );
+
+    final journey = find.byKey(
+      const Key('act0_shell_journey_preview_surface_v5'),
+    );
+    expect(find.text('What poker is'), findsOneWidget);
+    expect(
+      find.descendant(of: journey, matching: find.text('What poker is')),
+      findsNothing,
+    );
+    expect(
+      find.descendant(of: journey, matching: find.text('First Table Guide')),
+      findsOneWidget,
+    );
+    expect(find.text('11%'), findsOneWidget);
+    final routeBoard = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_learn_route_board')),
+    );
+    expect(routeBoard.data, '1 of 9 lessons');
+    expect(
+      find.byKey(const Key('act0_shell_current_mission_cta')),
       findsOneWidget,
     );
   });

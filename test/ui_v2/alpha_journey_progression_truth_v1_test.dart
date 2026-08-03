@@ -119,15 +119,16 @@ void main() {
       await openLearn(tester);
       expect(find.textContaining('0 of 9 lessons'), findsOneWidget);
       expect(
-        find.byKey(const Key('act0_shell_lesson_First Table Guide')),
+        find.byKey(const Key('act0_shell_current_mission_card')),
         findsOneWidget,
       );
-      final guideState = tester.widget<Text>(
-        find.byKey(
-          const Key('act0_shell_learn_lesson_state_text_what_poker_is'),
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('act0_shell_current_mission_card')),
+          matching: find.text('First Table Guide'),
         ),
+        findsOneWidget,
       );
-      expect(guideState.data, 'Now');
 
       await tester.tap(find.text('All lessons'));
       await tester.pumpAndSettle();
@@ -254,12 +255,13 @@ void main() {
       await seedValidActionPrecondition();
       await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
       expect(find.textContaining('4 of 9 lessons'), findsOneWidget);
-      final actionState = tester.widget<Text>(
-        find.byKey(
-          const Key('act0_shell_learn_lesson_state_text_fold_check_call_raise'),
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('act0_shell_current_mission_card')),
+          matching: find.text('Fold, check, call, raise'),
         ),
+        findsOneWidget,
       );
-      expect(actionState.data, 'Now');
 
       final firstSnapshot = validActionPrecondition();
       final secondSnapshot = validActionPrecondition();
@@ -277,23 +279,7 @@ void main() {
       await seedValidActionPrecondition();
       await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
 
-      final lesson = find.byKey(
-        const Key('act0_shell_lesson_Fold, check, call, raise'),
-      );
-      await tester.ensureVisible(lesson);
-      await tester.tap(lesson);
-      await tester.pumpAndSettle();
-      final theoryStep = find.byKey(
-        const Key('act0_shell_lesson_step_actions_theory'),
-      );
-      await tester.scrollUntilVisible(
-        theoryStep,
-        120,
-        scrollable: find.byType(Scrollable).first,
-      );
-      await tester.tap(theoryStep);
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const Key('act0_shell_selected_lesson_cta')));
+      await tester.tap(find.byKey(const Key('act0_shell_current_mission_cta')));
       await tester.pumpAndSettle();
 
       for (var tap = 0; tap < 12; tap++) {

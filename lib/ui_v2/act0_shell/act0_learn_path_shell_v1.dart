@@ -678,10 +678,17 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                   .where((l) => l.state == Act0LessonStateV1.completed)
                   .length /
               widget.lessons.length;
-    final journeyLessonIndexes = _missionFirstJourneyPreviewIndexesV5(
-      widget.lessons,
-      showFullPath: _showFullJourneyPathV5,
-    );
+    final journeyLessonIndexes =
+        _missionFirstJourneyPreviewIndexesV5(
+              widget.lessons,
+              showFullPath: _showFullJourneyPathV5,
+            )
+            .where(
+              (index) =>
+                  widget.lessons[index].lessonId !=
+                  currentMissionLesson.lessonId,
+            )
+            .toList();
     final deferredLockedCount = _hiddenLockedLessonCountV5(
       widget.lessons,
       journeyLessonIndexes,
@@ -1184,8 +1191,8 @@ class _WorldContextStripV5 extends StatelessWidget {
                         Text(
                           _learnCopyV1(
                             context,
-                            en: '$conciseProgressLabel · $progressPercent%',
-                            ru: '$conciseProgressLabel · $progressPercent%',
+                            en: conciseProgressLabel,
+                            ru: conciseProgressLabel,
                           ),
                           key: const Key('act0_shell_learn_route_board'),
                           maxLines: 1,
