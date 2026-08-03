@@ -200,28 +200,6 @@ class Act0HomeShellV1 extends StatelessWidget {
               const SizedBox(height: Act0VisualMetricsV1.sectionGap),
               missionCard,
               const SizedBox(height: Act0VisualMetricsV1.sectionGap),
-              if (checklistActive)
-                (_isDailyGoalDoneValue(goalValue)
-                    ? _HomeCompletionSurfaceV1(
-                        localeIsRu: _isRuLocaleV1(context),
-                        earnedStreak: completionEarnedStreak,
-                        streakDays: state.streakDays,
-                      )
-                    : _HomeChecklistSurfaceV1(
-                        rows: checklistRows,
-                        localeIsRu: _isRuLocaleV1(context),
-                        title:
-                            dailyPlanTitle ??
-                            act0LocalizedSurfaceAtomV1(
-                              context,
-                              'home_checklist_title',
-                              fallback: 'Today\'s sequence',
-                            ),
-                        personalizedReturnReasonLine:
-                            personalizedReturnReasonLine,
-                      ))
-              else
-                const SizedBox.shrink(),
             ],
           ),
         ),

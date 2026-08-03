@@ -321,13 +321,6 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
           title: _playCopyV1(context, 'play_title', fallback: 'Practice'),
         ),
         const SizedBox(height: 12),
-        if (recommendedRepairGroup) ...[
-          _PracticeCurrentRepValueV1(
-            title: 'Current useful rep',
-            body: widget.screenSubtitle,
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-        ],
         if (hasPrimaryRepairQueue) ...[
           _PracticeRepairQueueSectionV1(
             consumer: widget.repairQueueConsumer,

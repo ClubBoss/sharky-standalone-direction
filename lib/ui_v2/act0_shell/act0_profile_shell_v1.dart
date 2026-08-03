@@ -70,22 +70,6 @@ class Act0ProfileShellV1 extends StatelessWidget {
           profile: profile,
           crossSessionProof: crossSessionProof,
         ),
-        if (evidenceSignal != null) ...[
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          _ProfileEvidenceSignalCardV1(signal: evidenceSignal!),
-        ],
-        if (achievementSeedConsumer.hasMoments) ...[
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          _ProfileEarnedMomentsCardV1(consumer: achievementSeedConsumer),
-        ],
-        if (profile.skillStats.isNotEmpty) ...[
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          _ProfileSkillStatsStripV1(profile: profile),
-        ],
-        if (profile.achievements.isNotEmpty) ...[
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
-          _ProfileMilestonesCardV1(profile: profile),
-        ],
         const SizedBox(height: Act0ShellTokensV1.gapMd),
         _ProfileAccountSettingsRowV1(
           onRetakePlacement: onRetakePlacement,
@@ -501,8 +485,8 @@ class _ProfileHeroCardV1 extends StatelessWidget {
                     Text(
                       _profileCopyV1(
                         context,
-                        en: 'Proof profile',
-                        ru: 'Профиль доказательств',
+                        en: 'Your poker path',
+                        ru: 'Твой путь в покере',
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.fade,
@@ -514,8 +498,8 @@ class _ProfileHeroCardV1 extends StatelessWidget {
                     Text(
                       _profileCopyV1(
                         context,
-                        en: 'Sharky keeps proof, not points.',
-                        ru: 'Шарки хранит доказательства, а не очки.',
+                        en: 'One clear table read at a time.',
+                        ru: 'Одно ясное чтение стола за раз.',
                       ),
                       style: Act0ShellTokensV1.body.copyWith(
                         color: Act0VisualCanonV1.bluePrimary,
@@ -1131,13 +1115,13 @@ class _ProfileProgressProofCardV1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            _profileCopyV1(context, en: 'Progress proof', ru: 'Твой прогресс'),
+            _profileCopyV1(context, en: 'Your proof', ru: 'Твой прогресс'),
             style: Act0ShellTokensV1.sectionTitle,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
           _TwoColumnStaggeredGridV1(
             children: [
-              for (final tile in tiles.take(4)) _ProfileProofTileV1(tile: tile),
+              for (final tile in tiles.take(2)) _ProfileProofTileV1(tile: tile),
             ],
           ),
           if (proof?.hasProof == true &&

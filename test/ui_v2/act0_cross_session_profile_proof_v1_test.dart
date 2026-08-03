@@ -180,8 +180,8 @@ void main() {
         expect(find.text('4 banked'), findsOneWidget);
         expect(find.text('Reinforced'), findsOneWidget);
         expect(find.text('1 on a later hand'), findsOneWidget);
-        expect(find.text('Concepts'), findsOneWidget);
-        expect(find.text('2 worked on'), findsOneWidget);
+        expect(find.text('Concepts'), findsNothing);
+        expect(find.text('2 worked on'), findsNothing);
       },
     );
 

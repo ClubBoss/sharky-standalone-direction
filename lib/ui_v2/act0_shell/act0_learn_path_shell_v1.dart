@@ -954,16 +954,18 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 9),
-        _CurrentMissionCardV1(
-          lesson: currentMissionLesson,
-          task: currentMissionTask,
-          stepIndex: currentMissionStepIndex,
-          totalSteps: currentMissionLesson.taskList.length,
-          accent: Act0ShellTokensV1.primary,
-          detailMode: detailMode,
-          onStart: onStartMission,
-        ),
-        const SizedBox(height: 12),
+        if (!showFullPath) ...[
+          _CurrentMissionCardV1(
+            lesson: currentMissionLesson,
+            task: currentMissionTask,
+            stepIndex: currentMissionStepIndex,
+            totalSteps: currentMissionLesson.taskList.length,
+            accent: Act0ShellTokensV1.primary,
+            detailMode: detailMode,
+            onStart: onStartMission,
+          ),
+          const SizedBox(height: 12),
+        ],
         _JourneyPreviewV5(
           lessons: lessons,
           journeyLessonIndexes: journeyLessonIndexes,
@@ -1182,11 +1184,7 @@ class _WorldContextStripV5 extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          _learnCopyV1(
-                            context,
-                            en: '$conciseProgressLabel · $progressPercent%',
-                            ru: '$conciseProgressLabel · $progressPercent%',
-                          ),
+                          conciseProgressLabel,
                           key: const Key('act0_shell_learn_route_board'),
                           maxLines: 1,
                           overflow: TextOverflow.fade,
@@ -1293,6 +1291,13 @@ class _JourneyPreviewV5 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final visibleJourneyIndexes = showFullPath
+        ? journeyLessonIndexes
+        : journeyLessonIndexes
+              .where(
+                (index) => lessons[index].state != Act0LessonStateV1.current,
+              )
+              .toList(growable: false);
     return Column(
       key: const Key('act0_shell_learn_v5_journey_preview'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1387,12 +1392,12 @@ class _JourneyPreviewV5 extends StatelessWidget {
               children: [
                 for (
                   var windowIndex = 0;
-                  windowIndex < journeyLessonIndexes.length;
+                  windowIndex < visibleJourneyIndexes.length;
                   windowIndex++
                 ) ...[
                   Builder(
                     builder: (context) {
-                      final i = journeyLessonIndexes[windowIndex];
+                      final i = visibleJourneyIndexes[windowIndex];
                       final lesson = lessons[i];
                       final isNextUp =
                           i > 0 &&
@@ -1425,7 +1430,7 @@ class _JourneyPreviewV5 extends StatelessWidget {
                       );
                     },
                   ),
-                  if (windowIndex < journeyLessonIndexes.length - 1 ||
+                  if (windowIndex < visibleJourneyIndexes.length - 1 ||
                       deferredLockedCount > 0)
                     const SizedBox(height: 6),
                 ],

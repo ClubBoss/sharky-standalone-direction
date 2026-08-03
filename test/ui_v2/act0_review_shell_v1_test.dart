@@ -198,13 +198,13 @@ void main() {
       );
       expect(find.text('Review'), findsOneWidget);
       expect(find.text('1 miss to fix'), findsOneWidget);
-      expect(find.text('HOW REVIEW WORKS'), findsOneWidget);
-      expect(find.text('MISS'), findsOneWidget);
-      expect(find.text('No-bet-yet clue'), findsOneWidget);
-      expect(find.text('REPAIR'), findsOneWidget);
-      expect(find.text('RESULT'), findsOneWidget);
-      expect(find.text('focused rep'), findsOneWidget);
-      expect(find.text('saved read'), findsOneWidget);
+      expect(find.text('HOW REVIEW WORKS'), findsNothing);
+      expect(find.text('MISS'), findsNothing);
+      expect(find.text('No-bet-yet clue'), findsNothing);
+      expect(find.text('REPAIR'), findsNothing);
+      expect(find.text('RESULT'), findsNothing);
+      expect(find.text('focused rep'), findsNothing);
+      expect(find.text('saved read'), findsNothing);
       expect(
         find.byKey(const Key('act0_shell_review_bench_footer_content')),
         findsOneWidget,
@@ -685,16 +685,16 @@ void main() {
     expect(find.text('1 miss to fix'), findsNothing);
     expect(find.text('Review is ready'), findsOneWidget);
     expect(find.text('Nothing to fix right now.'), findsNothing);
-    expect(find.text('HOW REVIEW WORKS'), findsOneWidget);
-    expect(find.text('MISS'), findsOneWidget);
+    expect(find.text('HOW REVIEW WORKS'), findsNothing);
+    expect(find.text('MISS'), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_review_bench_footer_content')),
       findsOneWidget,
     );
-    expect(find.text('REPAIR'), findsOneWidget);
-    expect(find.text('RESULT'), findsOneWidget);
-    expect(find.text('focused rep'), findsOneWidget);
-    expect(find.text('saved read'), findsOneWidget);
+    expect(find.text('REPAIR'), findsNothing);
+    expect(find.text('RESULT'), findsNothing);
+    expect(find.text('focused rep'), findsNothing);
+    expect(find.text('saved read'), findsNothing);
     expect(find.text('Open Learn'), findsOneWidget);
     await tester.tap(find.text('Open Learn'));
     expect(openedLearn, isTrue);

@@ -4,7 +4,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
-  testWidgets('Profile skill proof uses evidence-safe nonnumeric copy', (
+  testWidgets('Profile keeps two evidence-safe proofs without a skill dashboard', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -87,54 +87,11 @@ void main() {
       findsNothing,
     );
 
-    await tester.scrollUntilVisible(
-      find.byKey(const Key('act0_shell_profile_skill_stats')),
-      180,
-      scrollable: find.descendant(
-        of: find.byKey(const Key('act0_shell_profile_screen')),
-        matching: find.byType(Scrollable),
-      ),
-    );
-    await tester.pumpAndSettle();
-
-    expect(find.text('Proof in practice'), findsOneWidget);
-    expect(find.textContaining('Recent proof: Table sense'), findsOneWidget);
-    expect(find.text('Table sense'), findsWidgets);
-    expect(find.text('Recent route proof'), findsWidgets);
-    expect(find.text('From Action words'), findsOneWidget);
-    final skillText = tester
-        .widgetList<Text>(
-          find.descendant(
-            of: find.byKey(const Key('act0_shell_profile_skill_stats')),
-            matching: find.byType(Text),
-          ),
-        )
-        .map((widget) => widget.data ?? widget.textSpan?.toPlainText() ?? '')
-        .join(' ');
-
-    for (final unsafe in <String>[
-      'Skill snapshot',
-      'Table sense +',
-      'Board reading +',
-      '+6',
-      '+3',
-      'Lv 1',
-      'Lv 2',
-      'Level',
-      'XP',
-      'Rating',
-      'Radar',
-      'Skill score',
-      'Strongest skill',
-      'Weakest skill',
-      'mastered',
-      'leak',
-      'AI',
-      'GTO',
-      'solver',
-    ]) {
-      expect(skillText, isNot(contains(unsafe)));
-    }
+    expect(find.text('Your poker path'), findsOneWidget);
+    expect(find.text('Your proof'), findsOneWidget);
+    expect(find.text('Lessons'), findsOneWidget);
+    expect(find.text('Rhythm'), findsOneWidget);
+    expect(find.byKey(const Key('act0_shell_profile_skill_stats')), findsNothing);
     expect(find.textContaining('badges'), findsNothing);
   });
 }
