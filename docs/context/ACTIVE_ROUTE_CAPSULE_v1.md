@@ -2,6 +2,20 @@
 
 Status: ACTIVE POST-MERGE EXECUTION CAPSULE.
 
+## Supersession — Final Product Visual Cohesion v1
+
+`POST_P3_SIMULATOR_VISUAL_ACCEPTANCE_V1` is **CLOSED_PARTIAL**: its evidence
+was sufficient to establish systemic visual inconsistency and insufficient for
+Wave 3 acceptance. `FINAL_PRODUCT_VISUAL_COHESION_V1` is now active under
+`docs/plan/FINAL_PRODUCT_VISUAL_COHESION_DESIGN_AUTHORITY_v1.md`, with exactly
+three implementation waves maximum and Wave 1 active only. Modern Table
+internals and geometry, learning semantics, content, route order, progression,
+payoff policy, telemetry, navigation IA, dependencies, and deterministic
+behaviour remain protected. Wave 1 has no screen-architecture, copy, mascot,
+motion, or public-Atlas authorization; it may only establish the shared
+foundation and repair Practice truncation when validly reproduced. Human QA and
+Human Proven status remain unclaimed.
+
 ## Supersession — 2026-08-03 (post-PR #139 capture-only closure)
 
 `P3_SPLIT_E2E_CLOSURE_V1` is **CLOSED_CURRENT**: PR #137 normally merged

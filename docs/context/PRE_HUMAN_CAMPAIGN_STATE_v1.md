@@ -9,13 +9,13 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical baseline | `27f4d88373ffc841e8742b1957528f69ed7f6a90` (PR #138 normal merge). |
-| Authority freshness | **RECONCILED after PR #139 closure.** P3 remains closed; this state authorizes only the non-product Simulator acceptance packet below. |
+| Canonical baseline | `fba56cf313dfdead4b955f3b411cd5e547b6c443` (PR #140 normal merge). |
+| Authority freshness | **RECONCILED for `FINAL_PRODUCT_VISUAL_COHESION_V1`.** The post-P3 Simulator acceptance evidence established systemic visual inconsistency, but is insufficient for Wave 3 acceptance. |
 | Campaign version | v1 |
 | Corridor | **`ROLLING_CORRIDOR_PHP6_TO_PHP8_V1`** — **CLOSED/HISTORICAL.** PHP-6, PHP-7, and PHP-8 are terminally closed and published (PR #85). The corridor is not reopened; its wave-by-wave authorization language below is historical record only. PHP-9 remains `NOT_PREAUTHORIZED`. |
-| Umbrella stage | **Learning Effect / Training Flow — current-head Top-1 convergence.** |
-| Active sub-packet | **`POST_P3_SIMULATOR_VISUAL_ACCEPTANCE_V1`.** |
-| Status | **ADMITTED — bounded black-box iOS Simulator acceptance; no product/test changes.** |
+| Umbrella stage | **`FINAL_PRODUCT_VISUAL_COHESION_V1` — three implementation waves maximum, then freeze.** |
+| Active sub-packet | **Wave 1 — Visual Foundation.** |
+| Status | **ACTIVE — Stage 0 authority reconciliation admitted; Wave 1 only. Wave 2 and Wave 3 are not yet active.** |
 | Latest admitted PR | **#138** — authority unblock, merge `27f4d88373ffc841e8742b1957528f69ed7f6a90`. |
 | EID-1 | **CLOSED** — PR #124, merge `29ea21b1c23da1fa398333ec4eaaa067467349e8`. |
 | VAT-1 | **CLOSED** — PR #125, merge `6268f114ceb668664ded65290d2aae459be10b75`. |
@@ -32,11 +32,11 @@ here; update only the fields below.
 | PHP-1 stale assertions | **2** — phase-7 campaign wording; compact-decision retired teaching-step expectation |
 | F-16 non-weakening review | **NON_WEAKENING** — seven stale-test groups (#4, #5, #6, #7–9, #11, #12) independently re-derived |
 | PHP-3 / PHP-4 / PHP-5 / PHP-6 / PHP-7 / PHP-8 | **HISTORICAL/CLOSED — not reopened by this dispatch.** |
-| Recommended next packet | **`POST_P3_SIMULATOR_VISUAL_ACCEPTANCE_V1`.** |
-| Next authorization | **Admitted exactly: current merged app, ordinary visible controls, high-value iOS Simulator captures, and no product/test/capture-harness changes. This is black-box acceptance, not Human Proven status.** |
+| Recommended next packet | **`FINAL_PRODUCT_VISUAL_COHESION_V1` Wave 1 — Visual Foundation.** |
+| Next authorization | **Wave 1 only: semantic tokens, typography, surface/CTA/icon contracts, existing shared primitive adoption, a Practice-only truncation repair if validly reproduced, and targeted Simulator evidence.** |
 | Functional visual maintenance | **`FUNCTIONAL_VISUAL_REGRESSION_MAINTENANCE_RULE_V1`.** One bounded repair without a new per-defect authority PR is allowed only for a valid deterministic/native reproduced functional regression affecting mandatory text, CTA reachability, compact/safe-area usability, or deterministic screenshots; one coherent owner, at most two production files, one PR, one corrective pass, rendered tests, and valid before/after evidence are mandatory. No new direction/copy/content/progression/payoff/telemetry/dependencies/mascot/motion/Review/Profile/broad runner redesign; Modern Table remains Maintenance Mode; no automatic Atlas refresh; invalid Ahem/glyph-block/proxy evidence is insufficient. This does not reopen Wave B or general visual work. |
-| Autonomous window | **One bounded non-product Simulator acceptance mission; no product/test/capture-harness changes.** |
-| Wave B | **NOT PREAUTHORIZED.** No broad visual work, Review/Profile, mascot, motion, tablet/landscape, general runner redesign, copy/content/progression/payoff/telemetry/dependency changes, Modern Table changes, Atlas refresh, or Human QA/HNP is authorized. |
+| Autonomous window | **Wave 1 only; maximum two implementation PRs plus one optional ownership extraction; one corrective pass; one open PR at a time.** |
+| Visual cohesion waves | **Wave 1 ACTIVE; Wave 2 NOT YET ACTIVE; Wave 3 NOT YET ACTIVE.** Full Atlas refresh, Human QA, and Human Proven status remain unclaimed. |
 | Human Proof | **NOT AUTHORIZED** — Human QA and Human Novice Proof are outside this dispatch. |
 | PHP-9 | **NOT_PREAUTHORIZED** |
 | Modern Table | **Maintenance Mode** |
