@@ -56,8 +56,8 @@ void main() {
       );
       expect(find.textContaining('XP'), findsNothing);
       expect(find.textContaining('Level'), findsNothing);
-      expect(find.text('Proof profile'), findsWidgets);
-      expect(find.text('Sharky keeps proof, not points.'), findsOneWidget);
+      expect(find.text('What Sharky can already prove'), findsWidgets);
+      expect(find.text('Your poker path'), findsOneWidget);
     },
   );
 
