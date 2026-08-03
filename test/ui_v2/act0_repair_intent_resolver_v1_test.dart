@@ -542,41 +542,40 @@ void main() {
     );
   });
 
-  testWidgets('successful repair writes focused return reason for Home', (
-    tester,
-  ) async {
-    await _pumpResolverHost(
-      tester,
-      taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
-      taskId: 'actions_legal_context',
-    );
-    await _answerOption(tester, 'fold');
-    await _launchHomeRepair(tester);
-    await _advanceTeachingToDrill(tester);
-    await _answerCorrectly(tester);
+  testWidgets(
+    'successful repair retains focused return reason state after Home surface removal',
+    (tester) async {
+      await _pumpResolverHost(
+        tester,
+        taskIds: const <String>['actions_legal_context', 'actions_check_drill'],
+        taskId: 'actions_legal_context',
+      );
+      await _answerOption(tester, 'fold');
+      await _launchHomeRepair(tester);
+      await _advanceTeachingToDrill(tester);
+      await _answerCorrectly(tester);
 
-    final state = _lastSessionReturnStatePayload(tester);
-    expect(state?['last_session_repair_focus_id'], 'no_bet_yet');
-    expect(state?['last_session_proof_result'], 'fix_landed');
-    expect(state?['last_session_world_id'], 'world_1');
-    expect((state?['last_session_date'] as String?)?.isNotEmpty, isTrue);
+      final state = _lastSessionReturnStatePayload(tester);
+      expect(state?['last_session_repair_focus_id'], 'no_bet_yet');
+      expect(state?['last_session_proof_result'], 'fix_landed');
+      expect(state?['last_session_world_id'], 'world_1');
+      expect((state?['last_session_date'] as String?)?.isNotEmpty, isTrue);
 
-    final line = _homePersonalizedReturnReasonLine(tester);
-    expect(
-      line,
-      'Resume your most recent table read.',
-    );
+      final line = _homePersonalizedReturnReasonLine(tester);
+      expect(line, 'Resume your most recent table read.');
 
-    await _pumpHomeWithPersonalizedReason(tester, line);
-    expect(
-      find.byKey(const Key('act0_shell_home_personalized_return_reason')),
-      findsOneWidget,
-    );
-    expect(find.text(line!), findsOneWidget);
-    expect(find.textContaining('no_bet_yet'), findsNothing);
-    expect(find.textContaining('actions_check_drill'), findsNothing);
-    expect(find.textContaining('mastered'), findsNothing);
-  });
+      await _pumpHomeWithPersonalizedReason(tester, line);
+      expect(
+        find.byKey(const Key('act0_shell_home_personalized_return_reason')),
+        findsNothing,
+      );
+      expect(find.text(line!), findsNothing);
+      expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
+      expect(find.textContaining('no_bet_yet'), findsNothing);
+      expect(find.textContaining('actions_check_drill'), findsNothing);
+      expect(find.textContaining('mastered'), findsNothing);
+    },
+  );
 
   testWidgets('failed repair keeps resolver priority', (tester) async {
     await _pumpResolverHost(

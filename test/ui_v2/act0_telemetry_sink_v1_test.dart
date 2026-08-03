@@ -349,29 +349,7 @@ void main() {
     await tester.pumpAndSettle();
     await openBottomTabV1(tester, 'Learn');
 
-    final lessonFinder = find.byKey(
-      const Key('act0_shell_lesson_Fold, check, call, raise'),
-    );
-    await tester.ensureVisible(lessonFinder);
-    await tester.pumpAndSettle();
-    await tester.tap(lessonFinder);
-    await tester.pump(const Duration(milliseconds: 1200));
-    await tester.pumpAndSettle();
-
-    final stepFinder = find.byKey(
-      const Key('act0_shell_lesson_step_actions_theory'),
-    );
-    await tester.scrollUntilVisible(
-      stepFinder,
-      120,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.ensureVisible(stepFinder);
-    await tester.pumpAndSettle();
-    await tester.tap(stepFinder);
-    await tester.pumpAndSettle();
-
-    final startCta = find.byKey(const Key('act0_shell_selected_lesson_cta'));
+    final startCta = find.byKey(const Key('act0_shell_current_mission_cta'));
     expect(startCta, findsOneWidget);
     await tester.tap(startCta);
     await tester.pumpAndSettle();
