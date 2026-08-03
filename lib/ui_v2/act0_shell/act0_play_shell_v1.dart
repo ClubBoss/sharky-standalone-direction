@@ -550,7 +550,7 @@ class _PracticeHubHeaderV1 extends StatelessWidget {
               width: 8,
               height: 8,
               decoration: const BoxDecoration(
-                color: Act0ShellTokensV1.actionBlue,
+                color: Act0ShellTokensV1.currentLearningState,
                 shape: BoxShape.circle,
               ),
             ),
@@ -558,7 +558,7 @@ class _PracticeHubHeaderV1 extends StatelessWidget {
             Text(
               title,
               style: Act0ShellTokensV1.label.copyWith(
-                color: Act0ShellTokensV1.actionBlue,
+                color: Act0ShellTokensV1.currentLearningState,
                 fontSize: 12,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 0.35,
@@ -726,8 +726,8 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
             height: 32,
             decoration: BoxDecoration(
               color: item.isPinned
-                  ? Act0ShellTokensV1.gold
-                  : Act0ShellTokensV1.actionBlue,
+                  ? Act0ShellTokensV1.repairAttention
+                  : Act0ShellTokensV1.currentLearningState,
               borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
             ),
           ),
@@ -753,7 +753,7 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                       Text(
                         'Active repair',
                         style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.gold,
+                          color: Act0ShellTokensV1.repairAttention,
                           fontSize: 11,
                           fontWeight: FontWeight.w900,
                         ),
@@ -795,7 +795,7 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                         key: const Key('act0_shell_play_repair_queue_item_cta'),
                         onPressed: () => onLaunchTarget!(item.launchRequest!),
                         style: TextButton.styleFrom(
-                          foregroundColor: Act0ShellTokensV1.actionBlue,
+                          foregroundColor: Act0ShellTokensV1.primaryAction,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 8,
                             vertical: 4,
@@ -806,7 +806,7 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                         child: Text(
                           'Practice this',
                           style: Act0ShellTokensV1.label.copyWith(
-                            color: Act0ShellTokensV1.actionBlue,
+                            color: Act0ShellTokensV1.primaryAction,
                             fontWeight: FontWeight.w900,
                           ),
                         ),
