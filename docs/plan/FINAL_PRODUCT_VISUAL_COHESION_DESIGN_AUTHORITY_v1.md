@@ -6,6 +6,16 @@
 **Authority:** Claude Design — design adjudication only. No code, no repository change, no new screenshots, no generated imagery.
 **Stage opened:** `FINAL_PRODUCT_VISUAL_COHESION_V1` — three implementation waves maximum, then freeze.
 
+**Closure addendum (2026-08-03):** `FINAL_PRODUCT_VISUAL_COHESION_WAVE1 =
+CLOSED_CURRENT`; `FINAL_PRODUCT_VISUAL_COHESION_WAVE2 = CLOSED`; Wave 3 is
+`UNBLOCKED_NOT_STARTED`. Wave 2 merged normally through PRs #148-#153 at final
+product SHA `38a9000e42cc9e34b4cfb6825696233c2d8870d4`. Its 11-state native iOS
+Simulator closure pack passed individual visual inspection, SHA-256, blank,
+duplicate, and semantic-state validation. Hosted canonical audit run
+`30843753728` is supplemental transport evidence. Wave 3 was not implemented by
+this closure and still requires the ordinary-route evidence in its hard
+acceptance gate. Modern Table remains protected.
+
 ---
 
 ## 1. Executive verdict

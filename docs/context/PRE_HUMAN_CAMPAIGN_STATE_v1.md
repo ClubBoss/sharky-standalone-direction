@@ -9,14 +9,15 @@ here; update only the fields below.
 
 | Field | Value |
 | --- | --- |
-| Canonical baseline | `723d732708c0ff5821affae33913d1c415490a53` (PR #143 normal merge; Wave 2 authority baseline). |
-| Authority freshness | **RECONCILED for `FINAL_PRODUCT_VISUAL_COHESION_V1` through PR #143.** PR #142 merged at `1b8063db2c58def0d749e6496fde37f0726fe2a6`; the Practice one-line clipping repair closed in PR #143. |
+| Canonical baseline | `38a9000e42cc9e34b4cfb6825696233c2d8870d4` (PR #153 normal merge; final Wave 2 product baseline). |
+| Authority freshness | **RECONCILED for `FINAL_PRODUCT_VISUAL_COHESION_V1` through PR #153.** Wave 2 closed through the sequential normal merges #148-#153; no rejected #145/#146 implementation entered main. |
 | Campaign version | v1 |
 | Corridor | **`ROLLING_CORRIDOR_PHP6_TO_PHP8_V1`** — **CLOSED/HISTORICAL.** PHP-6, PHP-7, and PHP-8 are terminally closed and published (PR #85). The corridor is not reopened; its wave-by-wave authorization language below is historical record only. PHP-9 remains `NOT_PREAUTHORIZED`. |
 | Umbrella stage | **`FINAL_PRODUCT_VISUAL_COHESION_V1` — three implementation waves maximum, then freeze.** |
-| Active sub-packet | **Wave 2 — Navigation Surfaces.** |
-| Status | **ACTIVE — `FINAL_PRODUCT_VISUAL_COHESION_WAVE1 = CLOSED_CURRENT`; `FINAL_PRODUCT_VISUAL_COHESION_WAVE2 = ACTIVE`; Wave 3 is not yet active.** |
-| Latest admitted PR | **#143** — Practice review, normal merge `723d732708c0ff5821affae33913d1c415490a53`. |
+| Active sub-packet | **Wave 3 — owner start is unblocked, but no Wave 3 implementation is active.** |
+| Status | **`FINAL_PRODUCT_VISUAL_COHESION_WAVE1 = CLOSED_CURRENT`; `FINAL_PRODUCT_VISUAL_COHESION_WAVE2 = CLOSED`; Wave 3 = `UNBLOCKED_NOT_STARTED`.** |
+| Latest admitted PR | **#153** — Profile proof truth, normal merge `38a9000e42cc9e34b4cfb6825696233c2d8870d4`. |
+| Wave 2 final evidence | **PASS at product SHA `38a9000e42cc9e34b4cfb6825696233c2d8870d4`.** Eleven individually inspected native iOS Simulator originals; manifest/hash/blank/duplicate/state checks green; contact SHA-256 `6a45169eded707f9f422b7f9b070eff9d89e3b30ae5798b419e88f50109b6f1d`; archive SHA-256 `52a63f16c835cfd9668d0e677d2a8c2b4a201b1d569f2f24b4b8e4753a34c441`; hosted canonical audit run `30843753728` is transport evidence only. |
 | EID-1 | **CLOSED** — PR #124, merge `29ea21b1c23da1fa398333ec4eaaa067467349e8`. |
 | VAT-1 | **CLOSED** — PR #125, merge `6268f114ceb668664ded65290d2aae459be10b75`. |
 | Independent visual review | **CLOSED — `VISUAL_CLOSURE_LEDGER_READY`; 135/135 evidence images inspected, 0 P0, 0 P1, and no Modern Table regression confirmed.** |
@@ -32,11 +33,11 @@ here; update only the fields below.
 | PHP-1 stale assertions | **2** — phase-7 campaign wording; compact-decision retired teaching-step expectation |
 | F-16 non-weakening review | **NON_WEAKENING** — seven stale-test groups (#4, #5, #6, #7–9, #11, #12) independently re-derived |
 | PHP-3 / PHP-4 / PHP-5 / PHP-6 / PHP-7 / PHP-8 | **HISTORICAL/CLOSED — not reopened by this dispatch.** |
-| Recommended next packet | **`FINAL_PRODUCT_VISUAL_COHESION_V1` Wave 2 — Navigation Surfaces.** |
-| Next authorization | **Wave 2 only: Home, Learn, Practice, Review, You/Profile, world selection, and shared navigation grammar under the final visual-cohesion authority. Wave 3 remains unauthorized.** |
+| Recommended next packet | **A fresh owner mission for `FINAL_PRODUCT_VISUAL_COHESION_V1` Wave 3 — Runner / Feedback / Payoff.** |
+| Next authorization | **Wave 3 is unblocked for owner start, not implemented by this closure. Its ordinary-route capture and acceptance gates remain binding; no proxy/fixture evidence may close them.** |
 | Functional visual maintenance | **`FUNCTIONAL_VISUAL_REGRESSION_MAINTENANCE_RULE_V1`.** One bounded repair without a new per-defect authority PR is allowed only for a valid deterministic/native reproduced functional regression affecting mandatory text, CTA reachability, compact/safe-area usability, or deterministic screenshots; one coherent owner, at most two production files, one PR, one corrective pass, rendered tests, and valid before/after evidence are mandatory. No new direction/copy/content/progression/payoff/telemetry/dependencies/mascot/motion/Review/Profile/broad runner redesign; Modern Table remains Maintenance Mode; no automatic Atlas refresh; invalid Ahem/glyph-block/proxy evidence is insufficient. This does not reopen Wave B or general visual work. |
-| Autonomous window | **Wave 2 only; preferred maximum two implementation PRs; one open PR at a time.** |
-| Visual cohesion waves | **Wave 1 CLOSED_CURRENT; Wave 2 ACTIVE; Wave 3 NOT YET ACTIVE.** Full Atlas refresh, Human QA, native proof, and Human Proven status remain unclaimed. |
+| Autonomous window | **Wave 2 window closed. Wave 3 requires a fresh owner mission under its existing hard gates.** |
+| Visual cohesion waves | **Wave 1 CLOSED_CURRENT; Wave 2 CLOSED; Wave 3 UNBLOCKED_NOT_STARTED.** Human QA, physical-device proof, and Human Proven status remain unclaimed. |
 | Human Proof | **NOT AUTHORIZED** — Human QA and Human Novice Proof are outside this dispatch. |
 | PHP-9 | **NOT_PREAUTHORIZED** |
 | Modern Table | **Maintenance Mode** |
