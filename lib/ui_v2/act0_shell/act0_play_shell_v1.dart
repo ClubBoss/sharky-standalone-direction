@@ -666,21 +666,18 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
           if (primary &&
               consumer.items.any(_canLaunchPracticeQueueTargetV1)) ...[
             const SizedBox(height: 3),
-            Padding(
-              padding: const EdgeInsets.only(left: 40),
-              child: Text(
-                act0SharkyCoachLineForMomentV1(
-                  Act0SharkyCoachMomentV1.practiceCurrentFix,
-                ),
-                key: const Key('act0_shell_play_sharky_coach_line'),
-                maxLines: 2,
-                overflow: TextOverflow.clip,
-                softWrap: true,
-                style: Act0ShellTokensV1.sentenceSupport.copyWith(
-                  color: Act0ShellTokensV1.repairAttention,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w800,
-                ),
+            Text(
+              act0SharkyCoachLineForMomentV1(
+                Act0SharkyCoachMomentV1.practiceCurrentFix,
+              ),
+              key: const Key('act0_shell_play_sharky_coach_line'),
+              maxLines: MediaQuery.textScalerOf(context).scale(1) > 1.2 ? 4 : 3,
+              overflow: TextOverflow.clip,
+              softWrap: true,
+              style: Act0ShellTokensV1.sentenceSupport.copyWith(
+                color: Act0ShellTokensV1.repairAttention,
+                fontSize: 11,
+                fontWeight: FontWeight.w800,
               ),
             ),
           ],
