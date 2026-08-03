@@ -669,6 +669,7 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
               consumer.items.any(_canLaunchPracticeQueueTargetV1)) ...[
             const SizedBox(height: 3),
             SizedBox(
+              width: double.infinity,
               height: 11 * 1.5 * coachTextScale * coachMaxLines,
               child: Text(
                 act0SharkyCoachLineForMomentV1(
