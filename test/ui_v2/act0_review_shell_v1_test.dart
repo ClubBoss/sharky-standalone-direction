@@ -5,6 +5,7 @@ import 'package:poker_analyzer/services/session_drill_recheck_user_launch_consum
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_personalized_return_reason_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/canonical_launcher_api_v1.dart';
@@ -662,6 +663,10 @@ void main() {
   testWidgets('Review shows an honest empty state without fake past spots', (
     tester,
   ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(375, 812);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
     var openedLearn = false;
     await tester.pumpWidget(
       reviewHost(
@@ -677,6 +682,7 @@ void main() {
         onOpenLearn: () {
           openedLearn = true;
         },
+        nextStep: Act0PersonalizedReturnReasonV1.fromSources(),
       ),
     );
     await tester.pumpAndSettle();
@@ -696,6 +702,26 @@ void main() {
     expect(find.text('focused rep'), findsNothing);
     expect(find.text('saved read'), findsNothing);
     expect(find.text('Open Learn'), findsOneWidget);
+    final openLearnCta = find.byKey(
+      const Key('act0_shell_review_empty_open_learn_cta'),
+    );
+    expect(tester.getTopLeft(openLearnCta).dy, greaterThanOrEqualTo(0));
+    expect(tester.getBottomRight(openLearnCta).dy, lessThan(812));
+    final openLearnButton = tester.widget<FilledButton>(openLearnCta);
+    expect(
+      openLearnButton.style?.backgroundColor?.resolve(<WidgetState>{}),
+      Act0VisualCanonV1.cyanAccent,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_review_empty_stage')),
+      findsOneWidget,
+    );
+    expect(
+      tester
+          .getRect(find.byKey(const Key('act0_shell_review_empty_repair_card')))
+          .height,
+      lessThan(300),
+    );
     await tester.tap(find.text('Open Learn'));
     expect(openedLearn, isTrue);
     expect(
