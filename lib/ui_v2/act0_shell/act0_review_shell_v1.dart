@@ -232,8 +232,6 @@ class Act0ReviewShellV1 extends StatelessWidget {
           mistake: activeMistake,
           onFixMistake: onFixMistake,
         ),
-      const SizedBox(height: Act0ShellTokensV1.gapMd),
-      _ReviewHowItWorksStripV1(mistake: activeMistake),
       ...historyAndRecovered,
     ];
 
