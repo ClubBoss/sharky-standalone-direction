@@ -518,7 +518,7 @@ class _PracticeCurrentRepValueV1 extends StatelessWidget {
                   body,
                   maxLines: 2,
                   overflow: TextOverflow.fade,
-                  style: Act0ShellTokensV1.muted.copyWith(
+                  style: Act0ShellTokensV1.sentenceSupport.copyWith(
                     color: Act0ShellTokensV1.textMuted,
                     height: 1.12,
                     fontWeight: FontWeight.w700,
@@ -671,8 +671,8 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.fade,
                         softWrap: false,
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.gold,
+                        style: Act0ShellTokensV1.sentenceSupport.copyWith(
+                          color: Act0ShellTokensV1.repairAttention,
                           fontSize: 11,
                           fontWeight: FontWeight.w800,
                         ),

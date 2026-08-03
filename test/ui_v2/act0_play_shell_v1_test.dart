@@ -13,26 +13,30 @@ void main() {
     String recommendedGroupId = 'daily',
     Act0PracticeRepairQueueConsumerV1 repairQueueConsumer =
         const Act0PracticeRepairQueueConsumerV1(),
+    double textScale = 1,
     ValueChanged<Act0PracticeGroupV1>? onStartGroup,
     ValueChanged<Act0PracticeRepairQueueLaunchRequestV1>?
     onLaunchRepairQueueTarget,
   }) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(
-          body: Act0PlayShellV1(
-            groups: groups,
-            recommendedGroupId: recommendedGroupId,
-            recommendedTitle: 'Start a short rep',
-            recommendedSubtitle: 'Run short spots to keep today clean.',
-            recommendedReasonLabel: 'Today\'s reps',
-            recommendedOutcome:
-                'three short spots keep the current route sharp without opening a full lesson.',
-            recommendedOutcomeLead: 'Sharpens today:',
-            masteryLabel: 'Today\'s reps',
-            repairQueueConsumer: repairQueueConsumer,
-            onLaunchRepairQueueTarget: onLaunchRepairQueueTarget,
-            onStartGroup: onStartGroup ?? (_) {},
+        home: MediaQuery(
+          data: MediaQueryData(textScaler: TextScaler.linear(textScale)),
+          child: Scaffold(
+            body: Act0PlayShellV1(
+              groups: groups,
+              recommendedGroupId: recommendedGroupId,
+              recommendedTitle: 'Start a short rep',
+              recommendedSubtitle: 'Run short spots to keep today clean.',
+              recommendedReasonLabel: 'Today\'s reps',
+              recommendedOutcome:
+                  'three short spots keep the current route sharp without opening a full lesson.',
+              recommendedOutcomeLead: 'Sharpens today:',
+              masteryLabel: 'Today\'s reps',
+              repairQueueConsumer: repairQueueConsumer,
+              onLaunchRepairQueueTarget: onLaunchRepairQueueTarget,
+              onStartGroup: onStartGroup ?? (_) {},
+            ),
           ),
         ),
       ),
@@ -834,6 +838,40 @@ void main() {
       cta.style?.backgroundColor?.resolve(<WidgetState>{}),
       isNot(const Color(0xFF087B91)),
     );
+  });
+
+  testWidgets('Practice coach sentence is untracked at 1.4x', (tester) async {
+    await pumpPractice(
+      tester,
+      textScale: 1.4,
+      groups: const <Act0PracticeGroupV1>[
+        dailyGroup,
+        disabledRepairGroup,
+        ...topicGroups,
+      ],
+      repairQueueConsumer: Act0PracticeRepairQueueConsumerV1.fromProjection(
+        Act0PracticeRepairQueueProjectionV1(
+          items: <Act0PracticeRepairQueueItemV1>[
+            _queueItem(
+              sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+              launchTarget: const Act0PracticeRepairQueueLaunchTargetV1(
+                worldId: 'world_1',
+                lessonId: 'fold_check_call_raise',
+                taskId: 'actions_check_drill',
+                source: act0PracticeRepairQueueSourceActiveRepairV1,
+                targetType: act0PracticeRepairQueueTargetTypeActiveRepairV1,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    final sentence = tester.widget<Text>(
+      find.byKey(const Key('act0_shell_play_sharky_coach_line')),
+    );
+    expect(sentence.style?.letterSpacing, 0);
+    expect(tester.takeException(), isNull);
   });
 }
 
