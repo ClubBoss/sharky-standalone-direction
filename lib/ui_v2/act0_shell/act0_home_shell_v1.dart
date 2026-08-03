@@ -200,28 +200,25 @@ class Act0HomeShellV1 extends StatelessWidget {
               const SizedBox(height: Act0VisualMetricsV1.sectionGap),
               missionCard,
               const SizedBox(height: Act0VisualMetricsV1.sectionGap),
-              if (checklistActive)
-                (_isDailyGoalDoneValue(goalValue)
-                    ? _HomeCompletionSurfaceV1(
-                        localeIsRu: _isRuLocaleV1(context),
-                        earnedStreak: completionEarnedStreak,
-                        streakDays: state.streakDays,
-                      )
-                    : _HomeChecklistSurfaceV1(
-                        rows: checklistRows,
-                        localeIsRu: _isRuLocaleV1(context),
-                        title:
-                            dailyPlanTitle ??
-                            act0LocalizedSurfaceAtomV1(
-                              context,
-                              'home_checklist_title',
-                              fallback: 'Today\'s sequence',
-                            ),
-                        personalizedReturnReasonLine:
-                            personalizedReturnReasonLine,
-                      ))
-              else
-                const SizedBox.shrink(),
+              _isDailyGoalDoneValue(goalValue)
+                  ? _HomeCompletionSurfaceV1(
+                      localeIsRu: _isRuLocaleV1(context),
+                      earnedStreak: completionEarnedStreak,
+                      streakDays: state.streakDays,
+                    )
+                  : _HomeChecklistSurfaceV1(
+                      rows: checklistRows,
+                      localeIsRu: _isRuLocaleV1(context),
+                      title:
+                          dailyPlanTitle ??
+                          act0LocalizedSurfaceAtomV1(
+                            context,
+                            'home_checklist_title',
+                            fallback: 'Today\'s sequence',
+                          ),
+                      personalizedReturnReasonLine:
+                          personalizedReturnReasonLine,
+                    ),
             ],
           ),
         ),
@@ -707,7 +704,7 @@ class _HomeProofMomentumLineV1 extends StatelessWidget {
     final line = hasCompletedLessons
         ? localeIsRu
               ? 'Подтверждено: $completedLessons урока. Следующее доказательство начинается с одного чистого чтения.'
-              : 'Route proof: $completedLessons lessons complete. Next proof starts with one clean read.'
+              : 'Route proof is active. Next proof starts with one clean read.'
         : localeIsRu
         ? 'Твой маршрут готов. Первое доказательство начинается с одного чистого чтения.'
         : 'Your route is ready. Next proof starts with one clean read.';
@@ -831,80 +828,80 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    title,
-                    key: const Key('act0_shell_home_daily_plan_title'),
-                    style: Act0ShellTokensV1.cardTitle.copyWith(fontSize: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      title,
+                      key: const Key('act0_shell_home_daily_plan_title'),
+                      style: Act0ShellTokensV1.cardTitle.copyWith(fontSize: 16),
+                    ),
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.arrow_forward_rounded,
+                        size: 13,
+                        color: Act0ShellTokensV1.textDim,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        localeIsRu ? 'Следующая раздача' : 'Next useful hand',
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: Act0ShellTokensV1.textDim,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapXs),
+              Text(
+                localeIsRu
+                    ? 'Неделя 1: тренируй одно чтение стола'
+                    : 'Week 1: train one table read',
+                key: const Key('act0_shell_home_week1_title'),
+                maxLines: 1,
+                overflow: TextOverflow.fade,
+                style: Act0ShellTokensV1.label.copyWith(
+                  color: Act0ShellTokensV1.primary,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapXs),
+              KeyedSubtree(
+                key: personalizedReturnReasonLine?.trim().isNotEmpty == true
+                    ? const Key('act0_shell_home_personalized_return_reason')
+                    : const Key('act0_shell_home_generic_return_reason'),
+                child: Text(
+                  personalizedReturnReasonLine?.trim().isNotEmpty == true
+                      ? personalizedReturnReasonLine!.trim()
+                      : localeIsRu
+                      ? 'Сегодня: держи одну подсказку стола в тонусе.'
+                      : 'Today: keep one table clue warm',
+                  key: const Key('act0_shell_home_daily_plan_support'),
+                  style: Act0ShellTokensV1.muted.copyWith(
+                    color: Act0ShellTokensV1.textMuted,
                   ),
                 ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.arrow_forward_rounded,
-                      size: 13,
-                      color: Act0ShellTokensV1.textDim,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      localeIsRu ? 'Следующая раздача' : 'Next useful hand',
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.textDim,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ],
+              ),
+              const SizedBox(height: 12),
+              for (var i = 0; i < rows.length; i++) ...[
+                _HomeChecklistRowTileV1(
+                  row: rows[i],
+                  isFirst: i == 0,
+                  isLast: i == rows.length - 1,
+                  isCompleted: activeFocusIndex != -1 && i < activeFocusIndex,
+                  isActiveFocus: i == activeFocusIndex,
+                  isPending: activeFocusIndex != -1 && i > activeFocusIndex,
                 ),
+                if (i + 1 < rows.length) const SizedBox(height: 10),
               ],
-            ),
-            const SizedBox(height: Act0ShellTokensV1.gapXs),
-            Text(
-              localeIsRu
-                  ? 'Неделя 1: тренируй одно чтение стола'
-                  : 'Week 1: train one table read',
-              key: const Key('act0_shell_home_week1_title'),
-              maxLines: 1,
-              overflow: TextOverflow.fade,
-              style: Act0ShellTokensV1.label.copyWith(
-                color: Act0ShellTokensV1.primary,
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-            const SizedBox(height: Act0ShellTokensV1.gapXs),
-            KeyedSubtree(
-              key: personalizedReturnReasonLine?.trim().isNotEmpty == true
-                  ? const Key('act0_shell_home_personalized_return_reason')
-                  : const Key('act0_shell_home_generic_return_reason'),
-              child: Text(
-                personalizedReturnReasonLine?.trim().isNotEmpty == true
-                    ? personalizedReturnReasonLine!.trim()
-                    : localeIsRu
-                    ? 'Сегодня: держи одну подсказку стола в тонусе.'
-                    : 'Today: keep one table clue warm',
-                key: const Key('act0_shell_home_daily_plan_support'),
-                style: Act0ShellTokensV1.muted.copyWith(
-                  color: Act0ShellTokensV1.textMuted,
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            for (var i = 0; i < rows.length; i++) ...[
-              _HomeChecklistRowTileV1(
-                row: rows[i],
-                isFirst: i == 0,
-                isLast: i == rows.length - 1,
-                isCompleted: activeFocusIndex != -1 && i < activeFocusIndex,
-                isActiveFocus: i == activeFocusIndex,
-                isPending: activeFocusIndex != -1 && i > activeFocusIndex,
-              ),
-              if (i + 1 < rows.length) const SizedBox(height: 10),
             ],
-              ],
-            ),
+          ),
         ),
       ),
     );

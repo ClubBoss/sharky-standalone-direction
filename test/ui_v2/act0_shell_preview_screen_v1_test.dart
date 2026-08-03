@@ -40,7 +40,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  Widget wave2LearnHost(Act0ControlledDemoCaptureSurfaceV1 surface) {
+  Widget wave2SurfaceHost(Act0ControlledDemoCaptureSurfaceV1 surface) {
     return MaterialApp(
       supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
       localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
@@ -131,7 +131,7 @@ void main() {
   ) async {
     await pumpCompact(
       tester,
-      wave2LearnHost(Act0ControlledDemoCaptureSurfaceV1.wave2LearnFresh),
+      wave2SurfaceHost(Act0ControlledDemoCaptureSurfaceV1.wave2LearnFresh),
     );
 
     final journey = find.byKey(
@@ -164,7 +164,7 @@ void main() {
   ) async {
     await pumpCompact(
       tester,
-      wave2LearnHost(Act0ControlledDemoCaptureSurfaceV1.wave2LearnProgressed),
+      wave2SurfaceHost(Act0ControlledDemoCaptureSurfaceV1.wave2LearnProgressed),
     );
 
     final journey = find.byKey(
@@ -190,25 +190,26 @@ void main() {
     );
   });
 
-  testWidgets('Home turns confirmed route progress into an honest momentum cue', (
-    tester,
-  ) async {
-    await pumpCompact(tester, host());
+  testWidgets(
+    'Home turns confirmed route progress into an honest momentum cue',
+    (tester) async {
+      await pumpCompact(tester, host());
 
-    expect(
-      find.byKey(const Key('act0_shell_home_proof_momentum_line')),
-      findsOneWidget,
-    );
-    final momentum = tester.widget<Text>(
-      find.byKey(const Key('act0_shell_home_proof_momentum_text')),
-    );
-    expect(
-      momentum.data,
-      'Route proof: 4 lessons complete. Next proof starts with one clean read.',
-    );
-    expect(find.textContaining('mastery'), findsNothing);
-    expect(find.textContaining('streak'), findsNothing);
-  });
+      expect(
+        find.byKey(const Key('act0_shell_home_proof_momentum_line')),
+        findsOneWidget,
+      );
+      final momentum = tester.widget<Text>(
+        find.byKey(const Key('act0_shell_home_proof_momentum_text')),
+      );
+      expect(
+        momentum.data,
+        'Route proof is active. Next proof starts with one clean read.',
+      );
+      expect(find.textContaining('mastery'), findsNothing);
+      expect(find.textContaining('streak'), findsNothing);
+    },
+  );
 
   testWidgets('Home does not invent proof when progress is unavailable', (
     tester,
@@ -234,5 +235,70 @@ void main() {
       'Your route is ready. Next proof starts with one clean read.',
     );
     expect(find.textContaining('lessons complete'), findsNothing);
+  });
+
+  testWidgets('Wave 2 Home fresh keeps a useful continuation below the hero', (
+    tester,
+  ) async {
+    await pumpCompact(
+      tester,
+      wave2SurfaceHost(Act0ControlledDemoCaptureSurfaceV1.wave2HomeFresh),
+    );
+
+    expect(find.text('First Table Guide'), findsOneWidget);
+    expect(find.text('0 of 9 lessons complete'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_home_daily_plan_card')),
+      findsOneWidget,
+    );
+    expect(find.text('Today\'s sequence'), findsOneWidget);
+    expect(find.text('Route proof is active.'), findsNothing);
+    expect(
+      tester.getBottomLeft(find.byKey(const Key('act0_shell_main_cta'))).dy,
+      lessThan(844),
+    );
+  });
+
+  testWidgets('Wave 2 Home progressed states completion once', (tester) async {
+    await pumpCompact(
+      tester,
+      wave2SurfaceHost(Act0ControlledDemoCaptureSurfaceV1.wave2HomeProgressed),
+    );
+
+    expect(find.text('What poker is'), findsOneWidget);
+    expect(find.text('1 of 9 lessons complete'), findsOneWidget);
+    expect(
+      find.text(
+        'Route proof is active. Next proof starts with one clean read.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.textContaining('1 lessons complete'), findsNothing);
+    expect(
+      find.byKey(const Key('act0_shell_home_daily_plan_card')),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('Wave 2 Home repair return keeps its personalized reason', (
+    tester,
+  ) async {
+    await pumpCompact(
+      tester,
+      wave2SurfaceHost(
+        Act0ControlledDemoCaptureSurfaceV1.wave2HomeRepairReturn,
+      ),
+    );
+
+    expect(find.text('Repair one weak spot'), findsOneWidget);
+    expect(find.text('Practice this spot'), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_home_personalized_return_reason')),
+      findsOneWidget,
+    );
+    expect(
+      find.textContaining('You missed this clue last time.'),
+      findsOneWidget,
+    );
   });
 }
