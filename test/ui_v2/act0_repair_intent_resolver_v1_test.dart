@@ -157,18 +157,20 @@ void main() {
 
     await _openPractice(tester);
 
-    final hero = find.byKey(const Key('act0_shell_play_daily_hero'));
-    expect(hero, findsOneWidget);
+    final shortRep = find.byKey(
+      const Key('act0_shell_play_featured_status_row'),
+    );
+    expect(shortRep, findsOneWidget);
     expect(
       find.descendant(
-        of: hero,
+        of: shortRep,
         matching: find.text('Practice the no-bet-yet clue'),
       ),
       findsNothing,
     );
     expect(
       find.descendant(
-        of: hero,
+        of: shortRep,
         matching: find.text('One same-clue rep will help lock this in.'),
       ),
       findsNothing,
@@ -178,7 +180,7 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.text('No bet yet is still the clue to stabilize.'),
+      find.byKey(const Key('act0_shell_play_sharky_coach_line')),
       findsOneWidget,
     );
     expect(find.text('Repair reinforcement'), findsNothing);
@@ -406,15 +408,17 @@ void main() {
 
     await _openPractice(tester);
 
-    final hero = find.byKey(const Key('act0_shell_play_daily_hero'));
-    expect(hero, findsOneWidget);
+    final shortRep = find.byKey(
+      const Key('act0_shell_play_featured_status_row'),
+    );
+    expect(shortRep, findsOneWidget);
     expect(
-      find.descendant(of: hero, matching: find.text('Replay this spot')),
+      find.descendant(of: shortRep, matching: find.text('Replay this spot')),
       findsNothing,
     );
     expect(
       find.descendant(
-        of: hero,
+        of: shortRep,
         matching: find.text('Train the exact spot again.'),
       ),
       findsNothing,
@@ -424,7 +428,7 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.text('No bet yet is still the clue to stabilize.'),
+      find.byKey(const Key('act0_shell_play_sharky_coach_line')),
       findsOneWidget,
     );
     expect(find.text('Repair reinforcement'), findsNothing);
