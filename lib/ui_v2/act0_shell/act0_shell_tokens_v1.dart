@@ -90,6 +90,16 @@ class Act0ShellTokensV1 {
   static const Color gold = Act0VisualCanonV1.goldAccent;
   static const Color info = Act0VisualCanonV1.cyanAccent;
   static const Color danger = Act0VisualCanonV1.redDanger;
+
+  // Wave 1 semantic roles. These alias the established Act0 palette so
+  // foundation adoption does not fork the visual system or alter table-owned
+  // rendering.
+  static const Color primaryAction = actionBlue;
+  static const Color currentLearningState = actionBlue;
+  static const Color repairAttention = gold;
+  static const Color successProof = Act0VisualCanonV1.greenTable;
+  static const Color inactiveState = Act0VisualCanonV1.textDisabled;
+  static const Color informationalMetadata = Act0VisualCanonV1.textTertiary;
   static const Color felt = Act0TableFeltCanonV1.feltMid;
   static const Color feltDark = Act0TableFeltCanonV1.feltEdge;
   static const Color feltLine = Act0TableFeltCanonV1.railLine;
@@ -198,6 +208,16 @@ class Act0ShellTokensV1 {
     fontSize: 12,
     height: 1.32,
     fontWeight: FontWeight.w600,
+  );
+
+  /// Sentence support is intentionally untracked. Use it for learner-facing
+  /// prose; `label` remains reserved for compact metadata.
+  static const TextStyle sentenceSupport = TextStyle(
+    color: textMuted,
+    fontSize: 12,
+    height: 1.32,
+    fontWeight: FontWeight.w600,
+    letterSpacing: 0,
   );
 
   static const TextStyle label = TextStyle(
