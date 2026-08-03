@@ -924,6 +924,7 @@ void main() {
         painter.computeLineMetrics().length,
         lessThanOrEqualTo(textScale > 1.2 ? 4 : 3),
       );
+      expect(paragraph.size.height, greaterThanOrEqualTo(painter.height));
       expect(coachRect.left, greaterThanOrEqualTo(queueRect.left));
       expect(coachRect.right, lessThanOrEqualTo(queueRect.right));
       expect(coachRect.top, greaterThanOrEqualTo(queueRect.top));
