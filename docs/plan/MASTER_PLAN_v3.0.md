@@ -116,18 +116,20 @@ Do not use the readiness reference as the default bottleneck selector for day-to
 ## Current post-merge status
 
 - **Current-execution correction (Final Product Visual Cohesion v1):**
-  `FINAL_PRODUCT_VISUAL_COHESION_WAVE1 = CLOSED_CURRENT`. PR #142 merged at
-  `1b8063db2c58def0d749e6496fde37f0726fe2a6`; PR #143 then merged normally at
-  `723d732708c0ff5821affae33913d1c415490a53`, closing the Practice one-line
-  clipping repair. `FINAL_PRODUCT_VISUAL_COHESION_WAVE2 = ACTIVE` for the
-  navigation-surface architecture admitted by
-  `docs/plan/FINAL_PRODUCT_VISUAL_COHESION_DESIGN_AUTHORITY_v1.md`; Wave 3 is
-  not yet active. The three-wave maximum and mandatory post-Wave-3 freeze
-  remain binding. Modern Table internals/geometry, learning semantics, content,
-  route order, progression, payoff policy, telemetry, navigation IA,
-  dependencies, and deterministic behaviour remain protected. The public Atlas
-  remains frozen; native proof and Human QA/Human Proven claims remain
-  unclaimed.
+  `FINAL_PRODUCT_VISUAL_COHESION_WAVE1 = CLOSED_CURRENT` and
+  `FINAL_PRODUCT_VISUAL_COHESION_WAVE2 = CLOSED`. Wave 2 merged sequentially in
+  PRs #148-#153, with final product SHA
+  `38a9000e42cc9e34b4cfb6825696233c2d8870d4`. Eleven native iOS Simulator
+  semantic states passed individual visual inspection plus hash, blank,
+  duplicate, and state-identity validation; hosted canonical audit run
+  `30843753728` is supplemental transport evidence. Wave 3 is
+  `UNBLOCKED_NOT_STARTED`: it requires a fresh owner mission and remains subject
+  to the ordinary-route evidence and acceptance gates in
+  `docs/plan/FINAL_PRODUCT_VISUAL_COHESION_DESIGN_AUTHORITY_v1.md`. Modern Table
+  internals/geometry, learning semantics, content, route order, progression,
+  payoff policy, telemetry, navigation IA, dependencies, and deterministic
+  behaviour remain protected. Human QA, physical-device proof, and Human Proven
+  claims remain unclaimed.
 
 - **Current-execution correction (2026-08-03, post-PR #139 closure):**
   `P3_SPLIT_E2E_CLOSURE_V1` is **CLOSED_CURRENT**. PR #137 normally merged
