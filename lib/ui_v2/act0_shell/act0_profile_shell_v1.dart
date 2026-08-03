@@ -520,18 +520,6 @@ class _ProfileHeroCardV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           Text(
-            _profileCopyV1(
-              context,
-              en: 'Recent route proof',
-              ru: 'Недавнее подтверждение маршрута',
-            ),
-            style: Act0ShellTokensV1.body.copyWith(
-              color: Act0VisualCanonV1.textPrimary.withOpacity(0.92),
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Text(
             confidenceLine,
             key: const Key('act0_shell_profile_identity_summary'),
             maxLines: 2,
@@ -550,12 +538,13 @@ class _ProfileHeroCardV1 extends StatelessWidget {
                 label: _profileHeroQualityLineV1(context, profile),
                 tone: Act0VisualCanonV1.cyanAccent,
               ),
-              _ProfileHeroFactChipV1(
-                keyName: 'tasks',
-                label: completionLine,
-                tone: Act0ShellTokensV1.textMuted,
-                icon: Icons.flag_rounded,
-              ),
+              if (completionLine.isNotEmpty)
+                _ProfileHeroFactChipV1(
+                  keyName: 'tasks',
+                  label: completionLine,
+                  tone: Act0ShellTokensV1.textMuted,
+                  icon: Icons.flag_rounded,
+                ),
             ],
           ),
         ],
@@ -803,6 +792,9 @@ String _profileCompactCompletionLineV1(
     r'^\s*(\d+)\s+of\s+\d+\s+tasks?\s+complete',
   ).firstMatch(profile.lessonsLine);
   if (match != null) {
+    if (match.group(1) == '0') {
+      return '';
+    }
     return _profileCopyV1(
       context,
       en: '${match.group(1)} tasks complete',
@@ -1042,20 +1034,6 @@ class _ProfileProgressProofCardV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final recentGains = _dedupedRecentSkillGainsV1(profile.recentSkillGains);
-    Act0AchievementV1? firstAchievement;
-    Act0AchievementV1? firstUnlockedAchievement;
-    for (final achievement in profile.achievements) {
-      if (achievement.label.trim().isEmpty) {
-        continue;
-      }
-      firstAchievement ??= achievement;
-      if (!achievement.locked) {
-        firstUnlockedAchievement = achievement;
-        break;
-      }
-    }
-    final achievementProof = firstUnlockedAchievement ?? firstAchievement;
     final proof = crossSessionProof;
     final tiles = proof?.hasProof == true
         ? _crossSessionProofTilesV1(context, profile, proof!)
@@ -1072,37 +1050,6 @@ class _ProfileProgressProofCardV1 extends StatelessWidget {
               icon: Icons.local_fire_department_rounded,
               tone: Act0VisualCanonV1.cyanAccent,
             ),
-            if (recentGains.isNotEmpty || profile.skillStats.isNotEmpty)
-              _ProfileProofTileDataV1(
-                title: _profileCopyV1(context, en: 'Skills', ru: 'Навыки'),
-                value: recentGains.isNotEmpty
-                    ? _profileCopyV1(
-                        context,
-                        en: '${recentGains.length} growing',
-                        ru: '${recentGains.length} растут',
-                      )
-                    : _profileCopyV1(
-                        context,
-                        en: '${profile.skillStats.length} tracked',
-                        ru: '${profile.skillStats.length} отслеживаются',
-                      ),
-                icon: Icons.fact_check_rounded,
-                tone: Act0VisualCanonV1.bluePrimary,
-              ),
-            if (achievementProof != null)
-              _ProfileProofTileDataV1(
-                title: firstUnlockedAchievement != null
-                    ? _profileCopyV1(context, en: 'Earned', ru: 'Получено')
-                    : _profileCopyV1(
-                        context,
-                        en: 'Next proof',
-                        ru: 'Следующая цель',
-                      ),
-                value: achievementProof.label,
-                valueKey: const Key('act0_shell_profile_earned_proof_value'),
-                icon: Icons.emoji_events_rounded,
-                tone: Act0VisualCanonV1.greenTable,
-              ),
           ];
     return Container(
       key: const Key('act0_shell_profile_progress_proof'),
@@ -1124,37 +1071,6 @@ class _ProfileProgressProofCardV1 extends StatelessWidget {
               for (final tile in tiles.take(2)) _ProfileProofTileV1(tile: tile),
             ],
           ),
-          if (proof?.hasProof == true &&
-              proof!.recentProofItems.isNotEmpty) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
-            _ProfileRecentProofV1(proof: proof),
-          ],
-          if (profile.streakLast7.isNotEmpty) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
-            Row(
-              children: [
-                Expanded(
-                  child: _CompactStreakStripV1(days: profile.streakLast7),
-                ),
-                const SizedBox(width: Act0ShellTokensV1.gapSm),
-                OutlinedButton(
-                  key: const Key('act0_shell_profile_rhythm_week_button'),
-                  onPressed: () => _showRhythmWeekSheet(context, profile),
-                  style: Act0ShellTokensV1.quietButtonStyle().copyWith(
-                    minimumSize: const WidgetStatePropertyAll(
-                      Size(0, Act0ShellTokensV1.compactCtaHeight),
-                    ),
-                    padding: const WidgetStatePropertyAll(
-                      EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                    ),
-                  ),
-                  child: Text(
-                    _profileCopyV1(context, en: 'View week', ru: 'Неделя'),
-                  ),
-                ),
-              ],
-            ),
-          ],
         ],
       ),
     );
@@ -1249,6 +1165,13 @@ String _profileProofProgressLineV1(
     r'^\s*(\d+)\s+of\s+\d+\s+tasks?\s+complete',
   ).firstMatch(lessonsLine);
   if (taskMatch != null) {
+    if (taskMatch.group(1) == '0') {
+      return _profileCopyV1(
+        context,
+        en: 'Clean progress started',
+        ru: 'Чистый прогресс начат',
+      );
+    }
     return _profileCopyV1(
       context,
       en: '${taskMatch.group(1)} tasks complete',
@@ -1281,7 +1204,6 @@ class _ProfileProofTileDataV1 {
     required this.icon,
     required this.tone,
     this.proofIconRole,
-    this.valueKey,
   });
 
   final String title;
@@ -1289,7 +1211,6 @@ class _ProfileProofTileDataV1 {
   final IconData icon;
   final Color tone;
   final Act0ProofIconRoleV1? proofIconRole;
-  final Key? valueKey;
 }
 
 class _ProfileProofTileV1 extends StatelessWidget {
@@ -1332,7 +1253,6 @@ class _ProfileProofTileV1 extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             tile.value,
-            key: tile.valueKey,
             maxLines: 2,
             overflow: TextOverflow.fade,
             style: Act0ShellTokensV1.body.copyWith(fontWeight: FontWeight.w800),

@@ -199,7 +199,13 @@ class Act0HomeShellV1 extends StatelessWidget {
               ),
               const SizedBox(height: Act0VisualMetricsV1.sectionGap),
               missionCard,
-              const SizedBox(height: Act0VisualMetricsV1.sectionGap),
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
+              _HomeRouteHorizonLineV1(
+                courseTitle: courseTitle,
+                progressLabel: pathProgressLabel,
+                fallbackTitle: title,
+                localeIsRu: _isRuLocaleV1(context),
+              ),
             ],
           ),
         ),
@@ -503,6 +509,51 @@ class _HomeIdentityRowV1 extends StatelessWidget {
             tooltip: localeIsRu ? 'Меню разработчика' : 'Dev menu',
           ),
         ],
+      ],
+    );
+  }
+}
+
+class _HomeRouteHorizonLineV1 extends StatelessWidget {
+  const _HomeRouteHorizonLineV1({
+    required this.courseTitle,
+    required this.progressLabel,
+    required this.fallbackTitle,
+    required this.localeIsRu,
+  });
+
+  final String courseTitle;
+  final String? progressLabel;
+  final String fallbackTitle;
+  final bool localeIsRu;
+
+  @override
+  Widget build(BuildContext context) {
+    final routeDetail = progressLabel?.trim().isNotEmpty == true
+        ? progressLabel!.trim()
+        : fallbackTitle;
+    return Row(
+      key: const Key('act0_shell_home_route_horizon_line'),
+      children: [
+        const Icon(
+          Icons.route_outlined,
+          size: 15,
+          color: Act0ShellTokensV1.actionCyan,
+        ),
+        const SizedBox(width: 7),
+        Expanded(
+          child: Text(
+            localeIsRu
+                ? 'Дальше: $courseTitle · $routeDetail'
+                : 'Next on your path: $courseTitle · $routeDetail',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Act0ShellTokensV1.muted.copyWith(
+              color: Act0ShellTokensV1.textMuted,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
       ],
     );
   }

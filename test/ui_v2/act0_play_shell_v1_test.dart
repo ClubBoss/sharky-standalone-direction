@@ -69,6 +69,15 @@ void main() {
     isEnabled: true,
   );
 
+  const unavailableDailyGroup = Act0PracticeGroupV1(
+    groupId: 'daily',
+    title: '0/3 daily spots',
+    subtitle: 'Your next short rep becomes available on the active route.',
+    ctaLabel: 'Later',
+    categoryLabel: 'Today',
+    isEnabled: false,
+  );
+
   const disabledRepairGroup = Act0PracticeGroupV1(
     groupId: 'weak_spots',
     title: 'Review one quick fix',
@@ -219,7 +228,7 @@ void main() {
   });
 
   testWidgets(
-    'Practice renders a passive repair queue without replacing hero',
+    'Practice keeps a passive repair queue secondary to the short rep hero',
     (tester) async {
       final started = <String>[];
       await pumpPractice(
@@ -241,10 +250,8 @@ void main() {
 
       final queue = find.byKey(const Key('act0_shell_play_repair_queue'));
       expect(queue, findsOneWidget);
-      expect(
-        find.byKey(const Key('act0_shell_play_daily_hero')),
-        findsOneWidget,
-      );
+      expect(find.byKey(const Key('act0_shell_play_daily_hero')), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_play_featured_status_row')), findsNothing);
       expect(
         find.descendant(of: queue, matching: find.text('Practice repair')),
         findsOneWidget,
@@ -271,6 +278,27 @@ void main() {
       expect(started, isEmpty);
     },
   );
+
+  testWidgets('Practice renders an unavailable recommendation as status only', (
+    tester,
+  ) async {
+    await pumpPractice(
+      tester,
+      groups: const <Act0PracticeGroupV1>[
+        unavailableDailyGroup,
+        disabledRepairGroup,
+        ...topicGroups,
+      ],
+    );
+
+    expect(find.byKey(const Key('act0_shell_play_daily_hero')), findsNothing);
+    expect(
+      find.byKey(const Key('act0_shell_play_featured_status_row')),
+      findsOneWidget,
+    );
+    expect(find.text('Later'), findsNothing);
+    expect(find.byKey(const Key('act0_shell_play_short_rep_cta')), findsNothing);
+  });
 
   testWidgets('Practice repair queue renders at most three compact rows', (
     tester,
@@ -397,10 +425,15 @@ void main() {
         const Key('act0_shell_play_repair_queue_item_1'),
       );
       final queue = find.byKey(const Key('act0_shell_play_repair_queue'));
-      final hero = find.byKey(const Key('act0_shell_play_daily_hero'));
+      final shortRep = find.byKey(
+        const Key('act0_shell_play_featured_status_row'),
+      );
       expect(queue, findsOneWidget);
-      expect(hero, findsOneWidget);
-      expect(tester.getTopLeft(queue).dy, lessThan(tester.getTopLeft(hero).dy));
+      expect(shortRep, findsOneWidget);
+      expect(
+        tester.getTopLeft(queue).dy,
+        lessThan(tester.getTopLeft(shortRep).dy),
+      );
       expect(
         find.descendant(of: queue, matching: find.text('Active repair first')),
         findsOneWidget,
@@ -612,13 +645,13 @@ void main() {
     expect(find.text('Repair unlocks from real misses'), findsOneWidget);
     expect(
       find.text('Miss a lesson spot and Practice brings back the same clue.'),
-      findsOneWidget,
+      findsNothing,
     );
     expect(
       find.byKey(const Key('act0_shell_practice_group_weak_spots')),
       findsNothing,
     );
-    expect(tester.getRect(empty).height, lessThanOrEqualTo(104));
+    expect(tester.getRect(empty).height, lessThanOrEqualTo(48));
   });
 
   testWidgets('Enabled repair item keeps its existing callback', (
@@ -851,7 +884,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
     const coachKey = Key('act0_shell_play_sharky_coach_line');
     const queueKey = Key('act0_shell_play_repair_queue');
-    const ctaKey = Key('act0_shell_play_featured_cta');
+    const ctaKey = Key('act0_shell_play_short_rep_cta');
     final phrase = act0SharkyCoachLineForMomentV1(
       Act0SharkyCoachMomentV1.practiceCurrentFix,
     );

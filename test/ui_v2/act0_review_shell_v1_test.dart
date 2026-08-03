@@ -727,6 +727,36 @@ void main() {
     );
   });
 
+  testWidgets('Review empty action is visible in a compact first viewport', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(375, 812);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await tester.pumpWidget(
+      reviewHost(
+        const Act0ReviewStateV1(
+          title: 'Review',
+          subtitle: 'Confidence repair board',
+          weaknessLabel: 'Action read',
+          reason: '',
+          stats: <Act0ReviewStatV1>[],
+          chosenLabel: 'Bet',
+          betterLabel: 'Check',
+        ),
+        onOpenLearn: () {},
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final cta = tester.getRect(
+      find.byKey(const Key('act0_shell_review_empty_open_learn_cta')),
+    );
+    expect(cta.top, greaterThanOrEqualTo(0));
+    expect(cta.bottom, lessThanOrEqualTo(tester.view.physicalSize.height));
+  });
+
   testWidgets('Review renders persisted mistake history as read-only notes', (
     tester,
   ) async {

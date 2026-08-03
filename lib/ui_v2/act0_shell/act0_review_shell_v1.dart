@@ -565,7 +565,7 @@ class _SessionDrillRecheckQueueCardV1 extends StatelessWidget {
         : item.expectedActionId;
     return Container(
       key: const Key('act0_shell_review_recheck_queue_card'),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       decoration: Act0ShellTokensV1.surfaceDecoration(
         color: Act0ShellTokensV1.info.withOpacity(0.10),
         borderColor: Act0ShellTokensV1.info.withOpacity(0.28),
@@ -647,10 +647,20 @@ class _ReviewEmptyRepairCardV1 extends StatelessWidget {
                 'Finish a lesson - every miss can become one clean repair rep.',
             mood: Act0SharkyMoodV1.thinking,
             tone: Act0ShellTokensV1.info,
-            mascotSize: 58,
-            bubblePadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            mascotSize: 44,
+            bubblePadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
           ),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          if (onOpenLearn != null) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            FilledButton.icon(
+              key: const Key('act0_shell_review_empty_open_learn_cta'),
+              onPressed: onOpenLearn,
+              style: Act0ShellTokensV1.premiumActionButtonStyle(),
+              icon: const Icon(Icons.play_arrow_rounded, size: 19),
+              label: const Text('Open Learn'),
+            ),
+          ],
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
           Text(
             'Misses from lessons will appear here after you try a spot.',
             style: Act0ShellTokensV1.muted,
@@ -663,16 +673,6 @@ class _ReviewEmptyRepairCardV1 extends StatelessWidget {
               letterSpacing: 0,
             ),
           ),
-          if (onOpenLearn != null) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapMd),
-            FilledButton.icon(
-              key: const Key('act0_shell_review_empty_open_learn_cta'),
-              onPressed: onOpenLearn,
-              style: Act0ShellTokensV1.premiumActionButtonStyle(),
-              icon: const Icon(Icons.play_arrow_rounded, size: 19),
-              label: const Text('Open Learn'),
-            ),
-          ],
         ],
       ),
     );

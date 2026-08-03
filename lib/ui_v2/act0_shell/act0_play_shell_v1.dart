@@ -330,15 +330,22 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
           const SizedBox(height: Act0VisualMetricsV1.sectionGap),
         ],
         if (featuredGroup != null) ...[
-          _DailyTrainingHeroV1(
-            group: featuredGroup,
-            title: widget.recommendedTitle,
-            subtitle: widget.recommendedSubtitle,
-            reasonLabel: recommendedRepairGroup
-                ? widget.recommendedReasonLabel
-                : null,
-            onStartGroup: widget.onStartGroup,
-          ),
+          if (featuredGroup.isEnabled && !hasPrimaryRepairQueue)
+            _DailyTrainingHeroV1(
+              group: featuredGroup,
+              title: widget.recommendedTitle,
+              subtitle: widget.recommendedSubtitle,
+              reasonLabel: recommendedRepairGroup
+                  ? widget.recommendedReasonLabel
+                  : null,
+              onStartGroup: widget.onStartGroup,
+            )
+          else
+            _PracticeFeaturedStatusRowV1(
+              group: featuredGroup,
+              onStartGroup: widget.onStartGroup,
+              compactAction: featuredGroup.isEnabled,
+            ),
           const SizedBox(height: Act0VisualMetricsV1.sectionGap),
         ],
         if (widget.completionTitle != null &&
@@ -1110,6 +1117,83 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
   }
 }
 
+class _PracticeFeaturedStatusRowV1 extends StatelessWidget {
+  const _PracticeFeaturedStatusRowV1({
+    required this.group,
+    required this.onStartGroup,
+    required this.compactAction,
+  });
+
+  final Act0PracticeGroupV1 group;
+  final ValueChanged<Act0PracticeGroupV1> onStartGroup;
+  final bool compactAction;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDaily = group.groupId == 'daily';
+    final title = isDaily
+        ? _playCopyV1(
+            context,
+            'play_daily_hero_title',
+            fallback: 'Start a short rep',
+          )
+        : group.title;
+    final detail = compactAction
+        ? _playCopyV1(
+            context,
+            'play_daily_hero_support',
+            fallback: 'One short rep keeps this table clue fresh.',
+          )
+        : group.subtitle;
+    return Container(
+      key: const Key('act0_shell_play_featured_status_row'),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: Act0ShellTokensV1.surfaceDecoration(
+        color: Act0ShellTokensV1.surface2.withOpacity(0.72),
+        borderColor: Act0ShellTokensV1.actionBlue.withOpacity(0.18),
+        glow: false,
+      ),
+      child: Row(
+        children: [
+          Icon(
+            compactAction ? Icons.timer_outlined : Icons.lock_outline_rounded,
+            size: 18,
+            color: Act0ShellTokensV1.actionCyan,
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapSm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: Act0ShellTokensV1.body),
+                const SizedBox(height: 2),
+                Text(
+                  detail,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Act0ShellTokensV1.muted,
+                ),
+              ],
+            ),
+          ),
+          if (compactAction) ...[
+            const SizedBox(width: Act0ShellTokensV1.gapSm),
+            SizedBox(
+              width: 86,
+              child: OutlinedButton(
+                key: const Key('act0_shell_play_short_rep_cta'),
+                onPressed: () => onStartGroup(group),
+                style: Act0ShellTokensV1.quietButtonStyle(),
+                child: Text(_playActionLabelV1(context, group)),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
 class _PracticeProofChipV1 extends StatelessWidget {
   const _PracticeProofChipV1({required this.icon, required this.label});
 
@@ -1157,28 +1241,13 @@ class _PlayRepairEmptyCardV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       key: const Key('act0_shell_play_repair_empty'),
-      constraints: const BoxConstraints(minHeight: 78),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface2.withOpacity(0.72),
-        borderColor: Act0ShellTokensV1.actionBlue.withOpacity(0.18),
-        glow: false,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
       child: Row(
         children: [
-          Container(
-            width: 32,
-            height: 32,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Act0VisualCanonV1.greenTable.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
-            ),
-            child: const Icon(
-              Icons.check_circle_rounded,
-              color: Act0VisualCanonV1.greenTable,
-              size: 20,
-            ),
+          const Icon(
+            Icons.check_circle_outline_rounded,
+            color: Act0VisualCanonV1.greenTable,
+            size: 18,
           ),
           const SizedBox(width: Act0ShellTokensV1.gapSm),
           Expanded(
@@ -1191,20 +1260,12 @@ class _PlayRepairEmptyCardV1 extends StatelessWidget {
                     'play_repair_empty_title',
                     fallback: 'Repair unlocks from real misses',
                   ),
-                  style: Act0ShellTokensV1.body,
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  _playCopyV1(
-                    context,
-                    'play_repair_empty_body',
-                    fallback:
-                        'Miss a lesson spot and Practice brings back the same clue.',
-                  ),
-                  key: const Key('act0_shell_play_repair_empty_body'),
-                  maxLines: 2,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: Act0ShellTokensV1.muted,
+                  style: Act0ShellTokensV1.muted.copyWith(
+                    color: Act0ShellTokensV1.textMuted,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ],
             ),

@@ -4,6 +4,34 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
+  testWidgets('Profile does not phrase a fresh learner as zero tasks complete', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0ProfileShellV1(
+            profile: const Act0ProfileStateV1(
+              playerName: 'New player',
+              level: 'Level 1',
+              xpLine: '0 / 200 XP',
+              lessonsLine: '0 of 24 tasks complete',
+              accuracyLine: '',
+              qualityLine: '',
+              consistencyActiveDays: 0,
+              achievements: <Act0AchievementV1>[],
+            ),
+            onRetakePlacement: () {},
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('0 tasks complete'), findsNothing);
+    expect(find.text('Clean progress started'), findsWidgets);
+  });
+
   testWidgets('Profile keeps two evidence-safe proofs without a skill dashboard', (
     tester,
   ) async {
