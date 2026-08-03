@@ -904,7 +904,7 @@ void main() {
         expect(coach.style?.letterSpacing, 0);
         expect(coach.maxLines, 2);
         expect(coach.softWrap, isTrue);
-        expect(coach.overflow, TextOverflow.visible);
+        expect(coach.overflow, TextOverflow.clip);
         expect(painter.didExceedMaxLines, isFalse);
         expect(painter.computeLineMetrics().length, lessThanOrEqualTo(2));
         expect(coachRect.left, greaterThanOrEqualTo(queueRect.left));
