@@ -157,6 +157,21 @@ Act0ShellDebugHarnessEntryV1? parseAct0ControlledDemoHarnessEntryV1(Uri uri) {
         mode: Act0ControlledDemoCaptureModeV1.directState,
         surface: Act0ControlledDemoCaptureSurfaceV1.firstWeekHome,
       );
+    case 'day2_return_home':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.day2ReturnHome,
+      );
+    case 'day2_practice_repair_target':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.day2PracticeRepairTarget,
+      );
+    case 'review_empty':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.reviewEmpty,
+      );
     case 'first_week_review':
       return const Act0ShellDebugHarnessEntryV1(
         mode: Act0ControlledDemoCaptureModeV1.directState,

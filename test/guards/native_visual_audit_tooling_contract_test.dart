@@ -3,10 +3,23 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/app_root.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 
 void main() {
   test('native audit payload resolves only known capture surfaces', () {
     expect(parseAct0NativeVisualAuditEntryV1('act0_capture=home'), isNotNull);
+    final identityMappings = <String, Act0ControlledDemoCaptureSurfaceV1>{
+      'first_week_home': Act0ControlledDemoCaptureSurfaceV1.firstWeekHome,
+      'day2_return_home': Act0ControlledDemoCaptureSurfaceV1.day2ReturnHome,
+      'day2_practice_repair_target': Act0ControlledDemoCaptureSurfaceV1.day2PracticeRepairTarget,
+      'review_empty': Act0ControlledDemoCaptureSurfaceV1.reviewEmpty,
+    };
+    for (final mapping in identityMappings.entries) {
+      final entry = parseAct0NativeVisualAuditEntryV1('act0_capture=${mapping.key}');
+      expect(entry, isNotNull);
+      expect(entry!.mode, Act0ControlledDemoCaptureModeV1.directState);
+      expect(entry.surface, mapping.value);
+    }
     expect(
       parseAct0NativeVisualAuditEntryV1(
         'act0_capture=runner_feedback&world=world_1&lesson=positions&task=positions_early_late',
@@ -14,6 +27,16 @@ void main() {
       isNotNull,
     );
     expect(parseAct0NativeVisualAuditEntryV1('act0_capture=unknown'), isNull);
+    expect(
+      parseAct0NativeVisualAuditEntryV1('act0_capture=day2_return_home.png'),
+      isNull,
+    );
+  });
+
+  test('native audit bridge retains the compile-time and release boot guard', () {
+    final source = File('lib/ui_v2/app_root.dart').readAsStringSync();
+    expect(source, contains('if (!_sharkyVisualAuditEnabled || kReleaseMode) return null;'));
+    expect(source, contains('const bool _sharkyVisualAuditEnabled = bool.fromEnvironment('));
   });
 
   test('native audit manifest has the exact admitted row-level distribution', () {
