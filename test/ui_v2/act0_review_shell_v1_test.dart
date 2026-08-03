@@ -173,6 +173,44 @@ void main() {
     },
   );
 
+  testWidgets('Review opens Learn from a generic empty next step', (tester) async {
+    var openedLearn = false;
+    await tester.pumpWidget(
+      reviewHost(
+        const Act0ReviewStateV1(
+          title: 'Review',
+          subtitle: 'Repair the clue that slipped.',
+          weaknessLabel: 'Action read',
+          reason: '',
+          stats: <Act0ReviewStatV1>[],
+          chosenLabel: '',
+          betterLabel: '',
+        ),
+        nextStep: const Act0PersonalizedReturnReasonV1(
+          reasonType: 'fresh_start',
+          conceptFamilyId: '',
+          sourceTaskId: '',
+          evidenceKind: '',
+          messageKey: '',
+          priorityClass: 0,
+          recommendedDestination: 'learn',
+          recommendedAction: 'continue_learning',
+          whyNowMessageKey: '',
+        ),
+        onOpenLearn: () => openedLearn = true,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final cta = find.byKey(
+      const Key('act0_shell_review_open_recommended_action'),
+    );
+    expect(cta, findsOneWidget);
+    expect(find.text('Open Learn'), findsOneWidget);
+    await tester.tap(cta);
+    expect(openedLearn, isTrue);
+  });
+
   testWidgets(
     'Review keeps one compact active repair note without a Home redirect',
     (tester) async {

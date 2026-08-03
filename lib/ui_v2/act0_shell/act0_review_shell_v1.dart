@@ -84,7 +84,9 @@ class Act0ReviewShellV1 extends StatelessWidget {
           nextStep: nextStep!,
           onOpen: _nextStepNeedsDedicatedCtaV1(nextStep!)
               ? onOpenRecommendedAction
-              : null,
+              : (nextStep!.recommendedAction == 'spaced_review'
+                    ? null
+                    : onOpenLearn),
         ),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
       ],
@@ -339,7 +341,7 @@ class _ReviewNextStepCardV1 extends StatelessWidget {
       'repair' || 'retry_repair' => 'Practice this repair',
       'reinforce' => 'Reinforce this read',
       'resume_focus' => 'Resume this focus',
-      _ => 'Continue learning',
+      _ => 'Open Learn',
     };
     final line = focus.isNotEmpty
         ? '$action: notice $focus.'
