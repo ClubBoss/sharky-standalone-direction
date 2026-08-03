@@ -775,13 +775,11 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
     required this.rows,
     required this.localeIsRu,
     required this.title,
-    this.personalizedReturnReasonLine,
   });
 
   final List<Act0HomeChecklistRowV1> rows;
   final bool localeIsRu;
   final String title;
-  final String? personalizedReturnReasonLine;
 
   @override
   Widget build(BuildContext context) {
@@ -854,13 +852,9 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
             ),
             const SizedBox(height: Act0ShellTokensV1.gapXs),
             KeyedSubtree(
-              key: personalizedReturnReasonLine?.trim().isNotEmpty == true
-                  ? const Key('act0_shell_home_personalized_return_reason')
-                  : const Key('act0_shell_home_generic_return_reason'),
+              key: const Key('act0_shell_home_generic_return_reason'),
               child: Text(
-                personalizedReturnReasonLine?.trim().isNotEmpty == true
-                    ? personalizedReturnReasonLine!.trim()
-                    : localeIsRu
+                localeIsRu
                     ? 'Сегодня: держи одну подсказку стола в тонусе.'
                     : 'Today: keep one table clue warm',
                 key: const Key('act0_shell_home_daily_plan_support'),
