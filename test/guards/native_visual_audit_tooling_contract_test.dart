@@ -21,7 +21,7 @@ void main() {
           Act0ControlledDemoCaptureSurfaceV1.wave2PracticeNoRepair,
       'wave2_practice_active_repair_hub':
           Act0ControlledDemoCaptureSurfaceV1.wave2PracticeActiveRepairHub,
-      'wave2_review_empty': Act0ControlledDemoCaptureSurfaceV1.reviewEmpty,
+      'wave2_review_empty': Act0ControlledDemoCaptureSurfaceV1.wave2ReviewEmpty,
       'wave2_review_miss': Act0ControlledDemoCaptureSurfaceV1.wave2ReviewMiss,
       'wave2_profile_fresh':
           Act0ControlledDemoCaptureSurfaceV1.wave2ProfileFresh,

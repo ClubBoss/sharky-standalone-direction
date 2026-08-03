@@ -196,7 +196,7 @@ Act0ShellDebugHarnessEntryV1? parseAct0ControlledDemoHarnessEntryV1(Uri uri) {
     case 'wave2_review_empty':
       return const Act0ShellDebugHarnessEntryV1(
         mode: Act0ControlledDemoCaptureModeV1.directState,
-        surface: Act0ControlledDemoCaptureSurfaceV1.reviewEmpty,
+        surface: Act0ControlledDemoCaptureSurfaceV1.wave2ReviewEmpty,
       );
     case 'wave2_review_miss':
       return const Act0ShellDebugHarnessEntryV1(

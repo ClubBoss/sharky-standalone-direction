@@ -79,7 +79,9 @@ class Act0ReviewShellV1 extends StatelessWidget {
       ),
     ];
     final queueCard = <Widget>[
-      if (nextStep != null) ...[
+      if (nextStep != null &&
+          nextStep!.reasonType !=
+              act0ReturnReasonNoPersonalReasonAvailableV1) ...[
         _ReviewNextStepCardV1(
           nextStep: nextStep!,
           onOpen: _nextStepNeedsDedicatedCtaV1(nextStep!)
@@ -272,11 +274,46 @@ class Act0ReviewShellV1 extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Expanded(
-                        child: SingleChildScrollView(
-                          primary: false,
-                          physics: const ClampingScrollPhysics(),
-                          child: centeredBench,
-                        ),
+                        child: lowContentBench
+                            ? Column(
+                                key: const Key('act0_shell_review_empty_stage'),
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Act0ShellTokensV1.centeredContent(
+                                    context,
+                                    tabletMaxWidth: 860,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: header,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: UnconstrainedBox(
+                                        constrainedAxis: Axis.horizontal,
+                                        child: ConstrainedBox(
+                                          constraints: BoxConstraints(
+                                            maxWidth:
+                                                Act0ShellTokensV1.contentMaxWidthFor(
+                                                  context,
+                                                  tablet: 860,
+                                                ),
+                                          ),
+                                          child: _ReviewEmptyRepairCardV1(
+                                            onOpenLearn: onOpenLearn,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : SingleChildScrollView(
+                                primary: false,
+                                physics: const ClampingScrollPhysics(),
+                                child: centeredBench,
+                              ),
                       ),
                       const SizedBox(height: Act0ShellTokensV1.gapMd),
                       Act0ShellTokensV1.centeredContent(

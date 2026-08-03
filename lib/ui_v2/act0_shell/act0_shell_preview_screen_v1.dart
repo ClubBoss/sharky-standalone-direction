@@ -1019,6 +1019,7 @@ enum Act0ControlledDemoCaptureSurfaceV1 {
   wave2LearnProgressed,
   wave2PracticeNoRepair,
   wave2PracticeActiveRepairHub,
+  wave2ReviewEmpty,
   wave2ReviewMiss,
   wave2ProfileFresh,
   wave2ProfileProgressed,
@@ -2511,6 +2512,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _applyDebugWave2PracticeNoRepairSurface();
       case Act0ControlledDemoCaptureSurfaceV1.wave2PracticeActiveRepairHub:
         _applyDebugWave2PracticeActiveRepairHubSurface(state);
+      case Act0ControlledDemoCaptureSurfaceV1.wave2ReviewEmpty:
+        _applyDebugWave2ReviewEmptySurface();
       case Act0ControlledDemoCaptureSurfaceV1.wave2ReviewMiss:
         _applyDebugReviewSurface(state);
       case Act0ControlledDemoCaptureSurfaceV1.wave2ProfileFresh:
@@ -2698,6 +2701,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _tab = Act0ShellTabV1.play;
     _showPlayHub = true;
     _returnToPlayHubOnBack = false;
+  }
+
+  void _applyDebugWave2ReviewEmptySurface() {
+    _applyDebugWave2FreshLearnerStateV1();
+    _tab = Act0ShellTabV1.review;
+    _debugReviewEmptyV1 = true;
+    _mistakeRecords.clear();
+    _resolvedMistakeTaskIds.clear();
   }
 
   void _applyDebugWave2ProfileFreshSurface() {
