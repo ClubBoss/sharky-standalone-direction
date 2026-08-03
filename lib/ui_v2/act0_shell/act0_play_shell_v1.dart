@@ -550,7 +550,7 @@ class _PracticeHubHeaderV1 extends StatelessWidget {
               width: 8,
               height: 8,
               decoration: const BoxDecoration(
-                color: Act0ShellTokensV1.actionBlue,
+                color: Act0ShellTokensV1.currentLearningState,
                 shape: BoxShape.circle,
               ),
             ),
@@ -558,7 +558,7 @@ class _PracticeHubHeaderV1 extends StatelessWidget {
             Text(
               title,
               style: Act0ShellTokensV1.label.copyWith(
-                color: Act0ShellTokensV1.actionBlue,
+                color: Act0ShellTokensV1.currentLearningState,
                 fontSize: 12,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 0.35,
@@ -609,6 +609,8 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final coachTextScale = MediaQuery.textScalerOf(context).scale(1);
+    final coachMaxLines = coachTextScale > 1.2 ? 4 : 3;
     return Container(
       key: const Key('act0_shell_play_repair_queue'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
@@ -658,31 +660,38 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: Act0ShellTokensV1.muted,
                     ),
-                    if (primary &&
-                        consumer.items.any(
-                          _canLaunchPracticeQueueTargetV1,
-                        )) ...[
-                      const SizedBox(height: 3),
-                      Text(
-                        act0SharkyCoachLineForMomentV1(
-                          Act0SharkyCoachMomentV1.practiceCurrentFix,
-                        ),
-                        key: const Key('act0_shell_play_sharky_coach_line'),
-                        maxLines: 1,
-                        overflow: TextOverflow.fade,
-                        softWrap: false,
-                        style: Act0ShellTokensV1.sentenceSupport.copyWith(
-                          color: Act0ShellTokensV1.repairAttention,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ],
                   ],
                 ),
               ),
             ],
           ),
+          if (primary &&
+              consumer.items.any(_canLaunchPracticeQueueTargetV1)) ...[
+            const SizedBox(height: 3),
+            Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 11 * 1.5 * coachTextScale * coachMaxLines,
+                    child: Text(
+                      act0SharkyCoachLineForMomentV1(
+                        Act0SharkyCoachMomentV1.practiceCurrentFix,
+                      ),
+                      key: const Key('act0_shell_play_sharky_coach_line'),
+                      maxLines: coachMaxLines,
+                      overflow: TextOverflow.clip,
+                      softWrap: true,
+                      style: Act0ShellTokensV1.sentenceSupport.copyWith(
+                        color: Act0ShellTokensV1.repairAttention,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
           const SizedBox(height: Act0ShellTokensV1.gapSm),
           for (var index = 0; index < consumer.items.length; index++) ...[
             _PracticeRepairQueueRowV1(
@@ -726,8 +735,8 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
             height: 32,
             decoration: BoxDecoration(
               color: item.isPinned
-                  ? Act0ShellTokensV1.gold
-                  : Act0ShellTokensV1.actionBlue,
+                  ? Act0ShellTokensV1.repairAttention
+                  : Act0ShellTokensV1.currentLearningState,
               borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
             ),
           ),
@@ -753,7 +762,7 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                       Text(
                         'Active repair',
                         style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.gold,
+                          color: Act0ShellTokensV1.repairAttention,
                           fontSize: 11,
                           fontWeight: FontWeight.w900,
                         ),
@@ -795,7 +804,7 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                         key: const Key('act0_shell_play_repair_queue_item_cta'),
                         onPressed: () => onLaunchTarget!(item.launchRequest!),
                         style: TextButton.styleFrom(
-                          foregroundColor: Act0ShellTokensV1.actionBlue,
+                          foregroundColor: Act0ShellTokensV1.primaryAction,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 8,
                             vertical: 4,
@@ -806,7 +815,7 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                         child: Text(
                           'Practice this',
                           style: Act0ShellTokensV1.label.copyWith(
-                            color: Act0ShellTokensV1.actionBlue,
+                            color: Act0ShellTokensV1.primaryAction,
                             fontWeight: FontWeight.w900,
                           ),
                         ),

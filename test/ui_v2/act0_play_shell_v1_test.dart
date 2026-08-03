@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
@@ -840,38 +842,103 @@ void main() {
     );
   });
 
-  testWidgets('Practice coach sentence is untracked at 1.4x', (tester) async {
-    await pumpPractice(
-      tester,
-      textScale: 1.4,
-      groups: const <Act0PracticeGroupV1>[
-        dailyGroup,
-        disabledRepairGroup,
-        ...topicGroups,
-      ],
-      repairQueueConsumer: Act0PracticeRepairQueueConsumerV1.fromProjection(
-        Act0PracticeRepairQueueProjectionV1(
-          items: <Act0PracticeRepairQueueItemV1>[
-            _queueItem(
-              sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
-              launchTarget: const Act0PracticeRepairQueueLaunchTargetV1(
-                worldId: 'world_1',
-                lessonId: 'fold_check_call_raise',
-                taskId: 'actions_check_drill',
-                source: act0PracticeRepairQueueSourceActiveRepairV1,
-                targetType: act0PracticeRepairQueueTargetTypeActiveRepairV1,
+  testWidgets('Practice coach sentence remains fully readable at 1.0x and 1.4x', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(375, 812);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    const coachKey = Key('act0_shell_play_sharky_coach_line');
+    const queueKey = Key('act0_shell_play_repair_queue');
+    const ctaKey = Key('act0_shell_play_featured_cta');
+    final phrase = act0SharkyCoachLineForMomentV1(
+      Act0SharkyCoachMomentV1.practiceCurrentFix,
+    );
+    Act0PracticeRepairQueueConsumerV1 activeConsumer() =>
+        Act0PracticeRepairQueueConsumerV1.fromProjection(
+          Act0PracticeRepairQueueProjectionV1(
+            items: <Act0PracticeRepairQueueItemV1>[
+              _queueItem(
+                itemId: 'active',
+                sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+                launchTarget: const Act0PracticeRepairQueueLaunchTargetV1(
+                  worldId: 'world_1',
+                  lessonId: 'fold_check_call_raise',
+                  taskId: 'actions_check_drill',
+                  source: act0PracticeRepairQueueSourceActiveRepairV1,
+                  targetType: act0PracticeRepairQueueTargetTypeActiveRepairV1,
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
+              _queueItem(itemId: 'history', safeLabel: 'History row'),
+            ],
+          ),
+        );
 
-    final sentence = tester.widget<Text>(
-      find.byKey(const Key('act0_shell_play_sharky_coach_line')),
-    );
-    expect(sentence.style?.letterSpacing, 0);
-    expect(tester.takeException(), isNull);
+    for (final textScale in <double>[1, 1.4]) {
+      await pumpPractice(
+        tester,
+        textScale: textScale,
+        groups: const <Act0PracticeGroupV1>[
+          dailyGroup,
+          disabledRepairGroup,
+          ...topicGroups,
+        ],
+        repairQueueConsumer: activeConsumer(),
+        onLaunchRepairQueueTarget: (_) {},
+      );
+
+      final coachFinder = find.byKey(coachKey);
+      final coach = tester.widget<Text>(coachFinder);
+      final paragraph = tester.renderObject<RenderParagraph>(coachFinder);
+      final queueRect = tester.getRect(find.byKey(queueKey));
+      final coachRect = tester.getRect(coachFinder);
+      final painter = TextPainter(
+        text: TextSpan(text: phrase, style: coach.style),
+        textDirection: TextDirection.ltr,
+        textScaler: TextScaler.linear(textScale),
+        maxLines: coach.maxLines,
+      )..layout(maxWidth: paragraph.size.width);
+      final naturalPainter = TextPainter(
+        text: TextSpan(text: phrase, style: coach.style),
+        textDirection: TextDirection.ltr,
+        textScaler: TextScaler.linear(textScale),
+      )..layout(maxWidth: paragraph.size.width);
+
+      expect(coach.data, phrase);
+      expect(
+        MediaQuery.textScalerOf(tester.element(coachFinder)).scale(1),
+        textScale,
+      );
+      expect(coach.style?.letterSpacing, 0);
+      expect(coach.maxLines, textScale > 1.2 ? 4 : 3);
+      expect(coach.softWrap, isTrue);
+      expect(coach.overflow, TextOverflow.clip);
+      expect(
+        painter.didExceedMaxLines,
+        isFalse,
+        reason:
+            'scale=$textScale width=${paragraph.size.width} lines=${painter.computeLineMetrics().length} natural=${naturalPainter.computeLineMetrics().length}',
+      );
+      expect(
+        painter.computeLineMetrics().length,
+        lessThanOrEqualTo(textScale > 1.2 ? 4 : 3),
+      );
+      expect(paragraph.size.height, greaterThanOrEqualTo(painter.height));
+      expect(coachRect.left, greaterThanOrEqualTo(queueRect.left));
+      expect(coachRect.right, lessThanOrEqualTo(queueRect.right));
+      expect(coachRect.top, greaterThanOrEqualTo(queueRect.top));
+      expect(coachRect.bottom, lessThanOrEqualTo(queueRect.bottom));
+      expect(
+        coachRect.bottom,
+        lessThanOrEqualTo(tester.view.physicalSize.height),
+      );
+
+      await tester.ensureVisible(find.byKey(ctaKey));
+      await tester.pumpAndSettle();
+      expect(tester.getRect(find.byKey(ctaKey)).height, greaterThan(0));
+      expect(tester.takeException(), isNull);
+    }
   });
 }
 
