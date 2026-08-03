@@ -5,7 +5,7 @@ capture_set="${1:-}"
 group="${2:-core}"
 capture_dir="${3:-}"
 if [[ "$capture_set" != "current" ]]; then
-  echo 'Usage: ./tools/package_screen_review_v1.sh current [alpha_journey_fast|core|core_fast|runner_fast|first_week_fast|day2_return_fast|profile_evidence_fast|sharky_evidence_fast|full_scroll_fast|route_w7_w12_fast|active_route_w7_w12_fast|w2_fast|presentation_closure_v1|review_return_v1] [capture_dir]' >&2
+  echo 'Usage: ./tools/package_screen_review_v1.sh current [alpha_journey_fast|core|core_fast|runner_fast|first_week_fast|day2_return_fast|profile_evidence_fast|wave2_closure_fast|sharky_evidence_fast|full_scroll_fast|route_w7_w12_fast|active_route_w7_w12_fast|w2_fast|presentation_closure_v1|review_return_v1] [capture_dir]' >&2
   exit 64
 fi
 

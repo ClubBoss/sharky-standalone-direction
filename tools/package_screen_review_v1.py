@@ -75,6 +75,19 @@ SURFACE_GROUPS = {
     "profile_evidence_fast": (
         ("profile_evidence", "Profile evidence signal"),
     ),
+    "wave2_closure_fast": (
+        ("home_fresh", "Home - fresh"),
+        ("home_progressed", "Home - progressed"),
+        ("home_repair_return", "Home - repair return"),
+        ("learn_fresh", "Learn - fresh"),
+        ("learn_progressed", "Learn - progressed"),
+        ("practice_no_repair", "Practice - no repair"),
+        ("practice_active_repair_hub", "Practice - active repair hub"),
+        ("review_empty", "Review - empty"),
+        ("review_miss", "Review - active miss"),
+        ("profile_fresh", "Profile - fresh"),
+        ("profile_progressed", "Profile - progressed"),
+    ),
     "sharky_evidence_fast": (
         ("developing", "Developing growth treatment"),
         ("improve", "Improvement state"),
@@ -174,7 +187,7 @@ MUTED = (142, 159, 181)
 def main(argv: list[str]) -> int:
     if len(argv) not in (2, 3, 4) or argv[1] != "current":
         print(
-            "Usage: ./tools/package_screen_review_v1.sh current [core|core_fast|runner_fast|first_week_fast|day2_return_fast|profile_evidence_fast|sharky_evidence_fast|full_scroll_fast] [capture_dir]",
+            "Usage: ./tools/package_screen_review_v1.sh current [core|core_fast|runner_fast|first_week_fast|day2_return_fast|profile_evidence_fast|wave2_closure_fast|sharky_evidence_fast|full_scroll_fast] [capture_dir]",
             file=sys.stderr,
         )
         return 64
@@ -475,6 +488,8 @@ def _source_command(group: str) -> str:
         return "./tools/screen_review_fast_v1.sh day2_return compact"
     if group == "profile_evidence_fast":
         return "./tools/screen_review_fast_v1.sh profile_evidence compact"
+    if group == "wave2_closure_fast":
+        return "./tools/screen_review_fast_v1.sh wave2_closure compact"
     if group == "sharky_evidence_fast":
         return "./tools/screen_review_fast_v1.sh sharky_evidence compact"
     if group == "full_scroll_fast":

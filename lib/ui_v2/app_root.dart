@@ -157,6 +157,62 @@ Act0ShellDebugHarnessEntryV1? parseAct0ControlledDemoHarnessEntryV1(Uri uri) {
         mode: Act0ControlledDemoCaptureModeV1.directState,
         surface: Act0ControlledDemoCaptureSurfaceV1.firstWeekHome,
       );
+    case 'wave2_home_fresh':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.wave2HomeFresh,
+      );
+    case 'wave2_home_progressed':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.wave2HomeProgressed,
+      );
+    case 'wave2_home_repair_return':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.wave2HomeRepairReturn,
+      );
+    case 'wave2_learn_fresh':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.wave2LearnFresh,
+      );
+    case 'wave2_learn_progressed':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.wave2LearnProgressed,
+      );
+    case 'wave2_practice_no_repair':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.wave2PracticeNoRepair,
+      );
+    case 'wave2_practice_active_repair_hub':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface:
+            Act0ControlledDemoCaptureSurfaceV1.wave2PracticeActiveRepairHub,
+      );
+    case 'wave2_review_empty':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.reviewEmpty,
+      );
+    case 'wave2_review_miss':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.wave2ReviewMiss,
+      );
+    case 'wave2_profile_fresh':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.wave2ProfileFresh,
+      );
+    case 'wave2_profile_progressed':
+      return const Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.wave2ProfileProgressed,
+      );
     case 'first_week_review':
       return const Act0ShellDebugHarnessEntryV1(
         mode: Act0ControlledDemoCaptureModeV1.directState,

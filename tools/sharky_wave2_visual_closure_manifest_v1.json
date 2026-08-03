@@ -1,0 +1,17 @@
+{
+  "schema": "sharky_wave2_visual_closure_row_matrix_v1",
+  "expected_rows": 11,
+  "rows": [
+    {"visual_state_id":"wave2.home_fresh.canonical.normal","state":"home_fresh","semantic_phase":"home_fresh","device_profile":"canonical","modifier":"none","logical_viewport":"402x874","query":"act0_capture=wave2_home_fresh"},
+    {"visual_state_id":"wave2.home_progressed.canonical.normal","state":"home_progressed","semantic_phase":"home_progressed","device_profile":"canonical","modifier":"none","logical_viewport":"402x874","query":"act0_capture=wave2_home_progressed"},
+    {"visual_state_id":"wave2.home_repair_return.canonical.normal","state":"home_repair_return","semantic_phase":"home_repair_return","device_profile":"canonical","modifier":"none","logical_viewport":"402x874","query":"act0_capture=wave2_home_repair_return"},
+    {"visual_state_id":"wave2.learn_fresh.canonical.normal","state":"learn_fresh","semantic_phase":"learn_fresh","device_profile":"canonical","modifier":"none","logical_viewport":"402x874","query":"act0_capture=wave2_learn_fresh"},
+    {"visual_state_id":"wave2.learn_progressed.canonical.normal","state":"learn_progressed","semantic_phase":"learn_progressed","device_profile":"canonical","modifier":"none","logical_viewport":"402x874","query":"act0_capture=wave2_learn_progressed"},
+    {"visual_state_id":"wave2.practice_no_repair.canonical.normal","state":"practice_no_repair","semantic_phase":"practice_no_repair","device_profile":"canonical","modifier":"none","logical_viewport":"402x874","query":"act0_capture=wave2_practice_no_repair"},
+    {"visual_state_id":"wave2.practice_active_repair_hub.canonical.normal","state":"practice_active_repair_hub","semantic_phase":"practice_active_repair_hub","device_profile":"canonical","modifier":"none","logical_viewport":"402x874","query":"act0_capture=wave2_practice_active_repair_hub"},
+    {"visual_state_id":"wave2.review_empty.canonical.normal","state":"review_empty","semantic_phase":"review_empty","device_profile":"canonical","modifier":"none","logical_viewport":"402x874","query":"act0_capture=wave2_review_empty"},
+    {"visual_state_id":"wave2.review_miss.canonical.normal","state":"review_miss","semantic_phase":"review_miss","device_profile":"canonical","modifier":"none","logical_viewport":"402x874","query":"act0_capture=wave2_review_miss"},
+    {"visual_state_id":"wave2.profile_fresh.canonical.normal","state":"profile_fresh","semantic_phase":"profile_fresh","device_profile":"canonical","modifier":"none","logical_viewport":"402x874","query":"act0_capture=wave2_profile_fresh"},
+    {"visual_state_id":"wave2.profile_progressed.canonical.normal","state":"profile_progressed","semantic_phase":"profile_progressed","device_profile":"canonical","modifier":"none","logical_viewport":"402x874","query":"act0_capture=wave2_profile_progressed"}
+  ]
+}
