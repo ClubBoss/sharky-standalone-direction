@@ -91,6 +91,20 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Open next world'), findsOneWidget);
+    expect(
+      tester
+          .getTopLeft(
+            find.byKey(const Key('act0_shell_block_summary_continue_cta')),
+          )
+          .dy,
+      lessThan(
+        tester
+            .getTopLeft(
+              find.byKey(const Key('act0_shell_block_summary_xp_progress')),
+            )
+            .dy,
+      ),
+    );
     expect(find.textContaining('mastered'), findsNothing);
     expect(find.textContaining('36-world'), findsNothing);
     expect(find.textContaining('36 worlds'), findsNothing);

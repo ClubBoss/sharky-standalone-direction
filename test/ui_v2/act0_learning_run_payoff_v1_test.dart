@@ -324,7 +324,9 @@ void main() {
         ),
         findsOneWidget,
       );
-      expect(find.textContaining('this clue'), findsNothing);
+      expect(find.text('What was proved'), findsNothing);
+      expect(find.text('Keep this clue in view'), findsOneWidget);
+      expect(find.text('Next practice'), findsOneWidget);
     },
   );
 

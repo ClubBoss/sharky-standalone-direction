@@ -6818,37 +6818,15 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                         ? 8
                         : (isCompactRefinedFeedback ? 5 : (refined ? 8 : 10)),
                   ),
+            // Feedback states share the runner's single lower-stage surface.
+            // Accent belongs to the outcome, not to a state-specific card.
             decoration: usesSharedAccessibilitySurface
                 ? null
                 : BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: <Color>[
-                        if (isWrong) missedCueTone.withValues(alpha: 0.14),
-                        Act0ShellTokensV1.surface2.withValues(
-                          alpha: isWrong ? 0.96 : 0.98,
-                        ),
-                        Act0ShellTokensV1.surface3.withValues(alpha: 0.94),
-                      ],
-                    ),
+                    color: Act0ShellTokensV1.surface2.withValues(alpha: 0.98),
                     borderRadius: BorderRadius.circular(
                       Act0ShellTokensV1.radiusCard,
                     ),
-                    border: Border.all(
-                      color: tone.withValues(
-                        alpha: isCompactRefinedFeedback
-                            ? 0.24
-                            : (refined ? 0.32 : 0.40),
-                      ),
-                    ),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.18),
-                        blurRadius: 18,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
                   ),
             child: Column(
               key: usesCohesiveShortOutcome
@@ -7202,11 +7180,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   const SizedBox(height: 8),
                   Builder(
                     builder: (context) {
-                      final receiptProof = _RepairSystemProofBlockV1(
-                        cardKey: const Key(
-                          'act0_shell_repair_result_system_card',
-                        ),
-                        tone: Act0ShellTokensV1.primary,
+                      final receiptProof = KeyedSubtree(
+                        key: const Key('act0_shell_repair_result_system_card'),
                         child: _FeedbackProofKeyWrapperV1(
                           proofKey: repairReceiptLine.isNotEmpty
                               ? const Key(
@@ -7343,8 +7318,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   else if (usesCohesiveShortOutcome) ...[
                     const SizedBox(height: 16),
                     buildContinueAction(),
-                  ]
-                  else if (usesSharedAccessibilitySurface)
+                  ] else if (usesSharedAccessibilitySurface)
                     Expanded(
                       child: Align(
                         alignment: Alignment.bottomCenter,
@@ -8589,7 +8563,30 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               nextActionCard(),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
               primaryCtaButton(),
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
+              if (summary.secondaryCtaLabel != null) ...[
+                const SizedBox(height: Act0ShellTokensV1.gapSm),
+                OutlinedButton(
+                  key: const Key('act0_shell_block_summary_quality_cta'),
+                  onPressed: _callbackForCta(summary.secondaryCtaKind!),
+                  style: Act0ShellTokensV1.tonalButtonStyle(
+                    tone: Act0ShellTokensV1.info,
+                    fullWidth: true,
+                  ),
+                  child: Text(summary.secondaryCtaLabel!),
+                ),
+              ],
+              if (summary.hasNextLesson ||
+                  (summary.isWorldComplete &&
+                      summary.nextWorldTitle != null &&
+                      summary.nextWorldTitle!.isNotEmpty)) ...[
+                const SizedBox(height: Act0ShellTokensV1.gapXs),
+                TextButton(
+                  key: const Key('act0_shell_block_summary_map_cta'),
+                  onPressed: onBackToMap,
+                  child: const Text('Back to map'),
+                ),
+              ],
+              const SizedBox(height: Act0ShellTokensV1.gapLg),
               if (showHabitReward) ...[
                 Container(
                   key: const Key('act0_shell_block_summary_habit_reward'),
@@ -8781,29 +8778,6 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   ),
                 ),
               ],
-              if (summary.secondaryCtaLabel != null) ...[
-                const SizedBox(height: Act0ShellTokensV1.gapSm),
-                OutlinedButton(
-                  key: const Key('act0_shell_block_summary_quality_cta'),
-                  onPressed: _callbackForCta(summary.secondaryCtaKind!),
-                  style: Act0ShellTokensV1.tonalButtonStyle(
-                    tone: Act0ShellTokensV1.info,
-                    fullWidth: true,
-                  ),
-                  child: Text(summary.secondaryCtaLabel!),
-                ),
-              ],
-              if (summary.hasNextLesson ||
-                  (summary.isWorldComplete &&
-                      summary.nextWorldTitle != null &&
-                      summary.nextWorldTitle!.isNotEmpty)) ...[
-                const SizedBox(height: Act0ShellTokensV1.gapXs),
-                TextButton(
-                  key: const Key('act0_shell_block_summary_map_cta'),
-                  onPressed: onBackToMap,
-                  child: const Text('Back to map'),
-                ),
-              ],
             ],
           ),
         ),
@@ -8982,102 +8956,98 @@ class _WorldMilestoneCardV1 extends StatelessWidget {
         : receipt!.hasReinforcedEvidence
         ? Act0ProofIconRoleV1.reinforced
         : Act0ProofIconRoleV1.repairCompleted;
-    return Container(
+    return KeyedSubtree(
       key: Key('${keyPrefix}_payoff'),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapSm),
-      decoration: BoxDecoration(
-        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.72),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-        border: Border.all(
-          color: tone.withValues(alpha: emphasizeMilestone ? 0.34 : 0.24),
-          width: emphasizeMilestone ? 1.4 : 1.0,
-        ),
-      ),
-      child: _MilestoneMotionRevealV1(
-        key: Key('${keyPrefix}_motion_reveal'),
-        emphasized: emphasizeMilestone,
-        identity: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Act0ProofIconV1(
-              key: Key('${keyPrefix}_milestone_icon'),
-              role: Act0ProofIconRoleV1.milestone,
-              size: Act0ProofIconSizeV1.seal,
-              emphasized: emphasizeMilestone,
-            ),
-            const SizedBox(width: Act0ShellTokensV1.gapSm),
-            Expanded(
-              child: Text(
-                payoffLabel,
-                key: Key('${keyPrefix}_payoff_label'),
+      child: Padding(
+        padding: const EdgeInsets.only(top: Act0ShellTokensV1.gapSm),
+        child: _MilestoneMotionRevealV1(
+          key: Key('${keyPrefix}_motion_reveal'),
+          emphasized: emphasizeMilestone,
+          identity: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Act0ProofIconV1(
+                key: Key('${keyPrefix}_milestone_icon'),
+                role: Act0ProofIconRoleV1.milestone,
+                size: Act0ProofIconSizeV1.seal,
+                emphasized: emphasizeMilestone,
+              ),
+              const SizedBox(width: Act0ShellTokensV1.gapSm),
+              Expanded(
+                child: Text(
+                  payoffLabel,
+                  key: Key('${keyPrefix}_payoff_label'),
+                  style: Act0ShellTokensV1.body.copyWith(
+                    color: Act0ShellTokensV1.text,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          details: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: Act0ShellTokensV1.gapXs),
+              Text(
+                learningLabel,
+                key: Key('${keyPrefix}_learning_label'),
+                maxLines: 2,
+                overflow: TextOverflow.fade,
+                style: Act0ShellTokensV1.muted.copyWith(
+                  color: Act0ShellTokensV1.textMuted,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapXs),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (proofIconRole != null) ...[
+                    Act0ProofIconV1(
+                      key: Key('${keyPrefix}_proof_icon'),
+                      role: proofIconRole,
+                    ),
+                    const SizedBox(width: Act0ShellTokensV1.gapXs),
+                  ],
+                  Expanded(
+                    child: Text(
+                      _hasEarnedProof
+                          ? receipt!.lines.first
+                          : proofFallbackLabel,
+                      key: Key('${keyPrefix}_proof_line'),
+                      maxLines: 2,
+                      overflow: TextOverflow.fade,
+                      style: Act0ShellTokensV1.muted.copyWith(
+                        color: Act0ShellTokensV1.textMuted,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: Act0ShellTokensV1.gapXs),
+              Text(
+                nextLabel,
+                key: Key('${keyPrefix}_next_label'),
                 style: Act0ShellTokensV1.body.copyWith(
-                  color: Act0ShellTokensV1.text,
+                  color: tone,
                   fontWeight: FontWeight.w900,
                 ),
               ),
-            ),
-          ],
-        ),
-        details: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: Act0ShellTokensV1.gapXs),
-            Text(
-              learningLabel,
-              key: Key('${keyPrefix}_learning_label'),
-              maxLines: 2,
-              overflow: TextOverflow.fade,
-              style: Act0ShellTokensV1.muted.copyWith(
-                color: Act0ShellTokensV1.textMuted,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: Act0ShellTokensV1.gapXs),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                if (proofIconRole != null) ...[
-                  Act0ProofIconV1(
-                    key: Key('${keyPrefix}_proof_icon'),
-                    role: proofIconRole,
-                  ),
-                  const SizedBox(width: Act0ShellTokensV1.gapXs),
-                ],
-                Expanded(
-                  child: Text(
-                    _hasEarnedProof ? receipt!.lines.first : proofFallbackLabel,
-                    key: Key('${keyPrefix}_proof_line'),
-                    maxLines: 2,
-                    overflow: TextOverflow.fade,
-                    style: Act0ShellTokensV1.muted.copyWith(
-                      color: Act0ShellTokensV1.textMuted,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
+              const SizedBox(height: 4),
+              Text(
+                previewLine,
+                key: Key('${keyPrefix}_preview_line'),
+                maxLines: 3,
+                overflow: TextOverflow.fade,
+                style: Act0ShellTokensV1.body.copyWith(
+                  color: Act0ShellTokensV1.textMuted,
+                  fontWeight: FontWeight.w600,
                 ),
-              ],
-            ),
-            const SizedBox(height: Act0ShellTokensV1.gapXs),
-            Text(
-              nextLabel,
-              key: Key('${keyPrefix}_next_label'),
-              style: Act0ShellTokensV1.body.copyWith(
-                color: tone,
-                fontWeight: FontWeight.w900,
               ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              previewLine,
-              key: Key('${keyPrefix}_preview_line'),
-              maxLines: 3,
-              overflow: TextOverflow.fade,
-              style: Act0ShellTokensV1.body.copyWith(
-                color: Act0ShellTokensV1.textMuted,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
