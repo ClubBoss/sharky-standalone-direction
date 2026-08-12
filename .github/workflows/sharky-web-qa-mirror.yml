@@ -65,7 +65,7 @@ jobs:
             --project-name sharky-qa-mirror \
             --branch "${MIRROR_BRANCH}" \
             --commit-hash "${TARGET_SHA}" | tee deploy-output.txt
-          DEPLOYMENT_URL="$(grep -Eo 'https://[^[:space:]]+\.pages\.dev' deploy-output.txt | tail -n 1)"
+          DEPLOYMENT_URL="$(grep -Eo 'https://[^[:space:]]+\.pages\.dev' deploy-output.txt | head -n 1)"
           test -n "${DEPLOYMENT_URL}"
           echo "url=${DEPLOYMENT_URL}" >> "$GITHUB_OUTPUT"
 
