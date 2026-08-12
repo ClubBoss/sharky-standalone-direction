@@ -41,9 +41,10 @@ jobs:
           flutter pub get
           flutter build web --debug
 
-      - name: Add deployment-only metadata and headers
+      - name: Add deployment-only QA tooling, metadata, and headers
         run: |
           set -euo pipefail
+          cp tools/sharky_phone_lab_v1.html build/web/phone.html
           cat > build/web/sharky-mirror-build.json <<EOF
           {
             "product_sha": "${TARGET_SHA}",
@@ -106,6 +107,7 @@ jobs:
           fi
           HOME_HTTP="$(retry_get "${DEPLOYMENT_URL}/?act0_capture=home" /tmp/sharky-home.html)"
           LEARN_HTTP="$(retry_get "${DEPLOYMENT_URL}/?act0_capture=learn" /tmp/sharky-learn.html)"
+          PHONE_HTTP="$(retry_get "${DEPLOYMENT_URL}/phone.html?profile=compact&surface=home" /tmp/sharky-phone.html)"
 
           {
             echo "## Exact-SHA remote smoke"
@@ -118,6 +120,7 @@ jobs:
             echo "- Build JSON HTTP: ${BUILD_JSON_HTTP}"
             echo "- Home HTTP: ${HOME_HTTP}"
             echo "- Learn HTTP: ${LEARN_HTTP}"
+            echo "- Phone Lab HTTP: ${PHONE_HTTP}"
           } >> "$GITHUB_STEP_SUMMARY"
 
           echo "observed_sha=${OBSERVED_SHA}" >> "$GITHUB_OUTPUT"
@@ -125,6 +128,44 @@ jobs:
           echo "build_json_http=${BUILD_JSON_HTTP}" >> "$GITHUB_OUTPUT"
           echo "home_http=${HOME_HTTP}" >> "$GITHUB_OUTPUT"
           echo "learn_http=${LEARN_HTTP}" >> "$GITHUB_OUTPUT"
+          echo "phone_http=${PHONE_HTTP}" >> "$GITHUB_OUTPUT"
+
+      - name: Browser-proof Phone Lab logical viewport
+        id: phone_browser
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.url }}
+        run: |
+          set -euo pipefail
+          REAL_CHROME_BIN="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          test -n "$REAL_CHROME_BIN"
+          cat > /tmp/sharky-phone-lab-chrome-wrapper <<EOF
+          #!/usr/bin/env bash
+          exec "$REAL_CHROME_BIN" --disable-extensions --disable-component-extensions-with-background-pages "\$@"
+          EOF
+          chmod +x /tmp/sharky-phone-lab-chrome-wrapper
+          CHROME_BIN=/tmp/sharky-phone-lab-chrome-wrapper
+          export CHROME_BIN
+          if node -e 'process.exit(typeof WebSocket === "function" ? 0 : 1)'; then
+            node tools/sharky_phone_lab_browser_probe_v1.mjs \
+              --base-url "$DEPLOYMENT_URL" \
+              --target-sha "$TARGET_SHA" \
+              --out output/phone_lab_browser
+          else
+            node --experimental-websocket tools/sharky_phone_lab_browser_probe_v1.mjs \
+              --base-url "$DEPLOYMENT_URL" \
+              --target-sha "$TARGET_SHA" \
+              --out output/phone_lab_browser
+          fi
+          cat output/phone_lab_browser/browser-proof.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload Phone Lab browser proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sharky-phone-lab-browser-proof-${{ env.TARGET_SHA }}
+          path: output/phone_lab_browser
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Publish preview links
         env:
@@ -137,6 +178,8 @@ jobs:
             echo "- Target SHA: \`${TARGET_SHA}\`"
             echo "- Build mode: \`debug_non_release_qa_mirror\`"
             echo "- [Preview root](${DEPLOYMENT_URL}/)"
+            echo "- [Phone Lab — Compact](${DEPLOYMENT_URL}/phone.html?profile=compact&surface=live)"
+            echo "- [Phone Lab — Tall](${DEPLOYMENT_URL}/phone.html?profile=tall&surface=live)"
             echo "- [Home](${DEPLOYMENT_URL}/?act0_capture=home)"
             echo "- [Learn](${DEPLOYMENT_URL}/?act0_capture=learn)"
             echo "- [Runner drill](${DEPLOYMENT_URL}/?act0_capture=runner_drill)"
@@ -144,5 +187,5 @@ jobs:
             echo "- [Review](${DEPLOYMENT_URL}/?act0_capture=review)"
             echo "- [Profile](${DEPLOYMENT_URL}/?act0_capture=profile)"
             echo
-            echo "This non-release web deployment is development QA only. Native iOS Simulator/device remains product authority."
+            echo "Phone Lab is browser QA tooling only. Native iOS Simulator/device remains product authority."
           } >> "$GITHUB_STEP_SUMMARY"
