@@ -130,6 +130,37 @@ jobs:
           echo "learn_http=${LEARN_HTTP}" >> "$GITHUB_OUTPUT"
           echo "phone_http=${PHONE_HTTP}" >> "$GITHUB_OUTPUT"
 
+      - name: Browser-proof Phone Lab logical viewport
+        id: phone_browser
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.url }}
+        run: |
+          set -euo pipefail
+          CHROME_BIN="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          test -n "$CHROME_BIN"
+          export CHROME_BIN
+          if node -e 'process.exit(typeof WebSocket === "function" ? 0 : 1)'; then
+            node tools/sharky_phone_lab_browser_probe_v1.mjs \
+              --base-url "$DEPLOYMENT_URL" \
+              --target-sha "$TARGET_SHA" \
+              --out output/phone_lab_browser
+          else
+            node --experimental-websocket tools/sharky_phone_lab_browser_probe_v1.mjs \
+              --base-url "$DEPLOYMENT_URL" \
+              --target-sha "$TARGET_SHA" \
+              --out output/phone_lab_browser
+          fi
+          cat output/phone_lab_browser/browser-proof.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload Phone Lab browser proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sharky-phone-lab-browser-proof-${{ env.TARGET_SHA }}
+          path: output/phone_lab_browser
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Publish preview links
         env:
           DEPLOYMENT_URL: ${{ steps.deploy.outputs.url }}
