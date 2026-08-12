@@ -8560,6 +8560,33 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
               ],
+              nextActionCard(),
+              const SizedBox(height: Act0ShellTokensV1.gapMd),
+              primaryCtaButton(),
+              if (summary.secondaryCtaLabel != null) ...[
+                const SizedBox(height: Act0ShellTokensV1.gapSm),
+                OutlinedButton(
+                  key: const Key('act0_shell_block_summary_quality_cta'),
+                  onPressed: _callbackForCta(summary.secondaryCtaKind!),
+                  style: Act0ShellTokensV1.tonalButtonStyle(
+                    tone: Act0ShellTokensV1.info,
+                    fullWidth: true,
+                  ),
+                  child: Text(summary.secondaryCtaLabel!),
+                ),
+              ],
+              if (summary.hasNextLesson ||
+                  (summary.isWorldComplete &&
+                      summary.nextWorldTitle != null &&
+                      summary.nextWorldTitle!.isNotEmpty)) ...[
+                const SizedBox(height: Act0ShellTokensV1.gapXs),
+                TextButton(
+                  key: const Key('act0_shell_block_summary_map_cta'),
+                  onPressed: onBackToMap,
+                  child: const Text('Back to map'),
+                ),
+              ],
+              const SizedBox(height: Act0ShellTokensV1.gapLg),
               if (showHabitReward) ...[
                 Container(
                   key: const Key('act0_shell_block_summary_habit_reward'),
@@ -8749,33 +8776,6 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
-              ],
-              const SizedBox(height: Act0ShellTokensV1.gapLg),
-              nextActionCard(),
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
-              primaryCtaButton(),
-              if (summary.secondaryCtaLabel != null) ...[
-                const SizedBox(height: Act0ShellTokensV1.gapSm),
-                OutlinedButton(
-                  key: const Key('act0_shell_block_summary_quality_cta'),
-                  onPressed: _callbackForCta(summary.secondaryCtaKind!),
-                  style: Act0ShellTokensV1.tonalButtonStyle(
-                    tone: Act0ShellTokensV1.info,
-                    fullWidth: true,
-                  ),
-                  child: Text(summary.secondaryCtaLabel!),
-                ),
-              ],
-              if (summary.hasNextLesson ||
-                  (summary.isWorldComplete &&
-                      summary.nextWorldTitle != null &&
-                      summary.nextWorldTitle!.isNotEmpty)) ...[
-                const SizedBox(height: Act0ShellTokensV1.gapXs),
-                TextButton(
-                  key: const Key('act0_shell_block_summary_map_cta'),
-                  onPressed: onBackToMap,
-                  child: const Text('Back to map'),
                 ),
               ],
             ],

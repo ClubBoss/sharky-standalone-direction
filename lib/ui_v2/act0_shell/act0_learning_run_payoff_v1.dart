@@ -366,7 +366,7 @@ class Act0LearningRunPayoffSheetV1 extends StatelessWidget {
     child: SafeArea(
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 440, maxHeight: 640),
+          constraints: const BoxConstraints(maxWidth: 440, maxHeight: 680),
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Material(
@@ -419,7 +419,7 @@ class Act0LearningRunPayoffSheetV1 extends StatelessWidget {
                       ),
                     const Divider(color: Color(0x335B9FC8), height: 24),
                     const Text(
-                      'What was proved',
+                      'Keep this clue in view',
                       style: TextStyle(
                         color: Color(0xFF9DD6FF),
                         fontWeight: FontWeight.w700,
@@ -432,7 +432,7 @@ class Act0LearningRunPayoffSheetV1 extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     const Text(
-                      'What happens next',
+                      'Next practice',
                       style: TextStyle(
                         color: Color(0xFF9DD6FF),
                         fontWeight: FontWeight.w700,
