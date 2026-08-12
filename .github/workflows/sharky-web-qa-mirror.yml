@@ -28,6 +28,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -158,11 +159,64 @@ jobs:
           fi
           cat output/phone_lab_browser/browser-proof.md >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload Phone Lab browser proof
-        if: always()
+      - name: Package SHARKY_EVIDENCE_V1
+        id: evidence_package
+        env:
+          BASE_SHA_FROM_EVENT: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
+          PR_NUMBER: ${{ github.event.pull_request.number || '' }}
+        run: |
+          set -euo pipefail
+          BASE_SHA="$BASE_SHA_FROM_EVENT"
+          if [[ -z "$BASE_SHA" || "$BASE_SHA" =~ ^0+$ ]]; then
+            BASE_SHA="$(git rev-parse "${TARGET_SHA}^")"
+          fi
+          python3 tools/package_sharky_evidence_v1.py \
+            --proof-dir output/phone_lab_browser \
+            --out-dir output/sharky_evidence \
+            --repository "$GITHUB_REPOSITORY" \
+            --candidate-sha "$TARGET_SHA" \
+            --base-sha "$BASE_SHA" \
+            --pr-number "$PR_NUMBER" \
+            --run-id "$GITHUB_RUN_ID" \
+            --tooling-sha "$TARGET_SHA"
+          cat "output/sharky_evidence/sharky-evidence-${TARGET_SHA}/report.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload SHARKY_EVIDENCE_V1
+        id: evidence_upload
         uses: actions/upload-artifact@v4
         with:
-          name: sharky-phone-lab-browser-proof-${{ env.TARGET_SHA }}
+          name: sharky-evidence-${{ env.TARGET_SHA }}
+          path: output/sharky_evidence/sharky-evidence-${{ env.TARGET_SHA }}
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish evidence discovery
+        env:
+          ARTIFACT_ID: ${{ steps.evidence_upload.outputs.artifact-id }}
+          ARTIFACT_URL: ${{ steps.evidence_upload.outputs.artifact-url }}
+          ARTIFACT_DIGEST: ${{ steps.evidence_upload.outputs.artifact-digest }}
+        run: |
+          set -euo pipefail
+          {
+            echo "## SHARKY_EVIDENCE_V1"
+            echo
+            echo "- candidate_sha=\`${TARGET_SHA}\`"
+            echo "- run_id=\`${GITHUB_RUN_ID}\`"
+            echo "- artifact_name=\`sharky-evidence-${TARGET_SHA}\`"
+            echo "- artifact_id=\`${ARTIFACT_ID}\`"
+            echo "- artifact_digest=\`${ARTIFACT_DIGEST}\`"
+            echo "- evidence_kind=\`phone_lab_browser\`"
+            echo "- capture_authority=\`web_qa\`"
+            echo "- native_acceptance_claimed=\`false\`"
+            echo "- status=\`READY_FOR_EVALUATION\`"
+            echo "- artifact_url=${ARTIFACT_URL}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload raw Phone Lab failure proof
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sharky-phone-lab-browser-proof-failure-${{ env.TARGET_SHA }}
           path: output/phone_lab_browser
           if-no-files-found: warn
           retention-days: 14
