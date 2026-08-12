@@ -1,0 +1,148 @@
+name: Sharky Web QA Mirror
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sharky-web-qa-mirror-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    env:
+      TARGET_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+      MIRROR_BRANCH: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || 'main' }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      WRANGLER_VERSION: 4.121.0
+    steps:
+      - name: Checkout exact target SHA
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.35.0'
+
+      - name: Build non-release QA mirror
+        run: |
+          set -euo pipefail
+          flutter pub get
+          flutter build web --debug
+
+      - name: Add deployment-only metadata and headers
+        run: |
+          set -euo pipefail
+          cat > build/web/sharky-mirror-build.json <<EOF
+          {
+            "product_sha": "${TARGET_SHA}",
+            "event": "${{ github.event_name }}",
+            "branch_or_pr": "${MIRROR_BRANCH}",
+            "build_mode": "debug_non_release_qa_mirror"
+          }
+          EOF
+          cat > build/web/_headers <<'EOF'
+          /*
+            X-Robots-Tag: noindex, nofollow, noarchive
+          EOF
+
+      - name: Deploy exact-SHA mirror to Cloudflare Pages
+        id: deploy
+        run: |
+          set -euo pipefail
+          npx --yes "wrangler@${WRANGLER_VERSION}" pages deploy build/web \
+            --project-name sharky-qa-mirror \
+            --branch "${MIRROR_BRANCH}" \
+            --commit-hash "${TARGET_SHA}" | tee deploy-output.txt
+          DEPLOYMENT_URL="$(grep -Eo 'https://[^[:space:]]+\.pages\.dev' deploy-output.txt | head -n 1)"
+          test -n "${DEPLOYMENT_URL}"
+          echo "url=${DEPLOYMENT_URL}" >> "$GITHUB_OUTPUT"
+
+      - name: Verify deployed exact-SHA mirror
+        id: remote_smoke
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.url }}
+        run: |
+          set -euo pipefail
+
+          retry_get() {
+            local url="$1"
+            local output="$2"
+            local attempt code
+            for attempt in $(seq 1 12); do
+              code="$(curl --silent --show-error --location \
+                --connect-timeout 10 --max-time 20 \
+                --output "$output" --write-out '%{http_code}' \
+                "$url" || true)"
+              if [[ "$code" =~ ^2[0-9][0-9]$ ]]; then
+                printf '%s' "$code"
+                return 0
+              fi
+              if [[ "$attempt" -lt 12 ]]; then
+                sleep 5
+              fi
+            done
+            echo "Remote mirror did not return HTTP success after bounded retries: $url" >&2
+            return 1
+          }
+
+          ROOT_HTTP="$(retry_get "${DEPLOYMENT_URL}/" /tmp/sharky-root.html)"
+          BUILD_JSON_HTTP="$(retry_get "${DEPLOYMENT_URL}/sharky-mirror-build.json" /tmp/sharky-mirror-build.json)"
+          OBSERVED_SHA="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["product_sha"])' /tmp/sharky-mirror-build.json)"
+          if [[ "$OBSERVED_SHA" != "$TARGET_SHA" ]]; then
+            echo "Remote mirror SHA mismatch: expected $TARGET_SHA, observed $OBSERVED_SHA" >&2
+            exit 1
+          fi
+          HOME_HTTP="$(retry_get "${DEPLOYMENT_URL}/?act0_capture=home" /tmp/sharky-home.html)"
+          LEARN_HTTP="$(retry_get "${DEPLOYMENT_URL}/?act0_capture=learn" /tmp/sharky-learn.html)"
+
+          {
+            echo "## Exact-SHA remote smoke"
+            echo
+            echo "- Expected SHA: \`${TARGET_SHA}\`"
+            echo "- Observed remote SHA: \`${OBSERVED_SHA}\`"
+            echo "- EXACT_SHA_REMOTE_SMOKE=PASS"
+            echo "- Verified deployment URL: ${DEPLOYMENT_URL}"
+            echo "- Root HTTP: ${ROOT_HTTP}"
+            echo "- Build JSON HTTP: ${BUILD_JSON_HTTP}"
+            echo "- Home HTTP: ${HOME_HTTP}"
+            echo "- Learn HTTP: ${LEARN_HTTP}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          echo "observed_sha=${OBSERVED_SHA}" >> "$GITHUB_OUTPUT"
+          echo "root_http=${ROOT_HTTP}" >> "$GITHUB_OUTPUT"
+          echo "build_json_http=${BUILD_JSON_HTTP}" >> "$GITHUB_OUTPUT"
+          echo "home_http=${HOME_HTTP}" >> "$GITHUB_OUTPUT"
+          echo "learn_http=${LEARN_HTTP}" >> "$GITHUB_OUTPUT"
+
+      - name: Publish preview links
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.url }}
+        run: |
+          set -euo pipefail
+          {
+            echo "## Sharky non-authoritative web QA mirror"
+            echo
+            echo "- Target SHA: \`${TARGET_SHA}\`"
+            echo "- Build mode: \`debug_non_release_qa_mirror\`"
+            echo "- [Preview root](${DEPLOYMENT_URL}/)"
+            echo "- [Home](${DEPLOYMENT_URL}/?act0_capture=home)"
+            echo "- [Learn](${DEPLOYMENT_URL}/?act0_capture=learn)"
+            echo "- [Runner drill](${DEPLOYMENT_URL}/?act0_capture=runner_drill)"
+            echo "- [Runner feedback](${DEPLOYMENT_URL}/?act0_capture=runner_feedback)"
+            echo "- [Review](${DEPLOYMENT_URL}/?act0_capture=review)"
+            echo "- [Profile](${DEPLOYMENT_URL}/?act0_capture=profile)"
+            echo
+            echo "This non-release web deployment is development QA only. Native iOS Simulator/device remains product authority."
+          } >> "$GITHUB_STEP_SUMMARY"
