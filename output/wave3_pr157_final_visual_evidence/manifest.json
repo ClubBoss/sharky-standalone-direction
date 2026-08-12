@@ -1,0 +1,213 @@
+{
+  "mission": "PACKAGE_AND_PUBLISH_WAVE3_FINAL_VISUAL_EVIDENCE_V1",
+  "pr": 157,
+  "candidate_head_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+  "candidate_base_sha": "896954668a14b092956e62f8d20ba5fa4bfdb348",
+  "exact_head_deployment_url": "https://pr-157.sharky-qa-mirror.pages.dev/phone.html",
+  "PRODUCT_CODE_CHANGED": "NO",
+  "CANDIDATE_BRANCH_CHANGED": "NO",
+  "CYCLE_3_STARTED": "NO",
+  "images": [
+    {
+      "filename": "primary_402x874/runner_theory.png",
+      "surface_state": "runner_theory",
+      "profile": "tall",
+      "logical_viewport": "402x874",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "40854476fefc49cd382d62224a76bb10ed69222c232d422d1d725d41dc4513e2",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "initial"
+    },
+    {
+      "filename": "primary_402x874/runner_drill.png",
+      "surface_state": "runner_drill",
+      "profile": "tall",
+      "logical_viewport": "402x874",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "68ce068debe688517e90997a454ba01d5aba523ca09e18adda46d1ea8d91e120",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "initial"
+    },
+    {
+      "filename": "primary_402x874/correct_feedback.png",
+      "surface_state": "correct_feedback",
+      "profile": "tall",
+      "logical_viewport": "402x874",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "ba5e098d9e5ab79b3ba62d99fc7a64df79941e3c2459bac3d8d89a77323857bf",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "initial"
+    },
+    {
+      "filename": "primary_402x874/wrong_feedback.png",
+      "surface_state": "wrong_feedback",
+      "profile": "tall",
+      "logical_viewport": "402x874",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "75eafa835dbac12bea9a50000f16704afa59b31b401a921a310ab945fcd3b5b0",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "initial"
+    },
+    {
+      "filename": "primary_402x874/repair_focus.png",
+      "surface_state": "repair_focus",
+      "profile": "tall",
+      "logical_viewport": "402x874",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "662b30aa9c99b132b2231c2d92dd83d7fee571cb4c213eb2eec2580407fbdc77",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "initial"
+    },
+    {
+      "filename": "primary_402x874/repair_result.png",
+      "surface_state": "repair_result",
+      "profile": "tall",
+      "logical_viewport": "402x874",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "1f62487d5b5696c7b80c94c7f2ff58007f6e2f740bfcc5699e6ae00c97ed0e24",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "initial"
+    },
+    {
+      "filename": "primary_402x874/world_completion.png",
+      "surface_state": "world_completion",
+      "profile": "tall",
+      "logical_viewport": "402x874",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "b5eab685becde8d64015d71ce3bf73c572047459fe09471ddab9feb9220417e1",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "initial"
+    },
+    {
+      "filename": "primary_402x874/world_completion_full.png",
+      "surface_state": "world_completion",
+      "profile": "tall",
+      "logical_viewport": "402x874",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "47af31a9750f0ac43b2efc49c0e1a34874ff15957eb3b0627ae4080fb9a382ce",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "post-scroll continuation"
+    },
+    {
+      "filename": "primary_402x874/session_summary.png",
+      "surface_state": "session_summary",
+      "profile": "tall",
+      "logical_viewport": "402x874",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "8145c1c68646cbb66aad90a956442b2c7481f24e68265f1e0a34592cbdb4bb84",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "initial"
+    },
+    {
+      "filename": "primary_402x874/session_summary_full.png",
+      "surface_state": "session_summary",
+      "profile": "tall",
+      "logical_viewport": "402x874",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "14226dc05eea0e10bc616921951773605cab0f9c13454c2b8026793a5a2b48c7",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "post-scroll continuation"
+    },
+    {
+      "filename": "compact_375x812/runner_theory.png",
+      "surface_state": "runner_theory",
+      "profile": "compact",
+      "logical_viewport": "375x812",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "58e3d1d223ed76a566b56334ca40e1a94ae3f464580c108558ff449ebc27a890",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "initial"
+    },
+    {
+      "filename": "compact_375x812/runner_drill.png",
+      "surface_state": "runner_drill",
+      "profile": "compact",
+      "logical_viewport": "375x812",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "e4300140a1116f07f600df9df1fa45078ce0e3704e446a6029f4aeb55146b108",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "initial"
+    },
+    {
+      "filename": "compact_375x812/correct_feedback.png",
+      "surface_state": "correct_feedback",
+      "profile": "compact",
+      "logical_viewport": "375x812",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "ac3a771970d0e454c4749112392bc6934393aeda0314c618bb33f0b11a7779b9",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "initial"
+    },
+    {
+      "filename": "compact_375x812/wrong_feedback.png",
+      "surface_state": "wrong_feedback",
+      "profile": "compact",
+      "logical_viewport": "375x812",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "2f63501e734b584d15a212a879e104b2fe95e0fd7a52ca87d34b556314c041a2",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "initial"
+    },
+    {
+      "filename": "compact_375x812/repair_focus.png",
+      "surface_state": "repair_focus",
+      "profile": "compact",
+      "logical_viewport": "375x812",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "805acafe887878fe1b8c00c18042714e7b9345dcb464a041112f27a85b4049a2",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "initial"
+    },
+    {
+      "filename": "compact_375x812/repair_result.png",
+      "surface_state": "repair_result",
+      "profile": "compact",
+      "logical_viewport": "375x812",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "dcf41581493cc63171f2de757ea2ba4c9e91b562951ef0b8bdc48b76ea8d272a",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "initial"
+    },
+    {
+      "filename": "compact_375x812/world_completion.png",
+      "surface_state": "world_completion",
+      "profile": "compact",
+      "logical_viewport": "375x812",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "08051fed29e4fc4262993f29c54b02305c09caf63a981995e162e9a54f8b332b",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "initial"
+    },
+    {
+      "filename": "compact_375x812/world_completion_full.png",
+      "surface_state": "world_completion",
+      "profile": "compact",
+      "logical_viewport": "375x812",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "36fe5810e3e2f727d6416eba5a461a5d219f9cdf4fc17a6b3f7c162db69acd94",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "post-scroll continuation"
+    },
+    {
+      "filename": "compact_375x812/session_summary.png",
+      "surface_state": "session_summary",
+      "profile": "compact",
+      "logical_viewport": "375x812",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "7c59d39180aeb300185d5de1f9adf2ba9d89a7175609f0782acb91d8510145f9",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "initial"
+    },
+    {
+      "filename": "compact_375x812/session_summary_full.png",
+      "surface_state": "session_summary",
+      "profile": "compact",
+      "logical_viewport": "375x812",
+      "source_deployment_sha": "c05ed7a5833f8550fd427f57e7b3581375707907",
+      "sha256": "cf122760c2e73dc58ba8d0d6ac047202140dcd2c7d02d657daeaaf7b59d0cd0a",
+      "capture_method": "local Chrome/CDP against exact-head Phone Lab deployment",
+      "viewport": "post-scroll continuation"
+    }
+  ],
+  "full_scroll_note": "World Completion and Session Summary include post-scroll continuation PNGs for both profiles."
+}
