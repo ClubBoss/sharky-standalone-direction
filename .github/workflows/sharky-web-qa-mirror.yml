@@ -131,7 +131,10 @@ jobs:
           echo "learn_http=${LEARN_HTTP}" >> "$GITHUB_OUTPUT"
           echo "phone_http=${PHONE_HTTP}" >> "$GITHUB_OUTPUT"
 
+      # Ordinary PR updates stop after exact-SHA preview/smoke. Full evidence remains
+      # available on main pushes and explicit workflow_dispatch final-gate runs.
       - name: Browser-proof Phone Lab logical viewport
+        if: github.event_name != 'pull_request'
         id: phone_browser
         env:
           DEPLOYMENT_URL: ${{ steps.deploy.outputs.url }}
@@ -160,6 +163,7 @@ jobs:
           cat output/phone_lab_browser/browser-proof.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Package SHARKY_EVIDENCE_V1
+        if: github.event_name != 'pull_request'
         id: evidence_package
         env:
           BASE_SHA_FROM_EVENT: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
@@ -182,6 +186,7 @@ jobs:
           cat "output/sharky_evidence/sharky-evidence-${TARGET_SHA}/report.md" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload SHARKY_EVIDENCE_V1
+        if: github.event_name != 'pull_request'
         id: evidence_upload
         uses: actions/upload-artifact@v4
         with:
@@ -191,6 +196,7 @@ jobs:
           retention-days: 14
 
       - name: Publish evidence discovery
+        if: github.event_name != 'pull_request'
         env:
           ARTIFACT_ID: ${{ steps.evidence_upload.outputs.artifact-id }}
           ARTIFACT_URL: ${{ steps.evidence_upload.outputs.artifact-url }}
@@ -213,7 +219,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload raw Phone Lab failure proof
-        if: failure()
+        if: failure() && github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: sharky-phone-lab-browser-proof-failure-${{ env.TARGET_SHA }}
@@ -231,6 +237,12 @@ jobs:
             echo
             echo "- Target SHA: \`${TARGET_SHA}\`"
             echo "- Build mode: \`debug_non_release_qa_mirror\`"
+            echo "- FAST_PREVIEW=PASS"
+            if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+              echo "- Full evidence: skipped for PR inner loop; use workflow_dispatch for a final gate"
+            else
+              echo "- Full evidence: enabled for this run"
+            fi
             echo "- [Preview root](${DEPLOYMENT_URL}/)"
             echo "- [Phone Lab — Compact](${DEPLOYMENT_URL}/phone.html?profile=compact&surface=live)"
             echo "- [Phone Lab — Tall](${DEPLOYMENT_URL}/phone.html?profile=tall&surface=live)"
