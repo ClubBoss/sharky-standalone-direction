@@ -1,0 +1,464 @@
+name: Web Mirror Runtime Proof v1
+
+on:
+  push:
+    branches:
+      - probe/web-mirror-feasibility-v1
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PRODUCT_MAIN_SHA: 838a803aebdd8196125e430dd380fb98b3a49afa
+      PROOF_URL: http://127.0.0.1:7357/
+    steps:
+      - name: Checkout exact probe SHA
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Verify temporary diff boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "PRODUCT_MAIN_SHA=${PRODUCT_MAIN_SHA}"
+          echo "PROBE_SHA=${GITHUB_SHA}"
+          git diff --name-only "${PRODUCT_MAIN_SHA}" "${GITHUB_SHA}" | tee /tmp/current_delta.txt
+          if [[ "$(cat /tmp/current_delta.txt)" != ".github/workflows/web-mirror-runtime-proof-v1.yml" ]]; then
+            echo "Unexpected current-tree delta from product main" >&2
+            exit 1
+          fi
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+
+      - name: Record build identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p runtime-proof-evidence
+          {
+            echo "product_main_sha=${PRODUCT_MAIN_SHA}"
+            echo "probe_sha=${GITHUB_SHA}"
+            echo "runner=${RUNNER_OS}"
+            flutter --version
+            dart --version
+          } | tee runtime-proof-evidence/build_identity.txt
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Flutter web release build
+        run: flutter build web --release
+
+      - name: Verify static artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f build/web/index.html
+          test -f build/web/flutter_bootstrap.js
+          find build/web -maxdepth 2 -type f | sort > runtime-proof-evidence/build_web_files.txt
+
+      - name: Install transient Playwright Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/sharky-runtime-pw
+          cd /tmp/sharky-runtime-pw
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Serve static build
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 7357 --bind 127.0.0.1 --directory build/web >runtime-proof-evidence/static_server.log 2>&1 &
+          echo $! >/tmp/sharky_static_server.pid
+          for i in $(seq 1 30); do
+            if curl -fsS "${PROOF_URL}" >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat runtime-proof-evidence/static_server.log || true
+          exit 1
+
+      - name: Chromium canonical Act0 runtime proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat >/tmp/sharky-runtime-pw/runtime_probe.mjs <<'JS'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const evidenceDir = path.join(process.env.GITHUB_WORKSPACE, 'runtime-proof-evidence');
+          fs.mkdirSync(evidenceDir, { recursive: true });
+          const url = process.env.PROOF_URL || 'http://127.0.0.1:7357/';
+          const consoleEntries = [];
+          const pageErrors = [];
+          const failedRequests = [];
+          const badResponses = [];
+          const states = [];
+          const reached = [];
+          const interactions = [];
+
+          const browser = await chromium.launch({ headless: true });
+          const browserVersion = browser.version();
+          const context = await browser.newContext({
+            viewport: { width: 402, height: 874 },
+            locale: 'en-US',
+            colorScheme: 'dark',
+          });
+          const page = await context.newPage();
+
+          page.on('console', message => {
+            consoleEntries.push({ type: message.type(), text: message.text() });
+          });
+          page.on('pageerror', error => {
+            pageErrors.push({ name: error.name, message: error.message, stack: error.stack || '' });
+          });
+          page.on('requestfailed', request => {
+            failedRequests.push({
+              url: request.url(),
+              method: request.method(),
+              failure: request.failure()?.errorText || 'unknown',
+            });
+          });
+          page.on('response', response => {
+            if (response.status() >= 400) {
+              badResponses.push({ url: response.url(), status: response.status() });
+            }
+          });
+
+          async function settle(ms = 1000) {
+            await page.waitForLoadState('domcontentloaded').catch(() => {});
+            await page.waitForTimeout(ms);
+          }
+
+          async function enableSemantics() {
+            const gate = page.locator('flt-semantics-placeholder[aria-label="Enable accessibility"]');
+            if (await gate.count()) {
+              await gate.first().evaluate(element => element.click()).catch(() => {});
+              await page.waitForTimeout(800);
+            }
+          }
+
+          async function bodyText() {
+            return (await page.locator('body').innerText().catch(() => ''))
+              .replace(/\s+/g, ' ')
+              .trim();
+          }
+
+          async function buttonNames() {
+            return (await page.getByRole('button').allTextContents().catch(() => []))
+              .map(v => v.replace(/\s+/g, ' ').trim())
+              .filter(Boolean);
+          }
+
+          async function snapshot(name) {
+            await enableSemantics();
+            await settle(350);
+            const text = await bodyText();
+            const buttons = await buttonNames();
+            const state = { name, url: page.url(), text, buttons };
+            states.push(state);
+            fs.writeFileSync(path.join(evidenceDir, `${name}.json`), JSON.stringify(state, null, 2));
+            await page.screenshot({ path: path.join(evidenceDir, `${name}.png`), fullPage: true });
+            return state;
+          }
+
+          async function clickRole(pattern, label) {
+            const loc = page.getByRole('button', { name: pattern });
+            const count = await loc.count().catch(() => 0);
+            for (let i = 0; i < count; i++) {
+              const item = loc.nth(i);
+              if (await item.isVisible().catch(() => false)) {
+                await item.click();
+                interactions.push({ label, via: 'button', pattern: String(pattern), ok: true });
+                await settle(800);
+                await enableSemantics();
+                return true;
+              }
+            }
+            return false;
+          }
+
+          async function clickText(pattern, label) {
+            const loc = page.getByText(pattern, { exact: false });
+            const count = await loc.count().catch(() => 0);
+            for (let i = 0; i < Math.min(count, 8); i++) {
+              const item = loc.nth(i);
+              if (await item.isVisible().catch(() => false)) {
+                await item.click();
+                interactions.push({ label, via: 'text', pattern: String(pattern), ok: true });
+                await settle(800);
+                await enableSemantics();
+                return true;
+              }
+            }
+            return false;
+          }
+
+          async function clickAny(patterns, label) {
+            for (const pattern of patterns) {
+              if (await clickRole(pattern, label)) return true;
+            }
+            for (const pattern of patterns) {
+              if (await clickText(pattern, label)) return true;
+            }
+            interactions.push({ label, ok: false, patterns: patterns.map(String) });
+            return false;
+          }
+
+          async function hasBottomNav() {
+            const text = await bodyText();
+            return /\bHome\b/i.test(text) && /\bLearn\b/i.test(text) && /\bReview\b/i.test(text) && /\bYou\b/i.test(text);
+          }
+
+          async function clickDecisionCandidate(label) {
+            const preferred = [
+              /^Check$/i, /^Fold$/i, /^Call$/i, /^Raise$/i,
+              /^BTN$/i, /^CO$/i, /^HJ$/i, /^UTG$/i, /^SB$/i, /^BB$/i,
+            ];
+            for (const pattern of preferred) {
+              if (await clickRole(pattern, label)) return true;
+            }
+            const names = await buttonNames();
+            const utility = /^(Back|Continue|Next|Home|Learn|Practice|Review|You|Close|Try one table read|Open first lesson|Find my start|Start from zero)$/i;
+            for (const name of names) {
+              if (!name || utility.test(name)) continue;
+              if (await clickRole(new RegExp(`^${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i'), label)) return true;
+            }
+            interactions.push({ label, ok: false, reason: 'no decision candidate' });
+            return false;
+          }
+
+          let bootPass = false;
+          let persistence = 'PERSISTENCE_NOT_PROVEN';
+          let decisionPass = false;
+          let feedbackPass = false;
+          let pointerPass = false;
+
+          try {
+            await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+            await settle(3500);
+            await enableSemantics();
+            const boot = await snapshot('00_boot');
+            bootPass = boot.text.length > 0;
+            if (bootPass) reached.push('BOOT');
+
+            // Complete only the ordinary fresh-start UI. No capture/deep-link bypasses.
+            for (let step = 0; step < 16 && !(await hasBottomNav()); step++) {
+              const text = await bodyText();
+              if (/Find my start/i.test(text)) {
+                await clickAny([/^Find my start$/i], 'placement_intro_primary');
+                await snapshot(`01_onboarding_${step}_placement_started`);
+                continue;
+              }
+              if (/Where are you starting from\?/i.test(text)) {
+                await clickAny([/new to poker/i], 'placement_beginner_choice');
+                await snapshot(`01_onboarding_${step}_beginner_selected`);
+                await clickAny([/^Start from zero$/i, /^Continue$/i], 'placement_beginner_continue');
+                await snapshot(`01_onboarding_${step}_beginner_continued`);
+                continue;
+              }
+              if (/Try one table read/i.test(text)) {
+                await clickAny([/^Try one table read$/i], 'welcome_primary');
+                await snapshot(`01_onboarding_${step}_welcome_spot`);
+                continue;
+              }
+              if (/Open first lesson/i.test(text)) {
+                await clickAny([/^Open first lesson$/i], 'welcome_open_first_lesson');
+                await snapshot(`01_onboarding_${step}_first_lesson_opened`);
+                continue;
+              }
+              if (/Your path is ready/i.test(text)) {
+                await clickAny([/^Open first lesson$/i], 'welcome_handoff');
+                await snapshot(`01_onboarding_${step}_handoff`);
+                continue;
+              }
+              // Welcome micro-spot or a naturally opened runner.
+              if (await clickDecisionCandidate(`onboarding_decision_${step}`)) {
+                decisionPass = true;
+                const feedback = await snapshot(`01_onboarding_${step}_feedback`);
+                feedbackPass = feedback.text.length > 0;
+                if (await clickAny([/^Continue$/i, /continue/i], `onboarding_feedback_continue_${step}`)) {
+                  await snapshot(`01_onboarding_${step}_continued`);
+                }
+                continue;
+              }
+              if (await clickAny([/^Continue$/i, /^Next$/i, /continue/i], `onboarding_generic_continue_${step}`)) {
+                await snapshot(`01_onboarding_${step}_generic_continue`);
+                continue;
+              }
+              if (await clickAny([/^Back$/i], `onboarding_back_${step}`)) {
+                await snapshot(`01_onboarding_${step}_back`);
+                continue;
+              }
+              break;
+            }
+
+            // If first lesson opened before shell navigation, back out through current UI.
+            if (!(await hasBottomNav())) {
+              for (let i = 0; i < 4 && !(await hasBottomNav()); i++) {
+                if (!(await clickAny([/^Back$/i], `reach_shell_back_${i}`))) break;
+                await snapshot(`02_reach_shell_${i}`);
+              }
+            }
+
+            if (await hasBottomNav()) {
+              reached.push('SHELL_NAV');
+              pointerPass = true;
+              await clickAny([/^Home$/i], 'bottom_nav_home');
+              const homeBefore = await snapshot('03_home_before_reload');
+              reached.push('HOME');
+
+              await page.reload({ waitUntil: 'domcontentloaded' });
+              await settle(3000);
+              await enableSemantics();
+              const homeAfter = await snapshot('04_home_after_reload');
+              const afterNav = await hasBottomNav();
+              const regressedToOnboarding = /Find my start|Where are you starting from\?|Try one table read/i.test(homeAfter.text);
+              if (afterNav && !regressedToOnboarding && /Home/i.test(homeBefore.text)) {
+                persistence = 'PERSISTENCE_GREEN';
+              } else {
+                persistence = 'PERSISTENCE_BLOCKED';
+              }
+
+              if (await clickAny([/^Learn$/i], 'bottom_nav_learn')) {
+                pointerPass = true;
+                const learn = await snapshot('05_learn');
+                reached.push('LEARN');
+
+                let openedLesson = false;
+                const lessonPatterns = [
+                  /First Table Guide/i,
+                  /What poker is/i,
+                  /Cards, ranks/i,
+                ];
+                for (const pattern of lessonPatterns) {
+                  if (await clickText(pattern, 'open_current_lesson')) {
+                    openedLesson = true;
+                    break;
+                  }
+                }
+                if (!openedLesson) {
+                  const names = await buttonNames();
+                  for (const name of names) {
+                    if (/^(Home|Learn|Practice|Review|You|Back)$/i.test(name)) continue;
+                    if (await clickRole(new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'), 'open_current_lesson')) {
+                      openedLesson = true;
+                      break;
+                    }
+                  }
+                }
+
+                if (openedLesson) {
+                  await snapshot('06_runner_open');
+                  for (let i = 0; i < 14; i++) {
+                    const before = await bodyText();
+                    if (await clickDecisionCandidate(`runner_decision_${i}`)) {
+                      decisionPass = true;
+                      const feedback = await snapshot('07_feedback');
+                      feedbackPass = feedback.text !== before && feedback.text.length > 0;
+                      reached.push('DECISION');
+                      reached.push('FEEDBACK');
+                      break;
+                    }
+                    if (!(await clickAny([/^Continue$/i, /^Next$/i, /continue/i, /start/i], `runner_advance_${i}`))) break;
+                    await snapshot(`06_runner_advance_${i}`);
+                  }
+                }
+
+                // Return to shell using current UI only.
+                for (let i = 0; i < 5 && !(await hasBottomNav()); i++) {
+                  if (!(await clickAny([/^Back$/i, /^Continue$/i], `return_shell_${i}`))) break;
+                  await snapshot(`08_return_shell_${i}`);
+                }
+
+                if (await hasBottomNav()) {
+                  if (await clickAny([/^Review$/i], 'bottom_nav_review')) {
+                    pointerPass = true;
+                    await snapshot('09_review');
+                    reached.push('REVIEW');
+                  }
+                  if (await clickAny([/^You$/i, /^Profile$/i], 'bottom_nav_you')) {
+                    pointerPass = true;
+                    await snapshot('10_you');
+                    reached.push('YOU');
+                  }
+                }
+              }
+            }
+          } catch (error) {
+            pageErrors.push({ name: error.name || 'ProbeError', message: error.message || String(error), stack: error.stack || '' });
+          }
+
+          const fatalConsoleErrors = consoleEntries.filter(e => e.type === 'error');
+          const summary = {
+            productMainSha: process.env.PRODUCT_MAIN_SHA,
+            probeSha: process.env.GITHUB_SHA,
+            browser: 'Chromium',
+            browserVersion,
+            viewport: { width: 402, height: 874 },
+            servedUrl: url,
+            bootPass,
+            reached,
+            pointerPass,
+            decisionPass,
+            feedbackPass,
+            persistence,
+            consoleErrorCount: fatalConsoleErrors.length,
+            pageErrorCount: pageErrors.length,
+            failedRequestCount: failedRequests.length,
+            badResponseCount: badResponses.length,
+            interactions,
+          };
+
+          fs.writeFileSync(path.join(evidenceDir, 'console.json'), JSON.stringify(consoleEntries, null, 2));
+          fs.writeFileSync(path.join(evidenceDir, 'page_errors.json'), JSON.stringify(pageErrors, null, 2));
+          fs.writeFileSync(path.join(evidenceDir, 'failed_requests.json'), JSON.stringify(failedRequests, null, 2));
+          fs.writeFileSync(path.join(evidenceDir, 'bad_responses.json'), JSON.stringify(badResponses, null, 2));
+          fs.writeFileSync(path.join(evidenceDir, 'states.json'), JSON.stringify(states, null, 2));
+          fs.writeFileSync(path.join(evidenceDir, 'summary.json'), JSON.stringify(summary, null, 2));
+          console.log(JSON.stringify(summary, null, 2));
+          await browser.close();
+          JS
+
+          cd /tmp/sharky-runtime-pw
+          node runtime_probe.mjs | tee "${GITHUB_WORKSPACE}/runtime-proof-evidence/runtime_probe_stdout.txt"
+
+      - name: Record final temporary diff hygiene
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "product_main_sha=${PRODUCT_MAIN_SHA}"
+            echo "probe_sha=${GITHUB_SHA}"
+            echo "current_tree_delta:"
+            git diff --name-status "${PRODUCT_MAIN_SHA}" "${GITHUB_SHA}"
+            echo "working_tree:"
+            git status --short
+          } | tee runtime-proof-evidence/diff_hygiene.txt
+
+      - name: Upload runtime proof evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sharky-web-runtime-proof-${{ github.sha }}
+          path: runtime-proof-evidence
+          if-no-files-found: error
+          retention-days: 2
