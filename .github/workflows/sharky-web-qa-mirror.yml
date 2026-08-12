@@ -138,12 +138,12 @@ jobs:
           set -euo pipefail
           REAL_CHROME_BIN="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
           test -n "$REAL_CHROME_BIN"
-          cat > /tmp/sharky-phone-lab-chrome <<EOF
+          cat > /tmp/sharky-phone-lab-chrome-wrapper <<EOF
           #!/usr/bin/env bash
           exec "$REAL_CHROME_BIN" --disable-extensions --disable-component-extensions-with-background-pages "\$@"
           EOF
-          chmod +x /tmp/sharky-phone-lab-chrome
-          CHROME_BIN=/tmp/sharky-phone-lab-chrome
+          chmod +x /tmp/sharky-phone-lab-chrome-wrapper
+          CHROME_BIN=/tmp/sharky-phone-lab-chrome-wrapper
           export CHROME_BIN
           if node -e 'process.exit(typeof WebSocket === "function" ? 0 : 1)'; then
             node tools/sharky_phone_lab_browser_probe_v1.mjs \
