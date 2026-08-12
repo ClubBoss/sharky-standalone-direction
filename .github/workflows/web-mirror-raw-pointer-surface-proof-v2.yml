@@ -1,0 +1,241 @@
+name: Web Mirror Raw Pointer and Surface Proof v2
+
+on:
+  push:
+    branches:
+      - probe/web-mirror-feasibility-v1
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  raw-pointer-surface-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PRODUCT_MAIN_SHA: 838a803aebdd8196125e430dd380fb98b3a49afa
+      PROOF_URL: http://127.0.0.1:7357/
+    steps:
+      - name: Checkout exact probe SHA
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Verify temporary diff boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only "${PRODUCT_MAIN_SHA}" "${GITHUB_SHA}" | tee /tmp/current_delta.txt
+          if [[ "$(cat /tmp/current_delta.txt)" != ".github/workflows/web-mirror-raw-pointer-surface-proof-v2.yml" ]]; then
+            echo "Unexpected tree delta from product main" >&2
+            exit 1
+          fi
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+
+      - name: Record build identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p runtime-proof-v2
+          {
+            echo "product_main_sha=${PRODUCT_MAIN_SHA}"
+            echo "probe_sha=${GITHUB_SHA}"
+            flutter --version
+            dart --version
+          } | tee runtime-proof-v2/build_identity.txt
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Flutter web release build
+        run: flutter build web --release
+
+      - name: Verify static artifact
+        run: test -f build/web/index.html
+
+      - name: Install transient Playwright Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/sharky-runtime-pw-v2
+          cd /tmp/sharky-runtime-pw-v2
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Serve static build
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 7357 --bind 127.0.0.1 --directory build/web >runtime-proof-v2/static_server.log 2>&1 &
+          echo $! >/tmp/sharky_static_server_v2.pid
+          for i in $(seq 1 30); do
+            if curl -fsS "${PROOF_URL}" >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+
+      - name: Chromium raw pointer and Act0 surface proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat >/tmp/sharky-runtime-pw-v2/probe.mjs <<'JS'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+
+          const out = path.join(process.env.GITHUB_WORKSPACE, 'runtime-proof-v2');
+          fs.mkdirSync(out, { recursive: true });
+          const baseUrl = process.env.PROOF_URL || 'http://127.0.0.1:7357/';
+          const consoleEntries = [];
+          const pageErrors = [];
+          const failedRequests = [];
+          const badResponses = [];
+          const surfaceResults = [];
+          const hash = buffer => crypto.createHash('sha256').update(buffer).digest('hex');
+
+          const browser = await chromium.launch({ headless: true });
+          const browserVersion = browser.version();
+          const context = await browser.newContext({ viewport: { width: 402, height: 874 }, locale: 'en-US', colorScheme: 'dark' });
+          const page = await context.newPage();
+
+          page.on('console', m => consoleEntries.push({ type: m.type(), text: m.text() }));
+          page.on('pageerror', e => pageErrors.push({ name: e.name, message: e.message, stack: e.stack || '' }));
+          page.on('requestfailed', r => failedRequests.push({ url: r.url(), method: r.method(), failure: r.failure()?.errorText || 'unknown' }));
+          page.on('response', r => { if (r.status() >= 400) badResponses.push({ url: r.url(), status: r.status() }); });
+
+          const settle = async ms => { await page.waitForLoadState('domcontentloaded').catch(() => {}); await page.waitForTimeout(ms); };
+          const shot = async name => {
+            const buf = await page.screenshot({ path: path.join(out, `${name}.png`), fullPage: true });
+            return { hash: hash(buf), bytes: buf.length };
+          };
+          const renderProbe = async () => page.evaluate(() => ({
+            href: location.href,
+            width: innerWidth,
+            height: innerHeight,
+            hasGlassPane: !!document.querySelector('flt-glass-pane'),
+            canvasCount: document.querySelectorAll('canvas').length,
+            bodyChildren: document.body.children.length,
+          }));
+
+          let rawPointerPass = false;
+          let rawBefore;
+          let rawAfter;
+          let rawAfterStable;
+          let bootProbe = null;
+
+          try {
+            await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
+            await settle(3500);
+            bootProbe = await renderProbe();
+            rawBefore = await shot('raw_00_before');
+
+            // Fixed 402x874 screenshot evidence places the fresh CTA center at approximately (201, 844).
+            // Ordinary raw pointer events only. Accessibility semantics are never activated.
+            await page.mouse.move(201, 844);
+            await page.mouse.down();
+            await page.waitForTimeout(80);
+            await page.mouse.up();
+            await settle(1400);
+            rawAfter = await shot('raw_01_after');
+            await settle(900);
+            rawAfterStable = await shot('raw_02_after_stable');
+            rawPointerPass = rawBefore.hash !== rawAfterStable.hash;
+
+            if (rawPointerPass) {
+              const surfaces = ['home', 'learn', 'runner_drill', 'runner_feedback', 'review', 'profile'];
+              for (const surface of surfaces) {
+                const errorStart = pageErrors.length;
+                const failedStart = failedRequests.length;
+                const badStart = badResponses.length;
+                await page.goto(`${baseUrl}?act0_capture=${surface}`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+                await settle(2600);
+                const probe = await renderProbe();
+                const image = await shot(`surface_${surface}`);
+                surfaceResults.push({
+                  surface,
+                  probe,
+                  screenshotBytes: image.bytes,
+                  screenshotSha256: image.hash,
+                  pageErrors: pageErrors.length - errorStart,
+                  failedRequests: failedRequests.length - failedStart,
+                  http400Plus: badResponses.length - badStart,
+                });
+              }
+            }
+          } catch (e) {
+            pageErrors.push({ name: e.name || 'ProbeError', message: e.message || String(e), stack: e.stack || '' });
+          }
+
+          const summary = {
+            productMainSha: process.env.PRODUCT_MAIN_SHA,
+            probeSha: process.env.GITHUB_SHA,
+            browser: 'Chromium',
+            browserVersion,
+            viewport: { width: 402, height: 874 },
+            servedUrl: baseUrl,
+            semanticsActivated: false,
+            interactionArchitecture: 'raw_page_mouse_coordinates_only',
+            rawPointerCoordinates: { x: 201, y: 844 },
+            bootProbe,
+            rawPointerPass,
+            rawBefore,
+            rawAfter,
+            rawAfterStable,
+            surfaceResults,
+            consoleErrorCount: consoleEntries.filter(e => e.type === 'error').length,
+            pageErrorCount: pageErrors.length,
+            failedRequestCount: failedRequests.length,
+            http400PlusCount: badResponses.length,
+            persistence: 'PERSISTENCE_NOT_PROVEN',
+          };
+
+          fs.writeFileSync(path.join(out, 'summary.json'), JSON.stringify(summary, null, 2));
+          fs.writeFileSync(path.join(out, 'console.json'), JSON.stringify(consoleEntries, null, 2));
+          fs.writeFileSync(path.join(out, 'page_errors.json'), JSON.stringify(pageErrors, null, 2));
+          fs.writeFileSync(path.join(out, 'failed_requests.json'), JSON.stringify(failedRequests, null, 2));
+          fs.writeFileSync(path.join(out, 'http_400_plus.json'), JSON.stringify(badResponses, null, 2));
+          console.log(JSON.stringify(summary, null, 2));
+          await browser.close();
+
+          if (!rawPointerPass) process.exit(2);
+          JS
+
+          if grep -Eq 'flt-semantics-placeholder|getByRole|getByText|locator\(|\.click\(' /tmp/sharky-runtime-pw-v2/probe.mjs; then
+            echo "Forbidden semantics/locator interaction primitive present in probe script" >&2
+            exit 1
+          fi
+          echo "SEMANTICS_ACTIVATED=NO" | tee runtime-proof-v2/semantics_invariant.txt
+          cd /tmp/sharky-runtime-pw-v2
+          node probe.mjs | tee "${GITHUB_WORKSPACE}/runtime-proof-v2/probe_stdout.txt"
+
+      - name: Record temporary diff hygiene
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "product_main_sha=${PRODUCT_MAIN_SHA}"
+            echo "probe_sha=${GITHUB_SHA}"
+            echo "committed_delta:"
+            git diff --name-status "${PRODUCT_MAIN_SHA}" "${GITHUB_SHA}"
+            echo "working_tree:"
+            git status --short
+          } | tee runtime-proof-v2/diff_hygiene.txt
+
+      - name: Upload V2 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sharky-web-raw-pointer-surface-proof-${{ github.sha }}
+          path: runtime-proof-v2
+          if-no-files-found: error
+          retention-days: 2
