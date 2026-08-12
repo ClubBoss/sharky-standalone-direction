@@ -136,8 +136,14 @@ jobs:
           DEPLOYMENT_URL: ${{ steps.deploy.outputs.url }}
         run: |
           set -euo pipefail
-          CHROME_BIN="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
-          test -n "$CHROME_BIN"
+          REAL_CHROME_BIN="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          test -n "$REAL_CHROME_BIN"
+          cat > /tmp/sharky-phone-lab-chrome <<EOF
+          #!/usr/bin/env bash
+          exec "$REAL_CHROME_BIN" --disable-extensions --disable-component-extensions-with-background-pages "\$@"
+          EOF
+          chmod +x /tmp/sharky-phone-lab-chrome
+          CHROME_BIN=/tmp/sharky-phone-lab-chrome
           export CHROME_BIN
           if node -e 'process.exit(typeof WebSocket === "function" ? 0 : 1)'; then
             node tools/sharky_phone_lab_browser_probe_v1.mjs \
