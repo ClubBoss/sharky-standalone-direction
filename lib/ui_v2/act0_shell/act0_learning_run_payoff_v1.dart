@@ -366,28 +366,36 @@ class Act0LearningRunPayoffSheetV1 extends StatelessWidget {
     child: SafeArea(
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 440, maxHeight: 680),
+          constraints: const BoxConstraints(maxWidth: 440, maxHeight: 640),
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Material(
               color: const Color(0xFF152331),
               borderRadius: BorderRadius.circular(24),
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
                 child: Column(
                   key: const Key('act0_learning_run_payoff'),
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Your learning run',
+                      'Learning run complete',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 24,
+                        fontSize: 26,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 6),
+                    const Text(
+                      'What happened',
+                      style: TextStyle(
+                        color: Color(0xFF9DD6FF),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
                     if (payoff.strength != null)
                       _line(
                         'Strength',
@@ -409,9 +417,33 @@ class Act0LearningRunPayoffSheetV1 extends StatelessWidget {
                           payoff.unresolved!,
                         ),
                       ),
-                    _line('Next clue', payoff.nextClue),
-                    _line('Practice next', payoff.nextPractice),
+                    const Divider(color: Color(0x335B9FC8), height: 24),
+                    const Text(
+                      'What was proved',
+                      style: TextStyle(
+                        color: Color(0xFF9DD6FF),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      payoff.nextClue,
+                      style: const TextStyle(color: Colors.white, height: 1.3),
+                    ),
                     const SizedBox(height: 12),
+                    const Text(
+                      'What happens next',
+                      style: TextStyle(
+                        color: Color(0xFF9DD6FF),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      payoff.nextPractice,
+                      style: const TextStyle(color: Colors.white, height: 1.3),
+                    ),
+                    const SizedBox(height: 16),
                     SizedBox(
                       width: double.infinity,
                       child: FilledButton(
