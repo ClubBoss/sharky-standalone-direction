@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Sharky Phone Lab</title>
+  <style>
+    :root { color-scheme: dark; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:#070b12; color:#e8eef8; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; overflow:hidden; background:radial-gradient(circle at 50% 18%,#152034 0,#0a101b 38%,#05080e 100%); }
+    .toolbar { position:relative; z-index:2; min-height:116px; padding:12px 18px 10px; display:grid; grid-template-columns:minmax(220px,1fr) auto; gap:10px 18px; border-bottom:1px solid #263247; background:rgba(7,11,18,.96); }
+    .title { font-size:17px; font-weight:700; letter-spacing:.01em; }
+    .truth { display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:6px; font:12px/1.35 ui-monospace,SFMono-Regular,Menlo,monospace; color:#aebbd0; }
+    .truth strong { color:#f2f6fd; font-weight:700; }
+    .controls { display:flex; flex-wrap:wrap; justify-content:flex-end; align-items:center; gap:8px; }
+    label { display:flex; align-items:center; gap:6px; font-size:12px; color:#b9c5d8; }
+    select,button { height:34px; border:1px solid #33425c; border-radius:8px; background:#111a29; color:#eef4ff; padding:0 10px; font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    button[aria-pressed="true"] { border-color:#5ccfe6; color:#80e7f5; }
+    .viewport { position:relative; height:calc(100vh - 116px); min-height:300px; display:grid; place-items:center; overflow:hidden; padding:12px; }
+    .phone-wrap { position:relative; }
+    .phone-shell { position:absolute; top:0; left:0; transform-origin:top left; padding:12px; border-radius:44px; background:#020306; box-shadow:0 22px 70px rgba(0,0,0,.55), inset 0 0 0 1px #394054; }
+    .device-chrome { height:18px; display:flex; align-items:flex-start; justify-content:center; pointer-events:none; }
+    .speaker { width:74px; height:6px; border-radius:99px; background:#151a24; box-shadow:inset 0 0 0 1px #252d3b; }
+    .screen { overflow:hidden; border-radius:32px; background:#000; box-shadow:0 0 0 1px #151b25; }
+    iframe { display:block; border:0; background:#000; }
+    .status { position:absolute; right:14px; bottom:12px; z-index:3; max-width:min(540px,calc(100vw - 28px)); padding:7px 10px; border:1px solid #2d3a50; border-radius:9px; background:rgba(7,11,18,.9); color:#9eabc0; font:11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace; }
+    .pass { color:#69ddb2; }
+    .fail { color:#ff9b9b; }
+    @media (max-width:900px) { .toolbar { grid-template-columns:1fr; min-height:154px; } .controls { justify-content:flex-start; } .viewport { height:calc(100vh - 154px); } }
+  </style>
+</head>
+<body>
+  <header class="toolbar" id="toolbar">
+    <div>
+      <div class="title">Sharky Phone Lab <span style="font-weight:500;color:#7f8da4">development QA only</span></div>
+      <div class="truth">
+        <span>INNER VIEWPORT: <strong id="innerViewport">measuring…</strong></span>
+        <span>PROFILE: <strong id="profileTruth">COMPACT</strong></span>
+        <span>DISPLAY SCALE: <strong id="scaleTruth">—</strong></span>
+        <span>OUTER VIEWPORT: <strong id="outerViewport">—</strong></span>
+        <span>PRODUCT SHA: <strong id="shaTruth">loading…</strong></span>
+        <span>BUILD MODE: <strong id="modeTruth">loading…</strong></span>
+        <span>IDENTITY: <strong id="identityTruth">loading…</strong></span>
+      </div>
+    </div>
+    <div class="controls">
+      <label>Profile
+        <select id="profileSelect">
+          <option value="compact">Compact · 375×812</option>
+          <option value="tall">Tall · 402×874</option>
+        </select>
+      </label>
+      <label>Surface
+        <select id="surfaceSelect">
+          <option value="live">Live / ordinary root</option>
+          <option value="home">Home</option>
+          <option value="learn">Learn</option>
+          <option value="runner_theory">Runner theory</option>
+          <option value="runner_drill">Runner drill</option>
+          <option value="runner_feedback">Runner feedback</option>
+          <option value="runner_first_correct_feedback">First correct feedback</option>
+          <option value="runner_first_wrong_feedback">First wrong feedback</option>
+          <option value="repair_focus">Repair focus</option>
+          <option value="repair_result">Repair result</option>
+          <option value="session_repair">Session repair</option>
+          <option value="practice">Practice</option>
+          <option value="review">Review</option>
+          <option value="profile">Profile</option>
+          <option value="world_completion">World completion</option>
+          <option value="session_summary">Session summary</option>
+        </select>
+      </label>
+      <button id="fitButton" type="button" aria-pressed="true">Fit</button>
+      <button id="oneButton" type="button" aria-pressed="false">1:1</button>
+    </div>
+  </header>
+
+  <main class="viewport" id="viewport">
+    <div class="phone-wrap" id="phoneWrap">
+      <div class="phone-shell" id="phoneShell">
+        <div class="device-chrome"><div class="speaker"></div></div>
+        <div class="screen"><iframe id="appFrame" title="Sharky QA mirror"></iframe></div>
+      </div>
+    </div>
+    <div class="status" id="status">Waiting for same-origin Flutter frame…</div>
+  </main>
+
+  <script>
+    (() => {
+      'use strict';
+      const PROFILES = { compact:{w:375,h:812,label:'COMPACT'}, tall:{w:402,h:874,label:'TALL'} };
+      const SURFACES = new Set([
+        'live','home','learn','runner_theory','runner_drill','runner_feedback',
+        'runner_first_correct_feedback','runner_first_wrong_feedback','repair_focus',
+        'repair_result','session_repair','practice','review','profile','world_completion','session_summary'
+      ]);
+      const q = new URLSearchParams(location.search);
+      let profile = PROFILES[q.get('profile')] ? q.get('profile') : 'compact';
+      let surface = SURFACES.has(q.get('surface')) ? q.get('surface') : 'live';
+      let presentation = q.get('presentation') === '1to1' ? '1to1' : 'fit';
+
+      const $ = id => document.getElementById(id);
+      const frame = $('appFrame');
+      const shell = $('phoneShell');
+      const wrap = $('phoneWrap');
+      const viewport = $('viewport');
+      const profileSelect = $('profileSelect');
+      const surfaceSelect = $('surfaceSelect');
+
+      function updateUrl() {
+        const next = new URL(location.href);
+        next.searchParams.set('profile', profile);
+        next.searchParams.set('surface', surface);
+        next.searchParams.set('presentation', presentation);
+        history.replaceState(null, '', next);
+      }
+
+      function appUrl() {
+        const url = new URL('./', location.href);
+        url.search = surface === 'live' ? '' : new URLSearchParams({act0_capture:surface}).toString();
+        return url.href;
+      }
+
+      function measure() {
+        const p = PROFILES[profile];
+        $('outerViewport').textContent = `${window.innerWidth} × ${window.innerHeight} CSS`;
+        let measuredW = null, measuredH = null;
+        try {
+          measuredW = frame.contentWindow.innerWidth;
+          measuredH = frame.contentWindow.innerHeight;
+        } catch (_) {}
+        const ok = measuredW === p.w && measuredH === p.h;
+        $('innerViewport').textContent = measuredW && measuredH ? `${measuredW} × ${measuredH} CSS` : 'unavailable';
+        $('innerViewport').className = ok ? 'pass' : 'fail';
+        document.body.dataset.innerWidth = measuredW ?? '';
+        document.body.dataset.innerHeight = measuredH ?? '';
+        document.body.dataset.profile = profile;
+        document.body.dataset.viewportPass = String(ok);
+        $('status').innerHTML = ok
+          ? `<span class="pass">INNER_VIEWPORT=PASS</span> · Flutter frame is same-origin and interactive.`
+          : `<span class="fail">INNER_VIEWPORT=FAIL</span> · expected ${p.w}×${p.h}, measured ${measuredW ?? '?'}×${measuredH ?? '?'}`;
+        return ok;
+      }
+
+      function layout() {
+        const p = PROFILES[profile];
+        frame.width = p.w;
+        frame.height = p.h;
+        frame.style.width = `${p.w}px`;
+        frame.style.height = `${p.h}px`;
+        const shellW = p.w + 24;
+        const shellH = p.h + 42;
+        let scale = 1;
+        if (presentation === 'fit') {
+          const availableW = Math.max(220, viewport.clientWidth - 24);
+          const availableH = Math.max(220, viewport.clientHeight - 24);
+          scale = Math.min(1, availableW / shellW, availableH / shellH);
+        }
+        shell.style.width = `${shellW}px`;
+        shell.style.height = `${shellH}px`;
+        shell.style.transform = `scale(${scale})`;
+        wrap.style.width = `${shellW * scale}px`;
+        wrap.style.height = `${shellH * scale}px`;
+        $('profileTruth').textContent = p.label;
+        $('scaleTruth').textContent = scale.toFixed(3);
+        document.body.dataset.displayScale = scale.toFixed(3);
+        document.body.dataset.outerWidth = String(window.innerWidth);
+        document.body.dataset.outerHeight = String(window.innerHeight);
+        $('fitButton').setAttribute('aria-pressed', String(presentation === 'fit'));
+        $('oneButton').setAttribute('aria-pressed', String(presentation === '1to1'));
+        requestAnimationFrame(measure);
+      }
+
+      function loadSurface() {
+        $('status').textContent = 'Loading Flutter frame…';
+        frame.src = appUrl();
+        updateUrl();
+      }
+
+      async function loadIdentity() {
+        try {
+          const response = await fetch('./sharky-mirror-build.json', {cache:'no-store'});
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const build = await response.json();
+          $('shaTruth').textContent = build.product_sha || 'unknown';
+          $('modeTruth').textContent = build.build_mode || 'unknown';
+          $('identityTruth').textContent = `${build.event || 'unknown'} · ${build.branch_or_pr || 'unknown'}`;
+          document.body.dataset.productSha = build.product_sha || '';
+        } catch (error) {
+          $('shaTruth').textContent = 'metadata unavailable';
+          $('modeTruth').textContent = '—';
+          $('identityTruth').textContent = String(error);
+        }
+      }
+
+      profileSelect.value = profile;
+      surfaceSelect.value = surface;
+      profileSelect.addEventListener('change', () => { profile = profileSelect.value; layout(); loadSurface(); });
+      surfaceSelect.addEventListener('change', () => { surface = surfaceSelect.value; loadSurface(); });
+      $('fitButton').addEventListener('click', () => { presentation = 'fit'; updateUrl(); layout(); });
+      $('oneButton').addEventListener('click', () => { presentation = '1to1'; updateUrl(); layout(); });
+      frame.addEventListener('load', () => { measure(); setTimeout(measure, 400); });
+      window.addEventListener('resize', layout);
+
+      layout();
+      loadIdentity();
+      loadSurface();
+    })();
+  </script>
+</body>
+</html>
