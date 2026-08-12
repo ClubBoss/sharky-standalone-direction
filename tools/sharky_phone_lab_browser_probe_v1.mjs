@@ -115,8 +115,69 @@ async function waitFor(cdp, expression, timeoutMs = 25000) {
   throw new Error(`Timed out waiting for condition: ${expression}; last=${JSON.stringify(value)}`);
 }
 
+async function pageDiagnostics(cdp) {
+  return await evaluate(cdp, `(() => {
+    const frame = document.querySelector('iframe');
+    let frameHref = null;
+    let frameInner = null;
+    let frameReadyState = null;
+    let frameBodyLength = null;
+    let flutterReady = false;
+    let frameError = null;
+    try {
+      if (frame) {
+        frameHref = frame.contentWindow?.location?.href || null;
+        frameInner = frame.contentWindow ? [frame.contentWindow.innerWidth, frame.contentWindow.innerHeight] : null;
+        frameReadyState = frame.contentDocument?.readyState || null;
+        frameBodyLength = frame.contentDocument?.body?.innerHTML?.length || 0;
+        flutterReady = !!frame.contentDocument?.querySelector('flutter-view, flt-glass-pane');
+      }
+    } catch (error) {
+      frameError = String(error);
+    }
+    return {
+      href: location.href,
+      title: document.title,
+      readyState: document.readyState,
+      bodyText: document.body?.innerText?.slice(0, 800) || '',
+      dataset: {...(document.body?.dataset || {})},
+      outer: [window.innerWidth, window.innerHeight],
+      frame: frame ? {
+        src: frame.src,
+        rect: (() => { const r = frame.getBoundingClientRect(); return [r.left,r.top,r.width,r.height]; })(),
+        href: frameHref,
+        inner: frameInner,
+        readyState: frameReadyState,
+        bodyLength: frameBodyLength,
+        flutterReady,
+        error: frameError,
+      } : null,
+    };
+  })()`);
+}
+
+async function waitForPhoneTruth(cdp, expectedSha, timeoutMs = 30000) {
+  const deadline = Date.now() + timeoutMs;
+  let diagnostics = null;
+  let nextLog = Date.now();
+  while (Date.now() < deadline) {
+    diagnostics = await pageDiagnostics(cdp);
+    if (diagnostics.dataset?.viewportPass === 'true' && diagnostics.dataset?.productSha === expectedSha) {
+      return diagnostics;
+    }
+    if (Date.now() >= nextLog) {
+      console.log(`PHONE_LAB_DIAGNOSTICS ${JSON.stringify(diagnostics)}`);
+      nextLog = Date.now() + 5000;
+    }
+    await sleep(350);
+  }
+  try { await screenshot(cdp, 'phone-lab-timeout.png'); } catch (_) {}
+  throw new Error(`Phone Lab truth timeout; last diagnostics=${JSON.stringify(diagnostics)}`);
+}
+
 async function navigate(cdp, url) {
-  await cdp.send('Page.navigate', { url });
+  const result = await cdp.send('Page.navigate', { url });
+  if (result.errorText) throw new Error(`Chrome navigation failed for ${url}: ${result.errorText}`);
   await waitFor(cdp, 'document.readyState === "complete" || document.readyState === "interactive"', 15000);
 }
 
@@ -169,6 +230,7 @@ try {
   await cdp.send('Page.enable');
   await cdp.send('Runtime.enable');
   await cdp.send('Log.enable');
+  await cdp.send('Network.enable');
   await cdp.send('Emulation.setDeviceMetricsOverride', {
     width: 1280,
     height: 720,
@@ -180,57 +242,43 @@ try {
     cdp.events.length = 0;
     const url = `${baseUrl}/phone.html?profile=${profile}&surface=home&presentation=fit`;
     await navigate(cdp, url);
-    await waitFor(cdp, `document.body?.dataset.viewportPass === 'true' && document.body?.dataset.productSha === ${JSON.stringify(targetSha)}`, 30000);
+    const initialTruth = await waitForPhoneTruth(cdp, targetSha, 30000);
     await sleep(1800);
-    const truth = await evaluate(cdp, `(() => {
-      const frame = document.querySelector('iframe');
-      return {
-        outer: [window.innerWidth, window.innerHeight],
-        inner: frame ? [frame.contentWindow.innerWidth, frame.contentWindow.innerHeight] : null,
-        profile: document.body.dataset.profile,
-        scale: Number(document.body.dataset.displayScale || '0'),
-        viewportPass: document.body.dataset.viewportPass,
-        productSha: document.body.dataset.productSha,
-        frameHref: frame?.contentWindow.location.href || null,
-        flutterReady: !!frame?.contentDocument?.querySelector('flutter-view, flt-glass-pane'),
-      };
-    })()`);
-    const expectedPass = truth.inner?.[0] === expectedWidth && truth.inner?.[1] === expectedHeight;
-    if (!expectedPass || truth.viewportPass !== 'true') {
+    const truth = await pageDiagnostics(cdp);
+    report.profiles[`${profile}_initial`] = initialTruth;
+    const expectedPass = truth.frame?.inner?.[0] === expectedWidth && truth.frame?.inner?.[1] === expectedHeight;
+    if (!expectedPass || truth.dataset?.viewportPass !== 'true') {
       throw new Error(`${profile} inner viewport mismatch: ${JSON.stringify(truth)}`);
     }
-    if (!truth.flutterReady) throw new Error(`${profile} Flutter frame did not boot`);
-    if (truth.productSha !== targetSha) throw new Error(`${profile} SHA mismatch`);
+    if (!truth.frame?.flutterReady) throw new Error(`${profile} Flutter frame did not boot: ${JSON.stringify(truth)}`);
+    if (truth.dataset?.productSha !== targetSha) throw new Error(`${profile} SHA mismatch: ${JSON.stringify(truth)}`);
     const shot = await screenshot(cdp, `${profile}-home-fit.png`);
     report.profiles[profile] = {
       expected: [expectedWidth, expectedHeight],
-      measured_inner: truth.inner,
+      measured_inner: truth.frame.inner,
       outer: truth.outer,
-      display_scale: truth.scale,
+      display_scale: Number(truth.dataset.displayScale || '0'),
       viewport_pass: true,
       flutter_ready: true,
-      product_sha: truth.productSha,
+      product_sha: truth.dataset.productSha,
       screenshot: shot.filename,
       screenshot_sha256: shot.sha256,
     };
     report.outer_viewport = truth.outer;
-    return truth;
+    return report.profiles[profile];
   }
 
   const compact = await probeProfile('compact', 375, 812);
   const tall = await probeProfile('tall', 402, 874);
-  report.fit_mode = compact.scale > 0 && compact.scale < 1 && tall.scale > 0 && tall.scale < 1 ? 'PASS' : 'FAIL';
-  report.exact_sha_identity = compact.productSha === targetSha && tall.productSha === targetSha ? 'PASS' : 'FAIL';
+  report.fit_mode = compact.display_scale > 0 && compact.display_scale < 1 && tall.display_scale > 0 && tall.display_scale < 1 ? 'PASS' : 'FAIL';
+  report.exact_sha_identity = compact.product_sha === targetSha && tall.product_sha === targetSha ? 'PASS' : 'FAIL';
   if (report.fit_mode !== 'PASS' || report.exact_sha_identity !== 'PASS') {
     throw new Error(`Phone Lab truth gate failed: fit=${report.fit_mode} sha=${report.exact_sha_identity}`);
   }
 
-  // Raw-pointer interaction proof on the ordinary root. This is deliberately
-  // the same browser-level input class used by the accepted web feasibility
-  // proof: no semantics activation and no direct state mutation.
   cdp.events.length = 0;
   await navigate(cdp, `${baseUrl}/phone.html?profile=compact&surface=live&presentation=fit`);
-  await waitFor(cdp, `document.body?.dataset.viewportPass === 'true' && document.body?.dataset.productSha === ${JSON.stringify(targetSha)}`, 30000);
+  await waitForPhoneTruth(cdp, targetSha, 30000);
   await sleep(2200);
   const before = await screenshot(cdp, 'compact-live-before.png');
   const rect = await evaluate(cdp, `(() => {
@@ -263,7 +311,7 @@ try {
     cdp.events.length = 0;
     const url = `${baseUrl}/phone.html?profile=${profile}&surface=runner_theory&presentation=fit`;
     await navigate(cdp, url);
-    await waitFor(cdp, `document.body?.dataset.viewportPass === 'true' && document.body?.dataset.productSha === ${JSON.stringify(targetSha)}`, 30000);
+    await waitForPhoneTruth(cdp, targetSha, 30000);
     await sleep(2200);
     const shot = await screenshot(cdp, `${profile}-runner-theory.png`);
     const eventText = cdp.events.map(event => JSON.stringify(event)).join('\n');
@@ -283,15 +331,17 @@ try {
   if (compactOverflow || tallOverflow) {
     report.retained_3px_overflow = 'REPRODUCED_MOBILE';
   } else {
-    // Console silence alone is not strong enough to adjudicate a visible
-    // Flutter debug overflow banner. The screenshots are retained for the
-    // mastermind/visual inspection and the report stays NOT_REACHED until it
-    // is visually adjudicated.
     report.retained_3px_overflow = 'NOT_REACHED';
   }
 
   if (report.interaction !== 'PASS') throw new Error('Interaction proof failed');
 } catch (error) {
+  try { report.failure_diagnostics = cdp ? await pageDiagnostics(cdp) : null; } catch (_) {}
+  try {
+    if (cdp) {
+      report.browser_events_tail = cdp.events.slice(-80).map(event => ({method:event.method, params:event.params}));
+    }
+  } catch (_) {}
   report.error = String(error?.stack || error);
   report.chrome_stderr_tail = chromeStderr.slice(-5000);
   writeFileSync(join(outDir, 'browser-proof.json'), JSON.stringify(report, null, 2) + '\n');
