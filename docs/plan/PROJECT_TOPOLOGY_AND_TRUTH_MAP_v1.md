@@ -1,92 +1,96 @@
 # PROJECT_TOPOLOGY_AND_TRUTH_MAP_v1
-Status: ACTIVE
+Status: ACTIVE ARCHITECTURE / NAVIGATION COMPANION
 Purpose: primary orientation layer for future agents before repo investigation.
 
 ## How to use this map
 
-- Read order:
+- Read order while the pre-Human campaign is active:
   - `AGENTS.md`
-  - this file
-  - `docs/plan/MASTER_PLAN_v3.0.md` for active product-working route / block order
-  - `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md` when the task concerns
-    top-1 ambition, 10/10 product/commercial standard, Runout/competitor
-    positioning, first-week proof, visible repair proof, or best-in-class
-    product attack sequencing
-    - post-Wave-2.4 route-reset evidence:
-      `docs/_reviews/top1_recalibration_after_wave2_4_v1.md`
-    - Public Premium TOP1 v1 endgame route lock:
-      `docs/_reviews/public_premium_top1_v1_endgame_lock_v1.md`
-  - `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md` only when launch/readiness reference is actually needed
-  - `docs/plan/ACTIVE_APP_BOUNDARY_AND_DORMANT_SYSTEMS_v1.md` when the task risks drifting into legacy, persona, AI-coach, or non-Act0 families
-  - latest Audit Hub surfaces if routing depends on fresh live truth:
-    - `assets/audit_hub_v1/latest_run.json`
-    - `assets/audit_hub_v1/operational_snapshot.json`
-    - latest `out/audit_hub_v1/dossiers/project_status_dossier_*.md`
-    - latest `out/audit_hub_v1/top_wave_packets/top_wave_packet_*.md`
+  - `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` for exact current dispatch
+  - `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` for principal product-working authority
+  - this file only when architecture/navigation context is needed
+  - exactly one task-specific protocol/SSOT when required
+- When no campaign state applies, read `AGENTS.md`, then
+  `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`, then the one
+  task-specific protocol/SSOT required by the task.
+- `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md` is a strategy/reference
+  companion when the task concerns top-1 ambition, 10/10 product/commercial
+  standard, Runout/competitor positioning, first-week proof, visible repair
+  proof, or best-in-class product attack sequencing. It does not select the
+  active route.
+- `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md` is used only when
+  launch/readiness reference is actually needed.
+- `docs/plan/ACTIVE_APP_BOUNDARY_AND_DORMANT_SYSTEMS_v1.md` is used when the
+  task risks drifting into legacy, persona, AI-coach, or non-Act0 families.
+- Latest Audit Hub surfaces are operational evidence only and do not override
+  v4 evidence classes or the active campaign dispatch:
+  - `assets/audit_hub_v1/latest_run.json`
+  - `assets/audit_hub_v1/operational_snapshot.json`
+  - latest `out/audit_hub_v1/dossiers/project_status_dossier_*.md`
+  - latest `out/audit_hub_v1/top_wave_packets/top_wave_packet_*.md`
 
 - Do not do this first:
   - broad repo-wide recon
   - giant todo backlog building
   - reopening historical readiness docs as if active
-  - routing from stale review packets without checking live Audit Hub freshness
+  - routing from stale review packets or numeric Product-100 artifacts
 
 - Fast next-frontier selection:
-  - if the task is active product routing, use `docs/plan/MASTER_PLAN_v3.0.md` first
-  - if the task is about becoming top-1 / 10 out of 10 / Runout benchmark /
-    commercial-product attack path, use `docs/plan/MASTER_PLAN_v3.0.md` for
-    day-to-day priority and `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md`
-    for the top-1 operating map
-    - for the closed route from Wave 3.0.1 to Public Premium TOP1 v1 Candidate,
-      use `docs/_reviews/public_premium_top1_v1_endgame_lock_v1.md`
-  - if the task is post-route proof / "what still blocks product 100?", use
-    `docs/plan/PRODUCT_100_PROOF_AUDIT_v1.md`
-  - if the task is launch/readiness framing, use `docs/plan/MASTER_PLAN_v3.0.md` plus `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
-  - if the task is operator routing, check `latest_run.json` summary, then `completion_gap_synthesis`, `autonomous_block_handoff`, and latest dossier / top packet
-  - if the task is runtime/debugging, start from the canonical runner boundary and only open legacy paths if a boundary contract proves they still own that seam
+  - active product routing / next Gauntlet -> `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
+  - while the campaign is active, exact next dispatch -> `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`; HNP remains the next execution evidence gate until valid evidence changes that state
+  - top-1 / 10 out of 10 / Runout / commercial-product analysis -> v4 for route/evidence authority plus `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md` as strategy/reference
+  - post-route Product-100 artifacts -> historical/reference diagnostic input only; never learner-efficacy proof
+  - launch/readiness framing -> v4 plus `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
+  - operator evidence -> check `latest_run.json`, then `completion_gap_synthesis`, `autonomous_block_handoff`, and latest dossier/top packet, but do not let generated routing override v4/campaign truth
+  - runtime/debugging -> start from the canonical runner boundary and only open legacy paths if a boundary contract proves they still own that seam
 
 ## 1. Source-of-truth hierarchy
 
-- Strict priority order:
-  1. `docs/plan/MASTER_PLAN_v3.0.md`
-     - active product-working master plan
-     - owns current route order, launch-shape priorities, and bounded-wave sequencing
-     - companion layer: `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md`
-       - companion strategy SSOT for top-1 / 10/10 product attack planning
-       - owns Runout benchmark interpretation, 10/10 operating map, acceptance
-         gates, and current visible-repair attack sequence
-       - current post-Wave-2.4 recalibration evidence:
-         `docs/_reviews/top1_recalibration_after_wave2_4_v1.md`
-       - does not replace Master Plan, Monetization SSOT, readiness SSOT, or
-         active route truth
-  2. `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
-     - auxiliary launch-readiness reference
-     - use for release/store-prep framing, not day-to-day bottleneck selection
-  3. Historical execution references:
+- Strict priority order for current product work:
+  1. `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` while the campaign is active
+     - temporary first-read dispatch overlay for exact current gate/state
+     - cannot redefine the North Star, evidence hierarchy, or post-gate model
+  2. `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
+     - principal day-to-day product-working master plan
+     - owns North Star, evidence classes, protected boundaries, Gauntlet model,
+       and post-HNP candidate ordering
+  3. task-specific independent protocol/SSOT for its owned procedure or contract
+     - e.g. HNP protocol, retention/transfer contract, telemetry truth map,
+       monetization SSOT
+  4. strategy/navigation/readiness companions
+     - `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md` - strategy/reference only
+     - this topology map - architecture/navigation only
+     - `docs/context/CONTEXT_ROUTER_v1.md` - navigation only
+     - `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md` - downstream launch/readiness only
+  5. Historical execution references:
+     - `docs/plan/MASTER_PLAN_v3.0.md`
      - `docs/plan/ROUTE_TO_B_EXECUTION_RESET_v1.md`
      - `docs/plan/ROUTE_TO_B_ACTION_LADDER_v1.md`
-     - historical stubs only; use when older prompts or references need traceability
-  4. Subordinate readiness references:
+     - historical only; use when older prompts or references need traceability
+  6. Subordinate readiness references:
      - `docs/plan/WORLD_READINESS_REGISTRY_v1.md`
      - `docs/plan/PRODUCT_SURFACE_READINESS_v1.md`
-     - visibility layers only; they do not compete with the readiness SSOT
-  5. Audit-Hub routing protocol:
+     - visibility layers only; they do not compete with v4 or readiness SSOT
+  7. Audit-Hub routing protocol:
      - `docs/ops/AUTONOMOUS_WAVE_PROTOCOL_SSOT.md`
      - use when interpreting live hub artifacts and normalized routing truth
-  6. Release / ops governance reference:
+  8. Release / ops governance reference:
      - `docs/release/operational_dashboard_governance_truth_v1.md`
      - canonical negative truth for dashboard ownership
 
 - Routing vs readiness vs reference:
-  - active product-working plan -> `docs/plan/MASTER_PLAN_v3.0.md`
-  - near-term route / execution mode / wave sizing -> `docs/plan/MASTER_PLAN_v3.0.md`
-  - post-route proof pass toward practical product `100 / 100` ->
-    `docs/plan/PRODUCT_100_PROOF_AUDIT_v1.md`
+  - active product-working plan -> `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
+  - exact current campaign dispatch -> `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` while active
+  - next Gauntlet / evidence class / protected scope -> v4
+  - post-route Product-100 documents -> historical/reference diagnostics, not active efficacy proof
   - launch/readiness framing reference -> `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
   - deeper historical structure / reference context -> `docs/plan/MASTER_PLAN_v2.2.md`
   - archived execution-route context -> `docs/plan/archive/execution_history/`
-  - operator live-route interpretation -> `docs/ops/AUTONOMOUS_WAVE_PROTOCOL_SSOT.md` + Audit Hub outputs
+  - operator live-route interpretation -> Audit Hub outputs only within v4/campaign claim boundaries
 
 - Historical-only docs:
+  - `docs/plan/MASTER_PLAN_v3.0.md`
+    - superseded by v4 for current routing
   - `docs/plan/TRUE_RELEASE_READINESS_SSOT_v1.md`
     - historical beta-path record only
     - never use for current scoring, rollout gating, or final-100 meaning
