@@ -1,6 +1,15 @@
 # MASTER PLAN v3.0
 
-Status: ACTIVE
+> **SUPERSEDED / HISTORICAL**
+>
+> `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` becomes the principal
+> day-to-day product-working authority when its authoring PR merges. This v3
+> file is retained below for historical traceability only and must not select
+> current work. While `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` remains
+> active, that state is the first-read dispatch overlay; Human Novice Proof
+> remains the next execution evidence gate.
+
+Status: SUPERSEDED / HISTORICAL
 Last updated: 2026-05-14
 
 Launch-readiness reference:
