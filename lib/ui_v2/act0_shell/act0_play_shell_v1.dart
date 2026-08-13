@@ -460,10 +460,11 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
 
   int _topicPreviewSortIndex(Act0PracticeGroupV1 group) {
     return switch (group.groupId) {
-      'actions' => 0,
-      'blinds' => 1,
-      'positions' => 2,
-      'showdown' => 3,
+      'cue_first_mixed' => 0,
+      'actions' => 1,
+      'blinds' => 2,
+      'positions' => 3,
+      'showdown' => 4,
       _ => 20 + _topicSortIndex(group),
     };
   }

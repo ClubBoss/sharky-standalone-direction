@@ -1155,6 +1155,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   final Map<String, int> _lessonRunSkillGainCounts = <String, int>{};
   final Set<String> _dailyCompletedTaskIds = <String>{};
   int _dailyCompletedRepCount = 0;
+  int _cueFirstMixedRetrievalIndexV1 = 0;
+  int _cueFirstMixedRetrievalCleanRepCountV1 = 0;
   bool _rapidPracticeLoop = false;
   int _persistedStreakDays = 0;
   String _lastDailyDate = '';
@@ -5792,6 +5794,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     : _localizedTaskTitleV1(playSelectedTask),
                                 selectedTaskFamily:
                                     playSelectedTask?.resolvedTaskFamily,
+                                cueFirstRetrievalMode:
+                                    _activePracticeGroupId == 'cue_first_mixed',
                                 compositionFamily:
                                     playSelectedTask
                                         ?.resolvedCompositionFamily ??
@@ -6260,6 +6264,39 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     );
                                     return;
                                   }
+                                  if (_rapidPracticeLoop &&
+                                      _activePracticeGroupId ==
+                                          'cue_first_mixed') {
+                                    if (playRunner.selectedOption?.isCorrect ??
+                                        false) {
+                                      _cueFirstMixedRetrievalCleanRepCountV1 +=
+                                          1;
+                                    }
+                                    _completeCurrentTask(playSelectedTask);
+                                    _cueFirstMixedRetrievalIndexV1 += 1;
+                                    if (_cueFirstMixedRetrievalIndexV1 <
+                                        act0CueFirstMixedRetrievalEntriesV1
+                                            .length) {
+                                      _startCueFirstMixedRetrievalEntryV1();
+                                      return;
+                                    }
+                                    _finishRapidPracticeLoopToHub(
+                                      completedLessonId:
+                                          selectedLesson.lessonId,
+                                      completedRepCount:
+                                          act0CueFirstMixedRetrievalEntriesV1
+                                              .length,
+                                      cleanRepCount:
+                                          _cueFirstMixedRetrievalCleanRepCountV1,
+                                      resultSummary:
+                                          _cueFirstMixedRetrievalCleanRepCountV1 ==
+                                              act0CueFirstMixedRetrievalEntriesV1
+                                                  .length
+                                          ? 'cue_first_mixed_clean_set_complete'
+                                          : 'cue_first_mixed_set_complete',
+                                    );
+                                    return;
+                                  }
                                   if (_rapidPracticeLoop) {
                                     _completeCurrentTask(playSelectedTask);
                                     final singleCleanRep =
@@ -6659,6 +6696,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         allowDrillBypass: true,
         useRapidPracticeLoop: true,
       ),
+      _cueFirstMixedRetrievalGroupV1(),
       ..._topicPackSpecsV1.map(
         (spec) => _groupForTaskPack(
           state,
@@ -6680,6 +6718,58 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       (entry) => !_dailyCompletedTaskIds.contains(entry.taskId),
       orElse: () => deck.first,
     );
+  }
+
+  Act0PracticeGroupV1 _cueFirstMixedRetrievalGroupV1() {
+    final isEligible = act0CueFirstMixedRetrievalEntriesV1.every(
+      (entry) => _completedTaskIds.contains(entry.taskId),
+    );
+    final firstEntry = act0CueFirstMixedRetrievalEntriesV1.first;
+    return Act0PracticeGroupV1(
+      groupId: 'cue_first_mixed',
+      title: _copyV1(en: 'Table check', ru: 'Проверка стола'),
+      subtitle: isEligible
+          ? _copyV1(
+              en: 'Three table decisions. Read the cue before you choose.',
+              ru: 'Три решения за столом. Сначала прочитай подсказку, затем выбирай.',
+            )
+          : _copyV1(
+              en: 'Clear the three route spots first.',
+              ru: 'Сначала закрой три задания на маршруте.',
+            ),
+      ctaLabel: isEligible ? 'Start check' : 'Later',
+      categoryLabel: 'Mixed retrieval',
+      isEnabled: isEligible,
+      targetWorldId: firstEntry.worldId,
+      targetLessonId: firstEntry.lessonId,
+      targetTaskId: firstEntry.taskId,
+      countLabel: '3 spots',
+      sessionLabel: 'Cue first',
+      durationLabel: '~3 min',
+      skipTeaching: true,
+      allowDrillBypass: true,
+      useRapidPracticeLoop: true,
+    );
+  }
+
+  void _startCueFirstMixedRetrievalEntryV1() {
+    final entry =
+        act0CueFirstMixedRetrievalEntriesV1[_cueFirstMixedRetrievalIndexV1];
+    final state = widget.state ?? Act0ShellStateV1.sample;
+    final launchWorld = _worldById(_progressedWorlds(state), entry.worldId);
+    _startTaskByIds(
+      launchWorld,
+      entry.lessonId,
+      entry.taskId,
+      skipTeaching: true,
+      allowDrillBypass: true,
+      rapidPracticeLoop: true,
+      evidenceRunKind: 'practice',
+      evidenceStartedBy: 'practice_cue_first_mixed',
+    );
+    _activePracticeGroupId = 'cue_first_mixed';
+    _showPlayHub = false;
+    _returnToPlayHubOnBack = true;
   }
 
   List<_Act0DailyDeckEntryV1> _dailyDeckEntries(Act0ShellStateV1 state) {
@@ -8645,6 +8735,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     _emitPracticeStartedTelemetryV1(practiceGroupId: group.groupId);
+    if (group.groupId == 'cue_first_mixed') {
+      _cueFirstMixedRetrievalIndexV1 = 0;
+      _cueFirstMixedRetrievalCleanRepCountV1 = 0;
+      _startCueFirstMixedRetrievalEntryV1();
+      return;
+    }
     var launchWorld = selectedWorld;
     final targetWorldId = group.targetWorldId;
     if (targetWorldId != null) {
@@ -11201,6 +11297,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         en: 'Nice work — one table clue is warmer. Sharky has tomorrow\'s useful hand ready.',
         ru: 'Три коротких повтора готовы. Сегодняшние чтения остаются в тонусе. Можешь взять ещё одну дорожку или вернуться домой.',
       );
+    } else if (groupId == 'cue_first_mixed') {
+      _practiceCompletionTitle = _copyV1(
+        en: 'Table check complete',
+        ru: 'Проверка стола готова',
+      );
+      _practiceCompletionBody = _copyV1(
+        en: 'You made three cue-first decisions across different table contexts.',
+        ru: 'Ты принял три решения по подсказкам в разных ситуациях за столом.',
+      );
     } else if (completedLessonId != null) {
       final family = _playDrillTitleForLesson(completedLessonId);
       _practiceCompletionTitle = _copyV1(
@@ -13615,6 +13720,24 @@ class _Act0DailyDeckEntryV1 {
   final bool isSpaced;
 }
 
+class Act0CueFirstMixedRetrievalEntryV1 {
+  const Act0CueFirstMixedRetrievalEntryV1({
+    required this.worldId,
+    required this.lessonId,
+    required this.taskId,
+    required this.conceptFamilyId,
+    required this.decisiveCue,
+    required this.contextDimensions,
+  });
+
+  final String worldId;
+  final String lessonId;
+  final String taskId;
+  final String conceptFamilyId;
+  final String decisiveCue;
+  final List<String> contextDimensions;
+}
+
 class _Act0PracticeLaunchTargetV1 {
   const _Act0PracticeLaunchTargetV1({
     required this.worldId,
@@ -13648,6 +13771,33 @@ class _Act0TopicPackSpecV1 {
   final String sessionLabel;
   final String durationLabel;
 }
+
+const act0CueFirstMixedRetrievalEntriesV1 = <Act0CueFirstMixedRetrievalEntryV1>[
+  Act0CueFirstMixedRetrievalEntryV1(
+    worldId: 'world_1',
+    lessonId: 'what_poker_is',
+    taskId: 'what_poker_is_table_read_transfer',
+    conceptFamilyId: 'table_read_transfer',
+    decisiveCue: 'private-card, board-card, and pot counts',
+    contextDimensions: <String>['hero cards', 'flop cards', 'pot size'],
+  ),
+  Act0CueFirstMixedRetrievalEntryV1(
+    worldId: 'world_1',
+    lessonId: 'cards_ranks_suits',
+    taskId: 'cards_ranks_suits_private_board',
+    conceptFamilyId: 'private_board_distinction',
+    decisiveCue: 'shared board cards versus Hero private cards',
+    contextDimensions: <String>['shared cards', 'hero ownership'],
+  ),
+  Act0CueFirstMixedRetrievalEntryV1(
+    worldId: 'world_1',
+    lessonId: 'fold_check_call_raise',
+    taskId: 'actions_legal_context',
+    conceptFamilyId: 'action_legality',
+    decisiveCue: 'whether a bet is facing Hero',
+    contextDimensions: <String>['bet state', 'available action'],
+  ),
+];
 
 const _taskSkillDeltasV1 = <String, Map<String, int>>{
   'what_poker_is_table_read_transfer': <String, int>{

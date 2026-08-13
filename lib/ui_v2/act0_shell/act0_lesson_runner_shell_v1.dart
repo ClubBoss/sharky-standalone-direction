@@ -1120,6 +1120,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.selectedTaskId,
     this.selectedTaskTitle,
     this.selectedTaskFamily,
+    this.cueFirstRetrievalMode = false,
     this.tablePresentation = Act0TaskTablePresentationV1.legacy,
     this.theoryRecallStep,
     required this.onBack,
@@ -1165,6 +1166,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final String? selectedTaskId;
   final String? selectedTaskTitle;
   final Act0TaskFamilyV1? selectedTaskFamily;
+  final bool cueFirstRetrievalMode;
   final Act0TaskTablePresentationV1 tablePresentation;
   final Act0TeachingStepV1? theoryRecallStep;
   final VoidCallback onBack;
@@ -2371,7 +2373,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     final isRefinedDev2 = _isRefinedDev2;
     final teachingStep = _teachingStep;
     final isTeaching = _isTeaching;
-    final prompt = isTeaching
+    final prompt = widget.cueFirstRetrievalMode && !isTeaching
+        ? 'Read the table cue.'
+        : isTeaching
         ? act0LocalizedTeachingStepTitleAtomByTaskIdV1(
             widget.selectedTaskId,
             runner.teachingStepIndex,
@@ -2388,7 +2392,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       Act0HintPolicyV1.theoryOnly => isTheory,
       Act0HintPolicyV1.hidden => false,
     };
-    final hint = isTeaching
+    final hint = widget.cueFirstRetrievalMode && !isTeaching
+        ? ''
+        : isTeaching
         ? act0LocalizedTeachingStepBodyAtomByTaskIdV1(
             widget.selectedTaskId,
             runner.teachingStepIndex,
@@ -2533,7 +2539,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     // repair. Keep that identity visible so it cannot read as another
     // authored hand before its result finalizes.
     final selectedTaskTitle = widget.selectedTaskTitle?.trim() ?? '';
-    final taskRailLabel = widget.isSourceRecheckAttempt
+    final taskRailLabel = widget.cueFirstRetrievalMode
+        ? 'Table check'
+        : widget.isSourceRecheckAttempt
         ? 'Original read recheck'
         : selectedTaskTitle.isNotEmpty
         ? selectedTaskTitle
@@ -2565,14 +2573,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         : (bottomContext.isTrailHistory ? null : promptCoachLine);
     final showStreetReplayInline =
         streetReplay?.isConsumerSafe == true && isDrill && !isTeaching;
-    final decisionHint = _resolveDecisionHintV1(
-      taskFamily: widget.selectedTaskFamily,
-      runner: runner,
-      prompt: prompt,
-      question: question,
-      supportLine: promptContextLine ?? hint,
-      fullIdeaStep: widget.theoryRecallStep,
-    );
+    final decisionHint = widget.cueFirstRetrievalMode
+        ? null
+        : _resolveDecisionHintV1(
+            taskFamily: widget.selectedTaskFamily,
+            runner: runner,
+            prompt: prompt,
+            question: question,
+            supportLine: promptContextLine ?? hint,
+            fullIdeaStep: widget.theoryRecallStep,
+          );
     final theoryRecallPeek = decisionHint == null
         ? null
         : _DecisionHintPeekV1(
@@ -2839,7 +2849,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         child: isAccessibilityDirectDecision
             ? _AccessibilityDirectDecisionV1(
                 question: question,
-                guidance: runner.hint,
+                guidance: widget.cueFirstRetrievalMode ? '' : runner.hint,
                 options: runner.options,
                 onChoose: _handleChooseOptionTelemetry,
               )
