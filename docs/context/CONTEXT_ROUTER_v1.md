@@ -1,25 +1,34 @@
 # Context Router v1
 
-Status: ACTIVE routing index for Sharky Codex, Sonnet, and Fable work. It is
-the second-stage router after an active campaign state, and the first routing
-document when no campaign state applies.
+Status: ACTIVE NAVIGATION COMPANION ONLY.
 
-Purpose: route agents to the smallest current capsule set. Do not broad-read
-repo history to feel safe.
+Purpose: route agents to the smallest task-specific source set. It does not own
+product direction, next-wave selection, evidence admission, or closure.
+
+While `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` is active, that one-screen
+state is the first-read dispatch overlay. `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
+is the principal day-to-day product-working authority after merge.
 
 ## Authority And Conflict Rule
 
-Capsules summarize and route context only. They never outrank:
+This router and all capsules summarize/navigation context only. They never
+outrank:
 
-1. `docs/plan/MASTER_PLAN_v3.0.md`
-2. Current Execution Context, when supplied by the task
-3. Project Rules / repo instructions, including `AGENTS.md`
-4. Workflow Protocol / active prompt contract
-5. active task evidence
-6. live source, tests, and runtime truth
+1. repository `AGENTS.md`;
+2. active campaign state, while one exists, for exact current dispatch;
+3. `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` for product route,
+   North Star, evidence hierarchy, protected boundaries, and Gauntlet order;
+4. task-specific independent protocol/SSOT for its owned procedure/contract;
+5. active task evidence and live source/tests/runtime truth within their valid
+   claim boundary.
 
-If a capsule conflicts with a higher authority, use the higher authority and
-report the conflict. Do not silently reconcile stale capsule truth.
+`docs/plan/MASTER_PLAN_v3.0.md` is superseded/historical and cannot select
+current work. `docs/context/ACTIVE_ROUTE_CAPSULE_v1.md` is a stale/superseded
+route snapshot and future archive candidate.
+
+If a navigation companion conflicts with higher authority, use the higher
+authority and report the conflict. Do not silently reconcile stale capsule
+truth.
 
 ## Derived Metadata Boundary
 
@@ -35,66 +44,70 @@ When an active campaign state exists:
 
 1. repository `AGENTS.md` / automatically loaded repo instructions
 2. active campaign state file
-3. this Context Router only when the state does not carry sufficient routing
-4. exactly one relevant capsule
-5. task-specific SSOT/source/evidence
+3. `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
+4. exactly one task-specific protocol/SSOT when required
+5. this router only if source discovery is still needed
 
 When no campaign state applies:
 
 1. `AGENTS.md`
-2. this Context Router
-3. exactly one relevant capsule
-4. task-specific SSOT/source/evidence
+2. `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
+3. exactly one task-specific protocol/SSOT when required
+4. this router only if source discovery is still needed
 
-Tiny single-file or single-command tasks may skip capsules when route context
-cannot affect the answer.
+Tiny single-file or single-command tasks may skip navigation companions when
+route context cannot affect the answer.
 
-## Active Capsule Architecture
+## Capsule Architecture
 
 | Capsule | Use for | Agents |
 | --- | --- | --- |
-| `ACTIVE_ROUTE_CAPSULE_v1.md` | current pre-Human TOP1 route, immediate task, next 2-3 steps, forbidden scope | all |
+| `ACTIVE_ROUTE_CAPSULE_v1.md` | historical route trace only; never next-work authority | all |
 | `VISUAL_PROOF_CAPSULE_v1.md` | visual system, proof/progression display, screenshot lanes, design acceptance | Fable, Sonnet, Codex |
 | `LEARNING_REPAIR_CAPSULE_v1.md` | learning loop, repair contracts, proof claims, telemetry ownership | Codex, Sonnet |
 | `WORKTREE_EVIDENCE_CAPSULE_v1.md` | branch/HEAD checks, output rules, validation, generated drift | Codex |
 | `REPO_HYGIENE_CAPSULE_v1.md` | mainline sync, branch hygiene, checkpoint tasks | Codex |
-| `HUMAN_QA_CAPSULE_v1.md` | human evidence protocol and claim safety | Codex, Sonnet |
+| `HUMAN_QA_CAPSULE_v1.md` | human evidence support context; HNP procedure is owned by the HNP protocol | Codex, Sonnet |
 
 `TOKEN_BUDGET_PROTOCOL_v1.md` remains the workflow budget rule. The prompt
 templates library remains supporting reference only.
 
 ## Agent Mapping
 
-- Codex: read route capsule + one lane capsule + worktree/evidence capsule.
-- Sonnet: read route capsule + relevant lane capsule.
-- Fable / Claude Design: read route capsule + visual/proof capsule.
+- Codex: use v4 + one task-specific owner; add one lane capsule only when it
+  materially reduces owner tracing.
+- Sonnet: use v4 + relevant task-specific source; add a lane capsule only when
+  needed.
+- Fable / Claude Design: use v4 + visual/proof capsule only when a visual task is
+  explicitly admitted.
 
 Do not ask any agent to read all capsules by default.
 
-## Task To Capsule Mapping
+## Task To Source Mapping
 
-| Task shape | Required capsule |
+| Task shape | Required source |
 | --- | --- |
-| route choice, next wave, scope boundary | `ACTIVE_ROUTE_CAPSULE_v1.md` |
-| Proof Progression, Cross-Session Proof Profile, achievement/payoff proof | `ACTIVE_ROUTE_CAPSULE_v1.md` + `VISUAL_PROOF_CAPSULE_v1.md`; add `LEARNING_REPAIR_CAPSULE_v1.md` only when proof source contracts are relevant |
-| UI polish, visual audit, design packet, screenshot review | `VISUAL_PROOF_CAPSULE_v1.md` |
-| Session Summary proof, Review repair, Practice repair, learning claims | `LEARNING_REPAIR_CAPSULE_v1.md` |
-| commit, preflight, validation, generated drift, output handling | `WORKTREE_EVIDENCE_CAPSULE_v1.md` |
+| route choice, next Gauntlet, scope boundary | `MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`; active campaign state first while active |
+| Human Novice Proof | `docs/_reviews/human_novice_proof_protocol_v1.md` |
+| transfer/retention | `docs/plan/DURABLE_RETENTION_TRANSFER_CONTRACT_v1.md` |
+| telemetry | `docs/plan/ACT0_TELEMETRY_TRUTH_MAP_v1.md` + exact source owner |
+| UI/visual evidence after explicit admission | `VISUAL_PROOF_CAPSULE_v1.md` + exact visual owner |
+| Session Summary / Review / repair claims | `LEARNING_REPAIR_CAPSULE_v1.md` + exact owner |
+| commit, preflight, validation, generated drift | `WORKTREE_EVIDENCE_CAPSULE_v1.md` |
 | mainline merge, push, repo integration checkpoint | `REPO_HYGIENE_CAPSULE_v1.md` |
-| novice evidence, launch/9.0/learning-effect claims | `HUMAN_QA_CAPSULE_v1.md` |
-| content/correctness wave | route capsule + exact content SSOT/owner files |
-| motion wave | visual/proof capsule + exact motion owner/evidence files |
-| telemetry wave | learning/repair capsule + exact telemetry owner files |
+| content/correctness | exact content SSOT/owner files under v4 scope |
+| monetization | `docs/plan/MONETIZATION_SSOT_v1.md` |
+| release/readiness | `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md` |
 
 ## Freshness Rule
 
-Every implementation prompt should name capsule freshness: date, verified HEAD,
-and active route artifact. A capsule is stale when its verified HEAD, route
-artifact, or immediate task is older than the active prompt evidence.
+Every implementation prompt should name verified HEAD and the active claim/gate.
+A capsule is stale when its verified HEAD, route artifact, or immediate task is
+older than the active campaign/v4/task evidence.
 
-Stop with `stale_capsule_scope` when route-critical facts are stale and the
-task depends on them. For narrow implementation tasks, continue from live source
-and note the stale capsule as a non-blocking context risk.
+For narrow tasks, continue from higher authority plus live source and note stale
+capsule text as non-blocking context. Never promote a stale capsule to route
+authority merely because it is easier to read.
 
 ## Search Before Reading
 
@@ -105,21 +118,23 @@ ledgers or historical review chains.
 
 ## Do Not Read By Default
 
-- `output/**`, unless visual evidence is the task
+- `output/**`, unless evidence is the task
 - archive docs, unless historical retrieval is requested
 - old wave histories, unless one exact fact must be verified
-- W13-W36, unless the prompt explicitly opens that scope
-- Modern Table files, unless a concrete dependency is proven
+- W13-W36, unless v4 and evidence explicitly open that scope
+- Modern Table files, unless a concrete dependency/regression is proven
 - all capsules, all ledgers, or all reviews
 
 ## Validation Routing
 
-- Docs/workflow: graphify hook, diff checks, status.
+- Docs/workflow: path/reference checks, diff-scope checks, markdown integrity,
+  and graphify hook when locally available and useful.
 - Product code: focused tests, analyzer, graphify hook, diff checks.
-- UI: focused tests plus screenshot evidence when making visual claims.
+- UI: focused tests plus screenshot/native evidence only when the admitted
+  claim requires it.
 - Motion: motion evidence, screenshot/video packet, focused checks.
 - Content: content validators and claim-safety checks.
 - Telemetry: owner tests plus claim-safety review.
 
-If required context exceeds the lane budget, stop with `needs_scope_split` and
-name the exact missing evidence or authority.
+If required context exceeds the lane budget, split the task around the exact
+missing evidence/owner instead of broad-reading repository history.
