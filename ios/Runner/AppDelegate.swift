@@ -8,7 +8,20 @@ import UIKit
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
-    let controller = window?.rootViewController as! FlutterViewController
+    let launchResult = super.application(
+      application,
+      didFinishLaunchingWithOptions: launchOptions
+    )
+
+    let environment = ProcessInfo.processInfo.environment
+    let payload = environment["SHARKY_VISUAL_AUDIT_PAYLOAD"]
+    let stateId = environment["SHARKY_VISUAL_AUDIT_STATE_ID"]
+    guard payload != nil || stateId != nil,
+      let controller = window?.rootViewController as? FlutterViewController
+    else {
+      return launchResult
+    }
+
     let visualAuditChannel = FlutterMethodChannel(
       name: "com.clubboss.sharky/visual_audit_v1",
       binaryMessenger: controller.binaryMessenger
@@ -18,14 +31,11 @@ import UIKit
         result(FlutterMethodNotImplemented)
         return
       }
-      let environment = ProcessInfo.processInfo.environment
-      let payload = environment["SHARKY_VISUAL_AUDIT_PAYLOAD"] ?? ""
-      let stateId = environment["SHARKY_VISUAL_AUDIT_STATE_ID"] ?? ""
       result([
-        "query": payload,
-        "visual_state_id": stateId,
+        "query": payload ?? "",
+        "visual_state_id": stateId ?? "",
       ])
     }
-    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    return launchResult
   }
 }
