@@ -1,0 +1,160 @@
+name: Sharky Kaizen Fast Render
+
+on:
+  push:
+    branches:
+      - 'kaizen/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sharky-kaizen-fast-render-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fast-render:
+    runs-on: macos-latest
+    timeout-minutes: 12
+    env:
+      CANDIDATE_SHA: ${{ github.sha }}
+    steps:
+      - name: Checkout exact candidate SHA
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+
+      - name: Assert exact SHA and diff hygiene
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          git diff --check HEAD^ HEAD
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+
+      - name: Install locked dependencies
+        run: flutter pub get
+
+      - name: Record Flutter version
+        run: |
+          set -euo pipefail
+          mkdir -p output/kaizen_meta
+          flutter --version | tee output/kaizen_meta/flutter-version.txt
+          flutter --version --machine > output/kaizen_meta/flutter-version.json
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Focused Act0 ownership and evidence guards
+        run: >-
+          flutter test
+          test/guards/app_root_shell_ownership_contract_test.dart
+          test/guards/visual_evidence_identity_authority_contract_test.dart
+
+      - name: Capture primary iphone17_class production-real evidence
+        run: |
+          set -euo pipefail
+          dart run tools/act0_production_real_runner_capture_v1.dart iphone17_class
+
+      - name: Capture secondary compact production-real evidence
+        run: |
+          set -euo pipefail
+          dart run tools/act0_production_real_runner_capture_v1.dart compact
+
+      - name: Package and verify exact-SHA kaizen evidence
+        run: |
+          set -euo pipefail
+          ROOT="output/kaizen_artifact"
+          rm -rf "$ROOT"
+          mkdir -p "$ROOT/profiles"
+          cp -R output/visual_master_audit/raw/live_runner_iphone17_class_none_v1 "$ROOT/profiles/iphone17_class"
+          cp -R output/visual_master_audit/raw/live_runner_compact_none_v1 "$ROOT/profiles/compact"
+          cp output/kaizen_meta/flutter-version.txt "$ROOT/flutter-version.txt"
+          cp output/kaizen_meta/flutter-version.json "$ROOT/flutter-version.json"
+
+          cat > "$ROOT/capture-commands.txt" <<'EOF'
+          dart run tools/act0_production_real_runner_capture_v1.dart iphone17_class
+          dart run tools/act0_production_real_runner_capture_v1.dart compact
+          EOF
+
+          cat > "$ROOT/focused-checks.txt" <<'EOF'
+          flutter analyze = PASS
+          flutter test test/guards/app_root_shell_ownership_contract_test.dart test/guards/visual_evidence_identity_authority_contract_test.dart = PASS
+          git diff --check HEAD^ HEAD = PASS
+          EOF
+
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          sha = os.environ['CANDIDATE_SHA']
+          root = Path('output/kaizen_artifact')
+          profiles = ['iphone17_class', 'compact']
+          rows = []
+          for profile in profiles:
+              manifest_path = root / 'profiles' / profile / 'manifest.json'
+              manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+              observed = manifest.get('candidate_commit_sha')
+              if observed != sha:
+                  raise SystemExit(
+                      f'candidate SHA mismatch for {profile}: expected {sha}, observed {observed}'
+                  )
+              pngs = sorted(str(path.relative_to(root)) for path in (root / 'profiles' / profile).glob('*.png'))
+              if not pngs:
+                  raise SystemExit(f'no PNGs captured for {profile}')
+              rows.append({
+                  'profile': profile,
+                  'manifest': str(manifest_path.relative_to(root)),
+                  'png_count': len(pngs),
+                  'pngs': pngs,
+              })
+
+          aggregate = {
+              'schema': 'sharky_remote_fast_kaizen_execution_lane_v1',
+              'candidate_commit_sha': sha,
+              'github_run_id': os.environ['GITHUB_RUN_ID'],
+              'github_ref': os.environ['GITHUB_REF'],
+              'capture_tool': 'tools/act0_production_real_runner_capture_v1.dart',
+              'capture_profiles': profiles,
+              'focused_checks': [
+                  'git diff --check HEAD^ HEAD',
+                  'flutter analyze',
+                  'test/guards/app_root_shell_ownership_contract_test.dart',
+                  'test/guards/visual_evidence_identity_authority_contract_test.dart',
+              ],
+              'results': 'PASS',
+              'profiles': rows,
+          }
+          (root / 'kaizen-manifest.json').write_text(
+              json.dumps(aggregate, indent=2) + '\n', encoding='utf-8'
+          )
+          PY
+
+          git rev-parse HEAD > "$ROOT/candidate-sha.txt"
+          test "$(cat "$ROOT/candidate-sha.txt")" = "$CANDIDATE_SHA"
+
+          {
+            echo "## Sharky Kaizen Fast Render"
+            echo
+            echo "- candidate_sha=\`$CANDIDATE_SHA\`"
+            echo "- primary_profile=\`iphone17_class\`"
+            echo "- secondary_profile=\`compact\`"
+            echo "- focused_checks=\`PASS\`"
+            echo "- exact_sha_manifest=\`PASS\`"
+            echo "- artifact_name=\`sharky-kaizen-$CANDIDATE_SHA\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload exact-SHA kaizen artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sharky-kaizen-${{ github.sha }}
+          path: output/kaizen_artifact
+          if-no-files-found: error
+          retention-days: 7
