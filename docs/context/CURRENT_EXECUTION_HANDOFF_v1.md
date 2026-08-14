@@ -8,8 +8,8 @@ applicable. This file only compresses current state for low-context continuation
 
 ## CURRENT EXACT MAIN
 
-Reconciled from exact `origin/main` after PR #167 closure:
-`3caeb125db7b0e3904691171ef75bc4a7eb6fa41`.
+Re-resolved before the post-adjudication authority reconciliation:
+`2249064fcb7bf9d216f1e0024a7463cca802e670`.
 
 Consumers must re-resolve live `origin/main` before execution; this handoff does
 not make its authoring SHA a permanent authority.
@@ -143,8 +143,27 @@ Final implementation disposition:
 `PR_VISUAL_EVIDENCE_BEST_EFFORT_DISPOSITION_V1_CLOSED`.
 
 This closes the operational multiplier only. It does not close
-`VISUAL_NORTH_STAR_GAP_OPEN` and does not authorize Learning Scene
-implementation.
+`VISUAL_NORTH_STAR_GAP_OPEN`.
+
+## LEARNING SCENE ADJUDICATION
+
+`LEARNING_SCENE_STRATEGIC_ADJUDICATION_V1 = CLOSED`
+
+Disposition:
+`LEARNING_SCENE_RESTRAINED_DEPTH_HYPOTHESIS_ADMITTED`.
+
+Single admitted bottleneck:
+`SCENE_SPATIAL_HIERARCHY`.
+
+Candidate B is restrained depth / table-context-action spatial continuity.
+It is admitted but has not been implemented, compared against A after
+implementation, or proven. Candidate C contextual coaching is not admitted.
+
+The GitHub-only executor stopped before mutation because safe B execution needs
+a local Flutter composition / geometry / hit-test loop. Codex then stopped
+before mutation because stale `AGENTS.md` HNP-first wording conflicted with the
+active campaign dispatch. These were procedural stops, not product verdicts;
+B remains admitted and unfalsified.
 
 ## DEFERRED HIGH-EV OPERATIONAL MULTIPLIERS
 
@@ -162,20 +181,16 @@ implementation.
 
 ## EXACT NEXT ACTION
 
-`LEARNING_SCENE_STRATEGIC_ADJUDICATION_V1`
+`LEARNING_SCENE_RESTRAINED_DEPTH_CODEX_EXECUTION_V1`
 
-Purpose: perform the cheapest machine comparative adjudication of the confirmed
-`VISUAL_NORTH_STAR_GAP_OPEN` before any Learning Scene implementation.
+Purpose: execute the already-admitted B hypothesis using a local Flutter
+composition / geometry / hit-test loop. No new adjudication. The experiment is
+limited to `SCENE_SPATIAL_HIERARCHY` with a maximum of two bounded geometry
+repairs.
 
-The Master Plan v4 comparison frame remains:
-
-- A: current Sharky control;
-- B: restrained perspective/depth Sharky;
-- C: perspective/depth plus contextual coaching Sharky.
-
-This is an adjudication, not implementation authorization. `DO_NOTHING` remains
-a valid outcome. The PokerSkill Learning Scene benchmark is reference-only and
-cannot override Master Plan v4.
+Not authorized by this handoff: generic visual polish, a fourth cohesion wave,
+Modern Table reopening, contextual coaching C, poker semantic changes,
+answer-bearing cues, new dependencies, or broad architecture redesign.
 
 Machine convergence exits when all confirmed high-EV machine-reducible material
 gaps are closed, boundedly deferred, or diminishing-return; no machine-obvious
@@ -185,4 +200,4 @@ Human findings.
 
 `HANDOFF_AUTHORITY = NONE`
 `MASTER_PLAN_V4_WINS_ON_PRODUCT_DIRECTION = TRUE`
-`EXACT_NEXT_ACTION = LEARNING_SCENE_STRATEGIC_ADJUDICATION_V1`
+`EXACT_NEXT_ACTION = LEARNING_SCENE_RESTRAINED_DEPTH_CODEX_EXECUTION_V1`

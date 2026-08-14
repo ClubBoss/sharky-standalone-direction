@@ -70,8 +70,10 @@ These instructions apply to the entire repository.
 - `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` is the principal
   execution-mode and product-route authority after merge.
 - While `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` is active, that state is
-  the first-read current dispatch overlay; HNP remains the first execution
-  Gauntlet until valid Human evidence changes the route.
+  the first-read exact current dispatch overlay. HNP remains a required future
+  Human evidence gate and is entered when the active state / Master Plan v4
+  sequence reaches it; HNP does not unconditionally override the current exact
+  dispatch.
 - `docs/plan/MASTER_PLAN_v3.0.md`,
   `docs/plan/ROUTE_TO_B_EXECUTION_RESET_v1.md`, and
   `docs/plan/ROUTE_TO_B_ACTION_LADDER_v1.md` are historical/reference only.
