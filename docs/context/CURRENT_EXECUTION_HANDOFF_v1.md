@@ -8,8 +8,8 @@ applicable. This file only compresses current state for low-context continuation
 
 ## CURRENT EXACT MAIN
 
-Reconciled from exact `origin/main`:
-`e0c2c793ab31adb7a7b2999a40ebc662eb63cc0e`.
+Reconciled from exact `origin/main` after PR #167 closure:
+`3caeb125db7b0e3904691171ef75bc4a7eb6fa41`.
 
 Consumers must re-resolve live `origin/main` before execution; this handoff does
 not make its authoring SHA a permanent authority.
@@ -47,6 +47,7 @@ speculative feature or polish accumulation.
 - HNP Profile A passed;
 - transfer, retention, bounded telemetry, feedback/repair/recheck/payoff, and
   source-owned personalization mechanisms have machine evidence;
+- `PR_VISUAL_EVIDENCE_INNER_LOOP_V1 = CLOSED / IMPLEMENTED` by PR #167;
 - no machine evidence is promoted into a Human learner-outcome claim.
 
 ## WHAT REMAINS UNPROVEN
@@ -110,10 +111,21 @@ Human HNP unless another admitted Gauntlet naturally resolves it.
 `ordinary ChatGPT`
 `-> bounded GitHub implementation`
 `-> exact-PR Web QA`
-`-> real rendered browser evidence`
+`-> rendered browser evidence when available`
 `-> 0-2 bounded repair iterations`
 `-> one native finalist proof only when required`
 `-> merge / exact-main evidence`
+
+For admitted UI/evidence-relevant PRs, exact-PR Web QA reuses one existing
+Flutter Web build. Exact-head Cloudflare deploy and HTTP smoke remain mandatory.
+Browser evidence is attempted best-effort: evaluable browser assertion failure
+remains blocking; browser infrastructure failure remains explicitly non-PASS
+and cannot fabricate `SHARKY_EVIDENCE_V1`, but does not block the PR machine
+gate when mandatory deploy/smoke succeed; browser PASS may produce
+`SHARKY_EVIDENCE_V1`. Main/non-PR browser semantics remain hard-blocking.
+
+No further Chrome hardening, browser framework migration, browser pinning, or
+new reliability route is active absent new real evidence.
 
 Codex escalates local/native interactive execution, difficult Flutter/Dart
 loops, Xcode/Simulator state manipulation not expressible through CI, and
@@ -123,19 +135,23 @@ Human remains required for novice understanding, real learner transfer,
 retention, personalization outcome lift, subjective trust/desirability when
 Human evidence is required, real-poker proof, and market/WTP.
 
+## CLOSED OPERATIONAL CAPABILITY
+
+`PR_VISUAL_EVIDENCE_INNER_LOOP_V1 = CLOSED / IMPLEMENTED`
+
+Final implementation disposition:
+`PR_VISUAL_EVIDENCE_BEST_EFFORT_DISPOSITION_V1_CLOSED`.
+
+This closes the operational multiplier only. It does not close
+`VISUAL_NORTH_STAR_GAP_OPEN` and does not authorize Learning Scene
+implementation.
+
 ## DEFERRED HIGH-EV OPERATIONAL MULTIPLIERS
 
-1. `PR_VISUAL_EVIDENCE_INNER_LOOP_V1`
-   - existing single Flutter Web build;
-   - existing exact-SHA Cloudflare mirror;
-   - existing Chrome;
-   - bounded screenshots + structured evidence;
-   - short-lived artifact;
-   - no second build/job/browser matrix.
-2. `SHARKY_EVIDENCE_BOARD_V1`
+1. `SHARKY_EVIDENCE_BOARD_V1`
    - static `BASE | CANDIDATE | NATIVE` evidence view;
    - no backend/platform/SaaS.
-3. Later only after demonstrated ROI:
+2. Later only after demonstrated ROI:
    - claim -> required evidence states;
    - changed-only visual triage;
    - pixel-diff as triage only;
@@ -146,17 +162,20 @@ Human evidence is required, real-poker proof, and market/WTP.
 
 ## EXACT NEXT ACTION
 
-`MACHINE_NORTH_STAR_CONVERGENCE_ROUTE_SELECTION_V1`
+`LEARNING_SCENE_STRATEGIC_ADJUDICATION_V1`
 
-Adjudicate dependency/unblocking EV between:
+Purpose: perform the cheapest machine comparative adjudication of the confirmed
+`VISUAL_NORTH_STAR_GAP_OPEN` before any Learning Scene implementation.
 
-A. implementing `PR_VISUAL_EVIDENCE_INNER_LOOP_V1` first; or
+The Master Plan v4 comparison frame remains:
 
-B. entering the highest-EV North Star product Gauntlet first.
+- A: current Sharky control;
+- B: restrained perspective/depth Sharky;
+- C: perspective/depth plus contextual coaching Sharky.
 
-Current hypothesis: the visual evidence inner loop may be the highest-EV first
-action because likely UI-heavy North Star work benefits from cheap rendered
-feedback. This is a hypothesis, not an authorization.
+This is an adjudication, not implementation authorization. `DO_NOTHING` remains
+a valid outcome. The PokerSkill Learning Scene benchmark is reference-only and
+cannot override Master Plan v4.
 
 Machine convergence exits when all confirmed high-EV machine-reducible material
 gaps are closed, boundedly deferred, or diminishing-return; no machine-obvious
@@ -166,4 +185,4 @@ Human findings.
 
 `HANDOFF_AUTHORITY = NONE`
 `MASTER_PLAN_V4_WINS_ON_PRODUCT_DIRECTION = TRUE`
-`EXACT_NEXT_ACTION = MACHINE_NORTH_STAR_CONVERGENCE_ROUTE_SELECTION_V1`
+`EXACT_NEXT_ACTION = LEARNING_SCENE_STRATEGIC_ADJUDICATION_V1`
