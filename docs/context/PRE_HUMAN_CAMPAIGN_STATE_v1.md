@@ -1,278 +1,57 @@
 # Pre-Human Campaign State v1
 
-Status: ACTIVE campaign state — **single first-read dispatch authority** for any
-campaign session.
+Status: ACTIVE campaign state - single first-read dispatch authority.
 
-Compact machine-readable campaign state. **One screen only.** Full plan:
-`docs/plan/PRE_HUMAN_AND_HUMAN_PROVEN_CAMPAIGN_v1.md`. Do not duplicate the plan
-here; update only the fields below.
+This file is intentionally compact. It carries exact current campaign dispatch
+only. Product direction remains governed by
+`docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`.
 
 | Field | Value |
 | --- | --- |
-| Product/native admission baseline | `486a1509748a556de11a7e90076ed6e53aefa06e` (exact product/native evidence head; PR #161 normal merge). |
-| Authority baseline | `ad9f75cb39a487a90bcb86b54c7ec8deb96aef5a` (exact `origin/main` at this reconciliation start; PR #164 normal merge of Master Plan v4). |
-| Authority freshness | **RECONCILED through `FINAL_PRODUCT_VISUAL_COHESION_V1` Wave 3 hard acceptance, PHP-9 admission, and active Master Plan v4 authority.** Machine pre-Human Horizon A is terminal; Human Novice Proof has not been performed. The product/native evidence head remains `486a1509748a556de11a7e90076ed6e53aefa06e`; later docs-only authority does not rewrite that evidence. |
-| Master Plan v4 relationship | **`docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` is ACTIVE as the principal day-to-day product-working authority. This campaign state remains the temporary first-read exact-dispatch overlay while the HNP campaign is active. HNP remains the first execution Gauntlet; this governance reconciliation inserts no product work before HNP.** |
-| Campaign version | v1 |
-| Corridor | **`ROLLING_CORRIDOR_PHP6_TO_PHP8_V1` — CLOSED/HISTORICAL.** PHP-6, PHP-7, and PHP-8 remain terminally closed and published (PR #85). PHP-9 is now `CLOSED_PRE_HUMAN_READY`. |
-| Umbrella stage | **`FINAL_PRODUCT_VISUAL_COHESION_V1 = CLOSED_ACCEPTED`.** The three-wave implementation corridor is terminal. Its closure establishes an HNP-admissible machine/native baseline, not final or North Star visual sufficiency. |
-| Canonical visual status | **`VISUAL_BASELINE_ACCEPTED_FOR_HNP` + `VISUAL_NORTH_STAR_GAP_OPEN`.** Sharky's current visual state is an HNP-admissible baseline, not the intended North Star visual experience. Absence of critical visual defects does not imply premium visual sufficiency. |
-| Active sub-packet | **PHP-9 publication is CLOSED. No Human execution is active. Human Novice Proof is the next evidence gate and is NOT YET PERFORMED.** |
-| Status | **`FINAL_PRODUCT_VISUAL_COHESION_WAVE1 = CLOSED_CURRENT`; `FINAL_PRODUCT_VISUAL_COHESION_WAVE2 = CLOSED`; `FINAL_PRODUCT_VISUAL_COHESION_WAVE3 = CLOSED_ACCEPTED`; `PHP9_PRE_HUMAN_READY_ADMISSION_V1 = CLOSED`.** |
-| Latest admitted PR | **#161** — native-startup visual-audit-channel repair, normal merge `486a1509748a556de11a7e90076ed6e53aefa06e`; this exact head owns PHP-9 admission. |
-| Wave 2 final evidence | **PASS at product SHA `38a9000e42cc9e34b4cfb6825696233c2d8870d4`.** Eleven individually inspected native iOS Simulator originals; manifest/hash/blank/duplicate/state checks green; contact SHA-256 `6a45169eded707f9f422b7f9b070eff9d89e3b30ae5798b419e88f50109b6f1d`; archive SHA-256 `52a63f16c835cfd9668d0e677d2a8c2b4a201b1d569f2f24b4b8e4753a34c441`; hosted canonical audit run `30843753728` is transport evidence only. |
-| Wave 3 final evidence | **PASS / `CLOSED_ACCEPTED` at `486a1509748a556de11a7e90076ed6e53aefa06e`.** Binding ordinary-route Simulator states are present: true Fresh Learn; W1 repair; W1 recheck; W1 recheck receipt; real Learning Run payoff; Practice-next transition; W4 Call price representative (`Home -> Learn -> W4 Bet Purpose / Price -> Call price -> Start`); W1 feedback at canonical 1.4x; W1 payoff at canonical 1.4x. Ordinary Runner SHA-256 `d92113d8a54ab7d093642a14698a52736d6225e9cb931c7a82a3526e40b5439a`; W4 PNG SHA-256 `f1f1300ef6f41bdad12a54b0c4ae63a8c24251aeaedd4396786960a1df7c1e8e`; fixture reconciliation is 25 completed lessons and 164/164 unique CURRENT-source completed tasks. The stale 176-entry local artifact is non-authoritative. This proves the bounded Wave 3 acceptance scope only; it does not prove premium or North Star visual completion. |
-| EID-1 | **CLOSED** — PR #124, merge `29ea21b1c23da1fa398333ec4eaaa067467349e8`. |
-| VAT-1 | **CLOSED** — PR #125, merge `6268f114ceb668664ded65290d2aae459be10b75`. |
-| Independent visual review | **CLOSED — `VISUAL_CLOSURE_LEDGER_READY`; 135/135 evidence images inspected, 0 P0, 0 P1, and no Modern Table regression confirmed.** This is bounded closure evidence, not a final-product visual-quality claim. |
-| Wave-A outcome | **`RUNNER_LEARNING_SURFACE_GRAMMAR_V1` = `CLOSED_ALREADY_PRESENT_BEFORE_DISPATCH`** — PRs #110/#114/#116 already integrated the geometry/CTA contracts; the remaining source-string guard is stale, not a product regression. |
-| Systemic product admission | **`P3_SPLIT_E2E_CLOSURE_V1 = CLOSED_CURRENT`.** P1/P2/P3 deterministic pre-Human corridor is closed; physical-device and Human QA evidence remain unproven. |
-| Owner visual directives | **`W1_CLUE_ROW_READABILITY_REPAIR_V1 = CLOSED_NO_PRODUCT_CHANGE_CAPTURE_ONLY_ARTIFACT`.** Valid font-backed production-widget evidence did not reproduce clipping; prior glyph-block/Atlas interpretation was invalid, PR #139 was closed unmerged, no PR #139 product/test source entered main, the existing 1.0x clue rendering remains current, and no further clue-row repair is authorized without new valid evidence. |
-| F-16 | **CLOSED** (seven stale-test adjudications under PHP-1 independent non-weakening review) |
-| F-17 | **PARTIALLY CLOSED IN PHP-3** — six PHP-3-owned unique current guards are current-contract reconciled and Tier-B ledgered; four differently owned unresolved-unique files remain. |
-| F-18 | **STALE_TEST** — exact pre-F-16-to-head trail disproves PR #51/#52 causation; owner is compact-decision test fixture / retired teaching-step assertion |
-| Sharky owner decision | **SUPPLIED** — `SHARKY_VISUAL_LOCK_V1` (refined C). No direction exploration reopened. |
-| Sharky production integration | **CLOSED_WITH_EXTERNAL_ASSET_INPUT_REQUIRED — PHP-6, PR #82.** No Sharky scope is authorized by the production-real baseline acquisition. |
-| SHK-CREST-01 | **GENUINELY ACTIVE — NOT STALE; legal PHP-9 terminal disposition is `BLOCKED_OWNER_DECISION` for crest-dependent asset production only.** Refined C's "small soft asymmetric front crest" conflicts with the owner-approved `sharky_canonical_character_package_v1_1` no-crest rank-1 authority. The conflict remains unresolved and is not reopened as exploration; PHP-6 generated no new art, so it does not block `PRE_HUMAN_READY` or Human Novice Proof. |
-| PHP-1 stale assertions | **2** — phase-7 campaign wording; compact-decision retired teaching-step expectation |
-| F-16 non-weakening review | **NON_WEAKENING** — seven stale-test groups (#4, #5, #6, #7–9, #11, #12) independently re-derived |
-| PHP-3 / PHP-4 / PHP-5 / PHP-6 / PHP-7 / PHP-8 | **HISTORICAL/CLOSED — not reopened by this publication.** |
-| PHP-9 validation set | **PASS at exact admission head `486a1509748a556de11a7e90076ed6e53aefa06e`.** Test Authority Lanes run `31740168742` passed canonical Tier A + terminal Tier B with structural manifest validation; Analyze run `31740168732` passed format/analyze + Tier-1 guards; R5 release gate run `31740168717` passed; Content CI run `31740168706` passed. PHP-5/6/7/8 terminal evidence and their named guards remain in force. Human Novice Proof: **NOT PERFORMED**. |
-| Recommended next packet | **Human Novice Proof remains the next legally admitted evidence gate. No visual/design/tooling implementation packet is inserted before it.** |
-| Next authorization | **Machine pre-Human Horizon A is terminal. Human Novice Proof is legally admitted as the next evidence gate but remains NOT YET PERFORMED.** Master Plan v4 is active; this docs-only reconciliation does not authorize visual, Modern Table, product, test/tooling, content, monetization, or other implementation before HNP. |
-| Functional visual maintenance | **`FUNCTIONAL_VISUAL_REGRESSION_MAINTENANCE_RULE_V1`.** One bounded repair without a new per-defect authority PR is allowed only for a valid deterministic/native reproduced functional regression affecting mandatory text, CTA reachability, compact/safe-area usability, or deterministic screenshots; one coherent owner, at most two production files, one PR, one corrective pass, rendered tests, and valid before/after evidence are mandatory. No new direction/copy/content/progression/payoff/telemetry/dependencies/mascot/motion/Review/Profile/broad runner redesign; Modern Table remains Maintenance Mode; no automatic Atlas refresh; invalid Ahem/glyph-block/proxy evidence is insufficient. This does not reopen Wave B or general visual work. |
-| Autonomous window | **Machine pre-Human Horizon A CLOSED.** No autonomous Human evidence is possible; HNP must be performed with a real participant under the canonical Human protocol. |
-| Visual cohesion waves | **Wave 1 CLOSED_CURRENT; Wave 2 CLOSED; Wave 3 CLOSED_ACCEPTED.** The bounded visual cohesion corridor is terminal; its acceptance does not imply final/North-Star visual sufficiency. Physical-device proof, Human QA, and Human Proven status remain unclaimed. |
-| Human Proof | **Human Novice Proof = AUTHORIZED_NEXT_EVIDENCE_GATE / NOT PERFORMED.** Human QA and `HUMAN_PROVEN_10_OF_10_CANDIDATE` remain unclaimed. |
-| PHP-9 | **CLOSED — `PHP9_PRE_HUMAN_READY_ADMISSION_V1`; `PRE_HUMAN_READY` publication admitted at exact head `486a1509748a556de11a7e90076ed6e53aefa06e`.** |
-| Modern Table | **Maintenance Mode** |
-| Public visual tooling | **Frozen; screenshot/Simulator tooling remains audit/regression evidence only and is not a design-iteration trigger.** |
-| `PRE_HUMAN_READY` | **MET** |
-| `HUMAN_PROVEN_10_OF_10_CANDIDATE` | **NOT MET** |
+| Reconciliation baseline | `e0c2c793ab31adb7a7b2999a40ebc662eb63cc0e` - exact `origin/main` re-resolved before `MACHINE_NORTH_STAR_CONVERGENCE_GOVERNANCE_HANDOFF_V1`. |
+| Product/native admission baseline | `486a1509748a556de11a7e90076ed6e53aefa06e` - exact product/native evidence head owning Wave 3 hard acceptance and PHP-9 admission. |
+| Master Plan authority | `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` - principal product-working North Star authority. |
+| Current stage | **`MACHINE_NORTH_STAR_CONVERGENCE`**. |
+| Owner route | **Machine North Star Convergence -> Machine Diminishing-Return Gate -> HNP technical revalidation/Profile B repair if still required -> real Human HNP -> Human-triggered repairs -> longitudinal/real-poker/market proof.** |
+| Exact next action | **`MACHINE_NORTH_STAR_CONVERGENCE_ROUTE_SELECTION_V1`**. |
+| Exact next-action purpose | Adjudicate whether `PR_VISUAL_EVIDENCE_INNER_LOOP_V1` should be implemented first for dependency/unblocking EV, or whether the highest-EV North Star product Gauntlet should start first. No product implementation is selected by this docs mission. |
+| Machine pre-Human Horizon A | `TERMINAL`; prior PHP-9 / Wave 3 machine/native admission remains closed and valid. |
+| `PRE_HUMAN_READY` | `MET`. |
+| `HUMAN_PROVEN_10_OF_10_CANDIDATE` | `NOT_MET`. |
+| Visual baseline | `VISUAL_BASELINE_ACCEPTED_FOR_HNP`. |
+| Visual North Star status | **`VISUAL_NORTH_STAR_GAP_OPEN`** - current HNP-admissible visual baseline is intentionally not the desired North Star visual candidate. |
+| Modern Table | `MAINTENANCE_MODE`; do not reopen for cosmetic polish. |
+| HNP disposition | **`REQUIRED_FUTURE_HUMAN_EVIDENCE_GATE / NOT_PERFORMED`**. HNP is deferred in sequence, not deleted or weakened. |
+| `HNP_NATIVE_BUILD` | `PASS`. |
+| `HNP_PROFILE_A` | `PASS`. |
+| `HNP_PROFILE_B_NATIVE_MATERIALIZATION` | **`BLOCKED / DEFERRED`**. |
+| `HNP_PHYSICAL_TELEMETRY_FULL_CHAIN` | `NOT_YET_PROVEN`. |
+| `REAL_HUMAN_HNP` | `NOT_PERFORMED`. |
+| Profile B blocker | Canonical persisted prerequisite state is overwritten by fresh progress during app bootstrap; no supported installed-Simulator Profile B materialization operation is currently validated. Reopen immediately before Human HNP unless another admitted Gauntlet naturally resolves it. |
+| Human evidence boundary | Human, longitudinal, real-poker, trust/desirability, personalization-outcome, and market/WTP claims remain irreducible; machine evidence must not be promoted into these classes. |
+| Machine convergence rule | North Star gap -> cheapest machine falsifier -> bounded implementation only when justified -> evidence -> scorecard update -> next highest-EV gap. |
+| Machine exit gate | Advance toward real Human evidence when confirmed high-EV machine-reducible material gaps are closed/deferred/diminishing-return, no machine-obvious P0/P1 remains, major uncertainty is intrinsically Human/longitudinal/real-poker/market-bound, and evidence tooling is sufficient for cheap Human-triggered repair. |
+| Repository-as-machine route | `SHARKY_REPOSITORY_AS_MACHINE_GAUNTLET_LOOP_V1` - operational multiplier, not product North Star. |
+| Deferred multiplier A | `PR_VISUAL_EVIDENCE_INNER_LOOP_V1` - validated pattern, not implemented by this reconciliation. |
+| Deferred multiplier B | `SHARKY_EVIDENCE_BOARD_V1` - static `BASE | CANDIDATE | NATIVE` view, not implemented by this reconciliation. |
+| Protected scope | Modern Table maintenance-only; no fourth cohesion wave, visual micro-polish, speculative guards/tests-for-tests, generic AI/ML architecture, dormant Persona/AI Coach/ui_v3 resurrection, W13-W36 bulk expansion, full solver, commerce-before-evidence, broad refactor, or new dependency without direct evidence-backed need. |
+| Handoff | `docs/context/CURRENT_EXECUTION_HANDOFF_v1.md` is a low-context continuation snapshot only; it does not compete with Master Plan v4. |
 
-## Superseded historical dispatch record
+## Closed baseline preserved
 
-The false-positive W1 repair did not merge. The admitted Simulator packet is a
-bounded post-P3 acceptance pass; it does not prove Human or physical-device QA.
+- `FINAL_PRODUCT_VISUAL_COHESION_WAVE1 = CLOSED_CURRENT`
+- `FINAL_PRODUCT_VISUAL_COHESION_WAVE2 = CLOSED`
+- `FINAL_PRODUCT_VISUAL_COHESION_WAVE3 = CLOSED_ACCEPTED`
+- `PHP9_PRE_HUMAN_READY_ADMISSION_V1 = CLOSED`
+- Wave 3 remains bounded machine/native acceptance, not North Star visual proof.
+- Existing HNP protocol remains the canonical real-Human session protocol.
 
-The production-real baseline / Active-Route Visual Reality language below is
-retained only as historical evidence. This reconciliation does not authorize
-product UI, content, navigation, telemetry, Modern Table, Sharky art, unrelated
-visual guards, screenshot recapture as a design loop, Human Novice Proof, PHP-9,
-monetization, dependencies, or workspace cleanup.
+## Dispatch rule
 
-### Historical canonical severity snapshot (at `52034abb`)
+If this file and Master Plan v4 appear to conflict, use this file only for the
+exact current campaign dispatch and use Master Plan v4 for product direction,
+evidence hierarchy, protected boundaries, and Gauntlet policy. Report a genuine
+semantic contradiction instead of inventing a third authority.
 
-**HISTORICAL SNAPSHOT — NOT CURRENT DISPATCH AUTHORITY.** These preserved
-severity counts are not recalculated here and do not alter the PHP-5 dispatch.
-
-| Severity | Count | IDs |
-| --- | ---: | --- |
-| P0 | **0** | — |
-| P1 proven | **0** | (the known P1, F-16 #12, is closed and verified) |
-| P2 contract-significance | **5** | F-15, W1W6-DLR-003, SHK-VIS-01, MOT-04, A11Y-01 (red-contract half) |
-| P3 | **2** | F-01, F-02 |
-| Unassignable until PHP-0 | **0** | — |
-| `BLOCKED_OWNER_DECISION` | **1** | SHK-CREST-01 (crest vs approved no-crest package; blocks only crest-dependent asset production — PHP-6 as authorized by this dispatch generates no new art, so no packet in this wave is blocked) |
-
-Severity here is *contract significance*, not proven learner-visible impact.
-Product severity resolves in PHP-0.
-
-### Packet ledger
-
-| Packet | Stage | Status |
-| --- | --- | --- |
-| PHP-0 Canonical-Adjacent Red-Guard Triage | Node 5 | **CLOSED_CLASSIFIED** |
-| PHP-1 Stale Contract Repair + F-16 Non-Weakening Verification | Node 5 | **CLOSED_NON_WEAKENING** |
-| PHP-2 Legacy Corpus Ownership Disposition | Node 5 | **CLOSED_DISPOSED_WITH_PHP3_HANDOFFS — retired 68; handoffs 77; eligible residual 0; unexplained 0** |
-| PHP-3 Canonical Test Classification and Manifest | Node 5 | **HISTORICAL TERMINAL DISPOSITION — NOT CURRENT DISPATCH AUTHORITY.** At PR #72, nine stale session-drill carriers were extracted to live canonical tests (candidate 23/59/59/0). PHP-4 subsequently closed in PR #76; PHP-3 is not reopened. |
-| PHP-4 Canonical Full-Lane CI Authority | Node 5 | **CLOSED — `PHP4_MANIFEST_DRIVEN_CANONICAL_AUTHORITY_CLOSED`; PR #76 merge `edee622eaf3cfdba2f8472b766ef8c4b5532d0ec`; Tier A + terminal Tier B positive authority, Tier C structural only** |
-| PHP-5 Premium Motion & Ceremony Completion | — | **CLOSED — PR #78 merge `71fda1d5be2dae3771599e8b674ab0d8229aa633`; publication PR #79 merge `e91c0ea8939ff2e3c8f8cc6b2ecdf71235da4e35`; Street Replay step reveal restored through the shared tokenized proof reveal; active guards cover all four canonical moments, reduced-motion bypass, rebuild stability, and CTA safety.** |
-| PHP-6 Sharky Production Integration & Completeness Proof | Node 6, Corridor Wave A | **CLOSED_WITH_EXTERNAL_ASSET_INPUT_REQUIRED — PR #82 merge `b00d786af0ae84a1ac8530d93f078c8a1c5d83fa`; runtime integration and deterministic proof are complete, while the admitted state-art rows remain externally supplied.** |
-| PHP-7 Screen-Role & Visual-Hierarchy Emphasis Proof | Node 6, Corridor Wave B | **CLOSED_PROVEN — PR #83 merge `194b2f14709b012db8af73921cd41315e0cf7053`; compact hierarchy and six-surface role proof passed without redesign.** |
-| PHP-8 Evidence & Accessibility Lane Completeness | Node 6, Corridor Wave C | **CLOSED_PROVEN — PR #84 merge `cc1562db0b53a4e86fd9249f220df7e65bf0914e`; W2 active-runtime capture and named accessibility sweep are green.** |
-| PRE_HUMAN_VISUAL_COMPLETION_STRATEGY | Node 6, post-corridor checkpoint | **TERMINAL — PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_COMPLETED. VS-0 (PR #86, `432c9f47`) and Publication 2 (PR #87, merge `a27366e6f6f4a25e6862a053945be6a5f4a421cd`) both merged. Selected: Model 7 process governing Model 3 code fix, fallback Model 1. Next legal capability is Wave V1, not PHP-9.** |
-| Wave V1 (visual completion corridor) | Node 6, corridor Wave 1 of 3 | **TERMINAL — WAVE_V1_COMPLETED. Dispatch PR #88 (`1afb94f2`); implementation/evidence PR #89 (`daa42e0f`) closed S3 as STALE_FIXTURE, added reduced-motion capture, published the full symptom ledger; terminal report `docs/plan/PRE_HUMAN_VISUAL_COMPLETION_WAVE_V1_REPORT_v1.md` selects `V2_MODEL_3_NARROW_GRAMMAR`. Systemic verdict: BOUNDED, NOT SYSTEMIC. Wave V2/V3 not entered.** |
-| Wave V2 (visual completion corridor) | Node 6, corridor Wave 2 of 3 | **CLOSED_PROVEN — PR #91 dispatch `48bdf2ec`; PR #92 product/evidence `1da7d348`; terminal publication PR #93 `20b7cc8d`. `LOCAL_EQUIVALENT_RULE` repaired Review low-content bench and onboarding/welcome allocation without a shared shell, Modern Table, Sharky art, or a third owner. Retained as valid — not reopened.** |
-| Active-Route Visual Reality Corridor | Node 6, new 3-wave corridor | **Wave A AUTHORIZED, Wave B/C CONDITIONALLY PREAUTHORIZED — dispatch `docs/plan/PRE_HUMAN_ACTIVE_ROUTE_VISUAL_REALITY_AND_CORRIDOR_v1.md`, merge SHA recorded at this publication's merge. Reconciles VRT-02 owner evidence: dead-space root cause repeats in a 3rd independently-owned family (lesson-runner action dock), crossing the 3+ shared-shell-fallback threshold; scoped to the lesson-runner composition layer only.** |
-| PHP-9 `PRE_HUMAN_READY` Admission | — | NOT_PREAUTHORIZED — never auto-entered by the corridor, the visual completion strategy checkpoint, Wave V1, Wave V2, or this new corridor |
-| EID-1 Source-Owned Visual Evidence Identity Authority v1 | Visual evidence closure | **ACTIVE — no product/UI/content/navigation/telemetry implementation.** |
-| VAT-1 Visual State Atlas Truth Hardening v1 | Visual evidence closure | **CONDITIONALLY PREAUTHORIZED — only after EID-1 normal merge and identity-complete bundle validation.** |
-| Independent visual review + `VISUAL_CLOSURE_LEDGER` | Visual evidence closure | **FOLLOWS VAT-1 — no visual-fix wave preauthorized.** |
-
-PR targets: Node 5 ≈ **4–7**; full machine horizon ≈ **8–12**; **16 is a hard
-emergency ceiling, never a target.**
-
-## Current dispatch boundaries
-
-Controlling plan: `docs/plan/MASTER_PLAN_v3.0.md`; packet-specific plan:
-`docs/plan/PRE_HUMAN_AND_HUMAN_PROVEN_CAMPAIGN_v1.md` (§4.2/§4.3 PHP-6/PHP-7/
-PHP-8; §7.5 OD-03/OD-03b/OD-03c/OD-03d and SHK-CREST-01).
-
-### `ROLLING_CORRIDOR_PHP6_TO_PHP8_V1` — CLOSED, HISTORICAL RECORD ONLY
-
-**This corridor is terminally closed and published (PR #85, merge
-`de3f0ce2398601ab557af05b18fcff8a07279cfa`).** PHP-6, PHP-7, and PHP-8 are not
-reopened. The wave/gate/autonomous-window language below describes how the
-corridor ran; it is preserved for audit trail and must not be read as a live
-authorization. The active checkpoint is
-`PRE_HUMAN_VISUAL_COMPLETION_STRATEGY` (see field table above and
-`docs/plan/PRE_HUMAN_VISUAL_COMPLETION_STRATEGY_v1.md` once published).
-
-This dispatch replaces the prior one-wave-at-a-time pattern (PHP-6 → closure →
-fresh dispatch → PHP-7 → closure → fresh dispatch → PHP-8) with one rolling
-corridor: **PHP-6 → transition gate → PHP-7 or `CLOSED_UNNECESSARY` →
-transition gate → PHP-8 or `CLOSED_UNNECESSARY` → one terminal corridor
-report.** The corridor does not blindly require all three implementation
-waves — PHP-7 and PHP-8 may each close as unnecessary on their own first proof
-without implementing anything.
-
-- **Wave A — PHP-6 Sharky Production Integration & Completeness Proof:**
-  **UNCONDITIONALLY AUTHORIZED.** Unchanged from PR #80: Packet 6A
-  (state-reachability matrix across all six Sharky states and both growth
-  stages, same-character continuity, 16dp/34dp small-size identity,
-  reduced-motion proof, SHK-CREST-01 verification-only reconciliation — no new
-  art) then Packet 6B (the three recorded deterministic-capture gaps —
-  Developing, improve, milestone — fallback migration limited to rows with an
-  existing production-ready asset, explicit `EXTERNAL_ASSET_INPUT_REQUIRED`
-  rows for the rest, regression/release-gate proof, PHP-6 closure). PHP-6 must
-  publish exactly one terminal outcome:
-  - **`PHP6_CLOSED_INTEGRATED`** — every in-scope reachable row has a
-    production-ready admitted asset, fallback migration is complete,
-    deterministic evidence is reproducible, continuity/small-size identity are
-    proven, no unresolved external-asset input affects an in-scope state.
-  - **`PHP6_CLOSED_WITH_EXTERNAL_ASSET_INPUT_REQUIRED`** — integration,
-    reachability, and proof are complete for all existing admitted assets, but
-    one or more in-scope rows lack production-ready admitted art; no fake or
-    generated replacement is introduced; every missing row and the exact
-    remaining learner-visible limitation is stated explicitly. Valid, bounded,
-    and must never be described as full Sharky visual completeness.
-  - **`PHP6_BLOCKED_OWNER_DECISION`** — only when SHK-CREST-01 or another
-    active visual-authority conflict becomes decision-controlling for work
-    PHP-6 actually requires, with no art-independent completion path
-    remaining. Not used merely because an asset is absent.
-
-- **Wave B — PHP-7 Screen-Role & Visual-Hierarchy Emphasis Proof:**
-  **CONDITIONALLY PREAUTHORIZED.** Auto-enters only when all four transition
-  keys pass at PHP-6's terminal disposition:
-  - **KEY 7.1 PHP-6 terminal:** PHP-6 closed as `PHP6_CLOSED_INTEGRATED` or
-    `PHP6_CLOSED_WITH_EXTERNAL_ASSET_INPUT_REQUIRED`.
-  - **KEY 7.2 authority stable:** this corridor dispatch is still first-read
-    authority on `origin/main`; no external merge changed Master Plan,
-    campaign state, PHP-7 authority, or Modern Table policy (unrelated source
-    merges may be rebased past if they don't alter authority).
-  - **KEY 7.3 no global R3:** no owner decision blocks all PHP-7 work
-    (SHK-CREST-01 may remain deferred if PHP-7 needs no crest-dependent art).
-  - **KEY 7.4 PHP-7 gap census:** a bounded first proof against PHP-7's exact
-    contract (§4.2/§4.3) classifies it as `PHP7_EXECUTION_REQUIRED` (a
-    reproducible learner-visible screen-role/hierarchy gap exists in the
-    authorized owner family), `PHP7_CLOSED_UNNECESSARY` (current main already
-    satisfies PHP-7's DoD — no cosmetic work invented to avoid this), or
-    `PHP7_DEFERRED_OWNER_DECISION` (a true owner decision blocks PHP-7 while
-    PHP-8 stays independent).
-  Decomposition: **Packet 7A** (census the exact PHP-7 surfaces, prove
-  role/hierarchy/CTA/compact-phone truth, classify) and **Packet 7B**
-  (bounded repair only if 7A proves a real gap — minimum owner cone, active
-  guards, deterministic evidence, analyzer, canonical lane, release gate,
-  terminal disposition). One PR if proof and bounded repair share one owner
-  cone. Constraints: one bounded owner family, distinct screen roles, one
-  dominant action per surface, no broad redesign, no Modern Table changes, no
-  reopening closed surfaces without reproducible evidence, no mascot
-  saturation, no new visual system, no decorative polish for its own sake.
-
-- **Wave C — PHP-8 Evidence & Accessibility Lane Completeness:**
-  **CONDITIONALLY PREAUTHORIZED.** Auto-enters only when all four transition
-  keys pass at PHP-7's terminal disposition:
-  - **KEY 8.1 prior terminal:** PHP-6 is terminal and PHP-7 is
-    `PHP7_CLOSED_PROVEN`, `PHP7_CLOSED_UNNECESSARY`, or
-    `PHP7_DEFERRED_OWNER_DECISION` only if PHP-8 is demonstrably independent.
-  - **KEY 8.2 authority stable:** the corridor remains current authority; no
-    new merge changes the route; Human remains NOT AUTHORIZED; Modern Table
-    remains Maintenance Mode.
-  - **KEY 8.3 no global R3:** no unresolved decision blocks every remaining
-    PHP-8 owner family.
-  - **KEY 8.4 evidence/accessibility gap census:** a bounded census against
-    PHP-8's exact contract (§4.2/§4.3) classifies it as
-    `PHP8_EXECUTION_REQUIRED` (a real evidence-lane or accessibility gap
-    affects supported-phone acceptance, external review confidence, or
-    current learner access — never tests-for-tests), `PHP8_CLOSED_UNNECESSARY`
-    (all PHP-8 DoD rows already satisfied), or `PHP8_DEFERRED_HUMAN_EVIDENCE`
-    (deterministic work complete but one Human-only assertion remains).
-  Decomposition: **Packet 8A** (enumerate exact DoD rows, map each to current
-  evidence, classify real gaps vs. already-proven rows, select only causal
-  work) and **Packet 8B** (bounded closure only if 8A proves real gaps —
-  repair, updated active evidence, deterministic supported-phone proof,
-  canonical lane, release gate, terminal disposition). Constraints: supported
-  phones only (compact/tall/large; tablet stays deferred/nonblocking unless
-  current authority says otherwise), accessibility work must map to a real
-  user/reviewer failure mode, evidence tooling reuses existing infrastructure,
-  no new screenshot system, no meta-tests, no broad semantics refactor, no
-  Modern Table work without concrete regression, no Human Novice Proof
-  execution. The corridor ends after PHP-8's terminal disposition.
-
-- **Four available actions per wave:** **EXECUTE** (real authorized gap —
-  implement, validate, merge), **CLOSE_UNNECESSARY** (fresh evidence proves
-  the full packet DoD already satisfied — publish evidence, continue),
-  **REPAIR_AND_CONTINUE** (an R0/R1/R2 problem — repair automatically,
-  continue), **DEFER_AND_CONTINUE** (a true local owner/Human decision blocks
-  one wave while the next is independent — record the deferred item,
-  continue). No fifth action returning an ordinary intermediate status to the
-  operator is authorized.
-
-- **Global stop rule:** return before corridor completion only when **both**
-  hold: (1) a genuine R3 conflict exists — incompatible active SSOT, a
-  product/visual owner decision required, unauthorized architecture/
-  dependency, Human evidence that is decision-controlling, or a Modern Table
-  boundary violation; **and** (2) that conflict blocks every remaining
-  independent wave in the corridor. A blocker local to PHP-6 does not
-  automatically block PHP-7; a blocker local to PHP-7 does not automatically
-  block PHP-8.
-
-- **External asset input policy:** no new Sharky art is authorized anywhere in
-  this corridor. When a required production-ready asset is absent: do not
-  generate or fake it; record `EXTERNAL_ASSET_INPUT_REQUIRED`; identify the
-  exact state/size/surface affected and whether the limitation blocks only
-  visual completeness or blocks functional integration; continue to
-  independent work. Claude Design is not invoked during corridor execution; a
-  bounded Claude Design asset-production mission may be recommended only in
-  the terminal corridor macro report, and only if it is then the highest-EV
-  remaining block.
-
-- **Publication policy:** one active implementation PR at a time; implement/
-  verify a coherent packet, merge, reconcile its exact merge SHA in the next
-  packet's first authority update, continue — avoid a standalone docs-only
-  closure PR after every packet. A standalone closure PR is justified only
-  when the next transition cannot legally begin without it, a packet closes
-  as unnecessary/deferred with no product PR, or the entire corridor is
-  terminal. After PHP-8's terminal disposition, publish one terminal corridor
-  closure with all exact merge SHAs and dispositions.
-
-- **SHK-CREST-01 disposition (unchanged):** genuinely active, not stale —
-  refined C's small soft front crest clause and the approved
-  `sharky_canonical_character_package_v1_1` no-crest rank-1 authority remain in
-  direct, unresolved contradiction (OD-03d). Not resolved by this dispatch;
-  the owner is not asked the same question again, because no wave in this
-  corridor generates new art.
-
-- **Claude Design subtask:** **NOT authorized** for corridor execution. The
-  canonical visual lock is supplied and all three waves are integration/proof
-  only; no fresh evidence shows a production-ready canonical asset is missing
-  for any in-scope row (absent-asset rows are recorded, not faked).
-
-- **Boundaries preserved throughout the corridor:** Human Novice Proof remains
-  **NOT AUTHORIZED**; Modern Table remains in permanent Maintenance Mode and
-  is not touched by any wave; PHP-9 remains **NOT_PREAUTHORIZED** and is never
-  auto-entered by this corridor; no monetization, redesign, AI/persona, or
-  dashboard/XP/economy scope is opened.
-
-## Update rule
-
-Each packet records the exact canonical baseline from which its branch was
-created. The final merge SHA belongs in the packet report and GitHub; the next
-packet reconciles this state file to that admitted merge SHA at mission start.
-No docs-only PR is required solely to write a merge SHA that did not exist
-before merge. Each packet close updates only: canonical HEAD, latest admitted
-PR, the changed finding statuses, the changed severity counts, the packet
-ledger row, and the next-authorized/following-packet fields. Any packet may be **eliminated** if
-triage proves it unnecessary — record `CLOSED_UNNECESSARY` with the proving
-evidence rather than executing it for completeness.
+`CURRENT_STAGE = MACHINE_NORTH_STAR_CONVERGENCE`
+`EXACT_NEXT_ACTION = MACHINE_NORTH_STAR_CONVERGENCE_ROUTE_SELECTION_V1`
