@@ -30,6 +30,52 @@ jobs:
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 2
 
+      - name: Detect PR visual evidence scope
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          enabled=0
+          reason=not-pull-request
+          changed_files=''
+
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            test -n "$BASE_SHA"
+            test -n "$HEAD_SHA"
+            git cat-file -e "${BASE_SHA}^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "$BASE_SHA"
+            git cat-file -e "${HEAD_SHA}^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "$HEAD_SHA"
+            changed_files="$(git diff --name-only "$BASE_SHA" "$HEAD_SHA")"
+            reason=no-render-scope-changes
+
+            if printf '%s\n' "$changed_files" | grep -Eq '^(lib/ui_v2/act0_shell/.*|lib/ui_v2/app_root\.dart|lib/ui_v2/ui_v2_beta_shell\.dart|lib/services/app_language_controller\.dart|lib/services/progress_service\.dart|lib/services/session_drill_recheck_launch_queue_v1\.dart|lib/services/session_drill_recheck_user_launch_consumer_v1\.dart|lib/navigation/deep_link_target_v1\.dart|lib/ui_v2/onboarding/onboarding_preferences_service\.dart|assets/brand/.*|assets/images/mascot/.*|assets/mascot/.*|pubspec\.yaml|tools/sharky_phone_lab_v1\.html|tools/sharky_phone_lab_browser_probe_v1\.mjs|tools/package_sharky_evidence_v1\.py|\.github/workflows/sharky-web-qa-mirror\.yml)$'; then
+              enabled=1
+              reason=ui-evidence-relevant-pr
+            fi
+          fi
+
+          echo "SHARKY_PR_VISUAL_EVIDENCE=$enabled" >> "$GITHUB_ENV"
+          echo "SHARKY_PR_VISUAL_EVIDENCE_REASON=$reason" >> "$GITHUB_ENV"
+          echo "SHARKY_PR_BASE_SHA=$BASE_SHA" >> "$GITHUB_ENV"
+          echo "SHARKY_PR_HEAD_SHA=$HEAD_SHA" >> "$GITHUB_ENV"
+
+          {
+            echo "## PR visual evidence scope"
+            echo
+            echo "- event=\`${EVENT_NAME}\`"
+            echo "- enabled=\`${enabled}\`"
+            echo "- reason=\`${reason}\`"
+            if [[ "$EVENT_NAME" == "pull_request" ]]; then
+              echo "- base_sha=\`${BASE_SHA}\`"
+              echo "- head_sha=\`${HEAD_SHA}\`"
+              echo "- changed_files:"
+              while IFS= read -r path; do
+                [[ -z "$path" ]] || echo "  - \`${path}\`"
+              done <<< "$changed_files"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -131,10 +177,8 @@ jobs:
           echo "learn_http=${LEARN_HTTP}" >> "$GITHUB_OUTPUT"
           echo "phone_http=${PHONE_HTTP}" >> "$GITHUB_OUTPUT"
 
-      # Ordinary PR updates stop after exact-SHA preview/smoke. Full evidence remains
-      # available on main pushes and explicit workflow_dispatch final-gate runs.
       - name: Browser-proof Phone Lab logical viewport
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' || env.SHARKY_PR_VISUAL_EVIDENCE == '1'
         id: phone_browser
         env:
           DEPLOYMENT_URL: ${{ steps.deploy.outputs.url }}
@@ -163,7 +207,7 @@ jobs:
           cat output/phone_lab_browser/browser-proof.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Package SHARKY_EVIDENCE_V1
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' || env.SHARKY_PR_VISUAL_EVIDENCE == '1'
         id: evidence_package
         env:
           BASE_SHA_FROM_EVENT: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
@@ -186,27 +230,32 @@ jobs:
           cat "output/sharky_evidence/sharky-evidence-${TARGET_SHA}/report.md" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload SHARKY_EVIDENCE_V1
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' || env.SHARKY_PR_VISUAL_EVIDENCE == '1'
         id: evidence_upload
         uses: actions/upload-artifact@v4
         with:
           name: sharky-evidence-${{ env.TARGET_SHA }}
           path: output/sharky_evidence/sharky-evidence-${{ env.TARGET_SHA }}
           if-no-files-found: error
-          retention-days: 14
+          retention-days: ${{ github.event_name == 'pull_request' && 3 || 14 }}
 
       - name: Publish evidence discovery
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' || env.SHARKY_PR_VISUAL_EVIDENCE == '1'
         env:
           ARTIFACT_ID: ${{ steps.evidence_upload.outputs.artifact-id }}
           ARTIFACT_URL: ${{ steps.evidence_upload.outputs.artifact-url }}
           ARTIFACT_DIGEST: ${{ steps.evidence_upload.outputs.artifact-digest }}
         run: |
           set -euo pipefail
+          MANIFEST="output/sharky_evidence/sharky-evidence-${TARGET_SHA}/manifest.json"
+          BASE_SHA="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["base_sha"])' "$MANIFEST")"
+          PR_NUMBER="$(python3 -c 'import json,sys; value=json.load(open(sys.argv[1], encoding="utf-8"))["pr_number"]; print("N/A" if value is None else value)' "$MANIFEST")"
           {
             echo "## SHARKY_EVIDENCE_V1"
             echo
             echo "- candidate_sha=\`${TARGET_SHA}\`"
+            echo "- base_sha=\`${BASE_SHA}\`"
+            echo "- pr_number=\`${PR_NUMBER}\`"
             echo "- run_id=\`${GITHUB_RUN_ID}\`"
             echo "- artifact_name=\`sharky-evidence-${TARGET_SHA}\`"
             echo "- artifact_id=\`${ARTIFACT_ID}\`"
@@ -219,13 +268,13 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload raw Phone Lab failure proof
-        if: failure() && github.event_name != 'pull_request'
+        if: failure() && (github.event_name != 'pull_request' || env.SHARKY_PR_VISUAL_EVIDENCE == '1')
         uses: actions/upload-artifact@v4
         with:
           name: sharky-phone-lab-browser-proof-failure-${{ env.TARGET_SHA }}
           path: output/phone_lab_browser
           if-no-files-found: warn
-          retention-days: 14
+          retention-days: ${{ github.event_name == 'pull_request' && 3 || 14 }}
 
       - name: Publish preview links
         env:
@@ -239,13 +288,17 @@ jobs:
             echo "- Build mode: \`debug_non_release_qa_mirror\`"
             echo "- FAST_PREVIEW=PASS"
             if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-              echo "- Full evidence: skipped for PR inner loop; use workflow_dispatch for a final gate"
+              if [[ "${SHARKY_PR_VISUAL_EVIDENCE:-0}" == "1" ]]; then
+                echo "- Full evidence: enabled for UI/evidence-relevant PR head"
+              else
+                echo "- Full evidence: skipped; no bounded render-scope changes detected"
+              fi
             else
               echo "- Full evidence: enabled for this run"
             fi
             echo "- [Preview root](${DEPLOYMENT_URL}/)"
-            echo "- [Phone Lab — Compact](${DEPLOYMENT_URL}/phone.html?profile=compact&surface=live)"
-            echo "- [Phone Lab — Tall](${DEPLOYMENT_URL}/phone.html?profile=tall&surface=live)"
+            echo "- [Phone Lab - Compact](${DEPLOYMENT_URL}/phone.html?profile=compact&surface=live)"
+            echo "- [Phone Lab - Tall](${DEPLOYMENT_URL}/phone.html?profile=tall&surface=live)"
             echo "- [Home](${DEPLOYMENT_URL}/?act0_capture=home)"
             echo "- [Learn](${DEPLOYMENT_URL}/?act0_capture=learn)"
             echo "- [Runner drill](${DEPLOYMENT_URL}/?act0_capture=runner_drill)"
