@@ -8,14 +8,19 @@ only. Product direction remains governed by
 
 | Field | Value |
 | --- | --- |
-| Reconciliation baseline | `3caeb125db7b0e3904691171ef75bc4a7eb6fa41` - exact `origin/main` re-resolved after successful closure and merge of PR #167. |
+| Reconciliation baseline | `2249064fcb7bf9d216f1e0024a7463cca802e670` - exact `origin/main` re-resolved before this post-adjudication authority reconciliation. |
 | Product/native admission baseline | `486a1509748a556de11a7e90076ed6e53aefa06e` - exact product/native evidence head owning Wave 3 hard acceptance and PHP-9 admission. |
 | Master Plan authority | `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` - principal product-working North Star authority. |
 | Current stage | **`MACHINE_NORTH_STAR_CONVERGENCE`**. |
 | Owner route | **Machine North Star Convergence -> Machine Diminishing-Return Gate -> HNP technical revalidation/Profile B repair if still required -> real Human HNP -> Human-triggered repairs -> longitudinal/real-poker/market proof.** |
-| Completed route sequence | `MACHINE_NORTH_STAR_CONVERGENCE_ROUTE_SELECTION_V1 -> PR_VISUAL_EVIDENCE_INNER_LOOP_V1 -> bounded probe reliability adjudication/repair -> best-effort browser disposition -> CLOSED`. |
-| Exact next action | **`LEARNING_SCENE_STRATEGIC_ADJUDICATION_V1`**. |
-| Exact next-action purpose | Perform the cheapest machine comparative adjudication of the confirmed `VISUAL_NORTH_STAR_GAP_OPEN` before any Learning Scene implementation. This is adjudication only; `DO_NOTHING` remains valid and no product implementation is authorized by this state update. |
+| Completed route sequence | `MACHINE_NORTH_STAR_CONVERGENCE_ROUTE_SELECTION_V1 -> PR_VISUAL_EVIDENCE_INNER_LOOP_V1 -> LEARNING_SCENE_STRATEGIC_ADJUDICATION_V1 -> B ADMITTED -> GitHub-only implementation pre-mutation stop -> CODEX ESCALATION REQUIRED`. |
+| Learning Scene strategic adjudication | **`CLOSED`** - disposition `LEARNING_SCENE_RESTRAINED_DEPTH_HYPOTHESIS_ADMITTED`; single bottleneck `SCENE_SPATIAL_HIERARCHY`; candidate B = restrained depth / table-context-action spatial continuity. |
+| Candidate B status | **`ADMITTED / NOT_IMPLEMENTED / NOT_YET_PROVEN / UNFALSIFIED`**. No A/B comparison occurred after admission because both implementation executors stopped before mutation. |
+| Candidate C status | **`NOT_ADMITTED`**. Contextual coaching remains outside the admitted experiment. |
+| Executor stop interpretation | Ordinary GitHub-only ChatGPT stopped before mutation because safe B execution requires a local Flutter composition / geometry / hit-test loop. Codex then stopped before mutation because stale `AGENTS.md` HNP-first wording conflicted with the active dispatch. This was a procedural authority stop, not a product decision; `CLOSED_CONTROL_RETAINED` is not a B disposition. |
+| Exact next action | **`LEARNING_SCENE_RESTRAINED_DEPTH_CODEX_EXECUTION_V1`**. |
+| Exact next-action purpose | Execute the already-admitted B hypothesis using a local Flutter composition / geometry / hit-test loop. No new adjudication. Maximum two bounded geometry repairs within `SCENE_SPATIAL_HIERARCHY`. |
+| B execution boundary | No generic visual polish, fourth cohesion wave, Modern Table reopening, contextual coaching C, poker semantic changes, answer-bearing cues, new dependencies, or broad architecture redesign. |
 | Machine pre-Human Horizon A | `TERMINAL`; prior PHP-9 / Wave 3 machine/native admission remains closed and valid. |
 | `PRE_HUMAN_READY` | `MET`. |
 | `HUMAN_PROVEN_10_OF_10_CANDIDATE` | `NOT_MET`. |
@@ -48,6 +53,8 @@ only. Product direction remains governed by
 - `FINAL_PRODUCT_VISUAL_COHESION_WAVE3 = CLOSED_ACCEPTED`
 - `PHP9_PRE_HUMAN_READY_ADMISSION_V1 = CLOSED`
 - `PR_VISUAL_EVIDENCE_INNER_LOOP_V1 = CLOSED / IMPLEMENTED`
+- `LEARNING_SCENE_STRATEGIC_ADJUDICATION_V1 = CLOSED`
+- `LEARNING_SCENE_RESTRAINED_DEPTH_HYPOTHESIS_ADMITTED`
 - Wave 3 remains bounded machine/native acceptance, not North Star visual proof.
 - Existing HNP protocol remains the canonical real-Human session protocol.
 
@@ -59,4 +66,4 @@ evidence hierarchy, protected boundaries, and Gauntlet policy. Report a genuine
 semantic contradiction instead of inventing a third authority.
 
 `CURRENT_STAGE = MACHINE_NORTH_STAR_CONVERGENCE`
-`EXACT_NEXT_ACTION = LEARNING_SCENE_STRATEGIC_ADJUDICATION_V1`
+`EXACT_NEXT_ACTION = LEARNING_SCENE_RESTRAINED_DEPTH_CODEX_EXECUTION_V1`
