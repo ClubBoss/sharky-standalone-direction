@@ -1,6 +1,6 @@
 # PokerSkill Learning Scene Reference - 2026-08-14
 
-Status: REFERENCE ONLY / NOT PRODUCT AUTHORITY / NOT IMPLEMENTATION AUTHORITY
+Status: BENCHMARK-CLASS REFERENCE ONLY / NOT PRODUCT AUTHORITY / NOT IMPLEMENTATION AUTHORITY
 
 Authority:
 `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`, section
@@ -20,8 +20,9 @@ enough source identity to verify a later reattached copy by hash.
 
 ## Principles worth studying
 
-- poker table presented as one immersive learning scene rather than a widget
-  above a separate lesson panel;
+- coaching-first learning-scene composition;
+- poker table presented as one immersive learning scene rather than a utility
+  board above a separate lesson panel;
 - restrained perspective and near/far depth;
 - stronger spatial orientation of hero and opponents;
 - pot, price, action, and stack information positioned near the table object
@@ -29,23 +30,37 @@ enough source identity to verify a later reattached copy by hash.
 - contextual coaching visually attached to the decision scene;
 - clear depth hierarchy from environment to table to cards/HUD to coaching to
   controls;
+- stronger relationship between poker state, coaching context, and learner
+  action;
 - lower controls visually integrated with the table scene;
-- premium emotional presentation without sacrificing decision clarity.
+- premium emotional presentation without sacrificing decision clarity;
+- mobile-first visual quality rather than mere mobile fit.
 
 ## Sharky interpretation
 
-The goal is not to reproduce the reference. If Human evidence later admits the
-Learning Scene V2 hypothesis, Sharky may test whether comparable scene clarity,
-spatial hierarchy, premium trust, and emotional coherence improve learner
-outcomes while preserving Sharky's corrective-learning loop.
+The goal is not to reproduce the reference or to claim parity with it. The owner
+has established that Sharky's current HNP-admissible visual baseline is not the
+intended North Star visual destination and that a material premium
+learning-scene gap remains open.
 
-Required future comparison:
+PokerSkill is retained only as a benchmark-class reference for useful
+principles of composition, depth, hierarchy, coaching context, and premium feel.
+Sharky should adapt any useful principle into its own identity, mobile learning
+architecture, and corrective loop.
+
+Learning Scene V2 remains the legitimate future route in Master Plan v4 for
+adjudicating that strategic uplift. This record does not activate its
+implementation, does not insert work before HNP, and does not convert a
+competitor reference into a design specification.
+
+Required future comparison if Learning Scene V2 implementation is admitted:
 
 1. current Sharky control;
 2. restrained perspective/depth Sharky;
 3. perspective/depth plus contextual coaching Sharky.
 
-`DO_NOTHING` is a valid result.
+`DO_NOTHING` remains a valid result for any specific proposed implementation if
+evidence does not justify it.
 
 ## Anti-answer-leak rule
 
@@ -69,13 +84,15 @@ risk. Beauty alone cannot win.
 
 ## Anti-copy boundary
 
-Do not copy competitor art, characters, brand, exact geometry, control styling,
-HUD styling, or trade dress. Use this record only as a benchmark for
-composition principles.
+Do not copy or recreate competitor layouts, assets, art, characters, brand,
+exact geometry, control styling, HUD styling, proprietary content, or trade
+dress. Use this record only as a principle-level benchmark. Sharky's expression
+must remain original and integrated with its own corrective-learning system.
 
 ## Route status
 
-`REFERENCE_ONLY / DEFERRED_NOT_ACTIVE`
+`REFERENCE_ONLY / VISUAL_NORTH_STAR_GAP_CONTEXT / IMPLEMENTATION_NOT_ACTIVE`
 
 This benchmark does not reopen Modern Table, does not authorize a fourth visual
-cohesion wave, and does not insert product work before Human Novice Proof.
+cohesion wave, does not reopen accepted Wave 3 evidence, and does not insert
+product work before Human Novice Proof.
