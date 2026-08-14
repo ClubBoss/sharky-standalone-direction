@@ -8,10 +8,10 @@ applicable. This file only compresses current state for low-context continuation
 
 ## CURRENT EXACT MAIN BASELINE
 
-Re-resolved before this CTA-closure result / proof-feedback allocation authority
+Re-resolved before the final V2 owner benchmark / production-migration admission
 reconciliation:
 
-`30422e922d9fe0d0e38f397831726211eac4b5c9`
+`ebd7335353cd4e9b61d8feed01eab2bf601b8daa`
 
 Consumers must re-resolve live `origin/main` before execution; this authoring
 baseline is not permanent authority.
@@ -50,285 +50,256 @@ Preserved status:
 - Contextual answer-bearing coaching = `NOT_ADMITTED`
 - Avatars / characters = `DEFERRED`
 
-HNP is not cancelled. Sharky is closing one concrete high-EV machine-reducible
-proof-feedback allocation defect in the directionally successful V2 candidate
-before any production admission decision.
+HNP is not cancelled. Sharky has closed the bounded pre-production V2
+prototype-exploration loop and is now admitted to one bounded canonical
+production migration before machine diminishing-return / next-gap adjudication.
 
-## V2 SPATIAL RESULT - PRESERVED
-
-Owner disposition:
-
-`SHARKY_INTEGRATED_2_5D_OWNER_DIRECTED_V2 = VISUAL_DIRECTION_CONFIRMED / PRIMARY_USABLE_GEOMETRY_INCOMPLETE / PRODUCTION_NOT_ADMITTED`
-
-Preserve:
-
-- P1 / table dominance = `DIRECTIONAL WIN`
-- P2 / perspective silhouette = `DIRECTIONAL WIN`
-- P3 / hero-action ownership = `DIRECTIONAL WIN`
-
-Do not promote this into `PRODUCTION_ACCEPTED`, `NORTH_STAR_COMPLETE`,
-`HUMAN_PROVEN`, PokerSkill parity, or final premium quality.
-
-## CTA HIT-GEOMETRY CLOSURE - COMPLETED AND CLOSED
+## PROOF-FEEDBACK ALLOCATION - COMPLETED AND CLOSED
 
 Completed packet:
 
-`SHARKY_INTEGRATED_2_5D_V2_CTA_HIT_GEOMETRY_CLOSURE_CODEX_EXECUTION_V1`
+`SHARKY_INTEGRATED_2_5D_V2_PROOF_FEEDBACK_ALLOCATION_CODEX_EXECUTION_V1`
 
 Execution base:
 
-`30422e922d9fe0d0e38f397831726211eac4b5c9`
+`ebd7335353cd4e9b61d8feed01eab2bf601b8daa`
 
 Terminal verdict:
 
-`SHARKY_INTEGRATED_2_5D_V2_CTA_HIT_GEOMETRY_CLOSURE_FAILED_AFTER_BUDGET`
+`SHARKY_INTEGRATED_2_5D_V2_PROOF_FEEDBACK_ALLOCATION_READY_FOR_OWNER_REVIEW`
 
-Budget:
+Packet status:
 
-`INITIAL CTA HIT-GEOMETRY FIX + MAXIMUM ONE DIRECTLY RELATED REPAIR`
+`INITIAL IMPLEMENTATION SUCCEEDED / 2 OF 2 REPAIR SLOTS UNUSED / PACKET CLOSED`
 
-Status:
+The experiment remained local-only and did not mutate the canonical route.
 
-`EXHAUSTED / CLOSED`
+### Root cause solved
 
-No continuation under that packet is authorized.
+The proof-feedback body and CTA no longer compete for residual Column height.
+The reported experiment mechanism is:
 
-### Causal reclassification
+`Expanded(SingleChildScrollView(...))`
+`+ sibling SizedBox(height: 48)`
 
-The old residual is no longer active:
+Treat this as evidence from the successful isolated experiment, not immutable
+architecture doctrine for the production owner.
 
-`CTA VISUAL / HIT-GEOMETRY OWNERSHIP MISMATCH = TECHNICALLY_RESOLVED`
-
-Machine evidence proves practical visual/hit ownership alignment:
-
-- visible CTA bounds == interactive CTA bounds;
-- center hits;
-- upper-left interior hits;
-- upper-right interior hits;
-- lower-left interior hits;
-- lower-right interior hits;
-- outside-left does not falsely hit;
-- real action-option taps work.
-
-The packet failed overall for a later usable-allocation collapse, not because hit
-ownership remained displaced.
-
-## V2 FUNCTIONAL ROUTE - MACHINE-PROVEN
-
-The real canonical primary-harness route completes without direct state mutation:
-
-`decision -> wrong feedback -> visible CTA -> repair -> repair success -> recheck -> recheck success -> recovered/completion`
-
-Record:
-
-`V2 FUNCTIONAL ROUTE SEMANTICS = PROVEN_IN_PRIMARY_HARNESS`
-
-This does not admit V2 to production because usable CTA geometry still fails in
-later proof-feedback states.
-
-## NEW EXACT HARD FAILURE
-
-Classification:
-
-`PROOF_FEEDBACK_LOWER_ENVELOPE_ALLOCATION_COLLAPSE`
-
-Measured primary `402x874 / 1.0x` CTA geometry:
-
-- wrong feedback: `376 x 48`
-- repair success: `376 x 27`
-- recheck success: `376 x 9`
-
-The `27 px` and `9 px` CTAs are not acceptable usable controls even though hit
-geometry correctly matches rendered bounds.
-
-This is a layout-allocation failure. It is not:
-
-- a remaining hit-test ownership failure;
-- poker-semantics failure;
-- P1 table-dominance falsification;
-- P2 perspective falsification;
-- P3 hero/action falsification;
-- Human uncertainty.
-
-## CURRENT CONSTRAINT CONFLICT
-
-On `402x874`, current proof-feedback content cannot always fit inside the current
-lower envelope while simultaneously preserving:
-
-- the large stable V2 table scene;
-- fixed hero/major seat geometry;
-- complete proof-feedback content;
-- a normal usable CTA.
-
-The prior CTA closure increased lower foreground allocation from about
-`251.94 px` to about `284 px` and still produced CTA collapse in later proof
-states. Do not solve by repeatedly adding arbitrary lower-envelope height.
-
-## PROOF-FEEDBACK ALLOCATION EXPERIMENT - ADMITTED
-
-`SHARKY_INTEGRATED_2_5D_V2_PROOF_FEEDBACK_ALLOCATION_V1`
-
-Purpose: preserve the proven V2 spatial scene while giving proof-feedback states
-a bounded internal layout that guarantees a normal usable CTA.
-
-Central hypothesis:
-
-`TABLE SCENE REMAINS PROTECTED`
-`+ FEEDBACK CONTENT OWNS A BOUNDED FLEXIBLE REGION`
-`+ CTA OWNS A PINNED USABLE REGION`
-
-The cheapest first mechanism must be chosen after source inspection. Candidate
-existing Flutter primitives include:
-
-- `Flexible` / `Expanded`;
-- bounded feedback scrolling where required;
-- pinned CTA outside scrollable content;
-- an equivalent minimal owner-local allocation.
-
-Scrolling is not pre-authorized as the required implementation mechanism.
-
-## REQUIRED CTA CONTRACT
+## FINAL CTA / ROUTE MACHINE PROOF
 
 Primary `402x874 / 1.0x`:
 
-- every required proof-feedback CTA has a normal usable visual and hit height;
-- target is approximately the existing normal CTA height (`~48 px`);
-- `27 px` and `9 px` are rejected;
-- no invisible hit expansion detached from visible geometry;
-- visible and hit geometry remain aligned.
+- wrong feedback CTA: `376 x 48`
+- repair success CTA: `376 x 48`
+- recheck success CTA: `376 x 48`
+- visible geometry == hit geometry
 
-## V2 SCENE FREEZE
+Real route PASS without direct state mutation:
 
-Preserve within negligible/render-tolerance drift:
+`decision -> wrong -> feedback -> repair -> repair success -> recheck -> recheck success -> completion -> next state`
 
-- prompt position;
-- table visual mass;
-- table silhouette;
-- perspective;
-- hero location;
-- major seat anchors;
-- near/mid/far strategy.
+## V2 SCENE FREEZE - PASSED
 
-Do not shrink the table merely to make feedback fit unless the bounded-feedback
-model is proven impossible. Any material table shrink is STOP / owner
-adjudication, not an automatic repair.
+Exact preservation evidence:
 
-## FEEDBACK CONTENT / SCROLL POLICY
+- prompt: `(0,38), 402x50`
+- table: `(52.2,100), 297.6x496`
+- table scale: `1.0`
+- hero: `y = 541.2265`
+- major seat anchors: exactly unchanged
+- lower envelope: `(0,590), 402x284`
 
-Do not rewrite or delete learning copy to cheat layout. Do not change:
+The allocation solution fixed proof-feedback usability without shrinking or
+moving the winning V2 spatial scene.
 
-- correctness;
-- repair logic;
-- recheck logic;
-- task IDs;
-- option IDs;
-- progression;
-- telemetry;
-- answer-leakage policy.
+## DEVICE MATRIX - PASSED
 
-If bounded scrolling is used:
+- `402x874 / 1.0x = PASS`
+- `375x812 / 1.0x = PASS`
+- `430x932 / 1.0x = PASS`
+- `402x874 / 1.4x = PASS`
 
-- primary causal feedback/result remains immediately visible;
-- CTA remains pinned and visible;
-- required learning content remains reachable;
-- no hidden mandatory interaction;
-- no answer-bearing cue;
-- scrolling does not move the table scene;
-- do not turn the entire screen into a scrolling article.
+No repair slots were consumed.
 
-## PRIMARY ACCEPTANCE STATES
+## SEMANTIC PRESERVATION
 
-Use real canonical W1 at `402x874 / 1.0x`:
+Preserved by the successful experiment:
 
-1. wrong feedback
-2. repair success
-3. recheck success
+- `Act0RunnerStateV1` truth
+- `Act0TableStateV1` truth
+- task IDs
+- option IDs
+- poker strategy truth
+- correctness
+- content
+- repair
+- recheck
+- progression
+- telemetry
+- answer-leakage policy
 
-Also preserve decision for scene-freeze comparison.
+No second poker engine.
 
-Hard acceptance:
+## FINAL V2 OWNER DISPOSITION
 
-- CTA usable in all three proof states;
-- visible/hit bounds aligned;
-- full route still completes;
-- table/hero/seat scene remains stable;
-- feedback content remains available.
+Confirmed:
 
-Secondary only after primary succeeds:
+- P1 table dominance = `CONFIRMED`
+- P2 perspective silhouette = `CONFIRMED`
+- P3 hero/action ownership = `CONFIRMED`
+- proof-feedback usable allocation = `CONFIRMED`
+- full primary machine route = `CONFIRMED`
+- multi-portrait machine viability = `CONFIRMED`
 
-- `375x812 / 1.0x`
-- `430x932 / 1.0x`
+Candidate status:
 
-`1.4x` remains optional catastrophic-usability signal only.
+`SHARKY_INTEGRATED_2_5D_LEARNING_SCENE_V2 = OWNER_ACCEPTED_FOR_BOUNDED_PRODUCTION_MIGRATION / MACHINE_PROVEN_FOR_ADMITTED_SCOPE / NOT_HUMAN_PROVEN / NOT_NORTH_STAR_COMPLETE`
 
-## EXPERIMENT BUDGET
+This is an owner visual win and machine proof for the admitted scope. Do not
+promote it into Human approval, final premium quality, or North Star completion.
 
-`INITIAL PROOF-FEEDBACK ALLOCATION IMPLEMENTATION + MAXIMUM TWO EVIDENCE-TRIGGERED REPAIRS`
+## POKERSKILL PRINCIPLE-LEVEL BENCHMARK
 
-Allowed repair dimensions only:
+PokerSkill remains external reference only and never becomes repository
+authority.
 
-- feedback internal flex allocation;
-- pinned CTA allocation;
-- bounded feedback scrolling;
-- local gaps/insets strictly required for usable allocation;
-- directly related overflow/collision geometry.
+Independent benchmark conclusion:
 
-Forbidden repair dimensions:
+`POKERSKILL_ADVANTAGE_PRIMARILY_SPATIAL_SCENE_ARCHITECTURE`
 
-- table geometry;
-- perspective;
-- hero geometry;
-- general visual polish.
+Tier-1 principles:
 
-After repair #2: STOP.
+- hero orientation
+- forced perspective / depth
+- one-scene composition
 
-## STRICT NON-SCOPE
+Important secondary principles:
+
+- object-attached HUD
+- stable spatial continuity
+- attention-aware rendering
+
+Final Sharky V2 materially closes the original Tier-1 structural gap through:
+
+- real perspective silhouette
+- near/mid/far hierarchy
+- explicit hero foreground
+- prompt-before-scene hierarchy
+- hero/action foreground ownership
+- stable decision/repair/recheck geometry
+
+Residual PokerSkill-class differences remain in richer environment,
+characters/player embodiment, deeper HUD attachment, attention rendering, art,
+and semantic motion. These do not automatically justify another pre-production
+visual iteration. No copying.
+
+## PROTOTYPE VISUAL LOOP - CLOSED
+
+Do not dispatch:
+
+- V3 composition iteration
+- more table-perspective polish
+- avatar experiment
+- room/environment art
+- shader/lighting wave
+- motion wave
+
+The highest-EV next action is canonical migration of the already proven V2
+candidate, not another visual prototype.
+
+## BOUNDED PRODUCTION MIGRATION - ADMITTED
+
+Admitted packet:
+
+`SHARKY_INTEGRATED_2_5D_V2_BOUNDED_PRODUCTION_MIGRATION_V1`
+
+Purpose:
+
+Move the proven opt-in V2 Learning Scene presentation into canonical production
+ownership while preserving all semantic contracts and safely removing
+prototype-only selection/plumbing where possible.
+
+This is migration, not redesign:
+
+`PROTOTYPE -> CANONICAL`
+
+not:
+
+`PROTOTYPE -> REDESIGN`
+
+### Migration freeze
+
+Preserve:
+
+- perspective silhouette
+- table visual mass
+- prompt/table/hero composition
+- near/mid/far hierarchy
+- hero/action ownership
+- proof-feedback bounded body
+- pinned CTA geometry
+
+No visual improvement during migration.
+
+### Allowed scope
+
+- make V2 presentation canonical on the admitted Learning Scene route
+- remove/retire prototype-only opt-in plumbing when safe
+- consolidate candidate presentation into the existing production owner
+- reconcile tests/guards with canonical geometry
+- preserve deterministic screenshot/evidence tooling
+- run focused regression
+- run exact production/native validation required by current authority
+
+No broad refactor.
+
+### Forbidden scope
 
 No:
 
-- new composition direction;
-- P1/P2/P3 redesign;
-- table polish;
-- PokerSkill copying;
-- avatars;
-- characters;
-- lighting;
-- shaders;
-- motion;
-- new art;
-- content rewrite;
-- coach;
-- new dependencies;
-- production migration.
+- avatars
+- PokerSkill art
+- room environment
+- lighting
+- shaders
+- motion
+- coach redesign
+- content changes
+- poker logic changes
+- feedback copy changes
+- new dependencies
+- generalized scene engine
+- Modern Table cosmetic reopening
 
-## POKERSKILL / GAUNTLET
+## POST-MIGRATION ROUTE
 
-PokerSkill remains:
+After successful bounded production migration:
 
-`EXTERNAL NORTH STAR REFERENCE / NOT PART OF THIS IMPLEMENTATION`
+1. validate canonical production route;
+2. validate the standard portrait matrix;
+3. perform exact-SHA native validation if authority/tooling requires it;
+4. perform `MACHINE DIMINISHING-RETURN / NEXT-GAP ADJUDICATION`.
 
-After a fully usable V2 exists, owner benchmark may compare:
+That adjudication must choose exactly one:
 
-`CONTROL | V1 | V2 | POKERSKILL REFERENCE`
+A. one concrete high-EV machine-reducible gap;
 
-at principle level only.
+or
 
-Machine Gauntlet continues only while concrete high-EV machine-reducible gaps
-remain. This proof-feedback allocation defect qualifies. Do not create an
-open-ended visual-polish loop.
+B. `MACHINE DIMINISHING RETURN REACHED -> proceed toward HNP`.
+
+Do not assume another visual Gauntlet is required.
 
 ## EXACT NEXT ACTION
 
-`SHARKY_INTEGRATED_2_5D_V2_PROOF_FEEDBACK_ALLOCATION_CODEX_EXECUTION_V1`
+`SHARKY_INTEGRATED_2_5D_V2_BOUNDED_PRODUCTION_MIGRATION_CODEX_EXECUTION_V1`
 
-Purpose: starting from exact current main plus the verified V2 candidate,
-preserve the winning V2 spatial scene and solve only proof-feedback lower-envelope
-allocation so every required CTA remains visibly and interactively usable
-through the real decision -> repair -> recheck loop.
-
-No production migration.
+Purpose: starting from exact live main plus the owner-accepted V2 candidate,
+migrate the proven presentation from prototype ownership into the canonical
+Learning Scene without visual improvement, semantic drift, or scope expansion;
+then validate production/native truth.
 
 `HANDOFF_AUTHORITY = NONE`
 `MASTER_PLAN_V4_WINS_ON_PRODUCT_DIRECTION = TRUE`
 `CURRENT_STAGE = MACHINE_NORTH_STAR_CONVERGENCE`
-`EXACT_NEXT_ACTION = SHARKY_INTEGRATED_2_5D_V2_PROOF_FEEDBACK_ALLOCATION_CODEX_EXECUTION_V1`
+`EXACT_NEXT_ACTION = SHARKY_INTEGRATED_2_5D_V2_BOUNDED_PRODUCTION_MIGRATION_CODEX_EXECUTION_V1`
