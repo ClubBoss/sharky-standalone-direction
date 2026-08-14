@@ -6,15 +6,14 @@ Master Plan v4 wins on product direction.
 `PRE_HUMAN_CAMPAIGN_STATE_v1.md` wins on exact campaign dispatch where
 applicable. This file only compresses current state for low-context continuation.
 
-## CURRENT EXACT MAIN
+## CURRENT EXACT MAIN BASELINE
 
-Re-resolved before the owner-review composition-iteration authority
-reconciliation:
+Re-resolved before this V2-result / CTA-closure authority reconciliation:
 
-`2c53d17c9a5c45743d9fe5bb28e19bc0edf816f4`
+`677f3fd35088d26df6131fb4e4042fafef4f769e`
 
-Consumers must re-resolve live `origin/main` before execution; this handoff does
-not make its authoring SHA a permanent authority.
+Consumers must re-resolve live `origin/main` before execution; this authoring
+baseline is not permanent authority.
 
 ## CURRENT NORTH STAR
 
@@ -41,377 +40,243 @@ Preserved status:
 - `VISUAL_NORTH_STAR_GAP_OPEN`
 - `HUMAN_PROVEN_10_OF_10_CANDIDATE = NOT_MET`
 - `HNP = REQUIRED_FUTURE_HUMAN_EVIDENCE_GATE / NOT_PERFORMED`
-- Modern Table = `MAINTENANCE_MODE`
-
-HNP is not cancelled. Sharky is resolving one additional evidence-admitted,
-high-EV machine-reducible Learning Scene composition question before the
-machine diminishing-return gate.
-
-## COMPLETED INTEGRATED 2.5D V1
-
-Completed mission:
-
-`SHARKY_INTEGRATED_2_5D_LEARNING_SCENE_CODEX_PROTOTYPE_EXECUTION_V1`
-
-Terminal result:
-
-`SHARKY_INTEGRATED_2_5D_LEARNING_SCENE_PROTOTYPE_READY_FOR_OWNER_REVIEW`
-
-Execution base:
-
-`2c53d17c9a5c45743d9fe5bb28e19bc0edf816f4`
-
-The experiment was local-only and isolated. It produced no branch, commit, PR,
-merge, dependency, canonical route switch, default-presentation change, or
-Modern Table production mutation.
-
-V1 tested one integrated composition over existing Sharky semantics:
-
-`PROMPT -> RESTRAINED 2.5D TABLE EVIDENCE -> HERO FOREGROUND -> ACTION`
-
-Mechanisms included a neutral prompt above table, restrained Matrix4 depth,
-near/mid/far presentation tiers, the canonical hero in the near foreground,
-hero-adjacent actions, transformed existing HUD/table ownership, and the same W1
-Action decision -> repair -> recheck lifecycle. Reported transform values from
-V1 remain evidence only and are not permanent architecture authority.
-
-## V1 TECHNICAL EVIDENCE
-
-PASS:
-
-- `402x874 / 1.0x`
-- `375x812 / 1.0x`
-- `430x932 / 1.0x`
-- table identity guard
-- alpha progression truth
-- production-real capture owner guard
-- focused analyzer
-- `git diff --check`
-- canonical decision/repair/recheck semantics
-
-Optional `402x874 / 1.4x` did not pass because of about `9 px` table-stage
-overflow. No evidence showed required actions inaccessible. This remains
-secondary accessibility debt and is not the product reason for another
-composition iteration.
-
-## V1 EXECUTION BUDGET - CLOSED
-
-V1 initial candidate failed primary layout by about `51 px` table-stage
-overflow.
-
-Repair #1 reserved about `54 px` from the existing table allocation for the
-prompt and restored standard-scale primary layout.
-
-Repair #2 removed the duplicated lower question from the ordinary action branch.
-
-Original V1 budget:
-
-`INITIAL PROTOTYPE + MAXIMUM TWO BOUNDED GEOMETRY REPAIRS`
-
-Status:
-
-`EXHAUSTED / CLOSED`
-
-Do not call any next work repair #3 under that mission.
-
-## OWNER REVIEW DISPOSITION
-
-`SHARKY_INTEGRATED_2_5D_LEARNING_SCENE_V1 = DIRECTION_CONFIRMED / V1_OWNER_REVIEW_COMPLETE / PRODUCTION_NOT_ADMITTED`
-
-The owner found the integrated 2.5D direction directionally positive, but V1 is
-not production accepted, not North Star complete, and not yet strong enough for
-immediate canonical migration.
-
-Bounded V1 evidence supports only these conclusions:
-
-- prompt-before-table hierarchy is materially clearer;
-- hero orientation is more immediate;
-- Prompt -> Table Evidence -> Hero -> Action is more coherent than control;
-- decision -> repair -> recheck can preserve one stable spatial table through
-  existing semantics;
-- action controls can read more like a continuation of the learner seat;
-- restrained depth can be introduced without a second poker engine,
-  correctness/content/telemetry rewrite, new dependency, or real 3D.
-
-Do not promote this into final premium quality, Human learning improvement,
-PokerSkill parity, production readiness, or North Star completion.
-
-## OWNER-DIAGNOSED RESIDUALS
-
-Exactly three material composition residuals justify one new experiment.
-
-### P1 - TABLE DOMINANCE / BOUNDED TEXT ENVELOPES
-
-V1 moved the prompt above the table by taking about `54 px` from the existing
-table allocation. This improved information hierarchy but weakened table
-dominance.
-
-Next layout hypothesis:
-
-`TOP TEXT IS BOUNDED`
-`CENTER TABLE SCENE IS PROTECTED`
-`BOTTOM ACTION / FEEDBACK IS BOUNDED`
-
-Desired composition:
-
-`PROGRESS -> BOUNDED PROMPT -> LARGE STABLE TABLE SCENE -> HERO FOREGROUND -> BOUNDED ACTION / FEEDBACK`
-
-Longer text must not continuously shrink the center poker scene. Do not rewrite
-content to force the layout.
-
-### P2 - PERSPECTIVE SILHOUETTE
-
-V1 produced perceptible restrained depth, but its oval still reads too much as a
-flat oval tilted slightly.
-
-V2 must test actual restrained perspective silhouette/geometry:
-
-- wider near edge;
-- narrower far edge;
-- readable board/pot;
-- stronger recession without theatrical distortion.
-
-Prefer silhouette/geometry over simply increasing X rotation. No real 3D and no
-new dependency or art requirement.
-
-### P3 - HERO -> ACTION FOREGROUND BRIDGE
-
-V1 improved action ownership, but the hero still visually ends before the action
-controls begin.
-
-V2 must strengthen this one foreground chain:
-
-`TABLE -> HERO CARDS -> HERO IDENTITY / POSITION -> ACTIONS`
-
-Actions should feel owned by the learner seat, not by a detached Flutter
-questionnaire panel. Button styling novelty is not the goal.
-
-## NEW OWNER-DIRECTED ITERATION
-
-Admitted mission:
-
-`SHARKY_INTEGRATED_2_5D_OWNER_DIRECTED_COMPOSITION_ITERATION_V1`
-
-Purpose: improve V1 only on P1/P2/P3.
-
-This is not:
-
-- repair #3 under V1;
-- generic visual polish;
-- a fourth cohesion wave;
-- avatar implementation;
-- room art, lighting, shaders, or animation;
-- a new coach or feedback-copy project;
-- content expansion;
-- new poker logic;
-- production migration.
-
-## TABLE-DOMINANCE INVARIANT
-
-Reserve a stable dominant center envelope for the poker scene. Prompt and
-action/feedback surfaces must live within bounded envelopes rather than freely
-consuming the scene.
-
-Within the representative W1 cycle:
-
-`decision -> repair -> recheck`
-
-the following should remain substantially stable:
-
-- table visual mass;
-- perspective framing;
-- hero location;
-- major seat anchors.
-
-Semantic state may change. Spatial place should not.
-
-Do not encode arbitrary permanent pixel values in governance. The implementation
-must derive bounded budgets from actual live layout.
-
-## PERSPECTIVE POLICY
-
-V2 may change only the composition owners required by P1/P2/P3, including:
-
-- table silhouette/path;
-- seat anchors;
-- near/mid/far scaling;
-- restrained z-order;
-- table/hero composition;
-- top/bottom envelope budgeting;
-- center table allocation;
-- hero/action bridge;
-- collisions/hit geometry.
-
-Do not admit real 3D, Unity, a 3D package, camera engine, scene JSON,
-world-coordinate framework, depth maps, shaders, room systems, parallax, or
-gyro.
-
-## HERO / ACTION AND FEEDBACK BOUNDARY
-
-Preserve existing option IDs, labels, callbacks, correctness, hit targets, and
-telemetry ownership. Only spatial composition may change.
-
-Do not redesign the feedback system. Only the minimum layout adaptation needed
-to preserve the bounded-center/table-dominance invariant through decision,
-repair, and recheck is admitted.
-
-## AVATARS / CHARACTERS
-
-`DEFERRED`
-
-Human opponent busts, illustrated characters, avatar art direction, and
-engaged/folded variants remain outside the causal test. They may be revisited
-later only if the spatial architecture wins and a separate mission admits them.
-
-## ACCESSIBILITY POLICY
-
-Primary hard target:
-
-- standard/default text scale `1.0x`;
-- modern portrait-phone surfaces.
-
-`1.4x` remains a secondary catastrophic-usability signal only during this
-architecture phase. Do not optimize V2 around historical `1.4x` positional
-geometry.
-
-Still reject catastrophic failure:
-
-- hidden required action;
-- unusable controls;
-- impossible navigation;
-- severe task-blocking clipping;
-- wrong poker ownership;
-- safe-area blocker.
-
-Do not disable text scaling or semantics.
-
-## SEMANTIC INVARIANTS
-
-Preserve:
-
-- `Act0RunnerStateV1`;
-- `Act0TableStateV1`;
-- task IDs;
-- option IDs;
-- correctness;
-- poker strategy truth;
-- content;
-- repair semantics;
-- recheck semantics;
-- telemetry;
-- answer-leakage behavior.
-
-No second poker engine. No presentation-derived strategy.
-
-Contextual answer-bearing coaching remains `NOT_ADMITTED`.
-
-## MODERN TABLE BOUNDARY
-
-Modern Table remains `MAINTENANCE_MODE`.
-
-V2 is an isolated Learning Scene presentation/composition experiment using the
-existing poker state and visual atoms. It does not authorize standalone Modern
-Table polish or canonical/default migration. Existing production/default
-presentation remains control.
-
-## V2 DEVICE / STATE SCOPE
-
-Primary:
-
-- `iphone17_class`
-- `402x874`
-- `1.0x`
-
-Secondary standard-size checks:
-
-- `375x812 / 1.0x`
-- `430x932 / 1.0x`
-
-Representative W1 Action states only:
-
-1. decision;
-2. wrong / repair;
-3. recheck / recovered.
-
-No whole-course migration.
-
-## V2 EVIDENCE STANDARD
-
-Required primary owner-facing comparison:
-
-`CONTROL vs V1 vs OWNER-DIRECTED V2`
-
-at `402x874 / 1.0x`.
-
-The evidence must answer:
-
-1. Is the table materially larger/more dominant than V1?
-2. Does prompt remain clear without shrinking the scene?
-3. Does table silhouette visibly recede into depth?
-4. Is perspective stronger without damaging readability?
-5. Is hero immediately the learner's seat?
-6. Do hero cards -> hero identity -> actions read as one foreground stack?
-7. Does the action surface stop reading like a detached questionnaire?
-8. Are decision/repair/recheck spatially stable?
-9. Is HUD ownership preserved?
-10. Does the result move materially closer to a premium integrated poker scene?
-11. Is poker truth unchanged?
-12. Is answer leakage unchanged?
-
-## V2 EXECUTION BUDGET
-
-`INITIAL OWNER-DIRECTED V2 IMPLEMENTATION + MAXIMUM TWO EVIDENCE-TRIGGERED GEOMETRY REPAIRS`
-
-Allowed repair dimensions only:
-
-- top/bottom envelope budgeting;
-- center table allocation;
-- perspective silhouette strength;
-- near/mid/far anchors/scales;
-- hero/action bridge;
-- collisions/hit geometry.
-
-After repair #2: STOP and return evidence to owner.
-
-Reuse the exact V1 candidate baseline where safely possible after validating its
-base SHA. Owner-reported V1 patch SHA-256:
-
-`99cf13848b1913e47d8ca5777a0fdad875148276d828cfee883eece822df6115`
-
-Do not make local filesystem paths permanent authority.
-
-## HNP TECHNICAL STATUS
-
-- `HNP = REQUIRED_FUTURE_HUMAN_EVIDENCE_GATE / NOT_PERFORMED`
 - `HNP_NATIVE_BUILD = PASS`
 - `HNP_PROFILE_A = PASS`
 - `HNP_PROFILE_B_NATIVE_MATERIALIZATION = BLOCKED / DEFERRED`
 - `HNP_PHYSICAL_TELEMETRY_FULL_CHAIN = NOT_YET_PROVEN`
 - `REAL_HUMAN_HNP = NOT_PERFORMED`
+- Modern Table = `MAINTENANCE_MODE`
+- Contextual answer-bearing coaching = `NOT_ADMITTED`
+- Avatars / characters = `DEFERRED`
 
-HNP remains required future Human evidence. V1/V2 machine evidence cannot be
-promoted into Human, longitudinal, real-poker, trust/desirability, or market
-proof.
+HNP is not cancelled. Sharky is closing one narrow machine-reducible interaction
+geometry defect in the directionally successful V2 candidate before any
+production admission decision.
 
-## EXACT NEXT ACTION
+## OWNER-DIRECTED V2 - COMPLETED
+
+Completed packet:
 
 `SHARKY_INTEGRATED_2_5D_OWNER_DIRECTED_COMPOSITION_ITERATION_CODEX_EXECUTION_V1`
 
-Purpose: starting from exact main plus the proven V1 candidate baseline, test
-exactly:
+Execution base:
 
-- P1 bounded text envelopes + protected large table scene;
-- P2 true restrained perspective silhouette;
-- P3 stronger hero -> action foreground ownership.
+`677f3fd35088d26df6131fb4e4042fafef4f769e`
+
+Terminal result:
+
+`SHARKY_INTEGRATED_2_5D_OWNER_DIRECTED_V2_REPAIR_BUDGET_EXHAUSTED`
+
+The V2 experiment was local-only in an isolated detached worktree. It produced
+no branch, commit, PR, merge, dependency, canonical route migration, or default
+presentation mutation.
+
+Original budget:
+
+`INITIAL OWNER-DIRECTED V2 IMPLEMENTATION + MAXIMUM TWO EVIDENCE-TRIGGERED GEOMETRY REPAIRS`
+
+Status:
+
+`EXHAUSTED / CLOSED`
+
+No repair #3 or continuation under the old V2 packet is authorized.
+
+## V2 OWNER VISUAL DISPOSITION
+
+`SHARKY_INTEGRATED_2_5D_OWNER_DIRECTED_V2 = VISUAL_DIRECTION_CONFIRMED / FUNCTIONAL_PROOF_INCOMPLETE / PRODUCTION_NOT_ADMITTED`
+
+Owner review supports a bounded visual/spatial directional win over V1:
+
+- P1 / table dominance: directional win; the table returned to a large dominant
+  visual mass while prompt remained above it.
+- P2 / perspective silhouette: directional win; near/far recession became
+  materially clearer than V1's flatter tilted-oval read.
+- P3 / hero-action ownership: directional win; hero and actions read more
+  coherently as one learner-owned foreground.
+- one-scene coherence, spatial hierarchy, and learner-seat orientation improved.
+
+Do not promote this into `PRODUCTION_ACCEPTED`, `NORTH_STAR_COMPLETE`,
+`HUMAN_PROVEN`, PokerSkill parity, or final premium quality.
+
+## V2 TECHNICAL EVIDENCE
+
+PASS:
+
+- analyzer;
+- table identity;
+- alpha progression truth `6/6`;
+- production-real capture ownership;
+- `git diff --check`;
+- no intentional poker-semantics change;
+- no intentional task/option/content/correctness/progression/telemetry change.
+
+Primary visual geometry reached the intended V2 form.
+
+Secondary devices and `1.4x` were not run because primary end-to-end viability
+failed first. They are neither PASS nor FAIL.
+
+## EXACT RESIDUAL HARD FAILURE
+
+Classification:
+
+`CTA VISUAL / HIT-GEOMETRY OWNERSHIP MISMATCH`
+
+Observed visible feedback CTA center was approximately:
+
+`(201, 772)`
+
+That point did not hit the actual CTA interaction target.
+
+Consequence:
+
+- the real feedback CTA could not advance the canonical route to repair/recheck;
+- final V2 recheck evidence is unavailable;
+- the complete real `decision -> wrong/repair -> CTA -> recheck -> recovered`
+  chain is not yet proven on V2;
+- production admission remains blocked.
+
+This is not P1/P2/P3 failure, failed visual direction, poker-semantics failure,
+content failure, or Human uncertainty. Current evidence supports a narrow
+machine-reducible coordinate/hit-ownership defect after composition changes.
+
+## NEW TECHNICAL CLOSURE - ADMITTED
+
+`SHARKY_INTEGRATED_2_5D_V2_CTA_HIT_GEOMETRY_CLOSURE_V1`
+
+Purpose: make the existing visible feedback CTA and actual interactive geometry
+agree in the V2 candidate without changing the V2 visual architecture.
+
+This is not:
+
+- another composition iteration;
+- V2 repair #3;
+- visual polish;
+- production migration.
+
+## V2 VISUAL FREEZE
+
+During CTA closure, freeze:
+
+- P1 prompt/table/bottom-envelope strategy and table dominance;
+- P2 perspective silhouette, table shape, and near/mid/far strategy;
+- P3 hero/action spatial architecture.
+
+Only the minimum geometry-ownership correction strictly required to align the
+visible and interactive CTA is allowed. Do not use closure to improve aesthetics.
+
+## CTA CLOSURE ALLOWED SCOPE
+
+Allowed:
+
+- trace exact visible CTA `RenderBox`;
+- trace exact interactive/hit-test owner;
+- inspect `Stack`, `Positioned`, `Transform`, and translation ownership;
+- reconcile coordinate spaces;
+- ensure visible CTA bounds and actual tappable bounds agree;
+- minimally relocate ownership if necessary;
+- validate that real taps hit the visible CTA;
+- rerun canonical W1 feedback -> repair/recheck path;
+- regenerate missing V2 recheck evidence.
+
+If a presentation transform is visually applied but not represented by hit
+geometry, fix only the smallest relevant ownership seam.
+
+## CTA CLOSURE FORBIDDEN SCOPE
+
+Do not change for visual gain:
+
+- table silhouette, size, or perspective strength;
+- seat scales/anchors except only if strictly required to prevent regression
+  from the hit-target fix;
+- prompt design;
+- feedback copy;
+- CTA copy;
+- poker content;
+- option IDs;
+- correctness;
+- progression;
+- telemetry;
+- avatar art or characters;
+- lighting, shaders, or motion;
+- coach;
+- dependencies.
+
+No visual micro-polish.
+
+## CTA CLOSURE SUCCESS CRITERIA
+
+Hard success requires:
+
+1. visible feedback CTA center hits the CTA;
+2. a reasonable sample of points inside visible CTA bounds hits the same target;
+3. no significant displaced invisible tappable area remains;
+4. existing action options retain correct visual/hit geometry;
+5. canonical W1 flow completes: decision -> wrong feedback -> visible CTA ->
+   repair/recheck -> recovered outcome;
+6. final V2 recheck screenshot is captured;
+7. poker state, IDs, correctness, progression, telemetry, and answer leakage are
+   unchanged;
+8. frozen V2 visual composition remains materially unchanged.
+
+## CTA CLOSURE BUDGET
+
+`INITIAL CTA HIT-GEOMETRY FIX + MAXIMUM ONE DIRECTLY RELATED REPAIR`
+
+The one repair may address only a directly observed remaining visual/hit-target
+geometry defect. After that: STOP.
+
+## REQUIRED EVIDENCE
+
+Primary:
+
+- `402x874 / 1.0x`
+- decision
+- wrong/repair-facing
+- recheck/recovered
+- CTA hit-test evidence
+
+Preserve `CONTROL | V1 | V2` comparison where practical and obtain the missing
+final V2 recheck.
+
+Secondary `375x812` and `430x932` run only after primary closure succeeds.
+`1.4x` remains a secondary catastrophic-usability signal only if cheap.
+
+## POKERSKILL BOUNDARY
+
+PokerSkill remains an external North Star reference only.
+
+Do not bring PokerSkill assets, XAPK, screenshots, or implementation into the
+CTA closure. After full V2 functional proof, a separate owner review may compare
+CONTROL/V1/V2/PokerSkill at principle level only: table dominance, spatial
+recession, hero orientation, one-scene coherence, object ownership, and
+hero/action continuity. No copying.
+
+## GAUNTLET ROUTE
+
+After CTA closure and full owner review:
+
+- if V2 wins and is production-admitted, perform a separately admitted bounded
+  production migration;
+- validate the production candidate;
+- reassess the next highest-EV machine-reducible North Star gap;
+- continue machine Gauntlet only while a concrete high-EV machine-reducible gap
+  remains;
+- enter HNP at diminishing return / when remaining material uncertainty is
+  intrinsically Human.
+
+Do not encode open-ended visual iteration or `improve until 10/10`.
+
+## EXACT NEXT ACTION
+
+`SHARKY_INTEGRATED_2_5D_V2_CTA_HIT_GEOMETRY_CLOSURE_CODEX_EXECUTION_V1`
+
+Purpose: starting from exact current main plus the verified frozen V2 local
+candidate, fix only the CTA visual/hit geometry mismatch, prove the real
+feedback -> recheck chain, and return complete V2 evidence.
 
 No production migration.
 
-Machine convergence exits when confirmed high-EV machine-reducible material
-gaps are closed, boundedly deferred, or at diminishing return; no
-machine-obvious P0/P1 remains; major uncertainty is intrinsically Human,
-longitudinal, real-poker, or market-bound; and evidence tooling is sufficient to
-react cheaply to Human findings.
-
 `HANDOFF_AUTHORITY = NONE`
 `MASTER_PLAN_V4_WINS_ON_PRODUCT_DIRECTION = TRUE`
-`EXACT_NEXT_ACTION = SHARKY_INTEGRATED_2_5D_OWNER_DIRECTED_COMPOSITION_ITERATION_CODEX_EXECUTION_V1`
+`CURRENT_STAGE = MACHINE_NORTH_STAR_CONVERGENCE`
+`EXACT_NEXT_ACTION = SHARKY_INTEGRATED_2_5D_V2_CTA_HIT_GEOMETRY_CLOSURE_CODEX_EXECUTION_V1`
