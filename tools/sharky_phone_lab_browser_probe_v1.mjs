@@ -17,6 +17,11 @@ mkdirSync(outDir, { recursive: true });
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
+const CHROME_STARTUP_TIMEOUT_MS = 30000;
+
+class AssertionFailure extends Error {
+  constructor(message) { super(message); this.name = 'AssertionFailure'; }
+}
 
 class Cdp {
   constructor(url) { this.url = url; this.id = 0; this.pending = new Map(); this.events = []; }
@@ -46,16 +51,6 @@ class Cdp {
     });
   }
   close() { try { this.ws?.close(); } catch (_) {} }
-}
-
-async function pollJson(url, timeout = 12000) {
-  const end = Date.now() + timeout; let last;
-  while (Date.now() < end) {
-    try { const r = await fetch(url, { cache: 'no-store' }); if (r.ok) return await r.json(); last = new Error(`HTTP ${r.status}`); }
-    catch (e) { last = e; }
-    await sleep(200);
-  }
-  throw last || new Error(`Timed out: ${url}`);
 }
 
 async function evaluate(cdp, expression) {
@@ -95,6 +90,22 @@ async function diagnostics(cdp) {
   })()`);
 }
 
+async function waitForEvaluablePhone(cdp, timeout = 15000) {
+  const end = Date.now() + timeout; let d;
+  while (Date.now() < end) {
+    d = await diagnostics(cdp);
+    const identity = String(d?.dataset?.productSha || '');
+    if (d?.title === 'Sharky Phone Lab' && d?.frame?.href && identity) {
+      report.stage = 'CANDIDATE_EVALUABLE';
+      report.candidate_surface_evaluable = true;
+      report.candidate_identity_evaluable = true;
+      return d;
+    }
+    await sleep(300);
+  }
+  throw new Error(`Canonical Phone Lab surface not evaluable: ${JSON.stringify(d)}`);
+}
+
 async function waitPhone(cdp, width, height, requireRender = true, timeout = 35000) {
   const end = Date.now() + timeout; let d;
   while (Date.now() < end) {
@@ -104,10 +115,11 @@ async function waitPhone(cdp, width, height, requireRender = true, timeout = 350
     if (truth && (!requireRender || d.frame.rendered)) return d;
     await sleep(350);
   }
-  throw new Error(`Phone truth timeout: ${JSON.stringify(d)}`);
+  throw new AssertionFailure(`Phone evidence assertion timeout: ${JSON.stringify(d)}`);
 }
 
 async function navigate(cdp, url) {
+  report.stage = 'NAVIGATING_CANONICAL_SURFACE';
   const result = await cdp.send('Page.navigate', { url });
   if (result.errorText) throw new Error(`Navigation failed: ${result.errorText}`);
   await waitFor(cdp, 'document.readyState === "interactive" || document.readyState === "complete"', 15000);
@@ -119,30 +131,124 @@ async function screenshot(cdp, name) {
   return { name, sha256: sha256(bytes) };
 }
 
+const startupStartedAt = Date.now();
 const chrome = spawn(chromeBin, [
   '--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage',
   '--remote-debugging-port=9222','--remote-allow-origins=*',
   '--user-data-dir=/tmp/sharky-phone-lab-chrome','--hide-scrollbars','about:blank'
 ], { stdio: ['ignore','ignore','pipe'] });
-let chromeStderr=''; chrome.stderr.on('data', c => { chromeStderr += c.toString(); });
+let chromeStderr='';
+let chromeSpawnError=null;
+let chromeExited=false;
+let chromeExitCode=null;
+let chromeExitSignal=null;
+chrome.stderr.on('data', c => { chromeStderr += c.toString(); });
+chrome.on('error', error => { chromeSpawnError = error; });
+chrome.on('exit', (code, signal) => {
+  chromeExited = true;
+  chromeExitCode = code;
+  chromeExitSignal = signal;
+});
+
+function chromeStartupSnapshot(disposition) {
+  return {
+    disposition,
+    chrome_bin: chromeBin,
+    elapsed_ms: Date.now() - startupStartedAt,
+    process_alive: !chromeSpawnError && !chromeExited,
+    process_exited: chromeExited,
+    spawn_error: chromeSpawnError ? String(chromeSpawnError?.stack || chromeSpawnError) : null,
+    exit_code: chromeExitCode,
+    exit_signal: chromeExitSignal,
+    stderr_tail: chromeStderr.slice(-5000)
+  };
+}
+
 let cdp;
+let terminalExitCode = 0;
 const report = {
   schema:'sharky_phone_lab_browser_proof_v1', target_sha:targetSha, base_url:baseUrl,
+  terminal_classification:'INFRASTRUCTURE_FAILURE', stage:'CHROME_STARTING',
+  cdp_ready:false, candidate_surface_evaluable:false, candidate_identity_evaluable:false,
   outer_viewport:null, profiles:{}, fit_mode:'FAIL', interaction:'FAIL', exact_sha_identity:'FAIL',
-  retained_3px_overflow:'NOT_REACHED', console_overflow_signals:{}
+  retained_3px_overflow:'NOT_REACHED', console_overflow_signals:{},
+  browser_startup: chromeStartupSnapshot('STARTING')
 };
 
+async function waitForChromeCdp(url, timeout = CHROME_STARTUP_TIMEOUT_MS) {
+  const deadline = startupStartedAt + timeout;
+  let lastError = null;
+  while (Date.now() < deadline) {
+    if (chromeSpawnError || chromeExited) {
+      report.browser_startup = chromeStartupSnapshot('PROCESS_EXITED');
+      throw new Error(`Chrome startup PROCESS_EXITED: ${JSON.stringify(report.browser_startup)}`);
+    }
+    try {
+      const response = await fetch(url, { cache: 'no-store' });
+      if (response.ok) {
+        const value = await response.json();
+        report.browser_startup = chromeStartupSnapshot('READY');
+        return value;
+      }
+      lastError = new Error(`HTTP ${response.status}`);
+    } catch (error) {
+      lastError = error;
+    }
+    await sleep(200);
+  }
+  if (chromeSpawnError || chromeExited) {
+    report.browser_startup = chromeStartupSnapshot('PROCESS_EXITED');
+    throw new Error(`Chrome startup PROCESS_EXITED: ${JSON.stringify(report.browser_startup)}`);
+  }
+  report.browser_startup = chromeStartupSnapshot('STARTUP_TIMEOUT');
+  throw new Error(`Chrome startup STARTUP_TIMEOUT after ${report.browser_startup.elapsed_ms}ms; last=${String(lastError?.stack || lastError || 'none')}; diagnostics=${JSON.stringify(report.browser_startup)}`);
+}
+
+function browserProofMarkdown() {
+  const lines = [
+    '## Phone Lab browser proof',
+    '',
+    `- Target SHA: \`${targetSha}\``,
+    `- BROWSER_EVIDENCE_STATUS=${report.terminal_classification}`,
+    `- Stage: ${report.stage}`,
+    `- CDP ready: ${report.cdp_ready}`,
+    `- Candidate surface evaluable: ${report.candidate_surface_evaluable}`,
+    `- Candidate identity evaluable: ${report.candidate_identity_evaluable}`,
+    `- CHROME STARTUP: ${report.browser_startup.disposition} in ${report.browser_startup.elapsed_ms} ms`
+  ];
+  if (report.terminal_classification === 'PASS') {
+    lines.push(
+      `- OUTER VIEWPORT: ${report.outer_viewport.join(' x ')} CSS`,
+      `- COMPACT INNER: ${report.profiles.compact.measured_inner.join(' x ')} CSS - PASS`,
+      `- TALL INNER: ${report.profiles.tall.measured_inner.join(' x ')} CSS - PASS`,
+      `- FIT MODE: ${report.fit_mode}`,
+      `- INTERACTION: ${report.interaction}`,
+      `- EXACT SHA IDENTITY: ${report.exact_sha_identity}`,
+      `- RETAINED 3PX OVERFLOW: ${report.retained_3px_overflow}`
+    );
+  } else {
+    lines.push(`- Underlying error: ${report.error || 'unknown'}`);
+    lines.push('- Rendered browser evidence unavailable; no browser PASS is claimed.');
+  }
+  return lines.join('\n') + '\n';
+}
+
 try {
-  const targets = await pollJson('http://127.0.0.1:9222/json/list');
+  const targets = await waitForChromeCdp('http://127.0.0.1:9222/json/list');
   const target = targets.find(t => t.type === 'page' && !String(t.url).startsWith('chrome-extension://')) || targets.find(t => t.type === 'page');
   if (!target) throw new Error(`No page CDP target: ${JSON.stringify(targets.map(t => ({type:t.type,url:t.url})))}`);
+  report.stage = 'CDP_DISCOVERED';
   cdp = new Cdp(target.webSocketDebuggerUrl); await cdp.connect();
+  report.cdp_ready = true;
+  report.stage = 'CDP_READY';
   await cdp.send('Page.enable'); await cdp.send('Runtime.enable'); await cdp.send('Log.enable'); await cdp.send('Network.enable');
   await cdp.send('Emulation.setDeviceMetricsOverride', { width:1280, height:720, deviceScaleFactor:1, mobile:false });
 
   async function profile(name, w, h) {
     cdp.events.length=0;
-    await navigate(cdp, `${baseUrl}/phone.html?profile=${name}&surface=home&presentation=fit`);
+    await navigate(cdp, `${baseUrl}/phone?profile=${name}&surface=home&presentation=fit`);
+    await waitForEvaluablePhone(cdp);
+    report.stage = 'ASSERTING_BROWSER_EVIDENCE';
     const d = await waitPhone(cdp, w, h, true, 35000);
     const shot = await screenshot(cdp, `${name}-home-fit.png`);
     const scale = Number(d.dataset.displayScale || '0');
@@ -157,10 +263,14 @@ try {
   const tall=await profile('tall',402,874);
   report.fit_mode = compact.display_scale>0 && compact.display_scale<1 && tall.display_scale>0 && tall.display_scale<1 ? 'PASS':'FAIL';
   report.exact_sha_identity = compact.product_sha===targetSha && tall.product_sha===targetSha ? 'PASS':'FAIL';
-  if (report.fit_mode!=='PASS' || report.exact_sha_identity!=='PASS') throw new Error(`Truth gate failed: ${JSON.stringify(report)}`);
+  if (report.fit_mode!=='PASS' || report.exact_sha_identity!=='PASS') {
+    throw new AssertionFailure(`Truth gate failed: ${JSON.stringify(report)}`);
+  }
 
   cdp.events.length=0;
-  await navigate(cdp, `${baseUrl}/phone.html?profile=compact&surface=live&presentation=fit`);
+  await navigate(cdp, `${baseUrl}/phone?profile=compact&surface=live&presentation=fit`);
+  await waitForEvaluablePhone(cdp);
+  report.stage = 'ASSERTING_BROWSER_EVIDENCE';
   const live=await waitPhone(cdp,375,812,true,35000);
   const before=await screenshot(cdp,'compact-live-before.png');
   const r=live.frame.rect; const x=r[0]+r[2]*0.5; const y=r[1]+r[3]*0.965;
@@ -170,11 +280,13 @@ try {
   await sleep(1500); const after=await screenshot(cdp,'compact-live-after.png'); await sleep(900); const stable=await screenshot(cdp,'compact-live-stable.png');
   report.interaction_details={rendered_pointer:[Number(x.toFixed(1)),Number(y.toFixed(1))],before_sha256:before.sha256,after_sha256:after.sha256,stable_sha256:stable.sha256};
   if (before.sha256!==after.sha256 && after.sha256===stable.sha256) report.interaction='PASS';
-  else throw new Error(`Interaction did not reach stable transition: ${JSON.stringify(report.interaction_details)}`);
+  else throw new AssertionFailure(`Interaction did not reach stable transition: ${JSON.stringify(report.interaction_details)}`);
 
   async function overflow(profileName,w,h) {
     cdp.events.length=0;
-    await navigate(cdp, `${baseUrl}/phone.html?profile=${profileName}&surface=runner_theory&presentation=fit`);
+    await navigate(cdp, `${baseUrl}/phone?profile=${profileName}&surface=runner_theory&presentation=fit`);
+    await waitForEvaluablePhone(cdp);
+    report.stage = 'ASSERTING_BROWSER_EVIDENCE';
     await waitPhone(cdp,w,h,true,35000); await sleep(1000);
     const shot=await screenshot(cdp,`${profileName}-runner-theory.png`);
     const text=cdp.events.map(e=>JSON.stringify(e)).join('\n');
@@ -183,21 +295,27 @@ try {
     return exact||generic;
   }
   report.retained_3px_overflow = (await overflow('compact',375,812)) || (await overflow('tall',402,874)) ? 'REPRODUCED_MOBILE':'NOT_REACHED';
+  report.terminal_classification = 'PASS';
+  report.stage = 'PASS';
 } catch(error) {
+  if (report.browser_startup.disposition === 'STARTING') {
+    report.browser_startup = chromeStartupSnapshot(chromeSpawnError || chromeExited ? 'PROCESS_EXITED' : 'STARTUP_TIMEOUT');
+  }
+  report.terminal_classification = error instanceof AssertionFailure ? 'ASSERTION_FAILURE' : 'INFRASTRUCTURE_FAILURE';
+  if (report.terminal_classification === 'ASSERTION_FAILURE') report.stage = 'ASSERTION_FAILURE';
+  else if (report.stage !== 'CHROME_STARTING') report.stage = `INFRASTRUCTURE_FAILURE_AT_${report.stage}`;
+  else report.stage = 'INFRASTRUCTURE_FAILURE_AT_CHROME_STARTING';
   try { report.failure_diagnostics=cdp?await diagnostics(cdp):null; } catch(_) {}
   report.error=String(error?.stack||error); report.chrome_stderr_tail=chromeStderr.slice(-5000);
   try { report.browser_events_tail=cdp?.events.slice(-120).map(e=>({method:e.method,params:e.params})); } catch(_) {}
-  writeFileSync(join(outDir,'browser-proof.json'),JSON.stringify(report,null,2)+'\n');
-  throw error;
-} finally { try { cdp?.close(); } catch(_) {} chrome.kill('SIGKILL'); }
+  terminalExitCode = report.terminal_classification === 'ASSERTION_FAILURE' ? 21 : 20;
+} finally {
+  try { cdp?.close(); } catch (_) {}
+  chrome.kill('SIGKILL');
+}
 
 writeFileSync(join(outDir,'browser-proof.json'),JSON.stringify(report,null,2)+'\n');
-const md=[
-  '## Phone Lab browser proof','',`- Target SHA: \`${targetSha}\``,
-  `- OUTER VIEWPORT: ${report.outer_viewport.join(' × ')} CSS`,
-  `- COMPACT INNER: ${report.profiles.compact.measured_inner.join(' × ')} CSS — PASS`,
-  `- TALL INNER: ${report.profiles.tall.measured_inner.join(' × ')} CSS — PASS`,
-  `- FIT MODE: ${report.fit_mode}`,`- INTERACTION: ${report.interaction}`,
-  `- EXACT SHA IDENTITY: ${report.exact_sha_identity}`,`- RETAINED 3PX OVERFLOW: ${report.retained_3px_overflow}`
-].join('\n')+'\n';
-writeFileSync(join(outDir,'browser-proof.md'),md); process.stdout.write(md);
+const md=browserProofMarkdown();
+writeFileSync(join(outDir,'browser-proof.md'),md);
+process.stdout.write(md);
+process.exitCode = terminalExitCode;
