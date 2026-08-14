@@ -1,5 +1,6 @@
 name: Sharky Kaizen Fast Render
 # Self-test marker: this workflow definition existed before this push.
+# Post-merge proof marker: harmless tooling-only candidate.
 
 on:
   push:
