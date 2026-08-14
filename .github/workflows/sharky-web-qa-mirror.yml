@@ -185,7 +185,6 @@ jobs:
         run: |
           set -euo pipefail
           REAL_CHROME_BIN="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
-          test -n "$REAL_CHROME_BIN"
           cat > /tmp/sharky-phone-lab-chrome-wrapper <<EOF
           #!/usr/bin/env bash
           exec "$REAL_CHROME_BIN" --disable-extensions --disable-component-extensions-with-background-pages "\$@"
@@ -193,21 +192,48 @@ jobs:
           chmod +x /tmp/sharky-phone-lab-chrome-wrapper
           CHROME_BIN=/tmp/sharky-phone-lab-chrome-wrapper
           export CHROME_BIN
+
+          set +e
           if node -e 'process.exit(typeof WebSocket === "function" ? 0 : 1)'; then
             node tools/sharky_phone_lab_browser_probe_v1.mjs \
               --base-url "$DEPLOYMENT_URL" \
               --target-sha "$TARGET_SHA" \
               --out output/phone_lab_browser
+            PROBE_EXIT=$?
           else
             node --experimental-websocket tools/sharky_phone_lab_browser_probe_v1.mjs \
               --base-url "$DEPLOYMENT_URL" \
               --target-sha "$TARGET_SHA" \
               --out output/phone_lab_browser
+            PROBE_EXIT=$?
           fi
+          set -e
+
+          PROOF=output/phone_lab_browser/browser-proof.json
+          test -f "$PROOF"
+          STATUS="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["terminal_classification"])' "$PROOF")"
+          STAGE="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["stage"])' "$PROOF")"
+          CDP_READY="$(python3 -c 'import json,sys; print(str(json.load(open(sys.argv[1], encoding="utf-8"))["cdp_ready"]).lower())' "$PROOF")"
+          CANDIDATE_EVALUABLE="$(python3 -c 'import json,sys; print(str(json.load(open(sys.argv[1], encoding="utf-8"))["candidate_surface_evaluable"]).lower())' "$PROOF")"
+          IDENTITY_EVALUABLE="$(python3 -c 'import json,sys; print(str(json.load(open(sys.argv[1], encoding="utf-8"))["candidate_identity_evaluable"]).lower())' "$PROOF")"
+
+          case "$STATUS:$PROBE_EXIT" in
+            PASS:0|INFRASTRUCTURE_FAILURE:20|ASSERTION_FAILURE:21) ;;
+            *)
+              echo "Browser probe classification/exit mismatch: status=$STATUS exit=$PROBE_EXIT" >&2
+              exit 1
+              ;;
+          esac
+
           cat output/phone_lab_browser/browser-proof.md >> "$GITHUB_STEP_SUMMARY"
+          echo "status=$STATUS" >> "$GITHUB_OUTPUT"
+          echo "stage=$STAGE" >> "$GITHUB_OUTPUT"
+          echo "cdp_ready=$CDP_READY" >> "$GITHUB_OUTPUT"
+          echo "candidate_evaluable=$CANDIDATE_EVALUABLE" >> "$GITHUB_OUTPUT"
+          echo "identity_evaluable=$IDENTITY_EVALUABLE" >> "$GITHUB_OUTPUT"
 
       - name: Package SHARKY_EVIDENCE_V1
-        if: github.event_name != 'pull_request' || env.SHARKY_PR_VISUAL_EVIDENCE == '1'
+        if: (github.event_name != 'pull_request' || env.SHARKY_PR_VISUAL_EVIDENCE == '1') && steps.phone_browser.outputs.status == 'PASS'
         id: evidence_package
         env:
           BASE_SHA_FROM_EVENT: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
@@ -230,7 +256,7 @@ jobs:
           cat "output/sharky_evidence/sharky-evidence-${TARGET_SHA}/report.md" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload SHARKY_EVIDENCE_V1
-        if: github.event_name != 'pull_request' || env.SHARKY_PR_VISUAL_EVIDENCE == '1'
+        if: (github.event_name != 'pull_request' || env.SHARKY_PR_VISUAL_EVIDENCE == '1') && steps.phone_browser.outputs.status == 'PASS'
         id: evidence_upload
         uses: actions/upload-artifact@v4
         with:
@@ -240,7 +266,7 @@ jobs:
           retention-days: ${{ github.event_name == 'pull_request' && 3 || 14 }}
 
       - name: Publish evidence discovery
-        if: github.event_name != 'pull_request' || env.SHARKY_PR_VISUAL_EVIDENCE == '1'
+        if: (github.event_name != 'pull_request' || env.SHARKY_PR_VISUAL_EVIDENCE == '1') && steps.phone_browser.outputs.status == 'PASS'
         env:
           ARTIFACT_ID: ${{ steps.evidence_upload.outputs.artifact-id }}
           ARTIFACT_URL: ${{ steps.evidence_upload.outputs.artifact-url }}
@@ -268,13 +294,67 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload raw Phone Lab failure proof
-        if: failure() && (github.event_name != 'pull_request' || env.SHARKY_PR_VISUAL_EVIDENCE == '1')
+        if: always() && (github.event_name != 'pull_request' || env.SHARKY_PR_VISUAL_EVIDENCE == '1') && steps.phone_browser.outputs.status != '' && steps.phone_browser.outputs.status != 'PASS'
+        id: browser_failure_upload
         uses: actions/upload-artifact@v4
         with:
           name: sharky-phone-lab-browser-proof-failure-${{ env.TARGET_SHA }}
           path: output/phone_lab_browser
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: ${{ github.event_name == 'pull_request' && 3 || 14 }}
+
+      - name: Publish browser evidence disposition
+        if: always() && (github.event_name != 'pull_request' || env.SHARKY_PR_VISUAL_EVIDENCE == '1') && steps.phone_browser.outputs.status != ''
+        env:
+          BROWSER_STATUS: ${{ steps.phone_browser.outputs.status }}
+          BROWSER_STAGE: ${{ steps.phone_browser.outputs.stage }}
+          CDP_READY: ${{ steps.phone_browser.outputs.cdp_ready }}
+          CANDIDATE_EVALUABLE: ${{ steps.phone_browser.outputs.candidate_evaluable }}
+          IDENTITY_EVALUABLE: ${{ steps.phone_browser.outputs.identity_evaluable }}
+          RAW_ARTIFACT_ID: ${{ steps.browser_failure_upload.outputs.artifact-id }}
+          RAW_ARTIFACT_URL: ${{ steps.browser_failure_upload.outputs.artifact-url }}
+        run: |
+          set -euo pipefail
+          {
+            echo "## Browser evidence disposition"
+            echo
+            echo "- BROWSER_EVIDENCE_STATUS=\`${BROWSER_STATUS}\`"
+            echo "- stage=\`${BROWSER_STAGE}\`"
+            echo "- cdp_ready=\`${CDP_READY}\`"
+            echo "- candidate_surface_evaluable=\`${CANDIDATE_EVALUABLE}\`"
+            echo "- candidate_identity_evaluable=\`${IDENTITY_EVALUABLE}\`"
+            echo "- capture_authority=\`web_qa\`"
+            echo "- native_acceptance_claimed=\`false\`"
+            if [[ "$BROWSER_STATUS" == "INFRASTRUCTURE_FAILURE" ]]; then
+              echo "- rendered_browser_evidence=\`UNAVAILABLE\`"
+              echo "- browser_pass_claimed=\`false\`"
+              echo "- raw_failure_artifact_id=\`${RAW_ARTIFACT_ID}\`"
+              echo "- raw_failure_artifact_url=${RAW_ARTIFACT_URL}"
+            elif [[ "$BROWSER_STATUS" == "ASSERTION_FAILURE" ]]; then
+              echo "- rendered_browser_assertion=\`FAILED_BLOCKING\`"
+              echo "- raw_failure_artifact_id=\`${RAW_ARTIFACT_ID}\`"
+              echo "- raw_failure_artifact_url=${RAW_ARTIFACT_URL}"
+            else
+              echo "- rendered_browser_evidence=\`PASS\`"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Enforce browser evidence semantics
+        if: always() && (github.event_name != 'pull_request' || env.SHARKY_PR_VISUAL_EVIDENCE == '1') && steps.phone_browser.outputs.status != ''
+        env:
+          BROWSER_STATUS: ${{ steps.phone_browser.outputs.status }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          if [[ "$BROWSER_STATUS" == "PASS" ]]; then
+            exit 0
+          fi
+          if [[ "$EVENT_NAME" == "pull_request" && "$BROWSER_STATUS" == "INFRASTRUCTURE_FAILURE" ]]; then
+            echo "Browser infrastructure unavailable; mandatory PR machine layers remain authoritative."
+            exit 0
+          fi
+          echo "Blocking browser evidence disposition: event=$EVENT_NAME status=$BROWSER_STATUS" >&2
+          exit 1
 
       - name: Publish preview links
         env:
@@ -289,7 +369,7 @@ jobs:
             echo "- FAST_PREVIEW=PASS"
             if [[ "${{ github.event_name }}" == "pull_request" ]]; then
               if [[ "${SHARKY_PR_VISUAL_EVIDENCE:-0}" == "1" ]]; then
-                echo "- Full evidence: enabled for UI/evidence-relevant PR head"
+                echo "- Full evidence: attempted for UI/evidence-relevant PR head"
               else
                 echo "- Full evidence: skipped; no bounded render-scope changes detected"
               fi
