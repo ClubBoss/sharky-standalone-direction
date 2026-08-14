@@ -8,13 +8,14 @@ only. Product direction remains governed by
 
 | Field | Value |
 | --- | --- |
-| Reconciliation baseline | `e0c2c793ab31adb7a7b2999a40ebc662eb63cc0e` - exact `origin/main` re-resolved before `MACHINE_NORTH_STAR_CONVERGENCE_GOVERNANCE_HANDOFF_V1`. |
+| Reconciliation baseline | `3caeb125db7b0e3904691171ef75bc4a7eb6fa41` - exact `origin/main` re-resolved after successful closure and merge of PR #167. |
 | Product/native admission baseline | `486a1509748a556de11a7e90076ed6e53aefa06e` - exact product/native evidence head owning Wave 3 hard acceptance and PHP-9 admission. |
 | Master Plan authority | `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` - principal product-working North Star authority. |
 | Current stage | **`MACHINE_NORTH_STAR_CONVERGENCE`**. |
 | Owner route | **Machine North Star Convergence -> Machine Diminishing-Return Gate -> HNP technical revalidation/Profile B repair if still required -> real Human HNP -> Human-triggered repairs -> longitudinal/real-poker/market proof.** |
-| Exact next action | **`MACHINE_NORTH_STAR_CONVERGENCE_ROUTE_SELECTION_V1`**. |
-| Exact next-action purpose | Adjudicate whether `PR_VISUAL_EVIDENCE_INNER_LOOP_V1` should be implemented first for dependency/unblocking EV, or whether the highest-EV North Star product Gauntlet should start first. No product implementation is selected by this docs mission. |
+| Completed route sequence | `MACHINE_NORTH_STAR_CONVERGENCE_ROUTE_SELECTION_V1 -> PR_VISUAL_EVIDENCE_INNER_LOOP_V1 -> bounded probe reliability adjudication/repair -> best-effort browser disposition -> CLOSED`. |
+| Exact next action | **`LEARNING_SCENE_STRATEGIC_ADJUDICATION_V1`**. |
+| Exact next-action purpose | Perform the cheapest machine comparative adjudication of the confirmed `VISUAL_NORTH_STAR_GAP_OPEN` before any Learning Scene implementation. This is adjudication only; `DO_NOTHING` remains valid and no product implementation is authorized by this state update. |
 | Machine pre-Human Horizon A | `TERMINAL`; prior PHP-9 / Wave 3 machine/native admission remains closed and valid. |
 | `PRE_HUMAN_READY` | `MET`. |
 | `HUMAN_PROVEN_10_OF_10_CANDIDATE` | `NOT_MET`. |
@@ -32,8 +33,11 @@ only. Product direction remains governed by
 | Machine convergence rule | North Star gap -> cheapest machine falsifier -> bounded implementation only when justified -> evidence -> scorecard update -> next highest-EV gap. |
 | Machine exit gate | Advance toward real Human evidence when confirmed high-EV machine-reducible material gaps are closed/deferred/diminishing-return, no machine-obvious P0/P1 remains, major uncertainty is intrinsically Human/longitudinal/real-poker/market-bound, and evidence tooling is sufficient for cheap Human-triggered repair. |
 | Repository-as-machine route | `SHARKY_REPOSITORY_AS_MACHINE_GAUNTLET_LOOP_V1` - operational multiplier, not product North Star. |
-| Deferred multiplier A | `PR_VISUAL_EVIDENCE_INNER_LOOP_V1` - validated pattern, not implemented by this reconciliation. |
-| Deferred multiplier B | `SHARKY_EVIDENCE_BOARD_V1` - static `BASE | CANDIDATE | NATIVE` view, not implemented by this reconciliation. |
+| PR visual evidence inner loop | **`CLOSED / IMPLEMENTED`** by PR #167. Exact-PR Web QA reuses one existing Flutter Web build; exact-head Cloudflare deploy and HTTP smoke remain mandatory. |
+| PR browser semantics | For admitted UI/evidence-relevant PRs, browser evidence is attempted best-effort: evaluable assertion failure remains blocking; browser infrastructure failure is explicitly non-PASS and does not fabricate `SHARKY_EVIDENCE_V1`, but does not block the PR machine gate when mandatory deploy/smoke succeed; browser PASS may produce `SHARKY_EVIDENCE_V1`. Main/non-PR browser semantics remain hard-blocking. |
+| Tooling reopen boundary | No further Chrome hardening, browser framework migration/pinning, or related reliability work is active absent new real evidence. |
+| Deferred multiplier B | `SHARKY_EVIDENCE_BOARD_V1` - static `BASE | CANDIDATE | NATIVE` view, not activated by this reconciliation. |
+| Later tooling | Pixel-diff, generic stale-base automation, universal evidence manifests, and further CI optimization remain deferred pending demonstrated ROI. |
 | Protected scope | Modern Table maintenance-only; no fourth cohesion wave, visual micro-polish, speculative guards/tests-for-tests, generic AI/ML architecture, dormant Persona/AI Coach/ui_v3 resurrection, W13-W36 bulk expansion, full solver, commerce-before-evidence, broad refactor, or new dependency without direct evidence-backed need. |
 | Handoff | `docs/context/CURRENT_EXECUTION_HANDOFF_v1.md` is a low-context continuation snapshot only; it does not compete with Master Plan v4. |
 
@@ -43,6 +47,7 @@ only. Product direction remains governed by
 - `FINAL_PRODUCT_VISUAL_COHESION_WAVE2 = CLOSED`
 - `FINAL_PRODUCT_VISUAL_COHESION_WAVE3 = CLOSED_ACCEPTED`
 - `PHP9_PRE_HUMAN_READY_ADMISSION_V1 = CLOSED`
+- `PR_VISUAL_EVIDENCE_INNER_LOOP_V1 = CLOSED / IMPLEMENTED`
 - Wave 3 remains bounded machine/native acceptance, not North Star visual proof.
 - Existing HNP protocol remains the canonical real-Human session protocol.
 
@@ -54,4 +59,4 @@ evidence hierarchy, protected boundaries, and Gauntlet policy. Report a genuine
 semantic contradiction instead of inventing a third authority.
 
 `CURRENT_STAGE = MACHINE_NORTH_STAR_CONVERGENCE`
-`EXACT_NEXT_ACTION = MACHINE_NORTH_STAR_CONVERGENCE_ROUTE_SELECTION_V1`
+`EXACT_NEXT_ACTION = LEARNING_SCENE_STRATEGIC_ADJUDICATION_V1`
