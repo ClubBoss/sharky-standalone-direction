@@ -1,17 +1,18 @@
 # MASTER PLAN v4 - NORTH STAR INTEGRATED
 
-Status: PROPOSED PRINCIPAL PRODUCT-WORKING AUTHORITY - ACTIVE ON MERGE
+Status: ACTIVE PRINCIPAL PRODUCT-WORKING AUTHORITY
 Authoring date: 2026-08-14
 Repository: `ClubBoss/sharky-standalone-direction`
 
-On merge, this file becomes the single principal day-to-day product-working
-Master Plan. While `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` is active, that
-one-screen state remains the first-read dispatch overlay. It may identify the
-exact current gate, but it cannot redefine this plan's North Star, evidence
-hierarchy, protected boundaries, or post-gate operating model.
+This file is the single principal day-to-day product-working Master Plan. While
+`docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` is active, that one-screen state
+remains the first-read dispatch overlay. It may identify the exact current gate,
+but it cannot redefine this plan's North Star, evidence hierarchy, protected
+boundaries, or post-gate operating model.
 
-This PR is governance-only. It inserts no product, runtime, test/tooling,
-visual, content, monetization, donor-migration, or Human work before HNP.
+This reconciliation is governance-only. It inserts no product, runtime,
+test/tooling, visual, content, monetization, donor-migration, or Human work
+before HNP.
 
 ## 1. Product Thesis
 
@@ -108,6 +109,7 @@ None of these proves a learner outcome by itself:
 | --- | --- | --- |
 | Repository `main` at v4 authoring start | `adab28fcea853e936066760dab62d878bac4300e` | PR #163 docs-only merge; governance baseline. |
 | Exact product / PHP-9 admission head | `486a1509748a556de11a7e90076ed6e53aefa06e` | Product/native evidence head owning Wave 3 hard acceptance and PHP-9 admission. |
+| Authority baseline at visual-truth reconciliation start | `ad9f75cb39a487a90bcb86b54c7ec8deb96aef5a` | PR #164 normal merge; live `origin/main` before this docs-only reconciliation. |
 
 Later docs-only commits do not rewrite the product-evidence head.
 
@@ -120,8 +122,31 @@ Later docs-only commits do not rewrite the product-evidence head.
 - HNP = `AUTHORIZED_NEXT_EVIDENCE_GATE / NOT PERFORMED`
 - `HUMAN_PROVEN_10_OF_10_CANDIDATE = NOT MET`
 - Modern Table = `MAINTENANCE MODE`
+- `VISUAL_BASELINE_ACCEPTED_FOR_HNP`
+- `VISUAL_NORTH_STAR_GAP_OPEN`
 
 No product implementation is inserted before HNP.
+
+### Canonical visual status
+
+Sharky's current visual state is an **HNP-admissible baseline, not the intended
+North Star visual experience**.
+
+`FINAL_PRODUCT_VISUAL_COHESION_WAVE3 = CLOSED_ACCEPTED` means its bounded
+machine/native acceptance scope passed. It does not establish premium visual
+completion, best-in-class learning-scene quality, PokerSkill-level visual
+quality, North Star visual completion, or final visual sufficiency.
+
+**Absence of critical visual defects does not imply premium visual sufficiency.**
+The current product-quality truth therefore remains
+`VISUAL_NORTH_STAR_GAP_OPEN` even while execution truth remains
+`VISUAL_BASELINE_ACCEPTED_FOR_HNP`.
+
+This distinction does not reopen Wave 3, authorize a fourth cohesion wave, weaken
+Modern Table Maintenance Mode, or insert visual implementation before HNP. HNP
+remains the first execution Gauntlet. After HNP, genuine visual findings may
+trigger bounded repair; separately, Learning Scene V2 remains the strategic
+North Star visual-uplift route under the ordering in this plan.
 
 ### North Star scorecard
 
@@ -294,13 +319,19 @@ Readiness companion:
 
 ## 10. Conditional Evolution
 
-### Learning Scene V2 - EVIDENCE_TRIGGERED
+### Learning Scene V2 - STRATEGIC NORTH STAR ROUTE / IMPLEMENTATION EVIDENCE-ORDERED
 
-Eligible only if Human/later evidence shows a material problem in table
-orientation, position recognition, clue detection, table/instruction
-continuity, CTA discovery, accessibility, trust, or desire to continue.
+The owner decision establishes a material North Star visual-quality gap in the
+current Sharky experience. Learning Scene V2 is therefore a legitimate future
+visual/product uplift route, but this does **not** activate implementation now.
 
-If admitted, compare:
+The execution order remains unchanged: current accepted baseline -> HNP
+technical preflight -> real Human Novice Proof -> evidence adjudication -> next
+Gauntlet/evidence-triggered action. HNP findings may trigger bounded causal
+repair. Separately, Learning Scene V2 remains available for later strategic
+uplift under this Master Plan's post-HNP ordering and evidence discipline.
+
+If admitted for implementation, compare:
 
 - A: current Sharky control;
 - B: restrained perspective/depth Sharky;
@@ -308,14 +339,22 @@ If admitted, compare:
 
 Preserve: one learning scene, restrained depth, hero/position orientation,
 object-attached HUD, contextual coaching, table/instruction/control continuity,
-premium trust, 1.0x/1.4x behavior.
+premium trust, 1.0x/1.4x behavior, and mobile-first visual quality rather than
+mere mobile fit.
+
+Study benchmark-class principles such as coaching-first learning-scene
+composition, stronger spatial depth/perspective, clearer hierarchy, the
+relationship between poker state/coaching context/learner action, and premium
+emotional finish. Adapt those principles into Sharky's own identity and
+corrective-learning architecture; do not copy a competitor's implementation.
 
 Anti-answer-leak:
 
 `show where/how to look -> learner interprets -> learner decides`
 
 Reject answer-bearing clue revelation. Beauty cannot win by itself.
-`DO_NOTHING` is valid.
+`DO_NOTHING` remains valid for any specific proposed implementation if evidence
+does not justify it.
 
 Reference only:
 `docs/reference/visual_benchmarks/POKERSKILL_LEARNING_SCENE_REFERENCE_2026-08-14.md`
@@ -456,7 +495,7 @@ quality. No machine checkpoint grants the strongest claim.
 5. Personalized next action proof;
 6. Real-poker bridge;
 7. Commercial / willingness-to-pay proof;
-8. Learning Scene V2 only if triggered;
+8. Learning Scene V2 strategic visual uplift adjudication;
 9. Demand-led advanced expansion only if justified.
 
 Repository simplification may interleave after HNP/urgent repair only if context
@@ -465,6 +504,6 @@ Gauntlets.
 
 ---
 
-`MASTER_PLAN_V4_NORTH_STAR_INTEGRATED = PRINCIPAL_AUTHORITY_ON_MERGE`
+`MASTER_PLAN_V4_NORTH_STAR_INTEGRATED = PRINCIPAL_AUTHORITY`
 `FIRST_EXECUTION_GAUNTLET = HUMAN_NOVICE_PROOF`
 `NO_PRODUCT_WORK_INSERTED_BEFORE_HNP = TRUE`
