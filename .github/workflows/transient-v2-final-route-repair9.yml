@@ -1,24 +1,72 @@
-name: Transient V2 repair-intent diagnostic
+name: Transient V2 bounded repair 2
 on:
   push:
     branches:
       - sol-transient/v2-final-route-repair9
 permissions:
-  contents: read
+  contents: write
 jobs:
-  diagnostic:
+  repair:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
+    env:
+      BASE_SHA: e917e7204af860739ccf146061f189c305696d9e
+      TARGET_BRANCH: kaizen/integrated-2-5d-v2-production-migration-v1
     steps:
       - uses: actions/checkout@v4
         with:
           ref: e917e7204af860739ccf146061f189c305696d9e
           fetch-depth: 2
+      - name: Assert exact retained base
+        run: test "$(git rev-parse HEAD)" = "$BASE_SHA"
+      - name: Apply exact ownership split
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart')
+          text = path.read_text()
+          old = """        if (_usesCanonicalIntegratedLearningSceneV1 &&
+            usesSharedActiveRunnerAllocation &&
+            (isDrill || isReview)) ...[
+          _RunnerProgressV1(runner: runner, onBack: widget.onBack),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          buildIntegratedPrompt(),
+        ],
+"""
+          new = """        if (_usesCanonicalIntegratedLearningSceneV1 && (isDrill || isReview))
+          _RunnerProgressV1(runner: runner, onBack: widget.onBack),
+        if (_usesCanonicalIntegratedLearningSceneV1 &&
+            usesSharedActiveRunnerAllocation &&
+            (isDrill || isReview)) ...[
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          buildIntegratedPrompt(),
+        ],
+"""
+          if text.count(old) != 1:
+              raise SystemExit(f'expected exactly one ownership block, found {text.count(old)}')
+          path.write_text(text.replace(old, new))
+          PY
+          git diff --check
+          test "$(git diff --name-only | tr -d '\r')" = "lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart"
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.0'
           channel: stable
           cache: true
       - run: flutter pub get
-      - name: Reproduce Tier-A repair intent failure
-        run: flutter test test/ui_v2/act0_repair_intent_resolver_v1_test.dart -r expanded
+      - name: Assert formatter clean
+        run: dart format --output=none --set-exit-if-changed lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
+      - name: Repair-intent Tier A regression
+        run: flutter test test/ui_v2/act0_repair_intent_resolver_v1_test.dart -r compact
+      - name: Action telemetry exit preservation
+        run: flutter test test/ui_v2/act0_telemetry_sink_v1_test.dart --plain-name 'unlocked Action capability journey completes the alpha loop with ordered safe telemetry'
+      - name: Commit and push exact repair
+        run: |
+          set -euo pipefail
+          git add lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
+          test "$(git diff --cached --name-only)" = "lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "fix(act0): restore canonical non-shared runner exit owner"
+          git push origin HEAD:"$TARGET_BRANCH"
+          echo "candidate_sha=$(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
