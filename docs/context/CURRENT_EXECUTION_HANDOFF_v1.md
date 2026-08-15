@@ -8,13 +8,12 @@ applicable. This file only compresses current state for low-context continuation
 
 ## CURRENT EXACT MAIN BASELINE
 
-Re-resolved after publication of the push-only remote kaizen execution lane:
+Post-migration canonical main verified before this reconciliation:
 
-`3e322dc546a131af30ec70390db248230b74bb9d`
+`90e3b5a67a85424be457a946c629e88a578661e4`
 
-This is the merged PR #176 execution substrate. Consumers must still re-resolve
-live `origin/main` before execution; this authoring baseline is not permanent
-authority.
+This is PR #179 merge commit. Consumers must still re-resolve live `origin/main`
+before execution; this authoring baseline is not permanent authority.
 
 ## CURRENT NORTH STAR
 
@@ -32,29 +31,116 @@ Canonical authority:
 
 ## CURRENT STAGE
 
-`MACHINE_NORTH_STAR_CONVERGENCE`
+`HNP_TECHNICAL_REVALIDATION`
 
-Preserved status:
+Exact next packet:
+
+`SHARKY_HNP_TECHNICAL_REVALIDATION_PROFILE_B_MATERIALIZATION_V1`
+
+Purpose: revalidate the exact-main native/HNP execution path, determine whether
+the historical Profile B materialization blocker still exists, prove the
+physical HNP telemetry chain, and repair only the minimum technical blocker if
+current evidence proves one remains.
+
+## CANONICAL V2 MIGRATION - PROVEN
+
+`SHARKY_INTEGRATED_2_5D_V2_CANONICAL_PRODUCTION_MIGRATION = PROVEN`
+
+Migration PR:
+
+`#179 - Migrate Integrated 2.5D V2 to canonical Learning Scene`
+
+Retained final head:
+
+`6ae270e042b04dbeada6d25f15b1945ef901e2d3`
+
+Merged main:
+
+`90e3b5a67a85424be457a946c629e88a578661e4`
+
+Exact-main proof:
+
+`GitHub Actions run 31891654280 = SUCCESS`
+
+The run included exact merged-main/tree assertion, exact-main analysis, route
+semantics, production-real `iphone17_class` + `compact`, and canonical ownership
+proof.
+
+The accepted Integrated 2.5D V2 Learning Scene is canonical. Prototype-selection
+plumbing is retired. This migration does not claim Human approval, final premium
+visual quality, or North Star completion.
+
+## MACHINE DIMINISHING-RETURN GATE
+
+`MACHINE DIMINISHING-RETURN GATE = REACHED`
+
+No further pre-HNP machine product/visual wave is currently admitted. Major
+remaining uncertainty is Human evidence rather than another speculative machine
+product wave.
+
+This does not mean:
+
+- final premium visual North Star is proven;
+- Human learning effect is proven;
+- retention is proven;
+- real-poker improvement is proven;
+- market value is proven.
+
+Modern Table remains `MAINTENANCE_MODE`.
+
+## HNP TECHNICAL BASELINE TO REVALIDATE
+
+Historical authority records:
 
 - `PRE_HUMAN_READY = MET`
-- `VISUAL_BASELINE_ACCEPTED_FOR_HNP`
-- `VISUAL_NORTH_STAR_GAP_OPEN`
-- `HUMAN_PROVEN_10_OF_10_CANDIDATE = NOT_MET`
-- `HNP = REQUIRED_FUTURE_HUMAN_EVIDENCE_GATE / NOT_PERFORMED`
 - `HNP_NATIVE_BUILD = PASS`
 - `HNP_PROFILE_A = PASS`
 - `HNP_PROFILE_B_NATIVE_MATERIALIZATION = BLOCKED / DEFERRED`
 - `HNP_PHYSICAL_TELEMETRY_FULL_CHAIN = NOT_YET_PROVEN`
 - `REAL_HUMAN_HNP = NOT_PERFORMED`
-- Modern Table = `MAINTENANCE_MODE`
-- Contextual answer-bearing coaching = `NOT_ADMITTED`
-- Avatars / characters = `DEFERRED`
+- `HUMAN_PROVEN_10_OF_10_CANDIDATE = NOT_MET`
+- `VISUAL_NORTH_STAR_GAP_OPEN`
 
-HNP is not cancelled. Sharky has closed the bounded pre-production V2
-prototype-exploration loop and is now admitted to one bounded canonical
-production migration before machine diminishing-return / next-gap adjudication.
+The Profile B blocker is historical evidence, not eternal truth. Revalidate it
+against current exact main before any repair.
 
-## REMOTE FAST KAIZEN EXECUTION LANE - PROVEN
+Canonical HNP protocol:
+
+`docs/_reviews/human_novice_proof_protocol_v1.md`
+
+Canonical telemetry contract:
+
+`docs/plan/ACT0_TELEMETRY_TRUTH_MAP_v1.md`
+
+Historical HNP telemetry enablement/sink to revalidate:
+
+- build define: `--dart-define=HNP_TELEMETRY=true`
+- physical sink: `Library/Application Support/act0_hnp_trace_v1.jsonl`
+
+Profile A remains a fresh installed container and must not be contaminated by
+Profile B preparation.
+
+Profile B remains a production-equivalent progressed state that exposes the
+normal production Action loop. It must not use a debug menu, direct-state route,
+alternate fake app root, answer-bearing surface, or synthetic production bypass.
+
+## CURRENT PRODUCT / EVIDENCE TRUTH
+
+Preserved machine truth includes:
+
+- canonical V2 Integrated 2.5D Learning Scene;
+- production-real phone evidence;
+- portrait matrix including catastrophic 1.4x condition;
+- W1 theory route;
+- Action decision route;
+- wrong feedback -> repair -> recheck -> completion path;
+- session exit;
+- bounded learning-loop telemetry mechanism;
+- no machine-obvious P0/P1 remaining in the completed convergence scope.
+
+Human proof remains `NOT_PERFORMED`.
+
+## REMOTE EXECUTION SUBSTRATE
 
 `SHARKY_REMOTE_FAST_KAIZEN_EXECUTION_LANE_V1 = PROVEN`
 
@@ -62,268 +148,41 @@ Publication PR #176 merged at:
 
 `3e322dc546a131af30ec70390db248230b74bb9d`
 
-The proven execution substrate provides:
-
-- push-only `kaizen/**` candidate execution;
-- exact `github.sha` checkout and SHA assertion;
-- Flutter 3.35 remote analysis;
-- focused Act0/evidence guards;
-- existing production-real captures for `iphone17_class` and `compact`;
-- exact-SHA downloadable evidence artifacts;
-- actual PNG inspection by ordinary ChatGPT before visual KEEP/REJECT claims;
-- one intended workflow run per material candidate without PR inner-loop fan-out.
-
-This is executor/transport truth only. It does not change product direction,
-V2 migration scope, the visual freeze, HNP status, Modern Table status, North
-Star, or the evidence hierarchy. Production CI remains unchanged.
-
-## PROOF-FEEDBACK ALLOCATION - COMPLETED AND CLOSED
-
-Completed packet:
-
-`SHARKY_INTEGRATED_2_5D_V2_PROOF_FEEDBACK_ALLOCATION_CODEX_EXECUTION_V1`
-
-Execution base:
-
-`ebd7335353cd4e9b61d8feed01eab2bf601b8daa`
-
-Terminal verdict:
-
-`SHARKY_INTEGRATED_2_5D_V2_PROOF_FEEDBACK_ALLOCATION_READY_FOR_OWNER_REVIEW`
-
-Packet status:
-
-`INITIAL IMPLEMENTATION SUCCEEDED / 2 OF 2 REPAIR SLOTS UNUSED / PACKET CLOSED`
-
-The experiment remained local-only and did not mutate the canonical route.
-
-### Root cause solved
-
-The proof-feedback body and CTA no longer compete for residual Column height.
-The reported experiment mechanism is:
-
-`Expanded(SingleChildScrollView(...))`
-`+ sibling SizedBox(height: 48)`
-
-Treat this as evidence from the successful isolated experiment, not immutable
-architecture doctrine for the production owner.
-
-## FINAL CTA / ROUTE MACHINE PROOF
-
-Primary `402x874 / 1.0x`:
-
-- wrong feedback CTA: `376 x 48`
-- repair success CTA: `376 x 48`
-- recheck success CTA: `376 x 48`
-- visible geometry == hit geometry
-
-Real route PASS without direct state mutation:
-
-`decision -> wrong -> feedback -> repair -> repair success -> recheck -> recheck success -> completion -> next state`
-
-## V2 SCENE FREEZE - PASSED
-
-Exact preservation evidence:
-
-- prompt: `(0,38), 402x50`
-- table: `(52.2,100), 297.6x496`
-- table scale: `1.0`
-- hero: `y = 541.2265`
-- major seat anchors: exactly unchanged
-- lower envelope: `(0,590), 402x284`
-
-The allocation solution fixed proof-feedback usability without shrinking or
-moving the winning V2 spatial scene.
-
-## DEVICE MATRIX - PASSED
-
-- `402x874 / 1.0x = PASS`
-- `375x812 / 1.0x = PASS`
-- `430x932 / 1.0x = PASS`
-- `402x874 / 1.4x = PASS`
-
-No repair slots were consumed.
-
-## SEMANTIC PRESERVATION
-
-Preserved by the successful experiment:
-
-- `Act0RunnerStateV1` truth
-- `Act0TableStateV1` truth
-- task IDs
-- option IDs
-- poker strategy truth
-- correctness
-- content
-- repair
-- recheck
-- progression
-- telemetry
-- answer-leakage policy
-
-No second poker engine.
-
-## FINAL V2 OWNER DISPOSITION
-
-Confirmed:
-
-- P1 table dominance = `CONFIRMED`
-- P2 perspective silhouette = `CONFIRMED`
-- P3 hero/action ownership = `CONFIRMED`
-- proof-feedback usable allocation = `CONFIRMED`
-- full primary machine route = `CONFIRMED`
-- multi-portrait machine viability = `CONFIRMED`
-
-Candidate status:
-
-`SHARKY_INTEGRATED_2_5D_LEARNING_SCENE_V2 = OWNER_ACCEPTED_FOR_BOUNDED_PRODUCTION_MIGRATION / MACHINE_PROVEN_FOR_ADMITTED_SCOPE / NOT_HUMAN_PROVEN / NOT_NORTH_STAR_COMPLETE`
-
-This is an owner visual win and machine proof for the admitted scope. Do not
-promote it into Human approval, final premium quality, or North Star completion.
-
-## POKERSKILL PRINCIPLE-LEVEL BENCHMARK
-
-PokerSkill remains external reference only and never becomes repository
-authority.
-
-Independent benchmark conclusion:
-
-`POKERSKILL_ADVANTAGE_PRIMARILY_SPATIAL_SCENE_ARCHITECTURE`
-
-Tier-1 principles:
-
-- hero orientation
-- forced perspective / depth
-- one-scene composition
-
-Important secondary principles:
-
-- object-attached HUD
-- stable spatial continuity
-- attention-aware rendering
-
-Final Sharky V2 materially closes the original Tier-1 structural gap through:
-
-- real perspective silhouette
-- near/mid/far hierarchy
-- explicit hero foreground
-- prompt-before-scene hierarchy
-- hero/action foreground ownership
-- stable decision/repair/recheck geometry
-
-Residual PokerSkill-class differences remain in richer environment,
-characters/player embodiment, deeper HUD attachment, attention rendering, art,
-and semantic motion. These do not automatically justify another pre-production
-visual iteration. No copying.
-
-## PROTOTYPE VISUAL LOOP - CLOSED
-
-Do not dispatch:
-
-- V3 composition iteration
-- more table-perspective polish
-- avatar experiment
-- room/environment art
-- shader/lighting wave
-- motion wave
-
-The highest-EV next action is canonical migration of the already proven V2
-candidate, not another visual prototype.
-
-## BOUNDED PRODUCTION MIGRATION - ADMITTED
-
-Admitted packet:
-
-`SHARKY_INTEGRATED_2_5D_V2_BOUNDED_PRODUCTION_MIGRATION_V1`
-
-Purpose:
-
-Move the proven opt-in V2 Learning Scene presentation into canonical production
-ownership while preserving all semantic contracts and safely removing
-prototype-only selection/plumbing where possible.
-
-This is migration, not redesign:
-
-`PROTOTYPE -> CANONICAL`
-
-not:
-
-`PROTOTYPE -> REDESIGN`
-
-### Migration freeze
-
-Preserve:
-
-- perspective silhouette
-- table visual mass
-- prompt/table/hero composition
-- near/mid/far hierarchy
-- hero/action ownership
-- proof-feedback bounded body
-- pinned CTA geometry
-
-No visual improvement during migration.
-
-### Allowed scope
-
-- make V2 presentation canonical on the admitted Learning Scene route
-- remove/retire prototype-only opt-in plumbing when safe
-- consolidate candidate presentation into the existing production owner
-- reconcile tests/guards with canonical geometry
-- preserve deterministic screenshot/evidence tooling
-- run focused regression
-- run exact production/native validation required by current authority
-
-No broad refactor.
-
-### Forbidden scope
-
-No:
-
-- avatars
-- PokerSkill art
-- room environment
-- lighting
-- shaders
-- motion
-- coach redesign
-- content changes
-- poker logic changes
-- feedback copy changes
-- new dependencies
-- generalized scene engine
-- Modern Table cosmetic reopening
-
-## POST-MIGRATION ROUTE
-
-After successful bounded production migration:
-
-1. validate canonical production route;
-2. validate the standard portrait matrix;
-3. perform exact-SHA native validation if authority/tooling requires it;
-4. perform `MACHINE DIMINISHING-RETURN / NEXT-GAP ADJUDICATION`.
-
-That adjudication must choose exactly one:
-
-A. one concrete high-EV machine-reducible gap;
-
-or
-
-B. `MACHINE DIMINISHING RETURN REACHED -> proceed toward HNP`.
-
-Do not assume another visual Gauntlet is required.
-
-## EXACT NEXT ACTION
-
-`SHARKY_INTEGRATED_2_5D_V2_BOUNDED_PRODUCTION_MIGRATION_ORDINARY_SOL_REMOTE_EXECUTION_V1`
-
-Purpose: starting from exact live main plus the owner-accepted V2 candidate,
-migrate the proven presentation from prototype ownership into the canonical
-Learning Scene without visual improvement, semantic drift, or scope expansion;
-then validate production/native truth using ordinary GPT-5.6 Sol High plus the
-proven push-only remote kaizen lane.
+The push-only `kaizen/**` lane can provide exact-SHA Flutter analysis, focused
+Act0/evidence guards, production-real phone captures, and exact-SHA artifacts.
+This is execution transport only; it does not replace native/HNP physical proof.
+
+## PROTECTED SCOPE
+
+Do not open:
+
+- visual polish or another Learning Scene visual wave;
+- avatars, room/environment art, lighting, shaders, or motion;
+- Modern Table cosmetics;
+- content/poker-logic changes;
+- generic AI/ML or dormant Persona/AI Coach/ui_v3 systems;
+- broad persistence refactors;
+- generic fixture/test infrastructure;
+- new dependencies without direct evidence-backed need;
+- synthetic Human proof.
+
+Stage-B implementation is authorized only if current exact-main evidence proves
+a direct HNP technical blocker. Prefer truthful external HNP-only materialization
+against the existing production persistence contract over product UI/runtime
+architecture.
+
+## HUMAN BOUNDARY
+
+A technical observer-only traversal may prove the mechanism before the real
+participant, using a separate container and then resetting.
+
+It is never Human proof.
+
+Do not publish `HUMAN_NOVICE_PROOF_V1_PASSED` without a real eligible novice.
+The successful pre-participant terminal state is only technical readiness for a
+real HNP session.
 
 `HANDOFF_AUTHORITY = NONE`
 `MASTER_PLAN_V4_WINS_ON_PRODUCT_DIRECTION = TRUE`
-`CURRENT_STAGE = MACHINE_NORTH_STAR_CONVERGENCE`
-`EXACT_NEXT_ACTION = SHARKY_INTEGRATED_2_5D_V2_BOUNDED_PRODUCTION_MIGRATION_ORDINARY_SOL_REMOTE_EXECUTION_V1`
+`CURRENT_STAGE = HNP_TECHNICAL_REVALIDATION`
+`EXACT_NEXT_ACTION = SHARKY_HNP_TECHNICAL_REVALIDATION_PROFILE_B_MATERIALIZATION_V1`
