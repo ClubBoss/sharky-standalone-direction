@@ -165,7 +165,7 @@ void main() {
       expect(runner.runner.phase, Act0LessonPhaseV1.drill);
       expect(runner.runner.question, 'What does this table show?');
       final semanticsHandle = tester.ensureSemantics();
-      final question = find.byKey(const Key('act0_shell_action_question'));
+      final question = find.byKey(const Key('act0_integrated_scene_prompt'));
       final options = <Finder>[
         for (final option in runner.runner.options)
           find.byKey(Key('act0_shell_option_${option.id}')),
