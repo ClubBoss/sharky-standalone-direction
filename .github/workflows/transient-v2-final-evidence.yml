@@ -1,0 +1,139 @@
+name: Transient V2 final evidence
+
+on:
+  push:
+    branches:
+      - sol-transient/v2-progression-owner-reconcile
+
+permissions:
+  contents: read
+
+jobs:
+  evidence:
+    runs-on: macos-14
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: b166299cb3f9f813653eabcee35a52bf7a994a59
+          fetch-depth: 0
+
+      - name: Assert exact candidate and scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 'b166299cb3f9f813653eabcee35a52bf7a994a59'
+          git diff --check a5c7d94d31ea6f2f2ff7d1cf2ceb0856cd7f26a6
+          git diff --name-only a5c7d94d31ea6f2f2ff7d1cf2ceb0856cd7f26a6 > /tmp/changed.txt
+          cat /tmp/changed.txt
+          test "$(wc -l < /tmp/changed.txt | tr -d ' ')" = '3'
+          grep -Fxq 'lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart' /tmp/changed.txt
+          grep -Fxq 'test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart' /tmp/changed.txt
+          grep -Fxq 'test/ui_v2/alpha_journey_progression_truth_v1_test.dart' /tmp/changed.txt
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+
+      - name: Install locked dependencies
+        run: flutter pub get
+
+      - name: Semantic and telemetry preservation
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p output/v2-final-evidence/semantic
+          flutter test test/ui_v2/alpha_journey_progression_truth_v1_test.dart | tee output/v2-final-evidence/semantic/alpha_progression.log
+          flutter test \
+            --dart-define=ALPHA_QA_TRACE_PATH="$PWD/output/v2-final-evidence/semantic/action_trace.json" \
+            test/ui_v2/act0_telemetry_sink_v1_test.dart \
+            --plain-name 'unlocked Action capability journey completes the alpha loop with ordered safe telemetry' \
+            | tee output/v2-final-evidence/semantic/action_telemetry.log
+          flutter test test/ui_v2/act0_action_sequence_personalization_v1_test.dart \
+            --plain-name 'correct initial Action read continues canonical progression' \
+            | tee output/v2-final-evidence/semantic/correct_first.log
+          flutter test test/ui_v2/act0_action_sequence_personalization_v1_test.dart \
+            --plain-name 'repeated missed action read takes precedence over other rules' \
+            | tee output/v2-final-evidence/semantic/repeated_miss.log
+          flutter test test/ui_v2/act0_action_learning_sequence_v1_test.dart \
+            | tee output/v2-final-evidence/semantic/same_task_route.log
+          flutter test \
+            test/ui_v2/table_identity_policy_wave_b_labels_v1_test.dart \
+            test/ui_v2/table_identity_policy_wave_c_markers_v1_test.dart \
+            test/ui_v2/table_identity_semantic_metadata_seam_v1_test.dart \
+            | tee output/v2-final-evidence/semantic/table_identity.log
+
+      - name: Capture exact accepted portrait matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+          run_profile() {
+            local device="$1"
+            local scale="$2"
+            local out="$3"
+            mkdir -p "$out"
+            flutter test \
+              --dart-define=ACTION_EVIDENCE_DEVICE="$device" \
+              --dart-define=ACTION_EVIDENCE_TEXT_SCALE="$scale" \
+              --dart-define=ACTION_EVIDENCE_OUTPUT="$PWD/$out" \
+              test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
+              --plain-name 'captures canonical W1 Action production states'
+          }
+          run_profile iphone17_class 1.0 output/v2-final-evidence/iphone17_class
+          run_profile compact 1.0 output/v2-final-evidence/compact
+          run_profile large_phone 1.0 output/v2-final-evidence/large_phone
+          run_profile iphone17_class 1.4 output/v2-final-evidence/iphone17_class_1_4x
+
+      - name: Verify frozen geometry CTA and selector retirement
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, math, pathlib
+          root = pathlib.Path('output/v2-final-evidence')
+          expected = {
+            'iphone17_class': dict(prompt=(0,38,402,50), table=(52.2,100,297.6,496), hero=541.2265, action=(0,590,402,284)),
+            'compact': dict(prompt=(0,38,375,50), table=(51.3,100,272.4,454), hero=505.3585, action=(0,548,375,264)),
+            'large_phone': dict(prompt=(0,38,430,50), table=(53.6,100,322.8,538), hero=577.0945, action=(0,632,430,300)),
+            'iphone17_class_1_4x': dict(prompt=(0,38,402,60), table=(70.2,110,261.6,436), hero=499.9865, action=(0,540,402,334)),
+          }
+          def rect_tuple(v): return (v['left'], v['top'], v['width'], v['height'])
+          def close_tuple(a,b): return all(math.isclose(x,y,abs_tol=1e-6) for x,y in zip(a,b))
+          for profile, exp in expected.items():
+            data=json.loads((root/profile/'raster_geometry_metrics.json').read_text())
+            decision=next(x for x in data['states'] if x['name']=='decision')
+            g=decision['integratedGeometry']
+            assert close_tuple(rect_tuple(g['promptEnvelope']), exp['prompt']), (profile,'prompt',g['promptEnvelope'])
+            assert close_tuple(rect_tuple(g['visibleTableBounds']), exp['table']), (profile,'table',g['visibleTableBounds'])
+            assert math.isclose(g['heroY'], exp['hero'], abs_tol=1e-6), (profile,'hero',g['heroY'])
+            assert close_tuple(rect_tuple(g['actionEnvelope']), exp['action']), (profile,'action',g['actionEnvelope'])
+            assert math.isclose(g['explicitTableScale'], 1.0, abs_tol=1e-9)
+            cta=json.loads((root/profile/'cta_hit_geometry.json').read_text())
+            assert {x['state'] for x in cta} == {'wrong_feedback','repair_success','recheck_success'}
+            for row in cta:
+              assert math.isclose(row['bounds']['height'],48.0,abs_tol=1e-6), (profile,row)
+              samples=row['samples']
+              assert all(samples[k] for k in ['center','upperLeft','upperRight','lowerLeft','lowerRight'])
+              assert samples['outsideLeft'] is False
+            allocation=json.loads((root/profile/'feedback_allocation_geometry.json').read_text())
+            assert all(x['primaryResultInitiallyVisible'] and x['reachedBodyEnd'] and x['ctaPinnedWhileBodyScrolled'] for x in allocation)
+          runner=pathlib.Path('lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart').read_text()
+          preview=pathlib.Path('lib/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart').read_text()
+          raster=pathlib.Path('test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart').read_text()
+          assert 'integratedLearningScenePrototype' not in runner
+          assert 'integratedLearningScenePrototype' not in preview
+          assert 'INTEGRATED_2_5D_PROTOTYPE' not in raster
+          assert 'bool get _usesCanonicalIntegratedLearningSceneV1 => true;' in runner
+          print('FINAL_V2_GEOMETRY_CTA_DEFAULT_SELECTION=PASS')
+          PY
+          printf '%s\n' 'b166299cb3f9f813653eabcee35a52bf7a994a59' > output/v2-final-evidence/candidate-sha.txt
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sharky-v2-final-evidence-b166299c
+          path: output/v2-final-evidence
+          if-no-files-found: warn
+          retention-days: 7
