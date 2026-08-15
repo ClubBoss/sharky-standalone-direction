@@ -1,0 +1,197 @@
+name: HNP technical evidence transient
+
+on:
+  push:
+    branches:
+      - hnp/technical-revalidation-v1
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Assert exact candidate
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          echo "HNP_CANDIDATE_SHA=${GITHUB_SHA}"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+      - name: Install locked dependencies
+        run: flutter pub get
+      - name: Native capability inventory
+        run: |
+          set -euo pipefail
+          xcodebuild -version
+          flutter --version
+          xcrun simctl list devices available
+          for tool in idb maestro applesimutils cliclick; do
+            if command -v "$tool" >/dev/null 2>&1; then
+              echo "HNP_UI_DRIVER_${tool}=AVAILABLE:$(command -v "$tool")"
+            else
+              echo "HNP_UI_DRIVER_${tool}=ABSENT"
+            fi
+          done
+          xcrun simctl help io || true
+      - name: Emit canonical Profile B persisted snapshot
+        run: |
+          set -euo pipefail
+          mkdir -p output
+          cat > test/_tmp_hnp_profile_b_snapshot_v1_test.dart <<'DART'
+          import 'dart:convert';
+          import 'dart:io';
+          import 'package:flutter_test/flutter_test.dart';
+          import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+
+          void main() {
+            test('emit production-equivalent Profile B snapshot', () {
+              final fixture = jsonDecode(
+                File('tools/contracts/alpha_action_capability_prerequisite_progression_v1.json')
+                    .readAsStringSync(),
+              ) as Map<String, dynamic>;
+              expect(fixture['schema'], 'act0_progression_fixture_v1');
+              final lessonIds = (fixture['completed_lesson_ids'] as List<dynamic>)
+                  .map((value) => value.toString())
+                  .toList(growable: false);
+              final state = Act0ShellStateV1.sample;
+              final world = state.worldById(fixture['world_id'] as String);
+              final completedTaskIds = <String>[
+                for (final lessonId in lessonIds)
+                  ...world.lessons
+                      .firstWhere((lesson) => lesson.lessonId == lessonId)
+                      .taskList
+                      .map((task) => task.taskId),
+              ];
+              expect(completedTaskIds, hasLength(28));
+              final target = fixture['target'] as Map<String, dynamic>;
+              final snapshot = <String, Object>{
+                'schemaVersion': 16,
+                'completedTaskIds': completedTaskIds,
+                'skippedTaskIds': <String>[],
+                'completedLessonIds': lessonIds,
+                'selectedWorldId': world.worldId,
+                'selectedLessonId': target['lesson_id'] as String,
+                'selectedTaskId': target['task_id'] as String,
+                'earnedXp': 0,
+              };
+              File('output/hnp_profile_b_progress_v1.json')
+                  .writeAsStringSync(jsonEncode(snapshot));
+            });
+          }
+          DART
+          flutter test test/_tmp_hnp_profile_b_snapshot_v1_test.dart
+          rm test/_tmp_hnp_profile_b_snapshot_v1_test.dart
+          python3 - <<'PY'
+          import json
+          p=json.load(open('output/hnp_profile_b_progress_v1.json'))
+          assert p['schemaVersion']==16
+          assert len(p['completedTaskIds'])==28
+          assert p['completedLessonIds']==['what_poker_is','what_poker_is_content','cards_ranks_suits','your_first_hand']
+          assert p['selectedLessonId']=='fold_check_call_raise'
+          assert p['selectedTaskId']=='actions_theory'
+          print('HNP_PROFILE_B_SNAPSHOT=PASS tasks=28 target=fold_check_call_raise/actions_theory')
+          PY
+      - name: Build exact-candidate HNP Runner
+        run: |
+          set -euo pipefail
+          flutter build ios --simulator --debug --dart-define=HNP_TELEMETRY=true
+          APP=build/ios/iphonesimulator/Runner.app
+          test -d "$APP"
+          shasum -a 256 "$APP/Runner" | tee output/runner_sha256.txt
+      - name: Profile A native clean-install proof
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' > output/simulator_selection.env
+          import json, subprocess
+          payload=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j'], text=True))
+          prefs=('iPhone 17 Pro','iPhone 16 Pro','iPhone 17','iPhone 16','iPhone 15 Pro','iPhone 15')
+          candidates=[]
+          for runtime, devices in payload['devices'].items():
+            for d in devices:
+              if d.get('isAvailable') and any(d['name'].startswith(n) for n in prefs):
+                candidates.append((prefs.index(next(n for n in prefs if d['name'].startswith(n))), runtime, d))
+          if not candidates:
+            raise SystemExit('no suitable iPhone Simulator')
+          _, runtime, d=sorted(candidates, key=lambda x:(x[0], x[1]), reverse=False)[0]
+          print(f"UDID={d['udid']}")
+          print(f"SIM_NAME={d['name']}")
+          print(f"SIM_RUNTIME={runtime}")
+          PY
+          cat output/simulator_selection.env
+          source output/simulator_selection.env
+          BUNDLE_ID=com.example.pokerAnalyzer
+          APP=build/ios/iphonesimulator/Runner.app
+          xcrun simctl shutdown all 2>/dev/null || true
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl uninstall "$UDID" "$BUNDLE_ID" 2>/dev/null || true
+          xcrun simctl install "$UDID" "$APP"
+          xcrun simctl launch --terminate-running-process --stdout=output/profile_a.stdout.log --stderr=output/profile_a.stderr.log "$UDID" "$BUNDLE_ID" | tee output/profile_a.launch.txt
+          sleep 6
+          xcrun simctl io "$UDID" screenshot output/profile_a.png >/dev/null
+          test -s output/profile_a.png
+          DATA_CONTAINER="$(xcrun simctl get_app_container "$UDID" "$BUNDLE_ID" data)"
+          echo "DATA_CONTAINER=$DATA_CONTAINER" | tee output/profile_a.container.txt
+          test -d "$DATA_CONTAINER"
+          test ! -e "$DATA_CONTAINER/Library/Application Support/act0_hnp_trace_v1.jsonl" || ls -l "$DATA_CONTAINER/Library/Application Support/act0_hnp_trace_v1.jsonl"
+          xcrun simctl terminate "$UDID" "$BUNDLE_ID"
+          echo "HNP_PROFILE_A_NATIVE_LAUNCH=PASS"
+      - name: Materialize Profile B through production UserDefaults contract
+        run: |
+          set -euo pipefail
+          source output/simulator_selection.env
+          BUNDLE_ID=com.example.pokerAnalyzer
+          PROGRESS="$(cat output/hnp_profile_b_progress_v1.json)"
+          echo '--- shared_preferences foundation prefix evidence ---' | tee output/shared_preferences_prefix.txt
+          grep -R "flutter\." "$HOME/.pub-cache/hosted/pub.dev/shared_preferences_foundation-"*/darwin/shared_preferences_foundation/Sources 2>/dev/null | head -n 20 | tee -a output/shared_preferences_prefix.txt || true
+          xcrun simctl spawn "$UDID" defaults write "$BUNDLE_ID" flutter.onboardingCompleted -bool true
+          xcrun simctl spawn "$UDID" defaults write "$BUNDLE_ID" flutter.onboarding_complete -bool true
+          xcrun simctl spawn "$UDID" defaults write "$BUNDLE_ID" flutter.intake_completed_v1 -bool true
+          xcrun simctl spawn "$UDID" defaults write "$BUNDLE_ID" flutter.act0_welcome_completed_v1 -bool true
+          xcrun simctl spawn "$UDID" defaults write "$BUNDLE_ID" flutter.act0_shell_progress_v1 "$PROGRESS"
+          xcrun simctl spawn "$UDID" defaults read "$BUNDLE_ID" | tee output/profile_b.defaults.before.txt
+          xcrun simctl launch --terminate-running-process --stdout=output/profile_b.stdout.log --stderr=output/profile_b.stderr.log "$UDID" "$BUNDLE_ID" | tee output/profile_b.launch.txt
+          sleep 8
+          xcrun simctl io "$UDID" screenshot output/profile_b.png >/dev/null
+          test -s output/profile_b.png
+          DATA_CONTAINER="$(xcrun simctl get_app_container "$UDID" "$BUNDLE_ID" data)"
+          echo "$DATA_CONTAINER" > output/profile_b.container_path.txt
+          TRACE="$DATA_CONTAINER/Library/Application Support/act0_hnp_trace_v1.jsonl"
+          if [[ -e "$TRACE" ]]; then
+            cp "$TRACE" output/profile_b.initial_trace.jsonl
+            echo "HNP_PHYSICAL_TRACE_FILE_AFTER_NATIVE_LAUNCH=EXISTS bytes=$(wc -c < "$TRACE")"
+          else
+            echo "HNP_PHYSICAL_TRACE_FILE_AFTER_NATIVE_LAUNCH=MISSING"
+            exit 31
+          fi
+          xcrun simctl terminate "$UDID" "$BUNDLE_ID"
+          xcrun simctl spawn "$UDID" defaults read "$BUNDLE_ID" flutter.act0_shell_progress_v1 > output/profile_b.progress.after.json
+          python3 - <<'PY'
+          import json
+          raw=open('output/profile_b.progress.after.json').read().strip()
+          p=json.loads(raw)
+          assert p['selectedWorldId']=='world_1', p
+          assert p['selectedLessonId']=='fold_check_call_raise', p
+          assert p['selectedTaskId']=='actions_theory', p
+          assert set(p['completedLessonIds'])=={'what_poker_is','what_poker_is_content','cards_ranks_suits','your_first_hand'}, p
+          assert len(p['completedTaskIds'])==28, len(p['completedTaskIds'])
+          print('HNP_PROFILE_B_BOOTSTRAP_PRESERVATION=PASS schemaVersion=%s tasks=%s' % (p['schemaVersion'], len(p['completedTaskIds'])))
+          PY
+          echo "HNP_PROFILE_B_NATIVE_MATERIALIZATION=PASS"
+      - name: Upload bounded technical evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hnp-technical-probe-${{ github.sha }}
+          path: output/
+          if-no-files-found: warn
+          retention-days: 7
