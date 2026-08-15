@@ -3300,10 +3300,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           const SizedBox.shrink(
             key: Key('act0_shell_compact_answer_list_branch'),
           ),
+        if (_usesCanonicalIntegratedLearningSceneV1 && (isDrill || isReview))
+          _RunnerProgressV1(runner: runner, onBack: widget.onBack),
         if (_usesCanonicalIntegratedLearningSceneV1 &&
             usesSharedActiveRunnerAllocation &&
             (isDrill || isReview)) ...[
-          _RunnerProgressV1(runner: runner, onBack: widget.onBack),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           buildIntegratedPrompt(),
         ],
