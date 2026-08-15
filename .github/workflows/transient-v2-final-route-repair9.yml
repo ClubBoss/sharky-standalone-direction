@@ -1,4 +1,4 @@
-name: Transient V2 canonical exit allocation reconciliation
+name: Transient V2 canonical exit allocation repair 1
 on:
   push:
     branches:
@@ -20,38 +20,66 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - name: Reconcile canonical exit allocation and prove route
+      - name: Reuse existing lower navigation as canonical exit owner
         shell: bash
         run: |
           set -euo pipefail
           BASE='56c3ee2a7ebd6304b7c9bc7ae4be9ef1a0daacd3'
           EXPECTED_MAIN='a5c7d94d31ea6f2f2ff7d1cf2ceb0856cd7f26a6'
           TARGET_BRANCH='kaizen/integrated-2-5d-v2-production-migration-v1'
-          FILE='lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart'
+          RUNNER='lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart'
+          TEST='test/ui_v2/act0_telemetry_sink_v1_test.dart'
           OLD_STAGE_B64='ICAgICAgICAgICAgICBpZiAoIV91c2VzQ2Fub25pY2FsSW50ZWdyYXRlZExlYXJuaW5nU2NlbmVWMSB8fAogICAgICAgICAgICAgICAgICAhdXNlc1NoYXJlZEFjdGl2ZVJ1bm5lckFsbG9jYXRpb24gfHwKICAgICAgICAgICAgICAgICAgKCFpc0RyaWxsICYmICFpc1JldmlldykpCiAgICAgICAgICAgICAgICBfUnVubmVyUHJvZ3Jlc3NWMShydW5uZXI6IHJ1bm5lciwgb25CYWNrOiB3aWRnZXQub25CYWNrKSw='
           NEW_STAGE_B64='ICAgICAgICAgICAgICBpZiAoIV91c2VzQ2Fub25pY2FsSW50ZWdyYXRlZExlYXJuaW5nU2NlbmVWMSkKICAgICAgICAgICAgICAgIF9SdW5uZXJQcm9ncmVzc1YxKHJ1bm5lcjogcnVubmVyLCBvbkJhY2s6IHdpZGdldC5vbkJhY2spLA=='
-          OLD_TOP_B64='ICAgICAgICBpZiAoX3VzZXNDYW5vbmljYWxJbnRlZ3JhdGVkTGVhcm5pbmdTY2VuZVYxICYmCiAgICAgICAgICAgIHVzZXNTaGFyZWRBY3RpdmVSdW5uZXJBbGxvY2F0aW9uICYmCiAgICAgICAgICAgIChpc0RyaWxsIHx8IGlzUmV2aWV3KSkgLi4uWwogICAgICAgICAgX1J1bm5lclByb2dyZXNzVjEocnVubmVyOiBydW5uZXIsIG9uQmFjazogd2lkZ2V0Lm9uQmFjayksCiAgICAgICAgICBjb25zdCBTaXplZEJveChoZWlnaHQ6IEFjdDBTaGVsbFRva2Vuc1YxLmdhcFhzKSwKICAgICAgICAgIGJ1aWxkSW50ZWdyYXRlZFByb21wdCgpLAogICAgICAgIF0s'
-          NEW_TOP_B64='ICAgICAgICBpZiAoX3VzZXNDYW5vbmljYWxJbnRlZ3JhdGVkTGVhcm5pbmdTY2VuZVYxKQogICAgICAgICAgX1J1bm5lclByb2dyZXNzVjEocnVubmVyOiBydW5uZXIsIG9uQmFjazogd2lkZ2V0Lm9uQmFjayksCiAgICAgICAgaWYgKF91c2VzQ2Fub25pY2FsSW50ZWdyYXRlZExlYXJuaW5nU2NlbmVWMSAmJgogICAgICAgICAgICB1c2VzU2hhcmVkQWN0aXZlUnVubmVyQWxsb2NhdGlvbiAmJgogICAgICAgICAgICAoaXNEcmlsbCB8fCBpc1JldmlldykpIC4uLlsKICAgICAgICAgIGNvbnN0IFNpemVkQm94KGhlaWdodDogQWN0MFNoZWxsVG9rZW5zVjEuZ2FwWHMpLAogICAgICAgICAgYnVpbGRJbnRlZ3JhdGVkUHJvbXB0KCksCiAgICAgICAgXSw='
+          OLD_RAIL_B64='ICAgICAgICAgICAgICAgIGNhbkdvQmFjazoKICAgICAgICAgICAgICAgICAgICBoYXNQcmV2aW91c1N1cHBvcnRTZWdtZW50IHx8IHJ1bm5lci50ZWFjaGluZ1N0ZXBJbmRleCA+IDAsCiAgICAgICAgICAgICAgICBvbkJhY2s6IGhhc1ByZXZpb3VzU3VwcG9ydFNlZ21lbnQKICAgICAgICAgICAgICAgICAgICA/ICgpID0+IHNldFN0YXRlKCgpID0+IF9sZWFybmluZ1JhaWxTdXBwb3J0U2VnbWVudEluZGV4LS0pCiAgICAgICAgICAgICAgICAgICAgOiAocnVubmVyLnRlYWNoaW5nU3RlcEluZGV4ID4gMAogICAgICAgICAgICAgICAgICAgICAgICAgID8gd2lkZ2V0Lm9uUHJldmlvdXNUaGVvcnkKICAgICAgICAgICAgICAgICAgICAgICAgICA6IG51bGwpLA=='
+          NEW_RAIL_B64='ICAgICAgICAgICAgICAgIGNhbkdvQmFjazoKICAgICAgICAgICAgICAgICAgICBoYXNQcmV2aW91c1N1cHBvcnRTZWdtZW50IHx8CiAgICAgICAgICAgICAgICAgICAgcnVubmVyLnRlYWNoaW5nU3RlcEluZGV4ID4gMCB8fAogICAgICAgICAgICAgICAgICAgIF91c2VzQ2Fub25pY2FsSW50ZWdyYXRlZExlYXJuaW5nU2NlbmVWMSwKICAgICAgICAgICAgICAgIG9uQmFjazogaGFzUHJldmlvdXNTdXBwb3J0U2VnbWVudAogICAgICAgICAgICAgICAgICAgID8gKCkgPT4gc2V0U3RhdGUoKCkgPT4gX2xlYXJuaW5nUmFpbFN1cHBvcnRTZWdtZW50SW5kZXgtLSkKICAgICAgICAgICAgICAgICAgICA6IChydW5uZXIudGVhY2hpbmdTdGVwSW5kZXggPiAwCiAgICAgICAgICAgICAgICAgICAgICAgICAgPyB3aWRnZXQub25QcmV2aW91c1RoZW9yeQogICAgICAgICAgICAgICAgICAgICAgICAgIDogKF91c2VzQ2Fub25pY2FsSW50ZWdyYXRlZExlYXJuaW5nU2NlbmVWMQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID8gd2lkZ2V0Lm9uQmFjawogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDogbnVsbCkpLA=='
+          OLD_TEST_B64='YXdhaXQgdGVzdGVyLnRhcChmaW5kLmJ5S2V5KGNvbnN0IEtleSgnYWN0MF9zaGVsbF9ydW5uZXJfYmFjaycpKSk7'
+          NEW_TEST_B64='YXdhaXQgdGVzdGVyLnRhcChmaW5kLmJ5S2V5KGNvbnN0IEtleSgnYWN0MF9zaGVsbF9wcmV2aW91c19jdGEnKSkpOw=='
 
           test "$(git rev-parse HEAD)" = "$BASE"
           test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$EXPECTED_MAIN"
-          test "$(git ls-remote origin refs/heads/$TARGET_BRANCH | cut -f1)" = "$BASE"
 
-          export FILE OLD_STAGE_B64 NEW_STAGE_B64 OLD_TOP_B64 NEW_TOP_B64
-          python3 -c "from pathlib import Path; import base64, os; p=Path(os.environ['FILE']); s=p.read_text(); pairs=[(base64.b64decode(os.environ['OLD_STAGE_B64']).decode(),base64.b64decode(os.environ['NEW_STAGE_B64']).decode()),(base64.b64decode(os.environ['OLD_TOP_B64']).decode(),base64.b64decode(os.environ['NEW_TOP_B64']).decode())]; [(None if s.count(old)==1 else (_ for _ in ()).throw(SystemExit(f'expected one match, found {s.count(old)}'))) for old,new in pairs]; s=s.replace(pairs[0][0],pairs[0][1]).replace(pairs[1][0],pairs[1][1]); p.write_text(s)"
+          export RUNNER TEST OLD_STAGE_B64 NEW_STAGE_B64 OLD_RAIL_B64 NEW_RAIL_B64 OLD_TEST_B64 NEW_TEST_B64
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64, os
 
-          dart format "$FILE"
-          git diff --check "$BASE" -- "$FILE"
-          test "$(git diff --name-only "$BASE" -- "$FILE")" = "$FILE"
-          git diff --unified=8 "$BASE" -- "$FILE"
+          def dec(name):
+              return base64.b64decode(os.environ[name]).decode()
 
-          flutter test test/ui_v2/act0_telemetry_sink_v1_test.dart --plain-name 'unlocked Action capability journey completes the alpha loop with ordered safe telemetry'
+          runner = Path(os.environ['RUNNER'])
+          source = runner.read_text()
+          pairs = [
+              (dec('OLD_STAGE_B64'), dec('NEW_STAGE_B64')),
+              (dec('OLD_RAIL_B64'), dec('NEW_RAIL_B64')),
+          ]
+          for old, new in pairs:
+              count = source.count(old)
+              if count != 1:
+                  raise SystemExit(f'runner replacement expected once, found {count}')
+              source = source.replace(old, new)
+          runner.write_text(source)
+
+          test_path = Path(os.environ['TEST'])
+          test_source = test_path.read_text()
+          old_test, new_test = dec('OLD_TEST_B64'), dec('NEW_TEST_B64')
+          count = test_source.count(old_test)
+          if count != 1:
+              raise SystemExit(f'test replacement expected once, found {count}')
+          test_path.write_text(test_source.replace(old_test, new_test))
+          PY
+
+          git diff --check "$BASE" -- "$RUNNER" "$TEST"
+          test "$(git diff --name-only "$BASE" | sort)" = $'lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart\ntest/ui_v2/act0_telemetry_sink_v1_test.dart'
+          git diff --unified=8 "$BASE" -- "$RUNNER" "$TEST"
+
+          flutter test "$TEST" --plain-name 'unlocked Action capability journey completes the alpha loop with ordered safe telemetry'
 
           git config user.name 'Sharky Migration Executor'
           git config user.email 'actions@users.noreply.github.com'
-          git add "$FILE"
-          git commit -m 'fix(act0): allocate canonical runner exit above scene'
-          test "$(git diff-tree --no-commit-id --name-only -r HEAD)" = "$FILE"
+          git add "$RUNNER" "$TEST"
+          git commit -m 'fix(act0): route canonical exit through learning rail'
           test "$(git rev-parse HEAD^)" = "$BASE"
-          echo "RECONCILIATION_SHA=$(git rev-parse HEAD)"
-          git push origin HEAD:refs/heads/$TARGET_BRANCH
+          test "$(git diff-tree --no-commit-id --name-only -r HEAD | sort)" = $'lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart\ntest/ui_v2/act0_telemetry_sink_v1_test.dart'
+          echo "REPAIR1_SHA=$(git rev-parse HEAD)"
+          git push --force origin HEAD:refs/heads/$TARGET_BRANCH
