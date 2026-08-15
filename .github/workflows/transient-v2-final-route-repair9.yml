@@ -1,4 +1,4 @@
-name: Transient V2 final route repair 9
+name: Transient V2 canonical exit allocation reconciliation
 on:
   push:
     branches:
@@ -6,13 +6,13 @@ on:
 permissions:
   contents: write
 jobs:
-  build:
+  reconcile:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: b166299cb3f9f813653eabcee35a52bf7a994a59
+          ref: 56c3ee2a7ebd6304b7c9bc7ae4be9ef1a0daacd3
           fetch-depth: 0
       - uses: subosito/flutter-action@v2
         with:
@@ -20,27 +20,70 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - name: Apply and prove bounded route repair
+      - name: Reconcile canonical exit allocation and prove route
         shell: bash
         run: |
           set -euo pipefail
-          BASE='b166299cb3f9f813653eabcee35a52bf7a994a59'
+          BASE='56c3ee2a7ebd6304b7c9bc7ae4be9ef1a0daacd3'
+          EXPECTED_MAIN='a5c7d94d31ea6f2f2ff7d1cf2ceb0856cd7f26a6'
+          TARGET_BRANCH='kaizen/integrated-2-5d-v2-production-migration-v1'
           FILE='lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart'
-          perl -0pi -e 's/              if \(!_usesCanonicalIntegratedLearningSceneV1\)\n                _RunnerProgressV1\(runner: runner, onBack: widget\.onBack\),/              if (!_usesCanonicalIntegratedLearningSceneV1 ||\n                  !usesSharedActiveRunnerAllocation ||\n                  (!isDrill && !isReview))\n                _RunnerProgressV1(runner: runner, onBack: widget.onBack),/' "$FILE"
-          if git diff --quiet "$BASE" -- "$FILE"; then
-            echo 'ERROR: route repair produced no runner diff'
-            exit 41
-          fi
+
+          test "$(git rev-parse HEAD)" = "$BASE"
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$EXPECTED_MAIN"
+          test "$(git ls-remote origin refs/heads/$TARGET_BRANCH | cut -f1)" = "$BASE"
+
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart')
+          source = path.read_text()
+
+          old_stage = """              if (!_usesCanonicalIntegratedLearningSceneV1 ||
+                  !usesSharedActiveRunnerAllocation ||
+                  (!isDrill && !isReview))
+                _RunnerProgressV1(runner: runner, onBack: widget.onBack),"""
+          new_stage = """              if (!_usesCanonicalIntegratedLearningSceneV1)
+                _RunnerProgressV1(runner: runner, onBack: widget.onBack),"""
+          if source.count(old_stage) != 1:
+              raise SystemExit(f'expected exactly one failed inner-stage exit owner, found {source.count(old_stage)}')
+          source = source.replace(old_stage, new_stage)
+
+          old_top = """        if (_usesCanonicalIntegratedLearningSceneV1 &&
+            usesSharedActiveRunnerAllocation &&
+            (isDrill || isReview)) ...[
+          _RunnerProgressV1(runner: runner, onBack: widget.onBack),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          buildIntegratedPrompt(),
+        ],"""
+          new_top = """        if (_usesCanonicalIntegratedLearningSceneV1)
+          _RunnerProgressV1(runner: runner, onBack: widget.onBack),
+        if (_usesCanonicalIntegratedLearningSceneV1 &&
+            usesSharedActiveRunnerAllocation &&
+            (isDrill || isReview)) ...[
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          buildIntegratedPrompt(),
+        ],"""
+          if source.count(old_top) != 1:
+              raise SystemExit(f'expected exactly one canonical top progress/prompt owner, found {source.count(old_top)}')
+          source = source.replace(old_top, new_top)
+
+          path.write_text(source)
+          PY
+
           git diff --check "$BASE" -- "$FILE"
+          dart format --output=none --set-exit-if-changed "$FILE"
           test "$(git diff --name-only "$BASE" -- "$FILE")" = "$FILE"
-          git diff --unified=6 "$BASE" -- "$FILE"
+          test "$(git diff --numstat "$BASE" -- "$FILE")" = $'3\t4\t'$FILE
+          git diff --unified=8 "$BASE" -- "$FILE"
+
           flutter test test/ui_v2/act0_telemetry_sink_v1_test.dart --plain-name 'unlocked Action capability journey completes the alpha loop with ordered safe telemetry'
+
           git config user.name 'Sharky Migration Executor'
           git config user.email 'actions@users.noreply.github.com'
           git add "$FILE"
-          git commit -m 'fix(act0): preserve canonical runner exit after Action recovery'
+          git commit -m 'fix(act0): allocate canonical runner exit above scene'
           test "$(git diff-tree --no-commit-id --name-only -r HEAD)" = "$FILE"
-          echo "FINAL_ROUTE_REPAIR_SHA=$(git rev-parse HEAD)"
-          echo "FINAL_ROUTE_REPAIR_PARENT=$(git rev-parse HEAD^)"
-          git push --force origin HEAD:refs/heads/sol-transient/v2-final-route-repair9-staging
-          git push origin --delete sol-transient/v2-final-route-repair9-staging
+          test "$(git rev-parse HEAD^)" = "$BASE"
+          echo "RECONCILIATION_SHA=$(git rev-parse HEAD)"
+          git push origin HEAD:refs/heads/$TARGET_BRANCH
