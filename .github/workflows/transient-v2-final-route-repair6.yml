@@ -1,0 +1,44 @@
+name: Transient V2 final route repair 6
+on:
+  push:
+    branches:
+      - sol-transient/v2-final-route-repair6
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: b166299cb3f9f813653eabcee35a52bf7a994a59
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Apply and prove bounded route repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          FILE='lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart'
+          grep -n -B2 -A3 'if (!_usesCanonicalIntegratedLearningSceneV1)' "$FILE" | head -20
+          sed -i '/^              if (!_usesCanonicalIntegratedLearningSceneV1)$/c\              if (!_usesCanonicalIntegratedLearningSceneV1 ||\
+                  !usesSharedActiveRunnerAllocation ||\
+                  (!isDrill && !isReview))' "$FILE"
+          test "$(grep -c '^              if (!_usesCanonicalIntegratedLearningSceneV1 ||$' "$FILE")" = '1'
+          git diff --check b166299cb3f9f813653eabcee35a52bf7a994a59
+          test "$(git diff --name-only b166299cb3f9f813653eabcee35a52bf7a994a59)" = "$FILE"
+          git diff --unified=6 b166299cb3f9f813653eabcee35a52bf7a994a59 -- "$FILE"
+          flutter test test/ui_v2/act0_telemetry_sink_v1_test.dart --plain-name 'unlocked Action capability journey completes the alpha loop with ordered safe telemetry'
+          git config user.name 'Sharky Migration Executor'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$FILE"
+          git commit -m 'fix(act0): preserve canonical runner exit after Action recovery'
+          echo "FINAL_ROUTE_REPAIR_SHA=$(git rev-parse HEAD)"
+          echo "FINAL_ROUTE_REPAIR_PARENT=$(git rev-parse HEAD^)"
+          git push --force origin HEAD:refs/heads/sol-transient/v2-final-route-repair6-staging
+          git push origin --delete sol-transient/v2-final-route-repair6-staging
