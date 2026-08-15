@@ -8,13 +8,13 @@ applicable. This file only compresses current state for low-context continuation
 
 ## CURRENT EXACT MAIN BASELINE
 
-Re-resolved before the final V2 owner benchmark / production-migration admission
-reconciliation:
+Re-resolved after publication of the push-only remote kaizen execution lane:
 
-`ebd7335353cd4e9b61d8feed01eab2bf601b8daa`
+`3e322dc546a131af30ec70390db248230b74bb9d`
 
-Consumers must re-resolve live `origin/main` before execution; this authoring
-baseline is not permanent authority.
+This is the merged PR #176 execution substrate. Consumers must still re-resolve
+live `origin/main` before execution; this authoring baseline is not permanent
+authority.
 
 ## CURRENT NORTH STAR
 
@@ -53,6 +53,29 @@ Preserved status:
 HNP is not cancelled. Sharky has closed the bounded pre-production V2
 prototype-exploration loop and is now admitted to one bounded canonical
 production migration before machine diminishing-return / next-gap adjudication.
+
+## REMOTE FAST KAIZEN EXECUTION LANE - PROVEN
+
+`SHARKY_REMOTE_FAST_KAIZEN_EXECUTION_LANE_V1 = PROVEN`
+
+Publication PR #176 merged at:
+
+`3e322dc546a131af30ec70390db248230b74bb9d`
+
+The proven execution substrate provides:
+
+- push-only `kaizen/**` candidate execution;
+- exact `github.sha` checkout and SHA assertion;
+- Flutter 3.35 remote analysis;
+- focused Act0/evidence guards;
+- existing production-real captures for `iphone17_class` and `compact`;
+- exact-SHA downloadable evidence artifacts;
+- actual PNG inspection by ordinary ChatGPT before visual KEEP/REJECT claims;
+- one intended workflow run per material candidate without PR inner-loop fan-out.
+
+This is executor/transport truth only. It does not change product direction,
+V2 migration scope, the visual freeze, HNP status, Modern Table status, North
+Star, or the evidence hierarchy. Production CI remains unchanged.
 
 ## PROOF-FEEDBACK ALLOCATION - COMPLETED AND CLOSED
 
@@ -292,14 +315,15 @@ Do not assume another visual Gauntlet is required.
 
 ## EXACT NEXT ACTION
 
-`SHARKY_INTEGRATED_2_5D_V2_BOUNDED_PRODUCTION_MIGRATION_CODEX_EXECUTION_V1`
+`SHARKY_INTEGRATED_2_5D_V2_BOUNDED_PRODUCTION_MIGRATION_ORDINARY_SOL_REMOTE_EXECUTION_V1`
 
 Purpose: starting from exact live main plus the owner-accepted V2 candidate,
 migrate the proven presentation from prototype ownership into the canonical
 Learning Scene without visual improvement, semantic drift, or scope expansion;
-then validate production/native truth.
+then validate production/native truth using ordinary GPT-5.6 Sol High plus the
+proven push-only remote kaizen lane.
 
 `HANDOFF_AUTHORITY = NONE`
 `MASTER_PLAN_V4_WINS_ON_PRODUCT_DIRECTION = TRUE`
 `CURRENT_STAGE = MACHINE_NORTH_STAR_CONVERGENCE`
-`EXACT_NEXT_ACTION = SHARKY_INTEGRATED_2_5D_V2_BOUNDED_PRODUCTION_MIGRATION_CODEX_EXECUTION_V1`
+`EXACT_NEXT_ACTION = SHARKY_INTEGRATED_2_5D_V2_BOUNDED_PRODUCTION_MIGRATION_ORDINARY_SOL_REMOTE_EXECUTION_V1`
