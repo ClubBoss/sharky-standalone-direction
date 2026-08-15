@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: e917e7204af860739ccf146061f189c305696d9e
-          fetch-depth: 2
+          fetch-depth: 0
       - name: Assert exact retained SHA
         run: |
           set -euo pipefail
@@ -59,7 +59,7 @@ jobs:
           flutter --version > output/closure_meta/flutter-version.txt
       - uses: actions/upload-artifact@v4
         with:
-          name: v2-migration-closure-e917e720
+          name: v2-migration-closure-e917e720-full-history
           path: |
             output/closure
             output/closure_meta
