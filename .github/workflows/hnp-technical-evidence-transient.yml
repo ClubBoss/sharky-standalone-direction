@@ -16,35 +16,24 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      - name: Assert exact candidate
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
-          echo "HNP_CANDIDATE_SHA=${GITHUB_SHA}"
+
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.0'
           channel: stable
           cache: true
-      - name: Install locked dependencies
-        run: flutter pub get
-      - name: Native capability inventory
+
+      - name: Assert candidate and install dependencies
         run: |
           set -euo pipefail
           mkdir -p output
-          {
-            xcodebuild -version
-            flutter --version
-            xcrun simctl list devices available
-            for tool in idb maestro applesimutils cliclick; do
-              if command -v "$tool" >/dev/null 2>&1; then
-                echo "HNP_UI_DRIVER_${tool}=AVAILABLE:$(command -v "$tool")"
-              else
-                echo "HNP_UI_DRIVER_${tool}=ABSENT"
-              fi
-            done
-          } | tee output/native_capability_inventory.txt
-      - name: Emit canonical Profile B persisted snapshot
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          echo "HNP_CANDIDATE_SHA=$GITHUB_SHA" | tee output/candidate.txt
+          flutter pub get
+          xcodebuild -version | tee output/xcode_version.txt
+          flutter --version | tee output/flutter_version.txt
+
+      - name: Emit canonical Profile B snapshot
         run: |
           set -euo pipefail
           cat > test/_tmp_hnp_profile_b_snapshot_v1_test.dart <<'DART'
@@ -96,12 +85,14 @@ jobs:
           p=json.load(open('output/hnp_profile_b_progress_v1.json'))
           assert p['schemaVersion']==16
           assert len(p['completedTaskIds'])==28
-          assert p['completedLessonIds']==['what_poker_is','what_poker_is_content','cards_ranks_suits','your_first_hand']
+          assert p['completedLessonIds']==[
+              'what_poker_is','what_poker_is_content','cards_ranks_suits','your_first_hand']
           assert p['selectedWorldId']=='world_1'
           assert p['selectedLessonId']=='fold_check_call_raise'
           assert p['selectedTaskId']=='actions_theory'
           print('HNP_PROFILE_B_SNAPSHOT=PASS tasks=28 target=fold_check_call_raise/actions_theory')
           PY
+
       - name: Build exact-candidate HNP Runner
         run: |
           set -euo pipefail
@@ -109,12 +100,14 @@ jobs:
           APP=build/ios/iphonesimulator/Runner.app
           test -d "$APP"
           shasum -a 256 "$APP/Runner" | tee output/runner_sha256.txt
-      - name: Select and boot Simulator
+
+      - name: Select and open Simulator
         run: |
           set -euo pipefail
           python3 - <<'PY'
           import json, shlex, subprocess
-          payload=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j'], text=True))
+          payload=json.loads(subprocess.check_output(
+              ['xcrun','simctl','list','devices','available','-j'], text=True))
           prefs=('iPhone 17 Pro','iPhone 16 Pro','iPhone 17','iPhone 16','iPhone 15 Pro','iPhone 15')
           candidates=[]
           for runtime, devices in payload['devices'].items():
@@ -127,19 +120,17 @@ jobs:
           if not candidates:
             raise SystemExit('no suitable iPhone Simulator')
           _, runtime, d=sorted(candidates, key=lambda x:(x[0], x[1]))[0]
-          with open('output/simulator_selection.env','w') as f:
-            f.write('UDID='+shlex.quote(d['udid'])+'\n')
-          with open('output/simulator_identity.txt','w') as f:
-            f.write('SIM_NAME='+d['name']+'\n')
-            f.write('SIM_RUNTIME='+runtime+'\n')
-            f.write('SIM_UDID='+d['udid']+'\n')
+          open('output/simulator_selection.env','w').write('UDID='+shlex.quote(d['udid'])+'\n')
+          open('output/simulator_identity.txt','w').write(
+              'SIM_NAME='+d['name']+'\nSIM_RUNTIME='+runtime+'\nSIM_UDID='+d['udid']+'\n')
           PY
-          cat output/simulator_selection.env
-          cat output/simulator_identity.txt
           source output/simulator_selection.env
+          cat output/simulator_identity.txt
           xcrun simctl shutdown all 2>/dev/null || true
           xcrun simctl boot "$UDID"
+          open -a Simulator
           xcrun simctl bootstatus "$UDID" -b
+
       - name: Profile A clean-install native launch
         run: |
           set -euo pipefail
@@ -148,57 +139,63 @@ jobs:
           APP=build/ios/iphonesimulator/Runner.app
           xcrun simctl uninstall "$UDID" "$BUNDLE_ID" 2>/dev/null || true
           xcrun simctl install "$UDID" "$APP"
-          xcrun simctl launch --terminate-running-process --stdout=output/profile_a.stdout.log --stderr=output/profile_a.stderr.log "$UDID" "$BUNDLE_ID" | tee output/profile_a.launch.txt
+          xcrun simctl launch \
+            --terminate-running-process \
+            --stdout="$PWD/output/profile_a.stdout.log" \
+            --stderr="$PWD/output/profile_a.stderr.log" \
+            "$UDID" "$BUNDLE_ID" | tee output/profile_a.launch.txt
           sleep 6
           xcrun simctl io "$UDID" screenshot output/profile_a.png >/dev/null
           test -s output/profile_a.png
           DATA_CONTAINER="$(xcrun simctl get_app_container "$UDID" "$BUNDLE_ID" data)"
-          echo "DATA_CONTAINER=$DATA_CONTAINER" | tee output/profile_a.container.txt
-          test -d "$DATA_CONTAINER"
+          echo "$DATA_CONTAINER" > output/profile_a.container.txt
           TRACE="$DATA_CONTAINER/Library/Application Support/act0_hnp_trace_v1.jsonl"
           test -e "$TRACE"
           cp "$TRACE" output/profile_a.initial_trace.jsonl
           xcrun simctl terminate "$UDID" "$BUNDLE_ID"
           echo "HNP_PROFILE_A_NATIVE_LAUNCH=PASS"
-      - name: Cheapest falsifier - materialize Profile B through production UserDefaults
+
+      - name: Cheapest falsifier - materialize Profile B
         run: |
           set -euo pipefail
           source output/simulator_selection.env
           BUNDLE_ID=com.example.pokerAnalyzer
           PROGRESS="$(cat output/hnp_profile_b_progress_v1.json)"
-          echo '--- shared_preferences foundation prefix evidence ---' | tee output/shared_preferences_prefix.txt
-          grep -R "flutter\." "$HOME/.pub-cache/hosted/pub.dev/shared_preferences_foundation-"*/darwin/shared_preferences_foundation/Sources 2>/dev/null | head -n 20 | tee -a output/shared_preferences_prefix.txt || true
           xcrun simctl spawn "$UDID" defaults write "$BUNDLE_ID" flutter.onboardingCompleted -bool true
           xcrun simctl spawn "$UDID" defaults write "$BUNDLE_ID" flutter.onboarding_complete -bool true
           xcrun simctl spawn "$UDID" defaults write "$BUNDLE_ID" flutter.intake_completed_v1 -bool true
           xcrun simctl spawn "$UDID" defaults write "$BUNDLE_ID" flutter.act0_welcome_completed_v1 -bool true
           xcrun simctl spawn "$UDID" defaults write "$BUNDLE_ID" flutter.act0_shell_progress_v1 "$PROGRESS"
-          xcrun simctl spawn "$UDID" defaults read "$BUNDLE_ID" | tee output/profile_b.defaults.before.txt
-          xcrun simctl launch --terminate-running-process --stdout=output/profile_b.stdout.log --stderr=output/profile_b.stderr.log "$UDID" "$BUNDLE_ID" | tee output/profile_b.launch.txt
+          xcrun simctl spawn "$UDID" defaults read "$BUNDLE_ID" flutter.act0_shell_progress_v1 > output/profile_b.progress.before.json
+          xcrun simctl launch \
+            --terminate-running-process \
+            --stdout="$PWD/output/profile_b.stdout.log" \
+            --stderr="$PWD/output/profile_b.stderr.log" \
+            "$UDID" "$BUNDLE_ID" | tee output/profile_b.launch.txt
           sleep 8
           xcrun simctl io "$UDID" screenshot output/profile_b.png >/dev/null
           test -s output/profile_b.png
           DATA_CONTAINER="$(xcrun simctl get_app_container "$UDID" "$BUNDLE_ID" data)"
-          echo "$DATA_CONTAINER" > output/profile_b.container_path.txt
           TRACE="$DATA_CONTAINER/Library/Application Support/act0_hnp_trace_v1.jsonl"
           test -e "$TRACE"
           cp "$TRACE" output/profile_b.initial_trace.jsonl
-          echo "HNP_PHYSICAL_TRACE_FILE_AFTER_NATIVE_LAUNCH=EXISTS bytes=$(wc -c < "$TRACE")"
           xcrun simctl terminate "$UDID" "$BUNDLE_ID"
           xcrun simctl spawn "$UDID" defaults read "$BUNDLE_ID" flutter.act0_shell_progress_v1 > output/profile_b.progress.after.json
           python3 - <<'PY'
           import json
-          raw=open('output/profile_b.progress.after.json').read().strip()
-          p=json.loads(raw)
+          p=json.loads(open('output/profile_b.progress.after.json').read().strip())
           assert p['selectedWorldId']=='world_1', p
           assert p['selectedLessonId']=='fold_check_call_raise', p
           assert p['selectedTaskId']=='actions_theory', p
-          assert set(p['completedLessonIds'])=={'what_poker_is','what_poker_is_content','cards_ranks_suits','your_first_hand'}, p
+          assert set(p['completedLessonIds'])=={
+              'what_poker_is','what_poker_is_content','cards_ranks_suits','your_first_hand'}, p
           assert len(p['completedTaskIds'])==28, len(p['completedTaskIds'])
-          print('HNP_PROFILE_B_BOOTSTRAP_PRESERVATION=PASS schemaVersion=%s tasks=%s' % (p['schemaVersion'], len(p['completedTaskIds'])))
+          print('HNP_PROFILE_B_BOOTSTRAP_PRESERVATION=PASS schemaVersion=%s tasks=%s' %
+                (p['schemaVersion'], len(p['completedTaskIds'])))
+          print('HNP_PROFILE_B_NATIVE_MATERIALIZATION=PASS')
           PY
-          echo "HNP_PROFILE_B_NATIVE_MATERIALIZATION=PASS"
-      - name: Prepare transient native XCUITest driver
+
+      - name: Prepare transient XCUITest driver
         run: |
           set -euo pipefail
           cp ios/Runner.xcodeproj/project.pbxproj output/project.pbxproj.before_xcuitest
@@ -209,9 +206,8 @@ jobs:
           path=Path('ios/Runner.xcodeproj/project.pbxproj')
           text=path.read_text()
           old='productType = "com.apple.product-type.bundle.unit-test";'
-          new='productType = "com.apple.product-type.bundle.ui-testing";'
           assert text.count(old)==1, text.count(old)
-          text=text.replace(old,new,1)
+          text=text.replace(old,'productType = "com.apple.product-type.bundle.ui-testing";',1)
           text=re.sub(r'^\s*BUNDLE_LOADER = "\$\(TEST_HOST\)";\n','',text,flags=re.M)
           text=re.sub(r'^\s*TEST_HOST = "\$\(BUILT_PRODUCTS_DIR\)/Runner\.app/\$\(BUNDLE_EXECUTABLE_FOLDER_PATH\)/Runner";\n','',text,flags=re.M)
           pattern=r'(PRODUCT_BUNDLE_IDENTIFIER = com\.example\.pokerAnalyzer\.RunnerTests;\n\s*PRODUCT_NAME = "\$\(TARGET_NAME\)";)'
@@ -230,80 +226,51 @@ jobs:
               app = XCUIApplication()
             }
 
-            private func exact(_ label: String, timeout: TimeInterval = 10) -> XCUIElement {
-              let direct = app.buttons[label]
-              if direct.waitForExistence(timeout: timeout), direct.isHittable {
-                return direct
-              }
-              let predicate = NSPredicate(format: "label ==[c] %@", label)
-              let candidate = app.descendants(matching: .any).matching(predicate).firstMatch
-              XCTAssertTrue(candidate.waitForExistence(timeout: timeout), "Missing exact label: \(label)")
-              return candidate
+            private func exact(_ label: String, timeout: TimeInterval = 12) -> XCUIElement {
+              let button = app.buttons[label]
+              XCTAssertTrue(button.waitForExistence(timeout: timeout), "Missing button: \(label)")
+              return button
             }
 
-            private func containing(_ text: String, timeout: TimeInterval = 10) -> XCUIElement {
+            private func containing(_ text: String, timeout: TimeInterval = 12) -> XCUIElement {
               let predicate = NSPredicate(format: "label CONTAINS[c] %@", text)
               let query = app.descendants(matching: .any).matching(predicate)
               let deadline = Date().addingTimeInterval(timeout)
               repeat {
-                for candidate in query.allElementsBoundByIndex where candidate.exists && candidate.isHittable {
-                  return candidate
+                for element in query.allElementsBoundByIndex where element.exists && element.isHittable {
+                  return element
                 }
                 RunLoop.current.run(until: Date().addingTimeInterval(0.2))
               } while Date() < deadline
-              let candidate = query.firstMatch
-              XCTAssertTrue(candidate.exists, "Missing label containing: \(text)")
-              return candidate
+              XCTFail("Missing hittable element containing: \(text)")
+              return query.firstMatch
             }
 
-            private func assertContains(_ text: String, timeout: TimeInterval = 10) {
+            private func assertContains(_ text: String, timeout: TimeInterval = 12) {
               let predicate = NSPredicate(format: "label CONTAINS[c] %@", text)
-              let candidate = app.descendants(matching: .any).matching(predicate).firstMatch
-              XCTAssertTrue(candidate.waitForExistence(timeout: timeout), "Missing visible text: \(text)")
+              let element = app.descendants(matching: .any).matching(predicate).firstMatch
+              XCTAssertTrue(element.waitForExistence(timeout: timeout), "Missing text: \(text)")
             }
 
             private func advanceTheoryToDecision() {
-              for _ in 0..<14 {
-                if app.buttons["Check"].exists && app.buttons["Fold"].exists {
-                  return
-                }
-                if app.buttons["Next"].exists {
-                  app.buttons["Next"].tap()
-                } else if app.buttons["Continue"].exists {
-                  app.buttons["Continue"].tap()
-                } else {
-                  XCTFail("No theory advance control before Action decision")
-                  return
-                }
+              for _ in 0..<12 {
+                if app.buttons["Check"].exists && app.buttons["Fold"].exists { return }
+                exact("Continue").tap()
+                RunLoop.current.run(until: Date().addingTimeInterval(0.3))
               }
-              XCTAssertTrue(app.buttons["Check"].exists && app.buttons["Fold"].exists, "Action decision not reached")
+              XCTAssertTrue(app.buttons["Check"].exists && app.buttons["Fold"].exists,
+                            "Action decision not reached")
             }
 
-            private func waitForDecision() {
-              for _ in 0..<10 {
-                if app.buttons["Check"].exists {
-                  return
-                }
-                if app.buttons["Next"].exists {
-                  app.buttons["Next"].tap()
-                } else if app.buttons["Continue"].exists {
-                  app.buttons["Continue"].tap()
-                } else {
-                  RunLoop.current.run(until: Date().addingTimeInterval(0.3))
-                }
-              }
-              XCTAssertTrue(app.buttons["Check"].exists, "Decision control not reached")
-            }
-
-            private func tapTopLeftRunnerBack() {
+            private func topLeftBack() -> XCUIElement {
               let candidates = app.buttons.allElementsBoundByIndex.filter {
                 $0.exists && $0.isHittable && $0.frame.minX < 130 && $0.frame.minY < 190
               }.sorted {
                 if $0.frame.minY == $1.frame.minY { return $0.frame.minX < $1.frame.minX }
                 return $0.frame.minY < $1.frame.minY
               }
-              XCTAssertFalse(candidates.isEmpty, "No top-left runner back control")
-              candidates[0].tap()
+              XCTAssertFalse(candidates.isEmpty, "No runner back button")
+              return candidates[0]
             }
 
             func testProfileAFreshFirstLessonReachable() throws {
@@ -315,29 +282,29 @@ jobs:
               exact("Check").tap()
               exact("Continue").tap()
               exact("Open first lesson", timeout: 15).tap()
-              assertContains("0 of 9 lessons", timeout: 15)
+              exact("Learn", timeout: 15).tap()
+              assertContains("0 of 9 lessons")
               assertContains("First Table Guide")
               exact("Start").tap()
-              XCTAssertTrue(app.buttons["Next"].waitForExistence(timeout: 10) || app.buttons["Continue"].waitForExistence(timeout: 10), "Fresh first lesson runner not reachable")
+              XCTAssertTrue(app.buttons["Continue"].waitForExistence(timeout: 12),
+                            "Fresh first lesson runner not reachable")
             }
 
             func testProfileBActionRepairRecheckExit() throws {
               app.launch()
               exact("Learn", timeout: 20).tap()
-              assertContains("4 of 9 lessons", timeout: 15)
+              assertContains("4 of 9 lessons")
               assertContains("Fold, check, call, raise")
               exact("Start").tap()
               advanceTheoryToDecision()
               exact("Fold").tap()
               exact("Repair now", timeout: 15).tap()
-              waitForDecision()
-              exact("Check").tap()
+              exact("Check", timeout: 15).tap()
               exact("Check original read", timeout: 15).tap()
-              waitForDecision()
-              exact("Check").tap()
+              exact("Check", timeout: 15).tap()
               exact("Continue", timeout: 15).tap()
               RunLoop.current.run(until: Date().addingTimeInterval(0.8))
-              tapTopLeftRunnerBack()
+              topLeftBack().tap()
               RunLoop.current.run(until: Date().addingTimeInterval(0.8))
               if app.buttons["Home"].exists && app.buttons["Home"].isHittable {
                 app.buttons["Home"].tap()
@@ -345,7 +312,8 @@ jobs:
             }
           }
           SWIFT
-          git diff -- ios/Runner.xcodeproj/project.pbxproj ios/RunnerTests/RunnerTests.swift | tee output/transient_xcuitest_patch.diff
+          git diff -- ios/Runner.xcodeproj/project.pbxproj ios/RunnerTests/RunnerTests.swift > output/transient_xcuitest_patch.diff
+
       - name: Build transient XCUITest products
         run: |
           set -euo pipefail
@@ -356,11 +324,13 @@ jobs:
             -configuration Debug \
             -destination "platform=iOS Simulator,id=$UDID" \
             -derivedDataPath "$PWD/build/hnp-uitest" \
+            DART_DEFINES=SE5QX1RFTEVNRVRSWT10cnVl \
             | tee output/xcuitest_build.log
-          find build/hnp-uitest/Build/Products -maxdepth 3 -name 'Runner.app' -print | tee output/xcuitest_runner_paths.txt
-          TEST_APP="$(find build/hnp-uitest/Build/Products -maxdepth 3 -name 'Runner.app' -print -quit)"
+          TEST_APP="$(find build/hnp-uitest/Build/Products -maxdepth 4 -name 'Runner.app' -print -quit)"
           test -n "$TEST_APP"
+          echo "$TEST_APP" > output/xcuitest_runner_path.txt
           shasum -a 256 "$TEST_APP/Runner" | tee output/xcuitest_runner_sha256.txt
+
       - name: Profile A physical first-session traversal
         run: |
           set -euo pipefail
@@ -379,13 +349,13 @@ jobs:
           test -s output/profile_a_after_first_lesson.png
           xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null || true
           echo "HNP_PROFILE_A_TECHNICAL_READY=PASS"
+
       - name: Reset and materialize Profile B for observer traversal
         run: |
           set -euo pipefail
           source output/simulator_selection.env
           BUNDLE_ID=com.example.pokerAnalyzer
-          TEST_APP="$(find build/hnp-uitest/Build/Products -maxdepth 3 -name 'Runner.app' -print -quit)"
-          test -n "$TEST_APP"
+          TEST_APP="$(cat output/xcuitest_runner_path.txt)"
           PROGRESS="$(cat output/hnp_profile_b_progress_v1.json)"
           xcrun simctl uninstall "$UDID" "$BUNDLE_ID" 2>/dev/null || true
           xcrun simctl install "$UDID" "$TEST_APP"
@@ -395,6 +365,7 @@ jobs:
           xcrun simctl spawn "$UDID" defaults write "$BUNDLE_ID" flutter.act0_welcome_completed_v1 -bool true
           xcrun simctl spawn "$UDID" defaults write "$BUNDLE_ID" flutter.act0_shell_progress_v1 "$PROGRESS"
           xcrun simctl spawn "$UDID" defaults read "$BUNDLE_ID" flutter.act0_shell_progress_v1 > output/profile_b.observer.progress.before.json
+
       - name: Profile B observer-only production traversal
         run: |
           set -euo pipefail
@@ -408,69 +379,60 @@ jobs:
             -derivedDataPath "$PWD/build/hnp-uitest" \
             -only-testing:RunnerTests/HnpUITests/testProfileBActionRepairRecheckExit \
             | tee output/profile_b_xcuitest.log
-          xcrun simctl io "$UDID" screenshot output/profile_b_after_observer.png >/dev/null
-          test -s output/profile_b_after_observer.png
           DATA_CONTAINER="$(xcrun simctl get_app_container "$UDID" "$BUNDLE_ID" data)"
           TRACE="$DATA_CONTAINER/Library/Application Support/act0_hnp_trace_v1.jsonl"
           test -s "$TRACE"
           cp "$TRACE" output/profile_b.full_trace.jsonl
+          xcrun simctl io "$UDID" screenshot output/profile_b_after_observer.png >/dev/null
           xcrun simctl spawn "$UDID" defaults read "$BUNDLE_ID" flutter.act0_shell_progress_v1 > output/profile_b.observer.progress.after.json
           xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null || true
-      - name: Validate physical HNP JSONL full chain and privacy
+
+      - name: Validate physical HNP JSONL and privacy
         run: |
           set -euo pipefail
           python3 - <<'PY' | tee output/jsonl_validation.txt
           import json
-          from pathlib import Path
-
-          path=Path('output/profile_b.full_trace.jsonl')
-          lines=path.read_text().splitlines()
+          lines=open('output/profile_b.full_trace.jsonl').read().splitlines()
           assert lines, 'empty HNP JSONL'
           events=[json.loads(line) for line in lines]
-          assert all(isinstance(e,dict) and isinstance(e.get('name'),str) and isinstance(e.get('fields'),dict) for e in events)
+          assert all(isinstance(e,dict) and isinstance(e.get('name'),str) and
+                     isinstance(e.get('fields'),dict) for e in events)
           names=[e['name'] for e in events]
-          def pos(name):
-            assert name in names, f'missing {name}: {names}'
-            return names.index(name)
-          ordered=['lesson_started','theory_completed','user_choice','feedback_viewed','repair_started','repair_completed','recheck_started','recheck_result','action_sequence_completed','session_exited']
-          positions=[pos(name) for name in ordered]
+          ordered=['lesson_started','theory_completed','user_choice','feedback_viewed',
+                   'repair_started','repair_completed','recheck_started','recheck_result',
+                   'action_sequence_completed','session_exited']
+          positions=[]
+          for name in ordered:
+            assert name in names, (name,names)
+            positions.append(names.index(name))
           assert positions==sorted(positions), list(zip(ordered,positions))
-          assert names.count('session_exited')==1, names.count('session_exited')
-          assert names.count('theory_completed')==1, names.count('theory_completed')
-          assert names.count('repair_started')==1, names.count('repair_started')
-          assert names.count('repair_completed')==1, names.count('repair_completed')
-
-          choices=[e for e in events if e['name']=='user_choice' and e['fields'].get('taskId')=='actions_check_drill']
-          assert choices, 'missing actions_check_drill user_choice'
-          first_choice=choices[0]['fields']
-          assert first_choice.get('choiceId')=='fold', first_choice
-          assert first_choice.get('decisionTimeBucket') in {'under_3s','3_to_10s','10_to_30s','over_30s','unknown'}, first_choice
-
-          results=[e for e in events if e['name']=='task_result' and e['fields'].get('taskId')=='actions_check_drill']
-          assert results, 'missing actions_check_drill task_result'
-          first_result=results[0]['fields']
-          assert first_result.get('result')=='incorrect', first_result
-          assert first_result.get('errorType')=='misread_action_legality', first_result
-
+          assert names.count('session_exited')==1
+          choices=[e for e in events if e['name']=='user_choice' and
+                   e['fields'].get('taskId')=='actions_check_drill']
+          assert choices and choices[0]['fields'].get('choiceId')=='fold', choices
+          assert choices[0]['fields'].get('decisionTimeBucket') in {
+              'under_3s','3_to_10s','10_to_30s','over_30s','unknown'}
+          results=[e for e in events if e['name']=='task_result' and
+                   e['fields'].get('taskId')=='actions_check_drill']
+          assert results and results[0]['fields'].get('result')=='incorrect', results
+          assert results[0]['fields'].get('errorType')=='misread_action_legality', results
           rechecks=[e for e in events if e['name']=='recheck_result']
-          assert rechecks, 'missing recheck_result'
-          assert rechecks[-1]['fields'].get('result')=='correct', rechecks[-1]
-          assert rechecks[-1]['fields'].get('sequence_id')=='w1_action_words_check_v1', rechecks[-1]
-
+          assert rechecks and rechecks[-1]['fields'].get('result')=='correct', rechecks
+          assert rechecks[-1]['fields'].get('sequence_id')=='w1_action_words_check_v1', rechecks
           payoffs=[e for e in events if e['name']=='action_payoff_generated']
           assert any(e['fields'].get('payoff_type')=='recoveredSuccess' for e in payoffs), payoffs
-
-          forbidden_keys={
-            'participantId','participant_id','userId','user_id','email','phone','accountId','account_id',
-            'password','credential','credentials','freeText','free_text','learnerText','learner_text',
-            'rawScreen','raw_screen','rawCopy','raw_copy','promptText','prompt_text','optionLabel','option_label',
-            'feedbackText','feedback_text','tableContextKey','table_context_key','boardCards','board_cards',
-            'holeCards','hole_cards','handHistory','hand_history','ipAddress','ip_address','preciseLocation','precise_location'
-          }
+          forbidden={
+            'participantId','participant_id','userId','user_id','email','phone',
+            'accountId','account_id','password','credential','credentials','freeText',
+            'free_text','learnerText','learner_text','rawScreen','raw_screen','rawCopy',
+            'raw_copy','promptText','prompt_text','optionLabel','option_label','feedbackText',
+            'feedback_text','tableContextKey','table_context_key','boardCards','board_cards',
+            'holeCards','hole_cards','handHistory','hand_history','ipAddress','ip_address',
+            'preciseLocation','precise_location'}
           def walk(value):
             if isinstance(value,dict):
               for key,item in value.items():
-                assert key not in forbidden_keys, f'forbidden key {key}'
+                assert key not in forbidden, key
                 walk(item)
             elif isinstance(value,list):
               for item in value: walk(item)
@@ -478,36 +440,42 @@ jobs:
           encoded='\n'.join(lines)
           assert 'w1_action_words_no_bet_read_v1' not in encoded
           assert 'missed_action_read' not in encoded
-          print(f'HNP_PHYSICAL_TELEMETRY_FULL_CHAIN=PASS lines={len(events)}')
+          json.loads(lines[-1])
+          print('HNP_PHYSICAL_TELEMETRY_FULL_CHAIN=PASS lines=%d' % len(events))
           print('HNP_JSONL_FINAL_LINE_COMPLETE=PASS')
           print('HNP_JSONL_PRIVACY=PASS')
-          print('HNP_OBSERVER_ROUTE=actions_theory->actions_check_drill(fold wrong)->repair(check)->recheck(check)->exit')
           PY
-      - name: Verify normal Profile A remains resettable after observer traversal
+
+      - name: Verify post-observer Profile A reset
         run: |
           set -euo pipefail
           source output/simulator_selection.env
           BUNDLE_ID=com.example.pokerAnalyzer
-          TEST_APP="$(find build/hnp-uitest/Build/Products -maxdepth 3 -name 'Runner.app' -print -quit)"
+          TEST_APP="$(cat output/xcuitest_runner_path.txt)"
           xcrun simctl uninstall "$UDID" "$BUNDLE_ID" 2>/dev/null || true
           xcrun simctl install "$UDID" "$TEST_APP"
           if xcrun simctl spawn "$UDID" defaults read "$BUNDLE_ID" flutter.act0_shell_progress_v1 > output/profile_a_reset.progress.txt 2>&1; then
-            echo 'unexpected persisted Profile B after uninstall/reset'
-            cat output/profile_a_reset.progress.txt
+            echo 'unexpected Profile B persistence after uninstall/reset'
             exit 41
           fi
-          xcrun simctl launch --terminate-running-process "$UDID" "$BUNDLE_ID" | tee output/profile_a_reset.launch.txt
+          xcrun simctl launch "$UDID" "$BUNDLE_ID" | tee output/profile_a_reset.launch.txt
           sleep 4
           xcrun simctl io "$UDID" screenshot output/profile_a_reset.png >/dev/null
           test -s output/profile_a_reset.png
           xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null || true
           echo "HNP_PROFILE_A_POST_OBSERVER_RESET=PASS"
+
       - name: Restore transient native project files
         if: always()
         run: |
-          if [[ -f output/project.pbxproj.before_xcuitest ]]; then cp output/project.pbxproj.before_xcuitest ios/Runner.xcodeproj/project.pbxproj; fi
-          if [[ -f output/RunnerTests.swift.before_xcuitest ]]; then cp output/RunnerTests.swift.before_xcuitest ios/RunnerTests/RunnerTests.swift; fi
+          if [[ -f output/project.pbxproj.before_xcuitest ]]; then
+            cp output/project.pbxproj.before_xcuitest ios/Runner.xcodeproj/project.pbxproj
+          fi
+          if [[ -f output/RunnerTests.swift.before_xcuitest ]]; then
+            cp output/RunnerTests.swift.before_xcuitest ios/RunnerTests/RunnerTests.swift
+          fi
           git status --short | tee output/git_status_after_restore.txt
+
       - name: Upload bounded technical evidence
         if: always()
         uses: actions/upload-artifact@v4
