@@ -1,0 +1,75 @@
+name: HNP technical revalidation v1
+
+on:
+  push:
+    branches:
+      - hnp/current-main-technical-revalidation-v1
+    paths:
+      - '.github/workflows/hnp-technical-revalidation-v1.yml'
+      - 'tools/emit_hnp_profile_b_progress_v1.dart'
+      - 'tools/run_hnp_native_preflight_v1.sh'
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        description: Exact product SHA to revalidate
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  simctl-preflight:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - name: Resolve exact product SHA
+        id: target
+        shell: bash
+        run: |
+          set -euo pipefail
+          requested='${{ inputs.candidate_sha }}'
+          if [[ -z "$requested" ]]; then
+            requested='f62f2d40ee0022de42e11b6a0326ecc3e1d46ded'
+          fi
+          echo "sha=$requested" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout transport/operator packet
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: transport
+          fetch-depth: 1
+
+      - name: Checkout exact product SHA
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.target.outputs.sha }}
+          path: product
+          fetch-depth: 1
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+
+      - name: Run simctl-only current-main falsifier
+        shell: bash
+        env:
+          EXPECTED_PRODUCT_SHA: ${{ steps.target.outputs.sha }}
+        run: |
+          set -euo pipefail
+          chmod +x transport/tools/run_hnp_native_preflight_v1.sh
+          transport/tools/run_hnp_native_preflight_v1.sh \
+            "$GITHUB_WORKSPACE/product" \
+            "$GITHUB_WORKSPACE/transport/output/hnp_native_preflight_v1"
+
+      - name: Upload physical native preflight evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hnp-native-preflight-${{ steps.target.outputs.sha }}
+          path: transport/output/hnp_native_preflight_v1
+          if-no-files-found: warn
+          retention-days: 14
