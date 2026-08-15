@@ -2864,12 +2864,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                 activeSupportSegmentIndex: cappedSupportSegmentIndex,
                 progressLabel: learningRailProgress,
                 canGoBack:
-                    hasPreviousSupportSegment || runner.teachingStepIndex > 0,
+                    hasPreviousSupportSegment ||
+                    runner.teachingStepIndex > 0 ||
+                    _usesCanonicalIntegratedLearningSceneV1,
                 onBack: hasPreviousSupportSegment
                     ? () => setState(() => _learningRailSupportSegmentIndex--)
                     : (runner.teachingStepIndex > 0
                           ? widget.onPreviousTheory
-                          : null),
+                          : (_usesCanonicalIntegratedLearningSceneV1
+                                ? widget.onBack
+                                : null)),
                 canAdvance: _canAdvanceTheory,
                 onAdvance: hasNextSupportSegment
                     ? () => setState(() => _learningRailSupportSegmentIndex++)
@@ -3072,9 +3076,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           final runnerStageColumn = Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              if (!_usesCanonicalIntegratedLearningSceneV1 ||
-                  !usesSharedActiveRunnerAllocation ||
-                  (!isDrill && !isReview))
+              if (!_usesCanonicalIntegratedLearningSceneV1)
                 _RunnerProgressV1(runner: runner, onBack: widget.onBack),
               SizedBox(
                 height: showTopInstructionCard
