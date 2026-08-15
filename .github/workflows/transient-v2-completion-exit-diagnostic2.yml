@@ -1,0 +1,44 @@
+name: Transient V2 completion exit diagnostic 2
+on:
+  push:
+    branches:
+      - sol-transient/v2-completion-exit-diagnostic2
+permissions:
+  contents: read
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: b166299cb3f9f813653eabcee35a52bf7a994a59
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Inject widget tree dump
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('test/ui_v2/act0_telemetry_sink_v1_test.dart')
+          s = p.read_text()
+          old = "      await tester.tap(find.byKey(const Key('act0_shell_runner_back')));\n"
+          new = "      debugDumpApp();\n" + old
+          assert s.count(old) == 1
+          p.write_text(s.replace(old, new, 1))
+          PY
+      - name: Run failing journey and capture widget tree
+        shell: bash
+        run: |
+          set +e
+          flutter test test/ui_v2/act0_telemetry_sink_v1_test.dart --plain-name 'unlocked Action capability journey completes the alpha loop with ordered safe telemetry' > /tmp/diag.log 2>&1
+          status=$?
+          set -e
+          grep -E 'act0_shell_|Act0LessonRunnerShellV1|Act0LessonPhaseV1' /tmp/diag.log | tail -250 || true
+          echo "EXPECTED_DIAGNOSTIC_TEST_STATUS=$status"
+          exit 0
