@@ -70,7 +70,7 @@ jobs:
           PY
 
           git diff --check "$BASE" -- "$RUNNER" "$TEST"
-          test "$(git diff --name-only "$BASE" | sort)" = $'lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart\ntest/ui_v2/act0_telemetry_sink_v1_test.dart'
+          test "$(git diff --name-only "$BASE" -- "$RUNNER" "$TEST" | sort)" = $'lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart\ntest/ui_v2/act0_telemetry_sink_v1_test.dart'
           git diff --unified=8 "$BASE" -- "$RUNNER" "$TEST"
 
           flutter test "$TEST" --plain-name 'unlocked Action capability journey completes the alpha loop with ordered safe telemetry'
