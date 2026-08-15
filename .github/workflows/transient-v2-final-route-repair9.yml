@@ -1,4 +1,4 @@
-name: Transient V2 migration closure matrix
+name: Transient V2 repair-intent diagnostic
 on:
   push:
     branches:
@@ -6,64 +6,19 @@ on:
 permissions:
   contents: read
 jobs:
-  closure:
-    runs-on: macos-latest
-    timeout-minutes: 20
-    env:
-      CANDIDATE_SHA: e917e7204af860739ccf146061f189c305696d9e
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
           ref: e917e7204af860739ccf146061f189c305696d9e
-          fetch-depth: 0
-      - name: Assert exact retained SHA
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
-          git diff --check a5c7d94d31ea6f2f2ff7d1cf2ceb0856cd7f26a6 "$CANDIDATE_SHA"
+          fetch-depth: 2
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.0'
           channel: stable
           cache: true
       - run: flutter pub get
-      - name: Progression and telemetry preservation
-        run: |
-          set -euo pipefail
-          flutter test test/ui_v2/alpha_journey_progression_truth_v1_test.dart
-          flutter test test/ui_v2/act0_telemetry_sink_v1_test.dart --plain-name 'unlocked Action capability journey completes the alpha loop with ordered safe telemetry'
-      - name: Canonical Action raster compact
-        run: flutter test test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart --dart-define=ACTION_EVIDENCE_DEVICE=compact --dart-define=ACTION_EVIDENCE_OUTPUT=output/closure/action_compact
-      - name: Canonical Action raster iphone17 class
-        run: flutter test test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart --dart-define=ACTION_EVIDENCE_DEVICE=iphone17_class --dart-define=ACTION_EVIDENCE_OUTPUT=output/closure/action_iphone17
-      - name: Canonical Action raster large phone
-        run: flutter test test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart --dart-define=ACTION_EVIDENCE_DEVICE=large_phone --dart-define=ACTION_EVIDENCE_OUTPUT=output/closure/action_large
-      - name: Canonical Action raster catastrophic 1.4x
-        run: flutter test test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart --dart-define=ACTION_EVIDENCE_DEVICE=iphone17_class --dart-define=ACTION_EVIDENCE_TEXT_SCALE=1.4 --dart-define=ACTION_EVIDENCE_OUTPUT=output/closure/action_iphone17_text_1_4
-      - name: Production-real large and 1.4x acceptance
-        run: |
-          set -euo pipefail
-          dart run tools/act0_production_real_runner_capture_v1.dart large_phone
-          dart run tools/act0_production_real_runner_capture_v1.dart iphone17_class text_scale_1_4
-      - name: Canonical default and prototype retirement proof
-        run: |
-          set -euo pipefail
-          ! grep -R "integratedLearningScenePrototype" lib/ui_v2/act0_shell
-          ! grep -R "INTEGRATED_2_5D_PROTOTYPE" lib/ui_v2/act0_shell test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart
-          grep -n "_usesCanonicalIntegratedLearningSceneV1 => true" lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
-      - name: Package closure evidence
-        run: |
-          set -euo pipefail
-          mkdir -p output/closure_meta
-          printf '%s\n' "$CANDIDATE_SHA" > output/closure_meta/candidate-sha.txt
-          flutter --version > output/closure_meta/flutter-version.txt
-      - uses: actions/upload-artifact@v4
-        with:
-          name: v2-migration-closure-e917e720-full-history
-          path: |
-            output/closure
-            output/closure_meta
-            output/visual_master_audit/raw/live_runner_large_phone_none_v1
-            output/visual_master_audit/raw/live_runner_iphone17_class_text_scale_1_4_v1
-          if-no-files-found: error
-          retention-days: 7
+      - name: Reproduce Tier-A repair intent failure
+        run: flutter test test/ui_v2/act0_repair_intent_resolver_v1_test.dart -r expanded
