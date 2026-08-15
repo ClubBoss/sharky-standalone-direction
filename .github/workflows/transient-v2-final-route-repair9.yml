@@ -1,85 +1,69 @@
-name: Transient V2 canonical exit allocation repair 1
+name: Transient V2 migration closure matrix
 on:
   push:
     branches:
       - sol-transient/v2-final-route-repair9
 permissions:
-  contents: write
+  contents: read
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  closure:
+    runs-on: macos-latest
     timeout-minutes: 20
+    env:
+      CANDIDATE_SHA: e917e7204af860739ccf146061f189c305696d9e
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 56c3ee2a7ebd6304b7c9bc7ae4be9ef1a0daacd3
-          fetch-depth: 0
+          ref: e917e7204af860739ccf146061f189c305696d9e
+          fetch-depth: 2
+      - name: Assert exact retained SHA
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          git diff --check a5c7d94d31ea6f2f2ff7d1cf2ceb0856cd7f26a6 "$CANDIDATE_SHA"
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.0'
           channel: stable
           cache: true
       - run: flutter pub get
-      - name: Reuse existing lower navigation as canonical exit owner
-        shell: bash
+      - name: Progression and telemetry preservation
         run: |
           set -euo pipefail
-          BASE='56c3ee2a7ebd6304b7c9bc7ae4be9ef1a0daacd3'
-          EXPECTED_MAIN='a5c7d94d31ea6f2f2ff7d1cf2ceb0856cd7f26a6'
-          TARGET_BRANCH='kaizen/integrated-2-5d-v2-production-migration-v1'
-          RUNNER='lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart'
-          TEST='test/ui_v2/act0_telemetry_sink_v1_test.dart'
-          OLD_STAGE_B64='ICAgICAgICAgICAgICBpZiAoIV91c2VzQ2Fub25pY2FsSW50ZWdyYXRlZExlYXJuaW5nU2NlbmVWMSB8fAogICAgICAgICAgICAgICAgICAhdXNlc1NoYXJlZEFjdGl2ZVJ1bm5lckFsbG9jYXRpb24gfHwKICAgICAgICAgICAgICAgICAgKCFpc0RyaWxsICYmICFpc1JldmlldykpCiAgICAgICAgICAgICAgICBfUnVubmVyUHJvZ3Jlc3NWMShydW5uZXI6IHJ1bm5lciwgb25CYWNrOiB3aWRnZXQub25CYWNrKSw='
-          NEW_STAGE_B64='ICAgICAgICAgICAgICBpZiAoIV91c2VzQ2Fub25pY2FsSW50ZWdyYXRlZExlYXJuaW5nU2NlbmVWMSkKICAgICAgICAgICAgICAgIF9SdW5uZXJQcm9ncmVzc1YxKHJ1bm5lcjogcnVubmVyLCBvbkJhY2s6IHdpZGdldC5vbkJhY2spLA=='
-          OLD_RAIL_B64='ICAgICAgICAgICAgICAgIGNhbkdvQmFjazoKICAgICAgICAgICAgICAgICAgICBoYXNQcmV2aW91c1N1cHBvcnRTZWdtZW50IHx8IHJ1bm5lci50ZWFjaGluZ1N0ZXBJbmRleCA+IDAsCiAgICAgICAgICAgICAgICBvbkJhY2s6IGhhc1ByZXZpb3VzU3VwcG9ydFNlZ21lbnQKICAgICAgICAgICAgICAgICAgICA/ICgpID0+IHNldFN0YXRlKCgpID0+IF9sZWFybmluZ1JhaWxTdXBwb3J0U2VnbWVudEluZGV4LS0pCiAgICAgICAgICAgICAgICAgICAgOiAocnVubmVyLnRlYWNoaW5nU3RlcEluZGV4ID4gMAogICAgICAgICAgICAgICAgICAgICAgICAgID8gd2lkZ2V0Lm9uUHJldmlvdXNUaGVvcnkKICAgICAgICAgICAgICAgICAgICAgICAgICA6IG51bGwpLA=='
-          NEW_RAIL_B64='ICAgICAgICAgICAgICAgIGNhbkdvQmFjazoKICAgICAgICAgICAgICAgICAgICBoYXNQcmV2aW91c1N1cHBvcnRTZWdtZW50IHx8CiAgICAgICAgICAgICAgICAgICAgcnVubmVyLnRlYWNoaW5nU3RlcEluZGV4ID4gMCB8fAogICAgICAgICAgICAgICAgICAgIF91c2VzQ2Fub25pY2FsSW50ZWdyYXRlZExlYXJuaW5nU2NlbmVWMSwKICAgICAgICAgICAgICAgIG9uQmFjazogaGFzUHJldmlvdXNTdXBwb3J0U2VnbWVudAogICAgICAgICAgICAgICAgICAgID8gKCkgPT4gc2V0U3RhdGUoKCkgPT4gX2xlYXJuaW5nUmFpbFN1cHBvcnRTZWdtZW50SW5kZXgtLSkKICAgICAgICAgICAgICAgICAgICA6IChydW5uZXIudGVhY2hpbmdTdGVwSW5kZXggPiAwCiAgICAgICAgICAgICAgICAgICAgICAgICAgPyB3aWRnZXQub25QcmV2aW91c1RoZW9yeQogICAgICAgICAgICAgICAgICAgICAgICAgIDogKF91c2VzQ2Fub25pY2FsSW50ZWdyYXRlZExlYXJuaW5nU2NlbmVWMQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID8gd2lkZ2V0Lm9uQmFjawogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDogbnVsbCkpLA=='
-          OLD_TEST_B64='YXdhaXQgdGVzdGVyLnRhcChmaW5kLmJ5S2V5KGNvbnN0IEtleSgnYWN0MF9zaGVsbF9ydW5uZXJfYmFjaycpKSk7'
-          NEW_TEST_B64='YXdhaXQgdGVzdGVyLnRhcChmaW5kLmJ5S2V5KGNvbnN0IEtleSgnYWN0MF9zaGVsbF9wcmV2aW91c19jdGEnKSkpOw=='
-
-          test "$(git rev-parse HEAD)" = "$BASE"
-          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$EXPECTED_MAIN"
-
-          export RUNNER TEST OLD_STAGE_B64 NEW_STAGE_B64 OLD_RAIL_B64 NEW_RAIL_B64 OLD_TEST_B64 NEW_TEST_B64
-          python3 - <<'PY'
-          from pathlib import Path
-          import base64, os
-
-          def dec(name):
-              return base64.b64decode(os.environ[name]).decode()
-
-          runner = Path(os.environ['RUNNER'])
-          source = runner.read_text()
-          pairs = [
-              (dec('OLD_STAGE_B64'), dec('NEW_STAGE_B64')),
-              (dec('OLD_RAIL_B64'), dec('NEW_RAIL_B64')),
-          ]
-          for old, new in pairs:
-              count = source.count(old)
-              if count != 1:
-                  raise SystemExit(f'runner replacement expected once, found {count}')
-              source = source.replace(old, new)
-          runner.write_text(source)
-
-          test_path = Path(os.environ['TEST'])
-          test_source = test_path.read_text()
-          old_test, new_test = dec('OLD_TEST_B64'), dec('NEW_TEST_B64')
-          count = test_source.count(old_test)
-          if count != 1:
-              raise SystemExit(f'test replacement expected once, found {count}')
-          test_path.write_text(test_source.replace(old_test, new_test))
-          PY
-
-          git diff --check "$BASE" -- "$RUNNER" "$TEST"
-          test "$(git diff --name-only "$BASE" -- "$RUNNER" "$TEST" | sort)" = $'lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart\ntest/ui_v2/act0_telemetry_sink_v1_test.dart'
-          git diff --unified=8 "$BASE" -- "$RUNNER" "$TEST"
-
-          flutter test "$TEST" --plain-name 'unlocked Action capability journey completes the alpha loop with ordered safe telemetry'
-
-          git config user.name 'Sharky Migration Executor'
-          git config user.email 'actions@users.noreply.github.com'
-          git add "$RUNNER" "$TEST"
-          git commit -m 'fix(act0): route canonical exit through learning rail'
-          test "$(git rev-parse HEAD^)" = "$BASE"
-          test "$(git diff-tree --no-commit-id --name-only -r HEAD | sort)" = $'lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart\ntest/ui_v2/act0_telemetry_sink_v1_test.dart'
-          echo "REPAIR1_SHA=$(git rev-parse HEAD)"
-          git push --force origin HEAD:refs/heads/$TARGET_BRANCH
+          flutter test test/ui_v2/alpha_journey_progression_truth_v1_test.dart
+          flutter test test/ui_v2/act0_telemetry_sink_v1_test.dart --plain-name 'unlocked Action capability journey completes the alpha loop with ordered safe telemetry'
+      - name: Canonical Action raster compact
+        run: flutter test test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart --dart-define=ACTION_EVIDENCE_DEVICE=compact --dart-define=ACTION_EVIDENCE_OUTPUT=output/closure/action_compact
+      - name: Canonical Action raster iphone17 class
+        run: flutter test test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart --dart-define=ACTION_EVIDENCE_DEVICE=iphone17_class --dart-define=ACTION_EVIDENCE_OUTPUT=output/closure/action_iphone17
+      - name: Canonical Action raster large phone
+        run: flutter test test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart --dart-define=ACTION_EVIDENCE_DEVICE=large_phone --dart-define=ACTION_EVIDENCE_OUTPUT=output/closure/action_large
+      - name: Canonical Action raster catastrophic 1.4x
+        run: flutter test test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart --dart-define=ACTION_EVIDENCE_DEVICE=iphone17_class --dart-define=ACTION_EVIDENCE_TEXT_SCALE=1.4 --dart-define=ACTION_EVIDENCE_OUTPUT=output/closure/action_iphone17_text_1_4
+      - name: Production-real large and 1.4x acceptance
+        run: |
+          set -euo pipefail
+          dart run tools/act0_production_real_runner_capture_v1.dart large_phone
+          dart run tools/act0_production_real_runner_capture_v1.dart iphone17_class text_scale_1_4
+      - name: Canonical default and prototype retirement proof
+        run: |
+          set -euo pipefail
+          ! grep -R "integratedLearningScenePrototype" lib/ui_v2/act0_shell
+          ! grep -R "INTEGRATED_2_5D_PROTOTYPE" lib/ui_v2/act0_shell test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart
+          grep -n "_usesCanonicalIntegratedLearningSceneV1 => true" lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
+      - name: Package closure evidence
+        run: |
+          set -euo pipefail
+          mkdir -p output/closure_meta
+          printf '%s\n' "$CANDIDATE_SHA" > output/closure_meta/candidate-sha.txt
+          flutter --version > output/closure_meta/flutter-version.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v2-migration-closure-e917e720
+          path: |
+            output/closure
+            output/closure_meta
+            output/visual_master_audit/raw/live_runner_large_phone_none_v1
+            output/visual_master_audit/raw/live_runner_iphone17_class_text_scale_1_4_v1
+          if-no-files-found: error
+          retention-days: 7
