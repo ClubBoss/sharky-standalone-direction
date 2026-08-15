@@ -1,0 +1,59 @@
+name: Transient V2 final route repair 5
+on:
+  push:
+    branches:
+      - sol-transient/v2-final-route-repair5
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: b166299cb3f9f813653eabcee35a52bf7a994a59
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Apply and prove bounded route repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart')
+          lines = p.read_text().splitlines(keepends=True)
+          matches = []
+          for i in range(len(lines) - 1):
+              if lines[i].strip() == 'if (!_usesCanonicalIntegratedLearningSceneV1)' and lines[i + 1].strip() == '_RunnerProgressV1(runner: runner, onBack: widget.onBack),':
+                  matches.append(i)
+          assert len(matches) == 1, matches
+          i = matches[0]
+          lead = lines[i][:len(lines[i]) - len(lines[i].lstrip())]
+          child = lines[i + 1][:len(lines[i + 1]) - len(lines[i + 1].lstrip())]
+          replacement = [
+              lead + 'if (!_usesCanonicalIntegratedLearningSceneV1 ||\n',
+              lead + '    !usesSharedActiveRunnerAllocation ||\n',
+              lead + '    (!isDrill && !isReview))\n',
+              child + '_RunnerProgressV1(runner: runner, onBack: widget.onBack),\n',
+          ]
+          lines[i:i+2] = replacement
+          p.write_text(''.join(lines))
+          PY
+          git diff --check b166299cb3f9f813653eabcee35a52bf7a994a59
+          test "$(git diff --name-only b166299cb3f9f813653eabcee35a52bf7a994a59)" = 'lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart'
+          git diff --unified=6 b166299cb3f9f813653eabcee35a52bf7a994a59 -- lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
+          flutter test test/ui_v2/act0_telemetry_sink_v1_test.dart --plain-name 'unlocked Action capability journey completes the alpha loop with ordered safe telemetry'
+          git config user.name 'Sharky Migration Executor'
+          git config user.email 'actions@users.noreply.github.com'
+          git add lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
+          git commit -m 'fix(act0): preserve canonical runner exit after Action recovery'
+          echo "FINAL_ROUTE_REPAIR_SHA=$(git rev-parse HEAD)"
+          echo "FINAL_ROUTE_REPAIR_PARENT=$(git rev-parse HEAD^)"
+          git push --force origin HEAD:refs/heads/sol-transient/v2-final-route-repair5-staging
+          git push origin --delete sol-transient/v2-final-route-repair5-staging
