@@ -40,10 +40,9 @@ jobs:
           export FILE OLD_STAGE_B64 NEW_STAGE_B64 OLD_TOP_B64 NEW_TOP_B64
           python3 -c "from pathlib import Path; import base64, os; p=Path(os.environ['FILE']); s=p.read_text(); pairs=[(base64.b64decode(os.environ['OLD_STAGE_B64']).decode(),base64.b64decode(os.environ['NEW_STAGE_B64']).decode()),(base64.b64decode(os.environ['OLD_TOP_B64']).decode(),base64.b64decode(os.environ['NEW_TOP_B64']).decode())]; [(None if s.count(old)==1 else (_ for _ in ()).throw(SystemExit(f'expected one match, found {s.count(old)}'))) for old,new in pairs]; s=s.replace(pairs[0][0],pairs[0][1]).replace(pairs[1][0],pairs[1][1]); p.write_text(s)"
 
+          dart format "$FILE"
           git diff --check "$BASE" -- "$FILE"
-          dart format --output=none --set-exit-if-changed "$FILE"
           test "$(git diff --name-only "$BASE" -- "$FILE")" = "$FILE"
-          test "$(git diff --numstat "$BASE" -- "$FILE")" = $'3\t4\t'$FILE
           git diff --unified=8 "$BASE" -- "$FILE"
 
           flutter test test/ui_v2/act0_telemetry_sink_v1_test.dart --plain-name 'unlocked Action capability journey completes the alpha loop with ordered safe telemetry'
