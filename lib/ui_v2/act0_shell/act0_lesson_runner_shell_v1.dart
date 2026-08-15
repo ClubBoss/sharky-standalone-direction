@@ -1317,6 +1317,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
   bool get _isRefinedDev2 =>
       widget.tableVisualVariant == Act0ShellTableVisualVariantV1.refinedDev2;
 
+  bool get _usesCanonicalIntegratedLearningSceneV1 => true;
+
   String _compositionTaskIdentity(Act0LessonRunnerShellV1 value) =>
       '${value.selectedWorldId ?? ''}|${value.selectedLessonId ?? ''}|'
       '${value.selectedTaskId ?? value.runner.lessonId}|${value.runner.beatIndex}';
@@ -2799,11 +2801,15 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       streamlinedDirectDecisionFeedback: isAccessibilityFlow,
       cycleStableEnvelope: usesSharedActiveRunnerAllocation,
       forceCompactPhoneFeedback: usesSharedActiveRunnerAllocation,
+      ensureFullCtaGeometry: _usesCanonicalIntegratedLearningSceneV1,
       coachVoiceSeed:
           '${runner.lessonId}|${runner.beatIndex}|${runner.phase.name}|${runner.selectedOptionId ?? ''}',
       onContinue: widget.onContinueReview,
     );
     Widget buildRunnerActionDock() {
+      final actionDockQuestion = _usesCanonicalIntegratedLearningSceneV1
+          ? ''
+          : question;
       return _RunnerActionDockV1(
         pageX: pageX,
         taskRailLabel:
@@ -2858,12 +2864,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                 activeSupportSegmentIndex: cappedSupportSegmentIndex,
                 progressLabel: learningRailProgress,
                 canGoBack:
-                    hasPreviousSupportSegment || runner.teachingStepIndex > 0,
+                    hasPreviousSupportSegment ||
+                    runner.teachingStepIndex > 0 ||
+                    _usesCanonicalIntegratedLearningSceneV1,
                 onBack: hasPreviousSupportSegment
                     ? () => setState(() => _learningRailSupportSegmentIndex--)
                     : (runner.teachingStepIndex > 0
                           ? widget.onPreviousTheory
-                          : null),
+                          : (_usesCanonicalIntegratedLearningSceneV1
+                                ? widget.onBack
+                                : null)),
                 canAdvance: _canAdvanceTheory,
                 onAdvance: hasNextSupportSegment
                     ? () => setState(() => _learningRailSupportSegmentIndex++)
@@ -2902,7 +2912,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             ? runner.options.any((option) => option.seatId != null)
                   ? _SeatTapPromptV1(
                       taskLabel: taskRailLabel,
-                      question: question,
+                      question: actionDockQuestion,
                       helperLine: promptCoachLine,
                       options: runner.options,
                       onBack: null,
@@ -2924,7 +2934,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                           : null,
                       embedChildInSurface: bottomContext.isTrailHistory,
                       compactDecision: compactAnswerListDecision,
-                      question: question,
+                      question: actionDockQuestion,
                       onBack: null,
                       recallLabel: decisionHint == null ? null : 'Need a hint?',
                       onRecall: decisionHint == null
@@ -2949,7 +2959,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                       // Equal answer rows are content-driven, never a share
                       // of the remaining viewport.
                       fillAllocatedDock: false,
-                      question: question,
+                      question: actionDockQuestion,
                       onBack: null,
                       recallLabel: decisionHint == null ? null : 'Need a hint?',
                       onRecall: decisionHint == null
@@ -3041,6 +3051,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             identityPolicy: identityPolicy,
             maxTableHeight: effectiveMaxTableHeight,
             lockSharedActiveTableGeometry: usesSharedActiveRunnerAllocation,
+            integratedPerspectivePrototype:
+                _usesCanonicalIntegratedLearningSceneV1,
           );
           if (isAccessibilityFlow || usesSharedActiveRunnerAllocation) {
             final effectiveOnFeltScale = isAccessibilityFlow
@@ -3064,7 +3076,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           final runnerStageColumn = Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              _RunnerProgressV1(runner: runner, onBack: widget.onBack),
+              if (!_usesCanonicalIntegratedLearningSceneV1)
+                _RunnerProgressV1(runner: runner, onBack: widget.onBack),
               SizedBox(
                 height: showTopInstructionCard
                     ? Act0ShellTokensV1.gapSm
@@ -3215,6 +3228,38 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       );
     }
 
+    Widget buildIntegratedPrompt() {
+      return SizedBox(
+        height: media.textScaler.scale(50).clamp(50, 60),
+        child: Container(
+          key: const Key('act0_integrated_scene_prompt'),
+          width: double.infinity,
+          margin: const EdgeInsets.symmetric(horizontal: 12),
+          padding: const EdgeInsets.fromLTRB(12, 7, 12, 8),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Act0ShellTokensV1.surface2.withValues(alpha: 0.72),
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
+            border: Border.all(
+              color: Act0ShellTokensV1.info.withValues(alpha: 0.22),
+            ),
+          ),
+          child: Text(
+            question,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: Act0ShellTokensV1.body.copyWith(
+              color: Act0ShellTokensV1.text,
+              fontSize: 14.2,
+              fontWeight: FontWeight.w900,
+              height: 1.08,
+            ),
+          ),
+        ),
+      );
+    }
+
     final runnerScreen = Column(
       key: const Key('act0_shell_runner_screen'),
       children: [
@@ -3255,6 +3300,14 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           const SizedBox.shrink(
             key: Key('act0_shell_compact_answer_list_branch'),
           ),
+        if (_usesCanonicalIntegratedLearningSceneV1 && (isDrill || isReview))
+          _RunnerProgressV1(runner: runner, onBack: widget.onBack),
+        if (_usesCanonicalIntegratedLearningSceneV1 &&
+            usesSharedActiveRunnerAllocation &&
+            (isDrill || isReview)) ...[
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          buildIntegratedPrompt(),
+        ],
         if (taskCycleEnvelope.usesFixedLowerSlot &&
             !usesSharedActiveRunnerAllocation)
           Expanded(
@@ -3310,39 +3363,114 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                         _sharedRunnerSeamV1,
                   ),
                 );
+                final boundedLowerHeight =
+                    _usesCanonicalIntegratedLearningSceneV1
+                    ? math.min(
+                        lowerHeight,
+                        math.max(220.0, constraints.maxHeight * 0.29),
+                      )
+                    : lowerHeight;
+                final tableStageChrome = _usesCanonicalIntegratedLearningSceneV1
+                    ? 20.0
+                    : _runnerCompositionHeaderAndGapV1;
                 final tableHeight = math.min(
                   allocation.tableHeight,
                   math.max(
                     0.0,
                     constraints.maxHeight -
-                        _runnerCompositionHeaderAndGapV1 -
+                        tableStageChrome -
                         _sharedRunnerSeamV1 -
-                        lowerHeight,
+                        boundedLowerHeight,
                   ),
+                );
+                final integratedLowerSurfaceHeight = math.max(
+                  0.0,
+                  constraints.maxHeight - tableHeight - tableStageChrome,
                 );
                 return Column(
                   children: [
                     SizedBox(
-                      height: tableHeight + _runnerCompositionHeaderAndGapV1,
-                      child: buildRunnerStage(maxTableHeight: tableHeight),
-                    ),
-                    SizedBox(
-                      key: const Key('act0_shell_shared_runner_seam'),
-                      height: _sharedRunnerSeamV1,
-                      width: double.infinity,
-                      child: DecoratedBox(
-                        decoration: _sharedRunnerSeamDecorationV1(),
+                      height: tableHeight + tableStageChrome,
+                      child: buildRunnerStage(
+                        maxTableHeight: math.max(0.0, tableHeight),
                       ),
                     ),
+                    if (!_usesCanonicalIntegratedLearningSceneV1)
+                      SizedBox(
+                        key: const Key('act0_shell_shared_runner_seam'),
+                        height: _sharedRunnerSeamV1,
+                        width: double.infinity,
+                        child: DecoratedBox(
+                          decoration: _sharedRunnerSeamDecorationV1(),
+                        ),
+                      ),
                     SizedBox(
                       key: const Key('act0_shell_shared_runner_cycle_envelope'),
-                      height: lowerHeight,
-                      child: KeyedSubtree(
-                        key: const Key(
-                          'act0_shell_shared_runner_lower_surface',
-                        ),
-                        child: buildRunnerActionDock(),
-                      ),
+                      height: _usesCanonicalIntegratedLearningSceneV1
+                          ? integratedLowerSurfaceHeight
+                          : boundedLowerHeight,
+                      child: _usesCanonicalIntegratedLearningSceneV1
+                          ? Stack(
+                              clipBehavior: Clip.none,
+                              fit: StackFit.expand,
+                              children: [
+                                Positioned(
+                                  top: -14,
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 0,
+                                  child: IgnorePointer(
+                                    child: Container(
+                                      key: const Key(
+                                        'act0_integrated_scene_action_foreground',
+                                      ),
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          colors: <Color>[
+                                            Act0ShellTokensV1.surface2
+                                                .withValues(alpha: 0.97),
+                                            Act0ShellTokensV1.surface,
+                                          ],
+                                        ),
+                                        borderRadius:
+                                            const BorderRadius.vertical(
+                                              top: Radius.circular(28),
+                                            ),
+                                        border: Border(
+                                          top: BorderSide(
+                                            color: Act0ShellTokensV1.primary
+                                                .withValues(alpha: 0.34),
+                                          ),
+                                        ),
+                                        boxShadow: <BoxShadow>[
+                                          BoxShadow(
+                                            color: Act0ShellTokensV1.primary
+                                                .withValues(alpha: 0.10),
+                                            blurRadius: 22,
+                                            spreadRadius: 2,
+                                            offset: const Offset(0, -7),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                KeyedSubtree(
+                                  key: const Key(
+                                    'act0_shell_shared_runner_lower_surface',
+                                  ),
+                                  child: buildRunnerActionDock(),
+                                ),
+                              ],
+                            )
+                          : KeyedSubtree(
+                              key: const Key(
+                                'act0_shell_shared_runner_lower_surface',
+                              ),
+                              child: buildRunnerActionDock(),
+                            ),
                     ),
                   ],
                 );
@@ -5272,6 +5400,7 @@ class Act0TableSceneV1 extends StatelessWidget {
         identityPolicy: input.identityPolicy,
         maxTableHeight: input.maxTableHeight,
         lockSharedActiveTableGeometry: input.lockSharedActiveTableGeometry,
+        integratedPerspectivePrototype: input.integratedPerspectivePrototype,
       );
     }
     final resolved = config!;
@@ -5323,6 +5452,7 @@ class _Act0TableSceneRunnerInput {
     required this.identityPolicy,
     required this.maxTableHeight,
     required this.lockSharedActiveTableGeometry,
+    required this.integratedPerspectivePrototype,
   });
   final Act0TableStateV1 table;
   final List<String> highlightedCardIds;
@@ -5350,6 +5480,7 @@ class _Act0TableSceneRunnerInput {
   final Act0TableIdentityPolicyV1 identityPolicy;
   final double? maxTableHeight;
   final bool lockSharedActiveTableGeometry;
+  final bool integratedPerspectivePrototype;
 }
 
 class _RunnerTableStageV1 extends StatelessWidget {
@@ -5380,6 +5511,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
     this.identityPolicy = Act0TableIdentityPolicyV1.currentProduction,
     this.maxTableHeight,
     this.lockSharedActiveTableGeometry = false,
+    this.integratedPerspectivePrototype = false,
   });
 
   final Act0TableStateV1 table;
@@ -5408,6 +5540,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
   final Act0TableIdentityPolicyV1 identityPolicy;
   final double? maxTableHeight;
   final bool lockSharedActiveTableGeometry;
+  final bool integratedPerspectivePrototype;
 
   @override
   Widget build(BuildContext context) {
@@ -5439,6 +5572,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
         identityPolicy: identityPolicy,
         maxTableHeight: maxTableHeight,
         lockSharedActiveTableGeometry: lockSharedActiveTableGeometry,
+        integratedPerspectivePrototype: integratedPerspectivePrototype,
       ),
     );
   }
@@ -6412,6 +6546,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.streamlinedDirectDecisionFeedback = false,
     this.cycleStableEnvelope = false,
     this.forceCompactPhoneFeedback = false,
+    this.ensureFullCtaGeometry = false,
     this.coachVoiceSeed,
     required this.onContinue,
   });
@@ -6448,6 +6583,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final bool streamlinedDirectDecisionFeedback;
   final bool cycleStableEnvelope;
   final bool forceCompactPhoneFeedback;
+  final bool ensureFullCtaGeometry;
   final String? coachVoiceSeed;
   final VoidCallback onContinue;
 
@@ -6472,6 +6608,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         repairReceiptLine.toLowerCase().startsWith('repair fixed:') ||
         repairReceiptLine.toLowerCase().startsWith('replay fixed:') ||
         repairReceiptLine.toLowerCase().startsWith('fix landed:');
+    final reservesFullCtaGeometry =
+        ensureFullCtaGeometry && hasProofEarnedState;
     final media = MediaQuery.of(context);
     final view = View.of(context);
     final fullViewportHeight = view.physicalSize.height / view.devicePixelRatio;
@@ -6679,6 +6817,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final usesSharedAccessibilitySurface =
         (streamlinedDirectDecisionFeedback || cycleStableEnvelope) &&
         isCompactRefinedFeedback;
+    final pinsAllocatedFeedbackCta =
+        usesSharedAccessibilitySurface && ensureFullCtaGeometry && !rapidMode;
     final pinsF1FeedbackCta =
         usesSharedAccessibilitySurface &&
         hasSeatTargets &&
@@ -6806,7 +6946,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             padding: usesSharedAccessibilitySurface
                 ? EdgeInsets.fromLTRB(
                     5,
-                    pinsF1FeedbackCta ? 0 : Act0ShellTokensV1.gapMd,
+                    pinsF1FeedbackCta || reservesFullCtaGeometry
+                        ? 0
+                        : Act0ShellTokensV1.gapMd,
                     5,
                     // The runner is already inside the route-level SafeArea.
                     // Reserving viewPadding again clips the compact feedback
@@ -6828,14 +6970,20 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                       Act0ShellTokensV1.radiusCard,
                     ),
                   ),
-            child: Column(
+            child: Builder(
+              builder: (context) {
+                final feedbackBody = Column(
               key: usesCohesiveShortOutcome
                   ? const Key('act0_shell_feedback_cohesive_group')
                   : null,
-              mainAxisSize: usesCohesiveShortOutcome
+              mainAxisSize: pinsAllocatedFeedbackCta
+                  ? MainAxisSize.min
+                  : usesCohesiveShortOutcome
                   ? MainAxisSize.max
                   : MainAxisSize.min,
-              mainAxisAlignment: usesCohesiveShortOutcome
+              mainAxisAlignment: pinsAllocatedFeedbackCta
+                  ? MainAxisAlignment.start
+                  : usesCohesiveShortOutcome
                   ? MainAxisAlignment.center
                   : MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -7313,11 +7461,16 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   ),
                 ] else ...[
                   SizedBox(key: feedbackTreatmentKey, height: 0),
-                  if (pinsF1FeedbackCta)
+                  if (pinsAllocatedFeedbackCta)
+                    const SizedBox.shrink()
+                  else if (pinsF1FeedbackCta)
                     SizedBox(height: 48, child: buildContinueAction())
                   else if (usesCohesiveShortOutcome) ...[
                     const SizedBox(height: 16),
                     buildContinueAction(),
+                  ] else if (usesSharedAccessibilitySurface &&
+                      reservesFullCtaGeometry) ...[
+                    SizedBox(height: 48, child: buildContinueAction()),
                   ] else if (usesSharedAccessibilitySurface)
                     Expanded(
                       child: Align(
@@ -7336,6 +7489,25 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   ],
                 ],
               ],
+                );
+                if (!pinsAllocatedFeedbackCta) return feedbackBody;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        key: const Key(
+                          'act0_shell_feedback_allocated_body_scroll',
+                        ),
+                        primary: false,
+                        physics: const ClampingScrollPhysics(),
+                        child: feedbackBody,
+                      ),
+                    ),
+                    SizedBox(height: 48, child: buildContinueAction()),
+                  ],
+                );
+              },
             ),
           ),
         ),
@@ -9950,6 +10122,90 @@ Act0RunnerCompletionSummaryV1 _feedbackProgressAtGain(
   );
 }
 
+class _IntegratedPerspectiveTableShapeV2 extends ShapeBorder {
+  const _IntegratedPerspectiveTableShapeV2({this.side = BorderSide.none});
+
+  final BorderSide side;
+
+  @override
+  EdgeInsetsGeometry get dimensions => EdgeInsets.all(side.width);
+
+  Path _path(Rect rect) {
+    final w = rect.width;
+    final h = rect.height;
+    return Path()
+      ..moveTo(rect.left + (w * 0.22), rect.top)
+      ..cubicTo(
+        rect.left + (w * 0.34),
+        rect.top - (h * 0.008),
+        rect.left + (w * 0.66),
+        rect.top - (h * 0.008),
+        rect.left + (w * 0.78),
+        rect.top,
+      )
+      ..quadraticBezierTo(
+        rect.left + (w * 0.87),
+        rect.top + (h * 0.025),
+        rect.left + (w * 0.90),
+        rect.top + (h * 0.12),
+      )
+      ..lineTo(rect.left + (w * 0.985), rect.top + (h * 0.80))
+      ..quadraticBezierTo(
+        rect.right,
+        rect.top + (h * 0.93),
+        rect.left + (w * 0.88),
+        rect.top + (h * 0.985),
+      )
+      ..quadraticBezierTo(
+        rect.left + (w * 0.50),
+        rect.bottom + (h * 0.012),
+        rect.left + (w * 0.12),
+        rect.top + (h * 0.985),
+      )
+      ..quadraticBezierTo(
+        rect.left,
+        rect.top + (h * 0.93),
+        rect.left + (w * 0.015),
+        rect.top + (h * 0.80),
+      )
+      ..lineTo(rect.left + (w * 0.10), rect.top + (h * 0.12))
+      ..quadraticBezierTo(
+        rect.left + (w * 0.13),
+        rect.top + (h * 0.025),
+        rect.left + (w * 0.22),
+        rect.top,
+      )
+      ..close();
+  }
+
+  @override
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) => _path(rect);
+
+  @override
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) =>
+      _path(rect.deflate(side.width));
+
+  @override
+  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
+    if (side.style == BorderStyle.none || side.width == 0) return;
+    canvas.drawPath(_path(rect.deflate(side.width / 2)), side.toPaint());
+  }
+
+  @override
+  ShapeBorder scale(double t) =>
+      _IntegratedPerspectiveTableShapeV2(side: side.scale(t));
+}
+
+Offset _integratedPerspectivePointV2(Offset point) {
+  final horizontalScale = 0.72 + (0.34 * point.dy.clamp(0.0, 1.0));
+  final y = point.dy <= 0.34
+      ? point.dy + 0.012
+      : point.dy >= 0.68
+      ? point.dy - 0.006
+      : point.dy;
+  return Offset(0.5 + ((point.dx - 0.5) * horizontalScale), y);
+}
+
 class _Act0TableV1 extends StatelessWidget {
   const _Act0TableV1({
     required this.table,
@@ -9978,6 +10234,7 @@ class _Act0TableV1 extends StatelessWidget {
     this.identityPolicy = Act0TableIdentityPolicyV1.currentProduction,
     this.maxTableHeight,
     this.lockSharedActiveTableGeometry = false,
+    this.integratedPerspectivePrototype = false,
   });
 
   final Act0TableStateV1 table;
@@ -10006,6 +10263,7 @@ class _Act0TableV1 extends StatelessWidget {
   final Act0TableIdentityPolicyV1 identityPolicy;
   final double? maxTableHeight;
   final bool lockSharedActiveTableGeometry;
+  final bool integratedPerspectivePrototype;
 
   @override
   Widget build(BuildContext context) {
@@ -10072,7 +10330,7 @@ class _Act0TableV1 extends StatelessWidget {
     if (maxTableHeight != null && maxTableHeight > 0) {
       tableMaxWidth = math.min(tableMaxWidth, maxTableHeight * tableAspect);
     }
-    return ConstrainedBox(
+    final scene = ConstrainedBox(
       key: const Key('act0_shell_table'),
       constraints: BoxConstraints(maxWidth: tableMaxWidth),
       child: AspectRatio(
@@ -10081,16 +10339,22 @@ class _Act0TableV1 extends StatelessWidget {
           builder: (context, constraints) {
             final width = constraints.maxWidth;
             final height = constraints.maxHeight;
-            final seatSlots = _seatSlotsForVariant(
+            final baseSeatSlots = _seatSlotsForVariant(
               visualVariant,
               compactBottomDockClearance: compactBottomDockClearance,
               useAnswerListPerimeterRing:
                   _viewportFamilyUsesAnswerListCompositionV1(viewportFamily),
             );
-            final chipSlots = _chipSlotsForVariant(
+            final baseChipSlots = _chipSlotsForVariant(
               visualVariant,
               compactBottomDockClearance: compactBottomDockClearance,
             );
+            final seatSlots = integratedPerspectivePrototype
+                ? baseSeatSlots.map(_integratedPerspectivePointV2).toList()
+                : baseSeatSlots;
+            final chipSlots = integratedPerspectivePrototype
+                ? baseChipSlots.map(_integratedPerspectivePointV2).toList()
+                : baseChipSlots;
             final activeSeatId = (playbackActiveSeatId ?? '').trim().isNotEmpty
                 ? playbackActiveSeatId
                 : _resolveActiveSeatId(table);
@@ -10111,57 +10375,139 @@ class _Act0TableV1 extends StatelessWidget {
                 (table.focusCalloutLabel.isNotEmpty ||
                     interactiveCalloutLabel.isNotEmpty);
             return Container(
-              key: const Key('act0_shell_table_scene'),
+              key: integratedPerspectivePrototype
+                  ? const Key('act0_integrated_scene_perspective_silhouette')
+                  : const Key('act0_shell_table_scene'),
               padding: const EdgeInsets.all(10),
-              decoration: Act0ShellTokensV1.tableRimDecoration(),
+              decoration: integratedPerspectivePrototype
+                  ? ShapeDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: <Color>[
+                          Act0TableFeltCanonV1.railInner,
+                          Act0TableFeltCanonV1.railMid,
+                          Act0TableFeltCanonV1.railOuter,
+                        ],
+                        stops: <double>[0, 0.42, 1],
+                      ),
+                      shadows: const <BoxShadow>[
+                        BoxShadow(
+                          color: Color(0xD8000000),
+                          blurRadius: 48,
+                          offset: Offset(0, 28),
+                        ),
+                        BoxShadow(
+                          color: Act0TableFeltCanonV1.railAmbientShadow,
+                          blurRadius: 18,
+                          spreadRadius: 3,
+                          offset: Offset(0, 7),
+                        ),
+                      ],
+                      shape: _IntegratedPerspectiveTableShapeV2(
+                        side: BorderSide(
+                          color: Act0TableFeltCanonV1.innerHairline,
+                          width: 1.5,
+                        ),
+                      ),
+                    )
+                  : Act0ShellTokensV1.tableRimDecoration(),
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
                   Positioned.fill(
                     child: Container(
                       key: const Key('act0_shell_table_felt'),
-                      decoration: Act0ShellTokensV1.feltDecoration(),
+                      decoration: integratedPerspectivePrototype
+                          ? ShapeDecoration(
+                              gradient: const RadialGradient(
+                                center: Alignment(0, -0.16),
+                                radius: 1.08,
+                                colors: <Color>[
+                                  Act0TableFeltCanonV1.feltCenter,
+                                  Act0TableFeltCanonV1.feltMid,
+                                  Act0TableFeltCanonV1.feltEdge,
+                                ],
+                                stops: <double>[0, 0.55, 1],
+                              ),
+                              shape: _IntegratedPerspectiveTableShapeV2(
+                                side: BorderSide(
+                                  color: Act0ShellTokensV1.feltLine,
+                                  width: 2,
+                                ),
+                              ),
+                            )
+                          : Act0ShellTokensV1.feltDecoration(),
                     ),
                   ),
                   Positioned.fill(
                     child: Padding(
                       padding: const EdgeInsets.all(13),
                       child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            Act0ShellTokensV1.tableInnerRadius,
-                          ),
-                          border: Border.all(
-                            color: Act0ShellTokensV1.feltLine.withValues(
-                              alpha: 0.30,
-                            ),
-                          ),
-                        ),
+                        decoration: integratedPerspectivePrototype
+                            ? ShapeDecoration(
+                                shape: _IntegratedPerspectiveTableShapeV2(
+                                  side: BorderSide(
+                                    color: Act0ShellTokensV1.feltLine
+                                        .withValues(alpha: 0.30),
+                                    width: 1,
+                                  ),
+                                ),
+                              )
+                            : BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                  Act0ShellTokensV1.tableInnerRadius,
+                                ),
+                                border: Border.all(
+                                  color: Act0ShellTokensV1.feltLine.withValues(
+                                    alpha: 0.30,
+                                  ),
+                                ),
+                              ),
                       ),
                     ),
                   ),
                   Positioned.fill(
                     child: IgnorePointer(
                       child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            Act0ShellTokensV1.tableInnerRadius,
-                          ),
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: <Color>[
-                              Colors.white.withValues(
-                                alpha: refined ? 0.06 : 0.04,
+                        decoration: integratedPerspectivePrototype
+                            ? ShapeDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: <Color>[
+                                    Colors.white.withValues(
+                                      alpha: refined ? 0.06 : 0.04,
+                                    ),
+                                    Colors.transparent,
+                                    Act0VisualCanonV1.deepNavy.withValues(
+                                      alpha: refined ? 0.14 : 0.10,
+                                    ),
+                                  ],
+                                  stops: const <double>[0, 0.34, 1],
+                                ),
+                                shape:
+                                    const _IntegratedPerspectiveTableShapeV2(),
+                              )
+                            : BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                  Act0ShellTokensV1.tableInnerRadius,
+                                ),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: <Color>[
+                                    Colors.white.withValues(
+                                      alpha: refined ? 0.06 : 0.04,
+                                    ),
+                                    Colors.transparent,
+                                    Act0VisualCanonV1.deepNavy.withValues(
+                                      alpha: refined ? 0.14 : 0.10,
+                                    ),
+                                  ],
+                                  stops: const <double>[0, 0.34, 1],
+                                ),
                               ),
-                              Colors.transparent,
-                              Act0VisualCanonV1.deepNavy.withValues(
-                                alpha: refined ? 0.14 : 0.10,
-                              ),
-                            ],
-                            stops: const <double>[0, 0.34, 1],
-                          ),
-                        ),
                       ),
                     ),
                   ),
@@ -10300,6 +10646,7 @@ class _Act0TableV1 extends StatelessWidget {
                       seatSlots: seatSlots,
                       visualVariant: visualVariant,
                       identityPolicy: identityPolicy,
+                      depthTieredPrototype: integratedPerspectivePrototype,
                     ),
                 ],
               ),
@@ -10307,6 +10654,13 @@ class _Act0TableV1 extends StatelessWidget {
           },
         ),
       ),
+    );
+    if (!integratedPerspectivePrototype) {
+      return scene;
+    }
+    return KeyedSubtree(
+      key: const Key('act0_integrated_scene_perspective_table'),
+      child: scene,
     );
   }
 
@@ -11196,6 +11550,7 @@ class _SeatPlacementV1 extends StatelessWidget {
     required this.seatSlots,
     required this.visualVariant,
     this.identityPolicy = Act0TableIdentityPolicyV1.currentProduction,
+    this.depthTieredPrototype = false,
   });
 
   final int slot;
@@ -11214,6 +11569,7 @@ class _SeatPlacementV1 extends StatelessWidget {
   final List<Offset> seatSlots;
   final Act0ShellTableVisualVariantV1 visualVariant;
   final Act0TableIdentityPolicyV1 identityPolicy;
+  final bool depthTieredPrototype;
 
   static const List<Offset> defaultSlots = <Offset>[
     Offset(0.50, 0.90),
@@ -11227,27 +11583,44 @@ class _SeatPlacementV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final point = seatSlots[slot.clamp(0, seatSlots.length - 1)];
+    final tierScale = !depthTieredPrototype
+        ? 1.0
+        : point.dy >= 0.68
+        ? 1.05
+        : point.dy <= 0.34
+        ? 0.91
+        : 0.97;
     return Positioned(
       left: tableWidth * point.dx,
       top: tableHeight * point.dy,
       child: FractionalTranslation(
         translation: const Offset(-0.5, -0.5),
-        child: _SeatNodeV1(
-          seat: seat,
-          heroCards: heroCards,
-          highlightedCardIds: highlightedCardIds,
-          active: active,
-          emphasized: emphasized,
-          hero: hero,
-          selectable: selectable,
-          visualState: visualState,
-          decisionPriceOwnedByTable: decisionPriceOwnedByTable,
-          visualVariant: visualVariant,
-          identityPolicy: identityPolicy,
-          onTap: selectable && onChooseSeat != null
-              ? () => onChooseSeat!(seat.seatId)
-              : null,
-          compact: slot != 0,
+        child: Transform.scale(
+          key: Key(
+            'act0_integrated_scene_depth_${point.dy >= 0.68
+                ? 'near'
+                : point.dy <= 0.34
+                ? 'far'
+                : 'mid'}_${seat.seatId}',
+          ),
+          scale: tierScale,
+          child: _SeatNodeV1(
+            seat: seat,
+            heroCards: heroCards,
+            highlightedCardIds: highlightedCardIds,
+            active: active,
+            emphasized: emphasized,
+            hero: hero,
+            selectable: selectable,
+            visualState: visualState,
+            decisionPriceOwnedByTable: decisionPriceOwnedByTable,
+            visualVariant: visualVariant,
+            identityPolicy: identityPolicy,
+            onTap: selectable && onChooseSeat != null
+                ? () => onChooseSeat!(seat.seatId)
+                : null,
+            compact: slot != 0,
+          ),
         ),
       ),
     );

@@ -1564,7 +1564,7 @@ void main() {
       expect(recheck.fields['result'], 'correct');
       expect(recheck.fields['sequence_id'], 'w1_action_words_check_v1');
 
-      await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+      await tester.tap(find.byKey(const Key('act0_shell_previous_cta')));
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('act0_shell_learn_screen')), findsOneWidget);
       expect(
