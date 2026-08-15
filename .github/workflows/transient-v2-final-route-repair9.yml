@@ -6,7 +6,7 @@ on:
 permissions:
   contents: write
 jobs:
-  reconcile:
+  build:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -28,48 +28,17 @@ jobs:
           EXPECTED_MAIN='a5c7d94d31ea6f2f2ff7d1cf2ceb0856cd7f26a6'
           TARGET_BRANCH='kaizen/integrated-2-5d-v2-production-migration-v1'
           FILE='lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart'
+          OLD_STAGE_B64='ICAgICAgICAgICAgICBpZiAoIV91c2VzQ2Fub25pY2FsSW50ZWdyYXRlZExlYXJuaW5nU2NlbmVWMSB8fAogICAgICAgICAgICAgICAgICAhdXNlc1NoYXJlZEFjdGl2ZVJ1bm5lckFsbG9jYXRpb24gfHwKICAgICAgICAgICAgICAgICAgKCFpc0RyaWxsICYmICFpc1JldmlldykpCiAgICAgICAgICAgICAgICBfUnVubmVyUHJvZ3Jlc3NWMShydW5uZXI6IHJ1bm5lciwgb25CYWNrOiB3aWRnZXQub25CYWNrKSw='
+          NEW_STAGE_B64='ICAgICAgICAgICAgICBpZiAoIV91c2VzQ2Fub25pY2FsSW50ZWdyYXRlZExlYXJuaW5nU2NlbmVWMSkKICAgICAgICAgICAgICAgIF9SdW5uZXJQcm9ncmVzc1YxKHJ1bm5lcjogcnVubmVyLCBvbkJhY2s6IHdpZGdldC5vbkJhY2spLA=='
+          OLD_TOP_B64='ICAgICAgICBpZiAoX3VzZXNDYW5vbmljYWxJbnRlZ3JhdGVkTGVhcm5pbmdTY2VuZVYxICYmCiAgICAgICAgICAgIHVzZXNTaGFyZWRBY3RpdmVSdW5uZXJBbGxvY2F0aW9uICYmCiAgICAgICAgICAgIChpc0RyaWxsIHx8IGlzUmV2aWV3KSkgLi4uWwogICAgICAgICAgX1J1bm5lclByb2dyZXNzVjEocnVubmVyOiBydW5uZXIsIG9uQmFjazogd2lkZ2V0Lm9uQmFjayksCiAgICAgICAgICBjb25zdCBTaXplZEJveChoZWlnaHQ6IEFjdDBTaGVsbFRva2Vuc1YxLmdhcFhzKSwKICAgICAgICAgIGJ1aWxkSW50ZWdyYXRlZFByb21wdCgpLAogICAgICAgIF0s'
+          NEW_TOP_B64='ICAgICAgICBpZiAoX3VzZXNDYW5vbmljYWxJbnRlZ3JhdGVkTGVhcm5pbmdTY2VuZVYxKQogICAgICAgICAgX1J1bm5lclByb2dyZXNzVjEocnVubmVyOiBydW5uZXIsIG9uQmFjazogd2lkZ2V0Lm9uQmFjayksCiAgICAgICAgaWYgKF91c2VzQ2Fub25pY2FsSW50ZWdyYXRlZExlYXJuaW5nU2NlbmVWMSAmJgogICAgICAgICAgICB1c2VzU2hhcmVkQWN0aXZlUnVubmVyQWxsb2NhdGlvbiAmJgogICAgICAgICAgICAoaXNEcmlsbCB8fCBpc1JldmlldykpIC4uLlsKICAgICAgICAgGNvbnN0IFNpemVkQm94KGhlaWdodDogQWN0MFNoZWxsVG9rZW5zVjEuZ2FwWHMpLAogICAgICAgICAgYnVpbGRJbnRlZ3JhdGVkUHJvbXB0KCksCiAgICAgICAgXSw='
 
           test "$(git rev-parse HEAD)" = "$BASE"
           test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$EXPECTED_MAIN"
           test "$(git ls-remote origin refs/heads/$TARGET_BRANCH | cut -f1)" = "$BASE"
 
-          python3 - <<'PY'
-          from pathlib import Path
-
-          path = Path('lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart')
-          source = path.read_text()
-
-          old_stage = """              if (!_usesCanonicalIntegratedLearningSceneV1 ||
-                  !usesSharedActiveRunnerAllocation ||
-                  (!isDrill && !isReview))
-                _RunnerProgressV1(runner: runner, onBack: widget.onBack),"""
-          new_stage = """              if (!_usesCanonicalIntegratedLearningSceneV1)
-                _RunnerProgressV1(runner: runner, onBack: widget.onBack),"""
-          if source.count(old_stage) != 1:
-              raise SystemExit(f'expected exactly one failed inner-stage exit owner, found {source.count(old_stage)}')
-          source = source.replace(old_stage, new_stage)
-
-          old_top = """        if (_usesCanonicalIntegratedLearningSceneV1 &&
-            usesSharedActiveRunnerAllocation &&
-            (isDrill || isReview)) ...[
-          _RunnerProgressV1(runner: runner, onBack: widget.onBack),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          buildIntegratedPrompt(),
-        ],"""
-          new_top = """        if (_usesCanonicalIntegratedLearningSceneV1)
-          _RunnerProgressV1(runner: runner, onBack: widget.onBack),
-        if (_usesCanonicalIntegratedLearningSceneV1 &&
-            usesSharedActiveRunnerAllocation &&
-            (isDrill || isReview)) ...[
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          buildIntegratedPrompt(),
-        ],"""
-          if source.count(old_top) != 1:
-              raise SystemExit(f'expected exactly one canonical top progress/prompt owner, found {source.count(old_top)}')
-          source = source.replace(old_top, new_top)
-
-          path.write_text(source)
-          PY
+          export FILE OLD_STAGE_B64 NEW_STAGE_B64 OLD_TOP_B64 NEW_TOP_B64
+          python3 -c "from pathlib import Path; import base64, os; p=Path(os.environ['FILE']); s=p.read_text(); pairs=[(base64.b64decode(os.environ['OLD_STAGE_B64']).decode(),base64.b64decode(os.environ['NEW_STAGE_B64']).decode()),(base64.b64decode(os.environ['OLD_TOP_B64']).decode(),base64.b64decode(os.environ['NEW_TOP_B64']).decode())]; [(None if s.count(old)==1 else (_ for _ in ()).throw(SystemExit(f'expected one match, found {s.count(old)}'))) for old,new in pairs]; s=s.replace(pairs[0][0],pairs[0][1]).replace(pairs[1][0],pairs[1][1]); p.write_text(s)"
 
           git diff --check "$BASE" -- "$FILE"
           dart format --output=none --set-exit-if-changed "$FILE"
