@@ -1,0 +1,54 @@
+name: Transient V2 completion exit diagnostic
+
+on:
+  push:
+    branches:
+      - sol-transient/v2-completion-exit-diagnostic
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: b166299cb3f9f813653eabcee35a52bf7a994a59
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Inject read-only post-completion diagnostic
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('test/ui_v2/act0_telemetry_sink_v1_test.dart')
+          s=p.read_text()
+          needle="      await tester.tap(find.byKey(const Key('act0_shell_runner_back')));\n"
+          insert="""      print('V2_DIAG learn=${find.byKey(const Key('act0_shell_learn_screen')).evaluate().length} runner=${find.byType(Act0LessonRunnerShellV1).evaluate().length} runnerBack=${find.byKey(const Key('act0_shell_runner_back')).evaluate().length} continue=${find.byKey(const Key('act0_shell_continue_cta')).evaluate().length} feedbackContinue=${find.byKey(const Key('act0_shell_feedback_continue_cta')).evaluate().length} main=${find.byKey(const Key('act0_shell_main_cta')).evaluate().length}');
+      if (find.byType(Act0LessonRunnerShellV1).evaluate().isNotEmpty) {
+        final diagRunner = tester.widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1));
+        print('V2_DIAG runner phase=${diagRunner.runner.phase} beat=${diagRunner.runner.beatIndex} selectedTask=${diagRunner.selectedTaskId} options=${diagRunner.runner.options.map((option) => option.id).join(',')}');
+      }
+      final keyed = find.byWidgetPredicate((widget) => widget.key != null).evaluate().map((element) => '${element.widget.runtimeType}:${element.widget.key}').where((value) => value.contains('act0_')).toList();
+      print('V2_DIAG keys=${keyed.join('|')}');
+"""
+          assert s.count(needle)==1
+          p.write_text(s.replace(needle, insert+needle,1))
+          PY
+          git diff --check
+      - name: Run exact failing journey with diagnostic
+        shell: bash
+        run: |
+          set -o pipefail
+          flutter test test/ui_v2/act0_telemetry_sink_v1_test.dart \
+            --plain-name 'unlocked Action capability journey completes the alpha loop with ordered safe telemetry' \
+            2>&1 | tee /tmp/v2-diag.log || true
+          grep 'V2_DIAG' /tmp/v2-diag.log
