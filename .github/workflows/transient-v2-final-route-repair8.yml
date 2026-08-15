@@ -1,0 +1,44 @@
+name: Transient V2 final route repair 8
+on:
+  push:
+    branches:
+      - sol-transient/v2-final-route-repair8
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: b166299cb3f9f813653eabcee35a52bf7a994a59
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Apply and prove bounded route repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          FILE='lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart'
+          perl -0pi -e 's/              if \(!_usesCanonicalIntegratedLearningSceneV1\)\n                _RunnerProgressV1\(runner: runner, onBack: widget\.onBack\),/              if (!_usesCanonicalIntegratedLearningSceneV1 ||\n                  !usesSharedActiveRunnerAllocation ||\n                  (!isDrill && !isReview))\n                _RunnerProgressV1(runner: runner, onBack: widget.onBack),/' "$FILE"
+          if git diff --quiet b166299cb3f9f813653eabcee35a52bf7a994a59 -- "$FILE"; then
+            echo 'ERROR: route repair produced no diff'
+            exit 41
+          fi
+          git diff --check b166299cb3f9f813653eabcee35a52bf7a994a59
+          test "$(git diff --name-only b166299cb3f9f813653eabcee35a52bf7a994a59)" = "$FILE"
+          git diff --unified=6 b166299cb3f9f813653eabcee35a52bf7a994a59 -- "$FILE"
+          flutter test test/ui_v2/act0_telemetry_sink_v1_test.dart --plain-name 'unlocked Action capability journey completes the alpha loop with ordered safe telemetry'
+          git config user.name 'Sharky Migration Executor'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$FILE"
+          git commit -m 'fix(act0): preserve canonical runner exit after Action recovery'
+          echo "FINAL_ROUTE_REPAIR_SHA=$(git rev-parse HEAD)"
+          echo "FINAL_ROUTE_REPAIR_PARENT=$(git rev-parse HEAD^)"
+          git push --force origin HEAD:refs/heads/sol-transient/v2-final-route-repair8-staging
+          git push origin --delete sol-transient/v2-final-route-repair8-staging
