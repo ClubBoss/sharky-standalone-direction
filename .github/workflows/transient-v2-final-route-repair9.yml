@@ -7,7 +7,7 @@ permissions:
   contents: read
 jobs:
   exact-main:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     timeout-minutes: 15
     env:
       MAIN_SHA: 90e3b5a67a85424be457a946c629e88a578661e4
