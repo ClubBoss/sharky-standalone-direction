@@ -1,0 +1,59 @@
+name: Transient V2 final route repair
+
+on:
+  push:
+    branches:
+      - sol-transient/v2-final-route-repair
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: b166299cb3f9f813653eabcee35a52bf7a994a59
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Restore canonical non-drill runner exit ownership
+        shell: bash
+        run: |
+          set -euo pipefail
+          FILE='lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart'
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart')
+          s = p.read_text()
+          old = """              if (!_usesCanonicalIntegratedLearningSceneV1)
+                _RunnerProgressV1(runner: runner, onBack: widget.onBack),
+"""
+          new = """              if (!_usesCanonicalIntegratedLearningSceneV1 ||
+                  !usesSharedActiveRunnerAllocation ||
+                  (!isDrill && !isReview))
+                _RunnerProgressV1(runner: runner, onBack: widget.onBack),
+"""
+          assert s.count(old) == 1
+          assert s.count(new) == 0
+          p.write_text(s.replace(old, new, 1))
+          PY
+          dart format "$FILE"
+          git diff --check b166299cb3f9f813653eabcee35a52bf7a994a59
+          test "$(git diff --name-only b166299cb3f9f813653eabcee35a52bf7a994a59)" = "$FILE"
+          flutter test test/ui_v2/act0_telemetry_sink_v1_test.dart --plain-name 'unlocked Action capability journey completes the alpha loop with ordered safe telemetry'
+          git config user.name 'Sharky Migration Executor'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$FILE"
+          git commit -m 'fix(act0): preserve canonical runner exit after Action recovery'
+          SHA="$(git rev-parse HEAD)"
+          echo "FINAL_ROUTE_REPAIR_SHA=$SHA"
+          echo "FINAL_ROUTE_REPAIR_PARENT=$(git rev-parse HEAD^)"
+          git push --force origin "HEAD:refs/heads/sol-transient/v2-final-route-repair-staging"
+          git push origin --delete 'sol-transient/v2-final-route-repair-staging'
