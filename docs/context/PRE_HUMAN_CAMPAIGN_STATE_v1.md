@@ -9,6 +9,7 @@ governed by `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`.
 | --- | --- |
 | Reconciliation baseline | `ebd7335353cd4e9b61d8feed01eab2bf601b8daa` - exact `origin/main` re-resolved before this final V2 owner benchmark / production-migration admission reconciliation. |
 | Product/native admission baseline | `486a1509748a556de11a7e90076ed6e53aefa06e` - exact product/native evidence head owning Wave 3 hard acceptance and PHP-9 admission. |
+| Remote execution substrate | **`SHARKY_REMOTE_FAST_KAIZEN_EXECUTION_LANE_V1 = PROVEN`**. Publication PR #176 merged at `3e322dc546a131af30ec70390db248230b74bb9d`; the push-only `kaizen/**` lane checks out exact `github.sha`, runs Flutter 3.35 analysis/focused guards, captures production-real `iphone17_class` + `compact` evidence, and publishes an exact-SHA artifact. This changes executor/transport truth only. |
 | Master Plan authority | `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` - principal product-working North Star authority. |
 | Current stage | **`MACHINE_NORTH_STAR_CONVERGENCE`**. |
 | Owner route | **Machine North Star Convergence -> Machine Diminishing-Return Gate -> HNP technical revalidation/Profile B repair if still required -> real Human HNP -> Human-triggered repairs -> longitudinal/real-poker/market proof.** |
@@ -48,8 +49,8 @@ governed by `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`.
 | Avatars/characters | **DEFERRED**. |
 | Contextual answer-bearing coaching | **`NOT_ADMITTED`**. |
 | Visual North Star status | **`VISUAL_NORTH_STAR_GAP_OPEN`** until canonical migration and subsequent diminishing-return adjudication. |
-| Exact next action | **`SHARKY_INTEGRATED_2_5D_V2_BOUNDED_PRODUCTION_MIGRATION_CODEX_EXECUTION_V1`**. |
-| Exact next-action purpose | Starting from exact current main plus the owner-accepted V2 candidate, migrate the proven presentation from prototype ownership into the canonical Learning Scene without visual improvement, semantic drift, or scope expansion; then validate production/native truth. |
+| Exact next action | **`SHARKY_INTEGRATED_2_5D_V2_BOUNDED_PRODUCTION_MIGRATION_ORDINARY_SOL_REMOTE_EXECUTION_V1`**. |
+| Exact next-action purpose | Starting from exact current main plus the owner-accepted V2 candidate, migrate the proven presentation from prototype ownership into the canonical Learning Scene without visual improvement, semantic drift, or scope expansion; then validate production/native truth. Execution uses ordinary GPT-5.6 Sol High plus the proven push-only remote kaizen lane. |
 | Protected scope | No generic visual polish, new composition direction, avatars, room art, lighting, shaders, animation, coach redesign, content expansion, poker-logic mutation, speculative guards/tests-for-tests, generic AI/ML architecture, dormant Persona/AI Coach/ui_v3 resurrection, W13-W36 bulk expansion, full solver, commerce-before-evidence, broad refactor, or new dependency without direct evidence-backed need. |
 | Handoff | `docs/context/CURRENT_EXECUTION_HANDOFF_v1.md` is a low-context continuation snapshot only; it does not compete with Master Plan v4. |
 
@@ -60,6 +61,7 @@ governed by `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`.
 - `FINAL_PRODUCT_VISUAL_COHESION_WAVE3 = CLOSED_ACCEPTED`
 - `PHP9_PRE_HUMAN_READY_ADMISSION_V1 = CLOSED`
 - `PR_VISUAL_EVIDENCE_INNER_LOOP_V1 = CLOSED / IMPLEMENTED`
+- `SHARKY_REMOTE_FAST_KAIZEN_EXECUTION_LANE_V1 = PROVEN` via publication PR #176 / merged substrate `3e322dc546a131af30ec70390db248230b74bb9d`
 - `LEARNING_SCENE_STRATEGIC_ADJUDICATION_V1 = CLOSED`
 - `LEARNING_SCENE_RESTRAINED_DEPTH_CODEX_EXECUTION_V1_CLOSED_CONTROL_RETAINED`
 - `SHARKY_INTEGRATED_2_5D_LEARNING_SCENE_PROTOTYPE_ADMISSION_V1 = CLOSED`
@@ -86,4 +88,4 @@ hierarchy, protected boundaries, and Gauntlet policy. Report a genuine semantic
 contradiction instead of inventing a third authority.
 
 `CURRENT_STAGE = MACHINE_NORTH_STAR_CONVERGENCE`
-`EXACT_NEXT_ACTION = SHARKY_INTEGRATED_2_5D_V2_BOUNDED_PRODUCTION_MIGRATION_CODEX_EXECUTION_V1`
+`EXACT_NEXT_ACTION = SHARKY_INTEGRATED_2_5D_V2_BOUNDED_PRODUCTION_MIGRATION_ORDINARY_SOL_REMOTE_EXECUTION_V1`
