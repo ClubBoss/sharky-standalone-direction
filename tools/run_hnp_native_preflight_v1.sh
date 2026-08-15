@@ -21,6 +21,15 @@ printf '%s\n' "$actual_sha" > "$out/product_sha.txt"
 git status --short --branch > "$out/product_git_status_before.txt"
 
 flutter pub get 2>&1 | tee "$out/flutter_pub_get.log"
+
+# Prove the operator materialization payload before paying the native build cost.
+# The emitter imports Flutter-backed current product state, so run it with the
+# Flutter test engine rather than a bare Dart VM (which has no dart:ui).
+HNP_PROFILE_B_OUTPUT="$out/profile_b_progress.json" \
+  flutter test "$transport_root/tools/emit_hnp_profile_b_progress_v1.dart" \
+  --reporter expanded 2>&1 | tee "$out/profile_b_emitter.log"
+progress_json="$(tr -d '\n' < "$out/profile_b_progress.json")"
+
 flutter build ios --simulator --debug --dart-define=HNP_TELEMETRY=true 2>&1 | tee "$out/flutter_build_ios.log"
 runner="$product_root/build/ios/iphonesimulator/Runner.app"
 [[ -d "$runner" ]] || { echo "Runner.app missing: $runner" >&2; exit 11; }
@@ -58,6 +67,8 @@ PY
 sim_udid="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["udid"])' "$out/simulator_selected.json")"
 
 xcrun simctl help > "$out/simctl_help.txt" 2>&1 || true
+xcrun simctl io help > "$out/simctl_io_help.txt" 2>&1 || true
+xcrun simctl ui help > "$out/simctl_ui_help.txt" 2>&1 || true
 xcrun simctl boot "$sim_udid" >/dev/null 2>&1 || true
 xcrun simctl bootstatus "$sim_udid" -b 2>&1 | tee "$out/simulator_bootstatus.log"
 
@@ -88,36 +99,21 @@ clean_install
 profile_b_container="$(xcrun simctl get_app_container "$sim_udid" "$bundle_id" data)"
 printf '%s\n' "$profile_b_container" > "$out/profile_b_container.txt"
 
-# Emit exact current-product prerequisite task IDs from the canonical fixture.
-dart --packages="$product_root/.dart_tool/package_config.json" \
-  "$transport_root/tools/emit_hnp_profile_b_progress_v1.dart" \
-  "$out/profile_b_progress.json" 2>&1 | tee "$out/profile_b_emitter.log"
-progress_json="$(tr -d '\n' < "$out/profile_b_progress.json")"
-
-prefs_dir="$profile_b_container/Library/Preferences"
-prefs_plist="$prefs_dir/$bundle_id.plist"
-mkdir -p "$prefs_dir"
-PROFILE_B_PROGRESS_JSON="$progress_json" python3 - "$prefs_plist" <<'PY'
-import os, plistlib, sys
-path = sys.argv[1]
-progress = os.environ['PROFILE_B_PROGRESS_JSON']
-payload = {
-    'flutter.intake_completed_v1': True,
-    'flutter.act0_welcome_completed_v1': True,
-    'flutter.act0_shell_progress_v1': progress,
-}
-with open(path, 'wb') as fh:
-    plistlib.dump(payload, fh, fmt=plistlib.FMT_BINARY)
-PY
-cp "$prefs_plist" "$out/profile_b_preferences_before_launch.plist"
+# SharedPreferences on Apple is NSUserDefaults-backed. Write the same production
+# domain/keys through the booted Simulator's defaults tool so cfprefsd owns the
+# materialization; do not inject widget state, routes, answers, or debug flags.
+xcrun simctl spawn "$sim_udid" defaults write "$bundle_id" flutter.intake_completed_v1 -bool true
+xcrun simctl spawn "$sim_udid" defaults write "$bundle_id" flutter.act0_welcome_completed_v1 -bool true
+xcrun simctl spawn "$sim_udid" defaults write "$bundle_id" flutter.act0_shell_progress_v1 -string "$progress_json"
+xcrun simctl spawn "$sim_udid" defaults export "$bundle_id" - > "$out/profile_b_preferences_before_launch.plist"
 
 profile_b_launch="$(xcrun simctl launch "$sim_udid" "$bundle_id")"
 printf '%s\n' "$profile_b_launch" > "$out/profile_b_launch.txt"
 sleep 5
 xcrun simctl io "$sim_udid" screenshot "$out/profile_b_bootstrap.png"
-cp "$prefs_plist" "$out/profile_b_preferences_after_launch.plist"
+xcrun simctl spawn "$sim_udid" defaults export "$bundle_id" - > "$out/profile_b_preferences_after_launch.plist"
 
-python3 - "$prefs_plist" "$out/profile_b_validation.json" <<'PY'
+python3 - "$out/profile_b_preferences_after_launch.plist" "$out/profile_b_validation.json" <<'PY'
 import json, plistlib, sys
 plist_path, out_path = sys.argv[1:]
 with open(plist_path, 'rb') as fh:
