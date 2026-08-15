@@ -156,32 +156,59 @@ jobs:
           xcrun simctl terminate "$UDID" "$BUNDLE_ID"
           echo "HNP_PROFILE_A_NATIVE_LAUNCH=PASS"
 
-      - name: Materialize Profile B through production UserDefaults contract
+      - name: Materialize Profile B in the installed app persistence container
         run: |
           set -euo pipefail
           source output/simulator_selection.env
           BUNDLE_ID=com.example.pokerAnalyzer
-          PROGRESS="$(cat output/hnp_profile_b_progress_v1.json)"
-          # shared_preferences_foundation stores legacy SharedPreferences values
-          # in the application domain under the flutter. prefix.
-          xcrun simctl spawn "$UDID" defaults write "$BUNDLE_ID" flutter.intake_completed_v1 -bool true
-          xcrun simctl spawn "$UDID" defaults write "$BUNDLE_ID" flutter.act0_welcome_completed_v1 -bool true
-          xcrun simctl spawn "$UDID" defaults write "$BUNDLE_ID" flutter.act0_shell_progress_v1 -string "$PROGRESS"
-          xcrun simctl spawn "$UDID" defaults read "$BUNDLE_ID" flutter.act0_shell_progress_v1 > output/profile_b.progress.before.json
+          APP=build/ios/iphonesimulator/Runner.app
+
+          # A separate clean install prevents the prior Profile A process and
+          # cfprefsd state from participating in the progressed-state proof.
+          xcrun simctl uninstall "$UDID" "$BUNDLE_ID"
+          xcrun simctl install "$UDID" "$APP"
+          DATA_CONTAINER="$(xcrun simctl get_app_container "$UDID" "$BUNDLE_ID" data)"
+          echo "$DATA_CONTAINER" > output/profile_b.container.txt
+          export DATA_CONTAINER
+
+          # shared_preferences_foundation uses the app UserDefaults domain with
+          # the flutter. prefix.  Materialize that physical production store
+          # before the app's first Profile B launch; no product/debug route is used.
           python3 - <<'PY'
-          import json
-          p=json.loads(open('output/profile_b.progress.before.json').read().strip())
+          import json, os, plistlib
+          from pathlib import Path
+
+          root=Path(os.environ['DATA_CONTAINER'])
+          prefs=root/'Library'/'Preferences'/'com.example.pokerAnalyzer.plist'
+          prefs.parent.mkdir(parents=True, exist_ok=True)
+          progress=json.load(open('output/hnp_profile_b_progress_v1.json'))
+          payload={
+              'flutter.intake_completed_v1': True,
+              'flutter.act0_welcome_completed_v1': True,
+              'flutter.act0_shell_progress_v1': json.dumps(progress, separators=(',', ':')),
+          }
+          with prefs.open('wb') as f:
+              plistlib.dump(payload, f, fmt=plistlib.FMT_BINARY, sort_keys=True)
+          with prefs.open('rb') as f:
+              check=plistlib.load(f)
+          assert check['flutter.intake_completed_v1'] is True
+          assert check['flutter.act0_welcome_completed_v1'] is True
+          p=json.loads(check['flutter.act0_shell_progress_v1'])
           assert len(p['completedTaskIds'])==28
           assert p['selectedLessonId']=='fold_check_call_raise'
           assert p['selectedTaskId']=='actions_theory'
-          print('HNP_PROFILE_B_PERSISTENCE_WRITE=PASS')
+          print('HNP_PROFILE_B_APP_CONTAINER_WRITE=PASS')
           PY
+          PREFS="$DATA_CONTAINER/Library/Preferences/$BUNDLE_ID.plist"
+          plutil -convert xml1 -o output/profile_b.preferences.before.plist "$PREFS"
 
-      - name: Profile B normal bootstrap preservation
+      - name: Profile B normal bootstrap materialization proof
         run: |
           set -euo pipefail
           source output/simulator_selection.env
           BUNDLE_ID=com.example.pokerAnalyzer
+          DATA_CONTAINER="$(cat output/profile_b.container.txt)"
+          PREFS="$DATA_CONTAINER/Library/Preferences/$BUNDLE_ID.plist"
           xcrun simctl launch \
             --terminate-running-process \
             --stdout="$PWD/output/profile_b.stdout.log" \
@@ -190,16 +217,22 @@ jobs:
           sleep 8
           xcrun simctl io "$UDID" screenshot output/profile_b.png >/dev/null
           test -s output/profile_b.png
-          DATA_CONTAINER="$(xcrun simctl get_app_container "$UDID" "$BUNDLE_ID" data)"
-          echo "$DATA_CONTAINER" > output/profile_b.container.txt
           TRACE="$DATA_CONTAINER/Library/Application Support/act0_hnp_trace_v1.jsonl"
           test -e "$TRACE"
           cp "$TRACE" output/profile_b.initial_trace.jsonl
+          test ! -s output/profile_b.initial_trace.jsonl
           xcrun simctl terminate "$UDID" "$BUNDLE_ID"
-          xcrun simctl spawn "$UDID" defaults read "$BUNDLE_ID" flutter.act0_shell_progress_v1 > output/profile_b.progress.after.json
+          plutil -convert xml1 -o output/profile_b.preferences.after.plist "$PREFS"
+          export PREFS
           python3 - <<'PY'
-          import json
-          p=json.loads(open('output/profile_b.progress.after.json').read().strip())
+          import hashlib, json, os, plistlib
+          from pathlib import Path
+
+          with open(os.environ['PREFS'], 'rb') as f:
+              values=plistlib.load(f)
+          assert values.get('flutter.intake_completed_v1') is True, values
+          assert values.get('flutter.act0_welcome_completed_v1') is True, values
+          p=json.loads(values['flutter.act0_shell_progress_v1'])
           assert p['schemaVersion']==16, p
           assert p['selectedWorldId']=='world_1', p
           assert p['selectedLessonId']=='fold_check_call_raise', p
@@ -207,6 +240,14 @@ jobs:
           assert p['completedLessonIds']==[
               'what_poker_is','what_poker_is_content','cards_ranks_suits','your_first_hand'], p
           assert len(p['completedTaskIds'])==28, len(p['completedTaskIds'])
+
+          a=Path('output/profile_a.png').read_bytes()
+          b=Path('output/profile_b.png').read_bytes()
+          ah=hashlib.sha256(a).hexdigest()
+          bh=hashlib.sha256(b).hexdigest()
+          print('PROFILE_A_PNG_SHA256='+ah)
+          print('PROFILE_B_PNG_SHA256='+bh)
+          assert ah != bh, 'Profile B rendered the same fresh-placement surface as Profile A'
           print('HNP_PROFILE_B_BOOTSTRAP_PRESERVATION=PASS schemaVersion=%s tasks=%s' %
                 (p['schemaVersion'], len(p['completedTaskIds'])))
           print('HNP_PROFILE_B_NATIVE_MATERIALIZATION=PASS')
