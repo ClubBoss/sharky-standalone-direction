@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - hnp/technical-revalidation-v1
+  workflow_dispatch: {}
 
 permissions:
   contents: read
@@ -227,6 +228,10 @@ jobs:
               return app.descendants(matching: .any).matching(predicate)
             }
 
+            private func preferredHittable(_ elements: [XCUIElement]) -> XCUIElement? {
+              elements.first(where: { $0.elementType == .button }) ?? elements.first
+            }
+
             private func firstHittable(
               _ query: XCUIElementQuery,
               identity: String,
@@ -235,7 +240,8 @@ jobs:
               mark("wait:\(identity)")
               let deadline = Date().addingTimeInterval(timeout)
               repeat {
-                for element in query.allElementsBoundByIndex where element.exists && element.isHittable {
+                let hittable = query.allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+                if let element = preferredHittable(hittable) {
                   mark("found:\(identity)")
                   return element
                 }
@@ -266,8 +272,9 @@ jobs:
               let deadline = Date().addingTimeInterval(timeout)
               repeat {
                 for label in labels {
-                  for element in candidates(exact: label).allElementsBoundByIndex
-                  where element.exists && element.isHittable {
+                  let hittable = candidates(exact: label).allElementsBoundByIndex
+                    .filter { $0.exists && $0.isHittable }
+                  if let element = preferredHittable(hittable) {
                     element.tap()
                     mark("tapped:exact:\(label)")
                     return
@@ -337,18 +344,18 @@ jobs:
               app.launch()
               mark("profile_a:launched")
               tapExact("Find my start", timeout: 25)
-              tapContaining("new to poker", timeout: 15)
+              tapContaining("Best for zero", timeout: 15)
               tapExact("Start from zero", timeout: 15)
               tapExact("Try one table read", timeout: 20)
-              tapExact("Check", timeout: 15)
-              tapExact("Continue", timeout: 15)
+              tapContaining("Check", timeout: 15)
+              tapExact("Next hand", timeout: 15)
               tapExact("Open first lesson", timeout: 20)
               tapExact("Learn", timeout: 15)
               assertContains("0 of 9 lessons", timeout: 20)
               assertContains("First Table Guide", timeout: 15)
               tapFirstExact(["Start", "Continue"], timeout: 15)
-              if !candidates(exact: "Continue").firstMatch.waitForExistence(timeout: 15) {
-                failObserver("fresh_first_real_lesson_runner_not_reachable selector=exact:Continue")
+              if !candidates(exact: "Next").firstMatch.waitForExistence(timeout: 15) {
+                failObserver("fresh_first_real_lesson_runner_not_reachable selector=exact:Next")
                 return
               }
               mark("profile_a:first_lesson_reachable")
@@ -414,7 +421,12 @@ jobs:
           for framework in "$SOURCE_FRAMEWORKS"/*.framework; do
             test -d "$framework"
             ditto "$framework" "$UI_TEST_RUNNER/Frameworks/$(basename "$framework")"
+            codesign --force --sign - --timestamp=none \
+              "$UI_TEST_RUNNER/Frameworks/$(basename "$framework")"
           done
+          codesign --force --deep --sign - --timestamp=none "$UI_TEST_RUNNER"
+          codesign --verify --deep --strict "$UI_TEST_RUNNER"
+          echo 'HNP_TEST_RUNNER_RESIGN=PASS' | tee output/test_runner_resign.txt
           TEST_BINARY="$UI_TEST_RUNNER/PlugIns/RunnerTests.xctest/RunnerTests"
           test -x "$TEST_BINARY"
           python3 - "$SOURCE_FRAMEWORKS" "$UI_TEST_RUNNER/Frameworks" "$TEST_BINARY" \
