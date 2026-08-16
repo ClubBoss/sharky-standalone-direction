@@ -8,32 +8,45 @@ on:
 permissions:
   contents: read
 
+env:
+  TARGET_MAIN_SHA: f62f2d40ee0022de42e11b6a0326ecc3e1d46ded
+  BUNDLE_ID: com.example.pokerAnalyzer
+  HNP_DART_DEFINES_B64: SE5QX1RFTEVNRVRSWT10cnVl
+
 jobs:
-  probe:
+  exact-main-observer-proof:
     runs-on: macos-latest
-    timeout-minutes: 75
+    timeout-minutes: 90
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout exact live main
+        uses: actions/checkout@v4
         with:
+          ref: ${{ env.TARGET_MAIN_SHA }}
           fetch-depth: 1
 
-      - uses: subosito/flutter-action@v2
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.0'
           channel: stable
           cache: true
 
-      - name: Assert exact candidate and install dependencies
+      - name: Assert exact target and resolve dependencies
         run: |
           set -euo pipefail
           mkdir -p output
-          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-          echo "HNP_CANDIDATE_SHA=$GITHUB_SHA" | tee output/candidate.txt
+          ACTUAL="$(git rev-parse HEAD)"
+          test "$ACTUAL" = "$TARGET_MAIN_SHA"
+          {
+            echo "WORKFLOW_SHA=$GITHUB_SHA"
+            echo "EXACT_MAIN_SHA=$ACTUAL"
+          } | tee output/exact_main_identity.txt
           flutter pub get
+          (cd ios && pod install)
           xcodebuild -version | tee output/xcode_version.txt
           flutter --version | tee output/flutter_version.txt
 
-      - name: Emit canonical Profile B snapshot
+      - name: Emit canonical Profile B snapshot from exact main
         run: |
           set -euo pipefail
           cat > test/_tmp_hnp_profile_b_snapshot_v1_test.dart <<'DART'
@@ -43,15 +56,25 @@ jobs:
           import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
           void main() {
-            test('emit production-equivalent Profile B snapshot', () {
+            test('emit exact-main production-equivalent Profile B snapshot', () {
               final fixture = jsonDecode(
                 File('tools/contracts/alpha_action_capability_prerequisite_progression_v1.json')
                     .readAsStringSync(),
               ) as Map<String, dynamic>;
               expect(fixture['schema'], 'act0_progression_fixture_v1');
+              expect(
+                fixture['fixture_id'],
+                'alpha_action_capability_prerequisite_progression_v1',
+              );
               final lessonIds = (fixture['completed_lesson_ids'] as List<dynamic>)
                   .map((value) => value.toString())
                   .toList(growable: false);
+              expect(lessonIds, <String>[
+                'what_poker_is',
+                'what_poker_is_content',
+                'cards_ranks_suits',
+                'your_first_hand',
+              ]);
               final state = Act0ShellStateV1.sample;
               final world = state.worldById(fixture['world_id'] as String);
               final completedTaskIds = <String>[
@@ -63,6 +86,8 @@ jobs:
               ];
               expect(completedTaskIds, hasLength(28));
               final target = fixture['target'] as Map<String, dynamic>;
+              expect(target['lesson_id'], 'fold_check_call_raise');
+              expect(target['task_id'], 'actions_theory');
               final snapshot = <String, Object>{
                 'schemaVersion': 16,
                 'completedTaskIds': completedTaskIds,
@@ -78,51 +103,47 @@ jobs:
             });
           }
           DART
-          flutter test test/_tmp_hnp_profile_b_snapshot_v1_test.dart
+          flutter test test/_tmp_hnp_profile_b_snapshot_v1_test.dart \
+            | tee output/profile_b_snapshot_test.log
           rm test/_tmp_hnp_profile_b_snapshot_v1_test.dart
-          python3 - <<'PY'
+          python3 - <<'PY' | tee output/profile_b_snapshot_validation.txt
           import json
           p=json.load(open('output/hnp_profile_b_progress_v1.json'))
           assert p['schemaVersion']==16
           assert len(p['completedTaskIds'])==28
           assert p['completedLessonIds']==[
-              'what_poker_is','what_poker_is_content','cards_ranks_suits','your_first_hand']
+            'what_poker_is','what_poker_is_content','cards_ranks_suits','your_first_hand']
           assert p['selectedWorldId']=='world_1'
           assert p['selectedLessonId']=='fold_check_call_raise'
           assert p['selectedTaskId']=='actions_theory'
           print('HNP_PROFILE_B_SNAPSHOT=PASS tasks=28 target=fold_check_call_raise/actions_theory')
           PY
 
-      - name: Build exact-candidate HNP Runner
-        run: |
-          set -euo pipefail
-          flutter build ios --simulator --debug --dart-define=HNP_TELEMETRY=true
-          APP=build/ios/iphonesimulator/Runner.app
-          test -d "$APP"
-          shasum -a 256 "$APP/Runner" | tee output/runner_sha256.txt
-
-      - name: Select and open Simulator
+      - name: Select and boot native Simulator
         run: |
           set -euo pipefail
           python3 - <<'PY'
           import json, shlex, subprocess
           payload=json.loads(subprocess.check_output(
-              ['xcrun','simctl','list','devices','available','-j'], text=True))
-          prefs=('iPhone 17 Pro','iPhone 16 Pro','iPhone 17','iPhone 16','iPhone 15 Pro','iPhone 15')
+            ['xcrun','simctl','list','devices','available','-j'], text=True))
+          preferred=('iPhone 17 Pro','iPhone 16 Pro','iPhone 17','iPhone 16','iPhone 15 Pro','iPhone 15')
           candidates=[]
           for runtime, devices in payload['devices'].items():
-            for d in devices:
-              if not d.get('isAvailable'):
+            for device in devices:
+              if not device.get('isAvailable'):
                 continue
-              matching=[name for name in prefs if d['name'].startswith(name)]
-              if matching:
-                candidates.append((prefs.index(matching[0]), runtime, d))
+              matches=[name for name in preferred if device['name'].startswith(name)]
+              if matches:
+                candidates.append((preferred.index(matches[0]), runtime, device))
           if not candidates:
             raise SystemExit('no suitable iPhone Simulator')
-          _, runtime, d=sorted(candidates, key=lambda x:(x[0], x[1]))[0]
-          open('output/simulator_selection.env','w').write('UDID='+shlex.quote(d['udid'])+'\n')
+          _, runtime, device=sorted(candidates, key=lambda item:(item[0], item[1]))[0]
+          open('output/simulator_selection.env','w').write(
+            'UDID='+shlex.quote(device['udid'])+'\n')
           open('output/simulator_identity.txt','w').write(
-              'SIM_NAME='+d['name']+'\nSIM_RUNTIME='+runtime+'\nSIM_UDID='+d['udid']+'\n')
+            'SIM_NAME='+device['name']+'\n'
+            'SIM_RUNTIME='+runtime+'\n'
+            'SIM_UDID='+device['udid']+'\n')
           PY
           source output/simulator_selection.env
           cat output/simulator_identity.txt
@@ -131,49 +152,278 @@ jobs:
           open -a Simulator
           xcrun simctl bootstatus "$UDID" -b
 
-      - name: Profile A clean-install native launch
+      - name: Prepare minimal transient XCUITest observer driver
+        run: |
+          set -euo pipefail
+          cp ios/Runner.xcodeproj/project.pbxproj output/project.pbxproj.before_hnp_xcuitest
+          cp ios/RunnerTests/RunnerTests.swift output/RunnerTests.swift.before_hnp_xcuitest
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          path=Path('ios/Runner.xcodeproj/project.pbxproj')
+          text=path.read_text()
+          old='productType = "com.apple.product-type.bundle.unit-test";'
+          assert text.count(old)==1, text.count(old)
+          text=text.replace(
+            old,
+            'productType = "com.apple.product-type.bundle.ui-testing";',
+            1,
+          )
+          text=re.sub(
+            r'^\s*BUNDLE_LOADER = "\$\(TEST_HOST\)";\n',
+            '', text, flags=re.M,
+          )
+          text=re.sub(
+            r'^\s*TEST_HOST = "\$\(BUILT_PRODUCTS_DIR\)/Runner\.app/\$\(BUNDLE_EXECUTABLE_FOLDER_PATH\)/Runner";\n',
+            '', text, flags=re.M,
+          )
+          pattern=(
+            r'(PRODUCT_BUNDLE_IDENTIFIER = com\.example\.pokerAnalyzer\.RunnerTests;\n'
+            r'\s*PRODUCT_NAME = "\$\(TARGET_NAME\)";)'
+          )
+          text,count=re.subn(
+            pattern,
+            r'\1\n\t\t\t\tTEST_TARGET_NAME = Runner;',
+            text,
+          )
+          assert count==3, count
+          path.write_text(text)
+          PY
+          cat > ios/RunnerTests/RunnerTests.swift <<'SWIFT'
+          import XCTest
+
+          final class HnpObserverUITests: XCTestCase {
+            private var app: XCUIApplication!
+
+            override func setUpWithError() throws {
+              continueAfterFailure = false
+              app = XCUIApplication()
+            }
+
+            private func candidates(exact label: String) -> XCUIElementQuery {
+              let predicate = NSPredicate(format: "label == %@", label)
+              return app.descendants(matching: .any).matching(predicate)
+            }
+
+            private func candidates(containing text: String) -> XCUIElementQuery {
+              let predicate = NSPredicate(format: "label CONTAINS[c] %@", text)
+              return app.descendants(matching: .any).matching(predicate)
+            }
+
+            private func firstHittable(
+              _ query: XCUIElementQuery,
+              timeout: TimeInterval = 15
+            ) -> XCUIElement {
+              let deadline = Date().addingTimeInterval(timeout)
+              repeat {
+                for element in query.allElementsBoundByIndex where element.exists && element.isHittable {
+                  return element
+                }
+                RunLoop.current.run(until: Date().addingTimeInterval(0.25))
+              } while Date() < deadline
+              XCTFail("No hittable matching UI element")
+              return query.firstMatch
+            }
+
+            private func tapExact(_ label: String, timeout: TimeInterval = 15) {
+              firstHittable(candidates(exact: label), timeout: timeout).tap()
+            }
+
+            private func tapContaining(_ text: String, timeout: TimeInterval = 15) {
+              firstHittable(candidates(containing: text), timeout: timeout).tap()
+            }
+
+            private func tapFirstExact(
+              _ labels: [String],
+              timeout: TimeInterval = 15
+            ) {
+              let deadline = Date().addingTimeInterval(timeout)
+              repeat {
+                for label in labels {
+                  for element in candidates(exact: label).allElementsBoundByIndex
+                  where element.exists && element.isHittable {
+                    element.tap()
+                    return
+                  }
+                }
+                RunLoop.current.run(until: Date().addingTimeInterval(0.25))
+              } while Date() < deadline
+              XCTFail("None of the expected labels is hittable: \(labels)")
+            }
+
+            private func assertContains(_ text: String, timeout: TimeInterval = 15) {
+              let element = candidates(containing: text).firstMatch
+              XCTAssertTrue(element.waitForExistence(timeout: timeout), "Missing text containing: \(text)")
+            }
+
+            private func existsExact(_ label: String) -> Bool {
+              for element in candidates(exact: label).allElementsBoundByIndex
+              where element.exists && element.isHittable {
+                return true
+              }
+              return false
+            }
+
+            private func advanceActionTheoryToDecision() {
+              for _ in 0..<12 {
+                if existsExact("Check") && existsExact("Fold") { return }
+                tapExact("Continue", timeout: 15)
+                RunLoop.current.run(until: Date().addingTimeInterval(0.35))
+              }
+              XCTAssertTrue(existsExact("Check") && existsExact("Fold"),
+                            "Action theory did not reach the canonical decision")
+            }
+
+            private func tapRunnerBack() {
+              let buttons = app.buttons.allElementsBoundByIndex.filter {
+                $0.exists && $0.isHittable &&
+                $0.frame.minX < 125 && $0.frame.minY < 190 &&
+                $0.frame.width < 100 && $0.frame.height < 100
+              }.sorted {
+                if abs($0.frame.minY - $1.frame.minY) < 1 {
+                  return $0.frame.minX < $1.frame.minX
+                }
+                return $0.frame.minY < $1.frame.minY
+              }
+              XCTAssertFalse(buttons.isEmpty, "No visible runner back control")
+              buttons[0].tap()
+            }
+
+            func testProfileAFreshFirstLessonReachable() throws {
+              app.launch()
+              tapExact("Find my start", timeout: 25)
+              tapContaining("new to poker", timeout: 15)
+              tapExact("Start from zero", timeout: 15)
+              tapExact("Try one table read", timeout: 20)
+              tapExact("Check", timeout: 15)
+              tapExact("Continue", timeout: 15)
+              tapExact("Open first lesson", timeout: 20)
+              tapExact("Learn", timeout: 15)
+              assertContains("0 of 9 lessons", timeout: 20)
+              assertContains("First Table Guide", timeout: 15)
+              tapFirstExact(["Start", "Continue"], timeout: 15)
+              XCTAssertTrue(candidates(exact: "Continue").firstMatch.waitForExistence(timeout: 15),
+                            "Fresh first real lesson runner was not reachable")
+            }
+
+            func testProfileBCanonicalActionRepairRecheckExit() throws {
+              // Host-side evidence transport injects the canonical production
+              // SharedPreferences payload after Xcode installs the exact-main app.
+              Thread.sleep(forTimeInterval: 45)
+              app.launch()
+              tapExact("Learn", timeout: 25)
+              assertContains("4 of 9 lessons", timeout: 20)
+              assertContains("Fold, check, call, raise", timeout: 15)
+              tapFirstExact(["Start", "Continue"], timeout: 15)
+              advanceActionTheoryToDecision()
+
+              // Observer-only deterministic technical traversal. These choices
+              // prove the route and sink; they are not Human HNP evidence.
+              tapExact("Fold", timeout: 15)
+              tapExact("Repair now", timeout: 20)
+              tapExact("Check", timeout: 15)
+              tapExact("Check original read", timeout: 20)
+              tapExact("Check", timeout: 15)
+              tapExact("Continue", timeout: 20)
+              RunLoop.current.run(until: Date().addingTimeInterval(1.5))
+              tapRunnerBack()
+              assertContains("Fold, check, call, raise", timeout: 20)
+              RunLoop.current.run(until: Date().addingTimeInterval(2.0))
+            }
+          }
+          SWIFT
+          git diff -- ios/Runner.xcodeproj/project.pbxproj ios/RunnerTests/RunnerTests.swift \
+            > output/transient_hnp_xcuitest.patch
+          test -s output/transient_hnp_xcuitest.patch
+          echo 'TRANSIENT_XCUITEST_DRIVER=PREPARED' | tee output/xcuitest_driver_disposition.txt
+
+      - name: Build exact-main HNP app and transient UI test once
         run: |
           set -euo pipefail
           source output/simulator_selection.env
-          BUNDLE_ID=com.example.pokerAnalyzer
-          APP=build/ios/iphonesimulator/Runner.app
+          rm -rf output/DerivedData
+          set -o pipefail
+          xcodebuild build-for-testing \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$UDID" \
+            -derivedDataPath "$PWD/output/DerivedData" \
+            DART_DEFINES="$HNP_DART_DEFINES_B64" \
+            | tee output/xcuitest_build.log
+          TEST_APP="$(find output/DerivedData/Build/Products -type d -path '*Debug-iphonesimulator/Runner.app' -print -quit)"
+          test -n "$TEST_APP"
+          test -x "$TEST_APP/Runner"
+          echo "$TEST_APP" > output/exact_main_runner_path.txt
+          shasum -a 256 "$TEST_APP/Runner" | tee output/exact_main_runner_sha256.txt
+          TEST_BUNDLE="$(find output/DerivedData/Build/Products -type d -name 'RunnerTests-Runner.app' -o -name 'RunnerTests.xctest' | head -1 || true)"
+          echo "TEST_BUNDLE_DISCOVERY=$TEST_BUNDLE" | tee output/test_bundle_discovery.txt
+
+      - name: Profile A physical fresh-route traversal
+        run: |
+          set -euo pipefail
+          source output/simulator_selection.env
           xcrun simctl uninstall "$UDID" "$BUNDLE_ID" 2>/dev/null || true
-          xcrun simctl install "$UDID" "$APP"
-          xcrun simctl launch \
-            --terminate-running-process \
-            --stdout="$PWD/output/profile_a.stdout.log" \
-            --stderr="$PWD/output/profile_a.stderr.log" \
-            "$UDID" "$BUNDLE_ID" | tee output/profile_a.launch.txt
-          sleep 6
-          xcrun simctl io "$UDID" screenshot output/profile_a.png >/dev/null
-          test -s output/profile_a.png
+          set -o pipefail
+          xcodebuild test-without-building \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$UDID" \
+            -derivedDataPath "$PWD/output/DerivedData" \
+            -only-testing:RunnerTests/HnpObserverUITests/testProfileAFreshFirstLessonReachable \
+            | tee output/profile_a_xcuitest.log
+          xcrun simctl io "$UDID" screenshot output/profile_a_after_first_lesson.png >/dev/null
+          test -s output/profile_a_after_first_lesson.png
           DATA_CONTAINER="$(xcrun simctl get_app_container "$UDID" "$BUNDLE_ID" data)"
-          echo "$DATA_CONTAINER" > output/profile_a.container.txt
           TRACE="$DATA_CONTAINER/Library/Application Support/act0_hnp_trace_v1.jsonl"
           test -e "$TRACE"
-          cp "$TRACE" output/profile_a.initial_trace.jsonl
-          test ! -s output/profile_a.initial_trace.jsonl
-          xcrun simctl terminate "$UDID" "$BUNDLE_ID"
-          echo "HNP_PROFILE_A_NATIVE_LAUNCH=PASS"
+          cp "$TRACE" output/profile_a_route_trace.jsonl
+          xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null || true
+          echo 'HNP_PROFILE_A_TECHNICAL_READY=PASS' | tee output/profile_a_verdict.txt
 
-      - name: Materialize Profile B in the installed app persistence container
+      - name: Profile B physical materialization plus observer traversal
         run: |
           set -euo pipefail
           source output/simulator_selection.env
-          BUNDLE_ID=com.example.pokerAnalyzer
-          APP=build/ios/iphonesimulator/Runner.app
+          xcrun simctl uninstall "$UDID" "$BUNDLE_ID" 2>/dev/null || true
 
-          # A separate clean install prevents the prior Profile A process and
-          # cfprefsd state from participating in the progressed-state proof.
-          xcrun simctl uninstall "$UDID" "$BUNDLE_ID"
-          xcrun simctl install "$UDID" "$APP"
-          DATA_CONTAINER="$(xcrun simctl get_app_container "$UDID" "$BUNDLE_ID" data)"
+          set +e
+          xcodebuild test-without-building \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$UDID" \
+            -derivedDataPath "$PWD/output/DerivedData" \
+            -only-testing:RunnerTests/HnpObserverUITests/testProfileBCanonicalActionRepairRecheckExit \
+            > output/profile_b_xcuitest.log 2>&1 &
+          TEST_PID=$!
+          set -e
+          echo "$TEST_PID" > output/profile_b_xcuitest.pid
+
+          DATA_CONTAINER=''
+          for attempt in $(seq 1 180); do
+            if candidate="$(xcrun simctl get_app_container "$UDID" "$BUNDLE_ID" data 2>/dev/null)"; then
+              if [[ -n "$candidate" && -d "$candidate" ]]; then
+                DATA_CONTAINER="$candidate"
+                break
+              fi
+            fi
+            if ! kill -0 "$TEST_PID" 2>/dev/null; then
+              echo 'xcodebuild exited before target app container became available'
+              cat output/profile_b_xcuitest.log
+              exit 51
+            fi
+            sleep 0.5
+          done
+          test -n "$DATA_CONTAINER"
           echo "$DATA_CONTAINER" > output/profile_b.container.txt
           export DATA_CONTAINER
 
-          # shared_preferences_foundation uses the app UserDefaults domain with
-          # the flutter. prefix.  Materialize that physical production store
-          # before the app's first Profile B launch; no product/debug route is used.
+          # Give Xcode's installation phase a short stable window, then write the
+          # exact production SharedPreferences file before XCUIApplication.launch().
+          sleep 2
           python3 - <<'PY'
           import json, os, plistlib
           from pathlib import Path
@@ -183,92 +433,240 @@ jobs:
           prefs.parent.mkdir(parents=True, exist_ok=True)
           progress=json.load(open('output/hnp_profile_b_progress_v1.json'))
           payload={
-              'flutter.intake_completed_v1': True,
-              'flutter.act0_welcome_completed_v1': True,
-              'flutter.act0_shell_progress_v1': json.dumps(progress, separators=(',', ':')),
+            'flutter.intake_completed_v1': True,
+            'flutter.act0_welcome_completed_v1': True,
+            'flutter.act0_shell_progress_v1': json.dumps(progress, separators=(',', ':')),
           }
-          with prefs.open('wb') as f:
-              plistlib.dump(payload, f, fmt=plistlib.FMT_BINARY, sort_keys=True)
-          with prefs.open('rb') as f:
-              check=plistlib.load(f)
+          with prefs.open('wb') as handle:
+            plistlib.dump(payload, handle, fmt=plistlib.FMT_BINARY, sort_keys=True)
+          with prefs.open('rb') as handle:
+            check=plistlib.load(handle)
           assert check['flutter.intake_completed_v1'] is True
           assert check['flutter.act0_welcome_completed_v1'] is True
-          p=json.loads(check['flutter.act0_shell_progress_v1'])
-          assert len(p['completedTaskIds'])==28
-          assert p['selectedLessonId']=='fold_check_call_raise'
-          assert p['selectedTaskId']=='actions_theory'
-          print('HNP_PROFILE_B_APP_CONTAINER_WRITE=PASS')
+          persisted=json.loads(check['flutter.act0_shell_progress_v1'])
+          assert persisted['schemaVersion']==16
+          assert len(persisted['completedTaskIds'])==28
+          assert persisted['completedLessonIds']==[
+            'what_poker_is','what_poker_is_content','cards_ranks_suits','your_first_hand']
+          assert persisted['selectedLessonId']=='fold_check_call_raise'
+          assert persisted['selectedTaskId']=='actions_theory'
+          print('HNP_PROFILE_B_PHYSICAL_PREFS_WRITE=PASS')
           PY
           PREFS="$DATA_CONTAINER/Library/Preferences/$BUNDLE_ID.plist"
-          plutil -convert xml1 -o output/profile_b.preferences.before.plist "$PREFS"
+          plutil -convert xml1 -o output/profile_b.preferences.injected.plist "$PREFS"
 
-      - name: Profile B normal bootstrap materialization proof
+          set +e
+          wait "$TEST_PID"
+          STATUS=$?
+          set -e
+          cat output/profile_b_xcuitest.log
+          test "$STATUS" -eq 0
+
+          xcrun simctl io "$UDID" screenshot output/profile_b_after_observer.png >/dev/null
+          test -s output/profile_b_after_observer.png
+          DATA_CONTAINER_AFTER="$(xcrun simctl get_app_container "$UDID" "$BUNDLE_ID" data)"
+          test "$DATA_CONTAINER_AFTER" = "$DATA_CONTAINER"
+          TRACE="$DATA_CONTAINER/Library/Application Support/act0_hnp_trace_v1.jsonl"
+          test -s "$TRACE"
+          cp "$TRACE" output/profile_b.full_trace.jsonl
+          plutil -convert xml1 -o output/profile_b.preferences.after_observer.plist "$PREFS"
+          xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null || true
+          echo 'HNP_PROFILE_B_OBSERVER_TRAVERSAL=PASS' | tee output/profile_b_observer_verdict.txt
+
+      - name: Validate physical JSONL full chain, timing and privacy
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' | tee output/hnp_physical_jsonl_validation.txt
+          import json
+          from collections import Counter
+          from pathlib import Path
+
+          path=Path('output/profile_b.full_trace.jsonl')
+          raw=path.read_bytes()
+          assert raw, 'physical HNP trace is empty'
+          assert raw.endswith(b'\n'), 'physical HNP trace is not newline terminated'
+          lines=raw.decode().splitlines()
+          events=[json.loads(line) for line in lines]
+          assert events and all(isinstance(e,dict) for e in events)
+          assert all(isinstance(e.get('name'),str) for e in events)
+          assert all(isinstance(e.get('fields'),dict) for e in events)
+          names=[e['name'] for e in events]
+          counts=Counter(names)
+
+          required=[
+            'lesson_started','theory_completed','user_choice','feedback_viewed',
+            'repair_started','repair_completed','recheck_started','recheck_result',
+            'action_sequence_completed','session_exited',
+          ]
+          positions=[]
+          for name in required:
+            assert name in names, (name,names)
+            positions.append(names.index(name))
+          assert positions==sorted(positions), list(zip(required,positions))
+          for name in ('theory_completed','repair_started','repair_completed',
+                       'recheck_started','recheck_result','session_exited'):
+            assert counts[name]==1, (name,counts[name])
+
+          def value(event, snake, camel=None):
+            fields=event['fields']
+            if snake in fields: return fields[snake]
+            if camel and camel in fields: return fields[camel]
+            return None
+
+          decision_task='actions_check_drill'
+          wrong_choices=[e for e in events if e['name']=='user_choice'
+                         and value(e,'task_id','taskId')==decision_task
+                         and value(e,'choice_id','choiceId')=='fold']
+          assert wrong_choices, 'canonical wrong Fold user_choice missing'
+          wrong=wrong_choices[0]
+          assert value(wrong,'correct') is False, wrong
+          assert value(wrong,'error_type','errorType')=='misread_action_legality', wrong
+          assert value(wrong,'decisionTimeBucket') in {
+            'under_3s','3_to_10s','over_10s','10_to_30s','over_30s','unknown'
+          }, wrong
+          assert 'time_to_decision_ms' not in wrong['fields'], wrong
+
+          wrong_results=[e for e in events if e['name']=='task_result'
+                         and value(e,'task_id','taskId')==decision_task
+                         and value(e,'result')=='incorrect']
+          assert wrong_results, 'canonical incorrect task_result missing'
+          assert value(wrong_results[0],'error_type','errorType')=='misread_action_legality'
+
+          repair_start=next(e for e in events if e['name']=='repair_started')
+          repair_done=next(e for e in events if e['name']=='repair_completed')
+          recheck_start=next(e for e in events if e['name']=='recheck_started')
+          recheck_done=next(e for e in events if e['name']=='recheck_result')
+          repair_task=value(repair_start,'repair_task_id','repairTaskId')
+          recheck_task=value(recheck_start,'recheck_task_id','recheckTaskId')
+          assert value(repair_start,'source_task_id','sourceTaskId')==decision_task
+          assert repair_task
+          assert value(repair_done,'source_task_id','sourceTaskId')==decision_task
+          assert value(repair_done,'repair_task_id','repairTaskId')==repair_task
+          assert value(repair_done,'result')=='correct'
+          assert value(recheck_start,'source_task_id','sourceTaskId')==decision_task
+          assert value(recheck_start,'repair_task_id','repairTaskId')==repair_task
+          assert recheck_task
+          assert value(recheck_done,'source_task_id','sourceTaskId')==decision_task
+          assert value(recheck_done,'recheck_task_id','recheckTaskId')==recheck_task
+          assert value(recheck_done,'result')=='correct'
+          assert value(recheck_done,'sequence_id','sequenceId')=='w1_action_words_check_v1'
+
+          def index(event): return events.index(event)
+          assert index(wrong) < index(repair_start) < index(repair_done) < index(recheck_start) < index(recheck_done)
+
+          canonical_decisions=[e for e in events if e['name']=='decision_made']
+          repair_correct=[e for e in canonical_decisions
+                          if index(repair_start)<index(e)<index(repair_done)
+                          and value(e,'task_id','taskId')==repair_task
+                          and value(e,'selected_action')=='check'
+                          and value(e,'is_correct') is True]
+          recheck_correct=[e for e in canonical_decisions
+                           if index(recheck_start)<index(e)<index(recheck_done)
+                           and value(e,'task_id','taskId')==recheck_task
+                           and value(e,'selected_action')=='check'
+                           and value(e,'is_correct') is True]
+          assert repair_correct, 'correct repair Check decision missing'
+          assert recheck_correct, 'correct recheck Check decision missing'
+
+          payoff=[e for e in events if e['name']=='action_payoff_generated'
+                  and value(e,'payoff_type')=='recoveredSuccess'
+                  and index(e)>index(recheck_start)]
+          assert payoff, 'recoveredSuccess payoff missing'
+
+          session_names={
+            'theory_completed','repair_started','repair_completed','recheck_started',
+            'recheck_result','action_sequence_completed','session_exited',
+          }
+          scoped=[e for e in events if e['name'] in session_names]
+          session_ids={value(e,'session_id','sessionId') for e in scoped}
+          assert scoped and None not in session_ids and len(session_ids)==1, session_ids
+
+          error_events=[]
+          for event in events:
+            error=value(event,'error_type','errorType')
+            if isinstance(error,str) and error and error!='none':
+              error_events.append(error)
+          assert error_events, 'controlled error classification missing'
+          assert set(error_events)=={'misread_action_legality'}, set(error_events)
+
+          forbidden={
+            'participantId','participant_id','userId','user_id','playerName','email','phone',
+            'accountId','account_id','password','credential','credentials','freeText','free_text',
+            'learnerText','learner_text','rawScreen','raw_screen','rawCopy','raw_copy',
+            'localizedCopy','promptText','prompt_text','optionLabel','option_label',
+            'feedbackText','feedback_text','feedbackReason','handHistory','hand_history',
+            'boardCards','board_cards','board_card_ids','holeCards','hole_cards',
+            'tableContextKey','table_context_key','tableSignal','missedSignal','ipAddress',
+            'ip_address','preciseLocation','precise_location','time_to_decision_ms',
+          }
+          def walk(value_):
+            if isinstance(value_,dict):
+              for key,item in value_.items():
+                assert key not in forbidden, ('forbidden telemetry field',key)
+                walk(item)
+            elif isinstance(value_,list):
+              for item in value_: walk(item)
+          for event in events: walk(event)
+          encoded=raw.decode()
+          assert 'w1_action_words_no_bet_read_v1' not in encoded
+          assert 'missed_action_read' not in encoded
+          json.loads(lines[-1])
+
+          print('HNP_PHYSICAL_TELEMETRY_FULL_CHAIN=PASS events=%d' % len(events))
+          print('HNP_JSONL_FINAL_LINE_COMPLETE=PASS')
+          print('HNP_DECISION_TIME_BUCKET=PASS')
+          print('HNP_CONTROLLED_ERROR_CLASSIFICATION=PASS misread_action_legality')
+          print('HNP_REPAIR_RECHECK_PAYOFF=PASS recoveredSuccess')
+          print('HNP_SESSION_EXIT=PASS count=1')
+          print('HNP_JSONL_PRIVACY=PASS')
+          PY
+
+      - name: Reset to clean Profile A container
         run: |
           set -euo pipefail
           source output/simulator_selection.env
-          BUNDLE_ID=com.example.pokerAnalyzer
-          DATA_CONTAINER="$(cat output/profile_b.container.txt)"
-          PREFS="$DATA_CONTAINER/Library/Preferences/$BUNDLE_ID.plist"
-          xcrun simctl launch \
-            --terminate-running-process \
-            --stdout="$PWD/output/profile_b.stdout.log" \
-            --stderr="$PWD/output/profile_b.stderr.log" \
-            "$UDID" "$BUNDLE_ID" | tee output/profile_b.launch.txt
-          sleep 8
-          xcrun simctl io "$UDID" screenshot output/profile_b.png >/dev/null
-          test -s output/profile_b.png
-          TRACE="$DATA_CONTAINER/Library/Application Support/act0_hnp_trace_v1.jsonl"
-          test -e "$TRACE"
-          cp "$TRACE" output/profile_b.initial_trace.jsonl
-          test ! -s output/profile_b.initial_trace.jsonl
-          xcrun simctl terminate "$UDID" "$BUNDLE_ID"
-          plutil -convert xml1 -o output/profile_b.preferences.after.plist "$PREFS"
-          export PREFS
-          python3 - <<'PY'
-          import hashlib, json, os, plistlib
-          from pathlib import Path
+          xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null || true
+          xcrun simctl uninstall "$UDID" "$BUNDLE_ID" 2>/dev/null || true
+          if xcrun simctl get_app_container "$UDID" "$BUNDLE_ID" data > output/post_reset_container.txt 2>&1; then
+            echo 'app container still exists after uninstall reset'
+            exit 61
+          fi
+          echo 'HNP_PROFILE_A_POST_OBSERVER_RESET=PASS' | tee output/reset_verdict.txt
 
-          with open(os.environ['PREFS'], 'rb') as f:
-              values=plistlib.load(f)
-          assert values.get('flutter.intake_completed_v1') is True, values
-          assert values.get('flutter.act0_welcome_completed_v1') is True, values
-          p=json.loads(values['flutter.act0_shell_progress_v1'])
-          assert p['schemaVersion']==16, p
-          assert p['selectedWorldId']=='world_1', p
-          assert p['selectedLessonId']=='fold_check_call_raise', p
-          assert p['selectedTaskId']=='actions_theory', p
-          assert p['completedLessonIds']==[
-              'what_poker_is','what_poker_is_content','cards_ranks_suits','your_first_hand'], p
-          assert len(p['completedTaskIds'])==28, len(p['completedTaskIds'])
-
-          a=Path('output/profile_a.png').read_bytes()
-          b=Path('output/profile_b.png').read_bytes()
-          ah=hashlib.sha256(a).hexdigest()
-          bh=hashlib.sha256(b).hexdigest()
-          print('PROFILE_A_PNG_SHA256='+ah)
-          print('PROFILE_B_PNG_SHA256='+bh)
-          assert ah != bh, 'Profile B rendered the same fresh-placement surface as Profile A'
-          print('HNP_PROFILE_B_BOOTSTRAP_PRESERVATION=PASS schemaVersion=%s tasks=%s' %
-                (p['schemaVersion'], len(p['completedTaskIds'])))
-          print('HNP_PROFILE_B_NATIVE_MATERIALIZATION=PASS')
-          PY
-
-      - name: Record evidence-only disposition
+      - name: Restore transient Xcode test mutation and record disposition
         if: always()
         run: |
+          if [[ -f output/project.pbxproj.before_hnp_xcuitest ]]; then
+            cp output/project.pbxproj.before_hnp_xcuitest ios/Runner.xcodeproj/project.pbxproj
+          fi
+          if [[ -f output/RunnerTests.swift.before_hnp_xcuitest ]]; then
+            cp output/RunnerTests.swift.before_hnp_xcuitest ios/RunnerTests/RunnerTests.swift
+          fi
+          rm -f test/_tmp_hnp_profile_b_snapshot_v1_test.dart
+          git status --short | tee output/git_status_after_restore.txt
+          TRACKED="$(git status --short --untracked-files=no)"
+          test -z "$TRACKED"
           {
             echo 'PRODUCT_RUNTIME_MUTATION=NONE'
+            echo 'PRODUCT_IMPLEMENTATION_DISPOSITION=DO_NOTHING'
             echo 'PRODUCT_REPAIR_BUDGET_CONSUMED=0'
-            echo 'XCUITEST_USED=NO'
-          } | tee output/disposition.txt
-          git checkout -- macos/Flutter/GeneratedPluginRegistrant.swift 2>/dev/null || true
-          git status --short | tee output/git_status.txt
+            echo 'TRANSIENT_XCUITEST_RETAINED=NO'
+            echo 'REAL_HUMAN_HNP=NOT_PERFORMED'
+            echo 'HUMAN_PROVEN=NOT_MET'
+          } | tee output/final_technical_disposition.txt
 
-      - name: Upload bounded technical evidence
+      - name: Upload bounded exact-main technical evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hnp-technical-probe-${{ github.sha }}
-          path: output/
+          name: hnp-exact-main-observer-${{ env.TARGET_MAIN_SHA }}
+          path: |
+            output/*.txt
+            output/*.log
+            output/*.json
+            output/*.jsonl
+            output/*.plist
+            output/*.png
+            output/*.patch
           if-no-files-found: warn
-          retention-days: 7
+          retention-days: 14
