@@ -405,6 +405,18 @@ jobs:
           shasum -a 256 "$TEST_APP/Runner" | tee output/exact_main_runner_sha256.txt
           TEST_BUNDLE="$(find output/DerivedData/Build/Products -type d \( -name 'RunnerTests-Runner.app' -o -name 'RunnerTests.xctest' \) -print -quit || true)"
           echo "TEST_BUNDLE_DISCOVERY=$TEST_BUNDLE" | tee output/test_bundle_discovery.txt
+          UI_TEST_RUNNER="$(find output/DerivedData/Build/Products -type d -name 'RunnerTests-Runner.app' -print -quit)"
+          test -n "$UI_TEST_RUNNER"
+          test -d "$TEST_APP/Frameworks/AppAuth.framework"
+          mkdir -p "$UI_TEST_RUNNER/Frameworks"
+          ditto "$TEST_APP/Frameworks/AppAuth.framework" \
+            "$UI_TEST_RUNNER/Frameworks/AppAuth.framework"
+          test -x "$UI_TEST_RUNNER/Frameworks/AppAuth.framework/AppAuth"
+          {
+            echo "HNP_TEST_TRANSPORT_APPAUTH=PASS"
+            echo "HNP_TEST_TRANSPORT_RUNNER=$UI_TEST_RUNNER"
+            echo "HNP_TEST_TRANSPORT_APPAUTH_PATH=$UI_TEST_RUNNER/Frameworks/AppAuth.framework/AppAuth"
+          } | tee output/test_transport_resolution.txt
 
       - name: Profile A physical fresh-route traversal
         run: |
