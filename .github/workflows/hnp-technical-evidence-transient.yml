@@ -407,16 +407,57 @@ jobs:
           echo "TEST_BUNDLE_DISCOVERY=$TEST_BUNDLE" | tee output/test_bundle_discovery.txt
           UI_TEST_RUNNER="$(find output/DerivedData/Build/Products -type d -name 'RunnerTests-Runner.app' -print -quit)"
           test -n "$UI_TEST_RUNNER"
-          test -d "$TEST_APP/Frameworks/AppAuth.framework"
+          SOURCE_FRAMEWORKS="$TEST_APP/Frameworks"
+          test -d "$SOURCE_FRAMEWORKS"
           mkdir -p "$UI_TEST_RUNNER/Frameworks"
-          ditto "$TEST_APP/Frameworks/AppAuth.framework" \
-            "$UI_TEST_RUNNER/Frameworks/AppAuth.framework"
-          test -x "$UI_TEST_RUNNER/Frameworks/AppAuth.framework/AppAuth"
-          {
-            echo "HNP_TEST_TRANSPORT_APPAUTH=PASS"
-            echo "HNP_TEST_TRANSPORT_RUNNER=$UI_TEST_RUNNER"
-            echo "HNP_TEST_TRANSPORT_APPAUTH_PATH=$UI_TEST_RUNNER/Frameworks/AppAuth.framework/AppAuth"
-          } | tee output/test_transport_resolution.txt
+          shopt -s nullglob
+          for framework in "$SOURCE_FRAMEWORKS"/*.framework; do
+            test -d "$framework"
+            ditto "$framework" "$UI_TEST_RUNNER/Frameworks/$(basename "$framework")"
+          done
+          TEST_BINARY="$UI_TEST_RUNNER/PlugIns/RunnerTests.xctest/RunnerTests"
+          test -x "$TEST_BINARY"
+          python3 - "$SOURCE_FRAMEWORKS" "$UI_TEST_RUNNER/Frameworks" "$TEST_BINARY" \
+            > output/test_transport_resolution.txt <<'PY'
+          import pathlib
+          import re
+          import subprocess
+          import sys
+
+          source_root, runner_root, test_binary = map(pathlib.Path, sys.argv[1:])
+          source = sorted(path.name for path in source_root.glob('*.framework') if path.is_dir())
+          packaged = sorted(path.name for path in runner_root.glob('*.framework') if path.is_dir())
+          if not source:
+              raise SystemExit('HNP_TEST_TRANSPORT_FAILURE=NO_SOURCE_FRAMEWORKS')
+          if source != packaged:
+              raise SystemExit(
+                  'HNP_TEST_TRANSPORT_FAILURE=PACKAGED_FRAMEWORK_SET_MISMATCH '\
+                  f'source={source} packaged={packaged}'
+              )
+
+          def rpath_frameworks(binary):
+              output = subprocess.check_output(['otool', '-L', str(binary)], text=True)
+              return set(re.findall(r'@rpath/([^/]+\\.framework)/', output))
+
+          binaries = [test_binary]
+          for framework in runner_root.glob('*.framework'):
+              candidate = framework / framework.stem
+              if candidate.is_file():
+                  binaries.append(candidate)
+          required = set()
+          for binary in binaries:
+              required.update(rpath_frameworks(binary))
+          missing = sorted(required - set(packaged))
+          print('HNP_TEST_TRANSPORT_CLOSURE=PASS' if not missing else 'HNP_TEST_TRANSPORT_CLOSURE=FAIL')
+          print('HNP_TEST_TRANSPORT_RUNNER=' + str(runner_root.parent))
+          print('HNP_TEST_TRANSPORT_SCAN_TARGETS=' + ','.join(str(binary) for binary in binaries))
+          print('HNP_TEST_TRANSPORT_SOURCE_FRAMEWORKS=' + ','.join(source))
+          print('HNP_TEST_TRANSPORT_PACKAGED_FRAMEWORKS=' + ','.join(packaged))
+          print('HNP_TEST_TRANSPORT_RPATH_REQUIREMENTS=' + ','.join(sorted(required)))
+          print('HNP_TEST_TRANSPORT_MISSING=' + ','.join(missing))
+          if missing:
+              raise SystemExit(1)
+          PY
 
       - name: Profile A physical fresh-route traversal
         run: |
