@@ -513,7 +513,10 @@ jobs:
             echo 'PROFILE_A_XCRESULT_MISSING=YES' | tee output/profile_a_xcresult_missing.txt
           fi
           test "$STATUS" -eq 0
-          xcrun simctl io "$UDID" screenshot output/profile_a_after_first_lesson.png >/dev/null
+          for attempt in 1 2 3 4 5; do
+            xcrun simctl io "$UDID" screenshot output/profile_a_after_first_lesson.png >/dev/null 2>&1 && break
+            sleep 3
+          done
           test -s output/profile_a_after_first_lesson.png
           DATA_CONTAINER="$(xcrun simctl get_app_container "$UDID" "$BUNDLE_ID" data)"
           TRACE="$DATA_CONTAINER/Library/Application Support/act0_hnp_trace_v1.jsonl"
@@ -621,7 +624,10 @@ jobs:
           cat output/profile_b_xcuitest.log
           test "$STATUS" -eq 0
 
-          xcrun simctl io "$UDID" screenshot output/profile_b_after_observer.png >/dev/null
+          for attempt in 1 2 3 4 5; do
+            xcrun simctl io "$UDID" screenshot output/profile_b_after_observer.png >/dev/null 2>&1 && break
+            sleep 3
+          done
           test -s output/profile_b_after_observer.png
           DATA_CONTAINER_AFTER="$(xcrun simctl get_app_container "$UDID" "$BUNDLE_ID" data)"
           test "$DATA_CONTAINER_AFTER" = "$DATA_CONTAINER"
