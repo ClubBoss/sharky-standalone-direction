@@ -22,14 +22,37 @@
 - Changed files: docs only.
 
 ### CP1 — iteration 1: player-local identity / stack / position / dealer
-- Status: **pending**
+- Status: **done**
+- `act0_scene_hud_v1.dart` adds the B4 seam: `Act0SceneNameplateV1`, an
+  engraved plate set into the surface — recessed fill the cloth reads through,
+  dark top edge, lit lower lip on the same lamp as the rail crown.
+- Generic `person_rounded` glyph dropped for occupied seats: B3 already draws
+  the person, so it was a duplicate and the most app-like mark on the cloth.
+  The selectable touch glyph and empty-seat mark stay — interaction truth.
+- Reclaimed width returned as padding so the plate stays plate-shaped.
 
 ### CP2 — iteration 2: bet / state / hero / clue attachment
-- Status: **pending**
+- Status: **done (scope corrected mid-iteration)**
+- **Gap-map claim corrected by measurement.** I recorded that bets "float
+  mid-felt" and that wiring B1's unused `betAnchor` would attach them. Both
+  halves were wrong:
+  1. The repository's own informative-object guard rejected the move — there is
+     no offset from `betAnchor` that clears both the seat's card+plate column
+     and the board panel. I tried two variants; the guard caught both.
+  2. Measured baseline bounds show the legacy ring already seats each chip
+     immediately beside its owner (bb seat x82-150, bb chip x122-166).
+  Chip placement was reverted to exactly what Wave A validated, and the B1
+  `betAnchor` definition was restored untouched.
+- The real bet gap was **treatment, not position**: commitments rendered as
+  frosted-glass app pills with a backdrop blur. They now use the same engraved
+  carrier as the nameplate, so identity and commitment read as one attached
+  family. Every bet-kind colour semantic is unchanged.
 
 ### CP3 — final validation, evidence, draft PR
 - Status: **pending**
 
 ## Next remaining class-level gap
 
-`INFORMATION_DOES_NOT_BELONG_TO_ITS_OWNER` — owned by iteration 1.
+None pursued further under the remaining window. Dealer-puck ownership and
+feedback-clue attachment are the honest un-run items — see the execution
+result section of the gap map.

@@ -10588,6 +10588,13 @@ class _Act0TableV1 extends StatelessWidget {
                       .map(Act0ScenePerspectiveV1.canonical.project)
                       .toList()
                 : baseSeatSlots;
+            // Chip placement stays exactly as Wave A validated it. B4 tried
+            // moving commitments onto B1's `betAnchor` and the repository's own
+            // informative-object guard rejected it: there is no offset from
+            // that anchor which clears both the seat's own card+plate column
+            // and the board panel. Measured bounds also show the legacy ring
+            // already seats each chip immediately beside its owner, so the real
+            // gap here was treatment, not position.
             final chipSlots = integratedPerspectivePrototype
                 ? baseChipSlots
                       .map(Act0ScenePerspectiveV1.canonical.project)
@@ -13980,76 +13987,68 @@ class _BetChipV1 extends StatelessWidget {
       Act0SeatBetKindV1.raise => Act0ShellTokensV1.primary,
       Act0SeatBetKindV1.allIn => Act0ShellTokensV1.danger,
     };
-    return ClipRRect(
+    // B4: a commitment is instrumentation sitting on the cloth, not an app
+    // card floating over it. Same engraved carrier as the seat nameplate, so
+    // identity and commitment read as one attached family. The frosted-glass
+    // backdrop blur is gone — it is an application effect, and felt does not
+    // refract. Every bet-kind colour semantic is unchanged.
+    return Container(
       key: Key('act0_shell_bet_chip_${bet.label}'),
-      borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-      child: BackdropFilter(
-        filter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-        child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: compact ? 5 : 6,
-            vertical: compact ? 3 : 4,
-          ),
-          decoration: BoxDecoration(
-            color: Act0ShellTokensV1.surface.withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-            border: Border.all(color: color.withValues(alpha: 0.8), width: 1.2),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: color.withValues(alpha: 0.15),
-                blurRadius: 8,
-                spreadRadius: 2,
-              ),
-            ],
-          ),
-          child: Row(
+      padding: EdgeInsets.symmetric(
+        horizontal: compact ? 5 : 6,
+        vertical: compact ? 3 : 4,
+      ),
+      decoration: Act0SceneNameplateV1.decoration(
+        radius: Act0ShellTokensV1.radiusPill,
+        stateTone: color,
+        stateStrength: 0.85,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _ChipStackIconV1(color: color, compact: compact),
+          SizedBox(width: compact ? 3 : 4),
+          Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _ChipStackIconV1(color: color, compact: compact),
-              SizedBox(width: compact ? 3 : 4),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (showLabelPill)
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: compact ? 3 : 4,
-                        vertical: 1,
-                      ),
-                      decoration: BoxDecoration(
-                        color: color.withValues(alpha: 0.16),
-                        borderRadius: BorderRadius.circular(
-                          Act0ShellTokensV1.radiusPill,
-                        ),
-                      ),
-                      child: Text(
-                        bet.label,
-                        style: TextStyle(
-                          color: color,
-                          fontSize: compact ? 5.6 : 6.1,
-                          height: 0.95,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                    ),
-                  if (showLabelPill) SizedBox(height: compact ? 1 : 2),
-                  Text(
-                    bet.amountLabel,
-                    style: TextStyle(
-                      color: Act0ShellTokensV1.text,
-                      fontSize: compact ? 7.0 : 7.8,
-                      height: 0.98,
-                      fontWeight: FontWeight.w900,
+              if (showLabelPill)
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: compact ? 3 : 4,
+                    vertical: 1,
+                  ),
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.16),
+                    borderRadius: BorderRadius.circular(
+                      Act0ShellTokensV1.radiusPill,
                     ),
                   ),
-                ],
+                  child: Text(
+                    bet.label,
+                    style: TextStyle(
+                      color: color,
+                      fontSize: compact ? 5.6 : 6.1,
+                      height: 0.95,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                ),
+              if (showLabelPill) SizedBox(height: compact ? 1 : 2),
+              Text(
+                bet.amountLabel,
+                style: TextStyle(
+                  color: Act0ShellTokensV1.text,
+                  fontSize: compact ? 7.0 : 7.8,
+                  height: 0.98,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }
