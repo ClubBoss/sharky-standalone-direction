@@ -11,6 +11,8 @@
 | Evidence root (uncommitted) | `output/visual_gauntlet_b3/` |
 | B2 baseline captures | `output/visual_gauntlet_b3/baseline_b2_402x874/` |
 | Capture harness | `test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart` |
+| Draft PR | `#190` |
+| PR head | `a5c7d6363fcea759eec7358b9eee3c7b8be9c149` |
 | `HUMAN_PROOF` | `FALSE` |
 
 ## Capture command
@@ -77,6 +79,11 @@ differentiation. B1 geometry and B2 material imported, never replaced.
 - Responsive: compact 375x812, large 430x932, 1.4x text at 402x874.
 - Matched B2-vs-B3 evidence for the five canonical states, one contact sheet and
   SHA provenance under `output/visual_gauntlet_b3/evidence/`.
+- `dart format` clean, `flutter analyze lib` clean,
+  `tools/release_gate_world1.sh` PASS (includes fast loop).
+- Focused suites `+36 -3`; the three failures are the same inherited
+  `task_table_presentation_semantics_v1_test.dart` names carried since B1.
+- Draft PR `#190` opened. Not merged.
 
 ## Next remaining class-level gap
 
