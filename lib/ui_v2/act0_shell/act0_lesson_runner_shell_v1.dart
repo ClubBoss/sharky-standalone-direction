@@ -2819,7 +2819,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       cycleStableEnvelope: usesSharedActiveRunnerAllocation,
       forceCompactPhoneFeedback: usesSharedActiveRunnerAllocation,
       ensureFullCtaGeometry: _usesCanonicalIntegratedLearningSceneV1,
-      sceneOwnsFeedbackExplanation: _usesCanonicalIntegratedLearningSceneV1,
+      sceneOwnsFeedbackExplanation:
+          _usesCanonicalIntegratedLearningSceneV1 &&
+          usesSharedActiveRunnerAllocation,
       coachVoiceSeed:
           '${runner.lessonId}|${runner.beatIndex}|${runner.phase.name}|${runner.selectedOptionId ?? ''}',
       onContinue: widget.onContinueReview,
@@ -3275,10 +3277,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           feedbackAction.endsWith('.') ||
           feedbackAction.endsWith('!') ||
           feedbackAction.endsWith('?');
+      final repairReceipt = widget.repairResultReceiptLine?.trim() ?? '';
       final headline = isTheory
           ? prompt
           : isReview
-          ? feedbackAction.isEmpty
+          ? repairReceipt.isNotEmpty
+                ? repairReceipt
+                : feedbackAction.isEmpty
                 ? runner.reviewTitle
                 : feedbackActionIsSentence
                 ? feedbackAction
