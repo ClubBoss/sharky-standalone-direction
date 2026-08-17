@@ -10,6 +10,8 @@
 | Gap map | `docs/_reviews/visual_gauntlet_b4_gap_map_v1.md` |
 | Evidence root (uncommitted) | `output/visual_gauntlet_b4/` |
 | B3 baseline captures | `output/visual_gauntlet_b4/baseline_b3_402x874/` |
+| Draft PR | `#192` |
+| PR head | `f91120b3b70f3ab9849c079445800d448c80184f` |
 | `HUMAN_PROOF` | `FALSE` |
 
 ## Checkpoint ledger
