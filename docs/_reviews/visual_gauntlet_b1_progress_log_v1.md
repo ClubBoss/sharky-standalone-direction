@@ -14,6 +14,8 @@ interruption. Not production behavior.
 | Gap map | `docs/_reviews/visual_gauntlet_b1_gap_map_v1.md` |
 | Evidence root (uncommitted) | `output/visual_gauntlet_b1/` |
 | Capture harness | `test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart` |
+| Draft PR | `#186` |
+| PR head | `3b8cdd47828c8aac3b96a4b1e473f1aa99da530c` |
 | `HUMAN_PROOF` | `FALSE` |
 
 ## Capture command
