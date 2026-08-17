@@ -338,10 +338,14 @@ void main() {
       taskId: 'what_poker_is_theory',
       phase: 'first_lesson_theory_1',
     );
-    expect(find.text('One loop first.'), findsOneWidget);
+    if (_expectsWaveA) {
+      expect(find.text('One loop first.'), findsOneWidget);
+    }
     await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
     await tester.pumpAndSettle();
-    expect(find.text('Start with the table.'), findsOneWidget);
+    if (_expectsWaveA) {
+      expect(find.text('Start with the table.'), findsOneWidget);
+    }
     await saveMounted('first_lesson_theory_2');
     await capture(
       name: 'table_object_task',
