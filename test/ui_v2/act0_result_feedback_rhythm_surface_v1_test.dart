@@ -952,7 +952,7 @@ void main() {
   });
 
   testWidgets(
-    'runner decision keeps table evidence above an anchored prompt action surface',
+    'runner decision keeps one prompt above table evidence and an anchored action surface',
     (tester) async {
       final lesson = Act0ShellStateV1.sample
           .worldById('world_1')
@@ -987,7 +987,7 @@ void main() {
 
       expect(find.byKey(const Key('act0_shell_table')), findsOneWidget);
       expect(
-        find.byKey(const Key('act0_shell_runner_decision_rhythm_surface')),
+        find.byKey(const Key('act0_wave_a_learning_context')),
         findsOneWidget,
       );
       expect(
@@ -996,22 +996,28 @@ void main() {
       );
       expect(find.byKey(const Key('act0_shell_action_panel')), findsOneWidget);
 
+      final guideBottom = tester
+          .getBottomLeft(find.byKey(const Key('act0_wave_a_learning_context')))
+          .dy;
+      final tableTop = tester
+          .getTopLeft(find.byKey(const Key('act0_shell_table')))
+          .dy;
       final tableBottom = tester
           .getBottomLeft(find.byKey(const Key('act0_shell_table')))
           .dy;
-      final rhythmTop = tester
-          .getTopLeft(
-            find.byKey(const Key('act0_shell_runner_decision_rhythm_surface')),
-          )
+      final dockTop = tester
+          .getTopLeft(find.byKey(const Key('act0_shell_runner_action_dock')))
           .dy;
       final promptTop = tester
-          .getTopLeft(find.byKey(const Key('act0_shell_action_question')))
+          .getTopLeft(find.byKey(const Key('act0_integrated_scene_prompt')))
           .dy;
       final actionTop = tester
           .getTopLeft(find.byKey(const Key('act0_shell_action_panel')))
           .dy;
 
-      expect(tableBottom, lessThan(rhythmTop));
+      expect(promptTop, lessThan(guideBottom));
+      expect(guideBottom, lessThanOrEqualTo(tableTop));
+      expect(tableBottom, lessThanOrEqualTo(dockTop));
       expect(promptTop, lessThan(actionTop));
     },
   );

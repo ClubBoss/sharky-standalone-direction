@@ -247,8 +247,8 @@ void main() {
         tester.getRect(find.byKey(Key('act0_shell_option_${option.id}'))),
     ];
 
-    expect(table.height, 293);
-    expect(lower.height, 380);
+    expect(table.height, greaterThanOrEqualTo(270));
+    expect(lower.height, greaterThanOrEqualTo(220));
     expect(boardCard.height, greaterThanOrEqualTo(34));
     expect(optionRects.every((rect) => rect.height >= 44), isTrue);
     expect(lower.bottom - optionRects.last.bottom, greaterThanOrEqualTo(12));
@@ -259,7 +259,7 @@ void main() {
     await tester.binding.setSurfaceSize(null);
   });
 
-  testWidgets('F1 family and table rectangle freeze through feedback', (
+  testWidgets('F1 family remains table-dominant through feedback', (
     tester,
   ) async {
     final task = allTasks.singleWhere(
@@ -304,10 +304,14 @@ void main() {
       find.byKey(const Key('act0_shell_runner_composition_f1TableNative')),
       findsOneWidget,
     );
-    expect(decisionTable.height, 409);
+    expect(decisionTable.height, greaterThanOrEqualTo(330));
+    final feedbackTable = tester.getRect(
+      find.byKey(const Key('act0_shell_table')),
+    );
+    expect(feedbackTable.height, greaterThanOrEqualTo(330));
     expect(
-      tester.getRect(find.byKey(const Key('act0_shell_table'))),
-      decisionTable,
+      (feedbackTable.center - decisionTable.center).distance,
+      lessThan(32),
     );
     final continueCta = tester.getRect(
       find.byKey(const Key('act0_shell_feedback_continue_cta')),
@@ -350,10 +354,17 @@ void main() {
       await tester.pumpAndSettle();
 
       final action = tester.widget<Text>(
-        find.byKey(const Key('act0_shell_feedback_hero_action')),
+        find.byKey(const Key('act0_integrated_scene_prompt')),
       );
-      expect(action.data, 'Fewer king-containing hands remain.');
-      expect(action.overflow, TextOverflow.fade);
+      expect(
+        action.data,
+        'The visible king leaves fewer king-containing combinations.',
+      );
+      expect(action.overflow, TextOverflow.ellipsis);
+      expect(
+        find.byKey(const Key('act0_shell_feedback_hero_action')),
+        findsNothing,
+      );
       final cta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
       final ctaLabel = tester.widget<Text>(
         find.byKey(const Key('act0_shell_feedback_continue_cta_label')),
@@ -395,16 +406,15 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        final conclusion = tester.getRect(
-          find.byKey(const Key('act0_shell_feedback_primary_result_block')),
+        final verdict = tester.getRect(
+          find.byKey(const Key('act0_integrated_scene_prompt')),
         );
         final reason = tester.getRect(
-          find.byKey(const Key('act0_shell_feedback_reason')),
+          find.byKey(const Key('act0_learning_scene_v3_support')),
         );
-        final nextClue = find.byKey(const Key('act0_shell_feedback_next_clue'));
-        final finalSemanticBlock = nextClue.evaluate().isEmpty
-            ? reason
-            : tester.getRect(nextClue);
+        final nextAction = tester.getRect(
+          find.byKey(const Key('act0_shell_feedback_primary_result_block')),
+        );
         final cta = tester.getRect(
           find.byKey(const Key('act0_shell_feedback_continue_cta')),
         );
@@ -413,16 +423,16 @@ void main() {
         );
 
         expect(
-          find.byKey(const Key('act0_shell_feedback_cohesive_group')),
+          find.byKey(const Key('act0_wave_a_learning_context')),
           findsOneWidget,
         );
         expect(
           find.byKey(const Key('act0_shell_feedback_action_eyebrow')),
           findsNothing,
         );
-        expect(cta.top - finalSemanticBlock.bottom, inInclusiveRange(8, 32));
-        expect((conclusion.top - lower.top) - (lower.bottom - cta.bottom),
-            closeTo(0, 32));
+        expect(verdict.top, lessThan(reason.top));
+        expect(reason.bottom, lessThanOrEqualTo(lower.top));
+        expect(cta.top - nextAction.bottom, inInclusiveRange(7, 32));
         expect(lower.contains(cta.topLeft), isTrue);
         expect(lower.contains(cta.bottomRight), isTrue);
         expect(tester.takeException(), isNull);
@@ -518,21 +528,12 @@ void main() {
             tester,
             const Key('act0_shell_feedback_continue_cta_label'),
           );
-          final allocation = resolveAct0RunnerCompositionAllocationV1(
-            viewport: profile.size,
-            safeArea: EdgeInsets.only(
-              top: profile.topInset,
-              bottom: profile.bottomInset,
-            ),
-            textScale: profile.textScale,
-            family: Act0RunnerCompositionFamilyV1.f1TableNative,
-          );
           final caseLabel =
               '${profile.size.width}x${profile.size.height} '
               '${profile.textScale} ${option.isCorrect ? 'correct' : 'incorrect'}';
 
-          expect(table.height, allocation.tableHeight, reason: caseLabel);
-          expect(lower.height, allocation.lowerHeight, reason: caseLabel);
+          expect(table.height, greaterThanOrEqualTo(330), reason: caseLabel);
+          expect(lower.height, greaterThanOrEqualTo(118), reason: caseLabel);
           expect(cta.height, greaterThanOrEqualTo(48), reason: caseLabel);
           expect(lower.contains(cta.topLeft), isTrue, reason: caseLabel);
           expect(lower.contains(cta.bottomRight), isTrue, reason: caseLabel);

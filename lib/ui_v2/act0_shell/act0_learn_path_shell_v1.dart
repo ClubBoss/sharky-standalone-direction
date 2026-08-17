@@ -672,6 +672,10 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
           (task) => task.taskId == currentMissionTask.taskId,
         ) +
         1;
+    final isFirstLessonLanding =
+        currentMissionLesson.lessonId == 'what_poker_is' &&
+        currentMissionStepIndex == 1 &&
+        detailLessonId == null;
     final progressFraction = widget.lessons.isEmpty
         ? 0.0
         : widget.lessons
@@ -748,6 +752,7 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                         currentMissionTask: currentMissionTask,
                         currentMissionStepIndex: currentMissionStepIndex,
                         detailMode: detailLessonId != null,
+                        firstLessonLanding: isFirstLessonLanding,
                         onStartMission: currentMissionLesson.isSelectable
                             ? () => widget.onStartTask(
                                 currentMissionLesson.lessonId,
@@ -893,6 +898,7 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
     required this.currentMissionTask,
     required this.currentMissionStepIndex,
     required this.detailMode,
+    required this.firstLessonLanding,
     required this.onStartMission,
     required this.lessons,
     required this.journeyLessonIndexes,
@@ -924,6 +930,7 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
   final Act0LessonTaskV1 currentMissionTask;
   final int currentMissionStepIndex;
   final bool detailMode;
+  final bool firstLessonLanding;
   final VoidCallback? onStartMission;
   final List<Act0LessonCardV1> lessons;
   final List<int> journeyLessonIndexes;
@@ -968,6 +975,7 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
           totalSteps: currentMissionLesson.taskList.length,
           accent: Act0ShellTokensV1.primary,
           detailMode: detailMode,
+          firstLessonLanding: firstLessonLanding,
           onStart: onStartMission,
         ),
         const SizedBox(height: 12),
@@ -1340,6 +1348,7 @@ class _JourneyPreviewV5 extends StatelessWidget {
                   en: showFullPath ? 'Show less' : 'All lessons',
                   ru: showFullPath ? 'Свернуть' : 'Все уроки',
                 ),
+                style: const TextStyle(fontFamily: 'Roboto'),
               ),
             ),
           ],
@@ -3350,6 +3359,7 @@ class _CurrentMissionCardV1 extends StatelessWidget {
     required this.totalSteps,
     required this.accent,
     required this.detailMode,
+    required this.firstLessonLanding,
     required this.onStart,
   });
 
@@ -3359,6 +3369,7 @@ class _CurrentMissionCardV1 extends StatelessWidget {
   final int totalSteps;
   final Color accent;
   final bool detailMode;
+  final bool firstLessonLanding;
   final VoidCallback? onStart;
 
   @override
@@ -3369,13 +3380,19 @@ class _CurrentMissionCardV1 extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final compact = constraints.maxWidth < 390;
-        final support = _currentMissionSupportCopyV1(
-          context: context,
-          lesson: lesson,
-          nextTask: task,
-          compact: compact,
-          visualVariant: visualVariant,
-        );
+        final support = firstLessonLanding
+            ? _learnCopyV1(
+                context,
+                en: 'Find your seat, read one clue, and make your first table decision.',
+                ru: 'Найдите своё место, прочитайте одну подсказку и примите первое решение.',
+              )
+            : _currentMissionSupportCopyV1(
+                context: context,
+                lesson: lesson,
+                nextTask: task,
+                compact: compact,
+                visualVariant: visualVariant,
+              );
         return Container(
           key: detailMode
               ? const Key('act0_shell_lesson_detail_hero')
@@ -3448,7 +3465,11 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                         child: Text(
                           _learnCopyV1(
                             context,
-                            en: detailMode ? 'Lesson read' : 'Learn route',
+                            en: firstLessonLanding
+                                ? 'FIRST TABLE GUIDE'
+                                : detailMode
+                                ? 'Lesson read'
+                                : 'Learn route',
                             ru: detailMode
                                 ? 'Чтение урока'
                                 : 'Маршрут обучения',
@@ -3460,28 +3481,30 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      Flexible(
-                        child: Text(
-                          _learnCopyV1(
-                            context,
-                            en: detailMode
-                                ? 'What this teaches'
-                                : 'Current table read',
-                            ru: detailMode
-                                ? 'Что это учит'
-                                : 'Текущее чтение стола',
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.fade,
-                          softWrap: false,
-                          style: Act0ShellTokensV1.label.copyWith(
-                            color: Act0ShellTokensV1.textMuted,
-                            letterSpacing: 0,
-                            fontSize: 10.0,
+                      if (!firstLessonLanding) ...[
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: Text(
+                            _learnCopyV1(
+                              context,
+                              en: detailMode
+                                  ? 'What this teaches'
+                                  : 'Current table read',
+                              ru: detailMode
+                                  ? 'Что это учит'
+                                  : 'Текущее чтение стола',
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.fade,
+                            softWrap: false,
+                            style: Act0ShellTokensV1.label.copyWith(
+                              color: Act0ShellTokensV1.textMuted,
+                              letterSpacing: 0,
+                              fontSize: 10.0,
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -3501,18 +3524,20 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                           overflow: TextOverflow.fade,
                         ),
                         const SizedBox(height: 6),
-                        Text(
-                          _learnCopyV1(
-                            context,
-                            en: 'Why it matters',
-                            ru: 'Зачем это нужно',
+                        if (!firstLessonLanding) ...[
+                          Text(
+                            _learnCopyV1(
+                              context,
+                              en: 'Why it matters',
+                              ru: 'Зачем это нужно',
+                            ),
+                            style: Act0ShellTokensV1.label.copyWith(
+                              color: _learnV6Cyan,
+                              fontSize: 9.2,
+                            ),
                           ),
-                          style: Act0ShellTokensV1.label.copyWith(
-                            color: _learnV6Cyan,
-                            fontSize: 9.2,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
+                          const SizedBox(height: 4),
+                        ],
                         Text(
                           support,
                           key: const Key('act0_shell_current_mission_support'),
@@ -3525,51 +3550,52 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: compact ? 16 : 18),
-                  Container(
-                    key: const Key('act0_shell_current_mission_step_card'),
-                    width: double.infinity,
-                    padding: const EdgeInsets.fromLTRB(12, 9, 10, 9),
-                    decoration: BoxDecoration(
-                      color: _learnV6Navy.withValues(alpha: 0.42),
-                      border: Border(
-                        left: BorderSide(
-                          color: _learnV6Cyan.withValues(alpha: 0.72),
-                          width: 3,
+                  if (!firstLessonLanding)
+                    Container(
+                      key: const Key('act0_shell_current_mission_step_card'),
+                      width: double.infinity,
+                      padding: const EdgeInsets.fromLTRB(12, 9, 10, 9),
+                      decoration: BoxDecoration(
+                        color: _learnV6Navy.withValues(alpha: 0.42),
+                        border: Border(
+                          left: BorderSide(
+                            color: _learnV6Cyan.withValues(alpha: 0.72),
+                            width: 3,
+                          ),
+                        ),
+                      ),
+                      child: KeyedSubtree(
+                        key: const Key('act0_shell_current_mission_step_band'),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _learnCopyV1(
+                                context,
+                                en: 'Current step · $stepIndex of $totalSteps',
+                                ru: 'Текущий шаг · $stepIndex из $totalSteps',
+                              ),
+                              style: Act0ShellTokensV1.label.copyWith(
+                                color: _learnV6Cyan,
+                                letterSpacing: 0,
+                                fontSize: 9.4,
+                              ),
+                            ),
+                            const SizedBox(height: 3),
+                            Text(
+                              taskTitle,
+                              style: Act0ShellTokensV1.body.copyWith(
+                                color: Act0ShellTokensV1.text,
+                                fontWeight: FontWeight.w800,
+                                height: 1.12,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    child: KeyedSubtree(
-                      key: const Key('act0_shell_current_mission_step_band'),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _learnCopyV1(
-                              context,
-                              en: 'Current step · $stepIndex of $totalSteps',
-                              ru: 'Текущий шаг · $stepIndex из $totalSteps',
-                            ),
-                            style: Act0ShellTokensV1.label.copyWith(
-                              color: _learnV6Cyan,
-                              letterSpacing: 0,
-                              fontSize: 9.4,
-                            ),
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                            taskTitle,
-                            style: Act0ShellTokensV1.body.copyWith(
-                              color: Act0ShellTokensV1.text,
-                              fontWeight: FontWeight.w800,
-                              height: 1.12,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                   const SizedBox(height: 12),
                   SizedBox(
                     width: double.infinity,
@@ -3580,7 +3606,16 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                         height: Act0VisualMetricsV1.primaryCtaHeight,
                       ),
                       child: Text(
-                        _learnCopyV1(context, en: 'Start', ru: 'Старт'),
+                        _learnCopyV1(
+                          context,
+                          en: firstLessonLanding
+                              ? 'Start first table'
+                              : 'Start',
+                          ru: firstLessonLanding
+                              ? 'Начать первый стол'
+                              : 'Старт',
+                        ),
+                        style: const TextStyle(fontFamily: 'Roboto'),
                         maxLines: 1,
                         softWrap: false,
                         overflow: TextOverflow.fade,

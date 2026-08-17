@@ -124,33 +124,35 @@ void main() {
     );
   }
 
-  test(
-    'first-session source uses You for learner-facing identity teaching',
-    () {
-      final source = File(
-        'lib/ui_v2/act0_shell/act0_shell_state_v1.dart',
-      ).readAsStringSync();
-      final start = source.indexOf('final _firstTableGuideMeetTableRunner');
-      final end = source.indexOf('final _boardCountRunner', start);
-      final firstSession = source.substring(start, end);
+  test('first-session source uses You for learner-facing identity teaching', () {
+    final source = File(
+      'lib/ui_v2/act0_shell/act0_shell_state_v1.dart',
+    ).readAsStringSync();
+    final start = source.indexOf('final _firstTableGuideMeetTableRunner');
+    final end = source.indexOf('final _boardCountRunner', start);
+    final firstSession = source.substring(start, end);
 
-      expect(firstSession, contains('Which seat acts next before the blinds?'));
-      expect(
-        firstSession,
-        contains(
-          'Which label could change next hand while the player is still you?',
-        ),
-      );
-      expect(firstSession, contains('You marks your seat. BTN is the Button'));
-      expect(firstSession, isNot(contains('Which marker identifies you?')));
-      expect(firstSession, isNot(contains('Which seat has the You badge?')));
-      expect(firstSession, isNot(contains('seat marked Hero')));
-      expect(firstSession, isNot(contains('Which seat is the hero seat?')));
-    },
-  );
+    expect(firstSession, contains('Which seat acts next before the blinds?'));
+    expect(
+      firstSession,
+      contains(
+        'Which label could change next hand while the player is still you?',
+      ),
+    );
+    expect(
+      firstSession,
+      contains(
+        r"You marks the learner. BTN is this hand\'s position and can change next hand.",
+      ),
+    );
+    expect(firstSession, isNot(contains('Which marker identifies you?')));
+    expect(firstSession, isNot(contains('Which seat has the You badge?')));
+    expect(firstSession, isNot(contains('seat marked Hero')));
+    expect(firstSession, isNot(contains('Which seat is the hero seat?')));
+  });
 
   testWidgets(
-    'short identity teaching stays below a stable table with its footer rail anchored',
+    'short identity teaching leads into a stable table with navigation anchored below',
     (tester) async {
       await pumpRunner(
         tester,
@@ -171,20 +173,30 @@ void main() {
       final tableRect = tester.getRect(
         find.byKey(const Key('act0_shell_table')),
       );
+      final guideRect = tester.getRect(
+        find.byKey(const Key('act0_wave_a_learning_context')),
+      );
       final surfaceRect = tester.getRect(
         find.byKey(const Key('act0_shell_shared_runner_lower_surface')),
       );
-      final laneRect = tester.getRect(
-        find.byKey(const Key('act0_shell_learning_rail_content_lane')),
+      final railRect = tester.getRect(
+        find.byKey(const Key('act0_shell_learning_rail')),
       );
-      final footerRect = tester.getRect(
-        find.byKey(const Key('act0_shell_learning_rail_fixed_footer')),
+      final continueRect = tester.getRect(
+        find.byKey(const Key('act0_shell_continue_cta')),
       );
 
+      expect(guideRect.bottom, lessThanOrEqualTo(tableRect.top));
       expect(surfaceRect.top, greaterThanOrEqualTo(tableRect.bottom));
-      expect(laneRect.top - surfaceRect.top, lessThanOrEqualTo(24));
-      expect(footerRect.bottom, closeTo(surfaceRect.bottom, 2));
-      expect(laneRect.bottom, lessThanOrEqualTo(footerRect.top));
+      expect(railRect.left, greaterThanOrEqualTo(surfaceRect.left));
+      expect(railRect.right, lessThanOrEqualTo(surfaceRect.right));
+      expect(railRect.top, greaterThanOrEqualTo(surfaceRect.top - 16));
+      expect(railRect.bottom, lessThanOrEqualTo(surfaceRect.bottom + 2));
+      expect(railRect.contains(continueRect.center), isTrue);
+      expect(
+        find.byKey(const Key('act0_shell_learning_rail_content_lane')),
+        findsNothing,
+      );
       expect(tester.takeException(), isNull);
     },
   );
@@ -228,7 +240,7 @@ void main() {
   );
 
   testWidgets(
-    'first-session identity rail stays anchored across supported phones and text scale',
+    'first-session guide and navigation stay anchored across supported phones and text scale',
     (tester) async {
       for (final configuration in <(Size, TextScaler)>[
         (const Size(393, 852), TextScaler.noScaling),
@@ -256,16 +268,26 @@ void main() {
         final surfaceRect = tester.getRect(
           find.byKey(const Key('act0_shell_shared_runner_lower_surface')),
         );
-        final laneRect = tester.getRect(
-          find.byKey(const Key('act0_shell_learning_rail_content_lane')),
+        final guideRect = tester.getRect(
+          find.byKey(const Key('act0_wave_a_learning_context')),
         );
-        final footerRect = tester.getRect(
-          find.byKey(const Key('act0_shell_learning_rail_fixed_footer')),
+        final tableRect = tester.getRect(
+          find.byKey(const Key('act0_shell_table')),
+        );
+        final railRect = tester.getRect(
+          find.byKey(const Key('act0_shell_learning_rail')),
+        );
+        final continueRect = tester.getRect(
+          find.byKey(const Key('act0_shell_continue_cta')),
         );
 
-        expect(laneRect.top - surfaceRect.top, lessThanOrEqualTo(24));
-        expect(footerRect.bottom, closeTo(surfaceRect.bottom, 2));
-        expect(laneRect.bottom, lessThanOrEqualTo(footerRect.top));
+        expect(guideRect.bottom, lessThanOrEqualTo(tableRect.top));
+        expect(surfaceRect.top, greaterThanOrEqualTo(tableRect.bottom));
+        expect(railRect.left, greaterThanOrEqualTo(surfaceRect.left));
+        expect(railRect.right, lessThanOrEqualTo(surfaceRect.right));
+        expect(railRect.top, greaterThanOrEqualTo(surfaceRect.top - 16));
+        expect(railRect.bottom, lessThanOrEqualTo(surfaceRect.bottom + 2));
+        expect(railRect.contains(continueRect.center), isTrue);
         expect(tester.takeException(), isNull);
       }
     },

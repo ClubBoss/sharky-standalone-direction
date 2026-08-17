@@ -38,12 +38,22 @@ final _viewport = switch (_device) {
   _ => const Size(375, 812),
 };
 const _boundaryKey = Key('action_sequence_raster_boundary');
+const _expectsWaveA = bool.fromEnvironment(
+  'ACTION_EVIDENCE_EXPECT_WAVE_A',
+  defaultValue: true,
+);
 
 void main() {
   setUpAll(() async {
-    final bytes = await File(
-      '/System/Library/Fonts/Supplemental/Arial.ttf',
-    ).readAsBytes();
+    final fontFile =
+        <File>[
+          File('/System/Library/Fonts/Supplemental/Arial.ttf'),
+          File('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'),
+        ].firstWhere(
+          (candidate) => candidate.existsSync(),
+          orElse: () => throw StateError('No real-text test font found.'),
+        );
+    final bytes = await fontFile.readAsBytes();
     for (final family in <String>['Roboto', 'Ahem']) {
       await (FontLoader(
         family,
@@ -105,10 +115,15 @@ void main() {
       );
     }
 
+    Future<void> saveMounted(String name) async {
+      File('${out.path}/$name.png').writeAsBytesSync(await _png(tester));
+    }
+
     Future<void> capture({
       required String name,
       required Act0ControlledDemoCaptureSurfaceV1 surface,
       String taskId = 'actions_check_drill',
+      String lessonId = 'fold_check_call_raise',
       String phase = 'selected',
     }) async {
       await tester.pumpWidget(
@@ -130,7 +145,7 @@ void main() {
                 mode: Act0ControlledDemoCaptureModeV1.directState,
                 surface: surface,
                 worldId: 'world_1',
-                lessonId: 'fold_check_call_raise',
+                lessonId: lessonId,
                 taskId: taskId,
               ),
             ),
@@ -148,6 +163,22 @@ void main() {
       final runner = runnerFinder.evaluate().isEmpty
           ? null
           : tester.widget<Act0LessonRunnerShellV1>(runnerFinder);
+      if (_expectsWaveA) {
+        final expectedPurpose = switch (runner?.runner.phase) {
+          Act0LessonPhaseV1.theory => 'ONE TABLE IDEA',
+          Act0LessonPhaseV1.drill => 'YOUR MOVE',
+          Act0LessonPhaseV1.review =>
+            runner!.runner.reviewQuality == Act0FeedbackQualityV1.wrong
+                ? 'MISSED CLUE'
+                : 'CORRECT READ',
+          null => throw StateError('Expected an Act0 lesson runner for $name'),
+        };
+        expect(
+          find.byKey(const Key('act0_wave_a_learning_context')),
+          findsOneWidget,
+        );
+        expect(find.text(expectedPurpose), findsOneWidget);
+      }
       final table = find.byKey(const Key('act0_shell_table'));
       final rect = table.evaluate().isEmpty ? null : tester.getRect(table);
       Map<String, double>? rectData(Finder finder) {
@@ -207,6 +238,38 @@ void main() {
       final stableRect = stableBounds.evaluate().isEmpty
           ? null
           : tester.getRect(stableBounds);
+      final informativeObjectCollisions = <Map<String, Object?>>[];
+      for (final seatId in const <String>['sb', 'bb']) {
+        final seat = find.byKey(Key('act0_shell_seat_node_$seatId'));
+        final chip = find.byKey(Key('act0_shell_bet_chip_owner_$seatId'));
+        if (seat.evaluate().isEmpty || chip.evaluate().isEmpty) continue;
+        final seatRect = tester.getRect(seat);
+        final chipRect = tester.getRect(chip);
+        informativeObjectCollisions.add(<String, Object?>{
+          'objects': <String>['seat:$seatId', 'chip:$seatId'],
+          'overlap': seatRect.overlaps(chipRect),
+          'seatBounds': <String, double>{
+            'left': seatRect.left,
+            'top': seatRect.top,
+            'right': seatRect.right,
+            'bottom': seatRect.bottom,
+          },
+          'chipBounds': <String, double>{
+            'left': chipRect.left,
+            'top': chipRect.top,
+            'right': chipRect.right,
+            'bottom': chipRect.bottom,
+          },
+        });
+      }
+      if (_expectsWaveA) {
+        expect(
+          informativeObjectCollisions.every((row) => row['overlap'] == false),
+          isTrue,
+          reason:
+              '$name must keep blind chips outside their informative seats.',
+        );
+      }
       rows.add(<String, Object?>{
         'name': name,
         'phase': phase,
@@ -219,6 +282,14 @@ void main() {
         'runnerSelectedTaskId': runner?.selectedTaskId,
         'runnerTeachingStepIndex': runner?.runner.teachingStepIndex,
         'runnerTeachingStepCount': runner?.runner.teachingSteps.length,
+        'eligibleTableObjects': find
+            .byWidgetPredicate(
+              (widget) =>
+                  widget.key?.toString().contains('act0_shell_seat_tap_') ??
+                  false,
+            )
+            .evaluate()
+            .length,
         'stablePracticeSelected': stableRect != null,
         'stablePracticeBounds': stableRect == null
             ? null
@@ -237,16 +308,17 @@ void main() {
                 'height': rect.height,
               },
         'integratedGeometry': <String, Object?>{
-                'promptEnvelope': promptRect,
-                'tableSceneAllocation': rect?.height,
-                'visibleTableBounds': silhouetteRect,
-                'heroBounds': heroRect,
-                'heroY': heroRect?['top'],
-                'actionEnvelope': actionRect,
-                'actionEnvelopeTop': actionRect?['top'],
-                'explicitTableScale': 1.0,
-                'seatAnchors': depthAnchors,
-              },
+          'promptEnvelope': promptRect,
+          'tableSceneAllocation': rect?.height,
+          'visibleTableBounds': silhouetteRect,
+          'heroBounds': heroRect,
+          'heroY': heroRect?['top'],
+          'actionEnvelope': actionRect,
+          'actionEnvelopeTop': actionRect?['top'],
+          'explicitTableScale': 1.0,
+          'seatAnchors': depthAnchors,
+        },
+        'informativeObjectCollisions': informativeObjectCollisions,
         'overflow': tester.takeException()?.toString(),
       });
       writeGeometryMetrics();
@@ -259,6 +331,40 @@ void main() {
       taskId: 'actions_theory',
       phase: 'theory',
     );
+    await capture(
+      name: 'first_lesson_theory_1',
+      surface: Act0ControlledDemoCaptureSurfaceV1.runnerTheory,
+      lessonId: 'what_poker_is',
+      taskId: 'what_poker_is_theory',
+      phase: 'first_lesson_theory_1',
+    );
+    if (_expectsWaveA) {
+      expect(find.text('One loop first.'), findsOneWidget);
+    }
+    await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
+    await tester.pumpAndSettle();
+    if (_expectsWaveA) {
+      expect(find.text('Start with the table.'), findsOneWidget);
+    }
+    await saveMounted('first_lesson_theory_2');
+    await capture(
+      name: 'table_object_task',
+      surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
+      lessonId: 'what_poker_is',
+      taskId: 'what_poker_is_find_hero',
+      phase: 'table_object_task',
+    );
+    final tappableSeats = find.byWidgetPredicate(
+      (widget) =>
+          widget.key?.toString().contains('act0_shell_seat_tap_') ?? false,
+    );
+    expect(tappableSeats, findsAtLeastNWidgets(2));
+    if (_expectsWaveA) {
+      expect(
+        find.text('Tap one equally highlighted seat on the table.'),
+        findsOneWidget,
+      );
+    }
     await capture(
       name: 'decision',
       surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
@@ -286,10 +392,6 @@ void main() {
       taskId: 'actions_legal_context',
       phase: 'existing_repair_result_surface',
     );
-
-    Future<void> saveMounted(String name) async {
-      File('${out.path}/$name.png').writeAsBytesSync(await _png(tester));
-    }
 
     final ctaHitRows = <Map<String, Object?>>[];
     final feedbackAllocationRows = <Map<String, Object?>>[];
@@ -399,6 +501,80 @@ void main() {
         home: RepaintBoundary(
           key: _boundaryKey,
           child: Act0ShellPreviewScreenV1(
+            key: const ValueKey<String>('wave_a_first_lesson_landing'),
+            state: Act0ShellStateV1.sample,
+            showPlacementOnStart: false,
+            debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+              mode: Act0ControlledDemoCaptureModeV1.directState,
+              surface: Act0ControlledDemoCaptureSurfaceV1.wave2LearnFresh,
+              worldId: 'world_1',
+              lessonId: 'what_poker_is',
+              taskId: 'what_poker_is_theory',
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await saveMounted('first_lesson_landing');
+    expect(
+      find.byKey(const Key('act0_shell_current_mission_cta')),
+      findsOneWidget,
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: realTextTheme,
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: TextScaler.linear(_textScale)),
+          child: child!,
+        ),
+        home: RepaintBoundary(
+          key: _boundaryKey,
+          child: Act0ShellPreviewScreenV1(
+            key: const ValueKey<String>('wave_a_table_object_ack'),
+            state: Act0ShellStateV1.sample,
+            showPlacementOnStart: false,
+            debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+              mode: Act0ControlledDemoCaptureModeV1.directState,
+              surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
+              worldId: 'world_1',
+              lessonId: 'what_poker_is',
+              taskId: 'what_poker_is_find_hero',
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tapVisible(find.byKey(const Key('act0_shell_seat_tap_btn')));
+    await tester.pumpAndSettle();
+    await saveMounted('table_object_evaluated');
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget.key?.toString().contains(
+              'act0_shell_seat_state_btn_confirmedSelected',
+            ) ??
+            false,
+      ),
+      findsOneWidget,
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: realTextTheme,
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: TextScaler.linear(_textScale)),
+          child: child!,
+        ),
+        home: RepaintBoundary(
+          key: _boundaryKey,
+          child: Act0ShellPreviewScreenV1(
             key: const ValueKey<String>('action_sequence_live_wrong_route'),
             state: Act0ShellStateV1.sample,
             showPlacementOnStart: false,
@@ -466,11 +642,29 @@ used in the Action sequence contact sheets.
 ''',
     );
     _sheet(out, <String>[
+      'first_lesson_theory_1',
+      'first_lesson_theory_2',
+      'table_object_task',
+      'table_object_evaluated',
+    ], 'wave_a_first_lesson_contact_sheet.png');
+    _sheet(out, <String>[
+      'theory',
+      'table_object_task',
+      'decision',
+      'correct_feedback',
+      'wrong_feedback',
+    ], 'wave_a_learning_sequence_contact_sheet.png');
+    _sheet(out, <String>[
       'theory',
       'decision',
       'correct_feedback',
       'wrong_feedback',
     ], 'canonical_sequence_contact_sheet.png');
+    _sheet(out, <String>[
+      'first_lesson_landing',
+      'table_object_task',
+      'table_object_evaluated',
+    ], 'wave_a_entry_and_interaction_contact_sheet.png');
     _sheet(out, <String>[
       'wrong_feedback',
       'targeted_repair',
@@ -543,7 +737,11 @@ void _sheet(Directory out, List<String> names, String fileName) {
     height: images.first.height,
   );
   for (var index = 0; index < images.length; index++) {
-    image.compositeImage(canvas, images[index], dstX: 375 * index);
+    image.compositeImage(
+      canvas,
+      images[index],
+      dstX: images.first.width * index,
+    );
   }
   File('${out.path}/$fileName').writeAsBytesSync(image.encodePng(canvas));
 }
