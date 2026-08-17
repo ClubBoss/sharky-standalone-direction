@@ -3485,8 +3485,23 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                   children: [
                     SizedBox(
                       height: tableHeight + tableStageChrome,
-                      child: buildRunnerStage(
-                        maxTableHeight: math.max(0.0, tableHeight),
+                      // B2 owns the bounded vertical trade B1 identified. The
+                      // stage keeps its full height and the lower surface is
+                      // untouched; only the table gives back room, which buys
+                      // headroom for the far-player plane above the far rail.
+                      child: Padding(
+                        // The reserve must land ABOVE the far rail to be worth
+                        // anything; the table is top-aligned in its stage, so
+                        // shrinking alone just opened dead space underneath.
+                        padding: const EdgeInsets.only(
+                          top: _act0SceneFarPlaneReserveV1,
+                        ),
+                        child: buildRunnerStage(
+                          maxTableHeight: math.max(
+                            0.0,
+                            tableHeight - _act0SceneFarPlaneReserveV1,
+                          ),
+                        ),
                       ),
                     ),
                     if (!_usesCanonicalIntegratedLearningSceneV1)
@@ -10387,6 +10402,11 @@ Act0RunnerCompletionSummaryV1 _feedbackProgressAtGain(
 /// first board card's rank, which is learning-relevant information.
 const double _act0SceneRailWidthV1 = 10.0;
 
+/// Vertical room B2 gives back from the table so the far-player plane is
+/// readable above the far rail. Taken from the table only — teaching copy,
+/// interaction targets and the lower surface keep their allocation.
+const double _act0SceneFarPlaneReserveV1 = 30.0;
+
 /// How far the B2 rail stands proud of the felt inset. The rail gains its
 /// volume outward, into the room, rather than by eating the playing surface.
 const double _act0SceneRailOverhangV1 = 5.0;
@@ -10899,17 +10919,16 @@ class _Act0TableV1 extends StatelessWidget {
           Positioned.fill(
             child: IgnorePointer(
               child: Transform.scale(
-                // Reaches past the table into the flanks Wave A left as flat
-                // navy, so the environment owns the whole scene band. Growth
-                // is almost entirely downward: the teaching layer above the
-                // table keeps its Wave A contrast, and the room simply
-                // continues behind the action dock.
+                // The B2 room reaches past the table into the flanks and
+                // continues downward behind the action dock. Growth stays
+                // almost entirely downward so the teaching layer above the
+                // table keeps its Wave A contrast.
                 scaleX: 1.46,
                 scaleY: 1.18,
                 alignment: const Alignment(0, -0.9),
                 child: const CustomPaint(
                   key: Key('act0_scene_environment_plane'),
-                  painter: Act0SceneEnvironmentPainterV1(),
+                  painter: Act0SceneRoomPainterV1(),
                 ),
               ),
             ),

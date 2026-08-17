@@ -71,7 +71,26 @@ anchors and table allocation byte-identical.
 
 ### CP2 — iteration 2: room + light + vertical composition
 
-- Status: **pending**
+- Status: **done**
+- `Act0SceneRoomPainterV1` replaces B1's structural environment placeholder:
+  lit back wall, architectural piers, floor falloff, horizon with atmospheric
+  haze, table-lamp spill on the floor, framing vignette — all sharing the same
+  `Act0SceneLightV1` as the table.
+- Bounded vertical trade applied: `_act0SceneFarPlaneReserveV1 = 30`, taken
+  from the table only. Table top +30 and table height -30 in every state; the
+  action envelope top is **identical in all 8 states**, so the lower surface,
+  CTA and teaching copy keep their full allocation.
+- **Two misses caught and fixed in-loop:** (1) the reserve first landed *below*
+  the table, because the table is top-aligned in its stage — shrinking alone
+  just opened dead space; re-aimed with an explicit top pad. (2) The first room
+  was darker than B1 and its vignette crushed the corners the far volumes live
+  in, making the far plane less readable, not more; wall/floor tones lifted and
+  the vignette pulled back.
+- Far-player plane is now readable above the far rail — the gap B1 recorded as
+  needing the vertical trade B2 owns.
+- Contracts: collision guard clean, zero overflow, tappable `9 -> 9`, runner
+  phases identical, all six B1 seat anchors preserved with identical tiers.
+- Evidence: `output/visual_gauntlet_b2/iter2_402x874/`
 
 ### CP3 — iteration 3 (conditional)
 
@@ -83,7 +102,7 @@ anchors and table allocation byte-identical.
 
 ## Next remaining class-level gap
 
-`ROOM_IS_STILL_A_PLACEHOLDER_AND_FAR_PLANE_IS_STARVED` — owned by iteration 2.
-The table is now a physical object standing in a structural gradient. The room
-must become an environment, the lighting must be shared across it, and the
-bounded vertical trade must buy far-player visibility.
+`LIGHT_NOT_YET_SHARED_WITH_THE_B1_VOLUMES` — candidate for a bounded
+iteration 3. The table and room now share one key light, but the player volumes
+and hero foreground still carry B1's hardcoded rim, which is exactly the
+"widget-specific glow" the B2 acceptance bar calls out.

@@ -324,3 +324,171 @@ class Act0SceneFeltMaterialPainterV1 extends CustomPainter {
       oldDelegate.light.intensity != light.intensity ||
       oldDelegate.light.origin != light.origin;
 }
+
+/// The B2 room.
+///
+/// Replaces B1's structural environment placeholder, which was a wall/floor/
+/// vignette gradient stack that existed to stop the table floating. This is an
+/// actual room: a lit back wall, an architectural rhythm, a floor that catches
+/// the table lamp's spill, a horizon with atmospheric haze, and a vignette that
+/// frames rather than merely darkens.
+///
+/// It shares [Act0SceneLightV1] with the table, so the room and the object
+/// standing in it are lit by the same source instead of glowing independently.
+class Act0SceneRoomPainterV1 extends CustomPainter {
+  const Act0SceneRoomPainterV1({
+    this.light = Act0SceneLightV1.canonical,
+    this.horizon = 0.17,
+  });
+
+  final Act0SceneLightV1 light;
+
+  /// Where the back wall meets the floor, as a fraction of scene height.
+  final double horizon;
+
+  static const Color _ceiling = Color(0xFF02060C);
+  static const Color _wallDeep = Color(0xFF0B1D31);
+  static const Color _wallLit = Color(0xFF244B6E);
+  static const Color _floorNear = Color(0xFF060F1C);
+  static const Color _haze = Color(0xFF2C5876);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+    final horizonY = size.height * horizon;
+    final i = light.intensity;
+
+    // Back wall: darkest at the ceiling, opening up toward the horizon.
+    canvas.drawRect(
+      Rect.fromLTRB(0, 0, size.width, horizonY),
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: <Color>[_ceiling, _wallDeep, _wallLit],
+          stops: const <double>[0, 0.55, 1],
+        ).createShader(Rect.fromLTRB(0, 0, size.width, horizonY)),
+    );
+
+    // Floor: takes the wall's tone at the horizon and falls away to the viewer.
+    canvas.drawRect(
+      Rect.fromLTRB(0, horizonY, size.width, size.height),
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: <Color>[_wallLit, _wallDeep, _floorNear],
+          stops: const <double>[0, 0.34, 1],
+        ).createShader(Rect.fromLTRB(0, horizonY, size.width, size.height)),
+    );
+
+    // Architectural rhythm: soft vertical piers either side of the table. Just
+    // enough structure that the wall reads as built rather than as a gradient.
+    for (final centre in const <double>[0.115, 0.885]) {
+      final pier = Rect.fromCenter(
+        center: Offset(size.width * centre, size.height * 0.20),
+        width: size.width * 0.22,
+        height: size.height * 0.52,
+      );
+      canvas.drawRect(
+        pier,
+        Paint()
+          ..shader = LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: <Color>[
+              Colors.transparent,
+              Act0SceneLightV1.ambient.withValues(alpha: 0.16 * i),
+              Colors.transparent,
+            ],
+          ).createShader(pier),
+      );
+    }
+
+    // The room's own light behind the far rail. This is what the far player
+    // volumes read against, and why they no longer need an outline.
+    final wallGlow = Rect.fromCenter(
+      center: Offset(size.width * 0.5, horizonY * 1.05),
+      width: size.width * 1.2,
+      height: size.height * 0.46,
+    );
+    canvas.drawOval(
+      wallGlow,
+      Paint()
+        ..shader = RadialGradient(
+          colors: <Color>[
+            _haze.withValues(alpha: 0.62 * i),
+            _haze.withValues(alpha: 0.22 * i),
+            Colors.transparent,
+          ],
+          stops: const <double>[0, 0.5, 1],
+        ).createShader(wallGlow),
+    );
+
+    // Atmospheric haze sitting on the horizon line. Depth separation for the
+    // far plane without touching the volumes themselves.
+    final hazeBand = Rect.fromLTRB(
+      0,
+      horizonY - (size.height * 0.05),
+      size.width,
+      horizonY + (size.height * 0.10),
+    );
+    canvas.drawRect(
+      hazeBand,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: <Color>[
+            Colors.transparent,
+            _haze.withValues(alpha: 0.20 * i),
+            Colors.transparent,
+          ],
+        ).createShader(hazeBand),
+    );
+
+    // The table lamp spilling onto the floor around the table's feet.
+    final spill = Rect.fromCenter(
+      center: Offset(
+        size.width * (0.5 + (light.origin.x * 0.5)),
+        size.height * (0.5 + (light.origin.y * 0.22)),
+      ),
+      width: size.width * 1.05,
+      height: size.height * 0.86,
+    );
+    canvas.drawOval(
+      spill,
+      Paint()
+        ..shader = RadialGradient(
+          colors: <Color>[
+            Act0SceneLightV1.ambient.withValues(alpha: 0.22 * i),
+            Act0SceneLightV1.ambient.withValues(alpha: 0.07 * i),
+            Colors.transparent,
+          ],
+          stops: const <double>[0, 0.48, 1],
+        ).createShader(spill),
+    );
+
+    // Framing vignette: pulls the corners down so the room holds the scene.
+    canvas.drawRect(
+      rect,
+      Paint()
+        ..shader = RadialGradient(
+          center: const Alignment(0, -0.12),
+          radius: 1.02,
+          colors: <Color>[
+            Colors.transparent,
+            _ceiling.withValues(alpha: 0.20),
+            _ceiling.withValues(alpha: 0.56),
+          ],
+          stops: const <double>[0.58, 0.86, 1],
+        ).createShader(rect),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant Act0SceneRoomPainterV1 oldDelegate) =>
+      oldDelegate.light.intensity != light.intensity ||
+      oldDelegate.light.origin != light.origin ||
+      oldDelegate.horizon != horizon;
+}
