@@ -37,7 +37,24 @@ differentiation. B1 geometry and B2 material imported, never replaced.
 - Changed files: docs only.
 
 ### CP1 — iteration 1: player family + depth
-- Status: **pending**
+- Status: **done**
+- Added `lib/ui_v2/act0_shell/act0_scene_player_v1.dart`: four archetypes,
+  deterministic seat->archetype hash, posture enum, figure painter, and
+  `Act0ScenePlayerLayerV1` replacing B1's `Act0SceneVolumeLayerV1`.
+- **Three rejections of my own output, in loop:**
+  1. First build kept a rounded-rect chair wider than the player; it became the
+     dominant shape and the figure read as furniture. Chair removed entirely.
+  2. Two symmetric arms made the figure read frontally and the outer arm swept
+     *away* from the table. Replaced with a single near arm reaching toward the
+     pot, into the rail cut.
+  3. Figure value sat at ~`0x1A2C46` against a `0x244B6E` lit wall — barely a
+     value step, so no silhouette read at all. Pushed to near-black at far, with
+     the key-light rim carrying the form.
+- `characterAnchor` push tightened (`pushX 0.135->0.104`, `pushY` similarly) —
+  there was a visible gap between figure and rail, which breaks the "seated at
+  it" read. `plateAnchor` / `betAnchor` / `cardAnchor` untouched.
+- No faces drawn: at 60-110 px a face is noise. Identity is silhouette + posture.
+- Evidence: `output/visual_gauntlet_b3/iter1_402x874/`
 
 ### CP2 — iteration 2: hero + state integration
 - Status: **pending**
@@ -47,4 +64,6 @@ differentiation. B1 geometry and B2 material imported, never replaced.
 
 ## Next remaining class-level gap
 
-`NOTHING_READS_AS_A_PERSON` — owned by iteration 1.
+`HERO_NOT_YET_EMBODIED` — owned by iteration 2. Opponents are now people; the
+learner is still B1's rim-lit mass with no arms and no relationship to the hero
+cards.

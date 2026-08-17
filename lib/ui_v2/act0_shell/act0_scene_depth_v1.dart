@@ -243,11 +243,11 @@ List<Act0SceneSeatSlotV1> act0SceneSeatSlotsV1({
     // always cuts across the lower part of each volume rather than leaving a
     // gap, which is the difference between a seated player and a floating
     // shape beside a diagram.
-    final pushX = 0.135 + (0.090 * depth);
+    final pushX = 0.104 + (0.072 * depth);
     // The far seat has no long side to stand on, so it gets a fixed larger
     // vertical push: enough for its head to clear the far rail and give the
     // scene a far plane, bounded by the teaching layer directly above.
-    final pushY = depth <= 0.34 ? 0.078 : 0.060 + (0.035 * depth);
+    final pushY = depth <= 0.34 ? 0.082 : 0.052 + (0.030 * depth);
 
     slots.add(
       Act0SceneSeatSlotV1(
