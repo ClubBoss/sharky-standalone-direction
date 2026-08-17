@@ -44,7 +44,17 @@
 - Responsive: compact 375x812, large 430x932, 1.4x text.
 - Matched B4-vs-B5 evidence for 6 states + contact sheet + provenance.
 
-### Known limitation carried into review
+### CP4 — phase-resolution completion (blocker admitted and resolved)
+- Status: **done**
+- Canonical owner found: `Act0ActionSequenceStageV1` via
+  `_advanceActionSequenceReviewV1`. Exposed as one view-only field,
+  `learningLoopStage`. No parallel state machine, no progression change.
+- Canonical walking acceptance test passes: wrong feedback -> repair ->
+  recheck, orchestration through renderer.
+- Clue gold px: decision 169, wrong feedback 297, repair 422, recheck 186.
+- Repair clue emphasis restored from the 0.34 compromise to 0.85.
+
+### Superseded limitation (kept for provenance)
 Separating `repair` from `recheck` in the captured surfaces proved unreliable
 inside the window: `targeted_recheck` does not expose a receipt line that
 distinguishes it from the repair attempt. Rather than ship a bracket that might

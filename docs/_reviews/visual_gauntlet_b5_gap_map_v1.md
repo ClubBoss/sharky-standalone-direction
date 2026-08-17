@@ -100,9 +100,10 @@ support.
 
 ---
 
-# B5_PHASE_SIGNAL_BLOCKER
+# B5_PHASE_SIGNAL_BLOCKER — RAISED, ADMITTED, RESOLVED
 
-Reported per the completion-pass instruction rather than papered over.
+Raised per the completion-pass instruction. Mastermind verified it and approved
+a minimal exposure of the existing learning-route stage. **Resolved below.**
 
 ## What was required
 
@@ -171,5 +172,79 @@ repair-vs-recheck contract is locked by
 
 Whether exposing the existing repair/recheck identity to the learning route —
 rather than only the Play route — is admissible as view metadata.
+
+`HUMAN_PROOF = FALSE`
+
+
+---
+
+# B5 PHASE RESOLUTION — RESOLVED
+
+## The canonical owner
+
+`Act0ActionSequenceStageV1` — an existing typed enum
+(`theory / decision / repair / recheck / complete`) held in
+`_activeActionSequenceStageV1` and transitioned by
+`_advanceActionSequenceReviewV1`
+(`act0_shell_preview_screen_v1.dart:12520`), which is the route seam that
+actually performs wrong-feedback -> repair -> recheck on the Wave A action
+learning sequence.
+
+No parallel state machine was created. The enum already existed, already owned
+the transition, and already emitted the repair/recheck telemetry.
+
+## The exposure
+
+One field, view-only:
+
+```
+learningLoopStage: _activeActionSequenceStageV1
+```
+
+passed to `Act0LessonRunnerShellV1` and read by the B5 resolver. It drives no
+progression; progression stays owned by `_advanceActionSequenceReviewV1`.
+
+The Play-only `isSourceRecheckAttempt` / `repairContinuesToSourceRecheck` flags
+are retained as the fallback for their own path, exactly as the architecture
+constraint required.
+
+## Canonical acceptance test
+
+`test/ui_v2/act0_scene_attention_phase_resolution_v1_test.dart` mounts
+`Act0ShellPreviewScreenV1` and walks the real production sequence — wrong
+feedback -> Continue -> targeted repair -> answer -> repair result -> Continue
+-> targeted recheck — asserting the scene-published phase at each step:
+
+| Step | Resolved phase |
+| --- | --- |
+| wrong feedback | `wrongFeedback` |
+| targeted repair | `repair` |
+| targeted recheck | `recheck` |
+
+Orchestration -> runner -> renderer, passing. The model-level guards are
+retained alongside it.
+
+## Rendered proof
+
+Gold pixels in the clue band, measured from the actual captures:
+
+| State | Clue gold px |
+| --- | --- |
+| decision | 169 (floor — no bracket) |
+| wrong feedback | 297 |
+| **targeted repair** | **422** — asserted for reacquisition |
+| **targeted recheck** | **186** — back to floor, no standing pointer |
+
+One adjustment the renders proved necessary: repair's clue emphasis was held at
+a decision-level `0.34` only while repair and recheck could not be told apart.
+With the stage resolving, the intended `0.85` was restored. The accepted global
+salience model was otherwise not retuned.
+
+## Answer-leak audit
+
+Recheck clue emphasis is `0.0`; room and player recession return to `0.12` /
+`0.10`, at or below normal-decision levels, so the learner re-recognises the
+full situation. Recession stays per-plane, so no seat is singled out. Cards,
+board, pot, bets, actions and copy are never attenuated.
 
 `HUMAN_PROOF = FALSE`

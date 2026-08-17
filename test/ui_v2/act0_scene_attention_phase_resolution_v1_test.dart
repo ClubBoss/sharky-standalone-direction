@@ -9,10 +9,84 @@
 // upstream — see B5_PHASE_SIGNAL_BLOCKER in
 // docs/_reviews/visual_gauntlet_b5_gap_map_v1.md — so this guards the half that
 // is provable today and will fail loudly if the model's contract regresses.
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_salience_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+
+String _resolvedPhase(WidgetTester tester) {
+  final matches = find
+      .byWidgetPredicate(
+        (widget) =>
+            widget.key?.toString().contains('act0_scene_attention_phase_') ??
+            false,
+      )
+      .evaluate();
+  expect(
+    matches,
+    isNotEmpty,
+    reason: 'the scene must publish its resolved B5 attention phase',
+  );
+  return matches.first.widget.key
+      .toString()
+      .split('act0_scene_attention_phase_')
+      .last
+      .replaceAll(RegExp(r"['>\]]"), '');
+}
+
+Future<void> _tap(WidgetTester tester, Key key) async {
+  await tester.ensureVisible(find.byKey(key).first);
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(key).first, warnIfMissed: false);
+  await tester.pumpAndSettle();
+}
 
 void main() {
+  testWidgets(
+    'the canonical learning sequence resolves distinct B5 attention phases',
+    (tester) async {
+      tester.view.physicalSize = const Size(402, 874);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Act0ShellPreviewScreenV1(
+            state: Act0ShellStateV1.sample,
+            showPlacementOnStart: false,
+            debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+              mode: Act0ControlledDemoCaptureModeV1.directState,
+              surface:
+                  Act0ControlledDemoCaptureSurfaceV1.runnerFirstWrongFeedback,
+              worldId: 'world_1',
+              lessonId: 'fold_check_call_raise',
+              taskId: 'actions_check_drill',
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(_resolvedPhase(tester), 'wrongFeedback');
+
+      await _tap(tester, const Key('act0_shell_feedback_continue_cta'));
+      expect(
+        _resolvedPhase(tester),
+        'repair',
+        reason: 'the targeted repair attempt must resolve to the repair phase',
+      );
+
+      await _tap(tester, const Key('act0_shell_option_check'));
+      await _tap(tester, const Key('act0_shell_feedback_continue_cta'));
+      expect(
+        _resolvedPhase(tester),
+        'recheck',
+        reason:
+            'the targeted recheck attempt must resolve to the recheck phase',
+      );
+    },
+  );
   test('repair and recheck are distinct B5 attention phases', () {
     const repair = Act0SceneAttentionV1(Act0SceneAttentionPhaseV1.repair);
     const recheck = Act0SceneAttentionV1(Act0SceneAttentionPhaseV1.recheck);

@@ -97,13 +97,12 @@ class Act0SceneAttentionV1 {
   double get clueEmphasis => switch (phase) {
     Act0SceneAttentionPhaseV1.correctFeedback => 1.0,
     Act0SceneAttentionPhaseV1.wrongFeedback => 1.0,
-    // Any phase where the learner is still answering keeps the bracket quiet.
-    // Asserting it while an answer is open risks becoming a standing pointer,
-    // and separating repair from recheck reliably in the captured surfaces
-    // needed more probing than the window allowed — so the safe side is taken
-    // for both. Reacquisition during repair rides on the quieted field
-    // instead.
-    Act0SceneAttentionPhaseV1.repair => 0.34,
+    // Repair supports reacquisition: the learner is re-attempting a named
+    // target, so the clue asserts. It was held at a decision-level 0.34 only
+    // while repair and recheck could not be told apart; with the canonical
+    // learning-loop stage now resolving them, the intended contract is
+    // restored.
+    Act0SceneAttentionPhaseV1.repair => 0.85,
     Act0SceneAttentionPhaseV1.decision => 0.30,
     Act0SceneAttentionPhaseV1.theory => 0.22,
     // No standing pointer during recognition.

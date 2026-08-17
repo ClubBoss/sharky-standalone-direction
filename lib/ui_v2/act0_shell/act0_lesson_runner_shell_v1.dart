@@ -14,6 +14,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_depth_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hud_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_material_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_player_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_salience_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
@@ -27,7 +28,6 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_recommendation_surface_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_sequence_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_session_payoff_v1.dart';
@@ -1146,6 +1146,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.forceShowRepairOutcomeProof = false,
     this.repairContinuesToSourceRecheck = false,
     this.isSourceRecheckAttempt = false,
+    this.learningLoopStage,
     this.repairSessionSummaryLines = const <String>[],
     this.feedbackForwardCtaLabel,
     this.suppressFeedbackRepairFocus = false,
@@ -1191,6 +1192,11 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final bool forceShowRepairOutcomeProof;
   final bool repairContinuesToSourceRecheck;
   final bool isSourceRecheckAttempt;
+
+  /// B5 view metadata: which stage of the canonical learning loop is being
+  /// rendered. Owned by the route that performs the transition; read-only here
+  /// and never used to advance anything.
+  final Act0ActionSequenceStageV1? learningLoopStage;
   final List<String> repairSessionSummaryLines;
   final String? feedbackForwardCtaLabel;
   final bool suppressFeedbackRepairFocus;
@@ -2709,10 +2715,18 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     // set for a task rather than for a stage: measured against the canonical
     // capture sequence it resolved targeted repair to `decision` and never
     // reached `recheck` at all. Copy and receipt strings are not phase truth.
-    final isTargetedRecheck = widget.isSourceRecheckAttempt;
+    // The learning route's own transition owner is authoritative. The
+    // Play-only same-signal flags stay valid for their path but never fire
+    // here, which is what B5_PHASE_SIGNAL_BLOCKER measured.
+    final loopStage = widget.learningLoopStage;
+    final isTargetedRecheck =
+        loopStage == Act0ActionSequenceStageV1.recheck ||
+        (loopStage == null && widget.isSourceRecheckAttempt);
     final isTargetedRepair =
         !isTargetedRecheck &&
-        (widget.repairContinuesToSourceRecheck || hasRepairContext);
+        (loopStage == Act0ActionSequenceStageV1.repair ||
+            (loopStage == null &&
+                (widget.repairContinuesToSourceRecheck || hasRepairContext)));
     final sceneAttention = Act0SceneAttentionV1(
       isTheory
           ? Act0SceneAttentionPhaseV1.theory

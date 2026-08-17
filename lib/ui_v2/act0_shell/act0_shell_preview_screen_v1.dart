@@ -5782,6 +5782,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 }),
                               )
                             : Act0LessonRunnerShellV1(
+                                // B5 view metadata. `_activeActionSequenceStageV1`
+                                // is the existing typed owner of the canonical
+                                // wrong-feedback -> repair -> recheck transition
+                                // (`_advanceActionSequenceReviewV1`). Passing it
+                                // to the renderer exposes a stage the product
+                                // already computes; it drives no progression.
+                                learningLoopStage: _activeActionSequenceStageV1,
                                 runner: activePlayRunner!,
                                 worldNumber: selectedWorld.worldNumber,
                                 selectedWorldId: selectedWorld.worldId,
