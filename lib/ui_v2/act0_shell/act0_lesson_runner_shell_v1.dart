@@ -11,6 +11,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_scene_v3.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_depth_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hud_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_material_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_player_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
@@ -10587,6 +10588,13 @@ class _Act0TableV1 extends StatelessWidget {
                       .map(Act0ScenePerspectiveV1.canonical.project)
                       .toList()
                 : baseSeatSlots;
+            // Chip placement stays exactly as Wave A validated it. B4 tried
+            // moving commitments onto B1's `betAnchor` and the repository's own
+            // informative-object guard rejected it: there is no offset from
+            // that anchor which clears both the seat's own card+plate column
+            // and the board panel. Measured bounds also show the legacy ring
+            // already seats each chip immediately beside its owner, so the real
+            // gap here was treatment, not position.
             final chipSlots = integratedPerspectivePrototype
                 ? baseChipSlots
                       .map(Act0ScenePerspectiveV1.canonical.project)
@@ -11571,55 +11579,78 @@ class _CenterSignalAnchorV1 extends StatelessWidget {
       key: const Key('act0_shell_wave1_table_signal_anchor'),
       child: Tooltip(
         message: 'Table clue',
-        child: Container(
-          key: const Key('act0_shell_wave1b_table_signal_chip'),
-          padding: EdgeInsets.symmetric(
-            horizontal: compact ? 7 : 9,
-            vertical: compact ? 3.5 : 4.5,
-          ),
-          decoration: BoxDecoration(
-            color: Act0ShellTokensV1.primary.withValues(alpha: 0.11),
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-            border: Border.all(
-              color: Act0ShellTokensV1.primary.withValues(alpha: 0.30),
-            ),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: Act0ShellTokensV1.primary.withValues(alpha: 0.08),
-                blurRadius: compact ? 5 : 7,
+        // B4: Wave A already decides this is the causal table clue and already
+        // says so in copy. What it lacked was a mark that visibly belongs to
+        // this exact object. Brackets clamp to its own corners, so "the clue is
+        // marked on the table" now has something to point at. Local and
+        // object-bound only — no dimming, no blur, no scene-wide treatment.
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              key: const Key('act0_shell_wave1b_table_signal_chip'),
+              padding: EdgeInsets.symmetric(
+                horizontal: compact ? 7 : 9,
+                vertical: compact ? 3.5 : 4.5,
               ),
-            ],
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ConstrainedBox(
-                // Compact seats leave a fixed center lane between BB and HJ.
-                // The full two-line label owns that lane; the decorative eye
-                // did not, and was pushing the chip into both seat cards.
-                constraints: BoxConstraints(maxWidth: compact ? 80 : 118),
-                child: Text(
-                  label,
-                  key: const Key('act0_shell_wave1b_table_signal_text'),
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.visible,
-                  softWrap: true,
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.text,
-                    fontSize: compact ? 8.8 : 9.6,
-                    fontWeight: FontWeight.w900,
-                    height: 1.0,
+              decoration: BoxDecoration(
+                color: Act0ShellTokensV1.primary.withValues(alpha: 0.11),
+                borderRadius: BorderRadius.circular(
+                  Act0ShellTokensV1.radiusPill,
+                ),
+                border: Border.all(
+                  color: Act0ShellTokensV1.primary.withValues(alpha: 0.30),
+                ),
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                    color: Act0ShellTokensV1.primary.withValues(alpha: 0.08),
+                    blurRadius: compact ? 5 : 7,
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ConstrainedBox(
+                    // Compact seats leave a fixed center lane between BB and HJ.
+                    // The full two-line label owns that lane; the decorative eye
+                    // did not, and was pushing the chip into both seat cards.
+                    constraints: BoxConstraints(maxWidth: compact ? 80 : 118),
+                    child: Text(
+                      label,
+                      key: const Key('act0_shell_wave1b_table_signal_text'),
+                      maxLines: 2,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.visible,
+                      softWrap: true,
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: Act0ShellTokensV1.text,
+                        fontSize: compact ? 8.8 : 9.6,
+                        fontWeight: FontWeight.w900,
+                        height: 1.0,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    key: Key('act0_shell_center_focus_badge'),
+                    width: 0,
+                    height: 0,
+                  ),
+                ],
+              ),
+            ),
+            Positioned.fill(
+              child: IgnorePointer(
+                child: CustomPaint(
+                  key: const Key('act0_scene_clue_bracket_signal'),
+                  painter: Act0SceneClueBracketPainterV1(
+                    tone: Act0ShellTokensV1.gold,
+                    inset: -2.0,
                   ),
                 ),
               ),
-              const SizedBox(
-                key: Key('act0_shell_center_focus_badge'),
-                width: 0,
-                height: 0,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -12011,6 +12042,12 @@ class _SeatNodeV1 extends StatelessWidget {
         !folded &&
         seat.cardsVisibleMode == Act0CardsVisibleModeV1.faceUp &&
         visibleCards.isNotEmpty;
+    // B4: the seat glyph survives only where it still carries meaning. B3 put
+    // a drawn player in every occupied seat, so `person_rounded` beside them is
+    // a duplicate — and it is the most app-like mark left on the cloth. The
+    // selectable touch glyph and the empty-seat mark are interaction truth and
+    // stay exactly as they were.
+    final showsSeatGlyph = hero || selectable || !seat.isOccupied;
     final occupiedOpacity = !seat.isOccupied
         ? 0.42
         : folded || !seat.isInHand
@@ -12084,149 +12121,125 @@ class _SeatNodeV1 extends StatelessWidget {
                       ? Key('act0_shell_hero_identity_${seat.seatId}')
                       : null,
                   padding: EdgeInsets.symmetric(
-                    horizontal: compact
-                        ? (refined ? 5 : 7)
-                        : (useSlimRefinedSeat ? 7 : (refined ? 9 : 8)),
+                    // Without the glyph the plate would shrink-wrap to its
+                    // label and read as a chip. A nameplate has to stay
+                    // plate-shaped, so the reclaimed width goes back as
+                    // padding rather than being given up.
+                    horizontal:
+                        (compact
+                            ? (refined ? 5 : 7)
+                            : (useSlimRefinedSeat ? 7 : (refined ? 9 : 8))) +
+                        (showsSeatGlyph ? 0 : 6),
                     vertical: useSlimRefinedSeat ? 5 : (refined ? 6 : 5),
                   ),
-                  decoration: BoxDecoration(
-                    color: refined
-                        ? (seatVisualState == _SeatVisualStateV1.hero
-                              ? Act0ShellTokensV1.runnerPanelSurface
-                              : highlighted
-                              ? Act0ShellTokensV1.surface2
-                              : Act0ShellTokensV1.surface.withValues(
-                                  alpha: 0.78,
-                                ))
-                        : highlighted
-                        ? Act0ShellTokensV1.surface2
-                        : Act0ShellTokensV1.surface.withValues(alpha: 0.92),
-                    borderRadius: BorderRadius.circular(
-                      Act0ShellTokensV1.radiusSm,
-                    ),
-                    border: Border.all(
-                      color: borderColor.withValues(alpha: refined ? 0.86 : 1),
-                      width: refined ? 1.15 : 1,
-                    ),
-                    boxShadow: <BoxShadow>[
-                      if (shouldShowRing)
-                        BoxShadow(
-                          color: ringColor.withValues(
-                            alpha: seatVisualState == _SeatVisualStateV1.hero
-                                ? 0.12
-                                : 0.16,
-                          ),
-                          blurRadius: refined ? 10 : 14,
-                        ),
-                      if (!shouldShowRing &&
-                          seatVisualState == _SeatVisualStateV1.hero)
-                        BoxShadow(
-                          color: Act0ShellTokensV1.primary.withValues(
-                            alpha: 0.15,
-                          ),
-                          blurRadius: refined ? 9 : 12,
-                        ),
-                    ],
+                  decoration: Act0SceneNameplateV1.decoration(
+                    radius: Act0ShellTokensV1.radiusSm,
+                    stateTone: shouldShowRing ? borderColor : null,
+                    stateStrength: shouldShowRing ? 1.0 : 0.0,
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
-                        width: compact
-                            ? (refined ? 18 : 22)
-                            : (useSlimRefinedSeat ? 22 : (refined ? 26 : 24)),
-                        height: compact
-                            ? (refined ? 18 : 22)
-                            : (useSlimRefinedSeat ? 22 : (refined ? 26 : 24)),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          gradient: hero
-                              ? const LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: <Color>[
-                                    Act0ShellTokensV1.runnerTagBlue,
-                                    Act0ShellTokensV1.runnerSharkBlueDark,
-                                  ],
-                                )
-                              : null,
-                          color: hero
-                              ? null
-                              : refined
-                              ? (seatVisualState ==
-                                        _SeatVisualStateV1.selectable
-                                    ? Act0ShellTokensV1.info.withValues(
-                                        alpha: 0.10,
-                                      )
-                                    : Act0ShellTokensV1.surface2)
-                              : Act0ShellTokensV1.surface3,
-                          borderRadius: BorderRadius.circular(
-                            refined
-                                ? Act0ShellTokensV1.radiusXs
-                                : Act0ShellTokensV1.radiusPill,
-                          ),
-                          border: Border.all(
-                            color: hero
-                                ? Act0ShellTokensV1.gold.withValues(alpha: 0.86)
-                                : refined
-                                ? Act0ShellTokensV1.border.withValues(
-                                    alpha: 0.72,
+                      if (showsSeatGlyph) ...[
+                        Container(
+                          width: compact
+                              ? (refined ? 18 : 22)
+                              : (useSlimRefinedSeat ? 22 : (refined ? 26 : 24)),
+                          height: compact
+                              ? (refined ? 18 : 22)
+                              : (useSlimRefinedSeat ? 22 : (refined ? 26 : 24)),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            gradient: hero
+                                ? const LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: <Color>[
+                                      Act0ShellTokensV1.runnerTagBlue,
+                                      Act0ShellTokensV1.runnerSharkBlueDark,
+                                    ],
                                   )
-                                : Colors.transparent,
-                            width: hero ? 1.2 : 1.0,
+                                : null,
+                            color: hero
+                                ? null
+                                : refined
+                                ? (seatVisualState ==
+                                          _SeatVisualStateV1.selectable
+                                      ? Act0ShellTokensV1.info.withValues(
+                                          alpha: 0.10,
+                                        )
+                                      : Act0ShellTokensV1.surface2)
+                                : Act0ShellTokensV1.surface3,
+                            borderRadius: BorderRadius.circular(
+                              refined
+                                  ? Act0ShellTokensV1.radiusXs
+                                  : Act0ShellTokensV1.radiusPill,
+                            ),
+                            border: Border.all(
+                              color: hero
+                                  ? Act0ShellTokensV1.gold.withValues(
+                                      alpha: 0.86,
+                                    )
+                                  : refined
+                                  ? Act0ShellTokensV1.border.withValues(
+                                      alpha: 0.72,
+                                    )
+                                  : Colors.transparent,
+                              width: hero ? 1.2 : 1.0,
+                            ),
+                            boxShadow: hero
+                                ? const <BoxShadow>[
+                                    BoxShadow(
+                                      color: Act0ShellTokensV1.shadowSoftStrong,
+                                      blurRadius: 3,
+                                      offset: Offset(0, 1.5),
+                                    ),
+                                  ]
+                                : null,
                           ),
-                          boxShadow: hero
-                              ? const <BoxShadow>[
-                                  BoxShadow(
-                                    color: Act0ShellTokensV1.shadowSoftStrong,
-                                    blurRadius: 3,
-                                    offset: Offset(0, 1.5),
-                                  ),
-                                ]
-                              : null,
-                        ),
-                        child: hero
-                            ? KeyedSubtree(
-                                key: const Key(
-                                  'act0_shell_wave1_hero_you_badge',
-                                ),
-                                child: FittedBox(
+                          child: hero
+                              ? KeyedSubtree(
                                   key: const Key(
-                                    'act0_shell_wave1b_hero_badge',
+                                    'act0_shell_wave1_hero_you_badge',
                                   ),
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    'You',
-                                    style: Act0ShellTokensV1.label.copyWith(
-                                      color: Act0ShellTokensV1.onPrimary,
-                                      fontSize: refined ? 7.2 : 7.6,
-                                      fontWeight: FontWeight.w900,
-                                      letterSpacing: 0,
+                                  child: FittedBox(
+                                    key: const Key(
+                                      'act0_shell_wave1b_hero_badge',
+                                    ),
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      'You',
+                                      style: Act0ShellTokensV1.label.copyWith(
+                                        color: Act0ShellTokensV1.onPrimary,
+                                        fontSize: refined ? 7.2 : 7.6,
+                                        fontWeight: FontWeight.w900,
+                                        letterSpacing: 0,
+                                      ),
                                     ),
                                   ),
+                                )
+                              : Icon(
+                                  selectable
+                                      ? Icons.touch_app_rounded
+                                      : seat.isOccupied
+                                      ? Icons.person_rounded
+                                      : Icons.circle_outlined,
+                                  size: useSlimRefinedSeat
+                                      ? 11
+                                      : (refined ? 12 : 13),
+                                  color:
+                                      seatVisualState ==
+                                          _SeatVisualStateV1.selectable
+                                      ? Act0ShellTokensV1.info.withValues(
+                                          alpha: 0.56,
+                                        )
+                                      : refined
+                                      ? Act0ShellTokensV1.textDim
+                                      : Act0ShellTokensV1.textMuted,
                                 ),
-                              )
-                            : Icon(
-                                selectable
-                                    ? Icons.touch_app_rounded
-                                    : seat.isOccupied
-                                    ? Icons.person_rounded
-                                    : Icons.circle_outlined,
-                                size: useSlimRefinedSeat
-                                    ? 11
-                                    : (refined ? 12 : 13),
-                                color:
-                                    seatVisualState ==
-                                        _SeatVisualStateV1.selectable
-                                    ? Act0ShellTokensV1.info.withValues(
-                                        alpha: 0.56,
-                                      )
-                                    : refined
-                                    ? Act0ShellTokensV1.textDim
-                                    : Act0ShellTokensV1.textMuted,
-                              ),
-                      ),
-                      SizedBox(width: useSlimRefinedSeat ? 4 : 5),
+                        ),
+                        SizedBox(width: useSlimRefinedSeat ? 4 : 5),
+                      ],
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -13997,76 +14010,68 @@ class _BetChipV1 extends StatelessWidget {
       Act0SeatBetKindV1.raise => Act0ShellTokensV1.primary,
       Act0SeatBetKindV1.allIn => Act0ShellTokensV1.danger,
     };
-    return ClipRRect(
+    // B4: a commitment is instrumentation sitting on the cloth, not an app
+    // card floating over it. Same engraved carrier as the seat nameplate, so
+    // identity and commitment read as one attached family. The frosted-glass
+    // backdrop blur is gone — it is an application effect, and felt does not
+    // refract. Every bet-kind colour semantic is unchanged.
+    return Container(
       key: Key('act0_shell_bet_chip_${bet.label}'),
-      borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-      child: BackdropFilter(
-        filter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-        child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: compact ? 5 : 6,
-            vertical: compact ? 3 : 4,
-          ),
-          decoration: BoxDecoration(
-            color: Act0ShellTokensV1.surface.withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-            border: Border.all(color: color.withValues(alpha: 0.8), width: 1.2),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: color.withValues(alpha: 0.15),
-                blurRadius: 8,
-                spreadRadius: 2,
-              ),
-            ],
-          ),
-          child: Row(
+      padding: EdgeInsets.symmetric(
+        horizontal: compact ? 5 : 6,
+        vertical: compact ? 3 : 4,
+      ),
+      decoration: Act0SceneNameplateV1.decoration(
+        radius: Act0ShellTokensV1.radiusPill,
+        stateTone: color,
+        stateStrength: 0.85,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _ChipStackIconV1(color: color, compact: compact),
+          SizedBox(width: compact ? 3 : 4),
+          Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _ChipStackIconV1(color: color, compact: compact),
-              SizedBox(width: compact ? 3 : 4),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (showLabelPill)
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: compact ? 3 : 4,
-                        vertical: 1,
-                      ),
-                      decoration: BoxDecoration(
-                        color: color.withValues(alpha: 0.16),
-                        borderRadius: BorderRadius.circular(
-                          Act0ShellTokensV1.radiusPill,
-                        ),
-                      ),
-                      child: Text(
-                        bet.label,
-                        style: TextStyle(
-                          color: color,
-                          fontSize: compact ? 5.6 : 6.1,
-                          height: 0.95,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                    ),
-                  if (showLabelPill) SizedBox(height: compact ? 1 : 2),
-                  Text(
-                    bet.amountLabel,
-                    style: TextStyle(
-                      color: Act0ShellTokensV1.text,
-                      fontSize: compact ? 7.0 : 7.8,
-                      height: 0.98,
-                      fontWeight: FontWeight.w900,
+              if (showLabelPill)
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: compact ? 3 : 4,
+                    vertical: 1,
+                  ),
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.16),
+                    borderRadius: BorderRadius.circular(
+                      Act0ShellTokensV1.radiusPill,
                     ),
                   ),
-                ],
+                  child: Text(
+                    bet.label,
+                    style: TextStyle(
+                      color: color,
+                      fontSize: compact ? 5.6 : 6.1,
+                      height: 0.95,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                ),
+              if (showLabelPill) SizedBox(height: compact ? 1 : 2),
+              Text(
+                bet.amountLabel,
+                style: TextStyle(
+                  color: Act0ShellTokensV1.text,
+                  fontSize: compact ? 7.0 : 7.8,
+                  height: 0.98,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }
@@ -14213,38 +14218,14 @@ class _MarkerDotV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (marker == _SeatMarkerKindV1.dealer) {
-      return KeyedSubtree(
-        key: const Key('act0_shell_wave1_dealer_marker'),
-        child: Container(
-          key: const Key('act0_shell_wave1b_button_marker'),
-          width: 24,
-          height: 15,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-            gradient: const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: <Color>[Color(0xFFF8FAFC), Color(0xFFDCE7F2)],
-            ),
-            border: Border.all(color: const Color(0xFFB7C4D3), width: 1),
-            boxShadow: const <BoxShadow>[
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 3,
-                offset: Offset(0, 1.4),
-              ),
-            ],
-          ),
-          alignment: Alignment.center,
-          child: const Text(
-            'D',
-            style: TextStyle(
-              color: Color(0xFF1E293B),
-              fontSize: 7.0,
-              fontWeight: FontWeight.w900,
-              height: 1.0,
-            ),
-          ),
+      // Same dealer semantic, physical expression. Wave A drew a flat white
+      // capsule floating above the scene; a dealer button is a pressed disc
+      // resting on the cloth. Keys, meaning, seat assignment and telemetry are
+      // untouched.
+      return const KeyedSubtree(
+        key: Key('act0_shell_wave1_dealer_marker'),
+        child: Act0SceneDealerPuckV1(
+          key: Key('act0_shell_wave1b_button_marker'),
         ),
       );
     }
@@ -14337,6 +14318,17 @@ class _CardV1 extends StatelessWidget {
       decoration: _playingCardDecorationV1(highlighted: highlighted),
       child: Stack(
         children: [
+          if (highlighted)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: CustomPaint(
+                  key: const Key('act0_scene_clue_bracket'),
+                  painter: Act0SceneClueBracketPainterV1(
+                    tone: Act0ShellTokensV1.gold,
+                  ),
+                ),
+              ),
+            ),
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -14411,6 +14403,17 @@ class _BoardCardV1 extends StatelessWidget {
       ),
       child: Stack(
         children: [
+          if (highlighted)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: CustomPaint(
+                  key: const Key('act0_scene_clue_bracket_board'),
+                  painter: Act0SceneClueBracketPainterV1(
+                    tone: Act0ShellTokensV1.gold,
+                  ),
+                ),
+              ),
+            ),
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -14507,11 +14510,13 @@ BoxDecoration _playingCardDecorationV1({
         blurRadius: 5,
         offset: const Offset(0, 2),
       ),
+      // Brackets now do the pointing, so the diffuse halo drops back. A glow
+      // this wide reads as the card emitting light rather than as something
+      // marking it.
       if (highlighted)
         BoxShadow(
-          color: Act0ShellTokensV1.gold.withValues(alpha: 0.35),
-          blurRadius: 8,
-          spreadRadius: 1.0,
+          color: Act0ShellTokensV1.gold.withValues(alpha: 0.20),
+          blurRadius: 5,
         ),
     ],
   );
