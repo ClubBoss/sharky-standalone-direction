@@ -50,9 +50,23 @@ scene seam `act0_integrated_scene_perspective_table` in
 
 ### CP1 — iteration 1: depth architecture + environment plane
 
-- Status: **pending**
+- Status: **done**
 - Goal: establish `environment / farPlayer / table / nearPlayer / overlay`
   planes and a real perspective; stop the table floating in empty UI space.
+- Added `lib/ui_v2/act0_shell/act0_scene_depth_v1.dart` as the single scene-space
+  owner. Deleted the local `_IntegratedPerspectiveTableShapeV2` and
+  `_integratedPerspectivePointV2`; every consumer now reads the canonical
+  projection.
+- Silhouette taper 0.82 -> 0.68. Plate depth range now derived from
+  `plateScaleAt`, deliberately narrow to protect small-text accessibility.
+- Environment plane (wall, horizon bloom, floor falloff, overhead light pool,
+  vignette) plus a grounding contact shadow, reaching past the table into the
+  112 px flanks Wave A left flat.
+- Regression caught and fixed in-loop: the first environment build painted over
+  the Wave A teaching line. Growth re-anchored to `Alignment(0, -0.9)` so the
+  room only continues downward behind the action dock.
+- Validated: all five canonical states re-captured; learning hierarchy intact.
+- Evidence: `output/visual_gauntlet_b1/iter1_402x874/`
 
 ### CP2 — iteration 2: character volumes + hero ownership
 
@@ -71,4 +85,6 @@ scene seam `act0_integrated_scene_perspective_table` in
 
 ## Next remaining class-level gap
 
-`NO_SCENE_DEPTH_MODEL` — owned by iteration 1.
+`NO_PLAYER_VOLUMES_AND_NO_HERO_OWNERSHIP` — owned by iteration 2.
+Iteration 1 alone still reads as "same table, better background", which the
+admission explicitly calls INSUFFICIENT.
