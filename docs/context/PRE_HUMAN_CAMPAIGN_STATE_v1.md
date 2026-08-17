@@ -1,6 +1,6 @@
 # Pre-Human Campaign State v1
 
-Status: `VISUAL_GAUNTLET_B1_ACTIVE` - single first-read dispatch authority.
+Status: `VISUAL_GAUNTLET_B2_ACTIVE` - single first-read dispatch authority.
 Freshness date: 2026-08-17.
 
 This file carries exact current campaign dispatch only. Product direction remains
@@ -10,13 +10,13 @@ real-Human procedure remains
 owned by
 `docs/_reviews/human_hnp_p01_reconciliation_and_repair_admission_v1.md`.
 
-Wave A admission/history remains in:
-
-`docs/_reviews/novice_learning_experience_reconstruction_wave_a_admission_v1.md`
-
-Current Wave A closure and the next admitted Visual Gauntlet packet are owned by:
+Wave A closure and B1 admission history:
 
 `docs/_reviews/wave_a_closure_and_visual_gauntlet_b1_admission_v1.md`
+
+Current B1 closure and B2 admission authority:
+
+`docs/_reviews/visual_gauntlet_b1_closure_and_b2_admission_v1.md`
 
 ## Current exact authority
 
@@ -25,100 +25,87 @@ Current Wave A closure and the next admitted Visual Gauntlet packet are owned by
 | P01 Human evidence candidate | `3416b9720e0bcfb4925b1e96d394860efb7620d9` |
 | P01 reconciliation baseline | `eb8d46c6a243c564acee04da71dc3513ef92523c` |
 | Wave A implementation PR | `#184` |
-| Wave A implementation head | `08a66f6689d738e7f1369c0cfa8d147d0588d36d` |
 | Wave A integrated main | `7b63288c3848bd6603541eff38ce9f818049a45a` |
 | Wave A state | **`CLOSED_PASS`** |
-| Wave A mission | **`NOVICE_LEARNING_EXPERIENCE_RECONSTRUCTION_V1 = CLOSED_PASS`** |
-| Current stage | **`VISUAL_GAUNTLET_B1_ACTIVE`** |
-| Exact next action | **`IMPLEMENT_VISUAL_GAUNTLET_B1_SPATIAL_CHARACTER_READY_FOUNDATION_V1`** |
-| Active family | **`VISUAL_GAUNTLET_B1_SPATIAL_CHARACTER_READY_FOUNDATION_V1`** |
-| B2-B7 | **`DEFERRED`** |
+| B1 implementation PR | `#186` |
+| B1 pre-merge main | `da22a09b25ea36d5e2becfc5d2384b448840d265` |
+| B1 exact implementation head | `b8baabbf87ad7207dd2f8edc05c4d43e75fc4c0d` |
+| B1 integrated main | `a4f9e8ef83359bdf04914aa6a5f964267e209a0b` |
+| B1 state | **`CLOSED_PASS`** |
+| Current stage | **`VISUAL_GAUNTLET_B2_ACTIVE`** |
+| Exact next action | **`IMPLEMENT_VISUAL_GAUNTLET_B2_PREMIUM_TABLE_AND_ENVIRONMENT_ART_V1`** |
+| Active family | **`VISUAL_GAUNTLET_B2_PREMIUM_TABLE_AND_ENVIRONMENT_ART_V1`** |
+| B3-B7 | **`DEFERRED`** |
 | `REAL_HUMAN_HNP` | **`P01_EXECUTED_ACTIONABLE_STOP`** |
 | P02 | **`DEFERRED / NOT_STARTED`** |
 | P01 verdict | **`HUMAN_NOVICE_PROOF_V1_FAILED_WITH_ACTIONABLE_FINDINGS`** |
 | `HNP_HARNESS` | **`CLOSED_UNCHANGED`** |
 | `HUMAN_PROOF` | **`FALSE`** |
-| Modern Table | **`MAINTENANCE_MODE`** |
+| Modern Table | **`MAINTENANCE_MODE` outside the admitted Learning Scene cone** |
 
-## Wave A closure
+## Wave A and B1 closure
 
-Mastermind reviewed PR #184, its exact changed-file set, exact-head CI, durable
-matched baseline/candidate evidence, representative responsive states, first
-lesson landing, theory, table-object interaction, correct/wrong feedback, and
-table geometry evidence.
+Wave A remains the accepted structural/learning foundation:
 
-Owner/Mastermind verdict:
-
-- `NOVICE_LEARNING_EXPERIENCE_RECONSTRUCTION_V1 = PASS`
-- `WAVE_A_VISUAL_LEARNING_DELTA = SUFFICIENT`
+- `NOVICE_LEARNING_EXPERIENCE_RECONSTRUCTION_V1 = CLOSED_PASS`
 - `WAVE_A = CLOSED_PASS`
 - `HUMAN_PROOF = FALSE`
 
-Wave A is accepted as the structural/learning foundation. It is not Human HNP
-proof and does not mean Sharky reached its premium visual North Star.
+Mastermind then independently reviewed B1's gap map, implementation architecture,
+actual rendered baseline/candidate screenshots, theory/decision/feedback states,
+exact-head CI, and responsive evidence.
 
-PR #184 was merged from exact head
-`08a66f6689d738e7f1369c0cfa8d147d0588d36d` into main as
-`7b63288c3848bd6603541eff38ce9f818049a45a`.
+Canonical B1 verdict:
 
-The implementation changed only the bounded Wave A first-learning-scene/evidence
-cone. It did not begin Visual Gauntlet B1, run P02, reopen the HNP harness,
-expand route/personalization/telemetry architecture, add a new dependency, or
-alter Human proof status.
+- `VISUAL_GAUNTLET_B1_SPATIAL_CHARACTER_READY_FOUNDATION_V1 = CLOSED_PASS`
+- `VISUAL_GAUNTLET_B1 = CLOSED_PASS`
+- `WAVE_A = CLOSED_PASS`
+- `HUMAN_PROOF = FALSE`
+
+PR #186 merged from exact head
+`b8baabbf87ad7207dd2f8edc05c4d43e75fc4c0d` into main as
+`a4f9e8ef83359bdf04914aa6a5f964267e209a0b`.
+
+B1 established one coherent scene perspective, the protected
+`environment -> farPlayer -> table -> nearPlayer -> overlay` model,
+character-ready player volumes, hero foreground ownership, table grounding,
+future character-safe geometry, and future HUD anchors while preserving Wave A
+learning semantics.
+
+B1 does not establish final premium visual quality. Player volumes remain
+low-fidelity, the environment remains structural, and final characters do not
+exist yet. Do not reopen B1 for cosmetic preferences alone.
 
 ## P01 Human evidence remains canonical history
 
-P01 is not rewritten as PASS. Preserve the exact finding ledger and evidence in:
-
-`docs/_reviews/human_hnp_p01_reconciliation_and_repair_admission_v1.md`
-
-Canonical state remains:
+P01 is not rewritten as PASS:
 
 - `REAL_HUMAN_HNP = P01_EXECUTED_ACTIONABLE_STOP`
 - `HNP_P01_VERDICT = HUMAN_NOVICE_PROOF_V1_FAILED_WITH_ACTIONABLE_FINDINGS`
+- `P02 = DEFERRED / NOT_STARTED`
 - `HUMAN_PROOF = FALSE`
 
-The seven P01 finding IDs and their severity/confidence classifications remain
-unchanged. Wave A closes the admitted product response; it does not retroactively
-change what the participant experienced.
+Wave A and B1 close product responses/foundations only. They do not alter what
+the P01 participant experienced.
 
-## Owner decision - defer P02 and open Visual Gauntlet
-
-The owner explicitly chooses not to spend P02 immediately.
-
-Reason: Wave A materially repaired novice learning architecture, but a material
-premium-visual gap remains relative to Sharky's North Star and reference-quality
-benchmark. The next evidence-backed campaign is a staged Visual Gauntlet before
-a fresh Human participant is spent.
-
-PokerSkill references may be used as a quality benchmark for spatial coherence,
-premium perception, depth, table presence, player embodiment, HUD ownership,
-visual polish, and attention control. PokerSkill is not a clone target. Do not
-copy copyrighted assets, characters, branding, exact layouts, or proprietary
-visual identity.
-
-Master Plan v4 already permits deferred post-HNP visual North Star art production
-when explicitly admitted after Human evidence and bounded repair. P01 occurred,
-Wave A repair is closed, and this owner decision is the explicit admission.
+`HNP_HARNESS = CLOSED_UNCHANGED`.
 
 ## Visual Gauntlet roadmap
 
-Directional roadmap only:
-
-1. `B1 SPATIAL_CHARACTER_READY_SCENE_FOUNDATION` - **ACTIVE**
-2. `B2 PREMIUM_TABLE_AND_ENVIRONMENT_ART` - **DEFERRED**
+1. `B1 SPATIAL_CHARACTER_READY_SCENE_FOUNDATION` - **CLOSED_PASS**
+2. `B2 PREMIUM_TABLE_AND_ENVIRONMENT_ART` - **ACTIVE / ADMITTED**
 3. `B3 PLAYER_EMBODIMENT` - **DEFERRED**
 4. `B4 OBJECT_ATTACHED_HUD` - **DEFERRED**
 5. `B5 ATTENTION_AWARE_RENDERING` - **DEFERRED**
 6. `B6 SEMANTIC_MOTION` - **DEFERRED**
 7. `B7 BENCHMARK_COHESION_AND_POLISH_GAUNTLET` - **DEFERRED**
 
-Only B1 may be implemented now. Every later wave requires an explicit
+Only B2 may be implemented now. Every later wave requires an explicit
 Mastermind gate after review of the previous wave.
 
-## Active dispatch
+## Active B2 dispatch
 
-`IMPLEMENT_VISUAL_GAUNTLET_B1_SPATIAL_CHARACTER_READY_FOUNDATION_V1`
+`IMPLEMENT_VISUAL_GAUNTLET_B2_PREMIUM_TABLE_AND_ENVIRONMENT_ART_V1`
 
 Executor:
 
@@ -127,59 +114,50 @@ Executor:
 - HIGH / maximum practical reasoning
 - iterative local visual gauntlet
 
-The exact B1 objective, scope, gap-map requirement, iterative visual loop,
-acceptance bar, protected semantics, evidence package, and exact execution packet
-are defined in:
+The exact B2 objective, ownership, benchmark boundary, B2-only gap map,
+iteration strategy, acceptance bar, non-scope, protected semantics, validation
+strategy, evidence package, post-B2 gate, and exact Claude execution packet are
+defined in:
 
-`docs/_reviews/wave_a_closure_and_visual_gauntlet_b1_admission_v1.md`
+`docs/_reviews/visual_gauntlet_b1_closure_and_b2_admission_v1.md`
 
-## B1 boundary
+## B2 boundary
 
-B1 is spatial architecture, not a cosmetic pass. It may establish stable
-ownership for table, hero, player volumes, board, pot, bets, seats, future
-character art, future object-attached HUD, learning overlays, depth planes, and
-room/environment framing inside the canonical learning scene.
+B2 owns premium table material, coherent environment/room art, one lighting
+system, and the bounded vertical scene-composition trade needed to improve
+far-player visibility and scene framing.
 
-B1 does not authorize final character production, premium environment art,
-B2-B7 work, broad Modern Table redesign, large motion, casino spectacle,
-curriculum/lesson/evaluation changes, route/telemetry/personalization changes,
-HNP harness work, P02, new dependencies, or unrelated redesign/refactors.
+B2 must preserve the B1 perspective architecture, seat identities,
+character-safe volumes, future HUD anchors, hero zone, and Wave A learning
+semantics.
 
-Wave A learning semantics must survive unchanged:
+B2 does not authorize final characters, B3-B7 implementation, unrelated screens,
+curriculum/evaluation/repair/recheck/telemetry changes, HNP harness work, P02,
+new unrelated dependencies, or unrelated cleanup.
 
-- information architecture;
-- interaction affordances;
-- answer truth/evaluation;
-- correct/wrong feedback;
-- causal table clue;
-- repair/recheck;
-- continuation;
-- telemetry semantics;
-- safe-area behavior;
-- accessibility intent;
-- supported responsive profiles.
+PokerSkill remains a quality benchmark, not a clone target. Do not copy exact
+art, characters, branding, palette, layouts, or proprietary visual identity.
 
-## HNP harness disposition
+## Post-B2 gate
 
-`HNP_HARNESS = CLOSED_UNCHANGED`.
+B2 must end with one draft implementation PR and return to Mastermind.
 
-Do not restart the prior technical harness campaign. Its retained terminal
-history remains technical evidence only and does not override P01 Human evidence.
+Do not merge the B2 implementation PR automatically.
+Do not self-admit B3.
+`HUMAN_PROOF` remains `FALSE`.
 
 ## Dispatch rule
 
 Use this file for exact current campaign dispatch and Master Plan v4 for North
 Star product direction, evidence hierarchy, protected boundaries, and Gauntlet
-discipline. The current Visual Gauntlet admission is the explicit post-HNP,
-post-repair opening already allowed by Master Plan v4's deferred visual-art
-sequence.
+discipline.
 
-`CURRENT_STAGE = VISUAL_GAUNTLET_B1_ACTIVE`
-`EXACT_NEXT_ACTION = IMPLEMENT_VISUAL_GAUNTLET_B1_SPATIAL_CHARACTER_READY_FOUNDATION_V1`
+`CURRENT_STAGE = VISUAL_GAUNTLET_B2_ACTIVE`
+`EXACT_NEXT_ACTION = IMPLEMENT_VISUAL_GAUNTLET_B2_PREMIUM_TABLE_AND_ENVIRONMENT_ART_V1`
 `WAVE_A = CLOSED_PASS`
-`NOVICE_LEARNING_EXPERIENCE_RECONSTRUCTION_V1 = CLOSED_PASS`
-`ACTIVE_VISUAL_GAUNTLET = VISUAL_GAUNTLET_B1_SPATIAL_CHARACTER_READY_FOUNDATION_V1`
-`B2_B7 = DEFERRED`
+`VISUAL_GAUNTLET_B1 = CLOSED_PASS`
+`ACTIVE_VISUAL_GAUNTLET = VISUAL_GAUNTLET_B2_PREMIUM_TABLE_AND_ENVIRONMENT_ART_V1`
+`B3_B7 = DEFERRED`
 `REAL_HUMAN_HNP = P01_EXECUTED_ACTIONABLE_STOP`
 `P02 = DEFERRED_NOT_STARTED`
 `HNP_HARNESS = CLOSED_UNCHANGED`
