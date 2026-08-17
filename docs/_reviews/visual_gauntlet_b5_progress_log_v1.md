@@ -21,15 +21,40 @@
   information and persists into recheck.
 - Changed files: docs only.
 
-### CP1 — iteration 1: decision + feedback salience model
-- Status: **pending**
-
-### CP2 — iteration 2: repair + recheck + scene restoration
-- Status: **pending**
+### CP1/CP2 — salience model, feedback + repair/recheck restoration
+- Status: **done**
+- `act0_scene_salience_v1.dart`: one phase resolved from deterministic Wave A
+  state, turned into bounded recession for the room plane, the player plane and
+  B4's clue anchor.
+- **Mechanism corrected mid-iteration.** The first build used a colour matrix
+  alone (desaturate + darken) and measured a mean pixel delta of `2.5/255` at
+  the strongest phase — this scene is already dark and nearly neutral, so
+  darkening it has no headroom. Opacity attenuation is the lever that works on
+  a dark scene. No blur adopted.
+- Recession applies **per plane, never per seat**, so eligible answers stay
+  fair by construction.
+- Cards, board, pot, bets, plates, hero cards, teaching copy and the action
+  dock are never attenuated.
+- B4's always-on clue bracket now belongs to the phases talking about it.
 
 ### CP3 — final validation, evidence, draft PR
-- Status: **pending**
+- Status: **done**
+- `dart format` clean, `flutter analyze lib` clean,
+  `tools/release_gate_world1.sh` PASS, focused `+15 -3` (inherited since B1).
+- Responsive: compact 375x812, large 430x932, 1.4x text.
+- Matched B4-vs-B5 evidence for 6 states + contact sheet + provenance.
+
+### Known limitation carried into review
+Separating `repair` from `recheck` in the captured surfaces proved unreliable
+inside the window: `targeted_recheck` does not expose a receipt line that
+distinguishes it from the repair attempt. Rather than ship a bracket that might
+persist as a standing pointer during recognition, the clue emphasis is quiet
+for **every** phase where an answer is still open — decision, repair and
+recheck alike — and asserts only in correct/wrong feedback. Repair
+reacquisition rides on the quieted field instead of on a stronger marker.
+This is the safe side of the §8.5 answer-leak risk, not the ideal one.
 
 ## Next remaining class-level gap
 
-`SCENE_HAS_NO_SALIENCE_MODEL` — owned by iteration 1.
+Salience model delivered. The honest remainder is phase resolution fidelity for
+`recheck`, recorded above.
