@@ -11579,55 +11579,78 @@ class _CenterSignalAnchorV1 extends StatelessWidget {
       key: const Key('act0_shell_wave1_table_signal_anchor'),
       child: Tooltip(
         message: 'Table clue',
-        child: Container(
-          key: const Key('act0_shell_wave1b_table_signal_chip'),
-          padding: EdgeInsets.symmetric(
-            horizontal: compact ? 7 : 9,
-            vertical: compact ? 3.5 : 4.5,
-          ),
-          decoration: BoxDecoration(
-            color: Act0ShellTokensV1.primary.withValues(alpha: 0.11),
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-            border: Border.all(
-              color: Act0ShellTokensV1.primary.withValues(alpha: 0.30),
-            ),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: Act0ShellTokensV1.primary.withValues(alpha: 0.08),
-                blurRadius: compact ? 5 : 7,
+        // B4: Wave A already decides this is the causal table clue and already
+        // says so in copy. What it lacked was a mark that visibly belongs to
+        // this exact object. Brackets clamp to its own corners, so "the clue is
+        // marked on the table" now has something to point at. Local and
+        // object-bound only — no dimming, no blur, no scene-wide treatment.
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              key: const Key('act0_shell_wave1b_table_signal_chip'),
+              padding: EdgeInsets.symmetric(
+                horizontal: compact ? 7 : 9,
+                vertical: compact ? 3.5 : 4.5,
               ),
-            ],
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ConstrainedBox(
-                // Compact seats leave a fixed center lane between BB and HJ.
-                // The full two-line label owns that lane; the decorative eye
-                // did not, and was pushing the chip into both seat cards.
-                constraints: BoxConstraints(maxWidth: compact ? 80 : 118),
-                child: Text(
-                  label,
-                  key: const Key('act0_shell_wave1b_table_signal_text'),
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.visible,
-                  softWrap: true,
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.text,
-                    fontSize: compact ? 8.8 : 9.6,
-                    fontWeight: FontWeight.w900,
-                    height: 1.0,
+              decoration: BoxDecoration(
+                color: Act0ShellTokensV1.primary.withValues(alpha: 0.11),
+                borderRadius: BorderRadius.circular(
+                  Act0ShellTokensV1.radiusPill,
+                ),
+                border: Border.all(
+                  color: Act0ShellTokensV1.primary.withValues(alpha: 0.30),
+                ),
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                    color: Act0ShellTokensV1.primary.withValues(alpha: 0.08),
+                    blurRadius: compact ? 5 : 7,
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ConstrainedBox(
+                    // Compact seats leave a fixed center lane between BB and HJ.
+                    // The full two-line label owns that lane; the decorative eye
+                    // did not, and was pushing the chip into both seat cards.
+                    constraints: BoxConstraints(maxWidth: compact ? 80 : 118),
+                    child: Text(
+                      label,
+                      key: const Key('act0_shell_wave1b_table_signal_text'),
+                      maxLines: 2,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.visible,
+                      softWrap: true,
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: Act0ShellTokensV1.text,
+                        fontSize: compact ? 8.8 : 9.6,
+                        fontWeight: FontWeight.w900,
+                        height: 1.0,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    key: Key('act0_shell_center_focus_badge'),
+                    width: 0,
+                    height: 0,
+                  ),
+                ],
+              ),
+            ),
+            Positioned.fill(
+              child: IgnorePointer(
+                child: CustomPaint(
+                  key: const Key('act0_scene_clue_bracket_signal'),
+                  painter: Act0SceneClueBracketPainterV1(
+                    tone: Act0ShellTokensV1.gold,
+                    inset: -2.0,
                   ),
                 ),
               ),
-              const SizedBox(
-                key: Key('act0_shell_center_focus_badge'),
-                width: 0,
-                height: 0,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -14195,38 +14218,14 @@ class _MarkerDotV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (marker == _SeatMarkerKindV1.dealer) {
-      return KeyedSubtree(
-        key: const Key('act0_shell_wave1_dealer_marker'),
-        child: Container(
-          key: const Key('act0_shell_wave1b_button_marker'),
-          width: 24,
-          height: 15,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-            gradient: const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: <Color>[Color(0xFFF8FAFC), Color(0xFFDCE7F2)],
-            ),
-            border: Border.all(color: const Color(0xFFB7C4D3), width: 1),
-            boxShadow: const <BoxShadow>[
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 3,
-                offset: Offset(0, 1.4),
-              ),
-            ],
-          ),
-          alignment: Alignment.center,
-          child: const Text(
-            'D',
-            style: TextStyle(
-              color: Color(0xFF1E293B),
-              fontSize: 7.0,
-              fontWeight: FontWeight.w900,
-              height: 1.0,
-            ),
-          ),
+      // Same dealer semantic, physical expression. Wave A drew a flat white
+      // capsule floating above the scene; a dealer button is a pressed disc
+      // resting on the cloth. Keys, meaning, seat assignment and telemetry are
+      // untouched.
+      return const KeyedSubtree(
+        key: Key('act0_shell_wave1_dealer_marker'),
+        child: Act0SceneDealerPuckV1(
+          key: Key('act0_shell_wave1b_button_marker'),
         ),
       );
     }
@@ -14319,6 +14318,17 @@ class _CardV1 extends StatelessWidget {
       decoration: _playingCardDecorationV1(highlighted: highlighted),
       child: Stack(
         children: [
+          if (highlighted)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: CustomPaint(
+                  key: const Key('act0_scene_clue_bracket'),
+                  painter: Act0SceneClueBracketPainterV1(
+                    tone: Act0ShellTokensV1.gold,
+                  ),
+                ),
+              ),
+            ),
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -14393,6 +14403,17 @@ class _BoardCardV1 extends StatelessWidget {
       ),
       child: Stack(
         children: [
+          if (highlighted)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: CustomPaint(
+                  key: const Key('act0_scene_clue_bracket_board'),
+                  painter: Act0SceneClueBracketPainterV1(
+                    tone: Act0ShellTokensV1.gold,
+                  ),
+                ),
+              ),
+            ),
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -14489,11 +14510,13 @@ BoxDecoration _playingCardDecorationV1({
         blurRadius: 5,
         offset: const Offset(0, 2),
       ),
+      // Brackets now do the pointing, so the diffuse halo drops back. A glow
+      // this wide reads as the card emitting light rather than as something
+      // marking it.
       if (highlighted)
         BoxShadow(
-          color: Act0ShellTokensV1.gold.withValues(alpha: 0.35),
-          blurRadius: 8,
-          spreadRadius: 1.0,
+          color: Act0ShellTokensV1.gold.withValues(alpha: 0.20),
+          blurRadius: 5,
         ),
     ],
   );

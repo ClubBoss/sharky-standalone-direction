@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_material_v1.dart';
 
@@ -85,4 +87,158 @@ class Act0SceneNameplateV1 {
       ],
     );
   }
+}
+
+/// The dealer button, as an object resting on the cloth.
+///
+/// Wave A expressed the same dealer semantic as a flat white capsule with a
+/// letter in it — a Flutter chip floating above the scene. The semantic is
+/// unchanged here; only its physical expression is. A real dealer button is a
+/// pressed disc: bright where it faces the lamp, shadowed on the far side,
+/// with a milled edge and an engraved face.
+class Act0SceneDealerPuckV1 extends StatelessWidget {
+  const Act0SceneDealerPuckV1({
+    super.key,
+    this.diameter = 18,
+    this.light = Act0SceneLightV1.canonical,
+  });
+
+  final double diameter;
+  final Act0SceneLightV1 light;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: diameter,
+      height: diameter,
+      child: CustomPaint(
+        painter: _Act0SceneDealerPuckPainterV1(light: light),
+        child: Center(
+          child: Text(
+            'D',
+            style: TextStyle(
+              color: const Color(0xFF16222F),
+              fontSize: diameter * 0.47,
+              fontWeight: FontWeight.w900,
+              height: 1.0,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Act0SceneDealerPuckPainterV1 extends CustomPainter {
+  const _Act0SceneDealerPuckPainterV1({required this.light});
+
+  final Act0SceneLightV1 light;
+
+  static const Color _faceLit = Color(0xFFF6F9FC);
+  static const Color _faceShade = Color(0xFFB9C7D6);
+  static const Color _edge = Color(0xFF7C8DA0);
+  static const Color _ink = Color(0xFF16222F);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final r = size.width / 2;
+    final c = Offset(r, r);
+
+    // Contact shadow on the cloth. Tight and offset with the lamp, so the puck
+    // sits on the surface instead of hovering over it.
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: Offset(r, r + (size.height * 0.10)),
+        width: size.width * 0.94,
+        height: size.height * 0.70,
+      ),
+      Paint()
+        ..color = const Color(0x8C020609)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.4),
+    );
+
+    // Milled edge.
+    canvas.drawCircle(c, r, Paint()..color = _edge);
+
+    // Face, lit from the same lamp as the rail crown.
+    canvas.drawCircle(
+      c,
+      r * 0.90,
+      Paint()
+        ..shader = RadialGradient(
+          center: const Alignment(-0.35, -0.45),
+          radius: 1.0,
+          colors: const <Color>[_faceLit, _faceShade],
+        ).createShader(Rect.fromCircle(center: c, radius: r * 0.90)),
+    );
+
+    // Engraved ring inside the rim.
+    canvas.drawCircle(
+      c,
+      r * 0.72,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = math.max(0.7, r * 0.075)
+        ..color = _edge.withValues(alpha: 0.42),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _Act0SceneDealerPuckPainterV1 oldDelegate) =>
+      oldDelegate.light.intensity != light.intensity;
+}
+
+/// Corner brackets clamped to the exact object a Wave A clue is about.
+///
+/// Wave A already decides which table object is causal and already says so in
+/// copy. What it lacked was a mark that visibly *belongs* to that object: a
+/// gold border plus a diffuse glow reads as a tint, not as a pointer.
+///
+/// Brackets clamp to the object's own corners, so the marker cannot be mistaken
+/// for a card style or drift onto a neighbour. This is deliberately local — no
+/// dimming, no blur, no scene-wide treatment. Attention-aware rendering is B5.
+class Act0SceneClueBracketPainterV1 extends CustomPainter {
+  const Act0SceneClueBracketPainterV1({required this.tone, this.inset = 1.4});
+
+  /// The existing Wave A clue colour, passed through unchanged.
+  final Color tone;
+
+  final double inset;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final arm = math.min(size.width, size.height) * 0.30;
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = math.max(1.5, size.width * 0.075)
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round
+      ..color = tone;
+
+    final l = inset;
+    final t = inset;
+    final r = size.width - inset;
+    final b = size.height - inset;
+
+    canvas.drawPath(
+      Path()
+        ..moveTo(l, t + arm)
+        ..lineTo(l, t)
+        ..lineTo(l + arm, t)
+        ..moveTo(r - arm, t)
+        ..lineTo(r, t)
+        ..lineTo(r, t + arm)
+        ..moveTo(r, b - arm)
+        ..lineTo(r, b)
+        ..lineTo(r - arm, b)
+        ..moveTo(l + arm, b)
+        ..lineTo(l, b)
+        ..lineTo(l, b - arm),
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant Act0SceneClueBracketPainterV1 oldDelegate) =>
+      oldDelegate.tone != tone || oldDelegate.inset != inset;
 }
