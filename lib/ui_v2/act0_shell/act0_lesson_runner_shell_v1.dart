@@ -2699,6 +2699,20 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     // B5: where the learner is, from state Wave A already exposes. No new
     // poker meaning is inferred — every branch maps onto a phase the runner
     // already knows.
+    // B5: where the learner is, from canonical state the shell already
+    // carries. `isSourceRecheckAttempt` is the product's own identity for the
+    // source recheck attempt, and `repairContinuesToSourceRecheck` marks the
+    // repair that leads to it — both already fields on this widget, both
+    // already driven by the preview shell's repair orchestration.
+    //
+    // An earlier build inferred these from `repairResultReceiptLine`, which is
+    // set for a task rather than for a stage: measured against the canonical
+    // capture sequence it resolved targeted repair to `decision` and never
+    // reached `recheck` at all. Copy and receipt strings are not phase truth.
+    final isTargetedRecheck = widget.isSourceRecheckAttempt;
+    final isTargetedRepair =
+        !isTargetedRecheck &&
+        (widget.repairContinuesToSourceRecheck || hasRepairContext);
     final sceneAttention = Act0SceneAttentionV1(
       isTheory
           ? Act0SceneAttentionPhaseV1.theory
@@ -2708,16 +2722,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                 : isRepairFocusFeedback
                 ? Act0SceneAttentionPhaseV1.repair
                 : Act0SceneAttentionPhaseV1.correctFeedback)
-          : (repairFillMode ||
-                (isDrill &&
-                    (widget.repairReasonLine?.trim().isNotEmpty ?? false)))
-          // A repair attempt and a recheck are both drills carrying repair
-          // context. What separates them is whether a result has been issued:
-          // before the receipt the learner is re-attempting a named target,
-          // after it they are being asked to recognise the situation again.
-          ? ((widget.repairResultReceiptLine?.trim().isNotEmpty ?? false)
-                ? Act0SceneAttentionPhaseV1.recheck
-                : Act0SceneAttentionPhaseV1.repair)
+          : isDrill && isTargetedRecheck
+          ? Act0SceneAttentionPhaseV1.recheck
+          : isDrill && isTargetedRepair
+          ? Act0SceneAttentionPhaseV1.repair
           : Act0SceneAttentionPhaseV1.decision,
     );
     final usesCompactRepairFeedbackDock =
@@ -10958,6 +10966,11 @@ class _Act0TableV1 extends StatelessWidget {
         clipBehavior: Clip.none,
         alignment: Alignment.center,
         children: [
+          // Zero-size marker carrying the resolved B5 phase, so phase
+          // separation is provable deterministically rather than by pixels.
+          SizedBox.shrink(
+            key: Key('act0_scene_attention_phase_${attention.phase.name}'),
+          ),
           Positioned.fill(
             child: Act0SceneRecedeV1(
               recession: attention.roomRecession,

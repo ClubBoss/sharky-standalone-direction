@@ -97,3 +97,79 @@ repair/recheck logic, continuation, telemetry, accessibility, responsive
 support.
 
 `HUMAN_PROOF = FALSE`
+
+---
+
+# B5_PHASE_SIGNAL_BLOCKER
+
+Reported per the completion-pass instruction rather than papered over.
+
+## What was required
+
+The renderer must deterministically separate targeted repair from targeted
+recheck on the canonical learning route.
+
+## Deterministic sources found, and why they do not reach this route
+
+The product **does** own a canonical repair/recheck identity. Two fields already
+exist on `Act0LessonRunnerShellV1` and are already consumed by this branch:
+
+- `isSourceRecheckAttempt` — driven by
+  `_activeSameSignalRecheckTaskId == playSelectedTask?.taskId`
+- `repairContinuesToSourceRecheck` — driven by
+  `_activeRepairTaskId == playSelectedTask?.taskId && (...)`
+
+Both are assigned only from Play-tab flows:
+`_startSameSignalRecheckV1` (`act0_shell_preview_screen_v1.dart:8927`, called at
+`:6178`) and `_startSameSignalRepairFromFeedbackV1` (`:8844`, called at `:6313`).
+Both compare against `playSelectedTask`, which is `null` unless
+`_tab == Act0ShellTabV1.play`.
+
+The canonical Wave A learning-scene sequence used by the evidence harness —
+`runnerFirstWrongFeedback` -> continue -> drill -> answer -> continue -> drill —
+never enters those flows, so `_activeRepairTaskId` and
+`_activeSameSignalRecheckTaskId` are never set on it.
+
+## Measured evidence
+
+A widget test walking that exact canonical sequence, reading the scene's
+published attention-phase marker:
+
+| Step | Resolved phase |
+| --- | --- |
+| wrong feedback surface | `wrongFeedback` (correct) |
+| after continue — targeted repair | **`decision`** |
+| after answer + continue — targeted recheck | **`decision`** |
+
+Independently, gold-pixel counts in the clue band of the rendered captures:
+`decision 169`, `targeted_repair 169`, `targeted_recheck 186`,
+`wrong_feedback 297`, `repair_success 447`. Repair is pixel-identical to a
+normal decision.
+
+## Why the previous heuristic was insufficient
+
+`repairResultReceiptLine` is bound to a *task*, not to a *stage*
+(`_activeRepairTaskId == playSelectedTask?.taskId ? ... : null`). On the learning
+route it is null in both steps, so it cannot separate them; and where it is
+non-null it stays set across subsequent steps of the same task.
+
+## What was NOT done, deliberately
+
+- No new learning state invented to satisfy rendering.
+- No inference of phase from header copy, receipt strings or beat index.
+- No degrading of the visual contract to make repair and recheck agree.
+
+## What is in place and ready
+
+The renderer now consumes the canonical fields directly, and the scene publishes
+its resolved phase as `act0_scene_attention_phase_<name>` so separation is
+provable the moment the signal reaches this route. The salience model's
+repair-vs-recheck contract is locked by
+`test/ui_v2/act0_scene_attention_phase_resolution_v1_test.dart`.
+
+## Decision requested
+
+Whether exposing the existing repair/recheck identity to the learning route —
+rather than only the Play route — is admissible as view metadata.
+
+`HUMAN_PROOF = FALSE`
