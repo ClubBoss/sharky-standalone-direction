@@ -12,6 +12,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_scene_v3.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_depth_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_material_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_player_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
@@ -10944,22 +10945,17 @@ class _Act0TableV1 extends StatelessWidget {
             ),
           ),
           Positioned.fill(
-            child: Act0SceneVolumeLayerV1(
+            child: Act0ScenePlayerLayerV1(
               key: const Key('act0_scene_player_volume_plane'),
               slots: sceneSeatSlots,
-              inactiveSeatIds: inactiveSeatIds,
-              // One key light for the whole scene: the volumes take their rim
-              // and body tone from the same source as the table and the room.
-              rimColor: Act0SceneLightV1.specular,
-              bodyColor: Act0SceneLightV1.ambient,
+              foldedSeatIds: inactiveSeatIds,
             ),
           ),
           scene,
           if (heroSceneSlot != null)
             const Positioned.fill(
-              child: Act0SceneHeroForegroundV1(
+              child: Act0ScenePlayerHeroV1(
                 key: Key('act0_scene_hero_foreground_volume'),
-                rimColor: Act0SceneLightV1.specular,
               ),
             ),
         ],
