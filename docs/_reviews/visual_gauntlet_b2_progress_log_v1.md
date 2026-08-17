@@ -15,6 +15,8 @@ Continuity artifact so this mission survives a usage-limit interruption.
 | Evidence root (uncommitted) | `output/visual_gauntlet_b2/` |
 | B1 baseline captures | `output/visual_gauntlet_b2/baseline_b1_402x874/` |
 | Capture harness | `test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart` |
+| Draft PR | `#188` |
+| PR head | `14b63053b8110dd5ee976908079a92be6e1d0257` |
 | `HUMAN_PROOF` | `FALSE` |
 
 ## Capture command
