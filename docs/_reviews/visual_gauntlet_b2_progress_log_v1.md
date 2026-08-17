@@ -48,7 +48,26 @@ anchors and table allocation byte-identical.
 
 ### CP1 — iteration 1: table physicality + material system
 
-- Status: **pending**
+- Status: **done**
+- Added `lib/ui_v2/act0_shell/act0_scene_material_v1.dart`: `Act0SceneLightV1`
+  (one key light), `Act0SceneTableMaterialPainterV1` (rail volume),
+  `Act0SceneFeltMaterialPainterV1` (matte cloth).
+- Rail is now a physical object: shadowed outer wall, lit crown with a
+  directional specular, inner bevel picking up felt bounce, silhouette contact
+  shadow. The flat single-colour band is gone.
+- All three neon cyan outlines removed (rail border, felt border). A real table
+  is defined by a dark edge, not a lit one — and this returns cyan to its token
+  role as a focus accent instead of a surface fill.
+- Felt behaves as cloth: distance falloff toward the far rail, key pool under
+  the lamp, nap sheen, rail cast shadow, edge absorption.
+- **Regression caught and fixed in-loop:** widening the felt inset to 18 px to
+  buy rail volume pushed the blind chip over the first board card's rank,
+  destroying learning-relevant information. The rail now gains its volume
+  *outward* into the room (`railOverhang = 5`) with the felt inset held at the
+  B1 value of 10, so the playing surface geometry is byte-identical.
+- Contracts verified: table allocation, action envelope, collision guard,
+  tappable objects `9 -> 9`, zero overflow — all identical to the B1 baseline.
+- Evidence: `output/visual_gauntlet_b2/iter1_402x874/`
 
 ### CP2 — iteration 2: room + light + vertical composition
 
@@ -64,4 +83,7 @@ anchors and table allocation byte-identical.
 
 ## Next remaining class-level gap
 
-`TABLE_HAS_NO_MATERIAL` — owned by iteration 1.
+`ROOM_IS_STILL_A_PLACEHOLDER_AND_FAR_PLANE_IS_STARVED` — owned by iteration 2.
+The table is now a physical object standing in a structural gradient. The room
+must become an environment, the lighting must be shared across it, and the
+bounded vertical trade must buy far-player visibility.

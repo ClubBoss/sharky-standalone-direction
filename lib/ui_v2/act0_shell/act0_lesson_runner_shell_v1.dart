@@ -11,6 +11,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_scene_v3.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_depth_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_material_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
@@ -10382,6 +10383,14 @@ Act0RunnerCompletionSummaryV1 _feedbackProgressAtGain(
   );
 }
 
+/// Felt inset. Unchanged from B1 — widening it pushed the blind chips over the
+/// first board card's rank, which is learning-relevant information.
+const double _act0SceneRailWidthV1 = 10.0;
+
+/// How far the B2 rail stands proud of the felt inset. The rail gains its
+/// volume outward, into the room, rather than by eating the playing surface.
+const double _act0SceneRailOverhangV1 = 5.0;
+
 class _Act0TableV1 extends StatelessWidget {
   const _Act0TableV1({
     required this.table,
@@ -10583,48 +10592,23 @@ class _Act0TableV1 extends StatelessWidget {
                 showRepairCallout &&
                 (table.focusCalloutLabel.isNotEmpty ||
                     interactiveCalloutLabel.isNotEmpty);
-            return Container(
+            final tableBody = Container(
               key: integratedPerspectivePrototype
                   ? const Key('act0_integrated_scene_perspective_silhouette')
                   : const Key('act0_shell_table_scene'),
-              padding: const EdgeInsets.all(10),
+              // B2 rail volume. A 10 px band cannot read as a rail on a 290 px
+              // table; real rails occupy several percent of the table width.
+              // The outer table allocation is unchanged, so Wave A/B1 geometry
+              // contracts still hold — only the felt inset moves.
+              padding: EdgeInsets.all(
+                integratedPerspectivePrototype ? _act0SceneRailWidthV1 : 10.0,
+              ),
+              // B2 owns the rail as a physical volume; the material painter
+              // behind this container draws its wall, crown, specular and
+              // shadows. The flat single-colour band and its neon outline are
+              // gone.
               decoration: integratedPerspectivePrototype
-                  ? ShapeDecoration(
-                      gradient: const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: <Color>[
-                          Act0TableFeltCanonV1.railInner,
-                          Act0TableFeltCanonV1.railMid,
-                          Act0TableFeltCanonV1.railOuter,
-                        ],
-                        stops: <double>[0, 0.42, 1],
-                      ),
-                      shadows: const <BoxShadow>[
-                        // Wave A needed a heavy drop shadow to lift the table
-                        // off flat navy. With a room behind it that shadow
-                        // became a black moat separating the table from the
-                        // players seated at it, so it drops to a contact
-                        // shadow and the environment plane does the lifting.
-                        BoxShadow(
-                          color: Color(0x66000000),
-                          blurRadius: 26,
-                          offset: Offset(0, 12),
-                        ),
-                        BoxShadow(
-                          color: Act0TableFeltCanonV1.railAmbientShadow,
-                          blurRadius: 18,
-                          spreadRadius: 3,
-                          offset: Offset(0, 7),
-                        ),
-                      ],
-                      shape: Act0SceneTableShapeV1(
-                        side: BorderSide(
-                          color: Act0TableFeltCanonV1.innerHairline,
-                          width: 1.5,
-                        ),
-                      ),
-                    )
+                  ? null
                   : Act0ShellTokensV1.tableRimDecoration(),
               child: Stack(
                 clipBehavior: Clip.none,
@@ -10644,16 +10628,20 @@ class _Act0TableV1 extends StatelessWidget {
                                 ],
                                 stops: <double>[0, 0.55, 1],
                               ),
-                              shape: Act0SceneTableShapeV1(
-                                side: BorderSide(
-                                  color: Act0ShellTokensV1.feltLine,
-                                  width: 2,
-                                ),
-                              ),
+                              shape: const Act0SceneTableShapeV1(),
                             )
                           : Act0ShellTokensV1.feltDecoration(),
                     ),
                   ),
+                  if (integratedPerspectivePrototype)
+                    const Positioned.fill(
+                      child: IgnorePointer(
+                        child: CustomPaint(
+                          key: Key('act0_scene_felt_material'),
+                          painter: Act0SceneFeltMaterialPainterV1(),
+                        ),
+                      ),
+                    ),
                   Positioned.fill(
                     child: Padding(
                       padding: const EdgeInsets.all(13),
@@ -10879,6 +10867,17 @@ class _Act0TableV1 extends StatelessWidget {
                     ),
                 ],
               ),
+            );
+            if (!integratedPerspectivePrototype) {
+              return tableBody;
+            }
+            return CustomPaint(
+              key: const Key('act0_scene_table_material'),
+              painter: const Act0SceneTableMaterialPainterV1(
+                railWidth: _act0SceneRailWidthV1,
+                railOverhang: _act0SceneRailOverhangV1,
+              ),
+              child: tableBody,
             );
           },
         ),
