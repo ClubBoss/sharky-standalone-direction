@@ -96,3 +96,65 @@ evaluation, feedback, causal clue, repair/recheck, continuation, telemetry,
 accessibility, responsive support. No poker truth or calculation changes.
 
 `HUMAN_PROOF = FALSE`
+
+---
+
+# B4 EXECUTION RESULT
+
+## Iterations
+
+| # | Class-level problem | Outcome |
+| --- | --- | --- |
+| 1 | Identity does not belong to the player | Engraved nameplate set into the surface; generic avatar glyph dropped now that B3 draws a real person |
+| 2 | Commitment reads as an app card | Same engraved carrier as the nameplate; frosted-glass backdrop blur removed |
+
+## HUD system
+
+`lib/ui_v2/act0_shell/act0_scene_hud_v1.dart` — `Act0SceneNameplateV1`:
+recessed fill the surface reads through, a dark top edge where the surface
+steps down, a lit lower lip on the same lamp as B2's rail crown, and a contact
+shadow instead of a glow. Existing seat visual state is passed straight through
+as `stateTone`, so selectable / focus / hero semantics keep their exact meaning
+and gain a physical carrier.
+
+## What I got wrong, and how the repository caught it
+
+The gap map claimed bets "float mid-felt" and that wiring B1's unused
+`betAnchor` would attach them to their owner. Both halves were wrong:
+
+1. Wave A's informative-object guard rejected the reposition **twice**. There is
+   no offset from `betAnchor` that clears both the seat's own card+plate column
+   and the board panel at `402x874`.
+2. Measured baseline bounds show the legacy ring already seats each chip
+   immediately beside its owner — `bb` seat `x82-150`, `bb` chip `x122-166`.
+
+Chip placement was reverted to exactly what Wave A validated, and the B1
+`betAnchor` definition restored untouched. The real gap was treatment, not
+position.
+
+## Foundation preservation
+
+Across all 8 captured states, B3 baseline vs B4 candidate: table geometry
+identical, action envelope top identical, informative-object collision guard
+clean, tappable objects `9 -> 9`, six seat anchors intact, zero overflow. B1
+planes/perspective/anchors, B2 material/room/light and B3 characters/postures
+are untouched. Table oval debt untouched, still `DEFERRED_TO_B7`.
+
+Interaction truth explicitly preserved: the selectable touch glyph and the
+empty-seat mark were **not** removed with the avatar glyph.
+
+## Honestly not done
+
+Two admitted B4 sub-items were not reached inside the usage window and are not
+claimed:
+
+- **§7.4 dealer ownership** — the dealer marker is still the generic `D` pill;
+  it did not become a puck belonging to the cloth.
+- **§7.5 learning-clue attachment** — Wave A copy still names the causal object;
+  no additional spatial attachment was added.
+
+Stack presentation was also left as Wave A renders it, deliberately: changing
+which seats surface a stack would alter displayed information rather than its
+ownership.
+
+`HUMAN_PROOF = FALSE`

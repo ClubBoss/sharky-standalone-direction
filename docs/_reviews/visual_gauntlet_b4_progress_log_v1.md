@@ -49,7 +49,14 @@
   family. Every bet-kind colour semantic is unchanged.
 
 ### CP3 — final validation, evidence, draft PR
-- Status: **pending**
+- Status: **done**
+- `dart format` clean, `flutter analyze lib` clean,
+  `tools/release_gate_world1.sh` PASS.
+- Focused `+15 -3` — the three inherited
+  `task_table_presentation_semantics_v1_test.dart` names carried since B1.
+- Responsive: compact 375x812, large 430x932, 1.4x text.
+- Matched B3-vs-B4 evidence + contact sheet + provenance under
+  `output/visual_gauntlet_b4/evidence/`.
 
 ## Next remaining class-level gap
 
