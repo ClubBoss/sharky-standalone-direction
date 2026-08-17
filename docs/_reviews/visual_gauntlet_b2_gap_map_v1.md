@@ -121,3 +121,103 @@ answer truth, evaluation, feedback, causal clue, repair/recheck, continuation,
 telemetry, routes, accessibility, safe-area and responsive profiles.
 
 `HUMAN_PROOF = FALSE`
+
+---
+
+# B2 EXECUTION RESULT
+
+Candidate SHA: `e3232d0d863c0ce3a8c9e4937df47838412b1022` (pre-final-docs)
+Branch: `feat/visual-gauntlet-b2-premium-table-and-environment-art-v1`
+
+## Iterations
+
+| # | Class-level problem | Outcome |
+| --- | --- | --- |
+| 1 | Table has no material | Rail becomes a volume; cloth becomes cloth; three neon outlines removed |
+| 2 | Room is a structural placeholder; far plane starved | Premium room sharing the table's key light; bounded vertical trade |
+| 3 | Light not shared with the B1 volumes | Player volumes and hero foreground lit by the same source |
+
+## Material system
+
+`Act0SceneTableMaterialPainterV1` renders the rail as a physical object:
+shadowed outer wall, lit crown with a directional specular, a tighter hot line
+along the far crown, inner bevel picking up green bounce off the cloth, and a
+silhouette-following contact shadow. Rail volume is gained **outward**
+(`railOverhang = 5`) rather than by eating the playing surface.
+
+`Act0SceneFeltMaterialPainterV1` renders cloth as matte: distance falloff toward
+the far rail, a key pool under the lamp, a nap sheen, the rail's cast shadow,
+and edge absorption. The felt absorbs where the rail returns a specular — that
+contrast is the material read.
+
+Rail material is navy leather in the Deep Ocean identity. No reference palette,
+wood, art or branding was copied. Gold stays reserved for mastery and reward.
+
+## Environment system
+
+`Act0SceneRoomPainterV1` replaces B1's structural placeholder: lit back wall,
+architectural piers either side of the table, floor falloff toward the viewer,
+a horizon carrying an atmospheric haze band, the table lamp's spill on the
+floor, and a framing vignette. The far volumes now read against a lit wall
+rather than needing an outline.
+
+## Lighting model
+
+One `Act0SceneLightV1` (origin `Alignment(0, -0.58)`) governs the rail crown
+specular, the felt key pool and falloff, the room's wall glow and floor spill,
+the player-volume rims and the hero rim. Nothing glows per-widget.
+
+To keep the dependency direction clean, `act0_scene_depth_v1.dart` (B1) takes no
+import on the B2 material module; it accepts rim/body tones as inputs and the
+runner supplies them from the light.
+
+## Vertical composition
+
+`_act0SceneFarPlaneReserveV1 = 18`, applied as a **paint-only shift, not a
+shrink**. Taking the reserve out of the table's height broke three Wave A
+table-dominance guards which leave as little as 7 px of slack — that slack is
+the true bound on the admitted "bounded vertical trade". Shifting spends the
+dead gap between the near rail and the action dock instead.
+
+Result: table width and height identical to B1 in every state; table top +18;
+far-player plane clears the far rail.
+
+## B1 foundation preservation audit
+
+| Contract | Result |
+| --- | --- |
+| Plane order `environment -> farPlayer -> table -> nearPlayer -> overlay` | preserved |
+| B1 perspective model (`Act0ScenePerspectiveV1`) | unchanged |
+| Seat slots and identities | all six preserved, identical depth tiers |
+| `characterAnchor` / `plateAnchor` / `betAnchor` / `cardAnchor` | unchanged |
+| Hero zone and hero foreground geometry | unchanged |
+| Table width and height | identical in all 8 states |
+| Action envelope top | identical in all 8 states |
+| Blind-chip / seat collision guard | clean |
+| Tappable table objects | `9 -> 9` |
+| Runner phases | identical |
+| Overflow exceptions | none |
+
+## Validation
+
+`dart format` clean; `flutter analyze lib` clean; `tools/fast_loop_world1_v1.sh`
+PASS; `tools/release_gate_world1.sh` PASS; responsive captured at compact
+375x812, tall 390x844, large 430x932 and 1.4x text.
+
+Focused suites return `+15 -3`, identical in count and test name to the B2
+starting main `c8f15c5e`. Those three failures in
+`task_table_presentation_semantics_v1_test.dart` are inherited debt and are not
+repaired here — unrelated cleanup is explicit non-scope.
+
+## Residual gaps — explicit deferrals
+
+| Gap | Owner |
+| --- | --- |
+| Faces, clothing, poses, the character family | `B3` |
+| Stacks/bets/position plates bound to the B1 anchors | `B4` |
+| Attention-aware rendering, selective focus, depth of field | `B5` |
+| Chip flight, seat reveal, camera moves | `B6` |
+| Final benchmark parity, richer room detail, asset-backed texture | `B7` |
+| Fully framed far-player bodies above the rail | `B7` — needs more vertical room than the dominance guards allow at 402x874 |
+
+`HUMAN_PROOF = FALSE`

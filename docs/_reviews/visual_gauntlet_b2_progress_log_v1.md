@@ -110,7 +110,16 @@ anchors and table allocation byte-identical.
 
 ### CP4 — full validation, evidence, draft PR
 
-- Status: **pending**
+- Status: **done**
+- `dart format` clean, `flutter analyze lib` clean,
+  `tools/fast_loop_world1_v1.sh` PASS, `tools/release_gate_world1.sh` PASS.
+- Focused suites `+15 -3`, identical in count and test name to the B2 starting
+  main `c8f15c5e` — verified by checking out that SHA and re-running.
+- Responsive: compact 375x812, tall 390x844, large 430x932, 1.4x text.
+- Matched B1-vs-B2 evidence for the five canonical states, one contact sheet and
+  SHA provenance under `output/visual_gauntlet_b2/evidence/`.
+- Reverted an unrelated coach-phrase reformat pulled in by a directory-wide
+  `dart format`; unrelated cleanup is explicit non-scope.
 
 ## Next remaining class-level gap
 
