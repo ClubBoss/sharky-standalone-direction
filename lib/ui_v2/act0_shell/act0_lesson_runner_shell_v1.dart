@@ -10506,6 +10506,27 @@ class _Act0TableV1 extends StatelessWidget {
     if (maxTableHeight != null && maxTableHeight > 0) {
       tableMaxWidth = math.min(tableMaxWidth, maxTableHeight * tableAspect);
     }
+    // Canonical scene slots. Seat order and rough placement stay owned by the
+    // Wave A slot tables; B1 only resolves how deep each seat is and what
+    // volume it reserves for future character art.
+    final sceneSeatSlots = act0SceneSeatSlotsV1(
+      baseSlots: _seatSlotsForVariant(
+        visualVariant,
+        compactBottomDockClearance: compactBottomDockClearance,
+        useAnswerListPerimeterRing: _viewportFamilyUsesAnswerListCompositionV1(
+          viewportFamily,
+        ),
+      ),
+      seatIds: seats.map((seat) => seat.seatId).toList(),
+      heroSeatId: table.heroSeatId,
+    );
+    final inactiveSeatIds = seats
+        .where((seat) => seat.isFolded || !seat.isInHand || !seat.isOccupied)
+        .map((seat) => seat.seatId)
+        .toSet();
+    final heroSceneSlot = sceneSeatSlots
+        .where((slot) => slot.isHero)
+        .firstOrNull;
     final scene = ConstrainedBox(
       key: const Key('act0_shell_table'),
       constraints: BoxConstraints(maxWidth: tableMaxWidth),
@@ -10572,10 +10593,15 @@ class _Act0TableV1 extends StatelessWidget {
                         stops: <double>[0, 0.42, 1],
                       ),
                       shadows: const <BoxShadow>[
+                        // Wave A needed a heavy drop shadow to lift the table
+                        // off flat navy. With a room behind it that shadow
+                        // became a black moat separating the table from the
+                        // players seated at it, so it drops to a contact
+                        // shadow and the environment plane does the lifting.
                         BoxShadow(
-                          color: Color(0xD8000000),
-                          blurRadius: 48,
-                          offset: Offset(0, 28),
+                          color: Color(0x66000000),
+                          blurRadius: 26,
+                          offset: Offset(0, 12),
                         ),
                         BoxShadow(
                           color: Act0TableFeltCanonV1.railAmbientShadow,
@@ -10718,6 +10744,22 @@ class _Act0TableV1 extends StatelessWidget {
                       ),
                     ),
                   ),
+                  if (heroSceneSlot != null)
+                    Positioned.fill(
+                      child: IgnorePointer(
+                        child: ClipPath(
+                          clipper: const ShapeBorderClipper(
+                            shape: Act0SceneTableShapeV1(),
+                          ),
+                          child: CustomPaint(
+                            key: const Key('act0_scene_hero_near_plane'),
+                            painter: Act0SceneHeroPlanePainterV1(
+                              heroAnchor: heroSceneSlot.plateAnchor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   Center(
                     child: Transform.translate(
                       // The callout owns the upper-center teaching lane; keep
@@ -10875,6 +10917,13 @@ class _Act0TableV1 extends StatelessWidget {
                   painter: Act0SceneGroundingPainterV1(),
                 ),
               ),
+            ),
+          ),
+          Positioned.fill(
+            child: Act0SceneVolumeLayerV1(
+              key: const Key('act0_scene_player_volume_plane'),
+              slots: sceneSeatSlots,
+              inactiveSeatIds: inactiveSeatIds,
             ),
           ),
           scene,

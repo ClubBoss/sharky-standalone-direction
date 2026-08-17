@@ -70,9 +70,37 @@ scene seam `act0_integrated_scene_perspective_table` in
 
 ### CP2 — iteration 2: character volumes + hero ownership
 
-- Status: **pending**
+- Status: **done**
 - Goal: character-ready player volumes occluded by the rail; hero owns the
   near/foreground plane instead of a badge.
+- `Act0SceneVolumeLayerV1` mounted on the `farPlayer` plane, between the
+  environment and the table, so the rail cuts across the volumes.
+- Asymmetric outward push: horizontal fills the flanks and crops near seats at
+  the screen edge; vertical stays small because the teaching layer sits
+  directly above the far rail.
+- Volume depth range widened to 0.74..1.42 — the range plates cannot take
+  without hurting small-text legibility.
+- `Act0SceneHeroPlanePainterV1`: hero foreground pool plus near-rail rim,
+  clipped to the table silhouette.
+- Regression caught and fixed in-loop: the Wave A drop shadow
+  (`0xD8000000`, blur 48) became a black moat cutting the players off from the
+  table. Reduced to a contact shadow (`0x66000000`, blur 26); the environment
+  plane now does the lifting.
+- Validated: all five canonical states re-captured; focused tests match the
+  authority baseline exactly.
+- Evidence: `output/visual_gauntlet_b1/iter2_402x874/`
+
+### Pre-existing test failures inherited from main
+
+`test/ui_v2/task_table_presentation_semantics_v1_test.dart` fails `+5 -3` on the
+authority baseline `da22a09b` and `+5 -3` on this branch, with identical test
+names:
+
+- `large-text Action theory keeps its fixed continuation control reachable ...`
+- `Day 2 repair keeps the table locked above a content-sized active panel`
+- `one hand keeps table geometry through decision and feedback`
+
+Not caused by B1 and not repaired here — unrelated debt is explicit non-scope.
 
 ### CP3 — iteration 3 (conditional)
 
@@ -85,6 +113,7 @@ scene seam `act0_integrated_scene_perspective_table` in
 
 ## Next remaining class-level gap
 
-`NO_PLAYER_VOLUMES_AND_NO_HERO_OWNERSHIP` — owned by iteration 2.
-Iteration 1 alone still reads as "same table, better background", which the
-admission explicitly calls INSUFFICIENT.
+`WEAK_FAR_PLANE_AND_HERO_STILL_A_BADGE` — owned by iteration 3.
+The far seat's volume is fully hidden behind the table, so the top of the scene
+is empty room; and the hero is still the detached `You BTN` pill that the
+admission §8.3 names directly.

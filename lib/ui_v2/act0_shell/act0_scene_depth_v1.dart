@@ -62,8 +62,8 @@ class Act0ScenePerspectiveV1 {
     this.nearWidthFactor = 0.97,
     this.plateScaleFar = 0.88,
     this.plateScaleNear = 1.08,
-    this.volumeScaleFar = 0.70,
-    this.volumeScaleNear = 1.04,
+    this.volumeScaleFar = 0.74,
+    this.volumeScaleNear = 1.42,
   });
 
   /// Canonical B1 perspective for the first-learning scene.
@@ -180,7 +180,7 @@ class Act0SceneSeatSlotV1 {
   /// Reserved in B1 and only sketched; B3 fills it. Held as a fraction of the
   /// table so it survives every responsive profile.
   Size volumeSize(double tableWidth) =>
-      Size(tableWidth * 0.215 * volumeScale, tableWidth * 0.250 * volumeScale);
+      Size(tableWidth * 0.245 * volumeScale, tableWidth * 0.275 * volumeScale);
 }
 
 /// The learner's near-plane ownership.
@@ -233,12 +233,26 @@ List<Act0SceneSeatSlotV1> act0SceneSeatSlotsV1({
         ? const Offset(0, -1)
         : Offset(outward.dx / length, outward.dy / length);
 
+    // Near seats stand further out of frame than far seats, so the scene
+    // continues past the screen edge instead of ending at the table.
+    //
+    // The push is deliberately asymmetric. People sit along the long sides of
+    // a poker table, and the learning scene has a teaching layer directly
+    // above the far rail, so vertical push stays small. Horizontal push is
+    // what fills the flanks Wave A left flat — and it is tuned so the rail
+    // always cuts across the lower part of each volume rather than leaving a
+    // gap, which is the difference between a seated player and a floating
+    // shape beside a diagram.
+    final pushX = 0.135 + (0.090 * depth);
+    final pushY = 0.060 + (0.035 * depth);
+
     slots.add(
       Act0SceneSeatSlotV1(
         seatId: seatIds[i],
         depth: depth,
         plateAnchor: projected,
-        characterAnchor: projected + (outward * 0.130),
+        characterAnchor:
+            projected + Offset(outward.dx * pushX, outward.dy * pushY),
         betAnchor: projected - (outward * 0.115),
         cardAnchor: projected - (outward * 0.055),
         plateScale: perspective.plateScaleAt(depth),
@@ -384,11 +398,11 @@ class Act0SceneGroundingPainterV1 extends CustomPainter {
       Paint()
         ..shader = RadialGradient(
           colors: <Color>[
-            Act0VisualCanonV1.appBlack.withValues(alpha: 0.72),
-            Act0VisualCanonV1.appBlack.withValues(alpha: 0.30),
+            Act0VisualCanonV1.appBlack.withValues(alpha: 0.46),
+            Act0VisualCanonV1.appBlack.withValues(alpha: 0.18),
             Colors.transparent,
           ],
-          stops: const <double>[0, 0.62, 1],
+          stops: const <double>[0, 0.66, 1],
         ).createShader(rect),
     );
   }
@@ -483,6 +497,123 @@ class Act0SceneTableShapeV1 extends ShapeBorder {
       Act0SceneTableShapeV1(side: side.scale(t), perspective: perspective);
 }
 
+/// The `farPlayer` plane: every reserved player volume around the table.
+///
+/// Lives between the environment and the table so the rail cuts across the
+/// volumes it should occlude. That single overlap is what turns a top-down
+/// diagram into a scene the learner is sitting inside.
+class Act0SceneVolumeLayerV1 extends StatelessWidget {
+  const Act0SceneVolumeLayerV1({
+    super.key,
+    required this.slots,
+    this.inactiveSeatIds = const <String>{},
+    this.perspective = Act0ScenePerspectiveV1.canonical,
+  });
+
+  final List<Act0SceneSeatSlotV1> slots;
+
+  /// Seats that are folded or out of the hand.
+  final Set<String> inactiveSeatIds;
+
+  final Act0ScenePerspectiveV1 perspective;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final height = constraints.maxHeight;
+        if (width <= 0 || height <= 0) return const SizedBox.shrink();
+
+        // Far first, so nearer volumes overlap their neighbours correctly.
+        final ordered = [...slots.where((slot) => !slot.isHero)]
+          ..sort((a, b) => a.depth.compareTo(b.depth));
+
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            for (final slot in ordered)
+              Positioned(
+                left: width * slot.characterAnchor.dx,
+                top: height * slot.characterAnchor.dy,
+                child: FractionalTranslation(
+                  translation: const Offset(-0.5, -0.5),
+                  child: Act0SceneCharacterVolumeV1(
+                    key: Key('act0_scene_player_volume_${slot.seatId}'),
+                    slot: slot,
+                    size: slot.volumeSize(width),
+                    active: !inactiveSeatIds.contains(slot.seatId),
+                    perspective: perspective,
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// Paints the learner's near plane.
+///
+/// The hero is the camera, so B1 does not give it a body. It gives it a lit
+/// side of the table: a foreground pool centred on the hero anchor and a rim
+/// along the near rail, the edge closest to the viewer. Together they answer
+/// "where do I sit" without a detached badge doing the work.
+class Act0SceneHeroPlanePainterV1 extends CustomPainter {
+  const Act0SceneHeroPlanePainterV1({required this.heroAnchor});
+
+  final Offset heroAnchor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+    final centre = Offset(
+      size.width * heroAnchor.dx,
+      size.height * heroAnchor.dy,
+    );
+
+    // Foreground pool: the learner's side of the felt catches more light.
+    final pool = Rect.fromCenter(
+      center: centre,
+      width: size.width * 1.02,
+      height: size.height * 0.62,
+    );
+    canvas.drawOval(
+      pool,
+      Paint()
+        ..shader = RadialGradient(
+          colors: <Color>[
+            Act0TableFeltCanonV1.feltCenter.withValues(alpha: 0.40),
+            Act0TableFeltCanonV1.feltCenter.withValues(alpha: 0.14),
+            Colors.transparent,
+          ],
+          stops: const <double>[0, 0.52, 1],
+        ).createShader(pool),
+    );
+
+    // Near-rail rim: the closest edge of the table reads as lit and physical.
+    canvas.drawRect(
+      rect,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: <Color>[
+            Colors.transparent,
+            Act0TableFeltCanonV1.innerHairline.withValues(alpha: 0.06),
+            Act0TableFeltCanonV1.innerHairline.withValues(alpha: 0.16),
+          ],
+          stops: const <double>[0.72, 0.92, 1],
+        ).createShader(rect),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant Act0SceneHeroPlanePainterV1 oldDelegate) =>
+      oldDelegate.heroAnchor != heroAnchor;
+}
+
 /// A reserved, character-safe player volume.
 ///
 /// B1 deliberately ships presence, not personality: a chair mass, a shoulder
@@ -529,9 +660,9 @@ class _Act0SceneCharacterVolumePainterV1 extends CustomPainter {
 
   final double haze;
 
-  static const Color _chair = Color(0xFF13223A);
-  static const Color _body = Color(0xFF1B2C46);
-  static const Color _rim = Color(0xFF3C5878);
+  static const Color _chair = Color(0xFF1B2E49);
+  static const Color _body = Color(0xFF28405F);
+  static const Color _rim = Color(0xFF6D8FB4);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -569,7 +700,7 @@ class _Act0SceneCharacterVolumePainterV1 extends CustomPainter {
     final rim = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = math.max(1.0, w * 0.018)
-      ..color = _rim.withValues(alpha: 0.42 * lift);
+      ..color = _rim.withValues(alpha: 0.62 * lift);
     canvas.drawArc(
       Rect.fromCircle(center: Offset(w * 0.50, h * 0.36), radius: w * 0.163),
       math.pi * 1.12,
