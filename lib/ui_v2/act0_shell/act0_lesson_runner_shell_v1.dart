@@ -14,6 +14,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_depth_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hud_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_material_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_player_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_salience_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
@@ -2695,6 +2696,30 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         isReview &&
         !widget.rapidReviewMode &&
         (widget.repairReasonLine?.trim().isNotEmpty ?? false);
+    // B5: where the learner is, from state Wave A already exposes. No new
+    // poker meaning is inferred — every branch maps onto a phase the runner
+    // already knows.
+    final sceneAttention = Act0SceneAttentionV1(
+      isTheory
+          ? Act0SceneAttentionPhaseV1.theory
+          : isReview
+          ? (runner.reviewQuality == Act0FeedbackQualityV1.wrong
+                ? Act0SceneAttentionPhaseV1.wrongFeedback
+                : isRepairFocusFeedback
+                ? Act0SceneAttentionPhaseV1.repair
+                : Act0SceneAttentionPhaseV1.correctFeedback)
+          : (repairFillMode ||
+                (isDrill &&
+                    (widget.repairReasonLine?.trim().isNotEmpty ?? false)))
+          // A repair attempt and a recheck are both drills carrying repair
+          // context. What separates them is whether a result has been issued:
+          // before the receipt the learner is re-attempting a named target,
+          // after it they are being asked to recognise the situation again.
+          ? ((widget.repairResultReceiptLine?.trim().isNotEmpty ?? false)
+                ? Act0SceneAttentionPhaseV1.recheck
+                : Act0SceneAttentionPhaseV1.repair)
+          : Act0SceneAttentionPhaseV1.decision,
+    );
     final usesCompactRepairFeedbackDock =
         isReview &&
         !widget.rapidReviewMode &&
@@ -3050,6 +3075,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                 )
               : maxTableHeight;
           Widget tableStage = _RunnerTableStageV1(
+            attention: sceneAttention,
             table: table,
             highlightedCardIds: mergedHighlightIds,
             interactiveCalloutLabel: interactiveCallout,
@@ -5568,6 +5594,7 @@ class Act0TableSceneV1 extends StatelessWidget {
         maxTableHeight: input.maxTableHeight,
         lockSharedActiveTableGeometry: input.lockSharedActiveTableGeometry,
         integratedPerspectivePrototype: input.integratedPerspectivePrototype,
+        attention: input.attention,
       );
     }
     final resolved = config!;
@@ -5593,6 +5620,7 @@ class Act0TableSceneV1 extends StatelessWidget {
 
 class _Act0TableSceneRunnerInput {
   const _Act0TableSceneRunnerInput({
+    required this.attention,
     required this.table,
     required this.highlightedCardIds,
     required this.interactiveCalloutLabel,
@@ -5647,11 +5675,13 @@ class _Act0TableSceneRunnerInput {
   final Act0TableIdentityPolicyV1 identityPolicy;
   final double? maxTableHeight;
   final bool lockSharedActiveTableGeometry;
+  final Act0SceneAttentionV1 attention;
   final bool integratedPerspectivePrototype;
 }
 
 class _RunnerTableStageV1 extends StatelessWidget {
   const _RunnerTableStageV1({
+    required this.attention,
     required this.table,
     required this.highlightedCardIds,
     required this.interactiveCalloutLabel,
@@ -5707,6 +5737,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
   final Act0TableIdentityPolicyV1 identityPolicy;
   final double? maxTableHeight;
   final bool lockSharedActiveTableGeometry;
+  final Act0SceneAttentionV1 attention;
   final bool integratedPerspectivePrototype;
 
   @override
@@ -5740,6 +5771,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
         maxTableHeight: maxTableHeight,
         lockSharedActiveTableGeometry: lockSharedActiveTableGeometry,
         integratedPerspectivePrototype: integratedPerspectivePrototype,
+        attention: attention,
       ),
     );
   }
@@ -10413,6 +10445,7 @@ const double _act0SceneRailOverhangV1 = 5.0;
 
 class _Act0TableV1 extends StatelessWidget {
   const _Act0TableV1({
+    this.attention = Act0SceneAttentionV1.neutral,
     required this.table,
     required this.highlightedCardIds,
     required this.interactiveCalloutLabel,
@@ -10468,6 +10501,7 @@ class _Act0TableV1 extends StatelessWidget {
   final Act0TableIdentityPolicyV1 identityPolicy;
   final double? maxTableHeight;
   final bool lockSharedActiveTableGeometry;
+  final Act0SceneAttentionV1 attention;
   final bool integratedPerspectivePrototype;
 
   @override
@@ -10789,6 +10823,7 @@ class _Act0TableV1 extends StatelessWidget {
                       // the context/street stack in its reserved middle lane.
                       offset: Offset(0, hasRepairCallout ? height * 0.075 : 0),
                       child: _CenterPotV1(
+                        clueEmphasis: attention.clueEmphasis,
                         table: table,
                         highlightedCardIds: highlightedCardIds,
                         onBoardCardTap: () => onBoardCardTap(table),
@@ -10924,18 +10959,21 @@ class _Act0TableV1 extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Positioned.fill(
-            child: IgnorePointer(
-              child: Transform.scale(
-                // The B2 room reaches past the table into the flanks and
-                // continues downward behind the action dock. Growth stays
-                // almost entirely downward so the teaching layer above the
-                // table keeps its Wave A contrast.
-                scaleX: 1.46,
-                scaleY: 1.18,
-                alignment: const Alignment(0, -0.9),
-                child: const CustomPaint(
-                  key: Key('act0_scene_environment_plane'),
-                  painter: Act0SceneRoomPainterV1(),
+            child: Act0SceneRecedeV1(
+              recession: attention.roomRecession,
+              child: IgnorePointer(
+                child: Transform.scale(
+                  // The B2 room reaches past the table into the flanks and
+                  // continues downward behind the action dock. Growth stays
+                  // almost entirely downward so the teaching layer above the
+                  // table keeps its Wave A contrast.
+                  scaleX: 1.46,
+                  scaleY: 1.18,
+                  alignment: const Alignment(0, -0.9),
+                  child: const CustomPaint(
+                    key: Key('act0_scene_environment_plane'),
+                    painter: Act0SceneRoomPainterV1(),
+                  ),
                 ),
               ),
             ),
@@ -10953,17 +10991,23 @@ class _Act0TableV1 extends StatelessWidget {
             ),
           ),
           Positioned.fill(
-            child: Act0ScenePlayerLayerV1(
-              key: const Key('act0_scene_player_volume_plane'),
-              slots: sceneSeatSlots,
-              foldedSeatIds: inactiveSeatIds,
+            child: Act0SceneRecedeV1(
+              recession: attention.playerRecession,
+              child: Act0ScenePlayerLayerV1(
+                key: const Key('act0_scene_player_volume_plane'),
+                slots: sceneSeatSlots,
+                foldedSeatIds: inactiveSeatIds,
+              ),
             ),
           ),
           scene,
           if (heroSceneSlot != null)
-            const Positioned.fill(
-              child: Act0ScenePlayerHeroV1(
-                key: Key('act0_scene_hero_foreground_volume'),
+            Positioned.fill(
+              child: Act0SceneRecedeV1(
+                recession: attention.playerRecession,
+                child: const Act0ScenePlayerHeroV1(
+                  key: Key('act0_scene_hero_foreground_volume'),
+                ),
               ),
             ),
         ],
@@ -11353,6 +11397,7 @@ List<String> _inferCanonicalSeatOrder(List<Act0SeatStateV1> seats) {
 
 class _CenterPotV1 extends StatelessWidget {
   const _CenterPotV1({
+    this.clueEmphasis = 1.0,
     required this.table,
     required this.highlightedCardIds,
     required this.onBoardCardTap,
@@ -11375,6 +11420,8 @@ class _CenterPotV1 extends StatelessWidget {
   final String? potLabelOverride;
   final String? toCallLabelOverride;
   final String? streetLabelOverride;
+
+  final double clueEmphasis;
 
   @override
   Widget build(BuildContext context) {
@@ -11424,6 +11471,7 @@ class _CenterPotV1 extends StatelessWidget {
                           resolvedCenterLabel,
                         ),
                         compact: refined,
+                        clueEmphasis: clueEmphasis,
                       ),
                     ],
                     const SizedBox(height: 3),
@@ -11447,6 +11495,7 @@ class _CenterPotV1 extends StatelessWidget {
                           resolvedCenterLabel,
                         ),
                         compact: refined,
+                        clueEmphasis: clueEmphasis,
                       ),
                     ],
                     _CenterStreetStatusV1(label: streetLabel, compact: refined),
@@ -11568,10 +11617,18 @@ class _LateRouteCenterSignalV1 extends StatelessWidget {
 }
 
 class _CenterSignalAnchorV1 extends StatelessWidget {
-  const _CenterSignalAnchorV1({required this.label, required this.compact});
+  const _CenterSignalAnchorV1({
+    this.clueEmphasis = 1.0,
+    required this.label,
+    required this.compact,
+  });
 
   final String label;
   final bool compact;
+
+  /// B5 drives B4's bracket. It shipped always-on, so it carried no state
+  /// information and persisted into recheck as a standing pointer.
+  final double clueEmphasis;
 
   @override
   Widget build(BuildContext context) {
@@ -11639,17 +11696,20 @@ class _CenterSignalAnchorV1 extends StatelessWidget {
                 ],
               ),
             ),
-            Positioned.fill(
-              child: IgnorePointer(
-                child: CustomPaint(
-                  key: const Key('act0_scene_clue_bracket_signal'),
-                  painter: Act0SceneClueBracketPainterV1(
-                    tone: Act0ShellTokensV1.gold,
-                    inset: -2.0,
+            if (clueEmphasis > 0.02)
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: CustomPaint(
+                    key: const Key('act0_scene_clue_bracket_signal'),
+                    painter: Act0SceneClueBracketPainterV1(
+                      tone: Act0ShellTokensV1.gold.withValues(
+                        alpha: clueEmphasis.clamp(0.0, 1.0),
+                      ),
+                      inset: -2.0,
+                    ),
                   ),
                 ),
               ),
-            ),
           ],
         ),
       ),
