@@ -119,3 +119,87 @@ continuation, telemetry semantics, safe-area behavior, accessibility intent,
 supported responsive profiles.
 
 `HUMAN_PROOF = FALSE`.
+
+---
+
+# B1 EXECUTION RESULT
+
+Candidate SHA: `c1b75eb8edc42644f49af50495cd3b8db998601f`
+Branch: `feat/visual-gauntlet-b1-spatial-character-ready-foundation-v1`
+
+## Iterations performed
+
+| # | Class-level problem attacked | Outcome |
+| --- | --- | --- |
+| 1 | No scene depth model | One projection owns the scene; environment plane mounted; taper 0.82 -> 0.68 |
+| 2 | No player volumes, no hero plane | `farPlayer` volumes occluded by the rail; hero near-plane lit; drop-shadow moat removed |
+| 3 | Far plane invisible, hero still a badge | Hero foreground volume occludes the table; far seat clears the far rail |
+
+## Player-slot geometry
+
+Six stable slots resolved by `act0SceneSeatSlotsV1` from the Wave A base slots.
+B1 did not renegotiate which seat sits where — only depth and reserved volume.
+
+| Property | Value |
+| --- | --- |
+| Depth source | `Act0ScenePerspectiveV1.project` on normalized table space |
+| Plate scale | `0.88` far -> `1.08` near (narrow on purpose; plates carry text) |
+| Volume scale | `0.74` far -> `1.42` near |
+| Volume size | `0.245 w x 0.275 w` of table width, times volume scale |
+| Outward push | `x = 0.135 + 0.090 d`; `y = 0.078` far tier, else `0.060 + 0.035 d` |
+| Named anchors | `plateAnchor`, `characterAnchor`, `betAnchor`, `cardAnchor` |
+
+## Hero integration
+
+Hero is the camera, so B1 gives it no face. It gives it a plane:
+`Act0SceneHeroPlanePainterV1` lights the learner's side of the felt and rims the
+near rail; `Act0SceneHeroForegroundV1` is the learner's own volume seen from
+behind, drawn after the table so it cuts across the near rail.
+
+Far players are occluded BY the table. The hero occludes it. That symmetry is
+what seats the learner.
+
+## Environment / depth architecture
+
+`environment -> farPlayer -> table -> nearPlayer -> overlay`, painted in that
+order. The environment plane carries wall, horizon bloom, floor falloff,
+overhead light pool and corner vignette, reaching 1.46x horizontally past the
+table into the 112 px flanks Wave A left flat.
+
+## Future HUD anchors (B4)
+
+Every seat exposes `plateAnchor` and `betAnchor` in normalized table space plus
+a depth-resolved `plateScale`. Stacks, bets, position labels, player status and
+acting indicators attach to those without moving the scene.
+
+## Wave A semantic-preservation audit
+
+Measured from matched harness geometry across all eight captured states:
+
+| Contract | Result |
+| --- | --- |
+| Table allocation (w x h) | identical in all 8 states |
+| Action envelope top | identical in all 8 states |
+| Blind-chip / seat collision guard | clean in all states |
+| Tappable table objects | `9 -> 9` |
+| Runner phases | identical |
+| Overflow exceptions | none |
+| Answer truth / evaluation / feedback / repair / recheck | untouched |
+| Routes / telemetry / personalization / curriculum | untouched |
+
+B1 changed the scene's spatial architecture without moving a single Wave A
+layout allocation.
+
+## Residual gaps — explicit deferrals
+
+| Gap | Owner |
+| --- | --- |
+| Felt/rail material, wood, cloth weave, real room art, textures | `B2` |
+| Final character family; faces, clothing, poses, folded/active art | `B3` |
+| Executed object-attached HUD bound to the anchors B1 defines | `B4` |
+| Attention-aware rendering, depth of field, selective focus | `B5` |
+| Semantic motion, chip flight, seat reveal, camera moves | `B6` |
+| Final benchmark cohesion and polish parity | `B7` |
+| Vertical room for a fully visible far-player plane above the rail | `B2` — needs the table-height trade B2 owns |
+
+`HUMAN_PROOF = FALSE`

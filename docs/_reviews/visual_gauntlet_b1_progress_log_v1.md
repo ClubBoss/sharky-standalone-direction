@@ -123,7 +123,16 @@ Not caused by B1 and not repaired here — unrelated debt is explicit non-scope.
 
 ### CP4 — final evidence + draft PR
 
-- Status: **pending**
+- Status: **done**
+- Validation: `dart format` clean, `flutter analyze lib` clean,
+  `tools/fast_loop_world1_v1.sh` PASS, `tools/release_gate_world1.sh` PASS.
+- Responsive proof captured: compact 375x812, tall 390x844, large 430x932,
+  and 1.4x text at 402x874.
+- Matched Wave A baseline vs B1 candidate evidence for theory, table task,
+  decision, correct feedback and wrong feedback, plus one contact sheet and
+  exact SHA provenance, under `output/visual_gauntlet_b1/evidence/`.
+- Semantic-preservation audit: table allocation and action envelope identical
+  in all 8 states; collision guard clean; tappable objects 9 -> 9.
 
 ## Next remaining class-level gap
 
