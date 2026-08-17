@@ -3229,32 +3229,101 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
     }
 
     Widget buildIntegratedPrompt() {
+      final isRu = act0IsRuLocaleV1(context);
+      final isFeedback = isReview;
+      final purpose = isTheory
+          ? (isRu ? 'ЧИТАЕМ СТОЛ' : 'LEARN THE TABLE')
+          : isFeedback
+          ? (isRu ? 'РАЗБИРАЕМ РЕЗУЛЬТАТ' : 'UNDERSTAND THE RESULT')
+          : (isRu ? 'ВАШЕ РЕШЕНИЕ ЗА СТОЛОМ' : 'YOUR TABLE DECISION');
+      final headline = isTheory ? prompt : question;
+      final support = isTheory ? hint : '';
       return SizedBox(
-        height: media.textScaler.scale(50).clamp(50, 60),
+        height: media.textScaler
+            .scale(isTheory ? 64 : 50)
+            .clamp(isTheory ? 64 : 50, isTheory ? 78 : 60),
         child: Container(
-          key: const Key('act0_integrated_scene_prompt'),
+          key: const Key('act0_wave_a_learning_context'),
           width: double.infinity,
           margin: const EdgeInsets.symmetric(horizontal: 12),
-          padding: const EdgeInsets.fromLTRB(12, 7, 12, 8),
-          alignment: Alignment.center,
+          padding: const EdgeInsets.fromLTRB(14, 8, 14, 9),
           decoration: BoxDecoration(
-            color: Act0ShellTokensV1.surface2.withValues(alpha: 0.72),
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
+            color: Act0ShellTokensV1.surface2.withValues(alpha: 0.94),
+            borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color: Act0ShellTokensV1.info.withValues(alpha: 0.22),
+              color: Act0ShellTokensV1.primary.withValues(alpha: 0.32),
             ),
           ),
-          child: Text(
-            question,
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: Act0ShellTokensV1.body.copyWith(
-              color: Act0ShellTokensV1.text,
-              fontSize: 14.2,
-              fontWeight: FontWeight.w900,
-              height: 1.08,
-            ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 30,
+                height: 30,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Act0ShellTokensV1.primary.withValues(alpha: 0.14),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  isTheory
+                      ? Icons.visibility_rounded
+                      : isFeedback
+                      ? Icons.lightbulb_rounded
+                      : Icons.touch_app_rounded,
+                  size: 17,
+                  color: Act0ShellTokensV1.primary,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      purpose,
+                      key: const Key('act0_integrated_scene_purpose'),
+                      maxLines: 1,
+                      overflow: TextOverflow.fade,
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: Act0ShellTokensV1.primary,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 0.7,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      headline,
+                      key: const Key('act0_integrated_scene_prompt'),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Act0ShellTokensV1.body.copyWith(
+                        color: Act0ShellTokensV1.text,
+                        fontSize: 15.4,
+                        fontWeight: FontWeight.w900,
+                        height: 1.05,
+                      ),
+                    ),
+                    if (support.trim().isNotEmpty) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        support,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Act0ShellTokensV1.muted.copyWith(
+                          color: Act0ShellTokensV1.textMuted,
+                          fontSize: 10.6,
+                          height: 1.05,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       );
@@ -3300,11 +3369,12 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
           const SizedBox.shrink(
             key: Key('act0_shell_compact_answer_list_branch'),
           ),
-        if (_usesCanonicalIntegratedLearningSceneV1 && (isDrill || isReview))
+        if (_usesCanonicalIntegratedLearningSceneV1 &&
+            (isTheory || isDrill || isReview))
           _RunnerProgressV1(runner: runner, onBack: widget.onBack),
         if (_usesCanonicalIntegratedLearningSceneV1 &&
             usesSharedActiveRunnerAllocation &&
-            (isDrill || isReview)) ...[
+            (isTheory || isDrill || isReview)) ...[
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           buildIntegratedPrompt(),
         ],
@@ -6973,522 +7043,556 @@ class Act0FeedbackShellV1 extends StatelessWidget {
             child: Builder(
               builder: (context) {
                 final feedbackBody = Column(
-              key: usesCohesiveShortOutcome
-                  ? const Key('act0_shell_feedback_cohesive_group')
-                  : null,
-              mainAxisSize: pinsAllocatedFeedbackCta
-                  ? MainAxisSize.min
-                  : usesCohesiveShortOutcome
-                  ? MainAxisSize.max
-                  : MainAxisSize.min,
-              mainAxisAlignment: pinsAllocatedFeedbackCta
-                  ? MainAxisAlignment.start
-                  : usesCohesiveShortOutcome
-                  ? MainAxisAlignment.center
-                  : MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  key: usesCohesiveShortOutcome
+                      ? const Key('act0_shell_feedback_cohesive_group')
+                      : null,
+                  mainAxisSize: pinsAllocatedFeedbackCta
+                      ? MainAxisSize.min
+                      : usesCohesiveShortOutcome
+                      ? MainAxisSize.max
+                      : MainAxisSize.min,
+                  mainAxisAlignment: pinsAllocatedFeedbackCta
+                      ? MainAxisAlignment.start
+                      : usesCohesiveShortOutcome
+                      ? MainAxisAlignment.center
+                      : MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    if (showSharkyCompanion) ...[
-                      Act0SharkyMascotV1(
-                        key: feedbackSharkySlotKey,
-                        mood: sharkyMood,
-                        tone: sharkyTone,
-                        size: isCompactRefinedFeedback
-                            ? 30
-                            : (refined ? 46 : 50),
-                      ),
-                      const SizedBox(width: 8),
-                    ] else if (!isCompactRefinedFeedback) ...[
-                      Container(
-                        key: const Key('act0_shell_feedback_state_mark'),
-                        width: refined ? 42 : 46,
-                        height: refined ? 42 : 46,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: tone.withValues(alpha: 0.10),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: tone.withValues(alpha: 0.30),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (showSharkyCompanion) ...[
+                          Act0SharkyMascotV1(
+                            key: feedbackSharkySlotKey,
+                            mood: sharkyMood,
+                            tone: sharkyTone,
+                            size: isCompactRefinedFeedback
+                                ? 30
+                                : (refined ? 46 : 50),
                           ),
-                        ),
-                        child: Icon(icon, color: tone, size: refined ? 21 : 23),
-                      ),
-                      const SizedBox(width: 8),
-                    ],
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (!rapidMode && stateLabel.isNotEmpty) ...[
-                            KeyedSubtree(
-                              key: const Key(
-                                'act0_shell_feedback_primary_result_block',
+                          const SizedBox(width: 8),
+                        ] else if (!isCompactRefinedFeedback) ...[
+                          Container(
+                            key: const Key('act0_shell_feedback_state_mark'),
+                            width: refined ? 42 : 46,
+                            height: refined ? 42 : 46,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: tone.withValues(alpha: 0.10),
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: tone.withValues(alpha: 0.30),
                               ),
-                              child: KeyedSubtree(
-                                key: const Key(
-                                  'act0_shell_feedback_primary_result_label',
-                                ),
-                                child: Text(
-                                  stateLabel,
+                            ),
+                            child: Icon(
+                              icon,
+                              color: tone,
+                              size: refined ? 21 : 23,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                        ],
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (!rapidMode && stateLabel.isNotEmpty) ...[
+                                KeyedSubtree(
                                   key: const Key(
-                                    'act0_shell_feedback_rhythm_verdict',
+                                    'act0_shell_feedback_primary_result_block',
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.fade,
-                                  style: Act0ShellTokensV1.label.copyWith(
-                                    color: tone,
-                                    fontSize: 13.5,
-                                    height: 1.04,
-                                    fontWeight: FontWeight.w900,
-                                    letterSpacing: 0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 1),
-                          ],
-                          if (!isCompactRefinedFeedback &&
-                              (stateDetail.isNotEmpty ||
-                                  (showSharkyCompanion &&
-                                      reactionLine.isNotEmpty)))
-                            KeyedSubtree(
-                              key: const Key(
-                                'act0_shell_feedback_companion_role',
-                              ),
-                              child: Text(
-                                stateDetail.isNotEmpty
-                                    ? stateDetail
-                                    : '$companionRoleLabel · $reactionLine',
-                                key: const Key(
-                                  'act0_shell_sharky_outcome_reaction',
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.fade,
-                                style: Act0ShellTokensV1.muted.copyWith(
-                                  color: Act0ShellTokensV1.textMuted,
-                                  fontSize: refined ? 10.0 : 10.5,
-                                  height: 1.06,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                if (rapidMode && actionLabel.isNotEmpty) ...[
-                  Text(
-                    '$actionPrefix: $actionLabel',
-                    key: const Key('act0_shell_feedback_hero_action'),
-                    maxLines: 2,
-                    overflow: TextOverflow.fade,
-                    style: Act0ShellTokensV1.body.copyWith(
-                      color: Act0ShellTokensV1.text,
-                      fontSize: 15,
-                      height: 1.06,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                  const SizedBox(height: 0),
-                ],
-                if (!rapidMode && !isCompactRefinedFeedback) ...[
-                  SizedBox(height: isCompactRefinedFeedback ? 4 : 6),
-                  _FeedbackStateRailV1(
-                    tone: tone,
-                    compact: isCompactRefinedFeedback,
-                  ),
-                ],
-                if (showProofStack) ...[
-                  SizedBox(height: isCompactRefinedFeedback ? 4 : 8),
-                  Builder(
-                    builder: (context) {
-                      final proofStack = Column(
-                        key: const Key('act0_shell_feedback_proof_stack'),
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          if (showActionContrast) ...[
-                            _FeedbackActionContrastBlockV1(
-                              actionLine: '$actionPrefix: $actionLabel',
-                              selectedLine: selectedContrastLine,
-                              tone: tone,
-                              compact: isCompactRefinedFeedback,
-                              refined: refined,
-                              showEyebrow: showActionContrastEyebrow,
-                            ),
-                            SizedBox(height: isCompactRefinedFeedback ? 7 : 10),
-                          ],
-                          if (showSignalProofInProofStack) ...[
-                            _FeedbackSignalProofRowV1(
-                              proofLine: signalProof!.proofLine,
-                              tone: tone,
-                              compact: isCompactRefinedFeedback,
-                            ),
-                            SizedBox(height: isCompactRefinedFeedback ? 2 : 3),
-                          ],
-                          if (showReason)
-                            cycleStableEnvelope &&
-                                    !usesSharedAccessibilitySurface
-                                ? ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                      maxHeight: pinsF1FeedbackCta
-                                          ? 20
-                                          : isCompactRefinedFeedback
-                                          ? 34
-                                          : 60,
-                                    ),
-                                    child: SingleChildScrollView(
-                                      key: const Key(
-                                        'act0_shell_feedback_explanation_scroll',
-                                      ),
-                                      primary: false,
-                                      physics: const ClampingScrollPhysics(),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
-                                        children: [
-                                          Text(
-                                            resolvedReason,
-                                            key: const Key(
-                                              'act0_shell_feedback_reason',
-                                            ),
-                                            style: Act0ShellTokensV1.body
-                                                .copyWith(
-                                                  color: Act0ShellTokensV1
-                                                      .textMuted,
-                                                  fontSize:
-                                                      isCompactRefinedFeedback
-                                                      ? 11.4
-                                                      : (refined ? 12.0 : 12.5),
-                                                  height:
-                                                      isCompactRefinedFeedback
-                                                      ? 1.08
-                                                      : 1.16,
-                                                ),
-                                          ),
-                                          if (foldsNextClueIntoExplanation) ...[
-                                            const SizedBox(height: 3),
-                                            Text(
-                                              nextClueLine.trim(),
-                                              key: const Key(
-                                                'act0_shell_feedback_next_clue',
-                                              ),
-                                              style: Act0ShellTokensV1.label
-                                                  .copyWith(
-                                                    color: tone.withValues(
-                                                      alpha: 0.9,
-                                                    ),
-                                                    fontSize: 10.5,
-                                                    height: 1.1,
-                                                  ),
-                                            ),
-                                          ],
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                : Text(
-                                    resolvedReason,
+                                  child: KeyedSubtree(
                                     key: const Key(
-                                      'act0_shell_feedback_reason',
+                                      'act0_shell_feedback_primary_result_label',
                                     ),
-                                    maxLines:
-                                        isCompactRefinedFeedback &&
-                                            !usesSharedAccessibilitySurface &&
-                                            !preserveFullCompactReason
-                                        ? 2
-                                        : null,
-                                    overflow:
-                                        isCompactRefinedFeedback &&
-                                            !usesSharedAccessibilitySurface &&
-                                            !preserveFullCompactReason
-                                        ? TextOverflow.fade
-                                        : null,
-                                    style: Act0ShellTokensV1.body.copyWith(
-                                      color: Act0ShellTokensV1.textMuted,
-                                      fontSize: isCompactRefinedFeedback
-                                          ? 11.4
-                                          : (refined ? 12.0 : 12.5),
-                                      height: isCompactRefinedFeedback
-                                          ? 1.08
-                                          : 1.16,
+                                    child: Text(
+                                      stateLabel,
+                                      key: const Key(
+                                        'act0_shell_feedback_rhythm_verdict',
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.fade,
+                                      style: Act0ShellTokensV1.label.copyWith(
+                                        color: tone,
+                                        fontSize: 13.5,
+                                        height: 1.04,
+                                        fontWeight: FontWeight.w900,
+                                        letterSpacing: 0,
+                                      ),
                                     ),
                                   ),
-                          if (!rapidMode &&
-                              nextClueLine.trim().isNotEmpty &&
-                              !foldsNextClueIntoExplanation) ...[
-                            SizedBox(height: isCompactRefinedFeedback ? 3 : 6),
-                            Text(
-                              nextClueLine.trim(),
-                              key: const Key('act0_shell_feedback_next_clue'),
-                              maxLines:
-                                  isCompactRefinedFeedback &&
-                                      !usesSharedAccessibilitySurface
-                                  ? 2
-                                  : null,
-                              overflow:
-                                  isCompactRefinedFeedback &&
-                                      !usesSharedAccessibilitySurface
-                                  ? TextOverflow.fade
-                                  : null,
-                              style: Act0ShellTokensV1.label.copyWith(
-                                color: tone.withValues(alpha: 0.9),
-                                fontSize: isCompactRefinedFeedback
-                                    ? 10.5
-                                    : 11.0,
-                                height: 1.1,
+                                ),
+                                const SizedBox(height: 1),
+                              ],
+                              if (!isCompactRefinedFeedback &&
+                                  (stateDetail.isNotEmpty ||
+                                      (showSharkyCompanion &&
+                                          reactionLine.isNotEmpty)))
+                                KeyedSubtree(
+                                  key: const Key(
+                                    'act0_shell_feedback_companion_role',
+                                  ),
+                                  child: Text(
+                                    stateDetail.isNotEmpty
+                                        ? stateDetail
+                                        : '$companionRoleLabel · $reactionLine',
+                                    key: const Key(
+                                      'act0_shell_sharky_outcome_reaction',
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.fade,
+                                    style: Act0ShellTokensV1.muted.copyWith(
+                                      color: Act0ShellTokensV1.textMuted,
+                                      fontSize: refined ? 10.0 : 10.5,
+                                      height: 1.06,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (rapidMode && actionLabel.isNotEmpty) ...[
+                      Text(
+                        '$actionPrefix: $actionLabel',
+                        key: const Key('act0_shell_feedback_hero_action'),
+                        maxLines: 2,
+                        overflow: TextOverflow.fade,
+                        style: Act0ShellTokensV1.body.copyWith(
+                          color: Act0ShellTokensV1.text,
+                          fontSize: 15,
+                          height: 1.06,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      const SizedBox(height: 0),
+                    ],
+                    if (!rapidMode && !isCompactRefinedFeedback) ...[
+                      SizedBox(height: isCompactRefinedFeedback ? 4 : 6),
+                      _FeedbackStateRailV1(
+                        tone: tone,
+                        compact: isCompactRefinedFeedback,
+                      ),
+                    ],
+                    if (showProofStack) ...[
+                      SizedBox(height: isCompactRefinedFeedback ? 4 : 8),
+                      Builder(
+                        builder: (context) {
+                          final proofStack = Column(
+                            key: const Key('act0_shell_feedback_proof_stack'),
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              if (showActionContrast) ...[
+                                _FeedbackActionContrastBlockV1(
+                                  actionLine: '$actionPrefix: $actionLabel',
+                                  selectedLine: selectedContrastLine,
+                                  tone: tone,
+                                  compact: isCompactRefinedFeedback,
+                                  refined: refined,
+                                  showEyebrow: showActionContrastEyebrow,
+                                ),
+                                SizedBox(
+                                  height: isCompactRefinedFeedback ? 7 : 10,
+                                ),
+                              ],
+                              if (showSignalProofInProofStack) ...[
+                                _FeedbackSignalProofRowV1(
+                                  proofLine: signalProof!.proofLine,
+                                  tone: tone,
+                                  compact: isCompactRefinedFeedback,
+                                ),
+                                SizedBox(
+                                  height: isCompactRefinedFeedback ? 2 : 3,
+                                ),
+                              ],
+                              if (showReason)
+                                cycleStableEnvelope &&
+                                        !usesSharedAccessibilitySurface
+                                    ? ConstrainedBox(
+                                        constraints: BoxConstraints(
+                                          maxHeight: pinsF1FeedbackCta
+                                              ? 20
+                                              : isCompactRefinedFeedback
+                                              ? 34
+                                              : 60,
+                                        ),
+                                        child: SingleChildScrollView(
+                                          key: const Key(
+                                            'act0_shell_feedback_explanation_scroll',
+                                          ),
+                                          primary: false,
+                                          physics:
+                                              const ClampingScrollPhysics(),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.stretch,
+                                            children: [
+                                              Text(
+                                                resolvedReason,
+                                                key: const Key(
+                                                  'act0_shell_feedback_reason',
+                                                ),
+                                                style: Act0ShellTokensV1.body
+                                                    .copyWith(
+                                                      color: Act0ShellTokensV1
+                                                          .textMuted,
+                                                      fontSize:
+                                                          isCompactRefinedFeedback
+                                                          ? 11.4
+                                                          : (refined
+                                                                ? 12.0
+                                                                : 12.5),
+                                                      height:
+                                                          isCompactRefinedFeedback
+                                                          ? 1.08
+                                                          : 1.16,
+                                                    ),
+                                              ),
+                                              if (foldsNextClueIntoExplanation) ...[
+                                                const SizedBox(height: 3),
+                                                Text(
+                                                  nextClueLine.trim(),
+                                                  key: const Key(
+                                                    'act0_shell_feedback_next_clue',
+                                                  ),
+                                                  style: Act0ShellTokensV1.label
+                                                      .copyWith(
+                                                        color: tone.withValues(
+                                                          alpha: 0.9,
+                                                        ),
+                                                        fontSize: 10.5,
+                                                        height: 1.1,
+                                                      ),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    : Text(
+                                        resolvedReason,
+                                        key: const Key(
+                                          'act0_shell_feedback_reason',
+                                        ),
+                                        maxLines:
+                                            isCompactRefinedFeedback &&
+                                                !usesSharedAccessibilitySurface &&
+                                                !preserveFullCompactReason
+                                            ? 2
+                                            : null,
+                                        overflow:
+                                            isCompactRefinedFeedback &&
+                                                !usesSharedAccessibilitySurface &&
+                                                !preserveFullCompactReason
+                                            ? TextOverflow.fade
+                                            : null,
+                                        style: Act0ShellTokensV1.body.copyWith(
+                                          color: Act0ShellTokensV1.textMuted,
+                                          fontSize: isCompactRefinedFeedback
+                                              ? 11.4
+                                              : (refined ? 12.0 : 12.5),
+                                          height: isCompactRefinedFeedback
+                                              ? 1.08
+                                              : 1.16,
+                                        ),
+                                      ),
+                              if (!rapidMode &&
+                                  nextClueLine.trim().isNotEmpty &&
+                                  !foldsNextClueIntoExplanation) ...[
+                                SizedBox(
+                                  height: isCompactRefinedFeedback ? 3 : 6,
+                                ),
+                                Text(
+                                  nextClueLine.trim(),
+                                  key: const Key(
+                                    'act0_shell_feedback_next_clue',
+                                  ),
+                                  maxLines:
+                                      isCompactRefinedFeedback &&
+                                          !usesSharedAccessibilitySurface
+                                      ? 2
+                                      : null,
+                                  overflow:
+                                      isCompactRefinedFeedback &&
+                                          !usesSharedAccessibilitySurface
+                                      ? TextOverflow.fade
+                                      : null,
+                                  style: Act0ShellTokensV1.label.copyWith(
+                                    color: tone.withValues(alpha: 0.9),
+                                    fontSize: isCompactRefinedFeedback
+                                        ? 10.5
+                                        : 11.0,
+                                    height: 1.1,
+                                  ),
+                                ),
+                              ],
+                              if (showRepairFocus) ...[
+                                SizedBox(
+                                  height: isCompactRefinedFeedback ? 6 : 10,
+                                ),
+                                const _FeedbackVerdictDividerV1(),
+                                SizedBox(
+                                  height: isCompactRefinedFeedback ? 6 : 8,
+                                ),
+                                _FeedbackVisibleRepairReasonBlockV1(
+                                  lines: visibleRepairReasonLines,
+                                  compact: isCompactRefinedFeedback,
+                                ),
+                              ],
+                            ],
+                          );
+                          if (!usesSharedAccessibilitySurface ||
+                              (usesCohesiveShortOutcome &&
+                                  !preserveFullCompactReason)) {
+                            return proofStack;
+                          }
+                          return ConstrainedBox(
+                            constraints: const BoxConstraints(maxHeight: 64),
+                            child: SingleChildScrollView(
+                              key: const Key(
+                                'act0_shell_feedback_proof_stack_scroll',
+                              ),
+                              primary: false,
+                              physics: const ClampingScrollPhysics(),
+                              child: proofStack,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                    if (!rapidMode &&
+                        showVerdictTitle &&
+                        !isCompactRefinedFeedback) ...[
+                      const SizedBox(height: 7),
+                      Row(
+                        children: [
+                          Icon(icon, key: iconKey, color: tone, size: 15),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              act0RuntimeLocalizedGeneralLabelV1(
+                                context,
+                                resolvedTitle,
+                              ),
+                              key: const Key(
+                                'act0_shell_feedback_status_label',
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.fade,
+                              style: Act0ShellTokensV1.muted.copyWith(
+                                color: tone.withValues(alpha: 0.92),
+                                fontSize: 11.5,
+                                fontWeight: FontWeight.w800,
                               ),
                             ),
-                          ],
-                          if (showRepairFocus) ...[
-                            SizedBox(height: isCompactRefinedFeedback ? 6 : 10),
-                            const _FeedbackVerdictDividerV1(),
-                            SizedBox(height: isCompactRefinedFeedback ? 6 : 8),
-                            _FeedbackVisibleRepairReasonBlockV1(
-                              lines: visibleRepairReasonLines,
-                              compact: isCompactRefinedFeedback,
-                            ),
-                          ],
+                          ),
                         ],
-                      );
-                      if (!usesSharedAccessibilitySurface ||
-                          (usesCohesiveShortOutcome &&
-                              !preserveFullCompactReason)) {
-                        return proofStack;
-                      }
-                      return ConstrainedBox(
-                        constraints: const BoxConstraints(maxHeight: 64),
-                        child: SingleChildScrollView(
-                          key: const Key(
-                            'act0_shell_feedback_proof_stack_scroll',
-                          ),
-                          primary: false,
-                          physics: const ClampingScrollPhysics(),
-                          child: proofStack,
+                      ),
+                    ],
+                    if (!rapidMode && showPotSweep && potLabel.isNotEmpty) ...[
+                      const SizedBox(height: 9),
+                      _PotSweepMomentV1(potLabel: potLabel),
+                    ],
+                    if (!rapidMode &&
+                        !isCompactRefinedFeedback &&
+                        visibleContextLabels.isNotEmpty) ...[
+                      const SizedBox(height: 7),
+                      Wrap(
+                        key: const Key('act0_shell_feedback_context_labels'),
+                        spacing: 6,
+                        runSpacing: 5,
+                        children: [
+                          for (final label in visibleContextLabels)
+                            _DockStatusPillV1(
+                              label: label,
+                              icon: Icons.check_rounded,
+                              tone: tone,
+                            ),
+                        ],
+                      ),
+                    ],
+                    if (shouldShowReceiptProof) ...[
+                      const SizedBox(height: 8),
+                      const _FeedbackVerdictDividerV1(),
+                      const SizedBox(height: 8),
+                      Builder(
+                        builder: (context) {
+                          final receiptProof = KeyedSubtree(
+                            key: const Key(
+                              'act0_shell_repair_result_system_card',
+                            ),
+                            child: _FeedbackProofKeyWrapperV1(
+                              proofKey: repairReceiptLine.isNotEmpty
+                                  ? const Key(
+                                      'act0_shell_repair_receipt_proof_block',
+                                    )
+                                  : hasRepairOutcomeProof
+                                  ? const Key('act0_shell_repair_outcome_proof')
+                                  : null,
+                              child: KeyedSubtree(
+                                key: repairReceiptLine.isNotEmpty
+                                    ? const Key(
+                                        'act0_shell_repair_result_receipt',
+                                      )
+                                    : hasRepairOutcomeProof
+                                    ? const Key(
+                                        'act0_shell_repair_outcome_proof_card',
+                                      )
+                                    : const Key(
+                                        'act0_shell_first_value_receipt',
+                                      ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (receiptTitle.isNotEmpty)
+                                      Text(
+                                        receiptTitle,
+                                        key: repairReceiptLine.isNotEmpty
+                                            ? const Key(
+                                                'act0_shell_repair_result_receipt_title',
+                                              )
+                                            : hasRepairOutcomeProof
+                                            ? const Key(
+                                                'act0_shell_repair_outcome_proof_title',
+                                              )
+                                            : null,
+                                        style: Act0ShellTokensV1.label.copyWith(
+                                          color: Act0ShellTokensV1.primary,
+                                          fontSize: isCompactRefinedFeedback
+                                              ? 10.0
+                                              : 10.5,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    if (receiptDetail.isNotEmpty) ...[
+                                      if (receiptTitle.isNotEmpty)
+                                        const SizedBox(height: 4),
+                                      Text(
+                                        receiptDetail,
+                                        key: repairReceiptLine.isNotEmpty
+                                            ? const Key(
+                                                'act0_shell_repair_result_outcome_line',
+                                              )
+                                            : hasRepairOutcomeProof
+                                            ? const Key(
+                                                'act0_shell_repair_outcome_proof_line',
+                                              )
+                                            : null,
+                                        style: Act0ShellTokensV1.body.copyWith(
+                                          color: Act0ShellTokensV1.text,
+                                          fontSize: isCompactRefinedFeedback
+                                              ? 13.0
+                                              : 15.0,
+                                          height: 1.12,
+                                          fontWeight: FontWeight.w900,
+                                        ),
+                                      ),
+                                    ],
+                                    if (receiptNextLine.isNotEmpty) ...[
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        receiptNextLine,
+                                        style: Act0ShellTokensV1.label.copyWith(
+                                          color: Act0ShellTokensV1.textMuted,
+                                          fontSize: isCompactRefinedFeedback
+                                              ? 10.0
+                                              : 10.5,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                          if (!usesSharedAccessibilitySurface)
+                            return receiptProof;
+                          return ConstrainedBox(
+                            constraints: const BoxConstraints(maxHeight: 44),
+                            child: SingleChildScrollView(
+                              key: const Key(
+                                'act0_shell_feedback_receipt_scroll',
+                              ),
+                              primary: false,
+                              physics: const ClampingScrollPhysics(),
+                              child: receiptProof,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                    if (!rapidMode &&
+                        !isFocusedCompactProofFeedback &&
+                        visibleRepairSessionSummaryLines.isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      const _FeedbackVerdictDividerV1(),
+                      const SizedBox(height: 8),
+                      _RepairSystemProofBlockV1(
+                        cardKey: const Key(
+                          'act0_shell_repair_closure_system_card',
                         ),
-                      );
-                    },
-                  ),
-                ],
-                if (!rapidMode &&
-                    showVerdictTitle &&
-                    !isCompactRefinedFeedback) ...[
-                  const SizedBox(height: 7),
-                  Row(
-                    children: [
-                      Icon(icon, key: iconKey, color: tone, size: 15),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          act0RuntimeLocalizedGeneralLabelV1(
-                            context,
-                            resolvedTitle,
+                        tone: Act0ShellTokensV1.gold,
+                        showLabel: false,
+                        child: _FeedbackProofKeyWrapperV1(
+                          proofKey: const Key(
+                            'act0_shell_session_summary_proof_block',
                           ),
-                          key: const Key('act0_shell_feedback_status_label'),
-                          maxLines: 1,
-                          overflow: TextOverflow.fade,
-                          style: Act0ShellTokensV1.muted.copyWith(
-                            color: tone.withValues(alpha: 0.92),
-                            fontSize: 11.5,
-                            fontWeight: FontWeight.w800,
+                          child: _FeedbackSessionSummaryCeremonyBlockV1(
+                            lines: visibleRepairSessionSummaryLines,
                           ),
                         ),
                       ),
                     ],
-                  ),
-                ],
-                if (!rapidMode && showPotSweep && potLabel.isNotEmpty) ...[
-                  const SizedBox(height: 9),
-                  _PotSweepMomentV1(potLabel: potLabel),
-                ],
-                if (!rapidMode &&
-                    !isCompactRefinedFeedback &&
-                    visibleContextLabels.isNotEmpty) ...[
-                  const SizedBox(height: 7),
-                  Wrap(
-                    key: const Key('act0_shell_feedback_context_labels'),
-                    spacing: 6,
-                    runSpacing: 5,
-                    children: [
-                      for (final label in visibleContextLabels)
-                        _DockStatusPillV1(
-                          label: label,
-                          icon: Icons.check_rounded,
-                          tone: tone,
-                        ),
+                    if (!rapidMode && completionSummary != null) ...[
+                      const SizedBox(height: 8),
+                      _CompletionToastV1(summary: completionSummary!),
                     ],
-                  ),
-                ],
-                if (shouldShowReceiptProof) ...[
-                  const SizedBox(height: 8),
-                  const _FeedbackVerdictDividerV1(),
-                  const SizedBox(height: 8),
-                  Builder(
-                    builder: (context) {
-                      final receiptProof = KeyedSubtree(
-                        key: const Key('act0_shell_repair_result_system_card'),
-                        child: _FeedbackProofKeyWrapperV1(
-                          proofKey: repairReceiptLine.isNotEmpty
-                              ? const Key(
-                                  'act0_shell_repair_receipt_proof_block',
-                                )
-                              : hasRepairOutcomeProof
-                              ? const Key('act0_shell_repair_outcome_proof')
-                              : null,
-                          child: KeyedSubtree(
-                            key: repairReceiptLine.isNotEmpty
-                                ? const Key('act0_shell_repair_result_receipt')
-                                : hasRepairOutcomeProof
-                                ? const Key(
-                                    'act0_shell_repair_outcome_proof_card',
-                                  )
-                                : const Key('act0_shell_first_value_receipt'),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (receiptTitle.isNotEmpty)
-                                  Text(
-                                    receiptTitle,
-                                    key: repairReceiptLine.isNotEmpty
-                                        ? const Key(
-                                            'act0_shell_repair_result_receipt_title',
-                                          )
-                                        : hasRepairOutcomeProof
-                                        ? const Key(
-                                            'act0_shell_repair_outcome_proof_title',
-                                          )
-                                        : null,
-                                    style: Act0ShellTokensV1.label.copyWith(
-                                      color: Act0ShellTokensV1.primary,
-                                      fontSize: isCompactRefinedFeedback
-                                          ? 10.0
-                                          : 10.5,
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                if (receiptDetail.isNotEmpty) ...[
-                                  if (receiptTitle.isNotEmpty)
-                                    const SizedBox(height: 4),
-                                  Text(
-                                    receiptDetail,
-                                    key: repairReceiptLine.isNotEmpty
-                                        ? const Key(
-                                            'act0_shell_repair_result_outcome_line',
-                                          )
-                                        : hasRepairOutcomeProof
-                                        ? const Key(
-                                            'act0_shell_repair_outcome_proof_line',
-                                          )
-                                        : null,
-                                    style: Act0ShellTokensV1.body.copyWith(
-                                      color: Act0ShellTokensV1.text,
-                                      fontSize: isCompactRefinedFeedback
-                                          ? 13.0
-                                          : 15.0,
-                                      height: 1.12,
-                                      fontWeight: FontWeight.w900,
-                                    ),
-                                  ),
-                                ],
-                                if (receiptNextLine.isNotEmpty) ...[
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    receiptNextLine,
-                                    style: Act0ShellTokensV1.label.copyWith(
-                                      color: Act0ShellTokensV1.textMuted,
-                                      fontSize: isCompactRefinedFeedback
-                                          ? 10.0
-                                          : 10.5,
-                                    ),
-                                  ),
-                                ],
-                              ],
+                    if (rapidMode) ...[
+                      SizedBox(key: feedbackTreatmentKey, height: 0),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Next spot...',
+                        key: const Key(
+                          'act0_shell_feedback_auto_advance_label',
+                        ),
+                        textAlign: TextAlign.center,
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: tone,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                    ] else ...[
+                      SizedBox(key: feedbackTreatmentKey, height: 0),
+                      if (pinsAllocatedFeedbackCta)
+                        const SizedBox.shrink()
+                      else if (pinsF1FeedbackCta)
+                        SizedBox(height: 48, child: buildContinueAction())
+                      else if (usesCohesiveShortOutcome) ...[
+                        const SizedBox(height: 16),
+                        buildContinueAction(),
+                      ] else if (usesSharedAccessibilitySurface &&
+                          reservesFullCtaGeometry) ...[
+                        SizedBox(height: 48, child: buildContinueAction()),
+                      ] else if (usesSharedAccessibilitySurface)
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                top: Act0ShellTokensV1.gapSm,
+                              ),
+                              child: buildContinueAction(),
                             ),
                           ),
-                        ),
-                      );
-                      if (!usesSharedAccessibilitySurface) return receiptProof;
-                      return ConstrainedBox(
-                        constraints: const BoxConstraints(maxHeight: 44),
-                        child: SingleChildScrollView(
-                          key: const Key('act0_shell_feedback_receipt_scroll'),
-                          primary: false,
-                          physics: const ClampingScrollPhysics(),
-                          child: receiptProof,
-                        ),
-                      );
-                    },
-                  ),
-                ],
-                if (!rapidMode &&
-                    !isFocusedCompactProofFeedback &&
-                    visibleRepairSessionSummaryLines.isNotEmpty) ...[
-                  const SizedBox(height: 8),
-                  const _FeedbackVerdictDividerV1(),
-                  const SizedBox(height: 8),
-                  _RepairSystemProofBlockV1(
-                    cardKey: const Key('act0_shell_repair_closure_system_card'),
-                    tone: Act0ShellTokensV1.gold,
-                    showLabel: false,
-                    child: _FeedbackProofKeyWrapperV1(
-                      proofKey: const Key(
-                        'act0_shell_session_summary_proof_block',
-                      ),
-                      child: _FeedbackSessionSummaryCeremonyBlockV1(
-                        lines: visibleRepairSessionSummaryLines,
-                      ),
-                    ),
-                  ),
-                ],
-                if (!rapidMode && completionSummary != null) ...[
-                  const SizedBox(height: 8),
-                  _CompletionToastV1(summary: completionSummary!),
-                ],
-                if (rapidMode) ...[
-                  SizedBox(key: feedbackTreatmentKey, height: 0),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Next spot...',
-                    key: const Key('act0_shell_feedback_auto_advance_label'),
-                    textAlign: TextAlign.center,
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: tone,
-                      letterSpacing: 0.2,
-                    ),
-                  ),
-                ] else ...[
-                  SizedBox(key: feedbackTreatmentKey, height: 0),
-                  if (pinsAllocatedFeedbackCta)
-                    const SizedBox.shrink()
-                  else if (pinsF1FeedbackCta)
-                    SizedBox(height: 48, child: buildContinueAction())
-                  else if (usesCohesiveShortOutcome) ...[
-                    const SizedBox(height: 16),
-                    buildContinueAction(),
-                  ] else if (usesSharedAccessibilitySurface &&
-                      reservesFullCtaGeometry) ...[
-                    SizedBox(height: 48, child: buildContinueAction()),
-                  ] else if (usesSharedAccessibilitySurface)
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            top: Act0ShellTokensV1.gapSm,
-                          ),
-                          child: buildContinueAction(),
-                        ),
-                      ),
-                    )
-                  else ...[
-                    SizedBox(height: isCompactRefinedFeedback ? 4 : 10),
-                    buildContinueAction(),
+                        )
+                      else ...[
+                        SizedBox(height: isCompactRefinedFeedback ? 4 : 10),
+                        buildContinueAction(),
+                      ],
+                    ],
                   ],
-                ],
-              ],
                 );
                 if (!pinsAllocatedFeedbackCta) return feedbackBody;
                 return Column(

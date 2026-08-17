@@ -148,6 +148,17 @@ void main() {
       final runner = runnerFinder.evaluate().isEmpty
           ? null
           : tester.widget<Act0LessonRunnerShellV1>(runnerFinder);
+      final expectedPurpose = switch (runner?.runner.phase) {
+        Act0LessonPhaseV1.theory => 'LEARN THE TABLE',
+        Act0LessonPhaseV1.drill => 'YOUR TABLE DECISION',
+        Act0LessonPhaseV1.review => 'UNDERSTAND THE RESULT',
+        null => throw StateError('Expected an Act0 lesson runner for $name'),
+      };
+      expect(
+        find.byKey(const Key('act0_wave_a_learning_context')),
+        findsOneWidget,
+      );
+      expect(find.text(expectedPurpose), findsOneWidget);
       final table = find.byKey(const Key('act0_shell_table'));
       final rect = table.evaluate().isEmpty ? null : tester.getRect(table);
       Map<String, double>? rectData(Finder finder) {
@@ -237,16 +248,16 @@ void main() {
                 'height': rect.height,
               },
         'integratedGeometry': <String, Object?>{
-                'promptEnvelope': promptRect,
-                'tableSceneAllocation': rect?.height,
-                'visibleTableBounds': silhouetteRect,
-                'heroBounds': heroRect,
-                'heroY': heroRect?['top'],
-                'actionEnvelope': actionRect,
-                'actionEnvelopeTop': actionRect?['top'],
-                'explicitTableScale': 1.0,
-                'seatAnchors': depthAnchors,
-              },
+          'promptEnvelope': promptRect,
+          'tableSceneAllocation': rect?.height,
+          'visibleTableBounds': silhouetteRect,
+          'heroBounds': heroRect,
+          'heroY': heroRect?['top'],
+          'actionEnvelope': actionRect,
+          'actionEnvelopeTop': actionRect?['top'],
+          'explicitTableScale': 1.0,
+          'seatAnchors': depthAnchors,
+        },
         'overflow': tester.takeException()?.toString(),
       });
       writeGeometryMetrics();
