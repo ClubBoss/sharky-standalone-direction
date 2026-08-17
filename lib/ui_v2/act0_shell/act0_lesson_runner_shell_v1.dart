@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_error_contract_v1.d
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_scene_v3.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_depth_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
@@ -10381,90 +10382,6 @@ Act0RunnerCompletionSummaryV1 _feedbackProgressAtGain(
   );
 }
 
-class _IntegratedPerspectiveTableShapeV2 extends ShapeBorder {
-  const _IntegratedPerspectiveTableShapeV2({this.side = BorderSide.none});
-
-  final BorderSide side;
-
-  @override
-  EdgeInsetsGeometry get dimensions => EdgeInsets.all(side.width);
-
-  Path _path(Rect rect) {
-    final w = rect.width;
-    final h = rect.height;
-    return Path()
-      ..moveTo(rect.left + (w * 0.22), rect.top)
-      ..cubicTo(
-        rect.left + (w * 0.34),
-        rect.top - (h * 0.008),
-        rect.left + (w * 0.66),
-        rect.top - (h * 0.008),
-        rect.left + (w * 0.78),
-        rect.top,
-      )
-      ..quadraticBezierTo(
-        rect.left + (w * 0.87),
-        rect.top + (h * 0.025),
-        rect.left + (w * 0.90),
-        rect.top + (h * 0.12),
-      )
-      ..lineTo(rect.left + (w * 0.985), rect.top + (h * 0.80))
-      ..quadraticBezierTo(
-        rect.right,
-        rect.top + (h * 0.93),
-        rect.left + (w * 0.88),
-        rect.top + (h * 0.985),
-      )
-      ..quadraticBezierTo(
-        rect.left + (w * 0.50),
-        rect.bottom + (h * 0.012),
-        rect.left + (w * 0.12),
-        rect.top + (h * 0.985),
-      )
-      ..quadraticBezierTo(
-        rect.left,
-        rect.top + (h * 0.93),
-        rect.left + (w * 0.015),
-        rect.top + (h * 0.80),
-      )
-      ..lineTo(rect.left + (w * 0.10), rect.top + (h * 0.12))
-      ..quadraticBezierTo(
-        rect.left + (w * 0.13),
-        rect.top + (h * 0.025),
-        rect.left + (w * 0.22),
-        rect.top,
-      )
-      ..close();
-  }
-
-  @override
-  Path getOuterPath(Rect rect, {TextDirection? textDirection}) => _path(rect);
-
-  @override
-  Path getInnerPath(Rect rect, {TextDirection? textDirection}) =>
-      _path(rect.deflate(side.width));
-
-  @override
-  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
-    if (side.style == BorderStyle.none || side.width == 0) return;
-    canvas.drawPath(_path(rect.deflate(side.width / 2)), side.toPaint());
-  }
-
-  @override
-  ShapeBorder scale(double t) =>
-      _IntegratedPerspectiveTableShapeV2(side: side.scale(t));
-}
-
-Offset _integratedPerspectivePointV2(Offset point) {
-  final horizontalScale = 0.72 + (0.34 * point.dy.clamp(0.0, 1.0));
-  final y = point.dy <= 0.34
-      ? point.dy + 0.012
-      : point.dy >= 0.68
-      ? point.dy - 0.006
-      : point.dy;
-  return Offset(0.5 + ((point.dx - 0.5) * horizontalScale), y);
-}
-
 class _Act0TableV1 extends StatelessWidget {
   const _Act0TableV1({
     required this.table,
@@ -10589,6 +10506,35 @@ class _Act0TableV1 extends StatelessWidget {
     if (maxTableHeight != null && maxTableHeight > 0) {
       tableMaxWidth = math.min(tableMaxWidth, maxTableHeight * tableAspect);
     }
+    // Canonical scene slots. Seat order and rough placement stay owned by the
+    // Wave A slot tables; B1 only resolves how deep each seat is and what
+    // volume it reserves for future character art.
+    final sceneSeatSlots = act0SceneSeatSlotsV1(
+      baseSlots: _seatSlotsForVariant(
+        visualVariant,
+        compactBottomDockClearance: compactBottomDockClearance,
+        useAnswerListPerimeterRing: _viewportFamilyUsesAnswerListCompositionV1(
+          viewportFamily,
+        ),
+      ),
+      seatIds: seats.map((seat) => seat.seatId).toList(),
+      // `heroSeatId` is optional on the table state and is frequently null, so
+      // resolve the hero the same way seat placement does: the seat's own flag
+      // first, then the explicit id.
+      heroSeatId:
+          seats
+              .where((seat) => seat.isHero || seat.seatId == table.heroSeatId)
+              .firstOrNull
+              ?.seatId ??
+          table.heroSeatId,
+    );
+    final inactiveSeatIds = seats
+        .where((seat) => seat.isFolded || !seat.isInHand || !seat.isOccupied)
+        .map((seat) => seat.seatId)
+        .toSet();
+    final heroSceneSlot = sceneSeatSlots
+        .where((slot) => slot.isHero)
+        .firstOrNull;
     final scene = ConstrainedBox(
       key: const Key('act0_shell_table'),
       constraints: BoxConstraints(maxWidth: tableMaxWidth),
@@ -10609,10 +10555,14 @@ class _Act0TableV1 extends StatelessWidget {
               compactBottomDockClearance: compactBottomDockClearance,
             );
             final seatSlots = integratedPerspectivePrototype
-                ? baseSeatSlots.map(_integratedPerspectivePointV2).toList()
+                ? baseSeatSlots
+                      .map(Act0ScenePerspectiveV1.canonical.project)
+                      .toList()
                 : baseSeatSlots;
             final chipSlots = integratedPerspectivePrototype
-                ? baseChipSlots.map(_integratedPerspectivePointV2).toList()
+                ? baseChipSlots
+                      .map(Act0ScenePerspectiveV1.canonical.project)
+                      .toList()
                 : baseChipSlots;
             final activeSeatId = (playbackActiveSeatId ?? '').trim().isNotEmpty
                 ? playbackActiveSeatId
@@ -10651,10 +10601,15 @@ class _Act0TableV1 extends StatelessWidget {
                         stops: <double>[0, 0.42, 1],
                       ),
                       shadows: const <BoxShadow>[
+                        // Wave A needed a heavy drop shadow to lift the table
+                        // off flat navy. With a room behind it that shadow
+                        // became a black moat separating the table from the
+                        // players seated at it, so it drops to a contact
+                        // shadow and the environment plane does the lifting.
                         BoxShadow(
-                          color: Color(0xD8000000),
-                          blurRadius: 48,
-                          offset: Offset(0, 28),
+                          color: Color(0x66000000),
+                          blurRadius: 26,
+                          offset: Offset(0, 12),
                         ),
                         BoxShadow(
                           color: Act0TableFeltCanonV1.railAmbientShadow,
@@ -10663,7 +10618,7 @@ class _Act0TableV1 extends StatelessWidget {
                           offset: Offset(0, 7),
                         ),
                       ],
-                      shape: _IntegratedPerspectiveTableShapeV2(
+                      shape: Act0SceneTableShapeV1(
                         side: BorderSide(
                           color: Act0TableFeltCanonV1.innerHairline,
                           width: 1.5,
@@ -10689,7 +10644,7 @@ class _Act0TableV1 extends StatelessWidget {
                                 ],
                                 stops: <double>[0, 0.55, 1],
                               ),
-                              shape: _IntegratedPerspectiveTableShapeV2(
+                              shape: Act0SceneTableShapeV1(
                                 side: BorderSide(
                                   color: Act0ShellTokensV1.feltLine,
                                   width: 2,
@@ -10705,7 +10660,7 @@ class _Act0TableV1 extends StatelessWidget {
                       child: DecoratedBox(
                         decoration: integratedPerspectivePrototype
                             ? ShapeDecoration(
-                                shape: _IntegratedPerspectiveTableShapeV2(
+                                shape: Act0SceneTableShapeV1(
                                   side: BorderSide(
                                     color: Act0ShellTokensV1.feltLine
                                         .withValues(alpha: 0.30),
@@ -10745,8 +10700,7 @@ class _Act0TableV1 extends StatelessWidget {
                                   ],
                                   stops: const <double>[0, 0.34, 1],
                                 ),
-                                shape:
-                                    const _IntegratedPerspectiveTableShapeV2(),
+                                shape: const Act0SceneTableShapeV1(),
                               )
                             : BoxDecoration(
                                 borderRadius: BorderRadius.circular(
@@ -10798,6 +10752,22 @@ class _Act0TableV1 extends StatelessWidget {
                       ),
                     ),
                   ),
+                  if (heroSceneSlot != null)
+                    Positioned.fill(
+                      child: IgnorePointer(
+                        child: ClipPath(
+                          clipper: const ShapeBorderClipper(
+                            shape: Act0SceneTableShapeV1(),
+                          ),
+                          child: CustomPaint(
+                            key: const Key('act0_scene_hero_near_plane'),
+                            painter: Act0SceneHeroPlanePainterV1(
+                              heroAnchor: heroSceneSlot.plateAnchor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   Center(
                     child: Transform.translate(
                       // The callout owns the upper-center teaching lane; keep
@@ -10917,9 +10887,62 @@ class _Act0TableV1 extends StatelessWidget {
     if (!integratedPerspectivePrototype) {
       return scene;
     }
+    // B1 scene assembly. The table keeps every Wave A responsibility; it is
+    // now mounted inside a room instead of floating in unowned app space.
+    // Painting order is the canonical plane order: environment, grounding,
+    // then the table object itself.
     return KeyedSubtree(
       key: const Key('act0_integrated_scene_perspective_table'),
-      child: scene,
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.center,
+        children: [
+          Positioned.fill(
+            child: IgnorePointer(
+              child: Transform.scale(
+                // Reaches past the table into the flanks Wave A left as flat
+                // navy, so the environment owns the whole scene band. Growth
+                // is almost entirely downward: the teaching layer above the
+                // table keeps its Wave A contrast, and the room simply
+                // continues behind the action dock.
+                scaleX: 1.46,
+                scaleY: 1.18,
+                alignment: const Alignment(0, -0.9),
+                child: const CustomPaint(
+                  key: Key('act0_scene_environment_plane'),
+                  painter: Act0SceneEnvironmentPainterV1(),
+                ),
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: IgnorePointer(
+              child: Transform.scale(
+                scaleX: 1.10,
+                scaleY: 1.05,
+                child: const CustomPaint(
+                  key: Key('act0_scene_grounding_plane'),
+                  painter: Act0SceneGroundingPainterV1(),
+                ),
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: Act0SceneVolumeLayerV1(
+              key: const Key('act0_scene_player_volume_plane'),
+              slots: sceneSeatSlots,
+              inactiveSeatIds: inactiveSeatIds,
+            ),
+          ),
+          scene,
+          if (heroSceneSlot != null)
+            const Positioned.fill(
+              child: Act0SceneHeroForegroundV1(
+                key: Key('act0_scene_hero_foreground_volume'),
+              ),
+            ),
+        ],
+      ),
     );
   }
 
@@ -11842,13 +11865,12 @@ class _SeatPlacementV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final point = seatSlots[slot.clamp(0, seatSlots.length - 1)];
+    // Plate depth comes from the one canonical projection. Its range stays
+    // narrow on purpose: plates carry text, so the scene's depth is carried by
+    // the character volumes instead.
     final tierScale = !depthTieredPrototype
         ? 1.0
-        : point.dy >= 0.68
-        ? 1.05
-        : point.dy <= 0.34
-        ? 0.91
-        : 0.97;
+        : Act0ScenePerspectiveV1.canonical.plateScaleAt(point.dy);
     return Positioned(
       left: tableWidth * point.dx,
       top: tableHeight * point.dy,
@@ -11856,11 +11878,8 @@ class _SeatPlacementV1 extends StatelessWidget {
         translation: const Offset(-0.5, -0.5),
         child: Transform.scale(
           key: Key(
-            'act0_integrated_scene_depth_${point.dy >= 0.68
-                ? 'near'
-                : point.dy <= 0.34
-                ? 'far'
-                : 'mid'}_${seat.seatId}',
+            'act0_integrated_scene_depth_'
+            '${act0SceneDepthTierV1(point.dy)}_${seat.seatId}',
           ),
           scale: tierScale,
           child: _SeatNodeV1(
