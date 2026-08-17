@@ -289,7 +289,9 @@ Act0SharkyGrowthStageV1 act0SharkyGrowthStageForTierV1(
 /// world number crosses the W4->W5 boundary. W13+ resolves the same
 /// `developing` stage as W5-W12 — no new stage is introduced for later
 /// worlds.
-Act0SharkyGrowthStageV1 act0SharkyGrowthStageForWorldNumberV1(int worldNumber) {
+Act0SharkyGrowthStageV1 act0SharkyGrowthStageForWorldNumberV1(
+  int worldNumber,
+) {
   return act0SharkyGrowthStageForTierV1(
     act0SharkyCoachTierForWorldNumberV1(worldNumber),
   );
