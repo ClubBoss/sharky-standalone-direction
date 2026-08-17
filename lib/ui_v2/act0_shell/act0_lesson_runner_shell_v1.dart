@@ -3485,22 +3485,19 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                   children: [
                     SizedBox(
                       height: tableHeight + tableStageChrome,
-                      // B2 owns the bounded vertical trade B1 identified. The
-                      // stage keeps its full height and the lower surface is
-                      // untouched; only the table gives back room, which buys
-                      // headroom for the far-player plane above the far rail.
-                      child: Padding(
-                        // The reserve must land ABOVE the far rail to be worth
-                        // anything; the table is top-aligned in its stage, so
-                        // shrinking alone just opened dead space underneath.
-                        padding: const EdgeInsets.only(
-                          top: _act0SceneFarPlaneReserveV1,
-                        ),
+                      // B2 owns the bounded vertical trade B1 identified.
+                      //
+                      // It is a SHIFT, not a shrink. Taking the reserve out of
+                      // the table's height breaks Wave A's table-dominance
+                      // guards, which leave as little as 7 px of slack — the
+                      // real bound on "bounded". Translating instead spends the
+                      // dead gap between the table's near rail and the action
+                      // dock, so table height, the lower surface and every
+                      // interaction target keep their full allocation.
+                      child: Transform.translate(
+                        offset: const Offset(0, _act0SceneFarPlaneReserveV1),
                         child: buildRunnerStage(
-                          maxTableHeight: math.max(
-                            0.0,
-                            tableHeight - _act0SceneFarPlaneReserveV1,
-                          ),
+                          maxTableHeight: math.max(0.0, tableHeight),
                         ),
                       ),
                     ),
@@ -10402,10 +10399,11 @@ Act0RunnerCompletionSummaryV1 _feedbackProgressAtGain(
 /// first board card's rank, which is learning-relevant information.
 const double _act0SceneRailWidthV1 = 10.0;
 
-/// Vertical room B2 gives back from the table so the far-player plane is
-/// readable above the far rail. Taken from the table only — teaching copy,
-/// interaction targets and the lower surface keep their allocation.
-const double _act0SceneFarPlaneReserveV1 = 30.0;
+/// Downward shift B2 applies to the table so the far-player plane is readable
+/// above the far rail. Spends the dead gap between the near rail and the action
+/// dock; the table's own height is unchanged, so Wave A table-dominance guards
+/// keep their full margin.
+const double _act0SceneFarPlaneReserveV1 = 18.0;
 
 /// How far the B2 rail stands proud of the felt inset. The rail gains its
 /// volume outward, into the room, rather than by eating the playing surface.

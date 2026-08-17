@@ -76,16 +76,19 @@ anchors and table allocation byte-identical.
   lit back wall, architectural piers, floor falloff, horizon with atmospheric
   haze, table-lamp spill on the floor, framing vignette — all sharing the same
   `Act0SceneLightV1` as the table.
-- Bounded vertical trade applied: `_act0SceneFarPlaneReserveV1 = 30`, taken
-  from the table only. Table top +30 and table height -30 in every state; the
-  action envelope top is **identical in all 8 states**, so the lower surface,
-  CTA and teaching copy keep their full allocation.
-- **Two misses caught and fixed in-loop:** (1) the reserve first landed *below*
-  the table, because the table is top-aligned in its stage — shrinking alone
-  just opened dead space; re-aimed with an explicit top pad. (2) The first room
-  was darker than B1 and its vignette crushed the corners the far volumes live
-  in, making the far plane less readable, not more; wall/floor tones lifted and
-  the vignette pulled back.
+- Bounded vertical trade applied as a **shift, not a shrink**:
+  `_act0SceneFarPlaneReserveV1 = 18`, a paint-only translate that spends the
+  dead gap between the near rail and the action dock. Table width and height
+  are identical to B1 in every state; only the top moves, by +18.
+- **Three misses caught and fixed in-loop:** (1) the reserve first landed
+  *below* the table, because the table is top-aligned in its stage — shrinking
+  alone just opened dead space. (2) The first room was darker than B1 and its
+  vignette crushed the corners the far volumes live in, making the far plane
+  less readable, not more; wall/floor tones lifted and the vignette pulled
+  back. (3) Taking the reserve out of the table's **height** broke three Wave A
+  table-dominance guards in `t5_two_family_runner_closure_v1_test.dart`, which
+  leave as little as 7 px of slack — that is the real bound on "bounded". The
+  trade was converted to a paint-only shift, restoring full table allocation.
 - Far-player plane is now readable above the far rail — the gap B1 recorded as
   needing the vertical trade B2 owns.
 - Contracts: collision guard clean, zero overflow, tappable `9 -> 9`, runner
