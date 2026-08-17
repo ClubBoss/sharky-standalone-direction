@@ -511,6 +511,8 @@ class Act0SceneVolumeLayerV1 extends StatelessWidget {
     required this.slots,
     this.inactiveSeatIds = const <String>{},
     this.perspective = Act0ScenePerspectiveV1.canonical,
+    this.rimColor,
+    this.bodyColor,
   });
 
   final List<Act0SceneSeatSlotV1> slots;
@@ -519,6 +521,12 @@ class Act0SceneVolumeLayerV1 extends StatelessWidget {
   final Set<String> inactiveSeatIds;
 
   final Act0ScenePerspectiveV1 perspective;
+
+  /// Scene key-light rim tone, forwarded to every volume.
+  final Color? rimColor;
+
+  /// Room ambient body tone, forwarded to every volume.
+  final Color? bodyColor;
 
   @override
   Widget build(BuildContext context) {
@@ -547,6 +555,8 @@ class Act0SceneVolumeLayerV1 extends StatelessWidget {
                     size: slot.volumeSize(width),
                     active: !inactiveSeatIds.contains(slot.seatId),
                     perspective: perspective,
+                    rimColor: rimColor,
+                    bodyColor: bodyColor,
                   ),
                 ),
               ),
@@ -628,7 +638,10 @@ class Act0SceneHeroPlanePainterV1 extends CustomPainter {
 /// As the object closest to the camera it is the darkest thing in the scene,
 /// lit only along its rim by the overhead lamp. B3 inherits this exact volume.
 class Act0SceneHeroForegroundV1 extends StatelessWidget {
-  const Act0SceneHeroForegroundV1({super.key});
+  const Act0SceneHeroForegroundV1({super.key, this.rimColor});
+
+  /// Rim tone from the scene's key light; null keeps the B1 default.
+  final Color? rimColor;
 
   @override
   Widget build(BuildContext context) {
@@ -642,8 +655,8 @@ class Act0SceneHeroForegroundV1 extends StatelessWidget {
             // Clears the hero's own plate, then continues down behind the
             // action dock so the learner's seat has no visible end.
             translation: const Offset(0, 0.86),
-            child: const CustomPaint(
-              painter: _Act0SceneHeroForegroundPainterV1(),
+            child: CustomPaint(
+              painter: _Act0SceneHeroForegroundPainterV1(rimColor: rimColor),
             ),
           ),
         ),
@@ -653,10 +666,12 @@ class Act0SceneHeroForegroundV1 extends StatelessWidget {
 }
 
 class _Act0SceneHeroForegroundPainterV1 extends CustomPainter {
-  const _Act0SceneHeroForegroundPainterV1();
+  const _Act0SceneHeroForegroundPainterV1({this.rimColor});
+
+  final Color? rimColor;
 
   static const Color _mass = Color(0xFF060C16);
-  static const Color _rim = Color(0xFF5E86AE);
+  static const Color _rimDefault = Color(0xFF5E86AE);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -685,8 +700,8 @@ class _Act0SceneHeroForegroundPainterV1 extends CustomPainter {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: <Color>[
-            _rim.withValues(alpha: 0.46),
-            _rim.withValues(alpha: 0.06),
+            (rimColor ?? _rimDefault).withValues(alpha: 0.52),
+            (rimColor ?? _rimDefault).withValues(alpha: 0.06),
           ],
         ).createShader(Rect.fromLTWH(0, 0, w, h * 0.72)),
     );
@@ -694,7 +709,7 @@ class _Act0SceneHeroForegroundPainterV1 extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _Act0SceneHeroForegroundPainterV1 oldDelegate) =>
-      false;
+      oldDelegate.rimColor != rimColor;
 }
 
 /// A reserved, character-safe player volume.
@@ -710,6 +725,8 @@ class Act0SceneCharacterVolumeV1 extends StatelessWidget {
     required this.size,
     this.active = true,
     this.perspective = Act0ScenePerspectiveV1.canonical,
+    this.rimColor,
+    this.bodyColor,
   });
 
   final Act0SceneSeatSlotV1 slot;
@@ -719,6 +736,14 @@ class Act0SceneCharacterVolumeV1 extends StatelessWidget {
   final bool active;
 
   final Act0ScenePerspectiveV1 perspective;
+
+  /// Rim tone from the scene's key light. B2 supplies this so the volumes are
+  /// lit by the same source as the table and room instead of glowing on their
+  /// own. Null keeps the B1 self-lit defaults.
+  final Color? rimColor;
+
+  /// Body tone, tinted by the room's ambient.
+  final Color? bodyColor;
 
   @override
   Widget build(BuildContext context) {
@@ -730,7 +755,11 @@ class Act0SceneCharacterVolumeV1 extends StatelessWidget {
         child: Opacity(
           opacity: (active ? 1.0 : 0.62) * (1 - (haze * 0.30)),
           child: CustomPaint(
-            painter: _Act0SceneCharacterVolumePainterV1(haze: haze),
+            painter: _Act0SceneCharacterVolumePainterV1(
+              haze: haze,
+              rimColor: rimColor,
+              bodyColor: bodyColor,
+            ),
           ),
         ),
       ),
@@ -739,18 +768,27 @@ class Act0SceneCharacterVolumeV1 extends StatelessWidget {
 }
 
 class _Act0SceneCharacterVolumePainterV1 extends CustomPainter {
-  const _Act0SceneCharacterVolumePainterV1({required this.haze});
+  const _Act0SceneCharacterVolumePainterV1({
+    required this.haze,
+    this.rimColor,
+    this.bodyColor,
+  });
 
   final double haze;
+  final Color? rimColor;
+  final Color? bodyColor;
 
-  static const Color _chair = Color(0xFF1B2E49);
-  static const Color _body = Color(0xFF28405F);
-  static const Color _rim = Color(0xFF6D8FB4);
+  static const Color _chairDefault = Color(0xFF1B2E49);
+  static const Color _bodyDefault = Color(0xFF28405F);
+  static const Color _rimDefault = Color(0xFF6D8FB4);
 
   @override
   void paint(Canvas canvas, Size size) {
     final w = size.width;
     final h = size.height;
+    final body = bodyColor ?? _bodyDefault;
+    final chairTone = Color.lerp(_chairDefault, body, 0.25)!;
+    final rimTone = rimColor ?? _rimDefault;
     // Far volumes sit deeper in the room haze, so their contrast drops.
     final lift = 1 - haze;
 
@@ -761,7 +799,7 @@ class _Act0SceneCharacterVolumePainterV1 extends CustomPainter {
     );
     canvas.drawRRect(
       chair,
-      Paint()..color = Color.lerp(_chair, _body, 0.15 * lift)!,
+      Paint()..color = Color.lerp(chairTone, body, 0.15 * lift)!,
     );
 
     // Shoulders.
@@ -769,13 +807,13 @@ class _Act0SceneCharacterVolumePainterV1 extends CustomPainter {
       Rect.fromLTWH(w * 0.19, h * 0.50, w * 0.62, h * 0.50),
       Radius.circular(w * 0.24),
     );
-    canvas.drawRRect(shoulders, Paint()..color = _body);
+    canvas.drawRRect(shoulders, Paint()..color = body);
 
     // Head.
     canvas.drawCircle(
       Offset(w * 0.50, h * 0.36),
       w * 0.163,
-      Paint()..color = _body,
+      Paint()..color = body,
     );
 
     // Rim light from the overhead lamp. This is what makes the volume read as
@@ -783,7 +821,7 @@ class _Act0SceneCharacterVolumePainterV1 extends CustomPainter {
     final rim = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = math.max(1.0, w * 0.018)
-      ..color = _rim.withValues(alpha: 0.62 * lift);
+      ..color = rimTone.withValues(alpha: 0.62 * lift);
     canvas.drawArc(
       Rect.fromCircle(center: Offset(w * 0.50, h * 0.36), radius: w * 0.163),
       math.pi * 1.12,
@@ -803,5 +841,8 @@ class _Act0SceneCharacterVolumePainterV1 extends CustomPainter {
   @override
   bool shouldRepaint(
     covariant _Act0SceneCharacterVolumePainterV1 oldDelegate,
-  ) => oldDelegate.haze != haze;
+  ) =>
+      oldDelegate.haze != haze ||
+      oldDelegate.rimColor != rimColor ||
+      oldDelegate.bodyColor != bodyColor;
 }

@@ -10950,6 +10950,10 @@ class _Act0TableV1 extends StatelessWidget {
               key: const Key('act0_scene_player_volume_plane'),
               slots: sceneSeatSlots,
               inactiveSeatIds: inactiveSeatIds,
+              // One key light for the whole scene: the volumes take their rim
+              // and body tone from the same source as the table and the room.
+              rimColor: Act0SceneLightV1.specular,
+              bodyColor: Act0SceneLightV1.ambient,
             ),
           ),
           scene,
@@ -10957,6 +10961,7 @@ class _Act0TableV1 extends StatelessWidget {
             const Positioned.fill(
               child: Act0SceneHeroForegroundV1(
                 key: Key('act0_scene_hero_foreground_volume'),
+                rimColor: Act0SceneLightV1.specular,
               ),
             ),
         ],

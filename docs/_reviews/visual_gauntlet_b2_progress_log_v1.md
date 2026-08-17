@@ -92,9 +92,18 @@ anchors and table allocation byte-identical.
   phases identical, all six B1 seat anchors preserved with identical tiers.
 - Evidence: `output/visual_gauntlet_b2/iter2_402x874/`
 
-### CP3 — iteration 3 (conditional)
+### CP3 — iteration 3: one key light across the whole scene
 
-- Status: **pending**
+- Status: **done**
+- Surviving B2 class: the table and room shared a key light, but the B1 player
+  volumes and hero foreground still carried hardcoded self-lit rims — exactly
+  the "widget-specific glow" the acceptance bar rules out.
+- `Act0SceneCharacterVolumeV1`, `Act0SceneVolumeLayerV1` and
+  `Act0SceneHeroForegroundV1` now accept rim/body tones, and the runner feeds
+  them `Act0SceneLightV1.specular` / `.ambient`. B1 defaults are retained when
+  no light is supplied, so the B1 geometry module stays independently valid and
+  keeps no import on the B2 material module.
+- Geometry untouched: this iteration changes colour inputs only.
 
 ### CP4 — full validation, evidence, draft PR
 
@@ -102,7 +111,5 @@ anchors and table allocation byte-identical.
 
 ## Next remaining class-level gap
 
-`LIGHT_NOT_YET_SHARED_WITH_THE_B1_VOLUMES` — candidate for a bounded
-iteration 3. The table and room now share one key light, but the player volumes
-and hero foreground still carry B1's hardcoded rim, which is exactly the
-"widget-specific glow" the B2 acceptance bar calls out.
+None at B2 scope. Remaining richness is asset-and-parity work owned by B7, and
+character/HUD/attention/motion work owned by B3-B6.
