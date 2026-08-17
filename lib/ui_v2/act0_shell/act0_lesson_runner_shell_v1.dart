@@ -10954,9 +10954,8 @@ class _Act0TableV1 extends StatelessWidget {
           scene,
           if (heroSceneSlot != null)
             const Positioned.fill(
-              child: Act0SceneHeroForegroundV1(
+              child: Act0ScenePlayerHeroV1(
                 key: Key('act0_scene_hero_foreground_volume'),
-                rimColor: Act0SceneLightV1.specular,
               ),
             ),
         ],

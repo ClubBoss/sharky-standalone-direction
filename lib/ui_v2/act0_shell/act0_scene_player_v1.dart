@@ -388,3 +388,113 @@ class Act0ScenePlayerLayerV1 extends StatelessWidget {
 /// Lerp helper kept local so the module owns its own maths.
 double act0ScenePlayerLerpV1(double a, double b, double t) =>
     lerpDouble(a, b, t.clamp(0.0, 1.0))!;
+
+/// The learner, seen from behind.
+///
+/// B1 gave the hero correct geometry — a foreground mass that occludes the near
+/// rail, the mirror of the far players being occluded by it — and B2 gave it a
+/// rim. Neither made it a person. It had no arms and no relationship to the
+/// cards it was supposedly holding.
+///
+/// This puts the learner in the same family as everyone else at the table:
+/// the same head-and-shoulder silhouette, the same key light, and forearms
+/// coming up onto the cloth. The arms deliberately pass *outside* the hero's
+/// hole cards and identity plate — they frame the learner's hand, never cover
+/// it, because that hand is the thing the lesson is about.
+class Act0ScenePlayerHeroV1 extends StatelessWidget {
+  const Act0ScenePlayerHeroV1({
+    super.key,
+    this.light = Act0SceneLightV1.canonical,
+  });
+
+  final Act0SceneLightV1 light;
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: FractionallySizedBox(
+          widthFactor: 0.74,
+          heightFactor: 0.19,
+          child: FractionalTranslation(
+            translation: const Offset(0, 0.80),
+            child: CustomPaint(
+              painter: _Act0ScenePlayerHeroPainterV1(light: light),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Act0ScenePlayerHeroPainterV1 extends CustomPainter {
+  const _Act0ScenePlayerHeroPainterV1({required this.light});
+
+  final Act0SceneLightV1 light;
+
+  /// Closest object to the camera, so it is the darkest thing in the scene and
+  /// is described only by its rim.
+  static const Color _mass = Color(0xFF04090F);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+    final body = Paint()..color = _mass;
+
+    // Forearms first, so the shoulder mass reads as being in front of them.
+    // They rise outside the hero card lane and stop short of the identity
+    // plate, which keeps every learning object clear.
+    final arm = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = h * 0.17
+      ..color = _mass;
+    for (final side in const <double>[-1, 1]) {
+      canvas.drawPath(
+        Path()
+          ..moveTo(w * (0.5 + (0.42 * side)), h * 0.94)
+          ..quadraticBezierTo(
+            w * (0.5 + (0.47 * side)),
+            h * 0.44,
+            w * (0.5 + (0.455 * side)),
+            h * 0.06,
+          ),
+        arm,
+      );
+    }
+
+    // Head and shoulders, one silhouette, cropped by the action dock below.
+    final shoulders = Path()
+      ..moveTo(0, h)
+      ..lineTo(0, h * 0.70)
+      ..cubicTo(w * 0.14, h * 0.60, w * 0.26, h * 0.53, w * 0.335, h * 0.46)
+      ..cubicTo(w * 0.352, h * 0.06, w * 0.648, h * 0.06, w * 0.665, h * 0.46)
+      ..cubicTo(w * 0.74, h * 0.53, w * 0.86, h * 0.60, w, h * 0.70)
+      ..lineTo(w, h)
+      ..close();
+    canvas.drawPath(shoulders, body);
+
+    // The overhead lamp catching the top of the learner's head and shoulders.
+    canvas.drawPath(
+      shoulders,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = math.max(1.3, h * 0.034)
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: <Color>[
+            Act0SceneLightV1.specular.withValues(alpha: 0.58 * light.intensity),
+            Act0SceneLightV1.specular.withValues(alpha: 0.05),
+          ],
+        ).createShader(Rect.fromLTWH(0, 0, w, h * 0.74)),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _Act0ScenePlayerHeroPainterV1 oldDelegate) =>
+      oldDelegate.light.intensity != light.intensity;
+}

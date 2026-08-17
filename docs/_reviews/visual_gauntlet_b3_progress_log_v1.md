@@ -57,13 +57,25 @@ differentiation. B1 geometry and B2 material imported, never replaced.
 - Evidence: `output/visual_gauntlet_b3/iter1_402x874/`
 
 ### CP2 — iteration 2: hero + state integration
-- Status: **pending**
+- Status: **done**
+- `Act0ScenePlayerHeroV1` puts the learner in the same family as everyone else:
+  same head-and-shoulder silhouette, same key light, plus forearms coming up
+  onto the cloth.
+- Arms deliberately routed *outside* the hero card lane, the `You/BTN` identity
+  plate and the dealer button — they frame the learner's hand, never cover it.
+- **Rejected my own first hero build:** arms at `strokeWidth h*0.30` read as two
+  black blobs and the right one sat on the dealer button. Thinned to `h*0.17`
+  and moved outboard to `+/-0.455w`.
+- Folded/in-hand posture wired from existing seat semantics
+  (`isFolded || !isInHand || !isOccupied`); B3 invents no new seat state.
+- B2 foundation preserved exactly: table geometry, action envelope, collision
+  guard, tappable `9 -> 9`, six seat anchors — zero deltas in all 8 states.
+- Evidence: `output/visual_gauntlet_b3/iter2_402x874/`
 
 ### CP3 — final validation, evidence, draft PR
 - Status: **pending**
 
 ## Next remaining class-level gap
 
-`HERO_NOT_YET_EMBODIED` — owned by iteration 2. Opponents are now people; the
-learner is still B1's rim-lit mass with no arms and no relationship to the hero
-cards.
+None at B3 scope worth a third iteration under the remaining window. Residual
+richness (facial/costume detail, per-seat props) is B7 parity work.
