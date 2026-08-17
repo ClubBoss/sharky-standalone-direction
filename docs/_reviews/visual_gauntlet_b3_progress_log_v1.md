@@ -73,7 +73,10 @@ differentiation. B1 geometry and B2 material imported, never replaced.
 - Evidence: `output/visual_gauntlet_b3/iter2_402x874/`
 
 ### CP3 — final validation, evidence, draft PR
-- Status: **pending**
+- Status: **done**
+- Responsive: compact 375x812, large 430x932, 1.4x text at 402x874.
+- Matched B2-vs-B3 evidence for the five canonical states, one contact sheet and
+  SHA provenance under `output/visual_gauntlet_b3/evidence/`.
 
 ## Next remaining class-level gap
 

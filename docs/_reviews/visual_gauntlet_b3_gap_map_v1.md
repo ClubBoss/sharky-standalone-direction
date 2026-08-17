@@ -108,3 +108,79 @@ learning hierarchy, interaction grammar, answer truth, feedback, repair/recheck,
 continuation, telemetry, accessibility, responsive support.
 
 `HUMAN_PROOF = FALSE`
+
+---
+
+# B3 EXECUTION RESULT
+
+Branch: `feat/visual-gauntlet-b3-player-embodiment-v1`
+
+## Iterations
+
+| # | Class-level problem | Outcome |
+| --- | --- | --- |
+| 1 | Nothing reads as a person | Four-archetype vector family: head/shoulder silhouette in one filled path, single near arm into the rail cut, near-black against B2's lit wall |
+| 2 | Hero not embodied | Learner joins the same family: same silhouette, same key light, forearms on the cloth routed clear of every learning object |
+
+## Player system
+
+- `Act0ScenePlayerArchetypeV1` — four builds varying shoulder span, head mass,
+  hair silhouette, shoulder slope and lean. Assigned by a **stable** seat-id
+  hash, because `String.hashCode` is not reproducible across runs and evidence
+  captures must be.
+- `Act0ScenePlayerPostureV1` — `inHand` / `folded`, driven only from seat
+  semantics Wave A already exposes.
+- `Act0ScenePlayerFigureV1` / `Act0ScenePlayerLayerV1` — replaces B1's
+  `Act0SceneVolumeLayerV1`. Placement, ordering and anchors come from B1.
+- `Act0ScenePlayerHeroV1` — the learner, same family, arms routed outside the
+  hero card lane, identity plate and dealer button.
+
+**No faces are drawn.** At 60-110 px a face is six pixels of noise; identity is
+carried by silhouette and posture, which is the priority order the admission
+sets.
+
+## Three self-rejections in loop
+
+1. A rounded-rect chair wider than the player became the dominant shape — the
+   figure read as furniture. Chair removed entirely.
+2. Two symmetric arms made figures read frontally, and the outer arm swept
+   *away* from the table. Replaced with a single near arm reaching to the pot.
+3. Figure value at `0x1A2C46` against a `0x244B6E` lit wall gave almost no value
+   step, so no silhouette read. Pushed to near-black with the key-light rim
+   carrying the form.
+
+A fourth on the hero: arms at `h*0.30` read as black blobs and one sat on the
+dealer button.
+
+## Foundation preservation audit
+
+Measured across all 8 captured states, B2 baseline vs B3 candidate:
+
+| Contract | Result |
+| --- | --- |
+| Plane order `environment -> farPlayer -> table -> nearPlayer -> overlay` | preserved |
+| B1 perspective model | unchanged |
+| Seat slots and identities | six, unchanged |
+| `plateAnchor` / `betAnchor` / `cardAnchor` | unchanged |
+| `characterAnchor` | tightened by B3 to close a figure-to-rail gap (B3 owns rail occlusion) |
+| B2 table material, room, shared lighting | unchanged |
+| Table width/height and position | identical in all 8 states |
+| Action envelope top | identical in all 8 states |
+| Collision guard / overflow / tappable objects | clean / none / `9 -> 9` |
+
+## Honest residual assessment
+
+The figures read as silhouetted people seated at and occluded by the rail, and
+they are differentiated. They remain **restrained** — dark rim-lit silhouettes
+rather than fully rendered characters. Against the admission's ambition of one
+of the largest perceptual jumps in the Gauntlet, this lands as a solid but not
+dramatic step. Costume, prop and value-range richness is the honest remaining
+gap and belongs to `B7` parity work.
+
+## Deferrals
+
+`B4` object-attached HUD, `B5` attention-aware rendering, `B6` motion, `B7`
+final parity. Table oval identity refinement stays `DEFERRED_TO_B7` — rendered
+embodiment surfaced no causal placement or occlusion blocker.
+
+`HUMAN_PROOF = FALSE`
