@@ -8,6 +8,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_error_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_scene_v3.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
@@ -2431,7 +2432,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             text: learningRailText,
             compact: isRefinedDev2,
           );
-    final effectiveLearningRailPages = learningRailPages.isNotEmpty
+    final effectiveLearningRailPages =
+        _usesCanonicalIntegratedLearningSceneV1 && isTheory
+        ? <String>[hint.trim().isNotEmpty ? hint : prompt]
+        : learningRailPages.isNotEmpty
         ? learningRailPages
         : learningRailSupportSegments;
     final cappedSupportSegmentIndex = effectiveLearningRailPages.isEmpty
@@ -2626,7 +2630,20 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         playbackStreetLabel = calc.street.isNotEmpty ? calc.street : null;
       }
     }
-    final interactiveCallout = _interactiveShowdownLine;
+    final teachingFocusLabel = teachingStep?.focusLabels
+        .where((label) => label.trim().isNotEmpty)
+        .firstOrNull;
+    final interactiveCallout = _interactiveShowdownLine.trim().isNotEmpty
+        ? _interactiveShowdownLine
+        : isReview
+        ? feedbackSignalProof?.label ?? ''
+        : isTheory
+        ? teachingFocusLabel ?? ''
+        : hasSeatTargets && isDrill
+        ? (act0IsRuLocaleV1(context)
+              ? 'Нажмите на подсвеченное место'
+              : 'Tap a highlighted seat')
+        : '';
     final rawShowActionTrail = bottomContext.showActionTrail;
     final selectedSeatId = runner.selectedOption?.seatId?.trim();
     final selectedSeatFeedbackState = switch (runner.reviewQuality) {
@@ -2802,6 +2819,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
       cycleStableEnvelope: usesSharedActiveRunnerAllocation,
       forceCompactPhoneFeedback: usesSharedActiveRunnerAllocation,
       ensureFullCtaGeometry: _usesCanonicalIntegratedLearningSceneV1,
+      sceneOwnsFeedbackExplanation: _usesCanonicalIntegratedLearningSceneV1,
       coachVoiceSeed:
           '${runner.lessonId}|${runner.beatIndex}|${runner.phase.name}|${runner.selectedOptionId ?? ''}',
       onContinue: widget.onContinueReview,
@@ -2889,6 +2907,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                     theoryPresentationRole ==
                         Act0TheoryPresentationRoleV1.recapCheck,
                 fillsAvailableHeight: usesSharedActiveRunnerAllocation,
+                contextOwnsTeachingCopy:
+                    _usesCanonicalIntegratedLearningSceneV1,
               )
             : isTeaching
             ? FilledButton(
@@ -2988,10 +3008,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                     Expanded(child: buildFeedbackShell())
                   else
                     buildFeedbackShell(),
-                  if (widget.actionRecommendation case final recommendation?)
-                    Act0ActionRecommendationSurfaceV1(
-                      recommendation: recommendation,
-                    ),
+                  if (!_usesCanonicalIntegratedLearningSceneV1)
+                    if (widget.actionRecommendation case final recommendation?)
+                      Act0ActionRecommendationSurfaceV1(
+                        recommendation: recommendation,
+                      ),
                 ],
               )
             : const SizedBox.shrink(),
@@ -3030,7 +3051,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
             onChooseSeat: _handleChooseSeat,
             visualVariant: widget.tableVisualVariant,
             showFocusBadge: !_showBottomLearningRail,
-            showRepairCallout: !_isReview,
+            showRepairCallout: isTheory || (isDrill && hasSeatTargets),
             playbackActiveSeatId: playbackActiveSeatId,
             animateBetMotion: trailPlaybackEnabled,
             betOverride: betOverride,
@@ -3131,6 +3152,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                 Center(child: tablePresentation),
               ],
               if (!usesElasticSharedTableZone &&
+                  !_usesCanonicalIntegratedLearningSceneV1 &&
                   interactiveCallout.isNotEmpty) ...[
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
                 Container(
@@ -3230,102 +3252,78 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
 
     Widget buildIntegratedPrompt() {
       final isRu = act0IsRuLocaleV1(context);
-      final isFeedback = isReview;
+      final phase = isTheory
+          ? Act0LearningScenePhaseV3.theory
+          : isReview && runner.reviewQuality == Act0FeedbackQualityV1.wrong
+          ? Act0LearningScenePhaseV3.feedbackWrong
+          : isReview
+          ? Act0LearningScenePhaseV3.feedbackCorrect
+          : Act0LearningScenePhaseV3.tableTask;
       final purpose = isTheory
-          ? (isRu ? 'ЧИТАЕМ СТОЛ' : 'LEARN THE TABLE')
-          : isFeedback
-          ? (isRu ? 'РАЗБИРАЕМ РЕЗУЛЬТАТ' : 'UNDERSTAND THE RESULT')
-          : (isRu ? 'ВАШЕ РЕШЕНИЕ ЗА СТОЛОМ' : 'YOUR TABLE DECISION');
-      final headline = isTheory ? prompt : question;
-      final support = isTheory ? hint : '';
-      return SizedBox(
-        height: media.textScaler
-            .scale(isTheory ? 64 : 50)
-            .clamp(isTheory ? 64 : 50, isTheory ? 78 : 60),
-        child: Container(
-          key: const Key('act0_wave_a_learning_context'),
-          width: double.infinity,
-          margin: const EdgeInsets.symmetric(horizontal: 12),
-          padding: const EdgeInsets.fromLTRB(14, 8, 14, 9),
-          decoration: BoxDecoration(
-            color: Act0ShellTokensV1.surface2.withValues(alpha: 0.94),
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: Act0ShellTokensV1.primary.withValues(alpha: 0.32),
-            ),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 30,
-                height: 30,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Act0ShellTokensV1.primary.withValues(alpha: 0.14),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  isTheory
-                      ? Icons.visibility_rounded
-                      : isFeedback
-                      ? Icons.lightbulb_rounded
-                      : Icons.touch_app_rounded,
-                  size: 17,
-                  color: Act0ShellTokensV1.primary,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      purpose,
-                      key: const Key('act0_integrated_scene_purpose'),
-                      maxLines: 1,
-                      overflow: TextOverflow.fade,
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.primary,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 0.7,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      headline,
-                      key: const Key('act0_integrated_scene_prompt'),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Act0ShellTokensV1.body.copyWith(
-                        color: Act0ShellTokensV1.text,
-                        fontSize: 15.4,
-                        fontWeight: FontWeight.w900,
-                        height: 1.05,
-                      ),
-                    ),
-                    if (support.trim().isNotEmpty) ...[
-                      const SizedBox(height: 2),
-                      Text(
-                        support,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Act0ShellTokensV1.muted.copyWith(
-                          color: Act0ShellTokensV1.textMuted,
-                          fontSize: 10.6,
-                          height: 1.05,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+          ? (isRu ? 'ОДНА ИДЕЯ' : 'ONE TABLE IDEA')
+          : isReview
+          ? (runner.reviewQuality == Act0FeedbackQualityV1.wrong
+                ? (isRu ? 'ПРОПУЩЕННАЯ ПОДСКАЗКА' : 'MISSED CLUE')
+                : (isRu ? 'ВЕРНОЕ ЧТЕНИЕ' : 'CORRECT READ'))
+          : (isRu ? 'ВАШ ХОД' : 'YOUR MOVE');
+      final feedbackAction =
+          (runner.reviewQuality == Act0FeedbackQualityV1.wrong
+                  ? runner.reviewBetterLabel
+                  : runner.reviewPreferredLabel)
+              .trim();
+      final feedbackActionIsSentence =
+          feedbackAction.endsWith('.') ||
+          feedbackAction.endsWith('!') ||
+          feedbackAction.endsWith('?');
+      final headline = isTheory
+          ? prompt
+          : isReview
+          ? feedbackAction.isEmpty
+                ? runner.reviewTitle
+                : feedbackActionIsSentence
+                ? feedbackAction
+                : runner.reviewQuality == Act0FeedbackQualityV1.wrong
+                ? '$feedbackAction was the better play.'
+                : '$feedbackAction was right.'
+          : question;
+      final support = isTheory
+          ? hint
+          : isReview
+          ? causalFeedback.whyChosen
+          : hasSeatTargets
+          ? (isRu
+                ? 'Нажмите на одно из одинаково подсвеченных мест.'
+                : 'Tap one equally highlighted seat on the table.')
+          : (isRu
+                ? 'Выберите одно действие ниже.'
+                : 'Choose one action below.');
+      final focusLabel = isReview
+          ? feedbackSignalProof == null
+                ? null
+                : (isRu
+                      ? 'Подсказка показана на столе'
+                      : 'The exact clue is marked on the table')
+          : isTheory
+          ? teachingFocusLabel == null
+                ? null
+                : (isRu
+                      ? 'Смотрите: $teachingFocusLabel'
+                      : 'Look at: $teachingFocusLabel')
+          : hasSeatTargets
+          ? (isRu
+                ? 'Можно нажимать подсвеченные места'
+                : 'Highlighted seats are tappable')
+          : null;
+      final progressLabel = isTheory && runner.teachingSteps.length > 1
+          ? '${runner.teachingStepIndex + 1}/${runner.teachingSteps.length}'
+          : null;
+      return Act0LearningSceneGuideV3(
+        phase: phase,
+        eyebrow: purpose,
+        headline: headline,
+        support: support,
+        focusLabel: focusLabel,
+        progressLabel: progressLabel,
       );
     }
 
@@ -3433,15 +3431,34 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
                         _sharedRunnerSeamV1,
                   ),
                 );
+                final learningSceneLowerFloor = isTheory
+                    ? 132.0
+                    : isDrill && hasSeatTargets
+                    ? 116.0
+                    : isReview
+                    ? 132.0
+                    : 220.0;
+                final learningSceneLowerShare = isTheory
+                    ? 0.18
+                    : isDrill && hasSeatTargets
+                    ? 0.16
+                    : isReview
+                    ? 0.18
+                    : 0.29;
                 final boundedLowerHeight =
                     _usesCanonicalIntegratedLearningSceneV1
                     ? math.min(
                         lowerHeight,
-                        math.max(220.0, constraints.maxHeight * 0.29),
+                        math.max(
+                          learningSceneLowerFloor,
+                          constraints.maxHeight * learningSceneLowerShare,
+                        ),
                       )
                     : lowerHeight;
                 final tableStageChrome = _usesCanonicalIntegratedLearningSceneV1
-                    ? 20.0
+                    // The runner stage owns its vertical padding and compact
+                    // phase gap in addition to the table itself.
+                    ? 56.0
                     : _runnerCompositionHeaderAndGapV1;
                 final tableHeight = math.min(
                   allocation.tableHeight,
@@ -5070,6 +5087,7 @@ class _LearningRailV1 extends StatelessWidget {
     this.maxHeight = _learningRailMaxHeightV1,
     this.emphasizePrompt = false,
     this.fillsAvailableHeight = false,
+    this.contextOwnsTeachingCopy = false,
   });
 
   final String? taskLabel;
@@ -5087,6 +5105,7 @@ class _LearningRailV1 extends StatelessWidget {
   final double maxHeight;
   final bool emphasizePrompt;
   final bool fillsAvailableHeight;
+  final bool contextOwnsTeachingCopy;
 
   @override
   Widget build(BuildContext context) {
@@ -5100,6 +5119,63 @@ class _LearningRailV1 extends StatelessWidget {
     final tone = canAdvance
         ? Act0ShellTokensV1.primary
         : Act0ShellTokensV1.textMuted;
+    if (contextOwnsTeachingCopy) {
+      final pageCount = math.max(1, supportSegments.length);
+      final currentPage = activeSupportSegmentIndex.clamp(0, pageCount - 1);
+      return Semantics(
+        container: true,
+        label: 'Theory navigation, page ${currentPage + 1} of $pageCount',
+        child: Padding(
+          key: const Key('act0_shell_learning_rail'),
+          padding: const EdgeInsets.fromLTRB(14, 9, 14, 8),
+          child: Row(
+            children: [
+              _LearningRailNavButtonV1(
+                icon: Icons.arrow_back_ios_new_rounded,
+                buttonKey: const Key('act0_shell_previous_cta'),
+                enabled: canGoBack,
+                onPressed: onBack,
+                compact: true,
+              ),
+              const SizedBox(width: Act0ShellTokensV1.gapSm),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'LOOK AT THE TABLE',
+                      key: const Key('act0_learning_scene_v3_table_focus'),
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: Act0ShellTokensV1.info,
+                        fontSize: 9.4,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    if (pageCount > 1) ...[
+                      const SizedBox(height: 5),
+                      _LearningRailSupportDotsV1(
+                        count: pageCount,
+                        current: currentPage,
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              const SizedBox(width: Act0ShellTokensV1.gapSm),
+              _LearningRailNavButtonV1(
+                icon: Icons.arrow_forward_ios_rounded,
+                buttonKey: const Key('act0_shell_continue_cta'),
+                enabled: canAdvance,
+                onPressed: canAdvance ? onAdvance : null,
+                tone: tone,
+                compact: true,
+                label: advanceLabel,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
     return Material(
       color: Colors.transparent,
       child: Container(
@@ -6617,6 +6693,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.cycleStableEnvelope = false,
     this.forceCompactPhoneFeedback = false,
     this.ensureFullCtaGeometry = false,
+    this.sceneOwnsFeedbackExplanation = false,
     this.coachVoiceSeed,
     required this.onContinue,
   });
@@ -6654,6 +6731,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final bool cycleStableEnvelope;
   final bool forceCompactPhoneFeedback;
   final bool ensureFullCtaGeometry;
+  final bool sceneOwnsFeedbackExplanation;
   final String? coachVoiceSeed;
   final VoidCallback onContinue;
 
@@ -6923,6 +7001,10 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               ),
               child: Text(
                 key: const Key('act0_shell_feedback_continue_cta_label'),
+                // Keep the primary action readable in deterministic rendered
+                // evidence as well as runtime; flutter_test otherwise falls
+                // back to its block-glyph Ahem face for this button style.
+                style: const TextStyle(fontFamily: 'Roboto'),
                 forwardCtaLabel ??
                     (isRecoveredSourceRecheck
                         ? 'Continue'
@@ -7003,6 +7085,74 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         : isWrong
         ? 'Missed cue'
         : 'Correct read';
+    if (sceneOwnsFeedbackExplanation) {
+      final nextActionLine = isWrong || isRepairFocusState
+          ? 'Try the same table clue once more.'
+          : repairContinuesToSourceRecheck
+          ? 'Return to the original read and prove the repair.'
+          : 'Continue to the next table read.';
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          final hasBoundedHeight = constraints.hasBoundedHeight;
+          final resultBody = SingleChildScrollView(
+            key: const Key('act0_shell_feedback_allocated_body_scroll'),
+            primary: false,
+            physics: const ClampingScrollPhysics(),
+            child: KeyedSubtree(
+              key: feedbackTreatmentKey,
+              child: Column(
+                key: const Key('act0_shell_feedback_primary_result_block'),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    isWrong || isRepairFocusState
+                        ? 'NEXT · REPAIR THE CLUE'
+                        : 'NEXT · KEEP THE READ',
+                    key: const Key('act0_shell_feedback_primary_result_label'),
+                    style: Act0ShellTokensV1.label.copyWith(
+                      color: tone,
+                      fontSize: 10.0,
+                      letterSpacing: 0.45,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    nextActionLine,
+                    key: const Key('act0_shell_feedback_rhythm_verdict'),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Act0ShellTokensV1.body.copyWith(
+                      color: Act0ShellTokensV1.text,
+                      fontSize: 13.2,
+                      height: 1.14,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+          return Container(
+            key: const Key('act0_shell_feedback_card'),
+            padding: const EdgeInsets.fromLTRB(13, 10, 13, 8),
+            child: Column(
+              mainAxisSize: hasBoundedHeight
+                  ? MainAxisSize.max
+                  : MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (hasBoundedHeight)
+                  Expanded(child: resultBody)
+                else
+                  resultBody,
+                const SizedBox(height: 7),
+                buildContinueAction(),
+              ],
+            ),
+          );
+        },
+      );
+    }
     return _ProofMotionRevealV1(
       key: const Key('act0_shell_feedback_card_motion_reveal'),
       child: KeyedSubtree(
@@ -11785,7 +11935,9 @@ class _SeatNodeV1 extends StatelessWidget {
     final useSlimRefinedSeat = refined && !hero;
     final folded = seat.isFolded;
     final isPassive = seatVisualState == _SeatVisualStateV1.passive;
-    final primaryLabelColor = hero
+    final primaryLabelColor = selectable
+        ? Act0ShellTokensV1.info
+        : hero
         ? Act0ShellTokensV1.text
         : isPassive
         ? (refined ? Act0ShellTokensV1.textDim : Act0ShellTokensV1.textMuted)
@@ -12014,7 +12166,9 @@ class _SeatNodeV1 extends StatelessWidget {
                                 ),
                               )
                             : Icon(
-                                seat.isOccupied
+                                selectable
+                                    ? Icons.touch_app_rounded
+                                    : seat.isOccupied
                                     ? Icons.person_rounded
                                     : Icons.circle_outlined,
                                 size: useSlimRefinedSeat
@@ -12125,13 +12279,17 @@ class _SeatNodeV1 extends StatelessWidget {
     if (onTap == null) {
       return node;
     }
-    return GestureDetector(
-      key: Key('act0_shell_seat_tap_${seat.seatId}'),
-      behavior: HitTestBehavior.opaque,
-      onTap: onTap,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-        child: Center(child: node),
+    return Semantics(
+      button: true,
+      label: 'Tap ${seat.seatLabel}',
+      child: GestureDetector(
+        key: Key('act0_shell_seat_tap_${seat.seatId}'),
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+          child: Center(child: node),
+        ),
       ),
     );
   }

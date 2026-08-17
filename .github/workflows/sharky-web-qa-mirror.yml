@@ -88,6 +88,77 @@ jobs:
           flutter pub get
           flutter build web --debug
 
+      - name: Checkout Wave A baseline for matched-state evidence
+        if: github.event_name == 'pull_request' && env.SHARKY_PR_VISUAL_EVIDENCE == '1'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SHARKY_PR_BASE_SHA }}
+          path: _wave_a_baseline
+          fetch-depth: 1
+
+      - name: Capture Wave A matched baseline and candidate states
+        if: github.event_name == 'pull_request' && env.SHARKY_PR_VISUAL_EVIDENCE == '1'
+        run: |
+          set -euo pipefail
+          ROOT="output/wave_a_pr_evidence"
+          mkdir -p "$ROOT/candidate" "$ROOT/baseline"
+
+          flutter test \
+            --dart-define=ACTION_EVIDENCE_DEVICE=iphone17_class \
+            --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/iphone17_class" \
+            test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
+            --plain-name 'captures canonical W1 Action production states'
+          flutter test \
+            --dart-define=ACTION_EVIDENCE_DEVICE=compact \
+            --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/compact" \
+            test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
+            --plain-name 'captures canonical W1 Action production states'
+          flutter test \
+            --dart-define=ACTION_EVIDENCE_DEVICE=tall_phone \
+            --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/tall_phone" \
+            test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
+            --plain-name 'captures canonical W1 Action production states'
+          flutter test \
+            --dart-define=ACTION_EVIDENCE_DEVICE=large_phone \
+            --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/large_phone" \
+            test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
+            --plain-name 'captures canonical W1 Action production states'
+          flutter test \
+            --dart-define=ACTION_EVIDENCE_DEVICE=iphone17_class \
+            --dart-define=ACTION_EVIDENCE_TEXT_SCALE=1.4 \
+            --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/iphone17_class_text_1_4" \
+            test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
+            --plain-name 'captures canonical W1 Action production states'
+
+          cp test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
+            _wave_a_baseline/test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart
+          (
+            cd _wave_a_baseline
+            flutter pub get
+            flutter test \
+              --dart-define=ACTION_EVIDENCE_DEVICE=iphone17_class \
+              --dart-define=ACTION_EVIDENCE_EXPECT_WAVE_A=false \
+              --dart-define=ACTION_EVIDENCE_OUTPUT="../$ROOT/baseline/iphone17_class" \
+              test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
+              --plain-name 'captures canonical W1 Action production states'
+          )
+
+          printf '%s\n' \
+            "candidate_sha=$SHARKY_PR_HEAD_SHA" \
+            "baseline_sha=$SHARKY_PR_BASE_SHA" \
+            'capture_owner=test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart' \
+            'evidence_class=deterministic rendered widget evidence; not Human proof' \
+            > "$ROOT/provenance.txt"
+
+      - name: Upload Wave A matched-state evidence
+        if: github.event_name == 'pull_request' && env.SHARKY_PR_VISUAL_EVIDENCE == '1'
+        uses: actions/upload-artifact@v4
+        with:
+          name: wave-a-matched-state-${{ env.TARGET_SHA }}
+          path: output/wave_a_pr_evidence
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Add deployment-only QA tooling, metadata, and headers
         run: |
           set -euo pipefail

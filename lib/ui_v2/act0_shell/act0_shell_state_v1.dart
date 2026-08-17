@@ -10949,14 +10949,13 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'One loop first.',
-      body:
-          'Sharky teaches one spot at a time. Read, answer, and get a clear why.',
+      body: 'Read one table spot, answer once, then see the exact reason.',
       focusLabels: <String>['Read', 'Answer', 'Why'],
     ),
     Act0TeachingStepV1(
       title: 'Start with the table.',
       body:
-          'You marks your seat. BTN is the Button position for this hand; on another hand, You can be in a different position.\n\nSB = Small Blind. BB = Big Blind.',
+          'You marks the learner. BTN is this hand\'s position and can change next hand. SB and BB post the blinds.',
       focusSeatIds: <String>['btn', 'sb', 'bb'],
       focusLabels: <String>['You', 'BTN', 'Blinds'],
       identityTeachingSemantics: Act0TableIdentityTeachingSemanticsV1.position,
