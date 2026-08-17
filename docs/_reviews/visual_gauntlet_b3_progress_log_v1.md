@@ -85,7 +85,27 @@ differentiation. B1 geometry and B2 material imported, never replaced.
   `task_table_presentation_semantics_v1_test.dart` names carried since B1.
 - Draft PR `#190` opened. Not merged.
 
+### CP4 — Mastermind completion pass (B3 = INSUFFICIENT -> character-grade)
+- Status: **done**
+- Verdict accepted: single-path silhouettes read as cutouts, and the character
+  language itself is foundational B3, not B7 polish.
+- Figures rebuilt from parts: hood/hair mass, head, neck, torso garment,
+  collar, sleeve, cuff, hand. Skin vs cloth value steps now carry the read.
+- Archetypes gained garment/skin/hair/shoulder identity: jacket, hoodie,
+  collared shirt, tee. Palette muted into Deep Ocean; table stays dominant.
+- Depth rule: near = cuffs + hands, mid = collars, far = silhouette and value
+  only. Every part recedes toward B2's wall tone with haze.
+- Hero stays first-person: sleeves, cuffs, backs of hands. Hands drawn as flat
+  ovals after discs read as chips at the rail.
+- Contracts vs B2 baseline: **zero geometry deltas** in all 8 states, collision
+  guard clean, tappable `9 -> 9`, six anchors, no overflow.
+- Validation: `dart format` clean, `flutter analyze lib` clean,
+  `tools/release_gate_world1.sh` PASS, focused `+15 -3` (the three inherited
+  `task_table_presentation_semantics_v1_test.dart` names carried since B1).
+- Evidence refreshed under `output/visual_gauntlet_b3/evidence/`.
+
 ## Next remaining class-level gap
 
-None at B3 scope worth a third iteration under the remaining window. Residual
-richness (facial/costume detail, per-seat props) is B7 parity work.
+None at B3 scope. The player system is now character-grade rather than
+silhouette-placeholder-grade. Costume richness beyond this, props and parity
+refinement remain B7.
