@@ -1,7 +1,7 @@
 # Pre-Human Campaign State v1
 
-Status: `VISUAL_GAUNTLET_B4_ACTIVE` - single first-read dispatch authority.
-Freshness date: 2026-08-17.
+Status: `VISUAL_GAUNTLET_B5_ACTIVE` - single first-read dispatch authority.
+Freshness date: 2026-08-18.
 
 This file carries exact current campaign dispatch only. Product direction remains
 governed by `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`. The canonical
@@ -22,9 +22,13 @@ B2 closure and B3 admission history:
 
 `docs/_reviews/visual_gauntlet_b2_closure_and_b3_admission_v1.md`
 
-Current B3 closure and B4 admission authority:
+B3 closure and B4 admission history:
 
 `docs/_reviews/visual_gauntlet_b3_closure_and_b4_admission_v1.md`
+
+Current B4 closure and B5 admission authority:
+
+`docs/_reviews/visual_gauntlet_b4_closure_and_b5_admission_v1.md`
 
 ## Current exact authority
 
@@ -42,14 +46,17 @@ Current B3 closure and B4 admission authority:
 | B2 integrated main | `dcb8baa39e46b3a69734e1f030af918cd5b1790c` |
 | B2 state | **`CLOSED_PASS`** |
 | B3 implementation PR | `#190` |
-| B3 pre-merge main | `13f33b0c97d95ea72872bcdb8bf509078dac96cb` |
-| B3 exact implementation head | `25efe1871f987d6ff121e46e536787b66b7f679e` |
 | B3 integrated main | `19f97534aae83ef508193b50408dbfa9a0707bf5` |
 | B3 state | **`CLOSED_PASS`** |
-| Current stage | **`VISUAL_GAUNTLET_B4_ACTIVE`** |
-| Exact next action | **`IMPLEMENT_VISUAL_GAUNTLET_B4_OBJECT_ATTACHED_HUD_V1`** |
-| Active family | **`VISUAL_GAUNTLET_B4_OBJECT_ATTACHED_HUD_V1`** |
-| B5-B7 | **`DEFERRED`** |
+| B4 implementation PR | `#192` |
+| B4 pre-merge main | `da5115b3779a46eaa55275768ed9f16f1b1d782d` |
+| B4 exact implementation head | `ae3c45bd450cbe27af5e74df7e5a898c12d5ebc2` |
+| B4 integrated main | `0f4f4ace4829fc7e11a2808bdd769df7a219ffbc` |
+| B4 state | **`CLOSED_PASS`** |
+| Current stage | **`VISUAL_GAUNTLET_B5_ACTIVE`** |
+| Exact next action | **`IMPLEMENT_VISUAL_GAUNTLET_B5_ATTENTION_AWARE_RENDERING_V1`** |
+| Active family | **`VISUAL_GAUNTLET_B5_ATTENTION_AWARE_RENDERING_V1`** |
+| B6-B7 | **`DEFERRED`** |
 | Table oval residual debt | **`DEFERRED_TO_B7`** |
 | `REAL_HUMAN_HNP` | **`P01_EXECUTED_ACTIONABLE_STOP`** |
 | P02 | **`DEFERRED / NOT_STARTED`** |
@@ -58,7 +65,7 @@ Current B3 closure and B4 admission authority:
 | `HUMAN_PROOF` | **`FALSE`** |
 | Modern Table | **`MAINTENANCE_MODE` outside the admitted Learning Scene cone** |
 
-## Wave A and B1-B3 closure
+## Wave A and B1-B4 closure
 
 Wave A remains the accepted structural and learning foundation:
 
@@ -76,35 +83,43 @@ B2 remains the accepted material/environment foundation:
 - `VISUAL_GAUNTLET_B2_PREMIUM_TABLE_AND_ENVIRONMENT_ART_V1 = CLOSED_PASS`
 - `VISUAL_GAUNTLET_B2 = CLOSED_PASS`
 
-B3 is now the accepted player-embodiment foundation:
+B3 remains the accepted player-embodiment foundation:
 
 - `VISUAL_GAUNTLET_B3_PLAYER_EMBODIMENT_V1 = CLOSED_PASS`
 - `VISUAL_GAUNTLET_B3 = CLOSED_PASS`
 
-PR #190 merged from exact head
-`25efe1871f987d6ff121e46e536787b66b7f679e` into main as
-`19f97534aae83ef508193b50408dbfa9a0707bf5`.
+B4 is now the accepted object-attached HUD foundation:
 
-The accepted B3 completion pass establishes recognisable seated people, an
-original Sharky player family, skin/hair/clothing value separation, multiple
-garment/archetype treatments, near/mid/far detail falloff, rail occlusion
-ownership, and first-person hero sleeves/cuffs/hands while preserving B1 scene
-geometry/anchors, B2 table/room/shared lighting, and Wave A learning semantics.
+- `VISUAL_GAUNTLET_B4_OBJECT_ATTACHED_HUD_V1 = CLOSED_PASS`
+- `VISUAL_GAUNTLET_B4 = CLOSED_PASS`
 
-B3 does not establish final character illustration parity. Costume richness,
-props, and final cohesion remain later polish territory.
+PR #192 merged from exact head
+`ae3c45bd450cbe27af5e74df7e5a898c12d5ebc2` into main as
+`0f4f4ace4829fc7e11a2808bdd769df7a219ffbc`.
 
-Do not reopen B1-B3 for cosmetic preference alone. In particular, B3 should not
-be reopened merely for facial detail, richer clothes, decorative props, or
-cosmetic character variants unless later evidence proves a real regression or
-causal blocker.
+Accepted B4 foundation:
+
+- player identity carriers belong more clearly to their seats/players;
+- redundant generic player avatar glyph removed;
+- commitment carriers use the same table-instrumentation language;
+- existing player visual state flows through local HUD treatment;
+- dealer semantic is represented by a physical scene-owned dealer puck;
+- Wave A causal clue is spatially attached to the exact existing clue object;
+- hero HUD remains compatible with B3 first-person embodiment;
+- no B5 attention engine was introduced;
+- Wave A truth, feedback, repair, and recheck remain unchanged.
+
+Forensic correction remains protected: existing blind/bet placement already had
+adequate owner adjacency. The attempted B1 `betAnchor` reposition was reverted
+after repository collision evidence disproved it. Do not reopen that decision.
+
+Do not reopen B1-B4 for cosmetic preference alone.
 
 ## Table oval residual debt
 
 `TABLE_OVAL_IDENTITY_REFINEMENT` remains non-blocking and deferred to B7.
 
-B3 rendered evidence did not prove it to be a causal embodiment or HUD-layout
-blocker. Do not open a standalone table-shape wave.
+Do not open a standalone table-shape wave.
 
 ## P01 Human evidence remains canonical history
 
@@ -115,8 +130,8 @@ P01 is not rewritten as PASS:
 - `P02 = DEFERRED / NOT_STARTED`
 - `HUMAN_PROOF = FALSE`
 
-Wave A and B1-B3 close product responses/foundations only. They do not alter what
-the P01 participant experienced.
+Wave A and B1-B4 close product responses/foundations only. They do not alter
+what the P01 participant experienced.
 
 `HNP_HARNESS = CLOSED_UNCHANGED`.
 
@@ -125,17 +140,17 @@ the P01 participant experienced.
 1. `B1 SPATIAL_CHARACTER_READY_SCENE_FOUNDATION` - **CLOSED_PASS**
 2. `B2 PREMIUM_TABLE_AND_ENVIRONMENT_ART` - **CLOSED_PASS**
 3. `B3 PLAYER_EMBODIMENT` - **CLOSED_PASS**
-4. `B4 OBJECT_ATTACHED_HUD` - **ACTIVE / ADMITTED**
-5. `B5 ATTENTION_AWARE_RENDERING` - **DEFERRED**
+4. `B4 OBJECT_ATTACHED_HUD` - **CLOSED_PASS**
+5. `B5 ATTENTION_AWARE_RENDERING` - **ACTIVE / ADMITTED**
 6. `B6 SEMANTIC_MOTION` - **DEFERRED**
 7. `B7 BENCHMARK_COHESION_AND_POLISH_GAUNTLET` - **DEFERRED**
 
-Only B4 may be implemented now. Every later wave requires an explicit
-Mastermind gate after review of the previous wave.
+Only B5 may be implemented now. B6-B7 require a fresh Mastermind gate after B5
+review.
 
-## Active B4 dispatch
+## Active B5 dispatch
 
-`IMPLEMENT_VISUAL_GAUNTLET_B4_OBJECT_ATTACHED_HUD_V1`
+`IMPLEMENT_VISUAL_GAUNTLET_B5_ATTENTION_AWARE_RENDERING_V1`
 
 Executor:
 
@@ -144,49 +159,58 @@ Executor:
 - HIGH / maximum practical reasoning
 - iterative local visual gauntlet
 
-The exact B4 objective, ownership, mandatory pre-mutation gap map, two-iteration
-strategy, depth rules, acceptance bar, strict non-scope, protected Wave A/B1/B2/
-B3 foundation, evidence requirements, post-B4 gate, and exact Claude execution
+The exact B5 objective, deterministic salience model, mandatory gap map,
+iteration strategy, acceptance bar, strict non-scope, protected Wave A/B1-B4
+foundation, evidence requirements, post-B5 gate, and exact Claude execution
 packet are defined in:
 
-`docs/_reviews/visual_gauntlet_b3_closure_and_b4_admission_v1.md`
+`docs/_reviews/visual_gauntlet_b4_closure_and_b5_admission_v1.md`
 
-## B4 boundary
+## B5 boundary
 
-B4 owns object-attached HUD only: player identity/stack/position ownership,
-bet/blind commitment ownership, existing acting/active/inactive/folded/
-selected/eligible state ownership, position/dealer ownership, hero HUD ownership,
-and stronger spatial attachment for Wave A causal table clues where current
-semantics already support it.
+B5 owns attention-aware rendering only. It may respond only to existing
+deterministic semantics such as theory, decision, eligible/selectable target,
+active player, correct feedback, wrong feedback, causal clue, repair target,
+recheck, and folded/inactive state.
 
-B4 must use the existing B1 anchor/depth model and attach to the accepted B3
-character geometry. It must preserve poker truth, calculation, evaluation,
-telemetry semantics, feedback semantics, repair/recheck, and the Wave A learning
-hierarchy.
+B5 changes visual salience only. It must not infer new poker meaning, change
+truth/evaluation, alter feedback semantics, change repair/recheck logic, or
+change telemetry semantics.
 
-B4 does not authorize B5 attention-aware rendering, selective blur/depth of
-field, B6 motion, B7 final parity, table/room/material redesign, B3 character
-redesign, curriculum or poker-truth changes, HNP harness work, P02, unrelated
-screens, unrelated dependencies, or unrelated technical-debt cleanup.
+The core target is a coherent deterministic hierarchy such as primary,
+supporting, and ambient/receded. Avoid unrelated per-widget opacity hacks and
+avoid the anti-pattern where every important object glows.
 
-## B4 acceptance
+## B5 learning loop attention contract
 
-The viewer should immediately understand:
+Decision:
 
-`this information belongs to THIS player / THIS bet / THIS object.`
+`situation -> actionable choice`
 
-B4 is insufficient if identity/stack plates still look randomly floated,
-players and HUD read as separate layers, bet ownership stays ambiguous, status
-indicators create clutter, near players collide with metadata, far players
-become unreadable, hero HUD competes with cards/actions, or learning clarity
-regresses.
+Feedback:
 
-## Post-B4 gate
+`verdict -> reason -> exact table clue`
 
-B4 must end with one draft implementation PR and return to Mastermind.
+Repair:
 
-Do not merge the B4 implementation PR automatically.
-Do not self-admit B5.
+`exact relevant object / decision context`
+
+Recheck:
+
+`normal recognition context restored`
+
+Eligible choices must remain fair where Wave A requires it. Recheck must not
+leave the prior answer visibly highlighted.
+
+B3 people and B2 room may recede but must remain spatially present. Hero cards,
+required poker information, and actionable controls must remain readable.
+
+## Post-B5 gate
+
+B5 must end with one draft implementation PR and return to Mastermind.
+
+Do not merge the B5 implementation PR automatically.
+Do not self-admit B6.
 `HUMAN_PROOF` remains `FALSE`.
 
 ## Dispatch rule
@@ -195,14 +219,15 @@ Use this file for exact current campaign dispatch and Master Plan v4 for North
 Star product direction, evidence hierarchy, protected boundaries, and Gauntlet
 discipline.
 
-`CURRENT_STAGE = VISUAL_GAUNTLET_B4_ACTIVE`
-`EXACT_NEXT_ACTION = IMPLEMENT_VISUAL_GAUNTLET_B4_OBJECT_ATTACHED_HUD_V1`
+`CURRENT_STAGE = VISUAL_GAUNTLET_B5_ACTIVE`
+`EXACT_NEXT_ACTION = IMPLEMENT_VISUAL_GAUNTLET_B5_ATTENTION_AWARE_RENDERING_V1`
 `WAVE_A = CLOSED_PASS`
 `VISUAL_GAUNTLET_B1 = CLOSED_PASS`
 `VISUAL_GAUNTLET_B2 = CLOSED_PASS`
 `VISUAL_GAUNTLET_B3 = CLOSED_PASS`
-`ACTIVE_VISUAL_GAUNTLET = VISUAL_GAUNTLET_B4_OBJECT_ATTACHED_HUD_V1`
-`B5_B7 = DEFERRED`
+`VISUAL_GAUNTLET_B4 = CLOSED_PASS`
+`ACTIVE_VISUAL_GAUNTLET = VISUAL_GAUNTLET_B5_ATTENTION_AWARE_RENDERING_V1`
+`B6_B7 = DEFERRED`
 `TABLE_OVAL_IDENTITY_REFINEMENT = DEFERRED_TO_B7`
 `REAL_HUMAN_HNP = P01_EXECUTED_ACTIONABLE_STOP`
 `P02 = DEFERRED_NOT_STARTED`
