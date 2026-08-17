@@ -143,15 +143,44 @@ are untouched. Table oval debt untouched, still `DEFERRED_TO_B7`.
 Interaction truth explicitly preserved: the selectable touch glyph and the
 empty-seat mark were **not** removed with the avatar glyph.
 
-## Honestly not done
+## Completion pass — §7.4 and §7.5 closed
 
-Two admitted B4 sub-items were not reached inside the usage window and are not
-claimed:
+Mastermind returned `INSUFFICIENT / PARTIAL` on exactly the two sub-items this
+document had recorded as unreached. One bounded completion iteration closed
+both.
 
-- **§7.4 dealer ownership** — the dealer marker is still the generic `D` pill;
-  it did not become a puck belonging to the cloth.
-- **§7.5 learning-clue attachment** — Wave A copy still names the causal object;
-  no additional spatial attachment was added.
+**§7.4 dealer ownership.** `Act0SceneDealerPuckV1` — same dealer semantic, new
+physical expression. A pressed disc resting on the cloth: milled edge, face lit
+from the same lamp as B2's rail crown, engraved inner ring, tight contact
+shadow offset with the light. Seat assignment, meaning, game logic and
+telemetry untouched; only the widget's visual body changed, behind the same two
+keys.
+
+**§7.5 learning-clue attachment.** The causal object turned out **not** to be a
+card. Wave A's clue is `_CenterSignalAnchorV1` — the chip whose own tooltip
+reads "Table clue" — and in this lesson it carries `No bet yet`, which is
+exactly what the feedback copy is about. My first attempt bracketed board and
+hole cards and rendered nothing, because `highlightedCardIds` is empty in these
+states. Brackets are now clamped to the clue anchor itself, and the diffuse
+gold halo on highlighted cards was pulled back so brackets carry the pointing
+rather than a card appearing to emit light.
+
+Both treatments are strictly local and object-bound. No dimming, no blur, no
+scene-wide desaturation, no attention engine — B5 is untouched.
+
+### Completion-pass collision audit (measured, not assumed)
+
+Across all 8 captured states, B3 baseline vs B4 completion: table geometry
+identical, action envelope top identical, informative-object collision guard
+clean, tappable objects `9 -> 9`, six seat anchors intact, zero overflow. The
+puck occupies its predecessor's slot and did not disturb hero cards, hero
+hands, the hero identity plate, the action dock, the board or the bet chips.
+
+### Caught in loop
+
+The puck's `D` first rendered as a solid box: a bare `TextPainter` has no font
+family and fell back to the evidence harness's box font. Moved into a `Text`
+child so it inherits the real typeface.
 
 Stack presentation was also left as Wave A renders it, deliberately: changing
 which seats surface a stack would alter displayed information rather than its

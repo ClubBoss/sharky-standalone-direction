@@ -60,8 +60,19 @@
 - Matched B3-vs-B4 evidence + contact sheet + provenance under
   `output/visual_gauntlet_b4/evidence/`.
 
+### CP4 — Mastermind completion pass (dealer + clue)
+- Status: **done**
+- `Act0SceneDealerPuckV1` replaces the flat white `D` capsule with a pressed
+  disc resting on the cloth. Dealer semantics untouched.
+- Clue brackets clamped to `_CenterSignalAnchorV1` — the object whose own
+  tooltip is "Table clue". First attempt bracketed cards and rendered nothing:
+  `highlightedCardIds` is empty in these states, so the causal object is the
+  centre cue chip, not a card.
+- Validation: `flutter analyze lib` clean, `release_gate_world1.sh` PASS,
+  focused `+15 -3` (inherited), responsive at compact / large / 1.4x.
+- Evidence refreshed for 7 states including repair and recheck.
+
 ## Next remaining class-level gap
 
-None pursued further under the remaining window. Dealer-puck ownership and
-feedback-clue attachment are the honest un-run items — see the execution
-result section of the gap map.
+None at B4 scope. All six admitted ownership areas now have an object-attached
+treatment.
