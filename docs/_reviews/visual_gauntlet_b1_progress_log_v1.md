@@ -102,10 +102,24 @@ names:
 
 Not caused by B1 and not repaired here — unrelated debt is explicit non-scope.
 
-### CP3 — iteration 3 (conditional)
+### CP3 — iteration 3: symmetric occlusion
 
-- Status: **pending**
-- Goal: only if a class-level B1 gap survives iteration 2.
+- Status: **done**
+- Two class-level gaps survived iteration 2: the far seat's volume was fully
+  hidden behind the table, and the hero was still the detached `You BTN` badge
+  the admission names in §8.3.
+- `Act0SceneHeroForegroundV1`: the learner's own volume, seen from behind,
+  drawn AFTER the table so it cuts across the near rail. Far players are
+  occluded BY the table; the hero occludes it. That symmetry is what seats the
+  learner rather than perching them above a diagram.
+- Far seat given a fixed larger vertical push so its head clears the far rail,
+  bounded by the teaching layer directly above it.
+- Bug caught and fixed in-loop: hero resolution used `table.heroSeatId`, which
+  is optional and usually null. Neither hero element rendered at all until it
+  was changed to the seat's own `isHero` flag, matching seat placement.
+- Verified at zoom that the far volume clears the teaching text in the
+  tightest state (table-object task).
+- Evidence: `output/visual_gauntlet_b1/iter3_402x874/`
 
 ### CP4 — final evidence + draft PR
 
@@ -113,7 +127,6 @@ Not caused by B1 and not repaired here — unrelated debt is explicit non-scope.
 
 ## Next remaining class-level gap
 
-`WEAK_FAR_PLANE_AND_HERO_STILL_A_BADGE` — owned by iteration 3.
-The far seat's volume is fully hidden behind the table, so the top of the scene
-is empty room; and the hero is still the detached `You BTN` pill that the
-admission §8.3 names directly.
+None at B1 scope. All five depth planes are established, populated and
+occluding each other correctly. Residual gaps are material and art, which
+belong to B2-B7 — see the final report.

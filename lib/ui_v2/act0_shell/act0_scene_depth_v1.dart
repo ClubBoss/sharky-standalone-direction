@@ -244,7 +244,10 @@ List<Act0SceneSeatSlotV1> act0SceneSeatSlotsV1({
     // gap, which is the difference between a seated player and a floating
     // shape beside a diagram.
     final pushX = 0.135 + (0.090 * depth);
-    final pushY = 0.060 + (0.035 * depth);
+    // The far seat has no long side to stand on, so it gets a fixed larger
+    // vertical push: enough for its head to clear the far rail and give the
+    // scene a far plane, bounded by the teaching layer directly above.
+    final pushY = depth <= 0.34 ? 0.078 : 0.060 + (0.035 * depth);
 
     slots.add(
       Act0SceneSeatSlotV1(
@@ -612,6 +615,86 @@ class Act0SceneHeroPlanePainterV1 extends CustomPainter {
   @override
   bool shouldRepaint(covariant Act0SceneHeroPlanePainterV1 oldDelegate) =>
       oldDelegate.heroAnchor != heroAnchor;
+}
+
+/// The learner's own foreground volume, seen from behind.
+///
+/// This is the counterpart to the occlusion on the far plane. Far players
+/// stand behind the rail and the table cuts across them; the hero sits in
+/// front of the rail and cuts across the table. That symmetry is what puts the
+/// learner *at* the table rather than above a diagram of one — and it is what
+/// the detached `You` badge could never do on its own.
+///
+/// As the object closest to the camera it is the darkest thing in the scene,
+/// lit only along its rim by the overhead lamp. B3 inherits this exact volume.
+class Act0SceneHeroForegroundV1 extends StatelessWidget {
+  const Act0SceneHeroForegroundV1({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: FractionallySizedBox(
+          widthFactor: 0.72,
+          heightFactor: 0.17,
+          child: FractionalTranslation(
+            // Clears the hero's own plate, then continues down behind the
+            // action dock so the learner's seat has no visible end.
+            translation: const Offset(0, 0.86),
+            child: const CustomPaint(
+              painter: _Act0SceneHeroForegroundPainterV1(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Act0SceneHeroForegroundPainterV1 extends CustomPainter {
+  const _Act0SceneHeroForegroundPainterV1();
+
+  static const Color _mass = Color(0xFF060C16);
+  static const Color _rim = Color(0xFF5E86AE);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+
+    final shoulders = Path()
+      ..moveTo(0, h)
+      ..lineTo(0, h * 0.68)
+      ..cubicTo(w * 0.14, h * 0.58, w * 0.26, h * 0.51, w * 0.335, h * 0.44)
+      ..cubicTo(w * 0.352, h * 0.05, w * 0.648, h * 0.05, w * 0.665, h * 0.44)
+      ..cubicTo(w * 0.74, h * 0.51, w * 0.86, h * 0.58, w, h * 0.68)
+      ..lineTo(w, h)
+      ..close();
+
+    canvas.drawPath(shoulders, Paint()..color = _mass);
+
+    // Rim light: the overhead lamp catching the top of the learner's shoulders
+    // and head. Without it the mass reads as a hole rather than a body.
+    canvas.drawPath(
+      shoulders,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = math.max(1.2, h * 0.030)
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: <Color>[
+            _rim.withValues(alpha: 0.46),
+            _rim.withValues(alpha: 0.06),
+          ],
+        ).createShader(Rect.fromLTWH(0, 0, w, h * 0.72)),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _Act0SceneHeroForegroundPainterV1 oldDelegate) =>
+      false;
 }
 
 /// A reserved, character-safe player volume.

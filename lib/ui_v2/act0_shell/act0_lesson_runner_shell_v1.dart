@@ -10518,7 +10518,15 @@ class _Act0TableV1 extends StatelessWidget {
         ),
       ),
       seatIds: seats.map((seat) => seat.seatId).toList(),
-      heroSeatId: table.heroSeatId,
+      // `heroSeatId` is optional on the table state and is frequently null, so
+      // resolve the hero the same way seat placement does: the seat's own flag
+      // first, then the explicit id.
+      heroSeatId:
+          seats
+              .where((seat) => seat.isHero || seat.seatId == table.heroSeatId)
+              .firstOrNull
+              ?.seatId ??
+          table.heroSeatId,
     );
     final inactiveSeatIds = seats
         .where((seat) => seat.isFolded || !seat.isInHand || !seat.isOccupied)
@@ -10927,6 +10935,12 @@ class _Act0TableV1 extends StatelessWidget {
             ),
           ),
           scene,
+          if (heroSceneSlot != null)
+            const Positioned.fill(
+              child: Act0SceneHeroForegroundV1(
+                key: Key('act0_scene_hero_foreground_volume'),
+              ),
+            ),
         ],
       ),
     );
