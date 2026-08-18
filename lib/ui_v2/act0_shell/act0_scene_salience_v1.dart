@@ -53,10 +53,52 @@ enum Act0SceneAttentionPhaseV1 {
 /// in raw recession values.
 enum Act0SceneSalienceTierV1 { primary, supporting, ambient }
 
+/// The three bounded numbers B5 resolves for a phase, detached from the phase
+/// itself so B6 can interpolate between two of them.
+///
+/// This is not a second salience model. Every value here still originates in
+/// the switch expressions below — B6 only asks what a point *between* two
+/// already-accepted B5 states looks like.
+@immutable
+class Act0SceneAttentionValuesV1 {
+  const Act0SceneAttentionValuesV1({
+    required this.roomRecession,
+    required this.playerRecession,
+    required this.clueEmphasis,
+  });
+
+  final double roomRecession;
+  final double playerRecession;
+  final double clueEmphasis;
+
+  static Act0SceneAttentionValuesV1 lerp(
+    Act0SceneAttentionValuesV1 a,
+    Act0SceneAttentionValuesV1 b,
+    double t,
+  ) {
+    if (t <= 0) return a;
+    if (t >= 1) return b;
+    return Act0SceneAttentionValuesV1(
+      roomRecession: a.roomRecession + (b.roomRecession - a.roomRecession) * t,
+      playerRecession:
+          a.playerRecession + (b.playerRecession - a.playerRecession) * t,
+      clueEmphasis: a.clueEmphasis + (b.clueEmphasis - a.clueEmphasis) * t,
+    );
+  }
+
+  Act0SceneAttentionValuesV1 withClueEmphasis(double value) =>
+      Act0SceneAttentionValuesV1(
+        roomRecession: roomRecession,
+        playerRecession: playerRecession,
+        clueEmphasis: value,
+      );
+}
+
 /// The scene's attention state.
 @immutable
 class Act0SceneAttentionV1 {
-  const Act0SceneAttentionV1(this.phase);
+  const Act0SceneAttentionV1(this.phase, {Act0SceneAttentionValuesV1? rendered})
+    : _rendered = rendered;
 
   static const Act0SceneAttentionV1 neutral = Act0SceneAttentionV1(
     Act0SceneAttentionPhaseV1.decision,
@@ -64,9 +106,28 @@ class Act0SceneAttentionV1 {
 
   final Act0SceneAttentionPhaseV1 phase;
 
+  /// B6: the values actually being rendered this frame, when an interpolation
+  /// between two phases is in flight. `null` means "settled", and every getter
+  /// then reports the exact B5 value for [phase] — which is what keeps every
+  /// motion endpoint identical to accepted B5 evidence.
+  final Act0SceneAttentionValuesV1? _rendered;
+
+  /// The settled B5 values for [phase], ignoring any in-flight interpolation.
+  Act0SceneAttentionValuesV1 get settledValues => Act0SceneAttentionValuesV1(
+    roomRecession: _roomRecessionFor(phase),
+    playerRecession: _playerRecessionFor(phase),
+    clueEmphasis: _clueEmphasisFor(phase),
+  );
+
+  Act0SceneAttentionValuesV1 get values => _rendered ?? settledValues;
+
   /// How far the room recedes. Bounded well short of disappearing: B2's
   /// environment must stay spatially present, never become a flat backdrop.
-  double get roomRecession => switch (phase) {
+  double get roomRecession => values.roomRecession;
+
+  static double _roomRecessionFor(
+    Act0SceneAttentionPhaseV1 phase,
+  ) => switch (phase) {
     Act0SceneAttentionPhaseV1.theory => 0.34,
     Act0SceneAttentionPhaseV1.decision => 0.20,
     Act0SceneAttentionPhaseV1.correctFeedback => 0.52,
@@ -80,21 +141,28 @@ class Act0SceneAttentionV1 {
 
   /// How far the B3 players recede. Always less than the room — people are the
   /// scene's spatial scale, and flattening them would undo B3.
-  double get playerRecession => switch (phase) {
-    Act0SceneAttentionPhaseV1.theory => 0.30,
-    Act0SceneAttentionPhaseV1.decision => 0.16,
-    Act0SceneAttentionPhaseV1.correctFeedback => 0.56,
-    Act0SceneAttentionPhaseV1.wrongFeedback => 0.64,
-    Act0SceneAttentionPhaseV1.repair => 0.56,
-    Act0SceneAttentionPhaseV1.recheck => 0.10,
-  };
+  double get playerRecession => values.playerRecession;
+
+  static double _playerRecessionFor(Act0SceneAttentionPhaseV1 phase) =>
+      switch (phase) {
+        Act0SceneAttentionPhaseV1.theory => 0.30,
+        Act0SceneAttentionPhaseV1.decision => 0.16,
+        Act0SceneAttentionPhaseV1.correctFeedback => 0.56,
+        Act0SceneAttentionPhaseV1.wrongFeedback => 0.64,
+        Act0SceneAttentionPhaseV1.repair => 0.56,
+        Act0SceneAttentionPhaseV1.recheck => 0.10,
+      };
 
   /// How strongly B4's clue anchor asserts itself.
   ///
   /// B4 shipped this bracket always-on, so it carried no state information and
   /// persisted into recheck as a standing pointer. It now belongs to the phases
   /// that are actually talking about it.
-  double get clueEmphasis => switch (phase) {
+  double get clueEmphasis => values.clueEmphasis;
+
+  static double _clueEmphasisFor(
+    Act0SceneAttentionPhaseV1 phase,
+  ) => switch (phase) {
     Act0SceneAttentionPhaseV1.correctFeedback => 1.0,
     Act0SceneAttentionPhaseV1.wrongFeedback => 1.0,
     // Repair supports reacquisition: the learner is re-attempting a named
@@ -180,6 +248,107 @@ class Act0SceneRecedeV1 extends StatelessWidget {
         ]),
         child: child,
       ),
+    );
+  }
+}
+
+/// Visual Gauntlet B6 — semantic motion.
+///
+/// B5 gave the scene a correct idea of *what the learner is doing*. It gave it
+/// no idea of *change*: every value above is applied by a stateless widget that
+/// reads the current phase, so the whole learning loop is a sequence of hard
+/// cuts. Measured on the canonical route at `402x874`, the room plane drops
+/// from `0.876` to `0.5412` opacity between one frame and the next, with zero
+/// animated frames in between.
+///
+/// This carries one in-flight interpolation between two already-accepted B5
+/// states. It adds no value B5 did not already define, and it owns no truth:
+/// at rest, [current] is exactly the settled B5 value for [phase], which is
+/// what keeps every motion endpoint identical to accepted B1-B5 evidence.
+///
+/// Motion category: `state_transition`. Duration and easing come from
+/// `Act0MotionTokensV1` only, per `docs/_reviews/motion_direction_system_v1.md`.
+///
+/// The interpolation is owned by the runner `State`, deliberately. Element
+/// identity across the scene subtree is *not* stable — probing the canonical
+/// loop shows the scene's elements replaced at every hop while the runner
+/// `State` survives — so an implicit animation placed inside the table would
+/// remount with no "from" value at exactly the moments B6 exists to smooth.
+@immutable
+class Act0SceneAttentionMotionV1 {
+  const Act0SceneAttentionMotionV1({
+    required this.phase,
+    required this.from,
+    required this.to,
+    required this.progress,
+  });
+
+  /// A motion that is already at rest on [phase]: zero animated frames, and
+  /// every value exactly B5's. This is the reduced-motion result.
+  factory Act0SceneAttentionMotionV1.settled(Act0SceneAttentionPhaseV1 phase) {
+    final settled = Act0SceneAttentionV1(phase).settledValues;
+    return Act0SceneAttentionMotionV1(
+      phase: phase,
+      from: settled,
+      to: settled,
+      progress: kAlwaysCompleteAnimation,
+    );
+  }
+
+  /// The canonical phase being rendered. Always the *incoming* phase, so the
+  /// scene's published phase marker flips on the same frame the state does —
+  /// motion never delays or owns the identity of the state.
+  final Act0SceneAttentionPhaseV1 phase;
+
+  final Act0SceneAttentionValuesV1 from;
+  final Act0SceneAttentionValuesV1 to;
+
+  /// Already curved. `1` means settled.
+  final Animation<double> progress;
+
+  Act0SceneAttentionValuesV1 get current =>
+      Act0SceneAttentionValuesV1.lerp(from, to, progress.value);
+
+  Act0SceneAttentionV1 get attention =>
+      Act0SceneAttentionV1(phase, rendered: current);
+}
+
+/// Which plane a receding subtree belongs to.
+enum Act0SceneRecedePlaneV1 { room, player }
+
+/// [Act0SceneRecedeV1], driven by an in-flight attention interpolation.
+///
+/// The animated rebuild is confined to the recession wrapper — the subtree is
+/// passed through `AnimatedBuilder`'s `child`, so the room, the players and the
+/// hero are never rebuilt per frame. That is what keeps this free of jank: the
+/// only per-frame work is the `Opacity` + `ColorFilter` already in the tree.
+class Act0SceneRecedeMotionV1 extends StatelessWidget {
+  const Act0SceneRecedeMotionV1({
+    super.key,
+    required this.motion,
+    required this.plane,
+    required this.child,
+  });
+
+  final Act0SceneAttentionMotionV1 motion;
+  final Act0SceneRecedePlaneV1 plane;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: motion.progress,
+      child: child,
+      builder: (context, child) {
+        final values = motion.current;
+        return Act0SceneRecedeV1(
+          recession: switch (plane) {
+            Act0SceneRecedePlaneV1.room => values.roomRecession,
+            Act0SceneRecedePlaneV1.player => values.playerRecession,
+          },
+          child: child!,
+        );
+      },
     );
   }
 }
