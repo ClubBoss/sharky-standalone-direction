@@ -51,8 +51,13 @@ bool _clueVisible() => find
     .evaluate()
     .isNotEmpty;
 
-Widget _host({required bool reducedMotion}) {
+Widget _host({
+  required bool reducedMotion,
+  double textScale = 1.0,
+  Key? remountKey,
+}) {
   final screen = Act0ShellPreviewScreenV1(
+    key: remountKey,
     state: Act0ShellStateV1.sample,
     showPlacementOnStart: false,
     debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
@@ -64,14 +69,15 @@ Widget _host({required bool reducedMotion}) {
     ),
   );
   return MaterialApp(
-    home: reducedMotion
-        ? Builder(
-            builder: (context) => MediaQuery(
-              data: MediaQuery.of(context).copyWith(disableAnimations: true),
-              child: screen,
-            ),
-          )
-        : screen,
+    home: Builder(
+      builder: (context) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(
+          disableAnimations: reducedMotion ? true : null,
+          textScaler: TextScaler.linear(textScale),
+        ),
+        child: screen,
+      ),
+    ),
   );
 }
 
@@ -248,6 +254,92 @@ void main() {
         reason:
             'B5 keeps players less receded than the room; interpolation must '
             'not invert that mid-flight',
+      );
+    }
+  });
+
+  testWidgets('the verdict arrives without ever gating the CTA', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(402, 874);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(_host(reducedMotion: false));
+    await tester.pumpAndSettle();
+
+    await _tap(tester, const Key('act0_shell_option_fold'));
+    expect(
+      find.byKey(const Key('act0_shell_feedback_card_motion_reveal')),
+      findsOneWidget,
+      reason: 'the verdict must arrive rather than cut',
+    );
+    expect(
+      find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      findsOneWidget,
+      reason:
+          'the continue CTA must be present on the transition first frame - '
+          'motion may never gate interaction behind its own duration',
+    );
+
+    // Act on the CTA mid-transition. If any part of the motion blocked input,
+    // the phase would not advance.
+    await tester.pump(const Duration(milliseconds: 32));
+    await tester.tap(
+      find.byKey(const Key('act0_shell_feedback_continue_cta')).first,
+      warnIfMissed: false,
+    );
+    await tester.pump();
+    expect(
+      _phase(tester),
+      'repair',
+      reason: 'an in-flight transition must never absorb or delay input',
+    );
+  });
+
+  testWidgets('motion holds at compact, large and 1.4x text', (tester) async {
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final endpoints = <String, double>{};
+    for (final variant in <({String name, Size size, double textScale})>[
+      (name: 'canonical', size: Size(402, 874), textScale: 1.0),
+      (name: 'compact', size: Size(375, 812), textScale: 1.0),
+      (name: 'large', size: Size(430, 932), textScale: 1.0),
+      (name: 'text1.4x', size: Size(402, 874), textScale: 1.4),
+    ]) {
+      tester.view.physicalSize = variant.size;
+      tester.view.devicePixelRatio = 1;
+      await tester.pumpWidget(
+        _host(
+          reducedMotion: false,
+          textScale: variant.textScale,
+          // Each variant must start from a fresh decision, not inherit the
+          // previous variant's position in the loop.
+          remountKey: ValueKey<String>(variant.name),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await _tap(tester, const Key('act0_shell_option_fold'));
+      expect(_phase(tester), 'wrongFeedback');
+      final hop = await _settle(tester);
+      expect(
+        hop.frames,
+        greaterThan(4),
+        reason: 'the transition must survive ${variant.name}',
+      );
+      endpoints[variant.name] = _roomOpacity(tester);
+    }
+
+    // Recession is a phase property, never a layout property: every viewport
+    // and text scale must settle on the same B5 value.
+    for (final entry in endpoints.entries) {
+      expect(
+        entry.value,
+        closeTo(endpoints['canonical']!, 0.0001),
+        reason: '${entry.key} must settle on the canonical B5 endpoint',
       );
     }
   });

@@ -1273,8 +1273,14 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       // transition *from*, so it must not animate itself in.
       value: 1,
     );
+    // `enter`, not `settle`. Measured, `settle` (easeInOutCubic) moves only
+    // 4.7% of the way in its first 64ms, so a transition the learner just
+    // caused reads as lag before it reads as motion. `enter` (easeOutCubic)
+    // responds on the first frame and decelerates into the endpoint, which is
+    // what makes this feel like the scene answering the tap rather than
+    // animating on its own schedule. Both are sanctioned tokens.
     _sceneAttentionProgress = _sceneAttentionController.drive(
-      CurveTween(curve: Act0MotionTokensV1.settle),
+      CurveTween(curve: Act0MotionTokensV1.enter),
     );
     _syncTheoryAdvanceLock(initial: true);
     _syncRapidReviewAdvance();
@@ -7303,22 +7309,34 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               ),
             ),
           );
-          return Container(
-            key: const Key('act0_shell_feedback_card'),
-            padding: const EdgeInsets.fromLTRB(13, 10, 13, 8),
-            child: Column(
-              mainAxisSize: hasBoundedHeight
-                  ? MainAxisSize.max
-                  : MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (hasBoundedHeight)
-                  Expanded(child: resultBody)
-                else
-                  resultBody,
-                const SizedBox(height: 7),
-                buildContinueAction(),
-              ],
+          // B6: the verdict arrives rather than cuts. On this route the scene
+          // owns the causal explanation, so the table's quieting field and its
+          // asserting clue already carry "the state changed; here is why" —
+          // this is the third beat, the verdict itself becoming current.
+          //
+          // Reuses the accepted reveal widget rather than inventing motion:
+          // it starts at 0.92 opacity, so the continue CTA is visible and
+          // interaction-ready on the very first frame, never gated behind a
+          // duration, and it resolves to identical geometry.
+          return _ProofMotionRevealV1(
+            key: const Key('act0_shell_feedback_card_motion_reveal'),
+            child: Container(
+              key: const Key('act0_shell_feedback_card'),
+              padding: const EdgeInsets.fromLTRB(13, 10, 13, 8),
+              child: Column(
+                mainAxisSize: hasBoundedHeight
+                    ? MainAxisSize.max
+                    : MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (hasBoundedHeight)
+                    Expanded(child: resultBody)
+                  else
+                    resultBody,
+                  const SizedBox(height: 7),
+                  buildContinueAction(),
+                ],
+              ),
             ),
           );
         },
