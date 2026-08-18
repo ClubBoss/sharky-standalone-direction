@@ -210,6 +210,37 @@ Do not authorize by default:
 Closed families refreeze after every Gauntlet. Preference, stale debt wording,
 or aesthetics alone cannot reopen them.
 
+### Canonical text-scale policy
+
+`TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE`
+
+`ACCESSIBILITY_TEXT_SCALING = DEFERRED_NOT_CURRENT_ACCEPTANCE`
+
+Sharky v1 currently optimizes for one fixed canonical visual typography/layout
+scale. Accessibility text scaling / Dynamic Type optimization is deferred. It
+must not block current visual, learning, P02, or B7 closure.
+
+Device responsiveness remains required across compact, canonical, and large
+phone viewports at the same canonical text scale. Safe-area contracts,
+canonical readable typography, standard touch-target contracts, and
+reduced-motion debt tracking remain in force.
+
+Current acceptance does not require 1.4x typography layout support, Dynamic
+Type optimization, 1.4x screenshots/evidence variants, or a 1.4x regression
+blocker. Historical 1.4x evidence remains valid provenance and must not be
+deleted or rewritten. This policy explicitly supersedes prior B7 1.4x
+acceptance clauses, including the 1.4x obligations in
+`docs/_reviews/visual_gauntlet_b6_closure_and_b7_admission_v1.md`.
+
+Future accessibility text-scaling work may reopen this policy only through
+explicit authority/admission.
+
+Runtime enforcement is not part of this docs-only policy correction. B7
+Iteration 1 must inspect the narrowest correct Flutter app/shell boundary and
+ensure system text scaling cannot silently produce a second layout, using the
+supported Flutter text-scaling mechanism for the repository's exact Flutter
+version. Do not use per-widget hacks or duplicate clamps across widgets.
+
 ## 5. Current Stage - READY_FOR_REAL_HUMAN_HNP_SESSION
 
 Purpose: spend the next evidence budget on the Human claim that machine work
@@ -613,3 +644,5 @@ causal evidence.
 `REAL_HUMAN_HNP = NOT_EXECUTED`
 `HUMAN_PROOF = FALSE`
 `EXACT_NEXT_ACTION = EXECUTE_CANONICAL_REAL_HUMAN_HNP_SESSION_V1`
+`TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE`
+`ACCESSIBILITY_TEXT_SCALING = DEFERRED_NOT_CURRENT_ACCEPTANCE`
