@@ -38,6 +38,29 @@ Current B6 closure and B7 admission authority:
 
 `docs/_reviews/visual_gauntlet_b6_closure_and_b7_admission_v1.md`
 
+## Text scale policy supersession
+
+`TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE`
+
+`ACCESSIBILITY_TEXT_SCALING = DEFERRED_NOT_CURRENT_ACCEPTANCE`
+
+Sharky v1 currently has one canonical visual typography/layout scale.
+Accessibility text scaling / Dynamic Type optimization is deferred and must not
+block current B7, learning, P02, or visual closure. Compact, canonical, and
+large physical phone viewports remain required at the same canonical text
+scale, together with safe-area, canonical readable typography, and standard
+tap-target contracts.
+
+Historical 1.4x evidence remains valid historical provenance and is not deleted
+or rewritten. The owner policy in this file and
+`docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` explicitly supersedes any
+prior B7 1.4x acceptance clause, including the 1.4x obligations recorded in
+`docs/_reviews/visual_gauntlet_b6_closure_and_b7_admission_v1.md`.
+
+Current acceptance therefore does not require 1.4x screenshots, 1.4x layout
+optimization, or a 1.4x regression blocker. Future accessibility text-scaling
+work may reopen this policy only through explicit authority/admission.
+
 ## Current exact authority
 
 | Field | Value |
@@ -73,6 +96,8 @@ Current B6 closure and B7 admission authority:
 | Active family | **`VISUAL_GAUNTLET_B7_BENCHMARK_COHESION_AND_POLISH_V1`** |
 | B7 | **`ACTIVE / ADMITTED`** |
 | B7 Asset Requirement Gate | **`COMPLETE`** |
+| Text scale policy | **`SINGLE_CANONICAL_PRODUCT_SCALE`** |
+| Accessibility text scaling | **`DEFERRED_NOT_CURRENT_ACCEPTANCE`** |
 | Inherited reduced-motion proof-beat debt | **`NOT_B6_REGRESSION / NOT_B6_BLOCKER / MUST_RECEIVE_DISPOSITION_BEFORE_P02`** |
 | `REAL_HUMAN_HNP` | **`P01_EXECUTED_ACTIONABLE_STOP`** |
 | P02 | **`DEFERRED / NOT_STARTED`** |
@@ -162,8 +187,10 @@ Accepted B7 candidate classes:
 - make street/context quieter and remove redundant center chrome;
 - compact top chrome before changing table geometry;
 - use a state-aware compact bottom dock, strongest in feedback states;
-- preserve typography, safe-area, 1.4x, tap-target, and no-answer-scroll
-  contracts;
+- preserve canonical readable typography, safe-area, tap-target, and
+  no-answer-scroll contracts;
+- prove compact, canonical, and large phone viewports at one canonical text
+  scale;
 - evaluate table-oval identity only after composition/chrome changes.
 
 `ASSET_REQUIRED`:
@@ -226,7 +253,12 @@ Iteration 1 - code cohesion:
 - compact state-aware dock;
 - table/scene perceptual ownership;
 - blind/bet/board legibility if proven;
-- oval identity only if still materially deficient after composition changes.
+- oval identity only if still materially deficient after composition changes;
+- inspect the narrowest correct Flutter app/shell boundary and ensure system
+  text scaling cannot silently create a second layout, using the supported
+  Flutter text-scaling mechanism for the repository's exact Flutter version;
+- do not implement per-widget text-scale hacks or duplicate clamps across
+  widgets.
 
 Iteration 2 - asset vertical slice:
 
@@ -237,9 +269,9 @@ Minimum:
 - one authored opponent;
 - one authored first-person hero foreground.
 
-Prove canonical / compact / large / 1.4x class-level lift, seat ownership,
-perspective, rail occlusion, B2 lighting, B5 recession, B6 motion compatibility,
-and deterministic rendering.
+Prove compact / canonical / large viewport class-level lift at the same
+canonical text scale, plus seat ownership, perspective, rail occlusion, B2
+lighting, B5 recession, B6 motion compatibility, and deterministic rendering.
 
 Gate:
 
@@ -343,6 +375,8 @@ discipline.
 `ACTIVE_VISUAL_GAUNTLET = VISUAL_GAUNTLET_B7_BENCHMARK_COHESION_AND_POLISH_V1`
 `B7 = ACTIVE_ADMITTED`
 `B7_ASSET_REQUIREMENT_GATE_V1 = COMPLETE`
+`TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE`
+`ACCESSIBILITY_TEXT_SCALING = DEFERRED_NOT_CURRENT_ACCEPTANCE`
 `INHERITED_REDUCED_MOTION_PROOF_BEAT_DEBT = MUST_RECEIVE_DISPOSITION_BEFORE_P02`
 `REAL_HUMAN_HNP = P01_EXECUTED_ACTIONABLE_STOP`
 `P02 = DEFERRED_NOT_STARTED`
