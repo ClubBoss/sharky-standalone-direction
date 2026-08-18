@@ -23,11 +23,15 @@ const _outputRootPathV1 = 'output/visual_gauntlet_b6';
 const _frameTimesMsV1 = <int>[0, 32, 64, 128, 192, 260];
 
 /// Every transition the B6 packet requires evidence for.
+/// The canonical route resolves `repair success -> targeted recheck` as two
+/// real hops (`repair -> correctFeedback -> recheck`), so it is captured as two
+/// transitions rather than mislabelled as one.
 const _transitionsV1 = <String>[
   'decision_to_correct_feedback',
   'decision_to_wrong_feedback',
   'wrong_feedback_to_targeted_repair',
-  'repair_success_to_targeted_recheck',
+  'repair_success_to_verdict',
+  'verdict_to_targeted_recheck',
   'recheck_to_result_continuation',
 ];
 
@@ -365,21 +369,31 @@ void main() {
     );
     await capture(tester, dir.path + '/endpoint_targeted_repair.png');
 
-    // Repair success resolves through the correct-feedback beat and then
-    // releases into the targeted recheck.
+    // Repair success resolves through the correct-feedback verdict and only
+    // then releases into the targeted recheck. Both hops are captured, because
+    // labelling either one alone as `repair success -> targeted recheck` would
+    // misstate what the route actually does.
     await transition(
       tester,
       dir.path,
-      'repair_success_to_targeted_recheck',
+      'repair_success_to_verdict',
       const Key('act0_shell_option_check'),
     );
     await transition(
       tester,
       dir.path,
-      'recheck_to_result_continuation',
+      'verdict_to_targeted_recheck',
       const Key('act0_shell_feedback_continue_cta'),
     );
     await capture(tester, dir.path + '/endpoint_targeted_recheck.png');
+
+    // The recognition attempt itself completing.
+    await transition(
+      tester,
+      dir.path,
+      'recheck_to_result_continuation',
+      const Key('act0_shell_option_check'),
+    );
 
     tester.view.resetPhysicalSize();
     tester.view.resetDevicePixelRatio();

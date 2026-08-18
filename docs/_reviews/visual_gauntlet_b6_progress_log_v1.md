@@ -65,8 +65,15 @@
 - Status: **done**
 - `dart format` clean on all four touched files; `flutter analyze lib` clean;
   `tools/release_gate_world1.sh` **PASS**.
-- Motion evidence captured for 5 variants x 5 transitions x 6 frames, plus 5
-  settled endpoints per variant: **175 PNG frames + 25 GIFs**.
+- Motion evidence captured for 5 variants x 6 transitions x 6 frames, plus 5
+  settled endpoints per variant: **205 PNG frames + 30 GIFs**.
+- **Capture correction applied.** The first capture mislabelled the tail of the
+  route: the moment tagged `repair_success_to_targeted_recheck` actually landed
+  on `correctFeedback`, and the one tagged `recheck_to_result_continuation`
+  actually captured *arrival into* recheck — so the true
+  `recheck -> result / continuation` hop was never recorded. The canonical route
+  resolves `repair success -> targeted recheck` as two real hops, so it is now
+  captured as two, and the recognition attempt completing is captured for real.
 
 ## Validation
 
@@ -86,18 +93,71 @@ Every one of those is pre-existing. Measured against canonical main
 
 **B6 introduces zero test regressions.**
 
+## Transition coverage
+
+The canonical route resolves `repair success -> targeted recheck` as **two real
+hops**, so it is captured as two rather than mislabelled as one.
+
+| Required transition | Captured as |
+| --- | --- |
+| decision -> correct feedback | `decision_to_correct_feedback` |
+| decision -> wrong feedback | `decision_to_wrong_feedback` |
+| wrong feedback -> targeted repair | `wrong_feedback_to_targeted_repair` |
+| repair success -> targeted recheck | `repair_success_to_verdict` **+** `verdict_to_targeted_recheck` |
+| recheck -> result / continuation | `recheck_to_result_continuation` |
+
 ## Evidence integrity
 
-Byte-level verification of the captured frames:
+Byte-level verification of the captured frames, `402x874`.
+
+### B6-added semantic scene motion
+
+These three hops are the ones whose motion B6 owns alone:
+
+| Hop | Canonical | Reduced motion |
+| --- | --- | --- |
+| `decision_to_wrong_feedback` | `5/6` distinct | **`1/6`** — zero animated frames |
+| `wrong_feedback_to_targeted_repair` | `5/6` distinct | **`1/6`** — zero animated frames |
+| `verdict_to_targeted_recheck` | `5/6` distinct | **`1/6`** — zero animated frames |
+
+`B6-added motion respects reduced motion completely.`
+
+### Inherited success-beat animation
+
+The three hops that land on a success verdict still animate under reduced
+motion:
+
+| Hop | Canonical | Reduced motion |
+| --- | --- | --- |
+| `decision_to_correct_feedback` | `6/6` | `4/6` |
+| `repair_success_to_verdict` | `6/6` | `4/6` |
+| `recheck_to_result_continuation` | `6/6` | `4/6` |
+
+**This residual is inherited, not B6.** An identical reduced-motion probe run
+against canonical main `7c0e39813fd156822b07c5eced69f2a6ce5972a4` in a detached
+worktree reproduces **`4/6` on `decision_to_correct_feedback`** — the same
+count as the B6 head. A pre-existing success/proof animation on that beat does
+not honour `MediaQuery.disableAnimations`.
+
+`INHERITED_REDUCED_MOTION_PROOF_BEAT_DEBT = NOT_B6_REGRESSION =
+REQUIRES_FUTURE_MASTERMIND_DISPOSITION`
+
+Not repaired here: fixing it means changing runtime behaviour of widgets B6 does
+not own, which is reduced-motion compliance work outside the semantic-motion
+boundary.
+
+**Do not read this record as "the product has zero animated frames under reduced
+motion".** The accurate claim is narrower: *B6 adds none, and removes none of
+what was already there.*
+
+### Endpoint determinism
 
 | Check | Result |
 | --- | --- |
-| Canonical `402x874`, distinct frames per transition | `5 / 6` — motion is real |
-| Reduced motion, distinct frames per transition | `1 / 6` — literally zero animated frames |
 | Every endpoint, canonical vs reduced motion | **byte-identical** |
 
-The last row is the strongest available proof that no B1-B5 evidence geometry
-moved: with motion on and motion off, the settled pixels are the same file.
+That is the strongest available proof that no B1-B5 evidence geometry moved:
+with motion on and motion off, the settled pixels are the same file.
 
 ## Measured results
 
@@ -110,8 +170,10 @@ Frames produced per hop at `402x874`, and the reduced-motion counterpart:
 | `repair -> correctFeedback` | scene static by design (both phases share `0.52` room recession); clue rises `0.85 -> 1.0` | — | identical |
 | `correctFeedback -> recheck` | `18` | `0.6776 -> 0.9256`, clue released | `1` frame | identical |
 
+The `Reduced motion` column above counts frames of **B6-owned scene motion**.
 Reduced motion reaches **exactly** the animated endpoints, so no B1-B5 evidence
-geometry moved.
+geometry moved. See `## Evidence integrity` for the inherited success-beat
+residual that B6 neither adds nor removes.
 
 ## Design decisions worth carrying forward
 
@@ -135,11 +197,15 @@ transition uses opacity/luminance interpolation alone.
    moves (`0.85 -> 1.0`). This is faithful to B5 rather than a B6 defect —
    changing it would mean editing accepted B5 salience values, which is out of
    scope. Flagged in case Mastermind wants the differentiation opened later.
-2. **An unrelated ~1.8s proof animation shares the repair-success beat** (113
-   scheduled frames, present identically with reduced motion off *and* on).
+2. **`INHERITED_REDUCED_MOTION_PROOF_BEAT_DEBT`** — an unrelated ~1.8s proof
+   animation shares every success-verdict beat (113 scheduled frames) and does
+   **not** honour `MediaQuery.disableAnimations`, so those three hops still show
+   `4/6` distinct frames under reduced motion. Proven inherited: the identical
+   probe on canonical main `7c0e3981` returns the same `4/6`.
    `docs/_reviews/motion_direction_system_v1.md` §6 already flags the `1800ms`
-   widgets as over-long and slated for shortening when next touched. B6 did not
-   touch them: doing so is polish, not semantic motion, and would widen scope.
+   widgets as over-long. B6 did not touch them: repairing them changes runtime
+   behaviour B6 does not own.
+   `= NOT_B6_REGRESSION = REQUIRES_FUTURE_MASTERMIND_DISPOSITION`
 3. **Motion evidence is frame-sequence + GIF, not video.** This reuses the
    existing accepted evidence pattern; no video harness was built, per the
    packet's instruction not to build a large new harness to prove motion.
