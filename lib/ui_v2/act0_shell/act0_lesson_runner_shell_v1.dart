@@ -1220,7 +1220,8 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
       _Act0LessonRunnerShellV1State();
 }
 
-class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
+class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
+    with SingleTickerProviderStateMixin {
   static const Duration _theoryAdvanceLockDuration = Duration(
     milliseconds: 820,
   );
@@ -1250,14 +1251,111 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
   late Act0RunnerCompositionFamilyV1 _compositionFamily;
   late String _compositionTaskKey;
 
+  // B6 semantic motion. One interpolation between two already-accepted B5
+  // states, owned here because this `State` is the only owner that survives
+  // every learning-loop hop — the scene's own elements are replaced at each
+  // one, so an implicit animation placed down there would remount with no
+  // "from" value at exactly the moments B6 exists to smooth.
+  late final AnimationController _sceneAttentionController;
+  late final Animation<double> _sceneAttentionProgress;
+  Act0SceneAttentionPhaseV1? _sceneAttentionPhase;
+  Act0SceneAttentionValuesV1? _sceneAttentionFrom;
+  Act0SceneAttentionValuesV1? _sceneAttentionTo;
+  var _sceneAttentionStartPending = false;
+
   @override
   void initState() {
     super.initState();
+    _sceneAttentionController = AnimationController(
+      vsync: this,
+      duration: Act0MotionTokensV1.standard,
+      // Settled on first mount: a freshly entered scene has nothing to
+      // transition *from*, so it must not animate itself in.
+      value: 1,
+    );
+    // `enter`, not `settle`. Measured, `settle` (easeInOutCubic) moves only
+    // 4.7% of the way in its first 64ms, so a transition the learner just
+    // caused reads as lag before it reads as motion. `enter` (easeOutCubic)
+    // responds on the first frame and decelerates into the endpoint, which is
+    // what makes this feel like the scene answering the tap rather than
+    // animating on its own schedule. Both are sanctioned tokens.
+    _sceneAttentionProgress = _sceneAttentionController.drive(
+      CurveTween(curve: Act0MotionTokensV1.enter),
+    );
     _syncTheoryAdvanceLock(initial: true);
     _syncRapidReviewAdvance();
     _maybeEmitTaskShownTelemetry();
     _compositionFamily = widget.compositionFamily;
     _compositionTaskKey = _compositionTaskIdentity(widget);
+  }
+
+  /// Resolves what the scene should render this frame for [phase].
+  ///
+  /// Motion never owns the phase: the returned motion always publishes the
+  /// incoming [phase], so the scene's deterministic phase marker flips on the
+  /// same frame the state does. Only the three bounded B5 numbers interpolate,
+  /// and they always end exactly on B5's settled values.
+  Act0SceneAttentionMotionV1 _resolveSceneAttentionMotionV1(
+    Act0SceneAttentionPhaseV1 phase, {
+    required bool disableMotion,
+  }) {
+    final settled = Act0SceneAttentionV1(phase).settledValues;
+    if (disableMotion) {
+      // Reduced-motion contract: immediate transition, zero animated frames.
+      if (_sceneAttentionController.isAnimating) {
+        _sceneAttentionController.stop();
+      }
+      _sceneAttentionPhase = phase;
+      _sceneAttentionFrom = settled;
+      _sceneAttentionTo = settled;
+      _sceneAttentionStartPending = false;
+      return Act0SceneAttentionMotionV1.settled(phase);
+    }
+    if (_sceneAttentionPhase != phase) {
+      final previousPhase = _sceneAttentionPhase;
+      final previousFrom = _sceneAttentionFrom;
+      final previousTo = _sceneAttentionTo;
+      // Interruptible: a new state change wins immediately, and departs from
+      // whatever is actually on screen rather than from a stale endpoint.
+      var origin = previousFrom == null || previousTo == null
+          ? settled
+          : Act0SceneAttentionValuesV1.lerp(
+              previousFrom,
+              previousTo,
+              _sceneAttentionProgress.value,
+            );
+      if (phase == Act0SceneAttentionPhaseV1.recheck) {
+        // Answer fairness beats transition symmetry. A fading bracket is still
+        // a clue animating into a recognition attempt, which the B6 acceptance
+        // bar forbids, so the clue is released instantly on entering recheck
+        // and never interpolates out. The field restoring around it is what
+        // carries "the assistance is gone".
+        origin = origin.withClueEmphasis(settled.clueEmphasis);
+      }
+      _sceneAttentionPhase = phase;
+      _sceneAttentionFrom = origin;
+      _sceneAttentionTo = settled;
+      if (previousPhase != null && !_sceneAttentionStartPending) {
+        // Start after this frame. The frame that discovers the change renders
+        // the outgoing values, so the transition begins from what the learner
+        // was actually looking at instead of flashing the new state first.
+        _sceneAttentionStartPending = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          _sceneAttentionStartPending = false;
+          _sceneAttentionController.forward(from: 0);
+          setState(() {});
+        });
+      }
+    }
+    return Act0SceneAttentionMotionV1(
+      phase: phase,
+      from: _sceneAttentionFrom ?? settled,
+      to: _sceneAttentionTo ?? settled,
+      progress: _sceneAttentionStartPending
+          ? const AlwaysStoppedAnimation<double>(0)
+          : _sceneAttentionProgress,
+    );
   }
 
   @override
@@ -1288,6 +1386,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
   void dispose() {
     _theoryUnlockTimer?.cancel();
     _rapidReviewTimer?.cancel();
+    _sceneAttentionController.dispose();
     super.dispose();
   }
 
@@ -2727,20 +2826,23 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1> {
         (loopStage == Act0ActionSequenceStageV1.repair ||
             (loopStage == null &&
                 (widget.repairContinuesToSourceRecheck || hasRepairContext)));
-    final sceneAttention = Act0SceneAttentionV1(
-      isTheory
-          ? Act0SceneAttentionPhaseV1.theory
-          : isReview
-          ? (runner.reviewQuality == Act0FeedbackQualityV1.wrong
-                ? Act0SceneAttentionPhaseV1.wrongFeedback
-                : isRepairFocusFeedback
-                ? Act0SceneAttentionPhaseV1.repair
-                : Act0SceneAttentionPhaseV1.correctFeedback)
-          : isDrill && isTargetedRecheck
-          ? Act0SceneAttentionPhaseV1.recheck
-          : isDrill && isTargetedRepair
-          ? Act0SceneAttentionPhaseV1.repair
-          : Act0SceneAttentionPhaseV1.decision,
+    final sceneAttentionPhase = isTheory
+        ? Act0SceneAttentionPhaseV1.theory
+        : isReview
+        ? (runner.reviewQuality == Act0FeedbackQualityV1.wrong
+              ? Act0SceneAttentionPhaseV1.wrongFeedback
+              : isRepairFocusFeedback
+              ? Act0SceneAttentionPhaseV1.repair
+              : Act0SceneAttentionPhaseV1.correctFeedback)
+        : isDrill && isTargetedRecheck
+        ? Act0SceneAttentionPhaseV1.recheck
+        : isDrill && isTargetedRepair
+        ? Act0SceneAttentionPhaseV1.repair
+        : Act0SceneAttentionPhaseV1.decision;
+    // B6: the same phase, plus the in-flight interpolation toward it.
+    final sceneAttention = _resolveSceneAttentionMotionV1(
+      sceneAttentionPhase,
+      disableMotion: MediaQuery.of(context).disableAnimations,
     );
     final usesCompactRepairFeedbackDock =
         isReview &&
@@ -5697,7 +5799,7 @@ class _Act0TableSceneRunnerInput {
   final Act0TableIdentityPolicyV1 identityPolicy;
   final double? maxTableHeight;
   final bool lockSharedActiveTableGeometry;
-  final Act0SceneAttentionV1 attention;
+  final Act0SceneAttentionMotionV1 attention;
   final bool integratedPerspectivePrototype;
 }
 
@@ -5759,7 +5861,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
   final Act0TableIdentityPolicyV1 identityPolicy;
   final double? maxTableHeight;
   final bool lockSharedActiveTableGeometry;
-  final Act0SceneAttentionV1 attention;
+  final Act0SceneAttentionMotionV1 attention;
   final bool integratedPerspectivePrototype;
 
   @override
@@ -7207,22 +7309,34 @@ class Act0FeedbackShellV1 extends StatelessWidget {
               ),
             ),
           );
-          return Container(
-            key: const Key('act0_shell_feedback_card'),
-            padding: const EdgeInsets.fromLTRB(13, 10, 13, 8),
-            child: Column(
-              mainAxisSize: hasBoundedHeight
-                  ? MainAxisSize.max
-                  : MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (hasBoundedHeight)
-                  Expanded(child: resultBody)
-                else
-                  resultBody,
-                const SizedBox(height: 7),
-                buildContinueAction(),
-              ],
+          // B6: the verdict arrives rather than cuts. On this route the scene
+          // owns the causal explanation, so the table's quieting field and its
+          // asserting clue already carry "the state changed; here is why" —
+          // this is the third beat, the verdict itself becoming current.
+          //
+          // Reuses the accepted reveal widget rather than inventing motion:
+          // it starts at 0.92 opacity, so the continue CTA is visible and
+          // interaction-ready on the very first frame, never gated behind a
+          // duration, and it resolves to identical geometry.
+          return _ProofMotionRevealV1(
+            key: const Key('act0_shell_feedback_card_motion_reveal'),
+            child: Container(
+              key: const Key('act0_shell_feedback_card'),
+              padding: const EdgeInsets.fromLTRB(13, 10, 13, 8),
+              child: Column(
+                mainAxisSize: hasBoundedHeight
+                    ? MainAxisSize.max
+                    : MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (hasBoundedHeight)
+                    Expanded(child: resultBody)
+                  else
+                    resultBody,
+                  const SizedBox(height: 7),
+                  buildContinueAction(),
+                ],
+              ),
             ),
           );
         },
@@ -10467,7 +10581,7 @@ const double _act0SceneRailOverhangV1 = 5.0;
 
 class _Act0TableV1 extends StatelessWidget {
   const _Act0TableV1({
-    this.attention = Act0SceneAttentionV1.neutral,
+    this.attention,
     required this.table,
     required this.highlightedCardIds,
     required this.interactiveCalloutLabel,
@@ -10523,11 +10637,19 @@ class _Act0TableV1 extends StatelessWidget {
   final Act0TableIdentityPolicyV1 identityPolicy;
   final double? maxTableHeight;
   final bool lockSharedActiveTableGeometry;
-  final Act0SceneAttentionV1 attention;
+
+  /// `null` on the non-runner table surface, which has no learning phase and
+  /// therefore no state change to communicate.
+  final Act0SceneAttentionMotionV1? attention;
   final bool integratedPerspectivePrototype;
 
   @override
   Widget build(BuildContext context) {
+    // B6: `null` means this surface has no learning phase, so it renders the
+    // settled decision-level scene and never animates.
+    final sceneMotion =
+        attention ??
+        Act0SceneAttentionMotionV1.settled(Act0SceneAttentionPhaseV1.decision);
     final seats = _visualSeatOrder(table.seats);
     final refined = visualVariant == Act0ShellTableVisualVariantV1.refinedDev2;
     final isTablet =
@@ -10845,7 +10967,7 @@ class _Act0TableV1 extends StatelessWidget {
                       // the context/street stack in its reserved middle lane.
                       offset: Offset(0, hasRepairCallout ? height * 0.075 : 0),
                       child: _CenterPotV1(
-                        clueEmphasis: attention.clueEmphasis,
+                        clueMotion: sceneMotion,
                         table: table,
                         highlightedCardIds: highlightedCardIds,
                         onBoardCardTap: () => onBoardCardTap(table),
@@ -10983,11 +11105,12 @@ class _Act0TableV1 extends StatelessWidget {
           // Zero-size marker carrying the resolved B5 phase, so phase
           // separation is provable deterministically rather than by pixels.
           SizedBox.shrink(
-            key: Key('act0_scene_attention_phase_${attention.phase.name}'),
+            key: Key('act0_scene_attention_phase_${sceneMotion.phase.name}'),
           ),
           Positioned.fill(
-            child: Act0SceneRecedeV1(
-              recession: attention.roomRecession,
+            child: Act0SceneRecedeMotionV1(
+              motion: sceneMotion,
+              plane: Act0SceneRecedePlaneV1.room,
               child: IgnorePointer(
                 child: Transform.scale(
                   // The B2 room reaches past the table into the flanks and
@@ -11018,8 +11141,9 @@ class _Act0TableV1 extends StatelessWidget {
             ),
           ),
           Positioned.fill(
-            child: Act0SceneRecedeV1(
-              recession: attention.playerRecession,
+            child: Act0SceneRecedeMotionV1(
+              motion: sceneMotion,
+              plane: Act0SceneRecedePlaneV1.player,
               child: Act0ScenePlayerLayerV1(
                 key: const Key('act0_scene_player_volume_plane'),
                 slots: sceneSeatSlots,
@@ -11030,8 +11154,9 @@ class _Act0TableV1 extends StatelessWidget {
           scene,
           if (heroSceneSlot != null)
             Positioned.fill(
-              child: Act0SceneRecedeV1(
-                recession: attention.playerRecession,
+              child: Act0SceneRecedeMotionV1(
+                motion: sceneMotion,
+                plane: Act0SceneRecedePlaneV1.player,
                 child: const Act0ScenePlayerHeroV1(
                   key: Key('act0_scene_hero_foreground_volume'),
                 ),
@@ -11424,7 +11549,7 @@ List<String> _inferCanonicalSeatOrder(List<Act0SeatStateV1> seats) {
 
 class _CenterPotV1 extends StatelessWidget {
   const _CenterPotV1({
-    this.clueEmphasis = 1.0,
+    this.clueMotion,
     required this.table,
     required this.highlightedCardIds,
     required this.onBoardCardTap,
@@ -11448,7 +11573,10 @@ class _CenterPotV1 extends StatelessWidget {
   final String? toCallLabelOverride;
   final String? streetLabelOverride;
 
-  final double clueEmphasis;
+  /// B6: drives B4's bracket through the in-flight attention interpolation.
+  /// `null` on surfaces with no learning phase, which keep B4's always-on
+  /// bracket.
+  final Act0SceneAttentionMotionV1? clueMotion;
 
   @override
   Widget build(BuildContext context) {
@@ -11498,7 +11626,7 @@ class _CenterPotV1 extends StatelessWidget {
                           resolvedCenterLabel,
                         ),
                         compact: refined,
-                        clueEmphasis: clueEmphasis,
+                        clueMotion: clueMotion,
                       ),
                     ],
                     const SizedBox(height: 3),
@@ -11522,7 +11650,7 @@ class _CenterPotV1 extends StatelessWidget {
                           resolvedCenterLabel,
                         ),
                         compact: refined,
-                        clueEmphasis: clueEmphasis,
+                        clueMotion: clueMotion,
                       ),
                     ],
                     _CenterStreetStatusV1(label: streetLabel, compact: refined),
@@ -11645,7 +11773,7 @@ class _LateRouteCenterSignalV1 extends StatelessWidget {
 
 class _CenterSignalAnchorV1 extends StatelessWidget {
   const _CenterSignalAnchorV1({
-    this.clueEmphasis = 1.0,
+    this.clueMotion,
     required this.label,
     required this.compact,
   });
@@ -11655,7 +11783,12 @@ class _CenterSignalAnchorV1 extends StatelessWidget {
 
   /// B5 drives B4's bracket. It shipped always-on, so it carried no state
   /// information and persisted into recheck as a standing pointer.
-  final double clueEmphasis;
+  ///
+  /// B6 lets that emphasis *arrive* rather than cut: the bracket fades up as
+  /// the verdict becomes current, and re-asserts for repair reacquisition. It
+  /// is released instantly — never faded — on entering recheck, so no clue is
+  /// ever animating during a recognition attempt.
+  final Act0SceneAttentionMotionV1? clueMotion;
 
   @override
   Widget build(BuildContext context) {
@@ -11723,20 +11856,27 @@ class _CenterSignalAnchorV1 extends StatelessWidget {
                 ],
               ),
             ),
-            if (clueEmphasis > 0.02)
-              Positioned.fill(
-                child: IgnorePointer(
-                  child: CustomPaint(
-                    key: const Key('act0_scene_clue_bracket_signal'),
-                    painter: Act0SceneClueBracketPainterV1(
-                      tone: Act0ShellTokensV1.gold.withValues(
-                        alpha: clueEmphasis.clamp(0.0, 1.0),
+            Positioned.fill(
+              child: IgnorePointer(
+                child: AnimatedBuilder(
+                  animation: clueMotion?.progress ?? kAlwaysCompleteAnimation,
+                  builder: (context, _) {
+                    final emphasis = (clueMotion?.current.clueEmphasis ?? 1.0)
+                        .clamp(0.0, 1.0);
+                    if (emphasis <= 0.02) return const SizedBox.shrink();
+                    return CustomPaint(
+                      key: const Key('act0_scene_clue_bracket_signal'),
+                      painter: Act0SceneClueBracketPainterV1(
+                        tone: Act0ShellTokensV1.gold.withValues(
+                          alpha: emphasis,
+                        ),
+                        inset: -2.0,
                       ),
-                      inset: -2.0,
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ),
+            ),
           ],
         ),
       ),
