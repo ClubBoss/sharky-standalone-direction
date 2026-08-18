@@ -62,7 +62,42 @@
   identical B5 endpoint — recession is a phase property, never a layout one.
 
 ### CP3 — motion evidence + validation
-- Status: **done** (see `## Measured results` and `## Validation`)
+- Status: **done**
+- `dart format` clean on all four touched files; `flutter analyze lib` clean;
+  `tools/release_gate_world1.sh` **PASS**.
+- Motion evidence captured for 5 variants x 5 transitions x 6 frames, plus 5
+  settled endpoints per variant: **175 PNG frames + 25 GIFs**.
+
+## Validation
+
+Broad suite, `test/ui_v2` + `test/guards`, on the B6 head:
+
+`+1802 -156` = **41 compile failures** (file-scoped) + **115 assertion
+failures** across 53 files.
+
+Every one of those is pre-existing. Measured against canonical main
+`7c0e39813fd156822b07c5eced69f2a6ce5972a4` in a detached worktree:
+
+| Class | B6 head | Canonical main | Verdict |
+| --- | --- | --- | --- |
+| Compile failures | `41` | `41` (41/41 identical files) | pre-existing |
+| Assertion-failing files | `53` | `53`, **identical set** | pre-existing |
+| Assertion failures | `115` | `115` | pre-existing |
+
+**B6 introduces zero test regressions.**
+
+## Evidence integrity
+
+Byte-level verification of the captured frames:
+
+| Check | Result |
+| --- | --- |
+| Canonical `402x874`, distinct frames per transition | `5 / 6` — motion is real |
+| Reduced motion, distinct frames per transition | `1 / 6` — literally zero animated frames |
+| Every endpoint, canonical vs reduced motion | **byte-identical** |
+
+The last row is the strongest available proof that no B1-B5 evidence geometry
+moved: with motion on and motion off, the settled pixels are the same file.
 
 ## Measured results
 
