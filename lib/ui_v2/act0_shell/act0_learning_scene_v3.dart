@@ -39,12 +39,6 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
       Act0LearningScenePhaseV3.theory => Act0ShellTokensV1.info,
       Act0LearningScenePhaseV3.tableTask => Act0ShellTokensV1.primary,
     };
-    final icon = switch (phase) {
-      Act0LearningScenePhaseV3.theory => Icons.visibility_rounded,
-      Act0LearningScenePhaseV3.tableTask => Icons.touch_app_rounded,
-      Act0LearningScenePhaseV3.feedbackCorrect => Icons.check_rounded,
-      Act0LearningScenePhaseV3.feedbackWrong => Icons.search_rounded,
-    };
     final scaler = MediaQuery.textScalerOf(context);
     final enlarged = scaler.scale(1) > 1.1;
 
@@ -54,8 +48,13 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
       child: Container(
         key: const Key('act0_wave_a_learning_context'),
         width: double.infinity,
-        margin: const EdgeInsets.fromLTRB(14, 2, 14, 1),
-        padding: EdgeInsets.fromLTRB(12, enlarged ? 8 : 6, 8, enlarged ? 9 : 7),
+        margin: const EdgeInsets.fromLTRB(14, 1, 14, 1),
+        padding: EdgeInsets.fromLTRB(
+          12,
+          enlarged ? 6 : 5,
+          10,
+          enlarged ? 7 : 6,
+        ),
         decoration: BoxDecoration(
           border: Border(left: BorderSide(color: tone, width: 3)),
           gradient: LinearGradient(
@@ -65,17 +64,6 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: 30,
-              height: 30,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: tone.withValues(alpha: 0.14),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(icon, size: 17, color: tone),
-            ),
-            const SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

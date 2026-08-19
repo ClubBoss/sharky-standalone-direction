@@ -3619,16 +3619,21 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                     // phase gap in addition to the table itself.
                     ? 56.0
                     : _runnerCompositionHeaderAndGapV1;
-                final tableHeight = math.min(
-                  allocation.tableHeight,
-                  math.max(
-                    0.0,
-                    constraints.maxHeight -
-                        tableStageChrome -
-                        _sharedRunnerSeamV1 -
-                        boundedLowerHeight,
-                  ),
+                final tableHeightCeiling = math.max(
+                  0.0,
+                  constraints.maxHeight -
+                      tableStageChrome -
+                      _sharedRunnerSeamV1 -
+                      boundedLowerHeight,
                 );
+                // Feedback owns a short, fixed lower surface - an outcome line
+                // and one continuation control. Everything above that bound is
+                // scene, not chrome.
+                final sceneClaimsFeedbackSurplus =
+                    _usesCanonicalIntegratedLearningSceneV1 && isReview;
+                final tableHeight = sceneClaimsFeedbackSurplus
+                    ? tableHeightCeiling
+                    : math.min(allocation.tableHeight, tableHeightCeiling);
                 final integratedLowerSurfaceHeight = math.max(
                   0.0,
                   constraints.maxHeight - tableHeight - tableStageChrome,
@@ -11490,8 +11495,8 @@ List<Offset> _chipSlotsForVariant(
       if (compactBottomDockClearance) {
         return const <Offset>[
           Offset(0.50, 0.62),
-          Offset(0.20, 0.55),
-          Offset(0.22, 0.45),
+          Offset(0.067, 0.55),
+          Offset(0.087, 0.45),
           Offset(0.50, 0.29),
           Offset(0.80, 0.39),
           Offset(0.84, 0.59),
@@ -11604,7 +11609,10 @@ class _CenterPotV1 extends StatelessWidget {
         horizontal: refined ? 6 : 4,
         vertical: refined ? 4 : 3,
       ),
-      decoration: refined ? Act0ShellTokensV1.onFeltPanelDecoration() : null,
+      // B7: no panel. The board is the primary poker object and it sits on the
+      // felt, not inside a card. Metadata around it is carried by the objects
+      // themselves (an engraved pot plaque, an incised street mark), so the
+      // centre stops reading as app UI dropped into the table.
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -11693,8 +11701,7 @@ class _CenterPotV1 extends StatelessWidget {
                   context,
                   potLabelOverride ?? table.potLabel,
                 ),
-                tone: Act0ShellTokensV1.text,
-                icon: Icons.casino_rounded,
+                tone: Act0ShellTokensV1.gold,
                 compact: refined,
                 pulse: table.actionTrail.isNotEmpty,
               ),
@@ -11707,7 +11714,6 @@ class _CenterPotV1 extends StatelessWidget {
                     resolvedToCallLabel,
                   ),
                   tone: Act0ShellTokensV1.info,
-                  icon: Icons.arrow_downward_rounded,
                   compact: refined,
                 ),
             ],
@@ -11716,17 +11722,7 @@ class _CenterPotV1 extends StatelessWidget {
       ),
     );
 
-    final resolvedCenterCard = refined
-        ? ClipRRect(
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-            child: BackdropFilter(
-              filter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-              child: centerCard,
-            ),
-          )
-        : centerCard;
-
-    return Center(child: resolvedCenterCard);
+    return Center(child: centerCard);
   }
 }
 
@@ -11818,12 +11814,6 @@ class _CenterSignalAnchorV1 extends StatelessWidget {
                 border: Border.all(
                   color: Act0ShellTokensV1.primary.withValues(alpha: 0.30),
                 ),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                    color: Act0ShellTokensV1.primary.withValues(alpha: 0.08),
-                    blurRadius: compact ? 5 : 7,
-                  ),
-                ],
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -11895,34 +11885,17 @@ class _CenterStreetStatusV1 extends StatelessWidget {
     return Container(
       key: const Key('act0_shell_center_street_badge'),
       padding: EdgeInsets.symmetric(
-        horizontal: compact ? 6 : 8,
-        vertical: compact ? 3 : 4,
+        horizontal: compact ? 2 : 3,
+        vertical: compact ? 1 : 1.5,
       ),
-      decoration: BoxDecoration(
-        color: Act0ShellTokensV1.gold.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-        border: Border.all(
-          color: Act0ShellTokensV1.gold.withValues(alpha: 0.22),
+      child: Text(
+        label,
+        style: Act0ShellTokensV1.label.copyWith(
+          color: Act0ShellTokensV1.gold.withValues(alpha: 0.62),
+          fontSize: compact ? 7.8 : 8.5,
+          fontWeight: FontWeight.w900,
+          letterSpacing: 1.6,
         ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.layers_rounded,
-            color: Act0ShellTokensV1.gold.withValues(alpha: 0.92),
-            size: compact ? 9 : 10,
-          ),
-          const SizedBox(width: 4),
-          Text(
-            label,
-            style: Act0ShellTokensV1.label.copyWith(
-              color: Act0ShellTokensV1.gold.withValues(alpha: 0.94),
-              fontSize: compact ? 7.8 : 8.5,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -11934,7 +11907,6 @@ class _CenterPriorityStatV1 extends StatelessWidget {
     required this.legacyKey,
     required this.label,
     required this.tone,
-    required this.icon,
     required this.compact,
     this.pulse = false,
   });
@@ -11942,7 +11914,6 @@ class _CenterPriorityStatV1 extends StatelessWidget {
   final Key legacyKey;
   final String label;
   final Color tone;
-  final IconData icon;
   final bool compact;
   final bool pulse;
 
@@ -11951,25 +11922,24 @@ class _CenterPriorityStatV1 extends StatelessWidget {
     final stat = Container(
       padding: EdgeInsets.symmetric(
         horizontal: compact ? 8 : 10,
-        vertical: compact ? 4.5 : 5.5,
+        vertical: compact ? 4 : 5,
       ),
-      decoration: BoxDecoration(
-        color: tone.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-        border: Border.all(color: tone.withValues(alpha: 0.24)),
+      decoration: Act0SceneNameplateV1.decoration(
+        radius: Act0ShellTokensV1.radiusPill,
+        stateTone: tone,
+        stateStrength: 0.55,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: compact ? 11 : 12, color: tone),
-          const SizedBox(width: 5),
           Flexible(
             child: Text(
               label,
               style: Act0ShellTokensV1.label.copyWith(
                 color: Act0ShellTokensV1.text,
-                fontSize: compact ? 8.8 : 9.8,
+                fontSize: compact ? 9.6 : 10.4,
                 fontWeight: FontWeight.w900,
+                letterSpacing: 0.2,
               ),
             ),
           ),
@@ -14253,15 +14223,15 @@ class _BetChipV1 extends StatelessWidget {
         stateTone: color,
         stateStrength: 0.85,
       ),
-      child: Row(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _ChipStackIconV1(color: color, compact: compact),
-          SizedBox(width: compact ? 3 : 4),
+          SizedBox(height: compact ? 1 : 2),
           Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if (showLabelPill)
                 Container(
