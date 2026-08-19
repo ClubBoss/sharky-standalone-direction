@@ -38,9 +38,13 @@ Current B6 closure and B7 admission authority:
 
 `docs/_reviews/visual_gauntlet_b6_closure_and_b7_admission_v1.md`
 
-Current B7 Iteration 1 closure and Iteration 2 admission authority:
+B7 Iteration 1 closure and character vertical-slice admission authority:
 
 `docs/_reviews/b7_iteration1_closure_and_asset_vertical_slice_admission_v1.md`
+
+Current B7 character-slice reconciliation and scene-geometry admission authority:
+
+`docs/_reviews/b7_character_slice_reconciliation_and_scene_geometry_admission_v1.md`
 
 ## Text scale policy supersession
 
@@ -100,13 +104,22 @@ work may reopen this policy only through explicit authority/admission.
 | B7 Iteration 1 exact implementation head | `74493883d1d4118d659f44911b614ca590aeb0c8` |
 | B7 Iteration 1 integrated main | `f400dbb9fbe2a0d111a662ad867caabf5626cb8b` |
 | B7 Iteration 1 state | **`CLOSED_PASS`** |
+| Current authority baseline before this docs reconciliation | `3c815afcd1eb285fb21535f1ba8347e677add7ea` |
 | Current stage | **`VISUAL_GAUNTLET_B7_ACTIVE`** |
-| Exact next action | **`IMPLEMENT_B7_CHARACTER_VERTICAL_SLICE_V1`** |
-| Active family | **`B7_CHARACTER_VERTICAL_SLICE_V1`** |
+| Exact next action | **`IMPLEMENT_B7_CANONICAL_SCENE_COMPOSITION_AND_GEOMETRY_V1`** |
+| Active family | **`B7_CANONICAL_SCENE_COMPOSITION_AND_GEOMETRY_V1`** |
 | B7 | **`ACTIVE / ADMITTED`** |
 | B7 Asset Requirement Gate | **`COMPLETE`** |
 | B7 Completion Disposition Rule | **`ACTIVE`** |
-| B7 Character Vertical Slice | **`ACTIVE / ADMITTED`** |
+| B7 Character Vertical Slice | **`CLOSED_PASS_PROOF`** |
+| Character asset architecture | **`PROVEN`** |
+| Character class-level lift | **`YES`** |
+| Premium character art | **`NOT_YET_PROVEN`** |
+| Full character pack | **`NOT_ADMITTED`** |
+| Table geometry stability | **`NOT_PASSED`** |
+| Table geometry invariant | **`REQUIRED`** |
+| Recommended canonical scene direction | **`B_STRONG_PREMIUM_LIFT`** |
+| B7 Canonical Scene Composition + Geometry | **`ACTIVE / ADMITTED`** |
 | Text scale policy | **`SINGLE_CANONICAL_PRODUCT_SCALE`** |
 | Accessibility text scaling | **`DEFERRED_NOT_CURRENT_ACCEPTANCE`** |
 | Inherited reduced-motion proof-beat debt | **`NOT_B6_REGRESSION / NOT_B6_BLOCKER / MUST_RECEIVE_DISPOSITION_BEFORE_P02 / DEFER_TO_POST_B7_PRE_P02_MAINTENANCE`** |
@@ -181,7 +194,85 @@ Accepted Iteration 1 foundation:
 - no table-oval mutation without evidence;
 - clue semantics preserved.
 
-B7 remains active.
+B7 remains active. The accepted Iteration 1 gains remain valid; later forensic
+evidence identified one separate state-dependent table-scale consequence of the
+feedback-surplus policy, which is now owned by the admitted scene-geometry wave.
+
+## Character vertical-slice reconciliation
+
+`B7_CHARACTER_VERTICAL_SLICE_V1 = CLOSED_PASS_PROOF`.
+
+Returned evidence proves:
+
+- `CHARACTER_ASSET_ARCHITECTURE = PROVEN`;
+- authored transparent 2D / 2.5D assets ride existing B1 anchors/projection,
+  rail occlusion, B2 lighting, B5 recession, B6 semantic motion and deterministic
+  capture;
+- `CLASS_LEVEL_LIFT = YES` for human presence versus the procedural B3 baseline.
+
+The current script-generated opponent and hero are prototype evidence only:
+
+- `CURRENT_SCRIPT_GENERATED_ART_QUALITY = PROTOTYPE_ONLY`;
+- opponent = `REWORK`;
+- hero = `REWORK`;
+- Python/PIL full-production method = `NOT_APPROVED`;
+- `PREMIUM_CHARACTER_ART = NOT_YET_PROVEN`;
+- `ART_PRODUCTION_PIPELINE = REQUIRES_SEPARATE_SELECTION`;
+- `FULL_CHARACTER_PACK = NOT_STARTED / NOT_ADMITTED`.
+
+Do not merge or canonize the current prototype PNGs as final art. Character
+production resumes only after stable scene geometry is accepted.
+
+## Table geometry forensic + invariant
+
+`TABLE_GEOMETRY_STABILITY = NOT_PASSED`.
+
+Codex forensic evidence identified the B7 Iteration 1 review-state-specific
+`tableHeight` allocation as the direct cause of state-dependent physical table
+scale. The whole table world is affected: outer table, felt, seats, hero, board,
+pot and physical anchors.
+
+`B7_ITERATION_1_FEEDBACK_SURPLUS_POLICY = DIRECT_CAUSE_OF_STATE_DEPENDENT_TABLE_SCALE`
+
+`TABLE_GEOMETRY_STABILITY = MATERIAL_GAP_CONFIRMED`
+
+This does not reopen B7 Iteration 1 as failed.
+
+Canonical principle:
+
+`TABLE_GEOMETRY_INVARIANT_V1 = REQUIRED`
+
+For one viewport at canonical text scale:
+
+`ONE VIEWPORT -> ONE PHYSICAL TABLE GEOMETRY -> SAME GEOMETRY ACROSS THE LEARNING LOOP`
+
+Decision, correct feedback, wrong feedback, repair, recheck and
+continuation/result must keep the same camera, physical table envelope, scale,
+projected perspective, rail geometry, seat/character anchors and board/pot/
+hero-card physical anchors. State may still change salience, opacity/recession,
+clue/HUD semantic state, feedback copy and dock content/visible height.
+
+## Canonical scene direction
+
+`RECOMMENDED_CANONICAL_SCENE_DIRECTION = B_STRONG_PREMIUM_LIFT`.
+
+Do not freeze current decision geometry or current feedback geometry. The
+accepted target is a new canonical geometry: wider than current decision,
+vertically more foreshortened, with a lower far rail, roughly preserved near
+rail, more far-player / teaching breathing room, and board/hero-card readability
+kept near the current decision baseline.
+
+Indicative render-tuning envelope only:
+
+- felt width `~66-72%` viewport;
+- outer table width `~78-84%` viewport;
+- outer table projected height `~46-50%` viewport;
+- table center `~54-56%` viewport Y;
+- far rail `~31-34%` viewport Y;
+- near rail `~75-78%` viewport Y.
+
+The final values must be selected from exact temporary parameterized renders,
+not copied blindly.
 
 ## Inherited reduced-motion debt
 
@@ -289,63 +380,89 @@ presence, and any newly exposed benchmark-level class gap.
 
 Mission:
 
-`B7_CHARACTER_VERTICAL_SLICE_V1`
+`B7_CANONICAL_SCENE_COMPOSITION_AND_GEOMETRY_V1`
 
 State:
 
-`B7_CHARACTER_VERTICAL_SLICE_V1 = ACTIVE / ADMITTED`
+`B7_CANONICAL_SCENE_COMPOSITION_AND_GEOMETRY_V1 = ACTIVE / ADMITTED`
 
 Exact next action:
 
-`IMPLEMENT_B7_CHARACTER_VERTICAL_SLICE_V1`
+`IMPLEMENT_B7_CANONICAL_SCENE_COMPOSITION_AND_GEOMETRY_V1`
 
-This is B7 Iteration 2. Its purpose is to determine whether authored 2D / 2.5D
-character art creates a genuine class-level premium lift over the accepted
-procedural B3 character renderer.
+This is one bounded B7 structural composition wave, not B8.
 
-Minimum slice:
+Treat as one causal system:
 
-- one authored opponent;
-- one authored first-person hero foreground.
+- stable canonical scene/table envelope;
+- table geometry invariant across states;
+- B-camera / stronger premium perspective;
+- wider but vertically foreshortened physical table;
+- lower far rail / more player breathing room;
+- preserve board/card readable size independently of physical felt scaling;
+- decouple feedback-dock surplus from table growth;
+- reclaim feedback surplus as environment, hero foreground and breathing room;
+- reserve larger far-player volumes;
+- reserve deeper hero foreground zone;
+- scene-owned top coaching surface;
+- scene-attached bottom control shelf;
+- compact/canonical/large deterministic geometry proof.
 
-Do not build a full asset pack inside this mission.
+Before committing final geometry, run a parameter-only rendered experiment:
 
-Preferred asset pipeline:
+- A = conservative/current-like;
+- B = strong premium lift;
+- C = maximum justified perspective.
 
-`authored transparent 2D / 2.5D assets -> deterministic Flutter compositor`
+Do not build three production implementations. B is the recommended target; a
+different result requires exact evidence that it materially outperforms B while
+preserving learning readability.
 
-Art owns believable anatomy, hands, head shape, facial planes, hair, clothing
-silhouette/material, pose asymmetry, and character personality.
+Poker-information guard:
 
-Existing code keeps ownership of seat identity, perspective, `characterAnchor`,
-hero zone, depth, rail occlusion, B2 lighting relationship, B3 state semantics,
-B4 HUD, B5 recession, B6 semantic motion, responsiveness, and deterministic
-evidence.
+- board-card readable size `>= ~95%` current decision baseline;
+- hero cards `>= ~95%` current decision baseline;
+- pot remains fully legible;
+- commitment amounts remain at proven legibility;
+- clue / board / pot keep clear separation;
+- reject camera directions requiring more than approximately `5-8%` shrink of
+  core poker information.
 
-No new 3D runtime. Blender may be an artist-side source tool only if useful.
+Design-space envelopes, not mandatory literal rectangles:
 
-Prove compact, canonical, and large viewports at one canonical text scale and
-evaluate visual class-level lift, human believability, premium quality,
-poker-table presence, silhouette clarity, seat ownership, perspective
-compatibility, rail occlusion, lighting coherence, B5 recession, B6 motion,
-deterministic rendering, hierarchy versus poker information, and no answer
-leakage.
+- far players `~76-88 x ~88-108` logical px;
+- mid/side players `~85-110 x ~100-135` logical px visible;
+- hero foreground `~250-300` logical px wide and `~72-92` logical px deep.
 
-Required verdict:
+`TOP_SURFACE_COHESION = IMPLEMENT_NOW_IN_SCENE_WAVE`
 
-`CLASS_LEVEL_LIFT = YES / NO`
+Target: `SCENE_OWNED_COACHING_SURFACE`.
 
-If `NO`, stop asset expansion and reassess art direction / pipeline.
+`BOTTOM_SURFACE_COHESION = IMPLEMENT_NOW_IN_SCENE_WAVE`
 
-If `YES`, later bounded expansion may be admitted toward approximately five
-distinct opponents, neutral / in-hand pose, folded secondary pose, and one
-authored hero foreground. That expansion is not automatically admitted here.
+Target: `SCENE_ATTACHED_CONTROL_SHELF`.
 
-After the vertical slice, Mastermind must explicitly disposition at least
-room/environment richness, table oval identity, decision dock residual slack,
-cards/chips tactile quality, Sharky scene presence, opponent
-active/inactive/folded readability, hero quality, and any newly visible
-composition gap.
+Dock height/content may change by state. Dock height must never resize the
+physical table.
+
+`ENVIRONMENT_TERRITORY = IMPLEMENT_NOW`
+
+`RICHER_ENVIRONMENT_ASSET_ART = EXPERIMENT_LATER / NOT_REQUIRED_IN_THIS_WAVE`
+
+No final characters are produced in this wave. Use the procedural baseline or
+temporary experimental authored slice only as a local non-canonical probe.
+
+Required deterministic geometry guard at one canonical text scale:
+
+- `375x812`;
+- `402x874`;
+- `430x932`;
+- real loop states: decision, correct feedback, wrong feedback, repair, recheck,
+  continuation/result;
+- approximately `<= 0.5` logical px delta for physical table rect, felt rect,
+  table centerline, representative far-seat anchor, hero anchor, board anchor
+  and pot anchor within a viewport;
+- preserve safe area, `>=44dp` tap targets, no-answer-scroll and CTA reachability.
 
 ## B7 boundary
 
@@ -364,6 +481,10 @@ B7 must not:
 - become a PokerSkill clone;
 - automatically create B8.
 
+The scene wave additionally must not produce final character art, start the full
+character pack, add richer decorative room art, change card visual identity,
+change the dealer puck, or replace B4/B5/B6 ownership systems.
+
 ## P01 Human evidence remains canonical history
 
 P01 is not rewritten as PASS:
@@ -373,8 +494,8 @@ P01 is not rewritten as PASS:
 - `P02 = DEFERRED / NOT_STARTED`
 - `HUMAN_PROOF = FALSE`
 
-Wave A and B1-B6 plus B7 Iteration 1 close product responses/foundations only.
-They do not alter what the P01 participant experienced.
+Wave A and B1-B6 plus the current B7 work close product responses/foundations
+only. They do not alter what the P01 participant experienced.
 
 `HNP_HARNESS = CLOSED_UNCHANGED`.
 
@@ -388,8 +509,9 @@ They do not alter what the P01 participant experienced.
 6. `B6 SEMANTIC_MOTION` - **CLOSED_PASS**
 7. `B7 BENCHMARK_COHESION_AND_POLISH_GAUNTLET` - **ACTIVE / ADMITTED**
 
-B7 Iteration 1 is closed. `B7_CHARACTER_VERTICAL_SLICE_V1` is the only admitted
-next B7 implementation substage. No B8 is admitted.
+B7 Iteration 1 is closed. The character vertical slice is closed as proof.
+`B7_CANONICAL_SCENE_COMPOSITION_AND_GEOMETRY_V1` is the only admitted next B7
+implementation substage. No full character pack and no B8 are admitted.
 
 ## Post-B7 route
 
@@ -420,7 +542,7 @@ Star product direction, evidence hierarchy, protected boundaries, and Gauntlet
 discipline.
 
 `CURRENT_STAGE = VISUAL_GAUNTLET_B7_ACTIVE`
-`EXACT_NEXT_ACTION = IMPLEMENT_B7_CHARACTER_VERTICAL_SLICE_V1`
+`EXACT_NEXT_ACTION = IMPLEMENT_B7_CANONICAL_SCENE_COMPOSITION_AND_GEOMETRY_V1`
 `WAVE_A = CLOSED_PASS`
 `VISUAL_GAUNTLET_B1 = CLOSED_PASS`
 `VISUAL_GAUNTLET_B2 = CLOSED_PASS`
@@ -428,12 +550,21 @@ discipline.
 `VISUAL_GAUNTLET_B4 = CLOSED_PASS`
 `VISUAL_GAUNTLET_B5 = CLOSED_PASS`
 `VISUAL_GAUNTLET_B6 = CLOSED_PASS`
-`ACTIVE_VISUAL_GAUNTLET = B7_CHARACTER_VERTICAL_SLICE_V1`
+`ACTIVE_VISUAL_GAUNTLET = B7_CANONICAL_SCENE_COMPOSITION_AND_GEOMETRY_V1`
 `B7 = ACTIVE_ADMITTED`
 `B7_ASSET_REQUIREMENT_GATE_V1 = COMPLETE`
 `B7_ITERATION_1_CODE_COHESION_V1 = CLOSED_PASS`
 `B7_COMPLETION_DISPOSITION_RULE_V1 = ACTIVE`
-`B7_CHARACTER_VERTICAL_SLICE_V1 = ACTIVE_ADMITTED`
+`B7_CHARACTER_VERTICAL_SLICE_V1 = CLOSED_PASS_PROOF`
+`CHARACTER_ASSET_ARCHITECTURE = PROVEN`
+`CLASS_LEVEL_LIFT = YES`
+`PREMIUM_CHARACTER_ART = NOT_YET_PROVEN`
+`ART_PRODUCTION_PIPELINE = REQUIRES_SEPARATE_SELECTION`
+`FULL_CHARACTER_PACK = NOT_ADMITTED`
+`TABLE_GEOMETRY_STABILITY = NOT_PASSED`
+`TABLE_GEOMETRY_INVARIANT_V1 = REQUIRED`
+`RECOMMENDED_CANONICAL_SCENE_DIRECTION = B_STRONG_PREMIUM_LIFT`
+`B7_CANONICAL_SCENE_COMPOSITION_AND_GEOMETRY_V1 = ACTIVE_ADMITTED`
 `TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE`
 `ACCESSIBILITY_TEXT_SCALING = DEFERRED_NOT_CURRENT_ACCEPTANCE`
 `INHERITED_REDUCED_MOTION_PROOF_BEAT_DEBT = NOT_B6_REGRESSION`
