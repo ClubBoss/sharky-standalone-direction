@@ -189,6 +189,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
     required this.phase,
     required this.attentionPhase,
     required this.sharkyState,
+    this.growthStage = Act0SharkyGrowthStageV1.foundation,
     required this.eyebrow,
     required this.headline,
     required this.support,
@@ -208,6 +209,13 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
   /// only wraps the canonical [act0ResolveSharkyCompanionStateV1]
   /// contract). This widget never re-derives or overrides it.
   final Act0SharkyCompanionStateV1 sharkyState;
+
+  /// Sharky's persistent growth stage — a separate axis from [sharkyState].
+  /// Callers pass the canonical resolved stage (see
+  /// [act0SharkyGrowthStageForWorldNumberV1]), never a style token. Defaults
+  /// to [Act0SharkyGrowthStageV1.foundation] only for callers that have not
+  /// wired the canonical resolver.
+  final Act0SharkyGrowthStageV1 growthStage;
   final String eyebrow;
   final String headline;
   final String support;
@@ -361,6 +369,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
                   state: sharkyState,
                   size: scaffold.avatarSize,
                   simpleFrame: true,
+                  growthStage: growthStage,
                 ),
               ),
               const SizedBox(width: Act0ShellTokensV1.gapSm),
