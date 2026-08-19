@@ -10780,18 +10780,33 @@ class _Act0TableV1 extends StatelessWidget {
                       .map(Act0ScenePerspectiveV1.canonical.project)
                       .toList()
                 : baseSeatSlots;
-            // Chip placement stays exactly as Wave A validated it. B4 tried
+            // Chip placement keeps exactly the ring Wave A validated. B4 tried
             // moving commitments onto B1's `betAnchor` and the repository's own
             // informative-object guard rejected it: there is no offset from
             // that anchor which clears both the seat's own card+plate column
             // and the board panel. Measured bounds also show the legacy ring
             // already seats each chip immediately beside its owner, so the real
-            // gap here was treatment, not position.
-            final chipSlots = integratedPerspectivePrototype
+            // gap there was treatment, not position.
+            //
+            // B7 adds only a separation step, and only under the camera: one
+            // canonical table is shorter than the tallest state it replaced, so
+            // the same normalized ring resolves to fewer pixels and the chip
+            // meets its owner's card+plate column. The ring's topology is
+            // untouched.
+            final projectedChipSlots = integratedPerspectivePrototype
                 ? baseChipSlots
                       .map(Act0ScenePerspectiveV1.canonical.project)
                       .toList()
                 : baseChipSlots;
+            final chipSlots = cameraStageSize == null
+                ? projectedChipSlots
+                : <Offset>[
+                    for (var i = 0; i < projectedChipSlots.length; i++)
+                      Act0SceneCameraV1.canonical.separateCommitment(
+                        projectedChipSlots[i],
+                        seatSlots[i.clamp(0, seatSlots.length - 1)],
+                      ),
+                  ];
             final activeSeatId = (playbackActiveSeatId ?? '').trim().isNotEmpty
                 ? playbackActiveSeatId
                 : _resolveActiveSeatId(table);
@@ -11044,6 +11059,7 @@ class _Act0TableV1 extends StatelessWidget {
                     ),
                   for (var slot = 0; slot < seats.length; slot++)
                     _SeatPlacementV1(
+                      compactInformativeColumn: cameraStageSize != null,
                       slot: slot,
                       seat: seats[slot],
                       heroCards: table.heroCards,
@@ -12088,6 +12104,7 @@ class _SeatPlacementV1 extends StatelessWidget {
     required this.visualVariant,
     this.identityPolicy = Act0TableIdentityPolicyV1.currentProduction,
     this.depthTieredPrototype = false,
+    this.compactInformativeColumn = false,
   });
 
   final int slot;
@@ -12107,6 +12124,7 @@ class _SeatPlacementV1 extends StatelessWidget {
   final Act0ShellTableVisualVariantV1 visualVariant;
   final Act0TableIdentityPolicyV1 identityPolicy;
   final bool depthTieredPrototype;
+  final bool compactInformativeColumn;
 
   static const List<Offset> defaultSlots = <Offset>[
     Offset(0.50, 0.90),
@@ -12138,6 +12156,7 @@ class _SeatPlacementV1 extends StatelessWidget {
           ),
           scale: tierScale,
           child: _SeatNodeV1(
+            compactInformativeColumn: compactInformativeColumn,
             seat: seat,
             heroCards: heroCards,
             highlightedCardIds: highlightedCardIds,
@@ -12175,6 +12194,7 @@ class _SeatNodeV1 extends StatelessWidget {
     this.identityPolicy = Act0TableIdentityPolicyV1.currentProduction,
     this.onTap,
     this.compact = false,
+    this.compactInformativeColumn = false,
   });
 
   final Act0SeatStateV1 seat;
@@ -12191,9 +12211,22 @@ class _SeatNodeV1 extends StatelessWidget {
   final VoidCallback? onTap;
   final bool compact;
 
+  /// B7: the camera-owned scene resolves one table for every state, and that
+  /// table is shorter than the tallest state it replaced. The seat's own
+  /// informative column — cards, the gap under them, the plate's internal
+  /// padding — was sized against the taller table and now saturates the flank,
+  /// leaving no room between a seat and its own commitment. This trims the
+  /// column's dead vertical space only. No type size, no plate width, no
+  /// content changes.
+  final bool compactInformativeColumn;
+
   @override
   Widget build(BuildContext context) {
     final refined = visualVariant == Act0ShellTableVisualVariantV1.refinedDev2;
+    // Dead vertical space in the seat's informative column, trimmed under the
+    // camera. Cards keep their size and the plate keeps its type and width.
+    final double cardPlateGap = compactInformativeColumn ? 1 : 3;
+    final double plateVerticalPad = compactInformativeColumn ? 2 : 0;
     final seatVisualState = visualState;
     final markerDisplay = _resolveSeatMarkerDisplayV1(
       context,
@@ -12286,7 +12319,7 @@ class _SeatNodeV1 extends StatelessWidget {
                   ],
                 ],
               ),
-              const SizedBox(height: 3),
+              SizedBox(height: cardPlateGap),
             ] else if (showFaceDown) ...[
               Row(
                 mainAxisSize: MainAxisSize.min,
@@ -12300,7 +12333,7 @@ class _SeatNodeV1 extends StatelessWidget {
                   ],
                 ],
               ),
-              const SizedBox(height: 3),
+              SizedBox(height: cardPlateGap),
             ] else if (showFaceUp) ...[
               Row(
                 mainAxisSize: MainAxisSize.min,
@@ -12317,9 +12350,12 @@ class _SeatNodeV1 extends StatelessWidget {
                   ],
                 ],
               ),
-              const SizedBox(height: 3),
+              SizedBox(height: cardPlateGap),
             ],
-            if (folded) ...[const _FoldedBadgeV1(), const SizedBox(height: 3)],
+            if (folded) ...[
+              const _FoldedBadgeV1(),
+              SizedBox(height: cardPlateGap),
+            ],
             Stack(
               clipBehavior: Clip.none,
               children: [
@@ -12337,7 +12373,9 @@ class _SeatNodeV1 extends StatelessWidget {
                             ? (refined ? 5 : 7)
                             : (useSlimRefinedSeat ? 7 : (refined ? 9 : 8))) +
                         (showsSeatGlyph ? 0 : 6),
-                    vertical: useSlimRefinedSeat ? 5 : (refined ? 6 : 5),
+                    vertical:
+                        (useSlimRefinedSeat ? 5 : (refined ? 6 : 5)) -
+                        plateVerticalPad,
                   ),
                   decoration: Act0SceneNameplateV1.decoration(
                     radius: Act0ShellTokensV1.radiusSm,

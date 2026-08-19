@@ -134,6 +134,12 @@ class Act0ScenePerspectiveV1 {
   double hazeAt(double depth) => (1 - depth.clamp(0.0, 1.0)) * 0.55;
 }
 
+/// The scene's felt centre in normalized table space.
+///
+/// Seats push out from it and commitments draw back toward it, so both rings
+/// resolve against one axis rather than two that can disagree.
+const Offset act0SceneCentreV1 = Offset(0.5, 0.52);
+
 /// The canonical scene camera: where the one physical poker table lives inside
 /// one viewport.
 ///
@@ -155,9 +161,10 @@ class Act0ScenePerspectiveV1 {
 class Act0SceneCameraV1 {
   const Act0SceneCameraV1({
     this.outerTableWidthFraction = 0.810,
-    this.projectedTableHeightFraction = 0.460,
-    this.farRailFraction = 0.265,
+    this.projectedTableHeightFraction = 0.500,
+    this.farRailFraction = 0.225,
     this.horizonOffsetFraction = 0.020,
+    this.commitmentSeatSeparation = 0.006,
   });
 
   static const Act0SceneCameraV1 canonical = Act0SceneCameraV1();
@@ -181,7 +188,45 @@ class Act0SceneCameraV1 {
   double get tableCentreFraction =>
       farRailFraction + (projectedTableHeightFraction / 2);
 
+  /// How far a commitment is drawn back toward the felt centre, in normalized
+  /// scene units, so it keeps deterministic screen-space separation from its
+  /// owner's informative seat.
+  ///
+  /// The camera is what makes this necessary. Wave A's chip ring cleared the
+  /// seat's card+plate column by roughly 15 logical px, but it bought that
+  /// clearance out of a much taller projected table — review and theory states
+  /// used to claim extra height. One canonical geometry is shorter than the
+  /// tallest state it replaces, so the same normalized ring resolves to fewer
+  /// pixels and the two informative objects meet.
+  ///
+  /// This restores the separation without reopening commitment ownership: the
+  /// ring keeps its validated topology and each chip stays beside its owner,
+  /// pushed one fixed normalized step further along the axis the ring already
+  /// chose for that pair. B4 established that moving commitments onto B1's
+  /// `betAnchor` cannot clear both the seat column and the board, so that
+  /// anchor is deliberately still not used here.
+  final double commitmentSeatSeparation;
+
   double get horizonFraction => farRailFraction - horizonOffsetFraction;
+
+  /// Pushes [chip] one step further from [seat] along the axis the validated
+  /// ring already chose for that pair.
+  ///
+  /// Direction is taken from the ring itself rather than from the felt centre.
+  /// The centre axis is almost horizontal for the flank seats, so separating
+  /// along it moves a chip sideways into the same column it is trying to
+  /// leave; the seat-to-chip axis is the one the collision is actually on.
+  Offset separateCommitment(Offset chip, Offset seat) {
+    if (commitmentSeatSeparation == 0) return chip;
+    final away = chip - seat;
+    final distance = away.distance;
+    if (distance < 0.0001) return chip;
+    return chip +
+        Offset(
+          (away.dx / distance) * commitmentSeatSeparation,
+          (away.dy / distance) * commitmentSeatSeparation,
+        );
+  }
 
   /// The stage box the table silhouette is drawn into.
   ///
@@ -296,7 +341,7 @@ List<Act0SceneSeatSlotV1> act0SceneSeatSlotsV1({
   required String? heroSeatId,
   Act0ScenePerspectiveV1 perspective = Act0ScenePerspectiveV1.canonical,
 }) {
-  const sceneCentre = Offset(0.5, 0.52);
+  const sceneCentre = act0SceneCentreV1;
   final slots = <Act0SceneSeatSlotV1>[];
   for (var i = 0; i < seatIds.length; i++) {
     final base = baseSlots[i.clamp(0, baseSlots.length - 1)];
