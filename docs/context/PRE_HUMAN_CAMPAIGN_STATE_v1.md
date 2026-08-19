@@ -1,5 +1,101 @@
 # Pre-Human Campaign State v1
 
+## Current dispatch supersession - 2026-08-20
+
+Status: `POST_B7_PRE_P02_MAINTENANCE_ACTIVE`.
+
+This block supersedes the historical pre-closure dispatch snapshot retained
+below. Product direction remains governed by
+`docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`; this file advances exact
+campaign dispatch beneath that authority.
+
+Latest closure/admission authority:
+
+`docs/_reviews/b7_coach_surface_closure_b7_final_closure_and_pre_p02_maintenance_admission_v1.md`
+
+Live authoring baseline:
+
+`628a5df23ea45c587cf6674ecc6185c365aac3bb`
+
+PR #207 exact implementation head:
+
+`68b3781eae03946869f27698afa681578423748b`
+
+Record:
+
+`SHARKY_COACH_SURFACE_V1 = CLOSED_PASS`
+
+`PR207_IMPLEMENTATION = CLOSED_PASS`
+
+`B7_COMPLETION_DISPOSITION_RULE_V1 = SATISFIED`
+
+`VISUAL_GAUNTLET_B7_BENCHMARK_COHESION_AND_POLISH_V1 = CLOSED_PASS`
+
+`VISUAL_GAUNTLET_B7 = CLOSED_PASS`
+
+`B7 = CLOSED_PASS`
+
+Final residual dispositions:
+
+| Material class | Disposition |
+| --- | --- |
+| Sharky Coach Surface | `CLOSED_PASS` |
+| Premium character art | `NOT_YET_PROVEN / BLOCKED_PENDING_ASSET_OR_DEPENDENCY` |
+| Full character pack | `BLOCKED_PENDING_ASSET_OR_DEPENDENCY / NOT_ADMITTED` |
+| W8 BTN/pot baseline overlap | `PRE_EXISTING_BASELINE_VISUAL_DEBT / DEFER_LOW_EV / NOT_ADMITTED` |
+| Inherited reduced-motion proof-beat debt | `POST_B7_PRE_P02_REDUCED_MOTION_PROOF_BEAT_MAINTENANCE_V1 = ACTIVE / ADMITTED` |
+
+Set:
+
+`CURRENT_STAGE = POST_B7_PRE_P02_MAINTENANCE`
+
+`POST_B7_PRE_P02_REDUCED_MOTION_PROOF_BEAT_MAINTENANCE_V1 = ACTIVE / ADMITTED`
+
+`EXACT_NEXT_ACTION = IMPLEMENT_POST_B7_PRE_P02_REDUCED_MOTION_PROOF_BEAT_MAINTENANCE_V1`
+
+The admitted maintenance scope is only the known approximately 1.8 second
+success/proof animation that remains animated under
+`MediaQuery.disableAnimations`. No broad accessibility work, Dynamic Type,
+B6 redesign, new motion, visual polish, unrelated guards, or tests-for-tests
+are admitted.
+
+Post-maintenance route is recorded but not executed:
+
+`POST_B7_PRE_P02_REDUCED_MOTION_PROOF_BEAT_MAINTENANCE_V1`
+`-> FREEZE EXACT CANDIDATE`
+`-> CHEAP MACHINE FALSIFIERS`
+`-> P02 REAL NOVICE`
+
+Preserve:
+
+`TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE`
+
+`ACCESSIBILITY_TEXT_SCALING = DEFERRED_NOT_CURRENT_ACCEPTANCE`
+
+`HNP_HARNESS = CLOSED_UNCHANGED`
+
+`REAL_HUMAN_HNP = P01_EXECUTED_ACTIONABLE_STOP`
+
+`HUMAN_PROOF = FALSE`
+
+`P02 = DEFERRED / NOT_STARTED`
+
+`B8 = NOT_ADMITTED`
+
+`CAMERA_RETUNE_AGAIN = NO`
+
+Modern Table remains `MAINTENANCE_MODE`.
+
+Protected checkout `/Users/elmarsalimzade/Sharky_1.0` must not be reset,
+cleaned, stashed, reused, or overwritten.
+
+The snapshot below is retained as historical provenance only. Any stale
+`VISUAL_GAUNTLET_B7_ACTIVE`, `IMPLEMENT_SHARKY_COACH_SURFACE_V1`, or
+`B7 = ACTIVE` statement below is superseded by this block and the latest review
+authority.
+
+---
+
 Status: `VISUAL_GAUNTLET_B7_ACTIVE` - single first-read dispatch authority.
 Freshness date: 2026-08-19.
 
@@ -454,7 +550,7 @@ They do not alter what the P01 participant experienced.
 2. `B2 PREMIUM_TABLE_AND_ENVIRONMENT_ART` - **CLOSED_PASS**
 3. `B3 PLAYER_EMBODIMENT` - **CLOSED_PASS**
 4. `B4 OBJECT_ATTACHED_HUD` - **CLOSED_PASS**
-5. `B5 ATTENTION_AWARE_RENDERING` - **CLOSED_PASS**
+5. `B5 ATTENTION_AWARE_RENDERING_V1` - **CLOSED_PASS**
 6. `B6 SEMANTIC_MOTION` - **CLOSED_PASS**
 7. `B7 BENCHMARK_COHESION_AND_POLISH_GAUNTLET` - **ACTIVE / ADMITTED**
 
