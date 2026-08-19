@@ -744,6 +744,11 @@ Future<void> _answer(WidgetTester tester, {required bool correct}) async {
   for (var i = 0; i < 4 && finder.evaluate().isEmpty; i++) {
     final continueCta = find.byKey(const Key('act0_shell_continue_cta'));
     expect(continueCta, findsOneWidget);
+    // The teaching advance is time-gated. Pump elapsed time explicitly rather
+    // than relying on how many frames `pumpAndSettle` happens to schedule,
+    // which varies with unrelated scene animation.
+    await tester.pump(const Duration(seconds: 2));
+    await tester.pumpAndSettle();
     await tester.tap(continueCta);
     await tester.pumpAndSettle();
     runner = tester.widget<Act0LessonRunnerShellV1>(
