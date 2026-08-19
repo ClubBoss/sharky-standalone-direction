@@ -1,5 +1,94 @@
 # Current Execution Handoff v1
 
+## Current continuation supersession - 2026-08-20
+
+Status: CURRENT-STATE CONTINUATION AID / NON-AUTHORITY.
+
+This block supersedes the historical pre-closure continuation snapshot retained
+below. The authority hierarchy remains:
+
+1. `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
+2. `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`
+3. admitted review authority
+4. this file only as a continuation aid
+
+Latest closure/admission authority:
+
+`docs/_reviews/b7_coach_surface_closure_b7_final_closure_and_pre_p02_maintenance_admission_v1.md`
+
+Exact authoring baseline:
+
+`628a5df23ea45c587cf6674ecc6185c365aac3bb`
+
+PR #207 exact implementation head:
+
+`68b3781eae03946869f27698afa681578423748b`
+
+Current state:
+
+`SHARKY_COACH_SURFACE_V1 = CLOSED_PASS`
+
+`PR207_IMPLEMENTATION = CLOSED_PASS`
+
+`B7_COMPLETION_DISPOSITION_RULE_V1 = SATISFIED`
+
+`VISUAL_GAUNTLET_B7 = CLOSED_PASS`
+
+`B7 = CLOSED_PASS`
+
+`CURRENT_STAGE = POST_B7_PRE_P02_MAINTENANCE`
+
+`POST_B7_PRE_P02_REDUCED_MOTION_PROOF_BEAT_MAINTENANCE_V1 = ACTIVE / ADMITTED`
+
+`EXACT_NEXT_ACTION = IMPLEMENT_POST_B7_PRE_P02_REDUCED_MOTION_PROOF_BEAT_MAINTENANCE_V1`
+
+The active implementation is limited to the known approximately 1.8 second
+success/proof animation that remains animated under
+`MediaQuery.disableAnimations`. No broad accessibility work, Dynamic Type,
+B6 redesign, new motion, visual polish, unrelated guards, or tests-for-tests
+are admitted.
+
+Preserve:
+
+`TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE`
+
+`ACCESSIBILITY_TEXT_SCALING = DEFERRED_NOT_CURRENT_ACCEPTANCE`
+
+`PREMIUM_CHARACTER_ART = NOT_YET_PROVEN / BLOCKED_PENDING_ASSET_OR_DEPENDENCY`
+
+`FULL_CHARACTER_PACK = NOT_STARTED / NOT_ADMITTED`
+
+`W8_BTN_POT_OVERLAP = PRE_EXISTING_BASELINE_VISUAL_DEBT / DEFER_LOW_EV / NOT_ADMITTED`
+
+`P02 = DEFERRED / NOT_STARTED`
+
+`HNP_HARNESS = CLOSED_UNCHANGED`
+
+`REAL_HUMAN_HNP = P01_EXECUTED_ACTIONABLE_STOP`
+
+`HUMAN_PROOF = FALSE`
+
+`B8 = NOT_ADMITTED`
+
+Modern Table remains `MAINTENANCE_MODE`.
+
+Post-maintenance route is recorded but not executed:
+
+`POST_B7_PRE_P02_REDUCED_MOTION_PROOF_BEAT_MAINTENANCE_V1`
+`-> FREEZE EXACT CANDIDATE`
+`-> CHEAP MACHINE FALSIFIERS`
+`-> P02 REAL NOVICE`
+
+Protected checkout `/Users/elmarsalimzade/Sharky_1.0` must not be reset,
+cleaned, stashed, reused, or overwritten.
+
+The snapshot below is retained as historical provenance only. Any stale
+`VISUAL_GAUNTLET_B7_ACTIVE`, `SHARKY_COACH_SURFACE_V1 = ACTIVE`, or
+`IMPLEMENT_SHARKY_COACH_SURFACE_V1` statement below is superseded by this block
+and the latest review authority.
+
+---
+
 Status: CURRENT-STATE CONTINUATION AID / NON-AUTHORITY
 Freshness date: 2026-08-19
 Repository: `ClubBoss/sharky-standalone-direction`
