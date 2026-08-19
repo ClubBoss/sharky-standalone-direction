@@ -1,16 +1,17 @@
 # MASTER PLAN v4 - NORTH STAR INTEGRATED
 
 Status: ACTIVE PRINCIPAL PRODUCT-WORKING AUTHORITY
-Authoring date: 2026-08-17
+Rebaseline date: 2026-08-20
 Repository: `ClubBoss/sharky-standalone-direction`
 
 This file is Sharky's single principal day-to-day product-working Master Plan.
-`docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` may provide the exact current
-campaign dispatch, but it cannot redefine this plan's North Star, evidence
-hierarchy, protected boundaries, or Gauntlet discipline.
+`docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` provides exact current campaign
+dispatch beneath this authority. `docs/context/CURRENT_EXECUTION_HANDOFF_v1.md`
+is a compact continuation aid only.
 
-`docs/context/CURRENT_EXECUTION_HANDOFF_v1.md` is a compact continuation aid
-only. It never competes with this Master Plan for product direction.
+This rebaseline supersedes the prior post-B7 immediate-P02 sequencing. It does
+not weaken or replace the evidence hierarchy. Human, longitudinal, market, and
+real-poker claims still require their corresponding evidence classes.
 
 ## 1. Product Thesis
 
@@ -35,29 +36,19 @@ only. It never competes with this Master Plan for product direction.
 - `TRANSFER`: apply it to a materially different situation without leakage.
 - `RETAIN`: reproduce it after meaningful elapsed time.
 
-Automaticity is not a separate milestone or subsystem. It is measured as a
-quality of successful transfer:
+Automaticity is measured as a quality of successful transfer:
 
 `correct transferred decision + reduced decision latency + no accuracy loss`
 
-### Learner transformation
-
-Before: isolated rule recognition, wording/option guessing, post-answer clue
-recognition, same-example success, and fragile recall.
-
-After: independently notice the signal -> decide -> explain causally -> identify
-the misread -> repair -> prove with less scaffold -> transfer -> retain ->
-eventually apply outside authored Sharky prompts.
-
-This transformation outranks feature count, lesson count, PR count, and
-architecture completeness.
+Feature count, lesson count, PR count, architecture completeness, visual polish,
+or synthetic evidence never outrank this transformation.
 
 ### Continuity-first invariant
 
 Preserve meaningful current progression before globally redirecting a learner
 toward a weakness. Interrupt continuity only when evidence proves that doing so
-is more useful. This donor-derived invariant does not reactivate a donor planner
-or a second personalization architecture.
+is more useful. This invariant does not reactivate a donor planner or second
+personalization architecture.
 
 ## 2. Evidence and Claim Hierarchy
 
@@ -71,18 +62,6 @@ or a second personalization architecture.
 
 Evidence classes are not interchangeable. A missing evidence class is an
 evidence gap unless separate evidence proves a product defect.
-
-### No aggregate readiness score
-
-No global numeric readiness score may substitute for evidence class. Historical
-weighted scores or counts of closed waves may be prioritization artifacts only.
-
-For each major North Star capability record:
-
-1. target;
-2. strongest current proven state;
-3. unresolved claim;
-4. next valid evidence source.
 
 ### Prohibited proxy proof
 
@@ -101,114 +80,337 @@ None of these proves a learner outcome by itself:
 - same-task correction alone;
 - synthetic/AI novice simulation.
 
+No aggregate readiness score may substitute for evidence class.
+
 ## 3. Current Exact Truth
 
-### Required SHAs
+### Rebaseline provenance
 
-| Identity | SHA | Meaning |
+| Identity | SHA / state | Meaning |
 | --- | --- | --- |
-| Post-harness authority reconciliation baseline | `f62f2d40ee0022de42e11b6a0326ecc3e1d46ded` | Exact live `origin/main` re-resolved before this docs-only reconciliation. No Sharky product code changed during the HNP technical harness closure. |
-| Machine North Star convergence reconciliation baseline | `e0c2c793ab31adb7a7b2999a40ebc662eb63cc0e` | Prior exact `origin/main` reconciliation baseline. |
-| Exact product / PHP-9 admission head | `486a1509748a556de11a7e90076ed6e53aefa06e` | Product/native evidence head owning Wave 3 hard acceptance and PHP-9 admission. |
-| Master Plan v4 merge baseline | `ad9f75cb39a487a90bcb86b54c7ec8deb96aef5a` | PR #164 normal merge that activated v4. |
-
-Later docs-only commits do not rewrite the product/native evidence head.
+| Canonical main at rebaseline | `275a923445b478de18fe48c829c754189c38f3e6` | PR #208 merge commit and exact live baseline for this owner rebaseline. |
+| PR #208 exact head | `303cd99d42b97ce63ceb5f02d1da01d0f2c70271` | Docs authority head that closed B7 and admitted the now-superseded immediate maintenance route. |
+| PR #208 first parent | `628a5df23ea45c587cf6674ecc6185c365aac3bb` | Pre-PR208 canonical main. |
+| PR #208 second parent | `303cd99d42b97ce63ceb5f02d1da01d0f2c70271` | Merged PR #208 head. |
 
 ### Current legal state
 
-- `FINAL_PRODUCT_VISUAL_COHESION_WAVE3 = CLOSED_ACCEPTED`
-- `PHP9_PRE_HUMAN_READY_ADMISSION_V1 = CLOSED`
-- `PRE_HUMAN_READY = MET`
-- Machine pre-Human Horizon A = `TERMINAL`
-- `CURRENT_STAGE = READY_FOR_REAL_HUMAN_HNP_SESSION`
-- HNP = `ACTIVE NEXT HUMAN EVIDENCE GATE / NOT_PERFORMED`
-- `HUMAN_PROVEN_10_OF_10_CANDIDATE = NOT_MET`
-- `REAL_HUMAN_HNP = NOT_EXECUTED`
+- `B1-B6 = CLOSED_PASS`
+- `B7 = CLOSED_PASS`
+- `SHARKY_COACH_SURFACE_V1 = CLOSED_PASS`
+- `CURRENT_STAGE = PRE_P02_NORTH_STAR_CONVERGENCE`
+- `ACTIVE_FAMILY = PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
+- `EXACT_NEXT_ACTION = EXECUTE_PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
+- `P02 = DEFERRED / NOT_CURRENT_GATE`
+- `P02_ENTRY_GATE_V2 = PRE_P02_NORTH_STAR_CONVERGENCE_DIMINISHING_RETURNS_REACHED`
+- `REAL_HUMAN_HNP = P01_EXECUTED_ACTIONABLE_STOP`
 - `HUMAN_PROOF = FALSE`
-- Modern Table = `MAINTENANCE_MODE`
-- `VISUAL_BASELINE_ACCEPTED_FOR_HNP`
-- `VISUAL_NORTH_STAR_GAP_OPEN`
+- `B8 = NOT_ADMITTED`
+- Modern Table = `MAINTENANCE_MODE` outside explicitly admitted North Star convergence work.
 
-### Owner-approved sequencing
+### Superseded post-B7 route
 
-The bounded route is now:
+The PR #208 route:
 
-`MACHINE NORTH STAR CONVERGENCE`
-`-> MACHINE DIMINISHING-RETURN GATE = REACHED`
-`-> HNP TECHNICAL CLOSURE / HARNESS DIMINISHING RETURNS = REACHED`
-`-> REAL HUMAN HNP`
-`-> HUMAN-TRIGGERED REPAIRS IF EVIDENCED`
-`-> DEFERRED VISUAL_NORTH_STAR_ART_PRODUCTION WHEN ADMITTED`
-`-> LONGITUDINAL / REAL-POKER / MARKET PROOF`
+`POST_B7_PRE_P02_REDUCED_MOTION_PROOF_BEAT_MAINTENANCE_V1`
+`-> FREEZE EXACT CANDIDATE`
+`-> CHEAP MACHINE FALSIFIERS`
+`-> P02`
 
-A perfectly green automated CI lane is not a prerequisite for the real-Human
-HNP gate. This sequencing does not authorize arbitrary polish, speculative
-features, synthetic promotion of Human evidence, or unproven telemetry claims.
+is no longer the current macro-sequence.
 
-### Canonical visual status
+The B7 closure itself remains accepted. Only post-B7 routing / P02 sequencing
+is superseded.
 
-Sharky's current visual state is an HNP-admissible machine/native baseline, not
-the intended North Star visual experience.
+## 4. Owner-Approved Sequencing
 
-`FINAL_PRODUCT_VISUAL_COHESION_WAVE3 = CLOSED_ACCEPTED` proves its bounded
-acceptance scope only. It does not establish premium visual completion,
-best-in-class Learning Scene quality, competitor parity, or North Star visual
-completion.
+The canonical route is now:
 
-`VISUAL_NORTH_STAR_GAP_OPEN` therefore remains a confirmed material product
-quality gap. This does not reopen Wave 3, authorize a fourth cohesion wave, or
-weaken Modern Table Maintenance Mode. The owner's post-HNP art-production
-intent is recorded below as deferred and is not active pre-HNP scope.
+`PRE_P02_NORTH_STAR_CONVERGENCE`
+`-> ALL CURRENTLY RELEVANT MACHINE/PRODUCT-REDUCIBLE LANES REACH EXPLICIT DISPOSITION`
+`-> HOLISTIC NORTH STAR CHALLENGER PASS`
+`-> ONE CONFIRMATORY PASS`
+`-> DIMINISHING RETURNS REACHED`
+`-> FREEZE EXACT CANDIDATE`
+`-> CHEAP FINAL MACHINE FALSIFIERS`
+`-> OWNER EXPLICITLY ADMITS P02`
+`-> P02 HUMAN EVIDENCE`
+`-> LATER HUMAN / LONGITUDINAL / REAL-POKER / MARKET EVIDENCE AS APPLICABLE`
 
-### North Star scorecard
+Canonical principle:
 
-| Capability | Target | Current proven state | Unresolved claim | Next valid evidence |
-| --- | --- | --- | --- | --- |
-| `SEE` | Learner independently notices the relevant signal. | Mechanism `MACHINE_PROVEN`. | Human independent clue detection is unproven. | Real HNP / transfer evidence. |
-| `DECIDE` | Learner commits without answer coaching. | Mechanism `MACHINE_PROVEN`. | Human uncoached commitment is unproven. | Real HNP. |
-| `UNDERSTAND` | Learner explains the causal reason. | Mechanism `MACHINE_PROVEN`. | Human causal understanding is unproven. | Real HNP. |
-| `REPAIR` | Misconception is identified and corrected. | Mechanism `MACHINE_PROVEN`. | Human misconception repair is unproven. | Real HNP when naturally exposed. |
-| `PROVE` | Learner demonstrates correction with reduced scaffold. | Mechanism `MACHINE_PROVEN`. | Human reduced-scaffold proof is unproven. | HNP / transfer evidence. |
-| `TRANSFER + AUTOMATICITY measurement` | Correct decision transfers to materially different context and becomes faster without accuracy loss. | Transfer mechanism and bounded decision-time telemetry are `MACHINE_PROVEN`. | Learner transfer and latency improvement are unproven. | Human transfer trial with correctness + latency + no accuracy loss. |
-| `RETAIN` | Correction persists after meaningful elapsed time. | Retention mechanism `MACHINE_PROVEN`. | Learner persistence is unproven. | Day-2 / Day-7 Human evidence. |
-| Personalized next rep | Current source-owned selection improves learner outcome while preserving continuity. | Mechanism `MACHINE_PROVEN`. | Outcome lift is unproven. | Proof-first Human comparison. |
-| Decision integrity / anti-guessing | Correct choices require poker-state interpretation, not wording/option-quality leakage. | Existing deterministic content/decision machinery is substantial; anti-answer-leak is an explicit contract. | No global learner-facing anti-guessing outcome claim is proven; unresolved rows are not defects without evidence. | Cheapest machine discrimination audit, then Human evidence only if needed. |
-| Curriculum / content quality | Current scope teaches the intended concepts accurately, deeply enough, and with useful transfer. | Current W1-W12 content/correctness mechanisms have substantial machine evidence. | Broad learner efficacy and completeness are not proven. | Machine content falsifier for specific suspected gaps; Human/real-poker evidence for outcomes. |
-| Training-flow coherence | Entry -> learning -> decision -> feedback -> repair -> payoff -> continuation feels like one coherent training loop. | Canonical route and bounded loop are `MACHINE_PROVEN`. | Novice coherence, felt learning effect, and continuation value are unproven. | Real HNP. |
-| Learning Scene / visual product quality | Premium mobile-first learning scene supports orientation, coaching context, clarity, and trust without answer leakage. | `VISUAL_BASELINE_ACCEPTED_FOR_HNP`; Wave 3 native acceptance passed. | `VISUAL_NORTH_STAR_GAP_OPEN`; intended premium North Star quality is not achieved/proven. | Real HNP now; deferred post-HNP visual-art production when admitted. |
-| Product trust / polish | Product feels intentional, reliable, and premium enough to sustain confidence. | No machine-obvious P0/P1 visual blocker remains in the accepted baseline. | Human trust/desirability remains unproven; absence of defects is not premium sufficiency. | Real Human evidence. |
-| Mobile ergonomics / accessibility | Critical learning states remain usable, reachable, legible, and safe across target phone conditions. | Current deterministic/native evidence covers accepted portrait, safe-area, 1.0x/1.4x, and key reachability surfaces. | Universal accessibility and real-human ergonomics are unproven. | Real HNP/accessibility observation for Human claims. |
-| Human first-session clarity/value | Novice understands what to do and perceives useful value. | `UNPROVEN`. | Entire Human claim unresolved. | Real HNP. |
-| Desire to continue | Learner wants another useful rep/session. | `UNPROVEN`. | Human/market continuation intent unresolved. | Human evidence, then market behavior. |
-| Willingness to pay | Value supports an honest paid offer. | `UNPROVEN`. | Market demand/payment claim unresolved. | Market evidence after value proof. |
-| Real-poker improvement | Learning improves unseen realistic decisions outside authored Sharky prompts. | `UNPROVEN`. | Strongest efficacy bridge unresolved. | `REAL_POKER_PROVEN` evidence. |
+> Do not send a candidate to P02 while Sharky already knows there is high-EV,
+> machine/product-reducible North Star work it can do itself.
 
-## 4. Protected Boundaries
+This sequencing does not require Human learning proof before P02. Human
+learning, Human retention, real Human transfer outcome, subjective Human trust,
+real-poker outcome, market proof, and willingness-to-pay remain downstream
+evidence classes.
 
-Modern Table stays in Maintenance Mode. Reopen only for:
+## 5. PRE_P02_NORTH_STAR_CONVERGENCE
 
-- real regression;
-- functional blocker;
-- safe-area/portrait blocker;
-- deterministic evidence blocker;
-- later explicitly evidence-admitted structural hypothesis.
+Purpose: close or explicitly dispose every currently relevant material
+machine/product-reducible North Star gap before freezing the P02 candidate.
+
+Rules:
+
+- exactly one active implementation family at a time;
+- select the highest-EV bounded family, not every imaginable improvement;
+- class-level fixes beat local cosmetic symptoms;
+- use the cheapest valid falsifier first;
+- implementation requires material product EV;
+- obtain deterministic/rendered/native evidence as appropriate;
+- stop a lane at diminishing returns;
+- refreeze closed ownership after each bounded family.
+
+### Lane A - Visual Art / Learning Scene Completion
+
+Purpose: continue while there is clear class-level learner-facing or product
+quality EV.
+
+Eligible:
+
+- production-quality player/character embodiment;
+- convincing human presence rather than mannequin/icon ceiling;
+- authored opponent identity;
+- hero / first-person foreground presence where useful;
+- Sharky visual presence;
+- Sharky speech / coach-surface visual integration;
+- scene-level visual cohesion;
+- asset integration with existing deterministic architecture;
+- lighting/depth/occlusion integration where materially needed.
+
+Preserve closed table geometry and semantic ownership unless a real regression
+proves reopening is required. PokerSkill is a quality benchmark only, never a
+cloning target.
+
+Claude remains preferred for visual/art-direction implementation while it is
+producing clear class-level lift. Codex is fallback for a genuine systemic
+architecture blocker.
+
+### Lane B - Whole Product Surface Cohesion
+
+Do not treat Learning Table as the whole product.
+
+When materially justified, audit and improve:
+
+- Placement / onboarding;
+- Home;
+- Learn;
+- Play;
+- Learning Scene / Table;
+- Result / payoff;
+- Review;
+- You / progression identity;
+- navigation / transitions between these surfaces.
+
+Goal: one coherent premium Sharky experience. Cosmetic micro-polish without
+material product EV is not admitted.
+
+### Lane C - Learning Loop Convergence
+
+The loop remains:
+
+`SEE -> DECIDE -> UNDERSTAND -> REPAIR -> PROVE -> TRANSFER -> RETAIN`
+
+Before P02, close only the machine/product-reducible gaps that can be established
+without Human outcome proof, including:
+
+- clue visibility / answer leakage;
+- decision integrity;
+- causal feedback clarity;
+- repair ownership;
+- reduced-scaffold proof mechanics;
+- progression/payoff coherence;
+- obvious learning-flow contradictions.
+
+Do not claim Human learning. Human `TRANSFER` / `RETAIN` outcomes remain
+separate downstream evidence.
+
+### Lane D - Content / Correctness / Curriculum Convergence
+
+For current W1-W12 launch scope, eligible bounded work includes:
+
+- poker correctness and source truth;
+- obvious weak or misleading items;
+- wording leakage;
+- duplicated/redundant learning;
+- insufficiently differentiated transfer construction;
+- curriculum coherence;
+- obvious content holes identifiable without Human evidence.
+
+This authority does not admit unbounded content expansion or W13-W36 bulk
+production.
+
+### Lane E - Personalized Next Value / Return Reason
+
+Use only current source-owned deterministic mechanisms.
+
+Eligible:
+
+- next useful rep;
+- weakness-aware continuation;
+- return reason;
+- progression-aware Sharky coaching;
+- evidence-backed personalization seams already inside current architecture.
+
+Do not resurrect Persona architecture, old AI Coach, `SmartTrainingPlanner`,
+`PersonalizationHub`, or generic ML/LLM personalization. Outcome lift remains a
+later Human claim.
+
+### Lane F - Reliability / Ergonomics / Evidence Readiness
+
+This lane contains known real maintenance debt and evidence-backed blockers only.
+
+The inherited approximately 1.8 second reduced-motion proof beat discovered
+after PR #208 is now:
+
+`KNOWN_REQUIRED_PRE_FREEZE_MAINTENANCE`
+
+It is not the current macro-stage and not the current next action. It must be
+disposed before exact candidate freeze.
+
+Also eligible only when evidence-backed:
+
+- real safe-area / viewport blockers;
+- real accessibility blockers in current canonical scope;
+- telemetry minimum required for learning evidence;
+- deterministic evidence blockers;
+- real functional regressions.
+
+Do not reopen technical/tooling campaigns for cleanliness.
+
+## 6. Diminishing Returns Rule
+
+For each active convergence lane:
+
+1. define the current material gap;
+2. use the cheapest valid falsifier;
+3. implement only if high/material EV exists;
+4. obtain deterministic/rendered/native evidence as appropriate;
+5. repeat boundedly while class-level/high-EV movement remains;
+6. stop when remaining items are low EV, blocked by a real dependency, require
+   Human evidence, or produce only micro-polish.
+
+Do not equate `we can imagine another improvement` with `IMPLEMENT_NOW`.
+
+Diminishing returns means another bounded iteration is unlikely to produce
+material North Star movement relative to cost and regression risk.
+
+Every active lane must finish with one explicit disposition:
+
+- `CLOSED_PASS`
+- `DEFER_LOW_EV`
+- `BLOCKED_PENDING_REAL_DEPENDENCY`
+- `REQUIRES_HUMAN_EVIDENCE`
+
+No material lane may remain `IMPLEMENT_NOW` at P02 admission time.
+
+## 7. Current Active Family
+
+`PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1 = ACTIVE / ADMITTED`
+
+Initial focus:
+
+`LEARNING_SCENE_CHARACTER_AND_COACH_VISUAL_COMPLETION`
+
+The first bounded family should determine and execute the highest-EV material
+visual work around:
+
+- production character quality;
+- player embodiment;
+- hero presence;
+- Sharky / speech-surface visual integration;
+- holistic Learning Scene cohesion.
+
+It must not automatically expand into all product surfaces in one PR. After
+this family reaches bounded closure / diminishing returns, Mastermind selects
+the next highest-EV convergence family from the lane map.
+
+## 8. P02 ENTRY GATE V2
+
+`P02 = DEFERRED / NOT_CURRENT_GATE`
+
+`P02_ENTRY_GATE_V2 = PRE_P02_NORTH_STAR_CONVERGENCE_DIMINISHING_RETURNS_REACHED`
+
+P02 may be considered for admission only when all of the following are true:
+
+1. every active machine/product-reducible North Star lane has one explicit final
+   disposition: `CLOSED_PASS`, `DEFER_LOW_EV`,
+   `BLOCKED_PENDING_REAL_DEPENDENCY`, or `REQUIRES_HUMAN_EVIDENCE`;
+2. no material lane remains `IMPLEMENT_NOW`;
+3. no known high-EV obvious product gap is left open merely because Human
+   testing was previously called next;
+4. all relevant pre-P02 convergence lanes have reached bounded diminishing
+   returns;
+5. one holistic North Star challenger pass produces no new class-level/high-EV
+   implementation family;
+6. one confirmatory pass does not materially change that result;
+7. only then is an exact candidate frozen;
+8. cheap final machine falsifiers pass;
+9. OWNER explicitly admits P02.
+
+P02 does not auto-start because an older roadmap named Human evidence the next
+gate.
+
+## 9. Not Required Before P02
+
+Do not make these pre-P02 completion requirements:
+
+- `HUMAN_PROVEN` learning;
+- Day-2 / Day-7 Human retention proof;
+- real Human transfer outcome;
+- `REAL_POKER_PROVEN` outcome;
+- `MARKET_PROVEN` outcome;
+- willingness-to-pay proof;
+- full commerce infrastructure;
+- store submission package;
+- W13-W36 implementation;
+- solver expansion;
+- universal accessibility perfection;
+- broad architecture cleanup.
+
+These either require later evidence classes or fall outside current North Star
+convergence scope.
+
+## 10. Protected Boundaries
+
+Preserve:
+
+- `B1-B6 = CLOSED_PASS`
+- `B7 = CLOSED_PASS`
+- `SHARKY_COACH_SURFACE_V1 = CLOSED_PASS`
+- PR #203 canonical table geometry = `FROZEN`
+- PR #205 commitment ownership = `FROZEN`
+- `CAMERA_RETUNE_AGAIN = NO`
+- `TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE`
+- `ACCESSIBILITY_TEXT_SCALING = DEFERRED_NOT_CURRENT_ACCEPTANCE`
+- `HNP_HARNESS = CLOSED_UNCHANGED`
+- `REAL_HUMAN_HNP = P01_EXECUTED_ACTIONABLE_STOP`
+- `HUMAN_PROOF = FALSE`
+- `B8 = NOT_ADMITTED`
+- Modern Table = `MAINTENANCE_MODE` outside explicitly admitted North Star convergence work.
+
+Protected checkout:
+
+`/Users/elmarsalimzade/Sharky_1.0`
+
+must not be reset, cleaned, stashed, reused, or overwritten.
 
 Do not authorize by default:
 
-- visual micro-polish or a fourth cohesion wave;
+- visual micro-polish without material product EV;
+- reopening frozen table geometry or commitment ownership without a real
+  regression;
 - speculative guards or tests-for-tests;
-- dashboard/statistical theater;
 - generic AI architecture or ML-by-label;
 - Persona/AI Coach/`ui_v3` resurrection;
-- `SmartTrainingPlanner` or `PersonalizationHub` resurrection;
+- `SmartTrainingPlanner` / `PersonalizationHub` resurrection;
 - W13-W36 bulk production;
 - full solver expansion;
 - commerce infrastructure before market evidence;
 - broad clean-architecture refactors;
 - dependencies without direct evidence-backed need.
-
-Closed families refreeze after every Gauntlet. Preference, stale debt wording,
-or aesthetics alone cannot reopen them.
 
 ### Canonical text-scale policy
 
@@ -217,281 +419,45 @@ or aesthetics alone cannot reopen them.
 `ACCESSIBILITY_TEXT_SCALING = DEFERRED_NOT_CURRENT_ACCEPTANCE`
 
 Sharky v1 currently optimizes for one fixed canonical visual typography/layout
-scale. Accessibility text scaling / Dynamic Type optimization is deferred. It
-must not block current visual, learning, P02, or B7 closure.
+scale. Accessibility text scaling / Dynamic Type optimization is deferred and
+must not block current convergence, P02 admission, or B7 closure. Device
+responsiveness, safe-area contracts, readable canonical typography, standard
+touch targets, and evidence-backed reduced-motion debt tracking remain in
+force.
 
-Device responsiveness remains required across compact, canonical, and large
-phone viewports at the same canonical text scale. Safe-area contracts,
-canonical readable typography, standard touch-target contracts, and
-reduced-motion debt tracking remain in force.
+## 11. Human Novice Proof Routing
 
-Current acceptance does not require 1.4x typography layout support, Dynamic
-Type optimization, 1.4x screenshots/evidence variants, or a 1.4x regression
-blocker. Historical 1.4x evidence remains valid provenance and must not be
-deleted or rewritten. This policy explicitly supersedes prior B7 1.4x
-acceptance clauses, including the 1.4x obligations in
-`docs/_reviews/visual_gauntlet_b6_closure_and_b7_admission_v1.md`.
+The Human evidence hierarchy is preserved exactly.
 
-Future accessibility text-scaling work may reopen this policy only through
-explicit authority/admission.
+Current Human state:
 
-Runtime enforcement is not part of this docs-only policy correction. B7
-Iteration 1 must inspect the narrowest correct Flutter app/shell boundary and
-ensure system text scaling cannot silently produce a second layout, using the
-supported Flutter text-scaling mechanism for the repository's exact Flutter
-version. Do not use per-widget hacks or duplicate clamps across widgets.
-
-## 5. Current Stage - READY_FOR_REAL_HUMAN_HNP_SESSION
-
-Purpose: spend the next evidence budget on the Human claim that machine work
-cannot prove, while refusing another pre-HNP product, visual, or harness loop
-without new causal evidence.
-
-Known facts:
-
-- the strongest machine architecture is already substantial;
-- machine diminishing return has been reached;
-- Profile A technical capability has been demonstrated locally and by a real
-  GitHub macOS XCTest traversal;
-- residual Simulator/GitHub macOS launch unreliability is a technical
-  capability limitation, not a proven Sharky product defect;
-- the full Profile B / physical JSONL / privacy / reset chain remains
-  `UNPROVEN`, not failed;
-- Human outcomes remain unproven;
-- `VISUAL_NORTH_STAR_GAP_OPEN` remains real but is deferred behind the Human
-  gate;
-- repository/evidence tooling is sufficient to react boundedly to a real Human
-  finding.
-
-### Machine diminishing-return gate - satisfied
-
-The transition criteria are satisfied for the current pre-HNP scope:
-
-1. confirmed high-EV machine-reducible material gaps are closed, boundedly
-   deferred, or at diminishing return;
-2. no machine-obvious P0/P1 product issue is proven open;
-3. the major next uncertainty is intrinsically Human;
-4. the product can be repaired cheaply if Human evidence identifies a causal
-   defect.
-
-Do not extend this stage backward merely because additional CI stabilization,
-telemetry proof, or visual polish is possible.
-
-## 6. Gauntlet Operating Model
-
-For every Gauntlet:
-
-1. define the North Star claim;
-2. define the cheapest valid falsifier;
-3. define the required evidence class;
-4. measure current behavior;
-5. distinguish a product defect from an evidence gap;
-6. decide explicitly whether implementation is needed;
-7. choose exactly one bottleneck/owner family;
-8. choose the cheapest valid intervention;
-9. implement the smallest sufficient change, if any;
-10. obtain deterministic proof;
-11. obtain rendered/native proof where applicable;
-12. update the scorecard;
-13. choose exactly one: `CLOSE`, `ONE_BOUNDED_ITERATION`, `CHANGE_HYPOTHESIS`,
-    `DEFER`, or `DO_NOTHING`;
-14. refreeze closed boundaries.
-
-Human/longitudinal/market/real-poker proof is requested only when the route
-actually reaches that evidence class. `DO_NOTHING` is valid.
-
-## 7. Human Novice Proof - Active Next Human Gate
-
-Canonical protocol:
-
-`docs/_reviews/human_novice_proof_protocol_v1.md`
-
-Disposition:
-
-- `HNP = ACTIVE NEXT HUMAN EVIDENCE GATE / NOT_PERFORMED`
-- `HNP_NATIVE_BUILD = PASS`
-- `HNP_PROFILE_A = PASS` for the bounded machine/harness capability claim only
-- `HNP_PROFILE_B_NATIVE_MATERIALIZATION = UNPROVEN / NOT_FAILED`
-- `HNP_PHYSICAL_TELEMETRY_FULL_CHAIN = UNPROVEN`
-- `HARNESS_DIMINISHING_RETURNS = REACHED`
-- `PRODUCT_IMPLEMENTATION_DISPOSITION = DO_NOTHING`
-- `PRODUCT_REPAIR_BUDGET_CONSUMED = 0`
-- `REAL_HUMAN_HNP = NOT_EXECUTED`
+- `REAL_HUMAN_HNP = P01_EXECUTED_ACTIONABLE_STOP`
 - `HUMAN_PROOF = FALSE`
-- `READY_FOR_REAL_HUMAN_HNP_SESSION = TRUE`
+- `P02 = DEFERRED / NOT_CURRENT_GATE`
 
-### Terminal technical reconciliation
+Prior P01 Human evidence remains valid provenance. This rebaseline does not
+convert any machine result into Human proof and does not claim that learning,
+retention, transfer, trust, or outcome lift are proven.
 
-Technical closure used branch
-`hnp/claude-local-harness-closure-v1` at
-`63dc5532a0bf174d47e1534e2610af42bb2f1948`.
+P02 becomes eligible only after `P02_ENTRY_GATE_V2` is satisfied and OWNER
+explicitly admits it.
 
-Profile A passed locally. In GitHub macOS run `31973115398`, the Profile A
-XCTest traversal completed successfully with zero failures; the workflow later
-failed during screenshot capture. Run `32004559132`, on the same harness head,
-failed before XCTest execution with nondeterministic Simulator launch denial:
-`FBSOpenApplicationServiceErrorDomain / SBMainWorkspace RequestDenied`.
+The canonical Human protocol remains a task-specific evidence authority when a
+Human session is actually admitted. Human evidence can lower confidence and
+open bounded repairs; synthetic or AI simulation cannot substitute for it.
 
-Because identical launch-affecting harness code had already launched and passed
-Profile A, the residual launch failure is classified as
-`TECHNICAL_CAPABILITY_LIMITATION`, not a proven Sharky product defect. It does
-not justify a product mutation or another technical harness campaign.
+## 12. Evidence Infrastructure and Donor Boundaries
 
-The full Profile B / physical JSONL / privacy / reset chain remains `UNPROVEN`.
-Do not promote it to PASS. A perfectly green automated CI lane is not required
-to begin the canonical real-Human session; Human observations and supporting
-machine telemetry remain separate evidence records.
+Technical telemetry authority remains:
 
-HNP asks whether a real novice can orient, decide, understand useful feedback,
-and experience a clean correction loop without answer coaching or a functional
-blocker. It cannot alone prove retention, transfer breadth, automaticity,
-market demand, willingness to pay, real-poker improvement, universal
-accessibility, or a global `10/10` / `#1` claim.
-
-Protocol terminal outcomes remain:
-
-- `HUMAN_NOVICE_PROOF_V1_PASSED`
-- `HUMAN_NOVICE_PROOF_V1_FAILED_WITH_ACTIONABLE_FINDINGS`
-- `HUMAN_NOVICE_PROOF_V1_INCONCLUSIVE`
-- `HUMAN_NOVICE_PROOF_V1_READY_FOR_SESSION` only before a participant session.
-
-### Evidence-triggered Human repair
-
-`HNP_FINDINGS_REPAIR = EVIDENCE_TRIGGERED`.
-
-Only real HNP findings can open it. Preserve the finding/falsifier, identify the
-smallest causal owner, exclude adjacent polish, repair only enough to address
-the finding, re-run deterministic proof, then obtain the minimum valid Human
-reproof. `DO_NOTHING` remains valid.
-
-## 8. Learning-Efficacy Gauntlets
-
-These are evidence-driven candidate families, not guaranteed implementation
-waves. Existing machinery is tested first.
-
-### Transfer + Automaticity measurement - MUST
-
-Question: can a corrected concept transfer to a materially different table
-situation without leakage/coaching, and can successful transferred decisions
-become faster without loss of accuracy?
-
-Change enough context to prevent memorization; use reduced scaffold; do not
-pre-highlight answer-bearing clues. Measure:
-
-`correct transferred decision + decision latency + no accuracy loss`
-
-Do not create an Automaticity subsystem or separate architecture.
-
-### Day-2 / Day-7 retention - MUST
-
-Test the existing 24h/72h/7d mechanism with real learners first. No new
-scheduler unless learner evidence proves the current mechanism fails.
-
-Technical contract:
-`docs/plan/DURABLE_RETENTION_TRANSFER_CONTRACT_v1.md`
-
-### Personalized next action - LIKELY / PROOF-FIRST
-
-Test whether current source-owned next-rep logic improves a learner outcome
-versus a valid comparison. Preserve continuity-first progression. Do not
-activate dormant generic personalization. Presence of personalization is not
-success; outcome lift is.
-
-## 9. Product, Visual, Real-Poker, and Market Gauntlets
-
-### Real-poker bridge - MUST before strongest efficacy claim
-
-Eventually test realistic, unseen, or independently sourced poker decisions
-outside authored Sharky lesson prompts. Authored transfer alone is not the
-strongest efficacy proof.
-
-### Learning Scene strategic adjudication - material North Star gap
-
-The owner decision establishes a material visual/product-quality gap between
-the current HNP-admissible baseline and Sharky's intended North Star.
-
-The gap remains real, but no pre-HNP visual iteration is active. Real Human HNP
-is the current evidence gate.
-
-Reference only:
-`docs/reference/visual_benchmarks/POKERSKILL_LEARNING_SCENE_REFERENCE_2026-08-14.md`
-
-### Deferred VISUAL_NORTH_STAR_ART_PRODUCTION owner intent
-
-`VISUAL_NORTH_STAR_ART_PRODUCTION = DEFERRED_POST_HNP`
-
-After Real Human HNP and any evidence-triggered bounded repairs, the owner
-intends to open a staged art-production path toward PokerSkill-class or better
-presentation. Tools such as Blender, Photoshop, AI-assisted art, or another
-suitable pipeline are implementation choices rather than goals.
-
-Candidate sequence:
-
-1. premium room/table art;
-2. layered 2.5D depth;
-3. player embodiment;
-4. object-attached HUD;
-5. attention-aware rendering;
-6. semantic motion.
-
-This deferred intent does not authorize pre-HNP visual polish, another Learning
-Scene cohesion wave, Modern Table reopening, avatar/character implementation,
-room art, shader/lighting work, or motion now. It becomes eligible only after
-the Human gate and any evidence-triggered bounded repair have been adjudicated.
-
-### Commercial / willingness to pay - MUST before strongest commercial claim
-
-Strongest Commercial/WTP proof follows the later admitted premium visual
-candidate so the market candidate is not knowingly tested against an
-intentionally non-North-Star presentation.
-
-Order inside the commercial Gauntlet remains:
-
-`value proof -> market hypothesis -> minimum honest offer -> market evidence -> commerce scale`
-
-Do not build full commerce first.
-
-Domain companion:
-`docs/plan/MONETIZATION_SSOT_v1.md`
-
-Readiness companion:
-`docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
-
-### Demand-led advanced expansion - DEFERRED
-
-No solver/W13+ expansion without demonstrated demand or real-poker bridge need.
-
-## 10. Poker_Analyzer Donor Residuals
-
-Pinned donor: `ClubBoss/Poker_Analyzer`
-Pinned `main`: `ceb3c26d19909be4dbddf41048db5d687146e679`
-
-| Residual | Disposition |
-| --- | --- |
-| Recurrence-aware learning signal | `EVIDENCE_TRIGGERED_HYPOTHESIS` |
-| Continuity-first recommendation | `TAKE_TO_V4_INVARIANT` |
-| Cross-session weakness aggregation | `EVIDENCE_TRIGGERED_HYPOTHESIS` |
-| Deterministic engine / C1-C9 / push-fold heritage | `DEFERRED_DONOR_REFERENCE` for possible real-poker/advanced use |
-
-Do not resurrect `SmartTrainingPlanner`, `PersonalizationHub`, old AI Coach,
-Persona, old `ui_v3`, old dashboard, or old Modern Table architecture.
-
-Poker_Analyzer remains donor/reference until a later extraction ledger proves
-safe archival.
-
-## 11. Evidence Infrastructure
-
-Technical telemetry authority:
 `docs/plan/ACT0_TELEMETRY_TRUTH_MAP_v1.md`
 
-Reuse its source-owned, privacy-bounded Act0 path. Core observables include
+Reuse the source-owned privacy-bounded Act0 path. Core observables include
 choice, correctness/result, controlled error type, bounded decision-time
 bucket, feedback, repair, recheck, payoff/recommendation, and session
 completion/exit where applicable.
 
-Do not add a dashboard, vendor pipeline, identity/free-text path, or broad
-telemetry architecture for measurement theater. Telemetry proves mechanism and
-events, not comprehension or learning.
+Telemetry proves mechanism/events, not comprehension or learning.
 
 Use the cheapest valid evidence source:
 
@@ -503,146 +469,63 @@ Use the cheapest valid evidence source:
 - real behavior -> market claims;
 - unseen/independently sourced decisions -> real-poker claims.
 
-Synthetic/AI novice simulation is diagnostic only, never Human evidence.
+Poker_Analyzer remains donor/reference. Do not resurrect dormant planner,
+Persona, AI Coach, old dashboard, old `ui_v3`, or old Modern Table architecture
+without explicit later authority.
 
-Independent task/domain contracts remain:
+## 13. Governance and Downstream Order
 
-- `docs/_reviews/human_novice_proof_protocol_v1.md`
-- `docs/plan/DURABLE_RETENTION_TRANSFER_CONTRACT_v1.md`
-- `docs/plan/ACT0_TELEMETRY_TRUTH_MAP_v1.md`
-- `docs/plan/MONETIZATION_SSOT_v1.md`
-- `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
+Authority order:
 
-## 12. Repository-as-Machine Operating Route
+1. `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
+2. `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` for exact active dispatch
+3. admitted review authority
+4. `docs/context/CURRENT_EXECUTION_HANDOFF_v1.md` as continuation aid only
+5. task-specific protocol/SSOT when required.
 
-Canonical operational multiplier:
+After the current first visual family closes, Mastermind chooses the next
+highest-EV unresolved convergence lane. Do not pre-admit the entire map.
 
-`SHARKY_REPOSITORY_AS_MACHINE_GAUNTLET_LOOP_V1`
+Only after all relevant convergence lanes reach bounded diminishing returns,
+the holistic challenger/confirmatory passes hold, the exact candidate is frozen,
+cheap final machine falsifiers pass, and OWNER explicitly admits P02 does the
+route enter P02 Human evidence.
 
-Goal: make most machine-reducible Sharky Gauntlets executable from diagnosis to
-merged proof by ordinary ChatGPT, using repository CI/browser/native evidence
-as remote execution infrastructure.
+Later candidate families can then include, when separately admitted:
 
-Target model:
+1. P02 Human evidence and evidence-triggered repairs;
+2. Human transfer / automaticity measurement;
+3. Day-2 / Day-7 retention;
+4. personalized next-action outcome proof;
+5. real-poker bridge;
+6. commercial / willingness-to-pay proof;
+7. demand-led advanced expansion.
 
-`ordinary ChatGPT`
-`-> bounded GitHub implementation`
-`-> exact-PR Web QA`
-`-> real rendered browser evidence`
-`-> 0-2 bounded repair iterations`
-`-> one native finalist proof only when required`
-`-> merge / exact-main evidence`
-
-Codex is escalation for:
-
-- local/native interactive execution;
-- difficult Flutter/Dart implementation loops;
-- Xcode/Simulator state manipulation not expressible through CI;
-- complex engine/system changes.
-
-Human remains required for novice understanding, real learner transfer,
-retention, personalization outcome lift, subjective trust/desirability where
-Human evidence is required, real-poker proof, and market/WTP proof.
-
-### Deferred operational multipliers
-
-These stay visible but are not implemented by this reconciliation:
-
-1. `PR_VISUAL_EVIDENCE_INNER_LOOP_V1`
-   - UI-relevant PR -> existing single Flutter Web build -> existing exact-SHA
-     Cloudflare mirror -> existing Chrome -> bounded screenshots + structured
-     evidence -> short-lived artifact;
-   - no second build/job/browser matrix.
-2. `SHARKY_EVIDENCE_BOARD_V1`
-   - static `BASE | CANDIDATE | NATIVE` evidence view;
-   - no backend/platform/SaaS.
-3. Later only after demonstrated ROI:
-   - claim -> required evidence states;
-   - changed-only visual triage;
-   - pixel-diff as triage only, never acceptance authority;
-   - universal evidence manifest;
-   - stale-base merge protection;
-   - empirical CI-cost optimization;
-   - structured Human/Retention/Real-Poker evidence packets.
-
-These are operational multipliers, not product North Star capabilities.
-
-## 13. Governance Simplification and Completion
-
-### Authority disposition
-
-| Document/family | Disposition |
-| --- | --- |
-| `MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` | Sole principal product-working North Star authority. |
-| `PRE_HUMAN_CAMPAIGN_STATE_v1.md` | First-read exact campaign dispatch overlay while active. |
-| `CURRENT_EXECUTION_HANDOFF_v1.md` | Compact current-state continuation aid only; never direction authority. |
-| `MASTER_PLAN_v3.0.md` | `SUPERSEDED / HISTORICAL`; traceability only. |
-| `TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md` | Strategy/reference companion only. |
-| `PRE_HUMAN_AND_HUMAN_PROVEN_CAMPAIGN_v1.md` | Historical/reference campaign companion. |
-| `ACTIVE_ROUTE_CAPSULE_v1.md` | Stale/superseded route snapshot; archive candidate. |
-| `CONTEXT_ROUTER_v1.md` | Navigation companion only. |
-| `PROJECT_TOPOLOGY_AND_TRUTH_MAP_v1.md` | Architecture/navigation companion only. |
-| HNP protocol | Independent task-specific execution protocol. |
-| Retention, telemetry, monetization, readiness SSOTs | Independent domain/technical companions. |
-
-### Read order while campaign state is active
-
-1. `AGENTS.md`
-2. `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`
-3. `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
-4. `docs/context/CURRENT_EXECUTION_HANDOFF_v1.md` only when a compact continuation snapshot is useful
-5. exactly one task-specific protocol/SSOT when required.
-
-Master Plan v4 always wins on product direction. Campaign state wins on exact
-campaign dispatch where applicable. The handoff only compresses current state.
-
-### Completion definition
-
-Top-tier / `#1` requires appropriate proof across:
-
-`MACHINE_PROVEN`, `HUMAN_PROVEN`, `LONGITUDINALLY_PROVEN`, `MARKET_PROVEN`,
-`REAL_POKER_PROVEN`.
-
-No machine checkpoint grants the strongest Human, longitudinal, real-poker, or
-market claim.
-
-### Downstream candidate order after pre-HNP machine closure
-
-1. real Human HNP;
-2. HNP findings repair, only if triggered;
-3. deferred `VISUAL_NORTH_STAR_ART_PRODUCTION`, when post-HNP admission is
-   explicitly opened;
-4. Transfer + Automaticity measurement;
-5. Day-2 / Day-7 retention;
-6. Personalized next action proof;
-7. Real-poker bridge;
-8. strongest Commercial / willingness-to-pay proof;
-9. demand-led advanced expansion only if justified.
-
-This is candidate ordering, not permission to implement each item automatically.
+This ordering is not permission to implement each item automatically.
 
 ## 14. Exact Next Action
 
-`EXECUTE_CANONICAL_REAL_HUMAN_HNP_SESSION_V1`
+`EXECUTE_PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
 
-Purpose: use the canonical Human Novice Proof protocol with a real eligible
-novice on the recorded product candidate, capture Human observations as the
-primary Human-proof record, keep any machine telemetry separate and supporting,
-and open no Sharky product repair unless real Human evidence satisfies the
-protocol's actionable-finding boundary.
+Purpose: preserve current visual momentum and execute exactly one bounded
+high-EV Learning Scene visual-art convergence family around production character
+quality, player embodiment, hero presence, Sharky/speech-surface integration,
+and scene cohesion, while preserving frozen table geometry, frozen commitment
+ownership, poker truth, evidence hierarchy, and one-family-at-a-time discipline.
 
-A machine telemetry gap or nondeterministic Simulator/CI launch failure remains
-a separate technical evidence state. It must not be converted into a Human FAIL,
-a product defect, or an excuse for another pre-HNP harness loop without new
-causal evidence.
+The inherited reduced-motion proof beat remains
+`KNOWN_REQUIRED_PRE_FREEZE_MAINTENANCE` and must not displace this higher-EV
+current family.
 
 ---
 
 `MASTER_PLAN_V4_NORTH_STAR_INTEGRATED = PRINCIPAL_AUTHORITY`
-`CURRENT_STAGE = READY_FOR_REAL_HUMAN_HNP_SESSION`
-`HNP = ACTIVE NEXT HUMAN EVIDENCE GATE / NOT_PERFORMED`
-`REAL_HUMAN_HNP = NOT_EXECUTED`
+`CURRENT_STAGE = PRE_P02_NORTH_STAR_CONVERGENCE`
+`ACTIVE_FAMILY = PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
+`EXACT_NEXT_ACTION = EXECUTE_PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
+`P02 = DEFERRED / NOT_CURRENT_GATE`
+`P02_ENTRY_GATE_V2 = PRE_P02_NORTH_STAR_CONVERGENCE_DIMINISHING_RETURNS_REACHED`
 `HUMAN_PROOF = FALSE`
-`EXACT_NEXT_ACTION = EXECUTE_CANONICAL_REAL_HUMAN_HNP_SESSION_V1`
-`TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE`
-`ACCESSIBILITY_TEXT_SCALING = DEFERRED_NOT_CURRENT_ACCEPTANCE`
+`B7 = CLOSED_PASS`
+`B8 = NOT_ADMITTED`
+`REDUCED_MOTION_DEBT = KNOWN_REQUIRED_PRE_FREEZE_MAINTENANCE`
