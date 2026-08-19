@@ -10,7 +10,8 @@ real-Human procedure remains
 owned by
 `docs/_reviews/human_hnp_p01_reconciliation_and_repair_admission_v1.md`.
 
-Historical closure/admission authority remains in the review chain below:
+Historical closure/admission authority remains in the review chain below and is
+not rewritten by this dispatch reconciliation:
 
 - Wave A closure / B1 admission:
   `docs/_reviews/wave_a_closure_and_visual_gauntlet_b1_admission_v1.md`
@@ -32,6 +33,8 @@ Historical closure/admission authority remains in the review chain below:
   `docs/_reviews/b7_character_slice_reconciliation_and_scene_geometry_admission_v1.md`
 - Scene-geometry closure / commitment-anchor admission:
   `docs/_reviews/b7_scene_geometry_closure_and_commitment_anchor_admission_v1.md`
+- Commitment-anchor closure / Sharky Coach Surface admission:
+  `docs/_reviews/b7_commitment_anchor_closure_and_sharky_coach_surface_admission_v1.md`
 
 ## Authority relationship
 
@@ -54,9 +57,9 @@ without changing Master Plan direction.
 `ACCESSIBILITY_TEXT_SCALING = DEFERRED_NOT_CURRENT_ACCEPTANCE`
 
 Sharky v1 currently has one canonical visual typography/layout scale.
-Accessibility text scaling / Dynamic Type optimization is deferred and must not
-block current B7, learning, P02, or visual closure. Compact, canonical, and
-large physical phone viewports remain required at the same canonical text
+Accessibility text scaling / Dynamic Type optimization remains deferred and
+must not block current B7, learning, P02, or visual closure. Compact, canonical,
+and large physical phone viewports remain required at the same canonical text
 scale, together with safe-area, canonical readable typography, and standard
 tap-target contracts.
 
@@ -69,10 +72,11 @@ text-scaling work may reopen this policy only through explicit authority.
 
 | Field | Value |
 | --- | --- |
-| Current authoring / PR #203 merged main | `858c83ee5d927f08d5ad0fcdefd870156a389232` |
+| Current authoring / PR #205 merged main | `7144e4c3bbe0319f9552637ca02d6450304f0a2f` |
+| PR #205 exact implementation head | `64da9ffca1a418ed98b9fe5fb23e978953d03289` |
 | Current stage | **`VISUAL_GAUNTLET_B7_ACTIVE`** |
-| Exact next action | **`IMPLEMENT_PLAYER_COMMITMENT_ANCHOR_SYSTEM_V1`** |
-| Active family | **`PLAYER_COMMITMENT_ANCHOR_SYSTEM_V1`** |
+| Exact next action | **`IMPLEMENT_SHARKY_COACH_SURFACE_V1`** |
+| Active family | **`SHARKY_COACH_SURFACE_V1`** |
 | B7 | **`ACTIVE / ADMITTED`** |
 | B7 Asset Requirement Gate | **`COMPLETE`** |
 | B7 Completion Disposition Rule | **`ACTIVE`** |
@@ -80,7 +84,7 @@ text-scaling work may reopen this policy only through explicit authority.
 | B7 Character Vertical Slice | **`CLOSED_PASS_PROOF`** |
 | Character asset architecture | **`PROVEN`** |
 | Character class-level lift | **`YES`** |
-| Premium character art | **`NOT_YET_PROVEN`** |
+| Premium character art | **`NOT_YET_PROVEN / BLOCKED_PENDING_ASSET_OR_DEPENDENCY`** |
 | Art production pipeline | **`REQUIRES_SEPARATE_SELECTION`** |
 | Full character pack | **`NOT_STARTED / NOT_ADMITTED`** |
 | B7 Canonical Scene Composition + Geometry | **`CLOSED_PASS`** |
@@ -90,9 +94,14 @@ text-scaling work may reopen this policy only through explicit authority.
 | Blind/seat regression | **`CLOSED_PASS`** |
 | Camera retune again | **`NO`** |
 | Top coach territory | **`PRESERVE`** |
-| Player Commitment Anchor System v1 | **`ACTIVE / ADMITTED`** |
+| Player Commitment Anchor System v1 | **`CLOSED_PASS`** |
+| PR #205 implementation | **`CLOSED_PASS`** |
+| W8 BTN/pot overlap | **`PRE_EXISTING_BASELINE_VISUAL_DEBT / DEFER_LOW_EV / NOT_ADMITTED`** |
+| PR #205 attribution for W8 overlap | **`FALSE`** |
 | Sharky Coach Surface hypothesis | **`STRONGLY_VALIDATED`** |
-| Sharky Coach Surface v1 | **`HIGH_PRIORITY_CANDIDATE_NOT_ADMITTED`** |
+| Sharky Coach Surface compatibility | **`COMPATIBLE_WITH_TARGETED_REWORK`** |
+| Sharky Coach Surface architecture estimate | **`APPROXIMATELY_70_TO_80_PERCENT`** |
+| Sharky Coach Surface v1 | **`ACTIVE / ADMITTED`** |
 | Text scale policy | **`SINGLE_CANONICAL_PRODUCT_SCALE`** |
 | Accessibility text scaling | **`DEFERRED_NOT_CURRENT_ACCEPTANCE`** |
 | Inherited reduced-motion proof-beat debt | **`NOT_B6_REGRESSION / NOT_B6_BLOCKER / MUST_RECEIVE_DISPOSITION_BEFORE_P02 / DEFER_TO_POST_B7_PRE_P02_MAINTENANCE`** |
@@ -143,8 +152,8 @@ Accepted Iteration 1 foundation remains:
 - single canonical text-scale runtime enforcement;
 - clue semantics preserved.
 
-Later scene-geometry work closed the separate table-scale defect without
-reopening Iteration 1 as failed.
+Later scene-geometry and commitment-anchor work closed separate ownership and
+stability requirements without reopening Iteration 1 as failed.
 
 ## Character vertical-slice state
 
@@ -167,9 +176,13 @@ The current script-generated opponent and hero remain prototype-only evidence:
 - `ART_PRODUCTION_PIPELINE = REQUIRES_SEPARATE_SELECTION`;
 - `FULL_CHARACTER_PACK = NOT_STARTED / NOT_ADMITTED`.
 
-Do not merge or canonize the prototype PNGs as final premium art. Scene geometry
-is now closed, but character production still requires separate explicit
-admission and production-pipeline selection.
+Disposition:
+
+`PREMIUM_CHARACTER_ART = BLOCKED_PENDING_ASSET_OR_DEPENDENCY`
+
+Do not merge or canonize prototype PNGs as final premium art. Character
+production still requires separate explicit admission and production-pipeline
+selection.
 
 ## PR #203 canonical scene geometry closure
 
@@ -193,7 +206,7 @@ Record:
 - `CAMERA_RETUNE_AGAIN = NO`;
 - `TOP_COACH_TERRITORY = PRESERVE`.
 
-Final production geometry:
+Final production geometry remains frozen:
 
 ```text
 outerTableWidthFraction      = 0.810
@@ -208,30 +221,77 @@ volumeScaleFar               = 0.95
 commitmentSeatSeparation     = 0.006
 ```
 
-Accepted proof:
-
-- `0.0 px` table-geometry delta across six learning states;
-- proven at `375 / 402 / 430`;
-- board cards = `100%` baseline;
-- hero cards = `99.7%` baseline;
-- final clearance: SB `+8.50 px`, BB `+6.70 px`, blind-to-blind `+3.40 px`;
-- exact-head required repo CI green;
-- no net-new attributed failures.
-
-Preserve:
-
-- camera-owned physical scene;
-- environment/world-plane ownership;
-- scene-owned top territory;
-- scene-attached content-sized bottom shelf;
-- current perspective direction;
-- room / player / hero breathing territory.
-
 Do not reopen this geometry for cosmetic preference.
 
-## Sharky Coach Surface audit
+## PR #205 player commitment-anchor closure
 
-Returned read-only audit verdict:
+`PLAYER_COMMITMENT_ANCHOR_SYSTEM_V1 = CLOSED_PASS`.
+
+`PR205_IMPLEMENTATION = CLOSED_PASS`.
+
+PR #205 merged from exact implementation head:
+
+`64da9ffca1a418ed98b9fe5fb23e978953d03289`
+
+into canonical main:
+
+`7144e4c3bbe0319f9552637ca02d6450304f0a2f`
+
+Accepted proof:
+
+- deterministic seat-ID commitment ownership;
+- one physical commitment anchor per seat;
+- same physical slot for post/call/bet/raise semantics;
+- dealer remains separately owned;
+- center pot remains separately owned;
+- real W8 multi-seat fixture proves concurrent BTN / CO / BB ownership;
+- rendered SB/BB commitment position invariant through decision, correct
+  feedback, wrong feedback, repair, recheck, and continuation/result;
+- invariant proven at `375 / 402 / 430`;
+- existing `0.5 px` geometry tolerance respected;
+- production camera/table geometry unchanged;
+- no B4 `betAnchor` resurrection;
+- valid required pre-merge exact-head repo CI green.
+
+Valid gate set for closure:
+
+- R5 release gate = `SUCCESS`;
+- Sharky Web QA Mirror = `SUCCESS`;
+- Test Authority Lanes = `SUCCESS`;
+- Theory Integrity run #942 (`32277507728`) = `SUCCESS`;
+- Health = `SUCCESS`;
+- L2 Tests (conditional) = policy `SKIPPED`.
+
+Theory Integrity run #943 (`32278682972`) is classified only as:
+
+`THEORY_INTEGRITY_RUN_943 = CI_DIFF_DETECTION_RACE / INFRASTRUCTURE_ONLY`
+
+`THEORY_CONTENT_FAILURE = FALSE`
+
+`PR205_ATTRIBUTED_FAILURE = FALSE`
+
+It failed before strict theory verification because the diff-detection step had
+no merge base after live `origin/main` advanced through the merge. Workflow
+repair is not admitted in this mission.
+
+## W8 baseline residual
+
+`W8_BTN_POT_OVERLAP = PRE_EXISTING_BASELINE_VISUAL_DEBT`
+
+`PR205_ATTRIBUTION = FALSE`
+
+Disposition:
+
+`DEFER_LOW_EV`
+
+`NOT_ADMITTED`
+
+Do not repair it and do not reopen camera, B4, table geometry, commitment ring,
+commitment ownership, or pot geometry.
+
+## Sharky Coach Surface admission
+
+Returned audit verdict:
 
 `SHARKY_COACH_SURFACE_HYPOTHESIS = STRONGLY_VALIDATED`
 
@@ -239,13 +299,17 @@ Compatibility:
 
 `COMPATIBLE_WITH_TARGETED_REWORK`
 
-Seamless adaptation score:
-
-`8.4 / 10`
-
 Architecture estimate:
 
-approximately `70-80%` of the required structure already exists.
+`APPROXIMATELY_70_TO_80_PERCENT`
+
+Disposition:
+
+`IMPLEMENT_NOW`
+
+Admit exactly:
+
+`SHARKY_COACH_SURFACE_V1 = ACTIVE / ADMITTED`
 
 Canonical product hypothesis:
 
@@ -259,92 +323,19 @@ Direction:
 
 - large readable coaching text;
 - Sharky as speaking owner;
-- scene-integrated speech surface;
-- explanation ownership primarily above/in scene;
-- bottom owns action / CTA;
+- scene-integrated coaching / speech surface;
+- explanation primarily above / within scene;
+- bottom shelf primarily owns actions / CTA;
 - no duplicated long explanation above and below;
 - Sharky strong in `UNDERSTAND / REPAIR`;
 - Sharky restrained in `DECIDE`;
-- scaffold reduced in `RECHECK / PROVE`.
+- reduced scaffold in `RECHECK / PROVE`;
+- frozen PR #203 camera/table geometry;
+- frozen PR #205 commitment ownership;
+- existing poker truth and learning contracts.
 
-Disposition:
-
-`SHARKY_COACH_SURFACE_V1 = HIGH_PRIORITY_CANDIDATE_NOT_ADMITTED`
-
-It is not the exact next action. Commitment/object geometry must be formalized
-against the now-frozen camera before final character / coach art production
-resumes.
-
-## Player commitment-anchor admission
-
-Returned read-only audit verdict:
-
-`CURRENT_COMMITMENT_PLACEMENT = MILDLY_WEAK`
-
-`PRODUCT_GAP = REAL_BUT_BOUNDED`
-
-The gap is not unreadable blinds. The gap is the lack of an explicit,
-deterministic per-seat ownership contract under the frozen B7 camera.
-
-Admit exactly:
-
-`PLAYER_COMMITMENT_ANCHOR_SYSTEM_V1 = ACTIVE / ADMITTED`
-
-Canonical principle:
-
-`PLAYER -> SEAT-LOCAL OBJECTS -> COMMITMENT -> CENTER POT`
-
-Blind/post and live bet/call/raise:
-
-`SAME_PHYSICAL_COMMITMENT_SLOT`
-
-`DISTINCT_SEMANTIC_STATE`
-
-Do not create separate simultaneous blind and live-bet lanes.
-
-Dealer:
-
-`SEPARATE_SEAT_ADJACENT_DEALER_ANCHOR`
-
-Pot:
-
-`ONE_CENTER_OWNED_POT_ANCHOR`
-
-Commitment position remains invariant across:
-
-- decision;
-- correct feedback;
-- wrong feedback;
-- repair;
-- recheck;
-- continuation/result.
-
-Allowed:
-
-- semantic state;
-- amount;
-- salience;
-- object-bound clue emphasis.
-
-Forbidden:
-
-- state-dependent position changes;
-- dock-dependent movement;
-- answer-leaking movement;
-- seat-specific pixel hacks.
-
-Historical B4 protection remains binding. B4 already tested moving commitments
-to the B1 `betAnchor` and rejected that reposition after collision evidence.
-Therefore the admitted subtask must:
-
-`FORMALIZE_AND_GUARD_EXISTING_OWNERSHIP`
-
-not:
-
-`REDESIGN_B4_COMMITMENT_TREATMENT`
-
-This is a bounded B7 subtask, not a new visual wave, B8, B4 reopening, GGPoker
-clone, or arbitrary chip repositioning.
+This admission is the bounded Coach Surface implementation only. It does not
+admit final premium character production.
 
 ## Inherited reduced-motion debt
 
@@ -358,67 +349,63 @@ Persist exactly:
 
 `INHERITED_REDUCED_MOTION_PROOF_BEAT_DEBT = DEFER_TO_POST_B7_PRE_P02_MAINTENANCE`
 
-A pre-existing approximately 1.8 second success/proof animation remains animated
-under `MediaQuery.disableAnimations`. Canonical pre-B6 evidence reproduced the
-same behavior. Do not reopen B6 to fix it. Retain the bounded maintenance
-disposition after B7 and before P02 unless a later explicitly admitted B7 task
-naturally owns that widget.
+Do not reopen B6.
 
 ## B7 Asset Requirement Gate
 
 `B7_ASSET_REQUIREMENT_GATE_V1 = COMPLETE`.
 
-Existing asset-gate dispositions remain in force. In particular:
-
-- premium authored character anatomy / heads / hair / clothing / hands remain
-  asset-required work;
-- authored character form must continue to integrate with existing scene,
-  lighting, occlusion, recession, motion, and responsive contracts;
-- learner-visible clues remain semantic product objects and cannot be removed as
-  cosmetic cleanup;
-- idle loops, answer-leaking reactions, full 3D runtime, Blender dependency,
-  decorative animation, broad costume/pose expansion, copying PokerSkill, and
-  broad B8 work remain deferred / not admitted.
+Existing asset-gate dispositions remain in force. Premium authored character
+anatomy / heads / hair / clothing / hands remain asset-required work. Idle
+loops, answer-leaking reactions, full 3D runtime, Blender dependency,
+decorative animation, broad costume/pose expansion, copying PokerSkill, and
+broad B8 work remain deferred / not admitted.
 
 ## B7 Completion Disposition Rule v1
 
 `B7_COMPLETION_DISPOSITION_RULE_V1 = ACTIVE`.
 
-Every material residual class must receive exactly one disposition:
+Current residual disposition table:
 
-- `IMPLEMENT_NOW`
-- `BLOCKED_PENDING_ASSET_OR_DEPENDENCY`
-- `NO_MATERIAL_GAP`
-- `DEFER_LOW_EV`
+| Material class | Disposition |
+| --- | --- |
+| Sharky Coach Surface | `IMPLEMENT_NOW` |
+| Premium character art | `BLOCKED_PENDING_ASSET_OR_DEPENDENCY` |
+| Full character pack | `BLOCKED_PENDING_ASSET_OR_DEPENDENCY / NOT_ADMITTED` |
+| W8 BTN/pot baseline overlap | `DEFER_LOW_EV / NOT_ADMITTED` |
+| Inherited reduced-motion proof-beat debt | `DEFER_TO_POST_B7_PRE_P02_MAINTENANCE` |
 
-Do not silently skip class-level gaps. Stop micro-polish after class-level
-convergence.
+B7 remains active because the Coach Surface is now the one admitted bounded
+subtask.
 
 ## Active B7 dispatch
 
 Mission:
 
-`PLAYER_COMMITMENT_ANCHOR_SYSTEM_V1`
+`SHARKY_COACH_SURFACE_V1`
 
 State:
 
-`PLAYER_COMMITMENT_ANCHOR_SYSTEM_V1 = ACTIVE / ADMITTED`
+`SHARKY_COACH_SURFACE_V1 = ACTIVE / ADMITTED`
 
 Exact next action:
 
-`IMPLEMENT_PLAYER_COMMITMENT_ANCHOR_SYSTEM_V1`
+`IMPLEMENT_SHARKY_COACH_SURFACE_V1`
 
 Recommended executor:
 
-`Codex`
+`Claude`
 
-Reason: geometry / ownership / invariant-contract work rather than art-direction
-iteration.
+Reason: visual hierarchy, scene integration, comparative rendered judgment,
+and art-direction work over an already-proven architecture.
 
-The active implementation must formalize and guard the existing seat-local
-commitment ownership under the frozen PR #203 camera. It must not retune the
-camera, redesign B4 treatment, implement Coach Surface, produce premium
-characters, run P02, reopen HNP, or admit B8.
+`Codex` is fallback only if implementation exposes a genuine systemic
+architecture blocker.
+
+The active implementation must preserve the frozen PR #203 camera/table
+geometry, the frozen PR #205 commitment ownership, current poker truth, current
+learning contracts, and the existing bottom-shelf action/CTA role. It must not
+produce or admit the full character pack.
 
 ## B7 boundary
 
@@ -437,16 +424,15 @@ B7 must not:
 - become a PokerSkill or GGPoker clone;
 - automatically create B8.
 
-The commitment-anchor subtask additionally must not:
+The Coach Surface subtask additionally must not:
 
-- change the frozen scene camera;
+- retune the frozen camera;
 - change final canonical table geometry;
-- introduce seat-specific pixel hacks;
-- split blind/post and live-bet commitments into simultaneous physical lanes;
-- use state-dependent or dock-dependent commitment movement;
-- implement Sharky Coach Surface;
-- implement character assets;
-- admit the full character pack.
+- change PR #205 commitment ownership;
+- repair the W8 BTN/pot overlap;
+- resurrect B4 `betAnchor` placement;
+- admit final premium character production;
+- admit a full character pack.
 
 ## P01 Human evidence remains canonical history
 
@@ -477,8 +463,8 @@ Within B7:
 - Iteration 1 = `CLOSED_PASS`;
 - character vertical slice = `CLOSED_PASS_PROOF`;
 - canonical scene composition / geometry = `CLOSED_PASS`;
-- commitment-anchor system = `ACTIVE / ADMITTED`;
-- Sharky Coach Surface = `HIGH_PRIORITY_CANDIDATE_NOT_ADMITTED`;
+- commitment-anchor system = `CLOSED_PASS`;
+- Sharky Coach Surface = `ACTIVE / ADMITTED`;
 - full character pack = `NOT_STARTED / NOT_ADMITTED`.
 
 B7 itself is not closed. B8 is not admitted.
@@ -512,7 +498,7 @@ Star product direction, evidence hierarchy, protected boundaries, and Gauntlet
 discipline.
 
 `CURRENT_STAGE = VISUAL_GAUNTLET_B7_ACTIVE`
-`EXACT_NEXT_ACTION = IMPLEMENT_PLAYER_COMMITMENT_ANCHOR_SYSTEM_V1`
+`EXACT_NEXT_ACTION = IMPLEMENT_SHARKY_COACH_SURFACE_V1`
 `WAVE_A = CLOSED_PASS`
 `VISUAL_GAUNTLET_B1 = CLOSED_PASS`
 `VISUAL_GAUNTLET_B2 = CLOSED_PASS`
@@ -520,7 +506,7 @@ discipline.
 `VISUAL_GAUNTLET_B4 = CLOSED_PASS`
 `VISUAL_GAUNTLET_B5 = CLOSED_PASS`
 `VISUAL_GAUNTLET_B6 = CLOSED_PASS`
-`ACTIVE_VISUAL_GAUNTLET = PLAYER_COMMITMENT_ANCHOR_SYSTEM_V1`
+`ACTIVE_VISUAL_GAUNTLET = SHARKY_COACH_SURFACE_V1`
 `B7 = ACTIVE_ADMITTED`
 `B7_ASSET_REQUIREMENT_GATE_V1 = COMPLETE`
 `B7_ITERATION_1_CODE_COHESION_V1 = CLOSED_PASS`
@@ -529,6 +515,7 @@ discipline.
 `CHARACTER_ASSET_ARCHITECTURE = PROVEN`
 `CLASS_LEVEL_LIFT = YES`
 `PREMIUM_CHARACTER_ART = NOT_YET_PROVEN`
+`PREMIUM_CHARACTER_ART_DISPOSITION = BLOCKED_PENDING_ASSET_OR_DEPENDENCY`
 `ART_PRODUCTION_PIPELINE = REQUIRES_SEPARATE_SELECTION`
 `FULL_CHARACTER_PACK = NOT_STARTED_NOT_ADMITTED`
 `B7_CANONICAL_SCENE_COMPOSITION_AND_GEOMETRY_V1 = CLOSED_PASS`
@@ -538,9 +525,12 @@ discipline.
 `BLIND_SEAT_REGRESSION = CLOSED_PASS`
 `CAMERA_RETUNE_AGAIN = NO`
 `TOP_COACH_TERRITORY = PRESERVE`
-`PLAYER_COMMITMENT_ANCHOR_SYSTEM_V1 = ACTIVE_ADMITTED`
+`PLAYER_COMMITMENT_ANCHOR_SYSTEM_V1 = CLOSED_PASS`
+`PR205_IMPLEMENTATION = CLOSED_PASS`
+`W8_BTN_POT_OVERLAP = PRE_EXISTING_BASELINE_VISUAL_DEBT`
+`PR205_ATTRIBUTION = FALSE`
 `SHARKY_COACH_SURFACE_HYPOTHESIS = STRONGLY_VALIDATED`
-`SHARKY_COACH_SURFACE_V1 = HIGH_PRIORITY_CANDIDATE_NOT_ADMITTED`
+`SHARKY_COACH_SURFACE_V1 = ACTIVE_ADMITTED`
 `TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE`
 `ACCESSIBILITY_TEXT_SCALING = DEFERRED_NOT_CURRENT_ACCEPTANCE`
 `INHERITED_REDUCED_MOTION_PROOF_BEAT_DEBT = NOT_B6_REGRESSION`
