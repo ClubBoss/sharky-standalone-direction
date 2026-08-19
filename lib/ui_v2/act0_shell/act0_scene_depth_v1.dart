@@ -308,6 +308,52 @@ class Act0SceneSeatSlotV1 {
       Size(tableWidth * 0.245 * volumeScale, tableWidth * 0.275 * volumeScale);
 }
 
+/// The one physical commitment location owned by a player seat.
+///
+/// The established commitment ring remains the visual clearance input, but it
+/// is resolved through this seat-ID owner rather than being handed to the
+/// renderer as a second anonymous slot list. A post, call, bet, or raise can
+/// therefore vary only in semantic treatment and amount; it cannot acquire a
+/// second physical lane.
+@immutable
+class Act0SceneCommitmentAnchorV1 {
+  const Act0SceneCommitmentAnchorV1({
+    required this.seatId,
+    required this.anchor,
+  });
+
+  final String seatId;
+  final Offset anchor;
+}
+
+/// Resolves the accepted commitment ring into one deterministic anchor per
+/// stable seat. The ring vectors are deliberately retained: B4 evidence ruled
+/// out the historical [Act0SceneSeatSlotV1.betAnchor] as a commitment target.
+///
+/// [applyCameraClearance] is used only when the canonical B7 camera owns the
+/// stage. It preserves the frozen camera's accepted seat/commitment clearance
+/// without making camera geometry depend on a wager or learning state.
+List<Act0SceneCommitmentAnchorV1> act0SceneCommitmentAnchorsV1({
+  required List<Act0SceneSeatSlotV1> seatSlots,
+  required List<Offset> establishedRing,
+  Act0SceneCameraV1 camera = Act0SceneCameraV1.canonical,
+  bool applyCameraClearance = true,
+}) {
+  assert(seatSlots.length == establishedRing.length);
+  return <Act0SceneCommitmentAnchorV1>[
+    for (var index = 0; index < seatSlots.length; index++)
+      Act0SceneCommitmentAnchorV1(
+        seatId: seatSlots[index].seatId,
+        anchor: applyCameraClearance
+            ? camera.separateCommitment(
+                establishedRing[index],
+                seatSlots[index].plateAnchor,
+              )
+            : establishedRing[index],
+      ),
+  ];
+}
+
 /// The learner's near-plane ownership.
 ///
 /// Wave A gave the hero a 73x42 identity badge sitting inside the felt, which
