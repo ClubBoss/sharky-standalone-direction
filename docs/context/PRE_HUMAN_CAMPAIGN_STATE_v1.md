@@ -38,6 +38,10 @@ Current B6 closure and B7 admission authority:
 
 `docs/_reviews/visual_gauntlet_b6_closure_and_b7_admission_v1.md`
 
+Current B7 Iteration 1 closure and Iteration 2 admission authority:
+
+`docs/_reviews/b7_iteration1_closure_and_asset_vertical_slice_admission_v1.md`
+
 ## Text scale policy supersession
 
 `TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE`
@@ -91,14 +95,21 @@ work may reopen this policy only through explicit authority/admission.
 | B6 exact implementation head | `40aa8ced2fa849df56353938106b1bf03e04fce4` |
 | B6 integrated main | `0f0f60bb31bc5b4b8de5cf08e4baeb905dd07dcb` |
 | B6 state | **`CLOSED_PASS`** |
+| B7 Iteration 1 implementation PR | `#200` |
+| B7 Iteration 1 pre-merge main | `ef0312688739edea8c74410a25f038682cc8e1e7` |
+| B7 Iteration 1 exact implementation head | `74493883d1d4118d659f44911b614ca590aeb0c8` |
+| B7 Iteration 1 integrated main | `f400dbb9fbe2a0d111a662ad867caabf5626cb8b` |
+| B7 Iteration 1 state | **`CLOSED_PASS`** |
 | Current stage | **`VISUAL_GAUNTLET_B7_ACTIVE`** |
-| Exact next action | **`IMPLEMENT_VISUAL_GAUNTLET_B7_BENCHMARK_COHESION_AND_POLISH_V1`** |
-| Active family | **`VISUAL_GAUNTLET_B7_BENCHMARK_COHESION_AND_POLISH_V1`** |
+| Exact next action | **`IMPLEMENT_B7_CHARACTER_VERTICAL_SLICE_V1`** |
+| Active family | **`B7_CHARACTER_VERTICAL_SLICE_V1`** |
 | B7 | **`ACTIVE / ADMITTED`** |
 | B7 Asset Requirement Gate | **`COMPLETE`** |
+| B7 Completion Disposition Rule | **`ACTIVE`** |
+| B7 Character Vertical Slice | **`ACTIVE / ADMITTED`** |
 | Text scale policy | **`SINGLE_CANONICAL_PRODUCT_SCALE`** |
 | Accessibility text scaling | **`DEFERRED_NOT_CURRENT_ACCEPTANCE`** |
-| Inherited reduced-motion proof-beat debt | **`NOT_B6_REGRESSION / NOT_B6_BLOCKER / MUST_RECEIVE_DISPOSITION_BEFORE_P02`** |
+| Inherited reduced-motion proof-beat debt | **`NOT_B6_REGRESSION / NOT_B6_BLOCKER / MUST_RECEIVE_DISPOSITION_BEFORE_P02 / DEFER_TO_POST_B7_PRE_P02_MAINTENANCE`** |
 | `REAL_HUMAN_HNP` | **`P01_EXECUTED_ACTIONABLE_STOP`** |
 | P02 | **`DEFERRED / NOT_STARTED`** |
 | P01 verdict | **`HUMAN_NOVICE_PROOF_V1_FAILED_WITH_ACTIONABLE_FINDINGS`** |
@@ -151,6 +162,27 @@ Accepted B6 foundation:
 
 Do not reopen B1-B6 for cosmetic preference alone.
 
+## B7 Iteration 1 closure
+
+`B7_ITERATION_1_CODE_COHESION_V1 = CLOSED_PASS`.
+
+PR #200 merged from exact head
+`74493883d1d4118d659f44911b614ca590aeb0c8` into main as
+`f400dbb9fbe2a0d111a662ad867caabf5626cb8b`.
+
+Accepted Iteration 1 foundation:
+
+- center simplification;
+- pot/street hierarchy;
+- lighter top chrome;
+- state-aware feedback scene ownership;
+- compact commitment legibility;
+- single canonical text-scale runtime enforcement;
+- no table-oval mutation without evidence;
+- clue semantics preserved.
+
+B7 remains active.
+
 ## Inherited reduced-motion debt
 
 Persist:
@@ -161,12 +193,16 @@ Persist:
 
 `INHERITED_REDUCED_MOTION_PROOF_BEAT_DEBT = MUST_RECEIVE_DISPOSITION_BEFORE_P02`
 
+Current disposition:
+
+`INHERITED_REDUCED_MOTION_PROOF_BEAT_DEBT = DEFER_TO_POST_B7_PRE_P02_MAINTENANCE`
+
 A pre-existing approximately 1.8 second success/proof animation remains animated
 under `MediaQuery.disableAnimations`. Canonical pre-B6 main reproduced the same
 behavior. Do not reopen B6 to fix it.
 
-If B7 naturally touches the owning proof/feedback widget, a bounded
-accessibility correction may be admitted there. Otherwise schedule one tiny
+If a later B7 stage naturally touches the owning proof/feedback widget, a bounded
+accessibility correction may be admitted there. Otherwise retain the one tiny
 maintenance fix after B7 and before P02.
 
 ## B7 Asset Requirement Gate
@@ -224,73 +260,92 @@ Deferred / no current product EV:
 - broad B8 wave;
 - copying PokerSkill.
 
+## B7 Completion Disposition Rule v1
+
+`B7_COMPLETION_DISPOSITION_RULE_V1 = ACTIVE`.
+
+Every material residual class identified by Owner, pre-B7 audits, benchmark
+comparison, exact current renders, or later asset evidence must receive exactly
+one explicit disposition:
+
+- `IMPLEMENT_NOW`
+- `BLOCKED_PENDING_ASSET_OR_DEPENDENCY`
+- `NO_MATERIAL_GAP`
+- `DEFER_LOW_EV`
+
+Do not silently skip class-level gaps. Do not pre-defer because a change is
+optional. `NO_MATERIAL_GAP` requires exact evidence. `DEFER_LOW_EV` requires
+explicit cost/risk versus EV justification. `BLOCKED_PENDING_ASSET_OR_DEPENDENCY`
+requires a concrete missing dependency, asset, or evidence. Stop micro-polish
+after class-level convergence.
+
+At minimum, disposition center-table cohesion, vertical composition, decision
+dock, feedback dock, table oval / poker-table identity, blind/bet/card
+legibility, room/environment richness, opponent quality, hero foreground/hands,
+active/inactive/folded readability, cards/chips tactile quality, Sharky scene
+presence, and any newly exposed benchmark-level class gap.
+
 ## Active B7 dispatch
 
 Mission:
 
-`VISUAL_GAUNTLET_B7_BENCHMARK_COHESION_AND_POLISH_V1`
+`B7_CHARACTER_VERTICAL_SLICE_V1`
+
+State:
+
+`B7_CHARACTER_VERTICAL_SLICE_V1 = ACTIVE / ADMITTED`
 
 Exact next action:
 
-`IMPLEMENT_VISUAL_GAUNTLET_B7_BENCHMARK_COHESION_AND_POLISH_V1`
+`IMPLEMENT_B7_CHARACTER_VERTICAL_SLICE_V1`
 
-Preferred executor:
+This is B7 Iteration 2. Its purpose is to determine whether authored 2D / 2.5D
+character art creates a genuine class-level premium lift over the accepted
+procedural B3 character renderer.
 
-- Claude Code
-- latest available Claude Opus
-- HIGH / maximum practical reasoning
-
-B7 uses staged evidence.
-
-CP0:
-
-- one unified B7 gap map from exact post-B6 main.
-
-Iteration 1 - code cohesion:
-
-- center simplification;
-- vertical hierarchy;
-- compact state-aware dock;
-- table/scene perceptual ownership;
-- blind/bet/board legibility if proven;
-- oval identity only if still materially deficient after composition changes;
-- inspect the narrowest correct Flutter app/shell boundary and ensure system
-  text scaling cannot silently create a second layout, using the supported
-  Flutter text-scaling mechanism for the repository's exact Flutter version;
-- do not implement per-widget text-scale hacks or duplicate clamps across
-  widgets.
-
-Iteration 2 - asset vertical slice:
-
-`B7_CHARACTER_VERTICAL_SLICE_V1`
-
-Minimum:
+Minimum slice:
 
 - one authored opponent;
 - one authored first-person hero foreground.
 
-Prove compact / canonical / large viewport class-level lift at the same
-canonical text scale, plus seat ownership, perspective, rail occlusion, B2
-lighting, B5 recession, B6 motion compatibility, and deterministic rendering.
-
-Gate:
-
-`CLASS_LEVEL_LIFT = YES / NO`
-
-Only if `YES`, allow bounded expansion toward approximately 5 distinct opponent
-identities, neutral/in-hand pose, folded secondary pose, and one hero foreground.
+Do not build a full asset pack inside this mission.
 
 Preferred asset pipeline:
 
-`authored 2D / 2.5D transparent assets -> deterministic Flutter compositor`
+`authored transparent 2D / 2.5D assets -> deterministic Flutter compositor`
 
-Iteration 3 - final cohesion:
+Art owns believable anatomy, hands, head shape, facial planes, hair, clothing
+silhouette/material, pose asymmetry, and character personality.
 
-Address only remaining class-level inconsistencies. No endless micro-polish.
+Existing code keeps ownership of seat identity, perspective, `characterAnchor`,
+hero zone, depth, rail occlusion, B2 lighting relationship, B3 state semantics,
+B4 HUD, B5 recession, B6 semantic motion, responsiveness, and deterministic
+evidence.
 
-PokerSkill is a benchmark for quality, table dominance, low chrome weight,
-strong character presence, and compositional restraint only. Do not copy exact
-characters, poses, room, colors/material identity, layout, controls, or branding.
+No new 3D runtime. Blender may be an artist-side source tool only if useful.
+
+Prove compact, canonical, and large viewports at one canonical text scale and
+evaluate visual class-level lift, human believability, premium quality,
+poker-table presence, silhouette clarity, seat ownership, perspective
+compatibility, rail occlusion, lighting coherence, B5 recession, B6 motion,
+deterministic rendering, hierarchy versus poker information, and no answer
+leakage.
+
+Required verdict:
+
+`CLASS_LEVEL_LIFT = YES / NO`
+
+If `NO`, stop asset expansion and reassess art direction / pipeline.
+
+If `YES`, later bounded expansion may be admitted toward approximately five
+distinct opponents, neutral / in-hand pose, folded secondary pose, and one
+authored hero foreground. That expansion is not automatically admitted here.
+
+After the vertical slice, Mastermind must explicitly disposition at least
+room/environment richness, table oval identity, decision dock residual slack,
+cards/chips tactile quality, Sharky scene presence, opponent
+active/inactive/folded readability, hero quality, and any newly visible
+composition gap.
 
 ## B7 boundary
 
@@ -318,8 +373,8 @@ P01 is not rewritten as PASS:
 - `P02 = DEFERRED / NOT_STARTED`
 - `HUMAN_PROOF = FALSE`
 
-Wave A and B1-B6 close product responses/foundations only. They do not alter
-what the P01 participant experienced.
+Wave A and B1-B6 plus B7 Iteration 1 close product responses/foundations only.
+They do not alter what the P01 participant experienced.
 
 `HNP_HARNESS = CLOSED_UNCHANGED`.
 
@@ -333,7 +388,8 @@ what the P01 participant experienced.
 6. `B6 SEMANTIC_MOTION` - **CLOSED_PASS**
 7. `B7 BENCHMARK_COHESION_AND_POLISH_GAUNTLET` - **ACTIVE / ADMITTED**
 
-Only B7 may be implemented now. No B8 is admitted.
+B7 Iteration 1 is closed. `B7_CHARACTER_VERTICAL_SLICE_V1` is the only admitted
+next B7 implementation substage. No B8 is admitted.
 
 ## Post-B7 route
 
@@ -364,7 +420,7 @@ Star product direction, evidence hierarchy, protected boundaries, and Gauntlet
 discipline.
 
 `CURRENT_STAGE = VISUAL_GAUNTLET_B7_ACTIVE`
-`EXACT_NEXT_ACTION = IMPLEMENT_VISUAL_GAUNTLET_B7_BENCHMARK_COHESION_AND_POLISH_V1`
+`EXACT_NEXT_ACTION = IMPLEMENT_B7_CHARACTER_VERTICAL_SLICE_V1`
 `WAVE_A = CLOSED_PASS`
 `VISUAL_GAUNTLET_B1 = CLOSED_PASS`
 `VISUAL_GAUNTLET_B2 = CLOSED_PASS`
@@ -372,12 +428,18 @@ discipline.
 `VISUAL_GAUNTLET_B4 = CLOSED_PASS`
 `VISUAL_GAUNTLET_B5 = CLOSED_PASS`
 `VISUAL_GAUNTLET_B6 = CLOSED_PASS`
-`ACTIVE_VISUAL_GAUNTLET = VISUAL_GAUNTLET_B7_BENCHMARK_COHESION_AND_POLISH_V1`
+`ACTIVE_VISUAL_GAUNTLET = B7_CHARACTER_VERTICAL_SLICE_V1`
 `B7 = ACTIVE_ADMITTED`
 `B7_ASSET_REQUIREMENT_GATE_V1 = COMPLETE`
+`B7_ITERATION_1_CODE_COHESION_V1 = CLOSED_PASS`
+`B7_COMPLETION_DISPOSITION_RULE_V1 = ACTIVE`
+`B7_CHARACTER_VERTICAL_SLICE_V1 = ACTIVE_ADMITTED`
 `TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE`
 `ACCESSIBILITY_TEXT_SCALING = DEFERRED_NOT_CURRENT_ACCEPTANCE`
+`INHERITED_REDUCED_MOTION_PROOF_BEAT_DEBT = NOT_B6_REGRESSION`
+`INHERITED_REDUCED_MOTION_PROOF_BEAT_DEBT = NOT_B6_BLOCKER`
 `INHERITED_REDUCED_MOTION_PROOF_BEAT_DEBT = MUST_RECEIVE_DISPOSITION_BEFORE_P02`
+`INHERITED_REDUCED_MOTION_PROOF_BEAT_DEBT = DEFER_TO_POST_B7_PRE_P02_MAINTENANCE`
 `REAL_HUMAN_HNP = P01_EXECUTED_ACTIONABLE_STOP`
 `P02 = DEFERRED_NOT_STARTED`
 `HNP_HARNESS = CLOSED_UNCHANGED`
