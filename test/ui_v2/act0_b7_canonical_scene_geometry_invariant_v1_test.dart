@@ -7,6 +7,8 @@
 // move, at one canonical text scale, on all three phone viewports.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_depth_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,8 +33,165 @@ const _viewportsV1 = <String, Size>{
 /// is supposed to be resolved from a single camera, so hold half of one.
 const _toleranceV1 = 0.5;
 
+const _commitmentSeatIdsV1 = <String>['hero', 'sb', 'bb', 'utg', 'hj', 'btn'];
+
+const _commitmentSeatBasesV1 = <Offset>[
+  Offset(0.50, 0.91),
+  Offset(0.12, 0.75),
+  Offset(0.12, 0.33),
+  Offset(0.50, 0.12),
+  Offset(0.88, 0.33),
+  Offset(0.88, 0.75),
+];
+
+// The established B4 ring, retained as a clearance input rather than a second
+// renderer-owned slot system.
+const _establishedCommitmentRingV1 = <Offset>[
+  Offset(0.50, 0.71),
+  Offset(0.24, 0.64),
+  Offset(0.26, 0.30),
+  Offset(0.50, 0.29),
+  Offset(0.74, 0.30),
+  Offset(0.76, 0.64),
+];
+
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues(<String, Object>{}));
+
+  test('seat-local commitments preserve one physical slot per player', () {
+    final seats = act0SceneSeatSlotsV1(
+      baseSlots: _commitmentSeatBasesV1,
+      seatIds: _commitmentSeatIdsV1,
+      heroSeatId: 'hero',
+    );
+    final ring = _establishedCommitmentRingV1
+        .map(Act0ScenePerspectiveV1.canonical.project)
+        .toList();
+    final commitments = act0SceneCommitmentAnchorsV1(
+      seatSlots: seats,
+      establishedRing: ring,
+    );
+
+    // SB/BB posts, opener/caller, and raise/3-bet-style multiway states all
+    // consume this same owner map; semantic kind and amount never add a lane.
+    expect(
+      commitments.map((anchor) => anchor.seatId).toSet(),
+      hasLength(_commitmentSeatIdsV1.length),
+    );
+    expect(
+      commitments.map((anchor) => anchor.anchor).toSet(),
+      hasLength(_commitmentSeatIdsV1.length),
+    );
+    for (var index = 0; index < commitments.length; index++) {
+      final commitment = commitments[index].anchor;
+      final seat = seats[index].plateAnchor;
+      expect(
+        commitment.distance,
+        greaterThan(0),
+        reason: 'each active commitment must remain a physical table object',
+      );
+      expect(
+        (commitment - act0SceneCentreV1).distance,
+        lessThan((seat - act0SceneCentreV1).distance),
+        reason: '${commitments[index].seatId} commitment must point inward',
+      );
+    }
+
+    // Re-resolving for decision, feedback, repair, recheck, and result must
+    // retain the exact owner position: only semantic state/amount may change.
+    final replay = act0SceneCommitmentAnchorsV1(
+      seatSlots: seats,
+      establishedRing: ring,
+    );
+    expect(
+      replay.map((anchor) => anchor.anchor),
+      orderedEquals(commitments.map((anchor) => anchor.anchor)),
+    );
+  });
+
+  testWidgets('side-pot fixture keeps concurrent commitments seat-owned', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(402, 874);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final task = Act0ShellStateV1.sample
+        .worldById('world_8')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'spr_and_commitment')
+        .taskList
+        .firstWhere(
+          (candidate) => candidate.taskId == 'what_poker_is_side_pot_intro',
+        );
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Act0LessonRunnerShellV1(
+          runner: task.runner,
+          selectedTaskId: task.taskId,
+          onBack: () {},
+          onContinueTheory: () {},
+          onChooseOption: (_) {},
+          onContinueReview: () {},
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // This production fixture expresses three concurrent player commitments:
+    // hero all-in, CO match-plus-side-pot contribution, and BB match-plus-side
+    // pot contribution. Each player has exactly one rendered owner subtree;
+    // amount/kind does not create a second blind/bet lane.
+    for (final seatId in const <String>['btn', 'co', 'bb']) {
+      expect(
+        find.byKey(Key('act0_shell_bet_chip_owner_$seatId')),
+        findsOneWidget,
+        reason: '$seatId has one physical commitment owner',
+      );
+      expect(
+        find.byKey(Key('act0_shell_seat_node_$seatId')),
+        findsOneWidget,
+        reason: '$seatId retains its physical seat owner',
+      );
+    }
+    expect(
+      find.byKey(const Key('act0_shell_wave1_pot_priority_stat')),
+      findsOneWidget,
+      reason: 'the center pot remains independently owned',
+    );
+    expect(
+      find.byKey(const Key('act0_shell_wave1_dealer_marker')),
+      findsOneWidget,
+      reason: 'the dealer remains independently anchored',
+    );
+  });
+
+  for (final entry in _viewportsV1.entries) {
+    test('commitment-to-pot clearance survives ${entry.key}', () {
+      final seats = act0SceneSeatSlotsV1(
+        baseSlots: _commitmentSeatBasesV1,
+        seatIds: _commitmentSeatIdsV1,
+        heroSeatId: 'hero',
+      );
+      final ring = _establishedCommitmentRingV1
+          .map(Act0ScenePerspectiveV1.canonical.project)
+          .toList();
+      final commitments = act0SceneCommitmentAnchorsV1(
+        seatSlots: seats,
+        establishedRing: ring,
+      );
+      final stage = Act0SceneCameraV1.canonical.stageRect(entry.value);
+      for (final commitment in commitments) {
+        final dx = (commitment.anchor.dx - act0SceneCentreV1.dx) * stage.width;
+        final dy = (commitment.anchor.dy - act0SceneCentreV1.dy) * stage.height;
+        expect(
+          Offset(dx, dy).distance,
+          greaterThan(30),
+          reason: '${commitment.seatId} must retain a clear center-pot gap',
+        );
+      }
+    });
+  }
 
   Widget host(Object remountKey) => MaterialApp(
     home: Act0ShellPreviewScreenV1(
@@ -73,6 +232,14 @@ void main() {
     return scene;
   }
 
+  Map<String, Rect> renderedCommitmentRects(WidgetTester tester) =>
+      <String, Rect>{
+        for (final seatId in const <String>['sb', 'bb'])
+          'commitment $seatId': tester.getRect(
+            find.byKey(Key('act0_shell_bet_chip_owner_$seatId')),
+          ),
+      };
+
   void expectSameScene(
     Map<String, Rect> reference,
     Map<String, Rect> actual,
@@ -111,6 +278,7 @@ void main() {
       await tester.pumpWidget(host('${entry.key}_a'));
       await settle(tester);
       final decision = physicalScene(tester);
+      final decisionCommitments = renderedCommitmentRects(tester);
       await hop(tester, const Key('act0_shell_option_check'));
       expectSameScene(
         decision,
@@ -118,11 +286,23 @@ void main() {
         'correct feedback',
         entry.key,
       );
+      expectSameScene(
+        decisionCommitments,
+        renderedCommitmentRects(tester),
+        'correct feedback commitment',
+        entry.key,
+      );
 
       // Run B — the canonical repair loop.
       await tester.pumpWidget(host('${entry.key}_b'));
       await settle(tester);
       expectSameScene(decision, physicalScene(tester), 'decision', entry.key);
+      expectSameScene(
+        decisionCommitments,
+        renderedCommitmentRects(tester),
+        'decision commitment',
+        entry.key,
+      );
       await hop(tester, const Key('act0_shell_option_fold'));
       expectSameScene(
         decision,
@@ -130,8 +310,20 @@ void main() {
         'wrong feedback',
         entry.key,
       );
+      expectSameScene(
+        decisionCommitments,
+        renderedCommitmentRects(tester),
+        'wrong feedback commitment',
+        entry.key,
+      );
       await hop(tester, const Key('act0_shell_feedback_continue_cta'));
       expectSameScene(decision, physicalScene(tester), 'repair', entry.key);
+      expectSameScene(
+        decisionCommitments,
+        renderedCommitmentRects(tester),
+        'repair commitment',
+        entry.key,
+      );
       await hop(tester, const Key('act0_shell_option_check'));
       // Continuation / result: clearing the repair raises the completion
       // summary over the same scene. This is the sixth state the invariant
@@ -147,8 +339,20 @@ void main() {
         'continuation/result',
         entry.key,
       );
+      expectSameScene(
+        decisionCommitments,
+        renderedCommitmentRects(tester),
+        'continuation commitment',
+        entry.key,
+      );
       await hop(tester, const Key('act0_shell_feedback_continue_cta'));
       expectSameScene(decision, physicalScene(tester), 'recheck', entry.key);
+      expectSameScene(
+        decisionCommitments,
+        renderedCommitmentRects(tester),
+        'recheck commitment',
+        entry.key,
+      );
     });
 
     testWidgets(

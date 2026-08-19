@@ -10776,9 +10776,7 @@ class _Act0TableV1 extends StatelessWidget {
               compactBottomDockClearance: compactBottomDockClearance,
             );
             final seatSlots = integratedPerspectivePrototype
-                ? baseSeatSlots
-                      .map(Act0ScenePerspectiveV1.canonical.project)
-                      .toList()
+                ? sceneSeatSlots.map((slot) => slot.plateAnchor).toList()
                 : baseSeatSlots;
             // Chip placement keeps exactly the ring Wave A validated. B4 tried
             // moving commitments onto B1's `betAnchor` and the repository's own
@@ -10798,13 +10796,21 @@ class _Act0TableV1 extends StatelessWidget {
                       .map(Act0ScenePerspectiveV1.canonical.project)
                       .toList()
                 : baseChipSlots;
-            final chipSlots = cameraStageSize == null
-                ? projectedChipSlots
-                : <Offset>[
-                    for (var i = 0; i < projectedChipSlots.length; i++)
-                      Act0SceneCameraV1.canonical.separateCommitment(
-                        projectedChipSlots[i],
-                        seatSlots[i.clamp(0, seatSlots.length - 1)],
+            final commitmentAnchors = integratedPerspectivePrototype
+                ? act0SceneCommitmentAnchorsV1(
+                    seatSlots: sceneSeatSlots,
+                    establishedRing: projectedChipSlots,
+                    applyCameraClearance: cameraStageSize != null,
+                  )
+                : <Act0SceneCommitmentAnchorV1>[
+                    for (var i = 0; i < seats.length; i++)
+                      Act0SceneCommitmentAnchorV1(
+                        seatId: seats[i].seatId,
+                        anchor:
+                            projectedChipSlots[i.clamp(
+                              0,
+                              projectedChipSlots.length - 1,
+                            )],
                       ),
                   ];
             final activeSeatId = (playbackActiveSeatId ?? '').trim().isNotEmpty
@@ -11053,7 +11059,7 @@ class _Act0TableV1 extends StatelessWidget {
                           betOverride != null,
                       tableWidth: width,
                       tableHeight: height,
-                      chipSlots: chipSlots,
+                      commitmentAnchors: commitmentAnchors,
                       seatSlots: seatSlots,
                       visualVariant: visualVariant,
                     ),
@@ -11993,7 +11999,7 @@ class _BetChipPlacementV1 extends StatelessWidget {
     required this.seat,
     required this.tableWidth,
     required this.tableHeight,
-    required this.chipSlots,
+    required this.commitmentAnchors,
     required this.seatSlots,
     required this.visualVariant,
     required this.animateMotion,
@@ -12004,7 +12010,7 @@ class _BetChipPlacementV1 extends StatelessWidget {
   final Act0SeatStateV1 seat;
   final double tableWidth;
   final double tableHeight;
-  final List<Offset> chipSlots;
+  final List<Act0SceneCommitmentAnchorV1> commitmentAnchors;
   final List<Offset> seatSlots;
   final Act0ShellTableVisualVariantV1 visualVariant;
   final bool animateMotion;
@@ -12027,8 +12033,13 @@ class _BetChipPlacementV1 extends StatelessWidget {
     if (bet == null || seat.isFolded) {
       return const SizedBox.shrink();
     }
-    final safeSlot = slot.clamp(0, chipSlots.length - 1);
-    final chipPoint = chipSlots[safeSlot];
+    final commitment = commitmentAnchors.firstWhere(
+      (anchor) => anchor.seatId == seat.seatId,
+      orElse: () =>
+          commitmentAnchors[slot.clamp(0, commitmentAnchors.length - 1)],
+    );
+    final chipPoint = commitment.anchor;
+    final safeSlot = slot.clamp(0, seatSlots.length - 1);
     final seatPoint = seatSlots[safeSlot.clamp(0, seatSlots.length - 1)];
     final child = KeyedSubtree(
       key: Key('act0_shell_bet_chip_owner_${seat.seatId}'),
