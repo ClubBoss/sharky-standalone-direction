@@ -58,12 +58,13 @@ String act0SceneDepthTierV1(double depth) => depth >= 0.68
 @immutable
 class Act0ScenePerspectiveV1 {
   const Act0ScenePerspectiveV1({
-    this.farWidthFactor = 0.66,
-    this.nearWidthFactor = 0.97,
+    this.farWidthFactor = 0.60,
+    this.nearWidthFactor = 0.99,
     this.plateScaleFar = 0.88,
     this.plateScaleNear = 1.08,
-    this.volumeScaleFar = 0.74,
+    this.volumeScaleFar = 0.95,
     this.volumeScaleNear = 1.42,
+    this.depthEase = 1.55,
   });
 
   /// Canonical B1 perspective for the first-learning scene.
@@ -93,6 +94,15 @@ class Act0ScenePerspectiveV1 {
   /// Character-ready volume scale at the near edge.
   final double volumeScaleNear;
 
+  /// Strength of the vertical foreshortening ease.
+  ///
+  /// B7 raised this from B1's implicit `1.0`. The rendered camera gauntlet
+  /// showed that the scene reads as a seated table rather than a diagram only
+  /// once the far half compresses noticeably harder than the near half, and
+  /// that the change costs the information layer nothing because board, hero
+  /// cards and pot do not scale with the felt.
+  final double depthEase;
+
   /// Silhouette width at [depth], as a fraction of the layout box.
   double widthAt(double depth) =>
       lerpDouble(farWidthFactor, nearWidthFactor, depth.clamp(0.0, 1.0))!;
@@ -104,9 +114,9 @@ class Act0ScenePerspectiveV1 {
     // A shallow vertical ease: the far half compresses slightly, the way a
     // receding plane does, without displacing seats off their rail.
     final dy = depth <= 0.34
-        ? depth + 0.014
+        ? depth + (0.014 * depthEase)
         : depth >= 0.68
-        ? depth - 0.008
+        ? depth - (0.008 * depthEase)
         : depth;
     return Offset(0.5 + ((point.dx - 0.5) * convergence), dy);
   }
@@ -122,6 +132,76 @@ class Act0ScenePerspectiveV1 {
   /// Atmospheric recession at [depth]: how much a far element blends into the
   /// environment. `0` at the near edge, strongest at the far edge.
   double hazeAt(double depth) => (1 - depth.clamp(0.0, 1.0)) * 0.55;
+}
+
+/// The canonical scene camera: where the one physical poker table lives inside
+/// one viewport.
+///
+/// B1 owned how the scene *tapers*. It never owned where the table sits or how
+/// much of the viewport it occupies — those were emergent results of the
+/// runner's vertical allocation, which is why review states could hand the same
+/// renderer a different `maxTableHeight` and rescale the whole physical world.
+///
+/// B7 makes that ownership explicit. The camera resolves one rect per scene
+/// box, so no learning state can renegotiate it. Dock height, coaching copy and
+/// feedback content may all change; none of them are inputs here.
+///
+/// The values are the result of the B7 rendered camera gauntlet (candidates A
+/// conservative / B strong premium lift / C maximum justified lift plus two
+/// hybrids). The winning hybrid takes B's physical width, C's projected depth,
+/// and a far rail placed so the near rail clears the control shelf by the hero
+/// foreground reservation.
+@immutable
+class Act0SceneCameraV1 {
+  const Act0SceneCameraV1({
+    this.outerTableWidthFraction = 0.810,
+    this.projectedTableHeightFraction = 0.460,
+    this.farRailFraction = 0.265,
+    this.horizonOffsetFraction = 0.020,
+  });
+
+  static const Act0SceneCameraV1 canonical = Act0SceneCameraV1();
+
+  /// Outer table silhouette width, as a fraction of the scene box width.
+  final double outerTableWidthFraction;
+
+  /// Projected table height, as a fraction of the scene box height.
+  final double projectedTableHeightFraction;
+
+  /// Far rail Y, as a fraction of the scene box height.
+  final double farRailFraction;
+
+  /// How far above the far rail the room's wall/floor horizon sits, as a
+  /// fraction of the scene box height. Keeps the far players standing against
+  /// the horizon glow rather than floating on a flat wall.
+  final double horizonOffsetFraction;
+
+  double get nearRailFraction => farRailFraction + projectedTableHeightFraction;
+
+  double get tableCentreFraction =>
+      farRailFraction + (projectedTableHeightFraction / 2);
+
+  double get horizonFraction => farRailFraction - horizonOffsetFraction;
+
+  /// The stage box the table silhouette is drawn into.
+  ///
+  /// The silhouette's widest point is [Act0ScenePerspectiveV1.nearWidthFactor]
+  /// of this box, so the box is inflated to land the *table* on
+  /// [outerTableWidthFraction] rather than the layout rectangle around it.
+  Rect stageRect(
+    Size sceneBox, {
+    Act0ScenePerspectiveV1 perspective = Act0ScenePerspectiveV1.canonical,
+  }) {
+    final width =
+        sceneBox.width * outerTableWidthFraction / perspective.nearWidthFactor;
+    final height = sceneBox.height * projectedTableHeightFraction;
+    return Rect.fromLTWH(
+      (sceneBox.width - width) / 2,
+      sceneBox.height * farRailFraction,
+      width,
+      height,
+    );
+  }
 }
 
 /// A stable, character-ready seat slot.
