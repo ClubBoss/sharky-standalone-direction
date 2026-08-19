@@ -1,188 +1,265 @@
 # Current Execution Handoff v1
 
-Status: CURRENT-STATE CONTINUATION AID / NOT PRODUCT AUTHORITY
+Status: CURRENT-STATE CONTINUATION AID / NON-AUTHORITY
+Freshness date: 2026-08-19
+Repository: `ClubBoss/sharky-standalone-direction`
 
-Master Plan v4 wins on product direction.
-`PRE_HUMAN_CAMPAIGN_STATE_v1.md` wins on exact campaign dispatch where
-applicable. This file only compresses current state for low-context continuation.
+This file is a compressed continuation aid only. It must not be used to create
+new product authority or to override admitted review authority.
 
-## CURRENT EXACT MAIN BASELINE
+## Authority hierarchy
 
-Post-migration canonical main verified before this reconciliation:
+Use exactly this order:
 
-`90e3b5a67a85424be457a946c629e88a578661e4`
+1. `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
+2. `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`
+3. admitted review authority
+4. `docs/context/CURRENT_EXECUTION_HANDOFF_v1.md` only as a compressed
+   continuation aid
 
-This is PR #179 merge commit. Consumers must still re-resolve live `origin/main`
-before execution; this authoring baseline is not permanent authority.
+If this handoff conflicts with a higher authority, the higher authority wins.
+Always re-resolve live `origin/main` and the active authority before mutation.
 
-## CURRENT NORTH STAR
+## Exact authoring baseline
 
-Product / brand:
+Exact authoring main:
 
-> The poker coach that turns mistakes into corrected table instincts.
+`858c83ee5d927f08d5ad0fcdefd870156a389232`
 
-Operational:
+This is the merge commit for PR #203. It is an authoring baseline, not a
+permanent substitute for live re-resolution.
 
-> Turn a learner's poker mistake into a corrected decision that transfers to a
-> new table spot and still holds later.
+Current stage:
 
-Canonical authority:
-`docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`.
+`VISUAL_GAUNTLET_B7_ACTIVE`
 
-## CURRENT STAGE
+B7 remains:
 
-`HNP_TECHNICAL_REVALIDATION`
+`ACTIVE / ADMITTED`
 
-Exact next packet:
+## PR #203 scene-geometry closure
 
-`SHARKY_HNP_TECHNICAL_REVALIDATION_PROFILE_B_MATERIALIZATION_V1`
+PR #203:
 
-Purpose: revalidate the exact-main native/HNP execution path, determine whether
-the historical Profile B materialization blocker still exists, prove the
-physical HNP telemetry chain, and repair only the minimum technical blocker if
-current evidence proves one remains.
+`B7: canonical scene composition and geometry v1`
 
-## CANONICAL V2 MIGRATION - PROVEN
+Merged from exact implementation head:
 
-`SHARKY_INTEGRATED_2_5D_V2_CANONICAL_PRODUCTION_MIGRATION = PROVEN`
+`7263cae12258ff2c963c0f154baf050859859b0c`
 
-Migration PR:
+into canonical main:
 
-`#179 - Migrate Integrated 2.5D V2 to canonical Learning Scene`
+`858c83ee5d927f08d5ad0fcdefd870156a389232`
 
-Retained final head:
+Current closure state:
 
-`6ae270e042b04dbeada6d25f15b1945ef901e2d3`
+`B7_CANONICAL_SCENE_COMPOSITION_AND_GEOMETRY_V1 = CLOSED_PASS`
 
-Merged main:
+`PR203_VISUAL_ACCEPTANCE = PASS`
 
-`90e3b5a67a85424be457a946c629e88a578661e4`
+`CLASS_LEVEL_LIFT = YES`
 
-Exact-main proof:
+`TABLE_GEOMETRY_STABILITY = PASSED`
 
-`GitHub Actions run 31891654280 = SUCCESS`
+`TABLE_GEOMETRY_INVARIANT_V1 = PASS`
 
-The run included exact merged-main/tree assertion, exact-main analysis, route
-semantics, production-real `iphone17_class` + `compact`, and canonical ownership
-proof.
+`BLIND_SEAT_REGRESSION = CLOSED_PASS`
 
-The accepted Integrated 2.5D V2 Learning Scene is canonical. Prototype-selection
-plumbing is retired. This migration does not claim Human approval, final premium
-visual quality, or North Star completion.
+`CAMERA_RETUNE_AGAIN = NO`
 
-## MACHINE DIMINISHING-RETURN GATE
+`TOP_COACH_TERRITORY = PRESERVE`
 
-`MACHINE DIMINISHING-RETURN GATE = REACHED`
+Final canonical production geometry:
 
-No further pre-HNP machine product/visual wave is currently admitted. Major
-remaining uncertainty is Human evidence rather than another speculative machine
-product wave.
+```text
+outerTableWidthFraction      = 0.810
+projectedTableHeightFraction = 0.500
+farRailFraction              = 0.225
+nearRailFraction             = 0.725
+farWidthFactor               = 0.60
+nearWidthFactor              = 0.99
+depthEase                    = 1.55
+horizonOffsetFraction        = 0.020
+volumeScaleFar               = 0.95
+commitmentSeatSeparation     = 0.006
+```
 
-This does not mean:
+Proof summary:
 
-- final premium visual North Star is proven;
-- Human learning effect is proven;
-- retention is proven;
-- real-poker improvement is proven;
-- market value is proven.
+- table-geometry delta = `0.0 px` across six learning states;
+- proven at `375 / 402 / 430`;
+- board cards = `100%` baseline;
+- hero cards = `99.7%` baseline;
+- final clearance: SB `+8.50 px`, BB `+6.70 px`, blind-to-blind `+3.40 px`;
+- exact-head required repo CI green;
+- no net-new attributed failures.
 
-Modern Table remains `MAINTENANCE_MODE`.
+Preserve the camera-owned physical scene, world-plane environment ownership,
+scene-owned top territory, scene-attached content-sized bottom shelf, current
+perspective direction, and room/player/hero breathing territory. Do not reopen
+scene geometry for cosmetic preference.
 
-## HNP TECHNICAL BASELINE TO REVALIDATE
+## Character vertical-slice state
 
-Historical authority records:
+`B7_CHARACTER_VERTICAL_SLICE_V1 = CLOSED_PASS_PROOF`
 
-- `PRE_HUMAN_READY = MET`
-- `HNP_NATIVE_BUILD = PASS`
-- `HNP_PROFILE_A = PASS`
-- `HNP_PROFILE_B_NATIVE_MATERIALIZATION = BLOCKED / DEFERRED`
-- `HNP_PHYSICAL_TELEMETRY_FULL_CHAIN = NOT_YET_PROVEN`
-- `REAL_HUMAN_HNP = NOT_PERFORMED`
-- `HUMAN_PROVEN_10_OF_10_CANDIDATE = NOT_MET`
-- `VISUAL_NORTH_STAR_GAP_OPEN`
+`CHARACTER_ASSET_ARCHITECTURE = PROVEN`
 
-The Profile B blocker is historical evidence, not eternal truth. Revalidate it
-against current exact main before any repair.
+`CLASS_LEVEL_LIFT = YES`
 
-Canonical HNP protocol:
+`PREMIUM_CHARACTER_ART = NOT_YET_PROVEN`
 
-`docs/_reviews/human_novice_proof_protocol_v1.md`
+`ART_PRODUCTION_PIPELINE = REQUIRES_SEPARATE_SELECTION`
 
-Canonical telemetry contract:
+`FULL_CHARACTER_PACK = NOT_STARTED / NOT_ADMITTED`
 
-`docs/plan/ACT0_TELEMETRY_TRUTH_MAP_v1.md`
+The old script-generated PNGs remain prototype-only. Do not canonize them as
+premium character art.
 
-Historical HNP telemetry enablement/sink to revalidate:
+## Active next B7 subtask
 
-- build define: `--dart-define=HNP_TELEMETRY=true`
-- physical sink: `Library/Application Support/act0_hnp_trace_v1.jsonl`
+`PLAYER_COMMITMENT_ANCHOR_SYSTEM_V1 = ACTIVE / ADMITTED`
 
-Profile A remains a fresh installed container and must not be contaminated by
-Profile B preparation.
+Exact next action:
 
-Profile B remains a production-equivalent progressed state that exposes the
-normal production Action loop. It must not use a debug menu, direct-state route,
-alternate fake app root, answer-bearing surface, or synthetic production bypass.
+`IMPLEMENT_PLAYER_COMMITMENT_ANCHOR_SYSTEM_V1`
 
-## CURRENT PRODUCT / EVIDENCE TRUTH
+Canonical ownership principle:
 
-Preserved machine truth includes:
+`PLAYER -> SEAT-LOCAL OBJECTS -> COMMITMENT -> CENTER POT`
 
-- canonical V2 Integrated 2.5D Learning Scene;
-- production-real phone evidence;
-- portrait matrix including catastrophic 1.4x condition;
-- W1 theory route;
-- Action decision route;
-- wrong feedback -> repair -> recheck -> completion path;
-- session exit;
-- bounded learning-loop telemetry mechanism;
-- no machine-obvious P0/P1 remaining in the completed convergence scope.
+Blind/post and live bet/call/raise use the same physical commitment slot with
+distinct semantic state. Dealer uses a separate seat-adjacent dealer anchor.
+Pot uses one center-owned pot anchor.
 
-Human proof remains `NOT_PERFORMED`.
+Commitment position must stay invariant across decision, correct feedback,
+wrong feedback, repair, recheck, and continuation/result. Amount, semantic
+state, salience, and object-bound clue emphasis may vary.
 
-## REMOTE EXECUTION SUBSTRATE
+Do not introduce state-dependent movement, dock-dependent movement,
+answer-leaking movement, seat-specific pixel hacks, separate simultaneous blind
+and live-bet lanes, or a redesign of B4 commitment treatment.
 
-`SHARKY_REMOTE_FAST_KAIZEN_EXECUTION_LANE_V1 = PROVEN`
+Historical B4 protection remains binding: moving commitments to the B1
+`betAnchor` was already rejected after collision evidence. The active subtask
+must formalize and guard existing ownership, not repeat that rejected
+reposition.
 
-Publication PR #176 merged at:
+Recommended executor: `Codex` because the next task is geometry / ownership /
+invariant-contract work rather than art-direction iteration.
 
-`3e322dc546a131af30ec70390db248230b74bb9d`
+## Sharky Coach Surface disposition
 
-The push-only `kaizen/**` lane can provide exact-SHA Flutter analysis, focused
-Act0/evidence guards, production-real phone captures, and exact-SHA artifacts.
-This is execution transport only; it does not replace native/HNP physical proof.
+Returned audit:
 
-## PROTECTED SCOPE
+`SHARKY_COACH_SURFACE_HYPOTHESIS = STRONGLY_VALIDATED`
 
-Do not open:
+`COMPATIBLE_WITH_TARGETED_REWORK`
 
-- visual polish or another Learning Scene visual wave;
-- avatars, room/environment art, lighting, shaders, or motion;
-- Modern Table cosmetics;
-- content/poker-logic changes;
-- generic AI/ML or dormant Persona/AI Coach/ui_v3 systems;
-- broad persistence refactors;
-- generic fixture/test infrastructure;
-- new dependencies without direct evidence-backed need;
-- synthetic Human proof.
+Seamless adaptation score: `8.4 / 10`.
 
-Stage-B implementation is authorized only if current exact-main evidence proves
-a direct HNP technical blocker. Prefer truthful external HNP-only materialization
-against the existing production persistence contract over product UI/runtime
-architecture.
+Architecture estimate: approximately `70-80%` of the required structure already
+exists.
 
-## HUMAN BOUNDARY
+Direction:
 
-A technical observer-only traversal may prove the mechanism before the real
-participant, using a separate container and then resetting.
+`SHARKY = VOICE OF THE SCENE`
 
-It is never Human proof.
+`TABLE = STABLE PHYSICAL WORLD`
 
-Do not publish `HUMAN_NOVICE_PROOF_V1_PASSED` without a real eligible novice.
-The successful pre-participant terminal state is only technical readiness for a
-real HNP session.
+`BOTTOM SHELF = CONTROLS`
+
+Sharky should own large readable scene-integrated coaching, be strong in
+`UNDERSTAND / REPAIR`, restrained in `DECIDE`, and reduce scaffold in
+`RECHECK / PROVE`. The bottom shelf owns action / CTA. Do not duplicate long
+explanation above and below.
+
+Disposition remains:
+
+`SHARKY_COACH_SURFACE_V1 = HIGH_PRIORITY_CANDIDATE_NOT_ADMITTED`
+
+It is not the exact next action.
+
+Recommended later executor: `Claude` for Sharky Coach Surface / premium visual
+comparative iteration after commitment geometry is formalized and explicit
+admission exists.
+
+## Preserved campaign state
+
+`TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE`
+
+`ACCESSIBILITY_TEXT_SCALING = DEFERRED_NOT_CURRENT_ACCEPTANCE`
+
+`INHERITED_REDUCED_MOTION_PROOF_BEAT_DEBT = NOT_B6_REGRESSION`
+
+`INHERITED_REDUCED_MOTION_PROOF_BEAT_DEBT = NOT_B6_BLOCKER`
+
+`INHERITED_REDUCED_MOTION_PROOF_BEAT_DEBT = MUST_RECEIVE_DISPOSITION_BEFORE_P02`
+
+`INHERITED_REDUCED_MOTION_PROOF_BEAT_DEBT = DEFER_TO_POST_B7_PRE_P02_MAINTENANCE`
+
+`P02 = DEFERRED / NOT_STARTED`
+
+`HNP_HARNESS = CLOSED_UNCHANGED`
+
+`HUMAN_PROOF = FALSE`
+
+`B8 = NOT_ADMITTED`
+
+Modern Table remains `MAINTENANCE_MODE` outside admitted Learning Scene work.
+
+Do not claim B7 closed, full character pack admitted, premium character art
+proven, Sharky Coach Surface admitted, P02 started, Human proof true, or B8
+admitted.
+
+## Protected character-slice checkout
+
+A local/private working checkout contains valuable uncommitted character-slice
+prototype work.
+
+Known protected path from the prior executor:
+
+`/Users/elmarsalimzade/Sharky_1.0`
+
+A new executor must not:
+
+- reset it;
+- clean it;
+- stash it;
+- reuse it;
+- overwrite it.
+
+Treat that checkout as protected until the owner explicitly changes this rule.
+
+## PR #203 local evidence package
+
+Supporting local evidence existed as:
+
+`SHARKY_B7_CANONICAL_SCENE_PR203_EVIDENCE_V1.zip`
+
+Evidence is supporting material, not authority.
+
+## Recommended executor routing
+
+Orchestration guidance only; this is not product authority:
+
+- `Codex`: next commitment-anchor geometry / ownership / invariant work;
+- `Claude`: later Sharky Coach Surface / premium visual comparative iteration;
+- ordinary ChatGPT: control-plane / authority / merge checkpoints.
+
+## Immediate continuation
+
+Before any new mutation:
+
+1. re-resolve live `origin/main`;
+2. read `MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`;
+3. read `PRE_HUMAN_CAMPAIGN_STATE_v1.md`;
+4. read the latest admitted review authority;
+5. confirm B7 is still active and
+   `PLAYER_COMMITMENT_ANCHOR_SYSTEM_V1` is still the exact admitted next subtask.
 
 `HANDOFF_AUTHORITY = NONE`
-`MASTER_PLAN_V4_WINS_ON_PRODUCT_DIRECTION = TRUE`
-`CURRENT_STAGE = HNP_TECHNICAL_REVALIDATION`
-`EXACT_NEXT_ACTION = SHARKY_HNP_TECHNICAL_REVALIDATION_PROFILE_B_MATERIALIZATION_V1`
+
+`CURRENT_STAGE = VISUAL_GAUNTLET_B7_ACTIVE`
+
+`EXACT_NEXT_ACTION = IMPLEMENT_PLAYER_COMMITMENT_ANCHOR_SYSTEM_V1`
