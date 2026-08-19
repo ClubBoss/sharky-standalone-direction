@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_salience_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
 enum Act0LearningScenePhaseV3 {
@@ -6,6 +9,52 @@ enum Act0LearningScenePhaseV3 {
   tableTask,
   feedbackCorrect,
   feedbackWrong,
+}
+
+/// Deterministic Sharky Coach Surface treatment for a given B5 attention
+/// phase. Reuses the existing attention-phase truth the scene already
+/// resolves for table salience, so coach ownership can never disagree with
+/// scene state: no new state machine, no inference from rendered copy.
+///
+/// `avatarSize` of `0` means Sharky renders no header avatar at all — the
+/// restrained treatment for every DECIDE-family moment (`theory`,
+/// `decision`, the in-task `repair` retry, and the reduced-scaffold
+/// `recheck` retry): the learner must still read the table, so the scene
+/// stays exactly as quiet as before this surface existed. Only the two
+/// feedback phases — `correctFeedback` (UNDERSTAND) and `wrongFeedback`
+/// (REPAIR, the strongest state) — earn a visible speaking-owner avatar,
+/// which is exactly where the mission asks Sharky to "become clearly
+/// present as the owner of the explanation".
+({Act0SharkyCompanionStateV1 state, double avatarSize})
+act0SharkySceneCoachTreatmentForAttentionPhaseV1(
+  Act0SceneAttentionPhaseV1 phase,
+) {
+  return switch (phase) {
+    Act0SceneAttentionPhaseV1.theory => (
+      state: Act0SharkyCompanionStateV1.neutral,
+      avatarSize: 0.0,
+    ),
+    Act0SceneAttentionPhaseV1.decision => (
+      state: Act0SharkyCompanionStateV1.neutral,
+      avatarSize: 0.0,
+    ),
+    Act0SceneAttentionPhaseV1.repair => (
+      state: Act0SharkyCompanionStateV1.coach,
+      avatarSize: 0.0,
+    ),
+    Act0SceneAttentionPhaseV1.recheck => (
+      state: Act0SharkyCompanionStateV1.coach,
+      avatarSize: 0.0,
+    ),
+    Act0SceneAttentionPhaseV1.correctFeedback => (
+      state: Act0SharkyCompanionStateV1.confirm,
+      avatarSize: 40.0,
+    ),
+    Act0SceneAttentionPhaseV1.wrongFeedback => (
+      state: Act0SharkyCompanionStateV1.repair,
+      avatarSize: 52.0,
+    ),
+  };
 }
 
 /// The single compact teaching/task layer attached to the learning table.
@@ -17,6 +66,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
   const Act0LearningSceneGuideV3({
     super.key,
     required this.phase,
+    required this.attentionPhase,
     required this.eyebrow,
     required this.headline,
     required this.support,
@@ -25,6 +75,11 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
   });
 
   final Act0LearningScenePhaseV3 phase;
+
+  /// The existing B5 attention-phase truth. Drives Sharky's Coach Surface
+  /// scaffold level (avatar presence/size) so the coach ownership reads as
+  /// the scene's own state rather than a second, independent inference.
+  final Act0SceneAttentionPhaseV1 attentionPhase;
   final String eyebrow;
   final String headline;
   final String support;
@@ -41,6 +96,9 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
     };
     final scaler = MediaQuery.textScalerOf(context);
     final enlarged = scaler.scale(1) > 1.1;
+    final coachTreatment = act0SharkySceneCoachTreatmentForAttentionPhaseV1(
+      attentionPhase,
+    );
 
     return Semantics(
       container: true,
@@ -62,8 +120,19 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
           ),
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            if (coachTreatment.avatarSize > 0) ...[
+              ExcludeSemantics(
+                child: Act0SharkyCompanionAvatarV1(
+                  key: const Key('act0_shell_learning_scene_sharky_avatar'),
+                  state: coachTreatment.state,
+                  size: coachTreatment.avatarSize,
+                  simpleFrame: true,
+                ),
+              ),
+              const SizedBox(width: Act0ShellTokensV1.gapSm),
+            ],
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

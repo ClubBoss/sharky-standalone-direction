@@ -3500,6 +3500,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           : null;
       return Act0LearningSceneGuideV3(
         phase: phase,
+        attentionPhase: sceneAttentionPhase,
         eyebrow: purpose,
         headline: headline,
         support: support,
