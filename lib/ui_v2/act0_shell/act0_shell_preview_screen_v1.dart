@@ -5191,7 +5191,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _emitFirstValueTodayShownTelemetryV1(firstValueTodayCarry);
     }
     final effectiveLearnDetailLessonId = _learnDetailLessonId;
-    return Scaffold(
+    final shell = Scaffold(
       key: const Key('act0_shell_preview_screen'),
       backgroundColor: Act0ShellTokensV1.background,
       body: SafeArea(
@@ -6510,6 +6510,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 }
               }),
             ),
+    );
+    // TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE.
+    //
+    // Sharky v1 ships one canonical typography/layout scale, so system text
+    // scaling must not be able to produce a second product layout. This is the
+    // single shared boundary for the active learner-facing route: every entry
+    // point (`buildCanonicalPathRootV1`, the `app_root` entry gate, the session
+    // result screen and the intake screen) routes through this widget, so the
+    // policy is applied once here instead of being clamped per widget.
+    //
+    // Accessibility text scaling is deferred, not rejected. Removing this one
+    // wrapper restores system scaling everywhere at once when that work is
+    // explicitly admitted.
+    return MediaQuery.withClampedTextScaling(
+      minScaleFactor: 1.0,
+      maxScaleFactor: 1.0,
+      child: shell,
     );
   }
 
