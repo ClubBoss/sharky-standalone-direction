@@ -133,6 +133,20 @@ void main() {
       await hop(tester, const Key('act0_shell_feedback_continue_cta'));
       expectSameScene(decision, physicalScene(tester), 'repair', entry.key);
       await hop(tester, const Key('act0_shell_option_check'));
+      // Continuation / result: clearing the repair raises the completion
+      // summary over the same scene. This is the sixth state the invariant
+      // covers, and the last one on this route that still owns a table.
+      expect(
+        find.byKey(const Key('act0_shell_completion_toast')),
+        findsWidgets,
+        reason: 'the repaired answer must reach the continuation/result state',
+      );
+      expectSameScene(
+        decision,
+        physicalScene(tester),
+        'continuation/result',
+        entry.key,
+      );
       await hop(tester, const Key('act0_shell_feedback_continue_cta'));
       expectSameScene(decision, physicalScene(tester), 'recheck', entry.key);
     });
@@ -148,13 +162,17 @@ void main() {
         await tester.pumpWidget(host('${entry.key}_shelf'));
         await settle(tester);
 
-        // Every answer is inside the viewport and carries a real tap target.
+        // Every answer is inside the viewport, carries a real tap target, and
+        // is reachable without scrolling. The last of those is the contract
+        // the shelf could most easily break by growing: an answer list that
+        // fits only because it can be scrolled to is not a decision surface.
         for (final option in const <Key>[
           Key('act0_shell_option_fold'),
           Key('act0_shell_option_check'),
           Key('act0_shell_option_call'),
         ]) {
-          final rect = tester.getRect(find.byKey(option).first);
+          final finder = find.byKey(option);
+          final rect = tester.getRect(finder.first);
           expect(
             rect.height,
             greaterThanOrEqualTo(44.0),
@@ -166,6 +184,27 @@ void main() {
             reason: '$option must not be clipped by the viewport',
           );
           expect(rect.top, greaterThanOrEqualTo(0.0));
+          expect(
+            finder.hitTestable(),
+            findsOneWidget,
+            reason: '$option must be reachable where it is drawn',
+          );
+          // Where a scroll view still wraps the answers it must have nothing
+          // to scroll: the answers fit their shelf outright.
+          for (final scrollable
+              in find
+                  .ancestor(of: finder.first, matching: find.byType(Scrollable))
+                  .evaluate()) {
+            final position =
+                ((scrollable as StatefulElement).state as ScrollableState)
+                    .position;
+            expect(
+              position.maxScrollExtent,
+              0.0,
+              reason: '$option must not require scrolling to reach',
+            );
+            expect(position.pixels, 0.0);
+          }
         }
 
         // The physical table clears the shelf, so the hero foreground survives.
