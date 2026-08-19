@@ -1262,6 +1262,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   Act0SceneAttentionValuesV1? _sceneAttentionFrom;
   Act0SceneAttentionValuesV1? _sceneAttentionTo;
   var _sceneAttentionStartPending = false;
+  var _sharkyMascotPrecachedV1 = false;
 
   @override
   void initState() {
@@ -1380,6 +1381,18 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       _showTheoryPeek = false;
       _showFullIdeaInTheoryPeek = false;
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Once only: decode every Sharky companion mascot asset before this
+    // scene's first coaching card can request it, so a learner who lands
+    // here without having seen Sharky elsewhere first never sees the
+    // lettered decode-placeholder on his own coach surface.
+    if (_sharkyMascotPrecachedV1) return;
+    _sharkyMascotPrecachedV1 = true;
+    unawaited(act0PrecacheSharkyCompanionAssetsV1(context));
   }
 
   @override
