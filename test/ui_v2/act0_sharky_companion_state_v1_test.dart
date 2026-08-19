@@ -1,9 +1,106 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_salience_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_scene_v3.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 
 void main() {
+  group('act0SharkySceneCoachStateV1 — Coach Surface evidence gate', () {
+    test(
+      'correct feedback resolves confirm only with direct-observation evidence',
+      () {
+        expect(
+          act0SharkySceneCoachStateV1(
+            attentionPhase: Act0SceneAttentionPhaseV1.correctFeedback,
+            hasDirectObservationEvidence: true,
+            hasOpenRepairTargetEvidence: false,
+          ),
+          Act0SharkyCompanionStateV1.confirm,
+        );
+        expect(
+          act0SharkySceneCoachStateV1(
+            attentionPhase: Act0SceneAttentionPhaseV1.correctFeedback,
+            hasDirectObservationEvidence: false,
+            hasOpenRepairTargetEvidence: false,
+          ),
+          Act0SharkyCompanionStateV1.neutral,
+          reason: 'missing evidence must fail closed, never fabricate confirm',
+        );
+      },
+    );
+
+    test(
+      'wrong feedback resolves repair only with direct-observation evidence',
+      () {
+        expect(
+          act0SharkySceneCoachStateV1(
+            attentionPhase: Act0SceneAttentionPhaseV1.wrongFeedback,
+            hasDirectObservationEvidence: true,
+            hasOpenRepairTargetEvidence: false,
+          ),
+          Act0SharkyCompanionStateV1.repair,
+        );
+        expect(
+          act0SharkySceneCoachStateV1(
+            attentionPhase: Act0SceneAttentionPhaseV1.wrongFeedback,
+            hasDirectObservationEvidence: false,
+            hasOpenRepairTargetEvidence: false,
+          ),
+          Act0SharkyCompanionStateV1.neutral,
+          reason: 'missing evidence must fail closed, never fabricate repair',
+        );
+      },
+    );
+
+    test(
+      'targeted repair resolves coach only with an open repair-target reason',
+      () {
+        expect(
+          act0SharkySceneCoachStateV1(
+            attentionPhase: Act0SceneAttentionPhaseV1.repair,
+            hasDirectObservationEvidence: false,
+            hasOpenRepairTargetEvidence: true,
+          ),
+          Act0SharkyCompanionStateV1.coach,
+        );
+        expect(
+          act0SharkySceneCoachStateV1(
+            attentionPhase: Act0SceneAttentionPhaseV1.repair,
+            hasDirectObservationEvidence: false,
+            hasOpenRepairTargetEvidence: false,
+          ),
+          Act0SharkyCompanionStateV1.neutral,
+          reason: 'missing evidence must fail closed, never fabricate coach',
+        );
+      },
+    );
+
+    test('DECIDE and RECHECK never resolve a claim, evidence flags or not', () {
+      for (final phase in <Act0SceneAttentionPhaseV1>[
+        Act0SceneAttentionPhaseV1.theory,
+        Act0SceneAttentionPhaseV1.decision,
+        Act0SceneAttentionPhaseV1.recheck,
+      ]) {
+        for (final directObservation in <bool>[true, false]) {
+          for (final repairTarget in <bool>[true, false]) {
+            expect(
+              act0SharkySceneCoachStateV1(
+                attentionPhase: phase,
+                hasDirectObservationEvidence: directObservation,
+                hasOpenRepairTargetEvidence: repairTarget,
+              ),
+              Act0SharkyCompanionStateV1.neutral,
+              reason:
+                  '$phase has no matching coach-phrase moment and must '
+                  'never claim a companion state.',
+            );
+          }
+        }
+      }
+    });
+  });
+
   group('act0ResolveSharkyCompanionStateV1 — admission rules', () {
     test('missing/mismatched structured evidence resolves neutral', () {
       // repairPrompt momentType but no matching evidenceKind/repairState.
@@ -156,17 +253,20 @@ void main() {
       },
     );
 
-    test('generic direct-observation correct answer is not an improve claim', () {
-      const context = Act0SharkyCoachPhraseContextV1(
-        surface: Act0SharkyCoachSurfaceV1.feedback,
-        momentType: Act0SharkyCoachMomentTypeV1.decisionCorrect,
-        evidenceKind: Act0SharkyCoachEvidenceKindV1.directObservation,
-      );
-      expect(
-        act0ResolveSharkyCompanionStateV1(context),
-        isNot(Act0SharkyCompanionStateV1.improve),
-      );
-    });
+    test(
+      'generic direct-observation correct answer is not an improve claim',
+      () {
+        const context = Act0SharkyCoachPhraseContextV1(
+          surface: Act0SharkyCoachSurfaceV1.feedback,
+          momentType: Act0SharkyCoachMomentTypeV1.decisionCorrect,
+          evidenceKind: Act0SharkyCoachEvidenceKindV1.directObservation,
+        );
+        expect(
+          act0ResolveSharkyCompanionStateV1(context),
+          isNot(Act0SharkyCompanionStateV1.improve),
+        );
+      },
+    );
 
     test('repeated multi-session pattern resolves repair, not improve', () {
       const context = Act0SharkyCoachPhraseContextV1(
@@ -229,23 +329,35 @@ void main() {
   });
 
   group('Phrase/state consistency — same context, no conflicts', () {
-    const expectedStateByMoment = <Act0SharkyCoachMomentV1, Act0SharkyCompanionStateV1>{
-      Act0SharkyCoachMomentV1.welcomeOrientation: Act0SharkyCompanionStateV1.neutral,
-      Act0SharkyCoachMomentV1.homeActiveRepair: Act0SharkyCompanionStateV1.coach,
-      Act0SharkyCoachMomentV1.homeMissionSupport: Act0SharkyCompanionStateV1.coach,
-      Act0SharkyCoachMomentV1.homeDoneSupport: Act0SharkyCompanionStateV1.coach,
-      Act0SharkyCoachMomentV1.homeDoneReturn: Act0SharkyCompanionStateV1.coach,
-      Act0SharkyCoachMomentV1.practiceCurrentFix: Act0SharkyCompanionStateV1.coach,
-      Act0SharkyCoachMomentV1.reviewActiveRepair: Act0SharkyCompanionStateV1.coach,
-      Act0SharkyCoachMomentV1.repairResultProof: Act0SharkyCompanionStateV1.confirm,
-      Act0SharkyCoachMomentV1.sessionSummaryProof: Act0SharkyCompanionStateV1.confirm,
-      Act0SharkyCoachMomentV1.sessionSummaryEarnedMoment:
-          Act0SharkyCompanionStateV1.confirm,
-      Act0SharkyCoachMomentV1.worldOneCompletionPayoff:
-          Act0SharkyCompanionStateV1.milestone,
-      Act0SharkyCoachMomentV1.worldCompletionPayoff: Act0SharkyCompanionStateV1.milestone,
-      Act0SharkyCoachMomentV1.bandTransitionPayoff: Act0SharkyCompanionStateV1.milestone,
-    };
+    const expectedStateByMoment =
+        <Act0SharkyCoachMomentV1, Act0SharkyCompanionStateV1>{
+          Act0SharkyCoachMomentV1.welcomeOrientation:
+              Act0SharkyCompanionStateV1.neutral,
+          Act0SharkyCoachMomentV1.homeActiveRepair:
+              Act0SharkyCompanionStateV1.coach,
+          Act0SharkyCoachMomentV1.homeMissionSupport:
+              Act0SharkyCompanionStateV1.coach,
+          Act0SharkyCoachMomentV1.homeDoneSupport:
+              Act0SharkyCompanionStateV1.coach,
+          Act0SharkyCoachMomentV1.homeDoneReturn:
+              Act0SharkyCompanionStateV1.coach,
+          Act0SharkyCoachMomentV1.practiceCurrentFix:
+              Act0SharkyCompanionStateV1.coach,
+          Act0SharkyCoachMomentV1.reviewActiveRepair:
+              Act0SharkyCompanionStateV1.coach,
+          Act0SharkyCoachMomentV1.repairResultProof:
+              Act0SharkyCompanionStateV1.confirm,
+          Act0SharkyCoachMomentV1.sessionSummaryProof:
+              Act0SharkyCompanionStateV1.confirm,
+          Act0SharkyCoachMomentV1.sessionSummaryEarnedMoment:
+              Act0SharkyCompanionStateV1.confirm,
+          Act0SharkyCoachMomentV1.worldOneCompletionPayoff:
+              Act0SharkyCompanionStateV1.milestone,
+          Act0SharkyCoachMomentV1.worldCompletionPayoff:
+              Act0SharkyCompanionStateV1.milestone,
+          Act0SharkyCoachMomentV1.bandTransitionPayoff:
+              Act0SharkyCompanionStateV1.milestone,
+        };
 
     test('every legacy moment resolves its one defined companion state', () {
       expectedStateByMoment.forEach((moment, expectedState) {
@@ -316,17 +428,14 @@ void main() {
       final names = Act0SharkyCompanionStateV1.values
           .map((state) => state.name)
           .toSet();
-      expect(
-        names,
-        <String>{
-          'neutral',
-          'coach',
-          'repair',
-          'confirm',
-          'improve',
-          'milestone',
-        },
-      );
+      expect(names, <String>{
+        'neutral',
+        'coach',
+        'repair',
+        'confirm',
+        'improve',
+        'milestone',
+      });
       for (final forbidden in <String>[
         'happy',
         'sad',

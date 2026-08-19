@@ -127,9 +127,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(
-        find.byKey(
-          const Key('act0_shell_sharky_presence_mascot_repair'),
-        ),
+        find.byKey(const Key('act0_shell_sharky_presence_mascot_repair')),
         findsOneWidget,
       );
       expect(find.byKey(_growthRingKey), findsNothing);
@@ -139,9 +137,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(
-        find.byKey(
-          const Key('act0_shell_sharky_presence_mascot_repair'),
-        ),
+        find.byKey(const Key('act0_shell_sharky_presence_mascot_repair')),
         findsOneWidget,
       );
       expect(find.byKey(_growthRingKey), findsOneWidget);
@@ -207,32 +203,33 @@ void main() {
       expect(continued, 1);
     });
 
-    testWidgets('compact layout with growth ring + state ring has no overflow', (
-      tester,
-    ) async {
-      tester.view.physicalSize = const Size(390, 844);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
+    testWidgets(
+      'compact layout with growth ring + state ring has no overflow',
+      (tester) async {
+        tester.view.physicalSize = const Size(390, 844);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
 
-      const improveReceipt = Act0RepairOutcomeSessionReceiptV1(
-        title: "Fixes you've banked",
-        lines: <String>['1 repair completed'],
-        isBankedFixProof: true,
-        hasImprovementObservation: true,
-      );
-      await tester.pumpWidget(
-        _host(
-          _summary(worldNumber: 8, sharkyLine: 'x'),
-          repairOutcomeConsumer: const Act0RepairOutcomeConsumerV1(
-            sessionReceipt: improveReceipt,
+        const improveReceipt = Act0RepairOutcomeSessionReceiptV1(
+          title: "Fixes you've banked",
+          lines: <String>['1 repair completed'],
+          isBankedFixProof: true,
+          hasImprovementObservation: true,
+        );
+        await tester.pumpWidget(
+          _host(
+            _summary(worldNumber: 8, sharkyLine: 'x'),
+            repairOutcomeConsumer: const Act0RepairOutcomeConsumerV1(
+              sessionReceipt: improveReceipt,
+            ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(tester.takeException(), isNull);
-    });
+        expect(tester.takeException(), isNull);
+      },
+    );
 
     testWidgets('no XP/level/rank/rarity language appears', (tester) async {
       await tester.pumpWidget(_host(_summary(worldNumber: 6, sharkyLine: 'x')));
@@ -356,7 +353,10 @@ void main() {
       await tester.tap(find.byKey(const Key('act0_shell_welcome_primary_cta')));
       await tester.pumpAndSettle();
 
-      expect(find.byKey(const Key('act0_shell_welcome_demo_spot')), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_welcome_demo_spot')),
+        findsOneWidget,
+      );
     });
 
     testWidgets('GuideCard forwards Developing growth in row layout', (
@@ -383,40 +383,133 @@ void main() {
     });
   });
 
-  group('Shared component API stays bounded', () {
-    test(
-      'Act0SharkyCompanionAvatarV1 exposes no mood/level/rank/xp/rarity/'
-      'random-seed parameter',
-      () {
-        final source = File(
-          'lib/ui_v2/act0_shell/act0_sharky_presence_v1.dart',
-        ).readAsStringSync();
-        final start = source.indexOf('class Act0SharkyCompanionAvatarV1');
-        expect(start, greaterThan(-1));
-        final end = source.indexOf('\nclass ', start + 1);
-        final classBody = source.substring(
-          start,
-          end == -1 ? source.length : end,
-        );
+  group('Coach Surface growth-stage admission', () {
+    const avatarKey = Key('act0_shell_learning_scene_sharky_avatar');
+    const spokenSurfaceKey = Key(
+      'act0_shell_learning_scene_sharky_spoken_surface',
+    );
 
-        expect(classBody, isNot(contains('required this.mood')));
-        for (final forbidden in <String>[
-          'level',
-          'rank',
-          'xp',
-          'rarity',
-          'randomSeed',
-          'seed',
-          'Colors.',
-        ]) {
-          expect(
-            classBody,
-            isNot(contains(forbidden)),
-            reason: 'shared avatar API must not expose "$forbidden"',
+    Future<void> pumpWrongFeedback(
+      WidgetTester tester, {
+      required int worldNumber,
+    }) async {
+      tester.view.physicalSize = const Size(375, 812);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      final lesson = Act0ShellStateV1.sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere(
+            (candidate) => candidate.lessonId == 'fold_check_call_raise',
           );
-        }
+      final task = lesson.taskList.firstWhere(
+        (candidate) => candidate.taskId == 'actions_check_drill',
+      );
+      final wrongOption = task.runner.options.firstWhere(
+        (option) => option.quality == Act0FeedbackQualityV1.wrong,
+      );
+      final runner = task.runner.copyWith(
+        phase: Act0LessonPhaseV1.review,
+        selectedOptionId: wrongOption.id,
+      );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              selectedTaskId: task.taskId,
+              selectedTaskFamily: task.resolvedTaskFamily,
+              worldNumber: worldNumber,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('World 4 Coach Surface shows Foundation, no growth ring', (
+      tester,
+    ) async {
+      await pumpWrongFeedback(tester, worldNumber: 4);
+
+      expect(find.byKey(avatarKey), findsOneWidget);
+      expect(find.byKey(_growthRingKey), findsNothing);
+    });
+
+    testWidgets('World 5 Coach Surface shows Developing growth ring', (
+      tester,
+    ) async {
+      await pumpWrongFeedback(tester, worldNumber: 5);
+
+      expect(find.byKey(avatarKey), findsOneWidget);
+      expect(find.byKey(_growthRingKey), findsOneWidget);
+    });
+
+    testWidgets(
+      'companion/feedback state holds across the W4->W5 growth boundary',
+      (tester) async {
+        await pumpWrongFeedback(tester, worldNumber: 4);
+        expect(find.byKey(avatarKey), findsOneWidget);
+        expect(find.byKey(spokenSurfaceKey), findsOneWidget);
+        expect(find.text('MISSED CLUE'), findsOneWidget);
+        expect(find.byKey(_growthRingKey), findsNothing);
+
+        await pumpWrongFeedback(tester, worldNumber: 5);
+        expect(find.byKey(avatarKey), findsOneWidget);
+        expect(
+          find.byKey(spokenSurfaceKey),
+          findsOneWidget,
+          reason:
+              'Crossing the growth boundary must not change the resolved '
+              'companion state.',
+        );
+        expect(find.text('MISSED CLUE'), findsOneWidget);
+        expect(
+          find.byKey(_growthRingKey),
+          findsOneWidget,
+          reason: 'Only the growth ring changes across the W4->W5 boundary.',
+        );
       },
     );
+  });
+
+  group('Shared component API stays bounded', () {
+    test('Act0SharkyCompanionAvatarV1 exposes no mood/level/rank/xp/rarity/'
+        'random-seed parameter', () {
+      final source = File(
+        'lib/ui_v2/act0_shell/act0_sharky_presence_v1.dart',
+      ).readAsStringSync();
+      final start = source.indexOf('class Act0SharkyCompanionAvatarV1');
+      expect(start, greaterThan(-1));
+      final end = source.indexOf('\nclass ', start + 1);
+      final classBody = source.substring(
+        start,
+        end == -1 ? source.length : end,
+      );
+
+      expect(classBody, isNot(contains('required this.mood')));
+      for (final forbidden in <String>[
+        'level',
+        'rank',
+        'xp',
+        'rarity',
+        'randomSeed',
+        'seed',
+        'Colors.',
+      ]) {
+        expect(
+          classBody,
+          isNot(contains(forbidden)),
+          reason: 'shared avatar API must not expose "$forbidden"',
+        );
+      }
+    });
   });
 }
 

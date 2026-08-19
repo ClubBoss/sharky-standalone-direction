@@ -3498,8 +3498,20 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       final progressLabel = isTheory && runner.teachingSteps.length > 1
           ? '${runner.teachingStepIndex + 1}/${runner.teachingSteps.length}'
           : null;
+      final sharkyState = act0SharkySceneCoachStateV1(
+        attentionPhase: sceneAttentionPhase,
+        hasDirectObservationEvidence: feedbackSignalProof != null,
+        hasOpenRepairTargetEvidence:
+            widget.repairReasonLine?.trim().isNotEmpty ?? false,
+      );
+      final sharkyGrowthStage = act0SharkyGrowthStageForWorldNumberV1(
+        widget.worldNumber,
+      );
       return Act0LearningSceneGuideV3(
         phase: phase,
+        attentionPhase: sceneAttentionPhase,
+        sharkyState: sharkyState,
+        growthStage: sharkyGrowthStage,
         eyebrow: purpose,
         headline: headline,
         support: support,
