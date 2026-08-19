@@ -1073,4 +1073,291 @@ void main() {
       expect(tester.getRect(cta).bottom, lessThanOrEqualTo(852));
     },
   );
+
+  group('Coach Surface companion-state ownership', () {
+    const avatarKey = Key('act0_shell_learning_scene_sharky_avatar');
+    const spokenSurfaceKey = Key(
+      'act0_shell_learning_scene_sharky_spoken_surface',
+    );
+
+    testWidgets('DECIDE renders no Sharky avatar and leaks no answer', (
+      tester,
+    ) async {
+      final lesson = Act0ShellStateV1.sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere(
+            (candidate) => candidate.lessonId == 'fold_check_call_raise',
+          );
+      final task = lesson.taskList.firstWhere(
+        (candidate) => candidate.taskId == 'actions_check_drill',
+      );
+      final runner = task.runner.copyWith(
+        phase: Act0LessonPhaseV1.drill,
+        teachingStepIndex: task.runner.teachingSteps.length,
+      );
+
+      await pumpCompactRunner(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              selectedTaskId: task.taskId,
+              selectedTaskFamily: task.resolvedTaskFamily,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byKey(avatarKey), findsNothing);
+      expect(find.byKey(spokenSurfaceKey), findsNothing);
+    });
+
+    testWidgets(
+      'targeted repair with real evidence shows a visible coaching avatar',
+      (tester) async {
+        final lesson = Act0ShellStateV1.sample
+            .worldById('world_1')
+            .lessons
+            .firstWhere(
+              (candidate) => candidate.lessonId == 'fold_check_call_raise',
+            );
+        final task = lesson.taskList.firstWhere(
+          (candidate) => candidate.taskId == 'actions_check_drill',
+        );
+        final runner = task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingStepIndex: task.runner.teachingSteps.length,
+        );
+
+        await pumpCompactRunner(
+          tester,
+          MaterialApp(
+            home: Scaffold(
+              body: Act0LessonRunnerShellV1(
+                runner: runner,
+                selectedTaskId: task.taskId,
+                selectedTaskFamily: task.resolvedTaskFamily,
+                repairReasonLine:
+                    'This hand keeps the missed table clue in view.',
+                onBack: () {},
+                onContinueTheory: () {},
+                onChooseOption: (_) {},
+                onContinueReview: () {},
+              ),
+            ),
+          ),
+        );
+
+        expect(find.byKey(avatarKey), findsOneWidget);
+        expect(
+          find.byKey(spokenSurfaceKey),
+          findsOneWidget,
+          reason:
+              'Real source-backed repair-target evidence must earn the '
+              'spoken coaching treatment.',
+        );
+      },
+    );
+
+    testWidgets(
+      'a repair-shaped moment without real evidence cannot claim a coaching state',
+      (tester) async {
+        final lesson = Act0ShellStateV1.sample
+            .worldById('world_1')
+            .lessons
+            .firstWhere(
+              (candidate) => candidate.lessonId == 'fold_check_call_raise',
+            );
+        final task = lesson.taskList.firstWhere(
+          (candidate) => candidate.taskId == 'actions_check_drill',
+        );
+        final runner = task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingStepIndex: task.runner.teachingSteps.length,
+        );
+
+        await pumpCompactRunner(
+          tester,
+          MaterialApp(
+            home: Scaffold(
+              body: Act0LessonRunnerShellV1(
+                runner: runner,
+                selectedTaskId: task.taskId,
+                selectedTaskFamily: task.resolvedTaskFamily,
+                // No repairReasonLine and no other repair evidence: this is
+                // an ordinary decision, so it must render exactly like
+                // DECIDE rather than borrowing the repair treatment.
+                onBack: () {},
+                onContinueTheory: () {},
+                onChooseOption: (_) {},
+                onContinueReview: () {},
+              ),
+            ),
+          ),
+        );
+
+        expect(find.byKey(avatarKey), findsNothing);
+        expect(find.byKey(spokenSurfaceKey), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'targeted recheck stays materially quieter than targeted repair',
+      (tester) async {
+        final lesson = Act0ShellStateV1.sample
+            .worldById('world_1')
+            .lessons
+            .firstWhere(
+              (candidate) => candidate.lessonId == 'fold_check_call_raise',
+            );
+        final task = lesson.taskList.firstWhere(
+          (candidate) => candidate.taskId == 'actions_check_drill',
+        );
+        final repairRunner = task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingStepIndex: task.runner.teachingSteps.length,
+        );
+
+        await pumpCompactRunner(
+          tester,
+          MaterialApp(
+            home: Scaffold(
+              body: Act0LessonRunnerShellV1(
+                runner: repairRunner,
+                selectedTaskId: task.taskId,
+                selectedTaskFamily: task.resolvedTaskFamily,
+                repairReasonLine:
+                    'This hand keeps the missed table clue in view.',
+                onBack: () {},
+                onContinueTheory: () {},
+                onChooseOption: (_) {},
+                onContinueReview: () {},
+              ),
+            ),
+          ),
+        );
+        expect(find.byKey(spokenSurfaceKey), findsOneWidget);
+        final repairAvatarSize = tester.getSize(find.byKey(avatarKey)).width;
+
+        final recheckRunner = task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingStepIndex: task.runner.teachingSteps.length,
+        );
+        await pumpCompactRunner(
+          tester,
+          MaterialApp(
+            home: Scaffold(
+              body: Act0LessonRunnerShellV1(
+                runner: recheckRunner,
+                selectedTaskId: task.taskId,
+                selectedTaskFamily: task.resolvedTaskFamily,
+                isSourceRecheckAttempt: true,
+                onBack: () {},
+                onContinueTheory: () {},
+                onChooseOption: (_) {},
+                onContinueReview: () {},
+              ),
+            ),
+          ),
+        );
+
+        expect(find.byKey(avatarKey), findsOneWidget);
+        expect(
+          find.byKey(spokenSurfaceKey),
+          findsNothing,
+          reason:
+              'Recheck has no matching coach-phrase moment, so it must never '
+              'claim evidence-backed coaching.',
+        );
+        final recheckAvatarSize = tester.getSize(find.byKey(avatarKey)).width;
+        expect(
+          recheckAvatarSize,
+          lessThan(repairAvatarSize),
+          reason: 'RECHECK/PROVE must read materially quieter than REPAIR.',
+        );
+      },
+    );
+
+    testWidgets(
+      'correct and wrong feedback resolve evidence-backed companion state, '
+      'wrong reading strongest',
+      (tester) async {
+        final lesson = Act0ShellStateV1.sample
+            .worldById('world_1')
+            .lessons
+            .firstWhere(
+              (candidate) => candidate.lessonId == 'fold_check_call_raise',
+            );
+        final task = lesson.taskList.firstWhere(
+          (candidate) => candidate.taskId == 'actions_check_drill',
+        );
+        final correctOption = task.runner.options.firstWhere(
+          (option) => option.isCorrect,
+        );
+        final wrongOption = task.runner.options.firstWhere(
+          (option) => option.quality == Act0FeedbackQualityV1.wrong,
+        );
+
+        final correctRunner = task.runner.copyWith(
+          phase: Act0LessonPhaseV1.review,
+          selectedOptionId: correctOption.id,
+        );
+        await pumpCompactRunner(
+          tester,
+          MaterialApp(
+            home: Scaffold(
+              body: Act0LessonRunnerShellV1(
+                runner: correctRunner,
+                selectedTaskId: task.taskId,
+                selectedTaskFamily: task.resolvedTaskFamily,
+                onBack: () {},
+                onContinueTheory: () {},
+                onChooseOption: (_) {},
+                onContinueReview: () {},
+              ),
+            ),
+          ),
+        );
+        expect(find.byKey(avatarKey), findsOneWidget);
+        expect(find.byKey(spokenSurfaceKey), findsOneWidget);
+        final correctAvatarSize = tester.getSize(find.byKey(avatarKey)).width;
+
+        final wrongRunner = task.runner.copyWith(
+          phase: Act0LessonPhaseV1.review,
+          selectedOptionId: wrongOption.id,
+        );
+        await pumpCompactRunner(
+          tester,
+          MaterialApp(
+            home: Scaffold(
+              body: Act0LessonRunnerShellV1(
+                runner: wrongRunner,
+                selectedTaskId: task.taskId,
+                selectedTaskFamily: task.resolvedTaskFamily,
+                onBack: () {},
+                onContinueTheory: () {},
+                onChooseOption: (_) {},
+                onContinueReview: () {},
+              ),
+            ),
+          ),
+        );
+        expect(find.byKey(avatarKey), findsOneWidget);
+        expect(find.byKey(spokenSurfaceKey), findsOneWidget);
+        final wrongAvatarSize = tester.getSize(find.byKey(avatarKey)).width;
+
+        expect(
+          wrongAvatarSize,
+          greaterThan(correctAvatarSize),
+          reason: 'REPAIR (wrong feedback) must read stronger than UNDERSTAND.',
+        );
+      },
+    );
+  });
 }
