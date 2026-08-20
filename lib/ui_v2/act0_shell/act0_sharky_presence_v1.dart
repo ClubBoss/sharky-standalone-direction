@@ -648,16 +648,13 @@ class _Act0SharkyPresenceMascotV1State extends State<Act0SharkyPresenceMascotV1>
       act0SharkyCompanionAssetForMoodV1(widget.mood),
       key: Key('act0_shell_sharky_presence_mascot_${widget.mood.name}'),
       fit: BoxFit.contain,
-      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-        if (wasSynchronouslyLoaded || frame != null) {
-          return child;
-        }
-        return _SharkyMascotAssetFallbackV1(
-          mood: widget.mood,
-          tone: widget.tone,
-          size: widget.size,
-        );
-      },
+      // No frameBuilder: a normal in-progress decode must never substitute
+      // the lettered fallback (it is not an error, and racing the decode
+      // through a precache or lifecycle hook could not deterministically
+      // beat it either). `Image` already leaves the outer sized frame in
+      // place and simply paints nothing until the first frame arrives, then
+      // repaints itself automatically — the correct, already-stable default.
+      // Only a genuine decode failure below reaches the letter fallback.
       errorBuilder: (context, error, stackTrace) {
         return _SharkyMascotAssetFallbackV1(
           mood: widget.mood,
