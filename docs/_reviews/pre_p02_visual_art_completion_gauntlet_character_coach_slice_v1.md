@@ -135,19 +135,29 @@ shipped via PR #207) against its own accepted semantics
 - The card never competes with the table for visual weight, and the bottom
   shelf remains CTA-first in every captured state — cohesion hypothesis
   holds structurally.
-- **Real defect found and fixed**: on `correct_feedback` — Sharky's *first*
-  appearance in the captured route — the mascot rendered as a bare circular
-  "S" letter (`_SharkyMascotLetterFallbackV1`) instead of the actual mascot
-  artwork. Root cause: `Image.asset`'s `frameBuilder` placeholder fires
-  whenever the asset has not yet been decoded into `ImageCache`, and nothing
-  in the Learning Scene route precached it. In practice the Welcome shell
-  (`_WelcomeSharkyPresenterTileV1`) precaches this same asset for first-time
-  onboarding sessions, but a returning learner who resumes straight into the
-  Learning Scene on a fresh app process (the common case post-onboarding) has
-  no guarantee anything decoded it first — this is a real, reachable
-  production path, not only a test-harness artifact, confirmed by
-  reproducing it in the deterministic capture and then eliminating it with
-  the fix below.
+- **Real defect found, and now correctly fixed**: on `correct_feedback` —
+  Sharky's *first* appearance in the captured route — the mascot rendered as
+  a bare circular "S" letter (`_SharkyMascotLetterFallbackV1`) instead of the
+  actual mascot artwork. Root cause: `Act0SharkyPresenceMascotV1`'s
+  `Image.asset` used a `frameBuilder` that substituted the letter fallback
+  for *any* frame not yet available — including a normal, still-in-progress
+  decode, which is not an error condition.
+
+  An earlier version of this PR attempted to close the gap by precaching the
+  asset from `didChangeDependencies` with `unawaited(precacheImage(...))`.
+  Mastermind review correctly rejected that: the precache `Future` was
+  unawaited, so the very first `build`/paint could still land before decode
+  completed, and no lifecycle-timing trick can *deterministically* win that
+  race — it can only make the window smaller. The `frameBuilder` was the
+  actual causal owner of the defect, not the absence of a precache, so this
+  revision fixes it there directly instead: the `frameBuilder` no longer
+  exists. `Image.asset` now simply paints nothing (the outer sized frame
+  already stays in place; `RawImage` with no frame paints empty) until its
+  real first frame arrives, then repaints itself automatically, exactly like
+  every other `Image.asset` in this codebase. `errorBuilder` is untouched —
+  a genuine decode failure still reaches the graceful lettered fallback.
+  This is now correct by construction for any asset, any cache state, any
+  entry route — not merely less likely to race.
 - No other material cohesion gap found; the remaining honest gap (Sharky's
   fixed neutral expression regardless of mood) is an asset-production
   dependency, not a cohesion-implementation defect, and is captured in the
@@ -155,69 +165,94 @@ shipped via PR #207) against its own accepted semantics
   copy/learning semantics, do not fake final art" boundary.
 
 **Implemented repair** (does not touch Coach Surface copy, layout, position,
-or dock semantics — purely eliminates a decode-timing gap):
+or dock semantics — purely removes the incorrect loading-state substitution):
 
-- `lib/ui_v2/act0_shell/act0_sharky_presence_v1.dart`: added
-  `act0SharkyCompanionAssetPathsV1()` (every distinct asset the mood mapping
-  can resolve to, mood-driven so a future per-mood art admission is covered
-  automatically) and `act0PrecacheSharkyCompanionAssetsV1(BuildContext)`
-  (precaches all of them).
-- `lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart`: added a
-  `didChangeDependencies` override on `_Act0LessonRunnerShellV1State`,
-  guarded by a one-shot `_sharkyMascotPrecachedV1` flag, that calls the new
-  precache helper once per mount.
+- `lib/ui_v2/act0_shell/act0_sharky_presence_v1.dart`: removed
+  `_Act0SharkyPresenceMascotV1State`'s `frameBuilder` entirely from its
+  `Image.asset`. `errorBuilder` (the genuine-failure path) is unchanged,
+  byte-for-byte. Net diff vs. `e9101ae0`: one file, `+7/-10`.
+- `lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart`: **reverted to
+  byte-identical with `e9101ae0`**. The precache field, the
+  `didChangeDependencies` override, and the precache helper it called are
+  all removed — per the review's own instruction to prefer smaller causal
+  ownership over keeping now-redundant machinery once the frameBuilder fix
+  makes them unnecessary. `act0SharkyCompanionAssetPathsV1()` and
+  `act0PrecacheSharkyCompanionAssetsV1()` are also removed from
+  `act0_sharky_presence_v1.dart` for the same reason.
+
+## Deterministic decode-contract proof
+
+Reproduced the cold-cache first-appearance route directly rather than relying
+on the capture tool's incidental timing: a throwaway widget test (not
+committed — this repo's own guidance is not to add a meta-test family) wraps
+`Act0SharkyCompanionAvatarV1` in a `DefaultAssetBundle` whose `load()` is
+artificially delayed 300ms, then asserts, across five 50ms pumps *before* the
+delay resolves, that `Key('act0_shell_sharky_presence_asset_fallback')` is
+never found — i.e. the letter never paints during a decode that is
+deliberately kept in-flight far longer than any real asset load — and that
+after `pumpAndSettle()` the real mascot (`Key('act0_shell_sharky_presence_mascot_happy')`)
+is present. Result: passed. This is a proof of the contract, not a
+timing-dependent observation.
+
+The genuine-error path (`errorBuilder`) was not independently re-proven,
+because it was not touched by this revision — it is byte-identical to the
+already-shipping implementation.
 
 ## Evidence — baseline vs candidate
 
-Re-captured after the fix:
-`output/visual_gauntlet_b7/candidate_precache_v1/` (same tool, same route,
-same three viewports, same five endpoints).
+Re-captured after the corrected fix:
+`output/visual_gauntlet_b7/candidate_frameBuilder_fix_v1/` (same tool, same
+route, same three viewports, same five endpoints).
 
-- `canonical_402x874/endpoint_correct_feedback.png`: baseline shows the "S"
-  letter fallback; candidate shows the real mascot artwork. Confirmed visual
-  fix.
-- All other endpoints/viewports: pixel-equivalent to baseline by inspection
-  (table, felt, seats, board, pot, dock, and every non-Sharky-avatar element
-  unchanged) — expected, since the change only affects image-cache timing,
-  not layout or geometry.
+- `canonical_402x874/endpoint_correct_feedback.png`: the mascot chip is empty
+  (no letter, no image yet) rather than showing "S" — this specific capture
+  tool does not await asset decode before snapshotting, so on a cold
+  `ImageCache` its very first Sharky frame can still be captured mid-decode;
+  the deterministic proof above is what establishes the actual guarantee
+  ("never wrong," not "always fully loaded within one arbitrary test frame").
+  `endpoint_targeted_repair.png` (a later state, asset already decoded by
+  then) shows the real mascot correctly.
+- All other endpoints/viewports: table, felt, seats, board, pot, and dock are
+  unchanged from baseline. One pre-existing, unrelated rendering artifact was
+  found and ruled out: at `large_430x932` / `endpoint_targeted_recheck`, the
+  Fold/Check/Call button labels render as blank white bars instead of text —
+  confirmed present identically in the very first `baseline_main_e9101ae0`
+  capture (taken before any change in this PR), so it is pre-existing
+  font/glyph-timing behavior of this specific headless capture tool, not a
+  regression.
 - No viewport regression found at `375x812` or `430x932`.
 
 ## Geometry / ownership preservation proof
 
-The change touches only image precache timing inside existing widgets. It
-does not touch `act0_scene_player_v1.dart`, `act0_scene_depth_v1.dart`, any
-geometry constant, any commitment-anchor code, or any Coach Surface
-copy/layout code. `flutter analyze` on both changed files: clean, 0 issues.
+The final change touches only `_Act0SharkyPresenceMascotV1State`'s
+`Image.asset` builder configuration. It does not touch
+`act0_lesson_runner_shell_v1.dart` at all (byte-identical to `e9101ae0`), nor
+`act0_scene_player_v1.dart`, `act0_scene_depth_v1.dart`, any geometry
+constant, any commitment-anchor code, or any Coach Surface copy/layout code.
+`flutter analyze` on the one changed file: clean, 0 issues.
 
 ## Tests / validation
 
 - `flutter analyze lib/ui_v2/act0_shell/act0_sharky_presence_v1.dart
   lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart` — 0 issues.
-- `dart format --set-exit-if-changed` on both changed files — 0 changes
-  needed.
-- `flutter test test/ui_v2 test/guards` (broad regression sweep, appropriate
-  for a change to a widely-shared state class; not a tests-for-tests
-  addition) — `+1824 -160`. Decomposed per the repo's own
-  compile-vs-assertion split rule:
-  - 40 distinct compile failures, all in `test/guards/*world1_*` /
-    `*campaign*` / `*map*` / `*bankroll*` files — every one of them a
-    dormant/legacy surface per `AGENTS.md`'s own dormant-systems list, and
-    none of them import either file this PR touches.
-  - The remaining assertion failures include pre-existing, unrelated debt —
-    spot-checked `test/ui_v2/sharky_visual_consistency_foundation_v1_test.dart`
-    (looks Sharky-adjacent, so verified directly): it fails because it looks
-    up `Key('act0_shell_sharky_mascot')`, a key that does not exist anywhere
-    in source (the real key is `act0_shell_sharky_presence_mascot`) — a
-    stale test/implementation key mismatch this PR never touched. Confirmed
-    pre-existing by `git stash`-ing this PR's two changed files and
-    re-running the same test against unmodified `e9101ae0` main: identical
-    failure, identical message.
-  - `test/ui_v2/act0_sharky_presence_v1_test.dart` — the one test file that
-    directly covers the changed mascot-resolution code path — passes in
-    full, no failures.
-  - No new test file was added: the fix has no new branching logic beyond
-    what that existing coverage plus the rendered before/after evidence
-    above already exercises.
+- `dart format --set-exit-if-changed` on both files — 0 changes needed.
+- `flutter test test/ui_v2/act0_sharky_presence_v1_test.dart` (direct
+  coverage of the changed code path) — all 7 cases pass unchanged; no
+  existing assertion encoded the old decode-placeholder behavior, so no test
+  needed updating.
+- Deterministic decode-contract proof (throwaway, not committed) — see above
+  — passed.
+- Broad `flutter test test/ui_v2 test/guards` regression sweep from the prior
+  revision of this PR (`+1824 -160`, all failures traced to pre-existing,
+  unrelated debt — 40 compile failures confined to dormant
+  `test/guards/*world1_*`/`*campaign*`/`*map*`/`*bankroll*` legacy surfaces
+  that don't import either file this PR touches, plus a stale test/key
+  mismatch confirmed via `git stash` against unmodified `e9101ae0`) is not
+  re-run in full for this revision: the net change shrank to a single-file,
+  `+7/-10` diff with no new logic paths beyond what
+  `act0_sharky_presence_v1_test.dart` and the decode-contract proof already
+  exercise, and `act0_lesson_runner_shell_v1.dart` — the file that motivated
+  the original broad sweep — is no longer touched at all.
 
 ## Disposition
 

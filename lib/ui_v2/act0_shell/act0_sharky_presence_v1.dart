@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -49,33 +47,6 @@ String act0SharkyCompanionAssetForMoodV1(Act0SharkyMoodV1 mood) {
   // Provisional single neutral Alpha fallback: production state art is not
   // admitted. Future approved state assets replace these mappings only.
   return _act0SharkyNeutralFallbackAssetV1;
-}
-
-/// Every distinct asset [act0SharkyCompanionAssetForMoodV1] can resolve to.
-///
-/// Every mood currently resolves to the same provisional asset, so this is a
-/// one-element set today. It stays mood-driven rather than a single hardcoded
-/// path so a future per-mood art admission is precached automatically without
-/// another call site to remember.
-Set<String> act0SharkyCompanionAssetPathsV1() =>
-    Act0SharkyMoodV1.values.map(act0SharkyCompanionAssetForMoodV1).toSet();
-
-/// Decodes every Sharky companion mascot asset ahead of first paint.
-///
-/// [Act0SharkyPresenceMascotV1] already degrades gracefully to a lettered
-/// avatar while its image decodes (`frameBuilder`), but that placeholder is
-/// only correct for a genuinely cold cache. Once precached, `ImageCache`
-/// serves the decoded frame synchronously for the rest of the process, so the
-/// very first coaching card a learner sees — often before any other screen
-/// has ever shown Sharky, e.g. a returning learner who lands straight in the
-/// Learning Scene — never has to show that fallback letter at all. Sharky is
-/// the voice of the scene; a bare "S" on his own coaching card is a
-/// coach-surface cohesion regression, not a defensible degrade.
-Future<void> act0PrecacheSharkyCompanionAssetsV1(BuildContext context) {
-  return Future.wait(<Future<void>>[
-    for (final path in act0SharkyCompanionAssetPathsV1())
-      precacheImage(AssetImage(path), context),
-  ]);
 }
 
 class Act0SharkyGuideCardV1 extends StatelessWidget {
@@ -677,16 +648,13 @@ class _Act0SharkyPresenceMascotV1State extends State<Act0SharkyPresenceMascotV1>
       act0SharkyCompanionAssetForMoodV1(widget.mood),
       key: Key('act0_shell_sharky_presence_mascot_${widget.mood.name}'),
       fit: BoxFit.contain,
-      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-        if (wasSynchronouslyLoaded || frame != null) {
-          return child;
-        }
-        return _SharkyMascotAssetFallbackV1(
-          mood: widget.mood,
-          tone: widget.tone,
-          size: widget.size,
-        );
-      },
+      // No frameBuilder: a normal in-progress decode must never substitute
+      // the lettered fallback (it is not an error, and racing the decode
+      // through a precache or lifecycle hook could not deterministically
+      // beat it either). `Image` already leaves the outer sized frame in
+      // place and simply paints nothing until the first frame arrives, then
+      // repaints itself automatically — the correct, already-stable default.
+      // Only a genuine decode failure below reaches the letter fallback.
       errorBuilder: (context, error, stackTrace) {
         return _SharkyMascotAssetFallbackV1(
           mood: widget.mood,

@@ -288,11 +288,12 @@ mood.
   to a `switch` over `mood`; every call site (`Act0SharkyPresenceMascotV1`,
   `Act0SharkyCompanionAvatarV1`, `_WelcomeSharkyPresenterTileV1`) already
   keys its `Image.asset` widget on `mood.name`, so no call-site changes are
-  needed, and this PR's `act0PrecacheSharkyCompanionAssetsV1` helper already
-  precaches whatever `act0SharkyCompanionAssetPathsV1()` returns, including a
-  future five-asset set, with no further changes.
+  needed. No precache step is required for this either — see the companion
+  review doc §Part C for why the first-appearance decode placeholder was
+  fixed at the `Image.asset` loading contract itself rather than by racing
+  the decode, which covers any number of mood assets automatically.
 - Re-run `tools/act0_b7_cohesion_capture_v1.dart` before and after landing
   either set and diff against this PR's `baseline_main_e9101ae0` /
-  `candidate_precache_v1` evidence to confirm no geometry drift, per the
-  deterministic geometry guard in
+  `candidate_frameBuilder_fix_v1` evidence to confirm no geometry drift, per
+  the deterministic geometry guard in
   `docs/_reviews/b7_character_slice_reconciliation_and_scene_geometry_admission_v1.md`.
