@@ -416,9 +416,29 @@ List<Act0SceneSeatSlotV1> act0SceneSeatSlotsV1({
     // shape beside a diagram.
     final pushX = 0.104 + (0.072 * depth);
     // The far seat has no long side to stand on, so it gets a fixed larger
-    // vertical push: enough for its head to clear the far rail and give the
-    // scene a far plane, bounded by the teaching layer directly above.
-    final pushY = depth <= 0.34 ? 0.082 : 0.052 + (0.030 * depth);
+    // vertical push: enough for a seated head-to-shoulder read to clear the
+    // far rail and give the scene a far plane, bounded by the teaching layer
+    // directly above.
+    //
+    // This used to be one `depth <= 0.34` branch, but the upper-flank seats'
+    // eased depth (~0.33-0.35 across the live seat tables) also falls at or
+    // under that boundary, so retuning the far seat's push silently moved the
+    // flanks too. `0.24` isolates the true far-center seat only — it sits at
+    // the midpoint of the real gap between the farthest-observed true-far
+    // depth (~0.14) and the nearest-observed flank depth (~0.33). It is not
+    // the shared far/mid/near tier boundary used elsewhere
+    // (`act0ScenePlaneForDepthV1`, `act0SceneDepthTierV1` keep their own
+    // `0.34`/`0.68`, unrelated to this seat's own screen-space push).
+    //
+    // The old `0.34` boundary and its `0.082` value are kept, unchanged, as
+    // the flank tier below it — this is what actually isolates the far seat:
+    // the flanks keep the exact push they already had, and only the new,
+    // narrower `<= 0.24` band gets the far seat's retuned value.
+    final pushY = depth <= 0.24
+        ? 0.11
+        : depth <= 0.34
+        ? 0.082
+        : 0.052 + (0.030 * depth);
 
     slots.add(
       Act0SceneSeatSlotV1(
