@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_depth_v1.dart';
@@ -194,24 +196,178 @@ class Act0ScenePlayerFigureV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     // Which way this seat turns to face the pot, from its own anchor.
     final facing = ((0.5 - slot.plateAnchor.dx) * 2.4).clamp(-1.0, 1.0);
-    return IgnorePointer(
-      child: SizedBox(
-        width: size.width,
-        height: size.height,
-        child: CustomPaint(
-          painter: _Act0ScenePlayerFigurePainterV1(
-            archetype: act0ScenePlayerArchetypeForSeatV1(slot.seatId),
-            depth: slot.depth,
-            facing: facing,
-            posture: posture,
-            detail: act0ScenePlayerDetailForDepthV1(slot.depth),
+    final procedural = _Act0ScenePlayerFigurePainterV1(
+      archetype: act0ScenePlayerArchetypeForSeatV1(slot.seatId),
+      depth: slot.depth,
+      facing: facing,
+      posture: posture,
+      detail: act0ScenePlayerDetailForDepthV1(slot.depth),
+      haze: perspective.hazeAt(slot.depth),
+      light: light,
+    );
+    // Cycle B — premium seated-embodiment pilot. Exactly one seat, the
+    // far-centre opponent (the only seat whose runtime envelope exposes a
+    // coherent unoccluded head+shoulder region), swaps its procedural figure
+    // for the authored production render. Every other seat is byte-identical.
+    // Geometry, anchors and z-order are untouched: the asset rides the exact
+    // volume the procedural painter used.
+    final child = Act0ScenePilotCharacterAssetV1.isFarCentrePilotSeat(slot)
+        ? _Act0ScenePilotFigureV1(
+            size: size,
             haze: perspective.hazeAt(slot.depth),
-            light: light,
-          ),
-        ),
+            folded: posture == Act0ScenePlayerPostureV1.folded,
+            fallback: procedural,
+          )
+        : CustomPaint(painter: procedural);
+    return IgnorePointer(
+      child: SizedBox(width: size.width, height: size.height, child: child),
+    );
+  }
+}
+
+/// Cycle B pilot: the single authored production opponent render and the
+/// deterministic rule for which seat receives it.
+class Act0ScenePilotCharacterAssetV1 {
+  const Act0ScenePilotCharacterAssetV1._();
+
+  /// The one authored production asset admitted by the Cycle B pilot.
+  static const String farCentreAssetPath =
+      'assets/act0_characters/opponent_far_centre_in_hand.png';
+
+  /// True for the far-centre opponent seat only.
+  ///
+  /// Resolved from geometry, not a seat id, so production tables that label the
+  /// far-centre seat differently still route correctly: the farthest depth
+  /// tier ([Act0ScenePlayerDetailV1.far]) combined with a near-centre plate
+  /// anchor uniquely identifies the seat sitting directly across the table
+  /// from the learner. Never the hero.
+  static bool isFarCentrePilotSeat(Act0SceneSeatSlotV1 slot) {
+    if (slot.isHero) return false;
+    if (act0ScenePlayerDetailForDepthV1(slot.depth) !=
+        Act0ScenePlayerDetailV1.far) {
+      return false;
+    }
+    return (slot.plateAnchor.dx - 0.5).abs() < 0.15;
+  }
+}
+
+/// Decodes the authored pilot render once and paints it into the seat's exact
+/// reserved volume, with the same depth recession the procedural figures carry.
+///
+/// Until the asset has decoded it paints [fallback] — the procedural figure —
+/// so the seat is never blank for a frame.
+class _Act0ScenePilotFigureV1 extends StatefulWidget {
+  const _Act0ScenePilotFigureV1({
+    required this.size,
+    required this.haze,
+    required this.folded,
+    required this.fallback,
+  });
+
+  final Size size;
+  final double haze;
+  final bool folded;
+  final _Act0ScenePlayerFigurePainterV1 fallback;
+
+  @override
+  State<_Act0ScenePilotFigureV1> createState() =>
+      _Act0ScenePilotFigureV1State();
+}
+
+class _Act0ScenePilotFigureV1State extends State<_Act0ScenePilotFigureV1> {
+  ui.Image? _image;
+  Object? _pending;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_image != null) return;
+    final token = Object();
+    _pending = token;
+    const provider = AssetImage(
+      Act0ScenePilotCharacterAssetV1.farCentreAssetPath,
+    );
+    final stream = provider.resolve(createLocalImageConfiguration(context));
+    late final ImageStreamListener listener;
+    listener = ImageStreamListener((info, _) {
+      stream.removeListener(listener);
+      if (!mounted || _pending != token) return;
+      setState(() => _image = info.image);
+    }, onError: (_, __) => stream.removeListener(listener));
+    stream.addListener(listener);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final image = _image;
+    if (image == null) {
+      return CustomPaint(size: widget.size, painter: widget.fallback);
+    }
+    return CustomPaint(
+      size: widget.size,
+      painter: _Act0ScenePilotFigurePainterV1(
+        image: image,
+        haze: widget.haze,
+        folded: widget.folded,
       ),
     );
   }
+}
+
+class _Act0ScenePilotFigurePainterV1 extends CustomPainter {
+  const _Act0ScenePilotFigurePainterV1({
+    required this.image,
+    required this.haze,
+    required this.folded,
+  });
+
+  final ui.Image image;
+  final double haze;
+  final bool folded;
+
+  /// B2's lit wall tone — the same value the procedural figures recede toward,
+  /// so the pilot sits at the same depth as its neighbours.
+  static const Color _roomTone = Color(0xFF1B3350);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final dst = Offset.zero & size;
+    final src = Rect.fromLTWH(
+      0,
+      0,
+      image.width.toDouble(),
+      image.height.toDouble(),
+    );
+    // Match `_Act0ScenePlayerFigurePainterV1._recede`: colours lerp toward the
+    // room tone by `haze * 0.62`; folded seats recede further.
+    final tint = ((haze * 0.62) + (folded ? 0.20 : 0.0)).clamp(0.0, 0.85);
+    final opacity = (folded ? 0.72 : 1.0) * (1 - (haze * 0.10));
+
+    canvas.saveLayer(dst, Paint());
+    canvas.drawImageRect(
+      image,
+      src,
+      dst,
+      Paint()
+        ..filterQuality = FilterQuality.high
+        ..color = Color.fromRGBO(255, 255, 255, opacity.clamp(0.0, 1.0)),
+    );
+    // srcATop so only the figure's own pixels take the haze, never the
+    // transparent margin.
+    canvas.drawRect(
+      dst,
+      Paint()
+        ..color = _roomTone.withValues(alpha: tint)
+        ..blendMode = BlendMode.srcATop,
+    );
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(covariant _Act0ScenePilotFigurePainterV1 oldDelegate) =>
+      !identical(oldDelegate.image, image) ||
+      oldDelegate.haze != haze ||
+      oldDelegate.folded != folded;
 }
 
 class _Act0ScenePlayerFigurePainterV1 extends CustomPainter {

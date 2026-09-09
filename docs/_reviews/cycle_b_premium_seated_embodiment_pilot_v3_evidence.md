@@ -1,6 +1,6 @@
 # Cycle B — Premium Seated Embodiment Pilot v3 — Evidence Pack
 
-Status: `BLOCKED_ON_PRODUCTION_IMAGE_ASSET`
+Status: `PASS` — was `BLOCKED_ON_PRODUCTION_IMAGE_ASSET` until the owner supplied the asset; see the "RESUMED" section at the end.
 Freshness: 2026-09-10
 Worktree: `/private/tmp/sharky-cycleB-seated-embodiment-v3`
 Branch: `mission/cycle-b-seated-embodiment-pilot-v3`
@@ -121,3 +121,90 @@ canvas, generous empty margin at the bottom.
 `BLOCKED_ON_PRODUCTION_IMAGE_ASSET` — this environment (Claude Code / Sonnet) has **no production-capable image-generation path**; the required asset is a premium reference-conditioned 2.5D character render. Same constraint recorded by commit `8ea8705b` (PR #210). B0–B3 are complete with OBSERVED/DERIVED evidence; the mission question is not answerable without the real asset.
 
 `BOUNDED_CAMERA_FALSIFICATION = NOT_EVALUATED` — no camera change was attempted or is recommended from this mission. Note (INFERRED, not a recommendation): the flank/near seats resolving to 16–39 px slivers is a geometry property; if a future wave wants five *individually legible* premium opponents it may need to evaluate that envelope, but the far-centre pilot does not require it.
+
+---
+
+# RESUMED — production asset supplied (2026-09-10)
+
+Owner supplied `opponent_far_centre_in_hand.png` (1184×1328, RGBA, real straight
+alpha — corners α0; aspect w/h 0.8916 vs contract 0.8909, a 0.08% delta = sub-
+pixel at 80 px, no re-authoring needed). Verdict revised from
+`BLOCKED_ON_PRODUCTION_IMAGE_ASSET` to the runtime result below.
+
+## Integration (OBSERVED — files changed)
+
+- `assets/act0_characters/opponent_far_centre_in_hand.png` — the supplied asset.
+- `pubspec.yaml` — `+ - assets/act0_characters/` under `flutter: assets:`.
+- `lib/ui_v2/act0_shell/act0_scene_player_v1.dart`:
+  - `Act0ScenePilotCharacterAssetV1` — asset path + `isFarCentrePilotSeat(slot)`
+    selector (geometry-based: `far` detail tier ∧ `|plateAnchor.dx − 0.5| < 0.15`
+    ∧ not hero — routes correctly regardless of seat-id labelling).
+  - `_Act0ScenePilotFigureV1` (stateful) — decodes the asset once, paints
+    `_Act0ScenePilotFigurePainterV1`, falls back to the existing procedural
+    painter until decode completes (no blank frame).
+  - `_Act0ScenePilotFigurePainterV1` — `drawImageRect` whole-src → whole-dst (no
+    `BoxFit`), then a `srcATop` room-tone (`#1B3350`) haze tint at `haze*0.62`
+    (matches the procedural `_recede`), + folded recession. `Act0ScenePlayerFigureV1.build`
+    routes the pilot seat here; **every other seat is byte-identical**.
+- No change to camera, table geometry, seat anchors, projection, commitments,
+  Coach Surface, CTA shelf, copy, poker state or telemetry.
+
+## Runtime evidence (OBSERVED — real Flutter frames)
+
+`test/ui_v2/cycle_b_seated_embodiment_pilot_capture_v1_test.dart` — same
+canonical host, golden PNGs under `test/ui_v2/goldens/cycle_b/`, **+3 PASS**.
+Asset decode is awaited via `precacheImage` before capture (the first,
+un-awaited pass captured the one-frame procedural fallback at 375 — a
+capture-tool timing artifact, corrected, not an art result).
+
+| viewport | pilot rect (L,T,W,H) — pre vs post integration | states captured |
+|---|---|---|
+| 375×812  | (143.10, 129.55, 74.30, 83.40) — **identical** | decide / correct / wrong / repair |
+| 402×874  | (153.41, 139.63, 79.65, 89.40) — **identical** | decide / correct / wrong / repair |
+| 430×932  | (164.09, 148.75, 85.20, 95.63) — **identical** | decide / correct / wrong / repair |
+
+Geometry drift pre→post integration and across all four learning states: **0.0 px**.
+
+Visual read (OBSERVED from the goldens, 4× crops in `output/cycle_b/crops/`):
+- Reads immediately as a man **seated across the table**: head, hair, face,
+  neck, open collar, shoulders, upper chest; the far rail cleanly crosses the
+  lower chest → correct "behind the table" occlusion. Torso mass present — not
+  a floating head / bust.
+- Forearms (present in the source) land in the rail-occluded bottom 36% → **no
+  felt intrusion**.
+- No collision with coach surface (25 px gap @402, and the repair-state coach
+  card clears the head), board, pot, hero cards, seat plates, commitments.
+- Does **not** overpower the information hierarchy — board cards, pot, focus
+  reticle and Sharky's coach card stay dominant; the opponent recedes.
+- Decisive **class-level lift** vs the 4 procedural blob figures visible in the
+  same frame.
+- Weaknesses (art-polish backlog, non-blocking): at 375 px the face is legible
+  but low-contrast; the asset's baked cool rim is slightly hot at 4× zoom
+  (subtle at 1×). Neither warrants a correction pass — the direction is proven.
+
+## Validation (OBSERVED)
+
+- `dart format` — clean (3 files).
+- `flutter analyze` (changed lib + both test files) — No issues found.
+- `flutter test test/ui_v2/cycle_b_seated_embodiment_pilot_capture_v1_test.dart` — +3 PASS.
+- `flutter test test/ui_v2/act0_b7_canonical_scene_geometry_invariant_v1_test.dart` — **+11 PASS** (incl. `far seat anchor` = `act0_scene_player_figure_utg` does not move; felt/silhouette unchanged).
+- `flutter test test/ui_v2/runner/` — **+213 PASS**.
+- scene semantic-motion / attention-phase / world1 compositor / seat-scene-contract / geometry probe — +16 PASS.
+
+## VERDICT (revised)
+
+`PASS`
+
+CAUSAL_REASON: the supplied reference-conditioned 2.5D render drops into the
+far-centre seat's exact reserved volume, rides the frozen PR203/PR211
+camera + rail occlusion with zero geometry change, and reads as a credible
+premium seated opponent across all three canonical viewports and all four
+learning states — a material class-level lift over the procedural ceiling. All
+15 acceptance points are met (point 7, face-readable-at-375, is a threshold
+pass with a noted asset-polish backlog). The correction budget was not used.
+
+`BOUNDED_CAMERA_FALSIFICATION = NOT_JUSTIFIED` — no spatial-geometry failure was
+observed for the far-centre seat. (Separate DERIVED note, not a recommendation:
+the four flank seats resolve to 16–39 px slivers behind the table; if a future
+wave wants all five opponents individually legible it should evaluate that
+envelope, but the pilot proves the direction and does not require it.)
