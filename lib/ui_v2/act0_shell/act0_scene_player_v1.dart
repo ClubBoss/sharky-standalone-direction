@@ -719,6 +719,400 @@ class Act0ScenePlayerLayerV1 extends StatelessWidget {
   }
 }
 
+// ===========================================================================
+// CYCLE C — BOUNDED_SPATIAL_REBALANCE_V1 (experimental)
+//
+// A tiered opponent layer that approaches the C2 / C2-9 North-Star seating
+// grammar with NO camera and NO table-geometry change. It replaces the flat
+// single-plane `Act0ScenePlayerLayerV1` on the canonical camera path only.
+//
+// Three causal moves, all owned here:
+//   1. SCENE_WORLD_WIDTH — opponents are laid out in a world wider than the
+//      felt (`worldWidenFraction`), so upper/near flanks sit in visible room
+//      OUTSIDE the table instead of being hidden behind it.
+//   2. SEAT_ANCHOR / PLAYER_VOLUME — each opponent is re-tiered
+//      (far-centre / upper-flank / near-flank) with its own anchor, scale and
+//      inward orientation, giving a real depth ladder.
+//   3. LAYER / OCCLUSION — near-flank opponents render on the FRONT plane
+//      (after the table), so the felt edge occludes their outer body the way
+//      the hero foreground does, instead of the whole figure hiding behind
+//      the rail.
+//
+// Non-UTG seats use a diagnostic seated-body proxy (head + neck + shoulders +
+// torso + chair back + near arm) sized to fill the proposed envelope — enough
+// to judge physical seating. It is explicitly NOT production art. UTG reuses
+// the Cycle B authored asset as one realistic anchor.
+// ===========================================================================
+
+/// Depth tier of a re-tiered opponent seat.
+enum Act0SceneOpponentTierV1 { farCentre, upperFlank, nearFlank }
+
+/// Which composited plane a tiered layer paints.
+enum Act0SceneTieredPlaneV1 {
+  /// Behind the table: far-centre + upper flanks.
+  back,
+
+  /// In front of the table edge: near flanks.
+  front,
+}
+
+/// Re-tiering + re-anchoring rule for the Cycle C spatial rebalance.
+@immutable
+class Act0SceneTieredSeatingV1 {
+  const Act0SceneTieredSeatingV1({
+    this.worldWidenFraction = 0.32,
+    this.topLiftFraction = 0.06,
+    this.bottomDropFraction = 0.04,
+  });
+
+  static const Act0SceneTieredSeatingV1 candidateV1 =
+      Act0SceneTieredSeatingV1();
+
+  /// How much wider than the felt stage the opponent world is, total
+  /// (split evenly left/right).
+  final double worldWidenFraction;
+
+  /// How far above the stage the world box starts, as a stage-height fraction.
+  final double topLiftFraction;
+
+  /// How far below the stage the world box ends, as a stage-height fraction.
+  final double bottomDropFraction;
+
+  Act0SceneOpponentTierV1 tierFor(Act0SceneSeatSlotV1 slot) {
+    final offCentre = (slot.plateAnchor.dx - 0.5).abs();
+    if (offCentre < 0.15) return Act0SceneOpponentTierV1.farCentre;
+    if (slot.depth < 0.5) return Act0SceneOpponentTierV1.upperFlank;
+    return Act0SceneOpponentTierV1.nearFlank;
+  }
+
+  bool paintsOn(Act0SceneOpponentTierV1 tier, Act0SceneTieredPlaneV1 plane) {
+    final front = tier == Act0SceneOpponentTierV1.nearFlank;
+    return front == (plane == Act0SceneTieredPlaneV1.front);
+  }
+
+  /// Anchor of the figure centre, in *world* fractions (0..1 of the widened
+  /// box). `side` is -1 for a left seat, +1 for a right seat.
+  Offset worldAnchorFor(Act0SceneOpponentTierV1 tier, double side) {
+    switch (tier) {
+      case Act0SceneOpponentTierV1.farCentre:
+        return const Offset(0.5, 0.085);
+      case Act0SceneOpponentTierV1.upperFlank:
+        return Offset(side < 0 ? 0.10 : 0.90, 0.27);
+      case Act0SceneOpponentTierV1.nearFlank:
+        return Offset(side < 0 ? 0.055 : 0.945, 0.80);
+    }
+  }
+
+  /// Envelope scale multiplier on the seat's base volume.
+  double scaleFor(Act0SceneOpponentTierV1 tier) {
+    switch (tier) {
+      case Act0SceneOpponentTierV1.farCentre:
+        return 0.95;
+      case Act0SceneOpponentTierV1.upperFlank:
+        return 1.35;
+      case Act0SceneOpponentTierV1.nearFlank:
+        return 1.55;
+    }
+  }
+
+  /// Inward turn, -1..1, feeding the figure painter's `facing`.
+  double facingFor(Act0SceneOpponentTierV1 tier, double side) {
+    switch (tier) {
+      case Act0SceneOpponentTierV1.farCentre:
+        return 0.05;
+      case Act0SceneOpponentTierV1.upperFlank:
+        return side < 0 ? 0.62 : -0.62;
+      case Act0SceneOpponentTierV1.nearFlank:
+        return side < 0 ? 0.92 : -0.92;
+    }
+  }
+}
+
+/// The Cycle C tiered opponent layer. Renders exactly the tiers that belong on
+/// [plane]; instantiate once per plane inside the scene stack.
+class Act0SceneTieredOpponentLayerV1 extends StatelessWidget {
+  const Act0SceneTieredOpponentLayerV1({
+    super.key,
+    required this.slots,
+    required this.plane,
+    this.foldedSeatIds = const <String>{},
+    this.rules = Act0SceneTieredSeatingV1.candidateV1,
+    this.light = Act0SceneLightV1.canonical,
+    this.perspective = Act0ScenePerspectiveV1.canonical,
+  });
+
+  final List<Act0SceneSeatSlotV1> slots;
+  final Act0SceneTieredPlaneV1 plane;
+  final Set<String> foldedSeatIds;
+  final Act0SceneTieredSeatingV1 rules;
+  final Act0SceneLightV1 light;
+  final Act0ScenePerspectiveV1 perspective;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final height = constraints.maxHeight;
+        if (width <= 0 || height <= 0) return const SizedBox.shrink();
+
+        final opponents = slots.where((s) => !s.isHero).toList()
+          ..sort((a, b) => a.depth.compareTo(b.depth));
+
+        final children = <Widget>[];
+        for (final slot in opponents) {
+          final tier = rules.tierFor(slot);
+          if (!rules.paintsOn(tier, plane)) continue;
+          final side = slot.plateAnchor.dx < 0.5 ? -1.0 : 1.0;
+          final anchor = tier == Act0SceneOpponentTierV1.farCentre
+              ? rules.worldAnchorFor(tier, side)
+              : rules.worldAnchorFor(tier, side);
+          final scale = rules.scaleFor(tier);
+          final baseBox = slot.volumeSize(
+            width / (1 + rules.worldWidenFraction),
+          );
+          final box = Size(baseBox.width * scale, baseBox.height * scale);
+          final isPilot = Act0ScenePilotCharacterAssetV1.isFarCentrePilotSeat(
+            slot,
+          );
+          final folded = foldedSeatIds.contains(slot.seatId);
+          children.add(
+            Positioned(
+              left: width * anchor.dx,
+              top: height * anchor.dy,
+              child: FractionalTranslation(
+                translation: const Offset(-0.5, -0.5),
+                child: SizedBox(
+                  key: Key('act0_scene_player_figure_${slot.seatId}'),
+                  width: box.width,
+                  height: box.height,
+                  child: IgnorePointer(
+                    child: isPilot
+                        ? Act0ScenePlayerFigureV1(
+                            slot: slot,
+                            size: box,
+                            posture: folded
+                                ? Act0ScenePlayerPostureV1.folded
+                                : Act0ScenePlayerPostureV1.inHand,
+                            light: light,
+                            perspective: perspective,
+                          )
+                        : CustomPaint(
+                            size: box,
+                            painter: _Act0SceneDiagnosticSeatedProxyPainterV1(
+                              tier: tier,
+                              side: side,
+                              facing: rules.facingFor(tier, side),
+                              depth: slot.depth,
+                              haze: perspective.hazeAt(slot.depth),
+                              folded: folded,
+                              archetype: act0ScenePlayerArchetypeForSeatV1(
+                                slot.seatId,
+                              ),
+                              light: light,
+                            ),
+                          ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+        return Stack(clipBehavior: Clip.none, children: children);
+      },
+    );
+  }
+}
+
+/// Diagnostic seated-body proxy: enough head / neck / shoulder / torso / chair
+/// / arm volume to judge whether an envelope reads as a seated person. NOT
+/// production art.
+class _Act0SceneDiagnosticSeatedProxyPainterV1 extends CustomPainter {
+  const _Act0SceneDiagnosticSeatedProxyPainterV1({
+    required this.tier,
+    required this.side,
+    required this.facing,
+    required this.depth,
+    required this.haze,
+    required this.folded,
+    required this.archetype,
+    required this.light,
+  });
+
+  final Act0SceneOpponentTierV1 tier;
+  final double side;
+  final double facing;
+  final double depth;
+  final double haze;
+  final bool folded;
+  final Act0ScenePlayerArchetypeV1 archetype;
+  final Act0SceneLightV1 light;
+
+  static const Color _roomTone = Color(0xFF1B3350);
+
+  Color _recede(Color base) => Color.lerp(base, _roomTone, haze * 0.62)!;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+    final skin = _recede(archetype.skin);
+    final hair = _recede(archetype.hair);
+    final cloth = _recede(archetype.garmentTone);
+    final clothShade = Color.lerp(cloth, const Color(0xFF040A12), 0.45)!;
+    final chair = Color.lerp(clothShade, _roomTone, 0.35)!;
+
+    // Head sits high in the box; the near tier crops tighter so its large
+    // envelope reads as head + shoulder + arm rather than a torso over the felt.
+    final headCY =
+        h * (tier == Act0SceneOpponentTierV1.nearFlank ? 0.22 : 0.30);
+    final headR =
+        w * (tier == Act0SceneOpponentTierV1.nearFlank ? 0.185 : 0.22);
+    final headCX = w * (0.5 + (facing * 0.08));
+    final shoulderY = headCY + (headR * 1.7);
+    final shoulderHalf = w * (folded ? 0.30 : 0.36);
+
+    // Chair back — the furniture mass that reads as "seated".
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(
+          headCX - shoulderHalf * 1.15,
+          headCY - headR * 0.4,
+          shoulderHalf * 2.3,
+          h - (headCY - headR * 0.4),
+        ),
+        Radius.circular(w * 0.16),
+      ),
+      Paint()..color = chair,
+    );
+
+    // Torso — tapers from shoulders to the bottom of frame.
+    final torso = Path()
+      ..moveTo(headCX - shoulderHalf, shoulderY)
+      ..quadraticBezierTo(
+        headCX - shoulderHalf * 1.02,
+        shoulderY + (h - shoulderY) * 0.5,
+        headCX - shoulderHalf * 0.86,
+        h,
+      )
+      ..lineTo(headCX + shoulderHalf * 0.86, h)
+      ..quadraticBezierTo(
+        headCX + shoulderHalf * 1.02,
+        shoulderY + (h - shoulderY) * 0.5,
+        headCX + shoulderHalf,
+        shoulderY,
+      )
+      ..quadraticBezierTo(
+        headCX,
+        shoulderY - headR * 0.9,
+        headCX - shoulderHalf,
+        shoulderY,
+      )
+      ..close();
+    canvas.drawPath(
+      torso,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: <Color>[
+            Color.lerp(cloth, Act0SceneLightV1.specular, 0.12)!,
+            cloth,
+            clothShade,
+          ],
+          stops: const <double>[0, 0.4, 1],
+        ).createShader(Rect.fromLTWH(0, shoulderY - h * 0.1, w, h)),
+    );
+
+    // Near arm reaching toward the felt / rail.
+    if (tier != Act0SceneOpponentTierV1.farCentre && !folded) {
+      final ax = headCX + (shoulderHalf * 0.7 * facing.sign);
+      canvas.drawPath(
+        Path()
+          ..moveTo(ax, shoulderY + h * 0.02)
+          ..quadraticBezierTo(
+            ax + (w * 0.16 * facing.sign),
+            shoulderY + (h - shoulderY) * 0.42,
+            headCX + (w * 0.34 * facing.sign),
+            h * 0.92,
+          ),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.round
+          ..strokeJoin = StrokeJoin.round
+          ..strokeWidth = w * 0.16
+          ..color = cloth,
+      );
+    }
+
+    // Neck + head.
+    canvas.drawRect(
+      Rect.fromLTRB(
+        headCX - headR * 0.42,
+        headCY + headR * 0.35,
+        headCX + headR * 0.42,
+        shoulderY + h * 0.01,
+      ),
+      Paint()..color = Color.lerp(skin, clothShade, 0.4)!,
+    );
+    if (archetype.hairMass > 0.05) {
+      canvas.drawCircle(
+        Offset(headCX - headR * 0.08 * facing.sign, headCY - headR * 0.12),
+        headR * (1.05 + 0.2 * archetype.hairMass),
+        Paint()..color = hair,
+      );
+    }
+    canvas.drawCircle(Offset(headCX, headCY), headR, Paint()..color = skin);
+    if (archetype.hairMass > 0.05) {
+      canvas.save();
+      canvas.clipPath(
+        Path()..addOval(
+          Rect.fromCircle(center: Offset(headCX, headCY), radius: headR * 1.02),
+        ),
+      );
+      canvas.drawCircle(
+        Offset(
+          headCX - headR * 0.16 * facing.sign,
+          headCY - headR * (0.55 - 0.4 * archetype.hairMass),
+        ),
+        headR * (0.95 + 0.16 * archetype.hairMass),
+        Paint()..color = hair,
+      );
+      canvas.restore();
+    }
+
+    // Key-light rim along the head + inner shoulder.
+    final rimStrength =
+        (0.30 + 0.34 * depth) * (1 - haze * 0.4) * light.intensity;
+    final rim = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = math.max(1.1, w * 0.02)
+      ..color = Act0SceneLightV1.specular.withValues(
+        alpha: rimStrength.clamp(0.0, 0.8),
+      );
+    canvas.drawArc(
+      Rect.fromCircle(center: Offset(headCX, headCY), radius: headR * 1.03),
+      math.pi * 1.15,
+      math.pi * 0.7,
+      false,
+      rim,
+    );
+  }
+
+  @override
+  bool shouldRepaint(
+    covariant _Act0SceneDiagnosticSeatedProxyPainterV1 oldDelegate,
+  ) =>
+      oldDelegate.tier != tier ||
+      oldDelegate.facing != facing ||
+      oldDelegate.depth != depth ||
+      oldDelegate.haze != haze ||
+      oldDelegate.folded != folded ||
+      oldDelegate.archetype != archetype ||
+      oldDelegate.light.intensity != light.intensity;
+}
+
 /// The learner, from the learner's own seat.
 ///
 /// Strictly first-person: sleeves, cuffs and the backs of the hands on the

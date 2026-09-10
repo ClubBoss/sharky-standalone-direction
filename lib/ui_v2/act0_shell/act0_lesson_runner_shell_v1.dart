@@ -3685,7 +3685,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     return LayoutBuilder(
       key: const Key('act0_shell_canonical_scene_box'),
       builder: (context, sceneConstraints) {
-        const camera = Act0SceneCameraV1.canonical;
+        // CYCLE C — STRUCTURAL_REBALANCE_V2 experimental camera (lowered far
+        // rail for coach headroom + far-centre relief). Swap back to
+        // `Act0SceneCameraV1.canonical` to A/B against frozen geometry.
+        const camera = Act0SceneCameraV1.cycleCRebalanceV2;
         final sceneBox = sceneConstraints.biggest;
         final stageRect = camera.stageRect(sceneBox);
         return Stack(
@@ -11189,18 +11192,57 @@ class _Act0TableV1 extends StatelessWidget {
               ),
             ),
           ),
-          Positioned.fill(
-            child: Act0SceneRecedeMotionV1(
-              motion: sceneMotion,
-              plane: Act0SceneRecedePlaneV1.player,
-              child: Act0ScenePlayerLayerV1(
-                key: const Key('act0_scene_player_volume_plane'),
-                slots: sceneSeatSlots,
-                foldedSeatIds: inactiveSeatIds,
+          // CYCLE C — BOUNDED_SPATIAL_REBALANCE_V1: on the canonical camera
+          // path the flat single-plane opponent layer is replaced by a tiered
+          // layer laid out in a world wider than the felt. Back plane (far
+          // centre + upper flanks) here; near-flank front plane after `scene`.
+          if (cameraStageSize != null)
+            Positioned(
+              left: -cameraStageSize.width * 0.16,
+              right: -cameraStageSize.width * 0.16,
+              top: -cameraStageSize.height * 0.06,
+              bottom: -cameraStageSize.height * 0.04,
+              child: Act0SceneRecedeMotionV1(
+                motion: sceneMotion,
+                plane: Act0SceneRecedePlaneV1.player,
+                child: Act0SceneTieredOpponentLayerV1(
+                  key: const Key('act0_scene_player_volume_plane'),
+                  slots: sceneSeatSlots,
+                  plane: Act0SceneTieredPlaneV1.back,
+                  foldedSeatIds: inactiveSeatIds,
+                ),
+              ),
+            )
+          else
+            Positioned.fill(
+              child: Act0SceneRecedeMotionV1(
+                motion: sceneMotion,
+                plane: Act0SceneRecedePlaneV1.player,
+                child: Act0ScenePlayerLayerV1(
+                  key: const Key('act0_scene_player_volume_plane'),
+                  slots: sceneSeatSlots,
+                  foldedSeatIds: inactiveSeatIds,
+                ),
               ),
             ),
-          ),
           scene,
+          if (cameraStageSize != null)
+            Positioned(
+              left: -cameraStageSize.width * 0.16,
+              right: -cameraStageSize.width * 0.16,
+              top: -cameraStageSize.height * 0.06,
+              bottom: -cameraStageSize.height * 0.04,
+              child: Act0SceneRecedeMotionV1(
+                motion: sceneMotion,
+                plane: Act0SceneRecedePlaneV1.player,
+                child: Act0SceneTieredOpponentLayerV1(
+                  key: const Key('act0_scene_player_front_plane'),
+                  slots: sceneSeatSlots,
+                  plane: Act0SceneTieredPlaneV1.front,
+                  foldedSeatIds: inactiveSeatIds,
+                ),
+              ),
+            ),
           if (heroSceneSlot != null)
             Positioned.fill(
               child: Act0SceneRecedeMotionV1(

@@ -169,6 +169,24 @@ class Act0SceneCameraV1 {
 
   static const Act0SceneCameraV1 canonical = Act0SceneCameraV1();
 
+  /// CYCLE C — STRUCTURAL_REBALANCE_V2 experimental camera.
+  ///
+  /// The bounded-rebalance V1 candidate proved the tiered opponent world but
+  /// left one residual structural owner: TOP_VERTICAL_BUDGET. At the frozen
+  /// `farRailFraction 0.225` there is ~197 px from the screen top to the far
+  /// rail, while the R2.3 coach surface needs ~180 px and the far-centre
+  /// opponent needs ~55 px of head relief above the rail — a ~40 px deficit
+  /// that pushes the far player under the coach or under the felt.
+  ///
+  /// This camera lowers the far rail (0.225 -> 0.27) to open that budget and
+  /// trims the projected height (0.50 -> 0.47) so the near rail only nets
+  /// ~13 px lower and still clears the control shelf. Width and taper are
+  /// unchanged. Experimental — not admitted to `canonical`.
+  static const Act0SceneCameraV1 cycleCRebalanceV2 = Act0SceneCameraV1(
+    farRailFraction: 0.27,
+    projectedTableHeightFraction: 0.47,
+  );
+
   /// Outer table silhouette width, as a fraction of the scene box width.
   final double outerTableWidthFraction;
 
