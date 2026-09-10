@@ -180,6 +180,7 @@ class Act0ScenePlayerFigureV1 extends StatelessWidget {
     required this.slot,
     required this.size,
     required this.posture,
+    this.facingOverride,
     this.light = Act0SceneLightV1.canonical,
     this.perspective = Act0ScenePerspectiveV1.canonical,
   });
@@ -187,13 +188,21 @@ class Act0ScenePlayerFigureV1 extends StatelessWidget {
   final Act0SceneSeatSlotV1 slot;
   final Size size;
   final Act0ScenePlayerPostureV1 posture;
+
+  /// Explicit inward turn, `-1..1`, when the caller owns a seat grammar richer
+  /// than the seat's own plate anchor — the V2 tiered opponent layer sets this
+  /// per depth tier. `null` keeps the anchor-derived facing.
+  final double? facingOverride;
+
   final Act0SceneLightV1 light;
   final Act0ScenePerspectiveV1 perspective;
 
   @override
   Widget build(BuildContext context) {
     // Which way this seat turns to face the pot, from its own anchor.
-    final facing = ((0.5 - slot.plateAnchor.dx) * 2.4).clamp(-1.0, 1.0);
+    final facing =
+        facingOverride?.clamp(-1.0, 1.0) ??
+        ((0.5 - slot.plateAnchor.dx) * 2.4).clamp(-1.0, 1.0);
     return IgnorePointer(
       child: SizedBox(
         width: size.width,
@@ -558,6 +567,217 @@ class Act0ScenePlayerLayerV1 extends StatelessWidget {
               ),
           ],
         );
+      },
+    );
+  }
+}
+
+// ===========================================================================
+// V2 PRODUCTION SPATIAL SKELETON — tiered opponent seating
+//
+// PR #213 / `V2_PRODUCTION_SPATIAL_BASELINE`. The owner closed structural
+// visual exploration and admitted the Cycle C V2 spatial arrangement as the
+// production learning-scene baseline. The flat single-plane
+// `Act0ScenePlayerLayerV1` (retained for the non-camera preview surface)
+// is replaced, on the camera-owned scene path, by this tiered layer.
+//
+// Three admitted V2 principles, all owned here:
+//   1. OPPONENT WORLD > FELT/TABLE STAGE — opponents are laid out in a world
+//      wider than the felt ([Act0SceneTieredSeatingV1.worldWidenFraction]),
+//      so upper/near flanks sit in visible room OUTSIDE the table instead of
+//      being pinched into ~16 px slivers between their anchor and the felt
+//      edge.
+//   2. THREE DEPTH TIERS — every opponent is re-tiered far-centre /
+//      upper-flank / near-flank, each with its own world anchor, envelope
+//      scale and inward facing, giving a real depth ladder.
+//   3. FRONT / BACK PLANES — far-centre + upper-flank opponents paint on the
+//      rear plane (before the table); near-flank opponents paint on the
+//      foreground plane (after the table) so the felt edge produces
+//      intentional seated occlusion, the way the Hero foreground does.
+//
+// No final opponent art is introduced here: every seat uses the existing
+// production procedural figure ([Act0ScenePlayerFigureV1]). This wave proves
+// spatial production plumbing, not final visible character quality.
+//
+// 9-max intra-tier fan-out is DEFERRED / NOT_ADMITTED and is deliberately
+// not implemented; the tier grammar stays extensible for it later.
+// ===========================================================================
+
+/// Depth tier of a re-tiered opponent seat.
+enum Act0SceneOpponentTierV1 { farCentre, upperFlank, nearFlank }
+
+/// Which composited plane a tiered opponent layer paints.
+enum Act0SceneTieredPlaneV1 {
+  /// Behind the table: far-centre + upper flanks.
+  back,
+
+  /// In front of the table edge: near flanks.
+  front,
+}
+
+/// The admitted V2 re-tiering + re-anchoring rule.
+///
+/// Constants are the Cycle C V2 values the owner adjudicated; this wave
+/// productionizes them and does not retune them. Structural exploration is
+/// closed and the family is refrozen at V2.
+@immutable
+class Act0SceneTieredSeatingV1 {
+  const Act0SceneTieredSeatingV1({
+    this.worldWidenFraction = 0.32,
+    this.topLiftFraction = 0.06,
+    this.bottomDropFraction = 0.04,
+  });
+
+  /// The one production tiered-seating rule.
+  static const Act0SceneTieredSeatingV1 production = Act0SceneTieredSeatingV1();
+
+  /// How much wider than the felt stage the opponent world is, total, split
+  /// evenly left/right.
+  final double worldWidenFraction;
+
+  /// How far above the stage the opponent world box starts, as a fraction of
+  /// stage height.
+  final double topLiftFraction;
+
+  /// How far below the stage the opponent world box ends, as a fraction of
+  /// stage height.
+  final double bottomDropFraction;
+
+  /// Left inset (negative -> wider than the stage) for the widened world box.
+  double horizontalInsetFor(double stageWidth) =>
+      -stageWidth * (worldWidenFraction / 2);
+
+  double topInsetFor(double stageHeight) => -stageHeight * topLiftFraction;
+
+  double bottomInsetFor(double stageHeight) =>
+      -stageHeight * bottomDropFraction;
+
+  /// Which depth tier a seat belongs to, from its projected plate anchor.
+  Act0SceneOpponentTierV1 tierFor(Act0SceneSeatSlotV1 slot) {
+    final offCentre = (slot.plateAnchor.dx - 0.5).abs();
+    if (offCentre < 0.15) return Act0SceneOpponentTierV1.farCentre;
+    if (slot.depth < 0.5) return Act0SceneOpponentTierV1.upperFlank;
+    return Act0SceneOpponentTierV1.nearFlank;
+  }
+
+  /// Whether [tier] paints on [plane]. Near-flank is the only front-plane tier.
+  bool paintsOn(Act0SceneOpponentTierV1 tier, Act0SceneTieredPlaneV1 plane) {
+    final front = tier == Act0SceneOpponentTierV1.nearFlank;
+    return front == (plane == Act0SceneTieredPlaneV1.front);
+  }
+
+  /// Figure-centre anchor in *world* fractions (0..1 of the widened box).
+  /// [side] is `-1` for a left seat, `+1` for a right seat.
+  Offset worldAnchorFor(Act0SceneOpponentTierV1 tier, double side) {
+    switch (tier) {
+      case Act0SceneOpponentTierV1.farCentre:
+        return const Offset(0.50, 0.085);
+      case Act0SceneOpponentTierV1.upperFlank:
+        return Offset(side < 0 ? 0.10 : 0.90, 0.27);
+      case Act0SceneOpponentTierV1.nearFlank:
+        return Offset(side < 0 ? 0.055 : 0.945, 0.80);
+    }
+  }
+
+  /// Envelope scale multiplier on the seat's depth-resolved base volume.
+  double scaleFor(Act0SceneOpponentTierV1 tier) {
+    switch (tier) {
+      case Act0SceneOpponentTierV1.farCentre:
+        return 0.95;
+      case Act0SceneOpponentTierV1.upperFlank:
+        return 1.35;
+      case Act0SceneOpponentTierV1.nearFlank:
+        return 1.55;
+    }
+  }
+
+  /// Inward turn, `-1..1`, feeding the figure painter's `facing`.
+  double facingFor(Act0SceneOpponentTierV1 tier, double side) {
+    switch (tier) {
+      case Act0SceneOpponentTierV1.farCentre:
+        return 0.05;
+      case Act0SceneOpponentTierV1.upperFlank:
+        return side < 0 ? 0.62 : -0.62;
+      case Act0SceneOpponentTierV1.nearFlank:
+        return side < 0 ? 0.92 : -0.92;
+    }
+  }
+}
+
+/// The V2 tiered opponent layer. Renders exactly the tiers that belong on
+/// [plane]; the scene stack instantiates it once per plane (back before the
+/// table, front after it) inside a world box widened per
+/// [Act0SceneTieredSeatingV1].
+class Act0SceneTieredOpponentLayerV1 extends StatelessWidget {
+  const Act0SceneTieredOpponentLayerV1({
+    super.key,
+    required this.slots,
+    required this.plane,
+    this.foldedSeatIds = const <String>{},
+    this.rules = Act0SceneTieredSeatingV1.production,
+    this.light = Act0SceneLightV1.canonical,
+    this.perspective = Act0ScenePerspectiveV1.canonical,
+  });
+
+  final List<Act0SceneSeatSlotV1> slots;
+  final Act0SceneTieredPlaneV1 plane;
+  final Set<String> foldedSeatIds;
+  final Act0SceneTieredSeatingV1 rules;
+  final Act0SceneLightV1 light;
+  final Act0ScenePerspectiveV1 perspective;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final height = constraints.maxHeight;
+        if (width <= 0 || height <= 0) return const SizedBox.shrink();
+
+        // Far first, so nearer players overlap their neighbours correctly.
+        final opponents = [...slots.where((slot) => !slot.isHero)]
+          ..sort((a, b) => a.depth.compareTo(b.depth));
+
+        // The seat's base volume is resolved against the felt-stage width, not
+        // the widened world width, so widening the world does not also inflate
+        // every figure.
+        final stageWidth = width / (1 + rules.worldWidenFraction);
+
+        final children = <Widget>[];
+        for (final slot in opponents) {
+          final tier = rules.tierFor(slot);
+          if (!rules.paintsOn(tier, plane)) continue;
+          final side = slot.plateAnchor.dx < 0.5 ? -1.0 : 1.0;
+          final anchor = rules.worldAnchorFor(tier, side);
+          final scale = rules.scaleFor(tier);
+          final baseBox = slot.volumeSize(stageWidth);
+          final box = Size(baseBox.width * scale, baseBox.height * scale);
+          children.add(
+            Positioned(
+              left: width * anchor.dx,
+              top: height * anchor.dy,
+              child: FractionalTranslation(
+                translation: const Offset(-0.5, -0.5),
+                child: SizedBox(
+                  key: Key('act0_scene_player_figure_${slot.seatId}'),
+                  width: box.width,
+                  height: box.height,
+                  child: Act0ScenePlayerFigureV1(
+                    slot: slot,
+                    size: box,
+                    posture: foldedSeatIds.contains(slot.seatId)
+                        ? Act0ScenePlayerPostureV1.folded
+                        : Act0ScenePlayerPostureV1.inHand,
+                    facingOverride: rules.facingFor(tier, side),
+                    light: light,
+                    perspective: perspective,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+        return Stack(clipBehavior: Clip.none, children: children);
       },
     );
   }

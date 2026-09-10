@@ -157,12 +157,24 @@ const Offset act0SceneCentreV1 = Offset(0.5, 0.52);
 /// hybrids). The winning hybrid takes B's physical width, C's projected depth,
 /// and a far rail placed so the near rail clears the control shelf by the hero
 /// foreground reservation.
+///
+/// PR #213 / `V2_PRODUCTION_SPATIAL_BASELINE` / `V2_CAMERA_EXCEPTION`: the owner
+/// closed structural visual exploration and admitted the Cycle C V2 spatial
+/// baseline. Exactly two constants move, as a bounded evidence-backed exception
+/// to the PR #203 / `CAMERA_RETUNE_AGAIN` freeze:
+///   * `farRailFraction` `0.225 -> 0.27` — lowers the far rail so the reserved
+///     Coach Surface budget and far-centre head relief both fit above it;
+///   * `projectedTableHeightFraction` `0.50 -> 0.47` — trims projected depth so
+///     the near rail only nets ~13 px lower and still clears the control shelf.
+/// `outerTableWidthFraction`, the perspective taper and every other scene-depth
+/// constant stay FROZEN under PR #203. The spatial family REFREEZES at V2; no
+/// further camera / taper / perspective / table-width work is admitted.
 @immutable
 class Act0SceneCameraV1 {
   const Act0SceneCameraV1({
     this.outerTableWidthFraction = 0.810,
-    this.projectedTableHeightFraction = 0.500,
-    this.farRailFraction = 0.225,
+    this.projectedTableHeightFraction = 0.470,
+    this.farRailFraction = 0.270,
     this.horizonOffsetFraction = 0.020,
     this.commitmentSeatSeparation = 0.006,
   });

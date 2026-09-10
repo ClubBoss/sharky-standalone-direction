@@ -11140,6 +11140,35 @@ class _Act0TableV1 extends StatelessWidget {
     if (!integratedPerspectivePrototype) {
       return scene;
     }
+    // PR #213 / V2_PRODUCTION_SPATIAL_BASELINE: one tiered opponent plane,
+    // laid out in a world widened past the felt stage per
+    // `Act0SceneTieredSeatingV1`. Instantiated twice — back plane before the
+    // table, front plane after it — so near-flank bodies are occluded by the
+    // felt edge the way the Hero foreground is.
+    Widget tieredOpponentPlane(
+      Size stageSize,
+      Act0SceneTieredPlaneV1 plane,
+      Key key,
+    ) {
+      const rules = Act0SceneTieredSeatingV1.production;
+      return Positioned(
+        left: rules.horizontalInsetFor(stageSize.width),
+        right: rules.horizontalInsetFor(stageSize.width),
+        top: rules.topInsetFor(stageSize.height),
+        bottom: rules.bottomInsetFor(stageSize.height),
+        child: Act0SceneRecedeMotionV1(
+          motion: sceneMotion,
+          plane: Act0SceneRecedePlaneV1.player,
+          child: Act0SceneTieredOpponentLayerV1(
+            key: key,
+            slots: sceneSeatSlots,
+            plane: plane,
+            foldedSeatIds: inactiveSeatIds,
+          ),
+        ),
+      );
+    }
+
     // B1 scene assembly. The table keeps every Wave A responsibility; it is
     // now mounted inside a room instead of floating in unowned app space.
     // Painting order is the canonical plane order: environment, grounding,
@@ -11189,18 +11218,37 @@ class _Act0TableV1 extends StatelessWidget {
               ),
             ),
           ),
-          Positioned.fill(
-            child: Act0SceneRecedeMotionV1(
-              motion: sceneMotion,
-              plane: Act0SceneRecedePlaneV1.player,
-              child: Act0ScenePlayerLayerV1(
-                key: const Key('act0_scene_player_volume_plane'),
-                slots: sceneSeatSlots,
-                foldedSeatIds: inactiveSeatIds,
+          // PR #213 / V2_PRODUCTION_SPATIAL_BASELINE: on the camera-owned scene
+          // path the flat single-plane opponent layer is replaced by the V2
+          // tiered layer (back plane here, front plane after `scene`). The
+          // `else` branch keeps the pre-existing flat layer for the non-camera
+          // preview surface — it is not an A/B spatial-family switch; there is
+          // one production spatial family (V2).
+          if (cameraStageSize != null)
+            tieredOpponentPlane(
+              cameraStageSize,
+              Act0SceneTieredPlaneV1.back,
+              const Key('act0_scene_player_volume_plane'),
+            )
+          else
+            Positioned.fill(
+              child: Act0SceneRecedeMotionV1(
+                motion: sceneMotion,
+                plane: Act0SceneRecedePlaneV1.player,
+                child: Act0ScenePlayerLayerV1(
+                  key: const Key('act0_scene_player_volume_plane'),
+                  slots: sceneSeatSlots,
+                  foldedSeatIds: inactiveSeatIds,
+                ),
               ),
             ),
-          ),
           scene,
+          if (cameraStageSize != null)
+            tieredOpponentPlane(
+              cameraStageSize,
+              Act0SceneTieredPlaneV1.front,
+              const Key('act0_scene_player_front_plane'),
+            ),
           if (heroSceneSlot != null)
             Positioned.fill(
               child: Act0SceneRecedeMotionV1(
