@@ -52,19 +52,19 @@ act0SharkySceneCoachScaffoldForAttentionPhaseV1(
     ),
     Act0SceneAttentionPhaseV1.recheck => (
       tier: Act0SharkyCoachScaffoldTierV1.quiet,
-      avatarSize: 22.0,
+      avatarSize: 30.0,
     ),
     Act0SceneAttentionPhaseV1.repair => (
       tier: Act0SharkyCoachScaffoldTierV1.spoken,
-      avatarSize: 46.0,
+      avatarSize: 84.0,
     ),
     Act0SceneAttentionPhaseV1.correctFeedback => (
       tier: Act0SharkyCoachScaffoldTierV1.spoken,
-      avatarSize: 40.0,
+      avatarSize: 80.0,
     ),
     Act0SceneAttentionPhaseV1.wrongFeedback => (
       tier: Act0SharkyCoachScaffoldTierV1.spoken,
-      avatarSize: 52.0,
+      avatarSize: 88.0,
     ),
   };
 }
@@ -147,17 +147,17 @@ class _Act0SharkySpokenSurfaceV1 extends StatelessWidget {
       children: [
         Positioned(
           left: -7,
-          top: 16,
+          top: 24,
           child: Transform.rotate(
             angle: 0.2,
             child: Container(
-              width: 12,
-              height: 12,
+              width: 14,
+              height: 14,
               decoration: BoxDecoration(
-                color: tone.withValues(alpha: 0.10),
+                color: Act0ShellTokensV1.surface.withValues(alpha: 0.98),
                 border: Border(
-                  left: BorderSide(color: tone.withValues(alpha: 0.32)),
-                  bottom: BorderSide(color: tone.withValues(alpha: 0.32)),
+                  left: BorderSide(color: tone.withValues(alpha: 0.34)),
+                  bottom: BorderSide(color: tone.withValues(alpha: 0.34)),
                 ),
               ),
             ),
@@ -165,11 +165,18 @@ class _Act0SharkySpokenSurfaceV1 extends StatelessWidget {
         ),
         Container(
           key: const Key('act0_shell_learning_scene_sharky_spoken_surface'),
-          padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+          padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
           decoration: BoxDecoration(
-            color: tone.withValues(alpha: 0.10),
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
-            border: Border.all(color: tone.withValues(alpha: 0.32)),
+            color: Act0ShellTokensV1.surface.withValues(alpha: 0.98),
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+            border: Border.all(color: tone.withValues(alpha: 0.34)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: tone.withValues(alpha: 0.10),
+                blurRadius: 18,
+                offset: const Offset(0, 8),
+              ),
+            ],
           ),
           child: child,
         ),
@@ -255,6 +262,19 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
       children: [
         Row(
           children: [
+            if (showSpokenSurface) ...[
+              Text(
+                'Sharky',
+                key: const Key('act0_learning_scene_v3_coach_owner'),
+                style: Act0ShellTokensV1.label.copyWith(
+                  color: tone,
+                  fontSize: 11.4,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0.1,
+                ),
+              ),
+              const SizedBox(width: 7),
+            ],
             Expanded(
               child: Text(
                 eyebrow,
@@ -263,10 +283,12 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
                 overflow: TextOverflow.fade,
                 softWrap: false,
                 style: Act0ShellTokensV1.label.copyWith(
-                  color: tone,
-                  fontSize: 10.2,
+                  color: showSpokenSurface
+                      ? Act0ShellTokensV1.textMuted
+                      : tone,
+                  fontSize: showSpokenSurface ? 8.8 : 10.2,
                   fontWeight: FontWeight.w900,
-                  letterSpacing: 0.65,
+                  letterSpacing: showSpokenSurface ? 0.35 : 0.65,
                 ),
               ),
             ),
@@ -282,51 +304,64 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(height: 2),
+        SizedBox(height: showSpokenSurface ? 3 : 2),
         Text(
           headline,
           key: const Key('act0_integrated_scene_prompt'),
-          maxLines: enlarged ? 3 : 2,
+          maxLines: showSpokenSurface ? 3 : (enlarged ? 3 : 2),
           overflow: TextOverflow.ellipsis,
           style: Act0ShellTokensV1.body.copyWith(
             color: Act0ShellTokensV1.text,
-            fontSize: enlarged ? 15.2 : 16.0,
+            fontSize: showSpokenSurface
+                ? (enlarged ? 15.4 : 16.4)
+                : (enlarged ? 15.2 : 16.0),
             fontWeight: FontWeight.w900,
-            height: 1.08,
+            height: showSpokenSurface ? 1.10 : 1.08,
           ),
         ),
         if (support.trim().isNotEmpty) ...[
-          const SizedBox(height: 3),
+          SizedBox(height: showSpokenSurface ? 4 : 3),
           Text(
             support,
             key: const Key('act0_learning_scene_v3_support'),
-            maxLines: enlarged ? 3 : 2,
+            maxLines: showSpokenSurface ? 3 : (enlarged ? 3 : 2),
             overflow: TextOverflow.ellipsis,
             style: Act0ShellTokensV1.muted.copyWith(
               color: Act0ShellTokensV1.textMuted,
-              fontSize: enlarged ? 12.2 : 11.4,
-              height: 1.16,
+              fontSize: showSpokenSurface
+                  ? (enlarged ? 12.0 : 11.8)
+                  : (enlarged ? 12.2 : 11.4),
+              height: showSpokenSurface ? 1.18 : 1.16,
               fontWeight: FontWeight.w700,
             ),
           ),
         ],
         if ((focusLabel ?? '').trim().isNotEmpty) ...[
-          const SizedBox(height: 5),
+          SizedBox(height: showSpokenSurface ? 6 : 5),
           Row(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.south_rounded, size: 12, color: tone),
+              Padding(
+                padding: EdgeInsets.only(top: showSpokenSurface ? 1 : 0),
+                child: Icon(
+                  Icons.south_rounded,
+                  size: showSpokenSurface ? 13 : 12,
+                  color: tone,
+                ),
+              ),
               const SizedBox(width: 4),
               Flexible(
                 child: Text(
                   focusLabel!,
                   key: const Key('act0_learning_scene_v3_focus'),
-                  maxLines: 1,
+                  maxLines: showSpokenSurface ? 2 : 1,
                   overflow: TextOverflow.fade,
-                  softWrap: false,
+                  softWrap: showSpokenSurface,
                   style: Act0ShellTokensV1.label.copyWith(
                     color: tone,
-                    fontSize: 9.8,
+                    fontSize: showSpokenSurface ? 10.2 : 9.8,
+                    height: showSpokenSurface ? 1.14 : null,
                     letterSpacing: 0,
                   ),
                 ),
@@ -337,50 +372,65 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
       ],
     );
 
+    final guideBody = Row(
+      crossAxisAlignment: showSpokenSurface
+          ? CrossAxisAlignment.start
+          : CrossAxisAlignment.center,
+      children: [
+        if (showAvatar) ...[
+          ExcludeSemantics(
+            child: Act0SharkyCompanionAvatarV1(
+              key: const Key('act0_shell_learning_scene_sharky_avatar'),
+              state: sharkyState,
+              size: scaffold.avatarSize,
+              simpleFrame: !showSpokenSurface,
+              growthStage: growthStage,
+            ),
+          ),
+          SizedBox(
+            width: showSpokenSurface ? 10 : Act0ShellTokensV1.gapSm,
+          ),
+        ],
+        Expanded(
+          child: showSpokenSurface
+              ? _Act0SharkySpokenSurfaceV1(tone: tone, child: content)
+              : content,
+        ),
+      ],
+    );
+
     return Semantics(
       container: true,
       label: '$eyebrow. $headline. $support',
       child: Container(
         key: const Key('act0_wave_a_learning_context'),
         width: double.infinity,
-        margin: const EdgeInsets.fromLTRB(14, 1, 14, 1),
-        padding: EdgeInsets.fromLTRB(
-          12,
-          enlarged ? 6 : 5,
-          10,
-          enlarged ? 7 : 6,
+        margin: EdgeInsets.fromLTRB(
+          showSpokenSurface ? 10 : 14,
+          showSpokenSurface ? 3 : 1,
+          showSpokenSurface ? 10 : 14,
+          showSpokenSurface ? 3 : 1,
         ),
-        decoration: BoxDecoration(
-          border: Border(left: BorderSide(color: phaseTone, width: 3)),
-          gradient: LinearGradient(
-            colors: <Color>[
-              phaseTone.withValues(alpha: 0.11),
-              Colors.transparent,
-            ],
-          ),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            if (showAvatar) ...[
-              ExcludeSemantics(
-                child: Act0SharkyCompanionAvatarV1(
-                  key: const Key('act0_shell_learning_scene_sharky_avatar'),
-                  state: sharkyState,
-                  size: scaffold.avatarSize,
-                  simpleFrame: true,
-                  growthStage: growthStage,
+        padding: showSpokenSurface
+            ? const EdgeInsets.fromLTRB(2, 2, 2, 2)
+            : EdgeInsets.fromLTRB(
+                12,
+                enlarged ? 6 : 5,
+                10,
+                enlarged ? 7 : 6,
+              ),
+        decoration: showSpokenSurface
+            ? null
+            : BoxDecoration(
+                border: Border(left: BorderSide(color: phaseTone, width: 3)),
+                gradient: LinearGradient(
+                  colors: <Color>[
+                    phaseTone.withValues(alpha: 0.11),
+                    Colors.transparent,
+                  ],
                 ),
               ),
-              const SizedBox(width: Act0ShellTokensV1.gapSm),
-            ],
-            Expanded(
-              child: showSpokenSurface
-                  ? _Act0SharkySpokenSurfaceV1(tone: tone, child: content)
-                  : content,
-            ),
-          ],
-        ),
+        child: guideBody,
       ),
     );
   }
