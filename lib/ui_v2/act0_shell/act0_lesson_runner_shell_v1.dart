@@ -1249,6 +1249,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   String _learningRailSupportStepKey = '';
   bool _showTheoryPeek = false;
   bool _showFullIdeaInTheoryPeek = false;
+  bool _coachAssetWarmupRequested = false;
   late Act0RunnerCompositionFamilyV1 _compositionFamily;
   late String _compositionTaskKey;
 
@@ -1288,6 +1289,30 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     _maybeEmitTaskShownTelemetry();
     _compositionFamily = widget.compositionFamily;
     _compositionTaskKey = _compositionTaskIdentity(widget);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_coachAssetWarmupRequested) {
+      return;
+    }
+    _coachAssetWarmupRequested = true;
+
+    // The Coach Surface is hidden during DECIDE, which gives the current
+    // production asset time to decode before the first feedback frame. This
+    // keeps the shared renderer and its error handling authoritative while
+    // avoiding an empty mascot frame when feedback appears for the first time.
+    unawaited(
+      precacheImage(
+        AssetImage(
+          act0SharkyCompanionAssetForMoodV1(Act0SharkyMoodV1.neutral),
+        ),
+        context,
+      ).catchError((Object _) {
+        // The normal Image.asset errorBuilder remains the visible fallback.
+      }),
+    );
   }
 
   /// Resolves what the scene should render this frame for [phase].
