@@ -138,6 +138,10 @@ historical machine/HNP evidence provenance.
 - `CURRENT_STAGE = PRE_P02_NORTH_STAR_CONVERGENCE`
 - `ACTIVE_FAMILY = PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
 - `EXACT_NEXT_ACTION = EXECUTE_PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
+- `CURRENT_SUB_WAVE = IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1`
+- `STRUCTURAL_VISUAL_EXPLORATION = CLOSED`
+- `V2_PRODUCTION_SPATIAL_BASELINE = ADMITTED` (bounded camera exception, see section 4)
+- `9MAX_FANOUT = DEFERRED / NOT_ADMITTED`
 - `P02 = DEFERRED / NOT_CURRENT_GATE`
 - `P02_ENTRY_GATE_V2 = PRE_P02_NORTH_STAR_CONVERGENCE_DIMINISHING_RETURNS_REACHED`
 - `REAL_HUMAN_HNP = P01_EXECUTED_ACTIONABLE_STOP`
@@ -235,10 +239,41 @@ convergence work. Reopen only for:
 
 Current frozen ownership additionally preserves:
 
-- PR #203 canonical table geometry = `FROZEN`;
+- PR #203 canonical table geometry = `FROZEN`, except the single bounded
+  evidence-backed V2 camera exception admitted below;
 - PR #205 commitment ownership = `FROZEN`;
-- `CAMERA_RETUNE_AGAIN = NO`;
+- `CAMERA_RETUNE_AGAIN = NO`, except the single bounded V2 camera exception
+  admitted below;
 - `SHARKY_COACH_SURFACE_V1 = CLOSED_PASS` unless a real regression proves otherwise.
+
+### Bounded V2 production spatial baseline exception (owner-admitted 2026-09-10)
+
+Cycle C and Cycle D were a specifically admitted, evidence-backed bounded
+falsification of the pre-P02 learning-scene spatial baseline. The prior PR #203 /
+`CAMERA_RETUNE_AGAIN` freeze language was valid; this exception is narrow, not a
+reopening. The owner has adjudicated the evidence:
+
+- `STRUCTURAL_VISUAL_EXPLORATION = CLOSED`;
+- Cycle C V2 is admitted as the production spatial baseline
+  (`V2_PRODUCTION_SPATIAL_BASELINE = ADMITTED`);
+- one bounded camera exception is authorized against the PR #203 /
+  `CAMERA_RETUNE_AGAIN` freeze:
+  - `farRailFraction` `0.225 -> 0.27`;
+  - `projectedTableHeightFraction` `0.50 -> 0.47`;
+  - table width, taper, perspective and every other scene-geometry constant
+    remain `FROZEN` under PR #203 ownership;
+- after this admission the spatial family `REFREEZES` at V2. No further camera,
+  taper, perspective, table-width or structural-challenger work is admitted;
+- the Cycle D challenger is rejected / reference only;
+- `9MAX_FANOUT = DEFERRED / NOT_ADMITTED` — 9-max is not current product scope;
+- preserved V2 spatial principles: opponent world wider than the felt stage;
+  far-centre / upper-flank / near-flank depth tiers; front/back opponent planes;
+  deterministic geometry across learning states; Hero POV; poker-information
+  dominance; explicit Coach Surface reservation; transparent authored-character
+  asset seam.
+
+Provenance:
+`docs/_reviews/owner_cycle_d_structural_closure_and_v2_production_admission_v1.md`.
 
 Do not authorize by default:
 
@@ -906,6 +941,16 @@ and scene cohesion, while preserving frozen table geometry, frozen commitment
 ownership, poker truth, the evidence hierarchy, and one-family-at-a-time
 discipline.
 
+The current bounded sub-wave inside this family, per
+`docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`, is
+`IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1`: productionize the owner-admitted
+Cycle C V2 learning-scene spatial baseline (bounded camera exception + wide
+opponent world + three depth tiers + front/back planes), strip diagnostic and
+challenger machinery from the production path, and add no final art, no R2.3
+visual, no 9-max fan-out, no environment polish and no further camera/taper
+search. Structural visual exploration is `CLOSED`; the spatial family is
+refrozen at V2.
+
 The inherited reduced-motion proof beat remains
 `KNOWN_REQUIRED_PRE_FREEZE_MAINTENANCE` and must not displace this higher-EV
 current family. It must receive disposition before exact candidate freeze.
@@ -921,6 +966,11 @@ evidence.
 `CURRENT_STAGE = PRE_P02_NORTH_STAR_CONVERGENCE`
 `ACTIVE_FAMILY = PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
 `EXACT_NEXT_ACTION = EXECUTE_PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
+`CURRENT_SUB_WAVE = IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1`
+`STRUCTURAL_VISUAL_EXPLORATION = CLOSED`
+`V2_PRODUCTION_SPATIAL_BASELINE = ADMITTED`
+`V2_CAMERA_EXCEPTION = ADMITTED / REFROZEN (farRailFraction 0.225->0.27, projectedTableHeightFraction 0.50->0.47)`
+`9MAX_FANOUT = DEFERRED / NOT_ADMITTED`
 `P02 = DEFERRED / NOT_CURRENT_GATE`
 `P02_ENTRY_GATE_V2 = PRE_P02_NORTH_STAR_CONVERGENCE_DIMINISHING_RETURNS_REACHED`
 `REAL_HUMAN_HNP = P01_EXECUTED_ACTIONABLE_STOP`
