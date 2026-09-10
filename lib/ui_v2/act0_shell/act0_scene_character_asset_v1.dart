@@ -304,8 +304,11 @@ class Act0SceneCharacterPainterV1 extends CustomPainter {
       image.width.toDouble(),
       image.height.toDouble(),
     );
-    final tint = ((haze * 0.62) + (folded ? 0.20 : 0.0)).clamp(0.0, 0.85);
-    final opacity = (folded ? 0.72 : 1.0) * (1 - (haze * 0.10));
+    // Keep depth hierarchy, but avoid stacking a heavy authored-art haze on
+    // top of the scene-level attention recession. Far and upper-flank faces
+    // retain their depth tint while staying physically present in the room.
+    final tint = ((haze * 0.50) + (folded ? 0.20 : 0.0)).clamp(0.0, 0.85);
+    final opacity = (folded ? 0.72 : 1.0) * (1 - (haze * 0.06));
 
     canvas.saveLayer(destination, Paint());
     canvas.drawImageRect(
