@@ -563,8 +563,8 @@ class Act0SceneRoomPainterV1 extends CustomPainter {
 @immutable
 class Act0SceneRoomPlateFitV1 {
   const Act0SceneRoomPlateFitV1({
-    this.scale = 1,
-    this.normalizedOffset = const Offset(0, -0.08),
+    this.scale = 1.12,
+    this.normalizedOffset = const Offset(0, 0.18),
   }) : assert(scale >= 1);
 
   static const production = Act0SceneRoomPlateFitV1();

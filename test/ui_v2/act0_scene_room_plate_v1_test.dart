@@ -16,12 +16,17 @@ void main() {
   test(
     'production fit covers without distortion and stays in source bounds',
     () {
+      expect(Act0SceneRoomPlateFitV1.production.scale, 1.12);
+      expect(
+        Act0SceneRoomPlateFitV1.production.normalizedOffset,
+        const Offset(0, 0.18),
+      );
       final source = Act0SceneRoomPlateFitV1.production.sourceRectFor(
         const Size(1254, 1254),
         const Size(375, 812),
       );
 
-      expect(source.height, 1254);
+      expect(source.height, closeTo(1254 / 1.12, 1e-9));
       expect(source.width / source.height, closeTo(375 / 812, 1e-9));
       expect(source.left, greaterThanOrEqualTo(0));
       expect(source.right, lessThanOrEqualTo(1254));
