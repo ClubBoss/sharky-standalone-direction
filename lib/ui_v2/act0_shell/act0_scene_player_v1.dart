@@ -797,15 +797,31 @@ class Act0SceneTieredOpponentLayerV1 extends StatelessWidget {
                   key: Key('act0_scene_player_figure_${slot.seatId}'),
                   width: box.width,
                   height: box.height,
-                  child: Act0ScenePlayerFigureV1(
-                    slot: slot,
-                    size: box,
-                    posture: foldedSeatIds.contains(slot.seatId)
-                        ? Act0ScenePlayerPostureV1.folded
-                        : Act0ScenePlayerPostureV1.inHand,
-                    facingOverride: rules.facingFor(tier, side),
-                    light: light,
-                    perspective: perspective,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    clipBehavior: Clip.none,
+                    children: [
+                      CustomPaint(
+                        key: Key('act0_scene_character_contact_${slot.seatId}'),
+                        painter: Act0SceneCharacterGroundingPainterV1(
+                          railOccluded: plane == Act0SceneTieredPlaneV1.back,
+                        ),
+                      ),
+                      Act0ScenePlayerFigureV1(
+                        slot: slot,
+                        size: box,
+                        posture: foldedSeatIds.contains(slot.seatId)
+                            ? Act0ScenePlayerPostureV1.folded
+                            : Act0ScenePlayerPostureV1.inHand,
+                        facingOverride: rules.facingFor(tier, side),
+                        light: light,
+                        perspective: perspective,
+                      ),
+                      if (plane == Act0SceneTieredPlaneV1.back)
+                        const CustomPaint(
+                          painter: Act0SceneCharacterRailCastPainterV1(),
+                        ),
+                    ],
                   ),
                 ),
               ),
@@ -816,6 +832,76 @@ class Act0SceneTieredOpponentLayerV1 extends StatelessWidget {
       },
     );
   }
+}
+
+/// Restrained seat-local darkness that grounds authored figures without an
+/// obvious oval shadow blob.
+class Act0SceneCharacterGroundingPainterV1 extends CustomPainter {
+  const Act0SceneCharacterGroundingPainterV1({required this.railOccluded});
+
+  final bool railOccluded;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final y = size.height * (railOccluded ? 0.86 : 0.91);
+    final contact = Path()
+      ..moveTo(size.width * 0.18, y)
+      ..quadraticBezierTo(
+        size.width * 0.50,
+        y + (size.height * 0.035),
+        size.width * 0.82,
+        y,
+      );
+    canvas.drawPath(
+      contact,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = size.height * 0.055
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, size.height * 0.035)
+        ..color = const Color(0xB8000308),
+    );
+  }
+
+  @override
+  bool shouldRepaint(
+    covariant Act0SceneCharacterGroundingPainterV1 oldDelegate,
+  ) => oldDelegate.railOccluded != railOccluded;
+}
+
+/// Soft rail-boundary cast on rear-plane figures. It is confined to the lower
+/// body so faces and the proven compact UTG read remain untouched.
+class Act0SceneCharacterRailCastPainterV1 extends CustomPainter {
+  const Act0SceneCharacterRailCastPainterV1();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final band = Rect.fromLTWH(
+      size.width * 0.06,
+      size.height * 0.70,
+      size.width * 0.88,
+      size.height * 0.24,
+    );
+    canvas.drawRect(
+      band,
+      Paint()
+        ..shader = const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: <Color>[
+            Colors.transparent,
+            Color(0x4D01050A),
+            Color(0x7001050A),
+          ],
+          stops: <double>[0, 0.56, 1],
+        ).createShader(band),
+    );
+  }
+
+  @override
+  bool shouldRepaint(
+    covariant Act0SceneCharacterRailCastPainterV1 oldDelegate,
+  ) => false;
 }
 
 /// The learner, from the learner's own seat.

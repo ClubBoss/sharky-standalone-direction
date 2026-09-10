@@ -64,6 +64,20 @@ class Act0TableFeltCanonV1 {
   static const Color onFeltPanelBorder = Color(0x387ADCC8);
 }
 
+/// Integrated learning-scene-only felt grade.
+///
+/// The legacy felt canon remains untouched because it is shared by dormant and
+/// secondary table surfaces. These values belong only to the admitted V2
+/// physical scene and keep even the rim visibly green.
+class Act0IntegratedSceneFeltV1 {
+  Act0IntegratedSceneFeltV1._();
+
+  static const Color centerLit = Color(0xFF168A62);
+  static const Color midLit = Color(0xFF0F7554);
+  static const Color edgeDeep = Color(0xFF0C5040);
+  static const Color keyLight = Color(0xFF49B98D);
+}
+
 class Act0ShellTokensV1 {
   const Act0ShellTokensV1._();
 

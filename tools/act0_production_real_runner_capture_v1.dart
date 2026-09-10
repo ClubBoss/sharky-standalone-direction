@@ -110,6 +110,14 @@ const _seeds = <_Seed>[
     auditSeedId: 'world3_early_pressure',
   ),
   _Seed(
+    'runner.repair.utg.live',
+    'world_3',
+    'position_six_seats',
+    'position_six_seats_position_repair_seat_id_utg',
+    'base',
+    'repair',
+  ),
+  _Seed(
     'runner.hand_comparison.live',
     'world_1',
     'hand_rankings_table',

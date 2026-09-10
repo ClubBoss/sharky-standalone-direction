@@ -14,6 +14,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_depth_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hud_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_material_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_player_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_room_plate_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_salience_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
@@ -3696,11 +3697,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
               child: Act0SceneRecedeMotionV1(
                 motion: sceneAttention,
                 plane: Act0SceneRecedePlaneV1.room,
-                child: CustomPaint(
+                child: Act0SceneRoomPlaneV1(
                   key: const Key('act0_scene_environment_plane'),
-                  painter: Act0SceneRoomPainterV1(
-                    horizon: camera.horizonFraction,
-                  ),
+                  horizon: camera.horizonFraction,
                 ),
               ),
             ),
@@ -10874,9 +10873,9 @@ class _Act0TableV1 extends StatelessWidget {
                                 center: Alignment(0, -0.16),
                                 radius: 1.08,
                                 colors: <Color>[
-                                  Act0TableFeltCanonV1.feltCenter,
-                                  Act0TableFeltCanonV1.feltMid,
-                                  Act0TableFeltCanonV1.feltEdge,
+                                  Act0IntegratedSceneFeltV1.centerLit,
+                                  Act0IntegratedSceneFeltV1.midLit,
+                                  Act0IntegratedSceneFeltV1.edgeDeep,
                                 ],
                                 stops: <double>[0, 0.55, 1],
                               ),
@@ -11198,9 +11197,8 @@ class _Act0TableV1 extends StatelessWidget {
                     scaleX: 1.46,
                     scaleY: 1.18,
                     alignment: const Alignment(0, -0.9),
-                    child: const CustomPaint(
+                    child: const Act0SceneRoomPlaneV1(
                       key: Key('act0_scene_environment_plane'),
-                      painter: Act0SceneRoomPainterV1(),
                     ),
                   ),
                 ),

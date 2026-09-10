@@ -773,9 +773,9 @@ class Act0SceneVolumeLayerV1 extends StatelessWidget {
 /// Paints the learner's near plane.
 ///
 /// The hero is the camera, so B1 does not give it a body. It gives it a lit
-/// side of the table: a foreground pool centred on the hero anchor and a rim
-/// along the near rail, the edge closest to the viewer. Together they answer
-/// "where do I sit" without a detached badge doing the work.
+/// side of the table through a rim along the near rail, the edge closest to the
+/// viewer. The former second felt pool was removed so the integrated scene has
+/// one material-owned key light rather than competing procedural pools.
 class Act0SceneHeroPlanePainterV1 extends CustomPainter {
   const Act0SceneHeroPlanePainterV1({required this.heroAnchor});
 
@@ -784,30 +784,6 @@ class Act0SceneHeroPlanePainterV1 extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final rect = Offset.zero & size;
-    final centre = Offset(
-      size.width * heroAnchor.dx,
-      size.height * heroAnchor.dy,
-    );
-
-    // Foreground pool: the learner's side of the felt catches more light.
-    final pool = Rect.fromCenter(
-      center: centre,
-      width: size.width * 1.02,
-      height: size.height * 0.62,
-    );
-    canvas.drawOval(
-      pool,
-      Paint()
-        ..shader = RadialGradient(
-          colors: <Color>[
-            Act0TableFeltCanonV1.feltCenter.withValues(alpha: 0.40),
-            Act0TableFeltCanonV1.feltCenter.withValues(alpha: 0.14),
-            Colors.transparent,
-          ],
-          stops: const <double>[0, 0.52, 1],
-        ).createShader(pool),
-    );
-
     // Near-rail rim: the closest edge of the table reads as lit and physical.
     canvas.drawRect(
       rect,

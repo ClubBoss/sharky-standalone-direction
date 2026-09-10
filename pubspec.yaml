@@ -117,6 +117,7 @@ flutter:
 
   assets:
     - assets/act0_characters/
+    - assets/act0_room/
     - assets/cards/card_back.png
     - assets/spots/spots.json
     - assets/scenarios/
