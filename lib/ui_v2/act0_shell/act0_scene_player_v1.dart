@@ -964,92 +964,67 @@ class _Act0ScenePlayerHeroPainterV1 extends CustomPainter {
       colors: const <Color>[_sleeve, _sleeveShade],
     ).createShader(Rect.fromLTWH(0, 0, w, h));
 
-    // Seat each palm on the near rail before drawing the hand itself. The
-    // shadow must sit underneath the skin; drawing it later makes the hands
-    // collapse into tiny dark nubs at phone scale.
     for (final side in const <double>[-1, 1]) {
-      final hand = Offset(w * (0.5 + (0.355 * side)), h * 0.09);
-      canvas.drawOval(
-        Rect.fromCenter(
-          center: Offset(hand.dx, hand.dy + (h * 0.07)),
-          width: h * 0.40,
-          height: h * 0.10,
-        ),
-        Paint()
-          ..color = const Color(0x59000308)
-          ..maskFilter = MaskFilter.blur(BlurStyle.normal, h * 0.032),
-      );
-    }
-
-    for (final side in const <double>[-1, 1]) {
-      // A broad tapered forearm, angled from the learner toward the inner
-      // corners of the near rail. At normal phone scale this reads as cloth
-      // volume rather than two vertical technical rods.
       canvas.drawPath(
         Path()
-          ..moveTo(w * (0.5 + (0.44 * side)), h * 1.02)
+          ..moveTo(w * (0.5 + (0.42 * side)), h * 0.94)
           ..quadraticBezierTo(
-            w * (0.5 + (0.405 * side)),
-            h * 0.47,
-            w * (0.5 + (0.365 * side)),
-            h * 0.16,
+            w * (0.5 + (0.47 * side)),
+            h * 0.44,
+            w * (0.5 + (0.455 * side)),
+            h * 0.10,
           ),
         Paint()
           ..style = PaintingStyle.stroke
           ..strokeCap = StrokeCap.round
           ..strokeJoin = StrokeJoin.round
-          ..strokeWidth = h * 0.22
+          ..strokeWidth = h * 0.15
           ..shader = sleeveShader,
       );
-
-      final cuffCenter = Offset(w * (0.5 + (0.36 * side)), h * 0.17);
+      // Cuff, then the back of the hand resting on the cloth. Drawn as a flat
+      // oval rather than a disc: a circle at this size reads as a knob or a
+      // chip, which is the last thing the near rail needs.
       canvas.drawOval(
         Rect.fromCenter(
-          center: cuffCenter,
-          width: h * 0.30,
-          height: h * 0.17,
+          center: Offset(w * (0.5 + (0.457 * side)), h * 0.185),
+          width: h * 0.20,
+          height: h * 0.13,
         ),
         Paint()..color = _cuff,
       );
-
-      final handCenter = Offset(w * (0.5 + (0.355 * side)), h * 0.075);
-      final handRect = Rect.fromCenter(
-        center: handCenter,
-        width: h * 0.34,
-        height: h * 0.18,
-      );
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(handRect, Radius.circular(h * 0.075)),
-        Paint()
-          ..shader = LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: const <Color>[
-              Color(0xFFBD8A6D),
-              _skin,
-            ],
-          ).createShader(handRect),
-      );
-
-      // One soft inner thumb mass is enough to keep the palm from reading as
-      // a capsule without attempting detailed hand illustration.
       canvas.drawOval(
         Rect.fromCenter(
-          center: Offset(
-            handCenter.dx - (side * h * 0.10),
-            handCenter.dy + (h * 0.035),
-          ),
-          width: h * 0.11,
+          center: Offset(w * (0.5 + (0.449 * side)), h * 0.095),
+          width: h * 0.175,
           height: h * 0.105,
         ),
         Paint()..color = _skin,
       );
+    }
 
+    // Keep the learner strictly first-person. The prior full-width shoulder
+    // mass formed a dark trapezoid at phone scale and read like a technical
+    // placeholder torso. The two tapered forearms above already provide the
+    // required embodiment while leaving the centre lane open for hole cards.
+    // A restrained contact shadow under each hand is enough to seat them on
+    // the near rail without reintroducing a body silhouette.
+    for (final side in const <double>[-1, 1]) {
+      final hand = Offset(w * (0.5 + (0.449 * side)), h * 0.125);
+      canvas.drawOval(
+        Rect.fromCenter(
+          center: Offset(hand.dx, hand.dy + (h * 0.055)),
+          width: h * 0.24,
+          height: h * 0.075,
+        ),
+        Paint()
+          ..color = const Color(0x66000308)
+          ..maskFilter = MaskFilter.blur(BlurStyle.normal, h * 0.030),
+      );
       canvas.drawArc(
         Rect.fromCenter(
-          center: Offset(w * (0.5 + (0.385 * side)), h * 0.42),
-          width: h * 0.23,
-          height: h * 0.62,
+          center: Offset(w * (0.5 + (0.455 * side)), h * 0.38),
+          width: h * 0.18,
+          height: h * 0.56,
         ),
         side < 0 ? math.pi * 0.88 : math.pi * 0.12,
         side < 0 ? math.pi * 0.42 : -math.pi * 0.42,
@@ -1057,9 +1032,9 @@ class _Act0ScenePlayerHeroPainterV1 extends CustomPainter {
         Paint()
           ..style = PaintingStyle.stroke
           ..strokeCap = StrokeCap.round
-          ..strokeWidth = math.max(1.0, h * 0.022)
+          ..strokeWidth = math.max(1.0, h * 0.018)
           ..color = Act0SceneLightV1.specular.withValues(
-            alpha: 0.25 * light.intensity,
+            alpha: 0.24 * light.intensity,
           ),
       );
     }
