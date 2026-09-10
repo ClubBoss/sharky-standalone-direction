@@ -843,6 +843,51 @@ class Act0SceneCharacterGroundingPainterV1 extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // A low-contrast seat back gives every authored torso a physical object to
+    // disappear into. The character stays dominant; only the side shoulders of
+    // the chair should survive around the transparent PNG at phone scale.
+    final chairTop = size.height * (railOccluded ? 0.43 : 0.47);
+    final chairBottom = size.height * 0.98;
+    final chair = Path()
+      ..moveTo(size.width * 0.20, chairBottom)
+      ..lineTo(size.width * 0.16, size.height * 0.63)
+      ..quadraticBezierTo(
+        size.width * 0.50,
+        chairTop,
+        size.width * 0.84,
+        size.height * 0.63,
+      )
+      ..lineTo(size.width * 0.80, chairBottom)
+      ..close();
+
+    canvas.drawPath(
+      chair,
+      Paint()
+        ..color = const Color(0xA6000308)
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, size.height * 0.025),
+    );
+    canvas.drawPath(
+      chair,
+      Paint()
+        ..shader = const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: <Color>[
+            Color(0xCC182638),
+            Color(0xE608101C),
+            Color(0xF2050910),
+          ],
+          stops: <double>[0, 0.52, 1],
+        ).createShader(Offset.zero & size),
+    );
+    canvas.drawPath(
+      chair,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = math.max(1.0, size.height * 0.010)
+        ..color = const Color(0x594B627D),
+    );
+
     final y = size.height * (railOccluded ? 0.86 : 0.91);
     final contact = Path()
       ..moveTo(size.width * 0.18, y)
