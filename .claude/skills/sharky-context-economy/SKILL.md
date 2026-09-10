@@ -141,3 +141,65 @@ document reading could never have found.
 
 Spend the saving on the check that only execution can answer. That is the whole
 trade: cheap on reading, expensive on measurement.
+
+
+## 8. Context Economy v2 - native tooling
+
+Use the native repository tooling before adding a third-party compressor.
+
+### Session capsule
+
+Run:
+
+```bash
+tools/sharky_context_capsule_v2.sh
+```
+
+The capsule reports live branch/HEAD, origin/main relation, tracked dirty count,
+campaign state identity, current stage/family/action, selected gate values, frozen
+keys, and the prompt-contract path. It is a routing view, not authority.
+
+If the capsule conflicts with live source or an authority document, report the
+conflict and resolve it from live evidence. Never mutate project truth to make the
+capsule "look right".
+
+### Compact evidence
+
+Wrap noisy commands:
+
+```bash
+tools/sharky_compact_evidence_v1.sh --id <evidence-id> -- <command> [args...]
+```
+
+The wrapper:
+
+- captures full stdout/stderr into an ignored `*.raw.log`;
+- emits a bounded machine-readable summary;
+- preserves the wrapped command's exit code;
+- separates compile-load failures from assertion-failing files when Flutter test
+  output provides enough structure;
+- keeps exact raw evidence available for bounded follow-up inspection.
+
+Do not paste the raw log into context after using the wrapper. Inspect only the
+specific raw section needed to resolve an ambiguity.
+
+## 9. Delta-only prompt contract
+
+Use `docs/context/SHARKY_PROMPT_CONTRACT_V1.md` for bounded implementation
+dispatch. Stable invariants live behind authority/contract IDs; the task prompt
+carries only live base identity, minimum authority, requested delta, frozen
+contracts, mutable owners, forbidden scope, validation, and return schema.
+
+This is semantic compression, not "caveman" prose. The model may reason as deeply
+as required, but implementation workers return compact state plus evidence rather
+than a narrative completion essay.
+
+## 10. Third-party compression policy
+
+Headroom/RTK-style tooling is optional experimentation, not project infrastructure
+by default. A third-party compressor or shell interceptor may be admitted only
+after an A/B comparison proves material context/latency benefit without increasing
+missed evidence, repair cycles, regressions, or CI failures.
+
+Raw evidence must remain independently recoverable. No compressor may rewrite
+canonical SSOT, `AGENTS.md`, or project instructions automatically.
