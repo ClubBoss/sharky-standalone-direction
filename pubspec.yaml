@@ -116,6 +116,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/act0_characters/
     - assets/cards/card_back.png
     - assets/spots/spots.json
     - assets/scenarios/

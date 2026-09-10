@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_character_asset_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_depth_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_material_v1.dart';
 
@@ -203,23 +204,57 @@ class Act0ScenePlayerFigureV1 extends StatelessWidget {
     final facing =
         facingOverride?.clamp(-1.0, 1.0) ??
         ((0.5 - slot.plateAnchor.dx) * 2.4).clamp(-1.0, 1.0);
-    return IgnorePointer(
-      child: SizedBox(
-        width: size.width,
-        height: size.height,
-        child: CustomPaint(
-          painter: _Act0ScenePlayerFigurePainterV1(
-            archetype: act0ScenePlayerArchetypeForSeatV1(slot.seatId),
-            depth: slot.depth,
-            facing: facing,
-            posture: posture,
-            detail: act0ScenePlayerDetailForDepthV1(slot.depth),
-            haze: perspective.hazeAt(slot.depth),
-            light: light,
-          ),
-        ),
+    final procedural = CustomPaint(
+      painter: _Act0ScenePlayerFigurePainterV1(
+        archetype: act0ScenePlayerArchetypeForSeatV1(slot.seatId),
+        depth: slot.depth,
+        facing: facing,
+        posture: posture,
+        detail: act0ScenePlayerDetailForDepthV1(slot.depth),
+        haze: perspective.hazeAt(slot.depth),
+        light: light,
       ),
     );
+    final identity = Act0SceneCharacterIdentityResolverV1.resolve(slot);
+    final figure = identity == null
+        ? procedural
+        : Act0SceneCharacterFigureV1(
+            identity: identity,
+            state: posture == Act0ScenePlayerPostureV1.folded
+                ? Act0SceneCharacterStateV1.folded
+                : Act0SceneCharacterStateV1.engaged,
+            size: size,
+            haze: perspective.hazeAt(slot.depth),
+            fallback: procedural,
+          );
+    return IgnorePointer(
+      child: SizedBox(width: size.width, height: size.height, child: figure),
+    );
+  }
+}
+
+/// Resolves authored identity from the admitted production tier and side.
+class Act0SceneCharacterIdentityResolverV1 {
+  const Act0SceneCharacterIdentityResolverV1._();
+
+  static Act0SceneCharacterIdentityV1? resolve(
+    Act0SceneSeatSlotV1 slot, {
+    Act0SceneTieredSeatingV1 rules = Act0SceneTieredSeatingV1.production,
+  }) {
+    if (slot.isHero) return null;
+    final tier = rules.tierFor(slot);
+    final isLeft = slot.plateAnchor.dx < 0.5;
+    return switch (tier) {
+      Act0SceneOpponentTierV1.farCentre => Act0SceneCharacterIdentityV1.utg,
+      Act0SceneOpponentTierV1.upperFlank =>
+        isLeft
+            ? Act0SceneCharacterIdentityV1.bb
+            : Act0SceneCharacterIdentityV1.hj,
+      Act0SceneOpponentTierV1.nearFlank =>
+        isLeft
+            ? Act0SceneCharacterIdentityV1.sb
+            : Act0SceneCharacterIdentityV1.co,
+    };
   }
 }
 
