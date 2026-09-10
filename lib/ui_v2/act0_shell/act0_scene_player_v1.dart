@@ -1038,6 +1038,7 @@ class _Act0ScenePlayerHeroPainterV1 extends CustomPainter {
           ),
       );
     }
+  }
 
   @override
   bool shouldRepaint(covariant _Act0ScenePlayerHeroPainterV1 oldDelegate) =>
