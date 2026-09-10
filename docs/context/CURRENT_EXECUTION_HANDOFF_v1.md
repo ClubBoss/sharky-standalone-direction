@@ -1,7 +1,7 @@
 # Current Execution Handoff v1
 
 Status: CURRENT-STATE CONTINUATION AID / NON-AUTHORITY
-Freshness date: 2026-08-20
+Freshness date: 2026-09-10
 Repository: `ClubBoss/sharky-standalone-direction`
 
 Authority hierarchy:
@@ -9,7 +9,8 @@ Authority hierarchy:
 1. `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
 2. `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`
 3. `docs/_reviews/owner_pre_p02_north_star_convergence_rebaseline_v1.md`
-4. this file only as a compressed continuation aid.
+4. `docs/_reviews/owner_cycle_d_structural_closure_and_v2_production_admission_v1.md`
+5. this file only as a compressed continuation aid.
 
 If this handoff conflicts with higher authority, the higher authority wins.
 Always re-resolve live `origin/main` before mutation.
@@ -48,7 +49,18 @@ freeze -> P02 route is superseded.
 
 `INITIAL_FOCUS = LEARNING_SCENE_CHARACTER_AND_COACH_VISUAL_COMPLETION`
 
-`EXACT_NEXT_ACTION = EXECUTE_PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
+`EXACT_NEXT_ACTION = IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1`
+(sub-wave inside the unchanged active family)
+
+`STRUCTURAL_VISUAL_EXPLORATION = CLOSED`
+
+`V2_PRODUCTION_SPATIAL_BASELINE = ADMITTED`
+
+`V2_CAMERA_EXCEPTION = ADMITTED / REFROZEN` (`farRailFraction 0.225 -> 0.27`,
+`projectedTableHeightFraction 0.50 -> 0.47`; all other geometry frozen under
+PR203)
+
+`9MAX_FANOUT = DEFERRED / NOT_ADMITTED`
 
 `P02 = DEFERRED / NOT_CURRENT_GATE`
 
@@ -57,6 +69,26 @@ freeze -> P02 route is superseded.
 `HUMAN_PROOF = FALSE`
 
 `B8 = NOT_ADMITTED`
+
+## V2 Baseline vs Original PR203 (do not confuse)
+
+Owner has closed structural visual exploration and admitted Cycle C V2 as the
+production spatial baseline (provenance:
+`docs/_reviews/owner_cycle_d_structural_closure_and_v2_production_admission_v1.md`).
+
+- "V2" = original PR203 geometry **plus** exactly two admitted camera constants:
+  `farRailFraction 0.225 -> 0.27`, `projectedTableHeightFraction 0.50 -> 0.47`.
+  Nothing else changes; width, taper and perspective stay frozen under PR203.
+- The Cycle C / Cycle D experiment branches, the Cycle D challenger constants,
+  the diagnostic family switch and the 9-max fan-out are **not** admitted.
+- The family is refrozen at V2. No further camera / taper / perspective /
+  table-width / structural-challenger work.
+- Exact next action: `IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1` — productionize
+  the V2 skeleton, strip diagnostic/challenger machinery from the production
+  path, no final art, no R2.3 visual, no 9-max, no environment polish, no
+  camera search. One layer at a time.
+- PR #212: do not merge standalone; extract its reusable pipeline into the later
+  character wave, then supersede/close.
 
 ## Active Family Boundary
 
@@ -129,11 +161,13 @@ completion requirement.
 
 ## Frozen / Preserved Product Boundaries
 
-`PR203_CANONICAL_TABLE_GEOMETRY = FROZEN`
+`PR203_CANONICAL_TABLE_GEOMETRY = FROZEN` — except the bounded V2 camera
+exception (two constants only; see "V2 Baseline vs Original PR203" above).
 
 `PR205_COMMITMENT_OWNERSHIP = FROZEN`
 
-`CAMERA_RETUNE_AGAIN = NO`
+`CAMERA_RETUNE_AGAIN = NO` — except the same bounded V2 camera exception; family
+refrozen at V2, no further camera work admitted.
 
 `TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE`
 
@@ -155,9 +189,10 @@ must not be reset, cleaned, stashed, reused, or overwritten.
 
 ## Immediate Continuation
 
-Re-resolve live authority, then execute exactly:
+Re-resolve live authority, then execute exactly, inside the unchanged active
+family `PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`:
 
-`EXECUTE_PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
+`IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1`
 
 Do not:
 
@@ -166,12 +201,19 @@ Do not:
 - admit B8;
 - implement reduced-motion maintenance as the current macro task;
 - open more than one convergence implementation family;
-- merge the owner-rebaseline PR during its creation/review mission.
+- reopen structural / camera / taper / perspective / table-width exploration
+  (the family is refrozen at V2);
+- merge PR #212 standalone;
+- merge this V2-admission docs PR during its creation/review mission.
 
 `HANDOFF_AUTHORITY = NONE`
 `CURRENT_STAGE = PRE_P02_NORTH_STAR_CONVERGENCE`
 `ACTIVE_FAMILY = PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
-`EXACT_NEXT_ACTION = EXECUTE_PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
+`EXACT_NEXT_ACTION = IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1`
+`STRUCTURAL_VISUAL_EXPLORATION = CLOSED`
+`V2_PRODUCTION_SPATIAL_BASELINE = ADMITTED`
+`V2_CAMERA_EXCEPTION = ADMITTED / REFROZEN (0.225/0.50 -> 0.27/0.47)`
+`9MAX_FANOUT = DEFERRED / NOT_ADMITTED`
 `P02 = DEFERRED / NOT_CURRENT_GATE`
 `B7 = CLOSED_PASS`
 `B8 = NOT_ADMITTED`

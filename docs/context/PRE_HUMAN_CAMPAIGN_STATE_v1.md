@@ -1,7 +1,7 @@
 # Pre-Human Campaign State v1
 
 Status: `PRE_P02_NORTH_STAR_CONVERGENCE_ACTIVE`
-Freshness date: 2026-08-20
+Freshness date: 2026-09-10
 Repository: `ClubBoss/sharky-standalone-direction`
 
 This file carries exact current campaign dispatch beneath
@@ -39,7 +39,11 @@ freeze -> P02 sequencing is superseded by the owner rebaseline.
 
 `INITIAL_FOCUS = LEARNING_SCENE_CHARACTER_AND_COACH_VISUAL_COMPLETION`
 
-`EXACT_NEXT_ACTION = EXECUTE_PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
+`EXACT_NEXT_ACTION = IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1`
+
+`STRUCTURAL_VISUAL_EXPLORATION = CLOSED`
+
+`V2_PRODUCTION_SPATIAL_BASELINE = ADMITTED`
 
 `P02 = DEFERRED / NOT_CURRENT_GATE`
 
@@ -48,6 +52,51 @@ freeze -> P02 sequencing is superseded by the owner rebaseline.
 `HUMAN_PROOF = FALSE`
 
 `B8 = NOT_ADMITTED`
+
+## V2 Production Spatial Baseline Admission (2026-09-10)
+
+Owner has adjudicated the Cycle C / Cycle D structural experiments. Provenance:
+`docs/_reviews/owner_cycle_d_structural_closure_and_v2_production_admission_v1.md`.
+
+`STRUCTURAL_VISUAL_EXPLORATION = CLOSED`
+
+`V2_PRODUCTION_SPATIAL_BASELINE = ADMITTED`
+
+`V2_CAMERA_EXCEPTION = ADMITTED / REFROZEN`
+
+- Bounded camera exception, evidence-backed, against the PR203 /
+  `CAMERA_RETUNE_AGAIN` freeze:
+  `farRailFraction 0.225 -> 0.27`, `projectedTableHeightFraction 0.50 -> 0.47`.
+  `outerTableWidthFraction`, taper, perspective and every other scene-geometry
+  constant stay `FROZEN` under PR203. The family refreezes at V2; no further
+  camera / taper / perspective / table-width / structural-challenger work.
+- Preserved V2 spatial principles: opponent world wider than the felt stage;
+  far-centre / upper-flank / near-flank depth tiers; front/back opponent planes;
+  deterministic geometry across learning states; Hero POV; poker-information
+  dominance; explicit Coach Surface reservation; transparent authored-character
+  asset seam.
+- Cycle D challenger: `REJECTED / REFERENCE_ONLY`.
+- `9MAX_FANOUT = DEFERRED / NOT_ADMITTED`.
+- PR #212: do not merge standalone; selectively extract its reusable asset
+  pipeline into the production character wave, then supersede/close after
+  verified extraction.
+- Visual reference identities (direction/evidence targets, not runtime
+  authority): `C2` = 6-max spatial North Star; `R2.3` = Coach Surface North
+  Star; `CAST V4` = Character Identity North Star; `C2-9` = deferred 9-max
+  concept reference.
+
+### Next sub-wave inside the active family
+
+`EXACT_NEXT_ACTION = IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1`
+
+Narrowly: productionize the winning V2 skeleton (bounded camera exception + wide
+opponent world + three depth tiers + front/back planes); remove diagnostic
+family / challenger machinery from the production path; no final opponent art
+yet; no R2.3 Coach Surface visual implementation yet; no 9-max fan-out; no
+environment polish; no further camera / taper search. One layer at a time. Then,
+in order: character system + 6-max cast (with PR #212 extraction) -> R2.3 Coach
+Surface with real typography and Sharky art -> conditional environment
+correction -> final runtime acceptance.
 
 ## Current Convergence Map
 
@@ -147,11 +196,15 @@ completion requirements.
 
 `SHARKY_COACH_SURFACE_V1 = CLOSED_PASS`
 
-`PR203_CANONICAL_TABLE_GEOMETRY = FROZEN`
+`PR203_CANONICAL_TABLE_GEOMETRY = FROZEN` — except the bounded V2 camera
+exception (`farRailFraction 0.225 -> 0.27`,
+`projectedTableHeightFraction 0.50 -> 0.47`); see
+`V2 Production Spatial Baseline Admission` above.
 
 `PR205_COMMITMENT_OWNERSHIP = FROZEN`
 
-`CAMERA_RETUNE_AGAIN = NO`
+`CAMERA_RETUNE_AGAIN = NO` — except the same bounded V2 camera exception; the
+family is refrozen at V2 and no further camera work is admitted.
 
 `TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE`
 
@@ -194,12 +247,15 @@ Before any mutation:
 1. re-resolve live `origin/main`;
 2. read `MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`;
 3. read this campaign state;
-4. read `owner_pre_p02_north_star_convergence_rebaseline_v1.md`;
-5. confirm the active family and exact next action are unchanged.
+4. read `owner_pre_p02_north_star_convergence_rebaseline_v1.md` and
+   `owner_cycle_d_structural_closure_and_v2_production_admission_v1.md`;
+5. confirm the active family is unchanged and the exact next action is the V2
+   production spatial skeleton sub-wave.
 
-Then execute only:
+Then execute only, inside `PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`:
 
-`EXECUTE_PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
+`IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1`
 
 Do not run P02, reopen HNP, admit B8, implement reduced-motion maintenance as
-the macro next action, or expand to multiple convergence families at once.
+the macro next action, expand to multiple convergence families at once, reopen
+structural / camera / taper exploration, or merge PR #212 standalone.
