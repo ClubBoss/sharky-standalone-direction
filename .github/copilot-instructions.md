@@ -1,3 +1,10 @@
+## Automatic context economy
+
+For all Sharky repository work, apply the root `AGENTS.md` context-economy policy
+automatically. Use the native capsule once per stable session and compact noisy
+evidence without asking the user to opt in. Reuse stable contract references and
+send only the changing task delta.
+
 ## graphify
 
 Graphify is navigation and dependency-safety tooling only. It is advisory and must not override

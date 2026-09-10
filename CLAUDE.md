@@ -6,6 +6,13 @@ This file is a helper for Claude. It is not the project source of truth.
 The Master Plan, current SSOT docs, current execution direction, and project
 rules override this file whenever they differ.
 
+## Automatic context economy
+
+For every Sharky repo session, treat the root `AGENTS.md` automatic context-economy
+policy as default. Run the native capsule once, use compact evidence for noisy
+commands, and reuse stable contract references without waiting for a user trigger.
+Do not ask the user to enable or manage token-saving mode.
+
 ## Product context
 
 - Target user: a micro-stakes player who makes mistakes and wants to repair

@@ -129,7 +129,28 @@ END_SHARKY_PACKET_REPORT_V1
 No narrative completion essay is required. Reasoning depth is preserved internally;
 the external report is state plus evidence.
 
-## 7. Mutation safety
+## 7. Automatic application and Astra profile
+
+This contract is the default for Sharky repository work. A user does not need to say
+"use context economy", invoke a skill, run the capsule, or choose a model tier.
+Agents perform those steps automatically when their client exposes the required
+capability.
+
+For GPT-6 Astra and other high-cost long-context models:
+
+- keep the stable instruction/authority prefix unchanged across turns where possible;
+- place volatile packet delta after the stable prefix;
+- prefer client-native prompt caching and conversation compaction when exposed;
+- when the client supports an in-conversation reasoning configuration update, change
+  effort through that mechanism rather than rewriting the stable prompt prefix;
+- compact only completed/stable history; preserve active assumptions, exact IDs,
+  tool outcomes, unresolved blockers, and the next concrete goal;
+- do not request manual cache, compaction, or reasoning management from the user.
+
+These are capability-gated behaviors. Repository tooling must still work correctly
+when a client exposes none of them.
+
+## 8. Mutation safety
 
 - Smallest sufficient intervention.
 - No unrelated cleanup.

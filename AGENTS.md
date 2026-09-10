@@ -11,8 +11,37 @@ Escalate to the documents below **only** when the task needs authority the state
 file does not carry, or when its facts conflict with live source/tests - then
 report the conflict. Do not read the full authority stack "for context".
 
-For token-efficient reading recipes, evidence-run patterns, and per-packet model
-routing, invoke the `sharky-context-economy` skill.
+## Automatic Context Economy (Default)
+
+Context economy is ON by default for every chat, coding session, review, or agent
+working on this repository. The user must not need to request it, remember a command,
+choose a compression mode, or repeat stable project context.
+
+- At the start of a new Sharky repo session, before broad reads or mutation, run
+  `tools/sharky_context_capsule_v2.sh` once when shell access exists. If shell access
+  is unavailable, reconstruct the same minimum fields from repository tools rather
+  than asking the user to provide them.
+- Invoke the `sharky-context-economy` skill automatically for repository work. Do not
+  wait for a user trigger.
+- Route noisy analyzer, test, build, and CI commands through
+  `tools/sharky_compact_evidence_v1.sh` when shell access exists. Preserve raw
+  evidence; put only the compact view into model context.
+- Re-run orientation only when branch, HEAD, campaign state, task authority, or a
+  material conflict changes. Do not repay orientation cost on every turn.
+- Keep stable authority and contract material referenced by ID/path. Put volatile
+  task delta after the stable prefix. Do not replay unchanged project history.
+- Select reasoning/model tier from decision content automatically. The user should not
+  have to choose High/Medium/Low for routine packets.
+- On GPT-6 Astra or another top-cost model, be especially strict about stable-prefix
+  reuse, delta-only context, bounded tool output, and compact return schemas. If the
+  client exposes prompt caching, conversation compaction, persisted state, or
+  reasoning configuration updates, use those capabilities without requiring user
+  setup. If the client does not expose them, continue with repository-native semantic
+  compression; never invent support or weaken evidence.
+
+This automatic policy applies to Sharky repository work. It must not leak Sharky
+project assumptions into unrelated general chats.
+
 
 For project navigation and SSOT authority:
 - `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` is the principal

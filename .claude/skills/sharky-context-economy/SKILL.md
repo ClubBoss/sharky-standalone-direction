@@ -1,6 +1,6 @@
 ---
 name: sharky-context-economy
-description: Token-efficient working recipes for this repository - orientation order, evidence-run log filtering, targeted reads, graphify boundaries, and per-packet model routing. Use when starting a campaign packet, when about to read several authority documents, when about to run a broad test suite or inspect a large log, or when a session is spending heavily on orientation rather than work.
+description: Automatic token-efficient working policy for every Sharky repository session - orientation order, evidence-run log filtering, targeted reads, graphify boundaries, delta-only dispatch, and per-packet model routing. Apply by default without waiting for a user trigger.
 ---
 
 # Sharky Context Economy
@@ -203,3 +203,15 @@ missed evidence, repair cycles, regressions, or CI failures.
 
 Raw evidence must remain independently recoverable. No compressor may rewrite
 canonical SSOT, `AGENTS.md`, or project instructions automatically.
+
+
+## 11. Automatic session policy
+
+This skill is default behavior for Sharky repository work, not an opt-in command.
+At session start, run the native capsule once when possible, then operate from the
+minimum sufficient authority plus task delta. Use compact evidence automatically for
+noisy commands. Re-orient only after a material branch/HEAD/state/authority change or
+when live evidence creates a conflict.
+
+The user must not be asked to remember this skill, choose token-saving mode, or manage
+model tiering for routine packets.
