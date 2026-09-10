@@ -107,51 +107,18 @@ void main() {
     expect(store.isPending(path), isFalse);
   });
 
-  testWidgets('missing cast asset remains on deterministic fallback', (
+  testWidgets('missing asset resolves to deterministic fallback state', (
     tester,
   ) async {
-    await tester.pumpWidget(
-      Directionality(
-        textDirection: TextDirection.ltr,
-        child: SizedBox(
-          width: 100,
-          height: 120,
-          child: Act0SceneCharacterFigureV1(
-            identity: Act0SceneCharacterIdentityV1.bb,
-            state: Act0SceneCharacterStateV1.engaged,
-            size: const Size(100, 120),
-            haze: 0.2,
-            store: store,
-            fallback: const ColoredBox(
-              key: Key('procedural_fallback'),
-              color: Colors.blue,
-            ),
-          ),
-        ),
-      ),
-    );
-    await tester.runAsync(
-      () => store.load(
-        Act0SceneCharacterAssetRegistryV1.engagedPathFor(
-          Act0SceneCharacterIdentityV1.bb,
-        ),
-      ),
-    );
-    await tester.pump();
+    const path = 'assets/act0_characters/opponent_missing_engaged.png';
 
-    expect(find.byKey(const Key('procedural_fallback')), findsOneWidget);
-    expect(
-      find.byKey(const Key('act0_scene_character_bb_fallback')),
-      findsOneWidget,
+    final image = await tester.runAsync(
+      () => store.load(path, bundle: _MissingAssetBundle()),
     );
-    expect(
-      store.isMissing(
-        Act0SceneCharacterAssetRegistryV1.engagedPathFor(
-          Act0SceneCharacterIdentityV1.bb,
-        ),
-      ),
-      isTrue,
-    );
+
+    expect(image, isNull);
+    expect(store.isMissing(path), isTrue);
+    expect(store.isReady(path), isFalse);
   });
 
   testWidgets('supplied UTG asset replaces fallback when ready', (
@@ -240,4 +207,10 @@ class _InvalidImageBundle extends CachingAssetBundle {
   Future<ByteData> load(String key) => SynchronousFuture<ByteData>(
     ByteData.sublistView(Uint8List.fromList(<int>[1, 2, 3, 4])),
   );
+}
+
+class _MissingAssetBundle extends CachingAssetBundle {
+  @override
+  Future<ByteData> load(String key) =>
+      Future<ByteData>.error(FlutterError('Missing test asset: $key'));
 }

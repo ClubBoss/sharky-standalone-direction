@@ -125,7 +125,7 @@ class Act0SceneCharacterImageStoreV1 {
     try {
       data = await bundle.load(path);
     } on FlutterError {
-      // BB/HJ/SB/CO are intentionally absent at the waiting-asset checkpoint.
+      // Keep the procedural figure visible if a bundled asset is unavailable.
       _missing.add(path);
       return null;
     } catch (error, stack) {
