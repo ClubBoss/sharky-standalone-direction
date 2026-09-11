@@ -136,14 +136,18 @@ historical machine/HNP evidence provenance.
 - `B7 = CLOSED_PASS`
 - `SHARKY_COACH_SURFACE_V1 = CLOSED_PASS`
 - `CURRENT_STAGE = PRE_P02_NORTH_STAR_CONVERGENCE`
-- `ACTIVE_FAMILY = PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
-- `EXACT_NEXT_ACTION = EXECUTE_PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
-- `CURRENT_SUB_WAVE = IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1`
+- `PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1 = CLOSED_PASS / FROZEN` (historical
+  active family; superseded as current dispatch — see "Post-PR221 audit
+  reconciliation" in section 5)
+- `ACTIVE_FAMILY = TABLE_ACTION_AND_STREET_MOTION_V1` (not yet implemented)
+- `EXACT_NEXT_ACTION = IMPLEMENT_TABLE_ACTION_AND_STREET_MOTION_V1_AFTER_PR221_MERGE`
+- `CURRENT_SUB_WAVE = TABLE_ACTION_AND_STREET_MOTION_V1`
 - `STRUCTURAL_VISUAL_EXPLORATION = CLOSED`
-- `V2_PRODUCTION_SPATIAL_BASELINE = ADMITTED` (bounded camera exception, see section 4)
+- `V2_PRODUCTION_SPATIAL_BASELINE = ADMITTED` (historical bounded camera exception, see section 4; frozen, not current dispatch)
 - `9MAX_FANOUT = DEFERRED / NOT_ADMITTED`
 - `P02 = DEFERRED / NOT_CURRENT_GATE`
-- `P02_ENTRY_GATE_V2 = PRE_P02_NORTH_STAR_CONVERGENCE_DIMINISHING_RETURNS_REACHED`
+- `P02_ENTRY_GATE_STATUS = MACHINE_PREP_REMAINING`
+- `PRE_P02_DIMINISHING_RETURNS = NOT_REACHED`
 - `REAL_HUMAN_HNP = P01_EXECUTED_ACTIONABLE_STOP`
 - `HUMAN_PROOF = FALSE`
 - `B8 = NOT_ADMITTED`
@@ -932,24 +936,34 @@ This is candidate ordering, not permission to implement each item automatically.
 
 ## 14. Exact Next Action
 
-`EXECUTE_PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
+`EXACT_NEXT_ACTION = IMPLEMENT_TABLE_ACTION_AND_STREET_MOTION_V1_AFTER_PR221_MERGE`
 
-Purpose: preserve current visual momentum and execute exactly one bounded
-high-EV Learning Scene visual-art convergence family around production character
-quality, player embodiment, hero presence, Sharky/speech-surface integration,
-and scene cohesion, while preserving frozen table geometry, frozen commitment
-ownership, poker truth, the evidence hierarchy, and one-family-at-a-time
-discipline.
+Current active bounded family: `TABLE_ACTION_AND_STREET_MOTION_V1` — not yet
+implemented; semantic poker-hand choreography / presentation orchestration
+over existing source-owned Act0 state, reusing the current engine, with no
+camera or table-geometry reopen. See "Post-PR221 audit reconciliation" below
+for the accepted findings and full scope statement.
 
-The current bounded sub-wave inside this family, per
-`docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`, is
+### Historical — `PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1` (CLOSED_PASS / FROZEN, superseded)
+
+`EXECUTE_PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1` was the prior exact next
+action. Purpose: preserve current visual momentum and execute exactly one
+bounded high-EV Learning Scene visual-art convergence family around production
+character quality, player embodiment, hero presence, Sharky/speech-surface
+integration, and scene cohesion, while preserving frozen table geometry,
+frozen commitment ownership, poker truth, the evidence hierarchy, and
+one-family-at-a-time discipline.
+
+The bounded sub-wave inside this now-frozen family, per
+`docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`, was
 `IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1`: productionize the owner-admitted
 Cycle C V2 learning-scene spatial baseline (bounded camera exception + wide
 opponent world + three depth tiers + front/back planes), strip diagnostic and
 challenger machinery from the production path, and add no final art, no R2.3
 visual, no 9-max fan-out, no environment polish and no further camera/taper
 search. Structural visual exploration is `CLOSED`; the spatial family is
-refrozen at V2.
+refrozen at V2. This sub-wave is complete/frozen and is not the current exact
+next action.
 
 The inherited reduced-motion proof beat is now `CLOSED_PASS` (disposed by
 `POST_B7_PRE_P02_REDUCED_MOTION_PROOF_BEAT_MAINTENANCE_V1`, 2026-09-12):
@@ -1012,9 +1026,10 @@ evidence.
 
 `MASTER_PLAN_V4_NORTH_STAR_INTEGRATED = PRINCIPAL_AUTHORITY`
 `CURRENT_STAGE = PRE_P02_NORTH_STAR_CONVERGENCE`
-`ACTIVE_FAMILY = PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1` (`CLOSED_PASS / FROZEN`; superseded as current work by `TABLE_ACTION_AND_STREET_MOTION_V1`, see reconciliation above)
+`PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1 = CLOSED_PASS / FROZEN` (historical active family, superseded)
+`ACTIVE_FAMILY = TABLE_ACTION_AND_STREET_MOTION_V1` (not yet implemented)
 `EXACT_NEXT_ACTION = IMPLEMENT_TABLE_ACTION_AND_STREET_MOTION_V1_AFTER_PR221_MERGE`
-`CURRENT_SUB_WAVE = IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1` (superseded; see `TABLE_ACTION_AND_STREET_MOTION_V1` above)
+`CURRENT_SUB_WAVE = TABLE_ACTION_AND_STREET_MOTION_V1`
 `STRUCTURAL_VISUAL_EXPLORATION = CLOSED`
 `V2_PRODUCTION_SPATIAL_BASELINE = ADMITTED`
 `V2_CAMERA_EXCEPTION = ADMITTED / REFROZEN (farRailFraction 0.225->0.27, projectedTableHeightFraction 0.50->0.47)`
