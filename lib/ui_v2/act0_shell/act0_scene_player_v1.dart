@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_character_asset_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_depth_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hybrid_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_material_v1.dart';
 
 /// Visual Gauntlet B3 — the player embodiment system.
@@ -913,7 +916,7 @@ class Act0SceneCharacterRailCastPainterV1 extends CustomPainter {
 ///
 /// The arms are routed outside the hole-card lane, the identity plate and the
 /// dealer button. They frame the learner's hand; they never cover it.
-class Act0ScenePlayerHeroV1 extends StatelessWidget {
+class Act0ScenePlayerHeroV1 extends StatefulWidget {
   const Act0ScenePlayerHeroV1({
     super.key,
     this.light = Act0SceneLightV1.canonical,
@@ -922,7 +925,48 @@ class Act0ScenePlayerHeroV1 extends StatelessWidget {
   final Act0SceneLightV1 light;
 
   @override
+  State<Act0ScenePlayerHeroV1> createState() => _Act0ScenePlayerHeroV1State();
+}
+
+class _Act0ScenePlayerHeroV1State extends State<Act0ScenePlayerHeroV1> {
+  ui.Image? _image;
+  Object? _pendingToken;
+
+  Act0SceneSinglePlateImageStoreV1 get _store =>
+      Act0SceneHybridShellRegistryV1.heroStore;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _resolve();
+  }
+
+  void _resolve() {
+    final ready = _store.readyImage;
+    if (ready != null) {
+      _image = ready;
+      return;
+    }
+    if (_store.isPending || _store.isMissing) return;
+    final token = Object();
+    _pendingToken = token;
+    unawaited(
+      _store.warmUp().then((image) {
+        if (!mounted || _pendingToken != token || image == null) return;
+        setState(() => _image = image);
+      }),
+    );
+  }
+
+  @override
+  void dispose() {
+    _pendingToken = null;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final image = _image ?? _store.readyImage;
     return IgnorePointer(
       child: Align(
         alignment: Alignment.bottomCenter,
@@ -931,14 +975,51 @@ class Act0ScenePlayerHeroV1 extends StatelessWidget {
           heightFactor: 0.19,
           child: FractionalTranslation(
             translation: const Offset(0, 0.52),
-            child: CustomPaint(
-              painter: _Act0ScenePlayerHeroPainterV1(light: light),
-            ),
+            child: image == null
+                ? CustomPaint(
+                    key: const Key('act0_scene_hero_procedural'),
+                    painter: _Act0ScenePlayerHeroPainterV1(
+                      light: widget.light,
+                    ),
+                  )
+                : CustomPaint(
+                    key: const Key('act0_scene_hero_authored'),
+                    painter: Act0SceneHeroForegroundPainterV1(image: image),
+                  ),
           ),
         ),
       ),
     );
   }
+}
+
+/// Whole-source to whole-destination paint of the authored Hero POV
+/// foreground into the existing Hero owner rect — no crop, no distortion; the
+/// asset was authored to that exact aspect.
+class Act0SceneHeroForegroundPainterV1 extends CustomPainter {
+  const Act0SceneHeroForegroundPainterV1({required this.image});
+
+  final ui.Image image;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final source = Rect.fromLTWH(
+      0,
+      0,
+      image.width.toDouble(),
+      image.height.toDouble(),
+    );
+    canvas.drawImageRect(
+      image,
+      source,
+      Offset.zero & size,
+      Paint()..filterQuality = FilterQuality.high,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant Act0SceneHeroForegroundPainterV1 oldDelegate) =>
+      !identical(oldDelegate.image, image);
 }
 
 class _Act0ScenePlayerHeroPainterV1 extends CustomPainter {

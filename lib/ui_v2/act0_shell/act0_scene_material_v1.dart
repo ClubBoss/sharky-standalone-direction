@@ -599,6 +599,17 @@ class Act0SceneRoomPlateFitV1 {
 
   static const production = Act0SceneRoomPlateFitV1();
 
+  /// RENDER_CLASS_HYBRID_INTEGRATION_V1 — the hybrid shell's own table is
+  /// already framed close to the canonical scene box at native scale; the
+  /// initial registration pass proved 1:1 (no zoom, no pan) puts the far rail
+  /// and near rail within a few percent of the frozen V2 stage fractions
+  /// (0.27 / 0.74) while staying clear of both the Coach exclusion band above
+  /// and the action dock below. Bounded correction cycles may retune this.
+  static const hybridShellV1 = Act0SceneRoomPlateFitV1(
+    scale: 1.0,
+    normalizedOffset: Offset.zero,
+  );
+
   final double scale;
   final Offset normalizedOffset;
 
