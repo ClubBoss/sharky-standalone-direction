@@ -149,23 +149,22 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
     return null;
   }
 
-  Act0TableChoreographyStreetV1? currentStreet;
   final first = parsed.first;
-  if (first.street != null) {
-    currentStreet = first.street;
+  final firstStreet = first.street;
+  final Act0TableChoreographyStreetV1 initialStreet;
+  if (firstStreet != null) {
+    initialStreet = firstStreet;
   } else if (first.action == _TrailActionV1.blind) {
-    currentStreet = Act0TableChoreographyStreetV1.preflop;
-  } else if (!parsed.any((item) => item.street != null)) {
-    currentStreet = finalStreet;
+    initialStreet = Act0TableChoreographyStreetV1.preflop;
   } else {
     return null;
   }
 
-  if (currentStreet.index > finalStreet.index) {
+  if (initialStreet.index > finalStreet.index) {
     return null;
   }
 
-  final initialStreet = currentStreet;
+  var currentStreet = initialStreet;
   final beats = <Act0TableChoreographyBeatV1>[];
   final transientCommitments = <String>{};
   var terminalSeen = false;
