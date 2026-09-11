@@ -959,12 +959,49 @@ following the existing `_ProofMotionRevealV1` local pattern, with normal-motion
 behavior unchanged. `PR220` (render-class hybrid shell / V4 shell integration)
 is `CLOSED_PASS / FROZEN`. Lane reassessment: `LANE_A_VISUAL`,
 `LANE_B_SURFACE_COHESION`, `LANE_D_CONTENT_CORRECTNESS`, and
-`LANE_F_RELIABILITY_ERGONOMICS` are `CLOSED_PASS`; `LANE_C_LEARNING_LOOP` and
-`LANE_E_PERSONALIZED_NEXT_VALUE` are `REQUIRES_HUMAN_EVIDENCE`. No other
-material machine/product-reducible lane remains `IMPLEMENT_NOW`. This does not
-by itself satisfy `P02_ENTRY_GATE_V2` — the holistic challenger pass,
-confirmatory pass, candidate freeze, and cheap final machine falsifiers below
-remain outstanding, and P02 is not admitted by lane closure alone.
+`LANE_F_RELIABILITY_ERGONOMICS` are `CLOSED_PASS`; `LANE_E_PERSONALIZED_NEXT_VALUE`
+is `REQUIRES_HUMAN_EVIDENCE`. This does not by itself satisfy
+`P02_ENTRY_GATE_V2` — the holistic challenger pass, confirmatory pass,
+candidate freeze, and cheap final machine falsifiers below remain outstanding,
+and P02 is not admitted by lane closure alone.
+
+### Post-PR221 audit reconciliation — Table Action & Street Motion (2026-09-12)
+
+The "no other material lane remains `IMPLEMENT_NOW`" statement above is now
+stale. A newer independent architecture audit,
+`TABLE_ACTION_AND_STREET_MOTION_ARCHITECTURE_AUDIT_V1`, established a material
+additional pre-P02 machine-reducible gap after the PR #221 reduced-motion
+mission was issued:
+
+`CURRENT_ACTION_SEQUENCE_CAPABILITY = 3/10`,
+`CURRENT_STREET_REVEAL_CAPABILITY = 1/10`,
+`CURRENT_CHIP_MOTION_CAPABILITY = 3/10`,
+`CURRENT_POT_SHOWDOWN_CAPABILITY = 2/10`,
+`CURRENT_WHOLE_HAND_CHOREOGRAPHY = 2/10`,
+`ACTION_QUEUE_STATUS = REPLAY_ONLY`, flop/turn/river reveal are each
+`STATIC_STATE_ONLY`. `NEW_ENGINE_REQUIRED = NO`; `REUSE_CURRENT_ACT0_STATE = YES`;
+`PRODUCT_EV = HIGH`; `REGRESSION_RISK = MEDIUM`; `SHOULD_IMPLEMENT_BEFORE_P02 = YES`.
+
+`LANE_C_LEARNING_LOOP = IMPLEMENT_NOW`
+
+Active bounded family: `TABLE_ACTION_AND_STREET_MOTION_V1` — **not yet
+implemented**. This is semantic poker-hand choreography / presentation
+orchestration over existing source-owned Act0 state (who acted -> what changed
+-> street transition -> Hero decision readiness), not visual micro-polish. It
+does not reopen V4 visual convergence, does not require a new poker engine,
+and does not reopen camera/table geometry; `LANE_A_VISUAL` stays
+`CLOSED_PASS / FROZEN` and `REDUCED_MOTION_DEBT` /
+`LANE_F_RELIABILITY_ERGONOMICS` stay `CLOSED_PASS`, unaffected by this
+reconciliation.
+
+`P02_ENTRY_GATE_STATUS = MACHINE_PREP_REMAINING`.
+`PRE_P02_DIMINISHING_RETURNS = NOT_REACHED` until `TABLE_ACTION_AND_STREET_MOTION_V1`
+is disposed. After that family passes, re-run the final cheap machine
+falsifiers and seek owner P02 admission — do not restore the generic holistic
+North Star challenger pass as the immediate next action; that stage follows
+disposition of this family, not precedes it.
+
+`EXACT_NEXT_ACTION = IMPLEMENT_TABLE_ACTION_AND_STREET_MOTION_V1_AFTER_PR221_MERGE`
 
 A machine telemetry gap or nondeterministic Simulator/CI launch failure remains
 a separate technical evidence state. It must not be converted into a Human FAIL,
@@ -975,9 +1012,9 @@ evidence.
 
 `MASTER_PLAN_V4_NORTH_STAR_INTEGRATED = PRINCIPAL_AUTHORITY`
 `CURRENT_STAGE = PRE_P02_NORTH_STAR_CONVERGENCE`
-`ACTIVE_FAMILY = PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
-`EXACT_NEXT_ACTION = EXECUTE_PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
-`CURRENT_SUB_WAVE = IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1`
+`ACTIVE_FAMILY = PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1` (`CLOSED_PASS / FROZEN`; superseded as current work by `TABLE_ACTION_AND_STREET_MOTION_V1`, see reconciliation above)
+`EXACT_NEXT_ACTION = IMPLEMENT_TABLE_ACTION_AND_STREET_MOTION_V1_AFTER_PR221_MERGE`
+`CURRENT_SUB_WAVE = IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1` (superseded; see `TABLE_ACTION_AND_STREET_MOTION_V1` above)
 `STRUCTURAL_VISUAL_EXPLORATION = CLOSED`
 `V2_PRODUCTION_SPATIAL_BASELINE = ADMITTED`
 `V2_CAMERA_EXCEPTION = ADMITTED / REFROZEN (farRailFraction 0.225->0.27, projectedTableHeightFraction 0.50->0.47)`
@@ -990,7 +1027,14 @@ evidence.
 `B8 = NOT_ADMITTED`
 `REDUCED_MOTION_DEBT = CLOSED_PASS`
 `PR220_VISUAL_FAMILY = CLOSED_PASS / FROZEN`
-`LANE_C_LEARNING_LOOP = REQUIRES_HUMAN_EVIDENCE`
+`LANE_A_VISUAL = CLOSED_PASS`
+`LANE_B_SURFACE_COHESION = CLOSED_PASS`
+`LANE_C_LEARNING_LOOP = IMPLEMENT_NOW`
+`LANE_D_CONTENT_CORRECTNESS = CLOSED_PASS`
 `LANE_E_PERSONALIZED_NEXT_VALUE = REQUIRES_HUMAN_EVIDENCE`
+`LANE_F_RELIABILITY_ERGONOMICS = CLOSED_PASS`
+`NEXT_ACTIVE_FAMILY = TABLE_ACTION_AND_STREET_MOTION_V1 (NOT YET IMPLEMENTED)`
+`PRE_P02_DIMINISHING_RETURNS = NOT_REACHED`
+`P02_ENTRY_GATE_STATUS = MACHINE_PREP_REMAINING`
 `TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE`
 `ACCESSIBILITY_TEXT_SCALING = DEFERRED_NOT_CURRENT_ACCEPTANCE`

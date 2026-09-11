@@ -106,7 +106,7 @@ One active implementation family at a time.
 | --- | --- |
 | A. Visual Art / Learning Scene Completion | `ACTIVE FAMILY` through `PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1` |
 | B. Whole Product Surface Cohesion | `QUEUED / SELECT ONLY AFTER ACTIVE FAMILY REASSESSMENT` |
-| C. Learning Loop Convergence | `QUEUED / MACHINE-PRODUCT REDUCIBLE ONLY` |
+| C. Learning Loop Convergence | `IMPLEMENT_NOW` — `TABLE_ACTION_AND_STREET_MOTION_V1` (2026-09-12 audit; not yet implemented) |
 | D. Content / Correctness / Curriculum | `QUEUED / W1-W12 BOUNDED ONLY` |
 | E. Personalized Next Value / Return Reason | `QUEUED / CURRENT DETERMINISTIC MECHANISMS ONLY` |
 | F. Reliability / Ergonomics / Evidence Readiness | `CLOSED_PASS` (reduced-motion proof-beat maintenance, 2026-09-12) |
@@ -158,25 +158,70 @@ and `_CompletionToastV1` in `act0_lesson_runner_shell_v1.dart` now honor
 tween, no faded-out final content), following the existing
 `_ProofMotionRevealV1` local pattern. Normal-motion behavior is unchanged.
 
-Lane reassessment (post-PR220, post-reduced-motion-fix):
+Lane reassessment (post-PR220, post-reduced-motion-fix) — superseded below by
+the post-audit reconciliation:
 
 - `LANE_A_VISUAL = CLOSED_PASS`
 - `LANE_B_SURFACE_COHESION = CLOSED_PASS`
-- `LANE_C_LEARNING_LOOP = REQUIRES_HUMAN_EVIDENCE`
+- ~~`LANE_C_LEARNING_LOOP = REQUIRES_HUMAN_EVIDENCE`~~ — superseded, see below.
 - `LANE_D_CONTENT_CORRECTNESS = CLOSED_PASS`
 - `LANE_E_PERSONALIZED_NEXT_VALUE = REQUIRES_HUMAN_EVIDENCE`
 - `LANE_F_RELIABILITY_ERGONOMICS = CLOSED_PASS`
 
-No other material machine/product-reducible lane remains `IMPLEMENT_NOW`.
-
-This closes the immediate machine-reducible debt only. It does **not** by
-itself satisfy the `P02 Entry Gate V2` below — conditions 5-9 (holistic North
-Star challenger pass, confirmatory pass, exact candidate freeze, cheap final
-machine falsifiers, explicit owner admission) have not been executed. PRE_P02
-diminishing-returns status must be reassessed from that actual evidence, not
-declared from lane closure alone.
-
 `P02 = DEFERRED / NOT_CURRENT_GATE` (unchanged; not auto-admitted).
+
+## Post-PR221 Audit Reconciliation — Table Action & Street Motion (2026-09-12)
+
+A newer independent architecture audit,
+`TABLE_ACTION_AND_STREET_MOTION_ARCHITECTURE_AUDIT_V1`, established a material
+additional pre-P02 machine-reducible gap after the PR #221 reduced-motion
+mission was issued. This makes the "no other material lane remains
+`IMPLEMENT_NOW`" statement above stale. It is not preserved as current.
+
+Accepted findings:
+
+- `CURRENT_ACTION_SEQUENCE_CAPABILITY = 3/10`
+- `CURRENT_STREET_REVEAL_CAPABILITY = 1/10`
+- `CURRENT_CHIP_MOTION_CAPABILITY = 3/10`
+- `CURRENT_POT_SHOWDOWN_CAPABILITY = 2/10`
+- `CURRENT_WHOLE_HAND_CHOREOGRAPHY = 2/10`
+- `ACTION_QUEUE_STATUS = REPLAY_ONLY`
+- `FLOP_REVEAL_STATUS = STATIC_STATE_ONLY`
+- `TURN_REVEAL_STATUS = STATIC_STATE_ONLY`
+- `RIVER_REVEAL_STATUS = STATIC_STATE_ONLY`
+- `NEW_ENGINE_REQUIRED = NO`
+- `REUSE_CURRENT_ACT0_STATE = YES`
+- `PRODUCT_EV = HIGH`
+- `REGRESSION_RISK = MEDIUM`
+- `SHOULD_IMPLEMENT_BEFORE_P02 = YES`
+
+Reconciled lane status:
+
+`LANE_C_LEARNING_LOOP = IMPLEMENT_NOW`
+
+Active bounded family: `TABLE_ACTION_AND_STREET_MOTION_V1` — **not yet
+implemented**. This is semantic poker-hand choreography / presentation
+orchestration over existing source-owned Act0 state (who acted -> what changed
+-> street transition -> Hero decision readiness). It is not visual
+micro-polish.
+
+Explicitly:
+
+- this does NOT reopen V4 visual convergence (`LANE_A_VISUAL` stays
+  `CLOSED_PASS / FROZEN`);
+- this does NOT require a new poker engine;
+- this does NOT reopen camera / table geometry;
+- `REDUCED_MOTION_DEBT` and `LANE_F_RELIABILITY_ERGONOMICS` stay `CLOSED_PASS`
+  (PR #221 closure is preserved, unaffected by this reconciliation).
+
+`P02_ENTRY_GATE_STATUS = MACHINE_PREP_REMAINING`
+
+`PRE_P02_DIMINISHING_RETURNS = NOT_REACHED` until `TABLE_ACTION_AND_STREET_MOTION_V1`
+is disposed. After that family passes, the next step is re-running the final
+cheap machine falsifiers and seeking owner P02 admission — not opening a
+generic holistic-challenger pass or unrelated polish.
+
+`EXACT_NEXT_ACTION = IMPLEMENT_TABLE_ACTION_AND_STREET_MOTION_V1_AFTER_PR221_MERGE`
 
 ## P02 Entry Gate V2
 
