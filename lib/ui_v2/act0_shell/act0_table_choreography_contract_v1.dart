@@ -145,7 +145,7 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
     }
     parsed.add(item);
   }
-  if (parsed.isEmpty) {
+  if (parsed.isEmpty || !parsed.any((item) => item.street != null)) {
     return null;
   }
 
