@@ -14349,22 +14349,59 @@ class _BetChipV1 extends StatelessWidget {
       Act0SeatBetKindV1.raise => Act0ShellTokensV1.primary,
       Act0SeatBetKindV1.allIn => Act0ShellTokensV1.danger,
     };
-    // B4: a commitment is instrumentation sitting on the cloth, not an app
-    // card floating over it. Same engraved carrier as the seat nameplate, so
-    // identity and commitment read as one attached family. The frosted-glass
-    // backdrop blur is gone — it is an application effect, and felt does not
-    // refract. Every bet-kind colour semantic is unchanged.
+    final physicalBlindPost =
+        compact &&
+        bet.kind == Act0SeatBetKindV1.post &&
+        (bet.label == 'SB' || bet.label == 'BB');
+
+    // Render canonical blind commitments as small physical table objects rather
+    // than another recessed HUD/nameplate. Anchor, amount, semantics and motion
+    // stay untouched; this is presentation-only inside the existing footprint.
+    final decoration = physicalBlindPost
+        ? BoxDecoration(
+            borderRadius: BorderRadius.circular(
+              Act0ShellTokensV1.radiusPill,
+            ),
+            gradient: const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: <Color>[
+                Color(0xFF182433),
+                Color(0xFF0A111A),
+                Color(0xFF05080D),
+              ],
+              stops: <double>[0, 0.58, 1],
+            ),
+            border: Border.all(
+              color: color.withValues(alpha: 0.86),
+              width: 1.0,
+            ),
+            boxShadow: <BoxShadow>[
+              const BoxShadow(
+                color: Color(0xA6000205),
+                blurRadius: 4.5,
+                offset: Offset(0, 2.2),
+              ),
+              BoxShadow(
+                color: color.withValues(alpha: 0.12),
+                blurRadius: 5,
+                spreadRadius: -1,
+              ),
+            ],
+          )
+        : Act0SceneNameplateV1.decoration(
+            radius: Act0ShellTokensV1.radiusPill,
+            stateTone: color,
+            stateStrength: 0.85,
+          );
+
     return Container(
       key: Key('act0_shell_bet_chip_${bet.label}'),
       padding: EdgeInsets.symmetric(
         horizontal: compact ? 5 : 6,
         vertical: compact ? 3 : 4,
       ),
-      decoration: Act0SceneNameplateV1.decoration(
-        radius: Act0ShellTokensV1.radiusPill,
-        stateTone: color,
-        stateStrength: 0.85,
-      ),
+      decoration: decoration,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -14424,10 +14461,10 @@ class _ChipStackIconV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double size = compact ? 12 : 14;
+    final double size = compact ? 13 : 14;
     return SizedBox(
       width: size,
-      height: size + 4,
+      height: size + 5,
       child: Stack(
         alignment: Alignment.topCenter,
         clipBehavior: Clip.none,
@@ -14437,11 +14474,11 @@ class _ChipStackIconV1 extends StatelessWidget {
             child: _ChipDiscV1(color: color, compact: compact, isBottom: true),
           ),
           Positioned(
-            bottom: 2,
+            bottom: 2.4,
             child: _ChipDiscV1(color: color, compact: compact, isBottom: true),
           ),
           Positioned(
-            bottom: 4,
+            bottom: 4.8,
             child: _ChipDiscV1(color: color, compact: compact),
           ),
         ],
@@ -14463,61 +14500,66 @@ class _ChipDiscV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double size = compact ? 12 : 14;
+    final double size = compact ? 13 : 14;
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: color,
         gradient: isBottom
             ? LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [
-                  color.withValues(alpha: 0.6),
-                  color.withValues(alpha: 0.3),
+                colors: <Color>[
+                  color.withValues(alpha: 0.58),
+                  color.withValues(alpha: 0.24),
                 ],
               )
             : RadialGradient(
-                center: const Alignment(-0.2, -0.4),
-                radius: 0.8,
-                colors: <Color>[Colors.white.withValues(alpha: 0.4), color],
+                center: const Alignment(-0.34, -0.42),
+                radius: 0.88,
+                colors: <Color>[
+                  Colors.white.withValues(alpha: 0.48),
+                  color.withValues(alpha: 0.96),
+                  color.withValues(alpha: 0.76),
+                ],
+                stops: const <double>[0, 0.34, 1],
               ),
         borderRadius: BorderRadius.circular(size / 2),
         border: Border.all(
-          color: Colors.white.withValues(alpha: isBottom ? 0.1 : 0.8),
-          width: isBottom ? 0.5 : 1.2,
+          color: Colors.white.withValues(alpha: isBottom ? 0.13 : 0.78),
+          width: isBottom ? 0.55 : 1.0,
         ),
-        boxShadow: [
+        boxShadow: <BoxShadow>[
           if (isBottom)
             const BoxShadow(
-              color: Color(0x66000000),
-              blurRadius: 3,
-              offset: Offset(0, 2),
+              color: Color(0x73000000),
+              blurRadius: 2.8,
+              offset: Offset(0, 1.8),
             )
           else
             const BoxShadow(
-              color: Color(0xAA000000),
-              blurRadius: 2,
-              offset: Offset(0, 1),
+              color: Color(0x99000000),
+              blurRadius: 2.4,
+              offset: Offset(0, 1.2),
             ),
         ],
       ),
-      child: Center(
-        child: isBottom
-            ? null
-            : Container(
-                width: size * 0.4,
-                height: size * 0.4,
+      child: isBottom
+          ? null
+          : Center(
+              child: Container(
+                width: size * 0.48,
+                height: size * 0.48,
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.4),
-                    width: 1,
+                    color: Colors.white.withValues(alpha: 0.46),
+                    width: 0.8,
                   ),
                   borderRadius: BorderRadius.circular(size),
+                  color: const Color(0x26000000),
                 ),
               ),
-      ),
+            ),
     );
   }
 }
