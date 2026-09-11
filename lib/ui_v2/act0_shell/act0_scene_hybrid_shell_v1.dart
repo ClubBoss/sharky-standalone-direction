@@ -4,7 +4,6 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_material_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_room_plate_v1.dart';
 
 /// RENDER_CLASS_HYBRID_INTEGRATION_V1 — the baked room+table scene shell and
@@ -133,34 +132,99 @@ class Act0SceneHybridShellRegistryV1 {
       );
 }
 
-/// Full-bleed cover-crop paint of the hybrid scene shell into the canonical
-/// scene box, using the same normalized fit contract as the room plate.
-class Act0SceneHybridShellPainterV1 extends CustomPainter {
-  const Act0SceneHybridShellPainterV1({
-    required this.image,
-    this.fit = Act0SceneRoomPlateFitV1.hybridShellV1,
+/// Deterministic, viewport-independent footprint for the hybrid shell inside
+/// the canonical scene box.
+///
+/// RENDER_CLASS_HYBRID_INTEGRATION_GAUNTLET_V2 measurement: the shell's own
+/// table spans source-normalized y=0.2846..0.8783 (far rail to near rail,
+/// full rail extent), i.e. 0.5936 of the image's own height. A full-bleed
+/// cover-crop (v1's registration) forces that span to fill the *entire*
+/// scene-box height, which over-crops the source horizontally — every
+/// dimension of the table then reads roughly 35% larger on screen than the
+/// frozen V2 stage fractions call for, leaving side players no room and
+/// reading as pasted into the corners.
+///
+/// Solving `heightFactor` so the table's own two fractions land exactly on
+/// the frozen stage fractions (far rail 0.27, near rail 0.74 of the scene
+/// box) gives one deterministic, no-crop, no-distortion placement: scale the
+/// *entire* source image uniformly into a centered, top-anchored rect sized
+/// by [heightFactor], width derived from the source's own aspect (never
+/// stretched). That rect is very slightly wider than the scene box (its
+/// horizontal overflow is clipped), which is far less zoomed than the old
+/// full-bleed crop.
+@immutable
+class Act0SceneHybridShellFootprintV1 {
+  const Act0SceneHybridShellFootprintV1({
+    required this.heightFactor,
+    required this.topFraction,
   });
 
-  final ui.Image image;
-  final Act0SceneRoomPlateFitV1 fit;
+  /// Solved from `(0.8783 - 0.2846) * heightFactor == 0.47` (the frozen V2
+  /// `projectedTableHeightFraction`).
+  static const production = Act0SceneHybridShellFootprintV1(
+    heightFactor: 0.79,
+    topFraction: 0.045,
+  );
 
-  @override
-  void paint(Canvas canvas, Size size) {
-    final source = fit.sourceRectFor(
-      Size(image.width.toDouble(), image.height.toDouble()),
-      size,
-    );
-    canvas.drawImageRect(
-      image,
-      source,
-      Offset.zero & size,
-      Paint()..filterQuality = FilterQuality.high,
+  final double heightFactor;
+  final double topFraction;
+
+  Rect destinationRectFor(Size scene, double sourceAspect) {
+    final height = scene.height * heightFactor;
+    final width = height * sourceAspect;
+    return Rect.fromLTWH(
+      (scene.width - width) / 2,
+      scene.height * topFraction,
+      width,
+      height,
     );
   }
 
   @override
+  bool operator ==(Object other) =>
+      other is Act0SceneHybridShellFootprintV1 &&
+      other.heightFactor == heightFactor &&
+      other.topFraction == topFraction;
+
+  @override
+  int get hashCode => Object.hash(heightFactor, topFraction);
+}
+
+/// Whole-source, no-crop, no-distortion paint of the hybrid shell into its
+/// deterministic footprint rect. Horizontal overflow (the footprint is very
+/// slightly wider than the scene box, by design — see
+/// [Act0SceneHybridShellFootprintV1]) is clipped to the scene box.
+class Act0SceneHybridShellPainterV1 extends CustomPainter {
+  const Act0SceneHybridShellPainterV1({
+    required this.image,
+    this.footprint = Act0SceneHybridShellFootprintV1.production,
+  });
+
+  final ui.Image image;
+  final Act0SceneHybridShellFootprintV1 footprint;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final imageSize = Size(image.width.toDouble(), image.height.toDouble());
+    final destination = footprint.destinationRectFor(
+      size,
+      imageSize.width / imageSize.height,
+    );
+    canvas.save();
+    canvas.clipRect(Offset.zero & size);
+    canvas.drawImageRect(
+      image,
+      Offset.zero & imageSize,
+      destination,
+      Paint()..filterQuality = FilterQuality.high,
+    );
+    canvas.restore();
+  }
+
+  @override
   bool shouldRepaint(covariant Act0SceneHybridShellPainterV1 oldDelegate) =>
-      !identical(oldDelegate.image, image) || oldDelegate.fit != fit;
+      !identical(oldDelegate.image, image) ||
+      oldDelegate.footprint != footprint;
 }
 
 /// Renders the baked render-class hybrid scene shell (room + table) across
@@ -223,12 +287,21 @@ class _Act0SceneHybridShellPlaneV1State
   @override
   Widget build(BuildContext context) {
     final image = _image ?? _store.readyImage;
-    if (image == null) {
-      return Act0SceneRoomPlaneV1(horizon: widget.horizon);
-    }
-    return CustomPaint(
-      key: const Key('act0_scene_hybrid_shell_ready'),
-      painter: Act0SceneHybridShellPainterV1(image: image),
+    // The production room plate is always the base plane — it supplies the
+    // wide establishing room around the shell's smaller table footprint (see
+    // Act0SceneHybridShellFootprintV1) instead of exposing flat app
+    // background, and is also the deterministic fallback if the shell asset
+    // is missing or fails to decode.
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Act0SceneRoomPlaneV1(horizon: widget.horizon),
+        if (image != null)
+          CustomPaint(
+            key: const Key('act0_scene_hybrid_shell_ready'),
+            painter: Act0SceneHybridShellPainterV1(image: image),
+          ),
+      ],
     );
   }
 }

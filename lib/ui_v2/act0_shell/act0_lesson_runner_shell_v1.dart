@@ -11206,22 +11206,35 @@ class _Act0TableV1 extends StatelessWidget {
       Act0SceneTieredPlaneV1 plane,
       Key key,
     ) {
-      const rules = Act0SceneTieredSeatingV1.production;
-      return Positioned(
-        left: rules.horizontalInsetFor(stageSize.width),
-        right: rules.horizontalInsetFor(stageSize.width),
-        top: rules.topInsetFor(stageSize.height),
-        bottom: rules.bottomInsetFor(stageSize.height),
-        child: Act0SceneRecedeMotionV1(
-          motion: sceneMotion,
-          plane: Act0SceneRecedePlaneV1.player,
-          child: Act0SceneTieredOpponentLayerV1(
-            key: key,
-            slots: sceneSeatSlots,
-            plane: plane,
-            foldedSeatIds: inactiveSeatIds,
-          ),
-        ),
+      return ValueListenableBuilder<bool>(
+        valueListenable:
+            Act0SceneHybridShellRegistryV1.shellStore.readyNotifier,
+        builder: (context, hybridShellReady, _) {
+          // RENDER_CLASS_HYBRID_INTEGRATION_GAUNTLET_V2: the narrower world
+          // box only applies once the hybrid shell owns the visual — the
+          // procedural-table fallback path keeps the original production
+          // widen it was tuned against.
+          final rules = hybridShellReady
+              ? Act0SceneTieredSeatingV1.renderClassHybridV1
+              : Act0SceneTieredSeatingV1.production;
+          return Positioned(
+            left: rules.horizontalInsetFor(stageSize.width),
+            right: rules.horizontalInsetFor(stageSize.width),
+            top: rules.topInsetFor(stageSize.height),
+            bottom: rules.bottomInsetFor(stageSize.height),
+            child: Act0SceneRecedeMotionV1(
+              motion: sceneMotion,
+              plane: Act0SceneRecedePlaneV1.player,
+              child: Act0SceneTieredOpponentLayerV1(
+                key: key,
+                slots: sceneSeatSlots,
+                plane: plane,
+                foldedSeatIds: inactiveSeatIds,
+                rules: rules,
+              ),
+            ),
+          );
+        },
       );
     }
 

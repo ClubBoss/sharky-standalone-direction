@@ -664,10 +664,34 @@ class Act0SceneTieredSeatingV1 {
     this.worldWidenFraction = 0.32,
     this.topLiftFraction = 0.06,
     this.bottomDropFraction = 0.04,
+    this.farCentreScale = 0.95,
+    this.upperFlankScale = 1.35,
+    this.nearFlankScale = 1.55,
   });
 
   /// The one production tiered-seating rule.
   static const Act0SceneTieredSeatingV1 production = Act0SceneTieredSeatingV1();
+
+  /// RENDER_CLASS_HYBRID_INTEGRATION_GAUNTLET_V2 — a narrower world box for
+  /// the hybrid-shell scene only (visual character-world fit, not a seat/
+  /// poker-anchor change; [production] is untouched for every other camera
+  /// path). Real capture measurement showed the shell's own table already
+  /// reads wide at BB/HJ depth, so the *production* 0.32 widen pushed those
+  /// world anchors far enough past the stage edge to clip hard against the
+  /// screen bounds. Narrowing the widen pulls BB/HJ/SB/CO inward without
+  /// touching worldAnchorFor's fractions or any seat/card/chip anchor.
+  ///
+  /// Cycle 1 real capture then showed the *production* flank scale (tuned to
+  /// fill the wider box) now overlaps SB/CO's own card/label plate once
+  /// pulled inward, so the flank scale is trimmed by the same proportion the
+  /// widen shrank by (0.20/0.32) to keep the envelope-to-anchor relationship
+  /// the production values encode.
+  static const Act0SceneTieredSeatingV1 renderClassHybridV1 =
+      Act0SceneTieredSeatingV1(
+        worldWidenFraction: 0.16,
+        upperFlankScale: 1.15,
+        nearFlankScale: 1.20,
+      );
 
   /// How much wider than the felt stage the opponent world is, total, split
   /// evenly left/right.
@@ -680,6 +704,10 @@ class Act0SceneTieredSeatingV1 {
   /// How far below the stage the opponent world box ends, as a fraction of
   /// stage height.
   final double bottomDropFraction;
+
+  final double farCentreScale;
+  final double upperFlankScale;
+  final double nearFlankScale;
 
   /// Left inset (negative -> wider than the stage) for the widened world box.
   double horizontalInsetFor(double stageWidth) =>
@@ -721,11 +749,11 @@ class Act0SceneTieredSeatingV1 {
   double scaleFor(Act0SceneOpponentTierV1 tier) {
     switch (tier) {
       case Act0SceneOpponentTierV1.farCentre:
-        return 0.95;
+        return farCentreScale;
       case Act0SceneOpponentTierV1.upperFlank:
-        return 1.35;
+        return upperFlankScale;
       case Act0SceneOpponentTierV1.nearFlank:
-        return 1.55;
+        return nearFlankScale;
     }
   }
 
@@ -967,14 +995,21 @@ class _Act0ScenePlayerHeroV1State extends State<Act0ScenePlayerHeroV1> {
   @override
   Widget build(BuildContext context) {
     final image = _image ?? _store.readyImage;
+    // RENDER_CLASS_HYBRID_INTEGRATION_GAUNTLET_V2 real-capture measurement:
+    // against the baked shell the authored Hero read too small/detached from
+    // the near rail. The procedural painter keeps its original proven
+    // geometry unchanged — only the authored-image path grows.
+    const widthFactor = 0.86;
+    const heightFactor = 0.25;
+    const translationDy = 0.46;
     return IgnorePointer(
       child: Align(
         alignment: Alignment.bottomCenter,
         child: FractionallySizedBox(
-          widthFactor: 0.78,
-          heightFactor: 0.19,
+          widthFactor: image == null ? 0.78 : widthFactor,
+          heightFactor: image == null ? 0.19 : heightFactor,
           child: FractionalTranslation(
-            translation: const Offset(0, 0.52),
+            translation: Offset(0, image == null ? 0.52 : translationDy),
             child: image == null
                 ? CustomPaint(
                     key: const Key('act0_scene_hero_procedural'),
