@@ -3309,7 +3309,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                     : (runner.teachingStepIndex > 0
                           ? widget.onPreviousTheory
                           : (_usesCanonicalIntegratedLearningSceneV1
-                                ? widget.onBack
+                                ? _handleRunnerBackV1
                                 : null)),
                 canAdvance: _canAdvanceTheory,
                 onAdvance: hasNextSupportSegment
@@ -3542,7 +3542,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               if (!_usesCanonicalIntegratedLearningSceneV1)
-                _RunnerProgressV1(runner: runner, onBack: widget.onBack),
+                _RunnerProgressV1(runner: runner, onBack: _handleRunnerBackV1),
               SizedBox(
                 height: showTopInstructionCard
                     ? Act0ShellTokensV1.gapSm
@@ -3682,7 +3682,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           table: table,
           isReview: isReview,
           question: question,
-          onBack: widget.onBack,
+          onBack: _handleRunnerBackV1,
           onChooseOption: _handleChooseOptionTelemetry,
           onContinueReview: widget.onContinueReview,
           actionRecommendation: widget.actionRecommendation,
@@ -3828,7 +3828,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           ),
         if (_usesCanonicalIntegratedLearningSceneV1 &&
             (isTheory || isDrill || isReview))
-          _RunnerProgressV1(runner: runner, onBack: widget.onBack),
+          _RunnerProgressV1(runner: runner, onBack: _handleRunnerBackV1),
         if (_usesCanonicalIntegratedLearningSceneV1 &&
             usesSharedActiveRunnerAllocation &&
             (isTheory || isDrill || isReview)) ...[
