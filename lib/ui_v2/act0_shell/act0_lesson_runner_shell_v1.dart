@@ -29,6 +29,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_recommendation_surface_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_sequence_personalization_v1.dart';
@@ -1161,6 +1162,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.actionPayoff,
     this.telemetrySink,
     this.reviewKindId = 'initialAssessment',
+    this.tableChoreographyMode = Act0TableChoreographyModeV1.runtime,
     this.lowerSurfacePrototypeState,
     this.accessibilityPrototypeStep,
     this.onAccessibilityPrototypeStepChanged,
@@ -1211,6 +1213,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final Act0ActionSessionPayoffV1? actionPayoff;
   final Act0TelemetrySinkV1? telemetrySink;
   final String reviewKindId;
+  final Act0TableChoreographyModeV1 tableChoreographyMode;
   final Act0LowerSurfacePrototypeStateV1? lowerSurfacePrototypeState;
   final Act0AccessibilityPrototypeStepV1? accessibilityPrototypeStep;
   final ValueChanged<Act0AccessibilityPrototypeStepV1>?
@@ -1243,6 +1246,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   int _completedDecisionOrdinal = 0;
   String _showdownInteractionKey = '';
   final Stopwatch _decisionTelemetryStopwatch = Stopwatch();
+  Timer? _tableChoreographyTimer;
+  String _tableChoreographyRunKey = '';
+  int _tableChoreographyGeneration = 0;
+  Act0TableChoreographyPlanV1? _tableChoreographyPlan;
+  int _tableChoreographyBeatIndex = -1;
+  Act0TableChoreographyFrameV1? _tableChoreographyFrame;
+  bool _heroDecisionReady = true;
   List<String> _interactiveHighlightedCardIds = const <String>[];
   String _interactiveShowdownLine = '';
   int? _actionTrailFocusedIndex;
@@ -1295,6 +1305,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _syncTableChoreographyV1();
     if (_coachAssetWarmupRequested) {
       return;
     }
@@ -1392,6 +1403,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     _syncLearningRailSupportSegment();
     _syncRapidReviewAdvance();
     _maybeEmitTaskShownTelemetry();
+    _syncTableChoreographyV1();
     _maybeEmitFeedbackViewedTelemetry();
     final nextCompositionTaskKey = _compositionTaskIdentity(widget);
     if (nextCompositionTaskKey != _compositionTaskKey) {
@@ -1413,6 +1425,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   void dispose() {
     _theoryUnlockTimer?.cancel();
     _rapidReviewTimer?.cancel();
+    _cancelTableChoreographyV1();
     _sceneAttentionController.dispose();
     super.dispose();
   }
@@ -1510,6 +1523,194 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       ? null
       : act0ActionLearningSequenceForTaskV1(widget.selectedTaskId!)?.sequenceId;
 
+  String _tableChoreographyTaskIdentityForWidgetV1(
+    Act0LessonRunnerShellV1 value,
+  ) {
+    final lessonId = (value.selectedLessonId ?? '').trim().isNotEmpty
+        ? value.selectedLessonId!.trim()
+        : value.runner.lessonId;
+    final taskId = (value.selectedTaskId ?? '').trim().isNotEmpty
+        ? value.selectedTaskId!.trim()
+        : '${value.runner.lessonId}_${value.runner.beatIndex}';
+    return '${value.selectedWorldId ?? ''}|$lessonId|$taskId';
+  }
+
+  bool _tableChoreographyActorFocusSafeV1() {
+    if (widget.runner.options.any((option) => option.seatId != null)) {
+      return false;
+    }
+    final learnerPrompt =
+        '${widget.runner.caption} ${widget.runner.question}'.toLowerCase();
+    return !learnerPrompt.contains('which seat') &&
+        !learnerPrompt.contains('who acts') &&
+        !learnerPrompt.contains('who is acting') &&
+        !learnerPrompt.contains('what position');
+  }
+
+  void _syncTableChoreographyV1() {
+    if (!_taskTelemetryVisible) {
+      _cancelTableChoreographyV1();
+      _tableChoreographyRunKey = '';
+      _tableChoreographyPlan = null;
+      _tableChoreographyFrame = null;
+      _tableChoreographyBeatIndex = -1;
+      _heroDecisionReady = true;
+      return;
+    }
+
+    final taskIdentity = _tableChoreographyTaskIdentityForWidgetV1(widget);
+    final reduceMotion = MediaQuery.of(context).disableAnimations;
+    final settleImmediately =
+        reduceMotion ||
+        widget.tableChoreographyMode == Act0TableChoreographyModeV1.settled;
+
+    if (_tableChoreographyRunKey == taskIdentity) {
+      if (settleImmediately && !_heroDecisionReady) {
+        _settleTableChoreographyV1(taskIdentity);
+      }
+      return;
+    }
+
+    _cancelTableChoreographyV1();
+    _tableChoreographyRunKey = taskIdentity;
+    _tableChoreographyBeatIndex = -1;
+    _tableChoreographyPlan = act0TableChoreographyPlanForTableV1(
+      widget.runner.table,
+      actorFocusSafe: _tableChoreographyActorFocusSafeV1(),
+    );
+
+    final plan = _tableChoreographyPlan;
+    if (plan == null || settleImmediately) {
+      _tableChoreographyFrame = plan == null
+          ? null
+          : act0TableChoreographyFrameAfterBeatV1(
+              plan,
+              plan.beats.length - 1,
+            );
+      _markHeroDecisionReadyV1(taskIdentity, notify: false);
+      return;
+    }
+
+    _heroDecisionReady = false;
+    _tableChoreographyFrame = act0TableChoreographyFrameAfterBeatV1(plan, -1);
+    final generation = _tableChoreographyGeneration;
+    _tableChoreographyTimer = Timer(
+      const Duration(milliseconds: 160),
+      () => _advanceTableChoreographyV1(taskIdentity, generation),
+    );
+  }
+
+  void _settleTableChoreographyV1(String taskIdentity) {
+    final plan = _tableChoreographyPlan;
+    if (plan != null) {
+      _tableChoreographyBeatIndex = plan.beats.length - 1;
+      _tableChoreographyFrame = act0TableChoreographyFrameAfterBeatV1(
+        plan,
+        _tableChoreographyBeatIndex,
+      );
+    }
+    _markHeroDecisionReadyV1(taskIdentity);
+  }
+
+  void _advanceTableChoreographyV1(String taskIdentity, int generation) {
+    if (!mounted ||
+        generation != _tableChoreographyGeneration ||
+        taskIdentity != _tableChoreographyRunKey) {
+      return;
+    }
+    final plan = _tableChoreographyPlan;
+    if (plan == null) {
+      _markHeroDecisionReadyV1(taskIdentity);
+      return;
+    }
+
+    final nextIndex = _tableChoreographyBeatIndex + 1;
+    if (nextIndex >= plan.beats.length) {
+      _markHeroDecisionReadyV1(taskIdentity);
+      return;
+    }
+
+    final beat = plan.beats[nextIndex];
+    _tableChoreographyBeatIndex = nextIndex;
+    _tableChoreographyFrame = act0TableChoreographyFrameAfterBeatV1(
+      plan,
+      nextIndex,
+    );
+
+    if (beat.kind == Act0TableChoreographyBeatKindV1.heroDecisionReady) {
+      _markHeroDecisionReadyV1(taskIdentity);
+      return;
+    }
+
+    setState(() {});
+    _tableChoreographyTimer = Timer(
+      _durationForTableChoreographyBeatV1(beat.kind),
+      () => _advanceTableChoreographyV1(taskIdentity, generation),
+    );
+  }
+
+  Duration _durationForTableChoreographyBeatV1(
+    Act0TableChoreographyBeatKindV1 kind,
+  ) {
+    return switch (kind) {
+      Act0TableChoreographyBeatKindV1.actionFocus =>
+        const Duration(milliseconds: 340),
+      Act0TableChoreographyBeatKindV1.commitmentMove =>
+        const Duration(milliseconds: 500),
+      Act0TableChoreographyBeatKindV1.foldRecess =>
+        const Duration(milliseconds: 340),
+      Act0TableChoreographyBeatKindV1.commitmentsCollect =>
+        const Duration(milliseconds: 300),
+      Act0TableChoreographyBeatKindV1.flopReveal ||
+      Act0TableChoreographyBeatKindV1.turnReveal ||
+      Act0TableChoreographyBeatKindV1.riverReveal =>
+        const Duration(milliseconds: 460),
+      Act0TableChoreographyBeatKindV1.heroDecisionReady => Duration.zero,
+    };
+  }
+
+  void _markHeroDecisionReadyV1(
+    String taskIdentity, {
+    bool notify = true,
+  }) {
+    if (taskIdentity != _tableChoreographyRunKey) {
+      return;
+    }
+    _tableChoreographyTimer?.cancel();
+    _tableChoreographyTimer = null;
+    final wasReady = _heroDecisionReady;
+    _heroDecisionReady = true;
+
+    final plan = _tableChoreographyPlan;
+    if (plan != null) {
+      _tableChoreographyBeatIndex = plan.beats.length - 1;
+      _tableChoreographyFrame = act0TableChoreographyFrameAfterBeatV1(
+        plan,
+        _tableChoreographyBeatIndex,
+      );
+    }
+
+    if (_taskTelemetryVisible && !_decisionTelemetryStopwatch.isRunning) {
+      _decisionTelemetryStopwatch
+        ..reset()
+        ..start();
+    }
+    if (notify && !wasReady && mounted) {
+      setState(() {});
+    }
+  }
+
+  void _cancelTableChoreographyV1() {
+    _tableChoreographyGeneration += 1;
+    _tableChoreographyTimer?.cancel();
+    _tableChoreographyTimer = null;
+  }
+
+  void _handleRunnerBackV1() {
+    _cancelTableChoreographyV1();
+    widget.onBack();
+  }
+
   void _maybeEmitTaskShownTelemetry() {
     if (!_taskTelemetryVisible) {
       return;
@@ -1522,8 +1723,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     _taskShownTelemetryKey = key;
     _userChoiceTelemetryKey = '';
     _decisionTelemetryStopwatch
-      ..reset()
-      ..start();
+      ..stop()
+      ..reset();
     _recordTelemetry(
       Act0TelemetryEventV1(
         name: 'task_shown',
@@ -1733,6 +1934,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }
 
   void _handleChooseOptionTelemetry(Act0RunnerOptionV1 option) {
+    if (!_heroDecisionReady) {
+      return;
+    }
     final telemetryDecisionTimeBucket = _decisionTimeBucketV1(
       _decisionTelemetryStopwatch.isRunning
           ? _decisionTelemetryStopwatch.elapsed
@@ -1896,6 +2100,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }
 
   void _handleChooseSeat(String seatId) {
+    if (!_heroDecisionReady) {
+      return;
+    }
     final option = widget.runner.options.cast<Act0RunnerOptionV1?>().firstWhere(
       (candidate) => candidate?.seatId == seatId,
       orElse: () => null,
@@ -1928,6 +2135,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }
 
   void _handleConfirmSizingPreset() {
+    if (!_heroDecisionReady) {
+      return;
+    }
     final presetId = widget.runner.selectedPresetId;
     final option = presetId == null
         ? null
@@ -2611,6 +2821,15 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     final table = feedbackSignalProof == null
         ? baseTable
         : _tableWithFeedbackSignalProofV1(baseTable, feedbackSignalProof);
+    final choreographyFrame = _tableChoreographyFrame;
+    final choreographyActive =
+        isDrill &&
+        !isTeaching &&
+        !_heroDecisionReady &&
+        choreographyFrame != null;
+    final presentationTable = choreographyActive
+        ? act0TableForChoreographyFrameV1(table, choreographyFrame)
+        : table;
     final sourceIdentityPolicy = act0TableIdentityPolicyForTeachingSemanticsV1(
       teachingStep?.identityTeachingSemantics ??
           Act0TableIdentityTeachingSemanticsV1.legacy,
@@ -2707,7 +2926,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         ? bottomContext.promptSupportLine
         : (bottomContext.isTrailHistory ? null : promptCoachLine);
     final showStreetReplayInline =
-        streetReplay?.isConsumerSafe == true && isDrill && !isTeaching;
+        _heroDecisionReady &&
+        streetReplay?.isConsumerSafe == true &&
+        isDrill &&
+        !isTeaching;
     final decisionHint = _resolveDecisionHintV1(
       taskFamily: widget.selectedTaskFamily,
       runner: runner,
@@ -2746,17 +2968,24 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       _interactiveShowdownLine = '';
     }
     final trailPlaybackEnabled =
-        _actionTrailFocusedIndex != null && !isTeaching;
+        _heroDecisionReady && _actionTrailFocusedIndex != null && !isTeaching;
     final mergedHighlightIds = <String>{
-      ...table.highlightedCardIds,
+      ...presentationTable.highlightedCardIds,
       ..._interactiveHighlightedCardIds,
     }.toList(growable: false);
-    final playbackActiveSeatId = trailPlaybackEnabled
+    final playbackActiveSeatId = choreographyActive
+        ? choreographyFrame.focusSeatId
+        : trailPlaybackEnabled
         ? _activeSeatIdFromActionTrail(table, _actionTrailFocusedIndex)
         : null;
-    final betOverride = trailPlaybackEnabled
-        ? _deriveBetFromTrailStep(table, _actionTrailFocusedIndex)
+    final choreographyCommitmentSeatId = choreographyActive
+        ? choreographyFrame.latestCommitmentSeatId
         : null;
+    final betOverride = choreographyCommitmentSeatId == null
+        ? trailPlaybackEnabled
+              ? _deriveBetFromTrailStep(table, _actionTrailFocusedIndex)
+              : null
+        : choreographyFrame.commitments[choreographyCommitmentSeatId];
     // Dynamic pot & street derived from replaying the trail up to current step.
     String? playbackPotLabel;
     String? playbackStreetLabel;
@@ -2781,7 +3010,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
               ? 'Нажмите на подсвеченное место'
               : 'Tap a highlighted seat')
         : '';
-    final rawShowActionTrail = bottomContext.showActionTrail;
+    final rawShowActionTrail =
+        _heroDecisionReady && bottomContext.showActionTrail;
     final selectedSeatId = runner.selectedOption?.seatId?.trim();
     final selectedSeatFeedbackState = switch (runner.reviewQuality) {
       Act0FeedbackQualityV1.wrong => _SeatSelectionFeedbackStateV1.wrong,
@@ -3220,21 +3450,30 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     }) {
       Widget tableStage = _RunnerTableStageV1(
         attention: sceneAttention,
-        table: table,
+        table: presentationTable,
         highlightedCardIds: mergedHighlightIds,
         interactiveCalloutLabel: interactiveCallout,
-        onBoardCardTap: _onBoardTappedForShowdown,
-        onChooseSeat: _handleChooseSeat,
+        onBoardCardTap: _heroDecisionReady
+            ? _onBoardTappedForShowdown
+            : (_) {},
+        onChooseSeat: _heroDecisionReady ? _handleChooseSeat : null,
         visualVariant: widget.tableVisualVariant,
         showFocusBadge: !_showBottomLearningRail,
         showRepairCallout: isTheory || (isDrill && hasSeatTargets),
         playbackActiveSeatId: playbackActiveSeatId,
-        animateBetMotion: trailPlaybackEnabled,
+        animateBetMotion:
+            choreographyCommitmentSeatId != null || trailPlaybackEnabled,
         betOverride: betOverride,
-        centerLabelOverride: centerStatDisplay.centerCueLabel,
-        potLabelOverride: playbackPotLabel ?? centerStatDisplay.potLabel,
-        toCallLabelOverride: centerStatDisplay.toCallLabel,
-        streetLabelOverride: playbackStreetLabel,
+        centerLabelOverride:
+            choreographyActive ? '' : centerStatDisplay.centerCueLabel,
+        potLabelOverride: choreographyActive
+            ? ''
+            : playbackPotLabel ?? centerStatDisplay.potLabel,
+        toCallLabelOverride:
+            choreographyActive ? '' : centerStatDisplay.toCallLabel,
+        streetLabelOverride: choreographyActive
+            ? choreographyFrame.street.label
+            : playbackStreetLabel,
         completionSummary: showCompletionToast
             ? widget.completionSummary
             : null,
