@@ -115,7 +115,7 @@ class Act0SceneHybridShellRegistryV1 {
   const Act0SceneHybridShellRegistryV1._();
 
   static const String shellPath =
-      'assets/act0_render_class/hybrid_scene_shell_v2.png';
+      'assets/act0_render_class/hybrid_scene_shell_v4.png';
   static const String heroPath =
       'assets/act0_render_class/hero_pov_foreground_v3.png';
 
@@ -135,23 +135,16 @@ class Act0SceneHybridShellRegistryV1 {
 /// Deterministic, viewport-independent footprint for the hybrid shell inside
 /// the canonical scene box.
 ///
-/// RENDER_CLASS_HYBRID_INTEGRATION_GAUNTLET_V2 measurement: the shell's own
-/// table spans source-normalized y=0.2846..0.8783 (far rail to near rail,
-/// full rail extent), i.e. 0.5936 of the image's own height. A full-bleed
-/// cover-crop (v1's registration) forces that span to fill the *entire*
-/// scene-box height, which over-crops the source horizontally — every
-/// dimension of the table then reads roughly 35% larger on screen than the
-/// frozen V2 stage fractions call for, leaving side players no room and
-/// reading as pasted into the corners.
-///
-/// Solving `heightFactor` so the table's own two fractions land exactly on
-/// the frozen stage fractions (far rail 0.27, near rail 0.74 of the scene
-/// box) gives one deterministic, no-crop, no-distortion placement: scale the
+/// RENDER_CLASS_HYBRID_INTEGRATION_GAUNTLET_V4 measurement: the V4 shell's
+/// own table envelope spans source-pixel y=456..1560 of its 941x1672 source
+/// (far rail to near rail), which maps to canonical stage fractions 0.27
+/// (far rail) and 0.74 (near rail) of the scene box. Solving `heightFactor`
+/// so those two envelope points land exactly on the frozen stage fractions
+/// gives one deterministic, no-crop, no-distortion placement: scale the
 /// *entire* source image uniformly into a centered, top-anchored rect sized
 /// by [heightFactor], width derived from the source's own aspect (never
 /// stretched). That rect is very slightly wider than the scene box (its
-/// horizontal overflow is clipped), which is far less zoomed than the old
-/// full-bleed crop.
+/// horizontal overflow is clipped).
 @immutable
 class Act0SceneHybridShellFootprintV1 {
   const Act0SceneHybridShellFootprintV1({
@@ -159,11 +152,11 @@ class Act0SceneHybridShellFootprintV1 {
     required this.topFraction,
   });
 
-  /// Solved from `(0.8783 - 0.2846) * heightFactor == 0.47` (the frozen V2
-  /// `projectedTableHeightFraction`).
+  /// Solved from the V4 source envelope (far rail y=456, near rail y=1560 of
+  /// the 941x1672 source) mapped onto canonical stage fractions 0.27..0.74.
   static const production = Act0SceneHybridShellFootprintV1(
-    heightFactor: 0.79,
-    topFraction: 0.045,
+    heightFactor: 0.7118115942,
+    topFraction: 0.0758695652,
   );
 
   final double heightFactor;
