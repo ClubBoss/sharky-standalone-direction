@@ -52,9 +52,16 @@ class Act0SceneCharacterArtFitV1 {
   static const standard = Act0SceneCharacterArtFitV1();
 
   /// Runtime-proven far-centre UTG art fit.
+  ///
+  /// RENDER_CLASS_HYBRID_INTEGRATION_GAUNTLET_V2 real-capture measurement:
+  /// against the baked hybrid table (smaller on screen than the procedural
+  /// table this was tuned against — see
+  /// `Act0SceneHybridShellFootprintV1`), 1.30 read as too dominant/too low.
+  /// Trimmed proportionally; the upward relativeOffset is eased to match so
+  /// UTG's head stays clear of the Coach exclusion band above the table.
   static const utg = Act0SceneCharacterArtFitV1(
-    scale: 1.30,
-    relativeOffset: Offset(0, -0.28),
+    scale: 1.12,
+    relativeOffset: Offset(0, -0.20),
   );
 }
 

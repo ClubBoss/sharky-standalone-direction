@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_character_asset_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_depth_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hybrid_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_material_v1.dart';
 
 /// Visual Gauntlet B3 — the player embodiment system.
@@ -661,10 +664,34 @@ class Act0SceneTieredSeatingV1 {
     this.worldWidenFraction = 0.32,
     this.topLiftFraction = 0.06,
     this.bottomDropFraction = 0.04,
+    this.farCentreScale = 0.95,
+    this.upperFlankScale = 1.35,
+    this.nearFlankScale = 1.55,
   });
 
   /// The one production tiered-seating rule.
   static const Act0SceneTieredSeatingV1 production = Act0SceneTieredSeatingV1();
+
+  /// RENDER_CLASS_HYBRID_INTEGRATION_GAUNTLET_V2 — a narrower world box for
+  /// the hybrid-shell scene only (visual character-world fit, not a seat/
+  /// poker-anchor change; [production] is untouched for every other camera
+  /// path). Real capture measurement showed the shell's own table already
+  /// reads wide at BB/HJ depth, so the *production* 0.32 widen pushed those
+  /// world anchors far enough past the stage edge to clip hard against the
+  /// screen bounds. Narrowing the widen pulls BB/HJ/SB/CO inward without
+  /// touching worldAnchorFor's fractions or any seat/card/chip anchor.
+  ///
+  /// Cycle 1 real capture then showed the *production* flank scale (tuned to
+  /// fill the wider box) now overlaps SB/CO's own card/label plate once
+  /// pulled inward, so the flank scale is trimmed by the same proportion the
+  /// widen shrank by (0.20/0.32) to keep the envelope-to-anchor relationship
+  /// the production values encode.
+  static const Act0SceneTieredSeatingV1 renderClassHybridV1 =
+      Act0SceneTieredSeatingV1(
+        worldWidenFraction: 0.16,
+        upperFlankScale: 1.15,
+        nearFlankScale: 1.20,
+      );
 
   /// How much wider than the felt stage the opponent world is, total, split
   /// evenly left/right.
@@ -677,6 +704,10 @@ class Act0SceneTieredSeatingV1 {
   /// How far below the stage the opponent world box ends, as a fraction of
   /// stage height.
   final double bottomDropFraction;
+
+  final double farCentreScale;
+  final double upperFlankScale;
+  final double nearFlankScale;
 
   /// Left inset (negative -> wider than the stage) for the widened world box.
   double horizontalInsetFor(double stageWidth) =>
@@ -718,11 +749,11 @@ class Act0SceneTieredSeatingV1 {
   double scaleFor(Act0SceneOpponentTierV1 tier) {
     switch (tier) {
       case Act0SceneOpponentTierV1.farCentre:
-        return 0.95;
+        return farCentreScale;
       case Act0SceneOpponentTierV1.upperFlank:
-        return 1.35;
+        return upperFlankScale;
       case Act0SceneOpponentTierV1.nearFlank:
-        return 1.55;
+        return nearFlankScale;
     }
   }
 
@@ -913,7 +944,7 @@ class Act0SceneCharacterRailCastPainterV1 extends CustomPainter {
 ///
 /// The arms are routed outside the hole-card lane, the identity plate and the
 /// dealer button. They frame the learner's hand; they never cover it.
-class Act0ScenePlayerHeroV1 extends StatelessWidget {
+class Act0ScenePlayerHeroV1 extends StatefulWidget {
   const Act0ScenePlayerHeroV1({
     super.key,
     this.light = Act0SceneLightV1.canonical,
@@ -922,23 +953,108 @@ class Act0ScenePlayerHeroV1 extends StatelessWidget {
   final Act0SceneLightV1 light;
 
   @override
+  State<Act0ScenePlayerHeroV1> createState() => _Act0ScenePlayerHeroV1State();
+}
+
+class _Act0ScenePlayerHeroV1State extends State<Act0ScenePlayerHeroV1> {
+  ui.Image? _image;
+  Object? _pendingToken;
+
+  Act0SceneSinglePlateImageStoreV1 get _store =>
+      Act0SceneHybridShellRegistryV1.heroStore;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _resolve();
+  }
+
+  void _resolve() {
+    final ready = _store.readyImage;
+    if (ready != null) {
+      _image = ready;
+      return;
+    }
+    if (_store.isPending || _store.isMissing) return;
+    final token = Object();
+    _pendingToken = token;
+    unawaited(
+      _store.warmUp().then((image) {
+        if (!mounted || _pendingToken != token || image == null) return;
+        setState(() => _image = image);
+      }),
+    );
+  }
+
+  @override
+  void dispose() {
+    _pendingToken = null;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final image = _image ?? _store.readyImage;
+    // RENDER_CLASS_HYBRID_INTEGRATION_GAUNTLET_V2 real-capture measurement:
+    // against the baked shell the authored Hero read too small/detached from
+    // the near rail. The procedural painter keeps its original proven
+    // geometry unchanged — only the authored-image path grows.
+    const widthFactor = 0.86;
+    const heightFactor = 0.25;
+    const translationDy = 0.46;
     return IgnorePointer(
       child: Align(
         alignment: Alignment.bottomCenter,
         child: FractionallySizedBox(
-          widthFactor: 0.74,
-          heightFactor: 0.19,
+          widthFactor: image == null ? 0.78 : widthFactor,
+          heightFactor: image == null ? 0.19 : heightFactor,
           child: FractionalTranslation(
-            translation: const Offset(0, 0.80),
-            child: CustomPaint(
-              painter: _Act0ScenePlayerHeroPainterV1(light: light),
-            ),
+            translation: Offset(0, image == null ? 0.52 : translationDy),
+            child: image == null
+                ? CustomPaint(
+                    key: const Key('act0_scene_hero_procedural'),
+                    painter: _Act0ScenePlayerHeroPainterV1(
+                      light: widget.light,
+                    ),
+                  )
+                : CustomPaint(
+                    key: const Key('act0_scene_hero_authored'),
+                    painter: Act0SceneHeroForegroundPainterV1(image: image),
+                  ),
           ),
         ),
       ),
     );
   }
+}
+
+/// Whole-source to whole-destination paint of the authored Hero POV
+/// foreground into the existing Hero owner rect — no crop, no distortion; the
+/// asset was authored to that exact aspect.
+class Act0SceneHeroForegroundPainterV1 extends CustomPainter {
+  const Act0SceneHeroForegroundPainterV1({required this.image});
+
+  final ui.Image image;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final source = Rect.fromLTWH(
+      0,
+      0,
+      image.width.toDouble(),
+      image.height.toDouble(),
+    );
+    canvas.drawImageRect(
+      image,
+      source,
+      Offset.zero & size,
+      Paint()..filterQuality = FilterQuality.high,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant Act0SceneHeroForegroundPainterV1 oldDelegate) =>
+      !identical(oldDelegate.image, image);
 }
 
 class _Act0ScenePlayerHeroPainterV1 extends CustomPainter {
@@ -952,7 +1068,7 @@ class _Act0ScenePlayerHeroPainterV1 extends CustomPainter {
   static const Color _sleeve = Color(0xFF1B2740);
   static const Color _sleeveShade = Color(0xFF080D16);
   static const Color _cuff = Color(0xFF2C3B58);
-  static const Color _skin = Color(0xFF7C5A4A);
+  static const Color _skin = Color(0xFFA6785F);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -978,7 +1094,7 @@ class _Act0ScenePlayerHeroPainterV1 extends CustomPainter {
           ..style = PaintingStyle.stroke
           ..strokeCap = StrokeCap.round
           ..strokeJoin = StrokeJoin.round
-          ..strokeWidth = h * 0.17
+          ..strokeWidth = h * 0.15
           ..shader = sleeveShader,
       );
       // Cuff, then the back of the hand resting on the cloth. Drawn as a flat
@@ -1002,32 +1118,42 @@ class _Act0ScenePlayerHeroPainterV1 extends CustomPainter {
       );
     }
 
-    // Shoulder line, cropped by the action dock below.
-    final shoulders = Path()
-      ..moveTo(0, h)
-      ..lineTo(0, h * 0.70)
-      ..cubicTo(w * 0.14, h * 0.60, w * 0.26, h * 0.53, w * 0.335, h * 0.46)
-      ..cubicTo(w * 0.352, h * 0.06, w * 0.648, h * 0.06, w * 0.665, h * 0.46)
-      ..cubicTo(w * 0.74, h * 0.53, w * 0.86, h * 0.60, w, h * 0.70)
-      ..lineTo(w, h)
-      ..close();
-    canvas.drawPath(shoulders, Paint()..shader = sleeveShader);
-
-    // The overhead lamp catching the top of the learner's head and shoulders.
-    canvas.drawPath(
-      shoulders,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = math.max(1.3, h * 0.034)
-        ..shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: <Color>[
-            Act0SceneLightV1.specular.withValues(alpha: 0.58 * light.intensity),
-            Act0SceneLightV1.specular.withValues(alpha: 0.05),
-          ],
-        ).createShader(Rect.fromLTWH(0, 0, w, h * 0.74)),
-    );
+    // Keep the learner strictly first-person. The prior full-width shoulder
+    // mass formed a dark trapezoid at phone scale and read like a technical
+    // placeholder torso. The two tapered forearms above already provide the
+    // required embodiment while leaving the centre lane open for hole cards.
+    // A restrained contact shadow under each hand is enough to seat them on
+    // the near rail without reintroducing a body silhouette.
+    for (final side in const <double>[-1, 1]) {
+      final hand = Offset(w * (0.5 + (0.449 * side)), h * 0.125);
+      canvas.drawOval(
+        Rect.fromCenter(
+          center: Offset(hand.dx, hand.dy + (h * 0.055)),
+          width: h * 0.24,
+          height: h * 0.075,
+        ),
+        Paint()
+          ..color = const Color(0x66000308)
+          ..maskFilter = MaskFilter.blur(BlurStyle.normal, h * 0.030),
+      );
+      canvas.drawArc(
+        Rect.fromCenter(
+          center: Offset(w * (0.5 + (0.455 * side)), h * 0.38),
+          width: h * 0.18,
+          height: h * 0.56,
+        ),
+        side < 0 ? math.pi * 0.88 : math.pi * 0.12,
+        side < 0 ? math.pi * 0.42 : -math.pi * 0.42,
+        false,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.round
+          ..strokeWidth = math.max(1.0, h * 0.018)
+          ..color = Act0SceneLightV1.specular.withValues(
+            alpha: 0.24 * light.intensity,
+          ),
+      );
+    }
   }
 
   @override

@@ -12,6 +12,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_scene_v3.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_depth_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hud_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hybrid_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_material_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_player_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_room_plate_v1.dart';
@@ -3722,7 +3723,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
               child: Act0SceneRecedeMotionV1(
                 motion: sceneAttention,
                 plane: Act0SceneRecedePlaneV1.room,
-                child: Act0SceneRoomPlaneV1(
+                child: Act0SceneHybridShellPlaneV1(
                   key: const Key('act0_scene_environment_plane'),
                   horizon: camera.horizonFraction,
                 ),
@@ -10890,34 +10891,55 @@ class _Act0TableV1 extends StatelessWidget {
                 clipBehavior: Clip.none,
                 children: [
                   Positioned.fill(
-                    child: Container(
-                      key: const Key('act0_shell_table_felt'),
-                      decoration: integratedPerspectivePrototype
-                          ? ShapeDecoration(
-                              gradient: const RadialGradient(
-                                center: Alignment(0, -0.16),
-                                radius: 1.08,
-                                colors: <Color>[
-                                  Act0IntegratedSceneFeltV1.centerLit,
-                                  Act0IntegratedSceneFeltV1.midLit,
-                                  Act0IntegratedSceneFeltV1.edgeDeep,
-                                ],
-                                stops: <double>[0, 0.55, 1],
+                    child: ValueListenableBuilder<bool>(
+                      valueListenable:
+                          Act0SceneHybridShellRegistryV1
+                              .shellStore
+                              .readyNotifier,
+                      builder: (context, hybridShellReady, _) => Container(
+                        key: const Key('act0_shell_table_felt'),
+                        // RENDER_CLASS_HYBRID_INTEGRATION_V1: once the baked
+                        // shell is ready its own felt/rail owns this pixel
+                        // area, so the procedural felt fill goes transparent
+                        // rather than double-painting under the same
+                        // dynamic-object geometry.
+                        decoration: !integratedPerspectivePrototype
+                            ? Act0ShellTokensV1.feltDecoration()
+                            : hybridShellReady
+                            ? null
+                            : ShapeDecoration(
+                                gradient: const RadialGradient(
+                                  center: Alignment(0, -0.16),
+                                  radius: 1.08,
+                                  colors: <Color>[
+                                    Act0IntegratedSceneFeltV1.centerLit,
+                                    Act0IntegratedSceneFeltV1.midLit,
+                                    Act0IntegratedSceneFeltV1.edgeDeep,
+                                  ],
+                                  stops: <double>[0, 0.55, 1],
+                                ),
+                                shape: const Act0SceneTableShapeV1(),
                               ),
-                              shape: const Act0SceneTableShapeV1(),
-                            )
-                          : Act0ShellTokensV1.feltDecoration(),
-                    ),
-                  ),
-                  if (integratedPerspectivePrototype)
-                    const Positioned.fill(
-                      child: IgnorePointer(
-                        child: CustomPaint(
-                          key: Key('act0_scene_felt_material'),
-                          painter: Act0SceneFeltMaterialPainterV1(),
-                        ),
                       ),
                     ),
+                  ),
+                  ValueListenableBuilder<bool>(
+                    valueListenable:
+                        Act0SceneHybridShellRegistryV1
+                            .shellStore
+                            .readyNotifier,
+                    builder: (context, hybridShellReady, _) =>
+                        integratedPerspectivePrototype && !hybridShellReady
+                        ? const Positioned.fill(
+                            child: IgnorePointer(
+                              child: CustomPaint(
+                                key: Key('act0_scene_felt_material'),
+                                painter: Act0SceneFeltMaterialPainterV1(),
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                  ),
                   Positioned.fill(
                     child: Padding(
                       padding: const EdgeInsets.all(13),
@@ -11149,13 +11171,23 @@ class _Act0TableV1 extends StatelessWidget {
             if (!integratedPerspectivePrototype) {
               return tableBody;
             }
-            return CustomPaint(
-              key: const Key('act0_scene_table_material'),
-              painter: const Act0SceneTableMaterialPainterV1(
-                railWidth: _act0SceneRailWidthV1,
-                railOverhang: _act0SceneRailOverhangV1,
-              ),
-              child: tableBody,
+            return ValueListenableBuilder<bool>(
+              valueListenable:
+                  Act0SceneHybridShellRegistryV1.shellStore.readyNotifier,
+              builder: (context, hybridShellReady, _) => hybridShellReady
+                  // RENDER_CLASS_HYBRID_INTEGRATION_V1: the baked shell
+                  // already owns rail volume/material, so the procedural
+                  // rail painter is suppressed rather than double-painted
+                  // behind it.
+                  ? tableBody
+                  : CustomPaint(
+                      key: const Key('act0_scene_table_material'),
+                      painter: const Act0SceneTableMaterialPainterV1(
+                        railWidth: _act0SceneRailWidthV1,
+                        railOverhang: _act0SceneRailOverhangV1,
+                      ),
+                      child: tableBody,
+                    ),
             );
           },
         ),
@@ -11174,22 +11206,35 @@ class _Act0TableV1 extends StatelessWidget {
       Act0SceneTieredPlaneV1 plane,
       Key key,
     ) {
-      const rules = Act0SceneTieredSeatingV1.production;
-      return Positioned(
-        left: rules.horizontalInsetFor(stageSize.width),
-        right: rules.horizontalInsetFor(stageSize.width),
-        top: rules.topInsetFor(stageSize.height),
-        bottom: rules.bottomInsetFor(stageSize.height),
-        child: Act0SceneRecedeMotionV1(
-          motion: sceneMotion,
-          plane: Act0SceneRecedePlaneV1.player,
-          child: Act0SceneTieredOpponentLayerV1(
-            key: key,
-            slots: sceneSeatSlots,
-            plane: plane,
-            foldedSeatIds: inactiveSeatIds,
-          ),
-        ),
+      return ValueListenableBuilder<bool>(
+        valueListenable:
+            Act0SceneHybridShellRegistryV1.shellStore.readyNotifier,
+        builder: (context, hybridShellReady, _) {
+          // RENDER_CLASS_HYBRID_INTEGRATION_GAUNTLET_V2: the narrower world
+          // box only applies once the hybrid shell owns the visual — the
+          // procedural-table fallback path keeps the original production
+          // widen it was tuned against.
+          final rules = hybridShellReady
+              ? Act0SceneTieredSeatingV1.renderClassHybridV1
+              : Act0SceneTieredSeatingV1.production;
+          return Positioned(
+            left: rules.horizontalInsetFor(stageSize.width),
+            right: rules.horizontalInsetFor(stageSize.width),
+            top: rules.topInsetFor(stageSize.height),
+            bottom: rules.bottomInsetFor(stageSize.height),
+            child: Act0SceneRecedeMotionV1(
+              motion: sceneMotion,
+              plane: Act0SceneRecedePlaneV1.player,
+              child: Act0SceneTieredOpponentLayerV1(
+                key: key,
+                slots: sceneSeatSlots,
+                plane: plane,
+                foldedSeatIds: inactiveSeatIds,
+                rules: rules,
+              ),
+            ),
+          );
+        },
       );
     }
 

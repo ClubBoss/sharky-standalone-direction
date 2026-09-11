@@ -67,13 +67,16 @@ void main() {
     final utg = Act0SceneCharacterAssetRegistryV1.artFitFor(
       Act0SceneCharacterIdentityV1.utg,
     );
-    expect(utg.scale, 1.30);
-    expect(utg.relativeOffset, const Offset(0, -0.28));
+    // RENDER_CLASS_HYBRID_INTEGRATION_GAUNTLET_V2: trimmed against the baked
+    // hybrid table (smaller on screen than the procedural table this was
+    // originally tuned against) — see Act0SceneCharacterArtFitV1.utg.
+    expect(utg.scale, 1.12);
+    expect(utg.relativeOffset, const Offset(0, -0.20));
     final destination = utg.destinationRectFor(const Size(100, 200));
-    expect(destination.left, closeTo(-15, 1e-9));
-    expect(destination.top, closeTo(-56, 1e-9));
-    expect(destination.width, closeTo(130, 1e-9));
-    expect(destination.height, closeTo(260, 1e-9));
+    expect(destination.left, closeTo(-6, 1e-9));
+    expect(destination.top, closeTo(-40, 1e-9));
+    expect(destination.width, closeTo(112, 1e-9));
+    expect(destination.height, closeTo(224, 1e-9));
 
     for (final identity in Act0SceneCharacterIdentityV1.values.where(
       (identity) => identity != Act0SceneCharacterIdentityV1.utg,
