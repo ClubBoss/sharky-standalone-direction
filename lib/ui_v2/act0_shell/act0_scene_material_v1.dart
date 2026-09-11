@@ -85,9 +85,9 @@ class Act0SceneTableMaterialPainterV1 extends CustomPainter {
   /// Rail material, navy leather rather than borrowed reference wood. Gold is
   /// deliberately absent — it stays reserved for mastery and reward.
   static const Color _outerWall = Color(0xFF030810);
-  static const Color _bodyDeep = Color(0xFF0A1625);
-  static const Color _bodyMid = Color(0xFF1B314A);
-  static const Color _crown = Color(0xFF395A79);
+  static const Color _bodyDeep = Color(0xFF07111E);
+  static const Color _bodyMid = Color(0xFF13283C);
+  static const Color _crown = Color(0xFF2A465F);
 
   Path _outerPath(Size size) => Act0SceneTableShapeV1(
     perspective: perspective,
@@ -124,7 +124,7 @@ class Act0SceneTableMaterialPainterV1 extends CustomPainter {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: <Color>[
-            Color.lerp(_bodyMid, _crown, 0.85 * light.intensity)!,
+            Color.lerp(_bodyMid, _crown, 0.62 * light.intensity)!,
             _bodyMid,
             _bodyDeep,
           ],
@@ -154,8 +154,8 @@ class Act0SceneTableMaterialPainterV1 extends CustomPainter {
       Paint()
         ..shader = RadialGradient(
           colors: <Color>[
-            Act0SceneLightV1.specular.withValues(alpha: 0.25 * light.intensity),
-            Act0SceneLightV1.specular.withValues(alpha: 0.08 * light.intensity),
+            Act0SceneLightV1.specular.withValues(alpha: 0.16 * light.intensity),
+            Act0SceneLightV1.specular.withValues(alpha: 0.045 * light.intensity),
             Colors.transparent,
           ],
           stops: const <double>[0, 0.60, 1],
@@ -168,14 +168,14 @@ class Act0SceneTableMaterialPainterV1 extends CustomPainter {
       outer,
       Paint()
         ..style = PaintingStyle.stroke
-        ..strokeWidth = railWidth * 0.62
+        ..strokeWidth = railWidth * 0.50
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3.0)
         ..shader = LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: <Color>[
-            Act0SceneLightV1.specular.withValues(alpha: 0.38 * light.intensity),
-            Act0SceneLightV1.specular.withValues(alpha: 0.07),
+            Act0SceneLightV1.specular.withValues(alpha: 0.24 * light.intensity),
+            Act0SceneLightV1.specular.withValues(alpha: 0.045),
             Colors.transparent,
           ],
           stops: const <double>[0, 0.44, 0.78],
@@ -213,7 +213,7 @@ class Act0SceneTableMaterialPainterV1 extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.4
         ..color = Act0SceneLightV1.feltBounce.withValues(
-          alpha: 0.42 * light.intensity,
+          alpha: 0.30 * light.intensity,
         ),
     );
   }
@@ -239,8 +239,11 @@ class Act0SceneFeltMaterialPainterV1 extends CustomPainter {
   final Act0SceneLightV1 light;
   final Act0ScenePerspectiveV1 perspective;
 
-  static const Color _shade = Color(0xFF04140F);
-  static const Color _lit = Act0IntegratedSceneFeltV1.keyLight;
+  static const Color _shade = Color(0xFF03110D);
+  static const Color _feltDeep = Color(0xFF073B2E);
+  static const Color _feltMid = Color(0xFF0B6047);
+  static const Color _feltLit = Color(0xFF117657);
+  static const Color _lit = Color(0xFF2F9C75);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -251,6 +254,33 @@ class Act0SceneFeltMaterialPainterV1 extends CustomPainter {
 
     canvas.save();
     canvas.clipPath(surface);
+
+    // Own the integrated scene's cloth grade here instead of inheriting the
+    // brighter legacy felt fill. The physical table needs one deep emerald
+    // material with a restrained lamp lift, not a uniformly luminous green UI
+    // surface. Geometry is unchanged; this is paint-only.
+    final basePool = Rect.fromCenter(
+      center: Offset(
+        size.width * (0.5 + (light.origin.x * 0.18)),
+        size.height * 0.43,
+      ),
+      width: size.width * 1.26,
+      height: size.height * 1.08,
+    );
+    canvas.drawRect(
+      rect,
+      Paint()
+        ..shader = RadialGradient(
+          center: const Alignment(0, -0.20),
+          radius: 0.92,
+          colors: <Color>[
+            _feltLit,
+            _feltMid,
+            _feltDeep,
+          ],
+          stops: const <double>[0, 0.56, 1],
+        ).createShader(basePool),
+    );
 
     // Distance falloff: the far end of the cloth is further from the lamp and
     // reads darker. This is most of what sells the table's length.
@@ -283,8 +313,8 @@ class Act0SceneFeltMaterialPainterV1 extends CustomPainter {
       Paint()
         ..shader = RadialGradient(
           colors: <Color>[
-            _lit.withValues(alpha: 0.50 * light.intensity),
-            _lit.withValues(alpha: 0.16 * light.intensity),
+            _lit.withValues(alpha: 0.30 * light.intensity),
+            _lit.withValues(alpha: 0.09 * light.intensity),
             Colors.transparent,
           ],
           stops: const <double>[0, 0.52, 1],
@@ -316,7 +346,7 @@ class Act0SceneFeltMaterialPainterV1 extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeWidth = math.max(5.0, size.width * 0.026)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5.5)
-        ..color = _shade.withValues(alpha: 0.40),
+        ..color = _shade.withValues(alpha: 0.48),
     );
 
     // Edge absorption: cloth darkens as it curves away into the rail.
