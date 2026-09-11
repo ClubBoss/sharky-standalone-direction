@@ -2829,14 +2829,14 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         ? baseTable
         : _tableWithFeedbackSignalProofV1(baseTable, feedbackSignalProof);
     final choreographyFrame = _tableChoreographyFrame;
-    final choreographyActive =
-        isDrill &&
-        !isTeaching &&
-        !_heroDecisionReady &&
-        choreographyFrame != null;
-    final presentationTable = choreographyActive
-        ? act0TableForChoreographyFrameV1(table, choreographyFrame)
-        : table;
+    final activeChoreographyFrame =
+        isDrill && !isTeaching && !_heroDecisionReady
+        ? choreographyFrame
+        : null;
+    final choreographyActive = activeChoreographyFrame != null;
+    final presentationTable = activeChoreographyFrame == null
+        ? table
+        : act0TableForChoreographyFrameV1(table, activeChoreographyFrame);
     final sourceIdentityPolicy = act0TableIdentityPolicyForTeachingSemanticsV1(
       teachingStep?.identityTeachingSemantics ??
           Act0TableIdentityTeachingSemanticsV1.legacy,
@@ -2981,18 +2981,18 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       ..._interactiveHighlightedCardIds,
     }.toList(growable: false);
     final playbackActiveSeatId = choreographyActive
-        ? choreographyFrame.focusSeatId
+        ? activeChoreographyFrame.focusSeatId
         : trailPlaybackEnabled
         ? _activeSeatIdFromActionTrail(table, _actionTrailFocusedIndex)
         : null;
     final choreographyCommitmentSeatId = choreographyActive
-        ? choreographyFrame.latestCommitmentSeatId
+        ? activeChoreographyFrame.latestCommitmentSeatId
         : null;
     final betOverride = choreographyCommitmentSeatId == null
         ? trailPlaybackEnabled
               ? _deriveBetFromTrailStep(table, _actionTrailFocusedIndex)
               : null
-        : choreographyFrame.commitments[choreographyCommitmentSeatId];
+        : activeChoreographyFrame.commitments[choreographyCommitmentSeatId];
     // Dynamic pot & street derived from replaying the trail up to current step.
     String? playbackPotLabel;
     String? playbackStreetLabel;
@@ -3481,7 +3481,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         toCallLabelOverride:
             choreographyActive ? '' : centerStatDisplay.toCallLabel,
         streetLabelOverride: choreographyActive
-            ? choreographyFrame.street.label
+            ? activeChoreographyFrame.street.label
             : playbackStreetLabel,
         completionSummary: showCompletionToast
             ? widget.completionSummary
