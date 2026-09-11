@@ -2134,6 +2134,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     }
   }
 
+  void _handleSelectSizingPresetV1(Act0SizingPresetV1 preset) {
+    if (!_heroDecisionReady) {
+      return;
+    }
+    widget.onSelectSizingPreset?.call(preset);
+  }
+
   void _handleConfirmSizingPreset() {
     if (!_heroDecisionReady) {
       return;
@@ -3258,7 +3265,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             ? runner.sizingConfig.presets
             : null,
         selectedPresetId: runner.selectedPresetId,
-        onSelectPreset: widget.onSelectSizingPreset,
+        onSelectPreset: widget.onSelectSizingPreset == null
+            ? null
+            : _handleSelectSizingPresetV1,
         integratedLowerSurface: _showBottomLearningRail,
         compactAnswerListDecision: compactAnswerListDecision,
         fillCompactPromptToDock: false,
