@@ -2980,19 +2980,23 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       ...presentationTable.highlightedCardIds,
       ..._interactiveHighlightedCardIds,
     }.toList(growable: false);
-    final playbackActiveSeatId = choreographyActive
-        ? activeChoreographyFrame.focusSeatId
-        : trailPlaybackEnabled
-        ? _activeSeatIdFromActionTrail(table, _actionTrailFocusedIndex)
+    final playbackActiveSeatId =
+        activeChoreographyFrame?.focusSeatId ??
+        (trailPlaybackEnabled
+            ? _activeSeatIdFromActionTrail(table, _actionTrailFocusedIndex)
+            : null);
+    final choreographyCommitmentSeatId =
+        activeChoreographyFrame?.latestCommitmentSeatId;
+    final choreographyBetOverride =
+        activeChoreographyFrame != null &&
+            choreographyCommitmentSeatId != null
+        ? activeChoreographyFrame.commitments[choreographyCommitmentSeatId]
         : null;
-    final choreographyCommitmentSeatId = choreographyActive
-        ? activeChoreographyFrame.latestCommitmentSeatId
-        : null;
-    final betOverride = choreographyCommitmentSeatId == null
-        ? trailPlaybackEnabled
-              ? _deriveBetFromTrailStep(table, _actionTrailFocusedIndex)
-              : null
-        : activeChoreographyFrame.commitments[choreographyCommitmentSeatId];
+    final betOverride =
+        choreographyBetOverride ??
+        (trailPlaybackEnabled
+            ? _deriveBetFromTrailStep(table, _actionTrailFocusedIndex)
+            : null);
     // Dynamic pot & street derived from replaying the trail up to current step.
     String? playbackPotLabel;
     String? playbackStreetLabel;
@@ -3480,9 +3484,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             : playbackPotLabel ?? centerStatDisplay.potLabel,
         toCallLabelOverride:
             choreographyActive ? '' : centerStatDisplay.toCallLabel,
-        streetLabelOverride: choreographyActive
-            ? activeChoreographyFrame.street.label
-            : playbackStreetLabel,
+        streetLabelOverride:
+            activeChoreographyFrame?.street.label ?? playbackStreetLabel,
         completionSummary: showCompletionToast
             ? widget.completionSummary
             : null,
