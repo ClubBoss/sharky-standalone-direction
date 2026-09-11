@@ -1,7 +1,7 @@
 # Pre-Human Campaign State v1
 
 Status: `PRE_P02_NORTH_STAR_CONVERGENCE_ACTIVE`
-Freshness date: 2026-09-10
+Freshness date: 2026-09-12
 Repository: `ClubBoss/sharky-standalone-direction`
 
 This file carries exact current campaign dispatch beneath
@@ -31,29 +31,48 @@ freeze -> P02 sequencing is superseded by the owner rebaseline.
 
 ## Exact Current Dispatch
 
+This is the single unambiguous current dispatch. Every other
+`EXACT_NEXT_ACTION` / `ACTIVE_FAMILY` statement elsewhere in this file predates
+PR #220 and the `TABLE_ACTION_AND_STREET_MOTION` audit and is historical /
+superseded — see the "(historical — superseded)" markers below.
+
 `CURRENT_STAGE = PRE_P02_NORTH_STAR_CONVERGENCE`
 
-`ACTIVE_FAMILY = PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
+`LANE_A_VISUAL = CLOSED_PASS / FROZEN`
 
-`PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1 = ACTIVE / ADMITTED`
+`LANE_B_SURFACE_COHESION = CLOSED_PASS`
 
-`INITIAL_FOCUS = LEARNING_SCENE_CHARACTER_AND_COACH_VISUAL_COMPLETION`
+`LANE_C_LEARNING_LOOP = IMPLEMENT_NOW`
 
-`EXACT_NEXT_ACTION = IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1`
+`LANE_D_CONTENT_CORRECTNESS = CLOSED_PASS`
+
+`LANE_E_PERSONALIZED_NEXT_VALUE = REQUIRES_HUMAN_EVIDENCE`
+
+`LANE_F_RELIABILITY_ERGONOMICS = CLOSED_PASS`
+
+`CURRENT_ACTIVE_FAMILY = TABLE_ACTION_AND_STREET_MOTION_V1` (not yet
+implemented; semantic poker-hand choreography / presentation orchestration
+over existing Act0 state — no new engine, no camera/table geometry reopen)
+
+`EXACT_NEXT_ACTION = IMPLEMENT_TABLE_ACTION_AND_STREET_MOTION_V1_AFTER_PR221_MERGE`
 
 `STRUCTURAL_VISUAL_EXPLORATION = CLOSED`
 
-`V2_PRODUCTION_SPATIAL_BASELINE = ADMITTED`
+`V2_PRODUCTION_SPATIAL_BASELINE = ADMITTED` (historical baseline, preserved;
+`PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1` and its V2 spatial-skeleton
+sub-wave are `CLOSED_PASS / FROZEN`, not the current dispatch)
 
 `P02 = DEFERRED / NOT_CURRENT_GATE`
 
-`P02_ENTRY_GATE_V2 = PRE_P02_NORTH_STAR_CONVERGENCE_DIMINISHING_RETURNS_REACHED`
+`P02_ENTRY_GATE_STATUS = MACHINE_PREP_REMAINING`
+
+`PRE_P02_DIMINISHING_RETURNS = NOT_REACHED`
 
 `HUMAN_PROOF = FALSE`
 
 `B8 = NOT_ADMITTED`
 
-## V2 Production Spatial Baseline Admission (2026-09-10)
+## V2 Production Spatial Baseline Admission (2026-09-10) — historical, superseded as current dispatch
 
 Owner has adjudicated the Cycle C / Cycle D structural experiments. Provenance:
 `docs/_reviews/owner_cycle_d_structural_closure_and_v2_production_admission_v1.md`.
@@ -85,9 +104,12 @@ Owner has adjudicated the Cycle C / Cycle D structural experiments. Provenance:
   Star; `CAST V4` = Character Identity North Star; `C2-9` = deferred 9-max
   concept reference.
 
-### Next sub-wave inside the active family
+### Next sub-wave inside the active family (historical — superseded, see "Exact Current Dispatch" above)
 
-`EXACT_NEXT_ACTION = IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1`
+`EXACT_NEXT_ACTION = IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1` — historical
+record of the V2 sub-wave dispatch at the time of this admission. This family
+is now `CLOSED_PASS / FROZEN`; it is not the current exact next action. The
+current exact next action is `IMPLEMENT_TABLE_ACTION_AND_STREET_MOTION_V1_AFTER_PR221_MERGE`.
 
 Narrowly: productionize the winning V2 skeleton (bounded camera exception + wide
 opponent world + three depth tiers + front/back planes); remove diagnostic
@@ -104,16 +126,16 @@ One active implementation family at a time.
 
 | Lane | Current role |
 | --- | --- |
-| A. Visual Art / Learning Scene Completion | `ACTIVE FAMILY` through `PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1` |
+| A. Visual Art / Learning Scene Completion | `CLOSED_PASS / FROZEN` — `PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1` (historical active family, superseded) |
 | B. Whole Product Surface Cohesion | `QUEUED / SELECT ONLY AFTER ACTIVE FAMILY REASSESSMENT` |
-| C. Learning Loop Convergence | `QUEUED / MACHINE-PRODUCT REDUCIBLE ONLY` |
+| C. Learning Loop Convergence | `IMPLEMENT_NOW` — `TABLE_ACTION_AND_STREET_MOTION_V1` (2026-09-12 audit; not yet implemented) |
 | D. Content / Correctness / Curriculum | `QUEUED / W1-W12 BOUNDED ONLY` |
 | E. Personalized Next Value / Return Reason | `QUEUED / CURRENT DETERMINISTIC MECHANISMS ONLY` |
-| F. Reliability / Ergonomics / Evidence Readiness | `QUEUED / EVIDENCE-BACKED DEBT ONLY` |
+| F. Reliability / Ergonomics / Evidence Readiness | `CLOSED_PASS` (reduced-motion proof-beat maintenance, 2026-09-12) |
 
 No queued lane is automatically admitted.
 
-## First Active Family
+## First Active Family (historical — CLOSED_PASS / FROZEN, superseded by TABLE_ACTION_AND_STREET_MOTION_V1)
 
 `PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
 
@@ -143,10 +165,85 @@ architecture blocker.
 Inherited approximately 1.8 second proof-beat motion under
 `MediaQuery.disableAnimations` is now:
 
-`KNOWN_REQUIRED_PRE_FREEZE_MAINTENANCE`
+`CLOSED_PASS`
 
-It is not the current macro-stage and not the current next action. It must be
-disposed before exact P02 candidate freeze.
+Disposed by `POST_B7_PRE_P02_REDUCED_MOTION_PROOF_BEAT_MAINTENANCE_V1` (see
+closure section below). It is not the current macro-stage.
+
+## Post-PR220 / Reduced-Motion Maintenance Closure (2026-09-12)
+
+`PR220_VISUAL_FAMILY (render-class hybrid shell / V4 shell integration) = CLOSED_PASS / FROZEN`
+
+`REDUCED_MOTION_PROOF_BEAT_CONTRACT_VIOLATION = CLOSED_PASS` — `_BlockXpProgressCardV1`
+and `_CompletionToastV1` in `act0_lesson_runner_shell_v1.dart` now honor
+`MediaQuery.disableAnimations` (settled state rendered immediately, no 1800ms
+tween, no faded-out final content), following the existing
+`_ProofMotionRevealV1` local pattern. Normal-motion behavior is unchanged.
+
+Lane reassessment (post-PR220, post-reduced-motion-fix) — superseded below by
+the post-audit reconciliation:
+
+- `LANE_A_VISUAL = CLOSED_PASS`
+- `LANE_B_SURFACE_COHESION = CLOSED_PASS`
+- ~~`LANE_C_LEARNING_LOOP = REQUIRES_HUMAN_EVIDENCE`~~ — superseded, see below.
+- `LANE_D_CONTENT_CORRECTNESS = CLOSED_PASS`
+- `LANE_E_PERSONALIZED_NEXT_VALUE = REQUIRES_HUMAN_EVIDENCE`
+- `LANE_F_RELIABILITY_ERGONOMICS = CLOSED_PASS`
+
+`P02 = DEFERRED / NOT_CURRENT_GATE` (unchanged; not auto-admitted).
+
+## Post-PR221 Audit Reconciliation — Table Action & Street Motion (2026-09-12)
+
+A newer independent architecture audit,
+`TABLE_ACTION_AND_STREET_MOTION_ARCHITECTURE_AUDIT_V1`, established a material
+additional pre-P02 machine-reducible gap after the PR #221 reduced-motion
+mission was issued. This makes the "no other material lane remains
+`IMPLEMENT_NOW`" statement above stale. It is not preserved as current.
+
+Accepted findings:
+
+- `CURRENT_ACTION_SEQUENCE_CAPABILITY = 3/10`
+- `CURRENT_STREET_REVEAL_CAPABILITY = 1/10`
+- `CURRENT_CHIP_MOTION_CAPABILITY = 3/10`
+- `CURRENT_POT_SHOWDOWN_CAPABILITY = 2/10`
+- `CURRENT_WHOLE_HAND_CHOREOGRAPHY = 2/10`
+- `ACTION_QUEUE_STATUS = REPLAY_ONLY`
+- `FLOP_REVEAL_STATUS = STATIC_STATE_ONLY`
+- `TURN_REVEAL_STATUS = STATIC_STATE_ONLY`
+- `RIVER_REVEAL_STATUS = STATIC_STATE_ONLY`
+- `NEW_ENGINE_REQUIRED = NO`
+- `REUSE_CURRENT_ACT0_STATE = YES`
+- `PRODUCT_EV = HIGH`
+- `REGRESSION_RISK = MEDIUM`
+- `SHOULD_IMPLEMENT_BEFORE_P02 = YES`
+
+Reconciled lane status:
+
+`LANE_C_LEARNING_LOOP = IMPLEMENT_NOW`
+
+Active bounded family: `TABLE_ACTION_AND_STREET_MOTION_V1` — **not yet
+implemented**. This is semantic poker-hand choreography / presentation
+orchestration over existing source-owned Act0 state (who acted -> what changed
+-> street transition -> Hero decision readiness). It is not visual
+micro-polish.
+
+Explicitly:
+
+- this does NOT reopen V4 visual convergence (`LANE_A_VISUAL` stays
+  `CLOSED_PASS / FROZEN`);
+- this does NOT require a new poker engine;
+- this does NOT reopen camera / table geometry;
+- `REDUCED_MOTION_DEBT` and `LANE_F_RELIABILITY_ERGONOMICS` stay `CLOSED_PASS`
+  (PR #221 closure is preserved, unaffected by this reconciliation).
+
+`P02_ENTRY_GATE_STATUS = MACHINE_PREP_REMAINING`
+
+`PRE_P02_DIMINISHING_RETURNS = NOT_REACHED` until `TABLE_ACTION_AND_STREET_MOTION_V1`
+is disposed. After that family passes, the next step is re-running the final
+cheap machine falsifiers and seeking owner P02 admission — not opening a
+generic holistic-challenger pass or unrelated polish.
+
+`EXACT_NEXT_ACTION = IMPLEMENT_TABLE_ACTION_AND_STREET_MOTION_V1_AFTER_PR221_MERGE`
 
 ## P02 Entry Gate V2
 
@@ -246,16 +343,20 @@ Before any mutation:
 
 1. re-resolve live `origin/main`;
 2. read `MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`;
-3. read this campaign state;
-4. read `owner_pre_p02_north_star_convergence_rebaseline_v1.md` and
-   `owner_cycle_d_structural_closure_and_v2_production_admission_v1.md`;
-5. confirm the active family is unchanged and the exact next action is the V2
-   production spatial skeleton sub-wave.
+3. read this campaign state, in particular "Exact Current Dispatch" at the top
+   and "Post-PR221 Audit Reconciliation — Table Action & Street Motion" below;
+4. read `owner_pre_p02_north_star_convergence_rebaseline_v1.md`,
+   `owner_cycle_d_structural_closure_and_v2_production_admission_v1.md`, and
+   the `TABLE_ACTION_AND_STREET_MOTION_ARCHITECTURE_AUDIT_V1` findings;
+5. confirm the current active family is `TABLE_ACTION_AND_STREET_MOTION_V1`
+   (the earlier V2 production spatial skeleton sub-wave is `CLOSED_PASS /
+   FROZEN`, historical, not current).
 
-Then execute only, inside `PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`:
+Then execute only:
 
-`IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1`
+`IMPLEMENT_TABLE_ACTION_AND_STREET_MOTION_V1_AFTER_PR221_MERGE`
 
-Do not run P02, reopen HNP, admit B8, implement reduced-motion maintenance as
-the macro next action, expand to multiple convergence families at once, reopen
-structural / camera / taper exploration, or merge PR #212 standalone.
+Do not run P02, reopen HNP, admit B8, expand to multiple convergence families
+at once, reopen structural / camera / taper / table-geometry exploration,
+reopen V4 visual convergence, treat this as requiring a new poker engine, or
+merge PR #212 standalone.

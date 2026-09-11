@@ -9883,15 +9883,22 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tone = summary.leveledUp
-        ? Act0ShellTokensV1.gold
-        : Act0ShellTokensV1.primary;
+    if (MediaQuery.of(context).disableAnimations) {
+      return _buildCard(context);
+    }
     return TweenAnimationBuilder<double>(
       tween: Tween<double>(begin: 0, end: 1),
       duration: const Duration(milliseconds: 1800),
       curve: Curves.easeOutCubic,
-      builder: (context, value, child) {
-        return Container(
+      builder: (context, value, child) => _buildCard(context),
+    );
+  }
+
+  Widget _buildCard(BuildContext context) {
+    final tone = summary.leveledUp
+        ? Act0ShellTokensV1.gold
+        : Act0ShellTokensV1.primary;
+    return Container(
           decoration: BoxDecoration(
             color: Act0ShellTokensV1.surface2.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPanel),
@@ -9955,8 +9962,6 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
             ],
           ),
         );
-      },
-    );
   }
 }
 
@@ -10406,6 +10411,9 @@ class _CompletionToastV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (MediaQuery.of(context).disableAnimations) {
+      return _buildToastCard(context);
+    }
     return TweenAnimationBuilder<double>(
       tween: Tween<double>(begin: 0, end: 1),
       duration: const Duration(milliseconds: 1800),
@@ -10416,17 +10424,27 @@ class _CompletionToastV1 extends StatelessWidget {
           ((value - 0.72) / 0.28).clamp(0.0, 1.0),
         );
         final opacity = (appear * (1 - disappear)).clamp(0.0, 1.0);
-        final tone = summary.leveledUp
-            ? Act0ShellTokensV1.gold
-            : Act0ShellTokensV1.primary;
         final onTableOverlay =
             overlayStyle == _CompletionToastOverlayStyleV1.table;
         return Opacity(
           opacity: opacity,
           child: Transform.translate(
             offset: Offset(0, (1 - appear) * (onTableOverlay ? 5 : 6)),
-            child: Container(
-              key: const Key('act0_shell_completion_toast'),
+            child: _buildToastCard(context),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildToastCard(BuildContext context) {
+    final tone = summary.leveledUp
+        ? Act0ShellTokensV1.gold
+        : Act0ShellTokensV1.primary;
+    final onTableOverlay =
+        overlayStyle == _CompletionToastOverlayStyleV1.table;
+    return Container(
+      key: const Key('act0_shell_completion_toast'),
               constraints: BoxConstraints(
                 minWidth: onTableOverlay ? 164 : 176,
                 maxWidth: onTableOverlay ? 204 : 220,
@@ -10502,10 +10520,6 @@ class _CompletionToastV1 extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-          ),
-        );
-      },
     );
   }
 }

@@ -136,14 +136,18 @@ historical machine/HNP evidence provenance.
 - `B7 = CLOSED_PASS`
 - `SHARKY_COACH_SURFACE_V1 = CLOSED_PASS`
 - `CURRENT_STAGE = PRE_P02_NORTH_STAR_CONVERGENCE`
-- `ACTIVE_FAMILY = PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
-- `EXACT_NEXT_ACTION = EXECUTE_PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
-- `CURRENT_SUB_WAVE = IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1`
+- `PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1 = CLOSED_PASS / FROZEN` (historical
+  active family; superseded as current dispatch — see "Post-PR221 audit
+  reconciliation" in section 5)
+- `ACTIVE_FAMILY = TABLE_ACTION_AND_STREET_MOTION_V1` (not yet implemented)
+- `EXACT_NEXT_ACTION = IMPLEMENT_TABLE_ACTION_AND_STREET_MOTION_V1_AFTER_PR221_MERGE`
+- `CURRENT_SUB_WAVE = TABLE_ACTION_AND_STREET_MOTION_V1`
 - `STRUCTURAL_VISUAL_EXPLORATION = CLOSED`
-- `V2_PRODUCTION_SPATIAL_BASELINE = ADMITTED` (bounded camera exception, see section 4)
+- `V2_PRODUCTION_SPATIAL_BASELINE = ADMITTED` (historical bounded camera exception, see section 4; frozen, not current dispatch)
 - `9MAX_FANOUT = DEFERRED / NOT_ADMITTED`
 - `P02 = DEFERRED / NOT_CURRENT_GATE`
-- `P02_ENTRY_GATE_V2 = PRE_P02_NORTH_STAR_CONVERGENCE_DIMINISHING_RETURNS_REACHED`
+- `P02_ENTRY_GATE_STATUS = MACHINE_PREP_REMAINING`
+- `PRE_P02_DIMINISHING_RETURNS = NOT_REACHED`
 - `REAL_HUMAN_HNP = P01_EXECUTED_ACTIONABLE_STOP`
 - `HUMAN_PROOF = FALSE`
 - `B8 = NOT_ADMITTED`
@@ -932,28 +936,86 @@ This is candidate ordering, not permission to implement each item automatically.
 
 ## 14. Exact Next Action
 
-`EXECUTE_PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
+`EXACT_NEXT_ACTION = IMPLEMENT_TABLE_ACTION_AND_STREET_MOTION_V1_AFTER_PR221_MERGE`
 
-Purpose: preserve current visual momentum and execute exactly one bounded
-high-EV Learning Scene visual-art convergence family around production character
-quality, player embodiment, hero presence, Sharky/speech-surface integration,
-and scene cohesion, while preserving frozen table geometry, frozen commitment
-ownership, poker truth, the evidence hierarchy, and one-family-at-a-time
-discipline.
+Current active bounded family: `TABLE_ACTION_AND_STREET_MOTION_V1` — not yet
+implemented; semantic poker-hand choreography / presentation orchestration
+over existing source-owned Act0 state, reusing the current engine, with no
+camera or table-geometry reopen. See "Post-PR221 audit reconciliation" below
+for the accepted findings and full scope statement.
 
-The current bounded sub-wave inside this family, per
-`docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`, is
+### Historical — `PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1` (CLOSED_PASS / FROZEN, superseded)
+
+`EXECUTE_PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1` was the prior exact next
+action. Purpose: preserve current visual momentum and execute exactly one
+bounded high-EV Learning Scene visual-art convergence family around production
+character quality, player embodiment, hero presence, Sharky/speech-surface
+integration, and scene cohesion, while preserving frozen table geometry,
+frozen commitment ownership, poker truth, the evidence hierarchy, and
+one-family-at-a-time discipline.
+
+The bounded sub-wave inside this now-frozen family, per
+`docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`, was
 `IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1`: productionize the owner-admitted
 Cycle C V2 learning-scene spatial baseline (bounded camera exception + wide
 opponent world + three depth tiers + front/back planes), strip diagnostic and
 challenger machinery from the production path, and add no final art, no R2.3
 visual, no 9-max fan-out, no environment polish and no further camera/taper
 search. Structural visual exploration is `CLOSED`; the spatial family is
-refrozen at V2.
+refrozen at V2. This sub-wave is complete/frozen and is not the current exact
+next action.
 
-The inherited reduced-motion proof beat remains
-`KNOWN_REQUIRED_PRE_FREEZE_MAINTENANCE` and must not displace this higher-EV
-current family. It must receive disposition before exact candidate freeze.
+The inherited reduced-motion proof beat is now `CLOSED_PASS` (disposed by
+`POST_B7_PRE_P02_REDUCED_MOTION_PROOF_BEAT_MAINTENANCE_V1`, 2026-09-12):
+`_BlockXpProgressCardV1` and `_CompletionToastV1` in
+`act0_lesson_runner_shell_v1.dart` now honor `MediaQuery.disableAnimations`,
+following the existing `_ProofMotionRevealV1` local pattern, with normal-motion
+behavior unchanged. `PR220` (render-class hybrid shell / V4 shell integration)
+is `CLOSED_PASS / FROZEN`. Lane reassessment: `LANE_A_VISUAL`,
+`LANE_B_SURFACE_COHESION`, `LANE_D_CONTENT_CORRECTNESS`, and
+`LANE_F_RELIABILITY_ERGONOMICS` are `CLOSED_PASS`; `LANE_E_PERSONALIZED_NEXT_VALUE`
+is `REQUIRES_HUMAN_EVIDENCE`. This does not by itself satisfy
+`P02_ENTRY_GATE_V2` — the holistic challenger pass, confirmatory pass,
+candidate freeze, and cheap final machine falsifiers below remain outstanding,
+and P02 is not admitted by lane closure alone.
+
+### Post-PR221 audit reconciliation — Table Action & Street Motion (2026-09-12)
+
+The "no other material lane remains `IMPLEMENT_NOW`" statement above is now
+stale. A newer independent architecture audit,
+`TABLE_ACTION_AND_STREET_MOTION_ARCHITECTURE_AUDIT_V1`, established a material
+additional pre-P02 machine-reducible gap after the PR #221 reduced-motion
+mission was issued:
+
+`CURRENT_ACTION_SEQUENCE_CAPABILITY = 3/10`,
+`CURRENT_STREET_REVEAL_CAPABILITY = 1/10`,
+`CURRENT_CHIP_MOTION_CAPABILITY = 3/10`,
+`CURRENT_POT_SHOWDOWN_CAPABILITY = 2/10`,
+`CURRENT_WHOLE_HAND_CHOREOGRAPHY = 2/10`,
+`ACTION_QUEUE_STATUS = REPLAY_ONLY`, flop/turn/river reveal are each
+`STATIC_STATE_ONLY`. `NEW_ENGINE_REQUIRED = NO`; `REUSE_CURRENT_ACT0_STATE = YES`;
+`PRODUCT_EV = HIGH`; `REGRESSION_RISK = MEDIUM`; `SHOULD_IMPLEMENT_BEFORE_P02 = YES`.
+
+`LANE_C_LEARNING_LOOP = IMPLEMENT_NOW`
+
+Active bounded family: `TABLE_ACTION_AND_STREET_MOTION_V1` — **not yet
+implemented**. This is semantic poker-hand choreography / presentation
+orchestration over existing source-owned Act0 state (who acted -> what changed
+-> street transition -> Hero decision readiness), not visual micro-polish. It
+does not reopen V4 visual convergence, does not require a new poker engine,
+and does not reopen camera/table geometry; `LANE_A_VISUAL` stays
+`CLOSED_PASS / FROZEN` and `REDUCED_MOTION_DEBT` /
+`LANE_F_RELIABILITY_ERGONOMICS` stay `CLOSED_PASS`, unaffected by this
+reconciliation.
+
+`P02_ENTRY_GATE_STATUS = MACHINE_PREP_REMAINING`.
+`PRE_P02_DIMINISHING_RETURNS = NOT_REACHED` until `TABLE_ACTION_AND_STREET_MOTION_V1`
+is disposed. After that family passes, re-run the final cheap machine
+falsifiers and seek owner P02 admission — do not restore the generic holistic
+North Star challenger pass as the immediate next action; that stage follows
+disposition of this family, not precedes it.
+
+`EXACT_NEXT_ACTION = IMPLEMENT_TABLE_ACTION_AND_STREET_MOTION_V1_AFTER_PR221_MERGE`
 
 A machine telemetry gap or nondeterministic Simulator/CI launch failure remains
 a separate technical evidence state. It must not be converted into a Human FAIL,
@@ -964,9 +1026,10 @@ evidence.
 
 `MASTER_PLAN_V4_NORTH_STAR_INTEGRATED = PRINCIPAL_AUTHORITY`
 `CURRENT_STAGE = PRE_P02_NORTH_STAR_CONVERGENCE`
-`ACTIVE_FAMILY = PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
-`EXACT_NEXT_ACTION = EXECUTE_PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1`
-`CURRENT_SUB_WAVE = IMPLEMENT_V2_PRODUCTION_SPATIAL_SKELETON_V1`
+`PRE_P02_VISUAL_ART_COMPLETION_GAUNTLET_V1 = CLOSED_PASS / FROZEN` (historical active family, superseded)
+`ACTIVE_FAMILY = TABLE_ACTION_AND_STREET_MOTION_V1` (not yet implemented)
+`EXACT_NEXT_ACTION = IMPLEMENT_TABLE_ACTION_AND_STREET_MOTION_V1_AFTER_PR221_MERGE`
+`CURRENT_SUB_WAVE = TABLE_ACTION_AND_STREET_MOTION_V1`
 `STRUCTURAL_VISUAL_EXPLORATION = CLOSED`
 `V2_PRODUCTION_SPATIAL_BASELINE = ADMITTED`
 `V2_CAMERA_EXCEPTION = ADMITTED / REFROZEN (farRailFraction 0.225->0.27, projectedTableHeightFraction 0.50->0.47)`
@@ -977,6 +1040,16 @@ evidence.
 `HUMAN_PROOF = FALSE`
 `B7 = CLOSED_PASS`
 `B8 = NOT_ADMITTED`
-`REDUCED_MOTION_DEBT = KNOWN_REQUIRED_PRE_FREEZE_MAINTENANCE`
+`REDUCED_MOTION_DEBT = CLOSED_PASS`
+`PR220_VISUAL_FAMILY = CLOSED_PASS / FROZEN`
+`LANE_A_VISUAL = CLOSED_PASS`
+`LANE_B_SURFACE_COHESION = CLOSED_PASS`
+`LANE_C_LEARNING_LOOP = IMPLEMENT_NOW`
+`LANE_D_CONTENT_CORRECTNESS = CLOSED_PASS`
+`LANE_E_PERSONALIZED_NEXT_VALUE = REQUIRES_HUMAN_EVIDENCE`
+`LANE_F_RELIABILITY_ERGONOMICS = CLOSED_PASS`
+`NEXT_ACTIVE_FAMILY = TABLE_ACTION_AND_STREET_MOTION_V1 (NOT YET IMPLEMENTED)`
+`PRE_P02_DIMINISHING_RETURNS = NOT_REACHED`
+`P02_ENTRY_GATE_STATUS = MACHINE_PREP_REMAINING`
 `TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE`
 `ACCESSIBILITY_TEXT_SCALING = DEFERRED_NOT_CURRENT_ACCEPTANCE`
