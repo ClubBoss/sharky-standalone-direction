@@ -111,6 +111,41 @@ void main() {
     expect(find.textContaining('pro-level'), findsNothing);
   });
 
+  testWidgets(
+    'reduced motion shows XP progress card settled with no 1800ms tween',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: MediaQuery(
+            data: const MediaQueryData(disableAnimations: true),
+            child: Scaffold(
+              body: Act0BlockCompletionShellV1(
+                summary: _worldOneCompleteSummary,
+                repairOutcomeConsumer: const Act0RepairOutcomeConsumerV1(),
+                onReplay: () {},
+                onContinue: () {},
+                onBackToMap: () {},
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(
+        find.byKey(const Key('act0_shell_block_summary_xp_progress')),
+        findsOneWidget,
+      );
+      expect(
+        find.ancestor(
+          of: find.byKey(const Key('act0_shell_block_summary_xp_progress')),
+          matching: find.byType(TweenAnimationBuilder<double>),
+        ),
+        findsNothing,
+      );
+    },
+  );
+
   testWidgets('no-proof completion shows the safe fallback line', (
     tester,
   ) async {

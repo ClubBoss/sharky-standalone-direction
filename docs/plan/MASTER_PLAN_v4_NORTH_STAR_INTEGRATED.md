@@ -951,9 +951,20 @@ visual, no 9-max fan-out, no environment polish and no further camera/taper
 search. Structural visual exploration is `CLOSED`; the spatial family is
 refrozen at V2.
 
-The inherited reduced-motion proof beat remains
-`KNOWN_REQUIRED_PRE_FREEZE_MAINTENANCE` and must not displace this higher-EV
-current family. It must receive disposition before exact candidate freeze.
+The inherited reduced-motion proof beat is now `CLOSED_PASS` (disposed by
+`POST_B7_PRE_P02_REDUCED_MOTION_PROOF_BEAT_MAINTENANCE_V1`, 2026-09-12):
+`_BlockXpProgressCardV1` and `_CompletionToastV1` in
+`act0_lesson_runner_shell_v1.dart` now honor `MediaQuery.disableAnimations`,
+following the existing `_ProofMotionRevealV1` local pattern, with normal-motion
+behavior unchanged. `PR220` (render-class hybrid shell / V4 shell integration)
+is `CLOSED_PASS / FROZEN`. Lane reassessment: `LANE_A_VISUAL`,
+`LANE_B_SURFACE_COHESION`, `LANE_D_CONTENT_CORRECTNESS`, and
+`LANE_F_RELIABILITY_ERGONOMICS` are `CLOSED_PASS`; `LANE_C_LEARNING_LOOP` and
+`LANE_E_PERSONALIZED_NEXT_VALUE` are `REQUIRES_HUMAN_EVIDENCE`. No other
+material machine/product-reducible lane remains `IMPLEMENT_NOW`. This does not
+by itself satisfy `P02_ENTRY_GATE_V2` — the holistic challenger pass,
+confirmatory pass, candidate freeze, and cheap final machine falsifiers below
+remain outstanding, and P02 is not admitted by lane closure alone.
 
 A machine telemetry gap or nondeterministic Simulator/CI launch failure remains
 a separate technical evidence state. It must not be converted into a Human FAIL,
@@ -977,6 +988,9 @@ evidence.
 `HUMAN_PROOF = FALSE`
 `B7 = CLOSED_PASS`
 `B8 = NOT_ADMITTED`
-`REDUCED_MOTION_DEBT = KNOWN_REQUIRED_PRE_FREEZE_MAINTENANCE`
+`REDUCED_MOTION_DEBT = CLOSED_PASS`
+`PR220_VISUAL_FAMILY = CLOSED_PASS / FROZEN`
+`LANE_C_LEARNING_LOOP = REQUIRES_HUMAN_EVIDENCE`
+`LANE_E_PERSONALIZED_NEXT_VALUE = REQUIRES_HUMAN_EVIDENCE`
 `TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE`
 `ACCESSIBILITY_TEXT_SCALING = DEFERRED_NOT_CURRENT_ACCEPTANCE`

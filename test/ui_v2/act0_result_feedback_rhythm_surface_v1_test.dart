@@ -309,6 +309,60 @@ void main() {
     expect(receiptTop, lessThan(xpTop));
   });
 
+  testWidgets(
+    'reduced motion shows completion toast settled with no fade tween',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: MediaQuery(
+            data: const MediaQueryData(disableAnimations: true),
+            child: Scaffold(
+              body: Act0FeedbackShellV1(
+                title: 'Correct.',
+                reason: 'Nobody had bet yet - that was the clue.',
+                quality: Act0FeedbackQualityV1.correct,
+                sharkyLine: 'Good read.',
+                sharkyMood: Act0SharkyMoodV1.happy,
+                selectedLabel: 'Check',
+                preferredLabel: 'Check',
+                betterLabel: 'Check',
+                signalProof: const Act0FeedbackSignalProofV1(
+                  signalId: 'no_bet_yet',
+                  label: 'No bet yet',
+                  proofLine: 'Signal: No bet yet',
+                ),
+                firstValueReceiptLine:
+                    'First read logged. Next: use it once more.',
+                completionSummary: const Act0RunnerCompletionSummaryV1(
+                  xpGain: 12,
+                  startLevel: 1,
+                  endLevel: 1,
+                  startXp: 20,
+                  endXp: 32,
+                  xpTarget: 100,
+                ),
+                onContinue: () {},
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(
+        find.byKey(const Key('act0_shell_completion_toast')),
+        findsOneWidget,
+      );
+      expect(
+        find.ancestor(
+          of: find.byKey(const Key('act0_shell_completion_toast')),
+          matching: find.byType(Opacity),
+        ),
+        findsNothing,
+      );
+    },
+  );
+
   testWidgets('correct-first stays calm without a Sharky reward treatment', (
     tester,
   ) async {

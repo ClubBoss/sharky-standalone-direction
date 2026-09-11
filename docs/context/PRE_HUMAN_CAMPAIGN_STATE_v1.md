@@ -1,7 +1,7 @@
 # Pre-Human Campaign State v1
 
 Status: `PRE_P02_NORTH_STAR_CONVERGENCE_ACTIVE`
-Freshness date: 2026-09-10
+Freshness date: 2026-09-12
 Repository: `ClubBoss/sharky-standalone-direction`
 
 This file carries exact current campaign dispatch beneath
@@ -109,7 +109,7 @@ One active implementation family at a time.
 | C. Learning Loop Convergence | `QUEUED / MACHINE-PRODUCT REDUCIBLE ONLY` |
 | D. Content / Correctness / Curriculum | `QUEUED / W1-W12 BOUNDED ONLY` |
 | E. Personalized Next Value / Return Reason | `QUEUED / CURRENT DETERMINISTIC MECHANISMS ONLY` |
-| F. Reliability / Ergonomics / Evidence Readiness | `QUEUED / EVIDENCE-BACKED DEBT ONLY` |
+| F. Reliability / Ergonomics / Evidence Readiness | `CLOSED_PASS` (reduced-motion proof-beat maintenance, 2026-09-12) |
 
 No queued lane is automatically admitted.
 
@@ -143,10 +143,40 @@ architecture blocker.
 Inherited approximately 1.8 second proof-beat motion under
 `MediaQuery.disableAnimations` is now:
 
-`KNOWN_REQUIRED_PRE_FREEZE_MAINTENANCE`
+`CLOSED_PASS`
 
-It is not the current macro-stage and not the current next action. It must be
-disposed before exact P02 candidate freeze.
+Disposed by `POST_B7_PRE_P02_REDUCED_MOTION_PROOF_BEAT_MAINTENANCE_V1` (see
+closure section below). It is not the current macro-stage.
+
+## Post-PR220 / Reduced-Motion Maintenance Closure (2026-09-12)
+
+`PR220_VISUAL_FAMILY (render-class hybrid shell / V4 shell integration) = CLOSED_PASS / FROZEN`
+
+`REDUCED_MOTION_PROOF_BEAT_CONTRACT_VIOLATION = CLOSED_PASS` — `_BlockXpProgressCardV1`
+and `_CompletionToastV1` in `act0_lesson_runner_shell_v1.dart` now honor
+`MediaQuery.disableAnimations` (settled state rendered immediately, no 1800ms
+tween, no faded-out final content), following the existing
+`_ProofMotionRevealV1` local pattern. Normal-motion behavior is unchanged.
+
+Lane reassessment (post-PR220, post-reduced-motion-fix):
+
+- `LANE_A_VISUAL = CLOSED_PASS`
+- `LANE_B_SURFACE_COHESION = CLOSED_PASS`
+- `LANE_C_LEARNING_LOOP = REQUIRES_HUMAN_EVIDENCE`
+- `LANE_D_CONTENT_CORRECTNESS = CLOSED_PASS`
+- `LANE_E_PERSONALIZED_NEXT_VALUE = REQUIRES_HUMAN_EVIDENCE`
+- `LANE_F_RELIABILITY_ERGONOMICS = CLOSED_PASS`
+
+No other material machine/product-reducible lane remains `IMPLEMENT_NOW`.
+
+This closes the immediate machine-reducible debt only. It does **not** by
+itself satisfy the `P02 Entry Gate V2` below — conditions 5-9 (holistic North
+Star challenger pass, confirmatory pass, exact candidate freeze, cheap final
+machine falsifiers, explicit owner admission) have not been executed. PRE_P02
+diminishing-returns status must be reassessed from that actual evidence, not
+declared from lane closure alone.
+
+`P02 = DEFERRED / NOT_CURRENT_GATE` (unchanged; not auto-admitted).
 
 ## P02 Entry Gate V2
 
