@@ -15,6 +15,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hud_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hybrid_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_material_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_player_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_registered_cast_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_room_plate_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_salience_v1.dart';
@@ -11481,13 +11482,25 @@ class _Act0TableV1 extends StatelessWidget {
         valueListenable:
             Act0SceneHybridShellRegistryV1.shellStore.readyNotifier,
         builder: (context, hybridShellReady, _) {
+          if (hybridShellReady) {
+            return Positioned.fill(
+              child: Act0SceneRecedeMotionV1(
+                motion: sceneMotion,
+                plane: Act0SceneRecedePlaneV1.player,
+                child: Act0SceneRegisteredCastLayerV1(
+                  key: key,
+                  slots: sceneSeatSlots,
+                  plane: plane,
+                  foldedSeatIds: inactiveSeatIds,
+                ),
+              ),
+            );
+          }
           // RENDER_CLASS_HYBRID_INTEGRATION_GAUNTLET_V2: the narrower world
-          // box only applies once the hybrid shell owns the visual — the
-          // procedural-table fallback path keeps the original production
-          // widen it was tuned against.
-          final rules = hybridShellReady
-              ? Act0SceneTieredSeatingV1.renderClassHybridV1
-              : Act0SceneTieredSeatingV1.production;
+          // box is now legacy compatibility for the generic/procedural
+          // fallback path. The V3 path above maps directly from the V4
+          // source-canvas registration and never consults per-seat ArtFit.
+          const rules = Act0SceneTieredSeatingV1.production;
           return Positioned(
             left: rules.horizontalInsetFor(stageSize.width),
             right: rules.horizontalInsetFor(stageSize.width),

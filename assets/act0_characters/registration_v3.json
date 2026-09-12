@@ -1,0 +1,69 @@
+{
+  "version": "v3",
+  "sourceCanvasWidth": 941,
+  "sourceCanvasHeight": 1672,
+  "compositionOrder": [
+    "UTG",
+    "BB",
+    "HJ",
+    "SB",
+    "CO"
+  ],
+  "seats": {
+    "UTG": {
+      "x": 298,
+      "y": 281,
+      "width": 250,
+      "height": 182,
+      "sourceCanvasWidth": 941,
+      "sourceCanvasHeight": 1672,
+      "depthPlane": "back",
+      "seatActiveAsset": "UTG_SEAT_ACTIVE.png",
+      "playerEffectMaskAsset": "UTG_PLAYER_EFFECT_MASK.png"
+    },
+    "BB": {
+      "x": 19,
+      "y": 334,
+      "width": 238,
+      "height": 281,
+      "sourceCanvasWidth": 941,
+      "sourceCanvasHeight": 1672,
+      "depthPlane": "back",
+      "seatActiveAsset": "BB_SEAT_ACTIVE.png",
+      "playerEffectMaskAsset": "BB_PLAYER_EFFECT_MASK.png"
+    },
+    "HJ": {
+      "x": 609,
+      "y": 333,
+      "width": 246,
+      "height": 318,
+      "sourceCanvasWidth": 941,
+      "sourceCanvasHeight": 1672,
+      "depthPlane": "back",
+      "seatActiveAsset": "HJ_SEAT_ACTIVE.png",
+      "playerEffectMaskAsset": "HJ_PLAYER_EFFECT_MASK.png"
+    },
+    "SB": {
+      "x": 0,
+      "y": 476,
+      "width": 200,
+      "height": 430,
+      "sourceCanvasWidth": 941,
+      "sourceCanvasHeight": 1672,
+      "depthPlane": "front",
+      "seatActiveAsset": "SB_SEAT_ACTIVE.png",
+      "playerEffectMaskAsset": "SB_PLAYER_EFFECT_MASK.png"
+    },
+    "CO": {
+      "x": 686,
+      "y": 448,
+      "width": 255,
+      "height": 475,
+      "sourceCanvasWidth": 941,
+      "sourceCanvasHeight": 1672,
+      "depthPlane": "front",
+      "seatActiveAsset": "CO_SEAT_ACTIVE.png",
+      "playerEffectMaskAsset": "CO_PLAYER_EFFECT_MASK.png"
+    }
+  }
+}
