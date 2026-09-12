@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
@@ -149,6 +150,127 @@ void main() {
       expect(completed!.skillAtomId, isNotEmpty);
     },
   );
+
+
+  testWidgets(
+    'distinct evidence runs create distinct durable attempt identities',
+    (tester) async {
+      final task = _task(
+        'world_1',
+        'fold_check_call_raise',
+        'actions_check_drill',
+      );
+      final selected = task.runner.options.firstWhere(
+        (option) => !option.isCorrect,
+      );
+      final decisions = <Act0CompletedDecisionV1>[];
+      var history = const Act0LearningEvidenceHistoryV1();
+
+      Future<void> answerInRun({
+        required String runId,
+        required int runOrdinal,
+        required String runKind,
+      }) async {
+        await _pumpRunner(
+          tester,
+          runner: task.runner.copyWith(
+            phase: Act0LessonPhaseV1.drill,
+            teachingSteps: const <Act0TeachingStepV1>[],
+          ),
+          worldId: 'world_1',
+          lessonId: 'fold_check_call_raise',
+          taskId: task.taskId,
+          evidenceRunId: runId,
+          onCompletedDecision: (value) {
+            decisions.add(value);
+            history = history.appendCompletedDecision(
+              value,
+              runKey: Act0EvidenceRunKeyV1(
+                runId: runId,
+                worldId: 'world_1',
+                lessonId: 'fold_check_call_raise',
+                runOrdinal: runOrdinal,
+                runKind: runKind,
+                startedBy: 'test',
+              ),
+            );
+          },
+        );
+        await tester.tap(find.byKey(Key('act0_shell_option_${selected.id}')));
+        await tester.pump();
+      }
+
+      const firstRun =
+          'run_v1|world_1|fold_check_call_raise|lesson|1';
+      const secondRun =
+          'run_v1|world_1|fold_check_call_raise|spaced_review|2';
+      await answerInRun(runId: firstRun, runOrdinal: 1, runKind: 'lesson');
+      await answerInRun(
+        runId: secondRun,
+        runOrdinal: 2,
+        runKind: 'spaced_review',
+      );
+
+      expect(decisions, hasLength(2));
+      expect(decisions.first.attemptKey, startsWith('v2|$firstRun|'));
+      expect(decisions.last.attemptKey, startsWith('v2|$secondRun|'));
+      expect(decisions.first.attemptKey, endsWith('|1'));
+      expect(decisions.last.attemptKey, endsWith('|1'));
+      expect(decisions.first.attemptKey, isNot(decisions.last.attemptKey));
+      expect(history.records, hasLength(2));
+    },
+  );
+
+  testWidgets(
+    'state-preserving rebuild keeps one evidence-run attempt scope',
+    (tester) async {
+      final task = _task(
+        'world_1',
+        'fold_check_call_raise',
+        'actions_check_drill',
+      );
+      final selected = task.runner.options.firstWhere(
+        (option) => !option.isCorrect,
+      );
+      const runId = 'run_v1|world_1|fold_check_call_raise|lesson|7';
+      final decisions = <Act0CompletedDecisionV1>[];
+
+      Future<void> rebuild() => _pumpRunner(
+        tester,
+        runner: task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingSteps: const <Act0TeachingStepV1>[],
+        ),
+        worldId: 'world_1',
+        lessonId: 'fold_check_call_raise',
+        taskId: task.taskId,
+        evidenceRunId: runId,
+        onCompletedDecision: decisions.add,
+      );
+
+      await rebuild();
+      await tester.tap(find.byKey(Key('act0_shell_option_${selected.id}')));
+      await tester.pump();
+      expect(decisions, hasLength(1));
+
+      await rebuild();
+      expect(
+        decisions,
+        hasLength(1),
+        reason: 'A rebuild must not emit or mint another attempt.',
+      );
+
+      await tester.tap(find.byKey(Key('act0_shell_option_${selected.id}')));
+      await tester.pump();
+
+      expect(decisions, hasLength(2));
+      expect(decisions.first.attemptKey, startsWith('v2|$runId|'));
+      expect(decisions.last.attemptKey, startsWith('v2|$runId|'));
+      expect(decisions.first.attemptKey, endsWith('|1'));
+      expect(decisions.last.attemptKey, endsWith('|2'));
+    },
+  );
+
 }
 
 Future<void> _pumpRunner(
@@ -157,6 +279,7 @@ Future<void> _pumpRunner(
   required String worldId,
   required String lessonId,
   required String taskId,
+  String evidenceRunId = '',
   required ValueChanged<Act0CompletedDecisionV1> onCompletedDecision,
 }) => tester.pumpWidget(
   MaterialApp(
@@ -165,6 +288,7 @@ Future<void> _pumpRunner(
       selectedWorldId: worldId,
       selectedLessonId: lessonId,
       selectedTaskId: taskId,
+      evidenceRunId: evidenceRunId,
       onBack: () {},
       onContinueTheory: () {},
       onChooseOption: (_) {},
