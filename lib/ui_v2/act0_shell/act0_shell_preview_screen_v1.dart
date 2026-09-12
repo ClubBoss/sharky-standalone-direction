@@ -5816,6 +5816,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   });
                                 },
                                 telemetrySink: _sessionAwareTelemetrySinkV1(),
+                                evidenceRunId:
+                                    _activeLearningEvidenceRunKeyV1?.runId ??
+                                    '',
                                 reviewKindId: _routeReviewKindForTaskIdV1(
                                   playSelectedTask?.taskId ?? '',
                                 ).name,
