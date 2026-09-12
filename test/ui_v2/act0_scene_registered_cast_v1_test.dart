@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_character_asset_v1.dart';
@@ -330,6 +331,317 @@ void main() {
       expect(humanDelta.reduce((a, b) => a + b), greaterThan(12));
     });
   });
+  for (final viewport in const <Size>[
+    Size(375, 812),
+    Size(402, 874),
+    Size(430, 932),
+  ]) {
+    testWidgets(
+      'T7 both HJ hole cards render unobscured by the registered front plane '
+      '— ${viewport.width.toInt()}',
+      (tester) async {
+        await _preloadProductionCast(tester);
+        addTearDown(_resetProductionCast);
+        tester.view.physicalSize = viewport;
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+
+        await tester.pumpWidget(_runnerHost());
+        await _settle(tester);
+        for (final identity in Act0SceneCharacterIdentityV1.values) {
+          expect(
+            find.byKey(Key('act0_scene_registered_${identity.name}_ready')),
+            findsOneWidget,
+          );
+        }
+
+        final hjCardBacks = find.descendant(
+          of: find.byKey(const Key('act0_shell_seat_node_hj')),
+          matching: find.byKey(const Key('act0_shell_quiet_card_back')),
+        );
+        expect(hjCardBacks, findsNWidgets(2));
+
+        final boundary = tester.renderObject<RenderRepaintBoundary>(
+          find.byKey(const Key('act0_registered_cast_test_boundary')),
+        );
+        final frame = await tester.runAsync(() async {
+          final image = await boundary.toImage();
+          final bytes = await image.toByteData();
+          return (image.width, bytes!);
+        });
+        final (frameWidth, frameBytes) = frame!;
+
+        for (final element in hjCardBacks.evaluate()) {
+          final box = element.renderObject! as RenderBox;
+          final toGlobal = box.getTransformTo(null);
+          var sampled = 0;
+          var cardBack = 0;
+          // The quiet back is a navy gradient (0xFF172B45 -> 0xFF233B59). An
+          // inset keeps antialiased edges and the faint border out of the
+          // sample; every remaining pixel must still be that live card back.
+          for (var y = 3.0; y <= box.size.height - 3; y += 1) {
+            for (var x = 3.0; x <= box.size.width - 3; x += 1) {
+              final global = MatrixUtils.transformPoint(toGlobal, Offset(x, y));
+              final offset =
+                  (global.dy.floor() * frameWidth + global.dx.floor()) * 4;
+              final r = frameBytes.getUint8(offset);
+              final g = frameBytes.getUint8(offset + 1);
+              final b = frameBytes.getUint8(offset + 2);
+              sampled++;
+              if (r >= 0x11 &&
+                  r <= 0x29 &&
+                  g >= 0x25 &&
+                  g <= 0x41 &&
+                  b >= 0x3F &&
+                  b <= 0x5F) {
+                cardBack++;
+              }
+            }
+          }
+          expect(sampled, greaterThan(300));
+          expect(
+            cardBack,
+            sampled,
+            reason:
+                'HJ card at ${MatrixUtils.transformRect(toGlobal, Offset.zero & box.size)} '
+                'must be owned by the live card back ($cardBack/$sampled)',
+          );
+        }
+      },
+    );
+  }
+
+  testWidgets(
+    'T8 cold start presents no opponent identity until all five register '
+    'together',
+    (tester) async {
+      _resetProductionCast();
+      addTearDown(_resetProductionCast);
+      tester.view.physicalSize = const Size(402, 874);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(_runnerHost());
+      await tester.pump();
+
+      // First visible frame: nothing is decoded, so both opponent planes are
+      // held and no generic or V3 identity is presented.
+      expect(
+        Act0SceneRegisteredCastReadinessV1.shared.phase,
+        Act0SceneRegisteredCastPhaseV1.pending,
+      );
+      _expectPlanesPresented(tester, presented: false);
+      expect(_readySeatCount(), 0);
+
+      var sawReady = false;
+      for (var hop = 0; hop < 200 && !sawReady; hop++) {
+        await tester.runAsync(
+          () => Future<void>.delayed(const Duration(milliseconds: 10)),
+        );
+        await tester.pump(const Duration(milliseconds: 16));
+        final ready = _readySeatCount();
+        final phase = Act0SceneRegisteredCastReadinessV1.shared.phase;
+        if (phase == Act0SceneRegisteredCastPhaseV1.ready) {
+          sawReady = true;
+          expect(ready, 5, reason: 'all five register in the same frame');
+          _expectPlanesPresented(tester, presented: true);
+        } else {
+          // Partial decode never leaks: planes stay held and no seat has
+          // swapped to its registered composite ahead of the others.
+          expect(phase, Act0SceneRegisteredCastPhaseV1.pending);
+          expect(ready, 0, reason: 'no early per-seat identity swap');
+          _expectPlanesPresented(tester, presented: false);
+        }
+      }
+      expect(sawReady, isTrue, reason: 'bundled V3 cast must become ready');
+
+      await _settle(tester);
+      expect(_readySeatCount(), 5);
+      for (final identity in Act0SceneCharacterIdentityV1.values) {
+        expect(
+          find.byKey(Key('act0_scene_registered_${identity.name}_fallback')),
+          findsNothing,
+        );
+      }
+    },
+  );
+
+  testWidgets('T9 a partially decoded set keeps every seat on one identity', (
+    tester,
+  ) async {
+    final registrations = Act0SceneRegisteredCastRegistryV1.registrations;
+    final early = <Act0SceneCharacterIdentityV1>[
+      Act0SceneCharacterIdentityV1.utg,
+      Act0SceneCharacterIdentityV1.hj,
+      Act0SceneCharacterIdentityV1.co,
+    ];
+    await tester.runAsync(
+      () => Future.wait<ui.Image?>(<Future<ui.Image?>>[
+        for (final identity in early) ...[
+          store.load(registrations[identity]!.seatActivePath),
+          store.load(registrations[identity]!.playerEffectMaskPath),
+        ],
+      ]),
+    );
+    await tester.pumpWidget(
+      _castHost(store: store, foldedSeatIds: const <String>{}),
+    );
+    await tester.pump();
+    for (final identity in Act0SceneCharacterIdentityV1.values) {
+      expect(
+        find.byKey(Key('act0_scene_registered_${identity.name}_ready')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(Key('act0_scene_registered_${identity.name}_fallback')),
+        findsOneWidget,
+      );
+    }
+
+    await _preloadRegisteredAssets(tester, store);
+    await tester.pumpWidget(
+      _castHost(store: store, foldedSeatIds: const <String>{'hj-seat'}),
+    );
+    await tester.pump();
+    for (final identity in Act0SceneCharacterIdentityV1.values) {
+      expect(
+        find.byKey(Key('act0_scene_registered_${identity.name}_ready')),
+        findsOneWidget,
+      );
+    }
+  });
+
+  for (final failure in _AssetFailureV1.values) {
+    testWidgets(
+      'T10 a ${failure.name} V3 asset falls back safely as one cast',
+      (tester) async {
+        _resetProductionCast();
+        addTearDown(_resetProductionCast);
+        final hj = Act0SceneRegisteredCastRegistryV1.registrationFor(
+          Act0SceneCharacterIdentityV1.hj,
+        );
+        final bundle = _FailingAssetBundleV1(
+          failingPath: failure == _AssetFailureV1.missing
+              ? hj.seatActivePath
+              : hj.playerEffectMaskPath,
+          failure: failure,
+        );
+        final reported = <FlutterErrorDetails>[];
+        final phase = await tester.runAsync(() async {
+          final previous = FlutterError.onError;
+          FlutterError.onError = reported.add;
+          try {
+            return await Act0SceneRegisteredCastReadinessV1.shared.warmUp(
+              bundle: bundle,
+            );
+          } finally {
+            FlutterError.onError = previous;
+          }
+        });
+        expect(phase, Act0SceneRegisteredCastPhaseV1.unavailable);
+        expect(
+          reported,
+          failure == _AssetFailureV1.corrupt ? isNotEmpty : isEmpty,
+        );
+        expect(Act0SceneHybridShellRegistryV1.shellStore.isReady, isTrue);
+
+        tester.view.physicalSize = const Size(402, 874);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        await tester.pumpWidget(_runnerHost());
+        await _settle(tester);
+
+        _expectPlanesPresented(tester, presented: true);
+        expect(_readySeatCount(), 0);
+        for (final identity in Act0SceneCharacterIdentityV1.values) {
+          expect(
+            find.byKey(Key('act0_scene_registered_${identity.name}_fallback')),
+            findsOneWidget,
+            reason: '${identity.name} uses the generic fallback with the cast',
+          );
+        }
+      },
+    );
+  }
+}
+
+enum _AssetFailureV1 { missing, corrupt }
+
+class _FailingAssetBundleV1 extends CachingAssetBundle {
+  _FailingAssetBundleV1({required this.failingPath, required this.failure});
+
+  final String failingPath;
+  final _AssetFailureV1 failure;
+
+  @override
+  Future<ByteData> load(String key) async {
+    if (key == failingPath) {
+      if (failure == _AssetFailureV1.missing) {
+        throw FlutterError('Unable to load asset: "$key".');
+      }
+      return ByteData.sublistView(Uint8List.fromList(<int>[1, 2, 3, 4, 5]));
+    }
+    return rootBundle.load(key);
+  }
+}
+
+Widget _runnerHost() => MaterialApp(
+  home: RepaintBoundary(
+    key: const Key('act0_registered_cast_test_boundary'),
+    child: Act0ShellPreviewScreenV1(
+      state: Act0ShellStateV1.sample,
+      showPlacementOnStart: false,
+      debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
+        mode: Act0ControlledDemoCaptureModeV1.directState,
+        surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
+        worldId: 'world_1',
+        lessonId: 'fold_check_call_raise',
+        taskId: 'actions_check_drill',
+      ),
+    ),
+  ),
+);
+
+Future<void> _preloadProductionCast(WidgetTester tester) async {
+  await tester.runAsync(
+    () => Act0SceneRegisteredCastReadinessV1.shared.warmUp(),
+  );
+  expect(
+    Act0SceneRegisteredCastReadinessV1.shared.phase,
+    Act0SceneRegisteredCastPhaseV1.ready,
+  );
+}
+
+void _resetProductionCast() {
+  Act0SceneHybridShellRegistryV1.shellStore.clear();
+  Act0SceneCharacterImageStoreV1.shared.clear();
+  Act0SceneRegisteredCastReadinessV1.shared.reset();
+}
+
+int _readySeatCount() => Act0SceneCharacterIdentityV1.values
+    .where(
+      (identity) => find
+          .byKey(Key('act0_scene_registered_${identity.name}_ready'))
+          .evaluate()
+          .isNotEmpty,
+    )
+    .length;
+
+void _expectPlanesPresented(WidgetTester tester, {required bool presented}) {
+  for (final key in const <Key>[
+    Key('act0_scene_player_volume_plane'),
+    Key('act0_scene_player_front_plane'),
+  ]) {
+    final visibility = tester.widget<Visibility>(
+      find
+          .ancestor(of: find.byKey(key), matching: find.byType(Visibility))
+          .first,
+    );
+    expect(visibility.visible, presented, reason: '$key presented');
+  }
 }
 
 Widget _castHost({
