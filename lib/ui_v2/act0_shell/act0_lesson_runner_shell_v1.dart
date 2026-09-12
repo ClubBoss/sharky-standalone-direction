@@ -1161,6 +1161,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.actionRecommendation,
     this.actionPayoff,
     this.telemetrySink,
+    this.evidenceRunId = '',
     this.reviewKindId = 'initialAssessment',
     this.tableChoreographyMode = Act0TableChoreographyModeV1.runtime,
     this.lowerSurfacePrototypeState,
@@ -1212,6 +1213,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final Act0ActionRecommendationV1? actionRecommendation;
   final Act0ActionSessionPayoffV1? actionPayoff;
   final Act0TelemetrySinkV1? telemetrySink;
+  final String evidenceRunId;
   final String reviewKindId;
   final Act0TableChoreographyModeV1 tableChoreographyMode;
   final Act0LowerSurfacePrototypeStateV1? lowerSurfacePrototypeState;
@@ -2163,9 +2165,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     Act0CompletedDecisionKindV1 kind, {
     String? decisionTimeBucket,
   }) {
+    final evidenceRunId = widget.evidenceRunId.trim();
     final taskKey =
-        '${widget.selectedWorldId ?? ''}|$_stableLessonTelemetryId|'
-        '$_stableTaskTelemetryId|${kind.name}';
+        '$evidenceRunId|${widget.selectedWorldId ?? ''}|'
+        '$_stableLessonTelemetryId|$_stableTaskTelemetryId|${kind.name}';
     if (_completedDecisionTaskKey != taskKey) {
       _completedDecisionTaskKey = taskKey;
       _completedDecisionOrdinal = 0;
@@ -2212,10 +2215,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           );
     widget.onCompletedDecision?.call(
       Act0CompletedDecisionV1(
-        attemptKey:
-            'v1|${normalizedWorldId ?? ''}|$_stableLessonTelemetryId|'
-            '$_stableTaskTelemetryId|${kind.name}|${option.id}|'
-            '$_completedDecisionOrdinal',
+        attemptKey: evidenceRunId.isEmpty
+            ? 'v1|${normalizedWorldId ?? ''}|$_stableLessonTelemetryId|'
+                  '$_stableTaskTelemetryId|${kind.name}|${option.id}|'
+                  '$_completedDecisionOrdinal'
+            : 'v2|$evidenceRunId|${normalizedWorldId ?? ''}|'
+                  '$_stableLessonTelemetryId|$_stableTaskTelemetryId|'
+                  '${kind.name}|${option.id}|$_completedDecisionOrdinal',
         worldId: normalizedWorldId,
         lessonId: _stableLessonTelemetryId,
         taskId: _stableTaskTelemetryId,
