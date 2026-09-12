@@ -15,6 +15,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hud_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hybrid_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_material_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_player_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_registered_cast_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_room_plate_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_salience_v1.dart';
@@ -3988,7 +3989,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             ),
             Positioned.fromRect(
               rect: stageRect,
-              child: buildPhysicalTableV1(cameraStageSize: stageRect.size),
+              // Opponent card rows register here so the registered front
+              // plane never paints over them.
+              child: Act0SceneSemanticClearanceScopeV1(
+                child: buildPhysicalTableV1(cameraStageSize: stageRect.size),
+              ),
             ),
             runnerScreen,
           ],
@@ -11477,35 +11482,62 @@ class _Act0TableV1 extends StatelessWidget {
       Act0SceneTieredPlaneV1 plane,
       Key key,
     ) {
-      return ValueListenableBuilder<bool>(
-        valueListenable:
-            Act0SceneHybridShellRegistryV1.shellStore.readyNotifier,
-        builder: (context, hybridShellReady, _) {
-          // RENDER_CLASS_HYBRID_INTEGRATION_GAUNTLET_V2: the narrower world
-          // box only applies once the hybrid shell owns the visual — the
-          // procedural-table fallback path keeps the original production
-          // widen it was tuned against.
-          final rules = hybridShellReady
-              ? Act0SceneTieredSeatingV1.renderClassHybridV1
-              : Act0SceneTieredSeatingV1.production;
-          return Positioned(
-            left: rules.horizontalInsetFor(stageSize.width),
-            right: rules.horizontalInsetFor(stageSize.width),
-            top: rules.topInsetFor(stageSize.height),
-            bottom: rules.bottomInsetFor(stageSize.height),
-            child: Act0SceneRecedeMotionV1(
-              motion: sceneMotion,
-              plane: Act0SceneRecedePlaneV1.player,
-              child: Act0SceneTieredOpponentLayerV1(
-                key: key,
-                slots: sceneSeatSlots,
-                plane: plane,
-                foldedSeatIds: inactiveSeatIds,
-                rules: rules,
+      // V4 registered-cast readiness: the hybrid shell and all ten V3 seat
+      // PNGs/masks resolve under one contract. While it is pending the plane
+      // keeps its layout but presents no opponent identity, so ordinary decode
+      // can never show generic opponents that later swap to V3 identities.
+      return Act0SceneRegisteredCastGateV1(
+        builder: (context, castPhase) => ValueListenableBuilder<bool>(
+          valueListenable:
+              Act0SceneHybridShellRegistryV1.shellStore.readyNotifier,
+          builder: (context, hybridShellReady, _) {
+            final holdCast =
+                castPhase == Act0SceneRegisteredCastPhaseV1.pending;
+            if (castPhase == Act0SceneRegisteredCastPhaseV1.ready ||
+                hybridShellReady) {
+              return Positioned.fill(
+                child: Visibility.maintain(
+                  visible: !holdCast,
+                  child: Act0SceneRecedeMotionV1(
+                    motion: sceneMotion,
+                    plane: Act0SceneRecedePlaneV1.player,
+                    child: Act0SceneRegisteredCastLayerV1(
+                      key: key,
+                      slots: sceneSeatSlots,
+                      plane: plane,
+                      foldedSeatIds: inactiveSeatIds,
+                    ),
+                  ),
+                ),
+              );
+            }
+            // RENDER_CLASS_HYBRID_INTEGRATION_GAUNTLET_V2: the narrower world
+            // box is now legacy compatibility for the generic/procedural
+            // fallback path. The V3 path above maps directly from the V4
+            // source-canvas registration and never consults per-seat ArtFit.
+            const rules = Act0SceneTieredSeatingV1.production;
+            return Positioned(
+              left: rules.horizontalInsetFor(stageSize.width),
+              right: rules.horizontalInsetFor(stageSize.width),
+              top: rules.topInsetFor(stageSize.height),
+              bottom: rules.bottomInsetFor(stageSize.height),
+              child: Visibility.maintain(
+                visible: !holdCast,
+                child: Act0SceneRecedeMotionV1(
+                  motion: sceneMotion,
+                  plane: Act0SceneRecedePlaneV1.player,
+                  child: Act0SceneTieredOpponentLayerV1(
+                    key: key,
+                    slots: sceneSeatSlots,
+                    plane: plane,
+                    foldedSeatIds: inactiveSeatIds,
+                    rules: rules,
+                  ),
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       );
     }
 
@@ -12737,7 +12769,9 @@ class _SeatNodeV1 extends StatelessWidget {
                   for (var i = 0; i < visibleCards.length; i++) ...[
                     Transform.rotate(
                       angle: i == 0 ? -0.06 : 0.06,
-                      child: const _MiniCardBackV1(),
+                      child: const Act0SceneSemanticClearanceSourceV1(
+                        child: _MiniCardBackV1(),
+                      ),
                     ),
                     if (i < visibleCards.length - 1) const SizedBox(width: 2),
                   ],
@@ -12749,11 +12783,13 @@ class _SeatNodeV1 extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   for (var i = 0; i < visibleCards.length; i++) ...[
-                    _CardV1(
-                      card: visibleCards[i],
-                      cardId: '${seat.seatId}_$i',
-                      highlighted: highlightedCardIds.contains(
-                        '${seat.seatId}_$i',
+                    Act0SceneSemanticClearanceSourceV1(
+                      child: _CardV1(
+                        card: visibleCards[i],
+                        cardId: '${seat.seatId}_$i',
+                        highlighted: highlightedCardIds.contains(
+                          '${seat.seatId}_$i',
+                        ),
                       ),
                     ),
                     if (i < visibleCards.length - 1) const SizedBox(width: 3),
