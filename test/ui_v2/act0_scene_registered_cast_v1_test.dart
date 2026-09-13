@@ -27,28 +27,28 @@ void main() {
   tearDown(() => store.clear());
 
   test(
-    'T1 canonical identity maps deterministically to all supplied assets',
+    'T1 canonical identity maps deterministically to the manager-final assets',
     () {
       const expected = <Act0SceneCharacterIdentityV1, (String, String)>{
         Act0SceneCharacterIdentityV1.utg: (
-          'UTG_SEAT_ACTIVE.png',
-          'UTG_PLAYER_EFFECT_MASK.png',
+          'UTG_SEAT_ACTIVE_V4R1_MANAGER_FINAL.png',
+          'UTG_PLAYER_EFFECT_MASK_V4R1_MANAGER_FINAL.png',
         ),
         Act0SceneCharacterIdentityV1.bb: (
-          'BB_SEAT_ACTIVE.png',
-          'BB_PLAYER_EFFECT_MASK.png',
+          'BB_SEAT_ACTIVE_V4R1_MANAGER_FINAL.png',
+          'BB_PLAYER_EFFECT_MASK_V4R1_MANAGER_FINAL.png',
         ),
         Act0SceneCharacterIdentityV1.hj: (
-          'HJ_SEAT_ACTIVE.png',
-          'HJ_PLAYER_EFFECT_MASK.png',
+          'HJ_SEAT_ACTIVE_V4R1_MANAGER_FINAL.png',
+          'HJ_PLAYER_EFFECT_MASK_V4R1_MANAGER_FINAL.png',
         ),
         Act0SceneCharacterIdentityV1.sb: (
-          'SB_SEAT_ACTIVE.png',
-          'SB_PLAYER_EFFECT_MASK.png',
+          'SB_SEAT_ACTIVE_V4R1_MANAGER_FINAL.png',
+          'SB_PLAYER_EFFECT_MASK_V4R1_MANAGER_FINAL.png',
         ),
         Act0SceneCharacterIdentityV1.co: (
-          'CO_SEAT_ACTIVE.png',
-          'CO_PLAYER_EFFECT_MASK.png',
+          'CO_SEAT_ACTIVE_V4R1_MANAGER_FINAL.png',
+          'CO_PLAYER_EFFECT_MASK_V4R1_MANAGER_FINAL.png',
         ),
       };
 
@@ -258,79 +258,158 @@ void main() {
     }
   });
 
-  testWidgets('T6 folded overlay changes human pixels but not seat support', (
-    tester,
-  ) async {
-    final registration = Act0SceneRegisteredCastRegistryV1.registrationFor(
-      Act0SceneCharacterIdentityV1.sb,
-    );
-    await tester.runAsync(() async {
-      final images = await Future.wait<ui.Image?>(<Future<ui.Image?>>[
-        store.load(registration.seatActivePath),
-        store.load(registration.playerEffectMaskPath),
-      ]);
-      final seat = images[0]!;
-      final mask = images[1]!;
-      final active = await _render(
-        Act0SceneRegisteredSeatPainterV1(
-          seatImage: seat,
-          playerEffectMask: mask,
-          folded: false,
-        ),
-        Size(seat.width.toDouble(), seat.height.toDouble()),
-      );
-      final folded = await _render(
-        Act0SceneRegisteredSeatPainterV1(
-          seatImage: seat,
-          playerEffectMask: mask,
-          folded: true,
-        ),
-        Size(seat.width.toDouble(), seat.height.toDouble()),
-      );
-      final maskBytes = (await mask.toByteData(
-        format: ui.ImageByteFormat.rawRgba,
-      ))!.buffer.asUint8List();
-      final seatBytes = (await seat.toByteData(
-        format: ui.ImageByteFormat.rawRgba,
-      ))!.buffer.asUint8List();
-      final activeBytes = (await active.toByteData(
-        format: ui.ImageByteFormat.rawRgba,
-      ))!.buffer.asUint8List();
-      final foldedBytes = (await folded.toByteData(
-        format: ui.ImageByteFormat.rawRgba,
-      ))!.buffer.asUint8List();
+  // The manager-final V4R1 policy is provable from the supplied bytes: BB and
+  // HJ are the two admitted seat-support candidates and carry opaque non-human
+  // pixels; UTG, SB and CO are the original frozen C3 bodies and carry none, so
+  // the rejected generated CO support cannot have come back as a fragment.
+  const supportCarryingIdentities = <Act0SceneCharacterIdentityV1>{
+    Act0SceneCharacterIdentityV1.bb,
+    Act0SceneCharacterIdentityV1.hj,
+  };
 
-      int? humanOffset;
-      int? supportOffset;
-      for (var offset = 0; offset < maskBytes.length; offset += 4) {
-        final maskLuminance = maskBytes[offset];
-        final seatAlpha = seatBytes[offset + 3];
-        if (humanOffset == null && maskLuminance > 240 && seatAlpha > 240) {
-          humanOffset = offset;
-        }
-        if (supportOffset == null && maskLuminance == 0 && seatAlpha > 16) {
-          supportOffset = offset;
-        }
-        if (humanOffset != null && supportOffset != null) break;
-      }
-      expect(humanOffset, isNotNull);
-      expect(supportOffset, isNotNull);
-      final supportDelta = <int>[
-        for (var channel = 0; channel < 4; channel++)
-          (foldedBytes[supportOffset! + channel] -
-                  activeBytes[supportOffset + channel])
-              .abs(),
-      ];
-      expect(supportDelta, everyElement(lessThanOrEqualTo(1)));
-      final humanDelta = <int>[
-        for (var channel = 0; channel < 3; channel++)
-          (foldedBytes[humanOffset! + channel] -
-                  activeBytes[humanOffset + channel])
-              .abs(),
-      ];
-      expect(humanDelta.reduce((a, b) => a + b), greaterThan(12));
-    });
-  });
+  for (final identity in Act0SceneCharacterIdentityV1.values) {
+    testWidgets(
+      'T6 folded overlay changes ${identity.name} human pixels and never its '
+      'seat support',
+      (tester) async {
+        final registration = Act0SceneRegisteredCastRegistryV1.registrationFor(
+          identity,
+        );
+        await tester.runAsync(() async {
+          final images = await Future.wait<ui.Image?>(<Future<ui.Image?>>[
+            store.load(registration.seatActivePath),
+            store.load(registration.playerEffectMaskPath),
+          ]);
+          final seat = images[0]!;
+          final mask = images[1]!;
+          final size = Size(seat.width.toDouble(), seat.height.toDouble());
+          expect(size, registration.sourceRect.size);
+          expect(
+            Size(mask.width.toDouble(), mask.height.toDouble()),
+            size,
+            reason: 'the human mask registers 1:1 with its composite',
+          );
+          final active = await _render(
+            Act0SceneRegisteredSeatPainterV1(
+              seatImage: seat,
+              playerEffectMask: mask,
+              folded: false,
+            ),
+            size,
+          );
+          final folded = await _render(
+            Act0SceneRegisteredSeatPainterV1(
+              seatImage: seat,
+              playerEffectMask: mask,
+              folded: true,
+            ),
+            size,
+          );
+          final maskBytes = (await mask.toByteData(
+            format: ui.ImageByteFormat.rawRgba,
+          ))!.buffer.asUint8List();
+          final seatBytes = (await seat.toByteData(
+            format: ui.ImageByteFormat.rawRgba,
+          ))!.buffer.asUint8List();
+          final activeBytes = (await active.toByteData(
+            format: ui.ImageByteFormat.rawRgba,
+          ))!.buffer.asUint8List();
+          final foldedBytes = (await folded.toByteData(
+            format: ui.ImageByteFormat.rawRgba,
+          ))!.buffer.asUint8List();
+
+          final width = mask.width;
+          final height = mask.height;
+          int? humanOffset;
+          final supportOffsets = <int>[];
+          // Support pixels whose whole 5x5 neighbourhood is also outside the
+          // human mask. Away from the mask edge the attenuation cannot reach
+          // them even through the mask's own antialiasing.
+          final interiorSupportOffsets = <int>[];
+          for (var y = 0; y < height; y++) {
+            for (var x = 0; x < width; x++) {
+              final offset = (y * width + x) * 4;
+              final maskLuminance = maskBytes[offset];
+              final seatAlpha = seatBytes[offset + 3];
+              if (humanOffset == null &&
+                  maskLuminance > 240 &&
+                  seatAlpha > 240) {
+                humanOffset = offset;
+              }
+              if (maskLuminance != 0 || seatAlpha <= 16) continue;
+              supportOffsets.add(offset);
+              var neighbourMask = 0;
+              for (var dy = -2; dy <= 2 && neighbourMask == 0; dy++) {
+                for (var dx = -2; dx <= 2; dx++) {
+                  final ny = y + dy;
+                  final nx = x + dx;
+                  if (ny < 0 || nx < 0 || ny >= height || nx >= width) {
+                    continue;
+                  }
+                  final neighbour = maskBytes[(ny * width + nx) * 4];
+                  if (neighbour > neighbourMask) neighbourMask = neighbour;
+                }
+              }
+              if (neighbourMask == 0) interiorSupportOffsets.add(offset);
+            }
+          }
+
+          expect(
+            humanOffset,
+            isNotNull,
+            reason: '${identity.name} has human pixels to attenuate',
+          );
+          expect(
+            supportOffsets.isNotEmpty,
+            supportCarryingIdentities.contains(identity),
+            reason: supportCarryingIdentities.contains(identity)
+                ? '${identity.name} is an admitted seat-support candidate'
+                : '${identity.name} is the original C3 body and carries no '
+                      'generated support fragment',
+          );
+
+          // Wherever support exists it is untouched by the fold state: the
+          // attenuation is clipped to the supplied human mask only. Interior
+          // support is bit-exact; support touching the mask edge may move by
+          // at most the mask's own antialiasing, which is imperceptible and
+          // never the folded room tone.
+          expect(
+            interiorSupportOffsets.length,
+            supportOffsets.isEmpty ? 0 : greaterThan(0),
+          );
+          for (final supportOffset in interiorSupportOffsets) {
+            for (var channel = 0; channel < 4; channel++) {
+              expect(
+                foldedBytes[supportOffset + channel],
+                activeBytes[supportOffset + channel],
+                reason: '${identity.name} interior seat support is untouched',
+              );
+            }
+          }
+          for (final supportOffset in supportOffsets) {
+            for (var channel = 0; channel < 4; channel++) {
+              expect(
+                (foldedBytes[supportOffset + channel] -
+                        activeBytes[supportOffset + channel])
+                    .abs(),
+                lessThanOrEqualTo(2),
+                reason: '${identity.name} seat support is not attenuated',
+              );
+            }
+          }
+
+          final humanDelta = <int>[
+            for (var channel = 0; channel < 3; channel++)
+              (foldedBytes[humanOffset! + channel] -
+                      activeBytes[humanOffset + channel])
+                  .abs(),
+          ];
+          expect(humanDelta.reduce((a, b) => a + b), greaterThan(12));
+        });
+      },
+    );
+  }
+
   for (final viewport in const <Size>[
     Size(375, 812),
     Size(402, 874),
@@ -427,7 +506,7 @@ void main() {
       await tester.pump();
 
       // First visible frame: nothing is decoded, so both opponent planes are
-      // held and no generic or V3 identity is presented.
+      // held and no generic or registered identity is presented.
       expect(
         Act0SceneRegisteredCastReadinessV1.shared.phase,
         Act0SceneRegisteredCastPhaseV1.pending,
@@ -455,7 +534,11 @@ void main() {
           _expectPlanesPresented(tester, presented: false);
         }
       }
-      expect(sawReady, isTrue, reason: 'bundled V3 cast must become ready');
+      expect(
+        sawReady,
+        isTrue,
+        reason: 'bundled registered cast must become ready',
+      );
 
       await _settle(tester);
       expect(_readySeatCount(), 5);
@@ -515,7 +598,7 @@ void main() {
 
   for (final failure in _AssetFailureV1.values) {
     testWidgets(
-      'T10 a ${failure.name} V3 asset falls back safely as one cast',
+      'T10 a ${failure.name} registered asset falls back safely as one cast',
       (tester) async {
         _resetProductionCast();
         addTearDown(_resetProductionCast);

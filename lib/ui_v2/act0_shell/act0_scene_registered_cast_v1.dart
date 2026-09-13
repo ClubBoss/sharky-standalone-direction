@@ -10,7 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_depth_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hybrid_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_player_v1.dart';
 
-/// One authored V3 opponent registration in the 941x1672 V4 source canvas.
+/// One authored V4R1 opponent registration in the 941x1672 V4 source canvas.
 ///
 /// This contract owns visual composition only. Seat anchors, cards, chips,
 /// labels, action state, and every other poker semantic remain outside it.
@@ -22,6 +22,7 @@ class Act0SceneRegisteredSeatV1 {
     required this.plane,
     required this.seatActiveAsset,
     required this.playerEffectMaskAsset,
+    required this.uniformScale,
   });
 
   final Act0SceneCharacterIdentityV1 identity;
@@ -29,6 +30,13 @@ class Act0SceneRegisteredSeatV1 {
   final Act0SceneTieredPlaneV1 plane;
   final String seatActiveAsset;
   final String playerEffectMaskAsset;
+
+  /// Authored uniform scale recorded by the manager-final registration.
+  ///
+  /// It is provenance only: it is already baked into [sourceRect], whose size
+  /// equals the supplied PNG's own pixel size. Nothing multiplies by it at
+  /// paint time, and no code may re-derive placement from asset bounds.
+  final double uniformScale;
 
   String get seatActivePath =>
       '${Act0SceneRegisteredCastRegistryV1.assetRoot}/$seatActiveAsset';
@@ -38,14 +46,19 @@ class Act0SceneRegisteredSeatV1 {
       '$playerEffectMaskAsset';
 }
 
-/// Canonical, deterministic V3 cast registration copied from
-/// `assets/act0_characters/registration_v3.json`.
+/// Canonical, deterministic V4R1 cast registration copied from
+/// `assets/act0_characters/registration_v4r1.json`.
+///
+/// The manager-final set is UTG/SB/CO on their original frozen C3 bodies and
+/// BB/HJ on the admitted seat-support candidates. The generated CO support is
+/// rejected and must not be reintroduced. The C3 human positions and scales
+/// are unchanged; only the authored crop/registration moved with them.
 class Act0SceneRegisteredCastRegistryV1 {
   const Act0SceneRegisteredCastRegistryV1._();
 
   static const String assetRoot = 'assets/act0_characters';
   static const String registrationSourcePath =
-      '$assetRoot/registration_v3.json';
+      '$assetRoot/registration_v4r1.json';
   static const Size sourceCanvasSize = Size(941, 1672);
 
   static const List<Act0SceneCharacterIdentityV1> compositionOrder =
@@ -61,44 +74,84 @@ class Act0SceneRegisteredCastRegistryV1 {
   registrations = <Act0SceneCharacterIdentityV1, Act0SceneRegisteredSeatV1>{
     Act0SceneCharacterIdentityV1.utg: Act0SceneRegisteredSeatV1(
       identity: Act0SceneCharacterIdentityV1.utg,
-      sourceRect: Rect.fromLTWH(298, 281, 250, 182),
+      sourceRect: Rect.fromLTWH(376, 325, 159, 145),
       plane: Act0SceneTieredPlaneV1.back,
-      seatActiveAsset: 'UTG_SEAT_ACTIVE.png',
-      playerEffectMaskAsset: 'UTG_PLAYER_EFFECT_MASK.png',
+      seatActiveAsset: 'UTG_SEAT_ACTIVE_V4R1_MANAGER_FINAL.png',
+      playerEffectMaskAsset: 'UTG_PLAYER_EFFECT_MASK_V4R1_MANAGER_FINAL.png',
+      uniformScale: 1.0,
     ),
     Act0SceneCharacterIdentityV1.bb: Act0SceneRegisteredSeatV1(
       identity: Act0SceneCharacterIdentityV1.bb,
-      sourceRect: Rect.fromLTWH(19, 334, 238, 281),
+      sourceRect: Rect.fromLTWH(60, 478, 144, 246),
       plane: Act0SceneTieredPlaneV1.back,
-      seatActiveAsset: 'BB_SEAT_ACTIVE.png',
-      playerEffectMaskAsset: 'BB_PLAYER_EFFECT_MASK.png',
+      seatActiveAsset: 'BB_SEAT_ACTIVE_V4R1_MANAGER_FINAL.png',
+      playerEffectMaskAsset: 'BB_PLAYER_EFFECT_MASK_V4R1_MANAGER_FINAL.png',
+      uniformScale: 0.95,
     ),
     Act0SceneCharacterIdentityV1.hj: Act0SceneRegisteredSeatV1(
       identity: Act0SceneCharacterIdentityV1.hj,
-      sourceRect: Rect.fromLTWH(609, 333, 246, 318),
+      sourceRect: Rect.fromLTWH(743, 498, 133, 301),
       plane: Act0SceneTieredPlaneV1.back,
-      seatActiveAsset: 'HJ_SEAT_ACTIVE.png',
-      playerEffectMaskAsset: 'HJ_PLAYER_EFFECT_MASK.png',
+      seatActiveAsset: 'HJ_SEAT_ACTIVE_V4R1_MANAGER_FINAL.png',
+      playerEffectMaskAsset: 'HJ_PLAYER_EFFECT_MASK_V4R1_MANAGER_FINAL.png',
+      uniformScale: 0.95,
     ),
     Act0SceneCharacterIdentityV1.sb: Act0SceneRegisteredSeatV1(
       identity: Act0SceneCharacterIdentityV1.sb,
-      sourceRect: Rect.fromLTWH(0, 476, 200, 430),
+      sourceRect: Rect.fromLTWH(0, 800, 167, 324),
       plane: Act0SceneTieredPlaneV1.front,
-      seatActiveAsset: 'SB_SEAT_ACTIVE.png',
-      playerEffectMaskAsset: 'SB_PLAYER_EFFECT_MASK.png',
+      seatActiveAsset: 'SB_SEAT_ACTIVE_V4R1_MANAGER_FINAL.png',
+      playerEffectMaskAsset: 'SB_PLAYER_EFFECT_MASK_V4R1_MANAGER_FINAL.png',
+      uniformScale: 0.94,
     ),
     Act0SceneCharacterIdentityV1.co: Act0SceneRegisteredSeatV1(
       identity: Act0SceneCharacterIdentityV1.co,
-      sourceRect: Rect.fromLTWH(686, 448, 255, 475),
+      sourceRect: Rect.fromLTWH(757, 810, 184, 333),
       plane: Act0SceneTieredPlaneV1.front,
-      seatActiveAsset: 'CO_SEAT_ACTIVE.png',
-      playerEffectMaskAsset: 'CO_PLAYER_EFFECT_MASK.png',
+      seatActiveAsset: 'CO_SEAT_ACTIVE_V4R1_MANAGER_FINAL.png',
+      playerEffectMaskAsset: 'CO_PLAYER_EFFECT_MASK_V4R1_MANAGER_FINAL.png',
+      uniformScale: 0.94,
     ),
   };
 
   static Act0SceneRegisteredSeatV1 registrationFor(
     Act0SceneCharacterIdentityV1 identity,
   ) => registrations[identity]!;
+}
+
+/// Manager-final opponent card+label anchor deltas, in V4 source-canvas pixels.
+///
+/// Copied from `assets/act0_characters/semantic_anchor_recommendations_v4r1
+/// .json`. These are metadata-only: nothing is baked into the supplied art.
+/// One delta per seat moves that seat's own card pair group *and* its own
+/// position-label group together, so a card pair never separates from the
+/// player it belongs to. UTG is authored at zero delta.
+///
+/// Board, pot, clue/status corridor, Hero cards, Hero identity, the dealer
+/// button, the top teaching surface and the bottom action surface are outside
+/// this contract and are never moved by it.
+class Act0SceneRegisteredCastAnchorsV1 {
+  const Act0SceneRegisteredCastAnchorsV1._();
+
+  static const String recommendationSourcePath =
+      '${Act0SceneRegisteredCastRegistryV1.assetRoot}/'
+      'semantic_anchor_recommendations_v4r1.json';
+
+  /// The manager-final physical felt bbox (LTRB) in the source canvas, kept
+  /// as the provenance of the normalized-in-felt figures the deltas came from.
+  static const Rect physicalFeltBBoxSource = Rect.fromLTRB(151, 476, 775, 1276);
+
+  static const Map<Act0SceneCharacterIdentityV1, Offset> sourceDeltas =
+      <Act0SceneCharacterIdentityV1, Offset>{
+        Act0SceneCharacterIdentityV1.utg: Offset.zero,
+        Act0SceneCharacterIdentityV1.bb: Offset(10.61, -196.8),
+        Act0SceneCharacterIdentityV1.hj: Offset(-44.3, -196.8),
+        Act0SceneCharacterIdentityV1.sb: Offset(45.55, -242.4),
+        Act0SceneCharacterIdentityV1.co: Offset(-75.5, -242.4),
+      };
+
+  static Offset sourceDeltaFor(Act0SceneCharacterIdentityV1 identity) =>
+      sourceDeltas[identity] ?? Offset.zero;
 }
 
 /// Maps authored V4 source-canvas coordinates into the frozen camera stage.
@@ -150,6 +203,45 @@ class Act0SceneRegisteredCastMapperV1 {
       (sourceRect.height / sourceCanvas.height) * shellRect.height,
     );
   }
+
+  /// A source-canvas displacement expressed in stage logical pixels.
+  ///
+  /// This is the exact scale [destinationRectFor] applies to registered cast
+  /// rects, so a semantic group displaced by this delta keeps its authored
+  /// relationship to the registered body it belongs to at every viewport.
+  Offset stageDeltaFor(Size stageSize, Offset sourceDelta) {
+    if (sourceDelta == Offset.zero) return Offset.zero;
+    final shellRect = shellRectInStageFor(stageSize);
+    final sourceCanvas = Act0SceneRegisteredCastRegistryV1.sourceCanvasSize;
+    return Offset(
+      (sourceDelta.dx / sourceCanvas.width) * shellRect.width,
+      (sourceDelta.dy / sourceCanvas.height) * shellRect.height,
+    );
+  }
+
+  /// [stageDeltaFor] as a fraction of the stage box.
+  ///
+  /// Seat-owned semantic groups are positioned in normalized stage space, so
+  /// the one source-canvas contract resolves through this single formula at
+  /// 375, 402 and 430 alike. There is no width-specific term anywhere in it.
+  Offset normalizedStageDeltaFor(Size stageSize, Offset sourceDelta) {
+    if (sourceDelta == Offset.zero ||
+        stageSize.isEmpty ||
+        !stageSize.isFinite) {
+      return Offset.zero;
+    }
+    final delta = stageDeltaFor(stageSize, sourceDelta);
+    return Offset(delta.dx / stageSize.width, delta.dy / stageSize.height);
+  }
+
+  /// The normalized card+label displacement owned by [identity].
+  Offset normalizedSemanticAnchorDeltaFor(
+    Size stageSize,
+    Act0SceneCharacterIdentityV1 identity,
+  ) => normalizedStageDeltaFor(
+    stageSize,
+    Act0SceneRegisteredCastAnchorsV1.sourceDeltaFor(identity),
+  );
 }
 
 /// Readiness of the production registered cast.

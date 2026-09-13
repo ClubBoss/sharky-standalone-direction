@@ -1,0 +1,134 @@
+{
+  "version": "v4r1",
+  "sourceCanvasWidth": 941,
+  "sourceCanvasHeight": 1672,
+  "physicalFeltBBoxSource": [
+    151,
+    476,
+    775,
+    1276
+  ],
+  "policy": "metadata_only_no_semantics_baked",
+  "seats": {
+    "UTG": {
+      "currentCardPairCenterNormInFelt": [
+        0.528,
+        0.094
+      ],
+      "recommendedCardPairCenterNormInFelt": [
+        0.528,
+        0.094
+      ],
+      "currentCardPairCenterSource": [
+        480.47,
+        551.2
+      ],
+      "recommendedCardPairCenterSource": [
+        480.47,
+        551.2
+      ],
+      "deltaSourcePx": [
+        0.0,
+        0.0
+      ],
+      "applySameDeltaToPositionLabelGroup": true,
+      "rationale": "zero_delta_current_ownership_already_clear"
+    },
+    "BB": {
+      "currentCardPairCenterNormInFelt": [
+        0.122,
+        0.438
+      ],
+      "recommendedCardPairCenterNormInFelt": [
+        0.139,
+        0.192
+      ],
+      "currentCardPairCenterSource": [
+        227.13,
+        826.4
+      ],
+      "recommendedCardPairCenterSource": [
+        237.74,
+        629.6
+      ],
+      "deltaSourcePx": [
+        10.61,
+        -196.8
+      ],
+      "applySameDeltaToPositionLabelGroup": true,
+      "rationale": "move_card_and_label_group_only_as_needed_to_restore_nearest-own-seat attribution after spatial reauthor"
+    },
+    "HJ": {
+      "currentCardPairCenterNormInFelt": [
+        0.926,
+        0.438
+      ],
+      "recommendedCardPairCenterNormInFelt": [
+        0.855,
+        0.192
+      ],
+      "currentCardPairCenterSource": [
+        728.82,
+        826.4
+      ],
+      "recommendedCardPairCenterSource": [
+        684.52,
+        629.6
+      ],
+      "deltaSourcePx": [
+        -44.3,
+        -196.8
+      ],
+      "applySameDeltaToPositionLabelGroup": true,
+      "rationale": "move_card_and_label_group_only_as_needed_to_restore_nearest-own-seat attribution after spatial reauthor"
+    },
+    "SB": {
+      "currentCardPairCenterNormInFelt": [
+        0.033,
+        0.913
+      ],
+      "recommendedCardPairCenterNormInFelt": [
+        0.106,
+        0.61
+      ],
+      "currentCardPairCenterSource": [
+        171.59,
+        1206.4
+      ],
+      "recommendedCardPairCenterSource": [
+        217.14,
+        964.0
+      ],
+      "deltaSourcePx": [
+        45.55,
+        -242.4
+      ],
+      "applySameDeltaToPositionLabelGroup": true,
+      "rationale": "move_card_and_label_group_only_as_needed_to_restore_nearest-own-seat attribution after spatial reauthor"
+    },
+    "CO": {
+      "currentCardPairCenterNormInFelt": [
+        1.003,
+        0.913
+      ],
+      "recommendedCardPairCenterNormInFelt": [
+        0.882,
+        0.61
+      ],
+      "currentCardPairCenterSource": [
+        776.87,
+        1206.4
+      ],
+      "recommendedCardPairCenterSource": [
+        701.37,
+        964.0
+      ],
+      "deltaSourcePx": [
+        -75.5,
+        -242.4
+      ],
+      "applySameDeltaToPositionLabelGroup": true,
+      "rationale": "move_card_and_label_group_only_as_needed_to_restore_nearest-own-seat attribution after spatial reauthor"
+    }
+  }
+}
