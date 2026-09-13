@@ -146,7 +146,17 @@ class Act0SceneRegisteredCastAnchorsV1 {
         Act0SceneCharacterIdentityV1.utg: Offset.zero,
         Act0SceneCharacterIdentityV1.bb: Offset(10.61, -196.8),
         Act0SceneCharacterIdentityV1.hj: Offset(-44.3, -196.8),
-        Act0SceneCharacterIdentityV1.sb: Offset(45.55, -242.4),
+        // SB is the one seat whose card+label group shares a lane with its
+        // own blind commitment chip. At the authored -242.4 the group
+        // straddles that chip at every gated width, which the repository's
+        // own `blind chips outside their informative seats` invariant
+        // rejects. The chip lane sits below the group, so moving the group
+        // down deepens the overlap; deepening dy lifts it clear instead.
+        // -282.4 is the first step on the 10-source-px grid that clears SB's
+        // own chip, and -382.4 the first that also leaves BB's chip fully
+        // readable beside it, in every gated W1 state at 375/390/402/430 and
+        // at 402 with text scale 1.4. dx is unchanged.
+        Act0SceneCharacterIdentityV1.sb: Offset(45.55, -382.4),
         Act0SceneCharacterIdentityV1.co: Offset(-75.5, -242.4),
       };
 

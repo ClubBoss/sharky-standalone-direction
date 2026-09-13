@@ -35,6 +35,7 @@ const _variantsV1 = <_VariantV1>[
 /// Endpoints captured at every viewport.
 const _sharedEndpointsV1 = <String>[
   'ordinary_decision',
+  'crop_bb_sb_ownership',
   'feedback_coach',
   'inactive_folded',
 ];
@@ -46,7 +47,6 @@ const _canonicalOnlyEndpointsV1 = <String>[
   'cold_first_visible_frame',
   'cold_all_ready',
   'one_table_contour_proof',
-  'crop_bb_sb_ownership',
   'crop_hj_co_ownership',
 ];
 
@@ -281,6 +281,9 @@ void main() {
       for (final finder in <Finder>[
         find.byKey(Key('act0_scene_player_figure_' + seatId)),
         find.byKey(Key('act0_shell_seat_node_' + seatId)),
+        // The commitment chip belongs in the ownership crop: the SB clearance
+        // repair is only provable if its own blind chip is visible beside it.
+        find.byKey(Key('act0_shell_bet_chip_owner_' + seatId)),
       ]) {
         final rect = globalRectOf(finder);
         if (rect == null) continue;
@@ -354,13 +357,13 @@ void main() {
     await tester.pumpWidget(host(variantId + '_a'));
     await settle(tester);
     await capture(tester, dir.path + '/ordinary_decision.png');
+    await capture(
+      tester,
+      dir.path + '/crop_bb_sb_ownership.png',
+      crop: ownershipCrop(const <String>['bb', 'sb'], viewport),
+    );
     if (canonical) {
       await capture(tester, dir.path + '/one_table_contour_proof.png');
-      await capture(
-        tester,
-        dir.path + '/crop_bb_sb_ownership.png',
-        crop: ownershipCrop(const <String>['bb', 'sb'], viewport),
-      );
       await capture(
         tester,
         dir.path + '/crop_hj_co_ownership.png',

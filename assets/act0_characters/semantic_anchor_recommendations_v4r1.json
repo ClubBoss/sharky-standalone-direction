@@ -88,8 +88,8 @@
         0.913
       ],
       "recommendedCardPairCenterNormInFelt": [
-        0.106,
-        0.61
+        0.105994,
+        0.435
       ],
       "currentCardPairCenterSource": [
         171.59,
@@ -97,14 +97,14 @@
       ],
       "recommendedCardPairCenterSource": [
         217.14,
-        964.0
+        824.0
       ],
       "deltaSourcePx": [
         45.55,
-        -242.4
+        -382.4
       ],
       "applySameDeltaToPositionLabelGroup": true,
-      "rationale": "move_card_and_label_group_only_as_needed_to_restore_nearest-own-seat attribution after spatial reauthor"
+      "rationale": "move_card_and_label_group_only_as_needed_to_restore_nearest-own-seat attribution after spatial reauthor; dy deepened from -242.4 to -382.4 so the group clears its own blind commitment chip (the repository's blind-chips-outside-informative-seats invariant) and leaves BB's chip readable, in every gated W1 state at 375/390/402/430"
     },
     "CO": {
       "currentCardPairCenterNormInFelt": [
