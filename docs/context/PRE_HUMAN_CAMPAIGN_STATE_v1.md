@@ -12,8 +12,8 @@ Verified `origin/main = bdf560f0d90d9659335f6492149c373842f655b1`.
 PR #221, #222 and #223 are MERGED. `TABLE_ACTION_AND_STREET_MOTION_V1` was implemented by merged PR #222 and is no longer an open implementation instruction. Learning outcome remains HUMAN_UNPROVEN.
 
 `CURRENT_STAGE = PRE_P02_NORTH_STAR_CONVERGENCE`
-`CURRENT_ACTIVE_FAMILY = PR224_V4R1_PRODUCTION_ART_ACCEPTANCE`
-`EXACT_NEXT_ACTION = REVIEW_PR224_EXACT_SHA_EVIDENCE_AND_CLASSIFY_REMAINING_BLOCKERS`
+`CURRENT_ACTIVE_FAMILY = ACT0_LEARNING_ENGINE_TRUTH_AUDIT`
+`EXACT_NEXT_ACTION = AUDIT_ACT0_MECHANICS_ON_CLEAN_MAIN_AND_SELECT_ONE_PROVEN_GAP`
 `PR224 = OPEN / NOT_MERGED / READY_FOR_MANAGER_REVIEW_ONLY`
 `PR224_HEAD = bd2046e7470f6aa3137e3a9354b5155528d99e25`
 `TABLE_ACTION_AND_STREET_MOTION_V1 = IMPLEMENTED_MERGED_PR222 / REASSESS_EVIDENCE`
@@ -21,14 +21,14 @@ PR #221, #222 and #223 are MERGED. `TABLE_ACTION_AND_STREET_MOTION_V1` was imple
 `P02 = DEFERRED / OWNER_ADMISSION_PENDING`
 `HUMAN_PROOF = FALSE`
 `MODERN_TABLE = MAINTENANCE_MODE`
-`FINAL_ART_COMPLETION = REGISTERED_DEFERRED / EVIDENCE_TRIGGERED`
+`FINAL_ART_COMPLETION = DEFERRED_UNTIL_PREMIUM_SHIP / CURRENT_VISUAL_PLACEHOLDER_ALLOWED`
 
-PR #224 awaits actual owner-visible visual adjudication, including SB/BB cards-labels-chips, active/inactive player treatment, CO contact/support, one-table topology, and the reported pre-existing C3 theory-state exception. Own GitHub workflows succeeded at exact head; third-party TestSprite reports "No tests detected" as a separate status. Do not infer visual acceptance or merge authority from those facts. The owner's remote Mac is currently offline; no fresh native run has been performed in this wave.
+PR #224 awaits actual owner-visible visual adjudication, including SB/BB cards-labels-chips, active/inactive player treatment, CO contact/support, one-table topology, and the reported pre-existing C3 theory-state exception. Own GitHub workflows succeeded at exact head; third-party TestSprite reports "No tests detected" as a separate status. Do not infer visual acceptance or merge authority from those facts. The owner's Mac reconnected. A clean detached main audit worktree exists at `/Users/elmarsalimzade/Sharky_Brain_Audit_2026-10-08`; native QA is not yet claimed. The protected dirty checkout `/Users/elmarsalimzade/Sharky_1.0` remains untouched.
 
 The owner has explicitly requested that paused designer/artist work is preserved for completion later, including all-engaged and disengaged cast options where product-significant. Do not restart a generic visual polish cycle. See:
 `docs/_reviews/2026_10_product_wave_resumption_manager_packet_v1.md`
 
-This Wave W0 is docs-only. Proceed one wave at a time, without mutating PR #224 until evidence disposition. No Human, market, real-poker, or longitudinal claims are upgraded.
+Owner's later 2026-10-08 sequencing decision explicitly prioritizes learner mechanics/personalization/effect. PR #224 visual acceptance is deferred as a held, unmerged placeholder art family. Wave W1 is the mechanism-truth audit on clean main; early Human mechanics diagnostics may be admitted separately, but are not automatically P02. Proceed one wave at a time, without mutating PR #224 until an eventual separate art disposition. No Human, market, real-poker, or longitudinal claims are upgraded.
 
 
 This file carries exact current campaign dispatch beneath
