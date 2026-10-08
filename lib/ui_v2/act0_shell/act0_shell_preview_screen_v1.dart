@@ -3600,31 +3600,30 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ),
               ),
         );
+      // The repair queue owns unresolved debt. Placement can create valid
+      // queue entries without a matching retention-memory entry. Only drop
+      // entries whose source/target no longer exist in the current curriculum;
+      // completion is adjudicated separately by the queue outcome contract.
+      bool isRestorableRepairIntentV1(Act0RepairIntentV1 intent) =>
+          validWorldIds.contains(intent.sourceWorldId) &&
+          validWorldIds.contains(intent.targetWorldId) &&
+          validLessonIds.contains(intent.sourceLessonId) &&
+          validLessonIds.contains(intent.targetLessonId) &&
+          validTaskIds.contains(intent.sourceTaskId) &&
+          validTaskIds.contains(intent.targetTaskId);
       _openRepairIntentBySourceTaskId
         ..clear()
         ..addEntries(
           parsed.multiRepairQueue
               .activeRepairIntents()
-              .where((intent) {
-                final retention = _retentionMemoryByTaskId[intent.sourceTaskId];
-                return retention != null &&
-                    retention.status ==
-                        _Act0RetentionMemoryStatusV1.openRepair &&
-                    retention.lessonId == intent.sourceLessonId &&
-                    retention.worldId == intent.sourceWorldId;
-              })
+              .where(isRestorableRepairIntentV1)
               .map((intent) => MapEntry(intent.sourceTaskId, intent)),
         );
       _multiRepairQueueV1 = Act0MultiRepairQueueV1(
         entries: List<Act0MultiRepairQueueEntryV1>.unmodifiable(
-          parsed.multiRepairQueue.entries.where((entry) {
-            final intent = entry.repairIntent;
-            final retention = _retentionMemoryByTaskId[intent.sourceTaskId];
-            return retention != null &&
-                retention.status == _Act0RetentionMemoryStatusV1.openRepair &&
-                retention.lessonId == intent.sourceLessonId &&
-                retention.worldId == intent.sourceWorldId;
-          }),
+          parsed.multiRepairQueue.entries.where(
+            (entry) => isRestorableRepairIntentV1(entry.repairIntent),
+          ),
         ),
       );
       _multiRepairQueueOrderV1 = parsed.multiRepairQueueOrder;
