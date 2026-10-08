@@ -1176,6 +1176,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.actionPayoff,
     this.telemetrySink,
     this.evidenceRunId = '',
+    this.evidenceNextOrder = 0,
     this.reviewKindId = 'initialAssessment',
     this.tableChoreographyMode = Act0TableChoreographyModeV1.runtime,
     this.lowerSurfacePrototypeState,
@@ -1229,6 +1230,9 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final Act0ActionSessionPayoffV1? actionPayoff;
   final Act0TelemetrySinkV1? telemetrySink;
   final String evidenceRunId;
+
+  /// Next durable order from the existing learning evidence owner.
+  final int evidenceNextOrder;
   final String reviewKindId;
   final Act0TableChoreographyModeV1 tableChoreographyMode;
   final Act0LowerSurfacePrototypeStateV1? lowerSurfacePrototypeState;
@@ -1261,6 +1265,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   String _feedbackViewedTelemetryKey = '';
   String _completedDecisionTaskKey = '';
   int _completedDecisionOrdinal = 0;
+  bool _decisionSubmittedForTaskV1 = false;
   String _showdownInteractionKey = '';
   final Stopwatch _decisionTelemetryStopwatch = Stopwatch();
   Timer? _tableChoreographyTimer;
@@ -1416,6 +1421,17 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   @override
   void didUpdateWidget(covariant Act0LessonRunnerShellV1 oldWidget) {
     super.didUpdateWidget(oldWidget);
+    // A new task or an explicit return from review opens a new attempt.
+    // A feedback re-render must not reopen the already committed choice.
+    if (oldWidget.selectedTaskId != widget.selectedTaskId ||
+        oldWidget.selectedLessonId != widget.selectedLessonId ||
+        (oldWidget.runner.phase == Act0LessonPhaseV1.review &&
+            widget.runner.phase == Act0LessonPhaseV1.drill) ||
+        (oldWidget.runner.phase == Act0LessonPhaseV1.drill &&
+            widget.runner.phase == Act0LessonPhaseV1.drill &&
+            widget.runner.selectedOptionId == null)) {
+      _decisionSubmittedForTaskV1 = false;
+    }
     _syncTheoryAdvanceLock();
     _syncLearningRailSupportSegment();
     _syncRapidReviewAdvance();
@@ -1765,14 +1781,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   void _maybeEmitUserChoiceTelemetry(
     Act0RunnerOptionV1 option, {
     required String decisionTimeBucket,
+    Act0CompletedDecisionKindV1 kind = Act0CompletedDecisionKindV1.actionList,
   }) {
-    final key =
-        '${widget.selectedWorldId ?? ''}|$_stableLessonTelemetryId|$_stableTaskTelemetryId|${widget.runner.phase.name}|${option.id}';
-    if (_userChoiceTelemetryKey == key) {
-      return;
-    }
+    final projection = _decisionTelemetryProjectionV1(option, kind: kind);
+    // Same-attempt callbacks are idempotent; a replay is a new attempt.
+    final key = projection.attemptId;
+    if (_userChoiceTelemetryKey == key) return;
     _userChoiceTelemetryKey = key;
-    final projection = _decisionTelemetryProjectionV1(option);
     _decisionTelemetryStopwatch.stop();
     _recordTelemetry(
       Act0TelemetryEventV1(
@@ -1813,8 +1828,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   void _emitCanonicalDecisionMadeTelemetryV1(
     Act0RunnerOptionV1 option, {
     required String decisionTimeBucket,
+    Act0CompletedDecisionKindV1 kind = Act0CompletedDecisionKindV1.actionList,
   }) {
-    final projection = _decisionTelemetryProjectionV1(option);
+    final projection = _decisionTelemetryProjectionV1(option, kind: kind);
     _recordTelemetry(
       Act0TelemetryEventV1(
         name: 'decision_made',
@@ -1953,9 +1969,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }
 
   void _handleChooseOptionTelemetry(Act0RunnerOptionV1 option) {
-    if (!_heroDecisionReady) {
+    if (!_heroDecisionReady || _decisionSubmittedForTaskV1) {
       return;
     }
+    _decisionSubmittedForTaskV1 = true;
     final telemetryDecisionTimeBucket = _decisionTimeBucketV1(
       _decisionTelemetryStopwatch.isRunning
           ? _decisionTelemetryStopwatch.elapsed
@@ -2050,7 +2067,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     List<String> boardCardIds,
     String streetLabel,
   })
-  _decisionTelemetryProjectionV1(Act0RunnerOptionV1 option) {
+  _decisionTelemetryProjectionV1(
+    Act0RunnerOptionV1 option, {
+    Act0CompletedDecisionKindV1 kind = Act0CompletedDecisionKindV1.actionList,
+  }) {
     final expectedOption = widget.runner.options
         .cast<Act0RunnerOptionV1?>()
         .firstWhere(
@@ -2108,9 +2128,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       repairFamilyId: repairFamilyId,
       repairTargetTaskId: option.isCorrect ? null : receipt?.nextRepId,
       drillKind: widget.selectedTaskFamily?.name ?? 'unknown',
-      attemptId:
-          'v1|${widget.selectedWorldId?.trim() ?? ''}|'
-          '$_stableLessonTelemetryId|$_stableTaskTelemetryId|${option.id}|1',
+      attemptId: _canonicalCompletedAttemptIdV1(
+        option,
+        kind,
+        _nextCompletedDecisionOrdinalV1(kind),
+      ),
       boardCardIds: widget.runner.table.boardCards
           .map((card) => card.label)
           .where((label) => label.trim().isNotEmpty)
@@ -2119,8 +2141,38 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     );
   }
 
+  int _nextCompletedDecisionOrdinalV1(Act0CompletedDecisionKindV1 kind) {
+    final taskKey =
+        '${widget.evidenceRunId.trim()}|${widget.evidenceNextOrder}|'
+        '${widget.selectedWorldId ?? ''}|'
+        '$_stableLessonTelemetryId|$_stableTaskTelemetryId|${kind.name}';
+    return _completedDecisionTaskKey == taskKey
+        ? _completedDecisionOrdinal + 1
+        : 1;
+  }
+
+  String _canonicalCompletedAttemptIdV1(
+    Act0RunnerOptionV1 option,
+    Act0CompletedDecisionKindV1 kind,
+    int ordinal,
+  ) {
+    final runId = widget.evidenceRunId.trim();
+    final worldId = widget.selectedWorldId?.trim() ?? '';
+    final suffix =
+        '$worldId|$_stableLessonTelemetryId|$_stableTaskTelemetryId|'
+        '${kind.name}|${option.id}|$ordinal';
+    if (widget.evidenceNextOrder <= 0) {
+      // Backwards-compatible standalone/legacy runner consumers: product
+      // owner always supplies next durable evidence order.
+      return runId.isEmpty ? 'v1|$suffix' : 'v2|$runId|$suffix';
+    }
+    // Existing monotonic durable evidence order is stable across process
+    // restore, and advances for each newly completed attempt.
+    return 'v3|$runId|${widget.evidenceNextOrder}|$suffix';
+  }
+
   void _handleChooseSeat(String seatId) {
-    if (!_heroDecisionReady) {
+    if (!_heroDecisionReady || _decisionSubmittedForTaskV1) {
       return;
     }
     final option = widget.runner.options.cast<Act0RunnerOptionV1?>().firstWhere(
@@ -2134,14 +2186,17 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         ? null
         : _decisionTimeBucketV1(elapsed);
     if (option != null) {
+      _decisionSubmittedForTaskV1 = true;
       final telemetryDecisionTimeBucket = decisionTimeBucket ?? 'unknown';
       _maybeEmitUserChoiceTelemetry(
         option,
         decisionTimeBucket: telemetryDecisionTimeBucket,
+        kind: Act0CompletedDecisionKindV1.seat,
       );
       _emitCanonicalDecisionMadeTelemetryV1(
         option,
         decisionTimeBucket: telemetryDecisionTimeBucket,
+        kind: Act0CompletedDecisionKindV1.seat,
       );
     }
     widget.onChoiceAssistance?.call(_decisionAssistanceKindV1);
@@ -2163,7 +2218,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }
 
   void _handleConfirmSizingPreset() {
-    if (!_heroDecisionReady) {
+    if (!_heroDecisionReady || _decisionSubmittedForTaskV1) {
       return;
     }
     final presetId = widget.runner.selectedPresetId;
@@ -2173,6 +2228,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             (candidate) => candidate?.id == presetId,
             orElse: () => null,
           );
+    if (option != null) _decisionSubmittedForTaskV1 = true;
     widget.onChoiceAssistance?.call(_decisionAssistanceKindV1);
     widget.onConfirmSizingPreset?.call();
     if (option != null) {
@@ -2187,7 +2243,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }) {
     final evidenceRunId = widget.evidenceRunId.trim();
     final taskKey =
-        '$evidenceRunId|${widget.selectedWorldId ?? ''}|'
+        '$evidenceRunId|${widget.evidenceNextOrder}|${widget.selectedWorldId ?? ''}|'
         '$_stableLessonTelemetryId|$_stableTaskTelemetryId|${kind.name}';
     if (_completedDecisionTaskKey != taskKey) {
       _completedDecisionTaskKey = taskKey;
@@ -2235,13 +2291,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           );
     widget.onCompletedDecision?.call(
       Act0CompletedDecisionV1(
-        attemptKey: evidenceRunId.isEmpty
-            ? 'v1|${normalizedWorldId ?? ''}|$_stableLessonTelemetryId|'
-                  '$_stableTaskTelemetryId|${kind.name}|${option.id}|'
-                  '$_completedDecisionOrdinal'
-            : 'v2|$evidenceRunId|${normalizedWorldId ?? ''}|'
-                  '$_stableLessonTelemetryId|$_stableTaskTelemetryId|'
-                  '${kind.name}|${option.id}|$_completedDecisionOrdinal',
+        attemptKey: _canonicalCompletedAttemptIdV1(
+          option,
+          kind,
+          _completedDecisionOrdinal,
+        ),
         worldId: normalizedWorldId,
         lessonId: _stableLessonTelemetryId,
         taskId: _stableTaskTelemetryId,
@@ -9740,10 +9794,10 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               Text(
                 !summary.independentProvenanceKnown
-                    ? '${summary.correctCount}/${summary.taskCount} correct · help history unverified · ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}'
+                    ? '${summary.correctCount}/${summary.taskCount} assessed correct · full-lesson proof unverified · ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}'
                     : summary.assistedCount > 0
                     ? '${summary.correctCount}/${summary.taskCount} correct · ${summary.assistedCount} with help · ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}'
-                    : '${summary.accuracyPercent}% accuracy · ${summary.correctCount}/${summary.taskCount} correct · ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}',
+                    : '${summary.accuracyPercent}% accuracy (assessed) · ${summary.correctCount}/${summary.taskCount} correct · ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}',
                 key: const Key('act0_shell_block_summary_accuracy'),
                 maxLines: 2,
                 overflow: TextOverflow.fade,

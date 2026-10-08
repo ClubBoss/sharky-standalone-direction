@@ -5868,6 +5868,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 evidenceRunId:
                                     _activeLearningEvidenceRunKeyV1?.runId ??
                                     '',
+                                evidenceNextOrder: _latestEvidenceOrderV1() + 1,
                                 reviewKindId: _routeReviewKindForTaskIdV1(
                                   playSelectedTask?.taskId ?? '',
                                 ).name,
@@ -12834,51 +12835,64 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         )
         .length;
     final lessonOpenMistakeCount = _openMistakeCountForLessonV1(selectedLesson);
-    final lessonTaskIds = selectedLesson.taskList
+    // Scored drills emit completed evidence; theory and review/navigation
+    // stages cannot inflate the lesson assessment denominator.
+    final assessedTaskIds = selectedLesson.taskList
+        .where((task) => task.phase == Act0LessonPhaseV1.drill)
         .map((task) => task.taskId)
         .toSet();
     final assistedTaskIds = _lessonRunAssistedTaskIds
-        .where(lessonTaskIds.contains)
+        .where(assessedTaskIds.contains)
         .toSet();
     final boundary = _lessonRunEvidenceLessonIdV1 == selectedLesson.lessonId
         ? _lessonRunEvidenceStartOrderV1
         : null;
-    var independentProvenanceKnown = boundary != null;
+    final history = _learningEvidenceHistoryV1.records;
+    final firstByTask = <String, Act0LearningEvidenceRecordV1>{};
+    final wrongAssessedTaskIds = <String>{};
+    var evidenceComplete = boundary != null && assessedTaskIds.isNotEmpty;
     if (boundary != null) {
-      final records = _learningEvidenceHistoryV1.records;
-      // If the capped history has dropped an in-run record, fail closed.
-      if (records.isNotEmpty && records.first.createdOrder > boundary + 1) {
-        independentProvenanceKnown = false;
+      if (history.isNotEmpty && history.first.createdOrder > boundary + 1) {
+        evidenceComplete = false; // bounded history was truncated
       }
-      for (final record in records) {
+      for (final record in history) {
         if (record.createdOrder <= boundary ||
             record.lessonId != selectedLesson.lessonId ||
-            !lessonTaskIds.contains(record.taskId)) {
+            !assessedTaskIds.contains(record.taskId)) {
           continue;
         }
+        firstByTask.putIfAbsent(record.taskId, () => record);
+        if (!record.isCorrect) wrongAssessedTaskIds.add(record.taskId);
         switch (record.assistanceKind) {
           case Act0DecisionAssistanceV1.quickHint:
           case Act0DecisionAssistanceV1.theoryRecall:
             assistedTaskIds.add(record.taskId);
           case Act0DecisionAssistanceV1.legacyUnknown:
-            independentProvenanceKnown = false;
+            evidenceComplete = false;
           case Act0DecisionAssistanceV1.none:
             break;
         }
       }
     }
+    if (firstByTask.length != assessedTaskIds.length) {
+      evidenceComplete = false;
+    }
+    // First scored result per task defines assessment accuracy. Later repair
+    // may teach the concept, but never overwrites the original mistake.
+    final assessedCorrectCount = firstByTask.values
+        .where((record) => record.isCorrect)
+        .length;
+    final assessedErrorCount = wrongAssessedTaskIds.length;
     final lessonAssistedCount = assistedTaskIds.length;
     final worldOpenMistakeCount = _openMistakeCountForWorldV1(progressedWorld);
     _blockCompletionSummary = Act0BlockCompletionSummaryV1(
       lessonTitle: _localizedLessonTitleV1(selectedLesson),
       xpEarned: _lessonRunXp,
-      errorCount: _lessonRunMistakeTaskIds.length,
+      errorCount: assessedErrorCount,
       assistedCount: lessonAssistedCount,
-      independentProvenanceKnown: independentProvenanceKnown,
-      taskCount: selectedLesson.taskList.length,
-      correctCount:
-          (selectedLesson.taskList.length - _lessonRunMistakeTaskIds.length)
-              .clamp(0, selectedLesson.taskList.length),
+      independentProvenanceKnown: evidenceComplete,
+      taskCount: assessedTaskIds.length,
+      correctCount: assessedCorrectCount,
       startLevel: _progressSnapshot(
         widget.state ?? Act0ShellStateV1.sample,
         earnedXpDelta: _earnedXp - _lessonRunXp,

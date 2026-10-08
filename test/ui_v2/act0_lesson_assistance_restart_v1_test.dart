@@ -23,6 +23,7 @@ void main() {
   for (final mode in <String>[
     'quickHint',
     'lessonDetour',
+    'wrongBeforeRestart',
     'theoryRecall',
     'repeatHint',
     'independent',
@@ -59,34 +60,58 @@ void main() {
           'selectedLessonId': lessonId,
           'selectedTaskId': 'actions_check_drill',
           'earnedXp': 20,
-          'learningEvidenceHistory': mode == 'freshAfterOldHelp'
-              ? <Object>[
-                  <String, Object?>{
-                    'schemaVersion': 1,
-                    'recordId': 'previous_run|1',
-                    'createdOrder': 1,
-                    'worldId': 'world_1',
-                    'lessonId': lessonId,
-                    'taskId': 'actions_check_drill',
-                    'choiceId': 'check',
-                    'expectedChoiceId': 'check',
-                    'isCorrect': true,
-                    'errorType': 'none',
-                    'repairFocusId': '',
-                    'skillAtomId': 'action_read',
-                    'decisionTimeBucket': '3_to_10s',
-                    'resultKind': 'correct',
-                    'assistanceKind': 'quickHint',
-                  },
-                ]
-              : <Object>[],
+          'learningEvidenceHistory': <Object>[
+            if (mode == 'freshAfterOldHelp')
+              <String, Object?>{
+                'schemaVersion': 1,
+                'recordId': 'previous_run|1',
+                'createdOrder': 1,
+                'worldId': 'world_1',
+                'lessonId': lessonId,
+                'taskId': 'actions_check_drill',
+                'choiceId': 'check',
+                'expectedChoiceId': 'check',
+                'isCorrect': true,
+                'errorType': 'none',
+                'skillAtomId': 'action_read',
+                'decisionTimeBucket': '3_to_10s',
+                'resultKind': 'correct',
+                'assistanceKind': 'quickHint',
+              },
+            <String, Object?>{
+              'schemaVersion': 1,
+              'recordId': 'legal_context|source_proof',
+              'createdOrder': mode == 'freshAfterOldHelp' ? 2 : 1,
+              'worldId': 'world_1',
+              'lessonId': lessonId,
+              'taskId': 'actions_legal_context',
+              'choiceId': lesson.taskList
+                  .firstWhere((t) => t.taskId == 'actions_legal_context')
+                  .runner
+                  .options
+                  .firstWhere((o) => o.isCorrect)
+                  .id,
+              'expectedChoiceId': lesson.taskList
+                  .firstWhere((t) => t.taskId == 'actions_legal_context')
+                  .runner
+                  .options
+                  .firstWhere((o) => o.isCorrect)
+                  .id,
+              'isCorrect': true,
+              'errorType': 'none',
+              'skillAtomId': 'action_read',
+              'decisionTimeBucket': '3_to_10s',
+              'resultKind': 'correct',
+              'assistanceKind': 'none',
+            },
+          ],
           if (mode != 'legacyUnknown')
             'lessonRunEvidenceBoundaries': <String, Object?>{
-              lessonId: mode == 'freshAfterOldHelp' ? 1 : 0,
+              lessonId: mode == 'freshAfterOldHelp' ? 2 : 0,
             },
           if (mode != 'legacyUnknown') 'lessonRunEvidenceLessonId': lessonId,
           if (mode != 'legacyUnknown')
-            'lessonRunEvidenceStartOrder': mode == 'freshAfterOldHelp' ? 1 : 0,
+            'lessonRunEvidenceStartOrder': mode == 'freshAfterOldHelp' ? 2 : 0,
         }),
       });
 
@@ -122,7 +147,9 @@ void main() {
       }
       final hint = find.byKey(const Key('act0_shell_theory_recall_cta'));
       expect(hint, findsOneWidget);
-      if (mode != 'independent' && mode != 'freshAfterOldHelp') {
+      if (mode != 'independent' &&
+          mode != 'freshAfterOldHelp' &&
+          mode != 'wrongBeforeRestart') {
         for (
           var repeat = 0;
           repeat < (mode == 'repeatHint' ? 2 : 1);
@@ -145,7 +172,17 @@ void main() {
           await tester.pumpAndSettle();
         }
       }
-      await tester.tap(find.byKey(const Key('act0_shell_option_check')));
+      final chosenId = mode == 'wrongBeforeRestart'
+          ? tester
+                .widget<Act0LessonRunnerShellV1>(
+                  find.byType(Act0LessonRunnerShellV1),
+                )
+                .runner
+                .options
+                .firstWhere((o) => !o.isCorrect)
+                .id
+          : 'check';
+      await tester.tap(find.byKey(Key('act0_shell_option_$chosenId')));
       await tester.pumpAndSettle();
       await tester.tap(
         find.byKey(const Key('act0_shell_feedback_continue_cta')),
@@ -155,7 +192,9 @@ void main() {
       final prefs = await SharedPreferences.getInstance();
       final afterHint = jsonDecode(prefs.getString(progressKey)!) as Map;
       final evidence = afterHint['learningEvidenceHistory'] as List;
-      if (mode != 'independent' && mode != 'freshAfterOldHelp') {
+      if (mode != 'independent' &&
+          mode != 'freshAfterOldHelp' &&
+          mode != 'wrongBeforeRestart') {
         final expectedKind = mode == 'theoryRecall'
             ? 'theoryRecall'
             : 'quickHint';
@@ -223,6 +262,7 @@ void main() {
       }
 
       for (final taskId in <String>[
+        if (mode == 'wrongBeforeRestart') 'actions_check_drill',
         'actions_fold_drill',
         'actions_call_drill',
         'actions_raise_drill',
@@ -281,12 +321,28 @@ void main() {
         find.byKey(const Key('act0_shell_block_summary_accuracy')),
         findsOneWidget,
       );
-      if (mode == 'independent' || mode == 'freshAfterOldHelp') {
+      if (mode == 'independent') {
+        final summary = tester
+            .widget<Act0BlockCompletionShellV1>(
+              find.byType(Act0BlockCompletionShellV1),
+            )
+            .summary;
+        // Five scored drills; theory and review emit no assessment.
+        expect(summary.taskCount, 5);
+        expect(summary.correctCount, 5);
+        expect(summary.masteryStatus, Act0MasteryStatusV1.cleanPass);
         expect(find.textContaining('100% accuracy'), findsOneWidget);
         expect(find.textContaining('with help'), findsNothing);
-      } else if (mode == 'legacyUnknown') {
+      } else if (mode == 'wrongBeforeRestart') {
         expect(find.text('Clean pass'), findsNothing);
-        expect(find.textContaining('help history unverified'), findsOneWidget);
+        expect(find.textContaining('1 error'), findsOneWidget);
+        expect(find.textContaining('100% accuracy'), findsNothing);
+      } else if (mode == 'legacyUnknown' || mode == 'freshAfterOldHelp') {
+        expect(find.text('Clean pass'), findsNothing);
+        expect(
+          find.textContaining('full-lesson proof unverified'),
+          findsOneWidget,
+        );
         expect(find.textContaining('100% accuracy'), findsNothing);
       } else {
         expect(find.text('Clean pass'), findsNothing);
