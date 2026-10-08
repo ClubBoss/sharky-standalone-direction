@@ -5,6 +5,19 @@ Authoring date: 2026-08-17
 Owner sequencing rebaseline: 2026-08-20
 Repository: `ClubBoss/sharky-standalone-direction`
 
+## 2026-10-08 Execution-Truth Reconciliation (Dated Overlay)
+
+This overlay updates implementation status only, not the Product/Operational North Star, evidence hierarchy, ownership boundaries, or the owner-approved P02 gate. Earlier statements in this plan that say `TABLE_ACTION_AND_STREET_MOTION_V1` is not yet implemented or remains `EXACT_NEXT_ACTION` describe the historical 2026-09-12 snapshot and are superseded for current dispatch.
+
+- Verified canonical main: `bdf560f0d90d9659335f6492149c373842f655b1`.
+- PR #221 (reduced motion), #222 (table action/street choreography) and #223 (durable attempt identity) are merged; do not reimplement PR #222.
+- PR #224 (registered V4 cast, exact head `bd2046e7470f6aa3137e3a9354b5155528d99e25`) remains open and not accepted for merge. The current bounded wave is evidence/manager adjudication of its existing V4R1 production-art work, NOT a new visual design search.
+- The paused designer art deliverables (including engaged/disengaged seat variants) remain registered as an evidence-triggered future final-art wave. Do not treat them as already production-complete or as unconditional P02 blockers.
+- `CURRENT_STAGE = PRE_P02_NORTH_STAR_CONVERGENCE`, `HUMAN_PROOF = FALSE`, `P02 = DEFERRED / OWNER_ADMISSION_PENDING`.
+- Exact current one-family dispatch: `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` (2026-10-08 block). Bounded wave manager packet: `docs/_reviews/2026_10_product_wave_resumption_manager_packet_v1.md`.
+- Neither synthetic proof nor successful GitHub Actions alone certifies premium visual quality, human learning, retention, or market results.
+
+
 This file is Sharky's single principal day-to-day product-working Master Plan.
 `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` may provide the exact current
 campaign dispatch, but it cannot redefine this plan's North Star, evidence
@@ -934,7 +947,7 @@ market claim.
 
 This is candidate ordering, not permission to implement each item automatically.
 
-## 14. Exact Next Action
+## 14. Historical Exact Next Action (2026-09-12; superseded by dated overlay above)
 
 `EXACT_NEXT_ACTION = IMPLEMENT_TABLE_ACTION_AND_STREET_MOTION_V1_AFTER_PR221_MERGE`
 
