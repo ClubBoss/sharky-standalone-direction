@@ -41,6 +41,27 @@ A five-novice formative test is for discovering repeated issues, not statistical
 
 **Source discrepancy to adjudicate, not silently resolve:** `gtowizard.com/pokerarena` says in one section every-match analysis is free while a nearby feature description says GTO analysis is available via a subscription. Therefore `POKERARENA_FREE_ANALYSIS_ENTITLEMENT = UNVERIFIED` until a controlled account/test.
 
+## 2A. Existing first real novice evidence — serious product risk, not an invented funnel
+
+The canonical prior P01 Human report, `docs/_reviews/human_hnp_p01_reconciliation_and_repair_admission_v1.md` (dated Aug 17, 2026), documents **one actual participant** on the OLD pre-repair candidate:
+- learner complained that font was somewhat small and active learning scene felt overloaded;
+- five tutorial screens were advanced in about ten seconds;
+- correct-answer feedback was advanced in under a second;
+- learner could not identify the required interaction and perceived a post-choice dead end.
+- Both required-action affordance and post-choice continuation were classified **P1**, stopping the Human campaign.
+
+This is strong evidence of a *historical* first-session problem in engagement-compatible pedagogy: instructions and result must earn attention without forced reading locks; one dominant task/action per state is fundamental.
+
+The subsequent `NOVICE_LEARNING_EXPERIENCE_RECONSTRUCTION_V1` (Wave A) admitted a coherent source/UI repair, and later PR #226 repaired one missing earned-recheck payoff. **Do not transfer the old P01 failure judgment unchanged to the current PR #226 candidate**, and equally **do not infer current Human success from its green CI or first-screen image**.
+
+For the next five-newbie trial, preserve fresh participant ignorance and add observations:
+- did they *look at and paraphrase* causal feedback or tap through automatically?
+- did they know *where to act* before assistance?
+- after a successful action did they voluntarily choose another interesting exercise?
+- did the newly visible earned proof explain a concrete corrected table read?
+
+These are first-ten-minute Human falsifiers with genuine lineage; they are not speculative new dashboard features.
+
 ## 3. Stage-specific red flags
 
 - A product quizzes the novice before any interpretable teaching and then markets that score as learned mastery.
