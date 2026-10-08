@@ -132,6 +132,9 @@ void main() {
 
     expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
     expect(find.text(selectedLesson.subtitle), findsOneWidget);
+    // The learner has reached World 2: preserve a truthful current world.
+    expect(find.text('Current world: Hand Discipline'), findsOneWidget);
+    expect(find.text('Week 1: train one table read'), findsNothing);
     expect(
       find.text(
         'Read the legal actions first so the first real hand is not a guess.',
