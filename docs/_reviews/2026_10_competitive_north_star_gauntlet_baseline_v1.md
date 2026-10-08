@@ -92,6 +92,17 @@ This is a **code inspection of the current Act0 shell**, not an in-app Human ass
 
 Implication for wave selection: **do not create a new streak, daily-goal, calendar review or personalization subsystem on the assumption that Sharky lacks it.** The likely missing evidence is real *experience quality and learning effect* of already wired mechanics. Ask humans whether 3 reps is satisfying, if they perceive a compelling optional next challenge, and whether Review is useful tomorrow. Only then attack a demonstrated seam.
 
+## 3B. Important existing telemetry/protocol mismatch (not a reason to broaden app scope)
+
+Source checked, not guessed:
+- Current `lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart:1858-1868` defines **`decisionTimeBucket`** (`under_3s`, `3_to_10s`, `over_10s`, `unknown`), emitted on choice/result. The active runner does **not** emit exact `time_to_decision_ms`.
+- The current `docs/plan/ACT0_TELEMETRY_TRUTH_MAP_v1.md:35-45` explicitly says exact decision milliseconds are not emitted and prohibits raw copy/identity and external analytics.
+- Older `docs/_reviews/human_novice_proof_preflight_v1/TELEMETRY_MAPPING.md:7` asks for `time_to_decision_ms`. It predates this privacy-preserving active projection; treat it as a **stale field expectation**, not proof the event is absent.
+- For the early observed pilot, record exact elapsed time by observer stopwatch/consented recording **separately from** existing local safe event bucket. Do not alter the active privacy contract just to generate millisecond analytics; reconcile the human protocol when formally admitting it.
+- Commercial renewal, D7 and engagement funnels have **no established production remote analytics proof**. Avoid claiming WAIL can already be computed from existing on-device local HNP 256-event capture.
+
+This mismatch matters because a dashboard made from non-existent precision fields would create false experimental confidence. The next wave must distinguish observed raw timing (Human scorecard), safe event bucket (machine), and hypothetical future aggregate cohort analytics (not instrumented).
+
 ## 4. Hypothesis stack from desk research (rank ≠ authorization to code)
 
 Candidate bottleneck families; each requires actual baseline observation and comparative proof before `IMPLEMENT_NOW`:
