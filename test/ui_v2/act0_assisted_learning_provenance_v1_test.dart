@@ -43,6 +43,37 @@ Act0LearningEvidenceRecordV1 record(
 )!;
 
 void main() {
+  test('assistance never promotes a correct repair to independent proof', () {
+    expect(
+      act0IndependentRepairProofV1(
+        isCorrect: true,
+        assistanceKind: Act0DecisionAssistanceV1.none,
+      ),
+      isTrue,
+    );
+    for (final assistance in <Act0DecisionAssistanceV1>[
+      Act0DecisionAssistanceV1.quickHint,
+      Act0DecisionAssistanceV1.theoryRecall,
+      Act0DecisionAssistanceV1.legacyUnknown,
+    ]) {
+      expect(
+        act0IndependentRepairProofV1(
+          isCorrect: true,
+          assistanceKind: assistance,
+        ),
+        isFalse,
+        reason: assistance.name,
+      );
+    }
+    expect(
+      act0IndependentRepairProofV1(
+        isCorrect: false,
+        assistanceKind: Act0DecisionAssistanceV1.none,
+      ),
+      isFalse,
+    );
+  });
+
   test('normal vs quick hint vs full recall preserve distinct provenance', () {
     for (final mode in <Act0DecisionAssistanceV1>[
       Act0DecisionAssistanceV1.none,

@@ -1140,6 +1140,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.onConfirmSizingPreset,
     this.onChooseSeat,
     this.onCompletedDecision,
+    this.onChoiceAssistance,
     required this.onContinueReview,
     this.completionSummary,
     this.firstValueReceiptLine,
@@ -1188,6 +1189,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final VoidCallback? onConfirmSizingPreset;
   final ValueChanged<String>? onChooseSeat;
   final ValueChanged<Act0CompletedDecisionV1>? onCompletedDecision;
+  final ValueChanged<Act0DecisionAssistanceV1>? onChoiceAssistance;
   final VoidCallback onContinueReview;
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final String? firstValueReceiptLine;
@@ -2014,6 +2016,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         },
       ),
     );
+    widget.onChoiceAssistance?.call(_decisionAssistanceKindV1);
     widget.onChooseOption(option);
     _emitCompletedDecision(
       option,
@@ -2128,6 +2131,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         decisionTimeBucket: telemetryDecisionTimeBucket,
       );
     }
+    widget.onChoiceAssistance?.call(_decisionAssistanceKindV1);
     widget.onChooseSeat?.call(seatId);
     if (option != null) {
       _emitCompletedDecision(
@@ -2156,6 +2160,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             (candidate) => candidate?.id == presetId,
             orElse: () => null,
           );
+    widget.onChoiceAssistance?.call(_decisionAssistanceKindV1);
     widget.onConfirmSizingPreset?.call();
     if (option != null) {
       _emitCompletedDecision(option, Act0CompletedDecisionKindV1.sizing);

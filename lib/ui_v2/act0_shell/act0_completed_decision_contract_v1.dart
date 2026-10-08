@@ -10,6 +10,14 @@ enum Act0CompletedDecisionKindV1 { actionList, seat, sizing }
 /// No provenance is inferred for records created before this field existed.
 enum Act0DecisionAssistanceV1 { legacyUnknown, none, quickHint, theoryRecall }
 
+/// Correctness is feedback; independent repair proof additionally requires
+/// an unassisted attempt. Historical unknown is deliberately not asserted
+/// to be an independent new repair attempt.
+bool act0IndependentRepairProofV1({
+  required bool isCorrect,
+  required Act0DecisionAssistanceV1 assistanceKind,
+}) => isCorrect && assistanceKind == Act0DecisionAssistanceV1.none;
+
 class Act0CompletedDecisionV1 {
   const Act0CompletedDecisionV1({
     this.schemaVersion = 1,
