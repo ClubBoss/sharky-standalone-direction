@@ -26,6 +26,14 @@ Existing, reusable procedure is in
 `CANDIDATE_MANIFEST.md`. This packet does not fork, duplicate or relax
 their requirements.
 
+## Exact native preflight delta — 2026-10-08
+
+The previously running Xcode build of frozen PR #226 candidate `e87862309817f2f27f9db8bb51afbfd118f8310f` completed at EXIT_CODE=0. On isolated iOS 26.2 iPhone 16e Simulator, `simctl install` and `simctl launch` succeeded; the actual local first-frame screenshot is
+`/tmp/sharky_pr226_first_run_iphone16e_20261008.png` (local-only).
+The screenshot visibly contains the branded welcome, initial starter proposition and bottom `Find my start` button, without clipping or blank frame. It also shows a substantial central unused area; classify visual taste/effect as observation only.
+
+`NATIVE_BUILD_AND_FIRST_SCREEN = PASS`, **not** a complete interactive route smoke. Primary CTA tap → placement → task → feedback → Review, clean-install/reset provenance, and real-human autonomy remain unverified. Do not admit formal P02 or mark the pilot run from this evidence.
+
 ## Core falsification goal
 
 Does a novice, with no poker help, understand and complete:
