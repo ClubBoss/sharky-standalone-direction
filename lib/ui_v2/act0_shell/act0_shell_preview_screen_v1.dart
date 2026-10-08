@@ -1176,6 +1176,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   final Set<String> _resolvedMistakeTaskIds = <String>{};
   final Set<String> _cleanTaskIds = <String>{};
   final Set<String> _lessonRunMistakeTaskIds = <String>{};
+  final Set<String> _lessonRunAssistedTaskIds = <String>{};
+  // Boundary only: assistance truth remains in the persisted evidence history.
+  // Null means legacy/incomplete provenance, never verified independence.
+  String _lessonRunEvidenceLessonIdV1 = '';
+  int? _lessonRunEvidenceStartOrderV1 = 0;
+  // Bookmarks for unfinished lessons; source evidence remains learningEvidenceHistory.
+  final Map<String, int?> _lessonRunEvidenceBoundariesV1 = <String, int?>{};
   final Set<String> _lessonRunPendingRetryTaskIds = <String>{};
   final Set<String> _lessonRunRetriedTaskIds = <String>{};
   final Set<String> _lessonRunWrapUpCompletedTaskIds = <String>{};
@@ -3564,6 +3571,25 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _selectedWorldId = selectedWorld.worldId;
       _selectedLessonId = selectedLesson.lessonId;
       _selectedTaskId = selectedTask.taskId;
+      final hasPriorLessonProgress = selectedLesson.taskList.any(
+        (task) => completedTaskIds.contains(task.taskId),
+      );
+      final hasPriorLessonEvidence = parsed.learningEvidenceHistory.records.any(
+        (record) => record.lessonId == selectedLesson.lessonId,
+      );
+      _lessonRunEvidenceBoundariesV1
+        ..clear()
+        ..addAll(parsed.lessonRunEvidenceBoundaries)
+        ..removeWhere((lessonId, _) => !validLessonIds.contains(lessonId));
+      _lessonRunEvidenceLessonIdV1 = selectedLesson.lessonId;
+      _lessonRunEvidenceStartOrderV1 =
+          _lessonRunEvidenceBoundariesV1.containsKey(selectedLesson.lessonId)
+          ? _lessonRunEvidenceBoundariesV1[selectedLesson.lessonId]
+          : (hasPriorLessonProgress || hasPriorLessonEvidence
+                ? null
+                : _latestEvidenceOrderV1());
+      _lessonRunEvidenceBoundariesV1[selectedLesson.lessonId] =
+          _lessonRunEvidenceStartOrderV1;
       if (widget.initialTab == Act0ShellTabV1.learn) {
         _seedLearnRouteFocusV1(
           lessonId: selectedLesson.lessonId,
@@ -3876,6 +3902,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       dismissedHomeHandoffDay: _dismissedHomeHandoffDay,
       firstValueReturnCarry: _firstValueReceiptCarry,
       learningEvidenceHistory: _learningEvidenceHistoryV1,
+      lessonRunEvidenceBoundaries: Map<String, int?>.from(
+        _lessonRunEvidenceBoundariesV1,
+      ),
       durableRetentionHistory: _durableRetentionHistoryV1.refreshedAt(
         widget.clock.nowUtc(),
       ),
@@ -4582,6 +4611,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _resolvedMistakeTaskIds.clear();
       _cleanTaskIds.clear();
       _lessonRunMistakeTaskIds.clear();
+      _lessonRunAssistedTaskIds.clear();
       _lessonRunPendingRetryTaskIds.clear();
       _lessonRunRetriedTaskIds.clear();
       _lessonRunQuickFixTaskIds.clear();
@@ -4630,7 +4660,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _profileSkillValues.clear();
       _recentSkillGains.clear();
       _placementResult = null;
-      _resetLessonRunMetrics();
+      _resetLessonRunMetrics(forceFreshProvenance: true);
     });
   }
 
@@ -5838,6 +5868,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 evidenceRunId:
                                     _activeLearningEvidenceRunKeyV1?.runId ??
                                     '',
+                                evidenceNextOrder: _latestEvidenceOrderV1() + 1,
                                 reviewKindId: _routeReviewKindForTaskIdV1(
                                   playSelectedTask?.taskId ?? '',
                                 ).name,
@@ -10313,6 +10344,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     Act0LessonTaskV1 selectedTask,
     Act0RunnerOptionV1 option,
   ) {
+    if (_choiceWasAssistedV1) {
+      // Record help in this lesson separately from correctness/mistake counts;
+      // it cannot earn the learner an independent clean-pass claim.
+      _lessonRunAssistedTaskIds.add(selectedTask.taskId);
+    }
     final practiceQueueRepairRequest = _activePracticeRepairQueueRequestV1;
     final recordingPracticeQueueRepair =
         practiceQueueRepairRequest != null &&
@@ -12799,15 +12835,64 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         )
         .length;
     final lessonOpenMistakeCount = _openMistakeCountForLessonV1(selectedLesson);
+    // Scored drills emit completed evidence; theory and review/navigation
+    // stages cannot inflate the lesson assessment denominator.
+    final assessedTaskIds = selectedLesson.taskList
+        .where((task) => task.phase == Act0LessonPhaseV1.drill)
+        .map((task) => task.taskId)
+        .toSet();
+    final assistedTaskIds = _lessonRunAssistedTaskIds
+        .where(assessedTaskIds.contains)
+        .toSet();
+    final boundary = _lessonRunEvidenceLessonIdV1 == selectedLesson.lessonId
+        ? _lessonRunEvidenceStartOrderV1
+        : null;
+    final history = _learningEvidenceHistoryV1.records;
+    final firstByTask = <String, Act0LearningEvidenceRecordV1>{};
+    final wrongAssessedTaskIds = <String>{};
+    var evidenceComplete = boundary != null && assessedTaskIds.isNotEmpty;
+    if (boundary != null) {
+      if (history.isNotEmpty && history.first.createdOrder > boundary + 1) {
+        evidenceComplete = false; // bounded history was truncated
+      }
+      for (final record in history) {
+        if (record.createdOrder <= boundary ||
+            record.lessonId != selectedLesson.lessonId ||
+            !assessedTaskIds.contains(record.taskId)) {
+          continue;
+        }
+        firstByTask.putIfAbsent(record.taskId, () => record);
+        if (!record.isCorrect) wrongAssessedTaskIds.add(record.taskId);
+        switch (record.assistanceKind) {
+          case Act0DecisionAssistanceV1.quickHint:
+          case Act0DecisionAssistanceV1.theoryRecall:
+            assistedTaskIds.add(record.taskId);
+          case Act0DecisionAssistanceV1.legacyUnknown:
+            evidenceComplete = false;
+          case Act0DecisionAssistanceV1.none:
+            break;
+        }
+      }
+    }
+    if (firstByTask.length != assessedTaskIds.length) {
+      evidenceComplete = false;
+    }
+    // First scored result per task defines assessment accuracy. Later repair
+    // may teach the concept, but never overwrites the original mistake.
+    final assessedCorrectCount = firstByTask.values
+        .where((record) => record.isCorrect)
+        .length;
+    final assessedErrorCount = wrongAssessedTaskIds.length;
+    final lessonAssistedCount = assistedTaskIds.length;
     final worldOpenMistakeCount = _openMistakeCountForWorldV1(progressedWorld);
     _blockCompletionSummary = Act0BlockCompletionSummaryV1(
       lessonTitle: _localizedLessonTitleV1(selectedLesson),
       xpEarned: _lessonRunXp,
-      errorCount: _lessonRunMistakeTaskIds.length,
-      taskCount: selectedLesson.taskList.length,
-      correctCount:
-          (selectedLesson.taskList.length - _lessonRunMistakeTaskIds.length)
-              .clamp(0, selectedLesson.taskList.length),
+      errorCount: assessedErrorCount,
+      assistedCount: lessonAssistedCount,
+      independentProvenanceKnown: evidenceComplete,
+      taskCount: assessedTaskIds.length,
+      correctCount: assessedCorrectCount,
       startLevel: _progressSnapshot(
         widget.state ?? Act0ShellStateV1.sample,
         earnedXpDelta: _earnedXp - _lessonRunXp,
@@ -12913,9 +12998,57 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     unawaited(UiHapticsV1.fire(UiHapticEventV1.success));
   }
 
-  void _resetLessonRunMetrics() {
+  int _latestEvidenceOrderV1() => _learningEvidenceHistoryV1.records.fold<int>(
+    0,
+    (latest, record) =>
+        record.createdOrder > latest ? record.createdOrder : latest,
+  );
+
+  void _resetLessonRunMetrics({bool forceFreshProvenance = false}) {
+    // Selection of a different lesson must not destroy an unfinished lesson's
+    // durable run boundary. Replays of completed lessons start a new run.
+    if (forceFreshProvenance) {
+      _lessonRunEvidenceBoundariesV1.clear();
+    } else if (_lessonRunEvidenceLessonIdV1.isNotEmpty) {
+      _lessonRunEvidenceBoundariesV1[_lessonRunEvidenceLessonIdV1] =
+          _lessonRunEvidenceStartOrderV1;
+    }
+    if (forceFreshProvenance ||
+        _lessonRunEvidenceLessonIdV1 != _selectedLessonId ||
+        _completedLessonIds.contains(_selectedLessonId)) {
+      _lessonRunEvidenceLessonIdV1 = _selectedLessonId;
+      if (forceFreshProvenance ||
+          _completedLessonIds.contains(_selectedLessonId)) {
+        _lessonRunEvidenceStartOrderV1 = _latestEvidenceOrderV1();
+      } else if (_lessonRunEvidenceBoundariesV1.containsKey(
+        _selectedLessonId,
+      )) {
+        _lessonRunEvidenceStartOrderV1 =
+            _lessonRunEvidenceBoundariesV1[_selectedLessonId];
+      } else {
+        final taskIds = <String>[
+          for (final world in (widget.state ?? Act0ShellStateV1.sample).worlds)
+            for (final lesson in world.lessons)
+              if (lesson.lessonId == _selectedLessonId)
+                for (final task in lesson.taskList) task.taskId,
+        ];
+        final hasOlderProgress =
+            taskIds.any(_completedTaskIds.contains) ||
+            _learningEvidenceHistoryV1.records.any(
+              (record) => record.lessonId == _selectedLessonId,
+            );
+        _lessonRunEvidenceStartOrderV1 = hasOlderProgress
+            ? null
+            : _latestEvidenceOrderV1();
+      }
+    }
+    if (_selectedLessonId.isNotEmpty) {
+      _lessonRunEvidenceBoundariesV1[_selectedLessonId] =
+          _lessonRunEvidenceStartOrderV1;
+    }
     _lessonRunXp = 0;
     _lessonRunMistakeTaskIds.clear();
+    _lessonRunAssistedTaskIds.clear();
     _lessonRunPendingRetryTaskIds.clear();
     _lessonRunRetriedTaskIds.clear();
     _lessonRunWrapUpCompletedTaskIds.clear();
@@ -13904,6 +14037,7 @@ class _Act0PersistedProgressV1 {
     this.dismissedHomeHandoffDay = '',
     this.firstValueReturnCarry,
     this.learningEvidenceHistory = const Act0LearningEvidenceHistoryV1(),
+    this.lessonRunEvidenceBoundaries = const <String, int?>{},
     this.durableRetentionHistory = const Act0DurableRetentionHistoryV1(),
     this.reviewMistakeHistory = const Act0ReviewMistakeHistoryV1(),
     this.reviewResolutionReceiptHistory =
@@ -13939,6 +14073,7 @@ class _Act0PersistedProgressV1 {
   final String dismissedHomeHandoffDay;
   final _Act0FirstValueReceiptCarryV1? firstValueReturnCarry;
   final Act0LearningEvidenceHistoryV1 learningEvidenceHistory;
+  final Map<String, int?> lessonRunEvidenceBoundaries;
   final Act0DurableRetentionHistoryV1 durableRetentionHistory;
   final Act0ReviewMistakeHistoryV1 reviewMistakeHistory;
   final Act0ReviewResolutionReceiptHistoryV1 reviewResolutionReceiptHistory;
@@ -13958,7 +14093,7 @@ class _Act0PersistedProgressV1 {
     final sortedOpenRepairIntents = openRepairIntents.toList(growable: false)
       ..sort((a, b) => a.sourceTaskId.compareTo(b.sourceTaskId));
     return jsonEncode(<String, Object>{
-      'schemaVersion': 17,
+      'schemaVersion': 18,
       'completedTaskIds': sortedTaskIds,
       'skippedTaskIds': sortedSkippedTaskIds,
       'completedLessonIds': sortedLessonIds,
@@ -13995,6 +14130,10 @@ class _Act0PersistedProgressV1 {
       'dismissedHomeHandoffKey': dismissedHomeHandoffKey,
       'dismissedHomeHandoffDay': dismissedHomeHandoffDay,
       'learningEvidenceHistory': learningEvidenceHistory.toPayload(),
+      'lessonRunEvidenceBoundaries': <String, int?>{
+        for (final entry in lessonRunEvidenceBoundaries.entries)
+          entry.key: entry.value,
+      },
       'durableRetentionHistory': durableRetentionHistory.toPayload(),
       'reviewMistakeHistory': reviewMistakeHistory.toPayload(),
       'reviewResolutionReceipts': reviewResolutionReceiptHistory.toPayload(),
@@ -14039,7 +14178,8 @@ class _Act0PersistedProgressV1 {
         schemaVersion != 14 &&
         schemaVersion != 15 &&
         schemaVersion != 16 &&
-        schemaVersion != 17) {
+        schemaVersion != 17 &&
+        schemaVersion != 18) {
       return null;
     }
     final completedTaskIds = _stringSet(map['completedTaskIds']);
@@ -14098,6 +14238,35 @@ class _Act0PersistedProgressV1 {
     final firstValueReturnCarry = _Act0FirstValueReceiptCarryV1.tryParse(
       map['firstValueReturnCarry'],
     );
+    final lessonRunEvidenceLessonId = (map['lessonRunEvidenceLessonId'] ?? '')
+        .toString();
+    final evidenceStartRaw = map['lessonRunEvidenceStartOrder'];
+    final parsedEvidenceStart = evidenceStartRaw is int
+        ? evidenceStartRaw
+        : int.tryParse(evidenceStartRaw?.toString() ?? '');
+    final lessonRunEvidenceStartOrder =
+        parsedEvidenceStart != null && parsedEvidenceStart >= 0
+        ? parsedEvidenceStart
+        : null;
+    final lessonRunEvidenceBoundaries = <String, int?>{};
+    final boundariesRaw = map['lessonRunEvidenceBoundaries'];
+    if (boundariesRaw is Map) {
+      for (final entry in boundariesRaw.entries) {
+        final lessonId = entry.key.toString().trim();
+        if (lessonId.isEmpty) continue;
+        final value = entry.value;
+        final order = value is int
+            ? value
+            : int.tryParse(value?.toString() ?? '');
+        lessonRunEvidenceBoundaries[lessonId] = order != null && order >= 0
+            ? order
+            : null;
+      }
+    } else if (lessonRunEvidenceLessonId.isNotEmpty) {
+      // Migrate the prior single-lesson schema-18 bookmark without dropping it.
+      lessonRunEvidenceBoundaries[lessonRunEvidenceLessonId] =
+          lessonRunEvidenceStartOrder;
+    }
     final learningEvidenceHistory =
         Act0LearningEvidenceHistoryV1.tryParse(
           map['learningEvidenceHistory'],
@@ -14160,6 +14329,7 @@ class _Act0PersistedProgressV1 {
       dismissedHomeHandoffDay: dismissedHomeHandoffDay,
       firstValueReturnCarry: firstValueReturnCarry,
       learningEvidenceHistory: learningEvidenceHistory,
+      lessonRunEvidenceBoundaries: lessonRunEvidenceBoundaries,
       durableRetentionHistory: durableRetentionHistory,
       reviewMistakeHistory: reviewMistakeHistory,
       reviewResolutionReceiptHistory: reviewResolutionReceiptHistory,

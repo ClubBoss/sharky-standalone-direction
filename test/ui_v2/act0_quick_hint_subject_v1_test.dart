@@ -81,9 +81,29 @@ void main() {
         final hint = find.byKey(const Key('act0_shell_theory_recall_cta'));
         expect(hint, findsOneWidget);
         await tester.ensureVisible(hint);
+        final hintTapTarget = tester.getSize(hint);
+        expect(
+          hintTapTarget.width,
+          greaterThanOrEqualTo(44),
+          reason: 'hint must have a finger-safe tap target',
+        );
+        expect(
+          hintTapTarget.height,
+          greaterThanOrEqualTo(44),
+          reason: 'hint must have a finger-safe tap target',
+        );
         await tester.tap(hint);
         await tester.pumpAndSettle();
         expect(find.text(scenario.expectedHint), findsOneWidget);
+        final close = find.byKey(
+          const Key('act0_shell_theory_recall_close_cta'),
+        );
+        expect(close, findsOneWidget);
+        expect(
+          tester.getSize(close).height,
+          greaterThanOrEqualTo(44),
+          reason: 'hint sheet must provide a usable way back',
+        );
       },
     );
   }

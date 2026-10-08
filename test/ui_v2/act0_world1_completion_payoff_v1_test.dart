@@ -36,6 +36,32 @@ const _worldOneCompleteSummary = Act0BlockCompletionSummaryV1(
 );
 
 void main() {
+  testWidgets(
+    'assisted correct lesson is not labeled clean independent mastery',
+    (tester) async {
+      const summary = Act0BlockCompletionSummaryV1(
+        lessonTitle: 'Action words',
+        xpEarned: 20,
+        errorCount: 0,
+        assistedCount: 1,
+        taskCount: 3,
+        correctCount: 3,
+        startLevel: 1,
+        endLevel: 1,
+        startXp: 40,
+        endXp: 60,
+        xpTarget: 200,
+        nextLessonTitle: 'Blinds & action order',
+      );
+      expect(summary.masteryLabel, 'Learning');
+      await tester.pumpWidget(_host(summary));
+      await tester.pumpAndSettle();
+      expect(find.text('Clean pass'), findsNothing);
+      expect(find.textContaining('1 with help'), findsOneWidget);
+      expect(find.textContaining('100% accuracy'), findsNothing);
+    },
+  );
+
   testWidgets('incomplete W1 does not show completion payoff', (tester) async {
     await tester.pumpWidget(
       _host(

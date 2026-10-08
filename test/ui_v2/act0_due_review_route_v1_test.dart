@@ -137,9 +137,7 @@ void main() {
     expect(runner.reviewKindId, 'spacedReview');
     expect(
       runner.evidenceRunId,
-      startsWith(
-        'run_v1|world_1|fold_check_call_raise|spaced_review|',
-      ),
+      startsWith('run_v1|world_1|fold_check_call_raise|spaced_review|'),
     );
 
     await tester.tap(find.byKey(const Key('act0_shell_option_fold')));
@@ -162,7 +160,7 @@ void main() {
     );
     expect(
       recordIds.last,
-      startsWith('v2|${runner.evidenceRunId}|'),
+      startsWith('v3|${runner.evidenceRunId}|${runner.evidenceNextOrder}|'),
     );
     expect(recordIds.last, endsWith('|actionList|fold|1'));
     expect(recordIds.toSet(), hasLength(3));

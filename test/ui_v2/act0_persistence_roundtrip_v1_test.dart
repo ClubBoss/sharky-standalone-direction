@@ -313,7 +313,7 @@ void main() {
     final prefs = await SharedPreferences.getInstance();
     final migrated =
         jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
-    expect(migrated['schemaVersion'], 17);
+    expect(migrated['schemaVersion'], 18);
     expect(migrated['durableRetentionHistory'], hasLength(1));
     expect(
       migrated['learningEvidenceHistory'][0],
@@ -321,7 +321,7 @@ void main() {
     );
   });
 
-  testWidgets('clean install writes schema 17 with explicit defaults', (
+  testWidgets('clean install writes schema 18 with explicit defaults', (
     tester,
   ) async {
     SharedPreferences.setMockInitialValues(<String, Object>{});
@@ -336,7 +336,7 @@ void main() {
     final prefs = await SharedPreferences.getInstance();
     final stored =
         jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
-    expect(stored['schemaVersion'], 17);
+    expect(stored['schemaVersion'], 18);
     expect(stored['learningEvidenceHistory'], isEmpty);
     expect(stored['durableRetentionHistory'], isEmpty);
   });
