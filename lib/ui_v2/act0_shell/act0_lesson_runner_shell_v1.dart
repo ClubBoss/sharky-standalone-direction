@@ -2704,9 +2704,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }
 
   void _syncTheoryAdvanceLock({bool initial = false}) {
-    _theoryUnlockTimer?.cancel();
     final nextKey = _currentAdvanceLockKey;
     if (nextKey.isEmpty) {
+      _theoryUnlockTimer?.cancel();
       _advanceLockKey = '';
       if (initial) {
         _canAdvanceTheory = true;
@@ -2716,8 +2716,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       return;
     }
     if (_advanceLockKey == nextKey) {
+      // Rebuilding the same step must not cancel the pending dwell unlock.
       return;
     }
+    _theoryUnlockTimer?.cancel();
     _advanceLockKey = nextKey;
     if (initial) {
       _canAdvanceTheory = false;
