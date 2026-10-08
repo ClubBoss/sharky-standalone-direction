@@ -6185,11 +6185,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         playSelectedTask.taskId;
                                     final repairSourceRecord =
                                         _mistakeRecords[repairSourceTaskId];
-                                    _emitRepairCompletedTelemetryV1(
-                                      sourceTaskId: repairSourceTaskId,
-                                      repairTaskId: playSelectedTask.taskId,
-                                      repaired: repaired,
-                                    );
+                                    // Practice Queue owns independent
+                                    // answer telemetry at decision time.
+                                    // Assisted answers bypass that owner, so
+                                    // keep the truthful non-success event here.
+                                    if (!_isPracticeQueueRepairAnswerV1(
+                                          playSelectedTask,
+                                        ) ||
+                                        _choiceWasAssistedV1) {
+                                      _emitRepairCompletedTelemetryV1(
+                                        sourceTaskId: repairSourceTaskId,
+                                        repairTaskId: playSelectedTask.taskId,
+                                        repaired: repaired,
+                                      );
+                                    }
                                     _emitRepairItemCompletedTelemetryV1(
                                       sourceTaskId: repairSourceTaskId,
                                       targetTaskId: playSelectedTask.taskId,
