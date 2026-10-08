@@ -12,10 +12,11 @@ Verified `origin/main = bdf560f0d90d9659335f6492149c373842f655b1`.
 PR #221, #222 and #223 are MERGED. `TABLE_ACTION_AND_STREET_MOTION_V1` was implemented by merged PR #222 and is no longer an open implementation instruction. Learning outcome remains HUMAN_UNPROVEN.
 
 `CURRENT_STAGE = PRE_P02_NORTH_STAR_CONVERGENCE`
-`CURRENT_ACTIVE_FAMILY = ACT0_POST_CHOICE_CONTINUATION_AND_ACTIONABILITY_EVIDENCE_V1`
-`EXACT_NEXT_ACTION = FALSIFY_POST_CHOICE_ACTIONABILITY_ON_CLEAN_MAIN_BEFORE_ANY_UI_FIX`
+`CURRENT_ACTIVE_FAMILY = ACT0_EARNED_RECHECK_PROOF_ACCEPTANCE_V1`
+`EXACT_NEXT_ACTION = REVIEW_PR226_EXACT_HEAD_CI_AND_OWNER_VERDICT_NO_MERGE`
 `PR224 = OPEN / NOT_MERGED / READY_FOR_MANAGER_REVIEW_ONLY`
 `PR224_HEAD = bd2046e7470f6aa3137e3a9354b5155528d99e25`
+`PR226 = OPEN_DRAFT / NOT_MERGED / EXACT_HEAD_e87862309817f2f27f9db8bb51afbfd118f8310f`
 `TABLE_ACTION_AND_STREET_MOTION_V1 = IMPLEMENTED_MERGED_PR222 / REASSESS_EVIDENCE`
 `LANE_C_LEARNING_LOOP = REASSESS_AFTER_PR222 / HUMAN_PROOF_PENDING`
 `P02 = DEFERRED / OWNER_ADMISSION_PENDING`
@@ -23,12 +24,12 @@ PR #221, #222 and #223 are MERGED. `TABLE_ACTION_AND_STREET_MOTION_V1` was imple
 `MODERN_TABLE = MAINTENANCE_MODE`
 `FINAL_ART_COMPLETION = DEFERRED_UNTIL_PREMIUM_SHIP / CURRENT_VISUAL_PLACEHOLDER_ALLOWED`
 
-PR #224 awaits actual owner-visible visual adjudication, including SB/BB cards-labels-chips, active/inactive player treatment, CO contact/support, one-table topology, and the reported pre-existing C3 theory-state exception. Own GitHub workflows succeeded at exact head; third-party TestSprite reports "No tests detected" as a separate status. Do not infer visual acceptance or merge authority from those facts. The owner's Mac reconnected. A clean detached main audit worktree exists at `/Users/elmarsalimzade/Sharky_Brain_Audit_2026-10-08`; native QA is not yet claimed. The protected dirty checkout `/Users/elmarsalimzade/Sharky_1.0` remains untouched.
+PR #224 awaits actual owner-visible visual adjudication, including SB/BB cards-labels-chips, active/inactive player treatment, CO contact/support, one-table topology, and the reported pre-existing C3 theory-state exception. Own GitHub workflows succeeded at exact head; third-party TestSprite reports "No tests detected" as a separate status. Do not infer visual acceptance or merge authority from those facts. The owner's Mac reconnected. An isolated Mac audit checkout at `/Users/elmarsalimzade/Sharky_Brain_Audit_2026-10-08` now holds clean branch `fix/act0-post-recheck-proof-visible-v1` at `e878623` (main base `bdf560f`); native QA is not yet claimed. The protected dirty checkout `/Users/elmarsalimzade/Sharky_1.0` remains untouched.
 
 The owner has explicitly requested that paused designer/artist work is preserved for completion later, including all-engaged and disengaged cast options where product-significant. Do not restart a generic visual polish cycle. See:
 `docs/_reviews/2026_10_product_wave_resumption_manager_packet_v1.md`
 
-Owner's later 2026-10-08 sequencing decision explicitly prioritizes learner mechanics/personalization/effect. PR #224 visual acceptance is deferred as a held, unmerged placeholder art family. Wave W1 is completed as a machine-only audit (policy tests 70/70 PASS, analyze/fast loop PASS, route cone 39 pass/5 fail). See `docs/_reviews/2026_10_act0_learning_engine_truth_audit_v1.md`. The new W2 focus is an evidence-only post-choice actionability falsifier; early Human mechanics diagnostics may be admitted separately, but are not automatically P02. Proceed one wave at a time, without mutating PR #224 until an eventual separate art disposition. No Human, market, real-poker, or longitudinal claims are upgraded.
+Owner's later 2026-10-08 sequencing decision explicitly prioritizes learner mechanics/personalization/effect. PR #224 visual acceptance is deferred as a held, unmerged placeholder art family. Wave W1 is completed as a machine-only audit (policy tests 70/70 PASS, analyze/fast loop PASS, route cone 39 pass/5 fail). See `docs/_reviews/2026_10_act0_learning_engine_truth_audit_v1.md`. Wave W2 falsified a material missing-payoff defect: `learning_effect_delta_viewed` was emitted while scene-owned compact feedback omitted the earned source-recheck proof. PR #226 is a bounded fix awaiting manager/exact-head CI acceptance; it displays the source-owned proof and `Original read proven` above the CTA. Local Mac machine evidence: 70/70 policy tests PASS, feedback matrix PASS, 375x812/402x874 proof above CTA, flutter analyze PASS, Bash5 release gate PASS with 105 selected tests. Baseline old route cone failures/geometry discrepancies are NOT all resolved. Early Human mechanics diagnostics may be admitted separately, but are not automatically P02. Proceed one wave at a time, without mutating PR #224 until an eventual separate art disposition. No Human, market, real-poker, or longitudinal claims are upgraded.
 
 
 This file carries exact current campaign dispatch beneath
