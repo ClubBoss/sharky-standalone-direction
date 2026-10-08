@@ -70,6 +70,29 @@ import 'package:poker_analyzer/services/session_drill_recheck_user_launch_consum
 @visibleForTesting
 bool act0DevMenuEnabledV1({required bool isReleaseMode}) => !isReleaseMode;
 
+/// Consecutive *local calendar* days, independent of elapsed UTC hours.
+///
+/// Both inputs are local YYYY-MM-DD keys produced by _todayDateString().
+/// Normalizing civil dates to UTC prevents a 23-hour spring DST day from
+/// incorrectly breaking a completed daily-practice streak.
+@visibleForTesting
+bool act0AreConsecutiveCivilDaysV1(String previousDay, String today) {
+  if (previousDay.isEmpty) return false;
+  try {
+    final previous = DateTime.parse(previousDay);
+    final current = DateTime.parse(today);
+    final previousCivil = DateTime.utc(
+      previous.year,
+      previous.month,
+      previous.day,
+    );
+    final currentCivil = DateTime.utc(current.year, current.month, current.day);
+    return currentCivil.difference(previousCivil) == const Duration(days: 1);
+  } catch (_) {
+    return false;
+  }
+}
+
 ({String worldId, String lessonId, String taskId, String mappingType})?
 act0FirstValueSameSignalRepMappingV1({
   required String nextRepId,
@@ -3483,7 +3506,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final today = _todayDateString();
     final isNewDay = parsed.lastActiveDay != today;
     final isStreakContinued =
-        !isNewDay || _isConsecutiveDay(parsed.lastActiveDay, today);
+        !isNewDay || act0AreConsecutiveCivilDaysV1(parsed.lastActiveDay, today);
     final restoredStreakDays = isNewDay
         ? (isStreakContinued && parsed.lastActiveDay.isNotEmpty
               ? parsed.persistedStreakDays
@@ -3616,7 +3639,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final restoredLastSession = parsed.lastSessionLearnerState;
     if (restoredLastSession != null &&
         restoredLastSession.isUsable &&
-        _isConsecutiveDay(restoredLastSession.lastSessionDate, today)) {
+        act0AreConsecutiveCivilDaysV1(
+          restoredLastSession.lastSessionDate,
+          today,
+        )) {
       _emitDay2ReturnTelemetryV1(restoredLastSession);
     }
   }
@@ -3802,18 +3828,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         '${now.day.toString().padLeft(2, '0')}';
   }
 
-  static bool _isConsecutiveDay(String prevDay, String today) {
-    if (prevDay.isEmpty) return false;
-    try {
-      final prev = DateTime.parse(prevDay);
-      final todayDate = DateTime.parse(today);
-      final diff = todayDate.difference(prev).inDays;
-      return diff == 1;
-    } catch (_) {
-      return false;
-    }
-  }
-
   void _persistProgress() {
     if (!_usesPersistedProgress) {
       return;
@@ -3823,7 +3837,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final currentStreak = dailyDone
         ? (_lastDailyDate == today
               ? _persistedStreakDays
-              : (_isConsecutiveDay(_lastDailyDate, today)
+              : (act0AreConsecutiveCivilDaysV1(_lastDailyDate, today)
                     ? (_persistedStreakDays + 1).clamp(0, 365)
                     : 1))
         : _persistedStreakDays;
