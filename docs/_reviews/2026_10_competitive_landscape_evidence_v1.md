@@ -100,6 +100,18 @@ P0 evidence needs before ranking products by quality:
 
 Stop rule: if source is marketing or anecdotal, label it so. A novel flashy competitor feature is a **deferred opportunity** until measured incremental EV against Sharky's active stage.
 
+## Deepened source and existing Runout snapshot reconciliation
+
+Sharky **already has** a dedicated Runout research folder: `docs/_competitive/runout/README.md` and `runout_vs_sharky_contentgraph_gap_analysis_v1.md`, from static APK/XAPK and user-supplied screenshots, plus manual validation. June 2026 snapshot: 7 curriculum categories, 31 visible skills and 280 chapter rows, with 33 screenshot-confirmed rows at that time. This is *structural breadth evidence*, not proof of actual lessons' quality, solver correctness, runtime paywall or current feature set. Avoid re-extracting it or copy-pasting competitor content.
+
+New official source checks:
+- Poker Skill US App Store release history https://apps.apple.com/us/app/poker-skill-learn-holdem/id6748104711 : v2.1.40 (Aug 27) five-hand AI sessions + graded XP/replay `Run It Back`; v2.1.41 (Sep 2) review/daily improvements; v2.1.42 (Sep 11) mission celebration, graded 1–3-star replay and restoral fixes. Prior v2.1.39 is NOT the latest documented release in our research.
+- WSOP/WSOP+ official https://www.wsop.com/plus/ : Free $0 gives full Academy curriculum, free Poker IQ, first Challenger Finn per level and 10 daily practice hands. Basic $9.99/month includes named-pro challengers and 50 hands; Premium $49.99/month adds unlimited hands and an Academy challenger also called `Sharky`. These are cross-product bundle prices, NOT pure Academy lesson prices. **Brand/discoverability caution** for Sharky Poker, not a legal infringement verdict.
+- Runout official https://runoutpoker.com/compare/runout-poker-vs-gto-wizard claims a limited free daily/preflop tier and Pro $19.99/month / $89.99/year. Store user reviews on iOS https://apps.apple.com/us/app/runout-poker-trainer-gto-coach/id6760210288?see-all=reviews and Android https://play.google.com/store/apps/details?id=com.gramercy.runout report paywall-before-try. This discrepancy needs same-build, same-region **actual runtime** checks. Do not falsely certify absence/presence of a free trial universally.
+- PokerArena https://gtowizard.com/pokerarena remains a different first job (real HU competition) and its free-solver-entitlement language remains internally inconsistent.
+
+A ranked attack hypothesis is now documented in `docs/_reviews/2026_10_competitive_engagement_attack_wave_bundle_v1.md`; no numeric competitor 10/10 score is admitted.
+
 ## October 8 first-ten-minute source addendum
 
 Research evidence updated for onboarding and the latest known **dated** official release history; do not mix stale crawl-relative time descriptions with release dates.
