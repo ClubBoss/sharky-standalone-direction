@@ -1,15 +1,84 @@
 # Pre-Human Campaign State v1
 
 Status: `PRE_P02_NORTH_STAR_CONVERGENCE_ACTIVE`
-Freshness date: 2026-09-12
+Freshness date: 2026-10-09 (October exact-dispatch overlay; September material retained as history)
 Repository: `ClubBoss/sharky-standalone-direction`
 
-This file carries exact current campaign dispatch beneath
-`docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`.
+This file carries the current dispatch beneath the owner-approved v5 roadmap
+once its docs-only merge is verified. September dispatch below is historical.
 
 Current owner rebaseline authority:
 
 `docs/_reviews/owner_pre_p02_north_star_convergence_rebaseline_v1.md`
+
+## October 2026 exact current dispatch — C0 integrated / C1 source truth closed
+
+This section supersedes the September "Exact Current Dispatch" and all
+older implementation-now statements below. The old sections are historical
+evidence, not live product instructions.
+
+`PRINCIPAL_PLAN = docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md`
+(owner-approved; **effective only after PR #242 verified docs-only merge**).
+
+`C0_SOURCE_INTEGRATED = TRUE`: cumulative #243 and #234–#241 are merged.
+`PRE_ADOPTION_MAIN = 1857818b1f80c4c12ab6a0e823f4f8b855f7e0ff`
+(tree-identical to #241 HEAD `ade7803eff9b9dfdaa7a9564a06ee9c9a489aa5c`).
+The live `main` ref must always be resolved anew; this is a dated provenance SHA.
+
+`C0_LEGACY_FULL_CHECKPOINT = INCOMPLETE / RED`
+`C0_NARROW_WAIVER = INTERNAL_SOURCE_INTEGRATION_ONLY` — 19 compared legacy
+test files, no newly observed candidate-only failures; no blanket release pass.
+
+`NATIVE_ASSISTED_RESTART_INDEPENDENT_RECHECK = OPEN_RELEASE_GATE`
+(an unclosed evidence obligation, **not** automatically a proven product defect).
+
+`CURRENT_STAGE = PRE_P02_NORTH_STAR_CONVERGENCE / GATE_PREPARATION`
+`LANE_A_VISUAL = CLOSED_PASS / FROZEN`
+`LANE_B_SURFACE_COHESION = CLOSED_PASS`
+`LANE_C_LEARNING_LOOP = CLOSED_PASS / BOUNDED_SOURCE_MACHINE_FAMILY`
+`LANE_D_CONTENT_CORRECTNESS = CLOSED_PASS`
+`LANE_E_PERSONALIZED_NEXT_VALUE = REQUIRES_HUMAN_EVIDENCE`
+`LANE_F_RELIABILITY_ERGONOMICS = CLOSED_PASS / ADMITTED_SCOPE_ONLY`
+`MATERIAL_NEW_P0_P1_FROM_C1 = NONE_PROVEN`
+`CURRENT_ACTIVE_IMPLEMENTATION_FAMILY = NONE / NO_NEW_PRODUCT_WORK_AUTHORIZED`
+`P02 = NOT_ADMITTED`
+`HUMAN_PROOF = FALSE`
+`PR_224 = SEPARATE / NOT_ADMITTED`
+
+### C1 source-truth evidence and limits
+
+- Historical command `IMPLEMENT_TABLE_ACTION_AND_STREET_MOTION_V1_AFTER_PR221_MERGE`
+  is obsolete: PR #222 merged on 2026-09-12
+  (`96f2f2e79863007c044e22d50f343a18c52fa0a5`).
+- Actual source owner: `lib/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart`;
+  canonical runtime consumer `lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart`.
+- Action focus, sourced commitment/fold/collect, flop/turn/river reveal and
+  Hero readiness form an immutable fail-closed projection. One-shot timer,
+  generation fencing and task/Back/dispose cancellation prevent stale beats;
+  unsafe answer-bearing actor cues are suppressed. Reduced-motion/settled
+  mode presents the terminal state without a learner timing penalty.
+- Existing named tests:
+  `test/ui_v2/act0_table_choreography_contract_v1_test.dart` and
+  `test/ui_v2/act0_table_action_street_motion_v1_test.dart`
+  (W6 turn, decision lock and `user_choice`, reduced motion,
+  deterministic settled frame, rebuild and replacement).
+  PR #222 HEAD CI checks succeeded, and the C0 final-main source/CI contract
+  succeeded. This proves the scoped mechanism, **not** real Human comprehension,
+  generalized fluent motion on every authored hand or native release acceptance.
+- **C1 disposition: `CLOSED_PASS` for the previously named source/machine
+  implementation gap.** No remaining class-level P0/P1 was reproduced from the
+  read-only inspection. Fail-closed absence of choreography on unsafe or invalid
+  authored trail is deliberate, not proof of a material missed learner feature.
+
+### Pre-P02 owner packet
+
+Read `docs/context/PRE_P02_ENTRY_DECISION_PACKET_v1.md` for the full
+nine-point entry gate, cheap falsifiers, narrow holistic challenger and
+independent confirmation scope. A/B/C/D/F pass their existing bounded evidence
+dispositions; E requires Human evidence. Outstanding: holistic challenger,
+one independent confirmatory pass, evidence-backed global diminishing-returns
+adjudication, exact candidate freeze, cheap final machine/native falsifiers and
+**explicit owner admission**. No P02 execution until authorized.
 
 ## Exact Rebaseline Provenance
 
@@ -29,9 +98,9 @@ PR #208:
 PR #208 remains valid for B7 closure. Its immediate post-B7 maintenance ->
 freeze -> P02 sequencing is superseded by the owner rebaseline.
 
-## Exact Current Dispatch
+## September Exact Current Dispatch — HISTORICAL / SUPERSEDED BY OCTOBER OVERLAY
 
-This is the single unambiguous current dispatch. Every other
+This was the single unambiguous September dispatch; it is now historical. Every other
 `EXACT_NEXT_ACTION` / `ACTIVE_FAMILY` statement elsewhere in this file predates
 PR #220 and the `TABLE_ACTION_AND_STREET_MOTION` audit and is historical /
 superseded — see the "(historical — superseded)" markers below.

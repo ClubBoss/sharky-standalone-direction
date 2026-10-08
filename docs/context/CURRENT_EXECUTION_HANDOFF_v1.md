@@ -1,13 +1,13 @@
 # Current Execution Handoff v1
 
-Status: CURRENT-STATE CONTINUATION AID / NON-AUTHORITY
-Freshness date: 2026-09-10
+Status: CURRENT-STATE CONTINUATION AID / NON-AUTHORITY (September historical body; October overlay is newer)
+Freshness date: 2026-10-09 (October handoff overlay; September authoring material retained)
 Repository: `ClubBoss/sharky-standalone-direction`
 
-Authority hierarchy:
+Authority hierarchy (effective only upon verified docs-only PR #242 merge):
 
-1. `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
-2. `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`
+1. `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md` — principal; v4 unchanged as history
+2. `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` — exact current dispatch
 3. `docs/_reviews/owner_pre_p02_north_star_convergence_rebaseline_v1.md`
 4. `docs/_reviews/owner_cycle_d_structural_closure_and_v2_production_admission_v1.md`
 5. this file only as a compressed continuation aid.
@@ -15,7 +15,29 @@ Authority hierarchy:
 If this handoff conflicts with higher authority, the higher authority wins.
 Always re-resolve live `origin/main` before mutation.
 
-## Exact Authoring Baseline
+## October 2026 handoff overlay (current; non-authoritative summary)
+
+- Owner approved v5 as principal effective upon verified docs-only PR #242
+  merge; principal file: `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md`.
+  Previous v4 remains unchanged and historical.
+- C0 `SOURCE_INTEGRATED`: #243 and #234–#241 merged. Pre-adoption main
+  `1857818b1f80c4c12ab6a0e823f4f8b855f7e0ff`, #241 source HEAD
+  `ade7803eff9b9dfdaa7a9564a06ee9c9a489aa5c`; final code tree parity.
+- Full legacy checkpoint `INCOMPLETE/RED`; 19-file narrow internal source
+  waiver only, without candidate-only failures in the compared sample.
+- C1 `CLOSED_PASS (source/machine)` for Table Action & Street Motion already
+  merged via PR #222 and verified at current runtime owner/tests. No new P0/P1.
+- Lane A/B/C/D/F `CLOSED_PASS` in their bounded scopes; E
+  `REQUIRES_HUMAN_EVIDENCE`. Do not extrapolate machine evidence.
+- P02 = `NOT_ADMITTED`. See `docs/context/PRE_P02_ENTRY_DECISION_PACKET_v1.md`
+  for challenger, independent confirmation, freeze, cheap falsifiers and
+  owner admission requirements.
+- Native assisted→restart→independent recheck = `OPEN_RELEASE_GATE`, not
+  native PASS or an assumed defect. PR #224 remains frozen/separate.
+- The September V2 visual family and old `EXACT_NEXT_ACTION` statements
+  below are **historical only** and must not reactivate implementation.
+
+## Exact Authoring Baseline (September historical)
 
 Owner rebaseline baseline:
 
