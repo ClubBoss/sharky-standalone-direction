@@ -21635,7 +21635,7 @@ final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w11_trigger_small_price_continue',
   caption:
-      'Real table. CO opens, Hero calls BTN with Q-J suited. Flop comes J-7-4 rainbow. CO bets 2 BB into 8 BB at 35 BB effective.',
+      'Six-handed, 0.25 BB ante each. CO opens to 2.5 BB, BTN calls with QJs. Flop J-7-4 rainbow: CO bets 2 BB into 8 BB, with 35 BB behind each.',
   hint: 'Real play means combining cues, not naming one concept.',
   question: 'What is the cleaner response?',
   table: _world3PlayableCallRunner.table.copyWith(
@@ -21699,21 +21699,22 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w11_trigger_bad_price_fold',
   caption:
-      'Same hand again. Turn bricks on J-7-4-2. CO now bets 12 BB into 14 BB at 100 BB effective.',
-  hint: 'A good hand can still be the wrong continue at the wrong price.',
+      'Same hand again. BTN called 2 BB on J-7-4. Turn 2 is a brick; pot is 12 BB and both started this street with 33 BB behind. Tight CO rarely bluffs big turn bets and now bets 12 BB.',
+  hint:
+      'Combine a large second-barrel price with this opponent\'s unusually value-heavy betting range.',
   question: 'What is the cleaner response now?',
   table: _world3PlayableCallRunner.table.copyWith(
     heroCards: _heroQJsCards,
     boardCards: _boardJ742TurnCards,
     streetLabel: 'Turn',
-    potLabel: 'Pot 14 BB',
+    potLabel: 'Pot 12 BB',
     toCallLabel: 'To call 12 BB',
-    centerLabel: 'BTN, top pair, bad price',
+    centerLabel: 'BTN top pair, tight CO barrel',
     actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
-      Act0ActionTrailItemV1(label: 'BTN calls'),
-      Act0ActionTrailItemV1(label: 'Flop bet called'),
-      Act0ActionTrailItemV1(label: 'CO bets 12 BB'),
+      Act0ActionTrailItemV1(label: 'CO opens 2.5; BTN calls'),
+      Act0ActionTrailItemV1(label: 'Flop pot 8 BB; CO bets 2'),
+      Act0ActionTrailItemV1(label: 'BTN calls 2; turn pot 12'),
+      Act0ActionTrailItemV1(label: 'Tight CO bets 12 on turn'),
     ],
   ),
   options: const <Act0RunnerOptionV1>[
@@ -21726,7 +21727,7 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Tempting hand-label trap.',
       feedbackReason:
-          'Top pair is why this feels close, but real play is not only hand naming. Price, action trail, and deeper future risk now lean against the continue.',
+          'Top pair makes calling tempting, but this tight CO rarely bluffs a full-pot second barrel. Calling 12 BB into 12 BB needs about 33% equity against the betting range, not just a pair label.',
     ),
     Act0RunnerOptionV1(
       id: 'fold_turn',
@@ -21736,7 +21737,7 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong contrast read.',
       feedbackReason:
-          'Top pair still looks decent, which makes calling tempting. But the price is now bad, the action shows pressure, and deep stacks keep costly future risk alive.',
+          'The 12 BB call into a 12 BB turn pot needs about 33% equity. This tight CO rarely bluffs this size and usually has a stronger jack or better; folding QJs is a disciplined exploit, not an automatic rule against every opponent.',
     ),
     Act0RunnerOptionV1(
       id: 'jam_turn',
@@ -21747,19 +21748,19 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too much pressure back.',
       feedbackReason:
-          'The cue is not to force a larger pot. The cleaner read is step away from the expensive continue instead of escalating a fragile one-pair hand.',
+          'Jamming a single pair into a tight CO\'s value-heavy barrel magnifies risk without a credible reason to expect enough folds.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Same hand, worse continue.',
       body:
-          'A hand can be fine at one price and wrong at another. Read the action trail and future risk before treating top pair like an auto-continue.',
+          'A small flop bet can justify a call, yet a pot-sized turn barrel from an opponent who rarely bluffs can make the same top pair a fold. The range read matters as much as the price.',
       focusLabels: <String>[
         'Same hand',
-        'Bad price',
-        'Action pressure',
-        'Deep risk',
+        'Pot-size bet',
+        'Tight CO read',
+        'River risk',
       ],
     ),
   ],
