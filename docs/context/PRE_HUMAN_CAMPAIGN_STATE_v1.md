@@ -12,11 +12,11 @@ Verified `origin/main = bdf560f0d90d9659335f6492149c373842f655b1`.
 PR #221, #222 and #223 are MERGED. `TABLE_ACTION_AND_STREET_MOTION_V1` was implemented by merged PR #222 and is no longer an open implementation instruction. Learning outcome remains HUMAN_UNPROVEN.
 
 `CURRENT_STAGE = PRE_P02_NORTH_STAR_CONVERGENCE`
-`CURRENT_ACTIVE_FAMILY = ACT0_EARNED_RECHECK_PROOF_ACCEPTANCE_V1`
-`EXACT_NEXT_ACTION = REVIEW_PR226_EXACT_HEAD_CI_AND_OWNER_VERDICT_NO_MERGE`
+`CURRENT_ACTIVE_FAMILY = EARLY_MECHANICS_PILOT_PREFLIGHT_V1`
+`EXACT_NEXT_ACTION = FINISH_EXACT_SHA_IOS_SIM_SMOKE_THEN_FREEZE_EARLY_NOVICE_CANDIDATE`
 `PR224 = OPEN / NOT_MERGED / READY_FOR_MANAGER_REVIEW_ONLY`
 `PR224_HEAD = bd2046e7470f6aa3137e3a9354b5155528d99e25`
-`PR226 = OPEN_DRAFT / NOT_MERGED / EXACT_HEAD_e87862309817f2f27f9db8bb51afbfd118f8310f`
+`PR226 = OPEN_DRAFT / NOT_MERGED / EXACT_HEAD_e87862309817f2f27f9db8bb51afbfd118f8310f / OWN_GITHUB_CI_GREEN`
 `TABLE_ACTION_AND_STREET_MOTION_V1 = IMPLEMENTED_MERGED_PR222 / REASSESS_EVIDENCE`
 `LANE_C_LEARNING_LOOP = REASSESS_AFTER_PR222 / HUMAN_PROOF_PENDING`
 `P02 = DEFERRED / OWNER_ADMISSION_PENDING`
@@ -29,7 +29,7 @@ PR #224 awaits actual owner-visible visual adjudication, including SB/BB cards-l
 The owner has explicitly requested that paused designer/artist work is preserved for completion later, including all-engaged and disengaged cast options where product-significant. Do not restart a generic visual polish cycle. See:
 `docs/_reviews/2026_10_product_wave_resumption_manager_packet_v1.md`
 
-Owner's later 2026-10-08 sequencing decision explicitly prioritizes learner mechanics/personalization/effect. PR #224 visual acceptance is deferred as a held, unmerged placeholder art family. Wave W1 is completed as a machine-only audit (policy tests 70/70 PASS, analyze/fast loop PASS, route cone 39 pass/5 fail). See `docs/_reviews/2026_10_act0_learning_engine_truth_audit_v1.md`. Wave W2 falsified a material missing-payoff defect: `learning_effect_delta_viewed` was emitted while scene-owned compact feedback omitted the earned source-recheck proof. PR #226 is a bounded fix awaiting manager/exact-head CI acceptance; it displays the source-owned proof and `Original read proven` above the CTA. Local Mac machine evidence: 70/70 policy tests PASS, feedback matrix PASS, 375x812/402x874 proof above CTA, flutter analyze PASS, Bash5 release gate PASS with 105 selected tests. Baseline old route cone failures/geometry discrepancies are NOT all resolved. Early Human mechanics diagnostics may be admitted separately, but are not automatically P02. Proceed one wave at a time, without mutating PR #224 until an eventual separate art disposition. No Human, market, real-poker, or longitudinal claims are upgraded.
+Owner's later 2026-10-08 sequencing decision explicitly prioritizes learner mechanics/personalization/effect. PR #224 visual acceptance is deferred as a held, unmerged placeholder art family. Wave W1 is completed as a machine-only audit (policy tests 70/70 PASS, analyze/fast loop PASS, route cone 39 pass/5 fail). See `docs/_reviews/2026_10_act0_learning_engine_truth_audit_v1.md`. Wave W2 falsified a material missing-payoff defect: `learning_effect_delta_viewed` was emitted while scene-owned compact feedback omitted the earned source-recheck proof. PR #226 is a bounded fix awaiting manager/exact-head CI acceptance; it displays the source-owned proof and `Original read proven` above the CTA. Local Mac machine evidence: 70/70 policy tests PASS, feedback matrix PASS, 375x812/402x874 proof above CTA, flutter analyze PASS, Bash5 release gate PASS with 105 selected tests. Baseline old route cone failures/geometry discrepancies are NOT all resolved. Early Human mechanics diagnostics may be admitted separately, but are not automatically P02. Wave W3 exact-PR226 route cone is 39/5 (same as W1 baseline), with three old locator/copy assumptions plus two 94.12px/143.12px real geometry gaps; no second learner-engine blocker proved. See `docs/_reviews/2026_10_wave3_mechanics_route_truth_v1.md`. Early-pilot preflight is `docs/_reviews/2026_10_early_mechanics_pilot_preflight_v1.md`: simulator build/smoke pending, real participants NOT run. Proceed one wave at a time, without mutating PR #224 until an eventual separate art disposition. No Human, market, real-poker, or longitudinal claims are upgraded.
 
 
 This file carries exact current campaign dispatch beneath
