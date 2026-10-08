@@ -138,6 +138,27 @@ void main() {
           await tester.tap(hint);
           await tester.pumpAndSettle();
           expect(find.byKey(const Key('act0_shell_hint_body')), findsOneWidget);
+          if (targetTaskId == 'cards_ranks_suits_board_count') {
+            expect(
+              find.text(
+                'Track the community cards street by street, not chips in the pot.',
+              ),
+              findsOneWidget,
+              reason:
+                  'Board-card count must not receive pot/chip counting advice.',
+            );
+            expect(
+              find.text(
+                'Count only chips that are actually in the pot or matched.',
+              ),
+              findsNothing,
+            );
+          } else {
+            expect(
+              find.text('Name the action before choosing what it means.'),
+              findsOneWidget,
+            );
+          }
 
           if (assistanceMode == 'theoryRecall') {
             final full = find.byKey(
