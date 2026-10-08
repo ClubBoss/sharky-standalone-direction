@@ -6205,11 +6205,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       repaired: repaired,
                                       record: repairSourceRecord,
                                     );
+                                    // Practice Queue closure is owned by its
+                                    // exact queue outcome; inline recheck is
+                                    // reserved for the same-signal feedback path.
                                     final startsSourceRecheck =
-                                        _activeSameSignalFeedbackRepairV1 ||
-                                        _isPracticeQueueRepairAnswerV1(
-                                          playSelectedTask,
-                                        );
+                                        _activeSameSignalFeedbackRepairV1;
                                     if (repaired) {
                                       _clearMatchedOpenRepairIntentV1(
                                         sourceTaskId: repairSourceTaskId,
@@ -8758,7 +8758,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _progressedWorlds(baseState),
       request.targetWorldId,
     );
-    final previousTaskId = _selectedTaskId;
     _startTaskByIds(
       launchWorld,
       request.targetLessonId,
@@ -8768,8 +8767,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       evidenceRunKind: 'repair',
       evidenceStartedBy: evidenceStartedBy,
     );
-    if (_selectedTaskId == previousTaskId ||
-        _selectedTaskId != request.targetTaskId) {
+    if (_selectedTaskId != request.targetTaskId ||
+        _tab != Act0ShellTabV1.play ||
+        _showPlayHub) {
       return;
     }
     _returnToPlayHubOnBack = true;
