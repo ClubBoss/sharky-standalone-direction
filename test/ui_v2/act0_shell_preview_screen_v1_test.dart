@@ -16,6 +16,7 @@ void main() {
   Widget host({
     Act0ShellTabV1 tab = Act0ShellTabV1.home,
     bool showPlacementOnStart = false,
+    Act0ShellStateV1? overrideState,
   }) {
     return MaterialApp(
       supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
@@ -27,6 +28,7 @@ void main() {
       home: Act0ShellPreviewScreenV1(
         initialTab: tab,
         showPlacementOnStart: showPlacementOnStart,
+        state: overrideState,
       ),
     );
   }
@@ -88,6 +90,55 @@ void main() {
       expect(world.title, entry.value);
       expect(world.lessons, isNotEmpty, reason: '${entry.key} has no lessons.');
     }
+  });
+
+  testWidgets('Home uses current authored lesson cue after World 1', (
+    tester,
+  ) async {
+    final sample = Act0ShellStateV1.sample;
+    final world = sample
+        .worldById('world_2')
+        .copyWith(
+          status: Act0WorldStateV1.current,
+          isSelectable: true,
+          isLocked: false,
+        );
+    final selectedLesson = world.lessons.first.copyWith(
+      state: Act0LessonStateV1.current,
+      isSelectable: true,
+      isLocked: false,
+    );
+    final lessons = <Act0LessonCardV1>[
+      selectedLesson,
+      ...world.lessons.skip(1),
+    ];
+    final selectedState = Act0ShellStateV1(
+      courseTitle: sample.courseTitle,
+      courseSubtitle: sample.courseSubtitle,
+      levelLabel: sample.levelLabel,
+      xp: sample.xp,
+      xpTarget: sample.xpTarget,
+      streakDays: sample.streakDays,
+      dailyGoalLabel: sample.dailyGoalLabel,
+      dailyGoalValue: sample.dailyGoalValue,
+      pathProgressLabel: sample.pathProgressLabel,
+      selectedWorldId: 'world_2',
+      worlds: <Act0WorldCardV1>[world.copyWith(lessons: lessons)],
+      lessons: lessons,
+      review: sample.review,
+      profile: sample.profile,
+    );
+    await pumpCompact(tester, host(overrideState: selectedState));
+
+    expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
+    expect(find.text(selectedLesson.subtitle), findsOneWidget);
+    expect(
+      find.text(
+        'Read the legal actions first so the first real hand is not a guess.',
+      ),
+      findsNothing,
+    );
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('Act0 preview shell renders Home and opens Learn lane', (
