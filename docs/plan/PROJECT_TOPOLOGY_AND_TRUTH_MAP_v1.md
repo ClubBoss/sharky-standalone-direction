@@ -2,6 +2,15 @@
 Status: ACTIVE ARCHITECTURE / NAVIGATION COMPANION
 Purpose: primary orientation layer for future agents before repo investigation.
 
+Pending authority change (not yet in force):
+- `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md` is staged as an
+  **owner-approval candidate**, not an active roadmap. All v4 routing references
+  below stay live until explicit owner approval, reviewed pointer promotion,
+  and verification of an authorized docs-only merge on `main`.
+- `docs/plan/MASTER_PLAN_V5_ADOPTION_PREP_v1.md` is the non-authoritative
+  reconciliation and promotion checklist. No Learning Trust SHA/native verdict,
+  current dispatch, P02 admission, or PR #224 integration follows from it.
+
 ## How to use this map
 
 - Read order while the pre-Human campaign is active:
