@@ -12,8 +12,8 @@ Verified `origin/main = bdf560f0d90d9659335f6492149c373842f655b1`.
 PR #221, #222 and #223 are MERGED. `TABLE_ACTION_AND_STREET_MOTION_V1` was implemented by merged PR #222 and is no longer an open implementation instruction. Learning outcome remains HUMAN_UNPROVEN.
 
 `CURRENT_STAGE = PRE_P02_NORTH_STAR_CONVERGENCE`
-`CURRENT_ACTIVE_FAMILY = ACT0_LEARNING_ENGINE_TRUTH_AUDIT`
-`EXACT_NEXT_ACTION = AUDIT_ACT0_MECHANICS_ON_CLEAN_MAIN_AND_SELECT_ONE_PROVEN_GAP`
+`CURRENT_ACTIVE_FAMILY = ACT0_POST_CHOICE_CONTINUATION_AND_ACTIONABILITY_EVIDENCE_V1`
+`EXACT_NEXT_ACTION = FALSIFY_POST_CHOICE_ACTIONABILITY_ON_CLEAN_MAIN_BEFORE_ANY_UI_FIX`
 `PR224 = OPEN / NOT_MERGED / READY_FOR_MANAGER_REVIEW_ONLY`
 `PR224_HEAD = bd2046e7470f6aa3137e3a9354b5155528d99e25`
 `TABLE_ACTION_AND_STREET_MOTION_V1 = IMPLEMENTED_MERGED_PR222 / REASSESS_EVIDENCE`
@@ -28,7 +28,7 @@ PR #224 awaits actual owner-visible visual adjudication, including SB/BB cards-l
 The owner has explicitly requested that paused designer/artist work is preserved for completion later, including all-engaged and disengaged cast options where product-significant. Do not restart a generic visual polish cycle. See:
 `docs/_reviews/2026_10_product_wave_resumption_manager_packet_v1.md`
 
-Owner's later 2026-10-08 sequencing decision explicitly prioritizes learner mechanics/personalization/effect. PR #224 visual acceptance is deferred as a held, unmerged placeholder art family. Wave W1 is the mechanism-truth audit on clean main; early Human mechanics diagnostics may be admitted separately, but are not automatically P02. Proceed one wave at a time, without mutating PR #224 until an eventual separate art disposition. No Human, market, real-poker, or longitudinal claims are upgraded.
+Owner's later 2026-10-08 sequencing decision explicitly prioritizes learner mechanics/personalization/effect. PR #224 visual acceptance is deferred as a held, unmerged placeholder art family. Wave W1 is completed as a machine-only audit (policy tests 70/70 PASS, analyze/fast loop PASS, route cone 39 pass/5 fail). See `docs/_reviews/2026_10_act0_learning_engine_truth_audit_v1.md`. The new W2 focus is an evidence-only post-choice actionability falsifier; early Human mechanics diagnostics may be admitted separately, but are not automatically P02. Proceed one wave at a time, without mutating PR #224 until an eventual separate art disposition. No Human, market, real-poker, or longitudinal claims are upgraded.
 
 
 This file carries exact current campaign dispatch beneath
