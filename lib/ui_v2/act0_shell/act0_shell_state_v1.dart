@@ -9494,6 +9494,11 @@ final _utgSeatRunner = _meetTableRunner.copyWith(
 );
 
 final _w3SeatIdBtnRepairRunner = _buttonSeatRunner.copyWith(
+  // The repair teaching step can point to BTN. The fresh choice cannot.
+  table: _buttonSeatRunner.table.copyWith(
+    highlightedSeatIds: const <String>[],
+    activeSeatId: '',
+  ),
   lessonId: 'w3_repair_seat_id_btn',
   caption: 'Repair: BTN is the Button seat.',
   hint: 'Find the dealer button, then tap BTN.',
@@ -9511,6 +9516,10 @@ final _w3SeatIdBtnRepairRunner = _buttonSeatRunner.copyWith(
 );
 
 final _w3SeatIdUtgRepairRunner = _utgSeatRunner.copyWith(
+  table: _utgSeatRunner.table.copyWith(
+    highlightedSeatIds: const <String>[],
+    activeSeatId: '',
+  ),
   lessonId: 'w3_repair_seat_id_utg',
   caption: 'Repair: UTG is the first preflop seat.',
   hint: 'Find the earliest preflop seat, then tap UTG.',
@@ -9576,8 +9585,10 @@ Act0RunnerStateV1 _w3SeatRecognitionRunnerV1({
     ],
     table: _meetTableRunner.table.copyWith(
       selectableSeatIds: <String>[correctSeatId, distractorSeatId],
-      highlightedSeatIds: highlighted,
-      activeSeatId: correctSeatId,
+      // W3 identification is the question: do not pre-highlight the answer.
+      // Teaching-step focus remains authored and appears during explanation.
+      highlightedSeatIds: const <String>[],
+      activeSeatId: '',
     ),
     teachingSteps: <Act0TeachingStepV1>[
       Act0TeachingStepV1(

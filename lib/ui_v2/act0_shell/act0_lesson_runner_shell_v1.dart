@@ -238,6 +238,7 @@ class Act0BlockCompletionSummaryV1 {
     required this.lessonTitle,
     required this.xpEarned,
     required this.errorCount,
+    this.assistedCount = 0,
     required this.taskCount,
     required this.correctCount,
     required this.startLevel,
@@ -268,6 +269,10 @@ class Act0BlockCompletionSummaryV1 {
   final String lessonTitle;
   final int xpEarned;
   final int errorCount;
+
+  /// Count of tasks where the learner used Quick Hint or Theory Recall.
+  /// Accuracy remains answer correctness; independent proof is distinct.
+  final int assistedCount;
   final int taskCount;
   final int correctCount;
   final int startLevel;
@@ -318,11 +323,14 @@ class Act0BlockCompletionSummaryV1 {
       !hasNextLesson || accuracyPercent >= unlockAccuracyPercent;
 
   Act0MasteryStatusV1 get masteryStatus {
-    if (errorCount == 0 && taskCount > 0) {
+    if (errorCount == 0 && taskCount > 0 && assistedCount == 0) {
       return Act0MasteryStatusV1.cleanPass;
     }
     if (deepLeakCount > 0 || !qualifiesForNextLesson) {
       return Act0MasteryStatusV1.needsReview;
+    }
+    if (assistedCount > 0) {
+      return Act0MasteryStatusV1.learning;
     }
     return Act0MasteryStatusV1.solid;
   }
@@ -9721,7 +9729,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               _BlockXpProgressCardV1(summary: summary),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               Text(
-                '${summary.accuracyPercent}% accuracy · ${summary.correctCount}/${summary.taskCount} correct · ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}',
+                summary.assistedCount > 0
+                    ? '${summary.correctCount}/${summary.taskCount} correct · ${summary.assistedCount} with help · ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}'
+                    : '${summary.accuracyPercent}% accuracy · ${summary.correctCount}/${summary.taskCount} correct · ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}',
                 key: const Key('act0_shell_block_summary_accuracy'),
                 maxLines: 2,
                 overflow: TextOverflow.fade,
@@ -16532,10 +16542,10 @@ class _TheoryRecallCtaV1 extends StatelessWidget {
         key: const Key('act0_shell_theory_recall_cta'),
         onPressed: onPressed,
         tooltip: label,
-        constraints: const BoxConstraints(minWidth: 32, minHeight: 24),
+        constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
         padding: EdgeInsets.zero,
         style: IconButton.styleFrom(
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          tapTargetSize: MaterialTapTargetSize.padded,
           foregroundColor: Act0ShellTokensV1.info,
         ),
         icon: const Icon(Icons.auto_stories_rounded, size: 15),
@@ -16556,8 +16566,8 @@ class _TheoryRecallCtaV1 extends StatelessWidget {
           horizontal: effectiveCompact ? 6 : 0,
           vertical: effectiveCompact ? 1 : 2,
         ),
-        minimumSize: Size(0, effectiveCompact ? 22 : 28),
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        minimumSize: const Size(48, 48),
+        tapTargetSize: MaterialTapTargetSize.padded,
         foregroundColor: Act0ShellTokensV1.info,
       ),
       icon: Icon(Icons.auto_stories_rounded, size: effectiveCompact ? 14 : 16),
@@ -16639,9 +16649,9 @@ class _DecisionHintPeekV1 extends StatelessWidget {
                 onPressed: onClose,
                 style: TextButton.styleFrom(
                   foregroundColor: Act0ShellTokensV1.info,
-                  minimumSize: const Size(0, 28),
+                  minimumSize: const Size(48, 48),
                   padding: const EdgeInsets.symmetric(horizontal: 4),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  tapTargetSize: MaterialTapTargetSize.padded,
                 ),
                 icon: const Icon(Icons.arrow_back_rounded, size: 15),
                 label: Text(

@@ -1176,6 +1176,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   final Set<String> _resolvedMistakeTaskIds = <String>{};
   final Set<String> _cleanTaskIds = <String>{};
   final Set<String> _lessonRunMistakeTaskIds = <String>{};
+  final Set<String> _lessonRunAssistedTaskIds = <String>{};
   final Set<String> _lessonRunPendingRetryTaskIds = <String>{};
   final Set<String> _lessonRunRetriedTaskIds = <String>{};
   final Set<String> _lessonRunWrapUpCompletedTaskIds = <String>{};
@@ -4582,6 +4583,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _resolvedMistakeTaskIds.clear();
       _cleanTaskIds.clear();
       _lessonRunMistakeTaskIds.clear();
+      _lessonRunAssistedTaskIds.clear();
       _lessonRunPendingRetryTaskIds.clear();
       _lessonRunRetriedTaskIds.clear();
       _lessonRunQuickFixTaskIds.clear();
@@ -10313,6 +10315,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     Act0LessonTaskV1 selectedTask,
     Act0RunnerOptionV1 option,
   ) {
+    if (_choiceWasAssistedV1) {
+      // Record help in this lesson separately from correctness/mistake counts;
+      // it cannot earn the learner an independent clean-pass claim.
+      _lessonRunAssistedTaskIds.add(selectedTask.taskId);
+    }
     final practiceQueueRepairRequest = _activePracticeRepairQueueRequestV1;
     final recordingPracticeQueueRepair =
         practiceQueueRepairRequest != null &&
@@ -12799,11 +12806,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         )
         .length;
     final lessonOpenMistakeCount = _openMistakeCountForLessonV1(selectedLesson);
+    final lessonAssistedCount = _lessonRunAssistedTaskIds
+        .where(
+          (taskId) =>
+              selectedLesson.taskList.any((task) => task.taskId == taskId),
+        )
+        .length;
     final worldOpenMistakeCount = _openMistakeCountForWorldV1(progressedWorld);
     _blockCompletionSummary = Act0BlockCompletionSummaryV1(
       lessonTitle: _localizedLessonTitleV1(selectedLesson),
       xpEarned: _lessonRunXp,
       errorCount: _lessonRunMistakeTaskIds.length,
+      assistedCount: lessonAssistedCount,
       taskCount: selectedLesson.taskList.length,
       correctCount:
           (selectedLesson.taskList.length - _lessonRunMistakeTaskIds.length)
@@ -12916,6 +12930,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   void _resetLessonRunMetrics() {
     _lessonRunXp = 0;
     _lessonRunMistakeTaskIds.clear();
+    _lessonRunAssistedTaskIds.clear();
     _lessonRunPendingRetryTaskIds.clear();
     _lessonRunRetriedTaskIds.clear();
     _lessonRunWrapUpCompletedTaskIds.clear();
