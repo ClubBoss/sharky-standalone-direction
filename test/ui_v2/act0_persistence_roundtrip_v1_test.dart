@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_multi_repair_queue_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
 
 void main() {
   const progressKey = 'act0_shell_progress_v1';
@@ -15,6 +17,153 @@ void main() {
       showPlacementOnStart: false,
       clock: clock ?? const Act0SystemUtcClockV1(),
     ),
+  );
+
+  testWidgets(
+    'native placement repair debts survive restore and unrelated task progress',
+    (tester) async {
+      // Exact source/target families from the preserved October 8 native
+      // schema-17 before/after snapshots. The placement stream contains
+      // repair intents without a source-task retention-memory entry.
+      const sourceTaskId = 'what_poker_is_table_read_transfer';
+      final nativeSignals =
+          <
+            ({
+              String signal,
+              String skill,
+              String choice,
+              String targetLesson,
+              String targetTask,
+              String reason,
+            })
+          >[
+            (
+              signal: 'hero_cards_board_pot',
+              skill: 'table_read',
+              choice: 'not_sure_yet',
+              targetLesson: 'what_poker_is',
+              targetTask: 'what_poker_is_table_read_recheck',
+              reason: 'same_signal_table_read_hero_cards_board_pot',
+            ),
+            (
+              signal: 'board_cards',
+              skill: 'board_read',
+              choice: 'not_sure_yet',
+              targetLesson: 'cards_ranks_suits',
+              targetTask: 'cards_ranks_suits_board_count',
+              reason: 'same_signal_board_read_board_cards',
+            ),
+            (
+              signal: 'no_bet_yet',
+              skill: 'action_read',
+              choice: 'raise',
+              targetLesson: 'fold_check_call_raise',
+              targetTask: 'actions_check_drill',
+              reason: 'same_signal_action_read_no_bet_yet',
+            ),
+          ];
+      var queue = const Act0MultiRepairQueueV1();
+      for (var index = 0; index < nativeSignals.length; index++) {
+        final signal = nativeSignals[index];
+        final intent = Act0RepairIntentV1(
+          sourceWorldId: 'world_1',
+          sourceLessonId: 'what_poker_is',
+          sourceTaskId: sourceTaskId,
+          choiceId: signal.choice,
+          result: index == 2 ? 'incorrect' : 'suboptimal',
+          errorType: 'confused_table_identity',
+          missedSignalId: signal.signal,
+          missedSignalLabel: signal.signal,
+          skillAtomId: signal.skill,
+          skillLabel: signal.skill,
+          targetWorldId: 'world_1',
+          targetLessonId: signal.targetLesson,
+          targetTaskId: signal.targetTask,
+          mappingType: 'repair',
+          reasonCode: signal.reason,
+        );
+        queue = queue.upsertIntent(intent, order: index + 1);
+      }
+      final expectedIds = queue.entries.map((e) => e.queueItemId).toSet();
+      expect(expectedIds, hasLength(3));
+      final snapshot = <String, Object?>{
+        'schemaVersion': 17,
+        'completedTaskIds': <String>[
+          'what_poker_is_find_hero',
+          'what_poker_is_theory',
+        ],
+        'skippedTaskIds': <String>[],
+        'completedLessonIds': <String>[],
+        'selectedWorldId': 'world_1',
+        'selectedLessonId': 'what_poker_is',
+        'selectedTaskId': 'what_poker_is_find_hero',
+        'earnedXp': 10,
+        'dailyCompletedRepCount': 0,
+        'retentionMemory': <Object>[
+          <String, Object>{
+            'taskId': 'what_poker_is_find_hero',
+            'lessonId': 'what_poker_is',
+            'worldId': 'world_1',
+            'status': 'fixedRecent',
+            'attempts': 1,
+            'fixedAtSequence': 1,
+            'lastRecheckSequence': 0,
+            'successfulRecheckCount': 0,
+          },
+        ],
+        'openRepairIntents': queue
+            .activeRepairIntents()
+            .map((intent) => intent.toPayload())
+            .toList(),
+        'multiRepairQueue': queue.toPayload(),
+        'multiRepairQueueOrder': 4,
+        'repairOutcomeProjection': <Object>[],
+        'reviewResolutionReceipts': <Object>[],
+        'reviewMistakeHistory': <Object>[],
+        'learningEvidenceHistory': <Object>[],
+      };
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        progressKey: jsonEncode(snapshot),
+      });
+
+      await tester.pumpWidget(host());
+      await tester.pumpAndSettle();
+      final dynamic state = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      state.debugPersistProgressV1(); // unrelated persistence, no repair.
+      await tester.pump(const Duration(milliseconds: 250));
+      final prefs = await SharedPreferences.getInstance();
+      final persisted =
+          jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
+      final restoredQueue =
+          persisted['multiRepairQueue'] as Map<String, dynamic>;
+      final entries = restoredQueue['entries'] as List<dynamic>;
+      final actualIds = entries
+          .map((e) => (e as Map<String, dynamic>)['queueItemId'])
+          .toSet();
+      expect(
+        actualIds,
+        expectedIds,
+        reason: 'Unrelated progress must not erase unresolved repair debt.',
+      );
+      expect((persisted['openRepairIntents'] as List).length, 3);
+      expect(persisted['reviewResolutionReceipts'], isEmpty);
+
+      // A real mount boundary must not lose the same still-unresolved debt.
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpWidget(host());
+      await tester.pumpAndSettle();
+      final dynamic reloaded = tester.state(
+        find.byType(Act0ShellPreviewScreenV1),
+      );
+      reloaded.debugPersistProgressV1();
+      await tester.pump(const Duration(milliseconds: 250));
+      final second =
+          jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
+      final secondIds = ((second['multiRepairQueue'] as Map)['entries'] as List)
+          .map((e) => (e as Map)['queueItemId'])
+          .toSet();
+      expect(secondIds, expectedIds);
+    },
   );
 
   testWidgets('Act0 persistence restores a deterministic current snapshot', (
