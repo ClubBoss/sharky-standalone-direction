@@ -9,6 +9,8 @@ const String act0ReturnReasonRetryNotYetSucceededV1 = 'retry_not_yet_succeeded';
 const String act0ReturnReasonDueReviewV1 = 'due_review';
 const String act0ReturnReasonReinforceRecentImprovementV1 =
     'reinforce_recent_improvement';
+const String act0ReturnReasonReinforceStableTransferV1 =
+    'reinforce_stable_transfer';
 const String act0ReturnReasonResumeRecentFocusV1 = 'resume_recent_focus';
 const String act0ReturnReasonNoPersonalReasonAvailableV1 =
     'no_personal_reason_available';
@@ -25,6 +27,8 @@ const String act0ReturnReasonMessageContinueRepairV1 = 'continue_repair';
 const String act0ReturnReasonMessageRetryRepairV1 = 'retry_repair';
 const String act0ReturnReasonMessageDueReviewV1 = 'due_review';
 const String act0ReturnReasonMessageReinforceTransferV1 = 'reinforce_transfer';
+const String act0ReturnReasonMessageReinforceStableTransferV1 =
+    'reinforce_stable_transfer';
 const String act0ReturnReasonMessageResumeFocusV1 = 'resume_focus';
 const String act0ReturnReasonMessageNoReasonV1 = 'no_reason';
 
@@ -109,6 +113,8 @@ class Act0PersonalizedReturnReasonV1 {
         'Review this clue now. It is ready for a spaced check.',
       act0ReturnReasonMessageReinforceTransferV1 =>
         'You handled this clue better on a later hand. Reinforce it once more.',
+      act0ReturnReasonMessageReinforceStableTransferV1 =>
+        'You kept this clue steady on a later hand. Reinforce it once more.',
       act0ReturnReasonMessageResumeFocusV1 =>
         'Resume your most recent table read.',
       _ => null,
@@ -268,13 +274,20 @@ Act0PersonalizedReturnReasonV1? _reinforceTransferReason(
     return null;
   }
   final signal = candidates.first;
+  final improved = signal.verdict == act0LearningTransferImprovedV1;
+  // A stable spaced transfer is encouraging, but it is not evidence of
+  // improvement. Keep both the learner copy and telemetry reason honest.
   return Act0PersonalizedReturnReasonV1(
-    reasonType: act0ReturnReasonReinforceRecentImprovementV1,
+    reasonType: improved
+        ? act0ReturnReasonReinforceRecentImprovementV1
+        : act0ReturnReasonReinforceStableTransferV1,
     conceptFamilyId: signal.conceptFamilyId,
     sourceTaskId: signal.comparisonTaskId,
     sourceSessionId: signal.comparisonSessionId,
     evidenceKind: act0ReturnReasonEvidenceTransferMeasurementV1,
-    messageKey: act0ReturnReasonMessageReinforceTransferV1,
+    messageKey: improved
+        ? act0ReturnReasonMessageReinforceTransferV1
+        : act0ReturnReasonMessageReinforceStableTransferV1,
     priorityClass: 3,
     recommendedDestination: 'learn',
     recommendedAction: 'reinforce',

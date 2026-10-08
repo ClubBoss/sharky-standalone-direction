@@ -13,9 +13,32 @@ void main() {
     SharedPreferences.setMockInitialValues(<String, Object>{});
   });
 
+  test('consecutive civil dates survive spring daylight saving jump', () {
+    // New York clocks advance on Mar 8, 2026: 23 elapsed hours
+    // separate Mar 8 and Mar 9 local midnights.
+    expect(act0AreConsecutiveCivilDaysV1('2026-03-08', '2026-03-09'), isTrue);
+    // Most of Europe moves forward on Mar 29, 2026.
+    expect(act0AreConsecutiveCivilDaysV1('2026-03-29', '2026-03-30'), isTrue);
+  });
+
+  test('regular year boundaries and leap-day runs remain consecutive', () {
+    expect(act0AreConsecutiveCivilDaysV1('2026-12-31', '2027-01-01'), isTrue);
+    expect(act0AreConsecutiveCivilDaysV1('2028-02-28', '2028-02-29'), isTrue);
+    expect(act0AreConsecutiveCivilDaysV1('2028-02-29', '2028-03-01'), isTrue);
+  });
+
+  test('same, skipped, backward or missing dates cannot continue streak', () {
+    expect(act0AreConsecutiveCivilDaysV1('2026-03-08', '2026-03-08'), isFalse);
+    expect(act0AreConsecutiveCivilDaysV1('2026-03-08', '2026-03-10'), isFalse);
+    expect(act0AreConsecutiveCivilDaysV1('2026-03-10', '2026-03-09'), isFalse);
+    expect(act0AreConsecutiveCivilDaysV1('', '2026-03-09'), isFalse);
+    expect(act0AreConsecutiveCivilDaysV1('not-a-day', '2026-03-09'), isFalse);
+  });
+
   Widget host({
     Act0ShellTabV1 tab = Act0ShellTabV1.home,
     bool showPlacementOnStart = false,
+    Act0ShellStateV1? overrideState,
   }) {
     return MaterialApp(
       supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
@@ -27,6 +50,7 @@ void main() {
       home: Act0ShellPreviewScreenV1(
         initialTab: tab,
         showPlacementOnStart: showPlacementOnStart,
+        state: overrideState,
       ),
     );
   }
@@ -88,6 +112,58 @@ void main() {
       expect(world.title, entry.value);
       expect(world.lessons, isNotEmpty, reason: '${entry.key} has no lessons.');
     }
+  });
+
+  testWidgets('Home uses current authored lesson cue after World 1', (
+    tester,
+  ) async {
+    final sample = Act0ShellStateV1.sample;
+    final world = sample
+        .worldById('world_2')
+        .copyWith(
+          status: Act0WorldStateV1.current,
+          isSelectable: true,
+          isLocked: false,
+        );
+    final selectedLesson = world.lessons.first.copyWith(
+      state: Act0LessonStateV1.current,
+      isSelectable: true,
+      isLocked: false,
+    );
+    final lessons = <Act0LessonCardV1>[
+      selectedLesson,
+      ...world.lessons.skip(1),
+    ];
+    final selectedState = Act0ShellStateV1(
+      courseTitle: sample.courseTitle,
+      courseSubtitle: sample.courseSubtitle,
+      levelLabel: sample.levelLabel,
+      xp: sample.xp,
+      xpTarget: sample.xpTarget,
+      streakDays: sample.streakDays,
+      dailyGoalLabel: sample.dailyGoalLabel,
+      dailyGoalValue: sample.dailyGoalValue,
+      pathProgressLabel: sample.pathProgressLabel,
+      selectedWorldId: 'world_2',
+      worlds: <Act0WorldCardV1>[world.copyWith(lessons: lessons)],
+      lessons: lessons,
+      review: sample.review,
+      profile: sample.profile,
+    );
+    await pumpCompact(tester, host(overrideState: selectedState));
+
+    expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
+    expect(find.text(selectedLesson.subtitle), findsOneWidget);
+    // The learner has reached World 2: preserve a truthful current world.
+    expect(find.text('Current world: Hand Discipline'), findsOneWidget);
+    expect(find.text('Week 1: train one table read'), findsNothing);
+    expect(
+      find.text(
+        'Read the legal actions first so the first real hand is not a guess.',
+      ),
+      findsNothing,
+    );
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('Act0 preview shell renders Home and opens Learn lane', (

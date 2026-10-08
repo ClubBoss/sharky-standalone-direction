@@ -209,6 +209,8 @@ class Act0HomeShellV1 extends StatelessWidget {
                   : _HomeChecklistSurfaceV1(
                       rows: checklistRows,
                       localeIsRu: _isRuLocaleV1(context),
+                      isFirstWorld: state.selectedWorld.worldId == 'world_1',
+                      currentWorldTitle: courseTitle,
                       title:
                           dailyPlanTitle ??
                           act0LocalizedSurfaceAtomV1(
@@ -793,12 +795,16 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
   const _HomeChecklistSurfaceV1({
     required this.rows,
     required this.localeIsRu,
+    required this.isFirstWorld,
+    required this.currentWorldTitle,
     required this.title,
     this.personalizedReturnReasonLine,
   });
 
   final List<Act0HomeChecklistRowV1> rows;
   final bool localeIsRu;
+  final bool isFirstWorld;
+  final String currentWorldTitle;
   final String title;
   final String? personalizedReturnReasonLine;
 
@@ -860,9 +866,13 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
               ),
               const SizedBox(height: Act0ShellTokensV1.gapXs),
               Text(
-                localeIsRu
-                    ? 'Неделя 1: тренируй одно чтение стола'
-                    : 'Week 1: train one table read',
+                isFirstWorld
+                    ? (localeIsRu
+                          ? 'Неделя 1: тренируй одно чтение стола'
+                          : 'Week 1: train one table read')
+                    : (localeIsRu
+                          ? 'Текущий мир: $currentWorldTitle'
+                          : 'Current world: $currentWorldTitle'),
                 key: const Key('act0_shell_home_week1_title'),
                 maxLines: 1,
                 overflow: TextOverflow.fade,

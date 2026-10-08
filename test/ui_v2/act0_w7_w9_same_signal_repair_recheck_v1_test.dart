@@ -709,19 +709,17 @@ Act0RunnerStateV1 _sourceRunner({
     primaryCtaLabel: 'Continue',
     nextLessonId: null,
     returnTarget: 'learn',
-    table: const Act0TableStateV1(
-      tableFormat: Act0TableFormatV1.sixMax,
-      playerCount: 6,
-      seats: <Act0SeatStateV1>[],
-      heroCards: <Act0CardStateV1>[],
-      boardCards: <Act0CardStateV1>[],
-      streetLabel: 'Preflop',
-      potLabel: '',
-      toCallLabel: '',
-      centerLabel: '',
-      highlightedSeatIds: <String>[],
-      highlightedCardIds: <String>[],
-    ),
+    // A six-max source test needs an actual six-seat table. An empty-seat
+    // synthetic table cannot be rendered by the accepted scene commitments.
+    // Reuse a real canonical table; this test assesses repair state, not art.
+    table: Act0ShellStateV1.sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'fold_check_call_raise')
+        .taskList
+        .firstWhere((task) => task.taskId == 'actions_check_drill')
+        .runner
+        .table,
   );
 }
 
@@ -814,10 +812,15 @@ Future<void> _launchPracticeQueueRepair(WidgetTester tester) async {
   final queue = find.byKey(const Key('act0_shell_play_repair_queue'));
   expect(queue, findsOneWidget);
   expect(
-    find.descendant(of: queue, matching: find.text('Practice this')),
+    find.descendant(
+      of: queue,
+      matching: find.byKey(const Key('act0_shell_play_repair_queue_item_cta')),
+    ),
     findsOneWidget,
   );
-  await tester.tap(find.text('Practice this'));
+  await tester.tap(
+    find.byKey(const Key('act0_shell_play_repair_queue_item_cta')),
+  );
   await tester.pumpAndSettle();
 }
 
