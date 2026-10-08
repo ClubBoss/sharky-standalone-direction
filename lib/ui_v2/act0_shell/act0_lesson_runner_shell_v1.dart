@@ -4115,7 +4115,12 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
                   child: Container(
                     key: const Key('act0_task_owned_practice_panel'),
                     width: double.infinity,
-                    padding: const EdgeInsets.all(14),
+                    // Preserve a 48dp Hint touch target without pushing choices
+                    // below the short-height practice dock's fixed bounds.
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: constraints.maxHeight < 650 ? 4 : 14,
+                    ),
                     decoration: BoxDecoration(
                       color: Act0ShellTokensV1.surface2,
                       borderRadius: BorderRadius.circular(20),
