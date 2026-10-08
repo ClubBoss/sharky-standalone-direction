@@ -27,7 +27,7 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
-    final recovered = state == 'recovered';
+    final recovered = state == 'recovered' || state == 'recovered-scene';
     final failedSourceRecheck = state == 'failed-recheck';
     final wrong = state == 'wrong' || failedSourceRecheck;
     final repair = state == 'repair';
@@ -65,6 +65,7 @@ void main() {
                   ? "You missed Hero's seat first. On the recheck, you used it correctly."
                   : null,
               forceShowRepairOutcomeProof: recovered,
+              sceneOwnsFeedbackExplanation: state == 'recovered-scene',
               onContinue: () {},
             ),
           ),
@@ -216,6 +217,7 @@ void main() {
         'wrong',
         'repair',
         'recovered',
+        'recovered-scene',
         'failed-recheck',
         'correct-first',
       ];
@@ -233,13 +235,38 @@ void main() {
             isNull,
             reason: '$configuration $state',
           );
+          if (state == 'recovered-scene') {
+            final proof = find.byKey(
+              const Key('act0_shell_repair_outcome_proof_line'),
+            );
+            expect(find.text('Original read proven'), findsOneWidget);
+            expect(
+              find.text(
+                "You missed Hero's seat first. On the recheck, you used it correctly.",
+              ),
+              findsOneWidget,
+            );
+            expect(proof, findsOneWidget);
+            expect(
+              tester.getRect(proof).bottom,
+              lessThanOrEqualTo(
+                tester
+                    .getRect(
+                      find.byKey(const Key('act0_shell_feedback_continue_cta')),
+                    )
+                    .top,
+              ),
+            );
+          }
           final card = find.byKey(const Key('act0_shell_feedback_card'));
           final cta = find.byKey(const Key('act0_shell_feedback_continue_cta'));
           expect(card, findsOneWidget);
           expect(cta, findsOneWidget);
           expect(
             tester.getSize(card).height,
-            lessThan(configuration.$1.height),
+            state == 'recovered-scene'
+                ? lessThanOrEqualTo(configuration.$1.height)
+                : lessThan(configuration.$1.height),
           );
           expect(
             tester.getRect(card).top,

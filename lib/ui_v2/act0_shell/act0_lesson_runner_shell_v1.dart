@@ -1319,9 +1319,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     // avoiding an empty mascot frame when feedback appears for the first time.
     unawaited(
       precacheImage(
-        AssetImage(
-          act0SharkyCompanionAssetForMoodV1(Act0SharkyMoodV1.neutral),
-        ),
+        AssetImage(act0SharkyCompanionAssetForMoodV1(Act0SharkyMoodV1.neutral)),
         context,
       ).catchError((Object _) {
         // The normal Image.asset errorBuilder remains the visible fallback.
@@ -1541,8 +1539,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     if (widget.runner.options.any((option) => option.seatId != null)) {
       return false;
     }
-    final learnerPrompt =
-        '${widget.runner.caption} ${widget.runner.question}'.toLowerCase();
+    final learnerPrompt = '${widget.runner.caption} ${widget.runner.question}'
+        .toLowerCase();
     return !learnerPrompt.contains('which seat') &&
         !learnerPrompt.contains('who acts') &&
         !learnerPrompt.contains('who is acting') &&
@@ -1585,10 +1583,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     if (plan == null || settleImmediately) {
       _tableChoreographyFrame = plan == null
           ? null
-          : act0TableChoreographyFrameAfterBeatV1(
-              plan,
-              plan.beats.length - 1,
-            );
+          : act0TableChoreographyFrameAfterBeatV1(plan, plan.beats.length - 1);
       _markHeroDecisionReadyV1(taskIdentity, notify: false);
       return;
     }
@@ -1655,26 +1650,28 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     Act0TableChoreographyBeatKindV1 kind,
   ) {
     return switch (kind) {
-      Act0TableChoreographyBeatKindV1.actionFocus =>
-        const Duration(milliseconds: 340),
-      Act0TableChoreographyBeatKindV1.commitmentMove =>
-        const Duration(milliseconds: 500),
-      Act0TableChoreographyBeatKindV1.foldRecess =>
-        const Duration(milliseconds: 340),
-      Act0TableChoreographyBeatKindV1.commitmentsCollect =>
-        const Duration(milliseconds: 300),
+      Act0TableChoreographyBeatKindV1.actionFocus => const Duration(
+        milliseconds: 340,
+      ),
+      Act0TableChoreographyBeatKindV1.commitmentMove => const Duration(
+        milliseconds: 500,
+      ),
+      Act0TableChoreographyBeatKindV1.foldRecess => const Duration(
+        milliseconds: 340,
+      ),
+      Act0TableChoreographyBeatKindV1.commitmentsCollect => const Duration(
+        milliseconds: 300,
+      ),
       Act0TableChoreographyBeatKindV1.flopReveal ||
       Act0TableChoreographyBeatKindV1.turnReveal ||
-      Act0TableChoreographyBeatKindV1.riverReveal =>
-        const Duration(milliseconds: 460),
+      Act0TableChoreographyBeatKindV1.riverReveal => const Duration(
+        milliseconds: 460,
+      ),
       Act0TableChoreographyBeatKindV1.heroDecisionReady => Duration.zero,
     };
   }
 
-  void _markHeroDecisionReadyV1(
-    String taskIdentity, {
-    bool notify = true,
-  }) {
+  void _markHeroDecisionReadyV1(String taskIdentity, {bool notify = true}) {
     if (taskIdentity != _tableChoreographyRunKey) {
       return;
     }
@@ -2994,8 +2991,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     final choreographyCommitmentSeatId =
         activeChoreographyFrame?.latestCommitmentSeatId;
     final choreographyBetOverride =
-        activeChoreographyFrame != null &&
-            choreographyCommitmentSeatId != null
+        activeChoreographyFrame != null && choreographyCommitmentSeatId != null
         ? activeChoreographyFrame.commitments[choreographyCommitmentSeatId]
         : null;
     final betOverride =
@@ -3472,9 +3468,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         table: presentationTable,
         highlightedCardIds: mergedHighlightIds,
         interactiveCalloutLabel: interactiveCallout,
-        onBoardCardTap: _heroDecisionReady
-            ? _onBoardTappedForShowdown
-            : (_) {},
+        onBoardCardTap: _heroDecisionReady ? _onBoardTappedForShowdown : (_) {},
         onChooseSeat: _heroDecisionReady ? _handleChooseSeat : null,
         visualVariant: widget.tableVisualVariant,
         showFocusBadge: !_showBottomLearningRail,
@@ -3483,13 +3477,15 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         animateBetMotion:
             choreographyCommitmentSeatId != null || trailPlaybackEnabled,
         betOverride: betOverride,
-        centerLabelOverride:
-            choreographyActive ? '' : centerStatDisplay.centerCueLabel,
+        centerLabelOverride: choreographyActive
+            ? ''
+            : centerStatDisplay.centerCueLabel,
         potLabelOverride: choreographyActive
             ? ''
             : playbackPotLabel ?? centerStatDisplay.potLabel,
-        toCallLabelOverride:
-            choreographyActive ? '' : centerStatDisplay.toCallLabel,
+        toCallLabelOverride: choreographyActive
+            ? ''
+            : centerStatDisplay.toCallLabel,
         streetLabelOverride:
             activeChoreographyFrame?.street.label ?? playbackStreetLabel,
         completionSummary: showCompletionToast
@@ -7575,30 +7571,62 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                 key: const Key('act0_shell_feedback_primary_result_block'),
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    isWrong || isRepairFocusState
-                        ? 'NEXT · REPAIR THE CLUE'
-                        : 'NEXT · KEEP THE READ',
-                    key: const Key('act0_shell_feedback_primary_result_label'),
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: tone,
-                      fontSize: 10.0,
-                      letterSpacing: 0.45,
+                  // Source-owned proof must be visible before reporting it viewed.
+                  // The scene already owns the causal explanation; this compact
+                  // slot owns the earned result without moving the table or CTA.
+                  if (isRecoveredSourceRecheck) ...[
+                    Text(
+                      companionRoleLabel,
+                      key: const Key(
+                        'act0_shell_feedback_primary_result_label',
+                      ),
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: tone,
+                        fontSize: 10.0,
+                        letterSpacing: 0.45,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    nextActionLine,
-                    key: const Key('act0_shell_feedback_rhythm_verdict'),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: Act0ShellTokensV1.body.copyWith(
-                      color: Act0ShellTokensV1.text,
-                      fontSize: 13.2,
-                      height: 1.14,
-                      fontWeight: FontWeight.w800,
+                    const SizedBox(height: 2),
+                    Text(
+                      repairOutcomeProofLine,
+                      key: const Key('act0_shell_repair_outcome_proof_line'),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Act0ShellTokensV1.body.copyWith(
+                        color: Act0ShellTokensV1.text,
+                        fontSize: 11.4,
+                        height: 1.10,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
-                  ),
+                  ] else ...[
+                    Text(
+                      isWrong || isRepairFocusState
+                          ? 'NEXT · REPAIR THE CLUE'
+                          : 'NEXT · KEEP THE READ',
+                      key: const Key(
+                        'act0_shell_feedback_primary_result_label',
+                      ),
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: tone,
+                        fontSize: 10.0,
+                        letterSpacing: 0.45,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      nextActionLine,
+                      key: const Key('act0_shell_feedback_rhythm_verdict'),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Act0ShellTokensV1.body.copyWith(
+                        color: Act0ShellTokensV1.text,
+                        fontSize: 13.2,
+                        height: 1.14,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -10156,69 +10184,67 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
         ? Act0ShellTokensV1.gold
         : Act0ShellTokensV1.primary;
     return Container(
-          decoration: BoxDecoration(
-            color: Act0ShellTokensV1.surface2.withValues(alpha: 0.9),
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPanel),
-            border: Border.all(color: Act0ShellTokensV1.border),
-          ),
-          padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      decoration: BoxDecoration(
+        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.9),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPanel),
+        border: Border.all(color: Act0ShellTokensV1.border),
+      ),
+      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: tone.withValues(alpha: 0.16),
-                      borderRadius: BorderRadius.circular(
-                        Act0ShellTokensV1.radiusPill,
-                      ),
-                    ),
-                    child: Text(
-                      'One clean read',
-                      key: const Key('act0_shell_block_summary_xp_gain'),
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: tone,
-                        letterSpacing: 0.4,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: Act0ShellTokensV1.gapSm),
-                  Expanded(
-                    child: Text(
-                      'Local read saved',
-                      key: const Key('act0_shell_block_summary_xp_total'),
-                      maxLines: 1,
-                      overflow: TextOverflow.fade,
-                      textAlign: TextAlign.right,
-                      style: Act0ShellTokensV1.body.copyWith(
-                        color: Act0ShellTokensV1.text,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(
-                  Act0ShellTokensV1.radiusPill,
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
                 ),
-                child: LinearProgressIndicator(
-                  key: const Key('act0_shell_block_summary_xp_progress'),
-                  minHeight: 8,
-                  value: summary.xpEarned <= 0 ? 0.0 : 1.0,
-                  backgroundColor: Act0ShellTokensV1.surface3,
-                  color: tone,
+                decoration: BoxDecoration(
+                  color: tone.withValues(alpha: 0.16),
+                  borderRadius: BorderRadius.circular(
+                    Act0ShellTokensV1.radiusPill,
+                  ),
+                ),
+                child: Text(
+                  'One clean read',
+                  key: const Key('act0_shell_block_summary_xp_gain'),
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: tone,
+                    letterSpacing: 0.4,
+                  ),
+                ),
+              ),
+              const SizedBox(width: Act0ShellTokensV1.gapSm),
+              Expanded(
+                child: Text(
+                  'Local read saved',
+                  key: const Key('act0_shell_block_summary_xp_total'),
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
+                  textAlign: TextAlign.right,
+                  style: Act0ShellTokensV1.body.copyWith(
+                    color: Act0ShellTokensV1.text,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
               ),
             ],
           ),
-        );
+          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+            child: LinearProgressIndicator(
+              key: const Key('act0_shell_block_summary_xp_progress'),
+              minHeight: 8,
+              value: summary.xpEarned <= 0 ? 0.0 : 1.0,
+              backgroundColor: Act0ShellTokensV1.surface3,
+              color: tone,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -10698,85 +10724,78 @@ class _CompletionToastV1 extends StatelessWidget {
     final tone = summary.leveledUp
         ? Act0ShellTokensV1.gold
         : Act0ShellTokensV1.primary;
-    final onTableOverlay =
-        overlayStyle == _CompletionToastOverlayStyleV1.table;
+    final onTableOverlay = overlayStyle == _CompletionToastOverlayStyleV1.table;
     return Container(
       key: const Key('act0_shell_completion_toast'),
-              constraints: BoxConstraints(
-                minWidth: onTableOverlay ? 164 : 176,
-                maxWidth: onTableOverlay ? 204 : 220,
-              ),
-              padding: EdgeInsets.symmetric(
-                horizontal: onTableOverlay ? 11 : 12,
-                vertical: onTableOverlay ? 8 : 10,
-              ),
-              decoration: BoxDecoration(
-                color: onTableOverlay
-                    ? Act0ShellTokensV1.surface2.withValues(alpha: 0.88)
-                    : Act0ShellTokensV1.surface2.withValues(alpha: 0.96),
-                borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
-                border: Border.all(
-                  color: tone.withValues(alpha: onTableOverlay ? 0.24 : 0.34),
+      constraints: BoxConstraints(
+        minWidth: onTableOverlay ? 164 : 176,
+        maxWidth: onTableOverlay ? 204 : 220,
+      ),
+      padding: EdgeInsets.symmetric(
+        horizontal: onTableOverlay ? 11 : 12,
+        vertical: onTableOverlay ? 8 : 10,
+      ),
+      decoration: BoxDecoration(
+        color: onTableOverlay
+            ? Act0ShellTokensV1.surface2.withValues(alpha: 0.88)
+            : Act0ShellTokensV1.surface2.withValues(alpha: 0.96),
+        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+        border: Border.all(
+          color: tone.withValues(alpha: onTableOverlay ? 0.24 : 0.34),
+        ),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: Colors.black.withValues(alpha: onTableOverlay ? 0.10 : 0.24),
+            blurRadius: onTableOverlay ? 8 : 18,
+            offset: Offset(0, onTableOverlay ? 3 : 8),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Read banked',
+                  key: const Key('act0_shell_completion_toast_reward_label'),
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
+                  style: Act0ShellTokensV1.label.copyWith(
+                    color: tone,
+                    letterSpacing: onTableOverlay ? 0.16 : 0.25,
+                    fontSize: onTableOverlay ? 9.0 : null,
+                  ),
                 ),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                    color: Colors.black.withValues(
-                      alpha: onTableOverlay ? 0.10 : 0.24,
-                    ),
-                    blurRadius: onTableOverlay ? 8 : 18,
-                    offset: Offset(0, onTableOverlay ? 3 : 8),
-                  ),
-                ],
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'Read banked',
-                          key: const Key(
-                            'act0_shell_completion_toast_reward_label',
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.fade,
-                          style: Act0ShellTokensV1.label.copyWith(
-                            color: tone,
-                            letterSpacing: onTableOverlay ? 0.16 : 0.25,
-                            fontSize: onTableOverlay ? 9.0 : null,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: onTableOverlay ? 2 : 3),
-                  Text(
-                    'Table read improved',
-                    key: const Key('act0_shell_completion_toast_total'),
-                    maxLines: 1,
-                    overflow: TextOverflow.fade,
-                    style: Act0ShellTokensV1.body.copyWith(
-                      fontWeight: FontWeight.w900,
-                      fontSize: onTableOverlay ? 10.8 : 11.5,
-                    ),
-                  ),
-                  SizedBox(height: onTableOverlay ? 5 : 6),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                      Act0ShellTokensV1.radiusPill,
-                    ),
-                    child: LinearProgressIndicator(
-                      key: const Key('act0_shell_completion_toast_progress'),
-                      minHeight: onTableOverlay ? 5 : 6,
-                      value: summary.xpGain <= 0 ? 0.0 : 1.0,
-                      backgroundColor: Act0ShellTokensV1.surface3,
-                      color: tone,
-                    ),
-                  ),
-                ],
-              ),
+            ],
+          ),
+          SizedBox(height: onTableOverlay ? 2 : 3),
+          Text(
+            'Table read improved',
+            key: const Key('act0_shell_completion_toast_total'),
+            maxLines: 1,
+            overflow: TextOverflow.fade,
+            style: Act0ShellTokensV1.body.copyWith(
+              fontWeight: FontWeight.w900,
+              fontSize: onTableOverlay ? 10.8 : 11.5,
+            ),
+          ),
+          SizedBox(height: onTableOverlay ? 5 : 6),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+            child: LinearProgressIndicator(
+              key: const Key('act0_shell_completion_toast_progress'),
+              minHeight: onTableOverlay ? 5 : 6,
+              value: summary.xpGain <= 0 ? 0.0 : 1.0,
+              backgroundColor: Act0ShellTokensV1.surface3,
+              color: tone,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -11163,10 +11182,9 @@ class _Act0TableV1 extends StatelessWidget {
                 children: [
                   Positioned.fill(
                     child: ValueListenableBuilder<bool>(
-                      valueListenable:
-                          Act0SceneHybridShellRegistryV1
-                              .shellStore
-                              .readyNotifier,
+                      valueListenable: Act0SceneHybridShellRegistryV1
+                          .shellStore
+                          .readyNotifier,
                       builder: (context, hybridShellReady, _) => Container(
                         key: const Key('act0_shell_table_felt'),
                         // RENDER_CLASS_HYBRID_INTEGRATION_V1: once the baked
@@ -11196,9 +11214,7 @@ class _Act0TableV1 extends StatelessWidget {
                   ),
                   ValueListenableBuilder<bool>(
                     valueListenable:
-                        Act0SceneHybridShellRegistryV1
-                            .shellStore
-                            .readyNotifier,
+                        Act0SceneHybridShellRegistryV1.shellStore.readyNotifier,
                     builder: (context, hybridShellReady, _) =>
                         integratedPerspectivePrototype && !hybridShellReady
                         ? const Positioned.fill(
