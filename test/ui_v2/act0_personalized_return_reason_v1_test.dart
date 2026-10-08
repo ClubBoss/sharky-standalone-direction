@@ -131,9 +131,21 @@ void main() {
       ),
     );
 
-    expect(reason.reasonType, act0ReturnReasonReinforceRecentImprovementV1);
+    expect(reason.reasonType, act0ReturnReasonReinforceStableTransferV1);
+    expect(reason.messageKey, act0ReturnReasonMessageReinforceStableTransferV1);
+    expect(
+      reason.copyLine,
+      'You kept this clue steady on a later hand. Reinforce it once more.',
+    );
+    expect(reason.copyLine, isNot(contains('better')));
     expect(reason.copyLine, isNot(contains('mastered')));
     expect(reason.copyLine, isNot(contains('fixed forever')));
+    expect(
+      reason.toTelemetryPayload()['reason_type'],
+      act0ReturnReasonReinforceStableTransferV1,
+    );
+    expect(reason.recommendedAction, 'reinforce');
+    expect(reason.priorityClass, 3);
   });
 
   test('insufficient transfer evidence is ignored', () {
