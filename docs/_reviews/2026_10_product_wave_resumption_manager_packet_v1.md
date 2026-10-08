@@ -58,7 +58,7 @@ DoD: exact main SHA + observed test outputs + explicit PASS/FAIL for existing me
 
 ## Wave W2 - Mechanics-first product integrity
 
-Wave W1 machine audit is in `docs/_reviews/2026_10_act0_learning_engine_truth_audit_v1.md`. W2 found a real high-EV missing-payoff defect: `learning_effect_delta_viewed` was emitted while the scene-owned feedback omitted the earned proof line. Draft PR #226 head `e878623` fixes only this seam, preserves the CTA and earns responsive proof. Local format/analyze, 70/70 learning policies and release gate (105 selected tests) PASS; exact-head CI and manager acceptance remain the active gate. Original geometry/route mismatches are not silently closed.
+Wave W1 machine audit is in `docs/_reviews/2026_10_act0_learning_engine_truth_audit_v1.md`. W2 found a real high-EV missing-payoff defect: `learning_effect_delta_viewed` was emitted while the scene-owned feedback omitted the earned proof line. Draft PR #226 head `e878623` fixes only this seam, preserves the CTA and earns responsive proof. Local format/analyze, 70/70 learning policies and release gate (105 selected tests) PASS; exact-head own GitHub CI now green and manager acceptance/merge separately pending. Wave W3 independent exact-head rerun remains 39 pass/5 fail across the old route cone: three old locator/copy assumptions and two measured geometry hypotheses. Report: `docs/_reviews/2026_10_wave3_mechanics_route_truth_v1.md`. Pilot readiness packet: `docs/_reviews/2026_10_early_mechanics_pilot_preflight_v1.md`. Machine evidence does NOT equal Human proof. Original geometry/route mismatches are not silently closed.
 
 After W1 disposition: verify the continuous first-session learner route, task decision, explanatory feedback, same-signal repair, recheck, progression, next useful practice, Review/return and telemetry trace on existing current render/placeholder. Use source-owned state, not handcrafted visual claims. Close a proven contradictory route only; otherwise freeze mechanisms candidate. Successful machine proof does not establish user learning.
 
@@ -88,7 +88,7 @@ After bounded learner proof, pursue real-device UX, repeatable release gate, fin
 
 ## Immediate continuation contract
 
-`NEXT_WAVE = W2_PR226_EARNED_PROOF_EXACT_HEAD_ACCEPTANCE`
+`NEXT_WAVE = W4_EARLY_MECHANICS_PILOT_CANDIDATE_SMOKE_AND_ADMISSION`
 `PR224_MERGE = FORBIDDEN_UNTIL_OWNER_ACCEPTANCE`
 `TABLE_ACTION_AND_STREET_MOTION_V1 = MERGED_PR222 / REASSESS_OWNED_EVIDENCE`
 `ART_COMPLETION = DEFERRED_UNTIL_BEFORE_PREMIUM_SHIP / PLACEHOLDER_ALLOWED`
