@@ -58,7 +58,7 @@ DoD: exact main SHA + observed test outputs + explicit PASS/FAIL for existing me
 
 ## Wave W2 - Mechanics-first product integrity
 
-Wave W1 machine-audit results and exact reproducible baseline failure classification are in `docs/_reviews/2026_10_act0_learning_engine_truth_audit_v1.md`. No speculative product mutation is admitted from failing old widget assertions. W2 must first falsify real post-choice actionability and Review continuation at the accepted placeholder viewport, with one actual defect before repair.
+Wave W1 machine audit is in `docs/_reviews/2026_10_act0_learning_engine_truth_audit_v1.md`. W2 found a real high-EV missing-payoff defect: `learning_effect_delta_viewed` was emitted while the scene-owned feedback omitted the earned proof line. Draft PR #226 head `e878623` fixes only this seam, preserves the CTA and earns responsive proof. Local format/analyze, 70/70 learning policies and release gate (105 selected tests) PASS; exact-head CI and manager acceptance remain the active gate. Original geometry/route mismatches are not silently closed.
 
 After W1 disposition: verify the continuous first-session learner route, task decision, explanatory feedback, same-signal repair, recheck, progression, next useful practice, Review/return and telemetry trace on existing current render/placeholder. Use source-owned state, not handcrafted visual claims. Close a proven contradictory route only; otherwise freeze mechanisms candidate. Successful machine proof does not establish user learning.
 
@@ -88,7 +88,7 @@ After bounded learner proof, pursue real-device UX, repeatable release gate, fin
 
 ## Immediate continuation contract
 
-`NEXT_WAVE = W2_POST_CHOICE_CONTINUATION_AND_ACTIONABILITY_EVIDENCE`
+`NEXT_WAVE = W2_PR226_EARNED_PROOF_EXACT_HEAD_ACCEPTANCE`
 `PR224_MERGE = FORBIDDEN_UNTIL_OWNER_ACCEPTANCE`
 `TABLE_ACTION_AND_STREET_MOTION_V1 = MERGED_PR222 / REASSESS_OWNED_EVIDENCE`
 `ART_COMPLETION = DEFERRED_UNTIL_BEFORE_PREMIUM_SHIP / PLACEHOLDER_ALLOWED`
