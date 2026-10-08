@@ -15366,6 +15366,7 @@ _DecisionHintV1? _resolveDecisionHintV1({
   }
   final quickHint = _genericDecisionHintV1(
     taskFamily: taskFamily,
+    focusText: question.trim().isNotEmpty ? question : prompt,
     text:
         '$prompt $question $supportLine '
         '${runner.lessonTitle} ${runner.lessonSubtitle}',
@@ -15387,25 +15388,51 @@ _DecisionHintV1? _resolveDecisionHintV1({
 
 String _genericDecisionHintV1({
   required Act0TaskFamilyV1? taskFamily,
+  required String focusText,
   required String text,
 }) {
+  // The question carries the task's subject. Lesson support may mention
+  // pot, seats and cards together, so it must not override that subject.
+  final focus = focusText.toLowerCase();
   final normalized = text.toLowerCase();
-  if (taskFamily == Act0TaskFamilyV1.sizing ||
-      taskFamily == Act0TaskFamilyV1.counting ||
-      normalized.contains('pot') ||
-      normalized.contains('chip') ||
-      normalized.contains('matched')) {
-    return 'Count only chips that are actually in the pot or matched.';
+  final isBoardFocus =
+      focus.contains('board') ||
+      focus.contains('community card') ||
+      focus.contains('flop') ||
+      focus.contains('river');
+  if (isBoardFocus &&
+      (taskFamily == Act0TaskFamilyV1.counting ||
+          focus.contains('how many') ||
+          focus.contains('count'))) {
+    return 'Track the community cards street by street, not chips in the pot.';
   }
-  if (normalized.contains('position') ||
-      normalized.contains('seat') ||
-      normalized.contains('button') ||
-      normalized.contains('btn') ||
-      normalized.contains('utg') ||
-      normalized.contains('blind')) {
+  if (focus.contains('position') ||
+      focus.contains('seat') ||
+      focus.contains('button') ||
+      focus.contains('btn') ||
+      focus.contains('utg') ||
+      focus.contains('blind')) {
     return 'Start from the button, then follow seat order.';
   }
-  if (taskFamily == Act0TaskFamilyV1.recognition ||
+  if (taskFamily == Act0TaskFamilyV1.sizing ||
+      focus.contains('pot') ||
+      focus.contains('chip') ||
+      focus.contains('matched')) {
+    return 'Count only chips that are actually in the pot or matched.';
+  }
+  if (focus.contains('action') ||
+      focus.contains('fold') ||
+      focus.contains('check') ||
+      focus.contains('call') ||
+      focus.contains('raise') ||
+      focus.contains('bet')) {
+    return 'Name the action before choosing what it means.';
+  }
+  if (taskFamily == Act0TaskFamilyV1.counting) {
+    return 'Count only the items named in the question.';
+  }
+  if (isBoardFocus ||
+      taskFamily == Act0TaskFamilyV1.recognition ||
       taskFamily == Act0TaskFamilyV1.compare ||
       normalized.contains('board') ||
       normalized.contains('card') ||
@@ -15424,6 +15451,19 @@ String _genericDecisionHintV1({
       normalized.contains('raise') ||
       normalized.contains('bet')) {
     return 'Name the action before choosing what it means.';
+  }
+  if (normalized.contains('position') ||
+      normalized.contains('seat') ||
+      normalized.contains('button') ||
+      normalized.contains('btn') ||
+      normalized.contains('utg') ||
+      normalized.contains('blind')) {
+    return 'Start from the button, then follow seat order.';
+  }
+  if (normalized.contains('pot') ||
+      normalized.contains('chip') ||
+      normalized.contains('matched')) {
+    return 'Count only chips that are actually in the pot or matched.';
   }
   return 'Start with what is visible on the table.';
 }
