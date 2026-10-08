@@ -100,6 +100,17 @@ P0 evidence needs before ranking products by quality:
 
 Stop rule: if source is marketing or anecdotal, label it so. A novel flashy competitor feature is a **deferred opportunity** until measured incremental EV against Sharky's active stage.
 
+## October 8 first-ten-minute source addendum
+
+Research evidence updated for onboarding and the latest known **dated** official release history; do not mix stale crawl-relative time descriptions with release dates.
+
+- **Poker Skill:** official pricing https://www.pokerskill.com/pricing/ confirms daily puzzle + short lessons + one free coached AI game/day, with optional Plus and energy-gated lesson pacing. App Store version history https://apps.apple.com/gb/app/poker-skill-learn-holdem/id6748104711 shows **2.1.39 released Aug 21, 2026**, adding star-based Daily Missions, music continuity and two tailored onboarding puzzles per play-frequency path. Do not call these new *today*. One user review https://apps.apple.com/us/app/poker-skill-learn-holdem/id6748104711?see-all=reviews complains of answer-leaking hints and another of energy/curriculum friction; developer responds about guidance and test-forward. Evidence B/D only; fix may already exist in the current release.
+- **WSOP Academy:** official https://www.wsopacademy.com/ and Apple https://apps.apple.com/us/app/wsop-academy/id6762133819 market Poker IQ, Daniel Negreanu, challenger modes and ladders, plus a limited free unit Challenger tier. Its App Store 1.8.1 history says Sep 5, 2026. A user says test felt like a quiz before lesson; anecdote, not independently reproduced.
+- **PokerArena:** official https://gtowizard.com/pokerarena documents ranked and casual HU with solver-linked review and requires account to begin. Its OWN page has conflicting language: it claims free GTO analysis after every match in FAQ/hero, but another page segment refers to solver review being available via GTO Wizard subscription. No entitlement certainty until a real logged-in free scenario. The same public site markets Season 10, not a confirmed same-device first-ten-minute experience.
+- **Runout:** Apple https://apps.apple.com/us/app/runout-poker-trainer-gto-coach/id6760210288?see-all=reviews contains an Aug 17 anecdote about extended onboarding and an immediate paywall, alongside other users praising the explanations of *why*. Hypothesis: pressure before delivered value may reduce trust, but app-version/locale and universal rollout remain unverified.
+
+**Implication:** the competitive acquisition battle is increasingly about fast player-specific onboarding, meaningful first decision, controlled educational excitement and accessible replay—not simply XP/streak feature parity. For proper evidence collection and score definitions, see `docs/_reviews/2026_10_first_ten_minutes_competitive_gauntlet_v1.md`.
+
 ## Evidence-state verdict
 
 `PUBLIC_COMPETITOR_DISCOVERY = COMPLETE_FIRST_PASS`
