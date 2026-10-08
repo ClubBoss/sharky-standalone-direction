@@ -20,6 +20,18 @@ Main confirmed via all three PR bases: `bdf560f0d90d9659335f6492149c373842f655b1
 - Unmerged code/doc PRs are **not** baseline main and do not automatically change product claims.
 - Protected dirty Mac checkout `/Users/elmarsalimzade/Sharky_1.0` is excluded from any operations.
 
+## 0A. Independent exact-SHA native launch smoke (after research baseline)
+
+An earlier isolated Mac iOS build completed during this research pass, so one **targeted** Desktop Commander check was justified despite GitHub-first policy:
+- Exact `PR #226 HEAD = e87862309817f2f27f9db8bb51afbfd118f8310f`;
+- Xcode 26.2, Flutter iOS Simulator Debug build `EXIT_CODE=0`, build time ~575 seconds; installed `Runner.app` (`com.example.pokerAnalyzer`) on iOS 26.2 **iPhone 16e Simulator**;
+- `simctl launch` succeeded and a local-only first-screen PNG was captured:
+  `/tmp/sharky_pr226_first_run_iphone16e_20261008.png`;
+- Visually inspected screenshot: branded `Sharky Poker` welcome, starter tile `Find your start`, footer explanatory line and primary `Find my start` CTA are visible, with no clipping/blank screen/crash on this frame;
+- The central part of the screen contains a large empty field in this screenshot. Its effect on perceived fun/quality is an **unverified observation**, NOT permission for screenshot-driven cosmetic repair.
+
+This is `NATIVE_FIRST_SCREEN_SMOKE_PASS` ONLY. No tap/navigation, subsequent lesson, payment, error repair, Human comprehension, competitor app or Day-2 return was examined through this screenshot. Do not upgrade broader UI or P02 claims.
+
 ## 1. Product differentiation and evidence hierarchy
 
 Preserve exact Master Plan v4 product promise:
