@@ -104,6 +104,19 @@ This is a **code inspection of the current Act0 shell**, not an in-app Human ass
 
 Implication for wave selection: **do not create a new streak, daily-goal, calendar review or personalization subsystem on the assumption that Sharky lacks it.** The likely missing evidence is real *experience quality and learning effect* of already wired mechanics. Ask humans whether 3 reps is satisfying, if they perceive a compelling optional next challenge, and whether Review is useful tomorrow. Only then attack a demonstrated seam.
 
+## 3A.1. Welcome is already an interactive learning micro-win (CURRENT source wins over old audit)
+
+A June/July historical PIEC claimed no pre-lesson interactive micro-aha, but a later implementation was already accepted and `main` still includes it. `lib/ui_v2/act0_shell/act0_welcome_shell_v1.dart:12-13,33-62,80-136` now renders three beats `intro → demoSpot → handoff`, with `Act0LessonRunnerShellV1` using the existing W1 `fold_check_call_raise/actions_check_drill` and real choice/feedback. The micro-win intentionally earns no fake XP, task completion, repair debt or mastery.
+
+This source fact **supersedes** the older `docs/_reviews/welcome_placement_micro_aha_alignment_piec_v1.md` conclusion at historical SHA `86512b2`. `docs/_reviews/archive/2026-07/welcome_first_micro_win_alignment_v1.md` documents the later change; don't reimplement it. Its user enjoyment, comprehension and downstream retention remain **UNMEASURED**.
+
+Independent exact-head PR226 local Mac Flutter test evidence for this wave:
+- four active activation suites: **39/39 PASS**;
+- adding `act0_p3_split_e2e_v1_test.dart`: **40 PASS / 2 FAIL** (both old lesson-tile location expectations, not an established new product bug). Record the full extended suite as FAIL, do not hide or force obsolete widgets back;
+- files/logs unchanged except ignored local logs; Flutter generated macOS registrant restored in isolated checkout.
+
+This means the next high-EV challenge is **whether the existing Welcome decision feels like a meaningful, interesting achievement**, not inventing another intro mini-game or redoing the screenshot pipeline. See `docs/_reviews/2026_10_competitive_engagement_attack_wave_bundle_v1.md`.
+
 ## 3B. Important existing telemetry/protocol mismatch (not a reason to broaden app scope)
 
 Source checked, not guessed:
