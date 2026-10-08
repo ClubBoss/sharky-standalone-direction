@@ -1,13 +1,13 @@
 # Current Execution Handoff v1
 
 Status: CURRENT-STATE CONTINUATION AID / NON-AUTHORITY (September historical body; October overlay is newer)
-Freshness date: 2026-09-10
+Freshness date: 2026-10-09 (October handoff overlay; September authoring material retained)
 Repository: `ClubBoss/sharky-standalone-direction`
 
-Authority hierarchy:
+Authority hierarchy (effective only upon verified docs-only PR #242 merge):
 
-1. `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
-2. `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`
+1. `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md` — principal; v4 unchanged as history
+2. `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` — exact current dispatch
 3. `docs/_reviews/owner_pre_p02_north_star_convergence_rebaseline_v1.md`
 4. `docs/_reviews/owner_cycle_d_structural_closure_and_v2_production_admission_v1.md`
 5. this file only as a compressed continuation aid.

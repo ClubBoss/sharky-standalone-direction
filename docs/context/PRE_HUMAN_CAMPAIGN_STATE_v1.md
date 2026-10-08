@@ -1,7 +1,7 @@
 # Pre-Human Campaign State v1
 
 Status: `PRE_P02_NORTH_STAR_CONVERGENCE_ACTIVE`
-Freshness date: 2026-09-12
+Freshness date: 2026-10-09 (October exact-dispatch overlay; September material retained as history)
 Repository: `ClubBoss/sharky-standalone-direction`
 
 This file carries the current dispatch beneath the owner-approved v5 roadmap
