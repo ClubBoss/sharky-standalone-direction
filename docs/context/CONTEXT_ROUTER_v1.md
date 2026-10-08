@@ -2,6 +2,12 @@
 
 Status: ACTIVE NAVIGATION COMPANION ONLY.
 
+Master Plan v5 adoption is **pending**: `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md`
+remains a candidate, and `docs/plan/MASTER_PLAN_V5_ADOPTION_PREP_v1.md`
+is a non-authoritative checklist. The v4 and campaign pointers in this router
+remain in force until owner approval, reviewed docs-only promotion, and a
+verified merge; do not infer Learning Trust or P02 closure from this notice.
+
 Purpose: route agents to the smallest task-specific source set. It does not own
 product direction, next-wave selection, evidence admission, or closure.
 
