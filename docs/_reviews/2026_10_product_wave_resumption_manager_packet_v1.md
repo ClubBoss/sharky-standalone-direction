@@ -7,8 +7,7 @@ Repository: ClubBoss/sharky-standalone-direction
 ## Authority and scope
 
 The principal product authority remains `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`.
-This packet only restores exact post-pause execution truth and proposes bounded next waves.
-It does not authorize a new roadmap, visual redesign, merge, app release, or unbounded feature expansion.
+Owner's 2026-10-08 scope decision admits prioritizing learner-mechanics and learning-efficacy evidence now, with V4R1 / final art temporarily deferred as a placeholder visual family. This is a bounded owner-directed sequencing change, not permission for a new engine, broad redesign, merge, release, or content expansion.
 Run one implementation family at a time and reassess after each acceptance.
 
 Verified on 2026-10-08:
@@ -22,7 +21,8 @@ Verified on 2026-10-08:
 - For PR #224, GitHub workflow results: Health, Theory Integrity, R5 release gate, Test Authority Lanes and Sharky Web QA Mirror succeeded; conditional L2 skipped. A separate third-party TestSprite Pre-Check status shows `failure / No tests detected`. Do not equate that signal with the repository's owned GitHub workflows.
 - The final prior executor report `PR224_SB_COMMITMENT_CLEARANCE_FINAL_REPAIR` states `READY_FOR_MANAGER_REVIEW`, not owner acceptance. It reports 91/91 scoped checks, an end-to-end local release gate, and exact-SHA 375/402/430 rendered evidence. Treat report claims as evidence to review, not as fresh independent acceptance.
 - The report states `C3` failure in the `theory` surface was pre-existing, independent of the SB delta, and conflicts with `C1` within SB-only scope. Do not silently certify it resolved.
-- The authorized local Mac is currently offline through the connected Desktop Commander service. Do not claim new native/iOS inspection or local tests.
+- The authorized Mac reconnected on 2026-10-08. Its protected checkout at `/Users/elmarsalimzade/Sharky_1.0` is dirty and 106 commits behind remote main: DO NOT TOUCH. A clean detached main audit worktree at `/Users/elmarsalimzade/Sharky_Brain_Audit_2026-10-08` is pinned to `bdf560f`.
+- Isolated PR #224 review checkout exists at `/Users/elmarsalimzade/Sharky_Review_PR224_2026-10-08`, pinned to `bd2046e` and clean. `sharky_v4r1_support_final_output_donor1.zip` exists on Mac: its prior asset verdict says PASS; 8/10 integrated asset SHA256 values match that source, while CO plate + CO human effect mask differ. This discrepancy is parked for the later art wave, not silently certified.
 
 ## Wave discipline
 
@@ -43,44 +43,42 @@ Actions:
 DoD: current main, PR status, no stale implementation dispatch, one active candidate, and explicit pending evidence are documented.
 No product, asset, or test file changes.
 
-## Wave W1 - PR #224 V4R1 production-art acceptance
+## Wave W1 - Learning-engine truth audit (CURRENT; NO ART MUTATION)
 
-Target: finish the already-open production visual defect family; do not restart art direction.
+Owner-approved goal: prove what the already-implemented source-owned Act0 learner loop actually does, rather than starting another generic AI subsystem.
 
-Required acceptance evidence:
-- Native/200%-scale visual inspection of final exact-SHA runtime images and composition, including one physical table rather than a duplicated hull.
-- All five seats plus Hero form a convincing coherent six-handed ring; chair/rail/arm contact and seat ownership read naturally.
-- CO frame-edge/support is examined against its admitted bounded source; no new regeneration, scaling, seat movement, or scene replacement without new owner admission.
-- SB/BB/HJ/CO own card/label/chip clearance at compact/nominal/large widths.
-- Active and folded/inactive states preserve distinct human-only treatments without corrupting chair/support.
-- Board, pot, Hero hands/cards, Coach and learning controls remain readable.
-- The pre-existing `C3` theory-state exception is explicitly adjudicated as a true route blocker, an accepted bounded non-route exception, or a separately scoped evidence-backed repair. Do not hide it in green aggregates.
-- Fresh exact-head repository workflow/CI statuses, formatter, analyzer and relevant Flutter suites are inspected. The third-party TestSprite status is classified separately by provenance and blocking policy.
-- No merge until an owner-visible verdict: `W1_ACCEPTED`, `W1_BLOCKED_EVIDENCE`, or `W1_REPAIR_REQUIRED`.
+Entry: clean main `bdf560f`, no changes to PR #224 or legacy checkout.
+1. Read only active Act0 learning-state/policies plus specific tests for decision integrity, causal feedback, same-signal repair, reduced-scaffold proof, unseen transfer, retention, and personalized next rep.
+2. Run the smallest relevant local test/analysis/fast-loop cone and inspect real results. Identify the first real learner-facing mechanistic blocker, if one exists.
+3. Use a single falsifiable, high-EV hypothesis. If no machine-proven defect emerges, record `NO_IMPLEMENT_NOW` and advance directly to eligible Human evidence planning rather than inventing tests/features.
+4. For a proven defect, implement one bounded fix on a fresh separate PR, preserve source-owned contracts and user_choice/correctness/error_type/time_to_decision telemetry, English/Russian where touched, and rollback on failed relevant gates.
+5. No further UI polish, art regeneration, new dependency, Persona, ML or old AI Coach architecture.
 
-If the exact-SHA visual artifacts or native device are unavailable, stop at `W1_BLOCKED_EVIDENCE`; do not substitute historical art screenshots or synthetic AI review.
+DoD: exact main SHA + observed test outputs + explicit PASS/FAIL for existing mechanisms + one accepted high-EV follow-up or honest no-change disposition.
 
-## Wave W2 - Pre-P02 machine convergence and candidate freeze
+## Wave W2 - Mechanics-first product integrity
 
-Only after W1 disposal. Reassess the existing A-F lanes against actual merged source, run a bounded holistic North Star challenger and one confirmatory pass, freeze an exact candidate, and pass the cheap machine falsifiers. No broad UX redesign. Owner explicit P02 admission is mandatory.
+After W1 disposition: verify the continuous first-session learner route, task decision, explanatory feedback, same-signal repair, recheck, progression, next useful practice, Review/return and telemetry trace on existing current render/placeholder. Use source-owned state, not handcrafted visual claims. Close a proven contradictory route only; otherwise freeze mechanisms candidate. Successful machine proof does not establish user learning.
 
-## Wave W3 - P02 human novice proof
+## Wave W3 - Early novice diagnostics (NOT P02 BY DEFAULT)
 
-Run the eligible real-human session protocol on the frozen candidate. Test first-run comprehension, uncoached decision, wrong-feedback understanding, same-signal repair, next useful rep and desire to continue. Record observed outcomes and classify defects separately from missing human evidence. Address only evidence-backed high-EV issues and rerun affected proof.
+Run only an owner-admitted bounded Human mechanics/learning-flow pilot using the existing legible placeholder UI. Measure SEE/DECIDE/UNDERSTAND/REPAIR/PROVE flow and user confusion without pretending to evaluate premium final-art desirability. This does not automatically satisfy the full P02 North Star gate or override its explicit admission conditions. Classify actual learner blockers and re-run targeted evidence after repairs.
 
-## Wave W4 - Learning-effect validation
+## Wave W4 - Transfer, retention, and personalization payoff
 
-When admitted after Human QA, measure transfer to unseen poker spots, accuracy without scaffold, decision latency without accuracy loss, Day-2 / Day-7 retention and personalized-next-step effect. No claims of improvement without eligible human/longitudinal evidence.
+After appropriate admission, perform source-equivalent unseen transfer and 24h/72h/7d scheduling/Day-2/Day-7 observations, accuracy + decision-time behavior, personalized next rep, and next-session return reason. Avoid reimplementing existing policies; repair only proven learning-loss mechanisms. Human and longitudinal efficacy require real Human evidence.
 
-## Wave W5 - Final art completion (REGISTERED, DEFERRED UNTIL GATE)
+## Wave W5 - V4R1/final art completion (DEFERRED, REQUIRED BEFORE PREMIUM SHIP)
 
-The paused artist/designer handoff remains an explicit deliverable, not forgotten debt:
-- Production art for the five seated opponents plus Hero is reviewed against the accepted V4 composition.
-- The designer's engaged/all-active and disengaged/inactive character variants are preserved as candidate source art, subject to seat registration, visual continuity, runtime semantic ownership and no quality loss.
-- Complete the final art integration, original approved premium look, and realistic seated embodiment only when W1 evidence identifies an actual blocker or a later separately admitted Human/product review establishes material EV.
-- Keep unfinished visual exploration out of W2/W3 otherwise. Final art is not automatically a pre-P02 blocker and cannot override the accepted shell.
-- Explicit DoD: exact accepted assets, active/inactive parity, readable mobile scene, regression proof, and owner acceptance.
-- Stop at diminishing returns; no indefinite cosmetic loop.
+Current V4R1 art is an interim placeholder; do not delete or rewrite it. The open PR #224 at head `bd2046e` is held unmerged. Preserve approved room/camera/table geometry, seat anchors, masks, choreography, Hero and live semantic ownership.
+
+Future conditional production-art acceptance (single separate bounded family):
+- Reconcile the saved `V4R1_SUPPORT_FINAL = PASS` source proof with runtime integration; explicitly investigate why CO plate and CO mask differ bytewise while other eight assets match.
+- Inspect real exact-SHA and 200% runtime artifacts, including CO support/frame edge, seated embodiment, one-table topology, SB/BB and HJ/CO own cards/labels/chip clearance, active/inactive treatments, Hero hands, Coach/CTA reservations, and the pre-existing `C3` theory-state caveat.
+- Complete designer handoff with involved/engaged versus disengaged/inactive five-seat cast variants and Hero where approved, without regenerating an unrelated room/table/camera or modifying poker logic.
+- Production-ready DoD includes actual approved asset ownership, clean runtime source mapping, tested viewport/semantics, reduced motion, and owner acceptance.
+- No merge of PR #224 until separate manager adjudication; no unconditional claim that final art substitution is trivial.
+- Material visual usability blockers that genuinely prevent a mechanical task or Human pilot may be reopened earlier with direct evidence; ordinary visual micro-polish stays deferred.
 
 ## Wave W6 - Restricted beta and commercial v1
 
@@ -88,11 +86,11 @@ After bounded learner proof, pursue real-device UX, repeatable release gate, fin
 
 ## Immediate continuation contract
 
-`NEXT_WAVE = W1_PR224_V4R1_EVIDENCE_ARBITRATION`
+`NEXT_WAVE = W1_ACT0_LEARNING_ENGINE_TRUTH_AUDIT`
 `PR224_MERGE = FORBIDDEN_UNTIL_OWNER_ACCEPTANCE`
 `TABLE_ACTION_AND_STREET_MOTION_V1 = MERGED_PR222 / REASSESS_OWNED_EVIDENCE`
-`ART_COMPLETION = REGISTERED_DEFERRED / EVIDENCE_TRIGGERED`
+`ART_COMPLETION = DEFERRED_UNTIL_BEFORE_PREMIUM_SHIP / PLACEHOLDER_ALLOWED`
 `HUMAN_PROOF = FALSE`
-`P02 = NOT_ADMITTED`
+`P02 = NOT_ADMITTED / EARLY_HUMAN_MECHANICS_PILOT_SEPARATE`
 
 No changes are made to PR #224 or to the active Flutter runtime by this packet.
