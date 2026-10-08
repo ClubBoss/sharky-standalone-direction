@@ -1,7 +1,7 @@
 # SHARKY POKER — MASTER PLAN v5.0
 ## NORTH STAR × TOP-1 EXCELLENCE × PARALLEL BULLDOZER EXECUTION
 
-**Document status:** `OWNER_APPROVAL CANDIDATE — NOT ACTIVE, NOT MERGED`
+**Document status:** `OWNER APPROVED — ACTIVE PRINCIPAL AUTHORITY EFFECTIVE UPON VERIFIED DOCS-ONLY MERGE OF PR #242`
 
 **Version/date:** `5.0 / 2026-10-08`
 
@@ -11,7 +11,7 @@
 
 **Scope:** principal **product strategy + operating roadmap + acceptance standards** from present integration through Volume I launch and the continuing 36-world platform.
 
-**Adoption status:** This candidate **does not supersede** the live `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` until the owner explicitly approves it, a docs-only PR is reviewed, and its merge is verified on `main`.
+**Adoption status:** Owner approved the full v5 strategy and docs-only promotion. **Authority switches only after PR #242 is merged into `main` and its exact resulting HEAD verified**. At that point v5 supersedes v4's current routing; v4 remains intact as historical/reference evidence.
 
 > **Product promise:** *The poker coach that turns mistakes into corrected table instincts.*
 
@@ -20,6 +20,16 @@
 > **Competitive ambition:** Sharky must become **at least competitive and preferably materially better** than the best relevant poker-training apps on matched learner jobs, not just prettier in screenshots or more complete in a feature list.
 
 ---
+
+## October 2026 verified C0 / C1 evidence overlay (newer than the authoring snapshot)
+
+- C0: cumulative base PR #243 plus #234–#241 **MERGED** in order; accepted source candidate `main=1857818b1f80c4c12ab6a0e823f4f8b855f7e0ff` before this docs-only adoption, tree-identical to #241 head `ade7803eff9b9dfdaa7a9564a06ee9c9a489aa5c`. Exact-main source/CI checks succeeded; no product changes belong to this adoption PR.
+- Narrow internal integration waiver: 19 compared legacy test files showed no newly observed candidate-only failures. The interrupted full legacy checkpoint remains `INCOMPLETE/RED`, **not PASS**.
+- Native assisted correct → actual process restart → independent matched recheck remains `OPEN_RELEASE_GATE`, a missing release proof, not a newly proven defect or Human evidence.
+- C1 campaign Lane C: `CLOSED_PASS` **for the bounded source/machine Table Action & Street Motion family**, using merged PR #222, `lib/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart`, runner wiring, `test/ui_v2/act0_table_action_street_motion_v1_test.dart`, and `test/ui_v2/act0_table_choreography_contract_v1_test.dart`. No second engine or new product patch authorized. This is not a whole-product or native/Human outcome PASS.
+- Lane A visual = `CLOSED_PASS/FROZEN`; B surface cohesion = `CLOSED_PASS`; C learning-loop source family = `CLOSED_PASS`; D content correctness = `CLOSED_PASS`; E personalized next value = `REQUIRES_HUMAN_EVIDENCE`; F reliability/ergonomics = `CLOSED_PASS` within their previously admitted scopes. Distinct native/release caveat remains open.
+- Pre-P02: holistic challenger, independent confirmation, exact candidate freeze, final cheap falsifiers and **owner P02 admission** have not been completed. `P02 = NOT_ADMITTED`; do not treat this evidence overlay as permission to execute it.
+- The 2026-10-08 authoring-table references to #240 and “wait for integrator” remain historical provenance only; the live dispatch is `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` under this principal plan. PR #224 remains separate.
 
 # PART I — IMMUTABLE STRATEGY
 
@@ -543,7 +553,7 @@ No automatic PR for v5, no change to #224, no re-opening closed design merely be
 
 **v5 is not a lower-quality shortcut to release.** It is a way to protect the stronger v4 product thesis while spending fewer hours on repeated context rebuilding, scattered PRs, failed simulator loops, aesthetic reopening and unnecessary infrastructure. The goal is to beat the relevant competition **through reliable skill acquisition, believable poker, differentiated premium presentation, authentic evidence and market value**.
 
-**Immediate management instruction (2026-10-08):** wait for the current integrator's bounded native-assisted result; decide the #234–#240 stack; reconcile active September campaign Lane C against source/PR #222; close pre-P02 machine/product convergence by evidence; admit P02 only with owner authorization. Keep non-overlapping read-only research/recruitment/design preparation available when it genuinely shortens calendar critical path.
+**Historical authoring-time management instruction (2026-10-08; superseded by the verified October C0/C1 evidence overlay above):** wait for the current integrator's bounded native-assisted result; decide the #234–#240 stack; reconcile active September campaign Lane C against source/PR #222; close pre-P02 machine/product convergence by evidence; admit P02 only with owner authorization. Keep non-overlapping read-only research/recruitment/design preparation available when it genuinely shortens calendar critical path.
 
 `MASTER_PLAN_V5_CANDIDATE = COMPREHENSIVE`
 

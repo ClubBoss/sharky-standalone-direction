@@ -1,12 +1,25 @@
 # Master Plan v5.0 - Adoption Preparation v1
 
-Status: `DRAFT / PREPARATION ONLY / NO OWNER APPROVAL / NO MERGE`
+Status: `OWNER-APPROVED ADOPTION / EFFECTIVE ONLY AFTER VERIFIED PR #242 MERGE`
 Prepared: 2026-10-09
 Repository: `ClubBoss/sharky-standalone-direction`
-Proposed future plan: `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md`
-Current active plan: `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
+Principal plan effective upon verified PR #242 merge: `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md`
+Historical plan retained: `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
 
-## Bounded source and integration snapshot
+## Owner approval and C0/C1 status (current as of 2026-10-09)
+
+Owner explicitly approved Master Plan v5 and authorized docs-only PR #242 after guarded checks. The principal authority changes **only on actual verified merge**.
+
+- Verified pre-adoption `main=1857818b1f80c4c12ab6a0e823f4f8b855f7e0ff`.
+- C0 cumulative #243 and Learning Trust #234–#241: `MERGED`; accepted tree identical to #241 `ade7803eff9b9dfdaa7a9564a06ee9c9a489aa5c`.
+- Legacy full checkpoint: `INCOMPLETE/RED`; narrow internal waiver only: 19 compared legacy test files with no newly observed candidate-only failure.
+- Native assisted→restart→independent matched recheck: `OPEN_RELEASE_GATE`; not Human or release PASS.
+- C1 bounded Table Action / Street Motion family: `CLOSED_PASS (SOURCE/MACHINE)`, merged PR #222 and canonical runtime/test owner verified; no source-level P0/P1 reproven.
+- Lane A/B/C/D/F: bounded `CLOSED_PASS` (A frozen); E: `REQUIRES_HUMAN_EVIDENCE`.
+- P02 holistic challenger, independent confirmation, exact freeze, final cheap falsifiers and separate owner admission remain outstanding; `P02 = NOT_ADMITTED`.
+- PR #224 remains unrelated; no runtime, design, content, or source code touched by this adoption.
+
+## Bounded source and integration snapshot (2026-10-09 preparation HISTORY)
 
 - Verified `main` at preparation: `bdf560f0d90d9659335f6492149c373842f655b1` (not a future integration SHA).
 - v5 source was supplied as `MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT_CANDIDATE.md`, authored 2026-10-08, comparing against Draft PR #240 `9b75eaa1b62343f61e83a7442ad2a2cd13c935c6`.
@@ -33,11 +46,11 @@ No material internal strategy contradiction is established within the focused do
 
 ## Preparation-only pointer state
 
-Existing pointers in `AGENTS.md`, `docs/plan/PROJECT_TOPOLOGY_AND_TRUTH_MAP_v1.md`, and `docs/context/CONTEXT_ROUTER_v1.md` continue to identify **v4 as active**. Their v5 mentions are non-authoritative candidate notices only. The active dispatch and `docs/context/CURRENT_EXECUTION_HANDOFF_v1.md` are deliberately not stamped with speculative October integration truth while the Learning Trust integrator owns that lane.
+The promotion updates `AGENTS.md`, topology, context router, the campaign dispatch and current handoff together, with v5 effective only upon verified merge. The September/early-October observations above remain dated historical evidence, not current authority.
 
 The v4 full file, v3 history, historical campaign statements and past evidence are retained unmodified. Domain SSOT continues to own exact monetization, content, event/telemetry, HNP and release contracts.
 
-## Final adoption runbook - only after integration
+## Final adoption runbook (historical approval checklist; actual merge verification still required)
 
 1. The integrator reports the actual native verdict and exact #234-#241 topology; owner reconciles combined checkpoint and identifies the verified accepted `main` SHA. Keep #224 separate. If native proof is tooling-blocked, record the evidence gap rather than inventing PASS.
 2. Reconcile the accepted SHA against campaign Lane C / PR #222 and the one current family. Only the campaign owner may update the exact dispatch; no stale September `IMPLEMENT_NOW` or assumed closure carried forward.
@@ -49,8 +62,8 @@ The v4 full file, v3 history, historical campaign statements and past evidence a
 
 ## Scope / DoD
 
-Allowed files here: v5 candidate, this prep note, and non-executing SSOT candidate notices in AGENTS/topology/context router.
+Allowed in this owner-authorized docs-only closure: v5 plan, this adoption note, AGENTS/topology/router, exact campaign and handoff dispatch, and one bounded P02 gate packet; no runtime implementation.
 
-Forbidden: `lib/**`, `test/**`, `assets/**`, tool/runtime changes, merges, PR #224, moving Learning Trust commits, replacing live campaign state, changing prior plan/evidence.
+Forbidden: `lib/**`, `test/**`, `assets/**`, tool/runtime changes, product merges, PR #224, moving Learning Trust commits, altering historical v4, claiming native/Human P02 acceptance.
 
 Terminal preparation is `V5_ADOPTION_PREP_READY` only if one Draft PR exists, docs-only diff is verified, no overlapping Learning Trust file is written, and the above owner adoption path remains gated.

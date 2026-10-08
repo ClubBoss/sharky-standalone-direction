@@ -44,21 +44,22 @@ project assumptions into unrelated general chats.
 
 
 For project navigation and SSOT authority:
-- **Pending, not active:** `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md`
-  is an owner-approval candidate only. The docs-only Draft preparation does not
-  supersede v4, authorize P02, or establish Learning Trust integration. See
-  `docs/plan/MASTER_PLAN_V5_ADOPTION_PREP_v1.md` for the gated adoption runbook.
-  Switch principal pointers only after explicit owner approval and a verified
-  docs-only merge; preserve v4 and existing historical evidence.
-- `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` is the principal
-  day-to-day product-working authority after its merge.
+- `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md` is the OWNER-APPROVED principal strategy and execution roadmap,
+  effective only upon verified merge of docs-only PR #242 into main. It owns
+  North Star, 36-world horizon, W1-W12 Volume I, bounded gates and routing.
+- `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` is preserved unchanged as historical/reference authority;
+  it does not supersede v5 for new dispatch. See
+  `docs/plan/MASTER_PLAN_V5_ADOPTION_PREP_v1.md` for adoption provenance.
+- Current pre-P02 dispatch is `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`;
+  C0 is integrated, C1 source family closed, P02 not admitted; native
+  assisted→restart→independent recheck is OPEN_RELEASE_GATE.
 - Use `docs/context/CONTEXT_ROUTER_v1.md` only as a navigation companion when
-  the campaign state and v4 do not identify the needed task-specific source.
+  the campaign state and v5 do not identify the needed task-specific source.
 - Use `docs/plan/PROJECT_TOPOLOGY_AND_TRUTH_MAP_v1.md` only for
   architecture/navigation context.
 - For top-1 / 10/10 / Runout / competitive-product analysis, use
   `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md` as a strategy/reference
-  companion; it cannot override v4.
+  companion; it cannot override v5.
 - `docs/plan/MASTER_PLAN_v3.0.md` is superseded/historical and must not select
   current work.
 
@@ -83,7 +84,7 @@ These instructions apply to the entire repository.
 ## Readiness SSOT
 - `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md` is the canonical launch/readiness authority for final release/store-prep framing and release-side reporting.
 - Future launch/readiness reporting should use its Core / Ship / Final layered model plus block and epic state movement rather than floating seam-only percentages.
-- It must not override `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` for day-to-day product prioritization, evidence claims, or Gauntlet selection.
+- It must not override `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md` for day-to-day product prioritization, evidence claims, or Gauntlet selection.
 - `docs/plan/TRUE_RELEASE_READINESS_SSOT_v1.md` is historical only and must not be used as the active readiness authority.
 - Closed seams should not be reopened without concrete new evidence.
 
@@ -97,22 +98,22 @@ These instructions apply to the entire repository.
   - visible repair proof;
   - best-in-class learning effect;
   - premium/value packaging sequence.
-- It does not override `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` for day-to-day product priority or evidence class.
+- It does not override `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md` for day-to-day product priority or evidence class.
 - It does not override monetization SSOT or active campaign truth.
 - Review artifacts under `docs/_reviews/top1_*.md` are evidence logs, not new roadmap authority.
 
 ## Execution Mode
-- `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` is the principal
+- `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md` is the principal
   execution-mode and product-route authority after merge.
 - While `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` is active, that state is
   the first-read exact current dispatch overlay. HNP remains a required future
-  Human evidence gate and is entered when the active state / Master Plan v4
+  Human evidence gate and is entered when the active state / Master Plan v5
   sequence reaches it; HNP does not unconditionally override the current exact
   dispatch.
 - `docs/plan/MASTER_PLAN_v3.0.md`,
   `docs/plan/ROUTE_TO_B_EXECUTION_RESET_v1.md`, and
   `docs/plan/ROUTE_TO_B_ACTION_LADDER_v1.md` are historical/reference only.
-- Use the v4 Gauntlet model: evidence before implementation, exactly one active
+- Use the v5 Gauntlet model: evidence before implementation, exactly one active
   bottleneck family, smallest sufficient intervention, and `DO_NOTHING` as a
   valid outcome.
 - Reassess after a Gauntlet disposition or when real evidence changes the
@@ -124,7 +125,7 @@ These instructions apply to the entire repository.
 - The active learner-facing product is the Act0 shell route plus its direct support seams.
 - Treat these as active app truth first:
   - `lib/ui_v2/act0_shell/*`
-  - `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
+  - `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md`
   - `docs/plan/LAUNCH_SURFACE_MECHANISM_v1.md`
   - `docs/plan/PROJECT_TOPOLOGY_AND_TRUTH_MAP_v1.md`
 - Do not route new active-app work into dormant systems unless the user explicitly asks or a proven dependency seam requires it.
@@ -157,7 +158,7 @@ When asked about:
 - "How does the 36-world architecture work?"
 - "Which world covers concept Y?"
 
-Use v4 first for active scope and evidence boundaries, then use this
+Use v5 first for active scope and evidence boundaries, then use this
 curriculum-specific priority order:
 1. `docs/plan/LONG_HORIZON_MASTERY_MAP_v1.md` - long-term player growth and mastery strata
 2. `docs/plan/VOLUME_STRUCTURE_AND_SPECIALIZATION_POLICY_v1.md` - Volume I/II/III structure and specialization rules

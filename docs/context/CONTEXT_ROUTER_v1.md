@@ -2,17 +2,17 @@
 
 Status: ACTIVE NAVIGATION COMPANION ONLY.
 
-Master Plan v5 adoption is **pending**: `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md`
-remains a candidate, and `docs/plan/MASTER_PLAN_V5_ADOPTION_PREP_v1.md`
-is a non-authoritative checklist. The v4 and campaign pointers in this router
-remain in force until owner approval, reviewed docs-only promotion, and a
-verified merge; do not infer Learning Trust or P02 closure from this notice.
+Master Plan v5 is **OWNER-APPROVED; principal effective upon verified merge**
+of docs-only PR #242. The previous v4 remains unchanged as historical authority.
+C0 #243/#234–#241 merged at `1857818b1f80c4c12ab6a0e823f4f8b855f7e0ff`;
+C1 Table Action/Street Motion source `CLOSED_PASS` via #222. Native
+assisted→restart→independent recheck remains OPEN_RELEASE_GATE; P02 NOT_ADMITTED.
 
 Purpose: route agents to the smallest task-specific source set. It does not own
 product direction, next-wave selection, evidence admission, or closure.
 
 While `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` is active, that one-screen
-state is the first-read dispatch overlay. `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
+state is the first-read dispatch overlay. `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md`
 is the principal day-to-day product-working authority after merge.
 
 ## Authority And Conflict Rule
@@ -22,12 +22,13 @@ outrank:
 
 1. repository `AGENTS.md`;
 2. active campaign state, while one exists, for exact current dispatch;
-3. `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` for product route,
+3. `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md` for product route,
    North Star, evidence hierarchy, protected boundaries, and Gauntlet order;
 4. task-specific independent protocol/SSOT for its owned procedure/contract;
 5. active task evidence and live source/tests/runtime truth within their valid
    claim boundary.
 
+The intact `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` is historical/reference only.
 `docs/plan/MASTER_PLAN_v3.0.md` is superseded/historical and cannot select
 current work. `docs/context/ACTIVE_ROUTE_CAPSULE_v1.md` is a stale/superseded
 route snapshot and future archive candidate.
@@ -50,14 +51,14 @@ When an active campaign state exists:
 
 1. repository `AGENTS.md` / automatically loaded repo instructions
 2. active campaign state file
-3. `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
+3. `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md`
 4. exactly one task-specific protocol/SSOT when required
 5. this router only if source discovery is still needed
 
 When no campaign state applies:
 
 1. `AGENTS.md`
-2. `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
+2. `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md`
 3. exactly one task-specific protocol/SSOT when required
 4. this router only if source discovery is still needed
 
@@ -80,11 +81,11 @@ templates library remains supporting reference only.
 
 ## Agent Mapping
 
-- Codex: use v4 + one task-specific owner; add one lane capsule only when it
+- Codex: use v5 + one task-specific owner; add one lane capsule only when it
   materially reduces owner tracing.
-- Sonnet: use v4 + relevant task-specific source; add a lane capsule only when
+- Sonnet: use v5 + relevant task-specific source; add a lane capsule only when
   needed.
-- Fable / Claude Design: use v4 + visual/proof capsule only when a visual task is
+- Fable / Claude Design: use v5 + visual/proof capsule only when a visual task is
   explicitly admitted.
 
 Do not ask any agent to read all capsules by default.
@@ -93,7 +94,7 @@ Do not ask any agent to read all capsules by default.
 
 | Task shape | Required source |
 | --- | --- |
-| route choice, next Gauntlet, scope boundary | `MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`; active campaign state first while active |
+| route choice, next Gauntlet, scope boundary | `MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md`; active campaign state first while active |
 | Human Novice Proof | `docs/_reviews/human_novice_proof_protocol_v1.md` |
 | transfer/retention | `docs/plan/DURABLE_RETENTION_TRANSFER_CONTRACT_v1.md` |
 | telemetry | `docs/plan/ACT0_TELEMETRY_TRUTH_MAP_v1.md` + exact source owner |
@@ -101,7 +102,7 @@ Do not ask any agent to read all capsules by default.
 | Session Summary / Review / repair claims | `LEARNING_REPAIR_CAPSULE_v1.md` + exact owner |
 | commit, preflight, validation, generated drift | `WORKTREE_EVIDENCE_CAPSULE_v1.md` |
 | mainline merge, push, repo integration checkpoint | `REPO_HYGIENE_CAPSULE_v1.md` |
-| content/correctness | exact content SSOT/owner files under v4 scope |
+| content/correctness | exact content SSOT/owner files under v5 scope |
 | monetization | `docs/plan/MONETIZATION_SSOT_v1.md` |
 | release/readiness | `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md` |
 
@@ -109,7 +110,7 @@ Do not ask any agent to read all capsules by default.
 
 Every implementation prompt should name verified HEAD and the active claim/gate.
 A capsule is stale when its verified HEAD, route artifact, or immediate task is
-older than the active campaign/v4/task evidence.
+older than the active campaign/v5/task evidence.
 
 For narrow tasks, continue from higher authority plus live source and note stale
 capsule text as non-blocking context. Never promote a stale capsule to route
@@ -127,7 +128,7 @@ ledgers or historical review chains.
 - `output/**`, unless evidence is the task
 - archive docs, unless historical retrieval is requested
 - old wave histories, unless one exact fact must be verified
-- W13-W36, unless v4 and evidence explicitly open that scope
+- W13-W36, unless v5 and evidence explicitly open that scope
 - Modern Table files, unless a concrete dependency/regression is proven
 - all capsules, all ledgers, or all reviews
 

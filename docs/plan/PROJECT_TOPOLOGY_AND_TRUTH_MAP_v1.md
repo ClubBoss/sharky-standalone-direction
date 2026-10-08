@@ -2,25 +2,27 @@
 Status: ACTIVE ARCHITECTURE / NAVIGATION COMPANION
 Purpose: primary orientation layer for future agents before repo investigation.
 
-Pending authority change (not yet in force):
-- `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md` is staged as an
-  **owner-approval candidate**, not an active roadmap. All v4 routing references
-  below stay live until explicit owner approval, reviewed pointer promotion,
-  and verification of an authorized docs-only merge on `main`.
-- `docs/plan/MASTER_PLAN_V5_ADOPTION_PREP_v1.md` is the non-authoritative
-  reconciliation and promotion checklist. No Learning Trust SHA/native verdict,
-  current dispatch, P02 admission, or PR #224 integration follows from it.
+Owner-approved authority promotion (effective only on verified PR #242 merge):
+- `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md` becomes the principal strategy/execution roadmap.
+- `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` remains intact as historical/reference; no new routing priority.
+- C0 cumulative #243 plus Learning Trust #234–#241 merged, pre-adoption
+  `main=1857818b1f80c4c12ab6a0e823f4f8b855f7e0ff`.
+- C1 Table Action / Street Motion `CLOSED_PASS (source/machine)` from merged #222.
+- `LEGACY_CHECKPOINT=INCOMPLETE/RED`; 19-file internal waiver only;
+  native assisted→restart→independent recheck OPEN_RELEASE_GATE.
+- P02 not admitted; PR #224 separate; adoption log in
+  `docs/plan/MASTER_PLAN_V5_ADOPTION_PREP_v1.md`.
 
 ## How to use this map
 
 - Read order while the pre-Human campaign is active:
   - `AGENTS.md`
   - `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` for exact current dispatch
-  - `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` for principal product-working authority
+  - `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md` for principal product-working authority
   - this file only when architecture/navigation context is needed
   - exactly one task-specific protocol/SSOT when required
 - When no campaign state applies, read `AGENTS.md`, then
-  `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`, then the one
+  `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md`, then the one
   task-specific protocol/SSOT required by the task.
 - `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md` is a strategy/reference
   companion when the task concerns top-1 ambition, 10/10 product/commercial
@@ -32,7 +34,7 @@ Pending authority change (not yet in force):
 - `docs/plan/ACTIVE_APP_BOUNDARY_AND_DORMANT_SYSTEMS_v1.md` is used when the
   task risks drifting into legacy, persona, AI-coach, or non-Act0 families.
 - Latest Audit Hub surfaces are operational evidence only and do not override
-  v4 evidence classes or the active campaign dispatch:
+  v5 evidence classes or the active campaign dispatch:
   - `assets/audit_hub_v1/latest_run.json`
   - `assets/audit_hub_v1/operational_snapshot.json`
   - latest `out/audit_hub_v1/dossiers/project_status_dossier_*.md`
@@ -45,12 +47,12 @@ Pending authority change (not yet in force):
   - routing from stale review packets or numeric Product-100 artifacts
 
 - Fast next-frontier selection:
-  - active product routing / next Gauntlet -> `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
-  - while the campaign is active, exact next dispatch -> `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`; HNP remains the next execution evidence gate until valid evidence changes that state
-  - top-1 / 10 out of 10 / Runout / commercial-product analysis -> v4 for route/evidence authority plus `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md` as strategy/reference
+  - active product routing / next Gauntlet -> `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md`
+  - while the campaign is active, exact next dispatch -> `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`; P02 remains owner-gated after holistic challenger, confirmation, freeze and falsifiers
+  - top-1 / 10 out of 10 / Runout / commercial-product analysis -> v5 for route/evidence authority plus `docs/plan/TOP1_PRODUCT_ATTACK_PLAN_SSOT_v1.md` as strategy/reference
   - post-route Product-100 artifacts -> historical/reference diagnostic input only; never learner-efficacy proof
-  - launch/readiness framing -> v4 plus `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
-  - operator evidence -> check `latest_run.json`, then `completion_gap_synthesis`, `autonomous_block_handoff`, and latest dossier/top packet, but do not let generated routing override v4/campaign truth
+  - launch/readiness framing -> v5 plus `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
+  - operator evidence -> check `latest_run.json`, then `completion_gap_synthesis`, `autonomous_block_handoff`, and latest dossier/top packet, but do not let generated routing override v5/campaign truth
   - runtime/debugging -> start from the canonical runner boundary and only open legacy paths if a boundary contract proves they still own that seam
 
 ## 1. Source-of-truth hierarchy
@@ -59,7 +61,7 @@ Pending authority change (not yet in force):
   1. `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` while the campaign is active
      - temporary first-read dispatch overlay for exact current gate/state
      - cannot redefine the North Star, evidence hierarchy, or post-gate model
-  2. `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
+  2. `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md`
      - principal day-to-day product-working master plan
      - owns North Star, evidence classes, protected boundaries, Gauntlet model,
        and post-HNP candidate ordering
@@ -88,18 +90,18 @@ Pending authority change (not yet in force):
      - canonical negative truth for dashboard ownership
 
 - Routing vs readiness vs reference:
-  - active product-working plan -> `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md`
+  - active product-working plan -> `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md`
   - exact current campaign dispatch -> `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md` while active
-  - next Gauntlet / evidence class / protected scope -> v4
+  - next Gauntlet / evidence class / protected scope -> v5
   - post-route Product-100 documents -> historical/reference diagnostics, not active efficacy proof
   - launch/readiness framing reference -> `docs/plan/PROJECT_READINESS_EPICS_SSOT_v1.md`
   - deeper historical structure / reference context -> `docs/plan/MASTER_PLAN_v2.2.md`
   - archived execution-route context -> `docs/plan/archive/execution_history/`
-  - operator live-route interpretation -> Audit Hub outputs only within v4/campaign claim boundaries
+  - operator live-route interpretation -> Audit Hub outputs only within v5/campaign claim boundaries
 
 - Historical-only docs:
   - `docs/plan/MASTER_PLAN_v3.0.md`
-    - superseded by v4 for current routing
+    - superseded by v5 for current routing
   - `docs/plan/TRUE_RELEASE_READINESS_SSOT_v1.md`
     - historical beta-path record only
     - never use for current scoring, rollout gating, or final-100 meaning
