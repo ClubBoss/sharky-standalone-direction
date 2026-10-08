@@ -58,6 +58,8 @@ DoD: exact main SHA + observed test outputs + explicit PASS/FAIL for existing me
 
 ## Wave W2 - Mechanics-first product integrity
 
+Wave W1 machine-audit results and exact reproducible baseline failure classification are in `docs/_reviews/2026_10_act0_learning_engine_truth_audit_v1.md`. No speculative product mutation is admitted from failing old widget assertions. W2 must first falsify real post-choice actionability and Review continuation at the accepted placeholder viewport, with one actual defect before repair.
+
 After W1 disposition: verify the continuous first-session learner route, task decision, explanatory feedback, same-signal repair, recheck, progression, next useful practice, Review/return and telemetry trace on existing current render/placeholder. Use source-owned state, not handcrafted visual claims. Close a proven contradictory route only; otherwise freeze mechanisms candidate. Successful machine proof does not establish user learning.
 
 ## Wave W3 - Early novice diagnostics (NOT P02 BY DEFAULT)
@@ -86,7 +88,7 @@ After bounded learner proof, pursue real-device UX, repeatable release gate, fin
 
 ## Immediate continuation contract
 
-`NEXT_WAVE = W1_ACT0_LEARNING_ENGINE_TRUTH_AUDIT`
+`NEXT_WAVE = W2_POST_CHOICE_CONTINUATION_AND_ACTIONABILITY_EVIDENCE`
 `PR224_MERGE = FORBIDDEN_UNTIL_OWNER_ACCEPTANCE`
 `TABLE_ACTION_AND_STREET_MOTION_V1 = MERGED_PR222 / REASSESS_OWNED_EVIDENCE`
 `ART_COMPLETION = DEFERRED_UNTIL_BEFORE_PREMIUM_SHIP / PLACEHOLDER_ALLOWED`
