@@ -145,3 +145,41 @@ Only write a new implementation PR if a *repeatable observed* bottleneck has cle
 `BRAND_DISTINCTIVENESS = PRE_LAUNCH_CLEARANCE_WATCH`
 `NEW_PRODUCT_CODE = NONE`
 `NEXT = FIXED_CANDIDATE_VOLUNTARY_NEXT_REP_AND_CAUSAL_RECALL_PILOT`
+
+## 2026-10-08 follow-on: first success → repair → next challenge, real machine falsifier
+
+### Why this extra wave
+
+The initial screen and micro-win tests cannot establish a working **post-error next step**, and zero code changes should be made solely because archived tests expect obsolete copy. Isolated PR #226 candidate (exact head `e87862309817f2f27f9db8bb51afbfd118f8310f`) was therefore exercised with focused, TEMPORARY diagnostics copied from the historical 33k-line preview backlog, and with current owner tests. All temporary tests were deleted after runs; none became a permanent meta-test.
+
+### Observed machine evidence
+
+- Eight of eight interactive Welcome journeys PASS: two compact sizes (`375x812`, `402x874`) × text scale (1.0, 1.3) × correct/wrong first decision. Each exposed first-choice option, feedback and reachable next/handoff CTA; no Flutter exceptions. This is **widget-machine proof, not native Human experience**.
+- Historical **four** `first-value receipt` tests on exact PR #226: 1 PASS / 3 FAIL in unmodified old form. The only directly passing one was correct receipt after relaunch and mapped same-signal rep. Initial failures were old exact feedback copy expectations; after narrowly filtering obsolete copy, some remaining old telemetry/map assumptions also failed (`tableSignal` expected in a specific event but null).
+- Wrong-first-value **relaunch** current path displays `Repair: Action read` and opens runner task `actions_check_drill`. It emits `personalized_next_step_opened` and repair attempt events. The old test expected `first_value_daily_rep_launched` and immediate clearing of `firstValueReturnCarry`. **Observed actual:** event distinction and carry persistence. It is not a dead end; it is a possible **duplicate-return-recommendation hypothesis** after a future successful repair, NOT YET PROVEN.
+- Historical `Open repair remains actionable after carry is consumed and a later relaunch` test reached its later Home assertion but expected the older title `Repair one weak spot` while actual title was `Repair: Action read`. It cannot be used to certify failure of the current path.
+- Separate 5-suite return/repair owner cone: **45 PASS / 4 FAIL**, all four in `act0_repair_intent_lifecycle_v1_test.dart`; failures involve missing historical exact Practice text (`Practice this`) or old scenario question copy (board/action wording). The other persistence, durable retention, due Review and personalized return tests completed without assertions. **The 49-test combined run is NOT GREEN**.
+- Source-level ownership: `_startHomeNextAction` first tries `_startFirstValueDailyRepLaunchV1` and then delegates to normal personalized recommendation; `_startFirstValueDailyRepLaunchV1` clears a carried receipt only when mapped direct launch succeeds. A personalized open-repair fallback can legitimately take precedence, but persistence and eventual resolution of the old carry deserve an exact post-repair observation before any mutation. Existing current code `_restorePersistedOpenRepairRecordsV1` also supersedes the older historical June audit that suggested this reconstruction was absent.
+
+### Interpretation and attack gate
+
+`WELCOME_RESPONSIVE_INTERACTION = MACHINE_PASS_8_OF_8`
+`CORRECT_FIRST_VALUE_RELAUNCH_MAPPED_REP = MACHINE_PASS_HISTORICAL_TARGETED_1`
+`WRONG_FIRST_VALUE_OPEN_REPAIR_CTA = ACTIONABLE_IN_WIDGET_TEST`
+`FULL_ARCHIVED_FIRST_VALUE_SUITE = FAIL_3_OF_4_WITH_STALE_ASSERTIONS`
+`RETURN_REPAIR_COMBINED_OWNER_CONE = FAIL_4_OF_49_WITH_OLD_COPY_ASSUMPTIONS`
+`STANDING_NEW_PRODUCT_DEFECT = NOT_PROVEN`
+`POSSIBLE_STALE_CARRY_AFTER_RESOLVED_REPAIR = INVESTIGATE_WITH_POST_REPAIR_OBSERVATION`
+`HUMAN_VOLUNTARY_NEXT_REP = STILL_UNKNOWN`
+
+**Do not** delete carried proof, reorder repair priority, duplicate Home CTA, add a streak game, force new fixed-source tests, or claim a Human win on these facts. A proper corrective PR needs reproducible *post-repair* stale suggestion or actual novice actionability failure, not old test snapshots.
+
+### Separate real reliability finding completed
+
+The prior 2026-10-08 attack found a true local-calendar DST issue in daily streak/Day-2 continuity, reproduced on America/New_York dates 2026-03-08/09 (23 elapsed hours). PR [#228](https://github.com/ClubBoss/sharky-standalone-direction/pull/228) fixed the common civil-date predicate, extended the existing required Act0 selected test with three civil-calendar cases, and passed the full **108/108** local release gate. **Exact-head five owned GitHub workflow results now SUCCESS**, conditional L2 skipped, third-party TestSprite `No tests detected` separate. PR #228 remains Draft and unmerged; it fixes machine correctness, **not** observed retention uplift.
+
+### Next cheapest decisive evidence
+
+1. Use fixed PR #226 build and fresh learner on legitimate device. Observe *without leading*: first clue/choice, feedback paraphrase, voluntary next meaningful rep, understanding of earned repair.
+2. If repeated difficulty or a repeat recommendation appears only **after correctly completed repair**, capture precise states/attempts, reproduce in one scoped test, and create one high-EV repair-family PR.
+3. If normal continuation works for people, close this hypothesis as NO_FIX, proceed to genuine held-out transfer + D2/D7 return. Never score delight or market retention from source/proxy alone.
