@@ -79,6 +79,19 @@ Never infer 10/10 from App Store rating, screenshot aesthetics, "AI" label, less
 
 Any historical product numeric scoring (e.g. prior 7.x/8.x) is a context-bound hypothesis, **not** current market-relative proof.
 
+## 3A. Stage 2 direct active-source implementation sample (GH exact-main audit)
+
+This is a **code inspection of the current Act0 shell**, not an in-app Human assessment or evidence that every rendering path is visible. It materially improves baseline truth beyond design documents:
+
+- **Daily micro-rep and streak state — implemented.** `lib/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart:1156-1160` holds daily task/rep and streak fields. `_persistProgress` around lines 3817-3843 counts a day as done at >=3 daily reps, persists streak days, and branches for consecutive calendar days; restore logic around lines 3483-3491 reconciles last-active day. **Unproven:** enjoyment, adherence, habit pressure, D7 retention or real device daily rollover.
+- **Learner-facing daily continuation — wired.** Current Home construction near 5324-5354 passes a daily goal, daily plan, 'next useful hand' reason and source-owned `personalizedReturnReasonLine`; the active daily-drill launcher around 5392-5415 uses 3-rep daily completion. Source near 6862-6895 presents `Done for today` / `Streak saved` and tomorrow-focused copy rather than random rewards. **Unproven:** independent novice comprehension and desire to reopen.
+- **Personalized return contract — source-owned.** `lib/ui_v2/act0_shell/act0_personalized_return_reason_v1.dart:48-85` prioritizes active repair → failed repair retry → due Review → reinforce transfer → recent focus → safe fallback. It reuses existing contracts rather than a resurrected ML planner. **Unproven:** personalization uplift over generic lessons.
+- **Calendar-based durable review — source present.** `lib/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart:56-87` exposes `refreshedAt(DateTime nowUtc)` and `dueItemsAt(DateTime nowUtc)` based on `nextDueAtUtc`. This is stronger than a mere click-count placeholder, but **not** proof the learner retains after D2/D7.
+- **Premium preview is an informational, secondary surface.** `lib/ui_v2/act0_shell/act0_premium_preview_v1.dart:80-145` explicitly marks 'Free right now', 'Premium adds later', 'Stay on free route', and a 'Not now' exit. **Unproven:** actual purchase/restore/trial safety or willingness to pay; public checkout intentionally deferred by monetization SSOT.
+- **The broader repo has legacy streak widgets.** Generic code search returns `lib/widgets/streak_*`, but those are **not** evidence that the active Act0 path renders them. This audit relies on the active `act0_shell` owner, not legacy artifact count.
+
+Implication for wave selection: **do not create a new streak, daily-goal, calendar review or personalization subsystem on the assumption that Sharky lacks it.** The likely missing evidence is real *experience quality and learning effect* of already wired mechanics. Ask humans whether 3 reps is satisfying, if they perceive a compelling optional next challenge, and whether Review is useful tomorrow. Only then attack a demonstrated seam.
+
 ## 4. Hypothesis stack from desk research (rank ≠ authorization to code)
 
 Candidate bottleneck families; each requires actual baseline observation and comparative proof before `IMPLEMENT_NOW`:
