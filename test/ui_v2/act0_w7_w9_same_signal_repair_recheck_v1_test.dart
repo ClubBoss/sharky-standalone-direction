@@ -167,8 +167,13 @@ void main() {
           .toList(growable: false);
       expect(repairStarts.map((event) => event.fields['repairTaskId']), [
         'w9_short_stack_survival',
+        'w9_short_stack_survival',
       ]);
-      expect(repairCompletions, isNotEmpty);
+      expect(repairCompletions, hasLength(2));
+      expect(
+        sink.events.where((event) => event.name == 'fix_landed'),
+        hasLength(1),
+      );
       expect(
         sink.events.where((event) => event.name == 'world_complete'),
         isEmpty,

@@ -3409,8 +3409,14 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                       compactDecision: compactAnswerListDecision,
                       question: actionDockQuestion,
                       onBack: null,
-                      recallLabel: decisionHint == null ? null : 'Need a hint?',
-                      onRecall: decisionHint == null
+                      recallLabel:
+                          decisionHint == null ||
+                              widget.theoryRecallStep == null
+                          ? null
+                          : 'Need a hint?',
+                      onRecall:
+                          decisionHint == null ||
+                              widget.theoryRecallStep == null
                           ? null
                           : _openTheoryRecallPeek,
                       child: _showTheoryPeek && theoryRecallPeek != null
@@ -3434,8 +3440,14 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                       fillAllocatedDock: false,
                       question: actionDockQuestion,
                       onBack: null,
-                      recallLabel: decisionHint == null ? null : 'Need a hint?',
-                      onRecall: decisionHint == null
+                      recallLabel:
+                          decisionHint == null ||
+                              widget.theoryRecallStep == null
+                          ? null
+                          : 'Need a hint?',
+                      onRecall:
+                          decisionHint == null ||
+                              widget.theoryRecallStep == null
                           ? null
                           : _openTheoryRecallPeek,
                       child: _showTheoryPeek && theoryRecallPeek != null
@@ -3718,6 +3730,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           onBack: _handleRunnerBackV1,
           onChooseOption: _handleChooseOptionTelemetry,
           onContinueReview: widget.onContinueReview,
+          recallLabel: decisionHint != null && widget.theoryRecallStep != null
+              ? 'Need a hint?'
+              : null,
+          onRecall: decisionHint != null && widget.theoryRecallStep != null
+              ? _openTheoryRecallPeek
+              : null,
+          hintPeek: _showTheoryPeek ? theoryRecallPeek : null,
           actionRecommendation: widget.actionRecommendation,
           actionPayoff: widget.actionPayoff,
           tableHeight: 460,
@@ -4025,6 +4044,9 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
     required this.onBack,
     required this.onChooseOption,
     required this.onContinueReview,
+    this.recallLabel,
+    this.onRecall,
+    this.hintPeek,
     this.actionRecommendation,
     this.actionPayoff,
     this.tableHeight = 460,
@@ -4039,6 +4061,9 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
   final VoidCallback onBack;
   final ValueChanged<Act0RunnerOptionV1> onChooseOption;
   final VoidCallback onContinueReview;
+  final String? recallLabel;
+  final VoidCallback? onRecall;
+  final Widget? hintPeek;
   final Act0ActionRecommendationV1? actionRecommendation;
   final Act0ActionSessionPayoffV1? actionPayoff;
   final double tableHeight;
@@ -4148,44 +4173,59 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
                               ),
                             ],
                           )
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                question,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: Act0ShellTokensV1.sectionTitle,
-                              ),
-                              const SizedBox(height: 8),
-                              for (final option in runner.options)
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 6),
-                                  child: SizedBox(
-                                    width: double.infinity,
-                                    child: OutlinedButton(
-                                      key: Key(
-                                        'act0_shell_option_${option.id}',
+                        : hintPeek ??
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          question,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: Act0ShellTokensV1.sectionTitle,
+                                        ),
                                       ),
-                                      onPressed: () => onChooseOption(option),
-                                      child: Text(
-                                        option.label,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
+                                      if (onRecall != null &&
+                                          recallLabel != null)
+                                        _TheoryRecallCtaV1(
+                                          label: recallLabel!,
+                                          onPressed: onRecall!,
+                                          compact: true,
+                                        ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  for (final option in runner.options)
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 6),
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        child: OutlinedButton(
+                                          key: Key(
+                                            'act0_shell_option_${option.id}',
+                                          ),
+                                          onPressed: () =>
+                                              onChooseOption(option),
+                                          child: Text(
+                                            option.label,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
                                       ),
                                     ),
+                                  const Spacer(),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: TextButton(
+                                      onPressed: onBack,
+                                      child: const Text('Back'),
+                                    ),
                                   ),
-                                ),
-                              const Spacer(),
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: TextButton(
-                                  onPressed: onBack,
-                                  child: const Text('Back'),
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
                   ),
                 ),
               ],
@@ -16331,6 +16371,19 @@ class _ActionPromptPanelV1 extends StatelessWidget {
           SizedBox(
             height: effectiveCompactDecision ? 5 : Act0ShellTokensV1.gapSm,
           ),
+        ] else if (question.isEmpty &&
+            onRecall != null &&
+            recallLabel != null) ...[
+          // The canonical scene owns the question, not the hint affordance.
+          Align(
+            alignment: Alignment.centerLeft,
+            child: _TheoryRecallCtaV1(
+              label: recallLabel!,
+              onPressed: onRecall!,
+              compact: effectiveCompactDecision,
+            ),
+          ),
+          const SizedBox(height: 3),
         ] else if (onBack != null) ...[
           Align(
             alignment: Alignment.centerLeft,
