@@ -44,6 +44,12 @@ project assumptions into unrelated general chats.
 
 
 For project navigation and SSOT authority:
+- **Pending, not active:** `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md`
+  is an owner-approval candidate only. The docs-only Draft preparation does not
+  supersede v4, authorize P02, or establish Learning Trust integration. See
+  `docs/plan/MASTER_PLAN_V5_ADOPTION_PREP_v1.md` for the gated adoption runbook.
+  Switch principal pointers only after explicit owner approval and a verified
+  docs-only merge; preserve v4 and existing historical evidence.
 - `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` is the principal
   day-to-day product-working authority after its merge.
 - Use `docs/context/CONTEXT_ROUTER_v1.md` only as a navigation companion when
