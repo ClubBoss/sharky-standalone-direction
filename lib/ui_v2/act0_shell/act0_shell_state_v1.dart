@@ -8781,7 +8781,7 @@ final _suitsRunner = _firstHandRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Hearts',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'One goal clears the noise.',
+      feedbackTitle: 'Hearts is the suit.',
       feedbackReason: 'Card code check: A means ace and h means hearts.',
     ),
     Act0RunnerOptionV1(
@@ -8817,7 +8817,7 @@ final _privateBoardRunner = _firstHandRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Board cards',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Overfold means widen.',
+      feedbackTitle: 'Board cards are shared.',
       feedbackReason: 'Board cards are shared by everyone still in the hand.',
     ),
     Act0RunnerOptionV1(
@@ -8869,7 +8869,7 @@ final _turnBoardRunner = _readBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Four',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Callers want value.',
+      feedbackTitle: 'Turn is the fourth board card.',
       feedbackReason: 'The turn is the fourth board card.',
     ),
     Act0RunnerOptionV1(
@@ -8923,7 +8923,7 @@ final _riverBoardRunner = _readBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Five',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Pick the repeat leak.',
+      feedbackTitle: 'River is the fifth board card.',
       feedbackReason: 'The river completes five board cards.',
     ),
     Act0RunnerOptionV1(
@@ -8978,7 +8978,7 @@ final _checkActionRunner = _firstHandRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Check',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Specific fix transfers.',
+      feedbackTitle: 'Check is legal with no bet to call.',
       feedbackReason: 'Checking keeps the hand going when no bet faces you.',
     ),
     Act0RunnerOptionV1(
@@ -9022,7 +9022,7 @@ final _foldActionRunner = _readBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Fold',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Low-energy plan first.',
+      feedbackTitle: 'Fold gives up this hand.',
       feedbackReason: 'Fold gives up the hand and saves the call.',
     ),
     Act0RunnerOptionV1(
@@ -9133,7 +9133,7 @@ final _callActionRunner = _readBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Call',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'One trigger, one lever.',
+      feedbackTitle: 'Call matches the current bet.',
       feedbackReason: 'Calling matches the current price.',
     ),
     Act0RunnerOptionV1(
@@ -9336,7 +9336,7 @@ final _postflopButtonActorRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Process beats reveal.',
+      feedbackTitle: 'BTN acts last after the flop.',
       feedbackReason: 'Button acts last after the flop in this hand.',
     ),
     Act0RunnerOptionV1(
@@ -11273,7 +11273,7 @@ final _bestFiveCardsRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Five',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Pause on big nodes.',
+      feedbackTitle: 'Five cards form your hand.',
       feedbackReason: 'Your final poker hand is the best five cards.',
     ),
     Act0RunnerOptionV1(
@@ -11546,7 +11546,7 @@ final _cutoffSeatRunner = _meetTableRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'CO',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Evidence beats respect.',
+      feedbackTitle: 'CO is the seat before BTN.',
       feedbackReason: 'CO is the cutoff seat before the Button.',
     ),
     Act0RunnerOptionV1(
@@ -13306,7 +13306,7 @@ final _world3WeakFacingFoldRunner = _world3PlayableCallRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Fold',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'BTN is the late seat.',
+      feedbackTitle: 'J8o still folds versus a CO open.',
       feedbackReason:
           'BTN versus a CO open, J8o is still too weak to continue.',
     ),
