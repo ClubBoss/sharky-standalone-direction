@@ -1102,6 +1102,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String? _accessibilityPrototypeTaskId;
   Act0AccessibilityPrototypeStepV1? _accessibilityPrototypeStep;
   Act0CompletedDecisionV1? _latestCompletedDecisionV1;
+  // The runner sends this synchronously BEFORE onChooseOption/onChooseSeat.
+  // Those callbacks own repair receipts and run before onCompletedDecision.
+  Act0DecisionAssistanceV1 _choiceAssistanceV1 = Act0DecisionAssistanceV1.none;
+  bool get _choiceWasAssistedV1 =>
+      _choiceAssistanceV1 == Act0DecisionAssistanceV1.quickHint ||
+      _choiceAssistanceV1 == Act0DecisionAssistanceV1.theoryRecall;
   Act0LearningEvidenceHistoryV1 _learningEvidenceHistoryV1 =
       const Act0LearningEvidenceHistoryV1();
   Act0DurableRetentionHistoryV1 _durableRetentionHistoryV1 =
@@ -6038,6 +6044,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     selectedTask: playSelectedTask,
                                   );
                                 }),
+                                onChoiceAssistance: (value) {
+                                  _choiceAssistanceV1 = value;
+                                },
                                 onCompletedDecision: (decision) {
                                   setState(() {
                                     _latestCompletedDecisionV1 = decision;
@@ -6164,8 +6173,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   if (_activeRepairTaskId ==
                                       playSelectedTask.taskId) {
                                     final repaired =
-                                        playRunner.selectedOption?.isCorrect ??
-                                        false;
+                                        act0IndependentRepairProofV1(
+                                          isCorrect:
+                                              playRunner
+                                                  .selectedOption
+                                                  ?.isCorrect ??
+                                              false,
+                                          assistanceKind: _choiceAssistanceV1,
+                                        );
                                     final repairSourceTaskId =
                                         _activeRepairSourceTaskId ??
                                         playSelectedTask.taskId;
@@ -9027,21 +9042,28 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final sourceTaskId =
         _activeSameSignalRecheckSourceTaskId ?? selectedTask.taskId;
     final correct = runner.selectedOption?.isCorrect ?? false;
+    final independentProof = act0IndependentRepairProofV1(
+      isCorrect: correct,
+      assistanceKind: _choiceAssistanceV1,
+    );
     _recordTelemetryEventV1('recheck_result', <String, Object?>{
       'schemaVersion': 1,
       'source_task_id': sourceTaskId,
       'recheck_task_id': selectedTask.taskId,
       'result': correct ? 'correct' : 'incorrect',
+      'proof_status': _choiceWasAssistedV1
+          ? 'assisted_not_proven'
+          : 'unassisted',
       'source_surface': 'act0_feedback_cta',
     });
     _emitRecheckCompletedTelemetryV1(
       taskId: selectedTask.taskId,
-      completedCorrectly: correct,
-      successfulRecheckCount: correct ? 1 : 0,
+      completedCorrectly: independentProof,
+      successfulRecheckCount: independentProof ? 1 : 0,
     );
     _activeSameSignalRecheckTaskId = null;
     _activeSameSignalRecheckSourceTaskId = null;
-    if (!correct) {
+    if (!independentProof) {
       // An unresolved recheck must not advance the parent lesson. This
       // inline recheck is only ever launched from the feedback CTA's own
       // "Try same clue" flow, so a miss here falls back to Review the same
@@ -9231,7 +9253,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     required Act0LessonTaskV1 selectedTask,
     required Act0RunnerOptionV1 option,
   }) {
-    if (_activeRepairTaskId != selectedTask.taskId) return null;
+    // The base feedback can still teach the correct action, but a
+    // hint-assisted answer must not generate an independent repair receipt.
+    if (_activeRepairTaskId != selectedTask.taskId || _choiceWasAssistedV1) {
+      return null;
+    }
     final sourceTaskId = _activeRepairSourceTaskId ?? selectedTask.taskId;
     final intent = _openRepairIntentBySourceTaskId[sourceTaskId];
     final clueLabel = intent?.missedSignalLabel ?? '';
@@ -10283,7 +10309,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final recordingPracticeQueueRepair =
         practiceQueueRepairRequest != null &&
         practiceQueueRepairRequest.repairTaskId == selectedTask.taskId;
-    if (recordingPracticeQueueRepair) {
+    if (recordingPracticeQueueRepair && !_choiceWasAssistedV1) {
       _appendPracticeQueueRepairOutcomeV1(
         request: practiceQueueRepairRequest,
         selectedTask: selectedTask,
@@ -10291,7 +10317,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       );
       return;
     }
-    if (_activeSameSignalRecheckTaskId == selectedTask.taskId) {
+    if (_activeSameSignalRecheckTaskId == selectedTask.taskId &&
+        !_choiceWasAssistedV1) {
       final finalized = _recordLearningRunSourceRecheckV1(
         sourceTaskId:
             _activeSameSignalRecheckSourceTaskId ?? selectedTask.taskId,
@@ -10313,6 +10340,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (_activePracticeGroupId == 'daily') {
       _dailyCompletedTaskIds.add(selectedTask.taskId);
       _dailyCompletedRepCount = (_dailyCompletedRepCount + 1).clamp(0, 3);
+    }
+    if (option.isCorrect && _choiceWasAssistedV1) {
+      // Real learning attempt, not independent repair, transfer or retention.
+      // Preserve any existing repair intent; subsequent ordinary task
+      // completion may still unlock the next teaching step.
+      _persistProgress();
+      return;
     }
     final category = _categoryForLesson(repairSourceLessonId);
     final contextLabels = _repairContextLabels(selectedTask.runner, option);
@@ -12442,7 +12476,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   void _completeCurrentTask(Act0LessonTaskV1 selectedTask) {
     final alreadyCompleted = _completedTaskIds.contains(_selectedTaskId);
-    _clearOpenRepairIntentsForCompletedTaskV1(completedTaskId: _selectedTaskId);
+    if (!_choiceWasAssistedV1) {
+      _clearOpenRepairIntentsForCompletedTaskV1(
+        completedTaskId: _selectedTaskId,
+      );
+    }
     _skippedTaskIds.remove(_selectedTaskId);
     _visibleSkippedTaskIds.remove(_selectedTaskId);
     _completedTaskIds.add(_selectedTaskId);

@@ -1140,6 +1140,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.onConfirmSizingPreset,
     this.onChooseSeat,
     this.onCompletedDecision,
+    this.onChoiceAssistance,
     required this.onContinueReview,
     this.completionSummary,
     this.firstValueReceiptLine,
@@ -1188,6 +1189,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final VoidCallback? onConfirmSizingPreset;
   final ValueChanged<String>? onChooseSeat;
   final ValueChanged<Act0CompletedDecisionV1>? onCompletedDecision;
+  final ValueChanged<Act0DecisionAssistanceV1>? onChoiceAssistance;
   final VoidCallback onContinueReview;
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final String? firstValueReceiptLine;
@@ -1261,6 +1263,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   int _learningRailSupportSegmentIndex = 0;
   String _learningRailSupportStepKey = '';
   bool _showTheoryPeek = false;
+  Act0DecisionAssistanceV1 _decisionAssistanceKindV1 =
+      Act0DecisionAssistanceV1.none;
   bool _showFullIdeaInTheoryPeek = false;
   bool _coachAssetWarmupRequested = false;
   late Act0RunnerCompositionFamilyV1 _compositionFamily;
@@ -1418,6 +1422,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       _interactiveShowdownLine = '';
       _showTheoryPeek = false;
       _showFullIdeaInTheoryPeek = false;
+      _decisionAssistanceKindV1 = Act0DecisionAssistanceV1.none;
     }
   }
 
@@ -1768,6 +1773,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           if (_actionSequenceTelemetryId != null)
             'sequenceId': _actionSequenceTelemetryId,
           'choiceId': option.id,
+          'assistance_kind': _decisionAssistanceKindV1.name,
           'chosen_action': option.id,
           if (projection.expectedAction != null)
             'expected_action': projection.expectedAction,
@@ -1816,6 +1822,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             'concept_family_id': widget.selectedTaskFamily!.name,
           },
           'choiceId': option.id,
+          'assistance_kind': _decisionAssistanceKindV1.name,
           'chosen_action': option.id,
           'selected_action': option.id,
           if (projection.expectedAction != null) ...{
@@ -2009,6 +2016,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         },
       ),
     );
+    widget.onChoiceAssistance?.call(_decisionAssistanceKindV1);
     widget.onChooseOption(option);
     _emitCompletedDecision(
       option,
@@ -2123,6 +2131,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         decisionTimeBucket: telemetryDecisionTimeBucket,
       );
     }
+    widget.onChoiceAssistance?.call(_decisionAssistanceKindV1);
     widget.onChooseSeat?.call(seatId);
     if (option != null) {
       _emitCompletedDecision(
@@ -2151,6 +2160,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             (candidate) => candidate?.id == presetId,
             orElse: () => null,
           );
+    widget.onChoiceAssistance?.call(_decisionAssistanceKindV1);
     widget.onConfirmSizingPreset?.call();
     if (option != null) {
       _emitCompletedDecision(option, Act0CompletedDecisionKindV1.sizing);
@@ -2230,6 +2240,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         decisionTimeBucket:
             decisionTimeBucket ?? _completedDecisionTimeBucket(),
         taskFamily: widget.selectedTaskFamily,
+        assistanceKind: _decisionAssistanceKindV1,
         resultKind: resultKind,
         errorType: errorType,
         skillAtomId: receipt?.skillAtomId ?? concept?.eligibleRepairFamily,
@@ -2657,6 +2668,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     if (step == null) {
       return;
     }
+    _decisionAssistanceKindV1 = Act0DecisionAssistanceV1.theoryRecall;
     final bodyBlocks = act0BuildInstructionBlocksV1(
       text: step.body,
       compact: true,
@@ -2677,6 +2689,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     if (widget.theoryRecallStep == null || _showTheoryPeek) {
       return;
     }
+    _decisionAssistanceKindV1 = Act0DecisionAssistanceV1.quickHint;
     setState(() => _showTheoryPeek = true);
   }
 
@@ -2956,7 +2969,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             fullIdeaBlocks: decisionHint.fullIdeaBlocks,
             showFullIdea: _showFullIdeaInTheoryPeek,
             onShowFullIdea: decisionHint.hasFullIdea
-                ? () => setState(() => _showFullIdeaInTheoryPeek = true)
+                ? () => setState(() {
+                    _showFullIdeaInTheoryPeek = true;
+                    _decisionAssistanceKindV1 =
+                        Act0DecisionAssistanceV1.theoryRecall;
+                  })
                 : null,
             onClose: _closeTheoryRecallPeek,
           );

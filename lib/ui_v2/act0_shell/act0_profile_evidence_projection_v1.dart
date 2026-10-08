@@ -35,6 +35,7 @@ class Act0ProfileEvidenceProjectionV1 {
         : minimumCorrectForPositiveSignal;
     final groups = <String, List<Act0LearningEvidenceRecordV1>>{};
     for (final record in history.records) {
+      if (record.isAssistedCorrect) continue;
       final skillAtomId = record.skillAtomId.trim();
       if (skillAtomId.isEmpty) {
         continue;

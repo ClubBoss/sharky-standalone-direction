@@ -33,6 +33,7 @@ class Act0DurableRetentionHistoryV1 {
   Act0DurableRetentionHistoryV1 applyEvidence(
     Act0LearningEvidenceRecordV1 record,
   ) {
+    if (record.isAssistedCorrect) return this;
     final conceptFamilyId = act0ConceptFamilyIdForDurableEvidenceV1(record);
     if (conceptFamilyId.isEmpty || conceptFamilyId == 'none') {
       return this;
