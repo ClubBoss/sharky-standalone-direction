@@ -27,7 +27,7 @@ void main() {
 
     expect(report.summary.totalIssues, 0);
     expect(report.summary.familyCount, 11);
-    expect(report.summary.totalCheckedSources, 246);
+    expect(report.summary.totalCheckedSources, 249);
     expect(report.summary.totalResidueSources, 0);
     expect(rowById.keys, contains('world1_scenario_truth_pilot_v1'));
     expect(rowById.keys, contains('world2_showdown_truth_v1'));
@@ -58,7 +58,7 @@ void main() {
     expect(rowById['world2_action_choice_policy_v1']!.checkedCount, 87);
     expect(rowById['world2_action_choice_policy_v1']!.residueCount, 0);
     expect(rowById['world2_hand_chain_mixed_subset_v1']!.checkedCount, 8);
-    expect(rowById['world3_early_arc_runtime_truth_v1']!.checkedCount, 10);
+    expect(rowById['world3_early_arc_runtime_truth_v1']!.checkedCount, 13);
   });
 
   test(

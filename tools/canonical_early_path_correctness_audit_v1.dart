@@ -421,14 +421,18 @@ Future<CanonicalEarlyPathCorrectnessFamilyRowV1> _buildWorld3RuntimeTruthRowV1(
       continue;
     }
     final drillIds = parseDrillIdsFromIndexV1(indexFile.readAsStringSync());
-    if (drillIds.length != 1) {
-      issues.add(
-        '$sessionId expected exactly 1 drill id but found ${drillIds.length}',
-      );
+    final isExpandedFinalCheckpoint = sessionId == 'w3.s10';
+    const finalCheckpointId = 'chain_preflop_final_checkpoint_v1';
+    if (drillIds.isEmpty ||
+        (!isExpandedFinalCheckpoint && drillIds.length != 1) ||
+        (isExpandedFinalCheckpoint && !drillIds.contains(finalCheckpointId))) {
+      issues.add('$sessionId missing or ambiguous canonical hand-chain drill');
       continue;
     }
 
-    final drillId = drillIds.single;
+    final drillId = isExpandedFinalCheckpoint
+        ? finalCheckpointId
+        : drillIds.single;
     final drillFile = File('$sessionPath/drills/d.$drillId.json');
     if (!drillFile.existsSync()) {
       issues.add('$sessionId missing drill file for $drillId');
@@ -463,11 +467,43 @@ Future<CanonicalEarlyPathCorrectnessFamilyRowV1> _buildWorld3RuntimeTruthRowV1(
     if (!steps.every((step) => step.street == 'preflop')) {
       issues.add('$sessionId expected every chain step to stay preflop');
     }
+
+    // The final W3 checkpoint also owns three independent action-choice
+    // transfer drills. Audit every indexed learner choice rather than
+    // treating the intentional multi-drill session as invalid.
+    if (isExpandedFinalCheckpoint) {
+      for (final transferId in drillIds.where((id) => id != drillId)) {
+        checkedSources.add('$sessionId/$transferId');
+        final transferFile = File('$sessionPath/drills/d.$transferId.json');
+        if (!transferFile.existsSync()) {
+          issues.add('$sessionId missing transfer drill $transferId');
+          continue;
+        }
+        final transferRaw = mergeSessionDrillProjectionDefaultsIntoDrillJsonV1(
+          sessionId: sessionId,
+          drillId: transferId,
+          drillRaw: transferFile.readAsStringSync(),
+          defaultsRaw: defaultsFile.existsSync()
+              ? defaultsFile.readAsStringSync()
+              : null,
+        );
+        final transfer = DrillSpecV1.fromJsonString(transferRaw);
+        final actions = transfer.availableActionsV1 ?? const <String>[];
+        final expectedAction = transfer.expected.actionId;
+        if (transfer.id != transferId ||
+            transfer.kind != DrillKindV1.actionChoice ||
+            actions.length < 2 ||
+            actions.toSet().length != actions.length ||
+            !actions.contains(expectedAction)) {
+          issues.add('$sessionId/$transferId invalid action-choice transfer');
+        }
+      }
+    }
   }
 
   return CanonicalEarlyPathCorrectnessFamilyRowV1(
     id: 'world3_early_arc_runtime_truth_v1',
-    familySourceCount: sessionIds.length,
+    familySourceCount: checkedSources.length,
     checkedCount: checkedSources.length,
     residueCount: 0,
     checkedSources: List<String>.unmodifiable(checkedSources),
