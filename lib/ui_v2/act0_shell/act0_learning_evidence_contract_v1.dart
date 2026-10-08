@@ -76,6 +76,7 @@ Act0LearningEvidenceRecordV1? act0LearningEvidenceRecordFromCompletedDecisionV1(
     sessionId: sessionId.trim(),
     recordedAtUtc: recordedAtUtc?.toUtc(),
     reviewKind: reviewKind,
+    assistanceKind: decision.assistanceKind,
   );
 }
 
@@ -193,6 +194,7 @@ class Act0LearningEvidenceRecordV1 {
     this.sessionId = '',
     this.recordedAtUtc,
     this.reviewKind = Act0ReviewKindV1.legacyUnspaced,
+    this.assistanceKind = Act0DecisionAssistanceV1.legacyUnknown,
   });
 
   final int schemaVersion;
@@ -220,6 +222,12 @@ class Act0LearningEvidenceRecordV1 {
   final String sessionId;
   final DateTime? recordedAtUtc;
   final Act0ReviewKindV1 reviewKind;
+  final Act0DecisionAssistanceV1 assistanceKind;
+
+  bool get isAssistedCorrect =>
+      isCorrect &&
+      (assistanceKind == Act0DecisionAssistanceV1.quickHint ||
+          assistanceKind == Act0DecisionAssistanceV1.theoryRecall);
 
   Map<String, Object?> toPayload() {
     final payload = <String, Object?>{
@@ -239,6 +247,8 @@ class Act0LearningEvidenceRecordV1 {
       'skillAtomId': skillAtomId,
       'decisionTimeBucket': decisionTimeBucket,
       'resultKind': resultKind,
+      if (assistanceKind != Act0DecisionAssistanceV1.legacyUnknown)
+        'assistanceKind': assistanceKind.name,
     };
     if (runId.isNotEmpty) {
       payload['runId'] = runId;
@@ -299,6 +309,12 @@ class Act0LearningEvidenceRecordV1 {
     final startedBy = _optionalString(map['startedBy']);
     final sessionId = _optionalString(map['sessionId']);
     final recordedAtUtc = act0TryParseUtcV1(map['recordedAtUtc']);
+    final assistanceKind = map.containsKey('assistanceKind')
+        ? act0EnumByNameV1(
+            Act0DecisionAssistanceV1.values,
+            map['assistanceKind'],
+          )
+        : Act0DecisionAssistanceV1.legacyUnknown;
     final reviewKind = map.containsKey('reviewKind')
         ? act0EnumByNameV1(Act0ReviewKindV1.values, map['reviewKind'])
         : Act0ReviewKindV1.legacyUnspaced;
@@ -321,6 +337,7 @@ class Act0LearningEvidenceRecordV1 {
         (!isCorrect && resultKind == 'correct') ||
         (isCorrect && errorType != 'none') ||
         reviewKind == null ||
+        assistanceKind == null ||
         (recordedAtUtc == null &&
             reviewKind != Act0ReviewKindV1.legacyUnspaced)) {
       return null;
@@ -350,6 +367,7 @@ class Act0LearningEvidenceRecordV1 {
       sessionId: sessionId,
       recordedAtUtc: recordedAtUtc,
       reviewKind: reviewKind,
+      assistanceKind: assistanceKind,
     );
   }
 
@@ -380,7 +398,8 @@ class Act0LearningEvidenceRecordV1 {
       other.startedBy == startedBy &&
       other.sessionId == sessionId &&
       other.recordedAtUtc == recordedAtUtc &&
-      other.reviewKind == reviewKind;
+      other.reviewKind == reviewKind &&
+      other.assistanceKind == assistanceKind;
 
   @override
   int get hashCode => Object.hashAll(<Object?>[
@@ -409,6 +428,7 @@ class Act0LearningEvidenceRecordV1 {
     sessionId,
     recordedAtUtc,
     reviewKind,
+    assistanceKind,
   ]);
 }
 

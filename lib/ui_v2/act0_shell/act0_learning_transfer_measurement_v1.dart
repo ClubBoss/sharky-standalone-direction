@@ -34,6 +34,7 @@ class Act0LearningTransferMeasurementV1 {
         Act0DurableRetentionHistoryV1.fromLearningEvidence(history);
     final buckets = <String, List<Act0LearningEvidenceRecordV1>>{};
     for (final record in history.records) {
+      if (record.isAssistedCorrect) continue;
       final conceptFamilyId = act0ConceptFamilyIdForDurableEvidenceV1(record);
       if (conceptFamilyId.isEmpty || conceptFamilyId == 'none') {
         continue;

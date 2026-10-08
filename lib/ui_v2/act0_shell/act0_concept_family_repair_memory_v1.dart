@@ -16,6 +16,7 @@ class Act0ConceptFamilyRepairMemoryV1 {
   ) {
     final buckets = <String, _ConceptFamilyAccumulatorV1>{};
     for (final record in history.records) {
+      if (record.isAssistedCorrect) continue;
       final conceptFamilyId = _conceptFamilyId(record);
       if (conceptFamilyId.isEmpty) {
         continue;

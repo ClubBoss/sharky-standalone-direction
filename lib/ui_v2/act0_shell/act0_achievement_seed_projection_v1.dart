@@ -70,7 +70,7 @@ class Act0AchievementSeedProjectionV1 {
           earnedRecord: _firstCorrectRecord(learningEvidenceHistory),
           summaryBuilder: (record) => <String, Object?>{
             'completedCorrectDecisions': learningEvidenceHistory.records
-                .where((item) => item.isCorrect)
+                .where((item) => item.isCorrect && !item.isAssistedCorrect)
                 .length,
             'firstCreatedOrder': record.createdOrder,
           },
@@ -312,8 +312,11 @@ Act0AchievementSeedV1 _earnedWhen<T extends Object>({
 Act0LearningEvidenceRecordV1? _firstCorrectRecord(
   Act0LearningEvidenceHistoryV1 history,
 ) {
-  final records = history.records.where((record) => record.isCorrect).toList()
-    ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));
+  final records =
+      history.records
+          .where((record) => record.isCorrect && !record.isAssistedCorrect)
+          .toList()
+        ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));
   return records.isEmpty ? null : records.first;
 }
 

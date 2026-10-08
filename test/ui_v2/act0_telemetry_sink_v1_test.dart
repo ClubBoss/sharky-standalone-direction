@@ -635,6 +635,7 @@ void main() {
       expect(userChoice['taskId'], 'actions_raise_drill');
       expect(userChoice['choiceId'], 'raise');
       expect(userChoice['chosen_action'], 'raise');
+      expect(userChoice['assistance_kind'], 'none');
       expect(userChoice['expected_action'], 'raise');
       expect(userChoice['correct'], isTrue);
       expect(userChoice['result_classification'], 'correct');
@@ -657,6 +658,7 @@ void main() {
         'lessonId',
         'taskId',
         'choiceId',
+        'assistance_kind',
         'chosen_action',
         'expected_action',
         'correct',

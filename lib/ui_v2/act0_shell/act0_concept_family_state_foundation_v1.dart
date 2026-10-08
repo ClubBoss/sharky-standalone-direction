@@ -65,6 +65,9 @@ class Act0ConceptFamilyStateHistoryV1 {
     if (sourceId.trim() == 'learning:' || appliedSourceIds.contains(sourceId)) {
       return this;
     }
+    if (record.isAssistedCorrect) {
+      return _withAppliedSourceId(sourceId);
+    }
     final conceptFamilyId = act0ConceptFamilyIdForEvidenceRecordV1(record);
     if (conceptFamilyId.isEmpty) {
       return this;
