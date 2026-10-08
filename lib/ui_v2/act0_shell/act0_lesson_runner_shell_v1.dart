@@ -239,6 +239,7 @@ class Act0BlockCompletionSummaryV1 {
     required this.xpEarned,
     required this.errorCount,
     this.assistedCount = 0,
+    this.independentProvenanceKnown = true,
     required this.taskCount,
     required this.correctCount,
     required this.startLevel,
@@ -273,6 +274,7 @@ class Act0BlockCompletionSummaryV1 {
   /// Count of tasks where the learner used Quick Hint or Theory Recall.
   /// Accuracy remains answer correctness; independent proof is distinct.
   final int assistedCount;
+  final bool independentProvenanceKnown;
   final int taskCount;
   final int correctCount;
   final int startLevel;
@@ -323,13 +325,16 @@ class Act0BlockCompletionSummaryV1 {
       !hasNextLesson || accuracyPercent >= unlockAccuracyPercent;
 
   Act0MasteryStatusV1 get masteryStatus {
-    if (errorCount == 0 && taskCount > 0 && assistedCount == 0) {
+    if (errorCount == 0 &&
+        taskCount > 0 &&
+        assistedCount == 0 &&
+        independentProvenanceKnown) {
       return Act0MasteryStatusV1.cleanPass;
     }
     if (deepLeakCount > 0 || !qualifiesForNextLesson) {
       return Act0MasteryStatusV1.needsReview;
     }
-    if (assistedCount > 0) {
+    if (assistedCount > 0 || !independentProvenanceKnown) {
       return Act0MasteryStatusV1.learning;
     }
     return Act0MasteryStatusV1.solid;
@@ -9734,7 +9739,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               _BlockXpProgressCardV1(summary: summary),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               Text(
-                summary.assistedCount > 0
+                !summary.independentProvenanceKnown
+                    ? '${summary.correctCount}/${summary.taskCount} correct · help history unverified · ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}'
+                    : summary.assistedCount > 0
                     ? '${summary.correctCount}/${summary.taskCount} correct · ${summary.assistedCount} with help · ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}'
                     : '${summary.accuracyPercent}% accuracy · ${summary.correctCount}/${summary.taskCount} correct · ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}',
                 key: const Key('act0_shell_block_summary_accuracy'),
