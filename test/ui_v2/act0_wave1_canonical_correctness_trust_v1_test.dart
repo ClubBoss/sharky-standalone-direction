@@ -98,6 +98,43 @@ void main() {
       );
     });
 
+    test('canonical W1 and inherited W3 feedback titles own their answer', () {
+      const expected = <String, String>{
+        'cards_ranks_suits_suit_drill': 'Hearts is the suit.',
+        'cards_ranks_suits_private_board': 'Board cards are shared.',
+        'cards_ranks_suits_best_five': 'Five cards form your hand.',
+        'your_first_hand_turn': 'Turn is the fourth board card.',
+        'your_first_hand_river': 'River is the fifth board card.',
+        'actions_legal_context': 'Check is legal with no bet to call.',
+        'actions_fold_drill': 'Fold gives up this hand.',
+        'actions_call_drill': 'Call matches the current bet.',
+        'blinds_postflop_button': 'BTN acts last after the flop.',
+        'positions_cutoff': 'CO is the seat before BTN.',
+        'hand_rankings_best_five_drill': 'Five cards form your hand.',
+        'button_advantage_button_last': 'BTN acts last after the flop.',
+        'button_advantage_position_repair_btn_last_postflop':
+            'BTN acts last after the flop.',
+        'fold_discipline_facing_fold': 'J8o still folds versus a CO open.',
+        'weak_ace_warning_weak_ace_pressure_fold':
+            'J8o still folds versus a CO open.',
+        'continue_or_let_go_weak_let_go':
+            'J8o still folds versus a CO open.',
+      };
+      final tasks = <Act0LessonTaskV1>[
+        for (var world = 1; world <= 3; world++)
+          ...Act0ShellStateV1.sample
+              .worldById('world_$world')
+              .lessons
+              .expand((lesson) => lesson.taskList),
+      ];
+      for (final row in expected.entries) {
+        final task = tasks.firstWhere((task) => task.taskId == row.key);
+        final correct = task.runner.options.firstWhere((o) => o.isCorrect);
+        expect(correct.feedbackTitle, row.value, reason: task.taskId);
+        expect(correct.feedbackReason.trim(), isNotEmpty);
+      }
+    });
+
     test(
       'W2 apply_hj_decision uses HJ medium-hand source without old UTG trash',
       () {
