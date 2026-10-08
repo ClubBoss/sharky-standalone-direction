@@ -62,6 +62,14 @@ For the next five-newbie trial, preserve fresh participant ignorance and add obs
 
 These are first-ten-minute Human falsifiers with genuine lineage; they are not speculative new dashboard features.
 
+## 2B. Current one-time Welcome micro-win: STOP treating it as a text-only bridge
+
+Exact active source `lib/ui_v2/act0_shell/act0_welcome_shell_v1.dart` implements `intro → demoSpot → handoff`; `demoSpot` embeds a real `Act0LessonRunnerShellV1` reusing `actions_check_drill` (no bet yet → check) with actual choice/review, not just a static teaser. The companion handoff then starts existing W1. It does not generate fake lesson progress or XP.
+
+The older document `welcome_placement_micro_aha_alignment_piec_v1.md` inspected historical SHA `86512b2` and predates the later Welcome micro-win implementation. The current source resolves that apparent contradiction. First-start differentiation hypothesis becomes: **does this existing micro-win feel like a satisfying corrected insight that leads naturally to the next challenge**, rather than whether any micro-win exists?
+
+Exact current PR226 activation owner tests on Mac (four suites) pass 39/39; an extended legacy E2E adds two missing old lesson list keys, giving 40 pass/2 fail. Neither source facts nor unit tests show actual Human delight. Do not add new intro content or award artificial XP to improve a cosmetic score.
+
 ## 3. Stage-specific red flags
 
 - A product quizzes the novice before any interpretable teaching and then markets that score as learned mastery.
