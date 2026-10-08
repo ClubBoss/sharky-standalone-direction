@@ -1,15 +1,22 @@
 # SHARKY POKER — MASTER PLAN v5.0
 ## NORTH STAR × TOP-1 EXCELLENCE × PARALLEL BULLDOZER EXECUTION
 
-**Document status:** `OWNER_APPROVAL CANDIDATE — NOT ACTIVE, NOT MERGED`  
-**Version/date:** `5.0 / 2026-10-08`  
-**Product/repository:** Sharky Poker / `ClubBoss/sharky-standalone-direction`  
-**Live source comparison:** repository files read at Draft PR #240 HEAD `9b75eaa1b62343f61e83a7442ad2a2cd13c935c6`; uploaded strategy/design references and candidate v4.1.  
-**Scope:** principal **product strategy + operating roadmap + acceptance standards** from present integration through Volume I launch and the continuing 36-world platform.  
+**Document status:** `OWNER_APPROVAL CANDIDATE — NOT ACTIVE, NOT MERGED`
+
+**Version/date:** `5.0 / 2026-10-08`
+
+**Product/repository:** Sharky Poker / `ClubBoss/sharky-standalone-direction`
+
+**Live source comparison:** repository files read at Draft PR #240 HEAD `9b75eaa1b62343f61e83a7442ad2a2cd13c935c6`; uploaded strategy/design references and candidate v4.1.
+
+**Scope:** principal **product strategy + operating roadmap + acceptance standards** from present integration through Volume I launch and the continuing 36-world platform.
+
 **Adoption status:** This candidate **does not supersede** the live `docs/plan/MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md` until the owner explicitly approves it, a docs-only PR is reviewed, and its merge is verified on `main`.
 
-> **Product promise:** *The poker coach that turns mistakes into corrected table instincts.*  
-> **Operating rule:** *Finish the most valuable learner-facing block per unit of elapsed time, with no false proof, no speculative refactoring, and no regression of accepted quality.*  
+> **Product promise:** *The poker coach that turns mistakes into corrected table instincts.*
+
+> **Operating rule:** *Finish the most valuable learner-facing block per unit of elapsed time, with no false proof, no speculative refactoring, and no regression of accepted quality.*
+
 > **Competitive ambition:** Sharky must become **at least competitive and preferably materially better** than the best relevant poker-training apps on matched learner jobs, not just prettier in screenshots or more complete in a feature list.
 
 ---
@@ -60,7 +67,8 @@ Never promote to Human/Market/Real-Poker proof by: CI green, number of lessons/w
 
 Sharky competes on the full learner journey. Our historic comparison family includes **Runout** (breadth, skill framing, daily training, market/product completeness) and **PokerSkill** (premium Learning Scene, visual embodiment). Other alternatives join only when specific named builds, tasks and dates are available. Historical competitor research is a **reference**, not verification of any competitor's October 2026 state.
 
-**Public Volume I positioning:** “The table coach. Learn to read the table from your first hand.”  
+**Public Volume I positioning:** “The table coach. Learn to read the table from your first hand.”
+
 **Platform positioning:** “Zero to shark. Table-first poker training across 36 worlds.”
 
 Sharky must be at least parity, and preferably better, on matched important jobs: novice orientation, first decision, poker truth, table-signal insight, feedback usefulness, repair integrity, transfer, retention, progression, respectful emotional support, premium visual coherence, stability and value. **Distinctive strengths to prove:** explainable error→repair causality and independent applied transfer. No broad “#1” claim without representative valid external evidence.
@@ -463,7 +471,8 @@ If two live authorities genuinely conflict (e.g., strategic W1–W12 vs commerce
 7. Keep PR #224 and unrelated visually frozen work separate; do not let the docs PR change code, art, runtime, test fixtures or a current proof status.
 8. Run a short first mission under v5: live-state/critical-path reconciliation using existing evidence, then one highest-EV bottleneck. Do not start ten simultaneous waves because a new roadmap has ten blocks.
 
-**Before adoption:** `MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md = ACTIVE`; `MASTER_PLAN_v5.0 = CANDIDATE`.  
+**Before adoption:** `MASTER_PLAN_v4_NORTH_STAR_INTEGRATED.md = ACTIVE`; `MASTER_PLAN_v5.0 = CANDIDATE`.
+
 **After owner-approved merge:** `MASTER_PLAN_v5.0 = ACTIVE`, with same product North Star and stricter efficiency/competitive proof; v4 = historic trace.
 
 ---
@@ -536,10 +545,16 @@ No automatic PR for v5, no change to #224, no re-opening closed design merely be
 
 **Immediate management instruction (2026-10-08):** wait for the current integrator's bounded native-assisted result; decide the #234–#240 stack; reconcile active September campaign Lane C against source/PR #222; close pre-P02 machine/product convergence by evidence; admit P02 only with owner authorization. Keep non-overlapping read-only research/recruitment/design preparation available when it genuinely shortens calendar critical path.
 
-`MASTER_PLAN_V5_CANDIDATE = COMPREHENSIVE`  
-`NORTH_STAR = PRESERVED`  
-`TOP1 / W1–W36 = PRESERVED`  
-`VOLUME_I_W1–W12 = INTENDED_LAUNCH_TARGET`  
-`BULLDOZER = HIGHEST_VALID_PRODUCT_EV_PER_HOUR`  
-`EVIDENCE = NO FALSE PASSES`  
+`MASTER_PLAN_V5_CANDIDATE = COMPREHENSIVE`
+
+`NORTH_STAR = PRESERVED`
+
+`TOP1 / W1–W36 = PRESERVED`
+
+`VOLUME_I_W1–W12 = INTENDED_LAUNCH_TARGET`
+
+`BULLDOZER = HIGHEST_VALID_PRODUCT_EV_PER_HOUR`
+
+`EVIDENCE = NO FALSE PASSES`
+
 `ACTIVE_AUTHORITY = V4_UNTIL_EXPLICIT_APPROVAL_AND_MERGE`
