@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 
 void main() {
   const progressKey = 'act0_shell_progress_v1';
@@ -21,6 +22,7 @@ void main() {
 
   for (final mode in <String>[
     'quickHint',
+    'lessonDetour',
     'theoryRecall',
     'repeatHint',
     'independent',
@@ -69,7 +71,7 @@ void main() {
                     'choiceId': 'check',
                     'expectedChoiceId': 'check',
                     'isCorrect': true,
-                    'errorType': '',
+                    'errorType': 'none',
                     'repairFocusId': '',
                     'skillAtomId': 'action_read',
                     'decisionTimeBucket': '3_to_10s',
@@ -78,6 +80,10 @@ void main() {
                   },
                 ]
               : <Object>[],
+          if (mode != 'legacyUnknown')
+            'lessonRunEvidenceBoundaries': <String, Object?>{
+              lessonId: mode == 'freshAfterOldHelp' ? 1 : 0,
+            },
           if (mode != 'legacyUnknown') 'lessonRunEvidenceLessonId': lessonId,
           if (mode != 'legacyUnknown')
             'lessonRunEvidenceStartOrder': mode == 'freshAfterOldHelp' ? 1 : 0,
@@ -163,9 +169,58 @@ void main() {
         );
       }
 
+      if (mode == 'freshAfterOldHelp') {
+        expect(
+          evidence.any(
+            (record) =>
+                (record as Map)['recordId'] == 'previous_run|1' &&
+                record['assistanceKind'] == 'quickHint',
+          ),
+          isTrue,
+        );
+      }
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pumpWidget(host());
       await tester.pumpAndSettle();
+      if (mode == 'lessonDetour') {
+        await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+        await tester.pumpAndSettle();
+        final bottomNav = find.byKey(const Key('act0_shell_bottom_nav'));
+        final learnTab = find.descendant(
+          of: bottomNav,
+          matching: find.text('Learn'),
+        );
+        if (learnTab.evaluate().isNotEmpty) {
+          await tester.tap(learnTab);
+          await tester.pumpAndSettle();
+        }
+        final earlier = find.byKey(
+          const Key('act0_shell_lesson_First Table Guide'),
+        );
+        if (earlier.evaluate().isEmpty) {
+          final fullPath = find.byKey(
+            const Key('act0_shell_learn_v5_view_full_path'),
+          );
+          expect(fullPath, findsOneWidget);
+          await tester.tap(fullPath);
+          await tester.pumpAndSettle();
+        }
+        expect(earlier, findsOneWidget);
+        await tester.ensureVisible(earlier);
+        await tester.tap(earlier);
+        await tester.pumpAndSettle();
+        // Invoke the same owned callbacks as Learn's lesson row and Start CTA;
+        // the mission-first viewport may virtualize the offscreen lesson row.
+        tester
+            .widget<Act0LearnPathShellV1>(find.byType(Act0LearnPathShellV1))
+            .onSelectLesson(lessonId);
+        await tester.pumpAndSettle();
+        tester
+            .widget<Act0LearnPathShellV1>(find.byType(Act0LearnPathShellV1))
+            .onStartTask(lessonId, 'actions_fold_drill');
+        await tester.pumpAndSettle();
+        expect(find.byType(Act0LessonRunnerShellV1), findsOneWidget);
+      }
 
       for (final taskId in <String>[
         'actions_fold_drill',

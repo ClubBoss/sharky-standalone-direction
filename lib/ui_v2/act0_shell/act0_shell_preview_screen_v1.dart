@@ -1181,6 +1181,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   // Null means legacy/incomplete provenance, never verified independence.
   String _lessonRunEvidenceLessonIdV1 = '';
   int? _lessonRunEvidenceStartOrderV1 = 0;
+  // Bookmarks for unfinished lessons; source evidence remains learningEvidenceHistory.
+  final Map<String, int?> _lessonRunEvidenceBoundariesV1 = <String, int?>{};
   final Set<String> _lessonRunPendingRetryTaskIds = <String>{};
   final Set<String> _lessonRunRetriedTaskIds = <String>{};
   final Set<String> _lessonRunWrapUpCompletedTaskIds = <String>{};
@@ -3575,13 +3577,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       final hasPriorLessonEvidence = parsed.learningEvidenceHistory.records.any(
         (record) => record.lessonId == selectedLesson.lessonId,
       );
+      _lessonRunEvidenceBoundariesV1
+        ..clear()
+        ..addAll(parsed.lessonRunEvidenceBoundaries)
+        ..removeWhere((lessonId, _) => !validLessonIds.contains(lessonId));
       _lessonRunEvidenceLessonIdV1 = selectedLesson.lessonId;
       _lessonRunEvidenceStartOrderV1 =
-          parsed.lessonRunEvidenceLessonId == selectedLesson.lessonId
-          ? parsed.lessonRunEvidenceStartOrder
+          _lessonRunEvidenceBoundariesV1.containsKey(selectedLesson.lessonId)
+          ? _lessonRunEvidenceBoundariesV1[selectedLesson.lessonId]
           : (hasPriorLessonProgress || hasPriorLessonEvidence
                 ? null
                 : _latestEvidenceOrderV1());
+      _lessonRunEvidenceBoundariesV1[selectedLesson.lessonId] =
+          _lessonRunEvidenceStartOrderV1;
       if (widget.initialTab == Act0ShellTabV1.learn) {
         _seedLearnRouteFocusV1(
           lessonId: selectedLesson.lessonId,
@@ -3894,8 +3902,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       dismissedHomeHandoffDay: _dismissedHomeHandoffDay,
       firstValueReturnCarry: _firstValueReceiptCarry,
       learningEvidenceHistory: _learningEvidenceHistoryV1,
-      lessonRunEvidenceLessonId: _lessonRunEvidenceLessonIdV1,
-      lessonRunEvidenceStartOrder: _lessonRunEvidenceStartOrderV1,
+      lessonRunEvidenceBoundaries: Map<String, int?>.from(
+        _lessonRunEvidenceBoundariesV1,
+      ),
       durableRetentionHistory: _durableRetentionHistoryV1.refreshedAt(
         widget.clock.nowUtc(),
       ),
@@ -12982,13 +12991,46 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   );
 
   void _resetLessonRunMetrics({bool forceFreshProvenance = false}) {
-    // Reopening the same incomplete lesson after Home-first restoration is a
-    // continuation; replay of a completed lesson or a changed lesson is fresh.
+    // Selection of a different lesson must not destroy an unfinished lesson's
+    // durable run boundary. Replays of completed lessons start a new run.
+    if (forceFreshProvenance) {
+      _lessonRunEvidenceBoundariesV1.clear();
+    } else if (_lessonRunEvidenceLessonIdV1.isNotEmpty) {
+      _lessonRunEvidenceBoundariesV1[_lessonRunEvidenceLessonIdV1] =
+          _lessonRunEvidenceStartOrderV1;
+    }
     if (forceFreshProvenance ||
         _lessonRunEvidenceLessonIdV1 != _selectedLessonId ||
         _completedLessonIds.contains(_selectedLessonId)) {
       _lessonRunEvidenceLessonIdV1 = _selectedLessonId;
-      _lessonRunEvidenceStartOrderV1 = _latestEvidenceOrderV1();
+      if (forceFreshProvenance ||
+          _completedLessonIds.contains(_selectedLessonId)) {
+        _lessonRunEvidenceStartOrderV1 = _latestEvidenceOrderV1();
+      } else if (_lessonRunEvidenceBoundariesV1.containsKey(
+        _selectedLessonId,
+      )) {
+        _lessonRunEvidenceStartOrderV1 =
+            _lessonRunEvidenceBoundariesV1[_selectedLessonId];
+      } else {
+        final taskIds = <String>[
+          for (final world in (widget.state ?? Act0ShellStateV1.sample).worlds)
+            for (final lesson in world.lessons)
+              if (lesson.lessonId == _selectedLessonId)
+                for (final task in lesson.taskList) task.taskId,
+        ];
+        final hasOlderProgress =
+            taskIds.any(_completedTaskIds.contains) ||
+            _learningEvidenceHistoryV1.records.any(
+              (record) => record.lessonId == _selectedLessonId,
+            );
+        _lessonRunEvidenceStartOrderV1 = hasOlderProgress
+            ? null
+            : _latestEvidenceOrderV1();
+      }
+    }
+    if (_selectedLessonId.isNotEmpty) {
+      _lessonRunEvidenceBoundariesV1[_selectedLessonId] =
+          _lessonRunEvidenceStartOrderV1;
     }
     _lessonRunXp = 0;
     _lessonRunMistakeTaskIds.clear();
@@ -13981,8 +14023,7 @@ class _Act0PersistedProgressV1 {
     this.dismissedHomeHandoffDay = '',
     this.firstValueReturnCarry,
     this.learningEvidenceHistory = const Act0LearningEvidenceHistoryV1(),
-    this.lessonRunEvidenceLessonId = '',
-    this.lessonRunEvidenceStartOrder,
+    this.lessonRunEvidenceBoundaries = const <String, int?>{},
     this.durableRetentionHistory = const Act0DurableRetentionHistoryV1(),
     this.reviewMistakeHistory = const Act0ReviewMistakeHistoryV1(),
     this.reviewResolutionReceiptHistory =
@@ -14018,8 +14059,7 @@ class _Act0PersistedProgressV1 {
   final String dismissedHomeHandoffDay;
   final _Act0FirstValueReceiptCarryV1? firstValueReturnCarry;
   final Act0LearningEvidenceHistoryV1 learningEvidenceHistory;
-  final String lessonRunEvidenceLessonId;
-  final int? lessonRunEvidenceStartOrder;
+  final Map<String, int?> lessonRunEvidenceBoundaries;
   final Act0DurableRetentionHistoryV1 durableRetentionHistory;
   final Act0ReviewMistakeHistoryV1 reviewMistakeHistory;
   final Act0ReviewResolutionReceiptHistoryV1 reviewResolutionReceiptHistory;
@@ -14076,9 +14116,10 @@ class _Act0PersistedProgressV1 {
       'dismissedHomeHandoffKey': dismissedHomeHandoffKey,
       'dismissedHomeHandoffDay': dismissedHomeHandoffDay,
       'learningEvidenceHistory': learningEvidenceHistory.toPayload(),
-      'lessonRunEvidenceLessonId': lessonRunEvidenceLessonId,
-      if (lessonRunEvidenceStartOrder != null)
-        'lessonRunEvidenceStartOrder': lessonRunEvidenceStartOrder!,
+      'lessonRunEvidenceBoundaries': <String, int?>{
+        for (final entry in lessonRunEvidenceBoundaries.entries)
+          entry.key: entry.value,
+      },
       'durableRetentionHistory': durableRetentionHistory.toPayload(),
       'reviewMistakeHistory': reviewMistakeHistory.toPayload(),
       'reviewResolutionReceipts': reviewResolutionReceiptHistory.toPayload(),
@@ -14193,6 +14234,25 @@ class _Act0PersistedProgressV1 {
         parsedEvidenceStart != null && parsedEvidenceStart >= 0
         ? parsedEvidenceStart
         : null;
+    final lessonRunEvidenceBoundaries = <String, int?>{};
+    final boundariesRaw = map['lessonRunEvidenceBoundaries'];
+    if (boundariesRaw is Map) {
+      for (final entry in boundariesRaw.entries) {
+        final lessonId = entry.key.toString().trim();
+        if (lessonId.isEmpty) continue;
+        final value = entry.value;
+        final order = value is int
+            ? value
+            : int.tryParse(value?.toString() ?? '');
+        lessonRunEvidenceBoundaries[lessonId] = order != null && order >= 0
+            ? order
+            : null;
+      }
+    } else if (lessonRunEvidenceLessonId.isNotEmpty) {
+      // Migrate the prior single-lesson schema-18 bookmark without dropping it.
+      lessonRunEvidenceBoundaries[lessonRunEvidenceLessonId] =
+          lessonRunEvidenceStartOrder;
+    }
     final learningEvidenceHistory =
         Act0LearningEvidenceHistoryV1.tryParse(
           map['learningEvidenceHistory'],
@@ -14255,8 +14315,7 @@ class _Act0PersistedProgressV1 {
       dismissedHomeHandoffDay: dismissedHomeHandoffDay,
       firstValueReturnCarry: firstValueReturnCarry,
       learningEvidenceHistory: learningEvidenceHistory,
-      lessonRunEvidenceLessonId: lessonRunEvidenceLessonId,
-      lessonRunEvidenceStartOrder: lessonRunEvidenceStartOrder,
+      lessonRunEvidenceBoundaries: lessonRunEvidenceBoundaries,
       durableRetentionHistory: durableRetentionHistory,
       reviewMistakeHistory: reviewMistakeHistory,
       reviewResolutionReceiptHistory: reviewResolutionReceiptHistory,
