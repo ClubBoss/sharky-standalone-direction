@@ -20,10 +20,20 @@ if [ ! -f "$STATE" ]; then
   exit 3
 fi
 
+# The dated current-dispatch section owns live assignments. Historical
+# dispatches below the next H2 heading must never supply missing values.
+CURRENT_DISPATCH="$(
+  awk '
+    /^## [[:alpha:]]+ 20[0-9][0-9] exact current dispatch([[:space:]]|$)/ { active=1; next }
+    active && /^## / { exit }
+    active { print }
+  ' "$STATE"
+)"
+
 extract_assignment() {
   local key="$1"
   local line
-  line="$(grep -m1 -F "\`$key = " "$STATE" 2>/dev/null || true)"
+  line="$(printf '%s\n' "$CURRENT_DISPATCH" | grep -m1 -F "\`$key = " || true)"
   if [ -z "$line" ]; then
     printf 'UNKNOWN'
     return
@@ -68,13 +78,26 @@ DIRTY_TRACKED_COUNT="$(
 STATE_BLOB="$(git rev-parse "HEAD:$STATE" 2>/dev/null || true)"
 [ -n "$STATE_BLOB" ] || STATE_BLOB="UNTRACKED_OR_MODIFIED"
 
-FROZEN_KEYS="$(
-  grep -E '^`[A-Z0-9_]+ = .*FROZEN' "$STATE" 2>/dev/null \
-    | sed -E 's/^`([^ ]+) = .*$/\1/' \
-    | sort -u \
-    | paste -sd, - || true
-)"
-[ -n "$FROZEN_KEYS" ] || FROZEN_KEYS="NONE_DECLARED"
+ACTIVE_FAMILY="$(extract_assignment CURRENT_ACTIVE_IMPLEMENTATION_FAMILY)"
+EXACT_NEXT_ACTION="$(extract_assignment EXACT_NEXT_ACTION)"
+if [ "$EXACT_NEXT_ACTION" = "UNKNOWN" ]; then
+  case "$ACTIVE_FAMILY" in
+    NONE|"NONE / "*) EXACT_NEXT_ACTION="NONE" ;;
+  esac
+fi
+
+if [ -z "$CURRENT_DISPATCH" ]; then
+  FROZEN_KEYS="UNKNOWN"
+else
+  FROZEN_KEYS="$(
+    printf '%s\n' "$CURRENT_DISPATCH" \
+      | grep -E '^`[A-Z0-9_]+ = .*FROZEN' \
+      | sed -E 's/^`([^ ]+) = .*$/\1/' \
+      | sort -u \
+      | paste -sd, - || true
+  )"
+  [ -n "$FROZEN_KEYS" ] || FROZEN_KEYS="NONE_DECLARED"
+fi
 
 printf '%s\n' \
   "SHARKY_CONTEXT_CAPSULE_V2" \
@@ -89,8 +112,8 @@ printf '%s\n' \
   "STATE_STATUS=$(extract_header Status)" \
   "STATE_FRESHNESS=$(extract_header 'Freshness date')" \
   "CURRENT_STAGE=$(extract_assignment CURRENT_STAGE)" \
-  "ACTIVE_FAMILY=$(extract_assignment ACTIVE_FAMILY)" \
-  "EXACT_NEXT_ACTION=$(extract_assignment EXACT_NEXT_ACTION)" \
+  "ACTIVE_FAMILY=$ACTIVE_FAMILY" \
+  "EXACT_NEXT_ACTION=$EXACT_NEXT_ACTION" \
   "STRUCTURAL_VISUAL_EXPLORATION=$(extract_assignment STRUCTURAL_VISUAL_EXPLORATION)" \
   "HUMAN_PROOF=$(extract_assignment HUMAN_PROOF)" \
   "B8=$(extract_assignment B8)" \
