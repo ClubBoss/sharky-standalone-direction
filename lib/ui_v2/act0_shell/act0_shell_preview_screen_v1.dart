@@ -1193,7 +1193,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   int _dailyCompletedRepCount = 0;
   bool _rapidPracticeLoop = false;
   int _persistedStreakDays = 0;
+  // Date of the last earned 3/3 set, never merely the last app save.
   String _lastDailyDate = '';
+  // Date owning the in-memory 0–3 daily counter.
+  String _dailyRepCountDay = _todayDateString();
   int _retentionSequence = 0;
   final Map<String, _Act0RetentionMemoryEntryV1> _retentionMemoryByTaskId =
       <String, _Act0RetentionMemoryEntryV1>{};
@@ -3518,13 +3521,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     final today = _todayDateString();
     final isNewDay = parsed.lastActiveDay != today;
-    final isStreakContinued =
-        !isNewDay || act0AreConsecutiveCivilDaysV1(parsed.lastActiveDay, today);
-    final restoredStreakDays = isNewDay
-        ? (isStreakContinued && parsed.lastActiveDay.isNotEmpty
-              ? parsed.persistedStreakDays
-              : 0)
-        : parsed.persistedStreakDays;
+    // Legacy 3/3 + lastActiveDay is NOT proof of completion on that date:
+    // an old runtime could save yesterday's 3/3 after midnight. Fail closed
+    // on the undated count without changing unrelated completed task/XP data.
+    final earnedDay = parsed.lastEarnedDailyDay;
+    // Older snapshots without this field lack even reliable provenance for
+    // partial daily reps. New snapshots explicitly persist the field (empty
+    // until the first completed set), so their 1/3–2/3 resume normally.
+    final unverifiedLegacyDailyCount =
+        !parsed.hasEarnedDailyDayField && parsed.dailyCompletedRepCount > 0;
+    final unverifiedUnanchoredFullSet =
+        earnedDay.isEmpty && parsed.dailyCompletedRepCount >= 3;
+    final eligibleStreak =
+        earnedDay == today || act0AreConsecutiveCivilDaysV1(earnedDay, today);
+    final restoredStreakDays = eligibleStreak ? parsed.persistedStreakDays : 0;
     final restoredSkillValues = parsed.profileSkillValues.isEmpty
         ? _deriveSkillValuesFromCompletedTasks(completedTaskIds)
         : parsed.profileSkillValues;
@@ -3605,8 +3615,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _showPlayHub = widget.initialTab != Act0ShellTabV1.play;
       _blockCompletionSummary = null;
       _persistedStreakDays = restoredStreakDays;
-      _lastDailyDate = isNewDay ? today : parsed.lastActiveDay;
-      _dailyCompletedRepCount = isNewDay
+      _lastDailyDate = earnedDay;
+      _dailyRepCountDay = today;
+      _dailyCompletedRepCount =
+          (isNewDay ||
+              unverifiedLegacyDailyCount ||
+              unverifiedUnanchoredFullSet)
           ? 0
           : parsed.dailyCompletedRepCount.clamp(0, 3);
       _retentionSequence = parsed.retentionSequence;
@@ -3859,19 +3873,39 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         '${now.day.toString().padLeft(2, '0')}';
   }
 
+  void _ensureDailyCountDayV1() {
+    final today = _todayDateString();
+    if (_dailyRepCountDay == today) return;
+    _dailyCompletedRepCount = 0;
+    _dailyCompletedTaskIds.clear();
+    _dailyRepCountDay = today;
+  }
+
+  int _earnedStreakDaysTodayV1(String today) {
+    final earnedToday = _lastDailyDate == today;
+    final earnedYesterday = act0AreConsecutiveCivilDaysV1(
+      _lastDailyDate,
+      today,
+    );
+    if (_dailyRepCountDay == today && _dailyCompletedRepCount >= 3) {
+      if (earnedToday) return _persistedStreakDays.clamp(1, 365);
+      return earnedYesterday && _persistedStreakDays > 0
+          ? (_persistedStreakDays + 1).clamp(0, 365)
+          : 1;
+    }
+    return earnedToday || earnedYesterday ? _persistedStreakDays : 0;
+  }
+
   void _persistProgress() {
     if (!_usesPersistedProgress) {
       return;
     }
+    _ensureDailyCountDayV1();
     final today = _todayDateString();
     final dailyDone = _dailyCompletedRepCount >= 3;
-    final currentStreak = dailyDone
-        ? (_lastDailyDate == today
-              ? _persistedStreakDays
-              : (act0AreConsecutiveCivilDaysV1(_lastDailyDate, today)
-                    ? (_persistedStreakDays + 1).clamp(0, 365)
-                    : 1))
-        : _persistedStreakDays;
+    final currentStreak = _earnedStreakDaysTodayV1(today);
+    if (dailyDone) _lastDailyDate = today;
+    _persistedStreakDays = currentStreak;
     final snapshot = _Act0PersistedProgressV1(
       completedTaskIds: _completedTaskIds,
       skippedTaskIds: _skippedTaskIds,
@@ -3883,6 +3917,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       profileSkillValues: _profileSkillValues,
       recentSkillGains: _recentSkillGains,
       lastActiveDay: today,
+      lastEarnedDailyDay: _lastDailyDate,
       dailyCompletedRepCount: _dailyCompletedRepCount,
       persistedStreakDays: currentStreak,
       retentionSequence: _retentionSequence,
@@ -10382,6 +10417,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         repairSourceRecord?.lessonId ?? selectedLesson.lessonId;
     final repairSourceWorldId = repairSourceRecord?.worldId ?? _selectedWorldId;
     if (_activePracticeGroupId == 'daily') {
+      _ensureDailyCountDayV1();
       _dailyCompletedTaskIds.add(selectedTask.taskId);
       _dailyCompletedRepCount = (_dailyCompletedRepCount + 1).clamp(0, 3);
     }
@@ -11676,7 +11712,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
     final totalAttempts = _cleanTaskIds.length + wrongAttempts;
     final accuracy = totalAttempts == 0
-        ? _debugFreshLearnerV1
+        ? (_debugFreshLearnerV1 || _usesPersistedProgress)
               ? _copyV1(
                   en: 'Practice proof starts with your first decision',
                   ru: 'Подтверждение начнётся с первого решения',
@@ -11724,7 +11760,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 : '$streakDays day streak · saved today')
           : (streakDays == 1 ? '1 day streak' : '$streakDays day streak'),
       streakDays: streakDays,
-      consistencyActiveDays: _debugFreshLearnerV1
+      // Ordinary persistence has no lifetime active-day counter. -1 is an
+      // unknown presentation value, not a count derived from current streak.
+      consistencyActiveDays: _usesPersistedProgress
+          ? -1
+          : _debugFreshLearnerV1
           ? 0
           : base.consistencyActiveDays,
       achievements: <Act0AchievementV1>[
@@ -11763,7 +11803,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       skillStats: _debugFreshLearnerV1
           ? const <Act0PlacementSkillStatV1>[]
           : _profileSkillStats(base.skillStats),
-      streakLast7: _debugFreshLearnerV1
+      // A single streak count/last-active date cannot prove seven dated cells.
+      streakLast7: _usesPersistedProgress
+          ? const <bool>[]
+          : _debugFreshLearnerV1
           ? const <bool>[false, false, false, false, false, false, false]
           : base.streakLast7,
       recommendedFocusTitle: focusTitle,
@@ -13351,7 +13394,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final xpTarget = state.xpTarget <= 0 ? 1 : state.xpTarget;
     final baseLevel = _parseLevelNumber(state.levelLabel);
     final totalXp =
-        (_debugFreshLearnerV1 ? 0 : state.xp) + (earnedXpDelta ?? _earnedXp);
+        ((_debugFreshLearnerV1 || _usesPersistedProgress) ? 0 : state.xp) +
+        (earnedXpDelta ?? _earnedXp);
     return _Act0ProgressSnapshotV1(
       level: baseLevel + (totalXp ~/ xpTarget),
       xp: totalXp % xpTarget,
@@ -13414,15 +13458,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (_debugFreshLearnerV1) {
       return 0;
     }
-    if (_persistedStreakDays > 0) {
-      // Persisted streak is source of truth once the user has prior data
-      final today = _todayDateString();
-      if (_dailyCompletedRepCount >= 3 && _lastDailyDate != today) {
-        return (_persistedStreakDays + 1).clamp(0, 365);
-      }
-      return _persistedStreakDays;
+    // Only earned completion dates are eligible for streak continuation.
+    // Explicit non-persisted preview/test states retain sample semantics.
+    if (_usesPersistedProgress) {
+      return _earnedStreakDaysTodayV1(_todayDateString());
     }
-    // Fall back to state-provided streak (preview / no-prefs mode)
     return _dailyCompletedRepCount >= 3
         ? (base.streakDays + 1).clamp(0, 365)
         : base.streakDays;
@@ -14022,6 +14062,8 @@ class _Act0PersistedProgressV1 {
     this.profileSkillValues = const <String, int>{},
     this.recentSkillGains = const <Act0SkillGainV1>[],
     this.lastActiveDay = '',
+    this.lastEarnedDailyDay = '',
+    this.hasEarnedDailyDayField = false,
     this.dailyCompletedRepCount = 0,
     this.persistedStreakDays = 0,
     this.retentionSequence = 0,
@@ -14058,6 +14100,9 @@ class _Act0PersistedProgressV1 {
   final Map<String, int> profileSkillValues;
   final List<Act0SkillGainV1> recentSkillGains;
   final String lastActiveDay;
+  final String lastEarnedDailyDay;
+  // Whether the incoming stored payload carried the new provenance key.
+  final bool hasEarnedDailyDayField;
   final int dailyCompletedRepCount;
   final int persistedStreakDays;
   final int retentionSequence;
@@ -14113,6 +14158,7 @@ class _Act0PersistedProgressV1 {
           },
       ],
       'lastActiveDay': lastActiveDay,
+      'lastEarnedDailyDay': lastEarnedDailyDay,
       'dailyCompletedRepCount': dailyCompletedRepCount,
       'persistedStreakDays': persistedStreakDays,
       'retentionSequence': retentionSequence,
@@ -14196,6 +14242,7 @@ class _Act0PersistedProgressV1 {
     final recentSkillGains = _skillGainList(map['recentSkillGains']);
     // v2 fields — gracefully default for v1 records
     final lastActiveDay = (map['lastActiveDay'] ?? '').toString();
+    final lastEarnedDailyDay = (map['lastEarnedDailyDay'] ?? '').toString();
     final dailyCompletedRepCountRaw = map['dailyCompletedRepCount'];
     final dailyCompletedRepCount = dailyCompletedRepCountRaw is int
         ? dailyCompletedRepCountRaw
@@ -14310,6 +14357,8 @@ class _Act0PersistedProgressV1 {
       profileSkillValues: profileSkillValues,
       recentSkillGains: recentSkillGains,
       lastActiveDay: lastActiveDay,
+      lastEarnedDailyDay: lastEarnedDailyDay,
+      hasEarnedDailyDayField: map.containsKey('lastEarnedDailyDay'),
       dailyCompletedRepCount: dailyCompletedRepCount.clamp(0, 3),
       persistedStreakDays: persistedStreakDays < 0 ? 0 : persistedStreakDays,
       retentionSequence: retentionSequence < 0 ? 0 : retentionSequence,

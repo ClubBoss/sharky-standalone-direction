@@ -1453,28 +1453,32 @@ class _ProfileConsistencyCardV1 extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                key: const Key('act0_shell_profile_consistency_active_days'),
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                decoration: BoxDecoration(
-                  color: Act0ShellTokensV1.surface2.withOpacity(0.92),
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusPill,
+              if (profile.consistencyActiveDays >= 0)
+                Container(
+                  key: const Key('act0_shell_profile_consistency_active_days'),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 6,
                   ),
-                  border: Border.all(
-                    color: Act0ShellTokensV1.border.withOpacity(0.88),
+                  decoration: BoxDecoration(
+                    color: Act0ShellTokensV1.surface2.withOpacity(0.92),
+                    borderRadius: BorderRadius.circular(
+                      Act0ShellTokensV1.radiusPill,
+                    ),
+                    border: Border.all(
+                      color: Act0ShellTokensV1.border.withOpacity(0.88),
+                    ),
+                  ),
+                  child: Text(
+                    _isRuLocaleV1(context)
+                        ? '${profile.consistencyActiveDays} активных дней'
+                        : '${profile.consistencyActiveDays} active days',
+                    style: Act0ShellTokensV1.label.copyWith(
+                      color: Act0ShellTokensV1.textMuted,
+                      letterSpacing: 0.3,
+                    ),
                   ),
                 ),
-                child: Text(
-                  _isRuLocaleV1(context)
-                      ? '${profile.consistencyActiveDays} активных дней'
-                      : '${profile.consistencyActiveDays} active days',
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.textMuted,
-                    letterSpacing: 0.3,
-                  ),
-                ),
-              ),
             ],
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
