@@ -6,7 +6,9 @@ Master Plan v5 is **OWNER-APPROVED; principal effective upon verified merge**
 of docs-only PR #242. The previous v4 remains unchanged as historical authority.
 C0 #243/#234–#241 merged at `1857818b1f80c4c12ab6a0e823f4f8b855f7e0ff`;
 C1 Table Action/Street Motion source `CLOSED_PASS` via #222. Native
-assisted→restart→independent recheck remains OPEN_RELEASE_GATE; P02 NOT_ADMITTED.
+assisted→restart→independent recheck is CLOSED_PASS (native machine,
+2026-10-09 exact main tree 2eacfa500396f1d253c4cc8c270a2a39cf38c489);
+P02 remains NOT_ADMITTED.
 
 Purpose: route agents to the smallest task-specific source set. It does not own
 product direction, next-wave selection, evidence admission, or closure.

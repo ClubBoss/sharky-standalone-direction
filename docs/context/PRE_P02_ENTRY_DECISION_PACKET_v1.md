@@ -16,7 +16,7 @@ Current campaign dispatch: `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`
 | C — Learning loop | `CLOSED_PASS (SOURCE/MACHINE)` | #222 source contract + integrated runner + focused W6/grammar/settled/reduced-motion tests; no every-hand/native/Human claim |
 | D — Content correctness | `CLOSED_PASS` | bounded previously accepted W1–W12 source audits; not Human efficacy |
 | E — Personalized next value | `REQUIRES_HUMAN_EVIDENCE` | deterministic machinery integrated, outcome lift unproven |
-| F — Reliability/ergonomics | `CLOSED_PASS / ADMITTED_SCOPE` | existing tested/mobile-safe scopes; native Learning Trust release proof separately open |
+| F — Reliability/ergonomics | `CLOSED_PASS / ADMITTED_SCOPE` | native assisted/restart/independent recheck now separately `CLOSED_PASS (MACHINE)` at 2026-10-09 exact main tree; Human outcome pending |
 
 PR #243 cumulative base and #234–#241 Learning Trust are integrated in
 product source, with no new C1 P0/P1 source-class failure proven.
@@ -36,7 +36,7 @@ authorization follows.
 | 5 | One holistic North Star challenger finds no new material class-level family | `NOT RUN IN THIS MISSION` |
 | 6 | One independent confirmatory challenger materially agrees | `NOT RUN IN THIS MISSION` |
 | 7 | Freeze exact candidate SHA and surfaces | `NOT YET FORMALLY FROZEN`; use validated candidate after #242 docs-only merge/CI |
-| 8 | Cheap final machine falsifiers pass | `PARTIAL`: C0 exact-main CI green; targeted native and final acceptance falsifiers remain |
+| 8 | Cheap final machine falsifiers pass | `PARTIAL`: native assisted/restart/independent recheck PASS at frozen source tree; other specified final machine/Human-adjacent entry falsifiers still require explicit evidence |
 | 9 | Owner explicitly admits P02 | `NOT GRANTED` |
 
 Overall: `P02_ENTRY_GATE_V2 = NOT_COMPLETE`; no synthetic Human success,
@@ -78,8 +78,10 @@ no speculative C2 branch.
    telemetry after readiness, plus reduced-motion settlement, **only when
    needed to falsify a specific release-class claim**.
 4. Native Learning Trust `assisted correct -> terminate/relaunch ->
-   independent matched recheck` remains a **separate OPEN_RELEASE_GATE**;
-   it cannot be excused into a release PASS or silently become a C1 defect.
+   independent matched recheck` is **CLOSED_PASS (NATIVE MACHINE)** for
+   Quick Hint and Full Theory Recall on merged tree
+   `2eacfa500396f1d253c4cc8c270a2a39cf38c489`; this does not imply
+   Human outcome, P02 admission or full release PASS.
 5. Freeze one exact product candidate plus route/locale/device evidence
    manifest, with no accepted source edits during challenge/confirmation.
 6. Deliver owner admission packet with all nine checkboxes truthfully
