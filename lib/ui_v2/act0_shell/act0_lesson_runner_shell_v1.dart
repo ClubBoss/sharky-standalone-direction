@@ -4809,11 +4809,26 @@ class _RunnerActionDockV1 extends StatelessWidget {
                   child: integratedDockBody,
                 ),
               ),
-      _RunnerLowerStageProfileV1.accessibility => SizedBox.expand(
-        key: const Key('act0_shell_lower_stage_accessibility'),
-        child: accessibilityFeedbackSurface
-            ? integratedDockBody
-            : Align(alignment: Alignment.center, child: integratedDockBody),
+      _RunnerLowerStageProfileV1.accessibility => LayoutBuilder(
+        builder: (context, constraints) {
+          // A scene-attached action shelf sizes to its content. Expanding
+          // against its unbounded vertical slot throws an infinite-height
+          // layout assertion and hides the first placement decision.
+          if (sceneAttachedShelf || !constraints.hasBoundedHeight) {
+            return Align(
+              key: const Key('act0_shell_lower_stage_accessibility'),
+              alignment: Alignment.topCenter,
+              heightFactor: 1,
+              child: integratedDockBody,
+            );
+          }
+          return SizedBox.expand(
+            key: const Key('act0_shell_lower_stage_accessibility'),
+            child: accessibilityFeedbackSurface
+                ? integratedDockBody
+                : Align(alignment: Alignment.center, child: integratedDockBody),
+          );
+        },
       ),
     };
     final dockContent = usesAccessibilitySharedSurface
