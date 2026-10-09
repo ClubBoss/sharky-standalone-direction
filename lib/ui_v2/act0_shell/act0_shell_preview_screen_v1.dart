@@ -3605,7 +3605,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _showPlayHub = widget.initialTab != Act0ShellTabV1.play;
       _blockCompletionSummary = null;
       _persistedStreakDays = restoredStreakDays;
-      _lastDailyDate = isNewDay ? today : parsed.lastActiveDay;
+      // Retain the previous active day for an eligible new-day streak.
+      _lastDailyDate = parsed.lastActiveDay;
       _dailyCompletedRepCount = isNewDay
           ? 0
           : parsed.dailyCompletedRepCount.clamp(0, 3);
@@ -3866,7 +3867,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final today = _todayDateString();
     final dailyDone = _dailyCompletedRepCount >= 3;
     final currentStreak = dailyDone
-        ? (_lastDailyDate == today
+        ? (_persistedStreakDays == 0
+              ? 1
+              : _lastDailyDate == today
               ? _persistedStreakDays
               : (act0AreConsecutiveCivilDaysV1(_lastDailyDate, today)
                     ? (_persistedStreakDays + 1).clamp(0, 365)
@@ -11676,7 +11679,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
     final totalAttempts = _cleanTaskIds.length + wrongAttempts;
     final accuracy = totalAttempts == 0
-        ? _debugFreshLearnerV1
+        ? (_debugFreshLearnerV1 || _usesPersistedProgress)
               ? _copyV1(
                   en: 'Practice proof starts with your first decision',
                   ru: 'Подтверждение начнётся с первого решения',
@@ -11726,6 +11729,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       streakDays: streakDays,
       consistencyActiveDays: _debugFreshLearnerV1
           ? 0
+          : _usesPersistedProgress
+          ? streakDays
           : base.consistencyActiveDays,
       achievements: <Act0AchievementV1>[
         Act0AchievementV1(
@@ -11765,6 +11770,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           : _profileSkillStats(base.skillStats),
       streakLast7: _debugFreshLearnerV1
           ? const <bool>[false, false, false, false, false, false, false]
+          : _usesPersistedProgress
+          ? _earnedStreakLast7V1(streakDays)
           : base.streakLast7,
       recommendedFocusTitle: focusTitle,
       recommendedFocusBody: focusBody,
@@ -11786,6 +11793,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                   ? '1 спот исправлен'
                   : '${_resolvedMistakeTaskIds.length} спота исправлены',
             ),
+    );
+  }
+
+  List<bool> _earnedStreakLast7V1(int streakDays) {
+    final lastEarnedIndex = _dailyCompletedRepCount >= 3 ? 6 : 5;
+    return List<bool>.generate(
+      7,
+      (index) =>
+          index <= lastEarnedIndex && lastEarnedIndex - index < streakDays,
+      growable: false,
     );
   }
 
@@ -13351,7 +13368,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final xpTarget = state.xpTarget <= 0 ? 1 : state.xpTarget;
     final baseLevel = _parseLevelNumber(state.levelLabel);
     final totalXp =
-        (_debugFreshLearnerV1 ? 0 : state.xp) + (earnedXpDelta ?? _earnedXp);
+        ((_debugFreshLearnerV1 || _usesPersistedProgress) ? 0 : state.xp) +
+        (earnedXpDelta ?? _earnedXp);
     return _Act0ProgressSnapshotV1(
       level: baseLevel + (totalXp ~/ xpTarget),
       xp: totalXp % xpTarget,
@@ -13422,7 +13440,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       }
       return _persistedStreakDays;
     }
-    // Fall back to state-provided streak (preview / no-prefs mode)
+    // Ordinary learners must not inherit the preview fixture's streak.
+    // Explicit non-persisted preview/test states retain sample semantics.
+    if (_usesPersistedProgress) {
+      return _dailyCompletedRepCount >= 3 ? 1 : 0;
+    }
     return _dailyCompletedRepCount >= 3
         ? (base.streakDays + 1).clamp(0, 365)
         : base.streakDays;
