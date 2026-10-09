@@ -11727,10 +11727,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 : '$streakDays day streak · saved today')
           : (streakDays == 1 ? '1 day streak' : '$streakDays day streak'),
       streakDays: streakDays,
-      consistencyActiveDays: _debugFreshLearnerV1
+      // Ordinary persistence has no lifetime active-day counter. -1 is an
+      // unknown presentation value, not a count derived from current streak.
+      consistencyActiveDays: _usesPersistedProgress
+          ? -1
+          : _debugFreshLearnerV1
           ? 0
-          : _usesPersistedProgress
-          ? streakDays
           : base.consistencyActiveDays,
       achievements: <Act0AchievementV1>[
         Act0AchievementV1(
@@ -11768,10 +11770,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       skillStats: _debugFreshLearnerV1
           ? const <Act0PlacementSkillStatV1>[]
           : _profileSkillStats(base.skillStats),
-      streakLast7: _debugFreshLearnerV1
+      // A single streak count/last-active date cannot prove seven dated cells.
+      streakLast7: _usesPersistedProgress
+          ? const <bool>[]
+          : _debugFreshLearnerV1
           ? const <bool>[false, false, false, false, false, false, false]
-          : _usesPersistedProgress
-          ? _earnedStreakLast7V1(streakDays)
           : base.streakLast7,
       recommendedFocusTitle: focusTitle,
       recommendedFocusBody: focusBody,
@@ -11793,16 +11796,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                   ? '1 спот исправлен'
                   : '${_resolvedMistakeTaskIds.length} спота исправлены',
             ),
-    );
-  }
-
-  List<bool> _earnedStreakLast7V1(int streakDays) {
-    final lastEarnedIndex = _dailyCompletedRepCount >= 3 ? 6 : 5;
-    return List<bool>.generate(
-      7,
-      (index) =>
-          index <= lastEarnedIndex && lastEarnedIndex - index < streakDays,
-      growable: false,
     );
   }
 

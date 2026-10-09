@@ -78,8 +78,8 @@ void main() {
       expect(profile.streakDays, 0);
       expect(profile.xpLine, '0 / 200 XP');
       expect(profile.accuracyLine, isNot(contains('82%')));
-      expect(profile.consistencyActiveDays, 0);
-      expect(profile.streakLast7, everyElement(isFalse));
+      expect(profile.consistencyActiveDays, -1);
+      expect(profile.streakLast7, isEmpty);
       expect(
         profile.achievements
             .singleWhere((item) => item.id == 'three_day_streak')
@@ -114,6 +114,17 @@ void main() {
           .widget<Act0ProfileShellV1>(find.byType(Act0ProfileShellV1))
           .profile;
       expect(profile.streakDays, 5);
+      // A streak count does not establish lifetime activity or dated week cells.
+      expect(profile.consistencyActiveDays, -1);
+      expect(profile.streakLast7, isEmpty);
+      expect(
+        find.byKey(const Key('act0_shell_profile_rhythm_strip')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_profile_rhythm_week_button')),
+        findsNothing,
+      );
       expect(
         profile.achievements
             .singleWhere((item) => item.id == 'three_day_streak')
@@ -189,8 +200,8 @@ void main() {
       expect(profile.streakDays, 0);
       expect(profile.xpLine, '0 / 200 XP');
       expect(profile.accuracyLine, isNot(contains('82%')));
-      expect(profile.consistencyActiveDays, 0);
-      expect(profile.streakLast7, everyElement(isFalse));
+      expect(profile.consistencyActiveDays, -1);
+      expect(profile.streakLast7, isEmpty);
       expect(
         profile.achievements
             .singleWhere((item) => item.id == 'three_day_streak')
