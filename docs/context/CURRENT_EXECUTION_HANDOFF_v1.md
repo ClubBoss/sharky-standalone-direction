@@ -32,8 +32,10 @@ Always re-resolve live `origin/main` before mutation.
 - P02 = `NOT_ADMITTED`. See `docs/context/PRE_P02_ENTRY_DECISION_PACKET_v1.md`
   for challenger, independent confirmation, freeze, cheap falsifiers and
   owner admission requirements.
-- Native assisted→restart→independent recheck = `OPEN_RELEASE_GATE`, not
-  native PASS or an assumed defect. PR #224 remains frozen/separate.
+- Native assisted→restart→independent recheck = `CLOSED_PASS (NATIVE MACHINE)`
+  at 2026-10-09 merged main tree `2eacfa500396f1d253c4cc8c270a2a39cf38c489`,
+  for both Quick Hint and Full Theory Recall. Human/P02 remain NOT_ADMITTED;
+  PR #224 remains frozen/separate.
 - The September V2 visual family and old `EXACT_NEXT_ACTION` statements
   below are **historical only** and must not reactivate implementation.
 

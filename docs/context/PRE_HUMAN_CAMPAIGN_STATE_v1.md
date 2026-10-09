@@ -29,8 +29,14 @@ The live `main` ref must always be resolved anew; this is a dated provenance SHA
 `C0_NARROW_WAIVER = INTERNAL_SOURCE_INTEGRATION_ONLY` — 19 compared legacy
 test files, no newly observed candidate-only failures; no blanket release pass.
 
-`NATIVE_ASSISTED_RESTART_INDEPENDENT_RECHECK = OPEN_RELEASE_GATE`
-(an unclosed evidence obligation, **not** automatically a proven product defect).
+`NATIVE_ASSISTED_RESTART_INDEPENDENT_RECHECK = CLOSED_PASS / NATIVE_MACHINE`
+(2026-10-09: both Quick Hint and Full Theory Recall, actual process restart,
+then independent matched repair; one correct/fixed telemetry pair per proof,
+other queue debt retained; exact merged main
+`5e28a1cf5ed03808af8413d38103313e21831acd`, tree
+`2eacfa500396f1d253c4cc8c270a2a39cf38c489`, proof receipt in merged
+PR #247 review; local-only native raw artifacts on Mac. This is **not**
+Human proof, whole-release readiness or P02 admission).
 
 `CURRENT_STAGE = PRE_P02_NORTH_STAR_CONVERGENCE / GATE_PREPARATION`
 `LANE_A_VISUAL = CLOSED_PASS / FROZEN`

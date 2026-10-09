@@ -9,7 +9,8 @@ Owner-approved authority promotion (effective only on verified PR #242 merge):
   `main=1857818b1f80c4c12ab6a0e823f4f8b855f7e0ff`.
 - C1 Table Action / Street Motion `CLOSED_PASS (source/machine)` from merged #222.
 - `LEGACY_CHECKPOINT=INCOMPLETE/RED`; 19-file internal waiver only;
-  native assisted→restart→independent recheck OPEN_RELEASE_GATE.
+  native assisted→restart→independent recheck CLOSED_PASS (machine/native,
+  2026-10-09 main tree 2eacfa500396f1d253c4cc8c270a2a39cf38c489).
 - P02 not admitted; PR #224 separate; adoption log in
   `docs/plan/MASTER_PLAN_V5_ADOPTION_PREP_v1.md`.
 

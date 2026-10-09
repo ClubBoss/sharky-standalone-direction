@@ -52,7 +52,8 @@ For project navigation and SSOT authority:
   `docs/plan/MASTER_PLAN_V5_ADOPTION_PREP_v1.md` for adoption provenance.
 - Current pre-P02 dispatch is `docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md`;
   C0 is integrated, C1 source family closed, P02 not admitted; native
-  assisted→restart→independent recheck is OPEN_RELEASE_GATE.
+  assisted→restart→independent recheck is CLOSED_PASS (machine/native,
+  2026-10-09, main tree 2eacfa500396f1d253c4cc8c270a2a39cf38c489).
 - Use `docs/context/CONTEXT_ROUTER_v1.md` only as a navigation companion when
   the campaign state and v5 do not identify the needed task-specific source.
 - Use `docs/plan/PROJECT_TOPOLOGY_AND_TRUTH_MAP_v1.md` only for
