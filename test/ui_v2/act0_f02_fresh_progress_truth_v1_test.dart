@@ -40,7 +40,7 @@ void main() {
   }) {
     final sample = Act0ShellStateV1.sample;
     return jsonEncode(<String, Object>{
-      'schemaVersion': 17,
+      'schemaVersion': lastEarnedDailyDay == null ? 17 : 18,
       'completedTaskIds': completedTaskIds.toList(),
       'completedLessonIds': <String>[],
       'selectedWorldId': sample.selectedWorldId,
@@ -160,6 +160,7 @@ void main() {
         progressKey: snapshot(
           persistedStreakDays: 0,
           dailyCompletedRepCount: 3,
+          lastEarnedDailyDay: dayKey(DateTime.now()),
           completedTaskIds: const <String>{completedTaskId},
         ),
       });
@@ -195,6 +196,93 @@ void main() {
             .locked,
         isTrue,
       );
+    },
+  );
+
+  testWidgets(
+    'F02: migrated legacy 3/3 after midnight must not mint earned day',
+    (tester) async {
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      final today = dayKey(DateTime.now());
+      // Old runtime completed 3/3 yesterday, stayed open past midnight,
+      // then autosaved stale 3/3 with today's ordinary activity date.
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        progressKey: snapshot(
+          persistedStreakDays: 5,
+          dailyCompletedRepCount: 3,
+          lastActiveDay: today,
+          // No independent date of the earned daily set.
+        ),
+      });
+      await mount(tester);
+      var home = tester.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
+      expect(home.state.streakDays, 0);
+      final dynamic state = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      state.debugPersistProgressV1();
+      await tester.pump(const Duration(milliseconds: 250));
+      final prefs = await SharedPreferences.getInstance();
+      final payload =
+          jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
+      expect(payload['lastEarnedDailyDay'], '');
+      expect(payload['persistedStreakDays'], 0);
+      expect(payload['dailyCompletedRepCount'], 0);
+      await tester.pumpWidget(const SizedBox.shrink());
+      await mount(tester);
+      home = tester.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
+      expect(home.state.streakDays, 0);
+    },
+  );
+
+  testWidgets(
+    'F02: legacy undated 2/3 cannot be reused as today after midnight',
+    (tester) async {
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        progressKey: snapshot(
+          persistedStreakDays: 5,
+          dailyCompletedRepCount: 2,
+          lastActiveDay: dayKey(DateTime.now()),
+          // Historical record has NO lastEarnedDailyDay field.
+        ),
+      });
+      await mount(tester);
+      final dynamic state = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      state.debugPersistProgressV1();
+      await tester.pump(const Duration(milliseconds: 250));
+      final prefs = await SharedPreferences.getInstance();
+      final payload =
+          jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
+      expect(payload['dailyCompletedRepCount'], 0);
+      expect(payload['lastEarnedDailyDay'], '');
+      expect(payload['persistedStreakDays'], 0);
+    },
+  );
+
+  testWidgets(
+    'F02: proven-format fresh partial 2/3 still resumes after restart',
+    (tester) async {
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        progressKey: snapshot(
+          persistedStreakDays: 0,
+          dailyCompletedRepCount: 2,
+          lastActiveDay: dayKey(DateTime.now()),
+          lastEarnedDailyDay: '',
+        ),
+      });
+      await mount(tester);
+      final dynamic state = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      state.debugPersistProgressV1();
+      await tester.pump(const Duration(milliseconds: 250));
+      final prefs = await SharedPreferences.getInstance();
+      final payload =
+          jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
+      expect(payload['dailyCompletedRepCount'], 2);
+      expect(payload['lastEarnedDailyDay'], '');
+      expect(payload['persistedStreakDays'], 0);
     },
   );
 

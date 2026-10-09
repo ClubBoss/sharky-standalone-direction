@@ -3521,11 +3521,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     final today = _todayDateString();
     final isNewDay = parsed.lastActiveDay != today;
-    // Legacy payloads cannot prove an earned day from a mere app visit.
-    // Only a completed 3/3 set anchors an older record's earned streak.
-    final earnedDay = parsed.lastEarnedDailyDay.isNotEmpty
-        ? parsed.lastEarnedDailyDay
-        : (parsed.dailyCompletedRepCount >= 3 ? parsed.lastActiveDay : '');
+    // Legacy 3/3 + lastActiveDay is NOT proof of completion on that date:
+    // an old runtime could save yesterday's 3/3 after midnight. Fail closed
+    // on the undated count without changing unrelated completed task/XP data.
+    final earnedDay = parsed.lastEarnedDailyDay;
+    // Older snapshots without this field lack even reliable provenance for
+    // partial daily reps. New snapshots explicitly persist the field (empty
+    // until the first completed set), so their 1/3–2/3 resume normally.
+    final unverifiedLegacyDailyCount =
+        !parsed.hasEarnedDailyDayField && parsed.dailyCompletedRepCount > 0;
+    final unverifiedUnanchoredFullSet =
+        earnedDay.isEmpty && parsed.dailyCompletedRepCount >= 3;
     final eligibleStreak =
         earnedDay == today || act0AreConsecutiveCivilDaysV1(earnedDay, today);
     final restoredStreakDays = eligibleStreak ? parsed.persistedStreakDays : 0;
@@ -3611,7 +3617,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _persistedStreakDays = restoredStreakDays;
       _lastDailyDate = earnedDay;
       _dailyRepCountDay = today;
-      _dailyCompletedRepCount = isNewDay
+      _dailyCompletedRepCount =
+          (isNewDay ||
+              unverifiedLegacyDailyCount ||
+              unverifiedUnanchoredFullSet)
           ? 0
           : parsed.dailyCompletedRepCount.clamp(0, 3);
       _retentionSequence = parsed.retentionSequence;
@@ -14054,6 +14063,7 @@ class _Act0PersistedProgressV1 {
     this.recentSkillGains = const <Act0SkillGainV1>[],
     this.lastActiveDay = '',
     this.lastEarnedDailyDay = '',
+    this.hasEarnedDailyDayField = false,
     this.dailyCompletedRepCount = 0,
     this.persistedStreakDays = 0,
     this.retentionSequence = 0,
@@ -14091,6 +14101,8 @@ class _Act0PersistedProgressV1 {
   final List<Act0SkillGainV1> recentSkillGains;
   final String lastActiveDay;
   final String lastEarnedDailyDay;
+  // Whether the incoming stored payload carried the new provenance key.
+  final bool hasEarnedDailyDayField;
   final int dailyCompletedRepCount;
   final int persistedStreakDays;
   final int retentionSequence;
@@ -14346,6 +14358,7 @@ class _Act0PersistedProgressV1 {
       recentSkillGains: recentSkillGains,
       lastActiveDay: lastActiveDay,
       lastEarnedDailyDay: lastEarnedDailyDay,
+      hasEarnedDailyDayField: map.containsKey('lastEarnedDailyDay'),
       dailyCompletedRepCount: dailyCompletedRepCount.clamp(0, 3),
       persistedStreakDays: persistedStreakDays < 0 ? 0 : persistedStreakDays,
       retentionSequence: retentionSequence < 0 ? 0 : retentionSequence,
