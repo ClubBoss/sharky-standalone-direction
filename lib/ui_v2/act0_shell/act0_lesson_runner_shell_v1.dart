@@ -3819,15 +3819,22 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           ? Act0LearningScenePhaseV3.theory
           : isReview && runner.reviewQuality == Act0FeedbackQualityV1.wrong
           ? Act0LearningScenePhaseV3.feedbackWrong
+          : isReview && runner.reviewQuality == Act0FeedbackQualityV1.suboptimal
+          ? Act0LearningScenePhaseV3.feedbackSuboptimal
           : isReview
           ? Act0LearningScenePhaseV3.feedbackCorrect
           : Act0LearningScenePhaseV3.tableTask;
       final purpose = isTheory
           ? (isRu ? 'ОДНА ИДЕЯ' : 'ONE TABLE IDEA')
           : isReview
-          ? (runner.reviewQuality == Act0FeedbackQualityV1.wrong
-                ? (isRu ? 'ПРОПУЩЕННАЯ ПОДСКАЗКА' : 'MISSED CLUE')
-                : (isRu ? 'ВЕРНОЕ ЧТЕНИЕ' : 'CORRECT READ'))
+          ? switch (runner.reviewQuality) {
+              Act0FeedbackQualityV1.wrong =>
+                isRu ? 'ПРОПУЩЕННАЯ ПОДСКАЗКА' : 'MISSED CLUE',
+              Act0FeedbackQualityV1.suboptimal =>
+                isRu ? 'РАЗБЕРЁМ ПОДСКАЗКУ' : "LET'S CHECK THE CLUE",
+              Act0FeedbackQualityV1.correct =>
+                isRu ? 'ВЕРНОЕ ЧТЕНИЕ' : 'CORRECT READ',
+            }
           : (isRu ? 'ВАШ ХОД' : 'YOUR MOVE');
       final feedbackAction =
           (runner.reviewQuality == Act0FeedbackQualityV1.wrong
@@ -3844,6 +3851,17 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           : isReview
           ? repairReceipt.isNotEmpty
                 ? repairReceipt
+                : runner.reviewQuality == Act0FeedbackQualityV1.suboptimal
+                // Uncertainty is not a factual error, but it is never proof
+                // of a correct read. Do not reuse the preferred answer as
+                // evidence that the learner chose it.
+                ? runner.selectedOptionId == 'not_sure_yet'
+                      ? (isRu
+                            ? 'Пока не уверены? Разберём подсказку.'
+                            : "Not sure yet? Let's check the table clue.")
+                      : (isRu
+                            ? 'Посмотрим на подсказку и улучшим решение.'
+                            : "Let's check the table clue and improve the read.")
                 : feedbackAction.isEmpty
                 ? runner.reviewTitle
                 : feedbackActionIsSentence
@@ -3885,7 +3903,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           : null;
       final sharkyState = act0SharkySceneCoachStateV1(
         attentionPhase: sceneAttentionPhase,
-        hasDirectObservationEvidence: feedbackSignalProof != null,
+        // A highlighted clue does not turn an unsure answer into a
+        // confirmed correct observation.
+        hasDirectObservationEvidence:
+            feedbackSignalProof != null &&
+            runner.reviewQuality != Act0FeedbackQualityV1.suboptimal,
         hasOpenRepairTargetEvidence:
             widget.repairReasonLine?.trim().isNotEmpty ?? false,
       );
