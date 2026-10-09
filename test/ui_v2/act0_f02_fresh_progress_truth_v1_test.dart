@@ -35,6 +35,8 @@ void main() {
     required int persistedStreakDays,
     required int dailyCompletedRepCount,
     Set<String> completedTaskIds = const <String>{},
+    String? lastActiveDay,
+    String? lastEarnedDailyDay,
   }) {
     final sample = Act0ShellStateV1.sample;
     return jsonEncode(<String, Object>{
@@ -45,11 +47,18 @@ void main() {
       'selectedLessonId': sample.currentLesson.lessonId,
       'selectedTaskId': sample.currentLesson.taskList.first.taskId,
       'earnedXp': completedTaskIds.isEmpty ? 0 : 10,
-      'lastActiveDay': DateTime.now().toIso8601String().substring(0, 10),
+      'lastActiveDay':
+          lastActiveDay ?? DateTime.now().toIso8601String().substring(0, 10),
+      if (lastEarnedDailyDay != null) 'lastEarnedDailyDay': lastEarnedDailyDay,
       'dailyCompletedRepCount': dailyCompletedRepCount,
       'persistedStreakDays': persistedStreakDays,
     });
   }
+
+  String dayKey(DateTime value) =>
+      '${value.year.toString().padLeft(4, '0')}-'
+      '${value.month.toString().padLeft(2, '0')}-'
+      '${value.day.toString().padLeft(2, '0')}';
 
   testWidgets(
     'F02: ordinary fresh Home and Profile cannot earn sample streak',
@@ -98,6 +107,13 @@ void main() {
         progressKey: snapshot(
           persistedStreakDays: 5,
           dailyCompletedRepCount: 0,
+          lastEarnedDailyDay: dayKey(
+            DateTime(
+              DateTime.now().year,
+              DateTime.now().month,
+              DateTime.now().day - 1,
+            ),
+          ),
         ),
       });
       await mount(tester);
@@ -179,6 +195,130 @@ void main() {
             .locked,
         isTrue,
       );
+    },
+  );
+
+  testWidgets(
+    'F02: legacy partial save without earned-day proof cannot certify streak',
+    (tester) async {
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        progressKey: snapshot(
+          persistedStreakDays: 5,
+          dailyCompletedRepCount: 0,
+        ),
+      });
+      await mount(tester);
+      final home = tester.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
+      expect(home.state.streakDays, 0);
+      final dynamic state = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      state.debugPersistProgressV1();
+      await tester.pump(const Duration(milliseconds: 250));
+      final prefs = await SharedPreferences.getInstance();
+      final payload =
+          jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
+      expect(payload['lastEarnedDailyDay'], '');
+      expect(payload['persistedStreakDays'], 0);
+    },
+  );
+
+  testWidgets(
+    'F02: an unfinished intervening day cannot extend an earned streak',
+    (tester) async {
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      final today = DateTime.now();
+      final yesterday = dayKey(
+        DateTime(today.year, today.month, today.day - 1),
+      );
+      final twoDaysAgo = dayKey(
+        DateTime(today.year, today.month, today.day - 2),
+      );
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        progressKey: snapshot(
+          persistedStreakDays: 5,
+          dailyCompletedRepCount: 0,
+          lastActiveDay: yesterday,
+          lastEarnedDailyDay: twoDaysAgo,
+        ),
+      });
+      await mount(tester);
+      final home = tester.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
+      expect(
+        home.state.streakDays,
+        0,
+        reason: 'Opening yesterday without 3/3 did not save the streak.',
+      );
+      final dynamic state = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      state.debugPersistProgressV1();
+      await tester.pump(const Duration(milliseconds: 250));
+      final prefs = await SharedPreferences.getInstance();
+      final payload =
+          jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
+      expect(payload['lastActiveDay'], dayKey(today));
+      expect(payload['lastEarnedDailyDay'], twoDaysAgo);
+      expect(payload['persistedStreakDays'], 0);
+    },
+  );
+
+  testWidgets(
+    'F02: partial today preserves yesterday earned anchor; 3/3 earns once',
+    (tester) async {
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      final today = dayKey(DateTime.now());
+      final yesterday = dayKey(
+        DateTime(
+          DateTime.now().year,
+          DateTime.now().month,
+          DateTime.now().day - 1,
+        ),
+      );
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        progressKey: snapshot(
+          persistedStreakDays: 5,
+          dailyCompletedRepCount: 2,
+          lastActiveDay: today,
+          lastEarnedDailyDay: yesterday,
+        ),
+      });
+      await mount(tester);
+      var home = tester.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
+      expect(home.state.streakDays, 5);
+      dynamic state = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      state.debugPersistProgressV1();
+      await tester.pump(const Duration(milliseconds: 250));
+      final prefs = await SharedPreferences.getInstance();
+      var payload =
+          jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
+      expect(payload['lastActiveDay'], today);
+      expect(payload['lastEarnedDailyDay'], yesterday);
+      expect(payload['persistedStreakDays'], 5);
+      await tester.pumpWidget(const SizedBox.shrink());
+      await mount(tester);
+      home = tester.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
+      expect(home.state.streakDays, 5);
+
+      // Recreate the durable post-third-rep state using the same day's
+      // persisted partial record (no invented older earned day).
+      await tester.pumpWidget(const SizedBox.shrink());
+      payload['dailyCompletedRepCount'] = 3;
+      await prefs.setString(progressKey, jsonEncode(payload));
+      await mount(tester);
+      home = tester.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
+      expect(home.state.streakDays, 6);
+      state = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      state.debugPersistProgressV1();
+      await tester.pump(const Duration(milliseconds: 250));
+      payload =
+          jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
+      expect(payload['lastEarnedDailyDay'], today);
+      expect(payload['persistedStreakDays'], 6);
+      await tester.pumpWidget(const SizedBox.shrink());
+      await mount(tester);
+      home = tester.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
+      expect(home.state.streakDays, 6);
     },
   );
 
