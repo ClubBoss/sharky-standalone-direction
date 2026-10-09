@@ -1,0 +1,146 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sharky S04 - A/B/C matched screen boards</title><style>
+:root { color-scheme: light; font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; }
+* {box-sizing:border-box}body{margin:0;background:#f0f3f6;color:#1d2630}
+.header{background:#111d29;color:#fff;padding:34px max(28px,6vw)}
+.header h1{font-size:32px;letter-spacing:-.8px;margin:5px 0}.header p{max-width:1000px;opacity:.82;line-height:1.6}
+.ribbon{padding:14px max(28px,6vw);background:#fff;border-bottom:1px solid #dae0e6;font-size:13px;color:#485b6b}
+.legend{display:flex;gap:14px;flex-wrap:wrap}.legend b{color:#192a3c}
+main{padding:28px 3.6vw 65px;max-width:1600px;margin:auto}
+.row-name{font-size:16px;font-weight:800;letter-spacing:.01em;margin:30px 0 10px;border-top:1px solid #d4dce4;padding-top:22px}
+.compare{display:grid;grid-template-columns:repeat(3,minmax(255px,1fr));gap:22px}
+.board{border-radius:18px;padding:17px 14px 20px;border:1px solid #d9e0e7;box-shadow:0 8px 28px rgba(10,30,50,.045)}
+.board.a{background:#e9f3fb}.board.b{background:#f0edf9}.board.c{background:#f9f1e7}
+.boardhead{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:12px}
+.boardhead b{font-size:12px;letter-spacing:.08em}.boardhead span{font-size:11px;opacity:.72}
+.phone{max-width:350px;margin:auto;background:#fff;border:8px solid #26303d;border-radius:34px;min-height:475px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 14px 28px rgba(30,42,56,.18)}
+.topbar{height:22px;text-align:center;color:#5b6875;font-size:11px;font-weight:700;padding:5px}
+.appbar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid #eef1f5;font-size:12px;font-weight:800}
+.appbar span{font-size:10px;color:#718192;font-weight:500}
+.screenbody{padding:16px 15px 10px;flex:1;display:flex;flex-direction:column;gap:9px;min-height:330px}
+.eyebrow{font-size:10px;letter-spacing:.10em;text-transform:uppercase;font-weight:900;opacity:.75}
+.hero{font-size:23px;line-height:1.12;letter-spacing:-.6px;font-weight:850}
+.sub{font-size:12px;color:#526071;line-height:1.42}
+.signal{font-size:12px;padding:11px 12px;border-radius:10px;font-weight:700}
+.a .eyebrow,.a .appbar strong{color:#126491}.a .signal{background:#eaf4fa;color:#1c6286;border-left:4px solid #2684b4}
+.b .eyebrow,.b .appbar strong{color:#5b3b9d}.b .signal{background:#f0edfb;color:#4f3b81;border:1px dashed #9b8ccc}
+.c .eyebrow,.c .appbar strong{color:#91622b}.c .signal{background:#fbf2e1;color:#795323;border-radius:18px}
+.a .motif{margin-top:5px;border-left:2px solid #6da5c1;padding:4px 0 4px 14px;font-size:12px;line-height:1.7;color:#38627a}
+.a .motif::before{content:'01  /  CURRENT';display:block;font-weight:800;color:#1e7195;font-size:10px;letter-spacing:.08em}
+.b .motif{margin-top:5px;border-top:3px solid #5f4794;background:#f8f6ff;padding:11px 12px;font-size:12px;color:#45356d;line-height:1.65;font-weight:650}
+.b .motif::before{content:'CASE FILE  /  SOURCE FACTS';display:block;letter-spacing:.07em;font-size:10px;color:#8c77b4}
+.c .motif{margin-top:5px;border:1px solid #e9d5ad;border-radius:14px;padding:11px 12px;font-size:12px;color:#785e38;line-height:1.65;font-style:italic}
+.c .motif::before{content:'GENTLE NOTE';display:block;font-weight:850;font-style:normal;font-size:10px;letter-spacing:.09em}
+.seam{margin:8px 0 3px;background:#15212e;min-height:116px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:14px;color:#e1eaf2;text-align:center;padding:10px;border:2px dashed #73899b}
+.seam .top{font-size:10px;letter-spacing:.1em;color:#aac3d7}.seam .mid{font-size:16px;font-weight:800;margin:8px 0 3px}.seam .bottom{font-size:10px;opacity:.77}
+.button{background:#183957;color:#fff;border-radius:11px;padding:12px;font-size:12px;font-weight:800;text-align:center;margin-top:auto}
+.b .button{background:#59408e}.c .button{background:#895e2e}
+.footnote{font-size:10px;line-height:1.25;color:#718192;margin:1px 2px 5px}
+.nav{border-top:1px solid #ebeff3;padding:11px 6px 13px;text-align:center;font-size:9px;color:#67788a;letter-spacing:-.1px}
+.stress{font-size:11px;color:#495664;background:#f5f8fb;padding:10px;border-radius:9px;line-height:1.45}
+.notice{padding:12px max(28px,6vw);font-size:12px;background:#fff;color:#425465;line-height:1.5}
+@media(max-width:970px){.compare{grid-template-columns:1fr}.board{padding:15px}.phone{max-width:360px}.boardhead{max-width:360px;margin:0 auto 12px}}
+@media print{main{padding:10px}.row-name{break-before:page}.compare{page-break-inside:avoid}.board{box-shadow:none}.phone{box-shadow:none}}
+</style></head><body>
+<header class="header"><div style="font-size:13px;letter-spacing:.14em;font-weight:800;color:#96c6ed">SHARKY / S04 / D3 / DESIGN-ONLY</div>
+<h1>Three whole-product concept boards</h1><p>24 matched static mobile wireframes: same real negative-result evidence and the same frozen table boundary, competing primary information architectures. Not iOS screenshots, not product acceptance, not adopted.</p></header>
+<div class="ribbon"><div class="legend"><span><b>A</b> course path first</span><span><b>B</b> repair case first</span><span><b>C</b> daily purposeful episode first</span><span>Shared scenario: genuine 3/4 Needs review; independent spaced review not yet due</span></div></div>
+<main><div class="row-name">01  /  Home / next useful action</div><div class="compare"><article class="board a"><div class="boardhead"><b>A / GUIDED ACADEMY</b><span>The path is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">World 1  &gt;  First Table Guide</div><div class="hero">Continue your path</div><div class="sub">Reason: revisit the private-vs-board card signal.</div>
+ <div class="motif">Current step: 1 of 7</div><div class="button">Resume this focus &rarr;</div><div class="footnote">Next step is selected from real recorded work.</div></div>
+ <div class="nav">Home  /  Learn  /  Practice  /  Review  /  You</div></section></article><article class="board b"><div class="boardhead"><b>B / DECISION LAB</b><span>The repair case is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">Observed: 1 wrong table read</div><div class="hero">Active case: Board count</div><div class="sub">Reason: a previously recorded miss needs a focused recheck.</div>
+ <div class="motif">CASE 001  /  unresolved</div><div class="button">Inspect this decision &rarr;</div><div class="footnote">Fresh users see Start basics, never an invented diagnosis.</div></div>
+ <div class="nav">Focus  /  Cases  /  Practice  /  Review  /  Evidence</div></section></article><article class="board c"><div class="boardhead"><b>C / COMPANION RITUAL</b><span>A short purposeful session is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">Today: read the board clearly</div><div class="hero">A small win, on purpose</div><div class="sub">Sharky offers one meaningful rep, not a streak obligation.</div>
+ <div class="motif">OPTIONAL GUIDE  /  no fixed time promise</div><div class="button">Begin one decision &rarr;</div><div class="footnote">Reason must come from actual available learning state.</div></div>
+ <div class="nav">Today  /  Explore  /  Practice  /  Review  /  You</div></section></article></div><div class="row-name">02  /  Learn / Worlds</div><div class="compare"><article class="board a"><div class="boardhead"><b>A / GUIDED ACADEMY</b><span>The path is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">W1: Table basics - current</div><div class="hero">A clear learning route</div><div class="sub">W2: Decision foundations - locked</div>
+ <div class="motif">Node 01 [in progress] -&gt; Node 02 [locked]</div><div class="button">Open World 1 &rarr;</div><div class="footnote">36-world horizon is not displayed as unlocked content.</div></div>
+ <div class="nav">Home  /  Learn  /  Practice  /  Review  /  You</div></section></article><article class="board b"><div class="boardhead"><b>B / DECISION LAB</b><span>The repair case is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">Cards / Board / Pot</div><div class="hero">Case library</div><div class="sub">Learning Worlds grouped by causal skill; novice route retained.</div>
+ <div class="motif">CASE 001 active | CASE 002 locked</div><div class="button">Study this signal &rarr;</div><div class="footnote">Cases are visual groupings, not new engine owners.</div></div>
+ <div class="nav">Focus  /  Cases  /  Practice  /  Review  /  Evidence</div></section></article><article class="board c"><div class="boardhead"><b>C / COMPANION RITUAL</b><span>A short purposeful session is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">World 1: Your first table</div><div class="hero">Explore a short chapter</div><div class="sub">Short chapters, expandable lesson path and open Practice.</div>
+ <div class="motif">CHAPTER 1  /  current</div><div class="button">Open chapter &rarr;</div><div class="footnote">Late worlds appear as locked only when sourced.</div></div>
+ <div class="nav">Today  /  Explore  /  Practice  /  Review  /  You</div></section></article></div><div class="row-name">03  /  Fixed Modern Table seam</div><div class="compare"><article class="board a"><div class="boardhead"><b>A / GUIDED ACADEMY</b><span>The path is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">First table decision</div><div class="hero">One hand at a time</div><div class="sub">Commit an independent answer before explanation.</div>
+ <div class="seam"><div class="top">BOUNDARY  /  FROZEN</div><div class="mid">MODERN TABLE</div><div class="bottom">Placeholder only. No table art changed.</div></div><div class="button">Submit decision &rarr;</div><div class="footnote">Fixed scene geometry and source-owned poker facts.</div></div>
+ <div class="nav">Home  /  Learn  /  Practice  /  Review  /  You</div></section></article><article class="board b"><div class="boardhead"><b>B / DECISION LAB</b><span>The repair case is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">Case 001 - independent read</div><div class="hero">Decision workspace</div><div class="sub">No answer-bearing hint before commit.</div>
+ <div class="seam"><div class="top">BOUNDARY  /  FROZEN</div><div class="mid">MODERN TABLE</div><div class="bottom">Placeholder only. No table art changed.</div></div><div class="button">Commit your read &rarr;</div><div class="footnote">Only surrounding chrome changes; Modern Table fixed.</div></div>
+ <div class="nav">Focus  /  Cases  /  Practice  /  Review  /  Evidence</div></section></article><article class="board c"><div class="boardhead"><b>C / COMPANION RITUAL</b><span>A short purposeful session is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">One independent table read</div><div class="hero">Your moment to decide</div><div class="sub">Coach stays quiet while choosing.</div>
+ <div class="seam"><div class="top">BOUNDARY  /  FROZEN</div><div class="mid">MODERN TABLE</div><div class="bottom">Placeholder only. No table art changed.</div></div><div class="button">Choose your action &rarr;</div><div class="footnote">Reduced motion must preserve state and clarity.</div></div>
+ <div class="nav">Today  /  Explore  /  Practice  /  Review  /  You</div></section></article></div><div class="row-name">04  /  Wrong feedback / exact repair</div><div class="compare"><article class="board a"><div class="boardhead"><b>A / GUIDED ACADEMY</b><span>The path is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">You mixed private cards and board cards.</div><div class="hero">Not yet - try same clue</div><div class="sub">Read 2 private + 5 community again, then decide.</div>
+ <div class="motif">1. Signal  2. Retry  3. Feedback</div><div class="button">Try same clue &rarr;</div><div class="footnote">F04: tap must actually retry, not advance.</div></div>
+ <div class="nav">Home  /  Learn  /  Practice  /  Review  /  You</div></section></article><article class="board b"><div class="boardhead"><b>B / DECISION LAB</b><span>The repair case is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">Your read: two five six</div><div class="hero">Evidence then correction</div><div class="sub">Correct context: 2 private, 3 board, 6 BB pot.</div>
+ <div class="motif">OBSERVED MISS -&gt; EXPLAIN -&gt; REPLAY</div><div class="button">Retry the same case &rarr;</div><div class="footnote">F04: exact target, F09: human poker terms.</div></div>
+ <div class="nav">Focus  /  Cases  /  Practice  /  Review  /  Evidence</div></section></article><article class="board c"><div class="boardhead"><b>C / COMPANION RITUAL</b><span>A short purposeful session is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">That board count needs another look.</div><div class="hero">A useful correction</div><div class="sub">You have 2 private cards. Count community cards separately.</div>
+ <div class="motif">COACH: Look again, then try.</div><div class="button">Try that clue again &rarr;</div><div class="footnote">F04 true retry; no answer leakage pre-commit.</div></div>
+ <div class="nav">Today  /  Explore  /  Practice  /  Review  /  You</div></section></article></div><div class="row-name">05  /  Session Summary / negative result</div><div class="compare"><article class="board a"><div class="boardhead"><b>A / GUIDED ACADEMY</b><span>The path is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">3 of 4 correct / 1 needs repair</div><div class="hero">First Table Guide</div><div class="sub">Needs review. This did not earn the next unlock.</div>
+ <div class="motif">75% assessed (actual V4 negative)</div><div class="button">Replay this spot &rarr;</div><div class="footnote">Back to path: route only; positive payoff unproven.</div></div>
+ <div class="nav">Home  /  Learn  /  Practice  /  Review  /  You</div></section></article><article class="board b"><div class="boardhead"><b>B / DECISION LAB</b><span>The repair case is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">3/4 assessed; 1 error remains</div><div class="hero">Case report: unresolved</div><div class="sub">Assisted / repeated / independent labels must not collapse.</div>
+ <div class="motif">OBSERVED: Needs review | PROOF: pending</div><div class="button">Replay decision &rarr;</div><div class="footnote">No pretend certificate; positive proof requires real event.</div></div>
+ <div class="nav">Focus  /  Cases  /  Practice  /  Review  /  Evidence</div></section></article><article class="board c"><div class="boardhead"><b>C / COMPANION RITUAL</b><span>A short purposeful session is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">You got 3 of 4 decisions right</div><div class="hero">A calm close, not a badge</div><div class="sub">One read is still unresolved; review before claiming progress.</div>
+ <div class="motif">NEEDS REVIEW  /  earned outcome only</div><div class="button">Review the miss &rarr;</div><div class="footnote">No artificial celebration for unearned mastery.</div></div>
+ <div class="nav">Today  /  Explore  /  Practice  /  Review  /  You</div></section></article></div><div class="row-name">06  /  Review / return</div><div class="compare"><article class="board a"><div class="boardhead"><b>A / GUIDED ACADEMY</b><span>The path is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">Private vs board cards - unresolved</div><div class="hero">Your next repair</div><div class="sub">You chose 2 private / 5 board / pot 6 BB; better 2 private / 3 board / pot 6 BB.</div>
+ <div class="motif">Why: count actual board cards.</div><div class="button">Replay this spot &rarr;</div><div class="footnote">F09 semantic explanation; due task not yet eligible.</div></div>
+ <div class="nav">Home  /  Learn  /  Practice  /  Review  /  You</div></section></article><article class="board b"><div class="boardhead"><b>B / DECISION LAB</b><span>The repair case is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">One unresolved case</div><div class="hero">Repair workbench</div><div class="sub">History separate from active repairs; future spaced check not due.</div>
+ <div class="motif">OPEN 1  |  DUE 0  |  PROVED 0</div><div class="button">Repair case 001 &rarr;</div><div class="footnote">Review has an explicit empty/no-due state.</div></div>
+ <div class="nav">Focus  /  Cases  /  Practice  /  Review  /  Evidence</div></section></article><article class="board c"><div class="boardhead"><b>C / COMPANION RITUAL</b><span>A short purposeful session is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">One real mistake to revisit</div><div class="hero">When you are ready</div><div class="sub">Not-yet-due spaced review is explained without urgency or guilt.</div>
+ <div class="motif">NO REVIEW DUE  /  free practice available</div><div class="button">Practice this clue &rarr;</div><div class="footnote">Return is optional; exact signal remains visible.</div></div>
+ <div class="nav">Today  /  Explore  /  Practice  /  Review  /  You</div></section></article></div><div class="row-name">07  /  You / Profile</div><div class="compare"><article class="board a"><div class="boardhead"><b>A / GUIDED ACADEMY</b><span>The path is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">Real progress, not vanity XP</div><div class="hero">Your learning path</div><div class="sub">One error remains unresolved; no independent spaced proof yet.</div>
+ <div class="motif">Learn evidence | Pending review</div><div class="button">First start tools &rarr;</div><div class="footnote">F11 truthful tools label, not phantom settings.</div></div>
+ <div class="nav">Home  /  Learn  /  Practice  /  Review  /  You</div></section></article><article class="board b"><div class="boardhead"><b>B / DECISION LAB</b><span>The repair case is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">What did the learner prove?</div><div class="hero">Evidence ledger</div><div class="sub">Assisted and independent results are visibly distinct.</div>
+ <div class="motif">RECORDED 1 MISS | RETEST PENDING</div><div class="button">First start tools &rarr;</div><div class="footnote">F11 rename; no phantom account features.</div></div>
+ <div class="nav">Focus  /  Cases  /  Practice  /  Review  /  Evidence</div></section></article><article class="board c"><div class="boardhead"><b>C / COMPANION RITUAL</b><span>A short purposeful session is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">A learning journal with receipts</div><div class="hero">Moments that matter</div><div class="sub">What was studied; what remains unproven.</div>
+ <div class="motif">RECORDED: 3/4, needs review</div><div class="button">First start tools &rarr;</div><div class="footnote">F11 truthful card. Progress claims require evidence.</div></div>
+ <div class="nav">Today  /  Explore  /  Practice  /  Review  /  You</div></section></article></div><div class="row-name">08  /  Empty state / long-copy stress</div><div class="compare"><article class="board a"><div class="boardhead"><b>A / GUIDED ACADEMY</b><span>The path is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">No Review task is due right now.</div><div class="hero">When nothing is due</div><div class="sub">Return to World 1 or practice freely.</div>
+ <div class="motif">LONG_COPY: source explanation scrolls; CTA stays visible.</div><div class="stress"><b>Empty and long-copy rules:</b> Do not fabricate due debt or unlocked world. Scroll long explanation, keep action usable at safe area.</div><div class="button">Continue World 1 &rarr;</div><div class="footnote">No ghost debt. 1.4x native proof pending S11.</div></div>
+ <div class="nav">Home  /  Learn  /  Practice  /  Review  /  You</div></section></article><article class="board b"><div class="boardhead"><b>B / DECISION LAB</b><span>The repair case is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">No recorded misses -&gt; no case to diagnose.</div><div class="hero">No case yet</div><div class="sub">Start the first lesson; avoid fake personalized analytics.</div>
+ <div class="motif">LONG_COPY: evidence rationale wraps and scrolls safely.</div><div class="stress"><b>Empty and long-copy rules:</b> Do not fabricate due debt or unlocked world. Scroll long explanation, keep action usable at safe area.</div><div class="button">Start basics &rarr;</div><div class="footnote">F07 counters derive from real beat count.</div></div>
+ <div class="nav">Focus  /  Cases  /  Practice  /  Review  /  Evidence</div></section></article><article class="board c"><div class="boardhead"><b>C / COMPANION RITUAL</b><span>A short purposeful session is the product</span></div>
+ <section class="phone"><div class="topbar">9:41 &#x25CF;&#x25CF;&#x25CF;</div><div class="appbar"><strong>SHARKY</strong><span>STATIC CONCEPT / NOT NATIVE</span></div>
+ <div class="screenbody"><div class="eyebrow">You can resume a lesson or simply leave.</div><div class="hero">Nothing to review today</div><div class="sub">Quiet empty state, no invented streak loss or penalties.</div>
+ <div class="motif">LONG_COPY: scroll body, preserve fixed action.</div><div class="stress"><b>Empty and long-copy rules:</b> Do not fabricate due debt or unlocked world. Scroll long explanation, keep action usable at safe area.</div><div class="button">Explore lessons &rarr;</div><div class="footnote">S11 validates text scaling and CTA accessibility.</div></div>
+ <div class="nav">Today  /  Explore  /  Practice  /  Review  /  You</div></section></article></div></main>
+<footer class="notice"><b>Evidence fence:</b> Actual V4 result is a negative recap only. Current positive summary, joined result -> Home -> next action, and natural empty/1.4x native cases remain unproven. Everything shown here is an S04 static design proposition. F04, F07, F09 and F11 are open product debt. No product source, table assets, telemetry or state owner is modified.</footer>
+</body></html>

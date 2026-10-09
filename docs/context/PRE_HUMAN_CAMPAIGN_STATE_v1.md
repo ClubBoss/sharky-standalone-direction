@@ -4,6 +4,17 @@ Status: `PRE_P02_DESIGN_RECONVERGENCE_PLANNING`
 Freshness date: 2026-10-09 (October exact-dispatch overlay; September material retained as history)
 Repository: `ClubBoss/sharky-standalone-direction`
 
+## 2026-10-10 S04 D3 completion / S05 explicit owner gate (newest dispatch)
+
+- `ACTIVE_TASK_ID = S05`; `CURRENT_STAGE = PRE_P02_DESIGN_RECONVERGENCE / D4_OWNER_DESIGN_DIRECTION / NO_PRODUCT_CODE`; `NEXT_TASK_ID = S05` until explicit owner concept decision. This block becomes the active pointer upon this docs-only S04 PR exact-head CI and verified merge; prior dispatch blocks below are preserved chronology, not current instructions.
+- S02 = `PASS_D1_AUDIT_WITH_DOCUMENTED_E2E_GAP` (audit only); S03 = `PASS_D2_WITH_SOURCE_LIMITATIONS` (public research only); S04 = `PASS_D3_CONCEPTS_READY_FOR_S05` (three comparable static 8-screen boards and navigation/learning diagrams, no adopted design). Authoritative S04 receipt: `docs/_reviews/s04_d3_whole_product_concept_competition_20261010.md`, 24 static concepts: `docs/design/s04_three_concept_screen_board_20261010.html`.
+- Three competing IA primitives: A Guided Academy = curriculum path; B Decision Lab = evidence-backed repair case; C Companion Ritual = short purposeful episode. Risk-adjusted comparative A 4.37/5, B 4.12/5, C 3.86/5; heuristic, no observed Delta-EV uplift. **RECOMMEND A, DO NOT ADOPT.** Decision brief: `docs/_reviews/s05_owner_design_direction_brief_20261010.md`.
+- Open PRODUCT debts: F04 P1, F07/F09/F11 P2. E2E unknown: joined result -> Home -> source-justified action; positive earned summary; native empty/long-copy/large-font proof. Future conditional S08-S11 only. Day-2/Day-7 real efficacy S15. Independently spaced recheck at V5 observation NOT_YET_DUE.
+- No S06/implementation admission, Flutter product changes, Modern Table or PR #224 changes, Codex, Human, or P02. S05 owner must choose exactly one concept or return a named material falsifier to S04, then approve Screen Contracts + clickable journey before further advancement.
+- S04 started **after** verified predecessor main `9e4aa05ce843441a477343b461800fe94b8237e9`, tree `a02a4ef79146b30b5372ce77033cc2076bd915c6`, with #255 integrated and all five internal GitHub checks green. Final main SHA must be reverified after this S04 PR merge.
+
+---
+
 ## 2026-10-10 S02/S03 D1-D2 superseding acceptance — pending exact-head CI/merge
 
 - `ACTIVE_TASK_ID = S03` **until this docs-only PR is merged and checked**; `NEXT_TASK_ID = S04`; S04 is **READY_AFTER_VERIFIED_MERGE**, not yet independently active on main. One active task only.
