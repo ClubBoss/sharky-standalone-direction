@@ -12,14 +12,16 @@ Repository: `ClubBoss/sharky-standalone-direction`
 - **Sequence intent:** whole-product UX/visual truth → research → concepts → owner design choice → waves → redesigned candidate → independently admitted P02 Human → efficacy/retention/transfer → W1–W12/product/competitive gates → market/commerce if admitted → release GO/NO-GO. No skips without a documented owner exception.
 - **CURRENT_STAGE:** PRE_P02_DESIGN_RECONVERGENCE / PLANNING_ONLY
 - **CURRENT_ACTIVE_ROUTE_TASK:** S01 (D0 Truth Recovery)
-- **S01_STATUS:** NOT_STARTED — first admissible next task; do not infer execution from this docs change.
+- **S01_STATUS:** ACTIVE — 2026-10-09 initial source-dated inventory complete (57 indexed native frames / 62 PNG / 7 videos from old GUI V3 at SHA 6a26a16e). This is intake only, **NOT S01 PASS**: reconcile old findings against live 7de36d81 source/current screenshots and complete truth-map DoD.
 - **S02–S24:** NOT_STARTED / CONDITIONAL where declared in §10A.
-- **NEXT_BOUNDED_ACTION:** source/date-labeled Current Product Visual Truth Map from actual current runtime screenshots and previous GUI Audit V3. Inventory first; no new visual concepts before D0 evidence.
+- **NEXT_BOUNDED_ACTION:** continue S01 Current Product Visual Truth Map: source/route compare archived V3 screenshots and F01–F12 issue ledger with current main 7de36d81, recapture only materially stale current screens, classify CURRENT / RESOLVED_WITH_EVIDENCE / OPEN / UNKNOWN / DEFERRED_PROTECTED. Evidence folder: `/Users/elmarsalimzade/Sharky_Design_Truth_S01_20261009/` (PRELIMINARY inventory CSV/MD, NOT S01 PASS). On evidenced S01 PASS activate S02 in the same work cycle.
 - **CURRENT_ACTIVE_IMPLEMENTATION_FAMILY:** NONE. Flutter/asset changes, new dependencies, PR #224 and V4 remain NOT_ADMITTED.
 - **P02:** HOLD / NOT_ADMITTED until design route S11–S12 plus a distinct explicit owner admission. Earlier pre-#250 post-fix holistic source PASS_BOUNDED remains genuine source-only evidence, not redesigned-candidate or Human PASS.
 - **FROZEN BASELINE BEFORE THIS DOCS ROUTE:** main e962a6ec735c58f3aad66c49c75b3660a480978f, tree 8ab1081e3c43774a3da91afffc9958c42bc9e4dd; after docs merge ALWAYS re-resolve live main. Current evidence classes and historic claims are unchanged.
 - **TASK TRANSITION LAW:** only mark S01 PASS upon documented real D0 DoD artifact; then explicitly activate S02 in this file. Every later step likewise needs evidence/owner decision and a single next task. Do not edit older sections as if they were newly executed.
 - **CONTEXT ECONOMY:** manager chat = task/gate decisions; low-cost separate research chat for D2 if helpful; Codex reserved for admitted multi-file implementation; no agent just to format a status table.
+- **NO_IDLE_AFTER_DOD / TRANSFER:** §10A continuous dispatch is binding: receipt → next allowed active task without a new user prompt; on context pressure transfer one complete handover to a new chat, then continue there. Stop only for owner gates, safety, genuine external participant/consent or material blocker; do not claim background execution.
+- **S03 PRECOLLECTED INPUT (not PASS):** `SHARKY_CROSS_INDUSTRY_DESIGN_RESEARCH_PACKET_v1.zip` (12 apps / 7 categories / A Guided Academy, B Decision Lab, C Companion Ritual) and `SHARKY_S03_RESEARCH_MANAGER_RECONCILIATION_v1.md` accepted as research input. Reconcile with S01/S02 outcomes when S03 becomes active; no fresh benchmark sweep without a proven gap.
 
 ---
 
