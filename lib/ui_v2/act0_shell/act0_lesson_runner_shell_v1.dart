@@ -3849,7 +3849,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       final headline = isTheory
           ? prompt
           : isReview
-          ? runner.reviewQuality == Act0FeedbackQualityV1.suboptimal
+          ? repairReceipt.isNotEmpty
+                ? repairReceipt
+                : runner.reviewQuality == Act0FeedbackQualityV1.suboptimal
                 // Uncertainty is not a factual error, but it is never proof
                 // of a correct read. Do not reuse the preferred answer as
                 // evidence that the learner chose it.
@@ -3860,8 +3862,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                       : (isRu
                             ? 'Посмотрим на подсказку и улучшим решение.'
                             : "Let's check the table clue and improve the read.")
-                : repairReceipt.isNotEmpty
-                ? repairReceipt
                 : feedbackAction.isEmpty
                 ? runner.reviewTitle
                 : feedbackActionIsSentence

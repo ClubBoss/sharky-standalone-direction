@@ -86,4 +86,63 @@ void main() {
     expect(wrong.eyebrow, 'MISSED CLUE');
     expect(wrong.headline, contains('better play'));
   });
+
+  testWidgets(
+    'F01 follow-up: real repair receipt keeps headline priority for unsure',
+    (tester) async {
+      tester.view.physicalSize = const Size(402, 874);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      final task = Act0ShellStateV1.sample
+          .worldById('world_1')
+          .lessons
+          .firstWhere((lesson) => lesson.lessonId == 'what_poker_is')
+          .taskList
+          .firstWhere(
+            (entry) => entry.taskId == 'what_poker_is_table_read_transfer',
+          );
+      final check = placementQuickCheckRunnerV1(
+        task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingSteps: const <Act0TeachingStepV1>[],
+        ),
+        signalId: 'board_private_cards',
+        checkIndex: 2,
+        checkCount: 3,
+      );
+      const actualReceipt = 'Repair receipt: board clue still needs a recheck.';
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: check.copyWith(
+                phase: Act0LessonPhaseV1.review,
+                selectedOptionId: 'not_sure_yet',
+                primaryCtaLabel: 'Next check',
+              ),
+              selectedTaskFamily: task.resolvedTaskFamily,
+              tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
+              repairResultReceiptLine: actualReceipt,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      final guide = tester.widget<Act0LearningSceneGuideV3>(
+        find.byType(Act0LearningSceneGuideV3),
+      );
+      expect(guide.phase, Act0LearningScenePhaseV3.feedbackSuboptimal);
+      expect(guide.eyebrow, "LET'S CHECK THE CLUE");
+      expect(guide.headline, actualReceipt);
+      expect(guide.headline, isNot(contains('was right')));
+      expect(guide.eyebrow, isNot('CORRECT READ'));
+    },
+  );
 }
