@@ -4,6 +4,17 @@ Status: `PRE_P02_DESIGN_RECONVERGENCE_PLANNING`
 Freshness date: 2026-10-09 (October exact-dispatch overlay; September material retained as history)
 Repository: `ClubBoss/sharky-standalone-direction`
 
+## 2026-10-10 S02 D1 adjudication — current override (newest dispatch)
+
+- `ACTIVE_TASK_ID = S02`; `CURRENT_STAGE = PRE_P02_DESIGN_RECONVERGENCE / D1_HOLISTIC_SCREEN_AUDIT / NO_PRODUCT_CODE`; `S02_STATUS = HOLD_MATERIAL_COVERAGE_GAP`; `NEXT_TASK_ID = S02` (close bounded missing native evidence). No other S-stage is active.
+- Formal evidence acceptance receipt: `docs/_reviews/s02_d1_evidence_adjudication_20261010.md`. Remote main at adjudication: `d582261ddd613da38e060729792bce7aaf339326`, tree `4076a4a9ae5e909c797701ebdda3c03100db5d00`; V3 ZIP SHA-256 `15cfc3e5dbcaf807a92ed98a29373f285357870c8e6afa6d004afa6742e5d689` and manifest 160/160 validated.
+- Native F04 P1, F07/F09/F11 P2 **CONFIRMED PRODUCT DEBT**; S02 V3 first-use+repair route legitimately observed but full lesson Session Summary, later independent recheck and true persistence/return unproven. Do **not** promote V3 `PASS_CANDIDATE` to D1 PASS before resolving material D1 coverage.
+- `S03_STATUS = NOT_STARTED`, original research packet `ACCEPTED_INPUT_PENDING_SEQUENCE` and SHA independently confirmed. `S04_STATUS = NOT_STARTED`. `S05_OWNER_GATE = PENDING` (not reached). `P02 = HOLD / NOT_ADMITTED`, `CURRENT_ACTIVE_IMPLEMENTATION_FAMILY = NONE`, Modern Table frozen, #224 separate.
+- **Exact next bounded action:** same-app/same-UDID native W1 lesson complete → Session Summary and justified CTA, then non-destructive app restart/resume/Review state; evidence-only XCUITest, no Flutter changes, Codex, simulator rebuild, synthetic mastery or Human proof.
+- This block supersedes the older S02 `ACTIVE` prose immediately below; older dated receipts are preserved as history. On a later evidenced D1 PASS, use §10A law and immediately proceed S03.
+
+---
+
 ## 2026-10-09 owner-requested Design-First launch-route overlay — LIVE NEXT TASK
 
 **This block is newer than the October C0/C1 gate-preparation dispatch below.** The previous source/native lane closures remain true as bounded historic evidence; the newly admitted task is *planning and research*, not reimplementation of previously closed contracts.
