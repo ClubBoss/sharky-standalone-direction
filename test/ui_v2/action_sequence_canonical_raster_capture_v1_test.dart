@@ -358,10 +358,26 @@ void main() {
       (widget) =>
           widget.key?.toString().contains('act0_shell_seat_tap_') ?? false,
     );
-    expect(tappableSeats, findsAtLeastNWidgets(2));
+    final mountedRunner = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    final usesSeatTapOptions = mountedRunner.runner.options.any(
+      (option) => option.seatId != null,
+    );
+    const seatTapPrompt = 'Tap one equally highlighted seat on the table.';
+    const abstractPrompt =
+        'Which label could change next hand while the player is still you?';
+    if (usesSeatTapOptions) {
+      expect(tappableSeats, findsAtLeastNWidgets(2));
+    } else {
+      for (final optionId in const <String>['top', 'bottom', 'random']) {
+        expect(find.byKey(Key('act0_shell_option_$optionId')), findsOneWidget);
+      }
+      expect(find.text(seatTapPrompt), findsNothing);
+    }
     if (_expectsWaveA) {
       expect(
-        find.text('Tap one equally highlighted seat on the table.'),
+        find.text(usesSeatTapOptions ? seatTapPrompt : abstractPrompt),
         findsOneWidget,
       );
     }
@@ -549,19 +565,34 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await tapVisible(find.byKey(const Key('act0_shell_seat_tap_btn')));
+    await tapVisible(
+      find.byKey(
+        Key(
+          usesSeatTapOptions
+              ? 'act0_shell_seat_tap_btn'
+              : 'act0_shell_option_bottom',
+        ),
+      ),
+    );
     await tester.pumpAndSettle();
     await saveMounted('table_object_evaluated');
-    expect(
-      find.byWidgetPredicate(
-        (widget) =>
-            widget.key?.toString().contains(
-              'act0_shell_seat_state_btn_confirmedSelected',
-            ) ??
-            false,
-      ),
-      findsOneWidget,
-    );
+    if (usesSeatTapOptions) {
+      expect(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget.key?.toString().contains(
+                'act0_shell_seat_state_btn_confirmedSelected',
+              ) ??
+              false,
+        ),
+        findsOneWidget,
+      );
+    } else {
+      expect(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+        findsOneWidget,
+      );
+    }
 
     await tester.pumpWidget(
       MaterialApp(
