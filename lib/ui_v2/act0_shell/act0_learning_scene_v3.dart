@@ -8,8 +8,8 @@ enum Act0LearningScenePhaseV3 {
   theory,
   tableTask,
   feedbackCorrect,
-  feedbackSuboptimal,
   feedbackWrong,
+  feedbackSuboptimal,
 }
 
 /// Presentation-only scaffold tier for a given B5 attention phase.
