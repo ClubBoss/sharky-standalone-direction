@@ -4,6 +4,17 @@ Status: `PRE_P02_DESIGN_RECONVERGENCE_PLANNING`
 Freshness date: 2026-10-09 (October exact-dispatch overlay; September material retained as history)
 Repository: `ClubBoss/sharky-standalone-direction`
 
+## 2026-10-10 S02/S03 D1-D2 superseding acceptance — pending exact-head CI/merge
+
+- `ACTIVE_TASK_ID = S03` **until this docs-only PR is merged and checked**; `NEXT_TASK_ID = S04`; S04 is **READY_AFTER_VERIFIED_MERGE**, not yet independently active on main. One active task only.
+- S02 = `PASS_D1_AUDIT_WITH_DOCUMENTED_E2E_GAP` as bounded audit, not product/E2E/Human acceptance; new receipt `docs/_reviews/s02_d1_final_bounded_adjudication_20261010.md`. Added V4 genuine negative result `3/4 Needs review`, restart/persistence and V5 actual decision/due-time to immutable V3 evidence. Historical #254 HOLD receipt remains unchanged.
+- S03 = `PASS_D2_WITH_SOURCE_LIMITATIONS`, subject to merged receipts; research ZIP verified SHA `e99ea45a084a4e9d6d32725bd0c550c75a0caf77dabe96112b57b89063c5e02b`; 12 apps, seven categories, five ranked transfers; 0/12 installed-current builds. Receipt `docs/_reviews/s03_d2_source_bounded_acceptance_20261010.md`.
+- Open PRODUCT: F04 P1, F07/F09/F11 P2. Open E2E/EVIDENCE: continuous result → Home → justified next action, positive earned summary, native empty/long-copy/stress. Route conditional S08–S11; independent Day-2/Day-7 efficacy S15.
+- On exact-head docs-only CI PASS, authorized merge and verified new main SHA/tree, **activate S04 D3**; stop next at explicit S05 owner gate. No Flutter, Modern Table, PR #224, P02 or Human authorization.
+- Baseline before proposed PR: `fe7d478af6f3760b207ea5f58f4e3052f5ee4115`, tree `b89086bc3e121ce3a62fe2bb1e8855d079603941`. Prior block below preserved as history.
+
+---
+
 ## 2026-10-10 S02 D1 adjudication — current override (newest dispatch)
 
 - `ACTIVE_TASK_ID = S02`; `CURRENT_STAGE = PRE_P02_DESIGN_RECONVERGENCE / D1_HOLISTIC_SCREEN_AUDIT / NO_PRODUCT_CODE`; `S02_STATUS = HOLD_MATERIAL_COVERAGE_GAP`; `NEXT_TASK_ID = S02` (close bounded missing native evidence). No other S-stage is active.
