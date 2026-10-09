@@ -8,6 +8,7 @@ enum Act0LearningScenePhaseV3 {
   theory,
   tableTask,
   feedbackCorrect,
+  feedbackSuboptimal,
   feedbackWrong,
 }
 
@@ -234,6 +235,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
     final phaseTone = switch (phase) {
       Act0LearningScenePhaseV3.feedbackWrong => const Color(0xFFFFC46B),
       Act0LearningScenePhaseV3.feedbackCorrect => Act0ShellTokensV1.primary,
+      Act0LearningScenePhaseV3.feedbackSuboptimal => Act0ShellTokensV1.info,
       Act0LearningScenePhaseV3.theory => Act0ShellTokensV1.info,
       Act0LearningScenePhaseV3.tableTask => Act0ShellTokensV1.primary,
     };
@@ -283,9 +285,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
                 overflow: TextOverflow.fade,
                 softWrap: false,
                 style: Act0ShellTokensV1.label.copyWith(
-                  color: showSpokenSurface
-                      ? Act0ShellTokensV1.textMuted
-                      : tone,
+                  color: showSpokenSurface ? Act0ShellTokensV1.textMuted : tone,
                   fontSize: showSpokenSurface ? 8.8 : 10.2,
                   fontWeight: FontWeight.w900,
                   letterSpacing: showSpokenSurface ? 0.35 : 0.65,
@@ -387,9 +387,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
               growthStage: growthStage,
             ),
           ),
-          SizedBox(
-            width: showSpokenSurface ? 10 : Act0ShellTokensV1.gapSm,
-          ),
+          SizedBox(width: showSpokenSurface ? 10 : Act0ShellTokensV1.gapSm),
         ],
         Expanded(
           child: showSpokenSurface
@@ -413,12 +411,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
         ),
         padding: showSpokenSurface
             ? const EdgeInsets.fromLTRB(2, 2, 2, 2)
-            : EdgeInsets.fromLTRB(
-                12,
-                enlarged ? 6 : 5,
-                10,
-                enlarged ? 7 : 6,
-              ),
+            : EdgeInsets.fromLTRB(12, enlarged ? 6 : 5, 10, enlarged ? 7 : 6),
         decoration: showSpokenSurface
             ? null
             : BoxDecoration(
