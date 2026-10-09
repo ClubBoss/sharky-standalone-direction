@@ -7642,7 +7642,7 @@ const _meetTableRunner = Act0RunnerStateV1(
     Act0RunnerOptionV1(
       id: 'random',
       label: 'BB',
-      seatId: 'hj',
+      seatId: 'bb',
       isCorrect: false,
       preferredLabel: 'BTN (your seat)',
       quality: Act0FeedbackQualityV1.wrong,
@@ -7718,7 +7718,7 @@ const _meetTableRunner = Act0RunnerStateV1(
     heroSeatId: 'btn',
     highlightedSeatIds: <String>['btn', 'sb', 'bb'],
     highlightedCardIds: <String>[],
-    selectableSeatIds: <String>['utg', 'btn', 'hj'],
+    selectableSeatIds: <String>['utg', 'btn', 'bb'],
     instructionAnchor: 'hero',
   ),
   teachingSteps: <Act0TeachingStepV1>[
@@ -10946,7 +10946,7 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
     Act0RunnerOptionV1(
       id: 'random',
       label: 'BB',
-      seatId: 'hj',
+      seatId: 'bb',
       isCorrect: false,
       preferredLabel: 'BTN (your seat)',
       quality: Act0FeedbackQualityV1.wrong,
@@ -10957,6 +10957,9 @@ final _firstTableGuideMeetTableRunner = _meetTableRunner.copyWith(
   feedbackTitle: 'Sharp read.',
   feedbackReason:
       'You identifies the learner; BTN is the seat role that acts after CO here.',
+  table: _meetTableRunner.table.copyWith(
+    selectableSeatIds: const <String>['utg', 'btn', 'bb'],
+  ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'One loop first.',
@@ -10987,7 +10990,7 @@ final _firstTableGuideFindHeroRunner = _findHeroSeatRunner.copyWith(
     Act0RunnerOptionV1(
       id: 'top',
       label: 'You',
-      seatId: 'utg',
+      repairFocusSeatIds: const <String>['btn'],
       isCorrect: false,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.wrong,
@@ -10997,7 +11000,7 @@ final _firstTableGuideFindHeroRunner = _findHeroSeatRunner.copyWith(
     Act0RunnerOptionV1(
       id: 'bottom',
       label: 'BTN',
-      seatId: 'btn',
+      repairFocusSeatIds: const <String>['btn'],
       isCorrect: true,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.correct,
@@ -11008,7 +11011,7 @@ final _firstTableGuideFindHeroRunner = _findHeroSeatRunner.copyWith(
     Act0RunnerOptionV1(
       id: 'random',
       label: 'Your private cards',
-      seatId: 'hj',
+      repairFocusSeatIds: const <String>['btn'],
       isCorrect: false,
       preferredLabel: 'BTN',
       quality: Act0FeedbackQualityV1.wrong,
@@ -11020,6 +11023,9 @@ final _firstTableGuideFindHeroRunner = _findHeroSeatRunner.copyWith(
   feedbackTitle: 'Player and position separated.',
   feedbackReason:
       'You is the learner identity; BTN is the current table position.',
+  table: _findHeroSeatRunner.table.copyWith(
+    selectableSeatIds: const <String>[],
+  ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'You means learner.',

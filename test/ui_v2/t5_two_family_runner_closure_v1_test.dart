@@ -287,7 +287,13 @@ void main() {
     );
     final hitRects = <Rect>[
       for (final option in decision.options)
-        tester.getRect(find.byKey(Key('act0_shell_seat_tap_${option.seatId}'))),
+        tester.getRect(
+          find.byKey(
+            option.seatId == null
+                ? Key('act0_shell_option_${option.id}')
+                : Key('act0_shell_seat_tap_${option.seatId}'),
+          ),
+        ),
     ];
 
     await tester.pumpWidget(

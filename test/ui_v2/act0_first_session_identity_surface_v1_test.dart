@@ -152,6 +152,71 @@ void main() {
   });
 
   testWidgets(
+    'first-session authored choices keep seat and abstract answers honest',
+    (tester) async {
+      final firstGuide = Act0ShellStateV1.sample.lessonById('what_poker_is');
+      final meetTable = firstGuide.tasks
+          .firstWhere((task) => task.taskId == 'what_poker_is_theory')
+          .runner;
+      final abstractIdentity = firstGuide.tasks
+          .firstWhere((task) => task.taskId == 'what_poker_is_find_hero')
+          .runner;
+      final baseMeetTable = Act0ShellStateV1.sample
+          .lessonById('positions')
+          .runner;
+      final bbChoice = meetTable.options.firstWhere(
+        (option) => option.label == 'BB',
+      );
+
+      expect(bbChoice.seatId, 'bb');
+      expect(meetTable.table.selectableSeatIds, <String>['utg', 'btn', 'bb']);
+      expect(
+        baseMeetTable.options
+            .firstWhere((option) => option.label == 'BB')
+            .seatId,
+        'bb',
+      );
+      expect(baseMeetTable.table.selectableSeatIds, <String>[
+        'utg',
+        'btn',
+        'bb',
+      ]);
+      expect(abstractIdentity.options.map((option) => option.label), <String>[
+        'You',
+        'BTN',
+        'Your private cards',
+      ]);
+      expect(
+        abstractIdentity.options.every((option) => option.seatId == null),
+        isTrue,
+      );
+      expect(abstractIdentity.table.selectableSeatIds, isEmpty);
+      expect(
+        abstractIdentity.options.every(
+          (option) => option.repairFocusSeatIds.contains('btn'),
+        ),
+        isTrue,
+        reason:
+            'Answers remain abstract but repair evidence keeps the BTN signal.',
+      );
+
+      // Decision answers become visible only after the authored teaching beats.
+      await pumpRunner(
+        tester,
+        abstractIdentity.copyWith(
+          teachingStepIndex: abstractIdentity.teachingSteps.length,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('act0_shell_option_top')), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_option_bottom')), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_option_random')), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_seat_tap_prompt')), findsNothing);
+    },
+  );
+
+  testWidgets(
     'short identity teaching leads into a stable table with navigation anchored below',
     (tester) async {
       await pumpRunner(
