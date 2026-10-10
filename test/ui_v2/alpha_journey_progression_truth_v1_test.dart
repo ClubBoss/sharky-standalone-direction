@@ -8,6 +8,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_scene_v3.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
 
 const _progressKey = 'act0_shell_progress_v1';
 const _fixturePath =
@@ -21,12 +22,14 @@ void main() {
   Widget host({
     bool showPlacementOnStart = false,
     Act0ShellTabV1 initialTab = Act0ShellTabV1.home,
+    Act0TelemetrySinkV1? telemetrySink,
   }) {
     return MaterialApp(
       home: Act0ShellPreviewScreenV1(
         key: UniqueKey(),
         showPlacementOnStart: showPlacementOnStart,
         initialTab: initialTab,
+        telemetrySink: telemetrySink,
       ),
     );
   }
@@ -153,8 +156,17 @@ void main() {
   testWidgets(
     'fresh install Learn route reaches authored First Table Guide theory and a truthful independent decision',
     (tester) async {
-      await pumpHost(tester, host(showPlacementOnStart: true));
+      final telemetry = Act0InMemoryTelemetrySinkV1();
+      await pumpHost(
+        tester,
+        host(showPlacementOnStart: true, telemetrySink: telemetry),
+      );
       await completeFreshBeginnerOnboarding(tester);
+      // Placement/Welcome orientation must never fabricate an assessment.
+      expect(
+        telemetry.events.where((event) => event.name == 'user_choice'),
+        isEmpty,
+      );
       await openLearn(tester);
 
       await tester.tap(find.byKey(const Key('act0_shell_current_mission_cta')));
@@ -182,7 +194,9 @@ void main() {
         );
         return current.selectedTaskId == taskId &&
             find
-                .byKey(Key('act0_shell_option_${current.runner.options.first.id}'))
+                .byKey(
+                  Key('act0_shell_option_${current.runner.options.first.id}'),
+                )
                 .evaluate()
                 .isNotEmpty;
       }
@@ -191,12 +205,17 @@ void main() {
       // decision (a drill, not more theory), still inside First Table
       // Guide: this is the "theoretical explanation -> independent
       // decision" step the route must actually deliver.
-      for (var step = 0; step < 12 && !atTaskWithOptions('what_poker_is_find_hero'); step++) {
+      for (
+        var step = 0;
+        step < 12 && !atTaskWithOptions('what_poker_is_find_hero');
+        step++
+      ) {
         final continueCta = find.byKey(const Key('act0_shell_continue_cta'));
         expect(
           continueCta,
           findsOneWidget,
-          reason: 'Stuck before reaching the first independent decision at step $step.',
+          reason:
+              'Stuck before reaching the first independent decision at step $step.',
         );
         await tester.tap(continueCta);
         await tester.pumpAndSettle();
@@ -223,6 +242,23 @@ void main() {
       );
       expect(wrongScene.phase.name, 'feedbackWrong');
       expect(wrongScene.eyebrow, 'MISSED CLUE');
+
+      // The real independent first choice is the sole graded answer owner.
+      final choices = telemetry.events
+          .where((event) => event.name == 'user_choice')
+          .toList(growable: false);
+      expect(choices, hasLength(1));
+      final fields = choices.single.fields;
+      expect(fields['lessonId'], 'what_poker_is');
+      expect(fields['taskId'], 'what_poker_is_find_hero');
+      expect(fields['choiceId'], 'top');
+      expect(fields['correct'], isFalse);
+      expect(fields['result_classification'], 'incorrect');
+      expect(fields['error_type'], isNot(anyOf(isNull, 'none', '')));
+      expect(
+        fields['decisionTimeBucket'],
+        isIn(<String>['under_3s', '3_to_10s', 'over_10s', 'unknown']),
+      );
     },
   );
 
