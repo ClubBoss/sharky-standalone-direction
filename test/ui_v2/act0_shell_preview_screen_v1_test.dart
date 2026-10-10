@@ -40,8 +40,10 @@ void main() {
     Act0ShellTabV1 tab = Act0ShellTabV1.home,
     bool showPlacementOnStart = false,
     Act0ShellStateV1? overrideState,
+    Locale locale = const Locale('en'),
   }) {
     return MaterialApp(
+      locale: locale,
       supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
       localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
         GlobalMaterialLocalizations.delegate,
@@ -64,6 +66,55 @@ void main() {
     await tester.pumpWidget(widget);
     await tester.pumpAndSettle();
   }
+
+  testWidgets('Placement root copy follows live EN/RU MaterialApp locale', (
+    tester,
+  ) async {
+    await pumpCompact(
+      tester,
+      host(showPlacementOnStart: true, locale: const Locale('en')),
+    );
+    expect(find.text('Find my start'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('act0_shell_placement_intro_cta')));
+    await tester.pumpAndSettle();
+    expect(
+      find.byKey(const Key('act0_shell_placement_question_experience')),
+      findsOneWidget,
+    );
+    // The eyebrow is supplied by the ROOT, not by the localized leaf.
+    expect(find.text('Starting point'), findsOneWidget);
+
+    await tester.pumpWidget(
+      host(showPlacementOnStart: true, locale: const Locale('ru')),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      find.text(
+        '\u0422\u043e\u0447\u043a\u0430 \u0441\u0442\u0430\u0440\u0442\u0430',
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Starting point'), findsNothing);
+    expect(
+      find.text(
+        '\u042f \u043d\u043e\u0432\u0438\u0447\u043e\u043a \u0432 \u043f\u043e\u043a\u0435\u0440\u0435',
+      ),
+      findsOneWidget,
+    );
+
+    await tester.pumpWidget(
+      host(showPlacementOnStart: true, locale: const Locale('en')),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Starting point'), findsOneWidget);
+    expect(
+      find.text(
+        '\u0422\u043e\u0447\u043a\u0430 \u0441\u0442\u0430\u0440\u0442\u0430',
+      ),
+      findsNothing,
+    );
+  });
 
   Widget wave2SurfaceHost(Act0ControlledDemoCaptureSurfaceV1 surface) {
     return MaterialApp(
@@ -466,9 +517,7 @@ void main() {
       );
 
       Act0RunnerStateV1 currentRunner() => tester
-          .widget<Act0LessonRunnerShellV1>(
-            find.byType(Act0LessonRunnerShellV1),
-          )
+          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
           .runner;
 
       final totalTeachingSteps = currentRunner().teachingSteps.length;

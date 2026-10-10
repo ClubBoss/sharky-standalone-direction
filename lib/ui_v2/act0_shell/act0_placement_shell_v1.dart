@@ -1757,29 +1757,32 @@ class _PlacementOptionButtonV1 extends StatelessWidget {
                         ),
                       ),
                       if (showBadge && option.badge != null)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Act0AcademyDesignTokensV1.focus.withValues(
-                              alpha: 0.10,
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
                             ),
-                            borderRadius: BorderRadius.circular(
-                              Act0ShellTokensV1.radiusPill,
-                            ),
-                            border: Border.all(
+                            decoration: BoxDecoration(
                               color: Act0AcademyDesignTokensV1.focus.withValues(
-                                alpha: 0.24,
+                                alpha: 0.10,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                Act0ShellTokensV1.radiusPill,
+                              ),
+                              border: Border.all(
+                                color: Act0AcademyDesignTokensV1.focus
+                                    .withValues(alpha: 0.24),
                               ),
                             ),
-                          ),
-                          child: Text(
-                            option.badge!,
-                            style: Act0AcademyDesignTokensV1.label.copyWith(
-                              color: Act0AcademyDesignTokensV1.focus,
-                              letterSpacing: 0.2,
+                            child: Text(
+                              option.badge!,
+                              softWrap: true,
+                              style: Act0AcademyDesignTokensV1.label.copyWith(
+                                color: Act0AcademyDesignTokensV1.focus,
+                                letterSpacing: 0.2,
+                              ),
                             ),
                           ),
                         ),

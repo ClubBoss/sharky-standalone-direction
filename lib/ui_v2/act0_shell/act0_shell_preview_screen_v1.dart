@@ -1909,7 +1909,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   int _placementDiagnosticIndex = 0;
   int _placementDiagnosticCorrect = 0;
   int _placementDiagnosticScore = 0;
-  bool get _isRuLocaleV1 => false;
+  bool _isRuLocaleV1 = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Runs after initState and again when MaterialApp changes locale.
+    _isRuLocaleV1 = Localizations.localeOf(context).languageCode == 'ru';
+  }
 
   String _copyV1({required String en, required String ru}) =>
       _isRuLocaleV1 ? ru : en;
