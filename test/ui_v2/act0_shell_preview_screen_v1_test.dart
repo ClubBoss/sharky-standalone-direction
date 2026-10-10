@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_canonical_path_root_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
@@ -440,4 +441,75 @@ void main() {
       findsNothing,
     );
   });
+
+  testWidgets(
+    'F07: real authored theory counter advances exactly one step per tap '
+    'and never overshoots its true total',
+    (tester) async {
+      await pumpCompact(
+        tester,
+        MaterialApp(
+          supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
+          localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          home: Act0ShellPreviewScreenV1(
+            showPlacementOnStart: false,
+            debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+              mode: Act0ControlledDemoCaptureModeV1.directState,
+              surface: Act0ControlledDemoCaptureSurfaceV1.runnerTheory,
+            ),
+          ),
+        ),
+      );
+
+      Act0RunnerStateV1 currentRunner() => tester
+          .widget<Act0LessonRunnerShellV1>(
+            find.byType(Act0LessonRunnerShellV1),
+          )
+          .runner;
+
+      final totalTeachingSteps = currentRunner().teachingSteps.length;
+      // The real first-value theory task (`what_poker_is_theory`) authors
+      // several steps; fail loudly if that source fact ever changes under
+      // this test instead of silently testing nothing.
+      expect(totalTeachingSteps, greaterThan(1));
+
+      for (
+        var expectedIndex = 0;
+        expectedIndex < totalTeachingSteps;
+        expectedIndex++
+      ) {
+        final runner = currentRunner();
+        expect(runner.phase, Act0LessonPhaseV1.theory);
+        expect(runner.teachingStepIndex, expectedIndex);
+
+        final progressFinder = find.byKey(
+          const Key('act0_learning_scene_v3_progress'),
+        );
+        if (progressFinder.evaluate().isNotEmpty) {
+          final label = tester.widget<Text>(progressFinder).data ?? '';
+          final parts = label.split('/');
+          expect(parts, hasLength(2));
+          final current = int.parse(parts[0]);
+          final total = int.parse(parts[1]);
+          expect(total, totalTeachingSteps);
+          // F07: the counter's current step must never read past its real
+          // authored total (the old off-by-one briefly showed e.g. "3/2").
+          expect(current, lessThanOrEqualTo(total));
+          expect(current, expectedIndex + 1);
+        }
+
+        await tester.tap(find.byKey(const Key('act0_shell_continue_cta')));
+        await tester.pumpAndSettle();
+      }
+
+      // Exactly one tap per authored step must leave theory. The old guard
+      // let the index overshoot by one, so it took one wasted extra tap
+      // through an invalid out-of-range step before theory actually ended.
+      expect(currentRunner().phase, isNot(Act0LessonPhaseV1.theory));
+    },
+  );
 }
