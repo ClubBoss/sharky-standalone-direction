@@ -1,0 +1,444 @@
+{
+  "main": "8c6d780b394685a9f663c305ce8c90a24c7d337d",
+  "class": "STATIC_SOURCE_INSPECTION_ONLY",
+  "files": [
+    {
+      "path": "lib/ui_v2/act0_shell/act0_canonical_path_root_v1.dart",
+      "gitBlob": "f63c4e32853ca35eb43b12fc4dc92e9d2586b598",
+      "sha256": "0d338e70f485dba33ad4582ac4b53e382d1a5ee50b8b4802595638de7012e435"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_causal_feedback_contract_v1.dart",
+      "gitBlob": "eae10d69d650181c86c4edafc500361417c0d982",
+      "sha256": "c40d1a2a8f1cc19b227dba00ad9b73e30cb2a0257e14bbd4bba1bfdcf7f879fb"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart",
+      "gitBlob": "7a4559b1556f46d42d0d7e943429e78e729d7bbc",
+      "sha256": "54987f01ff0492e3152f172336bbacd3413ff17553ee51742de0b4db06e0642a"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_content_copy_v1.dart",
+      "gitBlob": "00222c3f520eafe8065661b049fb8fc24d5a8e9e",
+      "sha256": "1dab0b4c60dbc4d42c3432c64f6d0abdaa6c67d3bd06ca20d8c1be2119828f37"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart",
+      "gitBlob": "73b51f103b1babb7aa00c391716ddb8a8ab1fdad",
+      "sha256": "ad40a317d36286dee00625d57b2a5d8d090663665dc10ad162eb3e95785e6ed5"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart",
+      "gitBlob": "42ad45f3f13abb12dbb75d794a105fae02fa6c24",
+      "sha256": "7b1236156ca663c844fc779f807ff83e4140f888a3f8c62efd38b411b0608524"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_first_start_preferences_v1.dart",
+      "gitBlob": "7c482a85a27cc8ff4e4288e6dfdba4070653de89",
+      "sha256": "c1092228417f644832e1781dd879ce369192c26601eddd1cfd9bf3aea87fc0fa"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_home_shell_v1.dart",
+      "gitBlob": "5f09d576fc11d43cae4a2be1d062e0b70e144924",
+      "sha256": "454b41985290075185490c92c1739fb2d8cdbed0797af228db9735ea5190ee93"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_learn_path_shell_v1.dart",
+      "gitBlob": "c4551752a613b99ef02c897dbd1b3e632a7ac52f",
+      "sha256": "f399901fd1607d7361bed0b8a9795190b9de2e042384c3fbb0bf4b6ac8afbb9c"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart",
+      "gitBlob": "f8a21dc045164aec9082bdd4072c85f9d249cd17",
+      "sha256": "96278a6cbc810f0dc849c49f926ccf8758a0a1352b150d45f0a1298ac4e80b90"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_learning_run_payoff_v1.dart",
+      "gitBlob": "d526947d70cb746f85ac441d10b6e57fb40f8f71",
+      "sha256": "14177014b2b924438ad8a6b6c862e8e0252e58c52d678654ba1405e6ad05b9da"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_learning_scene_v3.dart",
+      "gitBlob": "72e61de3527c3543e8b1c6c5930676a877c268fb",
+      "sha256": "9b28c1bec0587e114e6f1156913f0d2365ce1f78305768a208a35003111f240d"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart",
+      "gitBlob": "809b331442c3e5412ddfb3afff14c6a97b10d942",
+      "sha256": "6a08308a29e57f986273758eb8d86d6aebbadd66967dce2ab7e9c2c820fdc252"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_multi_repair_queue_v1.dart",
+      "gitBlob": "b8a712ea5bbec94cf664a74f078435b2f95dbece",
+      "sha256": "c256b486c3164e5be572fc91c09ba38ec8d4c1d68c8e3e1f5acc5728d1628860"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_personalized_return_reason_v1.dart",
+      "gitBlob": "1ea19504494d18379eb04e8e67aa375f2b25f71d",
+      "sha256": "56fadbe7bde56cea11d98646d36b416044c3ba6ff8a47f7ef37e25cfc0db56fc"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_placement_shell_v1.dart",
+      "gitBlob": "b3ee975eebcd05074d32a0ed2264455bdd6d9a31",
+      "sha256": "fc55ba559019ef67fa3f30d0f676dd3e4932879245894b64ff517ebc998fc148"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_play_shell_v1.dart",
+      "gitBlob": "ce4124d5ea042a53e355838e31eca04c65b7096b",
+      "sha256": "08f56247a8b1f8b22eed480d140028f4d21059cd26fef2e9ae6af1eb050625fb"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_profile_evidence_projection_v1.dart",
+      "gitBlob": "4cc8ea07c940e73543f91a321e36382fbaacae0f",
+      "sha256": "8e42f1cda08e16b5d8413f422aa614d5c52a189f8faaeed479dbd8d72c89cc2d"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_profile_shell_v1.dart",
+      "gitBlob": "dd6010fbf7aca0aac93e768af988ae5ac66faf09",
+      "sha256": "3ce9f878c7c9bb7317e18696389a0b8c483493801650199909108edfda911868"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart",
+      "gitBlob": "668913eff0821cf7795735fd07539d532693b065",
+      "sha256": "3f777ded4fa39c2cded4184ac3f51d58e042f41b7de40a770e6471a7bb0728fd"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart",
+      "gitBlob": "2f64c4f1b366e1461648bfbc240a32e077fec7e3",
+      "sha256": "1e9e4f2f0a4d8773da8ce556057213a65717e81e69c0f1eee4dfb2f021c7b50d"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart",
+      "gitBlob": "d99d80102baabbac4510c171c9a9ef437dd2b54b",
+      "sha256": "b349153d57a0ce5df1b7ff3f526db715c0d4bab6e8a5d709fde98981e5357c5a"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_review_shell_v1.dart",
+      "gitBlob": "dabd720d5251ca475dacb86399c6f17da5b6512b",
+      "sha256": "c84cd41176f4f2dd1ab52eb980953d95d9609207111dc3561e03e8d010cf6b27"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_sharky_presence_v1.dart",
+      "gitBlob": "aae42f2d595f2f2fd719b3702c9e65d98c4c97ef",
+      "sha256": "34a5669a778fd138bd5943933c4c0cbc9a41e055ffd18db290129c3f4d75eb0b"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_shell_chrome_v1.dart",
+      "gitBlob": "dc174e12e025d938a08280700f64b94d7ba8b387",
+      "sha256": "71b59613279ea5ee7e40db7472badb7c737dd63de5017e73f11fc12dcfcebe73"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart",
+      "gitBlob": "2fb758faa5a8afcbcc009a3259e725dd5b435f88",
+      "sha256": "926ac78996ac5b6c29334d6111eb7806759fd8110e12095ea13bd13f57f6865b"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_shell_state_v1.dart",
+      "gitBlob": "9e30d23b602d3d5bddc1dc9e63a146a0c005a0ed",
+      "sha256": "3c84e8abb62005d332af7bad86738275fdbf4cbaa1c106a9ec90865fb98ffd52"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_shell_tokens_v1.dart",
+      "gitBlob": "605adbfe1ebabcc308cffa8c9154fc9244e87fef",
+      "sha256": "2fccfa72d4c2dc388ba79319a8c4addcf62f1ec15d4033de9c3e36d223f36cc3"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_spaced_repetition_engine_v1.dart",
+      "gitBlob": "3ea140b688e74eb12db66de4b6921a3fed9bc6a1",
+      "sha256": "045db95a30752592d1e2bac6c78ce431ddf7f58b6092dfc4b43109e0f3b65e9f"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_table_presentation_config_v1.dart",
+      "gitBlob": "eb4f3fdbdd83c17a885a2ca748ce9d2d89b47e86",
+      "sha256": "7dbd5df27b9188829257cfe062d41b7f7d0e8f69976b761efe144b7fd1d06176"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_telemetry_sink_v1.dart",
+      "gitBlob": "70baf570d2a2dc0740572fa3e3f8892960a6dd58",
+      "sha256": "58bca64cc95050db653116523cf51b548572fb1d8e66a9f5c2a7907cfcf8248b"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_welcome_shell_v1.dart",
+      "gitBlob": "fb92854285097bfe3d03437f504605d8c4cc1ee5",
+      "sha256": "5c219025170fb04f88122211984a6a5483f5484761e78d9ee8e058cc1b7c7bc7"
+    },
+    {
+      "path": "lib/ui_v2/app_root.dart",
+      "gitBlob": "a0b54f6f6c73f8bfd1b8e9bfa9b0ecc21ff5de69",
+      "sha256": "97e9a0100be121931ae80ce614220016d3807f32b77b349dd16f39a30078249c"
+    },
+    {
+      "path": "lib/ui_v2/ui_v2_beta_shell.dart",
+      "gitBlob": "0cf663e7616b68ef941d01306dbc3e626eceb93b",
+      "sha256": "8594f10cc6b1be6ab4f016bd10c23b0b1440baeef05e576c368c9f5a628ae8e8"
+    },
+    {
+      "path": "pubspec.yaml",
+      "gitBlob": "d80e5dc32bd0592827a4ae05101b99322c135ca0",
+      "sha256": "0f8e609a2e375ce5c4f6537b7992d8d5facc53efe4ceae290f3a451e5d6c49cf"
+    }
+  ],
+  "states": [
+    {
+      "id": "placement",
+      "wave": "A",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_placement_shell_v1.dart",
+      "contract": "Placement questions/result; preserve first-start owners",
+      "feasibility": "UI_ADAPTER_NEEDED",
+      "writeRole": "A1"
+    },
+    {
+      "id": "welcome",
+      "wave": "A",
+      "decision": "REPLACE",
+      "source": "lib/ui_v2/act0_shell/act0_welcome_shell_v1.dart",
+      "contract": "Welcome completion preferences; orientation, not demo assessment",
+      "feasibility": "UI_ADAPTER_NEEDED",
+      "writeRole": "A1"
+    },
+    {
+      "id": "home",
+      "wave": "A",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_home_shell_v1.dart",
+      "contract": "Root recommendation + progressed Worlds; no demo debt flag",
+      "feasibility": "STATE_CONTRACT_MAPPING_NEEDED",
+      "writeRole": "A1"
+    },
+    {
+      "id": "home_next",
+      "wave": "B",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart",
+      "contract": "Existing next-useful-hand receipt from actual queues/history",
+      "feasibility": "STATE_CONTRACT_MAPPING_NEEDED",
+      "writeRole": "I1"
+    },
+    {
+      "id": "learn",
+      "wave": "A",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_learn_path_shell_v1.dart",
+      "contract": "Progressed worlds, selected lesson/task and locked gates",
+      "feasibility": "UI_ADAPTER_NEEDED",
+      "writeRole": "A1"
+    },
+    {
+      "id": "worlds",
+      "wave": "A",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_learn_path_shell_v1.dart",
+      "contract": "Ordered actual lesson.taskList; no invented lesson inventory",
+      "feasibility": "UI_ADAPTER_NEEDED",
+      "writeRole": "A1"
+    },
+    {
+      "id": "locked",
+      "wave": "A",
+      "decision": "KEEP",
+      "source": "lib/ui_v2/act0_shell/act0_learn_path_shell_v1.dart",
+      "contract": "Actual world/lesson prerequisite; adapt presentation only",
+      "feasibility": "ALREADY_SUPPORTED",
+      "writeRole": "A1"
+    },
+    {
+      "id": "theory",
+      "wave": "A",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart",
+      "contract": "Authored teachingSteps and theory advance lock; F07",
+      "feasibility": "UI_ADAPTER_NEEDED",
+      "writeRole": "I1"
+    },
+    {
+      "id": "decision",
+      "wave": "B",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart",
+      "contract": "Live runner options and unchanged table stage; not PNG",
+      "feasibility": "UI_ADAPTER_NEEDED",
+      "writeRole": "I1"
+    },
+    {
+      "id": "decision_wrong",
+      "wave": "B",
+      "decision": "KEEP",
+      "source": "lib/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart",
+      "contract": "Alternate entry to same real task; never pre-seed wrong result",
+      "feasibility": "STATE_CONTRACT_MAPPING_NEEDED",
+      "writeRole": "I1"
+    },
+    {
+      "id": "correct",
+      "wave": "B",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_causal_feedback_contract_v1.dart",
+      "contract": "Selected source option / grade; runner presents receipt",
+      "feasibility": "ALREADY_SUPPORTED",
+      "writeRole": "B1"
+    },
+    {
+      "id": "wrong",
+      "wave": "B",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_causal_feedback_contract_v1.dart",
+      "contract": "Selected vs expected and exact missed signal",
+      "feasibility": "ALREADY_SUPPORTED",
+      "writeRole": "B1"
+    },
+    {
+      "id": "repair",
+      "wave": "B",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart",
+      "contract": "Existing target world/lesson/task mapping; guidance flagged",
+      "feasibility": "ALREADY_SUPPORTED",
+      "writeRole": "I1"
+    },
+    {
+      "id": "repair_outcome",
+      "wave": "B",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart",
+      "contract": "Assisted correction distinct from independent proof",
+      "feasibility": "ALREADY_SUPPORTED",
+      "writeRole": "B1"
+    },
+    {
+      "id": "summary_success",
+      "wave": "B",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart",
+      "contract": "Act0BlockCompletionSummaryV1 and actual assessed boundaries",
+      "feasibility": "UNPROVEN_RUNTIME_ASSUMPTION",
+      "writeRole": "I1"
+    },
+    {
+      "id": "summary_review",
+      "wave": "B",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart",
+      "contract": "Actual assessed totals and Needs Review, not fixed 3/4",
+      "feasibility": "STATE_CONTRACT_MAPPING_NEEDED",
+      "writeRole": "I1"
+    },
+    {
+      "id": "practice",
+      "wave": "B",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_play_shell_v1.dart",
+      "contract": "Current practice groups / repair queue consumer",
+      "feasibility": "UI_ADAPTER_NEEDED",
+      "writeRole": "B1"
+    },
+    {
+      "id": "review_active",
+      "wave": "B",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_review_shell_v1.dart",
+      "contract": "Review history/resolution and saved original signal; F09",
+      "feasibility": "UI_ADAPTER_NEEDED",
+      "writeRole": "B1"
+    },
+    {
+      "id": "review_notdue",
+      "wave": "B",
+      "decision": "KEEP",
+      "source": "lib/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart",
+      "contract": "Actual clock/history eligibility; optional guided practice",
+      "feasibility": "ALREADY_SUPPORTED",
+      "writeRole": "I1"
+    },
+    {
+      "id": "review_due",
+      "wave": "B",
+      "decision": "KEEP",
+      "source": "lib/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart",
+      "contract": "dueItemsAt(widget.clock.nowUtc()); real eligible task",
+      "feasibility": "ALREADY_SUPPORTED",
+      "writeRole": "I1"
+    },
+    {
+      "id": "review_empty",
+      "wave": "B",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_review_shell_v1.dart",
+      "contract": "Loaded valid sources with no active/due item; native unproven",
+      "feasibility": "UNPROVEN_RUNTIME_ASSUMPTION",
+      "writeRole": "B1"
+    },
+    {
+      "id": "independent",
+      "wave": "B",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart",
+      "contract": "Source review kind and assistance none; no Coach/hint",
+      "feasibility": "UI_ADAPTER_NEEDED",
+      "writeRole": "I1"
+    },
+    {
+      "id": "independent_feedback",
+      "wave": "B",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart",
+      "contract": "Actual completed decision, original attempt and review kind",
+      "feasibility": "ALREADY_SUPPORTED",
+      "writeRole": "I1"
+    },
+    {
+      "id": "profile",
+      "wave": "C",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_profile_shell_v1.dart",
+      "contract": "Profile evidence consumer and insufficient-sample threshold",
+      "feasibility": "UI_ADAPTER_NEEDED",
+      "writeRole": "C1"
+    },
+    {
+      "id": "return",
+      "wave": "C",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_personalized_return_reason_v1.dart",
+      "contract": "Existing fromSources + persisted last session, no urgency",
+      "feasibility": "ALREADY_SUPPORTED",
+      "writeRole": "C1"
+    },
+    {
+      "id": "loading",
+      "wave": "A",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart",
+      "contract": "_bootSurfaceReady / _bootstrapFirstStartRouteV1",
+      "feasibility": "STATE_CONTRACT_MAPPING_NEEDED",
+      "writeRole": "I1"
+    },
+    {
+      "id": "error",
+      "wave": "A",
+      "decision": "RESTRUCTURE",
+      "source": "lib/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart",
+      "contract": "Typed transient boot failure/retry around existing restore",
+      "feasibility": "STATE_CONTRACT_MAPPING_NEEDED",
+      "writeRole": "I1"
+    },
+    {
+      "id": "longcopy",
+      "wave": "B",
+      "decision": "KEEP",
+      "source": "lib/ui_v2/act0_shell/act0_content_copy_v1.dart",
+      "contract": "Stress condition on existing causal copy, not new lesson",
+      "feasibility": "UNPROVEN_RUNTIME_ASSUMPTION",
+      "writeRole": "B1"
+    },
+    {
+      "id": "settings",
+      "wave": "C",
+      "decision": "REPLACE",
+      "source": "lib/ui_v2/act0_shell/act0_profile_shell_v1.dart",
+      "contract": "Existing first-start tools only; F11, no account promise",
+      "feasibility": "UI_ADAPTER_NEEDED",
+      "writeRole": "C1"
+    }
+  ]
+}

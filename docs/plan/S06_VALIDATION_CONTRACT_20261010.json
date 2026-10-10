@@ -1,0 +1,175 @@
+{
+  "class": "FUTURE_IMPLEMENTATION_VALIDATION_NOT_EXECUTED",
+  "sourceBaseline": "8c6d780b394685a9f663c305ce8c90a24c7d337d",
+  "waves": {
+    "A": {
+      "existingRegressionAnchors": [
+        {
+          "path": "test/ui_v2/act0_shell_preview_screen_v1_test.dart",
+          "sha256": "bbd65a39a315c572a7c2d2f9cecafc114a4911259af706c13a73bf755cd4a0eb"
+        },
+        {
+          "path": "test/ui_v2/act0_first_session_identity_surface_v1_test.dart",
+          "sha256": "15ebc4b84e2b240d65978f65447be9f9466a2e26ede579df1a49d5a7bd3d67b4"
+        },
+        {
+          "path": "test/ui_v2/act0_theory_advance_lock_rebuild_v1_test.dart",
+          "sha256": "ca5fbd685a7c85c1c6f65eee1df69bacc08d30f5da05a18e67a1b8aff81abb1e"
+        },
+        {
+          "path": "test/ui_v2/act0_instruction_content_policy_v1_test.dart",
+          "sha256": "466de65bc6290741ef086205403af5736e4e733fed6904142bff6446f56d3501"
+        },
+        {
+          "path": "test/ui_v2/act0_curriculum_integrity_v1_test.dart",
+          "sha256": "3ee8797337f6cb3a81f6abe47f25a397b5158178f404f6af7ef5a5e3d886ce41"
+        }
+      ],
+      "proposedNewSourceBoundTests": [
+        {
+          "path": "test/ui_v2/act0_s05_first_value_route_v1_test.dart",
+          "status": "PLANNED_NOT_IMPLEMENTED"
+        },
+        {
+          "path": "test/ui_v2/act0_s05_theory_counter_v1_test.dart",
+          "status": "PLANNED_NOT_IMPLEMENTED"
+        }
+      ],
+      "nativeRequired": true,
+      "independentAcceptanceRequired": true,
+      "productionAuthorization": "S07_REQUIRED"
+    },
+    "B": {
+      "existingRegressionAnchors": [
+        {
+          "path": "test/ui_v2/act0_causal_feedback_learning_receipt_v1_test.dart",
+          "sha256": "f6c539c130385b892c7a15deafb4a795fd70dbde0f10e40ae37bd77c8a93fd0b"
+        },
+        {
+          "path": "test/ui_v2/act0_shell_state_v1_feedback_test.dart",
+          "sha256": "d9973d59faa5a286b7c2e0d81d77741ed20c998922c2db092aed2595ac19c9f3"
+        },
+        {
+          "path": "test/ui_v2/act0_repair_intent_contract_v1_test.dart",
+          "sha256": "c0f911747b3af3f1e1c3db8bfc3bad6be6bed6c4bcc0a64e699975264d78125b"
+        },
+        {
+          "path": "test/ui_v2/act0_repair_intent_lifecycle_v1_test.dart",
+          "sha256": "f33b81f2388d7139b8bf9eee1312b60868dba0548d2ac1f0e5d0b69755e5f999"
+        },
+        {
+          "path": "test/ui_v2/act0_repair_intent_resolver_v1_test.dart",
+          "sha256": "3968fd8589bef6bc0f31ac687b760c5f405a8699ecc468db7b5bc2d99a0d723d"
+        },
+        {
+          "path": "test/ui_v2/act0_review_mistake_history_consumer_v1_test.dart",
+          "sha256": "d4b4dc7a09b34c82f5855fcfbd033e8507b295fe5fdcb77c2a3ae5b339fd9674"
+        },
+        {
+          "path": "test/ui_v2/act0_due_review_route_v1_test.dart",
+          "sha256": "ffe9bd0f3b7eca2ed9c4d6acf46b1b9a45b7aae1536f18db7ab949c6969a6ea9"
+        },
+        {
+          "path": "test/ui_v2/act0_lesson_assistance_restart_v1_test.dart",
+          "sha256": "f407ad1c8b7add14996cc5f4f44ccba8c6a45bbbfe38d00fb4c3238f40568c92"
+        },
+        {
+          "path": "test/ui_v2/act0_persistence_roundtrip_v1_test.dart",
+          "sha256": "e3cee3a52823e662efaeaf91b5a1ab2402c8618a6e1322e6cefd8a688b89cd1d"
+        },
+        {
+          "path": "test/ui_v2/act0_learning_run_payoff_v1_test.dart",
+          "sha256": "a30e48c09672b1d4a663d5b00b412001cbe85ee6cb4ca67d1be174a2402f400a"
+        },
+        {
+          "path": "test/ui_v2/act0_world1_completion_payoff_v1_test.dart",
+          "sha256": "81f3c183210648a2bef9e76862f8b80079e0f8b23fe52170c1d8def44edc8bce"
+        },
+        {
+          "path": "test/ui_v2/act0_multi_repair_queue_v1_test.dart",
+          "sha256": "24d179ad589a27bfd90fa3ec694d000de70c4d552ad1c652bd061ff5b957aced"
+        },
+        {
+          "path": "test/ui_v2/act0_learning_evidence_contract_v1_test.dart",
+          "sha256": "1a8d1abb35c2ff8c9aa13d1a6fcbfb618b47d75ab6147a52e6bc33f10a724787"
+        },
+        {
+          "path": "test/ui_v2/act0_telemetry_sink_v1_test.dart",
+          "sha256": "a3902e205a46328210d8e763ac76d8831c708c7b35151a45fbc52d900d827782"
+        },
+        {
+          "path": "test/ui_v2/act0_b7_canonical_scene_geometry_invariant_v1_test.dart",
+          "sha256": "08280a0416d636cc2843a1e42365629e001d2facfebebf96d7a71f14f756f824"
+        }
+      ],
+      "proposedNewSourceBoundTests": [
+        {
+          "path": "test/ui_v2/act0_s05_table_chapter_single_input_v1_test.dart",
+          "status": "PLANNED_NOT_IMPLEMENTED"
+        },
+        {
+          "path": "test/ui_v2/act0_s05_result_home_target_v1_test.dart",
+          "status": "PLANNED_NOT_IMPLEMENTED"
+        }
+      ],
+      "nativeRequired": true,
+      "independentAcceptanceRequired": true,
+      "productionAuthorization": "S07_REQUIRED"
+    },
+    "C": {
+      "existingRegressionAnchors": [
+        {
+          "path": "test/ui_v2/act0_personalized_return_reason_v1_test.dart",
+          "sha256": "99e83f17b09391bfe87c391bc00cbab458d08264cfb771fb4a255e2fe6ce8fe4"
+        },
+        {
+          "path": "test/ui_v2/act0_last_session_return_reason_v1_test.dart",
+          "sha256": "b375c10e04852cb7598aa9d5c76238f11fc3a9ce146cf77ffc102cdcf137b790"
+        },
+        {
+          "path": "test/ui_v2/act0_profile_evidence_projection_v1_test.dart",
+          "sha256": "e33350e72833b36a8623bc9e7d8b71b639797837114ec7a92693a436e5d16729"
+        },
+        {
+          "path": "test/ui_v2/act0_profile_evidence_consumer_v1_test.dart",
+          "sha256": "92aaa0ca53758000c38430a40b72d4797dc7c6669f52ba6da854447259cd657e"
+        },
+        {
+          "path": "test/ui_v2/act0_cross_session_profile_proof_v1_test.dart",
+          "sha256": "9174502fb1eebf36b6eae2680fe9f85cabb5b3d4159a5aadfd36d9a72a80c8ee"
+        },
+        {
+          "path": "test/ui_v2/act0_sharky_identity_contract_v1_test.dart",
+          "sha256": "740e81b023c2dcbb15861dc4ee44777880c2675bae467589dc14b41b38c152c0"
+        },
+        {
+          "path": "test/ui_v2/act0_sharky_coach_phrase_contract_v1_test.dart",
+          "sha256": "446148ae4478d07aef7af0a90d3c53d1e72ea61f18038920c01c9a3818b42e64"
+        },
+        {
+          "path": "test/ui_v2/act0_sharky_companion_state_v1_test.dart",
+          "sha256": "5358e337a4b57bcb6bfeb2b0dbbd60eb52e40d9f39f81d2554c2136fa02e16ab"
+        },
+        {
+          "path": "test/ui_v2/act0_persistence_roundtrip_v1_test.dart",
+          "sha256": "e3cee3a52823e662efaeaf91b5a1ab2402c8618a6e1322e6cefd8a688b89cd1d"
+        }
+      ],
+      "proposedNewSourceBoundTests": [
+        {
+          "path": "test/ui_v2/act0_s05_profile_first_start_tools_v1_test.dart",
+          "status": "PLANNED_NOT_IMPLEMENTED"
+        },
+        {
+          "path": "test/ui_v2/act0_s05_return_route_coherence_v1_test.dart",
+          "status": "PLANNED_NOT_IMPLEMENTED"
+        }
+      ],
+      "nativeRequired": true,
+      "independentAcceptanceRequired": true,
+      "productionAuthorization": "S07_REQUIRED"
+    }
+  },
+  "normalPolicy": "Use current canonical test authority and exact-head internal CI; no required failure bypass",
+  "naturalProof": "Native evidence must not seed state or manipulate due clock; deterministic test fixtures cannot stand in for native/Human proof"
+}
