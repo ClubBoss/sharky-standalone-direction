@@ -60,8 +60,16 @@ void main() {
     );
     await tester.tap(find.byKey(Key('act0_shell_option_${correct.id}')));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
-    await tester.pumpAndSettle();
+    // Welcome is orientation, not a graded attempt: the demo answer must
+    // hand off without fabricated feedback or a misleading retry CTA.
+    expect(
+      find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_welcome_next_step_line')),
+      findsOneWidget,
+    );
     await tester.tap(welcomeCta);
     await tester.pumpAndSettle();
   }
