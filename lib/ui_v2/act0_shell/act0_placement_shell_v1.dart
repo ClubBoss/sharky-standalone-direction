@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -269,215 +269,227 @@ class Act0PlacementShellV1 extends StatelessWidget {
       final allowNext =
           currentQuestion != null &&
           currentQuestionSelections.length >= minimumCount;
-      return Column(
-        key: const Key('act0_shell_placement_screen'),
-        children: [
-          Expanded(
-            child: LayoutBuilder(
-              builder: (context, viewport) => ListView(
-                padding: EdgeInsets.fromLTRB(
-                  pagePadding,
-                  Act0ShellTokensV1.gapMd,
-                  pagePadding,
-                  132,
-                ),
-                children: [
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: showIntro
-                          ? (viewport.maxHeight - 132).clamp(
-                              0.0,
-                              double.infinity,
-                            )
-                          : 0,
-                    ),
-                    child: Act0ShellTokensV1.centeredContent(
-                      context,
-                      tabletMaxWidth: 860,
-                      child: Column(
-                        mainAxisAlignment: showIntro
-                            ? MainAxisAlignment.center
-                            : MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (showIntro) ...[
-                            const _PlacementBrandBeatV1(),
-                            const SizedBox(height: Act0ShellTokensV1.gapMd),
-                          ],
-                          AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 360),
-                            reverseDuration: const Duration(milliseconds: 220),
-                            switchInCurve: Curves.easeOutCubic,
-                            switchOutCurve: Curves.easeInOutCubic,
-                            transitionBuilder: (child, animation) {
-                              final curved = CurvedAnimation(
-                                parent: animation,
-                                curve: Curves.easeOutCubic,
-                              );
-                              return FadeTransition(
-                                opacity: curved,
-                                child: SlideTransition(
-                                  position: Tween<Offset>(
-                                    begin: const Offset(0.03, 0.02),
-                                    end: Offset.zero,
-                                  ).animate(curved),
-                                  child: child,
-                                ),
-                              );
-                            },
-                            child: showIntro
-                                ? const KeyedSubtree(
-                                    key: ValueKey<String>(
-                                      'act0_shell_placement_intro',
-                                    ),
-                                    child: _PlacementIntroViewV1(),
-                                  )
-                                : KeyedSubtree(
-                                    key: ValueKey<String>(
-                                      'act0_shell_placement_body_$currentQuestionIndex',
-                                    ),
-                                    child: _QuestionOrDiagnosticV1(
-                                      questions: questions,
-                                      currentQuestionIndex:
-                                          currentQuestionIndex,
-                                      selectedOptionIds: selectedOptionIds,
-                                      onSelectOption: onSelectOption,
-                                      onBack: onBack,
-                                    ),
-                                  ),
-                          ),
-                          if (showIntro &&
-                              MediaQuery.sizeOf(context).shortestSide >=
-                                  700) ...[
-                            const SizedBox(height: Act0ShellTokensV1.gapMd),
-                            _PlacementTabletFillV1(localeIsRu: localeIsRu),
-                          ],
-                        ],
-                      ),
-                    ),
+      return ColoredBox(
+        color: Act0AcademyDesignTokensV1.pageSurface,
+        child: Column(
+          key: const Key('act0_shell_placement_screen'),
+          children: [
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, viewport) => ListView(
+                  padding: EdgeInsets.fromLTRB(
+                    pagePadding,
+                    Act0ShellTokensV1.gapMd,
+                    pagePadding,
+                    132,
                   ),
-                ],
-              ),
-            ),
-          ),
-          _PlacementFlowActionBarV1(
-            title: showIntro
-                ? (localeIsRu
-                      ? 'Около двух минут. Потом первый урок будет готов.'
-                      : 'About two minutes. Then your first lesson is ready.')
-                : explicitBeginnerStart
-                ? (localeIsRu
-                      ? 'Шарки начнёт просто.'
-                      : 'Sharky will start simple.')
-                : currentQuestionIndex >= questions.length
-                ? (localeIsRu
-                      ? 'Три короткие проверки — и первая раздача готова.'
-                      : 'Three short checks, then your first hand is ready.')
-                : currentQuestion?.allowsMultiple == true
-                ? (localeIsRu ? 'Выбери то, что подходит.' : 'Pick what fits.')
-                : currentQuestion?.questionId == 'experience'
-                ? (localeIsRu
-                      ? 'Если сомневаешься, выбери «Я новичок в покере».'
-                      : 'If unsure, choose “I’m new to poker.”')
-                : (localeIsRu
-                      ? 'Выбери то, что ближе всего.'
-                      : 'Choose what feels closest.'),
-            buttonKey: Key(
-              showIntro
-                  ? 'act0_shell_placement_intro_cta'
-                  : currentQuestionIndex >= questions.length
-                  ? 'act0_shell_placement_start_diagnostic'
-                  : 'act0_shell_placement_next_cta',
-            ),
-            buttonLabel: showIntro
-                ? (localeIsRu ? 'Найти мой старт' : 'Find my start')
-                : explicitBeginnerStart
-                ? (localeIsRu ? 'Начать с нуля' : 'Start from zero')
-                : currentQuestionIndex >= questions.length
-                ? (localeIsRu ? 'Начать проверку' : 'Start quick check')
-                : (localeIsRu ? 'Продолжить' : 'Continue'),
-            onPressed: showIntro
-                ? onStartPlacement
-                : explicitBeginnerStart
-                ? onStartFromZero
-                : currentQuestionIndex >= questions.length
-                ? onStartDiagnostic
-                : (allowNext ? onNext : null),
-          ),
-        ],
-      );
-    }
-
-    return Column(
-      key: const Key('act0_shell_placement_screen'),
-      children: [
-        Expanded(
-          child: ListView(
-            key: const Key('act0_shell_placement_result_scroll'),
-            padding: EdgeInsets.fromLTRB(
-              pagePadding,
-              Act0ShellTokensV1.gapMd,
-              pagePadding,
-              116,
-            ),
-            children: [
-              Act0ShellTokensV1.centeredContent(
-                context,
-                tabletMaxWidth: 860,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _PlacementHeroV1(
-                      title: _placementCopyV1(
-                        context,
-                        en: 'Find your start',
-                        ru: 'Найди свой старт',
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: showIntro
+                            ? (viewport.maxHeight - 132).clamp(
+                                0.0,
+                                double.infinity,
+                              )
+                            : 0,
                       ),
-                      subtitle: _placementCopyV1(
+                      child: Act0ShellTokensV1.centeredContent(
                         context,
-                        en: 'Your first hand is ready.',
-                        ru: 'Первая раздача готова.',
-                      ),
-                    ),
-                    const SizedBox(height: Act0ShellTokensV1.gapMd),
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 420),
-                      switchInCurve: Curves.easeOutCubic,
-                      switchOutCurve: Curves.easeInOutCubic,
-                      transitionBuilder: (child, animation) {
-                        final curved = CurvedAnimation(
-                          parent: animation,
-                          curve: Curves.easeOutCubic,
-                        );
-                        return FadeTransition(
-                          opacity: curved,
-                          child: SlideTransition(
-                            position: Tween<Offset>(
-                              begin: const Offset(0, 0.04),
-                              end: Offset.zero,
-                            ).animate(curved),
-                            child: child,
-                          ),
-                        );
-                      },
-                      child: KeyedSubtree(
-                        key: ValueKey<String>(
-                          'act0_shell_placement_result_${placementResult.level.name}',
+                        tabletMaxWidth: 860,
+                        child: Column(
+                          mainAxisAlignment: showIntro
+                              ? MainAxisAlignment.center
+                              : MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (showIntro) ...[
+                              const _PlacementBrandBeatV1(),
+                              const SizedBox(height: Act0ShellTokensV1.gapMd),
+                            ],
+                            AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 360),
+                              reverseDuration: const Duration(
+                                milliseconds: 220,
+                              ),
+                              switchInCurve: Curves.easeOutCubic,
+                              switchOutCurve: Curves.easeInOutCubic,
+                              transitionBuilder: (child, animation) {
+                                final curved = CurvedAnimation(
+                                  parent: animation,
+                                  curve: Curves.easeOutCubic,
+                                );
+                                return FadeTransition(
+                                  opacity: curved,
+                                  child: SlideTransition(
+                                    position: Tween<Offset>(
+                                      begin: const Offset(0.03, 0.02),
+                                      end: Offset.zero,
+                                    ).animate(curved),
+                                    child: child,
+                                  ),
+                                );
+                              },
+                              child: showIntro
+                                  ? const KeyedSubtree(
+                                      key: ValueKey<String>(
+                                        'act0_shell_placement_intro',
+                                      ),
+                                      child: _PlacementIntroViewV1(),
+                                    )
+                                  : KeyedSubtree(
+                                      key: ValueKey<String>(
+                                        'act0_shell_placement_body_$currentQuestionIndex',
+                                      ),
+                                      child: _QuestionOrDiagnosticV1(
+                                        questions: questions,
+                                        currentQuestionIndex:
+                                            currentQuestionIndex,
+                                        selectedOptionIds: selectedOptionIds,
+                                        onSelectOption: onSelectOption,
+                                        onBack: onBack,
+                                      ),
+                                    ),
+                            ),
+                            if (showIntro &&
+                                MediaQuery.sizeOf(context).shortestSide >=
+                                    700) ...[
+                              const SizedBox(height: Act0ShellTokensV1.gapMd),
+                              _PlacementTabletFillV1(localeIsRu: localeIsRu),
+                            ],
+                          ],
                         ),
-                        child: _PlacementResultViewV1(result: placementResult),
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
+            ),
+            _PlacementFlowActionBarV1(
+              title: showIntro
+                  ? (localeIsRu
+                        ? 'Около двух минут. Потом первый урок будет готов.'
+                        : 'About two minutes. Then your first lesson is ready.')
+                  : explicitBeginnerStart
+                  ? (localeIsRu
+                        ? 'Шарки начнёт просто.'
+                        : 'Sharky will start simple.')
+                  : currentQuestionIndex >= questions.length
+                  ? (localeIsRu
+                        ? 'Три короткие проверки — и первая раздача готова.'
+                        : 'Three short checks, then your first hand is ready.')
+                  : currentQuestion?.allowsMultiple == true
+                  ? (localeIsRu
+                        ? 'Выбери то, что подходит.'
+                        : 'Pick what fits.')
+                  : currentQuestion?.questionId == 'experience'
+                  ? (localeIsRu
+                        ? 'Если сомневаешься, выбери «Я новичок в покере».'
+                        : 'If unsure, choose “I’m new to poker.”')
+                  : (localeIsRu
+                        ? 'Выбери то, что ближе всего.'
+                        : 'Choose what feels closest.'),
+              buttonKey: Key(
+                showIntro
+                    ? 'act0_shell_placement_intro_cta'
+                    : currentQuestionIndex >= questions.length
+                    ? 'act0_shell_placement_start_diagnostic'
+                    : 'act0_shell_placement_next_cta',
+              ),
+              buttonLabel: showIntro
+                  ? (localeIsRu ? 'Найти мой старт' : 'Find my start')
+                  : explicitBeginnerStart
+                  ? (localeIsRu ? 'Начать с нуля' : 'Start from zero')
+                  : currentQuestionIndex >= questions.length
+                  ? (localeIsRu ? 'Начать проверку' : 'Start quick check')
+                  : (localeIsRu ? 'Продолжить' : 'Continue'),
+              onPressed: showIntro
+                  ? onStartPlacement
+                  : explicitBeginnerStart
+                  ? onStartFromZero
+                  : currentQuestionIndex >= questions.length
+                  ? onStartDiagnostic
+                  : (allowNext ? onNext : null),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ColoredBox(
+      color: Act0AcademyDesignTokensV1.pageSurface,
+      child: Column(
+        key: const Key('act0_shell_placement_screen'),
+        children: [
+          Expanded(
+            child: ListView(
+              key: const Key('act0_shell_placement_result_scroll'),
+              padding: EdgeInsets.fromLTRB(
+                pagePadding,
+                Act0ShellTokensV1.gapMd,
+                pagePadding,
+                116,
+              ),
+              children: [
+                Act0ShellTokensV1.centeredContent(
+                  context,
+                  tabletMaxWidth: 860,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _PlacementHeroV1(
+                        title: _placementCopyV1(
+                          context,
+                          en: 'Find your start',
+                          ru: 'Найди свой старт',
+                        ),
+                        subtitle: _placementCopyV1(
+                          context,
+                          en: 'Your first hand is ready.',
+                          ru: 'Первая раздача готова.',
+                        ),
+                      ),
+                      const SizedBox(height: Act0ShellTokensV1.gapMd),
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 420),
+                        switchInCurve: Curves.easeOutCubic,
+                        switchOutCurve: Curves.easeInOutCubic,
+                        transitionBuilder: (child, animation) {
+                          final curved = CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.easeOutCubic,
+                          );
+                          return FadeTransition(
+                            opacity: curved,
+                            child: SlideTransition(
+                              position: Tween<Offset>(
+                                begin: const Offset(0, 0.04),
+                                end: Offset.zero,
+                              ).animate(curved),
+                              child: child,
+                            ),
+                          );
+                        },
+                        child: KeyedSubtree(
+                          key: ValueKey<String>(
+                            'act0_shell_placement_result_${placementResult.level.name}',
+                          ),
+                          child: _PlacementResultViewV1(
+                            result: placementResult,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        _PlacementResultActionBarV1(
-          onStartRecommended: onStartRecommended,
-          onStartFromZero: onStartFromZero,
-        ),
-      ],
+          _PlacementResultActionBarV1(
+            onStartRecommended: onStartRecommended,
+            onStartFromZero: onStartFromZero,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -507,7 +519,9 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
         children: [
           _PlacementSectionCardV1(
             padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-            borderColor: Act0ShellTokensV1.info.withOpacity(0.18),
+            borderColor: Act0AcademyDesignTokensV1.focus.withValues(
+              alpha: 0.24,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -517,7 +531,7 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                       key: const Key('act0_shell_placement_back_arrow'),
                       onPressed: onBack,
                       icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                      color: Act0ShellTokensV1.primary,
+                      color: Act0AcademyDesignTokensV1.focus,
                       visualDensity: VisualDensity.compact,
                     ),
                     const SizedBox(width: Act0ShellTokensV1.gapXs),
@@ -528,13 +542,16 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                           'placement_ready_skill_check',
                           fallback: 'Quick table check',
                         ),
-                        style: Act0ShellTokensV1.sectionTitle,
+                        style: Act0AcademyDesignTokensV1.body.copyWith(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                     Text(
                       '${questions.length + 1}/${questions.length + 1}',
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.info,
+                      style: Act0AcademyDesignTokensV1.label.copyWith(
+                        color: Act0AcademyDesignTokensV1.focus,
                       ),
                     ),
                   ],
@@ -546,7 +563,10 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                     en: 'Three short checks before your first hand.',
                     ru: 'Три короткие проверки перед первой раздачей.',
                   ),
-                  style: Act0ShellTokensV1.cardTitle,
+                  style: Act0AcademyDesignTokensV1.body.copyWith(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
                 Text(
@@ -555,14 +575,12 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                     en: 'No score. Just read what is visible.',
                     ru: 'Без оценки. Просто прочитай то, что видно.',
                   ),
-                  style: Act0ShellTokensV1.muted.copyWith(
-                    color: Act0ShellTokensV1.text,
-                  ),
+                  style: Act0AcademyDesignTokensV1.body,
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
                 _PlacementLaunchSupportCardV1(
                   key: const Key('act0_shell_placement_ready_preview'),
-                  tone: Act0ShellTokensV1.info,
+                  tone: Act0AcademyDesignTokensV1.focus,
                   title: _placementCopyV1(
                     context,
                     en: 'What you’ll do',
@@ -632,22 +650,9 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
       child: Container(
         key: Key('act0_shell_placement_question_${question.questionId}'),
         padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-        decoration:
-            Act0ShellTokensV1.surfaceDecoration(
-              glow: true,
-              color: Act0ShellTokensV1.surface2.withValues(alpha: 0.94),
-              borderColor: Act0ShellTokensV1.primary.withValues(alpha: 0.24),
-            ).copyWith(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: <Color>[
-                  Act0ShellTokensV1.primary.withValues(alpha: 0.07),
-                  Act0ShellTokensV1.surface2.withValues(alpha: 0.98),
-                  Act0ShellTokensV1.info.withValues(alpha: 0.06),
-                ],
-              ),
-            ),
+        decoration: Act0AcademyDesignTokensV1.cardDecoration(
+          borderColor: Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.24),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -657,7 +662,7 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                   key: const Key('act0_shell_placement_back_arrow'),
                   onPressed: currentQuestionIndex == 0 ? null : onBack,
                   icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                  color: Act0ShellTokensV1.primary,
+                  color: Act0AcademyDesignTokensV1.focus,
                   visualDensity: VisualDensity.compact,
                 ),
                 const SizedBox(width: Act0ShellTokensV1.gapXs),
@@ -667,8 +672,8 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                     children: [
                       Text(
                         question.eyebrow ?? 'Placement profile',
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.primary,
+                        style: Act0AcademyDesignTokensV1.label.copyWith(
+                          color: Act0AcademyDesignTokensV1.focus,
                         ),
                       ),
                     ],
@@ -680,18 +685,22 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                     vertical: 5,
                   ),
                   decoration: BoxDecoration(
-                    color: Act0ShellTokensV1.primary.withOpacity(0.10),
+                    color: Act0AcademyDesignTokensV1.focus.withValues(
+                      alpha: 0.10,
+                    ),
                     borderRadius: BorderRadius.circular(
                       Act0ShellTokensV1.radiusPill,
                     ),
                     border: Border.all(
-                      color: Act0ShellTokensV1.primary.withOpacity(0.22),
+                      color: Act0AcademyDesignTokensV1.focus.withValues(
+                        alpha: 0.22,
+                      ),
                     ),
                   ),
                   child: Text(
                     '${currentQuestionIndex + 1}/${questions.length}',
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: Act0ShellTokensV1.primary,
+                    style: Act0AcademyDesignTokensV1.label.copyWith(
+                      color: Act0AcademyDesignTokensV1.focus,
                       letterSpacing: 0.2,
                     ),
                   ),
@@ -699,22 +708,22 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
               ],
             ),
             const SizedBox(height: Act0ShellTokensV1.gapSm),
-            Text(displayTitle, style: Act0ShellTokensV1.sectionTitle),
+            Text(
+              displayTitle,
+              style: Act0AcademyDesignTokensV1.sectionHeading.copyWith(
+                fontSize: 20,
+              ),
+            ),
             const SizedBox(height: Act0ShellTokensV1.gapXs),
             Text(
               displaySubtitle,
-              style: Act0ShellTokensV1.muted,
+              style: Act0AcademyDesignTokensV1.supporting,
               maxLines: keepFullSupportCopy ? null : 2,
               overflow: keepFullSupportCopy ? null : TextOverflow.fade,
             ),
             if (keepFullSupportCopy && displayHelper != null) ...[
               const SizedBox(height: Act0ShellTokensV1.gapSm),
-              Text(
-                displayHelper,
-                style: Act0ShellTokensV1.muted.copyWith(
-                  color: Act0ShellTokensV1.textMuted,
-                ),
-              ),
+              Text(displayHelper, style: Act0AcademyDesignTokensV1.supporting),
             ],
             const SizedBox(height: Act0ShellTokensV1.gapSm),
             Wrap(
@@ -724,8 +733,8 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
               children: [
                 Text(
                   choiceLabel,
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.primary,
+                  style: Act0AcademyDesignTokensV1.label.copyWith(
+                    color: Act0AcademyDesignTokensV1.focus,
                   ),
                 ),
                 if (question.allowsMultiple)
@@ -735,18 +744,22 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
                       vertical: 5,
                     ),
                     decoration: BoxDecoration(
-                      color: Act0ShellTokensV1.gold.withOpacity(0.10),
+                      color: Act0AcademyDesignTokensV1.focus.withValues(
+                        alpha: 0.10,
+                      ),
                       borderRadius: BorderRadius.circular(
                         Act0ShellTokensV1.radiusPill,
                       ),
                       border: Border.all(
-                        color: Act0ShellTokensV1.gold.withOpacity(0.24),
+                        color: Act0AcademyDesignTokensV1.focus.withValues(
+                          alpha: 0.24,
+                        ),
                       ),
                     ),
                     child: Text(
                       '$selectedCount selected',
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.gold,
+                      style: Act0AcademyDesignTokensV1.label.copyWith(
+                        color: Act0AcademyDesignTokensV1.focus,
                         letterSpacing: 0.2,
                       ),
                     ),
@@ -790,21 +803,14 @@ class _PlacementBrandBeatV1 extends StatelessWidget {
     return Container(
       key: const Key('act0_shell_placement_brand_beat'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPanel),
-        border: Border.all(
-          color: Act0ShellTokensV1.primary.withValues(alpha: 0.24),
-        ),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: <Color>[
-            Act0ShellTokensV1.primary.withValues(alpha: 0.16),
-            Act0ShellTokensV1.info.withValues(alpha: 0.08),
-            Act0ShellTokensV1.surface,
-          ],
-        ),
-      ),
+      decoration:
+          Act0AcademyDesignTokensV1.cardDecoration(
+            borderColor: Act0AcademyDesignTokensV1.focus.withValues(
+              alpha: 0.24,
+            ),
+          ).copyWith(
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPanel),
+          ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -814,15 +820,15 @@ class _PlacementBrandBeatV1 extends StatelessWidget {
             height: 70,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Act0ShellTokensV1.primary.withValues(alpha: 0.12),
+              color: Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(22),
               border: Border.all(
-                color: Act0ShellTokensV1.primary.withValues(alpha: 0.22),
+                color: Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.22),
               ),
             ),
             child: const Act0SharkyPresenceMascotV1(
               mood: Act0SharkyMoodV1.happy,
-              tone: Act0ShellTokensV1.primary,
+              tone: Act0AcademyDesignTokensV1.focus,
               size: 58,
             ),
           ),
@@ -837,7 +843,7 @@ class _PlacementBrandBeatV1 extends StatelessWidget {
                     en: 'Sharky Poker',
                     ru: 'Sharky Покер',
                   ),
-                  style: Act0ShellTokensV1.screenTitle.copyWith(
+                  style: Act0AcademyDesignTokensV1.sectionHeading.copyWith(
                     fontSize: 28,
                     height: 1.0,
                   ),
@@ -849,8 +855,7 @@ class _PlacementBrandBeatV1 extends StatelessWidget {
                     en: 'Read the table from your first hand.',
                     ru: 'Читай стол с первой раздачи.',
                   ),
-                  style: Act0ShellTokensV1.body.copyWith(
-                    color: Act0ShellTokensV1.text,
+                  style: Act0AcademyDesignTokensV1.body.copyWith(
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -861,8 +866,7 @@ class _PlacementBrandBeatV1 extends StatelessWidget {
                     en: 'One clue. One decision. One proof.',
                     ru: 'Одна подсказка. Одно решение. Одно доказательство.',
                   ),
-                  style: Act0ShellTokensV1.muted.copyWith(
-                    color: Act0ShellTokensV1.textMuted,
+                  style: Act0AcademyDesignTokensV1.supporting.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -873,8 +877,8 @@ class _PlacementBrandBeatV1 extends StatelessWidget {
                     en: 'Your table coach is ready.',
                     ru: 'Твой тренер за столом готов.',
                   ),
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.primary,
+                  style: Act0AcademyDesignTokensV1.label.copyWith(
+                    color: Act0AcademyDesignTokensV1.focus,
                     letterSpacing: 0.2,
                   ),
                 ),
@@ -895,7 +899,14 @@ class _PlacementIntroViewV1 extends StatelessWidget {
     return Container(
       key: const Key('act0_shell_placement_intro_card'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-      decoration: Act0ShellTokensV1.heroDecoration(),
+      decoration:
+          Act0AcademyDesignTokensV1.cardDecoration(
+            borderColor: Act0AcademyDesignTokensV1.focus.withValues(
+              alpha: 0.24,
+            ),
+          ).copyWith(
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXl),
+          ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -905,7 +916,7 @@ class _PlacementIntroViewV1 extends StatelessWidget {
               en: 'Find your start',
               ru: 'Найди свой старт',
             ),
-            style: Act0ShellTokensV1.screenTitle,
+            style: Act0AcademyDesignTokensV1.sectionHeading,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
           Text(
@@ -915,7 +926,7 @@ class _PlacementIntroViewV1 extends StatelessWidget {
               ru: 'Без экзамена. Только твоя точка старта.',
             ),
             key: const Key('act0_shell_placement_intro_support'),
-            style: Act0ShellTokensV1.muted,
+            style: Act0AcademyDesignTokensV1.supporting,
           ),
         ],
       ),
@@ -936,10 +947,8 @@ class _PlacementTabletFillV1 extends StatelessWidget {
       key: const Key('act0_shell_placement_tablet_fill'),
       constraints: const BoxConstraints(minHeight: 288),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.66),
-        borderColor: Act0ShellTokensV1.info.withValues(alpha: 0.16),
-        glow: false,
+      decoration: Act0AcademyDesignTokensV1.cardDecoration(
+        borderColor: Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.16),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -948,7 +957,7 @@ class _PlacementTabletFillV1 extends StatelessWidget {
             child: ConstrainedBox(
               constraints: const BoxConstraints(minHeight: 190),
               child: _PlacementLaunchSupportCardV1(
-                tone: Act0ShellTokensV1.info,
+                tone: Act0AcademyDesignTokensV1.focus,
                 title: copy(en: 'What happens next', ru: 'Что дальше'),
                 body: copy(
                   en: 'Sharky uses these answers only to choose the first useful hand and the safest pace.',
@@ -966,7 +975,7 @@ class _PlacementTabletFillV1 extends StatelessWidget {
             child: ConstrainedBox(
               constraints: const BoxConstraints(minHeight: 190),
               child: _PlacementLaunchSupportCardV1(
-                tone: Act0ShellTokensV1.gold,
+                tone: Act0AcademyDesignTokensV1.needsReviewFg,
                 title: copy(en: 'No score', ru: 'Без оценки'),
                 body: copy(
                   en: 'The check stays short: read the table, pick what feels closest, then start.',
@@ -1130,32 +1139,18 @@ class _PlacementLaunchSupportCardV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-      decoration:
-          Act0ShellTokensV1.surfaceDecoration(
-            color: Act0ShellTokensV1.surface.withValues(alpha: 0.68),
-            borderColor: tone.withValues(alpha: 0.18),
-          ).copyWith(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: <Color>[
-                tone.withValues(alpha: 0.08),
-                Act0ShellTokensV1.surface.withValues(alpha: 0.76),
-                Act0ShellTokensV1.surface2.withValues(alpha: 0.92),
-              ],
-            ),
-          ),
+      decoration: Act0AcademyDesignTokensV1.cardDecoration(
+        borderColor: tone.withValues(alpha: 0.24),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: Act0ShellTokensV1.label.copyWith(color: tone)),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(
-            body,
-            style: Act0ShellTokensV1.muted.copyWith(
-              color: Act0ShellTokensV1.text,
-            ),
+            title,
+            style: Act0AcademyDesignTokensV1.label.copyWith(color: tone),
           ),
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(body, style: Act0AcademyDesignTokensV1.body),
           if (chips.isNotEmpty) ...[
             const SizedBox(height: Act0ShellTokensV1.gapSm),
             Wrap(
@@ -1190,7 +1185,7 @@ class _PlacementIntroChipV1 extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: Act0ShellTokensV1.label.copyWith(
+        style: Act0AcademyDesignTokensV1.label.copyWith(
           color: tone,
           letterSpacing: 0.15,
         ),
@@ -1260,7 +1255,7 @@ class _PlacementResultViewV1 extends StatelessWidget {
                   en: 'Sharky found your start',
                   ru: 'Шарки нашёл твой старт',
                 ),
-                style: Act0ShellTokensV1.label.copyWith(
+                style: Act0AcademyDesignTokensV1.label.copyWith(
                   color: _placementToneForResult(result),
                 ),
               ),
@@ -1268,25 +1263,21 @@ class _PlacementResultViewV1 extends StatelessWidget {
               Text(
                 result.levelLabel,
                 key: const Key('act0_shell_placement_result_level'),
-                style: Act0ShellTokensV1.sectionTitle,
+                style: Act0AcademyDesignTokensV1.sectionHeading.copyWith(
+                  fontSize: 20,
+                ),
               ),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               Text(
                 result.recommendedReason,
                 key: const Key('act0_shell_placement_recommended_reason'),
-                style: Act0ShellTokensV1.muted.copyWith(
-                  color: Act0ShellTokensV1.text,
-                  height: 1.4,
-                ),
+                style: Act0AcademyDesignTokensV1.body.copyWith(height: 1.4),
               ),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               Text(
                 _placementRouteTrustLineV1(context, result),
                 key: const Key('act0_shell_placement_destination_trust_line'),
-                style: Act0ShellTokensV1.muted.copyWith(
-                  color: Act0ShellTokensV1.text,
-                  height: 1.38,
-                ),
+                style: Act0AcademyDesignTokensV1.body.copyWith(height: 1.38),
               ),
               if (focusChips.isNotEmpty) ...[
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
@@ -1327,9 +1318,11 @@ List<String> _placementFocusChipsV1(Act0PlacementResultV1 result) {
 
 Color _placementToneForResult(Act0PlacementResultV1 result) {
   return switch (result.level) {
-    Act0PlacementResultLevelV1.newPlayer => Act0ShellTokensV1.info,
-    Act0PlacementResultLevelV1.rustyBeginner => Act0ShellTokensV1.gold,
-    Act0PlacementResultLevelV1.readyForBasics => Act0ShellTokensV1.primary,
+    Act0PlacementResultLevelV1.newPlayer => Act0AcademyDesignTokensV1.focus,
+    Act0PlacementResultLevelV1.rustyBeginner =>
+      Act0AcademyDesignTokensV1.needsReviewFg,
+    Act0PlacementResultLevelV1.readyForBasics =>
+      Act0AcademyDesignTokensV1.correctFg,
   };
 }
 
@@ -1372,21 +1365,9 @@ class _PlacementSectionCardV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: padding,
-      decoration:
-          Act0ShellTokensV1.surfaceDecoration(
-            color: Act0ShellTokensV1.surface2,
-            borderColor: borderColor ?? Act0ShellTokensV1.border,
-          ).copyWith(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: <Color>[
-                Colors.white.withOpacity(0.015),
-                Act0ShellTokensV1.surface2,
-                Act0ShellTokensV1.surface.withOpacity(0.92),
-              ],
-            ),
-          ),
+      decoration: Act0AcademyDesignTokensV1.cardDecoration(
+        borderColor: borderColor ?? Act0AcademyDesignTokensV1.rule,
+      ),
       child: child,
     );
   }
@@ -1410,15 +1391,9 @@ class _PlacementResultActionBarV1 extends StatelessWidget {
         Act0ShellTokensV1.pageX,
         Act0ShellTokensV1.gapMd,
       ),
-      decoration: Act0ShellTokensV1.glassDecoration(top: true).copyWith(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: <Color>[
-            Act0ShellTokensV1.surface2.withOpacity(0.96),
-            Act0ShellTokensV1.surface.withOpacity(0.98),
-          ],
-        ),
+      decoration: BoxDecoration(
+        color: Act0AcademyDesignTokensV1.cardSurface,
+        border: Border(top: BorderSide(color: Act0AcademyDesignTokensV1.rule)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -1430,9 +1405,7 @@ class _PlacementResultActionBarV1 extends StatelessWidget {
               fallback: 'Sharky found your start.',
             ),
             textAlign: TextAlign.center,
-            style: Act0ShellTokensV1.muted.copyWith(
-              color: Act0ShellTokensV1.text,
-            ),
+            style: Act0AcademyDesignTokensV1.body,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
           FilledButton(
@@ -1483,15 +1456,9 @@ class _PlacementFlowActionBarV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       key: const Key('act0_shell_placement_flow_action_bar'),
-      decoration: Act0ShellTokensV1.glassDecoration(top: true).copyWith(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: <Color>[
-            Act0ShellTokensV1.surface2.withOpacity(0.96),
-            Act0ShellTokensV1.surface.withOpacity(0.98),
-          ],
-        ),
+      decoration: BoxDecoration(
+        color: Act0AcademyDesignTokensV1.cardSurface,
+        border: Border(top: BorderSide(color: Act0AcademyDesignTokensV1.rule)),
       ),
       padding: const EdgeInsets.fromLTRB(
         Act0ShellTokensV1.pageX,
@@ -1507,7 +1474,7 @@ class _PlacementFlowActionBarV1 extends StatelessWidget {
           children: [
             Text(
               title,
-              style: Act0ShellTokensV1.muted,
+              style: Act0AcademyDesignTokensV1.supporting,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -1536,51 +1503,65 @@ class _PlacementHeroV1 extends StatelessWidget {
     return Container(
       key: const Key('act0_shell_placement_hero'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXl),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: <Color>[
-            Act0ShellTokensV1.primary.withOpacity(0.22),
-            Act0ShellTokensV1.info.withOpacity(0.08),
-            Act0ShellTokensV1.surface,
-            Act0ShellTokensV1.surface2,
-          ],
-        ),
-        border: Border.all(color: Act0ShellTokensV1.primary.withOpacity(0.24)),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: Act0ShellTokensV1.primary.withOpacity(0.16),
-            blurRadius: 28,
-            offset: const Offset(0, 12),
+      decoration:
+          Act0AcademyDesignTokensV1.cardDecoration(
+            borderColor: Act0AcademyDesignTokensV1.focus.withValues(
+              alpha: 0.24,
+            ),
+          ).copyWith(
+            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXl),
+          ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: Act0AcademyDesignTokensV1.focus,
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                    ),
+                    const SizedBox(width: Act0ShellTokensV1.gapSm),
+                    Text(
+                      localeIsRu ? 'Быстрый старт' : 'Quick start',
+                      style: Act0AcademyDesignTokensV1.label.copyWith(
+                        color: Act0AcademyDesignTokensV1.focus,
+                        letterSpacing: 0.28,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: Act0ShellTokensV1.gapSm),
+                Text(title, style: Act0AcademyDesignTokensV1.sectionHeading),
+                const SizedBox(height: Act0ShellTokensV1.gapXs),
+                Text(subtitle, style: Act0AcademyDesignTokensV1.supporting),
+              ],
+            ),
+          ),
+          const SizedBox(width: Act0ShellTokensV1.gapMd),
+          Container(
+            width: 48,
+            height: 48,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Act0AcademyDesignTokensV1.primaryAction,
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
+            ),
+            child: const Icon(
+              Icons.psychology_alt_rounded,
+              color: Act0AcademyDesignTokensV1.onPrimaryAction,
+              size: 26,
+            ),
           ),
         ],
-      ),
-      child: Act0ShellScreenHeaderV1(
-        eyebrow: localeIsRu ? 'Быстрый старт' : 'Quick start',
-        title: title,
-        subtitle: subtitle,
-        trailing: Container(
-          width: 48,
-          height: 48,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Act0ShellTokensV1.primary,
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: Act0ShellTokensV1.primary.withOpacity(0.28),
-                blurRadius: 20,
-              ),
-            ],
-          ),
-          child: const Icon(
-            Icons.psychology_alt_rounded,
-            color: Act0ShellTokensV1.onPrimary,
-            size: 26,
-          ),
-        ),
       ),
     );
   }
@@ -1726,13 +1707,13 @@ class _PlacementOptionButtonV1 extends StatelessWidget {
       borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
       child: Container(
         padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-        decoration: Act0ShellTokensV1.surfaceDecoration(
+        decoration: Act0AcademyDesignTokensV1.cardDecoration(
           borderColor: selected
-              ? Act0ShellTokensV1.primary
-              : Act0ShellTokensV1.border,
+              ? Act0AcademyDesignTokensV1.focus
+              : Act0AcademyDesignTokensV1.rule,
           color: selected
-              ? Act0ShellTokensV1.primaryDark
-              : Act0ShellTokensV1.surface2,
+              ? Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.08)
+              : Act0AcademyDesignTokensV1.cardSurface,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1743,23 +1724,23 @@ class _PlacementOptionButtonV1 extends StatelessWidget {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: selected
-                    ? Act0ShellTokensV1.primary.withOpacity(0.14)
-                    : Act0ShellTokensV1.surface3,
+                    ? Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.14)
+                    : Act0AcademyDesignTokensV1.pageSurface,
                 borderRadius: BorderRadius.circular(
                   Act0ShellTokensV1.radiusBase,
                 ),
                 border: Border.all(
                   color: selected
-                      ? Act0ShellTokensV1.primary.withOpacity(0.32)
-                      : Act0ShellTokensV1.border,
+                      ? Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.32)
+                      : Act0AcademyDesignTokensV1.rule,
                 ),
               ),
               child: Icon(
                 option.icon ?? Icons.label_rounded,
                 size: 18,
                 color: selected
-                    ? Act0ShellTokensV1.primary
-                    : Act0ShellTokensV1.textMuted,
+                    ? Act0AcademyDesignTokensV1.focus
+                    : Act0AcademyDesignTokensV1.inkMuted,
               ),
             ),
             const SizedBox(width: Act0ShellTokensV1.gapSm),
@@ -1772,7 +1753,7 @@ class _PlacementOptionButtonV1 extends StatelessWidget {
                       Expanded(
                         child: Text(
                           displayLabel,
-                          style: Act0ShellTokensV1.body,
+                          style: Act0AcademyDesignTokensV1.body,
                         ),
                       ),
                       if (showBadge && option.badge != null)
@@ -1782,18 +1763,22 @@ class _PlacementOptionButtonV1 extends StatelessWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: Act0ShellTokensV1.info.withOpacity(0.10),
+                            color: Act0AcademyDesignTokensV1.focus.withValues(
+                              alpha: 0.10,
+                            ),
                             borderRadius: BorderRadius.circular(
                               Act0ShellTokensV1.radiusPill,
                             ),
                             border: Border.all(
-                              color: Act0ShellTokensV1.info.withOpacity(0.24),
+                              color: Act0AcademyDesignTokensV1.focus.withValues(
+                                alpha: 0.24,
+                              ),
                             ),
                           ),
                           child: Text(
                             option.badge!,
-                            style: Act0ShellTokensV1.label.copyWith(
-                              color: Act0ShellTokensV1.info,
+                            style: Act0AcademyDesignTokensV1.label.copyWith(
+                              color: Act0AcademyDesignTokensV1.focus,
                               letterSpacing: 0.2,
                             ),
                           ),
@@ -1802,7 +1787,10 @@ class _PlacementOptionButtonV1 extends StatelessWidget {
                   ),
                   if (showSubtitle && displaySubtitle != null) ...[
                     const SizedBox(height: Act0ShellTokensV1.gapXs),
-                    Text(displaySubtitle!, style: Act0ShellTokensV1.muted),
+                    Text(
+                      displaySubtitle!,
+                      style: Act0AcademyDesignTokensV1.supporting,
+                    ),
                   ],
                 ],
               ),
@@ -1817,8 +1805,8 @@ class _PlacementOptionButtonV1 extends StatelessWidget {
                         ? Icons.radio_button_checked_rounded
                         : Icons.radio_button_unchecked_rounded),
               color: selected
-                  ? Act0ShellTokensV1.primary
-                  : Act0ShellTokensV1.textMuted,
+                  ? Act0AcademyDesignTokensV1.focus
+                  : Act0AcademyDesignTokensV1.inkMuted,
             ),
           ],
         ),
