@@ -1,0 +1,74 @@
+{
+  "ownerDecision": "APPROVE_S05_A_PLUS_EDITORIAL_TIDE_OPTION2",
+  "date": "2026-10-10",
+  "approvalScope": "DESIGN_SIGNOFF_ONLY",
+  "sourceBaseline": "dd1b9d2cb65e2fc96a0e374999ca6ace785617a4",
+  "sourceTree": "1b4492cc69d2d93087d7412cd2a4da9b842628bd",
+  "artifacts": [
+    {
+      "name": "SHARKY_S05_UNIFIED_PREMIUM_V3_20261010.zip",
+      "sha256": "e6e9ce9b77e80ec0175c38d4edcb24e576e201eae1f68a3fcfd4914ea2dd8214",
+      "manifestSha256": "0f6443a8eccd4b77f1f9f420be13f0410ab01645df6b796ab09f0cdbf3c61b45",
+      "listedFiles": 171,
+      "members": 172,
+      "CRC": "PASS",
+      "allManifestHashes": "PASS",
+      "downloadUrl": "https://github.com/ClubBoss/sharky-standalone-direction/releases/download/design-s05-approved-20261010/SHARKY_S05_UNIFIED_PREMIUM_V3_20261010.zip",
+      "releaseUrl": "https://github.com/ClubBoss/sharky-standalone-direction/releases/tag/design-s05-approved-20261010",
+      "assetId": 627794617,
+      "assetSize": 31415266,
+      "extracts": [
+        {
+          "archivePath": "docs/02_PRODUCT_COHERENCE_CONTRACT.md",
+          "canonicalPath": "docs/design/s05-approved-20261010/base_product_coherence.md",
+          "sha256": "f440d3f9e06af7c694d1ac25390789c2a17b6c8a97094b4cd8f0b53a46230582"
+        },
+        {
+          "archivePath": "docs/03_UNIFIED_DESIGN_SYSTEM_AND_COACH.md",
+          "canonicalPath": "docs/design/s05-approved-20261010/base_design_system_and_coach.md",
+          "sha256": "23a0614e2f7e1ef9dedb6fa36d7e8cc3213b7e84c417dcb607c1504c218efdc1"
+        },
+        {
+          "archivePath": "docs/04_SCREEN_CONTRACTS.md",
+          "canonicalPath": "docs/design/s05-approved-20261010/base_screen_contracts.md",
+          "sha256": "6fd553051d2e553cfd62572bb42e4bb27b6ab8636e7b27f67c4554e5a8545b17"
+        }
+      ],
+      "remoteOriginalDownloadVerified": true
+    },
+    {
+      "name": "SHARKY_S05_TABLE_COHESION_V1_20261010.zip",
+      "sha256": "018fe7d805e09ca5cb2a53c7e6484d5687abde0f766cf999800eae7388e9d80a",
+      "manifestSha256": "f43332a939a4dd832975100accccabc63052e2a31498efa0c39548eeec32cb70",
+      "listedFiles": 39,
+      "members": 40,
+      "CRC": "PASS",
+      "allManifestHashes": "PASS",
+      "downloadUrl": "https://github.com/ClubBoss/sharky-standalone-direction/releases/download/design-s05-approved-20261010/SHARKY_S05_TABLE_COHESION_V1_20261010.zip",
+      "releaseUrl": "https://github.com/ClubBoss/sharky-standalone-direction/releases/tag/design-s05-approved-20261010",
+      "assetId": 627794616,
+      "assetSize": 8685988,
+      "extracts": [
+        {
+          "archivePath": "docs/02_SCREEN_BOUNDARY_AND_INTERACTION_CONTRACT.md",
+          "canonicalPath": "docs/design/s05-approved-20261010/table_boundary_override.md",
+          "sha256": "5bfcd0d21c3a0fddaf8b882308c4dddabab128b046ea13a3f44d15354a3e0351"
+        }
+      ],
+      "remoteOriginalDownloadVerified": true
+    }
+  ],
+  "overriddenStates": [
+    "decision",
+    "decision_wrong",
+    "repair",
+    "independent"
+  ],
+  "deltaBoundary": "Table/academy transition, composition ownership and directly impacted interaction contracts only; all other base V3 contracts remain authoritative.",
+  "protectedSourceBaseline": {
+    "lib": "4a8b5724f43af27a5fa91630eacb7226586a3247",
+    "assets": "b01be254dd6c26c9ed54a14d3f6dc12eff85d973",
+    "test": "84c62589decd53f579a1f48742e39e13871c8158",
+    "pubspec.yaml": "d80e5dc32bd0592827a4ae05101b99322c135ca0"
+  }
+}
