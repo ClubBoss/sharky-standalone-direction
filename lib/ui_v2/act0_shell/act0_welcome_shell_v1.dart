@@ -31,7 +31,6 @@ class Act0WelcomeShellV1 extends StatefulWidget {
 
 class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
   Act0WelcomeBeatV1 _beat = Act0WelcomeBeatV1.intro;
-  String? _selectedMicroWinOptionId;
   Act0AccessibilityPrototypeStepV1? _accessibilityPrototypeStep;
 
   bool get _isRuLocaleV1 => Localizations.localeOf(
@@ -44,19 +43,21 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
   String _atomV1(String atomId, {required String fallback}) =>
       act0LocalizedSurfaceAtomV1(context, atomId, fallback: fallback);
 
+  // F04: Welcome is truthful orientation, not a demo assessment. The real
+  // table/task renders for a genuine first read, but picking an option never
+  // enters the real grading/feedback phase here — there is no retry to offer,
+  // so Welcome must never show a graded wrong/"Try same clue" state. Actual
+  // wrong feedback and repair belong to the real decision route (Learn).
   Act0RunnerStateV1 get _microWinRunnerV1 {
     final lesson = Act0ShellStateV1.sample.lessonById('fold_check_call_raise');
     final task = lesson.taskList.firstWhere(
       (candidate) => candidate.taskId == 'actions_check_drill',
     );
-    final selectedOptionId = _selectedMicroWinOptionId;
     return task.runner.copyWith(
       beatIndex: 2,
       beatCount: 3,
-      phase: selectedOptionId == null
-          ? Act0LessonPhaseV1.drill
-          : Act0LessonPhaseV1.review,
-      selectedOptionId: selectedOptionId,
+      phase: Act0LessonPhaseV1.drill,
+      selectedOptionId: null,
       teachingStepIndex: task.runner.teachingSteps.length,
       returnTarget: 'Welcome',
     );
@@ -122,14 +123,14 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
             ? widget.onClose!
             : () => setState(() => _beat = Act0WelcomeBeatV1.intro),
         onContinueTheory: () {},
-        onChooseOption: (option) {
-          setState(() => _selectedMicroWinOptionId = option.id);
+        // Any pick moves straight to the truthful handoff beat: Welcome never
+        // renders the real review/feedback phase, so no fabricated graded
+        // choice (correct/wrong banner, fake retry CTA) can appear here.
+        onChooseOption: (_) {
+          setState(() => _beat = Act0WelcomeBeatV1.handoff);
         },
         onContinueReview: () {
-          setState(() {
-            _selectedMicroWinOptionId = null;
-            _beat = Act0WelcomeBeatV1.handoff;
-          });
+          setState(() => _beat = Act0WelcomeBeatV1.handoff);
         },
         tableVisualVariant: widget.tableVisualVariant,
       ),

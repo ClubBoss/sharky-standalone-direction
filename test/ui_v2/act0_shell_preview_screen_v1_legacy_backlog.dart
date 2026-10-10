@@ -2281,10 +2281,10 @@ void main() {
           .byKey(const Key('act0_shell_welcome_demo_spot'))
           .evaluate()
           .isNotEmpty) {
+        // F04: Welcome's demo spot never enters the graded review/feedback
+        // phase, so picking an option alone (no separate feedback continue
+        // tap) advances straight to the handoff beat.
         await answerVisiblePromptCorrectly(tester);
-        await tester.tap(
-          find.byKey(const Key('act0_shell_feedback_continue_cta')),
-        );
         await tester.pumpAndSettle();
         continue;
       }

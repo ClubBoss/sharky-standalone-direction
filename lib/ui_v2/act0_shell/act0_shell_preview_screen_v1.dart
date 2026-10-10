@@ -12834,7 +12834,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   bool _advanceTeachingStep(Act0RunnerStateV1 runner) {
-    if (_teachingStepIndex < runner.teachingSteps.length) {
+    // F07: stop at the last authored index. The old `< length` guard let the
+    // index overshoot to `length` for one extra tap, so the "current/total"
+    // counter briefly read one past the real authored total (e.g. `3/2`).
+    if (_teachingStepIndex < runner.teachingSteps.length - 1) {
       _teachingStepIndex += 1;
       return true;
     }
