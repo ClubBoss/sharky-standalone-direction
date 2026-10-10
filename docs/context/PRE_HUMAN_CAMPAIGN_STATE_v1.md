@@ -5,6 +5,16 @@ Freshness date: 2026-10-09 (October exact-dispatch overlay; September material r
 Repository: `ClubBoss/sharky-standalone-direction`
 
 
+## 2026-10-10 S06 EV wave plan completion / S07 owner admission gate (newest)
+
+- This block becomes effective only after this docs-only S06 receipt PR passes normal exact-head internal CI, is merged and its new main is verified. Until then the prior S06 planning dispatch remains active. On verified integration: `S05 = PASS_D4_OWNER_FINAL_DESIGN_SIGNOFF`; `S06 = PASS_D5_EV_WAVE_PLAN`; `ACTIVE_TASK_ID = S07`; `CURRENT_STAGE = PRE_P02_DESIGN_RECONVERGENCE / D6_DESIGN_ADMISSION / OWNER_GATE / NO_PRODUCT_CODE`; `NEXT_TASK_ID = S07` until explicit owner admission. One active task.
+- Final S05 decision remains `APPROVE_S05_A_PLUS_EDITORIAL_TIDE_OPTION2`. #258 integrated at main 8c6d780b394685a9f663c305ce8c90a24c7d337d; #257 superseded/closed, original direction receipt preserved. Canonical approved composite: `docs/design/s05-approved-20261010/README.md` and precedence manifest; original archives unchanged.
+- S06 receipt: `docs/_reviews/s06_d5_ev_wave_plan_receipt_20261010.md`; independent review: `docs/_reviews/s06_d5_independent_completeness_review_20261010.md`, PASS_D5_PLAN_COMPLETENESS. Plan: `docs/plan/S06_EV_IMPLEMENTATION_WAVE_MAP_20261010.md`; source/index, validation and risk handoff files alongside it. Three learner jobs, all 29 states, all 17 fields per wave, one root/runner writer, exact debt/test/rollback/native ownership.
+- `S07_OWNER_GATE = AWAITING_EXPLICIT_ADMISSION`; next authorized action `S07_DESIGN_ADMISSION`, brief `docs/_reviews/s07_design_admission_owner_brief_20261010.md`. Final design approval is already given; S07 reviews engineering admission and does not reopen IA/palette/table direction.
+- S06 is planning-only PASS. All F04/F07/F09/F11 defects remain unfixed; native redesigned E2E, font/scale/VoiceOver/table-bridge assumptions remain future acceptance gates. No product code, dependencies, Modern Table/PR224, S08-S10 execution, native/Human/P02 or release permission. Protected baseline unchanged; historical blocks below are chronology only.
+
+---
+
 ## 2026-10-10 S05 final owner sign-off / S06 planning dispatch (newest)
 
 - Owner decision: `APPROVE_S05_A_PLUS_EDITORIAL_TIDE_OPTION2`; A+ Guided Academy, V3 Editorial Tide, Option 2 Immersive Dark Table. Final owner design approval, DESIGN SIGN-OFF ONLY.
