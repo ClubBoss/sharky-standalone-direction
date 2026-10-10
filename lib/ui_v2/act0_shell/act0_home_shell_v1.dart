@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
@@ -175,7 +176,10 @@ class Act0HomeShellV1 extends StatelessWidget {
       checklistActive: checklistActive,
       showReviewOnlyIfDue: true,
     );
-    return ListView(
+    return Container(
+      key: const Key('act0_shell_home_page_background'),
+      color: Act0AcademyDesignTokensV1.pageSurface,
+      child: ListView(
       key: const Key('act0_shell_home_screen'),
       padding: EdgeInsets.fromLTRB(
         pagePadding,
@@ -225,6 +229,7 @@ class Act0HomeShellV1 extends StatelessWidget {
           ),
         ),
       ],
+      ),
     );
   }
 
@@ -493,8 +498,7 @@ class _HomeIdentityRowV1 extends StatelessWidget {
             children: [
               Text(
                 localeIsRu ? 'Sharky' : 'Sharky',
-                style: Act0ShellTokensV1.body.copyWith(
-                  color: Act0ShellTokensV1.text,
+                style: Act0AcademyDesignTokensV1.body.copyWith(
                   fontWeight: FontWeight.w900,
                 ),
               ),
@@ -504,8 +508,7 @@ class _HomeIdentityRowV1 extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.fade,
                 softWrap: false,
-                style: Act0ShellTokensV1.label.copyWith(
-                  color: Act0ShellTokensV1.textDim,
+                style: Act0AcademyDesignTokensV1.label.copyWith(
                   letterSpacing: 0.1,
                 ),
               ),
@@ -518,7 +521,7 @@ class _HomeIdentityRowV1 extends StatelessWidget {
             key: const Key('act0_shell_home_dev_menu_button'),
             onPressed: onOpenDevMenu,
             icon: const Icon(Icons.more_horiz_rounded),
-            color: Act0ShellTokensV1.textMuted,
+            color: Act0AcademyDesignTokensV1.inkMuted,
             splashRadius: 18,
             visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
             tooltip: localeIsRu ? 'Меню разработчика' : 'Dev menu',
@@ -557,8 +560,10 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
       key: const Key('act0_shell_home_v6_route_hero'),
       child: Container(
         key: const Key('act0_shell_home_mission_command_card'),
-        padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-        decoration: Act0ShellTokensV1.premiumActionSurfaceDecoration(),
+        padding: const EdgeInsets.all(Act0AcademyDesignTokensV1.gapLg),
+        decoration: Act0AcademyDesignTokensV1.cardDecoration(
+          borderColor: Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.24),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -568,49 +573,34 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
                   width: 34,
                   height: 34,
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: <Color>[
-                        Act0ShellTokensV1.actionCyan,
-                        Act0ShellTokensV1.actionBlue,
-                      ],
-                    ),
+                    color: Act0AcademyDesignTokensV1.focus,
                     borderRadius: BorderRadius.circular(
                       Act0ShellTokensV1.radiusMd,
                     ),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                        color: Act0ShellTokensV1.actionBlue.withOpacity(0.34),
-                        blurRadius: 18,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
                   ),
                   child: const Icon(
                     Icons.route_rounded,
-                    color: Act0ShellTokensV1.onPrimary,
+                    color: Act0AcademyDesignTokensV1.onPrimaryAction,
                     size: 18,
                   ),
                 ),
-                const SizedBox(width: Act0ShellTokensV1.gapSm),
+                const SizedBox(width: Act0AcademyDesignTokensV1.gapSm),
                 Expanded(
                   child: Text(
                     localeIsRu ? 'Чтение стола сегодня' : 'Today\'s table read',
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: Act0ShellTokensV1.actionCyan,
-                      fontWeight: FontWeight.w900,
+                    style: Act0AcademyDesignTokensV1.label.copyWith(
+                      color: Act0AcademyDesignTokensV1.focus,
                       letterSpacing: 0.35,
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: Act0ShellTokensV1.gapMd),
+            const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
             Text(
               title,
               key: const Key('act0_shell_home_primary_route_title'),
-              style: Act0ShellTokensV1.sectionTitle.copyWith(
+              style: Act0AcademyDesignTokensV1.sectionHeading.copyWith(
                 fontSize: 23,
                 height: 1.04,
               ),
@@ -623,10 +613,7 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
               key: const Key('act0_shell_home_next_action_subtitle'),
               maxLines: 2,
               overflow: TextOverflow.fade,
-              style: Act0ShellTokensV1.body.copyWith(
-                color: Act0ShellTokensV1.textMuted,
-                height: 1.25,
-              ),
+              style: Act0AcademyDesignTokensV1.body.copyWith(height: 1.25),
             ),
             const SizedBox(height: 8),
             Text(
@@ -639,15 +626,13 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.fade,
               softWrap: false,
-              style: Act0ShellTokensV1.body.copyWith(
-                color: Act0VisualCanonV1.textSecondary.withOpacity(0.80),
+              style: Act0AcademyDesignTokensV1.supporting.copyWith(
                 fontSize: 12,
                 height: 1.22,
                 fontWeight: FontWeight.w700,
-                letterSpacing: 0,
               ),
             ),
-            const SizedBox(height: Act0ShellTokensV1.gapMd),
+            const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -655,29 +640,38 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
                 _HomeMetaPillV1(
                   icon: Icons.school_rounded,
                   label: courseTitle,
-                  color: Act0ShellTokensV1.actionCyan,
+                  color: Act0AcademyDesignTokensV1.focus,
                 ),
                 if (cleanProgress != null && cleanProgress.isNotEmpty)
                   _HomeMetaPillV1(
                     icon: Icons.flag_rounded,
                     label: cleanProgress,
-                    color: Act0ShellTokensV1.textMuted,
+                    color: Act0AcademyDesignTokensV1.inkMuted,
                   ),
               ],
             ),
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            const SizedBox(height: Act0AcademyDesignTokensV1.gapSm),
             _HomeProofMomentumLineV1(
               progressLabel: cleanProgress,
               localeIsRu: localeIsRu,
             ),
-            const SizedBox(height: Act0ShellTokensV1.gapMd),
+            const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
             Container(
               key: const Key('act0_shell_home_v6_primary_cta'),
               child: FilledButton(
                 key: const Key('act0_shell_main_cta'),
                 onPressed: onContinue,
-                style: Act0ShellTokensV1.premiumActionButtonStyle(
-                  height: Act0VisualMetricsV1.primaryCtaHeight,
+                style: FilledButton.styleFrom(
+                  backgroundColor: Act0AcademyDesignTokensV1.primaryAction,
+                  foregroundColor: Act0AcademyDesignTokensV1.onPrimaryAction,
+                  minimumSize: Size.fromHeight(
+                    Act0VisualMetricsV1.primaryCtaHeight,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      Act0AcademyDesignTokensV1.radiusCard,
+                    ),
+                  ),
                 ),
                 child: Text(nextActionCtaLabel),
               ),
@@ -720,8 +714,8 @@ class _HomeProofMomentumLineV1 extends StatelessWidget {
               : Icons.play_circle_outline_rounded,
           size: 15,
           color: hasCompletedLessons
-              ? Act0VisualCanonV1.greenTable
-              : Act0ShellTokensV1.actionCyan,
+              ? Act0AcademyDesignTokensV1.correctFg
+              : Act0AcademyDesignTokensV1.focus,
         ),
         const SizedBox(width: 7),
         Expanded(
@@ -730,10 +724,8 @@ class _HomeProofMomentumLineV1 extends StatelessWidget {
             key: const Key('act0_shell_home_proof_momentum_text'),
             maxLines: 2,
             overflow: TextOverflow.fade,
-            style: Act0ShellTokensV1.label.copyWith(
-              color: Act0VisualCanonV1.textSecondary.withOpacity(0.9),
+            style: Act0AcademyDesignTokensV1.supporting.copyWith(
               height: 1.22,
-              letterSpacing: 0,
             ),
           ),
         ),
@@ -765,9 +757,9 @@ class _HomeMetaPillV1 extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
       decoration: BoxDecoration(
-        color: Act0ShellTokensV1.surface2.withOpacity(0.72),
+        color: Act0AcademyDesignTokensV1.cardSurface,
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-        border: Border.all(color: color.withOpacity(0.18)),
+        border: Border.all(color: color.withOpacity(0.28)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -779,7 +771,7 @@ class _HomeMetaPillV1 extends StatelessWidget {
               label,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: Act0ShellTokensV1.label.copyWith(
+              style: Act0AcademyDesignTokensV1.label.copyWith(
                 color: color,
                 fontWeight: FontWeight.w800,
               ),
@@ -824,9 +816,7 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(2, 14, 2, 4),
         decoration: BoxDecoration(
           border: Border(
-            top: BorderSide(
-              color: Act0ShellTokensV1.actionBlue.withOpacity(0.18),
-            ),
+            top: BorderSide(color: Act0AcademyDesignTokensV1.rule),
           ),
         ),
         child: KeyedSubtree(
@@ -840,7 +830,9 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
                     child: Text(
                       title,
                       key: const Key('act0_shell_home_daily_plan_title'),
-                      style: Act0ShellTokensV1.cardTitle.copyWith(fontSize: 16),
+                      style: Act0AcademyDesignTokensV1.sectionHeading.copyWith(
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                   Row(
@@ -849,22 +841,20 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
                       Icon(
                         Icons.arrow_forward_rounded,
                         size: 13,
-                        color: Act0ShellTokensV1.textDim,
+                        color: Act0AcademyDesignTokensV1.inkMuted,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         localeIsRu ? 'Следующая раздача' : 'Next useful hand',
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.textDim,
+                        style: Act0AcademyDesignTokensV1.label.copyWith(
                           fontSize: 10,
-                          fontWeight: FontWeight.w800,
                         ),
                       ),
                     ],
                   ),
                 ],
               ),
-              const SizedBox(height: Act0ShellTokensV1.gapXs),
+              const SizedBox(height: Act0AcademyDesignTokensV1.gapXs),
               Text(
                 isFirstWorld
                     ? (localeIsRu
@@ -876,12 +866,12 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
                 key: const Key('act0_shell_home_week1_title'),
                 maxLines: 1,
                 overflow: TextOverflow.fade,
-                style: Act0ShellTokensV1.label.copyWith(
-                  color: Act0ShellTokensV1.primary,
+                style: Act0AcademyDesignTokensV1.label.copyWith(
+                  color: Act0AcademyDesignTokensV1.focus,
                   fontWeight: FontWeight.w900,
                 ),
               ),
-              const SizedBox(height: Act0ShellTokensV1.gapXs),
+              const SizedBox(height: Act0AcademyDesignTokensV1.gapXs),
               KeyedSubtree(
                 key: personalizedReturnReasonLine?.trim().isNotEmpty == true
                     ? const Key('act0_shell_home_personalized_return_reason')
@@ -893,9 +883,7 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
                       ? 'Сегодня: держи одну подсказку стола в тонусе.'
                       : 'Today: keep one table clue warm',
                   key: const Key('act0_shell_home_daily_plan_support'),
-                  style: Act0ShellTokensV1.muted.copyWith(
-                    color: Act0ShellTokensV1.textMuted,
-                  ),
+                  style: Act0AcademyDesignTokensV1.supporting,
                 ),
               ),
               const SizedBox(height: 12),
@@ -938,11 +926,11 @@ class _HomeChecklistRowTileV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rowTone = isCompleted
-        ? Act0VisualCanonV1.greenTable
+        ? Act0AcademyDesignTokensV1.correctFg
         : isActiveFocus
-        ? Act0ShellTokensV1.actionCyan
+        ? Act0AcademyDesignTokensV1.focus
         : isPending
-        ? Act0ShellTokensV1.textDim
+        ? Act0AcademyDesignTokensV1.inkMuted
         : row.accentColor;
     final rowActionable =
         row.onTap != null && (isActiveFocus || row.isRepairAction);
@@ -955,13 +943,13 @@ class _HomeChecklistRowTileV1 extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: isActiveFocus
-            ? Act0ShellTokensV1.actionBlue.withOpacity(0.075)
-            : Act0ShellTokensV1.surface2.withOpacity(0.42),
+            ? Act0AcademyDesignTokensV1.focus.withOpacity(0.08)
+            : Act0AcademyDesignTokensV1.cardSurface,
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
         border: Border.all(
           color: isActiveFocus
-              ? Act0ShellTokensV1.actionCyan.withOpacity(0.22)
-              : Act0ShellTokensV1.border.withOpacity(0.50),
+              ? Act0AcademyDesignTokensV1.focus.withOpacity(0.30)
+              : Act0AcademyDesignTokensV1.rule,
         ),
       ),
       child: Row(
@@ -1022,16 +1010,14 @@ class _HomeChecklistRowTileV1 extends StatelessWidget {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: Act0ShellTokensV1.actionCyan.withOpacity(
-                              0.12,
-                            ),
+                            color: Act0AcademyDesignTokensV1.focus
+                                .withOpacity(0.12),
                             borderRadius: BorderRadius.circular(
                               Act0ShellTokensV1.radiusPill,
                             ),
                             border: Border.all(
-                              color: Act0ShellTokensV1.actionCyan.withOpacity(
-                                0.22,
-                              ),
+                              color: Act0AcademyDesignTokensV1.focus
+                                  .withOpacity(0.28),
                             ),
                           ),
                           child: Text(
@@ -1040,8 +1026,8 @@ class _HomeChecklistRowTileV1 extends StatelessWidget {
                               'home_checklist_next_label',
                               fallback: 'Next',
                             ),
-                            style: Act0ShellTokensV1.label.copyWith(
-                              color: Act0ShellTokensV1.actionCyan,
+                            style: Act0AcademyDesignTokensV1.label.copyWith(
+                              color: Act0AcademyDesignTokensV1.focus,
                               fontSize: 8,
                               fontWeight: FontWeight.w900,
                               letterSpacing: 0,
@@ -1058,10 +1044,10 @@ class _HomeChecklistRowTileV1 extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.fade,
                     softWrap: false,
-                    style: Act0ShellTokensV1.body.copyWith(
+                    style: Act0AcademyDesignTokensV1.body.copyWith(
                       color: isActiveFocus
-                          ? Act0ShellTokensV1.text
-                          : Act0ShellTokensV1.textMuted,
+                          ? Act0AcademyDesignTokensV1.ink
+                          : Act0AcademyDesignTokensV1.inkMuted,
                       fontWeight: FontWeight.w800,
                       fontSize: 13,
                     ),
@@ -1076,8 +1062,8 @@ class _HomeChecklistRowTileV1 extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.fade,
                       softWrap: false,
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.textDim,
+                      style: Act0AcademyDesignTokensV1.label.copyWith(
+                        color: Act0AcademyDesignTokensV1.inkMuted,
                       ),
                     ),
                   ],
@@ -1085,14 +1071,16 @@ class _HomeChecklistRowTileV1 extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: Act0ShellTokensV1.gapSm),
+          const SizedBox(width: Act0AcademyDesignTokensV1.gapSm),
           Opacity(
             opacity: opacity,
             child: Icon(
               row.onTap == null
                   ? Icons.check_circle_outline_rounded
                   : Icons.arrow_forward_rounded,
-              color: rowActionable ? rowTone : Act0ShellTokensV1.textDim,
+              color: rowActionable
+                  ? rowTone
+                  : Act0AcademyDesignTokensV1.inkMuted,
               size: 18,
             ),
           ),
@@ -1132,11 +1120,11 @@ class _HomeCompletionSurfaceV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       key: const Key('act0_shell_home_daily_plan_card'),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface.withValues(alpha: 0.82),
-        borderColor: Act0ShellTokensV1.gold.withValues(alpha: 0.18),
-        glow: false,
+      padding: const EdgeInsets.all(Act0AcademyDesignTokensV1.gapLg),
+      decoration: Act0AcademyDesignTokensV1.cardDecoration(
+        borderColor: Act0AcademyDesignTokensV1.correctFg.withValues(
+          alpha: 0.28,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1147,17 +1135,17 @@ class _HomeCompletionSurfaceV1 extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Act0ShellTokensV1.gold.withValues(alpha: 0.14),
+                  color: Act0AcademyDesignTokensV1.correctBg,
                   borderRadius: BorderRadius.circular(
                     Act0ShellTokensV1.radiusLg,
                   ),
                 ),
                 child: const Icon(
                   Icons.check_circle_rounded,
-                  color: Act0ShellTokensV1.gold,
+                  color: Act0AcademyDesignTokensV1.correctFg,
                 ),
               ),
-              const SizedBox(width: Act0ShellTokensV1.gapMd),
+              const SizedBox(width: Act0AcademyDesignTokensV1.gapMd),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1168,7 +1156,8 @@ class _HomeCompletionSurfaceV1 extends StatelessWidget {
                         'home_daily_done_title',
                         fallback: 'Session complete',
                       ),
-                      style: Act0ShellTokensV1.cardTitle.copyWith(height: 1.0),
+                      style: Act0AcademyDesignTokensV1.sectionHeading
+                          .copyWith(fontSize: 18, height: 1.0),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -1184,8 +1173,8 @@ class _HomeCompletionSurfaceV1 extends StatelessWidget {
                               fallback: 'Table read improved',
                             ),
                       key: const Key('act0_shell_home_daily_done_badge'),
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.gold,
+                      style: Act0AcademyDesignTokensV1.label.copyWith(
+                        color: Act0AcademyDesignTokensV1.correctFg,
                       ),
                     ),
                   ],
@@ -1193,7 +1182,7 @@ class _HomeCompletionSurfaceV1 extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          const SizedBox(height: Act0AcademyDesignTokensV1.gapSm),
           Text(
             act0LocalizedSurfaceAtomV1(
               context,
@@ -1202,9 +1191,7 @@ class _HomeCompletionSurfaceV1 extends StatelessWidget {
                 Act0SharkyCoachMomentV1.homeDoneSupport,
               ),
             ),
-            style: Act0ShellTokensV1.muted.copyWith(
-              color: Act0ShellTokensV1.textMuted,
-            ),
+            style: Act0AcademyDesignTokensV1.supporting,
           ),
           if (streakDays > 0) ...[
             const SizedBox(height: 6),
@@ -1212,8 +1199,8 @@ class _HomeCompletionSurfaceV1 extends StatelessWidget {
               _isRuLocaleV1(context)
                   ? 'Серия держится: $streakDays ${act0RussianPluralV1(streakDays, 'день', 'дня', 'дней')}.'
                   : '$streakDays day streak is holding.',
-              style: Act0ShellTokensV1.label.copyWith(
-                color: Act0ShellTokensV1.textDim,
+              style: Act0AcademyDesignTokensV1.label.copyWith(
+                color: Act0AcademyDesignTokensV1.inkMuted,
               ),
             ),
           ],
@@ -1226,8 +1213,8 @@ class _HomeCompletionSurfaceV1 extends StatelessWidget {
                 Act0SharkyCoachMomentV1.homeDoneReturn,
               ),
             ),
-            style: Act0ShellTokensV1.label.copyWith(
-              color: Act0ShellTokensV1.primary,
+            style: Act0AcademyDesignTokensV1.label.copyWith(
+              color: Act0AcademyDesignTokensV1.focus,
             ),
           ),
         ],
