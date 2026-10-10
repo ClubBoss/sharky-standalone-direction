@@ -1,5 +1,16 @@
 # Pre-Human Campaign State v1
 
+## 2026-10-10 S07 explicit owner admission / S08 bounded Wave A (newest)
+
+- **Effective only after this docs-only S07 admission PR passes required exact-head CI and is merged with verified new main.** Until then previous S07 owner gate remains authoritative. On verified integration: `S07 = PASS_D6_OWNER_DESIGN_ADMISSION`, `ACTIVE_TASK_ID = S08`, `CURRENT_STAGE = PRE_P02_DESIGN_RECONVERGENCE / S08_FIRST_VALUE_BUILD / BOUNDED_FLUTTER`, `NEXT_TASK_ID = S08`.
+- Owner explicitly delegated product-EV execution discretion after request for S07 admission. Formal bounded disposition: `S07_PASS_AND_BOUNDED_WAVE_A_ADMISSION`, *only* Wave A. Signed decision scope and file allowlist: `docs/_reviews/s07_d6_owner_wave_a_admission_20261010.md`.
+- S05 composite and S06 Wave Map unchanged. S07 independent browser/source candidate is evidence, not native/Human proof. Wave A = Placement/Welcome/Home/Learn/Worlds/theory/first genuine source decision; F04 and F07 owned here. No grading, learning engine, table scene, table-reader Wave B, PR224, Human/P02 or S09/S10 authorization.
+- Learning-format invariant: task-goal-based hybrid, **table-centered** for perceptual/strategic skills; separated evidence-free answer reader rejected for table-reading. Accessible compact scene observations are conditional Wave B and must not leak derived answers. Current independent W1 assessment defects are recorded for affected S09 acceptance; do not claim transfer from task IDs alone.
+- Native font/Cyrillic/scale/Coach/VoiceOver and route integrity are future S08 tests, not preexisting PASS. Same protected Modern Table; unchanged source state, grading, progress and telemetry. One root/runner owner and exact-head CI.
+
+---
+
+
 Status: `PRE_P02_DESIGN_RECONVERGENCE_PLANNING`
 Freshness date: 2026-10-09 (October exact-dispatch overlay; September material retained as history)
 Repository: `ClubBoss/sharky-standalone-direction`
