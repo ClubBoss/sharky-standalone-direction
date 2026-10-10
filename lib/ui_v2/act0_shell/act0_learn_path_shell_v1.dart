@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
@@ -10,7 +11,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
-bool _isRuLocaleV1(BuildContext context) => false;
+bool _isRuLocaleV1(BuildContext context) =>
+    Localizations.localeOf(context).languageCode == 'ru';
 
 String _learnCopyV1(
   BuildContext context, {
@@ -25,57 +27,6 @@ const Color _learnV6Green = Act0VisualCanonV1.greenTable;
 const Color _learnV6Navy = Act0VisualCanonV1.navySurface;
 const Color _learnV6Deep = Act0VisualCanonV1.deepNavy;
 
-BoxDecoration _learnV6PrimarySurfaceDecoration({
-  double radius = Act0ShellTokensV1.radiusLg,
-  double borderAlpha = 0.36,
-  double glowAlpha = 0.16,
-}) {
-  return BoxDecoration(
-    borderRadius: BorderRadius.circular(radius),
-    border: Border.all(color: _learnV6Blue.withValues(alpha: borderAlpha)),
-    gradient: const LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: <Color>[
-        Color(0xFF0B3153),
-        Color(0xFF082441),
-        Color(0xFF06182A),
-        _learnV6Deep,
-      ],
-      stops: <double>[0.0, 0.34, 0.74, 1.0],
-    ),
-    boxShadow: <BoxShadow>[
-      const BoxShadow(
-        color: Color(0x61000000),
-        blurRadius: 18,
-        offset: Offset(0, 10),
-      ),
-      BoxShadow(
-        color: _learnV6Blue.withValues(alpha: glowAlpha),
-        blurRadius: 26,
-        offset: const Offset(0, 10),
-      ),
-    ],
-  );
-}
-
-BoxDecoration _learnV6SecondarySurfaceDecoration({
-  Color borderColor = const Color(0xFF17456A),
-  double borderAlpha = 0.64,
-}) {
-  return BoxDecoration(
-    borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
-    border: Border.all(color: borderColor.withValues(alpha: borderAlpha)),
-    gradient: const LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: <Color>[Color(0xFF071C31), Color(0xFF061525), _learnV6Deep],
-    ),
-    boxShadow: const <BoxShadow>[
-      BoxShadow(color: Color(0x48000000), blurRadius: 16, offset: Offset(0, 8)),
-    ],
-  );
-}
 
 ({Color accent, Color accentSoft}) _learnWorldToneV1(int worldNumber) {
   return switch (worldNumber) {
@@ -701,6 +652,12 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
       child: Stack(
         key: _learnStackKey,
         children: [
+          Positioned.fill(
+            child: ColoredBox(
+              key: const Key('act0_shell_learn_page_background'),
+              color: Act0AcademyDesignTokensV1.pageSurface,
+            ),
+          ),
           NotificationListener<ScrollNotification>(
             onNotification: (notification) {
               if (notification.depth != 0) {
@@ -973,7 +930,7 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
           task: currentMissionTask,
           stepIndex: currentMissionStepIndex,
           totalSteps: currentMissionLesson.taskList.length,
-          accent: Act0ShellTokensV1.primary,
+          accent: Act0AcademyDesignTokensV1.focus,
           detailMode: detailMode,
           firstLessonLanding: firstLessonLanding,
           onStart: onStartMission,
@@ -1033,7 +990,6 @@ class _WorldContextStripV5 extends StatelessWidget {
     final conciseProgressLabel = moduleProgressLabel
         .replaceFirst(RegExp(r'\s+complete$'), '')
         .trim();
-    const accent = _learnV6Cyan;
     return Material(
       key: const Key('act0_shell_module_header'),
       color: Colors.transparent,
@@ -1043,223 +999,177 @@ class _WorldContextStripV5 extends StatelessWidget {
         child: Ink(
           key: const Key('act0_shell_learn_v5_world_context'),
           padding: EdgeInsets.fromLTRB(compact ? 12 : 14, 10, 12, 10),
-          decoration: _learnV6SecondarySurfaceDecoration(
-            borderColor: _learnV6Blue,
-            borderAlpha: 0.42,
+          decoration: Act0AcademyDesignTokensV1.cardDecoration(
+            borderColor: Act0AcademyDesignTokensV1.focus.withValues(
+              alpha: 0.42,
+            ),
           ),
-          child: Stack(
+          child: Row(
             children: [
-              Positioned(
-                key: const Key('act0_shell_learn_v6_world_luminous_context'),
-                right: compact ? 46 : 84,
-                top: -34,
-                child: IgnorePointer(
-                  child: Container(
-                    width: compact ? 106 : 136,
-                    height: 62,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(999),
-                      gradient: RadialGradient(
-                        colors: <Color>[
-                          _learnV6Blue.withValues(alpha: 0.08),
-                          Colors.transparent,
-                        ],
-                      ),
+              Container(
+                width: compact ? 32 : 36,
+                height: compact ? 32 : 36,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Act0AcademyDesignTokensV1.focus.withValues(
+                    alpha: 0.12,
+                  ),
+                  borderRadius: BorderRadius.circular(
+                    Act0ShellTokensV1.radiusMd,
+                  ),
+                  border: Border.all(
+                    color: Act0AcademyDesignTokensV1.focus.withValues(
+                      alpha: 0.28,
                     ),
                   ),
                 ),
-              ),
-              Row(
-                children: [
-                  Container(
-                    width: compact ? 32 : 36,
-                    height: compact ? 32 : 36,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: <Color>[
-                          _learnV6Cyan.withValues(alpha: 0.22),
-                          _learnV6Blue.withValues(alpha: 0.22),
-                        ],
-                      ),
-                      borderRadius: BorderRadius.circular(
-                        Act0ShellTokensV1.radiusMd,
-                      ),
-                      border: Border.all(
-                        color: _learnV6Cyan.withValues(alpha: 0.28),
-                      ),
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          color: _learnV6Cyan.withValues(alpha: 0.08),
-                          blurRadius: 10,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Text(
-                      '${world.worldNumber}',
-                      style: Act0ShellTokensV1.sectionTitle.copyWith(
-                        color: _learnV6Cyan,
-                        fontSize: compact ? 15.5 : 16.5,
-                        height: 1.0,
-                      ),
-                    ),
+                child: Text(
+                  '${world.worldNumber}',
+                  style: Act0AcademyDesignTokensV1.sectionHeading.copyWith(
+                    color: Act0AcademyDesignTokensV1.focus,
+                    fontSize: compact ? 15.5 : 16.5,
+                    height: 1.0,
                   ),
-                  const SizedBox(width: 11),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                ),
+              ),
+              const SizedBox(width: 11),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                _learnCopyV1(
-                                  context,
-                                  en: 'Current world · W${world.worldNumber}',
-                                  ru: 'Текущий мир · W${world.worldNumber}',
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.fade,
-                                softWrap: false,
-                                style: Act0ShellTokensV1.label.copyWith(
-                                  color: _learnV6Cyan,
-                                  fontSize: 9.8,
-                                  letterSpacing: 0,
-                                ),
+                        Flexible(
+                          child: Text(
+                            _learnCopyV1(
+                              context,
+                              en: 'Current world · W${world.worldNumber}',
+                              ru: 'Текущий мир · W${world.worldNumber}',
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.fade,
+                            softWrap: false,
+                            style: Act0AcademyDesignTokensV1.label.copyWith(
+                              color: Act0AcademyDesignTokensV1.focus,
+                              fontSize: 9.8,
+                              letterSpacing: 0,
+                            ),
+                          ),
+                        ),
+                        if (!compact) ...[
+                          const SizedBox(width: 6),
+                          Flexible(
+                            child: Text(
+                              moduleTitle,
+                              maxLines: 1,
+                              overflow: TextOverflow.fade,
+                              softWrap: false,
+                              style: Act0AcademyDesignTokensV1.label.copyWith(
+                                fontSize: 9.4,
+                                letterSpacing: 0,
                               ),
                             ),
-                            if (!compact) ...[
-                              const SizedBox(width: 6),
-                              Flexible(
-                                child: Text(
-                                  moduleTitle,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.fade,
-                                  softWrap: false,
-                                  style: Act0ShellTokensV1.label.copyWith(
-                                    color: Act0ShellTokensV1.textMuted,
-                                    fontSize: 9.4,
-                                    letterSpacing: 0,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          world.title,
-                          maxLines: 1,
-                          overflow: TextOverflow.fade,
-                          style: Act0ShellTokensV1.sectionTitle.copyWith(
-                            color: Act0ShellTokensV1.text,
+                          ),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      world.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.fade,
+                      style: Act0AcademyDesignTokensV1.sectionHeading
+                          .copyWith(
                             fontSize: compact ? 14.2 : 15.2,
                             height: 1.04,
                           ),
-                        ),
-                        const SizedBox(height: 5),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                  Act0ShellTokensV1.radiusPill,
-                                ),
-                                child: LinearProgressIndicator(
-                                  key: const Key(
-                                    'act0_shell_learn_progress_bar',
+                    ),
+                    const SizedBox(height: 5),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                              Act0ShellTokensV1.radiusPill,
+                            ),
+                            child: LinearProgressIndicator(
+                              key: const Key('act0_shell_learn_progress_bar'),
+                              value: normalizedProgress,
+                              minHeight: 3,
+                              backgroundColor: Act0AcademyDesignTokensV1.rule
+                                  .withValues(alpha: 0.55),
+                              valueColor:
+                                  const AlwaysStoppedAnimation<Color>(
+                                    Act0AcademyDesignTokensV1.focus,
                                   ),
-                                  value: normalizedProgress,
-                                  minHeight: 3,
-                                  backgroundColor: const Color(
-                                    0xFF0C2133,
-                                  ).withValues(alpha: 0.96),
-                                  valueColor:
-                                      const AlwaysStoppedAnimation<Color>(
-                                        _learnV6Blue,
-                                      ),
-                                ),
-                              ),
                             ),
-                            const SizedBox(width: 8),
-                            Text(
-                              '$progressPercent%',
-                              style: Act0ShellTokensV1.label.copyWith(
-                                color: _learnV6Blue.withValues(alpha: 0.92),
-                                fontSize: 10.0,
-                                letterSpacing: 0.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          _learnCopyV1(
-                            context,
-                            en: conciseProgressLabel,
-                            ru: conciseProgressLabel,
                           ),
-                          key: const Key('act0_shell_learn_route_board'),
-                          maxLines: 1,
-                          overflow: TextOverflow.fade,
-                          style: Act0ShellTokensV1.muted.copyWith(
-                            color: Act0ShellTokensV1.textMuted,
-                            fontSize: 9.8,
-                            height: 1.0,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          '$progressPercent%',
+                          style: Act0AcademyDesignTokensV1.label.copyWith(
+                            color: Act0AcademyDesignTokensV1.focus,
+                            fontSize: 10.0,
+                            letterSpacing: 0.0,
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Tooltip(
-                    message: _learnCopyV1(context, en: 'Worlds', ru: 'Миры'),
-                    child: OutlinedButton.icon(
-                      key: const Key('act0_shell_levels_menu_button'),
-                      onPressed: onOpenWorldMenu,
-                      style: Act0ShellTokensV1.quietButtonStyle(height: 34)
-                          .copyWith(
-                            minimumSize: const WidgetStatePropertyAll(
-                              Size(0, 30),
-                            ),
-                            padding: WidgetStatePropertyAll(
-                              EdgeInsets.symmetric(horizontal: compact ? 7 : 9),
-                            ),
-                            foregroundColor: WidgetStatePropertyAll(
-                              _learnV6Blue.withValues(alpha: 0.92),
-                            ),
-                            backgroundColor: WidgetStatePropertyAll(
-                              _learnV6Blue.withValues(alpha: 0.075),
-                            ),
-                            side: WidgetStatePropertyAll(
-                              BorderSide(
-                                color: _learnV6Blue.withValues(alpha: 0.22),
-                              ),
-                            ),
-                            shape: WidgetStatePropertyAll(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  Act0ShellTokensV1.radiusPill,
-                                ),
-                              ),
-                            ),
-                          ),
-                      icon: const Icon(
-                        Icons.map_rounded,
-                        size: 15,
-                        color: _learnV6Blue,
+                    const SizedBox(height: 4),
+                    Text(
+                      _learnCopyV1(
+                        context,
+                        en: conciseProgressLabel,
+                        ru: conciseProgressLabel,
                       ),
-                      label: compact
-                          ? const SizedBox.shrink()
-                          : Text(
-                              _learnCopyV1(context, en: 'Worlds', ru: 'Миры'),
-                            ),
+                      key: const Key('act0_shell_learn_route_board'),
+                      maxLines: 1,
+                      overflow: TextOverflow.fade,
+                      style: Act0AcademyDesignTokensV1.supporting.copyWith(
+                        fontSize: 9.8,
+                        height: 1.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Tooltip(
+                message: _learnCopyV1(context, en: 'Worlds', ru: 'Миры'),
+                child: OutlinedButton.icon(
+                  key: const Key('act0_shell_levels_menu_button'),
+                  onPressed: onOpenWorldMenu,
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(0, 30),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: compact ? 7 : 9,
+                    ),
+                    foregroundColor: Act0AcademyDesignTokensV1.focus,
+                    backgroundColor: Act0AcademyDesignTokensV1.focus
+                        .withValues(alpha: 0.075),
+                    side: BorderSide(
+                      color: Act0AcademyDesignTokensV1.focus.withValues(
+                        alpha: 0.32,
+                      ),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        Act0ShellTokensV1.radiusPill,
+                      ),
                     ),
                   ),
-                ],
+                  icon: Icon(
+                    Icons.map_rounded,
+                    size: 15,
+                    color: Act0AcademyDesignTokensV1.focus,
+                  ),
+                  label: compact
+                      ? const SizedBox.shrink()
+                      : Text(
+                          _learnCopyV1(context, en: 'Worlds', ru: 'Миры'),
+                        ),
+                ),
               ),
             ],
           ),
@@ -1322,8 +1232,7 @@ class _JourneyPreviewV5 extends StatelessWidget {
                   ru: showFullPath ? 'Все уроки' : 'Дальше',
                 ),
                 key: const Key('act0_shell_journey_path_header'),
-                style: Act0ShellTokensV1.sectionTitle.copyWith(
-                  color: Act0ShellTokensV1.text,
+                style: Act0AcademyDesignTokensV1.sectionHeading.copyWith(
                   fontSize: 14.4,
                   height: 1.05,
                 ),
@@ -1333,11 +1242,11 @@ class _JourneyPreviewV5 extends StatelessWidget {
               key: const Key('act0_shell_learn_v5_view_full_path'),
               onPressed: onToggleFullPath,
               style: TextButton.styleFrom(
-                foregroundColor: _learnV6Cyan,
+                foregroundColor: Act0AcademyDesignTokensV1.focus,
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 minimumSize: const Size(0, 30),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                textStyle: Act0ShellTokensV1.label.copyWith(
+                textStyle: Act0AcademyDesignTokensV1.label.copyWith(
                   fontSize: 10.0,
                   letterSpacing: 0.04,
                 ),
@@ -1348,7 +1257,6 @@ class _JourneyPreviewV5 extends StatelessWidget {
                   en: showFullPath ? 'Show less' : 'All lessons',
                   ru: showFullPath ? 'Свернуть' : 'Все уроки',
                 ),
-                style: const TextStyle(fontFamily: 'Roboto'),
               ),
             ),
           ],
@@ -1363,9 +1271,7 @@ class _JourneyPreviewV5 extends StatelessWidget {
           key: const Key('act0_shell_learn_week1_support_line'),
           maxLines: 2,
           overflow: TextOverflow.fade,
-          style: Act0ShellTokensV1.muted.copyWith(
-            color: Act0ShellTokensV1.textMuted,
-          ),
+          style: Act0AcademyDesignTokensV1.supporting,
         ),
         const SizedBox(height: 8),
         if (showFullPath)
@@ -1377,26 +1283,7 @@ class _JourneyPreviewV5 extends StatelessWidget {
           ),
         DecoratedBox(
           key: const Key('act0_shell_journey_preview_surface_v5'),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: <Color>[
-                const Color(0xFF071C31).withValues(alpha: 0.72),
-                const Color(0xFF061525).withValues(alpha: 0.62),
-                _learnV6Deep.withValues(alpha: 0.44),
-              ],
-            ),
-            border: Border.all(color: _learnV6Blue.withValues(alpha: 0.26)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: _learnV6Blue.withValues(alpha: 0.06),
-                blurRadius: 16,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
+          decoration: Act0AcademyDesignTokensV1.cardDecoration(),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(0, 1, 0, 1),
             child: Column(
@@ -1488,27 +1375,27 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
     final isCurrent = lesson.state == Act0LessonStateV1.current;
     final isLocked = lesson.state == Act0LessonStateV1.locked;
     final accent = isNextUp
-        ? _learnV6Gold
+        ? Act0AcademyDesignTokensV1.needsReviewFg
         : isLocked
-        ? Act0ShellTokensV1.textDim
+        ? Act0AcademyDesignTokensV1.inkMuted
         : isCompleted
-        ? _learnV6Green
-        : _learnV6Cyan;
+        ? Act0AcademyDesignTokensV1.correctFg
+        : Act0AcademyDesignTokensV1.focus;
     final opacity = isCurrent
-        ? 0.88
+        ? 1.0
         : isCompleted
-        ? 0.92
+        ? 1.0
         : isLocked
-        ? (isNextUp ? 0.76 : 0.66)
-        : 0.86;
+        ? (isNextUp ? 0.92 : 0.78)
+        : 1.0;
     final stateLabel = isCompleted
         ? null
         : isCurrent
-        ? 'Now'
+        ? _learnCopyV1(context, en: 'Now', ru: 'Сейчас')
         : isNextUp
-        ? 'Next'
+        ? _learnCopyV1(context, en: 'Next', ru: 'Дальше')
         : isLocked
-        ? 'Locked'
+        ? _learnCopyV1(context, en: 'Locked', ru: 'Закрыт')
         : null;
     final meta = isCompleted
         ? _learnCopyV1(context, en: 'Replay available', ru: 'Можно повторить')
@@ -1533,19 +1420,19 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
         ? Icons.lock_rounded
         : Icons.circle_rounded;
     final fill = isCurrent
-        ? _learnV6Blue.withValues(alpha: 0.075)
+        ? Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.06)
         : isCompleted
-        ? _learnV6Cyan.withValues(alpha: 0.040)
+        ? Act0AcademyDesignTokensV1.correctBg
         : isNextUp
-        ? _learnV6Gold.withValues(alpha: 0.045)
-        : Act0ShellTokensV1.textDim.withValues(alpha: 0.012);
+        ? Act0AcademyDesignTokensV1.needsReviewBg
+        : Act0AcademyDesignTokensV1.cardSurface;
     final border = isCurrent
-        ? _learnV6Cyan.withValues(alpha: 0.20)
+        ? Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.32)
         : isCompleted
-        ? _learnV6Cyan.withValues(alpha: 0.10)
+        ? Act0AcademyDesignTokensV1.correctFg.withValues(alpha: 0.24)
         : isNextUp
-        ? _learnV6Gold.withValues(alpha: 0.18)
-        : Act0ShellTokensV1.border.withValues(alpha: 0.045);
+        ? Act0AcademyDesignTokensV1.needsReviewFg.withValues(alpha: 0.28)
+        : Act0AcademyDesignTokensV1.rule;
 
     return Opacity(
       opacity: opacity,
@@ -1555,17 +1442,9 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: Ink(
           decoration: BoxDecoration(
-            color: Color.alphaBlend(fill, _learnV6Deep),
+            color: fill,
             borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
             border: Border.all(color: border),
-            boxShadow: <BoxShadow>[
-              if (isCurrent || expanded)
-                BoxShadow(
-                  color: _learnV6Blue.withValues(alpha: 0.09),
-                  blurRadius: 14,
-                  offset: const Offset(0, 4),
-                ),
-            ],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -1596,24 +1475,15 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
                         height: isCompleted ? 23 : 28,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: <Color>[
-                              accent.withValues(
-                                alpha: isCompleted ? 0.28 : 0.16,
-                              ),
-                              _learnV6Blue.withValues(
-                                alpha: isCompleted ? 0.035 : 0.045,
-                              ),
-                            ],
+                          color: accent.withValues(
+                            alpha: isCompleted ? 0.18 : 0.12,
                           ),
                           borderRadius: BorderRadius.circular(
                             isCompleted ? 8 : 10,
                           ),
                           border: Border.all(
                             color: accent.withValues(
-                              alpha: isCompleted ? 0.16 : 0.22,
+                              alpha: isCompleted ? 0.30 : 0.36,
                             ),
                           ),
                         ),
@@ -1633,11 +1503,12 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
                                         'act0_shell_journey_v6_next_soft_gold',
                                       )
                                     : null,
-                                style: Act0ShellTokensV1.label.copyWith(
-                                  color: accent,
-                                  fontSize: 10.0,
-                                  letterSpacing: 0,
-                                ),
+                                style: Act0AcademyDesignTokensV1.label
+                                    .copyWith(
+                                      color: accent,
+                                      fontSize: 10.0,
+                                      letterSpacing: 0,
+                                    ),
                               ),
                       ),
                       const SizedBox(width: 9),
@@ -1652,26 +1523,22 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
                               act0LocalizedLessonTitleV1(context, lesson),
                               maxLines: 1,
                               overflow: TextOverflow.fade,
-                              style: Act0ShellTokensV1.cardTitle.copyWith(
-                                color: isLocked
-                                    ? Act0ShellTokensV1.textMuted
-                                    : Act0ShellTokensV1.text,
-                                fontSize: isCompleted ? 12.8 : 13.6,
-                                height: 1.05,
-                              ),
+                              style: Act0AcademyDesignTokensV1.sectionHeading
+                                  .copyWith(
+                                    color: isLocked
+                                        ? Act0AcademyDesignTokensV1.inkMuted
+                                        : Act0AcademyDesignTokensV1.ink,
+                                    fontSize: isCompleted ? 12.8 : 13.6,
+                                    height: 1.05,
+                                  ),
                             ),
                             const SizedBox(height: 3),
                             Text(
                               meta,
                               maxLines: 1,
                               overflow: TextOverflow.fade,
-                              style: Act0ShellTokensV1.muted.copyWith(
-                                color: isLocked
-                                    ? Act0ShellTokensV1.textDim
-                                    : Act0ShellTokensV1.textMuted,
-                                fontSize: 10.2,
-                                height: 1.0,
-                              ),
+                              style: Act0AcademyDesignTokensV1.supporting
+                                  .copyWith(fontSize: 10.2, height: 1.0),
                             ),
                           ],
                         ),
@@ -1684,12 +1551,12 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
                             vertical: 3,
                           ),
                           decoration: BoxDecoration(
-                            color: accent.withValues(alpha: 0.055),
+                            color: accent.withValues(alpha: 0.14),
                             borderRadius: BorderRadius.circular(
                               Act0ShellTokensV1.radiusPill,
                             ),
                             border: Border.all(
-                              color: accent.withValues(alpha: 0.10),
+                              color: accent.withValues(alpha: 0.28),
                             ),
                           ),
                           child: Text(
@@ -1699,7 +1566,7 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.fade,
-                            style: Act0ShellTokensV1.label.copyWith(
+                            style: Act0AcademyDesignTokensV1.label.copyWith(
                               color: accent,
                               fontSize: 9.0,
                               letterSpacing: 0,
@@ -1778,14 +1645,9 @@ class _JourneyFutureSummaryV5 extends StatelessWidget {
       constraints: BoxConstraints(minHeight: minHeight),
       padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       decoration: BoxDecoration(
-        color: Color.alphaBlend(
-          Act0ShellTokensV1.primary.withValues(alpha: 0.010),
-          Act0ShellTokensV1.background,
-        ),
+        color: Act0AcademyDesignTokensV1.pageSurface,
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
-        border: Border.all(
-          color: Act0ShellTokensV1.primary.withValues(alpha: 0.035),
-        ),
+        border: Border.all(color: Act0AcademyDesignTokensV1.rule),
       ),
       child: Column(
         key: const Key('act0_shell_journey_preview_closeout'),
@@ -1796,7 +1658,7 @@ class _JourneyFutureSummaryV5 extends StatelessWidget {
               Icon(
                 Icons.lock_open_rounded,
                 size: 14,
-                color: Act0ShellTokensV1.primary.withValues(alpha: 0.54),
+                color: Act0AcademyDesignTokensV1.inkMuted,
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -1805,8 +1667,7 @@ class _JourneyFutureSummaryV5 extends StatelessWidget {
                   key: const Key('act0_shell_learn_v5_future_summary'),
                   maxLines: 1,
                   overflow: TextOverflow.fade,
-                  style: Act0ShellTokensV1.muted.copyWith(
-                    color: Act0ShellTokensV1.textMuted,
+                  style: Act0AcademyDesignTokensV1.supporting.copyWith(
                     fontSize: 10.8,
                     height: 1.05,
                     fontWeight: FontWeight.w700,
@@ -1815,8 +1676,7 @@ class _JourneyFutureSummaryV5 extends StatelessWidget {
               ),
               Text(
                 _learnCopyV1(context, en: 'In order', ru: 'По порядку'),
-                style: Act0ShellTokensV1.label.copyWith(
-                  color: Act0ShellTokensV1.textDim,
+                style: Act0AcademyDesignTokensV1.label.copyWith(
                   fontSize: 8.8,
                   letterSpacing: 0.08,
                 ),
@@ -1836,12 +1696,16 @@ class _JourneyFutureSummaryV5 extends StatelessWidget {
                       Act0ShellTokensV1.radiusPill,
                     ),
                     color: i == 1
-                        ? Act0ShellTokensV1.primary.withValues(alpha: 0.12)
-                        : Act0ShellTokensV1.textDim.withValues(alpha: 0.12),
+                        ? Act0AcademyDesignTokensV1.focus.withValues(
+                            alpha: 0.24,
+                          )
+                        : Act0AcademyDesignTokensV1.rule,
                     border: Border.all(
                       color: i == 1
-                          ? Act0ShellTokensV1.primary.withValues(alpha: 0.18)
-                          : Act0ShellTokensV1.border.withValues(alpha: 0.07),
+                          ? Act0AcademyDesignTokensV1.focus.withValues(
+                              alpha: 0.36,
+                            )
+                          : Act0AcademyDesignTokensV1.rule,
                     ),
                   ),
                 ),
@@ -1850,7 +1714,7 @@ class _JourneyFutureSummaryV5 extends StatelessWidget {
                     child: Container(
                       height: 1,
                       margin: const EdgeInsets.symmetric(horizontal: 7),
-                      color: Act0ShellTokensV1.border.withValues(alpha: 0.07),
+                      color: Act0AcademyDesignTokensV1.rule,
                     ),
                   ),
               ],
@@ -1864,16 +1728,11 @@ class _JourneyFutureSummaryV5 extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(10, 9, 10, 9),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: <Color>[
-                    Act0ShellTokensV1.primary.withValues(alpha: 0.035),
-                    Colors.transparent,
-                  ],
-                ),
+                color: Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.05),
                 border: Border.all(
-                  color: Act0ShellTokensV1.primary.withValues(alpha: 0.035),
+                  color: Act0AcademyDesignTokensV1.focus.withValues(
+                    alpha: 0.14,
+                  ),
                 ),
               ),
               child: Text(
@@ -1884,8 +1743,7 @@ class _JourneyFutureSummaryV5 extends StatelessWidget {
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.fade,
-                style: Act0ShellTokensV1.muted.copyWith(
-                  color: Act0ShellTokensV1.textDim.withValues(alpha: 0.86),
+                style: Act0AcademyDesignTokensV1.supporting.copyWith(
                   fontSize: 10.8,
                   height: 1.12,
                 ),
@@ -3404,225 +3262,175 @@ class _CurrentMissionCardV1 extends StatelessWidget {
             compact ? 15 : 18,
             17,
           ),
-          decoration: _learnV6PrimarySurfaceDecoration(
-            radius: Act0ShellTokensV1.radiusXl,
-            borderAlpha: detailMode ? 0.72 : 0.48,
-            glowAlpha: detailMode ? 0.34 : 0.24,
+          decoration: Act0AcademyDesignTokensV1.cardDecoration(
+            borderColor: accent.withValues(alpha: detailMode ? 0.60 : 0.32),
           ),
-          child: Stack(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Positioned.fill(
-                key: const Key('act0_shell_current_mission_premium_depth'),
-                child: IgnorePointer(
-                  child: DecoratedBox(
-                    key: const Key(
-                      'act0_shell_current_mission_luminous_frame_v6',
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 9,
+                      vertical: 5,
                     ),
                     decoration: BoxDecoration(
+                      color: accent.withValues(alpha: 0.14),
                       borderRadius: BorderRadius.circular(
-                        Act0ShellTokensV1.radiusXl,
+                        Act0ShellTokensV1.radiusPill,
                       ),
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: <Color>[
-                          _learnV6Cyan.withValues(alpha: 0.08),
-                          Colors.transparent,
-                          _learnV6Blue.withValues(alpha: 0.09),
-                        ],
-                        stops: const <double>[0.0, 0.48, 1.0],
+                      border: Border.all(
+                        color: accent.withValues(alpha: 0.32),
+                      ),
+                    ),
+                    child: Text(
+                      _learnCopyV1(
+                        context,
+                        en: firstLessonLanding
+                            ? 'FIRST TABLE GUIDE'
+                            : detailMode
+                            ? 'Lesson read'
+                            : 'Learn route',
+                        ru: detailMode ? 'Чтение урока' : 'Маршрут обучения',
+                      ),
+                      style: Act0AcademyDesignTokensV1.label.copyWith(
+                        color: accent,
+                        fontSize: 9.2,
+                        letterSpacing: 0,
                       ),
                     ),
                   ),
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 9,
-                          vertical: 5,
+                  if (!firstLessonLanding) ...[
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        _learnCopyV1(
+                          context,
+                          en: detailMode
+                              ? 'What this teaches'
+                              : 'Current table read',
+                          ru: detailMode
+                              ? 'Что это учит'
+                              : 'Текущее чтение стола',
                         ),
-                        decoration: BoxDecoration(
-                          color: _learnV6Cyan.withValues(alpha: 0.22),
-                          borderRadius: BorderRadius.circular(
-                            Act0ShellTokensV1.radiusPill,
-                          ),
-                          border: Border.all(
-                            color: _learnV6Cyan.withValues(alpha: 0.40),
-                          ),
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                              color: _learnV6Cyan.withValues(alpha: 0.18),
-                              blurRadius: 14,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          _learnCopyV1(
-                            context,
-                            en: firstLessonLanding
-                                ? 'FIRST TABLE GUIDE'
-                                : detailMode
-                                ? 'Lesson read'
-                                : 'Learn route',
-                            ru: detailMode
-                                ? 'Чтение урока'
-                                : 'Маршрут обучения',
-                          ),
-                          style: Act0ShellTokensV1.label.copyWith(
-                            color: _learnV6Cyan,
-                            fontSize: 9.2,
-                            letterSpacing: 0,
-                          ),
+                        maxLines: 1,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                        style: Act0AcademyDesignTokensV1.label.copyWith(
+                          letterSpacing: 0,
+                          fontSize: 10.0,
                         ),
                       ),
-                      if (!firstLessonLanding) ...[
-                        const SizedBox(width: 8),
-                        Flexible(
-                          child: Text(
-                            _learnCopyV1(
-                              context,
-                              en: detailMode
-                                  ? 'What this teaches'
-                                  : 'Current table read',
-                              ru: detailMode
-                                  ? 'Что это учит'
-                                  : 'Текущее чтение стола',
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.fade,
-                            softWrap: false,
-                            style: Act0ShellTokensV1.label.copyWith(
-                              color: Act0ShellTokensV1.textMuted,
-                              letterSpacing: 0,
-                              fontSize: 10.0,
-                            ),
-                          ),
+                    ),
+                  ],
+                ],
+              ),
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.only(right: 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      lessonTitle,
+                      style: Act0AcademyDesignTokensV1.lessonHeading.copyWith(
+                        fontSize: compact ? 22.0 : 25.0,
+                        height: 1.03,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.fade,
+                    ),
+                    const SizedBox(height: 6),
+                    if (!firstLessonLanding) ...[
+                      Text(
+                        _learnCopyV1(
+                          context,
+                          en: 'Why it matters',
+                          ru: 'Зачем это нужно',
                         ),
-                      ],
+                        style: Act0AcademyDesignTokensV1.label.copyWith(
+                          color: accent,
+                          fontSize: 9.2,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
                     ],
+                    Text(
+                      support,
+                      key: const Key('act0_shell_current_mission_support'),
+                      style: Act0AcademyDesignTokensV1.supporting.copyWith(
+                        height: 1.28,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: compact ? 16 : 18),
+              if (!firstLessonLanding)
+                Container(
+                  key: const Key('act0_shell_current_mission_step_card'),
+                  width: double.infinity,
+                  padding: const EdgeInsets.fromLTRB(12, 9, 10, 9),
+                  decoration: BoxDecoration(
+                    color: accent.withValues(alpha: 0.06),
+                    border: Border(
+                      left: BorderSide(color: accent, width: 3),
+                    ),
                   ),
-                  const SizedBox(height: 12),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 0),
+                  child: KeyedSubtree(
+                    key: const Key('act0_shell_current_mission_step_band'),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          lessonTitle,
-                          style: Act0ShellTokensV1.cardTitle.copyWith(
-                            color: Act0ShellTokensV1.text,
-                            fontSize: compact ? 22.0 : 25.0,
-                            height: 1.03,
+                          _learnCopyV1(
+                            context,
+                            en: 'Current step · $stepIndex of $totalSteps',
+                            ru: 'Текущий шаг · $stepIndex из $totalSteps',
+                          ),
+                          style: Act0AcademyDesignTokensV1.label.copyWith(
+                            color: accent,
+                            letterSpacing: 0,
+                            fontSize: 9.4,
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          taskTitle,
+                          style: Act0AcademyDesignTokensV1.body.copyWith(
+                            fontWeight: FontWeight.w800,
+                            height: 1.12,
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.fade,
                         ),
-                        const SizedBox(height: 6),
-                        if (!firstLessonLanding) ...[
-                          Text(
-                            _learnCopyV1(
-                              context,
-                              en: 'Why it matters',
-                              ru: 'Зачем это нужно',
-                            ),
-                            style: Act0ShellTokensV1.label.copyWith(
-                              color: _learnV6Cyan,
-                              fontSize: 9.2,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                        ],
-                        Text(
-                          support,
-                          key: const Key('act0_shell_current_mission_support'),
-                          style: Act0ShellTokensV1.muted.copyWith(
-                            color: Act0ShellTokensV1.textMuted,
-                            height: 1.28,
-                          ),
-                        ),
                       ],
                     ),
                   ),
-                  SizedBox(height: compact ? 16 : 18),
-                  if (!firstLessonLanding)
-                    Container(
-                      key: const Key('act0_shell_current_mission_step_card'),
-                      width: double.infinity,
-                      padding: const EdgeInsets.fromLTRB(12, 9, 10, 9),
-                      decoration: BoxDecoration(
-                        color: _learnV6Navy.withValues(alpha: 0.42),
-                        border: Border(
-                          left: BorderSide(
-                            color: _learnV6Cyan.withValues(alpha: 0.72),
-                            width: 3,
-                          ),
-                        ),
-                      ),
-                      child: KeyedSubtree(
-                        key: const Key('act0_shell_current_mission_step_band'),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _learnCopyV1(
-                                context,
-                                en: 'Current step · $stepIndex of $totalSteps',
-                                ru: 'Текущий шаг · $stepIndex из $totalSteps',
-                              ),
-                              style: Act0ShellTokensV1.label.copyWith(
-                                color: _learnV6Cyan,
-                                letterSpacing: 0,
-                                fontSize: 9.4,
-                              ),
-                            ),
-                            const SizedBox(height: 3),
-                            Text(
-                              taskTitle,
-                              style: Act0ShellTokensV1.body.copyWith(
-                                color: Act0ShellTokensV1.text,
-                                fontWeight: FontWeight.w800,
-                                height: 1.12,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton(
-                      key: const Key('act0_shell_current_mission_cta'),
-                      onPressed: onStart,
-                      style: Act0ShellTokensV1.premiumActionButtonStyle(
-                        height: Act0VisualMetricsV1.primaryCtaHeight,
-                      ),
-                      child: Text(
-                        _learnCopyV1(
-                          context,
-                          en: firstLessonLanding
-                              ? 'Start first table'
-                              : 'Start',
-                          ru: firstLessonLanding
-                              ? 'Начать первый стол'
-                              : 'Старт',
-                        ),
-                        style: const TextStyle(fontFamily: 'Roboto'),
-                        maxLines: 1,
-                        softWrap: false,
-                        overflow: TextOverflow.fade,
-                      ),
-                    ),
+                ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  key: const Key('act0_shell_current_mission_cta'),
+                  onPressed: onStart,
+                  style: Act0ShellTokensV1.premiumActionButtonStyle(
+                    height: Act0VisualMetricsV1.primaryCtaHeight,
                   ),
-                ],
+                  child: Text(
+                    _learnCopyV1(
+                      context,
+                      en: firstLessonLanding ? 'Start first table' : 'Start',
+                      ru: firstLessonLanding
+                          ? 'Начать первый стол'
+                          : 'Старт',
+                    ),
+                    maxLines: 1,
+                    softWrap: false,
+                    overflow: TextOverflow.fade,
+                  ),
+                ),
               ),
             ],
           ),
