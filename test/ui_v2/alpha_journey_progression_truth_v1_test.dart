@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_scene_v3.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -146,6 +147,82 @@ void main() {
         ),
       );
       expect(actionState.data, 'Locked');
+    },
+  );
+
+  testWidgets(
+    'fresh install Learn route reaches authored First Table Guide theory and a truthful independent decision',
+    (tester) async {
+      await pumpHost(tester, host(showPlacementOnStart: true));
+      await completeFreshBeginnerOnboarding(tester);
+      await openLearn(tester);
+
+      await tester.tap(find.byKey(const Key('act0_shell_current_mission_cta')));
+      await tester.pumpAndSettle();
+
+      // 1. The mission CTA opens real authored theory, not a placeholder:
+      // the actual "Meet the table" exposition copy must be on screen
+      // before any decision exists.
+      var runner = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(runner.selectedLessonId, 'what_poker_is');
+      expect(runner.selectedTaskId, 'what_poker_is_theory');
+      expect(runner.runner.phase, Act0LessonPhaseV1.theory);
+      expect(
+        find.textContaining(
+          'Read one table spot, answer once, then see the exact reason.',
+        ),
+        findsOneWidget,
+      );
+
+      bool atTaskWithOptions(String taskId) {
+        final current = tester.widget<Act0LessonRunnerShellV1>(
+          find.byType(Act0LessonRunnerShellV1),
+        );
+        return current.selectedTaskId == taskId &&
+            find
+                .byKey(Key('act0_shell_option_${current.runner.options.first.id}'))
+                .evaluate()
+                .isNotEmpty;
+      }
+
+      // 2. The theory exposition hands off to a real independent poker
+      // decision (a drill, not more theory), still inside First Table
+      // Guide: this is the "theoretical explanation -> independent
+      // decision" step the route must actually deliver.
+      for (var step = 0; step < 12 && !atTaskWithOptions('what_poker_is_find_hero'); step++) {
+        final continueCta = find.byKey(const Key('act0_shell_continue_cta'));
+        expect(
+          continueCta,
+          findsOneWidget,
+          reason: 'Stuck before reaching the first independent decision at step $step.',
+        );
+        await tester.tap(continueCta);
+        await tester.pumpAndSettle();
+      }
+      runner = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(runner.selectedTaskId, 'what_poker_is_find_hero');
+      expect(runner.runner.phase, Act0LessonPhaseV1.drill);
+      expect(runner.runner.lessonId, 'what_poker_is');
+      expect(
+        find.textContaining(
+          'Which label could change next hand while the player is still you?',
+        ),
+        findsOneWidget,
+      );
+
+      // 3. A wrong independent choice must get truthful error feedback, not
+      // silently graded as correct.
+      await tester.tap(find.byKey(const Key('act0_shell_option_top')));
+      await tester.pumpAndSettle();
+      final wrongScene = tester.widget<Act0LearningSceneGuideV3>(
+        find.byType(Act0LearningSceneGuideV3),
+      );
+      expect(wrongScene.phase.name, 'feedbackWrong');
+      expect(wrongScene.eyebrow, 'MISSED CLUE');
     },
   );
 
