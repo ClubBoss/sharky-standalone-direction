@@ -6023,6 +6023,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   if (_advanceTeachingStep(playRunner!)) {
                                     return;
                                   }
+                                  if (playSelectedTask.phase !=
+                                      Act0LessonPhaseV1.theory) {
+                                    // Drill-phase teaching preamble (e.g. a
+                                    // theory recall ahead of the real drill
+                                    // options): exiting it only dismisses the
+                                    // preamble. The task itself is not done
+                                    // yet, so it must not run task-completion
+                                    // side effects.
+                                    return;
+                                  }
                                   _emitActionTheoryCompletedTelemetryV1(
                                     playSelectedTask,
                                   );
@@ -12834,13 +12844,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   bool _advanceTeachingStep(Act0RunnerStateV1 runner) {
-    // F07: stop at the last authored index. The old `< length` guard let the
-    // index overshoot to `length` for one extra tap, so the "current/total"
-    // counter briefly read one past the real authored total (e.g. `3/2`).
-    if (_teachingStepIndex < runner.teachingSteps.length - 1) {
+    // F07: the old `< length` guard let the index advance to `length` and
+    // still return true (stay in theory for one more render), so the
+    // "current/total" counter briefly read one past the real authored total
+    // (e.g. `3/2`). Advance only while the NEXT index is still a real
+    // authored step; once it would land on `length`, set the sentinel and
+    // report "done" on this same tap instead of rendering the invalid step.
+    // `_teachingStepIndex == length` stays the sentinel every other call site
+    // already relies on (e.g. the drill-phase theory-recall affordance), so
+    // this only removes the wasted extra tap, not the sentinel value itself.
+    if (_teachingStepIndex + 1 < runner.teachingSteps.length) {
       _teachingStepIndex += 1;
       return true;
     }
+    _teachingStepIndex = runner.teachingSteps.length;
     return false;
   }
 
