@@ -4,6 +4,18 @@ Status: `PRE_P02_DESIGN_RECONVERGENCE_PLANNING`
 Freshness date: 2026-10-09 (October exact-dispatch overlay; September material retained as history)
 Repository: `ClubBoss/sharky-standalone-direction`
 
+
+## 2026-10-10 S05 final owner sign-off / S06 planning dispatch (newest)
+
+- Owner decision: `APPROVE_S05_A_PLUS_EDITORIAL_TIDE_OPTION2`; A+ Guided Academy, V3 Editorial Tide, Option 2 Immersive Dark Table. Final owner design approval, DESIGN SIGN-OFF ONLY.
+- This block becomes effective only after this docs-only receipt PR exact-head CI and verified main merge. Then `S05 = PASS_D4_OWNER_FINAL_DESIGN_SIGNOFF`; `ACTIVE_TASK_ID = S06`; `CURRENT_STAGE = PRE_P02_DESIGN_RECONVERGENCE / D5_EV_WAVE_PLANNING / NO_PRODUCT_CODE`; `NEXT_TASK_ID = S07` after evidenced S06 completion. One active task.
+- Receipt: `docs/_reviews/s05_d4_final_owner_design_signoff_20261010.md`; canonical composite: `docs/design/s05-approved-20261010/README.md` and `artifact_precedence_manifest.json`. Two immutable verified originals, base 171/171 and final override 39/39. No combined archive identity. Historical receipts are preserved below.
+- S06 authorized: read-only source feasibility, KEEP/RESTRUCTURE/REPLACE decisions, 2-4 learner-job waves, dependencies/write ownership/tests/native acceptance/rollback and S07 brief; docs-only integration under normal exact-head CI.
+- No production code, Flutter dependencies, Modern Table/PR224, Human/P02, S07 PASS or S08-S10 execution. F04 P1, F07/F09/F11 P2 and native E2E unknowns remain. Browser prototype state is not native state.
+- On S06 plan completion and verified docs merge, advance only to `S07_DESIGN_ADMISSION / AWAITING_EXPLICIT_ADMISSION`; no code authorization follows.
+
+---
+
 ## 2026-10-10 S04 D3 completion / S05 explicit owner gate (newest dispatch)
 
 - `ACTIVE_TASK_ID = S05`; `CURRENT_STAGE = PRE_P02_DESIGN_RECONVERGENCE / D4_OWNER_DESIGN_DIRECTION / NO_PRODUCT_CODE`; `NEXT_TASK_ID = S05` until explicit owner concept decision. This block becomes the active pointer upon this docs-only S04 PR exact-head CI and verified merge; prior dispatch blocks below are preserved chronology, not current instructions.
