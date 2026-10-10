@@ -4,6 +4,17 @@ Status: `PRE_P02_DESIGN_RECONVERGENCE_PLANNING`
 Freshness date: 2026-10-09 (October exact-dispatch overlay; September material retained as history)
 Repository: `ClubBoss/sharky-standalone-direction`
 
+## 2026-10-10 S05 owner direction selected / separate final screen-contract gate (newest dispatch)
+
+- `ACTIVE_TASK_ID=S05`; `PRIMARY_IA=A_PLUS_PATH_FIRST_STRUCTURAL_OWNER_SELECTED`; `S05_OWNER_DIRECTION=APPROVED` (explicit owner decision in 2026-10-10 conversation). This **supersedes the prior S04/S05 unselected-concept dispatch** below without changing prior evidence gate records.
+- Exactly ONE Guided Academy curriculum-path-first Home IA. Decision Lab causal/provenance methods and Companion restrained Coach/no-guilt return are subordinate screen mechanisms; no independent case Home, no streak system.
+- `S05_DESIGN_STATUS=READY_FOR_OWNER_SIGNOFF` **only in the sense that design artifacts are prepared for owner review, not finally approved**; `S05_FINAL_PASS=FALSE`; `NEXT_TASK=S05_OWNER_FINAL_DESIGN_SIGNOFF`. Owner must review/approve **actual** Screen Contracts and integrated clickable J1/J2/J3 prototype separately. Preserve owner HOLD/correction routes.
+- Docs-only direction receipt: `docs/_reviews/s05_a_plus_owner_direction_selected_20261010.md`. Separate portable 2026-10-10 design package `SHARKY_S05_A_PLUS_DESIGN_SIGNOFF_20261010.zip` is a conversation attachment, NOT checked in by this receipt PR. Internal CI on receipt PR is not a substitute for prototype design QA or owner review.
+- S02 bounded accepted; S03 research accepted with source limits; S04 concepts accepted. S02 still lacks native **positive earned result, joined result→Home→exact next action, natural empty/large-text, independent later due recheck**; debts F04 P1 and F07/F09/F11 P2 remain. Native Modern Table/PR #224 frozen.
+- No Flutter/product code, Codex, native retest, P02/Human, S06/S07 activation, or implementation authorization in S05 owner direction selection. `NEXT_AUTHORIZED_STAGE=S05` until **explicit final design owner sign-off** and later stage dispatch.
+
+---
+
 ## 2026-10-10 S04 D3 completion / S05 explicit owner gate (newest dispatch)
 
 - `ACTIVE_TASK_ID = S05`; `CURRENT_STAGE = PRE_P02_DESIGN_RECONVERGENCE / D4_OWNER_DESIGN_DIRECTION / NO_PRODUCT_CODE`; `NEXT_TASK_ID = S05` until explicit owner concept decision. This block becomes the active pointer upon this docs-only S04 PR exact-head CI and verified merge; prior dispatch blocks below are preserved chronology, not current instructions.
