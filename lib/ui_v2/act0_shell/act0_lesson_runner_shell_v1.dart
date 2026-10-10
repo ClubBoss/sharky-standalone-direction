@@ -15,6 +15,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hud_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hybrid_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_material_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_player_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_registered_cast_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_room_plate_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_salience_v1.dart';
@@ -4111,7 +4112,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             ),
             Positioned.fromRect(
               rect: stageRect,
-              child: buildPhysicalTableV1(cameraStageSize: stageRect.size),
+              // Opponent card rows register here so the registered front
+              // plane never paints over them.
+              child: Act0SceneSemanticClearanceScopeV1(
+                child: buildPhysicalTableV1(cameraStageSize: stageRect.size),
+              ),
             ),
             runnerScreen,
           ],
@@ -11255,6 +11260,32 @@ class _Act0TableV1 extends StatelessWidget {
     final heroSceneSlot = sceneSeatSlots
         .where((slot) => slot.isHero)
         .firstOrNull;
+    // V4R1 manager-final opponent semantic anchors. Each registered opponent
+    // owns one bounded source-canvas delta that moves its own card pair group
+    // and its own position-label group together, so a pair never drifts onto a
+    // neighbour after the V4R1 spatial reauthor. The delta is metadata: it is
+    // mapped through the same deterministic V4 shell-space mapping the
+    // registered cast rects use, so there is one normalized contract and no
+    // width-specific coordinate anywhere. UTG is authored at zero delta.
+    //
+    // Board, pot, clue/status corridor, Hero cards, Hero identity, the dealer
+    // button, the top teaching surface and the bottom action surface are not
+    // seat-owned groups and are never touched by this. Depth tier, plate scale
+    // and the commitment ring keep reading the unshifted plate anchor.
+    final semanticAnchorDeltas = <String, Offset>{};
+    if (cameraStageSize != null) {
+      const registeredMapper = Act0SceneRegisteredCastMapperV1();
+      for (final slot in sceneSeatSlots) {
+        if (slot.isHero) continue;
+        final identity = Act0SceneCharacterIdentityResolverV1.resolve(slot);
+        if (identity == null) continue;
+        final delta = registeredMapper.normalizedSemanticAnchorDeltaFor(
+          cameraStageSize,
+          identity,
+        );
+        if (delta != Offset.zero) semanticAnchorDeltas[slot.seatId] = delta;
+      }
+    }
     final scene = ConstrainedBox(
       key: const Key('act0_shell_table'),
       constraints: BoxConstraints(maxWidth: tableMaxWidth),
@@ -11399,74 +11430,105 @@ class _Act0TableV1 extends StatelessWidget {
                           )
                         : const SizedBox.shrink(),
                   ),
+                  // ONE_PHYSICAL_TABLE_READ owner 1/3 — the inner felt
+                  // hairline is a full table-shaped second contour. The baked
+                  // hybrid shell already carries its own felt edge, so keeping
+                  // this painted draws a second table-shaped outline around
+                  // the one physical table. Suppressed only while the shell is
+                  // ready; the procedural fallback keeps it exactly as before.
                   Positioned.fill(
-                    child: Padding(
-                      padding: const EdgeInsets.all(13),
-                      child: DecoratedBox(
-                        decoration: integratedPerspectivePrototype
-                            ? ShapeDecoration(
-                                shape: Act0SceneTableShapeV1(
-                                  side: BorderSide(
-                                    color: Act0ShellTokensV1.feltLine
-                                        .withValues(alpha: 0.30),
-                                    width: 1,
-                                  ),
-                                ),
-                              )
-                            : BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                  Act0ShellTokensV1.tableInnerRadius,
-                                ),
-                                border: Border.all(
-                                  color: Act0ShellTokensV1.feltLine.withValues(
-                                    alpha: 0.30,
-                                  ),
-                                ),
+                    child: ValueListenableBuilder<bool>(
+                      valueListenable: Act0SceneHybridShellRegistryV1
+                          .shellStore
+                          .readyNotifier,
+                      builder: (context, hybridShellReady, _) =>
+                          integratedPerspectivePrototype && hybridShellReady
+                          ? const SizedBox.shrink()
+                          : Padding(
+                              key: const Key('act0_scene_table_inner_hairline'),
+                              padding: const EdgeInsets.all(13),
+                              child: DecoratedBox(
+                                decoration: integratedPerspectivePrototype
+                                    ? ShapeDecoration(
+                                        shape: Act0SceneTableShapeV1(
+                                          side: BorderSide(
+                                            color: Act0ShellTokensV1.feltLine
+                                                .withValues(alpha: 0.30),
+                                            width: 1,
+                                          ),
+                                        ),
+                                      )
+                                    : BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          Act0ShellTokensV1.tableInnerRadius,
+                                        ),
+                                        border: Border.all(
+                                          color: Act0ShellTokensV1.feltLine
+                                              .withValues(alpha: 0.30),
+                                        ),
+                                      ),
                               ),
-                      ),
+                            ),
                     ),
                   ),
+                  // ONE_PHYSICAL_TABLE_READ owner 2/3 — the table-shaped
+                  // gradient wash. It is clipped to the whole table
+                  // silhouette, so over the baked shell it reads as a second
+                  // table-shaped body lying on the first. Suppressed only
+                  // while the shell is ready; the procedural fallback keeps
+                  // its own lighting.
                   Positioned.fill(
-                    child: IgnorePointer(
-                      child: DecoratedBox(
-                        decoration: integratedPerspectivePrototype
-                            ? ShapeDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: <Color>[
-                                    Colors.white.withValues(
-                                      alpha: refined ? 0.06 : 0.04,
-                                    ),
-                                    Colors.transparent,
-                                    Act0VisualCanonV1.deepNavy.withValues(
-                                      alpha: refined ? 0.14 : 0.10,
-                                    ),
-                                  ],
-                                  stops: const <double>[0, 0.34, 1],
-                                ),
-                                shape: const Act0SceneTableShapeV1(),
-                              )
-                            : BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                  Act0ShellTokensV1.tableInnerRadius,
-                                ),
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: <Color>[
-                                    Colors.white.withValues(
-                                      alpha: refined ? 0.06 : 0.04,
-                                    ),
-                                    Colors.transparent,
-                                    Act0VisualCanonV1.deepNavy.withValues(
-                                      alpha: refined ? 0.14 : 0.10,
-                                    ),
-                                  ],
-                                  stops: const <double>[0, 0.34, 1],
-                                ),
+                    child: ValueListenableBuilder<bool>(
+                      valueListenable: Act0SceneHybridShellRegistryV1
+                          .shellStore
+                          .readyNotifier,
+                      builder: (context, hybridShellReady, _) =>
+                          integratedPerspectivePrototype && hybridShellReady
+                          ? const SizedBox.shrink()
+                          : IgnorePointer(
+                              key: const Key('act0_scene_table_gradient_wash'),
+                              child: DecoratedBox(
+                                decoration: integratedPerspectivePrototype
+                                    ? ShapeDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          colors: <Color>[
+                                            Colors.white.withValues(
+                                              alpha: refined ? 0.06 : 0.04,
+                                            ),
+                                            Colors.transparent,
+                                            Act0VisualCanonV1.deepNavy
+                                                .withValues(
+                                                  alpha: refined ? 0.14 : 0.10,
+                                                ),
+                                          ],
+                                          stops: const <double>[0, 0.34, 1],
+                                        ),
+                                        shape: const Act0SceneTableShapeV1(),
+                                      )
+                                    : BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          Act0ShellTokensV1.tableInnerRadius,
+                                        ),
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          colors: <Color>[
+                                            Colors.white.withValues(
+                                              alpha: refined ? 0.06 : 0.04,
+                                            ),
+                                            Colors.transparent,
+                                            Act0VisualCanonV1.deepNavy
+                                                .withValues(
+                                                  alpha: refined ? 0.14 : 0.10,
+                                                ),
+                                          ],
+                                          stops: const <double>[0, 0.34, 1],
+                                        ),
+                                      ),
                               ),
-                      ),
+                            ),
                     ),
                   ),
                   Positioned.fill(
@@ -11497,20 +11559,35 @@ class _Act0TableV1 extends StatelessWidget {
                       ),
                     ),
                   ),
+                  // ONE_PHYSICAL_TABLE_READ owner 3/3 — the Hero near-plane
+                  // tint, clipped to the same full table silhouette. Over the
+                  // baked shell its clipped edge re-draws the table hull a
+                  // third time. Suppressed only while the shell is ready; the
+                  // procedural fallback keeps the Hero near-plane grounding.
                   if (heroSceneSlot != null)
                     Positioned.fill(
-                      child: IgnorePointer(
-                        child: ClipPath(
-                          clipper: const ShapeBorderClipper(
-                            shape: Act0SceneTableShapeV1(),
-                          ),
-                          child: CustomPaint(
-                            key: const Key('act0_scene_hero_near_plane'),
-                            painter: Act0SceneHeroPlanePainterV1(
-                              heroAnchor: heroSceneSlot.plateAnchor,
-                            ),
-                          ),
-                        ),
+                      child: ValueListenableBuilder<bool>(
+                        valueListenable: Act0SceneHybridShellRegistryV1
+                            .shellStore
+                            .readyNotifier,
+                        builder: (context, hybridShellReady, _) =>
+                            integratedPerspectivePrototype && hybridShellReady
+                            ? const SizedBox.shrink()
+                            : IgnorePointer(
+                                child: ClipPath(
+                                  clipper: const ShapeBorderClipper(
+                                    shape: Act0SceneTableShapeV1(),
+                                  ),
+                                  child: CustomPaint(
+                                    key: const Key(
+                                      'act0_scene_hero_near_plane',
+                                    ),
+                                    painter: Act0SceneHeroPlanePainterV1(
+                                      heroAnchor: heroSceneSlot.plateAnchor,
+                                    ),
+                                  ),
+                                ),
+                              ),
                       ),
                     ),
                   Center(
@@ -11585,6 +11662,9 @@ class _Act0TableV1 extends StatelessWidget {
                       compactInformativeColumn: cameraStageSize != null,
                       slot: slot,
                       seat: seats[slot],
+                      semanticAnchorDelta:
+                          semanticAnchorDeltas[seats[slot].seatId] ??
+                          Offset.zero,
                       heroCards: table.heroCards,
                       highlightedCardIds: table.highlightedCardIds,
                       active:
@@ -11665,35 +11745,62 @@ class _Act0TableV1 extends StatelessWidget {
       Act0SceneTieredPlaneV1 plane,
       Key key,
     ) {
-      return ValueListenableBuilder<bool>(
-        valueListenable:
-            Act0SceneHybridShellRegistryV1.shellStore.readyNotifier,
-        builder: (context, hybridShellReady, _) {
-          // RENDER_CLASS_HYBRID_INTEGRATION_GAUNTLET_V2: the narrower world
-          // box only applies once the hybrid shell owns the visual — the
-          // procedural-table fallback path keeps the original production
-          // widen it was tuned against.
-          final rules = hybridShellReady
-              ? Act0SceneTieredSeatingV1.renderClassHybridV1
-              : Act0SceneTieredSeatingV1.production;
-          return Positioned(
-            left: rules.horizontalInsetFor(stageSize.width),
-            right: rules.horizontalInsetFor(stageSize.width),
-            top: rules.topInsetFor(stageSize.height),
-            bottom: rules.bottomInsetFor(stageSize.height),
-            child: Act0SceneRecedeMotionV1(
-              motion: sceneMotion,
-              plane: Act0SceneRecedePlaneV1.player,
-              child: Act0SceneTieredOpponentLayerV1(
-                key: key,
-                slots: sceneSeatSlots,
-                plane: plane,
-                foldedSeatIds: inactiveSeatIds,
-                rules: rules,
+      // V4 registered-cast readiness: the hybrid shell and all ten V3 seat
+      // PNGs/masks resolve under one contract. While it is pending the plane
+      // keeps its layout but presents no opponent identity, so ordinary decode
+      // can never show generic opponents that later swap to V3 identities.
+      return Act0SceneRegisteredCastGateV1(
+        builder: (context, castPhase) => ValueListenableBuilder<bool>(
+          valueListenable:
+              Act0SceneHybridShellRegistryV1.shellStore.readyNotifier,
+          builder: (context, hybridShellReady, _) {
+            final holdCast =
+                castPhase == Act0SceneRegisteredCastPhaseV1.pending;
+            if (castPhase == Act0SceneRegisteredCastPhaseV1.ready ||
+                hybridShellReady) {
+              return Positioned.fill(
+                child: Visibility.maintain(
+                  visible: !holdCast,
+                  child: Act0SceneRecedeMotionV1(
+                    motion: sceneMotion,
+                    plane: Act0SceneRecedePlaneV1.player,
+                    child: Act0SceneRegisteredCastLayerV1(
+                      key: key,
+                      slots: sceneSeatSlots,
+                      plane: plane,
+                      foldedSeatIds: inactiveSeatIds,
+                    ),
+                  ),
+                ),
+              );
+            }
+            // RENDER_CLASS_HYBRID_INTEGRATION_GAUNTLET_V2: the narrower world
+            // box is now legacy compatibility for the generic/procedural
+            // fallback path. The V3 path above maps directly from the V4
+            // source-canvas registration and never consults per-seat ArtFit.
+            const rules = Act0SceneTieredSeatingV1.production;
+            return Positioned(
+              left: rules.horizontalInsetFor(stageSize.width),
+              right: rules.horizontalInsetFor(stageSize.width),
+              top: rules.topInsetFor(stageSize.height),
+              bottom: rules.bottomInsetFor(stageSize.height),
+              child: Visibility.maintain(
+                visible: !holdCast,
+                child: Act0SceneRecedeMotionV1(
+                  motion: sceneMotion,
+                  plane: Act0SceneRecedePlaneV1.player,
+                  child: Act0SceneTieredOpponentLayerV1(
+                    key: key,
+                    slots: sceneSeatSlots,
+                    plane: plane,
+                    foldedSeatIds: inactiveSeatIds,
+                    rules: rules,
+                  ),
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       );
     }
 
@@ -12703,6 +12810,7 @@ class _SeatPlacementV1 extends StatelessWidget {
     this.identityPolicy = Act0TableIdentityPolicyV1.currentProduction,
     this.depthTieredPrototype = false,
     this.compactInformativeColumn = false,
+    this.semanticAnchorDelta = Offset.zero,
   });
 
   final int slot;
@@ -12724,6 +12832,11 @@ class _SeatPlacementV1 extends StatelessWidget {
   final bool depthTieredPrototype;
   final bool compactInformativeColumn;
 
+  /// V4R1 manager-final displacement of this seat's own card+label group, as a
+  /// fraction of the stage. Zero for the Hero, for UTG, and on every path that
+  /// the canonical camera does not own.
+  final Offset semanticAnchorDelta;
+
   static const List<Offset> defaultSlots = <Offset>[
     Offset(0.50, 0.90),
     Offset(0.08, 0.72),
@@ -12736,6 +12849,11 @@ class _SeatPlacementV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final point = seatSlots[slot.clamp(0, seatSlots.length - 1)];
+    // The card+label group's own placement. `point` stays the seat's depth
+    // authority — tier, plate scale and the commitment ring all keep reading
+    // the unshifted anchor — so the V4R1 delta moves this group and nothing
+    // else about the seat.
+    final anchor = point + semanticAnchorDelta;
     // Plate depth comes from the one canonical projection. Its range stays
     // narrow on purpose: plates carry text, so the scene's depth is carried by
     // the character volumes instead.
@@ -12743,8 +12861,8 @@ class _SeatPlacementV1 extends StatelessWidget {
         ? 1.0
         : Act0ScenePerspectiveV1.canonical.plateScaleAt(point.dy);
     return Positioned(
-      left: tableWidth * point.dx,
-      top: tableHeight * point.dy,
+      left: tableWidth * anchor.dx,
+      top: tableHeight * anchor.dy,
       child: FractionalTranslation(
         translation: const Offset(-0.5, -0.5),
         child: Transform.scale(
@@ -12925,7 +13043,9 @@ class _SeatNodeV1 extends StatelessWidget {
                   for (var i = 0; i < visibleCards.length; i++) ...[
                     Transform.rotate(
                       angle: i == 0 ? -0.06 : 0.06,
-                      child: const _MiniCardBackV1(),
+                      child: const Act0SceneSemanticClearanceSourceV1(
+                        child: _MiniCardBackV1(),
+                      ),
                     ),
                     if (i < visibleCards.length - 1) const SizedBox(width: 2),
                   ],
@@ -12937,11 +13057,13 @@ class _SeatNodeV1 extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   for (var i = 0; i < visibleCards.length; i++) ...[
-                    _CardV1(
-                      card: visibleCards[i],
-                      cardId: '${seat.seatId}_$i',
-                      highlighted: highlightedCardIds.contains(
-                        '${seat.seatId}_$i',
+                    Act0SceneSemanticClearanceSourceV1(
+                      child: _CardV1(
+                        card: visibleCards[i],
+                        cardId: '${seat.seatId}_$i',
+                        highlighted: highlightedCardIds.contains(
+                          '${seat.seatId}_$i',
+                        ),
                       ),
                     ),
                     if (i < visibleCards.length - 1) const SizedBox(width: 3),
