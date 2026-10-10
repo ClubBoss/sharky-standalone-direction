@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -102,7 +103,7 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         onClose: widget.onClose,
         visual: _WelcomeVisualPreviewCardV1(
           title: _copyV1(en: 'Your first table read', ru: 'Первый рид стола'),
-          accent: Act0ShellTokensV1.primary,
+          accent: Act0AcademyDesignTokensV1.focus,
           line: _copyV1(
             en: 'Start with one clear table decision.',
             ru: 'Начни с одного понятного решения за столом.',
@@ -169,7 +170,7 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         onClose: widget.onClose,
         visual: _WelcomeVisualPreviewCardV1(
           title: _copyV1(en: 'FIRST HAND READY', ru: 'ПЕРВАЯ РАЗДАЧА ГОТОВА'),
-          accent: Act0ShellTokensV1.gold,
+          accent: Act0AcademyDesignTokensV1.primaryAction,
           previewKey: const Key('act0_shell_welcome_handoff_preview'),
           line: _copyV1(
             en: 'Your first useful hand is ready.',
@@ -243,7 +244,9 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final blocks = act0BuildInstructionBlocksV1(text: detail, compact: true);
     final centerContent = beatIndex == beatCount;
-    return SafeArea(
+    return Container(
+      color: Act0AcademyDesignTokensV1.pageSurface,
+      child: SafeArea(
       child: LayoutBuilder(
         builder: (context, constraints) {
           final horizontalPadding = constraints.maxWidth < 380 ? 20.0 : 24.0;
@@ -326,12 +329,8 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
                             ctaBridgeLine!,
                             key: const Key('act0_shell_welcome_cta_bridge'),
                             textAlign: TextAlign.center,
-                            style: Act0ShellTokensV1.muted.copyWith(
-                              fontSize: 13,
-                              color: Act0ShellTokensV1.text.withValues(
-                                alpha: 0.60,
-                              ),
-                            ),
+                            style: Act0AcademyDesignTokensV1.supporting
+                                .copyWith(fontSize: 13),
                           ),
                           const SizedBox(height: Act0ShellTokensV1.gapMd),
                         ] else
@@ -354,6 +353,7 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
             ),
           );
         },
+      ),
       ),
     );
   }
@@ -409,10 +409,9 @@ class _WelcomeStandardBeatFrameV1 extends StatelessWidget {
           );
     return Container(
       key: const Key('act0_shell_welcome_beat_frame'),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.58),
-        borderColor: Act0ShellTokensV1.primary.withValues(alpha: 0.14),
+      padding: const EdgeInsets.all(Act0AcademyDesignTokensV1.gapMd),
+      decoration: Act0AcademyDesignTokensV1.cardDecoration(
+        borderColor: Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.24),
       ),
       child: Column(
         mainAxisAlignment: tabletLayout
@@ -420,8 +419,8 @@ class _WelcomeStandardBeatFrameV1 extends StatelessWidget {
             : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: Act0ShellTokensV1.sectionTitle),
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          Text(title, style: Act0AcademyDesignTokensV1.sectionHeading),
+          const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
           body,
         ],
       ),
@@ -464,10 +463,8 @@ class _WelcomeHandoffContentGroupV1 extends StatelessWidget {
         Text(
           title,
           textAlign: TextAlign.center,
-          style: Act0ShellTokensV1.sectionTitle.copyWith(
+          style: Act0AcademyDesignTokensV1.sectionHeading.copyWith(
             fontSize: titleFontSize,
-            fontWeight: FontWeight.w700,
-            color: Act0ShellTokensV1.text,
           ),
         ),
         const SizedBox(height: Act0ShellTokensV1.gapXs),
@@ -475,9 +472,8 @@ class _WelcomeHandoffContentGroupV1 extends StatelessWidget {
           Text(
             subline,
             textAlign: TextAlign.center,
-            style: Act0ShellTokensV1.muted.copyWith(
+            style: Act0AcademyDesignTokensV1.supporting.copyWith(
               fontSize: 14,
-              color: Act0ShellTokensV1.text.withValues(alpha: 0.65),
               height: 1.22,
             ),
           ),
@@ -495,18 +491,20 @@ class _WelcomeSharkyPresenterTileV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const tone = Act0ShellTokensV1.primary;
+    const tone = Act0AcademyDesignTokensV1.focus;
     return Container(
       key: const Key('act0_shell_welcome_presenter_tile'),
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.82),
-        borderRadius: BorderRadius.circular(size * 0.28),
+        color: Act0AcademyDesignTokensV1.cardSurface,
+        borderRadius: BorderRadius.circular(
+          Act0AcademyDesignTokensV1.radiusCoachFrame,
+        ),
         border: Border.all(color: tone.withValues(alpha: 0.50)),
         boxShadow: <BoxShadow>[
           BoxShadow(
-            color: tone.withValues(alpha: 0.25),
+            color: tone.withValues(alpha: 0.18),
             blurRadius: 22,
             offset: Offset(0, size * 0.08),
           ),
@@ -543,34 +541,35 @@ class _WelcomeVisualPreviewCardV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       key: previewKey,
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-      decoration: Act0ShellTokensV1.heroDecoration().copyWith(
-        border: Border.all(color: accent.withOpacity(0.22)),
+      padding: const EdgeInsets.all(Act0AcademyDesignTokensV1.gapMd),
+      decoration: Act0AcademyDesignTokensV1.cardDecoration(
+        borderColor: accent.withOpacity(0.32),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: Act0ShellTokensV1.label.copyWith(color: accent)),
+          Text(
+            title,
+            style: Act0AcademyDesignTokensV1.label.copyWith(color: accent),
+          ),
           if (child is! SizedBox) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapMd),
+            const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
             child,
           ],
           if (line != null && line!.trim().isNotEmpty) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapMd),
+            const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
             Text(
               line!,
-              style: Act0ShellTokensV1.body.copyWith(
-                fontWeight: FontWeight.w800,
-                color: Act0ShellTokensV1.text,
+              style: Act0AcademyDesignTokensV1.body.copyWith(
+                fontWeight: FontWeight.w700,
               ),
             ),
           ],
           if (detail != null && detail!.trim().isNotEmpty) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapXs),
+            const SizedBox(height: Act0AcademyDesignTokensV1.gapXs),
             Text(
               detail!,
-              style: Act0ShellTokensV1.muted.copyWith(
-                color: Act0ShellTokensV1.textMuted,
+              style: Act0AcademyDesignTokensV1.supporting.copyWith(
                 height: 1.22,
               ),
             ),
@@ -746,7 +745,7 @@ class _WelcomeTopBarV1 extends StatelessWidget {
             key: const Key('act0_shell_welcome_close'),
             onPressed: onClose,
             icon: const Icon(Icons.close_rounded),
-            color: Act0ShellTokensV1.textMuted,
+            color: Act0AcademyDesignTokensV1.inkMuted,
           )
         else
           const SizedBox(width: 48),
@@ -761,8 +760,8 @@ class _WelcomeTopBarV1 extends StatelessWidget {
                     height: 6,
                     decoration: BoxDecoration(
                       color: index < beatIndex
-                          ? Act0ShellTokensV1.primary
-                          : Act0ShellTokensV1.surface3,
+                          ? Act0AcademyDesignTokensV1.focus
+                          : Act0AcademyDesignTokensV1.rule,
                       borderRadius: BorderRadius.circular(
                         Act0ShellTokensV1.radiusPill,
                       ),
@@ -779,8 +778,7 @@ class _WelcomeTopBarV1 extends StatelessWidget {
         Text(
           '$beatIndex/$beatCount',
           key: const Key('act0_shell_welcome_progress_label'),
-          style: Act0ShellTokensV1.body.copyWith(
-            color: Act0ShellTokensV1.textMuted,
+          style: Act0AcademyDesignTokensV1.supporting.copyWith(
             fontWeight: FontWeight.w800,
           ),
         ),
