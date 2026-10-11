@@ -299,6 +299,18 @@ For S08-S11 machine/product acceptance, the canonical baseline is standard-text 
 7. **Initial state after this docs-only route is merged and the verified main is recorded**: S01 is the FIRST pending bounded task; all later tasks remain NOT_STARTED; P02 stays HOLD/NOT_ADMITTED; Modern Table and PR #224 stay separate; code implementation remains NOT_AUTHORIZED. Update the live campaign state only on evidence-backed transitions.
 
 
+### §10A-P. Dated operational addendum candidate — acceptance and execution evidence (2026-10-11)
+
+**This addendum becomes authority only after the corresponding docs-only PR is accepted, merged and verified against live main.** It preserves North Star, S01–S24 ordering, Stage/DoD gates, §2 rejection of one authoritative “% ready”, Standard-First and protected Table boundaries.
+
+- Track independently **Accepted Readiness A (0–100)** and **Earned Execution Work W (0–100)** by admitted stage and relevant screen; show `ΔA`, `ΔW`, `HOLD/PASS/NOT_VERIFIED`, exact evidence and next gate. Never automatically transfer W points to A.
+- Preallocate outcome-based 100-unit work budget per active stage and update the forecast explicitly if newly evidenced work changes the remaining effort. Proof-backed diagnosis may earn its *pre-budgeted* W outcome even during a material HOLD, but does not earn PASS.
+- Native user-facing screen/visual acceptance requires exact candidate identity, actual runtime screenshots of meaningful states and manual product inspection. CI green, source widget existence, approved design image or frozen render cannot substitute. Human learning/transfer/retention need their separately authorized evidence.
+- Scorecard remains advisory, not release or merge authority; no numeric score can admit B2, S10, V4, P02 or any protected dependency. Preserve historic receipts and source-grading, telemetry, assistance and due truth.
+- Repeated failed micro-fixes on the same learner-truth class trigger a bounded source/projection root-cause review (normally after two attempts), not endless copy patches or a hidden architecture rewrite.
+
+See `docs/ops/SHARKY_PARALLEL_EXECUTION_ROUTER_v1.md` for handoff/ownership rules and the working Scorecard v2.2 for the current baseline; neither overrides this plan or Current Execution Context.
+
 ## 11. Gate 0 — Pre-P02 North Star convergence
 
 All **currently relevant machine/product-reducible** issues must reach bounded disposition before the Human P02 admission. The six-lane map is retained:
@@ -416,6 +428,12 @@ Parallel selection formula (prioritization heuristic, not fake metric):
 `ExpectedEVPerHour = (expected learner/market gain × evidence confidence × integration readiness) ÷ (active work + coordination + regression/rework exposure)`.
 
 Choose parallelism only when added critical-path savings exceed setup/merge/retest overhead. **Do not count agent tokens or wall-clock overlap as shipping progress.** Record the actual achieved savings over time; old “15–30% acceleration” is only an unmeasured hypothesis.
+
+### 2026-10-11 owner-authorized conditional five-chat operating capacity (v5.1)
+
+The owner permits **up to five contributor chats** with a single Manager controlling scope and merge order, superseding the ordinary **up-to-two supporting-lanes cap only for isolated non-runtime work**. One strategic bottleneck and **one writable canonical runtime owner** remain in force. All new supporting lanes require a distinct deliverable, exact read/write contracts, no duplicate native device use and a plausible net reduction of critical-path time. A docs-only branch can be separately writable under a strict allowlist; any extra production runtime writer requires a *separate explicit owner-approved non-overlap contract/amendment*, not just an extra chat. Never run support agents merely to fill five seats.
+
+Roles A Builder, B Future Scout, C Independent QA, D Product Truth, E Operations are described in `docs/ops/SHARKY_PARALLEL_EXECUTION_ROUTER_v1.md`. Independent support evidence is accepted input pending sequence, not permission to activate a later S-stage. Integration is serialized and owner-gated; native proof must match frozen exact SHA. Measure actual lead-time improvements and abandon a support lane when coordination/reproof costs exceed saved time.
 
 ## 18. EV-Pipeline-5 — mandatory mission lifecycle
 
