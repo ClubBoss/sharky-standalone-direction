@@ -6521,7 +6521,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                               localizeOptionLabel: (label) =>
                                   act0AcademyW1OptionLabelV1(
                                     context,
-                                    act0RuntimeLocalizedOptionLabelV1(context, label),
+                                    act0RuntimeLocalizedOptionLabelV1(
+                                      context,
+                                      label,
+                                    ),
                                   ),
                               activeRepairSourceTaskIds: <String>{
                                 for (final mistake in reviewState.mistakes)
