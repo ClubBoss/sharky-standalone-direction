@@ -79,6 +79,16 @@ class Act0ReviewShellV1 extends StatelessWidget {
         (mistake) => mistake.severityLabel == 'Quick fix',
       ),
     ];
+    final selectedDueItem = dueReviewItems.isEmpty
+        ? null
+        : _selectedDueItemV1(nextStep, dueReviewItems) ?? dueReviewItems.first;
+    final dueTaskIsOpen =
+        selectedDueItem != null &&
+        review.mistakes.any(
+          (mistake) => mistake.taskId == selectedDueItem.taskId,
+        );
+    final dueCardAvailable =
+        selectedDueItem != null && onStartDueReview != null;
     final queueCard = <Widget>[
       if (nextStep != null &&
           nextStep!.reasonType !=
@@ -99,12 +109,12 @@ class Act0ReviewShellV1 extends StatelessWidget {
         ),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
       ],
-      if (dueReviewItems.isNotEmpty && onStartDueReview != null) ...[
+      if (dueCardAvailable) ...[
         _DueReviewCardV1(
-          item:
-              _selectedDueItemV1(nextStep, dueReviewItems) ??
-              dueReviewItems.first,
+          item: selectedDueItem,
           onStart: onStartDueReview!,
+          hasOpenMistakeForTask: dueTaskIsOpen,
+          hasOtherOpenMistakes: review.mistakes.isNotEmpty && !dueTaskIsOpen,
         ),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
       ],
@@ -221,6 +231,9 @@ class Act0ReviewShellV1 extends StatelessWidget {
                   _ReviewRepairCoachCardV1(
                     mistake: mistake,
                     onFixMistake: onFixMistake,
+                    hasIndependentDueRecheck:
+                        dueCardAvailable &&
+                        mistake.taskId == selectedDueItem.taskId,
                   ),
                   if (mistake != review.mistakes.last)
                     const SizedBox(height: Act0ShellTokensV1.gapMd),
@@ -246,6 +259,9 @@ class Act0ReviewShellV1 extends StatelessWidget {
         _ReviewRepairCoachCardV1(
           mistake: activeMistake,
           onFixMistake: onFixMistake,
+          hasIndependentDueRecheck:
+              dueCardAvailable &&
+              activeMistake.taskId == selectedDueItem.taskId,
         ),
       ...historyAndRecovered,
     ];
@@ -493,10 +509,17 @@ class _ReviewNextStepCardV1 extends StatelessWidget {
 }
 
 class _DueReviewCardV1 extends StatelessWidget {
-  const _DueReviewCardV1({required this.item, required this.onStart});
+  const _DueReviewCardV1({
+    required this.item,
+    required this.onStart,
+    required this.hasOpenMistakeForTask,
+    required this.hasOtherOpenMistakes,
+  });
 
   final Act0DueReviewItemV1 item;
   final ValueChanged<Act0DueReviewItemV1> onStart;
+  final bool hasOpenMistakeForTask;
+  final bool hasOtherOpenMistakes;
 
   @override
   Widget build(BuildContext context) {
@@ -514,8 +537,12 @@ class _DueReviewCardV1 extends StatelessWidget {
           Text(
             _reviewCopyV1(
               context,
-              en: 'Ready to recheck',
-              ru: 'Пора повторить',
+              en: hasOpenMistakeForTask
+                  ? 'Scheduled recheck · mistake still open'
+                  : 'Ready to recheck',
+              ru: hasOpenMistakeForTask
+                  ? 'Повтор по расписанию · ошибка ещё открыта'
+                  : 'Пора повторить',
             ),
             style: Act0ShellTokensV1.sectionTitle,
           ),
@@ -523,8 +550,24 @@ class _DueReviewCardV1 extends StatelessWidget {
           Text(
             _reviewCopyV1(
               context,
-              en: 'A repaired clue is due for a spaced review.',
-              ru: 'Срок повторения исправленной ошибки наступил. Проверьте её снова.',
+              en: hasOpenMistakeForTask
+                  ? item.lapseCount > 0
+                        ? 'The last recheck of this task was missed. The mistake is still open: use guided repair below, or take this separate scheduled recheck independently.'
+                        : 'This task also has an open mistake. Use guided repair below, or take this separate scheduled recheck independently.'
+                  : hasOtherOpenMistakes
+                  ? 'This scheduled recheck is for another task, separate from the open mistake below.'
+                  : item.lapseCount > 0
+                  ? 'This task is due for another independent scheduled recheck.'
+                  : 'A repaired clue is due for a spaced review.',
+              ru: hasOpenMistakeForTask
+                  ? item.lapseCount > 0
+                        ? 'На прошлом повторе этого задания была ошибка. Она ещё не исправлена: ниже доступен разбор с подсказкой, здесь — отдельная самостоятельная проверка по расписанию.'
+                        : 'По этому заданию осталась открытая ошибка. Ниже доступен разбор с подсказкой, здесь — отдельная самостоятельная проверка по расписанию.'
+                  : hasOtherOpenMistakes
+                  ? 'Для другого задания наступил срок самостоятельного повтора. Он не относится к открытой ошибке ниже.'
+                  : item.lapseCount > 0
+                  ? 'Для этого задания наступил срок ещё одной самостоятельной проверки.'
+                  : 'Срок повторения исправленной ошибки наступил. Проверьте её снова.',
             ),
             style: Act0ShellTokensV1.muted,
           ),
@@ -537,8 +580,12 @@ class _DueReviewCardV1 extends StatelessWidget {
               child: Text(
                 _reviewCopyV1(
                   context,
-                  en: 'Review now',
-                  ru: 'Повторить сейчас',
+                  en: hasOpenMistakeForTask
+                      ? 'Check independently now'
+                      : 'Review now',
+                  ru: hasOpenMistakeForTask
+                      ? 'Проверить самостоятельно'
+                      : 'Повторить сейчас',
                 ),
               ),
             ),
@@ -812,10 +859,15 @@ class _ReviewEmptyRepairCardV1 extends StatelessWidget {
 }
 
 class _ReviewRepairCoachCardV1 extends StatelessWidget {
-  const _ReviewRepairCoachCardV1({required this.mistake, this.onFixMistake});
+  const _ReviewRepairCoachCardV1({
+    required this.mistake,
+    this.onFixMistake,
+    this.hasIndependentDueRecheck = false,
+  });
 
   final Act0MistakeCardV1 mistake;
   final ValueChanged<Act0MistakeCardV1>? onFixMistake;
+  final bool hasIndependentDueRecheck;
 
   @override
   Widget build(BuildContext context) {
@@ -993,7 +1045,15 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
               style: Act0ShellTokensV1.premiumActionButtonStyle(
                 height: Act0ShellTokensV1.compactCtaHeight,
               ),
-              child: const Text('Practice this spot'),
+              child: Text(
+                hasIndependentDueRecheck
+                    ? _reviewCopyV1(
+                        context,
+                        en: 'Repair with guidance',
+                        ru: 'Разобрать с подсказкой',
+                      )
+                    : 'Practice this spot',
+              ),
             ),
           ],
         ],
