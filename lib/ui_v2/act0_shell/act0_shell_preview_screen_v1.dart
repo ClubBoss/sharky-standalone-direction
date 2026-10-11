@@ -5733,6 +5733,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             : _blockCompletionSummary != null
                             ? Act0BlockCompletionShellV1(
                                 summary: _blockCompletionSummary!,
+                                firstCorrectEarnedThisRun:
+                                    _firstCorrectReadEarnedInCurrentLessonRunV1(),
+                                nextUsefulHand: _summaryHomeHandoffV1(
+                                  selectedWorld,
+                                ),
+                                onNextUsefulHand: () => setState(() {
+                                  _startHomeRepairAction(
+                                    selectedWorld,
+                                    _firstPlayableLesson(selectedWorld),
+                                  );
+                                }),
                                 evidenceSummary:
                                     Act0SessionSummaryEvidenceViewModelV1.fromHistory(
                                       _learningEvidenceHistoryV1,
@@ -7351,25 +7362,79 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
   }
 
-  String? _homeNextUsefulHandReasonLine(
+  _Act0NextUsefulHandReasonReceiptV1 _sharedHomeSummaryReceiptV1(
     Act0WorldCardV1 selectedWorld,
-    Act0LessonCardV1 selectedLesson,
   ) {
     final recommendation = _learningRecommendation(
       selectedWorld: selectedWorld,
-      selectedLesson: selectedLesson,
+      selectedLesson: _firstPlayableLesson(selectedWorld),
     );
-    final receipt = _nextUsefulHandReasonReceiptV1(
+    return _nextUsefulHandReasonReceiptV1(
       recommendation: recommendation,
       selectedWorld: selectedWorld,
       state: widget.state ?? Act0ShellStateV1.sample,
     );
+  }
+
+  String _sharedHomeSummaryReasonLineV1(
+    _Act0NextUsefulHandReasonReceiptV1 receipt,
+  ) {
+    final english = _Act0NextUsefulHandCopyBridgeV1.fromReceipt(
+      receipt,
+    ).renderedCopyLine.trim();
+    if (english.isEmpty) return '';
+    return _copyV1(
+      en: english,
+      ru: receipt.selectionSource == 'repair_intent_exact_replay'
+          ? 'Повтори исходный спот и проверь ту же подсказку без помощи.'
+          : 'Исправь ту же ошибку на следующем споте. Сначала назови подсказку стола.',
+    );
+  }
+
+  Act0SummaryNextHandoffV1 _summaryHomeHandoffV1(
+    Act0WorldCardV1 selectedWorld,
+  ) {
+    final receipt = _sharedHomeSummaryReceiptV1(selectedWorld);
+    return Act0SummaryNextHandoffV1(
+      sourceTaskId: receipt.sourceTaskId,
+      targetWorldId: receipt.targetWorldId,
+      targetLessonId: receipt.targetLessonId,
+      targetTaskId: receipt.targetTaskId,
+      reasonCode: receipt.reasonCode,
+      selectionSource: receipt.selectionSource,
+      copyLine: _sharedHomeSummaryReasonLineV1(receipt),
+    );
+  }
+
+  bool _firstCorrectReadEarnedInCurrentLessonRunV1() {
+    final boundary = _lessonRunEvidenceStartOrderV1;
+    if (boundary == null || _selectedLessonId.isEmpty) return false;
+    final correct = _learningEvidenceHistoryV1.records
+        .where((record) => record.isCorrect)
+        .firstOrNull;
+    return correct != null &&
+        correct.createdOrder > boundary &&
+        correct.lessonId == _selectedLessonId &&
+        correct.assistanceKind == Act0DecisionAssistanceV1.none;
+  }
+
+  @visibleForTesting
+  Map<String, String> debugSummaryHomeHandoffPayloadV1() {
+    final state = widget.state ?? Act0ShellStateV1.sample;
+    final world = _worldById(_progressedWorlds(state), _selectedWorldId);
+    return _summaryHomeHandoffV1(world).toPayload();
+  }
+
+  String? _homeNextUsefulHandReasonLine(
+    Act0WorldCardV1 selectedWorld,
+    Act0LessonCardV1 selectedLesson,
+  ) {
+    final receipt = _sharedHomeSummaryReceiptV1(selectedWorld);
     if (receipt.selectionSource != 'repair_intent_mapped' &&
         receipt.selectionSource != 'repair_intent_exact_replay') {
       return null;
     }
-    final bridge = _Act0NextUsefulHandCopyBridgeV1.fromReceipt(receipt);
-    final renderedLine = bridge.renderedCopyLine.trim();
+    final renderedLine = _sharedHomeSummaryReasonLineV1(receipt);
     return renderedLine.isEmpty ? null : renderedLine;
   }
 

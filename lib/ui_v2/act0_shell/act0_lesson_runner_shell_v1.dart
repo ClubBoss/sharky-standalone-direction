@@ -9339,6 +9339,45 @@ String _feedbackReasonFloorV1(
       : 'Pause, read the spot again, then continue.';
 }
 
+/// B2 source-identical Summary/Home next action, carried from the root owner.
+/// This value cannot grade, schedule, or manufacture a new recommendation.
+class Act0SummaryNextHandoffV1 {
+  const Act0SummaryNextHandoffV1({
+    required this.sourceTaskId,
+    required this.targetWorldId,
+    required this.targetLessonId,
+    required this.targetTaskId,
+    required this.reasonCode,
+    required this.selectionSource,
+    required this.copyLine,
+  });
+  final String sourceTaskId;
+  final String targetWorldId;
+  final String targetLessonId;
+  final String targetTaskId;
+  final String reasonCode;
+  final String selectionSource;
+  final String copyLine;
+
+  bool get isActionableRepair =>
+      sourceTaskId.isNotEmpty &&
+      targetWorldId.isNotEmpty &&
+      targetLessonId.isNotEmpty &&
+      targetTaskId.isNotEmpty &&
+      reasonCode.isNotEmpty &&
+      (selectionSource == 'repair_intent_mapped' ||
+          selectionSource == 'repair_intent_exact_replay');
+  Map<String, String> toPayload() => <String, String>{
+    'sourceTaskId': sourceTaskId,
+    'targetWorldId': targetWorldId,
+    'targetLessonId': targetLessonId,
+    'targetTaskId': targetTaskId,
+    'reasonCode': reasonCode,
+    'selectionSource': selectionSource,
+    'copyLine': copyLine,
+  };
+}
+
 class Act0BlockCompletionShellV1 extends StatelessWidget {
   const Act0BlockCompletionShellV1({
     super.key,
@@ -9346,6 +9385,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
     this.evidenceSummary,
     this.earnedMomentConsumer = const Act0AchievementSeedConsumerV1(),
     this.repairOutcomeConsumer = const Act0RepairOutcomeConsumerV1(),
+    this.firstCorrectEarnedThisRun,
+    this.nextUsefulHand,
+    this.onNextUsefulHand,
     required this.onContinue,
     this.onReplay,
     this.onOpenReview,
@@ -9357,6 +9399,11 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
   final Act0SessionSummaryEvidenceViewModelV1? evidenceSummary;
   final Act0AchievementSeedConsumerV1 earnedMomentConsumer;
   final Act0RepairOutcomeConsumerV1 repairOutcomeConsumer;
+
+  /// Null retains prior leaf-only preview behavior; production root supplies proof.
+  final bool? firstCorrectEarnedThisRun;
+  final Act0SummaryNextHandoffV1? nextUsefulHand;
+  final VoidCallback? onNextUsefulHand;
   final VoidCallback onContinue;
   final VoidCallback? onReplay;
   final VoidCallback? onOpenReview;
@@ -9388,11 +9435,31 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
     final visibleEarnedMoment = earnedMomentConsumer.moments.isNotEmpty
         ? earnedMomentConsumer.moments.first
         : null;
-    final visibleRepairOutcomeReceipt = repairOutcomeConsumer.sessionReceipt;
+    final visibleRepairOutcomeReceipt =
+        firstCorrectEarnedThisRun == null ||
+            (summary.independentProvenanceKnown &&
+                summary.quickFixCount > 0 &&
+                summary.assistedCount == 0)
+        ? repairOutcomeConsumer.sessionReceipt
+        : null;
+    final localeIsRu = Localizations.localeOf(context).languageCode == 'ru';
+    final earnedInThisRun = firstCorrectEarnedThisRun ?? true;
+    final currentRunMoments = earnedInThisRun
+        ? earnedMomentConsumer.moments
+        : const <Act0AchievementMomentViewModelV1>[];
+    final currentRunRepairReceipt = firstCorrectEarnedThisRun == null
+        ? visibleRepairOutcomeReceipt // Existing isolated renderer contract.
+        : summary.independentProvenanceKnown &&
+              summary.quickFixCount > 0 &&
+              summary.assistedCount == 0
+        ? visibleRepairOutcomeReceipt
+        : null;
     final payoffHero = _SessionSummaryPayoffHeroV1.fromProof(
-      moments: earnedMomentConsumer.moments,
-      receipt: visibleRepairOutcomeReceipt,
+      moments: currentRunMoments,
+      receipt: currentRunRepairReceipt,
     );
+    final hasSourceNext =
+        nextUsefulHand?.isActionableRepair == true && onNextUsefulHand != null;
     final summarySharkyLine = summary.sharkyLine.trim().isNotEmpty
         ? summary.sharkyLine.trim()
         : payoffHero != null
@@ -9436,7 +9503,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                payoffHero == null ? 'What next' : 'Next hand',
+                localeIsRu
+                    ? '\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433'
+                    : (payoffHero == null ? 'What next' : 'Next hand'),
                 style: Act0ShellTokensV1.label.copyWith(
                   color: Act0ShellTokensV1.info,
                   letterSpacing: 0.35,
@@ -9444,9 +9513,15 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                payoffHero != null &&
-                        summary.primaryCtaKind ==
-                            Act0MilestoneCtaKindV1.replayForPerfect
+                hasSourceNext
+                    ? nextUsefulHand!.copyLine
+                    : localeIsRu
+                    ? (summary.errorCount > 0 || summary.assistedCount > 0
+                          ? '\u041F\u043E\u0432\u0442\u043E\u0440\u0438 \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0441\u043F\u043E\u0442 \u0431\u0435\u0437 \u043F\u043E\u0434\u0441\u043A\u0430\u0437\u043A\u0438, \u0447\u0442\u043E\u0431\u044B \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0447\u0442\u0435\u043D\u0438\u0435.'
+                          : '\u041F\u0435\u0440\u0435\u0445\u043E\u0434\u0438 \u043A \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u043C\u0443 \u0443\u0440\u043E\u043A\u0443.')
+                    : payoffHero != null &&
+                          summary.primaryCtaKind ==
+                              Act0MilestoneCtaKindV1.replayForPerfect
                     ? 'Replay the saved read once.'
                     : summary.suggestedNextAction,
                 key: const Key('act0_shell_block_summary_suggested_next'),
@@ -9494,12 +9569,30 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
     Widget primaryCtaButton() {
       return FilledButton(
         key: const Key('act0_shell_block_summary_continue_cta'),
-        onPressed: _callbackForCta(summary.primaryCtaKind),
+        onPressed: hasSourceNext
+            ? onNextUsefulHand
+            : _callbackForCta(summary.primaryCtaKind),
         style: Act0ShellTokensV1.premiumActionButtonStyle(),
         child: Text(
-          payoffHero != null &&
-                  summary.primaryCtaKind ==
-                      Act0MilestoneCtaKindV1.replayForPerfect
+          hasSourceNext
+              ? (localeIsRu
+                    ? '\u0420\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C \u044D\u0442\u043E\u0442 \u0441\u043F\u043E\u0442'
+                    : 'Practice this clue')
+              : localeIsRu
+              ? switch (summary.primaryCtaKind) {
+                  Act0MilestoneCtaKindV1.continueForward =>
+                    '\u041f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c \u043e\u0431\u0443\u0447\u0435\u043d\u0438\u0435',
+                  Act0MilestoneCtaKindV1.replayForPerfect =>
+                    '\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c \u0443\u0440\u043e\u043a',
+                  Act0MilestoneCtaKindV1.reviewFirst ||
+                  Act0MilestoneCtaKindV1.reviewForPerfect =>
+                    '\u041e\u0442\u043a\u0440\u044b\u0442\u044c \u0440\u0430\u0437\u0431\u043e\u0440',
+                  Act0MilestoneCtaKindV1.backToMap =>
+                    '\u041a \u043a\u0430\u0440\u0442\u0435 \u043e\u0431\u0443\u0447\u0435\u043d\u0438\u044f',
+                }
+              : payoffHero != null &&
+                    summary.primaryCtaKind ==
+                        Act0MilestoneCtaKindV1.replayForPerfect
               ? 'Replay the saved read'
               : summary.primaryCtaLabel,
         ),
@@ -9615,7 +9708,11 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 6),
                                   Text(
-                                    payoffHero == null
+                                    localeIsRu
+                                        ? (summary.qualifiesForNextLesson
+                                              ? '\u042d\u0442\u0430\u043f \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043d'
+                                              : '\u041d\u0443\u0436\u0435\u043d \u043f\u043e\u0432\u0442\u043e\u0440')
+                                        : payoffHero == null
                                         ? summary.masteryLabel
                                         : payoffHero.kicker,
                                     style: Act0ShellTokensV1.label.copyWith(
@@ -9638,9 +9735,11 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                         ),
                         const SizedBox(height: Act0ShellTokensV1.gapSm),
                         Text(
-                          payoffHero == null
-                              ? 'What finished'
-                              : 'Session complete',
+                          localeIsRu
+                              ? '\u0418\u0442\u043e\u0433 \u044d\u0442\u043e\u0433\u043e \u043f\u0440\u043e\u0445\u043e\u0434\u0430'
+                              : (payoffHero == null
+                                    ? 'What finished'
+                                    : 'Session complete'),
                           style: Act0ShellTokensV1.label.copyWith(
                             color: celebrateTone,
                             letterSpacing: 0.35,
@@ -9654,8 +9753,14 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                                   'act0_shell_session_summary_hero_metric',
                                 ),
                           child: Text(
-                            summary.hasWorldOneCompletionPayoff ||
-                                    summary.hasWorldCompletionPayoff
+                            localeIsRu
+                                ? (payoffHero != null
+                                      ? '\u0412\u0435\u0440\u043d\u044b\u0439 \u043e\u0442\u0432\u0435\u0442 \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d'
+                                      : summary.qualifiesForNextLesson
+                                      ? '\u0423\u0440\u043e\u043a \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043d'
+                                      : '\u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439 \u0441\u043d\u043e\u0432\u0430')
+                                : summary.hasWorldOneCompletionPayoff ||
+                                      summary.hasWorldCompletionPayoff
                                 ? summary.milestoneTitle
                                 : payoffHero?.headline ??
                                       summary.milestoneTitle,
@@ -9668,8 +9773,10 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          summary.hasWorldOneCompletionPayoff ||
-                                  summary.hasWorldCompletionPayoff
+                          localeIsRu
+                              ? summary.milestoneDetailTitle
+                              : summary.hasWorldOneCompletionPayoff ||
+                                    summary.hasWorldCompletionPayoff
                               ? summary.milestoneDetailTitle
                               : payoffHero?.detail ??
                                     summary.milestoneDetailTitle,
@@ -9685,7 +9792,11 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          summary.gateMessage,
+                          localeIsRu
+                              ? (summary.qualifiesForNextLesson
+                                    ? '\u0421\u043b\u0435\u0434\u0443\u044e\u0449\u0438\u0439 \u0443\u0440\u043e\u043a \u0434\u043e\u0441\u0442\u0443\u043f\u0435\u043d. \u041f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u0430 \u043d\u0435 \u0434\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442 \u0441\u0430\u043c\u043e\u0441\u0442\u043e\u044f\u0442\u0435\u043b\u044c\u043d\u044b\u0439 \u043d\u0430\u0432\u044b\u043a.'
+                                    : '\u041f\u043e\u0432\u0442\u043e\u0440\u0438 \u043e\u0446\u0435\u043d\u0451\u043d\u043d\u044b\u0435 \u0437\u0430\u0434\u0430\u043d\u0438\u044f, \u0447\u0442\u043e\u0431\u044b \u0437\u0430\u043a\u0440\u044b\u0442\u044c \u044d\u0442\u043e\u0442 \u044d\u0442\u0430\u043f.')
+                              : summary.gateMessage,
                           key: const Key(
                             'act0_shell_block_summary_gate_message',
                           ),
@@ -9927,9 +10038,22 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
               ],
+              if (localeIsRu) ...[
+                Text(
+                  summary.independentProvenanceKnown
+                      ? (summary.assistedCount > 0
+                            ? 'Ответ с подсказкой помогает учиться, но не доказывает самостоятельное решение.'
+                            : 'Самостоятельные ответы оценены; исходные ошибки сохранены для разбора.')
+                      : 'Самостоятельный итог этого прохождения не подтверждён; помощь не засчитана как независимый успех.',
+                  key: const Key('act0_b2_summary_ru_assessed_truth'),
+                  style: Act0ShellTokensV1.body,
+                ),
+                const SizedBox(height: Act0ShellTokensV1.gapMd),
+              ],
               if (visibleEvidenceSummary != null) ...[
                 _SessionSummaryEvidenceCardV1(
                   summary: visibleEvidenceSummary,
+                  localeIsRu: localeIsRu,
                   onLaunchPracticeRepairQueueTarget:
                       onLaunchPracticeRepairQueueTarget,
                 ),
@@ -9939,6 +10063,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 _SessionSummaryEarnedMomentCardV1(
                   moment: visibleEarnedMoment,
                   tone: celebrateTone,
+                  previouslySaved: !earnedInThisRun,
+                  localeIsRu: localeIsRu,
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
               ],
@@ -9994,7 +10120,11 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               _BlockXpProgressCardV1(summary: summary),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               Text(
-                !summary.independentProvenanceKnown
+                localeIsRu
+                    ? (summary.independentProvenanceKnown
+                          ? '\u041e\u0446\u0435\u043d\u0435\u043d\u043e ${summary.taskCount} \u0437\u0430\u0434\u0430\u043d\u0438\u0439 · \u0432\u0435\u0440\u043d\u043e ${summary.correctCount} · \u043e\u0448\u0438\u0431\u043e\u043a ${summary.errorCount} · \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439 ${summary.assistedCount}'
+                          : '\u0421\u0430\u043c\u043e\u0441\u0442\u043e\u044f\u0442\u0435\u043b\u044c\u043d\u044b\u0439 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442 \u043d\u0435 \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043d · \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439 ${summary.assistedCount}')
+                    : !summary.independentProvenanceKnown
                     ? '${summary.correctCount}/${summary.taskCount} assessed correct \u00B7 full-lesson proof unverified \u00B7 ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}'
                     : summary.assistedCount > 0
                     ? '${summary.correctCount}/${summary.taskCount} correct \u00B7 ${summary.assistedCount} with help \u00B7 ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}'
@@ -10023,7 +10153,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          'Quick fixes: ${summary.quickFixCount}',
+                          localeIsRu
+                              ? '\u041f\u043e\u0432\u0442\u043e\u0440\u044b \u043f\u043e\u0441\u043b\u0435 \u043e\u0448\u0438\u0431\u043e\u043a: ${summary.quickFixCount}'
+                              : 'Quick fixes: ${summary.quickFixCount}',
                           key: const Key(
                             'act0_shell_block_summary_quick_fixes',
                           ),
@@ -10036,7 +10168,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                       const SizedBox(width: Act0ShellTokensV1.gapSm),
                       Expanded(
                         child: Text(
-                          'Deep leaks: ${summary.deepLeakCount}',
+                          localeIsRu
+                              ? '\u041e\u0448\u0438\u0431\u043a\u0438 \u0434\u043b\u044f \u0440\u0430\u0437\u0431\u043e\u0440\u0430: ${summary.deepLeakCount}'
+                              : 'Deep leaks: ${summary.deepLeakCount}',
                           key: const Key('act0_shell_block_summary_deep_leaks'),
                           textAlign: TextAlign.right,
                           style: Act0ShellTokensV1.body.copyWith(
@@ -10587,10 +10721,12 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
 class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
   const _SessionSummaryEvidenceCardV1({
     required this.summary,
+    this.localeIsRu = false,
     this.onLaunchPracticeRepairQueueTarget,
   });
 
   final Act0SessionSummaryEvidenceViewModelV1 summary;
+  final bool localeIsRu;
   final ValueChanged<Act0PracticeRepairQueueLaunchRequestV1>?
   onLaunchPracticeRepairQueueTarget;
 
@@ -10615,7 +10751,9 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            summary.title,
+            localeIsRu
+                ? '\u0422\u0435\u043a\u0443\u0449\u0438\u0439 \u043f\u0440\u043e\u0445\u043e\u0434'
+                : summary.title,
             key: const Key('act0_shell_block_summary_evidence_title'),
             style: Act0ShellTokensV1.label.copyWith(
               color: Act0ShellTokensV1.info,
@@ -10624,7 +10762,9 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            summary.spotsLine,
+            localeIsRu
+                ? '\u0427\u0438\u0441\u043b\u043e \u0438 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442 \u043e\u0446\u0435\u043d\u0451\u043d\u043d\u044b\u0445 \u0437\u0430\u0434\u0430\u043d\u0438\u0439 \u043f\u043e\u043a\u0430\u0437\u0430\u043d\u044b \u0432\u044b\u0448\u0435.'
+                : summary.spotsLine,
             key: const Key('act0_shell_block_summary_evidence_spots'),
             maxLines: 2,
             overflow: TextOverflow.fade,
@@ -10635,7 +10775,9 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            summary.resultLine,
+            localeIsRu
+                ? '\u041f\u043e\u043c\u043e\u0449\u044c \u043d\u0435 \u0441\u0447\u0438\u0442\u0430\u0435\u0442\u0441\u044f \u0441\u0430\u043c\u043e\u0441\u0442\u043e\u044f\u0442\u0435\u043b\u044c\u043d\u044b\u043c \u0438\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435\u043c.'
+                : summary.resultLine,
             key: const Key('act0_shell_block_summary_evidence_result'),
             maxLines: 2,
             overflow: TextOverflow.fade,
@@ -10647,7 +10789,9 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
           if (repairFocusLine != null && repairFocusLine.isNotEmpty) ...[
             const SizedBox(height: 4),
             Text(
-              repairFocusLine,
+              localeIsRu
+                  ? '\u041e\u0431\u0440\u0430\u0442\u0438 \u0432\u043d\u0438\u043c\u0430\u043d\u0438\u0435 \u043d\u0430 \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u0443\u044e \u043e\u0448\u0438\u0431\u043a\u0443.'
+                  : repairFocusLine,
               key: const Key('act0_shell_block_summary_evidence_repair_focus'),
               maxLines: 2,
               overflow: TextOverflow.fade,
@@ -10661,7 +10805,9 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
               repairCandidateLine.isNotEmpty) ...[
             const SizedBox(height: 4),
             Text(
-              repairCandidateLine,
+              localeIsRu
+                  ? '\u0414\u043b\u044f \u044d\u0442\u043e\u0439 \u043e\u0448\u0438\u0431\u043a\u0438 \u0435\u0441\u0442\u044c \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0438\u0439 \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043e\u0447\u043d\u044b\u0439 \u0441\u043f\u043e\u0442.'
+                  : repairCandidateLine,
               key: const Key(
                 'act0_shell_block_summary_evidence_repair_candidate',
               ),
@@ -10680,7 +10826,9 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
                 'act0_shell_block_summary_evidence_learning_proof_reveal',
               ),
               child: Text(
-                learningProofLine,
+                localeIsRu
+                    ? '\u041f\u043e\u0437\u0436\u0435 \u044d\u0442\u0443 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u0443 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u043f\u0440\u043e\u0447\u0438\u0442\u0430\u0442\u044c \u043f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u043e.'
+                    : learningProofLine,
                 key: const Key(
                   'act0_shell_block_summary_evidence_learning_proof',
                 ),
@@ -10707,7 +10855,11 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
                   vertical: Act0ShellTokensV1.gapSm,
                 ),
               ),
-              child: const Text('Practice this next'),
+              child: Text(
+                localeIsRu
+                    ? '\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u0443'
+                    : 'Practice this next',
+              ),
             ),
           ],
         ],
@@ -10786,10 +10938,14 @@ class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
   const _SessionSummaryEarnedMomentCardV1({
     required this.moment,
     required this.tone,
+    this.previouslySaved = false,
+    this.localeIsRu = false,
   });
 
   final Act0AchievementMomentViewModelV1 moment;
   final Color tone;
+  final bool previouslySaved;
+  final bool localeIsRu;
 
   @override
   Widget build(BuildContext context) {
@@ -10821,7 +10977,11 @@ class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Collected read',
+                  localeIsRu
+                      ? (previouslySaved
+                            ? '\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u0440\u0430\u043D\u0435\u0435'
+                            : '\u0412\u0435\u0440\u043D\u043E \u0432 \u044D\u0442\u043E\u0439 \u0441\u0435\u0441\u0441\u0438\u0438')
+                      : (previouslySaved ? 'Saved earlier' : 'Collected read'),
                   key: const Key('act0_shell_block_summary_earned_label'),
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.info,
@@ -10830,7 +10990,9 @@ class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  moment.label,
+                  localeIsRu && moment.label == 'First correct read'
+                      ? '\u041f\u0435\u0440\u0432\u043e\u0435 \u043f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u043e\u0435 \u0447\u0442\u0435\u043d\u0438\u0435 \u0441\u0442\u043e\u043b\u0430'
+                      : moment.label,
                   key: const Key('act0_shell_block_summary_earned_seed'),
                   maxLines: 2,
                   overflow: TextOverflow.fade,
