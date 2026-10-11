@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -6,7 +7,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contrac
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
-bool _isRuLocaleV1(BuildContext context) => false;
+bool _isRuLocaleV1(BuildContext context) =>
+    act0AcademyLanguageV1(context) == 'ru';
 
 String _shellCopyV1(
   BuildContext context, {
@@ -140,14 +142,13 @@ class Act0HomeShellV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final pagePadding = Act0ShellTokensV1.pageHorizontalPaddingFor(context);
     final lesson = currentLesson ?? state.currentLesson;
-    final title =
-        nextActionTitle ?? act0LocalizedLessonTitleV1(context, lesson);
+    final title = nextActionTitle ?? act0AcademyLessonTitleV1(context, lesson);
     final subtitle =
-        nextActionSubtitle ?? act0LocalizedLessonSubtitleV1(context, lesson);
-    final courseTitle = act0LocalizedWorldTitleV1(context, state.selectedWorld);
+        nextActionSubtitle ?? act0AcademyLessonSubtitleV1(context, lesson);
+    final courseTitle = act0AcademyWorldTitleV1(context, state.selectedWorld);
     final sharky = sharkyOverride ?? lesson.runner.sharky;
     final nextActionCtaLabel = this.nextActionCtaLabel == 'Continue'
-        ? act0LocalizedSurfaceAtomV1(
+        ? act0AcademySurfaceAtomV1(
             context,
             'home_checklist_continue_label',
             fallback: 'Continue',
@@ -180,55 +181,55 @@ class Act0HomeShellV1 extends StatelessWidget {
       key: const Key('act0_shell_home_page_background'),
       color: Act0AcademyDesignTokensV1.pageSurface,
       child: ListView(
-      key: const Key('act0_shell_home_screen'),
-      padding: EdgeInsets.fromLTRB(
-        pagePadding,
-        Act0ShellTokensV1.gapLg,
-        pagePadding,
-        Act0ShellTokensV1.bottomNavHeight + Act0ShellTokensV1.gapXl,
-      ),
-      children: [
-        Act0ShellTokensV1.centeredContent(
-          context,
-          tabletMaxWidth: 860,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _HomeIdentityRowV1(
-                state: state,
-                sharky: sharky,
-                courseTitle: courseTitle,
-                localeIsRu: _isRuLocaleV1(context),
-                onOpenDevMenu: onOpenDevMenu,
-              ),
-              const SizedBox(height: Act0VisualMetricsV1.sectionGap),
-              missionCard,
-              const SizedBox(height: Act0VisualMetricsV1.sectionGap),
-              _isDailyGoalDoneValue(goalValue)
-                  ? _HomeCompletionSurfaceV1(
-                      localeIsRu: _isRuLocaleV1(context),
-                      earnedStreak: completionEarnedStreak,
-                      streakDays: state.streakDays,
-                    )
-                  : _HomeChecklistSurfaceV1(
-                      rows: checklistRows,
-                      localeIsRu: _isRuLocaleV1(context),
-                      isFirstWorld: state.selectedWorld.worldId == 'world_1',
-                      currentWorldTitle: courseTitle,
-                      title:
-                          dailyPlanTitle ??
-                          act0LocalizedSurfaceAtomV1(
-                            context,
-                            'home_checklist_title',
-                            fallback: 'Today\'s sequence',
-                          ),
-                      personalizedReturnReasonLine:
-                          personalizedReturnReasonLine,
-                    ),
-            ],
-          ),
+        key: const Key('act0_shell_home_screen'),
+        padding: EdgeInsets.fromLTRB(
+          pagePadding,
+          Act0ShellTokensV1.gapLg,
+          pagePadding,
+          Act0ShellTokensV1.bottomNavHeight + Act0ShellTokensV1.gapXl,
         ),
-      ],
+        children: [
+          Act0ShellTokensV1.centeredContent(
+            context,
+            tabletMaxWidth: 860,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _HomeIdentityRowV1(
+                  state: state,
+                  sharky: sharky,
+                  courseTitle: courseTitle,
+                  localeIsRu: _isRuLocaleV1(context),
+                  onOpenDevMenu: onOpenDevMenu,
+                ),
+                const SizedBox(height: Act0VisualMetricsV1.sectionGap),
+                missionCard,
+                const SizedBox(height: Act0VisualMetricsV1.sectionGap),
+                _isDailyGoalDoneValue(goalValue)
+                    ? _HomeCompletionSurfaceV1(
+                        localeIsRu: _isRuLocaleV1(context),
+                        earnedStreak: completionEarnedStreak,
+                        streakDays: state.streakDays,
+                      )
+                    : _HomeChecklistSurfaceV1(
+                        rows: checklistRows,
+                        localeIsRu: _isRuLocaleV1(context),
+                        isFirstWorld: state.selectedWorld.worldId == 'world_1',
+                        currentWorldTitle: courseTitle,
+                        title:
+                            dailyPlanTitle ??
+                            act0AcademySurfaceAtomV1(
+                              context,
+                              'home_checklist_title',
+                              fallback: 'Today\'s sequence',
+                            ),
+                        personalizedReturnReasonLine:
+                            personalizedReturnReasonLine,
+                      ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -261,7 +262,7 @@ class Act0HomeShellV1 extends StatelessWidget {
     final recheckJob = findJob('recheck:');
     final proveJob = findJob('prove:');
     final localeIsRu = _isRuLocaleV1(context);
-    final learnDetail = act0LocalizedSurfaceAtomV1(
+    final learnDetail = act0AcademySurfaceAtomV1(
       context,
       'home_checklist_learn_status_detail',
       fallback: 'Current lesson is above.',
@@ -271,12 +272,12 @@ class Act0HomeShellV1 extends StatelessWidget {
         ? Act0HomeChecklistRowV1(
             rowKey: 'fix',
             stepNumber: 4,
-            label: act0LocalizedSurfaceAtomV1(
+            label: act0AcademySurfaceAtomV1(
               context,
               'home_checklist_fix_label',
               fallback: 'Repair',
             ),
-            title: act0LocalizedSurfaceAtomV1(
+            title: act0AcademySurfaceAtomV1(
               context,
               'home_checklist_fix_mistake_title',
               fallback: 'Repair this signal',
@@ -294,7 +295,7 @@ class Act0HomeShellV1 extends StatelessWidget {
         ? Act0HomeChecklistRowV1(
             rowKey: 'fix',
             stepNumber: 4,
-            label: act0LocalizedSurfaceAtomV1(
+            label: act0AcademySurfaceAtomV1(
               context,
               'home_checklist_keep_sharp_label',
               fallback: 'Keep sharp',
@@ -313,17 +314,17 @@ class Act0HomeShellV1 extends StatelessWidget {
         : Act0HomeChecklistRowV1(
             rowKey: 'fix',
             stepNumber: 4,
-            label: act0LocalizedSurfaceAtomV1(
+            label: act0AcademySurfaceAtomV1(
               context,
               'home_checklist_keep_sharp_label',
               fallback: 'Keep sharp',
             ),
-            title: act0LocalizedSurfaceAtomV1(
+            title: act0AcademySurfaceAtomV1(
               context,
               'home_checklist_clean_today_title',
               fallback: 'Clean today',
             ),
-            detail: act0LocalizedSurfaceAtomV1(
+            detail: act0AcademySurfaceAtomV1(
               context,
               'home_checklist_clean_today_detail',
               fallback: 'No urgent repair due. Keep the skill warm.',
@@ -335,12 +336,12 @@ class Act0HomeShellV1 extends StatelessWidget {
         ? Act0HomeChecklistRowV1(
             rowKey: 'review',
             stepNumber: 3,
-            label: act0LocalizedSurfaceAtomV1(
+            label: act0AcademySurfaceAtomV1(
               context,
               'home_checklist_review_label',
               fallback: 'Review',
             ),
-            title: act0LocalizedSurfaceAtomV1(
+            title: act0AcademySurfaceAtomV1(
               context,
               'home_checklist_check_confidence_title',
               fallback: 'Check confidence',
@@ -358,17 +359,17 @@ class Act0HomeShellV1 extends StatelessWidget {
         : Act0HomeChecklistRowV1(
             rowKey: 'review',
             stepNumber: 3,
-            label: act0LocalizedSurfaceAtomV1(
+            label: act0AcademySurfaceAtomV1(
               context,
               'home_checklist_review_label',
               fallback: 'Review',
             ),
-            title: act0LocalizedSurfaceAtomV1(
+            title: act0AcademySurfaceAtomV1(
               context,
               'home_checklist_no_old_spots_title',
               fallback: 'Review stays ready',
             ),
-            detail: act0LocalizedSurfaceAtomV1(
+            detail: act0AcademySurfaceAtomV1(
               context,
               'home_checklist_no_old_spots_detail',
               fallback:
@@ -382,12 +383,12 @@ class Act0HomeShellV1 extends StatelessWidget {
       Act0HomeChecklistRowV1(
         rowKey: 'learn',
         stepNumber: 1,
-        label: act0LocalizedSurfaceAtomV1(
+        label: act0AcademySurfaceAtomV1(
           context,
           'home_checklist_learn_label',
           fallback: 'Learn',
         ),
-        title: act0LocalizedSurfaceAtomV1(
+        title: act0AcademySurfaceAtomV1(
           context,
           'home_checklist_learn_status_title',
           fallback: 'Learning path',
@@ -399,7 +400,7 @@ class Act0HomeShellV1 extends StatelessWidget {
       Act0HomeChecklistRowV1(
         rowKey: 'drill',
         stepNumber: 2,
-        label: act0LocalizedSurfaceAtomV1(
+        label: act0AcademySurfaceAtomV1(
           context,
           'home_checklist_practice_label',
           fallback: 'Practice',
@@ -422,28 +423,28 @@ class Act0HomeShellV1 extends StatelessWidget {
 
   String _drillChecklistTitle(BuildContext context, String goalValue) {
     if (_isDailyGoalDoneValue(goalValue)) {
-      return act0LocalizedSurfaceAtomV1(
+      return act0AcademySurfaceAtomV1(
         context,
         'home_daily_goal_done_title',
         fallback: 'Done for today',
       );
     }
     if (goalValue.startsWith('0/')) {
-      return act0LocalizedSurfaceAtomV1(
+      return act0AcademySurfaceAtomV1(
         context,
         'home_drill_checklist_title_0_of_3',
         fallback: '0/3 daily spots',
       );
     }
     if (goalValue.startsWith('1/')) {
-      return act0LocalizedSurfaceAtomV1(
+      return act0AcademySurfaceAtomV1(
         context,
         'home_drill_checklist_title_1_of_3',
         fallback: '1/3 daily spots',
       );
     }
     if (goalValue.startsWith('2/')) {
-      return act0LocalizedSurfaceAtomV1(
+      return act0AcademySurfaceAtomV1(
         context,
         'home_drill_checklist_title_2_of_3',
         fallback: '2/3 daily spots',
@@ -505,9 +506,7 @@ class _HomeIdentityRowV1 extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 courseTitle,
-                maxLines: 1,
-                overflow: TextOverflow.fade,
-                softWrap: false,
+
                 style: Act0AcademyDesignTokensV1.label.copyWith(
                   letterSpacing: 0.1,
                 ),
@@ -600,10 +599,7 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
             Text(
               title,
               key: const Key('act0_shell_home_primary_route_title'),
-              style: Act0AcademyDesignTokensV1.sectionHeading.copyWith(
-                fontSize: 23,
-                height: 1.04,
-              ),
+              style: Act0AcademyDesignTokensV1.lessonHeading,
             ),
             const SizedBox(height: 7),
             Text(
@@ -611,21 +607,16 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
                   ? nextActionHint!.trim()
                   : subtitle,
               key: const Key('act0_shell_home_next_action_subtitle'),
-              maxLines: 2,
-              overflow: TextOverflow.fade,
               style: Act0AcademyDesignTokensV1.body.copyWith(height: 1.25),
             ),
             const SizedBox(height: 8),
             Text(
               localeIsRu
-                  ? 'Sharky держит одно чистое чтение готовым.'
+                  ? 'Sharky \u043f\u0440\u0438\u0433\u043e\u0442\u043e\u0432\u0438\u043b \u043e\u0434\u043d\u0443 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u0443 \u043d\u0430 \u0441\u0442\u043e\u043b\u0435.'
                   : act0SharkyCoachLineForMomentV1(
                       Act0SharkyCoachMomentV1.homeMissionSupport,
                     ),
               key: const Key('act0_shell_home_mission_sharky_line'),
-              maxLines: 1,
-              overflow: TextOverflow.fade,
-              softWrap: false,
               style: Act0AcademyDesignTokensV1.supporting.copyWith(
                 fontSize: 12,
                 height: 1.22,
@@ -645,7 +636,7 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
                 if (cleanProgress != null && cleanProgress.isNotEmpty)
                   _HomeMetaPillV1(
                     icon: Icons.flag_rounded,
-                    label: cleanProgress,
+                    label: act0AcademyProgressLabelV1(context, cleanProgress),
                     color: Act0AcademyDesignTokensV1.inkMuted,
                   ),
               ],
@@ -722,11 +713,8 @@ class _HomeProofMomentumLineV1 extends StatelessWidget {
           child: Text(
             line,
             key: const Key('act0_shell_home_proof_momentum_text'),
-            maxLines: 2,
-            overflow: TextOverflow.fade,
-            style: Act0AcademyDesignTokensV1.supporting.copyWith(
-              height: 1.22,
-            ),
+
+            style: Act0AcademyDesignTokensV1.supporting.copyWith(height: 1.22),
           ),
         ),
       ],
@@ -758,7 +746,9 @@ class _HomeMetaPillV1 extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
       decoration: BoxDecoration(
         color: Act0AcademyDesignTokensV1.cardSurface,
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+        borderRadius: BorderRadius.circular(
+          Act0AcademyDesignTokensV1.radiusCard,
+        ),
         border: Border.all(color: color.withOpacity(0.28)),
       ),
       child: Row(
@@ -769,8 +759,6 @@ class _HomeMetaPillV1 extends StatelessWidget {
           Flexible(
             child: Text(
               label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
               style: Act0AcademyDesignTokensV1.label.copyWith(
                 color: color,
                 fontWeight: FontWeight.w800,
@@ -835,23 +823,24 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.arrow_forward_rounded,
-                        size: 13,
-                        color: Act0AcademyDesignTokensV1.inkMuted,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        localeIsRu ? 'Следующая раздача' : 'Next useful hand',
-                        style: Act0AcademyDesignTokensV1.label.copyWith(
-                          fontSize: 10,
+                  if (MediaQuery.sizeOf(context).width >= 420)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.arrow_forward_rounded,
+                          size: 13,
+                          color: Act0AcademyDesignTokensV1.inkMuted,
                         ),
-                      ),
-                    ],
-                  ),
+                        const SizedBox(width: 4),
+                        Text(
+                          localeIsRu ? 'Следующая раздача' : 'Next useful hand',
+                          style: Act0AcademyDesignTokensV1.label.copyWith(
+                            fontSize: 10,
+                          ),
+                        ),
+                      ],
+                    ),
                 ],
               ),
               const SizedBox(height: Act0AcademyDesignTokensV1.gapXs),
@@ -864,8 +853,7 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
                           ? 'Текущий мир: $currentWorldTitle'
                           : 'Current world: $currentWorldTitle'),
                 key: const Key('act0_shell_home_week1_title'),
-                maxLines: 1,
-                overflow: TextOverflow.fade,
+
                 style: Act0AcademyDesignTokensV1.label.copyWith(
                   color: Act0AcademyDesignTokensV1.focus,
                   fontWeight: FontWeight.w900,
@@ -1010,8 +998,9 @@ class _HomeChecklistRowTileV1 extends StatelessWidget {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: Act0AcademyDesignTokensV1.focus
-                                .withOpacity(0.12),
+                            color: Act0AcademyDesignTokensV1.focus.withOpacity(
+                              0.12,
+                            ),
                             borderRadius: BorderRadius.circular(
                               Act0ShellTokensV1.radiusPill,
                             ),
@@ -1021,7 +1010,7 @@ class _HomeChecklistRowTileV1 extends StatelessWidget {
                             ),
                           ),
                           child: Text(
-                            act0LocalizedSurfaceAtomV1(
+                            act0AcademySurfaceAtomV1(
                               context,
                               'home_checklist_next_label',
                               fallback: 'Next',
@@ -1041,9 +1030,6 @@ class _HomeChecklistRowTileV1 extends StatelessWidget {
                   Text(
                     row.title,
                     key: Key('act0_shell_home_checklist_title_${row.rowKey}'),
-                    maxLines: 1,
-                    overflow: TextOverflow.fade,
-                    softWrap: false,
                     style: Act0AcademyDesignTokensV1.body.copyWith(
                       color: isActiveFocus
                           ? Act0AcademyDesignTokensV1.ink
@@ -1059,9 +1045,7 @@ class _HomeChecklistRowTileV1 extends StatelessWidget {
                       key: Key(
                         'act0_shell_home_checklist_detail_${row.rowKey}',
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.fade,
-                      softWrap: false,
+
                       style: Act0AcademyDesignTokensV1.label.copyWith(
                         color: Act0AcademyDesignTokensV1.inkMuted,
                       ),
@@ -1151,23 +1135,25 @@ class _HomeCompletionSurfaceV1 extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      act0LocalizedSurfaceAtomV1(
+                      act0AcademySurfaceAtomV1(
                         context,
                         'home_daily_done_title',
                         fallback: 'Session complete',
                       ),
-                      style: Act0AcademyDesignTokensV1.sectionHeading
-                          .copyWith(fontSize: 18, height: 1.0),
+                      style: Act0AcademyDesignTokensV1.sectionHeading.copyWith(
+                        fontSize: 18,
+                        height: 1.0,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       earnedStreak
-                          ? act0LocalizedSurfaceAtomV1(
+                          ? act0AcademySurfaceAtomV1(
                               context,
                               'home_daily_done_streak_label',
                               fallback: 'Table read improved',
                             )
-                          : act0LocalizedSurfaceAtomV1(
+                          : act0AcademySurfaceAtomV1(
                               context,
                               'home_daily_done_warm_label',
                               fallback: 'Table read improved',
@@ -1184,7 +1170,7 @@ class _HomeCompletionSurfaceV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0AcademyDesignTokensV1.gapSm),
           Text(
-            act0LocalizedSurfaceAtomV1(
+            act0AcademySurfaceAtomV1(
               context,
               'home_daily_done_detail',
               fallback: act0SharkyCoachLineForMomentV1(
@@ -1206,7 +1192,7 @@ class _HomeCompletionSurfaceV1 extends StatelessWidget {
           ],
           const SizedBox(height: 10),
           Text(
-            act0LocalizedSurfaceAtomV1(
+            act0AcademySurfaceAtomV1(
               context,
               'home_daily_done_continue_hint',
               fallback: act0SharkyCoachLineForMomentV1(
@@ -1242,27 +1228,27 @@ String _dailyGoalSupportText(BuildContext context, String goalValue) {
       goalValue.startsWith('Завтра будет легко вернуться') ||
       goalValue.startsWith('Ритм сохранён') ||
       goalValue.startsWith('Сохранён')) {
-    return act0LocalizedSurfaceAtomV1(
+    return act0AcademySurfaceAtomV1(
       context,
       'home_daily_goal_streak_saved',
       fallback: 'Repair banked. You earned tomorrow\'s rhythm.',
     );
   }
   if (_isDailyGoalDoneValue(goalValue)) {
-    return act0LocalizedSurfaceAtomV1(
+    return act0AcademySurfaceAtomV1(
       context,
       'home_daily_goal_complete',
       fallback: 'Goal complete. Tomorrow\'s return already feels lighter.',
     );
   }
   if (goalValue.startsWith('0/')) {
-    return act0LocalizedSurfaceAtomV1(
+    return act0AcademySurfaceAtomV1(
       context,
       'home_daily_goal_start_day',
       fallback: 'One clean spot starts the day.',
     );
   }
-  return act0LocalizedSurfaceAtomV1(
+  return act0AcademySurfaceAtomV1(
     context,
     'home_daily_goal_keep_pace',
     fallback: 'One more clean rep keeps the pace.',

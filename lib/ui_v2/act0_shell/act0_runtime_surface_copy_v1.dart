@@ -1019,3 +1019,164 @@ String _act0RuCombosWordV1(int count) {
   }
   return 'combos';
 }
+
+// Academy-only locale projection. The legacy context helpers deliberately
+// select EN for table consumers; use the existing ID bundles explicitly here.
+String act0AcademyLanguageV1(BuildContext context) =>
+    Localizations.localeOf(context).languageCode;
+
+String act0AcademySurfaceAtomV1(
+  BuildContext context,
+  String atomId, {
+  required String fallback,
+}) => act0LocalizedSurfaceAtomByIdV1(
+  atomId,
+  fallback: fallback,
+  languageCode: act0AcademyLanguageV1(context),
+);
+
+String act0AcademyWorldTitleV1(BuildContext context, Act0WorldCardV1 world) =>
+    act0LocalizedWorldTitleAtomV1(
+      world.worldId,
+      fallback: world.title,
+      languageCode: act0AcademyLanguageV1(context),
+    );
+String act0AcademyWorldSubtitleV1(
+  BuildContext context,
+  Act0WorldCardV1 world,
+) => act0LocalizedWorldSubtitleAtomV1(
+  world.worldId,
+  fallback: world.subtitle,
+  languageCode: act0AcademyLanguageV1(context),
+);
+
+String act0AcademyLessonTitleV1(BuildContext context, Act0LessonCardV1 lesson) {
+  // This stable ID now names First Table Guide, not the older poker lesson.
+  if (act0AcademyLanguageV1(context) == 'ru' &&
+      lesson.lessonId == 'what_poker_is')
+    return '\u041f\u0435\u0440\u0432\u044b\u0439 \u0440\u0430\u0437\u0431\u043e\u0440 \u0441\u0442\u043e\u043b\u0430';
+  return act0LocalizedLessonTitleAtomByIdV1(
+    lesson.lessonId,
+    fallback: lesson.title,
+    languageCode: act0AcademyLanguageV1(context),
+  );
+}
+
+String act0AcademyLessonSubtitleV1(
+  BuildContext context,
+  Act0LessonCardV1 lesson,
+) {
+  if (act0AcademyLanguageV1(context) == 'ru' &&
+      lesson.lessonId == 'what_poker_is')
+    return '\u041f\u0440\u043e\u0447\u0438\u0442\u0430\u0439 \u0441\u0442\u043e\u043b, \u043e\u0442\u0432\u0435\u0442\u044c \u043e\u0434\u0438\u043d \u0440\u0430\u0437 \u0438 \u0443\u0437\u043d\u0430\u0439 \u043f\u0440\u0438\u0447\u0438\u043d\u0443.';
+  return act0LocalizedLessonSubtitleAtomByIdV1(
+    lesson.lessonId,
+    fallback: lesson.subtitle,
+    languageCode: act0AcademyLanguageV1(context),
+  );
+}
+
+String act0AcademyTaskTitleV1(BuildContext context, Act0LessonTaskV1 task) =>
+    act0LocalizedTaskTitleAtomByIdV1(
+      task.taskId,
+      fallback: task.title,
+      languageCode: act0AcademyLanguageV1(context),
+    );
+String act0AcademyTaskSummaryV1(
+  BuildContext context,
+  Act0LessonTaskV1 task, {
+  String? fallback,
+}) => act0LocalizedTaskSummaryAtomByIdV1(
+  task.taskId,
+  fallback: fallback ?? task.summary ?? '',
+  languageCode: act0AcademyLanguageV1(context),
+);
+String act0AcademyTaskLockedSummaryV1(
+  BuildContext context,
+  Act0LessonTaskV1 task, {
+  String? fallback,
+}) => act0LocalizedTaskLockedSummaryAtomByIdV1(
+  task.taskId,
+  fallback: fallback ?? task.lockedSummary ?? '',
+  languageCode: act0AcademyLanguageV1(context),
+);
+
+// An exact presentation format produced by the World progress projection.
+// Unknown labels are preserved; never infer progress or translate identifiers.
+String act0AcademyProgressLabelV1(BuildContext context, String label) {
+  if (act0AcademyLanguageV1(context) != 'ru') return label;
+  final match = RegExp(
+    r'^(\d+) of (\d+) lessons( complete)?$',
+  ).firstMatch(label);
+  if (match == null) return label;
+  return '\u0423\u0440\u043e\u043a\u0438: ${match[1]} \u0438\u0437 ${match[2]}' +
+      (match[3] == null
+          ? ''
+          : ' \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e');
+}
+
+String act0AcademyNavLabelV1(BuildContext context, Act0ShellTabV1 tab) {
+  final ru = act0AcademyLanguageV1(context) == 'ru';
+  return switch (tab) {
+    Act0ShellTabV1.home =>
+      ru ? '\u0413\u043b\u0430\u0432\u043d\u0430\u044f' : 'Home',
+    Act0ShellTabV1.learn => ru ? '\u0423\u0447\u0451\u0431\u0430' : 'Learn',
+    Act0ShellTabV1.play =>
+      ru ? '\u041f\u0440\u0430\u043a\u0442\u0438\u043a\u0430' : 'Practice',
+    Act0ShellTabV1.review =>
+      ru ? '\u0420\u0430\u0437\u0431\u043e\u0440' : 'Review',
+    Act0ShellTabV1.profile =>
+      ru ? '\u041f\u0440\u043e\u0444\u0438\u043b\u044c' : 'You',
+  };
+}
+
+// Current authored First Table Guide beats supersede the older task-ID copy.
+// Match the runner identity AND the exact source strings, so source revisions
+// fail back to authored text instead of silently attaching a stale translation.
+String act0AcademyTeachingCopyV1(
+  BuildContext context, {
+  required String runnerLessonId,
+  required String source,
+  required String fallback,
+}) {
+  if (act0AcademyLanguageV1(context) != 'ru') return source;
+  final copy = _firstValueTeachingRuV1[runnerLessonId];
+  return copy == null ? fallback : copy[source] ?? source;
+}
+
+const _firstValueTeachingRuV1 = <String, Map<String, String>>{
+  'first_table_guide_meet_table': {
+    'One loop first.':
+        '\u0421\u043d\u0430\u0447\u0430\u043b\u0430 \u043e\u0434\u0438\u043d \u0443\u0447\u0435\u0431\u043d\u044b\u0439 \u0446\u0438\u043a\u043b.',
+    'Read one table spot, answer once, then see the exact reason.':
+        '\u041f\u0440\u043e\u0447\u0438\u0442\u0430\u0439 \u043e\u0434\u043d\u0443 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u044e \u0437\u0430 \u0441\u0442\u043e\u043b\u043e\u043c, \u043e\u0442\u0432\u0435\u0442\u044c \u043e\u0434\u0438\u043d \u0440\u0430\u0437 \u0438 \u0443\u0437\u043d\u0430\u0439 \u0442\u043e\u0447\u043d\u0443\u044e \u043f\u0440\u0438\u0447\u0438\u043d\u0443.',
+    'Start with the table.':
+        '\u041d\u0430\u0447\u043d\u0438 \u0441\u043e \u0441\u0442\u043e\u043b\u0430.',
+    "You marks the learner. BTN is this hand's position and can change next hand. SB and BB post the blinds.":
+        '\u041c\u0435\u0442\u043a\u0430 You \u043e\u0431\u043e\u0437\u043d\u0430\u0447\u0430\u0435\u0442 \u0442\u0435\u0431\u044f. BTN \u2014 \u043f\u043e\u0437\u0438\u0446\u0438\u044f \u0432 \u044d\u0442\u043e\u0439 \u0440\u0430\u0437\u0434\u0430\u0447\u0435; \u0432 \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0435\u0439 \u043e\u043d\u0430 \u043c\u043e\u0436\u0435\u0442 \u0438\u0437\u043c\u0435\u043d\u0438\u0442\u044c\u0441\u044f. SB \u0438 BB \u0441\u0442\u0430\u0432\u044f\u0442 \u0431\u043b\u0430\u0439\u043d\u0434\u044b.',
+  },
+  'first_table_guide_find_hero': {
+    'You means learner.':
+        'You \u043e\u0431\u043e\u0437\u043d\u0430\u0447\u0430\u0435\u0442 \u0442\u0435\u0431\u044f.',
+    'The You badge marks your seat. BTN is a position, so You can be at a different position on another hand.':
+        '\u041c\u0435\u0442\u043a\u0430 You \u043e\u0431\u043e\u0437\u043d\u0430\u0447\u0430\u0435\u0442 \u0442\u0432\u043e\u0451 \u043c\u0435\u0441\u0442\u043e. BTN \u2014 \u043f\u043e\u0437\u0438\u0446\u0438\u044f: \u0432 \u0434\u0440\u0443\u0433\u043e\u0439 \u0440\u0430\u0437\u0434\u0430\u0447\u0435 \u0442\u044b \u043c\u043e\u0436\u0435\u0448\u044c \u043e\u043a\u0430\u0437\u0430\u0442\u044c\u0441\u044f \u043d\u0430 \u0434\u0440\u0443\u0433\u043e\u0439 \u043f\u043e\u0437\u0438\u0446\u0438\u0438.',
+  },
+  'first_table_guide_read_table': {
+    'Carry the first table scan.':
+        '\u041f\u043e\u0432\u0442\u043e\u0440\u0438 \u043f\u0435\u0440\u0432\u044b\u0439 \u043e\u0441\u043c\u043e\u0442\u0440 \u0441\u0442\u043e\u043b\u0430.',
+    'Real tables use the same simple scan.\n\nFind your two cards and the shared board.\n\nThen check how many chips are already in the pot.':
+        '\u0417\u0430 \u043d\u0430\u0441\u0442\u043e\u044f\u0449\u0438\u043c \u0441\u0442\u043e\u043b\u043e\u043c \u043d\u0443\u0436\u0435\u043d \u0442\u043e\u0442 \u0436\u0435 \u043f\u0440\u043e\u0441\u0442\u043e\u0439 \u043e\u0441\u043c\u043e\u0442\u0440.\n\n\u041d\u0430\u0439\u0434\u0438 \u0434\u0432\u0435 \u043b\u0438\u0447\u043d\u044b\u0435 \u043a\u0430\u0440\u0442\u044b \u0438 \u043e\u0431\u0449\u0438\u0435 \u043a\u0430\u0440\u0442\u044b \u0431\u043e\u0440\u0434\u0430.\n\n\u0417\u0430\u0442\u0435\u043c \u043f\u0440\u043e\u0432\u0435\u0440\u044c, \u0441\u043a\u043e\u043b\u044c\u043a\u043e \u0444\u0438\u0448\u0435\u043a \u0443\u0436\u0435 \u0432 \u0431\u0430\u043d\u043a\u0435.',
+  },
+  'first_table_guide_one_clear_choice': {
+    'Same scan, simpler job.':
+        '\u0422\u043e\u0442 \u0436\u0435 \u043e\u0441\u043c\u043e\u0442\u0440, \u043f\u0440\u043e\u0441\u0442\u0430\u044f \u0437\u0430\u0434\u0430\u0447\u0430.',
+    'Preflop means no board yet. Read You, blinds, pot, and who acts next. Name the setup once.':
+        '\u041f\u0440\u0435\u0444\u043b\u043e\u043f \u043e\u0437\u043d\u0430\u0447\u0430\u0435\u0442, \u0447\u0442\u043e \u0431\u043e\u0440\u0434\u0430 \u0435\u0449\u0451 \u043d\u0435\u0442. \u041d\u0430\u0439\u0434\u0438 \u0441\u0432\u043e\u0451 \u043c\u0435\u0441\u0442\u043e, \u0431\u043b\u0430\u0439\u043d\u0434\u044b, \u0431\u0430\u043d\u043a \u0438 \u0442\u043e\u0433\u043e, \u043a\u0442\u043e \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0438\u043c. \u041d\u0430\u0437\u043e\u0432\u0438 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u044e.',
+  },
+  'first_table_guide_route_roles': {
+    'Know the five jobs.':
+        '\u041f\u044f\u0442\u044c \u0440\u0430\u0437\u0434\u0435\u043b\u043e\u0432, \u043f\u044f\u0442\u044c \u0437\u0430\u0434\u0430\u0447.',
+    'Home shows what to do now. Learn shows what to study next. Practice gives extra reps. Review fixes mistakes. You shows progress and settings.':
+        '\u0413\u043b\u0430\u0432\u043d\u0430\u044f \u043f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442, \u0447\u0442\u043e \u0434\u0435\u043b\u0430\u0442\u044c \u0441\u0435\u0439\u0447\u0430\u0441. \u0423\u0447\u0451\u0431\u0430 \u2014 \u0447\u0442\u043e \u0438\u0437\u0443\u0447\u0430\u0442\u044c \u0434\u0430\u043b\u044c\u0448\u0435. \u041f\u0440\u0430\u043a\u0442\u0438\u043a\u0430 \u0434\u0430\u0451\u0442 \u0434\u043e\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0435 \u043f\u043e\u043f\u044b\u0442\u043a\u0438. \u0420\u0430\u0437\u0431\u043e\u0440 \u043f\u043e\u043c\u043e\u0433\u0430\u0435\u0442 \u0438\u0441\u043f\u0440\u0430\u0432\u043b\u044f\u0442\u044c \u043e\u0448\u0438\u0431\u043a\u0438. \u041f\u0440\u043e\u0444\u0438\u043b\u044c \u043f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442 \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441 \u0438 \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438.',
+  },
+};

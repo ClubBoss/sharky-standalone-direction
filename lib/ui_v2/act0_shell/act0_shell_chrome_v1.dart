@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
 class Act0ShellScreenHeaderV1 extends StatelessWidget {
@@ -11,6 +12,7 @@ class Act0ShellScreenHeaderV1 extends StatelessWidget {
     this.trailing,
     this.titleKey,
     this.subtitleKey,
+    this.academy = false,
   });
 
   final String title;
@@ -20,10 +22,52 @@ class Act0ShellScreenHeaderV1 extends StatelessWidget {
   final Widget? trailing;
   final Key? titleKey;
   final Key? subtitleKey;
+  final bool academy;
 
   @override
   Widget build(BuildContext context) {
     final normalizedEyebrow = eyebrow?.trim() ?? '';
+    if (academy) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (normalizedEyebrow.isNotEmpty) ...[
+                    Text(
+                      normalizedEyebrow,
+                      style: Act0AcademyDesignTokensV1.label,
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                  Semantics(
+                    header: true,
+                    child: Text(
+                      title,
+                      key: titleKey,
+                      style: Act0AcademyDesignTokensV1.sectionHeading,
+                    ),
+                  ),
+                  if (subtitle.isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      subtitle,
+                      key: subtitleKey,
+                      style: Act0AcademyDesignTokensV1.supporting,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            if (trailing != null) ...[const SizedBox(width: 12), trailing!],
+          ],
+        ),
+      );
+    }
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),

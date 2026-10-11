@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
@@ -33,6 +34,7 @@ class Act0WelcomeShellV1 extends StatefulWidget {
 class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
   Act0WelcomeBeatV1 _beat = Act0WelcomeBeatV1.intro;
   Act0AccessibilityPrototypeStepV1? _accessibilityPrototypeStep;
+  String? _orientationChoiceLabel;
 
   bool get _isRuLocaleV1 => Localizations.localeOf(
     context,
@@ -42,7 +44,7 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
       _isRuLocaleV1 ? ru : en;
 
   String _atomV1(String atomId, {required String fallback}) =>
-      act0LocalizedSurfaceAtomV1(context, atomId, fallback: fallback);
+      act0AcademySurfaceAtomV1(context, atomId, fallback: fallback);
 
   // F04: Welcome is truthful orientation, not a demo assessment. The real
   // table/task renders for a genuine first read, but picking an option never
@@ -84,17 +86,18 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
       Act0WelcomeBeatV1.intro => _WelcomeTextBeatV1(
         beatIndex: 1,
         beatCount: 3,
-        title: _atomV1('welcome_intro_title', fallback: 'Try one table read'),
-        eyebrow: _atomV1('welcome_intro_eyebrow', fallback: 'Welcome'),
-        line: _atomV1(
-          'welcome_intro_line',
-          fallback: act0SharkyCoachLineForMomentV1(
-            Act0SharkyCoachMomentV1.welcomeOrientation,
-          ),
+        title: _copyV1(
+          en: 'Try one table read',
+          ru: '\u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439 \u043f\u0440\u043e\u0447\u0438\u0442\u0430\u0442\u044c \u0441\u0442\u043e\u043b',
         ),
-        detail: _atomV1(
-          'welcome_intro_detail',
-          fallback: 'About two minutes. Then your first lesson is ready.',
+        eyebrow: _atomV1('welcome_intro_eyebrow', fallback: 'Welcome'),
+        line: _copyV1(
+          en: 'Read the table, make a choice, then learn why.',
+          ru: '\u041f\u0440\u043e\u0447\u0438\u0442\u0430\u0439 \u0441\u0442\u043e\u043b, \u0441\u0434\u0435\u043b\u0430\u0439 \u0432\u044b\u0431\u043e\u0440 \u0438 \u0443\u0437\u043d\u0430\u0439 \u043f\u0440\u0438\u0447\u0438\u043d\u0443.',
+        ),
+        detail: _copyV1(
+          en: 'This preview is ungraded. Your first lesson comes next.',
+          ru: '\u042d\u0442\u043e \u0437\u043d\u0430\u043a\u043e\u043c\u0441\u0442\u0432\u043e \u0431\u0435\u0437 \u043e\u0446\u0435\u043d\u043a\u0438. \u041d\u0430\u0441\u0442\u043e\u044f\u0449\u0438\u0439 \u0443\u0440\u043e\u043a \u0431\u0443\u0434\u0435\u0442 \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0438\u043c.',
         ),
         mood: act0SharkyMoodForCompanionStateV1(
           Act0SharkyCompanionStateV1.neutral,
@@ -110,7 +113,10 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
           ),
           child: const SizedBox.shrink(),
         ),
-        ctaLabel: 'Try one table read',
+        ctaLabel: _copyV1(
+          en: 'Try one table read',
+          ru: '\u041f\u043e\u043f\u0440\u043e\u0431\u043e\u0432\u0430\u0442\u044c',
+        ),
         onNext: () => setState(() => _beat = Act0WelcomeBeatV1.demoSpot),
       ),
       Act0WelcomeBeatV1.demoSpot => Act0LessonRunnerShellV1(
@@ -127,8 +133,11 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         // Any pick moves straight to the truthful handoff beat: Welcome never
         // renders the real review/feedback phase, so no fabricated graded
         // choice (correct/wrong banner, fake retry CTA) can appear here.
-        onChooseOption: (_) {
-          setState(() => _beat = Act0WelcomeBeatV1.handoff);
+        onChooseOption: (option) {
+          setState(() {
+            _orientationChoiceLabel = option.label;
+            _beat = Act0WelcomeBeatV1.handoff;
+          });
         },
         onContinueReview: () {
           setState(() => _beat = Act0WelcomeBeatV1.handoff);
@@ -152,7 +161,7 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
               ? 'Home still shows what to do now, and Learn keeps the next lessons visible.'
               : 'Your first useful hand is ready.',
           ru: widget.replayMode
-              ? 'Home по-прежнему показывает, что делать сейчас, а Learn держит следующие уроки на виду.'
+              ? '\u0413\u043b\u0430\u0432\u043d\u0430\u044f \u043f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442, \u0447\u0442\u043e \u0434\u0435\u043b\u0430\u0442\u044c \u0441\u0435\u0439\u0447\u0430\u0441, \u0430 \u0423\u0447\u0451\u0431\u0430 \u2014 \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0438\u0435 \u0443\u0440\u043e\u043a\u0438.'
               : 'Твоя первая полезная раздача готова.',
         ),
         detail: _copyV1(
@@ -169,12 +178,19 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         replayMode: widget.replayMode,
         onClose: widget.onClose,
         visual: _WelcomeVisualPreviewCardV1(
-          title: _copyV1(en: 'FIRST HAND READY', ru: 'ПЕРВАЯ РАЗДАЧА ГОТОВА'),
+          title: _copyV1(
+            en: 'PREVIEW COMPLETE',
+            ru: '\u0417\u041d\u0410\u041a\u041e\u041c\u0421\u0422\u0412\u041e \u0417\u0410\u0412\u0415\u0420\u0428\u0415\u041d\u041e',
+          ),
           accent: Act0AcademyDesignTokensV1.primaryAction,
           previewKey: const Key('act0_shell_welcome_handoff_preview'),
           line: _copyV1(
-            en: 'Your first useful hand is ready.',
-            ru: 'Твоя первая полезная раздача готова.',
+            en: _orientationChoiceLabel == null
+                ? 'Your first useful hand is ready.'
+                : 'You tried ${_orientationChoiceLabel!}. This preview was ungraded.',
+            ru: _orientationChoiceLabel == null
+                ? '\u0422\u0432\u043e\u044f \u043f\u0435\u0440\u0432\u0430\u044f \u043f\u043e\u043b\u0435\u0437\u043d\u0430\u044f \u0440\u0430\u0437\u0434\u0430\u0447\u0430 \u0433\u043e\u0442\u043e\u0432\u0430.'
+                : '\u0422\u0432\u043e\u0439 \u0432\u044b\u0431\u043e\u0440: ${_welcomeChoiceRuV1(_orientationChoiceLabel!)}. \u042d\u0442\u043e \u0437\u043d\u0430\u043a\u043e\u043c\u0441\u0442\u0432\u043e \u0431\u0435\u0437 \u043e\u0446\u0435\u043d\u043a\u0438.',
           ),
           detail: _copyV1(
             en: 'Learn keeps the next one visible after that.',
@@ -186,8 +202,10 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
           ),
         ),
         ctaLabel: _copyV1(
-          en: widget.replayMode ? 'Back to profile' : 'Open first lesson',
-          ru: widget.replayMode ? 'Назад в профиль' : 'Открыть свой старт',
+          en: widget.replayMode ? 'Back to profile' : 'Open my path',
+          ru: widget.replayMode
+              ? '\u041d\u0430\u0437\u0430\u0434 \u0432 \u043f\u0440\u043e\u0444\u0438\u043b\u044c'
+              : '\u041e\u0442\u043a\u0440\u044b\u0442\u044c \u043c\u043e\u0439 \u043f\u0443\u0442\u044c',
         ),
         subline: widget.replayMode
             ? null
@@ -247,113 +265,83 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
     return Container(
       color: Act0AcademyDesignTokensV1.pageSurface,
       child: SafeArea(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final horizontalPadding = constraints.maxWidth < 380 ? 20.0 : 24.0;
-          final tabletLayout = constraints.maxWidth >= 700;
-          final contentMaxWidth = math.min(
-            math.max(0.0, constraints.maxWidth - (tabletLayout ? 96 : 48)),
-            tabletLayout ? 760.0 : 400.0,
-          );
-          final tabletContentMinHeight = centerContent ? 500.0 : 460.0;
-          final smallPhone = constraints.maxHeight < 700;
-          final bottomPadding = math.max(
-            Act0ShellTokensV1.gapLg,
-            MediaQuery.viewPaddingOf(context).bottom,
-          );
-          final content = centerContent
-              ? _WelcomeHandoffContentGroupV1(
-                  title: title,
-                  subline: subline ?? '',
-                  mood: mood,
-                  visual: visual,
-                  smallPhone: smallPhone,
-                )
-              : _WelcomeStandardBeatFrameV1(
-                  title: title,
-                  eyebrow: eyebrow,
-                  line: line,
-                  detail: blocks.join(' '),
-                  mood: mood,
-                  visual: visual,
-                  tabletLayout: tabletLayout,
-                );
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: IntrinsicHeight(
-                child: SizedBox(
-                  height: constraints.maxHeight,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(
-                      horizontalPadding,
-                      Act0ShellTokensV1.gapLg,
-                      horizontalPadding,
-                      bottomPadding,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        _WelcomeTopBarV1(
-                          beatIndex: beatIndex,
-                          beatCount: beatCount,
-                          replayMode: replayMode,
-                          onClose: onClose,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final horizontalPadding = constraints.maxWidth < 380 ? 20.0 : 24.0;
+            final tabletLayout = constraints.maxWidth >= 700;
+            final contentMaxWidth = math.min(
+              math.max(0.0, constraints.maxWidth - (tabletLayout ? 96 : 48)),
+              tabletLayout ? 760.0 : 400.0,
+            );
+            final smallPhone = constraints.maxHeight < 700;
+            final bottomPadding = math.max(
+              Act0ShellTokensV1.gapLg,
+              MediaQuery.viewPaddingOf(context).bottom,
+            );
+            final content = centerContent
+                ? _WelcomeHandoffContentGroupV1(
+                    title: title,
+                    subline: subline ?? '',
+                    mood: mood,
+                    visual: visual,
+                    smallPhone: smallPhone,
+                  )
+                : _WelcomeStandardBeatFrameV1(
+                    title: title,
+                    eyebrow: eyebrow,
+                    line: line,
+                    detail: blocks.join(' '),
+                    mood: mood,
+                    visual: visual,
+                    tabletLayout: tabletLayout,
+                  );
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    horizontalPadding,
+                    20,
+                    horizontalPadding,
+                    bottomPadding,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _WelcomeTopBarV1(
+                        beatIndex: beatIndex,
+                        beatCount: beatCount,
+                        replayMode: replayMode,
+                        onClose: onClose,
+                      ),
+                      const SizedBox(height: 32),
+                      Center(
+                        child: SizedBox(width: contentMaxWidth, child: content),
+                      ),
+                      const SizedBox(height: 24),
+                      if (ctaBridgeLine?.trim().isNotEmpty == true) ...[
+                        Text(
+                          ctaBridgeLine!,
+                          key: const Key('act0_shell_welcome_cta_bridge'),
+                          textAlign: TextAlign.center,
+                          style: Act0AcademyDesignTokensV1.supporting,
                         ),
-                        Spacer(
-                          flex: tabletLayout
-                              ? (centerContent ? 20 : 20)
-                              : (centerContent ? 65 : 50),
-                        ),
-                        Center(
-                          child: SizedBox(
-                            width: contentMaxWidth,
-                            child: tabletLayout
-                                ? ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                      minHeight: tabletContentMinHeight,
-                                    ),
-                                    child: content,
-                                  )
-                                : content,
-                          ),
-                        ),
-                        Spacer(
-                          flex: tabletLayout
-                              ? (centerContent ? 8 : 8)
-                              : (centerContent ? 20 : 50),
-                        ),
-                        if (ctaBridgeLine != null &&
-                            ctaBridgeLine!.trim().isNotEmpty) ...[
-                          Text(
-                            ctaBridgeLine!,
-                            key: const Key('act0_shell_welcome_cta_bridge'),
-                            textAlign: TextAlign.center,
-                            style: Act0AcademyDesignTokensV1.supporting
-                                .copyWith(fontSize: 13),
-                          ),
-                          const SizedBox(height: Act0ShellTokensV1.gapMd),
-                        ] else
-                          const SizedBox(height: Act0ShellTokensV1.gapLg),
-                        SizedBox(
-                          width: double.infinity,
-                          height: Act0ShellTokensV1.primaryCtaHeight,
-                          child: FilledButton(
-                            key: const Key('act0_shell_welcome_primary_cta'),
-                            onPressed: onNext,
-                            style: Act0ShellTokensV1.premiumActionButtonStyle(),
-                            child: Text(ctaLabel),
-                          ),
-                        ),
+                        const SizedBox(height: 16),
                       ],
-                    ),
+                      FilledButton(
+                        key: const Key('act0_shell_welcome_primary_cta'),
+                        onPressed: onNext,
+                        style: Act0AcademyDesignTokensV1.primaryButtonStyle(),
+                        child: Text(ctaLabel, textAlign: TextAlign.center),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ),
-          );
-        },
-      ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -380,33 +368,16 @@ class _WelcomeStandardBeatFrameV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final guideCard = Act0SharkyGuideCardV1(
-      eyebrow: eyebrow,
-      line: line,
-      detail: detail,
-      mood: mood,
-      compact: true,
-      growthStage: Act0SharkyGrowthStageV1.foundation,
+    final body = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Center(child: _WelcomeSharkyPresenterTileV1(mood: mood, size: 164)),
+        const SizedBox(height: Act0AcademyDesignTokensV1.gapXl),
+        Text(line, style: Act0AcademyDesignTokensV1.body),
+        const SizedBox(height: Act0AcademyDesignTokensV1.gapSm),
+        Text(detail, style: Act0AcademyDesignTokensV1.supporting),
+      ],
     );
-    final body = tabletLayout && visual != null
-        ? Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(flex: 9, child: visual!),
-              const SizedBox(width: Act0ShellTokensV1.gapMd),
-              Expanded(flex: 7, child: guideCard),
-            ],
-          )
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (visual != null) ...[
-                visual!,
-                const SizedBox(height: Act0ShellTokensV1.gapMd),
-              ],
-              guideCard,
-            ],
-          );
     return Container(
       key: const Key('act0_shell_welcome_beat_frame'),
       padding: const EdgeInsets.all(Act0AcademyDesignTokensV1.gapMd),
@@ -419,7 +390,7 @@ class _WelcomeStandardBeatFrameV1 extends StatelessWidget {
             : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: Act0AcademyDesignTokensV1.sectionHeading),
+          Text(title, style: Act0AcademyDesignTokensV1.display),
           const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
           body,
         ],
@@ -786,3 +757,10 @@ class _WelcomeTopBarV1 extends StatelessWidget {
     );
   }
 }
+
+String _welcomeChoiceRuV1(String label) => switch (label) {
+  'Fold' => '\u0444\u043e\u043b\u0434',
+  'Check' => '\u0447\u0435\u043a',
+  'Call' => '\u043a\u043e\u043b\u043b',
+  _ => label,
+};
