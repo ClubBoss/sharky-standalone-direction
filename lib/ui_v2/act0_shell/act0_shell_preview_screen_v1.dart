@@ -6512,6 +6512,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         mistakeHistoryItems:
                             Act0ReviewMistakeHistoryConsumerV1.fromHistory(
                               _reviewMistakeHistoryV1,
+                              sourceState: state,
+                              localeIsRu:
+                                  act0AcademyLanguageV1(context) == 'ru',
+                              localizeOptionLabel: (label) =>
+                                  act0RuntimeLocalizedOptionLabelV1(
+                                    context,
+                                    label,
+                                  ),
                               activeRepairSourceTaskIds: <String>{
                                 for (final mistake in reviewState.mistakes)
                                   mistake.taskId,

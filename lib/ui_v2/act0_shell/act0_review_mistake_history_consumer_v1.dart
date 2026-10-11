@@ -1,6 +1,7 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_pattern_coaching_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 class Act0ReviewMistakeHistoryConsumerV1 {
   const Act0ReviewMistakeHistoryConsumerV1({required this.items});
@@ -14,6 +15,9 @@ class Act0ReviewMistakeHistoryConsumerV1 {
     Set<String> activeRepairSourceTaskIds = const <String>{},
     Act0ReviewResolutionStateV1? reviewResolutionState,
     Act0ReviewPatternCoachingProjectionV1? patternCoachingProjection,
+    Act0ShellStateV1? sourceState,
+    String Function(String)? localizeOptionLabel,
+    bool localeIsRu = false,
   }) {
     final activeSources = activeRepairSourceTaskIds
         .map((value) => value.trim())
@@ -53,9 +57,9 @@ class Act0ReviewMistakeHistoryConsumerV1 {
             record.repairFocusId,
             record.resultKind,
           ]),
-          decisionLine:
-              'You chose ${_readableAction(record.selectedId)}; better was '
-              '${_readableAction(record.expectedId)}.',
+          decisionLine: localeIsRu
+              ? '\u0412\u0430\u0448 \u0432\u044B\u0431\u043E\u0440: ${_readableAction(record, record.selectedId, sourceState: sourceState, localizeOptionLabel: localizeOptionLabel, localeIsRu: true)}; \u043B\u0443\u0447\u0448\u0435: ${_readableAction(record, record.expectedId, sourceState: sourceState, localizeOptionLabel: localizeOptionLabel, localeIsRu: true)}.'
+              : 'You chose ${_readableAction(record, record.selectedId, sourceState: sourceState, localizeOptionLabel: localizeOptionLabel)}; better was ${_readableAction(record, record.expectedId, sourceState: sourceState, localizeOptionLabel: localizeOptionLabel)}.',
           contextLine: _readableContext(record),
           orderLabel: items.isEmpty ? 'Most recent' : 'Earlier',
           patternLine: patternLine,
@@ -125,12 +129,71 @@ String _firstReadableLabel(List<String> values) {
   return 'Review spot';
 }
 
-String _readableAction(String raw) {
-  final value = raw.trim();
-  if (value.isEmpty) {
-    return 'your action';
+// Source-owned task option copy, not a guessed interpretation of technical IDs.
+// The immutable answer IDs remain in persisted history and telemetry.
+String _readableAction(
+  Act0ReviewMistakeRecordV1 record,
+  String raw, {
+  Act0ShellStateV1? sourceState,
+  String Function(String)? localizeOptionLabel,
+  bool localeIsRu = false,
+}) {
+  final id = raw.trim();
+  if (id.isEmpty)
+    return localeIsRu
+        ? '\u043D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442'
+        : 'unknown option';
+  if (sourceState != null) {
+    final decisionTaskId = record.decisionTaskId.trim().isNotEmpty
+        ? record.decisionTaskId.trim()
+        : record.sourceTaskId.trim();
+    for (final world in sourceState.worlds) {
+      if (world.worldId != record.worldId) continue;
+      for (final lesson in world.lessons) {
+        if (lesson.lessonId != record.lessonId) continue;
+        for (final task in lesson.taskList) {
+          if (task.taskId != decisionTaskId) continue;
+          for (final option in task.runner.options) {
+            if (option.id != id) continue;
+            final sourceCopy = option.label.trim();
+            final localCopy =
+                (localizeOptionLabel?.call(sourceCopy) ?? sourceCopy).trim();
+            if (localeIsRu && localCopy == sourceCopy) {
+              // Exact authored W1 option text, never guessed from answer IDs.
+              final match = RegExp(
+                r'^(\d+) private cards, (\d+) board cards, (.+) in the pot$',
+              ).firstMatch(sourceCopy);
+              if (match != null) {
+                return '${match.group(1)} \u0437\u0430\u043a\u0440\u044b\u0442\u044b\u0435 \u043a\u0430\u0440\u0442\u044b, '
+                    '${match.group(2)} \u043e\u0431\u0449\u0438\u0435 \u043a\u0430\u0440\u0442\u044b, \u0431\u0430\u043d\u043a ${match.group(3)}';
+              }
+              if (sourceCopy == '5 board cards are already out') {
+                return '\u0423\u0436\u0435 \u043e\u0442\u043a\u0440\u044b\u0442\u043e 5 \u043e\u0431\u0449\u0438\u0445 \u043a\u0430\u0440\u0442';
+              }
+            }
+            if (localCopy.isNotEmpty) return localCopy;
+          }
+        }
+      }
+    }
   }
-  return _humanize(value).toLowerCase();
+  // Only direct poker action IDs have unambiguous standalone meanings.
+  switch (id) {
+    case 'fold':
+      return localeIsRu ? '\u0444\u043E\u043B\u0434' : 'fold';
+    case 'check':
+      return localeIsRu ? '\u0447\u0435\u043A' : 'check';
+    case 'call':
+      return localeIsRu ? '\u043A\u043E\u043B\u043B' : 'call';
+    case 'raise':
+      return localeIsRu ? '\u0440\u0435\u0439\u0437' : 'raise';
+    case 'all_in':
+      return localeIsRu ? '\u043E\u043B\u043B-\u0438\u043D' : 'all-in';
+    default:
+      return localeIsRu
+          ? '\u044D\u0442\u043E\u0442 \u0432\u0430\u0440\u0438\u0430\u043D\u0442'
+          : 'that option';
+  }
 }
 
 String _readableContext(Act0ReviewMistakeRecordV1 record) {
