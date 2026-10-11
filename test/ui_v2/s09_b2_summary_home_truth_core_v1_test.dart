@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -94,6 +96,95 @@ Future<void> _pump(
   await tester.pump(const Duration(milliseconds: 2200));
 }
 
+Future<void> _completeAssistedThenIndependentLesson(WidgetTester tester) async {
+  await tester.binding.setSurfaceSize(const Size(430, 932));
+  addTearDown(() => tester.binding.setSurfaceSize(null));
+  final lesson = Act0ShellStateV1.sample
+      .worldById('world_1')
+      .lessons
+      .firstWhere((item) => item.lessonId == 'fold_check_call_raise');
+  await tester.pumpWidget(
+    const MaterialApp(
+      home: Act0ShellPreviewScreenV1(
+        initialTab: Act0ShellTabV1.play,
+        showPlacementOnStart: false,
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+  final hint = find.byKey(const Key('act0_shell_theory_recall_cta'));
+  for (var i = 0; i < 12 && hint.evaluate().isEmpty; i++) {
+    final next = find.byKey(const Key('act0_shell_continue_cta'));
+    expect(next, findsOneWidget);
+    await tester.tap(next);
+    await tester.pumpAndSettle();
+  }
+  expect(hint, findsOneWidget);
+  await tester.ensureVisible(hint);
+  await tester.tap(hint);
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const Key('act0_shell_theory_recall_close_cta')));
+  await tester.pumpAndSettle();
+
+  for (final taskId in [
+    'actions_legal_context',
+    'actions_check_drill',
+    'actions_fold_drill',
+    'actions_call_drill',
+    'actions_raise_drill',
+    'actions_review',
+  ]) {
+    final runner = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(runner.selectedTaskId, taskId);
+    if (taskId == 'actions_review') {
+      final continueReview = find.byKey(
+        const Key('act0_shell_feedback_continue_cta'),
+      );
+      expect(continueReview, findsOneWidget);
+      await tester.tap(continueReview);
+      await tester.pumpAndSettle();
+      continue;
+    }
+    final task = lesson.taskList.firstWhere((item) => item.taskId == taskId);
+    final answer = task.runner.options.firstWhere((option) => option.isCorrect);
+    final option = find.byKey(Key('act0_shell_option_${answer.id}'));
+    final seat = find.byKey(Key('act0_shell_seat_tap_${answer.seatId}'));
+    for (
+      var i = 0;
+      i < 12 && option.evaluate().isEmpty && seat.evaluate().isEmpty;
+      i++
+    ) {
+      final next =
+          find
+              .byKey(const Key('act0_shell_theory_continue_cta'))
+              .evaluate()
+              .isNotEmpty
+          ? find.byKey(const Key('act0_shell_theory_continue_cta'))
+          : find.byKey(const Key('act0_shell_continue_cta'));
+      expect(
+        next,
+        findsOneWidget,
+        reason:
+            'task=$taskId, option=${answer.id}, phase=${runner.runner.phase}, visible=${tester.widgetList<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1)).length}',
+      );
+      await tester.tap(next);
+      await tester.pumpAndSettle();
+    }
+    if (seat.evaluate().isNotEmpty) {
+      await tester.tap(seat);
+    } else {
+      expect(option, findsOneWidget);
+      await tester.tap(option);
+    }
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+  }
+  expect(find.byType(Act0BlockCompletionShellV1), findsOneWidget);
+}
+
 void main() {
   testWidgets(
     'root shares the exact Home source task, target and reason with Summary',
@@ -181,6 +272,110 @@ void main() {
       expect(summary['targetTaskId'], 'actions_check_drill');
     },
   );
+
+  for (final historyOwner in [
+    'none',
+    'same_lesson_prior_run',
+    'other_lesson',
+  ]) {
+    testWidgets(
+      'production root selects first independent current lesson proof; '
+      'historical=$historyOwner',
+      (tester) async {
+        final historicallyEarned = historyOwner != 'none';
+        final world = Act0ShellStateV1.sample.worldById('world_1');
+        const lessonId = 'fold_check_call_raise';
+        SharedPreferences.setMockInitialValues(<String, Object>{
+          'act0_welcome_completed_v1': true,
+          'intake_completed_v1': true,
+          'act0_shell_progress_v1': jsonEncode(<String, Object?>{
+            'schemaVersion': 17,
+            'completedTaskIds': <String>[
+              for (final lesson in world.lessons.takeWhile(
+                (item) => item.lessonId != lessonId,
+              ))
+                for (final task in lesson.taskList) task.taskId,
+              'actions_theory',
+            ],
+            'completedLessonIds': <String>[
+              for (final lesson in world.lessons.takeWhile(
+                (item) => item.lessonId != lessonId,
+              ))
+                lesson.lessonId,
+            ],
+            'selectedWorldId': 'world_1',
+            'selectedLessonId': lessonId,
+            'selectedTaskId': 'actions_legal_context',
+            'learningEvidenceHistory': <Object>[
+              if (historicallyEarned)
+                <String, Object?>{
+                  'schemaVersion': 1,
+                  'recordId': 'previous_lesson_run|1',
+                  'createdOrder': 1,
+                  'worldId': 'world_1',
+                  'lessonId': historyOwner == 'same_lesson_prior_run'
+                      ? lessonId
+                      : 'what_poker_is',
+                  'taskId': historyOwner == 'same_lesson_prior_run'
+                      ? 'actions_call_drill'
+                      : 'what_poker_is_find_hero',
+                  'choiceId': 'call',
+                  'expectedChoiceId': 'call',
+                  'isCorrect': true,
+                  'errorType': 'none',
+                  'skillAtomId': 'table_read',
+                  'decisionTimeBucket': '3_to_10s',
+                  'resultKind': 'correct',
+                  'assistanceKind': 'none',
+                },
+            ],
+            'lessonRunEvidenceBoundaries': <String, Object?>{
+              lessonId: historicallyEarned ? 1 : 0,
+            },
+            'lessonRunEvidenceLessonId': lessonId,
+            'lessonRunEvidenceStartOrder': historicallyEarned ? 1 : 0,
+          }),
+        });
+        await _completeAssistedThenIndependentLesson(tester);
+        final preferences = await SharedPreferences.getInstance();
+        final progress =
+            jsonDecode(preferences.getString('act0_shell_progress_v1')!)
+                as Map<String, dynamic>;
+        final history = (progress['learningEvidenceHistory'] as List)
+            .cast<Map<String, dynamic>>();
+        final current = history
+            .where(
+              (record) =>
+                  record['taskId'] == 'actions_legal_context' ||
+                  record['taskId'] == 'actions_check_drill',
+            )
+            .toList();
+        expect(current.map((record) => record['assistanceKind']).toList(), [
+          'quickHint',
+          'none',
+        ]);
+        expect(current.every((record) => record['isCorrect'] == true), isTrue);
+        expect(current[0]['createdOrder'], historicallyEarned ? 2 : 1);
+        expect(current[1]['createdOrder'], historicallyEarned ? 3 : 2);
+        final summary = tester.widget<Act0BlockCompletionShellV1>(
+          find.byType(Act0BlockCompletionShellV1),
+        );
+        expect(summary.firstCorrectEarnedThisRun, !historicallyEarned);
+        expect(
+          find.text('Collected read'),
+          historicallyEarned ? findsNothing : findsOneWidget,
+        );
+        expect(
+          find.text('Saved earlier'),
+          historicallyEarned ? findsOneWidget : findsNothing,
+        );
+        expect(
+          find.byKey(const Key('act0_shell_session_summary_hero_payoff')),
+          historicallyEarned ? findsNothing : findsOneWidget,
+        );
+      },
+    );
+  }
 
   testWidgets('old saved first read is not presented as freshly earned', (
     tester,

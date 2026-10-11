@@ -7409,13 +7409,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool _firstCorrectReadEarnedInCurrentLessonRunV1() {
     final boundary = _lessonRunEvidenceStartOrderV1;
     if (boundary == null || _selectedLessonId.isEmpty) return false;
-    final correct = _learningEvidenceHistoryV1.records
-        .where((record) => record.isCorrect)
-        .firstOrNull;
-    return correct != null &&
-        correct.createdOrder > boundary &&
-        correct.lessonId == _selectedLessonId &&
-        correct.assistanceKind == Act0DecisionAssistanceV1.none;
+    // Match the canonical achievement's earliest correct, non-assisted
+    // record before deciding whether it belongs to this lesson run.
+    final eligible =
+        _learningEvidenceHistoryV1.records
+            .where((record) => record.isCorrect && !record.isAssistedCorrect)
+            .toList()
+          ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));
+    final first = eligible.firstOrNull;
+    return first != null &&
+        first.createdOrder > boundary &&
+        first.lessonId == _selectedLessonId &&
+        first.assistanceKind == Act0DecisionAssistanceV1.none;
   }
 
   @visibleForTesting
