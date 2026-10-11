@@ -10,7 +10,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
-bool _isRuLocaleV1(BuildContext context) => false;
+bool _isRuLocaleV1(BuildContext context) =>
+    Localizations.localeOf(context).languageCode == 'ru';
 
 String _reviewCopyV1(
   BuildContext context, {
@@ -98,9 +99,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
         ),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
       ],
-      if (review.mistakes.isEmpty &&
-          dueReviewItems.isNotEmpty &&
-          onStartDueReview != null) ...[
+      if (dueReviewItems.isNotEmpty && onStartDueReview != null) ...[
         _DueReviewCardV1(
           item:
               _selectedDueItemV1(nextStep, dueReviewItems) ??
@@ -183,6 +182,20 @@ class Act0ReviewShellV1 extends StatelessWidget {
       const _ReviewTodayBarV1(),
       const SizedBox(height: Act0ShellTokensV1.gapMd),
       _ReviewCompactHeaderV1(missCount: missCount),
+      if (localeIsRu) ...[
+        const SizedBox(height: Act0ShellTokensV1.gapXs),
+        Text(
+          missCount > 0
+              ? 'Это ошибки, сохранённые после ваших решений. Исправьте их здесь; повторы по расписанию доступны отдельно.'
+              : dueReviewItems.isNotEmpty && onStartDueReview != null
+              ? 'Ошибок для исправления сейчас нет. Повтор по расписанию уже доступен ниже.'
+              : mistakeHistoryItems.isNotEmpty || recovered.isNotEmpty
+              ? 'Нет повторов, срок которых наступил. Сохранённые результаты остаются ниже.'
+              : 'Ошибки после решений и повторы по расписанию появятся здесь, когда будут доступны.',
+          key: const Key('act0_shell_review_ru_route_explanation'),
+          style: Act0ShellTokensV1.muted,
+        ),
+      ],
       const SizedBox(height: Act0ShellTokensV1.gapMd),
     ];
 
@@ -371,35 +384,70 @@ class _ReviewNextStepCardV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final focus = nextStep.learnerSafeFocusLabel.trim();
+    final isRu = _isRuLocaleV1(context);
     final action = switch (nextStep.recommendedAction) {
-      'spaced_review' => 'Review this clue',
-      'repair' || 'retry_repair' => 'Practice this repair',
-      'reinforce' => 'Reinforce this read',
-      'resume_focus' => 'Resume this focus',
-      _ => 'Continue learning',
+      'spaced_review' => isRu ? 'Повторить решение' : 'Review this clue',
+      'repair' ||
+      'retry_repair' => isRu ? 'Исправить ошибку' : 'Practice this repair',
+      'reinforce' => isRu ? 'Закрепить решение' : 'Reinforce this read',
+      'resume_focus' => isRu ? 'Продолжить тему' : 'Resume this focus',
+      _ => isRu ? 'Продолжить обучение' : 'Continue learning',
     };
     final line = focus.isNotEmpty
-        ? '$action: notice $focus.'
+        ? isRu
+              ? '$action: обратите внимание на $focus.'
+              : '$action: notice $focus.'
         : switch (nextStep.recommendedAction) {
             'repair' =>
-              'Practice this repair: notice the decision that slipped.',
-            'retry_repair' => 'Practice this repair: replay the recent repair.',
+              isRu
+                  ? 'Исправьте ошибку: вспомните, где решение пошло неверно.'
+                  : 'Practice this repair: notice the decision that slipped.',
+            'retry_repair' =>
+              isRu
+                  ? 'Повторите попытку исправления сохранённой ошибки.'
+                  : 'Practice this repair: replay the recent repair.',
             'spaced_review' =>
-              'Review this clue: recheck the repaired decision.',
+              isRu
+                  ? 'Проверьте исправленную ошибку ещё раз.'
+                  : 'Review this clue: recheck the repaired decision.',
             'reinforce' =>
-              'Reinforce this read: compare it with the later hand.',
+              isRu
+                  ? 'Закрепите решение: сравните его со следующей раздачей.'
+                  : 'Reinforce this read: compare it with the later hand.',
             'resume_focus' =>
-              'Resume this focus: return to the latest table-reading focus.',
-            _ => 'Continue learning with one useful table read.',
+              isRu
+                  ? 'Вернитесь к последней теме чтения стола.'
+                  : 'Resume this focus: return to the latest table-reading focus.',
+            _ =>
+              isRu
+                  ? 'Продолжите обучение с одного полезного решения.'
+                  : 'Continue learning with one useful table read.',
           };
     final whyNow = switch (nextStep.whyNowMessageKey) {
-      'unfinished_repair' => 'It is still waiting for one clear retry.',
-      'repair_not_landed' => 'The last repair attempt did not land yet.',
-      'due_for_review' => 'It is ready for a spaced check now.',
+      'unfinished_repair' =>
+        isRu
+            ? 'Ошибка ещё ждёт исправления.'
+            : 'It is still waiting for one clear retry.',
+      'repair_not_landed' =>
+        isRu
+            ? 'Предыдущая попытка исправления не удалась.'
+            : 'The last repair attempt did not land yet.',
+      'due_for_review' =>
+        isRu
+            ? 'Срок повторения по расписанию наступил.'
+            : 'It is ready for a spaced check now.',
       'transfer_evidence' =>
-        'A later hand gave you a real signal to reinforce.',
-      'recent_focus' => 'It is the most recent useful focus in your history.',
-      _ => 'Start with one useful table read.',
+        isRu
+            ? 'Следующая раздача дала материал для закрепления.'
+            : 'A later hand gave you a real signal to reinforce.',
+      'recent_focus' =>
+        isRu
+            ? 'Это последняя полезная тема из вашей истории.'
+            : 'It is the most recent useful focus in your history.',
+      _ =>
+        isRu
+            ? 'Начните с одного полезного решения за столом.'
+            : 'Start with one useful table read.',
     };
     return Container(
       key: const Key('act0_shell_review_next_step_explanation'),
@@ -413,7 +461,11 @@ class _ReviewNextStepCardV1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'WHY THIS, WHY NOW',
+            _reviewCopyV1(
+              context,
+              en: 'WHY THIS, WHY NOW',
+              ru: 'ПОЧЕМУ ЭТО СЕЙЧАС',
+            ),
             style: Act0ShellTokensV1.label.copyWith(
               color: Act0ShellTokensV1.info,
               fontWeight: FontWeight.w900,
@@ -459,10 +511,21 @@ class _DueReviewCardV1 extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Ready to recheck', style: Act0ShellTokensV1.sectionTitle),
+          Text(
+            _reviewCopyV1(
+              context,
+              en: 'Ready to recheck',
+              ru: 'Пора повторить',
+            ),
+            style: Act0ShellTokensV1.sectionTitle,
+          ),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(
-            'A repaired clue is due for a spaced review.',
+            _reviewCopyV1(
+              context,
+              en: 'A repaired clue is due for a spaced review.',
+              ru: 'Срок повторения исправленной ошибки наступил. Проверьте её снова.',
+            ),
             style: Act0ShellTokensV1.muted,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -471,7 +534,13 @@ class _DueReviewCardV1 extends StatelessWidget {
             child: FilledButton(
               key: const Key('act0_shell_review_start_due_spaced_item'),
               onPressed: () => onStart(item),
-              child: const Text('Review now'),
+              child: Text(
+                _reviewCopyV1(
+                  context,
+                  en: 'Review now',
+                  ru: 'Повторить сейчас',
+                ),
+              ),
             ),
           ),
         ],
@@ -522,7 +591,7 @@ class _ReviewCompactHeaderV1 extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              'Review',
+              _reviewCopyV1(context, en: 'Review', ru: 'Разбор ошибок'),
               style: Act0ShellTokensV1.screenTitle.copyWith(
                 fontSize: 25,
                 fontWeight: FontWeight.w700,
@@ -566,7 +635,16 @@ class _ReviewMissCountPillV1 extends StatelessWidget {
           ),
           const SizedBox(width: 5),
           Text(
-            '$missCount ${missCount == 1 ? 'miss' : 'misses'} to fix',
+            _isRuLocaleV1(context)
+                ? '$missCount ' +
+                      act0RussianPluralV1(
+                        missCount,
+                        'ошибка',
+                        'ошибки',
+                        'ошибок',
+                      ) +
+                      ' для исправления'
+                : '$missCount ${missCount == 1 ? 'miss' : 'misses'} to fix',
             style: Act0ShellTokensV1.label.copyWith(
               color: Act0ShellTokensV1.gold,
               fontSize: 12,
@@ -678,10 +756,17 @@ class _ReviewEmptyRepairCardV1 extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Act0SharkyPresenceBubbleV1(
-            line: 'Review is ready',
-            detail:
-                'Finish a lesson - every miss can become one clean repair rep.',
+          Act0SharkyPresenceBubbleV1(
+            line: _reviewCopyV1(
+              context,
+              en: 'Review is ready',
+              ru: 'Разбор ошибок готов',
+            ),
+            detail: _reviewCopyV1(
+              context,
+              en: 'Finish a lesson - every miss can become one clean repair rep.',
+              ru: 'Примите решение в уроке. Если ошибётесь, здесь можно будет исправить ошибку.',
+            ),
             mood: Act0SharkyMoodV1.thinking,
             tone: Act0ShellTokensV1.info,
             mascotSize: 58,
@@ -689,12 +774,20 @@ class _ReviewEmptyRepairCardV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           Text(
-            'Misses from lessons will appear here after you try a spot.',
+            _reviewCopyV1(
+              context,
+              en: 'Misses from lessons will appear here after you try a spot.',
+              ru: 'Здесь пока нет сохранённых ошибок для исправления.',
+            ),
             style: Act0ShellTokensV1.muted,
           ),
           const SizedBox(height: 3),
           Text(
-            'Start on Learn, then come back here for the exact clue.',
+            _reviewCopyV1(
+              context,
+              en: 'Start on Learn, then come back here for the exact clue.',
+              ru: 'Начните урок в разделе «Обучение» и возвращайтесь к конкретной ошибке.',
+            ),
             style: Act0ShellTokensV1.label.copyWith(
               color: Act0ShellTokensV1.textMuted,
               letterSpacing: 0,
@@ -707,7 +800,9 @@ class _ReviewEmptyRepairCardV1 extends StatelessWidget {
               onPressed: onOpenLearn,
               style: Act0ShellTokensV1.premiumActionButtonStyle(),
               icon: const Icon(Icons.play_arrow_rounded, size: 19),
-              label: const Text('Open Learn'),
+              label: Text(
+                _reviewCopyV1(context, en: 'Open Learn', ru: 'К обучению'),
+              ),
             ),
           ],
         ],
@@ -766,7 +861,11 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
               const SizedBox(width: Act0ShellTokensV1.gapSm),
               Expanded(
                 child: Text(
-                  'MISS TO REPAIR',
+                  _reviewCopyV1(
+                    context,
+                    en: 'MISS TO REPAIR',
+                    ru: 'СОХРАНЁННАЯ ОШИБКА',
+                  ),
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.primary,
                     fontSize: 11,
@@ -805,7 +904,7 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
                 ),
                 const SizedBox(width: Act0ShellTokensV1.gapSm),
                 Text(
-                  'Current clue',
+                  _reviewCopyV1(context, en: 'Current clue', ru: 'Подсказка'),
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.gold,
                     fontSize: 10.5,
@@ -1731,7 +1830,7 @@ class _FixedMistakeCardV1 extends StatelessWidget {
         : _reviewCopyV1(
             context,
             en: 'Replay for perfect',
-            ru: 'Повторить на идеально',
+            ru: 'Повторить без ошибок',
           );
     return Container(
       key: Key('act0_shell_fixed_mistake_${mistake.taskId}'),

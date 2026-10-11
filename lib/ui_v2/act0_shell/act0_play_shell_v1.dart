@@ -376,7 +376,10 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
             if (hasRepairEmptyState) ...[
               if (primaryGroups.isNotEmpty)
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
-              _PlayRepairEmptyCardV1(localeIsRu: act0IsRuLocaleV1(context)),
+              _PlayRepairEmptyCardV1(
+                localeIsRu:
+                    Localizations.localeOf(context).languageCode == 'ru',
+              ),
             ],
             const SizedBox(height: Act0VisualMetricsV1.sectionGap),
           ],
@@ -527,6 +530,14 @@ class _PracticeHubHeaderV1 extends StatelessWidget {
             height: 1.22,
           ),
         ),
+        if (Localizations.localeOf(context).languageCode == 'ru') ...[
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            'Практика — тренировка по вашему выбору. Ошибки из решений сохраняются в «Разборе», где их можно исправить или повторить по расписанию.',
+            key: const Key('act0_shell_play_ru_voluntary_explanation'),
+            style: Act0ShellTokensV1.muted,
+          ),
+        ],
       ],
     );
   }
@@ -582,16 +593,26 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      primary ? 'Active repair first' : 'Practice repair',
+                      Localizations.localeOf(context).languageCode == 'ru'
+                          ? (primary
+                                ? 'Сначала исправление'
+                                : 'Повторить ошибку')
+                          : (primary
+                                ? 'Active repair first'
+                                : 'Practice repair'),
                       style: Act0ShellTokensV1.body.copyWith(
                         fontWeight: FontWeight.w900,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      primary
-                          ? 'Start the same table clue before browsing drills.'
-                          : 'Saved spots worth repeating.',
+                      Localizations.localeOf(context).languageCode == 'ru'
+                          ? (primary
+                                ? 'Повторите сохранённую ошибку перед свободной тренировкой.'
+                                : 'Сохранённые ошибки для добровольного повтора.')
+                          : (primary
+                                ? 'Start the same table clue before browsing drills.'
+                                : 'Saved spots worth repeating.'),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: Act0ShellTokensV1.muted,
