@@ -1,0 +1,115 @@
+{
+  "version": "v4r1_manager_final",
+  "sourceCanvasWidth": 941,
+  "sourceCanvasHeight": 1672,
+  "compositionOrder": [
+    "UTG",
+    "BB",
+    "HJ",
+    "SB",
+    "CO"
+  ],
+  "authoring": "manager_selected_c3_spatial_with_bb_hj_support_only",
+  "seats": {
+    "UTG": {
+      "x": 376,
+      "y": 325,
+      "width": 159,
+      "height": 145,
+      "sourceCanvasWidth": 941,
+      "sourceCanvasHeight": 1672,
+      "depthPlane": "back",
+      "seatActiveAsset": "UTG_SEAT_ACTIVE_V4R1_MANAGER_FINAL.png",
+      "playerEffectMaskAsset": "UTG_PLAYER_EFFECT_MASK_V4R1_MANAGER_FINAL.png",
+      "uniformScale": 1.0,
+      "playerCentroidSource": [
+        455.085,
+        410.187
+      ],
+      "playerCentroidNormInFelt": [
+        0.487315,
+        -0.082266
+      ]
+    },
+    "BB": {
+      "x": 60,
+      "y": 478,
+      "width": 144,
+      "height": 246,
+      "sourceCanvasWidth": 941,
+      "sourceCanvasHeight": 1672,
+      "depthPlane": "back",
+      "seatActiveAsset": "BB_SEAT_ACTIVE_V4R1_MANAGER_FINAL.png",
+      "playerEffectMaskAsset": "BB_PLAYER_EFFECT_MASK_V4R1_MANAGER_FINAL.png",
+      "uniformScale": 0.95,
+      "playerCentroidSource": [
+        141.423,
+        591.763
+      ],
+      "playerCentroidNormInFelt": [
+        -0.015348,
+        0.144704
+      ]
+    },
+    "HJ": {
+      "x": 743,
+      "y": 498,
+      "width": 133,
+      "height": 301,
+      "sourceCanvasWidth": 941,
+      "sourceCanvasHeight": 1672,
+      "depthPlane": "back",
+      "seatActiveAsset": "HJ_SEAT_ACTIVE_V4R1_MANAGER_FINAL.png",
+      "playerEffectMaskAsset": "HJ_PLAYER_EFFECT_MASK_V4R1_MANAGER_FINAL.png",
+      "uniformScale": 0.95,
+      "playerCentroidSource": [
+        800.172,
+        612.246
+      ],
+      "playerCentroidNormInFelt": [
+        1.04034,
+        0.170307
+      ]
+    },
+    "SB": {
+      "x": 0,
+      "y": 800,
+      "width": 167,
+      "height": 324,
+      "sourceCanvasWidth": 941,
+      "sourceCanvasHeight": 1672,
+      "depthPlane": "front",
+      "seatActiveAsset": "SB_SEAT_ACTIVE_V4R1_MANAGER_FINAL.png",
+      "playerEffectMaskAsset": "SB_PLAYER_EFFECT_MASK_V4R1_MANAGER_FINAL.png",
+      "uniformScale": 0.94,
+      "playerCentroidSource": [
+        72.464,
+        961.567
+      ],
+      "playerCentroidNormInFelt": [
+        -0.125858,
+        0.606959
+      ]
+    },
+    "CO": {
+      "x": 757,
+      "y": 810,
+      "width": 184,
+      "height": 333,
+      "sourceCanvasWidth": 941,
+      "sourceCanvasHeight": 1672,
+      "depthPlane": "front",
+      "seatActiveAsset": "CO_SEAT_ACTIVE_V4R1_MANAGER_FINAL.png",
+      "playerEffectMaskAsset": "CO_PLAYER_EFFECT_MASK_V4R1_MANAGER_FINAL.png",
+      "uniformScale": 0.94,
+      "playerCentroidSource": [
+        867.086,
+        967.395
+      ],
+      "playerCentroidNormInFelt": [
+        1.147574,
+        0.614243
+      ]
+    }
+  }
+}
