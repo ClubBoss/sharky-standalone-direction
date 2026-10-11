@@ -355,12 +355,10 @@ void main() {
       ),
     );
 
-    final momentum = tester.widget<Text>(
-      find.byKey(const Key('act0_shell_home_proof_momentum_text')),
-    );
+    // No earned lesson exists, so a proof/momentum receipt must not render.
     expect(
-      momentum.data,
-      'Your route is ready. Next proof starts with one clean read.',
+      find.byKey(const Key('act0_shell_home_proof_momentum_line')),
+      findsNothing,
     );
     expect(find.textContaining('lessons complete'), findsNothing);
   });
