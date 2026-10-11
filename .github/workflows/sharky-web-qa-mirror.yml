@@ -130,6 +130,8 @@ jobs:
             test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
             --plain-name 'captures canonical W1 Action production states'
 
+          # Reuse the freshly resolved compatible graph for both compared trees.
+          cp pubspec.lock _wave_a_baseline/pubspec.lock
           cp test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
             _wave_a_baseline/test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart
           (
