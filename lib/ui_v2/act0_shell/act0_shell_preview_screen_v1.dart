@@ -5226,6 +5226,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             widget.tableVisualVariant ==
                 Act0ShellTableVisualVariantV1.refinedDev2 &&
             playTaskAwardXp > 0 &&
+            _cleanTaskIds.contains(playSelectedTask?.taskId) &&
+            !_choiceWasAssistedV1 &&
             !suppressTaskCompletionToast
         ? Act0RunnerCompletionSummaryV1(
             xpGain: playTaskAwardXp,
@@ -5922,6 +5924,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 framingProfile: runnerFramingProfile,
                                 tableVisualVariant: widget.tableVisualVariant,
                                 completionSummary: completionSummary,
+                                isAssistedDecision: _choiceWasAssistedV1,
                                 firstValueReceiptLine:
                                     _placementHandoffActive &&
                                         !_placementDiagnosticActive
@@ -6512,6 +6515,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         mistakeHistoryItems:
                             Act0ReviewMistakeHistoryConsumerV1.fromHistory(
                               _reviewMistakeHistoryV1,
+                              sourceState: state,
+                              localeIsRu:
+                                  act0AcademyLanguageV1(context) == 'ru',
+                              localizeOptionLabel: (label) =>
+                                  act0AcademyW1OptionLabelV1(
+                                    context,
+                                    act0RuntimeLocalizedOptionLabelV1(context, label),
+                                  ),
                               activeRepairSourceTaskIds: <String>{
                                 for (final mistake in reviewState.mistakes)
                                   mistake.taskId,

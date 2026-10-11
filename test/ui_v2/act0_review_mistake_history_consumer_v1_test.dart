@@ -42,6 +42,70 @@ void main() {
     expect(model.items.first.orderLabel, 'Most recent');
   });
 
+  test('Review F09 renders exact source-owned W1 option meaning, not IDs', () {
+    final history = const Act0ReviewMistakeHistoryV1().appendCompletedDecision(
+      _decision(
+        attempt: 1,
+        lessonId: 'what_poker_is',
+        taskId: 'what_poker_is_table_read_transfer',
+        sourceTaskId: 'what_poker_is_table_read_transfer',
+        selectedId: 'five_board_now',
+        expectedId: 'two_three_six',
+      ),
+    );
+    final source = Act0ShellStateV1.sample;
+    final english = Act0ReviewMistakeHistoryConsumerV1.fromHistory(
+      history,
+      sourceState: source,
+    );
+    expect(
+      english.items.single.decisionLine,
+      'You chose 5 board cards are already out; better was '
+      '2 private cards, 3 board cards, 6 BB in the pot.',
+    );
+    final russian = Act0ReviewMistakeHistoryConsumerV1.fromHistory(
+      history,
+      sourceState: source,
+      localeIsRu: true,
+      localizeOptionLabel: (label) => 'RU:$label',
+    );
+    expect(russian.items.single.decisionLine, contains('RU:5 board cards'));
+    expect(russian.items.single.decisionLine, contains('RU:2 private cards'));
+    expect(
+      russian.items.single.decisionLine,
+      startsWith('\u0412\u0430\u0448 \u0432\u044B\u0431\u043E\u0440:'),
+    );
+    final ruFallback = Act0ReviewMistakeHistoryConsumerV1.fromHistory(
+      history,
+      sourceState: source,
+      localeIsRu: true,
+      localizeOptionLabel: (label) => label,
+    );
+    expect(
+      ruFallback.items.single.decisionLine,
+      '\u0412\u0430\u0448 \u0432\u044B\u0431\u043E\u0440: \u0423\u0436\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\u043E 5 \u043E\u0431\u0449\u0438\u0445 \u043A\u0430\u0440\u0442; \u043B\u0443\u0447\u0448\u0435: '
+      '2 \u0437\u0430\u043A\u0440\u044B\u0442\u044B\u0435 \u043A\u0430\u0440\u0442\u044B, 3 \u043E\u0431\u0449\u0438\u0435 \u043A\u0430\u0440\u0442\u044B, \u0431\u0430\u043D\u043A 6 BB.',
+    );
+    expect(history.records.single.selectedId, 'five_board_now');
+    expect(history.records.single.expectedId, 'two_three_six');
+  });
+
+  test('Review F09 never invents semantics for unknown source option IDs', () {
+    final history = const Act0ReviewMistakeHistoryV1().appendCompletedDecision(
+      _decision(
+        attempt: 2,
+        selectedId: 'unmapped_choice_982',
+        expectedId: 'unmapped_correct_982',
+      ),
+    );
+    final text = Act0ReviewMistakeHistoryConsumerV1.fromHistory(
+      history,
+      sourceState: Act0ShellStateV1.sample,
+    ).items.single.decisionLine;
+    expect(text, 'You chose that option; better was that option.');
+    expect(text, isNot(contains('982')));
+  });
+
   test('consumer filters active repair source without mutating history', () {
     final history = const Act0ReviewMistakeHistoryV1()
         .appendCompletedDecision(
@@ -286,6 +350,7 @@ Act0CompletedDecisionV1 _decision({
   required int attempt,
   String taskId = 'actions_legal_context',
   String sourceTaskId = 'actions_legal_context',
+  String lessonId = 'fold_check_call_raise',
   String selectedId = 'fold',
   String expectedId = 'check',
   String errorType = 'missed_action_read',
@@ -293,10 +358,9 @@ Act0CompletedDecisionV1 _decision({
   String repairFocusId = 'no_bet_yet',
 }) {
   return Act0CompletedDecisionV1(
-    attemptKey:
-        'v1|world_1|fold_check_call_raise|$taskId|actionList|$selectedId|$attempt',
+    attemptKey: 'v1|world_1|$lessonId|$taskId|actionList|$selectedId|$attempt',
     worldId: 'world_1',
-    lessonId: 'fold_check_call_raise',
+    lessonId: lessonId,
     taskId: taskId,
     sourceTaskId: sourceTaskId,
     decisionKind: Act0CompletedDecisionKindV1.actionList,

@@ -322,7 +322,7 @@ _ruTaskCopyByIdV1 = <String, Act0TaskDisplayCopyV1>{
         'Сначала посмотри на свои карты, потом на борд, потом на банк.',
     runnerSupport:
         'Этот порядок не даёт расплыться вниманию: свои карты, общие карты, потом размер банка.',
-    runnerQuestion: 'С чего лучше начать быстрое чтение стола?',
+    runnerQuestion: 'Какое описание текущего стола верно?',
     teachingSteps: <Act0TeachingStepDisplayCopyV1>[
       Act0TeachingStepDisplayCopyV1(
         title: 'Перенеси первое чтение на живой стол.',
