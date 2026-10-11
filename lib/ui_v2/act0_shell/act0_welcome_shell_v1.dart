@@ -119,30 +119,35 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         ),
         onNext: () => setState(() => _beat = Act0WelcomeBeatV1.demoSpot),
       ),
-      Act0WelcomeBeatV1.demoSpot => Act0LessonRunnerShellV1(
-        key: const Key('act0_shell_welcome_demo_spot'),
-        runner: microWinRunner,
-        accessibilityPrototypeStep: accessibilityPrototypeStep,
-        onAccessibilityPrototypeStepChanged: (next) {
-          setState(() => _accessibilityPrototypeStep = next);
-        },
-        onBack: widget.replayMode && widget.onClose != null
-            ? widget.onClose!
-            : () => setState(() => _beat = Act0WelcomeBeatV1.intro),
-        onContinueTheory: () {},
-        // Any pick moves straight to the truthful handoff beat: Welcome never
-        // renders the real review/feedback phase, so no fabricated graded
-        // choice (correct/wrong banner, fake retry CTA) can appear here.
-        onChooseOption: (option) {
-          setState(() {
-            _orientationChoiceLabel = option.label;
-            _beat = Act0WelcomeBeatV1.handoff;
-          });
-        },
-        onContinueReview: () {
-          setState(() => _beat = Act0WelcomeBeatV1.handoff);
-        },
-        tableVisualVariant: widget.tableVisualVariant,
+      // Keep the existing Table rendering context while Academy text scales.
+      Act0WelcomeBeatV1.demoSpot => MediaQuery.withClampedTextScaling(
+        minScaleFactor: 1.0,
+        maxScaleFactor: 1.0,
+        child: Act0LessonRunnerShellV1(
+          key: const Key('act0_shell_welcome_demo_spot'),
+          runner: microWinRunner,
+          accessibilityPrototypeStep: accessibilityPrototypeStep,
+          onAccessibilityPrototypeStepChanged: (next) {
+            setState(() => _accessibilityPrototypeStep = next);
+          },
+          onBack: widget.replayMode && widget.onClose != null
+              ? widget.onClose!
+              : () => setState(() => _beat = Act0WelcomeBeatV1.intro),
+          onContinueTheory: () {},
+          // Any pick moves straight to the truthful handoff beat: Welcome never
+          // renders the real review/feedback phase, so no fabricated graded
+          // choice (correct/wrong banner, fake retry CTA) can appear here.
+          onChooseOption: (option) {
+            setState(() {
+              _orientationChoiceLabel = option.label;
+              _beat = Act0WelcomeBeatV1.handoff;
+            });
+          },
+          onContinueReview: () {
+            setState(() => _beat = Act0WelcomeBeatV1.handoff);
+          },
+          tableVisualVariant: widget.tableVisualVariant,
+        ),
       ),
       Act0WelcomeBeatV1.handoff => _WelcomeTextBeatV1(
         beatIndex: 3,

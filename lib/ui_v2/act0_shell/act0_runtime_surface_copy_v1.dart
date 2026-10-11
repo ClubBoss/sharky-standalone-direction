@@ -1025,15 +1025,30 @@ String _act0RuCombosWordV1(int count) {
 String act0AcademyLanguageV1(BuildContext context) =>
     Localizations.localeOf(context).languageCode;
 
+// These current Home atoms were added after the shared RU bundle. Keep their
+// explicit semantic IDs scoped to Academy rather than translating identifiers.
+const _academySurfaceRuV1 = <String, String>{
+  'home_checklist_learn_status_title':
+      '\u041f\u0443\u0442\u044c \u043e\u0431\u0443\u0447\u0435\u043d\u0438\u044f',
+  'home_checklist_learn_status_detail':
+      '\u0422\u0435\u043a\u0443\u0449\u0438\u0439 \u0443\u0440\u043e\u043a \u043f\u043e\u043a\u0430\u0437\u0430\u043d \u0432\u044b\u0448\u0435.',
+};
+
 String act0AcademySurfaceAtomV1(
   BuildContext context,
   String atomId, {
   required String fallback,
-}) => act0LocalizedSurfaceAtomByIdV1(
-  atomId,
-  fallback: fallback,
-  languageCode: act0AcademyLanguageV1(context),
-);
+}) {
+  final language = act0AcademyLanguageV1(context);
+  if (language == 'ru' && _academySurfaceRuV1.containsKey(atomId)) {
+    return _academySurfaceRuV1[atomId]!;
+  }
+  return act0LocalizedSurfaceAtomByIdV1(
+    atomId,
+    fallback: fallback,
+    languageCode: language,
+  );
+}
 
 String act0AcademyWorldTitleV1(BuildContext context, Act0WorldCardV1 world) =>
     act0LocalizedWorldTitleAtomV1(

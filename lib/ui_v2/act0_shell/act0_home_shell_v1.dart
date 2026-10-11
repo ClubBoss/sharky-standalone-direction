@@ -652,18 +652,7 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
               child: FilledButton(
                 key: const Key('act0_shell_main_cta'),
                 onPressed: onContinue,
-                style: FilledButton.styleFrom(
-                  backgroundColor: Act0AcademyDesignTokensV1.primaryAction,
-                  foregroundColor: Act0AcademyDesignTokensV1.onPrimaryAction,
-                  minimumSize: Size.fromHeight(
-                    Act0VisualMetricsV1.primaryCtaHeight,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      Act0AcademyDesignTokensV1.radiusCard,
-                    ),
-                  ),
-                ),
+                style: Act0AcademyDesignTokensV1.primaryButtonStyle(),
                 child: Text(nextActionCtaLabel),
               ),
             ),
@@ -960,7 +949,7 @@ class _HomeChecklistRowTileV1 extends StatelessWidget {
                     key: Key(
                       'act0_shell_home_checklist_step_label_${row.rowKey}',
                     ),
-                    style: Act0ShellTokensV1.label.copyWith(
+                    style: Act0AcademyDesignTokensV1.label.copyWith(
                       color: rowTone,
                       fontWeight: FontWeight.w900,
                     ),
@@ -984,7 +973,7 @@ class _HomeChecklistRowTileV1 extends StatelessWidget {
                         key: Key(
                           'act0_shell_home_checklist_label_${row.rowKey}',
                         ),
-                        style: Act0ShellTokensV1.label.copyWith(
+                        style: Act0AcademyDesignTokensV1.label.copyWith(
                           color: rowTone,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 0,

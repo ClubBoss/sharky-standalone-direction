@@ -76,6 +76,8 @@ void main() {
       expect(find.text('Poker from Zero'), findsNothing);
       expect(find.text("Today's table read"), findsNothing);
       expect(find.text('Sharky has one table clue ready.'), findsNothing);
+      expect(find.text('Learning path'), findsNothing);
+      expect(find.text('Current lesson is above.'), findsNothing);
       expect(find.text('0 of 9 lessons complete'), findsNothing);
       final cta = find.byKey(const Key('act0_shell_main_cta'));
       await tester.ensureVisible(cta);
@@ -100,6 +102,8 @@ void main() {
       expect(find.text('Poker from Zero'), findsNothing);
       expect(find.text("Today's table read"), findsNothing);
       expect(find.text('Sharky has one table clue ready.'), findsNothing);
+      expect(find.text('Learning path'), findsNothing);
+      expect(find.text('Current lesson is above.'), findsNothing);
       expect(
         find.text(
           '\u041f\u0435\u0440\u0432\u044b\u0439 \u0440\u0430\u0437\u0431\u043e\u0440 \u0441\u0442\u043e\u043b\u0430',
@@ -154,6 +158,13 @@ void main() {
         await tester.pumpAndSettle();
         final runner = tester.widget<Act0LessonRunnerShellV1>(
           find.byType(Act0LessonRunnerShellV1),
+        );
+        // Academy large text must not alter the protected Welcome Table.
+        expect(
+          MediaQuery.textScalerOf(
+            tester.element(find.byType(Act0LessonRunnerShellV1)),
+          ).scale(14),
+          14,
         );
         final wrong = runner.runner.options.firstWhere(
           (option) => !option.isCorrect,
