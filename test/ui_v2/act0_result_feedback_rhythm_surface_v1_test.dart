@@ -283,6 +283,89 @@ void main() {
     },
   );
 
+  testWidgets(
+    'assisted correct acknowledges help without banked receipt or full XP',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0FeedbackShellV1(
+              title: 'Correct.',
+              reason: 'BTN is the position, not the identity.',
+              quality: Act0FeedbackQualityV1.correct,
+              sharkyLine: 'The table clue explains why.',
+              sharkyMood: Act0SharkyMoodV1.happy,
+              selectedLabel: 'BTN',
+              preferredLabel: 'BTN',
+              betterLabel: 'BTN',
+              isAssistedDecision: true,
+              signalProof: const Act0FeedbackSignalProofV1(
+                signalId: 'hero_cards_board_pot',
+                label: 'Hero cards + board + pot',
+                proofLine: 'Signal: hero cards + board + pot',
+              ),
+              firstValueReceiptLine:
+                  'First read logged. Next: use it once more.',
+              completionSummary: const Act0RunnerCompletionSummaryV1(
+                xpGain: 12,
+                startLevel: 1,
+                endLevel: 1,
+                startXp: 20,
+                endXp: 32,
+                xpTarget: 100,
+              ),
+              onContinue: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Correct with help'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_completion_toast')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_first_value_receipt')),
+        findsNothing,
+      );
+      expect(find.text('Read banked'), findsNothing);
+      expect(find.text('Table read improved'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'guided wrong retains a repair action without independent reward',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0FeedbackShellV1(
+              title: 'Missed clue',
+              reason: 'You labels identity, not BTN position.',
+              quality: Act0FeedbackQualityV1.wrong,
+              sharkyLine: 'Focus on the table role.',
+              sharkyMood: Act0SharkyMoodV1.repair,
+              selectedLabel: 'You',
+              preferredLabel: 'BTN',
+              betterLabel: 'BTN',
+              isAssistedDecision: true,
+              repairReasonLine: 'The same clue is ready for another read.',
+              onContinue: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Try same clue'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_completion_toast')),
+        findsNothing,
+      );
+      expect(find.text('Read banked'), findsNothing);
+    },
+  );
+
   testWidgets('correct feedback shows skill proof before proof reward', (
     tester,
   ) async {

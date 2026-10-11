@@ -1156,6 +1156,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.onChoiceAssistance,
     required this.onContinueReview,
     this.completionSummary,
+    this.isAssistedDecision = false,
     this.firstValueReceiptLine,
     this.repairReasonLine,
     this.repairResultReceiptLine,
@@ -1206,6 +1207,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final ValueChanged<Act0DecisionAssistanceV1>? onChoiceAssistance;
   final VoidCallback onContinueReview;
   final Act0RunnerCompletionSummaryV1? completionSummary;
+  final bool isAssistedDecision;
   final String? firstValueReceiptLine;
   final String? repairReasonLine;
   final String? repairResultReceiptLine;
@@ -3065,7 +3067,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         isRefinedDev2 &&
         isReview &&
         runner.reviewQuality != Act0FeedbackQualityV1.wrong &&
-        widget.completionSummary != null;
+        widget.completionSummary != null &&
+        !widget.isAssistedDecision;
     final interactionKey = _interactionKey(runner);
     if (_showdownInteractionKey != interactionKey) {
       _actionTrailFocusedIndex = null;
@@ -3328,6 +3331,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       ],
       refined: isRefinedDev2,
       completionSummary: null,
+      isAssistedDecision: widget.isAssistedDecision,
       firstValueReceiptLine: widget.firstValueReceiptLine,
       repairReasonLine: widget.repairReasonLine,
       repairResultReceiptLine: widget.repairResultReceiptLine,
@@ -3850,7 +3854,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
               Act0FeedbackQualityV1.suboptimal =>
                 isRu ? 'РАЗБЕРЁМ ПОДСКАЗКУ' : "LET'S CHECK THE CLUE",
               Act0FeedbackQualityV1.correct =>
-                isRu ? 'ВЕРНОЕ ЧТЕНИЕ' : 'CORRECT READ',
+                widget.isAssistedDecision
+                    ? (isRu
+                          ? '\u0412\u0415\u0420\u041d\u041e \u0421 \u041F\u041E\u0414\u0421\u041A\u0410\u0417\u041A\u041E\u0419'
+                          : 'CORRECT WITH HELP')
+                    : (isRu
+                          ? '\u0412\u0415\u0420\u041D\u041E\u0415 \u0427\u0422\u0415\u041D\u0418\u0415'
+                          : 'CORRECT READ'),
             }
           : (isRu ? 'ВАШ ХОД' : 'YOUR MOVE');
       final feedbackAction =
@@ -3885,6 +3895,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                 ? feedbackAction
                 : runner.reviewQuality == Act0FeedbackQualityV1.wrong
                 ? '$feedbackAction was the better play.'
+                : widget.isAssistedDecision
+                ? (isRu
+                      ? '\u0412\u0435\u0440\u043d\u043e \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439: $feedbackAction.'
+                      : '$feedbackAction was right with help.')
                 : '$feedbackAction was right.'
           : question;
       final support = isTheory
@@ -7333,6 +7347,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.contextLabels = const <String>[],
     this.refined = false,
     this.completionSummary,
+    this.isAssistedDecision = false,
     this.firstValueReceiptLine,
     this.repairReasonLine,
     this.repairResultReceiptLine,
@@ -7371,6 +7386,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final List<String> contextLabels;
   final bool refined;
   final Act0RunnerCompletionSummaryV1? completionSummary;
+  final bool isAssistedDecision;
   final String? firstValueReceiptLine;
   final String? repairReasonLine;
   final String? repairResultReceiptLine;
@@ -7405,13 +7421,16 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     // Repair success remains partial. Only the explicit source-recheck
     // projection can make the stronger recovery claim.
     final isRecoveredSourceRecheck =
-        hasRepairOutcomeProof && forceShowRepairOutcomeProof;
+        !isAssistedDecision &&
+        hasRepairOutcomeProof &&
+        forceShowRepairOutcomeProof;
     final isFailedSourceRecheck = isWrong && isSourceRecheckAttempt;
     final hasProofEarnedState =
-        hasRepairOutcomeProof ||
-        repairReceiptLine.toLowerCase().startsWith('repair fixed:') ||
-        repairReceiptLine.toLowerCase().startsWith('replay fixed:') ||
-        repairReceiptLine.toLowerCase().startsWith('fix landed:');
+        !isAssistedDecision &&
+        (hasRepairOutcomeProof ||
+            repairReceiptLine.toLowerCase().startsWith('repair fixed:') ||
+            repairReceiptLine.toLowerCase().startsWith('replay fixed:') ||
+            repairReceiptLine.toLowerCase().startsWith('fix landed:'));
     final reservesFullCtaGeometry =
         ensureFullCtaGeometry && hasProofEarnedState;
     final media = MediaQuery.of(context);
@@ -7461,12 +7480,16 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         : isSuboptimal
         ? Act0ShellTokensV1.gold
         : Act0ShellTokensV1.primary;
-    final resolvedTitle = _feedbackTitleFloorV1(
-      context,
-      title: title,
-      quality: quality,
-      contextLabels: contextLabels,
-    );
+    final resolvedTitle = isAssistedDecision && !isWrong
+        ? act0AcademyLanguageV1(context) == 'ru'
+              ? '\u0412\u0435\u0440\u043d\u043e \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439'
+              : 'Correct with help'
+        : _feedbackTitleFloorV1(
+            context,
+            title: title,
+            quality: quality,
+            contextLabels: contextLabels,
+          );
     final resolvedSharkyLine =
         _premiumSafeFeedbackTitleV1(sharkyLine.trim()) ?? sharkyLine;
     final reactionLine = act0RuntimeFeedbackCoachLineV1(
@@ -7545,7 +7568,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final preserveFullCompactReason =
         isCompactRefinedFeedback &&
         _shouldPreserveFullCompactFeedbackReasonV1(resolvedReason);
-    final skillReceipt = firstValueReceiptLine == null
+    final skillReceipt = firstValueReceiptLine == null || isAssistedDecision
         ? null
         : _skillReceiptForSignalProofV1(proof: signalProof, quality: quality);
     final repairReason = repairReasonLine?.trim() ?? '';
@@ -7563,6 +7586,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     ];
     final fallbackReceiptLine = repairReceiptLine.isNotEmpty
         ? repairReceiptLine
+        : isAssistedDecision
+        ? null
         : firstValueReceiptLine?.trim();
     final receiptSplitIndex = fallbackReceiptLine?.indexOf('. Next:') ?? -1;
     final receiptTitle = isRecoveredSourceRecheck
@@ -8395,7 +8420,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                         ),
                       ),
                     ],
-                    if (!rapidMode && completionSummary != null) ...[
+                    if (!rapidMode &&
+                        !isAssistedDecision &&
+                        completionSummary != null) ...[
                       const SizedBox(height: 8),
                       _CompletionToastV1(summary: completionSummary!),
                     ],
