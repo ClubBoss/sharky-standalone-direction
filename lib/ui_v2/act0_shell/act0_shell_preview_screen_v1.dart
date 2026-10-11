@@ -6519,9 +6519,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                               localeIsRu:
                                   act0AcademyLanguageV1(context) == 'ru',
                               localizeOptionLabel: (label) =>
-                                  act0RuntimeLocalizedOptionLabelV1(
+                                  act0AcademyW1OptionLabelV1(
                                     context,
-                                    label,
+                                    act0RuntimeLocalizedOptionLabelV1(context, label),
                                   ),
                               activeRepairSourceTaskIds: <String>{
                                 for (final mistake in reviewState.mistakes)

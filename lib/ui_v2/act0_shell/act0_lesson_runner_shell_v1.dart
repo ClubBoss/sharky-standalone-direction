@@ -69,12 +69,12 @@ Act0LateRouteTableSignalV1? act0LateRouteTableSignalForWorldNumberV1(
 ) {
   return switch (worldNumber) {
     11 => const Act0LateRouteTableSignalV1(
-      label: 'W11 · Transfer',
+      label: 'W11 \u00B7 Transfer',
       detail: 'Name the cue. Choose one action.',
       icon: Icons.alt_route_rounded,
     ),
     12 => const Act0LateRouteTableSignalV1(
-      label: 'W12 · Reset',
+      label: 'W12 \u00B7 Reset',
       detail: 'Drop last hand. Read spot.',
       icon: Icons.restart_alt_rounded,
     ),
@@ -878,7 +878,7 @@ String _formatSkillGrowthLabelV1(List<Act0SkillGainV1> gains) {
       }
       return a.label.compareTo(b.label);
     });
-  return sorted.take(2).map((gain) => gain.label).join('  •  ');
+  return sorted.take(2).map((gain) => gain.label).join('  \u2022  ');
 }
 
 String? _ownershipLineForSkillLabelV1(String label) {
@@ -893,9 +893,9 @@ String? _ownershipLineForSkillLabelV1(String label) {
   };
 }
 
-// ── Pure pot-calculation helpers (top-level so they are unit-testable) ────────
+// \u2500\u2500 Pure pot-calculation helpers (top-level so they are unit-testable) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
-/// Parses a BB amount string like "2.5 BB", "0.5 BB", "3BB" → double.
+/// Parses a BB amount string like "2.5 BB", "0.5 BB", "3BB" \u2192 double.
 /// Returns 0.0 if unrecognised.
 double act0ParseBbAmountV1(String s) {
   final m = RegExp(r'(\d+(?:\.\d+)?)\s*BB', caseSensitive: false).firstMatch(s);
@@ -919,9 +919,9 @@ String? _act0TrailActor(String stripped) {
 /// preflop blinds, so the caller can fall back to a static pot label.
 ///
 /// Algorithm (per street):
-///   – Each player's contribution is the **maximum** amount they put in
+///   \u2013 Each player's contribution is the **maximum** amount they put in
 ///     during that street (raise or call to X BB).
-///   – On street transition the per-street map is flushed into [runningPot].
+///   \u2013 On street transition the per-street map is flushed into [runningPot].
 ({double potBb, String street}) act0CalcTrailPotV1(
   List<String> labels,
   int upToIndex,
@@ -930,7 +930,7 @@ String? _act0TrailActor(String stripped) {
 
   final firstLower = labels[0].toLowerCase();
   // In a valid cash-game trail the *first* entry must be the small blind post.
-  // A trail starting with BB only (or any other action) is incomplete — fall
+  // A trail starting with BB only (or any other action) is incomplete \u2014 fall
   // back to the static potLabel so we never display a wrong pot.
   if (!firstLower.contains('sb blind')) {
     return (potBb: -1.0, street: '');
@@ -975,14 +975,14 @@ String? _act0TrailActor(String stripped) {
   return (potBb: totalPot, street: currentStreet);
 }
 
-/// Formats a pot double as a readable label: 6.5 → "Pot 6.5 BB", 7.0 → "Pot 7 BB".
+/// Formats a pot double as a readable label: 6.5 \u2192 "Pot 6.5 BB", 7.0 \u2192 "Pot 7 BB".
 String act0FormatPotLabelV1(double bb) {
   final rounded = (bb * 2).round() / 2; // nearest 0.5 BB
   final isWhole = rounded == rounded.truncateToDouble();
   return 'Pot ${isWhole ? rounded.toInt() : rounded} BB';
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
 enum Act0RunnerFramingProfileV1 {
   neutral,
@@ -1157,6 +1157,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     required this.onContinueReview,
     this.completionSummary,
     this.isAssistedDecision = false,
+    this.localizeW1Ctas = false,
     this.firstValueReceiptLine,
     this.repairReasonLine,
     this.repairResultReceiptLine,
@@ -1208,6 +1209,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final VoidCallback onContinueReview;
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final bool isAssistedDecision;
+  final bool localizeW1Ctas;
   final String? firstValueReceiptLine;
   final String? repairReasonLine;
   final String? repairResultReceiptLine;
@@ -1292,7 +1294,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
 
   // B6 semantic motion. One interpolation between two already-accepted B5
   // states, owned here because this `State` is the only owner that survives
-  // every learning-loop hop — the scene's own elements are replaced at each
+  // every learning-loop hop \u2014 the scene's own elements are replaced at each
   // one, so an implicit animation placed down there would remount with no
   // "from" value at exactly the moments B6 exists to smooth.
   late final AnimationController _sceneAttentionController;
@@ -2398,7 +2400,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     }
     final index = focusedIndex.clamp(0, table.actionTrail.length - 1);
     final raw = table.actionTrail[index].label.trim();
-    // Strip street prefix: "Flop: BB checks" → "BB checks"
+    // Strip street prefix: "Flop: BB checks" \u2192 "BB checks"
     final stripped = raw.replaceFirst(
       RegExp(r'^(Flop|Turn|River):\s*', caseSensitive: false),
       '',
@@ -2476,11 +2478,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       );
     }
 
-    // Folds / checks → no chip
+    // Folds / checks \u2192 no chip
     return null;
   }
 
-  // ── Pot calculation ─────────────────────────────────────────────────────────
+  // \u2500\u2500 Pot calculation \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
   /// Calculates the running pot by replaying the trail up to [upToIndex].
   /// Delegates to top-level [act0CalcTrailPotV1].
@@ -2497,7 +2499,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   /// Delegates to top-level [act0FormatPotLabelV1].
   String _formatPotLabel(double bb) => act0FormatPotLabelV1(bb);
 
-  // ─────────────────────────────────────────────────────────────────────────
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
   _Act0ShowdownInsightV1? _computeShowdownInsight(Act0TableStateV1 table) {
     if (table.boardCards.length < 5) {
@@ -2682,16 +2684,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   String? _toSolverSuit(String suit) {
     switch (suit.trim().toLowerCase()) {
       case 's':
-      case '♠':
+      case '\u2660':
         return 's';
       case 'h':
-      case '♥':
+      case '\u2665':
         return 'h';
       case 'd':
-      case '♦':
+      case '\u2666':
         return 'd';
       case 'c':
-      case '♣':
+      case '\u2663':
         return 'c';
       default:
         return null;
@@ -2827,10 +2829,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
               languageCode: act0AcademyLanguageV1(context),
             ),
           )
+        : act0AcademyW1InstructionTaskV1(widget.selectedTaskId)
+        ? act0AcademyW1InstructionV1(
+            context,
+            widget.selectedTaskId,
+            runner.caption,
+          )
         : act0LocalizedRunnerPromptAtomByTaskIdV1(
             widget.selectedTaskId,
             fallback: runner.caption,
-            isRu: act0IsRuLocaleV1(context),
+            languageCode: act0AcademyLanguageV1(context),
           );
     final shouldShowRunnerHint = switch (runner.hintPolicy) {
       Act0HintPolicyV1.always => true,
@@ -2849,16 +2857,28 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
               languageCode: act0AcademyLanguageV1(context),
             ),
           )
+        : act0AcademyW1InstructionTaskV1(widget.selectedTaskId)
+        ? act0AcademyW1InstructionV1(
+            context,
+            widget.selectedTaskId,
+            shouldShowRunnerHint ? runner.hint : '',
+          )
         : act0LocalizedRunnerSupportAtomByTaskIdV1(
             widget.selectedTaskId,
             fallback: shouldShowRunnerHint ? runner.hint : '',
-            isRu: act0IsRuLocaleV1(context),
+            languageCode: act0AcademyLanguageV1(context),
           );
-    final question = act0LocalizedRunnerQuestionAtomByTaskIdV1(
-      widget.selectedTaskId,
-      fallback: runner.question,
-      isRu: act0IsRuLocaleV1(context),
-    );
+    final question = act0AcademyW1InstructionTaskV1(widget.selectedTaskId)
+        ? act0AcademyW1InstructionV1(
+            context,
+            widget.selectedTaskId,
+            runner.question,
+          )
+        : act0LocalizedRunnerQuestionAtomByTaskIdV1(
+            widget.selectedTaskId,
+            fallback: runner.question,
+            languageCode: act0AcademyLanguageV1(context),
+          );
     final learningRailSupportSegments = act0BuildLearningRailSupportSegmentsV1(
       hint: hint,
       focusLabels: widget.showLearningRailFocusLabels
@@ -3034,7 +3054,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         streetReplay?.isConsumerSafe == true &&
         isDrill &&
         !isTeaching;
-    final decisionHint = _resolveDecisionHintV1(
+    final decisionHintFromSource = _resolveDecisionHintV1(
       taskFamily: widget.selectedTaskFamily,
       runner: runner,
       prompt: prompt,
@@ -3042,10 +3062,27 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       supportLine: promptContextLine ?? hint,
       fullIdeaStep: widget.theoryRecallStep,
     );
+    final decisionHint = decisionHintFromSource == null
+        ? null
+        : act0AcademyLanguageV1(context) == 'ru' &&
+              act0AcademyW1InstructionTaskV1(widget.selectedTaskId)
+        ? _DecisionHintV1(
+            quickHint: act0AcademyW1InstructionV1(
+              context,
+              widget.selectedTaskId,
+              runner.hint,
+            ),
+            fullIdeaTitle: decisionHintFromSource.fullIdeaTitle,
+            fullIdeaBlocks: decisionHintFromSource.fullIdeaBlocks,
+          )
+        : decisionHintFromSource;
     final theoryRecallPeek = decisionHint == null
         ? null
         : _DecisionHintPeekV1(
             quickHint: decisionHint.quickHint,
+            localizeW1Ctas: act0AcademyW1InstructionTaskV1(
+              widget.selectedTaskId,
+            ),
             fullIdeaTitle: decisionHint.fullIdeaTitle,
             fullIdeaBlocks: decisionHint.fullIdeaBlocks,
             showFullIdea: _showFullIdeaInTheoryPeek,
@@ -3119,7 +3156,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         ? teachingFocusLabel ?? ''
         : hasSeatTargets && isDrill
         ? (act0IsRuLocaleV1(context)
-              ? 'Нажмите на подсвеченное место'
+              ? '\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043D\u0430 \u043F\u043E\u0434\u0441\u0432\u0435\u0447\u0435\u043D\u043D\u043E\u0435 \u043C\u0435\u0441\u0442\u043E'
               : 'Tap a highlighted seat')
         : '';
     final rawShowActionTrail =
@@ -3177,12 +3214,12 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         !widget.rapidReviewMode &&
         (widget.repairReasonLine?.trim().isNotEmpty ?? false);
     // B5: where the learner is, from state Wave A already exposes. No new
-    // poker meaning is inferred — every branch maps onto a phase the runner
+    // poker meaning is inferred \u2014 every branch maps onto a phase the runner
     // already knows.
     // B5: where the learner is, from canonical state the shell already
     // carries. `isSourceRecheckAttempt` is the product's own identity for the
     // source recheck attempt, and `repairContinuesToSourceRecheck` marks the
-    // repair that leads to it — both already fields on this widget, both
+    // repair that leads to it \u2014 both already fields on this widget, both
     // already driven by the preview shell's repair orchestration.
     //
     // An earlier build inferred these from `repairResultReceiptLine`, which is
@@ -3305,8 +3342,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       structuredClue: feedbackSignalProof?.label ?? '',
     );
     Widget buildFeedbackShell() => Act0FeedbackShellV1(
-      title: runner.reviewTitle,
-      reason: causalFeedback.whyChosen,
+      title: act0AcademyW1InstructionV1(
+        context,
+        widget.selectedTaskId,
+        runner.reviewTitle,
+      ),
+      reason: act0AcademyW1InstructionV1(
+        context,
+        widget.selectedTaskId,
+        causalFeedback.whyChosen,
+      ),
       nextClueLine: causalFeedback.nextHandInstruction,
       quality: runner.reviewQuality,
       sharkyLine: runner.reviewQuality == Act0FeedbackQualityV1.correct
@@ -3317,9 +3362,18 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           : (runner.reviewQuality == Act0FeedbackQualityV1.suboptimal
                 ? Act0SharkyMoodV1.thinking
                 : runner.sharky.wrongMood),
-      selectedLabel: runner.reviewSelectedLabel,
-      preferredLabel: runner.reviewPreferredLabel,
-      betterLabel: runner.reviewBetterLabel,
+      selectedLabel: act0AcademyW1OptionLabelV1(
+        context,
+        runner.reviewSelectedLabel,
+      ),
+      preferredLabel: act0AcademyW1OptionLabelV1(
+        context,
+        runner.reviewPreferredLabel,
+      ),
+      betterLabel: act0AcademyW1OptionLabelV1(
+        context,
+        runner.reviewBetterLabel,
+      ),
       taskFamily: widget.selectedTaskFamily,
       hasSeatTargets: hasSeatTargets,
       potLabel: runner.table.potLabel,
@@ -3332,6 +3386,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       refined: isRefinedDev2,
       completionSummary: null,
       isAssistedDecision: widget.isAssistedDecision,
+      localizeW1Ctas: act0AcademyW1InstructionTaskV1(widget.selectedTaskId),
       firstValueReceiptLine: widget.firstValueReceiptLine,
       repairReasonLine: widget.repairReasonLine,
       repairResultReceiptLine: widget.repairResultReceiptLine,
@@ -3478,6 +3533,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                       onBack: null,
                       recallLabel: widget.theoryRecallStep == null
                           ? null
+                          : act0AcademyW1InstructionTaskV1(
+                              widget.selectedTaskId,
+                            )
+                          ? act0AcademyW1CtaV1(context, 'Need a hint?')
                           : 'Need a hint?',
                       onRecall: widget.theoryRecallStep == null
                           ? null
@@ -3500,6 +3559,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                           decisionHint == null ||
                               widget.theoryRecallStep == null
                           ? null
+                          : act0AcademyW1InstructionTaskV1(
+                              widget.selectedTaskId,
+                            )
+                          ? act0AcademyW1CtaV1(context, 'Need a hint?')
                           : 'Need a hint?',
                       onRecall:
                           decisionHint == null ||
@@ -3531,6 +3594,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                           decisionHint == null ||
                               widget.theoryRecallStep == null
                           ? null
+                          : act0AcademyW1InstructionTaskV1(
+                              widget.selectedTaskId,
+                            )
+                          ? act0AcademyW1CtaV1(context, 'Need a hint?')
                           : 'Need a hint?',
                       onRecall:
                           decisionHint == null ||
@@ -3818,7 +3885,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           onChooseOption: _handleChooseOptionTelemetry,
           onContinueReview: widget.onContinueReview,
           recallLabel: decisionHint != null && widget.theoryRecallStep != null
-              ? 'Need a hint?'
+              ? act0AcademyW1InstructionTaskV1(widget.selectedTaskId)
+                    ? act0AcademyW1CtaV1(context, 'Need a hint?')
+                    : 'Need a hint?'
               : null,
           onRecall: decisionHint != null && widget.theoryRecallStep != null
               ? _openTheoryRecallPeek
@@ -3846,13 +3915,19 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           ? Act0LearningScenePhaseV3.feedbackCorrect
           : Act0LearningScenePhaseV3.tableTask;
       final purpose = isTheory
-          ? (isRu ? 'ОДНА ИДЕЯ' : 'ONE TABLE IDEA')
+          ? (isRu
+                ? '\u041E\u0414\u041D\u0410 \u0418\u0414\u0415\u042F'
+                : 'ONE TABLE IDEA')
           : isReview
           ? switch (runner.reviewQuality) {
               Act0FeedbackQualityV1.wrong =>
-                isRu ? 'ПРОПУЩЕННАЯ ПОДСКАЗКА' : 'MISSED CLUE',
+                isRu
+                    ? '\u041F\u0420\u041E\u041F\u0423\u0429\u0415\u041D\u041D\u0410\u042F \u041F\u041E\u0414\u0421\u041A\u0410\u0417\u041A\u0410'
+                    : 'MISSED CLUE',
               Act0FeedbackQualityV1.suboptimal =>
-                isRu ? 'РАЗБЕРЁМ ПОДСКАЗКУ' : "LET'S CHECK THE CLUE",
+                isRu
+                    ? '\u0420\u0410\u0417\u0411\u0415\u0420\u0401\u041C \u041F\u041E\u0414\u0421\u041A\u0410\u0417\u041A\u0423'
+                    : "LET'S CHECK THE CLUE",
               Act0FeedbackQualityV1.correct =>
                 widget.isAssistedDecision
                     ? (isRu
@@ -3862,7 +3937,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                           ? '\u0412\u0415\u0420\u041D\u041E\u0415 \u0427\u0422\u0415\u041D\u0418\u0415'
                           : 'CORRECT READ'),
             }
-          : (isRu ? 'ВАШ ХОД' : 'YOUR MOVE');
+          : (isRu ? '\u0412\u0410\u0428 \u0425\u041E\u0414' : 'YOUR MOVE');
       final feedbackAction =
           (runner.reviewQuality == Act0FeedbackQualityV1.wrong
                   ? runner.reviewBetterLabel
@@ -3875,6 +3950,14 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       final repairReceipt = widget.repairResultReceiptLine?.trim() ?? '';
       final headline = isTheory
           ? prompt
+          : isReview &&
+                isRu &&
+                act0AcademyW1InstructionTaskV1(widget.selectedTaskId)
+          ? (runner.reviewQuality == Act0FeedbackQualityV1.wrong
+                ? '${act0AcademyW1OptionLabelV1(context, feedbackAction)} - \u0432\u0435\u0440\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442.'
+                : widget.isAssistedDecision
+                ? '${act0AcademyW1OptionLabelV1(context, feedbackAction)} - \u0432\u0435\u0440\u043D\u043E \u0441 \u043F\u043E\u0434\u0441\u043A\u0430\u0437\u043A\u043E\u0439.'
+                : '${act0AcademyW1OptionLabelV1(context, feedbackAction)} - \u0432\u0435\u0440\u043D\u043E.')
           : isReview
           ? repairReceipt.isNotEmpty
                 ? repairReceipt
@@ -3884,10 +3967,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                 // evidence that the learner chose it.
                 ? runner.selectedOptionId == 'not_sure_yet'
                       ? (isRu
-                            ? 'Пока не уверены? Разберём подсказку.'
+                            ? '\u041F\u043E\u043A\u0430 \u043D\u0435 \u0443\u0432\u0435\u0440\u0435\u043D\u044B? \u0420\u0430\u0437\u0431\u0435\u0440\u0451\u043C \u043F\u043E\u0434\u0441\u043A\u0430\u0437\u043A\u0443.'
                             : "Not sure yet? Let's check the table clue.")
                       : (isRu
-                            ? 'Посмотрим на подсказку и улучшим решение.'
+                            ? '\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0438\u043C \u043D\u0430 \u043F\u043E\u0434\u0441\u043A\u0430\u0437\u043A\u0443 \u0438 \u0443\u043B\u0443\u0447\u0448\u0438\u043C \u0440\u0435\u0448\u0435\u043D\u0438\u0435.'
                             : "Let's check the table clue and improve the read.")
                 : feedbackAction.isEmpty
                 ? runner.reviewTitle
@@ -3907,16 +3990,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           ? causalFeedback.whyChosen
           : hasSeatTargets
           ? (isRu
-                ? 'Нажмите на одно из одинаково подсвеченных мест.'
+                ? '\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043D\u0430 \u043E\u0434\u043D\u043E \u0438\u0437 \u043E\u0434\u0438\u043D\u0430\u043A\u043E\u0432\u043E \u043F\u043E\u0434\u0441\u0432\u0435\u0447\u0435\u043D\u043D\u044B\u0445 \u043C\u0435\u0441\u0442.'
                 : 'Tap one equally highlighted seat on the table.')
           : (isRu
-                ? 'Выберите одно действие ниже.'
+                ? '\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043E\u0434\u043D\u043E \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u043D\u0438\u0436\u0435.'
                 : 'Choose one action below.');
       final focusLabel = isReview
           ? feedbackSignalProof == null
                 ? null
                 : (isRu
-                      ? 'Подсказка показана на столе'
+                      ? '\u041F\u043E\u0434\u0441\u043A\u0430\u0437\u043A\u0430 \u043F\u043E\u043A\u0430\u0437\u0430\u043D\u0430 \u043D\u0430 \u0441\u0442\u043E\u043B\u0435'
                       : 'The exact clue is marked on the table')
           : isTheory
           ? teachingFocusLabel == null
@@ -3926,7 +4009,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                       : 'Look at: $teachingFocusLabel')
           : hasSeatTargets
           ? (isRu
-                ? 'Можно нажимать подсвеченные места'
+                ? '\u041C\u043E\u0436\u043D\u043E \u043D\u0430\u0436\u0438\u043C\u0430\u0442\u044C \u043F\u043E\u0434\u0441\u0432\u0435\u0447\u0435\u043D\u043D\u044B\u0435 \u043C\u0435\u0441\u0442\u0430'
                 : 'Highlighted seats are tappable')
           : null;
       final progressLabel = isTheory && runner.teachingSteps.length > 1
@@ -7294,7 +7377,7 @@ String _formatInstructionCopyV1(
     return normalized;
   }
 
-  final breakpoints = <String>[' — ', ': ', '; ', ', '];
+  final breakpoints = <String>[' \u2014 ', ': ', '; ', ', '];
   final middle = normalized.length ~/ 2;
 
   int? bestIndex;
@@ -7348,6 +7431,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.refined = false,
     this.completionSummary,
     this.isAssistedDecision = false,
+    this.localizeW1Ctas = false,
     this.firstValueReceiptLine,
     this.repairReasonLine,
     this.repairResultReceiptLine,
@@ -7387,6 +7471,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final bool refined;
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final bool isAssistedDecision;
+  final bool localizeW1Ctas;
   final String? firstValueReceiptLine;
   final String? repairReasonLine;
   final String? repairResultReceiptLine;
@@ -7686,20 +7771,39 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                 // evidence as well as runtime; flutter_test otherwise falls
                 // back to its block-glyph Ahem face for this button style.
                 style: const TextStyle(fontFamily: 'Roboto'),
-                forwardCtaLabel ??
-                    (isRecoveredSourceRecheck
-                        ? 'Continue'
-                        : isWrong && isSourceRecheckAttempt
-                        ? 'Continue to Review'
-                        : repairReceiptLine.isNotEmpty && !isWrong
-                        ? repairContinuesToSourceRecheck
-                              ? 'Check original read'
-                              : 'Continue to Review'
-                        : isWrong || isRepairFocusState
-                        ? isExactReplayRepair
-                              ? 'Try this spot again'
-                              : 'Try same clue'
-                        : 'Next hand'),
+                (localizeW1Ctas && forwardCtaLabel != null
+                        ? act0AcademyW1CtaV1(context, forwardCtaLabel!)
+                        : forwardCtaLabel) ??
+                    (localizeW1Ctas
+                        ? act0AcademyW1CtaV1(
+                            context,
+                            isRecoveredSourceRecheck
+                                ? 'Continue'
+                                : isWrong && isSourceRecheckAttempt
+                                ? 'Continue to Review'
+                                : repairReceiptLine.isNotEmpty && !isWrong
+                                ? repairContinuesToSourceRecheck
+                                      ? 'Check original read'
+                                      : 'Continue to Review'
+                                : isWrong || isRepairFocusState
+                                ? isExactReplayRepair
+                                      ? 'Try this spot again'
+                                      : 'Try same clue'
+                                : 'Next hand',
+                          )
+                        : (isRecoveredSourceRecheck
+                              ? 'Continue'
+                              : isWrong && isSourceRecheckAttempt
+                              ? 'Continue to Review'
+                              : repairReceiptLine.isNotEmpty && !isWrong
+                              ? repairContinuesToSourceRecheck
+                                    ? 'Check original read'
+                                    : 'Continue to Review'
+                              : isWrong || isRepairFocusState
+                              ? isExactReplayRepair
+                                    ? 'Try this spot again'
+                                    : 'Try same clue'
+                              : 'Next hand')),
               ),
             ),
           ),
@@ -7816,8 +7920,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                   ] else ...[
                     Text(
                       isWrong || isRepairFocusState
-                          ? 'NEXT · REPAIR THE CLUE'
-                          : 'NEXT · KEEP THE READ',
+                          ? 'NEXT \u00B7 REPAIR THE CLUE'
+                          : 'NEXT \u00B7 KEEP THE READ',
                       key: const Key(
                         'act0_shell_feedback_primary_result_label',
                       ),
@@ -7847,7 +7951,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
           );
           // B6: the verdict arrives rather than cuts. On this route the scene
           // owns the causal explanation, so the table's quieting field and its
-          // asserting clue already carry "the state changed; here is why" —
+          // asserting clue already carry "the state changed; here is why" \u2014
           // this is the third beat, the verdict itself becoming current.
           //
           // Reuses the accepted reveal widget rather than inventing motion:
@@ -8010,7 +8114,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                                   child: Text(
                                     stateDetail.isNotEmpty
                                         ? stateDetail
-                                        : '$companionRoleLabel · $reactionLine',
+                                        : '$companionRoleLabel \u00B7 $reactionLine',
                                     key: const Key(
                                       'act0_shell_sharky_outcome_reaction',
                                     ),
@@ -9149,13 +9253,19 @@ String _feedbackTitleFloorV1(
     if (quality == Act0FeedbackQualityV1.correct) {
       return focusLabel;
     }
-    return localeIsRu ? '$focusLabel сначала' : '$focusLabel first';
+    return localeIsRu
+        ? '$focusLabel \u0441\u043D\u0430\u0447\u0430\u043B\u0430'
+        : '$focusLabel first';
   }
 
   if (quality == Act0FeedbackQualityV1.correct) {
-    return localeIsRu ? 'Верное чтение' : 'Correct read';
+    return localeIsRu
+        ? '\u0412\u0435\u0440\u043D\u043E\u0435 \u0447\u0442\u0435\u043D\u0438\u0435'
+        : 'Correct read';
   }
-  return localeIsRu ? 'Сначала перечитай спот' : 'Read the spot first';
+  return localeIsRu
+      ? '\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u043F\u0435\u0440\u0435\u0447\u0438\u0442\u0430\u0439 \u0441\u043F\u043E\u0442'
+      : 'Read the spot first';
 }
 
 String? _premiumSafeFeedbackTitleV1(String title) {
@@ -9200,26 +9310,26 @@ String _feedbackReasonFloorV1(
   if (quality == Act0FeedbackQualityV1.correct) {
     if (focusLabel.isNotEmpty) {
       return localeIsRu
-          ? '$focusLabel прочитан верно. Сохрани это и продолжай.'
+          ? '$focusLabel \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u043D \u0432\u0435\u0440\u043D\u043E. \u0421\u043E\u0445\u0440\u0430\u043D\u0438 \u044D\u0442\u043E \u0438 \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0430\u0439.'
           : '$focusLabel read correctly. Keep it and continue.';
     }
     return localeIsRu
-        ? 'Чтение верное. Сохрани его и продолжай.'
+        ? '\u0427\u0442\u0435\u043D\u0438\u0435 \u0432\u0435\u0440\u043D\u043E\u0435. \u0421\u043E\u0445\u0440\u0430\u043D\u0438 \u0435\u0433\u043E \u0438 \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0430\u0439.'
         : 'Read is correct. Keep it and continue.';
   }
 
   if (focusLabel.isNotEmpty && safeBetterLine.isNotEmpty) {
     return localeIsRu
-        ? '$focusLabel сначала. Сравни это с $safeBetterLine перед продолжением.'
+        ? '$focusLabel \u0441\u043D\u0430\u0447\u0430\u043B\u0430. \u0421\u0440\u0430\u0432\u043D\u0438 \u044D\u0442\u043E \u0441 $safeBetterLine \u043F\u0435\u0440\u0435\u0434 \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0435\u043D\u0438\u0435\u043C.'
         : '$focusLabel first. Compare it with $safeBetterLine before you continue.';
   }
   if (safePickedLine.isNotEmpty && safeBetterLine.isNotEmpty) {
     return localeIsRu
-        ? 'Сравни $safePickedLine с $safeBetterLine перед продолжением.'
+        ? '\u0421\u0440\u0430\u0432\u043D\u0438 $safePickedLine \u0441 $safeBetterLine \u043F\u0435\u0440\u0435\u0434 \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0435\u043D\u0438\u0435\u043C.'
         : 'Compare $safePickedLine with $safeBetterLine before you continue.';
   }
   return localeIsRu
-      ? 'Сделай паузу, прочитай спот ещё раз и затем продолжай.'
+      ? '\u0421\u0434\u0435\u043B\u0430\u0439 \u043F\u0430\u0443\u0437\u0443, \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0439 \u0441\u043F\u043E\u0442 \u0435\u0449\u0451 \u0440\u0430\u0437 \u0438 \u0437\u0430\u0442\u0435\u043C \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0430\u0439.'
       : 'Pause, read the spot again, then continue.';
 }
 
@@ -9879,10 +9989,10 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               Text(
                 !summary.independentProvenanceKnown
-                    ? '${summary.correctCount}/${summary.taskCount} assessed correct · full-lesson proof unverified · ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}'
+                    ? '${summary.correctCount}/${summary.taskCount} assessed correct \u00B7 full-lesson proof unverified \u00B7 ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}'
                     : summary.assistedCount > 0
-                    ? '${summary.correctCount}/${summary.taskCount} correct · ${summary.assistedCount} with help · ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}'
-                    : '${summary.accuracyPercent}% accuracy (assessed) · ${summary.correctCount}/${summary.taskCount} correct · ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}',
+                    ? '${summary.correctCount}/${summary.taskCount} correct \u00B7 ${summary.assistedCount} with help \u00B7 ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}'
+                    : '${summary.accuracyPercent}% accuracy (assessed) \u00B7 ${summary.correctCount}/${summary.taskCount} correct \u00B7 ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}',
                 key: const Key('act0_shell_block_summary_accuracy'),
                 maxLines: 2,
                 overflow: TextOverflow.fade,
@@ -9972,7 +10082,7 @@ class _WorldOneCompletionPayoffV1 extends StatelessWidget {
 /// Ordinary World 2-6 completion payoff. Shares the exact hierarchy/visual
 /// grammar accepted for World 1 via [_WorldMilestoneCardV1]; only the
 /// deterministic per-world copy differs (`_worldCompletionMetaByNumberV1`).
-/// World 4 intentionally receives no special treatment here — the future
+/// World 4 intentionally receives no special treatment here \u2014 the future
 /// W4->W5 band transition PR can key off `summary.worldNumber == 4` to swap
 /// in its own stronger variant before this widget is reached.
 class _WorldCompletionPayoffV1 extends StatelessWidget {
@@ -11112,7 +11222,7 @@ Act0RunnerCompletionSummaryV1 _feedbackProgressAtGain(
   );
 }
 
-/// Felt inset. Unchanged from B1 — widening it pushed the blind chips over the
+/// Felt inset. Unchanged from B1 \u2014 widening it pushed the blind chips over the
 /// first board card's rank, which is learning-relevant information.
 const double _act0SceneRailWidthV1 = 10.0;
 
@@ -11386,7 +11496,7 @@ class _Act0TableV1 extends StatelessWidget {
               // B2 rail volume. A 10 px band cannot read as a rail on a 290 px
               // table; real rails occupy several percent of the table width.
               // The outer table allocation is unchanged, so Wave A/B1 geometry
-              // contracts still hold — only the felt inset moves.
+              // contracts still hold \u2014 only the felt inset moves.
               padding: EdgeInsets.all(
                 integratedPerspectivePrototype ? _act0SceneRailWidthV1 : 10.0,
               ),
@@ -11705,8 +11815,8 @@ class _Act0TableV1 extends StatelessWidget {
     }
     // PR #213 / V2_PRODUCTION_SPATIAL_BASELINE: one tiered opponent plane,
     // laid out in a world widened past the felt stage per
-    // `Act0SceneTieredSeatingV1`. Instantiated twice — back plane before the
-    // table, front plane after it — so near-flank bodies are occluded by the
+    // `Act0SceneTieredSeatingV1`. Instantiated twice \u2014 back plane before the
+    // table, front plane after it \u2014 so near-flank bodies are occluded by the
     // felt edge the way the Hero foreground is.
     Widget tieredOpponentPlane(
       Size stageSize,
@@ -11718,7 +11828,7 @@ class _Act0TableV1 extends StatelessWidget {
             Act0SceneHybridShellRegistryV1.shellStore.readyNotifier,
         builder: (context, hybridShellReady, _) {
           // RENDER_CLASS_HYBRID_INTEGRATION_GAUNTLET_V2: the narrower world
-          // box only applies once the hybrid shell owns the visual — the
+          // box only applies once the hybrid shell owns the visual \u2014 the
           // procedural-table fallback path keeps the original production
           // widen it was tuned against.
           final rules = hybridShellReady
@@ -11797,7 +11907,7 @@ class _Act0TableV1 extends StatelessWidget {
           // path the flat single-plane opponent layer is replaced by the V2
           // tiered layer (back plane here, front plane after `scene`). The
           // `else` branch keeps the pre-existing flat layer for the non-camera
-          // preview surface — it is not an A/B spatial-family switch; there is
+          // preview surface \u2014 it is not an A/B spatial-family switch; there is
           // one production spatial family (V2).
           if (cameraStageSize != null)
             tieredOpponentPlane(
@@ -12449,7 +12559,7 @@ class _CenterSignalAnchorV1 extends StatelessWidget {
   ///
   /// B6 lets that emphasis *arrive* rather than cut: the bracket fades up as
   /// the verdict becomes current, and re-asserts for repair reacquisition. It
-  /// is released instantly — never faded — on entering recheck, so no clue is
+  /// is released instantly \u2014 never faded \u2014 on entering recheck, so no clue is
   /// ever animating during a recognition attempt.
   final Act0SceneAttentionMotionV1? clueMotion;
 
@@ -12463,7 +12573,7 @@ class _CenterSignalAnchorV1 extends StatelessWidget {
         // says so in copy. What it lacked was a mark that visibly belongs to
         // this exact object. Brackets clamp to its own corners, so "the clue is
         // marked on the table" now has something to point at. Local and
-        // object-bound only — no dimming, no blur, no scene-wide treatment.
+        // object-bound only \u2014 no dimming, no blur, no scene-wide treatment.
         child: Stack(
           clipBehavior: Clip.none,
           children: [
@@ -12859,8 +12969,8 @@ class _SeatNodeV1 extends StatelessWidget {
 
   /// B7: the camera-owned scene resolves one table for every state, and that
   /// table is shorter than the tallest state it replaced. The seat's own
-  /// informative column — cards, the gap under them, the plate's internal
-  /// padding — was sized against the taller table and now saturates the flank,
+  /// informative column \u2014 cards, the gap under them, the plate's internal
+  /// padding \u2014 was sized against the taller table and now saturates the flank,
   /// leaving no room between a seat and its own commitment. This trims the
   /// column's dead vertical space only. No type size, no plate width, no
   /// content changes.
@@ -12930,7 +13040,7 @@ class _SeatNodeV1 extends StatelessWidget {
         visibleCards.isNotEmpty;
     // B4: the seat glyph survives only where it still carries meaning. B3 put
     // a drawn player in every occupied seat, so `person_rounded` beside them is
-    // a duplicate — and it is the most app-like mark left on the cloth. The
+    // a duplicate \u2014 and it is the most app-like mark left on the cloth. The
     // selectable touch glyph and the empty-seat mark are interaction truth and
     // stay exactly as they were.
     final showsSeatGlyph = hero || selectable || !seat.isOccupied;
@@ -13888,7 +13998,7 @@ bool _isCenterPriceContextCueV1(BuildContext context, String cueLabel) {
     return false;
   }
   if (normalizedCue.startsWith('facing ') ||
-      normalizedCue.startsWith('против ')) {
+      normalizedCue.startsWith('\u043F\u0440\u043E\u0442\u0438\u0432 ')) {
     return true;
   }
   final facingPrice = act0RuntimeNeutralFacingPriceCueLabelV1(
@@ -14202,7 +14312,7 @@ class _ActionTrailV1State extends State<_ActionTrailV1> {
   }
 
   /// Returns the street name if this trail label starts a new street
-  /// (e.g. "Flop: BB checks" → "FLOP", "Flop dealt" → "FLOP"), otherwise null.
+  /// (e.g. "Flop: BB checks" \u2192 "FLOP", "Flop dealt" \u2192 "FLOP"), otherwise null.
   String? _streetNameFromLabel(String label) {
     final m = RegExp(
       r'^(Flop|Turn|River)[:\s]',
@@ -14904,7 +15014,7 @@ class _BetChipV1 extends StatelessWidget {
     // B4: a commitment is instrumentation sitting on the cloth, not an app
     // card floating over it. Same engraved carrier as the seat nameplate, so
     // identity and commitment read as one attached family. The frosted-glass
-    // backdrop blur is gone — it is an application effect, and felt does not
+    // backdrop blur is gone \u2014 it is an application effect, and felt does not
     // refract. Every bet-kind colour semantic is unchanged.
     return Container(
       key: Key('act0_shell_bet_chip_${bet.label}'),
@@ -15125,7 +15235,7 @@ class _MarkerDotV1 extends StatelessWidget {
         Localizations.localeOf(
           context,
         ).languageCode.toLowerCase().startsWith('ru')
-        ? 'Ход'
+        ? '\u0425\u043E\u0434'
         : 'Act';
     final (color, label, isCircle) = switch (marker) {
       _SeatMarkerKindV1.dealer => (Colors.white, 'BTN', false),
@@ -15424,23 +15534,23 @@ String _displaySuit(String suit) {
     case 's':
     case 'spade':
     case 'spades':
-    case '♠':
-      return '♠';
+    case '\u2660':
+      return '\u2660';
     case 'h':
     case 'heart':
     case 'hearts':
-    case '♥':
-      return '♥';
+    case '\u2665':
+      return '\u2665';
     case 'd':
     case 'diamond':
     case 'diamonds':
-    case '♦':
-      return '♦';
+    case '\u2666':
+      return '\u2666';
     case 'c':
     case 'club':
     case 'clubs':
-    case '♣':
-      return '♣';
+    case '\u2663':
+      return '\u2663';
     default:
       return suit.toUpperCase();
   }
@@ -15884,9 +15994,12 @@ class _ActionPanelV1 extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              act0RuntimeLocalizedOptionLabelV1(
+                              act0AcademyW1OptionLabelV1(
                                 context,
-                                option.label,
+                                act0RuntimeLocalizedOptionLabelV1(
+                                  context,
+                                  option.label,
+                                ),
                               ),
                               textAlign: TextAlign.left,
                               style: Act0ShellTokensV1.body.copyWith(
@@ -16319,7 +16432,7 @@ class _ActionPromptPanelV1 extends StatelessWidget {
                         const SizedBox(width: 5),
                         Expanded(
                           child: Text(
-                            'First table read · Locate your seat',
+                            'First table read \u00B7 Locate your seat',
                             key: const Key(
                               'act0_shell_first_table_orientation',
                             ),
@@ -16362,7 +16475,7 @@ class _ActionPromptPanelV1 extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          'Step 1 · Locate your seat',
+                          'Step 1 \u00B7 Locate your seat',
                           style: Act0ShellTokensV1.label.copyWith(
                             color: Act0ShellTokensV1.text,
                             fontSize: 10.8,
@@ -16748,6 +16861,7 @@ class _TheoryRecallCtaV1 extends StatelessWidget {
 class _DecisionHintPeekV1 extends StatelessWidget {
   const _DecisionHintPeekV1({
     required this.quickHint,
+    this.localizeW1Ctas = false,
     required this.fullIdeaTitle,
     required this.fullIdeaBlocks,
     required this.showFullIdea,
@@ -16756,6 +16870,7 @@ class _DecisionHintPeekV1 extends StatelessWidget {
   });
 
   final String quickHint;
+  final bool localizeW1Ctas;
   final String fullIdeaTitle;
   final List<String> fullIdeaBlocks;
   final bool showFullIdea;
@@ -16785,7 +16900,9 @@ class _DecisionHintPeekV1 extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'Quick hint',
+                  localizeW1Ctas
+                      ? act0AcademyW1CtaV1(context, 'Quick hint')
+                      : 'Quick hint',
                   key: const Key('act0_shell_hint_title'),
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.info,
@@ -16806,7 +16923,9 @@ class _DecisionHintPeekV1 extends StatelessWidget {
                 ),
                 icon: const Icon(Icons.arrow_back_rounded, size: 15),
                 label: Text(
-                  'Back to choices',
+                  localizeW1Ctas
+                      ? act0AcademyW1CtaV1(context, 'Back to choices')
+                      : 'Back to choices',
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.info,
                     fontSize: 10.8,
@@ -16840,7 +16959,9 @@ class _DecisionHintPeekV1 extends StatelessWidget {
               ),
               icon: const Icon(Icons.auto_stories_rounded, size: 15),
               label: Text(
-                'Review full idea',
+                localizeW1Ctas
+                    ? act0AcademyW1CtaV1(context, 'Review full idea')
+                    : 'Review full idea',
                 style: Act0ShellTokensV1.label.copyWith(
                   color: Act0ShellTokensV1.info,
                   fontSize: 10.8,
