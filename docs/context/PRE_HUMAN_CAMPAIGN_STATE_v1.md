@@ -1,6 +1,13 @@
 # Pre-Human Campaign State v1
 
-## 2026-10-11 owner Standard-First S08 amendment (current pointer)
+## 2026-10-11 S08 verified merge / S09 admission (newest, effective after this docs-only PR merges)
+
+- S08 final owner + independent verdict: `S08 = PASS_STANDARD_FIRST_NATIVE`; PR #269 accepted exact source HEAD `b170bff43eac5f6ebfc08c7126a8e3ba0a5e4951`, squash-merged to main `1833a33f72040761eb09e56228258a815f3921cd` with exact accepted tree `ec30ede14df3408b3710a31aa38075c9c80950d0`. Independent native receipt: `docs/_reviews/s08_standard_first_native_closure_receipt_20261011.md`; Standard-First amendment remains in §10A and original owner receipt.
+- Once the **current docs-only receipt PR** has passed required exact-head CI and its merge is verified, the canonical active dispatch becomes `ACTIVE_TASK_ID = S09`, `CURRENT_STAGE = PRE_P02_DESIGN_RECONVERGENCE / S09_LEARN_TO_REPAIR / BOUNDED_WAVE_B`, `NEXT_TASK_ID = S09_B1_SOURCE_AUDIT_AND_LEARN_TO_REPAIR`, `S09 = LEARN_TO_REPAIR`, `S10 = NOT_AUTHORIZED`, `P02 = NOT_ADMITTED`.
+- Next authoritative handoff: `docs/_reviews/s09_wave_b_implementation_handoff_20261011.md` under unchanged S06 Wave Map, S05 Editorial Tide / Option 2 Table boundary and S07 source semantics; one learner job, small reversible scope, no production S09 changes in this docs PR. Protected Modern Table / PR #224, engine/telemetry/scheduler, Human gate and future release constraints unchanged.
+
+
+## 2026-10-11 owner Standard-First S08 amendment (historical; superseded by verified S09 admission above)
 
 - `ACTIVE_TASK_ID = S08`. `SCREEN_IA = KEEP_APPROVED_STRUCTURE_WITH_SIMPLIFICATION`. Normal-text iOS portrait, source-truth Home progress and complete standard RU teaching are mandatory; XXL-only/VoiceOver/uncommon viewport gaps may be explicitly DEFERRED for S08-S11, not falsely PASSED. Master Plan v5 section10A amendment and `docs/_reviews/s08_standard_first_owner_amendment_20261011.md` govern; historical S05/S07 unchanged.
 - PR #269 remains DRAFT/OPEN/UNMERGED pending standard product QA and new exact-HEAD CI; `NEXT_TASK_ID = S08`. No Modern Table / PR#224, Human/P02, S09 or S10 admission.
