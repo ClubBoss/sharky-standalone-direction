@@ -9460,7 +9460,11 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
     );
     final hasSourceNext =
         nextUsefulHand?.isActionableRepair == true && onNextUsefulHand != null;
-    final summarySharkyLine = summary.sharkyLine.trim().isNotEmpty
+    final summarySharkyLine = localeIsRu
+        ? (summary.assistedCount > 0
+              ? '\u041f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u0430 \u043f\u043e\u043c\u043e\u0433\u043b\u0430 \u043f\u043e\u043d\u044f\u0442\u044c \u043e\u0448\u0438\u0431\u043a\u0443. \u041f\u0440\u043e\u0432\u0435\u0440\u044c \u044d\u0442\u043e\u0442 \u0441\u0438\u0433\u043d\u0430\u043b \u0441\u0430\u043c\u043e\u0441\u0442\u043e\u044f\u0442\u0435\u043b\u044c\u043d\u043e.'
+              : '\u0417\u0430\u043f\u043e\u043c\u043d\u0438 \u044d\u0442\u0443 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u0443 \u0441\u0442\u043e\u043b\u0430 \u0438 \u043f\u0440\u043e\u0432\u0435\u0440\u044c \u0435\u0451 \u0432 \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0435\u0439 \u0440\u0430\u0437\u0434\u0430\u0447\u0435.')
+        : summary.sharkyLine.trim().isNotEmpty
         ? summary.sharkyLine.trim()
         : payoffHero != null
         ? act0SharkyCoachLineForMomentV1(
@@ -9952,7 +9956,21 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                     tone: Act0ShellTokensV1.info,
                     fullWidth: true,
                   ),
-                  child: Text(summary.secondaryCtaLabel!),
+                  child: Text(
+                    localeIsRu
+                        ? switch (summary.secondaryCtaKind!) {
+                            Act0MilestoneCtaKindV1.replayForPerfect =>
+                              '\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c \u0431\u0435\u0437 \u043e\u0448\u0438\u0431\u043e\u043a',
+                            Act0MilestoneCtaKindV1.reviewFirst ||
+                            Act0MilestoneCtaKindV1.reviewForPerfect =>
+                              '\u0420\u0430\u0437\u043e\u0431\u0440\u0430\u0442\u044c \u043e\u0448\u0438\u0431\u043a\u0438',
+                            Act0MilestoneCtaKindV1.continueForward =>
+                              '\u041f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c',
+                            Act0MilestoneCtaKindV1.backToMap =>
+                              '\u041a \u043a\u0430\u0440\u0442\u0435 \u0443\u0440\u043e\u043a\u043e\u0432',
+                          }
+                        : summary.secondaryCtaLabel!,
+                  ),
                 ),
               ],
               if (summary.hasNextLesson ||
@@ -9963,7 +9981,11 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 TextButton(
                   key: const Key('act0_shell_block_summary_map_cta'),
                   onPressed: onBackToMap,
-                  child: const Text('Back to map'),
+                  child: Text(
+                    localeIsRu
+                        ? '\u041a \u043a\u0430\u0440\u0442\u0435 \u0443\u0440\u043e\u043a\u043e\u0432'
+                        : 'Back to map',
+                  ),
                 ),
               ],
               const SizedBox(height: Act0ShellTokensV1.gapLg),
@@ -10009,7 +10031,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'What improved',
+                              localeIsRu
+                                  ? '\u0427\u0442\u043e \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u0430\u043b\u0438'
+                                  : 'What improved',
                               key: const Key(
                                 'act0_shell_block_summary_habit_reward_label',
                               ),
@@ -10020,7 +10044,11 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              summary.habitRewardDetail,
+                              localeIsRu
+                                  ? (summary.assistedCount > 0
+                                        ? '\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u043b\u0438 \u0447\u0442\u0435\u043d\u0438\u0435 \u0441\u0442\u043e\u043b\u0430 \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439. \u041e\u0448\u0438\u0431\u043a\u0430 \u043e\u0441\u0442\u0430\u0451\u0442\u0441\u044f \u0434\u043b\u044f \u0441\u0430\u043c\u043e\u0441\u0442\u043e\u044f\u0442\u0435\u043b\u044c\u043d\u043e\u0433\u043e \u0440\u0430\u0437\u0431\u043e\u0440\u0430.'
+                                        : '\u0422\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u0430\u043b\u0438 \u0447\u0442\u0435\u043d\u0438\u0435 \u0441\u0442\u043e\u043b\u0430. \u0418\u0442\u043e\u0433 \u043e\u0446\u0435\u043d\u0451\u043d \u043f\u043e \u0441\u0430\u043c\u043e\u0441\u0442\u043e\u044f\u0442\u0435\u043b\u044c\u043d\u044b\u043c \u043e\u0442\u0432\u0435\u0442\u0430\u043c.')
+                                  : summary.habitRewardDetail,
                               key: const Key(
                                 'act0_shell_block_summary_habit_reward_detail',
                               ),

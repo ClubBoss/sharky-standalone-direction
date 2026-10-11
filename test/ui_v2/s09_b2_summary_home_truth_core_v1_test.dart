@@ -7,9 +7,6 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 const _oldSeed = Act0AchievementSeedConsumerV1(
   moments: [
@@ -218,7 +215,12 @@ void main() {
     final outcome = find.byKey(const Key('act0_b2_summary_ru_assessed_truth'));
     expect(outcome, findsOneWidget);
     final line = tester.widget<Text>(outcome).data!;
-    expect(line, contains('не доказывает самостоятельное решение'));
+    expect(
+      line,
+      contains(
+        '\u043d\u0435 \u0434\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442 \u0441\u0430\u043c\u043e\u0441\u0442\u043e\u044f\u0442\u0435\u043b\u044c\u043d\u043e\u0435 \u0440\u0435\u0448\u0435\u043d\u0438\u0435',
+      ),
+    );
     expect(
       find.text(
         '\u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043e \u0440\u0430\u043d\u0435\u0435',
@@ -230,6 +232,40 @@ void main() {
       findsNothing,
     );
     expect(find.text('1 with help'), findsNothing);
+    final title = tester
+        .widget<Text>(
+          find.byKey(const Key('act0_shell_block_summary_habit_reward_label')),
+        )
+        .data!;
+    expect(
+      title,
+      '\u0427\u0442\u043e \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u0430\u043b\u0438',
+    );
+    final detail = tester
+        .widget<Text>(
+          find.byKey(const Key('act0_shell_block_summary_habit_reward_detail')),
+        )
+        .data!;
+    expect(detail, contains('\u041e\u0448\u0438\u0431\u043a'));
+    expect(detail, isNot(contains('This read will help')));
+  });
+
+  testWidgets('RU primary and secondary Summary CTA labels are native', (
+    tester,
+  ) async {
+    await _pump(tester, summary: _cleanSummary, earnedNow: true, ru: true);
+    expect(find.text('Replay for perfect'), findsNothing);
+    expect(find.text('Back to map'), findsNothing);
+    expect(find.text('What improved'), findsNothing);
+    if (_cleanSummary.secondaryCtaLabel != null) {
+      expect(find.text('Replay for perfect'), findsNothing);
+    }
+    expect(
+      find.text(
+        '\u041a \u043a\u0430\u0440\u0442\u0435 \u0443\u0440\u043e\u043a\u043e\u0432',
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('RU unknown independent evidence never invents a clean result', (
