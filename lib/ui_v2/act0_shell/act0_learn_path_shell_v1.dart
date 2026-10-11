@@ -2,6 +2,7 @@ import 'dart:async' show Timer, unawaited;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:flutter/rendering.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
@@ -26,7 +27,6 @@ const Color _learnV6Gold = Act0VisualCanonV1.goldAccent;
 const Color _learnV6Green = Act0VisualCanonV1.greenTable;
 const Color _learnV6Navy = Act0VisualCanonV1.navySurface;
 const Color _learnV6Deep = Act0VisualCanonV1.deepNavy;
-
 
 ({Color accent, Color accentSoft}) _learnWorldToneV1(int worldNumber) {
   return switch (worldNumber) {
@@ -108,12 +108,12 @@ Color _worldRouteStatusColorV1(
   Act0WorldCardV1 world,
 ) {
   return switch (world.status) {
-    Act0WorldStateV1.completed => Act0ShellTokensV1.primary,
-    Act0WorldStateV1.current => Act0ShellTokensV1.primary,
+    Act0WorldStateV1.completed => Act0AcademyDesignTokensV1.focus,
+    Act0WorldStateV1.current => Act0AcademyDesignTokensV1.focus,
     Act0WorldStateV1.locked =>
       _isImmediateNextWorldV1(worlds, world)
-          ? Act0ShellTokensV1.gold
-          : Act0ShellTokensV1.textDim,
+          ? Act0AcademyDesignTokensV1.needsReviewFg
+          : Act0AcademyDesignTokensV1.inkMuted,
   };
 }
 
@@ -522,7 +522,7 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
       }
     }
     routeTask ??= routeLesson.taskList.first;
-    return act0LocalizedTaskTitleV1(context, routeTask);
+    return act0AcademyTaskTitleV1(context, routeTask);
   }
 
   Widget? _expandedBodyForLessonV5({
@@ -1046,9 +1046,6 @@ class _WorldContextStripV5 extends StatelessWidget {
                               en: 'Current world · W${world.worldNumber}',
                               ru: 'Текущий мир · W${world.worldNumber}',
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.fade,
-                            softWrap: false,
                             style: Act0AcademyDesignTokensV1.label.copyWith(
                               color: Act0AcademyDesignTokensV1.focus,
                               fontSize: 9.8,
@@ -1061,9 +1058,7 @@ class _WorldContextStripV5 extends StatelessWidget {
                           Flexible(
                             child: Text(
                               moduleTitle,
-                              maxLines: 1,
-                              overflow: TextOverflow.fade,
-                              softWrap: false,
+
                               style: Act0AcademyDesignTokensV1.label.copyWith(
                                 fontSize: 9.4,
                                 letterSpacing: 0,
@@ -1075,14 +1070,12 @@ class _WorldContextStripV5 extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      world.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.fade,
-                      style: Act0AcademyDesignTokensV1.sectionHeading
-                          .copyWith(
-                            fontSize: compact ? 14.2 : 15.2,
-                            height: 1.04,
-                          ),
+                      act0AcademyWorldTitleV1(context, world),
+
+                      style: Act0AcademyDesignTokensV1.sectionHeading.copyWith(
+                        fontSize: compact ? 14.2 : 15.2,
+                        height: 1.04,
+                      ),
                     ),
                     const SizedBox(height: 5),
                     Row(
@@ -1098,10 +1091,9 @@ class _WorldContextStripV5 extends StatelessWidget {
                               minHeight: 3,
                               backgroundColor: Act0AcademyDesignTokensV1.rule
                                   .withValues(alpha: 0.55),
-                              valueColor:
-                                  const AlwaysStoppedAnimation<Color>(
-                                    Act0AcademyDesignTokensV1.focus,
-                                  ),
+                              valueColor: const AlwaysStoppedAnimation<Color>(
+                                Act0AcademyDesignTokensV1.focus,
+                              ),
                             ),
                           ),
                         ),
@@ -1121,11 +1113,13 @@ class _WorldContextStripV5 extends StatelessWidget {
                       _learnCopyV1(
                         context,
                         en: conciseProgressLabel,
-                        ru: conciseProgressLabel,
+                        ru: act0AcademyProgressLabelV1(
+                          context,
+                          conciseProgressLabel,
+                        ),
                       ),
                       key: const Key('act0_shell_learn_route_board'),
-                      maxLines: 1,
-                      overflow: TextOverflow.fade,
+
                       style: Act0AcademyDesignTokensV1.supporting.copyWith(
                         fontSize: 9.8,
                         height: 1.0,
@@ -1135,40 +1129,59 @@ class _WorldContextStripV5 extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              Tooltip(
-                message: _learnCopyV1(context, en: 'Worlds', ru: 'Миры'),
-                child: OutlinedButton.icon(
-                  key: const Key('act0_shell_levels_menu_button'),
-                  onPressed: onOpenWorldMenu,
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(0, 30),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: compact ? 7 : 9,
-                    ),
-                    foregroundColor: Act0AcademyDesignTokensV1.focus,
-                    backgroundColor: Act0AcademyDesignTokensV1.focus
-                        .withValues(alpha: 0.075),
-                    side: BorderSide(
-                      color: Act0AcademyDesignTokensV1.focus.withValues(
-                        alpha: 0.32,
-                      ),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        Act0ShellTokensV1.radiusPill,
-                      ),
-                    ),
+              Semantics(
+                container: true,
+                label: _learnCopyV1(
+                  context,
+                  en: 'Open worlds',
+                  ru: '\u041e\u0442\u043a\u0440\u044b\u0442\u044c \u043c\u0438\u0440\u044b',
+                ),
+                button: true,
+                onTap: onOpenWorldMenu,
+                excludeSemantics: true,
+                child: Tooltip(
+                  message: _learnCopyV1(
+                    context,
+                    en: 'Worlds',
+                    ru: '\u041c\u0438\u0440\u044b',
                   ),
-                  icon: Icon(
-                    Icons.map_rounded,
-                    size: 15,
-                    color: Act0AcademyDesignTokensV1.focus,
-                  ),
-                  label: compact
-                      ? const SizedBox.shrink()
-                      : Text(
-                          _learnCopyV1(context, en: 'Worlds', ru: 'Миры'),
+                  child: OutlinedButton.icon(
+                    key: const Key('act0_shell_levels_menu_button'),
+                    onPressed: onOpenWorldMenu,
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(48, 48),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: compact ? 7 : 9,
+                      ),
+                      foregroundColor: Act0AcademyDesignTokensV1.focus,
+                      backgroundColor: Act0AcademyDesignTokensV1.focus
+                          .withValues(alpha: 0.075),
+                      side: BorderSide(
+                        color: Act0AcademyDesignTokensV1.focus.withValues(
+                          alpha: 0.32,
                         ),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          Act0AcademyDesignTokensV1.radiusCard,
+                        ),
+                      ),
+                    ),
+                    icon: Icon(
+                      Icons.map_rounded,
+                      size: 15,
+                      color: Act0AcademyDesignTokensV1.focus,
+                    ),
+                    label: compact
+                        ? const SizedBox.shrink()
+                        : Text(
+                            _learnCopyV1(
+                              context,
+                              en: 'Worlds',
+                              ru: '\u041c\u0438\u0440\u044b',
+                            ),
+                          ),
+                  ),
                 ),
               ),
             ],
@@ -1269,8 +1282,7 @@ class _JourneyPreviewV5 extends StatelessWidget {
             ru: 'На этой неделе смотри на стол перед выбором.',
           ),
           key: const Key('act0_shell_learn_week1_support_line'),
-          maxLines: 2,
-          overflow: TextOverflow.fade,
+
           style: Act0AcademyDesignTokensV1.supporting,
         ),
         const SizedBox(height: 8),
@@ -1438,12 +1450,16 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
       opacity: opacity,
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+        borderRadius: BorderRadius.circular(
+          Act0AcademyDesignTokensV1.radiusCard,
+        ),
         clipBehavior: Clip.antiAlias,
         child: Ink(
           decoration: BoxDecoration(
             color: fill,
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+            borderRadius: BorderRadius.circular(
+              Act0AcademyDesignTokensV1.radiusCard,
+            ),
             border: Border.all(color: border),
           ),
           child: Column(
@@ -1452,7 +1468,9 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
               InkWell(
                 key: Key('act0_shell_lesson_${lesson.title}'),
                 onTap: () => onSelectLesson(lesson.lessonId),
-                borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+                borderRadius: BorderRadius.circular(
+                  Act0AcademyDesignTokensV1.radiusCard,
+                ),
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(
                     isCurrent ? 11 : 9,
@@ -1503,12 +1521,11 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
                                         'act0_shell_journey_v6_next_soft_gold',
                                       )
                                     : null,
-                                style: Act0AcademyDesignTokensV1.label
-                                    .copyWith(
-                                      color: accent,
-                                      fontSize: 10.0,
-                                      letterSpacing: 0,
-                                    ),
+                                style: Act0AcademyDesignTokensV1.label.copyWith(
+                                  color: accent,
+                                  fontSize: 10.0,
+                                  letterSpacing: 0,
+                                ),
                               ),
                       ),
                       const SizedBox(width: 9),
@@ -1520,9 +1537,8 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              act0LocalizedLessonTitleV1(context, lesson),
-                              maxLines: 1,
-                              overflow: TextOverflow.fade,
+                              act0AcademyLessonTitleV1(context, lesson),
+
                               style: Act0AcademyDesignTokensV1.sectionHeading
                                   .copyWith(
                                     color: isLocked
@@ -1535,8 +1551,7 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
                             const SizedBox(height: 3),
                             Text(
                               meta,
-                              maxLines: 1,
-                              overflow: TextOverflow.fade,
+
                               style: Act0AcademyDesignTokensV1.supporting
                                   .copyWith(fontSize: 10.2, height: 1.0),
                             ),
@@ -1553,7 +1568,7 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: accent.withValues(alpha: 0.14),
                             borderRadius: BorderRadius.circular(
-                              Act0ShellTokensV1.radiusPill,
+                              Act0AcademyDesignTokensV1.radiusCard,
                             ),
                             border: Border.all(
                               color: accent.withValues(alpha: 0.28),
@@ -1564,8 +1579,6 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
                             key: Key(
                               'act0_shell_learn_lesson_state_text_${lesson.lessonId}',
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.fade,
                             style: Act0AcademyDesignTokensV1.label.copyWith(
                               color: accent,
                               fontSize: 9.0,
@@ -1665,8 +1678,7 @@ class _JourneyFutureSummaryV5 extends StatelessWidget {
                 child: Text(
                   label,
                   key: const Key('act0_shell_learn_v5_future_summary'),
-                  maxLines: 1,
-                  overflow: TextOverflow.fade,
+
                   style: Act0AcademyDesignTokensV1.supporting.copyWith(
                     fontSize: 10.8,
                     height: 1.05,
@@ -1741,8 +1753,7 @@ class _JourneyFutureSummaryV5 extends StatelessWidget {
                   en: 'The road ahead opens one mission at a time.',
                   ru: 'Путь впереди открывается по одной миссии.',
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.fade,
+
                 style: Act0AcademyDesignTokensV1.supporting.copyWith(
                   fontSize: 10.8,
                   height: 1.12,
@@ -1829,8 +1840,6 @@ class _LockedJourneySummaryV1 extends StatelessWidget {
                 Expanded(
                   child: Text(
                     label,
-                    maxLines: 1,
-                    overflow: TextOverflow.fade,
                     style: Act0ShellTokensV1.muted.copyWith(
                       color: Act0ShellTokensV1.textMuted.withValues(
                         alpha: 0.96,
@@ -1843,8 +1852,7 @@ class _LockedJourneySummaryV1 extends StatelessWidget {
                 ),
                 Text(
                   _learnCopyV1(context, en: 'In order', ru: 'По порядку'),
-                  maxLines: 1,
-                  overflow: TextOverflow.fade,
+
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.textDim,
                     fontSize: 8.8,
@@ -1893,8 +1901,6 @@ class _LockedJourneySummaryV1 extends StatelessWidget {
                 en: 'The road continues when the next mission clears.',
                 ru: 'Путь продолжается, когда следующая миссия закрыта.',
               ),
-              maxLines: 2,
-              overflow: TextOverflow.fade,
               style: Act0ShellTokensV1.muted.copyWith(
                 color: Act0ShellTokensV1.textDim.withValues(alpha: 0.82),
                 fontSize: 10.3,
@@ -1947,8 +1953,8 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
           volume: volume,
           continueLabel: _learnCopyV1(
             context,
-            en: 'Continue ${currentWorld.title}',
-            ru: 'Продолжить ${currentWorld.title}',
+            en: 'Continue ${act0AcademyWorldTitleV1(context, currentWorld)}',
+            ru: '\u041f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c ${act0AcademyWorldTitleV1(context, currentWorld)}',
           ),
         ),
       ),
@@ -1973,7 +1979,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
         label: _learnCopyV1(context, en: 'Volume I', ru: 'Том I'),
         subtitle: _learnCopyV1(context, en: 'Foundations', ru: 'Основы'),
         stateLabel: _learnCopyV1(context, en: 'Active', ru: 'Активен'),
-        color: Act0ShellTokensV1.primary,
+        color: Act0AcademyDesignTokensV1.focus,
       ),
       _VolumePillModelV1(
         id: 'volume_ii',
@@ -1988,7 +1994,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
           en: 'Later frontier',
           ru: 'Поздний рубеж',
         ),
-        color: Act0ShellTokensV1.textDim,
+        color: Act0AcademyDesignTokensV1.inkMuted,
         unlockAfterLabel: _learnCopyV1(
           context,
           en: 'This is a future landmark, not a lesson you can open today.',
@@ -2013,7 +2019,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
           en: 'Advanced frontier',
           ru: 'Продвинутый рубеж',
         ),
-        color: Act0ShellTokensV1.textDim,
+        color: Act0AcademyDesignTokensV1.inkMuted,
         unlockAfterLabel: _learnCopyV1(
           context,
           en: 'This is a future landmark, not a lesson you can open today.',
@@ -2033,7 +2039,9 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
           child: BackdropFilter(
             filter: ui.ImageFilter.blur(sigmaX: 28, sigmaY: 28),
             child: Container(
-              color: Act0ShellTokensV1.background.withValues(alpha: 0.96),
+              color: Act0AcademyDesignTokensV1.pageSurface.withValues(
+                alpha: 0.96,
+              ),
             ),
           ),
         ),
@@ -2065,191 +2073,216 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                     onPressed: onClose,
                     icon: const Icon(
                       Icons.arrow_back_rounded,
-                      color: Act0ShellTokensV1.text,
+                      color: Act0AcademyDesignTokensV1.ink,
                     ),
                   ),
                   Expanded(
                     child: Text(
                       _learnCopyV1(context, en: 'Worlds', ru: 'Миры'),
                       textAlign: TextAlign.center,
-                      style: Act0ShellTokensV1.screenTitle,
+                      style: Act0AcademyDesignTokensV1.sectionHeading,
                     ),
                   ),
                   const SizedBox(width: 48),
                 ],
               ),
-              const SizedBox(height: 2),
-              Center(
-                child: Text(
-                  _learnCopyV1(
-                    context,
-                    en: '3 volumes · 36 worlds',
-                    ru: '3 тома · 36 миров',
-                  ),
-                  style: Act0ShellTokensV1.muted.copyWith(fontSize: 11.0),
-                ),
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
-              SizedBox(
-                key: const Key('act0_shell_volume_strip'),
-                height: 56,
-                child: Row(
-                  children: [
-                    for (var i = 0; i < volumePills.length; i++) ...[
-                      Expanded(
-                        child: _VolumePillV1(
-                          volume: volumePills[i],
-                          onTap: volumePills[i].id == 'volume_i'
-                              ? null
-                              : () => _showLockedVolumePreviewV1(
-                                  context,
-                                  volumePills[i],
-                                  currentWorld,
-                                ),
-                        ),
-                      ),
-                      if (i < volumePills.length - 1)
-                        const SizedBox(width: Act0ShellTokensV1.gapXs),
-                    ],
-                  ],
-                ),
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
-              Container(
-                key: const Key('act0_shell_levels_sticky_node_header'),
-                width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(13, 11, 13, 11),
-                decoration: BoxDecoration(
-                  color: Color.alphaBlend(
-                    currentStateColor.withValues(alpha: 0.08),
-                    Act0ShellTokensV1.surface2,
-                  ),
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusMd,
-                  ),
-                  border: Border.all(
-                    color: currentStateColor.withValues(alpha: 0.36),
-                  ),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                      color: currentStateColor.withValues(alpha: 0.10),
-                      blurRadius: 14,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _volumeSummaryLabelV1(
-                        context: context,
-                        volumeNumber: 1,
-                        subtitle: _learnCopyV1(
-                          context,
-                          en: 'Current foundation',
-                          ru: 'Текущая основа',
-                        ),
-                      ),
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: currentStateColor,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      _learnCopyV1(
-                        context,
-                        en: 'W1-W6 available - W7-W10 locked preview',
-                        ru: 'Миры 1-6 доступны - миры 7-10 закрытый предпросмотр',
-                      ),
-                      key: const Key(
-                        'act0_shell_levels_selected_world_status_line',
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.fade,
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: currentStateColor.withValues(alpha: 0.90),
-                        fontSize: 10.8,
-                        letterSpacing: 0.36,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      _learnCopyV1(
-                        context,
-                        en: 'Current: ${currentWorld.title}',
-                        ru: 'Текущий: ${currentWorld.title}',
-                      ),
-                      key: const Key(
-                        'act0_shell_levels_selected_world_current_line',
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.fade,
-                      style: Act0ShellTokensV1.body.copyWith(
-                        color: Act0ShellTokensV1.text,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    if (nextWorld != null) ...[
-                      Text(
-                        _learnCopyV1(
-                          context,
-                          en: 'Next: ${nextWorld.title}',
-                          ru: 'Дальше: ${nextWorld.title}',
-                        ),
-                        key: const Key(
-                          'act0_shell_levels_selected_world_next_landmark',
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.fade,
-                        style: Act0ShellTokensV1.body.copyWith(
-                          color: Act0ShellTokensV1.gold,
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 4),
-                    Text(
-                      _learnCopyV1(
-                        context,
-                        en: 'W11-W12 planned foundation chapters, coming later.',
-                        ru: 'Миры 11-12 — главы запланированной основы, позже.',
-                      ),
-                      key: const Key(
-                        'act0_shell_levels_planned_foundation_line',
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.fade,
-                      style: Act0ShellTokensV1.muted.copyWith(
-                        color: Act0ShellTokensV1.textDim,
-                        fontSize: 10.4,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      _learnCopyV1(
-                        context,
-                        en: 'W13+ is later strategic depth.',
-                        ru: 'Миры 13+ — более поздняя стратегическая глубина.',
-                      ),
-                      key: const Key('act0_shell_levels_later_frontier_line'),
-                      maxLines: 1,
-                      overflow: TextOverflow.fade,
-                      style: Act0ShellTokensV1.muted.copyWith(
-                        color: Act0ShellTokensV1.textDim,
-                        fontSize: 10.2,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
               Expanded(
                 child: ListView(
-                  padding: const EdgeInsets.only(
-                    bottom: Act0ShellTokensV1.bottomNavHeight + 44,
-                  ),
+                  key: const Key('act0_shell_worlds_content_scroll'),
+                  padding: const EdgeInsets.only(bottom: 24),
                   children: [
+                    const SizedBox(height: 2),
+                    Center(
+                      child: Text(
+                        _learnCopyV1(
+                          context,
+                          en: '3 volumes · 36 worlds',
+                          ru: '3 тома · 36 миров',
+                        ),
+                        style: Act0AcademyDesignTokensV1.supporting.copyWith(
+                          fontSize: 11.0,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: Act0ShellTokensV1.gapMd),
+                    LayoutBuilder(
+                      key: const Key('act0_shell_volume_strip'),
+                      builder: (context, constraints) {
+                        final stack =
+                            constraints.maxWidth < 360 ||
+                            MediaQuery.textScalerOf(context).scale(12) > 15;
+                        final pills = <Widget>[
+                          for (final volume in volumePills)
+                            _VolumePillV1(
+                              volume: volume,
+                              onTap: volume.id == 'volume_i'
+                                  ? null
+                                  : () => _showLockedVolumePreviewV1(
+                                      context,
+                                      volume,
+                                      currentWorld,
+                                    ),
+                            ),
+                        ];
+                        if (stack) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              for (var i = 0; i < pills.length; i++) ...[
+                                pills[i],
+                                if (i < pills.length - 1)
+                                  const SizedBox(
+                                    height: Act0AcademyDesignTokensV1.gapXs,
+                                  ),
+                              ],
+                            ],
+                          );
+                        }
+                        return IntrinsicHeight(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              for (var i = 0; i < pills.length; i++) ...[
+                                Expanded(child: pills[i]),
+                                if (i < pills.length - 1)
+                                  const SizedBox(
+                                    width: Act0AcademyDesignTokensV1.gapXs,
+                                  ),
+                              ],
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: Act0ShellTokensV1.gapMd),
+                    Container(
+                      key: const Key('act0_shell_levels_sticky_node_header'),
+                      width: double.infinity,
+                      padding: const EdgeInsets.fromLTRB(13, 11, 13, 11),
+                      decoration: BoxDecoration(
+                        color: Color.alphaBlend(
+                          currentStateColor.withValues(alpha: 0.08),
+                          Act0AcademyDesignTokensV1.pageSurface,
+                        ),
+                        borderRadius: BorderRadius.circular(
+                          Act0AcademyDesignTokensV1.radiusCard,
+                        ),
+                        border: Border.all(
+                          color: currentStateColor.withValues(alpha: 0.36),
+                        ),
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                            color: currentStateColor.withValues(alpha: 0.10),
+                            blurRadius: 14,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _volumeSummaryLabelV1(
+                              context: context,
+                              volumeNumber: 1,
+                              subtitle: _learnCopyV1(
+                                context,
+                                en: 'Current foundation',
+                                ru: 'Текущая основа',
+                              ),
+                            ),
+                            style: Act0AcademyDesignTokensV1.label.copyWith(
+                              color: currentStateColor,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            _learnCopyV1(
+                              context,
+                              en: 'W1-W6 available - W7-W10 locked preview',
+                              ru: 'Миры 1-6 доступны - миры 7-10 закрытый предпросмотр',
+                            ),
+                            key: const Key(
+                              'act0_shell_levels_selected_world_status_line',
+                            ),
+
+                            style: Act0AcademyDesignTokensV1.label.copyWith(
+                              color: currentStateColor.withValues(alpha: 0.90),
+                              fontSize: 10.8,
+                              letterSpacing: 0.36,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            _learnCopyV1(
+                              context,
+                              en: 'Current: ${act0AcademyWorldTitleV1(context, currentWorld)}',
+                              ru: '\u0422\u0435\u043a\u0443\u0449\u0438\u0439: ${act0AcademyWorldTitleV1(context, currentWorld)}',
+                            ),
+                            key: const Key(
+                              'act0_shell_levels_selected_world_current_line',
+                            ),
+
+                            style: Act0AcademyDesignTokensV1.body.copyWith(
+                              color: Act0AcademyDesignTokensV1.ink,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          if (nextWorld != null) ...[
+                            Text(
+                              _learnCopyV1(
+                                context,
+                                en: 'Next: ${act0AcademyWorldTitleV1(context, nextWorld)}',
+                                ru: '\u0414\u0430\u043b\u044c\u0448\u0435: ${act0AcademyWorldTitleV1(context, nextWorld)}',
+                              ),
+                              key: const Key(
+                                'act0_shell_levels_selected_world_next_landmark',
+                              ),
+
+                              style: Act0AcademyDesignTokensV1.body.copyWith(
+                                color: Act0AcademyDesignTokensV1.needsReviewFg,
+                              ),
+                            ),
+                          ],
+                          const SizedBox(height: 4),
+                          Text(
+                            _learnCopyV1(
+                              context,
+                              en: 'W11-W12 planned foundation chapters, coming later.',
+                              ru: 'Миры 11-12 — главы запланированной основы, позже.',
+                            ),
+                            key: const Key(
+                              'act0_shell_levels_planned_foundation_line',
+                            ),
+
+                            style: Act0AcademyDesignTokensV1.supporting
+                                .copyWith(
+                                  color: Act0AcademyDesignTokensV1.inkMuted,
+                                  fontSize: 10.4,
+                                ),
+                          ),
+                          const SizedBox(height: 3),
+                          Text(
+                            _learnCopyV1(
+                              context,
+                              en: 'W13+ is later strategic depth.',
+                              ru: 'Миры 13+ — более поздняя стратегическая глубина.',
+                            ),
+                            key: const Key(
+                              'act0_shell_levels_later_frontier_line',
+                            ),
+
+                            style: Act0AcademyDesignTokensV1.supporting
+                                .copyWith(
+                                  color: Act0AcademyDesignTokensV1.inkMuted,
+                                  fontSize: 10.2,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: Act0ShellTokensV1.gapMd),
                     for (var i = 0; i < worlds.length; i++) ...[
                       _WorldNodeV1(
                         world: worlds[i],
@@ -2317,15 +2350,19 @@ class _VolumePillV1 extends StatelessWidget {
       child: InkWell(
         key: Key('act0_shell_${volume.id}'),
         onTap: onTap,
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+        borderRadius: BorderRadius.circular(
+          Act0AcademyDesignTokensV1.radiusCard,
+        ),
         child: Ink(
           padding: const EdgeInsets.fromLTRB(9, 7, 9, 7),
           decoration: BoxDecoration(
             color: Color.alphaBlend(
               volume.color.withValues(alpha: active ? 0.10 : 0.05),
-              Act0ShellTokensV1.surface2,
+              Act0AcademyDesignTokensV1.pageSurface,
             ),
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
+            borderRadius: BorderRadius.circular(
+              Act0AcademyDesignTokensV1.radiusCard,
+            ),
             border: Border.all(
               color: volume.color.withValues(alpha: active ? 0.22 : 0.16),
             ),
@@ -2336,10 +2373,8 @@ class _VolumePillV1 extends StatelessWidget {
             children: [
               Text(
                 volume.label,
-                maxLines: 1,
-                overflow: TextOverflow.fade,
-                softWrap: false,
-                style: Act0ShellTokensV1.label.copyWith(
+
+                style: Act0AcademyDesignTokensV1.label.copyWith(
                   color: volume.color,
                   letterSpacing: 0.18,
                   fontSize: 8.5,
@@ -2347,22 +2382,19 @@ class _VolumePillV1 extends StatelessWidget {
               ),
               Text(
                 volume.subtitle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Act0ShellTokensV1.muted.copyWith(
+
+                style: Act0AcademyDesignTokensV1.supporting.copyWith(
                   fontSize: 9.6,
                   height: 1.0,
                   color: active
-                      ? Act0ShellTokensV1.textMuted
-                      : Act0ShellTokensV1.textDim,
+                      ? Act0AcademyDesignTokensV1.inkMuted
+                      : Act0AcademyDesignTokensV1.inkMuted,
                 ),
               ),
               Text(
                 volume.stateLabel,
-                maxLines: 1,
-                overflow: TextOverflow.fade,
-                softWrap: false,
-                style: Act0ShellTokensV1.label.copyWith(
+
+                style: Act0AcademyDesignTokensV1.label.copyWith(
                   color: volume.color,
                   fontSize: 8.6,
                   letterSpacing: 0.08,
@@ -2392,10 +2424,14 @@ class _LockedVolumePreviewSheetV1 extends StatelessWidget {
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
       decoration:
           Act0ShellTokensV1.surfaceDecoration(
-            color: Act0ShellTokensV1.surface2,
-            borderColor: Act0ShellTokensV1.textDim.withValues(alpha: 0.36),
+            color: Act0AcademyDesignTokensV1.pageSurface,
+            borderColor: Act0AcademyDesignTokensV1.inkMuted.withValues(
+              alpha: 0.36,
+            ),
           ).copyWith(
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXl),
+            borderRadius: BorderRadius.circular(
+              Act0AcademyDesignTokensV1.radiusCard,
+            ),
           ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -2403,18 +2439,18 @@ class _LockedVolumePreviewSheetV1 extends StatelessWidget {
         children: [
           _StateBadgeV1(
             label: volume.stateLabel,
-            color: Act0ShellTokensV1.textDim,
+            color: Act0AcademyDesignTokensV1.inkMuted,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Text(volume.label, style: Act0ShellTokensV1.sectionTitle),
+          Text(volume.label, style: Act0AcademyDesignTokensV1.sectionHeading),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(volume.subtitle, style: Act0ShellTokensV1.body),
+          Text(volume.subtitle, style: Act0AcademyDesignTokensV1.body),
           if ((volume.unlockAfterLabel ?? '').isNotEmpty) ...[
             const SizedBox(height: Act0ShellTokensV1.gapSm),
             Text(
               volume.unlockAfterLabel!,
               key: Key('act0_shell_${volume.id}_unlock_label'),
-              style: Act0ShellTokensV1.body,
+              style: Act0AcademyDesignTokensV1.body,
             ),
           ],
           if ((volume.previewLine ?? '').isNotEmpty) ...[
@@ -2422,14 +2458,14 @@ class _LockedVolumePreviewSheetV1 extends StatelessWidget {
             Text(
               volume.previewLine!,
               key: Key('act0_shell_${volume.id}_preview_line'),
-              style: Act0ShellTokensV1.muted,
+              style: Act0AcademyDesignTokensV1.supporting,
             ),
           ],
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           OutlinedButton(
             key: Key('act0_shell_${volume.id}_continue_current_cta'),
             onPressed: () => Navigator.of(context).pop(),
-            style: Act0ShellTokensV1.quietButtonStyle(height: 40),
+            style: Act0AcademyDesignTokensV1.secondaryButtonStyle(),
             child: Text(continueLabel),
           ),
         ],
@@ -2496,16 +2532,25 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
     final completed = widget.world.status == Act0WorldStateV1.completed;
     final active = widget.world.status == Act0WorldStateV1.current;
     final nextWorld = _isImmediateNextWorldV1(widget.worlds, widget.world);
-    final nodeRadius = Act0ShellTokensV1.radiusBase;
+    final nodeRadius = Act0AcademyDesignTokensV1.radiusCard;
     final targetScaleFactor = widget.selected ? 1.01 : 1.0;
-    final subtitle = act0LocalizedWorldSubtitleV1(context, widget.world);
+    final subtitle = act0AcademyWorldSubtitleV1(context, widget.world);
     final previousWorld = _worldBeforeV1(widget.worlds, widget.world);
     final detailText = switch (widget.world.status) {
-      Act0WorldStateV1.completed => widget.world.progressLabel,
-      Act0WorldStateV1.current => widget.world.progressLabel,
+      Act0WorldStateV1.completed => act0AcademyProgressLabelV1(
+        context,
+        widget.world.progressLabel,
+      ),
+      Act0WorldStateV1.current => act0AcademyProgressLabelV1(
+        context,
+        widget.world.progressLabel,
+      ),
       Act0WorldStateV1.locked =>
         nextWorld && previousWorld != null
-            ? _progressionUnlockLineShortV1(context, previousWorld.title)
+            ? _progressionUnlockLineShortV1(
+                context,
+                act0AcademyWorldTitleV1(context, previousWorld),
+              )
             : '',
     };
     final targetBorderColor = widget.selected
@@ -2540,9 +2585,11 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
                     color: widget.selected
                         ? Color.alphaBlend(
                             color.withValues(alpha: active ? 0.12 : 0.08),
-                            Act0ShellTokensV1.surface2,
+                            Act0AcademyDesignTokensV1.pageSurface,
                           )
-                        : Act0ShellTokensV1.surface.withValues(alpha: 0.88),
+                        : Act0AcademyDesignTokensV1.cardSurface.withValues(
+                            alpha: 0.88,
+                          ),
                     borderRadius: BorderRadius.circular(nodeRadius),
                     border: Border.all(color: targetBorderColor, width: 1.0),
                     boxShadow: <BoxShadow>[
@@ -2603,8 +2650,8 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
                                 '${widget.world.worldNumber}',
                                 style: TextStyle(
                                   color: locked && !nextWorld
-                                      ? Act0ShellTokensV1.textMuted
-                                      : Act0ShellTokensV1.text,
+                                      ? Act0AcademyDesignTokensV1.inkMuted
+                                      : Act0AcademyDesignTokensV1.ink,
                                   fontSize: active ? 16 : 15,
                                   fontWeight: FontWeight.w900,
                                 ),
@@ -2621,11 +2668,16 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
                               children: [
                                 Expanded(
                                   child: Text(
-                                    'World ${widget.world.worldNumber}',
-                                    style: Act0ShellTokensV1.label.copyWith(
-                                      color: color,
-                                      letterSpacing: 0.42,
+                                    _learnCopyV1(
+                                      context,
+                                      en: 'World ${widget.world.worldNumber}',
+                                      ru: '\u041c\u0438\u0440 ${widget.world.worldNumber}',
                                     ),
+                                    style: Act0AcademyDesignTokensV1.label
+                                        .copyWith(
+                                          color: color,
+                                          letterSpacing: 0.42,
+                                        ),
                                   ),
                                 ),
                                 _StateBadgeV1(label: statusLabel, color: color),
@@ -2633,42 +2685,37 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              act0LocalizedWorldTitleV1(context, widget.world),
+                              act0AcademyWorldTitleV1(context, widget.world),
                               style: Act0ShellTokensV1.cardTitle.copyWith(
                                 color: locked && !nextWorld
-                                    ? Act0ShellTokensV1.textMuted
-                                    : Act0ShellTokensV1.text,
+                                    ? Act0AcademyDesignTokensV1.inkMuted
+                                    : Act0AcademyDesignTokensV1.ink,
                                 fontSize: widget.selected ? 14.2 : 13.8,
                               ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(height: 3),
                             Text(
                               subtitle,
-                              style: Act0ShellTokensV1.muted.copyWith(
-                                color: locked && !nextWorld
-                                    ? Act0ShellTokensV1.textDim
-                                    : Act0ShellTokensV1.textMuted,
-                                fontSize: 11.2,
-                                height: 1.25,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+                              style: Act0AcademyDesignTokensV1.supporting
+                                  .copyWith(
+                                    color: locked && !nextWorld
+                                        ? Act0AcademyDesignTokensV1.inkMuted
+                                        : Act0AcademyDesignTokensV1.inkMuted,
+                                    fontSize: 11.2,
+                                    height: 1.25,
+                                  ),
                             ),
                             if (detailText.isNotEmpty) ...[
                               const SizedBox(height: 5),
                               Text(
                                 detailText,
-                                style: Act0ShellTokensV1.label.copyWith(
+                                style: Act0AcademyDesignTokensV1.label.copyWith(
                                   color: color.withValues(
                                     alpha: locked ? 0.92 : 0.88,
                                   ),
                                   fontSize: 10.2,
                                   letterSpacing: 0.28,
                                 ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ],
@@ -2705,14 +2752,14 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final progressionLocked = _isProgressionLockedWorldV1(worlds, world);
     final color = progressionLocked
-        ? Act0ShellTokensV1.gold
+        ? Act0AcademyDesignTokensV1.needsReviewFg
         : switch (world.status) {
-            Act0WorldStateV1.completed => Act0ShellTokensV1.primary,
-            Act0WorldStateV1.current => Act0ShellTokensV1.primary,
-            Act0WorldStateV1.locked => Act0ShellTokensV1.textDim,
+            Act0WorldStateV1.completed => Act0AcademyDesignTokensV1.focus,
+            Act0WorldStateV1.current => Act0AcademyDesignTokensV1.focus,
+            Act0WorldStateV1.locked => Act0AcademyDesignTokensV1.inkMuted,
           };
-    final worldTitle = act0LocalizedWorldTitleV1(context, world);
-    final worldSubtitle = act0LocalizedWorldSubtitleV1(context, world);
+    final worldTitle = act0AcademyWorldTitleV1(context, world);
+    final worldSubtitle = act0AcademyWorldSubtitleV1(context, world);
     final stateLabel = switch (world.status) {
       Act0WorldStateV1.completed => _learnCopyV1(
         context,
@@ -2734,10 +2781,12 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
       decoration:
           Act0ShellTokensV1.surfaceDecoration(
-            color: Act0ShellTokensV1.surface2,
+            color: Act0AcademyDesignTokensV1.pageSurface,
             borderColor: color.withValues(alpha: 0.48),
           ).copyWith(
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXl),
+            borderRadius: BorderRadius.circular(
+              Act0AcademyDesignTokensV1.radiusCard,
+            ),
           ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -2754,8 +2803,8 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
                     en: 'Proof path',
                     ru: 'Маршрут доказательств',
                   ),
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.gold,
+                  style: Act0AcademyDesignTokensV1.label.copyWith(
+                    color: Act0AcademyDesignTokensV1.needsReviewFg,
                     letterSpacing: 0.5,
                   ),
                 ),
@@ -2763,33 +2812,33 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
             ],
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Text(worldTitle, style: Act0ShellTokensV1.sectionTitle),
+          Text(worldTitle, style: Act0AcademyDesignTokensV1.sectionHeading),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
           Text(
             progressionLocked
                 ? _learnCopyV1(
                     context,
-                    en: 'Finish ${currentWorld.title} to open this world.',
-                    ru: 'Заверши ${currentWorld.title}, чтобы открыть этот мир.',
+                    en: 'Finish ${act0AcademyWorldTitleV1(context, currentWorld)} to open this world.',
+                    ru: '\u0417\u0430\u0432\u0435\u0440\u0448\u0438 ${act0AcademyWorldTitleV1(context, currentWorld)}, \u0447\u0442\u043e\u0431\u044b \u043e\u0442\u043a\u0440\u044b\u0442\u044c \u044d\u0442\u043e\u0442 \u043c\u0438\u0440.',
                   )
                 : world.unlockLabel,
             key: const Key('act0_shell_world_unlock_label'),
-            style: Act0ShellTokensV1.body.copyWith(
-              color: Act0ShellTokensV1.text,
+            style: Act0AcademyDesignTokensV1.body.copyWith(
+              color: Act0AcademyDesignTokensV1.ink,
             ),
           ),
           if (progressionLocked) ...[
-            Text(worldSubtitle, style: Act0ShellTokensV1.muted),
+            Text(worldSubtitle, style: Act0AcademyDesignTokensV1.supporting),
             const SizedBox(height: Act0ShellTokensV1.gapSm),
             OutlinedButton(
               key: const Key('act0_shell_world_continue_current_cta'),
               onPressed: onContinueCurrentWorld,
-              style: Act0ShellTokensV1.quietButtonStyle(height: 40),
+              style: Act0AcademyDesignTokensV1.secondaryButtonStyle(),
               child: Text(
                 _learnCopyV1(
                   context,
-                  en: 'Continue ${currentWorld.title}',
-                  ru: 'Продолжить ${currentWorld.title}',
+                  en: 'Continue ${act0AcademyWorldTitleV1(context, currentWorld)}',
+                  ru: '\u041f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c ${act0AcademyWorldTitleV1(context, currentWorld)}',
                 ),
               ),
             ),
@@ -2797,8 +2846,8 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
             const SizedBox(height: Act0ShellTokensV1.gapMd),
             Text(
               _learnCopyV1(context, en: 'Locked preview', ru: 'Предпросмотр'),
-              style: Act0ShellTokensV1.label.copyWith(
-                color: Act0ShellTokensV1.textMuted,
+              style: Act0AcademyDesignTokensV1.label.copyWith(
+                color: Act0AcademyDesignTokensV1.inkMuted,
               ),
             ),
             const SizedBox(height: Act0ShellTokensV1.gapXs),
@@ -2808,7 +2857,7 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
                 en: 'This world opens later in the route. Stay on the current path first.',
                 ru: 'Этот мир откроется позже по маршруту. Сначала держись текущего пути.',
               ),
-              style: Act0ShellTokensV1.muted,
+              style: Act0AcademyDesignTokensV1.supporting,
             ),
           ],
         ],
@@ -2994,7 +3043,7 @@ class _SelectedLessonPopupV1 extends StatelessWidget {
         ? Act0ShellTokensV1.textDim
         : Act0ShellTokensV1.primary;
     final tasks = lesson.taskList;
-    final lessonSubtitle = act0LocalizedLessonSubtitleV1(context, lesson);
+    final lessonSubtitle = act0AcademyLessonSubtitleV1(context, lesson);
     final lessonSubtitleBlocks = act0BuildInstructionBlocksV1(
       text: lessonSubtitle,
       compact: compactPanel,
@@ -3078,7 +3127,7 @@ class _SelectedLessonPopupV1 extends StatelessWidget {
                               'act0_shell_selected_lesson_subtitle_block_$index',
                             ),
                       maxLines: compactPanel ? 2 : 3,
-                      overflow: TextOverflow.fade,
+
                       style: Act0ShellTokensV1.muted.copyWith(
                         height: compactPanel ? 1.14 : 1.22,
                       ),
@@ -3095,8 +3144,6 @@ class _SelectedLessonPopupV1 extends StatelessWidget {
                   ),
                   child: Text(
                     guidanceCopy,
-                    maxLines: 2,
-                    overflow: TextOverflow.fade,
                     style: Act0ShellTokensV1.label.copyWith(
                       color: panelAccent.withValues(alpha: 0.82),
                       letterSpacing: 0.04,
@@ -3141,8 +3188,6 @@ class _SelectedLessonPopupV1 extends StatelessWidget {
                   Text(
                     completionOutcomeLabel!,
                     key: const Key('act0_shell_selected_lesson_outcome'),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                     style: Act0ShellTokensV1.muted.copyWith(
                       color: stateColor,
                       fontWeight: FontWeight.w700,
@@ -3232,8 +3277,8 @@ class _CurrentMissionCardV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lessonTitle = act0LocalizedLessonTitleV1(context, lesson);
-    final taskTitle = act0LocalizedTaskTitleV1(context, task);
+    final lessonTitle = act0AcademyLessonTitleV1(context, lesson);
+    final taskTitle = act0AcademyTaskTitleV1(context, task);
     final visualVariant = _missionVisualVariantForV1(lesson, task);
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -3280,9 +3325,7 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                       borderRadius: BorderRadius.circular(
                         Act0ShellTokensV1.radiusPill,
                       ),
-                      border: Border.all(
-                        color: accent.withValues(alpha: 0.32),
-                      ),
+                      border: Border.all(color: accent.withValues(alpha: 0.32)),
                     ),
                     child: Text(
                       _learnCopyV1(
@@ -3314,9 +3357,7 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                               ? 'Что это учит'
                               : 'Текущее чтение стола',
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.fade,
-                        softWrap: false,
+
                         style: Act0AcademyDesignTokensV1.label.copyWith(
                           letterSpacing: 0,
                           fontSize: 10.0,
@@ -3335,11 +3376,9 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                     Text(
                       lessonTitle,
                       style: Act0AcademyDesignTokensV1.lessonHeading.copyWith(
-                        fontSize: compact ? 22.0 : 25.0,
-                        height: 1.03,
+                        fontSize: 30,
+                        height: 1.16,
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.fade,
                     ),
                     const SizedBox(height: 6),
                     if (!firstLessonLanding) ...[
@@ -3374,9 +3413,7 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(12, 9, 10, 9),
                   decoration: BoxDecoration(
                     color: accent.withValues(alpha: 0.06),
-                    border: Border(
-                      left: BorderSide(color: accent, width: 3),
-                    ),
+                    border: Border(left: BorderSide(color: accent, width: 3)),
                   ),
                   child: KeyedSubtree(
                     key: const Key('act0_shell_current_mission_step_band'),
@@ -3402,8 +3439,6 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                             fontWeight: FontWeight.w800,
                             height: 1.12,
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.fade,
                         ),
                       ],
                     ),
@@ -3415,20 +3450,15 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                 child: FilledButton(
                   key: const Key('act0_shell_current_mission_cta'),
                   onPressed: onStart,
-                  style: Act0ShellTokensV1.premiumActionButtonStyle(
-                    height: Act0VisualMetricsV1.primaryCtaHeight,
-                  ),
+                  style: Act0AcademyDesignTokensV1.primaryButtonStyle(),
                   child: Text(
                     _learnCopyV1(
                       context,
                       en: firstLessonLanding ? 'Start first table' : 'Start',
                       ru: firstLessonLanding
-                          ? 'Начать первый стол'
-                          : 'Старт',
+                          ? '\u041d\u0430\u0447\u0430\u0442\u044c \u043f\u0435\u0440\u0432\u044b\u0439 \u0441\u0442\u043e\u043b'
+                          : '\u0421\u0442\u0430\u0440\u0442',
                     ),
-                    maxLines: 1,
-                    softWrap: false,
-                    overflow: TextOverflow.fade,
                   ),
                 ),
               ),
@@ -4144,7 +4174,7 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        act0LocalizedTaskTitleV1(
+                                        act0AcademyTaskTitleV1(
                                           context,
                                           widget.task,
                                         ),
@@ -4164,7 +4194,6 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
                                           height: 1.08,
                                         ),
                                         maxLines: compactWidth ? 3 : 2,
-                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ],
                                   ),
@@ -4214,8 +4243,6 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
                                             ? 7.4
                                             : 7.8,
                                       ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.fade,
                                     ),
                                   ),
                                 ],
@@ -4285,7 +4312,7 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
                                               'act0_shell_selected_lesson_task_detail',
                                             ),
                                             maxLines: compactRow ? 3 : 4,
-                                            overflow: TextOverflow.ellipsis,
+
                                             style: Act0ShellTokensV1.body
                                                 .copyWith(
                                                   color: Act0ShellTokensV1.text,
@@ -4314,8 +4341,7 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
                                               key: const Key(
                                                 'act0_shell_selected_lesson_quality_detail',
                                               ),
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
+
                                               style: Act0ShellTokensV1.label
                                                   .copyWith(
                                                     color: widget.isPerfect
@@ -4360,8 +4386,7 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
                                                   fit: BoxFit.scaleDown,
                                                   child: Text(
                                                     ctaText,
-                                                    maxLines: 1,
-                                                    softWrap: false,
+
                                                     style: Act0ShellTokensV1.cta
                                                         .copyWith(
                                                           fontSize: compactRow
@@ -4427,7 +4452,7 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
                                                     key: const Key(
                                                       'act0_shell_selected_lesson_quality_detail',
                                                     ),
-                                                    maxLines: 2,
+
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     style: Act0ShellTokensV1
@@ -4476,8 +4501,7 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
                                                 fit: BoxFit.scaleDown,
                                                 child: Text(
                                                   ctaText,
-                                                  maxLines: 1,
-                                                  softWrap: false,
+
                                                   style: Act0ShellTokensV1.cta
                                                       .copyWith(
                                                         fontSize: compactRow
@@ -4608,8 +4632,7 @@ class _ModuleHeaderV1 extends StatelessWidget {
                               ? title
                               : 'Мир $worldNumber · $title',
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.fade,
+
                         style: Act0ShellTokensV1.sectionTitle.copyWith(
                           color: Act0ShellTokensV1.text,
                           fontSize: 12.6,
@@ -4687,7 +4710,13 @@ class _ModuleHeaderV1 extends StatelessWidget {
                     ),
                     label: compactHeader
                         ? const SizedBox.shrink()
-                        : Text(_learnCopyV1(context, en: 'Worlds', ru: 'Миры')),
+                        : Text(
+                            _learnCopyV1(
+                              context,
+                              en: 'Worlds',
+                              ru: '\u041c\u0438\u0440\u044b',
+                            ),
+                          ),
                   ),
                 ),
               ],
@@ -4703,8 +4732,6 @@ class _ModuleHeaderV1 extends StatelessWidget {
                       fontSize: 9.6,
                       height: 1.0,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.fade,
                   ),
                 ),
               ],
@@ -4834,7 +4861,7 @@ class _PathCardV1 extends StatelessWidget {
         : isLocked
         ? 'Locked'
         : 'Later';
-    final lessonTitle = act0LocalizedLessonTitleV1(context, lesson);
+    final lessonTitle = act0AcademyLessonTitleV1(context, lesson);
     final isExpandedFocus = expanded;
     final isHighlighted = selected || isCurrent || expanded;
     final currentAccent = Act0ShellTokensV1.primary;
@@ -5058,8 +5085,6 @@ class _PathCardV1 extends StatelessWidget {
                                         child: Text(
                                           lessonTitle,
                                           style: rowTitleStyle,
-                                          maxLines: isCompletedQuiet ? 1 : 2,
-                                          overflow: TextOverflow.fade,
                                         ),
                                       ),
                                       const SizedBox(width: 6),
@@ -5087,8 +5112,7 @@ class _PathCardV1 extends StatelessWidget {
                                             key: Key(
                                               'act0_shell_learn_lesson_state_text_${lesson.lessonId}',
                                             ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.fade,
+
                                             style: Act0ShellTokensV1.label
                                                 .copyWith(
                                                   color: badgeTint,
@@ -5170,8 +5194,7 @@ class _PathCardV1 extends StatelessWidget {
                                             key: Key(
                                               'act0_shell_learn_lesson_state_text_${lesson.lessonId}',
                                             ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.fade,
+
                                             style: Act0ShellTokensV1.label
                                                 .copyWith(
                                                   color: badgeTint,
@@ -5183,12 +5206,7 @@ class _PathCardV1 extends StatelessWidget {
                                     ],
                                   ),
                                   const SizedBox(height: 4),
-                                  Text(
-                                    lessonTitle,
-                                    style: rowTitleStyle,
-                                    maxLines: isCompletedQuiet ? 1 : 2,
-                                    overflow: TextOverflow.fade,
-                                  ),
+                                  Text(lessonTitle, style: rowTitleStyle),
                                 ],
                                 if (stepSummary.isNotEmpty) ...[
                                   const SizedBox(height: 3),
@@ -5201,8 +5219,6 @@ class _PathCardV1 extends StatelessWidget {
                                           : Act0ShellTokensV1.textMuted,
                                       height: 1.14,
                                     ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.fade,
                                   ),
                                 ],
                               ],
@@ -5307,7 +5323,7 @@ String _selectedTaskDetail({
 }) {
   if (isLocked) {
     final blockerTitle = (routeBlockerTaskTitle ?? '').trim();
-    return act0LocalizedTaskLockedSummaryV1(
+    return act0AcademyTaskLockedSummaryV1(
       context,
       task,
       fallback:
@@ -5316,10 +5332,10 @@ String _selectedTaskDetail({
             context,
             en: blockerTitle.isNotEmpty
                 ? 'Clear ${blockerTitle.toLowerCase()} first, then this node opens.'
-                : 'Clear ${act0LocalizedTaskTitleV1(context, nextTask).toLowerCase()} first, then this node opens.',
+                : 'Clear ${act0AcademyTaskTitleV1(context, nextTask).toLowerCase()} first, then this node opens.',
             ru: blockerTitle.isNotEmpty
                 ? 'Сначала закрой шаг «${blockerTitle.toLowerCase()}», потом этот узел откроется.'
-                : 'Сначала закрой шаг «${act0LocalizedTaskTitleV1(context, nextTask).toLowerCase()}», потом этот узел откроется.',
+                : '\u0421\u043d\u0430\u0447\u0430\u043b\u0430 \u0437\u0430\u043a\u0440\u043e\u0439 \u0448\u0430\u0433 \u00ab${act0AcademyTaskTitleV1(context, nextTask).toLowerCase()}\u00bb, \u043f\u043e\u0442\u043e\u043c \u044d\u0442\u043e\u0442 \u0443\u0437\u0435\u043b \u043e\u0442\u043a\u0440\u043e\u0435\u0442\u0441\u044f.',
           ),
     );
   }
@@ -5341,7 +5357,7 @@ String _selectedTaskDetail({
             ru: 'Уже чисто. Один спокойный повтор превратит это в идеал.',
           );
   }
-  return act0LocalizedTaskSummaryV1(
+  return act0AcademyTaskSummaryV1(
     context,
     task,
     fallback: task.summary ?? task.runner.caption,
@@ -5381,8 +5397,8 @@ String _selectedLessonGuidanceV1({
   required Act0LessonCardV1 lesson,
   required Act0LessonTaskV1 nextTask,
 }) {
-  final nextTaskTitle = act0LocalizedTaskTitleV1(context, nextTask).trim();
-  final nextTaskSummary = act0LocalizedTaskSummaryV1(
+  final nextTaskTitle = act0AcademyTaskTitleV1(context, nextTask).trim();
+  final nextTaskSummary = act0AcademyTaskSummaryV1(
     context,
     nextTask,
     fallback: nextTask.summary ?? nextTask.runner.caption,

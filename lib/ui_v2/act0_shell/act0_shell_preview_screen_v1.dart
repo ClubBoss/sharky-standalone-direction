@@ -11,6 +11,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_family_state_foundation_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_cross_session_profile_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
@@ -1922,18 +1924,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _isRuLocaleV1 ? ru : en;
 
   String _localizedLessonTitleV1(Act0LessonCardV1 lesson) =>
-      act0LocalizedLessonTitleAtomByIdV1(
-        lesson.lessonId,
-        fallback: lesson.title,
-        isRu: _isRuLocaleV1,
-      );
-
+      act0AcademyLessonTitleV1(context, lesson);
   String _localizedLessonSubtitleV1(Act0LessonCardV1 lesson) =>
-      act0LocalizedLessonSubtitleAtomByIdV1(
-        lesson.lessonId,
-        fallback: lesson.subtitle,
-        isRu: _isRuLocaleV1,
-      );
+      act0AcademyLessonSubtitleV1(context, lesson);
 
   String _localizedTaskTitleV1(Act0LessonTaskV1 task) =>
       act0LocalizedTaskTitleAtomByIdV1(
@@ -5282,15 +5275,24 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _emitFirstValueTodayShownTelemetryV1(firstValueTodayCarry);
     }
     final effectiveLearnDetailLessonId = _learnDetailLessonId;
+    final academySurface =
+        !_bootSurfaceReady ||
+        (_showPlacement && !_placementDiagnosticActive) ||
+        _showWelcome ||
+        (!isPlayRunner &&
+            (_tab == Act0ShellTabV1.home || _tab == Act0ShellTabV1.learn));
     final shell = Scaffold(
       key: const Key('act0_shell_preview_screen'),
-      backgroundColor: Act0ShellTokensV1.background,
+      backgroundColor: academySurface
+          ? Act0AcademyDesignTokensV1.pageSurface
+          : Act0ShellTokensV1.background,
       body: SafeArea(
         bottom: !isPlayRunner,
         child: Column(
           children: [
             if (showTopBar)
               _TopBarV1(
+                academy: academySurface,
                 state: state,
                 goalLabel: _compactDailyLabel(),
                 goalProgress: _dailyGoalProgressValueV1(),
@@ -6580,6 +6582,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           ? null
           : _BottomNavV1(
               current: _tab,
+              academy: academySurface,
               reviewHasDot: reviewNavHasDot,
               onSelected: (tab) => setState(() {
                 final preserveRepairBridge =
@@ -6634,18 +6637,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               }),
             ),
     );
-    // TEXT_SCALE_POLICY_V1 = SINGLE_CANONICAL_PRODUCT_SCALE.
-    //
-    // Sharky v1 ships one canonical typography/layout scale, so system text
-    // scaling must not be able to produce a second product layout. This is the
-    // single shared boundary for the active learner-facing route: every entry
-    // point (`buildCanonicalPathRootV1`, the `app_root` entry gate, the session
-    // result screen and the intake screen) routes through this widget, so the
-    // policy is applied once here instead of being clamped per widget.
-    //
-    // Accessibility text scaling is deferred, not rejected. Removing this one
-    // wrapper restores system scaling everywhere at once when that work is
-    // explicitly admitted.
+    // S08 admits native scaling around the Academy only. Keep the protected
+    // Table and other deferred surfaces in their existing rendering context.
+    if (academySurface) return shell;
     return MediaQuery.withClampedTextScaling(
       minScaleFactor: 1.0,
       maxScaleFactor: 1.0,
@@ -14702,11 +14696,13 @@ class _TopBarV1 extends StatelessWidget {
     required this.state,
     required this.goalLabel,
     required this.goalProgress,
+    this.academy = false,
   });
 
   final Act0ShellStateV1 state;
   final String goalLabel;
   final double goalProgress;
+  final bool academy;
 
   @override
   Widget build(BuildContext context) {
@@ -14715,9 +14711,17 @@ class _TopBarV1 extends StatelessWidget {
         : Act0ShellTokensV1.textDim;
     return Container(
       key: const Key('act0_shell_top_bar'),
-      height: 50,
+      height: academy ? null : 50,
+      constraints: const BoxConstraints(minHeight: 50),
       padding: const EdgeInsets.symmetric(horizontal: Act0ShellTokensV1.pageX),
-      decoration: Act0ShellTokensV1.glassDecoration(),
+      decoration: academy
+          ? const BoxDecoration(
+              color: Act0AcademyDesignTokensV1.pageSurface,
+              border: Border(
+                bottom: BorderSide(color: Act0AcademyDesignTokensV1.rule),
+              ),
+            )
+          : Act0ShellTokensV1.glassDecoration(),
       child: Row(
         children: [
           Expanded(
@@ -14730,13 +14734,17 @@ class _TopBarV1 extends StatelessWidget {
                     Expanded(
                       child: Text(
                         goalLabel,
-                        maxLines: 1,
-                        overflow: TextOverflow.fade,
-                        softWrap: false,
-                        style: Act0ShellTokensV1.body.copyWith(
-                          color: Act0ShellTokensV1.text,
-                          fontWeight: FontWeight.w800,
-                        ),
+
+                        style:
+                            (academy
+                                    ? Act0AcademyDesignTokensV1.body
+                                    : Act0ShellTokensV1.body)
+                                .copyWith(
+                                  color: academy
+                                      ? Act0AcademyDesignTokensV1.ink
+                                      : Act0ShellTokensV1.text,
+                                  fontWeight: FontWeight.w800,
+                                ),
                       ),
                     ),
                   ],
@@ -14749,8 +14757,12 @@ class _TopBarV1 extends StatelessWidget {
                   child: LinearProgressIndicator(
                     minHeight: Act0ShellTokensV1.progressHeight,
                     value: goalProgress,
-                    backgroundColor: Act0ShellTokensV1.surface3,
-                    color: Act0ShellTokensV1.actionBlue,
+                    backgroundColor: academy
+                        ? Act0AcademyDesignTokensV1.rule
+                        : Act0ShellTokensV1.surface3,
+                    color: academy
+                        ? Act0AcademyDesignTokensV1.focus
+                        : Act0ShellTokensV1.actionBlue,
                   ),
                 ),
               ],
@@ -14765,9 +14777,13 @@ class _TopBarV1 extends StatelessWidget {
               border: Border.all(color: streakTone.withValues(alpha: 0.28)),
             ),
             child: Text(
-              '${state.streakDays}d',
+              academy && Localizations.localeOf(context).languageCode == 'ru'
+                  ? '${state.streakDays} \u0434.'
+                  : '${state.streakDays}d',
               style: Act0ShellTokensV1.muted.copyWith(
-                color: streakTone,
+                color: academy
+                    ? Act0AcademyDesignTokensV1.inkMuted
+                    : streakTone,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -14783,58 +14799,84 @@ class _BottomNavV1 extends StatelessWidget {
     required this.current,
     required this.onSelected,
     this.reviewHasDot = false,
+    this.academy = false,
   });
 
   final Act0ShellTabV1 current;
   final ValueChanged<Act0ShellTabV1> onSelected;
   final bool reviewHasDot;
+  final bool academy;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      key: const Key('act0_shell_bottom_nav'),
-      height: Act0ShellTokensV1.bottomNavHeight,
-      child: DecoratedBox(
-        decoration: Act0ShellTokensV1.glassDecoration(top: true),
-        child: Row(
-          children: [
-            _NavItemV1(
-              tab: Act0ShellTabV1.home,
-              current: current,
-              icon: Icons.home_rounded,
-              label: 'Home',
-              onSelected: onSelected,
+    return SafeArea(
+      top: false,
+      bottom: academy,
+      child: IntrinsicHeight(
+        child: SizedBox(
+          key: const Key('act0_shell_bottom_nav'),
+          height: academy ? null : Act0ShellTokensV1.bottomNavHeight,
+
+          child: DecoratedBox(
+            decoration: academy
+                ? const BoxDecoration(
+                    color: Act0AcademyDesignTokensV1.pageSurface,
+                    border: Border(
+                      top: BorderSide(color: Act0AcademyDesignTokensV1.rule),
+                    ),
+                  )
+                : Act0ShellTokensV1.glassDecoration(top: true),
+            child: Row(
+              crossAxisAlignment: academy
+                  ? CrossAxisAlignment.stretch
+                  : CrossAxisAlignment.center,
+              children: [
+                _NavItemV1(
+                  tab: Act0ShellTabV1.home,
+                  current: current,
+                  icon: academy ? Icons.home_outlined : Icons.home_rounded,
+                  label: act0AcademyNavLabelV1(context, Act0ShellTabV1.home),
+                  academy: academy,
+                  onSelected: onSelected,
+                ),
+                _NavItemV1(
+                  tab: Act0ShellTabV1.learn,
+                  current: current,
+                  icon: academy
+                      ? Icons.menu_book_outlined
+                      : Icons.menu_book_rounded,
+                  label: act0AcademyNavLabelV1(context, Act0ShellTabV1.learn),
+                  academy: academy,
+                  onSelected: onSelected,
+                ),
+                _NavItemV1(
+                  tab: Act0ShellTabV1.play,
+                  current: current,
+                  icon: academy ? Icons.spa_outlined : Icons.spa_rounded,
+                  label: act0AcademyNavLabelV1(context, Act0ShellTabV1.play),
+                  academy: academy,
+                  onSelected: onSelected,
+                ),
+                _NavItemV1(
+                  tab: Act0ShellTabV1.review,
+                  current: current,
+                  icon: Icons.refresh_rounded,
+                  label: act0AcademyNavLabelV1(context, Act0ShellTabV1.review),
+                  academy: academy,
+                  showDot: reviewHasDot,
+                  onSelected: onSelected,
+                ),
+                _NavItemV1(
+                  tab: Act0ShellTabV1.profile,
+                  current: current,
+                  icon: academy ? Icons.person_outline : Icons.person_rounded,
+                  label: act0AcademyNavLabelV1(context, Act0ShellTabV1.profile),
+                  academy: academy,
+                  onSelected: onSelected,
+                ),
+              ],
             ),
-            _NavItemV1(
-              tab: Act0ShellTabV1.learn,
-              current: current,
-              icon: Icons.menu_book_rounded,
-              label: 'Learn',
-              onSelected: onSelected,
-            ),
-            _NavItemV1(
-              tab: Act0ShellTabV1.play,
-              current: current,
-              icon: Icons.spa_rounded,
-              label: 'Practice',
-              onSelected: onSelected,
-            ),
-            _NavItemV1(
-              tab: Act0ShellTabV1.review,
-              current: current,
-              icon: Icons.refresh_rounded,
-              label: 'Review',
-              showDot: reviewHasDot,
-              onSelected: onSelected,
-            ),
-            _NavItemV1(
-              tab: Act0ShellTabV1.profile,
-              current: current,
-              icon: Icons.person_rounded,
-              label: 'You',
-              onSelected: onSelected,
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -14849,6 +14891,7 @@ class _NavItemV1 extends StatelessWidget {
     required this.label,
     required this.onSelected,
     this.showDot = false,
+    this.academy = false,
   });
 
   final Act0ShellTabV1 tab;
@@ -14857,61 +14900,84 @@ class _NavItemV1 extends StatelessWidget {
   final String label;
   final ValueChanged<Act0ShellTabV1> onSelected;
   final bool showDot;
+  final bool academy;
 
   @override
   Widget build(BuildContext context) {
     final selected = tab == current;
-    final color = selected
-        ? Act0VisualCanonV1.bluePrimary
-        : Act0ShellTokensV1.textMuted;
+    final color = academy
+        ? (selected
+              ? Act0AcademyDesignTokensV1.focus
+              : Act0AcademyDesignTokensV1.inkMuted)
+        : (selected
+              ? Act0VisualCanonV1.bluePrimary
+              : Act0ShellTokensV1.textMuted);
     final hasBadge = showDot;
     return Expanded(
       child: InkWell(
         onTap: () => onSelected(tab),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusSm),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 2),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Icon(icon, size: 21, color: color),
-                  if (hasBadge)
-                    Positioned(
-                      top: -3,
-                      right: -6,
-                      child: Container(
-                        key: Key(
-                          'act0_shell_nav_badge_${_navItemKeyLabelV1(tab)}',
-                        ),
-                        width: 9,
-                        height: 9,
-                        decoration: BoxDecoration(
-                          color: Act0ShellTokensV1.gold,
-                          borderRadius: BorderRadius.circular(
-                            Act0ShellTokensV1.radiusPill,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: academy ? 60 : 0,
+            minWidth: 44,
+          ),
+          child: Container(
+            decoration: academy && selected
+                ? BoxDecoration(
+                    border: Border(bottom: BorderSide(color: color, width: 2)),
+                  )
+                : null,
+            padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 2),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Icon(icon, size: 21, color: color),
+                    if (hasBadge)
+                      Positioned(
+                        top: -3,
+                        right: -6,
+                        child: Container(
+                          key: Key(
+                            'act0_shell_nav_badge_${_navItemKeyLabelV1(tab)}',
                           ),
-                          border: Border.all(
-                            color: Act0ShellTokensV1.surface,
-                            width: 1.2,
+                          width: 9,
+                          height: 9,
+                          decoration: BoxDecoration(
+                            color: Act0ShellTokensV1.gold,
+                            borderRadius: BorderRadius.circular(
+                              Act0ShellTokensV1.radiusPill,
+                            ),
+                            border: Border.all(
+                              color: Act0ShellTokensV1.surface,
+                              width: 1.2,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 2),
-              Text(
-                label,
-                style: TextStyle(
-                  color: color,
-                  fontSize: 10,
-                  fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+                  ],
                 ),
-              ),
-            ],
+                SizedBox(height: academy ? 4 : 2),
+                Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style:
+                      (academy
+                              ? Act0AcademyDesignTokensV1.supporting
+                              : const TextStyle())
+                          .copyWith(
+                            color: color,
+                            fontSize: 10,
+                            fontWeight: selected
+                                ? FontWeight.w800
+                                : FontWeight.w600,
+                          ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

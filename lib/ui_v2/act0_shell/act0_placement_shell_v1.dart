@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
@@ -19,7 +20,7 @@ String _placementAtomV1(
   BuildContext context,
   String atomId, {
   required String fallback,
-}) => act0LocalizedSurfaceAtomV1(context, atomId, fallback: fallback);
+}) => act0AcademySurfaceAtomV1(context, atomId, fallback: fallback);
 
 bool _placementKeepFullSupportCopyV1(String questionId) =>
     questionId == 'experience' || questionId == 'confidence';
@@ -281,13 +282,13 @@ class Act0PlacementShellV1 extends StatelessWidget {
                     pagePadding,
                     Act0ShellTokensV1.gapMd,
                     pagePadding,
-                    132,
+                    24,
                   ),
                   children: [
                     ConstrainedBox(
                       constraints: BoxConstraints(
                         minHeight: showIntro
-                            ? (viewport.maxHeight - 132).clamp(
+                            ? (viewport.maxHeight - 24).clamp(
                                 0.0,
                                 double.infinity,
                               )
@@ -809,7 +810,9 @@ class _PlacementBrandBeatV1 extends StatelessWidget {
               alpha: 0.24,
             ),
           ).copyWith(
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPanel),
+            borderRadius: BorderRadius.circular(
+              Act0AcademyDesignTokensV1.radiusCard,
+            ),
           ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -905,7 +908,9 @@ class _PlacementIntroViewV1 extends StatelessWidget {
               alpha: 0.24,
             ),
           ).copyWith(
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXl),
+            borderRadius: BorderRadius.circular(
+              Act0AcademyDesignTokensV1.radiusCard,
+            ),
           ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1411,7 +1416,7 @@ class _PlacementResultActionBarV1 extends StatelessWidget {
           FilledButton(
             key: const Key('act0_shell_placement_start_recommended'),
             onPressed: onStartRecommended,
-            style: Act0ShellTokensV1.premiumActionButtonStyle(),
+            style: Act0AcademyDesignTokensV1.primaryButtonStyle(),
             child: Text(
               _placementAtomV1(
                 context,
@@ -1424,7 +1429,7 @@ class _PlacementResultActionBarV1 extends StatelessWidget {
           OutlinedButton(
             key: const Key('act0_shell_placement_start_zero'),
             onPressed: onStartFromZero,
-            style: Act0ShellTokensV1.quietButtonStyle(),
+            style: Act0AcademyDesignTokensV1.secondaryButtonStyle(),
             child: Text(
               _placementAtomV1(
                 context,
@@ -1481,7 +1486,7 @@ class _PlacementFlowActionBarV1 extends StatelessWidget {
             FilledButton(
               key: buttonKey,
               onPressed: onPressed,
-              style: Act0ShellTokensV1.premiumActionButtonStyle(),
+              style: Act0AcademyDesignTokensV1.primaryButtonStyle(),
               child: Text(buttonLabel),
             ),
           ],
@@ -1509,7 +1514,9 @@ class _PlacementHeroV1 extends StatelessWidget {
               alpha: 0.24,
             ),
           ).copyWith(
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXl),
+            borderRadius: BorderRadius.circular(
+              Act0AcademyDesignTokensV1.radiusCard,
+            ),
           ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
