@@ -16256,9 +16256,12 @@ class _AnswerChoiceRowV1 extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          act0RuntimeLocalizedOptionLabelV1(
+                          act0AcademyW1OptionLabelV1(
                             context,
-                            option.label,
+                            act0RuntimeLocalizedOptionLabelV1(
+                              context,
+                              option.label,
+                            ),
                           ),
                           textAlign: TextAlign.left,
                           style: Act0ShellTokensV1.body.copyWith(
