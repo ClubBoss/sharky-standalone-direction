@@ -2814,11 +2814,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     final teachingStep = _teachingStep;
     final isTeaching = _isTeaching;
     final prompt = isTeaching
-        ? act0LocalizedTeachingStepTitleAtomByTaskIdV1(
-            widget.selectedTaskId,
-            runner.teachingStepIndex,
-            fallback: teachingStep!.title,
-            isRu: act0IsRuLocaleV1(context),
+        ? act0AcademyTeachingCopyV1(
+            context,
+            runnerLessonId: runner.lessonId,
+            source: teachingStep!.title,
+            fallback: act0LocalizedTeachingStepTitleAtomByTaskIdV1(
+              widget.selectedTaskId,
+              runner.teachingStepIndex,
+              fallback: teachingStep.title,
+              languageCode: act0AcademyLanguageV1(context),
+            ),
           )
         : act0LocalizedRunnerPromptAtomByTaskIdV1(
             widget.selectedTaskId,
@@ -2831,11 +2836,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       Act0HintPolicyV1.hidden => false,
     };
     final hint = isTeaching
-        ? act0LocalizedTeachingStepBodyAtomByTaskIdV1(
-            widget.selectedTaskId,
-            runner.teachingStepIndex,
-            fallback: teachingStep!.body,
-            isRu: act0IsRuLocaleV1(context),
+        ? act0AcademyTeachingCopyV1(
+            context,
+            runnerLessonId: runner.lessonId,
+            source: teachingStep!.body,
+            fallback: act0LocalizedTeachingStepBodyAtomByTaskIdV1(
+              widget.selectedTaskId,
+              runner.teachingStepIndex,
+              fallback: teachingStep.body,
+              languageCode: act0AcademyLanguageV1(context),
+            ),
           )
         : act0LocalizedRunnerSupportAtomByTaskIdV1(
             widget.selectedTaskId,
@@ -3416,7 +3426,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                 onAdvance: hasNextSupportSegment
                     ? () => setState(() => _learningRailSupportSegmentIndex++)
                     : widget.onContinueTheory,
-                advanceLabel: hasNextSupportSegment ? 'Next' : 'Continue',
+                advanceLabel: act0AcademySurfaceAtomV1(
+                  context,
+                  hasNextSupportSegment
+                      ? 'runner_cta_next'
+                      : 'home_checklist_continue_label',
+                  fallback: hasNextSupportSegment ? 'Next' : 'Continue',
+                ),
                 sharkyLine: theoryCoachLine,
                 sharkyMood: runner.sharky.preSessionMood,
                 emphasizePrompt:
@@ -3814,7 +3830,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     }
 
     Widget buildIntegratedPrompt() {
-      final isRu = act0IsRuLocaleV1(context);
+      // Academy scene copy only; legacy table locale helpers remain frozen.
+      final isRu = act0AcademyLanguageV1(context) == 'ru';
       final phase = isTheory
           ? Act0LearningScenePhaseV3.theory
           : isReview && runner.reviewQuality == Act0FeedbackQualityV1.wrong
@@ -3891,7 +3908,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           ? teachingFocusLabel == null
                 ? null
                 : (isRu
-                      ? 'Смотрите: $teachingFocusLabel'
+                      ? '\u0421\u043c\u043e\u0442\u0440\u0438\u0442\u0435: ${teachingFocusLabel == 'Read' ? '\u0447\u0442\u0435\u043d\u0438\u0435 \u0441\u0442\u043e\u043b\u0430' : teachingFocusLabel}'
                       : 'Look at: $teachingFocusLabel')
           : hasSeatTargets
           ? (isRu
@@ -5762,7 +5779,9 @@ class _LearningRailV1 extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'LOOK AT THE TABLE',
+                      act0AcademyLanguageV1(context) == 'ru'
+                          ? '\u0421\u041c\u041e\u0422\u0420\u0418 \u041d\u0410 \u0421\u0422\u041e\u041b'
+                          : 'LOOK AT THE TABLE',
                       key: const Key('act0_learning_scene_v3_table_focus'),
                       style: Act0ShellTokensV1.label.copyWith(
                         color: Act0ShellTokensV1.info,
@@ -6850,7 +6869,9 @@ class _RunnerProgressV1 extends StatelessWidget {
         ),
         const SizedBox(width: Act0ShellTokensV1.gapMd),
         Text(
-          'Step ${runner.beatIndex}/${runner.beatCount}',
+          act0AcademyLanguageV1(context) == 'ru'
+              ? '\u0428\u0430\u0433 ${runner.beatIndex}/${runner.beatCount}'
+              : 'Step ${runner.beatIndex}/${runner.beatCount}',
           style: Act0ShellTokensV1.body.copyWith(
             fontSize: 12,
             fontWeight: FontWeight.w900,

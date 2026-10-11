@@ -32,10 +32,17 @@ class Act0AcademyDesignTokensV1 {
   static const double radiusCoachFrame = 12;
 
   // Display/section/lesson sizes follow the approved Editorial Tide rhythm.
-  // Georgia is the approved display family; native bundling/licensing is a
-  // separate S08 asset task, so the default platform font remains in use
-  // here rather than silently substituting an unverified font identity.
+  // Georgia is requested from the OS, never copied or fetched. Platforms
+  // without it use their installed serif fallback; native fidelity is gated.
+  static const String displayFont = 'Georgia';
+  static const List<String> displayFallback = [
+    'Times New Roman',
+    'Noto Serif',
+    'serif',
+  ];
   static const TextStyle display = TextStyle(
+    fontFamily: displayFont,
+    fontFamilyFallback: displayFallback,
     color: ink,
     fontSize: 38,
     height: 1.12,
@@ -43,6 +50,8 @@ class Act0AcademyDesignTokensV1 {
   );
 
   static const TextStyle sectionHeading = TextStyle(
+    fontFamily: displayFont,
+    fontFamilyFallback: displayFallback,
     color: ink,
     fontSize: 24,
     height: 1.14,
@@ -50,6 +59,8 @@ class Act0AcademyDesignTokensV1 {
   );
 
   static const TextStyle lessonHeading = TextStyle(
+    fontFamily: displayFont,
+    fontFamilyFallback: displayFallback,
     color: ink,
     fontSize: 30,
     height: 1.16,
@@ -57,6 +68,8 @@ class Act0AcademyDesignTokensV1 {
   );
 
   static const TextStyle body = TextStyle(
+    fontFamily: 'Arial',
+    fontFamilyFallback: ['Roboto', 'sans-serif'],
     color: ink,
     fontSize: 14,
     height: 1.6,
@@ -64,6 +77,8 @@ class Act0AcademyDesignTokensV1 {
   );
 
   static const TextStyle supporting = TextStyle(
+    fontFamily: 'Arial',
+    fontFamilyFallback: ['Roboto', 'sans-serif'],
     color: inkMuted,
     fontSize: 12,
     height: 1.5,
@@ -71,11 +86,37 @@ class Act0AcademyDesignTokensV1 {
   );
 
   static const TextStyle label = TextStyle(
+    fontFamily: 'Arial',
+    fontFamilyFallback: ['Roboto', 'sans-serif'],
     color: inkMuted,
     fontSize: 10,
     height: 1.5,
     fontWeight: FontWeight.w700,
     letterSpacing: 1.2,
+  );
+
+  static ButtonStyle primaryButtonStyle() => FilledButton.styleFrom(
+    backgroundColor: primaryAction,
+    foregroundColor: onPrimaryAction,
+    disabledBackgroundColor: rule,
+    disabledForegroundColor: inkMuted,
+    minimumSize: const Size.fromHeight(52),
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+    textStyle: body.copyWith(fontWeight: FontWeight.w700, height: 1.25),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(radiusCard),
+    ),
+  );
+
+  static ButtonStyle secondaryButtonStyle() => OutlinedButton.styleFrom(
+    foregroundColor: focus,
+    minimumSize: const Size(48, 48),
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    side: const BorderSide(color: rule),
+    textStyle: body.copyWith(fontWeight: FontWeight.w700),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(radiusCard),
+    ),
   );
 
   static BoxDecoration cardDecoration({Color? borderColor, Color? color}) {
