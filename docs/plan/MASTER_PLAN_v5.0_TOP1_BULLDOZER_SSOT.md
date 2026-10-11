@@ -284,6 +284,10 @@ This section is a **dated execution snapshot**, not immutable history. Reconcile
 | **S23 — Owner Launch Gate** | Decide GO, CONDITIONAL_BETA (limited/accurate scope) or HOLD based on actual product, Human, market, commerce and release proofs. | Explicit owner signed decision, distribution release and verifiable launch record only after GO. No automatic app submission. |
 | **S24 — Post-launch Learning Loop** | Instrument genuinely consented usage/feedback, observe retention and issue severity, prioritize real learner EV for next release; W13–W36 remain demand-led. | First post-launch retrospective, bounded next top-value family, updated exact current context. |
 
+### 2026-10-11 owner S08 Standard-First precedence amendment
+
+For S08-S11 machine/product acceptance, the canonical baseline is standard-text iOS portrait with correct EN/RU meaning, readable essential teaching, reachable primary actions, source-truth progress, exact-head CI/native evidence and the unchanged Modern Table. This owner decision supersedes any conflicting *specialized* XXL text, uncommon viewport/scale, or VoiceOver proof requirement as a mandatory **S08-S11** stop: those gaps may be clearly DEFERRED if ordinary use is verified and no material standard-use defect remains. Preserve current accessibility features and their evidence, and do not relabel unverified checks PASS. This waiver does not affect source correctness, Table preservation, Human/P02 independent owner admission, or subsequent distribution/release accessibility obligations. Receipt: `docs/_reviews/s08_standard_first_owner_amendment_20261011.md`.
+
 ### Mandatory stop, scope and sequencing exceptions
 
 1. S01–S07 are **research/design decisions only**. Separate design chat is useful for D2 visual references but is NOT mandatory for D0/D1, and no expensive Codex is justified solely to summarize notes. Preserve the existing GUI screenshots/videos as evidence; recapture **only** stale or missing states.

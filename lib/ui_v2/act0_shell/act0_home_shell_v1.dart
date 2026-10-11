@@ -641,11 +641,14 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
                   ),
               ],
             ),
-            const SizedBox(height: Act0AcademyDesignTokensV1.gapSm),
-            _HomeProofMomentumLineV1(
-              progressLabel: cleanProgress,
-              localeIsRu: localeIsRu,
-            ),
+            // Only show a proof receipt after a source-backed lesson is earned.
+            if ((_completedLessonCountV1(cleanProgress) ?? 0) > 0) ...[
+              const SizedBox(height: Act0AcademyDesignTokensV1.gapSm),
+              _HomeProofMomentumLineV1(
+                progressLabel: cleanProgress,
+                localeIsRu: localeIsRu,
+              ),
+            ],
             const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
             Container(
               key: const Key('act0_shell_home_v6_primary_cta'),
@@ -869,7 +872,8 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
                   row: rows[i],
                   isFirst: i == 0,
                   isLast: i == rows.length - 1,
-                  isCompleted: activeFocusIndex != -1 && i < activeFocusIndex,
+                  // Callback position is navigation, never earned completion.
+                  isCompleted: false,
                   isActiveFocus: i == activeFocusIndex,
                   isPending: activeFocusIndex != -1 && i > activeFocusIndex,
                 ),
@@ -902,15 +906,15 @@ class _HomeChecklistRowTileV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rowTone = isCompleted
-        ? Act0AcademyDesignTokensV1.correctFg
+    final rowTone = row.onTap == null
+        ? Act0AcademyDesignTokensV1.inkMuted
         : isActiveFocus
         ? Act0AcademyDesignTokensV1.focus
         : isPending
         ? Act0AcademyDesignTokensV1.inkMuted
         : row.accentColor;
-    final rowActionable =
-        row.onTap != null && (isActiveFocus || row.isRepairAction);
+    // An available secondary action stays tappable even when not the focus.
+    final rowActionable = row.onTap != null;
     final opacity = isPending ? 0.78 : 1.0;
     final content = Container(
       constraints: BoxConstraints(minHeight: isActiveFocus ? 56 : 52),
@@ -1049,7 +1053,7 @@ class _HomeChecklistRowTileV1 extends StatelessWidget {
             opacity: opacity,
             child: Icon(
               row.onTap == null
-                  ? Icons.check_circle_outline_rounded
+                  ? Icons.info_outline_rounded
                   : Icons.arrow_forward_rounded,
               color: rowActionable
                   ? rowTone

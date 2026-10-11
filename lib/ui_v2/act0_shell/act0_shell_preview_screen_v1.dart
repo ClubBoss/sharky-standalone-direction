@@ -5358,6 +5358,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                   : _showWelcome
                   ? Act0WelcomeShellV1(
                       replayMode: _welcomeReturnTabV1 != null,
+                      handoffStartsRecommendedTask:
+                          _welcomeHandoffStartsRecommendedTaskV1,
                       onCompleted: () {
                         unawaited(_completeWelcomeV1());
                       },

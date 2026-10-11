@@ -321,20 +321,52 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
         ),
         if (support.trim().isNotEmpty) ...[
           SizedBox(height: showSpokenSurface ? 4 : 3),
-          Text(
-            support,
-            key: const Key('act0_learning_scene_v3_support'),
-            maxLines: showSpokenSurface ? 3 : (enlarged ? 3 : 2),
-            overflow: TextOverflow.ellipsis,
-            style: Act0ShellTokensV1.muted.copyWith(
-              color: Act0ShellTokensV1.textMuted,
-              fontSize: showSpokenSurface
-                  ? (enlarged ? 12.0 : 11.8)
-                  : (enlarged ? 12.2 : 11.4),
-              height: showSpokenSurface ? 1.18 : 1.16,
-              fontWeight: FontWeight.w700,
+          // Preserve the existing compact overlay footprint while letting
+          // learners read the complete authored theory rather than ellipsizing
+          // source teaching facts. The physical table remains unchanged.
+          if (phase == Act0LearningScenePhaseV3.theory)
+            SizedBox(
+              height: (enlarged ? 3 : 2) * (enlarged ? 12.2 : 11.4) * 1.16,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      key: const Key(
+                        'act0_learning_scene_v3_theory_support_scroll',
+                      ),
+                      physics: const ClampingScrollPhysics(),
+                      child: Text(
+                        support,
+                        key: const Key('act0_learning_scene_v3_support'),
+                        style: Act0ShellTokensV1.muted.copyWith(
+                          color: Act0ShellTokensV1.textMuted,
+                          fontSize: enlarged ? 12.2 : 11.4,
+                          height: 1.16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(Icons.unfold_more_rounded, size: 14, color: phaseTone),
+                ],
+              ),
+            )
+          else
+            Text(
+              support,
+              key: const Key('act0_learning_scene_v3_support'),
+              maxLines: showSpokenSurface ? 3 : (enlarged ? 3 : 2),
+              overflow: TextOverflow.ellipsis,
+              style: Act0ShellTokensV1.muted.copyWith(
+                color: Act0ShellTokensV1.textMuted,
+                fontSize: showSpokenSurface
+                    ? (enlarged ? 12.0 : 11.8)
+                    : (enlarged ? 12.2 : 11.4),
+                height: showSpokenSurface ? 1.18 : 1.16,
+                fontWeight: FontWeight.w700,
+              ),
             ),
-          ),
         ],
         if ((focusLabel ?? '').trim().isNotEmpty) ...[
           SizedBox(height: showSpokenSurface ? 6 : 5),
@@ -417,10 +449,15 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
             : BoxDecoration(
                 border: Border(left: BorderSide(color: phaseTone, width: 3)),
                 gradient: LinearGradient(
-                  colors: <Color>[
-                    phaseTone.withValues(alpha: 0.11),
-                    Colors.transparent,
-                  ],
+                  colors: phase == Act0LearningScenePhaseV3.theory
+                      ? <Color>[
+                          Act0ShellTokensV1.surface.withValues(alpha: 0.88),
+                          Act0ShellTokensV1.surface.withValues(alpha: 0.72),
+                        ]
+                      : <Color>[
+                          phaseTone.withValues(alpha: 0.11),
+                          Colors.transparent,
+                        ],
                 ),
               ),
         child: guideBody,

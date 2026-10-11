@@ -1,5 +1,11 @@
 # Pre-Human Campaign State v1
 
+## 2026-10-11 owner Standard-First S08 amendment (current pointer)
+
+- `ACTIVE_TASK_ID = S08`. `SCREEN_IA = KEEP_APPROVED_STRUCTURE_WITH_SIMPLIFICATION`. Normal-text iOS portrait, source-truth Home progress and complete standard RU teaching are mandatory; XXL-only/VoiceOver/uncommon viewport gaps may be explicitly DEFERRED for S08-S11, not falsely PASSED. Master Plan v5 section10A amendment and `docs/_reviews/s08_standard_first_owner_amendment_20261011.md` govern; historical S05/S07 unchanged.
+- PR #269 remains DRAFT/OPEN/UNMERGED pending standard product QA and new exact-HEAD CI; `NEXT_TASK_ID = S08`. No Modern Table / PR#224, Human/P02, S09 or S10 admission.
+
+
 ## 2026-10-10 S07 explicit owner admission / S08 bounded Wave A (newest)
 
 - **Effective only after this docs-only S07 admission PR passes required exact-head CI and is merged with verified new main.** Until then previous S07 owner gate remains authoritative. On verified integration: `S07 = PASS_D6_OWNER_DESIGN_ADMISSION`, `ACTIVE_TASK_ID = S08`, `CURRENT_STAGE = PRE_P02_DESIGN_RECONVERGENCE / S08_FIRST_VALUE_BUILD / BOUNDED_FLUTTER`, `NEXT_TASK_ID = S08`.
