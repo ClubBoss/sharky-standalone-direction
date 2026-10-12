@@ -6321,7 +6321,32 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         completedTaskId:
                                             playSelectedTask.taskId,
                                       );
-                                      _completeCurrentTask(playSelectedTask);
+                                      // A directed repair can rehearse a locked
+                                      // curriculum task. Its independent proof
+                                      // closes the repair, but cannot grant the
+                                      // future lesson's completion or normal XP.
+                                      final curriculumWorld = _worldById(
+                                        _progressedWorlds(
+                                          widget.state ??
+                                              Act0ShellStateV1.sample,
+                                        ),
+                                        _selectedWorldId,
+                                      );
+                                      final curriculumLesson = _lessonById(
+                                        curriculumWorld.lessons,
+                                        _selectedLessonId,
+                                      );
+                                      if (curriculumWorld.isSelectable &&
+                                          curriculumLesson.isSelectable &&
+                                          _taskAvailable(
+                                            curriculumLesson,
+                                            playSelectedTask.taskId,
+                                          )) {
+                                        _completeCurrentTask(playSelectedTask);
+                                      } else {
+                                        _refreshRetentionMemoryStatusesV1();
+                                        _persistProgress();
+                                      }
                                       if (startsSourceRecheck &&
                                           _startSameSignalRecheckV1(
                                             selectedWorld: selectedWorld,

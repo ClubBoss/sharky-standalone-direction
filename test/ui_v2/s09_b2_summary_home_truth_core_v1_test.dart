@@ -186,7 +186,221 @@ Future<void> _completeAssistedThenIndependentLesson(WidgetTester tester) async {
   expect(find.byType(Act0BlockCompletionShellV1), findsOneWidget);
 }
 
+Map<String, dynamic> _persistedLearningSnapshotV1(SharedPreferences prefs) =>
+    jsonDecode(prefs.getString('act0_shell_progress_v1')!)
+        as Map<String, dynamic>;
+
+Future<void> _pumpPersistedW1Learner(WidgetTester tester) async {
+  final firstLesson = Act0ShellStateV1.sample
+      .worldById('world_1')
+      .lessons
+      .firstWhere((lesson) => lesson.lessonId == 'what_poker_is');
+  const sourceTaskId = 'what_poker_is_find_hero';
+  SharedPreferences.setMockInitialValues(<String, Object>{
+    'act0_welcome_completed_v1': true,
+    'intake_completed_v1': true,
+    'act0_shell_progress_v1': jsonEncode(<String, Object?>{
+      'schemaVersion': 18,
+      'completedTaskIds': [
+        for (final task in firstLesson.taskList.takeWhile(
+          (task) => task.taskId != sourceTaskId,
+        ))
+          task.taskId,
+      ],
+      'completedLessonIds': <String>[],
+      'selectedWorldId': 'world_1',
+      'selectedLessonId': 'what_poker_is',
+      'selectedTaskId': sourceTaskId,
+      'earnedXp': 17,
+    }),
+  });
+  await tester.pumpWidget(
+    const MaterialApp(
+      home: Act0ShellPreviewScreenV1(
+        initialTab: Act0ShellTabV1.play,
+        initialPhase: Act0LessonPhaseV1.drill,
+        showPlacementOnStart: false,
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+  final root = tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+  expect(root.debugSelectedTaskIdV1(), sourceTaskId);
+}
+
+Future<void> _answerCurrentRunnerV1(
+  WidgetTester tester, {
+  required bool correct,
+}) async {
+  final runner = tester.widget<Act0LessonRunnerShellV1>(
+    find.byType(Act0LessonRunnerShellV1),
+  );
+  final choice = runner.runner.options.firstWhere(
+    (option) => option.isCorrect == correct,
+  );
+  final option = find.byKey(Key('act0_shell_option_${choice.id}'));
+  final seat = find.byKey(Key('act0_shell_seat_tap_${choice.seatId}'));
+  for (
+    var i = 0;
+    i < 20 && option.evaluate().isEmpty && seat.evaluate().isEmpty;
+    i++
+  ) {
+    final next =
+        find
+            .byKey(const Key('act0_shell_theory_continue_cta'))
+            .evaluate()
+            .isNotEmpty
+        ? find.byKey(const Key('act0_shell_theory_continue_cta'))
+        : find.byKey(const Key('act0_shell_continue_cta'));
+    expect(
+      next,
+      findsOneWidget,
+      reason: 'Missing forward route for ${runner.selectedTaskId}',
+    );
+    await tester.tap(next);
+    await tester.pumpAndSettle();
+  }
+  expect(option.evaluate().isNotEmpty || seat.evaluate().isNotEmpty, isTrue);
+  await tester.tap(seat.evaluate().isNotEmpty ? seat : option);
+  await tester.pumpAndSettle();
+}
+
+Future<void> _triggerHomeRepairV1(WidgetTester tester) async {
+  final back = find.byKey(const Key('act0_shell_runner_back'));
+  if (back.evaluate().isNotEmpty) {
+    await tester.tap(back);
+    await tester.pumpAndSettle();
+  }
+  final homeTab = find.descendant(
+    of: find.byKey(const Key('act0_shell_bottom_nav')),
+    matching: find.text('Home'),
+  );
+  await tester.ensureVisible(homeTab);
+  await tester.tap(homeTab);
+  await tester.pumpAndSettle();
+  final home = tester.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
+  home.onStartRepair!();
+  await tester.pumpAndSettle();
+}
+
+Future<void> _restartPersistedRootV1(WidgetTester tester) async {
+  await tester.pumpWidget(const SizedBox.shrink());
+  await tester.pumpAndSettle();
+  await tester.pumpWidget(
+    const MaterialApp(
+      home: Act0ShellPreviewScreenV1(
+        initialTab: Act0ShellTabV1.home,
+        showPlacementOnStart: false,
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
 void main() {
+  testWidgets(
+    'persisted locked W3 directed repair does not grant curriculum or XP',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(430, 932));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await _pumpPersistedW1Learner(tester);
+      await _answerCurrentRunnerV1(tester, correct: false);
+      final root =
+          tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+      final receipt =
+          root.debugSummaryHomeHandoffPayloadV1() as Map<String, String>;
+      const targetTask = 'position_checkpoint_position_checkpoint_table_notice';
+      expect(receipt['sourceTaskId'], 'what_poker_is_find_hero');
+      expect(receipt['targetWorldId'], 'world_3');
+      expect(receipt['targetTaskId'], targetTask);
+      final prefs = await SharedPreferences.getInstance();
+      final before = _persistedLearningSnapshotV1(prefs);
+      await _triggerHomeRepairV1(tester);
+      expect(root.debugSelectedWorldIdV1(), 'world_3');
+      expect(root.debugSelectedTaskIdV1(), targetTask);
+      expect(
+        root.debugActiveRepairContextPayloadV1()['sourceTaskId'],
+        'what_poker_is_find_hero',
+      );
+      await _answerCurrentRunnerV1(tester, correct: true);
+      await tester.tap(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      await tester.pumpAndSettle();
+      final after = _persistedLearningSnapshotV1(prefs);
+      final beforeCompleted = (before['completedTaskIds'] as List)
+          .cast<String>();
+      final completed = (after['completedTaskIds'] as List).cast<String>();
+      expect(completed, orderedEquals(beforeCompleted));
+      expect(completed, isNot(contains(targetTask)));
+      expect(
+        (after['completedLessonIds'] as List),
+        isNot(contains(receipt['targetLessonId'])),
+      );
+      expect(after['earnedXp'], before['earnedXp']);
+      expect(after['openRepairIntents'], isEmpty);
+      final evidence = (after['learningEvidenceHistory'] as List)
+          .cast<Map<String, dynamic>>();
+      expect(
+        evidence.any(
+          (entry) =>
+              entry['taskId'] == targetTask &&
+              entry['isCorrect'] == true &&
+              entry['assistanceKind'] == 'none',
+        ),
+        isTrue,
+      );
+      expect(root.debugOpenRepairIntentCountV1(), 0);
+      await _restartPersistedRootV1(tester);
+      final restored = _persistedLearningSnapshotV1(prefs);
+      expect(restored['completedTaskIds'], orderedEquals(beforeCompleted));
+      expect(
+        (restored['completedLessonIds'] as List),
+        isNot(contains(receipt['targetLessonId'])),
+      );
+      expect(restored['earnedXp'], before['earnedXp']);
+      expect(restored['openRepairIntents'], isEmpty);
+      expect(
+        (restored['learningEvidenceHistory'] as List)
+            .cast<Map<String, dynamic>>()
+            .any(
+              (entry) =>
+                  entry['taskId'] == targetTask &&
+                  entry['isCorrect'] == true &&
+                  entry['assistanceKind'] == 'none',
+            ),
+        isTrue,
+      );
+    },
+  );
+
+  testWidgets('ordinarily available W1 task still earns curriculum and XP', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(430, 932));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await _pumpPersistedW1Learner(tester);
+    final prefs = await SharedPreferences.getInstance();
+    final before = _persistedLearningSnapshotV1(prefs);
+    const taskId = 'what_poker_is_find_hero';
+    final task = Act0ShellStateV1.sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((lesson) => lesson.lessonId == 'what_poker_is')
+        .taskList
+        .firstWhere((task) => task.taskId == taskId);
+    await _answerCurrentRunnerV1(tester, correct: true);
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+    final after = _persistedLearningSnapshotV1(prefs);
+    expect((after['completedTaskIds'] as List), contains(taskId));
+    expect(after['earnedXp'], (before['earnedXp'] as int) + task.rewardXp);
+    await _restartPersistedRootV1(tester);
+    final restored = _persistedLearningSnapshotV1(prefs);
+    expect((restored['completedTaskIds'] as List), contains(taskId));
+    expect(restored['earnedXp'], (before['earnedXp'] as int) + task.rewardXp);
+  });
+
   for (final withWorld3 in [true, false]) {
     testWidgets('W1 mapped repair route (W3 present: $withWorld3)', (
       tester,
