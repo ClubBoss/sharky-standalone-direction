@@ -415,8 +415,8 @@ class _ProfileAccountSettingsRowV1 extends StatelessWidget {
                     Text(
                       _profileCopyV1(
                         context,
-                        en: 'Replay the intro or retake placement. Your progress stays.',
-                        ru: 'Повторить знакомство или пройти placement снова. Прогресс сохранится.',
+                        en: 'Replay the intro or retake placement. Lessons and XP stay; skill levels are re-measured.',
+                        ru: 'Повторить знакомство или пройти placement снова. Уроки и XP сохранятся, уровни навыков измерятся заново.',
                       ),
                       style: Act0ShellTokensV1.muted,
                     ),

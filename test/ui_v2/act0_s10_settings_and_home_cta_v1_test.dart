@@ -15,7 +15,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
   }
 
-  testWidgets('You entry is honest and keeps progress when opened', (
+  testWidgets('You entry is honest and does not promise account features', (
     tester,
   ) async {
     await setSize(tester, const Size(390, 844));
@@ -47,7 +47,7 @@ void main() {
     expect(find.text('Intro & placement'), findsOneWidget);
     expect(find.textContaining('Account'), findsNothing);
     expect(find.textContaining('notifications'), findsNothing);
-    expect(find.textContaining('Your progress stays'), findsOneWidget);
+    expect(find.textContaining('Lessons and XP stay'), findsOneWidget);
 
     await tester.tap(row);
     await tester.pumpAndSettle();
