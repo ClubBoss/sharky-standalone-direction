@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_consumer_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
@@ -17,6 +19,72 @@ const _miss = Act0MistakeCardV1(
   betterLabel: 'Check',
   reason: 'No prior bet meant checking was allowed.',
   attempts: 1,
+);
+
+// Native C first-table saved-miss task and its original correction route.
+const _seatMiss = Act0MistakeCardV1(
+  taskId: 'what_poker_is_find_hero',
+  lessonId: 'what_poker_is',
+  title: 'Find your seat',
+  weaknessLabel: 'Table position',
+  selectedOptionId: 'top',
+  selectedLabel: 'Top seat',
+  betterLabel: 'Bottom seat',
+  reason: 'Your seat is at the bottom of the table.',
+  repairActionLabel: 'Replay this spot once',
+  attempts: 1,
+);
+
+const _seatRepairRequest = Act0PracticeRepairQueueLaunchRequestV1(
+  targetWorldId: 'world_1',
+  targetLessonId: 'what_poker_is',
+  targetTaskId: 'what_poker_is_find_hero',
+  targetType: act0PracticeRepairQueueTargetTypeActiveRepairV1,
+  sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+  sourceTaskId: 'what_poker_is_find_hero',
+  repairTaskId: 'what_poker_is_find_hero',
+  repairFocusKey: 'same_clue',
+  queueItemId: 'seat_repair',
+);
+
+const _seatRepairQueue = Act0PracticeRepairQueueConsumerV1(
+  items: <Act0PracticeRepairQueueItemViewModelV1>[
+    Act0PracticeRepairQueueItemViewModelV1(
+      itemId: 'seat_repair',
+      title: 'Find your seat',
+      isPinned: true,
+      detail: 'Find your seat',
+      actionLine: 'You chose top - better: bottom',
+      launchTarget: Act0PracticeRepairQueueLaunchTargetV1(
+        worldId: 'world_1',
+        lessonId: 'what_poker_is',
+        taskId: 'what_poker_is_find_hero',
+        source: act0PracticeRepairQueueSourceActiveRepairV1,
+        targetType: act0PracticeRepairQueueTargetTypeActiveRepairV1,
+      ),
+      launchRequest: _seatRepairRequest,
+    ),
+  ],
+);
+
+Widget _practiceRepairHost(
+  Locale locale, {
+  ValueChanged<Act0PracticeRepairQueueLaunchRequestV1>? onLaunch,
+}) => _localeHost(
+  locale,
+  Act0PlayShellV1(
+    groups: const <Act0PracticeGroupV1>[],
+    recommendedGroupId: 'daily',
+    recommendedTitle: '',
+    recommendedSubtitle: '',
+    recommendedReasonLabel: '',
+    recommendedOutcome: '',
+    recommendedOutcomeLead: '',
+    masteryLabel: '',
+    repairQueueConsumer: _seatRepairQueue,
+    onLaunchRepairQueueTarget: onLaunch,
+    onStartGroup: (_) {},
+  ),
 );
 
 const _reviewBase = Act0ReviewStateV1(
@@ -61,6 +129,151 @@ Widget _review(
 );
 
 void main() {
+  testWidgets(
+    'Native RU saved seat mistake in Practice uses source task language, exact CTA route',
+    (tester) async {
+      Act0PracticeRepairQueueLaunchRequestV1? launched;
+      await tester.pumpWidget(
+        _practiceRepairHost(
+          const Locale('ru'),
+          onLaunch: (item) => launched = item,
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Найди своё место'), findsOneWidget);
+      expect(find.text('Открытая ошибка'), findsOneWidget);
+      expect(find.textContaining('Сначала найди своё место'), findsWidgets);
+      expect(
+        find.text('Повтор того же задания, в котором была ошибка.'),
+        findsOneWidget,
+      );
+      expect(find.text('Исправить ошибку'), findsOneWidget);
+      expect(find.text('Practice repair'), findsNothing);
+      expect(
+        find.text('Before choosing, check whether a bet is in front of you.'),
+        findsNothing,
+      );
+      await tester.ensureVisible(
+        find.byKey(const Key('act0_shell_play_repair_queue_item_cta')),
+      );
+      await tester.tap(
+        find.byKey(const Key('act0_shell_play_repair_queue_item_cta')),
+      );
+      expect(launched, same(_seatRepairRequest));
+      expect(launched!.sourceTaskId, 'what_poker_is_find_hero');
+      expect(launched!.targetTaskId, 'what_poker_is_find_hero');
+    },
+  );
+
+  testWidgets(
+    'EN Practice saved seat mistake keeps existing literal guidance and callback',
+    (tester) async {
+      final launched = <Act0PracticeRepairQueueLaunchRequestV1>[];
+      await tester.pumpWidget(
+        _practiceRepairHost(const Locale('en'), onLaunch: launched.add),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Find your seat'), findsNWidgets(2));
+      expect(find.text('Active repair'), findsOneWidget);
+      expect(find.text('Same table clue as the miss.'), findsOneWidget);
+      expect(find.text('Practice repair'), findsOneWidget);
+      expect(
+        find.text('Before choosing, check whether a bet is in front of you.'),
+        findsOneWidget,
+      );
+      await tester.ensureVisible(
+        find.byKey(const Key('act0_shell_play_repair_queue_item_cta')),
+      );
+      await tester.tap(
+        find.byKey(const Key('act0_shell_play_repair_queue_item_cta')),
+      );
+      expect(launched, <Act0PracticeRepairQueueLaunchRequestV1>[
+        _seatRepairRequest,
+      ]);
+    },
+  );
+
+  testWidgets(
+    'Native RU Review saved seat mistake no due: task-specific repair and CTA',
+    (tester) async {
+      Act0MistakeCardV1? repaired;
+      await tester.pumpWidget(
+        _review(
+          const Locale('ru'),
+          state: const Act0ReviewStateV1(
+            title: 'Review',
+            subtitle: '',
+            weaknessLabel: '',
+            reason: '',
+            stats: <Act0ReviewStatV1>[],
+            chosenLabel: '',
+            betterLabel: '',
+            mistakes: <Act0MistakeCardV1>[_seatMiss],
+          ),
+          onFix: (item) => repaired = item,
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining('Ошибка в задании «Найди своё место»'),
+        findsOneWidget,
+      );
+      expect(find.text('Что нужно заметить'), findsOneWidget);
+      expect(find.textContaining('Ошибка: Найди своё место.'), findsOneWidget);
+      expect(find.textContaining('Твоё место всегда внизу'), findsNothing);
+      expect(find.textContaining('Сначала найди своё место'), findsWidgets);
+      expect(find.text('Исправить эту ошибку'), findsOneWidget);
+      expect(find.text('Practice this spot'), findsNothing);
+      expect(find.text('Pattern to practice'), findsNothing);
+      expect(find.textContaining('Miss: Find your seat'), findsNothing);
+      await tester.ensureVisible(
+        find.byKey(const Key('act0_shell_review_practice_cta')),
+      );
+      await tester.tap(find.byKey(const Key('act0_shell_review_practice_cta')));
+      expect(repaired, same(_seatMiss));
+      expect(
+        find.byKey(const Key('act0_shell_review_due_spaced_item')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'EN Review saved seat mistake retains exact existing CTA and meaning',
+    (tester) async {
+      final repaired = <Act0MistakeCardV1>[];
+      await tester.pumpWidget(
+        _review(
+          const Locale('en'),
+          state: const Act0ReviewStateV1(
+            title: 'Review',
+            subtitle: '',
+            weaknessLabel: '',
+            reason: '',
+            stats: <Act0ReviewStatV1>[],
+            chosenLabel: '',
+            betterLabel: '',
+            mistakes: <Act0MistakeCardV1>[_seatMiss],
+          ),
+          onFix: repaired.add,
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Practice this spot'), findsOneWidget);
+      expect(find.text('Pattern to practice'), findsOneWidget);
+      expect(find.textContaining('Miss: Find your seat.'), findsOneWidget);
+      expect(
+        find.text('Find your seat is still the one to fix.'),
+        findsOneWidget,
+      );
+      await tester.ensureVisible(
+        find.byKey(const Key('act0_shell_review_practice_cta')),
+      );
+      await tester.tap(find.byKey(const Key('act0_shell_review_practice_cta')));
+      expect(repaired, <Act0MistakeCardV1>[_seatMiss]);
+    },
+  );
+
   testWidgets(
     'RU Practice explicitly means voluntary training, not Review debt',
     (tester) async {

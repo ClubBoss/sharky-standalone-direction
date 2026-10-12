@@ -882,6 +882,12 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
         : mistake.repairActionLabel;
     final patternFocus = _reviewPatternFocusLabelV1(mistake);
     final currentClue = _reviewCurrentClueLabelV1(mistake);
+    final ruTask = _isRuLocaleV1(context)
+        ? act0CopyBundleForLanguageCodeV1('ru')?.tasks[mistake.taskId]
+        : null;
+    final ruFocus = ruTask?.title;
+    final ruPrompt = ruTask?.runnerPrompt;
+    final ruSupport = ruTask?.runnerSupport;
     return Container(
       key: const Key('act0_shell_review_repair_coach_card'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
@@ -930,7 +936,9 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
           Text(
-            clueLine,
+            ruFocus == null
+                ? clueLine
+                : 'Ошибка в задании «$ruFocus» ещё ждёт исправления.',
             style: Act0ShellTokensV1.body.copyWith(
               color: Act0ShellTokensV1.text,
               fontWeight: FontWeight.w800,
@@ -967,7 +975,7 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
                 const SizedBox(width: Act0ShellTokensV1.gapSm),
                 Expanded(
                   child: Text(
-                    currentClue,
+                    ruFocus ?? currentClue,
                     maxLines: 1,
                     overflow: TextOverflow.fade,
                     softWrap: false,
@@ -997,7 +1005,11 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Pattern to practice',
+                    _reviewCopyV1(
+                      context,
+                      en: 'Pattern to practice',
+                      ru: 'Что нужно заметить',
+                    ),
                     style: Act0ShellTokensV1.label.copyWith(
                       color: Act0ShellTokensV1.primary,
                       fontWeight: FontWeight.w900,
@@ -1005,7 +1017,9 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
                   ),
                   const SizedBox(height: Act0ShellTokensV1.gapXs),
                   Text(
-                    'Miss: $patternFocus. Repair: spot it before choosing.',
+                    ruPrompt == null
+                        ? 'Miss: $patternFocus. Repair: spot it before choosing.'
+                        : 'Ошибка: $ruFocus. $ruPrompt',
                     key: const Key('act0_shell_review_pattern_focus_line'),
                     style: Act0ShellTokensV1.body.copyWith(
                       color: Act0ShellTokensV1.text,
@@ -1014,7 +1028,13 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
                   ),
                   const SizedBox(height: Act0ShellTokensV1.gapXs),
                   Text(
-                    'Next rep: spot the clue before choosing.',
+                    _reviewCopyV1(
+                      context,
+                      en: 'Next rep: spot the clue before choosing.',
+                      ru: ruPrompt == null
+                          ? 'Next rep: spot the clue before choosing.'
+                          : 'Следующая попытка: $ruPrompt',
+                    ),
                     style: Act0ShellTokensV1.muted.copyWith(
                       color: Act0ShellTokensV1.textMuted,
                     ),
@@ -1024,12 +1044,13 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
             ),
           ],
           const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(actionLine, style: Act0ShellTokensV1.muted),
+          Text(ruSupport ?? actionLine, style: Act0ShellTokensV1.muted),
           const SizedBox(height: 6),
           Text(
-            act0SharkyCoachLineForMomentV1(
-              Act0SharkyCoachMomentV1.reviewActiveRepair,
-            ),
+            ruPrompt ??
+                act0SharkyCoachLineForMomentV1(
+                  Act0SharkyCoachMomentV1.reviewActiveRepair,
+                ),
             key: const Key('act0_shell_review_sharky_coach_line'),
             style: Act0ShellTokensV1.body.copyWith(
               color: Act0ShellTokensV1.textMuted,
@@ -1052,7 +1073,11 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
                         en: 'Repair with guidance',
                         ru: 'Разобрать с подсказкой',
                       )
-                    : 'Practice this spot',
+                    : _reviewCopyV1(
+                        context,
+                        en: 'Practice this spot',
+                        ru: 'Исправить эту ошибку',
+                      ),
               ),
             ),
           ],
