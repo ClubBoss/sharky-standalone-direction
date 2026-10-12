@@ -263,49 +263,37 @@ void main() {
   );
 
   testWidgets(
-    'Home Continue opens the placement quick table check exactly once after fresh onboarding',
+    'Home first hand opens the taught placement target once after fresh onboarding',
     (tester) async {
-      await pumpHost(tester, host(showPlacementOnStart: true));
+      final telemetry = Act0InMemoryTelemetrySinkV1();
+      await pumpHost(
+        tester,
+        host(showPlacementOnStart: true, telemetrySink: telemetry),
+      );
       await completeFreshBeginnerOnboarding(tester);
       expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
-      expect(find.text('First Table Guide'), findsWidgets);
-
       final continueCta = find.byKey(const Key('act0_shell_main_cta'));
-      expect(continueCta, findsOneWidget);
       await tester.tap(continueCta);
       await tester.tap(continueCta);
       await tester.pumpAndSettle();
-
       expect(find.byKey(const Key('act0_shell_home_screen')), findsNothing);
       expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
       final runner = tester.widget<Act0LessonRunnerShellV1>(
         find.byType(Act0LessonRunnerShellV1),
       );
-      expect(runner.runner.lessonTitle, 'Quick table check');
-      expect(runner.runner.beatIndex, 1);
-      expect(runner.runner.phase, Act0LessonPhaseV1.drill);
-      expect(runner.runner.question, 'What does this table show?');
-      final semanticsHandle = tester.ensureSemantics();
-      final question = find.byKey(const Key('act0_integrated_scene_prompt'));
-      final options = <Finder>[
-        for (final option in runner.runner.options)
-          find.byKey(Key('act0_shell_option_${option.id}')),
-      ];
-      final scrollable = find.byKey(const Key('act0_shell_lower_stage_scroll'));
-      expect(scrollable, findsNothing);
-      expect(question, findsOneWidget);
-      expect(options, hasLength(runner.runner.options.length));
+      expect(runner.selectedLessonId, 'what_poker_is');
+      expect(runner.selectedTaskId, 'what_poker_is_theory');
+      expect(runner.runner.lessonTitle, 'First Table Guide');
+      expect(runner.runner.phase, Act0LessonPhaseV1.theory);
       expect(
-        tester.getRect(question).bottom,
-        lessThan(tester.getRect(options.first).top),
+        telemetry.events.where((event) => event.name == 'user_choice'),
+        isEmpty,
       );
-      for (final option in options) {
-        expect(tester.getRect(option).height, greaterThanOrEqualTo(48));
-        expect(tester.getSemantics(option).label, isNotEmpty);
-      }
-      expect(tester.getRect(options.last).bottom, lessThanOrEqualTo(932));
+      expect(
+        telemetry.events.where((event) => event.name == 'decision_made'),
+        isEmpty,
+      );
       expect(tester.takeException(), isNull);
-      semanticsHandle.dispose();
     },
   );
 
