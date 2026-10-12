@@ -5733,6 +5733,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             : _blockCompletionSummary != null
                             ? Act0BlockCompletionShellV1(
                                 summary: _blockCompletionSummary!,
+                                firstCorrectEarnedThisRun:
+                                    _firstCorrectReadEarnedInCurrentLessonRunV1(),
+                                nextUsefulHand: _summaryHomeHandoffV1(
+                                  selectedWorld,
+                                ),
+                                onNextUsefulHand: () => setState(() {
+                                  _startHomeRepairAction(
+                                    selectedWorld,
+                                    _firstPlayableLesson(selectedWorld),
+                                  );
+                                }),
                                 evidenceSummary:
                                     Act0SessionSummaryEvidenceViewModelV1.fromHistory(
                                       _learningEvidenceHistoryV1,
@@ -6310,7 +6321,32 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         completedTaskId:
                                             playSelectedTask.taskId,
                                       );
-                                      _completeCurrentTask(playSelectedTask);
+                                      // A directed repair can rehearse a locked
+                                      // curriculum task. Its independent proof
+                                      // closes the repair, but cannot grant the
+                                      // future lesson's completion or normal XP.
+                                      final curriculumWorld = _worldById(
+                                        _progressedWorlds(
+                                          widget.state ??
+                                              Act0ShellStateV1.sample,
+                                        ),
+                                        _selectedWorldId,
+                                      );
+                                      final curriculumLesson = _lessonById(
+                                        curriculumWorld.lessons,
+                                        _selectedLessonId,
+                                      );
+                                      if (curriculumWorld.isSelectable &&
+                                          curriculumLesson.isSelectable &&
+                                          _taskAvailable(
+                                            curriculumLesson,
+                                            playSelectedTask.taskId,
+                                          )) {
+                                        _completeCurrentTask(playSelectedTask);
+                                      } else {
+                                        _refreshRetentionMemoryStatusesV1();
+                                        _persistProgress();
+                                      }
                                       if (startsSourceRecheck &&
                                           _startSameSignalRecheckV1(
                                             selectedWorld: selectedWorld,
@@ -7351,25 +7387,84 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
   }
 
-  String? _homeNextUsefulHandReasonLine(
+  _Act0NextUsefulHandReasonReceiptV1 _sharedHomeSummaryReceiptV1(
     Act0WorldCardV1 selectedWorld,
-    Act0LessonCardV1 selectedLesson,
   ) {
     final recommendation = _learningRecommendation(
       selectedWorld: selectedWorld,
-      selectedLesson: selectedLesson,
+      selectedLesson: _firstPlayableLesson(selectedWorld),
     );
-    final receipt = _nextUsefulHandReasonReceiptV1(
+    return _nextUsefulHandReasonReceiptV1(
       recommendation: recommendation,
       selectedWorld: selectedWorld,
       state: widget.state ?? Act0ShellStateV1.sample,
     );
+  }
+
+  String _sharedHomeSummaryReasonLineV1(
+    _Act0NextUsefulHandReasonReceiptV1 receipt,
+  ) {
+    final english = _Act0NextUsefulHandCopyBridgeV1.fromReceipt(
+      receipt,
+    ).renderedCopyLine.trim();
+    if (english.isEmpty) return '';
+    return _copyV1(
+      en: english,
+      ru: receipt.selectionSource == 'repair_intent_exact_replay'
+          ? 'Повтори исходный спот и проверь ту же подсказку без помощи.'
+          : 'Исправь ту же ошибку на следующем споте. Сначала назови подсказку стола.',
+    );
+  }
+
+  Act0SummaryNextHandoffV1 _summaryHomeHandoffV1(
+    Act0WorldCardV1 selectedWorld,
+  ) {
+    final receipt = _sharedHomeSummaryReceiptV1(selectedWorld);
+    return Act0SummaryNextHandoffV1(
+      sourceTaskId: receipt.sourceTaskId,
+      targetWorldId: receipt.targetWorldId,
+      targetLessonId: receipt.targetLessonId,
+      targetTaskId: receipt.targetTaskId,
+      reasonCode: receipt.reasonCode,
+      selectionSource: receipt.selectionSource,
+      copyLine: _sharedHomeSummaryReasonLineV1(receipt),
+    );
+  }
+
+  bool _firstCorrectReadEarnedInCurrentLessonRunV1() {
+    final boundary = _lessonRunEvidenceStartOrderV1;
+    if (boundary == null || _selectedLessonId.isEmpty) return false;
+    // Match the canonical achievement's earliest correct, non-assisted
+    // record before deciding whether it belongs to this lesson run.
+    final eligible =
+        _learningEvidenceHistoryV1.records
+            .where((record) => record.isCorrect && !record.isAssistedCorrect)
+            .toList()
+          ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));
+    final first = eligible.firstOrNull;
+    return first != null &&
+        first.createdOrder > boundary &&
+        first.lessonId == _selectedLessonId &&
+        first.assistanceKind == Act0DecisionAssistanceV1.none;
+  }
+
+  @visibleForTesting
+  Map<String, String> debugSummaryHomeHandoffPayloadV1() {
+    final state = widget.state ?? Act0ShellStateV1.sample;
+    final world = _worldById(_progressedWorlds(state), _selectedWorldId);
+    return _summaryHomeHandoffV1(world).toPayload();
+  }
+
+  String? _homeNextUsefulHandReasonLine(
+    Act0WorldCardV1 selectedWorld,
+    Act0LessonCardV1 selectedLesson,
+  ) {
+    final receipt = _sharedHomeSummaryReceiptV1(selectedWorld);
     if (receipt.selectionSource != 'repair_intent_mapped' &&
         receipt.selectionSource != 'repair_intent_exact_replay') {
       return null;
     }
-    final bridge = _Act0NextUsefulHandCopyBridgeV1.fromReceipt(receipt);
-    final renderedLine = bridge.renderedCopyLine.trim();
+    final renderedLine = _sharedHomeSummaryReasonLineV1(receipt);
     return renderedLine.isEmpty ? null : renderedLine;
   }
 
@@ -8892,21 +8987,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         retentionStatus == _Act0RetentionMemoryStatusV1.ownedCandidate;
     final repairIntentTarget = isRetentionReplay
         ? null
-        : _repairIntentTargetForSourceV1(
-            selectedWorld: selectedWorld,
-            sourceTaskId: sourceTaskId,
-          );
+        : _openRepairIntentTargetForSourceTaskV1(sourceTaskId);
     final repairTarget = isRetentionReplay
         ? _Act0RepairTargetV1(lessonId: mistake.lessonId, taskId: sourceTaskId)
-        : (repairIntentTarget ??
-              _repairVariantTargetForSourceV1(
-                sourceTaskId,
-                sourceLessonId: mistake.lessonId,
-              ) ??
-              _Act0RepairTargetV1(
-                lessonId: mistake.lessonId,
-                taskId: sourceTaskId,
-              ));
+        : (repairIntentTarget == null
+              ? _repairVariantTargetForSourceV1(
+                      sourceTaskId,
+                      sourceLessonId: mistake.lessonId,
+                    ) ??
+                    _Act0RepairTargetV1(
+                      lessonId: mistake.lessonId,
+                      taskId: sourceTaskId,
+                    )
+              : _Act0RepairTargetV1(
+                  lessonId: repairIntentTarget.target.lessonId,
+                  taskId: repairIntentTarget.target.taskId,
+                ));
     final repairTaskId = repairTarget.taskId;
     final mappingType = isRetentionReplay
         ? 'replay'
@@ -8922,11 +9018,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         !isRetentionReplay &&
         _pendingFeedbackRepairSourceTaskIdV1 == sourceTaskId &&
         _pendingFeedbackRepairTaskIdV1 == repairTaskId;
-    final launchWorld = mistake.worldId.trim().isEmpty
+    final launchWorldId = repairIntentTarget?.target.worldId ?? mistake.worldId;
+    final launchWorld = launchWorldId.trim().isEmpty
         ? selectedWorld
         : _worldById(
             _progressedWorlds(widget.state ?? Act0ShellStateV1.sample),
-            mistake.worldId,
+            launchWorldId,
           );
     final launchLesson = _lessonById(
       launchWorld.lessons,
@@ -9195,20 +9292,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _selectedOptionId = null;
     _teachingStepIndex = 0;
     return true;
-  }
-
-  _Act0RepairTargetV1? _repairIntentTargetForSourceV1({
-    required Act0WorldCardV1 selectedWorld,
-    required String sourceTaskId,
-  }) {
-    final target = _openRepairIntentTargetForSourceTaskV1(sourceTaskId);
-    if (target == null || target.target.worldId != selectedWorld.worldId) {
-      return null;
-    }
-    return _Act0RepairTargetV1(
-      lessonId: target.target.lessonId,
-      taskId: target.target.taskId,
-    );
   }
 
   void _startRecommendation(
