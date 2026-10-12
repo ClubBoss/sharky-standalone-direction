@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -186,6 +187,121 @@ Future<void> _completeAssistedThenIndependentLesson(WidgetTester tester) async {
 }
 
 void main() {
+  for (final withWorld3 in [true, false]) {
+    testWidgets('W1 mapped repair route (W3 present: $withWorld3)', (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues(<String, Object>{});
+      await tester.binding.setSurfaceSize(const Size(430, 932));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final sample = Act0ShellStateV1.sample;
+      final w1 = sample.worldById('world_1');
+      final state = withWorld3
+          ? sample
+          : Act0ShellStateV1(
+              courseTitle: sample.courseTitle,
+              courseSubtitle: sample.courseSubtitle,
+              levelLabel: sample.levelLabel,
+              xp: sample.xp,
+              xpTarget: sample.xpTarget,
+              streakDays: sample.streakDays,
+              dailyGoalLabel: sample.dailyGoalLabel,
+              dailyGoalValue: sample.dailyGoalValue,
+              pathProgressLabel: sample.pathProgressLabel,
+              selectedWorldId: 'world_1',
+              worlds: [w1],
+              lessons: w1.lessons,
+              review: sample.review,
+              profile: sample.profile,
+            );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Act0ShellPreviewScreenV1(
+            initialTab: Act0ShellTabV1.play,
+            initialPhase: Act0LessonPhaseV1.drill,
+            showPlacementOnStart: false,
+            state: state,
+            debugHarnessEntry: const Act0ShellDebugHarnessEntryV1(
+              mode: Act0ControlledDemoCaptureModeV1.directState,
+              surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
+              worldId: 'world_1',
+              lessonId: 'what_poker_is',
+              taskId: 'what_poker_is_find_hero',
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final runner = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(runner.selectedTaskId, 'what_poker_is_find_hero');
+      final wrong = runner.runner.options.firstWhere((o) => !o.isCorrect);
+      final option = find.byKey(Key('act0_shell_option_${wrong.id}'));
+      final seat = find.byKey(Key('act0_shell_seat_tap_${wrong.seatId}'));
+      for (
+        var step = 0;
+        step < 12 && option.evaluate().isEmpty && seat.evaluate().isEmpty;
+        step++
+      ) {
+        final next = find.byKey(const Key('act0_shell_continue_cta'));
+        expect(next, findsOneWidget);
+        await tester.tap(next);
+        await tester.pumpAndSettle();
+      }
+      await tester.tap(seat.evaluate().isNotEmpty ? seat : option);
+      await tester.pumpAndSettle();
+      final root =
+          tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+      final summary =
+          root.debugSummaryHomeHandoffPayloadV1() as Map<String, String>;
+      final home =
+          root.debugNextUsefulHandTargetPayloadV1() as Map<String, Object?>;
+      final worldId = withWorld3 ? 'world_3' : 'world_1';
+      final taskId = withWorld3
+          ? 'position_checkpoint_position_checkpoint_table_notice'
+          : 'what_poker_is_find_hero';
+      expect(home['sourceTaskId'], 'what_poker_is_find_hero');
+      expect(home['targetWorldId'], worldId);
+      expect(home['targetTaskId'], taskId);
+      for (final key in [
+        'sourceTaskId',
+        'targetWorldId',
+        'targetLessonId',
+        'targetTaskId',
+        'reasonCode',
+        'selectionSource',
+      ]) {
+        expect(summary[key], home[key], reason: 'Handoff differs at $key');
+      }
+      expect(
+        summary['selectionSource'],
+        withWorld3 ? 'repair_intent_mapped' : 'repair_intent_exact_replay',
+      );
+      final back = find.byKey(const Key('act0_shell_runner_back'));
+      if (back.evaluate().isNotEmpty) {
+        await tester.tap(back);
+        await tester.pumpAndSettle();
+      }
+      final homeTab = find.descendant(
+        of: find.byKey(const Key('act0_shell_bottom_nav')),
+        matching: find.text('Home'),
+      );
+      await tester.ensureVisible(homeTab);
+      await tester.tap(homeTab);
+      await tester.pumpAndSettle();
+      final shell = tester.widget<Act0HomeShellV1>(
+        find.byType(Act0HomeShellV1),
+      );
+      shell.onStartRepair!();
+      await tester.pumpAndSettle();
+      expect(root.debugSelectedWorldIdV1(), worldId);
+      expect(root.debugSelectedLessonIdV1(), summary['targetLessonId']);
+      expect(root.debugSelectedTaskIdV1(), taskId);
+      expect(find.byType(Act0LessonRunnerShellV1), findsOneWidget);
+      if (withWorld3) expect(sample.worldById('world_3').isLocked, isTrue);
+    });
+  }
   testWidgets(
     'root shares the exact Home source task, target and reason with Summary',
     (tester) async {

@@ -8962,21 +8962,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         retentionStatus == _Act0RetentionMemoryStatusV1.ownedCandidate;
     final repairIntentTarget = isRetentionReplay
         ? null
-        : _repairIntentTargetForSourceV1(
-            selectedWorld: selectedWorld,
-            sourceTaskId: sourceTaskId,
-          );
+        : _openRepairIntentTargetForSourceTaskV1(sourceTaskId);
     final repairTarget = isRetentionReplay
         ? _Act0RepairTargetV1(lessonId: mistake.lessonId, taskId: sourceTaskId)
-        : (repairIntentTarget ??
-              _repairVariantTargetForSourceV1(
-                sourceTaskId,
-                sourceLessonId: mistake.lessonId,
-              ) ??
-              _Act0RepairTargetV1(
-                lessonId: mistake.lessonId,
-                taskId: sourceTaskId,
-              ));
+        : (repairIntentTarget == null
+              ? _repairVariantTargetForSourceV1(
+                      sourceTaskId,
+                      sourceLessonId: mistake.lessonId,
+                    ) ??
+                    _Act0RepairTargetV1(
+                      lessonId: mistake.lessonId,
+                      taskId: sourceTaskId,
+                    )
+              : _Act0RepairTargetV1(
+                  lessonId: repairIntentTarget.target.lessonId,
+                  taskId: repairIntentTarget.target.taskId,
+                ));
     final repairTaskId = repairTarget.taskId;
     final mappingType = isRetentionReplay
         ? 'replay'
@@ -8992,11 +8993,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         !isRetentionReplay &&
         _pendingFeedbackRepairSourceTaskIdV1 == sourceTaskId &&
         _pendingFeedbackRepairTaskIdV1 == repairTaskId;
-    final launchWorld = mistake.worldId.trim().isEmpty
+    final launchWorldId = repairIntentTarget?.target.worldId ?? mistake.worldId;
+    final launchWorld = launchWorldId.trim().isEmpty
         ? selectedWorld
         : _worldById(
             _progressedWorlds(widget.state ?? Act0ShellStateV1.sample),
-            mistake.worldId,
+            launchWorldId,
           );
     final launchLesson = _lessonById(
       launchWorld.lessons,
@@ -9265,20 +9267,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _selectedOptionId = null;
     _teachingStepIndex = 0;
     return true;
-  }
-
-  _Act0RepairTargetV1? _repairIntentTargetForSourceV1({
-    required Act0WorldCardV1 selectedWorld,
-    required String sourceTaskId,
-  }) {
-    final target = _openRepairIntentTargetForSourceTaskV1(sourceTaskId);
-    if (target == null || target.target.worldId != selectedWorld.worldId) {
-      return null;
-    }
-    return _Act0RepairTargetV1(
-      lessonId: target.target.lessonId,
-      taskId: target.target.taskId,
-    );
   }
 
   void _startRecommendation(
