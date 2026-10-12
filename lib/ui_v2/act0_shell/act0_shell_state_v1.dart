@@ -1032,6 +1032,9 @@ Act0SeatStateV1 _act0CopySeatStateV1(
   String? displayName,
   bool? isHero,
   bool? isActive,
+  bool? isInHand,
+  bool? isFolded,
+  bool? hasActed,
   List<Act0CardStateV1>? holeCards,
   Act0CardsVisibleModeV1? cardsVisibleMode,
 }) {
@@ -1046,9 +1049,9 @@ Act0SeatStateV1 _act0CopySeatStateV1(
     blindAmountLabel: seat.blindAmountLabel,
     isActive: isActive ?? seat.isActive,
     isTarget: seat.isTarget,
-    isInHand: seat.isInHand,
-    isFolded: seat.isFolded,
-    hasActed: seat.hasActed,
+    isInHand: isInHand ?? seat.isInHand,
+    isFolded: isFolded ?? seat.isFolded,
+    hasActed: hasActed ?? seat.hasActed,
     isLastAggressor: seat.isLastAggressor,
     isOccupied: seat.isOccupied,
     stackLabel: seat.stackLabel,
@@ -13820,19 +13823,35 @@ final _w3TablePositionNoticeRunner = _world3LateOpenRunner.copyWith(
           'Late position helps, but it is not a free pass. First notice who still acts after you.',
     ),
   ],
-  table: _world3LateOpenRunner.table.copyWith(
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'Q', suit: 's'),
-      Act0CardStateV1(rank: 'J', suit: 's'),
-    ],
+  table: _act0ReassignHeroSeatV1(
+    _world3LateOpenRunner.table.copyWith(
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'Q', suit: 's'),
+        Act0CardStateV1(rank: 'J', suit: 's'),
+      ],
+      // This authored transfer stops before CO acts. Inherited BTN scenarios
+      // have CO folded already, so identity reassignment alone is not enough.
+      seats: _world3LateOpenRunner.table.seats
+          .map((seat) {
+            final folded = seat.seatId == 'utg' || seat.seatId == 'hj';
+            return _act0CopySeatStateV1(
+              seat,
+              isInHand: !folded,
+              isFolded: folded,
+              hasActed: folded,
+            );
+          })
+          .toList(growable: false),
+      highlightedSeatIds: const <String>['co', 'btn', 'sb', 'bb'],
+      centerLabel: 'CO with three seats behind',
+      actionTrail: const <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+        Act0ActionTrailItemV1(label: 'CO acts'),
+      ],
+    ),
+    heroSeatId: 'co',
     activeSeatId: 'co',
-    highlightedSeatIds: const <String>['co', 'btn', 'sb', 'bb'],
-    centerLabel: 'CO with three seats behind',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'UTG folds'),
-      Act0ActionTrailItemV1(label: 'HJ folds'),
-      Act0ActionTrailItemV1(label: 'CO acts'),
-    ],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
