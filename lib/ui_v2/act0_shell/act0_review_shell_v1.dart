@@ -78,6 +78,16 @@ class Act0ReviewShellV1 extends StatelessWidget {
         (mistake) => mistake.severityLabel == 'Quick fix',
       ),
     ];
+    final selectedDueItem = dueReviewItems.isEmpty
+        ? null
+        : _selectedDueItemV1(nextStep, dueReviewItems) ?? dueReviewItems.first;
+    final dueTaskIsOpen =
+        selectedDueItem != null &&
+        review.mistakes.any(
+          (mistake) => mistake.taskId == selectedDueItem.taskId,
+        );
+    final dueCardAvailable =
+        selectedDueItem != null && onStartDueReview != null;
     final queueCard = <Widget>[
       if (nextStep != null &&
           nextStep!.reasonType !=
@@ -98,14 +108,12 @@ class Act0ReviewShellV1 extends StatelessWidget {
         ),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
       ],
-      if (review.mistakes.isEmpty &&
-          dueReviewItems.isNotEmpty &&
-          onStartDueReview != null) ...[
+      if (dueCardAvailable) ...[
         _DueReviewCardV1(
-          item:
-              _selectedDueItemV1(nextStep, dueReviewItems) ??
-              dueReviewItems.first,
+          item: selectedDueItem,
           onStart: onStartDueReview!,
+          hasOpenMistakeForTask: dueTaskIsOpen,
+          hasOtherOpenMistakes: review.mistakes.isNotEmpty && !dueTaskIsOpen,
         ),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
       ],
@@ -208,6 +216,9 @@ class Act0ReviewShellV1 extends StatelessWidget {
                   _ReviewRepairCoachCardV1(
                     mistake: mistake,
                     onFixMistake: onFixMistake,
+                    hasIndependentDueRecheck:
+                        dueCardAvailable &&
+                        mistake.taskId == selectedDueItem.taskId,
                   ),
                   if (mistake != review.mistakes.last)
                     const SizedBox(height: Act0ShellTokensV1.gapMd),
@@ -233,6 +244,9 @@ class Act0ReviewShellV1 extends StatelessWidget {
         _ReviewRepairCoachCardV1(
           mistake: activeMistake,
           onFixMistake: onFixMistake,
+          hasIndependentDueRecheck:
+              dueCardAvailable &&
+              activeMistake.taskId == selectedDueItem.taskId,
         ),
       ...historyAndRecovered,
     ];
@@ -441,10 +455,17 @@ class _ReviewNextStepCardV1 extends StatelessWidget {
 }
 
 class _DueReviewCardV1 extends StatelessWidget {
-  const _DueReviewCardV1({required this.item, required this.onStart});
+  const _DueReviewCardV1({
+    required this.item,
+    required this.onStart,
+    required this.hasOpenMistakeForTask,
+    required this.hasOtherOpenMistakes,
+  });
 
   final Act0DueReviewItemV1 item;
   final ValueChanged<Act0DueReviewItemV1> onStart;
+  final bool hasOpenMistakeForTask;
+  final bool hasOtherOpenMistakes;
 
   @override
   Widget build(BuildContext context) {
@@ -459,10 +480,23 @@ class _DueReviewCardV1 extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Ready to recheck', style: Act0ShellTokensV1.sectionTitle),
+          Text(
+            hasOpenMistakeForTask
+                ? 'Scheduled recheck · mistake still open'
+                : 'Ready to recheck',
+            style: Act0ShellTokensV1.sectionTitle,
+          ),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(
-            'A repaired clue is due for a spaced review.',
+            hasOpenMistakeForTask
+                ? item.lapseCount > 0
+                      ? 'The last recheck of this task was missed. The mistake is still open: use guided repair below, or take this separate scheduled recheck independently.'
+                      : 'This task also has an open mistake. Use guided repair below, or take this separate scheduled recheck independently.'
+                : hasOtherOpenMistakes
+                ? 'This scheduled recheck is for another task, separate from the open mistake below.'
+                : item.lapseCount > 0
+                ? 'This task is due for another independent scheduled recheck.'
+                : 'A repaired clue is due for a spaced review.',
             style: Act0ShellTokensV1.muted,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -471,7 +505,11 @@ class _DueReviewCardV1 extends StatelessWidget {
             child: FilledButton(
               key: const Key('act0_shell_review_start_due_spaced_item'),
               onPressed: () => onStart(item),
-              child: const Text('Review now'),
+              child: Text(
+                hasOpenMistakeForTask
+                    ? 'Check independently now'
+                    : 'Review now',
+              ),
             ),
           ),
         ],
@@ -717,10 +755,15 @@ class _ReviewEmptyRepairCardV1 extends StatelessWidget {
 }
 
 class _ReviewRepairCoachCardV1 extends StatelessWidget {
-  const _ReviewRepairCoachCardV1({required this.mistake, this.onFixMistake});
+  const _ReviewRepairCoachCardV1({
+    required this.mistake,
+    this.onFixMistake,
+    this.hasIndependentDueRecheck = false,
+  });
 
   final Act0MistakeCardV1 mistake;
   final ValueChanged<Act0MistakeCardV1>? onFixMistake;
+  final bool hasIndependentDueRecheck;
 
   @override
   Widget build(BuildContext context) {
@@ -766,7 +809,9 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
               const SizedBox(width: Act0ShellTokensV1.gapSm),
               Expanded(
                 child: Text(
-                  'MISS TO REPAIR',
+                  mistake.sourceRetriedCorrectly
+                      ? 'SAME CLUE, NEW SPOT STILL OWED'
+                      : 'MISS TO REPAIR',
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.primary,
                     fontSize: 11,
@@ -778,6 +823,14 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
             ],
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
+          if (mistake.sourceRetriedCorrectly) ...[
+            Text(
+              'You retried the original spot correctly. A different spot with the same clue is still waiting for you.',
+              key: const Key('act0_shell_review_source_retried_note'),
+              style: Act0ShellTokensV1.muted,
+            ),
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+          ],
           Text(
             clueLine,
             style: Act0ShellTokensV1.body.copyWith(
@@ -894,7 +947,11 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
               style: Act0ShellTokensV1.premiumActionButtonStyle(
                 height: Act0ShellTokensV1.compactCtaHeight,
               ),
-              child: const Text('Practice this spot'),
+              child: Text(
+                hasIndependentDueRecheck
+                    ? 'Repair with guidance'
+                    : 'Practice this spot',
+              ),
             ),
           ],
         ],

@@ -1544,7 +1544,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (mistake == null) {
       return null;
     }
-    final target = _openRepairIntentTargetForSourceTaskV1(mistake.taskId);
+    final target = _openRepairIntentTargetForSourceTaskV1(
+      mistake.taskId,
+      includeOwed: true,
+    );
     if (target == null) {
       return null;
     }
@@ -1571,7 +1574,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final sourceTaskId = recommendation.mistake?.taskId;
     final repairIntentTarget = sourceTaskId == null
         ? null
-        : _openRepairIntentTargetForSourceTaskV1(sourceTaskId, state: state);
+        : _openRepairIntentTargetForSourceTaskV1(
+            sourceTaskId,
+            state: state,
+            includeOwed: true,
+          );
     if (repairIntentTarget != null) {
       return _Act0NextUsefulHandReasonReceiptV1.forRepairIntent(
         sourceTaskId: sourceTaskId!,
@@ -3719,8 +3726,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _resolvedMistakeTaskIds.clear();
     for (final intent in _openRepairIntentBySourceTaskId.values) {
       final retention = _retentionMemoryByTaskId[intent.sourceTaskId];
-      if (retention == null ||
-          retention.status != _Act0RetentionMemoryStatusV1.openRepair) {
+      if (retention == null) {
+        continue;
+      }
+      // A source repaired by a correct retry stays resolved, but its different
+      // mapped same-signal repair is still owed and must remain actionable.
+      final sourceRepairedButMappedOwed =
+          retention.status != _Act0RetentionMemoryStatusV1.openRepair;
+      if (sourceRepairedButMappedOwed &&
+          (act0IsExactRepairMappingTypeV1(intent.mappingType) ||
+              intent.mappingType == 'unresolved_product_gap' ||
+              intent.targetTaskId == intent.sourceTaskId)) {
         continue;
       }
       final world = state.worlds.cast<Act0WorldCardV1?>().firstWhere(
@@ -3782,6 +3798,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         repairActionLabel: _repairActionLabel(task),
         attempts: retention.attempts.clamp(1, 99),
       );
+      if (sourceRepairedButMappedOwed) {
+        _resolvedMistakeTaskIds.add(intent.sourceTaskId);
+      }
     }
   }
 
@@ -5733,6 +5752,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             : _blockCompletionSummary != null
                             ? Act0BlockCompletionShellV1(
                                 summary: _blockCompletionSummary!,
+                                firstCorrectEarnedThisRun:
+                                    _firstCorrectReadEarnedInCurrentLessonRunV1(),
+                                nextUsefulHand: _summaryHomeHandoffV1(
+                                  selectedWorld,
+                                ),
+                                onNextUsefulHand: () => setState(() {
+                                  _startHomeRepairAction(
+                                    selectedWorld,
+                                    _firstPlayableLesson(selectedWorld),
+                                  );
+                                }),
                                 evidenceSummary:
                                     Act0SessionSummaryEvidenceViewModelV1.fromHistory(
                                       _learningEvidenceHistoryV1,
@@ -6310,7 +6340,32 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         completedTaskId:
                                             playSelectedTask.taskId,
                                       );
-                                      _completeCurrentTask(playSelectedTask);
+                                      // A directed repair can rehearse a locked
+                                      // curriculum task. Its independent proof
+                                      // closes the repair, but cannot grant the
+                                      // future lesson's completion or normal XP.
+                                      final curriculumWorld = _worldById(
+                                        _progressedWorlds(
+                                          widget.state ??
+                                              Act0ShellStateV1.sample,
+                                        ),
+                                        _selectedWorldId,
+                                      );
+                                      final curriculumLesson = _lessonById(
+                                        curriculumWorld.lessons,
+                                        _selectedLessonId,
+                                      );
+                                      if (curriculumWorld.isSelectable &&
+                                          curriculumLesson.isSelectable &&
+                                          _taskAvailable(
+                                            curriculumLesson,
+                                            playSelectedTask.taskId,
+                                          )) {
+                                        _completeCurrentTask(playSelectedTask);
+                                      } else {
+                                        _refreshRetentionMemoryStatusesV1();
+                                        _persistProgress();
+                                      }
                                       if (startsSourceRecheck &&
                                           _startSameSignalRecheckV1(
                                             selectedWorld: selectedWorld,
@@ -6906,6 +6961,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           topMistake.severityLabel == 'Deep repair';
       final repairIntentTarget = _openRepairIntentTargetForSourceTaskV1(
         topMistake.taskId,
+        includeOwed: true,
       );
       return _Act0LearningRecommendationV1(
         kind: isDeep
@@ -7351,25 +7407,84 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
   }
 
-  String? _homeNextUsefulHandReasonLine(
+  _Act0NextUsefulHandReasonReceiptV1 _sharedHomeSummaryReceiptV1(
     Act0WorldCardV1 selectedWorld,
-    Act0LessonCardV1 selectedLesson,
   ) {
     final recommendation = _learningRecommendation(
       selectedWorld: selectedWorld,
-      selectedLesson: selectedLesson,
+      selectedLesson: _firstPlayableLesson(selectedWorld),
     );
-    final receipt = _nextUsefulHandReasonReceiptV1(
+    return _nextUsefulHandReasonReceiptV1(
       recommendation: recommendation,
       selectedWorld: selectedWorld,
       state: widget.state ?? Act0ShellStateV1.sample,
     );
+  }
+
+  String _sharedHomeSummaryReasonLineV1(
+    _Act0NextUsefulHandReasonReceiptV1 receipt,
+  ) {
+    final english = _Act0NextUsefulHandCopyBridgeV1.fromReceipt(
+      receipt,
+    ).renderedCopyLine.trim();
+    if (english.isEmpty) return '';
+    return _copyV1(
+      en: english,
+      ru: receipt.selectionSource == 'repair_intent_exact_replay'
+          ? 'Повтори исходный спот и проверь ту же подсказку без помощи.'
+          : 'Исправь ту же ошибку на следующем споте. Сначала назови подсказку стола.',
+    );
+  }
+
+  Act0SummaryNextHandoffV1 _summaryHomeHandoffV1(
+    Act0WorldCardV1 selectedWorld,
+  ) {
+    final receipt = _sharedHomeSummaryReceiptV1(selectedWorld);
+    return Act0SummaryNextHandoffV1(
+      sourceTaskId: receipt.sourceTaskId,
+      targetWorldId: receipt.targetWorldId,
+      targetLessonId: receipt.targetLessonId,
+      targetTaskId: receipt.targetTaskId,
+      reasonCode: receipt.reasonCode,
+      selectionSource: receipt.selectionSource,
+      copyLine: _sharedHomeSummaryReasonLineV1(receipt),
+    );
+  }
+
+  bool _firstCorrectReadEarnedInCurrentLessonRunV1() {
+    final boundary = _lessonRunEvidenceStartOrderV1;
+    if (boundary == null || _selectedLessonId.isEmpty) return false;
+    // Match the canonical achievement's earliest correct, non-assisted
+    // record before deciding whether it belongs to this lesson run.
+    final eligible =
+        _learningEvidenceHistoryV1.records
+            .where((record) => record.isCorrect && !record.isAssistedCorrect)
+            .toList()
+          ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));
+    final first = eligible.firstOrNull;
+    return first != null &&
+        first.createdOrder > boundary &&
+        first.lessonId == _selectedLessonId &&
+        first.assistanceKind == Act0DecisionAssistanceV1.none;
+  }
+
+  @visibleForTesting
+  Map<String, String> debugSummaryHomeHandoffPayloadV1() {
+    final state = widget.state ?? Act0ShellStateV1.sample;
+    final world = _worldById(_progressedWorlds(state), _selectedWorldId);
+    return _summaryHomeHandoffV1(world).toPayload();
+  }
+
+  String? _homeNextUsefulHandReasonLine(
+    Act0WorldCardV1 selectedWorld,
+    Act0LessonCardV1 selectedLesson,
+  ) {
+    final receipt = _sharedHomeSummaryReceiptV1(selectedWorld);
     if (receipt.selectionSource != 'repair_intent_mapped' &&
         receipt.selectionSource != 'repair_intent_exact_replay') {
       return null;
     }
-    final bridge = _Act0NextUsefulHandCopyBridgeV1.fromReceipt(receipt);
-    final renderedLine = bridge.renderedCopyLine.trim();
+    final renderedLine = _sharedHomeSummaryReasonLineV1(receipt);
     return renderedLine.isEmpty ? null : renderedLine;
   }
 
@@ -8357,6 +8472,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       final target = _openRepairIntentTargetForSourceTaskV1(
         mistake.taskId,
         state: state,
+        includeOwed: true,
       );
       if (target != null) {
         return target;
@@ -8365,13 +8481,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     return null;
   }
 
+  /// [includeOwed] opts presentation and launch entry points into a mapped
+  /// repair still owed after the source clue was answered correctly. In-lesson
+  /// flow logic keeps the default so a source retry still finishes normally.
   _Act0OpenRepairIntentTargetV1? _openRepairIntentTargetForSourceTaskV1(
     String sourceTaskId, {
     Act0ShellStateV1? state,
+    bool includeOwed = false,
   }) {
     final normalizedSourceTaskId = sourceTaskId.trim();
+    final discharged = includeOwed
+        ? _isMistakeDischargedV1(normalizedSourceTaskId)
+        : _resolvedMistakeTaskIds.contains(normalizedSourceTaskId);
     if (normalizedSourceTaskId.isEmpty ||
-        _resolvedMistakeTaskIds.contains(normalizedSourceTaskId) ||
+        discharged ||
         !_mistakeRecords.containsKey(normalizedSourceTaskId)) {
       return null;
     }
@@ -8892,21 +9015,25 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         retentionStatus == _Act0RetentionMemoryStatusV1.ownedCandidate;
     final repairIntentTarget = isRetentionReplay
         ? null
-        : _repairIntentTargetForSourceV1(
-            selectedWorld: selectedWorld,
-            sourceTaskId: sourceTaskId,
+        : _openRepairIntentTargetForSourceTaskV1(
+            sourceTaskId,
+            includeOwed: true,
           );
     final repairTarget = isRetentionReplay
         ? _Act0RepairTargetV1(lessonId: mistake.lessonId, taskId: sourceTaskId)
-        : (repairIntentTarget ??
-              _repairVariantTargetForSourceV1(
-                sourceTaskId,
-                sourceLessonId: mistake.lessonId,
-              ) ??
-              _Act0RepairTargetV1(
-                lessonId: mistake.lessonId,
-                taskId: sourceTaskId,
-              ));
+        : (repairIntentTarget == null
+              ? _repairVariantTargetForSourceV1(
+                      sourceTaskId,
+                      sourceLessonId: mistake.lessonId,
+                    ) ??
+                    _Act0RepairTargetV1(
+                      lessonId: mistake.lessonId,
+                      taskId: sourceTaskId,
+                    )
+              : _Act0RepairTargetV1(
+                  lessonId: repairIntentTarget.target.lessonId,
+                  taskId: repairIntentTarget.target.taskId,
+                ));
     final repairTaskId = repairTarget.taskId;
     final mappingType = isRetentionReplay
         ? 'replay'
@@ -8922,11 +9049,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         !isRetentionReplay &&
         _pendingFeedbackRepairSourceTaskIdV1 == sourceTaskId &&
         _pendingFeedbackRepairTaskIdV1 == repairTaskId;
-    final launchWorld = mistake.worldId.trim().isEmpty
+    final launchWorldId = repairIntentTarget?.target.worldId ?? mistake.worldId;
+    final launchWorld = launchWorldId.trim().isEmpty
         ? selectedWorld
         : _worldById(
             _progressedWorlds(widget.state ?? Act0ShellStateV1.sample),
-            mistake.worldId,
+            launchWorldId,
           );
     final launchLesson = _lessonById(
       launchWorld.lessons,
@@ -9195,20 +9323,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _selectedOptionId = null;
     _teachingStepIndex = 0;
     return true;
-  }
-
-  _Act0RepairTargetV1? _repairIntentTargetForSourceV1({
-    required Act0WorldCardV1 selectedWorld,
-    required String sourceTaskId,
-  }) {
-    final target = _openRepairIntentTargetForSourceTaskV1(sourceTaskId);
-    if (target == null || target.target.worldId != selectedWorld.worldId) {
-      return null;
-    }
-    return _Act0RepairTargetV1(
-      lessonId: target.target.lessonId,
-      taskId: target.target.taskId,
-    );
   }
 
   void _startRecommendation(
@@ -11659,7 +11773,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               .where(
                 (mistake) =>
                     !mistake.resolved &&
-                    !_resolvedMistakeTaskIds.contains(mistake.taskId),
+                    !_isMistakeDischargedV1(mistake.taskId),
               )
               .toList()
         : _openMistakes();
@@ -11894,6 +12008,24 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _mistakeRecords.containsKey(taskId) &&
       !_resolvedMistakeTaskIds.contains(taskId);
 
+  /// The source clue was answered correctly, but a different mapped
+  /// same-signal repair assigned for it has not been completed yet.
+  bool _owesMappedRepairV1(String sourceTaskId) {
+    if (!_resolvedMistakeTaskIds.contains(sourceTaskId)) {
+      return false;
+    }
+    final intent = _openRepairIntentBySourceTaskId[sourceTaskId];
+    return intent != null &&
+        intent.mappingType != 'unresolved_product_gap' &&
+        !act0IsExactRepairMappingTypeV1(intent.mappingType) &&
+        intent.targetTaskId != sourceTaskId;
+  }
+
+  /// A source mistake is discharged only when it is resolved and no mapped
+  /// repair remains owed.
+  bool _isMistakeDischargedV1(String taskId) =>
+      _resolvedMistakeTaskIds.contains(taskId) && !_owesMappedRepairV1(taskId);
+
   Act0MistakeCardV1? _topOpenMistake() {
     final open = _openMistakes();
     final intentTarget = _topOpenRepairIntentTargetV1();
@@ -11910,11 +12042,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   List<Act0MistakeCardV1> _openMistakes() {
     final open = <Act0MistakeCardV1>[
       for (final record in _mistakeRecords.values)
-        if (!_resolvedMistakeTaskIds.contains(record.taskId))
+        if (!_isMistakeDischargedV1(record.taskId))
           record.toCard(
             repairActionLabelOverride: _repairIntentSurfaceCopyLineV1(
               record.taskId,
             ),
+            sourceRetriedCorrectly: _owesMappedRepairV1(record.taskId),
           ),
     ];
     open.sort((a, b) {
@@ -11928,7 +12061,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   String? _repairIntentSurfaceCopyLineV1(String sourceTaskId) {
-    final target = _openRepairIntentTargetForSourceTaskV1(sourceTaskId);
+    final target = _openRepairIntentTargetForSourceTaskV1(
+      sourceTaskId,
+      includeOwed: true,
+    );
     if (target == null) {
       return null;
     }
@@ -11958,6 +12094,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final emittedTaskIds = <String>{};
     for (final record in _mistakeRecords.values) {
       if (!_resolvedMistakeTaskIds.contains(record.taskId)) {
+        continue;
+      }
+      if (_owesMappedRepairV1(record.taskId)) {
+        // Shown as the open mapped repair, not as a finished fix.
+        emittedTaskIds.add(record.taskId);
         continue;
       }
       fixed.add(
@@ -14679,6 +14820,7 @@ class _Act0MistakeRecordV1 {
     Act0CompletionDisplayStateV1? completionState,
     String qualityLine = '',
     String? repairActionLabelOverride,
+    bool sourceRetriedCorrectly = false,
   }) {
     return Act0MistakeCardV1(
       taskId: taskId,
@@ -14703,6 +14845,7 @@ class _Act0MistakeRecordV1 {
       resolved: resolved,
       completionState: completionState,
       qualityLine: qualityLine,
+      sourceRetriedCorrectly: sourceRetriedCorrectly,
     );
   }
 }
