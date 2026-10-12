@@ -25,6 +25,33 @@ String _playCopyV1(
 String _playTaskLineV1(BuildContext _context, Act0PracticeGroupV1 group) =>
     group.subtitle;
 
+// The repair queue carries immutable source/target task IDs. Resolve RU
+// instructional copy from that authored task, never from translated guesses
+// about the English skill or error label.
+String _practiceRepairSourceTaskIdV1(
+  Act0PracticeRepairQueueItemViewModelV1 item,
+) {
+  final source = item.launchRequest?.sourceTaskId.trim() ?? '';
+  return source.isNotEmpty ? source : (item.launchTarget?.taskId ?? '');
+}
+
+String? _practiceRuTaskInstructionV1(
+  Act0PracticeRepairQueueItemViewModelV1 item, {
+  bool prompt = false,
+}) {
+  final taskId = _practiceRepairSourceTaskIdV1(item);
+  if (taskId.isEmpty) return null;
+  final bundle = act0CopyBundleForLanguageCodeV1('ru');
+  final task = bundle?.tasks[taskId];
+  return prompt ? task?.runnerPrompt : task?.runnerSupport;
+}
+
+String? _practiceRuTaskTitleV1(Act0PracticeRepairQueueItemViewModelV1 item) {
+  final taskId = _practiceRepairSourceTaskIdV1(item);
+  if (taskId.isEmpty) return null;
+  return act0CopyBundleForLanguageCodeV1('ru')?.tasks[taskId]?.title;
+}
+
 String _playActionLabelV1(BuildContext context, Act0PracticeGroupV1 group) {
   if (!group.isEnabled) {
     if (group.groupId == 'weak_spots') {
@@ -376,7 +403,10 @@ class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
             if (hasRepairEmptyState) ...[
               if (primaryGroups.isNotEmpty)
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
-              _PlayRepairEmptyCardV1(localeIsRu: act0IsRuLocaleV1(context)),
+              _PlayRepairEmptyCardV1(
+                localeIsRu:
+                    Localizations.localeOf(context).languageCode == 'ru',
+              ),
             ],
             const SizedBox(height: Act0VisualMetricsV1.sectionGap),
           ],
@@ -527,6 +557,14 @@ class _PracticeHubHeaderV1 extends StatelessWidget {
             height: 1.22,
           ),
         ),
+        if (Localizations.localeOf(context).languageCode == 'ru') ...[
+          const SizedBox(height: Act0ShellTokensV1.gapXs),
+          Text(
+            'Практика — тренировка по вашему выбору. Ошибки из решений сохраняются в «Разборе», где их можно исправить или повторить по расписанию.',
+            key: const Key('act0_shell_play_ru_voluntary_explanation'),
+            style: Act0ShellTokensV1.muted,
+          ),
+        ],
       ],
     );
   }
@@ -582,16 +620,26 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      primary ? 'Active repair first' : 'Practice repair',
+                      Localizations.localeOf(context).languageCode == 'ru'
+                          ? (primary
+                                ? 'Сначала исправление'
+                                : 'Повторить ошибку')
+                          : (primary
+                                ? 'Active repair first'
+                                : 'Practice repair'),
                       style: Act0ShellTokensV1.body.copyWith(
                         fontWeight: FontWeight.w900,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      primary
-                          ? 'Start the same table clue before browsing drills.'
-                          : 'Saved spots worth repeating.',
+                      Localizations.localeOf(context).languageCode == 'ru'
+                          ? (primary
+                                ? 'Повторите сохранённую ошибку перед свободной тренировкой.'
+                                : 'Сохранённые ошибки для добровольного повтора.')
+                          : (primary
+                                ? 'Start the same table clue before browsing drills.'
+                                : 'Saved spots worth repeating.'),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: Act0ShellTokensV1.muted,
@@ -610,9 +658,24 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
                   child: SizedBox(
                     height: 11 * 1.5 * coachTextScale * coachMaxLines,
                     child: Text(
-                      act0SharkyCoachLineForMomentV1(
-                        Act0SharkyCoachMomentV1.practiceCurrentFix,
-                      ),
+                      Localizations.localeOf(context).languageCode == 'ru'
+                          ? consumer.items
+                                .where(_canLaunchPracticeQueueTargetV1)
+                                .map(
+                                  (item) => _practiceRuTaskInstructionV1(
+                                    item,
+                                    prompt: true,
+                                  ),
+                                )
+                                .firstWhere(
+                                  (line) => line != null && line.isNotEmpty,
+                                  orElse: () => act0SharkyCoachLineForMomentV1(
+                                    Act0SharkyCoachMomentV1.practiceCurrentFix,
+                                  ),
+                                )!
+                          : act0SharkyCoachLineForMomentV1(
+                              Act0SharkyCoachMomentV1.practiceCurrentFix,
+                            ),
                       key: const Key('act0_shell_play_sharky_coach_line'),
                       maxLines: coachMaxLines,
                       overflow: TextOverflow.clip,
@@ -656,6 +719,9 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isRu = Localizations.localeOf(context).languageCode == 'ru';
+    final ruTitle = isRu ? _practiceRuTaskTitleV1(item) : null;
+    final ruInstruction = isRu ? _practiceRuTaskInstructionV1(item) : null;
     return Container(
       constraints: const BoxConstraints(minHeight: 54),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
@@ -685,7 +751,7 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        item.title,
+                        ruTitle ?? item.title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: Act0ShellTokensV1.body.copyWith(
@@ -696,7 +762,7 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                     if (item.isPinned) ...[
                       const SizedBox(width: 8),
                       Text(
-                        'Active repair',
+                        isRu ? 'Открытая ошибка' : 'Active repair',
                         style: Act0ShellTokensV1.label.copyWith(
                           color: Act0ShellTokensV1.repairAttention,
                           fontSize: 11,
@@ -709,8 +775,8 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                 if (item.detail != null) ...[
                   const SizedBox(height: 2),
                   Text(
-                    item.detail!,
-                    maxLines: 1,
+                    ruInstruction ?? item.detail!,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Act0ShellTokensV1.muted,
                   ),
@@ -718,10 +784,14 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                 if (item.actionLine != null) ...[
                   const SizedBox(height: 2),
                   Text(
-                    item.isPinned
-                        ? 'Same table clue as the miss.'
-                        : item.actionLine!,
-                    maxLines: 1,
+                    isRu
+                        ? (item.isPinned
+                              ? 'Повтор того же задания, в котором была ошибка.'
+                              : ruInstruction ?? item.actionLine!)
+                        : (item.isPinned
+                              ? 'Same table clue as the miss.'
+                              : item.actionLine!),
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Act0ShellTokensV1.label.copyWith(
                       color: Act0ShellTokensV1.textMuted,
@@ -742,7 +812,9 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                         style: Act0ShellTokensV1.premiumActionButtonStyle(
                           height: Act0ShellTokensV1.compactCtaHeight,
                         ),
-                        child: const Text('Practice repair'),
+                        child: Text(
+                          isRu ? 'Исправить ошибку' : 'Practice repair',
+                        ),
                       ),
                     ),
                   ),
