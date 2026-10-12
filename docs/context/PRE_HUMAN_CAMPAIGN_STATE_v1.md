@@ -1,5 +1,20 @@
 # Pre-Human Campaign State v1
 
+## 2026-10-13 owner visual-order clarification — S11 remains ACTIVE (latest dispatch)
+
+**ACTIVE_TASK_ID = S11; ACTIVE_FAMILY = S11_FROZEN_INTEGRATED_NATIVE_FALSIFIERS; NEXT_TASK_ID = S12 (mandatory S12.V visual-trust precondition before P02); P02/HUMAN = NOT_ADMITTED.** This supersedes the older historical top dispatch saying “S10 active.” It does NOT start visual production or S12 now.
+
+**Verified predecessor:** S09 = PASS_SCOPED_INTEGRATED on merged #278; S10 = PASS_SCOPED_INTEGRATED on [merged PR #280](https://github.com/ClubBoss/sharky-standalone-direction/pull/280), accepted source `cb095d557590089ad6347401d37dd227c7826c85`, resulting main `bfc6cbc44ba80973eb00ad83df0d3a98d2542de7` (verify live HEAD at each change). Scoped S10 native/CI limitations remain in PR #280; no whole-product release PASS.
+
+**Single active execution:** [S11 issue #281](https://github.com/ClubBoss/sharky-standalone-direction/issues/281) / [Draft PR #282](https://github.com/ClubBoss/sharky-standalone-direction/pull/282) under existing single-writer handoff. At this dispatch the draft source candidate is `f4a8a5110dc2b62220447e14df3bc392517bf8e1`, `S11_SOURCE_READY_NATIVE_PENDING` after Codex quota-safe handoff; Claude may complete unchanged exact-final native acceptance as the sole production writer, with an independent final reviewer. Do not interpret this as a terminal S11 PASS; verify candidate SHA and live issue status, which may change. Keep #282 Draft until actual terminal DoD.
+
+**Owner decision on visual order (2026-10-13):** The owner regards the shown table/whole-screen composition as below premium product trust and believes presenting this experience to novices now would confound feedback. **Keep executing S11 to completion** and preserve accepted functional work. **Before Human P02**, enforce the new **S12.V visual-trust gate** in Master Plan §10A: assess exact-binary native coherent seating/embodiment, card/chip/seat overlays, Hero POV, table and learning surfaces; if HOLD, obtain explicit scoped owner admission for one integrated visual rebuild wave (including potential complete table reconstruction), then reprove affected native/functional routes and return to S12 P02 entry. User-supplied screenshot illustrates concerns, not itself pinned exact-binary proof. Do **not** initiate visual rebuilding in S11, merge frozen #224, or jump stages. S17 remains for nonblocking outstanding brand/table assets only after pre-Human disposition.
+
+**Next lawful sequence:** `S11 terminal evidence/merge (if needed) → S12.V exact-native visual trust review → (if HOLD: owner-admitted bounded pre-Human visual wave → new exact binary/relevant S11 native reproof → S12.V revisit) → S12 nine-entry-gate owner decision → only then S13 Human if P02 admitted`. Legacy TestSprite and full-suite RED, HNP and Human-proof limits stay separately truthful. Master Plan is principal authority; this pointer is operational, not a competing plan.
+
+---
+
+
 ## 2026-10-12 S09 merged / S10 Lean active — LATEST EXECUTION DISPATCH (supersedes historical S09 blocks below)
 
 **ACTIVE_TASK_ID = S10; ACTIVE_FAMILY = S10_LEAN_RETAIN_AND_COHERE; NEXT_TASK_ID = S11 (conditional on real S10 PASS).** This is the current owner-delegated stage after the S09 exact accepted merge, not permission to launch S11 or P02 now.
