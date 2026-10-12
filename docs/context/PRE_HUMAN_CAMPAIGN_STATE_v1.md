@@ -1,5 +1,13 @@
 # Pre-Human Campaign State v1
 
+## 2026-10-12 owner-approved English-first direction — governance pending merge; prospective execution
+
+- The owner chooses **English-first product quality and speed**: complete a release-quality English learner path before starting a separate, demand/EV-selected multilingual rollout (RU is optional among future languages). Do not double-build/dual-audit new screens indefinitely. Exact governing text is the 2026-10-12 English-first amendment in `docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md`, effective only after its docs-only PR is merged and main verified.
+- **Active task remains S09-B2 / HOLD on material RU Practice/Review learning copy**, with current D leaf #275, A2 Core #276, F joined candidate and C native reproof gates unchanged. The in-flight S09 EN/RU contracted learner-critical acceptance is **not waived or retrospectively passed**. Complete only the already evidenced, bounded S09 RU correction; do not start fresh unrelated RU localization.
+- **After truthful S09 B2 acceptance and governance merge**, S10 onward may require **EN-only new-feature native/design/product acceptance**; freeze RU translations/new-copy iteration while retaining the existing localization-ready structure and already delivered RU code. Old S06 per-wave EN/RU wording is superseded only in that future-wave language scope, not in active S09 or other acceptance principles.
+- Before external beta, resolve how an incomplete RU locale is exposed; never imply full support. New multilingual implementation requires a later explicit owner gate after EN integrated-product quality proof (S11 at minimum), with market/EV-based language selection. **S10/P02/merge decisions remain NOT AUTHORIZED by this policy note.**
+
+
 ## 2026-10-11 S08 verified merge / S09 admission (newest, effective after this docs-only PR merges)
 
 - S08 final owner + independent verdict: `S08 = PASS_STANDARD_FIRST_NATIVE`; PR #269 accepted exact source HEAD `b170bff43eac5f6ebfc08c7126a8e3ba0a5e4951`, squash-merged to main `1833a33f72040761eb09e56228258a815f3921cd` with exact accepted tree `ec30ede14df3408b3710a31aa38075c9c80950d0`. Independent native receipt: `docs/_reviews/s08_standard_first_native_closure_receipt_20261011.md`; Standard-First amendment remains in §10A and original owner receipt.
