@@ -405,7 +405,7 @@ class _ProfileAccountSettingsRowV1 extends StatelessWidget {
                       _profileCopyV1(
                         context,
                         en: 'Intro & placement',
-                        ru: 'Знакомство и placement',
+                        ru: 'Знакомство и стартовый тест',
                       ),
                       style: Act0ShellTokensV1.body.copyWith(
                         fontWeight: FontWeight.w800,
@@ -416,7 +416,7 @@ class _ProfileAccountSettingsRowV1 extends StatelessWidget {
                       _profileCopyV1(
                         context,
                         en: 'Replay the intro or retake placement. Lessons and XP stay; skill levels are re-measured.',
-                        ru: 'Повторить знакомство или пройти placement снова. Уроки и XP сохранятся, уровни навыков измерятся заново.',
+                        ru: 'Повторить знакомство или пройти стартовый тест снова. Уроки и XP сохранятся, уровни навыков измерятся заново.',
                       ),
                       style: Act0ShellTokensV1.muted,
                     ),
