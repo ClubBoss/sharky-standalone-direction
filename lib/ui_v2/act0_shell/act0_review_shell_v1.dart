@@ -809,7 +809,9 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
               const SizedBox(width: Act0ShellTokensV1.gapSm),
               Expanded(
                 child: Text(
-                  'MISS TO REPAIR',
+                  mistake.sourceRetriedCorrectly
+                      ? 'SAME CLUE, NEW SPOT STILL OWED'
+                      : 'MISS TO REPAIR',
                   style: Act0ShellTokensV1.label.copyWith(
                     color: Act0ShellTokensV1.primary,
                     fontSize: 11,
@@ -821,6 +823,14 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
             ],
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
+          if (mistake.sourceRetriedCorrectly) ...[
+            Text(
+              'You retried the original spot correctly. A different spot with the same clue is still waiting for you.',
+              key: const Key('act0_shell_review_source_retried_note'),
+              style: Act0ShellTokensV1.muted,
+            ),
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+          ],
           Text(
             clueLine,
             style: Act0ShellTokensV1.body.copyWith(

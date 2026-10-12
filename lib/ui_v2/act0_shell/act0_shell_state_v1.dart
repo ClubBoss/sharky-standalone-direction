@@ -1148,6 +1148,7 @@ class Act0MistakeCardV1 {
     this.resolved = false,
     this.completionState,
     this.qualityLine = '',
+    this.sourceRetriedCorrectly = false,
   });
 
   final String taskId;
@@ -1166,6 +1167,10 @@ class Act0MistakeCardV1 {
   final bool resolved;
   final Act0CompletionDisplayStateV1? completionState;
   final String qualityLine;
+
+  /// The original clue was later answered correctly; a different mapped
+  /// same-signal repair is still owed.
+  final bool sourceRetriedCorrectly;
 }
 
 class Act0ProfileStateV1 {

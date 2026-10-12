@@ -216,6 +216,15 @@ void main() {
       final retained = _openRepairIntentPayload(tester, 'actions_check_drill');
       expect(retained?['mappingType'], 'repair');
       expect(retained?['targetTaskId'], 'actions_legal_context');
+      // The source retry stays correct, yet the owed mapped repair remains
+      // the actionable next step on the shared Summary/Home source.
+      final root =
+          tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
+      final owed =
+          root.debugSummaryHomeHandoffPayloadV1() as Map<String, String>;
+      expect(owed['selectionSource'], 'repair_intent_mapped');
+      expect(owed['sourceTaskId'], 'actions_check_drill');
+      expect(owed['targetTaskId'], 'actions_legal_context');
     },
   );
 

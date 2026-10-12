@@ -1544,7 +1544,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (mistake == null) {
       return null;
     }
-    final target = _openRepairIntentTargetForSourceTaskV1(mistake.taskId);
+    final target = _openRepairIntentTargetForSourceTaskV1(
+      mistake.taskId,
+      includeOwed: true,
+    );
     if (target == null) {
       return null;
     }
@@ -1571,7 +1574,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final sourceTaskId = recommendation.mistake?.taskId;
     final repairIntentTarget = sourceTaskId == null
         ? null
-        : _openRepairIntentTargetForSourceTaskV1(sourceTaskId, state: state);
+        : _openRepairIntentTargetForSourceTaskV1(
+            sourceTaskId,
+            state: state,
+            includeOwed: true,
+          );
     if (repairIntentTarget != null) {
       return _Act0NextUsefulHandReasonReceiptV1.forRepairIntent(
         sourceTaskId: sourceTaskId!,
@@ -3719,8 +3726,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _resolvedMistakeTaskIds.clear();
     for (final intent in _openRepairIntentBySourceTaskId.values) {
       final retention = _retentionMemoryByTaskId[intent.sourceTaskId];
-      if (retention == null ||
-          retention.status != _Act0RetentionMemoryStatusV1.openRepair) {
+      if (retention == null) {
+        continue;
+      }
+      // A source repaired by a correct retry stays resolved, but its different
+      // mapped same-signal repair is still owed and must remain actionable.
+      final sourceRepairedButMappedOwed =
+          retention.status != _Act0RetentionMemoryStatusV1.openRepair;
+      if (sourceRepairedButMappedOwed &&
+          (act0IsExactRepairMappingTypeV1(intent.mappingType) ||
+              intent.mappingType == 'unresolved_product_gap' ||
+              intent.targetTaskId == intent.sourceTaskId)) {
         continue;
       }
       final world = state.worlds.cast<Act0WorldCardV1?>().firstWhere(
@@ -3782,6 +3798,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         repairActionLabel: _repairActionLabel(task),
         attempts: retention.attempts.clamp(1, 99),
       );
+      if (sourceRepairedButMappedOwed) {
+        _resolvedMistakeTaskIds.add(intent.sourceTaskId);
+      }
     }
   }
 
@@ -6942,6 +6961,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           topMistake.severityLabel == 'Deep repair';
       final repairIntentTarget = _openRepairIntentTargetForSourceTaskV1(
         topMistake.taskId,
+        includeOwed: true,
       );
       return _Act0LearningRecommendationV1(
         kind: isDeep
@@ -8452,6 +8472,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       final target = _openRepairIntentTargetForSourceTaskV1(
         mistake.taskId,
         state: state,
+        includeOwed: true,
       );
       if (target != null) {
         return target;
@@ -8460,13 +8481,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     return null;
   }
 
+  /// [includeOwed] opts presentation and launch entry points into a mapped
+  /// repair still owed after the source clue was answered correctly. In-lesson
+  /// flow logic keeps the default so a source retry still finishes normally.
   _Act0OpenRepairIntentTargetV1? _openRepairIntentTargetForSourceTaskV1(
     String sourceTaskId, {
     Act0ShellStateV1? state,
+    bool includeOwed = false,
   }) {
     final normalizedSourceTaskId = sourceTaskId.trim();
+    final discharged = includeOwed
+        ? _isMistakeDischargedV1(normalizedSourceTaskId)
+        : _resolvedMistakeTaskIds.contains(normalizedSourceTaskId);
     if (normalizedSourceTaskId.isEmpty ||
-        _resolvedMistakeTaskIds.contains(normalizedSourceTaskId) ||
+        discharged ||
         !_mistakeRecords.containsKey(normalizedSourceTaskId)) {
       return null;
     }
@@ -8987,7 +9015,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         retentionStatus == _Act0RetentionMemoryStatusV1.ownedCandidate;
     final repairIntentTarget = isRetentionReplay
         ? null
-        : _openRepairIntentTargetForSourceTaskV1(sourceTaskId);
+        : _openRepairIntentTargetForSourceTaskV1(
+            sourceTaskId,
+            includeOwed: true,
+          );
     final repairTarget = isRetentionReplay
         ? _Act0RepairTargetV1(lessonId: mistake.lessonId, taskId: sourceTaskId)
         : (repairIntentTarget == null
@@ -11742,7 +11773,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               .where(
                 (mistake) =>
                     !mistake.resolved &&
-                    !_resolvedMistakeTaskIds.contains(mistake.taskId),
+                    !_isMistakeDischargedV1(mistake.taskId),
               )
               .toList()
         : _openMistakes();
@@ -11977,6 +12008,24 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _mistakeRecords.containsKey(taskId) &&
       !_resolvedMistakeTaskIds.contains(taskId);
 
+  /// The source clue was answered correctly, but a different mapped
+  /// same-signal repair assigned for it has not been completed yet.
+  bool _owesMappedRepairV1(String sourceTaskId) {
+    if (!_resolvedMistakeTaskIds.contains(sourceTaskId)) {
+      return false;
+    }
+    final intent = _openRepairIntentBySourceTaskId[sourceTaskId];
+    return intent != null &&
+        intent.mappingType != 'unresolved_product_gap' &&
+        !act0IsExactRepairMappingTypeV1(intent.mappingType) &&
+        intent.targetTaskId != sourceTaskId;
+  }
+
+  /// A source mistake is discharged only when it is resolved and no mapped
+  /// repair remains owed.
+  bool _isMistakeDischargedV1(String taskId) =>
+      _resolvedMistakeTaskIds.contains(taskId) && !_owesMappedRepairV1(taskId);
+
   Act0MistakeCardV1? _topOpenMistake() {
     final open = _openMistakes();
     final intentTarget = _topOpenRepairIntentTargetV1();
@@ -11993,11 +12042,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   List<Act0MistakeCardV1> _openMistakes() {
     final open = <Act0MistakeCardV1>[
       for (final record in _mistakeRecords.values)
-        if (!_resolvedMistakeTaskIds.contains(record.taskId))
+        if (!_isMistakeDischargedV1(record.taskId))
           record.toCard(
             repairActionLabelOverride: _repairIntentSurfaceCopyLineV1(
               record.taskId,
             ),
+            sourceRetriedCorrectly: _owesMappedRepairV1(record.taskId),
           ),
     ];
     open.sort((a, b) {
@@ -12011,7 +12061,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   String? _repairIntentSurfaceCopyLineV1(String sourceTaskId) {
-    final target = _openRepairIntentTargetForSourceTaskV1(sourceTaskId);
+    final target = _openRepairIntentTargetForSourceTaskV1(
+      sourceTaskId,
+      includeOwed: true,
+    );
     if (target == null) {
       return null;
     }
@@ -12041,6 +12094,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final emittedTaskIds = <String>{};
     for (final record in _mistakeRecords.values) {
       if (!_resolvedMistakeTaskIds.contains(record.taskId)) {
+        continue;
+      }
+      if (_owesMappedRepairV1(record.taskId)) {
+        // Shown as the open mapped repair, not as a finished fix.
+        emittedTaskIds.add(record.taskId);
         continue;
       }
       fixed.add(
@@ -14762,6 +14820,7 @@ class _Act0MistakeRecordV1 {
     Act0CompletionDisplayStateV1? completionState,
     String qualityLine = '',
     String? repairActionLabelOverride,
+    bool sourceRetriedCorrectly = false,
   }) {
     return Act0MistakeCardV1(
       taskId: taskId,
@@ -14786,6 +14845,7 @@ class _Act0MistakeRecordV1 {
       resolved: resolved,
       completionState: completionState,
       qualityLine: qualityLine,
+      sourceRetriedCorrectly: sourceRetriedCorrectly,
     );
   }
 }
