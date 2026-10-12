@@ -2352,6 +2352,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   bool _placementHandoffActive = false;
+  // True only while placement was opened from Profile on an existing learner.
+  // A retake re-measures skills; it must never erase earned completion.
+  bool _placementRetakeV1 = false;
   final Map<String, Set<String>> _placementAnswerIds = <String, Set<String>>{};
   final Set<String> _placementDiagnosticHitSignals = <String>{};
   final Set<String> _placementDiagnosticMissSignals = <String>{};
@@ -4696,6 +4699,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _lastSessionLearnerStateV1 = null;
       _persistedStreakDays = 0;
       _lastDailyDate = '';
+      _placementRetakeV1 = false;
       _showPlacement = showPlacement;
       _showWelcome = false;
       _welcomeCompletedV1 = false;
@@ -4741,6 +4745,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   void _openPlacementFlow() {
     setState(() {
+      _placementRetakeV1 = true;
       _showPlacement = true;
       _showWelcome = false;
       _welcomeHandoffStartsRecommendedTaskV1 = false;
@@ -5108,6 +5113,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final state = _stateWithProgress(baseState, progress);
     final reviewState = _reviewState(state.review);
     final personalizedNextStep = _personalizedNextStepV1(reviewState);
+    // Home's NoPersonal reason falls back to the lesson card, never a review.
+    final homeDueReview =
+        personalizedNextStep.reasonType ==
+            act0ReturnReasonNoPersonalReasonAvailableV1
+        ? null
+        : _launchableDueReviewV1(personalizedNextStep);
+    final homeDueReviewTitle = homeDueReview == null
+        ? null
+        : _localizedLessonTitleV1(
+            _lessonById(
+              _worldById(
+                _progressedWorlds(state),
+                homeDueReview.worldId,
+              ).lessons,
+              homeDueReview.lessonId,
+            ),
+          );
     if ((_tab == Act0ShellTabV1.home || _tab == Act0ShellTabV1.review) &&
         !_showPlacement &&
         !_showWelcome) {
@@ -5395,18 +5417,32 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         showChecklist: _showHomeChecklistV1(),
                         currentLesson: _firstPlayableLesson(selectedWorld),
                         pathProgressLabel: selectedWorld.progressLabel,
-                        nextActionLabel: _homeNextActionLabel(),
-                        nextActionTitle: _homeNextActionTitle(
-                          _firstPlayableLesson(selectedWorld),
-                        ),
-                        nextActionSubtitle: _homeNextActionSubtitle(
-                          _firstPlayableLesson(selectedWorld),
-                        ),
-                        nextActionCtaLabel: _homeNextActionCtaLabel(),
-                        nextActionHint: _homeCtaHint(
-                          selectedWorld,
-                          _firstPlayableLesson(selectedWorld),
-                        ),
+                        nextActionLabel: homeDueReview != null
+                            ? _copyV1(en: 'Review', ru: 'Разбор')
+                            : _homeNextActionLabel(),
+                        nextActionTitle:
+                            homeDueReviewTitle ??
+                            _homeNextActionTitle(
+                              _firstPlayableLesson(selectedWorld),
+                            ),
+                        nextActionSubtitle:
+                            homeDueReview != null &&
+                                (personalizedNextStep.copyLine ?? '')
+                                    .trim()
+                                    .isNotEmpty
+                            ? personalizedNextStep.copyLine!
+                            : _homeNextActionSubtitle(
+                                _firstPlayableLesson(selectedWorld),
+                              ),
+                        nextActionCtaLabel: homeDueReview != null
+                            ? _copyV1(en: 'Review now', ru: 'Повторить сейчас')
+                            : _homeNextActionCtaLabel(),
+                        nextActionHint: homeDueReview != null
+                            ? null
+                            : _homeCtaHint(
+                                selectedWorld,
+                                _firstPlayableLesson(selectedWorld),
+                              ),
                         repairLabel: _homeRepairLabel(
                           selectedWorld,
                           _firstPlayableLesson(selectedWorld),
@@ -7562,6 +7598,24 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     });
   }
 
+  /// The due spaced-review item a personalized next step will actually launch.
+  /// Shared by the Home primary card (what it says) and
+  /// [_openPersonalizedNextStepV1] (what it opens) so they cannot disagree.
+  Act0DueReviewItemV1? _launchableDueReviewV1(
+    Act0PersonalizedReturnReasonV1 step,
+  ) {
+    if (step.recommendedAction != 'spaced_review') {
+      return null;
+    }
+    return _durableRetentionHistoryV1
+        .dueItemsAt(widget.clock.nowUtc())
+        .cast<Act0DueReviewItemV1?>()
+        .firstWhere(
+          (item) => item?.taskId == step.sourceTaskId,
+          orElse: () => null,
+        );
+  }
+
   void _openPersonalizedNextStepV1(
     Act0PersonalizedReturnReasonV1 nextStep, {
     required String surface,
@@ -7574,19 +7628,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _startHomeNextAction(selectedWorld);
       return;
     }
-    if (truthful.recommendedAction == 'spaced_review') {
-      final due = _durableRetentionHistoryV1
-          .dueItemsAt(widget.clock.nowUtc())
-          .cast<Act0DueReviewItemV1?>()
-          .firstWhere(
-            (item) => item?.taskId == truthful.sourceTaskId,
-            orElse: () => null,
-          );
-      if (due != null) {
-        _recordPersonalizedNextStepOpenedV1(truthful, surface);
-        _startDueReviewItemV1(due);
-        return;
-      }
+    final due = _launchableDueReviewV1(truthful);
+    if (due != null) {
+      _recordPersonalizedNextStepOpenedV1(truthful, surface);
+      _startDueReviewItemV1(due);
+      return;
     }
     if (truthful.recommendedAction == 'repair' ||
         truthful.recommendedAction == 'retry_repair') {
@@ -9575,8 +9621,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       recommendedTaskId,
       _pathClosedTaskIds,
     );
-    _completedTaskIds.clear();
-    _completedLessonIds.clear();
+    // Retake (opened from Profile) keeps every earned completion; only first
+    // install starts from an empty path.
+    final retake = _placementRetakeV1;
+    _placementRetakeV1 = false;
+    if (!retake) {
+      _completedTaskIds.clear();
+      _completedLessonIds.clear();
+    }
     if (fromZero) {
       _skippedTaskIds.clear();
       _visibleSkippedTaskIds.clear();
@@ -9587,19 +9639,40 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         recommendedLessonId: recommendedLesson.lessonId,
         recommendedTaskId: recommendedTask.taskId,
       );
-      _skippedTaskIds.addAll(skipPlan.taskIds);
+      // A retake re-measures skills and picks a focus; it never records new
+      // placement skips (a skip is restored as completion on relaunch).
+      final skipTaskIds = retake ? const <String>{} : skipPlan.taskIds;
+      final skipOrdered = retake ? const <String>[] : skipPlan.orderedTaskIds;
+      _skippedTaskIds.addAll(skipTaskIds);
       if (directRunner) {
-        _visibleSkippedTaskIds.addAll(skipPlan.taskIds);
+        _visibleSkippedTaskIds.addAll(skipTaskIds);
       } else {
-        _visibleSkippedTaskIds.removeAll(skipPlan.taskIds);
-        unawaited(_animatePlacementSkipReveal(skipPlan.orderedTaskIds));
+        _visibleSkippedTaskIds.removeAll(skipTaskIds);
+        unawaited(_animatePlacementSkipReveal(skipOrdered));
+      }
+    }
+    var focusLesson = directRunner ? recommendedLesson : guideLesson;
+    var focusTask = directRunner ? recommendedTask : guideTask;
+    if (retake) {
+      // Never relaunch earned work, or a lesson that is still locked without
+      // the skips a first-install placement would have recorded.
+      final refreshed = _progressWorlds(
+        widget.state ?? Act0ShellStateV1.sample,
+      );
+      final refreshedWorld = _worldById(refreshed, world.worldId);
+      final refreshedFocus = _lessonById(
+        refreshedWorld.lessons,
+        focusLesson.lessonId,
+      );
+      if (_completedTaskIds.contains(focusTask.taskId) ||
+          refreshedFocus.state == Act0LessonStateV1.locked) {
+        focusLesson = _firstPlayableLesson(refreshedWorld);
+        focusTask = _firstIncompleteTask(focusLesson);
       }
     }
     _selectedWorldId = world.worldId;
-    _selectedLessonId = directRunner
-        ? recommendedLesson.lessonId
-        : guideLesson.lessonId;
-    _selectedTaskId = directRunner ? recommendedTask.taskId : guideTask.taskId;
+    _selectedLessonId = focusLesson.lessonId;
+    _selectedTaskId = focusTask.taskId;
     final showWelcome = !_welcomeCompletedV1;
     _showPlacement = false;
     _showWelcome = showWelcome;
@@ -9618,11 +9691,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _learnPopupTaskId = null;
     _firstValueReceiptCarry = null;
     _firstValueTodayShownTelemetryKey = '';
-    _phase = directRunner ? recommendedTask.phase : guideTask.phase;
+    _phase = focusTask.phase;
     _selectedOptionId = null;
     _teachingStepIndex =
-        directRunner && recommendedTask.phase == Act0LessonPhaseV1.drill
-        ? recommendedTask.runner.teachingSteps.length
+        directRunner && focusTask.phase == Act0LessonPhaseV1.drill
+        ? focusTask.runner.teachingSteps.length
         : 0;
     _resetLessonRunMetrics();
     _persistProgress();
