@@ -8329,9 +8329,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     if (_placementHandoffActive) {
-      _startPlacementDiagnostic(
-        _progressedWorlds(widget.state ?? Act0ShellStateV1.sample),
-      );
+      // Placement has already chosen this taught task. Home must not restart
+      // the assessment-only placement diagnostic behind a first-hand CTA.
+      _startTaskByIds(selectedWorld, _selectedLessonId, _selectedTaskId);
+      _returnToPlayHubOnBack = false;
       return;
     }
     _placementHandoffActive = false;

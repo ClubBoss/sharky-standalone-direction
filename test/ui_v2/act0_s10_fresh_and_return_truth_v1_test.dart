@@ -67,6 +67,16 @@ void main() {
     expect(find.text('0 tasks complete'), findsOneWidget);
     expect(find.textContaining('Recent proof'), findsNothing);
     expect(find.textContaining('Account'), findsNothing);
+
+    await tester.tap(find.text('Home').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
+    await tester.pumpAndSettle();
+    final firstHand = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(firstHand.selectedTaskId, 'what_poker_is_theory');
+    expect(firstHand.runner.phase.name, 'theory');
   });
 
   testWidgets('returning learner: saved facts survive cold remount, no mastery '

@@ -1972,25 +1972,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     );
   }
 
-  void _handleChooseOptionTelemetry(Act0RunnerOptionV1 option) {
-    if (!_heroDecisionReady || _decisionSubmittedForTaskV1) {
-      return;
-    }
-    _decisionSubmittedForTaskV1 = true;
-    final telemetryDecisionTimeBucket = _decisionTimeBucketV1(
-      _decisionTelemetryStopwatch.isRunning
-          ? _decisionTelemetryStopwatch.elapsed
-          : Duration.zero,
-    );
-    final decisionTimeBucket = _completedDecisionTimeBucket();
-    _maybeEmitUserChoiceTelemetry(
-      option,
-      decisionTimeBucket: telemetryDecisionTimeBucket,
-    );
-    _emitCanonicalDecisionMadeTelemetryV1(
-      option,
-      decisionTimeBucket: telemetryDecisionTimeBucket,
-    );
+  void _emitTaskResultTelemetryV1(
+    Act0RunnerOptionV1 option, {
+    required Act0CompletedDecisionKindV1 kind,
+  }) {
     final feedbackSignalProof = _feedbackSignalProofForRunnerV1(
       runner: widget.runner.copyWith(selectedOptionId: option.id),
       option: option,
@@ -2005,7 +1990,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             proof: feedbackSignalProof,
             quality: option.quality,
           );
-    final projection = _decisionTelemetryProjectionV1(option);
+    final projection = _decisionTelemetryProjectionV1(option, kind: kind);
     _recordTelemetry(
       Act0TelemetryEventV1(
         name: 'task_result',
@@ -2049,6 +2034,31 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           'repairStatus': 'none',
         },
       ),
+    );
+  }
+
+  void _handleChooseOptionTelemetry(Act0RunnerOptionV1 option) {
+    if (!_heroDecisionReady || _decisionSubmittedForTaskV1) {
+      return;
+    }
+    _decisionSubmittedForTaskV1 = true;
+    final telemetryDecisionTimeBucket = _decisionTimeBucketV1(
+      _decisionTelemetryStopwatch.isRunning
+          ? _decisionTelemetryStopwatch.elapsed
+          : Duration.zero,
+    );
+    final decisionTimeBucket = _completedDecisionTimeBucket();
+    _maybeEmitUserChoiceTelemetry(
+      option,
+      decisionTimeBucket: telemetryDecisionTimeBucket,
+    );
+    _emitCanonicalDecisionMadeTelemetryV1(
+      option,
+      decisionTimeBucket: telemetryDecisionTimeBucket,
+    );
+    _emitTaskResultTelemetryV1(
+      option,
+      kind: Act0CompletedDecisionKindV1.actionList,
     );
     widget.onChoiceAssistance?.call(_decisionAssistanceKindV1);
     widget.onChooseOption(option);
@@ -2202,6 +2212,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         decisionTimeBucket: telemetryDecisionTimeBucket,
         kind: Act0CompletedDecisionKindV1.seat,
       );
+      _emitTaskResultTelemetryV1(
+        option,
+        kind: Act0CompletedDecisionKindV1.seat,
+      );
     }
     widget.onChoiceAssistance?.call(_decisionAssistanceKindV1);
     widget.onChooseSeat?.call(seatId);
@@ -2232,11 +2246,37 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             (candidate) => candidate?.id == presetId,
             orElse: () => null,
           );
-    if (option != null) _decisionSubmittedForTaskV1 = true;
+    final decisionTimeBucket = _completedDecisionTimeBucket();
+    if (option != null) {
+      _decisionSubmittedForTaskV1 = true;
+      final telemetryDecisionTimeBucket = _decisionTimeBucketV1(
+        _decisionTelemetryStopwatch.isRunning
+            ? _decisionTelemetryStopwatch.elapsed
+            : Duration.zero,
+      );
+      _maybeEmitUserChoiceTelemetry(
+        option,
+        decisionTimeBucket: telemetryDecisionTimeBucket,
+        kind: Act0CompletedDecisionKindV1.sizing,
+      );
+      _emitCanonicalDecisionMadeTelemetryV1(
+        option,
+        decisionTimeBucket: telemetryDecisionTimeBucket,
+        kind: Act0CompletedDecisionKindV1.sizing,
+      );
+      _emitTaskResultTelemetryV1(
+        option,
+        kind: Act0CompletedDecisionKindV1.sizing,
+      );
+    }
     widget.onChoiceAssistance?.call(_decisionAssistanceKindV1);
     widget.onConfirmSizingPreset?.call();
     if (option != null) {
-      _emitCompletedDecision(option, Act0CompletedDecisionKindV1.sizing);
+      _emitCompletedDecision(
+        option,
+        Act0CompletedDecisionKindV1.sizing,
+        decisionTimeBucket: decisionTimeBucket,
+      );
     }
   }
 
