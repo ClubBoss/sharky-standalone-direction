@@ -5113,6 +5113,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final state = _stateWithProgress(baseState, progress);
     final reviewState = _reviewState(state.review);
     final personalizedNextStep = _personalizedNextStepV1(reviewState);
+    // Home's NoPersonal reason falls back to the lesson card, never a review.
+    final homeDueReview =
+        personalizedNextStep.reasonType ==
+            act0ReturnReasonNoPersonalReasonAvailableV1
+        ? null
+        : _launchableDueReviewV1(personalizedNextStep);
+    final homeDueReviewTitle = homeDueReview == null
+        ? null
+        : _localizedLessonTitleV1(
+            _lessonById(
+              _worldById(
+                _progressedWorlds(state),
+                homeDueReview.worldId,
+              ).lessons,
+              homeDueReview.lessonId,
+            ),
+          );
     if ((_tab == Act0ShellTabV1.home || _tab == Act0ShellTabV1.review) &&
         !_showPlacement &&
         !_showWelcome) {
@@ -5400,18 +5417,32 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         showChecklist: _showHomeChecklistV1(),
                         currentLesson: _firstPlayableLesson(selectedWorld),
                         pathProgressLabel: selectedWorld.progressLabel,
-                        nextActionLabel: _homeNextActionLabel(),
-                        nextActionTitle: _homeNextActionTitle(
-                          _firstPlayableLesson(selectedWorld),
-                        ),
-                        nextActionSubtitle: _homeNextActionSubtitle(
-                          _firstPlayableLesson(selectedWorld),
-                        ),
-                        nextActionCtaLabel: _homeNextActionCtaLabel(),
-                        nextActionHint: _homeCtaHint(
-                          selectedWorld,
-                          _firstPlayableLesson(selectedWorld),
-                        ),
+                        nextActionLabel: homeDueReview != null
+                            ? _copyV1(en: 'Review', ru: 'Разбор')
+                            : _homeNextActionLabel(),
+                        nextActionTitle:
+                            homeDueReviewTitle ??
+                            _homeNextActionTitle(
+                              _firstPlayableLesson(selectedWorld),
+                            ),
+                        nextActionSubtitle:
+                            homeDueReview != null &&
+                                (personalizedNextStep.copyLine ?? '')
+                                    .trim()
+                                    .isNotEmpty
+                            ? personalizedNextStep.copyLine!
+                            : _homeNextActionSubtitle(
+                                _firstPlayableLesson(selectedWorld),
+                              ),
+                        nextActionCtaLabel: homeDueReview != null
+                            ? _copyV1(en: 'Review now', ru: 'Повторить сейчас')
+                            : _homeNextActionCtaLabel(),
+                        nextActionHint: homeDueReview != null
+                            ? null
+                            : _homeCtaHint(
+                                selectedWorld,
+                                _firstPlayableLesson(selectedWorld),
+                              ),
                         repairLabel: _homeRepairLabel(
                           selectedWorld,
                           _firstPlayableLesson(selectedWorld),
@@ -7567,6 +7598,24 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     });
   }
 
+  /// The due spaced-review item a personalized next step will actually launch.
+  /// Shared by the Home primary card (what it says) and
+  /// [_openPersonalizedNextStepV1] (what it opens) so they cannot disagree.
+  Act0DueReviewItemV1? _launchableDueReviewV1(
+    Act0PersonalizedReturnReasonV1 step,
+  ) {
+    if (step.recommendedAction != 'spaced_review') {
+      return null;
+    }
+    return _durableRetentionHistoryV1
+        .dueItemsAt(widget.clock.nowUtc())
+        .cast<Act0DueReviewItemV1?>()
+        .firstWhere(
+          (item) => item?.taskId == step.sourceTaskId,
+          orElse: () => null,
+        );
+  }
+
   void _openPersonalizedNextStepV1(
     Act0PersonalizedReturnReasonV1 nextStep, {
     required String surface,
@@ -7579,19 +7628,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _startHomeNextAction(selectedWorld);
       return;
     }
-    if (truthful.recommendedAction == 'spaced_review') {
-      final due = _durableRetentionHistoryV1
-          .dueItemsAt(widget.clock.nowUtc())
-          .cast<Act0DueReviewItemV1?>()
-          .firstWhere(
-            (item) => item?.taskId == truthful.sourceTaskId,
-            orElse: () => null,
-          );
-      if (due != null) {
-        _recordPersonalizedNextStepOpenedV1(truthful, surface);
-        _startDueReviewItemV1(due);
-        return;
-      }
+    final due = _launchableDueReviewV1(truthful);
+    if (due != null) {
+      _recordPersonalizedNextStepOpenedV1(truthful, surface);
+      _startDueReviewItemV1(due);
+      return;
     }
     if (truthful.recommendedAction == 'repair' ||
         truthful.recommendedAction == 'retry_repair') {
