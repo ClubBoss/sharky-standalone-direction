@@ -2352,6 +2352,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   bool _placementHandoffActive = false;
+  // True only while placement was opened from Profile on an existing learner.
+  // A retake re-measures skills; it must never erase earned completion.
+  bool _placementRetakeV1 = false;
   final Map<String, Set<String>> _placementAnswerIds = <String, Set<String>>{};
   final Set<String> _placementDiagnosticHitSignals = <String>{};
   final Set<String> _placementDiagnosticMissSignals = <String>{};
@@ -4696,6 +4699,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _lastSessionLearnerStateV1 = null;
       _persistedStreakDays = 0;
       _lastDailyDate = '';
+      _placementRetakeV1 = false;
       _showPlacement = showPlacement;
       _showWelcome = false;
       _welcomeCompletedV1 = false;
@@ -4741,6 +4745,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   void _openPlacementFlow() {
     setState(() {
+      _placementRetakeV1 = true;
       _showPlacement = true;
       _showWelcome = false;
       _welcomeHandoffStartsRecommendedTaskV1 = false;
@@ -9575,8 +9580,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       recommendedTaskId,
       _pathClosedTaskIds,
     );
-    _completedTaskIds.clear();
-    _completedLessonIds.clear();
+    // Retake (opened from Profile) keeps every earned completion; only first
+    // install starts from an empty path.
+    final retake = _placementRetakeV1;
+    _placementRetakeV1 = false;
+    if (!retake) {
+      _completedTaskIds.clear();
+      _completedLessonIds.clear();
+    }
     if (fromZero) {
       _skippedTaskIds.clear();
       _visibleSkippedTaskIds.clear();
@@ -9587,19 +9598,40 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         recommendedLessonId: recommendedLesson.lessonId,
         recommendedTaskId: recommendedTask.taskId,
       );
-      _skippedTaskIds.addAll(skipPlan.taskIds);
+      // A retake re-measures skills and picks a focus; it never records new
+      // placement skips (a skip is restored as completion on relaunch).
+      final skipTaskIds = retake ? const <String>{} : skipPlan.taskIds;
+      final skipOrdered = retake ? const <String>[] : skipPlan.orderedTaskIds;
+      _skippedTaskIds.addAll(skipTaskIds);
       if (directRunner) {
-        _visibleSkippedTaskIds.addAll(skipPlan.taskIds);
+        _visibleSkippedTaskIds.addAll(skipTaskIds);
       } else {
-        _visibleSkippedTaskIds.removeAll(skipPlan.taskIds);
-        unawaited(_animatePlacementSkipReveal(skipPlan.orderedTaskIds));
+        _visibleSkippedTaskIds.removeAll(skipTaskIds);
+        unawaited(_animatePlacementSkipReveal(skipOrdered));
+      }
+    }
+    var focusLesson = directRunner ? recommendedLesson : guideLesson;
+    var focusTask = directRunner ? recommendedTask : guideTask;
+    if (retake) {
+      // Never relaunch earned work, or a lesson that is still locked without
+      // the skips a first-install placement would have recorded.
+      final refreshed = _progressWorlds(
+        widget.state ?? Act0ShellStateV1.sample,
+      );
+      final refreshedWorld = _worldById(refreshed, world.worldId);
+      final refreshedFocus = _lessonById(
+        refreshedWorld.lessons,
+        focusLesson.lessonId,
+      );
+      if (_completedTaskIds.contains(focusTask.taskId) ||
+          refreshedFocus.state == Act0LessonStateV1.locked) {
+        focusLesson = _firstPlayableLesson(refreshedWorld);
+        focusTask = _firstIncompleteTask(focusLesson);
       }
     }
     _selectedWorldId = world.worldId;
-    _selectedLessonId = directRunner
-        ? recommendedLesson.lessonId
-        : guideLesson.lessonId;
-    _selectedTaskId = directRunner ? recommendedTask.taskId : guideTask.taskId;
+    _selectedLessonId = focusLesson.lessonId;
+    _selectedTaskId = focusTask.taskId;
     final showWelcome = !_welcomeCompletedV1;
     _showPlacement = false;
     _showWelcome = showWelcome;
@@ -9618,11 +9650,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _learnPopupTaskId = null;
     _firstValueReceiptCarry = null;
     _firstValueTodayShownTelemetryKey = '';
-    _phase = directRunner ? recommendedTask.phase : guideTask.phase;
+    _phase = focusTask.phase;
     _selectedOptionId = null;
     _teachingStepIndex =
-        directRunner && recommendedTask.phase == Act0LessonPhaseV1.drill
-        ? recommendedTask.runner.teachingSteps.length
+        directRunner && focusTask.phase == Act0LessonPhaseV1.drill
+        ? focusTask.runner.teachingSteps.length
         : 0;
     _resetLessonRunMetrics();
     _persistProgress();
