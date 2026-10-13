@@ -7054,7 +7054,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         : _quickFixMistakes().first;
     // Fixed does not mean due. Never promise an immediate Review CTA
     // when the durable spaced-review owner has no launchable due item.
-    final quickFixDue = quickFix != null &&
+    final quickFixDue =
+        quickFix != null &&
         _durableRetentionHistoryV1
             .dueItemsAt(widget.clock.nowUtc())
             .any((item) => item.taskId == quickFix.taskId);

@@ -10723,7 +10723,8 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
         : Act0ShellTokensV1.primary;
     // A saved/assisted/wrong run is not automatically an independent clean read.
     // The bar displays assessed correctness, not "all XP equals mastery".
-    final cleanIndependentRead = summary.independentProvenanceKnown &&
+    final cleanIndependentRead =
+        summary.independentProvenanceKnown &&
         summary.taskCount > 0 &&
         summary.errorCount == 0 &&
         summary.assistedCount == 0 &&
