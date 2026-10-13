@@ -3,12 +3,17 @@ on:
   push:
     branches:
       - qa/s11-hosted-native-20261013
+    paths:
+      - qa/**
+      - tools/qa_s11*
+      - .github/workflows/qa-s11-hosted-acceptance.yml
 permissions:
   contents: read
   actions: read
 
 jobs:
   frozen-native-acceptance:
+    if: false # re-enabled only after the new exact hosted artifact is pinned
     runs-on: macos-latest
     timeout-minutes: 55
     steps:
