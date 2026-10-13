@@ -143,7 +143,7 @@ void main() {
       expect(find.textContaining('XP'), findsNothing);
       expect(find.textContaining('Level'), findsNothing);
       expect(find.text('One clean read'), findsOneWidget);
-      expect(find.text('Local read saved'), findsOneWidget);
+      expect(find.text('Assessed accuracy'), findsOneWidget);
     },
   );
 }
