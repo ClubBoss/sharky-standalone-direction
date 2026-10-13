@@ -1,6 +1,7 @@
 # S11 cloud closure wave — evidence reconciliation and morning Mac handoff (2026-10-13)
 
-Status: `S11_CLOUD_RESULT = CLOUD_COMPLETE_NATIVE_PENDING` (see §6 for why it is not `PASS_VERIFIED`).
+Status: `S11_CLOUD_RESULT = HOLD_MATERIAL` (one new native-confirmed defect of the same class as S11's third P1,
+by the S11 severity precedent; see §4 F-C1 and §6 — the owner can downgrade it to P2 and return to the pending-native path).
 Scope: issue #281 / Draft PR #282. No production change, no new PR, no merge. This file is an
 operational handoff, not authority; the Master Plan §10A and the live issue ledger control.
 
@@ -58,9 +59,9 @@ Not attempted, with reason: a natural-journey XCTest on a hosted runner. The rep
 
 ## 4. Product-truth findings
 
-### Material (P0/P1): none newly reproduced
+### Material (P0/P1): one — F-C1 (severity by S11 precedent; owner may downgrade)
 
-### F-C1 — sibling authored scenes still carry the inherited-seat defect class (P2-high, owner decision)
+### F-C1 — sibling authored scenes still carry the inherited-seat defect class (P1 by precedent; native-confirmed)
 
 S11 corrected only `w3_table_position_notice`. A deterministic probe over all 291 actionable authored runners at the
 exact tree (source below) shows the same inheritance (BTN-scenario seat flags reused after hero reassignment) in:
@@ -71,11 +72,21 @@ exact tree (source below) shows the same inheritance (BTN-scenario seat flags re
 | `same_hand_different_seat_same_hand_early_fold`, `position_checkpoint_position_checkpoint_early_fold` (seat flags dumped and rendered); probe also flags `position_apply_early_fold`, `hand_discipline_buckets_trash`, `fold_discipline_early_fold`, `apply_utg_fold` (Hero not in hand; occupancy not individually dumped) | UTG | Hero seat `isOccupied=false` → Hero rendered at 0.42 opacity (empty-seat dimming); CO shown folded although it has not acted |
 
 Verified by widget render: seat `Opacity` in `act0_shell_seat_node_*` reads 0.58 / 0.42 for these scenes, and 1.0 for the corrected scene.
-Grading, XP and evidence ids are not affected and the Hero label sits on the right seat, so this is not a false earned-progress or assessment claim. By precedent (the S11 P1 was a Hero identity
-contradiction) it is closer to P2-high than P1. Native pixel evidence: §4a. Bounded correction if the owner wants it:
-apply the same `_act0CopySeatStateV1(..., isInHand/isFolded/hasActed)` seat-flag reassignment already used in
-`_w3TablePositionNoticeRunner` to the CO/UTG hero-reassigned runners, with a new candidate, source tests and exact-binary reproof.
-Not fixed here: it would change the frozen candidate.
+Grading, XP and evidence ids are not affected and the Hero label sits on the right seat, so this is not a false earned-progress
+or assessment claim. It is a poker-truth contradiction on the scene a graded decision is asked about, which is the class
+S11 itself ruled P1 (third defect), and it sits in the ordinary World 3 curriculum, not a rare route. Native pixel evidence
+(§4a): in `w3_same_hand_open` the Hero "You / CO" seat is labelled **"Folded"** with greyed cards while the question asks
+"What is the cleaner first-in action from CO?"; in the UTG early-fold scene the CO seat is labelled "Folded" before UTG has acted
+and the Hero seat is dimmed. The corrected control scene renders Hero CO live with UTG/HJ "Folded".
+
+Minimal cause: `_act0ReassignHeroSeatV1` moves the Hero identity/cards but copies the previous scene's `isFolded/isInHand/hasActed/isOccupied`
+flags; only `_w3TablePositionNoticeRunner` was patched by S11. Bounded correction proposal (NOT applied; the frozen candidate is untouched,
+and a prototype edit in a scratch tree was blocked by the environment's permission policy): in `_act0ReassignHeroSeatV1`, when the
+Hero seat changes and the authored `actionTrail` names folds ("X folds"), set liveness from the trail (named seats folded/out/acted,
+Hero and every other seat live/not-acted) and mark the Hero seat occupied; alternatively patch the CO/UTG runners individually with the
+`_act0CopySeatStateV1(..., isInHand/isFolded/hasActed)` pattern S11 already used. Either needs a new candidate, a source test
+per scene (extend the S11 seat-truth test with the probe in §5), the 291-runner probe clean for CO/UTG heroes, and exact-binary native
+reproof of M1/M2 (this finding invalidates reuse of the current frozen binary for acceptance only if the owner requires the fix).
 
 ### F-C2 — Summary progress pill is unconditional (P2, wording; owner decision)
 
@@ -100,7 +111,19 @@ Row `world3.canonical.normal` is mislabeled (Home fallback) in the canonical man
 
 ## 4a. Native pixels for F-C1 (cloud-built app, candidate SHA, injected-state captures)
 
-See the delta run recorded in the issue ledger (rows `s11c1b.*`). Result recorded there.
+Hosted macOS capture with the existing `native-visual-delta.yml`, candidate `f4a8a511`, cloud-built app, canonical iPhone 17 Pro, production
+renderer on the real authored task (injected-state class, not a natural journey). Run `38340783583` (artifact `sharky-native-visual-delta-f4a8a5110dc2…`, expires 2026-10-27;
+the runner app expires 2026-10-14). The three red `capture (compact/large/text-scale)` jobs in that run are unused matrix legs with no rows, not capture failures.
+
+| Row | Result |
+| --- | --- |
+| `s11c1b.cutoff_open_ajo` | Hero "You CO" with a "Folded" label and greyed AJo cards; UTG empty ring; question asks the first-in action from CO — **defect visible** |
+| `s11c1b.utg_early_fold_ato` | Hero "You UTG" dimmed; "Folded" label on CO although UTG has not acted — **defect visible** |
+| `s11c1b.cutoff_notice_control` | Hero CO bright, UTG/HJ "Folded", BTN/SB/BB waiting — fixed S11 scene is correct |
+| `s11c1b.world3_early_pressure` | blank dark frame (readiness race, same signature as the candidate `theory` row) — NOT_VERIFIED |
+
+An earlier attempt (run `38337251146`) used short task ids that do not resolve; the app fell back to Home, so it is **invalid** and is not evidence.
+Evidence class: cloud-built app, not the frozen binary; the scenes are source-owned authored data identical in the frozen build, but binary parity is not claimed.
 
 ## 5. Probe source (scratch, not committed as a test)
 
@@ -134,12 +157,17 @@ void main() {
 
 ## 6. Result and why
 
-`CLOUD_COMPLETE_NATIVE_PENDING`. No P0/P1 is reproduced; no cloud evidence is transferable to the frozen binary, and
-DoD rows 7 (independent CO), 13, 14 and parts of 6/10 still need native execution on the frozen app. It is not
-`HOLD_MATERIAL`: F-C1/F-C2 do not make a false earned-progress or assessment claim, but the owner should decide them
-knowingly (§7). Not `PASS_VERIFIED`: the frozen binary has not been independently accepted.
+`HOLD_MATERIAL`. F-C1 is a native-visible poker-truth contradiction in graded World 3 scenes, the same class S11 treated as P1,
+and it is not covered by the three S11 fixes. It is not a false earned-progress/assessment claim, so the owner may reasonably
+classify it P2 and defer it to S12.V; if so the state reverts to `CLOUD_COMPLETE_NATIVE_PENDING` with M1–M3 below still required.
+No cloud evidence is transferable to the frozen binary, and DoD rows 7 (independent CO), 13, 14 and parts of 6/10 still need
+native execution. F-C2 stays P2. Not `PASS_VERIFIED`: the frozen binary has not been independently accepted.
 
 ## 7. Morning Mac session (one short session, no rebuild)
+
+**Decision first (no Mac time needed): F-C1.** (a) Accept as P2 → run M1–M3 on the frozen binary as below. (b) Require the fix → a new
+candidate is built from #282's branch (single writer, existing PR), M1–M3 are run on that new binary instead; running them on the
+current frozen app would be wasted work.
 
 Preconditions (stop on any failure): `git ls-remote origin refs/pull/282/head` = `f4a8a511…`; the frozen app manifest
 recomputes to `7d16dea6…59a1` (convention: SHA256 of sorted `<sha256>␣␣<bundle-relative path>\n` lines) and kernel
@@ -165,6 +193,6 @@ Use the existing tester `output/s11-v1/harness/S08NativeUITests/S08FirstValueUIT
 
 Merge #282 only when: M1 passes with an independent non-implementing reviewer on the frozen binary; M2 recorded; rows 13–14
 are either demonstrated or explicitly recorded NOT_VERIFIED with owner acceptance; F-C1/F-C2 receive an explicit owner
-disposition (accept as P2 for S12.V or fix in a new candidate with reproof); CI is rechecked at the exact head with
+disposition (F-C1: accept as P2 for S12.V, or fix in a new candidate with reproof; until then #282 is on HOLD_MATERIAL); CI is rechecked at the exact head with
 TestSprite and the legacy suite named RED; `main` ancestry verified (docs-only advance); PR marked ready by the delegated
 authority; resulting `main` verified. No merge on source review or on any cloud-app evidence alone.
