@@ -102,7 +102,28 @@ final class S11HostedNativeUITests: XCTestCase {
         // may advance directly to the Step 2/6 graded decision. Never search
         // backwards for a prior theory clue when the graded question is present.
         var atFindHero = false
-        for step in 0..<8 {
+        for step in 0..<10 {
+            // The live question is rendered BEHIND the teaching overlay.
+            // Accessibility shows "Theory navigation, page 1 of 2" and only
+            // the Next CTA while answers are intentionally not selectable.
+            // Do not interpret a visible question as an actionable decision.
+            let theoryOverlay = app.otherElements.matching(
+                NSPredicate(format: "label BEGINSWITH %@", "Theory navigation, page")
+            ).firstMatch
+            if theoryOverlay.exists {
+                let navigation = ["Next", "Continue"].compactMap { title -> XCUIElement? in
+                    let c = app.buttons.matching(identifier: title).firstMatch
+                    return (c.exists && c.isEnabled && c.isHittable) ? c : nil
+                }
+                guard navigation.count == 1 else {
+                    capture("blocked_theory_overlay_" + String(step))
+                    XCTFail("S11_OVERLAY_NAVIGATION_NOT_SINGLE step=" + String(step))
+                    return
+                }
+                print("S11_NATIVE_OVERLAY_ADVANCE step=" + String(step) + " label=" + navigation[0].label)
+                navigation[0].tap()
+                continue
+            }
             if visible("Which label could change next hand while the player is still you?") {
                 atFindHero = true
                 print("S11_NATIVE_GRADED_SCREEN_REACHED task=what_poker_is_find_hero at_step=" + String(step))
