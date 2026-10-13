@@ -1035,6 +1035,7 @@ Act0SeatStateV1 _act0CopySeatStateV1(
   bool? isInHand,
   bool? isFolded,
   bool? hasActed,
+  bool? isOccupied,
   List<Act0CardStateV1>? holeCards,
   Act0CardsVisibleModeV1? cardsVisibleMode,
 }) {
@@ -1053,12 +1054,34 @@ Act0SeatStateV1 _act0CopySeatStateV1(
     isFolded: isFolded ?? seat.isFolded,
     hasActed: hasActed ?? seat.hasActed,
     isLastAggressor: seat.isLastAggressor,
-    isOccupied: seat.isOccupied,
+    isOccupied: isOccupied ?? seat.isOccupied,
     stackLabel: seat.stackLabel,
     holeCards: holeCards ?? seat.holeCards,
     cardsVisibleMode: cardsVisibleMode ?? seat.cardsVisibleMode,
     currentBetLabel: seat.currentBetLabel,
     bet: seat.bet,
+  );
+}
+
+// An authored pre-action scene must not inherit stale folded/empty flags
+// from a different Hero's turn. Opt in only where the scenario owns this frame.
+Act0TableStateV1 _act0WithAuthoredPreActionSeatsV1(
+  Act0TableStateV1 table, {
+  Set<String> foldedSeatIds = const <String>{},
+}) {
+  return table.copyWith(
+    seats: table.seats
+        .map((seat) {
+          final folded = foldedSeatIds.contains(seat.seatId);
+          return _act0CopySeatStateV1(
+            seat,
+            isOccupied: true,
+            isInHand: !folded,
+            isFolded: folded,
+            hasActed: folded,
+          );
+        })
+        .toList(growable: false),
   );
 }
 
@@ -12584,6 +12607,10 @@ final _world3CutoffOpenRunner = _world3ButtonOpenRunner.copyWith(
   ],
   table: _act0ReassignHeroSeatV1(
     _world3ButtonOpenRunner.table.copyWith(
+      seats: _act0WithAuthoredPreActionSeatsV1(
+        _world3ButtonOpenRunner.table,
+        foldedSeatIds: const <String>{'utg', 'hj'},
+      ).seats,
       heroCards: const <Act0CardStateV1>[
         Act0CardStateV1(rank: 'A', suit: 'd'),
         Act0CardStateV1(rank: 'J', suit: 'c'),
@@ -13450,6 +13477,9 @@ final _world3PositionDisciplineRunner = _world3EarlyFoldRunner.copyWith(
   question: 'What is the disciplined action?',
   table: _act0ReassignHeroSeatV1(
     _world3EarlyFoldRunner.table.copyWith(
+      seats: _act0WithAuthoredPreActionSeatsV1(
+        _world3EarlyFoldRunner.table,
+      ).seats,
       heroCards: const <Act0CardStateV1>[
         Act0CardStateV1(rank: 'A', suit: 'd'),
         Act0CardStateV1(rank: 'T', suit: 'c'),
@@ -13477,6 +13507,10 @@ final _world3HijDisciplineRunner = _world3PositionDisciplineRunner.copyWith(
       'Middle position still needs discipline when the offsuit hand gets loose.',
   table: _act0ReassignHeroSeatV1(
     _world3PositionDisciplineRunner.table.copyWith(
+      seats: _act0WithAuthoredPreActionSeatsV1(
+        _world3PositionDisciplineRunner.table,
+        foldedSeatIds: const <String>{'utg'},
+      ).seats,
       heroCards: const <Act0CardStateV1>[
         Act0CardStateV1(rank: 'K', suit: 'd'),
         Act0CardStateV1(rank: 'T', suit: 'c'),
@@ -14475,6 +14509,9 @@ final _w1DisciplineApplyEarlyFoldRunner = _world3EarlyFoldRunner.copyWith(
       'Early position with a trash hand needs no extra thought. Fold and wait.',
   table: _act0ReassignHeroSeatV1(
     _world3EarlyFoldRunner.table.copyWith(
+      seats: _act0WithAuthoredPreActionSeatsV1(
+        _world3EarlyFoldRunner.table,
+      ).seats,
       heroCards: const <Act0CardStateV1>[
         Act0CardStateV1(rank: '8', suit: 's'),
         Act0CardStateV1(rank: '4', suit: 'd'),
@@ -14540,6 +14577,10 @@ final _w1DisciplineApplyHjMediumRunner = _world3ButtonOpenRunner.copyWith(
       'KQo is a medium hand, and HJ can open it when the pot is unopened.',
   table: _act0ReassignHeroSeatV1(
     _world3ButtonOpenRunner.table.copyWith(
+      seats: _act0WithAuthoredPreActionSeatsV1(
+        _world3ButtonOpenRunner.table,
+        foldedSeatIds: const <String>{'utg'},
+      ).seats,
       heroCards: const <Act0CardStateV1>[
         Act0CardStateV1(rank: 'K', suit: 'd'),
         Act0CardStateV1(rank: 'Q', suit: 'c'),
