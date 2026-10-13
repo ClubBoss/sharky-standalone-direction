@@ -7,14 +7,27 @@ import plistlib
 import sys
 from pathlib import Path
 
-path=Path(sys.argv[1])
-output=Path(sys.argv[2])
+first_gate = len(sys.argv)==4 and sys.argv[1]=="--first"
+path=Path(sys.argv[2] if first_gate else sys.argv[1])
+output=Path(sys.argv[3] if first_gate else sys.argv[2])
 output.parent.mkdir(parents=True,exist_ok=True)
 p=plistlib.load(path.open("rb"))
 key="flutter.act0_shell_progress_v1"
 assert key in p, "No persisted learner state"
 state=json.loads(p[key])
 records=state.get("learningEvidenceHistory",[])
+if first_gate:
+    target=[r for r in records if r.get("taskId")=="what_poker_is_find_hero"]
+    passed=(len(target)==1 and target[0].get("choiceId")=="bottom" and
+        target[0].get("expectedChoiceId")=="bottom" and target[0].get("isCorrect") is True and
+        target[0].get("assistanceKind")=="none" and bool(target[0].get("recordId")) and
+        bool(target[0].get("runId")) and bool(target[0].get("sessionId")))
+    outcome={"status":"PASS_FIRST_NATIVE_GRADED" if passed else "FAIL_FIRST_NATIVE_GRADED",
+        "count":len(records),"target":target,"earnedXp":state.get("earnedXp"),
+        "completedTaskIds":state.get("completedTaskIds",[])}
+    output.write_text(json.dumps(outcome,indent=2))
+    print("S11_FIRST_NATIVE_GRADED",outcome["status"],"TARGET_COUNT",len(target))
+    sys.exit(0 if passed else 1)
 expected={
   "what_poker_is_find_hero":"bottom",
   "what_poker_is_table_read_transfer":"two_three_six",
