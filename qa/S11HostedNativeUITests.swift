@@ -1,4 +1,5 @@
 import XCTest
+import Darwin
 
 final class S11HostedNativeUITests: XCTestCase {
     private let app = XCUIApplication(bundleIdentifier: "com.example.pokerAnalyzer")
@@ -27,6 +28,14 @@ final class S11HostedNativeUITests: XCTestCase {
         let b=enabledButton(label)
         print("S11_NAV_TAP_BUTTON " + label)
         b.tap()
+    }
+    private func tapTab(_ label: String) {
+        for type: XCUIElement.ElementType in [.button, .staticText] {
+            let matches = app.descendants(matching:type).matching(NSPredicate(format:"label == %@",label)).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+            if matches.count == 1 { matches[0].tap(); return }
+        }
+        capture("missing_tab_"+label)
+        XCTFail("NO_UNIQUE_NATIVE_TAB_"+label)
     }
     private func tapSelectableOption(_ exactOrPrefix:String) {
         let pred=NSPredicate(format:"label BEGINSWITH[cd] %@",exactOrPrefix)
@@ -130,7 +139,15 @@ final class S11HostedNativeUITests: XCTestCase {
         print("S11_CLEAN_GRADED_SUBMITTED task=\(tag)")
     }
 
-    func test00FirstGraded() throws {
+    private func persistedCheckpoint(_ tag: String) {
+        capture(tag)
+        print("S11_PERSIST_CHECKPOINT " + tag + " epoch=" + String(Date().timeIntervalSince1970))
+        fflush(stdout)
+        // Give the read-only hosted preference probe time to copy the real domain.
+        RunLoop.current.run(until: Date().addingTimeInterval(15))
+    }
+
+    private func firstLesson(wrongFinal: Bool = false) throws {
         app.launch()
         XCTAssertTrue(app.waitForExistence(timeout:35))
         capture("first_install_intro")
@@ -163,6 +180,15 @@ final class S11HostedNativeUITests: XCTestCase {
         tapButton("Open my path")
         XCTAssertTrue(visible("Start first hand"),"HOME_PRIMARY_FIRST_LESSON_MISSING")
         capture("home_start_first_hand")
+        if !wrongFinal {
+            tapTab("Review")
+            XCTAssertTrue(visible("Review is ready"))
+            capture("D1_fresh_review_empty")
+            tapButton("Open Learn")
+            XCTAssertTrue(visible("First Table Guide"))
+            capture("D1_empty_review_CTA_to_Learn")
+            tapTab("Home")
+        }
         tapButton("Start first hand")
         capture("w1_theory_open")
         // Deterministic source-owned route. The lesson's four teaching pages
@@ -257,7 +283,104 @@ final class S11HostedNativeUITests: XCTestCase {
             XCTFail("C1_ROUTE_ROLES_REVIEW_NOT_REACHED")
             return
         }
-        capture("C1_actual_route_roles_review")
-        print("S11_C1_FOUR_GRADED_AND_AUTHORED_REVIEW_ROUTE_REACHED")
+        XCTAssertTrue(visible("Where do you go to fix mistakes after a miss?"))
+        XCTAssertFalse(visible("CORRECT READ"), "UNEARNED_POSITIVE_FINAL_FEEDBACK")
+        XCTAssertFalse(app.buttons.matching(identifier:"Next hand").firstMatch.exists)
+        let review = app.staticTexts.matching(NSPredicate(format:"label BEGINSWITH %@", "B\nReview")).firstMatch
+        XCTAssertTrue(review.exists && review.isHittable && review.isEnabled)
+        if wrongFinal {
+            persistedCheckpoint("C1_wrong_prefinal")
+            tapSelectableOption("C\nLearn")
+            XCTAssertFalse(visible("CORRECT READ"), "WRONG_FINAL_MARKED_CORRECT")
+            XCTAssertTrue(visible("One more distinction.") || visible("WRONG READ"), "NO_AUTHENTIC_WRONG_FEEDBACK")
+            persistedCheckpoint("C1_wrong_answer")
+            return
+        }
+        persistedCheckpoint("C1_prefinal")
+        tapSelectableOption("B\nReview")
+        XCTAssertTrue(visible("CORRECT READ"), "FINAL_FEEDBACK_MISSING_AFTER_ANSWER")
+        persistedCheckpoint("C1_final_answer")
+        tapButton("Next hand")
+        XCTAssertTrue(visible("Session complete") || visible("What finished"), "NO_TRUE_LESSON_SUMMARY")
+        persistedCheckpoint("C1_summary")
+        // Summary owns the full screen; return through its actual map CTA.
+        for _ in 0..<5 {
+            let back = app.buttons.matching(identifier:"Back to map").firstMatch
+            if back.exists && back.isHittable { break }
+            app.swipeUp()
+        }
+        tapButton("Back to map")
+        tapTab("Home")
+        persistedCheckpoint("C1_home")
+        app.terminate()
+        app.launch()
+        XCTAssertTrue(app.waitForExistence(timeout:35))
+        XCTAssertFalse(visible("CORRECT READ"), "STALE_FEEDBACK_ON_RESTART")
+        persistedCheckpoint("C1_restart")
     }
+
+    private func waitForSelectable(_ prefix: String) {
+        for page in 0..<18 {
+            let overlay = app.otherElements.matching(NSPredicate(format:"label BEGINSWITH %@", "Theory navigation, page")).firstMatch
+            if !overlay.exists {
+                let option = app.staticTexts.matching(NSPredicate(format:"label BEGINSWITH %@", prefix)).firstMatch
+                if option.exists && option.isHittable && option.isEnabled { return }
+                let pot = app.staticTexts.matching(NSPredicate(format:"label BEGINSWITH %@", "A\nPot")).firstMatch
+                if pot.exists && pot.isHittable {
+                    tapSelectableOption("A\nPot")
+                    continue
+                }
+            }
+            let deadline = Date().addingTimeInterval(5)
+            var choices: [XCUIElement] = []
+            repeat {
+                choices = ["Next", "Continue", "Got it"].compactMap { name in
+                    let item = app.buttons.matching(identifier:name).firstMatch
+                    return item.exists && item.isEnabled && item.isHittable ? item : nil
+                }
+                if choices.count == 1 { break }
+                RunLoop.current.run(until:Date().addingTimeInterval(0.15))
+            } while Date() < deadline
+            guard choices.count == 1 else {
+                capture("second_review_navigation_blocked_\(page)")
+                XCTFail("NO_SOURCE_OWNED_THEORY_CONTINUE_TO_" + prefix)
+                return
+            }
+            choices[0].tap()
+        }
+        XCTFail("SECOND_REVIEW_ENTRY_NOT_REACHED")
+    }
+
+    func test02SecondAuthoredReview() throws {
+        app.launch()
+        XCTAssertTrue(app.waitForExistence(timeout:35))
+        capture("second_lesson_saved_home")
+        tapButton("Continue")
+        waitForSelectable("C\nEveryone folds")
+        let recipe = ["C\nEveryone folds", "C\nBest hand", "B\nHero put in all remaining chips", "C\nOnly the chips CO matched", "A\nA fold or a showdown"]
+        for (index, prefix) in recipe.enumerated() {
+            XCTAssertTrue(visible("Step \(index+2)/7"))
+            waitForSelectable(prefix)
+            tapSelectableOption(prefix)
+            XCTAssertTrue(visible("CORRECT READ"))
+            tapButton("Next hand")
+        }
+        waitForSelectable("C\nEveryone folds")
+        XCTAssertTrue(visible("Step 7/7"))
+        XCTAssertFalse(visible("CORRECT READ"), "SECOND_REVIEW_UNEARNED_FEEDBACK")
+        persistedCheckpoint("C1_second_review_entry")
+        // Exact-source falsifier: this recap inherits win-condition answers,
+        // while asking for the definition of the pot. Record the real grading.
+        if visible("What is the pot?") {
+            tapSelectableOption("C\nEveryone folds")
+            XCTAssertTrue(visible("CORRECT READ"))
+            persistedCheckpoint("C1_second_review_mismatch_graded")
+            XCTFail("MATERIAL_SOURCE_REVIEW_QUESTION_CHOICES_MISMATCH: What is the pot? graded Everyone folds as correct")
+            return
+        }
+        XCTFail("SECOND_REVIEW_SOURCE_QUESTION_CHANGED; REQUIRE_RECONCILIATION")
+    }
+
+    func test00FirstGraded() throws { try firstLesson() }
+    func test01WrongFinal() throws { try firstLesson(wrongFinal: true) }
 }

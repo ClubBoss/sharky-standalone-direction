@@ -21,42 +21,46 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: qa-infra
-          ref: qa/s11-hosted-native-20261013
+          ref: ${{ github.sha }}
           fetch-depth: 1
       - name: Checkout frozen app source (never QA branch)
         uses: actions/checkout@v4
         with:
           path: frozen-source
-          ref: 42fb7506de2726923bb838ee1cbb67b6f4e90b13
+          ref: 82ab71b8cc462629e7c3e7adbd7aa0a768ae77f5
           fetch-depth: 1
       - name: Verify exact source, environment and ownership
         run: |
           set -euo pipefail
-          test "$(git -C frozen-source rev-parse HEAD)" = "42fb7506de2726923bb838ee1cbb67b6f4e90b13"
-          test "$(git -C frozen-source rev-parse HEAD^{tree})" = "ef22ad4ebf1b0d6769125cbe6d00249121564e17"
+          test "$(git -C frozen-source rev-parse HEAD)" = "82ab71b8cc462629e7c3e7adbd7aa0a768ae77f5"
+          test "$(git -C frozen-source rev-parse HEAD^{tree})" = "0ba37bc49307ec677f0f49dc1bd91a04b1b80c40"
           mkdir -p output/s11_hosted
           xcodebuild -version > output/s11_hosted/host-xcode.txt
           sw_vers > output/s11_hosted/host-macos.txt
           ruby -e 'require "xcodeproj"; puts "XCODEPROJ_GEM_AVAILABLE"' | tee output/s11_hosted/gem-preflight.txt
           xcrun simctl list devices available -j > output/s11_hosted/simulators.json
-          echo "42fb7506de2726923bb838ee1cbb67b6f4e90b13" > output/s11_hosted/source-head.txt
+          echo "82ab71b8cc462629e7c3e7adbd7aa0a768ae77f5" > output/s11_hosted/source-head.txt
       - name: Download hosted app built from frozen source in feasibility run
         uses: actions/download-artifact@v4
         with:
-          name: s11-hosted-feasibility-38410405835
-          run-id: 38410405835
+          name: s11-hosted-feasibility-38469109844
+          run-id: 38469109844
           repository: ClubBoss/sharky-standalone-direction
           github-token: ${{ github.token }}
           path: output/s11_hosted
       - name: Verify new hosted binary provenance
         run: |
           set -euo pipefail
+          shasum -a 256 output/s11_hosted/Runner.zip | diff -u output/s11_hosted/app-archive-sha.txt -
+          rm -rf output/s11_hosted/Runner.app
+          ditto -x -k output/s11_hosted/Runner.zip output/s11_hosted
           test -d output/s11_hosted/Runner.app
           test -s output/s11_hosted/kernel-sha.txt
           shasum -a 256 output/s11_hosted/Runner.app/Frameworks/App.framework/flutter_assets/kernel_blob.bin | diff -u output/s11_hosted/kernel-sha.txt -
-          # GitHub artifact uploader excludes hidden .gitkeep files; assert parity of every non-placeholder.
-          grep -v -E '/[.]gitkeep$' output/s11_hosted/app-file-manifest.sha256 | sort > output/s11_hosted/real-file-manifest.sha256
-          find output/s11_hosted/Runner.app -type f ! -name .gitkeep -print0 | xargs -0 shasum -a 256 | sort > output/s11_hosted/real-files-received.sha256
+          # The attested zip preserves all files, including hidden placeholders.
+          shasum -a 256 output/s11_hosted/app-file-manifest.sha256 | diff -u output/s11_hosted/manifest-file-sha.txt -
+          sort output/s11_hosted/app-file-manifest.sha256 > output/s11_hosted/real-file-manifest.sha256
+          find output/s11_hosted/Runner.app -type f -print0 | xargs -0 shasum -a 256 | sort > output/s11_hosted/real-files-received.sha256
           diff -u output/s11_hosted/real-file-manifest.sha256 output/s11_hosted/real-files-received.sha256
           echo S11_NEW_BINARY_REAL_FILE_PARITY_PASS > output/s11_hosted/binary-file-verdict.txt
           cp output/s11_hosted/kernel-sha.txt output/s11_hosted/native-tested-binary.txt
@@ -88,7 +92,17 @@ jobs:
         run: |
           set -euo pipefail
           SIM_ID="$(cat output/s11_hosted/selected-simulator.txt)"
+          python3 -u qa-infra/tools/qa_s11_watch_checkpoints.py --log output/s11_hosted/native-tests.log --sim "$SIM_ID" --output output/s11_hosted/checkpoints > output/s11_hosted/checkpoint-observer.log 2>&1 &
+          OBSERVER_PID=$!
+          trap 'kill "$OBSERVER_PID" 2>/dev/null || true' EXIT
           xcodebuild test -project qa-infra/qa/s11_hosted/S11HostedNative.xcodeproj -scheme S11HostedNativeUITests -destination "platform=iOS Simulator,id=$SIM_ID" -parallel-testing-enabled NO -only-testing:S11HostedNativeUITests/S11HostedNativeUITests/test00FirstGraded -resultBundlePath "$PWD/output/s11_hosted/native-tests.xcresult" CODE_SIGNING_ALLOWED=NO > output/s11_hosted/native-tests.log 2>&1 || { tail -140 output/s11_hosted/native-tests.log; exit 1; }
+          python3 - <<'PYCOUNT'
+          import re
+          from pathlib import Path
+          text=Path('output/s11_hosted/native-tests.log').read_text()
+          assert any(int(n)>0 for n in re.findall(r'Executed (\d+) tests?',text)), 'ZERO_EXECUTED_XCTESTS'
+          assert '** TEST SUCCEEDED **' in text
+          PYCOUNT
           grep -E 'Executed .*tests|\*\* TEST SUCCEEDED' output/s11_hosted/native-tests.log | tail -12
       - name: Verify first native assessed record and capture screenshots
         if: always()
@@ -100,7 +114,7 @@ jobs:
           sleep 3
           python3 qa-infra/tools/qa_s11_probe_persistence.py --container "$CONTAINER" --output output/s11_hosted/preference-domain-discovery.json --extracted-plist output/s11_hosted/qa-synthetic-learner.plist | tee output/s11_hosted/persistence-probe.log
           if test -f output/s11_hosted/qa-synthetic-learner.plist; then
-            python3 qa-infra/tools/qa_s11_verify_evidence.py --clean output/s11_hosted/qa-synthetic-learner.plist output/s11_hosted/persisted-verdict.json | tee output/s11_hosted/persisted-verdict.log
+            python3 qa-infra/tools/qa_s11_verify_evidence.py --clean output/s11_hosted/checkpoints/C1_prefinal/learner.plist output/s11_hosted/persisted-verdict.json | tee output/s11_hosted/persisted-verdict.log
           else
             echo "NO_REAL_PERSISTED_NATIVE_PROGRESS_IN_APP_DOMAINS" | tee output/s11_hosted/persisted-verdict.log
           fi
@@ -108,20 +122,71 @@ jobs:
             xcrun xcresulttool export attachments --path output/s11_hosted/native-tests.xcresult --output-path output/s11_hosted/attachments || true
           fi
           xcrun simctl io "$SIM_ID" screenshot output/s11_hosted/native-posttest.png || true
-          xcrun simctl shutdown "$SIM_ID" || true
       - name: Assert real native persistence before any PASS
         if: always()
         shell: bash
         run: |
           set -euo pipefail
+          python3 qa-infra/tools/qa_s11_verify_closure.py output/s11_hosted/checkpoints
           test -s output/s11_hosted/persisted-verdict.json || { echo "NO_PERSISTED_VERDICT"; exit 1; }
           python3 - <<'PY'
           import json
           from pathlib import Path
           d=json.loads(Path("output/s11_hosted/persisted-verdict.json").read_text())
-          assert d.get("status")=="PASS_C1_FOUR_NATIVE_PERSISTED" and len(d.get("records",[]))==4 and d.get("earnedXp")==20, "NO_AUTHENTIC_FOUR_GRADED_C1_PASS"
+          assert d.get("status")=="PASS_C1_FOUR_NATIVE_PERSISTED" and len(d.get("records",[]))==4 and d.get("earnedXp")==25, "NO_AUTHENTIC_FOUR_GRADED_C1_PASS"
           print("S11_NATIVE_C1_FOUR_GRADED_PERSISTENCE_INDEPENDENT_PASS")
           PY
+      - name: Proportionate wrong final choice on separate fresh hosted learner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PYSIM' > output/s11_hosted/wrong-simulator.txt
+          import json, subprocess
+          data=json.load(open('output/s11_hosted/simulators.json'))['devices']
+          candidates=[(runtime,d) for runtime,devices in data.items() if 'iOS' in runtime for d in devices if d.get('isAvailable') and 'iPhone' in d.get('name','')]
+          runtime,d=candidates[0]
+          print(subprocess.check_output(['xcrun','simctl','create','S11-WrongFinal-Fresh',d['deviceTypeIdentifier'],runtime],text=True).strip())
+          PYSIM
+          SIM_ID="$(cat output/s11_hosted/wrong-simulator.txt)"
+          xcrun simctl boot "$SIM_ID"
+          xcrun simctl bootstatus "$SIM_ID" -b
+          xcrun simctl install "$SIM_ID" output/s11_hosted/Runner.app
+          python3 -u qa-infra/tools/qa_s11_watch_checkpoints.py --log output/s11_hosted/wrong-tests.log --sim "$SIM_ID" --output output/s11_hosted/checkpoints-wrong > output/s11_hosted/wrong-observer.log 2>&1 &
+          OBSERVER_PID=$!
+          trap 'kill "$OBSERVER_PID" 2>/dev/null || true' EXIT
+          xcodebuild test -project qa-infra/qa/s11_hosted/S11HostedNative.xcodeproj -scheme S11HostedNativeUITests -destination "platform=iOS Simulator,id=$SIM_ID" -parallel-testing-enabled NO -only-testing:S11HostedNativeUITests/S11HostedNativeUITests/test01WrongFinal -resultBundlePath "$PWD/output/s11_hosted/wrong-tests.xcresult" CODE_SIGNING_ALLOWED=NO > output/s11_hosted/wrong-tests.log 2>&1 || { tail -100 output/s11_hosted/wrong-tests.log; exit 1; }
+          python3 - <<'PYCOUNT'
+          import re
+          from pathlib import Path
+          text=Path('output/s11_hosted/wrong-tests.log').read_text()
+          assert any(int(n)>0 for n in re.findall(r'Executed (\d+) tests?',text)), 'ZERO_EXECUTED_XCTESTS'
+          assert '** TEST SUCCEEDED **' in text
+          PYCOUNT
+          python3 qa-infra/tools/qa_s11_verify_wrong_final.py output/s11_hosted/checkpoints-wrong
+      - name: Additional authored review entry on original genuine learner
+        shell: bash
+        run: |
+          set -euo pipefail
+          SIM_ID="$(cat output/s11_hosted/selected-simulator.txt)"
+          python3 -u qa-infra/tools/qa_s11_watch_checkpoints.py --log output/s11_hosted/second-review-tests.log --sim "$SIM_ID" --output output/s11_hosted/checkpoints > output/s11_hosted/second-review-observer.log 2>&1 &
+          OBSERVER_PID=$!
+          trap 'kill "$OBSERVER_PID" 2>/dev/null || true' EXIT
+          xcodebuild test -project qa-infra/qa/s11_hosted/S11HostedNative.xcodeproj -scheme S11HostedNativeUITests -destination "platform=iOS Simulator,id=$SIM_ID" -parallel-testing-enabled NO -only-testing:S11HostedNativeUITests/S11HostedNativeUITests/test02SecondAuthoredReview -resultBundlePath "$PWD/output/s11_hosted/second-review-tests.xcresult" CODE_SIGNING_ALLOWED=NO > output/s11_hosted/second-review-tests.log 2>&1 || { tail -120 output/s11_hosted/second-review-tests.log; exit 1; }
+          python3 - <<'PYCOUNT'
+          import re
+          from pathlib import Path
+          text=Path('output/s11_hosted/second-review-tests.log').read_text()
+          assert any(int(n)>0 for n in re.findall(r'Executed (\d+) tests?',text)), 'ZERO_EXECUTED_XCTESTS'
+          assert '** TEST SUCCEEDED **' in text
+          PYCOUNT
+      - name: Preserve all actual native receipts
+        if: always()
+        run: |
+          for NAME in wrong-tests second-review-tests; do
+            if test -d "output/s11_hosted/$NAME.xcresult"; then
+              xcrun xcresulttool export attachments --path "output/s11_hosted/$NAME.xcresult" --output-path "output/s11_hosted/$NAME-attachments" || true
+            fi
+          done
       - name: Upload native test, persisted synthetic state and evidence
         if: always()
         uses: actions/upload-artifact@v4

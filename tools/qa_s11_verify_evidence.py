@@ -55,7 +55,11 @@ if clean_gate:
     actual=clean
     valid=(
         c1["passed"] and len(actual)==4 and len(records)==4 and
-        state.get("earnedXp")==20 and
+        state.get("earnedXp")==25 and
+        len(state.get("completedTaskIds",[]))==5 and
+        not state.get("completedLessonIds",[]) and
+        state.get("selectedTaskId")=="first_table_guide_route_roles" and
+        state.get("resumeSelectedOptionId") is None and
         len(set(c1["run_ids"]))==1 and
         all(r.get("expectedChoiceId")==expected[r["taskId"]] and
             r.get("assistanceKind")=="none" and r.get("runKind")=="lesson" and
@@ -78,7 +82,7 @@ c2={
  "attempts":[{"task":r.get("taskId"),"source":r.get("sourceTaskId"),"chosen":r.get("choiceId"),"correct":r.get("isCorrect"),"assistance":r.get("assistanceKind"),"record":r.get("recordId"),"run":r.get("runId")} for r in c2_records],
  "passed":bool(wrong and assisted and recheck and len({r["recordId"] for r in wrong[:1]+assisted[:1]+recheck[:1]})==3)
 }
-report={"evidence_class":"NATIVE_PERSISTED_SYNTHETIC","source_sha":"42fb7506de2726923bb838ee1cbb67b6f4e90b13","total_records":len(records),"earnedXp":state.get("earnedXp"),"completedTaskIds":state.get("completedTaskIds",[]),"c1":c1,"c2":c2}
+report={"evidence_class":"NATIVE_PERSISTED_SYNTHETIC","source_sha":"82ab71b8cc462629e7c3e7adbd7aa0a768ae77f5","total_records":len(records),"earnedXp":state.get("earnedXp"),"completedTaskIds":state.get("completedTaskIds",[]),"c1":c1,"c2":c2}
 output.write_text(json.dumps(report,indent=2))
 print("S11_PERSISTED_C1_PASS=",c1["passed"],"COUNT",c1["count"])
 print("S11_PERSISTED_C2_PASS=",c2["passed"],"COUNT",c2["count"])
