@@ -195,6 +195,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: s11-hosted-native-acceptance-${{ github.run_id }}
-          path: output/s11_hosted/
+          path: |
+            output/s11_hosted/
+            !output/s11_hosted/Runner.app/**
+            !output/s11_hosted/Runner.zip
           if-no-files-found: warn
           retention-days: 14

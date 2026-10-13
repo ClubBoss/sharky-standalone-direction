@@ -187,9 +187,12 @@ final class S11HostedNativeUITests: XCTestCase {
             tapButton("Open Learn")
             XCTAssertTrue(visible("First Table Guide"))
             capture("D1_empty_review_CTA_to_Learn")
-            tapTab("Home")
+            // The real empty-state CTA has changed the handoff context.
+            // Continue on its observed curriculum mission, not a stale Home label.
+            tapButton("Start first table")
+        } else {
+            tapButton("Start first hand")
         }
-        tapButton("Start first hand")
         capture("w1_theory_open")
         // Deterministic source-owned route. The lesson's four teaching pages
         // may advance directly to the Step 2/6 graded decision. Never search
@@ -283,6 +286,7 @@ final class S11HostedNativeUITests: XCTestCase {
             XCTFail("C1_ROUTE_ROLES_REVIEW_NOT_REACHED")
             return
         }
+        waitForSelectable("B\nReview")
         XCTAssertTrue(visible("Where do you go to fix mistakes after a miss?"))
         XCTAssertFalse(visible("CORRECT READ"), "UNEARNED_POSITIVE_FINAL_FEEDBACK")
         XCTAssertFalse(app.buttons.matching(identifier:"Next hand").firstMatch.exists)
@@ -355,7 +359,13 @@ final class S11HostedNativeUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.waitForExistence(timeout:35))
         capture("second_lesson_saved_home")
-        tapButton("Continue")
+        // Home Continue is a personalized first-value repeat. Use the actual
+        // curriculum mission whose focus was selected by Summary Back to map.
+        tapTab("Learn")
+        XCTAssertTrue(visible("What poker is"), "SECOND_LESSON_CURRENT_MISSION_MISSING")
+        capture("second_lesson_actual_Learn_mission")
+        tapButton("Start")
+        XCTAssertTrue(visible("Step 1/7"), "SECOND_LESSON_POT_STACK_NOT_ENTERED")
         waitForSelectable("C\nEveryone folds")
         let recipe = ["C\nEveryone folds", "C\nBest hand", "B\nHero put in all remaining chips", "C\nOnly the chips CO matched", "A\nA fold or a showdown"]
         for (index, prefix) in recipe.enumerated() {
