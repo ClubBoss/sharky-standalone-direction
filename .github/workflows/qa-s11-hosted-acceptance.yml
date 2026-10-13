@@ -92,17 +92,31 @@ jobs:
           set +e
           SIM_ID="$(cat output/s11_hosted/selected-simulator.txt)"
           CONTAINER="$(xcrun simctl get_app_container "$SIM_ID" com.example.pokerAnalyzer data)"
-          if test -f "$CONTAINER/Library/Preferences/com.example.pokerAnalyzer.plist"; then
-            cp "$CONTAINER/Library/Preferences/com.example.pokerAnalyzer.plist" output/s11_hosted/qa-synthetic-learner.plist
+          sleep 3
+          python3 qa-infra/tools/qa_s11_probe_persistence.py --container "$CONTAINER" --output output/s11_hosted/preference-domain-discovery.json --extracted-plist output/s11_hosted/qa-synthetic-learner.plist | tee output/s11_hosted/persistence-probe.log
+          if test -f output/s11_hosted/qa-synthetic-learner.plist; then
             python3 qa-infra/tools/qa_s11_verify_evidence.py --first output/s11_hosted/qa-synthetic-learner.plist output/s11_hosted/persisted-verdict.json | tee output/s11_hosted/persisted-verdict.log
           else
-            echo "NO_PERSISTED_NATIVE_PREFERENCES" | tee output/s11_hosted/persisted-verdict.log
+            echo "NO_REAL_PERSISTED_NATIVE_PROGRESS_IN_APP_DOMAINS" | tee output/s11_hosted/persisted-verdict.log
           fi
           if test -d output/s11_hosted/native-tests.xcresult; then
             xcrun xcresulttool export attachments --path output/s11_hosted/native-tests.xcresult --output-path output/s11_hosted/attachments || true
           fi
           xcrun simctl io "$SIM_ID" screenshot output/s11_hosted/native-posttest.png || true
           xcrun simctl shutdown "$SIM_ID" || true
+      - name: Assert real native persistence before any PASS
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s output/s11_hosted/persisted-verdict.json || { echo "NO_PERSISTED_VERDICT"; exit 1; }
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("output/s11_hosted/persisted-verdict.json").read_text())
+          assert d.get("status")=="PASS_FIRST_NATIVE_GRADED" and len(d.get("target",[]))==1, "NO_AUTHENTIC_FIRST_GRADED_PERSISTED_PASS"
+          print("S11_NATIVE_FIRST_GRADED_PERSISTENCE_INDEPENDENT_PASS")
+          PY
       - name: Upload native test, persisted synthetic state and evidence
         if: always()
         uses: actions/upload-artifact@v4

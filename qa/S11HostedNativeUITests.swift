@@ -91,7 +91,14 @@ final class S11HostedNativeUITests: XCTestCase {
         // Accessibility represents the option as StaticText `B\\nCheck`, not a BTN seat.
         XCTAssertTrue(visible("What action keeps playing for free?"), "WELCOME_DEMO_WRONG_SCREEN")
         tapSelectableOption("B\nCheck")
-        XCTAssertTrue(visible("Your path is ready."),"WELCOME_UNGRADED_HANDOFF_MISSING")
+        // Await the actual handoff CTA after the ungraded welcome choice;
+        // a matching option tap alone is not a confirmed transition.
+        let handoff = app.buttons.matching(identifier: "Open my path").firstMatch
+        guard handoff.waitForExistence(timeout: 12) && handoff.isEnabled && handoff.isHittable else {
+            capture("welcome_handoff_missing_after_choice")
+            XCTFail("WELCOME_TRANSITION_NOT_COMPLETED_AFTER_UNGRADED_CHOICE")
+            return
+        }
         capture("welcome_handoff")
         tapButton("Open my path")
         XCTAssertTrue(visible("Start first hand"),"HOME_PRIMARY_FIRST_LESSON_MISSING")
@@ -157,9 +164,16 @@ final class S11HostedNativeUITests: XCTestCase {
         // Native option labels contain the authored ordinal, e.g. "B\nBTN".
         // Exact prefix avoids matching the miniature table's 'BTN' seat label.
         tapSelectableOption("B\nBTN")
+        let feedback = app.staticTexts.matching(NSPredicate(
+            format: "label CONTAINS[cd] %@ OR label CONTAINS[cd] %@",
+            "Role separated from player.", "Player and position separated."
+        )).firstMatch
+        guard feedback.waitForExistence(timeout: 10) || visible("CORRECT READ") else {
+            capture("first_graded_feedback_not_confirmed")
+            XCTFail("FIRST_GRADED_FEEDBACK_ABSENT_AFTER_SUBMISSION")
+            return
+        }
         capture("first_real_graded_feedback")
-        XCTAssertTrue(visible("Role separated from player.") || visible("CORRECT READ") || visible("Player and position separated."),
-                      "FIRST_GRADED_FEEDBACK_ABSENT")
         print("S11_FIRST_NATIVE_GRADED_SUBMISSION_DONE; PERSISTENCE MUST BE VERIFIED SEPARATELY")
     }
 }
