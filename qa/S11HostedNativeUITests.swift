@@ -118,10 +118,19 @@ final class S11HostedNativeUITests: XCTestCase {
                 NSPredicate(format: "label BEGINSWITH %@", "Theory navigation, page")
             ).firstMatch
             if theoryOverlay.exists {
-                let navigation = ["Next", "Continue"].compactMap { title -> XCUIElement? in
-                    let c = app.buttons.matching(identifier: title).firstMatch
-                    return (c.exists && c.isEnabled && c.isHittable) ? c : nil
-                }
+                // The production theory rail intentionally locks Continue
+                // for 820 ms per page. Await *enabled* state without tapping a
+                // disabled control or treating a normal dwell as a dead end.
+                let deadline = Date().addingTimeInterval(5.0)
+                var navigation: [XCUIElement] = []
+                repeat {
+                    navigation = ["Next", "Continue"].compactMap { title -> XCUIElement? in
+                        let c = app.buttons.matching(identifier: title).firstMatch
+                        return (c.exists && c.isEnabled && c.isHittable) ? c : nil
+                    }
+                    if navigation.count == 1 { break }
+                    RunLoop.current.run(until: Date().addingTimeInterval(0.15))
+                } while Date() < deadline
                 guard navigation.count == 1 else {
                     capture("blocked_theory_overlay_" + String(step))
                     XCTFail("S11_OVERLAY_NAVIGATION_NOT_SINGLE step=" + String(step))
