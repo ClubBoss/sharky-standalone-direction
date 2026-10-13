@@ -13,7 +13,6 @@ permissions:
 
 jobs:
   frozen-native-acceptance:
-    if: false # re-enabled only after the new exact hosted artifact is pinned
     runs-on: macos-latest
     timeout-minutes: 55
     steps:
@@ -55,6 +54,10 @@ jobs:
           rm -rf output/s11_hosted/Runner.app
           ditto -x -k output/s11_hosted/Runner.zip output/s11_hosted
           test -d output/s11_hosted/Runner.app
+          grep -Fx 'source=82ab71b8cc462629e7c3e7adbd7aa0a768ae77f5' output/s11_hosted/binary-provenance.txt
+          test "$(awk '{print $1}' output/s11_hosted/kernel-sha.txt)" = "06d6d5174594ab9372986bbac5a3aa50baa5103e16e475e82cf1d4b263fbc354"
+          test "$(awk '{print $1}' output/s11_hosted/manifest-file-sha.txt)" = "54067ac9cf9b474e7e8b222ddf15ec3ed6df830483edc94de29bb319f7067f33"
+          test "$(awk '{print $1}' output/s11_hosted/app-archive-sha.txt)" = "2d1bbb123e8a716b1ac89fe7d434d15782101247a503ee684662c508908c8b2c"
           test -s output/s11_hosted/kernel-sha.txt
           shasum -a 256 output/s11_hosted/Runner.app/Frameworks/App.framework/flutter_assets/kernel_blob.bin | diff -u output/s11_hosted/kernel-sha.txt -
           # The attested zip preserves all files, including hidden placeholders.
