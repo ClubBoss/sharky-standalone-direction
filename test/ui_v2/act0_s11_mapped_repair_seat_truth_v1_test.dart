@@ -43,4 +43,60 @@ void main() {
       'players_behind',
     );
   });
+
+  test('authored Cutoff first-in AJo has a live Hero and correct prior folds', () {
+    final task = Act0ShellStateV1.sample
+        .worldById('world_3')
+        .lessons
+        .expand((lesson) => lesson.taskList)
+        .firstWhere((task) => task.taskId == 'w3_same_hand_open');
+    final table = task.runner.table;
+    expect(table.heroSeatId, 'co');
+    expect(table.heroSeat.isOccupied, isTrue);
+    expect(table.heroSeat.isInHand, isTrue);
+    expect(table.heroSeat.isFolded, isFalse);
+    expect(table.heroSeat.hasActed, isFalse);
+    expect(table.heroSeat.holeCards.map((card) => '${card.rank}${card.suit}'), [
+      'Ad',
+      'Jc',
+    ]);
+    for (final id in ['utg', 'hj']) {
+      final seat = table.seats.firstWhere((seat) => seat.seatId == id);
+      expect(seat.isFolded, isTrue, reason: '$id has folded before CO');
+      expect(seat.isInHand, isFalse);
+      expect(seat.hasActed, isTrue);
+    }
+    for (final id in ['btn', 'sb', 'bb']) {
+      final seat = table.seats.firstWhere((seat) => seat.seatId == id);
+      expect(seat.isFolded, isFalse, reason: '$id is still to act');
+      expect(seat.isInHand, isTrue);
+      expect(seat.hasActed, isFalse);
+    }
+  });
+
+  test('authored UTG pre-action scenes keep Hero occupied and CO unacted', () {
+    final tasks = Act0ShellStateV1.sample.worlds
+        .expand((world) => world.lessons)
+        .expand((lesson) => lesson.taskList);
+    for (final suffix in [
+      'same_hand_early_fold',
+      'position_checkpoint_early_fold',
+      'position_apply_early_fold',
+      'apply_utg_fold',
+    ]) {
+      final task = tasks.firstWhere(
+        (task) => task.taskId.endsWith(suffix),
+      );
+      final table = task.runner.table;
+      expect(table.heroSeatId, 'utg', reason: suffix);
+      expect(table.heroSeat.isOccupied, isTrue, reason: suffix);
+      expect(table.heroSeat.isFolded, isFalse, reason: suffix);
+      expect(table.heroSeat.isInHand, isTrue, reason: suffix);
+      expect(table.heroSeat.hasActed, isFalse, reason: suffix);
+      final co = table.seats.firstWhere((seat) => seat.seatId == 'co');
+      expect(co.isFolded, isFalse, reason: '$suffix: CO has not acted');
+      expect(co.isInHand, isTrue, reason: suffix);
+      expect(co.hasActed, isFalse, reason: suffix);
+    }
+  });
 }
