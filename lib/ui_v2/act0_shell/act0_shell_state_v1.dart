@@ -479,6 +479,14 @@ class Act0LessonTaskV1 {
   final String taskId;
   final String title;
   final Act0LessonPhaseV1 phase;
+
+  /// Authored review is a learning role; runtime review is evaluated feedback.
+  /// A review task with choices must first collect an answer, like a drill.
+  Act0LessonPhaseV1 get entryPhase =>
+      phase == Act0LessonPhaseV1.review && runner.options.isNotEmpty
+      ? Act0LessonPhaseV1.drill
+      : phase;
+
   final Act0RunnerStateV1 runner;
   final int rewardXp;
   final Act0LessonStepKindV1 stepKind;
@@ -12458,9 +12466,7 @@ final _world3TrashBucketRunner = _world3BucketsIntroRunner.copyWith(
   ],
   table: _act0ReassignHeroSeatV1(
     _whatYouCanDoRunner.table.copyWith(
-      seats: _act0WithAuthoredPreActionSeatsV1(
-        _whatYouCanDoRunner.table,
-      ).seats,
+      seats: _act0WithAuthoredPreActionSeatsV1(_whatYouCanDoRunner.table).seats,
       heroCards: const <Act0CardStateV1>[
         Act0CardStateV1(rank: 'J', suit: 's'),
         Act0CardStateV1(rank: '8', suit: 'd'),

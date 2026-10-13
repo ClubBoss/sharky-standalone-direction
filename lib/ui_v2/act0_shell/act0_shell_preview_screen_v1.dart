@@ -3618,7 +3618,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       } else {
         _learnDetailLessonId = null;
       }
-      _phase = selectedTask.phase;
+      _phase = selectedTask.entryPhase;
       _selectedOptionId = null;
       _teachingStepIndex = 0;
       _tab = widget.initialTab;
@@ -4801,7 +4801,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _activeRepairResultReceiptLine = null;
       _activeRepairSessionSummaryLines = const <String>[];
       _selectedOptionId = null;
-      _phase = selectedTask.phase;
+      _phase = selectedTask.entryPhase;
       _teachingStepIndex = 0;
       if (tab != Act0ShellTabV1.learn) {
         _learnDetailLessonId = null;
@@ -5623,7 +5623,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 lesson,
                               ).taskId;
                               _selectedWorldId = worldId;
-                              _phase = _taskById(lesson, selectedTaskId).phase;
+                              _phase = _taskById(
+                                lesson,
+                                selectedTaskId,
+                              ).entryPhase;
                               _selectedOptionId = null;
                               _teachingStepIndex = 0;
                               _showWorldMenu = false;
@@ -5727,7 +5730,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             _tab = Act0ShellTabV1.play;
                             _showPlayHub = false;
                             _returnToPlayHubOnBack = false;
-                            _phase = _taskById(lesson, taskId).phase;
+                            _phase = _taskById(lesson, taskId).entryPhase;
                             _selectedOptionId = null;
                             _teachingStepIndex = 0;
                             _resetLessonRunMetrics();
@@ -5843,7 +5846,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   _phase = _taskById(
                                     selectedLesson,
                                     _selectedTaskId,
-                                  ).phase;
+                                  ).entryPhase;
                                   _selectedOptionId = null;
                                   _teachingStepIndex = 0;
                                   _resetLessonRunMetrics();
@@ -5910,7 +5913,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _phase = _taskById(
                                       nextLesson,
                                       _selectedTaskId,
-                                    ).phase;
+                                    ).entryPhase;
                                     _showPlayHub = false;
                                     _selectedOptionId = null;
                                     _teachingStepIndex = 0;
@@ -5936,7 +5939,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   _phase = _taskById(
                                     nextLesson,
                                     _selectedTaskId,
-                                  ).phase;
+                                  ).entryPhase;
                                   _showPlayHub = false;
                                   _selectedOptionId = null;
                                   _teachingStepIndex = 0;
@@ -9699,7 +9702,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _learnPopupTaskId = null;
     _firstValueReceiptCarry = null;
     _firstValueTodayShownTelemetryKey = '';
-    _phase = focusTask.phase;
+    _phase = focusTask.entryPhase;
     _selectedOptionId = null;
     _teachingStepIndex =
         directRunner && focusTask.phase == Act0LessonPhaseV1.drill
@@ -10470,7 +10473,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _activeRepairSourceTaskId = null;
     _activePracticeRepairQueueRequestV1 = null;
     _rapidPracticeLoop = rapidPracticeLoop;
-    _phase = task.phase;
+    _phase = task.entryPhase;
     _selectedOptionId = null;
     _teachingStepIndex = skipTeaching && task.phase == Act0LessonPhaseV1.drill
         ? task.runner.teachingSteps.length
@@ -11698,7 +11701,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     final anchorTask = _taskById(selectedLesson, wrapUpAnchorTaskId);
     _selectedTaskId = anchorTask.taskId;
-    _phase = anchorTask.phase;
+    _phase = anchorTask.entryPhase;
   }
 
   String _repairActionLabel(Act0LessonTaskV1 task) {
@@ -13369,13 +13372,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final nextTask = _nextTask(selectedLesson, _selectedTaskId);
     if (nextTask != null) {
       _selectedTaskId = nextTask.taskId;
+      _selectedOptionId = null;
       final actionSequence = act0ActionLearningSequenceForTaskV1(
         nextTask.taskId,
       );
       _activeActionSequenceStageV1 = actionSequence == null
           ? null
           : actionSequence.stageForTask(nextTask.taskId);
-      _phase = nextTask.phase;
+      _phase = nextTask.entryPhase;
       _tab = Act0ShellTabV1.play;
       _showPlayHub = false;
       _teachingStepIndex = 0;
@@ -13424,7 +13428,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final decisionTask = _taskById(selectedLesson, sequence.practiceTaskId);
     _selectedTaskId = decisionTask.taskId;
     _activeActionSequenceStageV1 = Act0ActionSequenceStageV1.decision;
-    _phase = decisionTask.phase;
+    _phase = decisionTask.entryPhase;
     _selectedOptionId = null;
     _teachingStepIndex = 0;
     _persistProgress();
@@ -13486,7 +13490,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _selectedTaskId = normalizedTask.taskId;
       _selectedOptionId = null;
       _teachingStepIndex = 0;
-      _phase = normalizedTask.phase;
+      _phase = normalizedTask.entryPhase;
     }
 
     final popupOwnerLesson =

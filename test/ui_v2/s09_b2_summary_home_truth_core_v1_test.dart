@@ -139,15 +139,6 @@ Future<void> _completeAssistedThenIndependentLesson(WidgetTester tester) async {
       find.byType(Act0LessonRunnerShellV1),
     );
     expect(runner.selectedTaskId, taskId);
-    if (taskId == 'actions_review') {
-      final continueReview = find.byKey(
-        const Key('act0_shell_feedback_continue_cta'),
-      );
-      expect(continueReview, findsOneWidget);
-      await tester.tap(continueReview);
-      await tester.pumpAndSettle();
-      continue;
-    }
     final task = lesson.taskList.firstWhere((item) => item.taskId == taskId);
     final answer = task.runner.options.firstWhere((option) => option.isCorrect);
     final option = find.byKey(Key('act0_shell_option_${answer.id}'));
