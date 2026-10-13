@@ -16,15 +16,15 @@ jobs:
       - name: Checkout exactly frozen PR 282 source
         uses: actions/checkout@v4
         with:
-          ref: 82ab71b8cc462629e7c3e7adbd7aa0a768ae77f5
+          ref: 948261351e7c1b430790174fce5b80d48f613e50
           fetch-depth: 1
       - name: Verify source and available Xcode/iOS simulators
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p output/s11_hosted
-          test "$(git rev-parse HEAD)" = "82ab71b8cc462629e7c3e7adbd7aa0a768ae77f5"
-          test "$(git rev-parse HEAD^{tree})" = "0ba37bc49307ec677f0f49dc1bd91a04b1b80c40"
+          test "$(git rev-parse HEAD)" = "948261351e7c1b430790174fce5b80d48f613e50"
+          test "$(git rev-parse HEAD^{tree})" = "5d89638989a23d5ec57b73bace7fe4d81069580b"
           echo "SOURCE_HEAD=$(git rev-parse HEAD)" | tee output/s11_hosted/environment.txt
           echo "SOURCE_TREE=$(git rev-parse HEAD^{tree})" | tee -a output/s11_hosted/environment.txt
           echo "RUNNER_OS=$RUNNER_OS" | tee -a output/s11_hosted/environment.txt
@@ -56,7 +56,7 @@ jobs:
           shasum -a 256 output/s11_hosted/app-file-manifest.sha256 > output/s11_hosted/manifest-file-sha.txt
           shasum -a 256 output/s11_hosted/Runner.app/Frameworks/App.framework/flutter_assets/kernel_blob.bin > output/s11_hosted/kernel-sha.txt
           echo "NEW_HOSTED_BINARY_NOT_HISTORIC_LOCAL_BINARY" | tee output/s11_hosted/binary-provenance.txt
-          echo "source=82ab71b8cc462629e7c3e7adbd7aa0a768ae77f5" >> output/s11_hosted/binary-provenance.txt
+          echo "source=948261351e7c1b430790174fce5b80d48f613e50" >> output/s11_hosted/binary-provenance.txt
       - name: Boot one supported simulator and interact with native app
         shell: bash
         run: |
