@@ -33,6 +33,11 @@ while True:
         time.sleep(1)
         container = subprocess.check_output(['xcrun', 'simctl', 'get_app_container', args.sim, 'com.example.pokerAnalyzer', 'data'], text=True).strip()
         result = subprocess.run(['python3', str(Path(__file__).with_name('qa_s11_probe_persistence.py')), '--container', container, '--output', str(target / 'discovery.json'), '--extracted-plist', str(target / 'learner.plist')], capture_output=True, text=True)
+        end_lag = time.time() - float(epoch)
+        (target / 'capture-timing.json').write_text(json.dumps({'requested_epoch': float(epoch), 'initial_lag_seconds': lag, 'completed_epoch': time.time(), 'completed_lag_seconds': end_lag}))
+        if end_lag >= 14 and (target / 'learner.plist').exists():
+            (target / 'learner.plist').rename(target / 'late-learner.plist')
+            result.stdout += '\nLATE_CHECKPOINT_EXTRACTION; quarantined, cannot pass verifier'
         (target / 'probe.log').write_text(result.stdout + result.stderr)
         print(tag, result.returncode, flush=True)
     time.sleep(0.25)
