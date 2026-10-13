@@ -95,7 +95,7 @@ jobs:
           sleep 3
           python3 qa-infra/tools/qa_s11_probe_persistence.py --container "$CONTAINER" --output output/s11_hosted/preference-domain-discovery.json --extracted-plist output/s11_hosted/qa-synthetic-learner.plist | tee output/s11_hosted/persistence-probe.log
           if test -f output/s11_hosted/qa-synthetic-learner.plist; then
-            python3 qa-infra/tools/qa_s11_verify_evidence.py --first output/s11_hosted/qa-synthetic-learner.plist output/s11_hosted/persisted-verdict.json | tee output/s11_hosted/persisted-verdict.log
+            python3 qa-infra/tools/qa_s11_verify_evidence.py --clean output/s11_hosted/qa-synthetic-learner.plist output/s11_hosted/persisted-verdict.json | tee output/s11_hosted/persisted-verdict.log
           else
             echo "NO_REAL_PERSISTED_NATIVE_PROGRESS_IN_APP_DOMAINS" | tee output/s11_hosted/persisted-verdict.log
           fi
@@ -114,8 +114,8 @@ jobs:
           import json
           from pathlib import Path
           d=json.loads(Path("output/s11_hosted/persisted-verdict.json").read_text())
-          assert d.get("status")=="PASS_FIRST_NATIVE_GRADED" and len(d.get("target",[]))==1, "NO_AUTHENTIC_FIRST_GRADED_PERSISTED_PASS"
-          print("S11_NATIVE_FIRST_GRADED_PERSISTENCE_INDEPENDENT_PASS")
+          assert d.get("status")=="PASS_C1_FOUR_NATIVE_PERSISTED" and len(d.get("records",[]))==4 and d.get("earnedXp")==20, "NO_AUTHENTIC_FOUR_GRADED_C1_PASS"
+          print("S11_NATIVE_C1_FOUR_GRADED_PERSISTENCE_INDEPENDENT_PASS")
           PY
       - name: Upload native test, persisted synthetic state and evidence
         if: always()

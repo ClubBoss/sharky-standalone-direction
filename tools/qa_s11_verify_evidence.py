@@ -8,8 +8,9 @@ import sys
 from pathlib import Path
 
 first_gate = len(sys.argv)==4 and sys.argv[1]=="--first"
-path=Path(sys.argv[2] if first_gate else sys.argv[1])
-output=Path(sys.argv[3] if first_gate else sys.argv[2])
+clean_gate = len(sys.argv)==4 and sys.argv[1]=="--clean"
+path=Path(sys.argv[2] if (first_gate or clean_gate) else sys.argv[1])
+output=Path(sys.argv[3] if (first_gate or clean_gate) else sys.argv[2])
 output.parent.mkdir(parents=True,exist_ok=True)
 p=plistlib.load(path.open("rb"))
 key="flutter.act0_shell_progress_v1"
@@ -50,6 +51,23 @@ c1={
   all(r.get("runId") and r.get("sessionId") for r in clean)
  )
 }
+if clean_gate:
+    actual=clean
+    valid=(
+        c1["passed"] and len(actual)==4 and len(records)==4 and
+        state.get("earnedXp")==20 and
+        len(set(c1["run_ids"]))==1 and
+        all(r.get("expectedChoiceId")==expected[r["taskId"]] and
+            r.get("assistanceKind")=="none" and r.get("runKind")=="lesson" and
+            r.get("sessionId") and r.get("recordId") for r in actual)
+    )
+    outcome={"status":"PASS_C1_FOUR_NATIVE_PERSISTED" if valid else "FAIL_C1_NATIVE_PERSISTED",
+       "record_count":len(records),"records":actual,
+       "earnedXp":state.get("earnedXp"),
+       "completedTaskIds":state.get("completedTaskIds",[])}
+    output.write_text(json.dumps(outcome,indent=2))
+    print("S11_NATIVE_C1_PERSISTED",outcome["status"],"RECORDS",len(actual),"XP",state.get("earnedXp"))
+    sys.exit(0 if valid else 1)
 c2_records=[r for r in records if r.get("taskId") in ("actions_legal_context","actions_check_drill","actions_fold_drill","actions_call_drill","actions_raise_drill")]
 wrong=[r for r in c2_records if r.get("taskId")=="actions_legal_context" and r.get("choiceId")=="fold" and r.get("isCorrect") is False]
 assisted=[r for r in c2_records if r.get("taskId")=="actions_check_drill" and r.get("choiceId")=="check" and r.get("assistanceKind") in ("quickHint","theoryRecall") and r.get("isCorrect") is True]

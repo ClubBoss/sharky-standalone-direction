@@ -70,6 +70,66 @@ final class S11HostedNativeUITests: XCTestCase {
         XCTFail("TEACHING_PROGRESS_LIMIT expected="+clue)
     }
 
+
+    /// Advance from a confirmed graded feedback frame to an authored task.
+    /// Step number plus distinct option label is the source-owned identity.
+    private func submitW1Followup(step: Int, prefix: String, tag: String) {
+        tapButton("Next hand")
+        guard visible("Step \(step)/6") else {
+            capture("w1_wrong_step_\(step)")
+            XCTFail("W1_NEXT_TASK_STEP_MISMATCH expected=\(step)")
+            return
+        }
+        var submitted = false
+        for page in 0..<8 {
+            let overlay = app.otherElements.matching(
+                NSPredicate(format:"label BEGINSWITH %@", "Theory navigation, page")
+            ).firstMatch
+            if overlay.exists {
+                let deadline = Date().addingTimeInterval(5)
+                var available: [XCUIElement] = []
+                repeat {
+                    available = ["Continue","Next"].compactMap { title -> XCUIElement? in
+                        let element = app.buttons.matching(identifier:title).firstMatch
+                        return (element.exists && element.isHittable && element.isEnabled) ? element : nil
+                    }
+                    if available.count == 1 { break }
+                    RunLoop.current.run(until:Date().addingTimeInterval(0.15))
+                } while Date() < deadline
+                guard available.count == 1 else {
+                    capture("w1_\(tag)_locked_theory")
+                    XCTFail("W1_THEORY_OVERLAY_NOT_ADVANCING task=\(tag)")
+                    return
+                }
+                available[0].tap()
+                continue
+            }
+            let candidate = app.staticTexts.matching(
+                NSPredicate(format:"label BEGINSWITH[cd] %@",prefix)
+            ).firstMatch
+            if candidate.exists && candidate.isHittable && candidate.isEnabled {
+                tapSelectableOption(prefix)
+                submitted = true
+                break
+            }
+            capture("w1_\(tag)_choice_not_present_\(page)")
+            XCTFail("W1_EXPECTED_GRADED_CHOICE_MISSING task=\(tag) prefix=\(prefix)")
+            return
+        }
+        guard submitted else {
+            XCTFail("W1_GRADED_SUBMISSION_TIMEOUT task=\(tag)")
+            return
+        }
+        let next = app.buttons.matching(identifier:"Next hand").firstMatch
+        guard next.waitForExistence(timeout:10) && next.isEnabled else {
+            capture("w1_\(tag)_feedback_no_next")
+            XCTFail("W1_FEEDBACK_NOT_CONFIRMED task=\(tag)")
+            return
+        }
+        capture("w1_\(tag)_graded_feedback")
+        print("S11_CLEAN_GRADED_SUBMITTED task=\(tag)")
+    }
+
     func test00FirstGraded() throws {
         app.launch()
         XCTAssertTrue(app.waitForExistence(timeout:35))
@@ -184,5 +244,10 @@ final class S11HostedNativeUITests: XCTestCase {
         }
         capture("first_real_graded_feedback")
         print("S11_FIRST_NATIVE_GRADED_SUBMISSION_DONE; PERSISTENCE MUST BE VERIFIED SEPARATELY")
+        submitW1Followup(step:3, prefix:"B\n2 private cards, 3 board cards, 6 BB", tag:"what_poker_is_table_read_transfer")
+        submitW1Followup(step:4, prefix:"C\n2 private cards, 3 board cards, 4 BB", tag:"what_poker_is_table_read_recheck")
+        submitW1Followup(step:5, prefix:"B\nYou are BTN, blinds are posted", tag:"first_table_guide_one_clear_choice")
+        capture("C1_after_four_independent_correct_submissions")
+        print("S11_C1_FOUR_SOURCE_OWNED_SUBMISSIONS_DONE; persisted ledger must verify 4/4 and XP")
     }
 }
