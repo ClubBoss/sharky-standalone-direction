@@ -249,5 +249,15 @@ final class S11HostedNativeUITests: XCTestCase {
         submitW1Followup(step:5, prefix:"B\nYou are BTN, blinds are posted", tag:"first_table_guide_one_clear_choice")
         capture("C1_after_four_independent_correct_submissions")
         print("S11_C1_FOUR_SOURCE_OWNED_SUBMISSIONS_DONE; persisted ledger must verify 4/4 and XP")
+        // The authored World-1 path includes a final route-roles review task.
+        // Do not invent a fifth assessed record or claim Summary early.
+        tapButton("Next hand")
+        guard visible("Step 6/6") else {
+            capture("C1_route_roles_not_reached")
+            XCTFail("C1_ROUTE_ROLES_REVIEW_NOT_REACHED")
+            return
+        }
+        capture("C1_actual_route_roles_review")
+        print("S11_C1_FOUR_GRADED_AND_AUTHORED_REVIEW_ROUTE_REACHED")
     }
 }
