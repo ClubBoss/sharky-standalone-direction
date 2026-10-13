@@ -12458,6 +12458,9 @@ final _world3TrashBucketRunner = _world3BucketsIntroRunner.copyWith(
   ],
   table: _act0ReassignHeroSeatV1(
     _whatYouCanDoRunner.table.copyWith(
+      seats: _act0WithAuthoredPreActionSeatsV1(
+        _whatYouCanDoRunner.table,
+      ).seats,
       heroCards: const <Act0CardStateV1>[
         Act0CardStateV1(rank: 'J', suit: 's'),
         Act0CardStateV1(rank: '8', suit: 'd'),
