@@ -144,7 +144,9 @@ final class S11HostedNativeUITests: XCTestCase {
         print("S11_PERSIST_CHECKPOINT " + tag + " epoch=" + String(Date().timeIntervalSince1970))
         fflush(stdout)
         // Give the read-only hosted preference probe time to copy the real domain.
-        RunLoop.current.run(until: Date().addingTimeInterval(15))
+        RunLoop.current.run(until: Date().addingTimeInterval(45))
+        print("S11_PERSIST_RELEASE " + tag + " epoch=" + String(Date().timeIntervalSince1970))
+        fflush(stdout)
     }
 
     private func firstLesson(wrongFinal: Bool = false) throws {
@@ -294,6 +296,8 @@ final class S11HostedNativeUITests: XCTestCase {
         XCTAssertTrue(review.exists && review.isHittable && review.isEnabled)
         if wrongFinal {
             persistedCheckpoint("C1_wrong_prefinal")
+            XCTAssertFalse(visible("CORRECT READ"), "UNEARNED_FEEDBACK_DURING_CHECKPOINT")
+            XCTAssertFalse(app.buttons.matching(identifier:"Next hand").firstMatch.exists)
             tapSelectableOption("C\nLearn")
             XCTAssertFalse(visible("CORRECT READ"), "WRONG_FINAL_MARKED_CORRECT")
             XCTAssertTrue(visible("One more distinction.") || visible("WRONG READ"), "NO_AUTHENTIC_WRONG_FEEDBACK")
@@ -301,6 +305,8 @@ final class S11HostedNativeUITests: XCTestCase {
             return
         }
         persistedCheckpoint("C1_prefinal")
+        XCTAssertFalse(visible("CORRECT READ"), "UNEARNED_FEEDBACK_DURING_CHECKPOINT")
+        XCTAssertFalse(app.buttons.matching(identifier:"Next hand").firstMatch.exists)
         tapSelectableOption("B\nReview")
         XCTAssertTrue(visible("CORRECT READ"), "FINAL_FEEDBACK_MISSING_AFTER_ANSWER")
         persistedCheckpoint("C1_final_answer")

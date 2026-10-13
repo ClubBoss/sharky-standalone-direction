@@ -2,6 +2,7 @@
 """Strict independent C1 native checkpoint judge; reads actual app plists only."""
 import json
 import plistlib
+import re
 import sys
 from pathlib import Path
 
@@ -15,6 +16,12 @@ expected = {
 }
 observed = {}
 def load(tag):
+    timing = json.loads((root / tag / 'capture-timing.json').read_text())
+    log = (root.parent / 'native-tests.log').read_text()
+    releases = re.findall(r'S11_PERSIST_RELEASE ' + re.escape(tag) + r' epoch=([0-9.]+)', log)
+    assert len(releases) == 1, 'CHECKPOINT_RELEASE_NOT_PROVEN'
+    assert timing['completed_epoch'] < float(releases[0]), 'CAPTURE_AFTER_UI_RELEASE'
+    assert timing['completed_lag_seconds'] < 44, 'LATE_CHECKPOINT_EXTRACTION'
     plist = plistlib.loads((root / tag / 'learner.plist').read_bytes())
     state = json.loads(plist['flutter.act0_shell_progress_v1'])
     observed[tag] = state
@@ -28,7 +35,9 @@ def records(state, count):
     assert len({r['runId'] for r in rows}) == 1
     assert [r['createdOrder'] for r in rows] == sorted({r['createdOrder'] for r in rows})
     assert all(r['worldId'] == 'world_1' and r['errorType'] == 'none' for r in rows)
+    assert all(r['sourceWorldId'] == 'world_1' and r['sourceLessonId'] == 'what_poker_is' and r['startedBy'] == 'learn_route' and r['runOrdinal'] > 0 for r in rows)
     assert all(r['recordId'] and r['runId'] and r['sessionId'] and r['recordedAtUtc'] for r in rows)
+    assert all(r['runId'] == f"run_v1|{r['sourceWorldId']}|{r['sourceLessonId']}|{r['runKind']}|{r['runOrdinal']}" for r in rows)
     assert all(r['choiceId'] == expected[r['taskId']] == r['expectedChoiceId'] and r['isCorrect'] is True and r['assistanceKind'] == 'none' and r['runKind'] == 'lesson' and r['lessonId'] == 'what_poker_is' for r in rows)
     return rows
 

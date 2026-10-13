@@ -16,6 +16,10 @@ parser.add_argument('--output', required=True)
 args = parser.parse_args()
 root = Path(args.output)
 seen = set()
+# Resolve once before UI checkpoints; simctl container discovery previously
+# consumed the checkpoint's entire hold window on the hosted runner.
+container = subprocess.check_output(['xcrun', 'simctl', 'get_app_container', args.sim, 'com.example.pokerAnalyzer', 'data'], text=True).strip()
+print('S11_READ_ONLY_CONTAINER_RESOLVED', flush=True)
 while True:
     log = Path(args.log)
     content = log.read_text(errors='replace') if log.exists() else ''
@@ -27,15 +31,14 @@ while True:
         target.mkdir(parents=True, exist_ok=True)
         lag = time.time() - float(epoch)
         (target / 'capture-timing.json').write_text(json.dumps({'requested_epoch': float(epoch), 'observed_epoch': time.time(), 'lag_seconds': lag}))
-        if not 0 <= lag < 12:
+        if not 0 <= lag < 40:
             (target / 'probe.log').write_text('CHECKPOINT_MARKER_DELAY; refusing stale state capture')
             continue
         time.sleep(1)
-        container = subprocess.check_output(['xcrun', 'simctl', 'get_app_container', args.sim, 'com.example.pokerAnalyzer', 'data'], text=True).strip()
         result = subprocess.run(['python3', str(Path(__file__).with_name('qa_s11_probe_persistence.py')), '--container', container, '--output', str(target / 'discovery.json'), '--extracted-plist', str(target / 'learner.plist')], capture_output=True, text=True)
         end_lag = time.time() - float(epoch)
         (target / 'capture-timing.json').write_text(json.dumps({'requested_epoch': float(epoch), 'initial_lag_seconds': lag, 'completed_epoch': time.time(), 'completed_lag_seconds': end_lag}))
-        if end_lag >= 14 and (target / 'learner.plist').exists():
+        if end_lag >= 44 and (target / 'learner.plist').exists():
             (target / 'learner.plist').rename(target / 'late-learner.plist')
             result.stdout += '\nLATE_CHECKPOINT_EXTRACTION; quarantined, cannot pass verifier'
         (target / 'probe.log').write_text(result.stdout + result.stderr)

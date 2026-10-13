@@ -2,10 +2,16 @@
 """Judge the proportionate wrong-final branch from actual native preferences."""
 import json
 import plistlib
+import re
 import sys
 from pathlib import Path
 root=Path(sys.argv[1])
 def load(tag):
+    timing=json.loads((root/tag/'capture-timing.json').read_text())
+    log=(root.parent/'wrong-tests.log').read_text()
+    releases=re.findall(r'S11_PERSIST_RELEASE '+re.escape(tag)+r' epoch=([0-9.]+)',log)
+    assert len(releases)==1 and timing['completed_epoch'] < float(releases[0])
+    assert timing['completed_lag_seconds'] < 44
     p=plistlib.loads((root/tag/'learner.plist').read_bytes())
     return json.loads(p['flutter.act0_shell_progress_v1'])
 observed={}
