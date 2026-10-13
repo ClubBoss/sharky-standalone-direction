@@ -3,7 +3,7 @@
 **Date:** 2026-10-14
 **Status:** `PREPARATORY_RESEARCH_COMPLETE / IMPLEMENTATION_NOT_ADMITTED`
 **Authority:** Manager research synthesis subordinate to the current [Master Plan v5.0](../plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md), execution context and product rules.
-**Source set:** [14-product market benchmark](../research/SHARKY_MARKET_REWARDS_COMPETITIVE_RESEARCH_20261014.md) (GPT-6 Sol), [19-source behavioral science audit](../research/SHARKY_BEHAVIORAL_RETENTION_EVIDENCE_20261014.md) (Claude Opus 5.5), and existing [2026-10-12 Lean Growth strategy](SHARKY_LEAN_GROWTH_PRODUCT_DECISION_20261012.md) (13-product earlier comparative synthesis).
+**Source set:** [14-product market benchmark](../research/SHARKY_MARKET_REWARD_RESEARCH_V1_20261014.md) (GPT-6 Sol), [19-source behavioral science audit](../research/SHARKY_BEHAVIORAL_RETENTION_RESEARCH_V1_20261014.md) (Claude Opus 5.5), and existing [2026-10-12 Lean Growth strategy](SHARKY_LEAN_GROWTH_PRODUCT_DECISION_20261012.md) (13-product earlier comparative synthesis).
 
 ## 1. Evidence hierarchy and what is **not** proven
 
