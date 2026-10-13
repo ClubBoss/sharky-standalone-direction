@@ -87,7 +87,10 @@ final class S11HostedNativeUITests: XCTestCase {
         capture("welcome_intro")
         tapButton("Try one table read")
         capture("welcome_demo")
-        tapSelectableOption("BTN (your seat)")
+        // Native Welcome is ungraded: Step 2/3 asks which action plays for free.
+        // Accessibility represents the option as StaticText `B\\nCheck`, not a BTN seat.
+        XCTAssertTrue(visible("What action keeps playing for free?"), "WELCOME_DEMO_WRONG_SCREEN")
+        tapSelectableOption("B\\nCheck")
         XCTAssertTrue(visible("Your path is ready."),"WELCOME_UNGRADED_HANDOFF_MISSING")
         capture("welcome_handoff")
         tapButton("Open my path")
