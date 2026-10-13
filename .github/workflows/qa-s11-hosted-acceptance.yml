@@ -1,0 +1,109 @@
+name: S11 hosted iOS graded acceptance
+on:
+  push:
+    branches:
+      - qa/s11-hosted-native-20261013
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  frozen-native-acceptance:
+    runs-on: macos-latest
+    timeout-minutes: 55
+    steps:
+      - name: Checkout QA-only test infrastructure
+        uses: actions/checkout@v4
+        with:
+          path: qa-infra
+          ref: qa/s11-hosted-native-20261013
+          fetch-depth: 1
+      - name: Checkout frozen app source (never QA branch)
+        uses: actions/checkout@v4
+        with:
+          path: frozen-source
+          ref: 42fb7506de2726923bb838ee1cbb67b6f4e90b13
+          fetch-depth: 1
+      - name: Verify exact source, environment and ownership
+        run: |
+          set -euo pipefail
+          test "$(git -C frozen-source rev-parse HEAD)" = "42fb7506de2726923bb838ee1cbb67b6f4e90b13"
+          test "$(git -C frozen-source rev-parse HEAD^{tree})" = "ef22ad4ebf1b0d6769125cbe6d00249121564e17"
+          mkdir -p output/s11_hosted
+          xcodebuild -version > output/s11_hosted/host-xcode.txt
+          sw_vers > output/s11_hosted/host-macos.txt
+          ruby -e 'require "xcodeproj"; puts "XCODEPROJ_GEM_AVAILABLE"' | tee output/s11_hosted/gem-preflight.txt
+          xcrun simctl list devices available -j > output/s11_hosted/simulators.json
+          echo "42fb7506de2726923bb838ee1cbb67b6f4e90b13" > output/s11_hosted/source-head.txt
+      - name: Download hosted app built from frozen source in feasibility run
+        uses: actions/download-artifact@v4
+        with:
+          name: s11-hosted-feasibility-38410405835
+          run-id: 38410405835
+          repository: ClubBoss/sharky-standalone-direction
+          github-token: ${{ github.token }}
+          path: output/s11_hosted
+      - name: Verify new hosted binary provenance
+        run: |
+          set -euo pipefail
+          test -d output/s11_hosted/Runner.app
+          test -s output/s11_hosted/kernel-sha.txt
+          shasum -a 256 output/s11_hosted/Runner.app/Frameworks/App.framework/flutter_assets/kernel_blob.bin | diff -u output/s11_hosted/kernel-sha.txt -
+          diff -u <(sort output/s11_hosted/app-file-manifest.sha256) <(find output/s11_hosted/Runner.app -type f -print0 | xargs -0 shasum -a 256 | sort)
+          cp output/s11_hosted/kernel-sha.txt output/s11_hosted/native-tested-binary.txt
+          echo "new GitHub-hosted binary; never equate to historical local kernel" >> output/s11_hosted/native-tested-binary.txt
+      - name: Create independent UITest-only Xcode project without app rebuild
+        run: |
+          ruby qa-infra/tools/qa_s11_create_xcodeproj.rb
+          xcodebuild -list -project qa-infra/qa/s11_hosted/S11HostedNative.xcodeproj | tee output/s11_hosted/uitest-project-list.txt
+      - name: Boot existing hosted iPhone and install attested app
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' > output/s11_hosted/selected-simulator.txt
+          import json
+          d=json.load(open("output/s11_hosted/simulators.json"))["devices"]
+          matches=[x for runtime,items in d.items() if "iOS" in runtime for x in items if x.get("isAvailable") and "iPhone" in x.get("name","")]
+          assert matches,"NO_HOSTED_IPHONE_SIMULATOR"
+          print(matches[0]["udid"])
+          PY
+          SIM_ID="$(cat output/s11_hosted/selected-simulator.txt)"
+          echo "S11_HOSTED_SIMULATOR=$SIM_ID"
+          xcrun simctl boot "$SIM_ID"
+          xcrun simctl bootstatus "$SIM_ID" -b
+          xcrun simctl install "$SIM_ID" output/s11_hosted/Runner.app
+          xcrun simctl launch "$SIM_ID" com.example.pokerAnalyzer | tee output/s11_hosted/pretest-launch.txt
+          xcrun simctl terminate "$SIM_ID" com.example.pokerAnalyzer
+      - name: Execute real native XCTest, C1 and C2
+        shell: bash
+        run: |
+          set -euo pipefail
+          SIM_ID="$(cat output/s11_hosted/selected-simulator.txt)"
+          xcodebuild test -project qa-infra/qa/s11_hosted/S11HostedNative.xcodeproj -scheme S11HostedNativeUITests -destination "platform=iOS Simulator,id=$SIM_ID" -parallel-testing-enabled NO -resultBundlePath "$PWD/output/s11_hosted/native-tests.xcresult" CODE_SIGNING_ALLOWED=NO > output/s11_hosted/native-tests.log 2>&1 || { tail -140 output/s11_hosted/native-tests.log; exit 1; }
+          grep -E 'Executed .*tests|\*\* TEST SUCCEEDED' output/s11_hosted/native-tests.log | tail -12
+      - name: Verify persisted native learning evidence and capture screenshots
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          SIM_ID="$(cat output/s11_hosted/selected-simulator.txt)"
+          CONTAINER="$(xcrun simctl get_app_container "$SIM_ID" com.example.pokerAnalyzer data)"
+          if test -f "$CONTAINER/Library/Preferences/com.example.pokerAnalyzer.plist"; then
+            cp "$CONTAINER/Library/Preferences/com.example.pokerAnalyzer.plist" output/s11_hosted/qa-synthetic-learner.plist
+            python3 qa-infra/tools/qa_s11_verify_evidence.py output/s11_hosted/qa-synthetic-learner.plist output/s11_hosted/persisted-verdict.json | tee output/s11_hosted/persisted-verdict.log
+          else
+            echo "NO_PERSISTED_NATIVE_PREFERENCES" | tee output/s11_hosted/persisted-verdict.log
+          fi
+          if test -d output/s11_hosted/native-tests.xcresult; then
+            xcrun xcresulttool export attachments --path output/s11_hosted/native-tests.xcresult --output-path output/s11_hosted/attachments || true
+          fi
+          xcrun simctl io "$SIM_ID" screenshot output/s11_hosted/native-posttest.png || true
+          xcrun simctl shutdown "$SIM_ID" || true
+      - name: Upload native test, persisted synthetic state and evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s11-hosted-native-acceptance-${{ github.run_id }}
+          path: output/s11_hosted/
+          if-no-files-found: warn
+          retention-days: 14

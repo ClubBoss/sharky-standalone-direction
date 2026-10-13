@@ -1,8 +1,6 @@
 name: S11 hosted isolated native feasibility
 on:
-  push:
-    branches:
-      - qa/s11-hosted-native-20261013
+  # The one-time feasibility run already executed. Future pushes use only the native acceptance workflow.
   workflow_dispatch:
 
 permissions:
