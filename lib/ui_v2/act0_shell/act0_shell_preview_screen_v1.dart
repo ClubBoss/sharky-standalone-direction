@@ -5724,6 +5724,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             lessonId: lessonId,
                             taskId: taskId,
                           );
+                          _startLearningEvidenceRunV1(
+                            worldId: selectedWorld.worldId,
+                            lessonId: lesson.lessonId,
+                            runKind: 'lesson',
+                            startedBy: 'learn_route',
+                          );
                           setState(() {
                             _selectedLessonId = lessonId;
                             _selectedTaskId = taskId;
