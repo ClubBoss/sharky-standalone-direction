@@ -7052,7 +7052,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final quickFix = _quickFixMistakes().isEmpty
         ? null
         : _quickFixMistakes().first;
-    if (quickFix != null) {
+    // Fixed does not mean due. Never promise an immediate Review CTA
+    // when the durable spaced-review owner has no launchable due item.
+    final quickFixDue = quickFix != null &&
+        _durableRetentionHistoryV1
+            .dueItemsAt(widget.clock.nowUtc())
+            .any((item) => item.taskId == quickFix.taskId);
+    if (quickFix != null && quickFixDue) {
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.reviewQuickFix,
         label: _copyV1(en: 'Quick fix', ru: 'Лёгкий повтор'),

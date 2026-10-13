@@ -298,6 +298,47 @@ Future<void> _restartPersistedRootV1(WidgetTester tester) async {
 }
 
 void main() {
+  testWidgets('Summary does not mark an assisted, mistaken run clean', (
+    tester,
+  ) async {
+    await _pump(
+      tester,
+      summary: const Act0BlockCompletionSummaryV1(
+        lessonTitle: 'First table',
+        xpEarned: 5,
+        errorCount: 1,
+        assistedCount: 1,
+        independentProvenanceKnown: true,
+        taskCount: 2,
+        correctCount: 1,
+        startLevel: 1,
+        endLevel: 1,
+        startXp: 10,
+        endXp: 15,
+        xpTarget: 100,
+      ),
+      earnedNow: false,
+    );
+    expect(find.text('One clean read'), findsNothing);
+    expect(find.text('Practice recorded'), findsOneWidget);
+    expect(find.text('Assessed accuracy'), findsOneWidget);
+    final bar = tester.widget<LinearProgressIndicator>(
+      find.byKey(const Key('act0_shell_block_summary_xp_progress')),
+    );
+    expect(bar.value, closeTo(0.5, 0.001));
+  });
+
+  testWidgets('Summary keeps clean-read copy for independent full success', (
+    tester,
+  ) async {
+    await _pump(tester, summary: _cleanSummary, earnedNow: true);
+    expect(find.text('One clean read'), findsOneWidget);
+    final bar = tester.widget<LinearProgressIndicator>(
+      find.byKey(const Key('act0_shell_block_summary_xp_progress')),
+    );
+    expect(bar.value, 1.0);
+  });
+
   testWidgets(
     'persisted locked W3 directed repair does not grant curriculum or XP',
     (tester) async {

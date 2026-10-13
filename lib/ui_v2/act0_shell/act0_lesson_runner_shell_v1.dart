@@ -10721,6 +10721,16 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
     final tone = summary.leveledUp
         ? Act0ShellTokensV1.gold
         : Act0ShellTokensV1.primary;
+    // A saved/assisted/wrong run is not automatically an independent clean read.
+    // The bar displays assessed correctness, not "all XP equals mastery".
+    final cleanIndependentRead = summary.independentProvenanceKnown &&
+        summary.taskCount > 0 &&
+        summary.errorCount == 0 &&
+        summary.assistedCount == 0 &&
+        summary.correctCount == summary.taskCount;
+    final assessedFraction = summary.taskCount <= 0
+        ? 0.0
+        : (summary.correctCount / summary.taskCount).clamp(0.0, 1.0);
     return Container(
       decoration: BoxDecoration(
         color: Act0ShellTokensV1.surface2.withValues(alpha: 0.9),
@@ -10745,7 +10755,7 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  'One clean read',
+                  cleanIndependentRead ? 'One clean read' : 'Practice recorded',
                   key: const Key('act0_shell_block_summary_xp_gain'),
                   style: Act0ShellTokensV1.label.copyWith(
                     color: tone,
@@ -10756,7 +10766,7 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
               const SizedBox(width: Act0ShellTokensV1.gapSm),
               Expanded(
                 child: Text(
-                  'Local read saved',
+                  'Assessed accuracy',
                   key: const Key('act0_shell_block_summary_xp_total'),
                   maxLines: 1,
                   overflow: TextOverflow.fade,
@@ -10775,7 +10785,7 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
             child: LinearProgressIndicator(
               key: const Key('act0_shell_block_summary_xp_progress'),
               minHeight: 8,
-              value: summary.xpEarned <= 0 ? 0.0 : 1.0,
+              value: assessedFraction,
               backgroundColor: Act0ShellTokensV1.surface3,
               color: tone,
             ),
