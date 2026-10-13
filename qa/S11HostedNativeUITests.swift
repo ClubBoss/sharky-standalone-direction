@@ -8,10 +8,13 @@ final class S11HostedNativeUITests: XCTestCase {
     private func capture(_ tag: String) {
         print("S11_GATE_STATE " + tag)
         print("S11_NATIVE_TREE_BEGIN " + tag + "\n" + app.debugDescription + "\nS11_NATIVE_TREE_END " + tag)
-        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
-        attachment.name = "S11_" + tag
-        attachment.lifetime = .keepAlways
-        add(attachment)
+        // XCTest's screen service timed out on a responsive graded frame.
+        // The hosted observer uses simctl's independently proven capture path.
+        print("S11_SCREEN_CHECKPOINT " + tag + " epoch=" + String(Date().timeIntervalSince1970))
+        fflush(stdout)
+        RunLoop.current.run(until: Date().addingTimeInterval(15))
+        print("S11_SCREEN_RELEASE " + tag + " epoch=" + String(Date().timeIntervalSince1970))
+        fflush(stdout)
     }
     private func visible(_ label: String) -> Bool {
         let p = NSPredicate(format:"label CONTAINS[cd] %@",label)

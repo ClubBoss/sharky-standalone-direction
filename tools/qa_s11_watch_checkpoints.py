@@ -3,6 +3,8 @@
 No writes to app state, route, clocks, or preferences.
 """
 import argparse
+import hashlib
+import struct
 import json
 import re
 import subprocess
@@ -23,10 +25,35 @@ print('S11_READ_ONLY_CONTAINER_RESOLVED', flush=True)
 while True:
     log = Path(args.log)
     content = log.read_text(errors='replace') if log.exists() else ''
-    for tag, epoch in re.findall(r'S11_PERSIST_CHECKPOINT (C[12]_[A-Za-z0-9_]+) epoch=([0-9.]+)', content):
-        if tag in seen:
+    for kind, tag, epoch in re.findall(r'S11_(SCREEN|PERSIST)_CHECKPOINT ([A-Za-z0-9_]+) epoch=([0-9.]+)', content):
+        if (kind, tag) in seen:
             continue
-        seen.add(tag)
+        seen.add((kind, tag))
+        if kind == 'SCREEN':
+            target = root / 'screens' / tag
+            target.mkdir(parents=True, exist_ok=True)
+            requested = float(epoch)
+            receipt = {'requested_epoch': requested, 'observed_epoch': time.time()}
+            try:
+                assert 0 <= time.time() - requested < 4, 'SCREEN_MARKER_DELAY'
+                result = subprocess.run(['xcrun', 'simctl', 'io', args.sim, 'screenshot', str(target / 'native.png')], capture_output=True, text=True, timeout=10)
+                (target / 'capture.log').write_text(result.stdout + result.stderr)
+                receipt['returncode'] = result.returncode
+                assert result.returncode == 0, 'SIMCTL_SCREENSHOT_FAILED'
+                data = (target / 'native.png').read_bytes()
+                assert data[:8] == b'\x89PNG\r\n\x1a\n', 'NOT_NATIVE_PNG'
+                receipt['width'], receipt['height'] = struct.unpack('>II', data[16:24])
+                assert receipt['width'] >= 375 and receipt['height'] > receipt['width']
+                receipt['sha256'] = hashlib.sha256(data).hexdigest()
+                assert time.time() - requested < 14, 'SCREEN_CAPTURE_OUTSIDE_HOLD'
+                receipt['status'] = 'CAPTURED_NATIVE_SCREEN'
+            except (AssertionError, OSError, subprocess.TimeoutExpired) as exc:
+                receipt['status'] = 'FAIL_NATIVE_SCREEN'
+                receipt['error'] = repr(exc)
+            receipt['completed_epoch'] = time.time()
+            (target / 'receipt.json').write_text(json.dumps(receipt, indent=2))
+            print(kind, tag, receipt['status'], flush=True)
+            continue
         target = root / tag
         target.mkdir(parents=True, exist_ok=True)
         lag = time.time() - float(epoch)

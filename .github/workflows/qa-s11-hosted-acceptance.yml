@@ -106,6 +106,7 @@ jobs:
           assert any(int(n)>0 for n in re.findall(r'Executed (\d+) tests?',text)), 'ZERO_EXECUTED_XCTESTS'
           assert '** TEST SUCCEEDED **' in text
           PYCOUNT
+          python3 qa-infra/tools/qa_s11_verify_evidence.py --screens output/s11_hosted/native-tests.log output/s11_hosted/checkpoints
           grep -E 'Executed .*tests|\*\* TEST SUCCEEDED' output/s11_hosted/native-tests.log | tail -12
       - name: Verify first native assessed record and capture screenshots
         if: always()
@@ -165,6 +166,7 @@ jobs:
           assert any(int(n)>0 for n in re.findall(r'Executed (\d+) tests?',text)), 'ZERO_EXECUTED_XCTESTS'
           assert '** TEST SUCCEEDED **' in text
           PYCOUNT
+          python3 qa-infra/tools/qa_s11_verify_evidence.py --screens output/s11_hosted/wrong-tests.log output/s11_hosted/checkpoints-wrong
           python3 qa-infra/tools/qa_s11_verify_wrong_final.py output/s11_hosted/checkpoints-wrong
       - name: Additional authored review entry on original genuine learner
         shell: bash
@@ -182,6 +184,7 @@ jobs:
           assert any(int(n)>0 for n in re.findall(r'Executed (\d+) tests?',text)), 'ZERO_EXECUTED_XCTESTS'
           assert '** TEST SUCCEEDED **' in text
           PYCOUNT
+          python3 qa-infra/tools/qa_s11_verify_evidence.py --screens output/s11_hosted/second-review-tests.log output/s11_hosted/checkpoints
       - name: Preserve all actual native receipts
         if: always()
         run: |
