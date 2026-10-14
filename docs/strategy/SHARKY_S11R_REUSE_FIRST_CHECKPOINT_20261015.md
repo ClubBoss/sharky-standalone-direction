@@ -79,3 +79,36 @@ Use only `PILOT / ADOPT_LATER / DEFER / DO_NOTHING` for candidate outcomes. A `P
 6. Stop research at saturation or timebox. Store deferred opportunities with trigger and owner; no speculative feature/content expansion, broad migration or reliance on APK-derived proprietary code.
 
 **Terminal truth:** `S11R_CATALOGED` is a research inventory, **not** production readiness, App Store approval, legal sign-off or proof that a component is a Sharky-compatible solution.
+
+## 7. 2026-10-15 post-S11 actual radar disposition — COMPLETED_CATALOG_ONLY
+
+**Identity / source:** post-merge `main=3a38ed8fb7931e22bc732c7564ecc352b21618d1`, accepted S11 functional PR #282 (merge `730cffd594183178485f90ace94b4536725ffb71`), merged preparatory docs PR #284. This is a **read-only sourcing choice, not an implementation/native QA result**. 13 stages S12–S24 were covered in §3; the accepted per-stage decisions and trigger below override uncommitted brainstorming. This radar is **complete at catalog depth**; third-party package integrations, real commercial production success and privacy impact have **not** been independently proven.
+
+### Top-three near-term choices
+
+| Candidate | Verified external/reference facts | Sharky-specific differential, cost and recommendation |
+| --- | --- | --- |
+| **Maestro vs Patrol vs existing XCTest/simctl** | [Maestro](https://github.com/mobile-dev-inc/Maestro) and [Patrol](https://github.com/leancodepl/patrol) licenses read directly at current source: Apache-2.0. Patrol `packages/patrol/pubspec.yaml` currently says `4.10.0`, Dart `>=3.8.0`, Flutter `>=3.32.0`; Sharky `pubspec.yaml` declares Dart `>=3.9.0`, **not enough to certify exact resolved Flutter/toolchain**. Maestro provides black-box iOS/Android accessibility flows without an app SDK; Patrol provides Flutter-aware/native UI tests but its CLI/test architecture must be integrated. | **`DO_NOTHING_NOW` / conditional `PILOT_LATER`.** S11 repeated fails were stale provenance SHA and guessed app selectors/tab types/scroll visibility in *new QA code*. A new framework would still need observed selectors and proven persisted/native receipts; it might increase migration cost. KEEP existing scoped XCTest evidence/harness for S12.V. Trigger only if new stage proves repeated tooling failures not addressed by one verified selector-contract/preflight pass. Then compare **one same-job real restart/persistence case** against current tool before any migration. No QA writer, build, dependency or pilot admitted. |
+| **Flutter presentation/accessibility primitives** | [Flutter official samples](https://github.com/flutter/samples) and [Flutter accessibility testing](https://docs.flutter.dev/ui/accessibility/accessibility-testing) provide reference implementation/inspection rather than a complete proven Sharky presentation. Sharky already includes `flutter_svg` and `lottie` in current `pubspec.yaml`. | **`EVALUATE_AT_S12.V`.** Determine T0 KEEP vs a precisely material actual native table/surface defect first. No speculative ready-made poker table, asset or theme migration; legal source provenance and 5-seat/hero/card semantics matter more than component count. If S12.V HOLD and owner admits bounded visual work, choose production-fit tools in that one wave. |
+| **Official distribution, release and monetization plumbing** | Current Sharky `pubspec.yaml` includes `in_app_purchase` and `sentry_flutter`; [Apple TestFlight](https://developer.apple.com/testflight/) + [App Store Connect API](https://developer.apple.com/documentation/appstoreconnectapi/) and [fastlane pilot/deliver](https://docs.fastlane.tools/actions/pilot/) + [fastlane MIT source](https://github.com/fastlane/fastlane) are mature references. [RevenueCat Flutter](https://github.com/RevenueCat/purchases-flutter) is MIT; its service has separate costs/privacy/operations not assessed here. | **`ADOPT_LATER / KEEP_CURRENT`.** At S20 compare actual StoreKit receipt/entitlement/recovery DoD to already present `in_app_purchase`; use RevenueCat only if proven maintenance saving exceeds new service/dependency risks. At S21/S22 evaluate fastlane against existing GH Actions/Xcode and Apple's API with protected signing credentials. At S24 use existing Sentry before adding a second SDK. Never infer store/legal approval or paid viability from package availability. |
+
+### S12–S24 catalog decisions (one current judgment each)
+
+| Stage | Initial action | Exact reopening trigger |
+| --- | --- | --- |
+| S12.V | `KEEP_NATIVE_PROOF / EVALUATE_AT_STAGE` | Exact-binary standard/compact screenshots and accessibility falsifier shows material screen/table defect |
+| S12 P02 | `KEEP_EXISTING_NINE_GATES` | All current P02 entry conditions can be verified; owner explicitly admits participants |
+| S13 | `KEEP_HUMAN_PROTOCOL` | Legitimate consenting novice observation logistics create evidenced overhead; TestFlight can handle build delivery only |
+| S14 | `KEEP_TARGETED_TESTS` | Human reports actual reproducible source defect; consider better harness only if current one is causal obstacle |
+| S15 | `KEEP_SOURCE_TELEMETRY` | Genuine time-separated learner measurement requires data ingestion/analysis; consent/privacy gate before PostHog or alternative |
+| S16 | `KEEP_AUTHORING_AND_VALIDATION` | Per-world W1–W12 playable seam/ID audit finds a real validator/tooling gap |
+| S17 | `DEFER_UNRESOLVED_BRAND` | S12.V has decided any blocking table issue; only genuinely remaining asset choice is actionable |
+| S18 | `REUSE_S03_BENCHMARKS` | Matched released native learner jobs available for dated competitive assessment |
+| S19 | `KEEP_MARKET_PROTOCOL` | Genuine interview/WTP sampling, not simulated AI demand; use survey SaaS only if overhead material |
+| S20 | `KEEP_IAP / OPTIONAL_REVENUECAT` | Owner admits real commerce and sandbox/device purchase/restore proof is needed; valid beta may mark N/A |
+| S21 | `EVALUATE_APP_STORE_API_FASTLANE` | Exact truthful screenshots, metadata, privacy/age disclosures and jurisdiction/product classification required |
+| S22 | `EVALUATE_FASTLANE_PILOT` | Real signed build/TestFlight/release provenance pipeline scope admitted; compare existing GH workflow |
+| S23 | `KEEP_EXPLICIT_OWNER_LAUNCH` | All launch-admission evidence actually met; tool may submit *after* express GO only |
+| S24 | `KEEP_SENTRY / EVALUATE_CONSENTED_ANALYTICS` | Actual post-launch defect triage, consented retention and learner-value telemetry require more than Sentry |
+
+**Checkpoint result: `S11R_REUSE_FIRST_DECISION = CATALOGED_READ_ONLY / NO_PILOT / COMPLETE_AT_PLANNING_DEPTH`.** The current safest highest-EV action is **advance to S12.V exact-native visual trust**, not add a third-party framework or reorder product stages. No finding above changes the protected table or admits P02/Human, IAP, telemetry, App Store or a new code owner. Every later stage must repeat a short just-in-time real compatibility/license/cost/security check when a specific adoption is actually proposed. Any open alternatives remain deferred by trigger, not lost.
