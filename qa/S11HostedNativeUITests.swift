@@ -304,7 +304,10 @@ final class S11HostedNativeUITests: XCTestCase {
             XCTAssertFalse(app.buttons.matching(identifier:"Next hand").firstMatch.exists)
             tapSelectableOption("C\nLearn")
             XCTAssertFalse(visible("CORRECT READ"), "WRONG_FINAL_MARKED_CORRECT")
-            XCTAssertTrue(visible("One more distinction.") || visible("WRONG READ"), "NO_AUTHENTIC_WRONG_FEEDBACK")
+            XCTAssertTrue(visible("MISSED CLUE"), "NO_AUTHENTIC_WRONG_FEEDBACK")
+            XCTAssertTrue(visible("Review was the better play."), "WRONG_FINAL_REPAIR_EXPLANATION_MISSING")
+            XCTAssertTrue(visible("Learn shows what to study next."), "WRONG_FINAL_ROUTE_DISTINCTION_MISSING")
+            _ = enabledButton("Try same clue")
             persistedCheckpoint("C1_wrong_answer")
             return
         }
