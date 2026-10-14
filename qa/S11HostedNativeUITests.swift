@@ -695,6 +695,61 @@ final class S11HostedNativeUITests: XCTestCase {
         print("S11_D1_DEGRADED_PLACEMENT_REACHED")
     }
 
+
+    /// Progress-truth minimal falsifier: a real casual Placement that skips lessons earns
+    /// nothing. Home must read "0 of 9 lessons complete" and You "0 tasks complete" before
+    /// and after kill/relaunch (twice); the persisted state is judged by the verifier.
+    private func scrollToText(_ text: String, swipes: Int = 8) -> Bool {
+        for _ in 0..<swipes {
+            if visible(text, timeout: 2) { return true }
+            app.swipeUp()
+        }
+        return visible(text, timeout: 2)
+    }
+    private func shellTab(_ label: String) {
+        let probe = app.buttons.matching(NSPredicate(format: "label == %@", label)).firstMatch
+        if !(probe.exists && probe.isHittable) { tapRunnerBack(); RunLoop.current.run(until: Date().addingTimeInterval(2)) }
+        tapTab(label)
+        RunLoop.current.run(until: Date().addingTimeInterval(2))
+    }
+    private func homeYouCheckpoint(_ stage: String, withYou: Bool = true) {
+        shellTab("Home")
+        XCTAssertTrue(scrollToText("0 of 9 lessons complete"), "PT_HOME_EARNED_LABEL_NOT_ZERO_" + stage)
+        XCTAssertFalse(visible("1 of 9 lessons complete", timeout: 1) || visible("3 of 9 lessons complete", timeout: 1), "PT_HOME_PHANTOM_COMPLETE_" + stage)
+        persistedCheckpoint("PT_home_" + stage)
+        if withYou {
+            shellTab("You")
+            XCTAssertTrue(scrollToText("0 tasks complete"), "PT_YOU_NOT_ZERO_" + stage)
+            persistedCheckpoint("PT_you_" + stage)
+        }
+    }
+    func test09PlacementProgressTruth() throws {
+        app.launch()
+        XCTAssertTrue(app.waitForExistence(timeout: 35))
+        openPlacementFromIntro()
+        tapSelectableOption("I’ve played casually"); tapButton("Continue")
+        tapSelectableOption("Try one quick check"); tapButton("Continue")
+        tapButton("Start quick check")
+        for (i, answer) in ["2 private · 3 board · Pot 6 BB", "Board cards", "Check"].enumerated() {
+            selectAction(answer)
+            XCTAssertTrue(visible("CORRECT READ", timeout: 12))
+            tapButton(i == 2 ? "See my start" : "Next check")
+        }
+        capture("PT_diagnostic_result")
+        tapButton("Start with the useful hand")
+        if visible("Try one table read", timeout: 8) {
+            tapButton("Try one table read"); tapWelcomeCheck()
+            tapButton("Open my path")
+        }
+        print("S11_PT_PLACEMENT_COMPLETE")
+        homeYouCheckpoint("before")
+        app.terminate(); app.launch(); XCTAssertTrue(app.waitForExistence(timeout: 35))
+        homeYouCheckpoint("r1")
+        app.terminate(); app.launch(); XCTAssertTrue(app.waitForExistence(timeout: 35))
+        homeYouCheckpoint("r2", withYou: false)
+        print("S11_PT_PROGRESS_TRUTH_OK")
+    }
+
     func test06CleanAndRecap() throws { try firstLesson(); try secondRecap(); routeBridgeAndRetakes() }
     func test03WrongRecap() throws { try firstLesson(); try secondRecap(wrong:true) }
 

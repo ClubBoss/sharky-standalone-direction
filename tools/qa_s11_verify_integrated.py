@@ -70,6 +70,20 @@ try:
   observed['d1_degraded']='PASS_SCOPED: app launched into usable first-use entry and primary route operated with corrupt saved progress'
   verdict={'status':'PASS_DEGRADED','observed':observed}
   (root/'integrated-verdict.json').write_text(json.dumps(verdict,indent=2));print(verdict['status']);sys.exit(0)
+ if mode=='progress-truth':
+  assert 'S11_PT_PLACEMENT_COMPLETE' in log and 'S11_PT_PROGRESS_TRUTH_OK' in log, 'native Home/You assertions did not complete'
+  tags=['PT_home_before','PT_you_before','PT_home_r1','PT_you_r1','PT_home_r2']
+  st=[state(t) for t in tags]
+  b=st[0]
+  assert b['skippedTaskIds'], 'Placement skipped nothing: route not exercised'
+  assert b['completedTaskIds']==[] and b['completedLessonIds']==[] and b['earnedXp']==0, 'earned progress exists after Placement with no earned task'
+  assert not any(r.get('runKind')!='placement' for r in b['learningEvidenceHistory']), 'non-placement evidence after Placement'
+  for t,s_ in zip(tags,st):
+   for key in ['completedTaskIds','completedLessonIds','earnedXp','skippedTaskIds','learningEvidenceHistory','durableRetentionHistory','openRepairIntents']:
+    assert s_.get(key)==b.get(key), f'{t}: {key} changed across kill/relaunch'
+  observed['progress_truth']={'skipped':len(b['skippedTaskIds']),'completed':0,'xp':0,'placement_records':len(b['learningEvidenceHistory'])}
+  verdict={'status':'PASS_PROGRESS_TRUTH','observed':observed}
+  (root/'integrated-verdict.json').write_text(json.dumps(verdict,indent=2));print(verdict['status']);sys.exit(0)
  if mode=='back-resume':
   tags=['AB_question_open','AB_after_back','AB_after_relaunch','AB_resumed_question']
   st=[state(t) for t in tags]
