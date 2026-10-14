@@ -739,7 +739,8 @@ final class S11HostedNativeUITests: XCTestCase {
         tapButton("Start with the useful hand")
         if visible("Try one table read", timeout: 8) {
             tapButton("Try one table read"); tapWelcomeCheck()
-            tapButton("Open my path")
+            // Observed casual-route handoff CTA (run 38639422695 tree).
+            tapButton("Start recommended lesson")
         }
         print("S11_PT_PLACEMENT_COMPLETE")
         homeYouCheckpoint("before")
