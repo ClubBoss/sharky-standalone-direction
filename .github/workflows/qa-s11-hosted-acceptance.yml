@@ -7,7 +7,7 @@ on:
         required: true
         default: all
         type: choice
-        options: [all, clean-recap, wrong-recap, repair, repair-nomotion]
+        options: [all, clean-recap, wrong-recap, repair, repair-nomotion, back-resume, degraded]
 permissions:
   contents: read
   actions: read
@@ -138,6 +138,13 @@ jobs:
           assert Path('output/s11_hosted/native-ready.png').read_bytes()[:8]==b'\x89PNG\r\n\x1a\n'
           PYPREWARM
           xcrun simctl terminate "$SIM_ID" com.example.pokerAnalyzer
+          if test "$SHARD" = degraded; then
+            # D1 degraded bootstrap: corrupt the real saved-progress preference once,
+            # before the test launches the app. Nothing valid is fabricated.
+            xcrun simctl spawn "$SIM_ID" defaults write com.example.pokerAnalyzer flutter.act0_shell_progress_v1 -string '{corrupt-progress'
+            xcrun simctl spawn "$SIM_ID" defaults read com.example.pokerAnalyzer flutter.act0_shell_progress_v1 | tee output/s11_hosted/degraded-pre.txt
+            grep -q 'corrupt-progress' output/s11_hosted/degraded-pre.txt
+          fi
       - name: Execute genuine shard with strict native and persisted gates
         shell: bash
         env:
@@ -150,6 +157,8 @@ jobs:
             wrong-recap) METHOD=test03WrongRecap ;;
             repair) METHOD=test04AuthenticRepair ;;
             repair-nomotion) METHOD=test04AuthenticRepair ;;
+            back-resume) METHOD=test07BackAndSavedReturn ;;
+            degraded) METHOD=test08DegradedBootstrap ;;
           esac
           python3 -u qa-infra/tools/qa_s11_watch_checkpoints.py --log output/s11_hosted/native-tests.log --sim "$SIM_ID" --output output/s11_hosted/checkpoints > output/s11_hosted/checkpoint-observer.log 2>&1 &
           OBSERVER_PID=$!
@@ -165,8 +174,11 @@ jobs:
           assert any(int(n)>0 for n in re.findall(r'Executed (\d+) tests?',text)), 'ZERO_EXECUTED_XCTESTS'
           assert '** TEST SUCCEEDED **' in text
           PYCOUNT
+          if test "$SHARD" = degraded; then
+            xcrun simctl spawn "$SIM_ID" defaults read com.example.pokerAnalyzer flutter.act0_shell_progress_v1 > output/s11_hosted/checkpoints/degraded-post.txt 2>&1 || true
+          fi
           python3 qa-infra/tools/qa_s11_verify_evidence.py --screens output/s11_hosted/native-tests.log output/s11_hosted/checkpoints
-          if test "$SHARD" != repair && test "$SHARD" != repair-nomotion; then
+          if test "$SHARD" = clean-recap || test "$SHARD" = wrong-recap; then
             python3 qa-infra/tools/qa_s11_verify_closure.py output/s11_hosted/checkpoints
           fi
           python3 qa-infra/tools/qa_s11_verify_integrated.py output/s11_hosted/checkpoints "$SHARD"

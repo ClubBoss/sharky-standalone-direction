@@ -196,7 +196,7 @@ final class S11HostedNativeUITests: XCTestCase {
         fflush(stdout)
     }
 
-    private func firstLesson(wrongFinal: Bool = false) throws {
+    private func firstLesson(wrongFinal: Bool = false, stopAtFirstQuestion: Bool = false) throws {
         app.launch()
         XCTAssertTrue(app.waitForExistence(timeout:35))
         capture("first_install_intro")
@@ -306,6 +306,7 @@ final class S11HostedNativeUITests: XCTestCase {
             return
         }
         capture("first_real_graded_question")
+        if stopAtFirstQuestion { return }
         // Native option labels contain the authored ordinal, e.g. "B\nBTN".
         // Exact prefix avoids matching the miniature table's 'BTN' seat label.
         tapSelectableOption("B\nBTN")
@@ -630,6 +631,68 @@ final class S11HostedNativeUITests: XCTestCase {
         persistedCheckpoint("B_retake_diagnostic_finished")
         app.terminate(); app.launch(); XCTAssertTrue(app.waitForExistence(timeout:35))
         persistedCheckpoint("B_retake_restart")
+    }
+
+
+    /// Real runner Back control: the unlabeled top-left arrow button of the runner.
+    private func tapRunnerBack() {
+        let candidates = app.buttons.allElementsBoundByIndex.filter {
+            $0.exists && $0.isHittable && $0.frame.minX < 4 && $0.frame.width < 60 && $0.frame.minY < 130
+        }
+        guard candidates.count == 1 else {
+            capture("runner_back_not_unique"); XCTFail("RUNNER_BACK_CONTROL_NOT_UNIQUE count=" + String(candidates.count)); return
+        }
+        print("S11_NAV_RUNNER_BACK")
+        candidates[0].tap()
+    }
+
+    /// A/B minimal falsifier: Back from a live graded question and process-kill saved
+    /// return must keep the learner's saved progress and let them re-enter the same
+    /// unanswered question with no premature feedback.
+    func test07BackAndSavedReturn() throws {
+        try firstLesson(stopAtFirstQuestion: true)
+        XCTAssertTrue(visible("Which label could change next hand while the player is still you?", timeout: 12), "AB_QUESTION_NOT_OPEN")
+        persistedCheckpoint("AB_question_open")
+        tapRunnerBack()
+        RunLoop.current.run(until: Date().addingTimeInterval(3))
+        XCTAssertFalse(visible("Which label could change next hand while the player is still you?"), "AB_BACK_DID_NOT_LEAVE_RUNNER")
+        XCTAssertFalse(visible("CORRECT READ"), "AB_BACK_SHOWED_FEEDBACK")
+        capture("AB_after_back_screen")
+        persistedCheckpoint("AB_after_back")
+        app.terminate(); app.launch()
+        XCTAssertTrue(app.waitForExistence(timeout: 35))
+        capture("AB_after_relaunch_screen")
+        persistedCheckpoint("AB_after_relaunch")
+        var reached = false
+        for step in 0..<5 {
+            if visible("Which label could change next hand while the player is still you?", timeout: 4) { reached = true; break }
+            var cta: XCUIElement? = nil
+            for name in ["Continue", "Start first hand", "Start", "Resume this focus"] {
+                let b = app.buttons.matching(identifier: name).firstMatch
+                if b.exists && b.isHittable { cta = b; print("S11_NAV_RESUME_CTA " + name + " step=" + String(step)); break }
+            }
+            guard let next = cta else { capture("AB_no_resume_cta_" + String(step)); XCTFail("AB_NO_RESUME_CTA"); return }
+            next.tap()
+            RunLoop.current.run(until: Date().addingTimeInterval(2))
+        }
+        XCTAssertTrue(reached, "AB_SAVED_QUESTION_NOT_REACHED_AFTER_RELAUNCH")
+        waitForSelectable("B\nBTN")
+        XCTAssertFalse(visible("CORRECT READ"), "AB_RESUME_UNEARNED_FEEDBACK")
+        persistedCheckpoint("AB_resumed_question")
+    }
+
+    /// D1 minimal falsifier: the workflow wrote a corrupt saved-progress value into the
+    /// real app preferences before this launch. The app must still start into a usable
+    /// entry and the primary route must operate.
+    func test08DegradedBootstrap() throws {
+        app.launch()
+        XCTAssertTrue(app.waitForExistence(timeout: 35))
+        capture("D1_degraded_entry")
+        XCTAssertTrue(visible("Sharky Poker", timeout: 12) || visible("Find my start", timeout: 12), "DEGRADED_ENTRY_NOT_USABLE")
+        print("S11_D1_DEGRADED_ENTRY_OK")
+        openPlacementFromIntro()
+        capture("D1_degraded_placement")
+        print("S11_D1_DEGRADED_PLACEMENT_REACHED")
     }
 
     func test06CleanAndRecap() throws { try firstLesson(); try secondRecap(); routeBridgeAndRetakes() }

@@ -57,6 +57,32 @@ def trace(tag,s,records=None):
  return len(rows)
 observed={}
 try:
+ if mode=='degraded':
+  # No learner progress exists: judge from the native log, the pre-launch corruption
+  # receipt and the post-run preference value. Never counts as learning evidence.
+  pre=(root.parent/'degraded-pre.txt').read_text()
+  assert 'corrupt-progress' in pre, 'corruption was not written before launch'
+  assert 'S11_D1_DEGRADED_ENTRY_OK' in log and 'S11_D1_DEGRADED_PLACEMENT_REACHED' in log, 'entry/primary route did not operate on corrupt saved state'
+  post=(root/'degraded-post.txt').read_text().strip()
+  observed['pre_value_prefix']=pre.strip()[:40]
+  observed['post_value_prefix']=post[:60]
+  observed['saved_state_after_run']='still_corrupt' if 'corrupt-progress' in post else ('absent' if 'does not exist' in post else 'replaced_by_app')
+  observed['d1_degraded']='PASS_SCOPED: app launched into usable first-use entry and primary route operated with corrupt saved progress'
+  verdict={'status':'PASS_DEGRADED','observed':observed}
+  (root/'integrated-verdict.json').write_text(json.dumps(verdict,indent=2));print(verdict['status']);sys.exit(0)
+ if mode=='back-resume':
+  tags=['AB_question_open','AB_after_back','AB_after_relaunch','AB_resumed_question']
+  st=[state(t) for t in tags]
+  base=st[0]
+  assert base['selectedTaskId']=='what_poker_is_find_hero', 'saved resume point must be the open graded task'
+  for t,s_ in zip(tags,st):
+   for key in ['learningEvidenceHistory','earnedXp','completedTaskIds','completedLessonIds','selectedTaskId']:
+    assert s_[key]==base[key], f'{t}: {key} changed across Back / kill / resume'
+   assert not any(r['taskId']=='what_poker_is_find_hero' for r in s_['learningEvidenceHistory']), f'{t}: unanswered question gained a record'
+  observed['saved_return']='PASS_SCOPED'
+  observed['checkpoints']={t:{'xp':s_['earnedXp'],'records':len(s_['learningEvidenceHistory']),'selectedTaskId':s_['selectedTaskId'],'resumeInRunner':s_.get('resumeInRunner')} for t,s_ in zip(tags,st)}
+  verdict={'status':'PASS_BACK_RESUME','observed':observed}
+  (root/'integrated-verdict.json').write_text(json.dumps(verdict,indent=2));print(verdict['status']);sys.exit(0)
  if mode in ('clean-recap','wrong-recap'):
   b=observed['before']=state('C1_second_review_entry')
   tag='recap_wrong' if mode=='wrong-recap' else 'recap_correct'
