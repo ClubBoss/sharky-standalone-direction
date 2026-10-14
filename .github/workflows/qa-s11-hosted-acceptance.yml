@@ -47,8 +47,8 @@ jobs:
       - name: Download hosted app built from frozen source in feasibility run
         uses: actions/download-artifact@v4
         with:
-          name: s11-hosted-feasibility-38602214956
-          run-id: 38602214956
+          name: s11-hosted-feasibility-38633381748
+          run-id: 38633381748
           repository: ClubBoss/sharky-standalone-direction
           github-token: ${{ github.token }}
           path: output/s11_hosted
@@ -60,8 +60,8 @@ jobs:
           ditto -x -k output/s11_hosted/Runner.zip output/s11_hosted
           test -d output/s11_hosted/Runner.app
           grep -Fx 'source=2bbaee75344dd5ddb780093355b2dbff5a62118a' output/s11_hosted/binary-provenance.txt
-          test "$(awk '{print $1}' output/s11_hosted/kernel-sha.txt)" = "47f1de571c136522692e9eeb6592cc3a9b7033283e72e2a8aa0df2cb51d5ab65"
-          test "$(awk '{print $1}' output/s11_hosted/manifest-file-sha.txt)" = "9968074d48b3207cfdc76f676e629087153ef36820a8740c690d6474fdf293ce"
+          test "$(awk '{print $1}' output/s11_hosted/kernel-sha.txt)" = "e3153105e8a9a8867e521e26a4784c2df170ac5e4f90ddf83462c48c09c03b45"
+          test "$(awk '{print $1}' output/s11_hosted/manifest-file-sha.txt)" = "a40dbb081de8907c3ca4cc694e3c87ee8b934c744aa6f66062e7b8bc1abcb166"
           test "$(awk '{print $1}' output/s11_hosted/app-archive-sha.txt)" = "3b630a0dd9fafed080d1847015f61eeebb7a7f2c38ebb8dca7e4fe09fb8713f5"
           test -s output/s11_hosted/kernel-sha.txt
           shasum -a 256 output/s11_hosted/Runner.app/Frameworks/App.framework/flutter_assets/kernel_blob.bin | diff -u output/s11_hosted/kernel-sha.txt -
