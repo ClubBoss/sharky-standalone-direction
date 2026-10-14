@@ -707,8 +707,8 @@ final class S11HostedNativeUITests: XCTestCase {
         return visible(text, timeout: 2)
     }
     private func shellTab(_ label: String) {
-        let probe = app.buttons.matching(NSPredicate(format: "label == %@", label)).firstMatch
-        if !(probe.exists && probe.isHittable) { tapRunnerBack(); RunLoop.current.run(until: Date().addingTimeInterval(2)) }
+        let probe = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", label)).allElementsBoundByIndex.filter { $0.exists && $0.isHittable && $0.frame.midY > app.frame.height * 0.8 }
+        if probe.isEmpty { tapRunnerBack(); RunLoop.current.run(until: Date().addingTimeInterval(2)) }
         tapTab(label)
         RunLoop.current.run(until: Date().addingTimeInterval(2))
     }
