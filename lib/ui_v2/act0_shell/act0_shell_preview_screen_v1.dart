@@ -7521,8 +7521,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool _firstCorrectReadEarnedInCurrentLessonRunV1() {
     final boundary = _lessonRunEvidenceStartOrderV1;
     if (boundary == null || _selectedLessonId.isEmpty) return false;
-    // Match the canonical achievement's earliest correct, non-assisted
-    // record before deciding whether it belongs to this lesson run.
+    // Earliest correct, non-assisted LESSON-run record. A placement answer is
+    // assessment, not a read earned in this lesson run, so it is skipped here
+    // (the achievement projection itself still counts it; recorded P2 N1).
     final eligible =
         _learningEvidenceHistoryV1.records
             .where(
