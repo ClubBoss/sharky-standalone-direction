@@ -535,6 +535,13 @@ final class S11HostedNativeUITests: XCTestCase {
         if recheck.exists && recheck.isHittable { tapButton("Check original read") }
         else if app.buttons.matching(identifier:"Try same clue").firstMatch.waitForExistence(timeout: 5) { tapButton("Try same clue") }
         else { tapButton("Next hand") }
+        // Observed (QA 9473bda): `Try same clue` after the assisted answer opens the
+        // Review repair card ("1 miss to fix", CTA `Practice this spot`). The matched
+        // independent recheck is entered through that real repair CTA.
+        if visible("Practice this repair", timeout: 6) || app.buttons.matching(identifier: "Practice this spot").firstMatch.exists {
+            capture("C2_review_repair_card_before_recheck")
+            tapButton("Practice this spot")
+        }
         waitForSelectable("B\nCheck")
         XCTAssertFalse(visible("CORRECT READ"))
         selectAction("Check")
