@@ -3595,7 +3595,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         (task) => completedTaskIds.contains(task.taskId),
       );
       final hasPriorLessonEvidence = parsed.learningEvidenceHistory.records.any(
-        (record) => record.lessonId == selectedLesson.lessonId,
+        (record) =>
+            !record.isPlacementAssessment &&
+            record.lessonId == selectedLesson.lessonId,
       );
       _lessonRunEvidenceBoundariesV1
         ..clear()
@@ -4041,8 +4043,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               orElse: () => '',
             );
     if (conceptFamilyId.isNotEmpty) {
+      // A placement diagnostic answer is assessment, not earlier learning.
       final priorFamilyRecords = _learningEvidenceHistoryV1.records.where(
         (record) =>
+            !record.isPlacementAssessment &&
             act0ConceptFamilyIdForDurableEvidenceV1(record) == conceptFamilyId,
       );
       if (priorFamilyRecords.isNotEmpty &&
@@ -6048,6 +6052,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 onBack: () => setState(() {
                                   _pendingReviewKindV1 = null;
                                   if (_placementDiagnosticActive) {
+                                    _endPlacementAssessmentRunV1();
                                     _placementDiagnosticActive = false;
                                     _showPlacement = true;
                                     _showPlayHub = true;
@@ -6312,6 +6317,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _seedProfileSkillStats(
                                       _placementResult!.skillStats,
                                     );
+                                    _endPlacementAssessmentRunV1();
                                     _placementDiagnosticActive = false;
                                     _showPlacement = true;
                                     _showPlayHub = true;
@@ -9437,7 +9443,62 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _placementDiagnosticHitSignals.clear();
     _placementDiagnosticMissSignals.clear();
     _placementIntroVisible = false;
+    _beginPlacementAssessmentRunV1();
     _startPlacementDiagnosticAt(worlds, _placementDiagnosticIndex);
+  }
+
+  /// The Placement diagnostic is a real assessment: its three answers get one
+  /// source-owned `placement` run and the active learner session before the
+  /// first decision, so no assessed record is saved without provenance.
+  void _beginPlacementAssessmentRunV1() {
+    final spot = _placementDiagnosticSpotsV1.first;
+    final session = _ensureActiveSessionIdentityV1(
+      worldId: spot.worldId,
+      lessonId: spot.lessonId,
+    );
+    if (session.startedNewSession) {
+      _recordTelemetryEventV1('session_start', <String, Object?>{
+        'schemaVersion': 1,
+        'worldId': spot.worldId,
+        'world_id': spot.worldId,
+        'lessonId': spot.lessonId,
+        'lesson_id': spot.lessonId,
+        'taskId': spot.taskId,
+        'task_id': spot.taskId,
+        'source_surface': 'act0_placement',
+      });
+    }
+    _startLearningEvidenceRunV1(
+      worldId: spot.worldId,
+      lessonId: spot.lessonId,
+      runKind: act0PlacementAssessmentRunKindV1,
+      startedBy: 'placement_diagnostic',
+    );
+  }
+
+  void _endPlacementAssessmentRunV1() {
+    if (_activeLearningEvidenceRunKeyV1?.runKind ==
+        act0PlacementAssessmentRunKindV1) {
+      _activeLearningEvidenceRunKeyV1 = null;
+    }
+  }
+
+  /// The recommended first lesson opens its own lesson run (and resumes the
+  /// active session) at the moment the runner is actually entered.
+  void _beginPlacementRecommendedLessonRunV1() {
+    if (_selectedLessonId.isEmpty || _selectedTaskId.isEmpty) {
+      return;
+    }
+    _emitLessonStartedTelemetryV1(
+      lessonId: _selectedLessonId,
+      taskId: _selectedTaskId,
+    );
+    _startLearningEvidenceRunV1(
+      worldId: _selectedWorldId,
+      lessonId: _selectedLessonId,
+      runKind: 'lesson',
+      startedBy: 'placement_recommendation',
+    );
   }
 
   bool _startNextPlacementDiagnostic(List<Act0WorldCardV1> worlds) {
@@ -9472,7 +9533,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     // Placement diagnostic is assessment-only. Skip lesson teaching copy here;
     // the same task still teaches normally when launched from the learning path.
     _teachingStepIndex = task.runner.teachingSteps.length;
+    // Selecting the diagnostic spot is not a lesson replay: per-run metrics
+    // reset, but historical lesson-run boundaries must not move.
+    final boundaries = Map<String, int?>.from(_lessonRunEvidenceBoundariesV1);
+    final boundaryLessonId = _lessonRunEvidenceLessonIdV1;
+    final boundaryStartOrder = _lessonRunEvidenceStartOrderV1;
     _resetLessonRunMetrics();
+    _lessonRunEvidenceBoundariesV1
+      ..clear()
+      ..addAll(boundaries);
+    _lessonRunEvidenceLessonIdV1 = boundaryLessonId;
+    _lessonRunEvidenceStartOrderV1 = boundaryStartOrder;
   }
 
   Future<void> _persistPlacementCompletionV1(
@@ -9715,6 +9786,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ? focusTask.runner.teachingSteps.length
         : 0;
     _resetLessonRunMetrics();
+    if (directRunner && !showWelcome) {
+      _beginPlacementRecommendedLessonRunV1();
+    }
     _persistProgress();
     await _persistPlacementCompletionV1(result ?? _buildPlacementResult());
   }
@@ -9758,6 +9832,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       } else if (_welcomeHandoffStartsRecommendedTaskV1) {
         _tab = Act0ShellTabV1.play;
         _showPlayHub = false;
+        _beginPlacementRecommendedLessonRunV1();
       } else {
         _tab = Act0ShellTabV1.home;
         final baseState = widget.state ?? Act0ShellStateV1.sample;
@@ -13346,7 +13421,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         final hasOlderProgress =
             taskIds.any(_completedTaskIds.contains) ||
             _learningEvidenceHistoryV1.records.any(
-              (record) => record.lessonId == _selectedLessonId,
+              (record) =>
+                  !record.isPlacementAssessment &&
+                  record.lessonId == _selectedLessonId,
             );
         _lessonRunEvidenceStartOrderV1 = hasOlderProgress
             ? null
