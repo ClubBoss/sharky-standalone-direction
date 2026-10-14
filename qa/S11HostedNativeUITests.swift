@@ -44,7 +44,12 @@ final class S11HostedNativeUITests: XCTestCase {
     }
     private func enabledButton(_ label: String, timeout: TimeInterval = 5) -> XCUIElement {
         let button = app.buttons.matching(identifier: label).firstMatch
-        XCTAssertTrue(button.waitForExistence(timeout: timeout), "MISSING_REQUIRED_BUTTON " + label)
+        if !button.waitForExistence(timeout: timeout) {
+            // Record the real AX tree and screen before failing; the previous
+            // repair run left only the failed query chain.
+            capture("missing_button_" + label.replacingOccurrences(of: " ", with: "_").prefix(24))
+        }
+        XCTAssertTrue(button.exists, "MISSING_REQUIRED_BUTTON " + label)
         XCTAssertTrue(button.isEnabled, "REQUIRED_CTA_DISABLED " + label)
         XCTAssertTrue(button.isHittable, "REQUIRED_CTA_NOT_HITTABLE " + label)
         return button
@@ -498,7 +503,11 @@ final class S11HostedNativeUITests: XCTestCase {
         capture("C2_actual_placement_recommendation")
         tapButton("Start with the useful hand")
         tapButton("Try one table read")
-        tapWelcomeCheck(); tapButton("Open my path")
+        tapWelcomeCheck()
+        // The compact handoff appears after the choice; wait like the standard path.
+        let compactHandoff = app.buttons.matching(identifier: "Open my path").firstMatch
+        _ = compactHandoff.waitForExistence(timeout: 15)
+        tapButton("Open my path")
         waitForSelectable("A\nFold")
         capture("C2_actual_action_source_entry")
         XCTAssertTrue(visible("No bet") || visible("free"))
