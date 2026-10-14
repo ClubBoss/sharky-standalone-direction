@@ -77,7 +77,8 @@ final class S11HostedNativeUITests: XCTestCase {
         let chars = Array(prefix)
         if chars.count > 2, chars[1] == "\n", chars[0].isUppercase {
             let text = String(chars[2...])
-            let exact = app.buttons.matching(NSPredicate(format:"label == %@", text)).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+            // Compact (375x667) quick-check buttons carry the text twice: "X\nX".
+            let exact = app.buttons.matching(NSPredicate(format:"label == %@ OR label BEGINSWITH %@", text, text + "\n")).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
             if !exact.isEmpty { return (exact, "button_exact") }
         }
         return ([], "none")

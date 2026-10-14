@@ -52,10 +52,26 @@ try:
     assert 'what_poker_is_review' in s['completedTaskIds'] and 'what_poker_is_content' in s['completedLessonIds']
    trace('recap_summary',observed['recap_summary'],current)
    base=state('B_profile_before_retake')
+   # Retake must not change earned learning. The retake diagnostic is a set of
+   # genuine new learner decisions: the saved history must keep the base as an
+   # exact prefix, and anything appended must be reported and have exactly one
+   # user_choice/decision_made/task_result per attempt. Earned XP and
+   # completion/skip sets must be identical.
+   appended={}
    for tag in ['B_retake_zero_finished','B_retake_diagnostic_finished','B_retake_restart']:
     s=observed[tag]=state(tag)
-    for key in ['learningEvidenceHistory','earnedXp','completedTaskIds','completedLessonIds','skippedTaskIds']:
+    for key in ['earnedXp','completedTaskIds','completedLessonIds','skippedTaskIds']:
      assert s[key]==base[key], f'{tag}:{key}:retake changed earned learning'
+    n=len(base['learningEvidenceHistory'])
+    assert s['learningEvidenceHistory'][:n]==base['learningEvidenceHistory'], f'{tag}:retake rewrote saved evidence'
+    appended[tag]=s['learningEvidenceHistory'][n:]
+   assert appended['B_retake_zero_finished']==[], 'zero retake must append no evidence'
+   assert appended['B_retake_restart']==appended['B_retake_diagnostic_finished'], 'restart changed retake evidence'
+   rows=[json.loads(x) for x in (root/'B_retake_diagnostic_finished'/'app-owned-telemetry.jsonl').read_text().splitlines() if x]
+   for r in appended['B_retake_diagnostic_finished']:
+    for name in ['user_choice','decision_made','task_result']:
+     assert len([e for e in rows if e['name']==name and e['fields'].get('attempt_id')==r['recordId']])==1, f"retake diagnostic {r['recordId']}:{name} cardinality"
+   observed['retake_diagnostic_appended']=[{k:r.get(k) for k in ('recordId','taskId','lessonId','choiceId','isCorrect','assistanceKind','runId','sessionId')} for r in appended['B_retake_diagnostic_finished']]
  else:
   tags=['C2_wrong','C2_assisted','C2_independent_recheck','C2_summary','C2_review','C2_home','C2_restart']
   for tag in tags:observed[tag]=state(tag)
