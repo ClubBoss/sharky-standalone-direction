@@ -34,6 +34,9 @@ class Act0DurableRetentionHistoryV1 {
     Act0LearningEvidenceRecordV1 record,
   ) {
     if (record.isAssistedCorrect) return this;
+    // A placement answer is assessment, not learning: it must not seed
+    // retention state or an elapsed due review.
+    if (record.isPlacementAssessment) return this;
     final conceptFamilyId = act0ConceptFamilyIdForDurableEvidenceV1(record);
     if (conceptFamilyId.isEmpty || conceptFamilyId == 'none') {
       return this;

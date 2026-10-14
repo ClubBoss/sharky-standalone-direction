@@ -80,6 +80,9 @@ Act0LearningEvidenceRecordV1? act0LearningEvidenceRecordFromCompletedDecisionV1(
   );
 }
 
+/// `runKind` of evidence recorded by the Placement diagnostic.
+const act0PlacementAssessmentRunKindV1 = 'placement';
+
 /// Evidence-only record for a completed Act0 decision.
 ///
 /// This contract deliberately has no learner-facing interpretation fields.
@@ -223,6 +226,12 @@ class Act0LearningEvidenceRecordV1 {
   final DateTime? recordedAtUtc;
   final Act0ReviewKindV1 reviewKind;
   final Act0DecisionAssistanceV1 assistanceKind;
+
+  /// Placement diagnostic answers are authentic assessment evidence with their
+  /// own run kind. They are never earlier lesson learning, unseen transfer,
+  /// durable retention or a lesson-run boundary.
+  bool get isPlacementAssessment =>
+      runKind.trim() == act0PlacementAssessmentRunKindV1;
 
   bool get isAssistedCorrect =>
       isCorrect &&
@@ -761,7 +770,11 @@ class Act0LearningEvidenceHistoryV1 {
     final latestGrouped = records
         .cast<Act0LearningEvidenceRecordV1?>()
         .lastWhere(
-          (record) => record?.runId.trim().isNotEmpty == true,
+          // A placement assessment run is not a learning run: it must not
+          // become the "latest run" summary or earn a session achievement.
+          (record) =>
+              record?.runId.trim().isNotEmpty == true &&
+              record?.isPlacementAssessment == false,
           orElse: () => null,
         );
     if (latestGrouped == null) {

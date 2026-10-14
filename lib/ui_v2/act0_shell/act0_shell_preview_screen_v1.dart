@@ -2600,6 +2600,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _resolvedMistakeTaskIds.clear();
     _cleanTaskIds.clear();
     _retentionMemoryByTaskId.clear();
+    _endPlacementAssessmentRunV1();
     _placementDiagnosticActive = false;
     _placementIntroVisible = true;
     _placementQuestionIndex = 0;
@@ -3481,6 +3482,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }.where(validTaskIds.contains).toSet();
     completedTaskIds.addAll(compatTaskIds);
     completedLessonIds.addAll(compatLessonIds.where(validLessonIds.contains));
+    // Placement skips are navigation, never earned completion: when only skips
+    // (no genuine completion) show progress beyond the guide, keep the content
+    // lesson path-closed as a SKIP so routing is unchanged, but earn nothing.
+    final compatSkipTaskIds = <String>{
+      for (final lessonId in _legacyCompatSkipClearedLessonIdsV1(
+        parsed: parsed,
+        state: state,
+      ))
+        for (final task in state.lessonById(lessonId).taskList) task.taskId,
+    }.where(validTaskIds.contains).toSet();
+    skippedTaskIds.addAll(compatSkipTaskIds.difference(completedTaskIds));
     final closedTaskIds = <String>{...completedTaskIds, ...skippedTaskIds};
     final worldsAfterProgress = _progressWorldsWithTaskIds(
       state,
@@ -3595,7 +3607,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         (task) => completedTaskIds.contains(task.taskId),
       );
       final hasPriorLessonEvidence = parsed.learningEvidenceHistory.records.any(
-        (record) => record.lessonId == selectedLesson.lessonId,
+        (record) =>
+            !record.isPlacementAssessment &&
+            record.lessonId == selectedLesson.lessonId,
       );
       _lessonRunEvidenceBoundariesV1
         ..clear()
@@ -3618,7 +3632,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       } else {
         _learnDetailLessonId = null;
       }
-      _phase = selectedTask.phase;
+      _phase = selectedTask.entryPhase;
       _selectedOptionId = null;
       _teachingStepIndex = 0;
       _tab = widget.initialTab;
@@ -4028,6 +4042,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (routed != Act0ReviewKindV1.initialAssessment) {
       return routed;
     }
+    // A placement diagnostic answer is itself the initial assessment.
+    if (_activeLearningEvidenceRunKeyV1?.runKind ==
+        act0PlacementAssessmentRunKindV1) {
+      return Act0ReviewKindV1.initialAssessment;
+    }
     final conceptFamilyId =
         <String?>[
               decision.conceptFamilyId,
@@ -4041,8 +4060,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               orElse: () => '',
             );
     if (conceptFamilyId.isNotEmpty) {
+      // A placement diagnostic answer is assessment, not earlier learning.
       final priorFamilyRecords = _learningEvidenceHistoryV1.records.where(
         (record) =>
+            !record.isPlacementAssessment &&
             act0ConceptFamilyIdForDurableEvidenceV1(record) == conceptFamilyId,
       );
       if (priorFamilyRecords.isNotEmpty &&
@@ -4727,6 +4748,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _showPlacement = false;
       _showWelcome = false;
       _welcomeReturnTabV1 = null;
+      _endPlacementAssessmentRunV1();
       _placementDiagnosticActive = false;
       _placementIntroVisible = false;
       _placementDiagnosticIndex = 0;
@@ -4750,6 +4772,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _showWelcome = false;
       _welcomeHandoffStartsRecommendedTaskV1 = false;
       _welcomeReturnTabV1 = null;
+      _endPlacementAssessmentRunV1();
       _placementDiagnosticActive = false;
       _placementIntroVisible = true;
       _placementQuestionIndex = 0;
@@ -4791,6 +4814,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _showPlacement = false;
       _showWelcome = false;
       _welcomeReturnTabV1 = null;
+      _endPlacementAssessmentRunV1();
       _placementDiagnosticActive = false;
       _tab = tab;
       _showPlayHub = tab == Act0ShellTabV1.play ? showPlayHub : true;
@@ -4801,7 +4825,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _activeRepairResultReceiptLine = null;
       _activeRepairSessionSummaryLines = const <String>[];
       _selectedOptionId = null;
-      _phase = selectedTask.phase;
+      _phase = selectedTask.entryPhase;
       _teachingStepIndex = 0;
       if (tab != Act0ShellTabV1.learn) {
         _learnDetailLessonId = null;
@@ -5623,7 +5647,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 lesson,
                               ).taskId;
                               _selectedWorldId = worldId;
-                              _phase = _taskById(lesson, selectedTaskId).phase;
+                              _phase = _taskById(
+                                lesson,
+                                selectedTaskId,
+                              ).entryPhase;
                               _selectedOptionId = null;
                               _teachingStepIndex = 0;
                               _showWorldMenu = false;
@@ -5721,13 +5748,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             lessonId: lessonId,
                             taskId: taskId,
                           );
+                          _startLearningEvidenceRunV1(
+                            worldId: selectedWorld.worldId,
+                            lessonId: lesson.lessonId,
+                            runKind: 'lesson',
+                            startedBy: 'learn_route',
+                          );
                           setState(() {
                             _selectedLessonId = lessonId;
                             _selectedTaskId = taskId;
                             _tab = Act0ShellTabV1.play;
                             _showPlayHub = false;
                             _returnToPlayHubOnBack = false;
-                            _phase = _taskById(lesson, taskId).phase;
+                            _phase = _taskById(lesson, taskId).entryPhase;
                             _selectedOptionId = null;
                             _teachingStepIndex = 0;
                             _resetLessonRunMetrics();
@@ -5843,7 +5876,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   _phase = _taskById(
                                     selectedLesson,
                                     _selectedTaskId,
-                                  ).phase;
+                                  ).entryPhase;
                                   _selectedOptionId = null;
                                   _teachingStepIndex = 0;
                                   _resetLessonRunMetrics();
@@ -5910,7 +5943,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _phase = _taskById(
                                       nextLesson,
                                       _selectedTaskId,
-                                    ).phase;
+                                    ).entryPhase;
                                     _showPlayHub = false;
                                     _selectedOptionId = null;
                                     _teachingStepIndex = 0;
@@ -5936,7 +5969,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   _phase = _taskById(
                                     nextLesson,
                                     _selectedTaskId,
-                                  ).phase;
+                                  ).entryPhase;
                                   _showPlayHub = false;
                                   _selectedOptionId = null;
                                   _teachingStepIndex = 0;
@@ -6039,6 +6072,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 onBack: () => setState(() {
                                   _pendingReviewKindV1 = null;
                                   if (_placementDiagnosticActive) {
+                                    _endPlacementAssessmentRunV1();
                                     _placementDiagnosticActive = false;
                                     _showPlacement = true;
                                     _showPlayHub = true;
@@ -6303,6 +6337,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _seedProfileSkillStats(
                                       _placementResult!.skillStats,
                                     );
+                                    _endPlacementAssessmentRunV1();
                                     _placementDiagnosticActive = false;
                                     _showPlacement = true;
                                     _showPlayHub = true;
@@ -7052,7 +7087,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final quickFix = _quickFixMistakes().isEmpty
         ? null
         : _quickFixMistakes().first;
-    if (quickFix != null) {
+    // Fixed does not mean due. Never promise an immediate Review CTA
+    // when the durable spaced-review owner has no launchable due item.
+    final quickFixDue =
+        quickFix != null &&
+        _durableRetentionHistoryV1
+            .dueItemsAt(widget.clock.nowUtc())
+            .any((item) => item.taskId == quickFix.taskId);
+    if (quickFix != null && quickFixDue) {
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.reviewQuickFix,
         label: _copyV1(en: 'Quick fix', ru: 'Лёгкий повтор'),
@@ -7490,11 +7532,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool _firstCorrectReadEarnedInCurrentLessonRunV1() {
     final boundary = _lessonRunEvidenceStartOrderV1;
     if (boundary == null || _selectedLessonId.isEmpty) return false;
-    // Match the canonical achievement's earliest correct, non-assisted
-    // record before deciding whether it belongs to this lesson run.
+    // Earliest correct, non-assisted LESSON-run record. A placement answer is
+    // assessment, not a read earned in this lesson run, so it is skipped here
+    // (the achievement projection itself still counts it; recorded P2 N1).
     final eligible =
         _learningEvidenceHistoryV1.records
-            .where((record) => record.isCorrect && !record.isAssistedCorrect)
+            .where(
+              (record) =>
+                  record.isCorrect &&
+                  !record.isAssistedCorrect &&
+                  !record.isPlacementAssessment,
+            )
             .toList()
           ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));
     final first = eligible.firstOrNull;
@@ -8329,9 +8377,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     if (_placementHandoffActive) {
-      _startPlacementDiagnostic(
-        _progressedWorlds(widget.state ?? Act0ShellStateV1.sample),
-      );
+      // Placement has already chosen this taught task. Home must not restart
+      // the assessment-only placement diagnostic behind a first-hand CTA.
+      _startTaskByIds(selectedWorld, _selectedLessonId, _selectedTaskId);
+      _returnToPlayHubOnBack = false;
       return;
     }
     _placementHandoffActive = false;
@@ -9420,7 +9469,62 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _placementDiagnosticHitSignals.clear();
     _placementDiagnosticMissSignals.clear();
     _placementIntroVisible = false;
+    _beginPlacementAssessmentRunV1();
     _startPlacementDiagnosticAt(worlds, _placementDiagnosticIndex);
+  }
+
+  /// The Placement diagnostic is a real assessment: its three answers get one
+  /// source-owned `placement` run and the active learner session before the
+  /// first decision, so no assessed record is saved without provenance.
+  void _beginPlacementAssessmentRunV1() {
+    final spot = _placementDiagnosticSpotsV1.first;
+    final session = _ensureActiveSessionIdentityV1(
+      worldId: spot.worldId,
+      lessonId: spot.lessonId,
+    );
+    if (session.startedNewSession) {
+      _recordTelemetryEventV1('session_start', <String, Object?>{
+        'schemaVersion': 1,
+        'worldId': spot.worldId,
+        'world_id': spot.worldId,
+        'lessonId': spot.lessonId,
+        'lesson_id': spot.lessonId,
+        'taskId': spot.taskId,
+        'task_id': spot.taskId,
+        'source_surface': 'act0_placement',
+      });
+    }
+    _startLearningEvidenceRunV1(
+      worldId: spot.worldId,
+      lessonId: spot.lessonId,
+      runKind: act0PlacementAssessmentRunKindV1,
+      startedBy: 'placement_diagnostic',
+    );
+  }
+
+  void _endPlacementAssessmentRunV1() {
+    if (_activeLearningEvidenceRunKeyV1?.runKind ==
+        act0PlacementAssessmentRunKindV1) {
+      _activeLearningEvidenceRunKeyV1 = null;
+    }
+  }
+
+  /// The recommended first lesson opens its own lesson run (and resumes the
+  /// active session) at the moment the runner is actually entered.
+  void _beginPlacementRecommendedLessonRunV1() {
+    if (_selectedLessonId.isEmpty || _selectedTaskId.isEmpty) {
+      return;
+    }
+    _emitLessonStartedTelemetryV1(
+      lessonId: _selectedLessonId,
+      taskId: _selectedTaskId,
+    );
+    _startLearningEvidenceRunV1(
+      worldId: _selectedWorldId,
+      lessonId: _selectedLessonId,
+      runKind: 'lesson',
+      startedBy: 'placement_recommendation',
+    );
   }
 
   bool _startNextPlacementDiagnostic(List<Act0WorldCardV1> worlds) {
@@ -9455,7 +9559,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     // Placement diagnostic is assessment-only. Skip lesson teaching copy here;
     // the same task still teaches normally when launched from the learning path.
     _teachingStepIndex = task.runner.teachingSteps.length;
+    // Selecting the diagnostic spot is not a lesson replay: per-run metrics
+    // reset, but historical lesson-run boundaries must not move.
+    final boundaries = Map<String, int?>.from(_lessonRunEvidenceBoundariesV1);
+    final boundaryLessonId = _lessonRunEvidenceLessonIdV1;
+    final boundaryStartOrder = _lessonRunEvidenceStartOrderV1;
     _resetLessonRunMetrics();
+    _lessonRunEvidenceBoundariesV1
+      ..clear()
+      ..addAll(boundaries);
+    _lessonRunEvidenceLessonIdV1 = boundaryLessonId;
+    _lessonRunEvidenceStartOrderV1 = boundaryStartOrder;
   }
 
   Future<void> _persistPlacementCompletionV1(
@@ -9691,13 +9805,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _learnPopupTaskId = null;
     _firstValueReceiptCarry = null;
     _firstValueTodayShownTelemetryKey = '';
-    _phase = focusTask.phase;
+    _phase = focusTask.entryPhase;
     _selectedOptionId = null;
     _teachingStepIndex =
         directRunner && focusTask.phase == Act0LessonPhaseV1.drill
         ? focusTask.runner.teachingSteps.length
         : 0;
     _resetLessonRunMetrics();
+    if (directRunner && !showWelcome) {
+      _beginPlacementRecommendedLessonRunV1();
+    }
     _persistProgress();
     await _persistPlacementCompletionV1(result ?? _buildPlacementResult());
   }
@@ -9741,6 +9858,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       } else if (_welcomeHandoffStartsRecommendedTaskV1) {
         _tab = Act0ShellTabV1.play;
         _showPlayHub = false;
+        _beginPlacementRecommendedLessonRunV1();
       } else {
         _tab = Act0ShellTabV1.home;
         final baseState = widget.state ?? Act0ShellStateV1.sample;
@@ -9816,31 +9934,80 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
   }
 
+  /// Legacy saves written before `what_poker_is_content` was split out: a
+  /// learner with a GENUINELY completed task beyond the guide had the content
+  /// lesson auto-completed. Only completed tasks count; Placement skips do not.
   Set<String> _legacyCompatAutoCompletedLessonIdsV1({
     required _Act0PersistedProgressV1 parsed,
     required Act0ShellStateV1 state,
   }) {
-    if (parsed.selectedWorldId != 'world_1') {
+    if (!_legacyCompatAppliesV1(parsed, state)) {
       return const <String>{};
     }
-    if (parsed.selectedLessonId == 'what_poker_is' ||
-        parsed.selectedLessonId == 'what_poker_is_content') {
-      return const <String>{};
-    }
-    final worldOne = state.worldById('world_1');
-    final guideTaskIds = <String>{
-      for (final task in worldOne.lessons.first.taskList) task.taskId,
-    };
-    final hasProgressBeyondGuide =
-        parsed.completedTaskIds.any(
-          (taskId) => !guideTaskIds.contains(taskId),
-        ) ||
-        parsed.skippedTaskIds.any((taskId) => !guideTaskIds.contains(taskId));
-    if (!hasProgressBeyondGuide) {
-      return const <String>{};
-    }
-    return const <String>{'what_poker_is_content'};
+    final guideTaskIds = _guideTaskIdsV1(state);
+    final hasCompletedBeyondGuide = parsed.completedTaskIds.any(
+      (taskId) => !guideTaskIds.contains(taskId),
+    );
+    // Only a save that has NEVER seen the content lesson is a pre-split legacy
+    // save. A modern save (e.g. after Placement) already lists its tasks as
+    // skipped; a later genuine completion elsewhere must not earn them.
+    return hasCompletedBeyondGuide &&
+            !_contentLessonKnownToSaveV1(parsed, state)
+        ? const <String>{'what_poker_is_content'}
+        : const <String>{};
   }
+
+  /// Skip-only progress beyond the guide (a Placement clearance): the content
+  /// lesson is closed for routing as a skip, never as an earned completion.
+  Set<String> _legacyCompatSkipClearedLessonIdsV1({
+    required _Act0PersistedProgressV1 parsed,
+    required Act0ShellStateV1 state,
+  }) {
+    if (!_legacyCompatAppliesV1(parsed, state)) {
+      return const <String>{};
+    }
+    final guideTaskIds = _guideTaskIdsV1(state);
+    final hasCompletedBeyondGuide = parsed.completedTaskIds.any(
+      (taskId) => !guideTaskIds.contains(taskId),
+    );
+    final hasSkippedBeyondGuide = parsed.skippedTaskIds.any(
+      (taskId) => !guideTaskIds.contains(taskId),
+    );
+    return !hasCompletedBeyondGuide && hasSkippedBeyondGuide
+        ? const <String>{'what_poker_is_content'}
+        : const <String>{};
+  }
+
+  bool _contentLessonKnownToSaveV1(
+    _Act0PersistedProgressV1 parsed,
+    Act0ShellStateV1 state,
+  ) {
+    final contentTaskIds = state
+        .lessonById('what_poker_is_content')
+        .taskList
+        .map((task) => task.taskId);
+    return contentTaskIds.any(
+      (taskId) =>
+          parsed.skippedTaskIds.contains(taskId) ||
+          parsed.completedTaskIds.contains(taskId),
+    );
+  }
+
+  bool _legacyCompatAppliesV1(
+    _Act0PersistedProgressV1 parsed,
+    Act0ShellStateV1 state,
+  ) {
+    if (parsed.selectedWorldId != 'world_1') {
+      return false;
+    }
+    return parsed.selectedLessonId != 'what_poker_is' &&
+        parsed.selectedLessonId != 'what_poker_is_content';
+  }
+
+  Set<String> _guideTaskIdsV1(Act0ShellStateV1 state) => <String>{
+    for (final task in state.worldById('world_1').lessons.first.taskList)
+      task.taskId,
+  };
 
   Act0PlacementResultV1 _buildPlacementResult() {
     final diagnosticTotal = _placementDiagnosticSpotsV1.length;
@@ -10462,7 +10629,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _activeRepairSourceTaskId = null;
     _activePracticeRepairQueueRequestV1 = null;
     _rapidPracticeLoop = rapidPracticeLoop;
-    _phase = task.phase;
+    _phase = task.entryPhase;
     _selectedOptionId = null;
     _teachingStepIndex = skipTeaching && task.phase == Act0LessonPhaseV1.drill
         ? task.runner.teachingSteps.length
@@ -11690,7 +11857,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     final anchorTask = _taskById(selectedLesson, wrapUpAnchorTaskId);
     _selectedTaskId = anchorTask.taskId;
-    _phase = anchorTask.phase;
+    _phase = anchorTask.entryPhase;
   }
 
   String _repairActionLabel(Act0LessonTaskV1 task) {
@@ -12746,6 +12913,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final completedCount = lessons
         .where((lesson) => lesson.state == Act0LessonStateV1.completed)
         .length;
+    // Path closure (earned + Placement-skipped tasks) drives routing and lesson
+    // state, but only earned tasks are earned completion. The learner-facing
+    // count must not present a Placement-cleared lesson as completed work. The
+    // label keeps its exact "X of N lessons complete" format: Home, Learn and
+    // the RU localizer parse it.
+    final earnedLessonCount = available
+        ? world.lessons
+              .where(
+                (lesson) =>
+                    _lessonCompleteWithTaskIds(lesson, _completedTaskIds),
+              )
+              .length
+        : 0;
+    final lessonsProgressLabel =
+        '$earnedLessonCount of ${lessons.length} lessons complete';
     final status = !available
         ? Act0WorldStateV1.locked
         : allComplete
@@ -12757,9 +12939,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           ? act0LockedWorldProgressLabelV1(
               isImmediateNext: isImmediateLockedWorld,
             )
-          : allComplete
-          ? '${lessons.length} of ${lessons.length} lessons complete'
-          : '$completedCount of ${lessons.length} lessons complete',
+          : lessonsProgressLabel,
       primaryCtaLabel: !available
           ? act0LockedWorldPrimaryCtaLabelV1(
               isImmediateNext: isImmediateLockedWorld,
@@ -13151,6 +13331,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       }
       for (final record in history) {
         if (record.createdOrder <= boundary ||
+            record.isPlacementAssessment ||
             record.lessonId != selectedLesson.lessonId ||
             !assessedTaskIds.contains(record.taskId)) {
           continue;
@@ -13329,7 +13510,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         final hasOlderProgress =
             taskIds.any(_completedTaskIds.contains) ||
             _learningEvidenceHistoryV1.records.any(
-              (record) => record.lessonId == _selectedLessonId,
+              (record) =>
+                  !record.isPlacementAssessment &&
+                  record.lessonId == _selectedLessonId,
             );
         _lessonRunEvidenceStartOrderV1 = hasOlderProgress
             ? null
@@ -13361,13 +13544,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final nextTask = _nextTask(selectedLesson, _selectedTaskId);
     if (nextTask != null) {
       _selectedTaskId = nextTask.taskId;
+      _selectedOptionId = null;
       final actionSequence = act0ActionLearningSequenceForTaskV1(
         nextTask.taskId,
       );
       _activeActionSequenceStageV1 = actionSequence == null
           ? null
           : actionSequence.stageForTask(nextTask.taskId);
-      _phase = nextTask.phase;
+      _phase = nextTask.entryPhase;
       _tab = Act0ShellTabV1.play;
       _showPlayHub = false;
       _teachingStepIndex = 0;
@@ -13416,7 +13600,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final decisionTask = _taskById(selectedLesson, sequence.practiceTaskId);
     _selectedTaskId = decisionTask.taskId;
     _activeActionSequenceStageV1 = Act0ActionSequenceStageV1.decision;
-    _phase = decisionTask.phase;
+    _phase = decisionTask.entryPhase;
     _selectedOptionId = null;
     _teachingStepIndex = 0;
     _persistProgress();
@@ -13478,7 +13662,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _selectedTaskId = normalizedTask.taskId;
       _selectedOptionId = null;
       _teachingStepIndex = 0;
-      _phase = normalizedTask.phase;
+      _phase = normalizedTask.entryPhase;
     }
 
     final popupOwnerLesson =

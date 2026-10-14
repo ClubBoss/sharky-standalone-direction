@@ -479,6 +479,14 @@ class Act0LessonTaskV1 {
   final String taskId;
   final String title;
   final Act0LessonPhaseV1 phase;
+
+  /// Authored review is a learning role; runtime review is evaluated feedback.
+  /// A review task with choices must first collect an answer, like a drill.
+  Act0LessonPhaseV1 get entryPhase =>
+      phase == Act0LessonPhaseV1.review && runner.options.isNotEmpty
+      ? Act0LessonPhaseV1.drill
+      : phase;
+
   final Act0RunnerStateV1 runner;
   final int rewardXp;
   final Act0LessonStepKindV1 stepKind;
@@ -1032,6 +1040,10 @@ Act0SeatStateV1 _act0CopySeatStateV1(
   String? displayName,
   bool? isHero,
   bool? isActive,
+  bool? isInHand,
+  bool? isFolded,
+  bool? hasActed,
+  bool? isOccupied,
   List<Act0CardStateV1>? holeCards,
   Act0CardsVisibleModeV1? cardsVisibleMode,
 }) {
@@ -1046,16 +1058,38 @@ Act0SeatStateV1 _act0CopySeatStateV1(
     blindAmountLabel: seat.blindAmountLabel,
     isActive: isActive ?? seat.isActive,
     isTarget: seat.isTarget,
-    isInHand: seat.isInHand,
-    isFolded: seat.isFolded,
-    hasActed: seat.hasActed,
+    isInHand: isInHand ?? seat.isInHand,
+    isFolded: isFolded ?? seat.isFolded,
+    hasActed: hasActed ?? seat.hasActed,
     isLastAggressor: seat.isLastAggressor,
-    isOccupied: seat.isOccupied,
+    isOccupied: isOccupied ?? seat.isOccupied,
     stackLabel: seat.stackLabel,
     holeCards: holeCards ?? seat.holeCards,
     cardsVisibleMode: cardsVisibleMode ?? seat.cardsVisibleMode,
     currentBetLabel: seat.currentBetLabel,
     bet: seat.bet,
+  );
+}
+
+// An authored pre-action scene must not inherit stale folded/empty flags
+// from a different Hero's turn. Opt in only where the scenario owns this frame.
+Act0TableStateV1 _act0WithAuthoredPreActionSeatsV1(
+  Act0TableStateV1 table, {
+  Set<String> foldedSeatIds = const <String>{},
+}) {
+  return table.copyWith(
+    seats: table.seats
+        .map((seat) {
+          final folded = foldedSeatIds.contains(seat.seatId);
+          return _act0CopySeatStateV1(
+            seat,
+            isOccupied: true,
+            isInHand: !folded,
+            isFolded: folded,
+            hasActed: folded,
+          );
+        })
+        .toList(growable: false),
   );
 }
 
@@ -1732,7 +1766,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         runner: _tableRecapRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
             _tableRecapRunner.options,
-            correctOptionId: 'everyone_folds',
+            correctOptionId: 'pot_committed_chips',
             correctIndex: 2,
           ),
         ),
@@ -10675,16 +10709,51 @@ final _tableRecapRunner = _winWaysRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'table_recap',
   caption: 'Lesson learned: read the table before choosing.',
-  hint: 'Hero is you, opponents fight you, blinds create the first pot.',
+  hint: 'Separate chips in the middle from chips still in player stacks.',
   question: 'What is the pot?',
   feedbackTitle: 'Table takeaway.',
   feedbackReason:
       'The pot is the prize in the middle. Stacks belong to players until chips move in.',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'pot_committed_chips',
+      label: 'Chips already committed to the middle',
+      isCorrect: true,
+      preferredLabel: 'Chips already committed to the middle',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'The shared prize.',
+      feedbackReason:
+          'The pot is the shared prize: chips already committed to the middle. Chips still in player stacks are not in the pot.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'largest_stack',
+      label: 'The largest stack still held by a player',
+      isCorrect: false,
+      preferredLabel: 'Chips already committed to the middle',
+      betterAnswerLabel: 'Chips already committed to the middle',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Separate the stack from the pot.',
+      feedbackReason:
+          'A stack belongs to a player until chips are committed. The pot is chips already committed to the middle, not the largest stack.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'everyone_folds',
+      label: 'Everyone folds before showdown',
+      isCorrect: false,
+      preferredLabel: 'Chips already committed to the middle',
+      betterAnswerLabel: 'Chips already committed to the middle',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'An ending is not the prize.',
+      feedbackReason:
+          'Folding can decide who wins the pot; it does not define the pot. The pot is chips already committed to the middle.',
+    ),
+  ],
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Table checklist.',
-      body: 'Find hero, opponents, blinds, and pot before any decision.',
-      focusLabels: <String>['Hero', 'Pot', 'Blinds'],
+      title: 'Find the shared prize.',
+      body:
+          'Find the pot in the middle. Separate it from chips still in player stacks.',
+      focusLabels: <String>['Pot'],
     ),
   ],
 );
@@ -12432,6 +12501,7 @@ final _world3TrashBucketRunner = _world3BucketsIntroRunner.copyWith(
   ],
   table: _act0ReassignHeroSeatV1(
     _whatYouCanDoRunner.table.copyWith(
+      seats: _act0WithAuthoredPreActionSeatsV1(_whatYouCanDoRunner.table).seats,
       heroCards: const <Act0CardStateV1>[
         Act0CardStateV1(rank: 'J', suit: 's'),
         Act0CardStateV1(rank: '8', suit: 'd'),
@@ -12581,6 +12651,10 @@ final _world3CutoffOpenRunner = _world3ButtonOpenRunner.copyWith(
   ],
   table: _act0ReassignHeroSeatV1(
     _world3ButtonOpenRunner.table.copyWith(
+      seats: _act0WithAuthoredPreActionSeatsV1(
+        _world3ButtonOpenRunner.table,
+        foldedSeatIds: const <String>{'utg', 'hj'},
+      ).seats,
       heroCards: const <Act0CardStateV1>[
         Act0CardStateV1(rank: 'A', suit: 'd'),
         Act0CardStateV1(rank: 'J', suit: 'c'),
@@ -13447,6 +13521,9 @@ final _world3PositionDisciplineRunner = _world3EarlyFoldRunner.copyWith(
   question: 'What is the disciplined action?',
   table: _act0ReassignHeroSeatV1(
     _world3EarlyFoldRunner.table.copyWith(
+      seats: _act0WithAuthoredPreActionSeatsV1(
+        _world3EarlyFoldRunner.table,
+      ).seats,
       heroCards: const <Act0CardStateV1>[
         Act0CardStateV1(rank: 'A', suit: 'd'),
         Act0CardStateV1(rank: 'T', suit: 'c'),
@@ -13474,6 +13551,10 @@ final _world3HijDisciplineRunner = _world3PositionDisciplineRunner.copyWith(
       'Middle position still needs discipline when the offsuit hand gets loose.',
   table: _act0ReassignHeroSeatV1(
     _world3PositionDisciplineRunner.table.copyWith(
+      seats: _act0WithAuthoredPreActionSeatsV1(
+        _world3PositionDisciplineRunner.table,
+        foldedSeatIds: const <String>{'utg'},
+      ).seats,
       heroCards: const <Act0CardStateV1>[
         Act0CardStateV1(rank: 'K', suit: 'd'),
         Act0CardStateV1(rank: 'T', suit: 'c'),
@@ -13820,19 +13901,35 @@ final _w3TablePositionNoticeRunner = _world3LateOpenRunner.copyWith(
           'Late position helps, but it is not a free pass. First notice who still acts after you.',
     ),
   ],
-  table: _world3LateOpenRunner.table.copyWith(
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'Q', suit: 's'),
-      Act0CardStateV1(rank: 'J', suit: 's'),
-    ],
+  table: _act0ReassignHeroSeatV1(
+    _world3LateOpenRunner.table.copyWith(
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'Q', suit: 's'),
+        Act0CardStateV1(rank: 'J', suit: 's'),
+      ],
+      // This authored transfer stops before CO acts. Inherited BTN scenarios
+      // have CO folded already, so identity reassignment alone is not enough.
+      seats: _world3LateOpenRunner.table.seats
+          .map((seat) {
+            final folded = seat.seatId == 'utg' || seat.seatId == 'hj';
+            return _act0CopySeatStateV1(
+              seat,
+              isInHand: !folded,
+              isFolded: folded,
+              hasActed: folded,
+            );
+          })
+          .toList(growable: false),
+      highlightedSeatIds: const <String>['co', 'btn', 'sb', 'bb'],
+      centerLabel: 'CO with three seats behind',
+      actionTrail: const <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+        Act0ActionTrailItemV1(label: 'CO acts'),
+      ],
+    ),
+    heroSeatId: 'co',
     activeSeatId: 'co',
-    highlightedSeatIds: const <String>['co', 'btn', 'sb', 'bb'],
-    centerLabel: 'CO with three seats behind',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'UTG folds'),
-      Act0ActionTrailItemV1(label: 'HJ folds'),
-      Act0ActionTrailItemV1(label: 'CO acts'),
-    ],
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -14456,6 +14553,9 @@ final _w1DisciplineApplyEarlyFoldRunner = _world3EarlyFoldRunner.copyWith(
       'Early position with a trash hand needs no extra thought. Fold and wait.',
   table: _act0ReassignHeroSeatV1(
     _world3EarlyFoldRunner.table.copyWith(
+      seats: _act0WithAuthoredPreActionSeatsV1(
+        _world3EarlyFoldRunner.table,
+      ).seats,
       heroCards: const <Act0CardStateV1>[
         Act0CardStateV1(rank: '8', suit: 's'),
         Act0CardStateV1(rank: '4', suit: 'd'),
@@ -14521,6 +14621,10 @@ final _w1DisciplineApplyHjMediumRunner = _world3ButtonOpenRunner.copyWith(
       'KQo is a medium hand, and HJ can open it when the pot is unopened.',
   table: _act0ReassignHeroSeatV1(
     _world3ButtonOpenRunner.table.copyWith(
+      seats: _act0WithAuthoredPreActionSeatsV1(
+        _world3ButtonOpenRunner.table,
+        foldedSeatIds: const <String>{'utg'},
+      ).seats,
       heroCards: const <Act0CardStateV1>[
         Act0CardStateV1(rank: 'K', suit: 'd'),
         Act0CardStateV1(rank: 'Q', suit: 'c'),
