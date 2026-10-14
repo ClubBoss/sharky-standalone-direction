@@ -521,6 +521,10 @@ final class S11HostedNativeUITests: XCTestCase {
         tapButton("Need a hint?")
         XCTAssertTrue(visible("Quick hint", timeout: 12))
         capture("C2_assistance_teaching")
+        // Compact tree (run on QA 419c348): the Quick hint panel replaces the option
+        // list; the learner returns through the real `Back to choices` button.
+        let optionsBehindHint = ["A", "B", "C"].contains { !findOption($0 + "\nCheck").found.isEmpty }
+        if !optionsBehindHint { tapButton("Back to choices") }
         selectAction("Check")
         persistedCheckpoint("C2_assisted")
         // Product-owned feedback CTA advances mapped repair to source recheck.
