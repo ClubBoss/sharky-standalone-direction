@@ -770,7 +770,11 @@ class Act0LearningEvidenceHistoryV1 {
     final latestGrouped = records
         .cast<Act0LearningEvidenceRecordV1?>()
         .lastWhere(
-          (record) => record?.runId.trim().isNotEmpty == true,
+          // A placement assessment run is not a learning run: it must not
+          // become the "latest run" summary or earn a session achievement.
+          (record) =>
+              record?.runId.trim().isNotEmpty == true &&
+              record?.isPlacementAssessment == false,
           orElse: () => null,
         );
     if (latestGrouped == null) {

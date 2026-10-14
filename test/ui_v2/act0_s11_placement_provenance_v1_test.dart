@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -90,6 +92,81 @@ Future<void> _welcomeToRecommendedRunner(WidgetTester tester) async {
   await _tapKey(tester, 'act0_shell_welcome_primary_cta');
 }
 
+/// Plays the currently selected W1 tasks with their authored correct answers
+/// until [stopAfter] tasks are completed or the completion summary appears.
+Future<void> _playW1(WidgetTester tester, {int? stopAfter}) async {
+  final lesson = Act0ShellStateV1.sample
+      .worldById('world_1')
+      .lessons
+      .firstWhere((l) => l.lessonId == 'what_poker_is');
+  var done = 0;
+  for (var guard = 0; guard < 12; guard++) {
+    if (find.byType(Act0BlockCompletionShellV1).evaluate().isNotEmpty) return;
+    if (stopAfter != null && done >= stopAfter) return;
+    final task = lesson.taskList.firstWhere(
+      (t) => t.taskId == _runner(tester).selectedTaskId,
+    );
+    if (task.phase == Act0LessonPhaseV1.theory) {
+      for (
+        var i = 0;
+        i < 12 && _runner(tester).selectedTaskId == task.taskId;
+        i++
+      ) {
+        final theory = find.byKey(const Key('act0_shell_theory_continue_cta'));
+        await _tapKey(
+          tester,
+          theory.evaluate().isNotEmpty
+              ? 'act0_shell_theory_continue_cta'
+              : 'act0_shell_continue_cta',
+        );
+      }
+    } else {
+      final answer = task.runner.options.firstWhere((o) => o.isCorrect);
+      for (var i = 0; i < 14; i++) {
+        final option = find.byKey(Key('act0_shell_option_${answer.id}'));
+        final seat = find.byKey(Key('act0_shell_seat_tap_${answer.seatId}'));
+        if (option.evaluate().isNotEmpty || seat.evaluate().isNotEmpty) {
+          await _tapKey(
+            tester,
+            seat.evaluate().isNotEmpty
+                ? 'act0_shell_seat_tap_${answer.seatId}'
+                : 'act0_shell_option_${answer.id}',
+          );
+          break;
+        }
+        final theory = find.byKey(const Key('act0_shell_theory_continue_cta'));
+        await _tapKey(
+          tester,
+          theory.evaluate().isNotEmpty
+              ? 'act0_shell_theory_continue_cta'
+              : 'act0_shell_continue_cta',
+        );
+      }
+      await _tapKey(tester, 'act0_shell_feedback_continue_cta');
+    }
+    done += 1;
+  }
+}
+
+Future<void> _openRetake(WidgetTester tester) async {
+  await tester.tap(find.text('You').last);
+  await tester.pumpAndSettle();
+  final tools = find.byKey(
+    const Key('act0_shell_profile_first_start_tools_button'),
+    skipOffstage: false,
+  );
+  await tester.scrollUntilVisible(
+    tools,
+    300,
+    scrollable: find.byType(Scrollable).first,
+  );
+  await tester.ensureVisible(tools);
+  await tester.pumpAndSettle();
+  await tester.tap(tools);
+  await tester.pumpAndSettle();
+  await _tapKey(tester, 'act0_shell_profile_retake_placement');
+}
+
 void main() {
   Future<Map<String, Object?>> casualFirstDecision(
     WidgetTester tester,
@@ -159,6 +236,17 @@ void main() {
       );
     }
     expect(afterDiagnostic['earnedXp'], 0);
+    final history = Act0LearningEvidenceHistoryV1.tryParse(
+      afterDiagnostic['learningEvidenceHistory'],
+    )!;
+    expect(
+      history.latestRunRecords(),
+      isEmpty,
+      reason:
+          'a placement assessment run is not the latest learning run: it must '
+          'not drive a run summary or earn "First session complete"',
+    );
+    expect(history.latestRunSummary(), isNull);
     expect(
       jsonEncode(afterDiagnostic['durableRetentionHistory'] ?? const []),
       isNot(contains('what_poker_is_table_read_transfer')),
@@ -323,11 +411,97 @@ void main() {
       expect(r['runKind'], 'placement');
       expect(r['runId'], isNotEmpty);
       expect(r['sessionId'], isNotEmpty);
+      expect(
+        r['reviewKind'],
+        'initialAssessment',
+        reason:
+            'a retake diagnostic answer is assessment, never unseenTransfer',
+      );
     }
     expect(
       (before['learningEvidenceHistory'] as List),
       records.take(beforeRecords).toList(),
       reason: 'historical records are never rewritten or backfilled',
     );
+  });
+
+  testWidgets('D1: a retake diagnostic MISS inside a partly played lesson '
+      'never becomes that lesson\'s completion-summary error', (tester) async {
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+    await _mount(tester, fresh: true);
+    for (final key in const [
+      'act0_shell_placement_intro_cta',
+      'act0_shell_placement_option_new',
+      'act0_shell_placement_next_cta',
+      'act0_shell_welcome_primary_cta',
+    ]) {
+      await _tapKey(tester, key);
+    }
+    final welcome = _runner(
+      tester,
+    ).runner.options.firstWhere((o) => o.isCorrect);
+    await _tapKey(tester, 'act0_shell_option_${welcome.id}');
+    await _tapKey(tester, 'act0_shell_welcome_primary_cta');
+    await _tapKey(tester, 'act0_shell_main_cta');
+    await _playW1(tester, stopAfter: 3); // genuinely partly played lesson
+    expect(find.byType(Act0BlockCompletionShellV1), findsNothing);
+    await _saved(tester);
+    // Real cold restart, then a placement retake whose FIRST answer is wrong.
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpAndSettle();
+    await _mount(tester, fresh: false);
+    await _openRetake(tester);
+    await _tapKey(tester, 'act0_shell_placement_intro_cta');
+    for (final option in const ['friends', 'rules']) {
+      await _tapKey(tester, 'act0_shell_placement_option_$option');
+      await _tapKey(tester, 'act0_shell_placement_next_cta');
+    }
+    await _tapKey(tester, 'act0_shell_placement_start_diagnostic');
+    for (var i = 0; i < 3; i++) {
+      final o = _runner(
+        tester,
+      ).runner.options.firstWhere((o) => i == 0 ? !o.isCorrect : o.isCorrect);
+      await _tapKey(
+        tester,
+        o.seatId == null
+            ? 'act0_shell_option_${o.id}'
+            : 'act0_shell_seat_tap_${o.seatId}',
+      );
+      await _tapKey(tester, 'act0_shell_feedback_continue_cta');
+    }
+    await _tapKey(tester, 'act0_shell_placement_start_recommended');
+    final saved = await _saved(tester);
+    expect(saved['selectedLessonId'], 'what_poker_is');
+    final diagnostic = (saved['learningEvidenceHistory'] as List)
+        .cast<Map>()
+        .where((r) => r['runKind'] == 'placement')
+        .toList();
+    expect(diagnostic, hasLength(3));
+    expect(diagnostic.first['isCorrect'], false);
+    if (find
+        .byKey(const Key('act0_shell_welcome_primary_cta'))
+        .evaluate()
+        .isNotEmpty) {
+      await _tapKey(tester, 'act0_shell_welcome_primary_cta');
+      final answer = _runner(
+        tester,
+      ).runner.options.firstWhere((o) => o.isCorrect);
+      await _tapKey(tester, 'act0_shell_option_${answer.id}');
+      await _tapKey(tester, 'act0_shell_welcome_primary_cta');
+    }
+    if (find.byType(Act0LessonRunnerShellV1).evaluate().isEmpty) {
+      await _tapKey(tester, 'act0_shell_main_cta'); // Home primary CTA
+    }
+    expect(_runner(tester).selectedLessonId, 'what_poker_is');
+    await _playW1(tester); // finish every remaining task correctly
+    final shell = tester.widget<Act0BlockCompletionShellV1>(
+      find.byType(Act0BlockCompletionShellV1),
+    );
+    expect(
+      shell.summary.errorCount,
+      0,
+      reason: 'placement answers are not lesson-run assessment evidence',
+    );
+    expect(shell.summary.correctCount, shell.summary.taskCount);
   });
 }

@@ -2600,6 +2600,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _resolvedMistakeTaskIds.clear();
     _cleanTaskIds.clear();
     _retentionMemoryByTaskId.clear();
+    _endPlacementAssessmentRunV1();
     _placementDiagnosticActive = false;
     _placementIntroVisible = true;
     _placementQuestionIndex = 0;
@@ -4030,6 +4031,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (routed != Act0ReviewKindV1.initialAssessment) {
       return routed;
     }
+    // A placement diagnostic answer is itself the initial assessment.
+    if (_activeLearningEvidenceRunKeyV1?.runKind ==
+        act0PlacementAssessmentRunKindV1) {
+      return Act0ReviewKindV1.initialAssessment;
+    }
     final conceptFamilyId =
         <String?>[
               decision.conceptFamilyId,
@@ -4731,6 +4737,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _showPlacement = false;
       _showWelcome = false;
       _welcomeReturnTabV1 = null;
+      _endPlacementAssessmentRunV1();
       _placementDiagnosticActive = false;
       _placementIntroVisible = false;
       _placementDiagnosticIndex = 0;
@@ -4754,6 +4761,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _showWelcome = false;
       _welcomeHandoffStartsRecommendedTaskV1 = false;
       _welcomeReturnTabV1 = null;
+      _endPlacementAssessmentRunV1();
       _placementDiagnosticActive = false;
       _placementIntroVisible = true;
       _placementQuestionIndex = 0;
@@ -4795,6 +4803,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _showPlacement = false;
       _showWelcome = false;
       _welcomeReturnTabV1 = null;
+      _endPlacementAssessmentRunV1();
       _placementDiagnosticActive = false;
       _tab = tab;
       _showPlayHub = tab == Act0ShellTabV1.play ? showPlayHub : true;
@@ -7516,7 +7525,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     // record before deciding whether it belongs to this lesson run.
     final eligible =
         _learningEvidenceHistoryV1.records
-            .where((record) => record.isCorrect && !record.isAssistedCorrect)
+            .where(
+              (record) =>
+                  record.isCorrect &&
+                  !record.isAssistedCorrect &&
+                  !record.isPlacementAssessment,
+            )
             .toList()
           ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));
     final first = eligible.firstOrNull;
@@ -13243,6 +13257,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       }
       for (final record in history) {
         if (record.createdOrder <= boundary ||
+            record.isPlacementAssessment ||
             record.lessonId != selectedLesson.lessonId ||
             !assessedTaskIds.contains(record.taskId)) {
           continue;
