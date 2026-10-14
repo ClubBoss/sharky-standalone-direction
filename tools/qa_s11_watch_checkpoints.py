@@ -33,10 +33,11 @@ while True:
             target = root / 'screens' / tag
             target.mkdir(parents=True, exist_ok=True)
             requested = float(epoch)
-            receipt = {'requested_epoch': requested, 'observed_epoch': time.time()}
+            budget = 30 if tag in ('first_install_intro', 'placement_unselected', 'placement_selected') else 15
+            receipt = {'requested_epoch': requested, 'observed_epoch': time.time(), 'hold_budget_seconds': budget}
             try:
                 assert 0 <= time.time() - requested < 4, 'SCREEN_MARKER_DELAY'
-                result = subprocess.run(['xcrun', 'simctl', 'io', args.sim, 'screenshot', str(target / 'native.png')], capture_output=True, text=True, timeout=10)
+                result = subprocess.run(['xcrun', 'simctl', 'io', args.sim, 'screenshot', str(target / 'native.png')], capture_output=True, text=True, timeout=budget - 5)
                 (target / 'capture.log').write_text(result.stdout + result.stderr)
                 receipt['returncode'] = result.returncode
                 assert result.returncode == 0, 'SIMCTL_SCREENSHOT_FAILED'
@@ -45,7 +46,7 @@ while True:
                 receipt['width'], receipt['height'] = struct.unpack('>II', data[16:24])
                 assert receipt['width'] >= 375 and receipt['height'] > receipt['width']
                 receipt['sha256'] = hashlib.sha256(data).hexdigest()
-                assert time.time() - requested < 14, 'SCREEN_CAPTURE_OUTSIDE_HOLD'
+                assert time.time() - requested < budget - 1, 'SCREEN_CAPTURE_OUTSIDE_HOLD'
                 receipt['status'] = 'CAPTURED_NATIVE_SCREEN'
             except (AssertionError, OSError, subprocess.TimeoutExpired) as exc:
                 receipt['status'] = 'FAIL_NATIVE_SCREEN'

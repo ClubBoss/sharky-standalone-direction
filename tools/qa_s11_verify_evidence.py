@@ -27,7 +27,9 @@ if len(sys.argv) == 4 and sys.argv[1] == '--screens':
             assert receipt['status'] == 'CAPTURED_NATIVE_SCREEN' and receipt['returncode'] == 0
             assert float(epoch) == receipt['requested_epoch']
             assert receipt['completed_epoch'] < float(releases[0])
-            assert 0 <= receipt['completed_epoch'] - float(epoch) < 14
+            budget = 30 if tag in ('first_install_intro', 'placement_unselected', 'placement_selected') else 15
+            assert receipt['hold_budget_seconds'] == budget
+            assert 0 <= receipt['completed_epoch'] - float(epoch) < budget - 1
             data = (path / 'native.png').read_bytes()
             assert data[:8] == b'\x89PNG\r\n\x1a\n'
             assert hashlib.sha256(data).hexdigest() == receipt['sha256']

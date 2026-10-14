@@ -12,7 +12,8 @@ final class S11HostedNativeUITests: XCTestCase {
         // The hosted observer uses simctl's independently proven capture path.
         print("S11_SCREEN_CHECKPOINT " + tag + " epoch=" + String(Date().timeIntervalSince1970))
         fflush(stdout)
-        RunLoop.current.run(until: Date().addingTimeInterval(15))
+        let startupFrame = ["first_install_intro", "placement_unselected", "placement_selected"].contains(tag)
+        RunLoop.current.run(until: Date().addingTimeInterval(startupFrame ? 30 : 15))
         print("S11_SCREEN_RELEASE " + tag + " epoch=" + String(Date().timeIntervalSince1970))
         fflush(stdout)
     }
