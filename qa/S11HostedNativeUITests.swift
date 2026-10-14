@@ -5,15 +5,14 @@ final class S11HostedNativeUITests: XCTestCase {
     private let app = XCUIApplication(bundleIdentifier: "com.example.pokerAnalyzer")
     override func setUpWithError() throws { continueAfterFailure = false }
 
-    private func capture(_ tag: String) {
+    private func capture(_ tag: String, owning: XCUIApplication? = nil) {
         print("S11_GATE_STATE " + tag)
-        print("S11_NATIVE_TREE_BEGIN " + tag + "\n" + app.debugDescription + "\nS11_NATIVE_TREE_END " + tag)
+        print("S11_NATIVE_TREE_BEGIN " + tag + "\n" + (owning ?? app).debugDescription + "\nS11_NATIVE_TREE_END " + tag)
         // XCTest's screen service timed out on a responsive graded frame.
         // The hosted observer uses simctl's independently proven capture path.
         print("S11_SCREEN_CHECKPOINT " + tag + " epoch=" + String(Date().timeIntervalSince1970))
         fflush(stdout)
-        let startupFrame = ["first_install_intro", "placement_unselected", "placement_selected"].contains(tag)
-        RunLoop.current.run(until: Date().addingTimeInterval(startupFrame ? 30 : 15))
+        RunLoop.current.run(until: Date().addingTimeInterval(45))
         print("S11_SCREEN_RELEASE " + tag + " epoch=" + String(Date().timeIntervalSince1970))
         fflush(stdout)
     }
@@ -351,7 +350,7 @@ final class S11HostedNativeUITests: XCTestCase {
             let deadline = Date().addingTimeInterval(5)
             var choices: [XCUIElement] = []
             repeat {
-                choices = ["Next", "Continue", "Got it"].compactMap { name in
+                choices = ["Next", "Continue", "Got it", "Next hand"].compactMap { name in
                     let item = app.buttons.matching(identifier:name).firstMatch
                     return item.exists && item.isEnabled && item.isHittable ? item : nil
                 }
@@ -368,7 +367,7 @@ final class S11HostedNativeUITests: XCTestCase {
         XCTFail("SECOND_REVIEW_ENTRY_NOT_REACHED")
     }
 
-    func test02SecondAuthoredReview() throws {
+    private func secondRecap(wrong: Bool = false) throws {
         app.launch()
         XCTAssertTrue(app.waitForExistence(timeout:35))
         capture("second_lesson_saved_home")
@@ -388,21 +387,171 @@ final class S11HostedNativeUITests: XCTestCase {
             XCTAssertTrue(visible("CORRECT READ"))
             tapButton("Next hand")
         }
-        waitForSelectable("C\nEveryone folds")
+        waitForSelectable("C\nChips already committed to the middle")
         XCTAssertTrue(visible("Step 7/7"))
+        XCTAssertTrue(visible("What is the pot?"))
         XCTAssertFalse(visible("CORRECT READ"), "SECOND_REVIEW_UNEARNED_FEEDBACK")
         persistedCheckpoint("C1_second_review_entry")
-        // Exact-source falsifier: this recap inherits win-condition answers,
-        // while asking for the definition of the pot. Record the real grading.
-        if visible("What is the pot?") {
-            tapSelectableOption("C\nEveryone folds")
-            XCTAssertTrue(visible("CORRECT READ"))
-            persistedCheckpoint("C1_second_review_mismatch_graded")
-            XCTFail("MATERIAL_SOURCE_REVIEW_QUESTION_CHOICES_MISMATCH: What is the pot? graded Everyone folds as correct")
+        if wrong {
+            app.terminate(); app.launch()
+            XCTAssertTrue(app.waitForExistence(timeout:35))
+            capture("recap_inflight_return")
+            let resumedChoice = app.staticTexts.matching(NSPredicate(format:"label BEGINSWITH %@","C\nChips already committed to the middle")).firstMatch
+            if !(resumedChoice.exists && resumedChoice.isHittable) {
+                tapButton("Continue")
+            }
+            waitForSelectable("C\nChips already committed to the middle")
+            XCTAssertFalse(visible("CORRECT READ"), "RECAP_RESUME_UNEARNED_FEEDBACK")
+            persistedCheckpoint("recap_resumed_unanswered")
+        }
+        tapSelectableOption(wrong ? "B\nEveryone folds before showdown" : "C\nChips already committed to the middle")
+        if wrong {
+            XCTAssertFalse(visible("CORRECT READ"), "POT_RECAP_FOLDS_MARKED_CORRECT")
+            XCTAssertTrue(visible("MISSED CLUE"))
+            XCTAssertTrue(visible("does not define the pot"))
+            _ = enabledButton("Try same clue")
+            persistedCheckpoint("recap_wrong")
             return
         }
-        XCTFail("SECOND_REVIEW_SOURCE_QUESTION_CHANGED; REQUIRE_RECONCILIATION")
+        XCTAssertTrue(visible("CORRECT READ"))
+        XCTAssertTrue(visible("shared prize"))
+        persistedCheckpoint("recap_correct")
+        tapButton("Next hand")
+        XCTAssertTrue(visible("Session complete") || visible("What finished"))
+        persistedCheckpoint("recap_summary")
+        for _ in 0..<6 {
+            if app.buttons.matching(identifier:"Back to map").firstMatch.exists && app.buttons.matching(identifier:"Back to map").firstMatch.isHittable { break }
+            app.swipeUp()
+        }
+        tapButton("Back to map")
+        tapTab("Home")
+        persistedCheckpoint("recap_home")
+        app.terminate(); app.launch()
+        XCTAssertTrue(app.waitForExistence(timeout:35))
+        persistedCheckpoint("recap_restart")
     }
+
+    private func selectAction(_ action: String) {
+        for letter in ["A", "B", "C"] {
+            let prefix = letter + "\n" + action
+            let e = app.staticTexts.matching(NSPredicate(format:"label BEGINSWITH[cd] %@",prefix)).firstMatch
+            if e.exists && e.isEnabled && e.isHittable { tapSelectableOption(prefix); return }
+        }
+        capture("missing_action_" + action)
+        XCTFail("NO_SOURCE_OWNED_SELECTABLE_ACTION_" + action)
+    }
+
+    func test04AuthenticRepair() throws {
+        // Real OS setting, on this isolated device; no app preference injection.
+        let settings = XCUIApplication(bundleIdentifier:"com.apple.Preferences")
+        settings.launch()
+        for title in ["Accessibility", "Motion"] {
+            let item = settings.staticTexts.matching(identifier:title).firstMatch
+            for _ in 0..<9 {
+                if item.exists && item.isHittable { break }
+                settings.swipeUp()
+            }
+            XCTAssertTrue(item.exists && item.isHittable, "OS_SETTING_NOT_REACHABLE_"+title)
+            item.tap()
+        }
+        let motion = settings.switches.matching(identifier:"Reduce Motion").firstMatch
+        XCTAssertTrue(motion.waitForExistence(timeout:10))
+        if motion.value as? String != "1" { motion.tap() }
+        XCTAssertEqual(motion.value as? String, "1", "REDUCED_MOTION_NOT_ENABLED")
+        capture("D2_OS_reduced_motion_enabled", owning:settings)
+        settings.terminate()
+        // Source-owned placement recommendation opens Actions legitimately.
+        // The fresh public topic pack is locked until its route is learned.
+        app.launch(); XCTAssertTrue(app.waitForExistence(timeout:35))
+        capture("D2_reduced_motion_first_use")
+        tapButton("Find my start")
+        tapSelectableOption("I’ve played casually"); tapButton("Continue")
+        tapSelectableOption("Try one quick check"); tapButton("Continue")
+        tapButton("Start quick check")
+        for (i, answer) in ["2 private · 3 board · Pot 6 BB", "Board cards", "Check"].enumerated() {
+            selectAction(answer)
+            XCTAssertTrue(visible("CORRECT READ"))
+            tapButton(i == 2 ? "See my start" : "Next check")
+        }
+        capture("C2_actual_placement_recommendation")
+        tapButton("Start with the useful hand")
+        tapButton("Try one table read")
+        tapSelectableOption("B\nCheck"); tapButton("Open my path")
+        waitForSelectable("A\nFold")
+        capture("C2_actual_action_source_entry")
+        XCTAssertTrue(visible("No bet") || visible("free"))
+        selectAction("Fold")
+        XCTAssertFalse(visible("CORRECT READ"))
+        persistedCheckpoint("C2_wrong")
+        tapButton("Try same clue")
+        waitForSelectable("B\nCheck")
+        tapButton("Need a hint?")
+        XCTAssertTrue(visible("Quick hint"))
+        capture("C2_assistance_teaching")
+        selectAction("Check")
+        persistedCheckpoint("C2_assisted")
+        // Product-owned feedback CTA advances mapped repair to source recheck.
+        let recheck = app.buttons.matching(identifier:"Check original read").firstMatch
+        if recheck.exists && recheck.isHittable { tapButton("Check original read") }
+        else { tapButton("Next hand") }
+        waitForSelectable("B\nCheck")
+        XCTAssertFalse(visible("CORRECT READ"))
+        selectAction("Check")
+        persistedCheckpoint("C2_independent_recheck")
+        if app.buttons.matching(identifier:"Continue").firstMatch.exists && app.buttons.matching(identifier:"Continue").firstMatch.isHittable { tapButton("Continue") }
+        else { tapButton("Next hand") }
+        XCTAssertTrue(visible("Session complete") || visible("What finished"))
+        persistedCheckpoint("C2_summary")
+        for _ in 0..<6 {
+            if app.buttons.matching(identifier:"Back to map").firstMatch.exists && app.buttons.matching(identifier:"Back to map").firstMatch.isHittable { break }
+            app.swipeUp()
+        }
+        tapButton("Back to map"); tapTab("Review")
+        persistedCheckpoint("C2_review")
+        tapTab("You"); capture("B_You_saved_truth")
+        tapTab("Home"); persistedCheckpoint("C2_home")
+        app.terminate(); app.launch(); XCTAssertTrue(app.waitForExistence(timeout:35))
+        persistedCheckpoint("C2_restart")
+    }
+
+    func test02SecondAuthoredReview() throws { try secondRecap() }
+    private func openRetake() {
+        tapTab("You")
+        for _ in 0..<9 {
+            let tools = app.staticTexts.matching(NSPredicate(format:"label BEGINSWITH %@","Intro & placement")).firstMatch
+            if tools.exists && tools.isHittable { break }
+            app.swipeUp()
+        }
+        tapSelectableOption("Intro & placement")
+        tapButton("Retake placement")
+        tapButton("Find my start")
+    }
+
+    private func routeBridgeAndRetakes() {
+        tapTab("Practice"); capture("B_Practice_bridge")
+        tapTab("Review"); capture("B_Review_not_due_bridge")
+        tapTab("You"); persistedCheckpoint("B_profile_before_retake")
+        openRetake()
+        tapSelectableOption("I’m new to poker"); tapButton("Start from zero")
+        persistedCheckpoint("B_retake_zero_finished")
+        openRetake()
+        tapSelectableOption("I’ve played casually"); tapButton("Continue")
+        tapSelectableOption("Try one quick check"); tapButton("Continue")
+        tapButton("Start quick check")
+        for (i, answer) in ["2 private · 3 board · Pot 6 BB", "Board cards", "Check"].enumerated() {
+            selectAction(answer)
+            XCTAssertTrue(visible("CORRECT READ"))
+            tapButton(i == 2 ? "See my start" : "Next check")
+        }
+        capture("B_retake_diagnostic_result")
+        tapButton("Start with the useful hand")
+        persistedCheckpoint("B_retake_diagnostic_finished")
+        app.terminate(); app.launch(); XCTAssertTrue(app.waitForExistence(timeout:35))
+        persistedCheckpoint("B_retake_restart")
+    }
+
+    func test06CleanAndRecap() throws { try firstLesson(); try secondRecap(); routeBridgeAndRetakes() }
+    func test03WrongRecap() throws { try firstLesson(); try secondRecap(wrong:true) }
 
     func test00FirstGraded() throws { try firstLesson() }
     func test01WrongFinal() throws { try firstLesson(wrongFinal: true) }

@@ -33,7 +33,7 @@ while True:
             target = root / 'screens' / tag
             target.mkdir(parents=True, exist_ok=True)
             requested = float(epoch)
-            budget = 30 if tag in ('first_install_intro', 'placement_unselected', 'placement_selected') else 15
+            budget = 45
             receipt = {'requested_epoch': requested, 'observed_epoch': time.time(), 'hold_budget_seconds': budget}
             try:
                 assert 0 <= time.time() - requested < 4, 'SCREEN_MARKER_DELAY'
@@ -70,5 +70,10 @@ while True:
             (target / 'learner.plist').rename(target / 'late-learner.plist')
             result.stdout += '\nLATE_CHECKPOINT_EXTRACTION; quarantined, cannot pass verifier'
         (target / 'probe.log').write_text(result.stdout + result.stderr)
+        # Copy the app-owned event trace before a later process launch replaces it.
+        traces = list(Path(container).rglob('act0_hnp_trace_v1.jsonl'))
+        if len(traces) == 1:
+            (target / 'app-owned-telemetry.jsonl').write_bytes(traces[0].read_bytes())
+        (target / 'trace-discovery.json').write_text(json.dumps([str(p) for p in traces]))
         print(tag, result.returncode, flush=True)
     time.sleep(0.25)
