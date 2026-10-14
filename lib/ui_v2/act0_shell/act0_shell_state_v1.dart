@@ -1766,7 +1766,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         runner: _tableRecapRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
             _tableRecapRunner.options,
-            correctOptionId: 'everyone_folds',
+            correctOptionId: 'pot_committed_chips',
             correctIndex: 2,
           ),
         ),
@@ -10709,16 +10709,51 @@ final _tableRecapRunner = _winWaysRunner.copyWith(
   phase: Act0LessonPhaseV1.review,
   lessonId: 'table_recap',
   caption: 'Lesson learned: read the table before choosing.',
-  hint: 'Hero is you, opponents fight you, blinds create the first pot.',
+  hint: 'Separate chips in the middle from chips still in player stacks.',
   question: 'What is the pot?',
   feedbackTitle: 'Table takeaway.',
   feedbackReason:
       'The pot is the prize in the middle. Stacks belong to players until chips move in.',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'pot_committed_chips',
+      label: 'Chips already committed to the middle',
+      isCorrect: true,
+      preferredLabel: 'Chips already committed to the middle',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'The shared prize.',
+      feedbackReason:
+          'The pot is the shared prize: chips already committed to the middle. Chips still in player stacks are not in the pot.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'largest_stack',
+      label: 'The largest stack still held by a player',
+      isCorrect: false,
+      preferredLabel: 'Chips already committed to the middle',
+      betterAnswerLabel: 'Chips already committed to the middle',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Separate the stack from the pot.',
+      feedbackReason:
+          'A stack belongs to a player until chips are committed. The pot is chips already committed to the middle, not the largest stack.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'everyone_folds',
+      label: 'Everyone folds before showdown',
+      isCorrect: false,
+      preferredLabel: 'Chips already committed to the middle',
+      betterAnswerLabel: 'Chips already committed to the middle',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'An ending is not the prize.',
+      feedbackReason:
+          'Folding can decide who wins the pot; it does not define the pot. The pot is chips already committed to the middle.',
+    ),
+  ],
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'Table checklist.',
-      body: 'Find hero, opponents, blinds, and pot before any decision.',
-      focusLabels: <String>['Hero', 'Pot', 'Blinds'],
+      title: 'Find the shared prize.',
+      body:
+          'Find the pot in the middle. Separate it from chips still in player stacks.',
+      focusLabels: <String>['Pot'],
     ),
   ],
 );
