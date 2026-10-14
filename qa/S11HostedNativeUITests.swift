@@ -527,35 +527,47 @@ final class S11HostedNativeUITests: XCTestCase {
         if !optionsBehindHint { tapButton("Back to choices") }
         selectAction("Check")
         persistedCheckpoint("C2_assisted")
-        // Product-owned feedback CTA advances mapped repair to source recheck.
-        // Observed compact feedback (QA 62a95b0): CORRECT WITH HELP, "NEXT · REPAIR THE
-        // CLUE", CTA `Try same clue` - the repair stays open until the recheck.
+        // Source-owned route (act0_shell_preview_screen_v1 onContinue): an assisted-correct
+        // repair answer is NOT `repaired`; the repair debt stays open and the learner is
+        // sent to Review. `Practice this spot` there starts the Practice Queue repair
+        // (evidenceRunKind repair, startedBy practice_repair_queue); only an unassisted
+        // answer on that route is recorded as the independent outcome and clears the intent.
         XCTAssertTrue(visible("CORRECT WITH HELP", timeout: 12), "ASSISTED_ANSWER_NOT_LABELLED_WITH_HELP")
-        let recheck = app.buttons.matching(identifier:"Check original read").firstMatch
-        if recheck.exists && recheck.isHittable { tapButton("Check original read") }
-        else if app.buttons.matching(identifier:"Try same clue").firstMatch.waitForExistence(timeout: 5) { tapButton("Try same clue") }
-        else { tapButton("Next hand") }
-        // Observed (QA 9473bda): `Try same clue` after the assisted answer opens the
-        // Review repair card ("1 miss to fix", CTA `Practice this spot`). The matched
-        // independent recheck is entered through that real repair CTA.
-        if visible("Practice this repair", timeout: 6) || app.buttons.matching(identifier: "Practice this spot").firstMatch.exists {
-            capture("C2_review_repair_card_before_recheck")
-            tapButton("Practice this spot")
-        }
-        waitForSelectable("B\nCheck")
-        XCTAssertFalse(visible("CORRECT READ"))
+        let toReview = app.buttons.matching(identifier:"Try same clue").firstMatch
+        XCTAssertTrue(toReview.waitForExistence(timeout: 5), "ASSISTED_REPAIR_CTA_MISSING")
+        tapButton("Try same clue")
+        XCTAssertTrue(visible("miss to fix", timeout: 12), "ASSISTED_ANSWER_DID_NOT_LEAVE_REPAIR_DEBT_OPEN")
+        capture("C2_review_repair_card_before_recheck")
+        persistedCheckpoint("C2_review_debt_open")
+        tapButton("Practice this spot")
+        XCTAssertTrue(visible("What action keeps playing for free?", timeout: 15), "INDEPENDENT_RECHECK_NOT_ENTERED")
+        XCTAssertFalse(visible("CORRECT READ"), "RECHECK_UNEARNED_FEEDBACK")
+        XCTAssertFalse(visible("Quick hint"), "RECHECK_STARTED_WITH_HINT_OPEN")
+        capture("C2_independent_recheck_question")
         selectAction("Check")
+        capture("C2_independent_recheck_feedback")
         persistedCheckpoint("C2_independent_recheck")
-        if app.buttons.matching(identifier:"Continue").firstMatch.exists && app.buttons.matching(identifier:"Continue").firstMatch.isHittable { tapButton("Continue") }
-        else { tapButton("Next hand") }
-        XCTAssertTrue(visible("Session complete", timeout: 12) || visible("What finished", timeout: 12))
-        persistedCheckpoint("C2_summary")
-        for _ in 0..<6 {
-            if app.buttons.matching(identifier:"Back to map").firstMatch.exists && app.buttons.matching(identifier:"Back to map").firstMatch.isHittable { break }
-            app.swipeUp()
+        // Forward CTA is whichever single product CTA is on screen; record it.
+        var forward: XCUIElement? = nil
+        for name in ["Check original read", "Continue to Review", "Continue", "Next hand"] {
+            let b = app.buttons.matching(identifier: name).firstMatch
+            if b.exists && b.isHittable { forward = b; print("S11_NAV_FORWARD_CTA " + name); break }
         }
-        tapButton("Back to map"); tapTab("Review")
-        persistedCheckpoint("C2_review")
+        guard let forwardCta = forward else {
+            capture("C2_no_forward_cta_after_recheck"); XCTFail("C2_FORWARD_CTA_MISSING_AFTER_RECHECK"); return
+        }
+        forwardCta.tap()
+        RunLoop.current.run(until: Date().addingTimeInterval(2))
+        capture("C2_after_recheck_forward")
+        if visible("Session complete", timeout: 4) || visible("What finished", timeout: 1) {
+            persistedCheckpoint("C2_summary")
+            for _ in 0..<6 {
+                if app.buttons.matching(identifier:"Back to map").firstMatch.exists && app.buttons.matching(identifier:"Back to map").firstMatch.isHittable { break }
+                app.swipeUp()
+            }
+            tapButton("Back to map")
+        }
+        tapTab("Review"); persistedCheckpoint("C2_review")
         tapTab("You"); capture("B_You_saved_truth")
         tapTab("Home"); persistedCheckpoint("C2_home")
         app.terminate(); app.launch(); XCTAssertTrue(app.waitForExistence(timeout:35))

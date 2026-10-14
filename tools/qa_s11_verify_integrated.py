@@ -73,23 +73,50 @@ try:
      assert len([e for e in rows if e['name']==name and e['fields'].get('attempt_id')==r['recordId']])==1, f"retake diagnostic {r['recordId']}:{name} cardinality"
    observed['retake_diagnostic_appended']=[{k:r.get(k) for k in ('recordId','taskId','lessonId','choiceId','isCorrect','assistanceKind','runId','sessionId')} for r in appended['B_retake_diagnostic_finished']]
  else:
-  tags=['C2_wrong','C2_assisted','C2_independent_recheck','C2_summary','C2_review','C2_home','C2_restart']
+  # C2 on the source-owned route (act0_shell_preview_screen_v1 onContinue):
+  # wrong -> mapped repair attempt WITH quickHint (not `repaired`, debt stays open)
+  # -> Review "Practice this spot" -> Practice Queue repair answered unassisted ->
+  # _appendPracticeQueueRepairOutcomeV1 records the outcome and clears the intent.
+  def cardinality(tag,records):
+   rows=[json.loads(x) for x in (root/tag/'app-owned-telemetry.jsonl').read_text().splitlines() if x]
+   for r in records:
+    for name in ['user_choice','decision_made','task_result']:
+     m=[e for e in rows if e['name']==name and e['fields'].get('attempt_id')==r['recordId']]
+     assert len(m)==1,f"{tag}:{r['recordId']}:{name}:cardinality={len(m)}"
+     assert m[0]['fields']['chosen_action']==r['choiceId'] or name=='task_result'
+   return rows
+  def open_for(s,src): return [i for i in s['openRepairIntents'] if i.get('sourceTaskId')==src]
+  def unresolved_for(s,src): return [e for e in (s.get('multiRepairQueue') or {}).get('entries',[]) if e.get('sourceTaskId')==src and e.get('resolutionState')=='unresolved']
+  tags=['C2_wrong','C2_assisted','C2_review_debt_open','C2_independent_recheck','C2_review','C2_home','C2_restart']
   for tag in tags:observed[tag]=state(tag)
-  w=observed['C2_wrong'];a=observed['C2_assisted'];q=observed['C2_independent_recheck']
+  w=observed['C2_wrong'];a=observed['C2_assisted'];d=observed['C2_review_debt_open'];q=observed['C2_independent_recheck']
   wr=w['learningEvidenceHistory'][-1];ar=a['learningEvidenceHistory'][-1];qr=q['learningEvidenceHistory'][-1]
-  assert wr['taskId']=='actions_legal_context' and wr['choiceId']=='fold' and wr['expectedChoiceId']=='check' and not wr['isCorrect'] and wr['errorType'] not in ('',None,'none')
-  assert ar['taskId']=='actions_check_drill' and ar['choiceId']=='check' and ar['isCorrect'] and ar['assistanceKind']=='quickHint'
-  assert qr['sourceTaskId']=='actions_legal_context' and qr['choiceId']=='check' and qr['isCorrect'] and qr['assistanceKind']=='none'
+  assert wr['taskId']=='actions_legal_context' and wr['choiceId']=='fold' and wr['expectedChoiceId']=='check' and not wr['isCorrect'] and wr['errorType'] not in ('',None,'none') and wr['assistanceKind']=='none'
+  assert ar['choiceId']=='check' and ar['isCorrect'] and ar['assistanceKind']=='quickHint' and ar['taskId']=='actions_check_drill'
+  provenance(ar); assert ar['runKind']=='repair'
+  assert qr['taskId']==ar['taskId'] and qr['choiceId']=='check' and qr['isCorrect'] and qr['assistanceKind']=='none', 'independent attempt must be unassisted and correct'
+  provenance(qr); assert qr['runKind']=='repair' and qr.get('startedBy')=='practice_repair_queue', 'independent attempt must come from the Practice Queue repair route'
   assert len({r['recordId'] for r in [wr,ar,qr]})==3
-  assert a['learningEvidenceHistory'][:-1]==w['learningEvidenceHistory'] and q['learningEvidenceHistory'][:-1]==a['learningEvidenceHistory']
-  assert w['earnedXp']==a['earnedXp']==q['earnedXp']
-  for s in [w,a]:
-   assert any(i.get('sourceTaskId')=='actions_legal_context' for i in s['openRepairIntents']), 'ASSISTANCE_CLOSED_INDEPENDENT_RECHECK_DEBT'
-   assert 'actions_legal_context' not in s['completedTaskIds'], 'WRONG_OR_ASSISTED_SOURCE_GRANTED_CURRICULUM_COMPLETION'
-  assert not any(i.get('sourceTaskId')=='actions_legal_context' for i in q['openRepairIntents'])
-  trace('C2_independent_recheck',q)
-  for tag in tags[3:]:
-   s=observed[tag];assert s['learningEvidenceHistory']==q['learningEvidenceHistory'] and s['earnedXp']==q['earnedXp']
+  assert a['learningEvidenceHistory'][:-1]==w['learningEvidenceHistory'] and d['learningEvidenceHistory']==a['learningEvidenceHistory'] and q['learningEvidenceHistory'][:-1]==d['learningEvidenceHistory']
+  assert w['earnedXp']==a['earnedXp']==d['earnedXp'], 'wrong/assisted attempts must not earn XP'
+  for s_ in [w,a,d]:
+   assert open_for(s_,'actions_legal_context'), 'repair debt must stay open until the independent attempt'
+   assert unresolved_for(s_,'actions_legal_context'), 'queue entry must stay unresolved until the independent attempt'
+   assert 'actions_legal_context' not in s_['completedTaskIds'], 'WRONG_OR_ASSISTED_SOURCE_GRANTED_CURRICULUM_COMPLETION'
+   assert not s_['repairOutcomeProjection'], 'assisted answer must not write an independent repair outcome'
+  assert not open_for(q,'actions_legal_context') and not unresolved_for(q,'actions_legal_context'), 'independent attempt must close the debt'
+  assert len(q['repairOutcomeProjection'])==1 and 'actions_legal_context' in json.dumps(q['repairOutcomeProjection']), 'exactly one independent repair outcome owned by the original source'
+  observed['xp_delta_independent']=q['earnedXp']-a['earnedXp']
+  rows=cardinality('C2_independent_recheck',[wr,ar,qr])
+  assert [e['fields'].get('assistance_kind') for e in rows if e['name']=='decision_made' and e['fields'].get('attempt_id')==ar['recordId']]==['quickHint']
+  assert [e['fields'].get('assistance_kind') for e in rows if e['name']=='decision_made' and e['fields'].get('attempt_id')==qr['recordId']]==['none']
+  later=[t for t in ['C2_summary','C2_review','C2_home','C2_restart'] if (root/t).exists()]
+  for tag in later:
+   s_=observed[tag]=state(tag)
+   assert s_['learningEvidenceHistory']==q['learningEvidenceHistory'] and s_['earnedXp']==q['earnedXp'] and s_['repairOutcomeProjection']==q['repairOutcomeProjection'], f'{tag}: persisted truth changed after independent attempt'
+   assert not open_for(s_,'actions_legal_context')
+  observed['summary_checkpoint']='REACHED' if 'C2_summary' in later else 'NOT_REACHED_ON_THIS_ROUTE'
+  observed['observations']={'wrong_attempt_run_session':[wr.get('runId'),wr.get('sessionId')],'assisted_run_session':[ar['runId'],ar['sessionId']],'independent_run_session':[qr['runId'],qr['sessionId']]}
  verdict={'status':'PASS_'+mode.upper().replace('-','_'),'observed':observed}
 except (AssertionError,KeyError,OSError,ValueError) as e:
  verdict={'status':'FAIL_'+mode.upper().replace('-','_'),'error':repr(e),'observed':observed}
