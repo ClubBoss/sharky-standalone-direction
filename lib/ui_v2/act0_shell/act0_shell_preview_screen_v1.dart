@@ -12853,6 +12853,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final completedCount = lessons
         .where((lesson) => lesson.state == Act0LessonStateV1.completed)
         .length;
+    // Path closure (earned + Placement-skipped tasks) drives routing and lesson
+    // state, but only earned tasks are earned completion. The learner-facing
+    // count must not present a Placement-cleared lesson as completed work. The
+    // label keeps its exact "X of N lessons complete" format: Home, Learn and
+    // the RU localizer parse it.
+    final earnedLessonCount = available
+        ? world.lessons
+              .where(
+                (lesson) =>
+                    _lessonCompleteWithTaskIds(lesson, _completedTaskIds),
+              )
+              .length
+        : 0;
+    final lessonsProgressLabel =
+        '$earnedLessonCount of ${lessons.length} lessons complete';
     final status = !available
         ? Act0WorldStateV1.locked
         : allComplete
@@ -12864,9 +12879,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           ? act0LockedWorldProgressLabelV1(
               isImmediateNext: isImmediateLockedWorld,
             )
-          : allComplete
-          ? '${lessons.length} of ${lessons.length} lessons complete'
-          : '$completedCount of ${lessons.length} lessons complete',
+          : lessonsProgressLabel,
       primaryCtaLabel: !available
           ? act0LockedWorldPrimaryCtaLabelV1(
               isImmediateNext: isImmediateLockedWorld,
