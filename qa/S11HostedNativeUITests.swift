@@ -469,10 +469,17 @@ final class S11HostedNativeUITests: XCTestCase {
     }
 
     private func selectAction(_ action: String) {
-        for letter in ["A", "B", "C"] {
-            let prefix = letter + "\n" + action
-            if let e = findOption(prefix).found.first, e.isEnabled { tapSelectableOption(prefix); return }
-        }
+        // The option list renders after a screen transition that can take several
+        // seconds on the hosted runner (run on QA 9ea3329 looked 0.3s after the tap).
+        // Poll for a unique hittable option; ambiguity and absence still fail.
+        let deadline = Date().addingTimeInterval(20)
+        repeat {
+            for letter in ["A", "B", "C"] {
+                let prefix = letter + "\n" + action
+                if let e = findOption(prefix).found.first, e.isEnabled { tapSelectableOption(prefix); return }
+            }
+            RunLoop.current.run(until: Date().addingTimeInterval(0.5))
+        } while Date() < deadline
         capture("missing_action_" + action)
         XCTFail("NO_SOURCE_OWNED_SELECTABLE_ACTION_" + action)
     }
