@@ -118,9 +118,10 @@ try:
    s_=observed[tag]=state(tag)
    assert s_['learningEvidenceHistory']==q['learningEvidenceHistory'] and s_['earnedXp']==q['earnedXp'] and s_['repairOutcomeProjection']==q['repairOutcomeProjection'], f'{tag}: persisted truth changed after independent attempt'
    assert not open_for(s_,'actions_legal_context')
-  final=[e for e in [json.loads(x) for x in (root/'C2_restart'/'app-owned-telemetry.jsonl').read_text().splitlines() if x] if e['name']=='repair_completed']
+  # The HNP journal is overwritten at process launch, so the pre-restart snapshot (C2_home) holds the closure events.
+  final=[e for e in [json.loads(x) for x in (root/'C2_home'/'app-owned-telemetry.jsonl').read_text().splitlines() if x] if e['name']=='repair_completed']
   observed['repair_completed_telemetry']=[{k:e['fields'].get(k) for k in ('result','repairStatus','attemptOrdinal')} for e in final]
-  assert len(final)>=2 and final[0]['fields'].get('repairStatus')=='open' and final[-1]['fields'].get('repairStatus')!='open', 'independent completion must close the repair in telemetry'
+  assert len(final)>=2 and final[0]['fields'].get('repairStatus')=='open' and final[-1]['fields'].get('repairStatus')=='fixed' and final[-1]['fields'].get('result')=='correct', 'independent completion must close the repair in telemetry'
   observed['summary_checkpoint']='REACHED' if 'C2_summary' in later else 'NOT_REACHED_ON_THIS_ROUTE'
   observed['observations']={'wrong_attempt_run_session':[wr.get('runId'),wr.get('sessionId')],'assisted_run_session':[ar['runId'],ar['sessionId']],'independent_run_session':[qr['runId'],qr['sessionId']]}
  verdict={'status':'PASS_'+mode.upper().replace('-','_'),'observed':observed}

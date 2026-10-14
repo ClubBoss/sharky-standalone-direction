@@ -153,7 +153,9 @@ jobs:
           python3 -u qa-infra/tools/qa_s11_watch_checkpoints.py --log output/s11_hosted/native-tests.log --sim "$SIM_ID" --output output/s11_hosted/checkpoints > output/s11_hosted/checkpoint-observer.log 2>&1 &
           OBSERVER_PID=$!
           trap 'kill "$OBSERVER_PID" 2>/dev/null || true' EXIT
-          xcodebuild test -project qa-infra/qa/s11_hosted/S11HostedNative.xcodeproj -scheme S11HostedNativeUITests -destination "platform=iOS Simulator,id=$SIM_ID" -parallel-testing-enabled NO -only-testing:S11HostedNativeUITests/S11HostedNativeUITests/$METHOD -resultBundlePath "$PWD/output/s11_hosted/native-tests.xcresult" CODE_SIGNING_ALLOWED=NO > output/s11_hosted/native-tests.log 2>&1 || { tail -120 output/s11_hosted/native-tests.log; exit 1; }
+          # Unbuffered stdout: the observer reads this log, and a block-buffered first marker
+          # reached it 22.7s late (run 38574481013, D2 first screen).
+          NSUnbufferedIO=YES xcodebuild test -project qa-infra/qa/s11_hosted/S11HostedNative.xcodeproj -scheme S11HostedNativeUITests -destination "platform=iOS Simulator,id=$SIM_ID" -parallel-testing-enabled NO -only-testing:S11HostedNativeUITests/S11HostedNativeUITests/$METHOD -resultBundlePath "$PWD/output/s11_hosted/native-tests.xcresult" CODE_SIGNING_ALLOWED=NO > output/s11_hosted/native-tests.log 2>&1 || { tail -120 output/s11_hosted/native-tests.log; exit 1; }
           python3 - <<'PYCOUNT'
           import re
           from pathlib import Path
