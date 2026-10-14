@@ -40,8 +40,7 @@ final class S11HostedNativeUITests: XCTestCase {
     /// by graded runner options. Tap the actual enabled Check button.
     private func tapWelcomeCheck() {
         XCTAssertTrue(visible("What action keeps playing for free?"), "WELCOME_DEMO_WRONG_SCREEN")
-        _ = enabledButton("Fold"); _ = enabledButton("Call")
-        tapButton("Check")
+        tapSelectableOption("B\nCheck")
     }
     private func enabledButton(_ label: String, timeout: TimeInterval = 5) -> XCUIElement {
         let button = app.buttons.matching(identifier: label).firstMatch
@@ -63,23 +62,39 @@ final class S11HostedNativeUITests: XCTestCase {
         capture("missing_tab_"+label)
         XCTFail("NO_UNIQUE_NATIVE_TAB_"+label)
     }
-    private func tapSelectableOption(_ exactOrPrefix:String) {
-        let pred=NSPredicate(format:"label BEGINSWITH[cd] %@",exactOrPrefix)
+    /// Responsive layouts expose the same authored option differently: standard
+    /// width as lettered StaticText ("B\nCheck"), large width as a real Button
+    /// labelled with the option text ("Check"). Native AX trees from runs
+    /// 38546378310 (440x956 buttons) and 38546382439 (402x874 lettered text).
+    /// Lettered/prefix match first, then the exact Button label of the option
+    /// text. Always a unique, hittable element; never a seat label (StaticText).
+    private func findOption(_ prefix: String) -> (found: [XCUIElement], via: String) {
+        let pred = NSPredicate(format:"label BEGINSWITH[cd] %@", prefix)
         for type: XCUIElement.ElementType in [.button, .staticText] {
-            let matches=app.descendants(matching:type).matching(pred)
-            let found=matches.allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
-            if found.count == 1 {
-                XCTAssertTrue(found[0].isEnabled, "OPTION_DISABLED "+exactOrPrefix)
-                print("S11_NAV_SELECT_OPTION requested="+exactOrPrefix+" actual="+found[0].label)
-                found[0].tap()
-                return
-            }
-            if found.count > 1 {
-                XCTFail("AMBIGUOUS_SELECTABLE_OPTION "+exactOrPrefix+" count="+String(found.count))
-                return
-            }
+            let found = app.descendants(matching:type).matching(pred).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+            if !found.isEmpty { return (found, "prefix") }
         }
-        capture("missing_option_"+exactOrPrefix.replacingOccurrences(of:" ",with:"_").prefix(18))
+        let chars = Array(prefix)
+        if chars.count > 2, chars[1] == "\n", chars[0].isUppercase {
+            let text = String(chars[2...])
+            let exact = app.buttons.matching(NSPredicate(format:"label == %@", text)).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+            if !exact.isEmpty { return (exact, "button_exact") }
+        }
+        return ([], "none")
+    }
+    private func tapSelectableOption(_ exactOrPrefix:String) {
+        let (found, via) = findOption(exactOrPrefix)
+        if found.count == 1 {
+            XCTAssertTrue(found[0].isEnabled, "OPTION_DISABLED "+exactOrPrefix)
+            print("S11_NAV_SELECT_OPTION requested="+exactOrPrefix+" actual="+found[0].label+" via="+via)
+            found[0].tap()
+            return
+        }
+        if found.count > 1 {
+            XCTFail("AMBIGUOUS_SELECTABLE_OPTION "+exactOrPrefix+" count="+String(found.count))
+            return
+        }
+        capture("missing_option_"+exactOrPrefix.replacingOccurrences(of:" ",with:"_").replacingOccurrences(of:"\n",with:"_").prefix(18))
         XCTFail("MISSING_SELECTABLE_OPTION "+exactOrPrefix)
     }
     private func continueTeachingUntil(_ clue:String, max:Int) {
@@ -139,10 +154,7 @@ final class S11HostedNativeUITests: XCTestCase {
                 available[0].tap()
                 continue
             }
-            let candidate = app.staticTexts.matching(
-                NSPredicate(format:"label BEGINSWITH[cd] %@",prefix)
-            ).firstMatch
-            if candidate.exists && candidate.isHittable && candidate.isEnabled {
+            if let candidate = findOption(prefix).found.first, candidate.isEnabled {
                 tapSelectableOption(prefix)
                 submitted = true
                 break
@@ -316,8 +328,8 @@ final class S11HostedNativeUITests: XCTestCase {
         XCTAssertTrue(visible("Where do you go to fix mistakes after a miss?"))
         XCTAssertFalse(visible("CORRECT READ"), "UNEARNED_POSITIVE_FINAL_FEEDBACK")
         XCTAssertFalse(app.buttons.matching(identifier:"Next hand").firstMatch.exists)
-        let review = app.staticTexts.matching(NSPredicate(format:"label BEGINSWITH %@", "B\nReview")).firstMatch
-        XCTAssertTrue(review.exists && review.isHittable && review.isEnabled)
+        let review = findOption("B\nReview").found.first
+        XCTAssertTrue(review != nil && review!.isEnabled, "FINAL_REVIEW_OPTION_NOT_SELECTABLE")
         if wrongFinal {
             persistedCheckpoint("C1_wrong_prefinal")
             XCTAssertFalse(visible("CORRECT READ"), "UNEARNED_FEEDBACK_DURING_CHECKPOINT")
@@ -360,8 +372,7 @@ final class S11HostedNativeUITests: XCTestCase {
         for page in 0..<18 {
             let overlay = app.otherElements.matching(NSPredicate(format:"label BEGINSWITH %@", "Theory navigation, page")).firstMatch
             if !overlay.exists {
-                let option = app.staticTexts.matching(NSPredicate(format:"label BEGINSWITH %@", prefix)).firstMatch
-                if option.exists && option.isHittable && option.isEnabled { return }
+                if let option = findOption(prefix).found.first, option.isEnabled { return }
                 let pot = app.staticTexts.matching(NSPredicate(format:"label BEGINSWITH %@", "A\nPot")).firstMatch
                 if pot.exists && pot.isHittable {
                     tapSelectableOption("A\nPot")
@@ -417,8 +428,7 @@ final class S11HostedNativeUITests: XCTestCase {
             app.terminate(); app.launch()
             XCTAssertTrue(app.waitForExistence(timeout:35))
             capture("recap_inflight_return")
-            let resumedChoice = app.staticTexts.matching(NSPredicate(format:"label BEGINSWITH %@","C\nChips already committed to the middle")).firstMatch
-            if !(resumedChoice.exists && resumedChoice.isHittable) {
+            if findOption("C\nChips already committed to the middle").found.isEmpty {
                 tapButton("Continue")
             }
             waitForSelectable("C\nChips already committed to the middle")
@@ -455,8 +465,7 @@ final class S11HostedNativeUITests: XCTestCase {
     private func selectAction(_ action: String) {
         for letter in ["A", "B", "C"] {
             let prefix = letter + "\n" + action
-            let e = app.staticTexts.matching(NSPredicate(format:"label BEGINSWITH[cd] %@",prefix)).firstMatch
-            if e.exists && e.isEnabled && e.isHittable { tapSelectableOption(prefix); return }
+            if let e = findOption(prefix).found.first, e.isEnabled { tapSelectableOption(prefix); return }
         }
         capture("missing_action_" + action)
         XCTFail("NO_SOURCE_OWNED_SELECTABLE_ACTION_" + action)

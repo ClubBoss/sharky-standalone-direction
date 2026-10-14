@@ -105,16 +105,22 @@ jobs:
           print(subprocess.check_output(['xcrun','simctl','create','S11-'+shard,kind,runtime],text=True).strip())
           PYDEVICE
           SIM_ID="$(cat output/s11_hosted/selected-simulator.txt)"
+          if test "$SHARD" = repair; then
+            # D2: real OS Reduce Motion for the isolated device, written to its
+            # (shut-down) OS accessibility preferences before the single boot and
+            # before the app ever launches. Settings-UI automation hung (run
+            # 38541883243) and a mid-run reboot broke the screenshot preflight
+            # (run 38546553098).
+            PREFS="$HOME/Library/Developer/CoreSimulator/Devices/$SIM_ID/data/Library/Preferences"
+            mkdir -p "$PREFS"
+            plutil -create xml1 "$PREFS/com.apple.Accessibility.plist"
+            plutil -insert ReduceMotionEnabled -bool true "$PREFS/com.apple.Accessibility.plist"
+          fi
           xcrun simctl boot "$SIM_ID"
           xcrun simctl bootstatus "$SIM_ID" -b
           if test "$SHARD" = repair; then
-            # D2: real OS Reduce Motion on the isolated device, applied before the
-            # app ever launches. Settings-UI automation hung (run 38541883243).
-            xcrun simctl spawn "$SIM_ID" defaults write com.apple.Accessibility ReduceMotionEnabled -bool true
-            xcrun simctl shutdown "$SIM_ID"
-            xcrun simctl boot "$SIM_ID"
-            xcrun simctl bootstatus "$SIM_ID" -b
-            xcrun simctl spawn "$SIM_ID" defaults read com.apple.Accessibility ReduceMotionEnabled | tee output/s11_hosted/os-reduce-motion-pref.txt
+            test "$(xcrun simctl spawn "$SIM_ID" defaults read com.apple.Accessibility ReduceMotionEnabled)" = 1
+            echo OS_REDUCE_MOTION_PREF_ACTIVE_AFTER_SINGLE_BOOT > output/s11_hosted/os-reduce-motion-pref.txt
           fi
           xcrun simctl install "$SIM_ID" output/s11_hosted/Runner.app
           xcrun simctl list devices available -j > output/s11_hosted/tested-devices.json
