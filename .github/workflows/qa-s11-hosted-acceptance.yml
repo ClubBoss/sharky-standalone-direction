@@ -31,24 +31,24 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: frozen-source
-          ref: 179105da294be3e7918369dcf841a584ea36fce4
+          ref: 59f1fdbe1cdb612539531c79bc3c39262a6216d0
           fetch-depth: 1
       - name: Verify exact source, environment and ownership
         run: |
           set -euo pipefail
-          test "$(git -C frozen-source rev-parse HEAD)" = "179105da294be3e7918369dcf841a584ea36fce4"
-          test "$(git -C frozen-source rev-parse HEAD^{tree})" = "be495b6d84c79a66930c5316b93adb56213a00dd"
+          test "$(git -C frozen-source rev-parse HEAD)" = "59f1fdbe1cdb612539531c79bc3c39262a6216d0"
+          test "$(git -C frozen-source rev-parse HEAD^{tree})" = "fa2b200ab446b931595bfc8e05cdaf110802109e"
           mkdir -p output/s11_hosted
           xcodebuild -version > output/s11_hosted/host-xcode.txt
           sw_vers > output/s11_hosted/host-macos.txt
           ruby -e 'require "xcodeproj"; puts "XCODEPROJ_GEM_AVAILABLE"' | tee output/s11_hosted/gem-preflight.txt
           xcrun simctl list devices available -j > output/s11_hosted/simulators.json
-          echo "179105da294be3e7918369dcf841a584ea36fce4" > output/s11_hosted/source-head.txt
+          echo "59f1fdbe1cdb612539531c79bc3c39262a6216d0" > output/s11_hosted/source-head.txt
       - name: Download hosted app built from frozen source in feasibility run
         uses: actions/download-artifact@v4
         with:
-          name: s11-hosted-feasibility-38536489523
-          run-id: 38536489523
+          name: s11-hosted-feasibility-38602214956
+          run-id: 38602214956
           repository: ClubBoss/sharky-standalone-direction
           github-token: ${{ github.token }}
           path: output/s11_hosted
@@ -59,10 +59,10 @@ jobs:
           rm -rf output/s11_hosted/Runner.app
           ditto -x -k output/s11_hosted/Runner.zip output/s11_hosted
           test -d output/s11_hosted/Runner.app
-          grep -Fx 'source=179105da294be3e7918369dcf841a584ea36fce4' output/s11_hosted/binary-provenance.txt
-          test "$(awk '{print $1}' output/s11_hosted/kernel-sha.txt)" = "6ff4850f95eefc64cdc534dddd6f4903852c3cce4989bd9e420e45d3ed912716"
-          test "$(awk '{print $1}' output/s11_hosted/manifest-file-sha.txt)" = "594d93c08d37a35a4d8aec010489c2d903a66ed77a33f54f873e12fe488ac2a7"
-          test "$(awk '{print $1}' output/s11_hosted/app-archive-sha.txt)" = "39b97deaafb9a2858e460552d8bf320884af98de9b8a7ba1394f296f779cae21"
+          grep -Fx 'source=59f1fdbe1cdb612539531c79bc3c39262a6216d0' output/s11_hosted/binary-provenance.txt
+          test "$(awk '{print $1}' output/s11_hosted/kernel-sha.txt)" = "47f1de571c136522692e9eeb6592cc3a9b7033283e72e2a8aa0df2cb51d5ab65"
+          test "$(awk '{print $1}' output/s11_hosted/manifest-file-sha.txt)" = "9968074d48b3207cfdc76f676e629087153ef36820a8740c690d6474fdf293ce"
+          test "$(awk '{print $1}' output/s11_hosted/app-archive-sha.txt)" = "3b630a0dd9fafed080d1847015f61eeebb7a7f2c38ebb8dca7e4fe09fb8713f5"
           test -s output/s11_hosted/kernel-sha.txt
           shasum -a 256 output/s11_hosted/Runner.app/Frameworks/App.framework/flutter_assets/kernel_blob.bin | diff -u output/s11_hosted/kernel-sha.txt -
           # The attested zip preserves all files, including hidden placeholders.
