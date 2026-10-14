@@ -1,12 +1,13 @@
 name: S11 hosted iOS graded acceptance
 on:
-  push:
-    branches:
-      - qa/s11-hosted-native-20261013
-    paths:
-      - qa/**
-      - tools/qa_s11*
-      - .github/workflows/qa-s11-hosted-acceptance.yml
+  workflow_dispatch:
+    inputs:
+      shard:
+        description: Native learner shard to execute against the pinned binary
+        required: true
+        default: all
+        type: choice
+        options: [all, clean-recap, wrong-recap, repair]
 permissions:
   contents: read
   actions: read
@@ -18,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [clean-recap, wrong-recap, repair]
+        shard: ${{ fromJSON(inputs.shard == 'all' && '["clean-recap","wrong-recap","repair"]' || format('["{0}"]', inputs.shard)) }}
     steps:
       - name: Checkout QA-only test infrastructure
         uses: actions/checkout@v4
@@ -108,6 +109,11 @@ jobs:
           xcrun simctl bootstatus "$SIM_ID" -b
           xcrun simctl install "$SIM_ID" output/s11_hosted/Runner.app
           xcrun simctl list devices available -j > output/s11_hosted/tested-devices.json
+          # Attach the host Simulator display before asking its screen service.
+          # A newly created Pro Max booted/launched but produced no PNG in 60s
+          # without this UI attachment. No learner state is changed here.
+          open -a Simulator --args -CurrentDeviceUDID "$SIM_ID"
+          sleep 5
           # Warm the real screenshot service while first-use state is untouched.
           xcrun simctl launch "$SIM_ID" com.example.pokerAnalyzer > output/s11_hosted/preflight-launch.txt
           python3 - "$SIM_ID" <<'PYPREWARM'
