@@ -43,7 +43,7 @@ jobs:
           set -euo pipefail
           flutter --version | tee -a output/s11_hosted/environment.txt
           flutter pub get > output/s11_hosted/pub-get.log 2>&1 || { tail -80 output/s11_hosted/pub-get.log; exit 1; }
-          flutter build ios --simulator --debug > output/s11_hosted/build.log 2>&1 || { tail -110 output/s11_hosted/build.log; exit 1; }
+          flutter build ios --simulator --debug --dart-define=HNP_TELEMETRY=true > output/s11_hosted/build.log 2>&1 || { tail -110 output/s11_hosted/build.log; exit 1; }
           test -d build/ios/iphonesimulator/Runner.app
           ditto build/ios/iphonesimulator/Runner.app output/s11_hosted/Runner.app
           cp pubspec.lock output/s11_hosted/resolved-pubspec.lock
@@ -55,6 +55,7 @@ jobs:
           find output/s11_hosted/Runner.app -type f -print0 | xargs -0 shasum -a 256 > output/s11_hosted/app-file-manifest.sha256
           shasum -a 256 output/s11_hosted/app-file-manifest.sha256 > output/s11_hosted/manifest-file-sha.txt
           shasum -a 256 output/s11_hosted/Runner.app/Frameworks/App.framework/flutter_assets/kernel_blob.bin > output/s11_hosted/kernel-sha.txt
+          echo "BUILD_DART_DEFINE=HNP_TELEMETRY=true" >> output/s11_hosted/environment.txt
           echo "NEW_HOSTED_BINARY_NOT_HISTORIC_LOCAL_BINARY" | tee output/s11_hosted/binary-provenance.txt
           echo "source=179105da294be3e7918369dcf841a584ea36fce4" >> output/s11_hosted/binary-provenance.txt
       - name: Boot one supported simulator and interact with native app
