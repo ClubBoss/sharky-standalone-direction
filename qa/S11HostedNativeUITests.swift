@@ -548,6 +548,9 @@ final class S11HostedNativeUITests: XCTestCase {
         persistedCheckpoint("C2_review_debt_open")
         tapButton("Practice this spot")
         XCTAssertTrue(visible("What action keeps playing for free?", timeout: 15), "INDEPENDENT_RECHECK_NOT_ENTERED")
+        // The queue repair opens behind a teaching overlay with a dwell-locked `Continue`
+        // (run on QA 68dbc67); advance it as a learner would, then the options are live.
+        waitForSelectable("B\nCheck")
         XCTAssertFalse(visible("CORRECT READ"), "RECHECK_UNEARNED_FEEDBACK")
         XCTAssertFalse(visible("Quick hint"), "RECHECK_STARTED_WITH_HINT_OPEN")
         capture("C2_independent_recheck_question")
