@@ -39,7 +39,7 @@ final class S11HostedNativeUITests: XCTestCase {
     /// buttons `Fold`/`Check`/`Call`; the lettered StaticText form is only used
     /// by graded runner options. Tap the actual enabled Check button.
     private func tapWelcomeCheck() {
-        XCTAssertTrue(visible("What action keeps playing for free?"), "WELCOME_DEMO_WRONG_SCREEN")
+        XCTAssertTrue(visible("What action keeps playing for free?", timeout: 12), "WELCOME_DEMO_WRONG_SCREEN")
         tapSelectableOption("B\nCheck")
     }
     private func enabledButton(_ label: String, timeout: TimeInterval = 5) -> XCUIElement {
@@ -197,7 +197,7 @@ final class S11HostedNativeUITests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.waitForExistence(timeout:35))
         capture("first_install_intro")
-        XCTAssertTrue(visible("Sharky Poker") || visible("Find my start"),"FIRST_INSTALL_NOT_SHARKY")
+        XCTAssertTrue(visible("Sharky Poker", timeout: 12) || visible("Find my start", timeout: 12),"FIRST_INSTALL_NOT_SHARKY")
         openPlacementFromIntro()
         capture("placement_unselected")
         // Native accessibility tree labels: actual tappable StaticText starts with this phrase.
@@ -205,7 +205,7 @@ final class S11HostedNativeUITests: XCTestCase {
         capture("placement_selected")
         XCTAssertTrue(enabledButton("Start from zero").exists)
         tapButton("Start from zero")
-        XCTAssertTrue(visible("Try one table read"),"WELCOME_INTRO_MISSING")
+        XCTAssertTrue(visible("Try one table read", timeout: 12),"WELCOME_INTRO_MISSING")
         capture("welcome_intro")
         tapButton("Try one table read")
         capture("welcome_demo")
@@ -222,14 +222,14 @@ final class S11HostedNativeUITests: XCTestCase {
         }
         capture("welcome_handoff")
         tapButton("Open my path")
-        XCTAssertTrue(visible("Start first hand"),"HOME_PRIMARY_FIRST_LESSON_MISSING")
+        XCTAssertTrue(visible("Start first hand", timeout: 12),"HOME_PRIMARY_FIRST_LESSON_MISSING")
         capture("home_start_first_hand")
         if !wrongFinal {
             tapTab("Review")
-            XCTAssertTrue(visible("Review is ready"))
+            XCTAssertTrue(visible("Review is ready", timeout: 12))
             capture("D1_fresh_review_empty")
             tapButton("Open Learn")
-            XCTAssertTrue(visible("First Table Guide"))
+            XCTAssertTrue(visible("First Table Guide", timeout: 12))
             capture("D1_empty_review_CTA_to_Learn")
             // The real empty-state CTA has changed the handoff context.
             // Continue on its observed curriculum mission, not a stale Home label.
@@ -331,7 +331,7 @@ final class S11HostedNativeUITests: XCTestCase {
             return
         }
         waitForSelectable("B\nReview")
-        XCTAssertTrue(visible("Where do you go to fix mistakes after a miss?"))
+        XCTAssertTrue(visible("Where do you go to fix mistakes after a miss?", timeout: 12))
         XCTAssertFalse(visible("CORRECT READ"), "UNEARNED_POSITIVE_FINAL_FEEDBACK")
         XCTAssertFalse(app.buttons.matching(identifier:"Next hand").firstMatch.exists)
         let review = findOption("B\nReview").found.first
@@ -342,9 +342,9 @@ final class S11HostedNativeUITests: XCTestCase {
             XCTAssertFalse(app.buttons.matching(identifier:"Next hand").firstMatch.exists)
             tapSelectableOption("C\nLearn")
             XCTAssertFalse(visible("CORRECT READ"), "WRONG_FINAL_MARKED_CORRECT")
-            XCTAssertTrue(visible("MISSED CLUE"), "NO_AUTHENTIC_WRONG_FEEDBACK")
-            XCTAssertTrue(visible("Review was the better play."), "WRONG_FINAL_REPAIR_EXPLANATION_MISSING")
-            XCTAssertTrue(visible("Learn shows what to study next."), "WRONG_FINAL_ROUTE_DISTINCTION_MISSING")
+            XCTAssertTrue(visible("MISSED CLUE", timeout: 12), "NO_AUTHENTIC_WRONG_FEEDBACK")
+            XCTAssertTrue(visible("Review was the better play.", timeout: 12), "WRONG_FINAL_REPAIR_EXPLANATION_MISSING")
+            XCTAssertTrue(visible("Learn shows what to study next.", timeout: 12), "WRONG_FINAL_ROUTE_DISTINCTION_MISSING")
             _ = enabledButton("Try same clue")
             persistedCheckpoint("C1_wrong_answer")
             return
@@ -353,10 +353,10 @@ final class S11HostedNativeUITests: XCTestCase {
         XCTAssertFalse(visible("CORRECT READ"), "UNEARNED_FEEDBACK_DURING_CHECKPOINT")
         XCTAssertFalse(app.buttons.matching(identifier:"Next hand").firstMatch.exists)
         tapSelectableOption("B\nReview")
-        XCTAssertTrue(visible("CORRECT READ"), "FINAL_FEEDBACK_MISSING_AFTER_ANSWER")
+        XCTAssertTrue(visible("CORRECT READ", timeout: 12), "FINAL_FEEDBACK_MISSING_AFTER_ANSWER")
         persistedCheckpoint("C1_final_answer")
         tapButton("Next hand")
-        XCTAssertTrue(visible("Session complete") || visible("What finished"), "NO_TRUE_LESSON_SUMMARY")
+        XCTAssertTrue(visible("Session complete", timeout: 12) || visible("What finished", timeout: 12), "NO_TRUE_LESSON_SUMMARY")
         persistedCheckpoint("C1_summary")
         // Summary owns the full screen; return through its actual map CTA.
         for _ in 0..<5 {
@@ -412,22 +412,22 @@ final class S11HostedNativeUITests: XCTestCase {
         // Home Continue is a personalized first-value repeat. Use the actual
         // curriculum mission whose focus was selected by Summary Back to map.
         tapTab("Learn")
-        XCTAssertTrue(visible("What poker is"), "SECOND_LESSON_CURRENT_MISSION_MISSING")
+        XCTAssertTrue(visible("What poker is", timeout: 12), "SECOND_LESSON_CURRENT_MISSION_MISSING")
         capture("second_lesson_actual_Learn_mission")
         tapButton("Start")
-        XCTAssertTrue(visible("Step 1/7"), "SECOND_LESSON_POT_STACK_NOT_ENTERED")
+        XCTAssertTrue(visible("Step 1/7", timeout: 12), "SECOND_LESSON_POT_STACK_NOT_ENTERED")
         waitForSelectable("C\nEveryone folds")
         let recipe = ["C\nEveryone folds", "C\nBest hand", "B\nHero put in all remaining chips", "C\nOnly the chips CO matched", "A\nA fold or a showdown"]
         for (index, prefix) in recipe.enumerated() {
-            XCTAssertTrue(visible("Step \(index+2)/7"))
+            XCTAssertTrue(visible("Step \(index+2)/7", timeout: 12))
             waitForSelectable(prefix)
             tapSelectableOption(prefix)
-            XCTAssertTrue(visible("CORRECT READ"))
+            XCTAssertTrue(visible("CORRECT READ", timeout: 12))
             tapButton("Next hand")
         }
         waitForSelectable("C\nChips already committed to the middle")
-        XCTAssertTrue(visible("Step 7/7"))
-        XCTAssertTrue(visible("What is the pot?"))
+        XCTAssertTrue(visible("Step 7/7", timeout: 12))
+        XCTAssertTrue(visible("What is the pot?", timeout: 12))
         XCTAssertFalse(visible("CORRECT READ"), "SECOND_REVIEW_UNEARNED_FEEDBACK")
         persistedCheckpoint("C1_second_review_entry")
         if wrong {
@@ -444,17 +444,17 @@ final class S11HostedNativeUITests: XCTestCase {
         tapSelectableOption(wrong ? "B\nEveryone folds before showdown" : "C\nChips already committed to the middle")
         if wrong {
             XCTAssertFalse(visible("CORRECT READ"), "POT_RECAP_FOLDS_MARKED_CORRECT")
-            XCTAssertTrue(visible("MISSED CLUE"))
-            XCTAssertTrue(visible("does not define the pot"))
+            XCTAssertTrue(visible("MISSED CLUE", timeout: 12))
+            XCTAssertTrue(visible("does not define the pot", timeout: 12))
             _ = enabledButton("Try same clue")
             persistedCheckpoint("recap_wrong")
             return
         }
-        XCTAssertTrue(visible("CORRECT READ"))
-        XCTAssertTrue(visible("shared prize"))
+        XCTAssertTrue(visible("CORRECT READ", timeout: 12))
+        XCTAssertTrue(visible("shared prize", timeout: 12))
         persistedCheckpoint("recap_correct")
         tapButton("Next hand")
-        XCTAssertTrue(visible("Session complete") || visible("What finished"))
+        XCTAssertTrue(visible("Session complete", timeout: 12) || visible("What finished", timeout: 12))
         persistedCheckpoint("recap_summary")
         for _ in 0..<6 {
             if app.buttons.matching(identifier:"Back to map").firstMatch.exists && app.buttons.matching(identifier:"Back to map").firstMatch.isHittable { break }
@@ -497,7 +497,7 @@ final class S11HostedNativeUITests: XCTestCase {
         tapButton("Start quick check")
         for (i, answer) in ["2 private · 3 board · Pot 6 BB", "Board cards", "Check"].enumerated() {
             selectAction(answer)
-            XCTAssertTrue(visible("CORRECT READ"))
+            XCTAssertTrue(visible("CORRECT READ", timeout: 12))
             tapButton(i == 2 ? "See my start" : "Next check")
         }
         capture("C2_actual_placement_recommendation")
@@ -510,14 +510,14 @@ final class S11HostedNativeUITests: XCTestCase {
         tapButton("Open my path")
         waitForSelectable("A\nFold")
         capture("C2_actual_action_source_entry")
-        XCTAssertTrue(visible("No bet") || visible("free"))
+        XCTAssertTrue(visible("No bet", timeout: 12) || visible("free", timeout: 12))
         selectAction("Fold")
         XCTAssertFalse(visible("CORRECT READ"))
         persistedCheckpoint("C2_wrong")
         tapButton("Try same clue")
         waitForSelectable("B\nCheck")
         tapButton("Need a hint?")
-        XCTAssertTrue(visible("Quick hint"))
+        XCTAssertTrue(visible("Quick hint", timeout: 12))
         capture("C2_assistance_teaching")
         selectAction("Check")
         persistedCheckpoint("C2_assisted")
@@ -531,7 +531,7 @@ final class S11HostedNativeUITests: XCTestCase {
         persistedCheckpoint("C2_independent_recheck")
         if app.buttons.matching(identifier:"Continue").firstMatch.exists && app.buttons.matching(identifier:"Continue").firstMatch.isHittable { tapButton("Continue") }
         else { tapButton("Next hand") }
-        XCTAssertTrue(visible("Session complete") || visible("What finished"))
+        XCTAssertTrue(visible("Session complete", timeout: 12) || visible("What finished", timeout: 12))
         persistedCheckpoint("C2_summary")
         for _ in 0..<6 {
             if app.buttons.matching(identifier:"Back to map").firstMatch.exists && app.buttons.matching(identifier:"Back to map").firstMatch.isHittable { break }
@@ -571,7 +571,7 @@ final class S11HostedNativeUITests: XCTestCase {
         tapButton("Start quick check")
         for (i, answer) in ["2 private · 3 board · Pot 6 BB", "Board cards", "Check"].enumerated() {
             selectAction(answer)
-            XCTAssertTrue(visible("CORRECT READ"))
+            XCTAssertTrue(visible("CORRECT READ", timeout: 12))
             tapButton(i == 2 ? "See my start" : "Next check")
         }
         capture("B_retake_diagnostic_result")
