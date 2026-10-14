@@ -61,7 +61,10 @@ final class S11HostedNativeUITests: XCTestCase {
     }
     private func tapTab(_ label: String) {
         for type: XCUIElement.ElementType in [.button, .staticText] {
-            let matches = app.descendants(matching:type).matching(NSPredicate(format:"label == %@",label)).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+            var matches = app.descendants(matching:type).matching(NSPredicate(format:"label == %@",label)).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+            // On the Review page the page title also reads "Review"; the bottom tab bar
+            // item is the one in the lowest 15% of the window.
+            if matches.count > 1 { matches = matches.filter { $0.frame.midY > app.frame.height * 0.85 } }
             if matches.count == 1 { matches[0].tap(); return }
         }
         capture("missing_tab_"+label)
