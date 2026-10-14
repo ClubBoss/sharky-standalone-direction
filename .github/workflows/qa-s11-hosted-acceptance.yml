@@ -107,6 +107,15 @@ jobs:
           SIM_ID="$(cat output/s11_hosted/selected-simulator.txt)"
           xcrun simctl boot "$SIM_ID"
           xcrun simctl bootstatus "$SIM_ID" -b
+          if test "$SHARD" = repair; then
+            # D2: real OS Reduce Motion on the isolated device, applied before the
+            # app ever launches. Settings-UI automation hung (run 38541883243).
+            xcrun simctl spawn "$SIM_ID" defaults write com.apple.Accessibility ReduceMotionEnabled -bool true
+            xcrun simctl shutdown "$SIM_ID"
+            xcrun simctl boot "$SIM_ID"
+            xcrun simctl bootstatus "$SIM_ID" -b
+            xcrun simctl spawn "$SIM_ID" defaults read com.apple.Accessibility ReduceMotionEnabled | tee output/s11_hosted/os-reduce-motion-pref.txt
+          fi
           xcrun simctl install "$SIM_ID" output/s11_hosted/Runner.app
           xcrun simctl list devices available -j > output/s11_hosted/tested-devices.json
           # Attach the host Simulator display before asking its screen service.

@@ -1,4 +1,5 @@
 import XCTest
+import UIKit
 import Darwin
 
 final class S11HostedNativeUITests: XCTestCase {
@@ -462,28 +463,19 @@ final class S11HostedNativeUITests: XCTestCase {
     }
 
     func test04AuthenticRepair() throws {
-        // Real OS setting, on this isolated device; no app preference injection.
-        let settings = XCUIApplication(bundleIdentifier:"com.apple.Preferences")
-        settings.launch()
-        for title in ["Accessibility", "Motion"] {
-            let item = settings.staticTexts.matching(identifier:title).firstMatch
-            for _ in 0..<9 {
-                if item.exists && item.isHittable { break }
-                settings.swipeUp()
-            }
-            XCTAssertTrue(item.exists && item.isHittable, "OS_SETTING_NOT_REACHABLE_"+title)
-            item.tap()
-        }
-        let motion = settings.switches.matching(identifier:"Reduce Motion").firstMatch
-        XCTAssertTrue(motion.waitForExistence(timeout:10))
-        if motion.value as? String != "1" { motion.tap() }
-        XCTAssertEqual(motion.value as? String, "1", "REDUCED_MOTION_NOT_ENABLED")
-        capture("D2_OS_reduced_motion_enabled", owning:settings)
-        settings.terminate()
+        // Real OS Reduce Motion on this isolated device (set by the workflow via
+        // the simulator's OS accessibility preference before this app launch).
+        // iOS Settings UI automation never reached idle after the Accessibility
+        // tap (run 38541883243), so the setting is verified from the OS itself:
+        // UIAccessibility in this runner process reads the same system value the
+        // app's MediaQuery.disableAnimations is derived from. No app preference.
+        let osReduceMotion = UIAccessibility.isReduceMotionEnabled
+        print("S11_OS_REDUCE_MOTION isReduceMotionEnabled=" + String(osReduceMotion))
+        XCTAssertTrue(osReduceMotion, "REDUCED_MOTION_NOT_ENABLED_BY_OS")
         // Source-owned placement recommendation opens Actions legitimately.
         // The fresh public topic pack is locked until its route is learned.
         app.launch(); XCTAssertTrue(app.waitForExistence(timeout:35))
-        capture("D2_reduced_motion_first_use")
+        capture("D2_OS_reduced_motion_first_use")
         openPlacementFromIntro()
         tapSelectableOption("I’ve played casually"); tapButton("Continue")
         tapSelectableOption("Try one quick check"); tapButton("Continue")
