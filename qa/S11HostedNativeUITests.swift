@@ -504,10 +504,12 @@ final class S11HostedNativeUITests: XCTestCase {
         tapButton("Start with the useful hand")
         tapButton("Try one table read")
         tapWelcomeCheck()
-        // The compact handoff appears after the choice; wait like the standard path.
-        let compactHandoff = app.buttons.matching(identifier: "Open my path").firstMatch
-        _ = compactHandoff.waitForExistence(timeout: 15)
-        tapButton("Open my path")
+        // Casual-player route (compact 375x667 tree, run 1708834): "Your path is
+        // ready... You tried Check. This preview was ungraded." with the real
+        // handoff CTA `Start recommended lesson` (`Open my path` is the beginner route).
+        let recommended = app.buttons.matching(identifier: "Start recommended lesson").firstMatch
+        _ = recommended.waitForExistence(timeout: 15)
+        tapButton("Start recommended lesson")
         waitForSelectable("A\nFold")
         capture("C2_actual_action_source_entry")
         XCTAssertTrue(visible("No bet", timeout: 12) || visible("free", timeout: 12))
