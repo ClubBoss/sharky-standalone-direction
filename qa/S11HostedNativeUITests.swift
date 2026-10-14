@@ -494,9 +494,10 @@ final class S11HostedNativeUITests: XCTestCase {
         // tap (run 38541883243), so the setting is verified from the OS itself:
         // UIAccessibility in this runner process reads the same system value the
         // app's MediaQuery.disableAnimations is derived from. No app preference.
+        let wantReduceMotion = (ProcessInfo.processInfo.environment["S11_REDUCE_MOTION"] ?? "on") != "off"
         let osReduceMotion = UIAccessibility.isReduceMotionEnabled
-        print("S11_OS_REDUCE_MOTION isReduceMotionEnabled=" + String(osReduceMotion))
-        XCTAssertTrue(osReduceMotion, "REDUCED_MOTION_NOT_ENABLED_BY_OS")
+        print("S11_OS_REDUCE_MOTION isReduceMotionEnabled=" + String(osReduceMotion) + " expected=" + String(wantReduceMotion))
+        XCTAssertEqual(osReduceMotion, wantReduceMotion, "OS_REDUCE_MOTION_STATE_NOT_AS_CONFIGURED")
         // Source-owned placement recommendation opens Actions legitimately.
         // The fresh public topic pack is locked until its route is learned.
         app.launch(); XCTAssertTrue(app.waitForExistence(timeout:35))
@@ -519,8 +520,14 @@ final class S11HostedNativeUITests: XCTestCase {
         // handoff CTA `Start recommended lesson` (`Open my path` is the beginner route).
         let recommended = app.buttons.matching(identifier: "Start recommended lesson").firstMatch
         _ = recommended.waitForExistence(timeout: 15)
+        // Motion probe (indicative only): wall time for the tap, and from the tap
+        // returning to the first selectable option. Compared across Reduce Motion on/off.
+        let probeStart = Date()
         tapButton("Start recommended lesson")
+        let probeTapped = Date()
         waitForSelectable("A\nFold")
+        print("S11_MOTION_PROBE first_entry tap_s=" + String(format: "%.2f", probeTapped.timeIntervalSince(probeStart)) + " tap_to_options_s=" + String(format: "%.2f", Date().timeIntervalSince(probeTapped)) + " reduce_motion=" + String(osReduceMotion))
+
         capture("C2_actual_action_source_entry")
         XCTAssertTrue(visible("No bet", timeout: 12) || visible("free", timeout: 12))
         selectAction("Fold")
@@ -549,8 +556,10 @@ final class S11HostedNativeUITests: XCTestCase {
         XCTAssertTrue(visible("miss to fix", timeout: 12), "ASSISTED_ANSWER_DID_NOT_LEAVE_REPAIR_DEBT_OPEN")
         capture("C2_review_repair_card_before_recheck")
         persistedCheckpoint("C2_review_debt_open")
+        let probeRecheckStart = Date()
         tapButton("Practice this spot")
         XCTAssertTrue(visible("What action keeps playing for free?", timeout: 15), "INDEPENDENT_RECHECK_NOT_ENTERED")
+        print("S11_MOTION_PROBE recheck_entry tap_to_question_s=" + String(format: "%.2f", Date().timeIntervalSince(probeRecheckStart)) + " reduce_motion=" + String(osReduceMotion))
         // The queue repair opens behind a teaching overlay with a dwell-locked `Continue`
         // (run on QA 68dbc67); advance it as a learner would, then the options are live.
         waitForSelectable("B\nCheck")

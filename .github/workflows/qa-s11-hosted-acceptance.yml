@@ -7,7 +7,7 @@ on:
         required: true
         default: all
         type: choice
-        options: [all, clean-recap, wrong-recap, repair]
+        options: [all, clean-recap, wrong-recap, repair, repair-nomotion]
 permissions:
   contents: read
   actions: read
@@ -89,7 +89,7 @@ jobs:
           candidates=[(r,d) for r,ds in data.items() if 'iOS' in r for d in ds if d.get('isAvailable') and 'iPhone' in d.get('name','')]
           assert candidates,'NO_HOSTED_IOS_RUNTIME'
           shard=os.environ['SHARD']
-          if shard=='repair':
+          if shard in ('repair','repair-nomotion'):
               runtime=candidates[0][0]
               raw=subprocess.check_output(['xcrun','simctl','list','devicetypes','-j'],text=True)
               open('output/s11_hosted/device-types.json','w').write(raw)
@@ -149,13 +149,15 @@ jobs:
             clean-recap) METHOD=test06CleanAndRecap ;;
             wrong-recap) METHOD=test03WrongRecap ;;
             repair) METHOD=test04AuthenticRepair ;;
+            repair-nomotion) METHOD=test04AuthenticRepair ;;
           esac
           python3 -u qa-infra/tools/qa_s11_watch_checkpoints.py --log output/s11_hosted/native-tests.log --sim "$SIM_ID" --output output/s11_hosted/checkpoints > output/s11_hosted/checkpoint-observer.log 2>&1 &
           OBSERVER_PID=$!
           trap 'kill "$OBSERVER_PID" 2>/dev/null || true' EXIT
           # Unbuffered stdout: the observer reads this log, and a block-buffered first marker
           # reached it 22.7s late (run 38574481013, D2 first screen).
-          NSUnbufferedIO=YES xcodebuild test -project qa-infra/qa/s11_hosted/S11HostedNative.xcodeproj -scheme S11HostedNativeUITests -destination "platform=iOS Simulator,id=$SIM_ID" -parallel-testing-enabled NO -only-testing:S11HostedNativeUITests/S11HostedNativeUITests/$METHOD -resultBundlePath "$PWD/output/s11_hosted/native-tests.xcresult" CODE_SIGNING_ALLOWED=NO > output/s11_hosted/native-tests.log 2>&1 || { tail -120 output/s11_hosted/native-tests.log; exit 1; }
+          RM=on; if test "$SHARD" = repair-nomotion; then RM=off; fi
+          TEST_RUNNER_S11_REDUCE_MOTION="$RM" NSUnbufferedIO=YES xcodebuild test -project qa-infra/qa/s11_hosted/S11HostedNative.xcodeproj -scheme S11HostedNativeUITests -destination "platform=iOS Simulator,id=$SIM_ID" -parallel-testing-enabled NO -only-testing:S11HostedNativeUITests/S11HostedNativeUITests/$METHOD -resultBundlePath "$PWD/output/s11_hosted/native-tests.xcresult" CODE_SIGNING_ALLOWED=NO > output/s11_hosted/native-tests.log 2>&1 || { tail -120 output/s11_hosted/native-tests.log; exit 1; }
           python3 - <<'PYCOUNT'
           import re
           from pathlib import Path
@@ -164,7 +166,7 @@ jobs:
           assert '** TEST SUCCEEDED **' in text
           PYCOUNT
           python3 qa-infra/tools/qa_s11_verify_evidence.py --screens output/s11_hosted/native-tests.log output/s11_hosted/checkpoints
-          if test "$SHARD" != repair; then
+          if test "$SHARD" != repair && test "$SHARD" != repair-nomotion; then
             python3 qa-infra/tools/qa_s11_verify_closure.py output/s11_hosted/checkpoints
           fi
           python3 qa-infra/tools/qa_s11_verify_integrated.py output/s11_hosted/checkpoints "$SHARD"
