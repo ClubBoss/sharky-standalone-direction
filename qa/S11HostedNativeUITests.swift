@@ -528,8 +528,12 @@ final class S11HostedNativeUITests: XCTestCase {
         selectAction("Check")
         persistedCheckpoint("C2_assisted")
         // Product-owned feedback CTA advances mapped repair to source recheck.
+        // Observed compact feedback (QA 62a95b0): CORRECT WITH HELP, "NEXT · REPAIR THE
+        // CLUE", CTA `Try same clue` - the repair stays open until the recheck.
+        XCTAssertTrue(visible("CORRECT WITH HELP", timeout: 12), "ASSISTED_ANSWER_NOT_LABELLED_WITH_HELP")
         let recheck = app.buttons.matching(identifier:"Check original read").firstMatch
         if recheck.exists && recheck.isHittable { tapButton("Check original read") }
+        else if app.buttons.matching(identifier:"Try same clue").firstMatch.waitForExistence(timeout: 5) { tapButton("Try same clue") }
         else { tapButton("Next hand") }
         waitForSelectable("B\nCheck")
         XCTAssertFalse(visible("CORRECT READ"))
