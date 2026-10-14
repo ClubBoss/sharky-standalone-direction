@@ -16,9 +16,31 @@ final class S11HostedNativeUITests: XCTestCase {
         print("S11_SCREEN_RELEASE " + tag + " epoch=" + String(Date().timeIntervalSince1970))
         fflush(stdout)
     }
-    private func visible(_ label: String) -> Bool {
+    private func visible(_ label: String, timeout: TimeInterval = 3) -> Bool {
         let p = NSPredicate(format:"label CONTAINS[cd] %@",label)
-        return app.descendants(matching:.any).matching(p).firstMatch.waitForExistence(timeout:3)
+        return app.descendants(matching:.any).matching(p).firstMatch.waitForExistence(timeout:timeout)
+    }
+    /// Intro -> Placement. A hosted run left the Intro unchanged 3s after a
+    /// hittable `Find my start` tap while another run advanced; wait for the
+    /// real transition, and only if the Intro is still the live screen repeat
+    /// the same user tap once (logged). No state is injected.
+    private func openPlacementFromIntro() {
+        tapButton("Find my start")
+        if visible("Where are you starting from?", timeout: 12) { return }
+        let again = app.buttons.matching(identifier: "Find my start").firstMatch
+        if again.exists && again.isEnabled && again.isHittable {
+            print("S11_NAV_RETAP_AFTER_NO_TRANSITION Find my start")
+            again.tap()
+        }
+        XCTAssertTrue(visible("Where are you starting from?", timeout: 20), "PLACEMENT_EXPERIENCE_SCREEN_NOT_FOUND")
+    }
+    /// Welcome step 2/3 is an ungraded action row. Native AX exposes real
+    /// buttons `Fold`/`Check`/`Call`; the lettered StaticText form is only used
+    /// by graded runner options. Tap the actual enabled Check button.
+    private func tapWelcomeCheck() {
+        XCTAssertTrue(visible("What action keeps playing for free?"), "WELCOME_DEMO_WRONG_SCREEN")
+        _ = enabledButton("Fold"); _ = enabledButton("Call")
+        tapButton("Check")
     }
     private func enabledButton(_ label: String, timeout: TimeInterval = 5) -> XCUIElement {
         let button = app.buttons.matching(identifier: label).firstMatch
@@ -157,8 +179,7 @@ final class S11HostedNativeUITests: XCTestCase {
         XCTAssertTrue(app.waitForExistence(timeout:35))
         capture("first_install_intro")
         XCTAssertTrue(visible("Sharky Poker") || visible("Find my start"),"FIRST_INSTALL_NOT_SHARKY")
-        tapButton("Find my start")
-        XCTAssertTrue(visible("Where are you starting from?"),"PLACEMENT_EXPERIENCE_SCREEN_NOT_FOUND")
+        openPlacementFromIntro()
         capture("placement_unselected")
         // Native accessibility tree labels: actual tappable StaticText starts with this phrase.
         tapSelectableOption("I’m new to poker")
@@ -170,9 +191,8 @@ final class S11HostedNativeUITests: XCTestCase {
         tapButton("Try one table read")
         capture("welcome_demo")
         // Native Welcome is ungraded: Step 2/3 asks which action plays for free.
-        // Accessibility represents the option as StaticText `B\\nCheck`, not a BTN seat.
-        XCTAssertTrue(visible("What action keeps playing for free?"), "WELCOME_DEMO_WRONG_SCREEN")
-        tapSelectableOption("B\nCheck")
+        // Accessibility exposes real Fold/Check/Call buttons here.
+        tapWelcomeCheck()
         // Await the actual handoff CTA after the ungraded welcome choice;
         // a matching option tap alone is not a confirmed transition.
         let handoff = app.buttons.matching(identifier: "Open my path").firstMatch
@@ -464,7 +484,7 @@ final class S11HostedNativeUITests: XCTestCase {
         // The fresh public topic pack is locked until its route is learned.
         app.launch(); XCTAssertTrue(app.waitForExistence(timeout:35))
         capture("D2_reduced_motion_first_use")
-        tapButton("Find my start")
+        openPlacementFromIntro()
         tapSelectableOption("I’ve played casually"); tapButton("Continue")
         tapSelectableOption("Try one quick check"); tapButton("Continue")
         tapButton("Start quick check")
@@ -476,7 +496,7 @@ final class S11HostedNativeUITests: XCTestCase {
         capture("C2_actual_placement_recommendation")
         tapButton("Start with the useful hand")
         tapButton("Try one table read")
-        tapSelectableOption("B\nCheck"); tapButton("Open my path")
+        tapWelcomeCheck(); tapButton("Open my path")
         waitForSelectable("A\nFold")
         capture("C2_actual_action_source_entry")
         XCTAssertTrue(visible("No bet") || visible("free"))
@@ -524,7 +544,7 @@ final class S11HostedNativeUITests: XCTestCase {
         }
         tapSelectableOption("Intro & placement")
         tapButton("Retake placement")
-        tapButton("Find my start")
+        openPlacementFromIntro()
     }
 
     private func routeBridgeAndRetakes() {
