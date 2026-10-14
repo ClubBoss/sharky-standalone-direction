@@ -3482,6 +3482,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }.where(validTaskIds.contains).toSet();
     completedTaskIds.addAll(compatTaskIds);
     completedLessonIds.addAll(compatLessonIds.where(validLessonIds.contains));
+    // Placement skips are navigation, never earned completion: when only skips
+    // (no genuine completion) show progress beyond the guide, keep the content
+    // lesson path-closed as a SKIP so routing is unchanged, but earn nothing.
+    final compatSkipTaskIds = <String>{
+      for (final lessonId in _legacyCompatSkipClearedLessonIdsV1(
+        parsed: parsed,
+        state: state,
+      ))
+        for (final task in state.lessonById(lessonId).taskList) task.taskId,
+    }.where(validTaskIds.contains).toSet();
+    skippedTaskIds.addAll(compatSkipTaskIds.difference(completedTaskIds));
     final closedTaskIds = <String>{...completedTaskIds, ...skippedTaskIds};
     final worldsAfterProgress = _progressWorldsWithTaskIds(
       state,
@@ -9923,31 +9934,80 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
   }
 
+  /// Legacy saves written before `what_poker_is_content` was split out: a
+  /// learner with a GENUINELY completed task beyond the guide had the content
+  /// lesson auto-completed. Only completed tasks count; Placement skips do not.
   Set<String> _legacyCompatAutoCompletedLessonIdsV1({
     required _Act0PersistedProgressV1 parsed,
     required Act0ShellStateV1 state,
   }) {
-    if (parsed.selectedWorldId != 'world_1') {
+    if (!_legacyCompatAppliesV1(parsed, state)) {
       return const <String>{};
     }
-    if (parsed.selectedLessonId == 'what_poker_is' ||
-        parsed.selectedLessonId == 'what_poker_is_content') {
-      return const <String>{};
-    }
-    final worldOne = state.worldById('world_1');
-    final guideTaskIds = <String>{
-      for (final task in worldOne.lessons.first.taskList) task.taskId,
-    };
-    final hasProgressBeyondGuide =
-        parsed.completedTaskIds.any(
-          (taskId) => !guideTaskIds.contains(taskId),
-        ) ||
-        parsed.skippedTaskIds.any((taskId) => !guideTaskIds.contains(taskId));
-    if (!hasProgressBeyondGuide) {
-      return const <String>{};
-    }
-    return const <String>{'what_poker_is_content'};
+    final guideTaskIds = _guideTaskIdsV1(state);
+    final hasCompletedBeyondGuide = parsed.completedTaskIds.any(
+      (taskId) => !guideTaskIds.contains(taskId),
+    );
+    // Only a save that has NEVER seen the content lesson is a pre-split legacy
+    // save. A modern save (e.g. after Placement) already lists its tasks as
+    // skipped; a later genuine completion elsewhere must not earn them.
+    return hasCompletedBeyondGuide &&
+            !_contentLessonKnownToSaveV1(parsed, state)
+        ? const <String>{'what_poker_is_content'}
+        : const <String>{};
   }
+
+  /// Skip-only progress beyond the guide (a Placement clearance): the content
+  /// lesson is closed for routing as a skip, never as an earned completion.
+  Set<String> _legacyCompatSkipClearedLessonIdsV1({
+    required _Act0PersistedProgressV1 parsed,
+    required Act0ShellStateV1 state,
+  }) {
+    if (!_legacyCompatAppliesV1(parsed, state)) {
+      return const <String>{};
+    }
+    final guideTaskIds = _guideTaskIdsV1(state);
+    final hasCompletedBeyondGuide = parsed.completedTaskIds.any(
+      (taskId) => !guideTaskIds.contains(taskId),
+    );
+    final hasSkippedBeyondGuide = parsed.skippedTaskIds.any(
+      (taskId) => !guideTaskIds.contains(taskId),
+    );
+    return !hasCompletedBeyondGuide && hasSkippedBeyondGuide
+        ? const <String>{'what_poker_is_content'}
+        : const <String>{};
+  }
+
+  bool _contentLessonKnownToSaveV1(
+    _Act0PersistedProgressV1 parsed,
+    Act0ShellStateV1 state,
+  ) {
+    final contentTaskIds = state
+        .lessonById('what_poker_is_content')
+        .taskList
+        .map((task) => task.taskId);
+    return contentTaskIds.any(
+      (taskId) =>
+          parsed.skippedTaskIds.contains(taskId) ||
+          parsed.completedTaskIds.contains(taskId),
+    );
+  }
+
+  bool _legacyCompatAppliesV1(
+    _Act0PersistedProgressV1 parsed,
+    Act0ShellStateV1 state,
+  ) {
+    if (parsed.selectedWorldId != 'world_1') {
+      return false;
+    }
+    return parsed.selectedLessonId != 'what_poker_is' &&
+        parsed.selectedLessonId != 'what_poker_is_content';
+  }
+
+  Set<String> _guideTaskIdsV1(Act0ShellStateV1 state) => <String>{
+    for (final task in state.worldById('world_1').lessons.first.taskList)
+      task.taskId,
+  };
 
   Act0PlacementResultV1 _buildPlacementResult() {
     final diagnosticTotal = _placementDiagnosticSpotsV1.length;
@@ -12853,6 +12913,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final completedCount = lessons
         .where((lesson) => lesson.state == Act0LessonStateV1.completed)
         .length;
+    // Path closure (earned + Placement-skipped tasks) drives routing and lesson
+    // state, but only earned tasks are earned completion. The learner-facing
+    // count must not present a Placement-cleared lesson as completed work. The
+    // label keeps its exact "X of N lessons complete" format: Home, Learn and
+    // the RU localizer parse it.
+    final earnedLessonCount = available
+        ? world.lessons
+              .where(
+                (lesson) =>
+                    _lessonCompleteWithTaskIds(lesson, _completedTaskIds),
+              )
+              .length
+        : 0;
+    final lessonsProgressLabel =
+        '$earnedLessonCount of ${lessons.length} lessons complete';
     final status = !available
         ? Act0WorldStateV1.locked
         : allComplete
@@ -12864,9 +12939,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           ? act0LockedWorldProgressLabelV1(
               isImmediateNext: isImmediateLockedWorld,
             )
-          : allComplete
-          ? '${lessons.length} of ${lessons.length} lessons complete'
-          : '$completedCount of ${lessons.length} lessons complete',
+          : lessonsProgressLabel,
       primaryCtaLabel: !available
           ? act0LockedWorldPrimaryCtaLabelV1(
               isImmediateNext: isImmediateLockedWorld,
