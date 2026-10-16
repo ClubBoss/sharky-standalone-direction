@@ -117,6 +117,32 @@ const _guardedKeys = <String>[
 ];
 
 void main() {
+  test(
+    'actions_legal_context asks for staying in the hand, not any free action',
+    () {
+      final task = Act0ShellStateV1.sample
+          .lessonById('fold_check_call_raise')
+          .taskList
+          .firstWhere((task) => task.taskId == 'actions_legal_context');
+      expect(task.runner.question, contains('keeps you in the hand'));
+      expect(task.runner.question, contains('without adding chips'));
+      expect(
+        task.runner.options.map((option) => option.id),
+        containsAll(<String>['fold', 'check', 'call']),
+      );
+      expect(
+        task.runner.options.where((option) => option.isCorrect).single.id,
+        'check',
+      );
+      expect(
+        task.runner.options
+            .firstWhere((option) => option.id == 'fold')
+            .isCorrect,
+        isFalse,
+      );
+    },
+  );
+
   testWidgets('Placement-cleared lessons are not shown as earned lesson '
       'completions on Home; You agrees', (tester) async {
     SharedPreferences.setMockInitialValues(<String, Object>{});
@@ -170,6 +196,23 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.textContaining('0 tasks complete'), findsWidgets);
 
+    // Learn presents Placement-cleared routing separately from earned progress.
+    await tester.tap(find.text('Learn').last);
+    await tester.pumpAndSettle();
+    final learnBar = tester.widget<LinearProgressIndicator>(
+      find.byKey(const Key('act0_shell_learn_progress_bar')),
+    );
+    expect(learnBar.value, 0.0);
+    expect(
+      find.textContaining('Placement cleared - available to practice'),
+      findsWidgets,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_journey_completed_achieved_v5')),
+      findsNothing,
+      reason: 'Placement clearance cannot draw an earned green check',
+    );
+
     // Skips/navigation/XP are preserved by the correction.
     final after = await _saved(tester);
     expect(after['skippedTaskIds'], saved['skippedTaskIds']);
@@ -207,6 +250,20 @@ void main() {
     final saved = await _saved(tester);
     final label = _homeLabel(tester);
     expect(label, '${_earnedLessons(saved)} of 9 lessons complete');
+    await tester.tap(find.text('Learn').last);
+    await tester.pumpAndSettle();
+    final learnBar = tester.widget<LinearProgressIndicator>(
+      find.byKey(const Key('act0_shell_learn_progress_bar')),
+    );
+    expect(
+      learnBar.value,
+      closeTo(_earnedLessons(saved) / 9, 0.00001),
+      reason: 'actual earned lessons still count toward Learn progress',
+    );
+    expect(
+      find.textContaining('Placement cleared - available to practice'),
+      findsNothing,
+    );
   });
 
   testWidgets('cold restart (twice) never promotes Placement skips to earned '
@@ -240,9 +297,25 @@ void main() {
       await tester.tap(find.text('You').last);
       await tester.pumpAndSettle();
       expect(find.textContaining('0 tasks complete'), findsWidgets);
-      await tester.tap(find.text('Home').last);
-      await tester.pumpAndSettle();
     }
+    // After both persistence assertions, inspect Learn without changing
+    // the selected lesson between the two restarts.
+    await tester.tap(find.text('Learn').last);
+    await tester.pumpAndSettle();
+    expect(
+      tester
+          .widget<LinearProgressIndicator>(
+            find.byKey(const Key('act0_shell_learn_progress_bar')),
+          )
+          .value,
+      0.0,
+    );
+    expect(
+      find.textContaining('Placement cleared - available to practice'),
+      findsWidgets,
+    );
+    await tester.tap(find.text('Home').last);
+    await tester.pumpAndSettle();
   });
 
   testWidgets('legacy save with only skipped tasks beyond the guide stays '

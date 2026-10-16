@@ -627,10 +627,19 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
         currentMissionLesson.lessonId == 'what_poker_is' &&
         currentMissionStepIndex == 1 &&
         detailLessonId == null;
+    // Routing may be closed by Placement; the visible progress bar is earned
+    // completion only. Keep lesson.state for existing navigation/eligibility.
     final progressFraction = widget.lessons.isEmpty
         ? 0.0
         : widget.lessons
-                  .where((l) => l.state == Act0LessonStateV1.completed)
+                  .where(
+                    (lesson) =>
+                        lesson.taskList.isNotEmpty &&
+                        lesson.taskList.every(
+                          (task) =>
+                              widget.completedTaskIds.contains(task.taskId),
+                        ),
+                  )
                   .length /
               widget.lessons.length;
     final journeyLessonIndexes =
@@ -1384,24 +1393,38 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCompleted = lesson.state == Act0LessonStateV1.completed;
+    final isEarnedCompleted =
+        isCompleted &&
+        lesson.taskList.isNotEmpty &&
+        lesson.taskList.every((task) => completedTaskIds.contains(task.taskId));
+    final isPlacementCleared =
+        isCompleted &&
+        !isEarnedCompleted &&
+        lesson.taskList.any((task) => skippedTaskIds.contains(task.taskId));
     final isCurrent = lesson.state == Act0LessonStateV1.current;
     final isLocked = lesson.state == Act0LessonStateV1.locked;
     final accent = isNextUp
         ? Act0AcademyDesignTokensV1.needsReviewFg
         : isLocked
         ? Act0AcademyDesignTokensV1.inkMuted
-        : isCompleted
+        : isEarnedCompleted
         ? Act0AcademyDesignTokensV1.correctFg
         : Act0AcademyDesignTokensV1.focus;
     final opacity = isCurrent
         ? 1.0
-        : isCompleted
+        : isEarnedCompleted
         ? 1.0
         : isLocked
         ? (isNextUp ? 0.92 : 0.78)
         : 1.0;
-    final stateLabel = isCompleted
+    final stateLabel = isEarnedCompleted
         ? null
+        : isPlacementCleared
+        ? _learnCopyV1(
+            context,
+            en: 'Placed',
+            ru: '\u041f\u043e \u0443\u0440\u043e\u0432\u043d\u044e',
+          )
         : isCurrent
         ? _learnCopyV1(context, en: 'Now', ru: 'Сейчас')
         : isNextUp
@@ -1409,8 +1432,14 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
         : isLocked
         ? _learnCopyV1(context, en: 'Locked', ru: 'Закрыт')
         : null;
-    final meta = isCompleted
+    final meta = isEarnedCompleted
         ? _learnCopyV1(context, en: 'Replay available', ru: 'Можно повторить')
+        : isPlacementCleared
+        ? _learnCopyV1(
+            context,
+            en: 'Placement cleared - available to practice',
+            ru: '\u041f\u0440\u043e\u043f\u0443\u0449\u0435\u043d \u043f\u043e \u0443\u0440\u043e\u0432\u043d\u044e - \u041c\u043e\u0436\u043d\u043e \u043f\u0440\u043e\u0439\u0442\u0438',
+          )
         : isCurrent
         ? _learnCopyV1(
             context,
@@ -1424,7 +1453,7 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
             ru: 'Откроется после текущей миссии',
           )
         : _learnCopyV1(context, en: 'Unlocks later', ru: 'Откроется позже');
-    final icon = isCompleted
+    final icon = isEarnedCompleted
         ? Icons.check_rounded
         : isCurrent
         ? Icons.my_location_rounded
@@ -1433,14 +1462,14 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
         : Icons.circle_rounded;
     final fill = isCurrent
         ? Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.06)
-        : isCompleted
+        : isEarnedCompleted
         ? Act0AcademyDesignTokensV1.correctBg
         : isNextUp
         ? Act0AcademyDesignTokensV1.needsReviewBg
         : Act0AcademyDesignTokensV1.cardSurface;
     final border = isCurrent
         ? Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.32)
-        : isCompleted
+        : isEarnedCompleted
         ? Act0AcademyDesignTokensV1.correctFg.withValues(alpha: 0.24)
         : isNextUp
         ? Act0AcademyDesignTokensV1.needsReviewFg.withValues(alpha: 0.28)
@@ -1476,13 +1505,13 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
                     isCurrent ? 11 : 9,
                     isCurrent
                         ? 9
-                        : isCompleted
+                        : isEarnedCompleted
                         ? 7
                         : 8,
                     9,
                     isCurrent
                         ? 9
-                        : isCompleted
+                        : isEarnedCompleted
                         ? 7
                         : 8,
                   ),
@@ -1505,7 +1534,7 @@ class _JourneyPreviewRowV5 extends StatelessWidget {
                             ),
                           ),
                         ),
-                        child: isCompleted
+                        child: isEarnedCompleted
                             ? Icon(
                                 icon,
                                 key: const Key(
