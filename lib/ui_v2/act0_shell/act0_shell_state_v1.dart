@@ -11519,7 +11519,8 @@ final _legalActionRunner = _checkActionRunner.copyWith(
   lessonId: 'legal_actions',
   caption: 'Legal actions depend on whether a bet is facing you.',
   hint: 'No bet means check is available; facing a bet means call or fold.',
-  question: 'No bet faces you. Which action is legal and free?',
+  question:
+      'No bet faces you. Which action keeps you in the hand without adding chips?',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Legality depends on price.',
