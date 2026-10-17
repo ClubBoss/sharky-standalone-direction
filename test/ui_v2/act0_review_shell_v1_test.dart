@@ -937,6 +937,14 @@ void main() {
       find.byKey(const Key('act0_shell_review_due_spaced_item')),
       findsOneWidget,
     );
+    final dueButton = tester.widget<FilledButton>(
+      find.byKey(const Key('act0_shell_review_start_due_spaced_item')),
+    );
+    expect(
+      dueButton.style?.backgroundColor?.resolve(<WidgetState>{}),
+      Act0AcademyDesignTokensV1.primaryAction,
+      reason: 'Due Review CTA must not fall back to default Material purple',
+    );
     await tester.tap(
       find.byKey(const Key('act0_shell_review_start_due_spaced_item')),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_reading_style_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
@@ -18,8 +19,11 @@ void main() {
     );
     final pageDecoration = pageCard.decoration as BoxDecoration;
     expect(pageDecoration.gradient, isNull);
-    expect(pageDecoration.color, Act0ShellTokensV1.surface);
-    expect(pageDecoration.border, Border.all(color: Act0ShellTokensV1.border));
+    expect(pageDecoration.color, Act0AcademyReadingStyleV1.surface);
+    expect(
+      pageDecoration.border,
+      Border.all(color: Act0AcademyReadingStyleV1.border),
+    );
 
     final hero = tester.widget<Container>(
       find.byKey(const Key('act0_shell_session_summary_hero_payoff')),
@@ -27,7 +31,7 @@ void main() {
     final heroDecoration = hero.decoration as BoxDecoration;
     expect(
       heroDecoration.border,
-      Border.all(color: Act0ShellTokensV1.gold.withValues(alpha: 0.28)),
+      Border.all(color: Act0AcademyReadingStyleV1.gold.withValues(alpha: 0.28)),
     );
 
     for (final lowerCardKey in <String>[
@@ -39,8 +43,8 @@ void main() {
       final lowerDecoration = lowerCard.decoration as BoxDecoration;
       expect(
         lowerDecoration.border,
-        Border.all(color: Act0ShellTokensV1.border),
-        reason: '$lowerCardKey must use the standard navy-glass hairline',
+        Border.all(color: Act0AcademyReadingStyleV1.border),
+        reason: '$lowerCardKey must use the standard Folio hairline, not gold',
       );
     }
   });
@@ -57,7 +61,7 @@ void main() {
         <WidgetState>{},
       );
 
-      expect(resolvedForeground, Act0ShellTokensV1.info);
+      expect(resolvedForeground, Act0AcademyReadingStyleV1.info);
       expect(
         find.ancestor(
           of: find.text('Practice this next'),

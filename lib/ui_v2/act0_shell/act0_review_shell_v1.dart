@@ -507,6 +507,9 @@ class _DueReviewCardV1 extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: FilledButton(
               key: const Key('act0_shell_review_start_due_spaced_item'),
+              style: Act0AcademyReadingStyleV1.primaryButtonStyle().copyWith(
+                minimumSize: const WidgetStatePropertyAll(Size(0, 52)),
+              ),
               onPressed: () => onStart(item),
               child: Text(
                 hasOpenMistakeForTask
