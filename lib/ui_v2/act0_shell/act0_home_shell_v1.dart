@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_folio_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
@@ -505,8 +506,7 @@ class _HomeIdentityRowV1 extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               Text(
-                courseTitle,
-
+                localeIsRu ? 'Покерная академия' : 'Poker Academy',
                 style: Act0AcademyDesignTokensV1.label.copyWith(
                   letterSpacing: 0.1,
                 ),
@@ -566,34 +566,8 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Container(
-                  width: 34,
-                  height: 34,
-                  decoration: BoxDecoration(
-                    color: Act0AcademyDesignTokensV1.focus,
-                    borderRadius: BorderRadius.circular(
-                      Act0ShellTokensV1.radiusMd,
-                    ),
-                  ),
-                  child: const Icon(
-                    Icons.route_rounded,
-                    color: Act0AcademyDesignTokensV1.onPrimaryAction,
-                    size: 18,
-                  ),
-                ),
-                const SizedBox(width: Act0AcademyDesignTokensV1.gapSm),
-                Expanded(
-                  child: Text(
-                    localeIsRu ? 'Чтение стола сегодня' : 'Today\'s table read',
-                    style: Act0AcademyDesignTokensV1.label.copyWith(
-                      color: Act0AcademyDesignTokensV1.focus,
-                      letterSpacing: 0.35,
-                    ),
-                  ),
-                ),
-              ],
+            Act0AcademyFolioLabelV1(
+              label: localeIsRu ? 'ТВОЙ СЛЕДУЮЩИЙ ШАГ' : 'YOUR NEXT STEP',
             ),
             const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
             Text(

@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_folio_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
@@ -298,14 +299,31 @@ class Act0PlacementShellV1 extends StatelessWidget {
                         context,
                         tabletMaxWidth: 860,
                         child: Column(
-                          mainAxisAlignment: showIntro
-                              ? MainAxisAlignment.center
-                              : MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             if (showIntro) ...[
                               const _PlacementBrandBeatV1(),
-                              const SizedBox(height: Act0ShellTokensV1.gapMd),
+                              const SizedBox(height: Act0ShellTokensV1.gapLg),
+                              Act0AcademyFolioPlateV1(
+                                key: const Key('act0_shell_placement_folio'),
+                                eyebrow: _placementCopyV1(
+                                  context,
+                                  en: 'AT THE TABLE',
+                                  ru: 'ЗА СТОЛОМ',
+                                ),
+                                title: _placementCopyV1(
+                                  context,
+                                  en: 'Look. Decide. Understand.',
+                                  ru: 'Посмотри. Реши. Пойми.',
+                                ),
+                                detail: _placementCopyV1(
+                                  context,
+                                  en: 'Start with what you can see. Make a choice, then find out why it matters.',
+                                  ru: 'Начни с того, что видно. Сделай выбор и узнай, почему это важно.',
+                                ),
+                              ),
+                              const SizedBox(height: Act0ShellTokensV1.gapLg),
                             ],
                             AnimatedSwitcher(
                               duration: const Duration(milliseconds: 360),
