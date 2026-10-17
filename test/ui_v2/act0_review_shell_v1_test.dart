@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/session_drill_recheck_launch_queue_v1.dart';
@@ -5,7 +6,6 @@ import 'package:poker_analyzer/services/session_drill_recheck_user_launch_consum
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_personalized_return_reason_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/canonical_launcher_api_v1.dart';
@@ -710,7 +710,7 @@ void main() {
     final openLearnButton = tester.widget<FilledButton>(openLearnCta);
     expect(
       openLearnButton.style?.backgroundColor?.resolve(<WidgetState>{}),
-      Act0VisualCanonV1.cyanAccent,
+      Act0AcademyDesignTokensV1.primaryAction,
     );
     expect(
       find.byKey(const Key('act0_shell_review_empty_stage')),

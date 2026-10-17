@@ -5347,8 +5347,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         !_bootSurfaceReady ||
         (_showPlacement && !_placementDiagnosticActive) ||
         _showWelcome ||
-        (!isPlayRunner &&
-            (_tab == Act0ShellTabV1.home || _tab == Act0ShellTabV1.learn));
+        !isPlayRunner;
     final shell = Scaffold(
       key: const Key('act0_shell_preview_screen'),
       backgroundColor: academySurface
@@ -6791,7 +6790,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     return MediaQuery.withClampedTextScaling(
       minScaleFactor: 1.0,
       maxScaleFactor: 1.0,
-      child: shell,
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: shell,
+      ),
     );
   }
 

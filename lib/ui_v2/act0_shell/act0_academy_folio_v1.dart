@@ -34,7 +34,7 @@ class Act0AcademyFolioPlateV1 extends StatelessWidget {
                 child: Text(
                   eyebrow,
                   style: Act0AcademyDesignTokensV1.label.copyWith(
-                    color: const Color(0xFFE4CDA5),
+                    color: Act0AcademyDesignTokensV1.folioBrass,
                     fontSize: 11,
                     letterSpacing: 0.8,
                   ),
@@ -44,7 +44,10 @@ class Act0AcademyFolioPlateV1 extends StatelessWidget {
               const ExcludeSemantics(
                 child: Text(
                   '♠',
-                  style: TextStyle(color: Color(0xFFE4CDA5), fontSize: 28),
+                  style: TextStyle(
+                    color: Act0AcademyDesignTokensV1.folioBrass,
+                    fontSize: 28,
+                  ),
                 ),
               ),
             ],
@@ -74,9 +77,14 @@ class Act0AcademyFolioPlateV1 extends StatelessWidget {
 
 /// A chapter label with a quiet rule, shared by Academy reading surfaces.
 class Act0AcademyFolioLabelV1 extends StatelessWidget {
-  const Act0AcademyFolioLabelV1({super.key, required this.label});
+  const Act0AcademyFolioLabelV1({
+    super.key,
+    required this.label,
+    this.inverse = false,
+  });
 
   final String label;
+  final bool inverse;
 
   @override
   Widget build(BuildContext context) => Row(
@@ -85,14 +93,34 @@ class Act0AcademyFolioLabelV1 extends StatelessWidget {
         child: Text(
           label,
           style: Act0AcademyDesignTokensV1.label.copyWith(
-            color: const Color(0xFF7A414D),
+            color: inverse
+                ? Act0AcademyDesignTokensV1.folioBrass
+                : Act0AcademyDesignTokensV1.folioEditorial,
             fontSize: 11,
             letterSpacing: 0.7,
           ),
         ),
       ),
       const SizedBox(width: 12),
-      const Expanded(child: Divider(color: Act0AcademyDesignTokensV1.rule)),
+      Expanded(
+        child: Divider(
+          color: inverse
+              ? Act0AcademyDesignTokensV1.folioBrass
+              : Act0AcademyDesignTokensV1.rule,
+        ),
+      ),
+      const SizedBox(width: 8),
+      ExcludeSemantics(
+        child: Text(
+          '♠',
+          style: TextStyle(
+            fontSize: 22,
+            color: inverse
+                ? Act0AcademyDesignTokensV1.folioBrass
+                : Act0AcademyDesignTokensV1.focus,
+          ),
+        ),
+      ),
     ],
   );
 }

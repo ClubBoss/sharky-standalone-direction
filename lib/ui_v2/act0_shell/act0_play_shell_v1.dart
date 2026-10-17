@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_reading_style_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_consumer_v1.dart';
@@ -11,9 +12,10 @@ const _kQuickGroupIds = {'continue', 'placement', 'daily', 'weak_spots'};
 const _kRepairGroupIds = {'weak_spots'};
 
 Color _groupIconColor(String groupId) {
-  if (_kRepairGroupIds.contains(groupId)) return Act0ShellTokensV1.gold;
-  if (_kQuickGroupIds.contains(groupId)) return Act0ShellTokensV1.actionBlue;
-  return Act0ShellTokensV1.info;
+  if (_kRepairGroupIds.contains(groupId)) return Act0AcademyReadingStyleV1.gold;
+  if (_kQuickGroupIds.contains(groupId))
+    return Act0AcademyReadingStyleV1.actionBlue;
+  return Act0AcademyReadingStyleV1.info;
 }
 
 String _playCopyV1(
@@ -190,11 +192,11 @@ String? _normalizedDailySessionMetaV1(String sessionLabel) {
 
 Color _topicAccentColorV1(String groupId) {
   return switch (groupId) {
-    'actions' => Act0ShellTokensV1.actionCyan,
-    'blinds' => Act0ShellTokensV1.actionBlue,
-    'positions' => Act0ShellTokensV1.actionCyan,
-    'showdown' => Act0ShellTokensV1.gold,
-    _ => Act0ShellTokensV1.info,
+    'actions' => Act0AcademyReadingStyleV1.actionCyan,
+    'blinds' => Act0AcademyReadingStyleV1.actionBlue,
+    'positions' => Act0AcademyReadingStyleV1.actionCyan,
+    'showdown' => Act0AcademyReadingStyleV1.gold,
+    _ => Act0AcademyReadingStyleV1.info,
   };
 }
 
@@ -486,15 +488,15 @@ class _PracticeHubHeaderV1 extends StatelessWidget {
               width: 8,
               height: 8,
               decoration: const BoxDecoration(
-                color: Act0ShellTokensV1.currentLearningState,
+                color: Act0AcademyReadingStyleV1.currentLearningState,
                 shape: BoxShape.circle,
               ),
             ),
             const SizedBox(width: 8),
             Text(
               title,
-              style: Act0ShellTokensV1.label.copyWith(
-                color: Act0ShellTokensV1.currentLearningState,
+              style: Act0AcademyReadingStyleV1.label.copyWith(
+                color: Act0AcademyReadingStyleV1.currentLearningState,
                 fontSize: 12,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 0.35,
@@ -509,7 +511,7 @@ class _PracticeHubHeaderV1 extends StatelessWidget {
             'play_working_hub_headline',
             fallback: 'Useful reps',
           ),
-          style: Act0ShellTokensV1.sectionTitle.copyWith(
+          style: Act0AcademyReadingStyleV1.sectionTitle.copyWith(
             fontSize: 26,
             height: 1.06,
           ),
@@ -522,8 +524,8 @@ class _PracticeHubHeaderV1 extends StatelessWidget {
             fallback: 'Build the read one spot at a time.',
           ),
           key: const Key('act0_shell_play_subtitle'),
-          style: Act0ShellTokensV1.body.copyWith(
-            color: Act0ShellTokensV1.textMuted,
+          style: Act0AcademyReadingStyleV1.body.copyWith(
+            color: Act0AcademyReadingStyleV1.textMuted,
             height: 1.22,
           ),
         ),
@@ -550,9 +552,9 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
     return Container(
       key: const Key('act0_shell_play_repair_queue'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface2.withOpacity(0.78),
-        borderColor: Act0ShellTokensV1.actionCyan.withOpacity(0.20),
+      decoration: Act0AcademyReadingStyleV1.surfaceDecoration(
+        color: Act0AcademyReadingStyleV1.surface2.withOpacity(0.78),
+        borderColor: Act0AcademyReadingStyleV1.actionCyan.withOpacity(0.20),
         glow: false,
       ),
       child: Column(
@@ -565,14 +567,14 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
                 height: 32,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: Act0ShellTokensV1.actionCyan.withOpacity(0.12),
+                  color: Act0AcademyReadingStyleV1.actionCyan.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(
                     Act0ShellTokensV1.radiusLg,
                   ),
                 ),
                 child: const Icon(
                   Icons.repeat_rounded,
-                  color: Act0ShellTokensV1.actionCyan,
+                  color: Act0AcademyReadingStyleV1.actionCyan,
                   size: 18,
                 ),
               ),
@@ -583,7 +585,7 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
                   children: [
                     Text(
                       primary ? 'Active repair first' : 'Practice repair',
-                      style: Act0ShellTokensV1.body.copyWith(
+                      style: Act0AcademyReadingStyleV1.body.copyWith(
                         fontWeight: FontWeight.w900,
                       ),
                     ),
@@ -594,7 +596,7 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
                           : 'Saved spots worth repeating.',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: Act0ShellTokensV1.muted,
+                      style: Act0AcademyReadingStyleV1.muted,
                     ),
                   ],
                 ),
@@ -617,8 +619,8 @@ class _PracticeRepairQueueSectionV1 extends StatelessWidget {
                       maxLines: coachMaxLines,
                       overflow: TextOverflow.clip,
                       softWrap: true,
-                      style: Act0ShellTokensV1.sentenceSupport.copyWith(
-                        color: Act0ShellTokensV1.repairAttention,
+                      style: Act0AcademyReadingStyleV1.sentenceSupport.copyWith(
+                        color: Act0AcademyReadingStyleV1.repairAttention,
                         fontSize: 11,
                         fontWeight: FontWeight.w800,
                       ),
@@ -660,9 +662,11 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
       constraints: const BoxConstraints(minHeight: 54),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
       decoration: BoxDecoration(
-        color: Act0ShellTokensV1.surface3.withOpacity(0.72),
+        color: Act0AcademyReadingStyleV1.surface3.withOpacity(0.72),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
-        border: Border.all(color: Act0ShellTokensV1.border.withOpacity(0.78)),
+        border: Border.all(
+          color: Act0AcademyReadingStyleV1.border.withOpacity(0.78),
+        ),
       ),
       child: Row(
         children: [
@@ -671,8 +675,8 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
             height: 32,
             decoration: BoxDecoration(
               color: item.isPinned
-                  ? Act0ShellTokensV1.repairAttention
-                  : Act0ShellTokensV1.currentLearningState,
+                  ? Act0AcademyReadingStyleV1.repairAttention
+                  : Act0AcademyReadingStyleV1.currentLearningState,
               borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
             ),
           ),
@@ -688,7 +692,7 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                         item.title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: Act0ShellTokensV1.body.copyWith(
+                        style: Act0AcademyReadingStyleV1.body.copyWith(
                           fontWeight: FontWeight.w900,
                         ),
                       ),
@@ -697,8 +701,8 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                       const SizedBox(width: 8),
                       Text(
                         'Active repair',
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.repairAttention,
+                        style: Act0AcademyReadingStyleV1.label.copyWith(
+                          color: Act0AcademyReadingStyleV1.repairAttention,
                           fontSize: 11,
                           fontWeight: FontWeight.w900,
                         ),
@@ -712,7 +716,7 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                     item.detail!,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: Act0ShellTokensV1.muted,
+                    style: Act0AcademyReadingStyleV1.muted,
                   ),
                 ],
                 if (item.actionLine != null) ...[
@@ -723,8 +727,8 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                         : item.actionLine!,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: Act0ShellTokensV1.textMuted,
+                    style: Act0AcademyReadingStyleV1.label.copyWith(
+                      color: Act0AcademyReadingStyleV1.textMuted,
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
                     ),
@@ -739,9 +743,10 @@ class _PracticeRepairQueueRowV1 extends StatelessWidget {
                       child: FilledButton(
                         key: const Key('act0_shell_play_repair_queue_item_cta'),
                         onPressed: () => onLaunchTarget!(item.launchRequest!),
-                        style: Act0ShellTokensV1.premiumActionButtonStyle(
-                          height: Act0ShellTokensV1.compactCtaHeight,
-                        ),
+                        style:
+                            Act0AcademyReadingStyleV1.premiumActionButtonStyle(
+                              height: Act0ShellTokensV1.compactCtaHeight,
+                            ),
                         child: const Text('Practice repair'),
                       ),
                     ),
@@ -871,8 +876,8 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
     final enabled = group.isEnabled;
     final isRepairGroup = _kRepairGroupIds.contains(group.groupId);
     final accentColor = isRepairGroup
-        ? Act0ShellTokensV1.actionCyan
-        : Act0ShellTokensV1.actionBlue;
+        ? Act0AcademyReadingStyleV1.actionCyan
+        : Act0AcademyReadingStyleV1.actionBlue;
     final dailyComplete = _dailyGroupCompleteV1(group);
     final heroTitle = group.groupId == 'daily' && !dailyComplete
         ? _playCopyV1(
@@ -904,7 +909,7 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
             constraints: BoxConstraints(minHeight: secondaryAction ? 160 : 214),
             padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
             decoration:
-                Act0ShellTokensV1.premiumActionSurfaceDecoration(
+                Act0AcademyReadingStyleV1.premiumActionSurfaceDecoration(
                   borderOpacity: enabled ? 0.30 : 0.16,
                   glowOpacity: enabled ? 0.16 : 0.06,
                 ).copyWith(
@@ -939,10 +944,10 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
                             key: reasonLabel?.trim().isNotEmpty ?? false
                                 ? const Key('act0_shell_play_featured_reason')
                                 : null,
-                            style: Act0ShellTokensV1.label.copyWith(
+                            style: Act0AcademyReadingStyleV1.label.copyWith(
                               color: isRepairGroup
-                                  ? Act0ShellTokensV1.gold
-                                  : Act0ShellTokensV1.actionBlue,
+                                  ? Act0AcademyReadingStyleV1.gold
+                                  : Act0AcademyReadingStyleV1.actionBlue,
                               fontSize: 12,
                               fontWeight: FontWeight.w900,
                               letterSpacing: 0.25,
@@ -952,10 +957,8 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
                           Text(
                             heroTitle,
                             key: const Key('act0_shell_play_featured_title'),
-                            style: Act0ShellTokensV1.sectionTitle.copyWith(
-                              fontSize: 22,
-                              height: 1.08,
-                            ),
+                            style: Act0AcademyReadingStyleV1.sectionTitle
+                                .copyWith(fontSize: 22, height: 1.08),
                           ),
                           if (metaItems.isNotEmpty) ...[
                             const SizedBox(height: 6),
@@ -966,10 +969,12 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
                                 for (final item in metaItems)
                                   Text(
                                     item,
-                                    style: Act0ShellTokensV1.body.copyWith(
-                                      color: Act0ShellTokensV1.textMuted,
-                                      fontWeight: FontWeight.w700,
-                                    ),
+                                    style: Act0AcademyReadingStyleV1.body
+                                        .copyWith(
+                                          color: Act0AcademyReadingStyleV1
+                                              .textMuted,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                   ),
                               ],
                             ),
@@ -985,8 +990,8 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
                   key: const Key('act0_shell_play_featured_subtitle'),
                   maxLines: 2,
                   overflow: TextOverflow.fade,
-                  style: Act0ShellTokensV1.body.copyWith(
-                    color: Act0ShellTokensV1.textMuted,
+                  style: Act0AcademyReadingStyleV1.body.copyWith(
+                    color: Act0AcademyReadingStyleV1.textMuted,
                     height: 1.24,
                   ),
                 ),
@@ -1029,7 +1034,7 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
                     child: FilledButton(
                       key: const Key('act0_shell_play_featured_cta'),
                       onPressed: enabled ? () => onStartGroup(group) : null,
-                      style: Act0ShellTokensV1.premiumActionButtonStyle(
+                      style: Act0AcademyReadingStyleV1.premiumActionButtonStyle(
                         height: Act0VisualMetricsV1.primaryCtaHeight,
                       ),
                       child: Text(_playActionLabelV1(context, group)),
@@ -1057,21 +1062,21 @@ class _PracticeProofChipV1 extends StatelessWidget {
       constraints: const BoxConstraints(minHeight: 28),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
-        color: Act0ShellTokensV1.surface2.withOpacity(0.62),
+        color: Act0AcademyReadingStyleV1.surface2.withOpacity(0.62),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
         border: Border.all(
-          color: Act0ShellTokensV1.actionCyan.withOpacity(0.18),
+          color: Act0AcademyReadingStyleV1.actionCyan.withOpacity(0.18),
         ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 13, color: Act0ShellTokensV1.actionCyan),
+          Icon(icon, size: 13, color: Act0AcademyReadingStyleV1.actionCyan),
           const SizedBox(width: 5),
           Text(
             label,
-            style: Act0ShellTokensV1.label.copyWith(
-              color: Act0ShellTokensV1.text,
+            style: Act0AcademyReadingStyleV1.label.copyWith(
+              color: Act0AcademyReadingStyleV1.text,
               fontSize: 11,
               fontWeight: FontWeight.w800,
               letterSpacing: 0,
@@ -1094,9 +1099,9 @@ class _PlayRepairEmptyCardV1 extends StatelessWidget {
       key: const Key('act0_shell_play_repair_empty'),
       constraints: const BoxConstraints(minHeight: 78),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface2.withOpacity(0.72),
-        borderColor: Act0ShellTokensV1.actionBlue.withOpacity(0.18),
+      decoration: Act0AcademyReadingStyleV1.surfaceDecoration(
+        color: Act0AcademyReadingStyleV1.surface2.withOpacity(0.72),
+        borderColor: Act0AcademyReadingStyleV1.actionBlue.withOpacity(0.18),
         glow: false,
       ),
       child: Row(
@@ -1106,12 +1111,12 @@ class _PlayRepairEmptyCardV1 extends StatelessWidget {
             height: 32,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Act0VisualCanonV1.greenTable.withOpacity(0.12),
+              color: Act0AcademyReadingStyleV1.correct.withOpacity(0.12),
               borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
             ),
             child: const Icon(
               Icons.check_circle_rounded,
-              color: Act0VisualCanonV1.greenTable,
+              color: Act0AcademyReadingStyleV1.correct,
               size: 20,
             ),
           ),
@@ -1126,7 +1131,7 @@ class _PlayRepairEmptyCardV1 extends StatelessWidget {
                     'play_repair_empty_title',
                     fallback: 'Repair unlocks from real misses',
                   ),
-                  style: Act0ShellTokensV1.body,
+                  style: Act0AcademyReadingStyleV1.body,
                 ),
                 const SizedBox(height: 2),
                 Text(
@@ -1139,7 +1144,7 @@ class _PlayRepairEmptyCardV1 extends StatelessWidget {
                   key: const Key('act0_shell_play_repair_empty_body'),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: Act0ShellTokensV1.muted,
+                  style: Act0AcademyReadingStyleV1.muted,
                 ),
               ],
             ),
@@ -1209,12 +1214,12 @@ class _PlayIntroCardV1 extends StatelessWidget {
     return Container(
       key: const Key('act0_shell_play_intro_card'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-      decoration: Act0ShellTokensV1.surfaceDecoration(
+      decoration: Act0AcademyReadingStyleV1.surfaceDecoration(
         color: isDailyCompletion
-            ? Act0ShellTokensV1.surface3
-            : Act0ShellTokensV1.surface2,
+            ? Act0AcademyReadingStyleV1.surface3
+            : Act0AcademyReadingStyleV1.surface2,
         borderColor: isDailyCompletion
-            ? Act0ShellTokensV1.primary.withOpacity(0.34)
+            ? Act0AcademyReadingStyleV1.primary.withOpacity(0.34)
             : null,
         glow: isDailyCompletion,
       ),
@@ -1231,18 +1236,20 @@ class _PlayIntroCardV1 extends StatelessWidget {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: <Color>[
-                        Act0ShellTokensV1.primary.withOpacity(0.24),
-                        Act0ShellTokensV1.info.withOpacity(0.12),
+                        Act0AcademyReadingStyleV1.primary.withOpacity(0.24),
+                        Act0AcademyReadingStyleV1.info.withOpacity(0.12),
                       ],
                     )
                   : null,
               color: isDailyCompletion
                   ? null
-                  : Act0ShellTokensV1.primary.withOpacity(0.12),
+                  : Act0AcademyReadingStyleV1.primary.withOpacity(0.12),
               borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
               border: isDailyCompletion
                   ? Border.all(
-                      color: Act0ShellTokensV1.primary.withOpacity(0.34),
+                      color: Act0AcademyReadingStyleV1.primary.withOpacity(
+                        0.34,
+                      ),
                     )
                   : null,
             ),
@@ -1250,7 +1257,7 @@ class _PlayIntroCardV1 extends StatelessWidget {
               isDailyCompletion
                   ? Icons.check_circle_rounded
                   : Icons.bolt_rounded,
-              color: Act0ShellTokensV1.primary,
+              color: Act0AcademyReadingStyleV1.primary,
               size: isDailyCompletion ? 22 : 20,
             ),
           ),
@@ -1274,22 +1281,26 @@ class _PlayIntroCardV1 extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: isDailyCompletion
-                      ? Act0ShellTokensV1.cardTitle.copyWith(fontSize: 17)
-                      : Act0ShellTokensV1.body,
+                      ? Act0AcademyReadingStyleV1.cardTitle.copyWith(
+                          fontSize: 17,
+                        )
+                      : Act0AcademyReadingStyleV1.body,
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapXs),
                 Text(
                   body,
                   maxLines: isDailyCompletion ? 3 : 2,
                   overflow: TextOverflow.ellipsis,
-                  style: Act0ShellTokensV1.muted,
+                  style: Act0AcademyReadingStyleV1.muted,
                 ),
                 if (isDailyCompletion && onOpenPremiumPreview != null) ...[
                   const SizedBox(height: Act0ShellTokensV1.gapSm),
                   OutlinedButton(
                     key: const Key('act0_shell_play_premium_preview_entry'),
                     onPressed: onOpenPremiumPreview,
-                    style: Act0ShellTokensV1.quietButtonStyle(height: 38),
+                    style: Act0AcademyReadingStyleV1.quietButtonStyle(
+                      height: 38,
+                    ),
                     child: const Text('See extra practice options'),
                   ),
                 ],
@@ -1311,9 +1322,11 @@ class _DoneForTodayPillV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Act0ShellTokensV1.primary.withOpacity(0.12),
+        color: Act0AcademyReadingStyleV1.primary.withOpacity(0.12),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-        border: Border.all(color: Act0ShellTokensV1.primary.withOpacity(0.28)),
+        border: Border.all(
+          color: Act0AcademyReadingStyleV1.primary.withOpacity(0.28),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -1322,14 +1335,14 @@ class _DoneForTodayPillV1 extends StatelessWidget {
           children: [
             const Icon(
               Icons.done_rounded,
-              color: Act0ShellTokensV1.primary,
+              color: Act0AcademyReadingStyleV1.primary,
               size: 14,
             ),
             const SizedBox(width: 4),
             Text(
               label,
-              style: Act0ShellTokensV1.label.copyWith(
-                color: Act0ShellTokensV1.textMuted,
+              style: Act0AcademyReadingStyleV1.label.copyWith(
+                color: Act0AcademyReadingStyleV1.textMuted,
                 letterSpacing: 0,
               ),
             ),
@@ -1399,9 +1412,9 @@ class _QuickRepsSurfaceV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       key: sectionKey,
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface2.withOpacity(0.72),
-        borderColor: Act0ShellTokensV1.actionBlue.withOpacity(0.18),
+      decoration: Act0AcademyReadingStyleV1.surfaceDecoration(
+        color: Act0AcademyReadingStyleV1.surface2.withOpacity(0.72),
+        borderColor: Act0AcademyReadingStyleV1.actionBlue.withOpacity(0.18),
       ),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       child: Column(
@@ -1413,7 +1426,7 @@ class _QuickRepsSurfaceV1 extends StatelessWidget {
               'play_quick_drills_label',
               fallback: 'Quick reps',
             ),
-            style: Act0ShellTokensV1.cardTitle.copyWith(fontSize: 16),
+            style: Act0AcademyReadingStyleV1.cardTitle.copyWith(fontSize: 16),
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
           for (var index = 0; index < groups.length; index += 1) ...[
@@ -1637,7 +1650,9 @@ class _SkillPacksPreviewV1 extends StatelessWidget {
                   'play_topic_packs_label',
                   fallback: 'Short reps',
                 ),
-                style: Act0ShellTokensV1.sectionTitle.copyWith(fontSize: 20),
+                style: Act0AcademyReadingStyleV1.sectionTitle.copyWith(
+                  fontSize: 20,
+                ),
               ),
             ),
           ],
@@ -1649,8 +1664,8 @@ class _SkillPacksPreviewV1 extends StatelessWidget {
             'play_skill_pack_unlocks_hint',
             fallback: 'A good rep is one clearer table decision.',
           ),
-          style: Act0ShellTokensV1.body.copyWith(
-            color: Act0ShellTokensV1.textMuted,
+          style: Act0AcademyReadingStyleV1.body.copyWith(
+            color: Act0AcademyReadingStyleV1.textMuted,
             height: 1.2,
           ),
         ),
@@ -1712,13 +1727,13 @@ class _SkillPackPreviewCardV1 extends StatelessWidget {
           constraints: const BoxConstraints(minHeight: 96),
           padding: const EdgeInsets.all(10),
           decoration:
-              Act0ShellTokensV1.surfaceDecoration(
-                color: Act0ShellTokensV1.surface2.withOpacity(
+              Act0AcademyReadingStyleV1.surfaceDecoration(
+                color: Act0AcademyReadingStyleV1.surface2.withOpacity(
                   enabled ? 0.72 : 0.48,
                 ),
                 borderColor: enabled
                     ? accentColor.withOpacity(0.24)
-                    : Act0ShellTokensV1.border.withOpacity(0.70),
+                    : Act0AcademyReadingStyleV1.border.withOpacity(0.70),
                 glow: false,
               ).copyWith(
                 borderRadius: BorderRadius.circular(
@@ -1734,7 +1749,9 @@ class _SkillPackPreviewCardV1 extends StatelessWidget {
                   child: Icon(
                     Icons.lock_rounded,
                     key: const Key('act0_shell_practice_group_locked_icon'),
-                    color: Act0ShellTokensV1.textMuted.withOpacity(0.78),
+                    color: Act0AcademyReadingStyleV1.textMuted.withOpacity(
+                      0.78,
+                    ),
                     size: 15,
                   ),
                 ),
@@ -1751,14 +1768,18 @@ class _SkillPackPreviewCardV1 extends StatelessWidget {
                     _playTileTitleV1(context, group),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: Act0ShellTokensV1.cardTitle.copyWith(fontSize: 13.5),
+                    style: Act0AcademyReadingStyleV1.cardTitle.copyWith(
+                      fontSize: 13.5,
+                    ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     _topicPackSubtitleV1(context, group),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: Act0ShellTokensV1.muted.copyWith(height: 1.18),
+                    style: Act0AcademyReadingStyleV1.muted.copyWith(
+                      height: 1.18,
+                    ),
                   ),
                   if (enabled) ...[
                     const SizedBox(height: 8),
@@ -1787,9 +1808,9 @@ class _LockedPacksSummaryV1 extends StatelessWidget {
       key: const Key('act0_shell_play_locked_packs_summary'),
       constraints: const BoxConstraints(minHeight: 76),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface2.withOpacity(0.62),
-        borderColor: Act0ShellTokensV1.actionBlue.withOpacity(0.14),
+      decoration: Act0AcademyReadingStyleV1.surfaceDecoration(
+        color: Act0AcademyReadingStyleV1.surface2.withOpacity(0.62),
+        borderColor: Act0AcademyReadingStyleV1.actionBlue.withOpacity(0.14),
         glow: false,
       ),
       child: Row(
@@ -1799,13 +1820,13 @@ class _LockedPacksSummaryV1 extends StatelessWidget {
             height: 36,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Act0ShellTokensV1.textDim.withOpacity(0.08),
+              color: Act0AcademyReadingStyleV1.textDim.withOpacity(0.08),
               borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
-              border: Border.all(color: Act0ShellTokensV1.border),
+              border: Border.all(color: Act0AcademyReadingStyleV1.border),
             ),
             child: const Icon(
               Icons.route_rounded,
-              color: Act0ShellTokensV1.actionBlue,
+              color: Act0AcademyReadingStyleV1.actionBlue,
               size: 18,
             ),
           ),
@@ -1821,7 +1842,7 @@ class _LockedPacksSummaryV1 extends StatelessWidget {
                     'play_locked_packs_summary_title',
                     fallback: 'More practice opens through the route',
                   ),
-                  style: Act0ShellTokensV1.body.copyWith(
+                  style: Act0AcademyReadingStyleV1.body.copyWith(
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -1833,7 +1854,7 @@ class _LockedPacksSummaryV1 extends StatelessWidget {
                     fallback:
                         'Locked topics stay below today\'s rep. Finish route steps to open more.',
                   ),
-                  style: Act0ShellTokensV1.muted,
+                  style: Act0AcademyReadingStyleV1.muted,
                 ),
               ],
             ),
@@ -2029,11 +2050,11 @@ class _PracticeGroupCardV1 extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
           decoration:
-              Act0ShellTokensV1.surfaceDecoration(
+              Act0AcademyReadingStyleV1.surfaceDecoration(
                 borderColor: enabled
                     ? accentColor.withOpacity(0.36)
-                    : Act0ShellTokensV1.border,
-                color: Act0ShellTokensV1.surface2,
+                    : Act0AcademyReadingStyleV1.border,
+                color: Act0AcademyReadingStyleV1.surface2,
               ).copyWith(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
@@ -2041,9 +2062,9 @@ class _PracticeGroupCardV1 extends StatelessWidget {
                   colors: <Color>[
                     enabled
                         ? accentColor.withOpacity(0.08)
-                        : Act0ShellTokensV1.surface3.withOpacity(0.72),
-                    Act0ShellTokensV1.surface2,
-                    Act0ShellTokensV1.surface,
+                        : Act0AcademyReadingStyleV1.surface3.withOpacity(0.72),
+                    Act0AcademyReadingStyleV1.surface2,
+                    Act0AcademyReadingStyleV1.surface,
                   ],
                 ),
               ),
@@ -2057,28 +2078,31 @@ class _PracticeGroupCardV1 extends StatelessWidget {
                   children: [
                     Text(
                       metaLine,
-                      style: Act0ShellTokensV1.label.copyWith(
+                      style: Act0AcademyReadingStyleV1.label.copyWith(
                         color: enabled
                             ? accentColor
-                            : Act0ShellTokensV1.textDim,
+                            : Act0AcademyReadingStyleV1.textDim,
                         letterSpacing: 0.25,
                       ),
                     ),
                     const SizedBox(height: Act0ShellTokensV1.gapXs),
-                    Text(group.title, style: Act0ShellTokensV1.cardTitle),
+                    Text(
+                      group.title,
+                      style: Act0AcademyReadingStyleV1.cardTitle,
+                    ),
                     const SizedBox(height: Act0ShellTokensV1.gapXs),
                     Text(
                       group.subtitle,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: Act0ShellTokensV1.muted,
+                      style: Act0AcademyReadingStyleV1.muted,
                     ),
                     if (supportLine.isNotEmpty) ...[
                       const SizedBox(height: Act0ShellTokensV1.gapSm),
                       Text(
                         supportLine,
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0ShellTokensV1.textDim,
+                        style: Act0AcademyReadingStyleV1.label.copyWith(
+                          color: Act0AcademyReadingStyleV1.textDim,
                           letterSpacing: 0.2,
                         ),
                       ),
@@ -2093,7 +2117,7 @@ class _PracticeGroupCardV1 extends StatelessWidget {
                       children: [
                         Text(
                           _playActionLabelV1(context, group),
-                          style: Act0ShellTokensV1.label.copyWith(
+                          style: Act0AcademyReadingStyleV1.label.copyWith(
                             color: accentColor,
                             letterSpacing: 0.2,
                           ),
@@ -2131,14 +2155,14 @@ class _DisabledPracticeChipV1 extends StatelessWidget {
       key: Key(keyName),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       decoration: BoxDecoration(
-        color: Act0ShellTokensV1.surface3,
+        color: Act0AcademyReadingStyleV1.surface3,
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-        border: Border.all(color: Act0ShellTokensV1.border),
+        border: Border.all(color: Act0AcademyReadingStyleV1.border),
       ),
       child: Text(
         label,
-        style: Act0ShellTokensV1.label.copyWith(
-          color: Act0ShellTokensV1.textDim,
+        style: Act0AcademyReadingStyleV1.label.copyWith(
+          color: Act0AcademyReadingStyleV1.textDim,
           letterSpacing: 0.2,
         ),
       ),

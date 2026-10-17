@@ -561,19 +561,23 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
         key: const Key('act0_shell_home_mission_command_card'),
         padding: const EdgeInsets.all(Act0AcademyDesignTokensV1.gapLg),
         decoration: Act0AcademyDesignTokensV1.cardDecoration(
-          borderColor: Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.24),
+          color: Act0AcademyDesignTokensV1.primaryAction,
+          borderColor: Act0AcademyDesignTokensV1.folioBrass,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Act0AcademyFolioLabelV1(
+              inverse: true,
               label: localeIsRu ? 'ТВОЙ СЛЕДУЮЩИЙ ШАГ' : 'YOUR NEXT STEP',
             ),
             const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
             Text(
               title,
               key: const Key('act0_shell_home_primary_route_title'),
-              style: Act0AcademyDesignTokensV1.lessonHeading,
+              style: Act0AcademyDesignTokensV1.lessonHeading.copyWith(
+                color: Act0AcademyDesignTokensV1.onPrimaryAction,
+              ),
             ),
             const SizedBox(height: 7),
             Text(
@@ -581,7 +585,10 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
                   ? nextActionHint!.trim()
                   : subtitle,
               key: const Key('act0_shell_home_next_action_subtitle'),
-              style: Act0AcademyDesignTokensV1.body.copyWith(height: 1.25),
+              style: Act0AcademyDesignTokensV1.body.copyWith(
+                height: 1.35,
+                color: Act0AcademyDesignTokensV1.onPrimaryAction,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
@@ -593,7 +600,8 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
               key: const Key('act0_shell_home_mission_sharky_line'),
               style: Act0AcademyDesignTokensV1.supporting.copyWith(
                 fontSize: 12,
-                height: 1.22,
+                color: Act0AcademyDesignTokensV1.onPrimaryAction,
+                height: 1.4,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -629,7 +637,14 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
               child: FilledButton(
                 key: const Key('act0_shell_main_cta'),
                 onPressed: onContinue,
-                style: Act0AcademyDesignTokensV1.primaryButtonStyle(),
+                style: Act0AcademyDesignTokensV1.primaryButtonStyle().copyWith(
+                  backgroundColor: const WidgetStatePropertyAll(
+                    Act0AcademyDesignTokensV1.folioBrass,
+                  ),
+                  foregroundColor: const WidgetStatePropertyAll(
+                    Act0AcademyDesignTokensV1.primaryAction,
+                  ),
+                ),
                 child: Text(nextActionCtaLabel),
               ),
             ),
@@ -671,8 +686,8 @@ class _HomeProofMomentumLineV1 extends StatelessWidget {
               : Icons.play_circle_outline_rounded,
           size: 15,
           color: hasCompletedLessons
-              ? Act0AcademyDesignTokensV1.correctFg
-              : Act0AcademyDesignTokensV1.focus,
+              ? Act0AcademyDesignTokensV1.folioBrass
+              : Act0AcademyDesignTokensV1.folioBrass,
         ),
         const SizedBox(width: 7),
         Expanded(
@@ -680,7 +695,10 @@ class _HomeProofMomentumLineV1 extends StatelessWidget {
             line,
             key: const Key('act0_shell_home_proof_momentum_text'),
 
-            style: Act0AcademyDesignTokensV1.supporting.copyWith(height: 1.22),
+            style: Act0AcademyDesignTokensV1.supporting.copyWith(
+              height: 1.4,
+              color: Act0AcademyDesignTokensV1.onPrimaryAction,
+            ),
           ),
         ),
       ],
