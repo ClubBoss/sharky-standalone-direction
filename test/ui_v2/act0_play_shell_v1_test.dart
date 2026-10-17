@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -6,7 +7,6 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_consu
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
 void main() {
   Future<void> pumpPractice(
@@ -188,11 +188,11 @@ void main() {
     );
     expect(
       cta.style?.backgroundColor?.resolve(<WidgetState>{}),
-      Act0ShellTokensV1.actionCyan,
+      Act0AcademyDesignTokensV1.primaryAction,
     );
     expect(
       cta.style?.foregroundColor?.resolve(<WidgetState>{}),
-      Act0ShellTokensV1.primaryDark,
+      Act0AcademyDesignTokensV1.onPrimaryAction,
     );
 
     await tester.tap(find.byKey(const Key('act0_shell_play_featured_cta')));
@@ -440,7 +440,7 @@ void main() {
       );
       expect(
         repairCta.style?.backgroundColor?.resolve(<WidgetState>{}),
-        Act0ShellTokensV1.actionCyan,
+        Act0AcademyDesignTokensV1.primaryAction,
       );
       expect(
         find.byKey(const Key('act0_shell_play_featured_cta')),

@@ -50,7 +50,7 @@ void main() {
 
   for (final size in [const Size(320, 690), const Size(375, 812)]) {
     testWidgets(
-      'Home uses the Academy light page/card tokens at ${size.width.toInt()}px',
+      'Home uses the Academy paper page and Folio current-task material at ${size.width.toInt()}px',
       (tester) async {
         await pumpHomeV1(tester, size: size);
 
@@ -65,7 +65,7 @@ void main() {
         final missionDecoration = missionCard.decoration as BoxDecoration;
         expect(
           missionDecoration.color,
-          Act0AcademyDesignTokensV1.cardSurface,
+          Act0AcademyDesignTokensV1.primaryAction,
         );
         expect(missionDecoration.borderRadius, BorderRadius.circular(6));
       },
