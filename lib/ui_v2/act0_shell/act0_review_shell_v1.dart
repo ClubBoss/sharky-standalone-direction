@@ -725,11 +725,6 @@ class _ReviewEmptyRepairCardV1 extends StatelessWidget {
             'Review is ready',
             style: Act0AcademyReadingStyleV1.sectionTitle,
           ),
-          const SizedBox(height: 8),
-          const Text(
-            'Finish a lesson - every miss can become one clean repair rep.',
-            style: Act0AcademyReadingStyleV1.muted,
-          ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           Text(
             'Misses from lessons will appear here after you try a spot.',

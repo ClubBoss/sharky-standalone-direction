@@ -897,7 +897,8 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
     return KeyedSubtree(
       key: const Key('act0_shell_play_v1_featured_premium_card'),
       child: Opacity(
-        opacity: enabled ? 1 : 0.64,
+        // Availability belongs to the disabled action, not the explanation.
+        opacity: 1,
         child: InkWell(
           key: const Key('act0_shell_play_featured_card'),
           onTap: enabled ? () => onStartGroup(group) : null,
