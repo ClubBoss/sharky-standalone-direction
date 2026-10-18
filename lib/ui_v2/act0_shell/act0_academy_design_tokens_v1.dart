@@ -20,6 +20,9 @@ class Act0AcademyDesignTokensV1 {
   static const Color needsReviewBg = Color(0xFFF2E5CD);
   static const Color correctFg = Color(0xFF226844);
   static const Color correctBg = Color(0xFFE1EEE2);
+  // Folio material accents are confined to Academy presentation.
+  static const Color folioBrass = Color(0xFFE4CDA5);
+  static const Color folioEditorial = Color(0xFF7A414D);
   static const Color rule = Color(0xFFCBD1C7);
 
   static const double gapXs = 8;

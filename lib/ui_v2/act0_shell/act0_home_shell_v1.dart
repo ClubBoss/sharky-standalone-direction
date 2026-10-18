@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_folio_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
@@ -505,8 +506,7 @@ class _HomeIdentityRowV1 extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               Text(
-                courseTitle,
-
+                localeIsRu ? 'Покерная академия' : 'Poker Academy',
                 style: Act0AcademyDesignTokensV1.label.copyWith(
                   letterSpacing: 0.1,
                 ),
@@ -561,45 +561,23 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
         key: const Key('act0_shell_home_mission_command_card'),
         padding: const EdgeInsets.all(Act0AcademyDesignTokensV1.gapLg),
         decoration: Act0AcademyDesignTokensV1.cardDecoration(
-          borderColor: Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.24),
+          color: Act0AcademyDesignTokensV1.primaryAction,
+          borderColor: Act0AcademyDesignTokensV1.folioBrass,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Container(
-                  width: 34,
-                  height: 34,
-                  decoration: BoxDecoration(
-                    color: Act0AcademyDesignTokensV1.focus,
-                    borderRadius: BorderRadius.circular(
-                      Act0ShellTokensV1.radiusMd,
-                    ),
-                  ),
-                  child: const Icon(
-                    Icons.route_rounded,
-                    color: Act0AcademyDesignTokensV1.onPrimaryAction,
-                    size: 18,
-                  ),
-                ),
-                const SizedBox(width: Act0AcademyDesignTokensV1.gapSm),
-                Expanded(
-                  child: Text(
-                    localeIsRu ? 'Чтение стола сегодня' : 'Today\'s table read',
-                    style: Act0AcademyDesignTokensV1.label.copyWith(
-                      color: Act0AcademyDesignTokensV1.focus,
-                      letterSpacing: 0.35,
-                    ),
-                  ),
-                ),
-              ],
+            Act0AcademyFolioLabelV1(
+              inverse: true,
+              label: localeIsRu ? 'ТВОЙ СЛЕДУЮЩИЙ ШАГ' : 'YOUR NEXT STEP',
             ),
             const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
             Text(
               title,
               key: const Key('act0_shell_home_primary_route_title'),
-              style: Act0AcademyDesignTokensV1.lessonHeading,
+              style: Act0AcademyDesignTokensV1.lessonHeading.copyWith(
+                color: Act0AcademyDesignTokensV1.onPrimaryAction,
+              ),
             ),
             const SizedBox(height: 7),
             Text(
@@ -607,7 +585,10 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
                   ? nextActionHint!.trim()
                   : subtitle,
               key: const Key('act0_shell_home_next_action_subtitle'),
-              style: Act0AcademyDesignTokensV1.body.copyWith(height: 1.25),
+              style: Act0AcademyDesignTokensV1.body.copyWith(
+                height: 1.35,
+                color: Act0AcademyDesignTokensV1.onPrimaryAction,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
@@ -619,7 +600,8 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
               key: const Key('act0_shell_home_mission_sharky_line'),
               style: Act0AcademyDesignTokensV1.supporting.copyWith(
                 fontSize: 12,
-                height: 1.22,
+                color: Act0AcademyDesignTokensV1.onPrimaryAction,
+                height: 1.4,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -655,7 +637,14 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
               child: FilledButton(
                 key: const Key('act0_shell_main_cta'),
                 onPressed: onContinue,
-                style: Act0AcademyDesignTokensV1.primaryButtonStyle(),
+                style: Act0AcademyDesignTokensV1.primaryButtonStyle().copyWith(
+                  backgroundColor: const WidgetStatePropertyAll(
+                    Act0AcademyDesignTokensV1.folioBrass,
+                  ),
+                  foregroundColor: const WidgetStatePropertyAll(
+                    Act0AcademyDesignTokensV1.primaryAction,
+                  ),
+                ),
                 child: Text(nextActionCtaLabel),
               ),
             ),
@@ -697,8 +686,8 @@ class _HomeProofMomentumLineV1 extends StatelessWidget {
               : Icons.play_circle_outline_rounded,
           size: 15,
           color: hasCompletedLessons
-              ? Act0AcademyDesignTokensV1.correctFg
-              : Act0AcademyDesignTokensV1.focus,
+              ? Act0AcademyDesignTokensV1.folioBrass
+              : Act0AcademyDesignTokensV1.folioBrass,
         ),
         const SizedBox(width: 7),
         Expanded(
@@ -706,7 +695,10 @@ class _HomeProofMomentumLineV1 extends StatelessWidget {
             line,
             key: const Key('act0_shell_home_proof_momentum_text'),
 
-            style: Act0AcademyDesignTokensV1.supporting.copyWith(height: 1.22),
+            style: Act0AcademyDesignTokensV1.supporting.copyWith(
+              height: 1.4,
+              color: Act0AcademyDesignTokensV1.onPrimaryAction,
+            ),
           ),
         ),
       ],

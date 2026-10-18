@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_reading_style_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/services/session_drill_recheck_launch_queue_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
@@ -131,7 +132,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
             atomId: 'review_recovered_lately_label',
             fallback: 'Worth replaying',
           ),
-          style: Act0ShellTokensV1.sectionTitle,
+          style: Act0AcademyReadingStyleV1.sectionTitle,
         ),
         const SizedBox(height: Act0ShellTokensV1.gapXs),
         Text(
@@ -142,22 +143,22 @@ class Act0ReviewShellV1 extends StatelessWidget {
               : (recovered.length == 1
                     ? 'One spot is saved as a light replay note. That keeps the board honest.'
                     : '${recovered.length} spots are saved as light replay notes. That keeps the board honest.'),
-          style: Act0ShellTokensV1.muted,
+          style: Act0AcademyReadingStyleV1.muted,
         ),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
         Container(
           key: const Key('act0_shell_review_recovered_proof_line'),
           padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-          decoration: Act0ShellTokensV1.surfaceDecoration(
-            color: Act0VisualCanonV1.greenTable.withOpacity(0.07),
-            borderColor: Act0VisualCanonV1.greenTable.withOpacity(0.18),
+          decoration: Act0AcademyReadingStyleV1.surfaceDecoration(
+            color: Act0AcademyReadingStyleV1.correct.withOpacity(0.07),
+            borderColor: Act0AcademyReadingStyleV1.correct.withOpacity(0.18),
             glow: false,
           ),
           child: Row(
             children: [
               const Icon(
                 Icons.verified_rounded,
-                color: Act0VisualCanonV1.greenTable,
+                color: Act0AcademyReadingStyleV1.correct,
                 size: 18,
               ),
               const SizedBox(width: Act0ShellTokensV1.gapSm),
@@ -166,8 +167,8 @@ class Act0ReviewShellV1 extends StatelessWidget {
                   localeIsRu
                       ? 'Заметки для повтора остаются лёгкими повторами, а не техническим отчётом.'
                       : 'Past repair notes stay as light replays, not a debug log.',
-                  style: Act0ShellTokensV1.body.copyWith(
-                    color: Act0ShellTokensV1.text,
+                  style: Act0AcademyReadingStyleV1.body.copyWith(
+                    color: Act0AcademyReadingStyleV1.text,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -418,9 +419,9 @@ class _ReviewNextStepCardV1 extends StatelessWidget {
     return Container(
       key: const Key('act0_shell_review_next_step_explanation'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.info.withOpacity(0.08),
-        borderColor: Act0ShellTokensV1.info.withOpacity(0.22),
+      decoration: Act0AcademyReadingStyleV1.surfaceDecoration(
+        color: Act0AcademyReadingStyleV1.info.withOpacity(0.08),
+        borderColor: Act0AcademyReadingStyleV1.info.withOpacity(0.22),
         glow: false,
       ),
       child: Column(
@@ -428,18 +429,20 @@ class _ReviewNextStepCardV1 extends StatelessWidget {
         children: [
           Text(
             'WHY THIS, WHY NOW',
-            style: Act0ShellTokensV1.label.copyWith(
-              color: Act0ShellTokensV1.info,
+            style: Act0AcademyReadingStyleV1.label.copyWith(
+              color: Act0AcademyReadingStyleV1.info,
               fontWeight: FontWeight.w900,
             ),
           ),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(
             line,
-            style: Act0ShellTokensV1.body.copyWith(fontWeight: FontWeight.w800),
+            style: Act0AcademyReadingStyleV1.body.copyWith(
+              fontWeight: FontWeight.w800,
+            ),
           ),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(whyNow, style: Act0ShellTokensV1.muted),
+          Text(whyNow, style: Act0AcademyReadingStyleV1.muted),
           if (onOpen != null) ...[
             const SizedBox(height: Act0ShellTokensV1.gapSm),
             FilledButton(
@@ -472,9 +475,9 @@ class _DueReviewCardV1 extends StatelessWidget {
     return Container(
       key: const Key('act0_shell_review_due_spaced_item'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0VisualCanonV1.greenTable.withOpacity(0.07),
-        borderColor: Act0VisualCanonV1.greenTable.withOpacity(0.18),
+      decoration: Act0AcademyReadingStyleV1.surfaceDecoration(
+        color: Act0AcademyReadingStyleV1.correct.withOpacity(0.07),
+        borderColor: Act0AcademyReadingStyleV1.correct.withOpacity(0.18),
         glow: false,
       ),
       child: Column(
@@ -484,7 +487,7 @@ class _DueReviewCardV1 extends StatelessWidget {
             hasOpenMistakeForTask
                 ? 'Scheduled recheck · mistake still open'
                 : 'Ready to recheck',
-            style: Act0ShellTokensV1.sectionTitle,
+            style: Act0AcademyReadingStyleV1.sectionTitle,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(
@@ -497,13 +500,16 @@ class _DueReviewCardV1 extends StatelessWidget {
                 : item.lapseCount > 0
                 ? 'This task is due for another independent scheduled recheck.'
                 : 'A repaired clue is due for a spaced review.',
-            style: Act0ShellTokensV1.muted,
+            style: Act0AcademyReadingStyleV1.muted,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
           Align(
             alignment: Alignment.centerLeft,
             child: FilledButton(
               key: const Key('act0_shell_review_start_due_spaced_item'),
+              style: Act0AcademyReadingStyleV1.primaryButtonStyle().copyWith(
+                minimumSize: const WidgetStatePropertyAll(Size(0, 52)),
+              ),
               onPressed: () => onStart(item),
               child: Text(
                 hasOpenMistakeForTask
@@ -528,8 +534,8 @@ class _ReviewTodayBarV1 extends StatelessWidget {
       children: [
         Text(
           'Today',
-          style: Act0ShellTokensV1.label.copyWith(
-            color: Act0ShellTokensV1.textMuted,
+          style: Act0AcademyReadingStyleV1.label.copyWith(
+            color: Act0AcademyReadingStyleV1.textMuted,
             fontSize: 12,
             letterSpacing: 0.4,
           ),
@@ -538,7 +544,7 @@ class _ReviewTodayBarV1 extends StatelessWidget {
         Expanded(
           child: Container(
             height: 1,
-            color: Act0ShellTokensV1.border.withOpacity(0.58),
+            color: Act0AcademyReadingStyleV1.border.withOpacity(0.58),
           ),
         ),
       ],
@@ -561,7 +567,7 @@ class _ReviewCompactHeaderV1 extends StatelessWidget {
           Expanded(
             child: Text(
               'Review',
-              style: Act0ShellTokensV1.screenTitle.copyWith(
+              style: Act0AcademyReadingStyleV1.screenTitle.copyWith(
                 fontSize: 25,
                 fontWeight: FontWeight.w700,
                 height: 1.08,
@@ -588,15 +594,17 @@ class _ReviewMissCountPillV1 extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-        border: Border.all(color: Act0ShellTokensV1.gold.withOpacity(0.45)),
+        border: Border.all(
+          color: Act0AcademyReadingStyleV1.gold.withOpacity(0.45),
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             '●',
-            style: Act0ShellTokensV1.label.copyWith(
-              color: Act0ShellTokensV1.gold,
+            style: Act0AcademyReadingStyleV1.label.copyWith(
+              color: Act0AcademyReadingStyleV1.gold,
               fontSize: 12,
               letterSpacing: 0,
               fontWeight: FontWeight.w800,
@@ -605,8 +613,8 @@ class _ReviewMissCountPillV1 extends StatelessWidget {
           const SizedBox(width: 5),
           Text(
             '$missCount ${missCount == 1 ? 'miss' : 'misses'} to fix',
-            style: Act0ShellTokensV1.label.copyWith(
-              color: Act0ShellTokensV1.gold,
+            style: Act0AcademyReadingStyleV1.label.copyWith(
+              color: Act0AcademyReadingStyleV1.gold,
               fontSize: 12,
               letterSpacing: 0,
               fontWeight: FontWeight.w800,
@@ -641,9 +649,9 @@ class _SessionDrillRecheckQueueCardV1 extends StatelessWidget {
     return Container(
       key: const Key('act0_shell_review_recheck_queue_card'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.info.withOpacity(0.10),
-        borderColor: Act0ShellTokensV1.info.withOpacity(0.28),
+      decoration: Act0AcademyReadingStyleV1.surfaceDecoration(
+        color: Act0AcademyReadingStyleV1.info.withOpacity(0.10),
+        borderColor: Act0AcademyReadingStyleV1.info.withOpacity(0.28),
         glow: false,
       ),
       child: Column(
@@ -651,26 +659,26 @@ class _SessionDrillRecheckQueueCardV1 extends StatelessWidget {
         children: [
           Text(
             'Practice this spot again',
-            style: Act0ShellTokensV1.label.copyWith(
-              color: Act0ShellTokensV1.info,
+            style: Act0AcademyReadingStyleV1.label.copyWith(
+              color: Act0AcademyReadingStyleV1.info,
               fontWeight: FontWeight.w900,
             ),
           ),
           const SizedBox(width: Act0ShellTokensV1.gapSm),
           Text(
             'Review this practice mistake',
-            style: Act0ShellTokensV1.sectionTitle,
+            style: Act0AcademyReadingStyleV1.sectionTitle,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(
             '$signalLabel: you chose $chosen; try the $expected line again.',
-            style: Act0ShellTokensV1.muted,
+            style: Act0AcademyReadingStyleV1.muted,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           Text(
             'This reopens the same drill so you can try the clue again.',
-            style: Act0ShellTokensV1.body.copyWith(
-              color: Act0ShellTokensV1.text,
+            style: Act0AcademyReadingStyleV1.body.copyWith(
+              color: Act0AcademyReadingStyleV1.text,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -678,7 +686,7 @@ class _SessionDrillRecheckQueueCardV1 extends StatelessWidget {
           FilledButton(
             key: const Key('act0_shell_review_recheck_cta'),
             onPressed: () => onStart(item),
-            style: Act0ShellTokensV1.premiumActionButtonStyle(
+            style: Act0AcademyReadingStyleV1.premiumActionButtonStyle(
               height: Act0ShellTokensV1.compactCtaHeight,
             ),
             child: const Text('Practice this spot again'),
@@ -704,37 +712,32 @@ class _ReviewEmptyRepairCardV1 extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: <Color>[
-            Act0ShellTokensV1.info.withValues(alpha: 0.13),
-            Act0ShellTokensV1.surface2.withValues(alpha: 0.92),
+            Act0AcademyReadingStyleV1.info.withValues(alpha: 0.13),
+            Act0AcademyReadingStyleV1.surface2.withValues(alpha: 0.92),
           ],
         ),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
         border: Border.all(
-          color: Act0ShellTokensV1.info.withValues(alpha: 0.28),
+          color: Act0AcademyReadingStyleV1.info.withValues(alpha: 0.28),
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Act0SharkyPresenceBubbleV1(
-            line: 'Review is ready',
-            detail:
-                'Finish a lesson - every miss can become one clean repair rep.',
-            mood: Act0SharkyMoodV1.thinking,
-            tone: Act0ShellTokensV1.info,
-            mascotSize: 58,
-            bubblePadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          const Text(
+            'Review is ready',
+            style: Act0AcademyReadingStyleV1.sectionTitle,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           Text(
             'Misses from lessons will appear here after you try a spot.',
-            style: Act0ShellTokensV1.muted,
+            style: Act0AcademyReadingStyleV1.muted,
           ),
           const SizedBox(height: 3),
           Text(
             'Start on Learn, then come back here for the exact clue.',
-            style: Act0ShellTokensV1.label.copyWith(
-              color: Act0ShellTokensV1.textMuted,
+            style: Act0AcademyReadingStyleV1.label.copyWith(
+              color: Act0AcademyReadingStyleV1.textMuted,
               letterSpacing: 0,
             ),
           ),
@@ -743,7 +746,7 @@ class _ReviewEmptyRepairCardV1 extends StatelessWidget {
             FilledButton.icon(
               key: const Key('act0_shell_review_empty_open_learn_cta'),
               onPressed: onOpenLearn,
-              style: Act0ShellTokensV1.premiumActionButtonStyle(),
+              style: Act0AcademyReadingStyleV1.premiumActionButtonStyle(),
               icon: const Icon(Icons.play_arrow_rounded, size: 19),
               label: const Text('Open Learn'),
             ),
@@ -781,9 +784,9 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
     return Container(
       key: const Key('act0_shell_review_repair_coach_card'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface2.withOpacity(0.72),
-        borderColor: Act0ShellTokensV1.primary.withOpacity(0.22),
+      decoration: Act0AcademyReadingStyleV1.surfaceDecoration(
+        color: Act0AcademyReadingStyleV1.surface2.withOpacity(0.72),
+        borderColor: Act0AcademyReadingStyleV1.primary.withOpacity(0.22),
         glow: false,
       ),
       child: Column(
@@ -795,14 +798,14 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
                 width: 30,
                 height: 30,
                 decoration: BoxDecoration(
-                  color: Act0ShellTokensV1.primary.withOpacity(0.12),
+                  color: Act0AcademyReadingStyleV1.primary.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(
                     Act0ShellTokensV1.radiusMd,
                   ),
                 ),
                 child: const Icon(
                   Icons.bookmark_outline_rounded,
-                  color: Act0ShellTokensV1.primary,
+                  color: Act0AcademyReadingStyleV1.primary,
                   size: 18,
                 ),
               ),
@@ -812,8 +815,8 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
                   mistake.sourceRetriedCorrectly
                       ? 'SAME CLUE, NEW SPOT STILL OWED'
                       : 'MISS TO REPAIR',
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.primary,
+                  style: Act0AcademyReadingStyleV1.label.copyWith(
+                    color: Act0AcademyReadingStyleV1.primary,
                     fontSize: 11,
                     fontWeight: FontWeight.w900,
                     letterSpacing: 1.3,
@@ -827,14 +830,14 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
             Text(
               'You retried the original spot correctly. A different spot with the same clue is still waiting for you.',
               key: const Key('act0_shell_review_source_retried_note'),
-              style: Act0ShellTokensV1.muted,
+              style: Act0AcademyReadingStyleV1.muted,
             ),
             const SizedBox(height: Act0ShellTokensV1.gapSm),
           ],
           Text(
             clueLine,
-            style: Act0ShellTokensV1.body.copyWith(
-              color: Act0ShellTokensV1.text,
+            style: Act0AcademyReadingStyleV1.body.copyWith(
+              color: Act0AcademyReadingStyleV1.text,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -843,24 +846,24 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
             key: const Key('act0_shell_wave2_review_active_clue_preview'),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
-              color: Act0ShellTokensV1.gold.withOpacity(0.08),
+              color: Act0AcademyReadingStyleV1.gold.withOpacity(0.08),
               borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
               border: Border.all(
-                color: Act0ShellTokensV1.gold.withOpacity(0.22),
+                color: Act0AcademyReadingStyleV1.gold.withOpacity(0.22),
               ),
             ),
             child: Row(
               children: [
                 const Icon(
                   Icons.visibility_rounded,
-                  color: Act0ShellTokensV1.gold,
+                  color: Act0AcademyReadingStyleV1.gold,
                   size: 16,
                 ),
                 const SizedBox(width: Act0ShellTokensV1.gapSm),
                 Text(
                   'Current clue',
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.gold,
+                  style: Act0AcademyReadingStyleV1.label.copyWith(
+                    color: Act0AcademyReadingStyleV1.gold,
                     fontSize: 10.5,
                     fontWeight: FontWeight.w900,
                     letterSpacing: 0.2,
@@ -873,8 +876,8 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.fade,
                     softWrap: false,
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: Act0ShellTokensV1.text,
+                    style: Act0AcademyReadingStyleV1.label.copyWith(
+                      color: Act0AcademyReadingStyleV1.text,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 0,
                     ),
@@ -889,10 +892,10 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
               key: const Key('act0_shell_review_pattern_coaching'),
               padding: const EdgeInsets.all(Act0ShellTokensV1.gapSm),
               decoration: BoxDecoration(
-                color: Act0ShellTokensV1.primary.withOpacity(0.08),
+                color: Act0AcademyReadingStyleV1.primary.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
                 border: Border.all(
-                  color: Act0ShellTokensV1.primary.withOpacity(0.18),
+                  color: Act0AcademyReadingStyleV1.primary.withOpacity(0.18),
                 ),
               ),
               child: Column(
@@ -900,8 +903,8 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
                 children: [
                   Text(
                     'Pattern to practice',
-                    style: Act0ShellTokensV1.label.copyWith(
-                      color: Act0ShellTokensV1.primary,
+                    style: Act0AcademyReadingStyleV1.label.copyWith(
+                      color: Act0AcademyReadingStyleV1.primary,
                       fontWeight: FontWeight.w900,
                     ),
                   ),
@@ -909,16 +912,16 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
                   Text(
                     'Miss: $patternFocus. Repair: spot it before choosing.',
                     key: const Key('act0_shell_review_pattern_focus_line'),
-                    style: Act0ShellTokensV1.body.copyWith(
-                      color: Act0ShellTokensV1.text,
+                    style: Act0AcademyReadingStyleV1.body.copyWith(
+                      color: Act0AcademyReadingStyleV1.text,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
                   const SizedBox(height: Act0ShellTokensV1.gapXs),
                   Text(
                     'Next rep: spot the clue before choosing.',
-                    style: Act0ShellTokensV1.muted.copyWith(
-                      color: Act0ShellTokensV1.textMuted,
+                    style: Act0AcademyReadingStyleV1.muted.copyWith(
+                      color: Act0AcademyReadingStyleV1.textMuted,
                     ),
                   ),
                 ],
@@ -926,15 +929,15 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
             ),
           ],
           const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(actionLine, style: Act0ShellTokensV1.muted),
+          Text(actionLine, style: Act0AcademyReadingStyleV1.muted),
           const SizedBox(height: 6),
           Text(
             act0SharkyCoachLineForMomentV1(
               Act0SharkyCoachMomentV1.reviewActiveRepair,
             ),
             key: const Key('act0_shell_review_sharky_coach_line'),
-            style: Act0ShellTokensV1.body.copyWith(
-              color: Act0ShellTokensV1.textMuted,
+            style: Act0AcademyReadingStyleV1.body.copyWith(
+              color: Act0AcademyReadingStyleV1.textMuted,
               fontWeight: FontWeight.w500,
               letterSpacing: 0,
             ),
@@ -944,7 +947,7 @@ class _ReviewRepairCoachCardV1 extends StatelessWidget {
             FilledButton(
               key: const Key('act0_shell_review_practice_cta'),
               onPressed: () => onFixMistake!(mistake),
-              style: Act0ShellTokensV1.premiumActionButtonStyle(
+              style: Act0AcademyReadingStyleV1.premiumActionButtonStyle(
                 height: Act0ShellTokensV1.compactCtaHeight,
               ),
               child: Text(
@@ -1314,7 +1317,7 @@ class _ReviewBenchFooterV1 extends StatelessWidget {
           children: [
             const Icon(
               Icons.check_circle_rounded,
-              color: Act0VisualCanonV1.greenTable,
+              color: Act0AcademyReadingStyleV1.correct,
               size: 19,
             ),
             const SizedBox(width: 9),
@@ -1322,8 +1325,8 @@ class _ReviewBenchFooterV1 extends StatelessWidget {
               child: Text(
                 'Nothing else is due. Misses land here the moment they happen.',
                 textAlign: TextAlign.left,
-                style: Act0ShellTokensV1.muted.copyWith(
-                  color: Act0ShellTokensV1.text.withOpacity(0.55),
+                style: Act0AcademyReadingStyleV1.muted.copyWith(
+                  color: Act0AcademyReadingStyleV1.text.withOpacity(0.55),
                   fontSize: 13,
                   height: 1.18,
                 ),
@@ -1435,19 +1438,22 @@ class _MistakeHistoryListV1 extends StatelessWidget {
     return Container(
       key: const Key('act0_shell_review_mistake_history_list'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
-      decoration: Act0ShellTokensV1.surfaceDecoration(
-        color: Act0ShellTokensV1.surface2.withOpacity(0.72),
-        borderColor: Act0ShellTokensV1.border,
+      decoration: Act0AcademyReadingStyleV1.surfaceDecoration(
+        color: Act0AcademyReadingStyleV1.surface2.withOpacity(0.72),
+        borderColor: Act0AcademyReadingStyleV1.border,
         glow: false,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Past spots to review', style: Act0ShellTokensV1.sectionTitle),
+          Text(
+            'Past spots to review',
+            style: Act0AcademyReadingStyleV1.sectionTitle,
+          ),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(
             'Read-only notes from completed hands.',
-            style: Act0ShellTokensV1.muted,
+            style: Act0AcademyReadingStyleV1.muted,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           for (final item in items) ...[
@@ -1472,9 +1478,11 @@ class _MistakeHistoryRowV1 extends StatelessWidget {
       key: Key('act0_shell_review_mistake_history_row_${item.stableKey}'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       decoration: BoxDecoration(
-        color: Act0ShellTokensV1.surface.withOpacity(0.78),
+        color: Act0AcademyReadingStyleV1.surface.withOpacity(0.78),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
-        border: Border.all(color: Act0ShellTokensV1.border.withOpacity(0.86)),
+        border: Border.all(
+          color: Act0AcademyReadingStyleV1.border.withOpacity(0.86),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1485,7 +1493,7 @@ class _MistakeHistoryRowV1 extends StatelessWidget {
                 width: 8,
                 height: 8,
                 decoration: BoxDecoration(
-                  color: Act0ShellTokensV1.gold,
+                  color: Act0AcademyReadingStyleV1.gold,
                   borderRadius: BorderRadius.circular(
                     Act0ShellTokensV1.radiusPill,
                   ),
@@ -1497,8 +1505,8 @@ class _MistakeHistoryRowV1 extends StatelessWidget {
                   item.primaryLabel,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: Act0ShellTokensV1.body.copyWith(
-                    color: Act0ShellTokensV1.text,
+                  style: Act0AcademyReadingStyleV1.body.copyWith(
+                    color: Act0AcademyReadingStyleV1.text,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
@@ -1506,28 +1514,28 @@ class _MistakeHistoryRowV1 extends StatelessWidget {
               const SizedBox(width: Act0ShellTokensV1.gapSm),
               Text(
                 item.orderLabel,
-                style: Act0ShellTokensV1.label.copyWith(
-                  color: Act0ShellTokensV1.textMuted,
+                style: Act0AcademyReadingStyleV1.label.copyWith(
+                  color: Act0AcademyReadingStyleV1.textMuted,
                   letterSpacing: 0,
                 ),
               ),
             ],
           ),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(item.detailLine, style: Act0ShellTokensV1.muted),
+          Text(item.detailLine, style: Act0AcademyReadingStyleV1.muted),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(
             item.decisionLine,
-            style: Act0ShellTokensV1.body.copyWith(
-              color: Act0ShellTokensV1.text,
+            style: Act0AcademyReadingStyleV1.body.copyWith(
+              color: Act0AcademyReadingStyleV1.text,
               fontWeight: FontWeight.w800,
             ),
           ),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(
             item.contextLine,
-            style: Act0ShellTokensV1.label.copyWith(
-              color: Act0ShellTokensV1.textMuted,
+            style: Act0AcademyReadingStyleV1.label.copyWith(
+              color: Act0AcademyReadingStyleV1.textMuted,
               letterSpacing: 0,
             ),
           ),
@@ -1536,8 +1544,8 @@ class _MistakeHistoryRowV1 extends StatelessWidget {
             Text(
               item.patternLine!,
               key: Key('act0_shell_review_pattern_line_${item.stableKey}'),
-              style: Act0ShellTokensV1.label.copyWith(
-                color: Act0ShellTokensV1.gold,
+              style: Act0AcademyReadingStyleV1.label.copyWith(
+                color: Act0AcademyReadingStyleV1.gold,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 0,
               ),
@@ -1798,14 +1806,14 @@ class _FixedMistakeCardV1 extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: <Color>[
-            Act0VisualCanonV1.greenTable.withOpacity(0.055),
-            Act0ShellTokensV1.surface,
-            Act0ShellTokensV1.surface2,
+            Act0AcademyReadingStyleV1.correct.withOpacity(0.055),
+            Act0AcademyReadingStyleV1.surface,
+            Act0AcademyReadingStyleV1.surface2,
           ],
         ),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
         border: Border.all(
-          color: Act0VisualCanonV1.greenTable.withOpacity(0.18),
+          color: Act0AcademyReadingStyleV1.correct.withOpacity(0.18),
         ),
       ),
       child: Row(
@@ -1815,16 +1823,16 @@ class _FixedMistakeCardV1 extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: Act0VisualCanonV1.greenTable.withOpacity(0.12),
+              color: Act0AcademyReadingStyleV1.correct.withOpacity(0.12),
               borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
               border: Border.all(
-                color: Act0VisualCanonV1.greenTable.withOpacity(0.20),
+                color: Act0AcademyReadingStyleV1.correct.withOpacity(0.20),
               ),
             ),
             child: const Icon(
               Icons.check_rounded,
               size: 20,
-              color: Act0VisualCanonV1.greenTable,
+              color: Act0AcademyReadingStyleV1.correct,
             ),
           ),
           const SizedBox(width: Act0ShellTokensV1.gapMd),
@@ -1839,7 +1847,7 @@ class _FixedMistakeCardV1 extends StatelessWidget {
                         mistake.title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: Act0ShellTokensV1.body.copyWith(
+                        style: Act0AcademyReadingStyleV1.body.copyWith(
                           fontWeight: FontWeight.w800,
                         ),
                       ),
@@ -1854,18 +1862,22 @@ class _FixedMistakeCardV1 extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: Act0VisualCanonV1.greenTable.withOpacity(0.12),
+                        color: Act0AcademyReadingStyleV1.correct.withOpacity(
+                          0.12,
+                        ),
                         borderRadius: BorderRadius.circular(
                           Act0ShellTokensV1.radiusPill,
                         ),
                         border: Border.all(
-                          color: Act0VisualCanonV1.greenTable.withOpacity(0.24),
+                          color: Act0AcademyReadingStyleV1.correct.withOpacity(
+                            0.24,
+                          ),
                         ),
                       ),
                       child: Text(
                         _reviewCopyV1(context, en: 'Replay', ru: 'Повтор'),
-                        style: Act0ShellTokensV1.label.copyWith(
-                          color: Act0VisualCanonV1.greenTable,
+                        style: Act0AcademyReadingStyleV1.label.copyWith(
+                          color: Act0AcademyReadingStyleV1.correct,
                           fontSize: 10,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 0,
@@ -1879,15 +1891,15 @@ class _FixedMistakeCardV1 extends StatelessWidget {
                   mistake.weaknessLabel,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: Act0ShellTokensV1.muted,
+                  style: Act0AcademyReadingStyleV1.muted,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   detailLine,
                   maxLines: 2,
                   overflow: TextOverflow.fade,
-                  style: Act0ShellTokensV1.label.copyWith(
-                    color: Act0ShellTokensV1.textMuted,
+                  style: Act0AcademyReadingStyleV1.label.copyWith(
+                    color: Act0AcademyReadingStyleV1.textMuted,
                     letterSpacing: 0,
                   ),
                 ),
@@ -1903,20 +1915,23 @@ class _FixedMistakeCardV1 extends StatelessWidget {
                     ? Key('act0_shell_quick_fix_replay_${mistake.taskId}')
                     : Key('act0_shell_fixed_mistake_replay_${mistake.taskId}'),
                 onPressed: () => onReplay!(mistake),
-                style: Act0ShellTokensV1.quietButtonStyle(height: 38).copyWith(
-                  minimumSize: WidgetStateProperty.all(const Size(92, 38)),
-                  padding: WidgetStateProperty.all(
-                    const EdgeInsets.symmetric(horizontal: 10),
-                  ),
-                  side: WidgetStateProperty.all(
-                    BorderSide(
-                      color: Act0ShellTokensV1.primary.withOpacity(0.34),
+                style: Act0AcademyReadingStyleV1.quietButtonStyle(height: 38)
+                    .copyWith(
+                      minimumSize: WidgetStateProperty.all(const Size(92, 38)),
+                      padding: WidgetStateProperty.all(
+                        const EdgeInsets.symmetric(horizontal: 10),
+                      ),
+                      side: WidgetStateProperty.all(
+                        BorderSide(
+                          color: Act0AcademyReadingStyleV1.primary.withOpacity(
+                            0.34,
+                          ),
+                        ),
+                      ),
+                      foregroundColor: WidgetStateProperty.all(
+                        Act0AcademyReadingStyleV1.primary,
+                      ),
                     ),
-                  ),
-                  foregroundColor: WidgetStateProperty.all(
-                    Act0ShellTokensV1.primary,
-                  ),
-                ),
                 child: Text(
                   replayLabel,
                   maxLines: 2,

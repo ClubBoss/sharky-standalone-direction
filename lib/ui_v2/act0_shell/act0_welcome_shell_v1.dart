@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_folio_v1.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -384,8 +385,8 @@ class _WelcomeStandardBeatFrameV1 extends StatelessWidget {
     final body = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Center(child: _WelcomeSharkyPresenterTileV1(mood: mood, size: 164)),
-        const SizedBox(height: Act0AcademyDesignTokensV1.gapXl),
+        _WelcomeSharkyPresenterTileV1(mood: mood, size: 88),
+        const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
         Text(line, style: Act0AcademyDesignTokensV1.body),
         const SizedBox(height: Act0AcademyDesignTokensV1.gapSm),
         Text(detail, style: Act0AcademyDesignTokensV1.supporting),
@@ -403,6 +404,8 @@ class _WelcomeStandardBeatFrameV1 extends StatelessWidget {
             : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Act0AcademyFolioLabelV1(label: eyebrow),
+          const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
           Text(title, style: Act0AcademyDesignTokensV1.display),
           const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
           body,
