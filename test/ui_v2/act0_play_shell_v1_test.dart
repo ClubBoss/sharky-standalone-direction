@@ -69,6 +69,16 @@ void main() {
     isEnabled: true,
   );
 
+  const disabledDailyGroup = Act0PracticeGroupV1(
+    groupId: 'daily',
+    title: 'Daily practice',
+    subtitle: 'Unlock after one route rep.',
+    ctaLabel: 'Start',
+    categoryLabel: 'Daily',
+    sessionLabel: 'Daily',
+    isEnabled: false,
+  );
+
   const disabledRepairGroup = Act0PracticeGroupV1(
     groupId: 'weak_spots',
     title: 'Review one quick fix',
@@ -197,6 +207,64 @@ void main() {
 
     await tester.tap(find.byKey(const Key('act0_shell_play_featured_cta')));
     expect(started, <String>['daily']);
+  });
+
+  testWidgets('Disabled daily hero keeps its source-owned unlock state', (
+    tester,
+  ) async {
+    final started = <String>[];
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0PlayShellV1(
+            groups: const <Act0PracticeGroupV1>[
+              disabledDailyGroup,
+              disabledRepairGroup,
+              ...topicGroups,
+            ],
+            recommendedGroupId: 'daily',
+            recommendedTitle: 'Daily practice',
+            recommendedSubtitle: 'Unlock after one route rep.',
+            recommendedReasonLabel: 'Practice focus',
+            recommendedOutcome: 'Open one route rep first.',
+            recommendedOutcomeLead: 'Next:',
+            masteryLabel: 'Practice focus',
+            onStartGroup: (group) => started.add(group.groupId),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final hero = find.byKey(const Key('act0_shell_play_daily_hero'));
+    expect(
+      find.descendant(of: hero, matching: find.text('Daily practice')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: hero,
+        matching: find.text('Unlock after one route rep.'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: hero, matching: find.text('Start a short rep')),
+      findsNothing,
+    );
+    expect(
+      find.descendant(
+        of: hero,
+        matching: find.text('One short rep keeps this table clue fresh.'),
+      ),
+      findsNothing,
+    );
+
+    final cta = tester.widget<FilledButton>(
+      find.byKey(const Key('act0_shell_play_featured_cta')),
+    );
+    expect(cta.onPressed, isNull);
+    expect(started, isEmpty);
   });
 
   testWidgets('Practice omits repair queue when projection has no rows', (
