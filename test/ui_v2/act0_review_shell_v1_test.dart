@@ -963,4 +963,179 @@ void main() {
     );
     expect(launchCount, 1);
   });
+
+  testWidgets(
+    'Due Review keeps its next action bound to the source-owned item',
+    (tester) async {
+      Act0DueReviewItemV1? launched;
+      final dueItem = Act0DueReviewItemV1(
+        conceptFamilyId: 'no_bet_yet',
+        worldId: 'world_1',
+        lessonId: 'fold_check_call_raise',
+        taskId: 'actions_check_drill',
+        nextDueAtUtc: DateTime.utc(2026, 7, 18),
+        repeatedMissCount: 2,
+        lapseCount: 0,
+      );
+      await tester.pumpWidget(
+        reviewHost(
+          const Act0ReviewStateV1(
+            title: 'Review',
+            subtitle: 'Repair the clue that slipped.',
+            weaknessLabel: 'Action read',
+            reason: '',
+            stats: <Act0ReviewStatV1>[],
+            chosenLabel: 'Bet',
+            betterLabel: 'Check',
+          ),
+          dueReviewItems: <Act0DueReviewItemV1>[dueItem],
+          onStartDueReview: (item) => launched = item,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const Key('act0_shell_review_due_spaced_item')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_review_bench_footer')),
+        findsNothing,
+      );
+
+      await tester.tap(
+        find.byKey(const Key('act0_shell_review_start_due_spaced_item')),
+      );
+
+      expect(launched, same(dueItem));
+    },
+  );
+
+  testWidgets(
+    'Due Review with two source-owned items launches the one the next step recommends',
+    (tester) async {
+      Act0DueReviewItemV1? launched;
+      final firstDueItem = Act0DueReviewItemV1(
+        conceptFamilyId: 'no_bet_yet',
+        worldId: 'world_1',
+        lessonId: 'fold_check_call_raise',
+        taskId: 'actions_check_drill',
+        nextDueAtUtc: DateTime.utc(2026, 7, 18),
+        repeatedMissCount: 2,
+        lapseCount: 0,
+      );
+      final secondDueItem = Act0DueReviewItemV1(
+        conceptFamilyId: 'range_vs_range',
+        worldId: 'world_1',
+        lessonId: 'fold_check_call_raise',
+        taskId: 'actions_range_drill',
+        nextDueAtUtc: DateTime.utc(2026, 7, 19),
+        repeatedMissCount: 1,
+        lapseCount: 0,
+      );
+      await tester.pumpWidget(
+        reviewHost(
+          const Act0ReviewStateV1(
+            title: 'Review',
+            subtitle: 'Repair the clue that slipped.',
+            weaknessLabel: 'Action read',
+            reason: '',
+            stats: <Act0ReviewStatV1>[],
+            chosenLabel: 'Bet',
+            betterLabel: 'Check',
+          ),
+          dueReviewItems: <Act0DueReviewItemV1>[firstDueItem, secondDueItem],
+          onStartDueReview: (item) => launched = item,
+          nextStep: const Act0PersonalizedReturnReasonV1(
+            reasonType: act0ReturnReasonDueReviewV1,
+            conceptFamilyId: 'range_vs_range',
+            sourceTaskId: 'actions_range_drill',
+            evidenceKind: act0ReturnReasonEvidenceDurableRetentionV1,
+            messageKey: act0ReturnReasonMessageDueReviewV1,
+            priorityClass: 2,
+            recommendedDestination: 'review',
+            recommendedAction: 'spaced_review',
+            whyNowMessageKey: 'due_for_review',
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const Key('act0_shell_review_due_spaced_item')),
+        findsOneWidget,
+        reason: 'Only the recommended due item should surface, not both.',
+      );
+      expect(
+        find.byKey(const Key('act0_shell_review_bench_footer')),
+        findsNothing,
+        reason: 'A genuinely due item must not share the "nothing due" claim.',
+      );
+
+      await tester.tap(
+        find.byKey(const Key('act0_shell_review_start_due_spaced_item')),
+      );
+
+      expect(launched, same(secondDueItem));
+      expect(launched, isNot(same(firstDueItem)));
+    },
+  );
+
+  testWidgets(
+    'Due Review on a different task stays separate from the active repair CTA',
+    (tester) async {
+      Act0DueReviewItemV1? launchedDueItem;
+      Act0MistakeCardV1? tappedMistake;
+      final dueItemOnOtherTask = Act0DueReviewItemV1(
+        conceptFamilyId: 'range_vs_range',
+        worldId: 'world_1',
+        lessonId: 'fold_check_call_raise',
+        taskId: 'actions_range_drill',
+        nextDueAtUtc: DateTime.utc(2026, 7, 19),
+        repeatedMissCount: 1,
+        lapseCount: 0,
+      );
+      await tester.pumpWidget(
+        reviewHost(
+          const Act0ReviewStateV1(
+            title: 'Review',
+            subtitle: 'Repair the clue that slipped.',
+            weaknessLabel: 'Action read',
+            reason: '',
+            stats: <Act0ReviewStatV1>[],
+            chosenLabel: 'Bet',
+            betterLabel: 'Check',
+            mistakes: <Act0MistakeCardV1>[activeMistake],
+          ),
+          dueReviewItems: <Act0DueReviewItemV1>[dueItemOnOtherTask],
+          onStartDueReview: (item) => launchedDueItem = item,
+          onFixMistake: (mistake) => tappedMistake = mistake,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const Key('act0_shell_review_due_spaced_item')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_review_repair_coach_card')),
+        findsOneWidget,
+      );
+
+      await tester.tap(
+        find.byKey(const Key('act0_shell_review_start_due_spaced_item')),
+      );
+      expect(launchedDueItem, same(dueItemOnOtherTask));
+      expect(tappedMistake, isNull);
+
+      await tester.ensureVisible(
+        find.byKey(const Key('act0_shell_review_practice_cta')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_shell_review_practice_cta')));
+      expect(tappedMistake, same(activeMistake));
+      expect(launchedDueItem, same(dueItemOnOtherTask));
+    },
+  );
 }
