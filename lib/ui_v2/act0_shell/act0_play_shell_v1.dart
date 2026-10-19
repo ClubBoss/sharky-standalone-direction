@@ -879,14 +879,14 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
         ? Act0AcademyReadingStyleV1.actionCyan
         : Act0AcademyReadingStyleV1.actionBlue;
     final dailyComplete = _dailyGroupCompleteV1(group);
-    final heroTitle = group.groupId == 'daily' && !dailyComplete
+    final heroTitle = enabled && group.groupId == 'daily' && !dailyComplete
         ? _playCopyV1(
             context,
             'play_daily_hero_title',
             fallback: 'Start a short rep',
           )
         : title;
-    final heroSubtitle = group.groupId == 'daily' && !dailyComplete
+    final heroSubtitle = enabled && group.groupId == 'daily' && !dailyComplete
         ? _playCopyV1(
             context,
             'play_daily_hero_support',
