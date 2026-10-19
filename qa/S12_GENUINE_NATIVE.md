@@ -86,3 +86,59 @@ not on the default branch. On this QA branch only, the existing registered
 `native-visual-delta.yml` path carries the exact closure lane for the single
 workflow_dispatch. This changes no main workflow and repeats no visual audit.
 The rejected dedicated-path dispatch created no hosted run.
+
+## Closure attempt disposition — STOP, no second run
+
+**S12V_09_PARTIAL_SOURCE_OR_ROUTE_BLOCKER.** Sole new run
+[39212792510](https://github.com/ClubBoss/sharky-standalone-direction/actions/runs/39212792510)
+failed XCTest `NO_UNIQUE_NATIVE_TAB_Home` at executed Swift line 71, before
+`C9_before_prerequisites`. The actual test executed once and failed in 191.261 s.
+Three original native PNGs passed; no timed persisted learner/telemetry snapshots
+were reached, so this attempt adds no original-source recheck or Actions Summary
+proof. Prior accepted V08/V10 scoped PASS and V09 PARTIAL remain unchanged.
+
+Cause: the fresh Placement handoff was still inside the active runner, not the
+previous run's saved Review/Home surface. The product intentionally hides bottom
+navigation there (`act0_shell_preview_screen_v1.dart:6719`). The screenshot/AX tree
+`missing_tab_Home` shows a unique upper-left Back button and no Home tab. Its
+source-owned callback (`:6072`, normal branch `:6103`) returns to Learn; Placement
+sets `returnToPlayHubOnBack=false` (`:9809`). This is a QA navigation omission,
+not an established product routing defect. The unexecuted candidate now taps that
+real, unique AX Back button before Home → Learn; it also preserves timed state if
+a future tab lookup fails. No production accessibility or routing code changes.
+
+The executed instrumentation also had a separate budget defect: reaching Summary
+required 21 × 90-second checkpoint holds plus two 45-second screenshots = **33
+minutes minimum**, before UI actions or XCTest startup. Native step started at
+07:34:33 after build/Simulator setup, leaving under 32 minutes of the 70-minute
+job. This was a QA preflight omission, not the cause of this early failure. The
+candidate batches prerequisite/tail receipts at their real Summary checkpoints,
+keeps per-record event cardinality, captures question frames without redundant
+pre-answer state copies, and ends at Actions Summary rather than repeating V10.
+Its seven persisted plus six screen-only checkpoints hold **15 minutes** in total.
+
+**Candidate validation:** Python syntax and `git diff --check` only; the new Back
+selection and shorter sequence have NOT been compiled/executed natively. One run
+limit is consumed; no retry, production patch, merge, Human/retention/transfer or
+S12.V PASS is authorized by this result. Next step is a separately authorized
+native execution of this prepared QA-only candidate, including visual Summary
+metrics versus saved history. SE3_UNVERIFIED; S12.V HOLD_VISUAL_TRUST.
+
+Frozen attempted product: `f99da096dcfda7d001c24003c052b1f3f314362a`, tree
+`ecc202a3ebc08a14f8f4d95a984186056e44d46a`. Executed QA:
+`b9e60387fd8cb005d3af30584a51a6d9e2801e40`, tree
+`5ef51505439995a487a492d8543d10239fc1fae1`.
+Runner.zip SHA-256 `aad05c2aec6bf47c0d3021a7993a4c6002ce06a504e986c8699d1958b9c09005`;
+kernel SHA-256 `f8802326078e2eb5f31e52a1e1aa6c56c5429c4cf95323a8116b38ac79f4b104`.
+iPhone 17 Pro Simulator, iOS 26.4, PNG **1206×2622**, AX **402×874**;
+macOS 26.6.2 / Xcode 26.6 / Flutter 3.35.0. SE3 was not booted or tested.
+
+[Original artifact 12170610854](https://github.com/ClubBoss/sharky-standalone-direction/actions/runs/39212792510/artifacts/12170610854),
+234030797 bytes; original ZIP SHA-256
+`d35d3379dea590dd20d97a9b818adae52db7e6c73ed5b7bd9becd5fb8837934e`.
+Downloaded bytes match GitHub digest. All 1982 Runner-file and 3373 evidence-file
+hashes match after extracting Runner.zip; all three native screenshot receipts
+reproduce PASS. On a copy of the original artifact, the executed verifier
+`git show b9e60387:tools/qa_s12_verify_integrated.py` still yields
+`FAIL_CLOSURE FileNotFoundError` for the unreached required checkpoint. Do not
+reinterpret absent saved receipts as zero XP/debt/events or completion proof.

@@ -67,8 +67,27 @@ final class S12GenuineNativeUITests: XCTestCase {
             if matches.count > 1 { matches = matches.filter { $0.frame.midY > app.frame.height * 0.85 } }
             if matches.count == 1 { matches[0].tap(); return }
         }
-        capture("missing_tab_"+label)
+        persistedCheckpoint("missing_tab_"+label)
         XCTFail("NO_UNIQUE_NATIVE_TAB_"+label)
+    }
+    private func leaveRunnerThroughBack() {
+        // Native receipt missing_tab_Home: active runner deliberately has no
+        // bottom tabs. Its source-owned Back is the sole upper-left AX Button;
+        // Flutter's IconButton currently exposes an empty native label.
+        let back = app.buttons.allElementsBoundByIndex.filter {
+            $0.exists && $0.isEnabled && $0.isHittable &&
+            $0.frame.minX < app.frame.width * 0.15 &&
+            $0.frame.minY < app.frame.height * 0.15 &&
+            $0.frame.width <= 48 && $0.frame.height <= 48 &&
+            ($0.label.isEmpty || $0.label == "Back")
+        }
+        guard back.count == 1 else {
+            persistedCheckpoint("C9_runner_back_not_unique")
+            XCTFail("NO_UNIQUE_SOURCE_OWNED_RUNNER_BACK"); return
+        }
+        print("S12_NAV_REAL_RUNNER_BACK " + back[0].debugDescription)
+        back[0].tap()
+        XCTAssertTrue(visible("Learn", timeout: 12), "RUNNER_BACK_DID_NOT_RETURN_TO_LEARN")
     }
     /// Responsive layouts expose the same authored option differently: standard
     /// width as lettered StaticText ("B\nCheck"), large width as a real Button
@@ -269,6 +288,7 @@ final class S12GenuineNativeUITests: XCTestCase {
 
         // Fresh simulator: all prerequisites below are earned by actual UI.
         // Placement skips retain their original source-owned provenance.
+        leaveRunnerThroughBack()
         tapTab("Home"); tapTab("Learn")
         persistedCheckpoint("C9_before_prerequisites")
         let firstStart = app.buttons.matching(identifier: "Start first table").firstMatch
@@ -280,7 +300,7 @@ final class S12GenuineNativeUITests: XCTestCase {
                             "You are BTN, blinds are posted, and no board is out yet", "Review"]
         for (i, answer) in guideAnswers.enumerated() {
             prepareChoice(answer); selectAction(answer)
-            persistedCheckpoint("C9_guide_answer_" + String(i))
+            print("S12_AUTHORED_GRADED_STEP guide_" + String(i) + " answer=" + answer + "\n" + app.debugDescription)
             feedbackForward()
         }
         XCTAssertTrue(visible("Session complete", timeout: 15) || visible("What finished"), "GUIDE_SUMMARY_NOT_REACHED")
@@ -290,7 +310,7 @@ final class S12GenuineNativeUITests: XCTestCase {
         // Mission Start selects the first incomplete Actions task: Legal actions.
         tapButton("Start")
         prepareChoice("Fold")
-        persistedCheckpoint("C9_source_question")
+        capture("C9_source_question")
         selectAction("Fold")
         XCTAssertTrue(visible("MISSED CLUE", timeout: 12) || visible("better play"))
         persistedCheckpoint("C9_source_wrong")
@@ -298,12 +318,12 @@ final class S12GenuineNativeUITests: XCTestCase {
         prepareChoice("Check")
         // Guidance is the product's targeted same-clue repair and explanation.
         // Do not request another quickHint: that intentionally exits to Review.
-        persistedCheckpoint("C9_guided_repair_question")
+        capture("C9_guided_repair_question")
         selectAction("Check")
         persistedCheckpoint("C9_independent_correction")
         tapButton("Check original read")
         prepareChoice("Check")
-        persistedCheckpoint("C9_original_recheck_question")
+        capture("C9_original_recheck_question")
         selectAction("Check")
         persistedCheckpoint("C9_original_recheck_answer")
         tapButton("Continue")
@@ -312,16 +332,13 @@ final class S12GenuineNativeUITests: XCTestCase {
         // retry of the original miss before Summary. No direct completion calls.
         for (i, answer) in ["Check", "Fold", "Call", "Raise", "Raise", "Check"].enumerated() {
             prepareChoice(answer); selectAction(answer)
-            persistedCheckpoint("C9_actions_answer_" + String(i))
+            print("S12_AUTHORED_GRADED_STEP actions_" + String(i) + " answer=" + answer + "\n" + app.debugDescription)
             feedbackForward()
         }
         XCTAssertTrue(visible("Session complete", timeout: 15) || visible("What finished"), "ACTIONS_SESSION_SUMMARY_NOT_REACHED")
         persistedCheckpoint("C9_actions_summary")
         // Scroll the real Summary to expose assessment/progress metrics and CTAs.
         app.swipeUp(); capture("C9_actions_summary_metrics")
-        backToMap()
-        tapTab("Home"); persistedCheckpoint("C9_home")
-        app.terminate(); app.launch(); XCTAssertTrue(app.waitForExistence(timeout:35))
-        persistedCheckpoint("C9_restart")
+        // V10 restart is already accepted; this bounded lane ends at V09 Summary.
     }
 }
