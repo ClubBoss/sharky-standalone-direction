@@ -80,3 +80,9 @@ inspection against saved history and the source-owned lesson evidence boundary.
 One new hosted dispatch only; fail/partial evidence must be preserved, not retried
 without a proven cause and new authorization. Product remains pinned to f99da096;
 SE3_UNVERIFIED, Human/retention/transfer unproven, S12.V HOLD_VISUAL_TRUST.
+
+Dispatch note: GitHub returns 404 for the dedicated workflow because its path is
+not on the default branch. On this QA branch only, the existing registered
+`native-visual-delta.yml` path carries the exact closure lane for the single
+workflow_dispatch. This changes no main workflow and repeats no visual audit.
+The rejected dedicated-path dispatch created no hosted run.
