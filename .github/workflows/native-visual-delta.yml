@@ -1,115 +1,120 @@
-name: S12 genuine native learning E2E
+name: Native visual delta registration refresh
+
 on:
   workflow_dispatch:
+    inputs:
+      candidate_sha:
+        description: Exact product candidate SHA
+        required: true
+        type: string
+      delta_spec_json:
+        description: Explicit JSON object with an exact rows array
+        required: true
+        type: string
+
 permissions:
   contents: read
-concurrency:
-  group: s12-genuine-native-single-writer
-  cancel-in-progress: false
+
 jobs:
-  genuine-route:
+  preflight:
+    runs-on: ubuntu-latest
+    outputs:
+      candidate_sha: ${{ inputs.candidate_sha }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require and validate the exact delta specification
+        env:
+          DELTA_SPEC_JSON: ${{ inputs.delta_spec_json }}
+        run: |
+          test -n "$DELTA_SPEC_JSON"
+          mkdir -p output
+          printf '%s' "$DELTA_SPEC_JSON" > output/delta_spec.json
+          python3 tools/native_visual_delta_v1.py --spec output/delta_spec.json --emit-shards output/delta_shards
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-delta-spec-${{ inputs.candidate_sha }}
+          path: output
+          retention-days: 14
+
+  build:
+    needs: preflight
     runs-on: macos-latest
-    timeout-minutes: 70
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
-          path: qa-infra
-      - uses: actions/checkout@v4
-        with:
-          path: product
-          ref: f99da096dcfda7d001c24003c052b1f3f314362a
-      - name: Freeze source and inventory host
-        run: |
-          set -euo pipefail
-          mkdir -p output/s12
-          test "$(git -C product rev-parse HEAD)" = f99da096dcfda7d001c24003c052b1f3f314362a
-          test "$(git -C product rev-parse HEAD^{tree})" = ecc202a3ebc08a14f8f4d95a984186056e44d46a
-          git -C product rev-parse HEAD HEAD^{tree} > output/s12/product-identity.txt
-          git -C qa-infra rev-parse HEAD HEAD^{tree} > output/s12/qa-identity.txt
-          sw_vers > output/s12/macos.txt
-          xcodebuild -version > output/s12/xcode.txt
-          xcrun simctl list -j > output/s12/simulator-inventory.json
-          ruby -e 'require "xcodeproj"; puts Xcodeproj::VERSION' > output/s12/xcodeproj-version.txt
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 1
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.0'
           channel: stable
           cache: true
-      - name: Build one ordinary Runner with existing telemetry observer
-        working-directory: product
-        run: |
-          set -euo pipefail
-          flutter --version > ../output/s12/flutter.txt
-          flutter pub get > ../output/s12/pub-get.log 2>&1
-          flutter build ios --simulator --debug --dart-define=HNP_TELEMETRY=true > ../output/s12/build.log 2>&1
-          ditto build/ios/iphonesimulator/Runner.app ../output/s12/Runner.app
-          cp pubspec.lock ../output/s12/pubspec.lock
-          cp ios/Podfile.lock ../output/s12/Podfile.lock
-          echo 'HNP_TELEMETRY=true; SHARKY_VISUAL_AUDIT=false; no injected state or route' > ../output/s12/build-mode.txt
-          cd ../output/s12
-          find Runner.app -type f -print0 | xargs -0 shasum -a 256 > runner-files.sha256
-          shasum -a 256 Runner.app/Frameworks/App.framework/flutter_assets/kernel_blob.bin > kernel.sha256
-          ditto -c -k --sequesterRsrc --keepParent Runner.app Runner.zip
-          shasum -a 256 Runner.zip > runner-archive.sha256
-      - name: Isolate supported phone and record SE3 compatibility
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import json, subprocess
-          from pathlib import Path
-          inventory=json.load(open('output/s12/simulator-inventory.json'))
-          candidates=[(r,d) for r,ds in inventory['devices'].items() if 'iOS' in r for d in ds if d.get('isAvailable') and d['name'] in ('iPhone 17 Pro','iPhone 16 Pro','iPhone 15 Pro')]
-          assert candidates, 'NO_SUPPORTED_STANDARD_IPHONE'
-          runtime,d=candidates[0]
-          sim=subprocess.check_output(['xcrun','simctl','create','S12-Genuine-Only',d['deviceTypeIdentifier'],runtime],text=True).strip()
-          Path('output/s12/sim-id.txt').write_text(sim)
-          Path('output/s12/selected-device.json').write_text(json.dumps({'udid':sim,'model':d['name'],'runtime':runtime,'deviceType':d['deviceTypeIdentifier']},indent=2))
-          se=[t for t in inventory['devicetypes'] if 'iPhone SE' in t['name'] and '3rd generation' in t['name']]
-          Path('output/s12/se3.json').write_text(json.dumps({'types':se,'status':'UNVERIFIED','reason':'Device type inventory alone does not establish bootable runtime or native geometry. This bounded run targets the supported standard device.'},indent=2))
-          PY
-          SIM_ID="$(cat output/s12/sim-id.txt)"
-          xcrun simctl boot "$SIM_ID"
-          xcrun simctl bootstatus "$SIM_ID" -b
-          xcrun simctl install "$SIM_ID" output/s12/Runner.app
-          open -a Simulator --args -CurrentDeviceUDID "$SIM_ID"
-          xcrun simctl launch "$SIM_ID" com.example.pokerAnalyzer > output/s12/prewarm-launch.txt
-          python3 - "$SIM_ID" <<'PY'
-          import subprocess,sys
-          subprocess.run(['xcrun','simctl','io',sys.argv[1],'screenshot','output/s12/prewarm.png'],check=True,timeout=60)
-          PY
-          xcrun simctl terminate "$SIM_ID" com.example.pokerAnalyzer
-          ruby qa-infra/tools/qa_s12_create_xcodeproj.rb
-      - name: One genuine UI route with read-only receipt collector
-        run: |
-          set -euo pipefail
-          SIM_ID="$(cat output/s12/sim-id.txt)"
-          python3 -u qa-infra/tools/qa_s12_watch_checkpoints.py --log output/s12/native-tests.log --sim "$SIM_ID" --output output/s12/checkpoints > output/s12/collector.log 2>&1 &
-          COLLECTOR_PID=$!
-          trap 'kill "$COLLECTOR_PID" 2>/dev/null || true' EXIT
-          NSUnbufferedIO=YES xcodebuild test -project qa-infra/qa/s12_hosted/S12GenuineNative.xcodeproj -scheme S12GenuineNativeUITests -destination "platform=iOS Simulator,id=$SIM_ID" -parallel-testing-enabled NO -only-testing:S12GenuineNativeUITests/S12GenuineNativeUITests/test04AuthenticRepair -resultBundlePath "$PWD/output/s12/native-tests.xcresult" CODE_SIGNING_ALLOWED=NO > output/s12/native-tests.log 2>&1
-      - name: Judge screenshots and persisted learner truth independently
-        if: always()
-        run: |
-          set +e
-          python3 qa-infra/tools/qa_s12_verify_evidence.py --screens output/s12/native-tests.log output/s12/checkpoints
-          SCREENS=$?
-          python3 qa-infra/tools/qa_s12_verify_integrated.py output/s12/checkpoints repair
-          TRUTH=$?
-          test "$SCREENS" = 0 && test "$TRUTH" = 0
-      - name: Seal evidence even on HOLD or automation failure
-        if: always()
-        run: |
-          if test -d output/s12/native-tests.xcresult; then
-            xcrun xcresulttool export attachments --path output/s12/native-tests.xcresult --output-path output/s12/attachments || true
-          fi
-          cd output/s12
-          find . -type f ! -name evidence.sha256 -print0 | xargs -0 shasum -a 256 > evidence.sha256
+      - run: flutter pub get
+      - run: python3 tools/sharky_native_visual_audit_v1.py --build-runner --app-out output/Runner.app
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
-          name: s12-genuine-native-${{ github.run_id }}
-          path: |
-            output/s12/
-            !output/s12/Runner.app/**
-          if-no-files-found: error
-          retention-days: 30
+          name: native-delta-runner-${{ inputs.candidate_sha }}
+          path: |-
+            output/Runner.app
+            output/build.log
+          retention-days: 1
+
+  capture:
+    needs: [preflight, build]
+    runs-on: macos-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [canonical-none, canonical-text_scale_1_4, compact-none, large-none]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 1
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-delta-runner-${{ inputs.candidate_sha }}
+          path: output
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-delta-spec-${{ inputs.candidate_sha }}
+          path: output
+      - run: >-
+          python3 tools/native_visual_delta_v1.py
+          --spec output/delta_spec.json --capture-shard output/delta_shards/${{ matrix.shard }}.json
+          --app output/Runner.app --out output/delta_shard --candidate-sha ${{ inputs.candidate_sha }}
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-delta-shard-${{ matrix.shard }}-${{ inputs.candidate_sha }}
+          path: output/delta_shard
+          if-no-files-found: warn
+          retention-days: 14
+
+  aggregate:
+    if: always()
+    needs: [preflight, build, capture]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-delta-spec-${{ inputs.candidate_sha }}
+          path: output
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: native-delta-shard-*-${{ inputs.candidate_sha }}
+          path: output/shards
+          merge-multiple: false
+      - run: >-
+          python3 tools/native_visual_delta_v1.py
+          --spec output/delta_spec.json --aggregate-shards output/shards
+          --out output/native_visual_delta --candidate-sha ${{ inputs.candidate_sha }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sharky-native-visual-delta-${{ inputs.candidate_sha }}
+          path: output/native_visual_delta
+          if-no-files-found: warn
+          retention-days: 14

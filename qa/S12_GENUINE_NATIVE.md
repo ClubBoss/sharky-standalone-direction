@@ -3,8 +3,11 @@
 Single QA writer; base product f99da096dcfda7d001c24003c052b1f3f314362a,
 tree ecc202a3ebc08a14f8f4d95a984186056e44d46a. No product edits.
 
-The branch version of the existing `native-visual-delta.yml` dispatch carrier
-runs ONE fresh product build and ONE XCTest on GitHub `macos-latest`.
+`qa-s12-genuine-native.yml` runs ONE fresh product build and ONE XCTest on
+GitHub `macos-latest`. The first run used the registered `native-visual-delta.yml`
+dispatch carrier on frozen QA commit 9f67a16f68fc94d9eba21162d30da14d11bdb689.
+The final PR restores the original visual workflow unchanged and relocates the
+identical E2E workflow body to its dedicated filename.
 It does not repeat the accepted visual delta or its injected-state captures.
 `HNP_TELEMETRY=true` enables the existing app-owned observer;
 `SHARKY_VISUAL_AUDIT` remains false. No new dependency or test engine.
@@ -27,8 +30,13 @@ retention. Placement skips never count as earned lesson completion.
 Run once after source and ownership verification:
 
 ```sh
-gh workflow run native-visual-delta.yml --ref qa/s12v-genuine-native-e2e-20261019
+gh workflow run qa-s12-genuine-native.yml --ref qa/s12v-genuine-native-e2e-20261019
 ```
+
+A newly named workflow must first be registered by GitHub on the default branch
+before `gh workflow run` can dispatch it. No merge is authorized in this mission.
+Before registration, reproduce the commands in the workflow on a compatible Mac,
+or use the preserved original run execution. No second hosted run is launched here.
 
 Reproduce receipt checks after downloading the run artifact to `output/s12`:
 
