@@ -937,6 +937,19 @@ void main() {
       find.byKey(const Key('act0_shell_review_due_spaced_item')),
       findsOneWidget,
     );
+    expect(
+      find.byKey(const Key('act0_shell_review_bench_footer')),
+      findsNothing,
+      reason:
+          'A genuinely due item must not share the screen with a '
+          '"nothing is due" claim.',
+    );
+    expect(
+      find.text(
+        'Nothing else is due. Misses land here the moment they happen.',
+      ),
+      findsNothing,
+    );
     final dueButton = tester.widget<FilledButton>(
       find.byKey(const Key('act0_shell_review_start_due_spaced_item')),
     );

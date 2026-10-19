@@ -330,12 +330,14 @@ class Act0ReviewShellV1 extends StatelessWidget {
                                 child: centeredBench,
                               ),
                       ),
-                      const SizedBox(height: Act0ShellTokensV1.gapMd),
-                      Act0ShellTokensV1.centeredContent(
-                        context,
-                        tabletMaxWidth: 860,
-                        child: const _ReviewBenchFooterV1(),
-                      ),
+                      if (dueReviewItems.isEmpty) ...[
+                        const SizedBox(height: Act0ShellTokensV1.gapMd),
+                        Act0ShellTokensV1.centeredContent(
+                          context,
+                          tabletMaxWidth: 860,
+                          child: const _ReviewBenchFooterV1(),
+                        ),
+                      ],
                     ],
                   ),
                 )
@@ -344,12 +346,14 @@ class Act0ReviewShellV1 extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     centeredBench,
-                    const SizedBox(height: Act0ShellTokensV1.gapMd),
-                    Act0ShellTokensV1.centeredContent(
-                      context,
-                      tabletMaxWidth: 860,
-                      child: const _ReviewBenchFooterV1(),
-                    ),
+                    if (dueReviewItems.isEmpty) ...[
+                      const SizedBox(height: Act0ShellTokensV1.gapMd),
+                      Act0ShellTokensV1.centeredContent(
+                        context,
+                        tabletMaxWidth: 860,
+                        child: const _ReviewBenchFooterV1(),
+                      ),
+                    ],
                   ],
                 ),
         );
