@@ -86,7 +86,7 @@ final class S12GenuineNativeUITests: XCTestCase {
         if chars.count > 2, chars[1] == "\n", chars[0].isUppercase {
             let text = String(chars[2...])
             // Compact (375x667) quick-check buttons carry the text twice: "X\nX".
-            let exact = app.buttons.matching(NSPredicate(format:"label == %@ OR label BEGINSWITH %@", text, text + "\n")).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+            let exact = app.buttons.matching(NSPredicate(format:"label == %@ OR label BEGINSWITH %@", text, text + "\n")).allElementsBoundByIndex.filter { $0.exists && $0.isHittable && $0.frame.midY < app.frame.height * 0.85 }
             if !exact.isEmpty { return (exact, "button_exact") }
         }
         return ([], "none")
@@ -172,7 +172,7 @@ final class S12GenuineNativeUITests: XCTestCase {
         // Poll for a unique hittable option; ambiguity and absence still fail.
         let deadline = Date().addingTimeInterval(20)
         repeat {
-            for letter in ["A", "B", "C"] {
+            for letter in ["A", "B", "C", "D"] {
                 let prefix = letter + "\n" + action
                 if let e = findOption(prefix).found.first, e.isEnabled { tapSelectableOption(prefix); return }
             }
@@ -180,6 +180,58 @@ final class S12GenuineNativeUITests: XCTestCase {
         } while Date() < deadline
         capture("missing_action_" + action)
         XCTFail("NO_SOURCE_OWNED_SELECTABLE_ACTION_" + action)
+    }
+
+    // Bounded navigation through authored teaching only. Answers below are
+    // frozen from product source, never inferred from feedback or preferences.
+    private func prepareChoice(_ answer: String) {
+        for page in 0..<24 {
+            let overlay = app.otherElements.matching(NSPredicate(format: "label BEGINSWITH %@", "Theory navigation, page")).firstMatch
+            if !overlay.exists {
+                for letter in ["A", "B", "C", "D"] {
+                    if let e = findOption(letter + "\n" + answer).found.first, e.isEnabled { return }
+                }
+            }
+            let deadline = Date().addingTimeInterval(12)
+            var buttons: [XCUIElement] = []
+            repeat {
+                buttons = ["Next", "Continue", "Got it", "Next hand"].compactMap { name in
+                    let e = app.buttons.matching(identifier: name).firstMatch
+                    return e.exists && e.isEnabled && e.isHittable ? e : nil
+                }
+                if buttons.count == 1 { break }
+                RunLoop.current.run(until: Date().addingTimeInterval(0.25))
+            } while Date() < deadline
+            guard buttons.count == 1 else {
+                capture("C9_navigation_blocked_" + String(page))
+                XCTFail("NO_UNIQUE_TEACHING_CTA_FOR_" + answer); return
+            }
+            print("S12_AUTHORED_TEACHING_TAP " + buttons[0].label)
+            buttons[0].tap()
+        }
+        XCTFail("AUTHORED_TEACHING_LIMIT_" + answer)
+    }
+    private func feedbackForward() {
+        let names = ["Next hand", "Continue", "Check original read"]
+        let deadline = Date().addingTimeInterval(12)
+        repeat {
+            let live = names.filter { name in
+                let b = app.buttons.matching(identifier: name).firstMatch
+                return b.exists && b.isEnabled && b.isHittable
+            }
+            if live.count == 1 { tapButton(live[0]); return }
+            RunLoop.current.run(until: Date().addingTimeInterval(0.25))
+        } while Date() < deadline
+        capture("C9_feedback_forward_missing")
+        XCTFail("NO_UNIQUE_EXPECTED_FEEDBACK_FORWARD")
+    }
+    private func backToMap() {
+        for _ in 0..<9 {
+            let b = app.buttons.matching(identifier: "Back to map").firstMatch
+            if b.exists && b.isEnabled && b.isHittable { tapButton("Back to map"); return }
+            app.swipeUp()
+        }
+        capture("C9_summary_map_cta_missing"); XCTFail("SUMMARY_BACK_TO_MAP_MISSING")
     }
 
     func test04AuthenticRepair() throws {
@@ -215,79 +267,61 @@ final class S12GenuineNativeUITests: XCTestCase {
         waitForSelectable("A\nFold")
         print("S11_MOTION_PROBE first_entry tap_s=" + String(format: "%.2f", probeTapped.timeIntervalSince(probeStart)) + " tap_to_options_s=" + String(format: "%.2f", Date().timeIntervalSince(probeTapped)) + " reduce_motion=" + String(osReduceMotion))
 
-        capture("C2_actual_action_source_entry")
-        XCTAssertTrue(visible("No bet", timeout: 12) || visible("free", timeout: 12))
+        // Fresh simulator: all prerequisites below are earned by actual UI.
+        // Placement skips retain their original source-owned provenance.
+        tapTab("Home"); tapTab("Learn")
+        persistedCheckpoint("C9_before_prerequisites")
+        let firstStart = app.buttons.matching(identifier: "Start first table").firstMatch
+        if firstStart.waitForExistence(timeout: 8) { tapButton("Start first table") }
+        else { tapButton("Start") }
+        // Meet the table is exposition; its Continue opens the first graded drill.
+        let guideAnswers = ["BTN", "2 private cards, 3 board cards, 6 BB in the pot",
+                            "2 private cards, 3 board cards, 4 BB in the pot",
+                            "You are BTN, blinds are posted, and no board is out yet", "Review"]
+        for (i, answer) in guideAnswers.enumerated() {
+            prepareChoice(answer); selectAction(answer)
+            persistedCheckpoint("C9_guide_answer_" + String(i))
+            feedbackForward()
+        }
+        XCTAssertTrue(visible("Session complete", timeout: 15) || visible("What finished"), "GUIDE_SUMMARY_NOT_REACHED")
+        persistedCheckpoint("C9_guide_summary")
+        backToMap()
+        XCTAssertTrue(visible("Actions", timeout: 12) || visible("Fold, check, call, raise"), "ACTIONS_NOT_UNLOCKED")
+        // Mission Start selects the first incomplete Actions task: Legal actions.
+        tapButton("Start")
+        prepareChoice("Fold")
+        persistedCheckpoint("C9_source_question")
         selectAction("Fold")
-        XCTAssertFalse(visible("CORRECT READ"))
-        XCTAssertTrue(visible("MISSED CLUE") || visible("better play"), "WRONG_FEEDBACK_MISSING")
-        persistedCheckpoint("C2_wrong")
+        XCTAssertTrue(visible("MISSED CLUE", timeout: 12) || visible("better play"))
+        persistedCheckpoint("C9_source_wrong")
         tapButton("Try same clue")
-        waitForSelectable("B\nCheck")
-        tapButton("Need a hint?")
-        XCTAssertTrue(visible("Quick hint", timeout: 12))
-        capture("C2_assistance_teaching")
-        // Compact tree (run on QA 419c348): the Quick hint panel replaces the option
-        // list; the learner returns through the real `Back to choices` button.
-        let optionsBehindHint = ["A", "B", "C"].contains { !findOption($0 + "\nCheck").found.isEmpty }
-        if !optionsBehindHint { tapButton("Back to choices") }
+        prepareChoice("Check")
+        // Guidance is the product's targeted same-clue repair and explanation.
+        // Do not request another quickHint: that intentionally exits to Review.
+        persistedCheckpoint("C9_guided_repair_question")
         selectAction("Check")
-        persistedCheckpoint("C2_assisted")
-        // Source-owned route (act0_shell_preview_screen_v1 onContinue): an assisted-correct
-        // repair answer is NOT `repaired`; the repair debt stays open and the learner is
-        // sent to Review. `Practice this spot` there starts the Practice Queue repair
-        // (evidenceRunKind repair, startedBy practice_repair_queue); only an unassisted
-        // answer on that route is recorded as the independent outcome and clears the intent.
-        XCTAssertTrue(visible("CORRECT WITH HELP", timeout: 12), "ASSISTED_ANSWER_NOT_LABELLED_WITH_HELP")
-        let assistedForward = ["Continue to Review", "Try same clue"].filter {
-            let b = app.buttons.matching(identifier:$0).firstMatch
-            return b.exists && b.isEnabled && b.isHittable
-        }
-        XCTAssertEqual(assistedForward.count, 1, "ASSISTED_FORWARD_CTA_NOT_UNIQUE")
-        guard let assistedCta = assistedForward.first else { return }
-        tapButton(assistedCta)
-        XCTAssertTrue(visible("miss to fix", timeout: 12), "ASSISTED_ANSWER_DID_NOT_LEAVE_REPAIR_DEBT_OPEN")
-        capture("C2_review_repair_card_before_recheck")
-        persistedCheckpoint("C2_review_debt_open")
-        let probeRecheckStart = Date()
-        tapButton("Practice this spot")
-        XCTAssertTrue(visible("What action keeps playing for free?", timeout: 15), "INDEPENDENT_RECHECK_NOT_ENTERED")
-        print("S11_MOTION_PROBE recheck_entry tap_to_question_s=" + String(format: "%.2f", Date().timeIntervalSince(probeRecheckStart)) + " reduce_motion=" + String(osReduceMotion))
-        // The queue repair opens behind a teaching overlay with a dwell-locked `Continue`
-        // (run on QA 68dbc67); advance it as a learner would, then the options are live.
-        waitForSelectable("B\nCheck")
-        XCTAssertFalse(visible("CORRECT READ"), "RECHECK_UNEARNED_FEEDBACK")
-        XCTAssertFalse(visible("Quick hint"), "RECHECK_STARTED_WITH_HINT_OPEN")
-        persistedCheckpoint("C2_independent_recheck_question")
+        persistedCheckpoint("C9_independent_correction")
+        tapButton("Check original read")
+        prepareChoice("Check")
+        persistedCheckpoint("C9_original_recheck_question")
         selectAction("Check")
-        capture("C2_independent_recheck_feedback")
-        persistedCheckpoint("C2_independent_recheck")
-        // Forward CTA is whichever single product CTA is on screen; record it.
-        var forward: XCUIElement? = nil
-        for name in ["Check original read", "Continue to Review", "Continue", "Next hand"] {
-            let b = app.buttons.matching(identifier: name).firstMatch
-            if b.exists && b.isHittable { forward = b; print("S11_NAV_FORWARD_CTA " + name); break }
+        persistedCheckpoint("C9_original_recheck_answer")
+        tapButton("Continue")
+        persistedCheckpoint("C9_original_recheck_completed")
+        // Actual remaining authored tasks, followed by the source-owned wrap-up
+        // retry of the original miss before Summary. No direct completion calls.
+        for (i, answer) in ["Check", "Fold", "Call", "Raise", "Raise", "Check"].enumerated() {
+            prepareChoice(answer); selectAction(answer)
+            persistedCheckpoint("C9_actions_answer_" + String(i))
+            feedbackForward()
         }
-        guard let forwardCta = forward else {
-            capture("C2_no_forward_cta_after_recheck"); XCTFail("C2_FORWARD_CTA_MISSING_AFTER_RECHECK"); return
-        }
-        forwardCta.tap()
-        RunLoop.current.run(until: Date().addingTimeInterval(2))
-        persistedCheckpoint("C2_after_recheck_forward")
-        if visible("Session complete", timeout: 4) || visible("What finished", timeout: 1) {
-            persistedCheckpoint("C2_summary")
-            for _ in 0..<6 {
-                if app.buttons.matching(identifier:"Back to map").firstMatch.exists && app.buttons.matching(identifier:"Back to map").firstMatch.isHittable { break }
-                app.swipeUp()
-            }
-            tapButton("Back to map")
-        }
-        tapTab("Review"); persistedCheckpoint("C2_review")
-        tapTab("You"); persistedCheckpoint("C2_you")
-        tapTab("Home"); persistedCheckpoint("C2_home")
+        XCTAssertTrue(visible("Session complete", timeout: 15) || visible("What finished"), "ACTIONS_SESSION_SUMMARY_NOT_REACHED")
+        persistedCheckpoint("C9_actions_summary")
+        // Scroll the real Summary to expose assessment/progress metrics and CTAs.
+        app.swipeUp(); capture("C9_actions_summary_metrics")
+        backToMap()
+        tapTab("Home"); persistedCheckpoint("C9_home")
         app.terminate(); app.launch(); XCTAssertTrue(app.waitForExistence(timeout:35))
-        persistedCheckpoint("C2_restart")
-        tapTab("You"); persistedCheckpoint("C2_restart_you")
-        tapTab("Home"); persistedCheckpoint("C2_restart_home")
+        persistedCheckpoint("C9_restart")
     }
-
 }

@@ -55,3 +55,28 @@ GitHub artifact retention is 30 days, not permanent archival.
 SE3 is always UNVERIFIED unless a separate genuine SE3 geometry/native receipt
 exists; an available device type or nominal compact profile is insufficient.
 No full S12.V, physical-table trust, Human/P02 or retention PASS is authorized.
+
+## S12.V-09 closure continuation (2026-10-19)
+
+The closure lane now starts on a fresh supported simulator and repeats only the
+proven Placement/Welcome entry. It returns through Home → Learn, earns all six
+First Table Guide tasks via authored teaching and five real graded answers, then
+opens the first incomplete Actions task (Legal actions). No preferences, earned
+completion, unlock, grading, clock or telemetry are injected.
+
+Frozen source route: legal-context Fold → Try same clue → mapped Check without
+new help → **Check original read** → original legal-context Check → Continue →
+remaining Check/Fold/Call/Raise/recap tasks → source-owned wrap-up Check → Actions
+Session Summary → Home → ordinary terminate/relaunch. Targeted repair guidance is
+not claimed as a new quickHint-assisted attempt. The previously accepted assisted
+repair evidence remains attached to run 39182086567.
+
+`qa_s12_verify_integrated.py CHECKPOINTS closure` requires exact original-source
+run/review/start provenance, per-record event cardinality, single linked original
+recheck start/result, real prerequisites, Actions task completion, truthful skipped
+Actions theory (not an earned lesson), source-owned session completion, authored
+XP and unchanged saved state across restart. Native Summary metrics still require
+inspection against saved history and the source-owned lesson evidence boundary.
+One new hosted dispatch only; fail/partial evidence must be preserved, not retried
+without a proven cause and new authorization. Product remains pinned to f99da096;
+SE3_UNVERIFIED, Human/retention/transfer unproven, S12.V HOLD_VISUAL_TRUST.

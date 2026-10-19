@@ -93,7 +93,7 @@ jobs:
           set +e
           python3 qa-infra/tools/qa_s12_verify_evidence.py --screens output/s12/native-tests.log output/s12/checkpoints
           SCREENS=$?
-          python3 qa-infra/tools/qa_s12_verify_integrated.py output/s12/checkpoints repair
+          python3 qa-infra/tools/qa_s12_verify_integrated.py output/s12/checkpoints closure
           TRUTH=$?
           test "$SCREENS" = 0 && test "$TRUTH" = 0
       - name: Seal evidence even on HOLD or automation failure

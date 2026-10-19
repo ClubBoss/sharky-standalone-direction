@@ -57,7 +57,45 @@ def trace(tag,s,records=None):
  return len(rows)
 observed={}
 try:
- if mode=='repair':
+ if mode=='closure':
+  tags=['C9_before_prerequisites']+[f'C9_guide_answer_{i}' for i in range(5)]+['C9_guide_summary','C9_source_question','C9_source_wrong','C9_guided_repair_question','C9_independent_correction','C9_original_recheck_question','C9_original_recheck_answer','C9_original_recheck_completed']+[f'C9_actions_answer_{i}' for i in range(6)]+['C9_actions_summary','C9_home','C9_restart']
+  for tag in tags: observed[tag]=state(tag)
+  observed['delta_cardinality_records_checked']=delta_cardinality(tags)
+  before=observed['C9_before_prerequisites'];guide=observed['C9_guide_summary']
+  assert before['completedTaskIds']==[] and before['earnedXp']==0
+  guide_tasks={'what_poker_is_theory','what_poker_is_find_hero','what_poker_is_table_read_transfer','what_poker_is_table_read_recheck','first_table_guide_one_clear_choice','first_table_guide_route_roles'}
+  assert guide_tasks<=set(guide['completedTaskIds']) and 'what_poker_is' in guide['completedLessonIds']
+  assert guide['skippedTaskIds']==before['skippedTaskIds'], 'prerequisites must be earned, not injected skips'
+  w=observed['C9_source_wrong'];c=observed['C9_independent_correction'];r=observed['C9_original_recheck_answer'];done=observed['C9_original_recheck_completed'];summary=observed['C9_actions_summary']
+  wr=w['learningEvidenceHistory'][-1];cr=c['learningEvidenceHistory'][-1];rr=r['learningEvidenceHistory'][-1]
+  assert wr['taskId']=='actions_legal_context' and wr['choiceId']=='fold' and wr['expectedChoiceId']=='check' and not wr['isCorrect'] and wr['errorType']=='misread_action_legality' and wr['assistanceKind']=='none'
+  assert wr['runKind']=='lesson' and wr['startedBy']=='learn_route'
+  assert cr['taskId']=='actions_check_drill' and cr['choiceId']=='check' and cr['isCorrect'] and cr['assistanceKind']=='none' and cr['reviewKind']=='alternateSameSignal' and cr['runKind']=='repair'
+  assert rr['taskId']=='actions_legal_context' and rr['choiceId']=='check' and rr['isCorrect'] and rr['assistanceKind']=='none' and rr['errorType']=='none'
+  assert rr['runKind']=='recheck' and rr['reviewKind']=='originalSourceRecheck' and rr['startedBy']=='same_signal_feedback_cta'
+  assert len({wr['recordId'],cr['recordId'],rr['recordId']})==3 and len({wr['runId'],cr['runId'],rr['runId']})==3
+  assert not any(i['sourceTaskId']=='actions_legal_context' for i in done['openRepairIntents'])
+  assert not any(i.get('sourceTaskId')=='actions_legal_context' and i.get('resolutionState')=='unresolved' for i in done['multiRepairQueue']['entries'])
+  rows=journal('C9_original_recheck_completed')
+  for name in ['recheck_started','recheck_result']:
+   matches=[e['fields'] for e in rows if e['name']==name and e['fields'].get('source_task_id')=='actions_legal_context']
+   assert len(matches)==1, f'{name} must occur exactly once for original source'
+   assert matches[0]['recheck_task_id']=='actions_legal_context'
+   if name=='recheck_result': assert matches[0]['result']=='correct' and matches[0]['proof_status']=='unassisted'
+  actions={'actions_theory','actions_legal_context','actions_check_drill','actions_fold_drill','actions_call_drill','actions_raise_drill','actions_review'}
+  assert (actions-{'actions_theory'})<=set(summary['completedTaskIds'])
+  assert 'actions_theory' in summary['skippedTaskIds'] and 'actions_theory' not in summary['completedTaskIds']
+  assert 'fold_check_call_raise' not in summary['completedLessonIds'], 'skipped theory is not earned lesson completion'
+  assert 'S11_GATE_STATE C9_actions_summary' in log and ('Session complete' in log.split('S11_NATIVE_TREE_BEGIN C9_actions_summary\n')[1].split('S11_NATIVE_TREE_END')[0] or 'What finished' in log.split('S11_NATIVE_TREE_BEGIN C9_actions_summary\n')[1].split('S11_NATIVE_TREE_END')[0])
+  assert 'S11_GATE_STATE C9_actions_summary_metrics' in log
+  assert any(e['name']=='session_complete' and e['fields'].get('lesson_id')=='fold_check_call_raise' and e['fields'].get('source_surface')=='act0_completion' for e in journal('C9_actions_summary'))
+  # Earned task XP comes from authored rewards, never from skips or number of retries.
+  reward={t:5 for t in guide_tasks|actions}
+  assert set(summary['completedTaskIds'])<=set(reward)
+  assert summary['earnedXp']==sum(reward[t] for t in summary['completedTaskIds'])
+  assert observed['C9_restart']==observed['C9_home']==summary, 'ordinary navigation/restart must preserve saved truth'
+  observed['closure_receipts']={'wrong':wr,'correction':cr,'original_recheck':rr,'earnedXp':summary['earnedXp'],'completedTaskIds':summary['completedTaskIds'],'completedLessonIds':summary['completedLessonIds'],'remainingDebt':len(summary['multiRepairQueue']['entries'])}
+ elif mode=='repair':
   # C2 on the observed native route: wrong -> mapped repair attempt WITH quickHint
   # (not independent; intent+queue stay open) -> Review 'Practice this spot' -> a
   # second repair run answered unassisted, which clears the matched intent and queue.
