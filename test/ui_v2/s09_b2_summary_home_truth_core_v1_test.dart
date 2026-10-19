@@ -288,6 +288,18 @@ Future<void> _restartPersistedRootV1(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
+Future<void> _openProfileTabV1(WidgetTester tester) async {
+  final profileTab = find.descendant(
+    of: find.byKey(const Key('act0_shell_bottom_nav')),
+    matching: find.text('You'),
+  );
+  expect(profileTab, findsOneWidget);
+  await tester.ensureVisible(profileTab);
+  await tester.tap(profileTab);
+  await tester.pumpAndSettle();
+  expect(find.byKey(const Key('act0_shell_profile_screen')), findsOneWidget);
+}
+
 void main() {
   testWidgets('Summary does not mark an assisted, mistaken run clean', (
     tester,
@@ -403,6 +415,15 @@ void main() {
             ),
         isTrue,
       );
+      await _openProfileTabV1(tester);
+      expect(
+        find.text(
+          '${(restored['completedTaskIds'] as List).length} tasks complete',
+        ),
+        findsOneWidget,
+        reason:
+            'Repair-only correction must not inflate visible completed-task count on Profile/You after restart',
+      );
     },
   );
 
@@ -431,6 +452,21 @@ void main() {
     final restored = _persistedLearningSnapshotV1(prefs);
     expect((restored['completedTaskIds'] as List), contains(taskId));
     expect(restored['earnedXp'], (before['earnedXp'] as int) + task.rewardXp);
+    await _openProfileTabV1(tester);
+    expect(
+      find.text(
+        '${(restored['completedTaskIds'] as List).length} tasks complete',
+      ),
+      findsOneWidget,
+      reason:
+          'Profile/You must show the actual persisted completed-task count after restart',
+    );
+    final afterProfileView = _persistedLearningSnapshotV1(prefs);
+    expect(
+      afterProfileView['earnedXp'],
+      restored['earnedXp'],
+      reason: 'Viewing Profile/You must not itself mint new XP',
+    );
   });
 
   for (final withWorld3 in [true, false]) {
