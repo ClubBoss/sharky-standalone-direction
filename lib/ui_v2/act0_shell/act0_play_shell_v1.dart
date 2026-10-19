@@ -885,6 +885,8 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
             'play_daily_hero_title',
             fallback: 'Start a short rep',
           )
+        : !enabled && group.groupId == 'daily'
+        ? group.title
         : title;
     final heroSubtitle = enabled && group.groupId == 'daily' && !dailyComplete
         ? _playCopyV1(
@@ -892,6 +894,8 @@ class _DailyTrainingHeroV1 extends StatelessWidget {
             'play_daily_hero_support',
             fallback: 'One short rep keeps this table clue fresh.',
           )
+        : !enabled && group.groupId == 'daily'
+        ? group.subtitle
         : subtitle;
     final metaItems = _dailyHeroMetaItemsV1(group);
     return KeyedSubtree(
