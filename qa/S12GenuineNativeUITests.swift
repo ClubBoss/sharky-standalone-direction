@@ -326,7 +326,7 @@ final class S12GenuineNativeUITests: XCTestCase {
         capture("C9_original_recheck_question")
         selectAction("Check")
         persistedCheckpoint("C9_original_recheck_answer")
-        tapButton("Continue")
+        feedbackForward()
         persistedCheckpoint("C9_original_recheck_completed")
         // Actual remaining authored tasks, followed by the source-owned wrap-up
         // retry of the original miss before Summary. No direct completion calls.
