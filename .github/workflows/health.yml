@@ -36,7 +36,7 @@ jobs:
         run: |
           set -euo pipefail
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            git fetch --no-tags --prune --depth=1 origin "${{ github.base_ref }}"
+            git fetch --no-tags --prune origin "${{ github.base_ref }}"
             BASE_SHA="origin/${{ github.base_ref }}"
             HEAD_SHA="${{ github.sha }}"
             git diff --name-only "$BASE_SHA...$HEAD_SHA" > changed.txt
@@ -108,7 +108,7 @@ jobs:
             exit 0
           fi
           BASE=origin/main
-          git fetch --no-tags --prune --depth=1 origin main
+          git fetch --no-tags --prune origin main
           CHANGED=$(git diff --name-only "$BASE...HEAD")
           if echo "$CHANGED" | grep -Eq '^(content/|assets/|theory/|packs/|training_packs/|tooling/allowlists/|tooling/pre_release_check\.dart|tools/health_dashboard\.dart)'; then
             if [ -f tools/health_dashboard.dart ]; then
