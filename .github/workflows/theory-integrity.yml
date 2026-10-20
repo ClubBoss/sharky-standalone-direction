@@ -32,7 +32,7 @@ jobs:
         run: |
           set -euo pipefail
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            git fetch --no-tags --prune --depth=1 origin "${{ github.base_ref }}"
+            git fetch --no-tags --prune origin "${{ github.base_ref }}"
             BASE_SHA="origin/${{ github.base_ref }}"
             HEAD_SHA="${{ github.sha }}"
           else

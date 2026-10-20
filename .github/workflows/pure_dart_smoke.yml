@@ -45,7 +45,7 @@ jobs:
         run: |
           set -euo pipefail
           BASE=origin/main
-          git fetch --no-tags --prune --depth=1 origin main
+          git fetch --no-tags --prune origin main
           CHANGED=$(git diff --name-only "$BASE...HEAD")
           if echo "$CHANGED" | grep -Eq '^(content/|assets/|theory/|packs/|training_packs/|tooling/allowlists/|tooling/pre_release_check\.dart|tools/health_dashboard\.dart)'; then
             if [ -f tools/allowlists_sync.py ]; then
@@ -78,7 +78,7 @@ jobs:
 
       - name: Analyze changed Dart files
         run: |
-          git fetch --depth=1 origin main || true
+          git fetch origin main || true
           CHANGED=$(git diff --name-only origin/main... | grep -E '\.dart$' || true)
           if [ -n "$CHANGED" ]; then
             dart analyze $CHANGED
