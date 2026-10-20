@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hybrid_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_room_plate_v1.dart';
 
+// Append-only one-seat visual states. This enum is art presentation only.
+/// A folded player is still occupied; an unoccupied chair is never Relaxed.
+enum Act0SceneT2SbVisualStateV1 { engaged, relaxed, empty }
+
 /// Owner-admitted S12.V T2 Stage A one-seat visual falsifier only.
 ///
 /// This is a build-time opt-in, never a production-path or release default.
@@ -22,6 +26,18 @@ class Act0SceneT2CanaryV1 {
       'assets/act0_t2_canary/t2_sb_engaged_1093x1844.png';
   static const relaxedPath =
       'assets/act0_t2_canary/t2_sb_relaxed_1093x1844.png';
+  static const emptyPath = 'assets/act0_t2_canary/t2_sb_empty_1093x1844.png';
+
+  // Do not map unoccupied to Relaxed: the source has genuinely empty seats.
+  static Act0SceneT2SbVisualStateV1 resolveSbVisualState({
+    required bool isOccupied,
+    required bool isInHand,
+    required bool isFolded,
+  }) {
+    if (!isOccupied) return Act0SceneT2SbVisualStateV1.empty;
+    if (isFolded || !isInHand) return Act0SceneT2SbVisualStateV1.relaxed;
+    return Act0SceneT2SbVisualStateV1.engaged;
+  }
 
   static final engagedStore = Act0SceneSinglePlateImageStoreV1(
     engagedPath,
@@ -30,6 +46,10 @@ class Act0SceneT2CanaryV1 {
   static final relaxedStore = Act0SceneSinglePlateImageStoreV1(
     relaxedPath,
     library: 'Sharky T2 isolated Folded candidate',
+  );
+  static final emptyStore = Act0SceneSinglePlateImageStoreV1(
+    emptyPath,
+    library: 'Sharky T2 isolated Empty chair candidate',
   );
 
   static const sourceSize = Size(1093, 1844);
@@ -75,17 +95,19 @@ class Act0SceneT2CanaryPlaneV1 extends StatelessWidget {
   const Act0SceneT2CanaryPlaneV1({
     super.key,
     required this.horizon,
-    required this.sbFolded,
+    required this.sbVisualState,
   });
 
   final double horizon;
-  final bool sbFolded;
+  final Act0SceneT2SbVisualStateV1 sbVisualState;
 
   @override
   Widget build(BuildContext context) {
-    final selected = sbFolded
-        ? Act0SceneT2CanaryV1.relaxedStore
-        : Act0SceneT2CanaryV1.engagedStore;
+    final selected = switch (sbVisualState) {
+      Act0SceneT2SbVisualStateV1.engaged => Act0SceneT2CanaryV1.engagedStore,
+      Act0SceneT2SbVisualStateV1.relaxed => Act0SceneT2CanaryV1.relaxedStore,
+      Act0SceneT2SbVisualStateV1.empty => Act0SceneT2CanaryV1.emptyStore,
+    };
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -93,17 +115,11 @@ class Act0SceneT2CanaryPlaneV1 extends StatelessWidget {
         FutureBuilder<ui.Image?>(
           future: selected.warmUp(),
           builder: (context, state) {
-            final image =
-                state.data ??
-                selected.readyImage ??
-                Act0SceneT2CanaryV1.engagedStore.readyImage;
+            // Never paint a stale Engaged person while Empty/Relaxed loads.
+            final image = state.data ?? selected.readyImage;
             if (image == null) return const SizedBox.shrink();
             return CustomPaint(
-              key: Key(
-                sbFolded
-                    ? 'act0_scene_t2_sb_relaxed_ready'
-                    : 'act0_scene_t2_sb_engaged_ready',
-              ),
+              key: Key('act0_scene_t2_sb_${sbVisualState.name}_ready'),
               painter: _T2SceneImagePainterV1(image),
             );
           },

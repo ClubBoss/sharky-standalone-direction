@@ -49,23 +49,55 @@ void main() {
       Act0SceneT2CanaryV1.engagedPath,
       isNot(Act0SceneT2CanaryV1.relaxedPath),
     );
+    expect(
+      Act0SceneT2CanaryV1.emptyPath,
+      isNot(Act0SceneT2CanaryV1.engagedPath),
+    );
+    expect(
+      Act0SceneT2CanaryV1.emptyPath,
+      isNot(Act0SceneT2CanaryV1.relaxedPath),
+    );
     expect(Act0SceneT2CanaryV1.sourceSize, const Size(1093, 1844));
+  });
+
+  test('SB source-state priority: unoccupied is Empty, never Relaxed', () {
+    final resolve = Act0SceneT2CanaryV1.resolveSbVisualState;
+    expect(
+      resolve(isOccupied: true, isInHand: true, isFolded: false),
+      Act0SceneT2SbVisualStateV1.engaged,
+    );
+    expect(
+      resolve(isOccupied: true, isInHand: true, isFolded: true),
+      Act0SceneT2SbVisualStateV1.relaxed,
+    );
+    expect(
+      resolve(isOccupied: true, isInHand: false, isFolded: false),
+      Act0SceneT2SbVisualStateV1.relaxed,
+    );
+    expect(
+      resolve(isOccupied: false, isInHand: false, isFolded: false),
+      Act0SceneT2SbVisualStateV1.empty,
+    );
+    expect(
+      resolve(isOccupied: false, isInHand: false, isFolded: true),
+      Act0SceneT2SbVisualStateV1.empty,
+    );
   });
 
   testWidgets('real authored scene switches on the source-owned SB state', (
     tester,
   ) async {
-    Widget host(bool folded) => MaterialApp(
+    Widget host(Act0SceneT2SbVisualStateV1 state) => MaterialApp(
       home: Center(
         child: SizedBox(
           width: 390,
           height: 844,
-          child: Act0SceneT2CanaryPlaneV1(horizon: 0.25, sbFolded: folded),
+          child: Act0SceneT2CanaryPlaneV1(horizon: 0.25, sbVisualState: state),
         ),
       ),
     );
 
-    await tester.pumpWidget(host(false));
+    await tester.pumpWidget(host(Act0SceneT2SbVisualStateV1.engaged));
     await tester.runAsync(() => Act0SceneT2CanaryV1.engagedStore.warmUp());
     await tester.pump();
     expect(
@@ -73,7 +105,7 @@ void main() {
       findsOneWidget,
     );
 
-    await tester.pumpWidget(host(true));
+    await tester.pumpWidget(host(Act0SceneT2SbVisualStateV1.relaxed));
     await tester.runAsync(() => Act0SceneT2CanaryV1.relaxedStore.warmUp());
     await tester.pump();
     expect(
@@ -82,6 +114,26 @@ void main() {
     );
     expect(
       find.byKey(const Key('act0_scene_t2_sb_engaged_ready')),
+      findsNothing,
+    );
+
+    await tester.pumpWidget(host(Act0SceneT2SbVisualStateV1.empty));
+    final emptyImage = await tester.runAsync(
+      () => Act0SceneT2CanaryV1.emptyStore.warmUp(),
+    );
+    expect(
+      emptyImage,
+      isNotNull,
+      reason: 'Empty must be a real bundled RGBA plate',
+    );
+    await tester.pump();
+    await tester.pump();
+    expect(
+      find.byKey(const Key('act0_scene_t2_sb_empty_ready')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_scene_t2_sb_relaxed_ready')),
       findsNothing,
     );
   });

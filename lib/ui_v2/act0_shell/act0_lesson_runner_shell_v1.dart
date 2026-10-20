@@ -4259,6 +4259,17 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         final stageRect = Act0SceneT2CanaryV1.enabled
             ? Act0SceneT2CanaryV1.tableStageRect(sceneBox)
             : camera.stageRect(sceneBox);
+        // Source-owned seatId wins over labels; no SB means Empty.
+        final sbSeats = table.seats.where(
+          (seat) => seat.seatId.toLowerCase() == 'sb',
+        );
+        final sbVisualState = sbSeats.isEmpty
+            ? Act0SceneT2SbVisualStateV1.empty
+            : Act0SceneT2CanaryV1.resolveSbVisualState(
+                isOccupied: sbSeats.first.isOccupied,
+                isInHand: sbSeats.first.isInHand,
+                isFolded: sbSeats.first.isFolded,
+              );
         return Stack(
           fit: StackFit.expand,
           clipBehavior: Clip.none,
@@ -4271,13 +4282,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                     ? Act0SceneT2CanaryPlaneV1(
                         key: const Key('act0_scene_environment_plane'),
                         horizon: camera.horizonFraction,
-                        sbFolded: table.seats.any(
-                          (seat) =>
-                              seat.seatLabel.toUpperCase() == 'SB' &&
-                              (seat.isFolded ||
-                                  !seat.isInHand ||
-                                  !seat.isOccupied),
-                        ),
+                        sbVisualState: sbVisualState,
                       )
                     : Act0SceneHybridShellPlaneV1(
                         key: const Key('act0_scene_environment_plane'),
