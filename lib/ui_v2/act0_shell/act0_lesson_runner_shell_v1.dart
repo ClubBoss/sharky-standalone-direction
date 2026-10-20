@@ -14,6 +14,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dar
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_depth_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hud_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hybrid_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_t2_canary_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_material_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_player_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_room_plate_v1.dart';
@@ -4255,7 +4256,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       builder: (context, sceneConstraints) {
         const camera = Act0SceneCameraV1.canonical;
         final sceneBox = sceneConstraints.biggest;
-        final stageRect = camera.stageRect(sceneBox);
+        final stageRect = Act0SceneT2CanaryV1.enabled
+            ? Act0SceneT2CanaryV1.tableStageRect(sceneBox)
+            : camera.stageRect(sceneBox);
         return Stack(
           fit: StackFit.expand,
           clipBehavior: Clip.none,
@@ -4264,10 +4267,22 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
               child: Act0SceneRecedeMotionV1(
                 motion: sceneAttention,
                 plane: Act0SceneRecedePlaneV1.room,
-                child: Act0SceneHybridShellPlaneV1(
-                  key: const Key('act0_scene_environment_plane'),
-                  horizon: camera.horizonFraction,
-                ),
+                child: Act0SceneT2CanaryV1.enabled
+                    ? Act0SceneT2CanaryPlaneV1(
+                        key: const Key('act0_scene_environment_plane'),
+                        horizon: camera.horizonFraction,
+                        sbFolded: table.seats.any(
+                          (seat) =>
+                              seat.seatLabel.toUpperCase() == 'SB' &&
+                              (seat.isFolded ||
+                                  !seat.isInHand ||
+                                  !seat.isOccupied),
+                        ),
+                      )
+                    : Act0SceneHybridShellPlaneV1(
+                        key: const Key('act0_scene_environment_plane'),
+                        horizon: camera.horizonFraction,
+                      ),
               ),
             ),
             Positioned.fromRect(
@@ -11782,7 +11797,7 @@ class _Act0TableV1 extends StatelessWidget {
                         // dynamic-object geometry.
                         decoration: !integratedPerspectivePrototype
                             ? Act0ShellTokensV1.feltDecoration()
-                            : hybridShellReady
+                            : (hybridShellReady || Act0SceneT2CanaryV1.enabled)
                             ? null
                             : ShapeDecoration(
                                 gradient: const RadialGradient(
@@ -11804,7 +11819,9 @@ class _Act0TableV1 extends StatelessWidget {
                     valueListenable:
                         Act0SceneHybridShellRegistryV1.shellStore.readyNotifier,
                     builder: (context, hybridShellReady, _) =>
-                        integratedPerspectivePrototype && !hybridShellReady
+                        integratedPerspectivePrototype &&
+                            !hybridShellReady &&
+                            !Act0SceneT2CanaryV1.enabled
                         ? const Positioned.fill(
                             child: IgnorePointer(
                               child: CustomPaint(
@@ -11913,7 +11930,7 @@ class _Act0TableV1 extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (heroSceneSlot != null)
+                  if (heroSceneSlot != null && !Act0SceneT2CanaryV1.enabled)
                     Positioned.fill(
                       child: IgnorePointer(
                         child: ClipPath(
@@ -12049,7 +12066,8 @@ class _Act0TableV1 extends StatelessWidget {
             return ValueListenableBuilder<bool>(
               valueListenable:
                   Act0SceneHybridShellRegistryV1.shellStore.readyNotifier,
-              builder: (context, hybridShellReady, _) => hybridShellReady
+              builder: (context, hybridShellReady, _) =>
+                  hybridShellReady || Act0SceneT2CanaryV1.enabled
                   // RENDER_CLASS_HYBRID_INTEGRATION_V1: the baked shell
                   // already owns rail volume/material, so the procedural
                   // rail painter is suppressed rather than double-painted
@@ -12089,7 +12107,7 @@ class _Act0TableV1 extends StatelessWidget {
           // box only applies once the hybrid shell owns the visual \u2014 the
           // procedural-table fallback path keeps the original production
           // widen it was tuned against.
-          final rules = hybridShellReady
+          final rules = (hybridShellReady || Act0SceneT2CanaryV1.enabled)
               ? Act0SceneTieredSeatingV1.renderClassHybridV1
               : Act0SceneTieredSeatingV1.production;
           return Positioned(
@@ -12167,13 +12185,13 @@ class _Act0TableV1 extends StatelessWidget {
           // `else` branch keeps the pre-existing flat layer for the non-camera
           // preview surface \u2014 it is not an A/B spatial-family switch; there is
           // one production spatial family (V2).
-          if (cameraStageSize != null)
+          if (cameraStageSize != null && !Act0SceneT2CanaryV1.enabled)
             tieredOpponentPlane(
               cameraStageSize,
               Act0SceneTieredPlaneV1.back,
               const Key('act0_scene_player_volume_plane'),
             )
-          else
+          else if (cameraStageSize == null)
             Positioned.fill(
               child: Act0SceneRecedeMotionV1(
                 motion: sceneMotion,
@@ -12186,13 +12204,13 @@ class _Act0TableV1 extends StatelessWidget {
               ),
             ),
           scene,
-          if (cameraStageSize != null)
+          if (cameraStageSize != null && !Act0SceneT2CanaryV1.enabled)
             tieredOpponentPlane(
               cameraStageSize,
               Act0SceneTieredPlaneV1.front,
               const Key('act0_scene_player_front_plane'),
             ),
-          if (heroSceneSlot != null)
+          if (heroSceneSlot != null && !Act0SceneT2CanaryV1.enabled)
             Positioned.fill(
               child: Act0SceneRecedeMotionV1(
                 motion: sceneMotion,

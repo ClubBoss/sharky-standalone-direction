@@ -1,0 +1,39 @@
+{
+  "scope": "T2 Stage A SB one-seat debug opt-in, first real table only",
+  "main_base": "294b737c2ffd3998ae52c7a5b2e8fee27e0ef2ab",
+  "optin": "SHARKY_T2_SB_CANARY=true",
+  "app_framework_binary_sha256": "816a757ba6130c49b5d94630ee6885e9b1fcb2bd2db3febb75faa16bad57a605",
+  "artsource": "original A, owner approved, SB Empty/Engaged/Relaxed V2 source candidates",
+  "screenshots": [
+    {
+      "viewport": "standard",
+      "file": "standard_FIRST_REAL_TABLE_actual_iOS.png",
+      "sha256": "650b280cb3741f326c457f3275c178dceb1303cfa2cb2a9df2f897b16ae2bac0",
+      "pixels": [
+        1206,
+        2622
+      ],
+      "test": "T2SBStageAOneSeatNativeUITests/test01AuthenticT2FirstTable",
+      "result": "XCTest 1 passed 0 failures",
+      "provenance": "actual XCTest screenshot attachment, no synthetic scene"
+    },
+    {
+      "viewport": "compact",
+      "file": "compact_FIRST_REAL_TABLE_actual_iOS.png",
+      "sha256": "ff9c83b6e96149642777b39be16e0b57e13242d675275671af18639e6caf551b",
+      "pixels": [
+        750,
+        1334
+      ],
+      "test": "T2SBStageAOneSeatNativeUITests/test01AuthenticT2FirstTable",
+      "result": "XCTest 1 passed 0 failures",
+      "provenance": "actual XCTest screenshot attachment, no synthetic scene"
+    }
+  ],
+  "stage_gate": "NATIVE_FIRST_TABLE_STANDARD_COMPACT_PASS_SCOPED",
+  "art_gate": "HOLD_INDEPENDENT_IDENTITY_AND_PREMIUM",
+  "folded_native_gate": "NOT_PROVEN source-driven rendered Folded on real iOS",
+  "other_four_players": "Baked-in static, not admitted for full dynamic semantics",
+  "learner_truth": "No simulated completion, grading, mastery, or retention claims",
+  "merge_policy": "DRAFT ONLY, PR #224 protected, never auto-merge"
+}
