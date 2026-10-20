@@ -118,6 +118,15 @@ void main() {
     );
 
     await tester.pumpWidget(host(Act0SceneT2SbVisualStateV1.empty));
+    // Fresh keyed FutureBuilder prevents previous Relaxed image carryover.
+    expect(
+      find.byKey(const ValueKey<String>('t2_sb_state_empty')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey<String>('t2_sb_state_relaxed')),
+      findsNothing,
+    );
     final emptyImage = await tester.runAsync(
       () => Act0SceneT2CanaryV1.emptyStore.warmUp(),
     );

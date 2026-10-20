@@ -112,7 +112,10 @@ class Act0SceneT2CanaryPlaneV1 extends StatelessWidget {
       fit: StackFit.expand,
       children: [
         Act0SceneRoomPlaneV1(horizon: horizon),
+        // An in-flight visual-state transition must never reuse the prior
+        // person's FutureBuilder snapshot (e.g. Relaxed while SB becomes Empty).
         FutureBuilder<ui.Image?>(
+          key: ValueKey<String>('t2_sb_state_${sbVisualState.name}'),
           future: selected.warmUp(),
           builder: (context, state) {
             // Never paint a stale Engaged person while Empty/Relaxed loads.
