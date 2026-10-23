@@ -446,8 +446,30 @@ final class S12GenuineNativeUITests: XCTestCase {
         try test05NaturalTurnRiverTaskSelectorProbe()
         RunLoop.current.run(until: Date().addingTimeInterval(1.2))
 
-        let turnRetry = app.buttons.matching(identifier: "Retry")
-            .allElementsBoundByIndex.filter { $0.exists && $0.isEnabled && $0.isHittable }
+        // The selected task's native CTA is below the fold on both exact
+        // devices in run 39925606783 (Standard AX has Retry at zero frame).
+        // Reach it only through natural visible UI scrolling, never by
+        // coordinate injection, hidden-element tapping, or progress mutation.
+        func visibleRetryAfterScroll(_ stage: String) -> [XCUIElement] {
+            for attempt in 0..<12 {
+                let buttons = app.buttons.matching(identifier: "Retry")
+                    .allElementsBoundByIndex.filter {
+                        $0.exists && $0.isEnabled && $0.isHittable
+                    }
+                if !buttons.isEmpty {
+                    print("S12V_REAL_RETRY_VISIBLE stage=" + stage +
+                          " count=" + String(buttons.count) +
+                          " scrolls=" + String(attempt))
+                    return buttons
+                }
+                print("S12V_RETRY_BELOW_FOLD stage=" + stage +
+                      " scroll=" + String(attempt + 1))
+                app.swipeUp()
+            }
+            return []
+        }
+
+        let turnRetry = visibleRetryAfterScroll("turn")
         guard turnRetry.count == 1 else {
             capture("TR05_no_unique_turn_retry")
             XCTFail("STOP_TURN_TASK_FOCUS_OR_RETRY_NOT_VISIBLE count=" + String(turnRetry.count))
@@ -495,8 +517,7 @@ final class S12GenuineNativeUITests: XCTestCase {
         print("S12V_REAL_RIVER_ROW_TAP actual=" + river.label)
         river.tap()
         RunLoop.current.run(until: Date().addingTimeInterval(1.2))
-        let riverRetry = app.buttons.matching(identifier: "Retry")
-            .allElementsBoundByIndex.filter { $0.exists && $0.isEnabled && $0.isHittable }
+        let riverRetry = visibleRetryAfterScroll("river")
         guard riverRetry.count == 1 else {
             capture("TR07_no_unique_river_retry")
             XCTFail("STOP_RIVER_TASK_FOCUS_OR_RETRY_NOT_VISIBLE count=" + String(riverRetry.count))
