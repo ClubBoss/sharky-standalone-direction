@@ -17,13 +17,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           path: product
-          ref: f99da096dcfda7d001c24003c052b1f3f314362a
+          ref: 4bf5f198930ff0bd7d5c41361a10a828b3fdd4cd
       - name: Freeze source and inventory host
         run: |
           set -euo pipefail
           mkdir -p output/s12
-          test "$(git -C product rev-parse HEAD)" = f99da096dcfda7d001c24003c052b1f3f314362a
-          test "$(git -C product rev-parse HEAD^{tree})" = ecc202a3ebc08a14f8f4d95a984186056e44d46a
+          test "$(git -C product rev-parse HEAD)" = 4bf5f198930ff0bd7d5c41361a10a828b3fdd4cd
+          test "$(git -C product rev-parse HEAD^{tree})" = d26f8f54861db03c7ae0dd40d400904a75e0e002
           git -C product rev-parse HEAD HEAD^{tree} > output/s12/product-identity.txt
           git -C qa-infra rev-parse HEAD HEAD^{tree} > output/s12/qa-identity.txt
           sw_vers > output/s12/macos.txt
