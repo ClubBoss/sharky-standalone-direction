@@ -438,4 +438,80 @@ final class S12GenuineNativeUITests: XCTestCase {
         capture("TR04_after_actual_turn_row_tap")
         print("S12V_ROUTE_TASK_ROW_TAPPED_ONLY=YES; GAMEPLAY_STREET_BOARD_POT_NOT_VERIFIED")
     }
+
+    // Stage 2: genuine UI-only gameplay probe, with native evidence receipts.
+    // A green XCTest does not by itself prove 4/5 painted cards: inspect
+    // the original native screenshots and AX tree before accepting S12.V.
+    func test06NativeTurnRiverBoardAndPotProbe() throws {
+        try test05NaturalTurnRiverTaskSelectorProbe()
+        RunLoop.current.run(until: Date().addingTimeInterval(1.2))
+
+        let turnRetry = app.buttons.matching(identifier: "Retry")
+            .allElementsBoundByIndex.filter { $0.exists && $0.isEnabled && $0.isHittable }
+        guard turnRetry.count == 1 else {
+            capture("TR05_no_unique_turn_retry")
+            XCTFail("STOP_TURN_TASK_FOCUS_OR_RETRY_NOT_VISIBLE count=" + String(turnRetry.count))
+            return
+        }
+        capture("TR05_actual_turn_retry_visible")
+        print("S12V_REAL_TURN_RETRY_TAP actual=" + turnRetry[0].label)
+        turnRetry[0].tap()
+        guard visible("Pot 5 BB", timeout: 15) else {
+            capture("TR06_turn_no_native_pot")
+            XCTFail("STOP_TURN_GAMEPLAY_POT_NOT_VISIBLE")
+            return
+        }
+        capture("TR06_actual_turn_gameplay")
+        print("S12V_TURN_NATIVE_POT_VISIBLE=YES; PAINTED_BOARD_COUNT_REQUIRES_ORIGINAL_SCREEN_REVIEW")
+        leaveRunnerThroughBack()
+
+        var riverRow: XCUIElement?
+        for attempt in 0..<24 {
+            let rows = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "River card")
+            ).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+            if rows.count == 1 {
+                riverRow = rows[0]
+                break
+            }
+            if rows.count > 1 {
+                capture("TR07_ambiguous_river_row")
+                XCTFail("STOP_AMBIGUOUS_REAL_RIVER_TASK_ROW")
+                return
+            }
+            let all = app.buttons.matching(identifier: "All lessons").firstMatch
+            if attempt == 0 && all.exists && all.isEnabled && all.isHittable {
+                print("S12V_RIVER_OPEN_ALL_LESSONS")
+                all.tap()
+            } else {
+                app.swipeUp()
+            }
+        }
+        guard let river = riverRow else {
+            capture("TR07_no_visible_river_row")
+            XCTFail("STOP_NO_SOURCE_OWNED_RIVER_TASK_ROW")
+            return
+        }
+        print("S12V_REAL_RIVER_ROW_TAP actual=" + river.label)
+        river.tap()
+        RunLoop.current.run(until: Date().addingTimeInterval(1.2))
+        let riverRetry = app.buttons.matching(identifier: "Retry")
+            .allElementsBoundByIndex.filter { $0.exists && $0.isEnabled && $0.isHittable }
+        guard riverRetry.count == 1 else {
+            capture("TR07_no_unique_river_retry")
+            XCTFail("STOP_RIVER_TASK_FOCUS_OR_RETRY_NOT_VISIBLE count=" + String(riverRetry.count))
+            return
+        }
+        capture("TR07_actual_river_retry_visible")
+        print("S12V_REAL_RIVER_RETRY_TAP actual=" + riverRetry[0].label)
+        riverRetry[0].tap()
+        guard visible("Pot 5 BB", timeout: 15) else {
+            capture("TR08_river_no_native_pot")
+            XCTFail("STOP_RIVER_GAMEPLAY_POT_NOT_VISIBLE")
+            return
+        }
+        capture("TR08_actual_river_gameplay")
+        print("S12V_RIVER_NATIVE_POT_VISIBLE=YES; PAINTED_BOARD_COUNT_REQUIRES_ORIGINAL_SCREEN_REVIEW")
+    }
+
 }
