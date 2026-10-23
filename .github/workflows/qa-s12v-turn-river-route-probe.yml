@@ -123,16 +123,16 @@ jobs:
             else
               SIM_ID="$(cat output/route-probe/compact-sim-id.txt)"
             fi
-            LOG="output/route-probe/native-tests-\${PROFILE}.log"
-            python3 -u qa-infra/tools/qa_s12_watch_checkpoints.py --log "$LOG" --sim "$SIM_ID" --output "output/route-probe/checkpoints/\${PROFILE}" > "output/route-probe/collector-\${PROFILE}.log" 2>&1 &
+            LOG="output/route-probe/native-tests-${PROFILE}.log"
+            python3 -u qa-infra/tools/qa_s12_watch_checkpoints.py --log "$LOG" --sim "$SIM_ID" --output "output/route-probe/checkpoints/${PROFILE}" > "output/route-probe/collector-${PROFILE}.log" 2>&1 &
             COLLECTOR_PID=$!
             set +e
-            NSUnbufferedIO=YES xcodebuild test -project qa-infra/qa/s12_hosted/S12GenuineNative.xcodeproj -scheme S12GenuineNativeUITests -destination "platform=iOS Simulator,id=$SIM_ID" -parallel-testing-enabled NO -only-testing:S12GenuineNativeUITests/S12GenuineNativeUITests/test06NativeTurnRiverBoardAndPotProbe -resultBundlePath "$PWD/output/route-probe/native-tests-\${PROFILE}.xcresult" CODE_SIGNING_ALLOWED=NO > "$LOG" 2>&1
+            NSUnbufferedIO=YES xcodebuild test -project qa-infra/qa/s12_hosted/S12GenuineNative.xcodeproj -scheme S12GenuineNativeUITests -destination "platform=iOS Simulator,id=$SIM_ID" -parallel-testing-enabled NO -only-testing:S12GenuineNativeUITests/S12GenuineNativeUITests/test06NativeTurnRiverBoardAndPotProbe -resultBundlePath "$PWD/output/route-probe/native-tests-${PROFILE}.xcresult" CODE_SIGNING_ALLOWED=NO > "$LOG" 2>&1
             EXIT_CODE=$?
             set -e
             kill "$COLLECTOR_PID" 2>/dev/null || true
             wait "$COLLECTOR_PID" 2>/dev/null || true
-            echo "$EXIT_CODE" > "output/route-probe/\${PROFILE}-exit-code.txt"
+            echo "$EXIT_CODE" > "output/route-probe/${PROFILE}-exit-code.txt"
             if [ "$EXIT_CODE" -ne 0 ]; then FAILED=1; fi
           done
           exit "$FAILED"
@@ -141,9 +141,9 @@ jobs:
         run: |
           set +e
           for PROFILE in standard compact; do
-            RESULT="output/route-probe/native-tests-\${PROFILE}.xcresult"
+            RESULT="output/route-probe/native-tests-${PROFILE}.xcresult"
             if test -d "$RESULT"; then
-              xcrun xcresulttool export attachments --path "$RESULT" --output-path "output/route-probe/attachments-\${PROFILE}"
+              xcrun xcresulttool export attachments --path "$RESULT" --output-path "output/route-probe/attachments-${PROFILE}"
             fi
           done
           cd output/route-probe || exit 0
