@@ -596,9 +596,9 @@ final class S12GenuineNativeUITests: XCTestCase {
             print("S12V_RIVER_FOCUS_CHECKPOINT stage=" + tag +
                   " swipes=" + String(swipes) +
                   " turn_count=" + String(turn.count) +
-                  " turn_frame=" + (turn.count == 1 ? NSStringFromCGRect(turn[0].frame) : "NONE") +
+                  " turn_frame=" + (turn.count == 1 ? String(describing: turn[0].frame) : "NONE") +
                   " river_count=" + String(river.count) +
-                  " river_frame=" + (river.count == 1 ? NSStringFromCGRect(river[0].frame) : "NONE") +
+                  " river_frame=" + (river.count == 1 ? String(describing: river[0].frame) : "NONE") +
                   " river_hittable=" + String(river.count == 1 && river[0].isHittable) +
                   " turn_retry_owned_by_AX_order=" + String(turnOwned) +
                   " river_retry_owned_by_AX_order=" + String(riverOwned))
@@ -643,7 +643,7 @@ final class S12GenuineNativeUITests: XCTestCase {
             return
         }
         print("S12V_REAL_RIVER_ROW_TAP_AFTER_DISTINCT_TASK actual=" + ready[0].label +
-              " frame=" + NSStringFromCGRect(ready[0].frame) +
+              " frame=" + String(describing: ready[0].frame) +
               " extra_swipes=" + String(riverScrollCount))
         ready[0].tap()
         RunLoop.current.run(until: Date().addingTimeInterval(1.2))
