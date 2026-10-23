@@ -908,7 +908,7 @@ double act0ParseBbAmountV1(String s) {
 /// Returns null when the label has no identifiable actor or no bet amount.
 String? _act0TrailActor(String stripped) {
   final m = RegExp(
-    r'^(\w+)\s+(?:blind|raises?|opens?|opened|calls?|called|bets?|all[- ]?in|goes\s+all)',
+    r'^([A-Za-z0-9+_-]+)\s+(?:blind|raises?|opens?|opened|calls?|called|bets?|shoves?|all[- ]?in|goes\s+all)',
     caseSensitive: false,
   ).firstMatch(stripped);
   return m?.group(1)?.toUpperCase();
