@@ -13,7 +13,7 @@ concurrency:
 jobs:
   source-owned-route:
     runs-on: macos-latest
-    timeout-minutes: 65
+    timeout-minutes: 85
     steps:
       - uses: actions/checkout@v4
         with:
@@ -52,7 +52,7 @@ jobs:
           shasum -a 256 ../output/route-probe/Runner.app/Frameworks/App.framework/flutter_assets/kernel_blob.bin > ../output/route-probe/kernel.sha256
           echo 'HNP_TELEMETRY=true; NO state/grade/task injection; NO visual canary; route probe ONLY' > ../output/route-probe/build-mode.txt
       - name: Provision isolated exact Standard phone and existing XCTest project
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: |
           set -euo pipefail
           python3 - <<'PY'
