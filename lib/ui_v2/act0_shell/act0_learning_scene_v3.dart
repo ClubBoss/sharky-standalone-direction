@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_salience_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_t2_canary_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -308,7 +309,13 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
         Text(
           headline,
           key: const Key('act0_integrated_scene_prompt'),
-          maxLines: showSpokenSurface ? 3 : (enlarged ? 3 : 2),
+          maxLines:
+              showSpokenSurface ||
+                  enlarged ||
+                  (Act0SceneT2CanaryV1.enabled &&
+                      phase == Act0LearningScenePhaseV3.tableTask)
+              ? 3
+              : 2,
           overflow: TextOverflow.ellipsis,
           style: Act0ShellTokensV1.body.copyWith(
             color: Act0ShellTokensV1.text,
