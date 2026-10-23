@@ -571,8 +571,46 @@ final class S12GenuineNativeUITests: XCTestCase {
         turn.tap()
         RunLoop.current.run(until: Date().addingTimeInterval(1.2))
 
+        // Exact Standard vs SE3 differential from native #39976582872:
+        // only Standard swiped after Turn selection and before River tap.
+        // Capture genuine source-owned task focus/frames at THREE points.
+        // Do NOT retry River taps or mutate any user progression state.
+        func checkpointRiverFocus(_ tag: String, _ swipes: Int) {
+            let turn = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "Turn card")
+            ).allElementsBoundByIndex.filter { $0.exists }
+            let river = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "River card")
+            ).allElementsBoundByIndex.filter { $0.exists }
+            let tree = app.debugDescription
+            let turnStart = tree.range(of: "label: 'Turn card")
+            let riverStart = tree.range(of: "label: 'River card")
+            let showdownStart = tree.range(of: "label: 'Showdown read")
+            let retryStart = tree.range(of: "label: 'Retry'")
+            let turnOwned = turnStart != nil && riverStart != nil &&
+                retryStart != nil && turnStart!.lowerBound < retryStart!.lowerBound &&
+                retryStart!.lowerBound < riverStart!.lowerBound
+            let riverOwned = riverStart != nil && showdownStart != nil &&
+                retryStart != nil && riverStart!.lowerBound < retryStart!.lowerBound &&
+                retryStart!.lowerBound < showdownStart!.lowerBound
+            print("S12V_RIVER_FOCUS_CHECKPOINT stage=" + tag +
+                  " swipes=" + String(swipes) +
+                  " turn_count=" + String(turn.count) +
+                  " turn_frame=" + (turn.count == 1 ? NSStringFromCGRect(turn[0].frame) : "NONE") +
+                  " river_count=" + String(river.count) +
+                  " river_frame=" + (river.count == 1 ? NSStringFromCGRect(river[0].frame) : "NONE") +
+                  " river_hittable=" + String(river.count == 1 && river[0].isHittable) +
+                  " turn_retry_owned_by_AX_order=" + String(turnOwned) +
+                  " river_retry_owned_by_AX_order=" + String(riverOwned))
+            capture(tag)
+        }
+
+        checkpointRiverFocus("TR07_focus_01_after_turn_before_scroll", 0)
         var riverRow: XCUIElement?
-        for _ in 0..<20 {
+        var riverScrollCount = 0
+        // One observed Standard-only scroll maximum; a longer search would
+        // erase causal attribution. Compact should require no extra scroll.
+        for _ in 0..<2 {
             let rows = app.staticTexts.matching(
                 NSPredicate(format: "label CONTAINS[cd] %@", "River card")
             ).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
@@ -585,20 +623,31 @@ final class S12GenuineNativeUITests: XCTestCase {
                 XCTFail("STOP_AMBIGUOUS_REAL_RIVER_TASK_ROW")
                 return
             }
+            if riverScrollCount >= 1 { break }
+            print("S12V_RIVER_STANDARD_INTERVENING_NATIVE_SWIPE_UP")
             app.swipeUp()
+            riverScrollCount += 1
+            RunLoop.current.run(until: Date().addingTimeInterval(0.35))
         }
-        guard let river = riverRow else {
-            capture("TR07_no_visible_river_row")
-            XCTFail("STOP_NO_SOURCE_OWNED_RIVER_TASK_ROW")
+        checkpointRiverFocus("TR07_focus_02_post_scroll_pre_river_tap", riverScrollCount)
+        guard riverRow != nil else {
+            XCTFail("STOP_RIVER_ROW_UNHITTABLE_AFTER_ONE_DIAGNOSTIC_SCROLL")
             return
         }
-        print("S12V_REAL_RIVER_ROW_TAP_AFTER_DISTINCT_TASK actual=" + river.label)
-        river.tap()
+        // Re-resolve after native screenshot/AX hold; never tap a stale frame.
+        let ready = app.staticTexts.matching(
+            NSPredicate(format: "label CONTAINS[cd] %@", "River card")
+        ).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+        guard ready.count == 1 else {
+            XCTFail("STOP_RIVER_ROW_MOVED_AFTER_PRETAP_NATIVE_CHECKPOINT")
+            return
+        }
+        print("S12V_REAL_RIVER_ROW_TAP_AFTER_DISTINCT_TASK actual=" + ready[0].label +
+              " frame=" + NSStringFromCGRect(ready[0].frame) +
+              " extra_swipes=" + String(riverScrollCount))
+        ready[0].tap()
         RunLoop.current.run(until: Date().addingTimeInterval(1.2))
-        // Observe native AX/screen immediately, before scrolling past an
-        // unfocused task. A missing River CTA is a real STOP, not a reason
-        // to tap River again and risk toggling its selection closed.
-        capture("TR07_after_distinct_turn_then_river_focus")
+        checkpointRiverFocus("TR07_focus_03_immediate_after_river_tap", riverScrollCount)
         // From exact original native Turn AX, the selected row's button is
         // directly AFTER that row and BEFORE the next task. Verify River
         // owns its Retry in the real AX hierarchy, not app-global presence:
