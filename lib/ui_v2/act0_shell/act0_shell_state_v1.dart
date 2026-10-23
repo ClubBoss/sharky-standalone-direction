@@ -8923,6 +8923,7 @@ final _turnBoardRunner = _readBoardRunner.copyWith(
   ],
   table: _readBoardRunner.table.copyWith(
     streetLabel: 'Turn',
+    highlightedCardIds: const <String>['board_3'],
     boardCards: const <Act0CardStateV1>[
       ..._flopA72Cards,
       Act0CardStateV1(rank: 'J', suit: 'c'),
@@ -8977,6 +8978,7 @@ final _riverBoardRunner = _readBoardRunner.copyWith(
   ],
   table: _readBoardRunner.table.copyWith(
     streetLabel: 'River',
+    highlightedCardIds: const <String>['board_4'],
     boardCards: const <Act0CardStateV1>[
       ..._flopA72Cards,
       Act0CardStateV1(rank: 'J', suit: 'c'),
