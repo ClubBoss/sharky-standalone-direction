@@ -540,6 +540,37 @@ final class S12GenuineNativeUITests: XCTestCase {
         }
         capture("TR07_reopened_source_owned_lesson")
 
+        // Native River proof #39955048811 failed after a real River-row tap.
+        // Source permits same-task taps to toggle the popup closed; whether
+        // that happened in the native run remains UNVERIFIED.
+        // Before touching River, select the distinct real Turn row. This
+        // deterministically prevents a subsequent River tap from being the
+        // same popup task; no hidden state or coordinates are injected.
+        var turnFocusRow: XCUIElement?
+        for _ in 0..<20 {
+            let rows = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "Turn card")
+            ).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+            if rows.count == 1 {
+                turnFocusRow = rows[0]
+                break
+            }
+            if rows.count > 1 {
+                capture("TR07_ambiguous_distinct_turn_focus")
+                XCTFail("STOP_AMBIGUOUS_DISTINCT_TURN_FOCUS")
+                return
+            }
+            app.swipeUp()
+        }
+        guard let turn = turnFocusRow else {
+            capture("TR07_distinct_turn_focus_unreachable")
+            XCTFail("STOP_DISTINCT_TURN_FOCUS_NOT_REACHABLE")
+            return
+        }
+        print("S12V_RIVER_DISTINCT_TASK_PRIME_TURN label=" + turn.label)
+        turn.tap()
+        RunLoop.current.run(until: Date().addingTimeInterval(1.2))
+
         var riverRow: XCUIElement?
         for _ in 0..<20 {
             let rows = app.staticTexts.matching(
@@ -561,13 +592,46 @@ final class S12GenuineNativeUITests: XCTestCase {
             XCTFail("STOP_NO_SOURCE_OWNED_RIVER_TASK_ROW")
             return
         }
-        print("S12V_REAL_RIVER_ROW_TAP actual=" + river.label)
+        print("S12V_REAL_RIVER_ROW_TAP_AFTER_DISTINCT_TASK actual=" + river.label)
         river.tap()
         RunLoop.current.run(until: Date().addingTimeInterval(1.2))
+        // Observe native AX/screen immediately, before scrolling past an
+        // unfocused task. A missing River CTA is a real STOP, not a reason
+        // to tap River again and risk toggling its selection closed.
+        capture("TR07_after_distinct_turn_then_river_focus")
+        // From exact original native Turn AX, the selected row's button is
+        // directly AFTER that row and BEFORE the next task. Verify River
+        // owns its Retry in the real AX hierarchy, not app-global presence:
+        // a stale Turn Retry before River must NEVER count for River.
+        func nativeAXShowsRiverOwnedRetry() -> Bool {
+            let tree = app.debugDescription
+            let riverNeedle = "label: 'River card"
+            let nextNeedle = "label: 'Showdown read"
+            let retryNeedle = "label: 'Retry'"
+            guard let river = tree.range(of: riverNeedle),
+                  let next = tree.range(of: nextNeedle),
+                  let retry = tree.range(of: retryNeedle),
+                  tree[river.upperBound...].range(of: riverNeedle) == nil,
+                  tree[next.upperBound...].range(of: nextNeedle) == nil,
+                  tree[retry.upperBound...].range(of: retryNeedle) == nil else {
+                return false
+            }
+            return river.lowerBound < retry.lowerBound &&
+                   retry.lowerBound < next.lowerBound
+        }
+        guard nativeAXShowsRiverOwnedRetry() else {
+            XCTFail("STOP_NO_SOURCE_OWNED_RIVER_RETRY_IN_NATIVE_AX")
+            return
+        }
         let riverRetry = visibleRetryAfterScroll("river")
         guard riverRetry.count == 1 else {
             capture("TR07_no_unique_river_retry")
             XCTFail("STOP_RIVER_TASK_FOCUS_OR_RETRY_NOT_VISIBLE count=" + String(riverRetry.count))
+            return
+        }
+        guard nativeAXShowsRiverOwnedRetry() else {
+            capture("TR07_river_retry_lost_native_ax_ownership")
+            XCTFail("STOP_RIVER_RETRY_OWNERSHIP_CHANGED_WHILE_SCROLLING")
             return
         }
         capture("TR07_actual_river_retry_visible")
