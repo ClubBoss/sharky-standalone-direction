@@ -435,8 +435,31 @@ final class S12GenuineNativeUITests: XCTestCase {
             XCTFail("STOP_NO_HITTABLE_TURN_TASK_ROW")
             return
         }
+        // Compact native receipt #39938389524: the Turn label received a tap,
+        // but the selection did not create any Retry element in native AX.
+        // This is not a task/completion injection: allow one further tap on
+        // the same real visible source-owned row, and only if focus is absent.
+        // A pre-existing Retry may be below the fold but is still in AX.
+        if !app.buttons.matching(identifier: "Retry").firstMatch.exists {
+            let turn = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "Turn card")
+            ).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+            guard turn.count == 1 else {
+                capture("TR04_compact_turn_row_lost_before_retap")
+                XCTFail("STOP_NO_UNIQUE_REAL_TURN_ROW_FOR_BOUNDED_RETAP")
+                return
+            }
+            print("S12V_REAL_TURN_FOCUS_RETRY_ONE_SOURCE_ROW_TAP label=" + turn[0].label)
+            turn[0].tap()
+            RunLoop.current.run(until: Date().addingTimeInterval(1.0))
+            capture("TR04_after_one_bounded_focus_retap")
+        }
         capture("TR04_after_actual_turn_row_tap")
-        print("S12V_ROUTE_TASK_ROW_TAPPED_ONLY=YES; GAMEPLAY_STREET_BOARD_POT_NOT_VERIFIED")
+        guard app.buttons.matching(identifier: "Retry").firstMatch.exists else {
+            XCTFail("STOP_TURN_SELECTION_DID_NOT_EXPOSE_NATIVE_RETRY")
+            return
+        }
+        print("S12V_ROUTE_TASK_ROW_TAPPED_AND_CTA_EXISTS_IN_AX=YES; GAMEPLAY_STREET_BOARD_POT_NOT_VERIFIED")
     }
 
     // Stage 2: genuine UI-only gameplay probe, with native evidence receipts.
@@ -487,8 +510,38 @@ final class S12GenuineNativeUITests: XCTestCase {
         print("S12V_TURN_NATIVE_POT_VISIBLE=YES; PAINTED_BOARD_COUNT_REQUIRES_ORIGINAL_SCREEN_REVIEW")
         leaveRunnerThroughBack()
 
+        // Standard original AX #39938389524: after returning from Turn the
+        // target lesson is collapsed. All lessons is NOT a task selector:
+        // reopen the actual lesson row before searching for River card.
+        print("S12V_RIVER_OPEN_ALL_LESSONS")
+        tapButton("All lessons")
+        var reopenedFirstHand = false
+        for _ in 0..<20 {
+            let lessons = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "Your first hand")
+            ).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+            if lessons.count == 1 {
+                print("S12V_RIVER_REOPEN_REAL_LESSON label=" + lessons[0].label)
+                lessons[0].tap()
+                reopenedFirstHand = true
+                break
+            }
+            if lessons.count > 1 {
+                capture("TR07_ambiguous_reopen_lesson")
+                XCTFail("STOP_AMBIGUOUS_REAL_RIVER_PARENT_LESSON")
+                return
+            }
+            app.swipeUp()
+        }
+        guard reopenedFirstHand else {
+            capture("TR07_no_reachable_reopen_lesson")
+            XCTFail("STOP_NO_SOURCE_OWNED_RIVER_PARENT_LESSON")
+            return
+        }
+        capture("TR07_reopened_source_owned_lesson")
+
         var riverRow: XCUIElement?
-        for attempt in 0..<24 {
+        for _ in 0..<20 {
             let rows = app.staticTexts.matching(
                 NSPredicate(format: "label CONTAINS[cd] %@", "River card")
             ).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
@@ -501,13 +554,7 @@ final class S12GenuineNativeUITests: XCTestCase {
                 XCTFail("STOP_AMBIGUOUS_REAL_RIVER_TASK_ROW")
                 return
             }
-            let all = app.buttons.matching(identifier: "All lessons").firstMatch
-            if attempt == 0 && all.exists && all.isEnabled && all.isHittable {
-                print("S12V_RIVER_OPEN_ALL_LESSONS")
-                all.tap()
-            } else {
-                app.swipeUp()
-            }
+            app.swipeUp()
         }
         guard let river = riverRow else {
             capture("TR07_no_visible_river_row")
