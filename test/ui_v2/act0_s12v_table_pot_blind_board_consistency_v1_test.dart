@@ -123,4 +123,27 @@ void main() {
       );
     }
   });
+
+  group('all-in shove must count in source pot', () {
+    test('authored Hero shoves 20 BB cannot drop Hero chips', () {
+      final pot = act0CalcTrailPotV1(const [
+        'SB blind 0.5 BB',
+        'BB blind 1 BB',
+        'Hero shoves 20 BB',
+        'BB calls 20 BB',
+      ], 3);
+      expect(pot.potBb, 40.5);
+    });
+
+    test('authored BB shoves 18 BB while CO calls to 18 BB', () {
+      final pot = act0CalcTrailPotV1(const [
+        'SB blind 0.5 BB',
+        'BB blind 1 BB',
+        'CO raises 3 BB',
+        'BB shoves 18 BB',
+        'CO calls 18 BB',
+      ], 4);
+      expect(pot.potBb, 36.5);
+    });
+  });
 }
