@@ -56,17 +56,34 @@ jobs:
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import json, subprocess
+          import json, re, subprocess
           from pathlib import Path
           inv=json.load(open('output/route-probe/simulator-inventory.json'))
-          found=[(runtime,d) for runtime,devices in inv['devices'].items()
-                 if 'iOS' in runtime for d in devices
-                 if d.get('isAvailable') and d.get('name') == 'iPhone 17 Pro']
-          assert len(found)==1, f'STOP_NO_EXACT_IPHONE_17_PRO: count={len(found)}'
-          runtime,device=found[0]
+          found=[]
+          for runtime,devices in inv['devices'].items():
+              match=re.search(r'iOS-(\d+)(?:-(\d+))?(?:-(\d+))?$',runtime)
+              if match is None:
+                  continue
+              version=tuple(int(part or 0) for part in match.groups())
+              for device in devices:
+                  if device.get('isAvailable') and device.get('name') == 'iPhone 17 Pro':
+                      found.append((version,runtime,device))
+          assert found, 'STOP_NO_EXACT_IPHONE_17_PRO'
+          # A hosted Mac can expose the same phone model under several iOS
+          # runtimes. Choose the newest available runtime deterministically.
+          found.sort(key=lambda item:(item[0],item[1],item[2].get('udid','')))
+          version,runtime,device=found[-1]
+          assert version[0]>=26, f'STOP_UNSUPPORTED_IPHONE_17_PRO_IOS: {runtime}'
+          assert device.get('deviceTypeIdentifier'), 'STOP_MISSING_SIMULATOR_DEVICE_TYPE'
           udid=subprocess.check_output(['xcrun','simctl','create','S12V-RouteProbe-Only',device['deviceTypeIdentifier'],runtime],text=True).strip()
           Path('output/route-probe/sim-id.txt').write_text(udid)
-          Path('output/route-probe/selected-device.json').write_text(json.dumps({'udid':udid,'model':device['name'],'runtime':runtime,'deviceType':device['deviceTypeIdentifier'],'compact':'NOT_RUN_NOT_VERIFIED'},indent=2))
+          Path('output/route-probe/selected-device.json').write_text(json.dumps({
+              'udid':udid,'model':device['name'],'runtime':runtime,
+              'deviceType':device['deviceTypeIdentifier'],
+              'candidateCount':len(found),
+              'candidates':[{'runtime':item[1],'deviceType':item[2].get('deviceTypeIdentifier'),'udid':item[2].get('udid')} for item in found],
+              'compact':'NOT_RUN_NOT_VERIFIED'
+          },indent=2))
           PY
           SIM_ID="$(cat output/route-probe/sim-id.txt)"
           xcrun simctl boot "$SIM_ID"
