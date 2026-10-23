@@ -1,0 +1,104 @@
+name: S12V native Turn River task-route probe
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/qa-s12v-turn-river-route-probe.yml'
+      - 'qa/S12GenuineNativeUITests.swift'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: s12v-turn-river-route-probe-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  source-owned-route:
+    runs-on: macos-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: qa-infra
+      - uses: actions/checkout@v4
+        with:
+          path: product
+          ref: eb69d6b74ef7de7286d624b7d175d1e162d5f7d9
+      - name: Freeze product and exact host inventory
+        run: |
+          set -euo pipefail
+          mkdir -p output/route-probe
+          test "$(git -C product rev-parse HEAD)" = eb69d6b74ef7de7286d624b7d175d1e162d5f7d9
+          test "$(git -C product rev-parse HEAD^{tree})" = c6f3a59ad479f9949b75d5261c8cdee1c77fdfc0
+          git -C product rev-parse HEAD HEAD^{tree} > output/route-probe/product-identity.txt
+          git -C qa-infra rev-parse HEAD HEAD^{tree} > output/route-probe/qa-identity.txt
+          xcrun simctl list -j > output/route-probe/simulator-inventory.json
+          xcodebuild -version > output/route-probe/xcode.txt
+          sw_vers > output/route-probe/macos.txt
+          ruby -e 'require "xcodeproj"; puts Xcodeproj::VERSION' > output/route-probe/xcodeproj-version.txt
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+      - name: Build one immutable real app (no synthetic progress)
+        working-directory: product
+        timeout-minutes: 35
+        run: |
+          set -euo pipefail
+          flutter --version > ../output/route-probe/flutter.txt
+          flutter pub get > ../output/route-probe/pub-get.log 2>&1
+          flutter build ios --simulator --debug --dart-define=HNP_TELEMETRY=true > ../output/route-probe/build.log 2>&1
+          ditto build/ios/iphonesimulator/Runner.app ../output/route-probe/Runner.app
+          shasum -a 256 ../output/route-probe/Runner.app/Frameworks/App.framework/App > ../output/route-probe/app.sha256
+          shasum -a 256 ../output/route-probe/Runner.app/Frameworks/App.framework/flutter_assets/kernel_blob.bin > ../output/route-probe/kernel.sha256
+          echo 'HNP_TELEMETRY=true; NO state/grade/task injection; NO visual canary; route probe ONLY' > ../output/route-probe/build-mode.txt
+      - name: Provision isolated exact Standard phone and existing XCTest project
+        timeout-minutes: 10
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          inv=json.load(open('output/route-probe/simulator-inventory.json'))
+          found=[(runtime,d) for runtime,devices in inv['devices'].items()
+                 if 'iOS' in runtime for d in devices
+                 if d.get('isAvailable') and d.get('name') == 'iPhone 17 Pro']
+          assert len(found)==1, f'STOP_NO_EXACT_IPHONE_17_PRO: count={len(found)}'
+          runtime,device=found[0]
+          udid=subprocess.check_output(['xcrun','simctl','create','S12V-RouteProbe-Only',device['deviceTypeIdentifier'],runtime],text=True).strip()
+          Path('output/route-probe/sim-id.txt').write_text(udid)
+          Path('output/route-probe/selected-device.json').write_text(json.dumps({'udid':udid,'model':device['name'],'runtime':runtime,'deviceType':device['deviceTypeIdentifier'],'compact':'NOT_RUN_NOT_VERIFIED'},indent=2))
+          PY
+          SIM_ID="$(cat output/route-probe/sim-id.txt)"
+          xcrun simctl boot "$SIM_ID"
+          xcrun simctl bootstatus "$SIM_ID" -b
+          xcrun simctl install "$SIM_ID" output/route-probe/Runner.app
+          xcrun simctl launch "$SIM_ID" com.example.pokerAnalyzer > output/route-probe/prewarm-launch.txt
+          xcrun simctl terminate "$SIM_ID" com.example.pokerAnalyzer
+          ruby qa-infra/tools/qa_s12_create_xcodeproj.rb
+      - name: One real Learn task-selector accessibility probe
+        timeout-minutes: 20
+        run: |
+          set -euo pipefail
+          SIM_ID="$(cat output/route-probe/sim-id.txt)"
+          python3 -u qa-infra/tools/qa_s12_watch_checkpoints.py --log output/route-probe/native-tests.log --sim "$SIM_ID" --output output/route-probe/checkpoints > output/route-probe/collector.log 2>&1 &
+          COLLECTOR_PID=$!
+          trap 'kill "$COLLECTOR_PID" 2>/dev/null || true' EXIT
+          NSUnbufferedIO=YES xcodebuild test -project qa-infra/qa/s12_hosted/S12GenuineNative.xcodeproj -scheme S12GenuineNativeUITests -destination "platform=iOS Simulator,id=$SIM_ID" -parallel-testing-enabled NO -only-testing:S12GenuineNativeUITests/S12GenuineNativeUITests/test05NaturalTurnRiverTaskSelectorProbe -resultBundlePath "$PWD/output/route-probe/native-tests.xcresult" CODE_SIGNING_ALLOWED=NO > output/route-probe/native-tests.log 2>&1
+      - name: Seal original screenshots, native AX trees, and binary hashes
+        if: always()
+        run: |
+          set +e
+          if test -d output/route-probe/native-tests.xcresult; then
+            xcrun xcresulttool export attachments --path output/route-probe/native-tests.xcresult --output-path output/route-probe/attachments
+          fi
+          cd output/route-probe || exit 0
+          find . -type f ! -name evidence.sha256 -print0 | xargs -0 shasum -a 256 > evidence.sha256
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s12v-route-probe-${{ github.run_id }}
+          path: |
+            output/route-probe/
+            !output/route-probe/Runner.app/**
+          retention-days: 30
+          if-no-files-found: error

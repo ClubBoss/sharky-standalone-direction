@@ -341,4 +341,101 @@ final class S12GenuineNativeUITests: XCTestCase {
         app.swipeUp(); capture("C9_actions_summary_metrics")
         // V10 restart is already accepted; this bounded lane ends at V09 Summary.
     }
+
+    // S12.V route probe only. Not a Turn/River gameplay or visual PASS.
+    func test05NaturalTurnRiverTaskSelectorProbe() throws {
+        app.launch()
+        XCTAssertTrue(app.waitForExistence(timeout: 35), "STOP_APP_NOT_LAUNCHED")
+        openPlacementFromIntro()
+        tapSelectableOption("I’ve played casually")
+        tapButton("Continue")
+        tapSelectableOption("Try one quick check")
+        tapButton("Continue")
+        tapButton("Start quick check")
+        for (i, answer) in ["2 private · 3 board · Pot 6 BB", "Board cards", "Check"].enumerated() {
+            selectAction(answer)
+            XCTAssertTrue(visible("CORRECT READ", timeout: 12), "STOP_PLACEMENT_ACTUAL_FEEDBACK")
+            tapButton(i == 2 ? "See my start" : "Next check")
+        }
+        tapButton("Start with the useful hand")
+        tapButton("Try one table read")
+        tapWelcomeCheck()
+        tapButton("Start recommended lesson")
+        waitForSelectable("A\nFold")
+        leaveRunnerThroughBack()
+        tapTab("Home")
+        tapTab("Learn")
+        capture("TR01_actual_learn_after_placement")
+
+        // Mission Start chooses first non-path-closed and is NOT a task selector.
+        var openedFullPath = false
+        for _ in 0..<12 {
+            let all = app.buttons.matching(identifier: "All lessons").firstMatch
+            if all.exists && all.isEnabled && all.isHittable {
+                print("S12V_ROUTE_ACTUAL_TAP " + all.label)
+                all.tap()
+                openedFullPath = true
+                break
+            }
+            app.swipeUp()
+        }
+        guard openedFullPath else {
+            capture("TR02_no_visible_all_lessons")
+            XCTFail("STOP_NO_HITTABLE_ALL_LESSONS")
+            return
+        }
+        capture("TR02_full_path_real_ui")
+
+        // Search text is an expectation, not an observed task identity.
+        var foundLesson = false
+        for _ in 0..<26 {
+            let rows = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "Your first hand")
+            ).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+            if rows.count == 1 {
+                print("S12V_ROUTE_REAL_LESSON_TAP actual=" + rows[0].label)
+                rows[0].tap()
+                foundLesson = true
+                break
+            }
+            if rows.count > 1 {
+                capture("TR03_ambiguous_lesson")
+                XCTFail("STOP_AMBIGUOUS_REAL_LESSON_ROW")
+                return
+            }
+            app.swipeUp()
+        }
+        guard foundLesson else {
+            capture("TR03_no_reachable_lesson")
+            XCTFail("STOP_NO_HITTABLE_YOUR_FIRST_HAND")
+            return
+        }
+        capture("TR03_real_lesson_selected")
+
+        var foundTurn = false
+        for _ in 0..<10 {
+            let tasks = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "Turn card")
+            ).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+            if tasks.count == 1 {
+                print("S12V_ROUTE_REAL_TASK_TAP actual=" + tasks[0].label)
+                tasks[0].tap()
+                foundTurn = true
+                break
+            }
+            if tasks.count > 1 {
+                capture("TR04_ambiguous_turn")
+                XCTFail("STOP_AMBIGUOUS_TURN_TASK_ROW")
+                return
+            }
+            app.swipeUp()
+        }
+        guard foundTurn else {
+            capture("TR04_turn_not_hittable")
+            XCTFail("STOP_NO_HITTABLE_TURN_TASK_ROW")
+            return
+        }
+        capture("TR04_after_actual_turn_row_tap")
+        print("S12V_ROUTE_TASK_ROW_TAPPED_ONLY=YES; GAMEPLAY_STREET_BOARD_POT_NOT_VERIFIED")
+    }
 }
