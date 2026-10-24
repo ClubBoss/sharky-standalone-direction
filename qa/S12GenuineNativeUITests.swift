@@ -341,4 +341,367 @@ final class S12GenuineNativeUITests: XCTestCase {
         app.swipeUp(); capture("C9_actions_summary_metrics")
         // V10 restart is already accepted; this bounded lane ends at V09 Summary.
     }
+
+    // S12.V route probe only. Not a Turn/River gameplay or visual PASS.
+    func test05NaturalTurnRiverTaskSelectorProbe() throws {
+        app.launch()
+        XCTAssertTrue(app.waitForExistence(timeout: 35), "STOP_APP_NOT_LAUNCHED")
+        openPlacementFromIntro()
+        tapSelectableOption("I’ve played casually")
+        tapButton("Continue")
+        tapSelectableOption("Try one quick check")
+        tapButton("Continue")
+        tapButton("Start quick check")
+        for (i, answer) in ["2 private · 3 board · Pot 6 BB", "Board cards", "Check"].enumerated() {
+            selectAction(answer)
+            XCTAssertTrue(visible("CORRECT READ", timeout: 12), "STOP_PLACEMENT_ACTUAL_FEEDBACK")
+            tapButton(i == 2 ? "See my start" : "Next check")
+        }
+        tapButton("Start with the useful hand")
+        tapButton("Try one table read")
+        tapWelcomeCheck()
+        tapButton("Start recommended lesson")
+        waitForSelectable("A\nFold")
+        leaveRunnerThroughBack()
+        tapTab("Home")
+        tapTab("Learn")
+        capture("TR01_actual_learn_after_placement")
+
+        // Mission Start chooses first non-path-closed and is NOT a task selector.
+        var openedFullPath = false
+        for _ in 0..<12 {
+            let all = app.buttons.matching(identifier: "All lessons").firstMatch
+            if all.exists && all.isEnabled && all.isHittable {
+                print("S12V_ROUTE_ACTUAL_TAP " + all.label)
+                all.tap()
+                openedFullPath = true
+                break
+            }
+            app.swipeUp()
+        }
+        guard openedFullPath else {
+            capture("TR02_no_visible_all_lessons")
+            XCTFail("STOP_NO_HITTABLE_ALL_LESSONS")
+            return
+        }
+        capture("TR02_full_path_real_ui")
+
+        // Search text is an expectation, not an observed task identity.
+        var foundLesson = false
+        for _ in 0..<26 {
+            let rows = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "Your first hand")
+            ).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+            if rows.count == 1 {
+                print("S12V_ROUTE_REAL_LESSON_TAP actual=" + rows[0].label)
+                rows[0].tap()
+                foundLesson = true
+                break
+            }
+            if rows.count > 1 {
+                capture("TR03_ambiguous_lesson")
+                XCTFail("STOP_AMBIGUOUS_REAL_LESSON_ROW")
+                return
+            }
+            app.swipeUp()
+        }
+        guard foundLesson else {
+            capture("TR03_no_reachable_lesson")
+            XCTFail("STOP_NO_HITTABLE_YOUR_FIRST_HAND")
+            return
+        }
+        capture("TR03_real_lesson_selected")
+
+        var foundTurn = false
+        for _ in 0..<10 {
+            let tasks = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "Turn card")
+            ).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+            if tasks.count == 1 {
+                print("S12V_ROUTE_REAL_TASK_TAP actual=" + tasks[0].label)
+                tasks[0].tap()
+                foundTurn = true
+                break
+            }
+            if tasks.count > 1 {
+                capture("TR04_ambiguous_turn")
+                XCTFail("STOP_AMBIGUOUS_TURN_TASK_ROW")
+                return
+            }
+            app.swipeUp()
+        }
+        guard foundTurn else {
+            capture("TR04_turn_not_hittable")
+            XCTFail("STOP_NO_HITTABLE_TURN_TASK_ROW")
+            return
+        }
+        // Compact native receipt #39938389524: the Turn label received a tap,
+        // but the selection did not create any Retry element in native AX.
+        // This is not a task/completion injection: allow one further tap on
+        // the same real visible source-owned row, and only if focus is absent.
+        // A pre-existing Retry may be below the fold but is still in AX.
+        if !app.buttons.matching(identifier: "Retry").firstMatch.exists {
+            let turn = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "Turn card")
+            ).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+            guard turn.count == 1 else {
+                capture("TR04_compact_turn_row_lost_before_retap")
+                XCTFail("STOP_NO_UNIQUE_REAL_TURN_ROW_FOR_BOUNDED_RETAP")
+                return
+            }
+            print("S12V_REAL_TURN_FOCUS_RETRY_ONE_SOURCE_ROW_TAP label=" + turn[0].label)
+            turn[0].tap()
+            RunLoop.current.run(until: Date().addingTimeInterval(1.0))
+            capture("TR04_after_one_bounded_focus_retap")
+        }
+        capture("TR04_after_actual_turn_row_tap")
+        guard app.buttons.matching(identifier: "Retry").firstMatch.exists else {
+            XCTFail("STOP_TURN_SELECTION_DID_NOT_EXPOSE_NATIVE_RETRY")
+            return
+        }
+        print("S12V_ROUTE_TASK_ROW_TAPPED_AND_CTA_EXISTS_IN_AX=YES; GAMEPLAY_STREET_BOARD_POT_NOT_VERIFIED")
+    }
+
+    // Stage 2: genuine UI-only gameplay probe, with native evidence receipts.
+    // A green XCTest does not by itself prove 4/5 painted cards: inspect
+    // the original native screenshots and AX tree before accepting S12.V.
+    func test06NativeTurnRiverBoardAndPotProbe() throws {
+        try test05NaturalTurnRiverTaskSelectorProbe()
+        RunLoop.current.run(until: Date().addingTimeInterval(1.2))
+
+        // The selected task's native CTA is below the fold on both exact
+        // devices in run 39925606783 (Standard AX has Retry at zero frame).
+        // Reach it only through natural visible UI scrolling, never by
+        // coordinate injection, hidden-element tapping, or progress mutation.
+        func visibleRetryAfterScroll(_ stage: String) -> [XCUIElement] {
+            for attempt in 0..<12 {
+                let buttons = app.buttons.matching(identifier: "Retry")
+                    .allElementsBoundByIndex.filter {
+                        $0.exists && $0.isEnabled && $0.isHittable
+                    }
+                if !buttons.isEmpty {
+                    print("S12V_REAL_RETRY_VISIBLE stage=" + stage +
+                          " count=" + String(buttons.count) +
+                          " scrolls=" + String(attempt))
+                    return buttons
+                }
+                print("S12V_RETRY_BELOW_FOLD stage=" + stage +
+                      " scroll=" + String(attempt + 1))
+                app.swipeUp()
+            }
+            return []
+        }
+
+        let turnRetry = visibleRetryAfterScroll("turn")
+        guard turnRetry.count == 1 else {
+            capture("TR05_no_unique_turn_retry")
+            XCTFail("STOP_TURN_TASK_FOCUS_OR_RETRY_NOT_VISIBLE count=" + String(turnRetry.count))
+            return
+        }
+        capture("TR05_actual_turn_retry_visible")
+        print("S12V_REAL_TURN_RETRY_TAP actual=" + turnRetry[0].label)
+        turnRetry[0].tap()
+        guard visible("Pot 5 BB", timeout: 15) else {
+            capture("TR06_turn_no_native_pot")
+            XCTFail("STOP_TURN_GAMEPLAY_POT_NOT_VISIBLE")
+            return
+        }
+        capture("TR06_actual_turn_gameplay")
+        print("S12V_TURN_NATIVE_POT_VISIBLE=YES; PAINTED_BOARD_COUNT_REQUIRES_ORIGINAL_SCREEN_REVIEW")
+        leaveRunnerThroughBack()
+
+        // Standard original AX #39938389524: after returning from Turn the
+        // target lesson is collapsed. All lessons is NOT a task selector:
+        // reopen the actual lesson row before searching for River card.
+        print("S12V_RIVER_OPEN_ALL_LESSONS")
+        tapButton("All lessons")
+        var reopenedFirstHand = false
+        for _ in 0..<20 {
+            let lessons = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "Your first hand")
+            ).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+            if lessons.count == 1 {
+                print("S12V_RIVER_REOPEN_REAL_LESSON label=" + lessons[0].label)
+                lessons[0].tap()
+                reopenedFirstHand = true
+                break
+            }
+            if lessons.count > 1 {
+                capture("TR07_ambiguous_reopen_lesson")
+                XCTFail("STOP_AMBIGUOUS_REAL_RIVER_PARENT_LESSON")
+                return
+            }
+            app.swipeUp()
+        }
+        guard reopenedFirstHand else {
+            capture("TR07_no_reachable_reopen_lesson")
+            XCTFail("STOP_NO_SOURCE_OWNED_RIVER_PARENT_LESSON")
+            return
+        }
+        capture("TR07_reopened_source_owned_lesson")
+
+        // Native River proof #39955048811 failed after a real River-row tap.
+        // Source permits same-task taps to toggle the popup closed; whether
+        // that happened in the native run remains UNVERIFIED.
+        // Before touching River, select the distinct real Turn row. This
+        // deterministically prevents a subsequent River tap from being the
+        // same popup task; no hidden state or coordinates are injected.
+        var turnFocusRow: XCUIElement?
+        for _ in 0..<20 {
+            let rows = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "Turn card")
+            ).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+            if rows.count == 1 {
+                turnFocusRow = rows[0]
+                break
+            }
+            if rows.count > 1 {
+                capture("TR07_ambiguous_distinct_turn_focus")
+                XCTFail("STOP_AMBIGUOUS_DISTINCT_TURN_FOCUS")
+                return
+            }
+            app.swipeUp()
+        }
+        guard let turn = turnFocusRow else {
+            capture("TR07_distinct_turn_focus_unreachable")
+            XCTFail("STOP_DISTINCT_TURN_FOCUS_NOT_REACHABLE")
+            return
+        }
+        print("S12V_RIVER_DISTINCT_TASK_PRIME_TURN label=" + turn.label)
+        turn.tap()
+        RunLoop.current.run(until: Date().addingTimeInterval(1.2))
+
+        // Exact Standard vs SE3 differential from native #39976582872:
+        // only Standard swiped after Turn selection and before River tap.
+        // Capture genuine source-owned task focus/frames at THREE points.
+        // Do NOT retry River taps or mutate any user progression state.
+        func checkpointRiverFocus(_ tag: String, _ swipes: Int) {
+            let turn = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "Turn card")
+            ).allElementsBoundByIndex.filter { $0.exists }
+            let river = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "River card")
+            ).allElementsBoundByIndex.filter { $0.exists }
+            let tree = app.debugDescription
+            let turnStart = tree.range(of: "label: 'Turn card")
+            let riverStart = tree.range(of: "label: 'River card")
+            let showdownStart = tree.range(of: "label: 'Showdown read")
+            let retryStart = tree.range(of: "label: 'Retry'")
+            let turnOwned = turnStart != nil && riverStart != nil &&
+                retryStart != nil && turnStart!.lowerBound < retryStart!.lowerBound &&
+                retryStart!.lowerBound < riverStart!.lowerBound
+            let riverOwned = riverStart != nil && showdownStart != nil &&
+                retryStart != nil && riverStart!.lowerBound < retryStart!.lowerBound &&
+                retryStart!.lowerBound < showdownStart!.lowerBound
+            print("S12V_RIVER_FOCUS_CHECKPOINT stage=" + tag +
+                  " swipes=" + String(swipes) +
+                  " turn_count=" + String(turn.count) +
+                  " turn_frame=" + (turn.count == 1 ? String(describing: turn[0].frame) : "NONE") +
+                  " river_count=" + String(river.count) +
+                  " river_frame=" + (river.count == 1 ? String(describing: river[0].frame) : "NONE") +
+                  " river_hittable=" + String(river.count == 1 && river[0].isHittable) +
+                  " turn_retry_owned_by_AX_order=" + String(turnOwned) +
+                  " river_retry_owned_by_AX_order=" + String(riverOwned))
+            capture(tag)
+        }
+
+        checkpointRiverFocus("TR07_focus_01_after_turn_before_scroll", 0)
+        var riverRow: XCUIElement?
+        var riverScrollCount = 0
+        // One observed Standard-only scroll maximum; a longer search would
+        // erase causal attribution. Compact should require no extra scroll.
+        for _ in 0..<2 {
+            let rows = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "River card")
+            ).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+            if rows.count == 1 {
+                riverRow = rows[0]
+                break
+            }
+            if rows.count > 1 {
+                capture("TR07_ambiguous_river_row")
+                XCTFail("STOP_AMBIGUOUS_REAL_RIVER_TASK_ROW")
+                return
+            }
+            if riverScrollCount >= 1 { break }
+            print("S12V_RIVER_STANDARD_INTERVENING_NATIVE_SWIPE_UP")
+            app.swipeUp()
+            riverScrollCount += 1
+            RunLoop.current.run(until: Date().addingTimeInterval(0.35))
+        }
+        checkpointRiverFocus("TR07_focus_02_post_scroll_pre_river_tap", riverScrollCount)
+        guard riverRow != nil else {
+            XCTFail("STOP_RIVER_ROW_UNHITTABLE_AFTER_ONE_DIAGNOSTIC_SCROLL")
+            return
+        }
+        // Re-resolve after native screenshot/AX hold; never tap a stale frame.
+        let ready = app.staticTexts.matching(
+            NSPredicate(format: "label CONTAINS[cd] %@", "River card")
+        ).allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
+        guard ready.count == 1 else {
+            XCTFail("STOP_RIVER_ROW_MOVED_AFTER_PRETAP_NATIVE_CHECKPOINT")
+            return
+        }
+        print("S12V_REAL_RIVER_ROW_TAP_AFTER_DISTINCT_TASK actual=" + ready[0].label +
+              " frame=" + String(describing: ready[0].frame) +
+              " extra_swipes=" + String(riverScrollCount))
+        ready[0].tap()
+        RunLoop.current.run(until: Date().addingTimeInterval(1.2))
+        checkpointRiverFocus("TR07_focus_03_immediate_after_river_tap", riverScrollCount)
+        // On compact, the real River Retry may be BELOW the visible fold.
+        // First scroll the normal UI to expose exactly one enabled CTA,
+        // then verify its ownership from native frames: River < Retry <
+        // Showdown. A stale Turn-owned Retry cannot pass this guard.
+        func nativeAXShowsRiverOwnedRetry() -> Bool {
+            let river = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "River card")
+            ).allElementsBoundByIndex.filter { $0.exists }
+            let showdown = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "Showdown read")
+            ).allElementsBoundByIndex.filter { $0.exists }
+            let retries = app.buttons.matching(identifier: "Retry")
+                .allElementsBoundByIndex.filter {
+                    $0.exists && $0.isEnabled && $0.isHittable
+                }
+            guard river.count == 1, showdown.count == 1,
+                  retries.count == 1 else {
+                print("S12V_RIVER_FRAME_OWNER_STOP counts=" +
+                      String(river.count) + "/" + String(showdown.count) +
+                      "/" + String(retries.count))
+                return false
+            }
+            let r = river[0].frame
+            let n = showdown[0].frame
+            let b = retries[0].frame
+            let owned = b.midY > r.maxY && b.midY < n.minY &&
+                        b.midX >= r.minX && b.midX <= r.maxX
+            print("S12V_RIVER_FRAME_OWNER_CHECK river=" +
+                  String(describing: r) + " retry=" +
+                  String(describing: b) + " next=" +
+                  String(describing: n) + " owned=" + String(owned))
+            return owned
+        }
+        let riverRetry = visibleRetryAfterScroll("river")
+        guard riverRetry.count == 1 else {
+            capture("TR07_no_unique_river_retry")
+            XCTFail("STOP_RIVER_TASK_FOCUS_OR_RETRY_NOT_VISIBLE count=" + String(riverRetry.count))
+            return
+        }
+        guard nativeAXShowsRiverOwnedRetry() else {
+            capture("TR07_river_retry_lost_native_ax_ownership")
+            XCTFail("STOP_RIVER_RETRY_OWNERSHIP_CHANGED_WHILE_SCROLLING")
+            return
+        }
+        capture("TR07_actual_river_retry_visible")
+        print("S12V_REAL_RIVER_RETRY_TAP actual=" + riverRetry[0].label)
+        riverRetry[0].tap()
+        guard visible("Pot 5 BB", timeout: 15) else {
+            capture("TR08_river_no_native_pot")
+            XCTFail("STOP_RIVER_GAMEPLAY_POT_NOT_VISIBLE")
+            return
+        }
+        capture("TR08_actual_river_gameplay")
+        print("S12V_RIVER_NATIVE_POT_VISIBLE=YES; PAINTED_BOARD_COUNT_REQUIRES_ORIGINAL_SCREEN_REVIEW")
+    }
+
 }

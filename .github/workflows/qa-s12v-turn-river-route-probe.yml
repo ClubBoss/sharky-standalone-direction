@@ -1,0 +1,159 @@
+name: S12V native Turn River table proof candidate
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/qa-s12v-turn-river-route-probe.yml'
+      - 'qa/S12GenuineNativeUITests.swift'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: s12v-turn-river-route-probe-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  source-owned-route:
+    runs-on: macos-latest
+    timeout-minutes: 85
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: qa-infra
+      - uses: actions/checkout@v4
+        with:
+          path: product
+          ref: 522df8d6ab90cbe8993fd3f2317963fe50ebf5b8
+      - name: Freeze product and exact host inventory
+        run: |
+          set -euo pipefail
+          mkdir -p output/route-probe
+          test "$(git -C product rev-parse HEAD)" = 522df8d6ab90cbe8993fd3f2317963fe50ebf5b8
+          test "$(git -C product rev-parse HEAD^{tree})" = bdd879ceeb30483c01865a8b255e827bbd768862
+          git -C product rev-parse HEAD HEAD^{tree} > output/route-probe/product-identity.txt
+          git -C qa-infra rev-parse HEAD HEAD^{tree} > output/route-probe/qa-identity.txt
+          xcrun simctl list -j > output/route-probe/simulator-inventory.json
+          xcodebuild -version > output/route-probe/xcode.txt
+          sw_vers > output/route-probe/macos.txt
+          ruby -e 'require "xcodeproj"; puts Xcodeproj::VERSION' > output/route-probe/xcodeproj-version.txt
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+      - name: Build one immutable real app (no synthetic progress)
+        working-directory: product
+        timeout-minutes: 35
+        run: |
+          set -euo pipefail
+          flutter --version > ../output/route-probe/flutter.txt
+          flutter pub get > ../output/route-probe/pub-get.log 2>&1
+          flutter build ios --simulator --debug --dart-define=HNP_TELEMETRY=true > ../output/route-probe/build.log 2>&1
+          ditto build/ios/iphonesimulator/Runner.app ../output/route-probe/Runner.app
+          shasum -a 256 ../output/route-probe/Runner.app/Frameworks/App.framework/App > ../output/route-probe/app.sha256
+          shasum -a 256 ../output/route-probe/Runner.app/Frameworks/App.framework/flutter_assets/kernel_blob.bin > ../output/route-probe/kernel.sha256
+          echo 'HNP_TELEMETRY=true; NO state/grade/task injection; NO visual canary; route probe ONLY' > ../output/route-probe/build-mode.txt
+      - name: Provision isolated exact Standard phone and existing XCTest project
+        timeout-minutes: 20
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, re, subprocess
+          from pathlib import Path
+          inv=json.load(open('output/route-probe/simulator-inventory.json'))
+          found=[]
+          for runtime,devices in inv['devices'].items():
+              match=re.search(r'iOS-(\d+)(?:-(\d+))?(?:-(\d+))?$',runtime)
+              if match is None:
+                  continue
+              version=tuple(int(part or 0) for part in match.groups())
+              for device in devices:
+                  if device.get('isAvailable') and device.get('name') == 'iPhone 17 Pro':
+                      found.append((version,runtime,device))
+          assert found, 'STOP_NO_EXACT_IPHONE_17_PRO'
+          # A hosted Mac can expose the same phone model under several iOS
+          # runtimes. Choose the newest available runtime deterministically.
+          found.sort(key=lambda item:(item[0],item[1],item[2].get('udid','')))
+          version,runtime,device=found[-1]
+          assert version[0]>=26, f'STOP_UNSUPPORTED_IPHONE_17_PRO_IOS: {runtime}'
+          assert device.get('deviceTypeIdentifier'), 'STOP_MISSING_SIMULATOR_DEVICE_TYPE'
+          udid=subprocess.check_output(['xcrun','simctl','create','S12V-RouteProbe-Only',device['deviceTypeIdentifier'],runtime],text=True).strip()
+          Path('output/route-probe/sim-id.txt').write_text(udid)
+          Path('output/route-probe/selected-device.json').write_text(json.dumps({
+              'udid':udid,'model':device['name'],'runtime':runtime,
+              'deviceType':device['deviceTypeIdentifier'],
+              'candidateCount':len(found),
+              'candidates':[{'runtime':item[1],'deviceType':item[2].get('deviceTypeIdentifier'),'udid':item[2].get('udid')} for item in found],
+              'compact':'NOT_RUN_NOT_VERIFIED'
+          },indent=2))
+          PY
+          SIM_ID="$(cat output/route-probe/sim-id.txt)"
+          xcrun simctl boot "$SIM_ID"
+          xcrun simctl bootstatus "$SIM_ID" -b
+          xcrun simctl install "$SIM_ID" output/route-probe/Runner.app
+          xcrun simctl launch "$SIM_ID" com.example.pokerAnalyzer > output/route-probe/prewarm-launch.txt
+          xcrun simctl terminate "$SIM_ID" com.example.pokerAnalyzer
+          ruby qa-infra/tools/qa_s12_create_xcodeproj.rb
+          # Exact Compact SE3: create from the same installed iOS runtime.
+          # No proxy iPhone model, state injection, or second Flutter build.
+          COMPACT_TYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation"
+          RUNTIME="$(python3 -c 'import json;print(json.load(open("output/route-probe/selected-device.json"))["runtime"])')"
+          xcrun simctl list devicetypes | grep -F "iPhone SE (3rd generation)"
+          COMPACT_ID="$(xcrun simctl create S12V-Compact-SE3-Only "$COMPACT_TYPE" "$RUNTIME")"
+          echo "$COMPACT_ID" > output/route-probe/compact-sim-id.txt
+          xcrun simctl boot "$COMPACT_ID"
+          xcrun simctl bootstatus "$COMPACT_ID" -b
+          xcrun simctl install "$COMPACT_ID" output/route-probe/Runner.app
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('output/route-probe/selected-device.json')
+          v=json.loads(p.read_text())
+          v['compact']={'model':'iPhone SE (3rd generation)','runtime':v['runtime'],
+                        'deviceType':'com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation',
+                        'udid':Path('output/route-probe/compact-sim-id.txt').read_text().strip()}
+          p.write_text(json.dumps(v,indent=2))
+          PY
+      - name: One frozen app - real Standard and exact Compact SE3 native probes
+        timeout-minutes: 35
+        run: |
+          set -euo pipefail
+          FAILED=0
+          for PROFILE in standard compact; do
+            if [ "$PROFILE" = standard ]; then
+              SIM_ID="$(cat output/route-probe/sim-id.txt)"
+            else
+              SIM_ID="$(cat output/route-probe/compact-sim-id.txt)"
+            fi
+            LOG="output/route-probe/native-tests-${PROFILE}.log"
+            python3 -u qa-infra/tools/qa_s12_watch_checkpoints.py --log "$LOG" --sim "$SIM_ID" --output "output/route-probe/checkpoints/${PROFILE}" > "output/route-probe/collector-${PROFILE}.log" 2>&1 &
+            COLLECTOR_PID=$!
+            set +e
+            NSUnbufferedIO=YES xcodebuild test -project qa-infra/qa/s12_hosted/S12GenuineNative.xcodeproj -scheme S12GenuineNativeUITests -destination "platform=iOS Simulator,id=$SIM_ID" -parallel-testing-enabled NO -only-testing:S12GenuineNativeUITests/S12GenuineNativeUITests/test06NativeTurnRiverBoardAndPotProbe -resultBundlePath "$PWD/output/route-probe/native-tests-${PROFILE}.xcresult" CODE_SIGNING_ALLOWED=NO > "$LOG" 2>&1
+            EXIT_CODE=$?
+            set -e
+            kill "$COLLECTOR_PID" 2>/dev/null || true
+            wait "$COLLECTOR_PID" 2>/dev/null || true
+            echo "$EXIT_CODE" > "output/route-probe/${PROFILE}-exit-code.txt"
+            if [ "$EXIT_CODE" -ne 0 ]; then FAILED=1; fi
+          done
+          exit "$FAILED"
+      - name: Seal original screenshots, native AX trees, and binary hashes
+        if: always()
+        run: |
+          set +e
+          for PROFILE in standard compact; do
+            RESULT="output/route-probe/native-tests-${PROFILE}.xcresult"
+            if test -d "$RESULT"; then
+              xcrun xcresulttool export attachments --path "$RESULT" --output-path "output/route-probe/attachments-${PROFILE}"
+            fi
+          done
+          cd output/route-probe || exit 0
+          find . -type f ! -name evidence.sha256 -print0 | xargs -0 shasum -a 256 > evidence.sha256
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s12v-route-probe-${{ github.run_id }}
+          path: |
+            output/route-probe/
+            !output/route-probe/Runner.app/**
+          retention-days: 30
+          if-no-files-found: error
