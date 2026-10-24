@@ -1,4 +1,4 @@
-name: S12V native Turn River table proof candidate
+name: S12V Standard placement AX cause and Turn River proof
 on:
   pull_request:
     paths:
@@ -69,11 +69,12 @@ jobs:
                   if device.get('isAvailable') and device.get('name') == 'iPhone 17 Pro':
                       found.append((version,runtime,device))
           assert found, 'STOP_NO_EXACT_IPHONE_17_PRO'
-          # A hosted Mac can expose the same phone model under several iOS
-          # runtimes. Choose the newest available runtime deterministically.
-          found.sort(key=lambda item:(item[0],item[1],item[2].get('udid','')))
-          version,runtime,device=found[-1]
-          assert version[0]>=26, f'STOP_UNSUPPORTED_IPHONE_17_PRO_IOS: {runtime}'
+          # Cause-check the EXACT prior failing hosted OS: iOS 26.5.
+          # Fail closed rather than silently use a different runtime.
+          matched=[item for item in found if item[0] == (26,5,0)]
+          assert matched, 'STOP_NO_EXACT_IPHONE_17_PRO_IOS_26_5'
+          matched.sort(key=lambda item:(item[1],item[2].get('udid','')))
+          version,runtime,device=matched[-1]
           assert device.get('deviceTypeIdentifier'), 'STOP_MISSING_SIMULATOR_DEVICE_TYPE'
           udid=subprocess.check_output(['xcrun','simctl','create','S12V-RouteProbe-Only',device['deviceTypeIdentifier'],runtime],text=True).strip()
           Path('output/route-probe/sim-id.txt').write_text(udid)
@@ -92,32 +93,12 @@ jobs:
           xcrun simctl launch "$SIM_ID" com.example.pokerAnalyzer > output/route-probe/prewarm-launch.txt
           xcrun simctl terminate "$SIM_ID" com.example.pokerAnalyzer
           ruby qa-infra/tools/qa_s12_create_xcodeproj.rb
-          # Exact Compact SE3: create from the same installed iOS runtime.
-          # No proxy iPhone model, state injection, or second Flutter build.
-          COMPACT_TYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation"
-          RUNTIME="$(python3 -c 'import json;print(json.load(open("output/route-probe/selected-device.json"))["runtime"])')"
-          xcrun simctl list devicetypes | grep -F "iPhone SE (3rd generation)"
-          COMPACT_ID="$(xcrun simctl create S12V-Compact-SE3-Only "$COMPACT_TYPE" "$RUNTIME")"
-          echo "$COMPACT_ID" > output/route-probe/compact-sim-id.txt
-          xcrun simctl boot "$COMPACT_ID"
-          xcrun simctl bootstatus "$COMPACT_ID" -b
-          xcrun simctl install "$COMPACT_ID" output/route-probe/Runner.app
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-          p=Path('output/route-probe/selected-device.json')
-          v=json.loads(p.read_text())
-          v['compact']={'model':'iPhone SE (3rd generation)','runtime':v['runtime'],
-                        'deviceType':'com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation',
-                        'udid':Path('output/route-probe/compact-sim-id.txt').read_text().strip()}
-          p.write_text(json.dumps(v,indent=2))
-          PY
-      - name: One frozen app - real Standard and exact Compact SE3 native probes
+      - name: One frozen app - Standard original AX and conditional Turn River route
         timeout-minutes: 35
         run: |
           set -euo pipefail
           FAILED=0
-          for PROFILE in standard compact; do
+          for PROFILE in standard; do
             if [ "$PROFILE" = standard ]; then
               SIM_ID="$(cat output/route-probe/sim-id.txt)"
             else

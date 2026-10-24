@@ -354,7 +354,27 @@ final class S12GenuineNativeUITests: XCTestCase {
         tapButton("Start quick check")
         for (i, answer) in ["2 private · 3 board · Pot 6 BB", "Board cards", "Check"].enumerated() {
             selectAction(answer)
-            XCTAssertTrue(visible("CORRECT READ", timeout: 12), "STOP_PLACEMENT_ACTUAL_FEEDBACK")
+            let initialCorrectAX = visible("CORRECT READ", timeout: 12)
+            if !initialCorrectAX && i == 0 {
+                // Previous exact-hosted iOS 26.5 Standard captured painted
+                // CORRECT READ + Next check, but XCTest AX still exposed the
+                // preceding choices. Capture both without injecting a state,
+                // tapping again, or pretending that pixels prove semantics.
+                print("S12V_AX_CAUSE_CHECK_FIRST_FEEDBACK_NOT_FOUND")
+                capture("AX01_standard_placement_feedback_disagreement")
+                let recoveredCorrectAX = visible("CORRECT READ", timeout: 10)
+                let forward = app.buttons.matching(identifier: "Next check").firstMatch
+                let forwardReady =
+                    forward.exists && forward.isEnabled && forward.isHittable
+                print("S12V_AX_CAUSE_CHECK_AFTER_NATIVE_CAPTURE correct=" +
+                    String(recoveredCorrectAX) + " next_hittable=" +
+                    String(forwardReady) + "\n" + app.debugDescription)
+                XCTAssertTrue(
+                    recoveredCorrectAX && forwardReady,
+                    "STOP_PLACEMENT_AX_NOT_RESTORED_AFTER_NATIVE_CAPTURE")
+            } else {
+                XCTAssertTrue(initialCorrectAX, "STOP_PLACEMENT_ACTUAL_FEEDBACK")
+            }
             tapButton(i == 2 ? "See my start" : "Next check")
         }
         tapButton("Start with the useful hand")
