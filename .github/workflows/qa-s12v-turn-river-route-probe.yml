@@ -21,13 +21,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           path: product
-          ref: 522df8d6ab90cbe8993fd3f2317963fe50ebf5b8
+          ref: a7fa3e82554935190a027ce40fa6329218daea4f
       - name: Freeze product and exact host inventory
         run: |
           set -euo pipefail
           mkdir -p output/route-probe
-          test "$(git -C product rev-parse HEAD)" = 522df8d6ab90cbe8993fd3f2317963fe50ebf5b8
-          test "$(git -C product rev-parse HEAD^{tree})" = bdd879ceeb30483c01865a8b255e827bbd768862
+          test "$(git -C product rev-parse HEAD)" = a7fa3e82554935190a027ce40fa6329218daea4f
+          test "$(git -C product rev-parse HEAD^{tree})" = 0b23b2dbd374868661d489b841cc98343700569a
           git -C product rev-parse HEAD HEAD^{tree} > output/route-probe/product-identity.txt
           git -C qa-infra rev-parse HEAD HEAD^{tree} > output/route-probe/qa-identity.txt
           xcrun simctl list -j > output/route-probe/simulator-inventory.json
