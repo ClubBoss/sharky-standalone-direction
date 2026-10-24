@@ -11999,6 +11999,10 @@ class _Act0TableV1 extends StatelessWidget {
                   for (var slot = 0; slot < seats.length; slot++)
                     _SeatPlacementV1(
                       compactInformativeColumn: cameraStageSize != null,
+                      boardBlindHudClearance:
+                          integratedPerspectivePrototype &&
+                          cameraStageSize != null &&
+                          table.boardCards.isNotEmpty,
                       slot: slot,
                       seat: seats[slot],
                       heroCards: table.heroCards,
@@ -13119,6 +13123,7 @@ class _SeatPlacementV1 extends StatelessWidget {
     this.identityPolicy = Act0TableIdentityPolicyV1.currentProduction,
     this.depthTieredPrototype = false,
     this.compactInformativeColumn = false,
+    this.boardBlindHudClearance = false,
   });
 
   final int slot;
@@ -13139,6 +13144,7 @@ class _SeatPlacementV1 extends StatelessWidget {
   final Act0TableIdentityPolicyV1 identityPolicy;
   final bool depthTieredPrototype;
   final bool compactInformativeColumn;
+  final bool boardBlindHudClearance;
 
   static const List<Offset> defaultSlots = <Offset>[
     Offset(0.50, 0.90),
@@ -13171,6 +13177,7 @@ class _SeatPlacementV1 extends StatelessWidget {
           scale: tierScale,
           child: _SeatNodeV1(
             compactInformativeColumn: compactInformativeColumn,
+            boardBlindHudClearance: boardBlindHudClearance,
             seat: seat,
             heroCards: heroCards,
             highlightedCardIds: highlightedCardIds,
@@ -13209,6 +13216,7 @@ class _SeatNodeV1 extends StatelessWidget {
     this.onTap,
     this.compact = false,
     this.compactInformativeColumn = false,
+    this.boardBlindHudClearance = false,
   });
 
   final Act0SeatStateV1 seat;
@@ -13233,6 +13241,7 @@ class _SeatNodeV1 extends StatelessWidget {
   /// column's dead vertical space only. No type size, no plate width, no
   /// content changes.
   final bool compactInformativeColumn;
+  final bool boardBlindHudClearance;
 
   @override
   Widget build(BuildContext context) {
@@ -13251,6 +13260,31 @@ class _SeatNodeV1 extends StatelessWidget {
       decisionPriceOwnedByTable: decisionPriceOwnedByTable,
       identityPolicy: identityPolicy,
     );
+    // Board-street HUD: compact only duplicated blind definitions, NEVER
+    // stack amounts, To act, bets or any other source-owned informative text.
+    final blindRoleDefinition = switch (seat.seatLabel.toUpperCase()) {
+      'SB' => _localizedSeatRoleLabelV1(
+        context,
+        atomId: 'table_word_small_blind',
+        fallback: 'Small blind',
+      ),
+      'BB' => _localizedSeatRoleLabelV1(
+        context,
+        atomId: 'table_word_big_blind',
+        fallback: 'Big blind',
+      ),
+      _ => null,
+    };
+    final compactBlindPlate =
+        boardBlindHudClearance &&
+        refined &&
+        !hero &&
+        blindRoleDefinition != null &&
+        markerDisplay.subLabel == blindRoleDefinition;
+    // Move the label ONLY, never the seated actor, cards, board or camera.
+    final blindPlateShift = compactBlindPlate
+        ? (seat.seatLabel.toUpperCase() == 'SB' ? 34.0 : -31.0)
+        : 0.0;
     final stackLabel = (seat.stackLabel ?? '').trim();
     final showsOpponentStack =
         !hero && stackLabel.isNotEmpty && markerDisplay.subLabel == stackLabel;
@@ -13370,220 +13404,237 @@ class _SeatNodeV1 extends StatelessWidget {
               const _FoldedBadgeV1(),
               SizedBox(height: cardPlateGap),
             ],
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  key: hero
-                      ? Key('act0_shell_hero_identity_${seat.seatId}')
-                      : null,
-                  padding: EdgeInsets.symmetric(
-                    // Without the glyph the plate would shrink-wrap to its
-                    // label and read as a chip. A nameplate has to stay
-                    // plate-shaped, so the reclaimed width goes back as
-                    // padding rather than being given up.
-                    horizontal:
-                        (compact
-                            ? (refined ? 5 : 7)
-                            : (useSlimRefinedSeat ? 7 : (refined ? 9 : 8))) +
-                        (showsSeatGlyph ? 0 : 6),
-                    vertical:
-                        (useSlimRefinedSeat ? 5 : (refined ? 6 : 5)) -
-                        plateVerticalPad,
-                  ),
-                  decoration: Act0SceneNameplateV1.decoration(
-                    radius: Act0ShellTokensV1.radiusSm,
-                    stateTone: shouldShowRing ? borderColor : null,
-                    stateStrength: shouldShowRing ? 1.0 : 0.0,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (showsSeatGlyph) ...[
-                        Container(
-                          width: compact
-                              ? (refined ? 18 : 22)
-                              : (useSlimRefinedSeat ? 22 : (refined ? 26 : 24)),
-                          height: compact
-                              ? (refined ? 18 : 22)
-                              : (useSlimRefinedSeat ? 22 : (refined ? 26 : 24)),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            gradient: hero
-                                ? const LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: <Color>[
-                                      Act0ShellTokensV1.runnerTagBlue,
-                                      Act0ShellTokensV1.runnerSharkBlueDark,
-                                    ],
-                                  )
-                                : null,
-                            color: hero
-                                ? null
-                                : refined
-                                ? (seatVisualState ==
-                                          _SeatVisualStateV1.selectable
-                                      ? Act0ShellTokensV1.info.withValues(
-                                          alpha: 0.10,
-                                        )
-                                      : Act0ShellTokensV1.surface2)
-                                : Act0ShellTokensV1.surface3,
-                            borderRadius: BorderRadius.circular(
-                              refined
-                                  ? Act0ShellTokensV1.radiusXs
-                                  : Act0ShellTokensV1.radiusPill,
-                            ),
-                            border: Border.all(
-                              color: hero
-                                  ? Act0ShellTokensV1.gold.withValues(
-                                      alpha: 0.86,
-                                    )
-                                  : refined
-                                  ? Act0ShellTokensV1.border.withValues(
-                                      alpha: 0.72,
-                                    )
-                                  : Colors.transparent,
-                              width: hero ? 1.2 : 1.0,
-                            ),
-                            boxShadow: hero
-                                ? const <BoxShadow>[
-                                    BoxShadow(
-                                      color: Act0ShellTokensV1.shadowSoftStrong,
-                                      blurRadius: 3,
-                                      offset: Offset(0, 1.5),
-                                    ),
-                                  ]
-                                : null,
-                          ),
-                          child: hero
-                              ? KeyedSubtree(
-                                  key: const Key(
-                                    'act0_shell_wave1_hero_you_badge',
-                                  ),
-                                  child: FittedBox(
-                                    key: const Key(
-                                      'act0_shell_wave1b_hero_badge',
-                                    ),
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      'You',
-                                      style: Act0ShellTokensV1.label.copyWith(
-                                        color: Act0ShellTokensV1.onPrimary,
-                                        fontSize: refined ? 7.2 : 7.6,
-                                        fontWeight: FontWeight.w900,
-                                        letterSpacing: 0,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : Icon(
-                                  selectable
-                                      ? Icons.touch_app_rounded
-                                      : seat.isOccupied
-                                      ? Icons.person_rounded
-                                      : Icons.circle_outlined,
-                                  size: useSlimRefinedSeat
-                                      ? 11
-                                      : (refined ? 12 : 13),
-                                  color:
-                                      seatVisualState ==
-                                          _SeatVisualStateV1.selectable
-                                      ? Act0ShellTokensV1.info.withValues(
-                                          alpha: 0.56,
-                                        )
-                                      : refined
-                                      ? Act0ShellTokensV1.textDim
-                                      : Act0ShellTokensV1.textMuted,
-                                ),
-                        ),
-                        SizedBox(width: useSlimRefinedSeat ? 4 : 5),
-                      ],
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            act0RuntimeLocalizedSeatPrimaryLabelV1(
-                              context,
-                              seat: seat,
-                              hero: hero,
-                              refined: refined,
-                              identityPolicy: identityPolicy,
-                            ),
-                            maxLines: 2,
-                            style: Act0ShellTokensV1.label.copyWith(
-                              color: primaryLabelColor,
-                              fontSize: useSlimRefinedSeat
-                                  ? 8.5
-                                  : (refined ? 9.0 : 10),
-                              letterSpacing: refined ? 0.1 : 0.4,
-                            ),
-                          ),
-                          if (markerDisplay.subLabel != null)
-                            KeyedSubtree(
-                              key: showsOpponentStack
-                                  ? Key(
-                                      'act0_shell_opponent_stack_${seat.seatId}',
+            Transform.translate(
+              offset: Offset(blindPlateShift, 0),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    key: compactBlindPlate
+                        ? Key('act0_shell_blind_hud_plate_' + seat.seatId)
+                        : hero
+                        ? Key('act0_shell_hero_identity_${seat.seatId}')
+                        : null,
+                    padding: EdgeInsets.symmetric(
+                      // Without the glyph the plate would shrink-wrap to its
+                      // label and read as a chip. A nameplate has to stay
+                      // plate-shaped, so the reclaimed width goes back as
+                      // padding rather than being given up.
+                      horizontal:
+                          (compact
+                              ? (refined ? 5 : 7)
+                              : (useSlimRefinedSeat ? 7 : (refined ? 9 : 8))) +
+                          (showsSeatGlyph ? 0 : 6),
+                      vertical:
+                          (useSlimRefinedSeat ? 5 : (refined ? 6 : 5)) -
+                          plateVerticalPad,
+                    ),
+                    decoration: Act0SceneNameplateV1.decoration(
+                      radius: Act0ShellTokensV1.radiusSm,
+                      stateTone: shouldShowRing ? borderColor : null,
+                      stateStrength: shouldShowRing ? 1.0 : 0.0,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (showsSeatGlyph) ...[
+                          Container(
+                            width: compact
+                                ? (refined ? 18 : 22)
+                                : (useSlimRefinedSeat
+                                      ? 22
+                                      : (refined ? 26 : 24)),
+                            height: compact
+                                ? (refined ? 18 : 22)
+                                : (useSlimRefinedSeat
+                                      ? 22
+                                      : (refined ? 26 : 24)),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              gradient: hero
+                                  ? const LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: <Color>[
+                                        Act0ShellTokensV1.runnerTagBlue,
+                                        Act0ShellTokensV1.runnerSharkBlueDark,
+                                      ],
                                     )
                                   : null,
-                              child: Text(
-                                markerDisplay.subLabel!,
-                                key: Key(
-                                  'act0_shell_seat_sublabel_${seat.seatId}',
-                                ),
-                                style: Act0ShellTokensV1.muted.copyWith(
-                                  fontSize: useSlimRefinedSeat
-                                      ? 8.0
-                                      : (refined ? 8.5 : 9),
-                                  color: subLabelColor,
-                                ),
+                              color: hero
+                                  ? null
+                                  : refined
+                                  ? (seatVisualState ==
+                                            _SeatVisualStateV1.selectable
+                                        ? Act0ShellTokensV1.info.withValues(
+                                            alpha: 0.10,
+                                          )
+                                        : Act0ShellTokensV1.surface2)
+                                  : Act0ShellTokensV1.surface3,
+                              borderRadius: BorderRadius.circular(
+                                refined
+                                    ? Act0ShellTokensV1.radiusXs
+                                    : Act0ShellTokensV1.radiusPill,
+                              ),
+                              border: Border.all(
+                                color: hero
+                                    ? Act0ShellTokensV1.gold.withValues(
+                                        alpha: 0.86,
+                                      )
+                                    : refined
+                                    ? Act0ShellTokensV1.border.withValues(
+                                        alpha: 0.72,
+                                      )
+                                    : Colors.transparent,
+                                width: hero ? 1.2 : 1.0,
+                              ),
+                              boxShadow: hero
+                                  ? const <BoxShadow>[
+                                      BoxShadow(
+                                        color:
+                                            Act0ShellTokensV1.shadowSoftStrong,
+                                        blurRadius: 3,
+                                        offset: Offset(0, 1.5),
+                                      ),
+                                    ]
+                                  : null,
+                            ),
+                            child: hero
+                                ? KeyedSubtree(
+                                    key: const Key(
+                                      'act0_shell_wave1_hero_you_badge',
+                                    ),
+                                    child: FittedBox(
+                                      key: const Key(
+                                        'act0_shell_wave1b_hero_badge',
+                                      ),
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        'You',
+                                        style: Act0ShellTokensV1.label.copyWith(
+                                          color: Act0ShellTokensV1.onPrimary,
+                                          fontSize: refined ? 7.2 : 7.6,
+                                          fontWeight: FontWeight.w900,
+                                          letterSpacing: 0,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : Icon(
+                                    selectable
+                                        ? Icons.touch_app_rounded
+                                        : seat.isOccupied
+                                        ? Icons.person_rounded
+                                        : Icons.circle_outlined,
+                                    size: useSlimRefinedSeat
+                                        ? 11
+                                        : (refined ? 12 : 13),
+                                    color:
+                                        seatVisualState ==
+                                            _SeatVisualStateV1.selectable
+                                        ? Act0ShellTokensV1.info.withValues(
+                                            alpha: 0.56,
+                                          )
+                                        : refined
+                                        ? Act0ShellTokensV1.textDim
+                                        : Act0ShellTokensV1.textMuted,
+                                  ),
+                          ),
+                          SizedBox(width: useSlimRefinedSeat ? 4 : 5),
+                        ],
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              act0RuntimeLocalizedSeatPrimaryLabelV1(
+                                context,
+                                seat: seat,
+                                hero: hero,
+                                refined: refined,
+                                identityPolicy: identityPolicy,
+                              ),
+                              // The shortened visual tag still speaks its full
+                              // localized blind role to screen readers.
+                              semanticsLabel: compactBlindPlate
+                                  ? seat.seatLabel + ', ' + blindRoleDefinition
+                                  : null,
+                              maxLines: 2,
+                              style: Act0ShellTokensV1.label.copyWith(
+                                color: primaryLabelColor,
+                                fontSize: useSlimRefinedSeat
+                                    ? 8.5
+                                    : (refined ? 9.0 : 10),
+                                letterSpacing: refined ? 0.1 : 0.4,
                               ),
                             ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                if (markerDisplay.markers.isNotEmpty)
-                  _SeatMarkerPlacementV1(
-                    seatId: seat.seatId,
-                    leftSide: seat.seatLabel == 'SB' || seat.seatLabel == 'BB',
-                    markers: markerDisplay.markers,
-                    hero: hero,
-                    visualVariant: visualVariant,
-                  ),
-                if (shouldShowRing)
-                  Positioned.fill(
-                    child: IgnorePointer(
-                      child: DecoratedBox(
-                        key: const Key('act0_shell_active_seat_ring'),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            Act0ShellTokensV1.radiusSm,
-                          ),
-                          border: Border.all(
-                            color: ringColor.withValues(alpha: 0.42),
-                            width: 2,
-                          ),
+                            if (markerDisplay.subLabel != null &&
+                                !compactBlindPlate)
+                              KeyedSubtree(
+                                key: showsOpponentStack
+                                    ? Key(
+                                        'act0_shell_opponent_stack_${seat.seatId}',
+                                      )
+                                    : null,
+                                child: Text(
+                                  markerDisplay.subLabel!,
+                                  key: Key(
+                                    'act0_shell_seat_sublabel_${seat.seatId}',
+                                  ),
+                                  style: Act0ShellTokensV1.muted.copyWith(
+                                    fontSize: useSlimRefinedSeat
+                                        ? 8.0
+                                        : (refined ? 8.5 : 9),
+                                    color: subLabelColor,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
-                        child: SizedBox(
-                          key: Key(
-                            'act0_shell_active_seat_ring_${seat.seatId}',
+                      ],
+                    ),
+                  ),
+                  if (markerDisplay.markers.isNotEmpty)
+                    _SeatMarkerPlacementV1(
+                      seatId: seat.seatId,
+                      leftSide:
+                          seat.seatLabel == 'SB' || seat.seatLabel == 'BB',
+                      markers: markerDisplay.markers,
+                      hero: hero,
+                      visualVariant: visualVariant,
+                    ),
+                  if (shouldShowRing)
+                    Positioned.fill(
+                      child: IgnorePointer(
+                        child: DecoratedBox(
+                          key: const Key('act0_shell_active_seat_ring'),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                              Act0ShellTokensV1.radiusSm,
+                            ),
+                            border: Border.all(
+                              color: ringColor.withValues(alpha: 0.42),
+                              width: 2,
+                            ),
+                          ),
+                          child: SizedBox(
+                            key: Key(
+                              'act0_shell_active_seat_ring_${seat.seatId}',
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                if (seatVisualState != _SeatVisualStateV1.passive)
-                  Positioned(
-                    child: SizedBox(
-                      key: Key(
-                        'act0_shell_seat_state_${seat.seatId}_${seatVisualState.name}',
+                  if (seatVisualState != _SeatVisualStateV1.passive)
+                    Positioned(
+                      child: SizedBox(
+                        key: Key(
+                          'act0_shell_seat_state_${seat.seatId}_${seatVisualState.name}',
+                        ),
                       ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
