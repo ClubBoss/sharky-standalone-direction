@@ -648,29 +648,38 @@ final class S12GenuineNativeUITests: XCTestCase {
         ready[0].tap()
         RunLoop.current.run(until: Date().addingTimeInterval(1.2))
         checkpointRiverFocus("TR07_focus_03_immediate_after_river_tap", riverScrollCount)
-        // From exact original native Turn AX, the selected row's button is
-        // directly AFTER that row and BEFORE the next task. Verify River
-        // owns its Retry in the real AX hierarchy, not app-global presence:
-        // a stale Turn Retry before River must NEVER count for River.
+        // On compact, the real River Retry may be BELOW the visible fold.
+        // First scroll the normal UI to expose exactly one enabled CTA,
+        // then verify its ownership from native frames: River < Retry <
+        // Showdown. A stale Turn-owned Retry cannot pass this guard.
         func nativeAXShowsRiverOwnedRetry() -> Bool {
-            let tree = app.debugDescription
-            let riverNeedle = "label: 'River card"
-            let nextNeedle = "label: 'Showdown read"
-            let retryNeedle = "label: 'Retry'"
-            guard let river = tree.range(of: riverNeedle),
-                  let next = tree.range(of: nextNeedle),
-                  let retry = tree.range(of: retryNeedle),
-                  tree[river.upperBound...].range(of: riverNeedle) == nil,
-                  tree[next.upperBound...].range(of: nextNeedle) == nil,
-                  tree[retry.upperBound...].range(of: retryNeedle) == nil else {
+            let river = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "River card")
+            ).allElementsBoundByIndex.filter { $0.exists }
+            let showdown = app.staticTexts.matching(
+                NSPredicate(format: "label CONTAINS[cd] %@", "Showdown read")
+            ).allElementsBoundByIndex.filter { $0.exists }
+            let retries = app.buttons.matching(identifier: "Retry")
+                .allElementsBoundByIndex.filter {
+                    $0.exists && $0.isEnabled && $0.isHittable
+                }
+            guard river.count == 1, showdown.count == 1,
+                  retries.count == 1 else {
+                print("S12V_RIVER_FRAME_OWNER_STOP counts=" +
+                      String(river.count) + "/" + String(showdown.count) +
+                      "/" + String(retries.count))
                 return false
             }
-            return river.lowerBound < retry.lowerBound &&
-                   retry.lowerBound < next.lowerBound
-        }
-        guard nativeAXShowsRiverOwnedRetry() else {
-            XCTFail("STOP_NO_SOURCE_OWNED_RIVER_RETRY_IN_NATIVE_AX")
-            return
+            let r = river[0].frame
+            let n = showdown[0].frame
+            let b = retries[0].frame
+            let owned = b.midY > r.maxY && b.midY < n.minY &&
+                        b.midX >= r.minX && b.midX <= r.maxX
+            print("S12V_RIVER_FRAME_OWNER_CHECK river=" +
+                  String(describing: r) + " retry=" +
+                  String(describing: b) + " next=" +
+                  String(describing: n) + " owned=" + String(owned))
+            return owned
         }
         let riverRetry = visibleRetryAfterScroll("river")
         guard riverRetry.count == 1 else {
