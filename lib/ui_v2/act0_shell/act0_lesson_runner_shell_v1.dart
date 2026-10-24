@@ -12003,6 +12003,10 @@ class _Act0TableV1 extends StatelessWidget {
                           integratedPerspectivePrototype &&
                           cameraStageSize != null &&
                           table.boardCards.isNotEmpty,
+                      riverHudClearance:
+                          integratedPerspectivePrototype &&
+                          cameraStageSize != null &&
+                          table.boardCards.length == 5,
                       slot: slot,
                       seat: seats[slot],
                       heroCards: table.heroCards,
@@ -13124,6 +13128,7 @@ class _SeatPlacementV1 extends StatelessWidget {
     this.depthTieredPrototype = false,
     this.compactInformativeColumn = false,
     this.boardBlindHudClearance = false,
+    this.riverHudClearance = false,
   });
 
   final int slot;
@@ -13145,6 +13150,7 @@ class _SeatPlacementV1 extends StatelessWidget {
   final bool depthTieredPrototype;
   final bool compactInformativeColumn;
   final bool boardBlindHudClearance;
+  final bool riverHudClearance;
 
   static const List<Offset> defaultSlots = <Offset>[
     Offset(0.50, 0.90),
@@ -13178,6 +13184,7 @@ class _SeatPlacementV1 extends StatelessWidget {
           child: _SeatNodeV1(
             compactInformativeColumn: compactInformativeColumn,
             boardBlindHudClearance: boardBlindHudClearance,
+            riverHudClearance: riverHudClearance,
             seat: seat,
             heroCards: heroCards,
             highlightedCardIds: highlightedCardIds,
@@ -13217,6 +13224,7 @@ class _SeatNodeV1 extends StatelessWidget {
     this.compact = false,
     this.compactInformativeColumn = false,
     this.boardBlindHudClearance = false,
+    this.riverHudClearance = false,
   });
 
   final Act0SeatStateV1 seat;
@@ -13242,6 +13250,7 @@ class _SeatNodeV1 extends StatelessWidget {
   /// content changes.
   final bool compactInformativeColumn;
   final bool boardBlindHudClearance;
+  final bool riverHudClearance;
 
   @override
   Widget build(BuildContext context) {
@@ -13282,6 +13291,11 @@ class _SeatNodeV1 extends StatelessWidget {
         blindRoleDefinition != null &&
         markerDisplay.subLabel == blindRoleDefinition;
     // Move the label ONLY, never the seated actor, cards, board or camera.
+    final compactRiverHjPlate =
+        riverHudClearance &&
+        refined &&
+        !hero &&
+        seat.seatLabel.toUpperCase() == 'HJ';
     final blindPlateShift = compactBlindPlate
         ? (seat.seatLabel.toUpperCase() == 'SB' ? 34.0 : -31.0)
         : 0.0;
@@ -13405,12 +13419,20 @@ class _SeatNodeV1 extends StatelessWidget {
               SizedBox(height: cardPlateGap),
             ],
             Transform.translate(
-              offset: Offset(blindPlateShift, 0),
+              // In five-card streets the source-owned HJ label can touch
+              // the last community card on compact phones. Relocate only
+              // that plate; the player's cards, figure and board do not move.
+              offset: Offset(
+                blindPlateShift + (compactRiverHjPlate ? 19.0 : 0.0),
+                0,
+              ),
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
                   Container(
-                    key: compactBlindPlate
+                    key: compactRiverHjPlate
+                        ? Key('act0_shell_river_hj_hud_plate_' + seat.seatId)
+                        : compactBlindPlate
                         ? Key('act0_shell_blind_hud_plate_' + seat.seatId)
                         : hero
                         ? Key('act0_shell_hero_identity_${seat.seatId}')

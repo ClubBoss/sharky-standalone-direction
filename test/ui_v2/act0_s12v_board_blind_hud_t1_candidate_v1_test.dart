@@ -7,6 +7,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 /// Does not substitute for fresh native Standard/Compact raster acceptance.
 void main() {
   for (final viewport in const <Size>[
+    Size(375, 667),
     Size(375, 812),
     Size(402, 874),
     Size(430, 932),
@@ -95,6 +96,26 @@ void main() {
             find.byKey(const Key('act0_shell_wave1_pot_priority_stat')),
             findsOneWidget,
           );
+          if (street.$2 == 5) {
+            final riverHjPlate = find.byKey(
+              const Key('act0_shell_river_hj_hud_plate_hj'),
+            );
+            expect(riverHjPlate, findsOneWidget);
+            final lastCard = tester.getRect(
+              find.byKey(const Key('act0_shell_card_board_4')),
+            );
+            final hj = tester.getRect(riverHjPlate);
+            expect(
+              hj.left,
+              greaterThanOrEqualTo(lastCard.right + 2),
+              reason: 'HJ seat HUD must clear the fifth river card',
+            );
+          } else {
+            expect(
+              find.byKey(const Key('act0_shell_river_hj_hud_plate_hj')),
+              findsNothing,
+            );
+          }
         },
       );
     }
