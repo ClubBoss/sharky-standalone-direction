@@ -557,11 +557,16 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cleanProgress = progressLabel?.trim();
+    final compact = MediaQuery.sizeOf(context).width <= 390;
     return KeyedSubtree(
       key: const Key('act0_shell_home_v6_route_hero'),
       child: Container(
         key: const Key('act0_shell_home_mission_command_card'),
-        padding: const EdgeInsets.all(Act0AcademyDesignTokensV1.gapLg),
+        padding: EdgeInsets.all(
+          compact
+              ? Act0AcademyDesignTokensV1.gapMd
+              : Act0AcademyDesignTokensV1.gapLg,
+        ),
         decoration: Act0AcademyDesignTokensV1.cardDecoration(
           color: Act0AcademyDesignTokensV1.primaryAction,
           borderColor: Act0AcademyDesignTokensV1.folioBrass,
@@ -573,7 +578,11 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
               inverse: true,
               label: localeIsRu ? 'ТВОЙ СЛЕДУЮЩИЙ ШАГ' : 'YOUR NEXT STEP',
             ),
-            const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
+            SizedBox(
+              height: compact
+                  ? Act0AcademyDesignTokensV1.gapSm
+                  : Act0AcademyDesignTokensV1.gapMd,
+            ),
             Text(
               title,
               key: const Key('act0_shell_home_primary_route_title'),
@@ -607,7 +616,11 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
+            SizedBox(
+              height: compact
+                  ? Act0AcademyDesignTokensV1.gapSm
+                  : Act0AcademyDesignTokensV1.gapMd,
+            ),
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -633,7 +646,11 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
                 localeIsRu: localeIsRu,
               ),
             ],
-            const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
+            SizedBox(
+              height: compact
+                  ? Act0AcademyDesignTokensV1.gapSm
+                  : Act0AcademyDesignTokensV1.gapMd,
+            ),
             Container(
               key: const Key('act0_shell_home_v6_primary_cta'),
               child: FilledButton(
@@ -674,7 +691,7 @@ class _HomeProofMomentumLineV1 extends StatelessWidget {
     final line = hasCompletedLessons
         ? localeIsRu
               ? 'Подтверждено: $completedLessons урока. Следующее доказательство начинается с одного чистого чтения.'
-              : 'Route proof is active. Next proof starts with one clean read.'
+              : 'Good progress. Keep reading the table.'
         : localeIsRu
         ? 'Твой маршрут готов. Первое доказательство начинается с одного чистого чтения.'
         : 'Your route is ready. Next proof starts with one clean read.';
