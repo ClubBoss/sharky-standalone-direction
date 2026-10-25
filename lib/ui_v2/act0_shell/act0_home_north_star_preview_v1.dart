@@ -269,8 +269,8 @@ class _ImmersiveHeaderV1 extends StatelessWidget {
             onPressed: onOpenDevMenu,
             tooltip: 'Dev menu',
             constraints: const BoxConstraints.tightFor(width: 44, height: 44),
-            icon: const Icon(
-              Act0AcademyIconographyV1.overflow,
+            icon: const Act0AcademyGlyphV1(
+              asset: Act0AcademyIconographyV1.overflow,
               color: Act0HomeNorthStarPaletteV1.textMuted,
             ),
           ),
@@ -378,7 +378,11 @@ class _NextActionCardV1 extends StatelessWidget {
                 ),
               ),
               iconAlignment: IconAlignment.end,
-              icon: const Icon(Act0AcademyIconographyV1.forward, size: 19),
+              icon: const Act0AcademyGlyphV1(
+                asset: Act0AcademyIconographyV1.forward,
+                size: 19,
+                color: Act0HomeNorthStarPaletteV1.ink,
+              ),
               label: Text(
                 ctaLabel,
                 maxLines: 1,
@@ -476,7 +480,7 @@ class _CycleStageV1 extends StatelessWidget {
   final int number;
   final bool isCurrent;
   final String label;
-  final IconData icon;
+  final String icon;
 
   @override
   Widget build(BuildContext context) {
@@ -516,8 +520,8 @@ class _CycleStageV1 extends StatelessWidget {
                         : null,
                   ),
                   alignment: Alignment.center,
-                  child: Icon(
-                    icon,
+                  child: Act0AcademyGlyphV1(
+                    asset: icon,
                     key: isCurrent
                         ? Key('act0_home_north_star_active_stage_$number')
                         : null,

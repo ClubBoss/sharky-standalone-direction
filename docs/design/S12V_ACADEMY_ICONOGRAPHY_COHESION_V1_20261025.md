@@ -19,7 +19,9 @@ In Draft PR #308 the initial semantic facade is the source file act0_academy_ico
 - Primary CTA uses one outlined rightward arrow; top utility = 3 neutral dots.
 - Review's actual source-owned nav cue dot, if present, uses Home teal contrast instead of legacy gold with unrelated table palette.
 
-The current rendering uses Flutter Material outlined glyphs as a TRANSITION KIT so it does not introduce network dependencies or font-file work. This does NOT yet prove a final perfect 2pt stroke set. In a later screen-cohesion gate owner may authorize a single carefully licensed uniform vector icon pack if the actual native comparison shows Material's optical inconsistencies. Do not spend for Claude/plugins without a specific unsolved icon task.
+The first pass using Flutter Material outlined icons was independently **FALSIFIED by the actual 14Pro image**: the book had more fill/weight than the house, target and refresh felt heavier than the remaining glyphs. Replaced this with **EIGHT original Sharky SVG source assets** in assets/design/sharky/iconography/ using a shared 24x24 viewBox, 1.85 stroke, rounded caps and joins: home, book, focus, review, user, recall, forward, more. These paths were authored for Sharky rather than taken from another design reference. The reused source resource is literally identical for Learn tab & phase and Practice tab & Apply phase. All are recolored by the existing Academy semantic palette; none embeds a learner state, grade or live poker card.
+
+**True icon acceptance still needs:** native screenshot of the exact eight-SVG commit, glyph sheet with optical weights/contrast, text alignment and focus/VoiceOver. UI tests and SVG XML invariants are supporting proof only. The current kit may still need one local refinement; do not claim 10/10 based on identical stroke metadata.
 
 Legacy light Academy tabs and protected poker table are unchanged when preview is off. No whole-repo icon replacement is authorized. Exact glyph mapping is tested at 393x852 (preview ON and OFF) plus Dart analyzer; true icon beauty, safe area and AX need actual native iPhone14Pro visual/review before Home visual acceptance.
 

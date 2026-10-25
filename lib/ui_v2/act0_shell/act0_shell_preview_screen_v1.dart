@@ -15355,11 +15355,7 @@ class _BottomNavV1 extends StatelessWidget {
                 _NavItemV1(
                   tab: Act0ShellTabV1.home,
                   current: current,
-                  icon: immersiveHome
-                      ? Act0AcademyIconographyV1.home
-                      : academy
-                      ? Icons.home_outlined
-                      : Icons.home_rounded,
+                  icon: academy ? Icons.home_outlined : Icons.home_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.home),
                   academy: academy,
                   immersiveHome: immersiveHome,
@@ -15368,9 +15364,7 @@ class _BottomNavV1 extends StatelessWidget {
                 _NavItemV1(
                   tab: Act0ShellTabV1.learn,
                   current: current,
-                  icon: immersiveHome
-                      ? Act0AcademyIconographyV1.learn
-                      : academy
+                  icon: academy
                       ? Icons.menu_book_outlined
                       : Icons.menu_book_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.learn),
@@ -15381,11 +15375,7 @@ class _BottomNavV1 extends StatelessWidget {
                 _NavItemV1(
                   tab: Act0ShellTabV1.play,
                   current: current,
-                  icon: immersiveHome
-                      ? Act0AcademyIconographyV1.practice
-                      : academy
-                      ? Icons.spa_outlined
-                      : Icons.spa_rounded,
+                  icon: academy ? Icons.spa_outlined : Icons.spa_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.play),
                   academy: academy,
                   immersiveHome: immersiveHome,
@@ -15394,9 +15384,7 @@ class _BottomNavV1 extends StatelessWidget {
                 _NavItemV1(
                   tab: Act0ShellTabV1.review,
                   current: current,
-                  icon: immersiveHome
-                      ? Act0AcademyIconographyV1.review
-                      : Icons.refresh_rounded,
+                  icon: Icons.refresh_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.review),
                   academy: academy,
                   immersiveHome: immersiveHome,
@@ -15406,11 +15394,7 @@ class _BottomNavV1 extends StatelessWidget {
                 _NavItemV1(
                   tab: Act0ShellTabV1.profile,
                   current: current,
-                  icon: immersiveHome
-                      ? Act0AcademyIconographyV1.you
-                      : academy
-                      ? Icons.person_outline
-                      : Icons.person_rounded,
+                  icon: academy ? Icons.person_outline : Icons.person_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.profile),
                   academy: academy,
                   immersiveHome: immersiveHome,
@@ -15483,7 +15467,24 @@ class _NavItemV1 extends StatelessWidget {
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    Icon(icon, size: 21, color: color),
+                    immersiveHome
+                        ? Act0AcademyGlyphV1(
+                            asset: switch (tab) {
+                              Act0ShellTabV1.home =>
+                                Act0AcademyIconographyV1.home,
+                              Act0ShellTabV1.learn =>
+                                Act0AcademyIconographyV1.learn,
+                              Act0ShellTabV1.play =>
+                                Act0AcademyIconographyV1.practice,
+                              Act0ShellTabV1.review =>
+                                Act0AcademyIconographyV1.review,
+                              Act0ShellTabV1.profile =>
+                                Act0AcademyIconographyV1.you,
+                            },
+                            size: 21,
+                            color: color,
+                          )
+                        : Icon(icon, size: 21, color: color),
                     if (hasBadge)
                       Positioned(
                         top: -3,

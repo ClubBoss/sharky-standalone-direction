@@ -1,26 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-/// Source-owned semantic glyph roles for the English Sharky Academy North Star.
-///
-/// The entire UI family uses ONE Material outlined silhouette family and a
-/// single optical scale. Color, stroke-neutral backdrop and glow express the
-/// active state; NEVER substitute a checkmark merely for opening a screen.
-///
-/// These glyphs are isolated from the protected table and existing light shell.
-/// Brand mascot/artwork is not a UI icon and may retain a separate art style.
+/// Sharky original 24x24 outline SVG family. Every stroke uses 1.85 width,
+/// round caps/joins; UI color is assigned outside each monotone symbol.
+/// Mascot and background art remain separate illustrative categories.
 abstract final class Act0AcademyIconographyV1 {
-  // Navigation / top-level actions. Use 21-22 logical px.
-  static const IconData home = Icons.home_outlined;
-  static const IconData learn = Icons.menu_book_outlined;
-  static const IconData practice = Icons.track_changes_outlined;
-  static const IconData review = Icons.refresh_outlined;
-  static const IconData you = Icons.person_outline_rounded;
+  static const home = 'assets/design/sharky/iconography/home.svg';
+  static const learn = 'assets/design/sharky/iconography/book.svg';
+  static const practice = 'assets/design/sharky/iconography/focus.svg';
+  static const review = 'assets/design/sharky/iconography/review.svg';
+  static const you = 'assets/design/sharky/iconography/user.svg';
+  static const recall = 'assets/design/sharky/iconography/recall.svg';
+  static const apply = practice;
+  static const forward = 'assets/design/sharky/iconography/forward.svg';
+  static const overflow = 'assets/design/sharky/iconography/more.svg';
+}
 
-  // Journey: same metaphor as corresponding destinations, 22px circles.
-  static const IconData recall = Icons.history_outlined;
-  static const IconData apply = practice;
+/// Decorative glyph, excluding semantics; parent control carries voice label.
+class Act0AcademyGlyphV1 extends StatelessWidget {
+  const Act0AcademyGlyphV1({
+    super.key,
+    required this.asset,
+    required this.color,
+    this.size = 22,
+  });
 
-  // Single navigational direction. Avoid mixing target/chevron/arrow as CTA.
-  static const IconData forward = Icons.arrow_forward_outlined;
-  static const IconData overflow = Icons.more_horiz_rounded;
+  final String asset;
+  final Color color;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) => SvgPicture.asset(
+    asset,
+    width: size,
+    height: size,
+    colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+    excludeFromSemantics: true,
+  );
 }

@@ -97,7 +97,7 @@ void main() {
     await tester.pumpAndSettle();
 
     if (kAct0HomeNorthStarPreviewV1) {
-      for (final pair in <(int, IconData)>[
+      for (final pair in <(int, String)>[
         (1, Act0AcademyIconographyV1.recall),
         (2, Act0AcademyIconographyV1.learn),
         (3, Act0AcademyIconographyV1.apply),
@@ -107,27 +107,37 @@ void main() {
         );
         expect(stage, findsOneWidget);
         expect(
-          find.descendant(of: stage, matching: find.byIcon(pair.$2)),
+          find.descendant(
+            of: stage,
+            matching: find.byWidgetPredicate(
+              (widget) =>
+                  widget is Act0AcademyGlyphV1 && widget.asset == pair.$2,
+            ),
+          ),
           findsOneWidget,
         );
       }
       expect(
         find.descendant(
           of: find.byKey(const Key('act0_shell_main_cta')),
-          matching: find.byIcon(Act0AcademyIconographyV1.forward),
+          matching: find.byWidgetPredicate(
+            (widget) =>
+                widget is Act0AcademyGlyphV1 &&
+                widget.asset == Act0AcademyIconographyV1.forward,
+          ),
         ),
         findsOneWidget,
       );
       final navIcons = tester
-          .widgetList<Icon>(
+          .widgetList<Act0AcademyGlyphV1>(
             find.descendant(
               of: find.byKey(const Key('act0_shell_bottom_nav')),
-              matching: find.byType(Icon),
+              matching: find.byType(Act0AcademyGlyphV1),
             ),
           )
-          .map((icon) => icon.icon)
+          .map((glyph) => glyph.asset)
           .toList();
-      expect(navIcons, <IconData>[
+      expect(navIcons, <String>[
         Act0AcademyIconographyV1.home,
         Act0AcademyIconographyV1.learn,
         Act0AcademyIconographyV1.practice,
