@@ -40,3 +40,13 @@ Related docs: docs/design/S12V_NORTH_STAR_RESET_OWNER_EXPLORATION_20261025.md, d
 | Table↔Academy transition / feedback / Summary | Concept placeholders only, source-native table remains protected | Pending | Pending | REQUIRES_SOURCE_NATIVE_REVIEW |
 
 Do not promote this ledger to owner-accepted design until the owner actually chooses.
+
+## 2026-10-25 newer OWNER HOME choice + LIMITED source preview admission
+
+**Supersedes earlier 'all 14 directions before any code' only for this narrow preliminary Home experiment.** Owner chose FIRST of two latest generated Home B-flow concepts; their art direction is immersive deep ink/teal, cinematic poker scene integrated with UI, minimal disconnected panels, connected round Recall→Learn→Apply, one real source-owned next CTA, one current-module earned-lessons percent strip, real streak chip only when real, unchanged five useful nav jobs. Owner said to do final Home polish and START implementation; this permits ONE safe HOME PREVIEW, not acceptance of wholesale Academy re-theme or protected Table.
+
+**Polish constraints:** show three stages as one guided sequence, NOT three independent daily obligations; no checkmarks based on app opens; do not highlight Learn if CTA opens Repair; do not invent user name, 5-day streak, 8 min, 44%, due/accuracy/mastery. Use visual restraint and readable text, not screenshot-as-UI. Poker imagery is decorative, no baked learning action, live card semantics or user status.
+
+**First implementation record:** Draft PR #308 at https://github.com/ClubBoss/sharky-standalone-direction/pull/308 HEAD 22f1994602a885c4ccb30872fddb2080c3f1367e. Compile-time SHARKY_HOME_NORTH_STAR_PREVIEW=true opt-in, OFF default. Source-based Home+scoped nav. Dart focused analyzer ZERO, focused tests OFF 2/2 PASS and ON 2/2 PASS on 393x852. A Flutter widget screenshot used Ahem glyph placeholders, so it is not genuine visual-native acceptance. No exact new iOS build on 99% full Mac volume (~4GiB free): do not invent PASS. Source candidate still needs a real 14Pro raster, cinematic original decorative artwork and independent review before merge. All other screens and 9-P02/Art/Table boundaries unchanged.
+
+**HOME_DIRECTION_SELECTED is NOT HOME_PIXEL_FINAL_ACCEPTED or S12.V PASS.**
