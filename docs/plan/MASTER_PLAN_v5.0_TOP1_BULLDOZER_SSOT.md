@@ -424,6 +424,12 @@ See `docs/ops/SHARKY_PARALLEL_EXECUTION_ROUTER_v1.md` for handoff/ownership rule
 
 **Adaptation starts only AFTER owner-recognized CORE V1 COMPLETE**, in a separately admitted release-qualification phase. Retain the original mandatory **S12.V exact-binary standard+compact visual trust**, nine P02 entry gates, independent owner Human decision and store release obligations. They are DEFERRED FOR DEVELOPMENT EFFICIENCY, NOT MARKED PASS or waived. A 14 Pro-only development artifact is not public-release-ready merely because its own screen tests are green. English V1 is planned; RU/other localization is deferred independently. Previous accepted Native Compact results remain legitimate historical evidence at their original binary, not a reason to do new compact work now.
 
+### 2026-10-25 owner-authorized visual system reconsideration — CONCEPT GATE, not production permission
+
+The owner finds the previous light-beige editorial Academy below premium, lively poker-native expectations and explicitly replaces the per-screen micro-polish execution order with a substantial ART-DIRECTED WHOLE-APP North Star exploration. Study three full 14-screen/states design routes on the existing EN-only iPhone14Pro 393x852 reference BEFORE Flutter color/style production: A Night Felt, B Deep Current (only a recommended hypothesis), C Signal Sport. Reference the approved discovery record at docs/design/S12V_NORTH_STAR_RESET_OWNER_EXPLORATION_20261025.md and owner approval checklist at docs/ops/S12V_VISUAL_RESET_PRECODE_GATE_20261025.md.
+
+All conceptual mockups are non-authoritative exploratory imagery, not source-state proof or S12.V acceptance. New design requires ONE explicit owner-selected direction and ONE separately bounded Home+Learn real-native implementation slice before other screen writers resume; use accepted v5 S05/D4, S06/D5, S07/D6 quality/admission logic without reopening closed learner-truth work. No global Shell/table palette replacement, no unproven 36 worlds, badges/streak/XP/due, no cast work or protected PR224 merger. Existing open Draft #298–#306 stay preserved. The merged English iPhone14Pro-only development cadence, eventual mandatory Standard/Compact S12.V, original nine P02 admission gates and Human boundary remain unchanged.
+
 ## 11. Gate 0 — Pre-P02 North Star convergence
 
 All **currently relevant machine/product-reducible** issues must reach bounded disposition before the Human P02 admission. The six-lane map is retained:

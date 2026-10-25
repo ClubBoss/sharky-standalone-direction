@@ -1,5 +1,13 @@
 # Pre-Human Campaign State v1
 
+## 2026-10-25 LATEST owner visual dispatch — DESIGN NORTH STAR FIRST / PRODUCTION STOP
+
+ACTIVE_VISUAL_FAMILY = S12.V_OWNER_VISUAL_NORTH_STAR_RESET. ACTIVE_GATE = CONCEPT_OWNER_SELECTION_PENDING. One bottleneck: evaluate A Night Felt / B Deep Current / C Signal Sport as integrated premium EN-only 393x852 iPhone14Pro design systems across 14 honest screen/alternate-state samples; do not accept B merely as art-director recommendation. See docs/design/S12V_NORTH_STAR_RESET_OWNER_EXPLORATION_20261025.md and docs/ops/S12V_VISUAL_RESET_PRECODE_GATE_20261025.md.
+
+The owner rejects the current light Academy's sterile feel. The prior per-screen micro-PR strategy is PAUSED for visual production; existing source-owned repairs/copy and Draft #298–#306 are preserved and unmerged. No new standalone Flutter visual writer, new cast art, mass global dark-color swap, protected PR224 merge or Human while direction remains unselected. After owner explicitly chooses ONE direction, request admission for ONE bounded Home+Learn true native product vertical slice; verify truthful source IDs/XP/due, shared Academy grammar and Table boundary before spreading to more screens. Current English V1 still ONLY iPhone14Pro 393x852; no compact/multilanguage development until core V1 completion. S12.V remains HOLD_VISUAL_TRUST; P02/Human NOT_ADMITTED and nine prior release gates preserved.
+
+---
+
 ## 2026-10-25 CURRENT owner overlay — single reference device until complete English V1
 
 **DEV_ACTIVE_REFERENCE = iPhone 14 Pro / 393×852 portrait ONLY. DEV_LANGUAGE = English ONLY. OTHER_DEVICE_ADAPTATION = PAUSED_UNTIL_OWNER_CONFIRMS_CORE_V1_COMPLETE.** This is an explicit newer owner correction to the earlier suggestion of immediate cheap Compact checks. During current standalone-screen and connected-learning design work: **no SE3/compact/wide matrix, no other-device native tests, no repeated cross-device screenshots, no RU/other-language production or QA**. Focus visual/UX/premium cohesion on one actual 14 Pro first; cheap affected functional source tests remain, with 14 Pro native checkpoint only when helpful. Finish standalone Home → Learn → Worlds → Practice → Review → You → Settings and multi-step learner journey after, subject to current GitHub owner dispositions. Character art owner-paused pending external artist.
