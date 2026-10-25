@@ -26,3 +26,26 @@ The first pass using Flutter Material outlined icons was independently **FALSIFI
 Legacy light Academy tabs and protected poker table are unchanged when preview is off. No whole-repo icon replacement is authorized. Exact glyph mapping is tested at 393x852 (preview ON and OFF) plus Dart analyzer; true icon beauty, safe area and AX need actual native iPhone14Pro visual/review before Home visual acceptance.
 
 Related decisions: docs/design/S12V_NORTH_STAR_RESET_OWNER_EXPLORATION_20261025.md, docs/ops/S12V_VISUAL_RESET_PRECODE_GATE_20261025.md, and Issue #287.
+
+## Home premium finish candidate (2026-10-25)
+
+The opt-in Home uses the existing palette owner and SVG facade; no second theme.
+24px stage / 22px navigation / 19px forward symbols share the original 1.85
+stroke family. Selected phase uses a brighter ring plus its source-owned semantic
+label; neutral stages never show earned checkmarks. Navigation retains its
+selected underline and text. The CTA is 46pt tall; utility/nav targets retain
+44pt minimum hit areas. Decorative imagery is excluded from accessibility.
+
+The single decorative `assets/design/sharky/home/poker_lounge_v1.png` is generated
+poker-lounge material with felt, leather, unmarked chips and distant light; it
+contains no cards, UI, learner data or current game state. It sits behind native
+text, glyphs and controls. Ink scrim protects the lower action/progress surfaces.
+Header 18/12pt, introductory title 32pt, source recommendation 24pt, body 13pt;
+18pt action radius, 13pt CTA radius, restrained one-phase halo; main spacing
+28/22/12pt. Bright aqua indicates the actionable/selected role, never achievement.
+The fixed introductory copy claims no identity, completion or elapsed activity.
+All recommendation, CTA, phase, progress and streak values keep existing owners.
+
+This is one Home-only owner-review candidate. Other Academy screens adopt these
+roles only in later admitted waves. Exact native receipts and visual limitations
+belong to the local evidence folder, not to an app-wide or Human PASS claim.

@@ -12,7 +12,7 @@ abstract final class Act0HomeNorthStarPaletteV1 {
   static const inkRaised = Color(0xFF0A1D1B);
   static const tealDeep = Color(0xFF0B3530);
   static const teal = Color(0xFF177D70);
-  static const aqua = Color(0xFF7EE6D5);
+  static const aqua = Color(0xFF23E6D2);
   static const aquaSoft = Color(0xFFB9F5E9);
   static const text = Color(0xFFF1FBF8);
   static const textMuted = Color(0xFF9DB8B2);
@@ -62,20 +62,38 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
       child: Stack(
         children: [
           const Positioned(
-            top: -120,
-            right: -90,
-            child: _AtmosphereOrbV1(size: 310, opacity: 0.20),
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 510,
+            child: ExcludeSemantics(
+              child: IgnorePointer(
+                child: Image(
+                  image: AssetImage(
+                    'assets/design/sharky/home/poker_lounge_v1.png',
+                  ),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topRight,
+                ),
+              ),
+            ),
           ),
-          const Positioned(
-            top: 330,
-            left: -170,
-            child: _AtmosphereOrbV1(size: 330, opacity: 0.10),
-          ),
-          // Decorative ink/felt light and original abstract chip motif.
-          // No live cards, earned data or poker decisions are drawn here.
           const Positioned.fill(
             child: IgnorePointer(
-              child: CustomPaint(painter: _PokerAtmospherePainterV1()),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0x0006100F),
+                      Color(0x0006100F),
+                      Color(0xFF06100F),
+                    ],
+                    stops: [0, 0.46, 0.76],
+                  ),
+                ),
+              ),
             ),
           ),
           ListView(
@@ -87,9 +105,35 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
                 streakDays: state.streakDays,
                 onOpenDevMenu: onOpenDevMenu,
               ),
-              const SizedBox(height: 36),
+              const SizedBox(height: 28),
+              const SizedBox(
+                height: 154,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Welcome to your table',
+                      style: TextStyle(
+                        color: Act0HomeNorthStarPaletteV1.textMuted,
+                        fontSize: 15,
+                      ),
+                    ),
+                    SizedBox(height: 7),
+                    Text(
+                      'Build your\npoker edge.',
+                      style: TextStyle(
+                        color: Act0HomeNorthStarPaletteV1.text,
+                        fontSize: 32,
+                        height: 1.08,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: -0.8,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               _LearningCycleV1(currentPhase: trainingPhase),
-              const SizedBox(height: 30),
+              const SizedBox(height: 22),
               _NextActionCardV1(
                 courseTitle: courseTitle,
                 title: nextActionTitle,
@@ -97,7 +141,7 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
                 ctaLabel: nextActionCtaLabel,
                 onContinue: onContinue,
               ),
-              const SizedBox(height: 27),
+              const SizedBox(height: 12),
               _CourseProgressStripV1(
                 courseTitle: courseTitle,
                 progress: progress,
@@ -108,68 +152,6 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
       ),
     );
   }
-}
-
-/// Quiet, scene-level felt lighting. No chip drawings or hand/card semantics:
-/// the Home artwork is a decorative material, never a fake table state.
-class _PokerAtmospherePainterV1 extends CustomPainter {
-  const _PokerAtmospherePainterV1();
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final bounds = Offset.zero & size;
-    canvas.drawRect(
-      bounds,
-      Paint()
-        ..shader = const RadialGradient(
-          center: Alignment(0.92, -0.52),
-          radius: 1.03,
-          colors: [Color(0x412A9787), Color(0x1B17615C), Colors.transparent],
-          stops: [0, 0.43, 1],
-        ).createShader(bounds),
-    );
-    // The broad shadow/soft highlight suggest premium felt in perspective
-    // without a stray rail line crossing the educational interface.
-    final table = Rect.fromLTWH(
-      size.width * 0.42,
-      size.height * 0.055,
-      size.width * 1.13,
-      size.height * 0.32,
-    );
-    canvas.drawOval(
-      table,
-      Paint()
-        ..shader = const RadialGradient(
-          center: Alignment(-0.15, -0.20),
-          radius: 1.0,
-          colors: [Color(0x27117C70), Color(0x0710544E), Colors.transparent],
-          stops: [0.0, 0.52, 1.0],
-        ).createShader(table),
-    );
-    final ambient = Paint()
-      ..color = const Color(0x337DD6BD)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 26);
-    canvas.drawCircle(
-      Offset(size.width * 0.97, size.height * 0.18),
-      18,
-      ambient,
-    );
-    final low = Rect.fromCenter(
-      center: Offset(size.width * 0.83, size.height * 0.85),
-      width: size.width * 1.65,
-      height: size.height * 0.82,
-    );
-    canvas.drawOval(
-      low,
-      Paint()
-        ..shader = const RadialGradient(
-          colors: [Color(0x160E7369), Color(0x08124B47), Colors.transparent],
-        ).createShader(low),
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant _PokerAtmospherePainterV1 oldDelegate) => false;
 }
 
 class _ImmersiveHeaderV1 extends StatelessWidget {
@@ -192,10 +174,10 @@ class _ImmersiveHeaderV1 extends StatelessWidget {
         Container(
           width: 44,
           height: 44,
-          padding: const EdgeInsets.all(7),
+          padding: const EdgeInsets.all(2),
           decoration: BoxDecoration(
             color: tone.withValues(alpha: 0.10),
-            shape: BoxShape.circle,
+            borderRadius: BorderRadius.circular(13),
             border: Border.all(color: tone.withValues(alpha: 0.28)),
             boxShadow: [
               BoxShadow(
@@ -207,7 +189,7 @@ class _ImmersiveHeaderV1 extends StatelessWidget {
           child: Act0SharkyPresenceMascotV1(
             mood: sharky.preSessionMood,
             tone: tone,
-            size: 30,
+            size: 40,
           ),
         ),
         const SizedBox(width: 11),
@@ -299,14 +281,14 @@ class _NextActionCardV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       key: const Key('act0_shell_home_mission_command_card'),
-      padding: const EdgeInsets.fromLTRB(19, 19, 19, 18),
+      padding: const EdgeInsets.fromLTRB(16, 15, 16, 13),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xB2175149), Color(0xBC082521)],
+          colors: [Color(0xD20B2928), Color(0xE006171B)],
         ),
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(18),
         // The atmospheric surface, not a hard outlined panel, carries the action.
         boxShadow: const [
           BoxShadow(
@@ -320,7 +302,7 @@ class _NextActionCardV1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'YOUR NEXT MOVE',
+            'YOUR NEXT STEP',
             key: const Key('act0_home_north_star_world_title'),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -328,7 +310,7 @@ class _NextActionCardV1 extends StatelessWidget {
               color: Act0HomeNorthStarPaletteV1.aqua,
               fontSize: 10,
               fontWeight: FontWeight.w800,
-              letterSpacing: 1.35,
+              letterSpacing: 0.8,
             ),
           ),
           const SizedBox(height: 10),
@@ -339,7 +321,7 @@ class _NextActionCardV1 extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               color: Act0HomeNorthStarPaletteV1.text,
-              fontSize: 26,
+              fontSize: 24,
               height: 1.08,
               fontWeight: FontWeight.w800,
               letterSpacing: -0.6,
@@ -362,7 +344,7 @@ class _NextActionCardV1 extends StatelessWidget {
           SizedBox(
             key: const Key('act0_shell_home_v6_primary_cta'),
             width: double.infinity,
-            height: 52,
+            height: 46,
             child: FilledButton.icon(
               key: const Key('act0_shell_main_cta'),
               onPressed: onContinue,
@@ -370,7 +352,7 @@ class _NextActionCardV1 extends StatelessWidget {
                 backgroundColor: Act0HomeNorthStarPaletteV1.aqua,
                 foregroundColor: Act0HomeNorthStarPaletteV1.ink,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(13),
                 ),
                 textStyle: const TextStyle(
                   fontSize: 15,
@@ -410,20 +392,10 @@ class _LearningCycleV1 extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'YOUR TRAINING LOOP',
-            style: TextStyle(
-              color: Act0HomeNorthStarPaletteV1.textMuted,
-              fontSize: 10,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 1.15,
-            ),
-          ),
-          const SizedBox(height: 15),
           Stack(
             children: [
               Positioned(
-                top: 21,
+                top: 26,
                 left: 52,
                 right: 52,
                 child: Container(
@@ -496,8 +468,8 @@ class _CycleStageV1 extends StatelessWidget {
               children: [
                 Container(
                   key: Key('act0_home_north_star_stage_$number'),
-                  width: 44,
-                  height: 44,
+                  width: 54,
+                  height: 54,
                   decoration: BoxDecoration(
                     color: isCurrent
                         ? const Color(0xFF17443D)
@@ -528,19 +500,7 @@ class _CycleStageV1 extends StatelessWidget {
                     color: isCurrent
                         ? Act0HomeNorthStarPaletteV1.aqua
                         : Act0HomeNorthStarPaletteV1.aquaSoft,
-                    size: 22,
-                  ),
-                ),
-                Positioned(
-                  top: 0,
-                  right: 26,
-                  child: Text(
-                    '$number',
-                    style: const TextStyle(
-                      color: Act0HomeNorthStarPaletteV1.aquaSoft,
-                      fontSize: 9,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    size: 24,
                   ),
                 ),
               ],
@@ -635,32 +595,6 @@ class _CourseProgressStripV1 extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _AtmosphereOrbV1 extends StatelessWidget {
-  const _AtmosphereOrbV1({required this.size, required this.opacity});
-
-  final double size;
-  final double opacity;
-
-  @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: RadialGradient(
-            colors: [
-              Act0HomeNorthStarPaletteV1.teal.withValues(alpha: opacity),
-              Act0HomeNorthStarPaletteV1.teal.withValues(alpha: 0),
-            ],
-          ),
-        ),
       ),
     );
   }
