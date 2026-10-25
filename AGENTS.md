@@ -11,6 +11,10 @@ Escalate to the documents below **only** when the task needs authority the state
 file does not carry, or when its facts conflict with live source/tests - then
 report the conflict. Do not read the full authority stack "for context".
 
+## Owner-approved active V1 device / language limit — 2026-10-25
+
+**Mandatory before any screen writer/QA/model dispatch:** read [docs/strategy/SHARKY_SINGLE_REFERENCE_DEVICE_EN_V1_DEVELOPMENT_POLICY_20261025.md](docs/strategy/SHARKY_SINGLE_REFERENCE_DEVICE_EN_V1_DEVELOPMENT_POLICY_20261025.md). Until the owner explicitly declares the English core V1 complete, **design, inspect and implement only for iPhone 14 Pro portrait (393×852 logical points), English UI**. DO NOT start tests, native screenshot matrices or layout polish for SE3/other Compact/larger devices, or RU/other language QA; do not interpret older Standard+SE3 receipts or earlier cadence notes as fresh permission. Build a visually cohesive premium English product first, starting with standalone Home, Learn, Worlds, Practice, Review, You, Settings and then multistep learning flows; keep existing accepted tokens and source-owned learning truth. Use focused functional checks and only material 14 Pro native checkpoints. Character/seat art owner-paused pending external artist. **AFTER owner-acknowledged core V1 completion**, separately plan other-device adaptation and release qualification. The existing S12.V Standard+Compact, nine P02 requirements, Human admission and publication checks are **not waived**; 14 Pro completion alone does not authorize external release. Verify live Issue #287 and current Master Plan before new code work; don't auto-merge Draft PRs or protected #224.
+
 ## Automatic Context Economy (Default)
 
 Context economy is ON by default for every chat, coding session, review, or agent

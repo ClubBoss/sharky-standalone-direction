@@ -1,5 +1,15 @@
 # Pre-Human Campaign State v1
 
+## 2026-10-25 CURRENT owner overlay — single reference device until complete English V1
+
+**DEV_ACTIVE_REFERENCE = iPhone 14 Pro / 393×852 portrait ONLY. DEV_LANGUAGE = English ONLY. OTHER_DEVICE_ADAPTATION = PAUSED_UNTIL_OWNER_CONFIRMS_CORE_V1_COMPLETE.** This is an explicit newer owner correction to the earlier suggestion of immediate cheap Compact checks. During current standalone-screen and connected-learning design work: **no SE3/compact/wide matrix, no other-device native tests, no repeated cross-device screenshots, no RU/other-language production or QA**. Focus visual/UX/premium cohesion on one actual 14 Pro first; cheap affected functional source tests remain, with 14 Pro native checkpoint only when helpful. Finish standalone Home → Learn → Worlds → Practice → Review → You → Settings and multi-step learner journey after, subject to current GitHub owner dispositions. Character art owner-paused pending external artist.
+
+**Resume other-device adaptation only on a separate OWNER decision AFTER complete English core V1.** Do not infer device support or legal launch readiness from a 14 Pro-only screenshot. Principal Master Plan section 10A mandatory Standard+true Compact integrated S12.V proof, all nine P02 gates, Human owner admission and store release obligations REMAIN OPEN; they must be fulfilled before their respective external gate unless formally amended in the roadmap. English-first was previously authorized; RU localization remains separately deferred. This is not P02 or release permission.
+
+Full standing policy: [single-reference-device EN-V1](../strategy/SHARKY_SINGLE_REFERENCE_DEVICE_EN_V1_DEVELOPMENT_POLICY_20261025.md). Current live source/PR HEAD and gate receipts on Issue #287 override stale dated pins, but may not silently erase this owner development-scope rule.
+
+---
+
 ## 2026-10-15 verified S11 integration and S12.V admission boundary — CURRENT DISPATCH
 
 **ACTIVE_TASK_ID = S12; ACTIVE_FAMILY = S12.V_EXACT_NATIVE_VISUAL_TRUST_ASSESSMENT; ACTIVE_GATE = S12.V_NOT_YET_ASSESSED; NEXT_POSSIBLE = S12_P02_ENTRY_DECISION (ONLY AFTER S12.V_PASS). P02/HUMAN = NOT_ADMITTED.** This supersedes the historical **S11 ACTIVE** and older S10 active passages below, which remain immutable dated provenance, **not instructions to re-open past writers**.
