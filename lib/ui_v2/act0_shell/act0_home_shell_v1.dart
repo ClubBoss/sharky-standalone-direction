@@ -418,6 +418,8 @@ class Act0HomeShellV1 extends StatelessWidget {
         onTap: onOpenPracticeContext ?? onStartDailyDrill,
       ),
       reviewRow,
+      // A real repair/proof job is visible; do not invent a fourth action.
+      if (repairJob != null || proveJob != null) fixRow,
     ];
     return rows;
   }
@@ -555,11 +557,16 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cleanProgress = progressLabel?.trim();
+    final compact = MediaQuery.sizeOf(context).width <= 390;
     return KeyedSubtree(
       key: const Key('act0_shell_home_v6_route_hero'),
       child: Container(
         key: const Key('act0_shell_home_mission_command_card'),
-        padding: const EdgeInsets.all(Act0AcademyDesignTokensV1.gapLg),
+        padding: EdgeInsets.all(
+          compact
+              ? Act0AcademyDesignTokensV1.gapMd
+              : Act0AcademyDesignTokensV1.gapLg,
+        ),
         decoration: Act0AcademyDesignTokensV1.cardDecoration(
           color: Act0AcademyDesignTokensV1.primaryAction,
           borderColor: Act0AcademyDesignTokensV1.folioBrass,
@@ -571,7 +578,11 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
               inverse: true,
               label: localeIsRu ? 'ТВОЙ СЛЕДУЮЩИЙ ШАГ' : 'YOUR NEXT STEP',
             ),
-            const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
+            SizedBox(
+              height: compact
+                  ? Act0AcademyDesignTokensV1.gapSm
+                  : Act0AcademyDesignTokensV1.gapMd,
+            ),
             Text(
               title,
               key: const Key('act0_shell_home_primary_route_title'),
@@ -605,7 +616,11 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
+            SizedBox(
+              height: compact
+                  ? Act0AcademyDesignTokensV1.gapSm
+                  : Act0AcademyDesignTokensV1.gapMd,
+            ),
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -631,7 +646,11 @@ class _HomeMissionCommandCardV1 extends StatelessWidget {
                 localeIsRu: localeIsRu,
               ),
             ],
-            const SizedBox(height: Act0AcademyDesignTokensV1.gapMd),
+            SizedBox(
+              height: compact
+                  ? Act0AcademyDesignTokensV1.gapSm
+                  : Act0AcademyDesignTokensV1.gapMd,
+            ),
             Container(
               key: const Key('act0_shell_home_v6_primary_cta'),
               child: FilledButton(
@@ -672,7 +691,7 @@ class _HomeProofMomentumLineV1 extends StatelessWidget {
     final line = hasCompletedLessons
         ? localeIsRu
               ? 'Подтверждено: $completedLessons урока. Следующее доказательство начинается с одного чистого чтения.'
-              : 'Route proof is active. Next proof starts with one clean read.'
+              : 'Good progress. Keep reading the table.'
         : localeIsRu
         ? 'Твой маршрут готов. Первое доказательство начинается с одного чистого чтения.'
         : 'Your route is ready. Next proof starts with one clean read.';
@@ -774,13 +793,8 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int activeFocusIndex = -1;
-    for (int i = 0; i < rows.length; i++) {
-      if (rows[i].onTap != null) {
-        activeFocusIndex = i;
-        break;
-      }
-    }
+    // The mission hero owns the single source-backed next action.
+    // Checklist callbacks are secondary navigation, not priority signals.
     return KeyedSubtree(
       key: const Key('act0_shell_home_daily_plan_card'),
       child: Container(
@@ -807,24 +821,6 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (MediaQuery.sizeOf(context).width >= 420)
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.arrow_forward_rounded,
-                          size: 13,
-                          color: Act0AcademyDesignTokensV1.inkMuted,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          localeIsRu ? 'Следующая раздача' : 'Next useful hand',
-                          style: Act0AcademyDesignTokensV1.label.copyWith(
-                            fontSize: 10,
-                          ),
-                        ),
-                      ],
-                    ),
                 ],
               ),
               const SizedBox(height: Act0AcademyDesignTokensV1.gapXs),
@@ -866,8 +862,8 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
                   isLast: i == rows.length - 1,
                   // Callback position is navigation, never earned completion.
                   isCompleted: false,
-                  isActiveFocus: i == activeFocusIndex,
-                  isPending: activeFocusIndex != -1 && i > activeFocusIndex,
+                  isActiveFocus: false,
+                  isPending: false,
                 ),
                 if (i + 1 < rows.length) const SizedBox(height: 10),
               ],
