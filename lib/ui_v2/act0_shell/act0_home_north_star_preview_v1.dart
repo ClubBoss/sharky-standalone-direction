@@ -303,14 +303,14 @@ class _NextActionCardV1 extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xA61A5A51), Color(0xB5082521)],
+          colors: [Color(0xB2175149), Color(0xBC082521)],
         ),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0x3D358378), width: 0.8),
+        // The atmospheric surface, not a hard outlined panel, carries the action.
         boxShadow: const [
           BoxShadow(
             color: Color(0x30000000),
-            blurRadius: 30,
+            blurRadius: 22,
             offset: Offset(0, 14),
           ),
         ],
@@ -574,9 +574,9 @@ class _CourseProgressStripV1 extends StatelessWidget {
       key: const Key('act0_home_north_star_course_progress'),
       padding: const EdgeInsets.fromLTRB(15, 13, 15, 14),
       decoration: BoxDecoration(
-        color: Act0HomeNorthStarPaletteV1.inkRaised.withValues(alpha: 0.57),
+        color: Act0HomeNorthStarPaletteV1.inkRaised.withValues(alpha: 0.31),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0x3A356E64), width: 0.8),
+        // Progress is a quiet continuation of the page, not another card.
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
