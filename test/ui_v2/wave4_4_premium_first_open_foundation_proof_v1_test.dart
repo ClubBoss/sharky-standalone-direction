@@ -49,9 +49,11 @@ void main() {
     expect(find.textContaining('purchase'), findsNothing);
   });
 
-  testWidgets('Learn keeps Worlds as the map and centers the current mission', (
+  testWidgets('Learn labels completed and upcoming lessons honestly on 14 Pro', (
     tester,
   ) async {
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
     final state = Act0ShellStateV1.sample;
     final world = state.selectedWorld;
     await tester.pumpWidget(
@@ -104,7 +106,9 @@ void main() {
       find.byKey(const Key('act0_shell_current_mission_cta')),
       findsOneWidget,
     );
-    expect(find.text('Up next'), findsOneWidget);
+    // The preview includes past completed lessons as well as upcoming ones.
+    expect(find.text('Your path'), findsOneWidget);
+    expect(find.text('Up next'), findsNothing);
     expect(find.text('All lessons'), findsOneWidget);
     expect(find.textContaining('36-world'), findsNothing);
     expect(find.textContaining('36 worlds'), findsNothing);
@@ -114,5 +118,7 @@ void main() {
     expect(find.textContaining('complete course'), findsNothing);
     expect(find.textContaining('premium'), findsNothing);
     expect(find.textContaining('paywall'), findsNothing);
+    tester.view.resetPhysicalSize();
+    tester.view.resetDevicePixelRatio();
   });
 }
