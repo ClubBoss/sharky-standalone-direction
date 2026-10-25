@@ -1250,7 +1250,7 @@ class _JourneyPreviewV5 extends StatelessWidget {
               child: Text(
                 _learnCopyV1(
                   context,
-                  en: showFullPath ? 'All lessons' : 'Up next',
+                  en: showFullPath ? 'All lessons' : 'Your path',
                   ru: showFullPath ? 'Все уроки' : 'Дальше',
                 ),
                 key: const Key('act0_shell_journey_path_header'),
