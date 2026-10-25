@@ -919,6 +919,7 @@ class _PlacementIntroViewV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       key: const Key('act0_shell_placement_intro_card'),
+      width: double.infinity,
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
       decoration:
           Act0AcademyDesignTokensV1.cardDecoration(

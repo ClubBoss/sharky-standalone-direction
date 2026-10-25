@@ -67,6 +67,41 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  testWidgets(
+    'Placement intro aligns its support card to the full folio grid at both phone widths',
+    (tester) async {
+      for (final size in const <Size>[Size(375, 667), Size(402, 874)]) {
+        tester.view.physicalSize = size;
+        tester.view.devicePixelRatio = 1;
+        await tester.pumpWidget(
+          MediaQuery(
+            data: const MediaQueryData(textScaler: TextScaler.linear(0.65)),
+            child: host(showPlacementOnStart: true, locale: const Locale('en')),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final intro = tester.getRect(
+          find.byKey(const Key('act0_shell_placement_intro_card')),
+        );
+        final folio = tester.getRect(
+          find.byKey(const Key('act0_shell_placement_folio')),
+        );
+        expect(
+          (intro.width - folio.width).abs(),
+          lessThanOrEqualTo(1),
+          reason: 'Placement support card must share the folio width at $size',
+        );
+        expect(
+          find.byKey(const Key('act0_shell_placement_intro_cta')),
+          findsOneWidget,
+        );
+        expect(tester.takeException(), isNull);
+      }
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    },
+  );
+
   testWidgets('Placement root copy follows live EN/RU MaterialApp locale', (
     tester,
   ) async {
