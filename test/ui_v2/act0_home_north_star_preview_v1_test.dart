@@ -27,7 +27,9 @@ void main() {
           home: Scaffold(
             body: Act0HomeShellV1(
               state: zeroStreakState,
-              pathProgressLabel: '2 of 8 lessons complete',
+              pathProgressLabel: 'Source display copy may change independently',
+              earnedLessonCount: 2,
+              courseLessonCount: 8,
               nextActionTitle: 'Fold, check, call, raise',
               nextActionSubtitle: 'Read the action before choosing a move.',
               nextActionCtaLabel: 'Continue',
@@ -49,6 +51,10 @@ void main() {
         expect(find.text('Apply'), findsOneWidget);
         expect(find.text('25%'), findsOneWidget);
         expect(find.text('2 of 8 lessons complete'), findsOneWidget);
+        expect(
+          find.text('Source display copy may change independently'),
+          findsNothing,
+        );
         expect(
           find.byKey(const Key('act0_home_north_star_streak')),
           findsNothing,
@@ -73,6 +79,42 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets('preview has real streak semantics and guards invalid counts', (
+    tester,
+  ) async {
+    await setReferenceViewport(tester);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0HomeShellV1(
+            state: _withStreakDays(Act0ShellStateV1.sample, 1),
+            earnedLessonCount: 5,
+            courseLessonCount: 4,
+            nextActionTitle: 'Next lesson',
+            onContinue: () {},
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    if (kAct0HomeNorthStarPreviewV1) {
+      expect(
+        find.byKey(const Key('act0_home_north_star_streak')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_home_north_star_progress_percent')),
+        findsNothing,
+      );
+      expect(find.text('5 of 4 lessons complete'), findsNothing);
+      final streakSemantics = tester.getSemantics(
+        find.byKey(const Key('act0_home_north_star_streak')),
+      );
+      expect(streakSemantics.label, contains('1 day streak'));
+    }
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('preview dark chrome is Home-only at the reference viewport', (
     tester,

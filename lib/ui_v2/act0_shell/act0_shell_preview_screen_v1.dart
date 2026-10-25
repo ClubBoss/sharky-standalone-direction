@@ -5454,6 +5454,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         showChecklist: _showHomeChecklistV1(),
                         currentLesson: _firstPlayableLesson(selectedWorld),
                         pathProgressLabel: selectedWorld.progressLabel,
+                        earnedLessonCount: selectedWorld.isLocked
+                            ? 0
+                            : selectedWorld.lessons
+                                  .where(
+                                    (lesson) => _lessonCompleteWithTaskIds(
+                                      lesson,
+                                      _completedTaskIds,
+                                    ),
+                                  )
+                                  .length,
+                        courseLessonCount: selectedWorld.lessons.length,
                         nextActionLabel: homeDueReview != null
                             ? _copyV1(en: 'Review', ru: 'Разбор')
                             : _homeNextActionLabel(),

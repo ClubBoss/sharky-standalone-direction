@@ -28,7 +28,8 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
     required this.nextActionSubtitle,
     required this.nextActionCtaLabel,
     required this.onContinue,
-    this.pathProgressLabel,
+    this.earnedLessonCount,
+    this.courseLessonCount,
     this.onOpenDevMenu,
   });
 
@@ -38,13 +39,17 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
   final String nextActionTitle;
   final String nextActionSubtitle;
   final String nextActionCtaLabel;
-  final String? pathProgressLabel;
+  final int? earnedLessonCount;
+  final int? courseLessonCount;
   final VoidCallback onContinue;
   final VoidCallback? onOpenDevMenu;
 
   @override
   Widget build(BuildContext context) {
-    final progress = _CourseProgressV1.tryParse(pathProgressLabel);
+    final progress = _CourseProgressV1.fromCounts(
+      earnedLessonCount,
+      courseLessonCount,
+    );
     return ColoredBox(
       key: const Key('act0_shell_home_page_background'),
       color: Act0HomeNorthStarPaletteV1.ink,
@@ -76,9 +81,9 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
                 streakDays: state.streakDays,
                 onOpenDevMenu: onOpenDevMenu,
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 36),
               const _LearningCycleV1(),
-              const SizedBox(height: 26),
+              const SizedBox(height: 30),
               _NextActionCardV1(
                 courseTitle: courseTitle,
                 title: nextActionTitle,
@@ -86,10 +91,9 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
                 ctaLabel: nextActionCtaLabel,
                 onContinue: onContinue,
               ),
-              const SizedBox(height: 22),
+              const SizedBox(height: 27),
               _CourseProgressStripV1(
                 courseTitle: courseTitle,
-                sourceLabel: pathProgressLabel,
                 progress: progress,
               ),
             ],
@@ -143,6 +147,18 @@ class _PokerAtmospherePainterV1 extends CustomPainter {
       Offset(size.width * 0.97, size.height * 0.18),
       18,
       ambient,
+    );
+    final low = Rect.fromCenter(
+      center: Offset(size.width * 0.83, size.height * 0.85),
+      width: size.width * 1.65,
+      height: size.height * 0.82,
+    );
+    canvas.drawOval(
+      low,
+      Paint()
+        ..shader = const RadialGradient(
+          colors: [Color(0x160E7369), Color(0x08124B47), Colors.transparent],
+        ).createShader(low),
     );
   }
 
@@ -217,6 +233,7 @@ class _ImmersiveHeaderV1 extends StatelessWidget {
         if (streakDays > 0)
           Semantics(
             label: '$streakDays day streak',
+            excludeSemantics: true,
             child: Container(
               key: const Key('act0_home_north_star_streak'),
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
@@ -281,10 +298,10 @@ class _NextActionCardV1 extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xBC134C43), Color(0xDC092520)],
+          colors: [Color(0xA61A5A51), Color(0xB5082521)],
         ),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0x532B756B)),
+        border: Border.all(color: const Color(0x3D358378), width: 0.8),
         boxShadow: const [
           BoxShadow(
             color: Color(0x30000000),
@@ -382,7 +399,7 @@ class _LearningCycleV1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'RECALL  ·  LEARN  ·  APPLY',
+            'YOUR TRAINING LOOP',
             style: TextStyle(
               color: Act0HomeNorthStarPaletteV1.textMuted,
               fontSize: 10,
@@ -510,24 +527,24 @@ class _CycleStageV1 extends StatelessWidget {
 class _CourseProgressStripV1 extends StatelessWidget {
   const _CourseProgressStripV1({
     required this.courseTitle,
-    required this.sourceLabel,
     required this.progress,
   });
 
   final String courseTitle;
-  final String? sourceLabel;
   final _CourseProgressV1? progress;
 
   @override
   Widget build(BuildContext context) {
-    final cleanLabel = sourceLabel?.trim();
+    final cleanLabel = progress == null
+        ? null
+        : '${progress!.earned} of ${progress!.total} lessons complete';
     return Container(
       key: const Key('act0_home_north_star_course_progress'),
       padding: const EdgeInsets.fromLTRB(15, 13, 15, 14),
       decoration: BoxDecoration(
-        color: Act0HomeNorthStarPaletteV1.inkRaised.withValues(alpha: 0.86),
+        color: Act0HomeNorthStarPaletteV1.inkRaised.withValues(alpha: 0.57),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Act0HomeNorthStarPaletteV1.rule),
+        border: Border.all(color: const Color(0x3A356E64), width: 0.8),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -621,14 +638,12 @@ class _CourseProgressV1 {
   double get ratio => total <= 0 ? 0 : (earned / total).clamp(0, 1);
   int get percent => (ratio * 100).round();
 
-  static _CourseProgressV1? tryParse(String? label) {
-    final match = RegExp(
-      r'\b(\d+)\s+of\s+(\d+)\s+lessons?\s+complete\b',
-      caseSensitive: false,
-    ).firstMatch(label?.trim() ?? '');
-    final earned = int.tryParse(match?.group(1) ?? '');
-    final total = int.tryParse(match?.group(2) ?? '');
-    if (earned == null || total == null || total <= 0 || earned > total) {
+  static _CourseProgressV1? fromCounts(int? earned, int? total) {
+    if (earned == null ||
+        total == null ||
+        earned < 0 ||
+        total <= 0 ||
+        earned > total) {
       return null;
     }
     return _CourseProgressV1(earned: earned, total: total);
