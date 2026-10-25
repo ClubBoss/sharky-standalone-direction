@@ -60,6 +60,13 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
             left: -170,
             child: _AtmosphereOrbV1(size: 330, opacity: 0.10),
           ),
+          // Decorative ink/felt light and original abstract chip motif.
+          // No live cards, earned data or poker decisions are drawn here.
+          const Positioned.fill(
+            child: IgnorePointer(
+              child: CustomPaint(painter: _PokerAtmospherePainterV1()),
+            ),
+          ),
           ListView(
             key: const Key('act0_shell_home_screen'),
             padding: const EdgeInsets.fromLTRB(20, 14, 20, 26),
@@ -91,6 +98,96 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Background-only premium poker material. The shapes represent generic felt,
+/// chip silhouettes and soft lighting; they cannot encode a hand or grade.
+class _PokerAtmospherePainterV1 extends CustomPainter {
+  const _PokerAtmospherePainterV1();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+    canvas.drawRect(
+      Offset.zero & size,
+      Paint()
+        ..shader = RadialGradient(
+          center: const Alignment(0.8, -0.62),
+          radius: 1.0,
+          colors: [
+            const Color(0xFF159184).withValues(alpha: 0.21),
+            const Color(0xFF0C3B37).withValues(alpha: 0.10),
+            Colors.transparent,
+          ],
+        ).createShader(Offset.zero & size),
+    );
+
+    final rail = Path()
+      ..moveTo(-w * 0.32, h * 0.68)
+      ..cubicTo(w * 0.05, h * 0.54, w * 0.67, h * 0.57, w * 1.28, h * 0.35);
+    canvas.drawPath(
+      rail,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.6
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10)
+        ..color = const Color(0xFF61E6D1).withValues(alpha: 0.24),
+    );
+    canvas.drawPath(
+      rail,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.9
+        ..color = const Color(0xFF61E6D1).withValues(alpha: 0.19),
+    );
+
+    // Layered, abstract chip stacks intentionally contain no numerals, suits,
+    // currency amounts, rank symbols or other live poker semantics.
+    void chips(double x, double y, double scale, int count) {
+      final rx = 29.0 * scale;
+      final ry = 9.0 * scale;
+      for (var i = 0; i < count; i++) {
+        final y0 = y - i * 10 * scale;
+        final oval = Rect.fromCenter(
+          center: Offset(x, y0),
+          width: rx * 2,
+          height: ry * 2,
+        );
+        final side = Rect.fromLTWH(
+          x - rx,
+          y0 - ry + 3 * scale,
+          rx * 2,
+          9 * scale,
+        );
+        canvas.drawRect(
+          side,
+          Paint()..color = const Color(0xFF1E716B).withValues(alpha: 0.18),
+        );
+        canvas.drawOval(
+          oval,
+          Paint()
+            ..color = const Color(
+              0xFF5FDCC9,
+            ).withValues(alpha: i.isEven ? 0.17 : 0.10),
+        );
+        canvas.drawOval(
+          oval.deflate(3 * scale),
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 0.6
+            ..color = const Color(0xFFB2F7E8).withValues(alpha: 0.19),
+        );
+      }
+    }
+
+    chips(w * 0.93, h * 0.28, 1.05, 5);
+    chips(w * 0.79, h * 0.37, 0.63, 3);
+    chips(w * 1.02, h * 0.43, 0.78, 4);
+  }
+
+  @override
+  bool shouldRepaint(covariant _PokerAtmospherePainterV1 oldDelegate) => false;
 }
 
 class _ImmersiveHeaderV1 extends StatelessWidget {
@@ -166,7 +263,11 @@ class _ImmersiveHeaderV1 extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Act0HomeNorthStarPaletteV1.aqua.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(18),
-                border: Border.all(color: Act0HomeNorthStarPaletteV1.rule),
+                border: Border.all(
+                  color: Act0HomeNorthStarPaletteV1.rule.withValues(
+                    alpha: 0.42,
+                  ),
+                ),
               ),
               child: Text(
                 '$streakDays day streak',
@@ -220,7 +321,7 @@ class _NextActionCardV1 extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF113D37), Color(0xFF0A2421)],
+          colors: [Color(0xEC123B35), Color(0xDC0A2421)],
         ),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: Act0HomeNorthStarPaletteV1.rule),
