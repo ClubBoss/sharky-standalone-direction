@@ -73,7 +73,7 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
                     'assets/design/sharky/home/poker_lounge_v1.png',
                   ),
                   fit: BoxFit.cover,
-                  alignment: Alignment.topRight,
+                  alignment: Alignment.bottomRight,
                 ),
               ),
             ),
