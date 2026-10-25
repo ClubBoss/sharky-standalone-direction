@@ -418,6 +418,12 @@ See `docs/ops/SHARKY_PARALLEL_EXECUTION_ROUTER_v1.md` for handoff/ownership rule
 
 **Source and practical experiment detail:** `docs/strategy/SHARKY_LEAN_GROWTH_PRODUCT_DECISION_20261012.md` (subordinate strategy decision record) and [2026-10-12 market-research manager receipt](https://github.com/ClubBoss/sharky-standalone-direction/issues/273#issuecomment-6126521442). These inputs do **not** supersede Master Plan, source grading, chronology, telemetry or store-commerce SSOT.
 
+### 2026-10-25 owner instruction — ONE iPhone 14 Pro reference and English-only until V1 completion
+
+**Binding DEV EXECUTION RULE, not a revision of S12.V/P02 release acceptance:** user explicitly chooses to STOP working on ALL other device sizes for now, including compact models and SE3. Until the OWNER confirms that the English-language core V1 is visually and functionally complete, all routine screen design/UX/UI, source iteration and meaningful native preview target ONLY **iPhone 14 Pro portrait 393×852 logical points** and EN. Do not schedule repeated Standard/SE3 native captures, compact/wide viewports, duplicated localized QA or a separate adaptation writer during this construction phase. Use targeted tests/analyzer and occasional 14 Pro native checkpoint, preserving real material source-truth and P0/P1 defects. Complete the unified premium standalone-screen experience, then the multi-step learning journey; external actor art remains paused. See [full single-reference-device execution policy](../strategy/SHARKY_SINGLE_REFERENCE_DEVICE_EN_V1_DEVELOPMENT_POLICY_20261025.md).
+
+**Adaptation starts only AFTER owner-recognized CORE V1 COMPLETE**, in a separately admitted release-qualification phase. Retain the original mandatory **S12.V exact-binary standard+compact visual trust**, nine P02 entry gates, independent owner Human decision and store release obligations. They are DEFERRED FOR DEVELOPMENT EFFICIENCY, NOT MARKED PASS or waived. A 14 Pro-only development artifact is not public-release-ready merely because its own screen tests are green. English V1 is planned; RU/other localization is deferred independently. Previous accepted Native Compact results remain legitimate historical evidence at their original binary, not a reason to do new compact work now.
+
 ## 11. Gate 0 — Pre-P02 North Star convergence
 
 All **currently relevant machine/product-reducible** issues must reach bounded disposition before the Human P02 admission. The six-lane map is retained:
