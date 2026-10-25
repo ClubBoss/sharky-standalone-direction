@@ -76,7 +76,9 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
                 streakDays: state.streakDays,
                 onOpenDevMenu: onOpenDevMenu,
               ),
-              const SizedBox(height: 18),
+              const SizedBox(height: 32),
+              const _LearningCycleV1(),
+              const SizedBox(height: 26),
               _NextActionCardV1(
                 courseTitle: courseTitle,
                 title: nextActionTitle,
@@ -84,9 +86,7 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
                 ctaLabel: nextActionCtaLabel,
                 onContinue: onContinue,
               ),
-              const SizedBox(height: 19),
-              const _LearningCycleV1(),
-              const SizedBox(height: 19),
+              const SizedBox(height: 22),
               _CourseProgressStripV1(
                 courseTitle: courseTitle,
                 sourceLabel: pathProgressLabel,
@@ -100,90 +100,50 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
   }
 }
 
-/// Background-only premium poker material. The shapes represent generic felt,
-/// chip silhouettes and soft lighting; they cannot encode a hand or grade.
+/// Quiet, scene-level felt lighting. No chip drawings or hand/card semantics:
+/// the Home artwork is a decorative material, never a fake table state.
 class _PokerAtmospherePainterV1 extends CustomPainter {
   const _PokerAtmospherePainterV1();
 
   @override
   void paint(Canvas canvas, Size size) {
-    final w = size.width;
-    final h = size.height;
+    final bounds = Offset.zero & size;
     canvas.drawRect(
-      Offset.zero & size,
+      bounds,
       Paint()
-        ..shader = RadialGradient(
-          center: const Alignment(0.8, -0.62),
+        ..shader = const RadialGradient(
+          center: Alignment(0.92, -0.52),
+          radius: 1.03,
+          colors: [Color(0x412A9787), Color(0x1B17615C), Colors.transparent],
+          stops: [0, 0.43, 1],
+        ).createShader(bounds),
+    );
+    // The broad shadow/soft highlight suggest premium felt in perspective
+    // without a stray rail line crossing the educational interface.
+    final table = Rect.fromLTWH(
+      size.width * 0.42,
+      size.height * 0.055,
+      size.width * 1.13,
+      size.height * 0.32,
+    );
+    canvas.drawOval(
+      table,
+      Paint()
+        ..shader = const RadialGradient(
+          center: Alignment(-0.15, -0.20),
           radius: 1.0,
-          colors: [
-            const Color(0xFF159184).withValues(alpha: 0.21),
-            const Color(0xFF0C3B37).withValues(alpha: 0.10),
-            Colors.transparent,
-          ],
-        ).createShader(Offset.zero & size),
+          colors: [Color(0x27117C70), Color(0x0710544E), Colors.transparent],
+          stops: [0.0, 0.52, 1.0],
+        ).createShader(table),
     );
-
-    final rail = Path()
-      ..moveTo(-w * 0.32, h * 0.68)
-      ..cubicTo(w * 0.05, h * 0.54, w * 0.67, h * 0.57, w * 1.28, h * 0.35);
-    canvas.drawPath(
-      rail,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.6
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10)
-        ..color = const Color(0xFF61E6D1).withValues(alpha: 0.24),
+    final ambient = Paint()
+      ..color = const Color(0x337DD6BD)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 26);
+    canvas.drawCircle(
+      Offset(size.width * 0.97, size.height * 0.18),
+      18,
+      ambient,
     );
-    canvas.drawPath(
-      rail,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 0.9
-        ..color = const Color(0xFF61E6D1).withValues(alpha: 0.19),
-    );
-
-    // Layered, abstract chip stacks intentionally contain no numerals, suits,
-    // currency amounts, rank symbols or other live poker semantics.
-    void chips(double x, double y, double scale, int count) {
-      final rx = 29.0 * scale;
-      final ry = 9.0 * scale;
-      for (var i = 0; i < count; i++) {
-        final y0 = y - i * 10 * scale;
-        final oval = Rect.fromCenter(
-          center: Offset(x, y0),
-          width: rx * 2,
-          height: ry * 2,
-        );
-        final side = Rect.fromLTWH(
-          x - rx,
-          y0 - ry + 3 * scale,
-          rx * 2,
-          9 * scale,
-        );
-        canvas.drawRect(
-          side,
-          Paint()..color = const Color(0xFF1E716B).withValues(alpha: 0.18),
-        );
-        canvas.drawOval(
-          oval,
-          Paint()
-            ..color = const Color(
-              0xFF5FDCC9,
-            ).withValues(alpha: i.isEven ? 0.17 : 0.10),
-        );
-        canvas.drawOval(
-          oval.deflate(3 * scale),
-          Paint()
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 0.6
-            ..color = const Color(0xFFB2F7E8).withValues(alpha: 0.19),
-        );
-      }
-    }
-
-    chips(w * 0.93, h * 0.28, 1.05, 5);
-    chips(w * 0.79, h * 0.37, 0.63, 3);
-    chips(w * 1.02, h * 0.43, 0.78, 4);
   }
 
   @override
@@ -234,12 +194,12 @@ class _ImmersiveHeaderV1 extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'SHARKY',
+                'Sharky',
                 style: TextStyle(
-                  color: Act0HomeNorthStarPaletteV1.aquaSoft,
-                  fontSize: 11,
+                  color: Act0HomeNorthStarPaletteV1.text,
+                  fontSize: 18,
                   fontWeight: FontWeight.w800,
-                  letterSpacing: 1.8,
+                  letterSpacing: -0.4,
                 ),
               ),
               SizedBox(height: 2),
@@ -247,7 +207,7 @@ class _ImmersiveHeaderV1 extends StatelessWidget {
                 'Poker Academy',
                 style: TextStyle(
                   color: Act0HomeNorthStarPaletteV1.textMuted,
-                  fontSize: 13,
+                  fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -316,18 +276,18 @@ class _NextActionCardV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       key: const Key('act0_shell_home_mission_command_card'),
-      padding: const EdgeInsets.fromLTRB(20, 19, 20, 18),
+      padding: const EdgeInsets.fromLTRB(19, 19, 19, 18),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xEC123B35), Color(0xDC0A2421)],
+          colors: [Color(0xBC134C43), Color(0xDC092520)],
         ),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Act0HomeNorthStarPaletteV1.rule),
+        border: Border.all(color: const Color(0x532B756B)),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x44000000),
+            color: Color(0x30000000),
             blurRadius: 30,
             offset: Offset(0, 14),
           ),
@@ -337,7 +297,7 @@ class _NextActionCardV1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            courseTitle.toUpperCase(),
+            'YOUR NEXT MOVE',
             key: const Key('act0_home_north_star_world_title'),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -356,8 +316,8 @@ class _NextActionCardV1 extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               color: Act0HomeNorthStarPaletteV1.text,
-              fontSize: 27,
-              height: 1.05,
+              fontSize: 26,
+              height: 1.08,
               fontWeight: FontWeight.w800,
               letterSpacing: -0.6,
             ),
@@ -416,27 +376,59 @@ class _LearningCycleV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       container: true,
-      label: 'Learning guide: Recall, Learn, Apply',
+      label:
+          'Learning guide, in order: Recall, Learn, Apply. No step is marked complete.',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'YOUR LEARNING RHYTHM',
+            'RECALL  ·  LEARN  ·  APPLY',
             style: TextStyle(
               color: Act0HomeNorthStarPaletteV1.textMuted,
               fontSize: 10,
               fontWeight: FontWeight.w800,
-              letterSpacing: 1.25,
+              letterSpacing: 1.15,
             ),
           ),
-          const SizedBox(height: 12),
-          Row(
-            children: const [
-              _CycleStageV1(number: 1, label: 'Recall'),
-              _CycleConnectorV1(),
-              _CycleStageV1(number: 2, label: 'Learn'),
-              _CycleConnectorV1(),
-              _CycleStageV1(number: 3, label: 'Apply'),
+          const SizedBox(height: 15),
+          Stack(
+            children: [
+              Positioned(
+                top: 21,
+                left: 52,
+                right: 52,
+                child: Container(
+                  height: 2,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0x1255BFB3),
+                        Color(0xB255BFB3),
+                        Color(0x1255BFB3),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const Row(
+                children: [
+                  _CycleStageV1(
+                    number: 1,
+                    label: 'Recall',
+                    icon: Icons.history_rounded,
+                  ),
+                  _CycleStageV1(
+                    number: 2,
+                    label: 'Learn',
+                    icon: Icons.menu_book_rounded,
+                  ),
+                  _CycleStageV1(
+                    number: 3,
+                    label: 'Apply',
+                    icon: Icons.gps_fixed_rounded,
+                  ),
+                ],
+              ),
             ],
           ),
         ],
@@ -446,10 +438,15 @@ class _LearningCycleV1 extends StatelessWidget {
 }
 
 class _CycleStageV1 extends StatelessWidget {
-  const _CycleStageV1({required this.number, required this.label});
+  const _CycleStageV1({
+    required this.number,
+    required this.label,
+    required this.icon,
+  });
 
   final int number;
   final String label;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -458,26 +455,43 @@ class _CycleStageV1 extends StatelessWidget {
         label: 'Step $number, $label',
         child: Column(
           children: [
-            Container(
-              key: Key('act0_home_north_star_stage_$number'),
-              width: 42,
-              height: 42,
+            Stack(
               alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Act0HomeNorthStarPaletteV1.inkRaised,
-                shape: BoxShape.circle,
-                border: Border.all(color: Act0HomeNorthStarPaletteV1.teal),
-              ),
-              child: Text(
-                '$number',
-                style: const TextStyle(
-                  color: Act0HomeNorthStarPaletteV1.aquaSoft,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
+              children: [
+                Container(
+                  key: Key('act0_home_north_star_stage_$number'),
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: Act0HomeNorthStarPaletteV1.inkRaised,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Act0HomeNorthStarPaletteV1.teal,
+                      width: 1.5,
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(
+                    icon,
+                    color: Act0HomeNorthStarPaletteV1.aquaSoft,
+                    size: 22,
+                  ),
                 ),
-              ),
+                Positioned(
+                  top: 0,
+                  right: 26,
+                  child: Text(
+                    '$number',
+                    style: const TextStyle(
+                      color: Act0HomeNorthStarPaletteV1.aquaSoft,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 7),
+            const SizedBox(height: 8),
             Text(
               label,
               style: const TextStyle(
@@ -488,21 +502,6 @@ class _CycleStageV1 extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _CycleConnectorV1 extends StatelessWidget {
-  const _CycleConnectorV1();
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        height: 1,
-        margin: const EdgeInsets.only(bottom: 27),
-        color: Act0HomeNorthStarPaletteV1.rule,
       ),
     );
   }
