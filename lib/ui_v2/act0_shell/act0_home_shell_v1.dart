@@ -78,6 +78,7 @@ class Act0HomeShellV1 extends StatelessWidget {
     this.pathProgressLabel,
     this.earnedLessonCount,
     this.courseLessonCount,
+    this.trainingPhase,
     this.nextActionLabel = 'Continue',
     this.nextActionTitle,
     this.nextActionSubtitle,
@@ -115,6 +116,7 @@ class Act0HomeShellV1 extends StatelessWidget {
   // Source-owned earned completion, distinct from routing/Placement closure.
   final int? earnedLessonCount;
   final int? courseLessonCount;
+  final Act0HomeTrainingPhaseV1? trainingPhase;
   final String nextActionLabel;
   final String? nextActionTitle;
   final String? nextActionSubtitle;
@@ -173,6 +175,7 @@ class Act0HomeShellV1 extends StatelessWidget {
         nextActionCtaLabel: nextActionCtaLabel,
         earnedLessonCount: earnedLessonCount,
         courseLessonCount: courseLessonCount,
+        trainingPhase: trainingPhase,
         onOpenDevMenu: onOpenDevMenu,
         onContinue: onContinue,
       );

@@ -5465,6 +5465,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   )
                                   .length,
                         courseLessonCount: selectedWorld.lessons.length,
+                        trainingPhase: kAct0HomeNorthStarPreviewV1
+                            ? _homeTrainingPhaseForRouteV1(
+                                selectedWorld: selectedWorld,
+                                nextStep: personalizedNextStep,
+                                launchableDue: homeDueReview,
+                                reviewState: reviewState,
+                              )
+                            : null,
                         nextActionLabel: homeDueReview != null
                             ? _copyV1(en: 'Review', ru: 'Разбор')
                             : _homeNextActionLabel(),
@@ -7369,6 +7377,52 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         en: 'Practice',
         ru: 'Практика',
       ),
+    };
+  }
+
+  // VISUAL projection of an existing launch recommendation, not another
+  // three-stage due/learning engine. Null means no safe active-stage claim.
+  Act0HomeTrainingPhaseV1? _homeTrainingPhaseForRouteV1({
+    required Act0WorldCardV1 selectedWorld,
+    required Act0PersonalizedReturnReasonV1 nextStep,
+    required Act0DueReviewItemV1? launchableDue,
+    required Act0ReviewStateV1 reviewState,
+  }) {
+    if (_placementHandoffActive) return null;
+    if (launchableDue != null) return Act0HomeTrainingPhaseV1.recall;
+
+    if (nextStep.reasonType != act0ReturnReasonNoPersonalReasonAvailableV1) {
+      final action = nextStep.recommendedAction;
+      if (action == 'repair' || action == 'retry_repair') {
+        final hasMappedMistake = reviewState.mistakes.any(
+          (mistake) => mistake.taskId == nextStep.sourceTaskId,
+        );
+        return hasMappedMistake
+            ? Act0HomeTrainingPhaseV1.recall
+            : Act0HomeTrainingPhaseV1.learn;
+      }
+      // Existing _openPersonalizedNextStepV1 falls back to Learn whenever
+      // neither a genuinely due review nor a mapped repair can launch.
+      return Act0HomeTrainingPhaseV1.learn;
+    }
+
+    if (_firstValueReceiptCarry?.isRepair == true) return null;
+    final lesson = _firstPlayableLesson(selectedWorld);
+    final recommendation = _homePrimaryRecommendation(
+      selectedWorld: selectedWorld,
+      selectedLesson: lesson,
+    );
+    return switch (recommendation.kind) {
+      _Act0LearningNextActionKindV1.repairDeepLeak ||
+      _Act0LearningNextActionKindV1.repairWeakSpot ||
+      _Act0LearningNextActionKindV1.reviewQuickFix =>
+        Act0HomeTrainingPhaseV1.recall,
+      _Act0LearningNextActionKindV1.continueLesson =>
+        Act0HomeTrainingPhaseV1.learn,
+      _Act0LearningNextActionKindV1.dailyDrill ||
+      _Act0LearningNextActionKindV1.categoryPractice =>
+        Act0HomeTrainingPhaseV1.apply,
+      _Act0LearningNextActionKindV1.dailyDone => null,
     };
   }
 

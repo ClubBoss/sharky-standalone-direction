@@ -67,6 +67,10 @@ void main() {
     (tester) async {
       await _pump(tester, now: _afterDue, repairOwed: false);
       expect(_ctaLabel(tester), 'Review now');
+      expect(
+        find.byKey(const Key('act0_home_north_star_active_stage_1')),
+        findsOneWidget,
+      );
       await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
       await tester.pumpAndSettle();
       final runner = tester.widget<Act0LessonRunnerShellV1>(
@@ -83,6 +87,10 @@ void main() {
     (tester) async {
       await _pump(tester, now: _beforeDue, repairOwed: false);
       expect(_ctaLabel(tester), 'Continue');
+      expect(
+        find.byKey(const Key('act0_home_north_star_active_stage_2')),
+        findsOneWidget,
+      );
       await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
       await tester.pumpAndSettle();
       expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
@@ -101,6 +109,10 @@ void main() {
           repairOwed: true,
         );
         expect(_ctaLabel(tester), 'Practice this spot');
+        expect(
+          find.byKey(const Key('act0_home_north_star_active_stage_1')),
+          findsOneWidget,
+        );
         await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
         await tester.pumpAndSettle();
         final runner = tester.widget<Act0LessonRunnerShellV1>(

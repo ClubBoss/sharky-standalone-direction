@@ -18,6 +18,9 @@ abstract final class Act0HomeNorthStarPaletteV1 {
   static const rule = Color(0xFF23443F);
 }
 
+/// Visual label for an EXISTING source-owned recommendation, not a daily engine.
+enum Act0HomeTrainingPhaseV1 { recall, learn, apply }
+
 class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
   const Act0HomeNorthStarPreviewV1({
     super.key,
@@ -30,6 +33,7 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
     required this.onContinue,
     this.earnedLessonCount,
     this.courseLessonCount,
+    this.trainingPhase,
     this.onOpenDevMenu,
   });
 
@@ -41,6 +45,7 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
   final String nextActionCtaLabel;
   final int? earnedLessonCount;
   final int? courseLessonCount;
+  final Act0HomeTrainingPhaseV1? trainingPhase;
   final VoidCallback onContinue;
   final VoidCallback? onOpenDevMenu;
 
@@ -82,7 +87,7 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
                 onOpenDevMenu: onOpenDevMenu,
               ),
               const SizedBox(height: 36),
-              const _LearningCycleV1(),
+              _LearningCycleV1(currentPhase: trainingPhase),
               const SizedBox(height: 30),
               _NextActionCardV1(
                 courseTitle: courseTitle,
@@ -387,7 +392,9 @@ class _NextActionCardV1 extends StatelessWidget {
 }
 
 class _LearningCycleV1 extends StatelessWidget {
-  const _LearningCycleV1();
+  const _LearningCycleV1({required this.currentPhase});
+
+  final Act0HomeTrainingPhaseV1? currentPhase;
 
   @override
   Widget build(BuildContext context) {
@@ -427,20 +434,23 @@ class _LearningCycleV1 extends StatelessWidget {
                   ),
                 ),
               ),
-              const Row(
+              Row(
                 children: [
                   _CycleStageV1(
+                    isCurrent: currentPhase == Act0HomeTrainingPhaseV1.recall,
                     number: 1,
                     label: 'Recall',
                     icon: Icons.history_rounded,
                   ),
                   _CycleStageV1(
                     number: 2,
+                    isCurrent: currentPhase == Act0HomeTrainingPhaseV1.learn,
                     label: 'Learn',
                     icon: Icons.menu_book_rounded,
                   ),
                   _CycleStageV1(
                     number: 3,
+                    isCurrent: currentPhase == Act0HomeTrainingPhaseV1.apply,
                     label: 'Apply',
                     icon: Icons.gps_fixed_rounded,
                   ),
@@ -457,11 +467,13 @@ class _LearningCycleV1 extends StatelessWidget {
 class _CycleStageV1 extends StatelessWidget {
   const _CycleStageV1({
     required this.number,
+    required this.isCurrent,
     required this.label,
     required this.icon,
   });
 
   final int number;
+  final bool isCurrent;
   final String label;
   final IconData icon;
 
@@ -469,7 +481,9 @@ class _CycleStageV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Semantics(
-        label: 'Step $number, $label',
+        label: isCurrent
+            ? 'Current training phase: $label'
+            : 'Step $number, $label',
         child: Column(
           children: [
             Stack(
@@ -480,17 +494,35 @@ class _CycleStageV1 extends StatelessWidget {
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: Act0HomeNorthStarPaletteV1.inkRaised,
+                    color: isCurrent
+                        ? const Color(0xFF17443D)
+                        : Act0HomeNorthStarPaletteV1.inkRaised,
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: Act0HomeNorthStarPaletteV1.teal,
-                      width: 1.5,
+                      color: isCurrent
+                          ? Act0HomeNorthStarPaletteV1.aqua
+                          : Act0HomeNorthStarPaletteV1.teal,
+                      width: isCurrent ? 2 : 1.5,
                     ),
+                    boxShadow: isCurrent
+                        ? const [
+                            BoxShadow(
+                              color: Color(0x4250DBC1),
+                              blurRadius: 18,
+                              spreadRadius: 1,
+                            ),
+                          ]
+                        : null,
                   ),
                   alignment: Alignment.center,
                   child: Icon(
                     icon,
-                    color: Act0HomeNorthStarPaletteV1.aquaSoft,
+                    key: isCurrent
+                        ? Key('act0_home_north_star_active_stage_$number')
+                        : null,
+                    color: isCurrent
+                        ? Act0HomeNorthStarPaletteV1.aqua
+                        : Act0HomeNorthStarPaletteV1.aquaSoft,
                     size: 22,
                   ),
                 ),
