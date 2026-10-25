@@ -42,3 +42,7 @@ Until then STOP independent screen visual code writers. Existing Drafts #298–#
 Merged V1 device policy PR #304 remains the limit: ONLY EN iPhone14Pro during core development; no SE3/multi-device/RU production, with original pre-release S12.V Standard+Compact and nine P02 gates NOT waived. Current S12.V HOLD_VISUAL_TRUST / Human P02 NOT_ADMITTED.
 
 References: Apple HIG design principles, buttons, games and dark mode; WCAG2.2; Poker Academy and Pokerdex vendor screenshots as categories, not competitor superiority.
+
+## 2026-10-25 owner clarification — per-screen two/three-option live selection
+
+The owner wishes to collaborate **actively in this chat**, evaluating **2–3 mockups PER SCREEN**, offering his visual preference and possibly disagreeing with the AI art-director recommendation. Run the design system as a sequential owner-reviewed decision process, rather than pushing the AI's full multi-screen favorite directly into production. Give an explicit comparison and evidence-grounded preferred option per screen, collect owner selection/revisions, persist the outcome in the checklist/ledger, and reconcile all choices into one coherent brand system. Start with Home. Examples: independently choose palette A/B/C and a Home layout B1/B2/B3; choosing different palettes and compositions is allowed as input but must converge to ONE reusable role-token system across the app. No unadmitted implementation.
