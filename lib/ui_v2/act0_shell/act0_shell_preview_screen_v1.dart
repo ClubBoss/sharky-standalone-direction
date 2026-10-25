@@ -14,6 +14,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_cross_session_profile_proof
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_iconography_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
@@ -15354,7 +15355,11 @@ class _BottomNavV1 extends StatelessWidget {
                 _NavItemV1(
                   tab: Act0ShellTabV1.home,
                   current: current,
-                  icon: academy ? Icons.home_outlined : Icons.home_rounded,
+                  icon: immersiveHome
+                      ? Act0AcademyIconographyV1.home
+                      : academy
+                      ? Icons.home_outlined
+                      : Icons.home_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.home),
                   academy: academy,
                   immersiveHome: immersiveHome,
@@ -15363,7 +15368,9 @@ class _BottomNavV1 extends StatelessWidget {
                 _NavItemV1(
                   tab: Act0ShellTabV1.learn,
                   current: current,
-                  icon: academy
+                  icon: immersiveHome
+                      ? Act0AcademyIconographyV1.learn
+                      : academy
                       ? Icons.menu_book_outlined
                       : Icons.menu_book_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.learn),
@@ -15374,7 +15381,11 @@ class _BottomNavV1 extends StatelessWidget {
                 _NavItemV1(
                   tab: Act0ShellTabV1.play,
                   current: current,
-                  icon: academy ? Icons.spa_outlined : Icons.spa_rounded,
+                  icon: immersiveHome
+                      ? Act0AcademyIconographyV1.practice
+                      : academy
+                      ? Icons.spa_outlined
+                      : Icons.spa_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.play),
                   academy: academy,
                   immersiveHome: immersiveHome,
@@ -15383,7 +15394,9 @@ class _BottomNavV1 extends StatelessWidget {
                 _NavItemV1(
                   tab: Act0ShellTabV1.review,
                   current: current,
-                  icon: Icons.refresh_rounded,
+                  icon: immersiveHome
+                      ? Act0AcademyIconographyV1.review
+                      : Icons.refresh_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.review),
                   academy: academy,
                   immersiveHome: immersiveHome,
@@ -15393,7 +15406,11 @@ class _BottomNavV1 extends StatelessWidget {
                 _NavItemV1(
                   tab: Act0ShellTabV1.profile,
                   current: current,
-                  icon: academy ? Icons.person_outline : Icons.person_rounded,
+                  icon: immersiveHome
+                      ? Act0AcademyIconographyV1.you
+                      : academy
+                      ? Icons.person_outline
+                      : Icons.person_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.profile),
                   academy: academy,
                   immersiveHome: immersiveHome,
@@ -15478,12 +15495,16 @@ class _NavItemV1 extends StatelessWidget {
                           width: 9,
                           height: 9,
                           decoration: BoxDecoration(
-                            color: Act0ShellTokensV1.gold,
+                            color: immersiveHome
+                                ? Act0HomeNorthStarPaletteV1.aqua
+                                : Act0ShellTokensV1.gold,
                             borderRadius: BorderRadius.circular(
                               Act0ShellTokensV1.radiusPill,
                             ),
                             border: Border.all(
-                              color: Act0ShellTokensV1.surface,
+                              color: immersiveHome
+                                  ? Act0HomeNorthStarPaletteV1.ink
+                                  : Act0ShellTokensV1.surface,
                               width: 1.2,
                             ),
                           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_iconography_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_north_star_preview_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
@@ -79,6 +80,65 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets('immersive Home glyph roles stay consistent at 14 Pro', (
+    tester,
+  ) async {
+    await setReferenceViewport(tester);
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Act0ShellPreviewScreenV1(
+          state: zeroStreakState,
+          showPlacementOnStart: false,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    if (kAct0HomeNorthStarPreviewV1) {
+      for (final pair in <(int, IconData)>[
+        (1, Act0AcademyIconographyV1.recall),
+        (2, Act0AcademyIconographyV1.learn),
+        (3, Act0AcademyIconographyV1.apply),
+      ]) {
+        final stage = find.byKey(
+          Key('act0_home_north_star_stage_' + pair.$1.toString()),
+        );
+        expect(stage, findsOneWidget);
+        expect(
+          find.descendant(of: stage, matching: find.byIcon(pair.$2)),
+          findsOneWidget,
+        );
+      }
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('act0_shell_main_cta')),
+          matching: find.byIcon(Act0AcademyIconographyV1.forward),
+        ),
+        findsOneWidget,
+      );
+      final navIcons = tester
+          .widgetList<Icon>(
+            find.descendant(
+              of: find.byKey(const Key('act0_shell_bottom_nav')),
+              matching: find.byType(Icon),
+            ),
+          )
+          .map((icon) => icon.icon)
+          .toList();
+      expect(navIcons, <IconData>[
+        Act0AcademyIconographyV1.home,
+        Act0AcademyIconographyV1.learn,
+        Act0AcademyIconographyV1.practice,
+        Act0AcademyIconographyV1.review,
+        Act0AcademyIconographyV1.you,
+      ]);
+      expect(find.text('Home'), findsOneWidget);
+      expect(find.text('Apply'), findsOneWidget);
+    }
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('preview has real streak semantics and guards invalid counts', (
     tester,

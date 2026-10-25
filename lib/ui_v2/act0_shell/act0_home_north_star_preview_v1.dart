@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_iconography_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
@@ -269,7 +270,7 @@ class _ImmersiveHeaderV1 extends StatelessWidget {
             tooltip: 'Dev menu',
             constraints: const BoxConstraints.tightFor(width: 44, height: 44),
             icon: const Icon(
-              Icons.more_horiz_rounded,
+              Act0AcademyIconographyV1.overflow,
               color: Act0HomeNorthStarPaletteV1.textMuted,
             ),
           ),
@@ -377,7 +378,7 @@ class _NextActionCardV1 extends StatelessWidget {
                 ),
               ),
               iconAlignment: IconAlignment.end,
-              icon: const Icon(Icons.arrow_forward_rounded, size: 19),
+              icon: const Icon(Act0AcademyIconographyV1.forward, size: 19),
               label: Text(
                 ctaLabel,
                 maxLines: 1,
@@ -440,19 +441,19 @@ class _LearningCycleV1 extends StatelessWidget {
                     isCurrent: currentPhase == Act0HomeTrainingPhaseV1.recall,
                     number: 1,
                     label: 'Recall',
-                    icon: Icons.history_rounded,
+                    icon: Act0AcademyIconographyV1.recall,
                   ),
                   _CycleStageV1(
                     number: 2,
                     isCurrent: currentPhase == Act0HomeTrainingPhaseV1.learn,
                     label: 'Learn',
-                    icon: Icons.menu_book_rounded,
+                    icon: Act0AcademyIconographyV1.learn,
                   ),
                   _CycleStageV1(
                     number: 3,
                     isCurrent: currentPhase == Act0HomeTrainingPhaseV1.apply,
                     label: 'Apply',
-                    icon: Icons.gps_fixed_rounded,
+                    icon: Act0AcademyIconographyV1.apply,
                   ),
                 ],
               ),
