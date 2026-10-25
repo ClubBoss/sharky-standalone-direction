@@ -35,3 +35,13 @@ Truth proof:
 - Existing protected Table scene, XP, task IDs, art and PR224 unmodified. No automatic Draft merge.
 
 Visual remaining: readability, coherent navigation, three connected circles and one CTA improved. Still missing owner's selected cinematic original felt/chip lighting material and refined use of lower empty space. Keep VISUAL_ART_HOLD, source native capture PASS_SCOPED, owner pixel approval PENDING, S12.V whole product HOLD, Human P02 NOT_ADMITTED. Do not substitute mockup artwork with baked numbers/buttons or call this 10/10.
+
+## 2026-10-25 Baku — 573ac softer-surface native candidate / owner visual pending
+
+Source Home B1 HEAD 573ac56927390393f5004460706ad466a3290d75; TREE 6bb73f8e60ed142ceb76e4cb1d6bff61b693c14f. Draft PR #308. Native iPhone14Pro 393x852 iOS26.2 exact simulator UUID 753F1483-6E33-45F0-8647-E955E1640A31. Debug flags SHARKY_HOME_NORTH_STAR_PREVIEW=true and SHARKY_VISUAL_AUDIT=true. One native original SOURCE-INJECTED wave2_home_progressed screenshot passed; sample data is NOT actual user progress/retention. Original PNG stored as 573ac_soft_surfaces_injected_return.png, SHA256 3332c20c27f2a275a23cac37c873a2a350bdf5e276fe2842a2fe3dbe8619ee41.
+
+Visual change from prior F390: remove strong card outlines for primary action/progress; keep same 3-step source-backed highlighted cycle, one real CTA, course percent based on earned source counts and earned streak only if >0. Lighter rhythm/less separate-box aesthetic. Focused preview ON 3/3 PASS, OFF 3/3 PASS, dart analyzer all four affected source/test zero. Exact new simulated visual was directly inspected by PM.
+
+REJECTED: independent original procedural felt/chip art experiment had native screenshot SHA256 3f0813f217d6982f241e3b5fdc0aa5a740d94948f61460d03507dc99c6c35a4e, but visual producer saw broad flat teal washes and schematic blocks, not premium credible poker atmosphere. Reverted all procedural asset files, pubspec and generator from worktree before source HEAD 573ac; no rejected art in PR. A real licensed/reviewed standalone image candidate may be considered only as separate no-UI/no-state art layer in a later owner-approved wave.
+
+VERDICT: NATIVE_RENDER_PASS_SCOPED + UI_CONTROLS_TEST_PASS; ART_DIRECTION_HOLD / OWNER_PIXEL_ACCEPTANCE_PENDING; S12.V whole-product HOLD and P02/Human NOT_ADMITTED. Cannot declare 10/10 or global A+ based on one injected sample. Do not merge PR #308 automatically. Protected Table/PR224 and five-cast art untouched. EN iPhone14Pro ONLY development scope.
