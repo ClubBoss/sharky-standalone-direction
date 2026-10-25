@@ -418,6 +418,8 @@ class Act0HomeShellV1 extends StatelessWidget {
         onTap: onOpenPracticeContext ?? onStartDailyDrill,
       ),
       reviewRow,
+      // A real repair/proof job is visible; do not invent a fourth action.
+      if (repairJob != null || proveJob != null) fixRow,
     ];
     return rows;
   }
@@ -774,13 +776,8 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int activeFocusIndex = -1;
-    for (int i = 0; i < rows.length; i++) {
-      if (rows[i].onTap != null) {
-        activeFocusIndex = i;
-        break;
-      }
-    }
+    // The mission hero owns the single source-backed next action.
+    // Checklist callbacks are secondary navigation, not priority signals.
     return KeyedSubtree(
       key: const Key('act0_shell_home_daily_plan_card'),
       child: Container(
@@ -807,24 +804,6 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (MediaQuery.sizeOf(context).width >= 420)
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.arrow_forward_rounded,
-                          size: 13,
-                          color: Act0AcademyDesignTokensV1.inkMuted,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          localeIsRu ? 'Следующая раздача' : 'Next useful hand',
-                          style: Act0AcademyDesignTokensV1.label.copyWith(
-                            fontSize: 10,
-                          ),
-                        ),
-                      ],
-                    ),
                 ],
               ),
               const SizedBox(height: Act0AcademyDesignTokensV1.gapXs),
@@ -866,8 +845,8 @@ class _HomeChecklistSurfaceV1 extends StatelessWidget {
                   isLast: i == rows.length - 1,
                   // Callback position is navigation, never earned completion.
                   isCompleted: false,
-                  isActiveFocus: i == activeFocusIndex,
-                  isPending: activeFocusIndex != -1 && i > activeFocusIndex,
+                  isActiveFocus: false,
+                  isPending: false,
                 ),
                 if (i + 1 < rows.length) const SizedBox(height: 10),
               ],

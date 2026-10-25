@@ -61,6 +61,127 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets(
+    'Home hero is the sole next callout and source repair stays reachable',
+    (tester) async {
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      for (final size in <Size>[
+        const Size(375, 667),
+        const Size(402, 874),
+        const Size(430, 932),
+      ]) {
+        String? openedJobId;
+        tester.view.physicalSize = size;
+        await tester.pumpWidget(
+          MaterialApp(
+            key: ValueKey(size),
+            home: Scaffold(
+              body: Act0HomeShellV1(
+                state: Act0ShellStateV1.sample,
+                nextActionTitle: 'Repair the position read',
+                nextActionCtaLabel: 'Repair now',
+                dailyGoalValue: '0/3',
+                showChecklist: true,
+                dailyPlanJobs: const <Act0HomePlanJobV1>[
+                  Act0HomePlanJobV1(
+                    jobId: 'repair:position_read',
+                    label: 'Repair',
+                    title: 'Miss: table position',
+                  ),
+                ],
+                onOpenDailyPlanJob: (jobId) => openedJobId = jobId,
+                onOpenPracticeContext: () {},
+                onOpenReviewContext: () {},
+                onContinue: () {},
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(
+          find.byKey(const Key('act0_shell_home_v6_primary_cta')),
+          findsOneWidget,
+        );
+        expect(find.text('Repair now'), findsOneWidget);
+        expect(find.text('Next'), findsNothing);
+        expect(
+          find.text('Next useful hand'),
+          findsNothing,
+          reason: 'No second priority cue below the primary hero CTA',
+        );
+
+        final repair = find.byKey(
+          const Key('act0_shell_home_plan_job_repair:position_read'),
+        );
+        expect(repair, findsOneWidget);
+        await tester.ensureVisible(repair);
+        await tester.pumpAndSettle();
+        expect(
+          find.byKey(const Key('act0_shell_home_repair_panel')),
+          findsOneWidget,
+        );
+        expect(find.text('Miss: table position'), findsOneWidget);
+        await tester.tap(repair);
+        expect(openedJobId, 'repair:position_read');
+        expect(tester.takeException(), isNull);
+      }
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0HomeShellV1(
+              state: Act0ShellStateV1.sample,
+              dailyGoalValue: '0/3',
+              showChecklist: true,
+              onOpenPracticeContext: () {},
+              onOpenReviewContext: () {},
+              onContinue: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const Key('act0_shell_home_repair_panel')),
+        findsNothing,
+      );
+      final neutralReview = find.descendant(
+        of: find.byKey(const Key('act0_shell_home_checklist_row_review')),
+        matching: find.byType(InkWell),
+      );
+      expect(tester.widget<InkWell>(neutralReview).onTap, isNull);
+      expect(find.text('Next'), findsNothing);
+      expect(tester.takeException(), isNull);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0HomeShellV1(
+              state: Act0ShellStateV1.sample,
+              dailyGoalValue: '3/3',
+              showChecklist: true,
+              onContinue: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const Key('act0_shell_home_daily_done_badge')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_home_focus_checklist')),
+        findsNothing,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets('Standard RU theory support stays fully scroll-reachable', (
     tester,
   ) async {
