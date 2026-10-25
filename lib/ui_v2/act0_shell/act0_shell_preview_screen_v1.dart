@@ -19,6 +19,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contr
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_fix_proof_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_first_start_preferences_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_north_star_preview_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
@@ -5326,12 +5327,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final theoryRecallStep = showTheoryRecallAffordance
         ? playRunner.teachingSteps.last
         : null;
+    final immersiveHome =
+        kAct0HomeNorthStarPreviewV1 &&
+        Localizations.localeOf(context).languageCode == 'en' &&
+        _bootSurfaceReady &&
+        !_showPlacement &&
+        !_showWelcome &&
+        !isPlayRunner &&
+        _blockCompletionSummary == null &&
+        _tab == Act0ShellTabV1.home;
     final showTopBar =
         _bootSurfaceReady &&
         !_showPlacement &&
         !_showWelcome &&
         !isPlayRunner &&
-        _blockCompletionSummary == null;
+        _blockCompletionSummary == null &&
+        !immersiveHome;
     final firstValueTodayCarry =
         _tab == Act0ShellTabV1.home &&
             !_showPlacement &&
@@ -5350,7 +5361,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         !isPlayRunner;
     final shell = Scaffold(
       key: const Key('act0_shell_preview_screen'),
-      backgroundColor: academySurface
+      backgroundColor: immersiveHome
+          ? Act0HomeNorthStarPaletteV1.ink
+          : academySurface
           ? Act0AcademyDesignTokensV1.pageSurface
           : Act0ShellTokensV1.background,
       body: SafeArea(
@@ -6725,6 +6738,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           : _BottomNavV1(
               current: _tab,
               academy: academySurface,
+              immersiveHome: immersiveHome,
               reviewHasDot: reviewNavHasDot,
               onSelected: (tab) => setState(() {
                 final preserveRepairBridge =
@@ -6781,6 +6795,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
     // S08 admits native scaling around the Academy only. Keep the protected
     // Table and other deferred surfaces in their existing rendering context.
+    if (immersiveHome) {
+      return AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: shell,
+      );
+    }
     if (academySurface) {
       return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.dark,
@@ -15224,25 +15244,36 @@ class _BottomNavV1 extends StatelessWidget {
     required this.onSelected,
     this.reviewHasDot = false,
     this.academy = false,
+    this.immersiveHome = false,
   });
 
   final Act0ShellTabV1 current;
   final ValueChanged<Act0ShellTabV1> onSelected;
   final bool reviewHasDot;
   final bool academy;
+  final bool immersiveHome;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       top: false,
-      bottom: academy,
+      bottom: academy || immersiveHome,
       child: IntrinsicHeight(
         child: SizedBox(
           key: const Key('act0_shell_bottom_nav'),
-          height: academy ? null : Act0ShellTokensV1.bottomNavHeight,
+          height: academy || immersiveHome
+              ? null
+              : Act0ShellTokensV1.bottomNavHeight,
 
           child: DecoratedBox(
-            decoration: academy
+            decoration: immersiveHome
+                ? const BoxDecoration(
+                    color: Act0HomeNorthStarPaletteV1.ink,
+                    border: Border(
+                      top: BorderSide(color: Act0HomeNorthStarPaletteV1.rule),
+                    ),
+                  )
+                : academy
                 ? const BoxDecoration(
                     color: Act0AcademyDesignTokensV1.pageSurface,
                     border: Border(
@@ -15251,7 +15282,7 @@ class _BottomNavV1 extends StatelessWidget {
                   )
                 : Act0ShellTokensV1.glassDecoration(top: true),
             child: Row(
-              crossAxisAlignment: academy
+              crossAxisAlignment: academy || immersiveHome
                   ? CrossAxisAlignment.stretch
                   : CrossAxisAlignment.center,
               children: [
@@ -15261,6 +15292,7 @@ class _BottomNavV1 extends StatelessWidget {
                   icon: academy ? Icons.home_outlined : Icons.home_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.home),
                   academy: academy,
+                  immersiveHome: immersiveHome,
                   onSelected: onSelected,
                 ),
                 _NavItemV1(
@@ -15271,6 +15303,7 @@ class _BottomNavV1 extends StatelessWidget {
                       : Icons.menu_book_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.learn),
                   academy: academy,
+                  immersiveHome: immersiveHome,
                   onSelected: onSelected,
                 ),
                 _NavItemV1(
@@ -15279,6 +15312,7 @@ class _BottomNavV1 extends StatelessWidget {
                   icon: academy ? Icons.spa_outlined : Icons.spa_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.play),
                   academy: academy,
+                  immersiveHome: immersiveHome,
                   onSelected: onSelected,
                 ),
                 _NavItemV1(
@@ -15287,6 +15321,7 @@ class _BottomNavV1 extends StatelessWidget {
                   icon: Icons.refresh_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.review),
                   academy: academy,
+                  immersiveHome: immersiveHome,
                   showDot: reviewHasDot,
                   onSelected: onSelected,
                 ),
@@ -15296,6 +15331,7 @@ class _BottomNavV1 extends StatelessWidget {
                   icon: academy ? Icons.person_outline : Icons.person_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.profile),
                   academy: academy,
+                  immersiveHome: immersiveHome,
                   onSelected: onSelected,
                 ),
               ],
@@ -15316,6 +15352,7 @@ class _NavItemV1 extends StatelessWidget {
     required this.onSelected,
     this.showDot = false,
     this.academy = false,
+    this.immersiveHome = false,
   });
 
   final Act0ShellTabV1 tab;
@@ -15325,11 +15362,16 @@ class _NavItemV1 extends StatelessWidget {
   final ValueChanged<Act0ShellTabV1> onSelected;
   final bool showDot;
   final bool academy;
+  final bool immersiveHome;
 
   @override
   Widget build(BuildContext context) {
     final selected = tab == current;
-    final color = academy
+    final color = immersiveHome
+        ? (selected
+              ? Act0HomeNorthStarPaletteV1.aqua
+              : Act0HomeNorthStarPaletteV1.textMuted)
+        : academy
         ? (selected
               ? Act0AcademyDesignTokensV1.focus
               : Act0AcademyDesignTokensV1.inkMuted)
@@ -15343,11 +15385,11 @@ class _NavItemV1 extends StatelessWidget {
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusSm),
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            minHeight: academy ? 60 : 0,
+            minHeight: academy || immersiveHome ? 60 : 0,
             minWidth: 44,
           ),
           child: Container(
-            decoration: academy && selected
+            decoration: (academy || immersiveHome) && selected
                 ? BoxDecoration(
                     border: Border(bottom: BorderSide(color: color, width: 2)),
                   )
@@ -15384,12 +15426,12 @@ class _NavItemV1 extends StatelessWidget {
                       ),
                   ],
                 ),
-                SizedBox(height: academy ? 4 : 2),
+                SizedBox(height: academy || immersiveHome ? 4 : 2),
                 Text(
                   label,
                   textAlign: TextAlign.center,
                   style:
-                      (academy
+                      (academy || immersiveHome
                               ? Act0AcademyDesignTokensV1.supporting
                               : const TextStyle())
                           .copyWith(

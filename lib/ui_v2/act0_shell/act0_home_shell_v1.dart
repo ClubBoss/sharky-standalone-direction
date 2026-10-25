@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_north_star_preview_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
@@ -155,6 +156,21 @@ class Act0HomeShellV1 extends StatelessWidget {
             fallback: 'Continue',
           )
         : this.nextActionCtaLabel;
+    if (kAct0HomeNorthStarPreviewV1 && !_isRuLocaleV1(context)) {
+      return Act0HomeNorthStarPreviewV1(
+        state: state,
+        sharky: sharky,
+        courseTitle: courseTitle,
+        nextActionTitle: title,
+        nextActionSubtitle: nextActionHint?.trim().isNotEmpty == true
+            ? nextActionHint!.trim()
+            : subtitle,
+        nextActionCtaLabel: nextActionCtaLabel,
+        pathProgressLabel: pathProgressLabel,
+        onOpenDevMenu: onOpenDevMenu,
+        onContinue: onContinue,
+      );
+    }
     final goalValue = dailyGoalValue ?? state.dailyGoalValue;
     final checklistActive =
         showChecklist ??
