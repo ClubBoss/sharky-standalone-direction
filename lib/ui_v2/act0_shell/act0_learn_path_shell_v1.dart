@@ -2002,6 +2002,10 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
     );
     final currentStateColor = _worldRouteStatusColorV1(worlds, currentWorld);
     final nextWorld = _nextWorldAfterV1(worlds, currentWorld);
+    // Count only source-owned playable status; never present the 36-world
+    // long-term curriculum aspiration as content available today.
+    final openWorldCount = worlds.where((world) => !world.isLocked).length;
+    final lockedWorldCount = worlds.length - openWorldCount;
     final volumePills = <_VolumePillModelV1>[
       _VolumePillModelV1(
         id: 'volume_i',
@@ -2125,7 +2129,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                       child: Text(
                         _learnCopyV1(
                           context,
-                          en: '3 volumes · 36 worlds',
+                          en: 'Your learning map',
                           ru: '3 тома · 36 миров',
                         ),
                         style: Act0AcademyDesignTokensV1.supporting.copyWith(
@@ -2229,7 +2233,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                           Text(
                             _learnCopyV1(
                               context,
-                              en: 'W1-W6 available - W7-W10 locked preview',
+                              en: '$openWorldCount open · $lockedWorldCount locked',
                               ru: 'Миры 1-6 доступны - миры 7-10 закрытый предпросмотр',
                             ),
                             key: const Key(
