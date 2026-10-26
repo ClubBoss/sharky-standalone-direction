@@ -120,7 +120,7 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
                         'Welcome,',
                         style: TextStyle(
                           color: Act0HomeNorthStarPaletteV1.textMuted,
-                          fontSize: 18,
+                          fontSize: 16,
                         ),
                       ),
                       SizedBox(height: 4),
@@ -128,10 +128,10 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
                         'Let’s learn',
                         style: TextStyle(
                           color: Act0HomeNorthStarPaletteV1.text,
-                          fontSize: 38,
-                          height: 1.08,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: -0.8,
+                          fontSize: 28,
+                          height: 1.15,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: -0.4,
                         ),
                       ),
                       SizedBox(height: 8),
@@ -139,7 +139,7 @@ class Act0HomeNorthStarPreviewV1 extends StatelessWidget {
                         'Build your\npoker edge.',
                         style: TextStyle(
                           color: Act0HomeNorthStarPaletteV1.textMuted,
-                          fontSize: 18,
+                          fontSize: 16,
                           height: 1.4,
                         ),
                       ),
@@ -301,24 +301,16 @@ class _NextActionCardV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       key: const Key('act0_shell_home_mission_command_card'),
-      constraints: const BoxConstraints(minHeight: 198),
+      constraints: const BoxConstraints(minHeight: 190),
       padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xD20B2928), Color(0xE006171B)],
+          colors: [Color(0xB2082128), Color(0xC005141C)],
         ),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0x8043D9D0), width: 0.8),
-        image: const DecorationImage(
-          image: AssetImage(
-            'assets/design/sharky/home/poker_lounge_reference_v2.png',
-          ),
-          fit: BoxFit.cover,
-          alignment: Alignment(1, 0.55),
-          colorFilter: ColorFilter.mode(Color(0xFF354E55), BlendMode.modulate),
-        ),
+        border: Border.all(color: const Color(0x4043D9D0), width: 0.8),
         boxShadow: const [
           BoxShadow(
             color: Color(0x30000000),
@@ -436,7 +428,7 @@ class _LearningCycleV1 extends StatelessWidget {
           Stack(
             children: [
               Positioned(
-                top: 32,
+                top: 30,
                 left: 55,
                 right: 55,
                 child: Container(
@@ -511,14 +503,14 @@ class _CycleStageV1 extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(
-              height: 64,
+              height: 60,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
                   Container(
                     key: Key('act0_home_north_star_stage_$number'),
-                    width: isCurrent ? 64 : 54,
-                    height: isCurrent ? 64 : 54,
+                    width: isCurrent ? 60 : 50,
+                    height: isCurrent ? 60 : 50,
                     decoration: BoxDecoration(
                       color: isCurrent
                           ? const Color(0xFF073C40)
@@ -549,7 +541,7 @@ class _CycleStageV1 extends StatelessWidget {
                       color: isCurrent
                           ? Act0HomeNorthStarPaletteV1.text
                           : Act0HomeNorthStarPaletteV1.textMuted,
-                      size: isCurrent ? 28 : 24,
+                      size: isCurrent ? 26 : 23,
                     ),
                   ),
                 ],
@@ -561,7 +553,7 @@ class _CycleStageV1 extends StatelessWidget {
               maxLines: 1,
               style: const TextStyle(
                 color: Act0HomeNorthStarPaletteV1.text,
-                fontSize: 14,
+                fontSize: 13,
                 height: 1.25,
                 fontWeight: FontWeight.w500,
               ),
