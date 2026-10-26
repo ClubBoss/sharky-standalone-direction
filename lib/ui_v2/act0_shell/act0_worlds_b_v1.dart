@@ -65,194 +65,200 @@ class _WorldsBOverlayV1State extends State<_WorldsBOverlayV1> {
         .where((w) => w.worldNumber > current.worldNumber)
         .take(2)
         .toList();
-    return ColoredBox(
-      key: const Key('act0_worlds_b_overlay'),
-      color: ink,
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 6, 20, 8),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 44,
-                      height: 44,
-                      child: OutlinedButton(
-                        key: const Key('act0_worlds_b_back'),
-                        onPressed: m.onClose,
-                        style: OutlinedButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          side: const BorderSide(color: line),
-                          backgroundColor: const Color(0xFF09232B),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+    return BlockSemantics(
+      child: ColoredBox(
+        key: const Key('act0_worlds_b_overlay'),
+        color: ink,
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 6, 20, 8),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 44,
+                        height: 44,
+                        child: OutlinedButton(
+                          key: const Key('act0_worlds_b_back'),
+                          onPressed: m.onClose,
+                          style: OutlinedButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            side: const BorderSide(color: line),
+                            backgroundColor: const Color(0xFF09232B),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
-                        ),
-                        child: Semantics(
-                          label: 'Back to Learn',
-                          button: true,
-                          child: glyph(
-                            Act0AcademyIconographyV1.forward,
-                            color: text,
-                            turn: 2,
+                          child: Semantics(
+                            label: 'Back to Learn',
+                            button: true,
+                            child: glyph(
+                              Act0AcademyIconographyV1.forward,
+                              color: text,
+                              turn: 2,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    Text('Worlds', style: type(18, bold: true)),
-                    const Spacer(),
-                    Text('FOUNDATIONS / I', style: type(10, color: muted)),
-                  ],
+                      const SizedBox(width: 12),
+                      Text('Worlds', style: type(18, bold: true)),
+                      const Spacer(),
+                      Text('FOUNDATIONS / I', style: type(10, color: muted)),
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  key: const Key('act0_worlds_b_scroll'),
-                  controller: _scroll,
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
-                  child: _full
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'All ${worlds.length} worlds',
-                              style: type(29, bold: true),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(counts, style: type(12, color: muted)),
-                            const SizedBox(height: 16),
-                            for (final w in worlds) row(w, compact: true),
-                          ],
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'YOUR LEARNING MAP',
-                              style: type(10.5, color: aqua, bold: true),
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              'Discover what\ncomes next.',
-                              style: type(32, bold: true),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              counts,
-                              key: const Key('act0_worlds_b_counts'),
-                              style: type(12, color: muted),
-                            ),
-                            const SizedBox(height: 20),
-                            hero(current, worlds.length),
-                            if (next.isNotEmpty) ...[
-                              const SizedBox(height: 22),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      'NEXT IN YOUR JOURNEY',
-                                      style: type(10, color: muted, bold: true),
-                                    ),
-                                  ),
-                                  Text(
-                                    'Unlock as you progress',
-                                    style: type(9, color: muted),
-                                  ),
-                                ],
+                Expanded(
+                  child: SingleChildScrollView(
+                    key: const Key('act0_worlds_b_scroll'),
+                    controller: _scroll,
+                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+                    child: _full
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'All ${worlds.length} worlds',
+                                style: type(29, bold: true),
                               ),
-                              const SizedBox(height: 12),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF061E25),
-                                  border: Border.all(color: line),
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                ),
-                                child: Column(
+                              const SizedBox(height: 8),
+                              Text(counts, style: type(12, color: muted)),
+                              const SizedBox(height: 16),
+                              for (final w in worlds) row(w, compact: true),
+                            ],
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'YOUR LEARNING MAP',
+                                style: type(10.5, color: aqua, bold: true),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                'Discover what\ncomes next.',
+                                style: type(32, bold: true),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                counts,
+                                key: const Key('act0_worlds_b_counts'),
+                                style: type(12, color: muted),
+                              ),
+                              const SizedBox(height: 20),
+                              hero(current, worlds.length),
+                              if (next.isNotEmpty) ...[
+                                const SizedBox(height: 22),
+                                Row(
                                   children: [
-                                    for (var i = 0; i < next.length; i++) ...[
-                                      if (i > 0)
-                                        const Divider(color: line, height: 1),
-                                      row(next[i]),
-                                    ],
+                                    Expanded(
+                                      child: Text(
+                                        'NEXT IN YOUR JOURNEY',
+                                        style: type(
+                                          10,
+                                          color: muted,
+                                          bold: true,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      'Unlock as you progress',
+                                      style: type(9, color: muted),
+                                    ),
                                   ],
                                 ),
-                              ),
+                                const SizedBox(height: 12),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF061E25),
+                                    border: Border.all(color: line),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      for (var i = 0; i < next.length; i++) ...[
+                                        if (i > 0)
+                                          const Divider(color: line, height: 1),
+                                        row(next[i]),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ],
-                          ],
+                          ),
+                  ),
+                ),
+                Container(
+                  decoration: const BoxDecoration(
+                    border: Border(top: BorderSide(color: line)),
+                  ),
+                  padding: const EdgeInsets.fromLTRB(16, 9, 16, 7),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 46,
+                    child: OutlinedButton(
+                      key: const Key('act0_worlds_b_catalog_toggle'),
+                      onPressed: toggle,
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: line),
+                        backgroundColor: const Color(0xFF061E25),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(13),
                         ),
-                ),
-              ),
-              Container(
-                decoration: const BoxDecoration(
-                  border: Border(top: BorderSide(color: line)),
-                ),
-                padding: const EdgeInsets.fromLTRB(16, 9, 16, 7),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 46,
-                  child: OutlinedButton(
-                    key: const Key('act0_worlds_b_catalog_toggle'),
-                    onPressed: toggle,
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: line),
-                      backgroundColor: const Color(0xFF061E25),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(13),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              _full
+                                  ? 'Back to worlds overview'
+                                  : 'View all ${worlds.length} worlds',
+                              style: type(14, bold: true),
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          glyph(
+                            Act0AcademyIconographyV1.forward,
+                            turn: _full ? 2 : 1,
+                          ),
+                        ],
                       ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            _full
-                                ? 'Back to worlds overview'
-                                : 'View all ${worlds.length} worlds',
-                            style: type(14, bold: true),
-                          ),
-                        ),
-                        const SizedBox(width: 14),
-                        glyph(
-                          Act0AcademyIconographyV1.forward,
-                          turn: _full ? 2 : 1,
-                        ),
-                      ],
-                    ),
+                  ),
+                ),
+              ],
+            ),
+            if (m.detailWorld != null) ...[
+              Positioned.fill(
+                child: ModalBarrier(
+                  color: Colors.black54,
+                  dismissible: true,
+                  onDismiss: m.onDismissWorldDetail,
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: _SelectedWorldPopupV1(
+                    world: m.detailWorld!,
+                    worlds: worlds,
+                    currentWorld: current,
+                    onContinueCurrentWorld: () =>
+                        m.onSelectWorld(current.worldId),
+                    onPreviewPremiumWorld: m.onPreviewPremiumWorld,
                   ),
                 ),
               ),
             ],
-          ),
-          if (m.detailWorld != null) ...[
-            Positioned.fill(
-              child: ModalBarrier(
-                color: Colors.black54,
-                dismissible: true,
-                onDismiss: m.onDismissWorldDetail,
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: _SelectedWorldPopupV1(
-                  world: m.detailWorld!,
-                  worlds: worlds,
-                  currentWorld: current,
-                  onContinueCurrentWorld: () =>
-                      m.onSelectWorld(current.worldId),
-                  onPreviewPremiumWorld: m.onPreviewPremiumWorld,
-                ),
-              ),
-            ),
           ],
-        ],
+        ),
       ),
     );
   }
@@ -261,7 +267,8 @@ class _WorldsBOverlayV1State extends State<_WorldsBOverlayV1> {
     key: const Key('act0_worlds_b_current_card'),
     height: 268,
     clipBehavior: Clip.antiAlias,
-    decoration: BoxDecoration(
+    decoration: BoxDecoration(borderRadius: BorderRadius.circular(24)),
+    foregroundDecoration: BoxDecoration(
       border: Border.all(color: aqua.withValues(alpha: .65)),
       borderRadius: BorderRadius.circular(24),
     ),
