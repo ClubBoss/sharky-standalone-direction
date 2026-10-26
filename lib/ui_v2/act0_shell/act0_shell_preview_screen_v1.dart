@@ -5337,13 +5337,24 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         !isPlayRunner &&
         _blockCompletionSummary == null &&
         _tab == Act0ShellTabV1.home;
+    final immersiveLearn =
+        kAct0LearnCinematicPathAV1 &&
+        Localizations.localeOf(context).languageCode == 'en' &&
+        _bootSurfaceReady &&
+        !_showPlacement &&
+        !_showWelcome &&
+        !isPlayRunner &&
+        _blockCompletionSummary == null &&
+        _tab == Act0ShellTabV1.learn &&
+        !_showWorldMenu;
+    final cinematicChrome = immersiveHome || immersiveLearn;
     final showTopBar =
         _bootSurfaceReady &&
         !_showPlacement &&
         !_showWelcome &&
         !isPlayRunner &&
         _blockCompletionSummary == null &&
-        !immersiveHome;
+        !cinematicChrome;
     final firstValueTodayCarry =
         _tab == Act0ShellTabV1.home &&
             !_showPlacement &&
@@ -5362,7 +5373,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         !isPlayRunner;
     final shell = Scaffold(
       key: const Key('act0_shell_preview_screen'),
-      backgroundColor: immersiveHome
+      backgroundColor: cinematicChrome
           ? Act0HomeNorthStarPaletteV1.ink
           : academySurface
           ? Act0AcademyDesignTokensV1.pageSurface
@@ -6758,7 +6769,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           : _BottomNavV1(
               current: _tab,
               academy: academySurface,
-              immersiveHome: immersiveHome,
+              immersiveHome: cinematicChrome,
               reviewHasDot: reviewNavHasDot,
               onSelected: (tab) => setState(() {
                 final preserveRepairBridge =
@@ -6815,7 +6826,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
     // S08 admits native scaling around the Academy only. Keep the protected
     // Table and other deferred surfaces in their existing rendering context.
-    if (immersiveHome) {
+    if (cinematicChrome) {
       return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: shell,
