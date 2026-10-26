@@ -15451,11 +15451,11 @@ class _NavItemV1 extends StatelessWidget {
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusSm),
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            minHeight: academy || immersiveHome ? 60 : 0,
+            minHeight: immersiveHome ? 50 : (academy ? 60 : 0),
             minWidth: 44,
           ),
           child: Container(
-            decoration: (academy || immersiveHome) && selected
+            decoration: academy && !immersiveHome && selected
                 ? BoxDecoration(
                     border: Border(bottom: BorderSide(color: color, width: 2)),
                   )
@@ -15481,7 +15481,7 @@ class _NavItemV1 extends StatelessWidget {
                               Act0ShellTabV1.profile =>
                                 Act0AcademyIconographyV1.you,
                             },
-                            size: 21,
+                            size: 24,
                             color: color,
                           )
                         : Icon(icon, size: 21, color: color),
@@ -15517,6 +15517,8 @@ class _NavItemV1 extends StatelessWidget {
                 Text(
                   label,
                   textAlign: TextAlign.center,
+                  maxLines: immersiveHome ? 1 : null,
+                  overflow: immersiveHome ? TextOverflow.ellipsis : null,
                   style:
                       (academy || immersiveHome
                               ? Act0AcademyDesignTokensV1.supporting
