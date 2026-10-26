@@ -3087,6 +3087,8 @@ class _SelectedLessonPopupV1 extends StatelessWidget {
     final locked = lesson.state == Act0LessonStateV1.locked;
     final panelAccent = locked
         ? Act0ShellTokensV1.textDim
+        : _cinematicLearnV1(context)
+        ? Act0HomeNorthStarPaletteV1.aqua
         : Act0ShellTokensV1.primary;
     final tasks = lesson.taskList;
     final lessonSubtitle = act0AcademyLessonSubtitleV1(context, lesson);

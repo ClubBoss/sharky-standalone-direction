@@ -6826,7 +6826,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
     // S08 admits native scaling around the Academy only. Keep the protected
     // Table and other deferred surfaces in their existing rendering context.
-    if (immersiveHome) {
+    if (cinematicChrome) {
       return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: shell,

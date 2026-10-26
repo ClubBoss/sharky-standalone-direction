@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
@@ -74,6 +75,14 @@ void main() {
       kAct0LearnCinematicPathAV1 ? findsOneWidget : findsNothing,
     );
     if (kAct0LearnCinematicPathAV1) {
+      expect(
+        find.byWidgetPredicate(
+          (w) =>
+              w is AnnotatedRegion<SystemUiOverlayStyle> &&
+              w.value == SystemUiOverlayStyle.light,
+        ),
+        findsWidgets,
+      );
       expect(find.text('0%'), findsOneWidget);
       expect(find.text('0 of 9 lessons complete'), findsOneWidget);
       expect(
@@ -113,7 +122,12 @@ void main() {
       final row = find.byKey(
         Key('act0_learn_cinematic_lesson_${prior.lessonId}'),
       );
+      final disclosure = find.byKey(
+        Key('act0_learn_cinematic_disclosure_${prior.lessonId}'),
+      );
+      expect(t.widget<RotatedBox>(disclosure).quarterTurns, 1);
       await tap(t, row);
+      expect(t.widget<RotatedBox>(disclosure).quarterTurns, 3);
       expect(
         find.byKey(const Key('act0_shell_selected_lesson_panel')),
         findsOneWidget,
@@ -126,6 +140,10 @@ void main() {
       await tap(t, find.byKey(const Key('act0_shell_learn_v5_view_full_path')));
       expect(find.text('Collapse full path'), findsOneWidget);
       final locked = shell.lessons.firstWhere((l) => !l.isSelectable);
+      expect(
+        find.byKey(Key('act0_learn_cinematic_disclosure_${locked.lessonId}')),
+        findsNothing,
+      );
       await tap(
         t,
         find.byKey(Key('act0_learn_cinematic_lesson_${locked.lessonId}')),

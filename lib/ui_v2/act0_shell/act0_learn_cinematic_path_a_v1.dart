@@ -213,6 +213,16 @@ class _CinematicLearnBodyV1 extends StatelessWidget {
                 ),
               ),
             ),
+            const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0x00020E13), Color(0xDA020E13)],
+                  stops: [0.35, 1],
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
@@ -419,7 +429,13 @@ class _CinematicLearnBodyV1 extends StatelessWidget {
                             act0AcademyLessonTitleV1(context, lesson),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: style(14, weight: FontWeight.w500),
+                            style: style(
+                              14,
+                              color: lesson.isSelectable
+                                  ? text
+                                  : const Color(0xFF87A0AA),
+                              weight: FontWeight.w500,
+                            ),
                           ),
                           const SizedBox(height: 3),
                           Text(
@@ -432,10 +448,16 @@ class _CinematicLearnBodyV1 extends StatelessWidget {
                       ),
                     ),
                     if (lesson.isSelectable)
-                      const Act0AcademyGlyphV1(
-                        asset: Act0AcademyIconographyV1.forward,
-                        color: muted,
-                        size: 16,
+                      RotatedBox(
+                        key: Key(
+                          'act0_learn_cinematic_disclosure_${lesson.lessonId}',
+                        ),
+                        quarterTurns: expanded ? 3 : 1,
+                        child: const Act0AcademyGlyphV1(
+                          asset: Act0AcademyIconographyV1.forward,
+                          color: muted,
+                          size: 16,
+                        ),
                       ),
                   ],
                 ),
