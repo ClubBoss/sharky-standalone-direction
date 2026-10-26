@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_hybrid_v1.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -5357,7 +5358,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _blockCompletionSummary == null &&
         _tab == Act0ShellTabV1.learn &&
         _showWorldMenu;
-    final cinematicChrome = immersiveHome || immersiveLearn || immersiveWorlds;
+    final immersivePractice =
+        kAct0PracticeHybridV1 &&
+        Localizations.localeOf(context).languageCode == 'en' &&
+        _bootSurfaceReady &&
+        !_showPlacement &&
+        !_showWelcome &&
+        !isPlayRunner &&
+        _blockCompletionSummary == null &&
+        _tab == Act0ShellTabV1.play &&
+        _showPlayHub;
+    final cinematicChrome =
+        immersiveHome || immersiveLearn || immersiveWorlds || immersivePractice;
     final showTopBar =
         _bootSurfaceReady &&
         !_showPlacement &&
@@ -5381,6 +5393,55 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         (_showPlacement && !_placementDiagnosticActive) ||
         _showWelcome ||
         !isPlayRunner;
+    void selectAcademyTab(Act0ShellTabV1 tab) => setState(() {
+      final preserveRepairBridge = _shouldPreserveLearningRunForRepairBridgeV1(
+        currentTab: _tab,
+        requestedTab: tab,
+      );
+      final leavingLearningRunSurface =
+          (_tab == Act0ShellTabV1.learn && tab != Act0ShellTabV1.learn) ||
+          (_tab == Act0ShellTabV1.play &&
+              _showPlayHub &&
+              tab != Act0ShellTabV1.play);
+      if (leavingLearningRunSurface && !preserveRepairBridge) {
+        _closeLearningRunForLearnExitV1();
+      }
+      _tab = tab;
+      if (tab == Act0ShellTabV1.play) {
+        _showPlayHub = true;
+        _blockCompletionSummary = null;
+        _placementHandoffActive = false;
+      }
+      if (tab != Act0ShellTabV1.play) {
+        _practiceCompletionTitle = null;
+        _practiceCompletionBody = null;
+        _phase = Act0LessonPhaseV1.theory;
+        _selectedOptionId = null;
+        _teachingStepIndex = 0;
+        _blockCompletionSummary = null;
+        _showPlayHub = true;
+        _activeRepairTaskId = null;
+        _activeRepairSourceTaskId = null;
+        _activeRepairResultReceiptLine = null;
+        _activeRepairSessionSummaryLines = const <String>[];
+      }
+      if (tab != Act0ShellTabV1.home) {
+        _placementHandoffActive = false;
+      }
+      if (tab == Act0ShellTabV1.learn) {
+        _activateLearnVisitEligibilityV1();
+        final learnLesson = _firstPlayableLesson(selectedWorld);
+        _seedLearnRouteFocusV1(
+          lessonId: learnLesson.lessonId,
+          taskId: _firstIncompleteTask(learnLesson).taskId,
+        );
+      }
+      if (tab != Act0ShellTabV1.learn) {
+        _learnDetailLessonId = null;
+        _learnDetailWorldId = null;
+        _showWorldMenu = false;
+      }
+    });
     final shell = Scaffold(
       key: const Key('act0_shell_preview_screen'),
       backgroundColor: cinematicChrome
@@ -5828,6 +5889,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                       Act0ShellTabV1.play =>
                         _showPlayHub && _blockCompletionSummary == null
                             ? Act0PlayShellV1(
+                                onOpenReview: () =>
+                                    selectAcademyTab(Act0ShellTabV1.review),
+                                onOpenLearn: () =>
+                                    selectAcademyTab(Act0ShellTabV1.learn),
                                 groups: practiceGroups,
                                 recommendedGroupId:
                                     practiceSurfaceRecommendation.groupId,
@@ -6782,57 +6847,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               academy: academySurface,
               immersiveHome: cinematicChrome,
               reviewHasDot: reviewNavHasDot,
-              onSelected: (tab) => setState(() {
-                final preserveRepairBridge =
-                    _shouldPreserveLearningRunForRepairBridgeV1(
-                      currentTab: _tab,
-                      requestedTab: tab,
-                    );
-                final leavingLearningRunSurface =
-                    (_tab == Act0ShellTabV1.learn &&
-                        tab != Act0ShellTabV1.learn) ||
-                    (_tab == Act0ShellTabV1.play &&
-                        _showPlayHub &&
-                        tab != Act0ShellTabV1.play);
-                if (leavingLearningRunSurface && !preserveRepairBridge) {
-                  _closeLearningRunForLearnExitV1();
-                }
-                _tab = tab;
-                if (tab == Act0ShellTabV1.play) {
-                  _showPlayHub = true;
-                  _blockCompletionSummary = null;
-                  _placementHandoffActive = false;
-                }
-                if (tab != Act0ShellTabV1.play) {
-                  _practiceCompletionTitle = null;
-                  _practiceCompletionBody = null;
-                  _phase = Act0LessonPhaseV1.theory;
-                  _selectedOptionId = null;
-                  _teachingStepIndex = 0;
-                  _blockCompletionSummary = null;
-                  _showPlayHub = true;
-                  _activeRepairTaskId = null;
-                  _activeRepairSourceTaskId = null;
-                  _activeRepairResultReceiptLine = null;
-                  _activeRepairSessionSummaryLines = const <String>[];
-                }
-                if (tab != Act0ShellTabV1.home) {
-                  _placementHandoffActive = false;
-                }
-                if (tab == Act0ShellTabV1.learn) {
-                  _activateLearnVisitEligibilityV1();
-                  final learnLesson = _firstPlayableLesson(selectedWorld);
-                  _seedLearnRouteFocusV1(
-                    lessonId: learnLesson.lessonId,
-                    taskId: _firstIncompleteTask(learnLesson).taskId,
-                  );
-                }
-                if (tab != Act0ShellTabV1.learn) {
-                  _learnDetailLessonId = null;
-                  _learnDetailWorldId = null;
-                  _showWorldMenu = false;
-                }
-              }),
+              onSelected: selectAcademyTab,
             ),
     );
     // S08 admits native scaling around the Academy only. Keep the protected
