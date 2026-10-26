@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_hybrid_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_reading_style_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
@@ -218,6 +219,8 @@ class Act0PlayShellV1 extends StatefulWidget {
     this.screenSubtitle = 'Short reps keep today\'s skill sharp.',
     this.completionTitle,
     this.completionBody,
+    this.onOpenReview,
+    this.onOpenLearn,
   });
 
   final List<Act0PracticeGroupV1> groups;
@@ -236,6 +239,8 @@ class Act0PlayShellV1 extends StatefulWidget {
   final String screenSubtitle;
   final String? completionTitle;
   final String? completionBody;
+  final VoidCallback? onOpenReview;
+  final VoidCallback? onOpenLearn;
 
   @override
   State<Act0PlayShellV1> createState() => _Act0PlayShellV1State();
@@ -244,6 +249,20 @@ class Act0PlayShellV1 extends StatefulWidget {
 class _Act0PlayShellV1State extends State<Act0PlayShellV1> {
   @override
   Widget build(BuildContext context) {
+    if (kAct0PracticeHybridV1 &&
+        Localizations.localeOf(context).languageCode == 'en') {
+      return Act0PracticeHybridV1(
+        groups: widget.groups,
+        recommendedGroupId: widget.recommendedGroupId,
+        recommendedTitle: widget.recommendedTitle,
+        recommendedSubtitle: widget.recommendedSubtitle,
+        onStartGroup: widget.onStartGroup,
+        onOpenReview: widget.onOpenReview,
+        onOpenLearn: widget.onOpenLearn,
+        completionTitle: widget.completionTitle,
+        completionBody: widget.completionBody,
+      );
+    }
     final quickDrillGroup = _groupById(widget.groups, 'daily');
     final fixLeakGroup = _groupById(widget.groups, 'weak_spots');
     final recommendedGroup = _groupById(
