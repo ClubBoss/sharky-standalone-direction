@@ -155,6 +155,11 @@ void main() {
       expect(group.groupId, 'daily');
       expect(group.isEnabled, isTrue);
       expect(
+        find.text('Short reps from your available practice topics.'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('spaced spots'), findsNothing);
+      expect(
         t.widget<Text>(_key('act0_practice_hybrid_title')).data,
         source.recommendedTitle,
       );
@@ -232,6 +237,12 @@ void main() {
         (g) => g.groupId == source.recommendedGroupId,
       );
       expect(group.sessionLabel, 'Complete');
+      expect(
+        find.text('Your daily set is complete. Extra reps are optional.'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('Table read improved'), findsNothing);
+      expect(find.textContaining('Come back tomorrow'), findsNothing);
       expect(
         t.widget<Text>(_key('act0_practice_hybrid_title')).data,
         'Daily short reps complete',

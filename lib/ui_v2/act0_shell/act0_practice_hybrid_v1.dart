@@ -47,6 +47,16 @@ class _Act0PracticeHybridV1State extends State<Act0PracticeHybridV1> {
         .where((g) => g.groupId == widget.recommendedGroupId)
         .firstOrNull;
     final canStart = group != null && group.isEnabled;
+    // Voluntary daily replay is not proof of improvement or genuinely due work.
+    // The existing Complete status controls only this presentation copy.
+    final dailyComplete =
+        group?.groupId == 'daily' &&
+        group?.sessionLabel.trim().toLowerCase() == 'complete';
+    final subtitle = dailyComplete
+        ? 'Your daily set is complete. Extra reps are optional.'
+        : group?.groupId == 'daily' && canStart
+        ? 'Short reps from your available practice topics.'
+        : widget.recommendedSubtitle;
     final topics = widget.groups
         .where(
           (g) => !const {
@@ -176,7 +186,7 @@ class _Act0PracticeHybridV1State extends State<Act0PracticeHybridV1> {
                   ),
                   const SizedBox(height: 9),
                   Text(
-                    widget.recommendedSubtitle,
+                    subtitle,
                     style: const TextStyle(
                       color: Act0HomeNorthStarPaletteV1.textMuted,
                       fontSize: 14,
