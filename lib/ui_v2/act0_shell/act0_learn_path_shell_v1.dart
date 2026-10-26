@@ -16,6 +16,14 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_iconography_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_north_star_preview_v1.dart';
 
 part 'act0_learn_cinematic_path_a_v1.dart';
+part 'act0_worlds_b_v1.dart';
+
+const bool kAct0WorldsBPreviewV1 = bool.fromEnvironment(
+  'SHARKY_WORLDS_B_PREVIEW',
+);
+bool _worldsBPreviewV1(BuildContext context) =>
+    kAct0WorldsBPreviewV1 &&
+    Localizations.localeOf(context).languageCode == 'en';
 
 const bool kAct0LearnCinematicPathAV1 = bool.fromEnvironment(
   'SHARKY_LEARN_CINEMATIC_PATH_A',
@@ -2009,6 +2017,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (_worldsBPreviewV1(context)) return _WorldsBOverlayV1(model: this);
     final selectedWorld = worlds.firstWhere(
       (world) => world.worldId == selectedWorldId,
       orElse: () => worlds.first,

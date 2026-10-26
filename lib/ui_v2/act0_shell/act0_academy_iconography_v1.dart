@@ -13,6 +13,7 @@ abstract final class Act0AcademyIconographyV1 {
   static const recall = 'assets/design/sharky/iconography/recall.svg';
   static const apply = practice;
   static const forward = 'assets/design/sharky/iconography/forward.svg';
+  static const lock = 'assets/design/sharky/iconography/lock.svg';
   static const overflow = 'assets/design/sharky/iconography/more.svg';
 }
 
