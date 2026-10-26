@@ -5347,7 +5347,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _blockCompletionSummary == null &&
         _tab == Act0ShellTabV1.learn &&
         !_showWorldMenu;
-    final cinematicChrome = immersiveHome || immersiveLearn;
+    final immersiveWorlds =
+        kAct0WorldsBPreviewV1 &&
+        Localizations.localeOf(context).languageCode == 'en' &&
+        _bootSurfaceReady &&
+        !_showPlacement &&
+        !_showWelcome &&
+        !isPlayRunner &&
+        _blockCompletionSummary == null &&
+        _tab == Act0ShellTabV1.learn &&
+        _showWorldMenu;
+    final cinematicChrome = immersiveHome || immersiveLearn || immersiveWorlds;
     final showTopBar =
         _bootSurfaceReady &&
         !_showPlacement &&
@@ -6761,7 +6771,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ),
       ),
       bottomNavigationBar:
-          !_bootSurfaceReady ||
+          immersiveWorlds ||
+              !_bootSurfaceReady ||
               _showWelcome ||
               (_showPlacement && !_placementDiagnosticActive) ||
               (_tab == Act0ShellTabV1.play && !_showPlayHub)
