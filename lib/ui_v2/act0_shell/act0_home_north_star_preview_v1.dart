@@ -317,7 +317,7 @@ class _NextActionCardV1 extends StatelessWidget {
           ),
           fit: BoxFit.cover,
           alignment: Alignment(1, 0.55),
-          colorFilter: ColorFilter.mode(Color(0xFF64777C), BlendMode.modulate),
+          colorFilter: ColorFilter.mode(Color(0xFF354E55), BlendMode.modulate),
         ),
         boxShadow: const [
           BoxShadow(
@@ -329,6 +329,7 @@ class _NextActionCardV1 extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             'YOUR NEXT STEP',

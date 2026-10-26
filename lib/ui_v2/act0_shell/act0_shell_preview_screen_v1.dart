@@ -15460,7 +15460,10 @@ class _NavItemV1 extends StatelessWidget {
                     border: Border(bottom: BorderSide(color: color, width: 2)),
                   )
                 : null,
-            padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 2),
+            padding: EdgeInsets.symmetric(
+              vertical: immersiveHome ? 3 : 7,
+              horizontal: 2,
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
