@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_north_star_preview_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
@@ -75,6 +76,9 @@ class Act0HomeShellV1 extends StatelessWidget {
     required this.state,
     this.currentLesson,
     this.pathProgressLabel,
+    this.earnedLessonCount,
+    this.courseLessonCount,
+    this.trainingPhase,
     this.nextActionLabel = 'Continue',
     this.nextActionTitle,
     this.nextActionSubtitle,
@@ -109,6 +113,10 @@ class Act0HomeShellV1 extends StatelessWidget {
   final Act0ShellStateV1 state;
   final Act0LessonCardV1? currentLesson;
   final String? pathProgressLabel;
+  // Source-owned earned completion, distinct from routing/Placement closure.
+  final int? earnedLessonCount;
+  final int? courseLessonCount;
+  final Act0HomeTrainingPhaseV1? trainingPhase;
   final String nextActionLabel;
   final String? nextActionTitle;
   final String? nextActionSubtitle;
@@ -155,6 +163,23 @@ class Act0HomeShellV1 extends StatelessWidget {
             fallback: 'Continue',
           )
         : this.nextActionCtaLabel;
+    if (kAct0HomeNorthStarPreviewV1 && !_isRuLocaleV1(context)) {
+      return Act0HomeNorthStarPreviewV1(
+        state: state,
+        sharky: sharky,
+        courseTitle: courseTitle,
+        nextActionTitle: title,
+        nextActionSubtitle: nextActionHint?.trim().isNotEmpty == true
+            ? nextActionHint!.trim()
+            : subtitle,
+        nextActionCtaLabel: nextActionCtaLabel,
+        earnedLessonCount: earnedLessonCount,
+        courseLessonCount: courseLessonCount,
+        trainingPhase: trainingPhase,
+        onOpenDevMenu: onOpenDevMenu,
+        onContinue: onContinue,
+      );
+    }
     final goalValue = dailyGoalValue ?? state.dailyGoalValue;
     final checklistActive =
         showChecklist ??
