@@ -12,6 +12,18 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_iconography_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_north_star_preview_v1.dart';
+
+part 'act0_learn_cinematic_path_a_v1.dart';
+
+const bool kAct0LearnCinematicPathAV1 = bool.fromEnvironment(
+  'SHARKY_LEARN_CINEMATIC_PATH_A',
+);
+bool _cinematicLearnV1(BuildContext context) =>
+    kAct0LearnCinematicPathAV1 &&
+    Localizations.localeOf(context).languageCode == 'en';
+
 bool _isRuLocaleV1(BuildContext context) =>
     Localizations.localeOf(context).languageCode == 'ru';
 
@@ -664,7 +676,9 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
           Positioned.fill(
             child: ColoredBox(
               key: const Key('act0_shell_learn_page_background'),
-              color: Act0AcademyDesignTokensV1.pageSurface,
+              color: _cinematicLearnV1(context)
+                  ? Act0HomeNorthStarPaletteV1.ink
+                  : Act0AcademyDesignTokensV1.pageSurface,
             ),
           ),
           NotificationListener<ScrollNotification>(
@@ -694,12 +708,14 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
               key: const Key('act0_shell_learn_screen'),
               slivers: [
                 SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(
-                    Act0ShellTokensV1.pageX,
-                    Act0ShellTokensV1.gapXs,
-                    Act0ShellTokensV1.pageX,
-                    Act0ShellTokensV1.bottomNavHeight + 34,
-                  ),
+                  padding: _cinematicLearnV1(context)
+                      ? const EdgeInsets.fromLTRB(16, 4, 16, 18)
+                      : const EdgeInsets.fromLTRB(
+                          Act0ShellTokensV1.pageX,
+                          Act0ShellTokensV1.gapXs,
+                          Act0ShellTokensV1.pageX,
+                          Act0ShellTokensV1.bottomNavHeight + 34,
+                        ),
                   sliver: SliverToBoxAdapter(
                     child: Act0ShellTokensV1.centeredContent(
                       context,
@@ -917,6 +933,7 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (_cinematicLearnV1(context)) return _CinematicLearnBodyV1(model: this);
     return Column(
       key: const Key('act0_shell_learn_v5_body'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
