@@ -1,3 +1,5 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_iconography_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_north_star_preview_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_reading_style_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
@@ -9,6 +11,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_proof_icon_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
+
+part 'act0_you_v23.dart';
 
 bool _isRuLocaleV1(BuildContext context) => false;
 
@@ -36,6 +40,10 @@ class Act0ProfileShellV1 extends StatelessWidget {
     required this.onRetakePlacement,
     this.onReplayWelcome,
     this.onGoToHome,
+    this.onGoToLearn,
+    this.onOpenReview,
+    this.youDueCount = 0,
+    this.youRepairCount = 0,
     this.evidenceSignal,
     this.crossSessionProof,
     this.achievementSeedConsumer = const Act0AchievementSeedConsumerV1(),
@@ -45,12 +53,19 @@ class Act0ProfileShellV1 extends StatelessWidget {
   final VoidCallback onRetakePlacement;
   final VoidCallback? onReplayWelcome;
   final VoidCallback? onGoToHome;
+  final VoidCallback? onGoToLearn;
+  final VoidCallback? onOpenReview;
+  final int youDueCount;
+  final int youRepairCount;
   final Act0ProfileEvidenceSignalViewModelV1? evidenceSignal;
   final Act0CrossSessionProfileProofV1? crossSessionProof;
   final Act0AchievementSeedConsumerV1 achievementSeedConsumer;
 
   @override
   Widget build(BuildContext context) {
+    if (kAct0YouV23Preview &&
+        Localizations.localeOf(context).languageCode == 'en')
+      return _YouV23(this);
     return ListView(
       key: const Key('act0_shell_profile_screen'),
       cacheExtent: 1200,
