@@ -87,7 +87,7 @@ class Act0ReviewV4 extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(18, 0, 18, 22),
         children: [
           SizedBox(
-            height: 168,
+            height: 152,
             child: Stack(
               clipBehavior: Clip.none,
               children: [
@@ -169,7 +169,7 @@ class Act0ReviewV4 extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(6, 0, 6, 18),
+            padding: const EdgeInsets.fromLTRB(6, 0, 6, 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -239,7 +239,7 @@ class Act0ReviewV4 extends StatelessWidget {
           ),
           if (featured != null) _mistakeCard(featured),
           if (mistakes.length > 1) ...[
-            const SizedBox(height: 20),
+            const SizedBox(height: 12),
             _eyebrow('OTHER MISTAKES TO REVIEW', color: _muted),
             const SizedBox(height: 10),
             for (var i = 1; i < mistakes.length; i++)
