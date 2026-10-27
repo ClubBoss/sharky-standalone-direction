@@ -1213,6 +1213,7 @@ class Act0ProfileStateV1 {
     required this.level,
     required this.xpLine,
     required this.lessonsLine,
+    this.completedTaskCount,
     required this.accuracyLine,
     this.qualityLine = '',
     required this.consistencyActiveDays,
@@ -1238,6 +1239,9 @@ class Act0ProfileStateV1 {
   final String level;
   final String xpLine;
   final String lessonsLine;
+
+  /// Read-only count supplied by the canonical shell progress projection.
+  final int? completedTaskCount;
   final String accuracyLine;
   final String qualityLine;
   final int consistencyActiveDays;

@@ -5378,12 +5378,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         !isPlayRunner &&
         _blockCompletionSummary == null &&
         _tab == Act0ShellTabV1.review;
+    final immersiveYou =
+        kAct0YouV23Preview &&
+        Localizations.localeOf(context).languageCode == 'en' &&
+        _bootSurfaceReady &&
+        !_showPlacement &&
+        !_showWelcome &&
+        !isPlayRunner &&
+        _blockCompletionSummary == null &&
+        _tab == Act0ShellTabV1.profile;
     final cinematicChrome =
         immersiveHome ||
         immersiveLearn ||
         immersiveWorlds ||
         immersivePractice ||
-        immersiveReview;
+        immersiveReview ||
+        immersiveYou;
     final showTopBar =
         _bootSurfaceReady &&
         !_showPlacement &&
@@ -6818,6 +6828,35 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         }),
                       ),
                       Act0ShellTabV1.profile => Act0ProfileShellV1(
+                        onGoToLearn: () =>
+                            selectAcademyTab(Act0ShellTabV1.learn),
+                        onOpenReview: () =>
+                            selectAcademyTab(Act0ShellTabV1.review),
+                        youDueCount: _durableRetentionHistoryV1
+                            .dueItemsAt(widget.clock.nowUtc())
+                            .where(
+                              (d) => act0YouV23TargetExists(
+                                state,
+                                d.worldId,
+                                d.lessonId,
+                                d.taskId,
+                              ),
+                            )
+                            .length,
+                        youRepairCount: reviewState.mistakes
+                            .where(
+                              (m) =>
+                                  act0YouV23TargetExists(
+                                    state,
+                                    m.worldId,
+                                    m.lessonId,
+                                    m.taskId,
+                                  ) &&
+                                  (!_usesPersistedProgress ||
+                                      _mistakeRecords.containsKey(m.taskId)),
+                            )
+                            .length,
+
                         profile: profileState,
                         crossSessionProof:
                             Act0CrossSessionProfileProofV1.fromFixProof(
@@ -12276,6 +12315,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       xpLine:
           '${progress.xp} / ${(widget.state ?? Act0ShellStateV1.sample).xpTarget} XP',
       lessonsLine: '$completedCount of $totalTasks tasks complete',
+      completedTaskCount: completedCount,
       accuracyLine: accuracy,
       qualityLine: qualityLine,
       streakLine: streakDays == 0
