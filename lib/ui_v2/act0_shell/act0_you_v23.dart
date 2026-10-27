@@ -249,25 +249,84 @@ class _YouV23 extends StatelessWidget {
                   style: const TextStyle(color: text, fontSize: 16),
                 ),
               ),
-              _ProfileNextMilestoneCardV1(
-                profile: p,
-                onGoToHome: source.onGoToHome,
-              ),
-              _ProfileProgressProofCardV1(profile: p, crossSessionProof: proof),
+              if (p.recommendedFocusTitle.isNotEmpty)
+                _detailLine('Current focus', p.recommendedFocusTitle),
+              if (p.recommendedFocusBody.isNotEmpty)
+                _detailLine('Learning path', p.recommendedFocusBody),
               if (source.evidenceSignal != null)
-                _ProfileEvidenceSignalCardV1(signal: source.evidenceSignal!),
-              if (p.skillStats.isNotEmpty)
-                _ProfileSkillStatsStripV1(profile: p),
+                _detailLine(
+                  source.evidenceSignal!.skillLabel,
+                  source.evidenceSignal!.proofLine,
+                ),
+              if (proof != null && proof.hasProof) ...[
+                _detailLine(
+                  'Repair record',
+                  '${proof.totalBankedFixCount} repairs banked · ${proof.reinforcedFixCount} with later supporting evidence',
+                ),
+                for (final item in proof.recentProofItems)
+                  _detailLine(
+                    _profileCopyV1(
+                      context,
+                      atomId: item.conceptLabelKey,
+                      fallback: 'Recorded repair',
+                    ),
+                    item.isReinforced
+                        ? 'Later supporting evidence recorded'
+                        : 'Repair completed',
+                  ),
+              ],
+              for (final gain in p.recentSkillGains)
+                _detailLine(gain.label, gain.source),
+              if (p.skillStats.isNotEmpty) ...[
+                for (final stat in p.skillStats)
+                  TextButton(
+                    onPressed: () => _showSkillDetailsSheet(context, stat),
+                    child: Text(
+                      stat.label,
+                      style: const TextStyle(color: aqua),
+                    ),
+                  ),
+                TextButton(
+                  onPressed: () => _showAllSkillsSheet(context, p.skillStats, {
+                    for (final gain in _dedupedRecentSkillGainsV1(
+                      p.recentSkillGains,
+                    ))
+                      gain.label: gain,
+                  }),
+                  child: const Text(
+                    'View all skills',
+                    style: TextStyle(color: aqua),
+                  ),
+                ),
+              ],
               if (p.achievements.isNotEmpty)
-                _ProfileMilestonesCardV1(profile: p),
-              _ProfileAccountSettingsRowV1(
-                onRetakePlacement: source.onRetakePlacement,
-                onReplayWelcome: source.onReplayWelcome,
+                TextButton(
+                  onPressed: () => _showAchievementsSheet(context, p),
+                  child: const Text(
+                    'View achievements',
+                    style: TextStyle(color: aqua),
+                  ),
+                ),
+              if (p.streakLast7.isNotEmpty)
+                TextButton(
+                  onPressed: () => _showRhythmWeekSheet(context, p),
+                  child: const Text('View week', style: TextStyle(color: aqua)),
+                ),
+              TextButton(
+                onPressed: () => _showFirstStartToolsSheetV1(
+                  context,
+                  onRetakePlacement: source.onRetakePlacement,
+                  onReplayWelcome: source.onReplayWelcome,
+                ),
+                child: const Text(
+                  'Intro & placement',
+                  style: TextStyle(color: aqua),
+                ),
               ),
               if (source.onGoToHome != null)
                 TextButton(
                   onPressed: source.onGoToHome,
-                  child: const Text('Open Home'),
+                  child: const Text('Open Home', style: TextStyle(color: aqua)),
                 ),
             ],
           ),
@@ -275,6 +334,30 @@ class _YouV23 extends StatelessWidget {
       ),
     );
   }
+
+  Widget _detailLine(String title, String body) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8),
+    child: _surface(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              color: text,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            body,
+            style: const TextStyle(color: muted, fontSize: 13, height: 1.4),
+          ),
+        ],
+      ),
+    ),
+  );
 
   Widget _heading(String a, String b) => Row(
     children: [
