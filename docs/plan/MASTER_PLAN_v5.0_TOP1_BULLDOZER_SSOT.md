@@ -225,6 +225,18 @@ Commercial progression: `product value proof → bounded market hypothesis → h
 **Authority and dispatch:** [Decision record](../strategy/SHARKY_REWARDS_RETENTION_RESEARCH_DECISION_20261014.md), [market research](../research/SHARKY_MARKET_REWARD_RESEARCH_V1_20261014.md), [behavioral research](../research/SHARKY_BEHAVIORAL_RETENTION_RESEARCH_V1_20261014.md), [evidence index](../research/README.md). These are **subordinate reference inputs**. S11 remains sole active production execution until valid completion; S12.V/visual, Human and market admissions remain in their existing order. No XP rebalance, Flutter change, PR #282/224 merge, new dependencies, telemetry migration or extra roadmap stage follows from this record.
 
 
+
+### 2026-10-27 owner decision — meaningful return as whole-journey product quality (PLANNING ONLY)
+
+**Owner-approved design/planning extension, not production admission.** Sharky should be enjoyable enough to revisit voluntarily while staying an honest poker-learning instrument. Optimize both emotional recognition of *earned* progress and meaningful, source-backed learning return, rather than simple session length, app opens, streak pressure or collectible rewards. The qualitative model is `Learn → Feel progress → Return for a meaningful next step → Prove it`.
+
+**Existing-wave implementation overlay:** (1) finish selected standalone EN14Pro Academy screens (You includes a compact premium presentation of *existing* earned moments and later proof, with honest fresh/empty states); (2) inspect an actual connected first-use → decision → feedback → Summary → persisted You → Home/Review experience; (3) in the already-planned cross-screen polish wave, conditionally strengthen immediate, session, accumulated and later *truthful* recognition with one bounded owner-selected change; (4) use the *existing* admitted Human/S13–S15 gates to observe unprompted comprehension, enjoyment, useful voluntary returns, independent recheck, unseen transfer and true elapsed retention; (5) only owner-admit additional reward mechanics if measured learner/business friction justifies them. `DO_NOTHING` remains a valid outcome. A draft UI PR, an injected native visual fixture, or competitor retention figure is not efficacy proof.
+
+**No new stage, engine or shortcut:** Keep once-only XP and source-owned learning/repair/due models; do not add a seven-login badge, daily-pressure streak economy, reward currency, XP booster, leaderboard, notification engine, broad refactor or new analytics SDK as a consequence of this planning decision. S12.V table and exact-native authority, protected #224, EN14Pro-only construction, P02 nine gates, Human admission and eventual other-device proof are unchanged.
+
+**Bounded DoD/stop, owner follow-up:** Full source triggers and proof classes in [Meaningful Return & Earned-Motivation Product Contract (2026-10-27)](../strategy/SHARKY_MEANINGFUL_RETURN_PRODUCT_CONTRACT_20261027.md). See operational sheet `EN_V1_UI_ROUTE` / `MOTIVATION_RETURN`. This is a documentation-side owner decision; no Flutter dispatch or merge until separately admitted.
+
+
 ---
 
 # PART III — SINGLE CRITICAL PATH
