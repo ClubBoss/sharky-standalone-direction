@@ -53,14 +53,25 @@ class _YouV23 extends StatelessWidget {
                 ),
               ),
               IconButton(
-                tooltip: 'Intro & placement',
-                onPressed: () => _showFirstStartToolsSheetV1(
-                  context,
-                  onRetakePlacement: source.onRetakePlacement,
-                  onReplayWelcome: source.onReplayWelcome,
-                ),
-                icon: const Act0AcademyGlyphV1(
-                  asset: Act0AcademyIconographyV1.overflow,
+                key: const Key('you_settings'),
+                tooltip: kAct0SettingsQuietControlPreviewV1
+                    ? 'Settings'
+                    : 'Intro & placement',
+                onPressed: () => kAct0SettingsQuietControlPreviewV1
+                    ? openAct0SettingsQuietControlV1(
+                        context,
+                        onRetakePlacement: source.onRetakePlacement,
+                        onReplayWelcome: source.onReplayWelcome,
+                      )
+                    : _showFirstStartToolsSheetV1(
+                        context,
+                        onRetakePlacement: source.onRetakePlacement,
+                        onReplayWelcome: source.onReplayWelcome,
+                      ),
+                icon: Act0AcademyGlyphV1(
+                  asset: kAct0SettingsQuietControlPreviewV1
+                      ? Act0AcademyIconographyV1.settings
+                      : Act0AcademyIconographyV1.overflow,
                   color: muted,
                 ),
               ),
@@ -316,12 +327,20 @@ class _YouV23 extends StatelessWidget {
                         label: 'View week',
                       ),
                     _detailAction(
-                      onPressed: () => _showFirstStartToolsSheetV1(
-                        context,
-                        onRetakePlacement: source.onRetakePlacement,
-                        onReplayWelcome: source.onReplayWelcome,
-                      ),
-                      label: 'Intro & placement',
+                      onPressed: () => kAct0SettingsQuietControlPreviewV1
+                          ? openAct0SettingsQuietControlV1(
+                              context,
+                              onRetakePlacement: source.onRetakePlacement,
+                              onReplayWelcome: source.onReplayWelcome,
+                            )
+                          : _showFirstStartToolsSheetV1(
+                              context,
+                              onRetakePlacement: source.onRetakePlacement,
+                              onReplayWelcome: source.onReplayWelcome,
+                            ),
+                      label: kAct0SettingsQuietControlPreviewV1
+                          ? 'Settings'
+                          : 'Intro & placement',
                     ),
                     if (source.onGoToHome != null)
                       _detailAction(
