@@ -12315,6 +12315,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       xpLine:
           '${progress.xp} / ${(widget.state ?? Act0ShellStateV1.sample).xpTarget} XP',
       lessonsLine: '$completedCount of $totalTasks tasks complete',
+      completedTaskCount: completedCount,
       accuracyLine: accuracy,
       qualityLine: qualityLine,
       streakLine: streakDays == 0

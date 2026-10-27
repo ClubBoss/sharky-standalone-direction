@@ -62,6 +62,8 @@ void main() {
       if (!kAct0YouV23Preview) return;
       expect(find.textContaining('Accuracy'), findsNothing);
       if (mode == 'progressed') {
+        expect(p.profile.completedTaskCount, 6);
+        expect(find.text('6 tasks completed'), findsOneWidget);
         expect(t.getBottomLeft(find.text('Your record')).dy, lessThan(740));
         expect(
           t.getBottomLeft(find.byKey(const Key('you_v23_learn'))).dy,
@@ -203,6 +205,37 @@ void main() {
       expect(find.text('1 of 180 tasks complete'), findsOneWidget);
       expect(t.takeException(), isNull);
     });
+  testWidgets('grouped details preserve source modal and Home actions', (
+    t,
+  ) async {
+    await mount(t, 'progressed');
+    if (!kAct0YouV23Preview) return;
+    await t.scrollUntilVisible(find.text('Learning details'), 120);
+    await t.tap(find.text('Learning details'));
+    await t.pumpAndSettle();
+    expect(find.text('6 of 367 tasks complete'), findsOneWidget);
+    for (final label in [
+      'Table sense',
+      'View all skills',
+      'View achievements',
+      'Intro & placement',
+    ]) {
+      final target = find.text(label);
+      await t.scrollUntilVisible(target, 100);
+      await t.pumpAndSettle();
+      await t.tap(target);
+      await t.pumpAndSettle();
+      expect(find.byType(BottomSheet), findsOneWidget);
+      Navigator.of(t.element(find.byType(BottomSheet))).pop();
+      await t.pumpAndSettle();
+    }
+    await t.scrollUntilVisible(find.text('Open Home'), 100);
+    await t.pumpAndSettle();
+    await t.tap(find.text('Open Home'));
+    await t.pumpAndSettle();
+    expect(find.byType(Act0ProfileShellV1), findsNothing);
+    expect(t.takeException(), isNull);
+  });
   test('unknown due target does not count as routable', () {
     expect(
       act0YouV23TargetExists(

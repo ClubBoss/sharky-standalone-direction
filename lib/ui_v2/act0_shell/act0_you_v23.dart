@@ -205,9 +205,11 @@ class _YouV23 extends StatelessWidget {
                 spacing: 14,
                 runSpacing: 5,
                 children: [
-                  const Text(
-                    'Your learning, saved',
-                    style: TextStyle(color: muted, fontSize: 13),
+                  Text(
+                    p.completedTaskCount == null
+                        ? 'Your learning, saved'
+                        : '${p.completedTaskCount} task${p.completedTaskCount == 1 ? '' : 's'} completed',
+                    style: const TextStyle(color: muted, fontSize: 13),
                   ),
                   if (proof != null && proof.totalBankedFixCount > 0)
                     Text(
@@ -242,92 +244,93 @@ class _YouV23 extends StatelessWidget {
             collapsedIconColor: muted,
             children: [
               Padding(
-                padding: const EdgeInsets.all(10),
-                child: Text(
-                  p.lessonsLine,
-                  key: const Key('you_v23_tasks'),
-                  style: const TextStyle(color: text, fontSize: 16),
+                padding: const EdgeInsets.fromLTRB(8, 8, 8, 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _detailHeading('Progress & evidence'),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Text(
+                        p.lessonsLine,
+                        key: const Key('you_v23_tasks'),
+                        style: const TextStyle(color: text, fontSize: 16),
+                      ),
+                    ),
+                    if (p.recommendedFocusTitle.isNotEmpty)
+                      _detailLine('Current focus', p.recommendedFocusTitle),
+                    if (p.recommendedFocusBody.isNotEmpty)
+                      _detailLine('Learning path', p.recommendedFocusBody),
+                    if (source.evidenceSignal != null)
+                      _detailLine(
+                        source.evidenceSignal!.skillLabel,
+                        source.evidenceSignal!.proofLine,
+                      ),
+                    if (proof != null && proof.hasProof) ...[
+                      _detailLine(
+                        'Repair record',
+                        '${proof.totalBankedFixCount} repairs banked · ${proof.reinforcedFixCount} with later supporting evidence',
+                      ),
+                      for (final item in proof.recentProofItems)
+                        _detailLine(
+                          _profileCopyV1(
+                            context,
+                            atomId: item.conceptLabelKey,
+                            fallback: 'Recorded repair',
+                          ),
+                          item.isReinforced
+                              ? 'Later supporting evidence recorded'
+                              : 'Repair completed',
+                        ),
+                    ],
+                    for (final gain in p.recentSkillGains)
+                      _detailLine(gain.label, gain.source),
+                    if (p.skillStats.isNotEmpty) ...[
+                      _detailHeading('Skills'),
+                      for (final stat in p.skillStats)
+                        _detailAction(
+                          onPressed: () =>
+                              _showSkillDetailsSheet(context, stat),
+                          label: stat.label,
+                        ),
+                      _detailAction(
+                        onPressed: () =>
+                            _showAllSkillsSheet(context, p.skillStats, {
+                              for (final gain in _dedupedRecentSkillGainsV1(
+                                p.recentSkillGains,
+                              ))
+                                gain.label: gain,
+                            }),
+                        label: 'View all skills',
+                      ),
+                    ],
+                    _detailHeading('Your tools'),
+                    if (p.achievements.isNotEmpty)
+                      _detailAction(
+                        onPressed: () => _showAchievementsSheet(context, p),
+                        label: 'View achievements',
+                      ),
+                    if (p.streakLast7.isNotEmpty)
+                      _detailAction(
+                        onPressed: () => _showRhythmWeekSheet(context, p),
+                        label: 'View week',
+                      ),
+                    _detailAction(
+                      onPressed: () => _showFirstStartToolsSheetV1(
+                        context,
+                        onRetakePlacement: source.onRetakePlacement,
+                        onReplayWelcome: source.onReplayWelcome,
+                      ),
+                      label: 'Intro & placement',
+                    ),
+                    if (source.onGoToHome != null)
+                      _detailAction(
+                        onPressed: source.onGoToHome!,
+                        label: 'Open Home',
+                      ),
+                  ],
                 ),
               ),
-              if (p.recommendedFocusTitle.isNotEmpty)
-                _detailLine('Current focus', p.recommendedFocusTitle),
-              if (p.recommendedFocusBody.isNotEmpty)
-                _detailLine('Learning path', p.recommendedFocusBody),
-              if (source.evidenceSignal != null)
-                _detailLine(
-                  source.evidenceSignal!.skillLabel,
-                  source.evidenceSignal!.proofLine,
-                ),
-              if (proof != null && proof.hasProof) ...[
-                _detailLine(
-                  'Repair record',
-                  '${proof.totalBankedFixCount} repairs banked · ${proof.reinforcedFixCount} with later supporting evidence',
-                ),
-                for (final item in proof.recentProofItems)
-                  _detailLine(
-                    _profileCopyV1(
-                      context,
-                      atomId: item.conceptLabelKey,
-                      fallback: 'Recorded repair',
-                    ),
-                    item.isReinforced
-                        ? 'Later supporting evidence recorded'
-                        : 'Repair completed',
-                  ),
-              ],
-              for (final gain in p.recentSkillGains)
-                _detailLine(gain.label, gain.source),
-              if (p.skillStats.isNotEmpty) ...[
-                for (final stat in p.skillStats)
-                  TextButton(
-                    onPressed: () => _showSkillDetailsSheet(context, stat),
-                    child: Text(
-                      stat.label,
-                      style: const TextStyle(color: aqua),
-                    ),
-                  ),
-                TextButton(
-                  onPressed: () => _showAllSkillsSheet(context, p.skillStats, {
-                    for (final gain in _dedupedRecentSkillGainsV1(
-                      p.recentSkillGains,
-                    ))
-                      gain.label: gain,
-                  }),
-                  child: const Text(
-                    'View all skills',
-                    style: TextStyle(color: aqua),
-                  ),
-                ),
-              ],
-              if (p.achievements.isNotEmpty)
-                TextButton(
-                  onPressed: () => _showAchievementsSheet(context, p),
-                  child: const Text(
-                    'View achievements',
-                    style: TextStyle(color: aqua),
-                  ),
-                ),
-              if (p.streakLast7.isNotEmpty)
-                TextButton(
-                  onPressed: () => _showRhythmWeekSheet(context, p),
-                  child: const Text('View week', style: TextStyle(color: aqua)),
-                ),
-              TextButton(
-                onPressed: () => _showFirstStartToolsSheetV1(
-                  context,
-                  onRetakePlacement: source.onRetakePlacement,
-                  onReplayWelcome: source.onReplayWelcome,
-                ),
-                child: const Text(
-                  'Intro & placement',
-                  style: TextStyle(color: aqua),
-                ),
-              ),
-              if (source.onGoToHome != null)
-                TextButton(
-                  onPressed: source.onGoToHome,
-                  child: const Text('Open Home', style: TextStyle(color: aqua)),
-                ),
             ],
           ),
         ],
@@ -335,27 +338,54 @@ class _YouV23 extends StatelessWidget {
     );
   }
 
+  Widget _detailHeading(String title) => Padding(
+    padding: const EdgeInsets.only(top: 16, bottom: 6),
+    child: Text(
+      title,
+      style: const TextStyle(
+        color: aqua,
+        fontSize: 12,
+        fontWeight: FontWeight.w700,
+        letterSpacing: .6,
+      ),
+    ),
+  );
+  Widget _detailAction({
+    required String label,
+    required VoidCallback onPressed,
+  }) => TextButton(
+    onPressed: onPressed,
+    style: TextButton.styleFrom(
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      minimumSize: const Size(0, 48),
+      shape: const RoundedRectangleBorder(),
+    ),
+    child: Row(
+      children: [
+        Expanded(
+          child: Text(label, style: const TextStyle(color: text, fontSize: 14)),
+        ),
+        const Act0AcademyGlyphV1(
+          asset: Act0AcademyIconographyV1.forward,
+          color: muted,
+          size: 16,
+        ),
+      ],
+    ),
+  );
   Widget _detailLine(String title, String body) => Padding(
     padding: const EdgeInsets.symmetric(vertical: 8),
-    child: _surface(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              color: text,
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 5),
-          Text(
-            body,
-            style: const TextStyle(color: muted, fontSize: 13, height: 1.4),
-          ),
-        ],
-      ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: const TextStyle(color: muted, fontSize: 12)),
+        const SizedBox(height: 4),
+        Text(
+          body,
+          style: const TextStyle(color: text, fontSize: 14, height: 1.4),
+        ),
+      ],
     ),
   );
 
