@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_v4.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_reading_style_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/services/session_drill_recheck_launch_queue_v1.dart';
@@ -67,6 +68,24 @@ class Act0ReviewShellV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (kAct0ReviewV4Preview &&
+        Localizations.localeOf(context).languageCode == 'en') {
+      return Act0ReviewV4(
+        review: review,
+        dueItem: dueReviewItems.isEmpty
+            ? null
+            : _selectedDueItemV1(nextStep, dueReviewItems) ??
+                  dueReviewItems.first,
+        dueCount: dueReviewItems.length,
+        hasHistory: mistakeHistoryItems.isNotEmpty,
+        onFixMistake: onFixMistake,
+        onReplayFixedMistake: onReplayFixedMistake,
+        onStartDueReview: onStartDueReview,
+        onOpenLearn: onOpenLearn,
+        sessionChecks: sessionDrillRecheckQueueItems,
+        onStartSessionCheck: onStartSessionDrillRecheck,
+      );
+    }
     final pagePadding = Act0ShellTokensV1.pageHorizontalPaddingFor(context);
     final localeIsRu = _isRuLocaleV1(context);
     final missCount = review.mistakes.length;

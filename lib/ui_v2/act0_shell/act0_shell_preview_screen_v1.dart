@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_v4.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_hybrid_v1.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -5368,8 +5369,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _blockCompletionSummary == null &&
         _tab == Act0ShellTabV1.play &&
         _showPlayHub;
+    final immersiveReview =
+        kAct0ReviewV4Preview &&
+        Localizations.localeOf(context).languageCode == 'en' &&
+        _bootSurfaceReady &&
+        !_showPlacement &&
+        !_showWelcome &&
+        !isPlayRunner &&
+        _blockCompletionSummary == null &&
+        _tab == Act0ShellTabV1.review;
     final cinematicChrome =
-        immersiveHome || immersiveLearn || immersiveWorlds || immersivePractice;
+        immersiveHome ||
+        immersiveLearn ||
+        immersiveWorlds ||
+        immersivePractice ||
+        immersiveReview;
     final showTopBar =
         _bootSurfaceReady &&
         !_showPlacement &&
