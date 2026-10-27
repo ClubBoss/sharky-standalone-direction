@@ -3,6 +3,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_north_star_preview_v1.
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_reading_style_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_cross_session_profile_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';

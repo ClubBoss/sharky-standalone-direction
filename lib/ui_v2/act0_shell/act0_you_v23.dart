@@ -331,9 +331,16 @@ class _YouV23 extends StatelessWidget {
   );
   Widget _moment(Act0AchievementMomentViewModelV1 m, bool featured) {
     final color = featured ? gold : aqua;
-    final icon = m.seedId.contains('return') || m.seedId.contains('back')
-        ? Act0AcademyIconographyV1.review
-        : Act0AcademyIconographyV1.recall;
+    final icon = switch (m.seedId) {
+      act0AchievementSeedFirstCorrectReadV1 =>
+        Act0AcademyIconographyV1.practice,
+      act0AchievementSeedFirstRepairNoteV1 ||
+      act0AchievementSeedFirstReviewHistoryItemV1 =>
+        Act0AcademyIconographyV1.review,
+      act0AchievementSeedFirstSessionCompleteV1 =>
+        Act0AcademyIconographyV1.learn,
+      _ => Act0AcademyIconographyV1.recall,
+    };
     return KeyedSubtree(
       key: Key('act0_shell_profile_earned_moment_${m.seedId}'),
       child: _surface(
