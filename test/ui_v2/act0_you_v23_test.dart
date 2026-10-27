@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_settings_quiet_control_v1.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -218,7 +219,7 @@ void main() {
       'Table sense',
       'View all skills',
       'View achievements',
-      'Intro & placement',
+      if (!kAct0SettingsQuietControlPreviewV1) 'Intro & placement',
     ]) {
       final target = find.text(label);
       await t.scrollUntilVisible(target, 100);
@@ -227,6 +228,15 @@ void main() {
       await t.pumpAndSettle();
       expect(find.byType(BottomSheet), findsOneWidget);
       Navigator.of(t.element(find.byType(BottomSheet))).pop();
+      await t.pumpAndSettle();
+    }
+    if (kAct0SettingsQuietControlPreviewV1) {
+      await t.scrollUntilVisible(find.text('Settings'), 100);
+      await t.pumpAndSettle();
+      await t.tap(find.text('Settings'));
+      await t.pumpAndSettle();
+      expect(find.byType(Act0SettingsQuietControlV1), findsOneWidget);
+      await t.tap(find.byKey(const Key('settings_back')));
       await t.pumpAndSettle();
     }
     await t.scrollUntilVisible(find.text('Open Home'), 100);

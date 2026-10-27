@@ -14,6 +14,12 @@ abstract final class Act0AcademyIconographyV1 {
   static const apply = practice;
   static const forward = 'assets/design/sharky/iconography/forward.svg';
   static const lock = 'assets/design/sharky/iconography/lock.svg';
+  static const settings = 'assets/design/sharky/iconography/settings.svg';
+  static const sound = 'assets/design/sharky/iconography/sound.svg';
+  static const haptics = 'assets/design/sharky/iconography/haptics.svg';
+  static const placement = 'assets/design/sharky/iconography/placement.svg';
+  static const privacy = 'assets/design/sharky/iconography/privacy.svg';
+  static const terms = 'assets/design/sharky/iconography/terms.svg';
   static const overflow = 'assets/design/sharky/iconography/more.svg';
 }
 
