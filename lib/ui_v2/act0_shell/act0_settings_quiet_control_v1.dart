@@ -336,64 +336,73 @@ class _SettingsState extends State<Act0SettingsQuietControlV1> {
     Color color = _aqua,
     Widget? toggle,
     VoidCallback? onTap,
-  }) => InkWell(
-    onTap: onTap,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(13),
-              border: Border.all(color: color.withValues(alpha: 0.2)),
-            ),
-            child: Center(
-              child: Act0AcademyGlyphV1(asset: icon, color: color, size: 22),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: _text,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
+  }) => MergeSemantics(
+    child: Semantics(
+      button: onTap != null,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(13),
+                  border: Border.all(color: color.withValues(alpha: 0.2)),
                 ),
-                const SizedBox(height: 3),
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    color: _muted,
-                    fontSize: 10.5,
-                    height: 1.3,
+                child: Center(
+                  child: Act0AcademyGlyphV1(
+                    asset: icon,
+                    color: color,
+                    size: 22,
                   ),
-                ),
-              ],
-            ),
-          ),
-          if (toggle != null)
-            Semantics(label: title, child: toggle)
-          else
-            const SizedBox(
-              width: 24,
-              height: 24,
-              child: Center(
-                child: Act0AcademyGlyphV1(
-                  asset: Act0AcademyIconographyV1.forward,
-                  color: _muted,
-                  size: 16,
                 ),
               ),
-            ),
-        ],
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        color: _text,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        color: _muted,
+                        fontSize: 10.5,
+                        height: 1.3,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (toggle != null)
+                toggle
+              else
+                const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: Center(
+                    child: Act0AcademyGlyphV1(
+                      asset: Act0AcademyIconographyV1.forward,
+                      color: _muted,
+                      size: 16,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
       ),
     ),
   );

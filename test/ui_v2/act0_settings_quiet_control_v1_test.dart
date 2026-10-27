@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui' show SemanticsFlag;
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_welcome_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_placement_shell_v1.dart';
 import 'package:flutter/material.dart';
@@ -75,6 +76,20 @@ void main() {
         before.xpLine,
       );
       await open(t);
+      final semantics = t.ensureSemantics();
+      expect(
+        t
+            .getSemantics(find.text('Privacy Policy'))
+            .hasFlag(SemanticsFlag.isButton),
+        true,
+      );
+      expect(
+        t
+            .getSemantics(find.text('Retake Placement'))
+            .hasFlag(SemanticsFlag.isButton),
+        true,
+      );
+      semantics.dispose();
     },
     skip: !kAct0SettingsQuietControlPreviewV1 || !kAct0YouV23Preview,
   );
