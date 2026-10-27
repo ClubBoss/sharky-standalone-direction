@@ -61,6 +61,13 @@ void main() {
       expect(p.youRepairCount, ['progressed', 'single'].contains(mode) ? 1 : 0);
       if (!kAct0YouV23Preview) return;
       expect(find.textContaining('Accuracy'), findsNothing);
+      if (mode == 'progressed') {
+        expect(t.getBottomLeft(find.text('Your record')).dy, lessThan(740));
+        expect(
+          t.getBottomLeft(find.byKey(const Key('you_v23_learn'))).dy,
+          lessThan(766),
+        );
+      }
       expect(
         find.byKey(const Key('you_v23_review')),
         p.youDueCount + p.youRepairCount > 0 ? findsOneWidget : findsNothing,
@@ -175,7 +182,11 @@ void main() {
       await t.pumpAndSettle();
       if (!kAct0YouV23Preview) return;
       expect(find.text('3 days · Learning streak'), findsOneWidget);
-      await t.scrollUntilVisible(find.byKey(const Key('you_v23_tasks')), 200);
+      if (banked > 0)
+        await t.scrollUntilVisible(
+          find.byKey(const Key('you_v23_banked')),
+          120,
+        );
       expect(
         find.byKey(const Key('you_v23_banked')),
         banked == 0 ? findsNothing : findsOneWidget,
@@ -184,6 +195,12 @@ void main() {
         find.byKey(const Key('you_v23_reinforced')),
         banked == 0 ? findsNothing : findsOneWidget,
       );
+      await t.scrollUntilVisible(find.text('Learning details'), 120);
+      await t.pumpAndSettle();
+      await t.tap(find.text('Learning details'));
+      await t.pumpAndSettle();
+      await t.scrollUntilVisible(find.byKey(const Key('you_v23_tasks')), 150);
+      expect(find.text('1 of 180 tasks complete'), findsOneWidget);
       expect(t.takeException(), isNull);
     });
   test('unknown due target does not count as routable', () {

@@ -37,6 +37,7 @@ class _YouV23 extends StatelessWidget {
       color: ink,
       child: ListView(
         key: const Key('act0_shell_profile_screen'),
+        cacheExtent: 1200,
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         children: [
           Row(
@@ -65,44 +66,42 @@ class _YouV23 extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 6),
           _surface(
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _medallion(Act0AcademyIconographyV1.you, gold, 52),
-                const SizedBox(width: 14),
+                _medallion(Act0AcademyIconographyV1.you, gold, 48),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        fresh ? 'Your journey' : p.playerName,
+                        fresh
+                            ? 'Your journey'
+                            : p.playerName == 'New player'
+                            ? 'Your poker journey'
+                            : p.playerName,
                         style: const TextStyle(
                           color: text,
-                          fontSize: 24,
+                          fontSize: 21,
                           fontWeight: FontWeight.w700,
-                          height: 1.2,
                         ),
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 4),
                       Text(
                         fresh
                             ? 'Build your first poker read'
                             : '${p.level} · ${p.xpLine}',
-                        style: const TextStyle(
-                          color: muted,
-                          fontSize: 13,
-                          height: 1.5,
-                        ),
+                        style: const TextStyle(color: muted, fontSize: 12),
                       ),
                       if (p.streakDays > 0)
                         Padding(
-                          padding: const EdgeInsets.only(top: 8),
+                          padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             '${p.streakDays} days · Learning streak',
                             key: const Key('you_v23_streak'),
-                            style: const TextStyle(color: gold, fontSize: 12),
+                            style: const TextStyle(color: gold, fontSize: 11),
                           ),
                         ),
                     ],
@@ -111,18 +110,17 @@ class _YouV23 extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 12),
           _heading(
             moments.isEmpty ? 'Your first earned moment' : 'Earned moments',
             moments.isEmpty ? 'Not earned yet' : '${moments.length} earned',
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 9),
           if (moments.isEmpty)
-            _surface(
-              border: gold.withValues(alpha: .4),
+            _featured(
               child: Row(
                 children: [
-                  _medallion(Act0AcademyIconographyV1.recall, muted, 62),
+                  _medallion(Act0AcademyIconographyV1.practice, muted, 76),
                   const SizedBox(width: 14),
                   const Expanded(
                     child: Column(
@@ -132,26 +130,26 @@ class _YouV23 extends StatelessWidget {
                           'NOT EARNED YET',
                           style: TextStyle(
                             color: muted,
-                            fontSize: 10,
-                            letterSpacing: 1.2,
+                            fontSize: 9,
+                            letterSpacing: 1.3,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        SizedBox(height: 6),
                         Text(
                           'First correct read',
                           style: TextStyle(
                             color: text,
-                            fontSize: 21,
+                            fontSize: 20,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        SizedBox(height: 6),
+                        SizedBox(height: 5),
                         Text(
                           'Make your first independent correct decision.',
                           style: TextStyle(
                             color: muted,
                             fontSize: 12,
-                            height: 1.4,
+                            height: 1.35,
                           ),
                         ),
                       ],
@@ -159,24 +157,27 @@ class _YouV23 extends StatelessWidget {
                   ),
                 ],
               ),
+              earned: false,
             )
           else ...[
             _moment(moments.first, true),
             if (moments.length > 1) ...[
-              const SizedBox(height: 10),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  for (var i = 1; i < moments.length; i++) ...[
-                    if (i > 1) const SizedBox(width: 10),
-                    Expanded(child: _moment(moments[i], false)),
+              const SizedBox(height: 8),
+              IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (var i = 1; i < moments.length; i++) ...[
+                      if (i > 1) const SizedBox(width: 8),
+                      Expanded(child: _moment(moments[i], false)),
+                    ],
                   ],
-                ],
+                ),
               ),
             ],
           ],
           if (source.youDueCount > 0 || source.youRepairCount > 0) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             _entry(
               key: const Key('you_v23_review'),
               title: source.youDueCount > 0
@@ -192,52 +193,37 @@ class _YouV23 extends StatelessWidget {
               onTap: source.onOpenReview,
             ),
           ],
-          const SizedBox(height: 18),
+          const SizedBox(height: 10),
           _heading(
             fresh ? 'Your record begins here' : 'Your record',
-            fresh ? 'Saved as you learn' : 'Saved progress',
+            'Saved as you learn',
           ),
-          if (!fresh) ...[
-            const SizedBox(height: 10),
-            _surface(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          if (!fresh)
+            Padding(
+              padding: const EdgeInsets.only(top: 7),
+              child: Wrap(
+                spacing: 14,
+                runSpacing: 5,
                 children: [
-                  Text(
-                    p.lessonsLine,
-                    key: const Key('you_v23_tasks'),
-                    style: const TextStyle(
-                      color: text,
-                      fontSize: 19,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
                   const Text(
-                    'Tasks completed',
-                    style: TextStyle(color: muted, fontSize: 12),
+                    'Your learning, saved',
+                    style: TextStyle(color: muted, fontSize: 13),
                   ),
                   if (proof != null && proof.totalBankedFixCount > 0)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 12),
-                      child: Text(
-                        '${proof.totalBankedFixCount} repairs banked',
-                        key: const Key('you_v23_banked'),
-                        style: const TextStyle(color: text, fontSize: 16),
-                      ),
+                    Text(
+                      '${proof.totalBankedFixCount} repairs banked',
+                      key: const Key('you_v23_banked'),
+                      style: const TextStyle(color: gold, fontSize: 13),
                     ),
                   if (proof != null && proof.reinforcedFixCount > 0)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Text(
-                        '${proof.reinforcedFixCount} with later supporting evidence',
-                        key: const Key('you_v23_reinforced'),
-                        style: const TextStyle(color: muted, fontSize: 12),
-                      ),
+                    Text(
+                      '${proof.reinforcedFixCount} with later supporting evidence',
+                      key: const Key('you_v23_reinforced'),
+                      style: const TextStyle(color: muted, fontSize: 12),
                     ),
                 ],
               ),
             ),
-          ],
           const SizedBox(height: 12),
           _entry(
             key: const Key('you_v23_learn'),
@@ -246,7 +232,7 @@ class _YouV23 extends StatelessWidget {
             asset: Act0AcademyIconographyV1.learn,
             onTap: source.onGoToLearn,
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 12),
           ExpansionTile(
             title: const Text(
               'Learning details',
@@ -255,6 +241,14 @@ class _YouV23 extends StatelessWidget {
             iconColor: muted,
             collapsedIconColor: muted,
             children: [
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  p.lessonsLine,
+                  key: const Key('you_v23_tasks'),
+                  style: const TextStyle(color: text, fontSize: 16),
+                ),
+              ),
               _ProfileNextMilestoneCardV1(
                 profile: p,
                 onGoToHome: source.onGoToHome,
@@ -289,7 +283,7 @@ class _YouV23 extends StatelessWidget {
           a,
           style: const TextStyle(
             color: text,
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -308,29 +302,83 @@ class _YouV23 extends StatelessWidget {
     required Widget child,
     Color border = const Color(0xFF24605A),
   }) => Container(
-    padding: const EdgeInsets.all(15),
+    padding: const EdgeInsets.all(10),
     decoration: BoxDecoration(
       gradient: const LinearGradient(
         colors: [Color(0xFF0B3234), Color(0xFF041E23)],
       ),
-      border: Border.all(color: border),
-      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: border.withValues(alpha: .5)),
+      borderRadius: BorderRadius.circular(17),
+    ),
+    child: child,
+  );
+  Widget _featured({required Widget child, bool earned = true}) => Container(
+    padding: const EdgeInsets.all(11),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(19),
+      border: Border.all(color: gold.withValues(alpha: earned ? .7 : .3)),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: earned
+            ? const [Color(0xFF66502C), Color(0xFF263E36), Color(0xFF092A2C)]
+            : const [Color(0xFF1D3434), Color(0xFF0A2529)],
+      ),
+      boxShadow: [
+        BoxShadow(
+          color: gold.withValues(alpha: earned ? .07 : 0),
+          blurRadius: 20,
+          offset: const Offset(0, 4),
+        ),
+      ],
     ),
     child: child,
   );
   Widget _medallion(String asset, Color color, double size) => Container(
     width: size,
     height: size,
-    padding: EdgeInsets.all(size / 5),
     decoration: BoxDecoration(
       shape: BoxShape.circle,
-      border: Border.all(color: color, width: 2),
-      gradient: RadialGradient(colors: [color.withValues(alpha: .25), ink]),
+      gradient: SweepGradient(
+        colors: [
+          color.withValues(alpha: .35),
+          color,
+          const Color(0xFFFAF0C3),
+          color.withValues(alpha: .4),
+          color,
+        ],
+      ),
+      boxShadow: [
+        BoxShadow(color: color.withValues(alpha: .18), blurRadius: 14),
+      ],
     ),
-    child: Act0AcademyGlyphV1(asset: asset, color: color, size: size / 2),
+    padding: EdgeInsets.all(size * .055),
+    child: Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: color.withValues(alpha: .7),
+          width: size * .025,
+        ),
+        gradient: RadialGradient(
+          center: const Alignment(-.4, -.5),
+          colors: [
+            color.withValues(alpha: .6),
+            const Color(0xFF16312F),
+            const Color(0xFF071B20),
+          ],
+        ),
+      ),
+      padding: EdgeInsets.all(size * .16),
+      child: Act0AcademyGlyphV1(asset: asset, color: color, size: size / 2),
+    ),
   );
   Widget _moment(Act0AchievementMomentViewModelV1 m, bool featured) {
-    final color = featured ? gold : aqua;
+    final color = featured
+        ? gold
+        : m.seedId == act0AchievementSeedFirstSessionCompleteV1
+        ? const Color(0xFF7BACD9)
+        : const Color(0xFF65C9BA);
     final icon = switch (m.seedId) {
       act0AchievementSeedFirstCorrectReadV1 =>
         Act0AcademyIconographyV1.practice,
@@ -341,45 +389,69 @@ class _YouV23 extends StatelessWidget {
         Act0AcademyIconographyV1.learn,
       _ => Act0AcademyIconographyV1.recall,
     };
+    final contents = Row(
+      children: [
+        _medallion(icon, color, featured ? 76 : 42),
+        SizedBox(width: featured ? 14 : 8),
+        Expanded(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (featured)
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 5),
+                  child: Text(
+                    'EARNED MOMENT',
+                    style: TextStyle(
+                      color: gold,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.3,
+                    ),
+                  ),
+                ),
+              Text(
+                m.label,
+                style: TextStyle(
+                  color: text,
+                  fontSize: featured ? 20 : 13,
+                  fontWeight: FontWeight.w700,
+                  height: 1.25,
+                ),
+              ),
+              if (featured && m.seedId == act0AchievementSeedFirstCorrectReadV1)
+                const Padding(
+                  padding: EdgeInsets.only(top: 5),
+                  child: Text(
+                    'An independent correct decision',
+                    style: TextStyle(color: muted, fontSize: 11),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
     return KeyedSubtree(
       key: Key('act0_shell_profile_earned_moment_${m.seedId}'),
-      child: _surface(
-        border: color.withValues(alpha: .6),
-        child: featured
-            ? Row(
-                children: [
-                  _medallion(icon, color, 68),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Text(
-                      m.label,
-                      style: const TextStyle(
-                        color: text,
-                        fontSize: 21,
-                        fontWeight: FontWeight.w700,
-                        height: 1.25,
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _medallion(icon, color, 40),
-                  const SizedBox(height: 8),
-                  Text(
-                    m.label,
-                    style: const TextStyle(
-                      color: text,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      height: 1.3,
-                    ),
-                  ),
-                ],
+      child: featured
+          ? _featured(child: contents)
+          : Container(
+              constraints: const BoxConstraints(minHeight: 78),
+              padding: const EdgeInsets.all(9),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                gradient: LinearGradient(
+                  colors: [
+                    color.withValues(alpha: .17),
+                    const Color(0xFF062329),
+                  ],
+                ),
+                border: Border.all(color: color.withValues(alpha: .3)),
               ),
-      ),
+              child: contents,
+            ),
     );
   }
 
@@ -409,17 +481,17 @@ class _YouV23 extends StatelessWidget {
                   title,
                   style: const TextStyle(
                     color: text,
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 3),
                 Text(
                   subtitle,
                   style: const TextStyle(
                     color: muted,
-                    fontSize: 12,
-                    height: 1.4,
+                    fontSize: 11,
+                    height: 1.3,
                   ),
                 ),
               ],
