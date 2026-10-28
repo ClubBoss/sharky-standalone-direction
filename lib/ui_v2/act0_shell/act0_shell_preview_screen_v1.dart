@@ -3757,6 +3757,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     for (final intent in _openRepairIntentBySourceTaskId.values) {
       final retention = _retentionMemoryByTaskId[intent.sourceTaskId];
       if (retention == null) {
+        // Placement is assessment, not retention learning. Its active durable
+        // intent still owns repair debt; reconstruct only the display cache.
+        final record = _restoredPlacementMistakeV1(state, intent.sourceTaskId);
+        if (record != null) {
+          _mistakeRecords.putIfAbsent(record.taskId, () => record);
+        }
         continue;
       }
       // A source repaired by a correct retry stays resolved, but its different
@@ -3832,6 +3838,88 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _resolvedMistakeTaskIds.add(intent.sourceTaskId);
       }
     }
+  }
+
+  /// Reuses the same diagnostic options/mapper as the live miss path. History
+  /// alone cannot create debt, and resolved queue items cannot reopen it.
+  _Act0MistakeRecordV1? _restoredPlacementMistakeV1(
+    Act0ShellStateV1 state,
+    String sourceTaskId,
+  ) {
+    for (final intent in _activeRepairIntentsV1()) {
+      if (intent.sourceTaskId != sourceTaskId) continue;
+      for (var index = 0; index < _placementDiagnosticSpotsV1.length; index++) {
+        final spot = _placementDiagnosticSpotsV1[index];
+        if (spot.worldId != intent.sourceWorldId ||
+            spot.lessonId != intent.sourceLessonId ||
+            spot.taskId != sourceTaskId)
+          continue;
+        final world = state.worlds.cast<Act0WorldCardV1?>().firstWhere(
+          (w) => w?.worldId == spot.worldId,
+          orElse: () => null,
+        );
+        final lesson = world?.lessons.cast<Act0LessonCardV1?>().firstWhere(
+          (l) => l?.lessonId == spot.lessonId,
+          orElse: () => null,
+        );
+        final task = lesson?.taskList.cast<Act0LessonTaskV1?>().firstWhere(
+          (t) => t?.taskId == spot.taskId,
+          orElse: () => null,
+        );
+        if (world == null || lesson == null || task == null) continue;
+        final runner = placementQuickCheckRunnerV1(
+          task.runner,
+          signalId: spot.signalId,
+          checkIndex: index + 1,
+          checkCount: _placementDiagnosticSpotsV1.length,
+          isRu: _isRuLocaleV1,
+        );
+        final option = runner.options.cast<Act0RunnerOptionV1?>().firstWhere(
+          (o) => o?.id == intent.choiceId && o?.isCorrect == false,
+          orElse: () => null,
+        );
+        if (option == null) continue;
+        final canonical = buildAct0RepairIntentV1(
+          sourceWorldId: world.worldId,
+          sourceLessonId: lesson.lessonId,
+          sourceTaskId: task.taskId,
+          runner: runner,
+          selectedOption: option,
+          mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+        );
+        if (canonical == null ||
+            queueItemIdForAct0RepairIntentV1(canonical) !=
+                queueItemIdForAct0RepairIntentV1(intent) ||
+            canonical.result != intent.result ||
+            canonical.targetWorldId != intent.targetWorldId ||
+            canonical.targetLessonId != intent.targetLessonId ||
+            canonical.targetTaskId != intent.targetTaskId ||
+            canonical.mappingType != intent.mappingType ||
+            canonical.reasonCode != intent.reasonCode)
+          continue;
+        final labels = _repairContextLabels(runner, option);
+        return _Act0MistakeRecordV1(
+          taskId: task.taskId,
+          lessonId: lesson.lessonId,
+          worldId: world.worldId,
+          title: _localizedTaskTitleV1(task),
+          weaknessLabel: _categoryForLesson(lesson.lessonId),
+          selectedOptionId: option.id,
+          selectedLabel: option.label,
+          betterLabel: option.betterAnswerLabel,
+          reason: _hardenMistakeReason(
+            rawReason: option.feedbackReason,
+            betterLabel: option.betterAnswerLabel,
+            contextLabels: labels,
+          ),
+          contextLabels: labels,
+          repairActionLabel: _repairActionLabel(task),
+          // Same putIfAbsent/one-attempt display semantics as live Placement.
+          attempts: 1,
+        );
+      }
+    }
+    return null;
   }
 
   List<Act0RepairIntentV1> _activeRepairIntentsV1() {
