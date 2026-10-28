@@ -1,3 +1,4 @@
+import 'act0_pw_c3_facade_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_v4.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_hybrid_v1.dart';
 import 'dart:async';
@@ -5387,7 +5388,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         !isPlayRunner &&
         _blockCompletionSummary == null &&
         _tab == Act0ShellTabV1.profile;
+    // Presentation-only first-use chrome; diagnostic Runner keeps its existing
+    // context. Welcome's own Runner remains unchanged inside the Academy shell.
+    final immersivePwC3 =
+        act0PwC3EnabledV1(context) &&
+        ((_showPlacement && !_placementDiagnosticActive) || _showWelcome);
     final cinematicChrome =
+        immersivePwC3 ||
         immersiveHome ||
         immersiveLearn ||
         immersiveWorlds ||

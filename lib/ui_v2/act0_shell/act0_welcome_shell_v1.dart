@@ -1,3 +1,4 @@
+import 'act0_pw_c3_facade_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_folio_v1.dart';
 import 'dart:math' as math;
 
@@ -274,6 +275,61 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (act0PwC3EnabledV1(context)) {
+      final card = visual;
+      return Act0PwC3PageV1(
+        hero: beatIndex == 1,
+        eyebrow: eyebrow,
+        title: title,
+        subtitle: line,
+        stage: '$beatIndex of $beatCount',
+        onBack: replayMode ? onClose : null,
+        backLabel: 'Close welcome',
+        backKey: const Key('act0_shell_welcome_close'),
+        content: Column(
+          key: Key(
+            beatIndex == beatCount
+                ? 'act0_shell_welcome_next_step_line'
+                : 'act0_shell_welcome_beat_frame',
+          ),
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              detail,
+              style: const TextStyle(
+                color: Act0PwC3PageV1.muted,
+                fontSize: 14,
+                height: 1.5,
+              ),
+            ),
+            const SizedBox(height: 24),
+            if (card is _WelcomeVisualPreviewCardV1)
+              Act0PwC3PanelV1(
+                key: card.previewKey,
+                title: card.title,
+                body: card.line ?? '',
+                child: card.child,
+              ),
+            if (subline != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 18),
+                child: Text(
+                  subline!,
+                  style: const TextStyle(
+                    color: Act0PwC3PageV1.muted,
+                    fontSize: 12,
+                    height: 1.4,
+                  ),
+                ),
+              ),
+          ],
+        ),
+        primaryKey: const Key('act0_shell_welcome_primary_cta'),
+        primaryLabel: ctaLabel,
+        onPrimary: onNext,
+        footer: ctaBridgeLine,
+      );
+    }
     final blocks = act0BuildInstructionBlocksV1(text: detail, compact: true);
     final centerContent = beatIndex == beatCount;
     return Container(

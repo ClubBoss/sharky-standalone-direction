@@ -1,3 +1,4 @@
+import 'act0_pw_c3_facade_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_folio_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
@@ -271,6 +272,58 @@ class Act0PlacementShellV1 extends StatelessWidget {
       final allowNext =
           currentQuestion != null &&
           currentQuestionSelections.length >= minimumCount;
+      final actionBar = _PlacementFlowActionBarV1(
+        title: showIntro
+            ? (localeIsRu
+                  ? 'Около двух минут. Потом первый урок будет готов.'
+                  : 'About two minutes. Then your first lesson is ready.')
+            : explicitBeginnerStart
+            ? (localeIsRu
+                  ? 'Шарки начнёт просто.'
+                  : 'Sharky will start simple.')
+            : currentQuestionIndex >= questions.length
+            ? (localeIsRu
+                  ? 'Три короткие проверки — и первая раздача готова.'
+                  : 'Three short checks, then your first hand is ready.')
+            : currentQuestion?.allowsMultiple == true
+            ? (localeIsRu ? 'Выбери то, что подходит.' : 'Pick what fits.')
+            : currentQuestion?.questionId == 'experience'
+            ? (localeIsRu
+                  ? 'Если сомневаешься, выбери «Я новичок в покере».'
+                  : 'If unsure, choose “I’m new to poker.”')
+            : (localeIsRu
+                  ? 'Выбери то, что ближе всего.'
+                  : 'Choose what feels closest.'),
+        buttonKey: Key(
+          showIntro
+              ? 'act0_shell_placement_intro_cta'
+              : currentQuestionIndex >= questions.length
+              ? 'act0_shell_placement_start_diagnostic'
+              : 'act0_shell_placement_next_cta',
+        ),
+        buttonLabel: showIntro
+            ? (localeIsRu ? 'Найти мой старт' : 'Find my start')
+            : explicitBeginnerStart
+            ? (localeIsRu ? 'Начать с нуля' : 'Start from zero')
+            : currentQuestionIndex >= questions.length
+            ? (localeIsRu ? 'Начать проверку' : 'Start quick check')
+            : (localeIsRu ? 'Продолжить' : 'Continue'),
+        onPressed: showIntro
+            ? onStartPlacement
+            : explicitBeginnerStart
+            ? onStartFromZero
+            : currentQuestionIndex >= questions.length
+            ? onStartDiagnostic
+            : (allowNext ? onNext : null),
+      );
+      if (act0PwC3EnabledV1(context)) {
+        return _pwC3Flow(
+          context,
+          currentQuestion,
+          currentQuestionSelections,
+          actionBar,
+        );
+      }
       return ColoredBox(
         color: Act0AcademyDesignTokensV1.pageSurface,
         child: Column(
@@ -383,53 +436,51 @@ class Act0PlacementShellV1 extends StatelessWidget {
                 ),
               ),
             ),
-            _PlacementFlowActionBarV1(
-              title: showIntro
-                  ? (localeIsRu
-                        ? 'Около двух минут. Потом первый урок будет готов.'
-                        : 'About two minutes. Then your first lesson is ready.')
-                  : explicitBeginnerStart
-                  ? (localeIsRu
-                        ? 'Шарки начнёт просто.'
-                        : 'Sharky will start simple.')
-                  : currentQuestionIndex >= questions.length
-                  ? (localeIsRu
-                        ? 'Три короткие проверки — и первая раздача готова.'
-                        : 'Three short checks, then your first hand is ready.')
-                  : currentQuestion?.allowsMultiple == true
-                  ? (localeIsRu
-                        ? 'Выбери то, что подходит.'
-                        : 'Pick what fits.')
-                  : currentQuestion?.questionId == 'experience'
-                  ? (localeIsRu
-                        ? 'Если сомневаешься, выбери «Я новичок в покере».'
-                        : 'If unsure, choose “I’m new to poker.”')
-                  : (localeIsRu
-                        ? 'Выбери то, что ближе всего.'
-                        : 'Choose what feels closest.'),
-              buttonKey: Key(
-                showIntro
-                    ? 'act0_shell_placement_intro_cta'
-                    : currentQuestionIndex >= questions.length
-                    ? 'act0_shell_placement_start_diagnostic'
-                    : 'act0_shell_placement_next_cta',
+            actionBar,
+          ],
+        ),
+      );
+    }
+
+    if (act0PwC3EnabledV1(context)) {
+      return Act0PwC3PageV1(
+        key: const Key('act0_shell_placement_screen'),
+        eyebrow: 'Your starting point',
+        title: placementResult.levelLabel,
+        subtitle: placementResult.recommendedReason,
+        content: Column(
+          key: const Key('act0_shell_placement_result'),
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              _placementRouteTrustLineV1(context, placementResult),
+              key: const Key('act0_shell_placement_destination_trust_line'),
+              style: const TextStyle(
+                color: Act0PwC3PageV1.muted,
+                fontSize: 14,
+                height: 1.5,
               ),
-              buttonLabel: showIntro
-                  ? (localeIsRu ? 'Найти мой старт' : 'Find my start')
-                  : explicitBeginnerStart
-                  ? (localeIsRu ? 'Начать с нуля' : 'Start from zero')
-                  : currentQuestionIndex >= questions.length
-                  ? (localeIsRu ? 'Начать проверку' : 'Start quick check')
-                  : (localeIsRu ? 'Продолжить' : 'Continue'),
-              onPressed: showIntro
-                  ? onStartPlacement
-                  : explicitBeginnerStart
-                  ? onStartFromZero
-                  : currentQuestionIndex >= questions.length
-                  ? onStartDiagnostic
-                  : (allowNext ? onNext : null),
+            ),
+            const SizedBox(height: 24),
+            Act0PwC3PanelV1(
+              title: placementResult.recommendedTitle,
+              body: 'Your first recommended hand',
+              child: Padding(
+                padding: const EdgeInsets.only(top: 14),
+                child: Text(
+                  '${placementResult.diagnosticCorrect} of ${placementResult.diagnosticTotal} checks read correctly',
+                  style: const TextStyle(
+                    color: Act0PwC3PageV1.aqua,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
             ),
           ],
+        ),
+        actions: _PlacementResultActionBarV1(
+          onStartRecommended: onStartRecommended,
+          onStartFromZero: onStartFromZero,
         ),
       );
     }
@@ -509,6 +560,86 @@ class Act0PlacementShellV1 extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _pwC3Flow(
+    BuildContext context,
+    Act0PlacementQuestionV1? question,
+    Set<String> selections,
+    Widget actions,
+  ) {
+    final ready = !showIntro && question == null;
+    return Act0PwC3PageV1(
+      key: const Key('act0_shell_placement_screen'),
+      hero: showIntro,
+      eyebrow: showIntro
+          ? 'At the table'
+          : ready
+          ? 'Before your first hand'
+          : 'Your starting point',
+      title: showIntro
+          ? 'Look. Decide. Understand.'
+          : ready
+          ? 'Quick table check'
+          : _placementQuestionTitleV1(context, question!),
+      subtitle: showIntro
+          ? 'Start with what you can see. Make a choice, then find out why it matters.'
+          : ready
+          ? 'Three short checks before your first hand.'
+          : _placementQuestionSubtitleV1(context, question!),
+      stage: showIntro
+          ? null
+          : ready
+          ? 'Quick check'
+          : '${currentQuestionIndex + 1} of ${questions.length}',
+      onBack: !showIntro && currentQuestionIndex > 0 ? onBack : null,
+      backKey: const Key('act0_shell_placement_back_arrow'),
+      actions: actions,
+      content: showIntro
+          ? const Act0PwC3PanelV1(
+              title: 'Your start. Your pace.',
+              body:
+                  'Choose a starting point that feels right. New to poker? Start from zero. Played before? Read the table with three short checks.',
+            )
+          : ready
+          ? const Act0PwC3PanelV1(
+              key: Key('act0_shell_placement_diagnostic_ready'),
+              title: 'Read what is visible.',
+              body:
+                  'Find your cards, read the board, and choose a first action. If you are unsure, say so.',
+            )
+          : Column(
+              key: Key('act0_shell_placement_question_${question!.questionId}'),
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (final option in _placementVisibleOptionsV1(question))
+                  Act0PwC3ChoiceV1(
+                    key: Key('act0_shell_placement_option_${option.optionId}'),
+                    label: _placementOptionLabelV1(context, question, option),
+                    subtitle: _placementOptionSubtitleV1(
+                      context,
+                      question,
+                      option,
+                    ),
+                    selected: selections.contains(option.optionId),
+                    onTap: () => onSelectOption(question, option.optionId),
+                  ),
+                if (_placementQuestionHelperV1(context, question)
+                    case final helper?)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6),
+                    child: Text(
+                      helper,
+                      style: const TextStyle(
+                        color: Act0PwC3PageV1.muted,
+                        fontSize: 12,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
     );
   }
 }
@@ -1407,6 +1538,23 @@ class _PlacementResultActionBarV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (act0PwC3EnabledV1(context))
+      return Act0PwC3ActionsV1(
+        primaryKey: const Key('act0_shell_placement_start_recommended'),
+        primaryLabel: _placementAtomV1(
+          context,
+          'placement_sheet_start_first_hand',
+          fallback: 'Start with the useful hand',
+        ),
+        onPrimary: onStartRecommended,
+        secondaryKey: const Key('act0_shell_placement_start_zero'),
+        secondaryLabel: _placementAtomV1(
+          context,
+          'placement_sheet_start_from_zero',
+          fallback: 'Start from the beginning',
+        ),
+        onSecondary: onStartFromZero,
+      );
     return Container(
       padding: const EdgeInsets.fromLTRB(
         Act0ShellTokensV1.pageX,
@@ -1477,6 +1625,13 @@ class _PlacementFlowActionBarV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (act0PwC3EnabledV1(context))
+      return Act0PwC3ActionsV1(
+        primaryLabel: buttonLabel,
+        primaryKey: buttonKey,
+        onPrimary: onPressed,
+        footer: title,
+      );
     return Container(
       key: const Key('act0_shell_placement_flow_action_bar'),
       decoration: BoxDecoration(
