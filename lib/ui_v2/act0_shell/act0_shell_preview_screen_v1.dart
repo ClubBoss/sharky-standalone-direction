@@ -877,6 +877,13 @@ Act0RunnerStateV1 placementQuickCheckRunnerV1(
   bool isRu = false,
 }) {
   return runner.copyWith(
+    // The reused lesson scene's own actor and seat highlight belong to that
+    // lesson, not to these Hero-view checks. An empty id means no active
+    // seat, so feedback marks only the source-owned card clue.
+    table: runner.table.copyWith(
+      activeSeatId: '',
+      highlightedSeatIds: const <String>[],
+    ),
     lessonTitle: isRu ? 'Быстрая проверка стола' : 'Quick table check',
     lessonSubtitle: isRu
         ? 'Три короткие проверки перед первой раздачей.'
