@@ -7073,7 +7073,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             : _copyV1(en: 'Start a short rep', ru: 'Начать короткий повтор'),
         subtitle: dailyDeckEntry == null
             ? _copyV1(
-                en: 'Unlock after one route rep.',
+                en: 'Opens after you play one lesson hand.',
                 ru: 'Откроется после одного дрилла на маршруте.',
               )
             : _dailyCompletedRepCount >= 3
@@ -7411,14 +7411,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         label: _copyV1(en: 'Keep going', ru: 'Продолжай'),
         title: _localizedLessonTitleV1(selectedLesson),
         subtitle: _copyV1(
-          en: 'Practice unlocks from reps you already cleared on the route.',
+          en: 'Practice opens with hands you have already played in Learn.',
           ru: 'Практика открывается из спотов, которые ты уже закрыл на маршруте.',
         ),
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.continueLesson,
         ),
         hint: _copyV1(
-          en: 'Clear one more route rep first.',
+          en: 'Play one more lesson hand first.',
           ru: 'Сначала закрой ещё один спот на маршруте.',
         ),
         outcome: _copyV1(
@@ -8384,11 +8384,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           : _copyV1(en: 'Practice the $clue', ru: 'Закрепи подсказку $clue'),
       subtitle: isExactReplay
           ? _copyV1(
-              en: 'Current useful rep: train the exact table clue again.',
+              en: 'Next: play this exact spot once more.',
               ru: 'Повтори именно этот спот ещё раз.',
             )
           : _copyV1(
-              en: 'Current useful rep: one same-clue hand before daily reps.',
+              en: 'Next: one more hand with the same clue, then daily practice.',
               ru: 'Один повтор с той же подсказкой поможет закрепить её.',
             ),
       reasonLabel: _practiceRepairReturnReasonLineV1(receipt.missedSignalLabel),
@@ -8407,7 +8407,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ru: 'Закрепление ремонта',
       ),
       screenSubtitle: _copyV1(
-        en: 'Current useful rep first. Locked inventory stays secondary until the route opens it.',
+        en: 'Your next useful hand comes first. More topics open as you learn.',
         ru: 'Практика закрепляет следующую полезную руку. Глубокие паттерны остаются в Разборе.',
       ),
     );
@@ -9002,7 +9002,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       title: spec.title,
       subtitle: target == null
           ? _copyV1(
-              en: 'Clear it on the route first.',
+              en: 'Opens as you progress in Learn.',
               ru: 'Сначала закрой это на маршруте.',
             )
           : spec.subtitle,
@@ -10280,7 +10280,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         recommendedTaskId: 'actions_legal_context',
         recommendedTitle: 'Fold, check, call, raise',
         recommendedReason:
-            'The live check stayed clean, so we can begin with action words instead of resetting the table.',
+            'Your quick check went well, so we can start with poker actions instead of table basics.',
         routeTrustLine: "We'll keep the next step beginner-safe.",
         premiumPitch:
             'Premium is optional later: more table-clue practice after the free foundation.',
@@ -10336,7 +10336,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         recommendedTaskId: 'your_first_hand_preflop',
         recommendedTitle: 'Your first hand, dealt',
         recommendedReason:
-            'The live check says we should steady the hand before we speed you up.',
+            'Your quick check says: steady the basics first, then speed up.',
         routeTrustLine: "We'll keep the hand flow visible before adding speed.",
         premiumPitch:
             'Premium is optional later: more practice with the table clues you have already seen.',
@@ -10379,7 +10379,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       recommendedTaskId: 'what_poker_is_theory',
       recommendedTitle: 'First Table Guide',
       recommendedReason:
-          'The live check says the route should teach the Sharky loop first, then move into the poker foundations.',
+          'Your quick check suggests learning how a Sharky lesson works first, then the poker basics.',
       routeTrustLine:
           "We'll start with the table first, so the first hand stays clear.",
       premiumPitch:

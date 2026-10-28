@@ -39,6 +39,7 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
   Act0WelcomeBeatV1 _beat = Act0WelcomeBeatV1.intro;
   Act0AccessibilityPrototypeStepV1? _accessibilityPrototypeStep;
   String? _orientationChoiceLabel;
+  Act0RunnerOptionV1? _orientationChoice;
 
   bool get _isRuLocaleV1 => Localizations.localeOf(
     context,
@@ -49,6 +50,20 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
 
   String _atomV1(String atomId, {required String fallback}) =>
       act0AcademySurfaceAtomV1(context, atomId, fallback: fallback);
+
+  // Still ungraded: no verdict and no record, only the demo task's own reason
+  // for the pick and, when it differs, the reason for the source answer.
+  String _welcomeTeachingLineV1(Act0RunnerOptionV1 choice) {
+    final answer = _microWinRunnerV1.options
+        .where((option) => option.isCorrect)
+        .firstOrNull;
+    return <String>[
+      'You chose ${choice.label}.',
+      choice.feedbackReason.trim(),
+      if (!choice.isCorrect && answer != null) answer.feedbackReason.trim(),
+      'This preview is ungraded.',
+    ].where((line) => line.isNotEmpty).join(' ');
+  }
 
   // F04: Welcome is truthful orientation, not a demo assessment. The real
   // table/task renders for a genuine first read, but picking an option never
@@ -144,6 +159,7 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
           onChooseOption: (option) {
             setState(() {
               _orientationChoiceLabel = option.label;
+              _orientationChoice = option;
               _beat = Act0WelcomeBeatV1.handoff;
             });
           },
@@ -194,9 +210,9 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
           accent: Act0AcademyDesignTokensV1.primaryAction,
           previewKey: const Key('act0_shell_welcome_handoff_preview'),
           line: _copyV1(
-            en: _orientationChoiceLabel == null
+            en: _orientationChoice == null
                 ? 'Your first useful hand is ready.'
-                : 'You tried ${_orientationChoiceLabel!}. This preview was ungraded.',
+                : _welcomeTeachingLineV1(_orientationChoice!),
             ru: _orientationChoiceLabel == null
                 ? '\u0422\u0432\u043e\u044f \u043f\u0435\u0440\u0432\u0430\u044f \u043f\u043e\u043b\u0435\u0437\u043d\u0430\u044f \u0440\u0430\u0437\u0434\u0430\u0447\u0430 \u0433\u043e\u0442\u043e\u0432\u0430.'
                 : '\u0422\u0432\u043e\u0439 \u0432\u044b\u0431\u043e\u0440: ${_welcomeChoiceRuV1(_orientationChoiceLabel!)}. \u042d\u0442\u043e \u0437\u043d\u0430\u043a\u043e\u043c\u0441\u0442\u0432\u043e \u0431\u0435\u0437 \u043e\u0446\u0435\u043d\u043a\u0438.',
@@ -215,7 +231,7 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
               ? 'Back to profile'
               : widget.handoffStartsRecommendedTask
               ? 'Start recommended lesson'
-              : 'Open my path',
+              : 'See my next step',
           ru: widget.replayMode
               ? '\u041d\u0430\u0437\u0430\u0434 \u0432 \u043f\u0440\u043e\u0444\u0438\u043b\u044c'
               : widget.handoffStartsRecommendedTask
