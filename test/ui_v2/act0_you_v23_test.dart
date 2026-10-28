@@ -109,12 +109,12 @@ void main() {
           (i) => Act0AchievementMomentViewModelV1(
             seedId: [
               'first_correct_read_v1',
-              'first_repair_note_v1',
+              'first_evidence_signal_v1',
               'first_session_complete_v1',
             ][i],
             label: [
               'First correct read',
-              'Back to the spot',
+              'First evidence signal',
               'First session complete',
             ][i],
           ),

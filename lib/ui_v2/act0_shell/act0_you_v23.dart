@@ -2,6 +2,16 @@ part of 'act0_profile_shell_v1.dart';
 
 const kAct0YouV23Preview = bool.fromEnvironment('SHARKY_YOU_V23_PREVIEW');
 
+/// Seeds that record an open mistake or repair opportunity rather than a
+/// learner achievement. You V23 shows them only as "Spots to repair".
+const act0YouV23OpenMistakeSeedIdsV1 = <String>{
+  act0AchievementSeedFirstRepairNoteV1,
+  act0AchievementSeedFirstReviewHistoryItemV1,
+};
+
+bool act0YouV23ActiveV1(BuildContext context) =>
+    kAct0YouV23Preview && Localizations.localeOf(context).languageCode == 'en';
+
 bool act0YouV23TargetExists(
   Act0ShellStateV1 state,
   String worldId,
@@ -27,7 +37,9 @@ class _YouV23 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = source.profile;
-    final moments = source.achievementSeedConsumer.moments;
+    final moments = source.achievementSeedConsumer.moments
+        .where((m) => !act0YouV23OpenMistakeSeedIdsV1.contains(m.seedId))
+        .toList(growable: false);
     final proof = source.crossSessionProof;
     final fresh =
         moments.isEmpty &&

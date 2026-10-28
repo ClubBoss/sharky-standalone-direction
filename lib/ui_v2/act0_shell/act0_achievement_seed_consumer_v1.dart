@@ -9,12 +9,16 @@ class Act0AchievementSeedConsumerV1 {
 
   bool get hasMoments => moments.isNotEmpty;
 
+  /// [excludedSeedIds] are dropped before the three-moment cap so a surface
+  /// can omit non-achievement seeds without hiding later earned ones.
   static Act0AchievementSeedConsumerV1 fromProjection(
-    Act0AchievementSeedProjectionV1 projection,
-  ) {
+    Act0AchievementSeedProjectionV1 projection, {
+    Set<String> excludedSeedIds = const <String>{},
+  }) {
     final earned = projection.seeds
         .where((seed) => seed.earned)
         .where((seed) => seed.state == act0AchievementSeedStateEarnedV1)
+        .where((seed) => !excludedSeedIds.contains(seed.id))
         .where((seed) => _labelForSeedIdV1(seed.id) != null)
         .toList(growable: false);
     final ordered = <Act0AchievementSeedV1>[...earned]..sort(_compareSeedsV1);

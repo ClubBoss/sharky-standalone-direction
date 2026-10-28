@@ -6884,6 +6884,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 reviewMistakeHistory: _reviewMistakeHistoryV1,
                                 profileStreakDays: profileState.streakDays,
                               ),
+                              excludedSeedIds: act0YouV23ActiveV1(context)
+                                  ? act0YouV23OpenMistakeSeedIdsV1
+                                  : const <String>{},
                             ),
                         onRetakePlacement: _openPlacementFlow,
                         onReplayWelcome: _openWelcomeReplayV1,
