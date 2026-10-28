@@ -2697,7 +2697,11 @@ class _ProfileSkillCardV1 extends StatelessWidget {
                       Text(stat.label, style: Act0AcademyReadingStyleV1.body),
                       Text(
                         stat.locked
-                            ? _profileCopyV1(context, en: 'Later', ru: 'Позже')
+                            ? _profileCopyV1(
+                                context,
+                                en: 'Not practiced yet',
+                                ru: 'Позже',
+                              )
                             : _profileCopyV1(
                                 context,
                                 en: 'Practiced',
@@ -2802,7 +2806,11 @@ class _ProfileSkillSummaryTileV1 extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     stat.locked
-                        ? _profileCopyV1(context, en: 'Later', ru: 'Позже')
+                        ? _profileCopyV1(
+                            context,
+                            en: 'Not practiced yet',
+                            ru: 'Позже',
+                          )
                         : gain == null
                         ? _profileCopyV1(
                             context,
@@ -3063,7 +3071,11 @@ void _showSkillDetailsSheet(
                   ),
                   Text(
                     stat.locked
-                        ? _profileCopyV1(context, en: 'Later', ru: 'Позже')
+                        ? _profileCopyV1(
+                            context,
+                            en: 'Not practiced yet',
+                            ru: 'Позже',
+                          )
                         : _profileCopyV1(
                             context,
                             en: 'Practiced',
