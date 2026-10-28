@@ -3,6 +3,13 @@ import 'act0_academy_iconography_v1.dart';
 import 'act0_home_north_star_preview_v1.dart';
 
 const kAct0PwC3PreviewV1 = bool.fromEnvironment('SHARKY_PW_C3_PREVIEW');
+// Temporary owner image, decorative intros only. The canonical Runner cannot
+// register its baked cast/Hero safely and deliberately never reads this flag.
+const kAct0PwC3RenderPreviewV1 = bool.fromEnvironment(
+  'SHARKY_PW_C3_RENDER_PREVIEW',
+);
+const kAct0PwC3RenderAssetV1 =
+    'assets/design/sharky/pw_c3/owner_clean_table_candidate_965x1629.png';
 bool act0PwC3EnabledV1(BuildContext context) =>
     kAct0PwC3PreviewV1 && Localizations.localeOf(context).languageCode == 'en';
 
@@ -52,7 +59,7 @@ class Act0PwC3PageV1 extends StatelessWidget {
             top: 0,
             left: 0,
             right: 0,
-            height: 390,
+            height: kAct0PwC3RenderPreviewV1 ? 664 : 390,
             child: ExcludeSemantics(
               child: IgnorePointer(
                 child: Stack(
@@ -60,10 +67,16 @@ class Act0PwC3PageV1 extends StatelessWidget {
                   children: [
                     Image(
                       image: AssetImage(
-                        'assets/design/sharky/home/poker_lounge_reference_v2.png',
+                        kAct0PwC3RenderPreviewV1
+                            ? kAct0PwC3RenderAssetV1
+                            : 'assets/design/sharky/home/poker_lounge_reference_v2.png',
                       ),
-                      fit: BoxFit.cover,
-                      alignment: Alignment.topRight,
+                      fit: kAct0PwC3RenderPreviewV1
+                          ? BoxFit.contain
+                          : BoxFit.cover,
+                      alignment: kAct0PwC3RenderPreviewV1
+                          ? Alignment.topCenter
+                          : Alignment.topRight,
                     ),
                     DecoratedBox(
                       decoration: BoxDecoration(

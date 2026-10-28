@@ -119,6 +119,7 @@ flutter:
     - assets/act0_characters/
     - assets/design/sharky/iconography/
     - assets/design/sharky/home/
+    - assets/design/sharky/pw_c3/
     - assets/act0_room/
     - assets/act0_render_class/
     - assets/cards/card_back.png
