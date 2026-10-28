@@ -426,7 +426,7 @@ class Act0ReviewV4 extends StatelessWidget {
           const SizedBox(height: 14),
           _cta(
             key: const Key('act0_shell_review_practice_cta'),
-            label: 'Review this mistake',
+            label: 'Practice this spot',
             onPressed: onFixMistake == null
                 ? null
                 : () => onFixMistake!(mistake),
