@@ -5,6 +5,9 @@ Reference: iPhone 14 Pro, English, 393x852 logical / nominal 1179x2556 physical
 Repo baseline main: b0a6b4a692b6feb0f9e0cae39035a153045e99c5 (docs-only)
 Authority: docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md, live AGENTS.md, docs/context/PRE_HUMAN_CAMPAIGN_STATE_v1.md, live Issue #287, owner EN_V1_UI_ROUTE Sheet.
 
+
+> UPDATE 2026-10-29: [Curated original screenshots have been published](../evidence/EN_V1_AUDIT_20261029/README.md). Any NOT_UPLOADED rows below describe the *historical 2026-10-28 snapshot*. Latest final Home and one-binary integrated native screenshot pass are still pending.
+
 ## PURPOSE
 
 One stable GitHub entry point for a separate visual/product auditor of the **existing** opt-in Sharky Academy screen candidates. It cross-references the selected/provisional Draft PRs at their exact authoring HEADs. It does NOT recapture, regenerate, or assert the final native screenshots. Production code and PRs #308-#315 are untouched; protected #224 is untouched. For dynamic states, written PR assertions are claims to validate, not substitute for original captured pixels.
