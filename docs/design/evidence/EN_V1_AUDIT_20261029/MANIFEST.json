@@ -1,0 +1,442 @@
+{
+  "label": "2026-10-29 EN V1 curated originals",
+  "audit_candidate_pr": 321,
+  "audit_candidate_head": "33005fcaef84bb78d9d2cbe56a3f125567f16ed0",
+  "status": "NOT integrated visual/native acceptance",
+  "entries": [
+    {
+      "surface": "Learn",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Learn/learn_default.png",
+      "source_pr": 309,
+      "source_pr_head": "b8d7fffaf64ebda9e9e1a5b437d3838c14679cb0",
+      "source_worktree_relative": ".codex/worktrees/learn-cinematic-path-a-v1/Sharky_1.0/output/learn_cinematic_path_a_20261026/native/learn_default.png",
+      "sha256": "0c27b70dd579221f7ddfee6fb5899a38617e075eabe82fd16e8e34dbcc2cf430",
+      "bytes": 629429,
+      "pixel_size": [
+        1179,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Learn",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Learn/learn_full_path.png",
+      "source_pr": 309,
+      "source_pr_head": "b8d7fffaf64ebda9e9e1a5b437d3838c14679cb0",
+      "source_worktree_relative": ".codex/worktrees/learn-cinematic-path-a-v1/Sharky_1.0/output/learn_cinematic_path_a_20261026/native/learn_full_path.png",
+      "sha256": "623c47a10591abaae987b27f369d070419778398e87f2d052a34c646420939aa",
+      "bytes": 674238,
+      "pixel_size": [
+        1179,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Learn",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Learn/learn_expanded.png",
+      "source_pr": 309,
+      "source_pr_head": "b8d7fffaf64ebda9e9e1a5b437d3838c14679cb0",
+      "source_worktree_relative": ".codex/worktrees/learn-cinematic-path-a-v1/Sharky_1.0/output/learn_cinematic_path_a_20261026/native/learn_expanded.png",
+      "sha256": "dd9a67bb55819337340587fdbc27ca2809397007c25a643a3b3eb3aec6f7f142",
+      "bytes": 1139778,
+      "pixel_size": [
+        1179,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Worlds",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Worlds/worlds_default.png",
+      "source_pr": 310,
+      "source_pr_head": "dc4892dde53c442f98664de22c9b02ee7b910913",
+      "source_worktree_relative": ".codex/worktrees/worlds-b-v1/Sharky_1.0/output/worlds_b_v1_20261026/native/worlds_default.png",
+      "sha256": "50dee221da50736d2de29b4f6f2e0f94dc4c29f0f8392da8c933de6d3f8ae215",
+      "bytes": 1013851,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Worlds",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Worlds/worlds_locked_nonlaunch.png",
+      "source_pr": 310,
+      "source_pr_head": "dc4892dde53c442f98664de22c9b02ee7b910913",
+      "source_worktree_relative": ".codex/worktrees/worlds-b-v1/Sharky_1.0/output/worlds_b_v1_20261026/native/worlds_locked_nonlaunch.png",
+      "sha256": "50dee221da50736d2de29b4f6f2e0f94dc4c29f0f8392da8c933de6d3f8ae215",
+      "bytes": 1013851,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Worlds",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Worlds/worlds_full_path_lower.png",
+      "source_pr": 310,
+      "source_pr_head": "dc4892dde53c442f98664de22c9b02ee7b910913",
+      "source_worktree_relative": ".codex/worktrees/worlds-b-v1/Sharky_1.0/output/worlds_b_v1_20261026/native/worlds_full_path_lower.png",
+      "sha256": "6ae0873b4079a2280fa16a646cfee95fa06e3ed28d4257bb88caeb8acecf18d0",
+      "bytes": 226376,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Practice",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Practice/practice_fresh_empty.png",
+      "source_pr": 311,
+      "source_pr_head": "394974c6d6802bba7fc35d37ca1e26794bc78f53",
+      "source_worktree_relative": ".codex/worktrees/practice-hybrid-v1/Sharky_1.0/output/practice_hybrid_v1_20261027/native/practice_fresh_empty.png",
+      "sha256": "ddf490dc5eedbd9f77a69ddb3b686e411c4bebe211df3d92517b98f3b996b456",
+      "bytes": 1166861,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Practice",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Practice/practice_progressed.png",
+      "source_pr": 311,
+      "source_pr_head": "394974c6d6802bba7fc35d37ca1e26794bc78f53",
+      "source_worktree_relative": ".codex/worktrees/practice-hybrid-v1/Sharky_1.0/output/practice_hybrid_v1_20261027/native/practice_progressed.png",
+      "sha256": "eba9cd89fc55579c9dfc88a9426b3387cc128be8c396879a625383a0e197b404",
+      "bytes": 1182897,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Practice",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Practice/practice_daily_complete.png",
+      "source_pr": 311,
+      "source_pr_head": "394974c6d6802bba7fc35d37ca1e26794bc78f53",
+      "source_worktree_relative": ".codex/worktrees/practice-hybrid-v1/Sharky_1.0/output/practice_hybrid_v1_20261027/native/practice_daily_complete.png",
+      "sha256": "9628a7da55a3519d854a3b9d0c13a297632759d7d674b65e63179b336fa3c906",
+      "bytes": 1182237,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Practice",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Practice/practice_active_repair.png",
+      "source_pr": 311,
+      "source_pr_head": "394974c6d6802bba7fc35d37ca1e26794bc78f53",
+      "source_worktree_relative": ".codex/worktrees/practice-hybrid-v1/Sharky_1.0/output/practice_hybrid_v1_20261027/native/practice_active_repair.png",
+      "sha256": "b10c2a908478fe72a129ac979cd8bd46ea859baf40e271a96670c4099213cab9",
+      "bytes": 1183489,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Review",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Review/review_zero_open.png",
+      "source_pr": 312,
+      "source_pr_head": "f835e90565678386cd4ce78cca11c811a0897ac0",
+      "source_worktree_relative": ".codex/worktrees/practice-hybrid-v1/Sharky_1.0/output/review_v4_20261027/native/review_zero_open.png",
+      "sha256": "be9e7d74a6278ff07256de5042f6fed0e499a5a2777142ebb84a0b69fcad4d05",
+      "bytes": 943637,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Review",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Review/review_multi_open.png",
+      "source_pr": 312,
+      "source_pr_head": "f835e90565678386cd4ce78cca11c811a0897ac0",
+      "source_worktree_relative": ".codex/worktrees/practice-hybrid-v1/Sharky_1.0/output/review_v4_20261027/native/review_multi_open.png",
+      "sha256": "bb4f0c281eeea95f9242b671b92c60a5f9619a3f18e329f450fa052a8a34bffe",
+      "bytes": 1273142,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Review",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Review/review_due_only.png",
+      "source_pr": 312,
+      "source_pr_head": "f835e90565678386cd4ce78cca11c811a0897ac0",
+      "source_worktree_relative": ".codex/worktrees/practice-hybrid-v1/Sharky_1.0/output/review_v4_20261027/native/review_due_only.png",
+      "sha256": "8a52f011069fac094c732a99b8c363cb7528e61a4b9bfac95dabd4b630a6ab6f",
+      "bytes": 1165245,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Review",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Review/review_both_open_and_due.png",
+      "source_pr": 312,
+      "source_pr_head": "f835e90565678386cd4ce78cca11c811a0897ac0",
+      "source_worktree_relative": ".codex/worktrees/practice-hybrid-v1/Sharky_1.0/output/review_v4_20261027/native/review_both_open_and_due.png",
+      "sha256": "8d0b42bf139d459f4fff928aabf6cd8d6e3a675ccd01e24e2bf9e6b2b2a048d3",
+      "bytes": 1449952,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "You",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/You/you_fresh.png",
+      "source_pr": 314,
+      "source_pr_head": "ea04197dd4ceffe807d757e25fc8b774216fd5a9",
+      "source_worktree_relative": ".codex/worktrees/practice-hybrid-v1/Sharky_1.0/output/you_v23_20261028/native/you_fresh.png",
+      "sha256": "135ead738ea75dbe75cb783030d5c1bda8f864ec16f77f9804f966419aeb06b0",
+      "bytes": 684319,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "You",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/You/you_progressed_both.png",
+      "source_pr": 314,
+      "source_pr_head": "ea04197dd4ceffe807d757e25fc8b774216fd5a9",
+      "source_worktree_relative": ".codex/worktrees/practice-hybrid-v1/Sharky_1.0/output/you_v23_20261028/native/you_progressed_both.png",
+      "sha256": "d2eb7e3b0374892a8b7effd4ae3d046f21aba2352460c61b830ea7c3476c0a6c",
+      "bytes": 1026320,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "You",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/You/you_due_only.png",
+      "source_pr": 314,
+      "source_pr_head": "ea04197dd4ceffe807d757e25fc8b774216fd5a9",
+      "source_worktree_relative": ".codex/worktrees/practice-hybrid-v1/Sharky_1.0/output/you_v23_20261028/native/you_due_only.png",
+      "sha256": "f818acfad7e5788d6d8ea850a7f1de5bba7a62327342262f21955ff2a5d0e264",
+      "bytes": 827941,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "You",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/You/you_repair_only.png",
+      "source_pr": 314,
+      "source_pr_head": "ea04197dd4ceffe807d757e25fc8b774216fd5a9",
+      "source_worktree_relative": ".codex/worktrees/practice-hybrid-v1/Sharky_1.0/output/you_v23_20261028/native/you_repair_only.png",
+      "sha256": "ea4f56da0233a845a2d28d6b24e652c8f4d1a06b889930a06cac10d306d1bb11",
+      "bytes": 900818,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Settings",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Settings/settings_top.png",
+      "source_pr": 315,
+      "source_pr_head": "03ef96979ec37a37f10144e3bf6dfdbe0a7a0850",
+      "source_worktree_relative": ".codex/worktrees/settings-a-quiet-control/Sharky_1.0/output/settings_a_20261028/native/settings_top.png",
+      "sha256": "f1d07945c77a7298d41e19e90251dd9b31b59e15630632fc26a78e691cfe6a99",
+      "bytes": 567640,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Settings",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Settings/settings_bottom.png",
+      "source_pr": 315,
+      "source_pr_head": "03ef96979ec37a37f10144e3bf6dfdbe0a7a0850",
+      "source_worktree_relative": ".codex/worktrees/settings-a-quiet-control/Sharky_1.0/output/settings_a_20261028/native/settings_bottom.png",
+      "sha256": "e5c8a2941c6b5df4a9cb8a87778d2c59a4362a1f4a4016a75729759f86fb4526",
+      "bytes": 537183,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Settings",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Settings/settings_toggles_off.png",
+      "source_pr": 315,
+      "source_pr_head": "03ef96979ec37a37f10144e3bf6dfdbe0a7a0850",
+      "source_worktree_relative": ".codex/worktrees/settings-a-quiet-control/Sharky_1.0/output/settings_a_20261028/native/settings_toggles_off.png",
+      "sha256": "9e3eb802dbeab56ba08420093b3243fb312fac46f89dbead93c6f90d6d31d6ca",
+      "bytes": 567217,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Settings",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Settings/settings_toggles_on.png",
+      "source_pr": 315,
+      "source_pr_head": "03ef96979ec37a37f10144e3bf6dfdbe0a7a0850",
+      "source_worktree_relative": ".codex/worktrees/settings-a-quiet-control/Sharky_1.0/output/settings_a_20261028/native/settings_toggles_on.png",
+      "sha256": "53ed56c71528787160baad2e27955621992e99b9111ca40a7180b11da86edb8d",
+      "bytes": 567984,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Placement_Welcome",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Placement_Welcome/High/pw_intro.png",
+      "source_pr": 321,
+      "source_pr_head": "33005fcaef84bb78d9d2cbe56a3f125567f16ed0",
+      "source_worktree_relative": ".codex/worktrees/pw-c4-onboarding-cohesion/Sharky_1.0/output/pw_c4_20261028/native/after/High/pw_intro.png",
+      "sha256": "0878af5d3428e2172875f0a57d560e758b487f7659bc53cb18ba4a8286ca1219",
+      "bytes": 2436518,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Placement_Welcome",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Placement_Welcome/High/pw_experience_selected.png",
+      "source_pr": 321,
+      "source_pr_head": "33005fcaef84bb78d9d2cbe56a3f125567f16ed0",
+      "source_worktree_relative": ".codex/worktrees/pw-c4-onboarding-cohesion/Sharky_1.0/output/pw_c4_20261028/native/after/High/pw_experience_selected.png",
+      "sha256": "b11ed9a70fe27af98e7f9941a68d0fba773ed067e02da565216341890810d1ff",
+      "bytes": 225517,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Placement_Welcome",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Placement_Welcome/High/pw_ready.png",
+      "source_pr": 321,
+      "source_pr_head": "33005fcaef84bb78d9d2cbe56a3f125567f16ed0",
+      "source_worktree_relative": ".codex/worktrees/pw-c4-onboarding-cohesion/Sharky_1.0/output/pw_c4_20261028/native/after/High/pw_ready.png",
+      "sha256": "14594fb7339af538d4495ebdc99b3fad01aae7d1f50c068cefd07043877216c5",
+      "bytes": 142426,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Placement_Welcome",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Placement_Welcome/High/pw_result_111.png",
+      "source_pr": 321,
+      "source_pr_head": "33005fcaef84bb78d9d2cbe56a3f125567f16ed0",
+      "source_worktree_relative": ".codex/worktrees/pw-c4-onboarding-cohesion/Sharky_1.0/output/pw_c4_20261028/native/after/High/pw_result_111.png",
+      "sha256": "a66d77c0697c38ed554e1e46f11ba5f82b54b086d9493d6e7e07da9b691db969",
+      "bytes": 171296,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Placement_Welcome",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Placement_Welcome/High/pw_welcome_intro.png",
+      "source_pr": 321,
+      "source_pr_head": "33005fcaef84bb78d9d2cbe56a3f125567f16ed0",
+      "source_worktree_relative": ".codex/worktrees/pw-c4-onboarding-cohesion/Sharky_1.0/output/pw_c4_20261028/native/after/High/pw_welcome_intro.png",
+      "sha256": "52a1bc30ec71033dbcd45c3cc8df8f5d503e0f170f18a500860f786d83188a85",
+      "bytes": 2523208,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Placement_Welcome",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Placement_Welcome/High/pw_welcome_handoff.png",
+      "source_pr": 321,
+      "source_pr_head": "33005fcaef84bb78d9d2cbe56a3f125567f16ed0",
+      "source_worktree_relative": ".codex/worktrees/pw-c4-onboarding-cohesion/Sharky_1.0/output/pw_c4_20261028/native/after/High/pw_welcome_handoff.png",
+      "sha256": "86cf88b2d14f57e2d80a5b639ebef67ce02d36a47a75d3cb85ba2a507ac46636",
+      "bytes": 141536,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Placement_Welcome",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Placement_Welcome/High/pw_welcome_runner.png",
+      "source_pr": 321,
+      "source_pr_head": "33005fcaef84bb78d9d2cbe56a3f125567f16ed0",
+      "source_worktree_relative": ".codex/worktrees/pw-c4-onboarding-cohesion/Sharky_1.0/output/pw_c4_20261028/native/after/High/pw_welcome_runner.png",
+      "sha256": "64861c24de908d82f910f47dd36b26a8f338f1efb41368eff7c09ba701d1bcff",
+      "bytes": 3228200,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Placement_Welcome",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Placement_Welcome/Middle/pw_result_110.png",
+      "source_pr": 321,
+      "source_pr_head": "33005fcaef84bb78d9d2cbe56a3f125567f16ed0",
+      "source_worktree_relative": ".codex/worktrees/pw-c4-onboarding-cohesion/Sharky_1.0/output/pw_c4_20261028/native/after/Middle/pw_result_110.png",
+      "sha256": "03c251db7c469579e85ecd4419cfefc0ca3c78df1dd36b767abadbccdaa25336",
+      "bytes": 166229,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    },
+    {
+      "surface": "Placement_Welcome",
+      "path": "docs/design/evidence/EN_V1_AUDIT_20261029/Placement_Welcome/Novice/pw_novice_welcome.png",
+      "source_pr": 321,
+      "source_pr_head": "33005fcaef84bb78d9d2cbe56a3f125567f16ed0",
+      "source_worktree_relative": ".codex/worktrees/pw-c4-onboarding-cohesion/Sharky_1.0/output/pw_c4_20261028/native/after/Novice/pw_novice_welcome.png",
+      "sha256": "9e645c4391ab034fde9c051deeed013b4cb745a4fdab21e87aa404261c9d0909",
+      "bytes": 2523087,
+      "pixel_size": [
+        1178,
+        2556
+      ],
+      "type": "original author native capture; fixture/source-backed where applicable; not a new integrated-binary capture"
+    }
+  ]
+}

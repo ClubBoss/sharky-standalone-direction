@@ -1,0 +1,84 @@
+{
+  "tested_head": "68562ad6aab05dec80eed12e173fdc91220e1e29",
+  "tested_tree": "27b51d6077b8ce2f66414d245cbfae49b1df627a",
+  "base_pr": 326,
+  "device": "Sharky-EN-V1-iPhone-14-Pro-Reference",
+  "reference_viewport": "iPhone 14 Pro 393x852 pt portrait, iOS 26.2, English",
+  "preview_flags": [
+    "SHARKY_HOME_NORTH_STAR_PREVIEW",
+    "SHARKY_LEARN_CINEMATIC_PATH_A",
+    "SHARKY_WORLDS_B_PREVIEW",
+    "SHARKY_PRACTICE_HYBRID_PREVIEW",
+    "SHARKY_REVIEW_V4_PREVIEW",
+    "SHARKY_YOU_V23_PREVIEW",
+    "SHARKY_SETTINGS_QUIET_CONTROL_PREVIEW",
+    "SHARKY_PW_C3_PREVIEW",
+    "SHARKY_PW_C3_RENDER_PREVIEW",
+    "SHARKY_PW_C4_PREVIEW",
+    "HNP_TELEMETRY"
+  ],
+  "all_flag_values": true,
+  "new_bundle_sha256": {
+    "Runner": "45e49b317cadf3a96b10eff275a9cefbb4d1a1a1f45eb97b2a7a8eb215d9f0af",
+    "Runner.debug.dylib": "efc1b9519b96b0a3b2fa0c52bc9a66ab8b354ea9f800c08f8b65f60b84cb6dcc"
+  },
+  "xctest": "One complete first-use experienced route; one XCTest test passed with 0 failures; original xcresult retained locally",
+  "test_harness_preflight": "First attempt failed because the QA script matched You by substring and tapped another element. Exact tab selection fixed; second run passed. Not a product defect.",
+  "installed_pretest_bundle_and_user_prefs_restored": "Original Runner and dylib SHA256 matched pretest backup and user preference plist SHA256 byte-identical",
+  "screenshots": [
+    {
+      "file": "F1_You_1earned_1repair.png",
+      "sha256": "297981eb434b8cc97eb73473569c6f0e793ba17a6de02d4045e3ff9fcfee2777",
+      "bytes": 804337,
+      "px": [
+        1178,
+        2556
+      ],
+      "source_original_xcresult_export_name": "0429729C-B2D2-4F26-A94B-60713D215291.png",
+      "original_unchanged": true
+    },
+    {
+      "file": "F2_Diagnostic_correct_board_clue.png",
+      "sha256": "003f78c2843acbf91594a44ad19b1ac12544eabbbbaa0aa72328905a6080c9ff",
+      "bytes": 2840654,
+      "px": [
+        1178,
+        2556
+      ],
+      "source_original_xcresult_export_name": "67672034-D83B-445C-A969-6DB7719FA08B.png",
+      "original_unchanged": true
+    },
+    {
+      "file": "F3_Welcome_wrong_call_causal_explanation.png",
+      "sha256": "0985dcc0c03c3f173a99ea5625434926376f932788f8743c61f15bc44416ec94",
+      "bytes": 176643,
+      "px": [
+        1178,
+        2556
+      ],
+      "source_original_xcresult_export_name": "07F4FA41-1760-486E-BC43-32F19088DD8A.png",
+      "original_unchanged": true
+    },
+    {
+      "file": "Placement_1of3_source_count.png",
+      "sha256": "990575964dbd2ba00dd8fe001bce74f6c78feaf5d3e8ed20eab5c11dcda3dcfb",
+      "bytes": 169376,
+      "px": [
+        1178,
+        2556
+      ],
+      "source_original_xcresult_export_name": "6857FD24-7A33-4422-A21D-E7E0C42AC574.png",
+      "original_unchanged": true
+    }
+  ],
+  "limits": [
+    "Only the 1-of-3 experienced diagnostic, not all branches or a complete release suite",
+    "F1 proof covers one independently correct choice plus unresolved repair; no-progress zero-earned state tested by source tests, not this native check",
+    "F2 absence of opponent To act checked for all three native diagnostic feedback states in XCTest accessibility hierarchy",
+    "F3 source-backed Call explanation visible, no grade; no new XP",
+    "F4/F5 not independently native checked",
+    "F7 inherited visual defects remain",
+    "F9 cold-restart Review/You repair-persistence not checked by this native scenario; separate owner-gated investigation required",
+    "No release, Human, S12.V or P02 acceptance claim"
+  ]
+}
