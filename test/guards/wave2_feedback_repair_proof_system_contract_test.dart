@@ -59,7 +59,7 @@ void main() {
     );
     expect(reviewSource, isNot(contains('proof note')));
     expect(playSource, contains('act0_shell_wave2_practice_current_rep_value'));
-    expect(previewSource, contains('Current useful rep'));
+    expect(previewSource, contains('Your next useful hand comes first'));
   });
 
   test('wave2 visual pack builder names the required evidence output', () {

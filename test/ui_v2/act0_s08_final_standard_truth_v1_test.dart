@@ -141,7 +141,7 @@ void main() {
       expect(find.text(targetLabel), findsOneWidget);
     }
 
-    await verify(false, 'Open my path');
+    await verify(false, 'See my next step');
     await verify(true, 'Start recommended lesson');
   });
 }
