@@ -12,6 +12,9 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
 
 const preview = bool.fromEnvironment('SHARKY_PW_C3_PREVIEW');
+const settingsFamily =
+    bool.fromEnvironment('SHARKY_YOU_V23_PREVIEW') &&
+    bool.fromEnvironment('SHARKY_SETTINGS_QUIET_CONTROL_PREVIEW');
 final receipts = <String, Object?>{};
 final clock = Act0FixedUtcClockV1(DateTime.utc(2026, 10, 28, 12));
 
@@ -290,55 +293,57 @@ void main() {
       );
     }
   }
-  testWidgets('Settings replay and retake preserve already earned progress', (
-    t,
-  ) async {
-    final raw =
-        jsonDecode(
-              File(
-                'test/ui_v2/fixtures/s09_c_native_w1_complete_open_intent_prefs_v1.json',
-              ).readAsStringSync(),
-            )
-            as Map<String, dynamic>;
-    await mount(
-      t,
-      fresh: false,
-      initial: raw.cast<String, Object>(),
-      tab: Act0ShellTabV1.profile,
-    );
-    final before = await saved(t);
-    await tap(t, 'you_settings');
-    await t.ensureVisible(find.text('Replay Welcome'));
-    await t.tap(find.text('Replay Welcome'));
-    await t.pumpAndSettle();
-    await tap(t, 'act0_shell_welcome_close');
-    expect(find.byKey(const Key('you_settings')), findsOneWidget);
-    final replay = await saved(t);
-    expect(replay['earnedXp'], before['earnedXp']);
-    expect(replay['completedTaskIds'], before['completedTaskIds']);
-    await tap(t, 'you_settings');
-    await t.ensureVisible(find.text('Retake Placement'));
-    await t.tap(find.text('Retake Placement'));
-    await t.pumpAndSettle();
-    await experience(t, 'friends');
-    await tap(t, 'act0_shell_placement_option_rules');
-    await tap(t, 'act0_shell_placement_next_cta');
-    final trace = await checks(t, '111');
-    await tap(t, 'act0_shell_placement_start_recommended');
-    final after = await saved(t);
-    for (final key in [
-      'earnedXp',
-      'completedTaskIds',
-      'completedLessonIds',
-      'lessonRunEvidenceBoundaries',
-      'openRepairIntents',
-    ])
-      expect(after[key], before[key], reason: key);
-    receipts['retake'] = {
-      'before': before,
-      'replay': replay,
-      'after': after,
-      'runners': trace,
-    };
-  });
+  testWidgets(
+    'Settings replay and retake preserve already earned progress',
+    (t) async {
+      final raw =
+          jsonDecode(
+                File(
+                  'test/ui_v2/fixtures/s09_c_native_w1_complete_open_intent_prefs_v1.json',
+                ).readAsStringSync(),
+              )
+              as Map<String, dynamic>;
+      await mount(
+        t,
+        fresh: false,
+        initial: raw.cast<String, Object>(),
+        tab: Act0ShellTabV1.profile,
+      );
+      final before = await saved(t);
+      await tap(t, 'you_settings');
+      await t.ensureVisible(find.text('Replay Welcome'));
+      await t.tap(find.text('Replay Welcome'));
+      await t.pumpAndSettle();
+      await tap(t, 'act0_shell_welcome_close');
+      expect(find.byKey(const Key('you_settings')), findsOneWidget);
+      final replay = await saved(t);
+      expect(replay['earnedXp'], before['earnedXp']);
+      expect(replay['completedTaskIds'], before['completedTaskIds']);
+      await tap(t, 'you_settings');
+      await t.ensureVisible(find.text('Retake Placement'));
+      await t.tap(find.text('Retake Placement'));
+      await t.pumpAndSettle();
+      await experience(t, 'friends');
+      await tap(t, 'act0_shell_placement_option_rules');
+      await tap(t, 'act0_shell_placement_next_cta');
+      final trace = await checks(t, '111');
+      await tap(t, 'act0_shell_placement_start_recommended');
+      final after = await saved(t);
+      for (final key in [
+        'earnedXp',
+        'completedTaskIds',
+        'completedLessonIds',
+        'lessonRunEvidenceBoundaries',
+        'openRepairIntents',
+      ])
+        expect(after[key], before[key], reason: key);
+      receipts['retake'] = {
+        'before': before,
+        'replay': replay,
+        'after': after,
+        'runners': trace,
+      };
+    },
+    skip: !settingsFamily,
+  );
 }
