@@ -445,6 +445,7 @@ class Act0PlacementShellV1 extends StatelessWidget {
     if (act0PwC3EnabledV1(context)) {
       return Act0PwC3PageV1(
         key: const Key('act0_shell_placement_screen'),
+        compact: true,
         eyebrow: 'Your starting point',
         title: placementResult.levelLabel,
         subtitle: placementResult.recommendedReason,
@@ -464,17 +465,21 @@ class Act0PlacementShellV1 extends StatelessWidget {
             const SizedBox(height: 24),
             Act0PwC3PanelV1(
               title: placementResult.recommendedTitle,
-              body: 'Your first recommended hand',
-              child: Padding(
-                padding: const EdgeInsets.only(top: 14),
-                child: Text(
-                  '${placementResult.diagnosticCorrect} of ${placementResult.diagnosticTotal} checks read correctly',
-                  style: const TextStyle(
-                    color: Act0PwC3PageV1.aqua,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
+              body: kAct0PwC4PreviewV1
+                  ? '${placementResult.diagnosticCorrect} of ${placementResult.diagnosticTotal} checks read correctly'
+                  : 'Your first recommended hand',
+              child: kAct0PwC4PreviewV1
+                  ? null
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 14),
+                      child: Text(
+                        '${placementResult.diagnosticCorrect} of ${placementResult.diagnosticTotal} checks read correctly',
+                        style: const TextStyle(
+                          color: Act0PwC3PageV1.aqua,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
             ),
           ],
         ),
@@ -573,20 +578,27 @@ class Act0PlacementShellV1 extends StatelessWidget {
     return Act0PwC3PageV1(
       key: const Key('act0_shell_placement_screen'),
       hero: showIntro,
+      compact: ready,
       eyebrow: showIntro
           ? 'At the table'
           : ready
           ? 'Before your first hand'
           : 'Your starting point',
       title: showIntro
-          ? 'Look. Decide. Understand.'
+          ? (kAct0PwC4PreviewV1
+                ? 'Take your seat.'
+                : 'Look. Decide. Understand.')
           : ready
           ? 'Quick table check'
           : _placementQuestionTitleV1(context, question!),
       subtitle: showIntro
-          ? 'Start with what you can see. Make a choice, then find out why it matters.'
+          ? (kAct0PwC4PreviewV1
+                ? 'Find a starting point that fits you.'
+                : 'Start with what you can see. Make a choice, then find out why it matters.')
           : ready
-          ? 'Three short checks before your first hand.'
+          ? (kAct0PwC4PreviewV1
+                ? 'If you are unsure, say so.'
+                : 'Three short checks before your first hand.')
           : _placementQuestionSubtitleV1(context, question!),
       stage: showIntro
           ? null
@@ -597,17 +609,30 @@ class Act0PlacementShellV1 extends StatelessWidget {
       backKey: const Key('act0_shell_placement_back_arrow'),
       actions: actions,
       content: showIntro
-          ? const Act0PwC3PanelV1(
-              title: 'Your start. Your pace.',
-              body:
-                  'Choose a starting point that feels right. New to poker? Start from zero. Played before? Read the table with three short checks.',
-            )
+          ? (kAct0PwC4PreviewV1
+                ? const Text(
+                    'New to poker? Start from zero.\nPlayed before? Try three short checks.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Act0PwC3PageV1.muted,
+                      fontSize: 13,
+                      height: 1.4,
+                    ),
+                  )
+                : const Act0PwC3PanelV1(
+                    title: 'Your start. Your pace.',
+                    body:
+                        'Choose a starting point that feels right. New to poker? Start from zero. Played before? Read the table with three short checks.',
+                  ))
           : ready
           ? const Act0PwC3PanelV1(
               key: Key('act0_shell_placement_diagnostic_ready'),
-              title: 'Read what is visible.',
-              body:
-                  'Find your cards, read the board, and choose a first action. If you are unsure, say so.',
+              title: kAct0PwC4PreviewV1
+                  ? 'Look, then decide.'
+                  : 'Read what is visible.',
+              body: kAct0PwC4PreviewV1
+                  ? 'Your cards. The board. Your first action.'
+                  : 'Find your cards, read the board, and choose a first action. If you are unsure, say so.',
             )
           : Column(
               key: Key('act0_shell_placement_question_${question!.questionId}'),

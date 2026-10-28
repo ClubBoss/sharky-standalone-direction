@@ -277,6 +277,69 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     if (act0PwC3EnabledV1(context)) {
       final card = visual;
+      if (kAct0PwC4PreviewV1) {
+        final intro = beatIndex == 1;
+        return Act0PwC3PageV1(
+          hero: intro,
+          compact: !intro,
+          eyebrow: eyebrow,
+          title: intro
+              ? 'Your first read.'
+              : (replayMode ? 'Back to your path.' : 'Your first hand awaits.'),
+          subtitle: intro
+              ? 'Look at the table. Make one choice.'
+              : (replayMode ? line : ''),
+          stage: '$beatIndex of $beatCount',
+          onBack: replayMode ? onClose : null,
+          backLabel: 'Close welcome',
+          backKey: const Key('act0_shell_welcome_close'),
+          content: Column(
+            key: Key(
+              intro
+                  ? 'act0_shell_welcome_beat_frame'
+                  : 'act0_shell_welcome_next_step_line',
+            ),
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (intro)
+                Text(
+                  detail,
+                  key: card is _WelcomeVisualPreviewCardV1
+                      ? card.previewKey
+                      : null,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Act0PwC3PageV1.muted,
+                    fontSize: 13,
+                    height: 1.4,
+                  ),
+                )
+              else ...[
+                if (card is _WelcomeVisualPreviewCardV1)
+                  Act0PwC3PanelV1(
+                    key: card.previewKey,
+                    title: 'Preview complete',
+                    body: card.line ?? '',
+                    child: card.child,
+                  ),
+                const SizedBox(height: 14),
+                Text(
+                  detail,
+                  style: const TextStyle(
+                    color: Act0PwC3PageV1.muted,
+                    fontSize: 12,
+                    height: 1.4,
+                  ),
+                ),
+              ],
+            ],
+          ),
+          primaryKey: const Key('act0_shell_welcome_primary_cta'),
+          primaryLabel: ctaLabel,
+          onPrimary: onNext,
+          footer: ctaBridgeLine,
+        );
+      }
       return Act0PwC3PageV1(
         hero: beatIndex == 1,
         eyebrow: eyebrow,
