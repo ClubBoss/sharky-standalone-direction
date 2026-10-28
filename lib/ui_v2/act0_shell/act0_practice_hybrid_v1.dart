@@ -214,7 +214,11 @@ class _Act0PracticeHybridV1State extends State<Act0PracticeHybridV1> {
                         children: [
                           Flexible(
                             child: Text(
-                              canStart ? 'Start practice' : 'Continue learning',
+                              !canStart
+                                  ? 'Continue learning'
+                                  : group.groupId == 'weak_spots'
+                                  ? 'Practice this spot'
+                                  : 'Start practice',
                               style: const TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.w700,
