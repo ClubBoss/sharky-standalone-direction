@@ -310,11 +310,13 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
           key: const Key('act0_integrated_scene_prompt'),
           // An authored teaching title is never ellipsized away (#331).
           maxLines: phase == Act0LearningScenePhaseV3.theory
-              ? (enlarged ? 4 : 3)
+              ? null
               : showSpokenSurface
               ? 3
               : (enlarged ? 3 : 2),
-          overflow: TextOverflow.ellipsis,
+          overflow: phase == Act0LearningScenePhaseV3.theory
+              ? TextOverflow.visible
+              : TextOverflow.ellipsis,
           style: Act0ShellTokensV1.body.copyWith(
             color: Act0ShellTokensV1.text,
             fontSize: showSpokenSurface
@@ -326,12 +328,19 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
         ),
         if (support.trim().isNotEmpty) ...[
           SizedBox(height: showSpokenSurface ? 4 : 3),
-          // Preserve the existing compact overlay footprint while letting
-          // learners read the complete authored theory rather than ellipsizing
-          // source teaching facts. The physical table remains unchanged.
+          // The authored teaching body is shown in full at the reference text
+          // scale (#331): the lane fits its content up to six lines, which
+          // covers every authored step, and only enlarged text scrolls. The
+          // physical table remains unchanged.
           if (phase == Act0LearningScenePhaseV3.theory)
-            SizedBox(
-              height: (enlarged ? 3 : 2) * (enlarged ? 12.2 : 11.4) * 1.16,
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight:
+                    (enlarged ? 4 : 6) *
+                        scaler.scale(enlarged ? 12.2 : 11.4) *
+                        1.16 +
+                    2,
+              ),
               child: Row(
                 children: [
                   Expanded(

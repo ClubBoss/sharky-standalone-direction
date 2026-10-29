@@ -67,6 +67,8 @@ Future<void> _expectDecisionPresented(
 }
 
 void main() {
+  setUpAll(act0LoadRealTextFontsV1);
+
   testWidgets(
     'A: cards_ranks_suits_rank_drill shows both authored steps, then king/ace/suit',
     (tester) async {
@@ -244,11 +246,45 @@ void main() {
       final ref = act0TeachingTaskByIdV1(taskId);
       await act0PumpTeachingHarnessV1(tester, ref, textScale: 2);
       final step = ref.task.runner.teachingSteps.first;
-      expect(act0CopyPresentedV1(tester, step.title), isTrue, reason: taskId);
-      expect(act0CopyPresentedV1(tester, step.body), isTrue, reason: taskId);
+      expect(
+        act0CopyPresentedV1(tester, step.title, allowScroll: true),
+        isTrue,
+        reason: taskId,
+      );
+      expect(
+        act0CopyPresentedV1(tester, step.body, allowScroll: true),
+        isTrue,
+        reason: taskId,
+      );
       expect(tester.takeException(), isNull, reason: taskId);
     }
   });
+
+  testWidgets(
+    'I: an answer-free recap teaches its authored step before its takeaway',
+    (tester) async {
+      final ref = act0TeachingTaskByIdV1('w4_value_recap');
+      final events = <String>[];
+      expect(ref.task.entryPhase, Act0LessonPhaseV1.review);
+      expect(ref.task.runner.options, isEmpty);
+      await act0PumpTeachingHarnessV1(tester, ref, events: events);
+      final step = ref.task.runner.teachingSteps.single;
+      expect(act0CopyPresentedV1(tester, step.title), isTrue);
+      expect(act0CopyPresentedV1(tester, step.body), isTrue);
+      expect(find.text('CORRECT READ'), findsNothing);
+      expect(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+        findsNothing,
+      );
+      await act0TapTeachingContinueV1(tester);
+      expect(events, <String>['teaching_done']);
+      expect(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+        findsOneWidget,
+      );
+      expect(act0CopyPresentedV1(tester, ref.task.runner.reviewTitle), isTrue);
+    },
+  );
 
   testWidgets('D: what_poker_is_theory remains the correct theory baseline', (
     tester,

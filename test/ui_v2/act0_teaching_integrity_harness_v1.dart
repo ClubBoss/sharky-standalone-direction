@@ -4,8 +4,11 @@
 // it with the same teaching-advance rules the preview screen uses
 // (`_advanceTeachingStep` plus the drill-phase preamble exit), so tests observe
 // what a learner actually sees at each authored step.
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -127,6 +130,28 @@ class Act0TeachingHarnessStateV1 extends State<Act0TeachingHarnessV1> {
   }
 }
 
+/// Replaces the square-glyph test font with a real proportional font so line
+/// counts and fit approximate the device (Arial is metrically close to the
+/// iOS system font). Call from `setUpAll`.
+Future<void> act0LoadRealTextFontsV1() async {
+  const dir = '/System/Library/Fonts/Supplemental';
+  final files = <File>[
+    File('$dir/Arial.ttf'),
+    File('$dir/Arial Bold.ttf'),
+  ].where((file) => file.existsSync()).toList();
+  if (files.isEmpty) {
+    throw StateError('No real-text test font found.');
+  }
+  for (final family in const <String>['Roboto', 'Ahem']) {
+    final loader = FontLoader(family);
+    for (final file in files) {
+      final bytes = file.readAsBytesSync();
+      loader.addFont(Future<ByteData>.value(ByteData.sublistView(bytes)));
+    }
+    await loader.load();
+  }
+}
+
 /// iPhone 14 Pro logical viewport (the native QA reference device).
 const Size act0TeachingReferenceViewportV1 = Size(393, 852);
 
@@ -143,6 +168,8 @@ Future<Act0TeachingHarnessStateV1> act0PumpTeachingHarnessV1(
   tester.view.physicalSize = viewport;
   tester.view.devicePixelRatio = 1;
   tester.platformDispatcher.textScaleFactorTestValue = textScale;
+  tester.platformDispatcher.systemFontFamily = 'Roboto';
+  addTearDown(tester.platformDispatcher.resetSystemFontFamily);
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
   addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
@@ -198,21 +225,36 @@ class Act0PresentedTextV1 {
     required this.onScreen,
     required this.truncated,
     required this.scrollable,
+    required this.fitsWithoutScroll,
   });
 
   final String text;
+
+  /// Painted, not hidden, and entirely inside the screen.
   final bool onScreen;
+
+  /// Ellipsized or clipped by maxLines.
   final bool truncated;
+
+  /// Hosted in a scroll view.
   final bool scrollable;
 
-  /// Fully readable: on screen, and either not ellipsized or hosted in a
-  /// scroll view that exposes the rest of the copy.
-  bool get readable => onScreen && (!truncated || scrollable);
+  /// Entirely inside its scroll viewport (or not scrollable at all), so every
+  /// line is visible without the learner scrolling.
+  final bool fitsWithoutScroll;
+
+  /// Genuinely readable. Scrolling counts only when [allowScroll] is set (for
+  /// enlarged text); at the reference scale every line must already be shown.
+  bool readable({bool allowScroll = false}) =>
+      onScreen &&
+      !truncated &&
+      (fitsWithoutScroll || (allowScroll && scrollable));
 }
 
 List<Act0PresentedTextV1> act0PresentedTextsV1(WidgetTester tester) {
   final view = tester.view;
-  final screen = Offset.zero & (view.physicalSize / view.devicePixelRatio);
+  final screen = (Offset.zero & (view.physicalSize / view.devicePixelRatio))
+      .inflate(0.5);
   final result = <Act0PresentedTextV1>[];
   for (final element in find.byType(Text).evaluate()) {
     final widget = element.widget as Text;
@@ -222,28 +264,33 @@ List<Act0PresentedTextV1> act0PresentedTextsV1(WidgetTester tester) {
     if (render is! RenderBox || !render.attached || !render.hasSize) continue;
     final paragraph = _paragraphOf(render);
     final rect = render.localToGlobal(Offset.zero) & render.size;
-    var opacityVisible = true;
+    var visible = true;
+    Rect? viewport;
     element.visitAncestorElements((ancestor) {
       final w = ancestor.widget;
-      if (w is Opacity && w.opacity == 0) opacityVisible = false;
-      if (w is Offstage && w.offstage) opacityVisible = false;
-      if (w is Visibility && !w.visible) opacityVisible = false;
-      return opacityVisible;
+      if (w is Opacity && w.opacity == 0) visible = false;
+      if (w is Offstage && w.offstage) visible = false;
+      if (w is Visibility && !w.visible) visible = false;
+      if (viewport == null && w is Scrollable) {
+        final box = ancestor.findRenderObject();
+        if (box is RenderBox && box.hasSize) {
+          viewport = (box.localToGlobal(Offset.zero) & box.size).inflate(0.5);
+        }
+      }
+      return visible;
     });
-    final scrollable = find
-        .ancestor(of: find.byWidget(widget), matching: find.byType(Scrollable))
-        .evaluate()
-        .isNotEmpty;
+    final inside =
+        screen.contains(rect.topLeft) && screen.contains(rect.bottomRight);
     result.add(
       Act0PresentedTextV1(
         text: text,
-        onScreen:
-            opacityVisible &&
-            rect.width > 0 &&
-            rect.height > 0 &&
-            screen.overlaps(rect),
+        onScreen: visible && rect.width > 0 && rect.height > 0 && inside,
         truncated: paragraph?.didExceedMaxLines ?? false,
-        scrollable: scrollable,
+        scrollable: viewport != null,
+        fitsWithoutScroll:
+            viewport == null ||
+            (viewport!.contains(rect.topLeft) &&
+                viewport!.contains(rect.bottomRight)),
       ),
     );
   }
@@ -262,11 +309,15 @@ RenderParagraph? _paragraphOf(RenderObject render) {
 /// Whether [expected] is presented readably on screen, either as one Text or
 /// as the exact concatenation the runner renders (title/body may share a
 /// Text). Whitespace is normalized; wording is not.
-bool act0CopyPresentedV1(WidgetTester tester, String expected) {
+bool act0CopyPresentedV1(
+  WidgetTester tester,
+  String expected, {
+  bool allowScroll = false,
+}) {
   final want = act0NormalizeCopyV1(expected);
   if (want.isEmpty) return true;
   for (final presented in act0PresentedTextsV1(tester)) {
-    if (!presented.readable) continue;
+    if (!presented.readable(allowScroll: allowScroll)) continue;
     if (act0NormalizeCopyV1(presented.text).contains(want)) return true;
   }
   return false;

@@ -1517,14 +1517,18 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
 
   bool get _isTheory => widget.runner.phase == Act0LessonPhaseV1.theory;
 
-  bool get _isReview => widget.runner.phase == Act0LessonPhaseV1.review;
+  // An answer-free recap enters in review phase; its authored teaching steps
+  // are presented first and its takeaway follows (#331).
+  bool get _isReview =>
+      widget.runner.phase == Act0LessonPhaseV1.review && !_isTeaching;
 
   Act0TeachingStepV1? get _teachingStep => widget.runner.activeTeachingStep;
 
   bool get _isTeaching =>
       _teachingStep != null &&
       widget.runner.selectedOptionId == null &&
-      widget.runner.phase != Act0LessonPhaseV1.review;
+      (widget.runner.phase != Act0LessonPhaseV1.review ||
+          widget.runner.options.isEmpty);
 
   bool get _showBottomLearningRail =>
       _isRefinedDev2 && (_isTheory || _isTeaching);
@@ -2744,7 +2748,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }
 
   bool _shouldShowPotSweep(Act0RunnerStateV1 runner) {
-    if (runner.phase != Act0LessonPhaseV1.review) {
+    if (runner.phase != Act0LessonPhaseV1.review || _isTeaching) {
       return false;
     }
     if (runner.reviewQuality == Act0FeedbackQualityV1.wrong) {
@@ -4149,11 +4153,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             key: Key('act0_shell_compact_answer_list_branch'),
           ),
         if (_usesCanonicalIntegratedLearningSceneV1 &&
-            (isTheory || isDrill || isReview))
+            (isTheory || isDrill || isReview || isTeaching))
           _RunnerProgressV1(runner: runner, onBack: _handleRunnerBackV1),
         if (_usesCanonicalIntegratedLearningSceneV1 &&
             usesSharedActiveRunnerAllocation &&
-            (isTheory || isDrill || isReview)) ...[
+            (isTheory || isDrill || isReview || isTeaching)) ...[
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           buildIntegratedPrompt(),
         ],
