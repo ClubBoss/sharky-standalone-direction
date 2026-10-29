@@ -92,3 +92,10 @@ feedback or occupying another reserved region on the 393-point viewport.
 Native comparison, exact build provenance and geometry deltas remain local
 under `output/f7_c1_20261029/`. No additional layout family, artwork, learning
 state, callback or navigation change is admitted by this calibration.
+
+The owner additionally requires one fixed five-slot board. The registered
+Runner reserves all five card spaces at the profile's board anchor and scale;
+flop fills slots 1–3, turn adds slot 4 and river adds slot 5. Future spaces have
+no paint, semantics or tap action. Earlier source cards keep identical anchors
+and sizes across streets. This affects presentation only; original preview-OFF
+rendering, source cards, IDs, grading and clue callbacks remain unchanged.

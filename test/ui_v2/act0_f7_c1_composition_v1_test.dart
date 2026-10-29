@@ -72,6 +72,40 @@ void main() {
   }
 
   testWidgets(
+    'fixed five-slot board keeps actual source card anchors and scale across streets',
+    (t) async {
+      final anchors = <Rect>[];
+      for (final street in ['flop', 'turn', 'river']) {
+        await mount(t, 'your_first_hand', 'your_first_hand_$street');
+        final count = street == 'flop'
+            ? 3
+            : street == 'turn'
+            ? 4
+            : 5;
+        for (var i = 0; i < count; i++) {
+          final card = t.getRect(find.byKey(Key('act0_shell_card_board_$i')));
+          if (i < anchors.length) {
+            expect(
+              card,
+              anchors[i],
+              reason: 'board_$i must stay physically fixed on $street',
+            );
+          } else {
+            anchors.add(card);
+          }
+        }
+        for (var i = count; i < 5; i++) {
+          expect(find.byKey(Key('act0_shell_card_board_$i')), findsNothing);
+        }
+      }
+      expect(anchors.length, 5);
+      expect(anchors.map((r) => r.size).toSet().length, 1);
+      expect(anchors.first.left, greaterThan(0));
+      expect(anchors.last.right, lessThan(393));
+    },
+  );
+
+  testWidgets(
     'actual four/five-card source rows remain visible and separate from Hero and pot',
     (t) async {
       for (final street in ['turn', 'river']) {
