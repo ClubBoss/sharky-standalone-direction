@@ -308,7 +308,12 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
         Text(
           headline,
           key: const Key('act0_integrated_scene_prompt'),
-          maxLines: showSpokenSurface ? 3 : (enlarged ? 3 : 2),
+          // An authored teaching title is never ellipsized away (#331).
+          maxLines: phase == Act0LearningScenePhaseV3.theory
+              ? (enlarged ? 4 : 3)
+              : showSpokenSurface
+              ? 3
+              : (enlarged ? 3 : 2),
           overflow: TextOverflow.ellipsis,
           style: Act0ShellTokensV1.body.copyWith(
             color: Act0ShellTokensV1.text,

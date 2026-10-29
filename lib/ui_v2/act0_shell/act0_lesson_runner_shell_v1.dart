@@ -2946,21 +2946,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             text: learningRailText,
             compact: isRefinedDev2,
           );
-    final effectiveLearningRailPages =
-        _usesCanonicalIntegratedLearningSceneV1 && isTheory
-        ? <String>[hint.trim().isNotEmpty ? hint : prompt]
-        : learningRailPages.isNotEmpty
-        ? learningRailPages
-        : learningRailSupportSegments;
-    final cappedSupportSegmentIndex = effectiveLearningRailPages.isEmpty
-        ? 0
-        : _learningRailSupportSegmentIndex.clamp(
-            0,
-            effectiveLearningRailPages.length - 1,
-          );
-    final hasNextSupportSegment =
-        cappedSupportSegmentIndex < effectiveLearningRailPages.length - 1;
-    final hasPreviousSupportSegment = cappedSupportSegmentIndex > 0;
     final learningRailProgress = isRefinedDev2
         ? null
         : _learningRailProgressLabel(runner);
@@ -2988,6 +2973,34 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     final table = feedbackSignalProof == null
         ? baseTable
         : _tableWithFeedbackSignalProofV1(baseTable, feedbackSignalProof);
+    final usesSharedActiveRunnerAllocation =
+        isRefinedDev2 &&
+        table.density == Act0TableDensityV1.compactLesson &&
+        MediaQuery.sizeOf(context).shortestSide < 600;
+    // #331: the integrated scene prompt is mounted only for the shared active
+    // runner allocation. Only then may it own the authored teaching copy;
+    // otherwise the rail keeps presenting it, so no step is ever advanced
+    // without its title and body on screen.
+    final integratedSceneOwnsTeachingCopy =
+        _usesCanonicalIntegratedLearningSceneV1 &&
+        usesSharedActiveRunnerAllocation;
+    // One authored teaching step is one visible page with one Continue, in
+    // theory and in a drill-phase teaching preamble alike.
+    final effectiveLearningRailPages =
+        integratedSceneOwnsTeachingCopy && (isTheory || isTeaching)
+        ? <String>[hint.trim().isNotEmpty ? hint : prompt]
+        : learningRailPages.isNotEmpty
+        ? learningRailPages
+        : learningRailSupportSegments;
+    final cappedSupportSegmentIndex = effectiveLearningRailPages.isEmpty
+        ? 0
+        : _learningRailSupportSegmentIndex.clamp(
+            0,
+            effectiveLearningRailPages.length - 1,
+          );
+    final hasNextSupportSegment =
+        cappedSupportSegmentIndex < effectiveLearningRailPages.length - 1;
+    final hasPreviousSupportSegment = cappedSupportSegmentIndex > 0;
     final choreographyFrame = _tableChoreographyFrame;
     final activeChoreographyFrame =
         isDrill && !isTeaching && !_heroDecisionReady
@@ -3226,10 +3239,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       context,
       viewportFamily: viewportFamily,
     );
-    final usesSharedActiveRunnerAllocation =
-        isRefinedDev2 &&
-        table.density == Act0TableDensityV1.compactLesson &&
-        MediaQuery.sizeOf(context).shortestSide < 600;
     // Compact seats already render a distinct learner badge. Keep the text
     // label to the table position so the visible identity is "You" + "BTN".
     final identityPolicy = usesSharedActiveRunnerAllocation
@@ -3545,8 +3554,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                     theoryPresentationRole ==
                         Act0TheoryPresentationRoleV1.recapCheck,
                 fillsAvailableHeight: usesSharedActiveRunnerAllocation,
-                contextOwnsTeachingCopy:
-                    _usesCanonicalIntegratedLearningSceneV1,
+                contextOwnsTeachingCopy: integratedSceneOwnsTeachingCopy,
               )
             : isTeaching
             ? FilledButton(
@@ -3698,7 +3706,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         highlightedCardIds: mergedHighlightIds,
         interactiveCalloutLabel: interactiveCallout,
         onBoardCardTap: _heroDecisionReady ? _onBoardTappedForShowdown : (_) {},
-        onChooseSeat: _heroDecisionReady ? _handleChooseSeat : null,
+        // #331: an authored teaching step is read before the seat answer is
+        // live; the same seats become tappable once teaching is done.
+        onChooseSeat: _heroDecisionReady && !isTeaching
+            ? _handleChooseSeat
+            : null,
         visualVariant: widget.tableVisualVariant,
         showFocusBadge: !_showBottomLearningRail,
         showRepairCallout: isTheory || (isDrill && hasSeatTargets),
@@ -3950,7 +3962,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     Widget buildIntegratedPrompt() {
       // Academy scene copy only; legacy table locale helpers remain frozen.
       final isRu = act0AcademyLanguageV1(context) == 'ru';
-      final phase = isTheory
+      // #331: a drill-phase teaching preamble is teaching, not the decision.
+      // It presents its authored step exactly like theory; the decision
+      // question and answers follow once the authored steps are done.
+      final teachingContext = isTheory || isTeaching;
+      final phase = teachingContext
           ? Act0LearningScenePhaseV3.theory
           : isReview && runner.reviewQuality == Act0FeedbackQualityV1.wrong
           ? Act0LearningScenePhaseV3.feedbackWrong
@@ -3959,7 +3975,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           : isReview
           ? Act0LearningScenePhaseV3.feedbackCorrect
           : Act0LearningScenePhaseV3.tableTask;
-      final purpose = isTheory
+      final purpose = teachingContext
           ? (isRu
                 ? '\u041E\u0414\u041D\u0410 \u0418\u0414\u0415\u042F'
                 : 'ONE TABLE IDEA')
@@ -3993,7 +4009,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           feedbackAction.endsWith('!') ||
           feedbackAction.endsWith('?');
       final repairReceipt = widget.repairResultReceiptLine?.trim() ?? '';
-      final headline = isTheory
+      final headline = teachingContext
           ? prompt
           : isReview &&
                 isRu &&
@@ -4029,7 +4045,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                       : '$feedbackAction was right with help.')
                 : '$feedbackAction was right.'
           : question;
-      final support = isTheory
+      final support = teachingContext
           ? hint
           : isReview
           ? act0AcademyW1InstructionV1(
@@ -4052,7 +4068,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                 : (isRu
                       ? '\u041F\u043E\u0434\u0441\u043A\u0430\u0437\u043A\u0430 \u043F\u043E\u043A\u0430\u0437\u0430\u043D\u0430 \u043D\u0430 \u0441\u0442\u043E\u043B\u0435'
                       : 'The exact clue is marked on the table')
-          : isTheory
+          : teachingContext
           ? teachingFocusLabel == null
                 ? null
                 : (isRu
@@ -4063,7 +4079,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                 ? '\u041C\u043E\u0436\u043D\u043E \u043D\u0430\u0436\u0438\u043C\u0430\u0442\u044C \u043F\u043E\u0434\u0441\u0432\u0435\u0447\u0435\u043D\u043D\u044B\u0435 \u043C\u0435\u0441\u0442\u0430'
                 : 'Highlighted seats are tappable')
           : null;
-      final progressLabel = isTheory && runner.teachingSteps.length > 1
+      final progressLabel = teachingContext && runner.teachingSteps.length > 1
           ? '${runner.teachingStepIndex + 1}/${runner.teachingSteps.length}'
           : null;
       final sharkyState = act0SharkySceneCoachStateV1(
@@ -6095,14 +6111,28 @@ class _LearningRailV1 extends StatelessWidget {
                                 child: contentLane,
                               ),
                             )
-                          : Align(
-                              // The navigation footer is the next action for
-                              // this instruction. Short pages stay intrinsic
-                              // and compose directly above it.
-                              alignment: fillsAvailableHeight
-                                  ? Alignment.topCenter
-                                  : Alignment.bottomCenter,
-                              child: contentLane,
+                          // #331: a long authored page stays reachable instead
+                          // of overflowing the bounded rail. Pages that fit
+                          // keep their intrinsic placement.
+                          : LayoutBuilder(
+                              builder: (context, lane) => SingleChildScrollView(
+                                primary: false,
+                                physics: const ClampingScrollPhysics(),
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    minHeight: lane.maxHeight,
+                                  ),
+                                  child: Align(
+                                    // The navigation footer is the next action
+                                    // for this instruction. Short pages stay
+                                    // intrinsic and compose directly above it.
+                                    alignment: fillsAvailableHeight
+                                        ? Alignment.topCenter
+                                        : Alignment.bottomCenter,
+                                    child: contentLane,
+                                  ),
+                                ),
+                              ),
                             ),
                     ),
                     const SizedBox(height: 3),
@@ -17336,7 +17366,10 @@ class _ActionPromptPanelV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
         ],
-        if (!embedChildInSurface &&
+        // #331: the canonical scene owns the question and passes it empty, so
+        // an action-history decision has no integrated surface above. Its
+        // source-owned answers must still be mounted here.
+        if (!(embedChildInSurface && question.isNotEmpty) &&
             !(question.isNotEmpty && effectiveCompactDecision)) ...[
           if (trailingContext != null) ...[
             trailingContext!,
