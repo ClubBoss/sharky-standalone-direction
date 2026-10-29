@@ -1,0 +1,69 @@
+# F7 replaceable scene contract
+
+Owner dispatch: F7 and Composition Calibration Amendment, 2026-10-29. Base is
+Draft #327, `754758428cdbbc23ec7883e30f11f22078db1ad5`. This authorizes a bounded
+presentation preview; it does not admit S12.V, Human, P02, release or a merge.
+
+`SHARKY_F7_TABLE_SCENE_PREVIEW` is explicit opt-in, default OFF. F7.A supplies
+the contract/asset gate only. F7.B integrates it with the existing Runner.
+**Composition remains OWNER_SELECTION_PENDING.** Provisional profile values
+are calibration inputs, not accepted production coordinates. Exactly three
+native comparison families (Physical / Learning First / Balanced) belong in
+local review evidence, not permanent production presets.
+
+## Ownership
+
+- `act0_scene_profile_v1.dart`: original image size, fit/alignment, normalized
+  table/felt regions, UI exclusions, separate seat-label/hole-card/bet/dealer
+  anchors, Hero/board/pot/street/clue anchors, card widths and Hero tilt.
+- `Act0SceneRegistrationV1`: the single original-image-to-viewport transform,
+  shared by artwork and all dynamic overlays. No people/image stretching.
+- `act0_scene_profile_gate_v1.dart`: reuses the existing decode-once plate
+  store, verifies actual decoded dimensions, and selects the original path on
+  invalid/missing art or an unsupported complete scenario. Selection is
+  latched per scenario key, including feedback; pending decode does not show
+  another room. It owns no persistence, grading, task choice or learning data.
+- The existing Runner continues to own source seat identities, cards, bets,
+  action playback, clue state, callbacks, choices, assistance and navigation.
+
+## Actual supplied art and capabilities
+
+The only premium plate is
+`assets/design/sharky/pw_c3/owner_clean_table_candidate_965x1629.png`, 965×1629.
+It owns the room, felt, rail, five seated opponents and Hero foreground.
+Independent character, Hero and procedural table/rail layers must not paint
+over it. Its clean felt supports real runtime cards and commitments.
+
+| Source state | Compatibility |
+|---|---|
+| Six occupied seats, one Hero, canonical clockwise order | Supported |
+| Hero at another canonical position | Rotate source identity order around Hero; do not relabel poker positions |
+| Preflop / flop / turn / river | 0 / 3 / 4 / 5 real board cards |
+| Seated opponent folded | Retain seated person; hide their in-hand cards and show existing explicit Folded badge |
+| Active / checked / bet / called / raised | Existing source HUD/cards/chips/action trail; body pose stays static |
+| Face-up opponent cards | Existing true source card visibility only |
+| Empty seat / removed actor | Unsupported: original scene for the entire scenario |
+| Nine/ten seats, missing/duplicate identities, >2 hole cards | Unsupported: original scene |
+| Moving/folding/away character poses | No such artwork exists; no animated-body claim |
+
+All source teaching variants must pass compatibility before selecting a room.
+A new occupancy/configuration mechanic must extend scenario preflight before
+using this profile; it cannot silently reuse a baked occupied body as an empty
+chair. No transparency mask, actor layer or state plate is fabricated.
+
+## Replacing artwork later
+
+1. Supply approved original artwork, exact dimensions/hash, and an explicit
+   inventory of baked people, cards, hands, table and state-specific assets.
+2. Instantiate a Scene Profile with that asset, size, normalized boundaries,
+   card/label/bet/dealer/Hero/board anchors, card sizes, safe zones and truthful
+   layer/state ownership. Review calibration can round-trip through
+   `calibrationData` / `act0SceneProfileFromCalibrationV1`.
+3. Validate no distortion, actual dimensions, anchor mapping, safe regions,
+   missing/corrupt fallback and scenario compatibility. Capture actual native
+   preflop/flop/feedback, plus supported later-street/fold cases.
+4. Obtain owner composition selection before promoting the new geometry.
+
+Task/choice IDs, poker rules, grading, source seat identity, evidence,
+assistance, run/session linkage, XP, repair/due ownership and navigation do not
+change for an art replacement. No new engine or dependency is required.
