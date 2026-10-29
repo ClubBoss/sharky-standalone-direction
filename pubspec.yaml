@@ -49,7 +49,9 @@ dependencies:
   file_saver: ^0.2.14
   permission_handler: ^11.3.0
   confetti: ^0.7.0
-  poker_solver: ^1.0.0
+  # Vendored with one hand-ranking fix; see third_party/poker_solver/SHARKY_PATCHES.md.
+  poker_solver:
+    path: third_party/poker_solver
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   webview_flutter: ^4.2.2
