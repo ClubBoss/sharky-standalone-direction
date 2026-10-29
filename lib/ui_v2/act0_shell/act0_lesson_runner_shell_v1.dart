@@ -12447,15 +12447,27 @@ class _Act0TableV1 extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  for (var i = 0; i < table.boardCards.length; i++) ...[
-                    _BoardCardV1(
-                      card: table.boardCards[i],
-                      cardId: 'board_$i',
-                      highlighted: highlightedCardIds.contains('board_$i'),
-                      onTap: () => onBoardCardTap(table),
+                  // The profile anchor owns the complete physical board.
+                  // Invisible future slots preserve prior cards' transforms
+                  // when a new source card appears on the turn or river.
+                  for (var i = 0; i < 5; i++) ...[
+                    KeyedSubtree(
+                      key: Key('act0_f7_board_slot_$i'),
+                      child: i < table.boardCards.length
+                          ? _BoardCardV1(
+                              card: table.boardCards[i],
+                              cardId: 'board_$i',
+                              highlighted: highlightedCardIds.contains(
+                                'board_$i',
+                              ),
+                              onTap: () => onBoardCardTap(table),
+                            )
+                          : const SizedBox(
+                              width: Act0ShellTokensV1.boardCardWidth,
+                              height: Act0ShellTokensV1.boardCardHeight,
+                            ),
                     ),
-                    if (i < table.boardCards.length - 1)
-                      const SizedBox(width: 5),
+                    if (i < 4) const SizedBox(width: 5),
                   ],
                 ],
               ),
