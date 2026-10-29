@@ -1,0 +1,154 @@
+--- a/lib/ui_v2/act0_shell/act0_shell_state_v1.dart
++++ b/lib/ui_v2/act0_shell/act0_shell_state_v1.dart
+@@ -15451,7 +15451,7 @@
+ 
+ final _world4BadPriceFoldRunner = _world4GoodPriceCallRunner.copyWith(
+   lessonId: 'w4_bad_price_fold',
+-  caption: 'Pot is 8 BB. To call is 7 BB with a weak pair.',
++  caption: 'Pot is 15 BB after the 7 BB bet. To call is 7 BB with a weak pair.',
+   hint: 'The price is high and the hand is not strong enough.',
+   question: 'What action fits the price?',
+   options: const <Act0RunnerOptionV1>[
+@@ -15463,7 +15463,7 @@
+       quality: Act0FeedbackQualityV1.correct,
+       feedbackTitle: 'Well done.',
+       feedbackReason:
+-          'Risking 7 BB to win 15 BB (the 8 BB pot plus the 7 BB bet) needs about 32% equity. A weak pair is too thin for that price.',
++          'Risking 7 BB to win 15 BB (8 BB before the bet plus the 7 BB bet) needs about 32% equity. A weak pair is too thin for that price.',
+     ),
+     Act0RunnerOptionV1(
+       id: 'call',
+@@ -15475,11 +15475,11 @@
+       quality: Act0FeedbackQualityV1.wrong,
+       feedbackTitle: 'One more step.',
+       feedbackReason:
+-          'Calling risks 7 BB to win 15 BB (the 8 BB pot plus the 7 BB bet), so it needs about 32% equity. A weak pair is not a strong enough reason.',
++          'Calling risks 7 BB to win 15 BB (8 BB before the bet plus the 7 BB bet), so it needs about 32% equity. A weak pair is not a strong enough reason.',
+     ),
+   ],
+   table: _world4GoodPriceCallRunner.table.copyWith(
+-    potLabel: 'Pot 8 BB',
++    potLabel: 'Pot 15 BB',
+     toCallLabel: 'To call 7 BB',
+     centerLabel: 'High price',
+     heroCards: const <Act0CardStateV1>[
+@@ -15569,7 +15569,7 @@
+ 
+ final _world4BigPriceMarginalFoldRunner = _world4BadPriceFoldRunner.copyWith(
+   lessonId: 'w4_big_price_marginal_fold',
+-  caption: 'Pot is 9 BB. To call is 6 BB with top pair, weak kicker.',
++  caption: 'Pot is 15 BB after the 6 BB bet. To call is 6 BB with top pair, weak kicker.',
+   hint:
+       'A bigger call needs a stronger reason. Hand strength alone is not enough here.',
+   question: 'What action fits the price?',
+@@ -15582,7 +15582,7 @@
+       quality: Act0FeedbackQualityV1.correct,
+       feedbackTitle: 'Strong discipline.',
+       feedbackReason:
+-          'Top pair sounds good, but risking 6 BB to win 15 BB (the 9 BB pot plus the 6 BB bet) needs about 29% equity, a lot to ask of a weak kicker against this bet.',
++          'Top pair sounds good, but risking 6 BB to win 15 BB (9 BB before the bet plus the 6 BB bet) needs about 29% equity, a lot to ask of a weak kicker against this bet.',
+     ),
+     Act0RunnerOptionV1(
+       id: 'call',
+@@ -15594,7 +15594,7 @@
+       quality: Act0FeedbackQualityV1.wrong,
+       feedbackTitle: 'Look at the price too.',
+       feedbackReason:
+-          'Do not stop at top pair. To call 6 BB is a big risk compared with the 9 BB pot and this marginal hand.',
++          'Do not stop at top pair. To call 6 BB is a big risk compared with the 9 BB that was in before the bet and this marginal hand.',
+     ),
+     Act0RunnerOptionV1(
+       id: 'raise',
+@@ -15610,7 +15610,7 @@
+     ),
+   ],
+   table: _world4BadPriceFoldRunner.table.copyWith(
+-    potLabel: 'Pot 9 BB',
++    potLabel: 'Pot 15 BB',
+     toCallLabel: 'To call 6 BB',
+     centerLabel: 'Top pair, big price',
+     heroCards: const <Act0CardStateV1>[
+@@ -21783,7 +21783,7 @@
+     heroCards: _heroQJsCards,
+     boardCards: _boardJ74FlopCards,
+     streetLabel: 'Flop',
+-    potLabel: 'Pot 8 BB',
++    potLabel: 'Pot 10 BB',
+     toCallLabel: 'To call 2 BB',
+     centerLabel: 'BTN, top pair, small price',
+     actionTrail: const <Act0ActionTrailItemV1>[
+@@ -21848,7 +21848,7 @@
+     heroCards: _heroQJsCards,
+     boardCards: _boardJ742TurnCards,
+     streetLabel: 'Turn',
+-    potLabel: 'Pot 12 BB',
++    potLabel: 'Pot 24 BB',
+     toCallLabel: 'To call 12 BB',
+     centerLabel: 'BTN top pair, tight CO barrel',
+     actionTrail: const <Act0ActionTrailItemV1>[
+@@ -22171,7 +22171,7 @@
+     heroCards: _heroAJsCards,
+     boardCards: _boardA84TwoToneCards,
+     streetLabel: 'Flop',
+-    potLabel: 'Pot 8 BB',
++    potLabel: 'Pot 13 BB',
+     toCallLabel: 'To call 5 BB',
+     centerLabel: 'BTN, top pair, 30 BB',
+     actionTrail: const <Act0ActionTrailItemV1>[
+@@ -22632,7 +22632,7 @@
+     heroCards: _heroKqCards,
+     boardCards: _boardK7294Cards,
+     streetLabel: 'River',
+-    potLabel: 'Pot 20 BB',
++    potLabel: 'Pot 38 BB',
+     toCallLabel: 'To call 18 BB',
+     centerLabel: 'Top pair, bad river price',
+     actionTrail: const <Act0ActionTrailItemV1>[
+@@ -22704,7 +22704,7 @@
+     heroCards: _heroQJsCards,
+     boardCards: _boardJ74FlopCards,
+     streetLabel: 'Flop',
+-    potLabel: 'Pot 8 BB',
++    potLabel: 'Pot 10 BB',
+     toCallLabel: 'To call 2 BB',
+     centerLabel: 'Top pair, ego trap',
+     actionTrail: const <Act0ActionTrailItemV1>[
+@@ -22907,7 +22907,7 @@
+     heroCards: _heroAJsCards,
+     boardCards: _boardA84TwoToneCards,
+     streetLabel: 'Flop',
+-    potLabel: 'Pot 8 BB',
++    potLabel: 'Pot 10 BB',
+     toCallLabel: 'To call 2 BB',
+     centerLabel: 'After mistake, stay clean',
+     actionTrail: const <Act0ActionTrailItemV1>[
+--- a/test/ui_v2/act0_w11_poker_source_truth_v1_test.dart
++++ b/test/ui_v2/act0_w11_poker_source_truth_v1_test.dart
+@@ -14,11 +14,12 @@
+       (t) => t.taskId == 'w11_trigger_bad_price_fold',
+     );
+ 
+-    expect(flop.runner.table.potLabel, 'Pot 8 BB');
++    // #334 L11: the displayed pot includes the outstanding bet.
++    expect(flop.runner.table.potLabel, 'Pot 10 BB');
+     expect(flop.runner.table.toCallLabel, 'To call 2 BB');
+     expect(flop.runner.caption, contains('0.25 BB ante each'));
+     expect(flop.runner.caption, contains('35 BB behind'));
+-    expect(turn.runner.table.potLabel, 'Pot 12 BB');
++    expect(turn.runner.table.potLabel, 'Pot 24 BB');
+     expect(turn.runner.table.toCallLabel, 'To call 12 BB');
+     expect(turn.runner.caption.toLowerCase(), contains('same hand again'));
+     expect(turn.runner.caption, contains('33 BB behind'));
+@@ -26,8 +27,11 @@
+ 
+     // Preflop: 2*2.5 invested + SB/BB 1.5 + 6*0.25 antes = 8.
+     expect(2 * 2.5 + 1.5 + 6 * .25, 8);
+-    // Flop: a 2 BB bet/call brings the 8 BB pot to 12; both lose 2 BB.
++    // Flop: CO's 2 BB bet makes the displayed pot 10; the call brings the
++    // turn to 12 before CO's 12 BB bet makes it 24. Both lose 2 BB on the flop.
++    expect(8 + 2, 10);
+     expect(8 + 2 + 2, 12);
++    expect(12 + 12, 24);
+     expect(35 - 2, 33);
+     expect(flop.runner.table.boardCards.map((c) => c.rank).toList(), <String>[
+       'J',
