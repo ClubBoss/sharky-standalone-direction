@@ -11,6 +11,14 @@ are calibration inputs, not accepted production coordinates. Exactly three
 native comparison families (Physical / Learning First / Balanced) belong in
 local review evidence, not permanent production presets.
 
+F7.B accepts review-only geometry through the compile-time
+`SHARKY_F7_SCENE_PROFILE_JSON` define, only behind the preview flag. The JSON
+round-trips the profile's `calibrationData` (including image alignment/crop).
+It selects no task or learner state and cannot substitute a different asset.
+Keep A/B/C JSON and native receipts under `output/f7_20261029/`; they are not
+shipped presets or an owner selection. Preview OFF preserves the original
+path. A compiled review binary is not promotion of its coordinates.
+
 ## Ownership
 
 - `act0_scene_profile_v1.dart`: original image size, fit/alignment, normalized

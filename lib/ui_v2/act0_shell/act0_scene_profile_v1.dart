@@ -106,6 +106,10 @@ class Act0SceneProfileV1 {
         heroCardTilt.isFinite &&
         heroCardTilt.abs() <= .2 &&
         (fit == BoxFit.contain || fit == BoxFit.cover) &&
+        alignment.x.isFinite &&
+        alignment.y.isFinite &&
+        alignment.x.abs() <= 3 &&
+        alignment.y.abs() <= 3 &&
         uiExclusionZones.every(rect);
   }
 
@@ -157,6 +161,7 @@ class Act0SceneProfileV1 {
       'opponentCardWidth': opponentCardWidth,
       'boardCardWidth': boardCardWidth,
       'heroCardTilt': heroCardTilt,
+      'alignment': [alignment.x, alignment.y],
     };
   }
 }
@@ -287,6 +292,12 @@ Act0SceneProfileV1? act0SceneProfileFromCalibrationV1(String data) {
       id: '${p.id}_${j['id']}',
       assetPath: p.assetPath,
       sourceSize: p.sourceSize,
+      alignment: j['alignment'] == null
+          ? p.alignment
+          : Alignment(
+              (j['alignment'][0] as num).toDouble(),
+              (j['alignment'][1] as num).toDouble(),
+            ),
       tableBoundary: p.tableBoundary,
       feltSafeRegion: p.feltSafeRegion,
       seatAnchorsFromHero: points('labels'),
