@@ -1517,14 +1517,23 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
 
   bool get _isTheory => widget.runner.phase == Act0LessonPhaseV1.theory;
 
-  bool get _isReview => widget.runner.phase == Act0LessonPhaseV1.review;
+  // An answer-free recap enters in review phase; its authored teaching steps
+  // are presented first and its takeaway follows (#331).
+  bool get _isReview =>
+      widget.runner.phase == Act0LessonPhaseV1.review && !_isTeaching;
 
   Act0TeachingStepV1? get _teachingStep => widget.runner.activeTeachingStep;
+
+  bool _isAnswerFreeRecapV1(Act0RunnerStateV1 runner) =>
+      runner.phase == Act0LessonPhaseV1.review &&
+      runner.options.isEmpty &&
+      runner.selectedOptionId == null;
 
   bool get _isTeaching =>
       _teachingStep != null &&
       widget.runner.selectedOptionId == null &&
-      widget.runner.phase != Act0LessonPhaseV1.review;
+      (widget.runner.phase != Act0LessonPhaseV1.review ||
+          widget.runner.options.isEmpty);
 
   bool get _showBottomLearningRail =>
       _isRefinedDev2 && (_isTheory || _isTeaching);
@@ -2744,7 +2753,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }
 
   bool _shouldShowPotSweep(Act0RunnerStateV1 runner) {
-    if (runner.phase != Act0LessonPhaseV1.review) {
+    if (runner.phase != Act0LessonPhaseV1.review ||
+        _isTeaching ||
+        _isAnswerFreeRecapV1(runner)) {
       return false;
     }
     if (runner.reviewQuality == Act0FeedbackQualityV1.wrong) {
@@ -2946,21 +2957,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             text: learningRailText,
             compact: isRefinedDev2,
           );
-    final effectiveLearningRailPages =
-        _usesCanonicalIntegratedLearningSceneV1 && isTheory
-        ? <String>[hint.trim().isNotEmpty ? hint : prompt]
-        : learningRailPages.isNotEmpty
-        ? learningRailPages
-        : learningRailSupportSegments;
-    final cappedSupportSegmentIndex = effectiveLearningRailPages.isEmpty
-        ? 0
-        : _learningRailSupportSegmentIndex.clamp(
-            0,
-            effectiveLearningRailPages.length - 1,
-          );
-    final hasNextSupportSegment =
-        cappedSupportSegmentIndex < effectiveLearningRailPages.length - 1;
-    final hasPreviousSupportSegment = cappedSupportSegmentIndex > 0;
     final learningRailProgress = isRefinedDev2
         ? null
         : _learningRailProgressLabel(runner);
@@ -2974,10 +2970,14 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     final hasSeatTargets = runner.options.any(
       (option) => option.seatId != null,
     );
+    // An answer-free lesson recap is not graded feedback: no choice was
+    // made, so it must not read as a correct answer (#331). Presentation only;
+    // the source review quality is left untouched.
+    final isAnswerFreeRecap = _isAnswerFreeRecapV1(runner) && isReview;
     final baseTable = isReview
         ? _repairTable(runner.table, runner.selectedOption)
         : _teachingTable(runner.table, teachingStep);
-    final feedbackSignalProof = isReview
+    final feedbackSignalProof = isReview && !isAnswerFreeRecap
         ? _feedbackSignalProofForRunnerV1(
             runner: runner,
             option: runner.selectedOption,
@@ -2988,6 +2988,34 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     final table = feedbackSignalProof == null
         ? baseTable
         : _tableWithFeedbackSignalProofV1(baseTable, feedbackSignalProof);
+    final usesSharedActiveRunnerAllocation =
+        isRefinedDev2 &&
+        table.density == Act0TableDensityV1.compactLesson &&
+        MediaQuery.sizeOf(context).shortestSide < 600;
+    // #331: the integrated scene prompt is mounted only for the shared active
+    // runner allocation. Only then may it own the authored teaching copy;
+    // otherwise the rail keeps presenting it, so no step is ever advanced
+    // without its title and body on screen.
+    final integratedSceneOwnsTeachingCopy =
+        _usesCanonicalIntegratedLearningSceneV1 &&
+        usesSharedActiveRunnerAllocation;
+    // One authored teaching step is one visible page with one Continue, in
+    // theory and in a drill-phase teaching preamble alike.
+    final effectiveLearningRailPages =
+        integratedSceneOwnsTeachingCopy && (isTheory || isTeaching)
+        ? <String>[hint.trim().isNotEmpty ? hint : prompt]
+        : learningRailPages.isNotEmpty
+        ? learningRailPages
+        : learningRailSupportSegments;
+    final cappedSupportSegmentIndex = effectiveLearningRailPages.isEmpty
+        ? 0
+        : _learningRailSupportSegmentIndex.clamp(
+            0,
+            effectiveLearningRailPages.length - 1,
+          );
+    final hasNextSupportSegment =
+        cappedSupportSegmentIndex < effectiveLearningRailPages.length - 1;
+    final hasPreviousSupportSegment = cappedSupportSegmentIndex > 0;
     final choreographyFrame = _tableChoreographyFrame;
     final activeChoreographyFrame =
         isDrill && !isTeaching && !_heroDecisionReady
@@ -3226,10 +3254,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       context,
       viewportFamily: viewportFamily,
     );
-    final usesSharedActiveRunnerAllocation =
-        isRefinedDev2 &&
-        table.density == Act0TableDensityV1.compactLesson &&
-        MediaQuery.sizeOf(context).shortestSide < 600;
     // Compact seats already render a distinct learner badge. Keep the text
     // label to the table position so the visible identity is "You" + "BTN".
     final identityPolicy = usesSharedActiveRunnerAllocation
@@ -3281,7 +3305,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         (loopStage == Act0ActionSequenceStageV1.repair ||
             (loopStage == null &&
                 (widget.repairContinuesToSourceRecheck || hasRepairContext)));
-    final sceneAttentionPhase = isTheory
+    final sceneAttentionPhase = isTheory || isAnswerFreeRecap
         ? Act0SceneAttentionPhaseV1.theory
         : isReview
         ? (runner.reviewQuality == Act0FeedbackQualityV1.wrong
@@ -3545,8 +3569,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                     theoryPresentationRole ==
                         Act0TheoryPresentationRoleV1.recapCheck,
                 fillsAvailableHeight: usesSharedActiveRunnerAllocation,
-                contextOwnsTeachingCopy:
-                    _usesCanonicalIntegratedLearningSceneV1,
+                contextOwnsTeachingCopy: integratedSceneOwnsTeachingCopy,
               )
             : isTeaching
             ? FilledButton(
@@ -3698,7 +3721,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         highlightedCardIds: mergedHighlightIds,
         interactiveCalloutLabel: interactiveCallout,
         onBoardCardTap: _heroDecisionReady ? _onBoardTappedForShowdown : (_) {},
-        onChooseSeat: _heroDecisionReady ? _handleChooseSeat : null,
+        // #331: an authored teaching step is read before the seat answer is
+        // live; the same seats become tappable once teaching is done.
+        onChooseSeat: _heroDecisionReady && !isTeaching
+            ? _handleChooseSeat
+            : null,
         visualVariant: widget.tableVisualVariant,
         showFocusBadge: !_showBottomLearningRail,
         showRepairCallout: isTheory || (isDrill && hasSeatTargets),
@@ -3950,7 +3977,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     Widget buildIntegratedPrompt() {
       // Academy scene copy only; legacy table locale helpers remain frozen.
       final isRu = act0AcademyLanguageV1(context) == 'ru';
-      final phase = isTheory
+      // #331: a drill-phase teaching preamble is teaching, not the decision.
+      // It presents its authored step exactly like theory; the decision
+      // question and answers follow once the authored steps are done.
+      final teachingContext = isTheory || isTeaching;
+      final phase = teachingContext || isAnswerFreeRecap
           ? Act0LearningScenePhaseV3.theory
           : isReview && runner.reviewQuality == Act0FeedbackQualityV1.wrong
           ? Act0LearningScenePhaseV3.feedbackWrong
@@ -3959,10 +3990,12 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           : isReview
           ? Act0LearningScenePhaseV3.feedbackCorrect
           : Act0LearningScenePhaseV3.tableTask;
-      final purpose = isTheory
+      final purpose = teachingContext
           ? (isRu
                 ? '\u041E\u0414\u041D\u0410 \u0418\u0414\u0415\u042F'
                 : 'ONE TABLE IDEA')
+          : isAnswerFreeRecap
+          ? 'KEY TAKEAWAY'
           : isReview
           ? switch (runner.reviewQuality) {
               Act0FeedbackQualityV1.wrong =>
@@ -3993,8 +4026,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           feedbackAction.endsWith('!') ||
           feedbackAction.endsWith('?');
       final repairReceipt = widget.repairResultReceiptLine?.trim() ?? '';
-      final headline = isTheory
+      final headline = teachingContext
           ? prompt
+          : isAnswerFreeRecap
+          ? runner.reviewTitle
           : isReview &&
                 isRu &&
                 act0AcademyW1InstructionTaskV1(widget.selectedTaskId)
@@ -4029,7 +4064,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                       : '$feedbackAction was right with help.')
                 : '$feedbackAction was right.'
           : question;
-      final support = isTheory
+      final support = teachingContext
           ? hint
           : isReview
           ? act0AcademyW1InstructionV1(
@@ -4052,7 +4087,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                 : (isRu
                       ? '\u041F\u043E\u0434\u0441\u043A\u0430\u0437\u043A\u0430 \u043F\u043E\u043A\u0430\u0437\u0430\u043D\u0430 \u043D\u0430 \u0441\u0442\u043E\u043B\u0435'
                       : 'The exact clue is marked on the table')
-          : isTheory
+          : teachingContext
           ? teachingFocusLabel == null
                 ? null
                 : (isRu
@@ -4063,7 +4098,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                 ? '\u041C\u043E\u0436\u043D\u043E \u043D\u0430\u0436\u0438\u043C\u0430\u0442\u044C \u043F\u043E\u0434\u0441\u0432\u0435\u0447\u0435\u043D\u043D\u044B\u0435 \u043C\u0435\u0441\u0442\u0430'
                 : 'Highlighted seats are tappable')
           : null;
-      final progressLabel = isTheory && runner.teachingSteps.length > 1
+      final progressLabel = teachingContext && runner.teachingSteps.length > 1
           ? '${runner.teachingStepIndex + 1}/${runner.teachingSteps.length}'
           : null;
       final sharkyState = act0SharkySceneCoachStateV1(
@@ -4133,11 +4168,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             key: Key('act0_shell_compact_answer_list_branch'),
           ),
         if (_usesCanonicalIntegratedLearningSceneV1 &&
-            (isTheory || isDrill || isReview))
+            (isTheory || isDrill || isReview || isTeaching))
           _RunnerProgressV1(runner: runner, onBack: _handleRunnerBackV1),
         if (_usesCanonicalIntegratedLearningSceneV1 &&
             usesSharedActiveRunnerAllocation &&
-            (isTheory || isDrill || isReview)) ...[
+            (isTheory || isDrill || isReview || isTeaching)) ...[
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           buildIntegratedPrompt(),
         ],
@@ -6095,14 +6130,28 @@ class _LearningRailV1 extends StatelessWidget {
                                 child: contentLane,
                               ),
                             )
-                          : Align(
-                              // The navigation footer is the next action for
-                              // this instruction. Short pages stay intrinsic
-                              // and compose directly above it.
-                              alignment: fillsAvailableHeight
-                                  ? Alignment.topCenter
-                                  : Alignment.bottomCenter,
-                              child: contentLane,
+                          // #331: a long authored page stays reachable instead
+                          // of overflowing the bounded rail. Pages that fit
+                          // keep their intrinsic placement.
+                          : LayoutBuilder(
+                              builder: (context, lane) => SingleChildScrollView(
+                                primary: false,
+                                physics: const ClampingScrollPhysics(),
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    minHeight: lane.maxHeight,
+                                  ),
+                                  child: Align(
+                                    // The navigation footer is the next action
+                                    // for this instruction. Short pages stay
+                                    // intrinsic and compose directly above it.
+                                    alignment: fillsAvailableHeight
+                                        ? Alignment.topCenter
+                                        : Alignment.bottomCenter,
+                                    child: contentLane,
+                                  ),
+                                ),
+                              ),
                             ),
                     ),
                     const SizedBox(height: 3),
@@ -17336,7 +17385,10 @@ class _ActionPromptPanelV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
         ],
-        if (!embedChildInSurface &&
+        // #331: the canonical scene owns the question and passes it empty, so
+        // an action-history decision has no integrated surface above. Its
+        // source-owned answers must still be mounted here.
+        if (!(embedChildInSurface && question.isNotEmpty) &&
             !(question.isNotEmpty && effectiveCompactDecision)) ...[
           if (trailingContext != null) ...[
             trailingContext!,

@@ -739,6 +739,14 @@ Future<void> _answerOption(WidgetTester tester, String optionId) async {
 /// as opposed to [_answerOption]'s option-button submission.
 Future<void> _answerSeat(WidgetTester tester, String seatId) async {
   final seat = find.byKey(Key('act0_shell_seat_tap_$seatId'));
+  // #331: authored teaching is read before the seat answer becomes live.
+  for (var i = 0; i < 6 && seat.evaluate().isEmpty; i++) {
+    final next = find.byKey(const Key('act0_shell_continue_cta'));
+    if (next.evaluate().isEmpty) break;
+    await tester.pump(const Duration(seconds: 1));
+    await tester.tap(next);
+    await tester.pumpAndSettle();
+  }
   expect(seat, findsOneWidget);
   await tester.tap(seat);
   await tester.pumpAndSettle();
