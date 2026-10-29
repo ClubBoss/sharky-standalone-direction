@@ -2,8 +2,8 @@
 // Mounts the real Act0 lesson runner, taps the board at decision time and
 // reads which cards the runner's showdown insight highlights. In
 // hand_rankings_full_house_vs_flush_drill Hero's A♠7♠ makes aces full of
-// sevens on A♥A♦7♥2♥2♣ and beats CO's ace-high flush, so the highlight must be
-// Hero's five cards and never the flush-only 2♥ (board_3) or CO's cards.
+// sevens on A♥A♦7♥2♥2♣ and beats CO's ace-high flush, so the lit board must be
+// A♥A♦7♥ (board_0..2), never the flush-only 2♥ (board_3), and CO stays dark.
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -45,11 +45,13 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
 
-    final highlighted = _highlightedCardIds();
-    expect(highlighted, containsAll(<String>['hero_0', 'hero_1']));
-    expect(highlighted, containsAll(<String>['board_0', 'board_1', 'board_2']));
-    expect(highlighted, isNot(contains('board_3')));
-    expect(highlighted, isNot(contains('co_0')));
-    expect(highlighted, isNot(contains('co_1')));
+    // The runner's tap insight lights board cards; Hero's hole cards keep
+    // their authored highlight, so only the board set proves the winner.
+    final litBoard = _highlightedCardIds().where(
+      (id) => id.startsWith('board_'),
+    );
+    expect(litBoard.toSet(), <String>{'board_0', 'board_1', 'board_2'});
+    expect(_highlightedCardIds(), isNot(contains('co_0')));
+    expect(_highlightedCardIds(), isNot(contains('co_1')));
   });
 }
