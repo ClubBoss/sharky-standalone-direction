@@ -16,6 +16,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hud_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_hybrid_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_material_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_player_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_profile_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_profile_gate_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_room_plate_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_salience_v1.dart';
@@ -3688,6 +3690,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     Widget buildPhysicalTableV1({
       double? maxTableHeight,
       Size? cameraStageSize,
+      Act0SceneRegistrationV1? sceneRegistration,
     }) {
       Widget tableStage = _RunnerTableStageV1(
         attention: sceneAttention,
@@ -3729,6 +3732,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         cameraStageSize: cameraStageSize,
         lockSharedActiveTableGeometry: usesSharedActiveRunnerAllocation,
         integratedPerspectivePrototype: _usesCanonicalIntegratedLearningSceneV1,
+        sceneRegistration: sceneRegistration,
       );
       if (isAccessibilityFlow || usesSharedActiveRunnerAllocation) {
         final effectiveOnFeltScale = isAccessibilityFlow
@@ -4250,7 +4254,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     // table's own layout rectangle, so lowering the far rail exposes more room
     // instead of exposing flat app background. The table is then placed at the
     // camera's rect. Neither reads anything from the learning state.
-    return LayoutBuilder(
+    Widget originalScene(BuildContext _) => LayoutBuilder(
       key: const Key('act0_shell_canonical_scene_box'),
       builder: (context, sceneConstraints) {
         const camera = Act0SceneCameraV1.canonical;
@@ -4278,6 +4282,49 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           ],
         );
       },
+    );
+    if (!kAct0F7TableScenePreview ||
+        Localizations.localeOf(context).languageCode != 'en') {
+      return originalScene(context);
+    }
+    final profile = act0SceneProfileFromCalibrationV1(
+      const String.fromEnvironment('SHARKY_F7_SCENE_PROFILE_JSON'),
+    );
+    if (profile == null || profile.paintsIndependentActors)
+      return originalScene(context);
+    return Act0SceneProfileGateV1(
+      scenarioKey: _compositionTaskIdentity(widget),
+      profile: profile,
+      sourceTables: [
+        runner.table,
+        for (final step in runner.teachingSteps)
+          if (step.table != null) step.table!,
+      ],
+      originalBuilder: originalScene,
+      registeredBuilder: (_, image, selectedProfile) => LayoutBuilder(
+        key: const Key('act0_f7_registered_scene'),
+        builder: (context, constraints) {
+          final registration = selectedProfile.register(constraints.biggest);
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              IgnorePointer(
+                child: CustomPaint(
+                  key: const Key('act0_f7_baked_room_cast_hero'),
+                  painter: Act0RegisteredScenePainterV1(
+                    image: image,
+                    registration: registration,
+                  ),
+                ),
+              ),
+              Positioned.fill(
+                child: buildPhysicalTableV1(sceneRegistration: registration),
+              ),
+              runnerScreen,
+            ],
+          );
+        },
+      ),
     );
   }
 }
@@ -6330,6 +6377,7 @@ class Act0TableSceneV1 extends StatelessWidget {
         cameraStageSize: input.cameraStageSize,
         lockSharedActiveTableGeometry: input.lockSharedActiveTableGeometry,
         integratedPerspectivePrototype: input.integratedPerspectivePrototype,
+        sceneRegistration: input.sceneRegistration,
         attention: input.attention,
       );
     }
@@ -6385,6 +6433,7 @@ class _Act0TableSceneRunnerInput {
     required this.cameraStageSize,
     required this.lockSharedActiveTableGeometry,
     required this.integratedPerspectivePrototype,
+    this.sceneRegistration,
   });
   final Act0TableStateV1 table;
   final List<String> highlightedCardIds;
@@ -6415,6 +6464,7 @@ class _Act0TableSceneRunnerInput {
   final bool lockSharedActiveTableGeometry;
   final Act0SceneAttentionMotionV1 attention;
   final bool integratedPerspectivePrototype;
+  final Act0SceneRegistrationV1? sceneRegistration;
 }
 
 class _RunnerTableStageV1 extends StatelessWidget {
@@ -6448,6 +6498,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
     this.cameraStageSize,
     this.lockSharedActiveTableGeometry = false,
     this.integratedPerspectivePrototype = false,
+    this.sceneRegistration,
   });
 
   final Act0TableStateV1 table;
@@ -6483,6 +6534,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
   final bool lockSharedActiveTableGeometry;
   final Act0SceneAttentionMotionV1 attention;
   final bool integratedPerspectivePrototype;
+  final Act0SceneRegistrationV1? sceneRegistration;
 
   @override
   Widget build(BuildContext context) {
@@ -6516,6 +6568,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
         cameraStageSize: cameraStageSize,
         lockSharedActiveTableGeometry: lockSharedActiveTableGeometry,
         integratedPerspectivePrototype: integratedPerspectivePrototype,
+        sceneRegistration: sceneRegistration,
         attention: attention,
       ),
     );
@@ -11525,6 +11578,7 @@ class _Act0TableV1 extends StatelessWidget {
     this.cameraStageSize,
     this.lockSharedActiveTableGeometry = false,
     this.integratedPerspectivePrototype = false,
+    this.sceneRegistration,
   });
 
   final Act0TableStateV1 table;
@@ -11567,9 +11621,12 @@ class _Act0TableV1 extends StatelessWidget {
   /// therefore no state change to communicate.
   final Act0SceneAttentionMotionV1? attention;
   final bool integratedPerspectivePrototype;
+  final Act0SceneRegistrationV1? sceneRegistration;
 
   @override
   Widget build(BuildContext context) {
+    final registration = sceneRegistration;
+    if (registration != null) return _registeredOverlays(context, registration);
     // B6: `null` means this surface has no learning phase, so it renders the
     // settled decision-level scene and never animates.
     final sceneMotion =
@@ -12204,6 +12261,284 @@ class _Act0TableV1 extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+
+  /// F7 changes physical registration only. The existing source seat order,
+  /// card widgets, marker policy, focus resolver, commitments and callbacks are
+  /// reused. The baked plate owns every person, hand and table contour.
+  Widget _registeredOverlays(BuildContext context, Act0SceneRegistrationV1 r) {
+    final p = r.profile;
+    final seats = _visualSeatOrder(table.seats);
+    final active = (playbackActiveSeatId ?? '').trim().isNotEmpty
+        ? playbackActiveSeatId
+        : _resolveActiveSeatId(table);
+    final selected = (selectedSeatId ?? table.selectedSeatId)?.trim();
+    final focus = _resolvePrimarySeatFocusV1(
+      activeSeatId: active,
+      highlightedSeatIds: table.highlightedSeatIds,
+      selectableSeatIds: table.selectableSeatIds,
+      selectedSeatId: selected,
+      selectionFeedbackState: selectedSeatFeedbackState,
+    );
+    final price = toCallLabelOverride ?? table.toCallLabel;
+    final hasPrice = price.trim().isNotEmpty;
+    final label = (centerLabelOverride ?? table.centerLabel).trim();
+    final repairCallout = table.focusCalloutLabel.isNotEmpty
+        ? table.focusCalloutLabel
+        : interactiveCalloutLabel;
+    final showClue =
+        (showFocusBadge || _isSafePriorActionTableCueV1(label)) &&
+        label.isNotEmpty &&
+        label != 'Blinds posted' &&
+        label != 'Action on hero';
+    final slots = [
+      for (final a in p.seatAnchorsFromHero)
+        Offset(r.map(a).dx / r.viewport.width, r.map(a).dy / r.viewport.height),
+    ];
+    final commitments = [
+      for (var i = 0; i < seats.length; i++)
+        Act0SceneCommitmentAnchorV1(
+          seatId: seats[i].seatId,
+          anchor: Offset(
+            r.map(p.betAnchorsFromHero[i]).dx / r.viewport.width,
+            r.map(p.betAnchorsFromHero[i]).dy / r.viewport.height,
+          ),
+        ),
+    ];
+    Widget at(String key, Offset anchor, Widget child) {
+      final point = r.map(anchor);
+      return Positioned(
+        left: point.dx,
+        top: point.dy,
+        child: FractionalTranslation(
+          translation: const Offset(-.5, -.5),
+          child: KeyedSubtree(key: Key(key), child: child),
+        ),
+      );
+    }
+
+    Widget cards(Act0SeatStateV1 seat) {
+      final hero = seat.isHero;
+      final visible = hero ? table.heroCards : seat.holeCards;
+      if (visible.isEmpty ||
+          (!hero &&
+              (!seat.isOccupied ||
+                  !seat.isInHand ||
+                  seat.isFolded ||
+                  seat.cardsVisibleMode == Act0CardsVisibleModeV1.none))) {
+        return const SizedBox.shrink();
+      }
+      final back =
+          !hero && seat.cardsVisibleMode == Act0CardsVisibleModeV1.faceDown;
+      final width =
+          r.destinationRect.width *
+          (hero ? p.heroCardWidth : p.opponentCardWidth);
+      return Transform.scale(
+        scale: width / (back ? 22 : Act0ShellTokensV1.heroCardWidth),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (var i = 0; i < visible.length; i++) ...[
+              Transform.rotate(
+                angle: hero ? (i == 0 ? -p.heroCardTilt : p.heroCardTilt) : 0,
+                child: back
+                    ? const _MiniCardBackV1()
+                    : _CardV1(
+                        card: visible[i],
+                        cardId: hero ? 'hero_$i' : '${seat.seatId}_$i',
+                        highlighted: highlightedCardIds.contains(
+                          hero ? 'hero_$i' : '${seat.seatId}_$i',
+                        ),
+                      ),
+              ),
+              if (i < visible.length - 1) const SizedBox(width: 4),
+            ],
+          ],
+        ),
+      );
+    }
+
+    return Stack(
+      key: const Key('act0_f7_dynamic_table'),
+      fit: StackFit.expand,
+      children: [
+        SizedBox.shrink(
+          key: Key(
+            'act0_scene_attention_phase_${attention?.phase.name ?? 'decision'}',
+          ),
+        ),
+        for (var i = 0; i < seats.length; i++) ...[
+          at(
+            'act0_f7_hole_cards_${seats[i].seatId}',
+            p.holeCardAnchorsFromHero[i],
+            cards(seats[i]),
+          ),
+          _SeatPlacementV1(
+            slot: i,
+            seat: seats[i],
+            heroCards: table.heroCards,
+            highlightedCardIds: highlightedCardIds,
+            active:
+                active == seats[i].seatId &&
+                selectedSeatFeedbackState ==
+                    _SeatSelectionFeedbackStateV1.none &&
+                (focus.kind != _PrimarySeatFocusKindV1.target ||
+                    focus.seatId == seats[i].seatId),
+            emphasized: table.highlightedSeatIds.contains(seats[i].seatId),
+            hero: seats[i].isHero,
+            selectable: table.selectableSeatIds.contains(seats[i].seatId),
+            visualState: _resolveSeatVisualStateV1(
+              seatId: seats[i].seatId,
+              hero: seats[i].isHero,
+              selectable: table.selectableSeatIds.contains(seats[i].seatId),
+              selected: selected == seats[i].seatId,
+              selectionFeedbackState: selectedSeatFeedbackState,
+              focusResolution: focus,
+            ),
+            decisionPriceOwnedByTable: hasPrice,
+            onChooseSeat: onChooseSeat,
+            tableWidth: r.viewport.width,
+            tableHeight: r.viewport.height,
+            seatSlots: slots,
+            visualVariant: visualVariant,
+            identityPolicy: identityPolicy,
+            showCards: false,
+            showDealerMarker: false,
+          ),
+          at(
+            'act0_f7_dealer_anchor_${seats[i].seatId}',
+            p.dealerAnchorsFromHero[i],
+            _SeatMarkersV1(
+              seatId: seats[i].seatId,
+              markers: _resolveSeatMarkerDisplayV1(
+                context,
+                seat: seats[i],
+                active: active == seats[i].seatId,
+                hero: seats[i].isHero,
+                refined:
+                    visualVariant == Act0ShellTableVisualVariantV1.refinedDev2,
+                decisionPriceOwnedByTable: hasPrice,
+                identityPolicy: identityPolicy,
+              ).markers.where((m) => m == _SeatMarkerKindV1.dealer).toList(),
+            ),
+          ),
+          _BetChipPlacementV1(
+            slot: i,
+            seat: seats[i],
+            tableWidth: r.viewport.width,
+            tableHeight: r.viewport.height,
+            commitmentAnchors: commitments,
+            seatSlots: slots,
+            visualVariant: visualVariant,
+            animateMotion: animateBetMotion && active == seats[i].seatId,
+            betOverride: active == seats[i].seatId ? betOverride : null,
+          ),
+        ],
+        if (table.boardCards.isNotEmpty)
+          at(
+            'act0_f7_board',
+            p.boardAnchor,
+            Transform.scale(
+              scale:
+                  r.destinationRect.width *
+                  p.boardCardWidth /
+                  Act0ShellTokensV1.boardCardWidth,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (var i = 0; i < table.boardCards.length; i++) ...[
+                    _BoardCardV1(
+                      card: table.boardCards[i],
+                      cardId: 'board_$i',
+                      highlighted: highlightedCardIds.contains('board_$i'),
+                      onTap: () => onBoardCardTap(table),
+                    ),
+                    if (i < table.boardCards.length - 1)
+                      const SizedBox(width: 5),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        at(
+          'act0_f7_street',
+          p.streetAnchor,
+          _CenterStreetStatusV1(
+            label: act0RuntimeLocalizedStreetLabelV1(
+              context,
+              streetLabelOverride ?? table.streetLabel,
+            ).toUpperCase(),
+            compact: true,
+          ),
+        ),
+        at(
+          'act0_f7_pot_price',
+          p.potAnchor,
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: r.destinationRect.width * .48,
+            ),
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 5,
+              runSpacing: 3,
+              children: [
+                _CenterPriorityStatV1(
+                  key: const Key('act0_shell_wave1_pot_priority_stat'),
+                  legacyKey: const Key('act0_shell_center_pot_stat'),
+                  label: act0RuntimeLocalizedPotLabelV1(
+                    context,
+                    potLabelOverride ?? table.potLabel,
+                  ),
+                  tone: Act0ShellTokensV1.gold,
+                  compact: true,
+                  pulse: table.actionTrail.isNotEmpty,
+                ),
+                if (hasPrice)
+                  _CenterPriorityStatV1(
+                    key: const Key('act0_shell_wave1_price_priority_stat'),
+                    legacyKey: const Key('act0_shell_center_to_call_stat'),
+                    label: act0RuntimeLocalizedToCallLabelV1(context, price),
+                    tone: Act0ShellTokensV1.info,
+                    compact: true,
+                  ),
+              ],
+            ),
+          ),
+        ),
+        if (completionSummary != null)
+          at(
+            'act0_shell_completion_reward_lane',
+            p.clueAnchor,
+            _CompletionToastV1(
+              summary: completionSummary!,
+              overlayStyle: _CompletionToastOverlayStyleV1.table,
+            ),
+          )
+        else if (lateRouteSignal != null ||
+            showClue ||
+            (showRepairCallout && repairCallout.isNotEmpty))
+          at(
+            'act0_f7_clue',
+            p.clueAnchor,
+            SizedBox(
+              width: r.destinationRect.width * .29,
+              child: lateRouteSignal != null
+                  ? _LateRouteCenterSignalV1(signal: lateRouteSignal!)
+                  : _CenterSignalAnchorV1(
+                      label: act0RuntimeLocalizedCenterLabelV1(
+                        context,
+                        showRepairCallout && repairCallout.isNotEmpty
+                            ? repairCallout
+                            : label,
+                      ),
+                      compact: true,
+                      clueMotion: attention,
+                    ),
+            ),
+          ),
+      ],
     );
   }
 
@@ -13119,6 +13454,8 @@ class _SeatPlacementV1 extends StatelessWidget {
     this.identityPolicy = Act0TableIdentityPolicyV1.currentProduction,
     this.depthTieredPrototype = false,
     this.compactInformativeColumn = false,
+    this.showCards = true,
+    this.showDealerMarker = true,
   });
 
   final int slot;
@@ -13139,6 +13476,7 @@ class _SeatPlacementV1 extends StatelessWidget {
   final Act0TableIdentityPolicyV1 identityPolicy;
   final bool depthTieredPrototype;
   final bool compactInformativeColumn;
+  final bool showCards, showDealerMarker;
 
   static const List<Offset> defaultSlots = <Offset>[
     Offset(0.50, 0.90),
@@ -13170,6 +13508,8 @@ class _SeatPlacementV1 extends StatelessWidget {
           ),
           scale: tierScale,
           child: _SeatNodeV1(
+            showCards: showCards,
+            showDealerMarker: showDealerMarker,
             compactInformativeColumn: compactInformativeColumn,
             seat: seat,
             heroCards: heroCards,
@@ -13209,6 +13549,8 @@ class _SeatNodeV1 extends StatelessWidget {
     this.onTap,
     this.compact = false,
     this.compactInformativeColumn = false,
+    this.showCards = true,
+    this.showDealerMarker = true,
   });
 
   final Act0SeatStateV1 seat;
@@ -13233,6 +13575,7 @@ class _SeatNodeV1 extends StatelessWidget {
   /// column's dead vertical space only. No type size, no plate width, no
   /// content changes.
   final bool compactInformativeColumn;
+  final bool showCards, showDealerMarker;
 
   @override
   Widget build(BuildContext context) {
@@ -13281,7 +13624,11 @@ class _SeatNodeV1 extends StatelessWidget {
     // outer affordance plane as focus states, while its cyan tone remains
     // distinct from gold target/current-player and correctness semantics.
     final shouldShowRing = seatVisualState != _SeatVisualStateV1.passive;
-    final visibleCards = hero ? heroCards : seat.holeCards;
+    final visibleCards = !showCards
+        ? const <Act0CardStateV1>[]
+        : hero
+        ? heroCards
+        : seat.holeCards;
     final showFaceDown =
         !hero &&
         seat.isOccupied &&
@@ -13310,6 +13657,7 @@ class _SeatNodeV1 extends StatelessWidget {
     final node = Container(
       key: Key('act0_shell_seat_node_${seat.seatId}'),
       constraints: BoxConstraints(
+        minHeight: !showCards && selectable ? 44 : 0,
         minWidth: compact
             ? Act0ShellTokensV1.compactSeatMinWidth
             : Act0ShellTokensV1.seatMinWidth,
@@ -13545,11 +13893,18 @@ class _SeatNodeV1 extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (markerDisplay.markers.isNotEmpty)
+                if (markerDisplay.markers.any(
+                  (m) => showDealerMarker || m != _SeatMarkerKindV1.dealer,
+                ))
                   _SeatMarkerPlacementV1(
                     seatId: seat.seatId,
                     leftSide: seat.seatLabel == 'SB' || seat.seatLabel == 'BB',
-                    markers: markerDisplay.markers,
+                    markers: markerDisplay.markers
+                        .where(
+                          (m) =>
+                              showDealerMarker || m != _SeatMarkerKindV1.dealer,
+                        )
+                        .toList(),
                     hero: hero,
                     visualVariant: visualVariant,
                   ),
