@@ -1524,6 +1524,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
 
   Act0TeachingStepV1? get _teachingStep => widget.runner.activeTeachingStep;
 
+  bool _isAnswerFreeRecapV1(Act0RunnerStateV1 runner) =>
+      runner.phase == Act0LessonPhaseV1.review &&
+      runner.options.isEmpty &&
+      runner.selectedOptionId == null;
+
   bool get _isTeaching =>
       _teachingStep != null &&
       widget.runner.selectedOptionId == null &&
@@ -2748,7 +2753,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }
 
   bool _shouldShowPotSweep(Act0RunnerStateV1 runner) {
-    if (runner.phase != Act0LessonPhaseV1.review || _isTeaching) {
+    if (runner.phase != Act0LessonPhaseV1.review ||
+        _isTeaching ||
+        _isAnswerFreeRecapV1(runner)) {
       return false;
     }
     if (runner.reviewQuality == Act0FeedbackQualityV1.wrong) {
@@ -2963,10 +2970,14 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     final hasSeatTargets = runner.options.any(
       (option) => option.seatId != null,
     );
+    // An answer-free lesson recap is not graded feedback: no choice was
+    // made, so it must not read as a correct answer (#331). Presentation only;
+    // the source review quality is left untouched.
+    final isAnswerFreeRecap = _isAnswerFreeRecapV1(runner) && isReview;
     final baseTable = isReview
         ? _repairTable(runner.table, runner.selectedOption)
         : _teachingTable(runner.table, teachingStep);
-    final feedbackSignalProof = isReview
+    final feedbackSignalProof = isReview && !isAnswerFreeRecap
         ? _feedbackSignalProofForRunnerV1(
             runner: runner,
             option: runner.selectedOption,
@@ -3294,7 +3305,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         (loopStage == Act0ActionSequenceStageV1.repair ||
             (loopStage == null &&
                 (widget.repairContinuesToSourceRecheck || hasRepairContext)));
-    final sceneAttentionPhase = isTheory
+    final sceneAttentionPhase = isTheory || isAnswerFreeRecap
         ? Act0SceneAttentionPhaseV1.theory
         : isReview
         ? (runner.reviewQuality == Act0FeedbackQualityV1.wrong
@@ -3970,7 +3981,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       // It presents its authored step exactly like theory; the decision
       // question and answers follow once the authored steps are done.
       final teachingContext = isTheory || isTeaching;
-      final phase = teachingContext
+      final phase = teachingContext || isAnswerFreeRecap
           ? Act0LearningScenePhaseV3.theory
           : isReview && runner.reviewQuality == Act0FeedbackQualityV1.wrong
           ? Act0LearningScenePhaseV3.feedbackWrong
@@ -3983,6 +3994,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           ? (isRu
                 ? '\u041E\u0414\u041D\u0410 \u0418\u0414\u0415\u042F'
                 : 'ONE TABLE IDEA')
+          : isAnswerFreeRecap
+          ? 'KEY TAKEAWAY'
           : isReview
           ? switch (runner.reviewQuality) {
               Act0FeedbackQualityV1.wrong =>
@@ -4015,6 +4028,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       final repairReceipt = widget.repairResultReceiptLine?.trim() ?? '';
       final headline = teachingContext
           ? prompt
+          : isAnswerFreeRecap
+          ? runner.reviewTitle
           : isReview &&
                 isRu &&
                 act0AcademyW1InstructionTaskV1(widget.selectedTaskId)
