@@ -94,6 +94,24 @@ void main() {
   );
 
   testWidgets(
+    'source clue is separate from inward opponent cards, street and board',
+    (t) async {
+      await mount(t, 'what_poker_is', 'what_poker_is_table_read_transfer');
+      final clue = t.getRect(find.byKey(const Key('act0_f7_clue')));
+      final street = t.getRect(find.byKey(const Key('act0_f7_street')));
+      final board = paintedRow(t, 'act0_f7_board');
+      for (final seat in ['bb', 'hj', 'utg']) {
+        expect(
+          clue.overlaps(paintedRow(t, 'act0_f7_hole_cards_$seat')),
+          isFalse,
+        );
+      }
+      expect(clue.bottom, lessThan(street.top));
+      expect(street.bottom, lessThan(board.top));
+    },
+  );
+
+  testWidgets(
     'actual seated fold keeps source cue and empty-seat scenario still falls back',
     (t) async {
       await mount(t, 'hand_discipline_apply', 'apply_hj_decision');
