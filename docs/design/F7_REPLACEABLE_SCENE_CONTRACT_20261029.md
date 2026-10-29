@@ -75,3 +75,20 @@ chair. No transparency mask, actor layer or state plate is fabricated.
 Task/choice IDs, poker rules, grading, source seat identity, evidence,
 assistance, run/session linkage, XP, repair/due ownership and navigation do not
 change for an art replacement. No new engine or dependency is required.
+
+## C1 bounded calibration basis
+
+The owner selected C — Balanced Premium as the next calibration basis on
+2026-10-29, without final visual acceptance. The default premium profile now
+contains the C1 candidate geometry, still behind the default-OFF preview flag.
+Opponent cards move inward onto the felt and reduce slightly; UTG cards and
+label separate; the SB chip moves below and clear of Hero; the board row uses
+a slightly smaller width for four/five-card states. Image fit/alignment and all
+overlay positions remain owned by the same Scene Profile registration.
+
+This does not promote a final visual layout. The existing source-owned Coach
+panel is retained: clearing the central head would require reducing readable
+feedback or occupying another reserved region on the 393-point viewport.
+Native comparison, exact build provenance and geometry deltas remain local
+under `output/f7_c1_20261029/`. No additional layout family, artwork, learning
+state, callback or navigation change is admitted by this calibration.
