@@ -1,0 +1,11 @@
+LEARN.UX.P1 (#331) native + source evidence — English V1
+Device: Sharky-EN-V1-iPhone-14-Pro-Reference (753F1483-6E33-45F0-8647-E955E1640A31), iOS 26.2, 393x852 pt
+Builds: flutter build ios --simulator --debug (Flutter 3.35.7), no dart-defines, default preview flags
+  BEFORE  HEAD 697f2d03193934790a23d7ba58996289bd51cae8  TREE 666f31856a0a177fa018c02b57ea64a0bda7d92a  (PR #330 head)
+  AFTER   HEAD 6b1ec9ed366201479b019b6f5e007c5ed1baeaf3  TREE 9efb2982cdb2def699d8a0db549f231dde6465b6
+Each build installed fresh (uninstall + install, empty data) and driven by real taps.
+Routes: Placement "new to poker" -> Welcome -> Home "Start first hand" (D, A=find_hero, B);
+        fresh install -> Placement quick check all correct -> "Ready for action basics" -> Fold/Check/Call/Raise (C).
+Simulator restored afterwards: original Runner.app (App sha256 f941ed0f...) + byte-identical data container, text size "large".
+Text scale: the play surface pins text scaling to 1.0 (act0_shell_preview_screen_v1.dart MediaQuery.withClampedTextScaling), so 200% is covered by widget tests only.
+Ledgers: teaching_coverage_en_100.csv / _200.csv from test/ui_v2/act0_learn_ux_p1_teaching_catalog_coverage_v1_test.dart (LEARN_UX_P1_LEDGER_DIR).
