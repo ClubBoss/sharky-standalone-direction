@@ -208,6 +208,8 @@ Future<void> _advanceToAnswer(WidgetTester tester) async {
       continue;
     }
     await tester.pump(const Duration(seconds: 2));
+    await tester.ensureVisible(cta);
+    await tester.pumpAndSettle();
     await tester.tap(cta);
     await tester.pumpAndSettle();
   }
@@ -232,6 +234,8 @@ Future<bool> _playToLessonEnd(WidgetTester tester) async {
     final cta = find.byKey(const Key('act0_shell_continue_cta'));
     if (cta.evaluate().isNotEmpty) {
       await tester.pump(const Duration(seconds: 2));
+      await tester.ensureVisible(cta);
+      await tester.pumpAndSettle();
       await tester.tap(cta);
       await tester.pumpAndSettle();
       continue;
@@ -253,6 +257,8 @@ bool _hasVisibleAnswer() => find
 Future<void> _answerOption(WidgetTester tester, String optionId) async {
   final option = find.byKey(Key('act0_shell_option_$optionId'));
   expect(option, findsOneWidget);
+  await tester.ensureVisible(option);
+  await tester.pumpAndSettle();
   await tester.tap(option);
   await tester.pumpAndSettle();
 }
@@ -271,6 +277,8 @@ Future<void> _continueFeedback(WidgetTester tester) async {
     if (cta.evaluate().isEmpty) {
       return;
     }
+    await tester.ensureVisible(cta);
+    await tester.pumpAndSettle();
     await tester.tap(cta);
     await tester.pumpAndSettle();
   }

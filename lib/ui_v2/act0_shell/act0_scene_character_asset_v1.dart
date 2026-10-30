@@ -315,7 +315,9 @@ class Act0SceneCharacterPainterV1 extends CustomPainter {
     // top of the scene-level attention recession. Far and upper-flank faces
     // retain their depth tint while staying physically present in the room.
     final tint = ((haze * 0.50) + (folded ? 0.20 : 0.0)).clamp(0.0, 0.85);
-    final opacity = (folded ? 0.72 : 1.0) * (1 - (haze * 0.06));
+    // A seated body occludes the room in every phase. Folded/depth state
+    // changes colour, never coverage: alpha here multiplied phase recession
+    // and exposed the table through faces and torsos.
 
     canvas.saveLayer(destination, Paint());
     canvas.drawImageRect(
@@ -324,7 +326,7 @@ class Act0SceneCharacterPainterV1 extends CustomPainter {
       destination,
       Paint()
         ..filterQuality = FilterQuality.high
-        ..color = Color.fromRGBO(255, 255, 255, opacity.clamp(0.0, 1.0)),
+        ..color = const Color(0xFFFFFFFF),
     );
     canvas.drawRect(
       destination,

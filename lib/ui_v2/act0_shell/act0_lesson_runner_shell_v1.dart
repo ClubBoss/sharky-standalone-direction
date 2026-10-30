@@ -4140,157 +4140,196 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       );
     }
 
-    final runnerScreen = Column(
-      key: const Key('act0_shell_runner_screen'),
-      children: [
-        SizedBox.shrink(
-          key: Key('act0_shell_runner_interaction_${interactionMode.name}'),
-        ),
-        SizedBox.shrink(
-          key: Key('act0_shell_runner_composition_${_compositionFamily.name}'),
-        ),
-        SizedBox.shrink(
-          key: Key('act0_shell_runner_framing_${framingProfile.name}'),
-        ),
-        SizedBox.shrink(
-          key: Key('act0_shell_runner_viewport_${viewportFamily.name}'),
-        ),
-        SizedBox.shrink(
-          key: Key(
-            'act0_shell_runner_envelope_${taskCycleEnvelope.familyName}',
-          ),
-        ),
-        SizedBox.shrink(
-          key: Key('act0_shell_runner_pressure_$viewportPressureReason'),
-        ),
-        SizedBox.shrink(
-          key: Key(
-            'act0_shell_runner_action_dock_compact_$compactAnswerListDecision',
-          ),
-        ),
-        SizedBox.shrink(
-          key: Key(
-            'act0_shell_runner_prompt_panel_compact_$compactAnswerListDecision',
-          ),
-        ),
-        SizedBox.shrink(
-          key: Key('act0_shell_runner_hint_compact_$hintCompact'),
-        ),
-        if (compactAnswerListDecision)
-          const SizedBox.shrink(
-            key: Key('act0_shell_compact_answer_list_branch'),
-          ),
-        if (_usesCanonicalIntegratedLearningSceneV1 &&
-            (isTheory || isDrill || isReview || isTeaching))
-          _RunnerProgressV1(runner: runner, onBack: _handleRunnerBackV1),
-        if (_usesCanonicalIntegratedLearningSceneV1 &&
-            usesSharedActiveRunnerAllocation &&
-            (isTheory || isDrill || isReview || isTeaching)) ...[
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          buildIntegratedPrompt(),
-        ],
-        if (taskCycleEnvelope.usesFixedLowerSlot &&
-            !usesSharedActiveRunnerAllocation)
-          Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final lowerSlotHeight = taskCycleEnvelope.lowerSlotHeightFor(
-                  constraints.maxHeight,
-                );
-                final upperSlotHeight = math.max(
-                  0.0,
-                  constraints.maxHeight - lowerSlotHeight,
-                );
-                final tableMaxHeight = math.max(
-                  0.0,
-                  upperSlotHeight -
-                      _runnerUpperStageChromeHeightV1(
-                        showTopInstructionCard: showTopInstructionCard,
-                        isRefinedDev2: isRefinedDev2,
-                        compactTableStageTopInset: compactTableStageTopInset,
-                      ),
-                );
-                return Column(
-                  children: [
-                    SizedBox(
-                      height: upperSlotHeight,
-                      child: buildRunnerStage(maxTableHeight: tableMaxHeight),
-                    ),
-                    SizedBox(
-                      height: lowerSlotHeight,
-                      child: buildRunnerActionDock(),
-                    ),
-                  ],
-                );
-              },
+    final runnerScreen = LayoutBuilder(
+      builder: (context, sceneConstraints) {
+        // Keep the control plane below the camera's near rail and Hero HUD.
+        // Long answers/feedback scroll within this bounded shelf; they cannot
+        // grow upwards through the physical table or shrink its geometry.
+        final maxSceneDockHeight = math.max(
+          48.0,
+          sceneConstraints.maxHeight *
+                  (1 - Act0SceneCameraV1.canonical.nearRailFraction) -
+              24,
+        );
+        return Column(
+          key: const Key('act0_shell_runner_screen'),
+          children: [
+            SizedBox.shrink(
+              key: Key('act0_shell_runner_interaction_${interactionMode.name}'),
             ),
-          )
-        else if (usesSharedActiveRunnerAllocation) ...[
-          // B7 canonical scene composition.
-          //
-          // The runner column no longer allocates the table any height at all.
-          // It reserves a transparent window onto the world plane, which is
-          // painted behind this column and owned solely by
-          // `Act0SceneCameraV1`. That is what closes
-          // `TABLE_GEOMETRY_INVARIANT_V1`: review states can still claim a
-          // different amount of vertical space, but there is no longer a path
-          // by which that claim can reach the physical table.
-          const Expanded(
-            child: SizedBox.expand(key: Key('act0_shell_scene_window')),
-          ),
-          KeyedSubtree(
-            key: const Key('act0_shell_shared_runner_cycle_envelope'),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Positioned(
-                  top: -14,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: IgnorePointer(
-                    child: Container(
-                      key: const Key('act0_integrated_scene_action_foreground'),
-                      decoration: BoxDecoration(
-                        // Scene-attached control shelf: one top boundary, no
-                        // all-around card, and the room stays visible through
-                        // the top of the shelf so the scene reads as
-                        // continuing behind the controls.
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: <Color>[
-                            Act0ShellTokensV1.surface2.withValues(alpha: 0.62),
-                            Act0ShellTokensV1.surface2.withValues(alpha: 0.95),
-                            Act0ShellTokensV1.surface,
-                          ],
-                          stops: const <double>[0, 0.34, 1],
+            SizedBox.shrink(
+              key: Key(
+                'act0_shell_runner_composition_${_compositionFamily.name}',
+              ),
+            ),
+            SizedBox.shrink(
+              key: Key('act0_shell_runner_framing_${framingProfile.name}'),
+            ),
+            SizedBox.shrink(
+              key: Key('act0_shell_runner_viewport_${viewportFamily.name}'),
+            ),
+            SizedBox.shrink(
+              key: Key(
+                'act0_shell_runner_envelope_${taskCycleEnvelope.familyName}',
+              ),
+            ),
+            SizedBox.shrink(
+              key: Key('act0_shell_runner_pressure_$viewportPressureReason'),
+            ),
+            SizedBox.shrink(
+              key: Key(
+                'act0_shell_runner_action_dock_compact_$compactAnswerListDecision',
+              ),
+            ),
+            SizedBox.shrink(
+              key: Key(
+                'act0_shell_runner_prompt_panel_compact_$compactAnswerListDecision',
+              ),
+            ),
+            SizedBox.shrink(
+              key: Key('act0_shell_runner_hint_compact_$hintCompact'),
+            ),
+            if (compactAnswerListDecision)
+              const SizedBox.shrink(
+                key: Key('act0_shell_compact_answer_list_branch'),
+              ),
+            if (_usesCanonicalIntegratedLearningSceneV1 &&
+                (isTheory || isDrill || isReview || isTeaching))
+              _RunnerProgressV1(runner: runner, onBack: _handleRunnerBackV1),
+            if (_usesCanonicalIntegratedLearningSceneV1 &&
+                usesSharedActiveRunnerAllocation &&
+                (isTheory || isDrill || isReview || isTeaching)) ...[
+              const SizedBox(height: Act0ShellTokensV1.gapXs),
+              buildIntegratedPrompt(),
+            ],
+            if (taskCycleEnvelope.usesFixedLowerSlot &&
+                !usesSharedActiveRunnerAllocation)
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final lowerSlotHeight = taskCycleEnvelope
+                        .lowerSlotHeightFor(constraints.maxHeight);
+                    final upperSlotHeight = math.max(
+                      0.0,
+                      constraints.maxHeight - lowerSlotHeight,
+                    );
+                    final tableMaxHeight = math.max(
+                      0.0,
+                      upperSlotHeight -
+                          _runnerUpperStageChromeHeightV1(
+                            showTopInstructionCard: showTopInstructionCard,
+                            isRefinedDev2: isRefinedDev2,
+                            compactTableStageTopInset:
+                                compactTableStageTopInset,
+                          ),
+                    );
+                    return Column(
+                      children: [
+                        SizedBox(
+                          height: upperSlotHeight,
+                          child: buildRunnerStage(
+                            maxTableHeight: tableMaxHeight,
+                          ),
                         ),
-                        border: Border(
-                          top: BorderSide(
-                            color: Act0ShellTokensV1.primary.withValues(
-                              alpha: 0.34,
+                        SizedBox(
+                          height: lowerSlotHeight,
+                          child: buildRunnerActionDock(),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              )
+            else if (usesSharedActiveRunnerAllocation) ...[
+              // B7 canonical scene composition.
+              //
+              // The runner column no longer allocates the table any height at all.
+              // It reserves a transparent window onto the world plane, which is
+              // painted behind this column and owned solely by
+              // `Act0SceneCameraV1`. That is what closes
+              // `TABLE_GEOMETRY_INVARIANT_V1`: review states can still claim a
+              // different amount of vertical space, but there is no longer a path
+              // by which that claim can reach the physical table.
+              const Expanded(
+                child: SizedBox.expand(key: Key('act0_shell_scene_window')),
+              ),
+              KeyedSubtree(
+                key: const Key('act0_shell_shared_runner_cycle_envelope'),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: IgnorePointer(
+                        child: Container(
+                          key: const Key(
+                            'act0_integrated_scene_action_foreground',
+                          ),
+                          decoration: BoxDecoration(
+                            // Scene-attached control shelf: one top boundary, no
+                            // all-around card, and the room stays visible through
+                            // the top of the shelf so the scene reads as
+                            // continuing behind the controls.
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: <Color>[
+                                Act0ShellTokensV1.surface2.withValues(
+                                  alpha: 0.62,
+                                ),
+                                Act0ShellTokensV1.surface2.withValues(
+                                  alpha: 0.95,
+                                ),
+                                Act0ShellTokensV1.surface,
+                              ],
+                              stops: const <double>[0, 0.34, 1],
+                            ),
+                            border: Border(
+                              top: BorderSide(
+                                color: Act0ShellTokensV1.primary.withValues(
+                                  alpha: 0.34,
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
+                    KeyedSubtree(
+                      key: const Key('act0_shell_shared_runner_lower_surface'),
+                      child: usesSceneAttachedShelfV1
+                          ? ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxHeight: maxSceneDockHeight,
+                              ),
+                              child: Scrollbar(
+                                child: SingleChildScrollView(
+                                  key: ValueKey(
+                                    'act0_scene_control_shelf_${widget.selectedTaskId}_'
+                                    '${runner.phase.name}_$_showTheoryPeek',
+                                  ),
+                                  physics: const ClampingScrollPhysics(),
+                                  child: buildRunnerActionDock(
+                                    sceneAttachedShelf: true,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : buildRunnerActionDock(),
+                    ),
+                  ],
                 ),
-                KeyedSubtree(
-                  key: const Key('act0_shell_shared_runner_lower_surface'),
-                  child: buildRunnerActionDock(
-                    sceneAttachedShelf: usesSceneAttachedShelfV1,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ] else ...[
-          Expanded(child: buildRunnerStage()),
-          buildRunnerActionDock(),
-        ],
-      ],
+              ),
+            ] else ...[
+              Expanded(child: buildRunnerStage()),
+              buildRunnerActionDock(),
+            ],
+          ],
+        );
+      },
     );
     if (!_usesCanonicalIntegratedLearningSceneV1 ||
         !usesSharedActiveRunnerAllocation) {
@@ -4931,7 +4970,12 @@ class _RunnerActionDockV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasSizingPresets = sizingPresets != null && sizingPresets!.isNotEmpty;
-    final safeBottom = MediaQuery.viewPaddingOf(context).bottom;
+    // The canonical shell has already consumed its SafeArea. Reusing the
+    // device's viewPadding here charged the home-indicator inset twice and
+    // pushed the control shelf over Hero's cards and seat identity.
+    final safeBottom = sceneAttachedShelf
+        ? MediaQuery.paddingOf(context).bottom
+        : MediaQuery.viewPaddingOf(context).bottom;
     final usesAccessibilitySharedSurface =
         lowerStageProfile == _RunnerLowerStageProfileV1.accessibility;
     final effectiveTaskRailLabel = compactAnswerListDecision
@@ -12327,7 +12371,6 @@ class _Act0TableV1 extends StatelessWidget {
                 ),
               ),
             ),
-          scene,
           if (cameraStageSize != null)
             tieredOpponentPlane(
               cameraStageSize,
@@ -12344,6 +12387,10 @@ class _Act0TableV1 extends StatelessWidget {
                 ),
               ),
             ),
+          // Cards, seat controls and commitments are the interaction plane.
+          // Near figures must not paint over SB/CO labels or Hero information.
+          // This changes no anchors, source ownership or physical felt contour.
+          scene,
         ],
       ),
     );

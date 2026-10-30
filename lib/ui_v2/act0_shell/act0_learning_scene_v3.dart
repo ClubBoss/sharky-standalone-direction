@@ -57,15 +57,15 @@ act0SharkySceneCoachScaffoldForAttentionPhaseV1(
     ),
     Act0SceneAttentionPhaseV1.repair => (
       tier: Act0SharkyCoachScaffoldTierV1.spoken,
-      avatarSize: 84.0,
+      avatarSize: 44.0,
     ),
     Act0SceneAttentionPhaseV1.correctFeedback => (
       tier: Act0SharkyCoachScaffoldTierV1.spoken,
-      avatarSize: 80.0,
+      avatarSize: 44.0,
     ),
     Act0SceneAttentionPhaseV1.wrongFeedback => (
       tier: Act0SharkyCoachScaffoldTierV1.spoken,
-      avatarSize: 88.0,
+      avatarSize: 44.0,
     ),
   };
 }
