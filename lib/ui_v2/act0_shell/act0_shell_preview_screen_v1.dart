@@ -9394,6 +9394,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _activeRepairTaskId = request.repairTaskId;
     _activeRepairSourceTaskId = request.sourceTaskId;
     _activePracticeRepairQueueRequestV1 = request;
+    // Repair ownership decorates the runner with a repair step, so the skip
+    // index must come from the decorated runner, as in _startMistakeRepair.
+    final launchTask = _taskById(
+      _lessonById(launchWorld.lessons, request.targetLessonId),
+      request.targetTaskId,
+    );
+    if (launchTask.phase == Act0LessonPhaseV1.drill) {
+      _teachingStepIndex = _repairRunnerForTask(
+        launchTask,
+      ).teachingSteps.length;
+    }
     _emitRepairStartedTelemetryV1(
       sourceTaskId: request.sourceTaskId,
       repairTaskId: request.repairTaskId,

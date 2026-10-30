@@ -28,6 +28,10 @@ jobs:
         run: >-
           flutter test test/ui_v2/act0_w7_w9_same_signal_repair_recheck_v1_test.dart
           --plain-name 'native regression: source recheck keeps teaching skipped on 14 Pro' -r expanded
+      - name: Assisted Practice Queue repair and lesson wrap-up truth
+        run: >-
+          flutter test test/ui_v2/act0_assisted_repair_route_v1_test.dart
+          test/ui_v2/act0_lesson_wrap_up_source_recheck_v1_test.dart -r expanded
       - uses: actions/upload-artifact@v4
         if: always()
         with:
