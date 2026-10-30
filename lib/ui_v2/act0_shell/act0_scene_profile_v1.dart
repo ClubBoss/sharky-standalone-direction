@@ -38,6 +38,8 @@ class Act0SceneProfileV1 {
     required this.supportsEmptySeats,
     this.fit = BoxFit.contain,
     this.alignment = Alignment.topCenter,
+    this.controlShelfTop,
+    this.headerScrimBottom,
   });
 
   final String id, assetPath;
@@ -59,6 +61,11 @@ class Act0SceneProfileV1 {
   final List<Rect> uiExclusionZones;
   final Act0SceneActorOwnershipV1 actorOwnership;
   final bool supportsFoldedSeatedPlayers, supportsEmptySeats;
+
+  /// Optional image-y limits for the learning surface. The control shelf may
+  /// rise to [controlShelfTop] (below the baked Hero hands); a legibility scrim
+  /// behind the prompt fades out by [headerScrimBottom]. Neither repaints art.
+  final double? controlShelfTop, headerScrimBottom;
 
   double get sourceAspect => sourceSize.width / sourceSize.height;
   bool get paintsIndependentActors =>
@@ -110,7 +117,11 @@ class Act0SceneProfileV1 {
         alignment.y.isFinite &&
         alignment.x.abs() <= 3 &&
         alignment.y.abs() <= 3 &&
-        uiExclusionZones.every(rect);
+        uiExclusionZones.every(rect) &&
+        [
+          controlShelfTop,
+          headerScrimBottom,
+        ].every((v) => v == null || (v.isFinite && v > 0 && v < 1));
   }
 
   /// A baked seated person can remain at the table after folding: the existing
@@ -214,13 +225,15 @@ class Act0SceneRegistrationV1 {
 /// No state-specific art is available.
 /// In particular, there are no empty-chair, removed-player or animated poses.
 const act0PremiumTableSceneProfileV1 = Act0SceneProfileV1(
-  id: 'owner_clean_six_seated_c1_candidate_v1',
+  id: 'owner_clean_six_seated_p1_runtime_v1',
   assetPath:
       'assets/design/sharky/pw_c3/owner_clean_table_candidate_965x1629.png',
   sourceSize: Size(965, 1629),
-  // C1 is an owner-selected calibration basis, pending independent review.
-  // Uniform contain mapping and this crop apply to both art and overlays.
-  alignment: Alignment(0, -1.35),
+  // P1 runtime registration, derived from C1 and measured against the actual
+  // felt/rail/face/hand regions of this plate at 393x852. The uniform contain
+  // mapping lifts the plate slightly so the baked Hero hands stay above the
+  // control shelf. Pending owner promotion; not a frozen composition.
+  alignment: Alignment(0, -1.57),
   tableBoundary: [
     Offset(.37, .35),
     Offset(.69, .35),
@@ -232,51 +245,57 @@ const act0PremiumTableSceneProfileV1 = Act0SceneProfileV1(
     Offset(.24, .57),
   ],
   feltSafeRegion: Rect.fromLTRB(.38, .40, .69, .72),
-  heroAnchor: Offset(0.44, 0.7),
+  heroAnchor: Offset(0.48, 0.705),
+  // Nameplates rest on the rail in front of each player, clear of faces and
+  // of the hands/arms that touch the rail.
   seatAnchorsFromHero: [
-    Offset(0.7, 0.715),
-    Offset(0.215, 0.665),
-    Offset(0.245, 0.455),
-    Offset(0.52, 0.35),
-    Offset(0.795, 0.455),
-    Offset(0.805, 0.665),
+    Offset(0.48, 0.778),
+    Offset(0.2, 0.695),
+    Offset(0.285, 0.478),
+    Offset(0.52, 0.362),
+    Offset(0.75, 0.472),
+    Offset(0.86, 0.67),
   ],
   holeCardAnchorsFromHero: [
-    Offset(0.44, 0.7),
-    Offset(0.3, 0.615),
-    Offset(0.37, 0.445),
-    Offset(0.52, 0.395),
-    Offset(0.67, 0.445),
-    Offset(0.74, 0.615),
+    Offset(0.48, 0.705),
+    Offset(0.31, 0.63),
+    Offset(0.405, 0.44),
+    Offset(0.52, 0.4),
+    Offset(0.635, 0.44),
+    Offset(0.69, 0.63),
   ],
   dealerAnchorsFromHero: [
-    Offset(0.84, 0.73),
-    Offset(0.28, 0.675),
-    Offset(0.29, 0.49),
+    Offset(0.635, 0.775),
+    Offset(0.27, 0.735),
+    Offset(0.4, 0.39),
     Offset(0.61, 0.355),
-    Offset(0.75, 0.49),
-    Offset(0.74, 0.675),
+    Offset(0.64, 0.39),
+    Offset(0.79, 0.715),
   ],
   heroCardWidth: .10,
   opponentCardWidth: 0.045,
-  boardCardWidth: 0.07,
+  boardCardWidth: 0.066,
   heroCardTilt: .035,
+  // Commitments sit on measured felt, between each player's cards and the
+  // board, never on the rail.
   betAnchorsFromHero: [
-    Offset(0.63, 0.76),
-    Offset(0.27, 0.77),
-    Offset(0.3, 0.5),
-    Offset(0.63, 0.405),
-    Offset(0.74, 0.5),
-    Offset(0.74, 0.73),
+    Offset(0.615, 0.715),
+    Offset(0.33, 0.685),
+    Offset(0.358, 0.515),
+    Offset(0.52, 0.442),
+    Offset(0.682, 0.515),
+    Offset(0.715, 0.685),
   ],
-  boardAnchor: Offset(0.52, 0.565),
-  potAnchor: Offset(0.52, 0.625),
-  streetAnchor: Offset(0.52, 0.52),
-  clueAnchor: Offset(0.52, 0.49),
-  uiExclusionZones: [Rect.fromLTRB(0, 0, 1, .18), Rect.fromLTRB(0, .84, 1, 1)],
+  boardAnchor: Offset(0.52, 0.574),
+  potAnchor: Offset(0.52, 0.632),
+  streetAnchor: Offset(0.52, 0.528),
+  clueAnchor: Offset(0.52, 0.492),
+  uiExclusionZones: [Rect.fromLTRB(0, 0, 1, .18), Rect.fromLTRB(0, .875, 1, 1)],
   actorOwnership: Act0SceneActorOwnershipV1.bakedIntoPlate,
   supportsFoldedSeatedPlayers: true,
   supportsEmptySeats: false,
+  controlShelfTop: .875,
+  headerScrimBottom: .245,
 );
 
 /// Review calibration is supplied as data, not permanent A/B/C production
@@ -317,6 +336,8 @@ Act0SceneProfileV1? act0SceneProfileFromCalibrationV1(String data) {
       boardCardWidth: (j['boardCardWidth'] as num).toDouble(),
       heroCardTilt: (j['heroCardTilt'] as num).toDouble(),
       uiExclusionZones: p.uiExclusionZones,
+      controlShelfTop: p.controlShelfTop,
+      headerScrimBottom: p.headerScrimBottom,
       actorOwnership: p.actorOwnership,
       supportsFoldedSeatedPlayers: p.supportsFoldedSeatedPlayers,
       supportsEmptySeats: p.supportsEmptySeats,

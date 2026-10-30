@@ -4145,12 +4145,19 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         // Keep the control plane below the camera's near rail and Hero HUD.
         // Long answers/feedback scroll within this bounded shelf; they cannot
         // grow upwards through the physical table or shrink its geometry.
-        final maxSceneDockHeight = math.max(
-          48.0,
-          sceneConstraints.maxHeight *
-                  (1 - Act0SceneCameraV1.canonical.nearRailFraction) -
-              24,
+        // F7: a registered plate owns its own near-rail/Hero-hand line, so
+        // its profile (not the procedural camera) bounds the shelf.
+        final registeredShelfHeight = _RegisteredSceneShelfScopeV1.maybeOf(
+          context,
         );
+        final maxSceneDockHeight =
+            registeredShelfHeight ??
+            math.max(
+              48.0,
+              sceneConstraints.maxHeight *
+                      (1 - Act0SceneCameraV1.canonical.nearRailFraction) -
+                  24,
+            );
         return Column(
           key: const Key('act0_shell_runner_screen'),
           children: [
@@ -4385,6 +4392,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         key: const Key('act0_f7_registered_scene'),
         builder: (context, constraints) {
           final registration = selectedProfile.register(constraints.biggest);
+          final shelfTop = selectedProfile.controlShelfTop;
+          final scrimBottom = selectedProfile.headerScrimBottom;
+          final plate = registration.destinationRect;
           return Stack(
             fit: StackFit.expand,
             children: [
@@ -4397,10 +4407,70 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                   ),
                 ),
               ),
+              // Presentation scrims only: the plate below its own bottom edge
+              // continues into the shelf colour instead of bare background,
+              // and the prompt gets a legible band over the bright window.
+              if (plate.bottom < constraints.maxHeight)
+                Positioned(
+                  key: const Key('act0_f7_plate_continuation'),
+                  left: 0,
+                  right: 0,
+                  top: plate.bottom - 56,
+                  bottom: 0,
+                  child: const IgnorePointer(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: <Color>[
+                            Color(0x00000000),
+                            Act0ShellTokensV1.surface2,
+                            Act0ShellTokensV1.surface,
+                          ],
+                          stops: <double>[0, .32, 1],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              if (scrimBottom != null)
+                Positioned(
+                  key: const Key('act0_f7_header_scrim'),
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  height: registration.map(Offset(0, scrimBottom)).dy,
+                  child: IgnorePointer(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: <Color>[
+                            Act0ShellTokensV1.surface.withValues(alpha: .86),
+                            Act0ShellTokensV1.surface.withValues(alpha: .58),
+                            Act0ShellTokensV1.surface.withValues(alpha: 0),
+                          ],
+                          stops: const <double>[0, .62, 1],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               Positioned.fill(
                 child: buildPhysicalTableV1(sceneRegistration: registration),
               ),
-              runnerScreen,
+              _RegisteredSceneShelfScopeV1(
+                maxShelfHeight: shelfTop == null
+                    ? null
+                    : math.max(
+                        48.0,
+                        constraints.maxHeight -
+                            registration.map(Offset(0, shelfTop)).dy,
+                      ),
+                child: runnerScreen,
+              ),
             ],
           );
         },
@@ -4934,25 +5004,148 @@ class _SceneControlShelfV1 extends StatefulWidget {
 
 class _SceneControlShelfV1State extends State<_SceneControlShelfV1> {
   final _controller = ScrollController();
+  bool _moreBelow = false;
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
 
+  bool _syncMoreBelow(ScrollMetricsNotification n) {
+    _updateMoreBelow(n.metrics);
+    return false;
+  }
+
+  bool _syncScroll(ScrollNotification n) {
+    _updateMoreBelow(n.metrics);
+    return false;
+  }
+
+  void _updateMoreBelow(ScrollMetrics m) {
+    // Only content still hidden beyond the bottom safe inset counts: the last
+    // choice's trailing safe-area padding is not "more".
+    final more = m.extentAfter > _kSceneShelfMoreSlackV1;
+    if (more != _moreBelow) setState(() => _moreBelow = more);
+  }
+
+  void _revealMore() {
+    if (!_controller.hasClients) return;
+    final p = _controller.position;
+    _controller.animateTo(
+      math.min(p.maxScrollExtent, p.pixels + p.viewportDimension * .6),
+      duration: const Duration(milliseconds: 260),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
   @override
   Widget build(BuildContext context) => ConstrainedBox(
     constraints: BoxConstraints(maxHeight: widget.maxHeight),
-    child: Scrollbar(
-      controller: _controller,
-      thumbVisibility: true,
-      child: SingleChildScrollView(
-        controller: _controller,
-        physics: const ClampingScrollPhysics(),
-        child: widget.child,
+    child: Stack(
+      children: [
+        NotificationListener<ScrollMetricsNotification>(
+          onNotification: _syncMoreBelow,
+          child: NotificationListener<ScrollNotification>(
+            onNotification: _syncScroll,
+            child: Scrollbar(
+              controller: _controller,
+              thumbVisibility: true,
+              child: SingleChildScrollView(
+                controller: _controller,
+                physics: const ClampingScrollPhysics(),
+                child: widget.child,
+              ),
+            ),
+          ),
+        ),
+        // A clipped choice is never left as an unexplained sliver: while more
+        // content waits below, the shelf edge says so and one tap scrolls a
+        // whole row into view. Choice order and grading are untouched.
+        if (_moreBelow)
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: _SceneShelfMoreCueV1(
+              bottomInset: MediaQuery.paddingOf(context).bottom,
+              onTap: _revealMore,
+            ),
+          ),
+      ],
+    ),
+  );
+}
+
+const double _kSceneShelfMoreSlackV1 = 56;
+
+class _SceneShelfMoreCueV1 extends StatelessWidget {
+  const _SceneShelfMoreCueV1({required this.bottomInset, required this.onTap});
+  final double bottomInset;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+    button: true,
+    label: 'More choices below',
+    excludeSemantics: true,
+    child: GestureDetector(
+      key: const Key('act0_scene_shelf_more_cue'),
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Container(
+        height: 44 + bottomInset,
+        padding: EdgeInsets.only(bottom: bottomInset),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: <Color>[
+              Act0ShellTokensV1.surface.withValues(alpha: 0),
+              Act0ShellTokensV1.surface.withValues(alpha: .94),
+              Act0ShellTokensV1.surface,
+            ],
+            stops: const <double>[0, .45, 1],
+          ),
+        ),
+        alignment: Alignment.bottomCenter,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'More choices',
+              style: Act0ShellTokensV1.label.copyWith(
+                color: Act0ShellTokensV1.info,
+                fontSize: 12,
+              ),
+            ),
+            const SizedBox(width: 4),
+            const Icon(
+              Icons.keyboard_arrow_down_rounded,
+              size: 18,
+              color: Act0ShellTokensV1.info,
+            ),
+          ],
+        ),
       ),
     ),
   );
+}
+
+/// Carries a registered plate's shelf bound to the shared runner column.
+class _RegisteredSceneShelfScopeV1 extends InheritedWidget {
+  const _RegisteredSceneShelfScopeV1({
+    required this.maxShelfHeight,
+    required super.child,
+  });
+  final double? maxShelfHeight;
+
+  static double? maybeOf(BuildContext context) => context
+      .dependOnInheritedWidgetOfExactType<_RegisteredSceneShelfScopeV1>()
+      ?.maxShelfHeight;
+
+  @override
+  bool updateShouldNotify(_RegisteredSceneShelfScopeV1 oldWidget) =>
+      maxShelfHeight != oldWidget.maxShelfHeight;
 }
 
 class _RunnerActionDockV1 extends StatelessWidget {
@@ -12567,6 +12760,7 @@ class _Act0TableV1 extends StatelessWidget {
             identityPolicy: identityPolicy,
             showCards: false,
             showDealerMarker: false,
+            registeredScene: true,
           ),
           at(
             'act0_f7_dealer_anchor_${seats[i].seatId}',
@@ -12697,7 +12891,7 @@ class _Act0TableV1 extends StatelessWidget {
             'act0_f7_clue',
             p.clueAnchor,
             SizedBox(
-              width: r.destinationRect.width * .29,
+              width: r.destinationRect.width * .245,
               child: lateRouteSignal != null
                   ? _LateRouteCenterSignalV1(signal: lateRouteSignal!)
                   : _CenterSignalAnchorV1(
@@ -13630,6 +13824,7 @@ class _SeatPlacementV1 extends StatelessWidget {
     this.compactInformativeColumn = false,
     this.showCards = true,
     this.showDealerMarker = true,
+    this.registeredScene = false,
   });
 
   final int slot;
@@ -13651,6 +13846,10 @@ class _SeatPlacementV1 extends StatelessWidget {
   final bool depthTieredPrototype;
   final bool compactInformativeColumn;
   final bool showCards, showDealerMarker;
+
+  /// F7: the seated person is baked into the plate, so a Folded seat keeps a
+  /// legible nameplate and shows its badge below it, away from face/hands.
+  final bool registeredScene;
 
   static const List<Offset> defaultSlots = <Offset>[
     Offset(0.50, 0.90),
@@ -13691,6 +13890,7 @@ class _SeatPlacementV1 extends StatelessWidget {
           child: _SeatNodeV1(
             showCards: showCards,
             showDealerMarker: showDealerMarker,
+            registeredScene: registeredScene,
             compactInformativeColumn: compactInformativeColumn,
             seat: seat,
             heroCards: heroCards,
@@ -13732,6 +13932,7 @@ class _SeatNodeV1 extends StatelessWidget {
     this.compactInformativeColumn = false,
     this.showCards = true,
     this.showDealerMarker = true,
+    this.registeredScene = false,
   });
 
   final Act0SeatStateV1 seat;
@@ -13756,7 +13957,7 @@ class _SeatNodeV1 extends StatelessWidget {
   /// column's dead vertical space only. No type size, no plate width, no
   /// content changes.
   final bool compactInformativeColumn;
-  final bool showCards, showDealerMarker;
+  final bool showCards, showDealerMarker, registeredScene;
 
   @override
   Widget build(BuildContext context) {
@@ -13833,7 +14034,7 @@ class _SeatNodeV1 extends StatelessWidget {
     final occupiedOpacity = !seat.isOccupied
         ? 0.42
         : folded || !seat.isInHand
-        ? 0.58
+        ? (registeredScene ? 0.84 : 0.58)
         : 1.0;
     final node = Container(
       key: Key('act0_shell_seat_node_${seat.seatId}'),
@@ -13895,7 +14096,7 @@ class _SeatNodeV1 extends StatelessWidget {
               ),
               SizedBox(height: cardPlateGap),
             ],
-            if (folded) ...[
+            if (folded && !registeredScene) ...[
               const _FoldedBadgeV1(),
               SizedBox(height: cardPlateGap),
             ],
@@ -14121,6 +14322,10 @@ class _SeatNodeV1 extends StatelessWidget {
                   ),
               ],
             ),
+            if (folded && registeredScene) ...[
+              const SizedBox(height: 2),
+              const _FoldedBadgeV1(registeredScene: true),
+            ],
           ],
         ),
       ),
@@ -15979,7 +16184,11 @@ class _ChipDiscV1 extends StatelessWidget {
 }
 
 class _FoldedBadgeV1 extends StatelessWidget {
-  const _FoldedBadgeV1();
+  const _FoldedBadgeV1({this.registeredScene = false});
+
+  /// Over a baked plate the badge is the only Folded signal, so it is set a
+  /// little larger and on a more opaque pill.
+  final bool registeredScene;
 
   @override
   Widget build(BuildContext context) {
@@ -15996,8 +16205,10 @@ class _FoldedBadgeV1 extends StatelessWidget {
       child: Text(
         'Folded',
         style: Act0ShellTokensV1.label.copyWith(
-          color: Act0ShellTokensV1.textMuted,
-          fontSize: 7,
+          color: registeredScene
+              ? Act0ShellTokensV1.text.withValues(alpha: .82)
+              : Act0ShellTokensV1.textMuted,
+          fontSize: registeredScene ? 8.5 : 7,
           letterSpacing: 0.3,
         ),
       ),

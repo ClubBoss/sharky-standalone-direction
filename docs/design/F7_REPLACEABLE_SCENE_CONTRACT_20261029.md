@@ -99,3 +99,33 @@ flop fills slots 1–3, turn adds slot 4 and river adds slot 5. Future spaces ha
 no paint, semantics or tap action. Earlier source cards keep identical anchors
 and sizes across streets. This affects presentation only; original preview-OFF
 rendering, source cards, IDs, grading and clue callbacks remain unchanged.
+
+## P1 runtime registration (2026-10-31)
+
+Owner selected this plate as the provisional primary table visual and admitted
+one bounded runtime integration wave, still behind the default-OFF flag. The
+default profile is now `owner_clean_six_seated_p1_runtime_v1`, derived from C1
+and measured against the plate's actual felt run, rail, faces and hands at the
+393x852 product viewport (native host: scene box below the status bar).
+
+- Plate lifted slightly (`alignment` y -1.57) so the baked Hero hands stay
+  visible above a four-answer control shelf. No stretch, no new crop axis.
+- Commitments (blinds/bets) sit on measured felt between each player's cards
+  and the board; none rests on the rail. Nameplates rest on the rail in front
+  of each player, clear of faces and of the hands/arms touching the rail.
+- Hero cards, BTN nameplate and dealer button form one Hero group above the
+  hands. Board/pot/street/clue keep one fixed column; the five-slot board is
+  unchanged in behaviour.
+- `controlShelfTop` bounds the control shelf from the plate (below the Hero
+  hands) instead of the procedural camera's near rail; `headerScrimBottom`
+  adds a legibility scrim behind the prompt. Below its own bottom edge the
+  plate fades into the shelf colour. These are presentation scrims only.
+- Folded seated players keep a legible nameplate; the Folded badge sits below
+  it (away from face/hands), their cards and commitments stay hidden.
+- When answers overflow the shelf, a "More choices" cue covers the clipped
+  edge and one tap scrolls a whole answer into view. Choice order, IDs and
+  grading are unchanged. The cue also applies on the preview-OFF shelf.
+
+Scenario compatibility is unchanged: any source Empty seat selects the
+original scene for the whole scenario. In the current source this is exactly
+the tasks with an unoccupied UTG seat; see the runtime completion package.

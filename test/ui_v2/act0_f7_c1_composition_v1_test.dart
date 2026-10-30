@@ -99,7 +99,12 @@ void main() {
         }
       }
       expect(anchors.length, 5);
-      expect(anchors.map((r) => r.size).toSet().length, 1);
+      // One physical scale for every slot; compare at the 0.01pt tolerance
+      // the native board-geometry receipt uses, not exact float identity.
+      for (final r in anchors) {
+        expect(r.width, moreOrLessEquals(anchors.first.width, epsilon: .01));
+        expect(r.height, moreOrLessEquals(anchors.first.height, epsilon: .01));
+      }
       expect(anchors.first.left, greaterThan(0));
       expect(anchors.last.right, lessThan(393));
     },
