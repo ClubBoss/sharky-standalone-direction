@@ -13663,11 +13663,14 @@ class _SeatPlacementV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Reuse the source-owned seat anchors. The prior -0.15 shift moved SB's
-    // informative column into its posted-blind chip envelope. Near-player
-    // legibility is owned by the corrected scene paint order, not a displaced
-    // seat with independently anchored commitments.
-    final point = seatSlots[slot.clamp(0, seatSlots.length - 1)];
+    // Preserve the source-owned Y clearance between seats and commitments.
+    // The old -0.15 Y shift put SB's nameplate on its blind chips. On the
+    // 393x852 reference, SB has 7.1 px to Hero; a measured ~2.6 px outward
+    // plate inset clears the 8 px Hero guard without touching chip anchors.
+    final sourcePoint = seatSlots[slot.clamp(0, seatSlots.length - 1)];
+    final point = compactInformativeColumn && !hero && (slot == 1 || slot == 5)
+        ? sourcePoint + Offset(slot == 1 ? -0.008 : 0.008, 0)
+        : sourcePoint;
     // Plate depth comes from the one canonical projection. Its range stays
     // narrow on purpose: plates carry text, so the scene's depth is carried by
     // the character volumes instead.
