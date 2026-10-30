@@ -169,10 +169,13 @@ void main() {
       debugPrint('T1_MEASURE hero=$hero dock=$dock');
       for (final id in ['sb', 'co']) {
         final nearHud = t.getRect(find.byKey(Key('act0_shell_seat_node_$id')));
+        // SB and CO flank Hero horizontally. A Y-only ordering rule
+        // incorrectly moved these plates into their own posted blind chips.
+        // Keep a true 2D clearance with an 8 px breathing margin.
         expect(
-          nearHud.bottom + 8,
-          lessThan(hero.top),
-          reason: '$id information must clear the near face / Hero corridor',
+          nearHud.inflate(8).overlaps(hero),
+          isFalse,
+          reason: '$id informative seat $nearHud overlaps Hero $hero',
         );
       }
       expect(
