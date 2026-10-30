@@ -4066,7 +4066,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                 : feedbackActionIsSentence
                 ? feedbackAction
                 : runner.reviewQuality == Act0FeedbackQualityV1.wrong
-                ? '$feedbackAction was the better play.'
+                ? (isRu
+                          ? null
+                          : act0FactualMissHeadlineByTaskIdV1[widget
+                                .selectedTaskId]) ??
+                      '$feedbackAction was the better play.'
                 : widget.isAssistedDecision
                 ? (isRu
                       ? '\u0412\u0435\u0440\u043d\u043e \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439: $feedbackAction.'

@@ -8178,6 +8178,12 @@ const _firstHandRunner = Act0RunnerStateV1(
   ],
 );
 
+/// Card-recognition questions are factual reads, not strategy plays. A miss
+/// states the true cards instead of naming a "better play".
+const Map<String, String> act0FactualMissHeadlineByTaskIdV1 = <String, String>{
+  'your_first_hand_private_cards_recheck': 'Hero\'s private cards are A and K.',
+};
+
 final _privateCardsRecheckRunner = _firstHandRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'your_first_hand_private_cards_recheck',
@@ -8208,7 +8214,7 @@ final _privateCardsRecheckRunner = _firstHandRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Good spot to recheck.',
       feedbackReason:
-          'Those are not Hero\'s cards in this spot. Read the two cards beside Hero.',
+          'Q and Q are not Hero\'s cards in this spot. Read the two cards beside Hero.',
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>['Hero cards'],
     ),

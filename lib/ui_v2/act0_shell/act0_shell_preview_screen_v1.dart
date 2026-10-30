@@ -1207,6 +1207,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   final Set<String> _lessonRunPendingRetryTaskIds = <String>{};
   final Set<String> _lessonRunRetriedTaskIds = <String>{};
   final Set<String> _lessonRunWrapUpCompletedTaskIds = <String>{};
+  // Misses this lesson run that an unassisted original-source recheck already
+  // answered correctly; the wrap-up does not revisit them again.
+  final Set<String> _lessonRunSourceRecheckedTaskIds = <String>{};
   final Set<String> _lessonRunQuickFixTaskIds = <String>{};
   final Set<String> _lessonRunDeepLeakTaskIds = <String>{};
   final Map<String, int> _lessonRunSkillGainCounts = <String, int>{};
@@ -1423,6 +1426,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   @visibleForTesting
   String debugSelectedTaskIdV1() => _selectedTaskId;
+
+  @visibleForTesting
+  List<String> debugLessonWrapUpOwedTaskIdsV1() =>
+      _lessonRunMistakeTaskIds.where(_lessonWrapUpOwedV1).toList();
 
   @visibleForTesting
   String debugSelectedWorldIdV1() => _selectedWorldId;
@@ -4796,6 +4803,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _resolvedMistakeTaskIds.clear();
       _cleanTaskIds.clear();
       _lessonRunMistakeTaskIds.clear();
+      _lessonRunSourceRecheckedTaskIds.clear();
       _lessonRunAssistedTaskIds.clear();
       _lessonRunPendingRetryTaskIds.clear();
       _lessonRunRetriedTaskIds.clear();
@@ -11179,6 +11187,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _cleanTaskIds.add(repairSourceTaskId);
       _lessonRunPendingRetryTaskIds.remove(selectedTask.taskId);
       _lessonRunPendingRetryTaskIds.remove(repairSourceTaskId);
+      if (_activeSameSignalRecheckTaskId == selectedTask.taskId) {
+        // Assisted answers returned above, so this is independent proof on
+        // the original source question.
+        _lessonRunSourceRecheckedTaskIds.add(repairSourceTaskId);
+      }
       if (retentionEntry?.status == _Act0RetentionMemoryStatusV1.agedRecheck ||
           retentionEntry?.status ==
               _Act0RetentionMemoryStatusV1.ownedCandidate) {
@@ -11275,6 +11288,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     _lessonRunMistakeTaskIds.add(repairSourceTaskId);
+    _lessonRunSourceRecheckedTaskIds.remove(repairSourceTaskId);
     if (_activeRepairTaskId != selectedTask.taskId &&
         !_lessonRunRetriedTaskIds.contains(repairSourceTaskId)) {
       _lessonRunPendingRetryTaskIds.add(repairSourceTaskId);
@@ -12171,10 +12185,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     _lessonRunWrapUpAnchorTaskId ??= wrapUpAnchorTaskId;
     for (final task in selectedLesson.taskList) {
-      if (!_lessonRunMistakeTaskIds.contains(task.taskId)) {
-        continue;
-      }
-      if (_lessonRunWrapUpCompletedTaskIds.contains(task.taskId)) {
+      if (!_lessonWrapUpOwedV1(task.taskId)) {
         continue;
       }
       _activeLessonWrapUpTaskId = task.taskId;
@@ -12225,10 +12236,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     ];
   }
 
+  /// A lesson-run miss is revisited once before the summary, unless an
+  /// unassisted original-source recheck already discharged it. The mistake
+  /// history, evidence and any separate review debt are kept either way.
+  bool _lessonWrapUpOwedV1(String taskId) {
+    if (!_lessonRunMistakeTaskIds.contains(taskId) ||
+        _lessonRunWrapUpCompletedTaskIds.contains(taskId)) {
+      return false;
+    }
+    return !(_lessonRunSourceRecheckedTaskIds.contains(taskId) &&
+        _isMistakeDischargedV1(taskId));
+  }
+
   int _remainingWrapUpTaskCount() {
-    return _lessonRunMistakeTaskIds
-        .where((taskId) => !_lessonRunWrapUpCompletedTaskIds.contains(taskId))
-        .length;
+    return _lessonRunMistakeTaskIds.where(_lessonWrapUpOwedV1).length;
   }
 
   Act0RunnerStateV1 _repairRunnerForTask(Act0LessonTaskV1 selectedTask) {
@@ -13867,6 +13888,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     _lessonRunXp = 0;
     _lessonRunMistakeTaskIds.clear();
+    _lessonRunSourceRecheckedTaskIds.clear();
     _lessonRunAssistedTaskIds.clear();
     _lessonRunPendingRetryTaskIds.clear();
     _lessonRunRetriedTaskIds.clear();
