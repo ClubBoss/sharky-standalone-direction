@@ -9,6 +9,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_scene_v3.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 
 void main() {
   test('Coach footprint supports feedback without assessment guidance', () {
@@ -168,10 +169,13 @@ void main() {
       debugPrint('T1_MEASURE hero=$hero dock=$dock');
       for (final id in ['sb', 'co']) {
         final nearHud = t.getRect(find.byKey(Key('act0_shell_seat_node_$id')));
+        // SB and CO flank Hero horizontally. A Y-only ordering rule
+        // incorrectly moved these plates into their own posted blind chips.
+        // Keep a true 2D clearance with an 8 px breathing margin.
         expect(
-          nearHud.bottom + 8,
-          lessThan(hero.top),
-          reason: '$id information must clear the near face / Hero corridor',
+          nearHud.inflate(8).overlaps(hero),
+          isFalse,
+          reason: '$id informative seat $nearHud overlaps Hero $hero',
         );
       }
       expect(
@@ -203,6 +207,49 @@ void main() {
         hero,
       );
       expect(t.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    '14 Pro authored Action theory keeps blind chips clear of owned seats',
+    (t) async {
+      t.view.physicalSize = const Size(393, 852);
+      t.view.devicePixelRatio = 1;
+      t.view.padding = const FakeViewPadding(top: 59, bottom: 34);
+      addTearDown(t.view.resetPhysicalSize);
+      addTearDown(t.view.resetDevicePixelRatio);
+      addTearDown(t.view.resetPadding);
+
+      await t.pumpWidget(
+        MaterialApp(
+          home: Act0ShellPreviewScreenV1(
+            state: Act0ShellStateV1.sample,
+            showPlacementOnStart: false,
+            debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
+              mode: Act0ControlledDemoCaptureModeV1.directState,
+              surface: Act0ControlledDemoCaptureSurfaceV1.runnerTheory,
+              worldId: 'world_1',
+              lessonId: 'fold_check_call_raise',
+              taskId: 'actions_theory',
+            ),
+          ),
+        ),
+      );
+      await t.pumpAndSettle();
+      expect(t.takeException(), isNull);
+      for (final id in const <String>['sb', 'bb']) {
+        final seat = find.byKey(Key('act0_shell_seat_node_$id'));
+        final chip = find.byKey(Key('act0_shell_bet_chip_owner_$id'));
+        expect(seat, findsOneWidget, reason: '$id seat missing');
+        expect(chip, findsOneWidget, reason: '$id posted chip missing');
+        final seatBounds = t.getRect(seat);
+        final chipBounds = t.getRect(chip);
+        expect(
+          seatBounds.overlaps(chipBounds),
+          isFalse,
+          reason: '$id seat=$seatBounds chip=$chipBounds',
+        );
+      }
     },
   );
 }

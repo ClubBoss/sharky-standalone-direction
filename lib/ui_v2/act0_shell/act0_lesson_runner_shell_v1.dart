@@ -13663,13 +13663,13 @@ class _SeatPlacementV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Preserve the source-owned Y clearance between seats and commitments.
+    // The old -0.15 Y shift put SB's nameplate on its blind chips. On the
+    // 393x852 reference, SB has 7.1 px to Hero; a measured ~2.6 px outward
+    // plate inset clears the 8 px Hero guard without touching chip anchors.
     final sourcePoint = seatSlots[slot.clamp(0, seatSlots.length - 1)];
-    // The near-flank portraits occupy the lower side of the stage. Keep their
-    // complete card/nameplate columns in the clear corridor above those faces,
-    // instead of solving label occlusion by painting a plate over a face.
-    // Relative slots preserve source seat/hero rotation and all callbacks.
     final point = compactInformativeColumn && !hero && (slot == 1 || slot == 5)
-        ? sourcePoint - const Offset(0, 0.15)
+        ? sourcePoint + Offset(slot == 1 ? -0.008 : 0.008, 0)
         : sourcePoint;
     // Plate depth comes from the one canonical projection. Its range stays
     // narrow on purpose: plates carry text, so the scene's depth is carried by
