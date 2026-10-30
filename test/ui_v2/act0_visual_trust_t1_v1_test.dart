@@ -219,7 +219,7 @@ void main() {
 
       await t.pumpWidget(
         MaterialApp(
-          home: const Act0ShellPreviewScreenV1(
+          home: Act0ShellPreviewScreenV1(
             state: Act0ShellStateV1.sample,
             showPlacementOnStart: false,
             debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
