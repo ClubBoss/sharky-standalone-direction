@@ -48,3 +48,20 @@ hashes, original PNGs and journey trace: `output/en_v1_truth_functional_20261030
 Read its final REPORT for native coverage, exclusions and terminal disposition.
 Source tests alone do not certify all poker statements, Human learning, retention,
 F7 visual acceptance, or release. No automatic merge is authorized.
+
+## Completion after the Codex quota pause
+
+The extended M-ratio guard also compares an explicit zone in a task title with
+the computed no-ante zone. It caught one real mismatch:
+`w9_m_ratio_table_window_transfer` was titled "Yellow-zone table read" while
+its scenario gives M = 8 (red). The title now says red. All other copy on that
+task already said red, and its ID and grading are unchanged.
+
+The native receipt `HHandCompletion` executed 0 tests (a stale on-simulator
+test runner), so it proves nothing. `IJourneyHandCompletion` replaces it. It
+starts from cleared preferences with no progress seeded and runs the full A–G
+journey on the VERIFIED binary, so G runs on the corrected build. Then, in the
+same process, it plays the first hand through flop, turn, river, showdown,
+history and recap. 1 test executed and passed, with 39 original PNGs. After
+the run the simulator's original app, preferences and traces were restored and
+hash-verified.
