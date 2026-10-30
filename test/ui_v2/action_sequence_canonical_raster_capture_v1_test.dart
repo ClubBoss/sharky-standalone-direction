@@ -267,7 +267,8 @@ void main() {
           informativeObjectCollisions.every((row) => row['overlap'] == false),
           isTrue,
           reason:
-              '$name must keep blind chips outside their informative seats.',
+              '$name must keep blind chips outside their informative seats. '
+              'Bounds=${jsonEncode(informativeObjectCollisions)}',
         );
       }
       rows.add(<String, Object?>{
