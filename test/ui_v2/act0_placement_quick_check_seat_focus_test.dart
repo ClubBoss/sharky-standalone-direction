@@ -73,9 +73,9 @@ Future<void> _pump(
 }
 
 void main() {
-  test('base lesson scene keeps its own actor and highlight', () {
+  test('base board-count scene has no invented actor and retains its clue', () {
     final table = _baseTask().runner.table;
-    expect(table.seats.where((s) => s.isActive).map((s) => s.seatId), ['hj']);
+    expect(table.seats.where((s) => s.isActive), isEmpty);
     expect(table.highlightedSeatIds, ['co']);
   });
 

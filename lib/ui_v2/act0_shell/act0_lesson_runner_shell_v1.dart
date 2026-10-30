@@ -1524,11 +1524,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
 
   Act0TeachingStepV1? get _teachingStep => widget.runner.activeTeachingStep;
 
-  bool _isAnswerFreeRecapV1(Act0RunnerStateV1 runner) =>
-      runner.phase == Act0LessonPhaseV1.review &&
-      runner.options.isEmpty &&
-      runner.selectedOptionId == null;
-
   bool get _isTeaching =>
       _teachingStep != null &&
       widget.runner.selectedOptionId == null &&
@@ -2975,8 +2970,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     // the source review quality is left untouched.
     final isAnswerFreeRecap = _isAnswerFreeRecapV1(runner) && isReview;
     final baseTable = isReview
-        ? _repairTable(runner.table, runner.selectedOption)
-        : _teachingTable(runner.table, teachingStep);
+        ? act0RepairTableForRunnerV1(runner.table, runner.selectedOption)
+        : act0TeachingTableForRunnerV1(runner.table, teachingStep);
     final feedbackSignalProof = isReview && !isAnswerFreeRecap
         ? _feedbackSignalProofForRunnerV1(
             runner: runner,
@@ -2985,9 +2980,12 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             hasSeatTargets: hasSeatTargets,
           )
         : null;
-    final table = feedbackSignalProof == null
-        ? baseTable
-        : _tableWithFeedbackSignalProofV1(baseTable, feedbackSignalProof);
+    final table = isReview
+        ? act0FeedbackTableForRunnerV1(
+            runner: runner,
+            taskFamily: widget.selectedTaskFamily,
+          )
+        : baseTable;
     final usesSharedActiveRunnerAllocation =
         isRefinedDev2 &&
         table.density == Act0TableDensityV1.compactLesson &&
@@ -6624,7 +6622,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
   }
 }
 
-Act0TableStateV1 _teachingTable(
+Act0TableStateV1 act0TeachingTableForRunnerV1(
   Act0TableStateV1 base,
   Act0TeachingStepV1? step,
 ) {
@@ -6684,7 +6682,7 @@ List<String> _instructionAnchorCardIds(Act0TableStateV1 table) {
   }
 }
 
-Act0TableStateV1 _repairTable(
+Act0TableStateV1 act0RepairTableForRunnerV1(
   Act0TableStateV1 base,
   Act0RunnerOptionV1? option,
 ) {
@@ -6699,6 +6697,29 @@ Act0TableStateV1 _repairTable(
         ? base.highlightedCardIds
         : option.repairFocusCardIds,
   );
+}
+
+bool _isAnswerFreeRecapV1(Act0RunnerStateV1 runner) =>
+    runner.phase == Act0LessonPhaseV1.review &&
+    runner.options.isEmpty &&
+    runner.selectedOptionId == null;
+
+// The final feedback projection is shared with catalog validation. In
+// particular, correct-option signal clues may extend the chosen repair table.
+Act0TableStateV1 act0FeedbackTableForRunnerV1({
+  required Act0RunnerStateV1 runner,
+  required Act0TaskFamilyV1? taskFamily,
+}) {
+  final base = act0RepairTableForRunnerV1(runner.table, runner.selectedOption);
+  final proof = _isAnswerFreeRecapV1(runner)
+      ? null
+      : _feedbackSignalProofForRunnerV1(
+          runner: runner,
+          option: runner.selectedOption,
+          taskFamily: taskFamily,
+          hasSeatTargets: runner.options.any((o) => o.seatId != null),
+        );
+  return proof == null ? base : _tableWithFeedbackSignalProofV1(base, proof);
 }
 
 Act0FeedbackSignalProofV1? _feedbackSignalProofForRunnerV1({

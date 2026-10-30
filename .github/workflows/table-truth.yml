@@ -1,0 +1,28 @@
+name: Table Truth
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  catalog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Catalog invariants and approved first-hand chronology (F7 default OFF)
+        env:
+          TABLE_TRUTH_LEDGER: table-truth-ledger.json
+        run: flutter test test/ui_v2/act0_table_truth_catalog_v1_test.dart test/ui_v2/act0_first_hand_truth_v1_test.dart test/ui_v2/act0_table_truth_render_v1_test.dart test/ui_v2/act0_table_truth_mutation_v1_test.dart -r expanded
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: table-truth-ledger
+          path: table-truth-ledger.json
