@@ -346,6 +346,9 @@ class Act0SceneRecedeMotionV1 extends StatelessWidget {
             Act0SceneRecedePlaneV1.room => values.roomRecession,
             Act0SceneRecedePlaneV1.player => values.playerRecession,
           },
+          // People remain physical occluders. Attention still changes their
+          // saturation/luminance; only the room may fade into its base tone.
+          maxOpacityDrop: plane == Act0SceneRecedePlaneV1.player ? 0 : 0.62,
           child: child!,
         );
       },

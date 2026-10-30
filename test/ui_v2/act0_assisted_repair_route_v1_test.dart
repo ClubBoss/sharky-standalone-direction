@@ -165,6 +165,7 @@ void main() {
               const Key('act0_shell_review_full_idea_cta'),
             );
             expect(full, findsOneWidget);
+            expect(tester.getSize(full).height, greaterThanOrEqualTo(44));
             await tester.ensureVisible(full);
             await tester.tap(full);
             await tester.pumpAndSettle();

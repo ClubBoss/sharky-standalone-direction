@@ -24,6 +24,8 @@ jobs:
         run: flutter test test/ui_v2/act0_table_truth_catalog_v1_test.dart test/ui_v2/act0_first_hand_truth_v1_test.dart test/ui_v2/act0_table_truth_render_v1_test.dart test/ui_v2/act0_table_truth_mutation_v1_test.dart test/ui_v2/act0_w11_poker_source_truth_v1_test.dart test/poker -r expanded
       - name: English 14 Pro learner persistence and readable explanation
         run: flutter test --dart-define=SHARKY_YOU_V23_PREVIEW=true --dart-define=SHARKY_SETTINGS_QUIET_CONTROL_PREVIEW=true --dart-define=SHARKY_PW_C3_PREVIEW=true test/ui_v2/act0_f9_placement_repair_persistence_v1_test.dart test/ui_v2/act0_en_v1_long_learning_copy_v1_test.dart -r expanded
+      - name: Scene opacity, information ownership and control reachability
+        run: flutter test test/ui_v2/act0_visual_trust_t1_v1_test.dart -r expanded
       - name: Source recheck cannot reopen teaching
         run: >-
           flutter test test/ui_v2/act0_w7_w9_same_signal_repair_recheck_v1_test.dart
