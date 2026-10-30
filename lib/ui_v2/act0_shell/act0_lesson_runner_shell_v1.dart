@@ -13663,14 +13663,11 @@ class _SeatPlacementV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sourcePoint = seatSlots[slot.clamp(0, seatSlots.length - 1)];
-    // The near-flank portraits occupy the lower side of the stage. Keep their
-    // complete card/nameplate columns in the clear corridor above those faces,
-    // instead of solving label occlusion by painting a plate over a face.
-    // Relative slots preserve source seat/hero rotation and all callbacks.
-    final point = compactInformativeColumn && !hero && (slot == 1 || slot == 5)
-        ? sourcePoint - const Offset(0, 0.15)
-        : sourcePoint;
+    // Reuse the source-owned seat anchors. The prior -0.15 shift moved SB's
+    // informative column into its posted-blind chip envelope. Near-player
+    // legibility is owned by the corrected scene paint order, not a displaced
+    // seat with independently anchored commitments.
+    final point = seatSlots[slot.clamp(0, seatSlots.length - 1)];
     // Plate depth comes from the one canonical projection. Its range stays
     // narrow on purpose: plates carry text, so the scene's depth is carried by
     // the character volumes instead.
