@@ -27,6 +27,9 @@ W9 retains 12 BB, with no-ante M=8 in the existing three-zone scheme.
 
 Independent decisions cannot tap the board to reveal winning cards. Showdown
 insight remains available after an answer; invalid exposed decks fail closed.
+A native-found caller reset reopened teaching after launching a source recheck.
+The caller now preserves the launcher's skipTeaching index; a real-catalog
+14 Pro regression is RED before this correction and GREEN after it.
 Teaching preambles remain instruction, not independent-transfer proof. Existing
 teaching/review interaction keys clear temporary insight on transition. A matched
 unassisted recheck must use its existing source route, without teaching carryover.

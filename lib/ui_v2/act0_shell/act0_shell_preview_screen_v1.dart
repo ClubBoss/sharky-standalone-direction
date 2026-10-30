@@ -6707,7 +6707,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                             const <String>[];
                                         _selectedOptionId = null;
                                         _phase = Act0LessonPhaseV1.drill;
-                                        _teachingStepIndex = 0;
+                                        // _startSameSignalRecheckV1 already skipped
+                                        // teaching. Keep this an independent decision.
                                         _rapidPracticeLoop = false;
                                         return;
                                       }
