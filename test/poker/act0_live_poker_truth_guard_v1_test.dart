@@ -651,6 +651,15 @@ _Coverage _checkMRatioZone() {
           : expected >= 10
           ? 'yellow'
           : 'red';
+      final titleZone = RegExp(
+        r'(green|yellow|red)[- ]zone',
+        caseSensitive: false,
+      ).firstMatch(ref.task.title);
+      if (titleZone != null && titleZone.group(1)!.toLowerCase() != zone) {
+        c.violations[ref.id] =
+            'task title contradicts the explicit no-ante M zone';
+      }
+
       if ((expected - stated).abs() > 0.001 || m.group(3) != zone) {
         c.violations[ref.id] =
             'no-ante M arithmetic or three-zone claim contradicts stack';

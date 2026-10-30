@@ -6314,7 +6314,7 @@ final _tournamentPressureLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w9_m_ratio_table_window_transfer',
-        title: 'Yellow-zone table read',
+        title: 'Red-zone table read',
         phase: Act0LessonPhaseV1.drill,
         runner: _w9MTableWindowTransferRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
