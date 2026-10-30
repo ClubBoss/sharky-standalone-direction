@@ -206,6 +206,8 @@ void main() {
           expect(progress()['reviewResolutionReceipts'], isEmpty);
           final evidences = progress()['learningEvidenceHistory'] as List;
           expect((evidences.last as Map)['assistanceKind'], assistanceMode);
+          // A Practice Queue repair earns no XP and completes no lesson task.
+          expect(progress()['earnedXp'], 10);
 
           await tester.tap(
             find.byKey(const Key('act0_shell_feedback_continue_cta')),
@@ -267,6 +269,8 @@ void main() {
             hasLength(1),
           );
           expect((progress()['multiRepairQueue'] as Map)['entries'], isEmpty);
+          expect(progress()['earnedXp'], 10);
+          expect(progress()['completedTaskIds'], isNot(contains(targetTaskId)));
         },
       );
     }

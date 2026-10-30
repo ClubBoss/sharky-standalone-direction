@@ -20,9 +20,22 @@ jobs:
       - name: Catalog invariants and approved first-hand chronology (F7 default OFF)
         env:
           TABLE_TRUTH_LEDGER: table-truth-ledger.json
-        run: flutter test test/ui_v2/act0_table_truth_catalog_v1_test.dart test/ui_v2/act0_first_hand_truth_v1_test.dart test/ui_v2/act0_table_truth_render_v1_test.dart test/ui_v2/act0_table_truth_mutation_v1_test.dart -r expanded
+          POKER_TRUTH_LEDGER: poker-truth-ledger.json
+        run: flutter test test/ui_v2/act0_table_truth_catalog_v1_test.dart test/ui_v2/act0_first_hand_truth_v1_test.dart test/ui_v2/act0_table_truth_render_v1_test.dart test/ui_v2/act0_table_truth_mutation_v1_test.dart test/ui_v2/act0_w11_poker_source_truth_v1_test.dart test/poker -r expanded
+      - name: English 14 Pro learner persistence and readable explanation
+        run: flutter test --dart-define=SHARKY_YOU_V23_PREVIEW=true --dart-define=SHARKY_SETTINGS_QUIET_CONTROL_PREVIEW=true --dart-define=SHARKY_PW_C3_PREVIEW=true test/ui_v2/act0_f9_placement_repair_persistence_v1_test.dart test/ui_v2/act0_en_v1_long_learning_copy_v1_test.dart -r expanded
+      - name: Source recheck cannot reopen teaching
+        run: >-
+          flutter test test/ui_v2/act0_w7_w9_same_signal_repair_recheck_v1_test.dart
+          --plain-name 'native regression: source recheck keeps teaching skipped on 14 Pro' -r expanded
+      - name: Assisted Practice Queue repair and lesson wrap-up truth
+        run: >-
+          flutter test test/ui_v2/act0_assisted_repair_route_v1_test.dart
+          test/ui_v2/act0_lesson_wrap_up_source_recheck_v1_test.dart -r expanded
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: table-truth-ledger
-          path: table-truth-ledger.json
+          path: |
+            table-truth-ledger.json
+            poker-truth-ledger.json

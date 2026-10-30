@@ -126,6 +126,12 @@ act0FirstValueSameSignalRepMappingV1({
     );
   }
 
+  // This task asks who posts 1 BB, not who acts after CO. Its corrected
+  // task-specific BB key must keep a same-signal blind-posting repair.
+  if (sourceTask == 'blinds_theory') {
+    return target('world_1', 'blinds_action_order', 'blinds_posts_drill');
+  }
+
   final adjudication = act0RepairGapAdjudicationForSourceTaskV1(sourceTask);
   if (adjudication != null) {
     return switch (adjudication.outcome) {
@@ -1201,6 +1207,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   final Set<String> _lessonRunPendingRetryTaskIds = <String>{};
   final Set<String> _lessonRunRetriedTaskIds = <String>{};
   final Set<String> _lessonRunWrapUpCompletedTaskIds = <String>{};
+  // Misses this lesson run that an unassisted original-source recheck already
+  // answered correctly; the wrap-up does not revisit them again.
+  final Set<String> _lessonRunSourceRecheckedTaskIds = <String>{};
   final Set<String> _lessonRunQuickFixTaskIds = <String>{};
   final Set<String> _lessonRunDeepLeakTaskIds = <String>{};
   final Map<String, int> _lessonRunSkillGainCounts = <String, int>{};
@@ -1417,6 +1426,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   @visibleForTesting
   String debugSelectedTaskIdV1() => _selectedTaskId;
+
+  @visibleForTesting
+  List<String> debugLessonWrapUpOwedTaskIdsV1() =>
+      _lessonRunMistakeTaskIds.where(_lessonWrapUpOwedV1).toList();
 
   @visibleForTesting
   String debugSelectedWorldIdV1() => _selectedWorldId;
@@ -4790,6 +4803,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _resolvedMistakeTaskIds.clear();
       _cleanTaskIds.clear();
       _lessonRunMistakeTaskIds.clear();
+      _lessonRunSourceRecheckedTaskIds.clear();
       _lessonRunAssistedTaskIds.clear();
       _lessonRunPendingRetryTaskIds.clear();
       _lessonRunRetriedTaskIds.clear();
@@ -5597,7 +5611,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                       selectedOptionIds: _placementAnswerIds,
                       result: _placementResult == null
                           ? null
-                          : _localizedPlacementResultV1(_placementResult!),
+                          : _placementResultForCurrentRouteV1(
+                              _localizedPlacementResultV1(_placementResult!),
+                            ),
                       onSelectOption: (question, optionId) => setState(() {
                         _togglePlacementOption(question, optionId);
                       }),
@@ -6699,7 +6715,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                             const <String>[];
                                         _selectedOptionId = null;
                                         _phase = Act0LessonPhaseV1.drill;
-                                        _teachingStepIndex = 0;
+                                        // _startSameSignalRecheckV1 already skipped
+                                        // teaching. Keep this an independent decision.
                                         _rapidPracticeLoop = false;
                                         return;
                                       }
@@ -9377,6 +9394,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _activeRepairTaskId = request.repairTaskId;
     _activeRepairSourceTaskId = request.sourceTaskId;
     _activePracticeRepairQueueRequestV1 = request;
+    // Repair ownership decorates the runner with a repair step, so the skip
+    // index must come from the decorated runner, as in _startMistakeRepair.
+    final launchTask = _taskById(
+      _lessonById(launchWorld.lessons, request.targetLessonId),
+      request.targetTaskId,
+    );
+    if (launchTask.phase == Act0LessonPhaseV1.drill) {
+      _teachingStepIndex = _repairRunnerForTask(
+        launchTask,
+      ).teachingSteps.length;
+    }
     _emitRepairStartedTelemetryV1(
       sourceTaskId: request.sourceTaskId,
       repairTaskId: request.repairTaskId,
@@ -10003,6 +10031,47 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _persistProgress();
   }
 
+  ({Act0LessonCardV1 lesson, Act0LessonTaskV1 task}) _retakePlacementTargetV1(
+    Act0WorldCardV1 world,
+    Act0LessonCardV1 lesson,
+    Act0LessonTaskV1 task,
+  ) {
+    // A retake does not grant skips or bypass real Academy prerequisites.
+    if (_completedTaskIds.contains(task.taskId) ||
+        lesson.state == Act0LessonStateV1.locked) {
+      final playable = _firstPlayableLesson(world);
+      return (lesson: playable, task: _firstIncompleteTask(playable));
+    }
+    return (lesson: lesson, task: task);
+  }
+
+  Act0PlacementResultV1 _placementResultForCurrentRouteV1(
+    Act0PlacementResultV1 result,
+  ) {
+    if (!_placementRetakeV1) return result;
+    final world = _worldById(
+      _progressWorlds(widget.state ?? Act0ShellStateV1.sample),
+      'world_1',
+    );
+    final lesson = _lessonById(world.lessons, result.recommendedLessonId);
+    final task = _taskByIdWithTaskIds(
+      lesson,
+      result.recommendedTaskId,
+      _pathClosedTaskIds,
+    );
+    final target = _retakePlacementTargetV1(world, lesson, task);
+    if (target.task.taskId == task.taskId) return result;
+    return result.withRecommendation(
+      recommendedLessonId: target.lesson.lessonId,
+      recommendedTaskId: target.task.taskId,
+      recommendedTitle: target.lesson.title,
+      recommendedReason:
+          'Your check is complete. Continue ${target.lesson.title} before the next action lesson; your earned progress stays saved.',
+      routeTrustLine:
+          'Next: ${target.lesson.title}. Existing prerequisites still apply.',
+    );
+  }
+
   Future<void> _startPlacementRecommendation(
     List<Act0WorldCardV1> worlds, {
     required bool fromZero,
@@ -10067,11 +10136,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         refreshedWorld.lessons,
         focusLesson.lessonId,
       );
-      if (_completedTaskIds.contains(focusTask.taskId) ||
-          refreshedFocus.state == Act0LessonStateV1.locked) {
-        focusLesson = _firstPlayableLesson(refreshedWorld);
-        focusTask = _firstIncompleteTask(focusLesson);
-      }
+      final target = _retakePlacementTargetV1(
+        refreshedWorld,
+        refreshedFocus,
+        focusTask,
+      );
+      focusLesson = target.lesson;
+      focusTask = target.task;
     }
     _selectedWorldId = world.worldId;
     _selectedLessonId = focusLesson.lessonId;
@@ -11127,6 +11198,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _cleanTaskIds.add(repairSourceTaskId);
       _lessonRunPendingRetryTaskIds.remove(selectedTask.taskId);
       _lessonRunPendingRetryTaskIds.remove(repairSourceTaskId);
+      if (_activeSameSignalRecheckTaskId == selectedTask.taskId) {
+        // Assisted answers returned above, so this is independent proof on
+        // the original source question.
+        _lessonRunSourceRecheckedTaskIds.add(repairSourceTaskId);
+      }
       if (retentionEntry?.status == _Act0RetentionMemoryStatusV1.agedRecheck ||
           retentionEntry?.status ==
               _Act0RetentionMemoryStatusV1.ownedCandidate) {
@@ -11223,6 +11299,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     _lessonRunMistakeTaskIds.add(repairSourceTaskId);
+    _lessonRunSourceRecheckedTaskIds.remove(repairSourceTaskId);
     if (_activeRepairTaskId != selectedTask.taskId &&
         !_lessonRunRetriedTaskIds.contains(repairSourceTaskId)) {
       _lessonRunPendingRetryTaskIds.add(repairSourceTaskId);
@@ -12119,10 +12196,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     _lessonRunWrapUpAnchorTaskId ??= wrapUpAnchorTaskId;
     for (final task in selectedLesson.taskList) {
-      if (!_lessonRunMistakeTaskIds.contains(task.taskId)) {
-        continue;
-      }
-      if (_lessonRunWrapUpCompletedTaskIds.contains(task.taskId)) {
+      if (!_lessonWrapUpOwedV1(task.taskId)) {
         continue;
       }
       _activeLessonWrapUpTaskId = task.taskId;
@@ -12173,10 +12247,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     ];
   }
 
+  /// A lesson-run miss is revisited once before the summary, unless an
+  /// unassisted original-source recheck already discharged it. The mistake
+  /// history, evidence and any separate review debt are kept either way.
+  bool _lessonWrapUpOwedV1(String taskId) {
+    if (!_lessonRunMistakeTaskIds.contains(taskId) ||
+        _lessonRunWrapUpCompletedTaskIds.contains(taskId)) {
+      return false;
+    }
+    return !(_lessonRunSourceRecheckedTaskIds.contains(taskId) &&
+        _isMistakeDischargedV1(taskId));
+  }
+
   int _remainingWrapUpTaskCount() {
-    return _lessonRunMistakeTaskIds
-        .where((taskId) => !_lessonRunWrapUpCompletedTaskIds.contains(taskId))
-        .length;
+    return _lessonRunMistakeTaskIds.where(_lessonWrapUpOwedV1).length;
   }
 
   Act0RunnerStateV1 _repairRunnerForTask(Act0LessonTaskV1 selectedTask) {
@@ -13815,6 +13899,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     _lessonRunXp = 0;
     _lessonRunMistakeTaskIds.clear();
+    _lessonRunSourceRecheckedTaskIds.clear();
     _lessonRunAssistedTaskIds.clear();
     _lessonRunPendingRetryTaskIds.clear();
     _lessonRunRetriedTaskIds.clear();

@@ -460,6 +460,48 @@ void main() {
       reason: 'exactly one recheck completion event, no duplicate',
     );
   });
+  testWidgets(
+    'native regression: source recheck keeps teaching skipped on 14 Pro',
+    (tester) async {
+      // Controlled widget entry, actual catalog source/target. Native evidence
+      // reaches this same route through ordinary Learn and feedback controls.
+      await _pumpHost(
+        tester,
+        state: Act0ShellStateV1.sample,
+        sink: Act0InMemoryTelemetrySinkV1(),
+        worldId: 'world_1',
+        lessonId: 'your_first_hand',
+        taskId: 'your_first_hand_private_cards_recheck',
+        viewport: const Size(393, 852),
+      );
+      await _answerOption(tester, 'queen_queen');
+      await _continueFeedback(tester);
+      expect(_activeTaskId(tester), 'cards_ranks_suits_private_board');
+      await _answerCorrectly(tester);
+      await _continueFeedback(tester);
+      final source = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(source.selectedTaskId, 'your_first_hand_private_cards_recheck');
+      expect(
+        source.runner.activeTeachingStep,
+        isNull,
+        reason:
+            'Check original read must not reopen an answer-teaching preamble',
+      );
+      expect(
+        find.byKey(const Key('act0_shell_option_ace_king')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_theory_continue_cta')),
+        findsNothing,
+      );
+      await _answerOption(tester, 'ace_king');
+      await _continueFeedback(tester);
+      expect(_activeTaskId(tester), 'your_first_hand_flop');
+    },
+  );
 }
 
 class _SameSignalRouteCaseV1 {
@@ -490,8 +532,9 @@ Future<void> _pumpHost(
   required String lessonId,
   required String taskId,
   bool debugHarness = true,
+  Size viewport = const Size(1200, 1600),
 }) async {
-  tester.view.physicalSize = const Size(1200, 1600);
+  tester.view.physicalSize = viewport;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
