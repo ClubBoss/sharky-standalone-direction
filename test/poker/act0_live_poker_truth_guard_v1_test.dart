@@ -6,11 +6,10 @@
 // are scored with the vendored poker_solver, whose ranking is pinned by
 // poker_solver_standard_ranking_v1_test.dart.
 //
-// Violations that are already confirmed and waiting on content integration
-// are listed in `_knownMaterialFails`. The ledger test fails if a NEW
-// violation appears or a listed one stops reproducing. Each per-rule "clean"
-// test is skipped while its ledger entries exist, so CI reports those rules
-// as KNOWN_MATERIAL_FAIL instead of green.
+// The integrated candidate has no known-failure exclusions. The frozen #334
+// registry is a resolved-finding coverage contract, not permission to skip.
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_solver/poker_solver.dart';
@@ -32,60 +31,8 @@ final List<_Ref> _catalog = <_Ref>[
       for (final task in lesson.taskList) _Ref(world.worldId, task),
 ];
 
-/// Confirmed #334 content defects awaiting serialized integration (the
-/// source owner, act0_shell_state_v1.dart, is frozen by #333). Key:
-/// `rule|taskId`. Value: ledger id in docs/_reviews/poker_redteam_334_*.
-const Map<String, String> _knownMaterialFails = <String, String>{
-  'hand_claim|w6_board_pair_strength_compare': 'L1',
-  'stated_hand_claim|w6_value_wet_board': 'L2',
-  'stated_hand_claim|w6_bluff_candidate': 'L3',
-  'stated_hand_claim|range_checkpoint_pressure': 'L3',
-  'board_claim|outs_improvement_w5_straight_out': 'L4',
-  'action_legality|w4_bad_bluff': 'L5',
-  'action_legality|w9_m_ratio_table_window_transfer': 'L7',
-  'pot_odds_wording|w4_bad_price_fold': 'L6',
-  'pot_odds_wording|w4_checkpoint_price': 'L6',
-  'pot_odds_wording|w4_big_price_marginal_fold': 'L6',
-  'm_ratio_zone|w9_m_ratio_table_window_transfer': 'L7',
-  'seat_rule_key|blinds_theory': 'L8',
-  'deterministic_tier|showdown_best_hand_drill': 'L9',
-  'deterministic_tier|showdown_review': 'L9',
-  'deterministic_tier|w6_ak_combos': 'L9',
-  'deterministic_tier|w6_pair_combos': 'L9',
-  'deterministic_tier|w6_combo_weight_compare': 'L9',
-  'deterministic_tier|w6_kicker_showdown_compare': 'L9',
-  'deterministic_tier|w6_board_pair_strength_compare': 'L9',
-  'deterministic_tier|w6_checkpoint_table_best_five': 'L9',
-  'deterministic_tier|range_checkpoint_combos': 'L9',
-  'deterministic_tier|what_poker_is_showdown_win': 'L9',
-  'deterministic_tier|your_first_hand_showdown': 'L9',
-  'deterministic_tier|w6_suited_offsuit_weight_compare': 'L9',
-  'deterministic_tier|w6_pair_vs_suited_weight_compare': 'L9',
-  'deterministic_tier|w6_checkpoint_table_combo_weight': 'L9',
-  'pre_answer_reveal|hand_rankings_full_house_vs_flush_drill': 'L10',
-  'pre_answer_reveal|hand_rankings_quads_vs_full_house_drill': 'L10',
-  'pre_answer_reveal|hand_rankings_royal_vs_flush_drill': 'L10',
-  'pre_answer_reveal|w6_kicker_showdown_compare': 'L10',
-  'pre_answer_reveal|w6_checkpoint_table_best_five': 'L10',
-  'answer_in_center_label|cards_ranks_suits_board_count': 'L12',
-  'answer_in_center_label|hand_rankings_best_five_drill': 'L12',
-  'answer_in_center_label|showdown_kicker_drill': 'L12',
-  'answer_in_center_label|board_texture_basics_w5_wet_board': 'L12',
-  'answer_in_center_label|connected_boards_w5_disconnected_board': 'L12',
-  'answer_in_center_label|turn_river_changes_w5_river_misses': 'L12',
-  'answer_in_center_label|hand_rankings_full_house_vs_flush_drill': 'L12',
-  'answer_in_center_label|hand_rankings_quads_vs_full_house_drill': 'L12',
-  'answer_in_center_label|hand_rankings_royal_vs_flush_drill': 'L12',
-  'pot_label_convention|w11_checkpoint_mixed_table_line': 'L11',
-  'pot_label_convention|w11_trigger_bad_price_fold': 'L11',
-  'pot_label_convention|w11_trigger_small_price_continue': 'L11',
-  'pot_label_convention|w12_checkpoint_full_loop_line': 'L11',
-  'pot_label_convention|w12_pretty_hand_bad_price_fold': 'L11',
-  'pot_label_convention|w12_revenge_raise_trap': 'L11',
-  'pot_label_convention|w4_bad_price_fold': 'L11',
-  'pot_label_convention|w4_checkpoint_price': 'L11',
-  'pot_label_convention|w4_big_price_marginal_fold': 'L11',
-};
+// Empty by contract: a new violation must be fixed or the candidate held.
+const Map<String, String> _knownMaterialFails = <String, String>{};
 
 // ---------------------------------------------------------------------------
 // Card helpers.
@@ -465,6 +412,20 @@ _Coverage _checkBoardClaims() {
       }
     }
   }
+  // Rank spans explicitly attributed to the board remain checkable after
+  // correcting a combined hole-card/board explanation.
+  final attributed = RegExp(r'((?:[AKQJT2-9]-)+[AKQJT2-9]) on (?:the )?board');
+  for (final ref in _catalog) {
+    final board = ref.table.boardCards.map((x) => _solverCard(x)?[0]).toSet();
+    for (final text in _authoredTexts(ref.runner)) {
+      for (final m in attributed.allMatches(text)) {
+        c.checked.add(ref.id);
+        if (m.group(1)!.split('-').any((r) => !board.contains(r))) {
+          c.violations[ref.id] = 'named board rank absent: ${m.group(0)}';
+        }
+      }
+    }
+  }
   return c;
 }
 
@@ -675,6 +636,27 @@ _Coverage _checkMRatioZone() {
       }
     }
   }
+  final explicit = RegExp(
+    r'(\d+(?:\.\d+)?) BB.*no antes, M = (\d+(?:\.\d+)?): (green|yellow|red)',
+  );
+  for (final ref in _catalog) {
+    for (final text in _authoredTexts(ref.runner)) {
+      final m = explicit.firstMatch(text);
+      if (m == null) continue;
+      c.checked.add(ref.id);
+      final expected = double.parse(m.group(1)!) / 1.5;
+      final stated = double.parse(m.group(2)!);
+      final zone = expected >= 20
+          ? 'green'
+          : expected >= 10
+          ? 'yellow'
+          : 'red';
+      if ((expected - stated).abs() > 0.001 || m.group(3) != zone) {
+        c.violations[ref.id] =
+            'no-ante M arithmetic or three-zone claim contradicts stack';
+      }
+    }
+  }
   return c;
 }
 
@@ -844,6 +826,49 @@ _Coverage _checkPotLabelConvention() {
         evidence = true;
       }
     }
+    final explicitInto = RegExp(
+      r'bets? (\d+(?:\.\d+)?) BB into (\d+(?:\.\d+)?) BB',
+    );
+    final sameHandPot = RegExp(
+      r'pot is (\d+(?:\.\d+)?) BB.*?now bets (\d+(?:\.\d+)?) BB',
+    );
+    final explicitAfter = RegExp(
+      r'Pot is (\d+(?:\.\d+)?) BB after the (\d+(?:\.\d+)?) BB bet',
+    );
+    var hasEquation = false;
+    for (final text in texts) {
+      for (final m in sameHandPot.allMatches(text)) {
+        hasEquation = true;
+        c.checked.add(ref.id);
+        final expected = double.parse(m.group(1)!) + double.parse(m.group(2)!);
+        if ((pot - expected).abs() > 0.001 ||
+            (toCall - double.parse(m.group(2)!)).abs() > 0.001) {
+          c.violations[ref.id] =
+              'current decision pot/price contradicts the explicit same-hand historical pot and new bet';
+        }
+      }
+      for (final m in explicitInto.allMatches(text)) {
+        // A previous-street line cannot price the current call.
+        if ((double.parse(m.group(1)!) - toCall).abs() > 0.001) continue;
+        hasEquation = true;
+        c.checked.add(ref.id);
+        final expected = double.parse(m.group(1)!) + double.parse(m.group(2)!);
+        if ((pot - expected).abs() > 0.001) {
+          c.violations[ref.id] =
+              'decision pot $pot != historical pot + outstanding bet $expected';
+        }
+      }
+      for (final m in explicitAfter.allMatches(text)) {
+        hasEquation = true;
+        c.checked.add(ref.id);
+        if ((pot - double.parse(m.group(1)!)).abs() > 0.001 ||
+            (toCall - double.parse(m.group(2)!)).abs() > 0.001) {
+          c.violations[ref.id] =
+              'decision pot or price contradicts explicit after-bet snapshot';
+        }
+      }
+    }
+    if (hasEquation) continue;
     if (!evidence) {
       c.excluded[ref.id] = 'pot label meaning not provable from copy';
       continue;
@@ -866,6 +891,30 @@ void main() {
   final results = {for (final e in _rules.entries) e.key: e.value()};
 
   test('coverage report', () {
+    final output = Platform.environment['POKER_TRUTH_LEDGER'];
+    if (output != null) {
+      File(output).writeAsStringSync(
+        const JsonEncoder.withIndent(' ').convert([
+          for (final ref in _catalog)
+            for (final rule in results.entries)
+              {
+                'task_id': ref.id,
+                'world_id': ref.worldId,
+                'rule': rule.key,
+                'result': rule.value.violations.containsKey(ref.id)
+                    ? 'FAIL'
+                    : rule.value.checked.contains(ref.id)
+                    ? 'PASS'
+                    : rule.value.excluded.containsKey(ref.id)
+                    ? 'NEEDS_SOURCE_CONTEXT'
+                    : 'NOT_APPLICABLE',
+                'reason':
+                    rule.value.violations[ref.id] ??
+                    rule.value.excluded[ref.id],
+              },
+        ]),
+      );
+    }
     expect(_catalog, hasLength(367), reason: 'live English catalog size');
     final lines = <String>['task universe: ${_catalog.length}'];
     for (final e in results.entries) {
@@ -879,15 +928,41 @@ void main() {
     print(lines.join('\n'));
     // Showdown denominators are pinned so silent drift is visible.
     expect(results['showdown_winner_key']!.checked, hasLength(6));
-    expect(results['hand_claim']!.checked, hasLength(15));
+    expect(results['hand_claim']!.checked, hasLength(18));
   });
 
-  test('known material failures are exactly the #334 ledger', () {
+  test('all 49 historical #334 findings are resolved without exclusions', () {
     final actual = <String, String>{
       for (final e in results.entries)
         for (final v in e.value.violations.entries)
           '${e.key}|${v.key}': v.value,
     };
+    final historical =
+        jsonDecode(
+              File(
+                'test/poker/fixtures/resolved_334_v1.json',
+              ).readAsStringSync(),
+            )
+            as Map;
+    expect(historical.length, 49);
+    expect(
+      historical.keys.map((k) => (k as String).split('|').last).toSet(),
+      hasLength(39),
+    );
+    for (final key in historical.keys.cast<String>()) {
+      final split = key.split('|');
+      expect(
+        results[split.first]!.checked,
+        contains(split.last),
+        reason:
+            'A resolved historical finding must stay proved, not excluded: $key',
+      );
+      expect(
+        results[split.first]!.violations.containsKey(split.last),
+        isFalse,
+        reason: key,
+      );
+    }
     final unexpected = actual.keys.toSet().difference(
       _knownMaterialFails.keys.toSet(),
     );

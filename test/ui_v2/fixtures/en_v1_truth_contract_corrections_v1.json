@@ -1,0 +1,170 @@
+[
+  {
+    "task": "what_poker_is_showdown_win",
+    "choice": "hero_cards_only",
+    "field": "q",
+    "before": "suboptimal",
+    "after": "wrong",
+    "reason": "Owner factual-question policy: objectively false answers are wrong."
+  },
+  {
+    "task": "your_first_hand_showdown",
+    "choice": "hero_cards_only",
+    "field": "q",
+    "before": "suboptimal",
+    "after": "wrong",
+    "reason": "Owner factual-question policy: objectively false answers are wrong."
+  },
+  {
+    "task": "blinds_theory",
+    "choice": "top",
+    "field": "seat",
+    "before": "utg",
+    "after": "sb",
+    "reason": "Task-specific blind answer with stable opaque choice IDs."
+  },
+  {
+    "task": "blinds_theory",
+    "choice": "bottom",
+    "field": "seat",
+    "before": "btn",
+    "after": "bb",
+    "reason": "Task-specific blind answer with stable opaque choice IDs."
+  },
+  {
+    "task": "blinds_theory",
+    "choice": "random",
+    "field": "seat",
+    "before": "bb",
+    "after": "btn",
+    "reason": "Task-specific blind answer with stable opaque choice IDs."
+  },
+  {
+    "task": "showdown_best_hand_drill",
+    "choice": "hero_cards_only",
+    "field": "q",
+    "before": "suboptimal",
+    "after": "wrong",
+    "reason": "Owner factual-question policy: objectively false answers are wrong."
+  },
+  {
+    "task": "showdown_review",
+    "choice": "hero_cards_only",
+    "field": "q",
+    "before": "suboptimal",
+    "after": "wrong",
+    "reason": "Owner factual-question policy: objectively false answers are wrong."
+  },
+  {
+    "task": "same_hand_different_seat_same_hand_early_fold",
+    "choice": "raise",
+    "field": "q",
+    "before": "wrong",
+    "after": "suboptimal",
+    "reason": "Strategy alternative in a conservative beginner baseline is suboptimal, not factually wrong."
+  },
+  {
+    "task": "position_apply_early_fold",
+    "choice": "raise",
+    "field": "q",
+    "before": "wrong",
+    "after": "suboptimal",
+    "reason": "Strategy alternative in a conservative beginner baseline is suboptimal, not factually wrong."
+  },
+  {
+    "task": "position_apply_hj_fold",
+    "choice": "raise",
+    "field": "q",
+    "before": "wrong",
+    "after": "suboptimal",
+    "reason": "Strategy alternative in a conservative beginner baseline is suboptimal, not factually wrong."
+  },
+  {
+    "task": "position_checkpoint_position_checkpoint_early_fold",
+    "choice": "raise",
+    "field": "q",
+    "before": "wrong",
+    "after": "suboptimal",
+    "reason": "Strategy alternative in a conservative beginner baseline is suboptimal, not factually wrong."
+  },
+  {
+    "task": "w6_ak_combos",
+    "choice": "twelve",
+    "field": "q",
+    "before": "suboptimal",
+    "after": "wrong",
+    "reason": "Owner factual-question policy: objectively false answers are wrong."
+  },
+  {
+    "task": "w6_pair_combos",
+    "choice": "twelve",
+    "field": "q",
+    "before": "suboptimal",
+    "after": "wrong",
+    "reason": "Owner factual-question policy: objectively false answers are wrong."
+  },
+  {
+    "task": "w6_combo_weight_compare",
+    "choice": "same_weight",
+    "field": "q",
+    "before": "suboptimal",
+    "after": "wrong",
+    "reason": "Owner factual-question policy: objectively false answers are wrong."
+  },
+  {
+    "task": "range_checkpoint_combos",
+    "choice": "twelve",
+    "field": "q",
+    "before": "suboptimal",
+    "after": "wrong",
+    "reason": "Owner factual-question policy: objectively false answers are wrong."
+  },
+  {
+    "task": "w6_suited_offsuit_weight_compare",
+    "choice": "same_weight",
+    "field": "q",
+    "before": "suboptimal",
+    "after": "wrong",
+    "reason": "Owner factual-question policy: objectively false answers are wrong."
+  },
+  {
+    "task": "w6_pair_vs_suited_weight_compare",
+    "choice": "same_weight",
+    "field": "q",
+    "before": "suboptimal",
+    "after": "wrong",
+    "reason": "Owner factual-question policy: objectively false answers are wrong."
+  },
+  {
+    "task": "w6_checkpoint_table_combo_weight",
+    "choice": "pair_nines",
+    "field": "q",
+    "before": "suboptimal",
+    "after": "wrong",
+    "reason": "Owner factual-question policy: objectively false answers are wrong."
+  },
+  {
+    "task": "w6_kicker_showdown_compare",
+    "choice": "tie",
+    "field": "q",
+    "before": "suboptimal",
+    "after": "wrong",
+    "reason": "Owner factual-question policy: objectively false answers are wrong."
+  },
+  {
+    "task": "w6_board_pair_strength_compare",
+    "choice": "hero_aj",
+    "field": "q",
+    "before": "suboptimal",
+    "after": "wrong",
+    "reason": "Owner factual-question policy: objectively false answers are wrong."
+  },
+  {
+    "task": "w6_checkpoint_table_best_five",
+    "choice": "villain_wins",
+    "field": "q",
+    "before": "suboptimal",
+    "after": "wrong",
+    "reason": "Owner factual-question policy: objectively false answers are wrong."
+  }
+]

@@ -33,6 +33,29 @@ void main() {
               ],
             },
     };
+    final contractOutput = Platform.environment['TABLE_TRUTH_CONTRACT'];
+    if (contractOutput != null)
+      File(contractOutput).writeAsStringSync(jsonEncode(actual));
+    final changes =
+        jsonDecode(
+              File(
+                'test/ui_v2/fixtures/en_v1_truth_contract_corrections_v1.json',
+              ).readAsStringSync(),
+            )
+            as List;
+    for (final change in changes.cast<Map>()) {
+      final options = expected[change['task']]['options'] as List;
+      final option = options.cast<Map>().singleWhere(
+        (o) => o['id'] == change['choice'],
+      );
+      expect(
+        option[change['field']],
+        change['before'],
+        reason: 'Correction must match frozen #337 contract',
+      );
+      expect(change['reason'], isNotEmpty);
+      option[change['field']] = change['after'];
+    }
     expect(
       actual,
       expected,

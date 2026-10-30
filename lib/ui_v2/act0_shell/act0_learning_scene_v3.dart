@@ -305,18 +305,13 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
           ],
         ),
         SizedBox(height: showSpokenSurface ? 3 : 2),
-        Text(
+        _LearningCopyV3(
           headline,
-          key: const Key('act0_integrated_scene_prompt'),
-          // An authored teaching title is never ellipsized away (#331).
+          textKey: const Key('act0_integrated_scene_prompt'),
+          scrollKey: const Key('act0_learning_scene_v3_question_scroll'),
           maxLines: phase == Act0LearningScenePhaseV3.theory
               ? null
-              : showSpokenSurface
-              ? 3
-              : (enlarged ? 3 : 2),
-          overflow: phase == Act0LearningScenePhaseV3.theory
-              ? TextOverflow.visible
-              : TextOverflow.ellipsis,
+              : (showSpokenSurface || enlarged ? 3 : 2),
           style: Act0ShellTokensV1.body.copyWith(
             color: Act0ShellTokensV1.text,
             fontSize: showSpokenSurface
@@ -367,11 +362,11 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
               ),
             )
           else
-            Text(
+            _LearningCopyV3(
               support,
-              key: const Key('act0_learning_scene_v3_support'),
+              textKey: const Key('act0_learning_scene_v3_support'),
               maxLines: showSpokenSurface ? 3 : (enlarged ? 3 : 2),
-              overflow: TextOverflow.ellipsis,
+              scrollKey: const Key('act0_learning_scene_v3_feedback_scroll'),
               style: Act0ShellTokensV1.muted.copyWith(
                 color: Act0ShellTokensV1.textMuted,
                 fontSize: showSpokenSurface
@@ -476,6 +471,66 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
               ),
         child: guideBody,
       ),
+    );
+  }
+}
+
+/// Keep the existing table allocation while making long decision/feedback copy
+/// readable by a real swipe. Short copy has the same natural height.
+class _LearningCopyV3 extends StatelessWidget {
+  const _LearningCopyV3(
+    this.text, {
+    required this.textKey,
+    required this.scrollKey,
+    required this.maxLines,
+    required this.style,
+  });
+  final String text;
+  final Key textKey;
+  final Key scrollKey;
+  final int? maxLines;
+  final TextStyle style;
+  @override
+  Widget build(BuildContext context) {
+    if (maxLines == null) return Text(text, key: textKey, style: style);
+    final scaler = MediaQuery.textScalerOf(context);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final painter = TextPainter(
+          text: TextSpan(text: text, style: style),
+          textDirection: Directionality.of(context),
+          textScaler: scaler,
+        )..layout(maxWidth: constraints.maxWidth);
+        final limit =
+            maxLines! *
+                scaler.scale(style.fontSize ?? 14) *
+                (style.height ?? 1.2) +
+            2;
+        final scrolls = painter.height > limit;
+        painter.dispose();
+        if (!scrolls) return Text(text, key: textKey, style: style);
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: limit),
+                child: SingleChildScrollView(
+                  key: scrollKey,
+                  physics: const ClampingScrollPhysics(),
+                  child: Text(text, key: textKey, style: style),
+                ),
+              ),
+            ),
+            const SizedBox(width: 3),
+            const Icon(
+              Icons.unfold_more_rounded,
+              size: 14,
+              color: Act0ShellTokensV1.textMuted,
+            ),
+          ],
+        );
+      },
     );
   }
 }

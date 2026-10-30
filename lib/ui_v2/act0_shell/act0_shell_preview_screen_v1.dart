@@ -5597,7 +5597,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                       selectedOptionIds: _placementAnswerIds,
                       result: _placementResult == null
                           ? null
-                          : _localizedPlacementResultV1(_placementResult!),
+                          : _placementResultForCurrentRouteV1(
+                              _localizedPlacementResultV1(_placementResult!),
+                            ),
                       onSelectOption: (question, optionId) => setState(() {
                         _togglePlacementOption(question, optionId);
                       }),
@@ -10003,6 +10005,47 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _persistProgress();
   }
 
+  ({Act0LessonCardV1 lesson, Act0LessonTaskV1 task}) _retakePlacementTargetV1(
+    Act0WorldCardV1 world,
+    Act0LessonCardV1 lesson,
+    Act0LessonTaskV1 task,
+  ) {
+    // A retake does not grant skips or bypass real Academy prerequisites.
+    if (_completedTaskIds.contains(task.taskId) ||
+        lesson.state == Act0LessonStateV1.locked) {
+      final playable = _firstPlayableLesson(world);
+      return (lesson: playable, task: _firstIncompleteTask(playable));
+    }
+    return (lesson: lesson, task: task);
+  }
+
+  Act0PlacementResultV1 _placementResultForCurrentRouteV1(
+    Act0PlacementResultV1 result,
+  ) {
+    if (!_placementRetakeV1) return result;
+    final world = _worldById(
+      _progressWorlds(widget.state ?? Act0ShellStateV1.sample),
+      'world_1',
+    );
+    final lesson = _lessonById(world.lessons, result.recommendedLessonId);
+    final task = _taskByIdWithTaskIds(
+      lesson,
+      result.recommendedTaskId,
+      _pathClosedTaskIds,
+    );
+    final target = _retakePlacementTargetV1(world, lesson, task);
+    if (target.task.taskId == task.taskId) return result;
+    return result.withRecommendation(
+      recommendedLessonId: target.lesson.lessonId,
+      recommendedTaskId: target.task.taskId,
+      recommendedTitle: target.lesson.title,
+      recommendedReason:
+          'Your check is complete. Continue ${target.lesson.title} before the next action lesson; your earned progress stays saved.',
+      routeTrustLine:
+          'Next: ${target.lesson.title}. Existing prerequisites still apply.',
+    );
+  }
+
   Future<void> _startPlacementRecommendation(
     List<Act0WorldCardV1> worlds, {
     required bool fromZero,
@@ -10067,11 +10110,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         refreshedWorld.lessons,
         focusLesson.lessonId,
       );
-      if (_completedTaskIds.contains(focusTask.taskId) ||
-          refreshedFocus.state == Act0LessonStateV1.locked) {
-        focusLesson = _firstPlayableLesson(refreshedWorld);
-        focusTask = _firstIncompleteTask(focusLesson);
-      }
+      final target = _retakePlacementTargetV1(
+        refreshedWorld,
+        refreshedFocus,
+        focusTask,
+      );
+      focusLesson = target.lesson;
+      focusTask = target.task;
     }
     _selectedWorldId = world.worldId;
     _selectedLessonId = focusLesson.lessonId;

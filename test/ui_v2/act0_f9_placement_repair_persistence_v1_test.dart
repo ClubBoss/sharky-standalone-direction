@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'act0_pw_c3_parity_v1_test.dart' as route;
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_placement_shell_v1.dart';
 
 const previewYou = bool.fromEnvironment('SHARKY_YOU_V23_PREVIEW');
 const previewSettings = bool.fromEnvironment(
@@ -142,7 +143,22 @@ void main() {
       await route.tap(t, 'act0_shell_placement_option_rules');
       await route.tap(t, 'act0_shell_placement_next_cta');
       await route.checks(t, '111');
+      final advertised = t
+          .widget<Act0PlacementShellV1>(find.byType(Act0PlacementShellV1))
+          .result!;
       await route.tap(t, 'act0_shell_placement_start_recommended');
+      if (find.byType(Act0LessonRunnerShellV1).evaluate().isEmpty) {
+        await route.welcome(t);
+      }
+      final actual = t.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(
+        actual.selectedTaskId,
+        advertised.recommendedTaskId,
+        reason: 'Retake must advertise the actual unlocked continuation',
+      );
+      expect(actual.selectedLessonId, advertised.recommendedLessonId);
       final after = await saved(t);
       for (final k in [
         'earnedXp',

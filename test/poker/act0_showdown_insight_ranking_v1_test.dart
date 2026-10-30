@@ -1,5 +1,5 @@
 // Runtime proof for the vendored poker_solver ranking fix (issue #334).
-// Mounts the real Act0 lesson runner, taps the board at decision time and
+// Mounts the real Act0 lesson runner, rejects winner insight before the answer, then taps during feedback and
 // reads which cards the runner's showdown insight highlights. In
 // hand_rankings_full_house_vs_flush_drill Hero's A♠7♠ makes aces full of
 // sevens on A♥A♦7♥2♥2♣ and beats CO's ace-high flush, so the lit board must be
@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../ui_v2/act0_teaching_integrity_harness_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 
 Set<String> _highlightedCardIds() => find
     .byWidgetPredicate((widget) {
@@ -23,35 +24,51 @@ Set<String> _highlightedCardIds() => find
     .toSet();
 
 void main() {
-  testWidgets('board tap highlights the full house, not the losing flush', (
-    tester,
-  ) async {
-    final ref = act0TeachingTaskByIdV1(
-      'hand_rankings_full_house_vs_flush_drill',
-    );
-    await act0PumpTeachingHarnessV1(tester, ref);
-    for (
-      var i = 0;
-      i < 12 && act0TeachingContinueFinderV1.evaluate().isNotEmpty;
-      i++
-    ) {
-      await act0TapTeachingContinueV1(tester);
-      await act0SettleTeachingV1(tester);
-    }
+  testWidgets(
+    'winner insight is unavailable before answer and correct in feedback',
+    (tester) async {
+      final ref = act0TeachingTaskByIdV1(
+        'hand_rankings_full_house_vs_flush_drill',
+      );
+      await act0PumpTeachingHarnessV1(tester, ref);
+      for (
+        var i = 0;
+        i < 12 && act0TeachingContinueFinderV1.evaluate().isNotEmpty;
+        i++
+      ) {
+        await act0TapTeachingContinueV1(tester);
+        await act0SettleTeachingV1(tester);
+      }
 
-    final board = find.byKey(const Key('act0_shell_card_board_0'));
-    expect(board, findsWidgets);
-    await tester.tap(board.first, warnIfMissed: false);
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 300));
+      final board = find.byKey(const Key('act0_shell_card_board_0'));
+      expect(board, findsWidgets);
+      await tester.tap(board.first, warnIfMissed: false);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
 
-    // The runner's tap insight lights board cards; Hero's hole cards keep
-    // their authored highlight, so only the board set proves the winner.
-    final litBoard = _highlightedCardIds().where(
-      (id) => id.startsWith('board_'),
-    );
-    expect(litBoard.toSet(), <String>{'board_0', 'board_1', 'board_2'});
-    expect(_highlightedCardIds(), isNot(contains('co_0')));
-    expect(_highlightedCardIds(), isNot(contains('co_1')));
-  });
+      expect(
+        _highlightedCardIds().where((id) => id.startsWith('board_')),
+        isEmpty,
+        reason: 'An independent decision cannot tap to reveal the winning five',
+      );
+      final shell = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      shell.onChooseOption(
+        ref.task.runner.options.firstWhere((o) => o.isCorrect),
+      );
+      await tester.pump();
+      await tester.tap(board.first, warnIfMissed: false);
+      await tester.pump(const Duration(milliseconds: 300));
+
+      // The runner's tap insight lights board cards; Hero's hole cards keep
+      // their authored highlight, so only the board set proves the winner.
+      final litBoard = _highlightedCardIds().where(
+        (id) => id.startsWith('board_'),
+      );
+      expect(litBoard.toSet(), <String>{'board_0', 'board_1', 'board_2'});
+      expect(_highlightedCardIds(), isNot(contains('co_0')));
+      expect(_highlightedCardIds(), isNot(contains('co_1')));
+    },
+  );
 }

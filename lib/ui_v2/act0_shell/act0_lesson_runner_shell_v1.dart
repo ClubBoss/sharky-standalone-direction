@@ -2393,7 +2393,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }
 
   void _onBoardTappedForShowdown(Act0TableStateV1 table) {
-    if (!_allowsInteractiveShowdown(widget.runner)) {
+    // Winner insight is feedback, never a free pre-answer oracle.
+    if (!_isReview ||
+        widget.runner.selectedOptionId == null ||
+        !_allowsInteractiveShowdown(widget.runner)) {
       return;
     }
     final insight = _computeShowdownInsight(table);
@@ -2621,6 +2624,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       return null;
     }
 
+    // Invalid exposed physical decks cannot produce an insight or throw from
+    // a feedback tap. The catalog guard separately rejects their source.
+    final physicalCards = <String>[
+      ...board,
+      for (final p in participants) ...p.cards,
+    ];
+    if (physicalCards.toSet().length != physicalCards.length) return null;
     final hands = <int, Hand>{};
     for (var i = 0; i < participants.length; i++) {
       hands[i] = Hand.solveHand(<String>[...board, ...participants[i].cards]);
@@ -3185,8 +3195,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     final trailPlaybackEnabled =
         _heroDecisionReady && _actionTrailFocusedIndex != null && !isTeaching;
     final mergedHighlightIds = <String>{
-      ...presentationTable.highlightedCardIds,
-      ..._interactiveHighlightedCardIds,
+      ...(_interactiveHighlightedCardIds.isEmpty
+          ? presentationTable.highlightedCardIds
+          : _interactiveHighlightedCardIds),
     }.toList(growable: false);
     final playbackActiveSeatId =
         activeChoreographyFrame?.focusSeatId ??
@@ -3718,7 +3729,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         table: presentationTable,
         highlightedCardIds: mergedHighlightIds,
         interactiveCalloutLabel: interactiveCallout,
-        onBoardCardTap: _heroDecisionReady ? _onBoardTappedForShowdown : (_) {},
+        onBoardCardTap: isReview ? _onBoardTappedForShowdown : (_) {},
         // #331: an authored teaching step is read before the seat answer is
         // live; the same seats become tappable once teaching is done.
         onChooseSeat: _heroDecisionReady && !isTeaching
