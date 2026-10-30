@@ -166,6 +166,18 @@ void main() {
         find.byKey(const Key('act0_integrated_scene_action_foreground')),
       );
       debugPrint('T1_MEASURE hero=$hero dock=$dock');
+      for (final id in ['sb', 'co']) {
+        final nearHud = t.getRect(find.byKey(Key('act0_shell_seat_node_$id')));
+        expect(
+          nearHud.bottom + 8,
+          lessThan(hero.top),
+          reason: '$id information must clear the near face / Hero corridor',
+        );
+      }
+      expect(
+        t.widget<Scrollbar>(find.byType(Scrollbar).first).thumbVisibility,
+        isTrue,
+      );
       expect(layerOrderValid, isTrue);
       expect(hero.bottom + 8, lessThanOrEqualTo(dock.top));
       for (final option in task.runner.options) {

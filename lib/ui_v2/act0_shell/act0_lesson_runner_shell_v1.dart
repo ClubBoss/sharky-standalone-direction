@@ -4301,21 +4301,14 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                     KeyedSubtree(
                       key: const Key('act0_shell_shared_runner_lower_surface'),
                       child: usesSceneAttachedShelfV1
-                          ? ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxHeight: maxSceneDockHeight,
+                          ? _SceneControlShelfV1(
+                              key: ValueKey(
+                                'act0_scene_control_shelf_${widget.selectedTaskId}_'
+                                '${runner.phase.name}_$_showTheoryPeek',
                               ),
-                              child: Scrollbar(
-                                child: SingleChildScrollView(
-                                  key: ValueKey(
-                                    'act0_scene_control_shelf_${widget.selectedTaskId}_'
-                                    '${runner.phase.name}_$_showTheoryPeek',
-                                  ),
-                                  physics: const ClampingScrollPhysics(),
-                                  child: buildRunnerActionDock(
-                                    sceneAttachedShelf: true,
-                                  ),
-                                ),
+                              maxHeight: maxSceneDockHeight,
+                              child: buildRunnerActionDock(
+                                sceneAttachedShelf: true,
                               ),
                             )
                           : buildRunnerActionDock(),
@@ -4923,6 +4916,43 @@ class _RunnerInstructionSlotV1 extends StatelessWidget {
 
     return showContent ? content : const SizedBox.shrink();
   }
+}
+
+/// A visible, independently scrollable control plane. A task/phase key gives
+/// each learning moment a fresh offset; disposal cannot leak its controller.
+class _SceneControlShelfV1 extends StatefulWidget {
+  const _SceneControlShelfV1({
+    super.key,
+    required this.maxHeight,
+    required this.child,
+  });
+  final double maxHeight;
+  final Widget child;
+  @override
+  State<_SceneControlShelfV1> createState() => _SceneControlShelfV1State();
+}
+
+class _SceneControlShelfV1State extends State<_SceneControlShelfV1> {
+  final _controller = ScrollController();
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => ConstrainedBox(
+    constraints: BoxConstraints(maxHeight: widget.maxHeight),
+    child: Scrollbar(
+      controller: _controller,
+      thumbVisibility: true,
+      child: SingleChildScrollView(
+        controller: _controller,
+        physics: const ClampingScrollPhysics(),
+        child: widget.child,
+      ),
+    ),
+  );
 }
 
 class _RunnerActionDockV1 extends StatelessWidget {
@@ -13633,7 +13663,14 @@ class _SeatPlacementV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final point = seatSlots[slot.clamp(0, seatSlots.length - 1)];
+    final sourcePoint = seatSlots[slot.clamp(0, seatSlots.length - 1)];
+    // The near-flank portraits occupy the lower side of the stage. Keep their
+    // complete card/nameplate columns in the clear corridor above those faces,
+    // instead of solving label occlusion by painting a plate over a face.
+    // Relative slots preserve source seat/hero rotation and all callbacks.
+    final point = compactInformativeColumn && !hero && (slot == 1 || slot == 5)
+        ? sourcePoint - const Offset(0, 0.15)
+        : sourcePoint;
     // Plate depth comes from the one canonical projection. Its range stays
     // narrow on purpose: plates carry text, so the scene's depth is carried by
     // the character volumes instead.
@@ -17716,7 +17753,7 @@ class _DecisionHintPeekV1 extends StatelessWidget {
               onPressed: onShowFullIdea,
               style: TextButton.styleFrom(
                 foregroundColor: Act0ShellTokensV1.info,
-                minimumSize: const Size(0, 28),
+                minimumSize: const Size(44, 44),
                 padding: EdgeInsets.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
