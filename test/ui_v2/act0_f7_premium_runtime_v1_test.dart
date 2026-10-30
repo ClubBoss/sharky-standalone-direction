@@ -386,6 +386,61 @@ void main() {
       }
     });
 
+    testWidgets('shelf cue taps reveal and drags scroll, never choosing', (
+      t,
+    ) async {
+      final (task, lessonId, worldId) = _task('your_first_hand_flop');
+      final runner = task.runner.copyWith(
+        phase: task.phase,
+        teachingStepIndex: task.runner.teachingSteps.length,
+      );
+      final chosen = <Act0RunnerOptionV1>[];
+      t.view.physicalSize = const Size(393, 852);
+      t.view.devicePixelRatio = 1;
+      t.view.padding = const FakeViewPadding(top: 59, bottom: 34);
+      addTearDown(t.view.resetPhysicalSize);
+      addTearDown(t.view.resetDevicePixelRatio);
+      addTearDown(t.view.resetPadding);
+      await t.pumpWidget(
+        MaterialApp(
+          theme: ThemeData(fontFamily: 'Roboto'),
+          home: Scaffold(
+            body: SafeArea(
+              bottom: false,
+              child: Act0LessonRunnerShellV1(
+                runner: runner,
+                selectedWorldId: worldId,
+                selectedLessonId: lessonId,
+                selectedTaskId: task.taskId,
+                selectedTaskFamily: task.resolvedTaskFamily,
+                tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
+                onBack: () {},
+                onContinueTheory: () {},
+                onChooseOption: chosen.add,
+                onContinueReview: () {},
+              ),
+            ),
+          ),
+        ),
+      );
+      await t.pumpAndSettle();
+      final cue = find.byKey(const Key('act0_scene_shelf_more_cue'));
+      expect(cue, findsOneWidget);
+      final second = find.byKey(
+        Key('act0_shell_option_${runner.options[1].id}'),
+      );
+      final before = t.getRect(second).top;
+      await t.tapAt(t.getRect(cue).center);
+      await t.pumpAndSettle();
+      expect(chosen, isEmpty);
+      expect(t.getRect(second).top, lessThan(before));
+      final afterTap = t.getRect(second).top;
+      await t.dragFrom(const Offset(196, 830), const Offset(0, -80));
+      await t.pumpAndSettle();
+      expect(chosen, isEmpty);
+      expect(t.getRect(second).top, lessThanOrEqualTo(afterTap));
+    });
+
     testWidgets('incompatible Empty scenario falls back and keeps state', (
       t,
     ) async {

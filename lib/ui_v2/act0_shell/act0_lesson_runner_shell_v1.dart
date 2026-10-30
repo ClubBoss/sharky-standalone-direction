@@ -5088,9 +5088,12 @@ class _SceneShelfMoreCueV1 extends StatelessWidget {
     button: true,
     label: 'More choices below',
     excludeSemantics: true,
+    // Translucent: a drag that starts on the cue still scrolls the shelf,
+    // while a tap here reveals the next whole answer instead of choosing the
+    // half-hidden one underneath.
     child: GestureDetector(
       key: const Key('act0_scene_shelf_more_cue'),
-      behavior: HitTestBehavior.opaque,
+      behavior: HitTestBehavior.translucent,
       onTap: onTap,
       child: Container(
         height: 44 + bottomInset,
