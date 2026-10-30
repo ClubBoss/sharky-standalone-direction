@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_scene_v3.dart';
@@ -7,7 +9,33 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contrac
 import 'act0_teaching_integrity_harness_v1.dart';
 
 void main() {
-  setUpAll(act0LoadRealTextFontsV1);
+  setUpAll(() async {
+    // Flutter ships the same licensed test font on macOS and Linux CI.
+    var directory = File(Platform.resolvedExecutable).parent;
+    Directory? fonts;
+    while (directory.parent.path != directory.path) {
+      final candidate = Directory(
+        '${directory.path}/bin/cache/artifacts/material_fonts',
+      );
+      if (candidate.existsSync()) {
+        fonts = candidate;
+        break;
+      }
+      directory = directory.parent;
+    }
+    expect(fonts, isNotNull, reason: 'Bundled real-text font must exist');
+    final loader = FontLoader('Roboto');
+    for (final weight in ['Regular', 'Bold']) {
+      loader.addFont(
+        Future.value(
+          ByteData.sublistView(
+            File('${fonts!.path}/Roboto-$weight.ttf').readAsBytesSync(),
+          ),
+        ),
+      );
+    }
+    await loader.load();
+  });
   testWidgets(
     'long source question and causal feedback remain readable by swipe on 14 Pro',
     (tester) async {

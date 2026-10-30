@@ -124,6 +124,25 @@ void sameTruth(Map<String, dynamic> before, Map<String, dynamic> after) {
 }
 
 void main() {
+  test(
+    'corrected blind-posting theory retains a source-owned same-signal rep',
+    () {
+      final target = act0FirstValueSameSignalRepMappingV1(
+        nextRepId: 'repeat_table_position_read',
+        skillAtomId: 'table_position_read',
+        sourceSignalId: 'big_blind',
+        sourceTaskId: 'blinds_theory',
+        receiptOutcome: 'repair_started',
+      );
+      expect(target?.taskId, 'blinds_posts_drill');
+      final task = Act0ShellStateV1.sample
+          .lessonById(target!.lessonId)
+          .taskList
+          .singleWhere((t) => t.taskId == target.taskId);
+      expect(task.runner.options.singleWhere((o) => o.isCorrect).seatId, 'bb');
+    },
+  );
+
   testWidgets(
     'Replay and Placement retake retain repair identity without XP or record duplication',
     (t) async {

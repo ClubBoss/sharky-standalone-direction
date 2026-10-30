@@ -126,6 +126,12 @@ act0FirstValueSameSignalRepMappingV1({
     );
   }
 
+  // This task asks who posts 1 BB, not who acts after CO. Its corrected
+  // task-specific BB key must keep a same-signal blind-posting repair.
+  if (sourceTask == 'blinds_theory') {
+    return target('world_1', 'blinds_action_order', 'blinds_posts_drill');
+  }
+
   final adjudication = act0RepairGapAdjudicationForSourceTaskV1(sourceTask);
   if (adjudication != null) {
     return switch (adjudication.outcome) {
