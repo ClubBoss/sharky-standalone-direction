@@ -9566,7 +9566,7 @@ final _foldActionRunner = _readBoardRunner.copyWith(
         Act0ActionTrailItemV1(label: 'Flop: SB checks'),
         Act0ActionTrailItemV1(label: 'Flop: BB checks'),
         Act0ActionTrailItemV1(label: 'Flop: HJ bets 2 BB'),
-        Act0ActionTrailItemV1(label: 'Flop: CO folds'),
+        Act0ActionTrailItemV1(label: 'CO folds'),
         Act0ActionTrailItemV1(label: 'Hero acts'),
       ],
     ),
