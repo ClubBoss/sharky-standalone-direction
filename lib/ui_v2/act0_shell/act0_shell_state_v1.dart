@@ -14026,11 +14026,6 @@ final _w3LateInfoEdgeRunner = _latePositionRunner.copyWith(
         Act0ActionTrailItemV1(label: 'CO acts'),
       ],
       centerLabel: 'CO after two folds',
-      activeSeatId: 'co',
-      seats: <Act0SeatStateV1>[
-        for (final seat in _latePositionRunner.table.seats)
-          _act0CopySeatStateV1(seat, isActive: seat.seatId == 'co'),
-      ],
     ),
     {'utg', 'hj'},
   ),
@@ -16325,11 +16320,6 @@ final _world4PurposePriceTableTransferRunner = _world4ValueBetRunner.copyWith(
   table: _act0CurrentStreetTableV1(
     _act0ExplicitFoldsV1(
       _world4ValueBetRunner.table.copyWith(
-        activeSeatId: 'bb',
-        seats: <Act0SeatStateV1>[
-          for (final seat in _world4ValueBetRunner.table.seats)
-            _act0CopySeatStateV1(seat, isActive: seat.seatId == 'bb'),
-        ],
         potLabel: 'Pot 6 BB',
         toCallLabel: '',
         centerLabel: 'Value plus price',

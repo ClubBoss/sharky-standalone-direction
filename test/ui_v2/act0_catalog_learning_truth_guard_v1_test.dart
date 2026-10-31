@@ -200,7 +200,8 @@ void main() {
 
   group('authored tables match the action they describe', () {
     const preflopOrder = ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'];
-    final actorStep = RegExp(r'^(UTG|HJ|CO|BTN|SB|BB) (folds|acts)$');
+    final actorStep = RegExp(r'^(UTG|HJ|CO|BTN|SB|BB) folds$');
+    final observedActor = RegExp(r'^(UTG|HJ|CO|BTN|SB|BB) acts$');
     final voluntary = RegExp(
       r'^(UTG|HJ|CO|BTN|SB|BB) (folds|opens|calls|raises|bets|checks|acts)',
     );
@@ -215,7 +216,7 @@ void main() {
       expect(offenders, isEmpty);
     });
 
-    test('folded players are out, Hero is in, trail actors agree', () {
+    test('folded players are out, Hero is in, trail folds agree', () {
       final offenders = <String>[];
       for (final e in tasks) {
         for (final t in tablesOf(e.task)) {
@@ -228,21 +229,12 @@ void main() {
               offenders.add('${e.task.taskId}: Hero is out of the hand');
             }
           }
-          final active = t.seats
-              .where((s) => s.seatId == t.activeSeatId)
-              .map((s) => s.seatLabel)
-              .firstOrNull;
           for (final item in t.actionTrail) {
             final m = actorStep.firstMatch(item.label);
             if (m == null) continue;
             final seat = byLabel[m.group(1)]!;
-            if (m.group(2) == 'folds' && seat.isInHand) {
+            if (seat.isInHand) {
               offenders.add('${e.task.taskId}: "${item.label}" yet in hand');
-            }
-            if (m.group(2) == 'acts' &&
-                active != null &&
-                m.group(1) != active) {
-              offenders.add('${e.task.taskId}: "${item.label}" vs $active');
             }
           }
         }
@@ -258,6 +250,11 @@ void main() {
         for (final t in tablesOf(e.task)) {
           if (t.boardCards.isNotEmpty) continue;
           if (!t.actionTrail.any((i) => voluntary.hasMatch(i.label))) continue;
+          // Observation frames: the trail ends on another player's turn while
+          // the learner answers from Hero's seat (Table Truth D1 keeps the
+          // decision actor on Hero). The order is about that other player.
+          final last = observedActor.firstMatch(t.actionTrail.last.label);
+          if (last != null && last.group(1) != t.heroSeat.seatLabel) continue;
           final active = t.seats
               .where((s) => s.seatId == t.activeSeatId)
               .firstOrNull;

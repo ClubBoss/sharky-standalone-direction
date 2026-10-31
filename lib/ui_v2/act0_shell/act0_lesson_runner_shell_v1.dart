@@ -5066,9 +5066,23 @@ class _SceneControlShelfV1State extends State<_SceneControlShelfV1> {
     final viewport = _viewportBox;
     if (end is RenderBox && end.attached && viewport != null) {
       final y = end.localToGlobal(Offset.zero, ancestor: viewport).dy;
-      final limit =
-          viewport.size.height -
-          (_bandReserved ? 0 : MediaQuery.paddingOf(context).bottom);
+      final inset = MediaQuery.paddingOf(context).bottom;
+      final unscrolled = !_controller.hasClients || _controller.offset <= 0;
+      if (_bandReserved && unscrolled) {
+        // Layout can settle after arrival (street choreography, theory
+        // peek). If every answer now fits without the band, give the space
+        // back; otherwise keep the whole-row boundary current.
+        if (y <= widget.maxHeight - inset + 1) {
+          setState(() {
+            _bandReserved = false;
+            _viewportCap = null;
+            _moreBelow = false;
+          });
+          return;
+        }
+        WidgetsBinding.instance.addPostFrameCallback((_) => _snapViewport());
+      }
+      final limit = viewport.size.height - (_bandReserved ? 0 : inset);
       more = y > limit + 1;
     }
     if (more && !_bandReserved) {
@@ -5086,7 +5100,8 @@ class _SceneControlShelfV1State extends State<_SceneControlShelfV1> {
   /// fully shown or waits entirely below, never a sliver under the cue.
   void _snapViewport() {
     final viewport = _viewportBox;
-    if (!mounted || viewport == null || _controller.offset > 0) return;
+    if (!mounted || viewport == null) return;
+    if (_controller.hasClients && _controller.offset > 0) return;
     final available = _availableViewportHeight(context);
     final rows = _answerRows(viewport);
     var cap = available;
@@ -5100,11 +5115,14 @@ class _SceneControlShelfV1State extends State<_SceneControlShelfV1> {
     if (cap != _viewportCap) setState(() => _viewportCap = cap);
   }
 
+  /// The band only needs room for the 44pt cue (+2pt rule) and may reach into
+  /// the safe inset, ending at least 20pt above the screen edge, so it costs
+  /// as little answer area as possible.
   double _availableViewportHeight(BuildContext context) => math.max(
     0,
     widget.maxHeight -
         _kSceneShelfCueBandV1 -
-        MediaQuery.paddingOf(context).bottom,
+        math.min(MediaQuery.paddingOf(context).bottom, 20),
   );
 
   void _revealMore() {
@@ -5170,7 +5188,6 @@ class _SceneControlShelfV1State extends State<_SceneControlShelfV1> {
           Expanded(
             child: _SceneShelfMoreCueV1(
               visible: _moreBelow,
-              bottomInset: MediaQuery.paddingOf(context).bottom,
               onTap: _revealMore,
             ),
           ),
@@ -5181,7 +5198,7 @@ class _SceneControlShelfV1State extends State<_SceneControlShelfV1> {
 }
 
 const double _kSceneShelfMoreSlackV1 = 56;
-const double _kSceneShelfCueBandV1 = 48;
+const double _kSceneShelfCueBandV1 = 46;
 final RegExp _kSceneShelfAnswerKeyV1 = RegExp(
   r'^act0_shell_option_(?!marker_)',
 );
@@ -5189,13 +5206,8 @@ final RegExp _kSceneShelfAnswerKeyV1 = RegExp(
 /// The cue's own band below the answers. It is never laid over an answer, so
 /// no answer text is hidden and no answer tap is intercepted.
 class _SceneShelfMoreCueV1 extends StatelessWidget {
-  const _SceneShelfMoreCueV1({
-    required this.visible,
-    required this.bottomInset,
-    required this.onTap,
-  });
+  const _SceneShelfMoreCueV1({required this.visible, required this.onTap});
   final bool visible;
-  final double bottomInset;
   final VoidCallback onTap;
 
   @override
@@ -5210,7 +5222,7 @@ class _SceneShelfMoreCueV1 extends StatelessWidget {
       ),
     ),
     child: Padding(
-      padding: EdgeInsets.only(right: 10, top: 2, bottom: bottomInset),
+      padding: const EdgeInsets.only(right: 10, top: 2),
       child: Align(
         alignment: Alignment.topRight,
         child: IgnorePointer(
