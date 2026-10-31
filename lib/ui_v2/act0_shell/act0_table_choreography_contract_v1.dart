@@ -134,6 +134,10 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
 
   final parsed = <_ParsedTrailItemV1>[];
   for (var index = 0; index < table.actionTrail.length; index++) {
+    // Prior actions were settled before this frame; the replay starts after.
+    if (table.actionTrail[index].isPrior) {
+      continue;
+    }
     final item = _parseTrailItemV1(
       table.actionTrail[index].label,
       sourceIndex: index,
@@ -359,31 +363,34 @@ Act0TableStateV1 act0TableForChoreographyFrameV1(
     return source;
   }
 
-  final seats = source.seats.map((seat) {
-    final folded = seat.isFolded || frame.foldedSeatIds.contains(seat.seatId);
-    return Act0SeatStateV1(
-      seatId: seat.seatId,
-      seatLabel: seat.seatLabel,
-      displayName: seat.displayName,
-      isHero: seat.isHero,
-      isDealerButton: seat.isDealerButton,
-      isSmallBlind: seat.isSmallBlind,
-      isBigBlind: seat.isBigBlind,
-      blindAmountLabel: seat.blindAmountLabel,
-      isActive: seat.seatId == frame.focusSeatId,
-      isTarget: seat.isTarget,
-      isInHand: folded ? false : seat.isInHand,
-      isFolded: folded,
-      hasActed: seat.hasActed,
-      isLastAggressor: seat.isLastAggressor,
-      isOccupied: seat.isOccupied,
-      stackLabel: seat.stackLabel,
-      holeCards: seat.holeCards,
-      cardsVisibleMode: seat.cardsVisibleMode,
-      currentBetLabel: null,
-      bet: frame.commitments[seat.seatId],
-    );
-  }).toList(growable: false);
+  final seats = source.seats
+      .map((seat) {
+        final folded =
+            seat.isFolded || frame.foldedSeatIds.contains(seat.seatId);
+        return Act0SeatStateV1(
+          seatId: seat.seatId,
+          seatLabel: seat.seatLabel,
+          displayName: seat.displayName,
+          isHero: seat.isHero,
+          isDealerButton: seat.isDealerButton,
+          isSmallBlind: seat.isSmallBlind,
+          isBigBlind: seat.isBigBlind,
+          blindAmountLabel: seat.blindAmountLabel,
+          isActive: seat.seatId == frame.focusSeatId,
+          isTarget: seat.isTarget,
+          isInHand: folded ? false : seat.isInHand,
+          isFolded: folded,
+          hasActed: seat.hasActed,
+          isLastAggressor: seat.isLastAggressor,
+          isOccupied: seat.isOccupied,
+          stackLabel: seat.stackLabel,
+          holeCards: seat.holeCards,
+          cardsVisibleMode: seat.cardsVisibleMode,
+          currentBetLabel: null,
+          bet: frame.commitments[seat.seatId],
+        );
+      })
+      .toList(growable: false);
 
   return Act0TableStateV1(
     tableFormat: source.tableFormat,
@@ -463,8 +470,10 @@ _ParsedTrailItemV1? _parseTrailItemV1(
     text = text.substring(prefix.end).trim();
   }
 
-  if (RegExp(r'^(Flop|Turn|River)\s+dealt$', caseSensitive: false)
-      .hasMatch(text)) {
+  if (RegExp(
+    r'^(Flop|Turn|River)\s+dealt$',
+    caseSensitive: false,
+  ).hasMatch(text)) {
     final match = RegExp(
       r'^(Flop|Turn|River)',
       caseSensitive: false,
@@ -487,9 +496,7 @@ _ParsedTrailItemV1? _parseTrailItemV1(
     return null;
   }
   final actorToken = actorMatch.group(1)!.toUpperCase();
-  final actorSeat = actorToken == 'HERO'
-      ? heroSeat
-      : seatByActor[actorToken];
+  final actorSeat = actorToken == 'HERO' ? heroSeat : seatByActor[actorToken];
   if (actorSeat == null) {
     return null;
   }
@@ -561,9 +568,7 @@ _TrailActionV1? _trailActionFromTokenV1(String token) {
   };
 }
 
-Act0SeatBetStateV1? _commitmentForTrailItemV1(
-  _ParsedTrailItemV1 item,
-) {
+Act0SeatBetStateV1? _commitmentForTrailItemV1(_ParsedTrailItemV1 item) {
   final actor = item.actorSeat;
   final action = item.action;
   if (actor == null || action == null) {
@@ -571,12 +576,10 @@ Act0SeatBetStateV1? _commitmentForTrailItemV1(
   }
   final kind = switch (action) {
     _TrailActionV1.blind => Act0SeatBetKindV1.post,
-    _TrailActionV1.opens || _TrailActionV1.raises =>
-      Act0SeatBetKindV1.raise,
+    _TrailActionV1.opens || _TrailActionV1.raises => Act0SeatBetKindV1.raise,
     _TrailActionV1.bets => Act0SeatBetKindV1.bet,
     _TrailActionV1.calls => Act0SeatBetKindV1.call,
-    _TrailActionV1.shoves || _TrailActionV1.allIn =>
-      Act0SeatBetKindV1.allIn,
+    _TrailActionV1.shoves || _TrailActionV1.allIn => Act0SeatBetKindV1.allIn,
     _TrailActionV1.checks ||
     _TrailActionV1.folds ||
     _TrailActionV1.acts => null,

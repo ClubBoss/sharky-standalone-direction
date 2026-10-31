@@ -954,9 +954,11 @@ class Act0TableStateV1 {
   }
 }
 
-/// A trail item is either an executable action of the shown hand or a note:
-/// teaching context (a read, an earlier orbit) that is not a betting action.
-enum Act0ActionTrailKindV1 { action, note }
+/// A trail item is an executable action of the shown hand, a note (teaching
+/// context such as a read or an earlier orbit, never executed), or a prior
+/// action: part of the hand's history that was already settled before this
+/// frame's table replay begins, so the replay starts after it.
+enum Act0ActionTrailKindV1 { action, note, prior }
 
 class Act0ActionTrailItemV1 {
   const Act0ActionTrailItemV1({required this.label})
@@ -965,10 +967,14 @@ class Act0ActionTrailItemV1 {
   const Act0ActionTrailItemV1.note({required this.label})
     : kind = Act0ActionTrailKindV1.note;
 
+  const Act0ActionTrailItemV1.prior({required this.label})
+    : kind = Act0ActionTrailKindV1.prior;
+
   final String label;
   final Act0ActionTrailKindV1 kind;
 
   bool get isNote => kind == Act0ActionTrailKindV1.note;
+  bool get isPrior => kind == Act0ActionTrailKindV1.prior;
 }
 
 /// What a table claims to be. A played hand claims a legal history; an
@@ -1262,7 +1268,7 @@ const _kW4PriceSixToEightStoryV1 = Act0HandStoryV1(
     Act0ActionTrailItemV1(label: 'Flop: HJ checks'),
     Act0ActionTrailItemV1(label: 'BTN checks'),
     Act0ActionTrailItemV1(label: 'Turn: HJ bets 2 BB'),
-    Act0ActionTrailItemV1(label: 'BTN acts'),
+    Act0ActionTrailItemV1(label: 'Hero acts'),
   ],
   folded: {'utg', 'co', 'sb', 'bb'},
   acted: {'hj'},
@@ -1284,7 +1290,7 @@ const _kW4PriceSevenToEightStoryV1 = Act0HandStoryV1(
     Act0ActionTrailItemV1(label: 'BTN checks'),
     Act0ActionTrailItemV1(label: 'Turn: SB checks'),
     Act0ActionTrailItemV1(label: 'HJ bets 1 BB'),
-    Act0ActionTrailItemV1(label: 'BTN acts'),
+    Act0ActionTrailItemV1(label: 'Hero acts'),
   ],
   folded: {'utg', 'co', 'bb'},
   acted: {'sb', 'hj'},
@@ -1306,7 +1312,7 @@ const _kW4PriceEightToFifteenStoryV1 = Act0HandStoryV1(
     Act0ActionTrailItemV1(label: 'BTN checks'),
     Act0ActionTrailItemV1(label: 'Turn: BB checks'),
     Act0ActionTrailItemV1(label: 'HJ bets 7 BB'),
-    Act0ActionTrailItemV1(label: 'BTN acts'),
+    Act0ActionTrailItemV1(label: 'Hero acts'),
   ],
   folded: {'utg', 'co', 'sb'},
   acted: {'bb', 'hj'},
@@ -1326,7 +1332,7 @@ const _kW4PriceNineToTenStoryV1 = Act0HandStoryV1(
     Act0ActionTrailItemV1(label: 'Flop: HJ checks'),
     Act0ActionTrailItemV1(label: 'BTN checks'),
     Act0ActionTrailItemV1(label: 'Turn: HJ bets 1 BB'),
-    Act0ActionTrailItemV1(label: 'BTN acts'),
+    Act0ActionTrailItemV1(label: 'Hero acts'),
   ],
   folded: {'utg', 'co', 'sb', 'bb'},
   acted: {'hj'},
@@ -1347,7 +1353,7 @@ const _kW4PriceBbBetsSixStoryV1 = Act0HandStoryV1(
     Act0ActionTrailItemV1(label: 'Flop: BB checks'),
     Act0ActionTrailItemV1(label: 'BTN checks'),
     Act0ActionTrailItemV1(label: 'Turn: BB bets 6 BB'),
-    Act0ActionTrailItemV1(label: 'BTN acts'),
+    Act0ActionTrailItemV1(label: 'Hero acts'),
   ],
   folded: {'utg', 'hj', 'co', 'sb'},
   acted: {'bb'},
@@ -1367,7 +1373,7 @@ const _kW4PriceBbBetsTwoStoryV1 = Act0HandStoryV1(
     Act0ActionTrailItemV1(label: 'Flop: BB checks'),
     Act0ActionTrailItemV1(label: 'BTN checks'),
     Act0ActionTrailItemV1(label: 'Turn: BB bets 2 BB'),
-    Act0ActionTrailItemV1(label: 'BTN acts'),
+    Act0ActionTrailItemV1(label: 'Hero acts'),
   ],
   folded: {'utg', 'hj', 'co', 'sb'},
   acted: {'bb'},
@@ -1393,7 +1399,7 @@ const _kW4PurposePriceObservationStoryV1 = Act0HandStoryV1(
     Act0ActionTrailItemV1(label: 'BB acts'),
   ],
   folded: {'utg', 'hj', 'sb'},
-  acted: {'co', 'btn'},
+  acted: {'co'},
   bets: {'btn': '2 BB'},
   focus: ['btn', 'bb'],
 );
@@ -1483,7 +1489,7 @@ Act0HandStoryV1 _coBtnShowdownStoryV1(String flopBet) => Act0HandStoryV1(
     const Act0ActionTrailItemV1(label: 'BTN checks'),
   ],
   folded: _coVsBtnFolded,
-  acted: const {'co', 'btn'},
+  acted: const {'co'},
   focus: const ['co', 'btn'],
 );
 
@@ -1508,9 +1514,11 @@ final _w5TextureShiftStoryV1 = Act0HandStoryV1(
 );
 
 // W6 turn pressure: 6 BB, BTN bets 2.5 and BB calls (11 BB), BB checks turn.
+// The preflop is prior history, so the table's replay starts on the flop.
 final _w6TurnPressureStoryV1 = Act0HandStoryV1(
   trail: [
-    ..._btnOpensBbCallsV1('2.75'),
+    for (final item in _btnOpensBbCallsV1('2.75'))
+      Act0ActionTrailItemV1.prior(label: item.label),
     const Act0ActionTrailItemV1(label: 'Flop: BB checks'),
     const Act0ActionTrailItemV1(label: 'BTN bets 2.5 BB'),
     const Act0ActionTrailItemV1(label: 'BB calls 2.5 BB'),
@@ -1660,7 +1668,8 @@ final _w12RiverBarrelStoryV1 = Act0HandStoryV1(
 );
 
 /// An explanation diagram (not a played hand): its trail becomes notes, the
-/// listed seats are out, and [chips] states what the diagram claims.
+/// listed seats are out, and [chips] states what the diagram claims. Its
+/// questions are statements, so no seat is offered as a tap target.
 Act0TableStateV1 _act0ExplanationV1(
   Act0TableStateV1 table, {
   Set<String> folded = const <String>{},
@@ -1669,6 +1678,7 @@ Act0TableStateV1 _act0ExplanationV1(
   table.copyWith(
     scope: Act0TableScopeV1.explanation,
     chipExplanation: chips,
+    selectableSeatIds: const <String>[],
     actionTrail: [
       for (final item in table.actionTrail)
         Act0ActionTrailItemV1.note(label: item.label),
@@ -16062,7 +16072,8 @@ Act0TableStateV1 _act0W4BtnBbSixBbFlopV1(
     ],
   ),
   folded: const <String>{'utg', 'hj', 'co', 'sb'},
-  acted: btnCheckedBehind ? const <String>{'bb', 'btn'} : const <String>{'bb'},
+  // Hero stays unmarked: an actionable Hero is never shown as already acted.
+  acted: const <String>{'bb'},
 );
 
 final _world4PurposeIntroRunner = _readBoardRunner.copyWith(
