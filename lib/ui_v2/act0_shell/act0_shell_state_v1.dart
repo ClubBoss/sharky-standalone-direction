@@ -1192,6 +1192,195 @@ Act0TableStateV1 _act0WithHandParticipationV1(
   ],
 );
 
+/// An authored hand for one table frame: its executable trail (and notes),
+/// the seats that folded, the live seats that already acted on this street,
+/// the current bettor's street wager, and the seats to highlight.
+typedef Act0HandStoryV1 = ({
+  List<Act0ActionTrailItemV1> trail,
+  Set<String> folded,
+  Set<String> acted,
+  String? bettor,
+  String? bet,
+  List<String> focus,
+});
+
+/// Applies [story] to [table]: participation, trail, focus and the only
+/// current-street chip (the bettor's). Pot and price labels stay the caller's
+/// and are checked against the story by the Table Truth ledger.
+Act0TableStateV1 _act0AuthoredHandV1(
+  Act0TableStateV1 table,
+  Act0HandStoryV1 story,
+) => _act0CurrentStreetTableV1(
+  _act0WithHandParticipationV1(
+    table.copyWith(actionTrail: story.trail, highlightedSeatIds: story.focus),
+    folded: story.folded,
+    acted: story.acted,
+  ),
+  bets: story.bettor == null
+      ? const <String, Act0SeatBetStateV1>{}
+      : {
+          story.bettor!: Act0SeatBetStateV1(
+            kind: Act0SeatBetKindV1.bet,
+            label: story.bettor!.toUpperCase(),
+            amountLabel: story.bet!,
+          ),
+        },
+);
+
+// Short trail-item constructor for the authored hand stories below.
+const _a = Act0ActionTrailItemV1.new;
+
+// W4 turn prices. Each history explains the entering pot the pot-odds
+// feedback quotes; unlisted seats fold in order and dead blinds stay in.
+// 6 BB entering: HJ opens 2.25, BTN calls, blinds fold; HJ bets 2 -> 8 / 2.
+final Act0HandStoryV1 _kW4PriceSixToEightStoryV1 = (
+  trail: [
+    _a(label: 'UTG folds'),
+    _a(label: 'HJ opens 2.25 BB'),
+    _a(label: 'CO folds'),
+    _a(label: 'BTN calls 2.25 BB'),
+    _a(label: 'SB folds'),
+    _a(label: 'BB folds'),
+    _a(label: 'Flop: HJ checks'),
+    _a(label: 'BTN checks'),
+    _a(label: 'Turn: HJ bets 2 BB'),
+    _a(label: 'BTN acts'),
+  ],
+  folded: const {'utg', 'co', 'sb', 'bb'},
+  acted: const {'hj'},
+  bettor: 'hj',
+  bet: '2 BB',
+  focus: const ['hj'],
+);
+// 7 BB entering: HJ opens 2, BTN and SB call, BB folds; HJ bets 1 -> 8 / 1.
+final Act0HandStoryV1 _kW4PriceSevenToEightStoryV1 = (
+  trail: [
+    _a(label: 'UTG folds'),
+    _a(label: 'HJ opens 2 BB'),
+    _a(label: 'CO folds'),
+    _a(label: 'BTN calls 2 BB'),
+    _a(label: 'SB calls 2 BB'),
+    _a(label: 'BB folds'),
+    _a(label: 'Flop: SB checks'),
+    _a(label: 'HJ checks'),
+    _a(label: 'BTN checks'),
+    _a(label: 'Turn: SB checks'),
+    _a(label: 'HJ bets 1 BB'),
+    _a(label: 'BTN acts'),
+  ],
+  folded: const {'utg', 'co', 'bb'},
+  acted: const {'sb', 'hj'},
+  bettor: 'hj',
+  bet: '1 BB',
+  focus: const ['hj'],
+);
+// 8 BB entering: HJ opens 2.5, BTN and BB call, SB folds; HJ bets 7 -> 15 / 7.
+final Act0HandStoryV1 _kW4PriceEightToFifteenStoryV1 = (
+  trail: [
+    _a(label: 'UTG folds'),
+    _a(label: 'HJ opens 2.5 BB'),
+    _a(label: 'CO folds'),
+    _a(label: 'BTN calls 2.5 BB'),
+    _a(label: 'SB folds'),
+    _a(label: 'BB calls 2.5 BB'),
+    _a(label: 'Flop: BB checks'),
+    _a(label: 'HJ checks'),
+    _a(label: 'BTN checks'),
+    _a(label: 'Turn: BB checks'),
+    _a(label: 'HJ bets 7 BB'),
+    _a(label: 'BTN acts'),
+  ],
+  folded: const {'utg', 'co', 'sb'},
+  acted: const {'bb', 'hj'},
+  bettor: 'hj',
+  bet: '7 BB',
+  focus: const ['hj'],
+);
+// 9 BB entering: HJ opens 3.75, BTN calls, blinds fold; HJ bets 1 -> 10 / 1.
+final Act0HandStoryV1 _kW4PriceNineToTenStoryV1 = (
+  trail: [
+    _a(label: 'UTG folds'),
+    _a(label: 'HJ opens 3.75 BB'),
+    _a(label: 'CO folds'),
+    _a(label: 'BTN calls 3.75 BB'),
+    _a(label: 'SB folds'),
+    _a(label: 'BB folds'),
+    _a(label: 'Flop: HJ checks'),
+    _a(label: 'BTN checks'),
+    _a(label: 'Turn: HJ bets 1 BB'),
+    _a(label: 'BTN acts'),
+  ],
+  folded: const {'utg', 'co', 'sb', 'bb'},
+  acted: const {'hj'},
+  bettor: 'hj',
+  bet: '1 BB',
+  focus: const ['hj'],
+);
+// 9 BB entering: BTN opens 4.25, SB folds, BB calls; BB bets 6 -> 15 / 6.
+// The caption names BB as the bettor; the chip and trail now agree.
+final Act0HandStoryV1 _kW4PriceBbBetsSixStoryV1 = (
+  trail: [
+    _a(label: 'UTG folds'),
+    _a(label: 'HJ folds'),
+    _a(label: 'CO folds'),
+    _a(label: 'BTN opens 4.25 BB'),
+    _a(label: 'SB folds'),
+    _a(label: 'BB calls 4.25 BB'),
+    _a(label: 'Flop: BB checks'),
+    _a(label: 'BTN checks'),
+    _a(label: 'Turn: BB bets 6 BB'),
+    _a(label: 'BTN acts'),
+  ],
+  folded: const {'utg', 'hj', 'co', 'sb'},
+  acted: const {'bb'},
+  bettor: 'bb',
+  bet: '6 BB',
+  focus: const ['bb'],
+);
+// 5 BB entering: BTN opens 2.25, SB folds, BB calls; BB bets 2 -> 7 / 2.
+final Act0HandStoryV1 _kW4PriceBbBetsTwoStoryV1 = (
+  trail: [
+    _a(label: 'UTG folds'),
+    _a(label: 'HJ folds'),
+    _a(label: 'CO folds'),
+    _a(label: 'BTN opens 2.25 BB'),
+    _a(label: 'SB folds'),
+    _a(label: 'BB calls 2.25 BB'),
+    _a(label: 'Flop: BB checks'),
+    _a(label: 'BTN checks'),
+    _a(label: 'Turn: BB bets 2 BB'),
+    _a(label: 'BTN acts'),
+  ],
+  folded: const {'utg', 'hj', 'co', 'sb'},
+  acted: const {'bb'},
+  bettor: 'bb',
+  bet: '2 BB',
+  focus: const ['btn', 'bb'],
+);
+// Flop observation: CO, BTN and SB limp, BB checks (4 BB); SB, BB and CO
+// check, Hero bets 2, SB folds: 6 BB, BB owes 2 and acts next, CO still live.
+final Act0HandStoryV1 _kW4PurposePriceObservationStoryV1 = (
+  trail: [
+    _a(label: 'UTG folds'),
+    _a(label: 'HJ folds'),
+    _a(label: 'CO calls 1 BB'),
+    _a(label: 'BTN calls 1 BB'),
+    _a(label: 'SB calls 1 BB'),
+    _a(label: 'BB checks'),
+    _a(label: 'Flop: SB checks'),
+    _a(label: 'BB checks'),
+    _a(label: 'CO checks'),
+    _a(label: 'BTN bets 2 BB'),
+    _a(label: 'SB folds'),
+    _a(label: 'BB acts'),
+  ],
+  folded: const {'utg', 'hj', 'sb'},
+  acted: const {'co', 'btn'},
+  bettor: 'btn',
+  bet: '2 BB',
+  focus: const ['btn', 'bb'],
+);
+
 // Table Truth residual: this frame has no authored hand history yet (it is on
 // the ledger guard's residual list). It keeps its pre-ledger open table, all
 // six players seated and in the hand, so a shared template's history cannot
@@ -15504,6 +15693,38 @@ final _w3PositionApplyIntroRunner = _world3PositionIntroRunner.copyWith(
   ],
 );
 
+// W4 bet-sizing hand: UTG, HJ and CO fold, BTN opens to 2.75 BB, SB folds
+// (0.5 BB dead), BB calls: 6 BB on the flop, so one-third, half and pot are
+// 2, 3 and 6 BB. BB checks to BTN; [btnCheckedBehind] shows the moment after
+// Hero checks back.
+const _w4BtnBbFlopCheckTrail = <Act0ActionTrailItemV1>[
+  Act0ActionTrailItemV1(label: 'UTG folds'),
+  Act0ActionTrailItemV1(label: 'HJ folds'),
+  Act0ActionTrailItemV1(label: 'CO folds'),
+  Act0ActionTrailItemV1(label: 'BTN opens 2.75 BB'),
+  Act0ActionTrailItemV1(label: 'SB folds'),
+  Act0ActionTrailItemV1(label: 'BB calls 2.75 BB'),
+  Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+];
+
+Act0TableStateV1 _act0W4BtnBbSixBbFlopV1(
+  Act0TableStateV1 table, {
+  bool btnCheckedBehind = false,
+}) => _act0WithHandParticipationV1(
+  table.copyWith(
+    potLabel: 'Pot 6 BB',
+    toCallLabel: '',
+    actionTrail: <Act0ActionTrailItemV1>[
+      ..._w4BtnBbFlopCheckTrail,
+      Act0ActionTrailItemV1(
+        label: btnCheckedBehind ? 'BTN checks' : 'BTN acts',
+      ),
+    ],
+  ),
+  folded: const <String>{'utg', 'hj', 'co', 'sb'},
+  acted: btnCheckedBehind ? const <String>{'bb', 'btn'} : const <String>{'bb'},
+);
+
 final _world4PurposeIntroRunner = _readBoardRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w4_purpose_intro',
@@ -15515,18 +15736,11 @@ final _world4PurposeIntroRunner = _readBoardRunner.copyWith(
   hint: 'Start with purpose: value, bluff, or protection.',
   question: 'What should you name before sizing a bet?',
   options: const <Act0RunnerOptionV1>[],
-  table: _act0OpenTableResidualV1(
+  table: _act0W4BtnBbSixBbFlopV1(
     _readBoardRunner.table.copyWith(
       streetLabel: 'Flop',
-      potLabel: 'Pot 6 BB',
-      toCallLabel: '',
       centerLabel: 'Name purpose',
       boardCards: _flopA72Cards,
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'BTN raises 3 BB'),
-        Act0ActionTrailItemV1(label: 'BB calls 3 BB'),
-        Act0ActionTrailItemV1(label: 'Flop dealt'),
-      ],
       activeSeatId: 'btn',
       highlightedSeatIds: const <String>['btn', 'bb'],
     ),
@@ -15700,11 +15914,6 @@ final _world4ValueBetRunner = _world4ValuePurposeRunner.copyWith(
   table: _world4ValuePurposeRunner.table.copyWith(
     potLabel: 'Pot 6 BB',
     centerLabel: 'Value spot',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'BTN raises 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB calls 3 BB'),
-      Act0ActionTrailItemV1(label: 'BTN acts'),
-    ],
   ),
 );
 
@@ -15804,14 +16013,7 @@ final _world4BluffPressureRunner = _world4BluffPurposeRunner.copyWith(
           'Checking is legal and not a disaster, but a small bet creates fold pressure at low cost.',
     ),
   ],
-  table: _world4BluffPurposeRunner.table.copyWith(
-    centerLabel: 'Fold pressure',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'BTN raises 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB calls 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB checks'),
-    ],
-  ),
+  table: _world4BluffPurposeRunner.table.copyWith(centerLabel: 'Fold pressure'),
 );
 
 final _world4BadBluffRunner = _world4BluffPressureRunner.copyWith(
@@ -15854,11 +16056,6 @@ final _world4BadBluffRunner = _world4BluffPressureRunner.copyWith(
   ],
   table: _world4BluffPressureRunner.table.copyWith(
     centerLabel: 'Low fold pressure',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'BTN raises 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB calls 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB checks'),
-    ],
   ),
 );
 
@@ -15945,6 +16142,11 @@ final _world4ProtectionBetRunner = _world4ProtectionIntroRunner.copyWith(
 
 final _world4ProtectionCheckRunner = _world4ProtectionBetRunner.copyWith(
   lessonId: 'w4_protection_check',
+  // Past-action frame: Hero has already checked behind.
+  table: _act0W4BtnBbSixBbFlopV1(
+    _world4ProtectionBetRunner.table,
+    btnCheckedBehind: true,
+  ),
   caption: 'Hero checks behind on a draw-heavy board.',
   hint: 'Ask what the opponent receives by not facing a bet.',
   question: 'What did checking allow?',
@@ -15999,22 +16201,25 @@ final _world4PriceIntroRunner = _callActionRunner.copyWith(
       'Price is what you must pay to continue. Read pot, to call, and hand strength together.',
   question: 'What does a bet give the caller?',
   options: const <Act0RunnerOptionV1>[],
-  table: _act0OpenTableResidualV1(
-    _callActionRunner.table.copyWith(
-      streetLabel: 'Turn',
-      potLabel: 'Pot 8 BB',
-      toCallLabel: 'To call 2 BB',
-      centerLabel: 'Facing price',
-      seats: _world4PriceSeatsV1('2 BB'),
-      boardCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'T', suit: 'h'),
-        Act0CardStateV1(rank: '8', suit: 'c'),
-        Act0CardStateV1(rank: '3', suit: 'd'),
-        Act0CardStateV1(rank: '2', suit: 's'),
-      ],
-      actionTrail: _world4PriceActionTrailV1('2 BB'),
+  table: _act0AuthoredHandV1(
+    _act0OpenTableResidualV1(
+      _callActionRunner.table.copyWith(
+        streetLabel: 'Turn',
+        potLabel: 'Pot 8 BB',
+        toCallLabel: 'To call 2 BB',
+        centerLabel: 'Facing price',
+        seats: _world4PriceSeatsV1('2 BB'),
+        boardCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'T', suit: 'h'),
+          Act0CardStateV1(rank: '8', suit: 'c'),
+          Act0CardStateV1(rank: '3', suit: 'd'),
+          Act0CardStateV1(rank: '2', suit: 's'),
+        ],
+        actionTrail: _world4PriceActionTrailV1('2 BB'),
+      ),
+      highlightedSeatIds: const <String>['co'],
     ),
-    highlightedSeatIds: const <String>['co'],
+    _kW4PriceSixToEightStoryV1,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -16080,28 +16285,31 @@ final _world4GoodPriceCallRunner = _world4PriceIntroRunner.copyWith(
           'Do not look only at the hand. Pot 8 BB is worth fighting for, to call is only 1 BB, and one pair is enough to continue once.',
     ),
   ],
-  table: _world4PriceIntroRunner.table.copyWith(
-    potLabel: 'Pot 8 BB',
-    toCallLabel: 'To call 1 BB',
-    centerLabel: 'Small price',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'T', suit: 's'),
-      Act0CardStateV1(rank: '7', suit: 'd'),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'T', suit: 'h'),
-      Act0CardStateV1(rank: '8', suit: 'c'),
-      Act0CardStateV1(rank: '3', suit: 'd'),
-      Act0CardStateV1(rank: '2', suit: 's'),
-    ],
-    highlightedCardIds: const <String>[
-      'hero_0',
-      'hero_1',
-      'board_0',
-      'board_1',
-    ],
-    seats: _world4PriceSeatsV1('1 BB'),
-    actionTrail: _world4PriceActionTrailV1('1 BB'),
+  table: _act0AuthoredHandV1(
+    _world4PriceIntroRunner.table.copyWith(
+      potLabel: 'Pot 8 BB',
+      toCallLabel: 'To call 1 BB',
+      centerLabel: 'Small price',
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'T', suit: 's'),
+        Act0CardStateV1(rank: '7', suit: 'd'),
+      ],
+      boardCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'T', suit: 'h'),
+        Act0CardStateV1(rank: '8', suit: 'c'),
+        Act0CardStateV1(rank: '3', suit: 'd'),
+        Act0CardStateV1(rank: '2', suit: 's'),
+      ],
+      highlightedCardIds: const <String>[
+        'hero_0',
+        'hero_1',
+        'board_0',
+        'board_1',
+      ],
+      seats: _world4PriceSeatsV1('1 BB'),
+      actionTrail: _world4PriceActionTrailV1('1 BB'),
+    ),
+    _kW4PriceSevenToEightStoryV1,
   ),
 );
 
@@ -16134,22 +16342,25 @@ final _world4BadPriceFoldRunner = _world4GoodPriceCallRunner.copyWith(
           'Calling risks 7 BB to win 15 BB (8 BB before the bet plus the 7 BB bet), so it needs about 32% equity. A weak pair is not a strong enough reason.',
     ),
   ],
-  table: _world4GoodPriceCallRunner.table.copyWith(
-    potLabel: 'Pot 15 BB',
-    toCallLabel: 'To call 7 BB',
-    centerLabel: 'High price',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: '8', suit: 's'),
-      Act0CardStateV1(rank: '7', suit: 'd'),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'K', suit: 'h'),
-      Act0CardStateV1(rank: '8', suit: 'c'),
-      Act0CardStateV1(rank: '4', suit: 'd'),
-      Act0CardStateV1(rank: '2', suit: 's'),
-    ],
-    seats: _world4PriceSeatsV1('7 BB'),
-    actionTrail: _world4PriceActionTrailV1('7 BB'),
+  table: _act0AuthoredHandV1(
+    _world4GoodPriceCallRunner.table.copyWith(
+      potLabel: 'Pot 15 BB',
+      toCallLabel: 'To call 7 BB',
+      centerLabel: 'High price',
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: '8', suit: 's'),
+        Act0CardStateV1(rank: '7', suit: 'd'),
+      ],
+      boardCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'K', suit: 'h'),
+        Act0CardStateV1(rank: '8', suit: 'c'),
+        Act0CardStateV1(rank: '4', suit: 'd'),
+        Act0CardStateV1(rank: '2', suit: 's'),
+      ],
+      seats: _world4PriceSeatsV1('7 BB'),
+      actionTrail: _world4PriceActionTrailV1('7 BB'),
+    ),
+    _kW4PriceEightToFifteenStoryV1,
   ),
 );
 
@@ -16195,23 +16406,26 @@ final _world4CheapPriceMarginalCallRunner = _world4GoodPriceCallRunner.copyWith(
           'Raising adds more risk than this spot asks for. The clean read is use the cheap 1 BB price and call.',
     ),
   ],
-  table: _world4GoodPriceCallRunner.table.copyWith(
-    potLabel: 'Pot 10 BB',
-    toCallLabel: 'To call 1 BB',
-    centerLabel: 'Cheap price, middle pair',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: '9', suit: 's'),
-      Act0CardStateV1(rank: '7', suit: 'd'),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'K', suit: 'c'),
-      Act0CardStateV1(rank: '9', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '4', suit: 'd'),
-      Act0CardStateV1(rank: '2', suit: 's'),
-    ],
-    highlightedCardIds: const <String>['hero_0', 'board_1'],
-    seats: _world4PriceSeatsV1('1 BB'),
-    actionTrail: _world4PriceActionTrailV1('1 BB'),
+  table: _act0AuthoredHandV1(
+    _world4GoodPriceCallRunner.table.copyWith(
+      potLabel: 'Pot 10 BB',
+      toCallLabel: 'To call 1 BB',
+      centerLabel: 'Cheap price, middle pair',
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: '9', suit: 's'),
+        Act0CardStateV1(rank: '7', suit: 'd'),
+      ],
+      boardCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'K', suit: 'c'),
+        Act0CardStateV1(rank: '9', suit: 'h', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: '4', suit: 'd'),
+        Act0CardStateV1(rank: '2', suit: 's'),
+      ],
+      highlightedCardIds: const <String>['hero_0', 'board_1'],
+      seats: _world4PriceSeatsV1('1 BB'),
+      actionTrail: _world4PriceActionTrailV1('1 BB'),
+    ),
+    _kW4PriceNineToTenStoryV1,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -16266,23 +16480,26 @@ final _world4BigPriceMarginalFoldRunner = _world4BadPriceFoldRunner.copyWith(
           'Raising adds even more risk when the call price already asks too much from a thin top pair.',
     ),
   ],
-  table: _world4BadPriceFoldRunner.table.copyWith(
-    potLabel: 'Pot 15 BB',
-    toCallLabel: 'To call 6 BB',
-    centerLabel: 'Top pair, big price',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'Q', suit: 's'),
-      Act0CardStateV1(rank: '7', suit: 'd'),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: 'J', suit: 'c'),
-      Act0CardStateV1(rank: '3', suit: 'd'),
-      Act0CardStateV1(rank: '2', suit: 's'),
-    ],
-    highlightedCardIds: const <String>['hero_0', 'board_0'],
-    seats: _world4PriceSeatsV1('6 BB'),
-    actionTrail: _world4PriceActionTrailV1('6 BB'),
+  table: _act0AuthoredHandV1(
+    _world4BadPriceFoldRunner.table.copyWith(
+      potLabel: 'Pot 15 BB',
+      toCallLabel: 'To call 6 BB',
+      centerLabel: 'Top pair, big price',
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'Q', suit: 's'),
+        Act0CardStateV1(rank: '7', suit: 'd'),
+      ],
+      boardCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: 'J', suit: 'c'),
+        Act0CardStateV1(rank: '3', suit: 'd'),
+        Act0CardStateV1(rank: '2', suit: 's'),
+      ],
+      highlightedCardIds: const <String>['hero_0', 'board_0'],
+      seats: _world4PriceSeatsV1('6 BB'),
+      actionTrail: _world4PriceActionTrailV1('6 BB'),
+    ),
+    _kW4PriceBbBetsSixStoryV1,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -16522,37 +16739,40 @@ final _world4PriceTableTransferRunner = _world4GoodPriceCallRunner.copyWith(
           'Raising spends more than this price read needs. The clean transfer is call the small price with second pair.',
     ),
   ],
-  table: _act0CurrentStreetTableV1(
-    _world4GoodPriceCallRunner.table.copyWith(
-      streetLabel: 'Turn',
-      potLabel: 'Pot 7 BB',
-      toCallLabel: 'To call 2 BB',
-      centerLabel: 'Second pair, live table',
-      heroCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'A', suit: 'c'),
-        Act0CardStateV1(rank: '9', suit: 'd'),
-      ],
-      boardCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'K', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '9', suit: 's'),
-        Act0CardStateV1(rank: '4', suit: 'c'),
-        Act0CardStateV1(rank: '2', suit: 'd'),
-      ],
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'BB bets 2 BB'),
-        Act0ActionTrailItemV1(label: 'BTN acts'),
-      ],
-      activeSeatId: 'btn',
-      highlightedSeatIds: const <String>['btn', 'bb'],
-      highlightedCardIds: const <String>['hero_1', 'board_1'],
-    ),
-    bets: {
-      'bb': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'BB',
-        amountLabel: '2 BB',
+  table: _act0AuthoredHandV1(
+    _act0CurrentStreetTableV1(
+      _world4GoodPriceCallRunner.table.copyWith(
+        streetLabel: 'Turn',
+        potLabel: 'Pot 7 BB',
+        toCallLabel: 'To call 2 BB',
+        centerLabel: 'Second pair, live table',
+        heroCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'A', suit: 'c'),
+          Act0CardStateV1(rank: '9', suit: 'd'),
+        ],
+        boardCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'K', suit: 'h', tone: Act0CardToneV1.red),
+          Act0CardStateV1(rank: '9', suit: 's'),
+          Act0CardStateV1(rank: '4', suit: 'c'),
+          Act0CardStateV1(rank: '2', suit: 'd'),
+        ],
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'BB bets 2 BB'),
+          Act0ActionTrailItemV1(label: 'BTN acts'),
+        ],
+        activeSeatId: 'btn',
+        highlightedSeatIds: const <String>['btn', 'bb'],
+        highlightedCardIds: const <String>['hero_1', 'board_1'],
       ),
-    },
+      bets: {
+        'bb': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'BB',
+          amountLabel: '2 BB',
+        ),
+      },
+    ),
+    _kW4PriceBbBetsTwoStoryV1,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -16605,37 +16825,40 @@ final _world4PurposePriceTableTransferRunner = _world4ValueBetRunner.copyWith(
           'The size is not random once you connect purpose and price. The 2 BB bet keeps weaker hands in while still charging them to continue.',
     ),
   ],
-  table: _act0CurrentStreetTableV1(
-    _act0ExplicitFoldsV1(
-      _world4ValueBetRunner.table.copyWith(
-        potLabel: 'Pot 6 BB',
-        toCallLabel: '',
-        centerLabel: 'Value plus price',
-        heroCards: const <Act0CardStateV1>[
-          Act0CardStateV1(rank: 'A', suit: 's'),
-          Act0CardStateV1(rank: 'Q', suit: 'd'),
-        ],
-        boardCards: const <Act0CardStateV1>[
-          Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
-          Act0CardStateV1(rank: '7', suit: 'c'),
-          Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
-        ],
-        actionTrail: const <Act0ActionTrailItemV1>[
-          Act0ActionTrailItemV1(label: 'BTN bets 2 BB'),
-          Act0ActionTrailItemV1(label: 'BB acts'),
-        ],
-        highlightedSeatIds: const <String>['btn', 'bb'],
-        highlightedCardIds: const <String>['hero_0', 'board_0'],
+  table: _act0AuthoredHandV1(
+    _act0CurrentStreetTableV1(
+      _act0ExplicitFoldsV1(
+        _world4ValueBetRunner.table.copyWith(
+          potLabel: 'Pot 6 BB',
+          toCallLabel: '',
+          centerLabel: 'Value plus price',
+          heroCards: const <Act0CardStateV1>[
+            Act0CardStateV1(rank: 'A', suit: 's'),
+            Act0CardStateV1(rank: 'Q', suit: 'd'),
+          ],
+          boardCards: const <Act0CardStateV1>[
+            Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+            Act0CardStateV1(rank: '7', suit: 'c'),
+            Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
+          ],
+          actionTrail: const <Act0ActionTrailItemV1>[
+            Act0ActionTrailItemV1(label: 'BTN bets 2 BB'),
+            Act0ActionTrailItemV1(label: 'BB acts'),
+          ],
+          highlightedSeatIds: const <String>['btn', 'bb'],
+          highlightedCardIds: const <String>['hero_0', 'board_0'],
+        ),
+        {'utg', 'hj', 'co', 'sb'},
       ),
-      {'utg', 'hj', 'co', 'sb'},
+      bets: {
+        'btn': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'BTN',
+          amountLabel: '2 BB',
+        ),
+      },
     ),
-    bets: {
-      'btn': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'BTN',
-        amountLabel: '2 BB',
-      ),
-    },
+    _kW4PurposePriceObservationStoryV1,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
