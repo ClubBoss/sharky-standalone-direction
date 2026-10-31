@@ -5260,11 +5260,11 @@ class _SceneShelfMoreCueV1 extends StatelessWidget {
                 key: const Key('act0_scene_shelf_more_cue'),
                 behavior: HitTestBehavior.opaque,
                 onTap: onTap,
+                // No `alignment`: inside Align it would stretch to full width.
                 child: Container(
                   height: 44,
                   constraints: const BoxConstraints(minWidth: 88),
                   padding: const EdgeInsets.symmetric(horizontal: 14),
-                  alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: Act0ShellTokensV1.surface2,
                     borderRadius: BorderRadius.circular(
@@ -5276,6 +5276,7 @@ class _SceneShelfMoreCueV1 extends StatelessWidget {
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         'More',

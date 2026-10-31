@@ -137,6 +137,7 @@ void main() {
         final cueRect = t.getRect(cue);
         expect(cueRect.height, greaterThanOrEqualTo(44));
         expect(cueRect.width, greaterThanOrEqualTo(44));
+        expect(cueRect.width, lessThanOrEqualTo(160), reason: 'compact pill');
         for (final r in rows.values) {
           if (r.bottom <= bandTop + .5) {
             expect(r.overlaps(cueRect), isFalse, reason: id);
