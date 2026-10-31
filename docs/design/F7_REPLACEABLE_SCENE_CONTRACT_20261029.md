@@ -122,9 +122,13 @@ and measured against the plate's actual felt run, rail, faces and hands at the
   plate fades into the shelf colour. These are presentation scrims only.
 - Folded seated players keep a legible nameplate; the Folded badge sits below
   it (away from face/hands), their cards and commitments stay hidden.
-- When answers overflow the shelf, a "More choices" cue covers the clipped
-  edge and one tap scrolls a whole answer into view. Choice order, IDs and
-  grading are unchanged. The cue also applies on the preview-OFF shelf.
+- On the registered plate the answers lead the decision shelf and the street
+  history ("How we got here") follows them in the same shelf.
+- When an answer is still below the shelf edge, a visual-only fade and a
+  right-edge "More" pill appear; the pill scrolls the next whole answer into
+  view, drags still scroll, and any visible answer stays directly choosable.
+  Choice order, IDs and grading are unchanged. The cue also applies on the
+  preview-OFF shelf.
 
 Scenario compatibility is unchanged: any source Empty seat selects the
 original scene for the whole scenario. In the current source this is exactly
