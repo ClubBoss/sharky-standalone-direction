@@ -861,6 +861,8 @@ class Act0TableStateV1 {
     this.selectableSeatIds = const <String>[],
     this.selectedSeatId,
     this.instructionAnchor,
+    this.scope = Act0TableScopeV1.playedHand,
+    this.chipExplanation,
   });
 
   final Act0TableFormatV1 tableFormat;
@@ -883,6 +885,8 @@ class Act0TableStateV1 {
   final List<String> selectableSeatIds;
   final String? selectedSeatId;
   final String? instructionAnchor;
+  final Act0TableScopeV1 scope;
+  final Act0ChipExplanationV1? chipExplanation;
 
   String get tableSize => act0TableFormatLabelV1(tableFormat);
 
@@ -914,6 +918,8 @@ class Act0TableStateV1 {
     List<String>? selectableSeatIds,
     String? selectedSeatId,
     String? instructionAnchor,
+    Act0TableScopeV1? scope,
+    Act0ChipExplanationV1? chipExplanation,
   }) {
     return Act0TableStateV1(
       tableFormat: tableFormat ?? this.tableFormat,
@@ -942,14 +948,55 @@ class Act0TableStateV1 {
       selectableSeatIds: selectableSeatIds ?? this.selectableSeatIds,
       selectedSeatId: selectedSeatId ?? this.selectedSeatId,
       instructionAnchor: instructionAnchor ?? this.instructionAnchor,
+      scope: scope ?? this.scope,
+      chipExplanation: chipExplanation ?? this.chipExplanation,
     );
   }
 }
 
+/// A trail item is either an executable action of the shown hand or a note:
+/// teaching context (a read, an earlier orbit) that is not a betting action.
+enum Act0ActionTrailKindV1 { action, note }
+
 class Act0ActionTrailItemV1 {
-  const Act0ActionTrailItemV1({required this.label});
+  const Act0ActionTrailItemV1({required this.label})
+    : kind = Act0ActionTrailKindV1.action;
+
+  const Act0ActionTrailItemV1.note({required this.label})
+    : kind = Act0ActionTrailKindV1.note;
 
   final String label;
+  final Act0ActionTrailKindV1 kind;
+
+  bool get isNote => kind == Act0ActionTrailKindV1.note;
+}
+
+/// What a table claims to be. A played hand claims a legal history; an
+/// orientation frame shows seats and posted blinds before any action; an
+/// explanation is a chip or seat diagram that claims only what it states.
+enum Act0TableScopeV1 { playedHand, orientation, explanation }
+
+/// Stated chip claims of an explanation diagram: what each seat committed,
+/// who is all-in or folded, and the pots with the seats eligible to win them.
+class Act0ChipExplanationV1 {
+  const Act0ChipExplanationV1({
+    required this.contributions,
+    this.allInSeatIds = const <String>{},
+    this.foldedSeatIds = const <String>{},
+    required this.pots,
+  });
+
+  final Map<String, double> contributions;
+  final Set<String> allInSeatIds;
+  final Set<String> foldedSeatIds;
+  final List<Act0PotClaimV1> pots;
+}
+
+class Act0PotClaimV1 {
+  const Act0PotClaimV1({required this.amountBb, required this.eligibleSeatIds});
+
+  final double amountBb;
+  final Set<String> eligibleSeatIds;
 }
 
 class Act0CardStateV1 {
