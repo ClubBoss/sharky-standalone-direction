@@ -11,26 +11,32 @@ void main() {
 
   group('Act0 curriculum integrity', () {
     test('W4 price decisions show the opponent source of Hero call price', () {
-      final expectedPrices = <String, String>{
-        'w4_good_price_call': '1 BB',
-        'w4_bad_price_fold': '7 BB',
-        'w4_cheap_price_marginal_call': '1 BB',
-        'w4_big_price_marginal_fold': '6 BB',
+      // The bettor is the seat the caption names (BB for the big-price
+      // spot); the trail now carries the full legal history before it.
+      final expectedPrices = <String, (String, String)>{
+        'w4_good_price_call': ('1 BB', 'hj'),
+        'w4_bad_price_fold': ('7 BB', 'hj'),
+        'w4_cheap_price_marginal_call': ('1 BB', 'hj'),
+        'w4_big_price_marginal_fold': ('6 BB', 'bb'),
       };
 
       for (final entry in expectedPrices.entries) {
+        final (price, bettorId) = entry.value;
         final runner = task('world_4', entry.key).runner;
         final hero = runner.table.heroSeat;
         final bettor = runner.table.seats.firstWhere(
-          (seat) => seat.seatId == 'hj',
+          (seat) => seat.seatId == bettorId,
         );
         expect(hero.bet, isNull, reason: entry.key);
-        expect(bettor.bet?.amountLabel, entry.value, reason: entry.key);
-        expect(runner.table.toCallLabel, 'To call ${entry.value}');
-        expect(runner.table.actionTrail.map((item) => item.label), <String>[
-          'HJ bets ${entry.value}',
-          'Hero acts',
-        ], reason: entry.key);
+        expect(bettor.bet?.amountLabel, price, reason: entry.key);
+        expect(runner.table.toCallLabel, 'To call $price');
+        final labels = runner.table.actionTrail.map((i) => i.label).toList();
+        expect(labels.last, 'Hero acts', reason: entry.key);
+        expect(
+          labels[labels.length - 2],
+          endsWith('${bettor.seatLabel} bets $price'),
+          reason: entry.key,
+        );
       }
     });
 

@@ -861,6 +861,8 @@ class Act0TableStateV1 {
     this.selectableSeatIds = const <String>[],
     this.selectedSeatId,
     this.instructionAnchor,
+    this.scope = Act0TableScopeV1.playedHand,
+    this.chipExplanation,
   });
 
   final Act0TableFormatV1 tableFormat;
@@ -883,6 +885,8 @@ class Act0TableStateV1 {
   final List<String> selectableSeatIds;
   final String? selectedSeatId;
   final String? instructionAnchor;
+  final Act0TableScopeV1 scope;
+  final Act0ChipExplanationV1? chipExplanation;
 
   String get tableSize => act0TableFormatLabelV1(tableFormat);
 
@@ -914,6 +918,8 @@ class Act0TableStateV1 {
     List<String>? selectableSeatIds,
     String? selectedSeatId,
     String? instructionAnchor,
+    Act0TableScopeV1? scope,
+    Act0ChipExplanationV1? chipExplanation,
   }) {
     return Act0TableStateV1(
       tableFormat: tableFormat ?? this.tableFormat,
@@ -942,14 +948,61 @@ class Act0TableStateV1 {
       selectableSeatIds: selectableSeatIds ?? this.selectableSeatIds,
       selectedSeatId: selectedSeatId ?? this.selectedSeatId,
       instructionAnchor: instructionAnchor ?? this.instructionAnchor,
+      scope: scope ?? this.scope,
+      chipExplanation: chipExplanation ?? this.chipExplanation,
     );
   }
 }
 
+/// A trail item is an executable action of the shown hand, a note (teaching
+/// context such as a read or an earlier orbit, never executed), or a prior
+/// action: part of the hand's history that was already settled before this
+/// frame's table replay begins, so the replay starts after it.
+enum Act0ActionTrailKindV1 { action, note, prior }
+
 class Act0ActionTrailItemV1 {
-  const Act0ActionTrailItemV1({required this.label});
+  const Act0ActionTrailItemV1({required this.label})
+    : kind = Act0ActionTrailKindV1.action;
+
+  const Act0ActionTrailItemV1.note({required this.label})
+    : kind = Act0ActionTrailKindV1.note;
+
+  const Act0ActionTrailItemV1.prior({required this.label})
+    : kind = Act0ActionTrailKindV1.prior;
 
   final String label;
+  final Act0ActionTrailKindV1 kind;
+
+  bool get isNote => kind == Act0ActionTrailKindV1.note;
+  bool get isPrior => kind == Act0ActionTrailKindV1.prior;
+}
+
+/// What a table claims to be. A played hand claims a legal history; an
+/// orientation frame shows seats and posted blinds before any action; an
+/// explanation is a chip or seat diagram that claims only what it states.
+enum Act0TableScopeV1 { playedHand, orientation, explanation }
+
+/// Stated chip claims of an explanation diagram: what each seat committed,
+/// who is all-in or folded, and the pots with the seats eligible to win them.
+class Act0ChipExplanationV1 {
+  const Act0ChipExplanationV1({
+    required this.contributions,
+    this.allInSeatIds = const <String>{},
+    this.foldedSeatIds = const <String>{},
+    required this.pots,
+  });
+
+  final Map<String, double> contributions;
+  final Set<String> allInSeatIds;
+  final Set<String> foldedSeatIds;
+  final List<Act0PotClaimV1> pots;
+}
+
+class Act0PotClaimV1 {
+  const Act0PotClaimV1({required this.amountBb, required this.eligibleSeatIds});
+
+  final double amountBb;
+  final Set<String> eligibleSeatIds;
 }
 
 class Act0CardStateV1 {
@@ -1054,6 +1107,7 @@ Act0SeatStateV1 _act0CopySeatStateV1(
   Act0SeatBetStateV1? bet,
   List<Act0CardStateV1>? holeCards,
   Act0CardsVisibleModeV1? cardsVisibleMode,
+  String? stackLabel,
 }) {
   return Act0SeatStateV1(
     seatId: seat.seatId,
@@ -1071,7 +1125,7 @@ Act0SeatStateV1 _act0CopySeatStateV1(
     hasActed: hasActed ?? seat.hasActed,
     isLastAggressor: seat.isLastAggressor,
     isOccupied: isOccupied ?? seat.isOccupied,
-    stackLabel: seat.stackLabel,
+    stackLabel: stackLabel ?? seat.stackLabel,
     holeCards: holeCards ?? seat.holeCards,
     cardsVisibleMode: cardsVisibleMode ?? seat.cardsVisibleMode,
     currentBetLabel: clearCommitment ? bet?.amountLabel : seat.currentBetLabel,
@@ -1142,6 +1196,516 @@ Act0TableStateV1 _act0WithHandParticipationV1(
                   ? seat.cardsVisibleMode
                   : Act0CardsVisibleModeV1.faceDown,
             ),
+  ],
+);
+
+/// An authored hand for one table frame: its executable trail (and notes),
+/// the seats that folded, the live seats that already acted on this street,
+/// each live seat's current-street wager, authored stacks behind, and the
+/// seats to highlight.
+class Act0HandStoryV1 {
+  const Act0HandStoryV1({
+    required this.trail,
+    required this.folded,
+    this.acted = const <String>{},
+    this.bets = const <String, String>{},
+    this.stacks = const <String, String>{},
+    required this.focus,
+  });
+
+  final List<Act0ActionTrailItemV1> trail;
+  final Set<String> folded;
+  final Set<String> acted;
+  final Map<String, String> bets;
+  final Map<String, String> stacks;
+  final List<String> focus;
+}
+
+/// Applies [story] to [table]: participation, trail, focus, stacks and the
+/// current-street chips. Pot and price labels stay the caller's and are
+/// checked against the story by the Table Truth ledger.
+Act0TableStateV1 _act0AuthoredHandV1(
+  Act0TableStateV1 table,
+  Act0HandStoryV1 story,
+) {
+  final hand = _act0CurrentStreetTableV1(
+    _act0WithHandParticipationV1(
+      table.copyWith(actionTrail: story.trail, highlightedSeatIds: story.focus),
+      folded: story.folded,
+      acted: story.acted,
+    ),
+    bets: {
+      for (final entry in story.bets.entries)
+        entry.key: Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: entry.key.toUpperCase(),
+          amountLabel: entry.value,
+        ),
+    },
+  );
+  if (story.stacks.isEmpty) return hand;
+  return hand.copyWith(
+    seats: [
+      for (final seat in hand.seats)
+        story.stacks.containsKey(seat.seatId)
+            ? _act0CopySeatStateV1(seat, stackLabel: story.stacks[seat.seatId])
+            : seat,
+    ],
+  );
+}
+
+// W4 turn prices. Each history explains the entering pot the pot-odds
+// feedback quotes; unlisted seats fold in order and dead blinds stay in.
+// 6 BB entering: HJ opens 2.25, BTN calls, blinds fold; HJ bets 2 -> 8 / 2.
+const _kW4PriceSixToEightStoryV1 = Act0HandStoryV1(
+  trail: <Act0ActionTrailItemV1>[
+    Act0ActionTrailItemV1(label: 'UTG folds'),
+    Act0ActionTrailItemV1(label: 'HJ opens 2.25 BB'),
+    Act0ActionTrailItemV1(label: 'CO folds'),
+    Act0ActionTrailItemV1(label: 'BTN calls 2.25 BB'),
+    Act0ActionTrailItemV1(label: 'SB folds'),
+    Act0ActionTrailItemV1(label: 'BB folds'),
+    Act0ActionTrailItemV1(label: 'Flop: HJ checks'),
+    Act0ActionTrailItemV1(label: 'BTN checks'),
+    Act0ActionTrailItemV1(label: 'Turn: HJ bets 2 BB'),
+    Act0ActionTrailItemV1(label: 'Hero acts'),
+  ],
+  folded: {'utg', 'co', 'sb', 'bb'},
+  acted: {'hj'},
+  bets: {'hj': '2 BB'},
+  focus: ['hj'],
+);
+
+// 7 BB entering: HJ opens 2, BTN and SB call, BB folds; HJ bets 1 -> 8 / 1.
+const _kW4PriceSevenToEightStoryV1 = Act0HandStoryV1(
+  trail: <Act0ActionTrailItemV1>[
+    Act0ActionTrailItemV1(label: 'UTG folds'),
+    Act0ActionTrailItemV1(label: 'HJ opens 2 BB'),
+    Act0ActionTrailItemV1(label: 'CO folds'),
+    Act0ActionTrailItemV1(label: 'BTN calls 2 BB'),
+    Act0ActionTrailItemV1(label: 'SB calls 2 BB'),
+    Act0ActionTrailItemV1(label: 'BB folds'),
+    Act0ActionTrailItemV1(label: 'Flop: SB checks'),
+    Act0ActionTrailItemV1(label: 'HJ checks'),
+    Act0ActionTrailItemV1(label: 'BTN checks'),
+    Act0ActionTrailItemV1(label: 'Turn: SB checks'),
+    Act0ActionTrailItemV1(label: 'HJ bets 1 BB'),
+    Act0ActionTrailItemV1(label: 'Hero acts'),
+  ],
+  folded: {'utg', 'co', 'bb'},
+  acted: {'sb', 'hj'},
+  bets: {'hj': '1 BB'},
+  focus: ['hj'],
+);
+
+// 8 BB entering: HJ opens 2.5, BTN and BB call, SB folds; HJ bets 7 -> 15 / 7.
+const _kW4PriceEightToFifteenStoryV1 = Act0HandStoryV1(
+  trail: <Act0ActionTrailItemV1>[
+    Act0ActionTrailItemV1(label: 'UTG folds'),
+    Act0ActionTrailItemV1(label: 'HJ opens 2.5 BB'),
+    Act0ActionTrailItemV1(label: 'CO folds'),
+    Act0ActionTrailItemV1(label: 'BTN calls 2.5 BB'),
+    Act0ActionTrailItemV1(label: 'SB folds'),
+    Act0ActionTrailItemV1(label: 'BB calls 2.5 BB'),
+    Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+    Act0ActionTrailItemV1(label: 'HJ checks'),
+    Act0ActionTrailItemV1(label: 'BTN checks'),
+    Act0ActionTrailItemV1(label: 'Turn: BB checks'),
+    Act0ActionTrailItemV1(label: 'HJ bets 7 BB'),
+    Act0ActionTrailItemV1(label: 'Hero acts'),
+  ],
+  folded: {'utg', 'co', 'sb'},
+  acted: {'bb', 'hj'},
+  bets: {'hj': '7 BB'},
+  focus: ['hj'],
+);
+
+// 9 BB entering: HJ opens 3.75, BTN calls, blinds fold; HJ bets 1 -> 10 / 1.
+const _kW4PriceNineToTenStoryV1 = Act0HandStoryV1(
+  trail: <Act0ActionTrailItemV1>[
+    Act0ActionTrailItemV1(label: 'UTG folds'),
+    Act0ActionTrailItemV1(label: 'HJ opens 3.75 BB'),
+    Act0ActionTrailItemV1(label: 'CO folds'),
+    Act0ActionTrailItemV1(label: 'BTN calls 3.75 BB'),
+    Act0ActionTrailItemV1(label: 'SB folds'),
+    Act0ActionTrailItemV1(label: 'BB folds'),
+    Act0ActionTrailItemV1(label: 'Flop: HJ checks'),
+    Act0ActionTrailItemV1(label: 'BTN checks'),
+    Act0ActionTrailItemV1(label: 'Turn: HJ bets 1 BB'),
+    Act0ActionTrailItemV1(label: 'Hero acts'),
+  ],
+  folded: {'utg', 'co', 'sb', 'bb'},
+  acted: {'hj'},
+  bets: {'hj': '1 BB'},
+  focus: ['hj'],
+);
+
+// 9 BB entering: BTN opens 4.25, SB folds, BB calls; BB bets 6 -> 15 / 6.
+// The caption names BB as the bettor; the chip and trail now agree.
+const _kW4PriceBbBetsSixStoryV1 = Act0HandStoryV1(
+  trail: <Act0ActionTrailItemV1>[
+    Act0ActionTrailItemV1(label: 'UTG folds'),
+    Act0ActionTrailItemV1(label: 'HJ folds'),
+    Act0ActionTrailItemV1(label: 'CO folds'),
+    Act0ActionTrailItemV1(label: 'BTN opens 4.25 BB'),
+    Act0ActionTrailItemV1(label: 'SB folds'),
+    Act0ActionTrailItemV1(label: 'BB calls 4.25 BB'),
+    Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+    Act0ActionTrailItemV1(label: 'BTN checks'),
+    Act0ActionTrailItemV1(label: 'Turn: BB bets 6 BB'),
+    Act0ActionTrailItemV1(label: 'Hero acts'),
+  ],
+  folded: {'utg', 'hj', 'co', 'sb'},
+  acted: {'bb'},
+  bets: {'bb': '6 BB'},
+  focus: ['bb'],
+);
+
+// 5 BB entering: BTN opens 2.25, SB folds, BB calls; BB bets 2 -> 7 / 2.
+const _kW4PriceBbBetsTwoStoryV1 = Act0HandStoryV1(
+  trail: <Act0ActionTrailItemV1>[
+    Act0ActionTrailItemV1(label: 'UTG folds'),
+    Act0ActionTrailItemV1(label: 'HJ folds'),
+    Act0ActionTrailItemV1(label: 'CO folds'),
+    Act0ActionTrailItemV1(label: 'BTN opens 2.25 BB'),
+    Act0ActionTrailItemV1(label: 'SB folds'),
+    Act0ActionTrailItemV1(label: 'BB calls 2.25 BB'),
+    Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+    Act0ActionTrailItemV1(label: 'BTN checks'),
+    Act0ActionTrailItemV1(label: 'Turn: BB bets 2 BB'),
+    Act0ActionTrailItemV1(label: 'Hero acts'),
+  ],
+  folded: {'utg', 'hj', 'co', 'sb'},
+  acted: {'bb'},
+  bets: {'bb': '2 BB'},
+  focus: ['btn', 'bb'],
+);
+
+// Flop observation: CO, BTN and SB limp, BB checks (4 BB); SB, BB and CO
+// check, Hero bets 2, SB folds: 6 BB, BB owes 2 and acts next, CO still live.
+const _kW4PurposePriceObservationStoryV1 = Act0HandStoryV1(
+  trail: <Act0ActionTrailItemV1>[
+    Act0ActionTrailItemV1(label: 'UTG folds'),
+    Act0ActionTrailItemV1(label: 'HJ folds'),
+    Act0ActionTrailItemV1(label: 'CO calls 1 BB'),
+    Act0ActionTrailItemV1(label: 'BTN calls 1 BB'),
+    Act0ActionTrailItemV1(label: 'SB calls 1 BB'),
+    Act0ActionTrailItemV1(label: 'BB checks'),
+    Act0ActionTrailItemV1(label: 'Flop: SB checks'),
+    Act0ActionTrailItemV1(label: 'BB checks'),
+    Act0ActionTrailItemV1(label: 'CO checks'),
+    Act0ActionTrailItemV1(label: 'BTN bets 2 BB'),
+    Act0ActionTrailItemV1(label: 'SB folds'),
+    Act0ActionTrailItemV1(label: 'BB acts'),
+  ],
+  folded: {'utg', 'hj', 'sb'},
+  acted: {'co'},
+  bets: {'btn': '2 BB'},
+  focus: ['btn', 'bb'],
+);
+
+// Shared preflop lines for the W5-W12 authored hands below.
+List<Act0ActionTrailItemV1> _coOpensBtnCallsV1(String open) => [
+  const Act0ActionTrailItemV1(label: 'UTG folds'),
+  const Act0ActionTrailItemV1(label: 'HJ folds'),
+  Act0ActionTrailItemV1(label: 'CO opens $open BB'),
+  Act0ActionTrailItemV1(label: 'BTN calls $open BB'),
+  const Act0ActionTrailItemV1(label: 'SB folds'),
+  const Act0ActionTrailItemV1(label: 'BB folds'),
+];
+
+List<Act0ActionTrailItemV1> _btnOpensBbCallsV1(String open) => [
+  const Act0ActionTrailItemV1(label: 'UTG folds'),
+  const Act0ActionTrailItemV1(label: 'HJ folds'),
+  const Act0ActionTrailItemV1(label: 'CO folds'),
+  Act0ActionTrailItemV1(label: 'BTN opens $open BB'),
+  const Act0ActionTrailItemV1(label: 'SB folds'),
+  Act0ActionTrailItemV1(label: 'BB calls $open BB'),
+];
+
+const _coVsBtnFolded = <String>{'utg', 'hj', 'sb', 'bb'};
+const _btnVsBbFolded = <String>{'utg', 'hj', 'co', 'sb'};
+
+// CO vs BTN, unpriced: CO opens to (pot - 1.5) / 2 so the target pot is
+// exact, then every street is checked to Hero on the shown street.
+Act0HandStoryV1 _coBtnCheckedToHeroStoryV1(String open, String street) =>
+    Act0HandStoryV1(
+      trail: [
+        ..._coOpensBtnCallsV1(open),
+        const Act0ActionTrailItemV1(label: 'Flop: CO checks'),
+        if (street != 'Flop') ...const [
+          Act0ActionTrailItemV1(label: 'BTN checks'),
+          Act0ActionTrailItemV1(label: 'Turn: CO checks'),
+        ],
+        if (street == 'River') ...const [
+          Act0ActionTrailItemV1(label: 'BTN checks'),
+          Act0ActionTrailItemV1(label: 'River: CO checks'),
+        ],
+      ],
+      folded: _coVsBtnFolded,
+      acted: const {'co'},
+      focus: const ['co'],
+    );
+
+// BTN vs BB turn price: BTN opens, BB calls (SB's 0.5 BB dead), the flop
+// checks through, BB bets on the turn.
+Act0HandStoryV1 _btnBbTurnBetStoryV1(String open, String bet) =>
+    Act0HandStoryV1(
+      trail: [
+        ..._btnOpensBbCallsV1(open),
+        const Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+        const Act0ActionTrailItemV1(label: 'BTN checks'),
+        Act0ActionTrailItemV1(label: 'Turn: BB bets $bet BB'),
+        const Act0ActionTrailItemV1(label: 'BTN acts'),
+      ],
+      folded: _btnVsBbFolded,
+      acted: const {'bb'},
+      bets: {'bb': '$bet BB'},
+      focus: const ['bb'],
+    );
+
+// BTN vs BB, 6 BB flop (BTN opens 2.75, BB calls), BB checks to Hero.
+final _btnBbSixBbFlopStoryV1 = Act0HandStoryV1(
+  trail: [
+    ..._btnOpensBbCallsV1('2.75'),
+    const Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+    const Act0ActionTrailItemV1(label: 'BTN acts'),
+  ],
+  folded: _btnVsBbFolded,
+  acted: const {'bb'},
+  focus: const ['btn', 'bb'],
+);
+
+// CO vs BTN showdown from a 6.5 BB flop: CO bets and BTN calls on the flop,
+// then turn and river check through and both hands are tabled.
+Act0HandStoryV1 _coBtnShowdownStoryV1(String flopBet) => Act0HandStoryV1(
+  trail: [
+    ..._coOpensBtnCallsV1('2.5'),
+    Act0ActionTrailItemV1(label: 'Flop: CO bets $flopBet BB'),
+    Act0ActionTrailItemV1(label: 'BTN calls $flopBet BB'),
+    const Act0ActionTrailItemV1(label: 'Turn: CO checks'),
+    const Act0ActionTrailItemV1(label: 'BTN checks'),
+    const Act0ActionTrailItemV1(label: 'River: CO checks'),
+    const Act0ActionTrailItemV1(label: 'BTN checks'),
+  ],
+  folded: _coVsBtnFolded,
+  acted: const {'co'},
+  focus: const ['co', 'btn'],
+);
+
+// W5 BTN vs BB turn hands: 8 BB entering, BB bets 2 (flush outs); 6 BB
+// entering, BB bets 3 (straight outs, and the safer-outs preview).
+final _w5FlushOutsStoryV1 = _btnBbTurnBetStoryV1('3.75', '2');
+final _w5StraightOutsStoryV1 = _btnBbTurnBetStoryV1('2.75', '3');
+
+// W5 texture shift: 6 BB, BTN bets 1 on the flop and BB calls (8 BB), then
+// BB checks the turn.
+final _w5TextureShiftStoryV1 = Act0HandStoryV1(
+  trail: [
+    ..._btnOpensBbCallsV1('2.75'),
+    const Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+    const Act0ActionTrailItemV1(label: 'BTN bets 1 BB'),
+    const Act0ActionTrailItemV1(label: 'BB calls 1 BB'),
+    const Act0ActionTrailItemV1(label: 'Turn: BB checks'),
+  ],
+  folded: _btnVsBbFolded,
+  acted: const {'bb'},
+  focus: const ['bb'],
+);
+
+// W6 turn pressure: 6 BB, BTN bets 2.5 and BB calls (11 BB), BB checks turn.
+// The preflop is prior history, so the table's replay starts on the flop.
+final _w6TurnPressureStoryV1 = Act0HandStoryV1(
+  trail: [
+    for (final item in _btnOpensBbCallsV1('2.75'))
+      Act0ActionTrailItemV1.prior(label: item.label),
+    const Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+    const Act0ActionTrailItemV1(label: 'BTN bets 2.5 BB'),
+    const Act0ActionTrailItemV1(label: 'BB calls 2.5 BB'),
+    const Act0ActionTrailItemV1(label: 'Turn: BB checks'),
+    const Act0ActionTrailItemV1(label: 'BTN acts'),
+  ],
+  folded: _btnVsBbFolded,
+  acted: const {'bb'},
+  focus: const ['btn', 'bb'],
+);
+
+// W6 CO range read: CO opens 2.5 (4 BB), Hero is next. The range read is a
+// teaching note, not an action.
+const _w6CoRangeReadStoryV1 = Act0HandStoryV1(
+  trail: [
+    Act0ActionTrailItemV1(label: 'UTG folds'),
+    Act0ActionTrailItemV1(label: 'HJ folds'),
+    Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
+    Act0ActionTrailItemV1(label: 'BTN acts'),
+    Act0ActionTrailItemV1.note(label: 'BTN reads the range'),
+  ],
+  folded: {'utg', 'hj'},
+  acted: {'co'},
+  bets: {'co': '2.5 BB'},
+  focus: ['co', 'btn'],
+);
+
+// W8 SPR: 5 BB flop (BTN and BB 2.25, SB dead 0.5), BB bets 3. The stated
+// SPR is at the start of the flop: 10 or 40 BB behind over 5 BB.
+Act0HandStoryV1 _w8SprStoryV1(int spr) {
+  final behind = spr * 5;
+  return Act0HandStoryV1(
+    trail: [
+      ..._btnOpensBbCallsV1('2.25'),
+      Act0ActionTrailItemV1.note(
+        label: 'SPR $spr: $behind BB behind over a 5 BB pot',
+      ),
+      const Act0ActionTrailItemV1(label: 'Flop: BB bets 3 BB'),
+      const Act0ActionTrailItemV1(label: 'BTN acts'),
+    ],
+    folded: _btnVsBbFolded,
+    acted: const {'bb'},
+    bets: const {'bb': '3 BB'},
+    stacks: {'btn': '$behind BB', 'bb': '${behind - 3} BB'},
+    focus: const ['bb'],
+  );
+}
+
+// W9 M ratio: folded to Hero on the Button with 12 BB (M = 12 / 1.5 = 8).
+const _w9FoldedToButtonStoryV1 = Act0HandStoryV1(
+  trail: [
+    Act0ActionTrailItemV1(label: 'UTG folds'),
+    Act0ActionTrailItemV1(label: 'HJ folds'),
+    Act0ActionTrailItemV1(label: 'CO folds'),
+    Act0ActionTrailItemV1(label: 'BTN acts'),
+  ],
+  folded: {'utg', 'hj', 'co'},
+  stacks: {'btn': '12 BB'},
+  focus: ['btn'],
+);
+
+// W9 bubble (the #337 authored line): Hero raises to 2.5, SB folds, BB moves
+// all-in to 18 BB total (21 BB pot, 15.5 to call). Hero, a medium stack,
+// started with 30 BB; BB's stack is exhausted.
+const _w9BubbleShoveStoryV1 = Act0HandStoryV1(
+  trail: [
+    Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+    Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+    Act0ActionTrailItemV1(label: 'UTG folds'),
+    Act0ActionTrailItemV1(label: 'HJ folds'),
+    Act0ActionTrailItemV1(label: 'CO folds'),
+    Act0ActionTrailItemV1(label: 'BTN raises to 2.5 BB'),
+    Act0ActionTrailItemV1(label: 'SB folds'),
+    Act0ActionTrailItemV1(label: 'BB shoves to 18 BB'),
+  ],
+  folded: {'utg', 'hj', 'co', 'sb'},
+  acted: {'bb'},
+  bets: {'btn': '2.5 BB', 'bb': '18 BB'},
+  stacks: {'btn': '27.5 BB', 'bb': 'All-in'},
+  focus: ['bb'],
+);
+
+// W11 with six 0.25 BB antes: CO opens 2.5, BTN calls, blinds fold (8 BB).
+// Flop CO bets 2 (10 BB, 35 BB behind each at the start of the flop); the
+// turn line adds BTN's call (12 BB) and CO's 12 BB bet (24 BB).
+List<Act0ActionTrailItemV1> _w11AnteFlopV1() => [
+  const Act0ActionTrailItemV1(label: 'Antes 0.25 BB each'),
+  ..._coOpensBtnCallsV1('2.5'),
+  const Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
+];
+final _w11FlopPriceStoryV1 = Act0HandStoryV1(
+  trail: [
+    ..._w11AnteFlopV1(),
+    const Act0ActionTrailItemV1(label: 'BTN acts'),
+  ],
+  folded: _coVsBtnFolded,
+  acted: const {'co'},
+  bets: const {'co': '2 BB'},
+  stacks: const {'co': '33 BB', 'btn': '35 BB'},
+  focus: const ['co', 'btn'],
+);
+final _w11TurnPriceStoryV1 = Act0HandStoryV1(
+  trail: [
+    ..._w11AnteFlopV1(),
+    const Act0ActionTrailItemV1(label: 'BTN calls 2 BB'),
+    const Act0ActionTrailItemV1(label: 'Turn: CO bets 12 BB'),
+    const Act0ActionTrailItemV1(label: 'BTN acts'),
+  ],
+  folded: _coVsBtnFolded,
+  acted: const {'co'},
+  bets: const {'co': '12 BB'},
+  stacks: const {'co': '21 BB', 'btn': '33 BB'},
+  focus: const ['co', 'btn'],
+);
+
+// W12 new hands: CO opens 3.25, BTN calls, blinds fold (8 BB); CO bets 2.
+// The earlier orbit is a note, not an action of this hand.
+Act0HandStoryV1 _w12FlopBetStoryV1(String earlierOrbit) => Act0HandStoryV1(
+  trail: [
+    Act0ActionTrailItemV1.note(label: earlierOrbit),
+    ..._coOpensBtnCallsV1('3.25'),
+    const Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
+    const Act0ActionTrailItemV1(label: 'BTN acts'),
+  ],
+  folded: _coVsBtnFolded,
+  acted: const {'co'},
+  bets: const {'co': '2 BB'},
+  focus: const ['co', 'btn'],
+);
+
+// W12 river: 6.5 BB, flop bet/call 3 (12.5), turn bet/call 3.75 (20 BB),
+// river CO bets 18 into 20 (38 BB, 18 to call).
+final _w12RiverBarrelStoryV1 = Act0HandStoryV1(
+  trail: [
+    ..._coOpensBtnCallsV1('2.5'),
+    const Act0ActionTrailItemV1(label: 'Flop: CO bets 3 BB'),
+    const Act0ActionTrailItemV1(label: 'BTN calls 3 BB'),
+    const Act0ActionTrailItemV1(label: 'Turn: CO bets 3.75 BB'),
+    const Act0ActionTrailItemV1(label: 'BTN calls 3.75 BB'),
+    const Act0ActionTrailItemV1(label: 'River: CO bets 18 BB'),
+    const Act0ActionTrailItemV1(label: 'BTN acts'),
+  ],
+  folded: _coVsBtnFolded,
+  acted: const {'co'},
+  bets: const {'co': '18 BB'},
+  focus: const ['co', 'btn'],
+);
+
+/// An explanation diagram (not a played hand): its trail becomes notes, the
+/// listed seats are out, and [chips] states what the diagram claims. Its
+/// questions are statements, so no seat is offered as a tap target.
+Act0TableStateV1 _act0ExplanationV1(
+  Act0TableStateV1 table, {
+  Set<String> folded = const <String>{},
+  Act0ChipExplanationV1? chips,
+}) => _act0WithHandParticipationV1(
+  table.copyWith(
+    scope: Act0TableScopeV1.explanation,
+    chipExplanation: chips,
+    selectableSeatIds: const <String>[],
+    actionTrail: [
+      for (final item in table.actionTrail)
+        Act0ActionTrailItemV1.note(label: item.label),
+    ],
+  ),
+  folded: folded,
+);
+
+// W1 all-in: blinds fold, Hero is all-in for 20 BB and CO calls 20 BB.
+const _kAllInChipsV1 = Act0ChipExplanationV1(
+  contributions: {'sb': 0.5, 'bb': 1, 'btn': 20, 'co': 20},
+  allInSeatIds: {'btn'},
+  foldedSeatIds: {'sb', 'bb'},
+  pots: [
+    Act0PotClaimV1(amountBb: 41.5, eligibleSeatIds: {'btn', 'co'}),
+  ],
+);
+
+// W8 side pot: SB folds 0.5 BB, Hero all-in 20 BB, CO and BB 50 BB each.
+// Main 60.5 BB (Hero, CO, BB); side 60 BB (CO, BB only).
+const _kSidePotChipsV1 = Act0ChipExplanationV1(
+  contributions: {'sb': 0.5, 'btn': 20, 'co': 50, 'bb': 50},
+  allInSeatIds: {'btn'},
+  foldedSeatIds: {'sb'},
+  pots: [
+    Act0PotClaimV1(amountBb: 60.5, eligibleSeatIds: {'btn', 'co', 'bb'}),
+    Act0PotClaimV1(amountBb: 60, eligibleSeatIds: {'co', 'bb'}),
   ],
 );
 
@@ -7859,7 +8423,9 @@ const _meetTableRunner = Act0RunnerStateV1(
   primaryCtaLabel: 'Continue',
   nextLessonId: 'what_you_can_do',
   returnTarget: 'learn',
+  // A seat map before any action: orientation, not a played hand.
   table: Act0TableStateV1(
+    scope: Act0TableScopeV1.orientation,
     tableFormat: Act0TableFormatV1.sixMax,
     playerCount: 6,
     seats: <Act0SeatStateV1>[
@@ -8191,7 +8757,9 @@ const _firstHandRunner = Act0RunnerStateV1(
   primaryCtaLabel: 'Continue',
   nextLessonId: 'read_board',
   returnTarget: 'learn',
+  // A seat map before any action: orientation, not a played hand.
   table: Act0TableStateV1(
+    scope: Act0TableScopeV1.orientation,
     tableFormat: Act0TableFormatV1.sixMax,
     playerCount: 6,
     seats: <Act0SeatStateV1>[
@@ -8588,6 +9156,7 @@ Act0RunnerStateV1 _act0FirstHandAkRunnerV1(
       trail.add(Act0ActionTrailItemV1(label: '$name: BTN checks'));
   }
   final table = _act0CurrentStreetTableV1(runner.table).copyWith(
+    scope: Act0TableScopeV1.playedHand,
     heroCards: _heroAkCards,
     boardCards: history ? _flopA72Cards : runner.table.boardCards,
     streetLabel: street,
@@ -8871,75 +9440,79 @@ final _allInMeaningRunner = _potStackRunner.copyWith(
           'CO covering Hero matters for how many chips can be matched, but all-in first means Hero has no chips left behind. The bigger stack does not win by size alone.',
     ),
   ],
-  table: _potStackRunner.table.copyWith(
-    centerLabel: 'All-in is all remaining chips',
-    potLabel: 'Pot 41.5 BB',
-    toCallLabel: '',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'Blinds: 1.5 BB'),
-      Act0ActionTrailItemV1(label: 'Hero shoves 20 BB'),
-      Act0ActionTrailItemV1(label: 'CO calls 20 BB'),
-    ],
-    highlightedSeatIds: const <String>['btn', 'co'],
-    seats: _potStackRunner.table.seats
-        .map<Act0SeatStateV1>(
-          (seat) => seat.seatId == 'btn'
-              ? Act0SeatStateV1(
-                  seatId: seat.seatId,
-                  seatLabel: seat.seatLabel,
-                  displayName: 'Hero',
-                  isHero: true,
-                  isDealerButton: seat.isDealerButton,
-                  isSmallBlind: seat.isSmallBlind,
-                  isBigBlind: seat.isBigBlind,
-                  blindAmountLabel: seat.blindAmountLabel,
-                  isActive: seat.isActive,
-                  isTarget: seat.isTarget,
-                  isInHand: seat.isInHand,
-                  isFolded: seat.isFolded,
-                  hasActed: seat.hasActed,
-                  isLastAggressor: seat.isLastAggressor,
-                  isOccupied: seat.isOccupied,
-                  stackLabel: '0 BB',
-                  holeCards: seat.holeCards,
-                  cardsVisibleMode: seat.cardsVisibleMode,
-                  currentBetLabel: '20 BB',
-                  bet: const Act0SeatBetStateV1(
-                    kind: Act0SeatBetKindV1.raise,
-                    label: 'All-in',
-                    amountLabel: '20 BB',
-                  ),
-                )
-              : seat.seatId == 'co'
-              ? Act0SeatStateV1(
-                  seatId: seat.seatId,
-                  seatLabel: seat.seatLabel,
-                  displayName: 'CO',
-                  isHero: seat.isHero,
-                  isDealerButton: seat.isDealerButton,
-                  isSmallBlind: seat.isSmallBlind,
-                  isBigBlind: seat.isBigBlind,
-                  blindAmountLabel: seat.blindAmountLabel,
-                  isActive: false,
-                  isTarget: seat.isTarget,
-                  isInHand: seat.isInHand,
-                  isFolded: seat.isFolded,
-                  hasActed: seat.hasActed,
-                  isLastAggressor: seat.isLastAggressor,
-                  isOccupied: seat.isOccupied,
-                  stackLabel: '80 BB',
-                  holeCards: seat.holeCards,
-                  cardsVisibleMode: seat.cardsVisibleMode,
-                  currentBetLabel: '20 BB',
-                  bet: const Act0SeatBetStateV1(
-                    kind: Act0SeatBetKindV1.call,
-                    label: 'Call',
-                    amountLabel: '20 BB',
-                  ),
-                )
-              : seat,
-        )
-        .toList(growable: false),
+  table: _act0ExplanationV1(
+    _potStackRunner.table.copyWith(
+      centerLabel: 'All-in is all remaining chips',
+      potLabel: 'Pot 41.5 BB',
+      toCallLabel: '',
+      actionTrail: const <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: 'Blinds: 1.5 BB'),
+        Act0ActionTrailItemV1(label: 'Hero shoves 20 BB'),
+        Act0ActionTrailItemV1(label: 'CO calls 20 BB'),
+      ],
+      highlightedSeatIds: const <String>['btn', 'co'],
+      seats: _potStackRunner.table.seats
+          .map<Act0SeatStateV1>(
+            (seat) => seat.seatId == 'btn'
+                ? Act0SeatStateV1(
+                    seatId: seat.seatId,
+                    seatLabel: seat.seatLabel,
+                    displayName: 'Hero',
+                    isHero: true,
+                    isDealerButton: seat.isDealerButton,
+                    isSmallBlind: seat.isSmallBlind,
+                    isBigBlind: seat.isBigBlind,
+                    blindAmountLabel: seat.blindAmountLabel,
+                    isActive: seat.isActive,
+                    isTarget: seat.isTarget,
+                    isInHand: seat.isInHand,
+                    isFolded: seat.isFolded,
+                    hasActed: seat.hasActed,
+                    isLastAggressor: seat.isLastAggressor,
+                    isOccupied: seat.isOccupied,
+                    stackLabel: '0 BB',
+                    holeCards: seat.holeCards,
+                    cardsVisibleMode: seat.cardsVisibleMode,
+                    currentBetLabel: '20 BB',
+                    bet: const Act0SeatBetStateV1(
+                      kind: Act0SeatBetKindV1.raise,
+                      label: 'All-in',
+                      amountLabel: '20 BB',
+                    ),
+                  )
+                : seat.seatId == 'co'
+                ? Act0SeatStateV1(
+                    seatId: seat.seatId,
+                    seatLabel: seat.seatLabel,
+                    displayName: 'CO',
+                    isHero: seat.isHero,
+                    isDealerButton: seat.isDealerButton,
+                    isSmallBlind: seat.isSmallBlind,
+                    isBigBlind: seat.isBigBlind,
+                    blindAmountLabel: seat.blindAmountLabel,
+                    isActive: false,
+                    isTarget: seat.isTarget,
+                    isInHand: seat.isInHand,
+                    isFolded: seat.isFolded,
+                    hasActed: seat.hasActed,
+                    isLastAggressor: seat.isLastAggressor,
+                    isOccupied: seat.isOccupied,
+                    stackLabel: '80 BB',
+                    holeCards: seat.holeCards,
+                    cardsVisibleMode: seat.cardsVisibleMode,
+                    currentBetLabel: '20 BB',
+                    bet: const Act0SeatBetStateV1(
+                      kind: Act0SeatBetKindV1.call,
+                      label: 'Call',
+                      amountLabel: '20 BB',
+                    ),
+                  )
+                : seat,
+          )
+          .toList(growable: false),
+    ),
+    folded: const {'utg', 'hj', 'sb', 'bb'},
+    chips: _kAllInChipsV1,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -8991,8 +9564,12 @@ final _matchedChipsTransferRunner = _allInMeaningRunner.copyWith(
           'You do not need equal stacks everywhere first. Once Hero is all-in and CO matches 20 BB, those matched chips are already the honest contest.',
     ),
   ],
-  table: _allInMeaningRunner.table.copyWith(
-    centerLabel: 'Matched chips set the contest',
+  table: _act0ExplanationV1(
+    _allInMeaningRunner.table.copyWith(
+      centerLabel: 'Matched chips set the contest',
+    ),
+    folded: const {'utg', 'hj', 'sb', 'bb'},
+    chips: _kAllInChipsV1,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -9044,104 +9621,108 @@ final _sidePotIntroRunner = _matchedChipsTransferRunner.copyWith(
           'A side pot is not punishment. It is just the extra chips that only the bigger stacks matched after the short stack was already all-in.',
     ),
   ],
-  table: _matchedChipsTransferRunner.table.copyWith(
-    centerLabel: 'Main pot and side pot',
-    potLabel: 'Main 60.5 BB; side 60 BB',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'SB posts 0.5 BB, then folds'),
-      Act0ActionTrailItemV1(label: 'BB post is included in BB total'),
-      Act0ActionTrailItemV1(label: 'Hero all-in 20 BB'),
-      Act0ActionTrailItemV1(label: 'CO contributes 50 BB total'),
-      Act0ActionTrailItemV1(label: 'BB contributes 50 BB total'),
-      Act0ActionTrailItemV1(label: 'CO and BB: 30 BB each to side'),
-    ],
-    highlightedSeatIds: const <String>['btn', 'co', 'bb'],
-    seats: _matchedChipsTransferRunner.table.seats
-        .map<Act0SeatStateV1>(
-          (seat) => seat.seatId == 'btn'
-              ? Act0SeatStateV1(
-                  seatId: seat.seatId,
-                  seatLabel: seat.seatLabel,
-                  displayName: 'Hero',
-                  isHero: true,
-                  isDealerButton: seat.isDealerButton,
-                  isSmallBlind: seat.isSmallBlind,
-                  isBigBlind: seat.isBigBlind,
-                  blindAmountLabel: seat.blindAmountLabel,
-                  isActive: seat.isActive,
-                  isTarget: seat.isTarget,
-                  isInHand: seat.isInHand,
-                  isFolded: seat.isFolded,
-                  hasActed: seat.hasActed,
-                  isLastAggressor: seat.isLastAggressor,
-                  isOccupied: seat.isOccupied,
-                  stackLabel: '0 BB',
-                  holeCards: seat.holeCards,
-                  cardsVisibleMode: seat.cardsVisibleMode,
-                  currentBetLabel: '20 BB',
-                  bet: const Act0SeatBetStateV1(
-                    kind: Act0SeatBetKindV1.allIn,
-                    label: 'All-in',
-                    amountLabel: '20 BB',
-                  ),
-                )
-              : seat.seatId == 'co'
-              ? Act0SeatStateV1(
-                  seatId: seat.seatId,
-                  seatLabel: seat.seatLabel,
-                  displayName: 'CO',
-                  isHero: seat.isHero,
-                  isDealerButton: seat.isDealerButton,
-                  isSmallBlind: seat.isSmallBlind,
-                  isBigBlind: seat.isBigBlind,
-                  blindAmountLabel: seat.blindAmountLabel,
-                  isActive: false,
-                  isTarget: seat.isTarget,
-                  isInHand: seat.isInHand,
-                  isFolded: seat.isFolded,
-                  hasActed: seat.hasActed,
-                  isLastAggressor: seat.isLastAggressor,
-                  isOccupied: seat.isOccupied,
-                  stackLabel: '50 BB',
-                  holeCards: seat.holeCards,
-                  cardsVisibleMode: seat.cardsVisibleMode,
-                  currentBetLabel: '50 BB',
-                  bet: const Act0SeatBetStateV1(
-                    kind: Act0SeatBetKindV1.raise,
-                    label: 'Total in',
-                    amountLabel: '50 BB',
-                  ),
-                )
-              : seat.seatId == 'bb'
-              ? Act0SeatStateV1(
-                  seatId: seat.seatId,
-                  seatLabel: seat.seatLabel,
-                  displayName: 'Big blind',
-                  isHero: seat.isHero,
-                  isDealerButton: seat.isDealerButton,
-                  isSmallBlind: seat.isSmallBlind,
-                  isBigBlind: seat.isBigBlind,
-                  blindAmountLabel: seat.blindAmountLabel,
-                  isActive: false,
-                  isTarget: seat.isTarget,
-                  isInHand: seat.isInHand,
-                  isFolded: seat.isFolded,
-                  hasActed: seat.hasActed,
-                  isLastAggressor: seat.isLastAggressor,
-                  isOccupied: seat.isOccupied,
-                  stackLabel: '50 BB',
-                  holeCards: seat.holeCards,
-                  cardsVisibleMode: seat.cardsVisibleMode,
-                  currentBetLabel: '50 BB',
-                  bet: const Act0SeatBetStateV1(
-                    kind: Act0SeatBetKindV1.call,
-                    label: 'Total in',
-                    amountLabel: '50 BB',
-                  ),
-                )
-              : seat,
-        )
-        .toList(growable: false),
+  table: _act0ExplanationV1(
+    _matchedChipsTransferRunner.table.copyWith(
+      centerLabel: 'Main pot and side pot',
+      potLabel: 'Main 60.5 BB; side 60 BB',
+      actionTrail: const <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: 'SB posts 0.5 BB, then folds'),
+        Act0ActionTrailItemV1(label: 'BB post is included in BB total'),
+        Act0ActionTrailItemV1(label: 'Hero all-in 20 BB'),
+        Act0ActionTrailItemV1(label: 'CO contributes 50 BB total'),
+        Act0ActionTrailItemV1(label: 'BB contributes 50 BB total'),
+        Act0ActionTrailItemV1(label: 'CO and BB: 30 BB each to side'),
+      ],
+      highlightedSeatIds: const <String>['btn', 'co', 'bb'],
+      seats: _matchedChipsTransferRunner.table.seats
+          .map<Act0SeatStateV1>(
+            (seat) => seat.seatId == 'btn'
+                ? Act0SeatStateV1(
+                    seatId: seat.seatId,
+                    seatLabel: seat.seatLabel,
+                    displayName: 'Hero',
+                    isHero: true,
+                    isDealerButton: seat.isDealerButton,
+                    isSmallBlind: seat.isSmallBlind,
+                    isBigBlind: seat.isBigBlind,
+                    blindAmountLabel: seat.blindAmountLabel,
+                    isActive: seat.isActive,
+                    isTarget: seat.isTarget,
+                    isInHand: seat.isInHand,
+                    isFolded: seat.isFolded,
+                    hasActed: seat.hasActed,
+                    isLastAggressor: seat.isLastAggressor,
+                    isOccupied: seat.isOccupied,
+                    stackLabel: '0 BB',
+                    holeCards: seat.holeCards,
+                    cardsVisibleMode: seat.cardsVisibleMode,
+                    currentBetLabel: '20 BB',
+                    bet: const Act0SeatBetStateV1(
+                      kind: Act0SeatBetKindV1.allIn,
+                      label: 'All-in',
+                      amountLabel: '20 BB',
+                    ),
+                  )
+                : seat.seatId == 'co'
+                ? Act0SeatStateV1(
+                    seatId: seat.seatId,
+                    seatLabel: seat.seatLabel,
+                    displayName: 'CO',
+                    isHero: seat.isHero,
+                    isDealerButton: seat.isDealerButton,
+                    isSmallBlind: seat.isSmallBlind,
+                    isBigBlind: seat.isBigBlind,
+                    blindAmountLabel: seat.blindAmountLabel,
+                    isActive: false,
+                    isTarget: seat.isTarget,
+                    isInHand: seat.isInHand,
+                    isFolded: seat.isFolded,
+                    hasActed: seat.hasActed,
+                    isLastAggressor: seat.isLastAggressor,
+                    isOccupied: seat.isOccupied,
+                    stackLabel: '50 BB',
+                    holeCards: seat.holeCards,
+                    cardsVisibleMode: seat.cardsVisibleMode,
+                    currentBetLabel: '50 BB',
+                    bet: const Act0SeatBetStateV1(
+                      kind: Act0SeatBetKindV1.raise,
+                      label: 'Total in',
+                      amountLabel: '50 BB',
+                    ),
+                  )
+                : seat.seatId == 'bb'
+                ? Act0SeatStateV1(
+                    seatId: seat.seatId,
+                    seatLabel: seat.seatLabel,
+                    displayName: 'Big blind',
+                    isHero: seat.isHero,
+                    isDealerButton: seat.isDealerButton,
+                    isSmallBlind: seat.isSmallBlind,
+                    isBigBlind: seat.isBigBlind,
+                    blindAmountLabel: seat.blindAmountLabel,
+                    isActive: false,
+                    isTarget: seat.isTarget,
+                    isInHand: seat.isInHand,
+                    isFolded: seat.isFolded,
+                    hasActed: seat.hasActed,
+                    isLastAggressor: seat.isLastAggressor,
+                    isOccupied: seat.isOccupied,
+                    stackLabel: '50 BB',
+                    holeCards: seat.holeCards,
+                    cardsVisibleMode: seat.cardsVisibleMode,
+                    currentBetLabel: '50 BB',
+                    bet: const Act0SeatBetStateV1(
+                      kind: Act0SeatBetKindV1.call,
+                      label: 'Total in',
+                      amountLabel: '50 BB',
+                    ),
+                  )
+                : seat,
+          )
+          .toList(growable: false),
+    ),
+    folded: const {'utg', 'hj', 'sb'},
+    chips: _kSidePotChipsV1,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -9435,6 +10016,7 @@ final _checkActionRunner = _firstHandRunner.copyWith(
   table: _act0CurrentStreetTableV1(
     _act0WithHandParticipationV1(
       _firstHandRunner.table.copyWith(
+        scope: Act0TableScopeV1.playedHand,
         streetLabel: 'Flop',
         boardCards: _flopA72Cards,
         potLabel: 'Pot 3 BB',
@@ -9893,8 +10475,9 @@ final _postflopButtonActorRunner = _meetTableRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Postflop order changes.',
-      body: 'After the flop, blinds act early and Button often acts last.',
-      focusSeatIds: <String>['btn', 'sb', 'bb'],
+      body:
+          'After the flop, the Button acts last. Here CO checks first, then the Button decides.',
+      focusSeatIds: <String>['co', 'btn'],
       focusLabels: <String>['BTN late'],
     ),
   ],
@@ -9907,7 +10490,7 @@ final _w3BtnLastPostflopRepairRunner = _postflopButtonActorRunner.copyWith(
   hint: 'Find the Button on the table.',
   question: 'Who acts last after the flop?',
   feedbackTitle: 'BTN-last repaired.',
-  feedbackReason: 'Button acts after the blinds postflop in this hand.',
+  feedbackReason: 'Button acts after CO postflop in this hand.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Repair the postflop order.',
@@ -14254,6 +14837,7 @@ final _w3LateInfoEdgeRunner = _latePositionRunner.copyWith(
   ],
   table: _act0ExplicitFoldsV1(
     _latePositionRunner.table.copyWith(
+      scope: Act0TableScopeV1.playedHand,
       highlightedSeatIds: const <String>['co', 'btn', 'sb', 'bb'],
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'UTG folds'),
@@ -14633,22 +15217,24 @@ final _w3SameHandDifferentSeatRepairRunner = _world3PositionDisciplineRunner.cop
       repairFocusLabels: <String>['Same hand', 'Players behind'],
     ),
   ],
-  table: _act0ReassignHeroSeatV1(
-    _world3PositionDisciplineRunner.table.copyWith(
-      centerLabel: 'Same hand, seat changes',
-      heroCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'A', suit: 'd'),
-        Act0CardStateV1(rank: 'T', suit: 'c'),
-      ],
-      highlightedSeatIds: const <String>['utg', 'co', 'btn', 'sb', 'bb'],
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'Frame 1: UTG has more behind'),
-        Act0ActionTrailItemV1(label: 'Frame 2: CO has fewer behind'),
-        Act0ActionTrailItemV1(label: 'Hero compares seats'),
-      ],
-    ),
-    heroSeatId: 'co',
-    activeSeatId: 'co',
+  table: _act0ExplanationV1(
+    _act0ReassignHeroSeatV1(
+      _world3PositionDisciplineRunner.table.copyWith(
+        centerLabel: 'Same hand, seat changes',
+        heroCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'A', suit: 'd'),
+          Act0CardStateV1(rank: 'T', suit: 'c'),
+        ],
+        highlightedSeatIds: const <String>['utg', 'co', 'btn', 'sb', 'bb'],
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'Frame 1: UTG has more behind'),
+          Act0ActionTrailItemV1(label: 'Frame 2: CO has fewer behind'),
+          Act0ActionTrailItemV1(label: 'Hero compares seats'),
+        ],
+      ),
+      heroSeatId: 'co',
+      activeSeatId: 'co',
+    ).copyWith(toCallLabel: ''),
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -15457,6 +16043,39 @@ final _w3PositionApplyIntroRunner = _world3PositionIntroRunner.copyWith(
   ],
 );
 
+// W4 bet-sizing hand: UTG, HJ and CO fold, BTN opens to 2.75 BB, SB folds
+// (0.5 BB dead), BB calls: 6 BB on the flop, so one-third, half and pot are
+// 2, 3 and 6 BB. BB checks to BTN; [btnCheckedBehind] shows the moment after
+// Hero checks back.
+const _w4BtnBbFlopCheckTrail = <Act0ActionTrailItemV1>[
+  Act0ActionTrailItemV1(label: 'UTG folds'),
+  Act0ActionTrailItemV1(label: 'HJ folds'),
+  Act0ActionTrailItemV1(label: 'CO folds'),
+  Act0ActionTrailItemV1(label: 'BTN opens 2.75 BB'),
+  Act0ActionTrailItemV1(label: 'SB folds'),
+  Act0ActionTrailItemV1(label: 'BB calls 2.75 BB'),
+  Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+];
+
+Act0TableStateV1 _act0W4BtnBbSixBbFlopV1(
+  Act0TableStateV1 table, {
+  bool btnCheckedBehind = false,
+}) => _act0WithHandParticipationV1(
+  table.copyWith(
+    potLabel: 'Pot 6 BB',
+    toCallLabel: '',
+    actionTrail: <Act0ActionTrailItemV1>[
+      ..._w4BtnBbFlopCheckTrail,
+      Act0ActionTrailItemV1(
+        label: btnCheckedBehind ? 'BTN checks' : 'BTN acts',
+      ),
+    ],
+  ),
+  folded: const <String>{'utg', 'hj', 'co', 'sb'},
+  // Hero stays unmarked: an actionable Hero is never shown as already acted.
+  acted: const <String>{'bb'},
+);
+
 final _world4PurposeIntroRunner = _readBoardRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w4_purpose_intro',
@@ -15468,18 +16087,11 @@ final _world4PurposeIntroRunner = _readBoardRunner.copyWith(
   hint: 'Start with purpose: value, bluff, or protection.',
   question: 'What should you name before sizing a bet?',
   options: const <Act0RunnerOptionV1>[],
-  table: _act0OpenTableResidualV1(
+  table: _act0W4BtnBbSixBbFlopV1(
     _readBoardRunner.table.copyWith(
       streetLabel: 'Flop',
-      potLabel: 'Pot 6 BB',
-      toCallLabel: '',
       centerLabel: 'Name purpose',
       boardCards: _flopA72Cards,
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'BTN raises 3 BB'),
-        Act0ActionTrailItemV1(label: 'BB calls 3 BB'),
-        Act0ActionTrailItemV1(label: 'Flop dealt'),
-      ],
       activeSeatId: 'btn',
       highlightedSeatIds: const <String>['btn', 'bb'],
     ),
@@ -15653,11 +16265,6 @@ final _world4ValueBetRunner = _world4ValuePurposeRunner.copyWith(
   table: _world4ValuePurposeRunner.table.copyWith(
     potLabel: 'Pot 6 BB',
     centerLabel: 'Value spot',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'BTN raises 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB calls 3 BB'),
-      Act0ActionTrailItemV1(label: 'BTN acts'),
-    ],
   ),
 );
 
@@ -15757,14 +16364,7 @@ final _world4BluffPressureRunner = _world4BluffPurposeRunner.copyWith(
           'Checking is legal and not a disaster, but a small bet creates fold pressure at low cost.',
     ),
   ],
-  table: _world4BluffPurposeRunner.table.copyWith(
-    centerLabel: 'Fold pressure',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'BTN raises 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB calls 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB checks'),
-    ],
-  ),
+  table: _world4BluffPurposeRunner.table.copyWith(centerLabel: 'Fold pressure'),
 );
 
 final _world4BadBluffRunner = _world4BluffPressureRunner.copyWith(
@@ -15807,11 +16407,6 @@ final _world4BadBluffRunner = _world4BluffPressureRunner.copyWith(
   ],
   table: _world4BluffPressureRunner.table.copyWith(
     centerLabel: 'Low fold pressure',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'BTN raises 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB calls 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB checks'),
-    ],
   ),
 );
 
@@ -15898,6 +16493,11 @@ final _world4ProtectionBetRunner = _world4ProtectionIntroRunner.copyWith(
 
 final _world4ProtectionCheckRunner = _world4ProtectionBetRunner.copyWith(
   lessonId: 'w4_protection_check',
+  // Past-action frame: Hero has already checked behind.
+  table: _act0W4BtnBbSixBbFlopV1(
+    _world4ProtectionBetRunner.table,
+    btnCheckedBehind: true,
+  ),
   caption: 'Hero checks behind on a draw-heavy board.',
   hint: 'Ask what the opponent receives by not facing a bet.',
   question: 'What did checking allow?',
@@ -15952,22 +16552,25 @@ final _world4PriceIntroRunner = _callActionRunner.copyWith(
       'Price is what you must pay to continue. Read pot, to call, and hand strength together.',
   question: 'What does a bet give the caller?',
   options: const <Act0RunnerOptionV1>[],
-  table: _act0OpenTableResidualV1(
-    _callActionRunner.table.copyWith(
-      streetLabel: 'Turn',
-      potLabel: 'Pot 8 BB',
-      toCallLabel: 'To call 2 BB',
-      centerLabel: 'Facing price',
-      seats: _world4PriceSeatsV1('2 BB'),
-      boardCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'T', suit: 'h'),
-        Act0CardStateV1(rank: '8', suit: 'c'),
-        Act0CardStateV1(rank: '3', suit: 'd'),
-        Act0CardStateV1(rank: '2', suit: 's'),
-      ],
-      actionTrail: _world4PriceActionTrailV1('2 BB'),
+  table: _act0AuthoredHandV1(
+    _act0OpenTableResidualV1(
+      _callActionRunner.table.copyWith(
+        streetLabel: 'Turn',
+        potLabel: 'Pot 8 BB',
+        toCallLabel: 'To call 2 BB',
+        centerLabel: 'Facing price',
+        seats: _world4PriceSeatsV1('2 BB'),
+        boardCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'T', suit: 'h'),
+          Act0CardStateV1(rank: '8', suit: 'c'),
+          Act0CardStateV1(rank: '3', suit: 'd'),
+          Act0CardStateV1(rank: '2', suit: 's'),
+        ],
+        actionTrail: _world4PriceActionTrailV1('2 BB'),
+      ),
+      highlightedSeatIds: const <String>['co'],
     ),
-    highlightedSeatIds: const <String>['co'],
+    _kW4PriceSixToEightStoryV1,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -16033,28 +16636,31 @@ final _world4GoodPriceCallRunner = _world4PriceIntroRunner.copyWith(
           'Do not look only at the hand. Pot 8 BB is worth fighting for, to call is only 1 BB, and one pair is enough to continue once.',
     ),
   ],
-  table: _world4PriceIntroRunner.table.copyWith(
-    potLabel: 'Pot 8 BB',
-    toCallLabel: 'To call 1 BB',
-    centerLabel: 'Small price',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'T', suit: 's'),
-      Act0CardStateV1(rank: '7', suit: 'd'),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'T', suit: 'h'),
-      Act0CardStateV1(rank: '8', suit: 'c'),
-      Act0CardStateV1(rank: '3', suit: 'd'),
-      Act0CardStateV1(rank: '2', suit: 's'),
-    ],
-    highlightedCardIds: const <String>[
-      'hero_0',
-      'hero_1',
-      'board_0',
-      'board_1',
-    ],
-    seats: _world4PriceSeatsV1('1 BB'),
-    actionTrail: _world4PriceActionTrailV1('1 BB'),
+  table: _act0AuthoredHandV1(
+    _world4PriceIntroRunner.table.copyWith(
+      potLabel: 'Pot 8 BB',
+      toCallLabel: 'To call 1 BB',
+      centerLabel: 'Small price',
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'T', suit: 's'),
+        Act0CardStateV1(rank: '7', suit: 'd'),
+      ],
+      boardCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'T', suit: 'h'),
+        Act0CardStateV1(rank: '8', suit: 'c'),
+        Act0CardStateV1(rank: '3', suit: 'd'),
+        Act0CardStateV1(rank: '2', suit: 's'),
+      ],
+      highlightedCardIds: const <String>[
+        'hero_0',
+        'hero_1',
+        'board_0',
+        'board_1',
+      ],
+      seats: _world4PriceSeatsV1('1 BB'),
+      actionTrail: _world4PriceActionTrailV1('1 BB'),
+    ),
+    _kW4PriceSevenToEightStoryV1,
   ),
 );
 
@@ -16087,22 +16693,25 @@ final _world4BadPriceFoldRunner = _world4GoodPriceCallRunner.copyWith(
           'Calling risks 7 BB to win 15 BB (8 BB before the bet plus the 7 BB bet), so it needs about 32% equity. A weak pair is not a strong enough reason.',
     ),
   ],
-  table: _world4GoodPriceCallRunner.table.copyWith(
-    potLabel: 'Pot 15 BB',
-    toCallLabel: 'To call 7 BB',
-    centerLabel: 'High price',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: '8', suit: 's'),
-      Act0CardStateV1(rank: '7', suit: 'd'),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'K', suit: 'h'),
-      Act0CardStateV1(rank: '8', suit: 'c'),
-      Act0CardStateV1(rank: '4', suit: 'd'),
-      Act0CardStateV1(rank: '2', suit: 's'),
-    ],
-    seats: _world4PriceSeatsV1('7 BB'),
-    actionTrail: _world4PriceActionTrailV1('7 BB'),
+  table: _act0AuthoredHandV1(
+    _world4GoodPriceCallRunner.table.copyWith(
+      potLabel: 'Pot 15 BB',
+      toCallLabel: 'To call 7 BB',
+      centerLabel: 'High price',
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: '8', suit: 's'),
+        Act0CardStateV1(rank: '7', suit: 'd'),
+      ],
+      boardCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'K', suit: 'h'),
+        Act0CardStateV1(rank: '8', suit: 'c'),
+        Act0CardStateV1(rank: '4', suit: 'd'),
+        Act0CardStateV1(rank: '2', suit: 's'),
+      ],
+      seats: _world4PriceSeatsV1('7 BB'),
+      actionTrail: _world4PriceActionTrailV1('7 BB'),
+    ),
+    _kW4PriceEightToFifteenStoryV1,
   ),
 );
 
@@ -16148,23 +16757,26 @@ final _world4CheapPriceMarginalCallRunner = _world4GoodPriceCallRunner.copyWith(
           'Raising adds more risk than this spot asks for. The clean read is use the cheap 1 BB price and call.',
     ),
   ],
-  table: _world4GoodPriceCallRunner.table.copyWith(
-    potLabel: 'Pot 10 BB',
-    toCallLabel: 'To call 1 BB',
-    centerLabel: 'Cheap price, middle pair',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: '9', suit: 's'),
-      Act0CardStateV1(rank: '7', suit: 'd'),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'K', suit: 'c'),
-      Act0CardStateV1(rank: '9', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: '4', suit: 'd'),
-      Act0CardStateV1(rank: '2', suit: 's'),
-    ],
-    highlightedCardIds: const <String>['hero_0', 'board_1'],
-    seats: _world4PriceSeatsV1('1 BB'),
-    actionTrail: _world4PriceActionTrailV1('1 BB'),
+  table: _act0AuthoredHandV1(
+    _world4GoodPriceCallRunner.table.copyWith(
+      potLabel: 'Pot 10 BB',
+      toCallLabel: 'To call 1 BB',
+      centerLabel: 'Cheap price, middle pair',
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: '9', suit: 's'),
+        Act0CardStateV1(rank: '7', suit: 'd'),
+      ],
+      boardCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'K', suit: 'c'),
+        Act0CardStateV1(rank: '9', suit: 'h', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: '4', suit: 'd'),
+        Act0CardStateV1(rank: '2', suit: 's'),
+      ],
+      highlightedCardIds: const <String>['hero_0', 'board_1'],
+      seats: _world4PriceSeatsV1('1 BB'),
+      actionTrail: _world4PriceActionTrailV1('1 BB'),
+    ),
+    _kW4PriceNineToTenStoryV1,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -16219,23 +16831,26 @@ final _world4BigPriceMarginalFoldRunner = _world4BadPriceFoldRunner.copyWith(
           'Raising adds even more risk when the call price already asks too much from a thin top pair.',
     ),
   ],
-  table: _world4BadPriceFoldRunner.table.copyWith(
-    potLabel: 'Pot 15 BB',
-    toCallLabel: 'To call 6 BB',
-    centerLabel: 'Top pair, big price',
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'Q', suit: 's'),
-      Act0CardStateV1(rank: '7', suit: 'd'),
-    ],
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: 'J', suit: 'c'),
-      Act0CardStateV1(rank: '3', suit: 'd'),
-      Act0CardStateV1(rank: '2', suit: 's'),
-    ],
-    highlightedCardIds: const <String>['hero_0', 'board_0'],
-    seats: _world4PriceSeatsV1('6 BB'),
-    actionTrail: _world4PriceActionTrailV1('6 BB'),
+  table: _act0AuthoredHandV1(
+    _world4BadPriceFoldRunner.table.copyWith(
+      potLabel: 'Pot 15 BB',
+      toCallLabel: 'To call 6 BB',
+      centerLabel: 'Top pair, big price',
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'Q', suit: 's'),
+        Act0CardStateV1(rank: '7', suit: 'd'),
+      ],
+      boardCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
+        Act0CardStateV1(rank: 'J', suit: 'c'),
+        Act0CardStateV1(rank: '3', suit: 'd'),
+        Act0CardStateV1(rank: '2', suit: 's'),
+      ],
+      highlightedCardIds: const <String>['hero_0', 'board_0'],
+      seats: _world4PriceSeatsV1('6 BB'),
+      actionTrail: _world4PriceActionTrailV1('6 BB'),
+    ),
+    _kW4PriceBbBetsSixStoryV1,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -16475,37 +17090,40 @@ final _world4PriceTableTransferRunner = _world4GoodPriceCallRunner.copyWith(
           'Raising spends more than this price read needs. The clean transfer is call the small price with second pair.',
     ),
   ],
-  table: _act0CurrentStreetTableV1(
-    _world4GoodPriceCallRunner.table.copyWith(
-      streetLabel: 'Turn',
-      potLabel: 'Pot 7 BB',
-      toCallLabel: 'To call 2 BB',
-      centerLabel: 'Second pair, live table',
-      heroCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'A', suit: 'c'),
-        Act0CardStateV1(rank: '9', suit: 'd'),
-      ],
-      boardCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'K', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '9', suit: 's'),
-        Act0CardStateV1(rank: '4', suit: 'c'),
-        Act0CardStateV1(rank: '2', suit: 'd'),
-      ],
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'BB bets 2 BB'),
-        Act0ActionTrailItemV1(label: 'BTN acts'),
-      ],
-      activeSeatId: 'btn',
-      highlightedSeatIds: const <String>['btn', 'bb'],
-      highlightedCardIds: const <String>['hero_1', 'board_1'],
-    ),
-    bets: {
-      'bb': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'BB',
-        amountLabel: '2 BB',
+  table: _act0AuthoredHandV1(
+    _act0CurrentStreetTableV1(
+      _world4GoodPriceCallRunner.table.copyWith(
+        streetLabel: 'Turn',
+        potLabel: 'Pot 7 BB',
+        toCallLabel: 'To call 2 BB',
+        centerLabel: 'Second pair, live table',
+        heroCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'A', suit: 'c'),
+          Act0CardStateV1(rank: '9', suit: 'd'),
+        ],
+        boardCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'K', suit: 'h', tone: Act0CardToneV1.red),
+          Act0CardStateV1(rank: '9', suit: 's'),
+          Act0CardStateV1(rank: '4', suit: 'c'),
+          Act0CardStateV1(rank: '2', suit: 'd'),
+        ],
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'BB bets 2 BB'),
+          Act0ActionTrailItemV1(label: 'BTN acts'),
+        ],
+        activeSeatId: 'btn',
+        highlightedSeatIds: const <String>['btn', 'bb'],
+        highlightedCardIds: const <String>['hero_1', 'board_1'],
       ),
-    },
+      bets: {
+        'bb': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'BB',
+          amountLabel: '2 BB',
+        ),
+      },
+    ),
+    _kW4PriceBbBetsTwoStoryV1,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -16558,37 +17176,40 @@ final _world4PurposePriceTableTransferRunner = _world4ValueBetRunner.copyWith(
           'The size is not random once you connect purpose and price. The 2 BB bet keeps weaker hands in while still charging them to continue.',
     ),
   ],
-  table: _act0CurrentStreetTableV1(
-    _act0ExplicitFoldsV1(
-      _world4ValueBetRunner.table.copyWith(
-        potLabel: 'Pot 6 BB',
-        toCallLabel: '',
-        centerLabel: 'Value plus price',
-        heroCards: const <Act0CardStateV1>[
-          Act0CardStateV1(rank: 'A', suit: 's'),
-          Act0CardStateV1(rank: 'Q', suit: 'd'),
-        ],
-        boardCards: const <Act0CardStateV1>[
-          Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
-          Act0CardStateV1(rank: '7', suit: 'c'),
-          Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
-        ],
-        actionTrail: const <Act0ActionTrailItemV1>[
-          Act0ActionTrailItemV1(label: 'BTN bets 2 BB'),
-          Act0ActionTrailItemV1(label: 'BB acts'),
-        ],
-        highlightedSeatIds: const <String>['btn', 'bb'],
-        highlightedCardIds: const <String>['hero_0', 'board_0'],
+  table: _act0AuthoredHandV1(
+    _act0CurrentStreetTableV1(
+      _act0ExplicitFoldsV1(
+        _world4ValueBetRunner.table.copyWith(
+          potLabel: 'Pot 6 BB',
+          toCallLabel: '',
+          centerLabel: 'Value plus price',
+          heroCards: const <Act0CardStateV1>[
+            Act0CardStateV1(rank: 'A', suit: 's'),
+            Act0CardStateV1(rank: 'Q', suit: 'd'),
+          ],
+          boardCards: const <Act0CardStateV1>[
+            Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+            Act0CardStateV1(rank: '7', suit: 'c'),
+            Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
+          ],
+          actionTrail: const <Act0ActionTrailItemV1>[
+            Act0ActionTrailItemV1(label: 'BTN bets 2 BB'),
+            Act0ActionTrailItemV1(label: 'BB acts'),
+          ],
+          highlightedSeatIds: const <String>['btn', 'bb'],
+          highlightedCardIds: const <String>['hero_0', 'board_0'],
+        ),
+        {'utg', 'hj', 'co', 'sb'},
       ),
-      {'utg', 'hj', 'co', 'sb'},
+      bets: {
+        'btn': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'BTN',
+          amountLabel: '2 BB',
+        ),
+      },
     ),
-    bets: {
-      'btn': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'BTN',
-        amountLabel: '2 BB',
-      ),
-    },
+    _kW4PurposePriceObservationStoryV1,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -17047,22 +17668,25 @@ final _world5MadeHandVsFlushDrawTransferRunner = _world5FlushDrawRunner.copyWith
           'The draw matters because later cards can change the danger, but Hero still has a real made hand right now. Start with what already exists on the flop.',
     ),
   ],
-  table: _act0OpenTableResidualV1(
-    _world5FlushDrawRunner.table.copyWith(
-      potLabel: 'Pot 8 BB',
-      centerLabel: 'Top pair, heart draw live',
-      heroCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'A', suit: 's'),
-        Act0CardStateV1(rank: 'J', suit: 'c'),
-      ],
-      boardCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '8', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '4', suit: 'c'),
-      ],
-      highlightedCardIds: const <String>['hero_0', 'board_0', 'board_1'],
+  table: _act0AuthoredHandV1(
+    _act0OpenTableResidualV1(
+      _world5FlushDrawRunner.table.copyWith(
+        potLabel: 'Pot 8 BB',
+        centerLabel: 'Top pair, heart draw live',
+        heroCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'A', suit: 's'),
+          Act0CardStateV1(rank: 'J', suit: 'c'),
+        ],
+        boardCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+          Act0CardStateV1(rank: '8', suit: 'h', tone: Act0CardToneV1.red),
+          Act0CardStateV1(rank: '4', suit: 'c'),
+        ],
+        highlightedCardIds: const <String>['hero_0', 'board_0', 'board_1'],
+      ),
+      keepTrail: false,
     ),
-    keepTrail: false,
+    _coBtnCheckedToHeroStoryV1('3.25', 'Flop'),
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -17115,27 +17739,30 @@ final _world5FlushDrawRecheckTransferRunner = _world5FlushDrawRunner.copyWith(
           'The visible table already shows four hearts between Hero and the board. That creates real flush pressure even though the flush is not made yet.',
     ),
   ],
-  table: _act0OpenTableResidualV1(
-    _world5FlushDrawRunner.table.copyWith(
-      potLabel: 'Pot 7 BB',
-      centerLabel: 'Four hearts, not home yet',
-      heroCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
-      ],
-      boardCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '8', suit: 'c'),
-        Act0CardStateV1(rank: '2', suit: 'h', tone: Act0CardToneV1.red),
-      ],
-      highlightedCardIds: const <String>[
-        'hero_0',
-        'hero_1',
-        'board_0',
-        'board_2',
-      ],
+  table: _act0AuthoredHandV1(
+    _act0OpenTableResidualV1(
+      _world5FlushDrawRunner.table.copyWith(
+        potLabel: 'Pot 7 BB',
+        centerLabel: 'Four hearts, not home yet',
+        heroCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
+          Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+        ],
+        boardCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+          Act0CardStateV1(rank: '8', suit: 'c'),
+          Act0CardStateV1(rank: '2', suit: 'h', tone: Act0CardToneV1.red),
+        ],
+        highlightedCardIds: const <String>[
+          'hero_0',
+          'hero_1',
+          'board_0',
+          'board_2',
+        ],
+      ),
+      keepTrail: false,
     ),
-    keepTrail: false,
+    _coBtnCheckedToHeroStoryV1('2.75', 'Flop'),
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -17307,21 +17934,24 @@ final _world5GutshotContrastTransferRunner = _world5GutshotDrawRunner.copyWith(
           'Hero still needs the 6 to finish five in a row. Until that card arrives, the straight is future potential, not a made hand.',
     ),
   ],
-  table: _act0OpenTableResidualV1(
-    _world5GutshotDrawRunner.table.copyWith(
-      potLabel: 'Pot 6 BB',
-      centerLabel: 'Only a 6 fits',
-      heroCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: '9', suit: 's'),
-        Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
-      ],
-      boardCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'Q', suit: 'c'),
-        Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '5', suit: 's'),
-      ],
+  table: _act0AuthoredHandV1(
+    _act0OpenTableResidualV1(
+      _world5GutshotDrawRunner.table.copyWith(
+        potLabel: 'Pot 6 BB',
+        centerLabel: 'Only a 6 fits',
+        heroCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: '9', suit: 's'),
+          Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
+        ],
+        boardCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'Q', suit: 'c'),
+          Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+          Act0CardStateV1(rank: '5', suit: 's'),
+        ],
+      ),
+      keepTrail: false,
     ),
-    keepTrail: false,
+    _coBtnCheckedToHeroStoryV1('2.25', 'Flop'),
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -17516,40 +18146,43 @@ final _world5TableOutsFlushTransferRunner = _world5FlushOutRunner.copyWith(
           'Price matters after the draw read. On a real table, name the heart outs first, then decide whether paying 2 BB into Pot 10 BB is worth it.',
     ),
   ],
-  table: _act0CurrentStreetTableV1(
-    _act0OpenTableResidualV1(
-      _world5FlushDrawRunner.table.copyWith(
-        streetLabel: 'Turn',
-        potLabel: 'Pot 10 BB',
-        toCallLabel: 'To call 2 BB',
-        centerLabel: 'Live heart outs',
-        boardCards: const <Act0CardStateV1>[
-          Act0CardStateV1(rank: 'T', suit: 'h', tone: Act0CardToneV1.red),
-          Act0CardStateV1(rank: '4', suit: 'h', tone: Act0CardToneV1.red),
-          Act0CardStateV1(rank: '2', suit: 'c'),
-          Act0CardStateV1(rank: '9', suit: 's'),
-        ],
-        actionTrail: const <Act0ActionTrailItemV1>[
-          Act0ActionTrailItemV1(label: 'Flop: heart draw live'),
-          Act0ActionTrailItemV1(label: 'Turn: 9 spades'),
-          Act0ActionTrailItemV1(label: 'BB bets 2 BB'),
-          Act0ActionTrailItemV1(label: 'Hero acts'),
-        ],
-        highlightedCardIds: const <String>[
-          'hero_0',
-          'hero_1',
-          'board_0',
-          'board_1',
-        ],
+  table: _act0AuthoredHandV1(
+    _act0CurrentStreetTableV1(
+      _act0OpenTableResidualV1(
+        _world5FlushDrawRunner.table.copyWith(
+          streetLabel: 'Turn',
+          potLabel: 'Pot 10 BB',
+          toCallLabel: 'To call 2 BB',
+          centerLabel: 'Live heart outs',
+          boardCards: const <Act0CardStateV1>[
+            Act0CardStateV1(rank: 'T', suit: 'h', tone: Act0CardToneV1.red),
+            Act0CardStateV1(rank: '4', suit: 'h', tone: Act0CardToneV1.red),
+            Act0CardStateV1(rank: '2', suit: 'c'),
+            Act0CardStateV1(rank: '9', suit: 's'),
+          ],
+          actionTrail: const <Act0ActionTrailItemV1>[
+            Act0ActionTrailItemV1(label: 'Flop: heart draw live'),
+            Act0ActionTrailItemV1(label: 'Turn: 9 spades'),
+            Act0ActionTrailItemV1(label: 'BB bets 2 BB'),
+            Act0ActionTrailItemV1(label: 'Hero acts'),
+          ],
+          highlightedCardIds: const <String>[
+            'hero_0',
+            'hero_1',
+            'board_0',
+            'board_1',
+          ],
+        ),
       ),
+      bets: {
+        'bb': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'BB',
+          amountLabel: '2 BB',
+        ),
+      },
     ),
-    bets: {
-      'bb': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'BB',
-        amountLabel: '2 BB',
-      ),
-    },
+    _w5FlushOutsStoryV1,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -17603,34 +18236,40 @@ final _world5CleanVsRiskyOutTransferRunner = _world5TableOutsStraightTransferRun
           'Hero already has 9-8 with 7-6 on the board, so any 5 completes the straight. The beginner question is not whether Hero improves, but which completing card is safer.',
     ),
   ],
-  table: _act0OpenTableResidualV1(
-    _world5TableOutsStraightTransferRunner.table.copyWith(
-      potLabel: 'Pot 9 BB',
-      toCallLabel: 'River preview',
-      centerLabel: 'Some outs are safer',
-      heroCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: '9', suit: 's'),
-        Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
-      ],
-      boardCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '6', suit: 'c'),
-        Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
-      ],
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'Flop: A hearts, 7 hearts, 6 clubs'),
-        Act0ActionTrailItemV1(label: 'Turn: 2 diamonds'),
-        Act0ActionTrailItemV1(label: 'River can bring a 5'),
-        Act0ActionTrailItemV1(label: 'Hero compares safer vs riskier'),
-      ],
-      highlightedCardIds: const <String>[
-        'hero_0',
-        'hero_1',
-        'board_1',
-        'board_2',
-      ],
+  table: _act0AuthoredHandV1(
+    _act0OpenTableResidualV1(
+      _world5TableOutsStraightTransferRunner.table.copyWith(
+        potLabel: 'Pot 9 BB',
+        toCallLabel: 'River preview',
+        centerLabel: 'Some outs are safer',
+        heroCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: '9', suit: 's'),
+          Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
+        ],
+        boardCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+          Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+          Act0CardStateV1(rank: '6', suit: 'c'),
+          Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
+        ],
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'Flop: A hearts, 7 hearts, 6 clubs'),
+          Act0ActionTrailItemV1(label: 'Turn: 2 diamonds'),
+          Act0ActionTrailItemV1(label: 'River can bring a 5'),
+          Act0ActionTrailItemV1(label: 'Hero compares safer vs riskier'),
+        ],
+        highlightedCardIds: const <String>[
+          'hero_0',
+          'hero_1',
+          'board_1',
+          'board_2',
+        ],
+      ),
+    ).copyWith(
+      toCallLabel: 'To call 3 BB',
+      centerLabel: 'River preview: safer outs',
     ),
+    _w5StraightOutsStoryV1,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -17684,41 +18323,44 @@ final _world5TableOutsStraightTransferRunner = _world5StraightOutRunner.copyWith
           'A blank turn does not erase the draw. The live-table transfer is keep following the same 4 or 9 straight outs before making the next choice.',
     ),
   ],
-  table: _act0CurrentStreetTableV1(
-    _act0OpenTableResidualV1(
-      _world5StraightDrawRunner.table.copyWith(
-        streetLabel: 'Turn',
-        activeSeatId: 'btn',
-        potLabel: 'Pot 9 BB',
-        toCallLabel: 'To call 3 BB',
-        centerLabel: 'Live straight outs',
-        boardCards: const <Act0CardStateV1>[
-          Act0CardStateV1(rank: '8', suit: 'c'),
-          Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
-          Act0CardStateV1(rank: '2', suit: 's'),
-          Act0CardStateV1(rank: 'K', suit: 'd', tone: Act0CardToneV1.red),
-        ],
-        actionTrail: const <Act0ActionTrailItemV1>[
-          Act0ActionTrailItemV1(label: 'Flop: 8-7-2'),
-          Act0ActionTrailItemV1(label: 'Turn: K diamonds'),
-          Act0ActionTrailItemV1(label: 'BB bets 3 BB'),
-          Act0ActionTrailItemV1(label: 'Hero acts'),
-        ],
-        highlightedCardIds: const <String>[
-          'hero_0',
-          'hero_1',
-          'board_0',
-          'board_1',
-        ],
+  table: _act0AuthoredHandV1(
+    _act0CurrentStreetTableV1(
+      _act0OpenTableResidualV1(
+        _world5StraightDrawRunner.table.copyWith(
+          streetLabel: 'Turn',
+          activeSeatId: 'btn',
+          potLabel: 'Pot 9 BB',
+          toCallLabel: 'To call 3 BB',
+          centerLabel: 'Live straight outs',
+          boardCards: const <Act0CardStateV1>[
+            Act0CardStateV1(rank: '8', suit: 'c'),
+            Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+            Act0CardStateV1(rank: '2', suit: 's'),
+            Act0CardStateV1(rank: 'K', suit: 'd', tone: Act0CardToneV1.red),
+          ],
+          actionTrail: const <Act0ActionTrailItemV1>[
+            Act0ActionTrailItemV1(label: 'Flop: 8-7-2'),
+            Act0ActionTrailItemV1(label: 'Turn: K diamonds'),
+            Act0ActionTrailItemV1(label: 'BB bets 3 BB'),
+            Act0ActionTrailItemV1(label: 'Hero acts'),
+          ],
+          highlightedCardIds: const <String>[
+            'hero_0',
+            'hero_1',
+            'board_0',
+            'board_1',
+          ],
+        ),
       ),
+      bets: {
+        'bb': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'BB',
+          amountLabel: '3 BB',
+        ),
+      },
     ),
-    bets: {
-      'bb': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'BB',
-        amountLabel: '3 BB',
-      ),
-    },
+    _w5StraightOutsStoryV1,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -17738,12 +18380,15 @@ final _world5StreetChangeIntroRunner = _world5TextureIntroRunner.copyWith(
   hint: 'Read the same draw story again after each new street card.',
   question: 'What changes after the flop?',
   options: const <Act0RunnerOptionV1>[],
-  table: _act0OpenTableResidualV1(
-    _turnBoardRunner.table.copyWith(
-      centerLabel: 'Turn changes',
-      potLabel: 'Pot 7 BB',
+  table: _act0AuthoredHandV1(
+    _act0OpenTableResidualV1(
+      _turnBoardRunner.table.copyWith(
+        centerLabel: 'Turn changes',
+        potLabel: 'Pot 7 BB',
+      ),
+      keepTrail: false,
     ),
-    keepTrail: false,
+    _coBtnCheckedToHeroStoryV1('2.75', 'Turn'),
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -17945,29 +18590,32 @@ final _world5TurnTextureShiftTransferRunner = _world5StreetChangeIntroRunner.cop
           'Size matters, but not before the board read. The turn changed texture first, so action should start from that update.',
     ),
   ],
-  table: _act0OpenTableResidualV1(
-    _world5StreetChangeIntroRunner.table.copyWith(
-      streetLabel: 'Turn',
-      potLabel: 'Pot 8 BB',
-      centerLabel: 'Turn texture shift',
-      heroCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'K', suit: 's'),
-        Act0CardStateV1(rank: 'J', suit: 'd', tone: Act0CardToneV1.red),
-      ],
-      boardCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'K', suit: 'c'),
-        Act0CardStateV1(rank: '9', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '2', suit: 's'),
-        Act0CardStateV1(rank: 'T', suit: 'h', tone: Act0CardToneV1.red),
-      ],
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'BB checks flop'),
-        Act0ActionTrailItemV1(label: 'BTN bets'),
-        Act0ActionTrailItemV1(label: 'BB calls'),
-        Act0ActionTrailItemV1(label: 'Turn: T hearts'),
-      ],
-      highlightedCardIds: const <String>['board_1', 'board_3'],
+  table: _act0AuthoredHandV1(
+    _act0OpenTableResidualV1(
+      _world5StreetChangeIntroRunner.table.copyWith(
+        streetLabel: 'Turn',
+        potLabel: 'Pot 8 BB',
+        centerLabel: 'Turn texture shift',
+        heroCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'K', suit: 's'),
+          Act0CardStateV1(rank: 'J', suit: 'd', tone: Act0CardToneV1.red),
+        ],
+        boardCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'K', suit: 'c'),
+          Act0CardStateV1(rank: '9', suit: 'h', tone: Act0CardToneV1.red),
+          Act0CardStateV1(rank: '2', suit: 's'),
+          Act0CardStateV1(rank: 'T', suit: 'h', tone: Act0CardToneV1.red),
+        ],
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'BB checks flop'),
+          Act0ActionTrailItemV1(label: 'BTN bets'),
+          Act0ActionTrailItemV1(label: 'BB calls'),
+          Act0ActionTrailItemV1(label: 'Turn: T hearts'),
+        ],
+        highlightedCardIds: const <String>['board_1', 'board_3'],
+      ),
     ),
+    _w5TextureShiftStoryV1,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -18026,29 +18674,32 @@ final _world5RiverDrawStoryTransferRunner = _world5StreetChangeIntroRunner.copyW
           'That guess skips the board. The clean recheck is simpler: no heart means the same draw story missed.',
     ),
   ],
-  table: _act0OpenTableResidualV1(
-    _world5StreetChangeIntroRunner.table.copyWith(
-      streetLabel: 'River',
-      potLabel: 'Pot 10 BB',
-      centerLabel: 'River draw story',
-      heroCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
-      ],
-      boardCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'T', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '4', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '2', suit: 'c'),
-        Act0CardStateV1(rank: '9', suit: 's'),
-        Act0CardStateV1(rank: '3', suit: 'c'),
-      ],
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'Flop: heart draw live'),
-        Act0ActionTrailItemV1(label: 'Turn: draw still live'),
-        Act0ActionTrailItemV1(label: 'River: black 3'),
-      ],
-      highlightedCardIds: const <String>['board_0', 'board_1', 'board_4'],
+  table: _act0AuthoredHandV1(
+    _act0OpenTableResidualV1(
+      _world5StreetChangeIntroRunner.table.copyWith(
+        streetLabel: 'River',
+        potLabel: 'Pot 10 BB',
+        centerLabel: 'River draw story',
+        heroCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+          Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+        ],
+        boardCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'T', suit: 'h', tone: Act0CardToneV1.red),
+          Act0CardStateV1(rank: '4', suit: 'h', tone: Act0CardToneV1.red),
+          Act0CardStateV1(rank: '2', suit: 'c'),
+          Act0CardStateV1(rank: '9', suit: 's'),
+          Act0CardStateV1(rank: '3', suit: 'c'),
+        ],
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'Flop: heart draw live'),
+          Act0ActionTrailItemV1(label: 'Turn: draw still live'),
+          Act0ActionTrailItemV1(label: 'River: black 3'),
+        ],
+        highlightedCardIds: const <String>['board_0', 'board_1', 'board_4'],
+      ),
     ),
+    _coBtnCheckedToHeroStoryV1('4.25', 'River'),
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -18814,27 +19465,30 @@ final _w6TableValueLineTransferRunner = _w6ValueRangeActionRunner.copyWith(
           'The bet is fine, but the reason matters. This is not bluff pressure. It is a value line because top pair can get called by worse.',
     ),
   ],
-  table: _act0OpenTableResidualV1(
-    _w6ValueRangeActionRunner.table.copyWith(
-      potLabel: 'Pot 6 BB',
-      centerLabel: 'Real table value line',
-      heroCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'K', suit: 's'),
-        Act0CardStateV1(rank: 'J', suit: 'c'),
-      ],
-      boardCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'K', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '4', suit: 'c'),
-      ],
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'BB checks'),
-        Act0ActionTrailItemV1(label: 'BTN acts'),
-      ],
-      activeSeatId: 'btn',
-      highlightedSeatIds: const <String>['btn', 'bb'],
-      highlightedCardIds: const <String>['hero_0', 'board_0'],
+  table: _act0AuthoredHandV1(
+    _act0OpenTableResidualV1(
+      _w6ValueRangeActionRunner.table.copyWith(
+        potLabel: 'Pot 6 BB',
+        centerLabel: 'Real table value line',
+        heroCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'K', suit: 's'),
+          Act0CardStateV1(rank: 'J', suit: 'c'),
+        ],
+        boardCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'K', suit: 'h', tone: Act0CardToneV1.red),
+          Act0CardStateV1(rank: '8', suit: 'd', tone: Act0CardToneV1.red),
+          Act0CardStateV1(rank: '4', suit: 'c'),
+        ],
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'BB checks'),
+          Act0ActionTrailItemV1(label: 'BTN acts'),
+        ],
+        activeSeatId: 'btn',
+        highlightedSeatIds: const <String>['btn', 'bb'],
+        highlightedCardIds: const <String>['hero_0', 'board_0'],
+      ),
     ),
+    _btnBbSixBbFlopStoryV1,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -18887,31 +19541,34 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
           'A-Q still has no made hand on K-7-2-2. This is not a value line. The better read is that the bluff pressure cooled off.',
     ),
   ],
-  table: _act0OpenTableResidualV1(
-    _w6BluffCandidateRunner.table.copyWith(
-      streetLabel: 'Turn',
-      potLabel: 'Pot 11 BB',
-      centerLabel: 'Turn pressure shift',
-      heroCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'A', suit: 's'),
-        Act0CardStateV1(rank: 'Q', suit: 'd', tone: Act0CardToneV1.red),
-      ],
-      boardCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'K', suit: 'c'),
-        Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '2', suit: 's'),
-        Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
-      ],
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'BTN bets flop'),
-        Act0ActionTrailItemV1(label: 'BB calls'),
-        Act0ActionTrailItemV1(label: 'BB checks turn'),
-        Act0ActionTrailItemV1(label: 'BTN acts'),
-      ],
-      activeSeatId: 'btn',
-      highlightedSeatIds: const <String>['btn', 'bb'],
-      highlightedCardIds: const <String>['board_2', 'board_3'],
+  table: _act0AuthoredHandV1(
+    _act0OpenTableResidualV1(
+      _w6BluffCandidateRunner.table.copyWith(
+        streetLabel: 'Turn',
+        potLabel: 'Pot 11 BB',
+        centerLabel: 'Turn pressure shift',
+        heroCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'A', suit: 's'),
+          Act0CardStateV1(rank: 'Q', suit: 'd', tone: Act0CardToneV1.red),
+        ],
+        boardCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'K', suit: 'c'),
+          Act0CardStateV1(rank: '7', suit: 'h', tone: Act0CardToneV1.red),
+          Act0CardStateV1(rank: '2', suit: 's'),
+          Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
+        ],
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'BTN bets flop'),
+          Act0ActionTrailItemV1(label: 'BB calls'),
+          Act0ActionTrailItemV1(label: 'BB checks turn'),
+          Act0ActionTrailItemV1(label: 'BTN acts'),
+        ],
+        activeSeatId: 'btn',
+        highlightedSeatIds: const <String>['btn', 'bb'],
+        highlightedCardIds: const <String>['board_2', 'board_3'],
+      ),
     ),
+    _w6TurnPressureStoryV1,
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -19229,14 +19886,17 @@ final _w6CheckpointTableComboWeightRunner = _w6ComboCountsIntroRunner.copyWith(
   hint: 'Use combo counts as weight, not as a guess.',
   question:
       'Which family should you expect more often in a simple opening range before blockers?',
-  table: _world3PlayableCallRunner.table.copyWith(
-    heroCards: _unknownHoleCards,
-    centerLabel: 'Range weight',
-    highlightedSeatIds: const <String>['co', 'btn'],
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
-      Act0ActionTrailItemV1(label: 'BTN reads the range'),
-    ],
+  table: _act0AuthoredHandV1(
+    _world3PlayableCallRunner.table.copyWith(
+      heroCards: _unknownHoleCards,
+      centerLabel: 'Range weight',
+      highlightedSeatIds: const <String>['co', 'btn'],
+      actionTrail: const <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
+        Act0ActionTrailItemV1(label: 'BTN reads the range'),
+      ],
+    ),
+    _w6CoRangeReadStoryV1,
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -19290,79 +19950,84 @@ final _w6KickerShowdownCompareRunner = _world6RangeCheckpointRunner.copyWith(
   caption: 'River board is K-7-2-9-4. Hero shows A-K. Villain shows K-Q.',
   hint: 'Name the made hand first. Both players have one pair.',
   question: 'Which hand is stronger at showdown?',
-  table: _w6RangeIntroRunner.table.copyWith(
-    streetLabel: 'River',
-    potLabel: 'Pot 11 BB',
-    toCallLabel: '',
-    centerLabel: 'Showdown read',
-    boardCards: _boardK7294Cards,
-    heroCards: _heroAkCards,
-    highlightedCardIds: const <String>[],
-    highlightedSeatIds: const <String>['co', 'btn'],
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'River checks through'),
-      Act0ActionTrailItemV1(label: 'Cards tabled'),
-    ],
-    seats: <Act0SeatStateV1>[
-      Act0SeatStateV1(
-        seatId: 'utg',
-        seatLabel: 'UTG',
-        displayName: 'Seat',
-        isFolded: true,
-        isInHand: false,
-        hasActed: true,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'hj',
-        seatLabel: 'HJ',
-        displayName: 'Seat',
-        isFolded: true,
-        isInHand: false,
-        hasActed: true,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'co',
-        seatLabel: 'CO',
-        displayName: 'Villain',
-        holeCards: _villainKqCards,
-        cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
-        isTarget: true,
-      ),
-      Act0SeatStateV1(
-        seatId: 'btn',
-        seatLabel: 'BTN',
-        displayName: 'Hero',
-        isHero: true,
-        isDealerButton: true,
-        holeCards: _heroAkCards,
-        cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
-        isTarget: true,
-      ),
-      Act0SeatStateV1(
-        seatId: 'sb',
-        seatLabel: 'SB',
-        displayName: 'Seat',
-        isFolded: true,
-        isInHand: false,
-        hasActed: true,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'bb',
-        seatLabel: 'BB',
-        displayName: 'Seat',
-        isFolded: true,
-        isInHand: false,
-        hasActed: true,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-        holeCards: _unknownHoleCards,
-      ),
-    ],
+  table: _act0AuthoredHandV1(
+    _w6RangeIntroRunner.table.copyWith(
+      streetLabel: 'River',
+      potLabel: 'Pot 11 BB',
+      toCallLabel: '',
+      centerLabel: 'Showdown read',
+      boardCards: _boardK7294Cards,
+      heroCards: _heroAkCards,
+      highlightedCardIds: const <String>[],
+      highlightedSeatIds: const <String>['co', 'btn'],
+      actionTrail: const <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: 'River checks through'),
+        Act0ActionTrailItemV1(label: 'Cards tabled'),
+      ],
+      seats: <Act0SeatStateV1>[
+        Act0SeatStateV1(
+          seatId: 'utg',
+          seatLabel: 'UTG',
+          displayName: 'Seat',
+          isFolded: true,
+          isInHand: false,
+          hasActed: true,
+          cardsVisibleMode: Act0CardsVisibleModeV1.none,
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'hj',
+          seatLabel: 'HJ',
+          displayName: 'Seat',
+          isFolded: true,
+          isInHand: false,
+          hasActed: true,
+          cardsVisibleMode: Act0CardsVisibleModeV1.none,
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'co',
+          seatLabel: 'CO',
+          displayName: 'Villain',
+          holeCards: _villainKqCards,
+          cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+          isTarget: true,
+        ),
+        Act0SeatStateV1(
+          seatId: 'btn',
+          seatLabel: 'BTN',
+          displayName: 'Hero',
+          isHero: true,
+          isDealerButton: true,
+          holeCards: _heroAkCards,
+          cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+          isTarget: true,
+        ),
+        Act0SeatStateV1(
+          seatId: 'sb',
+          seatLabel: 'SB',
+          displayName: 'Seat',
+          isSmallBlind: true,
+          isFolded: true,
+          isInHand: false,
+          hasActed: true,
+          cardsVisibleMode: Act0CardsVisibleModeV1.none,
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'bb',
+          seatLabel: 'BB',
+          displayName: 'Seat',
+          isBigBlind: true,
+          isFolded: true,
+          isInHand: false,
+          hasActed: true,
+          cardsVisibleMode: Act0CardsVisibleModeV1.none,
+          holeCards: _unknownHoleCards,
+        ),
+      ],
+    ),
+    _coBtnShowdownStoryV1('2.25'),
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -19416,79 +20081,84 @@ final _w6BoardPairStrengthCompareRunner = _world6RangeCheckpointRunner.copyWith(
   caption: 'River board is J-8-8-2-2. Hero shows A-J. Villain shows K-8.',
   hint: 'The board helped both players. Compare the full five-card hand.',
   question: 'Which hand is stronger at showdown?',
-  table: _w6RangeIntroRunner.table.copyWith(
-    streetLabel: 'River',
-    potLabel: 'Pot 14 BB',
-    toCallLabel: '',
-    centerLabel: 'River compare',
-    boardCards: _boardJ8822Cards,
-    heroCards: _heroAjCards,
-    highlightedCardIds: const <String>['hero_1', 'board_0', 'board_1'],
-    highlightedSeatIds: const <String>['co', 'btn'],
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'River checks through'),
-      Act0ActionTrailItemV1(label: 'Cards tabled'),
-    ],
-    seats: <Act0SeatStateV1>[
-      Act0SeatStateV1(
-        seatId: 'utg',
-        seatLabel: 'UTG',
-        displayName: 'Seat',
-        isFolded: true,
-        isInHand: false,
-        hasActed: true,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'hj',
-        seatLabel: 'HJ',
-        displayName: 'Seat',
-        isFolded: true,
-        isInHand: false,
-        hasActed: true,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'co',
-        seatLabel: 'CO',
-        displayName: 'Villain',
-        holeCards: _villainK8Cards,
-        cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
-        isTarget: true,
-      ),
-      Act0SeatStateV1(
-        seatId: 'btn',
-        seatLabel: 'BTN',
-        displayName: 'Hero',
-        isHero: true,
-        isDealerButton: true,
-        holeCards: _heroAjCards,
-        cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
-        isTarget: true,
-      ),
-      Act0SeatStateV1(
-        seatId: 'sb',
-        seatLabel: 'SB',
-        displayName: 'Seat',
-        isFolded: true,
-        isInHand: false,
-        hasActed: true,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'bb',
-        seatLabel: 'BB',
-        displayName: 'Seat',
-        isFolded: true,
-        isInHand: false,
-        hasActed: true,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-        holeCards: _unknownHoleCards,
-      ),
-    ],
+  table: _act0AuthoredHandV1(
+    _w6RangeIntroRunner.table.copyWith(
+      streetLabel: 'River',
+      potLabel: 'Pot 14 BB',
+      toCallLabel: '',
+      centerLabel: 'River compare',
+      boardCards: _boardJ8822Cards,
+      heroCards: _heroAjCards,
+      highlightedCardIds: const <String>['hero_1', 'board_0', 'board_1'],
+      highlightedSeatIds: const <String>['co', 'btn'],
+      actionTrail: const <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: 'River checks through'),
+        Act0ActionTrailItemV1(label: 'Cards tabled'),
+      ],
+      seats: <Act0SeatStateV1>[
+        Act0SeatStateV1(
+          seatId: 'utg',
+          seatLabel: 'UTG',
+          displayName: 'Seat',
+          isFolded: true,
+          isInHand: false,
+          hasActed: true,
+          cardsVisibleMode: Act0CardsVisibleModeV1.none,
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'hj',
+          seatLabel: 'HJ',
+          displayName: 'Seat',
+          isFolded: true,
+          isInHand: false,
+          hasActed: true,
+          cardsVisibleMode: Act0CardsVisibleModeV1.none,
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'co',
+          seatLabel: 'CO',
+          displayName: 'Villain',
+          holeCards: _villainK8Cards,
+          cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+          isTarget: true,
+        ),
+        Act0SeatStateV1(
+          seatId: 'btn',
+          seatLabel: 'BTN',
+          displayName: 'Hero',
+          isHero: true,
+          isDealerButton: true,
+          holeCards: _heroAjCards,
+          cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+          isTarget: true,
+        ),
+        Act0SeatStateV1(
+          seatId: 'sb',
+          seatLabel: 'SB',
+          displayName: 'Seat',
+          isSmallBlind: true,
+          isFolded: true,
+          isInHand: false,
+          hasActed: true,
+          cardsVisibleMode: Act0CardsVisibleModeV1.none,
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'bb',
+          seatLabel: 'BB',
+          displayName: 'Seat',
+          isBigBlind: true,
+          isFolded: true,
+          isInHand: false,
+          hasActed: true,
+          cardsVisibleMode: Act0CardsVisibleModeV1.none,
+          holeCards: _unknownHoleCards,
+        ),
+      ],
+    ),
+    _coBtnShowdownStoryV1('3.75'),
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -19548,79 +20218,84 @@ final _w6CheckpointTableBestFiveRunner = _world6RangeCheckpointRunner.copyWith(
       'Real table showdown. River board is A-K-Q-J-T. Hero shows A-5. Villain shows K-4.',
   hint: 'Best five cards decide the hand, not the loudest private card.',
   question: 'What is the clean read before the pot is pushed?',
-  table: _w6RangeIntroRunner.table.copyWith(
-    streetLabel: 'River',
-    potLabel: 'Pot 18 BB',
-    toCallLabel: '',
-    centerLabel: 'Live showdown',
-    boardCards: _boardBroadwayCards,
-    heroCards: _heroA5Cards,
-    highlightedCardIds: const <String>[],
-    highlightedSeatIds: const <String>['co', 'btn'],
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'River checks through'),
-      Act0ActionTrailItemV1(label: 'Cards tabled'),
-    ],
-    seats: <Act0SeatStateV1>[
-      Act0SeatStateV1(
-        seatId: 'utg',
-        seatLabel: 'UTG',
-        displayName: 'Seat',
-        isFolded: true,
-        isInHand: false,
-        hasActed: true,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'hj',
-        seatLabel: 'HJ',
-        displayName: 'Seat',
-        isFolded: true,
-        isInHand: false,
-        hasActed: true,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'co',
-        seatLabel: 'CO',
-        displayName: 'Villain',
-        holeCards: _villainK4Cards,
-        cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
-        isTarget: true,
-      ),
-      Act0SeatStateV1(
-        seatId: 'btn',
-        seatLabel: 'BTN',
-        displayName: 'Hero',
-        isHero: true,
-        isDealerButton: true,
-        holeCards: _heroA5Cards,
-        cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
-        isTarget: true,
-      ),
-      Act0SeatStateV1(
-        seatId: 'sb',
-        seatLabel: 'SB',
-        displayName: 'Seat',
-        isFolded: true,
-        isInHand: false,
-        hasActed: true,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'bb',
-        seatLabel: 'BB',
-        displayName: 'Seat',
-        isFolded: true,
-        isInHand: false,
-        hasActed: true,
-        cardsVisibleMode: Act0CardsVisibleModeV1.none,
-        holeCards: _unknownHoleCards,
-      ),
-    ],
+  table: _act0AuthoredHandV1(
+    _w6RangeIntroRunner.table.copyWith(
+      streetLabel: 'River',
+      potLabel: 'Pot 18 BB',
+      toCallLabel: '',
+      centerLabel: 'Live showdown',
+      boardCards: _boardBroadwayCards,
+      heroCards: _heroA5Cards,
+      highlightedCardIds: const <String>[],
+      highlightedSeatIds: const <String>['co', 'btn'],
+      actionTrail: const <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: 'River checks through'),
+        Act0ActionTrailItemV1(label: 'Cards tabled'),
+      ],
+      seats: <Act0SeatStateV1>[
+        Act0SeatStateV1(
+          seatId: 'utg',
+          seatLabel: 'UTG',
+          displayName: 'Seat',
+          isFolded: true,
+          isInHand: false,
+          hasActed: true,
+          cardsVisibleMode: Act0CardsVisibleModeV1.none,
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'hj',
+          seatLabel: 'HJ',
+          displayName: 'Seat',
+          isFolded: true,
+          isInHand: false,
+          hasActed: true,
+          cardsVisibleMode: Act0CardsVisibleModeV1.none,
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'co',
+          seatLabel: 'CO',
+          displayName: 'Villain',
+          holeCards: _villainK4Cards,
+          cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+          isTarget: true,
+        ),
+        Act0SeatStateV1(
+          seatId: 'btn',
+          seatLabel: 'BTN',
+          displayName: 'Hero',
+          isHero: true,
+          isDealerButton: true,
+          holeCards: _heroA5Cards,
+          cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+          isTarget: true,
+        ),
+        Act0SeatStateV1(
+          seatId: 'sb',
+          seatLabel: 'SB',
+          displayName: 'Seat',
+          isSmallBlind: true,
+          isFolded: true,
+          isInHand: false,
+          hasActed: true,
+          cardsVisibleMode: Act0CardsVisibleModeV1.none,
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'bb',
+          seatLabel: 'BB',
+          displayName: 'Seat',
+          isBigBlind: true,
+          isFolded: true,
+          isInHand: false,
+          hasActed: true,
+          cardsVisibleMode: Act0CardsVisibleModeV1.none,
+          holeCards: _unknownHoleCards,
+        ),
+      ],
+    ),
+    _coBtnShowdownStoryV1('5.75'),
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -20260,14 +20935,17 @@ final _w7TopPairSprTwoRunner = _w7SprIntroRunner.copyWith(
   hint:
       'The hand did not change from the deeper version. Read what the low SPR changes first.',
   question: 'What does low SPR add to this top-pair spot?',
-  table: _act0OpenTableResidualV1(
-    _w6ValueRangeActionRunner.table.copyWith(
-      streetLabel: 'Flop',
-      potLabel: 'Pot 8 BB',
-      toCallLabel: 'To call 3 BB',
-      centerLabel: 'SPR 2, top pair',
+  table: _act0AuthoredHandV1(
+    _act0OpenTableResidualV1(
+      _w6ValueRangeActionRunner.table.copyWith(
+        streetLabel: 'Flop',
+        potLabel: 'Pot 8 BB',
+        toCallLabel: 'To call 3 BB',
+        centerLabel: 'SPR 2, top pair',
+      ),
+      keepTrail: false,
     ),
-    keepTrail: false,
+    _w8SprStoryV1(2),
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -20319,14 +20997,17 @@ final _w7TopPairSprEightRunner = _w7SprIntroRunner.copyWith(
   caption: 'Real table. K-7-2 rainbow flop. Hero has K-Q and SPR is 8.',
   hint: 'Top pair is good, but deep room keeps future-street risk alive.',
   question: 'What does stack depth add to this top-pair spot?',
-  table: _act0OpenTableResidualV1(
-    _w6ValueRangeActionRunner.table.copyWith(
-      streetLabel: 'Flop',
-      potLabel: 'Pot 8 BB',
-      toCallLabel: 'To call 3 BB',
-      centerLabel: 'SPR 8, top pair',
+  table: _act0AuthoredHandV1(
+    _act0OpenTableResidualV1(
+      _w6ValueRangeActionRunner.table.copyWith(
+        streetLabel: 'Flop',
+        potLabel: 'Pot 8 BB',
+        toCallLabel: 'To call 3 BB',
+        centerLabel: 'SPR 8, top pair',
+      ),
+      keepTrail: false,
     ),
-    keepTrail: false,
+    _w8SprStoryV1(8),
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -20928,19 +21609,22 @@ final _w9MTableWindowTransferRunner = _w9MRatioIntroRunner.copyWith(
   hint:
       'Low M means little time to wait. Urgency still does not mean shoving every hand.',
   question: 'What is the cleaner first zone adjustment here?',
-  table: _act0OpenTableResidualV1(
-    _w9MRatioIntroRunner.table.copyWith(
-      heroCards: _heroAjCards,
-      streetLabel: 'Preflop',
-      boardCards: const <Act0CardStateV1>[],
-      highlightedCardIds: const ['hero_0', 'hero_1'],
-      potLabel: 'Pot 1.5 BB',
-      toCallLabel: 'To call 1 BB',
-      centerLabel: 'BTN, 12 BB, M 8',
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'Folded to BTN'),
-      ],
+  table: _act0AuthoredHandV1(
+    _act0OpenTableResidualV1(
+      _w9MRatioIntroRunner.table.copyWith(
+        heroCards: _heroAjCards,
+        streetLabel: 'Preflop',
+        boardCards: const <Act0CardStateV1>[],
+        highlightedCardIds: const ['hero_0', 'hero_1'],
+        potLabel: 'Pot 1.5 BB',
+        toCallLabel: 'To call 1 BB',
+        centerLabel: 'BTN, 12 BB, M 8',
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'Folded to BTN'),
+        ],
+      ),
     ),
+    _w9FoldedToButtonStoryV1,
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -21157,44 +21841,47 @@ final _w9BubbleTableRiskTransferRunner = _w9BubblePressureIntroRunner.copyWith(
   hint:
       'The covering big blind can hurt you more than you can hurt them. Name the bubble risk premium before acting.',
   question: 'What is the cleaner first bubble adjustment here?',
-  table: _act0CurrentStreetTableV1(
-    _act0ExplicitFoldsV1(
-      _act0OpenTableResidualV1(
-        _w9BubblePressureIntroRunner.table.copyWith(
-          heroCards: _heroAjCards,
-          boardCards: const [],
-          streetLabel: 'Preflop',
-          activeSeatId: 'btn',
-          highlightedCardIds: const ['hero_0', 'hero_1'],
-          potLabel: 'Pot 21 BB',
-          toCallLabel: 'To call 15.5 BB',
-          centerLabel: 'BTN, medium stack, bubble pressure',
-          actionTrail: const [
-            Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
-            Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
-            Act0ActionTrailItemV1(label: 'UTG folds'),
-            Act0ActionTrailItemV1(label: 'HJ folds'),
-            Act0ActionTrailItemV1(label: 'CO folds'),
-            Act0ActionTrailItemV1(label: 'BTN raises to 2.5 BB'),
-            Act0ActionTrailItemV1(label: 'SB folds'),
-            Act0ActionTrailItemV1(label: 'BB shoves to 18 BB'),
-          ],
+  table: _act0AuthoredHandV1(
+    _act0CurrentStreetTableV1(
+      _act0ExplicitFoldsV1(
+        _act0OpenTableResidualV1(
+          _w9BubblePressureIntroRunner.table.copyWith(
+            heroCards: _heroAjCards,
+            boardCards: const [],
+            streetLabel: 'Preflop',
+            activeSeatId: 'btn',
+            highlightedCardIds: const ['hero_0', 'hero_1'],
+            potLabel: 'Pot 21 BB',
+            toCallLabel: 'To call 15.5 BB',
+            centerLabel: 'BTN, medium stack, bubble pressure',
+            actionTrail: const [
+              Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+              Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+              Act0ActionTrailItemV1(label: 'UTG folds'),
+              Act0ActionTrailItemV1(label: 'HJ folds'),
+              Act0ActionTrailItemV1(label: 'CO folds'),
+              Act0ActionTrailItemV1(label: 'BTN raises to 2.5 BB'),
+              Act0ActionTrailItemV1(label: 'SB folds'),
+              Act0ActionTrailItemV1(label: 'BB shoves to 18 BB'),
+            ],
+          ),
         ),
+        {'utg', 'hj', 'co', 'sb'},
       ),
-      {'utg', 'hj', 'co', 'sb'},
+      bets: const {
+        'btn': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.raise,
+          label: 'BTN',
+          amountLabel: '2.5 BB',
+        ),
+        'bb': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.allIn,
+          label: 'BB',
+          amountLabel: '18 BB',
+        ),
+      },
     ),
-    bets: const {
-      'btn': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.raise,
-        label: 'BTN',
-        amountLabel: '2.5 BB',
-      ),
-      'bb': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.allIn,
-        label: 'BB',
-        amountLabel: '18 BB',
-      ),
-    },
+    _w9BubbleShoveStoryV1,
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -21812,24 +22499,27 @@ final _w10TableValueVsCallerTransferRunner = _w10OneLeverIntroRunner.copyWith(
   hint:
       'Call-heavy opponents pay value more often. Ask what changes first before adding more bluffs.',
   question: 'What is the cleaner first adjustment here?',
-  table: _act0OpenTableResidualV1(
-    _w6ValueRangeActionRunner.table.copyWith(
-      heroCards: _heroKqCards,
-      boardCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'K', suit: 's'),
-        Act0CardStateV1(rank: '7', suit: 'd'),
-        Act0CardStateV1(rank: '2', suit: 'c'),
-      ],
-      streetLabel: 'Flop',
-      potLabel: 'Pot 6 BB',
-      toCallLabel: 'To call 2 BB',
-      centerLabel: 'Top pair vs caller',
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'BTN opens 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'BB calls'),
-        Act0ActionTrailItemV1(label: 'BB checks'),
-      ],
-    ),
+  table: _act0AuthoredHandV1(
+    _act0OpenTableResidualV1(
+      _w6ValueRangeActionRunner.table.copyWith(
+        heroCards: _heroKqCards,
+        boardCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'K', suit: 's'),
+          Act0CardStateV1(rank: '7', suit: 'd'),
+          Act0CardStateV1(rank: '2', suit: 'c'),
+        ],
+        streetLabel: 'Flop',
+        potLabel: 'Pot 6 BB',
+        toCallLabel: 'To call 2 BB',
+        centerLabel: 'Top pair vs caller',
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'BTN opens 2.5 BB'),
+          Act0ActionTrailItemV1(label: 'BB calls'),
+          Act0ActionTrailItemV1(label: 'BB checks'),
+        ],
+      ),
+    ).copyWith(toCallLabel: ''),
+    _btnBbSixBbFlopStoryV1,
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -22563,27 +23253,30 @@ final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
       'Six-handed, 0.25 BB ante each. CO opens to 2.5 BB, BTN calls with QJs. Flop J-7-4 rainbow: CO bets 2 BB into 8 BB, with 35 BB behind each.',
   hint: 'Real play means combining cues, not naming one concept.',
   question: 'What is the cleaner response?',
-  table: _act0CurrentStreetTableV1(
-    _world3PlayableCallRunner.table.copyWith(
-      heroCards: _heroQJsCards,
-      boardCards: _boardJ74FlopCards,
-      streetLabel: 'Flop',
-      potLabel: 'Pot 10 BB',
-      toCallLabel: 'To call 2 BB',
-      centerLabel: 'BTN, top pair, small price',
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls'),
-        Act0ActionTrailItemV1(label: 'CO bets 2 BB'),
-      ],
-    ),
-    bets: {
-      'co': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'CO',
-        amountLabel: '2 BB',
+  table: _act0AuthoredHandV1(
+    _act0CurrentStreetTableV1(
+      _world3PlayableCallRunner.table.copyWith(
+        heroCards: _heroQJsCards,
+        boardCards: _boardJ74FlopCards,
+        streetLabel: 'Flop',
+        potLabel: 'Pot 10 BB',
+        toCallLabel: 'To call 2 BB',
+        centerLabel: 'BTN, top pair, small price',
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
+          Act0ActionTrailItemV1(label: 'BTN calls'),
+          Act0ActionTrailItemV1(label: 'CO bets 2 BB'),
+        ],
       ),
-    },
+      bets: {
+        'co': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'CO',
+          amountLabel: '2 BB',
+        ),
+      },
+    ),
+    _w11FlopPriceStoryV1,
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -22637,28 +23330,31 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
   hint:
       'Combine a large second-barrel price with this opponent\'s unusually value-heavy betting range.',
   question: 'What is the cleaner response now?',
-  table: _act0CurrentStreetTableV1(
-    _world3PlayableCallRunner.table.copyWith(
-      heroCards: _heroQJsCards,
-      boardCards: _boardJ742TurnCards,
-      streetLabel: 'Turn',
-      potLabel: 'Pot 24 BB',
-      toCallLabel: 'To call 12 BB',
-      centerLabel: 'BTN top pair, tight CO barrel',
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'CO opens 2.5; BTN calls'),
-        Act0ActionTrailItemV1(label: 'Flop pot 8 BB; CO bets 2'),
-        Act0ActionTrailItemV1(label: 'BTN calls 2; turn pot 12'),
-        Act0ActionTrailItemV1(label: 'Tight CO bets 12 on turn'),
-      ],
-    ),
-    bets: {
-      'co': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'CO',
-        amountLabel: '12 BB',
+  table: _act0AuthoredHandV1(
+    _act0CurrentStreetTableV1(
+      _world3PlayableCallRunner.table.copyWith(
+        heroCards: _heroQJsCards,
+        boardCards: _boardJ742TurnCards,
+        streetLabel: 'Turn',
+        potLabel: 'Pot 24 BB',
+        toCallLabel: 'To call 12 BB',
+        centerLabel: 'BTN top pair, tight CO barrel',
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'CO opens 2.5; BTN calls'),
+          Act0ActionTrailItemV1(label: 'Flop pot 8 BB; CO bets 2'),
+          Act0ActionTrailItemV1(label: 'BTN calls 2; turn pot 12'),
+          Act0ActionTrailItemV1(label: 'Tight CO bets 12 on turn'),
+        ],
       ),
-    },
+      bets: {
+        'co': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'CO',
+          amountLabel: '12 BB',
+        ),
+      },
+    ),
+    _w11TurnPriceStoryV1,
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -23454,29 +24150,32 @@ final _w12PrettyHandBadPriceFoldRunner = _w12ConfidenceDisciplineIntroRunner.cop
       'Real table. A tight player barrels into river and now bets 18 BB into 20 BB on K-7-2-9-4. Hero holds K-Q at 100 BB effective.',
   hint: 'Do not hero call only because the hand looks pretty.',
   question: 'What is the cleaner disciplined action?',
-  table: _act0CurrentStreetTableV1(
-    _world3PlayableCallRunner.table.copyWith(
-      heroCards: _heroKqCards,
-      boardCards: _boardK7294Cards,
-      streetLabel: 'River',
-      potLabel: 'Pot 38 BB',
-      toCallLabel: 'To call 18 BB',
-      centerLabel: 'Top pair, bad river price',
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls'),
-        Act0ActionTrailItemV1(label: 'CO barrels flop'),
-        Act0ActionTrailItemV1(label: 'CO barrels turn'),
-        Act0ActionTrailItemV1(label: 'CO bets 18 BB'),
-      ],
-    ),
-    bets: {
-      'co': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'CO',
-        amountLabel: '18 BB',
+  table: _act0AuthoredHandV1(
+    _act0CurrentStreetTableV1(
+      _world3PlayableCallRunner.table.copyWith(
+        heroCards: _heroKqCards,
+        boardCards: _boardK7294Cards,
+        streetLabel: 'River',
+        potLabel: 'Pot 38 BB',
+        toCallLabel: 'To call 18 BB',
+        centerLabel: 'Top pair, bad river price',
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
+          Act0ActionTrailItemV1(label: 'BTN calls'),
+          Act0ActionTrailItemV1(label: 'CO barrels flop'),
+          Act0ActionTrailItemV1(label: 'CO barrels turn'),
+          Act0ActionTrailItemV1(label: 'CO bets 18 BB'),
+        ],
       ),
-    },
+      bets: {
+        'co': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'CO',
+          amountLabel: '18 BB',
+        ),
+      },
+    ),
+    _w12RiverBarrelStoryV1,
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -23535,26 +24234,29 @@ final _w12RevengeRaiseTrapRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
   hint:
       'Do not raise just to take control when the table read says stay simple.',
   question: 'What is the clean discipline line?',
-  table: _act0CurrentStreetTableV1(
-    _world3PlayableCallRunner.table.copyWith(
-      heroCards: _heroQJsCards,
-      boardCards: _boardJ74FlopCards,
-      streetLabel: 'Flop',
-      potLabel: 'Pot 10 BB',
-      toCallLabel: 'To call 2 BB',
-      centerLabel: 'Top pair, ego trap',
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'Villain needled you last orbit'),
-        Act0ActionTrailItemV1(label: 'CO bets 2 BB'),
-      ],
-    ),
-    bets: {
-      'co': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'CO',
-        amountLabel: '2 BB',
+  table: _act0AuthoredHandV1(
+    _act0CurrentStreetTableV1(
+      _world3PlayableCallRunner.table.copyWith(
+        heroCards: _heroQJsCards,
+        boardCards: _boardJ74FlopCards,
+        streetLabel: 'Flop',
+        potLabel: 'Pot 10 BB',
+        toCallLabel: 'To call 2 BB',
+        centerLabel: 'Top pair, ego trap',
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'Villain needled you last orbit'),
+          Act0ActionTrailItemV1(label: 'CO bets 2 BB'),
+        ],
       ),
-    },
+      bets: {
+        'co': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'CO',
+          amountLabel: '2 BB',
+        ),
+      },
+    ),
+    _w12FlopBetStoryV1('Villain needled you last orbit'),
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -23747,28 +24449,31 @@ final _w12CheckpointFullLoopLineRunner = _w12ConfidenceDisciplineIntroRunner.cop
   hint:
       'Use the same decision loop even after a mistake: seat, hand, board, price, stack and action, then the clean action.',
   question: 'What keeps the next decision stable?',
-  table: _act0CurrentStreetTableV1(
-    _world3PlayableCallRunner.table.copyWith(
-      heroCards: _heroAJsCards,
-      boardCards: _boardA84TwoToneCards,
-      streetLabel: 'Flop',
-      potLabel: 'Pot 10 BB',
-      toCallLabel: 'To call 2 BB',
-      centerLabel: 'After mistake, stay clean',
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'Last orbit: loose bluff'),
-        Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls'),
-        Act0ActionTrailItemV1(label: 'CO bets 2 BB'),
-      ],
-    ),
-    bets: {
-      'co': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'CO',
-        amountLabel: '2 BB',
+  table: _act0AuthoredHandV1(
+    _act0CurrentStreetTableV1(
+      _world3PlayableCallRunner.table.copyWith(
+        heroCards: _heroAJsCards,
+        boardCards: _boardA84TwoToneCards,
+        streetLabel: 'Flop',
+        potLabel: 'Pot 10 BB',
+        toCallLabel: 'To call 2 BB',
+        centerLabel: 'After mistake, stay clean',
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'Last orbit: loose bluff'),
+          Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
+          Act0ActionTrailItemV1(label: 'BTN calls'),
+          Act0ActionTrailItemV1(label: 'CO bets 2 BB'),
+        ],
       ),
-    },
+      bets: {
+        'co': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'CO',
+          amountLabel: '2 BB',
+        ),
+      },
+    ),
+    _w12FlopBetStoryV1('Last orbit: loose bluff'),
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(

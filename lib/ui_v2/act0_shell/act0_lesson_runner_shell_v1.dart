@@ -13208,9 +13208,12 @@ class _Act0TableV1 extends StatelessWidget {
           'act0_f7_street',
           p.streetAnchor,
           _CenterStreetStatusV1(
+            // An explanation diagram is not a played hand: name it as one.
             label: act0RuntimeLocalizedStreetLabelV1(
               context,
-              streetLabelOverride ?? table.streetLabel,
+              table.scope == Act0TableScopeV1.explanation
+                  ? 'Example'
+                  : streetLabelOverride ?? table.streetLabel,
             ).toUpperCase(),
             compact: true,
           ),
@@ -13696,7 +13699,9 @@ class _CenterPotV1 extends StatelessWidget {
                 resolvedCenterLabel == 'Action on hero'));
     final streetLabel = act0RuntimeLocalizedStreetLabelV1(
       context,
-      streetLabelOverride ?? table.streetLabel,
+      table.scope == Act0TableScopeV1.explanation
+          ? 'Example'
+          : streetLabelOverride ?? table.streetLabel,
     ).toUpperCase();
     final resolvedToCallLabel = (toCallLabelOverride ?? table.toCallLabel)
         .trim();

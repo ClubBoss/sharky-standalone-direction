@@ -2928,6 +2928,9 @@ _ruSurfaceAtomCopyByIdV1 = <String, Act0SurfaceAtomCopyV1>{
   'table_street_flop': Act0SurfaceAtomCopyV1(text: 'Флоп'),
   'table_street_turn': Act0SurfaceAtomCopyV1(text: 'Тёрн'),
   'table_street_river': Act0SurfaceAtomCopyV1(text: 'Ривер'),
+  'table_street_example': Act0SurfaceAtomCopyV1(
+    text: '\u041f\u0440\u0438\u043c\u0435\u0440',
+  ),
   'table_center_blinds_posted': Act0SurfaceAtomCopyV1(
     text: 'Блайнды поставлены',
   ),
