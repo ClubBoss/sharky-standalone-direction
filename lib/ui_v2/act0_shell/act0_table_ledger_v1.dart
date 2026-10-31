@@ -24,7 +24,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 /// Trail grammar (one item per action, amounts in BB):
 ///   `UTG folds`, `HJ checks`, `CO calls 2.5 BB` (street total) or
 ///   `CO calls 2 BB more` (increment), `CO opens 2.5 BB` / `BTN raises to 7 BB`
-///   (raise-to), `HJ bets 5 BB`, `BB shoves 18 BB` (shove-to), `BTN acts`.
+///   (raise-to), `HJ bets 5 BB`, `BB shoves to 18 BB` (shove-to), `BTN acts`.
 ///   A `Flop: ` / `Turn: ` / `River: ` prefix or `Flop dealt` moves to that
 ///   street. Note items ([Act0ActionTrailItemV1.note]) are teaching context and
 ///   are never executed.
@@ -94,7 +94,7 @@ final _streetPrefixV1 = RegExp(r'^(Flop|Turn|River):\s*');
 final _streetDealtV1 = RegExp(r'^(Flop|Turn|River) dealt$');
 final _antesV1 = RegExp(r'^Antes (\d+(?:\.\d+)?) BB each$');
 final _actionItemV1 = RegExp(
-  r'^(\S+) (blind|folds|checks|calls|opens|raises to|raises|bets|shoves|acts)'
+  r'^(\S+) (blind|folds|checks|calls|opens|raises to|raises|bets|shoves to|shoves|acts)'
   r'(?: (\d+(?:\.\d+)?) BB)?( more)?$',
 );
 final _potLabelV1 = RegExp(r'^Pot (\d+(?:\.\d+)?) BB$');
@@ -383,7 +383,7 @@ Act0TableLedgerV1 act0TableLedgerForV1(Act0TableStateV1 table) {
           problems.add('"${item.label}" needs a street-total amount');
           break;
         }
-        final shove = verb == 'shoves';
+        final shove = verb.startsWith('shoves');
         if (shove && _behindBbV1(seatById[actor]!) != 0) {
           problems.add(
             '"${item.label}" is not an all-in: no authored stack shows '

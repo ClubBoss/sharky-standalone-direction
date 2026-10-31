@@ -23,34 +23,117 @@ void main() {
   Act0SeatStateV1 seatOf(Act0TableStateV1 table, String id) =>
       table.seats.singleWhere((s) => s.seatId == id);
 
-  test('every table is certified or an exact, listed residual', () {
-    final uncertified = <String, Act0TableLedgerStatusV1>{};
+  test('every table holds under its scope; nothing is left unaccounted', () {
+    final byStatus = <Act0TableLedgerStatusV1, List<String>>{};
+    final problems = <String>[];
     var tableCount = 0;
     for (final t in tasks) {
       final tables = tablesOf(t);
       for (var i = 0; i < tables.length; i++) {
         tableCount += 1;
-        final ledger = act0TableLedgerForV1(tables[i]);
-        if (!ledger.isCertified) {
-          uncertified['${t.taskId}#$i'] = ledger.status;
+        final table = tables[i];
+        final ledger = act0TableLedgerForV1(table);
+        final id = '${t.taskId}#$i';
+        byStatus.putIfAbsent(ledger.status, () => []).add(id);
+        final expected = switch (table.scope) {
+          Act0TableScopeV1.playedHand => Act0TableLedgerStatusV1.certified,
+          Act0TableScopeV1.orientation => Act0TableLedgerStatusV1.orientation,
+          Act0TableScopeV1.explanation => Act0TableLedgerStatusV1.explanatory,
+        };
+        if (ledger.status != expected) {
+          problems.add('$id ${table.scope.name}: ${ledger.problems}');
         }
       }
     }
     expect(tasks.length, 367);
     expect(tableCount, 367);
-    expect(
-      uncertified.keys.toSet().difference(_kResidualsV1.keys.toSet()),
-      isEmpty,
-      reason: 'New tables must carry a legal history the ledger certifies.',
-    );
-    expect(
-      _kResidualsV1.keys.toSet().difference(uncertified.keys.toSet()),
-      isEmpty,
-      reason: 'A residual now certifies: remove it from the list.',
-    );
-    for (final entry in _kResidualsV1.entries) {
-      expect(uncertified[entry.key], entry.value.$2, reason: entry.key);
+    expect(problems, isEmpty);
+    expect(byStatus[Act0TableLedgerStatusV1.certified]?.length, 317);
+    expect(byStatus[Act0TableLedgerStatusV1.orientation]?.length, 46);
+    expect(byStatus[Act0TableLedgerStatusV1.explanatory]?.toSet(), {
+      'what_poker_is_all_in_meaning#0',
+      'what_poker_is_matched_chips_transfer#0',
+      'what_poker_is_side_pot_intro#0',
+      'same_hand_different_seat_position_repair_same_hand_different_seat#0',
+    });
+  });
+
+  test('explanation diagrams state their pots and who can win them', () {
+    final sidePot = task('what_poker_is_side_pot_intro').runner.table;
+    final chips = sidePot.chipExplanation!;
+    expect(chips.contributions.values.fold(0.0, (a, b) => a + b), 120.5);
+    expect(chips.pots.map((p) => p.amountBb), [60.5, 60]);
+    expect(chips.pots.first.eligibleSeatIds, {'btn', 'co', 'bb'});
+    expect(chips.pots.last.eligibleSeatIds, {'co', 'bb'});
+    expect(chips.pots.last.eligibleSeatIds.contains('btn'), isFalse);
+    final allIn = task('what_poker_is_all_in_meaning').runner.table;
+    expect(allIn.chipExplanation!.pots.single.amountBb, 41.5);
+    for (final t in [sidePot, allIn]) {
+      expect(t.actionTrail.every((i) => i.isNote), isTrue);
+      expect(t.scope, Act0TableScopeV1.explanation);
     }
+  });
+
+  test('W4 sizing keeps one-third 2, half 3 and pot 6 on a 6 BB flop', () {
+    for (final id in ['w4_small_bet', 'w4_half_pot_bet', 'w4_pot_bet']) {
+      final ledger = act0TableLedgerForV1(task(id).runner.table);
+      expect(ledger.problems, isEmpty, reason: id);
+      expect(ledger.potBb, 6, reason: id);
+      expect(ledger.liveSeatIds, {'btn', 'bb'}, reason: id);
+      expect(ledger.nextActorSeatId, 'btn', reason: id);
+    }
+    expect(
+      task('w4_small_bet').runner.options.singleWhere((o) => o.isCorrect).id,
+      'two',
+    );
+    expect(
+      task('w4_half_pot_bet').runner.options.singleWhere((o) => o.isCorrect).id,
+      'three',
+    );
+    expect(
+      task('w4_pot_bet').runner.options.singleWhere((o) => o.isCorrect).id,
+      'six',
+    );
+    final checkedBack = act0TableLedgerForV1(
+      task('w4_protection_check').runner.table,
+    );
+    expect(checkedBack.problems, isEmpty);
+    expect(checkedBack.nextActorSeatId, isNull);
+  });
+
+  test('W4 prices: entering pots match the pot-odds feedback', () {
+    final cases = {
+      'w4_good_price_call': (8.0, 1.0, 'hj'),
+      'w4_bad_price_fold': (15.0, 7.0, 'hj'),
+      'w4_cheap_price_marginal_call': (10.0, 1.0, 'hj'),
+      'w4_big_price_marginal_fold': (15.0, 6.0, 'bb'),
+      'w4_checkpoint_table_price': (7.0, 2.0, 'bb'),
+    };
+    cases.forEach((id, expected) {
+      final table = task(id).runner.table;
+      final ledger = act0TableLedgerForV1(table);
+      expect(ledger.problems, isEmpty, reason: id);
+      expect(ledger.potBb, expected.$1, reason: id);
+      expect(ledger.heroPriceBb, expected.$2, reason: id);
+      final bettor = table.seats.singleWhere(
+        (s) => (s.currentBetLabel ?? '').isNotEmpty,
+      );
+      expect(bettor.seatId, expected.$3, reason: id);
+    });
+  });
+
+  test('stacks, antes and shoves are authored where the copy states them', () {
+    final bubble = task('w9_bubble_table_risk_transfer').runner.table;
+    expect(seatOf(bubble, 'bb').stackLabel, 'All-in');
+    expect(act0TableLedgerForV1(bubble).heroPriceBb, 15.5);
+    final ante = act0TableLedgerForV1(
+      task('w11_trigger_small_price_continue').runner.table,
+    );
+    expect(ante.potBb, 10);
+    expect(ante.problems, isEmpty);
+    final spr = task('w7_top_pair_spr2_transfer').runner.table;
+    expect(seatOf(spr, 'btn').stackLabel, '10 BB');
+    expect(act0TableLedgerForV1(spr).potBb, 8);
   });
 
   test('W11: HJ is the live current bettor Hero responds to', () {
@@ -262,280 +345,202 @@ void main() {
       expect(flags(multiway, 'bb is live in the history but out'), isFalse);
       expect(flags(multiway, 'bb is out in the history but live'), isTrue);
     });
+
+    // The independent PR343 review's five exact falsifiers.
+    List<Act0ActionTrailItemV1> swap(
+      Act0TableStateV1 t,
+      Map<String, String> changes,
+    ) => [
+      for (final a in t.actionTrail)
+        Act0ActionTrailItemV1(label: changes[a.label] ?? a.label),
+    ];
+
+    test('rejects a non-all-in opening bet below one big blind', () {
+      final t = task('actions_call_drill').runner.table;
+      final bad = mapSeat(
+        t.copyWith(
+          potLabel: 'Pot 4.5 BB',
+          toCallLabel: 'To call 0.5 BB',
+          actionTrail: swap(t, {'Flop: HJ bets 1 BB': 'Flop: HJ bets 0.5 BB'}),
+        ),
+        'hj',
+        (s) => reseat(
+          s,
+          bet: const Act0SeatBetStateV1(
+            kind: Act0SeatBetKindV1.bet,
+            label: 'HJ',
+            amountLabel: '0.5 BB',
+          ),
+        ),
+      );
+      expect(flags(bad, 'below the minimum 1 BB bet'), isTrue);
+    });
+
+    test('rejects a preflop raise to 1.5 BB over a 1 BB blind', () {
+      final t = task('cards_ranks_suits_private_board').runner.table;
+      final bad = t.copyWith(
+        potLabel: 'Pot 4.5 BB',
+        actionTrail: swap(t, {
+          'CO opens 2.5 BB': 'CO opens 1.5 BB',
+          'BTN calls 2.5 BB': 'BTN calls 1.5 BB',
+        }),
+      );
+      expect(flags(bad, 'below the minimum raise to 2 BB'), isTrue);
+    });
+
+    test('rejects an explicit backward street prefix', () {
+      final t = task('turn_river_changes_w5_turn_hits').runner.table;
+      final bad = t.copyWith(
+        actionTrail: [
+          ...t.actionTrail,
+          const Act0ActionTrailItemV1(label: 'Flop: BTN checks'),
+        ],
+      );
+      expect(flags(bad, 'goes back to an earlier street'), isTrue);
+    });
+
+    test('rejects actions after the end-of-trail marker', () {
+      final t = task('actions_call_drill').runner.table;
+      final bad = t.copyWith(
+        actionTrail: [
+          ...t.actionTrail,
+          const Act0ActionTrailItemV1(label: 'UTG bets 100 BB'),
+        ],
+      );
+      expect(flags(bad, 'follows the end of the trail'), isTrue);
+    });
+
+    test('rejects a showdown hand face up without two real cards', () {
+      final t = task('showdown_tie_drill').runner.table;
+      final bad = mapSeat(
+        t,
+        'co',
+        (s) => Act0SeatStateV1(
+          seatId: s.seatId,
+          seatLabel: s.seatLabel,
+          displayName: s.displayName,
+          hasActed: true,
+          cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+        ),
+      );
+      expect(flags(bad, 'co is face up without two real cards'), isTrue);
+    });
+
+    // Stack, shove, ante and scope counterexamples.
+    test('rejects a shove without an authored all-in stack', () {
+      final t = task('w9_bubble_table_risk_transfer').runner.table;
+      final bad = t.copyWith(
+        seats: [
+          for (final s in t.seats)
+            s.seatId == 'bb'
+                ? Act0SeatStateV1(
+                    seatId: s.seatId,
+                    seatLabel: s.seatLabel,
+                    displayName: s.displayName,
+                    isBigBlind: true,
+                    hasActed: true,
+                    holeCards: s.holeCards,
+                    stackLabel: '50 BB',
+                    currentBetLabel: s.currentBetLabel,
+                    bet: s.bet,
+                  )
+                : s,
+        ],
+      );
+      expect(flags(bad, 'is not an all-in'), isTrue);
+    });
+
+    test('rejects a raise that reopens action after a short all-in', () {
+      final t = task('w9_bubble_table_risk_transfer').runner.table;
+      final bad = t.copyWith(
+        actionTrail: [
+          ...swap(t, {'BB shoves to 18 BB': 'BB shoves to 3 BB'}),
+          const Act0ActionTrailItemV1(label: 'BTN raises to 8 BB'),
+        ],
+      );
+      expect(flags(bad, 'raises after a short all-in'), isTrue);
+    });
+
+    test('rejects antes posted after the action starts', () {
+      final t = task('w11_trigger_small_price_continue').runner.table;
+      final bad = t.copyWith(
+        actionTrail: [
+          ...t.actionTrail.skip(1).take(1),
+          t.actionTrail.first,
+          ...t.actionTrail.skip(2),
+        ],
+      );
+      expect(flags(bad, 'must come before any action'), isTrue);
+    });
+
+    test('notes are never executed; the same text as an action is', () {
+      final t = task('w12_revenge_raise_trap').runner.table;
+      expect(act0TableLedgerForV1(t).isCertified, isTrue);
+      final asAction = t.copyWith(
+        actionTrail: [
+          for (final a in t.actionTrail) Act0ActionTrailItemV1(label: a.label),
+        ],
+      );
+      expect(
+        act0TableLedgerForV1(asAction).status,
+        Act0TableLedgerStatusV1.narrative,
+      );
+    });
+
+    test('rejects an orientation frame that shows an action', () {
+      final t = task('what_poker_is_pot_stack').runner.table;
+      expect(t.scope, Act0TableScopeV1.orientation);
+      final bad = mapSeat(
+        t.copyWith(
+          actionTrail: [
+            ...t.actionTrail,
+            const Act0ActionTrailItemV1(label: 'UTG folds'),
+          ],
+        ),
+        'utg',
+        (s) => reseat(s, folded: true),
+      );
+      expect(flags(bad, 'shows only seats and posted blinds'), isTrue);
+    });
+
+    test('rejects a side pot that Hero could win or a wrong total', () {
+      final t = task('what_poker_is_side_pot_intro').runner.table;
+      final c = t.chipExplanation!;
+      final heroInSide = t.copyWith(
+        chipExplanation: Act0ChipExplanationV1(
+          contributions: c.contributions,
+          allInSeatIds: c.allInSeatIds,
+          foldedSeatIds: c.foldedSeatIds,
+          pots: [
+            c.pots.first,
+            const Act0PotClaimV1(
+              amountBb: 60,
+              eligibleSeatIds: {'btn', 'co', 'bb'},
+            ),
+          ],
+        ),
+      );
+      expect(flags(heroInSide, 'pot 2 can be won by'), isTrue);
+      final allIn = task('what_poker_is_all_in_meaning').runner.table;
+      final wrongTotal = allIn.copyWith(potLabel: 'Pot 40 BB');
+      expect(flags(wrongTotal, 'does not show the pots'), isTrue);
+    });
+
+    test('rejects a card shown twice', () {
+      final t = task('showdown_tie_drill').runner.table;
+      final bad = mapSeat(
+        t,
+        'co',
+        (s) => Act0SeatStateV1(
+          seatId: s.seatId,
+          seatLabel: s.seatLabel,
+          displayName: s.displayName,
+          hasActed: true,
+          holeCards: t.heroCards,
+          cardsVisibleMode: Act0CardsVisibleModeV1.faceUp,
+        ),
+      );
+      expect(flags(bad, 'appears twice'), isTrue);
+    });
   });
 }
-
-enum _ResidualFamilyV1 {
-  // BTN raises, BB calls, 6 BB flop: the SB's dead 0.5 BB makes 6.5 BB unless
-  // BTN raises to 2.75 BB; the sizing answers key to a 6 BB pot. Owner choice.
-  w4BtnVsBbSixBb,
-  // Turn price spots quote an entering pot (6-9 BB) with no history; the
-  // pot-odds feedback depends on those numbers.
-  w4PriceSpots,
-  w5Transfers,
-  w6Transfers,
-  w8DepthAndSidePot,
-  w9Pressure,
-  w10Transfer,
-  w11Transfers,
-  w12Transfers,
-  w1AllIn,
-  w3SeatComparison,
-}
-
-// Residual tables, unchanged from #341/#342. Each keeps its pre-ledger frame
-// (see _act0OpenTableResidualV1) until its family gets an authored history.
-const _kResidualsV1 = <String, (_ResidualFamilyV1, Act0TableLedgerStatusV1)>{
-  'w10_table_value_vs_caller_transfer#0': (
-    _ResidualFamilyV1.w10Transfer,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w11_trigger_bad_price_fold#0': (
-    _ResidualFamilyV1.w11Transfers,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-  'w11_trigger_small_price_continue#0': (
-    _ResidualFamilyV1.w11Transfers,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w12_checkpoint_full_loop_line#0': (
-    _ResidualFamilyV1.w12Transfers,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-  'w12_pretty_hand_bad_price_fold#0': (
-    _ResidualFamilyV1.w12Transfers,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-  'w12_revenge_raise_trap#0': (
-    _ResidualFamilyV1.w12Transfers,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-  'what_poker_is_all_in_meaning#0': (
-    _ResidualFamilyV1.w1AllIn,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-  'what_poker_is_matched_chips_transfer#0': (
-    _ResidualFamilyV1.w1AllIn,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-  'same_hand_different_seat_position_repair_same_hand_different_seat#0': (
-    _ResidualFamilyV1.w3SeatComparison,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-  'w4_bad_bluff#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_bluff_intro#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_bluff_pressure#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_bluff_purpose#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_bluff_recap#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_checkpoint_intro#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_checkpoint_review#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_checkpoint_value#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_half_pot_bet#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_pot_bet#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_protection_bet#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_protection_check#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_protection_intro#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_protection_recap#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_purpose_intro#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_purpose_recap#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_sizing_intro#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_sizing_recap#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_small_bet#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_value_bet#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_value_intro#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_value_missed#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_value_purpose#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_value_recap#0': (
-    _ResidualFamilyV1.w4BtnVsBbSixBb,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_bad_price_fold#0': (
-    _ResidualFamilyV1.w4PriceSpots,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_big_price_marginal_fold#0': (
-    _ResidualFamilyV1.w4PriceSpots,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_cheap_price_marginal_call#0': (
-    _ResidualFamilyV1.w4PriceSpots,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_checkpoint_price#0': (
-    _ResidualFamilyV1.w4PriceSpots,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_checkpoint_table_price#0': (
-    _ResidualFamilyV1.w4PriceSpots,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_checkpoint_table_purpose_price#0': (
-    _ResidualFamilyV1.w4PriceSpots,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_good_price_call#0': (
-    _ResidualFamilyV1.w4PriceSpots,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_price_intro#0': (
-    _ResidualFamilyV1.w4PriceSpots,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w4_price_recap#0': (
-    _ResidualFamilyV1.w4PriceSpots,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'flush_draws_w5_flush_draw_recheck_transfer#0': (
-    _ResidualFamilyV1.w5Transfers,
-    Act0TableLedgerStatusV1.unexplained,
-  ),
-  'flush_draws_w5_made_hand_vs_flush_draw_transfer#0': (
-    _ResidualFamilyV1.w5Transfers,
-    Act0TableLedgerStatusV1.unexplained,
-  ),
-  'outs_improvement_w5_clean_vs_risky_out_transfer#0': (
-    _ResidualFamilyV1.w5Transfers,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-  'outs_improvement_w5_table_outs_flush_transfer#0': (
-    _ResidualFamilyV1.w5Transfers,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-  'outs_improvement_w5_table_outs_straight_transfer#0': (
-    _ResidualFamilyV1.w5Transfers,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-  'straight_draws_w5_gutshot_contrast_transfer#0': (
-    _ResidualFamilyV1.w5Transfers,
-    Act0TableLedgerStatusV1.unexplained,
-  ),
-  'turn_river_changes_w5_river_draw_story_transfer#0': (
-    _ResidualFamilyV1.w5Transfers,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-  'turn_river_changes_w5_street_change_intro#0': (
-    _ResidualFamilyV1.w5Transfers,
-    Act0TableLedgerStatusV1.unexplained,
-  ),
-  'turn_river_changes_w5_street_repair#0': (
-    _ResidualFamilyV1.w5Transfers,
-    Act0TableLedgerStatusV1.unexplained,
-  ),
-  'turn_river_changes_w5_turn_texture_shift_transfer#0': (
-    _ResidualFamilyV1.w5Transfers,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-  'w6_board_pair_strength_compare#0': (
-    _ResidualFamilyV1.w6Transfers,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-  'w6_checkpoint_table_best_five#0': (
-    _ResidualFamilyV1.w6Transfers,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-  'w6_checkpoint_table_combo_weight#0': (
-    _ResidualFamilyV1.w6Transfers,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-  'w6_kicker_showdown_compare#0': (
-    _ResidualFamilyV1.w6Transfers,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-  'w6_table_value_line_transfer#0': (
-    _ResidualFamilyV1.w6Transfers,
-    Act0TableLedgerStatusV1.conflict,
-  ),
-  'w6_turn_pressure_shift_transfer#0': (
-    _ResidualFamilyV1.w6Transfers,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-  'w7_top_pair_spr2_transfer#0': (
-    _ResidualFamilyV1.w8DepthAndSidePot,
-    Act0TableLedgerStatusV1.unexplained,
-  ),
-  'w7_top_pair_spr8_transfer#0': (
-    _ResidualFamilyV1.w8DepthAndSidePot,
-    Act0TableLedgerStatusV1.unexplained,
-  ),
-  'what_poker_is_side_pot_intro#0': (
-    _ResidualFamilyV1.w8DepthAndSidePot,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-  'w9_bubble_table_risk_transfer#0': (
-    _ResidualFamilyV1.w9Pressure,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-  'w9_m_ratio_table_window_transfer#0': (
-    _ResidualFamilyV1.w9Pressure,
-    Act0TableLedgerStatusV1.narrative,
-  ),
-};

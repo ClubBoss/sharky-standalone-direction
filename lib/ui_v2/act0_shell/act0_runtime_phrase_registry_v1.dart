@@ -66,6 +66,8 @@ const Map<String, String> act0RuntimeStreetLabelAtomByEnglishV1 =
       'Flop': 'table_street_flop',
       'Turn': 'table_street_turn',
       'River': 'table_street_river',
+      // Explanation diagrams show this in place of a street.
+      'Example': 'table_street_example',
     };
 
 const Map<String, String>
