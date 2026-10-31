@@ -5005,7 +5005,12 @@ class _SceneControlShelfV1 extends StatefulWidget {
 class _SceneControlShelfV1State extends State<_SceneControlShelfV1> {
   final _controller = ScrollController();
   final _choicesEnd = GlobalKey(debugLabel: 'act0_scene_shelf_choices_end');
+  final _viewport = GlobalKey(debugLabel: 'act0_scene_shelf_viewport');
   bool _moreBelow = false;
+  // Sticky per learning moment: once answers overflow, the cue owns its own
+  // band below the answers, so it can never sit on answer text or a tap.
+  bool _bandReserved = false;
+  double? _viewportCap;
   @override
   void dispose() {
     _controller.dispose();
@@ -5022,153 +5027,241 @@ class _SceneControlShelfV1State extends State<_SceneControlShelfV1> {
     return false;
   }
 
+  RenderBox? get _viewportBox {
+    final box = _viewport.currentContext?.findRenderObject();
+    return box is RenderBox && box.attached && box.hasSize ? box : null;
+  }
+
+  /// Answer rows in viewport coordinates, top to bottom.
+  List<Rect> _answerRows(RenderBox viewport) {
+    final rows = <Rect>[];
+    void visit(Element e) {
+      final key = e.widget.key;
+      if (key is ValueKey<String> &&
+          _kSceneShelfAnswerKeyV1.hasMatch(key.value)) {
+        final box = e.findRenderObject();
+        if (box is RenderBox && box.attached && box.hasSize) {
+          rows.add(
+            box.localToGlobal(Offset.zero, ancestor: viewport) & box.size,
+          );
+        }
+        return;
+      }
+      e.visitChildren(visit);
+    }
+
+    (_viewport.currentContext as Element?)?.visitChildren(visit);
+    rows.sort((a, b) => a.top.compareTo(b.top));
+    return rows;
+  }
+
   void _updateMoreBelow(ScrollMetrics m) {
     // The cue is about choices. When the answer list marks its own end, only
-    // an answer hidden below the safe inset counts; otherwise fall back to any
-    // hidden content beyond the trailing safe-area padding.
+    // an answer hidden below the visible answer area counts; otherwise fall
+    // back to any hidden content beyond the trailing safe-area padding.
     var more = m.extentAfter > _kSceneShelfMoreSlackV1;
     final end = _choicesEnd.currentContext?.findRenderObject();
-    final shelf = context.findRenderObject();
-    if (end is RenderBox && shelf is RenderBox && end.attached) {
-      final y = end.localToGlobal(Offset.zero, ancestor: shelf).dy;
-      more = y > shelf.size.height - MediaQuery.paddingOf(context).bottom + 1;
+    final viewport = _viewportBox;
+    if (end is RenderBox && end.attached && viewport != null) {
+      final y = end.localToGlobal(Offset.zero, ancestor: viewport).dy;
+      final limit =
+          viewport.size.height -
+          (_bandReserved ? 0 : MediaQuery.paddingOf(context).bottom);
+      more = y > limit + 1;
+    }
+    if (more && !_bandReserved) {
+      setState(() {
+        _bandReserved = true;
+        _moreBelow = true;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) => _snapViewport());
+      return;
     }
     if (more != _moreBelow) setState(() => _moreBelow = more);
   }
 
+  /// On arrival the answer area ends on a whole row: an answer is either
+  /// fully shown or waits entirely below, never a sliver under the cue.
+  void _snapViewport() {
+    final viewport = _viewportBox;
+    if (!mounted || viewport == null || _controller.offset > 0) return;
+    final available = _availableViewportHeight(context);
+    final rows = _answerRows(viewport);
+    var cap = available;
+    for (final r in rows) {
+      if (r.top < cap - .5 && r.bottom > cap + .5) {
+        cap = r.top;
+        break;
+      }
+    }
+    if (rows.isNotEmpty && cap <= rows.first.top + .5) cap = available;
+    if (cap != _viewportCap) setState(() => _viewportCap = cap);
+  }
+
+  double _availableViewportHeight(BuildContext context) => math.max(
+    0,
+    widget.maxHeight -
+        _kSceneShelfCueBandV1 -
+        MediaQuery.paddingOf(context).bottom,
+  );
+
   void _revealMore() {
     if (!_controller.hasClients) return;
     final p = _controller.position;
+    var target = p.pixels + p.viewportDimension * .6;
+    final viewport = _viewportBox;
+    if (viewport != null) {
+      // Bring exactly the next hidden answer fully into view.
+      final hidden = _answerRows(
+        viewport,
+      ).where((r) => r.bottom > viewport.size.height + .5);
+      if (hidden.isNotEmpty) {
+        target = p.pixels + hidden.first.bottom - viewport.size.height;
+      }
+    }
     _controller.animateTo(
-      math.min(p.maxScrollExtent, p.pixels + p.viewportDimension * .6),
+      math.min(p.maxScrollExtent, target),
       duration: const Duration(milliseconds: 260),
       curve: Curves.easeOutCubic,
     );
   }
 
   @override
-  Widget build(BuildContext context) => ConstrainedBox(
-    constraints: BoxConstraints(maxHeight: widget.maxHeight),
-    child: Stack(
-      children: [
-        NotificationListener<ScrollMetricsNotification>(
-          onNotification: _syncMoreBelow,
-          child: NotificationListener<ScrollNotification>(
-            onNotification: _syncScroll,
-            child: Scrollbar(
+  Widget build(BuildContext context) {
+    final scroller = KeyedSubtree(
+      key: _viewport,
+      child: NotificationListener<ScrollMetricsNotification>(
+        onNotification: _syncMoreBelow,
+        child: NotificationListener<ScrollNotification>(
+          onNotification: _syncScroll,
+          child: Scrollbar(
+            controller: _controller,
+            thumbVisibility: true,
+            child: SingleChildScrollView(
               controller: _controller,
-              thumbVisibility: true,
-              child: SingleChildScrollView(
-                controller: _controller,
-                physics: const ClampingScrollPhysics(),
-                child: _SceneShelfChoicesEndScopeV1(
-                  endKey: _choicesEnd,
-                  child: widget.child,
-                ),
+              physics: const ClampingScrollPhysics(),
+              child: _SceneShelfChoicesEndScopeV1(
+                endKey: _choicesEnd,
+                child: widget.child,
               ),
             ),
           ),
         ),
-        // A clipped choice is never left as an unexplained sliver: while more
-        // content waits below, the shelf edge says so and one tap scrolls a
-        // whole row into view. Choice order and grading are untouched.
-        if (_moreBelow)
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
+      ),
+    );
+    if (!_bandReserved) {
+      return ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: widget.maxHeight),
+        child: scroller,
+      );
+    }
+    // Choice order and grading are untouched; only where the cue lives moves.
+    return SizedBox(
+      height: widget.maxHeight,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            height: _viewportCap ?? _availableViewportHeight(context),
+            child: scroller,
+          ),
+          Expanded(
             child: _SceneShelfMoreCueV1(
+              visible: _moreBelow,
               bottomInset: MediaQuery.paddingOf(context).bottom,
               onTap: _revealMore,
             ),
           ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }
 
 const double _kSceneShelfMoreSlackV1 = 56;
+const double _kSceneShelfCueBandV1 = 48;
+final RegExp _kSceneShelfAnswerKeyV1 = RegExp(
+  r'^act0_shell_option_(?!marker_)',
+);
 
+/// The cue's own band below the answers. It is never laid over an answer, so
+/// no answer text is hidden and no answer tap is intercepted.
 class _SceneShelfMoreCueV1 extends StatelessWidget {
-  const _SceneShelfMoreCueV1({required this.bottomInset, required this.onTap});
+  const _SceneShelfMoreCueV1({
+    required this.visible,
+    required this.bottomInset,
+    required this.onTap,
+  });
+  final bool visible;
   final double bottomInset;
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-    height: 44 + bottomInset,
-    child: Stack(
-      children: [
-        // The fade only signals that the list continues; it never takes a
-        // tap, so a visible answer under it stays choosable.
-        Positioned.fill(
-          child: IgnorePointer(
-            child: DecoratedBox(
-              key: const Key('act0_scene_shelf_more_fade'),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                    Act0ShellTokensV1.surface.withValues(alpha: 0),
-                    Act0ShellTokensV1.surface.withValues(alpha: .72),
-                    Act0ShellTokensV1.surface,
-                  ],
-                  stops: const <double>[0, .5, 1],
-                ),
-              ),
-            ),
-          ),
+  Widget build(BuildContext context) => DecoratedBox(
+    key: const Key('act0_scene_shelf_more_fade'),
+    decoration: BoxDecoration(
+      color: Act0ShellTokensV1.surface,
+      border: Border(
+        top: BorderSide(
+          color: Act0ShellTokensV1.info.withValues(alpha: visible ? .28 : 0),
         ),
-        // Compact right-edge control, clear of answer text: one tap scrolls
-        // the next whole answer into view. Drags still reach the list.
-        Positioned(
-          right: 10,
-          bottom: bottomInset,
-          child: Semantics(
-            button: true,
-            label: 'More choices below',
-            excludeSemantics: true,
-            child: GestureDetector(
-              key: const Key('act0_scene_shelf_more_cue'),
-              behavior: HitTestBehavior.translucent,
-              onTap: onTap,
-              child: Container(
-                height: 44,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Act0ShellTokensV1.surface2,
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusPill,
+      ),
+    ),
+    child: Padding(
+      padding: EdgeInsets.only(right: 10, top: 2, bottom: bottomInset),
+      child: Align(
+        alignment: Alignment.topRight,
+        child: IgnorePointer(
+          ignoring: !visible,
+          child: AnimatedOpacity(
+            opacity: visible ? 1 : 0,
+            duration: const Duration(milliseconds: 160),
+            child: Semantics(
+              button: true,
+              label: 'More choices below',
+              excludeSemantics: true,
+              child: GestureDetector(
+                key: const Key('act0_scene_shelf_more_cue'),
+                behavior: HitTestBehavior.opaque,
+                onTap: onTap,
+                child: Container(
+                  height: 44,
+                  constraints: const BoxConstraints(minWidth: 88),
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Act0ShellTokensV1.surface2,
+                    borderRadius: BorderRadius.circular(
+                      Act0ShellTokensV1.radiusPill,
+                    ),
+                    border: Border.all(
+                      color: Act0ShellTokensV1.info.withValues(alpha: .42),
+                    ),
                   ),
-                  border: Border.all(
-                    color: Act0ShellTokensV1.info.withValues(alpha: .42),
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'More',
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.info,
-                        fontSize: 12,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'More',
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: Act0ShellTokensV1.info,
+                          fontSize: 12,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 2),
-                    const Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      size: 18,
-                      color: Act0ShellTokensV1.info,
-                    ),
-                  ],
+                      const SizedBox(width: 2),
+                      const Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        size: 18,
+                        color: Act0ShellTokensV1.info,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ],
+      ),
     ),
   );
 }
