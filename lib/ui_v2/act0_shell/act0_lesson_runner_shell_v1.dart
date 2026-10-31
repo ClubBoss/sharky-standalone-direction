@@ -5004,6 +5004,7 @@ class _SceneControlShelfV1 extends StatefulWidget {
 
 class _SceneControlShelfV1State extends State<_SceneControlShelfV1> {
   final _controller = ScrollController();
+  final _choicesEnd = GlobalKey(debugLabel: 'act0_scene_shelf_choices_end');
   bool _moreBelow = false;
   @override
   void dispose() {
@@ -5022,9 +5023,16 @@ class _SceneControlShelfV1State extends State<_SceneControlShelfV1> {
   }
 
   void _updateMoreBelow(ScrollMetrics m) {
-    // Only content still hidden beyond the bottom safe inset counts: the last
-    // choice's trailing safe-area padding is not "more".
-    final more = m.extentAfter > _kSceneShelfMoreSlackV1;
+    // The cue is about choices. When the answer list marks its own end, only
+    // an answer hidden below the safe inset counts; otherwise fall back to any
+    // hidden content beyond the trailing safe-area padding.
+    var more = m.extentAfter > _kSceneShelfMoreSlackV1;
+    final end = _choicesEnd.currentContext?.findRenderObject();
+    final shelf = context.findRenderObject();
+    if (end is RenderBox && shelf is RenderBox && end.attached) {
+      final y = end.localToGlobal(Offset.zero, ancestor: shelf).dy;
+      more = y > shelf.size.height - MediaQuery.paddingOf(context).bottom + 1;
+    }
     if (more != _moreBelow) setState(() => _moreBelow = more);
   }
 
@@ -5053,7 +5061,10 @@ class _SceneControlShelfV1State extends State<_SceneControlShelfV1> {
               child: SingleChildScrollView(
                 controller: _controller,
                 physics: const ClampingScrollPhysics(),
-                child: widget.child,
+                child: _SceneShelfChoicesEndScopeV1(
+                  endKey: _choicesEnd,
+                  child: widget.child,
+                ),
               ),
             ),
           ),
@@ -5132,6 +5143,30 @@ class _SceneShelfMoreCueV1 extends StatelessWidget {
       ),
     ),
   );
+}
+
+/// Lets the scene shelf know where its answer list ends.
+class _SceneShelfChoicesEndScopeV1 extends InheritedWidget {
+  const _SceneShelfChoicesEndScopeV1({
+    required this.endKey,
+    required super.child,
+  });
+  final GlobalKey endKey;
+
+  @override
+  bool updateShouldNotify(_SceneShelfChoicesEndScopeV1 oldWidget) =>
+      endKey != oldWidget.endKey;
+}
+
+class _SceneShelfChoicesEndV1 extends StatelessWidget {
+  const _SceneShelfChoicesEndV1();
+
+  @override
+  Widget build(BuildContext context) {
+    final scope = context
+        .dependOnInheritedWidgetOfExactType<_SceneShelfChoicesEndScopeV1>();
+    return SizedBox.shrink(key: scope?.endKey);
+  }
 }
 
 /// Carries a registered plate's shelf bound to the shared runner column.
@@ -17724,11 +17759,24 @@ class _ActionPromptPanelV1 extends StatelessWidget {
         // source-owned answers must still be mounted here.
         if (!(embedChildInSurface && question.isNotEmpty) &&
             !(question.isNotEmpty && effectiveCompactDecision)) ...[
-          if (trailingContext != null) ...[
-            trailingContext!,
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
+          // F7: on the registered plate the shelf is bounded below the baked
+          // Hero hands, so the answers lead and the street history follows
+          // them in the same shelf. Same content, same answers, same order.
+          if (_RegisteredSceneShelfScopeV1.maybeOf(context) != null) ...[
+            child,
+            const _SceneShelfChoicesEndV1(),
+            if (trailingContext != null) ...[
+              const SizedBox(height: Act0ShellTokensV1.gapSm),
+              trailingContext!,
+            ],
+          ] else ...[
+            if (trailingContext != null) ...[
+              trailingContext!,
+              const SizedBox(height: Act0ShellTokensV1.gapSm),
+            ],
+            child,
+            const _SceneShelfChoicesEndV1(),
           ],
-          child,
         ],
       ],
     );

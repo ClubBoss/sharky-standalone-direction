@@ -386,6 +386,36 @@ void main() {
       }
     });
 
+    testWidgets('answers lead the registered shelf; history follows', (
+      t,
+    ) async {
+      final runner = await mount(t, 'your_first_hand_flop');
+      final history = find.text('How we got here');
+      expect(history, findsOneWidget);
+      final first = t.getRect(
+        find.byKey(Key('act0_shell_option_${runner.options.first.id}')),
+      );
+      expect(first.bottom, lessThan(t.getRect(history).top));
+      // The first answer is whole on arrival, above the home-indicator inset.
+      expect(first.height, greaterThanOrEqualTo(44));
+      expect(first.bottom, lessThanOrEqualTo(852 - 34));
+    });
+
+    testWidgets('incompatible Empty scenario falls back and keeps state', (
+      t,
+    ) async {
+      final runner = await mount(t, 'first_table_guide_one_clear_choice');
+      expect(find.byKey(const Key('act0_f7_registered_scene')), findsNothing);
+      expect(
+        runner.table.seats.where((s) => !s.isOccupied).map((s) => s.seatId),
+        ['utg'],
+      );
+    });
+  });
+
+  // The overflow cue also serves the preview-OFF scene shelf, where the
+  // street history still precedes the answers.
+  group('preview-OFF shelf cue', skip: kAct0F7TableScenePreview, () {
     testWidgets('shelf cue taps reveal and drags scroll, never choosing', (
       t,
     ) async {
@@ -439,17 +469,6 @@ void main() {
       await t.pumpAndSettle();
       expect(chosen, isEmpty);
       expect(t.getRect(second).top, lessThanOrEqualTo(afterTap));
-    });
-
-    testWidgets('incompatible Empty scenario falls back and keeps state', (
-      t,
-    ) async {
-      final runner = await mount(t, 'first_table_guide_one_clear_choice');
-      expect(find.byKey(const Key('act0_f7_registered_scene')), findsNothing);
-      expect(
-        runner.table.seats.where((s) => !s.isOccupied).map((s) => s.seatId),
-        ['utg'],
-      );
     });
   });
 }
