@@ -13016,6 +13016,26 @@ class _Act0TableV1 extends StatelessWidget {
           ),
         ),
     ];
+    Widget potStat({required bool dense}) => _CenterPriorityStatV1(
+      key: const Key('act0_shell_wave1_pot_priority_stat'),
+      legacyKey: const Key('act0_shell_center_pot_stat'),
+      label: act0RuntimeLocalizedPotLabelV1(
+        context,
+        potLabelOverride ?? table.potLabel,
+      ),
+      tone: Act0ShellTokensV1.gold,
+      compact: true,
+      dense: dense,
+      pulse: table.actionTrail.isNotEmpty,
+    );
+    Widget priceStat({required bool dense}) => _CenterPriorityStatV1(
+      key: const Key('act0_shell_wave1_price_priority_stat'),
+      legacyKey: const Key('act0_shell_center_to_call_stat'),
+      label: act0RuntimeLocalizedToCallLabelV1(context, price),
+      tone: Act0ShellTokensV1.info,
+      compact: true,
+      dense: dense,
+    );
     Widget at(String key, Offset anchor, Widget child) {
       final point = r.map(anchor);
       return Positioned(
@@ -13195,41 +13215,28 @@ class _Act0TableV1 extends StatelessWidget {
             compact: true,
           ),
         ),
-        at(
-          'act0_f7_pot_price',
-          p.potAnchor,
-          ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: r.destinationRect.width * .48,
-            ),
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 5,
-              runSpacing: 3,
-              children: [
-                _CenterPriorityStatV1(
-                  key: const Key('act0_shell_wave1_pot_priority_stat'),
-                  legacyKey: const Key('act0_shell_center_pot_stat'),
-                  label: act0RuntimeLocalizedPotLabelV1(
-                    context,
-                    potLabelOverride ?? table.potLabel,
-                  ),
-                  tone: Act0ShellTokensV1.gold,
-                  compact: true,
-                  pulse: table.actionTrail.isNotEmpty,
-                ),
-                if (hasPrice)
-                  _CenterPriorityStatV1(
-                    key: const Key('act0_shell_wave1_price_priority_stat'),
-                    legacyKey: const Key('act0_shell_center_to_call_stat'),
-                    label: act0RuntimeLocalizedToCallLabelV1(context, price),
-                    tone: Act0ShellTokensV1.info,
-                    compact: true,
-                  ),
-              ],
-            ),
+        // Pot and price keep separate measured envelopes: one row is wider
+        // than the felt between SB's and CO's cards. Preflop the empty board
+        // holds the pot and the price sits alone at the pot anchor; postflop
+        // both stack densely between the board and Hero's cards.
+        if (hasPrice && table.boardCards.isEmpty) ...[
+          at('act0_f7_pot_price', p.boardAnchor, potStat(dense: false)),
+          at('act0_f7_price', p.potAnchor, priceStat(dense: false)),
+        ] else
+          at(
+            'act0_f7_pot_price',
+            p.potAnchor,
+            hasPrice
+                ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      potStat(dense: true),
+                      const SizedBox(height: 2),
+                      priceStat(dense: true),
+                    ],
+                  )
+                : potStat(dense: false),
           ),
-        ),
         if (completionSummary != null)
           at(
             'act0_shell_completion_reward_lane',
@@ -14001,6 +14008,7 @@ class _CenterPriorityStatV1 extends StatelessWidget {
     required this.label,
     required this.tone,
     required this.compact,
+    this.dense = false,
     this.pulse = false,
   });
 
@@ -14008,6 +14016,9 @@ class _CenterPriorityStatV1 extends StatelessWidget {
   final String label;
   final Color tone;
   final bool compact;
+
+  /// Tighter vertical padding for two stats stacked in one narrow lane.
+  final bool dense;
   final bool pulse;
 
   @override
@@ -14015,7 +14026,11 @@ class _CenterPriorityStatV1 extends StatelessWidget {
     final stat = Container(
       padding: EdgeInsets.symmetric(
         horizontal: compact ? 8 : 10,
-        vertical: compact ? 4 : 5,
+        vertical: dense
+            ? 2
+            : compact
+            ? 4
+            : 5,
       ),
       decoration: Act0SceneNameplateV1.decoration(
         radius: Act0ShellTokensV1.radiusPill,
