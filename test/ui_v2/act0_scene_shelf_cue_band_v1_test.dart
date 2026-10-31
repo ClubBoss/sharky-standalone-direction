@@ -50,15 +50,16 @@ void main() {
 
   Future<(Act0RunnerStateV1, List<Act0RunnerOptionV1>)> mount(
     WidgetTester t,
-    String id,
-  ) async {
+    String id, {
+    double height = 852,
+  }) async {
     final (task, lessonId, worldId) = find0(id);
     final runner = task.runner.copyWith(
       phase: task.entryPhase,
       teachingStepIndex: task.runner.teachingSteps.length,
     );
     final chosen = <Act0RunnerOptionV1>[];
-    t.view.physicalSize = const Size(393, 852);
+    t.view.physicalSize = Size(393, height);
     t.view.devicePixelRatio = 1;
     t.view.padding = const FakeViewPadding(top: 59, bottom: 34);
     addTearDown(t.view.resetPhysicalSize);
@@ -160,4 +161,25 @@ void main() {
       }
     });
   }
+
+  testWidgets('a drag on the cue band scrolls the answers, never chooses', (
+    t,
+  ) async {
+    final band = find.byKey(const Key('act0_scene_shelf_more_fade'));
+    for (final id in longAnswerTasks) {
+      // A shorter screen guarantees overflow with the flag ON or OFF.
+      final (runner, chosen) = await mount(t, id, height: 700);
+      if (band.evaluate().isEmpty) continue;
+      final last = find.byKey(
+        Key('act0_shell_option_${runner.options.last.id}'),
+      );
+      final before = t.getRect(last).top;
+      await t.dragFrom(t.getRect(band).center, const Offset(0, -60));
+      await t.pumpAndSettle();
+      expect(t.getRect(last).top, lessThan(before), reason: id);
+      expect(chosen, isEmpty, reason: id);
+      return;
+    }
+    fail('no long-answer task overflowed the shelf in this mode');
+  });
 }

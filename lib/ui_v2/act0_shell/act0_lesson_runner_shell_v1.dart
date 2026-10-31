@@ -5125,6 +5125,16 @@ class _SceneControlShelfV1State extends State<_SceneControlShelfV1> {
         math.min(MediaQuery.paddingOf(context).bottom, 20),
   );
 
+  /// The band is part of the shelf surface: a vertical drag on it scrolls the
+  /// answer list exactly as a drag on the answers would.
+  void _dragFromBand(DragUpdateDetails details) {
+    if (!_controller.hasClients) return;
+    final p = _controller.position;
+    _controller.jumpTo(
+      (p.pixels - details.delta.dy).clamp(0.0, p.maxScrollExtent),
+    );
+  }
+
   void _revealMore() {
     if (!_controller.hasClients) return;
     final p = _controller.position;
@@ -5189,6 +5199,7 @@ class _SceneControlShelfV1State extends State<_SceneControlShelfV1> {
             child: _SceneShelfMoreCueV1(
               visible: _moreBelow,
               onTap: _revealMore,
+              onDrag: _dragFromBand,
             ),
           ),
         ],
@@ -5206,12 +5217,23 @@ final RegExp _kSceneShelfAnswerKeyV1 = RegExp(
 /// The cue's own band below the answers. It is never laid over an answer, so
 /// no answer text is hidden and no answer tap is intercepted.
 class _SceneShelfMoreCueV1 extends StatelessWidget {
-  const _SceneShelfMoreCueV1({required this.visible, required this.onTap});
+  const _SceneShelfMoreCueV1({
+    required this.visible,
+    required this.onTap,
+    required this.onDrag,
+  });
   final bool visible;
   final VoidCallback onTap;
+  final GestureDragUpdateCallback onDrag;
 
   @override
-  Widget build(BuildContext context) => DecoratedBox(
+  Widget build(BuildContext context) => GestureDetector(
+    behavior: HitTestBehavior.opaque,
+    onVerticalDragUpdate: onDrag,
+    child: _band(),
+  );
+
+  Widget _band() => DecoratedBox(
     key: const Key('act0_scene_shelf_more_fade'),
     decoration: BoxDecoration(
       color: Act0ShellTokensV1.surface,
