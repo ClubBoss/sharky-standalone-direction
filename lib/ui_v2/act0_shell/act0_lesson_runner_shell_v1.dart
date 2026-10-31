@@ -1,4 +1,6 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_reading_style_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_north_star_preview_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_v4.dart';
 import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
@@ -5005,7 +5007,12 @@ class _SceneControlShelfV1 extends StatefulWidget {
 class _SceneControlShelfV1State extends State<_SceneControlShelfV1> {
   final _controller = ScrollController();
   final _choicesEnd = GlobalKey(debugLabel: 'act0_scene_shelf_choices_end');
+  final _viewport = GlobalKey(debugLabel: 'act0_scene_shelf_viewport');
   bool _moreBelow = false;
+  // Sticky per learning moment: once answers overflow, the cue owns its own
+  // band below the answers, so it can never sit on answer text or a tap.
+  bool _bandReserved = false;
+  double? _viewportCap;
   @override
   void dispose() {
     _controller.dispose();
@@ -5022,153 +5029,281 @@ class _SceneControlShelfV1State extends State<_SceneControlShelfV1> {
     return false;
   }
 
+  RenderBox? get _viewportBox {
+    final box = _viewport.currentContext?.findRenderObject();
+    return box is RenderBox && box.attached && box.hasSize ? box : null;
+  }
+
+  /// Answer rows in viewport coordinates, top to bottom.
+  List<Rect> _answerRows(RenderBox viewport) {
+    final rows = <Rect>[];
+    void visit(Element e) {
+      final key = e.widget.key;
+      if (key is ValueKey<String> &&
+          _kSceneShelfAnswerKeyV1.hasMatch(key.value)) {
+        final box = e.findRenderObject();
+        if (box is RenderBox && box.attached && box.hasSize) {
+          rows.add(
+            box.localToGlobal(Offset.zero, ancestor: viewport) & box.size,
+          );
+        }
+        return;
+      }
+      e.visitChildren(visit);
+    }
+
+    (_viewport.currentContext as Element?)?.visitChildren(visit);
+    rows.sort((a, b) => a.top.compareTo(b.top));
+    return rows;
+  }
+
   void _updateMoreBelow(ScrollMetrics m) {
     // The cue is about choices. When the answer list marks its own end, only
-    // an answer hidden below the safe inset counts; otherwise fall back to any
-    // hidden content beyond the trailing safe-area padding.
+    // an answer hidden below the visible answer area counts; otherwise fall
+    // back to any hidden content beyond the trailing safe-area padding.
     var more = m.extentAfter > _kSceneShelfMoreSlackV1;
     final end = _choicesEnd.currentContext?.findRenderObject();
-    final shelf = context.findRenderObject();
-    if (end is RenderBox && shelf is RenderBox && end.attached) {
-      final y = end.localToGlobal(Offset.zero, ancestor: shelf).dy;
-      more = y > shelf.size.height - MediaQuery.paddingOf(context).bottom + 1;
+    final viewport = _viewportBox;
+    if (end is RenderBox && end.attached && viewport != null) {
+      final y = end.localToGlobal(Offset.zero, ancestor: viewport).dy;
+      final inset = MediaQuery.paddingOf(context).bottom;
+      final unscrolled = !_controller.hasClients || _controller.offset <= 0;
+      if (_bandReserved && unscrolled) {
+        // Layout can settle after arrival (street choreography, theory
+        // peek). If every answer now fits without the band, give the space
+        // back; otherwise keep the whole-row boundary current.
+        if (y <= widget.maxHeight - inset + 1) {
+          setState(() {
+            _bandReserved = false;
+            _viewportCap = null;
+            _moreBelow = false;
+          });
+          return;
+        }
+        WidgetsBinding.instance.addPostFrameCallback((_) => _snapViewport());
+      }
+      final limit = viewport.size.height - (_bandReserved ? 0 : inset);
+      more = y > limit + 1;
+    }
+    if (more && !_bandReserved) {
+      setState(() {
+        _bandReserved = true;
+        _moreBelow = true;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) => _snapViewport());
+      return;
     }
     if (more != _moreBelow) setState(() => _moreBelow = more);
+  }
+
+  /// On arrival the answer area ends on a whole row: an answer is either
+  /// fully shown or waits entirely below, never a sliver under the cue.
+  void _snapViewport() {
+    final viewport = _viewportBox;
+    if (!mounted || viewport == null) return;
+    if (_controller.hasClients && _controller.offset > 0) return;
+    final available = _availableViewportHeight(context);
+    final rows = _answerRows(viewport);
+    var cap = available;
+    for (final r in rows) {
+      if (r.top < cap - .5 && r.bottom > cap + .5) {
+        cap = r.top;
+        break;
+      }
+    }
+    if (rows.isNotEmpty && cap <= rows.first.top + .5) cap = available;
+    if (cap != _viewportCap) setState(() => _viewportCap = cap);
+  }
+
+  /// The band only needs room for the 44pt cue (+2pt rule) and may reach into
+  /// the safe inset, ending at least 20pt above the screen edge, so it costs
+  /// as little answer area as possible.
+  double _availableViewportHeight(BuildContext context) => math.max(
+    0,
+    widget.maxHeight -
+        _kSceneShelfCueBandV1 -
+        math.min(MediaQuery.paddingOf(context).bottom, 20),
+  );
+
+  /// The band is part of the shelf surface: a vertical drag on it scrolls the
+  /// answer list exactly as a drag on the answers would.
+  void _dragFromBand(DragUpdateDetails details) {
+    if (!_controller.hasClients) return;
+    final p = _controller.position;
+    _controller.jumpTo(
+      (p.pixels - details.delta.dy).clamp(0.0, p.maxScrollExtent),
+    );
   }
 
   void _revealMore() {
     if (!_controller.hasClients) return;
     final p = _controller.position;
+    var target = p.pixels + p.viewportDimension * .6;
+    final viewport = _viewportBox;
+    if (viewport != null) {
+      // Bring exactly the next hidden answer fully into view.
+      final hidden = _answerRows(
+        viewport,
+      ).where((r) => r.bottom > viewport.size.height + .5);
+      if (hidden.isNotEmpty) {
+        target = p.pixels + hidden.first.bottom - viewport.size.height;
+      }
+    }
     _controller.animateTo(
-      math.min(p.maxScrollExtent, p.pixels + p.viewportDimension * .6),
+      math.min(p.maxScrollExtent, target),
       duration: const Duration(milliseconds: 260),
       curve: Curves.easeOutCubic,
     );
   }
 
   @override
-  Widget build(BuildContext context) => ConstrainedBox(
-    constraints: BoxConstraints(maxHeight: widget.maxHeight),
-    child: Stack(
-      children: [
-        NotificationListener<ScrollMetricsNotification>(
-          onNotification: _syncMoreBelow,
-          child: NotificationListener<ScrollNotification>(
-            onNotification: _syncScroll,
-            child: Scrollbar(
+  Widget build(BuildContext context) {
+    final scroller = KeyedSubtree(
+      key: _viewport,
+      child: NotificationListener<ScrollMetricsNotification>(
+        onNotification: _syncMoreBelow,
+        child: NotificationListener<ScrollNotification>(
+          onNotification: _syncScroll,
+          child: Scrollbar(
+            controller: _controller,
+            thumbVisibility: true,
+            child: SingleChildScrollView(
               controller: _controller,
-              thumbVisibility: true,
-              child: SingleChildScrollView(
-                controller: _controller,
-                physics: const ClampingScrollPhysics(),
-                child: _SceneShelfChoicesEndScopeV1(
-                  endKey: _choicesEnd,
-                  child: widget.child,
-                ),
+              physics: const ClampingScrollPhysics(),
+              child: _SceneShelfChoicesEndScopeV1(
+                endKey: _choicesEnd,
+                child: widget.child,
               ),
             ),
           ),
         ),
-        // A clipped choice is never left as an unexplained sliver: while more
-        // content waits below, the shelf edge says so and one tap scrolls a
-        // whole row into view. Choice order and grading are untouched.
-        if (_moreBelow)
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
+      ),
+    );
+    if (!_bandReserved) {
+      return ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: widget.maxHeight),
+        child: scroller,
+      );
+    }
+    // Choice order and grading are untouched; only where the cue lives moves.
+    return SizedBox(
+      height: widget.maxHeight,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            height: _viewportCap ?? _availableViewportHeight(context),
+            child: scroller,
+          ),
+          Expanded(
             child: _SceneShelfMoreCueV1(
-              bottomInset: MediaQuery.paddingOf(context).bottom,
+              visible: _moreBelow,
               onTap: _revealMore,
+              onDrag: _dragFromBand,
             ),
           ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }
 
 const double _kSceneShelfMoreSlackV1 = 56;
+const double _kSceneShelfCueBandV1 = 46;
+final RegExp _kSceneShelfAnswerKeyV1 = RegExp(
+  r'^act0_shell_option_(?!marker_)',
+);
 
+/// The cue's own band below the answers. It is never laid over an answer, so
+/// no answer text is hidden and no answer tap is intercepted.
 class _SceneShelfMoreCueV1 extends StatelessWidget {
-  const _SceneShelfMoreCueV1({required this.bottomInset, required this.onTap});
-  final double bottomInset;
+  const _SceneShelfMoreCueV1({
+    required this.visible,
+    required this.onTap,
+    required this.onDrag,
+  });
+  final bool visible;
   final VoidCallback onTap;
+  final GestureDragUpdateCallback onDrag;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-    height: 44 + bottomInset,
-    child: Stack(
-      children: [
-        // The fade only signals that the list continues; it never takes a
-        // tap, so a visible answer under it stays choosable.
-        Positioned.fill(
-          child: IgnorePointer(
-            child: DecoratedBox(
-              key: const Key('act0_scene_shelf_more_fade'),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                    Act0ShellTokensV1.surface.withValues(alpha: 0),
-                    Act0ShellTokensV1.surface.withValues(alpha: .72),
-                    Act0ShellTokensV1.surface,
-                  ],
-                  stops: const <double>[0, .5, 1],
-                ),
-              ),
-            ),
-          ),
+  // The whole band is the More target while it shows (taps reveal, drags
+  // scroll); it adds no semantics node of its own, so the pill's button keeps
+  // its exact rect for assistive technology.
+  Widget build(BuildContext context) => GestureDetector(
+    behavior: HitTestBehavior.opaque,
+    excludeFromSemantics: true,
+    onTap: visible ? onTap : null,
+    onVerticalDragUpdate: onDrag,
+    child: _band(),
+  );
+
+  Widget _band() => DecoratedBox(
+    key: const Key('act0_scene_shelf_more_fade'),
+    decoration: BoxDecoration(
+      color: Act0ShellTokensV1.surface,
+      border: Border(
+        top: BorderSide(
+          color: Act0ShellTokensV1.info.withValues(alpha: visible ? .28 : 0),
         ),
-        // Compact right-edge control, clear of answer text: one tap scrolls
-        // the next whole answer into view. Drags still reach the list.
-        Positioned(
-          right: 10,
-          bottom: bottomInset,
-          child: Semantics(
-            button: true,
-            label: 'More choices below',
-            excludeSemantics: true,
-            child: GestureDetector(
-              key: const Key('act0_scene_shelf_more_cue'),
-              behavior: HitTestBehavior.translucent,
-              onTap: onTap,
-              child: Container(
-                height: 44,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Act0ShellTokensV1.surface2,
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusPill,
+      ),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.only(right: 10, top: 2),
+      child: Align(
+        alignment: Alignment.topRight,
+        child: IgnorePointer(
+          ignoring: !visible,
+          child: AnimatedOpacity(
+            opacity: visible ? 1 : 0,
+            duration: const Duration(milliseconds: 160),
+            child: Semantics(
+              button: true,
+              label: 'More choices below',
+              excludeSemantics: true,
+              child: GestureDetector(
+                key: const Key('act0_scene_shelf_more_cue'),
+                behavior: HitTestBehavior.opaque,
+                onTap: onTap,
+                // No `alignment`: inside Align it would stretch to full width.
+                child: Container(
+                  height: 44,
+                  constraints: const BoxConstraints(minWidth: 88),
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  decoration: BoxDecoration(
+                    color: Act0ShellTokensV1.surface2,
+                    borderRadius: BorderRadius.circular(
+                      Act0ShellTokensV1.radiusPill,
+                    ),
+                    border: Border.all(
+                      color: Act0ShellTokensV1.info.withValues(alpha: .42),
+                    ),
                   ),
-                  border: Border.all(
-                    color: Act0ShellTokensV1.info.withValues(alpha: .42),
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'More',
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: Act0ShellTokensV1.info,
-                        fontSize: 12,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'More',
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: Act0ShellTokensV1.info,
+                          fontSize: 12,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 2),
-                    const Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      size: 18,
-                      color: Act0ShellTokensV1.info,
-                    ),
-                  ],
+                      const SizedBox(width: 2),
+                      const Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        size: 18,
+                        color: Act0ShellTokensV1.info,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ],
+      ),
     ),
   );
 }
@@ -9890,6 +10025,156 @@ class Act0SummaryNextHandoffV1 {
   };
 }
 
+/// The dark premium journey (F7 table, Home North Star, Review v4) is
+/// presentation-flagged; the lesson payoff follows the surfaces it hands to.
+const bool kAct0CompletionNorthStarV1 =
+    kAct0HomeNorthStarPreviewV1 || kAct0ReviewV4Preview;
+
+/// Lesson-completion / Session Summary paint. [reading] is the existing light
+/// reading style, unchanged. [northStar] matches the dark journey's ink,
+/// aqua and sans-serif grammar. Paint only: never copy, CTA order, grading,
+/// XP, repair/due state or navigation.
+@immutable
+class Act0CompletionPaletteV1 {
+  const Act0CompletionPaletteV1._({
+    required this.page,
+    required this.text,
+    required this.textMuted,
+    required this.info,
+    required this.primary,
+    required this.gold,
+    required this.danger,
+    required this.surface,
+    required this.surface2,
+    required this.surface3,
+    required this.border,
+    required this.body,
+    required this.muted,
+    required this.label,
+    required this.screenTitle,
+    required this.isNorthStar,
+  });
+
+  final Color? page;
+  final Color text, textMuted, info, primary, gold, danger;
+  final Color surface, surface2, surface3, border;
+  final TextStyle body, muted, label, screenTitle;
+  final bool isNorthStar;
+
+  static const reading = Act0CompletionPaletteV1._(
+    page: null,
+    text: Act0AcademyReadingStyleV1.text,
+    textMuted: Act0AcademyReadingStyleV1.textMuted,
+    info: Act0AcademyReadingStyleV1.info,
+    primary: Act0AcademyReadingStyleV1.primary,
+    gold: Act0AcademyReadingStyleV1.gold,
+    danger: Act0AcademyReadingStyleV1.danger,
+    surface: Act0AcademyReadingStyleV1.surface,
+    surface2: Act0AcademyReadingStyleV1.surface2,
+    surface3: Act0AcademyReadingStyleV1.surface3,
+    border: Act0AcademyReadingStyleV1.border,
+    body: Act0AcademyReadingStyleV1.body,
+    muted: Act0AcademyReadingStyleV1.muted,
+    label: Act0AcademyReadingStyleV1.label,
+    screenTitle: Act0AcademyReadingStyleV1.screenTitle,
+    isNorthStar: false,
+  );
+
+  static const northStar = Act0CompletionPaletteV1._(
+    page: Act0HomeNorthStarPaletteV1.ink,
+    text: Act0HomeNorthStarPaletteV1.text,
+    textMuted: Act0HomeNorthStarPaletteV1.textMuted,
+    info: Act0HomeNorthStarPaletteV1.aqua,
+    primary: Act0HomeNorthStarPaletteV1.aqua,
+    gold: Color(0xFFF2C46B),
+    danger: Color(0xFFFF8A7A),
+    surface: Color(0xFF061A20),
+    surface2: Color(0xFF08272C),
+    surface3: Act0HomeNorthStarPaletteV1.tealDeep,
+    border: Act0HomeNorthStarPaletteV1.rule,
+    body: TextStyle(
+      color: Act0HomeNorthStarPaletteV1.text,
+      fontSize: 14,
+      height: 1.5,
+      fontWeight: FontWeight.w500,
+    ),
+    muted: TextStyle(
+      color: Act0HomeNorthStarPaletteV1.textMuted,
+      fontSize: 12,
+      height: 1.5,
+      fontWeight: FontWeight.w500,
+    ),
+    label: TextStyle(
+      color: Act0HomeNorthStarPaletteV1.textMuted,
+      fontSize: 11,
+      height: 1.45,
+      fontWeight: FontWeight.w700,
+      letterSpacing: 1.2,
+    ),
+    screenTitle: TextStyle(
+      color: Act0HomeNorthStarPaletteV1.text,
+      fontSize: 30,
+      height: 1.1,
+      fontWeight: FontWeight.w700,
+      letterSpacing: -0.6,
+    ),
+    isNorthStar: true,
+  );
+
+  ButtonStyle premiumActionButtonStyle({double height = 52}) => isNorthStar
+      ? FilledButton.styleFrom(
+          backgroundColor: Act0HomeNorthStarPaletteV1.aqua,
+          foregroundColor: Act0HomeNorthStarPaletteV1.ink,
+          minimumSize: Size(double.infinity, height < 52 ? 52 : height),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        )
+      : Act0AcademyReadingStyleV1.premiumActionButtonStyle(height: height);
+
+  ButtonStyle tonalButtonStyle({
+    required Color tone,
+    double height = 48,
+    bool fullWidth = false,
+  }) => isNorthStar
+      ? OutlinedButton.styleFrom(
+          foregroundColor: Act0HomeNorthStarPaletteV1.text,
+          backgroundColor: const Color(0xFF0B3439),
+          minimumSize: Size(
+            fullWidth ? double.infinity : 0,
+            height < 48 ? 48 : height,
+          ),
+          side: const BorderSide(color: Act0HomeNorthStarPaletteV1.rule),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        )
+      : Act0AcademyReadingStyleV1.tonalButtonStyle(
+          tone: tone,
+          height: height,
+          fullWidth: fullWidth,
+        );
+}
+
+class _CompletionPaletteScopeV1 extends InheritedWidget {
+  const _CompletionPaletteScopeV1({
+    required this.palette,
+    required super.child,
+  });
+  final Act0CompletionPaletteV1 palette;
+
+  @override
+  bool updateShouldNotify(_CompletionPaletteScopeV1 oldWidget) =>
+      palette != oldWidget.palette;
+}
+
+Act0CompletionPaletteV1 _cp(BuildContext context) =>
+    context
+        .dependOnInheritedWidgetOfExactType<_CompletionPaletteScopeV1>()
+        ?.palette ??
+    Act0CompletionPaletteV1.reading;
+
 class Act0BlockCompletionShellV1 extends StatelessWidget {
   const Act0BlockCompletionShellV1({
     super.key,
@@ -9905,6 +10190,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
     this.onOpenReview,
     this.onLaunchPracticeRepairQueueTarget,
     required this.onBackToMap,
+    this.northStar = kAct0CompletionNorthStarV1,
   });
 
   final Act0BlockCompletionSummaryV1 summary;
@@ -9923,6 +10209,10 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
   onLaunchPracticeRepairQueueTarget;
   final VoidCallback onBackToMap;
 
+  /// Paint only: the dark premium journey's lesson payoff. Projection, copy,
+  /// CTA order and callbacks are identical in both palettes.
+  final bool northStar;
+
   VoidCallback? _callbackForCta(Act0MilestoneCtaKindV1 kind) {
     return switch (kind) {
       Act0MilestoneCtaKindV1.continueForward => onContinue,
@@ -9935,11 +10225,12 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = northStar
+        ? Act0CompletionPaletteV1.northStar
+        : Act0CompletionPaletteV1.reading;
     final celebrateTone = summary.qualifiesForNextLesson
-        ? (summary.leveledUp
-              ? Act0AcademyReadingStyleV1.gold
-              : Act0AcademyReadingStyleV1.primary)
-        : Act0AcademyReadingStyleV1.gold;
+        ? (summary.leveledUp ? palette.gold : palette.primary)
+        : palette.gold;
     final visibleEvidenceSummary =
         evidenceSummary != null && evidenceSummary!.hasEvidence
         ? evidenceSummary
@@ -10011,9 +10302,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
           key: const Key('act0_shell_block_summary_next_label'),
           padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
           decoration: BoxDecoration(
-            color: Act0AcademyReadingStyleV1.surface2.withValues(alpha: 0.86),
+            color: palette.surface2.withValues(alpha: 0.86),
             borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-            border: Border.all(color: Act0AcademyReadingStyleV1.border),
+            border: Border.all(color: palette.border),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -10022,8 +10313,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 localeIsRu
                     ? '\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433'
                     : (payoffHero == null ? 'What next' : 'Next hand'),
-                style: Act0AcademyReadingStyleV1.label.copyWith(
-                  color: Act0AcademyReadingStyleV1.info,
+                style: palette.label.copyWith(
+                  color: palette.info,
                   letterSpacing: 0.35,
                 ),
               ),
@@ -10043,8 +10334,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 key: const Key('act0_shell_block_summary_suggested_next'),
                 maxLines: 4,
                 overflow: TextOverflow.fade,
-                style: Act0AcademyReadingStyleV1.body.copyWith(
-                  color: Act0AcademyReadingStyleV1.text,
+                style: palette.body.copyWith(
+                  color: palette.text,
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -10055,8 +10346,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   key: const Key('act0_shell_block_summary_next_reason'),
                   maxLines: 3,
                   overflow: TextOverflow.fade,
-                  style: Act0AcademyReadingStyleV1.body.copyWith(
-                    color: Act0AcademyReadingStyleV1.textMuted,
+                  style: palette.body.copyWith(
+                    color: palette.textMuted,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -10088,7 +10379,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
         onPressed: hasSourceNext
             ? onNextUsefulHand
             : _callbackForCta(summary.primaryCtaKind),
-        style: Act0AcademyReadingStyleV1.premiumActionButtonStyle(),
+        style: palette.premiumActionButtonStyle(),
         child: Text(
           hasSourceNext
               ? (localeIsRu
@@ -10115,7 +10406,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
       );
     }
 
-    return Center(
+    final page = Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(
           Act0ShellTokensV1.gapLg,
@@ -10128,11 +10419,11 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
           constraints: BoxConstraints(maxWidth: tabletLayout ? 720 : 388),
           padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
           decoration: BoxDecoration(
-            color: Act0AcademyReadingStyleV1.surface,
+            color: palette.surface,
             borderRadius: BorderRadius.circular(
               Act0ShellTokensV1.radiusOverlay,
             ),
-            border: Border.all(color: Act0AcademyReadingStyleV1.border),
+            border: Border.all(color: palette.border),
           ),
           child: Column(
             key: const Key('act0_shell_session_summary_victory_lap'),
@@ -10151,7 +10442,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                     colors: <Color>[
                       celebrateTone.withValues(alpha: 0.18),
                       celebrateTone.withValues(alpha: 0.82),
-                      Act0AcademyReadingStyleV1.info.withValues(alpha: 0.34),
+                      palette.info.withValues(alpha: 0.34),
                     ],
                   ),
                 ),
@@ -10176,9 +10467,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                         end: Alignment.bottomRight,
                         colors: <Color>[
                           celebrateTone.withValues(alpha: 0.22),
-                          Act0AcademyReadingStyleV1.surface2.withValues(
-                            alpha: 0.96,
-                          ),
+                          palette.surface2.withValues(alpha: 0.96),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(
@@ -10233,11 +10522,10 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                                         : payoffHero == null
                                         ? summary.masteryLabel
                                         : payoffHero.kicker,
-                                    style: Act0AcademyReadingStyleV1.label
-                                        .copyWith(
-                                          color: celebrateTone,
-                                          letterSpacing: 0.5,
-                                        ),
+                                    style: palette.label.copyWith(
+                                      color: celebrateTone,
+                                      letterSpacing: 0.5,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -10259,7 +10547,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                               : (payoffHero == null
                                     ? 'What finished'
                                     : 'Session complete'),
-                          style: Act0AcademyReadingStyleV1.label.copyWith(
+                          style: palette.label.copyWith(
                             color: celebrateTone,
                             letterSpacing: 0.35,
                           ),
@@ -10284,11 +10572,10 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                                 : payoffHero?.headline ??
                                       summary.milestoneTitle,
                             key: const Key('act0_shell_block_summary_title'),
-                            style: Act0AcademyReadingStyleV1.screenTitle
-                                .copyWith(
-                                  fontSize: payoffHero == null ? 30 : 32,
-                                  height: 1.05,
-                                ),
+                            style: palette.screenTitle.copyWith(
+                              fontSize: payoffHero == null ? 30 : 32,
+                              height: 1.05,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -10305,8 +10592,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.fade,
-                          style: Act0AcademyReadingStyleV1.body.copyWith(
-                            color: Act0AcademyReadingStyleV1.text,
+                          style: palette.body.copyWith(
+                            color: palette.text,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
@@ -10322,8 +10609,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                           ),
                           maxLines: 4,
                           overflow: TextOverflow.fade,
-                          style: Act0AcademyReadingStyleV1.body.copyWith(
-                            color: Act0AcademyReadingStyleV1.textMuted,
+                          style: palette.body.copyWith(
+                            color: palette.textMuted,
                           ),
                         ),
                         if (summarySharkyLine.isNotEmpty &&
@@ -10386,8 +10673,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.fade,
-                            style: Act0AcademyReadingStyleV1.body.copyWith(
-                              color: Act0AcademyReadingStyleV1.text,
+                            style: palette.body.copyWith(
+                              color: palette.text,
                               fontWeight: FontWeight.w800,
                             ),
                           ),
@@ -10399,8 +10686,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.fade,
-                            style: Act0AcademyReadingStyleV1.muted.copyWith(
-                              color: Act0AcademyReadingStyleV1.textMuted,
+                            style: palette.muted.copyWith(
+                              color: palette.textMuted,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -10419,13 +10706,11 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   key: const Key('act0_shell_block_summary_unlock_card'),
                   padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
                   decoration: BoxDecoration(
-                    color: Act0AcademyReadingStyleV1.surface2.withValues(
-                      alpha: 0.86,
-                    ),
+                    color: palette.surface2.withValues(alpha: 0.86),
                     borderRadius: BorderRadius.circular(
                       Act0ShellTokensV1.radiusCard,
                     ),
-                    border: Border.all(color: Act0AcademyReadingStyleV1.border),
+                    border: Border.all(color: palette.border),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -10438,8 +10723,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.fade,
-                          style: Act0AcademyReadingStyleV1.body.copyWith(
-                            color: Act0AcademyReadingStyleV1.text,
+                          style: palette.body.copyWith(
+                            color: palette.text,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
@@ -10452,8 +10737,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.fade,
-                        style: Act0AcademyReadingStyleV1.muted.copyWith(
-                          color: Act0AcademyReadingStyleV1.textMuted,
+                        style: palette.muted.copyWith(
+                          color: palette.textMuted,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -10470,8 +10755,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 OutlinedButton(
                   key: const Key('act0_shell_block_summary_quality_cta'),
                   onPressed: _callbackForCta(summary.secondaryCtaKind!),
-                  style: Act0AcademyReadingStyleV1.tonalButtonStyle(
-                    tone: Act0AcademyReadingStyleV1.info,
+                  style: palette.tonalButtonStyle(
+                    tone: palette.info,
                     fullWidth: true,
                   ),
                   child: Text(
@@ -10499,6 +10784,12 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 TextButton(
                   key: const Key('act0_shell_block_summary_map_cta'),
                   onPressed: onBackToMap,
+                  style: palette.isNorthStar
+                      ? TextButton.styleFrom(
+                          foregroundColor: palette.textMuted,
+                          minimumSize: const Size(0, 48),
+                        )
+                      : null,
                   child: Text(
                     localeIsRu
                         ? '\u041a \u043a\u0430\u0440\u0442\u0435 \u0443\u0440\u043e\u043a\u043e\u0432'
@@ -10512,13 +10803,11 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   key: const Key('act0_shell_block_summary_habit_reward'),
                   padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
                   decoration: BoxDecoration(
-                    color: Act0AcademyReadingStyleV1.surface2.withValues(
-                      alpha: 0.82,
-                    ),
+                    color: palette.surface2.withValues(alpha: 0.82),
                     borderRadius: BorderRadius.circular(
                       Act0ShellTokensV1.radiusCard,
                     ),
-                    border: Border.all(color: Act0AcademyReadingStyleV1.border),
+                    border: Border.all(color: palette.border),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -10557,8 +10846,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                               key: const Key(
                                 'act0_shell_block_summary_habit_reward_label',
                               ),
-                              style: Act0AcademyReadingStyleV1.label.copyWith(
-                                color: Act0AcademyReadingStyleV1.info,
+                              style: palette.label.copyWith(
+                                color: palette.info,
                                 letterSpacing: 0.35,
                               ),
                             ),
@@ -10574,8 +10863,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                               ),
                               maxLines: 4,
                               overflow: TextOverflow.fade,
-                              style: Act0AcademyReadingStyleV1.body.copyWith(
-                                color: Act0AcademyReadingStyleV1.textMuted,
+                              style: palette.body.copyWith(
+                                color: palette.textMuted,
                               ),
                             ),
                           ],
@@ -10594,7 +10883,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                             : 'Самостоятельные ответы оценены; исходные ошибки сохранены для разбора.')
                       : 'Самостоятельный итог этого прохождения не подтверждён; помощь не засчитана как независимый успех.',
                   key: const Key('act0_b2_summary_ru_assessed_truth'),
-                  style: Act0AcademyReadingStyleV1.body,
+                  style: palette.body,
                 ),
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
               ],
@@ -10680,8 +10969,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 key: const Key('act0_shell_block_summary_accuracy'),
                 maxLines: 2,
                 overflow: TextOverflow.fade,
-                style: Act0AcademyReadingStyleV1.muted.copyWith(
-                  color: Act0AcademyReadingStyleV1.textMuted,
+                style: palette.muted.copyWith(
+                  color: palette.textMuted,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -10691,13 +10980,11 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                   key: const Key('act0_shell_block_summary_repair_mix'),
                   padding: const EdgeInsets.all(Act0ShellTokensV1.gapSm),
                   decoration: BoxDecoration(
-                    color: Act0AcademyReadingStyleV1.surface2.withValues(
-                      alpha: 0.82,
-                    ),
+                    color: palette.surface2.withValues(alpha: 0.82),
                     borderRadius: BorderRadius.circular(
                       Act0ShellTokensV1.radiusLg,
                     ),
-                    border: Border.all(color: Act0AcademyReadingStyleV1.border),
+                    border: Border.all(color: palette.border),
                   ),
                   child: Row(
                     children: [
@@ -10709,8 +10996,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                           key: const Key(
                             'act0_shell_block_summary_quick_fixes',
                           ),
-                          style: Act0AcademyReadingStyleV1.body.copyWith(
-                            color: Act0AcademyReadingStyleV1.text,
+                          style: palette.body.copyWith(
+                            color: palette.text,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
@@ -10723,10 +11010,10 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                               : 'Deep leaks: ${summary.deepLeakCount}',
                           key: const Key('act0_shell_block_summary_deep_leaks'),
                           textAlign: TextAlign.right,
-                          style: Act0AcademyReadingStyleV1.body.copyWith(
+                          style: palette.body.copyWith(
                             color: summary.deepLeakCount == 0
-                                ? Act0AcademyReadingStyleV1.textMuted
-                                : Act0AcademyReadingStyleV1.danger,
+                                ? palette.textMuted
+                                : palette.danger,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
@@ -10739,6 +11026,16 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
           ),
         ),
       ),
+    );
+    return _CompletionPaletteScopeV1(
+      palette: palette,
+      child: palette.page == null
+          ? page
+          : ColoredBox(
+              key: const Key('act0_shell_block_summary_north_star_page'),
+              color: palette.page!,
+              child: page,
+            ),
     );
   }
 }
@@ -10934,8 +11231,8 @@ class _WorldMilestoneCardV1 extends StatelessWidget {
                 child: Text(
                   payoffLabel,
                   key: Key('${keyPrefix}_payoff_label'),
-                  style: Act0AcademyReadingStyleV1.body.copyWith(
-                    color: Act0AcademyReadingStyleV1.text,
+                  style: _cp(context).body.copyWith(
+                    color: _cp(context).text,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
@@ -10951,8 +11248,8 @@ class _WorldMilestoneCardV1 extends StatelessWidget {
                 key: Key('${keyPrefix}_learning_label'),
                 maxLines: 2,
                 overflow: TextOverflow.fade,
-                style: Act0AcademyReadingStyleV1.muted.copyWith(
-                  color: Act0AcademyReadingStyleV1.textMuted,
+                style: _cp(context).muted.copyWith(
+                  color: _cp(context).textMuted,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -10975,8 +11272,8 @@ class _WorldMilestoneCardV1 extends StatelessWidget {
                       key: Key('${keyPrefix}_proof_line'),
                       maxLines: 2,
                       overflow: TextOverflow.fade,
-                      style: Act0AcademyReadingStyleV1.muted.copyWith(
-                        color: Act0AcademyReadingStyleV1.textMuted,
+                      style: _cp(context).muted.copyWith(
+                        color: _cp(context).textMuted,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -10987,10 +11284,9 @@ class _WorldMilestoneCardV1 extends StatelessWidget {
               Text(
                 nextLabel,
                 key: Key('${keyPrefix}_next_label'),
-                style: Act0AcademyReadingStyleV1.body.copyWith(
-                  color: tone,
-                  fontWeight: FontWeight.w900,
-                ),
+                style: _cp(
+                  context,
+                ).body.copyWith(color: tone, fontWeight: FontWeight.w900),
               ),
               const SizedBox(height: 4),
               Text(
@@ -10998,8 +11294,8 @@ class _WorldMilestoneCardV1 extends StatelessWidget {
                 key: Key('${keyPrefix}_preview_line'),
                 maxLines: 3,
                 overflow: TextOverflow.fade,
-                style: Act0AcademyReadingStyleV1.body.copyWith(
-                  color: Act0AcademyReadingStyleV1.textMuted,
+                style: _cp(context).body.copyWith(
+                  color: _cp(context).textMuted,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -11200,9 +11496,7 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
   }
 
   Widget _buildCard(BuildContext context) {
-    final tone = summary.leveledUp
-        ? Act0AcademyReadingStyleV1.gold
-        : Act0AcademyReadingStyleV1.primary;
+    final tone = summary.leveledUp ? _cp(context).gold : _cp(context).primary;
     // A saved/assisted/wrong run is not automatically an independent clean read.
     // The bar displays assessed correctness, not "all XP equals mastery".
     final cleanIndependentRead =
@@ -11216,9 +11510,9 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
         : (summary.correctCount / summary.taskCount).clamp(0.0, 1.0);
     return Container(
       decoration: BoxDecoration(
-        color: Act0AcademyReadingStyleV1.surface2.withValues(alpha: 0.9),
+        color: _cp(context).surface2.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPanel),
-        border: Border.all(color: Act0AcademyReadingStyleV1.border),
+        border: Border.all(color: _cp(context).border),
       ),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       child: Column(
@@ -11240,10 +11534,9 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
                 child: Text(
                   cleanIndependentRead ? 'One clean read' : 'Practice recorded',
                   key: const Key('act0_shell_block_summary_xp_gain'),
-                  style: Act0AcademyReadingStyleV1.label.copyWith(
-                    color: tone,
-                    letterSpacing: 0.4,
-                  ),
+                  style: _cp(
+                    context,
+                  ).label.copyWith(color: tone, letterSpacing: 0.4),
                 ),
               ),
               const SizedBox(width: Act0ShellTokensV1.gapSm),
@@ -11254,8 +11547,8 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.fade,
                   textAlign: TextAlign.right,
-                  style: Act0AcademyReadingStyleV1.body.copyWith(
-                    color: Act0AcademyReadingStyleV1.text,
+                  style: _cp(context).body.copyWith(
+                    color: _cp(context).text,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
@@ -11269,7 +11562,7 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
               key: const Key('act0_shell_block_summary_xp_progress'),
               minHeight: 8,
               value: assessedFraction,
-              backgroundColor: Act0AcademyReadingStyleV1.surface3,
+              backgroundColor: _cp(context).surface3,
               color: tone,
             ),
           ),
@@ -11304,9 +11597,9 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
       key: const Key('act0_shell_block_summary_evidence_card'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       decoration: BoxDecoration(
-        color: Act0AcademyReadingStyleV1.surface2.withValues(alpha: 0.86),
+        color: _cp(context).surface2.withValues(alpha: 0.86),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-        border: Border.all(color: Act0AcademyReadingStyleV1.border),
+        border: Border.all(color: _cp(context).border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -11316,10 +11609,9 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
                 ? '\u0422\u0435\u043a\u0443\u0449\u0438\u0439 \u043f\u0440\u043e\u0445\u043e\u0434'
                 : summary.title,
             key: const Key('act0_shell_block_summary_evidence_title'),
-            style: Act0AcademyReadingStyleV1.label.copyWith(
-              color: Act0AcademyReadingStyleV1.info,
-              letterSpacing: 0.35,
-            ),
+            style: _cp(
+              context,
+            ).label.copyWith(color: _cp(context).info, letterSpacing: 0.35),
           ),
           const SizedBox(height: 6),
           Text(
@@ -11329,8 +11621,8 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
             key: const Key('act0_shell_block_summary_evidence_spots'),
             maxLines: 2,
             overflow: TextOverflow.fade,
-            style: Act0AcademyReadingStyleV1.body.copyWith(
-              color: Act0AcademyReadingStyleV1.text,
+            style: _cp(context).body.copyWith(
+              color: _cp(context).text,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -11342,8 +11634,8 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
             key: const Key('act0_shell_block_summary_evidence_result'),
             maxLines: 2,
             overflow: TextOverflow.fade,
-            style: Act0AcademyReadingStyleV1.muted.copyWith(
-              color: Act0AcademyReadingStyleV1.textMuted,
+            style: _cp(context).muted.copyWith(
+              color: _cp(context).textMuted,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -11356,8 +11648,8 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
               key: const Key('act0_shell_block_summary_evidence_repair_focus'),
               maxLines: 2,
               overflow: TextOverflow.fade,
-              style: Act0AcademyReadingStyleV1.muted.copyWith(
-                color: Act0AcademyReadingStyleV1.textMuted,
+              style: _cp(context).muted.copyWith(
+                color: _cp(context).textMuted,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -11374,8 +11666,8 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
               ),
               maxLines: 2,
               overflow: TextOverflow.fade,
-              style: Act0AcademyReadingStyleV1.muted.copyWith(
-                color: Act0AcademyReadingStyleV1.textMuted,
+              style: _cp(context).muted.copyWith(
+                color: _cp(context).textMuted,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -11395,8 +11687,8 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.fade,
-                style: Act0AcademyReadingStyleV1.muted.copyWith(
-                  color: Act0AcademyReadingStyleV1.textMuted,
+                style: _cp(context).muted.copyWith(
+                  color: _cp(context).textMuted,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -11409,7 +11701,7 @@ class _SessionSummaryEvidenceCardV1 extends StatelessWidget {
               onPressed: () =>
                   onLaunchPracticeRepairQueueTarget!(practiceLaunchRequest!),
               style: TextButton.styleFrom(
-                foregroundColor: Act0AcademyReadingStyleV1.info,
+                foregroundColor: _cp(context).info,
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.symmetric(
                   horizontal: Act0ShellTokensV1.gapXs,
@@ -11449,9 +11741,9 @@ class _GrowthHighlightV1 extends StatelessWidget {
         vertical: 10,
       ),
       decoration: BoxDecoration(
-        color: Act0AcademyReadingStyleV1.surface2.withValues(alpha: 0.86),
+        color: _cp(context).surface2.withValues(alpha: 0.86),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-        border: Border.all(color: Act0AcademyReadingStyleV1.border),
+        border: Border.all(color: _cp(context).border),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -11473,16 +11765,16 @@ class _GrowthHighlightV1 extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Act0AcademyReadingStyleV1.label.copyWith(
-                    color: Act0AcademyReadingStyleV1.info,
+                  style: _cp(context).label.copyWith(
+                    color: _cp(context).info,
                     letterSpacing: 0.35,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   label,
-                  style: Act0AcademyReadingStyleV1.body.copyWith(
-                    color: Act0AcademyReadingStyleV1.text,
+                  style: _cp(context).body.copyWith(
+                    color: _cp(context).text,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -11514,9 +11806,9 @@ class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
       key: const Key('act0_shell_block_summary_earned_moment'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       decoration: BoxDecoration(
-        color: Act0AcademyReadingStyleV1.surface2.withValues(alpha: 0.86),
+        color: _cp(context).surface2.withValues(alpha: 0.86),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-        border: Border.all(color: Act0AcademyReadingStyleV1.border),
+        border: Border.all(color: _cp(context).border),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -11544,8 +11836,8 @@ class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
                             : '\u0412\u0435\u0440\u043D\u043E \u0432 \u044D\u0442\u043E\u0439 \u0441\u0435\u0441\u0441\u0438\u0438')
                       : (previouslySaved ? 'Saved earlier' : 'Collected read'),
                   key: const Key('act0_shell_block_summary_earned_label'),
-                  style: Act0AcademyReadingStyleV1.label.copyWith(
-                    color: Act0AcademyReadingStyleV1.info,
+                  style: _cp(context).label.copyWith(
+                    color: _cp(context).info,
                     letterSpacing: 0.35,
                   ),
                 ),
@@ -11557,8 +11849,8 @@ class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
                   key: const Key('act0_shell_block_summary_earned_seed'),
                   maxLines: 2,
                   overflow: TextOverflow.fade,
-                  style: Act0AcademyReadingStyleV1.body.copyWith(
-                    color: Act0AcademyReadingStyleV1.text,
+                  style: _cp(context).body.copyWith(
+                    color: _cp(context).text,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -11570,8 +11862,8 @@ class _SessionSummaryEarnedMomentCardV1 extends StatelessWidget {
                   key: const Key('act0_shell_block_summary_earned_proof'),
                   maxLines: 2,
                   overflow: TextOverflow.fade,
-                  style: Act0AcademyReadingStyleV1.muted.copyWith(
-                    color: Act0AcademyReadingStyleV1.textMuted,
+                  style: _cp(context).muted.copyWith(
+                    color: _cp(context).textMuted,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -11615,10 +11907,9 @@ class _SessionSummaryRepairOutcomeReceiptCardV1 extends StatelessWidget {
           child: Text(
             receipt.title,
             key: const Key('act0_shell_session_repair_outcome_title'),
-            style: Act0AcademyReadingStyleV1.label.copyWith(
-              color: Act0AcademyReadingStyleV1.info,
-              letterSpacing: 0.35,
-            ),
+            style: _cp(
+              context,
+            ).label.copyWith(color: _cp(context).info, letterSpacing: 0.35),
           ),
         ),
       ],
@@ -11627,9 +11918,9 @@ class _SessionSummaryRepairOutcomeReceiptCardV1 extends StatelessWidget {
       key: const Key('act0_shell_session_repair_outcome_receipt'),
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       decoration: BoxDecoration(
-        color: Act0AcademyReadingStyleV1.surface2.withValues(alpha: 0.86),
+        color: _cp(context).surface2.withValues(alpha: 0.86),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-        border: Border.all(color: Act0AcademyReadingStyleV1.border),
+        border: Border.all(color: _cp(context).border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -11643,10 +11934,8 @@ class _SessionSummaryRepairOutcomeReceiptCardV1 extends StatelessWidget {
               key: Key('act0_shell_session_repair_outcome_line_$index'),
               maxLines: 2,
               overflow: TextOverflow.fade,
-              style: Act0AcademyReadingStyleV1.body.copyWith(
-                color: index == 0
-                    ? Act0AcademyReadingStyleV1.text
-                    : Act0AcademyReadingStyleV1.textMuted,
+              style: _cp(context).body.copyWith(
+                color: index == 0 ? _cp(context).text : _cp(context).textMuted,
                 fontWeight: index == 0 ? FontWeight.w800 : FontWeight.w700,
               ),
             ),
@@ -11676,9 +11965,9 @@ class _BlockSummaryListCardV1 extends StatelessWidget {
       key: cardKey,
       padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
       decoration: BoxDecoration(
-        color: Act0AcademyReadingStyleV1.surface2.withValues(alpha: 0.86),
+        color: _cp(context).surface2.withValues(alpha: 0.86),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusCard),
-        border: Border.all(color: Act0AcademyReadingStyleV1.border),
+        border: Border.all(color: _cp(context).border),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -11688,10 +11977,10 @@ class _BlockSummaryListCardV1 extends StatelessWidget {
             height: 30,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Act0AcademyReadingStyleV1.info.withValues(alpha: 0.14),
+              color: _cp(context).info.withValues(alpha: 0.14),
               borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
             ),
-            child: Icon(icon, size: 17, color: Act0AcademyReadingStyleV1.info),
+            child: Icon(icon, size: 17, color: _cp(context).info),
           ),
           const SizedBox(width: Act0ShellTokensV1.gapSm),
           Expanded(
@@ -11700,8 +11989,8 @@ class _BlockSummaryListCardV1 extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Act0AcademyReadingStyleV1.label.copyWith(
-                    color: Act0AcademyReadingStyleV1.info,
+                  style: _cp(context).label.copyWith(
+                    color: _cp(context).info,
                     letterSpacing: 0.35,
                   ),
                 ),
@@ -11709,8 +11998,8 @@ class _BlockSummaryListCardV1 extends StatelessWidget {
                 for (final line in lines) ...[
                   Text(
                     line,
-                    style: Act0AcademyReadingStyleV1.body.copyWith(
-                      color: Act0AcademyReadingStyleV1.text,
+                    style: _cp(context).body.copyWith(
+                      color: _cp(context).text,
                       fontWeight: FontWeight.w800,
                     ),
                   ),

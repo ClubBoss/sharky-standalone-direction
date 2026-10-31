@@ -337,7 +337,8 @@ act0W7VisibleAceHiddenTaskSpecsV1 = <Act0W7VisibleAceHiddenTaskSpecV1>[
           'The visible queens prove the opponent’s exact hand.',
     },
     feedbackReason:
-        'The queen on the board is unavailable to private hands, so fewer '
+        'Your two queens and the board queen cannot be in an opponent '
+        'hand, so at most one queen is left for them and fewer '
         'queen-containing combinations remain. That narrows a range; it '
         'does not identify one exact hand.',
     incorrectFeedback: <String, String>{

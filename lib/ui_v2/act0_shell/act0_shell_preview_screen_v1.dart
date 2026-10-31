@@ -5502,7 +5502,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final immersivePwC3 =
         act0PwC3EnabledV1(context) &&
         ((_showPlacement && !_placementDiagnosticActive) || _showWelcome);
+    // The North Star lesson payoff sits between dark gameplay and dark
+    // Home/Review, so its scaffold and status bar follow the same chrome.
+    final immersiveSummary =
+        kAct0CompletionNorthStarV1 &&
+        _blockCompletionSummary != null &&
+        _tab == Act0ShellTabV1.play;
     final cinematicChrome =
+        immersiveSummary ||
         immersivePwC3 ||
         immersiveHome ||
         immersiveLearn ||

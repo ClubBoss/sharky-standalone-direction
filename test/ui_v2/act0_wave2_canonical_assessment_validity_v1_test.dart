@@ -215,7 +215,7 @@ void main() {
       ]);
       expect(
         borderline.runner.table.heroCards.map((card) => card.label),
-        <String>['Qh', 'Js'],
+        <String>['Qh', 'Jh'],
       );
 
       expect(correctOption(strong).id, 'strong');

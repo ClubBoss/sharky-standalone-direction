@@ -15,11 +15,7 @@ void main() {
       final task = _task();
 
       await tester.pumpWidget(
-        _host(
-          task: task,
-          sink: sink,
-          onChoose: (_) => choices += 1,
-        ),
+        _host(task: task, sink: sink, onChoose: (_) => choices += 1),
       );
 
       expect(find.byKey(const Key('act0_shell_card_board_3')), findsNothing);
@@ -43,6 +39,10 @@ void main() {
       expect(find.byKey(const Key('act0_shell_card_board_3')), findsOneWidget);
       expect(find.text('Pot 11 BB'), findsWidgets);
 
+      // On this 800x600 surface the settled shelf keeps its More cue in its
+      // own band, so this answer waits below it; bring it into view first.
+      await tester.ensureVisible(option);
+      await tester.pump();
       await tester.tap(option);
       await tester.pump();
       expect(choices, 1);
@@ -66,11 +66,7 @@ void main() {
     final task = _task();
 
     await tester.pumpWidget(
-      _host(
-        task: task,
-        disableAnimations: true,
-        onChoose: (_) => choices += 1,
-      ),
+      _host(task: task, disableAnimations: true, onChoose: (_) => choices += 1),
     );
 
     expect(find.byKey(const Key('act0_shell_card_board_3')), findsOneWidget);
@@ -90,10 +86,7 @@ void main() {
     final task = _task();
 
     await tester.pumpWidget(
-      _host(
-        task: task,
-        mode: Act0TableChoreographyModeV1.settled,
-      ),
+      _host(task: task, mode: Act0TableChoreographyModeV1.settled),
     );
 
     expect(find.byKey(const Key('act0_shell_card_board_0')), findsOneWidget);
@@ -137,10 +130,7 @@ void main() {
     await tester.pumpWidget(_host(task: source));
     await tester.pump(const Duration(milliseconds: 700));
     await tester.pumpWidget(
-      _host(
-        task: replacement,
-        onChoose: (_) => replacementChoices += 1,
-      ),
+      _host(task: replacement, onChoose: (_) => replacementChoices += 1),
     );
     await tester.pump(const Duration(seconds: 4));
 
@@ -159,9 +149,7 @@ Act0LessonTaskV1 _task() => Act0ShellStateV1.sample
     .lessons
     .firstWhere((lesson) => lesson.lessonId == 'range_pressure_lines')
     .taskList
-    .firstWhere(
-      (task) => task.taskId == 'w6_turn_pressure_shift_transfer',
-    );
+    .firstWhere((task) => task.taskId == 'w6_turn_pressure_shift_transfer');
 
 Widget _host({
   required Act0LessonTaskV1 task,
