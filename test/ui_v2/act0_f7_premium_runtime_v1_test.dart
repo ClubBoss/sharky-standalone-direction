@@ -182,8 +182,8 @@ void main() {
       expect(_onFeltV1(p.potAnchor), isTrue);
     });
 
-    test('only source Empty seats make a scenario unsupported', () {
-      final unsupported = <String>[];
+    test('every authored scenario is seated and supported (367/367)', () {
+      var supported = 0;
       for (final w in Act0ShellStateV1.sample.worlds) {
         for (final l in w.lessons) {
           for (final task in l.taskList) {
@@ -192,19 +192,39 @@ void main() {
               for (final s in task.runner.teachingSteps)
                 if (s.table != null) s.table!,
             ];
-            final hasEmpty = tables.any(
-              (t) => t.seats.any((s) => !s.isOccupied),
-            );
             expect(
               p.supportsScenario(tables),
-              !hasEmpty,
-              reason: '${task.taskId} compatibility must follow Empty only',
+              isTrue,
+              reason: '${task.taskId} must stay inside the baked plate',
             );
-            if (hasEmpty) unsupported.add(task.taskId);
+            supported++;
           }
         }
       }
-      expect(unsupported, isNotEmpty);
+      expect(supported, 367);
+    });
+
+    test('a genuine Empty seat still fails closed', () {
+      final (task, _, _) = _task('first_table_guide_one_clear_choice');
+      final table = task.runner.table;
+      final withEmpty = table.copyWith(
+        seats: [
+          for (final s in table.seats)
+            s.seatId == 'utg'
+                ? Act0SeatStateV1(
+                    seatId: s.seatId,
+                    seatLabel: s.seatLabel,
+                    displayName: s.displayName,
+                    isOccupied: false,
+                    isInHand: false,
+                    cardsVisibleMode: Act0CardsVisibleModeV1.none,
+                  )
+                : s,
+        ],
+      );
+      expect(p.supports(table), isTrue);
+      expect(p.supports(withEmpty), isFalse);
+      expect(p.supportsScenario([table, withEmpty]), isFalse);
     });
   });
 
@@ -402,15 +422,19 @@ void main() {
       expect(first.bottom, lessThanOrEqualTo(852 - 34));
     });
 
-    testWidgets('incompatible Empty scenario falls back and keeps state', (
+    testWidgets('formerly Empty W1 guide spot now stays in the premium room', (
       t,
     ) async {
       final runner = await mount(t, 'first_table_guide_one_clear_choice');
-      expect(find.byKey(const Key('act0_f7_registered_scene')), findsNothing);
-      expect(
-        runner.table.seats.where((s) => !s.isOccupied).map((s) => s.seatId),
-        ['utg'],
-      );
+      expect(find.byKey(const Key('act0_f7_registered_scene')), findsOneWidget);
+      // Seated, folded and card-free: UTG, HJ and CO folded before BTN acts.
+      final folded = runner.table.seats.where((s) => s.isFolded);
+      expect(folded.map((s) => s.seatId), ['utg', 'hj', 'co']);
+      for (final s in folded) {
+        expect(s.isOccupied && !s.isInHand, isTrue);
+        expect(s.cardsVisibleMode, Act0CardsVisibleModeV1.none);
+      }
+      expect(runner.table.activeSeatId, 'btn');
     });
   });
 

@@ -2665,6 +2665,38 @@ List<Act0LessonTaskV1> _retitledTasksV1(
   ];
 }
 
+/// Replaces only the feedback copy of authored options. Ids, labels, grades,
+/// preferred answers and repair focus stay exactly as authored.
+List<Act0RunnerOptionV1> _act0WithOptionFeedbackV1(
+  List<Act0RunnerOptionV1> options,
+  Map<String, (String, String)> feedbackById,
+) {
+  if (!feedbackById.keys.every(options.map((o) => o.id).contains)) {
+    throw StateError('Feedback targets an unknown option id.');
+  }
+  return List<Act0RunnerOptionV1>.unmodifiable(
+    options.map((o) {
+      final feedback = feedbackById[o.id];
+      if (feedback == null) return o;
+      return Act0RunnerOptionV1(
+        id: o.id,
+        label: o.label,
+        amountLabel: o.amountLabel,
+        seatId: o.seatId,
+        isCorrect: o.isCorrect,
+        preferredLabel: o.preferredLabel,
+        betterAnswerLabel: o.betterAnswerLabel,
+        quality: o.quality,
+        feedbackTitle: feedback.$1,
+        feedbackReason: feedback.$2,
+        repairFocusSeatIds: o.repairFocusSeatIds,
+        repairFocusCardIds: o.repairFocusCardIds,
+        repairFocusLabels: o.repairFocusLabels,
+      );
+    }),
+  );
+}
+
 List<Act0RunnerOptionV1> _act0AuthoredCorrectOptionAtV1(
   List<Act0RunnerOptionV1> options, {
   required String correctOptionId,
@@ -7947,14 +7979,20 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
         seatId: 'utg',
         seatLabel: 'UTG',
         displayName: 'Seat',
-        isOccupied: false,
+        isFolded: true,
         isInHand: false,
+        hasActed: true,
         cardsVisibleMode: Act0CardsVisibleModeV1.none,
+        holeCards: _unknownHoleCards,
       ),
       Act0SeatStateV1(
         seatId: 'hj',
         seatLabel: 'HJ',
         displayName: 'Seat',
+        isFolded: true,
+        isInHand: false,
+        hasActed: true,
+        cardsVisibleMode: Act0CardsVisibleModeV1.none,
         holeCards: _unknownHoleCards,
       ),
       Act0SeatStateV1(
@@ -8009,6 +8047,9 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
     actionTrail: <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
       Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ folds'),
+      Act0ActionTrailItemV1(label: 'CO folds'),
       Act0ActionTrailItemV1(label: 'BTN acts'),
     ],
     activeSeatId: 'btn',
@@ -11632,7 +11673,8 @@ final _cardsRecapRunner = _bestFiveCardsRunner.copyWith(
   lessonId: 'cards_recap',
   caption: 'Lesson learned: cards have a job.',
   hint: 'Ranks compare strength, suits make flushes, board cards are shared.',
-  question: 'What do board cards mean?',
+  question:
+      'By the river you can see seven cards. How many make your final hand?',
   feedbackTitle: 'Card takeaway.',
   feedbackReason:
       'You hold two private cards, share the board, and make the best five-card hand.',
@@ -11947,6 +11989,23 @@ final _positionsRecapRunner = _positionsRunner.copyWith(
   caption: 'Lesson learned: position changes information.',
   hint: 'Early seats decide sooner. Late seats see more before acting.',
   question: 'Which seat is latest after the flop here?',
+  options: _act0WithOptionFeedbackV1(_positionsRunner.options, const <
+    String,
+    (String, String)
+  >{
+    'top': (
+      'Early both times.',
+      'UTG acts first before the flop and stays early after it. BTN acts last after the flop.',
+    ),
+    'random': (
+      'The blinds act first postflop.',
+      'BB can close the action before the flop, but after the flop the blinds act first. BTN acts last.',
+    ),
+    'bottom': (
+      'Last after the flop.',
+      'After the flop the blinds act first and BTN acts last, so BTN sees the most before deciding.',
+    ),
+  }),
   feedbackTitle: 'Position takeaway.',
   feedbackReason:
       'The six names are UTG, HJ, CO, BTN, SB, and BB. BTN is the clearest late seat.',
@@ -12439,7 +12498,7 @@ final _world2PositionRecapRunner = _positionsRecapRunner.copyWith(
   lessonSubtitle: 'Hand Value And Position',
   caption: 'Lesson learned: hand value depends on seat context.',
   hint: 'A later seat usually has more information before choosing.',
-  question: 'Which seat usually sees more first?',
+  question: 'Which seat usually acts last after the flop and sees more first?',
   feedbackTitle: 'Position-value takeaway.',
   feedbackReason:
       'Hand strength is not the whole decision. Seat position changes how much information you have.',
@@ -13111,28 +13170,40 @@ final _world3PlayableCallRunner = _callActionRunner.copyWith(
     toCallLabel: 'To call 2.5 BB',
     centerLabel: 'CO opened',
     actionTrail: const <Act0ActionTrailItemV1>[
+      Act0ActionTrailItemV1(label: 'UTG folds'),
+      Act0ActionTrailItemV1(label: 'HJ folds'),
       Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
       Act0ActionTrailItemV1(label: 'BTN acts'),
     ],
     activeSeatId: 'btn',
     highlightedSeatIds: const <String>['co', 'btn'],
     seats: <Act0SeatStateV1>[
+      // Action reached CO: UTG and HJ are seated and already out.
       Act0SeatStateV1(
         seatId: 'utg',
         seatLabel: 'UTG',
         displayName: 'Seat',
+        isFolded: true,
+        isInHand: false,
+        hasActed: true,
+        cardsVisibleMode: Act0CardsVisibleModeV1.none,
         holeCards: _unknownHoleCards,
       ),
       Act0SeatStateV1(
         seatId: 'hj',
         seatLabel: 'HJ',
         displayName: 'Seat',
+        isFolded: true,
+        isInHand: false,
+        hasActed: true,
+        cardsVisibleMode: Act0CardsVisibleModeV1.none,
         holeCards: _unknownHoleCards,
       ),
       Act0SeatStateV1(
         seatId: 'co',
         seatLabel: 'CO',
         displayName: 'Cutoff',
+        hasActed: true,
         bet: _coOpen25Bb,
         holeCards: _unknownHoleCards,
       ),
@@ -13204,7 +13275,9 @@ final _world2StrongContinueRunner = _world3PlayableCallRunner.copyWith(
   table: _world3PlayableCallRunner.table.copyWith(
     centerLabel: 'HJ opened',
     actionTrail: const <Act0ActionTrailItemV1>[
+      Act0ActionTrailItemV1(label: 'UTG folds'),
       Act0ActionTrailItemV1(label: 'HJ opens 2.5 BB'),
+      Act0ActionTrailItemV1(label: 'CO folds'),
       Act0ActionTrailItemV1(label: 'BTN acts'),
     ],
     highlightedSeatIds: const <String>['hj', 'btn'],
@@ -13213,12 +13286,17 @@ final _world2StrongContinueRunner = _world3PlayableCallRunner.copyWith(
         seatId: 'utg',
         seatLabel: 'UTG',
         displayName: 'Seat',
+        isFolded: true,
+        isInHand: false,
+        hasActed: true,
+        cardsVisibleMode: Act0CardsVisibleModeV1.none,
         holeCards: _unknownHoleCards,
       ),
       Act0SeatStateV1(
         seatId: 'hj',
         seatLabel: 'HJ',
         displayName: 'Hijack',
+        hasActed: true,
         bet: _hjOpen25Bb,
         holeCards: _unknownHoleCards,
       ),
@@ -13226,6 +13304,10 @@ final _world2StrongContinueRunner = _world3PlayableCallRunner.copyWith(
         seatId: 'co',
         seatLabel: 'CO',
         displayName: 'Cutoff',
+        isFolded: true,
+        isInHand: false,
+        hasActed: true,
+        cardsVisibleMode: Act0CardsVisibleModeV1.none,
         holeCards: _unknownHoleCards,
       ),
       Act0SeatStateV1(
@@ -13404,7 +13486,20 @@ final _world3CutoffCallRunner = _world3PlayableCallRunner.copyWith(
       activeSeatId: 'co',
       highlightedSeatIds: const <String>['hj', 'co'],
       centerLabel: 'HJ opened',
+      seats: <Act0SeatStateV1>[
+        for (final seat in _world2StrongContinueRunner.table.seats)
+          seat.seatId == 'co'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  isFolded: false,
+                  isInHand: true,
+                  hasActed: false,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceDown,
+                )
+              : seat,
+      ],
       actionTrail: const <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: 'UTG folds'),
         Act0ActionTrailItemV1(label: 'HJ opens 2.5 BB'),
         Act0ActionTrailItemV1(label: 'CO acts'),
       ],
@@ -13676,7 +13771,8 @@ final _world3FacingOpenRecapRunner = _world3PlayableCallRunner.copyWith(
   lessonId: 'w3_facing_open_recap',
   caption: 'Lesson learned: facing an open creates a price.',
   hint: 'Playable hands can call; weak hands can still fold.',
-  question: 'What did the opener create?',
+  question:
+      'Recap the spot: CO opened and you hold KQo on the Button. What is the simple response to that price?',
   feedbackTitle: 'Facing-open takeaway.',
   feedbackReason:
       'Once someone opens, your first preflop read changes from open-or-fold to continue-or-fold.',
@@ -13745,6 +13841,15 @@ final _world3LateOpenRunner = _world3ButtonOpenRunner.copyWith(
     ],
     centerLabel: 'Unopened pot',
   ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Late playable hand.',
+      body: 'ATo in a late seat is playable when nobody entered.',
+      focusSeatIds: <String>['btn'],
+      focusCardIds: <String>['hero_0', 'hero_1'],
+      focusLabels: <String>['ATo', 'Open'],
+    ),
+  ],
 );
 
 final _world3PositionDisciplineRunner = _world3EarlyFoldRunner.copyWith(
@@ -13921,6 +14026,11 @@ final _w3LateInfoEdgeRunner = _latePositionRunner.copyWith(
         Act0ActionTrailItemV1(label: 'CO acts'),
       ],
       centerLabel: 'CO after two folds',
+      activeSeatId: 'co',
+      seats: <Act0SeatStateV1>[
+        for (final seat in _latePositionRunner.table.seats)
+          _act0CopySeatStateV1(seat, isActive: seat.seatId == 'co'),
+      ],
     ),
     {'utg', 'hj'},
   ),
@@ -14107,7 +14217,8 @@ final _world3PositionRecapRunner = _world3LateOpenRunner.copyWith(
   lessonId: 'w3_position_recap',
   caption: 'Lesson learned: position changes preflop comfort.',
   hint: 'Late helps. Early demands stronger buckets and cleaner frames.',
-  question: 'What should you check after the bucket?',
+  question:
+      'Bucket first, then seat: ATo, late seat, unopened pot. What is the cleaner action?',
   feedbackTitle: 'Position-preflop takeaway.',
   feedbackReason:
       'Preflop is not one-hand-one-answer. Position changes how confidently the hand can continue in first-in and facing-open frames.',
@@ -14226,7 +14337,8 @@ final _world3SameHandRecapRunner = _world3SameHandIntroRunner.copyWith(
   caption: 'Lesson learned: context can change the action.',
   hint:
       'A hand can open first in, call facing an open, or fold in a worse frame.',
-  question: 'What prevents one-hand-one-answer thinking?',
+  question:
+      'Same hand, different seats: which seat makes it more comfortable to play?',
   feedbackTitle: 'Frame takeaway.',
   feedbackReason:
       'The reusable preflop read is hand bucket, position, and action frame before choosing.',
@@ -14396,7 +14508,8 @@ final _world3DominatedRecapRunner = _world3DominatedFoldRunner.copyWith(
   lessonId: 'w3_dominated_recap',
   caption: 'Lesson learned: familiar cards still need context.',
   hint: 'Do not continue just because one card looks high.',
-  question: 'What should weak familiar hands avoid?',
+  question:
+      'Recap the spot: CO opened and you hold A7o on the Button. What protects your stack?',
   feedbackTitle: 'Discipline takeaway.',
   feedbackReason:
       'Some hands look playable but are often behind stronger versions after an open.',
@@ -14444,7 +14557,7 @@ final _w1DisciplineCheckpointRunner = _world3DominatedRecapRunner.copyWith(
       'You now protect your stack with buckets. Next, add position so the same hand can play differently by seat, without chart memorization.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'W1 to W2 bridge.',
+      title: 'W2 to W3 bridge.',
       body: 'Bucket first. Position second. Then choose the action frame.',
       focusLabels: <String>['Bucket', 'Position', 'Action frame'],
     ),
@@ -14651,7 +14764,7 @@ final _w2BorderlineBucketRunner = _world3BucketsIntroRunner.copyWith(
   lessonId: 'w2_borderline_bucket_qjs',
   lessonTitle: 'Hand buckets',
   lessonSubtitle: 'Hand Discipline',
-  caption: 'Hero holds Q♥ J♠ before the flop.',
+  caption: 'Hero holds Q\u2665 J\u2665 before the flop.',
   hint: 'Connected high cards can play, but they need position and frame.',
   question: 'Which bucket is QJs before context helps?',
   options: const <Act0RunnerOptionV1>[
@@ -14691,7 +14804,7 @@ final _w2BorderlineBucketRunner = _world3BucketsIntroRunner.copyWith(
   table: _whatYouCanDoRunner.table.copyWith(
     heroCards: const <Act0CardStateV1>[
       Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: 'J', suit: 's'),
+      Act0CardStateV1(rank: 'J', suit: 'h', tone: Act0CardToneV1.red),
     ],
     centerLabel: 'QJs preflop',
     highlightedCardIds: const <String>['hero_0', 'hero_1'],
@@ -14895,6 +15008,12 @@ final _w1DisciplineApplyHjMediumRunner = _world3ButtonOpenRunner.copyWith(
         Act0CardStateV1(rank: 'Q', suit: 'c'),
       ],
       centerLabel: 'HJ, medium hand',
+      actionTrail: const <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ acts'),
+      ],
       activeSeatId: 'hj',
       highlightedSeatIds: const <String>['hj'],
       highlightedCardIds: const <String>['hero_0', 'hero_1'],
@@ -16204,25 +16323,33 @@ final _world4PurposePriceTableTransferRunner = _world4ValueBetRunner.copyWith(
     ),
   ],
   table: _act0CurrentStreetTableV1(
-    _world4ValueBetRunner.table.copyWith(
-      potLabel: 'Pot 6 BB',
-      toCallLabel: '',
-      centerLabel: 'Value plus price',
-      heroCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'A', suit: 's'),
-        Act0CardStateV1(rank: 'Q', suit: 'd'),
-      ],
-      boardCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '7', suit: 'c'),
-        Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
-      ],
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'BTN bets 2 BB'),
-        Act0ActionTrailItemV1(label: 'BB acts'),
-      ],
-      highlightedSeatIds: const <String>['btn', 'bb'],
-      highlightedCardIds: const <String>['hero_0', 'board_0'],
+    _act0ExplicitFoldsV1(
+      _world4ValueBetRunner.table.copyWith(
+        activeSeatId: 'bb',
+        seats: <Act0SeatStateV1>[
+          for (final seat in _world4ValueBetRunner.table.seats)
+            _act0CopySeatStateV1(seat, isActive: seat.seatId == 'bb'),
+        ],
+        potLabel: 'Pot 6 BB',
+        toCallLabel: '',
+        centerLabel: 'Value plus price',
+        heroCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'A', suit: 's'),
+          Act0CardStateV1(rank: 'Q', suit: 'd'),
+        ],
+        boardCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'A', suit: 'h', tone: Act0CardToneV1.red),
+          Act0CardStateV1(rank: '7', suit: 'c'),
+          Act0CardStateV1(rank: '2', suit: 'd', tone: Act0CardToneV1.red),
+        ],
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'BTN bets 2 BB'),
+          Act0ActionTrailItemV1(label: 'BB acts'),
+        ],
+        highlightedSeatIds: const <String>['btn', 'bb'],
+        highlightedCardIds: const <String>['hero_0', 'board_0'],
+      ),
+      {'utg', 'hj', 'co', 'sb'},
     ),
     bets: {
       'btn': Act0SeatBetStateV1(
@@ -17735,8 +17862,8 @@ final _world6RangeCheckpointRunner = _world5BoardCheckpointRunner.copyWith(
   lessonId: 'w6_range_checkpoint',
   lessonTitle: 'Range thinking checkpoint',
   caption: 'Lesson learned: range buckets need board-fit context.',
-  hint: 'Bucket first, board fit second, stack depth next.',
-  question: 'What carries this read into World 8?',
+  hint: 'Bucket first, board fit second; visible cards next, then stack depth.',
+  question: 'Later in Volume I, what pairs with this range read to judge risk?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'range_plus_pot_size',
@@ -17776,9 +17903,9 @@ final _world6RangeCheckpointRunner = _world5BoardCheckpointRunner.copyWith(
       'Use bucketed ranges with board texture first, then carry the read into stack-depth risk decisions.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
-      title: 'World 7 checkpoint.',
+      title: 'World 6 checkpoint.',
       body:
-          'Group hands into ranges, fit them to texture, then adjust risk by stack depth.',
+          'Group hands into ranges and fit them to texture. Next, visible cards narrow those ranges; later, stack depth adjusts the risk.',
       focusLabels: <String>['Range buckets', 'Texture fit', 'Stack depth'],
     ),
   ],
@@ -18921,17 +19048,21 @@ final _w6KickerShowdownCompareRunner = _world6RangeCheckpointRunner.copyWith(
         seatId: 'utg',
         seatLabel: 'UTG',
         displayName: 'Seat',
-        isOccupied: false,
+        isFolded: true,
         isInHand: false,
+        hasActed: true,
         cardsVisibleMode: Act0CardsVisibleModeV1.none,
+        holeCards: _unknownHoleCards,
       ),
       Act0SeatStateV1(
         seatId: 'hj',
         seatLabel: 'HJ',
         displayName: 'Seat',
-        isOccupied: false,
+        isFolded: true,
         isInHand: false,
+        hasActed: true,
         cardsVisibleMode: Act0CardsVisibleModeV1.none,
+        holeCards: _unknownHoleCards,
       ),
       Act0SeatStateV1(
         seatId: 'co',
@@ -18955,17 +19086,21 @@ final _w6KickerShowdownCompareRunner = _world6RangeCheckpointRunner.copyWith(
         seatId: 'sb',
         seatLabel: 'SB',
         displayName: 'Seat',
-        isOccupied: false,
+        isFolded: true,
         isInHand: false,
+        hasActed: true,
         cardsVisibleMode: Act0CardsVisibleModeV1.none,
+        holeCards: _unknownHoleCards,
       ),
       Act0SeatStateV1(
         seatId: 'bb',
         seatLabel: 'BB',
         displayName: 'Seat',
-        isOccupied: false,
+        isFolded: true,
         isInHand: false,
+        hasActed: true,
         cardsVisibleMode: Act0CardsVisibleModeV1.none,
+        holeCards: _unknownHoleCards,
       ),
     ],
   ),
@@ -19039,17 +19174,21 @@ final _w6BoardPairStrengthCompareRunner = _world6RangeCheckpointRunner.copyWith(
         seatId: 'utg',
         seatLabel: 'UTG',
         displayName: 'Seat',
-        isOccupied: false,
+        isFolded: true,
         isInHand: false,
+        hasActed: true,
         cardsVisibleMode: Act0CardsVisibleModeV1.none,
+        holeCards: _unknownHoleCards,
       ),
       Act0SeatStateV1(
         seatId: 'hj',
         seatLabel: 'HJ',
         displayName: 'Seat',
-        isOccupied: false,
+        isFolded: true,
         isInHand: false,
+        hasActed: true,
         cardsVisibleMode: Act0CardsVisibleModeV1.none,
+        holeCards: _unknownHoleCards,
       ),
       Act0SeatStateV1(
         seatId: 'co',
@@ -19073,17 +19212,21 @@ final _w6BoardPairStrengthCompareRunner = _world6RangeCheckpointRunner.copyWith(
         seatId: 'sb',
         seatLabel: 'SB',
         displayName: 'Seat',
-        isOccupied: false,
+        isFolded: true,
         isInHand: false,
+        hasActed: true,
         cardsVisibleMode: Act0CardsVisibleModeV1.none,
+        holeCards: _unknownHoleCards,
       ),
       Act0SeatStateV1(
         seatId: 'bb',
         seatLabel: 'BB',
         displayName: 'Seat',
-        isOccupied: false,
+        isFolded: true,
         isInHand: false,
+        hasActed: true,
         cardsVisibleMode: Act0CardsVisibleModeV1.none,
+        holeCards: _unknownHoleCards,
       ),
     ],
   ),
@@ -19163,17 +19306,21 @@ final _w6CheckpointTableBestFiveRunner = _world6RangeCheckpointRunner.copyWith(
         seatId: 'utg',
         seatLabel: 'UTG',
         displayName: 'Seat',
-        isOccupied: false,
+        isFolded: true,
         isInHand: false,
+        hasActed: true,
         cardsVisibleMode: Act0CardsVisibleModeV1.none,
+        holeCards: _unknownHoleCards,
       ),
       Act0SeatStateV1(
         seatId: 'hj',
         seatLabel: 'HJ',
         displayName: 'Seat',
-        isOccupied: false,
+        isFolded: true,
         isInHand: false,
+        hasActed: true,
         cardsVisibleMode: Act0CardsVisibleModeV1.none,
+        holeCards: _unknownHoleCards,
       ),
       Act0SeatStateV1(
         seatId: 'co',
@@ -19197,17 +19344,21 @@ final _w6CheckpointTableBestFiveRunner = _world6RangeCheckpointRunner.copyWith(
         seatId: 'sb',
         seatLabel: 'SB',
         displayName: 'Seat',
-        isOccupied: false,
+        isFolded: true,
         isInHand: false,
+        hasActed: true,
         cardsVisibleMode: Act0CardsVisibleModeV1.none,
+        holeCards: _unknownHoleCards,
       ),
       Act0SeatStateV1(
         seatId: 'bb',
         seatLabel: 'BB',
         displayName: 'Seat',
-        isOccupied: false,
+        isFolded: true,
         isInHand: false,
+        hasActed: true,
         cardsVisibleMode: Act0CardsVisibleModeV1.none,
+        holeCards: _unknownHoleCards,
       ),
     ],
   ),

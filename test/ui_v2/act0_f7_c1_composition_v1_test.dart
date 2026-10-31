@@ -150,22 +150,23 @@ void main() {
     },
   );
 
-  testWidgets(
-    'actual seated fold keeps source cue and empty-seat scenario still falls back',
-    (t) async {
-      await mount(t, 'hand_discipline_apply', 'apply_hj_decision');
-      expect(find.byKey(const Key('act0_f7_registered_scene')), findsOneWidget);
-      expect(find.text('Folded'), findsOneWidget);
-      expect(
-        t.getSize(find.byKey(const Key('act0_f7_hole_cards_utg'))),
-        Size.zero,
-      );
-      await mount(t, 'what_poker_is', 'first_table_guide_one_clear_choice');
-      expect(find.byKey(const Key('act0_f7_registered_scene')), findsNothing);
-      expect(
-        find.byKey(const Key('act0_integrated_scene_perspective_table')),
-        findsOneWidget,
-      );
-    },
-  );
+  testWidgets('actual seated folds keep source cues in the premium room', (
+    t,
+  ) async {
+    await mount(t, 'hand_discipline_apply', 'apply_hj_decision');
+    expect(find.byKey(const Key('act0_f7_registered_scene')), findsOneWidget);
+    expect(find.text('Folded'), findsOneWidget);
+    expect(
+      t.getSize(find.byKey(const Key('act0_f7_hole_cards_utg'))),
+      Size.zero,
+    );
+    // Formerly Empty-UTG: now seated folds before BTN, same room and cast.
+    // Genuine Empty seats still fail closed (act0_f7_premium_runtime test).
+    await mount(t, 'what_poker_is', 'first_table_guide_one_clear_choice');
+    expect(find.byKey(const Key('act0_f7_registered_scene')), findsOneWidget);
+    expect(find.text('Folded'), findsNWidgets(3));
+    for (final seat in const ['utg', 'hj', 'co']) {
+      expect(t.getSize(find.byKey(Key('act0_f7_hole_cards_$seat'))), Size.zero);
+    }
+  });
 }
