@@ -183,4 +183,41 @@ void main() {
     }
     fail('no long-answer task overflowed the shelf in this mode');
   });
+
+  testWidgets('a tap anywhere on the band reveals; its button is pill-sized', (
+    t,
+  ) async {
+    final band = find.byKey(const Key('act0_scene_shelf_more_fade'));
+    final semantics = t.ensureSemantics();
+    for (final id in longAnswerTasks) {
+      final (runner, chosen) = await mount(t, id, height: 700);
+      if (band.evaluate().isEmpty) continue;
+      final pill = t.getRect(
+        find.byKey(const Key('act0_scene_shelf_more_cue')),
+      );
+      final node = t.getSemantics(find.bySemanticsLabel('More choices below'));
+      expect(node.rect.width, lessThanOrEqualTo(pill.width + 1), reason: id);
+      expect(node.rect.height, lessThanOrEqualTo(pill.height + 1), reason: id);
+      final bandTop = t.getRect(band).top;
+      // The next answer that is not fully visible above the band.
+      final hidden = runner.options.firstWhere(
+        (o) =>
+            t.getRect(find.byKey(Key('act0_shell_option_${o.id}'))).bottom >
+            bandTop + .5,
+      );
+      await t.tapAt(Offset(40, t.getRect(band).center.dy));
+      await t.pumpAndSettle();
+      final now = t.getRect(find.byKey(Key('act0_shell_option_${hidden.id}')));
+      expect(
+        now.bottom,
+        lessThanOrEqualTo(t.getRect(band).top + .5),
+        reason: id,
+      );
+      expect(chosen, isEmpty, reason: id);
+      semantics.dispose();
+      return;
+    }
+    semantics.dispose();
+    fail('no long-answer task overflowed the shelf in this mode');
+  });
 }

@@ -5227,8 +5227,13 @@ class _SceneShelfMoreCueV1 extends StatelessWidget {
   final GestureDragUpdateCallback onDrag;
 
   @override
+  // The whole band is the More target while it shows (taps reveal, drags
+  // scroll); it adds no semantics node of its own, so the pill's button keeps
+  // its exact rect for assistive technology.
   Widget build(BuildContext context) => GestureDetector(
     behavior: HitTestBehavior.opaque,
+    excludeFromSemantics: true,
+    onTap: visible ? onTap : null,
     onVerticalDragUpdate: onDrag,
     child: _band(),
   );

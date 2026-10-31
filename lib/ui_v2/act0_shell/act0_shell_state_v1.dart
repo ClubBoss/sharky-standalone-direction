@@ -11168,18 +11168,22 @@ final _firstTableGuideReadTableRecheckRunner = _w1TableReadTransferRunner.copyWi
       repairFocusLabels: <String>['Your cards', 'Board cards', 'Pot 4 BB'],
     ),
   ],
-  table: _readBoardRunner.table.copyWith(
-    heroCards: _heroQqCards,
-    boardCards: _flopA72Cards,
-    centerLabel: 'Read hand, board, pot',
-    potLabel: 'Pot 4 BB',
-    highlightedCardIds: const <String>[
-      'hero_0',
-      'hero_1',
-      'board_0',
-      'board_1',
-      'board_2',
-    ],
+  // Pot 4 BB is four limpers (SB completes): UTG and HJ folded preflop.
+  table: _act0ExplicitFoldsV1(
+    _readBoardRunner.table.copyWith(
+      heroCards: _heroQqCards,
+      boardCards: _flopA72Cards,
+      centerLabel: 'Read hand, board, pot',
+      potLabel: 'Pot 4 BB',
+      highlightedCardIds: const <String>[
+        'hero_0',
+        'hero_1',
+        'board_0',
+        'board_1',
+        'board_2',
+      ],
+    ),
+    {'utg', 'hj'},
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(

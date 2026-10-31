@@ -242,6 +242,18 @@ void main() {
       expect(offenders, isEmpty);
     });
 
+    test('W1 table-read recheck: four live players make its 4 BB pot', () {
+      final task = tasks
+          .firstWhere(
+            (e) => e.task.taskId == 'what_poker_is_table_read_recheck',
+          )
+          .task;
+      final t = task.runner.table;
+      expect(t.potLabel, 'Pot 4 BB');
+      expect(t.seats.where((s) => s.isInHand).length, 4);
+      expect(t.heroSeat.isInHand, isTrue);
+    });
+
     test('preflop action never skips a seat that is still in the hand', () {
       // Seat-map frames (blind posts only, or an explicit seat comparison)
       // highlight a seat to tap; nobody has acted, so they are exempt.
