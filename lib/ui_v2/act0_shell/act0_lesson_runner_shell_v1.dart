@@ -5095,52 +5095,80 @@ class _SceneShelfMoreCueV1 extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) => Semantics(
-    button: true,
-    label: 'More choices below',
-    excludeSemantics: true,
-    // Translucent: a drag that starts on the cue still scrolls the shelf,
-    // while a tap here reveals the next whole answer instead of choosing the
-    // half-hidden one underneath.
-    child: GestureDetector(
-      key: const Key('act0_scene_shelf_more_cue'),
-      behavior: HitTestBehavior.translucent,
-      onTap: onTap,
-      child: Container(
-        height: 44 + bottomInset,
-        padding: EdgeInsets.only(bottom: bottomInset),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: <Color>[
-              Act0ShellTokensV1.surface.withValues(alpha: 0),
-              Act0ShellTokensV1.surface.withValues(alpha: .94),
-              Act0ShellTokensV1.surface,
-            ],
-            stops: const <double>[0, .45, 1],
-          ),
-        ),
-        alignment: Alignment.bottomCenter,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'More choices',
-              style: Act0ShellTokensV1.label.copyWith(
-                color: Act0ShellTokensV1.info,
-                fontSize: 12,
+  Widget build(BuildContext context) => SizedBox(
+    height: 44 + bottomInset,
+    child: Stack(
+      children: [
+        // The fade only signals that the list continues; it never takes a
+        // tap, so a visible answer under it stays choosable.
+        Positioned.fill(
+          child: IgnorePointer(
+            child: DecoratedBox(
+              key: const Key('act0_scene_shelf_more_fade'),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: <Color>[
+                    Act0ShellTokensV1.surface.withValues(alpha: 0),
+                    Act0ShellTokensV1.surface.withValues(alpha: .72),
+                    Act0ShellTokensV1.surface,
+                  ],
+                  stops: const <double>[0, .5, 1],
+                ),
               ),
             ),
-            const SizedBox(width: 4),
-            const Icon(
-              Icons.keyboard_arrow_down_rounded,
-              size: 18,
-              color: Act0ShellTokensV1.info,
-            ),
-          ],
+          ),
         ),
-      ),
+        // Compact right-edge control, clear of answer text: one tap scrolls
+        // the next whole answer into view. Drags still reach the list.
+        Positioned(
+          right: 10,
+          bottom: bottomInset,
+          child: Semantics(
+            button: true,
+            label: 'More choices below',
+            excludeSemantics: true,
+            child: GestureDetector(
+              key: const Key('act0_scene_shelf_more_cue'),
+              behavior: HitTestBehavior.translucent,
+              onTap: onTap,
+              child: Container(
+                height: 44,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Act0ShellTokensV1.surface2,
+                  borderRadius: BorderRadius.circular(
+                    Act0ShellTokensV1.radiusPill,
+                  ),
+                  border: Border.all(
+                    color: Act0ShellTokensV1.info.withValues(alpha: .42),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'More',
+                      style: Act0ShellTokensV1.label.copyWith(
+                        color: Act0ShellTokensV1.info,
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(width: 2),
+                    const Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      size: 18,
+                      color: Act0ShellTokensV1.info,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     ),
   );
 }

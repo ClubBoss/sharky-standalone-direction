@@ -342,7 +342,8 @@ void main() {
         final runner = await mount(t, id);
         final screen = Offset.zero & const Size(393, 852);
         final cue = find.byKey(const Key('act0_scene_shelf_more_cue'));
-        final cueRect = cue.evaluate().isEmpty ? null : t.getRect(cue);
+        final fade = find.byKey(const Key('act0_scene_shelf_more_fade'));
+        final cueRect = fade.evaluate().isEmpty ? null : t.getRect(fade);
         for (final o in runner.options) {
           final rect = t.getRect(find.byKey(Key('act0_shell_option_${o.id}')));
           final visible = rect.intersect(screen);
@@ -366,7 +367,7 @@ void main() {
           final second = t.getRect(
             find.byKey(Key('act0_shell_option_${runner.options[1].id}')),
           );
-          final cueNow = cue.evaluate().isEmpty ? null : t.getRect(cue);
+          final cueNow = fade.evaluate().isEmpty ? null : t.getRect(fade);
           expect(second.height, greaterThanOrEqualTo(44));
           expect(
             second.bottom,
@@ -469,6 +470,15 @@ void main() {
       await t.pumpAndSettle();
       expect(chosen, isEmpty);
       expect(t.getRect(second).top, lessThanOrEqualTo(afterTap));
+      // An answer scrolled to the bottom edge stays choosable under the fade.
+      final last = find.byKey(
+        Key('act0_shell_option_${runner.options.last.id}'),
+      );
+      await t.ensureVisible(last);
+      await t.pumpAndSettle();
+      await t.tap(last);
+      await t.pumpAndSettle();
+      expect(chosen, [runner.options.last]);
     });
   });
 }
