@@ -299,9 +299,34 @@ void main() {
         '${n - 1}/$n assessed correct · full-lesson proof unverified · 1 error',
       );
       expect(find.text('One clean read'), findsNothing);
+      expect(_text(tester, 'act0_shell_block_summary_title'), 'Lesson complete');
       expect(
-        _text(tester, 'act0_shell_block_summary_title'),
-        isNot('Lesson complete'),
+        _text(tester, 'act0_shell_block_summary_gate_message'),
+        contains('first answers still need practice'),
+      );
+      final continueCta = find.byKey(
+        const Key('act0_shell_block_summary_continue_cta'),
+      );
+      expect(
+        find.descendant(
+          of: continueCta,
+          matching: find.text('Open next lesson'),
+        ),
+        findsOneWidget,
+        reason: 'a genuine first miss recommends practice, not an unlock lie',
+      );
+      final saved = await _persisted();
+      expect(saved['completedLessonIds'], contains(_guideLessonId));
+      expect(
+        (saved['completedTaskIds'] as List),
+        containsAll(_guideLesson.taskList.map((t) => t.taskId)),
+      );
+      await _leaveSummary(tester);
+      await _openTab(tester, 'Home');
+      expect(
+        tester.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1))
+            .pathProgressLabel,
+        startsWith('1 of '),
       );
     });
 
