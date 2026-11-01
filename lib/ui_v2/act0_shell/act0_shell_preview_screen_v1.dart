@@ -13749,6 +13749,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final worldOpenMistakeCount = _openMistakeCountForWorldV1(progressedWorld);
     _blockCompletionSummary = Act0BlockCompletionSummaryV1(
       lessonTitle: _localizedLessonTitleV1(selectedLesson),
+      curriculumCompleted: _lessonCompleteWithTaskIds(
+        selectedLesson,
+        _completedTaskIds,
+      ),
       xpEarned: _lessonRunXp,
       errorCount: assessedErrorCount,
       assistedCount: lessonAssistedCount,
