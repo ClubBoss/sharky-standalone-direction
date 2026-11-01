@@ -246,6 +246,7 @@ class Act0BlockCompletionSummaryV1 {
     this.assistedCount = 0,
     this.independentProvenanceKnown = true,
     this.curriculumCompleted = false,
+    this.assessedEvidenceAvailable = true,
     required this.taskCount,
     required this.correctCount,
     required this.startLevel,
@@ -283,6 +284,8 @@ class Act0BlockCompletionSummaryV1 {
   final bool independentProvenanceKnown;
   // Source-owned curriculum closure is distinct from first-attempt accuracy.
   final bool curriculumCompleted;
+  // A missing evidence history is unknown, not a measured zero score.
+  final bool assessedEvidenceAvailable;
   final int taskCount;
   final int correctCount;
   final int startLevel;
@@ -330,16 +333,21 @@ class Act0BlockCompletionSummaryV1 {
       taskCount <= 0 ? 100 : ((correctCount * 100) / taskCount).round();
 
   bool get needsMorePractice =>
-      taskCount > 0 && accuracyPercent < unlockAccuracyPercent;
+      assessedEvidenceAvailable &&
+      taskCount > 0 &&
+      accuracyPercent < unlockAccuracyPercent;
 
   // A completed curriculum path cannot be re-locked by the coaching score.
   // The 80% threshold still informs review, never independent mastery.
   bool get qualifiesForNextLesson =>
-      curriculumCompleted || !hasNextLesson || !needsMorePractice;
+      curriculumCompleted ||
+      !hasNextLesson ||
+      (assessedEvidenceAvailable && !needsMorePractice);
 
   Act0MasteryStatusV1 get masteryStatus {
     if (errorCount == 0 &&
         taskCount > 0 &&
+        assessedEvidenceAvailable &&
         !needsMorePractice &&
         assistedCount == 0 &&
         independentProvenanceKnown) {
@@ -726,6 +734,7 @@ class Act0BlockCompletionSummaryV1 {
     }
     if (errorCount == 0 &&
         taskCount > 0 &&
+        assessedEvidenceAvailable &&
         assistedCount == 0 &&
         independentProvenanceKnown &&
         !needsMorePractice) {
@@ -749,6 +758,7 @@ class Act0BlockCompletionSummaryV1 {
     }
     if (errorCount == 0 &&
         taskCount > 0 &&
+        assessedEvidenceAvailable &&
         assistedCount == 0 &&
         independentProvenanceKnown &&
         !needsMorePractice) {
@@ -761,14 +771,7 @@ class Act0BlockCompletionSummaryV1 {
   }
 
   String get gateMessage {
-    if (curriculumCompleted && needsMorePractice) {
-      if (isWorldComplete && nextWorldTitle?.trim().isNotEmpty == true) {
-        return 'World complete. ${nextWorldTitle!} is available. A focused replay can help.';
-      }
-      return hasNextLesson
-          ? 'Lesson complete. Next lesson available: ${nextLessonTitle!}. A focused replay can help.'
-          : 'Lesson complete. A focused replay can help.';
-    }
+    // A genuine source-owned Review debt takes priority over generic replay.
     if (deepLeakCount > 0 && qualifiesForNextLesson) {
       if (isWorldComplete &&
           nextWorldTitle != null &&
@@ -778,6 +781,19 @@ class Act0BlockCompletionSummaryV1 {
       return hasNextLesson
           ? 'Deep leak saved for Review. Next lesson unlocked: ${nextLessonTitle!}. Repair should be next.'
           : 'Deep leak saved for Review. Clean it up before moving on.';
+    }
+    if (curriculumCompleted && !assessedEvidenceAvailable) {
+      return hasNextLesson
+          ? 'Lesson complete. Next lesson available: ${nextLessonTitle!}. Assessment history unavailable.'
+          : 'Lesson complete. Assessment history unavailable.';
+    }
+    if (curriculumCompleted && needsMorePractice) {
+      if (isWorldComplete && nextWorldTitle?.trim().isNotEmpty == true) {
+        return 'World complete. ${nextWorldTitle!} is available. A focused replay can help.';
+      }
+      return hasNextLesson
+          ? 'Lesson complete. Next lesson available: ${nextLessonTitle!}. A focused replay can help.'
+          : 'Lesson complete. A focused replay can help.';
     }
     if (isWorldComplete) {
       if (nextWorldTitle != null && nextWorldTitle!.isNotEmpty) {
@@ -10984,7 +11000,11 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
               _BlockXpProgressCardV1(summary: summary),
               const SizedBox(height: Act0ShellTokensV1.gapSm),
               Text(
-                localeIsRu
+                !summary.assessedEvidenceAvailable
+                    ? (localeIsRu
+                          ? '\u0418\u0441\u0442\u043e\u0440\u0438\u044f \u043e\u0446\u0435\u043d\u043a\u0438 \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u0430. \u0421\u0430\u043c\u043e\u0441\u0442\u043e\u044f\u0442\u0435\u043b\u044c\u043d\u044b\u0439 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442 \u043d\u0435 \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043d.'
+                          : 'Assessment history unavailable - full-lesson proof unverified')
+                    : localeIsRu
                     ? (summary.independentProvenanceKnown
                           ? '\u041e\u0446\u0435\u043d\u0435\u043d\u043e ${summary.taskCount} \u0437\u0430\u0434\u0430\u043d\u0438\u0439 · \u0432\u0435\u0440\u043d\u043e ${summary.correctCount} · \u043e\u0448\u0438\u0431\u043e\u043a ${summary.errorCount} · \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439 ${summary.assistedCount}'
                           : '\u0421\u0430\u043c\u043e\u0441\u0442\u043e\u044f\u0442\u0435\u043b\u044c\u043d\u044b\u0439 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442 \u043d\u0435 \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043d · \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439 ${summary.assistedCount}')
@@ -11527,6 +11547,7 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
     // A saved/assisted/wrong run is not automatically an independent clean read.
     // The bar displays assessed correctness, not "all XP equals mastery".
     final cleanIndependentRead =
+        summary.assessedEvidenceAvailable &&
         summary.independentProvenanceKnown &&
         summary.taskCount > 0 &&
         summary.errorCount == 0 &&
@@ -11569,7 +11590,9 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
               const SizedBox(width: Act0ShellTokensV1.gapSm),
               Expanded(
                 child: Text(
-                  'Assessed accuracy',
+                  summary.assessedEvidenceAvailable
+                      ? 'Assessed accuracy'
+                      : 'Assessment unavailable',
                   key: const Key('act0_shell_block_summary_xp_total'),
                   maxLines: 1,
                   overflow: TextOverflow.fade,
