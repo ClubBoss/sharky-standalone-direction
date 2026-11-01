@@ -232,7 +232,7 @@ void main() {
     expect(legacy.needsMorePractice, isFalse);
     expect(legacy.masteryStatus, Act0MasteryStatusV1.learning);
     expect(legacy.milestoneTitle, 'Lesson complete');
-    expect(legacy.habitRewardTitle, isNot('Clean read'));
+    expect(legacy.habitRewardLabel, isNot('Clean read'));
     expect(legacy.habitRewardDetail, isNot(contains('Clean run')));
     expect(legacy.gateMessage, contains('Assessment history unavailable'));
   });
