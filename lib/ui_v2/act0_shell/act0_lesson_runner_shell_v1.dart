@@ -245,6 +245,7 @@ class Act0BlockCompletionSummaryV1 {
     required this.errorCount,
     this.assistedCount = 0,
     this.independentProvenanceKnown = true,
+    this.curriculumLessonCompleted = false,
     required this.taskCount,
     required this.correctCount,
     required this.startLevel,
@@ -280,6 +281,11 @@ class Act0BlockCompletionSummaryV1 {
   /// Accuracy remains answer correctness; independent proof is distinct.
   final int assistedCount;
   final bool independentProvenanceKnown;
+
+  /// Source-owned curriculum completion is distinct from first-answer
+  /// accuracy, assistance and independent mastery evidence. The lesson
+  /// cannot be relocked by a presentation-only score once tasks are closed.
+  final bool curriculumLessonCompleted;
   final int taskCount;
   final int correctCount;
   final int startLevel;
@@ -326,8 +332,17 @@ class Act0BlockCompletionSummaryV1 {
   int get accuracyPercent =>
       taskCount <= 0 ? 100 : ((correctCount * 100) / taskCount).round();
 
+  /// This target describes a practice opportunity, not a curriculum lock.
+  /// Missing historical evidence is not treated as proof of an error.
+  bool get hasScoredPracticeGap =>
+      taskCount > 0 &&
+      correctCount + errorCount > 0 &&
+      accuracyPercent < unlockAccuracyPercent;
+
   bool get qualifiesForNextLesson =>
-      !hasNextLesson || accuracyPercent >= unlockAccuracyPercent;
+      !hasNextLesson ||
+      curriculumLessonCompleted ||
+      accuracyPercent >= unlockAccuracyPercent;
 
   Act0MasteryStatusV1 get masteryStatus {
     if (errorCount == 0 &&
@@ -336,7 +351,9 @@ class Act0BlockCompletionSummaryV1 {
         independentProvenanceKnown) {
       return Act0MasteryStatusV1.cleanPass;
     }
-    if (deepLeakCount > 0 || !qualifiesForNextLesson) {
+    if (deepLeakCount > 0 ||
+        !qualifiesForNextLesson ||
+        (curriculumLessonCompleted && hasScoredPracticeGap)) {
       return Act0MasteryStatusV1.needsReview;
     }
     if (assistedCount > 0 || !independentProvenanceKnown) {
@@ -660,6 +677,11 @@ class Act0BlockCompletionSummaryV1 {
     if (deepLeakCount > 0) {
       return 'Go to Review and fix the deep leak.';
     }
+    if (curriculumLessonCompleted && hasScoredPracticeGap) {
+      return hasSafeReviewTarget
+          ? 'Review the missed clue when ready.'
+          : 'You can continue; replay this lesson for extra practice.';
+    }
     if (masteryStatus == Act0MasteryStatusV1.needsReview) {
       return 'Replay this block before moving on.';
     }
@@ -742,6 +764,15 @@ class Act0BlockCompletionSummaryV1 {
   }
 
   String get gateMessage {
+    if (curriculumLessonCompleted &&
+        !independentProvenanceKnown &&
+        taskCount > 0 &&
+        correctCount == 0 &&
+        errorCount == 0) {
+      return hasNextLesson
+          ? 'Lesson complete. Earlier assessment evidence is unavailable; ${nextLessonTitle!} is available.'
+          : 'Lesson complete. Earlier assessment evidence is unavailable.';
+    }
     if (deepLeakCount > 0 && qualifiesForNextLesson) {
       if (isWorldComplete &&
           nextWorldTitle != null &&
@@ -751,6 +782,11 @@ class Act0BlockCompletionSummaryV1 {
       return hasNextLesson
           ? 'Deep leak saved for Review. Next lesson unlocked: ${nextLessonTitle!}. Repair should be next.'
           : 'Deep leak saved for Review. Clean it up before moving on.';
+    }
+    if (curriculumLessonCompleted && hasScoredPracticeGap) {
+      return hasNextLesson
+          ? 'Lesson complete. ${nextLessonTitle!} is available; first answers still need practice.'
+          : 'Lesson complete. First answers still need practice.';
     }
     if (isWorldComplete) {
       if (nextWorldTitle != null && nextWorldTitle!.isNotEmpty) {
