@@ -184,6 +184,109 @@ Future<void> _leaveSummary(WidgetTester tester) async {
 }
 
 void main() {
+  test('completed 75% permits next lesson without mastery', () {
+    const completed = Act0BlockCompletionSummaryV1(
+      lessonTitle: 'First Table Guide',
+      xpEarned: 0,
+      errorCount: 1,
+      independentProvenanceKnown: false,
+      curriculumCompleted: true,
+      taskCount: 4,
+      correctCount: 3,
+      startLevel: 1,
+      endLevel: 1,
+      startXp: 0,
+      endXp: 0,
+      xpTarget: 100,
+      nextLessonTitle: 'Blinds and action order',
+    );
+    expect(completed.accuracyPercent, 75);
+    expect(completed.needsMorePractice, isTrue);
+    expect(completed.qualifiesForNextLesson, isTrue);
+    expect(completed.masteryStatus, Act0MasteryStatusV1.needsReview);
+    expect(completed.milestoneTitle, 'Lesson complete');
+    expect(completed.primaryCtaKind, Act0MilestoneCtaKindV1.continueForward);
+    expect(completed.primaryCtaLabel, 'Open next lesson');
+    expect(completed.gateMessage, contains('A focused replay can help'));
+    expect(completed.gateMessage, isNot(contains('replay to unlock')));
+  });
+
+  test('legacy zero-evidence completion is not mastery', () {
+    const legacy = Act0BlockCompletionSummaryV1(
+      lessonTitle: 'First Table Guide',
+      xpEarned: 0,
+      errorCount: 0,
+      independentProvenanceKnown: false,
+      curriculumCompleted: true,
+      assessedEvidenceAvailable: false,
+      taskCount: 4,
+      correctCount: 0,
+      startLevel: 1,
+      endLevel: 1,
+      startXp: 0,
+      endXp: 0,
+      xpTarget: 100,
+      nextLessonTitle: 'Blinds and action order',
+    );
+    expect(legacy.qualifiesForNextLesson, isTrue);
+    expect(legacy.needsMorePractice, isFalse);
+    expect(legacy.masteryStatus, Act0MasteryStatusV1.learning);
+    expect(legacy.milestoneTitle, 'Lesson complete');
+    expect(legacy.habitRewardLabel, isNot('Clean read'));
+    expect(legacy.habitRewardDetail, isNot(contains('Clean run')));
+    expect(legacy.gateMessage, contains('Assessment history unavailable'));
+  });
+
+  test('real open repair debt takes priority over generic replay', () {
+    const withRepair = Act0BlockCompletionSummaryV1(
+      lessonTitle: 'First Table Guide',
+      xpEarned: 0,
+      errorCount: 1,
+      curriculumCompleted: true,
+      taskCount: 4,
+      correctCount: 3,
+      startLevel: 1,
+      endLevel: 1,
+      startXp: 0,
+      endXp: 0,
+      xpTarget: 100,
+      nextLessonTitle: 'Blinds and action order',
+      deepLeakCount: 1,
+      hasSafeReviewTarget: true,
+    );
+    expect(withRepair.qualifiesForNextLesson, isTrue);
+    expect(withRepair.masteryStatus, Act0MasteryStatusV1.needsReview);
+    expect(withRepair.primaryCtaKind, Act0MilestoneCtaKindV1.reviewFirst);
+    expect(withRepair.primaryCtaLabel, 'Review first');
+    expect(withRepair.secondaryCtaKind, Act0MilestoneCtaKindV1.continueForward);
+    expect(withRepair.gateMessage, contains('Deep leak saved for Review'));
+    expect(withRepair.gateMessage, contains('Next lesson unlocked'));
+    expect(
+      withRepair.gateMessage,
+      isNot(contains('A focused replay can help')),
+    );
+  });
+
+  test('unfinished low-accuracy lessons cannot claim completed progress', () {
+    const unfinished = Act0BlockCompletionSummaryV1(
+      lessonTitle: 'First Table Guide',
+      xpEarned: 0,
+      errorCount: 1,
+      curriculumCompleted: false,
+      taskCount: 4,
+      correctCount: 3,
+      startLevel: 1,
+      endLevel: 1,
+      startXp: 0,
+      endXp: 0,
+      xpTarget: 100,
+      nextLessonTitle: 'Blinds and action order',
+    );
+    expect(unfinished.qualifiesForNextLesson, isFalse);
+    expect(unfinished.milestoneTitle, 'Almost there - replay to unlock');
+    expect(unfinished.masteryStatus, Act0MasteryStatusV1.needsReview);
+  });
+
   group('Session Summary next action follows persisted completion truth', () {
     testWidgets('prior theory-only progress keeps a clean independent run', (
       tester,
@@ -298,11 +401,28 @@ void main() {
         _text(tester, 'act0_shell_block_summary_accuracy'),
         '${n - 1}/$n assessed correct · full-lesson proof unverified · 1 error',
       );
-      expect(find.text('One clean read'), findsNothing);
       expect(
         _text(tester, 'act0_shell_block_summary_title'),
-        isNot('Lesson complete'),
+        'Lesson complete',
       );
+      expect(find.text('One clean read'), findsNothing);
+      final continueCta = find.byKey(
+        const Key('act0_shell_block_summary_continue_cta'),
+      );
+      expect(continueCta, findsOneWidget);
+      expect(
+        find.descendant(
+          of: continueCta,
+          matching: find.text('Open next lesson'),
+        ),
+        findsOneWidget,
+      );
+      final persisted = await _persisted();
+      expect(persisted['completedLessonIds'], contains(_guideLessonId));
+      await _leaveSummary(tester);
+      await _openTab(tester, 'Home');
+      final home = tester.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
+      expect(home.pathProgressLabel, startsWith('1 of '));
     });
 
     testWidgets('earlier assisted answer is not independent completion', (
