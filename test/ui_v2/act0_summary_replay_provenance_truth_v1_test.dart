@@ -185,7 +185,6 @@ Future<void> _leaveSummary(WidgetTester tester) async {
 
 void main() {
   test('completed 75% permits next lesson without mastery', () {
-
     const completed = Act0BlockCompletionSummaryV1(
       lessonTitle: 'First Table Guide',
       xpEarned: 0,
