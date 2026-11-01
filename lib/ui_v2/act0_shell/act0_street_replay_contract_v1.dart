@@ -120,10 +120,18 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
   final steps = <Act0StreetReplayStepV1>[];
   var activeStreet = Act0StreetReplayStreetV1.preflop;
   var failedActionTruth = false;
+  final foldedActors = <String>{};
   for (var index = 0; index < trailLabels.length; index++) {
     final rawLabel = trailLabels[index];
     final parsedStreet = _act0StreetReplayStreetFromTrailLabelV1(rawLabel);
     if (parsedStreet != null) {
+      // Never present a reconstructed history that moves backwards or reads
+      // actions from a street the learner has not reached yet.
+      if (parsedStreet.index < activeStreet.index ||
+          parsedStreet.index > currentStreet.index) {
+        failedActionTruth = true;
+        break;
+      }
       activeStreet = parsedStreet;
     }
     final action = _act0StreetReplayActionLabelV1(rawLabel, parsedStreet);
@@ -134,6 +142,17 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
     if (parsedAction == null) {
       failedActionTruth = true;
       break;
+    }
+    final actor = parsedAction.actorLabel.trim().toUpperCase();
+    // A folded seat cannot take another action in the same hand. The label
+    // is a conservative source-owned seat token, not an invented action.
+    if (foldedActors.contains(actor)) {
+      failedActionTruth = true;
+      break;
+    }
+    if (parsedAction.actionTypeLabel.toLowerCase() == 'folds' ||
+        parsedAction.actionTypeLabel.toLowerCase() == 'fold') {
+      foldedActors.add(actor);
     }
     steps.add(
       Act0StreetReplayStepV1(
