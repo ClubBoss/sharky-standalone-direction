@@ -697,16 +697,63 @@ const Map<String, String> _sessionSummaryRepairFocusLabelsV1 = <String, String>{
 class Act0LearningEvidenceHistoryV1 {
   const Act0LearningEvidenceHistoryV1({
     this.records = const <Act0LearningEvidenceRecordV1>[],
+    this.sourceAnchors = const <Act0LearningEvidenceRecordV1>[],
+    this.hasCompleteLineage = true,
   });
 
   static const int maxRecords = 200;
 
   final List<Act0LearningEvidenceRecordV1> records;
+  // First observation and first mistake per source task (Placement separate).
+  // Retain actual records, never synthesized outcomes or historical assistance.
+  final List<Act0LearningEvidenceRecordV1> sourceAnchors;
+  final bool hasCompleteLineage;
+
+  List<Act0LearningEvidenceRecordV1> get provenanceRecords {
+    final byId = <String, Act0LearningEvidenceRecordV1>{};
+    for (final record in [...sourceAnchors, ...records]) byId.putIfAbsent(record.recordId, () => record);
+    return byId.values.toList()..sort((a,b) => a.createdOrder.compareTo(b.createdOrder));
+  }
+
+  static List<Act0LearningEvidenceRecordV1> _anchors(Iterable<Act0LearningEvidenceRecordV1> source) {
+    final sorted = source.toList()..sort((a,b) => a.createdOrder.compareTo(b.createdOrder));
+    final first = <String, Act0LearningEvidenceRecordV1>{};
+    for(final record in sorted) {
+      final key = jsonEncode([record.worldId, record.lessonId, record.taskId, record.isPlacementAssessment]);
+      first.putIfAbsent('$key|first', () => record);
+      if (!record.isCorrect) first.putIfAbsent('$key|wrong', () => record);
+    }
+    return first.values.toSet().toList()..sort((a,b) => a.createdOrder.compareTo(b.createdOrder));
+  }
+
+  Map<String, Object?> lineagePayload() => {'format':1, 'complete':hasCompleteLineage, 'anchors':_anchors(provenanceRecords).map((r)=>r.toPayload()).toList()};
+
+  /// A snapshot-list alone cannot attest that earlier evidence never existed.
+  /// Versioned metadata preserves only actual source anchors plus recent data.
+  static Act0LearningEvidenceHistoryV1? restore(Object? recent, Object? lineage) {
+    final legacy = tryParse(recent);
+    if (lineage == null) return legacy;
+    if (legacy == null || lineage is! Map || lineage['format'] != 1 || lineage['complete'] is! bool || lineage['anchors'] is! List) return null;
+    final rawAnchors = lineage['anchors'] as List;
+    final anchors = rawAnchors.map(Act0LearningEvidenceRecordV1.tryParse).whereType<Act0LearningEvidenceRecordV1>().toList();
+    if (anchors.length != rawAnchors.length) return null;
+    final identities = <String,Act0LearningEvidenceRecordV1>{};
+    for(final record in [...anchors,...legacy.records]) {
+      final prior = identities[record.recordId];
+      if(prior != null && prior != record) return null;
+      identities[record.recordId]=record;
+    }
+    return Act0LearningEvidenceHistoryV1(records:legacy.records,sourceAnchors:_anchors(identities.values),hasCompleteLineage:lineage['complete'] as bool);
+  }
 
   Act0LearningEvidenceHistoryV1 append(Act0LearningEvidenceRecordV1 record) {
+    if (provenanceRecords.any((r) => r.recordId == record.recordId)) return this;
+    final anchors = _anchors([...provenanceRecords,record]);
     final next = <Act0LearningEvidenceRecordV1>[...records, record]
       ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));
     return Act0LearningEvidenceHistoryV1(
+      sourceAnchors: List.unmodifiable(anchors),
+      hasCompleteLineage: hasCompleteLineage,
       records: next.length <= maxRecords
           ? List<Act0LearningEvidenceRecordV1>.unmodifiable(next)
           : List<Act0LearningEvidenceRecordV1>.unmodifiable(
@@ -726,11 +773,11 @@ class Act0LearningEvidenceHistoryV1 {
     DateTime? recordedAtUtc,
     Act0ReviewKindV1 reviewKind = Act0ReviewKindV1.legacyUnspaced,
   }) {
-    if (records.any((record) => record.recordId == decision.attemptKey)) {
+    if (provenanceRecords.any((record) => record.recordId == decision.attemptKey)) {
       return this;
     }
     final createdOrder =
-        records.fold<int>(
+        provenanceRecords.fold<int>(
           0,
           (maxOrder, record) =>
               record.createdOrder > maxOrder ? record.createdOrder : maxOrder,
@@ -799,9 +846,10 @@ class Act0LearningEvidenceHistoryV1 {
   List<Map<String, Object?>> toPayload() =>
       records.map((record) => record.toPayload()).toList(growable: false);
 
-  String toStorageString() => jsonEncode(toPayload());
+  String toStorageString() => jsonEncode({'format':2,'records':toPayload(),'lineage':lineagePayload()});
 
   static Act0LearningEvidenceHistoryV1? tryParse(Object? raw) {
+    if(raw is Map && raw['format'] == 2) return restore(raw['records'],raw['lineage']);
     if (raw is! List) {
       return null;
     }
@@ -812,6 +860,8 @@ class Act0LearningEvidenceHistoryV1 {
             .toList(growable: false)
           ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));
     return Act0LearningEvidenceHistoryV1(
+      sourceAnchors: List.unmodifiable(_anchors(records)),
+      hasCompleteLineage: false,
       records: List<Act0LearningEvidenceRecordV1>.unmodifiable(
         records.length <= maxRecords
             ? records

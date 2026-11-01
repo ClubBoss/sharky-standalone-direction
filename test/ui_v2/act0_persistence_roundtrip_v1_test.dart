@@ -237,23 +237,31 @@ void main() {
     );
   });
 
-  testWidgets('Act0 ignores corrupt or unsupported persistence safely', (
+  testWidgets('Act0 fails closed on corrupt or unsupported persistence', (
     tester,
   ) async {
-    SharedPreferences.setMockInitialValues(<String, Object>{
-      progressKey: '{bad',
-    });
-    await tester.pumpWidget(host());
-    await tester.pumpAndSettle();
-    expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
-
-    SharedPreferences.setMockInitialValues(<String, Object>{
-      progressKey: jsonEncode(<String, Object>{'schemaVersion': 999}),
-    });
-    await tester.pumpWidget(const SizedBox.shrink());
-    await tester.pumpWidget(host());
-    await tester.pumpAndSettle();
-    expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
+    for (final raw in <String>[
+      '{bad',
+      jsonEncode(<String, Object>{'schemaVersion': 999}),
+    ]) {
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        progressKey: raw,
+      });
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpWidget(host());
+      await tester.pumpAndSettle();
+      expect(
+        find.text('Your saved progress could not be read.'),
+        findsOneWidget,
+      );
+      expect(find.byKey(const Key('act0_shell_home_screen')), findsNothing);
+      final prefs = await SharedPreferences.getInstance();
+      expect(
+        prefs.getString(progressKey),
+        raw,
+        reason: 'unreadable bytes are preserved',
+      );
+    }
   });
 
   testWidgets('schema-16 evidence migrates without fabricated timestamps', (
@@ -313,7 +321,7 @@ void main() {
     final prefs = await SharedPreferences.getInstance();
     final migrated =
         jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
-    expect(migrated['schemaVersion'], 18);
+    expect(migrated['schemaVersion'], 19);
     expect(migrated['durableRetentionHistory'], hasLength(1));
     expect(
       migrated['learningEvidenceHistory'][0],
@@ -321,7 +329,7 @@ void main() {
     );
   });
 
-  testWidgets('clean install writes schema 18 with explicit defaults', (
+  testWidgets('clean install writes schema 19 with explicit defaults', (
     tester,
   ) async {
     SharedPreferences.setMockInitialValues(<String, Object>{});
@@ -336,7 +344,7 @@ void main() {
     final prefs = await SharedPreferences.getInstance();
     final stored =
         jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
-    expect(stored['schemaVersion'], 18);
+    expect(stored['schemaVersion'], 19);
     expect(stored['learningEvidenceHistory'], isEmpty);
     expect(stored['durableRetentionHistory'], isEmpty);
   });

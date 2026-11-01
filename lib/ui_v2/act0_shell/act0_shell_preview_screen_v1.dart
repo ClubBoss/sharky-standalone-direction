@@ -22,6 +22,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_first_start_preferences_v1.
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_run_payoff_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_receipt_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_transfer_measurement_v1.dart';
@@ -1139,6 +1140,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool _debugReviewEmptyV1 = false;
   bool _debugFreshLearnerV1 = false;
   static const String _progressPrefsKey = 'act0_shell_progress_v1';
+  final _progressStore = Act0ProgressStoreV1(key: _progressPrefsKey, isValidPayload: (raw) => _Act0PersistedProgressV1.tryParse(raw) != null);
+  bool _progressLoadFailed = false;
   static const int _homeHandoffDismissDays = 7;
   static const Set<String> _w5SizingDrillTaskIds = <String>{
     'w4_small_bet',
@@ -2389,7 +2392,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _showPlacement = widget.showPlacementOnStart;
     _showWelcome = false;
     _welcomeHandoffStartsRecommendedTaskV1 = false;
-    _bootSurfaceReady = !widget.showPlacementOnStart;
+    _bootSurfaceReady = false;
     _showPlayHub = widget.initialTab != Act0ShellTabV1.play;
     final state = widget.state ?? Act0ShellStateV1.sample;
     _selectedWorldId = state.selectedWorldId;
@@ -2447,7 +2450,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   Future<void> _bootstrapFirstStartRouteV1() async {
     if (_usesPersistedProgress) {
-      await _restorePersistedProgress();
+      try { await _restorePersistedProgress(); } catch (_) {
+        if (mounted) setState(() { _progressLoadFailed = true; _bootSurfaceReady = true; });
+        return;
+      }
     }
     if (!widget.showPlacementOnStart) {
       if (!mounted) {
@@ -3442,8 +3448,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Future<void> _restorePersistedProgress() async {
-    final prefs = await SharedPreferences.getInstance();
-    final raw = prefs.getString(_progressPrefsKey);
+    final raw = await _progressStore.load();
     if (raw == null || raw.isEmpty || !mounted) {
       return;
     }
@@ -3934,7 +3939,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   void _persistProgress() {
-    if (!_usesPersistedProgress) {
+    if (!_usesPersistedProgress || _progressLoadFailed) {
       return;
     }
     _ensureDailyCountDayV1();
@@ -3988,18 +3993,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       lastSessionLearnerState: _lastSessionLearnerStateV1,
     );
     final generation = ++_progressPersistGeneration;
-    unawaited(_writePersistedProgress(snapshot, generation));
+    // Capture bytes before yielding: the snapshot holds mutable source sets.
+    unawaited(_writePersistedProgress(snapshot.toStorageString(), generation));
   }
 
   Future<void> _writePersistedProgress(
-    _Act0PersistedProgressV1 snapshot,
+    String snapshot,
     int generation,
   ) async {
-    final prefs = await SharedPreferences.getInstance();
+    await Future<void>.value();
     if (generation != _progressPersistGeneration) {
       return;
     }
-    await prefs.setString(_progressPrefsKey, snapshot.toStorageString());
+    await _progressStore.save(snapshot);
   }
 
   void _appendLearningEvidenceV1(Act0CompletedDecisionV1 decision) {
@@ -4040,7 +4046,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   Act0ReviewKindV1 _reviewKindForDecisionV1(Act0CompletedDecisionV1 decision) {
     final routed = _routeReviewKindForTaskIdV1(decision.taskId);
-    if (routed != Act0ReviewKindV1.initialAssessment) {
+    if (routed != Act0ReviewKindV1.initialAssessment && routed != Act0ReviewKindV1.unseenTransfer) {
       return routed;
     }
     // A placement diagnostic answer is itself the initial assessment.
@@ -4048,6 +4054,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         act0PlacementAssessmentRunKindV1) {
       return Act0ReviewKindV1.initialAssessment;
     }
+    final prior = _learningEvidenceHistoryV1.provenanceRecords.where((r) => !r.isPlacementAssessment);
+    if (_completedTaskIds.contains(decision.taskId) || prior.any((r) => r.taskId == decision.taskId)) {
+      return Act0ReviewKindV1.exactReplay;
+    }
+    if (!_learningEvidenceHistoryV1.hasCompleteLineage) return Act0ReviewKindV1.legacyUnspaced;
+    if (routed == Act0ReviewKindV1.unseenTransfer) return routed;
     final conceptFamilyId =
         <String?>[
               decision.conceptFamilyId,
@@ -4062,7 +4074,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             );
     if (conceptFamilyId.isNotEmpty) {
       // A placement diagnostic answer is assessment, not earlier learning.
-      final priorFamilyRecords = _learningEvidenceHistoryV1.records.where(
+      final priorFamilyRecords = _learningEvidenceHistoryV1.provenanceRecords.where(
         (record) =>
             !record.isPlacementAssessment &&
             act0ConceptFamilyIdForDurableEvidenceV1(record) == conceptFamilyId,
@@ -4647,8 +4659,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     _progressPersistGeneration += 1;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_progressPrefsKey);
+    if (!await _progressStore.clear()) throw StateError('Progress reset was not saved');
   }
 
   void _restorePreviewToFreshStart({
@@ -5133,6 +5144,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   @override
   Widget build(BuildContext context) {
+    if (_progressLoadFailed) {
+      return Scaffold(body: SafeArea(child: Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
+        const Text('Your saved progress could not be read.'),
+        TextButton(onPressed: () { setState(() { _progressLoadFailed=false; _bootSurfaceReady=false; }); unawaited(_bootstrapFirstStartRouteV1()); }, child: const Text('Try again')),
+      ]))));
+    }
     final baseState = widget.state ?? Act0ShellStateV1.sample;
     final progress = _progressSnapshot(baseState);
     final state = _stateWithProgress(baseState, progress);
@@ -10737,7 +10754,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   int _sessionLifecycleOrderV1() {
-    final evidenceCount = _learningEvidenceHistoryV1.records.length;
+    final evidenceCount = _latestEvidenceOrderV1();
     final repairCount = _repairOutcomeSequenceV1;
     return evidenceCount + repairCount + 1;
   }
@@ -14581,7 +14598,7 @@ class _Act0PersistedProgressV1 {
     final sortedOpenRepairIntents = openRepairIntents.toList(growable: false)
       ..sort((a, b) => a.sourceTaskId.compareTo(b.sourceTaskId));
     return jsonEncode(<String, Object>{
-      'schemaVersion': 18,
+      'schemaVersion': 19,
       'completedTaskIds': sortedTaskIds,
       'skippedTaskIds': sortedSkippedTaskIds,
       'completedLessonIds': sortedLessonIds,
@@ -14619,6 +14636,7 @@ class _Act0PersistedProgressV1 {
       'dismissedHomeHandoffKey': dismissedHomeHandoffKey,
       'dismissedHomeHandoffDay': dismissedHomeHandoffDay,
       'learningEvidenceHistory': learningEvidenceHistory.toPayload(),
+      'learningEvidenceLineage': learningEvidenceHistory.lineagePayload(),
       'lessonRunEvidenceBoundaries': <String, int?>{
         for (final entry in lessonRunEvidenceBoundaries.entries)
           entry.key: entry.value,
@@ -14668,7 +14686,8 @@ class _Act0PersistedProgressV1 {
         schemaVersion != 15 &&
         schemaVersion != 16 &&
         schemaVersion != 17 &&
-        schemaVersion != 18) {
+        schemaVersion != 18 &&
+        schemaVersion != 19) {
       return null;
     }
     final completedTaskIds = _stringSet(map['completedTaskIds']);
@@ -14757,11 +14776,9 @@ class _Act0PersistedProgressV1 {
       lessonRunEvidenceBoundaries[lessonRunEvidenceLessonId] =
           lessonRunEvidenceStartOrder;
     }
-    final learningEvidenceHistory =
-        Act0LearningEvidenceHistoryV1.tryParse(
-          map['learningEvidenceHistory'],
-        ) ??
-        const Act0LearningEvidenceHistoryV1();
+    final restoredEvidence = Act0LearningEvidenceHistoryV1.restore(map['learningEvidenceHistory'],map['learningEvidenceLineage']);
+    if(schemaVersion == 19 && (restoredEvidence == null || map['learningEvidenceLineage'] is! Map || map['earnedXp'] is! int || (map['earnedXp'] as int) < 0)) return null;
+    final learningEvidenceHistory = restoredEvidence ?? const Act0LearningEvidenceHistoryV1(hasCompleteLineage:false);
     final durableRetentionHistory = Act0DurableRetentionHistoryV1.tryParse(
       map['durableRetentionHistory'],
     );
