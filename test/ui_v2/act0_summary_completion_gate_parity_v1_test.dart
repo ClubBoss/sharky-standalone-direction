@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 // These are ordinary English iPhone 14 Pro learning-route semantics.
 // Completing the curriculum is not the same claim as 80% independent accuracy.
