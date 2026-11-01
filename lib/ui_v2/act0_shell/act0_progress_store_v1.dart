@@ -15,6 +15,9 @@ class Act0ProgressStoreV1 {
   final String key;
   final bool Function(String) isValidPayload;
   static final _queues = <String, Future<void>>{};
+  // Keys whose last failed commit could not be proven rolled back. Reads fail
+  // closed until a later commit rewrites both copies at a higher revision.
+  static final _uncertain = <String>{};
   String get recoveryKey => '${key}_recovery';
   String get backupKey => '${key}_backup';
 
@@ -51,8 +54,10 @@ class Act0ProgressStoreV1 {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.reload();
-      final previous = _read(prefs);
-      return await _commit(prefs, previous.revision + 1, payload);
+      final revision = _uncertain.contains(key)
+          ? _highestRevision(prefs)
+          : _read(prefs).revision;
+      return await _commit(prefs, revision + 1, payload);
     } catch (_) {
       return false; // Preserve unreadable bytes; never replace them with defaults.
     }
@@ -65,7 +70,9 @@ class Act0ProgressStoreV1 {
     await prefs.reload();
     var revision = 0;
     try {
-      revision = _read(prefs).revision;
+      revision = _uncertain.contains(key)
+          ? _highestRevision(prefs)
+          : _read(prefs).revision;
     } catch (_) {
       revision = _highestRevision(prefs);
     }
@@ -85,22 +92,49 @@ class Act0ProgressStoreV1 {
       'payload': payload,
       'digest': _digest(revision, payload),
     });
-    if (!await _put(prefs, recoveryKey, raw)) return false;
-    // Once recovery is acknowledged, the transaction is durable even if a
-    // crash interrupts the redundant-copy or legacy-mirror writes.
-    // Acknowledge only when both copies hold this revision. If the second copy
-    // cannot be written, drop it so a later loss of the newer copy fails closed
-    // instead of resurrecting the older revision.
-    if (!await _put(prefs, backupKey, raw)) {
-      try {
-        await prefs.remove(backupKey);
-      } catch (_) {
-        /* nothing more can be done */
-      }
+    final previous = {
+      recoveryKey: prefs.getString(recoveryKey),
+      backupKey: prefs.getString(backupKey),
+    };
+    // Acknowledge only when both copies hold this revision. Any earlier failure
+    // must leave the previous copies verified in place, otherwise fail closed.
+    if (!await _put(prefs, recoveryKey, raw) ||
+        !await _put(prefs, backupKey, raw)) {
+      await _rollback(prefs, previous);
       return false;
     }
+    _uncertain.remove(key);
     if (payload != null) await _put(prefs, key, payload);
     return true;
+  }
+
+  Future<void> _rollback(
+    SharedPreferences prefs,
+    Map<String, String?> previous,
+  ) async {
+    var verified = true;
+    for (final entry in previous.entries) {
+      for (var attempt = 0; attempt < 2; attempt++) {
+        try {
+          await prefs.reload();
+          if (prefs.getString(entry.key) == entry.value) break;
+          if (entry.value == null) {
+            await prefs.remove(entry.key);
+          } else {
+            await prefs.setString(entry.key, entry.value!);
+          }
+        } catch (_) {
+          /* verified below */
+        }
+      }
+      try {
+        await prefs.reload();
+        if (prefs.getString(entry.key) != entry.value) verified = false;
+      } catch (_) {
+        verified = false;
+      }
+    }
+    if (!verified) _uncertain.add(key);
   }
 
   Future<bool> _put(
@@ -134,6 +168,9 @@ class Act0ProgressStoreV1 {
   }
 
   ({int revision, String? payload}) _read(SharedPreferences prefs) {
+    if (_uncertain.contains(key)) {
+      throw const FormatException('Unverified progress checkpoint');
+    }
     final candidates = <({int revision, String? payload})>[];
     var protected = false;
     for (final target in [recoveryKey, backupKey]) {

@@ -31,6 +31,10 @@ class _Disk extends SharedPreferencesStorePlatform {
   bool holdNextLoad = false;
   Completer<void>? heldLoad;
   final Set<String> failWriteKeys = <String>{};
+  final Set<String> failRemoveKeys = <String>{};
+  // key -> 1-based write ordinal from which setValue fails (0 = never).
+  final Map<String, int> failWritesFrom = <String, int>{};
+  final Map<String, int> writeCounts = <String, int>{};
   @override
   Future<Map<String, Object>> getAll() async {
     if (holdNextLoad) {
@@ -44,6 +48,9 @@ class _Disk extends SharedPreferencesStorePlatform {
   @override
   Future<bool> setValue(String type, String key, Object value) async {
     if (failWriteKeys.contains(key)) return false;
+    final n = writeCounts[key] = (writeCounts[key] ?? 0) + 1;
+    final from = failWritesFrom[key] ?? 0;
+    if (from > 0 && n >= from) return false;
     if (holdNext && key.contains(_key)) {
       holdNext = false;
       held = Completer<void>();
@@ -55,6 +62,7 @@ class _Disk extends SharedPreferencesStorePlatform {
 
   @override
   Future<bool> remove(String key) async {
+    if (failRemoveKeys.contains(key)) return false;
     values.remove(key);
     return true;
   }
@@ -535,29 +543,106 @@ void main() {
   });
 
   group('store acknowledgement', () {
+    const k = 'k_ck';
+    Future<({_Disk disk, Act0ProgressStoreV1 store})> seeded() async {
+      SharedPreferences.setMockInitialValues({});
+      final disk = _Disk({});
+      SharedPreferencesStorePlatform.instance = disk;
+      final store = Act0ProgressStoreV1(key: k, isValidPayload: (_) => true);
+      expect(await store.save('{"xp":50}'), isTrue);
+      expect(await store.load(), '{"xp":50}');
+      return (disk: disk, store: store);
+    }
+
+    Future<Object?> load(Act0ProgressStoreV1 s) =>
+        s.load().then<Object?>((v) => v, onError: (Object e) => e);
+
     test(
-      'a failed backup checkpoint is not acknowledged and cannot resurrect cleared data',
+      'P2-05a failed second copy (set and remove fail) leaves the previous state observable',
       () async {
-        SharedPreferences.setMockInitialValues({});
-        final disk = _Disk({});
-        SharedPreferencesStorePlatform.instance = disk;
-        final store = Act0ProgressStoreV1(
-          key: 'k_bk',
-          isValidPayload: (_) => true,
+        final f = await seeded();
+        f.disk.failWriteKeys.add('flutter.${k}_backup');
+        f.disk.failRemoveKeys.add('flutter.${k}_backup');
+        expect(await f.store.clear(), isFalse);
+        f.disk.failWriteKeys.clear();
+        f.disk.failRemoveKeys.clear();
+        expect(
+          await load(f.store),
+          '{"xp":50}',
+          reason: 'failed clear must not flip observable state',
         );
-        expect(await store.save('{"xp":50}'), isTrue);
-        disk.failWriteKeys.add('flutter.k_bk_backup');
-        expect(await store.clear(), isFalse);
-        disk.failWriteKeys.clear();
-        // The newer tombstone is already in recovery; corrupting it must not
-        // silently bring back pre-reset progress as if reset had succeeded.
-        disk.values['flutter.k_bk_recovery'] = '{corrupt';
-        await (await SharedPreferences.getInstance()).reload();
-        final loaded = await store.load().then<Object?>(
-          (v) => v,
-          onError: (e) => e,
+      },
+    );
+
+    test(
+      'P2-05b recovery corruption after a failed clear never yields a stale-after-tombstone state',
+      () async {
+        final f = await seeded();
+        f.disk.failWriteKeys.add('flutter.${k}_backup');
+        f.disk.failRemoveKeys.add('flutter.${k}_backup');
+        expect(await f.store.clear(), isFalse);
+        f.disk.failWriteKeys.clear();
+        f.disk.failRemoveKeys.clear();
+        await load(f.store);
+        f.disk.values['flutter.${k}_recovery'] = '{unreadable';
+        // Previous state was verified restored (clear never committed), so rev 1 is the
+        // acknowledged truth; it must also not claim a cleared state.
+        final r = await load(f.store);
+        expect(r == '{"xp":50}' || r is Exception, isTrue);
+      },
+    );
+
+    test(
+      'rollback failure fails closed: no success, no stale payload, until a full commit',
+      () async {
+        final f = await seeded();
+        f.disk.failWriteKeys.add('flutter.${k}_backup');
+        f.disk.failRemoveKeys.add('flutter.${k}_backup');
+        // First recovery write (the tombstone) succeeds; the rollback write fails.
+        f.disk.failWritesFrom['flutter.${k}_recovery'] =
+            (f.disk.writeCounts['flutter.${k}_recovery'] ?? 0) + 2;
+        expect(await f.store.clear(), isFalse);
+        f.disk.failWriteKeys.clear();
+        f.disk.failRemoveKeys.clear();
+        f.disk.failWritesFrom.clear();
+        expect(await load(f.store), isA<FormatException>());
+        f.disk.values['flutter.${k}_recovery'] = '{unreadable';
+        expect(
+          await load(f.store),
+          isA<FormatException>(),
+          reason: 'never resurrect revision 1',
         );
-        expect(loaded, isNot('{"xp":50}'));
+        // A later complete commit resolves the uncertainty with a higher revision.
+        expect(await f.store.clear(), isTrue);
+        expect(await f.store.load(), isNull);
+      },
+    );
+
+    test(
+      'failed save leaves previous payload and a later cold reload agrees',
+      () async {
+        final f = await seeded();
+        f.disk.failWriteKeys.add('flutter.${k}_backup');
+        expect(await f.store.save('{"xp":99}'), isFalse);
+        f.disk.failWriteKeys.clear();
+        expect(await load(f.store), '{"xp":50}');
+        final cold = Act0ProgressStoreV1(key: k, isValidPayload: (_) => true);
+        expect(await cold.load(), '{"xp":50}');
+        expect(await f.store.save('{"xp":99}'), isTrue);
+        expect(await cold.load(), '{"xp":99}');
+      },
+    );
+
+    test(
+      'interrupted commit (recovery new, backup old) is a coherent newest-wins state',
+      () async {
+        final f = await seeded();
+        final oldBackup = f.disk.values['flutter.${k}_backup']!;
+        expect(await f.store.save('{"xp":70}'), isTrue);
+        f.disk.values['flutter.${k}_backup'] =
+            oldBackup; // crash before backup write
+        final cold = Act0ProgressStoreV1(key: k, isValidPayload: (_) => true);
+        expect(await cold.load(), '{"xp":70}');
       },
     );
   });
