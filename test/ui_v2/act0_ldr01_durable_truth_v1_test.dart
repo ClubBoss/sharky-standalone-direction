@@ -32,6 +32,7 @@ class _Disk extends SharedPreferencesStorePlatform {
   Completer<void>? heldLoad;
   final Set<String> failWriteKeys = <String>{};
   final Set<String> failRemoveKeys = <String>{};
+  final Set<String> falseButLandedKeys = <String>{};
   // key -> 1-based write ordinal from which setValue fails (0 = never).
   final Map<String, int> failWritesFrom = <String, int>{};
   final Map<String, int> writeCounts = <String, int>{};
@@ -48,6 +49,10 @@ class _Disk extends SharedPreferencesStorePlatform {
   @override
   Future<bool> setValue(String type, String key, Object value) async {
     if (failWriteKeys.contains(key)) return false;
+    if (falseButLandedKeys.contains(key)) {
+      values[key] = value;
+      return false;
+    }
     final n = writeCounts[key] = (writeCounts[key] ?? 0) + 1;
     final from = failWritesFrom[key] ?? 0;
     if (from > 0 && n >= from) return false;
@@ -542,110 +547,298 @@ void main() {
     });
   });
 
-  group('store acknowledgement', () {
+  group('commit authority (approved revised invariant)', () {
     const k = 'k_ck';
+    String rk(String s) => 'flutter.${k}_$s';
+    String env(int rev, String? payload) =>
+        Act0ProgressStoreV1.debugEnvelopeV1(rev, payload);
+    String shape(_Disk d) {
+      String one(String n) {
+        final raw = d.values[rk(n)];
+        if (raw == null) return '-';
+        try {
+          final m = jsonDecode(raw as String) as Map;
+          return 'r${m['revision']}:${m['payload']}';
+        } catch (_) {
+          return 'BAD';
+        }
+      }
+
+      return '[recovery=${one('recovery')} backup=${one('backup')}]';
+    }
+
+    Act0ProgressStoreV1 fresh() =>
+        Act0ProgressStoreV1(key: k, isValidPayload: (_) => true);
+    Future<Object?> load(Act0ProgressStoreV1 st) =>
+        st.load().then<Object?>((v) => v, onError: (Object e) => e);
+    void chain(
+      String name,
+      String prior,
+      Object? write,
+      _Disk d,
+      Object? freshLoad,
+      String verdict,
+    ) {
+      // ignore: avoid_print
+      print(
+        'CHAIN $name | prior=$prior | write=$write | disk=${shape(d)} | fresh-load=${freshLoad is Exception ? 'FormatException' : freshLoad} | $verdict',
+      );
+    }
+
     Future<({_Disk disk, Act0ProgressStoreV1 store})> seeded() async {
       SharedPreferences.setMockInitialValues({});
       final disk = _Disk({});
       SharedPreferencesStorePlatform.instance = disk;
-      final store = Act0ProgressStoreV1(key: k, isValidPayload: (_) => true);
+      final store = fresh();
       expect(await store.save('{"xp":50}'), isTrue);
       expect(await store.load(), '{"xp":50}');
       return (disk: disk, store: store);
     }
 
-    Future<Object?> load(Act0ProgressStoreV1 s) =>
-        s.load().then<Object?>((v) => v, onError: (Object e) => e);
+    Future<_Disk> raw({String? rec, String? bak, String? legacy}) async {
+      SharedPreferences.setMockInitialValues({});
+      final disk = _Disk({if (legacy != null) k: legacy});
+      if (rec != null) disk.values[rk('recovery')] = rec;
+      if (bak != null) disk.values[rk('backup')] = bak;
+      SharedPreferencesStorePlatform.instance = disk;
+      return disk;
+    }
 
     test(
-      'P2-05a failed second copy (set and remove fail) leaves the previous state observable',
+      'R1 failed reset + failed rollback: fresh process heals tombstone, no resurrection',
       () async {
         final f = await seeded();
-        f.disk.failWriteKeys.add('flutter.${k}_backup');
-        f.disk.failRemoveKeys.add('flutter.${k}_backup');
-        expect(await f.store.clear(), isFalse);
+        f.disk.failWriteKeys.add(rk('backup'));
+        f.disk.failRemoveKeys.add(rk('backup'));
+        final ack = await f.store.clear();
+        expect(ack, isFalse);
+        expect(shape(f.disk), '[recovery=r2:null backup=r1:{"xp":50}]');
+        // heal blocked: fail closed, never the stale 50 and never a half state
+        expect(await load(fresh()), isA<FormatException>());
         f.disk.failWriteKeys.clear();
         f.disk.failRemoveKeys.clear();
-        expect(
-          await load(f.store),
-          '{"xp":50}',
-          reason: 'failed clear must not flip observable state',
+        final healed = await load(fresh());
+        expect(healed, isNull);
+        expect(shape(f.disk), '[recovery=r2:null backup=r2:null]');
+        f.disk.values[rk('recovery')] = '{corrupt';
+        final afterCorruption = await load(fresh());
+        expect(afterCorruption, isNull);
+        chain(
+          'R1',
+          'xp50@r1',
+          ack,
+          f.disk,
+          afterCorruption,
+          'tombstone survives, no resurrection',
         );
       },
     );
 
     test(
-      'P2-05b recovery corruption after a failed clear never yields a stale-after-tombstone state',
+      'failed save: indeterminate, fresh process heals forward, never mixed',
       () async {
         final f = await seeded();
-        f.disk.failWriteKeys.add('flutter.${k}_backup');
-        f.disk.failRemoveKeys.add('flutter.${k}_backup');
-        expect(await f.store.clear(), isFalse);
+        f.disk.failWriteKeys.add(rk('backup'));
+        final ack = await f.store.save('{"xp":99}');
+        expect(ack, isFalse);
+        expect(shape(f.disk), '[recovery=r2:{"xp":99} backup=r1:{"xp":50}]');
         f.disk.failWriteKeys.clear();
-        f.disk.failRemoveKeys.clear();
-        await load(f.store);
-        f.disk.values['flutter.${k}_recovery'] = '{unreadable';
-        // Previous state was verified restored (clear never committed), so rev 1 is the
-        // acknowledged truth; it must also not claim a cleared state.
-        final r = await load(f.store);
-        expect(r == '{"xp":50}' || r is Exception, isTrue);
+        final v = await load(fresh());
+        expect(v, '{"xp":99}');
+        expect(shape(f.disk), '[recovery=r2:{"xp":99} backup=r2:{"xp":99}]');
+        chain(
+          'failed-save',
+          'xp50@r1',
+          ack,
+          f.disk,
+          v,
+          'indeterminate -> healed to new',
+        );
       },
     );
 
     test(
-      'rollback failure fails closed: no success, no stale payload, until a full commit',
+      'recovery write that returns false but landed is acknowledged only after both copies verify',
       () async {
         final f = await seeded();
-        f.disk.failWriteKeys.add('flutter.${k}_backup');
-        f.disk.failRemoveKeys.add('flutter.${k}_backup');
-        // First recovery write (the tombstone) succeeds; the rollback write fails.
-        f.disk.failWritesFrom['flutter.${k}_recovery'] =
-            (f.disk.writeCounts['flutter.${k}_recovery'] ?? 0) + 2;
-        expect(await f.store.clear(), isFalse);
-        f.disk.failWriteKeys.clear();
-        f.disk.failRemoveKeys.clear();
-        f.disk.failWritesFrom.clear();
-        expect(await load(f.store), isA<FormatException>());
-        f.disk.values['flutter.${k}_recovery'] = '{unreadable';
-        expect(
-          await load(f.store),
-          isA<FormatException>(),
-          reason: 'never resurrect revision 1',
+        f.disk.falseButLandedKeys.addAll({rk('recovery'), rk('backup')});
+        final ack = await f.store.save('{"xp":70}');
+        f.disk.falseButLandedKeys.clear();
+        final v = await load(fresh());
+        expect(ack, isTrue);
+        expect(v, '{"xp":70}');
+        chain(
+          'false-but-landed',
+          'xp50@r1',
+          ack,
+          f.disk,
+          v,
+          'verified both -> ack true',
         );
-        // A later complete commit resolves the uncertainty with a higher revision.
+      },
+    );
+
+    test(
+      'recovery write failing before any landing is not acknowledged and changes nothing',
+      () async {
+        final f = await seeded();
+        f.disk.failWriteKeys.add(rk('recovery'));
+        expect(await f.store.save('{"xp":70}'), isFalse);
+        f.disk.failWriteKeys.clear();
+        expect(await load(fresh()), '{"xp":50}');
+        expect(shape(f.disk), '[recovery=r1:{"xp":50} backup=r1:{"xp":50}]');
+      },
+    );
+
+    test(
+      'failed mandatory healing fails closed for load, save and nothing changes',
+      () async {
+        final d = await raw(rec: env(2, 'new'), bak: env(1, 'old'));
+        d.failWriteKeys.add(rk('backup'));
+        final st = fresh();
+        expect(await load(st), isA<FormatException>());
+        expect(await st.save('x'), isFalse);
+        expect(await st.clear(), isFalse);
+        expect(shape(d), '[recovery=r2:new backup=r1:old]');
+      },
+    );
+
+    test(
+      'recovery corruption before healing yields only the acked copy; after healing it is safe',
+      () async {
+        var d = await raw(rec: env(2, 'new'), bak: env(1, 'old'));
+        d.values[rk('recovery')] = '{corrupt';
+        expect(
+          await load(fresh()),
+          'old',
+          reason: 'R2: unhealed partial, never exposed before',
+        );
+        d = await raw(rec: env(2, 'new'), bak: env(1, 'old'));
+        expect(await load(fresh()), 'new');
+        d.values[rk('recovery')] = '{corrupt';
+        expect(await load(fresh()), 'new');
+      },
+    );
+
+    test(
+      'successful save and reset acknowledge with both copies equal',
+      () async {
+        final f = await seeded();
+        expect(shape(f.disk), '[recovery=r1:{"xp":50} backup=r1:{"xp":50}]');
         expect(await f.store.clear(), isTrue);
-        expect(await f.store.load(), isNull);
+        expect(shape(f.disk), '[recovery=r2:null backup=r2:null]');
+        expect(await load(fresh()), isNull);
       },
     );
 
     test(
-      'failed save leaves previous payload and a later cold reload agrees',
+      'single-copy corruption after acknowledgement recovers and re-heals',
       () async {
-        final f = await seeded();
-        f.disk.failWriteKeys.add('flutter.${k}_backup');
-        expect(await f.store.save('{"xp":99}'), isFalse);
-        f.disk.failWriteKeys.clear();
-        expect(await load(f.store), '{"xp":50}');
-        final cold = Act0ProgressStoreV1(key: k, isValidPayload: (_) => true);
-        expect(await cold.load(), '{"xp":50}');
-        expect(await f.store.save('{"xp":99}'), isTrue);
-        expect(await cold.load(), '{"xp":99}');
+        for (final name in ['recovery', 'backup']) {
+          final f = await seeded();
+          f.disk.values[rk(name)] = '{corrupt';
+          expect(await load(fresh()), '{"xp":50}');
+          expect(shape(f.disk), '[recovery=r1:{"xp":50} backup=r1:{"xp":50}]');
+        }
       },
     );
 
     test(
-      'interrupted commit (recovery new, backup old) is a coherent newest-wins state',
+      'both copies corrupt fail closed and ignore the legacy mirror',
       () async {
-        final f = await seeded();
-        final oldBackup = f.disk.values['flutter.${k}_backup']!;
-        expect(await f.store.save('{"xp":70}'), isTrue);
-        f.disk.values['flutter.${k}_backup'] =
-            oldBackup; // crash before backup write
-        final cold = Act0ProgressStoreV1(key: k, isValidPayload: (_) => true);
-        expect(await cold.load(), '{"xp":70}');
+        final d = await raw(rec: '{x', bak: '{y', legacy: '{"legacy":1}');
+        final st = fresh();
+        expect(await load(st), isA<FormatException>());
+        expect(await st.save('z'), isFalse);
+        expect(d.values[rk('recovery')], '{x');
+        expect(
+          await st.clear(),
+          isTrue,
+          reason: 'explicit reset outranks unreadable copies',
+        );
+        expect(await load(fresh()), isNull);
+      },
+    );
+
+    test(
+      'legacy migration: first save creates protected copies; invalid legacy fails closed',
+      () async {
+        var d = await raw(legacy: '{"legacy":1}');
+        final st = fresh();
+        expect(await st.load(), '{"legacy":1}');
+        expect(await st.save('{"xp":5}'), isTrue);
+        expect(shape(d), '[recovery=r1:{"xp":5} backup=r1:{"xp":5}]');
+        Act0ProgressStoreV1 strict() =>
+            Act0ProgressStoreV1(key: k, isValidPayload: (p) => p != 'bad');
+        d = await raw(legacy: 'bad');
+        expect(await load(strict()), isA<FormatException>());
       },
     );
   });
+
+  Future<Object?> runReset(WidgetTester tester) async {
+    final dynamic state = tester.state(find.byType(Act0ShellPreviewScreenV1));
+    Object? error;
+    await tester.runAsync(() async {
+      try {
+        await state.debugInvalidatePersistedProgressWritesV1();
+      } catch (e) {
+        error = e;
+      }
+    });
+    return error;
+  }
+
+  testWidgets(
+    'reset with clear() failing before anything landed aborts and keeps progress',
+    (tester) async {
+      final disk = await _mount(tester, _snapshot(), tab: Act0ShellTabV1.home);
+      disk.failWriteKeys.add('flutter.${_key}_recovery');
+      final error = await runReset(tester);
+      disk.failWriteKeys.clear();
+      expect(error, isA<StateError>());
+      expect((error as StateError).message, contains('not saved'));
+      await _drain();
+      expect(_durable(disk)['earnedXp'], 20);
+    },
+  );
+
+  testWidgets(
+    'reset with tombstone landed but backup unhealable blocks writes and reports',
+    (tester) async {
+      final disk = await _mount(tester, _snapshot(), tab: Act0ShellTabV1.home);
+      await tester.runAsync(() => _store.save(jsonEncode(_snapshot())));
+      disk.failWriteKeys.add('flutter.${_key}_backup');
+      final error = await runReset(tester);
+      await tester.pumpAndSettle();
+      expect(error, isA<StateError>());
+      expect((error as StateError).message, contains('could not be verified'));
+      expect(
+        find.text('Your saved progress could not be read.'),
+        findsOneWidget,
+      );
+      final before = disk.values['flutter.${_key}_recovery'];
+      final dynamic state = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      state.debugPersistProgressV1();
+      await tester.pump(const Duration(milliseconds: 300));
+      await _drain();
+      expect(disk.values['flutter.${_key}_recovery'], before);
+    },
+  );
+
+  testWidgets(
+    'reset whose tombstone is durable completes even when clear() reported false',
+    (tester) async {
+      final disk = await _mount(tester, _snapshot(), tab: Act0ShellTabV1.home);
+      disk.falseButLandedKeys.addAll({
+        'flutter.${_key}_recovery',
+        'flutter.${_key}_backup',
+      });
+      final error = await runReset(tester);
+      disk.falseButLandedKeys.clear();
+      expect(error, isNull);
+    },
+  );
 
   test('malformed schema 19 recent record is rejected, not filtered', () {
     final h = const Act0LearningEvidenceHistoryV1().append(_record(_target, 1));

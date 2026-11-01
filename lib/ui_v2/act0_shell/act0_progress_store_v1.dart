@@ -5,19 +5,27 @@ import 'package:crypto/crypto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Storage protocol only: it never merges progress, awards XP or grades evidence.
-/// Two acknowledged, independently validated copies hold the same immutable
-/// source snapshot. The old key remains a compatibility mirror, not a second
-/// progress authority. A malformed protected store never falls back to that
-/// unauthenticated mirror.
+/// Two independently validated checkpoint copies hold the same immutable source
+/// snapshot. The old key remains a compatibility mirror, not a progress
+/// authority, and is never consulted once protected data exists.
+///
+/// Contract: every state a read exposes is a pure function of the durable bytes.
+/// Copies that disagree are healed (higher revision wins) and verified by an
+/// independent reload BEFORE the state is exposed; if that cannot be proven the
+/// read fails closed. A write is acknowledged only after both copies verifiably
+/// hold the new revision. A `false` result is indeterminate: the write may take
+/// effect at a later read, so callers must re-load to learn the durable state.
+class _CheckpointHealFailure extends FormatException {
+  const _CheckpointHealFailure()
+    : super('Progress checkpoints could not be healed');
+}
+
 class Act0ProgressStoreV1 {
   Act0ProgressStoreV1({required this.key, required this.isValidPayload});
 
   final String key;
   final bool Function(String) isValidPayload;
   static final _queues = <String, Future<void>>{};
-  // Keys whose last failed commit could not be proven rolled back. Reads fail
-  // closed until a later commit rewrites both copies at a higher revision.
-  static final _uncertain = <String>{};
   String get recoveryKey => '${key}_recovery';
   String get backupKey => '${key}_backup';
 
@@ -44,9 +52,8 @@ class Act0ProgressStoreV1 {
 
   Future<String?> load() => _serial(() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs
-        .reload(); // Read acknowledged platform data, not a failed-write cache.
-    return _read(prefs).payload;
+    await prefs.reload(); // Read durable platform data, not a write cache.
+    return (await _resolve(prefs)).payload;
   });
 
   Future<bool> save(String payload) => _serial(() async {
@@ -54,10 +61,8 @@ class Act0ProgressStoreV1 {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.reload();
-      final revision = _uncertain.contains(key)
-          ? _highestRevision(prefs)
-          : _read(prefs).revision;
-      return await _commit(prefs, revision + 1, payload);
+      final current = await _resolve(prefs);
+      return await _commit(prefs, current.revision + 1, payload);
     } catch (_) {
       return false; // Preserve unreadable bytes; never replace them with defaults.
     }
@@ -66,19 +71,31 @@ class Act0ProgressStoreV1 {
   /// An explicit user reset is itself an ordered durable tombstone. Removing
   /// keys one by one would allow an interrupted reset to resurrect old awards.
   Future<bool> clear() => _serial(() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.reload();
-    var revision = 0;
     try {
-      revision = _uncertain.contains(key)
-          ? _highestRevision(prefs)
-          : _read(prefs).revision;
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.reload();
+      var revision = 0;
+      try {
+        revision = (await _resolve(prefs)).revision;
+      } on _CheckpointHealFailure {
+        // Storage refuses writes: do not destroy intact copies on a blind reset.
+        return false;
+      } catch (_) {
+        // Explicit reset over unreadable/conflicting copies outranks them all.
+        revision = _highestRevision(prefs);
+      }
+      final committed = await _commit(prefs, revision + 1, null);
+      if (committed) {
+        try {
+          await prefs.remove(key);
+        } catch (_) {
+          /* legacy mirror is never authoritative */
+        }
+      }
+      return committed;
     } catch (_) {
-      revision = _highestRevision(prefs);
+      return false;
     }
-    final committed = await _commit(prefs, revision + 1, null);
-    if (committed) await prefs.remove(key);
-    return committed;
   });
 
   Future<bool> _commit(
@@ -86,71 +103,76 @@ class Act0ProgressStoreV1 {
     int revision,
     String? payload,
   ) async {
-    final raw = jsonEncode({
-      'format': 1,
-      'revision': revision,
-      'payload': payload,
-      'digest': _digest(revision, payload),
-    });
-    final previous = {
-      recoveryKey: prefs.getString(recoveryKey),
-      backupKey: prefs.getString(backupKey),
-    };
-    // Acknowledge only when both copies hold this revision. Any earlier failure
-    // must leave the previous copies verified in place, otherwise fail closed.
-    if (!await _put(prefs, recoveryKey, raw) ||
-        !await _put(prefs, backupKey, raw)) {
-      await _rollback(prefs, previous);
-      return false;
+    final raw = _envelope(revision, payload);
+    // Recovery first, then backup. No rollback: a failure leaves at most one
+    // copy ahead, which the next read heals forward or fails closed on.
+    if (!await _write(prefs, recoveryKey, raw)) return false;
+    if (!await _write(prefs, backupKey, raw)) return false;
+    if (payload != null) {
+      try {
+        await prefs.setString(key, payload);
+      } catch (_) {
+        /* compatibility mirror only */
+      }
     }
-    _uncertain.remove(key);
-    if (payload != null) await _put(prefs, key, payload);
     return true;
   }
 
-  Future<void> _rollback(
-    SharedPreferences prefs,
-    Map<String, String?> previous,
-  ) async {
-    var verified = true;
-    for (final entry in previous.entries) {
-      for (var attempt = 0; attempt < 2; attempt++) {
-        try {
-          await prefs.reload();
-          if (prefs.getString(entry.key) == entry.value) break;
-          if (entry.value == null) {
-            await prefs.remove(entry.key);
-          } else {
-            await prefs.setString(entry.key, entry.value!);
-          }
-        } catch (_) {
-          /* verified below */
-        }
-      }
-      try {
-        await prefs.reload();
-        if (prefs.getString(entry.key) != entry.value) verified = false;
-      } catch (_) {
-        verified = false;
-      }
-    }
-    if (!verified) _uncertain.add(key);
-  }
-
-  Future<bool> _put(
+  /// Landed means the durable bytes equal [value], whatever the call returned.
+  Future<bool> _write(
     SharedPreferences prefs,
     String target,
     String value,
   ) async {
     for (var attempt = 0; attempt < 2; attempt++) {
       try {
-        if (await prefs.setString(target, value)) return true;
+        await prefs.setString(target, value);
       } catch (_) {
-        /* retry same bytes */
+        /* verified by reload below */
+      }
+      try {
+        await prefs.reload();
+        if (prefs.getString(target) == value) return true;
+      } catch (_) {
+        return false;
       }
     }
-    await prefs.reload();
     return false;
+  }
+
+  // Test fixtures only: builds a valid checkpoint envelope.
+  static String debugEnvelopeV1(int revision, String? payload) =>
+      _envelope(revision, payload);
+
+  static String _envelope(int revision, String? payload) => jsonEncode({
+    'format': 1,
+    'revision': revision,
+    'payload': payload,
+    'digest': _digest(revision, payload),
+  });
+
+  ({int revision, String? payload, String raw})? _parse(
+    SharedPreferences prefs,
+    String target,
+  ) {
+    try {
+      final raw = prefs.getString(target);
+      if (raw == null) return null;
+      final map = jsonDecode(raw);
+      if (map is! Map || map['format'] != 1) return null;
+      final revision = map['revision'];
+      final payload = map['payload'];
+      if (revision is! int ||
+          revision < 1 ||
+          (payload != null && payload is! String) ||
+          map['digest'] != _digest(revision, payload as String?) ||
+          (payload != null && !isValidPayload(payload))) {
+        return null;
+      }
+      return (revision: revision, payload: payload, raw: raw);
+    } catch (_) {
+      return null;
+    }
   }
 
   /// A reset over unreadable or conflicting copies must still outrank every
@@ -167,46 +189,44 @@ class Act0ProgressStoreV1 {
     return highest;
   }
 
-  ({int revision, String? payload}) _read(SharedPreferences prefs) {
-    if (_uncertain.contains(key)) {
-      throw const FormatException('Unverified progress checkpoint');
-    }
-    final candidates = <({int revision, String? payload})>[];
-    var protected = false;
-    for (final target in [recoveryKey, backupKey]) {
-      if (!prefs.containsKey(target)) continue;
-      protected = true;
-      try {
-        final raw = jsonDecode(prefs.getString(target)!);
-        if (raw is! Map || raw['format'] != 1) continue;
-        final revision = raw['revision'];
-        final payload = raw['payload'];
-        if (revision is! int ||
-            revision < 1 ||
-            (payload != null && payload is! String) ||
-            raw['digest'] != _digest(revision, payload as String?) ||
-            (payload != null && !isValidPayload(payload)))
-          continue;
-        candidates.add((revision: revision, payload: payload));
-      } catch (_) {
-        /* another independently valid copy may recover it */
+  /// Arbitrates the two copies and returns the state only once it is safe.
+  Future<({int revision, String? payload})> _resolve(
+    SharedPreferences prefs,
+  ) async {
+    final rec = _parse(prefs, recoveryKey);
+    final bak = _parse(prefs, backupKey);
+    if (rec != null && bak != null) {
+      if (rec.revision == bak.revision) {
+        if (rec.payload != bak.payload) {
+          throw const FormatException('Conflicting progress checkpoints');
+        }
+        return (revision: rec.revision, payload: rec.payload);
       }
-    }
-    candidates.sort((a, b) => b.revision.compareTo(a.revision));
-    if (candidates.isNotEmpty) {
-      final latest = candidates.first;
-      if (candidates.any(
-        (c) => c.revision == latest.revision && c.payload != latest.payload,
-      )) {
-        throw const FormatException('Conflicting progress checkpoints');
+      // Mandatory heal: the lower copy must never be exposed or survive.
+      final high = rec.revision > bak.revision ? rec : bak;
+      final lowKey = identical(high, rec) ? backupKey : recoveryKey;
+      if (!await _write(prefs, lowKey, high.raw) ||
+          _parse(prefs, recoveryKey)?.raw != high.raw ||
+          _parse(prefs, backupKey)?.raw != high.raw) {
+        throw const _CheckpointHealFailure();
       }
-      return latest;
+      return (revision: high.revision, payload: high.payload);
     }
-    if (protected) throw const FormatException('No valid progress checkpoint');
+    final only = rec ?? bak;
+    if (only != null) {
+      // Single valid copy: nothing older can resurrect. Heal the twin if we can.
+      final twin = identical(only, rec) ? backupKey : recoveryKey;
+      await _write(prefs, twin, only.raw);
+      return (revision: only.revision, payload: only.payload);
+    }
+    if (prefs.containsKey(recoveryKey) || prefs.containsKey(backupKey)) {
+      throw const FormatException('No valid progress checkpoint');
+    }
     final legacy = prefs.getString(key);
     if (legacy == null || legacy.isEmpty) return (revision: 0, payload: null);
-    if (!isValidPayload(legacy))
+    if (!isValidPayload(legacy)) {
       throw const FormatException('Invalid legacy progress');
+    }
     return (revision: 0, payload: legacy);
   }
 

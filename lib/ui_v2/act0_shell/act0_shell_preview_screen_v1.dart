@@ -1463,6 +1463,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   void debugPersistProgressV1() => _persistProgress();
 
   @visibleForTesting
+  Future<void> debugInvalidatePersistedProgressWritesV1() =>
+      _invalidatePersistedProgressWrites();
+
+  @visibleForTesting
   Map<String, Object?> debugSessionIdentityStatePayloadV1() {
     return _sessionIdentityStateV1.toPayload();
   }
@@ -4679,8 +4683,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     _progressPersistGeneration += 1;
-    if (!await _progressStore.clear())
+    if (await _progressStore.clear()) {
+      return;
+    }
+    // false is indeterminate: the durable state, not the result, decides.
+    String? durable;
+    try {
+      durable = await _progressStore.load();
+    } catch (_) {
+      if (mounted) {
+        setState(() => _progressLoadFailed = true);
+      }
+      throw StateError('Progress reset outcome could not be verified');
+    }
+    if (durable != null) {
       throw StateError('Progress reset was not saved');
+    }
   }
 
   void _restorePreviewToFreshStart({
