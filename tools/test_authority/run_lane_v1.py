@@ -106,6 +106,16 @@ TIER_A_COMMANDS = [
         ],
     },
     {
+        "name": "street replay source chronology (PKR-03)",
+        "cmd": [
+            "flutter",
+            "test",
+            "test/ui_v2/act0_street_replay_contract_v1_test.dart",
+            "-r",
+            "compact",
+        ],
+    },
+    {
         "name": "source task and choice identity (ASM-01)",
         "cmd": [
             "flutter",

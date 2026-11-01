@@ -187,4 +187,87 @@ void main() {
 
     expect(replay, isNull);
   });
+
+  test(
+    'rejects reverse street chronology rather than repainting past state',
+    () {
+      final replay = act0StreetReplayFromTableV1(
+        multiStreetTable.copyWith(
+          actionTrail: const <Act0ActionTrailItemV1>[
+            Act0ActionTrailItemV1(label: 'BTN raises 3 BB'),
+            Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+            Act0ActionTrailItemV1(label: 'Turn: BTN bets 4 BB'),
+            Act0ActionTrailItemV1(label: 'Flop: BB calls 4 BB'),
+          ],
+        ),
+      );
+      expect(replay, isNotNull);
+      expect(replay!.isConsumerSafe, isFalse);
+      expect(replay.completeness, Act0StreetReplayCompletenessV1.insufficient);
+      expect(replay.steps, isEmpty);
+    },
+  );
+
+  test(
+    'rejects trail entries from a future street beyond current decision',
+    () {
+      final replay = act0StreetReplayFromTableV1(
+        multiStreetTable.copyWith(
+          streetLabel: 'Turn',
+          actionTrail: const <Act0ActionTrailItemV1>[
+            Act0ActionTrailItemV1(label: 'BTN raises 3 BB'),
+            Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+            Act0ActionTrailItemV1(label: 'Turn: BTN bets 4 BB'),
+            Act0ActionTrailItemV1(label: 'River: BTN bets 6 BB'),
+          ],
+        ),
+      );
+      expect(replay, isNotNull);
+      expect(replay!.isConsumerSafe, isFalse);
+      expect(replay.steps, isEmpty);
+    },
+  );
+
+  test('rejects a seat acting again after its source trail fold', () {
+    final replay = act0StreetReplayFromTableV1(
+      multiStreetTable.copyWith(
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'BTN raises 3 BB'),
+          Act0ActionTrailItemV1(label: 'BB folds'),
+          Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+        ],
+      ),
+    );
+    expect(replay, isNotNull);
+    expect(replay!.isConsumerSafe, isFalse);
+    expect(replay.steps, isEmpty);
+  });
+
+  test('catalog replay source census is explicitly scoped, not 367 proof', () {
+    var withTrail = 0;
+    var consumerSafe = 0;
+    var suppressed = 0;
+    for (final world in Act0ShellStateV1.sample.worlds) {
+      for (final lesson in world.lessons) {
+        for (final task in lesson.taskList) {
+          if (task.runner.table.actionTrail.isEmpty) continue;
+          withTrail++;
+          final replay = act0StreetReplayFromTableV1(task.runner.table);
+          if (replay?.isConsumerSafe == true) {
+            consumerSafe++;
+          } else {
+            suppressed++;
+          }
+        }
+      }
+    }
+    print(
+      'PKR03_AUTHORED_SOURCE_TRAILS=$withTrail '
+      'CONSUMER_SAFE=$consumerSafe SUPPRESSED=$suppressed',
+    );
+    expect(withTrail, greaterThan(0));
+    // A known safe history is only replay evidence, not a complete legal
+    // poker hand or proof of all 367 graded tasks.
+    expect(consumerSafe + suppressed, withTrail);
+  });
 }
