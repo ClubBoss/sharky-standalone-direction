@@ -38,6 +38,7 @@ jobs:
         run: >-
           flutter test
           test/ui_v2/act0_summary_replay_provenance_truth_v1_test.dart
+          test/ui_v2/act0_summary_completion_gate_parity_v1_test.dart
           test/ui_v2/act0_replay_review_kind_v1_test.dart
           -r expanded
       - uses: actions/upload-artifact@v4
