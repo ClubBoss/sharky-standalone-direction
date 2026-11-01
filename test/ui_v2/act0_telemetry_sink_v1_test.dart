@@ -361,6 +361,8 @@ void main() {
   }
 
   Future<void> completeDailySetFromPlayV1(WidgetTester tester) async {
+    // The shell now holds its surface until persisted progress has loaded.
+    await tester.pumpAndSettle();
     await openBottomTabV1(tester, 'Practice');
     await startDailyPracticeFromHubV1(tester);
     await advanceCurrentRunnerToDrillV1(tester);

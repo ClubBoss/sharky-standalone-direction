@@ -290,4 +290,101 @@ void main() {
     expect(await store.clear(), isTrue);
     expect(await store.load(), isNull);
   });
+
+  testWidgets('a saved schema 19 decision survives a cold remount', (
+    tester,
+  ) async {
+    final disk = await _mount(tester, _snapshot());
+    final runner = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    runner.onCompletedDecision!(_decision(_target, 901, correct: false));
+    await tester.pumpAndSettle();
+    await _flush(tester);
+    await _drain();
+    expect(_durable(disk)['schemaVersion'], 19);
+    expect(_durable(disk)['learningEvidenceLineage'], isA<Map>());
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Act0ShellPreviewScreenV1(showPlacementOnStart: false),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Your saved progress could not be read.'), findsNothing);
+    await _flush(tester);
+    await _drain();
+    final records = _durable(disk)['learningEvidenceHistory'] as List;
+    expect(
+      records.any(
+        (r) => (r as Map)['recordId'] == 'machine_source|$_target|901',
+      ),
+      isTrue,
+    );
+  });
+
+  group('schema 19 evidence lineage round trip', () {
+    Act0LearningEvidenceHistoryV1 roundTrip(Act0LearningEvidenceHistoryV1 h) =>
+        Act0LearningEvidenceHistoryV1.tryParse(
+          jsonDecode(h.toStorageString()),
+        )!;
+
+    test('one saved record overlaps anchor and recent list and restores', () {
+      final h = const Act0LearningEvidenceHistoryV1().append(
+        _record(_target, 1, correct: false),
+      );
+      final r = roundTrip(h);
+      expect(r.records.single.recordId, h.records.single.recordId);
+      expect(r.sourceAnchors, isNotEmpty);
+      expect(r.records.single.toPayload(), h.records.single.toPayload());
+    });
+
+    test('200+ records keep truncated source anchors across restore', () {
+      var h = const Act0LearningEvidenceHistoryV1().append(
+        _record(_target, 1, correct: false),
+      );
+      for (var n = 2; n <= 203; n++) {
+        h = h.append(_record('actions_legal_context', n));
+      }
+      final r = roundTrip(h);
+      expect(r.records, hasLength(200));
+      expect(
+        r.provenanceRecords.any(
+          (x) => x.recordId == 'machine_source|$_target|1',
+        ),
+        isTrue,
+      );
+      expect(r.toStorageString(), h.toStorageString());
+    });
+
+    test('assistance attribution survives restore', () {
+      final base = _record(_target, 1).toPayload();
+      final h = const Act0LearningEvidenceHistoryV1().append(
+        _record(_target, 1),
+      );
+      final r = roundTrip(h);
+      expect(
+        r.records.single.toPayload()['assistanceKind'],
+        base['assistanceKind'],
+      );
+    });
+
+    test('same record id with conflicting content is rejected', () {
+      final h = const Act0LearningEvidenceHistoryV1().append(
+        _record(_target, 1, correct: false),
+      );
+      final saved = jsonDecode(h.toStorageString()) as Map<String, dynamic>;
+      final anchors = (saved['lineage'] as Map)['anchors'] as List;
+      (anchors.first as Map)['isCorrect'] = true;
+      expect(Act0LearningEvidenceHistoryV1.tryParse(saved), isNull);
+    });
+
+    test('schema 18 list migrates to incomplete lineage', () {
+      final legacy = [_record(_target, 1).toPayload()];
+      final r = Act0LearningEvidenceHistoryV1.tryParse(legacy)!;
+      expect(r.hasCompleteLineage, isFalse);
+      expect(roundTrip(r).hasCompleteLineage, isFalse);
+    });
+  });
 }
