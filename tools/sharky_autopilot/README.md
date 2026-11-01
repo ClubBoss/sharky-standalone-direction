@@ -15,3 +15,14 @@ Issue: [#356](https://github.com/ClubBoss/sharky-standalone-direction/issues/356
 macOS Python.org TLS note: If local urllib reports an absent CA bundle (without a GitHub API failure), use the OS-provided trust file with SSL_CERT_FILE=/etc/ssl/cert.pem. Never bypass TLS certificate verification or hardcode authentication tokens.
 
 Security gate: This workflow deliberately has NO pull_request trigger. Only default-branch scheduled/manual runs read GitHub with an observer token. PR source changes require local/independent review plus existing canonical CI prior to merging; PR-provided code never runs in the observer with credentials.
+
+## M2A local-only preparation (NOT deployed)
+
+Pure `journal_projection.py` computes a material event identity from the
+exact-source PR and CI state while intentionally excluding the infrastructure
+Issue's updated_at and the observer capture timestamp. Its
+`plan_append()` only returns PREPARE_ONLY, NOOP or STOP; it has no GitHub write
+transport, subscription usage or executor dispatch. 12 deterministic tests
+cover feedback-loop prevention, replay dedup, falsified bot receipts and
+fail-closed behavior. The GitHub-hosted M1 observer remains read-only until
+separate M2B admission.
