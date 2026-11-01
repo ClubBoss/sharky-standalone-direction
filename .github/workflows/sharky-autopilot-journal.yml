@@ -1,0 +1,38 @@
+name: Sharky Autopilot M2B Issue Journal (bounded)
+on:
+  workflow_dispatch:
+  schedule:
+    # Best-effort hourly, separated from M1's 17-minute observation run.
+    - cron: '23 * * * *'
+
+# Untrusted pull_request and pull_request_target are explicitly absent.
+# The only writer is this single trusted-main job. No self-hosted runners.
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+  issues: write
+
+concurrency:
+  group: sharky-autopilot-journal-global
+  cancel-in-progress: false
+
+jobs:
+  journal:
+    if: >-
+      github.repository == 'ClubBoss/sharky-standalone-direction' &&
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify deterministic zero-spend journal tests
+        run: python3 -m unittest discover -s tools/sharky_autopilot -p 'test_*.py' -q
+      - name: Write at most one new material-state event to Issue 356
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SHARKY_M2_POST_OWNER_ADMITTED: YES_AFTER_INDEPENDENT_REVIEW
+        run: python3 tools/sharky_autopilot/journal_issue_runner.py
