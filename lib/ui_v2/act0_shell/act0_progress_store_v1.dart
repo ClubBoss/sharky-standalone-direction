@@ -88,7 +88,17 @@ class Act0ProgressStoreV1 {
     if (!await _put(prefs, recoveryKey, raw)) return false;
     // Once recovery is acknowledged, the transaction is durable even if a
     // crash interrupts the redundant-copy or legacy-mirror writes.
-    await _put(prefs, backupKey, raw);
+    // Acknowledge only when both copies hold this revision. If the second copy
+    // cannot be written, drop it so a later loss of the newer copy fails closed
+    // instead of resurrecting the older revision.
+    if (!await _put(prefs, backupKey, raw)) {
+      try {
+        await prefs.remove(backupKey);
+      } catch (_) {
+        /* nothing more can be done */
+      }
+      return false;
+    }
     if (payload != null) await _put(prefs, key, payload);
     return true;
   }

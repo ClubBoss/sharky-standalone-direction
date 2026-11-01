@@ -13,6 +13,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
 
 final _store = Act0ProgressStoreV1(key: _key, isValidPayload: (_) => true);
 const _key = 'act0_shell_progress_v1';
@@ -27,10 +28,22 @@ class _Disk extends SharedPreferencesStorePlatform {
   final Map<String, Object> values;
   bool holdNext = false;
   Completer<void>? held;
+  bool holdNextLoad = false;
+  Completer<void>? heldLoad;
+  final Set<String> failWriteKeys = <String>{};
   @override
-  Future<Map<String, Object>> getAll() async => Map.of(values);
+  Future<Map<String, Object>> getAll() async {
+    if (holdNextLoad) {
+      holdNextLoad = false;
+      heldLoad = Completer<void>();
+      await heldLoad!.future;
+    }
+    return Map.of(values);
+  }
+
   @override
   Future<bool> setValue(String type, String key, Object value) async {
+    if (failWriteKeys.contains(key)) return false;
     if (holdNext && key.contains(_key)) {
       holdNext = false;
       held = Completer<void>();
@@ -387,4 +400,232 @@ void main() {
       expect(roundTrip(r).hasCompleteLineage, isFalse);
     });
   });
+
+  group('P0 startup integrity', () {
+    Future<_Disk> mountHeld(
+      WidgetTester tester,
+      Map<String, Object?> snap,
+    ) async {
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+      await _store.flush();
+      SharedPreferences.setMockInitialValues({});
+      final disk = _Disk({
+        _key: jsonEncode(snap),
+        'act0_welcome_completed_v1': true,
+        'intake_completed_v1': true,
+      })..holdNextLoad = true;
+      SharedPreferencesStorePlatform.instance = disk;
+      return disk;
+    }
+
+    Future<void> seedAcknowledged(_Disk disk, Map<String, Object?> snap) async {
+      // Make the fixture an acknowledged protected store rather than legacy bytes.
+      final s = Act0ProgressStoreV1(key: _key, isValidPayload: (_) => true);
+      expect(await s.save(jsonEncode(snap)), isTrue);
+    }
+
+    testWidgets('dispose before the load completes never overwrites saved XP', (
+      tester,
+    ) async {
+      final snap = _snapshot(evidence: [_record(_target, 1).toPayload()]);
+      final disk = await mountHeld(tester, snap);
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Act0ShellPreviewScreenV1(showPlacementOnStart: false),
+        ),
+      );
+      await tester.pump();
+      expect(disk.heldLoad, isNotNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+      disk.heldLoad!.complete();
+      await tester.pumpAndSettle();
+      await _store.flush();
+      expect(_durable(disk)['earnedXp'], 20);
+      expect(_durable(disk)['learningEvidenceHistory'], isNotEmpty);
+      expect(
+        disk.values.keys.where((k) => k.endsWith('_recovery')),
+        isEmpty,
+        reason: 'an unrestored widget must not write any checkpoint',
+      );
+    });
+
+    testWidgets(
+      'failed load, dispose, retry and second cold remount keep progress',
+      (tester) async {
+        final snap = _snapshot(evidence: [_record(_target, 1).toPayload()]);
+        final disk = await mountHeld(tester, snap);
+        disk.holdNextLoad = false;
+        await seedAcknowledged(disk, snap);
+        final good = disk.values['flutter.${_key}_recovery']! as String;
+        disk.values['flutter.${_key}_recovery'] = '{bad';
+        disk.values['flutter.${_key}_backup'] = '{bad';
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: Act0ShellPreviewScreenV1(showPlacementOnStart: false),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(
+          find.text('Your saved progress could not be read.'),
+          findsOneWidget,
+        );
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pumpAndSettle();
+        await _store.flush();
+        expect(
+          disk.values['flutter.${_key}_recovery'],
+          '{bad',
+          reason: 'failed load never writes',
+        );
+        disk.values['flutter.${_key}_recovery'] = good;
+        disk.values['flutter.${_key}_backup'] = good;
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: Act0ShellPreviewScreenV1(showPlacementOnStart: false),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(
+          find.text('Your saved progress could not be read.'),
+          findsNothing,
+        );
+        await _flush(tester);
+        await _drain();
+        expect(_durable(disk)['earnedXp'], 20);
+        for (var i = 0; i < 2; i++) {
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pumpAndSettle();
+          await tester.pumpWidget(
+            const MaterialApp(
+              home: Act0ShellPreviewScreenV1(showPlacementOnStart: false),
+            ),
+          );
+          await tester.pumpAndSettle();
+          await _flush(tester);
+          await _drain();
+          expect(_durable(disk)['earnedXp'], 20);
+          expect(_durable(disk)['learningEvidenceHistory'], hasLength(1));
+        }
+      },
+    );
+
+    testWidgets('fresh install still persists its first snapshot', (
+      tester,
+    ) async {
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+      await _store.flush();
+      SharedPreferences.setMockInitialValues({});
+      final disk = _Disk({
+        'act0_welcome_completed_v1': true,
+        'intake_completed_v1': true,
+      });
+      SharedPreferencesStorePlatform.instance = disk;
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Act0ShellPreviewScreenV1(showPlacementOnStart: false),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await _flush(tester);
+      await _drain();
+      expect(_durable(disk)['schemaVersion'], 19);
+    });
+  });
+
+  group('store acknowledgement', () {
+    test(
+      'a failed backup checkpoint is not acknowledged and cannot resurrect cleared data',
+      () async {
+        SharedPreferences.setMockInitialValues({});
+        final disk = _Disk({});
+        SharedPreferencesStorePlatform.instance = disk;
+        final store = Act0ProgressStoreV1(
+          key: 'k_bk',
+          isValidPayload: (_) => true,
+        );
+        expect(await store.save('{"xp":50}'), isTrue);
+        disk.failWriteKeys.add('flutter.k_bk_backup');
+        expect(await store.clear(), isFalse);
+        disk.failWriteKeys.clear();
+        // The newer tombstone is already in recovery; corrupting it must not
+        // silently bring back pre-reset progress as if reset had succeeded.
+        disk.values['flutter.k_bk_recovery'] = '{corrupt';
+        await (await SharedPreferences.getInstance()).reload();
+        final loaded = await store.load().then<Object?>(
+          (v) => v,
+          onError: (e) => e,
+        );
+        expect(loaded, isNot('{"xp":50}'));
+      },
+    );
+  });
+
+  test('malformed schema 19 recent record is rejected, not filtered', () {
+    final h = const Act0LearningEvidenceHistoryV1().append(_record(_target, 1));
+    final saved = jsonDecode(h.toStorageString()) as Map<String, dynamic>;
+    (saved['records'] as List).add({'recordId': 'broken'});
+    expect(Act0LearningEvidenceHistoryV1.tryParse(saved), isNull);
+  });
+
+  testWidgets(
+    'user reset clears durable retention and does not re-persist it',
+    (tester) async {
+      final rec = act0LearningEvidenceRecordFromCompletedDecisionV1(
+        _decision(_target, 1, correct: false),
+        createdOrder: 1,
+        sessionId: 'machine_regression',
+        runKey: const Act0EvidenceRunKeyV1(
+          runId: 'machine_run|1',
+          worldId: 'world_1',
+          lessonId: _lesson,
+          runOrdinal: 1,
+          runKind: 'lesson',
+          startedBy: 'machine_regression',
+        ),
+        recordedAtUtc: DateTime.utc(2026, 10, 20, 12),
+      )!;
+      final history = const Act0LearningEvidenceHistoryV1().append(rec);
+      final retention = Act0DurableRetentionHistoryV1.fromLearningEvidence(
+        history,
+      );
+      expect(retention.families, isNotEmpty);
+      final snap = _snapshot()
+        ..['schemaVersion'] = 19
+        ..['learningEvidenceHistory'] = history.toPayload()
+        ..['learningEvidenceLineage'] = history.lineagePayload()
+        ..['durableRetentionHistory'] = retention.toPayload();
+      final disk = await _mount(tester, snap, tab: Act0ShellTabV1.home);
+      await tester.tap(
+        find.byKey(const Key('act0_shell_home_dev_menu_button')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const Key('act0_shell_dev_menu_reset_progress')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const Key('act0_shell_dev_menu_reset_confirm')),
+      );
+      await tester.pumpAndSettle();
+      await _drain();
+      final raw = disk.values['flutter.$_key'];
+      if (raw != null) {
+        final after = jsonDecode(raw as String) as Map<String, dynamic>;
+        expect(after['earnedXp'], 0);
+        expect(after['learningEvidenceHistory'], isEmpty);
+        expect(after['durableRetentionHistory'], isEmpty);
+      }
+      await _flush(tester);
+      await _drain();
+      final again = disk.values['flutter.$_key'];
+      if (again != null) {
+        expect(
+          (jsonDecode(again as String) as Map)['durableRetentionHistory'],
+          isEmpty,
+        );
+      }
+    },
+  );
 }
