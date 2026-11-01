@@ -390,9 +390,7 @@ void main() {
       expect(persisted['completedLessonIds'], contains(_guideLessonId));
       await _leaveSummary(tester);
       await _openTab(tester, 'Home');
-      final home = tester.widget<Act0HomeShellV1>(
-        find.byType(Act0HomeShellV1),
-      );
+      final home = tester.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
       expect(home.pathProgressLabel, startsWith('1 of '));
     });
 
