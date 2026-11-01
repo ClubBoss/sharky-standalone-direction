@@ -261,7 +261,10 @@ void main() {
     expect(withRepair.secondaryCtaKind, Act0MilestoneCtaKindV1.continueForward);
     expect(withRepair.gateMessage, contains('Deep leak saved for Review'));
     expect(withRepair.gateMessage, contains('Next lesson unlocked'));
-    expect(withRepair.gateMessage, isNot(contains('A focused replay can help')));
+    expect(
+      withRepair.gateMessage,
+      isNot(contains('A focused replay can help')),
+    );
   });
 
   test('unfinished low-accuracy lessons cannot claim completed progress', () {
