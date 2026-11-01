@@ -106,6 +106,16 @@ TIER_A_COMMANDS = [
         ],
     },
     {
+        "name": "decision grade independent of hand outcome (ASM-05)",
+        "cmd": [
+            "flutter",
+            "test",
+            "test/ui_v2/act0_w12_outcome_bias_grading_v1_test.dart",
+            "-r",
+            "compact",
+        ],
+    },
+    {
         "name": "source task and choice identity (ASM-01)",
         "cmd": [
             "flutter",
