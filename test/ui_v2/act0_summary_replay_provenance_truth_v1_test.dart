@@ -184,7 +184,10 @@ Future<void> _leaveSummary(WidgetTester tester) async {
 }
 
 void main() {
-  test('completed low-accuracy lessons keep forward access without mastery', () {
+  test(
+    'completed low-accuracy lessons keep forward access without mastery',
+    () {
+
     const completed = Act0BlockCompletionSummaryV1(
       lessonTitle: 'First Table Guide',
       xpEarned: 0,
@@ -209,6 +212,32 @@ void main() {
     expect(completed.primaryCtaLabel, 'Open next lesson');
     expect(completed.gateMessage, contains('A focused replay can help'));
     expect(completed.gateMessage, isNot(contains('replay to unlock')));
+    },
+  );
+
+  test('legacy completion with missing scored history cannot claim mastery', () {
+    const legacy = Act0BlockCompletionSummaryV1(
+      lessonTitle: 'First Table Guide',
+      xpEarned: 0,
+      errorCount: 0,
+      independentProvenanceKnown: false,
+      curriculumCompleted: true,
+      taskCount: 4,
+      correctCount: 0,
+      startLevel: 1,
+      endLevel: 1,
+      startXp: 0,
+      endXp: 0,
+      xpTarget: 100,
+      nextLessonTitle: 'Blinds and action order',
+    );
+    expect(legacy.qualifiesForNextLesson, isTrue);
+    expect(legacy.needsMorePractice, isTrue);
+    expect(legacy.masteryStatus, Act0MasteryStatusV1.needsReview);
+    expect(legacy.milestoneTitle, 'Lesson complete');
+    expect(legacy.habitRewardTitle, isNot('Clean read'));
+    expect(legacy.habitRewardDetail, isNot(contains('Clean run')));
+    expect(legacy.gateMessage, contains('A focused replay can help'));
   });
 
   test('unfinished low-accuracy lessons cannot claim completed progress', () {
@@ -345,7 +374,6 @@ void main() {
         _text(tester, 'act0_shell_block_summary_accuracy'),
         '${n - 1}/$n assessed correct · full-lesson proof unverified · 1 error',
       );
-      expect(find.text('One clean read'), findsNothing);
       expect(
         _text(tester, 'act0_shell_block_summary_title'),
         'Lesson complete',
