@@ -245,6 +245,7 @@ class Act0BlockCompletionSummaryV1 {
     required this.errorCount,
     this.assistedCount = 0,
     this.independentProvenanceKnown = true,
+    this.curriculumCompleted = false,
     required this.taskCount,
     required this.correctCount,
     required this.startLevel,
@@ -280,6 +281,8 @@ class Act0BlockCompletionSummaryV1 {
   /// Accuracy remains answer correctness; independent proof is distinct.
   final int assistedCount;
   final bool independentProvenanceKnown;
+  // Source-owned curriculum closure is distinct from first-attempt accuracy.
+  final bool curriculumCompleted;
   final int taskCount;
   final int correctCount;
   final int startLevel;
@@ -326,17 +329,23 @@ class Act0BlockCompletionSummaryV1 {
   int get accuracyPercent =>
       taskCount <= 0 ? 100 : ((correctCount * 100) / taskCount).round();
 
+  bool get needsMorePractice =>
+      taskCount > 0 && accuracyPercent < unlockAccuracyPercent;
+
+  // A completed curriculum path cannot be re-locked by the coaching score.
+  // The 80% threshold still informs review, never independent mastery.
   bool get qualifiesForNextLesson =>
-      !hasNextLesson || accuracyPercent >= unlockAccuracyPercent;
+      curriculumCompleted || !hasNextLesson || !needsMorePractice;
 
   Act0MasteryStatusV1 get masteryStatus {
     if (errorCount == 0 &&
         taskCount > 0 &&
+        !needsMorePractice &&
         assistedCount == 0 &&
         independentProvenanceKnown) {
       return Act0MasteryStatusV1.cleanPass;
     }
-    if (deepLeakCount > 0 || !qualifiesForNextLesson) {
+    if (deepLeakCount > 0 || needsMorePractice) {
       return Act0MasteryStatusV1.needsReview;
     }
     if (assistedCount > 0 || !independentProvenanceKnown) {
@@ -661,7 +670,9 @@ class Act0BlockCompletionSummaryV1 {
       return 'Go to Review and fix the deep leak.';
     }
     if (masteryStatus == Act0MasteryStatusV1.needsReview) {
-      return 'Replay this block before moving on.';
+      return curriculumCompleted
+          ? 'Next lesson available. Revisit this block when ready.'
+          : 'Replay this block before moving on.';
     }
     if (quickFixCount > 0) {
       return hasNextLesson
@@ -713,7 +724,11 @@ class Act0BlockCompletionSummaryV1 {
     if (!isWorldComplete && growthLabel.isNotEmpty) {
       return 'Skill moved';
     }
-    if (errorCount == 0 && taskCount > 0) {
+    if (errorCount == 0 &&
+        taskCount > 0 &&
+        assistedCount == 0 &&
+        independentProvenanceKnown &&
+        !needsMorePractice) {
       return 'Clean read';
     }
     if (qualifiesForNextLesson) {
@@ -732,7 +747,11 @@ class Act0BlockCompletionSummaryV1 {
     if (!isWorldComplete && growthLabel.isNotEmpty) {
       return 'Practiced: $growthLabel. This read will help in the next spot.';
     }
-    if (errorCount == 0 && taskCount > 0) {
+    if (errorCount == 0 &&
+        taskCount > 0 &&
+        assistedCount == 0 &&
+        independentProvenanceKnown &&
+        !needsMorePractice) {
       return 'Clean run. This read will help in the next spot.';
     }
     if (qualifiesForNextLesson) {
@@ -742,6 +761,14 @@ class Act0BlockCompletionSummaryV1 {
   }
 
   String get gateMessage {
+    if (curriculumCompleted && needsMorePractice) {
+      if (isWorldComplete && nextWorldTitle?.trim().isNotEmpty == true) {
+        return 'World complete. ${nextWorldTitle!} is available. A focused replay can help.';
+      }
+      return hasNextLesson
+          ? 'Lesson complete. Next lesson available: ${nextLessonTitle!}. A focused replay can help.'
+          : 'Lesson complete. A focused replay can help.';
+    }
     if (deepLeakCount > 0 && qualifiesForNextLesson) {
       if (isWorldComplete &&
           nextWorldTitle != null &&
