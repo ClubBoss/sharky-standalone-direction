@@ -136,11 +136,34 @@ void main() {
     },
   );
 
+  testWidgets('the same two physical Hero cards may be ordered differently', (
+    tester,
+  ) async {
+    final source = _task('showdown_best_hand_drill').runner;
+    final table = source.table.copyWith(
+      seats: [
+        for (final seat in _twoLiveSeats(source.table))
+          seat.isHero
+              ? _fixtureSeat(
+                  seat,
+                  cards: source.table.heroCards.reversed.toList(),
+                )
+              : seat,
+      ],
+    );
+    await _pump(tester, source.copyWith(table: table));
+    await tester.tap(find.byKey(const Key('act0_shell_card_board_0')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Best shown hand: You'), findsOneWidget);
+  });
+
   for (final invalid in [
     'one-card-reveal',
     'placeholder-reveal',
     'duplicate-card',
     'hero-mismatch',
+    'hero-seat-duplicate',
+    'hero-id-conflict',
     'extra-board',
     'diagram',
     'unclassified',
@@ -176,6 +199,20 @@ void main() {
             Act0CardStateV1(rank: '5', suit: 'h'),
           ],
         );
+      } else if (invalid == 'hero-seat-duplicate') {
+        table = table.copyWith(
+          seats: [
+            for (final seat in table.seats)
+              seat.isHero
+                  ? _fixtureSeat(
+                      seat,
+                      cards: [table.heroCards.first, table.heroCards.first],
+                    )
+                  : seat,
+          ],
+        );
+      } else if (invalid == 'hero-id-conflict') {
+        table = table.copyWith(heroSeatId: 'co');
       } else if (invalid == 'extra-board') {
         table = table.copyWith(
           boardCards: [

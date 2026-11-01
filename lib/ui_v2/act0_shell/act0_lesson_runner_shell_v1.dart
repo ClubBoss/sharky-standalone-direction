@@ -2561,14 +2561,18 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             table.seats.length) {
       return null;
     }
+    final heroSeat = liveSeats.singleWhere((seat) => seat.isHero);
+    final explicitHeroSeatId = table.heroSeatId?.trim() ?? '';
+    if (explicitHeroSeatId.isNotEmpty &&
+        explicitHeroSeatId != heroSeat.seatId) {
+      return null;
+    }
     final heroKeys = table.heroCards.map(_toSolverCard).toList();
-    final heroSeatKeys = liveSeats
-        .singleWhere((seat) => seat.isHero)
-        .holeCards
-        .map(_toSolverCard)
-        .toList();
+    final heroSeatKeys = heroSeat.holeCards.map(_toSolverCard).toList();
     if (heroKeys.any((key) => key == null) ||
         heroSeatKeys.length != 2 ||
+        heroKeys.toSet().length != 2 ||
+        heroSeatKeys.toSet().length != 2 ||
         !heroKeys.toSet().containsAll(heroSeatKeys)) {
       return null;
     }
