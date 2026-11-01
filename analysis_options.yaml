@@ -57,6 +57,7 @@ analyzer:
     - lib/ui_v2/ui_v2.dart
     - lib/ui_v2/map/**
     - lib/plugins/**
+    - third_party/**
     - poker_backup/**
     - poker_clean_backup/**
     - your_repo_root/**

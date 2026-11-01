@@ -106,6 +106,10 @@ TIER_A_COMMANDS = [
         ],
     },
     {
+        "name": "poker hand-ranking truth (#334)",
+        "cmd": ["flutter", "test", "test/poker", "-r", "compact"],
+    },
+    {
         "name": "fast loop",
         "cmd": ["./tools/fast_loop_world1_v1.sh", "--force-tests", "--all-selected-guards"],
     },
