@@ -1,10 +1,8 @@
 name: Sharky Autopilot Observer (read-only)
 
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/sharky-autopilot-observer.yml'
-      - 'tools/sharky_autopilot/**'
+  # Deliberately no pull_request trigger: never execute untrusted PR code
+  # with the observer token. Changes require source/CI review before merge.
   workflow_dispatch:
   schedule:
     # Best-effort hourly UTC, off the top of the hour. Active only once merged to main.
@@ -22,7 +20,7 @@ concurrency:
 
 jobs:
   observe:
-    if: github.repository == 'ClubBoss/sharky-standalone-direction'
+    if: github.repository == 'ClubBoss/sharky-standalone-direction' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 4
     steps:

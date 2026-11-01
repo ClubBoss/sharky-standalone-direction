@@ -1,6 +1,7 @@
 import copy
 import json
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 from observe import REPO, PR_NUMBER, ISSUE_NUMBER, api_get, normalize, observe
@@ -15,6 +16,14 @@ class ObserverTests(unittest.TestCase):
             {"id": 3, "name": "Theory", "status": "completed", "conclusion": "skipped", "event": "push", "head_sha": "a" * 40},
         ]}
         self.issue = {"state": "open", "updated_at": "2026-11-02T00:00:00Z"}
+
+    def test_workflow_never_runs_untrusted_pr_code(self):
+        workflow = (Path(__file__).resolve().parents[2] /
+                    '.github/workflows/sharky-autopilot-observer.yml').read_text()
+        self.assertNotIn('  pull_request:', workflow)
+        self.assertIn("github.ref == 'refs/heads/main'", workflow)
+        self.assertIn('  workflow_dispatch:', workflow)
+        self.assertIn('  schedule:', workflow)
 
     def test_exact_sha_filter(self):
         obj = normalize(self.pr, self.actions, self.issue)

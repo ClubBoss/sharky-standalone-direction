@@ -13,3 +13,5 @@ Issue: [#356](https://github.com/ClubBoss/sharky-standalone-direction/issues/356
 **Status:** M1 candidate, NOT 24/7 deployed; M2 durable queue, event dedup, producer/consumer separation and quotas still needed before automatic model execution. Owner decisions remain explicit.
 
 macOS Python.org TLS note: If local urllib reports an absent CA bundle (without a GitHub API failure), use the OS-provided trust file with SSL_CERT_FILE=/etc/ssl/cert.pem. Never bypass TLS certificate verification or hardcode authentication tokens.
+
+Security gate: This workflow deliberately has NO pull_request trigger. Only default-branch scheduled/manual runs read GitHub with an observer token. PR source changes require local/independent review plus existing canonical CI prior to merging; PR-provided code never runs in the observer with credentials.
