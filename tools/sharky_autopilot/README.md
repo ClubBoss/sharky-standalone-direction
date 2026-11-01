@@ -30,14 +30,15 @@ separate M2B admission.
 ## M2B local candidate (disabled; independent review required)
 
 `journal_issue_gateway.py` is a narrow Issue #356 journal transport and bounded
-write-policy candidate. It is **NOT** attached to a workflow, committed to
-`main`, or permitted to post. Its CLI has no write option and invokes
-`run_once()` with `admit_post=False`. M1 remains read-only on its established
-schedule. No provider, learner data, protected PR or score is touched.
+write-policy candidate. It is **NOT** committed to `main` or deployed. Its diagnostic CLI has no
+write option and invokes `run_once()` with `admit_post=False`. An explicitly
+separate `.github/workflows/sharky-autopilot-journal.yml` is included as a
+trusted-main-only candidate; it is inert until separately accepted and merged.
+M1 remains read-only on its established schedule. No provider, learner data, protected PR or score is touched.
 
-Before any real posting, an independent reviewer and owner must approve a
-separate default-branch-only `.github/workflows/sharky-autopilot-journal.yml`
-change. That future job must serialize *all* journal writers in a single
+Before any real posting, an independent reviewer must ACCEPT the exact new
+default-branch-only workflow and the owner must admit deployment. The job
+serializes *all* journal writers in a single
 concurrency group, supply only the normal job token, have exact scoped
 `issues: write` and supporting read permissions, and explicitly call
 `run_once(..., admit_post=True)` after satisfying both the owner-admission
@@ -61,4 +62,4 @@ this is a durable operational log, not an immutable cryptographic ledger.
 
 Local tests:
 `python3 -m unittest discover -s tools/sharky_autopilot -p 'test_*.py' -v`.
-Expected current isolated total: 40 tests. **No deployed journal/queue/lease/worker.**
+Expected current isolated total: 40 tests. **No deployed journal/queue/lease/worker as of this draft.**
