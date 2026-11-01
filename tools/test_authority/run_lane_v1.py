@@ -106,6 +106,16 @@ TIER_A_COMMANDS = [
         ],
     },
     {
+        "name": "source task and choice identity (ASM-01)",
+        "cmd": [
+            "flutter",
+            "test",
+            "test/ui_v2/act0_assessment_identity_census_v1_test.dart",
+            "-r",
+            "compact",
+        ],
+    },
+    {
         "name": "poker hand-ranking truth (#334)",
         "cmd": ["flutter", "test", "test/poker", "-r", "compact"],
     },
