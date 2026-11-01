@@ -4161,6 +4161,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         act0PlacementAssessmentRunKindV1) {
       return Act0ReviewKindV1.initialAssessment;
     }
+    // Answering a task already answered outside placement (for example a
+    // Learn replay of a completed lesson) replays that exact task; it is
+    // not a first assessment.
+    if (act0IsExactTaskReplayV1(
+      _learningEvidenceHistoryV1.records,
+      taskId: decision.taskId,
+      attemptKey: decision.attemptKey,
+    )) {
+      return Act0ReviewKindV1.exactReplay;
+    }
     final conceptFamilyId =
         <String?>[
               decision.conceptFamilyId,
