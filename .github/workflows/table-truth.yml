@@ -34,6 +34,12 @@ jobs:
         run: >-
           flutter test test/ui_v2/act0_assisted_repair_route_v1_test.dart
           test/ui_v2/act0_lesson_wrap_up_source_recheck_v1_test.dart -r expanded
+      - name: Summary scored boundary and durable replay provenance (EN 14 Pro)
+        run: >-
+          flutter test
+          test/ui_v2/act0_summary_replay_provenance_truth_v1_test.dart
+          test/ui_v2/act0_replay_review_kind_v1_test.dart
+          -r expanded
       - uses: actions/upload-artifact@v4
         if: always()
         with:
