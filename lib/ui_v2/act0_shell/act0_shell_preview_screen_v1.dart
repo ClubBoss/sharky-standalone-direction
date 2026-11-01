@@ -3629,8 +3629,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _selectedWorldId = selectedWorld.worldId;
       _selectedLessonId = selectedLesson.lessonId;
       _selectedTaskId = selectedTask.taskId;
+      // Only assessed progress can make this run's provenance unknown: a
+      // completed theory or review step carries no scored evidence.
       final hasPriorLessonProgress = selectedLesson.taskList.any(
-        (task) => completedTaskIds.contains(task.taskId),
+        (task) =>
+            task.phase == Act0LessonPhaseV1.drill &&
+            completedTaskIds.contains(task.taskId),
       );
       final hasPriorLessonEvidence = parsed.learningEvidenceHistory.records.any(
         (record) =>
@@ -4161,16 +4165,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         act0PlacementAssessmentRunKindV1) {
       return Act0ReviewKindV1.initialAssessment;
     }
-    // Answering a task already answered outside placement (for example a
-    // Learn replay of a completed lesson) replays that exact task; it is
-    // not a first assessment.
-    if (act0IsExactTaskReplayV1(
-      _learningEvidenceHistoryV1.records,
-      taskId: decision.taskId,
-      attemptKey: decision.attemptKey,
-    )) {
-      return Act0ReviewKindV1.exactReplay;
-    }
+    // Answering a task already answered or completed outside placement (for
+    // example a Learn replay of a completed lesson) replays that exact task;
+    // it is not a first assessment. The decision is recorded before the task
+    // enters the durable completion set, so a first answer stays initial.
     final conceptFamilyId =
         <String?>[
               decision.conceptFamilyId,
@@ -4183,21 +4181,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               (value) => value.isNotEmpty && value != 'none',
               orElse: () => '',
             );
-    if (conceptFamilyId.isNotEmpty) {
-      // A placement diagnostic answer is assessment, not earlier learning.
-      final priorFamilyRecords = _learningEvidenceHistoryV1.records.where(
-        (record) =>
-            !record.isPlacementAssessment &&
-            act0ConceptFamilyIdForDurableEvidenceV1(record) == conceptFamilyId,
-      );
-      if (priorFamilyRecords.isNotEmpty &&
-          priorFamilyRecords.every(
-            (record) => record.taskId != decision.taskId,
-          )) {
-        return Act0ReviewKindV1.unseenTransfer;
-      }
-    }
-    return Act0ReviewKindV1.initialAssessment;
+    return act0UnroutedReviewKindV1(
+      records: _learningEvidenceHistoryV1.records,
+      completedTaskIds: _completedTaskIds,
+      taskId: decision.taskId,
+      attemptKey: decision.attemptKey,
+      conceptFamilyId: conceptFamilyId,
+    );
   }
 
   Act0ReviewKindV1 _routeReviewKindForTaskIdV1(String rawTaskId) {
@@ -13716,28 +13706,34 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final firstByTask = <String, Act0LearningEvidenceRecordV1>{};
     final wrongAssessedTaskIds = <String>{};
     var evidenceComplete = boundary != null && assessedTaskIds.isNotEmpty;
-    if (boundary != null) {
-      if (history.isNotEmpty && history.first.createdOrder > boundary + 1) {
-        evidenceComplete = false; // bounded history was truncated
+    if (boundary != null &&
+        history.isNotEmpty &&
+        history.first.createdOrder > boundary + 1) {
+      evidenceComplete = false; // bounded history was truncated
+    }
+    // A null boundary means the lesson already had assessed progress when
+    // this run began (for example a repair-route answer on one of its tasks),
+    // so full-lesson provenance stays unverified. Its first scored results
+    // are still the lesson's assessment; dropping them reported a correctly
+    // completed lesson as 0/N and a false "replay to unlock".
+    final windowStartOrder = boundary ?? 0;
+    for (final record in history) {
+      if (record.createdOrder <= windowStartOrder ||
+          record.isPlacementAssessment ||
+          record.lessonId != selectedLesson.lessonId ||
+          !assessedTaskIds.contains(record.taskId)) {
+        continue;
       }
-      for (final record in history) {
-        if (record.createdOrder <= boundary ||
-            record.isPlacementAssessment ||
-            record.lessonId != selectedLesson.lessonId ||
-            !assessedTaskIds.contains(record.taskId)) {
-          continue;
-        }
-        firstByTask.putIfAbsent(record.taskId, () => record);
-        if (!record.isCorrect) wrongAssessedTaskIds.add(record.taskId);
-        switch (record.assistanceKind) {
-          case Act0DecisionAssistanceV1.quickHint:
-          case Act0DecisionAssistanceV1.theoryRecall:
-            assistedTaskIds.add(record.taskId);
-          case Act0DecisionAssistanceV1.legacyUnknown:
-            evidenceComplete = false;
-          case Act0DecisionAssistanceV1.none:
-            break;
-        }
+      firstByTask.putIfAbsent(record.taskId, () => record);
+      if (!record.isCorrect) wrongAssessedTaskIds.add(record.taskId);
+      switch (record.assistanceKind) {
+        case Act0DecisionAssistanceV1.quickHint:
+        case Act0DecisionAssistanceV1.theoryRecall:
+          assistedTaskIds.add(record.taskId);
+        case Act0DecisionAssistanceV1.legacyUnknown:
+          evidenceComplete = false;
+        case Act0DecisionAssistanceV1.none:
+          break;
       }
     }
     if (firstByTask.length != assessedTaskIds.length) {
@@ -13892,11 +13888,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _lessonRunEvidenceStartOrderV1 =
             _lessonRunEvidenceBoundariesV1[_selectedLessonId];
       } else {
+        // Only assessed progress can make this run's provenance unknown: a
+        // completed theory or review step carries no scored evidence.
         final taskIds = <String>[
           for (final world in (widget.state ?? Act0ShellStateV1.sample).worlds)
             for (final lesson in world.lessons)
               if (lesson.lessonId == _selectedLessonId)
-                for (final task in lesson.taskList) task.taskId,
+                for (final task in lesson.taskList)
+                  if (task.phase == Act0LessonPhaseV1.drill) task.taskId,
         ];
         final hasOlderProgress =
             taskIds.any(_completedTaskIds.contains) ||

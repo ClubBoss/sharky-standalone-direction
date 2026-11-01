@@ -695,19 +695,31 @@ const Map<String, String> _sessionSummaryRepairFocusLabelsV1 = <String, String>{
 };
 
 /// True when [taskId] was already answered outside placement in [records],
-/// other than the decision [attemptKey] itself. Answering such a task again
-/// (for example a Learn replay of a completed lesson) is an exact replay of
-/// that task, not a first assessment.
+/// other than the decision [attemptKey] itself, or when it is already in the
+/// learner's durable [completedTaskIds]. Answering such a task again (for
+/// example a Learn replay of a completed lesson) is an exact replay of that
+/// task, not a first assessment.
+///
+/// [records] is the bounded evidence history
+/// ([Act0LearningEvidenceHistoryV1.maxRecords]); an older answer can be
+/// evicted from it. The persisted completion set is not capped, and a task
+/// enters it only after its own decision has been recorded, so it keeps the
+/// replay provenance after eviction and restart. Unknown provenance resolves
+/// to [Act0ReviewKindV1.exactReplay], which earns no due, spaced or transfer
+/// credit, rather than to a fresh assessment.
 bool act0IsExactTaskReplayV1(
   Iterable<Act0LearningEvidenceRecordV1> records, {
   required String taskId,
   required String attemptKey,
-}) => records.any(
-  (record) =>
-      !record.isPlacementAssessment &&
-      record.taskId == taskId &&
-      record.recordId != attemptKey,
-);
+  Set<String> completedTaskIds = const <String>{},
+}) =>
+    completedTaskIds.contains(taskId) ||
+    records.any(
+      (record) =>
+          !record.isPlacementAssessment &&
+          record.taskId == taskId &&
+          record.recordId != attemptKey,
+    );
 
 class Act0LearningEvidenceHistoryV1 {
   const Act0LearningEvidenceHistoryV1({

@@ -26,7 +26,9 @@ void main() {
     expect(source, contains('Repair landed'));
     expect(source, contains('Session result'));
     expect(source, contains('Collected read'));
-    expect(source, contains('Local read saved'));
+    // fc3415ae: the XP card's 'Local read saved' became 'Assessed accuracy'.
+    expect(source, contains('Assessed accuracy'));
+    expect(source, isNot(contains('Local read saved')));
     expect(source, isNot(contains('Proof confirmed')));
     expect(source, isNot(contains('Repair proof')));
     expect(source, isNot(contains('Session repair')));

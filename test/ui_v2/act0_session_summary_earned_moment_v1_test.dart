@@ -1042,7 +1042,10 @@ void main() {
       find.byKey(const Key('act0_shell_block_summary_xp_total')),
       findsOneWidget,
     );
-    expect(find.text('Local read saved'), findsOneWidget);
+    // fc3415ae replaced the old 'Local read saved' copy with the honest
+    // 'Assessed accuracy' label (pinned by s09_b2 and wave4_2 truth tests).
+    expect(find.text('Assessed accuracy'), findsOneWidget);
+    expect(find.text('Local read saved'), findsNothing);
     expect(find.text('Level 2'), findsNothing);
   });
 
