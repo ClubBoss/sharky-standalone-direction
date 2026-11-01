@@ -460,6 +460,44 @@ int _compareDueItems(Act0DueReviewItemV1 a, Act0DueReviewItemV1 b) {
   return concept != 0 ? concept : a.taskId.compareTo(b.taskId);
 }
 
+/// Review kind of a completed decision that no repair, recheck or placement
+/// route has already classified.
+///
+/// - A task answered before (durable completion or a non-placement record)
+///   is an [Act0ReviewKindV1.exactReplay]; see [act0IsExactTaskReplayV1].
+/// - A never-answered task in a concept family already practised on other
+///   tasks is an [Act0ReviewKindV1.unseenTransfer].
+/// - Anything else is the [Act0ReviewKindV1.initialAssessment].
+Act0ReviewKindV1 act0UnroutedReviewKindV1({
+  required Iterable<Act0LearningEvidenceRecordV1> records,
+  required Set<String> completedTaskIds,
+  required String taskId,
+  required String attemptKey,
+  required String conceptFamilyId,
+}) {
+  if (act0IsExactTaskReplayV1(
+    records,
+    taskId: taskId,
+    attemptKey: attemptKey,
+    completedTaskIds: completedTaskIds,
+  )) {
+    return Act0ReviewKindV1.exactReplay;
+  }
+  if (conceptFamilyId.isNotEmpty) {
+    // A placement diagnostic answer is assessment, not earlier learning.
+    final priorFamilyRecords = records.where(
+      (record) =>
+          !record.isPlacementAssessment &&
+          act0ConceptFamilyIdForDurableEvidenceV1(record) == conceptFamilyId,
+    );
+    if (priorFamilyRecords.isNotEmpty &&
+        priorFamilyRecords.every((record) => record.taskId != taskId)) {
+      return Act0ReviewKindV1.unseenTransfer;
+    }
+  }
+  return Act0ReviewKindV1.initialAssessment;
+}
+
 String act0ConceptFamilyIdForDurableEvidenceV1(
   Act0LearningEvidenceRecordV1 record,
 ) {

@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 
 /// A Learn replay of an already answered task is an exact replay, never a
@@ -7,10 +9,12 @@ Act0LearningEvidenceRecordV1 _record({
   required String recordId,
   required String taskId,
   required String runKind,
+  int createdOrder = 1,
+  String skillAtomId = 'board_read',
 }) => Act0LearningEvidenceRecordV1.tryParse({
   'schemaVersion': 1,
   'recordId': recordId,
-  'createdOrder': 1,
+  'createdOrder': createdOrder,
   'worldId': 'world_1',
   'lessonId': 'your_first_hand',
   'taskId': taskId,
@@ -21,7 +25,7 @@ Act0LearningEvidenceRecordV1 _record({
   'errorType': 'none',
   'conceptFamilyId': '',
   'repairFocusId': '',
-  'skillAtomId': 'board_read',
+  'skillAtomId': skillAtomId,
   'decisionTimeBucket': 'under_3s',
   'resultKind': 'correct',
   'assistanceKind': 'none',
@@ -98,5 +102,106 @@ void main() {
       isFalse,
       reason: 'placement is assessment, not earlier lesson learning',
     );
+  });
+
+  group('durable exact-replay provenance', () {
+    const taskId = 'your_first_hand_flop';
+    Act0ReviewKindV1 kind(
+      Iterable<Act0LearningEvidenceRecordV1> records, {
+      Set<String> completed = const <String>{},
+      String task = taskId,
+      String family = 'board_read',
+    }) => act0UnroutedReviewKindV1(
+      records: records,
+      completedTaskIds: completed,
+      taskId: task,
+      attemptKey: 'replay_attempt',
+      conceptFamilyId: family,
+    );
+
+    test('a completed task stays exactReplay after 200+ later records', () {
+      var history = const Act0LearningEvidenceHistoryV1().append(
+        _record(recordId: 'original', taskId: taskId, runKind: 'lesson'),
+      );
+      for (var i = 0; i < Act0LearningEvidenceHistoryV1.maxRecords + 1; i++) {
+        history = history.append(
+          _record(
+            recordId: 'later_$i',
+            taskId: 'other_task',
+            runKind: 'lesson',
+            createdOrder: i + 2,
+          ),
+        );
+      }
+      expect(
+        history.records.any((record) => record.taskId == taskId),
+        isFalse,
+        reason: 'the original answer was evicted',
+      );
+      // Without the durable completion set the eviction erases provenance:
+      // the replay would masquerade as an unseen transfer.
+      expect(kind(history.records), Act0ReviewKindV1.unseenTransfer);
+      expect(
+        kind(history.records, completed: const {taskId}),
+        Act0ReviewKindV1.exactReplay,
+      );
+    });
+
+    test('a first genuine answer is the initial assessment', () {
+      expect(kind(const []), Act0ReviewKindV1.initialAssessment);
+      final placement = _record(
+        recordId: 'p',
+        taskId: taskId,
+        runKind: 'placement',
+      );
+      expect(
+        kind([placement]),
+        Act0ReviewKindV1.initialAssessment,
+        reason: 'placement is assessment, not earlier learning',
+      );
+    });
+
+    test(
+      'a distinct, never-answered task in a practised family is transfer',
+      () {
+        final sibling = _record(
+          recordId: 's',
+          taskId: 'your_first_hand_turn',
+          runKind: 'lesson',
+        );
+        expect(
+          kind([sibling], completed: const {'your_first_hand_turn'}),
+          Act0ReviewKindV1.unseenTransfer,
+        );
+        expect(
+          kind([sibling], family: 'another_family'),
+          Act0ReviewKindV1.initialAssessment,
+        );
+      },
+    );
+
+    test('unknown evidence for a completed task never becomes proof', () {
+      // Completed on a legacy save with no surviving record: exactReplay
+      // earns no due, spaced or transfer credit.
+      expect(
+        kind(const [], completed: const {taskId}),
+        Act0ReviewKindV1.exactReplay,
+      );
+      final replay = Act0LearningEvidenceRecordV1.tryParse({
+        ..._record(
+          recordId: 'r',
+          taskId: taskId,
+          runKind: 'lesson',
+        ).toPayload(),
+        'reviewKind': 'exactReplay',
+        'recordedAtUtc': '2026-12-01T00:00:00.000Z',
+      })!;
+      final family = const Act0DurableRetentionHistoryV1()
+          .applyEvidence(replay)
+          .families
+          .single;
+      expect(family.spacedSuccessStage, 0);
+      expect(family.lastSpacedReviewAtUtc, isNull);
+    });
   });
 }
