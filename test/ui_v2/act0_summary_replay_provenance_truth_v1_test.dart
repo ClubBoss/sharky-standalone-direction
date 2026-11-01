@@ -218,6 +218,7 @@ void main() {
       errorCount: 0,
       independentProvenanceKnown: false,
       curriculumCompleted: true,
+      assessedEvidenceAvailable: false,
       taskCount: 4,
       correctCount: 0,
       startLevel: 1,
@@ -228,12 +229,39 @@ void main() {
       nextLessonTitle: 'Blinds and action order',
     );
     expect(legacy.qualifiesForNextLesson, isTrue);
-    expect(legacy.needsMorePractice, isTrue);
-    expect(legacy.masteryStatus, Act0MasteryStatusV1.needsReview);
+    expect(legacy.needsMorePractice, isFalse);
+    expect(legacy.masteryStatus, Act0MasteryStatusV1.learning);
     expect(legacy.milestoneTitle, 'Lesson complete');
     expect(legacy.habitRewardTitle, isNot('Clean read'));
     expect(legacy.habitRewardDetail, isNot(contains('Clean run')));
-    expect(legacy.gateMessage, contains('A focused replay can help'));
+    expect(legacy.gateMessage, contains('Assessment history unavailable'));
+  });
+
+  test('real open repair debt takes priority over generic replay', () {
+    const withRepair = Act0BlockCompletionSummaryV1(
+      lessonTitle: 'First Table Guide',
+      xpEarned: 0,
+      errorCount: 1,
+      curriculumCompleted: true,
+      taskCount: 4,
+      correctCount: 3,
+      startLevel: 1,
+      endLevel: 1,
+      startXp: 0,
+      endXp: 0,
+      xpTarget: 100,
+      nextLessonTitle: 'Blinds and action order',
+      deepLeakCount: 1,
+      hasSafeReviewTarget: true,
+    );
+    expect(withRepair.qualifiesForNextLesson, isTrue);
+    expect(withRepair.masteryStatus, Act0MasteryStatusV1.needsReview);
+    expect(withRepair.primaryCtaKind, Act0MilestoneCtaKindV1.reviewFirst);
+    expect(withRepair.primaryCtaLabel, 'Review first');
+    expect(withRepair.secondaryCtaKind, Act0MilestoneCtaKindV1.continueForward);
+    expect(withRepair.gateMessage, contains('Deep leak saved for Review'));
+    expect(withRepair.gateMessage, contains('Next lesson unlocked'));
+    expect(withRepair.gateMessage, isNot(contains('A focused replay can help')));
   });
 
   test('unfinished low-accuracy lessons cannot claim completed progress', () {
