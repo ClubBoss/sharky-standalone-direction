@@ -184,9 +184,7 @@ Future<void> _leaveSummary(WidgetTester tester) async {
 }
 
 void main() {
-  test(
-    'completed low-accuracy lessons keep forward access without mastery',
-    () {
+  test('completed 75% permits next lesson without mastery', () {
 
     const completed = Act0BlockCompletionSummaryV1(
       lessonTitle: 'First Table Guide',
@@ -212,10 +210,9 @@ void main() {
     expect(completed.primaryCtaLabel, 'Open next lesson');
     expect(completed.gateMessage, contains('A focused replay can help'));
     expect(completed.gateMessage, isNot(contains('replay to unlock')));
-    },
-  );
+  });
 
-  test('legacy completion with missing scored history cannot claim mastery', () {
+  test('legacy zero-evidence completion is not mastery', () {
     const legacy = Act0BlockCompletionSummaryV1(
       lessonTitle: 'First Table Guide',
       xpEarned: 0,
