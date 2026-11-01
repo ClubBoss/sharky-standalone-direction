@@ -13753,6 +13753,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         selectedLesson,
         _completedTaskIds,
       ),
+      assessedEvidenceAvailable: firstByTask.isNotEmpty,
       xpEarned: _lessonRunXp,
       errorCount: assessedErrorCount,
       assistedCount: lessonAssistedCount,
