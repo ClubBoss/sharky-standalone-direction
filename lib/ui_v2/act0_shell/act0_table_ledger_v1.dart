@@ -61,6 +61,7 @@ class Act0TableLedgerV1 {
     required this.heroPriceBb,
     required this.streetLabel,
     required this.problems,
+    this.minRaiseToBb = 0,
   });
 
   final Act0TableLedgerStatusV1 status;
@@ -74,6 +75,9 @@ class Act0TableLedgerV1 {
 
   /// What Hero must add to continue on the current street.
   final double heroPriceBb;
+
+  /// The smallest legal raise-to (or opening bet) on the current street.
+  final double minRaiseToBb;
   final String streetLabel;
   final List<String> problems;
 
@@ -248,6 +252,7 @@ Act0TableLedgerV1 act0TableLedgerForV1(Act0TableStateV1 table) {
       heroPriceBb: price < 0 ? 0 : price,
       streetLabel: _kLedgerStreetsV1[street],
       problems: List.unmodifiable(problems),
+      minRaiseToBb: currentBet + lastFullRaise,
     );
   }
 

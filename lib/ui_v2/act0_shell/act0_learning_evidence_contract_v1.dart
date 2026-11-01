@@ -694,6 +694,21 @@ const Map<String, String> _sessionSummaryRepairFocusLabelsV1 = <String, String>{
   'missed_action_read': 'Action reads',
 };
 
+/// True when [taskId] was already answered outside placement in [records],
+/// other than the decision [attemptKey] itself. Answering such a task again
+/// (for example a Learn replay of a completed lesson) is an exact replay of
+/// that task, not a first assessment.
+bool act0IsExactTaskReplayV1(
+  Iterable<Act0LearningEvidenceRecordV1> records, {
+  required String taskId,
+  required String attemptKey,
+}) => records.any(
+  (record) =>
+      !record.isPlacementAssessment &&
+      record.taskId == taskId &&
+      record.recordId != attemptKey,
+);
+
 class Act0LearningEvidenceHistoryV1 {
   const Act0LearningEvidenceHistoryV1({
     this.records = const <Act0LearningEvidenceRecordV1>[],
