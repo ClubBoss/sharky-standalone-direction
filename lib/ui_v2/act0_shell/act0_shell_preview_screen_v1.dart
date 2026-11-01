@@ -13753,6 +13753,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       errorCount: assessedErrorCount,
       assistedCount: lessonAssistedCount,
       independentProvenanceKnown: evidenceComplete,
+      // Progress and first-answer assessment are different truths. A lesson
+      // with all authored tasks completed stays complete even after an
+      // earlier miss; a low score still recommends practice, not a false lock.
+      curriculumLessonCompleted:
+          _completedLessonIds.contains(selectedLesson.lessonId) &&
+          _lessonComplete(selectedLesson),
       taskCount: assessedTaskIds.length,
       correctCount: assessedCorrectCount,
       startLevel: _progressSnapshot(
