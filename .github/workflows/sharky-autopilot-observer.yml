@@ -1,0 +1,42 @@
+name: Sharky Autopilot Observer (read-only)
+
+on:
+  # Deliberately no pull_request trigger: never execute untrusted PR code
+  # with the observer token. Changes require source/CI review before merge.
+  workflow_dispatch:
+  schedule:
+    # Best-effort hourly UTC, off the top of the hour. Active only once merged to main.
+    - cron: '17 * * * *'
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+  issues: read
+
+concurrency:
+  group: sharky-autopilot-observer
+  cancel-in-progress: false
+
+jobs:
+  observe:
+    if: github.repository == 'ClubBoss/sharky-standalone-direction' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check deterministic observer
+        run: python3 -m unittest discover -s tools/sharky_autopilot -p 'test_*.py' -v
+      - name: Read exact-head GitHub state (no writes)
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 tools/sharky_autopilot/observe.py --out "$RUNNER_TEMP/sharky-autopilot-observation.json"
+      - name: Preserve bounded proof snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: sharky-autopilot-observer-${{ github.run_id }}
+          path: ${{ runner.temp }}/sharky-autopilot-observation.json
+          retention-days: 3
+          if-no-files-found: error
