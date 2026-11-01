@@ -43,34 +43,32 @@ void main() {
       expect(plan.beats[3].commitment!.amountLabel, isEmpty);
     });
 
-    test('preserves exact source amount and never invents a missing amount', () {
-      final table = _table(
-        street: 'Flop',
-        board: const <Act0CardStateV1>[
-          Act0CardStateV1(rank: 'K', suit: 'c'),
-          Act0CardStateV1(rank: '7', suit: 'h'),
-          Act0CardStateV1(rank: '2', suit: 's'),
-        ],
-        trail: const <String>[
-          'BTN bets 3 BB flop',
-          'BB calls',
-          'BTN acts',
-        ],
-      );
+    test(
+      'preserves exact source amount and never invents a missing amount',
+      () {
+        final table = _table(
+          street: 'Flop',
+          board: const <Act0CardStateV1>[
+            Act0CardStateV1(rank: 'K', suit: 'c'),
+            Act0CardStateV1(rank: '7', suit: 'h'),
+            Act0CardStateV1(rank: '2', suit: 's'),
+          ],
+          trail: const <String>['BTN bets 3 BB flop', 'BB calls', 'BTN acts'],
+        );
 
-      final plan = act0TableChoreographyPlanForTableV1(table)!;
-      final commitments = plan.beats
-          .where(
-            (beat) =>
-                beat.kind ==
-                Act0TableChoreographyBeatKindV1.commitmentMove,
-          )
-          .toList(growable: false);
+        final plan = act0TableChoreographyPlanForTableV1(table)!;
+        final commitments = plan.beats
+            .where(
+              (beat) =>
+                  beat.kind == Act0TableChoreographyBeatKindV1.commitmentMove,
+            )
+            .toList(growable: false);
 
-      expect(commitments, hasLength(2));
-      expect(commitments[0].commitment!.amountLabel, '3 BB');
-      expect(commitments[1].commitment!.amountLabel, isEmpty);
-    });
+        expect(commitments, hasLength(2));
+        expect(commitments[0].commitment!.amountLabel, '3 BB');
+        expect(commitments[1].commitment!.amountLabel, isEmpty);
+      },
+    );
 
     test('check has focus but no chip motion and fold recesses', () {
       final table = _table(
@@ -80,11 +78,7 @@ void main() {
           Act0CardStateV1(rank: '8', suit: 'h'),
           Act0CardStateV1(rank: '4', suit: 'd'),
         ],
-        trail: const <String>[
-          'BB checks flop',
-          'CO folds',
-          'BTN acts',
-        ],
+        trail: const <String>['BB checks flop', 'CO folds', 'BTN acts'],
       );
 
       final plan = act0TableChoreographyPlanForTableV1(table)!;
@@ -93,8 +87,7 @@ void main() {
         plan.beats
             .where(
               (beat) =>
-                  beat.kind ==
-                  Act0TableChoreographyBeatKindV1.commitmentMove,
+                  beat.kind == Act0TableChoreographyBeatKindV1.commitmentMove,
             )
             .isEmpty,
         isTrue,
@@ -200,8 +193,7 @@ void main() {
       );
       final collect = plan.beats.indexWhere(
         (beat) =>
-            beat.kind ==
-            Act0TableChoreographyBeatKindV1.commitmentsCollect,
+            beat.kind == Act0TableChoreographyBeatKindV1.commitmentsCollect,
       );
       expect(
         act0TableChoreographyFrameAfterBeatV1(
@@ -211,10 +203,7 @@ void main() {
         containsAll(<String>['btn', 'bb']),
       );
       expect(
-        act0TableChoreographyFrameAfterBeatV1(
-          plan,
-          collect,
-        ).commitments,
+        act0TableChoreographyFrameAfterBeatV1(plan, collect).commitments,
         isEmpty,
       );
     });
@@ -266,11 +255,7 @@ void main() {
           Act0CardStateV1(rank: 'J', suit: 'd'),
           Act0CardStateV1(rank: '4', suit: 'c'),
         ],
-        trail: const <String>[
-          'BTN bets flop',
-          'BB checks river',
-          'BTN acts',
-        ],
+        trail: const <String>['BTN bets flop', 'BB checks river', 'BTN acts'],
       );
       final proseCards = _table(
         street: 'Turn',
@@ -304,10 +289,7 @@ void main() {
       );
 
       expect(
-        act0TableChoreographyPlanForTableV1(
-          table,
-          actorFocusSafe: false,
-        ),
+        act0TableChoreographyPlanForTableV1(table, actorFocusSafe: false),
         isNull,
       );
     });
@@ -320,6 +302,7 @@ Act0TableStateV1 _table({
   required List<String> trail,
 }) {
   return Act0TableStateV1(
+    scope: Act0TableScopeV1.playedHand,
     tableFormat: Act0TableFormatV1.sixMax,
     playerCount: 6,
     seats: const <Act0SeatStateV1>[
@@ -334,26 +317,10 @@ Act0TableStateV1 _table({
         seatLabel: 'SB',
         displayName: 'Small blind',
       ),
-      Act0SeatStateV1(
-        seatId: 'bb',
-        seatLabel: 'BB',
-        displayName: 'Big blind',
-      ),
-      Act0SeatStateV1(
-        seatId: 'utg',
-        seatLabel: 'UTG',
-        displayName: 'UTG',
-      ),
-      Act0SeatStateV1(
-        seatId: 'hj',
-        seatLabel: 'HJ',
-        displayName: 'HJ',
-      ),
-      Act0SeatStateV1(
-        seatId: 'co',
-        seatLabel: 'CO',
-        displayName: 'CO',
-      ),
+      Act0SeatStateV1(seatId: 'bb', seatLabel: 'BB', displayName: 'Big blind'),
+      Act0SeatStateV1(seatId: 'utg', seatLabel: 'UTG', displayName: 'UTG'),
+      Act0SeatStateV1(seatId: 'hj', seatLabel: 'HJ', displayName: 'HJ'),
+      Act0SeatStateV1(seatId: 'co', seatLabel: 'CO', displayName: 'CO'),
     ],
     heroCards: const <Act0CardStateV1>[
       Act0CardStateV1(rank: 'A', suit: 's'),

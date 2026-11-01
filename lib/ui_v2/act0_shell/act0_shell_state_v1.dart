@@ -839,8 +839,13 @@ class Act0RunnerOptionV1 {
   final List<String> repairFocusLabels;
 }
 
+/// Authored instructional intent, never a certificate of hand legality.
+/// Unclassified tables fail closed at hand-history consumers.
+enum Act0TableScopeV1 { unclassified, playedHand, orientation, explanation }
+
 class Act0TableStateV1 {
   const Act0TableStateV1({
+    this.scope = Act0TableScopeV1.unclassified,
     required this.tableFormat,
     required this.playerCount,
     this.density = Act0TableDensityV1.compactLesson,
@@ -863,6 +868,7 @@ class Act0TableStateV1 {
     this.instructionAnchor,
   });
 
+  final Act0TableScopeV1 scope;
   final Act0TableFormatV1 tableFormat;
   final int playerCount;
   final Act0TableDensityV1 density;
@@ -895,6 +901,7 @@ class Act0TableStateV1 {
   Act0SeatStateV1 get heroSeat => seats.firstWhere((seat) => seat.isHero);
 
   Act0TableStateV1 copyWith({
+    Act0TableScopeV1? scope,
     Act0TableFormatV1? tableFormat,
     Act0TableDensityV1? density,
     List<Act0SeatStateV1>? seats,
@@ -916,6 +923,7 @@ class Act0TableStateV1 {
     String? instructionAnchor,
   }) {
     return Act0TableStateV1(
+      scope: scope ?? this.scope,
       tableFormat: tableFormat ?? this.tableFormat,
       playerCount: playerCount,
       density: density ?? this.density,
@@ -940,10 +948,18 @@ class Act0TableStateV1 {
   }
 }
 
+enum Act0ActionTrailKindV1 { action, note }
+
 class Act0ActionTrailItemV1 {
-  const Act0ActionTrailItemV1({required this.label});
+  const Act0ActionTrailItemV1({required this.label})
+    : kind = Act0ActionTrailKindV1.action;
+
+  const Act0ActionTrailItemV1.note({required this.label})
+    : kind = Act0ActionTrailKindV1.note;
 
   final String label;
+  final Act0ActionTrailKindV1 kind;
+  bool get isNote => kind == Act0ActionTrailKindV1.note;
 }
 
 class Act0CardStateV1 {
@@ -7696,6 +7712,7 @@ const _meetTableRunner = Act0RunnerStateV1(
   nextLessonId: 'what_you_can_do',
   returnTarget: 'learn',
   table: Act0TableStateV1(
+    scope: Act0TableScopeV1.orientation,
     tableFormat: Act0TableFormatV1.sixMax,
     playerCount: 6,
     seats: <Act0SeatStateV1>[
@@ -7857,6 +7874,7 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
   nextLessonId: 'read_board',
   returnTarget: 'learn',
   table: Act0TableStateV1(
+    scope: Act0TableScopeV1.playedHand,
     tableFormat: Act0TableFormatV1.sixMax,
     playerCount: 6,
     seats: <Act0SeatStateV1>[
@@ -8019,6 +8037,7 @@ const _firstHandRunner = Act0RunnerStateV1(
   nextLessonId: 'read_board',
   returnTarget: 'learn',
   table: Act0TableStateV1(
+    scope: Act0TableScopeV1.playedHand,
     tableFormat: Act0TableFormatV1.sixMax,
     playerCount: 6,
     seats: <Act0SeatStateV1>[
@@ -8211,6 +8230,7 @@ const _readBoardRunner = Act0RunnerStateV1(
   nextLessonId: 'first_simple_decision',
   returnTarget: 'learn',
   table: Act0TableStateV1(
+    scope: Act0TableScopeV1.playedHand,
     tableFormat: Act0TableFormatV1.sixMax,
     playerCount: 6,
     seats: <Act0SeatStateV1>[
@@ -8319,6 +8339,7 @@ final _cardsRanksRunner = _firstHandRunner.copyWith(
     ),
   ],
   table: _firstHandRunner.table.copyWith(
+    scope: Act0TableScopeV1.orientation,
     centerLabel: 'Ranks and suits',
     emptyBoardLabel: '',
   ),
@@ -8472,13 +8493,14 @@ final _allInMeaningRunner = _potStackRunner.copyWith(
     ),
   ],
   table: _potStackRunner.table.copyWith(
+    scope: Act0TableScopeV1.explanation,
     centerLabel: 'All-in is all remaining chips',
     potLabel: 'Pot 41.5 BB',
     toCallLabel: '',
     actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'Blinds: 1.5 BB'),
-      Act0ActionTrailItemV1(label: 'Hero shoves 20 BB'),
-      Act0ActionTrailItemV1(label: 'CO calls 20 BB'),
+      Act0ActionTrailItemV1.note(label: 'Blinds: 1.5 BB'),
+      Act0ActionTrailItemV1.note(label: 'Hero shoves 20 BB'),
+      Act0ActionTrailItemV1.note(label: 'CO calls 20 BB'),
     ],
     highlightedSeatIds: const <String>['btn', 'co'],
     seats: _potStackRunner.table.seats
@@ -8645,15 +8667,16 @@ final _sidePotIntroRunner = _matchedChipsTransferRunner.copyWith(
     ),
   ],
   table: _matchedChipsTransferRunner.table.copyWith(
+    scope: Act0TableScopeV1.explanation,
     centerLabel: 'Hero cannot win side pot',
     potLabel: 'Main 60.5 BB; side 60 BB',
     actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'SB posts 0.5 BB, then folds'),
-      Act0ActionTrailItemV1(label: 'BB post is included in BB total'),
-      Act0ActionTrailItemV1(label: 'Hero all-in 20 BB'),
-      Act0ActionTrailItemV1(label: 'CO contributes 50 BB total'),
-      Act0ActionTrailItemV1(label: 'BB contributes 50 BB total'),
-      Act0ActionTrailItemV1(label: 'CO and BB: 30 BB each to side'),
+      Act0ActionTrailItemV1.note(label: 'SB posts 0.5 BB, then folds'),
+      Act0ActionTrailItemV1.note(label: 'BB post is included in BB total'),
+      Act0ActionTrailItemV1.note(label: 'Hero all-in 20 BB'),
+      Act0ActionTrailItemV1.note(label: 'CO contributes 50 BB total'),
+      Act0ActionTrailItemV1.note(label: 'BB contributes 50 BB total'),
+      Act0ActionTrailItemV1.note(label: 'CO and BB: 30 BB each to side'),
     ],
     highlightedSeatIds: const <String>['btn', 'co', 'bb'],
     seats: _matchedChipsTransferRunner.table.seats
@@ -8808,6 +8831,7 @@ final _winWaysRunner = _meetTableRunner.copyWith(
 );
 
 final _suitsRunner = _firstHandRunner.copyWith(
+  table: _firstHandRunner.table.copyWith(scope: Act0TableScopeV1.orientation),
   lessonId: 'suits_drill',
   lessonTitle: 'Cards, ranks & suits',
   caption: 'Each card has a rank and a suit. Ah means ace of hearts.',
@@ -13655,6 +13679,7 @@ final _w3LateInfoEdgeRunner = _latePositionRunner.copyWith(
     ),
   ],
   table: _latePositionRunner.table.copyWith(
+    scope: Act0TableScopeV1.playedHand,
     highlightedSeatIds: const <String>['co', 'btn', 'sb', 'bb'],
     actionTrail: const <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1(label: 'UTG folds'),
@@ -14032,6 +14057,7 @@ final _w3SameHandDifferentSeatRepairRunner = _world3PositionDisciplineRunner.cop
   ],
   table: _act0ReassignHeroSeatV1(
     _world3PositionDisciplineRunner.table.copyWith(
+      scope: Act0TableScopeV1.explanation,
       centerLabel: 'Same hand, seat changes',
       heroCards: const <Act0CardStateV1>[
         Act0CardStateV1(rank: 'A', suit: 'd'),
@@ -14039,9 +14065,9 @@ final _w3SameHandDifferentSeatRepairRunner = _world3PositionDisciplineRunner.cop
       ],
       highlightedSeatIds: const <String>['utg', 'co', 'btn', 'sb', 'bb'],
       actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'Frame 1: UTG has more behind'),
-        Act0ActionTrailItemV1(label: 'Frame 2: CO has fewer behind'),
-        Act0ActionTrailItemV1(label: 'Hero compares seats'),
+        Act0ActionTrailItemV1.note(label: 'Frame 1: UTG has more behind'),
+        Act0ActionTrailItemV1.note(label: 'Frame 2: CO has fewer behind'),
+        Act0ActionTrailItemV1.note(label: 'Hero compares seats'),
       ],
     ),
     heroSeatId: 'co',

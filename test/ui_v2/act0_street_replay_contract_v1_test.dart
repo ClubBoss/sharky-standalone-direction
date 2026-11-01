@@ -4,6 +4,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.d
 
 void main() {
   const multiStreetTable = Act0TableStateV1(
+    scope: Act0TableScopeV1.playedHand,
     tableFormat: Act0TableFormatV1.sixMax,
     playerCount: 2,
     seats: <Act0SeatStateV1>[

@@ -74,12 +74,15 @@ class Act0StreetReplayStepV1 {
 }
 
 Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
+  // Scope is authored independently of parser success. A seat map or chip
+  // diagram must never become a hand history merely because a label parses.
+  if (table.scope != Act0TableScopeV1.playedHand) return null;
   final trailLabels = table.actionTrail
-      .map((item) => item.label.trim())
-      .where((label) => label.isNotEmpty)
+      // Keep the original source index when a note is skipped.
+      .map((item) => item.isNote ? '' : item.label.trim())
       .toList(growable: false);
   final currentStreet = _act0StreetReplayStreetFromLabelV1(table.streetLabel);
-  if (trailLabels.isEmpty || currentStreet == null) {
+  if (!trailLabels.any((label) => label.isNotEmpty) || currentStreet == null) {
     return null;
   }
 

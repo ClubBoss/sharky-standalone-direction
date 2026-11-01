@@ -106,11 +106,14 @@ TIER_A_COMMANDS = [
         ],
     },
     {
-        "name": "street replay source chronology (PKR-03)",
+        "name": "source scope, showdown disclosure and replay chronology (Q0)",
         "cmd": [
             "flutter",
             "test",
             "test/ui_v2/act0_street_replay_contract_v1_test.dart",
+            "test/ui_v2/act0_source_scope_v1_test.dart",
+            "test/ui_v2/act0_source_scope_runner_v1_test.dart",
+            "test/ui_v2/act0_table_choreography_contract_v1_test.dart",
             "-r",
             "compact",
         ],
