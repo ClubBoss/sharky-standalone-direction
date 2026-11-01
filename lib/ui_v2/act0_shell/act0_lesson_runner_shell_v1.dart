@@ -2532,7 +2532,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     int upToIndex,
   ) {
     final labels = table.actionTrail
-        .map((item) => item.label)
+        .map((item) => item.isNote ? '' : item.label)
         .toList(growable: false);
     return act0CalcTrailPotV1(labels, upToIndex);
   }
@@ -2543,8 +2543,51 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
   _Act0ShowdownInsightV1? _computeShowdownInsight(Act0TableStateV1 table) {
-    if (table.boardCards.length < 5) {
+    if (table.scope != Act0TableScopeV1.playedHand ||
+        table.boardCards.length != 5 ||
+        table.heroCards.length != 2) {
       return null;
+    }
+    // A best-hand comparison needs every source-live opponent. Silently
+    // skipping a hidden/malformed hand would manufacture a winner. This is
+    // disclosure validation only; no history, stack or payout is inferred.
+    final liveSeats = table.seats
+        .where((seat) => seat.isInHand && !seat.isFolded)
+        .toList(growable: false);
+    if (liveSeats.length < 2 ||
+        liveSeats.where((seat) => seat.isHero).length != 1 ||
+        liveSeats.any((seat) => !seat.isOccupied) ||
+        table.seats.map((seat) => seat.seatId).toSet().length !=
+            table.seats.length) {
+      return null;
+    }
+    final heroKeys = table.heroCards.map(_toSolverCard).toList();
+    final heroSeatKeys = liveSeats
+        .singleWhere((seat) => seat.isHero)
+        .holeCards
+        .map(_toSolverCard)
+        .toList();
+    if (heroKeys.any((key) => key == null) ||
+        heroSeatKeys.length != 2 ||
+        !heroKeys.toSet().containsAll(heroSeatKeys)) {
+      return null;
+    }
+    for (final seat in liveSeats.where((seat) => !seat.isHero)) {
+      if (seat.cardsVisibleMode != Act0CardsVisibleModeV1.faceUp ||
+          seat.holeCards.length != 2)
+        return null;
+    }
+    final physicalCards = <String>{};
+    for (final card in [
+      ...table.boardCards,
+      ...table.heroCards,
+      for (final seat in table.seats)
+        if (!seat.isHero &&
+            seat.cardsVisibleMode == Act0CardsVisibleModeV1.faceUp)
+          ...seat.holeCards,
+    ]) {
+      final key = _toSolverCard(card);
+      if (key == null || !physicalCards.add(key)) return null;
     }
     final board = <String>[];
     final boardByCard = <String, List<String>>{};
@@ -2648,10 +2691,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         .map((index) => participants[index].displayLabel)
         .toList(growable: false);
     final winnerPhrase = winnerLabels.join(' & ');
-    final winnerVerb = winnerPhrase == 'You' ? 'win' : 'wins';
     String summary;
     if (winnerIndexes.length > 1) {
-      summary = 'Split pot: $winnerPhrase with ${_humanHandName(leadHand)}.';
+      summary =
+          'Tied best hands: $winnerPhrase with ${_humanHandName(leadHand)}.';
     } else {
       final loserCandidates = <int>[
         for (final idx in hands.keys)
@@ -2665,9 +2708,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           }
         }
         summary =
-            '$winnerPhrase $winnerVerb with ${_humanHandName(leadHand)} over ${_humanHandName(hands[bestLoser]!)}.';
+            'Best shown hand: $winnerPhrase with ${_humanHandName(leadHand)} over ${_humanHandName(hands[bestLoser]!)}.';
       } else {
-        summary = '$winnerPhrase $winnerVerb with ${_humanHandName(leadHand)}.';
+        summary =
+            'Best shown hand: $winnerPhrase with ${_humanHandName(leadHand)}.';
       }
     }
 
@@ -3155,7 +3199,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       _interactiveShowdownLine = '';
     }
     final trailPlaybackEnabled =
-        _heroDecisionReady && _actionTrailFocusedIndex != null && !isTeaching;
+        _heroDecisionReady &&
+        table.scope == Act0TableScopeV1.playedHand &&
+        _actionTrailFocusedIndex != null &&
+        _actionTrailFocusedIndex! >= 0 &&
+        _actionTrailFocusedIndex! < table.actionTrail.length &&
+        !table.actionTrail[_actionTrailFocusedIndex!].isNote &&
+        !isTeaching;
     final mergedHighlightIds = <String>{
       ...presentationTable.highlightedCardIds,
       ..._interactiveHighlightedCardIds,
@@ -3869,6 +3919,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                 const SizedBox(height: Act0ShellTokensV1.gapSm),
                 _ActionTrailV1(
                   items: table.actionTrail,
+                  isHandHistory: table.scope == Act0TableScopeV1.playedHand,
                   variant:
                       bottomContext.actionTrailVariant ??
                       _ActionTrailVariantV1.compactContext,
@@ -14085,9 +14136,11 @@ bool _isSafePriorActionTableCueV1(String cueLabel) {
 }
 
 String? _safePriorActionCueV1(Act0TableStateV1 table) {
+  if (table.scope != Act0TableScopeV1.playedHand) return null;
   final candidates = <String>[
     table.centerLabel,
-    for (final item in table.actionTrail.reversed) item.label,
+    for (final item in table.actionTrail.reversed)
+      if (!item.isNote) item.label,
   ];
   for (final candidate in candidates) {
     final label = candidate.trim();
@@ -14102,8 +14155,10 @@ String? _deriveFacingActorCueV1(
   BuildContext context, {
   required Act0TableStateV1 table,
 }) {
+  if (table.scope != Act0TableScopeV1.playedHand) return null;
   final candidates = <String>[
-    for (final item in table.actionTrail.reversed) item.label,
+    for (final item in table.actionTrail.reversed)
+      if (!item.isNote) item.label,
     table.centerLabel,
   ];
   for (final raw in candidates) {
@@ -14330,7 +14385,7 @@ bool _looksLikeTrailHistoryQuestionV1(
   Act0RunnerStateV1 runner,
   Act0TableStateV1 table,
 ) {
-  if (table.actionTrail.isEmpty) {
+  if (table.scope != Act0TableScopeV1.playedHand || table.actionTrail.isEmpty) {
     return false;
   }
   final question = runner.question.trim().toLowerCase();
@@ -14455,12 +14510,14 @@ class _ActionTrailV1 extends StatefulWidget {
   const _ActionTrailV1({
     required this.items,
     required this.variant,
+    required this.isHandHistory,
     this.streetLabel,
     this.refined = false,
     this.onFocusedIndexChanged,
   });
 
   final List<Act0ActionTrailItemV1> items;
+  final bool isHandHistory;
   final _ActionTrailVariantV1 variant;
   final String? streetLabel;
   final bool refined;
@@ -14515,7 +14572,7 @@ class _ActionTrailV1State extends State<_ActionTrailV1> {
   }
 
   void _emitFocusedIndex() {
-    if (widget.items.isEmpty) {
+    if (!widget.isHandHistory || widget.items.isEmpty) {
       return;
     }
     final normalized = _focusedIndex.clamp(0, widget.items.length - 1);
@@ -14615,6 +14672,13 @@ class _ActionTrailV1State extends State<_ActionTrailV1> {
         ? 0
         : _focusedIndex.clamp(0, visibleCount - 1);
     final text = items.map((item) => item.label).join('  .  ');
+    if (!widget.isHandHistory) {
+      return Text(
+        'Table notes\n$text',
+        key: const Key('act0_shell_table_notes'),
+        style: Act0ShellTokensV1.muted,
+      );
+    }
     final focusedLabel = items.isEmpty
         ? ''
         : act0RuntimeLocalizedActionTrailLabelV1(
