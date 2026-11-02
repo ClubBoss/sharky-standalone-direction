@@ -635,6 +635,40 @@ void main() {
     );
 
     test(
+      'failed reset heal followed by newer-copy corruption never resurrects stale XP',
+      () async {
+        final f = await seeded();
+        f.disk.failWriteKeys.add(rk('backup'));
+        f.disk.failRemoveKeys.add(rk('backup'));
+        expect(await f.store.clear(), isFalse);
+        expect(shape(f.disk), '[recovery=r2:null backup=r1:{"xp":50}]');
+
+        // The reset tombstone is observed, but its backup cannot be healed.
+        expect(await load(fresh()), isA<FormatException>());
+        f.disk.values[rk('recovery')] = '{corrupt';
+
+        // A cold load must not mistake the older backup for the current state.
+        expect(await load(fresh()), isA<FormatException>());
+        expect(shape(f.disk), '[recovery=BAD backup=r1:{"xp":50}]');
+      },
+    );
+
+    test(
+      'failed head rollback removal makes a cold load fail closed',
+      () async {
+        final d = await raw(legacy: '{"xp":50}');
+        d.failWriteKeys.add(rk('recovery'));
+        d.failRemoveKeys.add(rk('head'));
+
+        expect(await fresh().save('{"xp":70}'), isFalse);
+        expect(d.values[rk('head')], isNotNull);
+        expect(d.values[rk('recovery')], isNull);
+        expect(d.values[rk('backup')], isNull);
+        expect(await load(fresh()), isA<FormatException>());
+      },
+    );
+
+    test(
       'failed save: indeterminate, fresh process heals forward, never mixed',
       () async {
         final f = await seeded();

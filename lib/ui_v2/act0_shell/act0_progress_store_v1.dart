@@ -28,6 +28,7 @@ class Act0ProgressStoreV1 {
   static final _queues = <String, Future<void>>{};
   String get recoveryKey => '${key}_recovery';
   String get backupKey => '${key}_backup';
+  String get headKey => '${key}_head';
 
   Future<T> _serial<T>(Future<T> Function() operation) {
     final result = (_queues[key] ?? Future<void>.value()).then(
@@ -62,7 +63,14 @@ class Act0ProgressStoreV1 {
       final prefs = await SharedPreferences.getInstance();
       await prefs.reload();
       final current = await _resolve(prefs);
-      return await _commit(prefs, current.revision + 1, payload);
+      return await _commit(
+        prefs,
+        current.revision + 1,
+        payload,
+        previousRaw: current.revision == 0
+            ? null
+            : _envelope(current.revision, current.payload),
+      );
     } catch (_) {
       return false; // Preserve unreadable bytes; never replace them with defaults.
     }
@@ -75,8 +83,11 @@ class Act0ProgressStoreV1 {
       final prefs = await SharedPreferences.getInstance();
       await prefs.reload();
       var revision = 0;
+      String? previousRaw;
       try {
-        revision = (await _resolve(prefs)).revision;
+        final current = await _resolve(prefs);
+        revision = current.revision;
+        if (revision > 0) previousRaw = _envelope(revision, current.payload);
       } on _CheckpointHealFailure {
         // Storage refuses writes: do not destroy intact copies on a blind reset.
         return false;
@@ -84,7 +95,12 @@ class Act0ProgressStoreV1 {
         // Explicit reset over unreadable/conflicting copies outranks them all.
         revision = _highestRevision(prefs);
       }
-      final committed = await _commit(prefs, revision + 1, null);
+      final committed = await _commit(
+        prefs,
+        revision + 1,
+        null,
+        previousRaw: previousRaw,
+      );
       if (committed) {
         try {
           await prefs.remove(key);
@@ -101,12 +117,23 @@ class Act0ProgressStoreV1 {
   Future<bool> _commit(
     SharedPreferences prefs,
     int revision,
-    String? payload,
-  ) async {
+    String? payload, {
+    String? previousRaw,
+  }) async {
     final raw = _envelope(revision, payload);
-    // Recovery first, then backup. No rollback: a failure leaves at most one
-    // copy ahead, which the next read heals forward or fails closed on.
-    if (!await _write(prefs, recoveryKey, raw)) return false;
+    // Publish the revision fence first. If a checkpoint write then fails, a
+    // later read can distinguish the attempted state from an older survivor,
+    // even if the only checkpoint that reached the new revision is corrupted.
+    if (!await _write(prefs, headKey, raw)) {
+      await _restoreHead(prefs, previousRaw);
+      return false;
+    }
+    if (!await _write(prefs, recoveryKey, raw)) {
+      // Recovery did not reach the new state; when the previous state was
+      // verified, release the fence so that state remains readable.
+      await _restoreHead(prefs, previousRaw);
+      return false;
+    }
     if (!await _write(prefs, backupKey, raw)) return false;
     if (payload != null) {
       try {
@@ -116,6 +143,22 @@ class Act0ProgressStoreV1 {
       }
     }
     return true;
+  }
+
+  Future<void> _restoreHead(
+    SharedPreferences prefs,
+    String? previousRaw,
+  ) async {
+    if (previousRaw != null) {
+      await _write(prefs, headKey, previousRaw);
+      return;
+    }
+    try {
+      await prefs.remove(headKey);
+      await prefs.reload();
+    } catch (_) {
+      // If rollback cannot be verified, subsequent loads fail closed.
+    }
   }
 
   /// Landed means the durable bytes equal [value], whatever the call returned.
@@ -179,7 +222,7 @@ class Act0ProgressStoreV1 {
   /// revision on disk, otherwise the tombstone would lose to the old copy.
   int _highestRevision(SharedPreferences prefs) {
     var highest = 0;
-    for (final target in [recoveryKey, backupKey]) {
+    for (final target in [headKey, recoveryKey, backupKey]) {
       try {
         final raw = jsonDecode(prefs.getString(target) ?? '');
         final revision = raw is Map ? raw['revision'] : null;
@@ -193,8 +236,36 @@ class Act0ProgressStoreV1 {
   Future<({int revision, String? payload})> _resolve(
     SharedPreferences prefs,
   ) async {
+    final head = _parse(prefs, headKey);
     final rec = _parse(prefs, recoveryKey);
     final bak = _parse(prefs, backupKey);
+    if (prefs.containsKey(headKey) && head == null) {
+      throw const FormatException('Invalid progress checkpoint head');
+    }
+    if (head != null) {
+      // The head is a durable fence for the latest attempted commit. A stale
+      // but valid checkpoint must never be exposed when the fenced copy was
+      // lost or corrupted.
+      final matching = [
+        rec,
+        bak,
+      ].where((copy) => copy != null && copy.raw == head.raw);
+      if (matching.isEmpty) {
+        throw const FormatException('No checkpoint matches progress head');
+      }
+      for (final target in [recoveryKey, backupKey]) {
+        if (_parse(prefs, target)?.raw != head.raw &&
+            !await _write(prefs, target, head.raw)) {
+          throw const _CheckpointHealFailure();
+        }
+      }
+      if (_parse(prefs, headKey)?.raw != head.raw ||
+          _parse(prefs, recoveryKey)?.raw != head.raw ||
+          _parse(prefs, backupKey)?.raw != head.raw) {
+        throw const _CheckpointHealFailure();
+      }
+      return (revision: head.revision, payload: head.payload);
+    }
     if (rec != null && bak != null) {
       if (rec.revision == bak.revision) {
         if (rec.payload != bak.payload) {
