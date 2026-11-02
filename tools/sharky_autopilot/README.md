@@ -100,3 +100,23 @@ or M3 dispatch permission. Product DoD and SHARKY_100 remain unchanged.
 
 M2C focused tests:
 `python3 -m unittest discover -s tools/sharky_autopilot -p 'test_*.py' -q`.
+
+
+## M2D real local process-stop proof — isolated pilot (2026-11-02)
+
+`process_pilot.py` launches exactly one fixed offline Python child using
+`subprocess.Popen` (no shell, no inherited user environment, no secrets, no
+Codex/Claude/provider calls). It acquires the M2C SQLite lease first, waits for
+the child to be reaped and its private process group to disappear, then supplies
+a SHA-256 stop receipt and a tightly scoped in-process OS observation callback
+to `acknowledge_stopped`. The child may not be relaunched after task STOP;
+the second invocation yields NOOP. An existing ACTIVE lease blocks it.
+
+The process proof deliberately uses `provider=NONE`, zero model tokens and
+`execution_permitted=False` as *model dispatch* permission: the only allowed
+action is the pre-approved fixed offline child. It is **not a generic worker**,
+a supported Codex CLI launcher or an unattended macOS daemon. Stop verification
+does not yet survive caller crash with an ACTIVE lease, does not prove malicious
+process-tree isolation, and cannot be reused as M3 permission. No automatic
+lease reclamation on timeout/error; operator intervention is necessary.
+Do not schedule or merge with product workflows without an independent review.
