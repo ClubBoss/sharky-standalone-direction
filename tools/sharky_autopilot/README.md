@@ -120,3 +120,53 @@ does not yet survive caller crash with an ACTIVE lease, does not prove malicious
 process-tree isolation, and cannot be reused as M3 permission. No automatic
 lease reclamation on timeout/error; operator intervention is necessary.
 Do not schedule or merge with product workflows without an independent review.
+
+
+## M3A one-shot subscription Codex READ-ONLY pilot (2026-11-02)
+
+This is **not** general autonomous dispatch and not a production worker. The
+only permitted model task is a fixed, manually owner-admitted one-line marker
+response via the existing ChatGPT-authenticated Codex CLI on the authorized Mac.
+No GitHub Actions, daemon, cron, app code, agent-to-agent queue bridge, or
+headless Work/ordinary ChatGPT session is involved. No paid API.
+
+The M2C SQLite schema advances to v2 with only two recognized providers:
+`NONE` (legacy M2C/M2D, no model permission) and
+`CODEX_SUBSCRIPTION_READONLY_ONESHOT`. A v1 database is **rejected** rather
+than migrated or reinitialized. Only `admit_codex_readonly_once()` can create
+the latter task, bound to fixed ID, exact source base SHA, infra-only branch,
+one attempt, $0 budget and a separate owner-admission value. A leased Codex
+task still sets generic `execution_permitted=False`; the dedicated M3A
+adapter requires `codex_readonly_probe_permitted=True`, never grants writes
+or accepts a model/prompt/command from the task or user.
+
+`codex_readonly_pilot.py` requires verified, clean local source branch and
+reviewed main ancestry. The CLI has no command/model/task/database overrides
+and uses only the single fixed local queue path
+`~/Sharky_Autopilot_Pilot/m3a_state/codex-readonly-once.sqlite3`.
+A real launch requires the explicit flag `--owner-admit-readonly-once` and
+initial `--initialize`; missing admission or DB STOPs. The explicit invocation
+is one-shot: identical replay is NOOP without re-running the model. The state
+path is a cooperative safety gate against accidental repeated launch, **not**
+an anti-tamper guarantee against someone who can deliberately delete files.
+
+The fixed Codex command uses `gpt-5.6-luna`, LOW reasoning,
+`--sandbox read-only`, `--ephemeral`, `--ignore-user-config`, temporary
+empty working directory, bounded 70-second timeout, exact marker output, and
+no inherited provider/GitHub API tokens. Standard output/error are discarded;
+only a bounded receipt hash and status are emitted. On any failure, no
+provider fallback, no automatic retry and no paid API; a model run counts as
+the single attempt. Once the child is reaped and its process group has ended,
+a scoped verifier can close its lease even on model failure. If exit/stop is
+uncertain, the active lease remains and a human must inspect it.
+
+**Owner/QA gates:** independent review BEFORE the first actual gated model
+launch; exact branch/HEAD and relevant CI BEFORE merge; independent evidence
+after launch. The amount of available subscription quota cannot be proven by
+`codex login status` or the installed model list. One-off access proof is not
+a guaranteed 24/7 free allowance. This is a bounded test using existing
+included quota only, with **incremental paid spend zero**.
+
+**No M3 continuous scheduler is deployed.** Flutter, PR #355, protected PR
+#224, SHARKY_100 and genuine learner/DoD proof remain untouched. M2B GitHub
+Issue journal and M1 observer are unchanged.
