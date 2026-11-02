@@ -63,3 +63,40 @@ this is a durable operational log, not an immutable cryptographic ledger.
 Local tests:
 `python3 -m unittest discover -s tools/sharky_autopilot -p 'test_*.py' -v`.
 Expected current isolated total: 40 tests. **No deployed journal/queue/lease/worker as of this draft.**
+
+
+## M2C isolated local queue pilot — NOT deployed (2026-11-02)
+
+M1 observer and M2B Issue #356 journal are **deployed on main** and have
+verified successful real scheduled GitHub-hosted runs. This paragraph supersedes
+the historical M1/M2A/M2B "candidate" labels above; those preserve their original
+pre-merge provenance.
+
+`durable_queue.py` now proves an isolated, **local-only** SQLite queue for
+explicitly owner-admitted `AUTOPILOT_INFRA_TEST_ONLY` tasks. It requires an
+explicit database initialization, stable task identity and source event hash,
+an infra/autopilot-* branch, a 40-hex exact source SHA and zero incremental
+spend. `provider=NONE` and `execution_permitted=False` are hard-coded: it
+never calls Codex, Claude, a shell, a paid API or GitHub mutation. There are no
+credentials, daemon, Actions triggers or production worker.
+
+Atomic `BEGIN IMMEDIATE` lease reservation and a unique active-resource
+index prevent duplicate reservations across separate SQLite connections;
+reopening the DB preserves active leases and append-only operational events.
+Old/stale leases are diagnostic ONLY and never automatically reclaimed.
+`acknowledge_stopped` **requires a separately supplied trusted verifier** of
+worker exit (not implemented); the default always STOPs, even if a plausible
+receipt is provided. Unit tests may use a fake verifier solely to exercise state
+transitions. Only owner re-admission can retry a verified-stopped task, limited
+to two attempts. Missing/incompatible storage STOPs rather than silently
+recreating a database.
+
+**Current gaps:** no actual process-identity/exit verifier, no machine daemon,
+no queue replication to GitHub, no provider quota probe, no trusted
+source-to-task admission service, no native simulator readiness and no
+owner-approved live Codex/Claude worker. SQLite is one-host storage, not a
+distributed lease service. Never equate these simulation tests with M2 full PASS
+or M3 dispatch permission. Product DoD and SHARKY_100 remain unchanged.
+
+M2C focused tests:
+`python3 -m unittest discover -s tools/sharky_autopilot -p 'test_*.py' -q`.
