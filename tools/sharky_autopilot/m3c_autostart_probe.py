@@ -125,6 +125,10 @@ def run_once():
                    "stop_verified": result["stop_verified"],
                    "lease_closed": result["lease_closed"],
                    "sha256": result["receipt_sha256"],
+                   "exit_code": result["exit_code"],
+                   "failure_class": result["failure_class"],
+                   "timed_out": result["timed_out"],
+                   "elapsed_seconds": result["elapsed_seconds"],
                    "autonomous_model_dispatch": "OFF"}
         path = state / STOP_FILENAME
         with path.open("x", encoding="ascii") as fh:

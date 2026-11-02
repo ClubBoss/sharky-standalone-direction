@@ -232,3 +232,20 @@ and independent QA require a new owner-admitted M4 gate and strict
 one-writer authority. No product DoD/learner retention/SHARKY_100 claims.
 The Mac must remain awake for launchd to run. Subscription remaining quota
 is not guaranteed by an earlier login or one successful call.
+
+### M3C.R1 bounded non-secret failure classification (2026-11-02)
+
+The first real unattended M3C invocation on macOS returned STOP_FAILED after
+the 70-second limit. The persisted task was STOPPED after one attempt and
+its lease CLOSED; the launchd job was unregistered. Interactive and launchd
+Codex login-status diagnostics both passed, but the actual root cause remains
+UNKNOWN. Neither result grants another model attempt or product DoD.
+
+The candidate R1 change retains only exit_code, elapsed_seconds, timed_out and
+a fixed failure_class enum (NONE, TIMEOUT, NONZERO_EXIT, MISSING_OUTPUT,
+OUTPUT_TOO_LARGE, MARKER_MISMATCH, OUTPUT_READ_ERROR) in the private receipt.
+It does not capture stdout, stderr, prompt, user content, credentials or
+model responses. A failure still consumes the once-only task; uncertain OS
+stop still leaves the ACTIVE lease and raises. This patch adds observation
+for a separately admitted future proof, NOT recovery/retry of consumed M3C.
+Do not merge PR #363 as M3C runtime PASS until real independent proof exists.

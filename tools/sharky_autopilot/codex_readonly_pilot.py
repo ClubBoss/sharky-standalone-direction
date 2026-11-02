@@ -121,6 +121,8 @@ def run_once(db_path: str | Path, *, owner_admission, initialize=False,
                 "--ephemeral", "--ignore-user-config", "--skip-git-repo-check",
                 "--output-last-message", str(output_path), "-C", cwd, prompt,
             ]
+            started_at = time.monotonic()
+            timed_out = False
             try:
                 proc = subprocess.Popen(
                     cmd, cwd=cwd, env=_safe_env(), stdin=subprocess.DEVNULL,
@@ -130,7 +132,8 @@ def run_once(db_path: str | Path, *, owner_admission, initialize=False,
                 try:
                     proc.wait(timeout=MAX_SECONDS)
                 except subprocess.TimeoutExpired:
-                    # Uncertain stop => persistent ACTIVE lease and STOP.
+                    # Count this as failure even when termination is confirmed.
+                    timed_out = True
                     os.killpg(proc.pid, signal.SIGKILL)
                     proc.wait(timeout=5)
             except (OSError, subprocess.SubprocessError) as exc:
@@ -138,14 +141,20 @@ def run_once(db_path: str | Path, *, owner_admission, initialize=False,
             if not _session_gone(proc):
                 raise QueueStop("Codex process group not conclusively gone; lease remains ACTIVE")
             result = "STOP_FAILED"
-            if proc.returncode == 0 and output_path.is_file():
+            failure_class = ("TIMEOUT" if timed_out else
+                             "NONZERO_EXIT" if proc.returncode != 0 else
+                             "MISSING_OUTPUT")
+            if not timed_out and proc.returncode == 0 and output_path.is_file():
                 try:
-                    if output_path.stat().st_size <= 512 and (
-                        output_path.read_text(encoding="utf-8").strip() == marker
-                    ):
+                    if output_path.stat().st_size > 512:
+                        failure_class = "OUTPUT_TOO_LARGE"
+                    elif output_path.read_text(encoding="utf-8").strip() == marker:
                         result = "PASS_SCOPED"
+                        failure_class = "NONE"
+                    else:
+                        failure_class = "MARKER_MISMATCH"
                 except (OSError, UnicodeError):
-                    result = "STOP_FAILED"
+                    failure_class = "OUTPUT_READ_ERROR"
             evidence = hashlib.sha256(
                 f"{claim['lease_id']}:{proc.pid}:{proc.returncode}:{result}".encode("ascii")
             ).hexdigest()
@@ -163,6 +172,9 @@ def run_once(db_path: str | Path, *, owner_admission, initialize=False,
             return {"action": result, "task": task_id,
                     "model": MODEL, "reasoning": EFFORT, "sandbox": "read-only",
                     "model_calls": 1, "exit_code": proc.returncode,
+                    "failure_class": failure_class,
+                    "timed_out": timed_out,
+                    "elapsed_seconds": int(time.monotonic() - started_at),
                     "stop_verified": True, "lease_closed": True,
                     "receipt_sha256": evidence, "additional_paid_usd": 0,
                     "product_dod": "NOT_INFERRED", "autonomous_dispatch": "OFF"}

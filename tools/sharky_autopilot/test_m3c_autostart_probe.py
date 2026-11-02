@@ -70,7 +70,11 @@ class M3CContractTests(unittest.TestCase):
         self.assertEqual(s["tasks"][0]["status"], "STOPPED")
         self.assertEqual(s["leases"][0]["status"], "CLOSED")
         self.assertEqual([e["action"] for e in s["events"]], ["ADMITTED", "LEASED", "STOPPED"])
-        self.assertEqual(json.loads((state / a.STOP_FILENAME).read_text())["model_calls"], 1)
+        stored = json.loads((state / a.STOP_FILENAME).read_text())
+        self.assertEqual(stored["model_calls"], 1)
+        self.assertEqual(stored["failure_class"], "NONE")
+        self.assertIs(stored["timed_out"], False)
+        self.assertEqual(stored["exit_code"], 0)
         with mock.patch("codex_readonly_pilot.subprocess.Popen") as child:
             again = a.run_once()
             child.assert_not_called()
@@ -110,6 +114,11 @@ class M3CContractTests(unittest.TestCase):
         with mock.patch("codex_readonly_pilot.subprocess.Popen", side_effect=FailingChild) as model:
             self.assertEqual(a.run_once()["action"], "STOP_FAILED")
             model.assert_called_once()
+        stored = json.loads((self.home / "Sharky_Autopilot_Pilot/m3c_state"
+                             / a.STOP_FILENAME).read_text())
+        self.assertEqual(stored["failure_class"], "NONZERO_EXIT")
+        self.assertIs(stored["timed_out"], False)
+        self.assertEqual(stored["exit_code"], 42)
         with mock.patch("codex_readonly_pilot.subprocess.Popen") as model:
             self.assertEqual(a.run_once()["action"], "NOOP")
             model.assert_not_called()
@@ -124,6 +133,38 @@ class M3CContractTests(unittest.TestCase):
         db = connect(state / a.DATABASE)
         self.assertEqual(snapshot(db)["leases"][0]["status"], "ACTIVE")
         db.close()
+
+    def test_timeout_is_classified_without_retry(self):
+        import subprocess
+
+        class TimeoutChild(FakeChild):
+            calls = 0
+            def wait(self, timeout=None):
+                self.calls += 1
+                if self.calls == 1:
+                    raise subprocess.TimeoutExpired("codex", timeout)
+                self.returncode = -9
+                return -9
+
+        a.prepare_plist()
+        with mock.patch("codex_readonly_pilot.subprocess.Popen", side_effect=TimeoutChild) as child:
+            with mock.patch("codex_readonly_pilot.os.killpg") as signal_group:
+                self.assertEqual(a.run_once()["action"], "STOP_FAILED")
+                child.assert_called_once()
+                signal_group.assert_called_once()
+        state = self.home / "Sharky_Autopilot_Pilot/m3c_state"
+        receipt = json.loads((state / a.STOP_FILENAME).read_text())
+        self.assertEqual(receipt["failure_class"], "TIMEOUT")
+        self.assertIs(receipt["timed_out"], True)
+        self.assertEqual(receipt["exit_code"], -9)
+        db = connect(state / a.DATABASE)
+        data = snapshot(db)
+        db.close()
+        self.assertEqual(data["tasks"][0]["attempts"], 1)
+        self.assertEqual(data["leases"][0]["status"], "CLOSED")
+        with mock.patch("codex_readonly_pilot.subprocess.Popen") as again:
+            self.assertEqual(a.run_once()["action"], "NOOP")
+            again.assert_not_called()
 
     def test_source_profile_exact_identity(self):
         a.prepare_plist()
