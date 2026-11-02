@@ -14875,6 +14875,49 @@ final _w3PositionApplyIntroRunner = _world3PositionIntroRunner.copyWith(
   ],
 );
 
+const _w4BtnBbSixBbFlopTrailV1 = <Act0ActionTrailItemV1>[
+  Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+  Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+  Act0ActionTrailItemV1(label: 'UTG folds'),
+  Act0ActionTrailItemV1(label: 'HJ folds'),
+  Act0ActionTrailItemV1(label: 'CO folds'),
+  Act0ActionTrailItemV1(label: 'BTN raises 2.75 BB'),
+  Act0ActionTrailItemV1(label: 'SB folds'),
+  Act0ActionTrailItemV1(label: 'BB calls 2.75 BB'),
+  Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+];
+
+// The W4 BTN-vs-BB sizing family shares one legal history. Calls are total
+// street commitments, so the calculator takes BB's 2.75 maximum rather than
+// adding it to the posted 1 BB again; the folded SB's 0.5 post remains in pot.
+Act0TableStateV1 _act0W4BtnBbSixBbFlopV1(
+  Act0TableStateV1 table, {
+  bool btnCheckedBehind = false,
+}) {
+  final seats =
+      _act0WithAuthoredPreActionSeatsV1(
+            table,
+            foldedSeatIds: const <String>{'utg', 'hj', 'co', 'sb'},
+          ).seats
+          .map(
+            (seat) => seat.seatId == 'bb'
+                ? _act0CopySeatStateV1(seat, hasActed: true)
+                : seat,
+          )
+          .toList(growable: false);
+  return table.copyWith(
+    potLabel: 'Pot 6 BB',
+    toCallLabel: '',
+    actionTrail: <Act0ActionTrailItemV1>[
+      ..._w4BtnBbSixBbFlopTrailV1,
+      if (btnCheckedBehind) Act0ActionTrailItemV1(label: 'BTN checks'),
+    ],
+    activeSeatId: 'btn',
+    seats: seats,
+    highlightedSeatIds: const <String>['btn', 'bb'],
+  );
+}
+
 final _world4PurposeIntroRunner = _readBoardRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w4_purpose_intro',
@@ -14886,19 +14929,12 @@ final _world4PurposeIntroRunner = _readBoardRunner.copyWith(
   hint: 'Start with purpose: value, bluff, or protection.',
   question: 'What should you name before sizing a bet?',
   options: const <Act0RunnerOptionV1>[],
-  table: _readBoardRunner.table.copyWith(
-    streetLabel: 'Flop',
-    potLabel: 'Pot 6 BB',
-    toCallLabel: '',
-    centerLabel: 'Name purpose',
-    boardCards: _flopA72Cards,
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'BTN raises 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB calls 3 BB'),
-      Act0ActionTrailItemV1(label: 'Flop dealt'),
-    ],
-    activeSeatId: 'btn',
-    highlightedSeatIds: const <String>['btn', 'bb'],
+  table: _act0W4BtnBbSixBbFlopV1(
+    _readBoardRunner.table.copyWith(
+      streetLabel: 'Flop',
+      centerLabel: 'Name purpose',
+      boardCards: _flopA72Cards,
+    ),
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -15066,14 +15102,8 @@ final _world4ValueBetRunner = _world4ValuePurposeRunner.copyWith(
       feedbackReason: 'Checking can miss value when worse hands can call.',
     ),
   ],
-  table: _world4ValuePurposeRunner.table.copyWith(
-    potLabel: 'Pot 6 BB',
-    centerLabel: 'Value spot',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'BTN raises 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB calls 3 BB'),
-      Act0ActionTrailItemV1(label: 'BTN acts'),
-    ],
+  table: _act0W4BtnBbSixBbFlopV1(
+    _world4ValuePurposeRunner.table.copyWith(centerLabel: 'Value spot'),
   ),
 );
 
@@ -15173,13 +15203,8 @@ final _world4BluffPressureRunner = _world4BluffPurposeRunner.copyWith(
           'Checking is legal and not a disaster, but a small bet creates fold pressure at low cost.',
     ),
   ],
-  table: _world4BluffPurposeRunner.table.copyWith(
-    centerLabel: 'Fold pressure',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'BTN raises 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB calls 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB checks'),
-    ],
+  table: _act0W4BtnBbSixBbFlopV1(
+    _world4BluffPurposeRunner.table.copyWith(centerLabel: 'Fold pressure'),
   ),
 );
 
@@ -15212,13 +15237,8 @@ final _world4BadBluffRunner = _world4BluffPressureRunner.copyWith(
           'A pot-size bluff is too ambitious when fold pressure is unclear.',
     ),
   ],
-  table: _world4BluffPressureRunner.table.copyWith(
-    centerLabel: 'Low fold pressure',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'BTN raises 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB calls 3 BB'),
-      Act0ActionTrailItemV1(label: 'Flop: BB calls 3 BB'),
-    ],
+  table: _act0W4BtnBbSixBbFlopV1(
+    _world4BluffPressureRunner.table.copyWith(centerLabel: 'Low fold pressure'),
   ),
 );
 
@@ -15328,6 +15348,10 @@ final _world4ProtectionCheckRunner = _world4ProtectionBetRunner.copyWith(
       feedbackReason: 'Villain pays only when Hero bets.',
     ),
   ],
+  table: _act0W4BtnBbSixBbFlopV1(
+    _world4ProtectionBetRunner.table,
+    btnCheckedBehind: true,
+  ),
 );
 
 final _world4ProtectionRecapRunner = _world4ProtectionIntroRunner.copyWith(
