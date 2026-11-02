@@ -18,6 +18,14 @@ SCOPE = "AUTOPILOT_INFRA_TEST_ONLY"
 RESOURCE = "autopilot-infra-test"
 ADMISSION = "OWNER_ADMITS_INFRA_TEST_ONLY"
 PROVIDER = "NONE"
+CODEX_PROVIDER = "CODEX_SUBSCRIPTION_READONLY_ONESHOT"
+CODEX_ADMISSION = "OWNER_ADMITS_CODEX_READONLY_ONESHOT"
+CODEX_TASK = "m2c-codex-readonly-01"
+CODEX_BRANCH = "infra/autopilot-m3a-readonly-20261102"
+CODEX_BASE_SHA = "a1ac8b63d397a00ddeaa5f8251694ce0b6a37baa"
+CODEX_EVENT = hashlib.sha256(
+    f"SHARKY_M3A_OWNER_READONLY_ONCE:{CODEX_BASE_SHA}".encode("ascii")
+).hexdigest()
 ID_PATTERN = re.compile(r"m2c-[a-z0-9][a-z0-9-]{1,70}\Z")
 HEX64 = re.compile(r"[0-9a-f]{64}\Z")
 HEX40 = re.compile(r"[0-9a-f]{40}\Z")
@@ -43,6 +51,8 @@ def transaction(db):
 def connect(path: str | Path, *, initialize: bool = False):
     """Initialize only by explicit request; otherwise refuse missing databases."""
     path = Path(path)
+    if path.is_symlink():
+        raise QueueStop("queue database cannot be a symlink")
     if initialize:
         if path.exists():
             raise QueueStop("existing queue cannot be silently reinitialized")
@@ -65,7 +75,7 @@ def connect(path: str | Path, *, initialize: bool = False):
         resource TEXT NOT NULL CHECK (resource = 'autopilot-infra-test'),
         branch TEXT NOT NULL,
         base_sha TEXT NOT NULL,
-        provider TEXT NOT NULL CHECK (provider = 'NONE'),
+        provider TEXT NOT NULL CHECK (provider IN ('NONE','CODEX_SUBSCRIPTION_READONLY_ONESHOT')),
         incremental_spend_cents INTEGER NOT NULL
             CHECK (incremental_spend_cents = 0),
         status TEXT NOT NULL CHECK (status IN ('READY','LEASED','STOPPED')),
@@ -95,11 +105,11 @@ def connect(path: str | Path, *, initialize: bool = False):
         detail TEXT NOT NULL,
         at INTEGER NOT NULL
     );
-    PRAGMA user_version=1;
+    PRAGMA user_version=2;
     """)
     else:
         version = db.execute("PRAGMA user_version").fetchone()[0]
-        if version != 1:
+        if version != 2:
             db.close()
             raise QueueStop("untrusted or incompatible existing queue schema")
         expected = {"tasks", "leases", "events", "only_one_active_resource",
@@ -117,9 +127,9 @@ def _expect_time(at):
         raise QueueStop("invalid event time")
 
 
-def _task_hash(task_id, event_id, branch, base_sha):
+def _task_hash(task_id, event_id, branch, base_sha, *, provider=PROVIDER, max_attempts=2):
     raw = json.dumps([task_id, event_id, SCOPE, RESOURCE, branch, base_sha,
-                      PROVIDER, 0, 2], separators=(",", ":"))
+                      provider, 0, max_attempts], separators=(",", ":"))
     return hashlib.sha256(raw.encode("ascii")).hexdigest()
 
 
@@ -150,6 +160,38 @@ def admit(db, *, task_id, event_id, branch, base_sha, owner_admission, at):
     return {"action": "ADMITTED", "task_id": task_id}
 
 
+def admit_codex_readonly_once(db, *, owner_admission, at):
+    """Fixed owner-admitted one-shot infra marker; no arbitrary task inputs.
+
+    There is intentionally no general provider/admission API. This does not
+    authorize a code-writing worker, scheduled model calls, or other scope.
+    """
+    _expect_time(at)
+    if owner_admission != CODEX_ADMISSION:
+        raise QueueStop("Codex readonly owner admission absent")
+    digest = _task_hash(
+        CODEX_TASK, CODEX_EVENT, CODEX_BRANCH, CODEX_BASE_SHA,
+        provider=CODEX_PROVIDER, max_attempts=1,
+    )
+    with transaction(db):
+        existing = db.execute("SELECT * FROM tasks WHERE id=?", (CODEX_TASK,)).fetchone()
+        if existing:
+            if (existing["payload_hash"] != digest
+                    or existing["provider"] != CODEX_PROVIDER
+                    or existing["max_attempts"] != 1):
+                raise QueueStop("Codex one-shot identity changed")
+            return {"action": "NOOP", "task_id": CODEX_TASK}
+        db.execute("""INSERT INTO tasks
+            (id,event_id,payload_hash,scope,resource,branch,base_sha,provider,
+             incremental_spend_cents,status,attempts,max_attempts)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
+            (CODEX_TASK, CODEX_EVENT, digest, SCOPE, RESOURCE, CODEX_BRANCH,
+             CODEX_BASE_SHA, CODEX_PROVIDER, 0, "READY", 0, 1))
+        db.execute("INSERT INTO events(task_id,action,detail,at) VALUES (?,?,?,?)",
+                   (CODEX_TASK, "ADMITTED", "fixed Codex readonly once; manual only", at))
+    return {"action": "ADMITTED", "task_id": CODEX_TASK}
+
+
 def lease_once(db, *, worker_id, at):
     """Atomic reservation. Never runs a model or invokes a shell command."""
     _expect_time(at)
@@ -165,8 +207,20 @@ def lease_once(db, *, worker_id, at):
              ORDER BY rowid LIMIT 1""").fetchone()
         if task is None:
             return {"action": "IDLE", "reason": "no-admitted-ready-task"}
-        if task["scope"] != SCOPE or task["resource"] != RESOURCE or task["provider"] != PROVIDER or task["incremental_spend_cents"] != 0:
-            raise QueueStop("unexpected task capability or budget")
+        if task["scope"] != SCOPE or task["resource"] != RESOURCE or task["incremental_spend_cents"] != 0:
+            raise QueueStop("unexpected task scope/resource/budget")
+        is_codex = task["provider"] == CODEX_PROVIDER
+        if task["provider"] not in (PROVIDER, CODEX_PROVIDER):
+            raise QueueStop("unadmitted provider")
+        if is_codex and (task["id"] != CODEX_TASK
+                or task["event_id"] != CODEX_EVENT
+                or task["branch"] != CODEX_BRANCH
+                or task["base_sha"] != CODEX_BASE_SHA
+                or task["attempts"] != 0 or task["max_attempts"] != 1
+                or task["payload_hash"] != _task_hash(
+                    CODEX_TASK, CODEX_EVENT, CODEX_BRANCH, CODEX_BASE_SHA,
+                    provider=CODEX_PROVIDER, max_attempts=1)):
+            raise QueueStop("Codex probe capability mismatch")
         lease_id = str(uuid.uuid4())
         db.execute("UPDATE tasks SET status='LEASED',attempts=attempts+1 WHERE id=?",
                    (task["id"],))
@@ -178,7 +232,8 @@ def lease_once(db, *, worker_id, at):
             (task["id"],"LEASED",lease_id,"reservation only; provider OFF",at))
         return {"action": "LEASED", "task_id": task["id"], "lease_id": lease_id,
                 "resource": RESOURCE, "branch": task["branch"],
-                "provider": PROVIDER, "execution_permitted": False}
+                "provider": task["provider"], "execution_permitted": False,
+                "codex_readonly_probe_permitted": is_codex}
 
 
 def stale_leases(db, *, now, after_seconds):
