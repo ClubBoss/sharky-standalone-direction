@@ -1038,6 +1038,27 @@ void main() {
     );
 
     test(
+      'corrupt present head fails closed and preserves valid matching checkpoints',
+      () async {
+        final f = await seeded();
+        final head = f.disk.values[rk('head')]! as String;
+        final recovery = f.disk.values[rk('recovery')]! as String;
+        final backup = f.disk.values[rk('backup')]! as String;
+        final legacy = f.disk.values['flutter.$k']! as String;
+        expect(head, recovery);
+        expect(recovery, backup);
+        expect(await f.store.load(), '{"xp":50}');
+
+        f.disk.values[rk('head')] = '{corrupt';
+        expect(await load(fresh()), isA<FormatException>());
+        expect(f.disk.values[rk('head')], '{corrupt');
+        expect(f.disk.values[rk('recovery')], recovery);
+        expect(f.disk.values[rk('backup')], backup);
+        expect(f.disk.values['flutter.$k'], legacy);
+      },
+    );
+
+    test(
       'both copies corrupt fail closed and ignore the legacy mirror',
       () async {
         final d = await raw(rec: '{x', bak: '{y', legacy: '{"legacy":1}');
