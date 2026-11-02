@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_position_personalization_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
@@ -59,6 +60,34 @@ void main() {
           Act0FeedbackQualityV1.suboptimal =>
             Act0SkillReceiptOutcomeV1.needsRep,
         }, reason: option.id);
+        if (!option.isCorrect) {
+          final intent = buildAct0RepairIntentV1(
+            sourceWorldId: 'world_3',
+            sourceLessonId: 'position_checkpoint',
+            sourceTaskId: task.taskId,
+            runner: runner,
+            selectedOption: option,
+            mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+          );
+          expect(intent?.sourceTaskId, task.taskId, reason: option.id);
+          expect(intent?.missedSignalId, 'players_behind', reason: option.id);
+          expect(intent?.skillAtomId, 'table_position_read', reason: option.id);
+          expect(intent?.errorType, 'misread_position_action_order');
+          expect(intent?.targetTaskId, task.taskId, reason: option.id);
+          expect(
+            intent?.targetTaskId,
+            isNot(Act0PositionPersonalizationV1.repairTaskId),
+          );
+          expect(
+            intent?.targetTaskId,
+            isNot('early_vs_late_position_repair_utg_players_behind'),
+          );
+          expect(intent?.mappingType, 'intentional_exact', reason: option.id);
+          expect(
+            intent?.reasonCode,
+            'intentional_exact_replay_table_position_read_players_behind',
+          );
+        }
       }
 
       final originalButtonRoute = act0FirstValueSameSignalRepMappingV1(
@@ -80,7 +109,8 @@ void main() {
         sourceTaskId: task.taskId,
         receiptOutcome: 'learned',
       );
-      expect(w3ButtonDebtRoute, isNull);
+      expect(w3ButtonDebtRoute?.taskId, task.taskId);
+      expect(w3ButtonDebtRoute?.mappingType, 'intentional_exact');
     },
   );
 }

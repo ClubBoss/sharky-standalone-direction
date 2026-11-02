@@ -97,6 +97,44 @@ bool act0AreConsecutiveCivilDaysV1(String previousDay, String today) {
   }
 }
 
+Act0RepairIntentV1 _migratePersistedW1HeroButtonIntentV1(
+  Act0RepairIntentV1 intent,
+) {
+  if (intent.sourceWorldId != 'world_1' ||
+      intent.sourceLessonId != 'what_poker_is' ||
+      intent.sourceTaskId != 'what_poker_is_find_hero' ||
+      intent.result != 'incorrect' ||
+      intent.errorType != 'confused_table_identity' ||
+      intent.missedSignalId != 'hero_button' ||
+      intent.skillAtomId != 'table_position_read' ||
+      intent.mappingType != 'repair' ||
+      intent.reasonCode != 'same_signal_table_position_read_hero_button' ||
+      intent.targetWorldId != 'world_3' ||
+      intent.targetLessonId != 'position_checkpoint' ||
+      intent.targetTaskId !=
+          'position_checkpoint_position_checkpoint_table_notice') {
+    return intent;
+  }
+  return Act0RepairIntentV1(
+    schemaVersion: intent.schemaVersion,
+    sourceWorldId: intent.sourceWorldId,
+    sourceLessonId: intent.sourceLessonId,
+    sourceTaskId: intent.sourceTaskId,
+    choiceId: intent.choiceId,
+    result: intent.result,
+    errorType: intent.errorType,
+    missedSignalId: intent.missedSignalId,
+    missedSignalLabel: intent.missedSignalLabel,
+    skillAtomId: intent.skillAtomId,
+    skillLabel: intent.skillLabel,
+    targetWorldId: 'world_3',
+    targetLessonId: 'position_six_seats',
+    targetTaskId: 'position_six_seats_position_repair_seat_id_btn',
+    mappingType: intent.mappingType,
+    reasonCode: intent.reasonCode,
+  );
+}
+
 ({String worldId, String lessonId, String taskId, String mappingType})?
 act0FirstValueSameSignalRepMappingV1({
   required String nextRepId,
@@ -123,7 +161,10 @@ act0FirstValueSameSignalRepMappingV1({
   }
 
   final adjudication = act0RepairGapAdjudicationForSourceTaskV1(sourceTask);
-  if (adjudication != null) {
+  // This W1 correction applies to repair receipts only. Preserve its existing
+  // learned-receipt reinforcement route and all other adjudication behavior.
+  if (adjudication != null &&
+      (sourceTask != 'what_poker_is_find_hero' || isRepair)) {
     return switch (adjudication.outcome) {
       Act0RepairGapOutcomeV1.alternateSameSignalTarget ||
       Act0RepairGapOutcomeV1.newBoundedRepairItem => (
@@ -3699,21 +3740,30 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           validLessonIds.contains(intent.targetLessonId) &&
           validTaskIds.contains(intent.sourceTaskId) &&
           validTaskIds.contains(intent.targetTaskId);
+      final restoredRepairQueueEntries = parsed.multiRepairQueue.entries
+          .map((entry) {
+            final intent = _migratePersistedW1HeroButtonIntentV1(
+              entry.repairIntent,
+            );
+            return identical(intent, entry.repairIntent)
+                ? entry
+                : entry.copyWith(repairIntent: intent);
+          })
+          .where((entry) => isRestorableRepairIntentV1(entry.repairIntent))
+          .toList(growable: false);
+      final restoredRepairQueue = Act0MultiRepairQueueV1(
+        entries: List<Act0MultiRepairQueueEntryV1>.unmodifiable(
+          restoredRepairQueueEntries,
+        ),
+      );
       _openRepairIntentBySourceTaskId
         ..clear()
         ..addEntries(
-          parsed.multiRepairQueue
-              .activeRepairIntents()
-              .where(isRestorableRepairIntentV1)
-              .map((intent) => MapEntry(intent.sourceTaskId, intent)),
-        );
-      _multiRepairQueueV1 = Act0MultiRepairQueueV1(
-        entries: List<Act0MultiRepairQueueEntryV1>.unmodifiable(
-          parsed.multiRepairQueue.entries.where(
-            (entry) => isRestorableRepairIntentV1(entry.repairIntent),
+          restoredRepairQueue.activeRepairIntents().map(
+            (intent) => MapEntry(intent.sourceTaskId, intent),
           ),
-        ),
-      );
+        );
+      _multiRepairQueueV1 = restoredRepairQueue;
       _multiRepairQueueOrderV1 = parsed.multiRepairQueueOrder;
       _restorePersistedOpenRepairRecordsV1(state);
       _refreshRetentionMemoryStatusesV1();

@@ -345,7 +345,7 @@ void main() {
   testWidgets(
     'persisted locked W3 directed repair does not grant curriculum or XP',
     (tester) async {
-      await tester.binding.setSurfaceSize(const Size(430, 932));
+      await tester.binding.setSurfaceSize(const Size(393, 852));
       addTearDown(() => tester.binding.setSurfaceSize(null));
       await _pumpPersistedW1Learner(tester);
       await _answerCurrentRunnerV1(tester, correct: false);
@@ -353,7 +353,7 @@ void main() {
           tester.state(find.byType(Act0ShellPreviewScreenV1)) as dynamic;
       final receipt =
           root.debugSummaryHomeHandoffPayloadV1() as Map<String, String>;
-      const targetTask = 'position_checkpoint_position_checkpoint_table_notice';
+      const targetTask = 'position_six_seats_position_repair_seat_id_btn';
       expect(receipt['sourceTaskId'], 'what_poker_is_find_hero');
       expect(receipt['targetWorldId'], 'world_3');
       expect(receipt['targetTaskId'], targetTask);
@@ -367,9 +367,12 @@ void main() {
         'what_poker_is_find_hero',
       );
       await _answerCurrentRunnerV1(tester, correct: true);
-      await tester.tap(
-        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      final repairContinue = find.byKey(
+        const Key('act0_shell_feedback_continue_cta'),
       );
+      await tester.ensureVisible(repairContinue);
+      await tester.pumpAndSettle();
+      await tester.tap(repairContinue);
       await tester.pumpAndSettle();
       final after = _persistedLearningSnapshotV1(prefs);
       final beforeCompleted = (before['completedTaskIds'] as List)
@@ -541,7 +544,7 @@ void main() {
           root.debugNextUsefulHandTargetPayloadV1() as Map<String, Object?>;
       final worldId = withWorld3 ? 'world_3' : 'world_1';
       final taskId = withWorld3
-          ? 'position_checkpoint_position_checkpoint_table_notice'
+          ? 'position_six_seats_position_repair_seat_id_btn'
           : 'what_poker_is_find_hero';
       expect(home['sourceTaskId'], 'what_poker_is_find_hero');
       expect(home['targetWorldId'], worldId);

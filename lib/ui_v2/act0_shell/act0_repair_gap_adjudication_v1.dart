@@ -63,6 +63,9 @@ class Act0RepairGapAdjudicationV1 {
 }
 
 const String _priorExact = 'unrecorded_exact_source_fallback';
+const String _priorW1HeroButtonWrongSignal =
+    'mapped_wrong_signal:world_3/position_checkpoint/'
+    'position_checkpoint_position_checkpoint_table_notice:players_behind';
 const String _same = 'same concept and signal; different authored decision';
 const String _exact =
     'identity or definition check has no equivalent alternate';
@@ -73,6 +76,43 @@ const String _compat = 'schema and telemetry event names unchanged';
 
 const List<Act0RepairGapAdjudicationV1>
 act0RepairGapAdjudicationsV1 = <Act0RepairGapAdjudicationV1>[
+  Act0RepairGapAdjudicationV1(
+    sourceWorldId: 'world_1',
+    sourceLessonId: 'what_poker_is',
+    sourceTaskId: 'what_poker_is_find_hero',
+    misconception: 'mistaking the Button seat for another table identity',
+    conceptErrorId: 'confused_table_identity',
+    priorFallback: _priorW1HeroButtonWrongSignal,
+    candidateTargetIds: <String>[
+      'position_six_seats_position_repair_seat_id_btn',
+    ],
+    outcome: Act0RepairGapOutcomeV1.alternateSameSignalTarget,
+    targetWorldId: 'world_3',
+    targetLessonId: 'position_six_seats',
+    targetTaskId: 'position_six_seats_position_repair_seat_id_btn',
+    learnerEquivalenceRationale:
+        'both tasks identify BTN as a seat; the target asks the learner to '
+        'locate and tap BTN without changing the original W1 source identity',
+    difficultyRelationship: _sameDifficulty,
+    recheckPath: _recheck,
+    compatibilityImpact: _compat,
+  ),
+  Act0RepairGapAdjudicationV1(
+    sourceWorldId: 'world_3',
+    sourceLessonId: 'position_checkpoint',
+    sourceTaskId: 'position_checkpoint_position_checkpoint_table_notice',
+    misconception: 'CO has already acted last or late position is a free pass',
+    conceptErrorId: 'misread_position_action_order',
+    priorFallback: _priorExact,
+    candidateTargetIds: <String>[],
+    outcome: Act0RepairGapOutcomeV1.intentionalExactReplay,
+    learnerEquivalenceRationale:
+        'no authored alternate preserves the CO frame and its three players '
+        'behind; the available UTG repair changes both the seat and count',
+    difficultyRelationship: _sameDifficulty,
+    recheckPath: _recheck,
+    compatibilityImpact: _compat,
+  ),
   Act0RepairGapAdjudicationV1(
     sourceWorldId: 'world_1',
     sourceLessonId: 'what_poker_is',
