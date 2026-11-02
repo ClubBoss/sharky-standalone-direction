@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import os
+import pwd
 from pathlib import Path
 import plistlib
 import subprocess
@@ -75,7 +76,18 @@ def prepare_plist():
     target = root / "tools/sharky_autopilot/m3c_autostart_probe.py"
     if not target.is_file() or target.is_symlink():
         raise QueueStop("M3C fixed source missing")
+    # launchd GUI services may lack the interactive shell environment.
+    # Supply only fixed login-derived variables, not arbitrary caller data.
+    account = pwd.getpwuid(os.getuid()).pw_name
+    home = str(Path.home())
     job = {
+        "EnvironmentVariables": {
+            "HOME": home,
+            "USER": account,
+            "LOGNAME": account,
+            "PATH": home + "/.local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+            "LANG": "en_US.UTF-8",
+        },
         "Label": LABEL,
         "ProgramArguments": [sys.executable, "-E", "-s", str(target), "--run"],
         "RunAtLoad": True,

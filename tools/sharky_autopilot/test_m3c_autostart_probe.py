@@ -51,6 +51,11 @@ class M3CContractTests(unittest.TestCase):
         self.assertTrue(job["RunAtLoad"])
         self.assertFalse(job["KeepAlive"])
         self.assertNotIn("StartInterval", job)
+        env = job["EnvironmentVariables"]
+        self.assertEqual(env["HOME"], str(self.home))
+        self.assertEqual(set(env), {"HOME","USER","LOGNAME","PATH","LANG"})
+        self.assertIn("/.local/bin", env["PATH"])
+        self.assertIn("/usr/bin", env["PATH"])
         with mock.patch("codex_readonly_pilot.subprocess.Popen", side_effect=FakeChild) as child:
             result = a.run_once()
             child.assert_called_once()
