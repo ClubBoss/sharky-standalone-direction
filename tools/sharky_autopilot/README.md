@@ -170,3 +170,36 @@ included quota only, with **incremental paid spend zero**.
 **No M3 continuous scheduler is deployed.** Flutter, PR #355, protected PR
 #224, SHARKY_100 and genuine learner/DoD proof remain untouched. M2B GitHub
 Issue journal and M1 observer are unchanged.
+
+
+## M3B macOS launchd one-shot OFFLINE cycle — isolated candidate (2026-11-02)
+
+`m3b_autostart_probe.py` is a bounded, owner-admitted, **model-free** proof
+of unattended local launch via macOS `launchd`. It is NOT a Codex/Claude
+daemon, does not poll GitHub and cannot modify Flutter or product evidence.
+The only child is the already accepted M2D fixed offline Python marker,
+under one durable M2C SQLite lease with stop verification and no auto retries.
+
+The command `--prepare` creates a private local state folder and one
+`launchd` property list; it **never registers/starts** the job itself.
+The plist is `RunAtLoad=true`, `KeepAlive=false`, with no calendar interval,
+no periodic poll, no privileged service and no user-supplied executable.
+Exact clean infrastructure branch, admitted main ancestry and origin are
+required before arming and before executing. State lives ONLY in
+`~/Sharky_Autopilot_Pilot/m3b_state`; the source branch must not be dirty.
+
+After independent review and exact-head local proof, the owner-admitted one
+shot may be tested by registering that plist using the current user's GUI
+domain (not system-wide), recording the result, and immediately unregistering.
+The GitHub product workflows and paid provider tokens are never used.
+If macOS replays registration/login, the DB returns `NOOP` after STOP
+rather than a second child; if the process or stop evidence is uncertain, the
+lease stays ACTIVE (or runner fails closed) and operator must inspect.
+This deliberately cannot prove unattended *model* cycles, background use
+while the lid is closed, or power/wake resilience.
+
+Gate after M3B: one separately admitted M3C unattended read-only Codex
+task under exactly the same resource and quota/stop discipline. After M3C,
+a bounded write-capable implementation lane requires independent QA and
+existing product authority. Do not increase PR count for trivial substeps.
+Measure end-to-end acceptance time and owner intervention, not mere launches.
