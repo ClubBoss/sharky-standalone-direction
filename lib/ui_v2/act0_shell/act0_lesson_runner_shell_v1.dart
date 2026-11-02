@@ -1159,6 +1159,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.completionSummary,
     this.isAssistedDecision = false,
     this.localizeW1Ctas = false,
+    this.preserveSourceOwnedQuestion = false,
     this.firstValueReceiptLine,
     this.repairReasonLine,
     this.repairResultReceiptLine,
@@ -1211,6 +1212,8 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final bool isAssistedDecision;
   final bool localizeW1Ctas;
+  // Placement quick-check reuses one task ID for three authored questions.
+  final bool preserveSourceOwnedQuestion;
   final String? firstValueReceiptLine;
   final String? repairReasonLine;
   final String? repairResultReceiptLine;
@@ -2957,7 +2960,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             fallback: shouldShowRunnerHint ? runner.hint : '',
             languageCode: act0AcademyLanguageV1(context),
           );
-    final question = act0AcademyW1InstructionTaskV1(widget.selectedTaskId)
+    final question = widget.preserveSourceOwnedQuestion
+        ? runner.question
+        : act0AcademyW1InstructionTaskV1(widget.selectedTaskId)
         ? act0AcademyW1InstructionV1(
             context,
             widget.selectedTaskId,
@@ -3506,7 +3511,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       onContinue: widget.onContinueReview,
     );
     Widget buildRunnerActionDock({bool sceneAttachedShelf = false}) {
-      final actionDockQuestion = _usesCanonicalIntegratedLearningSceneV1
+      // The integrated scene owns its standard question chrome, but the
+      // Placement quick-check must expose each distinct source-owned prompt.
+      final actionDockQuestion =
+          _usesCanonicalIntegratedLearningSceneV1 &&
+              !widget.preserveSourceOwnedQuestion
           ? ''
           : question;
       return _RunnerActionDockV1(

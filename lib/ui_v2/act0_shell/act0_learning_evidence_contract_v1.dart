@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:crypto/crypto.dart';
+
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_family_repair_memory_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_candidate_practice_mapper_v1.dart';
@@ -233,10 +235,14 @@ class Act0LearningEvidenceRecordV1 {
   bool get isPlacementAssessment =>
       runKind.trim() == act0PlacementAssessmentRunKindV1;
 
-  bool get isAssistedCorrect =>
-      isCorrect &&
-      (assistanceKind == Act0DecisionAssistanceV1.quickHint ||
-          assistanceKind == Act0DecisionAssistanceV1.theoryRecall);
+  bool get isAssistedCorrect => isCorrect && hasKnownAssistance;
+
+  bool get hasKnownAssistance =>
+      assistanceKind == Act0DecisionAssistanceV1.quickHint ||
+      assistanceKind == Act0DecisionAssistanceV1.theoryRecall;
+
+  bool get isIndependentCorrect =>
+      isCorrect && assistanceKind == Act0DecisionAssistanceV1.none;
 
   Map<String, Object?> toPayload() {
     final payload = <String, Object?>{
@@ -704,8 +710,9 @@ class Act0LearningEvidenceHistoryV1 {
   static const int maxRecords = 200;
 
   final List<Act0LearningEvidenceRecordV1> records;
-  // First observation and first mistake per source task (Placement separate).
-  // Retain actual records, never synthesized outcomes or historical assistance.
+  // Compact first-fact anchors per source task (Placement separate). Retain
+  // actual records only: observation, mistake, known help, and independent
+  // correct. Missing legacy facts remain missing rather than reconstructed.
   final List<Act0LearningEvidenceRecordV1> sourceAnchors;
   final bool hasCompleteLineage;
 
@@ -732,16 +739,57 @@ class Act0LearningEvidenceHistoryV1 {
       ]);
       first.putIfAbsent('$key|first', () => record);
       if (!record.isCorrect) first.putIfAbsent('$key|wrong', () => record);
+      if (record.hasKnownAssistance) {
+        first.putIfAbsent('$key|assisted', () => record);
+      }
+      if (record.isIndependentCorrect) {
+        first.putIfAbsent('$key|independentCorrect', () => record);
+      }
     }
     return first.values.toSet().toList()
       ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));
   }
 
-  Map<String, Object?> lineagePayload() => {
-    'format': 1,
-    'complete': hasCompleteLineage,
-    'anchors': _anchors(provenanceRecords).map((r) => r.toPayload()).toList(),
-  };
+  static String _lineageMetadataDigestV1({
+    required bool complete,
+    required int anchorCount,
+    required String anchorSha256,
+  }) => sha256
+      .convert(
+        utf8.encode(
+          jsonEncode(<Object?>[
+            'act0_lineage_metadata_v1',
+            complete,
+            anchorCount,
+            anchorSha256,
+          ]),
+        ),
+      )
+      .toString();
+
+  Map<String, Object?> lineagePayload() {
+    final anchors = _anchors(
+      provenanceRecords,
+    ).map((record) => record.toPayload()).toList(growable: false);
+    final anchorSha = sha256
+        .convert(utf8.encode(jsonEncode(anchors)))
+        .toString();
+    return <String, Object?>{
+      'format': 1,
+      'complete': hasCompleteLineage,
+      'anchors': anchors,
+      // The anchor digest detects changed/removed source facts, while the
+      // metadata digest binds the completeness claim to those exact facts.
+      // Neither digest can reconstruct history lost before this snapshot.
+      'anchorCount': anchors.length,
+      'anchorSha256': anchorSha,
+      'lineageSha256': _lineageMetadataDigestV1(
+        complete: hasCompleteLineage,
+        anchorCount: anchors.length,
+        anchorSha256: anchorSha,
+      ),
+    };
+  }
 
   /// A snapshot-list alone cannot attest that earlier evidence never existed.
   /// Versioned metadata preserves only actual source anchors plus recent data.
@@ -766,6 +814,30 @@ class Act0LearningEvidenceHistoryV1 {
         .whereType<Act0LearningEvidenceRecordV1>()
         .toList();
     if (anchors.length != rawAnchors.length) return null;
+    final count = lineage['anchorCount'];
+    final digest = lineage['anchorSha256'];
+    final metaDigest = lineage['lineageSha256'];
+    final hasAnchorSeal = count is int && digest is String;
+    if (!hasAnchorSeal && (count != null || digest != null)) return null;
+    if (hasAnchorSeal &&
+        (count != rawAnchors.length ||
+            digest !=
+                sha256
+                    .convert(utf8.encode(jsonEncode(rawAnchors)))
+                    .toString())) {
+      return null; // Corrupt or truncated authoritative anchor projection.
+    }
+    final hasFullSeal = hasAnchorSeal && metaDigest is String;
+    if (metaDigest != null && !hasFullSeal) return null;
+    if (hasFullSeal &&
+        metaDigest !=
+            _lineageMetadataDigestV1(
+              complete: lineage['complete'] as bool,
+              anchorCount: count,
+              anchorSha256: digest,
+            )) {
+      return null; // A changed completeness flag cannot become source proof.
+    }
     final identities = <String, Act0LearningEvidenceRecordV1>{};
     for (final record in [...anchors, ...legacy.records]) {
       final prior = identities[record.recordId];
@@ -775,7 +847,9 @@ class Act0LearningEvidenceHistoryV1 {
     return Act0LearningEvidenceHistoryV1(
       records: legacy.records,
       sourceAnchors: _anchors(identities.values),
-      hasCompleteLineage: lineage['complete'] as bool,
+      // Old v19 copies without both seals retain real facts but cannot
+      // assert original completeness; a hash is not an external origin proof.
+      hasCompleteLineage: (lineage['complete'] as bool) && hasFullSeal,
     );
   }
 

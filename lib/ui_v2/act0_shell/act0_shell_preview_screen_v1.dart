@@ -6061,6 +6061,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 // already computes; it drives no progression.
                                 learningLoopStage: _activeActionSequenceStageV1,
                                 runner: activePlayRunner!,
+                                preserveSourceOwnedQuestion:
+                                    _placementDiagnosticActive,
                                 worldNumber: selectedWorld.worldNumber,
                                 selectedWorldId: selectedWorld.worldId,
                                 selectedLessonId: selectedLesson.lessonId,
@@ -13404,12 +13406,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final boundary = _lessonRunEvidenceLessonIdV1 == selectedLesson.lessonId
         ? _lessonRunEvidenceStartOrderV1
         : null;
-    final history = _learningEvidenceHistoryV1.records;
+    final recentHistory = _learningEvidenceHistoryV1.records;
+    final history = _learningEvidenceHistoryV1.provenanceRecords;
     final firstByTask = <String, Act0LearningEvidenceRecordV1>{};
     final wrongAssessedTaskIds = <String>{};
     var evidenceComplete = boundary != null && assessedTaskIds.isNotEmpty;
     if (boundary != null) {
-      if (history.isNotEmpty && history.first.createdOrder > boundary + 1) {
+      if (recentHistory.isNotEmpty &&
+          recentHistory.first.createdOrder > boundary + 1) {
         evidenceComplete = false; // bounded history was truncated
       }
       for (final record in history) {

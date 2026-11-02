@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
@@ -85,7 +86,12 @@ Act0LessonTaskV1 _task(String id) => Act0ShellStateV1.sample
     .firstWhere((l) => l.lessonId == _lesson)
     .taskList
     .singleWhere((t) => t.taskId == id);
-Act0CompletedDecisionV1 _decision(String id, int n, {bool correct = true}) {
+Act0CompletedDecisionV1 _decision(
+  String id,
+  int n, {
+  bool correct = true,
+  Act0DecisionAssistanceV1 assistanceKind = Act0DecisionAssistanceV1.none,
+}) {
   final task = _task(id);
   final option = task.runner.options.firstWhere((o) => o.isCorrect == correct);
   return Act0CompletedDecisionV1(
@@ -105,23 +111,28 @@ Act0CompletedDecisionV1 _decision(String id, int n, {bool correct = true}) {
     conceptFamilyId: 'action_read',
     skillAtomId: 'action_read',
     repairFocusId: 'no_bet_yet',
+    assistanceKind: assistanceKind,
   );
 }
 
-Act0LearningEvidenceRecordV1 _record(String id, int n, {bool correct = true}) =>
-    act0LearningEvidenceRecordFromCompletedDecisionV1(
-      _decision(id, n, correct: correct),
-      createdOrder: n,
-      sessionId: 'machine_regression',
-      runKey: Act0EvidenceRunKeyV1(
-        runId: 'machine_run|$n',
-        worldId: 'world_1',
-        lessonId: _lesson,
-        runOrdinal: n,
-        runKind: 'lesson',
-        startedBy: 'machine_regression',
-      ),
-    )!;
+Act0LearningEvidenceRecordV1 _record(
+  String id,
+  int n, {
+  bool correct = true,
+  Act0DecisionAssistanceV1 assistanceKind = Act0DecisionAssistanceV1.none,
+}) => act0LearningEvidenceRecordFromCompletedDecisionV1(
+  _decision(id, n, correct: correct, assistanceKind: assistanceKind),
+  createdOrder: n,
+  sessionId: 'machine_regression',
+  runKey: Act0EvidenceRunKeyV1(
+    runId: 'machine_run|$n',
+    worldId: 'world_1',
+    lessonId: _lesson,
+    runOrdinal: n,
+    runKind: 'lesson',
+    startedBy: 'machine_regression',
+  ),
+)!;
 
 Map<String, Object?> _snapshot({
   List<Map<String, Object?>> evidence = const [],
@@ -146,6 +157,19 @@ Map<String, Object?> _snapshot({
     'learningEvidenceHistory': evidence,
   };
 }
+
+Map<String, Object?> _schema19Snapshot(
+  Act0LearningEvidenceHistoryV1 history, {
+  required String selectedTaskId,
+  required List<String> completedTaskIds,
+  required Map<String, int?> lessonRunEvidenceBoundaries,
+}) => _snapshot()
+  ..['schemaVersion'] = 19
+  ..['selectedTaskId'] = selectedTaskId
+  ..['completedTaskIds'] = completedTaskIds
+  ..['learningEvidenceHistory'] = history.toPayload()
+  ..['learningEvidenceLineage'] = history.lineagePayload()
+  ..['lessonRunEvidenceBoundaries'] = lessonRunEvidenceBoundaries;
 
 Future<_Disk> _mount(
   WidgetTester tester,
@@ -384,6 +408,156 @@ void main() {
       expect(r.toStorageString(), h.toStorageString());
     });
 
+    test('200+ records preserve an authentic assisted correction', () {
+      var h = const Act0LearningEvidenceHistoryV1()
+          .append(_record(_target, 1, correct: false))
+          .append(
+            _record(
+              _target,
+              2,
+              assistanceKind: Act0DecisionAssistanceV1.quickHint,
+            ),
+          );
+      for (var n = 3; n <= 202; n++) {
+        h = h.append(_record('actions_legal_context', n));
+      }
+
+      final r = roundTrip(h);
+      final target = r.provenanceRecords
+          .where((record) => record.taskId == _target)
+          .toList();
+      expect(r.records, hasLength(200));
+      expect(
+        target.map((record) => record.createdOrder),
+        containsAll(<int>[1, 2]),
+      );
+      expect(
+        target.any(
+          (record) =>
+              record.recordId == 'machine_source|$_target|2' &&
+              record.isAssistedCorrect &&
+              record.assistanceKind == Act0DecisionAssistanceV1.quickHint,
+        ),
+        isTrue,
+      );
+    });
+
+    test('200+ records preserve the first independent correct sequence', () {
+      var h = const Act0LearningEvidenceHistoryV1().append(_record(_target, 1));
+      for (var n = 2; n <= 201; n++) {
+        h = h.append(_record('actions_legal_context', n));
+      }
+
+      final projection = Act0AchievementSeedProjectionV1.fromSources(
+        learningEvidenceHistory: roundTrip(h),
+      );
+      final firstCorrect = projection.seedForId(
+        act0AchievementSeedFirstCorrectReadV1,
+      );
+      expect(firstCorrect.earnedSequence, 1);
+      expect(firstCorrect.sourceSummary['firstCreatedOrder'], 1);
+    });
+
+    test('unsealed schema 19 never claims complete historical lineage', () {
+      var history = const Act0LearningEvidenceHistoryV1().append(
+        _record(_target, 1, correct: false),
+      );
+      for (var order = 2; order <= 203; order++) {
+        history = history.append(_record('actions_legal_context', order));
+      }
+      final payload =
+          jsonDecode(history.toStorageString()) as Map<String, dynamic>;
+      final lineage = payload['lineage'] as Map<String, dynamic>;
+      lineage.remove('anchorCount');
+      lineage.remove('anchorSha256');
+      lineage.remove('lineageSha256');
+      final restored = Act0LearningEvidenceHistoryV1.tryParse(payload)!;
+      expect(restored.hasCompleteLineage, isFalse);
+      expect(restored.records, hasLength(200));
+      expect(
+        restored.provenanceRecords.any(
+          (record) => record.recordId == 'machine_source|$_target|1',
+        ),
+        isTrue,
+      );
+
+      // A new checksum over an already-incomplete recovered history must
+      // never upgrade completeness, even after later genuine source events.
+      final appended = restored.append(_record('actions_legal_context', 204));
+      final resealed = jsonDecode(appended.toStorageString()) as Map;
+      final resealedLineage = resealed['lineage'] as Map;
+      expect(resealedLineage['anchorSha256'], isA<String>());
+      expect(resealedLineage['anchorCount'], isA<int>());
+      expect(resealedLineage['complete'], isFalse);
+      expect(
+        Act0LearningEvidenceHistoryV1.tryParse(resealed)!.hasCompleteLineage,
+        isFalse,
+      );
+    });
+
+    test('incomplete lineage cannot become complete by flipping metadata', () {
+      final incomplete = Act0LearningEvidenceHistoryV1(
+        records: <Act0LearningEvidenceRecordV1>[
+          _record(_target, 1, correct: false),
+        ],
+        hasCompleteLineage: false,
+      );
+      final raw = jsonDecode(incomplete.toStorageString()) as Map;
+      final lineage = raw['lineage'] as Map;
+      expect(lineage['complete'], isFalse);
+      lineage['complete'] = true;
+      // A digest covering only anchors is not evidence that earlier facts
+      // were never lost. Metadata integrity must include completeness.
+      final tampered = Act0LearningEvidenceHistoryV1.tryParse(raw);
+      expect(tampered == null || !tampered.hasCompleteLineage, isTrue);
+    });
+
+    test('truncated or altered sealed source anchors fail closed', () {
+      var history = const Act0LearningEvidenceHistoryV1().append(
+        _record(_target, 1, correct: false),
+      );
+      for (var order = 2; order <= 202; order++) {
+        history = history.append(_record('actions_legal_context', order));
+      }
+      final unmodified = jsonDecode(history.toStorageString());
+      expect(
+        Act0LearningEvidenceHistoryV1.tryParse(unmodified)!.hasCompleteLineage,
+        isTrue,
+      );
+      final trimmed =
+          jsonDecode(history.toStorageString()) as Map<String, dynamic>;
+      ((trimmed['lineage'] as Map)['anchors'] as List).removeAt(0);
+      expect(Act0LearningEvidenceHistoryV1.tryParse(trimmed), isNull);
+
+      final modified =
+          jsonDecode(history.toStorageString()) as Map<String, dynamic>;
+      (((modified['lineage'] as Map)['anchors'] as List).first
+              as Map)['choiceId'] =
+          'forged_choice';
+      expect(Act0LearningEvidenceHistoryV1.tryParse(modified), isNull);
+    });
+
+    test(
+      'conflicting duplicate event IDs in schema 19 restore fail closed',
+      () {
+        final first = _record(_target, 1, correct: false);
+        final original = const Act0LearningEvidenceHistoryV1().append(first);
+        final payload = jsonDecode(original.toStorageString()) as Map;
+        (payload['records'] as List).add(
+          _record(_target, 1, correct: true).toPayload(),
+        );
+        expect(Act0LearningEvidenceHistoryV1.tryParse(payload), isNull);
+      },
+    );
+
+    test('duplicate source record id never overwrites earned provenance', () {
+      final original = _record(_target, 1, correct: false);
+      final history = const Act0LearningEvidenceHistoryV1().append(original);
+      final replay = history.append(_record(_target, 1, correct: true));
+      expect(replay.provenanceRecords, hasLength(1));
+      expect(replay.provenanceRecords.single.toPayload(), original.toPayload());
+    });
+
     test('assistance attribution survives restore', () {
       final base = _record(_target, 1).toPayload();
       final h = const Act0LearningEvidenceHistoryV1().append(
@@ -411,8 +585,94 @@ void main() {
       final r = Act0LearningEvidenceHistoryV1.tryParse(legacy)!;
       expect(r.hasCompleteLineage, isFalse);
       expect(roundTrip(r).hasCompleteLineage, isFalse);
+      expect(
+        roundTrip(r).provenanceRecords.any(
+          (record) => record.assistanceKind != Act0DecisionAssistanceV1.none,
+        ),
+        isFalse,
+      );
     });
   });
+
+  testWidgets(
+    'block summary retains known assisted evidence outside recent 200',
+    (tester) async {
+      var history = const Act0LearningEvidenceHistoryV1()
+          .append(
+            _record(
+              'actions_legal_context',
+              1,
+              assistanceKind: Act0DecisionAssistanceV1.quickHint,
+            ),
+          )
+          .append(_record(_target, 2))
+          .append(_record('actions_fold_drill', 3))
+          .append(_record('actions_call_drill', 4))
+          .append(_record('actions_raise_drill', 5));
+      for (var n = 6; n <= 205; n++) {
+        history = history.append(_record('actions_raise_drill', n));
+      }
+
+      final world = Act0ShellStateV1.sample.worldById('world_1');
+      final completedTaskIds = <String>[
+        for (final lesson in world.lessons.takeWhile(
+          (lesson) => lesson.lessonId != _lesson,
+        ))
+          for (final task in lesson.taskList) task.taskId,
+        'actions_theory',
+        'actions_legal_context',
+        _target,
+        'actions_fold_drill',
+        'actions_call_drill',
+        'actions_raise_drill',
+      ];
+      await _mount(
+        tester,
+        _schema19Snapshot(
+          history,
+          selectedTaskId: 'actions_review',
+          completedTaskIds: completedTaskIds,
+          lessonRunEvidenceBoundaries: const <String, int?>{_lesson: 0},
+        ),
+      );
+
+      final reviewTask = _task('actions_review');
+      final answer = reviewTask.runner.options.firstWhere(
+        (option) => option.isCorrect,
+      );
+      final option = find.byKey(Key('act0_shell_option_${answer.id}'));
+      final feedback = find.byKey(
+        const Key('act0_shell_feedback_continue_cta'),
+      );
+      for (
+        var step = 0;
+        step < 12 && option.evaluate().isEmpty && feedback.evaluate().isEmpty;
+        step++
+      ) {
+        final next =
+            find
+                .byKey(const Key('act0_shell_theory_continue_cta'))
+                .evaluate()
+                .isNotEmpty
+            ? find.byKey(const Key('act0_shell_theory_continue_cta'))
+            : find.byKey(const Key('act0_shell_continue_cta'));
+        await tester.tap(next);
+        await tester.pumpAndSettle();
+      }
+      await tester.tap(option);
+      await tester.pumpAndSettle();
+      await tester.tap(feedback);
+      await tester.pumpAndSettle();
+
+      final summary = tester
+          .widget<Act0BlockCompletionShellV1>(
+            find.byType(Act0BlockCompletionShellV1),
+          )
+          .summary;
+      expect(summary.assistedCount, greaterThanOrEqualTo(1));
+      expect(summary.independentProvenanceKnown, isFalse);
+    },
+  );
 
   group('P0 startup integrity', () {
     Future<_Disk> mountHeld(
