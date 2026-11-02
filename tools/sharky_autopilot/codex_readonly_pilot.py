@@ -16,8 +16,9 @@ import time
 
 from durable_queue import (
     CODEX_ADMISSION, CODEX_BASE_SHA, CODEX_BRANCH, CODEX_PROVIDER,
-    CODEX_TASK, QueueStop, acknowledge_stopped, admit_codex_readonly_once,
-    connect, lease_once,
+    CODEX_TASK, M3C_ADMISSION, M3C_TASK, M3C_BRANCH, M3C_BASE_SHA,
+    QueueStop, acknowledge_stopped, admit_codex_readonly_once,
+    admit_m3c_readonly_once, connect, lease_once,
 )
 from process_pilot import _session_gone
 
@@ -42,7 +43,7 @@ def _safe_env():
     return {k: v for k, v in os.environ.items() if k in names}
 
 
-def _source_preflight():
+def _source_preflight(*, branch_name=CODEX_BRANCH, base_sha=CODEX_BASE_SHA):
     """Require the reviewed infra branch and its exact main ancestry."""
     root = Path(__file__).resolve().parents[2]
     cmd = ["git", "-C", str(root)]
@@ -57,8 +58,8 @@ def _source_preflight():
                                capture_output=True, text=True, check=True, timeout=5)
     except (OSError, subprocess.SubprocessError) as exc:
         raise QueueStop("untrusted or inaccessible infra source") from exc
-    if (branch.stdout.strip() != CODEX_BRANCH
-            or base.stdout.strip() != CODEX_BASE_SHA
+    if (branch.stdout.strip() != branch_name
+            or base.stdout.strip() != base_sha
             or origin.stdout.strip() !=
                "https://github.com/ClubBoss/sharky-standalone-direction.git"
             or dirty.stdout.strip()):
@@ -73,34 +74,52 @@ def _codex_binary():
     return str(expected)
 
 
-def run_once(db_path: str | Path, *, owner_admission, initialize=False) -> dict:
-    """Single local invocation; never automatically requeues a failed model."""
-    if owner_admission != CODEX_ADMISSION:
-        raise QueueStop("explicit one-shot owner admission missing")
-    _source_preflight()
+def run_once(db_path: str | Path, *, owner_admission, initialize=False,
+             profile="M3A") -> dict:
+    """Only two exact accepted marker profiles, never a general Codex worker."""
+    if profile == "M3A":
+        task_id, worker, marker, prompt, admit_fn = (
+            CODEX_TASK, WORKER, MARKER, PROMPT, admit_codex_readonly_once)
+        if owner_admission != CODEX_ADMISSION:
+            raise QueueStop("explicit one-shot owner admission missing")
+        _source_preflight()
+    elif profile == "M3C":
+        task_id, worker, marker = M3C_TASK, "m3c-codex-readonly-once", (
+            "SHARKY_M3C_UNATTENDED_READONLY_QUEUE_OK")
+        prompt = (
+            "MODEL: gpt-5.6-luna. REASONING: LOW. MODE: READ-ONLY TEST. "
+            "Reply with exactly SHARKY_M3C_UNATTENDED_READONLY_QUEUE_OK "
+            "and nothing else. No tools, files, shell, code changes or browsing. "
+            "One unattended subscription marker only; no product or DoD proof.")
+        admit_fn = admit_m3c_readonly_once
+        if owner_admission != M3C_ADMISSION:
+            raise QueueStop("M3C owner admission missing")
+        _source_preflight(branch_name=M3C_BRANCH,base_sha=M3C_BASE_SHA)
+    else:
+        raise QueueStop("unknown Codex profile")
     binary = _codex_binary()
     db = connect(db_path, initialize=initialize)
     try:
         now = int(time.time())
-        admit_codex_readonly_once(db, owner_admission=owner_admission, at=now)
-        claim = lease_once(db, worker_id=WORKER, at=now)
+        admit_fn(db, owner_admission=owner_admission, at=now)
+        claim = lease_once(db, worker_id=worker, at=now)
         if claim["action"] == "IDLE":
             return {"action": "NOOP", "model_calls": 0, "reason": "one-shot-already-consumed"}
         if claim["action"] != "LEASED":
             return {"action": claim["action"], "model_calls": 0,
                     "reason": claim.get("reason", "held-lease")}
-        if (claim["task_id"] != CODEX_TASK or claim["provider"] != CODEX_PROVIDER
+        if (claim["task_id"] != task_id or claim["provider"] != CODEX_PROVIDER
                 or claim["execution_permitted"] is not False
                 or claim["codex_readonly_probe_permitted"] is not True):
             raise QueueStop("unexpected model capability under task lease")
         proc = None
-        with tempfile.TemporaryDirectory(prefix="sharky-m3a-codex-readonly-") as cwd:
+        with tempfile.TemporaryDirectory(prefix="sharky-codex-readonly-") as cwd:
             output_path = Path(cwd) / "final-marker.txt"
             cmd = [
                 binary, "exec", "--model", MODEL, "--sandbox", "read-only",
                 "-c", 'model_reasoning_effort="low"',
                 "--ephemeral", "--ignore-user-config", "--skip-git-repo-check",
-                "--output-last-message", str(output_path), "-C", cwd, PROMPT,
+                "--output-last-message", str(output_path), "-C", cwd, prompt,
             ]
             try:
                 proc = subprocess.Popen(
@@ -122,7 +141,7 @@ def run_once(db_path: str | Path, *, owner_admission, initialize=False) -> dict:
             if proc.returncode == 0 and output_path.is_file():
                 try:
                     if output_path.stat().st_size <= 512 and (
-                        output_path.read_text(encoding="utf-8").strip() == MARKER
+                        output_path.read_text(encoding="utf-8").strip() == marker
                     ):
                         result = "PASS_SCOPED"
                 except (OSError, UnicodeError):
@@ -133,15 +152,15 @@ def run_once(db_path: str | Path, *, owner_admission, initialize=False) -> dict:
 
             def verified_stop(lease_id, worker_id, receipt):
                 return (lease_id == claim["lease_id"]
-                        and worker_id == WORKER and receipt == evidence
+                        and worker_id == worker and receipt == evidence
                         and _session_gone(proc))
 
             acknowledge_stopped(
-                db, lease_id=claim["lease_id"], worker_id=WORKER,
+                db, lease_id=claim["lease_id"], worker_id=worker,
                 stopped_receipt=evidence, at=int(time.time()),
                 verify_stop=verified_stop,
             )
-            return {"action": result, "task": CODEX_TASK,
+            return {"action": result, "task": task_id,
                     "model": MODEL, "reasoning": EFFORT, "sandbox": "read-only",
                     "model_calls": 1, "exit_code": proc.returncode,
                     "stop_verified": True, "lease_closed": True,

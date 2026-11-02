@@ -203,3 +203,32 @@ task under exactly the same resource and quota/stop discipline. After M3C,
 a bounded write-capable implementation lane requires independent QA and
 existing product authority. Do not increase PR count for trivial substeps.
 Measure end-to-end acceptance time and owner intervention, not mere launches.
+
+
+## M3C one-shot unattended subscription Codex READ-ONLY (2026-11-02)
+
+M3C combines the admitted M2C/M3A fixed read-only subscription Codex
+probe and the M3B macOS RunAtLoad launch. Its only model task returns the
+fixed `SHARKY_M3C_UNATTENDED_READONLY_QUEUE_OK` marker. It is explicitly
+owner-admitted to a dedicated one-attempt task, exact infra branch/base,
+the same SQLite single-host exclusive resource, and 0 incremental spend.
+No arbitrary prompts, task payloads, coding or product permissions.
+
+`m3c_autostart_probe.py --prepare` creates only a private launchd
+configuration; it does not execute or register it. Only after independent
+review should an operator bootstrap that exact plist into the user's
+`gui/<uid>` launchd domain once, inspect persisted SQLite proof and
+stop-receipt, and boot it out. The job has RunAtLoad=true, KeepAlive=false,
+and no recurring schedule, cron or restart policy. The Codex command
+uses fixed `gpt-5.6-luna`, LOW, `read-only`, `--ephemeral`,
+empty temporary directory, exact marker, bounded timeout, no GitHub
+tokens or paid API fallback. The single failed model attempt is
+consumed. On uncertain stop the ACTIVE lease is retained and no retry
+is allowed. On any completed attempt (including model failure)
+a second call yields NOOP/model_calls=0.
+
+M3C is NOT persistent autonomous source development. Actual code-writing
+and independent QA require a new owner-admitted M4 gate and strict
+one-writer authority. No product DoD/learner retention/SHARKY_100 claims.
+The Mac must remain awake for launchd to run. Subscription remaining quota
+is not guaranteed by an earlier login or one successful call.
