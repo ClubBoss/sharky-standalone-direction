@@ -147,3 +147,7 @@ assets/audit_hub_v1/history_index.json
 assets/audit_hub_v1/latest_run.json
 assets/audit_hub_v1/world_screenshot_evidence_v1/world3/
 assets/audit_hub_v1/world_screenshot_evidence_v1/world4/
+
+# R-02: lock application dependency resolution across Flutter and CocoaPods.
+!pubspec.lock
+!ios/Podfile.lock
