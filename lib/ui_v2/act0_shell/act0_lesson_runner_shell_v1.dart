@@ -925,11 +925,22 @@ String? _act0TrailActor(String stripped) {
 ///   \u2013 On street transition the per-street map is flushed into [runningPot].
 ({double potBb, String street}) act0CalcTrailPotV1(
   List<String> labels,
-  int upToIndex,
-) {
+  int upToIndex, {
+  Set<int> noteIndexes = const {},
+}) {
   if (labels.isEmpty) return (potBb: -1.0, street: '');
 
-  final firstLower = labels[0].toLowerCase();
+  // Preserve the source-index cutoff while ignoring only explicitly typed
+  // notes. Any untyped blank in the requested prefix is malformed history.
+  String? firstAction;
+  for (var i = 0; i <= upToIndex && i < labels.length; i++) {
+    if (noteIndexes.contains(i)) continue;
+    final label = labels[i];
+    if (label.trim().isEmpty) return (potBb: -1.0, street: '');
+    firstAction ??= label;
+  }
+  if (firstAction == null) return (potBb: -1.0, street: '');
+  final firstLower = firstAction.toLowerCase();
   // In a valid cash-game trail the *first* entry must be the small blind post.
   // A trail starting with BB only (or any other action) is incomplete \u2014 fall
   // back to the static potLabel so we never display a wrong pot.
@@ -942,6 +953,7 @@ String? _act0TrailActor(String stripped) {
   String currentStreet = 'Preflop';
 
   for (int i = 0; i <= upToIndex && i < labels.length; i++) {
+    if (noteIndexes.contains(i)) continue;
     final raw = labels[i];
 
     // Detect street transition: both "Flop: action" and bare "Flop dealt" forms.
@@ -974,6 +986,22 @@ String? _act0TrailActor(String stripped) {
   final totalPot =
       runningPot + streetContribs.values.fold(0.0, (acc, v) => acc + v);
   return (potBb: totalPot, street: currentStreet);
+}
+
+/// Calculates the pot from typed source trail items while preserving source
+/// indexes. Notes occupy an empty label slot and are never parsed as actions.
+({double potBb, String street}) act0CalcTableTrailPotV1(
+  Act0TableStateV1 table,
+  int upToIndex,
+) {
+  final notes = <int>{};
+  final labels = <String>[];
+  for (var i = 0; i < table.actionTrail.length; i++) {
+    final item = table.actionTrail[i];
+    labels.add(item.label);
+    if (item.isNote) notes.add(i);
+  }
+  return act0CalcTrailPotV1(labels, upToIndex, noteIndexes: notes);
 }
 
 /// Formats a pot double as a readable label: 6.5 \u2192 "Pot 6.5 BB", 7.0 \u2192 "Pot 7 BB".
@@ -2534,10 +2562,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     Act0TableStateV1 table,
     int upToIndex,
   ) {
-    final labels = table.actionTrail
-        .map((item) => item.isNote ? '' : item.label)
-        .toList(growable: false);
-    return act0CalcTrailPotV1(labels, upToIndex);
+    return act0CalcTableTrailPotV1(table, upToIndex);
   }
 
   /// Delegates to top-level [act0FormatPotLabelV1].
