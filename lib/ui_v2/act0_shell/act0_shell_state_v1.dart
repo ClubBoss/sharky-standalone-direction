@@ -573,6 +573,7 @@ class Act0RunnerStateV1 {
     this.sizingConfig = const Act0SizingConfigV1.disabled(),
     this.selectedPresetId,
     this.sharky = Act0SharkyCueV1.beginner,
+    this.feedbackSignalId,
   });
 
   final String lessonId;
@@ -598,6 +599,7 @@ class Act0RunnerStateV1 {
   final Act0SizingConfigV1 sizingConfig;
   final String? selectedPresetId;
   final Act0SharkyCueV1 sharky;
+  final String? feedbackSignalId;
 
   Act0TeachingStepV1? get activeTeachingStep {
     if (teachingStepIndex < 0 || teachingStepIndex >= teachingSteps.length) {
@@ -630,6 +632,7 @@ class Act0RunnerStateV1 {
     Act0SizingConfigV1? sizingConfig,
     String? selectedPresetId,
     Act0SharkyCueV1? sharky,
+    String? feedbackSignalId,
   }) {
     return Act0RunnerStateV1(
       lessonId: lessonId ?? this.lessonId,
@@ -655,6 +658,7 @@ class Act0RunnerStateV1 {
       sizingConfig: sizingConfig ?? this.sizingConfig,
       selectedPresetId: selectedPresetId ?? this.selectedPresetId,
       sharky: sharky ?? this.sharky,
+      feedbackSignalId: feedbackSignalId ?? this.feedbackSignalId,
     );
   }
 
@@ -13887,6 +13891,7 @@ final _world3PositionRecapRunner = _world3LateOpenRunner.copyWith(
 final _w3TablePositionNoticeRunner = _world3LateOpenRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w3_table_position_notice',
+  feedbackSignalId: 'players_behind',
   caption: 'Real table. Hero is CO with QJs and three seats still act after.',
   hint: 'Before choosing an action, notice what the seat order gives you.',
   question: 'What is the clean seat read here?',

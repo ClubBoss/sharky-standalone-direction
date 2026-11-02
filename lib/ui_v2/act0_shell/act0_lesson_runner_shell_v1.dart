@@ -6703,6 +6703,36 @@ Act0FeedbackSignalProofV1? _feedbackSignalProofForRunnerV1({
   final targetOption = selectedOption?.isCorrect == true
       ? selectedOption
       : correctOption;
+  // This authored transfer teaches the CO seat order. It inherits repair
+  // labels and a price label from its source runner, but those fields are not
+  // evidence that the learner answered a price question.
+  if (runner.feedbackSignalId == 'players_behind') {
+    final heroSeatId = (table.heroSeatId ?? '').trim();
+    final seatsBehind = <String>[];
+    if (heroSeatId.isNotEmpty) {
+      final seatOrder = table.canonicalSeatOrder;
+      final heroIndex = seatOrder.indexWhere(
+        (seatId) => seatId.toLowerCase() == heroSeatId.toLowerCase(),
+      );
+      if (heroIndex >= 0) {
+        for (var offset = 1; offset < seatOrder.length; offset++) {
+          final seatId = seatOrder[(heroIndex + offset) % seatOrder.length]
+              .toLowerCase();
+          if (table.seats.any(
+            (seat) => seat.seatId == seatId && seat.isOccupied && seat.isInHand,
+          )) {
+            seatsBehind.add(seatId);
+          }
+        }
+      }
+    }
+    return _feedbackSignalProofV1(
+      signalId: 'players_behind',
+      label: 'Players behind',
+      seatIds: seatsBehind,
+    );
+  }
+
   if (selectedOption != null) {
     final repairSeatIds = _trimmedUniqueStringsV1(
       selectedOption.repairFocusSeatIds,
@@ -6833,6 +6863,12 @@ Act0SkillReceiptV1? act0FirstValueSkillReceiptForRunnerV1({
 _skillReceiptSpecForSignalIdV1(String signalId) {
   return switch (signalId.trim()) {
     'hero_button' => (
+      skillAtomId: 'table_position_read',
+      skillLabel: 'Table position read',
+      nextRepId: 'repeat_table_position_read',
+      nextRepLabel: 'use the same position read once more',
+    ),
+    'players_behind' => (
       skillAtomId: 'table_position_read',
       skillLabel: 'Table position read',
       nextRepId: 'repeat_table_position_read',
