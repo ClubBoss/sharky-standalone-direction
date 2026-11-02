@@ -6,6 +6,7 @@ Do not use this probe as a general-purpose Codex worker.
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 from pathlib import Path
 import shutil
@@ -17,8 +18,9 @@ import time
 from durable_queue import (
     CODEX_ADMISSION, CODEX_BASE_SHA, CODEX_BRANCH, CODEX_PROVIDER,
     CODEX_TASK, M3C_ADMISSION, M3C_TASK, M3C_BRANCH, M3C_BASE_SHA,
+    M3C_R2_ADMISSION, M3C_R2_TASK,
     QueueStop, acknowledge_stopped, admit_codex_readonly_once,
-    admit_m3c_readonly_once, connect, lease_once,
+    admit_m3c_readonly_once, admit_m3c_r2_readonly_once, connect, lease_once,
 )
 from process_pilot import _session_gone
 
@@ -95,6 +97,18 @@ def run_once(db_path: str | Path, *, owner_admission, initialize=False,
         if owner_admission != M3C_ADMISSION:
             raise QueueStop("M3C owner admission missing")
         _source_preflight(branch_name=M3C_BRANCH,base_sha=M3C_BASE_SHA)
+    elif profile == "M3C_R2":
+        task_id, worker = M3C_R2_TASK, "m3c-r2-codex-readonly"
+        marker = "SHARKY_M3C_R2_UNATTENDED_READONLY_OK"
+        prompt = (
+            "MODEL: gpt-5.6-luna. REASONING: LOW. MODE: READ-ONLY TEST. "
+            "Reply with exactly SHARKY_M3C_R2_UNATTENDED_READONLY_OK "
+            "and nothing else. Do not access files, tools, shell, code or web. "
+            "One diagnostic model call only; no product learning claim.")
+        admit_fn = admit_m3c_r2_readonly_once
+        if owner_admission != M3C_R2_ADMISSION:
+            raise QueueStop("M3C R2 separate owner admission missing")
+        _source_preflight(branch_name=M3C_BRANCH, base_sha=M3C_BASE_SHA)
     else:
         raise QueueStop("unknown Codex profile")
     binary = _codex_binary()
@@ -121,25 +135,68 @@ def run_once(db_path: str | Path, *, owner_admission, initialize=False,
                 "--ephemeral", "--ignore-user-config", "--skip-git-repo-check",
                 "--output-last-message", str(output_path), "-C", cwd, prompt,
             ]
+            diagnostic = profile == "M3C_R2"
+            if diagnostic:
+                # Only this separately admitted attempt observes in-memory JSONL.
+                # Never persist raw stdout/stderr, user content, or credentials.
+                cmd.insert(2, "--json")
             started_at = time.monotonic()
             timed_out = False
+            stdout_bytes, stderr_bytes = b"", b""
             try:
                 proc = subprocess.Popen(
                     cmd, cwd=cwd, env=_safe_env(), stdin=subprocess.DEVNULL,
-                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                    stdout=subprocess.PIPE if diagnostic else subprocess.DEVNULL,
+                    stderr=subprocess.PIPE if diagnostic else subprocess.DEVNULL,
                     start_new_session=True, close_fds=True,
                 )
                 try:
-                    proc.wait(timeout=MAX_SECONDS)
+                    if diagnostic:
+                        stdout_bytes, stderr_bytes = proc.communicate(timeout=120)
+                    else:
+                        proc.wait(timeout=MAX_SECONDS)
                 except subprocess.TimeoutExpired:
-                    # Count this as failure even when termination is confirmed.
                     timed_out = True
                     os.killpg(proc.pid, signal.SIGKILL)
-                    proc.wait(timeout=5)
+                    if diagnostic:
+                        stdout_bytes, stderr_bytes = proc.communicate(timeout=5)
+                    else:
+                        proc.wait(timeout=5)
             except (OSError, subprocess.SubprocessError) as exc:
                 raise QueueStop("Codex failed or timed out; preserve lease if uncertain") from exc
             if not _session_gone(proc):
                 raise QueueStop("Codex process group not conclusively gone; lease remains ACTIVE")
+            progress = {"thread_started": False, "turn_started": False,
+                        "turn_completed": False, "turn_failed": False,
+                        "error_event": False}
+            stderr_class = "NONE"
+            if diagnostic:
+                types = {
+                    "thread.started": "thread_started",
+                    "turn.started": "turn_started",
+                    "turn.completed": "turn_completed",
+                    "turn.failed": "turn_failed",
+                    "error": "error_event",
+                }
+                # Parse only known event-type identifiers. Never emit JSON payloads.
+                for line in stdout_bytes[:131072].splitlines()[:250]:
+                    try:
+                        record = json.loads(line)
+                        if isinstance(record, dict) and record.get("type") in types:
+                            progress[types[record["type"]]] = True
+                    except (ValueError, TypeError):
+                        pass
+                error_text = stderr_bytes[:131072].lower()
+                if any(x in error_text for x in (b"rate limit", b"429", b"usage limit", b"quota")):
+                    stderr_class = "QUOTA_OR_RATE_LIMIT"
+                elif any(x in error_text for x in (b"unauthorized", b"401", b"sign in", b"authentication failed")):
+                    stderr_class = "AUTH"
+                elif any(x in error_text for x in (b"connection", b"network", b"dns", b"transport", b"timeout")):
+                    stderr_class = "TRANSPORT"
+                elif stderr_bytes.strip():
+                    stderr_class = "OTHER"
+                del stdout_bytes, stderr_bytes
+
             result = "STOP_FAILED"
             failure_class = ("TIMEOUT" if timed_out else
                              "NONZERO_EXIT" if proc.returncode != 0 else
@@ -175,6 +232,8 @@ def run_once(db_path: str | Path, *, owner_admission, initialize=False,
                     "failure_class": failure_class,
                     "timed_out": timed_out,
                     "elapsed_seconds": int(time.monotonic() - started_at),
+                    "progress": progress if diagnostic else {},
+                    "stderr_class": stderr_class,
                     "stop_verified": True, "lease_closed": True,
                     "receipt_sha256": evidence, "additional_paid_usd": 0,
                     "product_dod": "NOT_INFERRED", "autonomous_dispatch": "OFF"}

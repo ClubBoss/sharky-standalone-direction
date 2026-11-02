@@ -249,3 +249,31 @@ model responses. A failure still consumes the once-only task; uncertain OS
 stop still leaves the ACTIVE lease and raises. This patch adds observation
 for a separately admitted future proof, NOT recovery/retry of consumed M3C.
 Do not merge PR #363 as M3C runtime PASS until real independent proof exists.
+
+### M3C.R2 one owner-admitted diagnostic attempt (2026-11-02)
+
+The previous M3C one-shot 70-second STOP_FAILED remains in the SAME
+SQLite database at ~/Sharky_Autopilot_Pilot/m3c_state/codex-readonly-once.sqlite3.
+It is NOT reinitialized/reopened as a new job and cannot be retried.
+R2 is a distinct, fixed source-owned task M3C_R2_TASK with a separate
+owner-admission constant, same repo branch/base and exclusive resource,
+one attempt maximum, zero paid spend and fixed Codex read-only LOW marker.
+R2 admission requires M3C original STOPPED/attempts=1, no active leases.
+
+Only after exact-HEAD independent QA and explicit owner approval,
+--prepare-r2 creates a second one-shot RunAtLoad/KeepAlive=false plist in
+the same private directory. The operator may bootstrap it ONCE to the
+existing macOS GUI domain and must bootout immediately after receipt.
+--run-r2 reuses the same queue, never re-arms or schedules itself.
+R2 Codex receives --json to stdout in a bounded, in-memory pipe and may
+run at most 120s (then SIGKILL to its process group; uncertain stop keeps
+ACTIVE lease). Raw JSONL, stderr and model response are never saved.
+Only known event-kind booleans, a fixed stderr category, a fixed failure
+class, exit code, elapsed seconds and SHA256 stop receipt are retained.
+No prompts/tokens/credentials/user content are recorded. Replaying R2
+after one completed attempt yields NOOP and model_calls=0.
+
+If R2 returns STOP_FAILED, leave M3C and M4 as HOLD and do not create
+another model retry without a newly accepted diagnosis. Even PASS_SCOPED
+proves only the unattended read-only test, not real code-writing or
+learner-product acceptance. Keep protected PR #224/product PR #355 untouched.

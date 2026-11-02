@@ -33,6 +33,11 @@ M3C_BASE_SHA = "9dd166568b12758bd6c797a38dae5b8758f61c54"
 M3C_EVENT = hashlib.sha256(
     f"SHARKY_M3C_OWNER_UNATTENDED_READONLY_ONCE:{M3C_BASE_SHA}".encode("ascii")
 ).hexdigest()
+M3C_R2_ADMISSION = "OWNER_ADMITS_M3C_R2_DIAGNOSTIC_READONLY_ONCE"
+M3C_R2_TASK = "m2c-codex-m3c-r2-once"
+M3C_R2_EVENT = hashlib.sha256(
+    f"SHARKY_M3C_R2_DIAGNOSTIC_ONCE:{M3C_BASE_SHA}".encode("ascii")
+).hexdigest()
 ID_PATTERN = re.compile(r"m2c-[a-z0-9][a-z0-9-]{1,70}\Z")
 HEX64 = re.compile(r"[0-9a-f]{64}\Z")
 HEX40 = re.compile(r"[0-9a-f]{40}\Z")
@@ -225,6 +230,41 @@ def admit_m3c_readonly_once(db, *, owner_admission, at):
     return {"action":"ADMITTED","task_id":M3C_TASK}
 
 
+def admit_m3c_r2_readonly_once(db, *, owner_admission, at):
+    """Separate, explicitly admitted diagnostic attempt in the SAME queue."""
+    _expect_time(at)
+    if owner_admission != M3C_R2_ADMISSION:
+        raise QueueStop("M3C R2 owner admission absent")
+    digest = _task_hash(M3C_R2_TASK, M3C_R2_EVENT, M3C_BRANCH, M3C_BASE_SHA,
+                        provider=CODEX_PROVIDER, max_attempts=1)
+    with transaction(db):
+        prior = db.execute(
+            "SELECT status,attempts,max_attempts FROM tasks WHERE id=?",
+            (M3C_TASK,)).fetchone()
+        if (prior is None or prior["status"] != "STOPPED"
+                or prior["attempts"] != 1 or prior["max_attempts"] != 1):
+            raise QueueStop("original M3C must be consumed before R2")
+        if db.execute("SELECT 1 FROM leases WHERE status='ACTIVE'").fetchone():
+            raise QueueStop("active lease blocks R2 admission")
+        existing = db.execute("SELECT * FROM tasks WHERE id=?",
+                              (M3C_R2_TASK,)).fetchone()
+        if existing:
+            if (existing["payload_hash"] != digest
+                    or existing["provider"] != CODEX_PROVIDER
+                    or existing["max_attempts"] != 1):
+                raise QueueStop("M3C R2 changed payload replay")
+            return {"action": "NOOP", "task_id": M3C_R2_TASK}
+        db.execute("""INSERT INTO tasks
+            (id,event_id,payload_hash,scope,resource,branch,base_sha,provider,
+             incremental_spend_cents,status,attempts,max_attempts)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
+            (M3C_R2_TASK,M3C_R2_EVENT,digest,SCOPE,RESOURCE,M3C_BRANCH,
+             M3C_BASE_SHA,CODEX_PROVIDER,0,"READY",0,1))
+        db.execute("INSERT INTO events(task_id,action,detail,at) VALUES (?,?,?,?)",
+                   (M3C_R2_TASK,"ADMITTED","separate R2 diagnostics once",at))
+    return {"action": "ADMITTED", "task_id": M3C_R2_TASK}
+
+
 def lease_once(db, *, worker_id, at):
     """Atomic reservation. Never runs a model or invokes a shell command."""
     _expect_time(at)
@@ -248,6 +288,7 @@ def lease_once(db, *, worker_id, at):
         codex_spec = {
             CODEX_TASK: (CODEX_EVENT, CODEX_BRANCH, CODEX_BASE_SHA),
             M3C_TASK: (M3C_EVENT, M3C_BRANCH, M3C_BASE_SHA),
+            M3C_R2_TASK: (M3C_R2_EVENT, M3C_BRANCH, M3C_BASE_SHA),
         }.get(task["id"])
         if is_codex:
             if codex_spec is None:
