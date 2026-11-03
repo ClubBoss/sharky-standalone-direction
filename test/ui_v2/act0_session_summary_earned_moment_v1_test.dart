@@ -2,6 +2,7 @@
 // Current-source admission is covered by act0_asm07_transfer_retention_boundary_falsifier_test.dart.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
@@ -650,7 +651,7 @@ void main() {
         matching: find.byType(AnimatedScale),
       ),
     );
-    expect(reveal.duration, const Duration(milliseconds: 160));
+    expect(reveal.duration, Act0MotionTokensV1.standard);
     final body = tester
         .widgetList<Text>(find.byType(Text))
         .map((text) => text.data ?? text.textSpan?.toPlainText() ?? '')
@@ -1029,26 +1030,32 @@ void main() {
     }
   });
 
-  testWidgets('Session Summary level-up card avoids forbidden level copy', (
-    tester,
-  ) async {
-    await _pumpSummary(
-      tester,
-      consumer: const Act0AchievementSeedConsumerV1(),
-      errorCount: 0,
-      correctCount: 2,
-      startXp: 195,
-      endXp: 215,
-      endLevel: 2,
-    );
+  testWidgets(
+    'Session Summary shows assessed accuracy, not level or save claims',
+    (tester) async {
+      await _pumpSummary(
+        tester,
+        consumer: const Act0AchievementSeedConsumerV1(),
+        errorCount: 0,
+        correctCount: 2,
+        startXp: 195,
+        endXp: 215,
+        endLevel: 2,
+      );
 
-    expect(
-      find.byKey(const Key('act0_shell_block_summary_xp_total')),
-      findsOneWidget,
-    );
-    expect(find.text('Local read saved'), findsOneWidget);
-    expect(find.text('Level 2'), findsNothing);
-  });
+      expect(
+        find.byKey(const Key('act0_shell_block_summary_xp_total')),
+        findsOneWidget,
+      );
+      expect(find.text('Assessed accuracy'), findsOneWidget);
+      expect(find.text('Local read saved'), findsNothing);
+      final accuracy = tester.widget<LinearProgressIndicator>(
+        find.byKey(const Key('act0_shell_block_summary_xp_progress')),
+      );
+      expect(accuracy.value, 1.0);
+      expect(find.text('Level 2'), findsNothing);
+    },
+  );
 
   testWidgets('Session Summary callbacks remain route-neutral', (tester) async {
     var continued = 0;

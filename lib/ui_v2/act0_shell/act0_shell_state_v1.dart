@@ -1580,6 +1580,30 @@ class Act0PlacementSkillStatV1 {
   static int _xpNeededForNextLevel(int level) => 12 + (level * 8);
 }
 
+// Used only by the three adjudicated UTG recognition tasks. Their assessment
+// stays neutral while authored teaching keeps its original table and focus.
+Act0RunnerStateV1 _act0NeutralSeatAssessmentPreservingTeachingV1(
+  Act0RunnerStateV1 source,
+) => source.copyWith(
+  table: source.table.copyWith(
+    highlightedSeatIds: const <String>[],
+    activeSeatId: '',
+  ),
+  teachingSteps: [
+    for (final step in source.teachingSteps)
+      Act0TeachingStepV1(
+        title: step.title,
+        body: step.body,
+        table: step.table ?? source.table,
+        focusSeatIds: step.focusSeatIds,
+        focusCardIds: step.focusCardIds,
+        focusLabels: step.focusLabels,
+        identityTeachingSemantics: step.identityTeachingSemantics,
+        ctaLabel: step.ctaLabel,
+      ),
+  ],
+);
+
 final _pokerFromZeroLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'what_poker_is',
@@ -2138,7 +2162,9 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'blinds_first_actor',
         title: 'First preflop actor',
         phase: Act0LessonPhaseV1.drill,
-        runner: _firstPreflopActorRunner,
+        runner: _act0NeutralSeatAssessmentPreservingTeachingV1(
+          _firstPreflopActorRunner,
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2298,7 +2324,9 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'positions_early_late',
         title: 'Early vs late',
         phase: Act0LessonPhaseV1.drill,
-        runner: _earlyLatePositionRunner,
+        runner: _act0NeutralSeatAssessmentPreservingTeachingV1(
+          _earlyLatePositionRunner,
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2909,7 +2937,9 @@ final _handValuePositionLessons = <Act0LessonCardV1>[
         taskId: 'w2_early_position',
         title: 'Early seat',
         phase: Act0LessonPhaseV1.drill,
-        runner: _earlyLatePositionRunner,
+        runner: _act0NeutralSeatAssessmentPreservingTeachingV1(
+          _earlyLatePositionRunner,
+        ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
