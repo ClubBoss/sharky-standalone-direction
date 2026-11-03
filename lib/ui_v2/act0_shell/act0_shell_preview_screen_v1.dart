@@ -6224,10 +6224,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 repairContinuesToSourceRecheck:
                                     _activeRepairTaskId ==
                                         playSelectedTask?.taskId &&
-                                    (_activeSameSignalFeedbackRepairV1 ||
-                                        _isPracticeQueueRepairAnswerV1(
-                                          playSelectedTask!,
-                                        )),
+                                    _activeSameSignalFeedbackRepairV1,
                                 isSourceRecheckAttempt:
                                     _activeSameSignalRecheckTaskId ==
                                     playSelectedTask?.taskId,
@@ -6237,7 +6234,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     ? _activeRepairSessionSummaryLines
                                     : const <String>[],
                                 feedbackForwardCtaLabel:
-                                    placementForwardCtaLabel,
+                                    placementForwardCtaLabel ??
+                                    (_activeRepairTaskId == playSelectedTask?.taskId && !_activeSameSignalFeedbackRepairV1
+                                        ? 'Continue to Review'
+                                        : null),
                                 suppressFeedbackRepairFocus:
                                     _placementDiagnosticActive,
                                 relaxTheoryAdvanceLock: _completedTaskIds
@@ -6705,8 +6705,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   if (_rapidPracticeLoop) {
                                     _completeCurrentTask(playSelectedTask);
                                     final singleCleanRep =
-                                        playRunner.selectedOption?.isCorrect ??
-                                        false;
+                                        (playRunner.selectedOption?.isCorrect ?? false) && !_choiceWasAssistedV1;
                                     _finishRapidPracticeLoopToHub(
                                       completedLessonId:
                                           selectedLesson.lessonId,
@@ -8565,9 +8564,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     if (_placementHandoffActive) {
-      // Placement has already chosen this taught task. Home must not restart
-      // the assessment-only placement diagnostic behind a first-hand CTA.
-      _startTaskByIds(selectedWorld, _selectedLessonId, _selectedTaskId);
+      // Home promises the eligible route task, including an unfinished Guide.
+      // A Placement recommendation is not permission to bypass prerequisites.
+      final lesson = _firstPlayableLesson(selectedWorld);
+      final task = _firstIncompleteTask(lesson);
+      _startTaskByIds(selectedWorld, lesson.lessonId, task.taskId);
       _returnToPlayHubOnBack = false;
       return;
     }
@@ -12053,7 +12054,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ru: 'Дневная серия закрыта',
       );
       _practiceCompletionBody = _copyV1(
-        en: 'Nice work — one table clue is warmer. Sharky has tomorrow\'s useful hand ready.',
+        en: cleanRepCount != null && completedRepCount != null && cleanRepCount == completedRepCount && cleanRepCount > 0
+            ? 'Session complete. You made $cleanRepCount independent correct reads. Try one fresh route spot next.'
+            : 'Session complete. Good work practicing. Review one missed clue, then try it independently.',
         ru: 'Три коротких повтора готовы. Сегодняшние чтения остаются в тонусе. Можешь взять ещё одну дорожку или вернуться домой.',
       );
     } else if (completedLessonId != null) {
@@ -12063,7 +12066,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ru: 'Повтор готов',
       );
       _practiceCompletionBody = _copyV1(
-        en: '$family stayed sharp. Pick another pack when you want one more clean rep.',
+        en: cleanRepCount != null && completedRepCount != null && cleanRepCount == completedRepCount && cleanRepCount > 0
+            ? '$family: independent correct practice complete. Try one fresh route spot next.'
+            : '$family: practice complete. Review one missed clue, then try it independently.',
         ru: '$family остаются в тонусе. Возьми другой пак, когда захочешь ещё один чистый повтор.',
       );
     }
@@ -13670,6 +13675,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final lessonAssistedCount = assistedTaskIds.length;
     final worldOpenMistakeCount = _openMistakeCountForWorldV1(progressedWorld);
     _blockCompletionSummary = Act0BlockCompletionSummaryV1(
+      curriculumCompleted: _lessonComplete(selectedLesson),
       lessonTitle: _localizedLessonTitleV1(selectedLesson),
       xpEarned: _lessonRunXp,
       errorCount: assessedErrorCount,

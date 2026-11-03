@@ -13676,7 +13676,8 @@ final _world3FacingOpenRecapRunner = _world3PlayableCallRunner.copyWith(
   lessonId: 'w3_facing_open_recap',
   caption: 'Lesson learned: facing an open creates a price.',
   hint: 'Playable hands can call; weak hands can still fold.',
-  question: 'What is the cleaner continue with this playable hand facing an open?',
+  question:
+      'What is the cleaner continue with this playable hand facing an open?',
   feedbackTitle: 'Facing-open takeaway.',
   feedbackReason:
       'Once someone opens, your first preflop read changes from open-or-fold to continue-or-fold.',

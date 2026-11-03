@@ -241,6 +241,7 @@ class Act0BlockCompletionSummaryV1 {
     required this.errorCount,
     this.assistedCount = 0,
     this.independentProvenanceKnown = true,
+    this.curriculumCompleted = false,
     required this.taskCount,
     required this.correctCount,
     required this.startLevel,
@@ -267,6 +268,8 @@ class Act0BlockCompletionSummaryV1 {
   });
 
   static const int unlockAccuracyPercent = 80;
+
+  final bool curriculumCompleted;
 
   final String lessonTitle;
   final int xpEarned;
@@ -323,7 +326,7 @@ class Act0BlockCompletionSummaryV1 {
       taskCount <= 0 ? 100 : ((correctCount * 100) / taskCount).round();
 
   bool get qualifiesForNextLesson =>
-      !hasNextLesson || accuracyPercent >= unlockAccuracyPercent;
+      curriculumCompleted || !hasNextLesson || accuracyPercent >= unlockAccuracyPercent;
 
   Act0MasteryStatusV1 get masteryStatus {
     if (errorCount == 0 &&
@@ -332,7 +335,7 @@ class Act0BlockCompletionSummaryV1 {
         independentProvenanceKnown) {
       return Act0MasteryStatusV1.cleanPass;
     }
-    if (deepLeakCount > 0 || !qualifiesForNextLesson) {
+    if (deepLeakCount > 0 || (taskCount > 0 && accuracyPercent < unlockAccuracyPercent)) {
       return Act0MasteryStatusV1.needsReview;
     }
     if (assistedCount > 0 || !independentProvenanceKnown) {
@@ -8078,7 +8081,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         ? 'Missed cue'
         : 'Correct read';
     if (sceneOwnsFeedbackExplanation) {
-      final nextActionLine = isWrong || isRepairFocusState
+      final nextActionLine = forwardCtaLabel == 'Continue to Review'
+          ? 'Return to Review to choose the next repair. Open mistakes stay available.'
+          : isWrong || isRepairFocusState
           ? 'Try the same table clue once more.'
           : repairContinuesToSourceRecheck
           ? 'Return to the original read and prove the repair.'
