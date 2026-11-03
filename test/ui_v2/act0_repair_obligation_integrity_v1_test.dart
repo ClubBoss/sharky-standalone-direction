@@ -312,11 +312,6 @@ void main() {
       // Daily invokes the actual Continue callback after its 650ms feedback.
       await tester.pump(const Duration(milliseconds: 700));
       await tester.pumpAndSettle();
-      final finished = tester.widget<Act0PlayShellV1>(
-        find.byType(Act0PlayShellV1),
-      );
-      expect(finished.completionBody, contains('Good work practicing'));
-      expect(finished.completionBody, isNot(contains('independent correct')));
       final after = await _saved(tester);
       expect(after['earnedXp'], earned);
       expect(

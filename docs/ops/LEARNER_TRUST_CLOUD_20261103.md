@@ -11,8 +11,10 @@ Runtime changes belong only to `act0_shell_state_v1.dart`,
 `act0_lesson_runner_shell_v1.dart` and `act0_shell_preview_screen_v1.dart`.
 Three `act0_learner_trust_*_v1_test.dart` files and the Learner Trust workflow
 own bounded regression evidence. Existing authority, historical fingerprint,
-Summary and Table Truth tests remain unchanged. Existing assisted-route and
-repair-obligation tests gain CTA/navigation and wrong-Daily copy assertions. Historical Draft #347
+Summary and Table Truth tests remain unchanged. The existing assisted-route test gains CTA/navigation assertions; the original
+repair-obligation test remains unchanged. A completion-copy assertion added at
+the wrong Daily route boundary was removed after its StateError; this is not
+completion-copy proof. Historical Draft #347
 was inspected as a donor: its curriculum-completion/coaching separation and
 real Guide traversal helper were reused narrowly; no cherry-pick.
 
@@ -105,3 +107,12 @@ Terminal verdict: **PARTIAL_SOURCE_PASS_WITH_EXACT_HOLD**. Native is unexecuted
 by instruction. Director acceptance/merge and the original SHARKY_100 criteria
 are unchanged. Resume W5 only under a new bounded compatibility/source-owner
 admission; this candidate must not merge while the assessment leakage remains.
+
+The expanded d783bbe3 run 41740766060 executed 68 cases: 64 PASS, 3 assertion
+FAIL (W5 + two assisted action-task CTA render cases), and 1 runtime harness
+error from expecting Daily completion before the repair/recheck boundary.
+The invalid added Daily expectation was removed; original debt/XP assertions
+are retained verbatim. Daily completion-copy verification for that scenario is
+**NOT_REACHED**, not PASS. Both action-task CTA failures are retained as a
+second exact product HOLD; final counts supersede these predecessor counts.
+No further runtime source changes are included.
