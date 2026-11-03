@@ -10,17 +10,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const _progressKey = 'act0_shell_progress_v1';
 const _guideLessonId = 'what_poker_is';
-const _falseUnlockTitle = 'Almost there - replay to unlock';
 
 final _guideLesson = Act0ShellStateV1.sample
     .worldById('world_1')
     .lessons
     .firstWhere((lesson) => lesson.lessonId == _guideLessonId);
-final _guideDrillTaskIds = <String>[
-  for (final task in _guideLesson.taskList)
-    if (task.phase == Act0LessonPhaseV1.drill) task.taskId,
-];
-
 Future<void> _pumpGuide(
   WidgetTester tester, {
   List<String> completedTaskIds = const <String>[],
@@ -149,7 +143,7 @@ void main() {
     await _leaveSummary(t);
     await _openTab(t, 'Home');
     final home = t.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
-    expect(home.currentLesson.lessonId, isNot(_guideLessonId));
+    expect(home.currentLesson!.lessonId, isNot(_guideLessonId));
     expect((await _persisted())['earnedXp'], earnedXp);
   });
 }

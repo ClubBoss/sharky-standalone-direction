@@ -105,7 +105,7 @@ void main() {
     await t.pumpWidget(const MaterialApp(home: Act0ShellPreviewScreenV1()));
     await t.pumpAndSettle();
     final home = t.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
-    final expectedLessonId = home.currentLesson.lessonId;
+    final expectedLessonId = home.currentLesson!.lessonId;
     await tap('act0_shell_main_cta');
     final launched = t.widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1));
     expect(launched.selectedLessonId, expectedLessonId);
