@@ -97,3 +97,60 @@ and evidence. If later merged, revert the accepted wave commit(s) as one unit;
 no schema/data migration or learner-progress cleanup is required. Do not merge
 protected #224, restart historical Draft writers, award SHARKY_100 points or
 admit Human/release from this document.
+
+
+## 2026-11-03 source-compatible recovery (supersedes CO first-hand details above)
+
+Authority: the owner recovery mission and PR #369 director comment 6612561073.
+The previous source writer explicitly stopped at frozen HEAD
+`2a53f1588a25c7802b8a1bcf9b03d8e7517eeb13`; recovery continues this same Draft
+and branch with one source writer. Previous evidence remains historical.
+
+The accepted ASM-01 contract includes choice text and preferred labels. The
+first candidate incorrectly treated `bb_check` as an opaque ID and replaced
+its answer with CO checking. The correction preserves the accepted option
+objects and global assessment fingerprint
+`26c8c2d76a89ba00adfb482b2130e758f7b8e32699ef85f75e15abf189e57bb4`.
+Only the newly authored first-hand wrapper changes: BB calls 2 BB more after
+BTN raises to 3; CO folds after contributing 1. Contributions are SB 0.5,
+BB 3, CO 1, BTN 3, total 7.5 BB. BB and BTN remain; each authored postflop
+street starts with BB checking. The retrospective history stops at the flop
+BB check with BTN next. BB owns the disclosed Kh/Jh showdown hand. Hero,
+board, task/choice IDs, order, grades, XP and repair targets stay unchanged.
+
+The original ASM-01 test was not edited. On frozen production source, the
+original identity test plus the revised focused first-hand checks executed
+7 cases: 4 passed, 3 failed, no skips/load errors. The three failures were
+actual assertions for frozen choice identity, admitted preflop chronology and
+the last live BB check. After the correction the same 7 cases passed.
+Exact final source, CI and native outcomes are recorded in the PR recovery
+receipt and its machine-readable evidence packet, not inferred from this log.
+
+The catalog retains every prior traversal/exclusion and adds explicit declared
+first-hand board continuity, BB/BTN survivor, chronology and turn rows. The
+focused test also verifies individual contributions and BB-only disclosure.
+The evidence exporter now calls the existing canonical
+`act0AuthoredSourceFingerprintV1` on both baseline and candidate and compares
+all ordered choice labels/preferred answers as well as the existing learning
+fixture. `source-fingerprint-delta.json` classifies every task as
+SOURCE_CONDITION_CHANGED, PRESENTATION_OR_TEACHING_ONLY or UNCHANGED.
+Runtime-input change counts are not fingerprint counts.
+
+Changed conditions intentionally invalidate old current-capability proof;
+the unchanged ASM-07 owner retains original historical fingerprints, grades,
+assistance, earned XP and repair lineage. It recomputes current proof only for
+compatible source. No learner migration, reset, forced mastery, source-hash
+rewrite, reward replay or new repair obligation is introduced.
+
+Mac recovery uses a new isolated workspace; dirty main and old evidence are
+preserved. Native follows only after exact-source and applicable CI GREEN and
+uses one separately owned iPhone 14 Pro profile. Previously protected profiles
+remain untouched. Native must verify the BB showdown, corrected history,
+current-street commitments and affected learner/restart route on actual binary
+hashes. Unsupported `raises to` / `calls ... more` choreography remains an
+explicit limitation, not animated-history PASS. No whole LDR campaign repeat.
+
+Rollback of this compatibility delta: revert only its recovery commit if the
+candidate fails validation; retain the earlier unmerged Draft and all evidence.
+Rollback of the complete wave remains closing the unmerged Draft. No schema or
+learner-data change needs reversal. No merge or score acceptance is implied.

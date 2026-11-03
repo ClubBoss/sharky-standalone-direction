@@ -2071,10 +2071,7 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         runner: _act0FirstHandAkRunnerV1(_actionTrailRunner, history: true)
             .copyWith(
               options: _act0AuthoredCorrectOptionAtV1(
-                _act0FirstHandAkRunnerV1(
-                  _actionTrailRunner,
-                  history: true,
-                ).options,
+                _actionTrailRunner.options,
                 correctOptionId: 'bb_check',
                 correctIndex: 1,
               ),
@@ -8432,8 +8429,8 @@ const _firstHandPreflopTrail = <Act0ActionTrailItemV1>[
   Act0ActionTrailItemV1(label: 'CO calls 1 BB'),
   Act0ActionTrailItemV1(label: 'BTN raises to 3 BB'),
   Act0ActionTrailItemV1(label: 'SB folds'),
-  Act0ActionTrailItemV1(label: 'BB folds'),
-  Act0ActionTrailItemV1(label: 'CO calls 2 BB more'),
+  Act0ActionTrailItemV1(label: 'BB calls 2 BB more'),
+  Act0ActionTrailItemV1(label: 'CO folds'),
 ];
 Act0RunnerStateV1 _act0FirstHandAkRunnerV1(
   Act0RunnerStateV1 runner, {
@@ -8446,7 +8443,7 @@ Act0RunnerStateV1 _act0FirstHandAkRunnerV1(
   final trail = <Act0ActionTrailItemV1>[..._firstHandPreflopTrail];
   for (var i = 1; i <= streetIndex; i++) {
     final name = ['Preflop', 'Flop', 'Turn', 'River'][i];
-    trail.add(Act0ActionTrailItemV1(label: '$name: CO checks'));
+    trail.add(Act0ActionTrailItemV1(label: '$name: BB checks'));
     if (i < streetIndex || finished)
       trail.add(Act0ActionTrailItemV1(label: '$name: BTN checks'));
   }
@@ -8461,24 +8458,24 @@ Act0RunnerStateV1 _act0FirstHandAkRunnerV1(
     toCallLabel: '',
     activeSeatId: streetIndex > 0 && !finished ? 'btn' : '',
     centerLabel: showdown
-        ? 'Hero pair of aces beats CO pair of jacks'
+        ? 'Hero pair of aces beats BB pair of jacks'
         : runner.table.centerLabel,
     actionTrail: trail,
     seats: [
       for (final seat in runner.table.seats)
         _act0CopySeatStateV1(
           seat,
-          isInHand: ['co', 'btn'].contains(seat.seatId),
-          isFolded: !['co', 'btn'].contains(seat.seatId),
+          isInHand: ['bb', 'btn'].contains(seat.seatId),
+          isFolded: !['bb', 'btn'].contains(seat.seatId),
           isActive: false,
           holeCards: seat.isHero
               ? _heroAkCards
-              : seat.seatId == 'co' && finished
+              : seat.seatId == 'bb' && finished
               ? _opponentKhJhCards
               : _unknownHoleCards,
-          cardsVisibleMode: !['co', 'btn'].contains(seat.seatId)
+          cardsVisibleMode: !['bb', 'btn'].contains(seat.seatId)
               ? Act0CardsVisibleModeV1.none
-              : seat.isHero || (seat.seatId == 'co' && finished)
+              : seat.isHero || (seat.seatId == 'bb' && finished)
               ? Act0CardsVisibleModeV1.faceUp
               : Act0CardsVisibleModeV1.faceDown,
           clearCommitment: true,
@@ -8488,48 +8485,15 @@ Act0RunnerStateV1 _act0FirstHandAkRunnerV1(
   return runner.copyWith(
     table: table,
     caption: history
-        ? 'Replay the earlier flop snapshot. The action history records what happened up to CO checking.'
+        ? 'Replay the earlier flop snapshot. The action history records what happened up to BB checking.'
         : runner.caption,
-    // bb_check is a legacy opaque persisted ID. Only its learner-facing text
-    // changes; correctness, quality, error/repair metadata and ordering persist.
-    options: history
-        ? [
-            for (final option in runner.options)
-              Act0RunnerOptionV1(
-                id: option.id,
-                amountLabel: option.amountLabel,
-                seatId: option.seatId,
-                isCorrect: option.isCorrect,
-                quality: option.quality,
-                feedbackTitle: option.feedbackTitle,
-                betterAnswerLabel: option.betterAnswerLabel.replaceAll(
-                  'Flop: BB checks',
-                  'Flop: CO checks',
-                ),
-                repairFocusSeatIds: option.repairFocusSeatIds,
-                repairFocusCardIds: option.repairFocusCardIds,
-                repairFocusLabels: option.repairFocusLabels,
-                label: option.label.replaceAll(
-                  'Flop: BB checks',
-                  'Flop: CO checks',
-                ),
-                preferredLabel: option.preferredLabel.replaceAll(
-                  'Flop: BB checks',
-                  'Flop: CO checks',
-                ),
-                feedbackReason: option.feedbackReason.replaceAll(
-                  'Flop: BB checks',
-                  'Flop: CO checks',
-                ),
-              ),
-          ]
-        : runner.options,
+    // Reuse accepted options unchanged: bb_check names the live BB check.
     teachingSteps: showdown
         ? const [
             Act0TeachingStepV1(
               title: 'Showdown compares hands.',
               body:
-                  'Hero best five are A-A-K-J-7, while CO best five are J-J-A-K-7. The pair of aces beats the pair of jacks.',
+                  'Hero best five are A-A-K-J-7, while BB best five are J-J-A-K-7. The pair of aces beats the pair of jacks.',
               focusCardIds: [
                 'hero_0',
                 'hero_1',

@@ -48,6 +48,29 @@ def compare(root):
     after = json.loads((root / 'candidate' / 'runtime-inputs.json').read_text())
     delta = {key: {'before': before[key], 'after': after[key]} for key in before if before[key] != after[key]}
     (root / 'runtime-input-delta.json').write_text(json.dumps(delta, indent=2))
+    before_fingerprints = json.loads((root / 'baseline' / 'source-fingerprints.json').read_text())
+    after_fingerprints = json.loads((root / 'candidate' / 'source-fingerprints.json').read_text())
+    if before_fingerprints.keys() != after_fingerprints.keys():
+        raise SystemExit('Canonical fingerprint task identity changed')
+    before_choices = json.loads((root / 'baseline' / 'choice-identity.json').read_text())
+    after_choices = json.loads((root / 'candidate' / 'choice-identity.json').read_text())
+    if before_choices != after_choices:
+        raise SystemExit('Accepted choice text, ordering or preferred answer changed')
+    fingerprint_delta = {}
+    for task_id, old in before_fingerprints.items():
+        new = after_fingerprints[task_id]
+        changed = old['fingerprint'] != new['fingerprint']
+        classification = ('SOURCE_CONDITION_CHANGED' if changed else
+                          'PRESENTATION_OR_TEACHING_ONLY' if task_id in delta else 'UNCHANGED')
+        fingerprint_delta[task_id] = {
+            'before': old, 'after': new, 'classification': classification,
+            'changed_runtime_fields': [field for field in before[task_id]
+                                       if before[task_id][field] != after[task_id][field]],
+            'historical_record_policy': 'retain original fingerprint, grade, assistance, XP and repair lineage',
+            'current_source_policy': 'reject old fingerprint' if changed else 'regrade against current compatible source',
+        }
+    (root / 'source-fingerprint-delta.json').write_text(json.dumps(fingerprint_delta, indent=2))
+    fingerprint_counts = dict(collections.Counter(v['classification'] for v in fingerprint_delta.values()))
     ledgers = {}
     for phase in ['baseline', 'candidate']:
         rows = json.loads((root / phase / 'ledger.json').read_text())
@@ -63,7 +86,8 @@ def compare(root):
     if ledgers['candidate']['statuses'].get('FAIL', 0):
         raise SystemExit('Candidate retains invariant failures: ' + str(ledgers['candidate']['failed_ids']))
     result = {'ledgers': ledgers, 'runtime_changed_task_count': len(delta), 'runtime_changed_task_ids': sorted(delta),
-              'learning_contract_identical': True, 'native': 'PENDING'}
+              'learning_contract_identical': True, 'choice_identity_identical': True,
+              'canonical_source_fingerprints': fingerprint_counts, 'native': 'PENDING'}
     (root / 'comparison.json').write_text(json.dumps(result, indent=2))
     hashes = {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(root.rglob('*')) if p.is_file()}
     (root / 'sha256.json').write_text(json.dumps(hashes, indent=2))

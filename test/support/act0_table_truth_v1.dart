@@ -60,6 +60,82 @@ List<TableTruthRow> auditTableTruth() {
           );
         }
 
+        if (lesson.lessonId == 'your_first_hand') {
+          final table = r.table;
+          final finished =
+              task.taskId.endsWith('showdown') || task.taskId.endsWith('recap');
+          final expectedTrail = <String>[
+            'SB blind 0.5 BB',
+            'BB blind 1 BB',
+            'UTG folds',
+            'HJ folds',
+            'CO calls 1 BB',
+            'BTN raises to 3 BB',
+            'SB folds',
+            'BB calls 2 BB more',
+            'CO folds',
+          ];
+          final streetIndex = [
+            'Preflop',
+            'Flop',
+            'Turn',
+            'River',
+          ].indexOf(table.streetLabel);
+          for (var i = 1; i <= streetIndex; i++) {
+            final street = ['Preflop', 'Flop', 'Turn', 'River'][i];
+            expectedTrail.add('$street: BB checks');
+            if (i < streetIndex || finished) {
+              expectedTrail.add('$street: BTN checks');
+            }
+          }
+          final liveSeats =
+              table.seats
+                  .where((seat) => seat.isInHand && !seat.isFolded)
+                  .map((seat) => seat.seatId)
+                  .toList()
+                ..sort();
+          void declared(String invariant, bool matches, String detail) {
+            rows.add(
+              TableTruthRow(
+                task.taskId,
+                'declared-same-hand',
+                invariant,
+                matches ? 'PASS' : 'FAIL',
+                detail,
+              ),
+            );
+          }
+
+          declared(
+            'D4.board_continuity',
+            table.boardCards.map(cardIdentity).join(',') ==
+                [
+                  'Ah',
+                  '7c',
+                  '2d',
+                  'Jc',
+                  '4s',
+                ].take(table.boardCards.length).join(','),
+            'Board is the declared AK hand prefix',
+          );
+          declared(
+            'D6.first_hand_survivors',
+            liveSeats.join(',') == 'bb,btn',
+            'BB and BTN remain; CO dead 1 BB stays in 7.5 BB pot',
+          );
+          declared(
+            'D6.first_hand_history',
+            table.actionTrail.map((a) => a.label).join('|') ==
+                expectedTrail.join('|'),
+            'Complete authored BB/BTN history through this snapshot',
+          );
+          declared(
+            'D1.first_hand_actor',
+            table.activeSeatId == (streetIndex > 0 && !finished ? 'btn' : ''),
+            'BTN acts after the current BB check; finished hand has no actor',
+          );
+        }
+
         final states = <String, Act0TableStateV1>{
           'authored/${task.phase.name}': r.table,
           for (var i = 0; i < r.teachingSteps.length; i++)

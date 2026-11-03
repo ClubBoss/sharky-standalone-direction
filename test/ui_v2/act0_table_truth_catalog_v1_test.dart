@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import '../support/act0_table_truth_v1.dart';
 
 void main() {
@@ -55,6 +56,41 @@ void main() {
       reason:
           'Baseline source IDs, XP, family, correctness and repair identities must remain unchanged',
     );
+    final fingerprints = <String, Object?>{};
+    final choiceIdentity = <String, Object?>{};
+    for (final world in Act0ShellStateV1.sample.worlds) {
+      for (final lesson in world.lessons) {
+        for (final task in lesson.taskList) {
+          final fingerprint = act0AuthoredSourceFingerprintV1(
+            worldId: world.worldId,
+            lessonId: lesson.lessonId,
+            task: task,
+          );
+          expect(fingerprint, isNotNull, reason: task.taskId);
+          fingerprints[task.taskId] = {
+            'world_id': world.worldId,
+            'lesson_id': lesson.lessonId,
+            'fingerprint': fingerprint,
+          };
+          choiceIdentity[task.taskId] = [
+            for (final option in task.runner.options)
+              [
+                option.id,
+                option.label,
+                option.isCorrect,
+                option.quality.name,
+                option.preferredLabel,
+              ],
+          ];
+        }
+      }
+    }
+    File(
+      '${out.path}/source-fingerprints.json',
+    ).writeAsStringSync(jsonEncode(fingerprints));
+    File(
+      '${out.path}/choice-identity.json',
+    ).writeAsStringSync(jsonEncode(choiceIdentity));
     final snapshot = {
       for (final t in tasks)
         t.taskId: {
