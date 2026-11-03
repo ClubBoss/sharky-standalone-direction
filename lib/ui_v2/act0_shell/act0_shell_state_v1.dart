@@ -843,6 +843,10 @@ class Act0RunnerOptionV1 {
   final List<String> repairFocusLabels;
 }
 
+/// Source grading predicate shared by runtime proof and content guards.
+bool act0RunnerOptionIsAuthoredCorrectV1(Act0RunnerOptionV1 option) =>
+    option.isCorrect && option.quality == Act0FeedbackQualityV1.correct;
+
 /// Authored instructional intent, never a certificate of hand legality.
 /// Unclassified tables fail closed at hand-history consumers.
 enum Act0TableScopeV1 { unclassified, playedHand, orientation, explanation }
@@ -2143,6 +2147,11 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         title: 'Last preflop actor',
         phase: Act0LessonPhaseV1.drill,
         runner: _lastPreflopActorRunner.copyWith(
+          // Recognition choices stay neutral; authored teaching keeps its focus.
+          table: _lastPreflopActorRunner.table.copyWith(
+            highlightedSeatIds: const <String>[],
+            activeSeatId: '',
+          ),
           options: _act0AuthoredCorrectOptionAtV1(
             _lastPreflopActorRunner.options,
             correctOptionId: 'bb',
@@ -2249,6 +2258,11 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         title: 'Tap UTG',
         phase: Act0LessonPhaseV1.drill,
         runner: _utgSeatRunner.copyWith(
+          // Recognition choices stay neutral; authored teaching keeps its focus.
+          table: _utgSeatRunner.table.copyWith(
+            highlightedSeatIds: const <String>[],
+            activeSeatId: '',
+          ),
           options: _act0AuthoredCorrectOptionAtV1(
             _utgSeatRunner.options,
             correctOptionId: 'utg',
@@ -21828,9 +21842,9 @@ final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
     toCallLabel: 'To call 2 BB',
     centerLabel: 'BTN, top pair, small price',
     actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
+      Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
       Act0ActionTrailItemV1(label: 'BTN calls'),
-      Act0ActionTrailItemV1(label: 'CO bets 2 BB'),
+      Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
     ],
   ),
   options: const <Act0RunnerOptionV1>[
@@ -21893,10 +21907,11 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
     toCallLabel: 'To call 12 BB',
     centerLabel: 'BTN top pair, tight CO barrel',
     actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'CO opens 2.5; BTN calls'),
-      Act0ActionTrailItemV1(label: 'Flop pot 8 BB; CO bets 2'),
-      Act0ActionTrailItemV1(label: 'BTN calls 2; turn pot 12'),
-      Act0ActionTrailItemV1(label: 'Tight CO bets 12 on turn'),
+      Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
+      Act0ActionTrailItemV1(label: 'BTN calls'),
+      Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
+      Act0ActionTrailItemV1(label: 'BTN calls 2 BB'),
+      Act0ActionTrailItemV1(label: 'Turn: CO bets 12 BB'),
     ],
   ),
   options: const <Act0RunnerOptionV1>[

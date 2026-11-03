@@ -2418,6 +2418,17 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }
 
   void _onBoardTappedForShowdown(Act0TableStateV1 table) {
+    // Solver-derived best-five cues are help, not unassisted assessment input.
+    // Keep explanation/review and explicitly assisted decisions available.
+    if (_decisionAssistanceKindV1 == Act0DecisionAssistanceV1.none &&
+        _isActiveAssessmentStateV1(
+          isTeaching: _isTeaching,
+          isTheory: _isTheory,
+          isReview: _isReview,
+          runner: widget.runner,
+        )) {
+      return;
+    }
     if (!_allowsInteractiveShowdown(widget.runner)) {
       return;
     }
@@ -3702,7 +3713,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                           ? theoryRecallPeek
                           : _SizingConfirmPanelV1(
                               selectedPreset: runner.selectedPreset,
-                              onConfirm: _handleConfirmSizingPreset,
+                              onConfirm: _heroDecisionReady
+                                  ? _handleConfirmSizingPreset
+                                  : null,
                             ),
                     )
                   : _ActionPromptPanelV1(

@@ -23,6 +23,7 @@ const String act0SessionSummaryRepairLifecycleQuietAfterCorrectV1 =
 Act0LearningEvidenceRecordV1? act0LearningEvidenceRecordFromCompletedDecisionV1(
   Act0CompletedDecisionV1 decision, {
   required int createdOrder,
+  String authoredSourceFingerprint = '',
   Act0EvidenceRunKeyV1? runKey,
   String sessionId = '',
   DateTime? recordedAtUtc,
@@ -79,6 +80,7 @@ Act0LearningEvidenceRecordV1? act0LearningEvidenceRecordFromCompletedDecisionV1(
     recordedAtUtc: recordedAtUtc?.toUtc(),
     reviewKind: reviewKind,
     assistanceKind: decision.assistanceKind,
+    authoredSourceFingerprint: authoredSourceFingerprint,
   );
 }
 
@@ -200,6 +202,7 @@ class Act0LearningEvidenceRecordV1 {
     this.recordedAtUtc,
     this.reviewKind = Act0ReviewKindV1.legacyUnspaced,
     this.assistanceKind = Act0DecisionAssistanceV1.legacyUnknown,
+    this.authoredSourceFingerprint = '',
   });
 
   final int schemaVersion;
@@ -228,6 +231,7 @@ class Act0LearningEvidenceRecordV1 {
   final DateTime? recordedAtUtc;
   final Act0ReviewKindV1 reviewKind;
   final Act0DecisionAssistanceV1 assistanceKind;
+  final String authoredSourceFingerprint;
 
   /// Placement diagnostic answers are authentic assessment evidence with their
   /// own run kind. They are never earlier lesson learning, unseen transfer,
@@ -262,6 +266,8 @@ class Act0LearningEvidenceRecordV1 {
       'skillAtomId': skillAtomId,
       'decisionTimeBucket': decisionTimeBucket,
       'resultKind': resultKind,
+      if (authoredSourceFingerprint.isNotEmpty)
+        'authoredSourceFingerprint': authoredSourceFingerprint,
       if (assistanceKind != Act0DecisionAssistanceV1.legacyUnknown)
         'assistanceKind': assistanceKind.name,
     };
@@ -323,6 +329,9 @@ class Act0LearningEvidenceRecordV1 {
     final sourceLessonId = _optionalString(map['sourceLessonId']);
     final startedBy = _optionalString(map['startedBy']);
     final sessionId = _optionalString(map['sessionId']);
+    final authoredSourceFingerprint = _optionalString(
+      map['authoredSourceFingerprint'],
+    );
     final recordedAtUtc = act0TryParseUtcV1(map['recordedAtUtc']);
     final assistanceKind = map.containsKey('assistanceKind')
         ? act0EnumByNameV1(
@@ -343,6 +352,7 @@ class Act0LearningEvidenceRecordV1 {
         expectedChoiceId == null ||
         errorType == null ||
         skillAtomId == null ||
+        authoredSourceFingerprint == null ||
         decisionTimeBucket == null ||
         resultKind == null ||
         isCorrect is! bool ||
@@ -383,6 +393,7 @@ class Act0LearningEvidenceRecordV1 {
       recordedAtUtc: recordedAtUtc,
       reviewKind: reviewKind,
       assistanceKind: assistanceKind,
+      authoredSourceFingerprint: authoredSourceFingerprint,
     );
   }
 
@@ -414,7 +425,8 @@ class Act0LearningEvidenceRecordV1 {
       other.sessionId == sessionId &&
       other.recordedAtUtc == recordedAtUtc &&
       other.reviewKind == reviewKind &&
-      other.assistanceKind == assistanceKind;
+      other.assistanceKind == assistanceKind &&
+      other.authoredSourceFingerprint == authoredSourceFingerprint;
 
   @override
   int get hashCode => Object.hashAll(<Object?>[
@@ -444,6 +456,7 @@ class Act0LearningEvidenceRecordV1 {
     recordedAtUtc,
     reviewKind,
     assistanceKind,
+    authoredSourceFingerprint,
   ]);
 }
 
@@ -876,6 +889,7 @@ class Act0LearningEvidenceHistoryV1 {
   /// from presentation state.
   Act0LearningEvidenceHistoryV1 appendCompletedDecision(
     Act0CompletedDecisionV1 decision, {
+    String authoredSourceFingerprint = '',
     Act0EvidenceRunKeyV1? runKey,
     String sessionId = '',
     DateTime? recordedAtUtc,
@@ -896,6 +910,7 @@ class Act0LearningEvidenceHistoryV1 {
     final record = act0LearningEvidenceRecordFromCompletedDecisionV1(
       decision,
       createdOrder: createdOrder,
+      authoredSourceFingerprint: authoredSourceFingerprint,
       runKey: runKey,
       sessionId: sessionId,
       recordedAtUtc: recordedAtUtc,

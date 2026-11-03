@@ -441,6 +441,7 @@ void main() {
       find.text('Your first clear read will appear here.'),
       findsOneWidget,
     );
+    expect(find.textContaining('Confirmation needed'), findsOneWidget);
     expect(find.text('Recent route proof'), findsNothing);
     expect(find.text('0 tasks complete'), findsOneWidget);
     expect(find.text('Starting now'), findsNothing);
@@ -458,38 +459,40 @@ void main() {
     );
     expect(
       find.byKey(const Key('act0_shell_profile_evidence_signal')),
-      findsNothing,
-    );
-  });
-
-  testWidgets('Wave 2 Profile progressed keeps real proof without repeats', (
-    tester,
-  ) async {
-    await pumpCompact(
-      tester,
-      wave2SurfaceHost(
-        Act0ControlledDemoCaptureSurfaceV1.wave2ProfileProgressed,
-      ),
-    );
-
-    expect(find.text('Recent route proof'), findsOneWidget);
-    expect(find.text('7 tasks complete'), findsOneWidget);
-    expect(find.text('3d'), findsOneWidget);
-    expect(find.text('3 day streak'), findsNothing);
-    expect(find.textContaining('Fold, check, call, raise'), findsOneWidget);
-    expect(
-      find.byKey(const Key('act0_shell_profile_evidence_signal')),
       findsOneWidget,
     );
-    expect(
-      find.byKey(const Key('act0_shell_profile_hero_fact_tasks')),
-      findsNothing,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_profile_hero_fact_streak')),
-      findsNothing,
-    );
   });
+
+  testWidgets(
+    'Wave 2 Profile legacy fixture preserves history without current proof',
+    (tester) async {
+      await pumpCompact(
+        tester,
+        wave2SurfaceHost(
+          Act0ControlledDemoCaptureSurfaceV1.wave2ProfileProgressed,
+        ),
+      );
+
+      expect(find.textContaining('Confirmation needed'), findsOneWidget);
+      expect(find.text('Recent route proof'), findsOneWidget);
+      expect(find.text('7 tasks complete'), findsOneWidget);
+      expect(find.text('3d'), findsOneWidget);
+      expect(find.text('3 day streak'), findsNothing);
+      expect(find.textContaining('Fold, check, call, raise'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_profile_evidence_signal')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_profile_hero_fact_tasks')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_profile_hero_fact_streak')),
+        findsNothing,
+      );
+    },
+  );
 
   testWidgets(
     'F07: real authored theory counter advances exactly one step per tap '

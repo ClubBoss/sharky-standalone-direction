@@ -1,3 +1,5 @@
+// These fixtures test reducer/consumer arithmetic, not current authored proof.
+// Current-source admission is covered by act0_asm07_transfer_retention_boundary_falsifier_test.dart.
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_family_repair_memory_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
@@ -304,7 +306,9 @@ void main() {
     test('12 unseen spaced task may contribute to stable transfer', () {
       final history = _durableEvidenceHistory();
       final measurement =
-          Act0LearningTransferMeasurementV1.fromLearningEvidence(history);
+          Act0LearningTransferMeasurementV1.fromUnverifiedEvidenceForTests(
+            history,
+          );
       final signal = measurement.signalForConcept('no_bet_yet');
 
       expect(signal.relationship, act0LearningTransferSameFamilyTransferV1);
@@ -319,10 +323,11 @@ void main() {
       final pending = Act0DurableRetentionHistoryV1(
         families: [retention.familyById('no_bet_yet')!._testPendingCopy()],
       );
-      final signal = Act0LearningTransferMeasurementV1.fromLearningEvidence(
-        evidence,
-        retentionHistory: pending,
-      ).signalForConcept('no_bet_yet');
+      final signal =
+          Act0LearningTransferMeasurementV1.fromUnverifiedEvidenceForTests(
+            evidence,
+            retentionHistory: pending,
+          ).signalForConcept('no_bet_yet');
 
       expect(signal.verdict, act0LearningTransferImprovingV1);
     });
@@ -409,9 +414,10 @@ void main() {
             ),
           ],
         );
-        final signal = Act0LearningTransferMeasurementV1.fromLearningEvidence(
-          evidence,
-        ).signalForConcept('no_bet_yet');
+        final signal =
+            Act0LearningTransferMeasurementV1.fromUnverifiedEvidenceForTests(
+              evidence,
+            ).signalForConcept('no_bet_yet');
 
         expect(signal.comparisonOrder, 2);
         expect(signal.comparisonTaskId, 'task_c');
@@ -480,7 +486,7 @@ Act0LearningEvidenceHistoryV1 _durableEvidenceHistory() =>
     );
 
 String _verdict(Act0LearningEvidenceHistoryV1 evidence) =>
-    Act0LearningTransferMeasurementV1.fromLearningEvidence(
+    Act0LearningTransferMeasurementV1.fromUnverifiedEvidenceForTests(
       evidence,
     ).signalForConcept('no_bet_yet').verdict;
 

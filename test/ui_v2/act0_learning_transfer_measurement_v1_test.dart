@@ -1,3 +1,5 @@
+// These fixtures test reducer/consumer arithmetic, not current authored proof.
+// Current-source admission is covered by act0_asm07_transfer_retention_boundary_falsifier_test.dart.
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -122,22 +124,23 @@ void main() {
   });
 
   test('different concept family cannot resolve another family', () {
-    final measurement = Act0LearningTransferMeasurementV1.fromLearningEvidence(
-      Act0LearningEvidenceHistoryV1(
-        records: [
-          _record(order: 1),
-          _record(
-            order: 2,
-            day: 1,
-            conceptFamilyId: 'position_read',
-            taskId: 'position_task',
-            sessionId: 'session_v1|2',
-            isCorrect: true,
-            reviewKind: Act0ReviewKindV1.unseenTransfer,
+    final measurement =
+        Act0LearningTransferMeasurementV1.fromUnverifiedEvidenceForTests(
+          Act0LearningEvidenceHistoryV1(
+            records: [
+              _record(order: 1),
+              _record(
+                order: 2,
+                day: 1,
+                conceptFamilyId: 'position_read',
+                taskId: 'position_task',
+                sessionId: 'session_v1|2',
+                isCorrect: true,
+                reviewKind: Act0ReviewKindV1.unseenTransfer,
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        );
 
     expect(
       measurement.signalForConcept('action_read').verdict,
@@ -159,7 +162,7 @@ void main() {
 
 Act0LearningTransferSignalV1 _measure(
   List<Act0LearningEvidenceRecordV1> records,
-) => Act0LearningTransferMeasurementV1.fromLearningEvidence(
+) => Act0LearningTransferMeasurementV1.fromUnverifiedEvidenceForTests(
   Act0LearningEvidenceHistoryV1(records: records),
 ).signalForConcept('action_read');
 

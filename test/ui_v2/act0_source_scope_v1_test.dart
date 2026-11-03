@@ -120,6 +120,12 @@ void main() {
       'w4_value_purpose',
       'w4_value_recap',
     };
+    // The reviewed W11 projection repair explicitly separates these authored
+    // trails into preflop/flop/turn actions; no other history is newly admitted.
+    const w11ExplicitStreetHistoryIds = <String>{
+      'w11_trigger_small_price_continue',
+      'w11_trigger_bad_price_fold',
+    };
     final tasks = [
       for (final w in Act0ShellStateV1.sample.worlds)
         for (final l in w.lessons) ...l.taskList,
@@ -195,9 +201,9 @@ void main() {
     expect(played, 317); // Authored hand contexts, NOT 317 certified histories.
     expect(
       historyConsumers,
-      w4NumericHistoryIds,
+      <String>{...w4NumericHistoryIds, ...w11ExplicitStreetHistoryIds},
       reason:
-          'only the explicitly played W4 BTN-vs-BB histories have complete legal trails',
+          'only the exact W4 histories and two reviewed W11 street trails are consumer-safe',
     );
   });
 

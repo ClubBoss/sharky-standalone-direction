@@ -1230,7 +1230,20 @@ void main() {
           .where((event) => event.name == 'practice_completed')
           .toList(growable: false);
       expect(practiceEvents, hasLength(1));
-      expect(sink.events.last.name, 'practice_completed');
+      // Persistence acknowledgement can finish after the learning lifecycle.
+      expect(
+        sink.events
+            .where((event) => event.name != 'progress_persist_result')
+            .last
+            .name,
+        'practice_completed',
+      );
+      expect(
+        sink.events
+            .skip(sink.events.indexOf(practiceEvents.single) + 1)
+            .map((event) => event.name),
+        everyElement('progress_persist_result'),
+      );
 
       final practice = practiceEvents.single.fields;
       expect(practice['schemaVersion'], 1);
@@ -1410,7 +1423,7 @@ void main() {
     'Action sequence surfaces a traceable deterministic recommendation',
     (tester) async {
       final sink = Act0InMemoryTelemetrySinkV1();
-      await tester.binding.setSurfaceSize(const Size(430, 932));
+      await tester.binding.setSurfaceSize(const Size(393, 852));
       addTearDown(() => tester.binding.setSurfaceSize(null));
       await tester.pumpWidget(
         MaterialApp(
@@ -1450,7 +1463,7 @@ void main() {
       );
       expect(payoff.fields['payoff_type'], 'unresolvedSkill');
       expect(payoff.fields['proof_source'], 'sequence_outcomes');
-      expect(payoff.fields['primary_action'], 'Repair now');
+      expect(payoff.fields['primary_action'], 'repair');
 
       await tester.tap(
         find.byKey(const Key('act0_shell_feedback_continue_cta')),
@@ -1467,6 +1480,7 @@ void main() {
         (event) => event.name == 'action_payoff_generated',
       );
       expect(recoveredPayoff.fields['payoff_type'], 'recoveredSuccess');
+      expect(recoveredPayoff.fields['primary_action'], 'nextCanonicalStep');
       expect(
         sink.events.where((event) => event.name == 'recommendation_accepted'),
         isNotEmpty,
@@ -1477,6 +1491,38 @@ void main() {
         ),
         isNotEmpty,
       );
+      final payoffEvents = sink.events
+          .where(
+            (event) => const <String>{
+              'action_payoff_generated',
+              'action_payoff_shown',
+              'action_payoff_primary_action_selected',
+            }.contains(event.name),
+          )
+          .toList();
+      expect(
+        payoffEvents.map((event) => event.name).toSet(),
+        containsAll(<String>[
+          'action_payoff_generated',
+          'action_payoff_shown',
+          'action_payoff_primary_action_selected',
+        ]),
+      );
+      for (final event in payoffEvents) {
+        expect(
+          event.fields['primary_action'],
+          isIn(<String>['repair', 'nextCanonicalStep']),
+        );
+        final serialized = jsonEncode(event.fields);
+        expect(serialized, isNot(contains('Repair now')));
+        expect(serialized, isNot(contains('Continue')));
+        expect(event.fields['source_attempt_key'], isA<String>());
+        expect(event.fields['sequence_id'], 'w1_action_words_check_v1');
+        final targetKey = event.name == 'action_payoff_primary_action_selected'
+            ? 'next_target'
+            : 'recommendation_target';
+        expect(event.fields['primary_action'], event.fields[targetKey]);
+      }
       expectNoForbiddenTelemetryFieldsV1(sink.events);
     },
   );

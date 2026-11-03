@@ -1,3 +1,5 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
@@ -49,6 +51,7 @@ void main() {
     expect(completed!.repairFocusId, isNotEmpty);
     expect(completed!.decisionTimeBucket, isNot('unknown'));
     expect(completed!.attemptKey, contains('|actionList|${selected.id}|1'));
+    _expectCurrentEvidenceFromCompletion(completed!);
   });
 
   testWidgets(
@@ -91,6 +94,7 @@ void main() {
       expect(completed!.resultKind, isNotEmpty);
       expect(completed!.skillAtomId, isNotEmpty);
       expect(completed!.missedSignalId, isNotEmpty);
+      _expectCurrentEvidenceFromCompletion(completed!);
     },
   );
 
@@ -98,7 +102,11 @@ void main() {
     'sizing confirmation resolves its preset option before emitting a completed-decision contract',
     (tester) async {
       final task = _task('world_4', 'small_half_pot', 'w4_half_pot_bet');
-      Act0CompletedDecisionV1? completed;
+      tester.view.physicalSize = const Size(393, 852);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      final completedDecisions = <Act0CompletedDecisionV1>[];
       var selectedPresetId = task.runner.options.first.id;
 
       await tester.pumpWidget(
@@ -122,7 +130,7 @@ void main() {
                       .toList(growable: false),
                 ),
               ),
-              selectedWorldId: 'world_5',
+              selectedWorldId: 'world_4',
               selectedLessonId: 'small_half_pot',
               selectedTaskId: task.taskId,
               selectedTaskFamily: task.resolvedTaskFamily,
@@ -132,25 +140,68 @@ void main() {
               onSelectSizingPreset: (preset) =>
                   setState(() => selectedPresetId = preset.id),
               onConfirmSizingPreset: () {},
-              onCompletedDecision: (value) => completed = value,
+              onCompletedDecision: completedDecisions.add,
               onContinueReview: () {},
             ),
           ),
         ),
       );
 
-      await tester.tap(find.byKey(const Key('act0_shell_sizing_confirm_cta')));
+      final decisionReadySignal = find.byKey(
+        const Key('act0_shell_street_replay_inline'),
+      );
+      final confirmCta = find.byKey(const Key('act0_shell_sizing_confirm_cta'));
+      await tester.ensureVisible(confirmCta);
+      await tester.pump();
+      expect(decisionReadySignal, findsNothing);
+      expect(tester.widget<FilledButton>(confirmCta).onPressed, isNull);
+      await tester.tap(confirmCta);
+      await tester.pump();
+      expect(
+        completedDecisions,
+        isEmpty,
+        reason: 'the early sizing tap must not emit a completed decision',
+      );
+
+      // The replay affordance is rendered only after the table choreography
+      // reaches its source-defined decision-ready state. Bound the wait by the
+      // authored trail length; pump virtual time in choreography-sized steps.
+      final readinessPumpLimit = task.runner.table.actionTrail.length * 2;
+      for (
+        var pumpIndex = 0;
+        pumpIndex < readinessPumpLimit &&
+            decisionReadySignal.evaluate().isEmpty;
+        pumpIndex++
+      ) {
+        await tester.pump(const Duration(milliseconds: 500));
+      }
+      expect(decisionReadySignal, findsOneWidget);
+      expect(completedDecisions, isEmpty);
+      expect(tester.widget<FilledButton>(confirmCta).onPressed, isNotNull);
+
+      await tester.ensureVisible(confirmCta);
+      await tester.pump();
+      await tester.tap(confirmCta);
       await tester.pump();
 
-      expect(completed, isNotNull);
-      expect(completed!.decisionKind, Act0CompletedDecisionKindV1.sizing);
-      expect(completed!.selectedId, selectedPresetId);
-      expect(completed!.decisionTimeBucket, isNot('unknown'));
-      expect(completed!.resultKind, isNotEmpty);
-      expect(completed!.skillAtomId, isNotEmpty);
+      expect(completedDecisions, hasLength(1));
+      final completed = completedDecisions.single;
+      expect(completed.decisionKind, Act0CompletedDecisionKindV1.sizing);
+      expect(completed.taskId, task.taskId);
+      expect(completed.sourceTaskId, task.taskId);
+      expect(completed.selectedId, selectedPresetId);
+      expect(
+        completed.expectedId,
+        task.runner.options.firstWhere((option) => option.isCorrect).id,
+      );
+      expect(completed.isCorrect, isTrue);
+      expect(completed.resultKind, 'correct');
+      expect(completed.errorType, 'none');
+      expect(completed.decisionTimeBucket, isNot('unknown'));
+      expect(completed.skillAtomId, isNotEmpty);
+      _expectCurrentEvidenceFromCompletion(completed);
     },
   );
-
 
   testWidgets(
     'distinct evidence runs create distinct durable attempt identities',
@@ -200,10 +251,8 @@ void main() {
         await tester.pump();
       }
 
-      const firstRun =
-          'run_v1|world_1|fold_check_call_raise|lesson|1';
-      const secondRun =
-          'run_v1|world_1|fold_check_call_raise|spaced_review|2';
+      const firstRun = 'run_v1|world_1|fold_check_call_raise|lesson|1';
+      const secondRun = 'run_v1|world_1|fold_check_call_raise|spaced_review|2';
       await answerInRun(runId: firstRun, runOrdinal: 1, runKind: 'lesson');
       await answerInRun(
         runId: secondRun,
@@ -221,56 +270,54 @@ void main() {
     },
   );
 
-  testWidgets(
-    'state-preserving rebuild keeps one evidence-run attempt scope',
-    (tester) async {
-      final task = _task(
-        'world_1',
-        'fold_check_call_raise',
-        'actions_check_drill',
-      );
-      final selected = task.runner.options.firstWhere(
-        (option) => !option.isCorrect,
-      );
-      const runId = 'run_v1|world_1|fold_check_call_raise|lesson|7';
-      final decisions = <Act0CompletedDecisionV1>[];
+  testWidgets('state-preserving rebuild keeps one evidence-run attempt scope', (
+    tester,
+  ) async {
+    final task = _task(
+      'world_1',
+      'fold_check_call_raise',
+      'actions_check_drill',
+    );
+    final selected = task.runner.options.firstWhere(
+      (option) => !option.isCorrect,
+    );
+    const runId = 'run_v1|world_1|fold_check_call_raise|lesson|7';
+    final decisions = <Act0CompletedDecisionV1>[];
 
-      Future<void> rebuild() => _pumpRunner(
-        tester,
-        runner: task.runner.copyWith(
-          phase: Act0LessonPhaseV1.drill,
-          teachingSteps: const <Act0TeachingStepV1>[],
-        ),
-        worldId: 'world_1',
-        lessonId: 'fold_check_call_raise',
-        taskId: task.taskId,
-        evidenceRunId: runId,
-        onCompletedDecision: decisions.add,
-      );
+    Future<void> rebuild() => _pumpRunner(
+      tester,
+      runner: task.runner.copyWith(
+        phase: Act0LessonPhaseV1.drill,
+        teachingSteps: const <Act0TeachingStepV1>[],
+      ),
+      worldId: 'world_1',
+      lessonId: 'fold_check_call_raise',
+      taskId: task.taskId,
+      evidenceRunId: runId,
+      onCompletedDecision: decisions.add,
+    );
 
-      await rebuild();
-      await tester.tap(find.byKey(Key('act0_shell_option_${selected.id}')));
-      await tester.pump();
-      expect(decisions, hasLength(1));
+    await rebuild();
+    await tester.tap(find.byKey(Key('act0_shell_option_${selected.id}')));
+    await tester.pump();
+    expect(decisions, hasLength(1));
 
-      await rebuild();
-      expect(
-        decisions,
-        hasLength(1),
-        reason: 'A rebuild must not emit or mint another attempt.',
-      );
+    await rebuild();
+    expect(
+      decisions,
+      hasLength(1),
+      reason: 'A rebuild must not emit or mint another attempt.',
+    );
 
-      await tester.tap(find.byKey(Key('act0_shell_option_${selected.id}')));
-      await tester.pump();
+    await tester.tap(find.byKey(Key('act0_shell_option_${selected.id}')));
+    await tester.pump();
 
-      expect(decisions, hasLength(2));
-      expect(decisions.first.attemptKey, startsWith('v2|$runId|'));
-      expect(decisions.last.attemptKey, startsWith('v2|$runId|'));
-      expect(decisions.first.attemptKey, endsWith('|1'));
-      expect(decisions.last.attemptKey, endsWith('|2'));
-    },
-  );
-
+    expect(decisions, hasLength(2));
+    expect(decisions.first.attemptKey, startsWith('v2|$runId|'));
+    expect(decisions.last.attemptKey, startsWith('v2|$runId|'));
+    expect(decisions.first.attemptKey, endsWith('|1'));
+    expect(decisions.last.attemptKey, endsWith('|2'));
+  });
 }
 
 Future<void> _pumpRunner(
@@ -306,3 +353,22 @@ Act0LessonTaskV1 _task(String worldId, String lessonId, String taskId) =>
         .firstWhere((lesson) => lesson.lessonId == lessonId)
         .taskList
         .firstWhere((task) => task.taskId == taskId);
+
+// Verifies the real callback payload, not a hand-built grading fixture.
+void _expectCurrentEvidenceFromCompletion(Act0CompletedDecisionV1 decision) {
+  expect(decision.sourceTaskId, decision.taskId);
+  final history = const Act0LearningEvidenceHistoryV1().appendCompletedDecision(
+    decision,
+    authoredSourceFingerprint:
+        act0CurrentAuthoredSourceFingerprintForIdentityV1(
+          worldId: decision.worldId!,
+          lessonId: decision.lessonId,
+          taskId: decision.taskId,
+        )!,
+    sessionId: 'machine_callback_session',
+    recordedAtUtc: DateTime.utc(2026, 1, 1),
+    reviewKind: Act0ReviewKindV1.initialAssessment,
+  );
+  expect(history.records, hasLength(1));
+  expect(act0CompleteCurrentAuthoredEvidenceV1(history).records, hasLength(1));
+}

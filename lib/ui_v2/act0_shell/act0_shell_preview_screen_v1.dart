@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/services/app_language_controller.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_family_state_foundation_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_cross_session_profile_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
@@ -3929,7 +3930,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       transferMeasurement:
           Act0LearningTransferMeasurementV1.fromLearningEvidence(
             _learningEvidenceHistoryV1,
-            retentionHistory: _durableRetentionHistoryV1,
+            // Scheduling cache remains historical; current proof is replayed.
+            nowUtc: widget.clock.nowUtc(),
           ),
     );
   }
@@ -3941,7 +3943,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       transferMeasurement:
           Act0LearningTransferMeasurementV1.fromLearningEvidence(
             _learningEvidenceHistoryV1,
-            retentionHistory: _durableRetentionHistoryV1,
+            // Scheduling cache remains historical; current proof is replayed.
+            nowUtc: widget.clock.nowUtc(),
           ),
     );
   }
@@ -4063,16 +4066,43 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       lastSessionLearnerState: _lastSessionLearnerStateV1,
     );
     final generation = ++_progressPersistGeneration;
+    // Capture attribution alongside the bytes, never from a newer route after
+    // the asynchronous save. Empty session explicitly means unknown.
+    final diagnosticContext = Map<String, Object?>.unmodifiable({
+      'schemaVersion': 1,
+      'operation': 'save',
+      'request_generation': generation,
+      'world_id': _selectedWorldId,
+      'lesson_id': _selectedLessonId,
+      'task_id': _selectedTaskId,
+      'session_id': _sessionIdentityStateV1.currentActiveSessionId,
+      'source_surface': 'act0_progress_store',
+    });
     // Capture bytes before yielding: the snapshot holds mutable source sets.
-    unawaited(_writePersistedProgress(snapshot.toStorageString(), generation));
+    unawaited(
+      _writePersistedProgress(
+        snapshot.toStorageString(),
+        generation,
+        diagnosticContext,
+      ),
+    );
   }
 
-  Future<void> _writePersistedProgress(String snapshot, int generation) async {
+  Future<void> _writePersistedProgress(
+    String snapshot,
+    int generation,
+    Map<String, Object?> diagnosticContext,
+  ) async {
     await Future<void>.value();
     if (generation != _progressPersistGeneration) {
-      return;
+      return; // Coalesced requests were not attempted, not failed saves.
     }
-    await _progressStore.save(snapshot);
+    final acknowledged = await _progressStore.save(snapshot);
+    // False is indeterminate, never proof of data loss or an OS-level cause.
+    _recordTelemetryEventV1('progress_persist_result', <String, Object?>{
+      ...diagnosticContext,
+      'outcome': acknowledged ? 'acknowledged' : 'indeterminate',
+    });
   }
 
   void _appendLearningEvidenceV1(Act0CompletedDecisionV1 decision) {
@@ -4084,6 +4114,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _learningEvidenceHistoryV1 = _learningEvidenceHistoryV1
         .appendCompletedDecision(
           decision,
+          authoredSourceFingerprint:
+              act0CurrentAuthoredSourceFingerprintForIdentityV1(
+                worldId: decision.worldId ?? '',
+                lessonId: decision.lessonId,
+                taskId: decision.taskId,
+              ) ??
+              '',
           runKey: _activeLearningEvidenceRunKeyV1,
           sessionId: _sessionIdentityStateV1.currentActiveSessionId,
           recordedAtUtc: recordedAtUtc,
@@ -5289,6 +5326,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       );
     }
     final profileState = _profileState(state.profile, progress);
+    final currentProfileEvidenceProjection = _tab == Act0ShellTabV1.profile
+        ? Act0ProfileEvidenceProjectionV1.fromLearningEvidenceHistory(
+            _learningEvidenceHistoryV1,
+            nowUtc: widget.clock.nowUtc(),
+          )
+        : const Act0ProfileEvidenceProjectionV1();
     if ((_tab == Act0ShellTabV1.home || _tab == Act0ShellTabV1.review) &&
         reviewState.mistakes.isNotEmpty &&
         !_showPlacement &&
@@ -6819,9 +6862,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             ),
                         evidenceSignal:
                             Act0ProfileEvidenceConsumerV1.fromProjection(
-                              Act0ProfileEvidenceProjectionV1.fromLearningEvidenceHistory(
-                                _learningEvidenceHistoryV1,
-                              ),
+                              currentProfileEvidenceProjection,
                             ).signal,
                         achievementSeedConsumer:
                             Act0AchievementSeedConsumerV1.fromProjection(
@@ -6830,6 +6871,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _learningEvidenceHistoryV1,
                                 repairIntents: _activeRepairIntentsV1(),
                                 reviewMistakeHistory: _reviewMistakeHistoryV1,
+                                profileEvidenceProjection:
+                                    currentProfileEvidenceProjection,
                                 profileStreakDays: profileState.streakDays,
                               ),
                             ),
@@ -7740,7 +7783,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       transferMeasurement:
           Act0LearningTransferMeasurementV1.fromLearningEvidence(
             _learningEvidenceHistoryV1,
-            retentionHistory: _durableRetentionHistoryV1,
+            // Scheduling cache remains historical; current proof is replayed.
+            nowUtc: widget.clock.nowUtc(),
           ),
       dueReviewItems: _durableRetentionHistoryV1.dueItemsAt(
         widget.clock.nowUtc(),
@@ -13206,7 +13250,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'proof_source': payoff.errorType == 'none'
           ? 'initial_correct_decision'
           : 'sequence_outcomes',
-      'primary_action': payoff.primaryActionLabel,
+      'primary_action': recommendation.target.name,
     };
     _recordTelemetryEventV1('action_payoff_generated', payoffFields);
     _recordTelemetryEventV1('action_payoff_shown', payoffFields);
@@ -13235,7 +13279,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           'sequence_id': payoff.sequenceId,
           'source_attempt_key': latest.attemptKey,
           'payoff_type': payoff.type.name,
-          'primary_action': payoff.primaryActionLabel,
+          'primary_action': recommendation.target.name,
           'next_target': recommendation.target.name,
           'recommendation_reason': recommendation.reason.name,
         },

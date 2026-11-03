@@ -1,6 +1,10 @@
+import 'act0_authored_source_proof_v1.dart';
 import 'act0_durable_learning_time_contract_v1.dart';
 import 'act0_durable_retention_contract_v1.dart';
 import 'act0_learning_evidence_contract_v1.dart';
+
+const String act0RecentEvidenceVerifiedV1 = 'recent_verified_v1';
+const String act0RecentEvidenceConfirmationNeededV1 = 'confirmation_needed_v1';
 
 const String act0LearningTransferSameFamilyTransferV1 =
     'same_family_transfer_v1';
@@ -21,11 +25,45 @@ const String act0LearningTransferHeldV1 = act0LearningTransferStableV1;
 const String act0LearningTransferNotYetImprovedV1 = act0LearningTransferMixedV1;
 
 class Act0LearningTransferMeasurementV1 {
-  const Act0LearningTransferMeasurementV1({required this.signals});
+  const Act0LearningTransferMeasurementV1({
+    required this.signals,
+    this.isRecentEvidence = false,
+  });
 
   final List<Act0LearningTransferSignalV1> signals;
+  final bool isRecentEvidence;
 
   factory Act0LearningTransferMeasurementV1.fromLearningEvidence(
+    Act0LearningEvidenceHistoryV1 history, {
+    Act0DurableRetentionHistoryV1? retentionHistory,
+    DateTime? nowUtc,
+  }) {
+    // Historical cache/debt never seeds a recent epoch.
+    final recent = act0RecentAuthoredEvidenceV1(
+      history,
+      nowUtc: nowUtc ?? const Act0SystemUtcClockV1().nowUtc(),
+    );
+    final signals =
+        [
+          for (final entry in recent.families.entries)
+            _recentSignal(entry.key, entry.value),
+        ]..sort(
+          (a, b) =>
+              (b.comparisonOrder ?? -1).compareTo(a.comparisonOrder ?? -1),
+        );
+    return Act0LearningTransferMeasurementV1(
+      signals: List.unmodifiable(signals),
+      isRecentEvidence: true,
+    );
+  }
+
+  /// Arithmetic-only fixtures. Never use for learner-facing current proof.
+  factory Act0LearningTransferMeasurementV1.fromUnverifiedEvidenceForTests(
+    Act0LearningEvidenceHistoryV1 history, {
+    Act0DurableRetentionHistoryV1? retentionHistory,
+  }) => _fromEvidence(history, retentionHistory: retentionHistory);
+
+  static Act0LearningTransferMeasurementV1 _fromEvidence(
     Act0LearningEvidenceHistoryV1 history, {
     Act0DurableRetentionHistoryV1? retentionHistory,
   }) {
@@ -61,7 +99,9 @@ class Act0LearningTransferMeasurementV1 {
         return signal;
       }
     }
-    return Act0LearningTransferSignalV1.insufficient(id);
+    return isRecentEvidence
+        ? _recentSignal(id, const [])
+        : Act0LearningTransferSignalV1.insufficient(id);
   }
 }
 
@@ -80,6 +120,9 @@ class Act0LearningTransferSignalV1 {
     required this.comparisonDecisionTimeBucket,
     this.eligibleEvidenceCount = 0,
     this.recentWindowCount = 0,
+    this.correctCount = 0,
+    this.skillAtomId = '',
+    this.confirmationLine = '',
   });
 
   factory Act0LearningTransferSignalV1.insufficient(String conceptFamilyId) =>
@@ -110,6 +153,9 @@ class Act0LearningTransferSignalV1 {
   final String comparisonDecisionTimeBucket;
   final int eligibleEvidenceCount;
   final int recentWindowCount;
+  final int correctCount;
+  final String skillAtomId;
+  final String confirmationLine;
 }
 
 Act0LearningTransferSignalV1 _signalForRecords(
@@ -294,4 +340,72 @@ int _compareEvidenceTimeThenOrder(
   }
   final order = a.createdOrder.compareTo(b.createdOrder);
   return order != 0 ? order : a.recordId.compareTo(b.recordId);
+}
+
+Act0LearningTransferSignalV1 _recentSignal(
+  String family,
+  List<Act0LearningEvidenceRecordV1> records,
+) {
+  final eligible =
+      records
+          .where(
+            (r) => r.isIndependentCorrect || r.assistanceKind.name == 'none',
+          )
+          .where(_eligibleForTransferTrend)
+          .toList()
+        ..sort(_compareEvidenceTimeThenOrder);
+  final correct = eligible.where((r) => r.isCorrect).length;
+  final recent =
+      eligible.length > Act0DurableLearningTimingV1.recentEvidenceWindow
+      ? eligible.sublist(
+          eligible.length - Act0DurableLearningTimingV1.recentEvidenceWindow,
+        )
+      : eligible;
+  final diverse = _hasAdequateTimingAndDiversity(eligible);
+  final recentCorrect = recent.where((r) => r.isCorrect).toList();
+  final spaced =
+      _hasTwoSpacedSuccesses(recent) &&
+      recentCorrect.last.sessionId !=
+          recentCorrect[recentCorrect.length - 2].sessionId;
+  final verified =
+      eligible.length >= 5 &&
+      correct >= 3 &&
+      eligible.last.isCorrect &&
+      diverse &&
+      spaced;
+  final line = verified
+      ? 'Recent verified responses'
+      : eligible.length < 5
+      ? 'Confirmation needed — complete 5 independent responses.'
+      : correct < 3 || !eligible.last.isCorrect
+      ? 'Confirmation needed — try another independent response.'
+      : eligible.map((r) => r.taskId).toSet().length < 2 ||
+            eligible.map((r) => r.sessionId).toSet().length < 2
+      ? 'Confirmation needed — try a different task in another session.'
+      : 'Confirmation needed — return after 24 hours for an independent response.';
+  final base = _signalFromPair(
+    family,
+    eligible,
+    verified
+        ? act0RecentEvidenceVerifiedV1
+        : act0RecentEvidenceConfirmationNeededV1,
+  );
+  return Act0LearningTransferSignalV1(
+    conceptFamilyId: family,
+    relationship: base.relationship,
+    verdict: base.verdict,
+    baselineOrder: base.baselineOrder,
+    comparisonOrder: base.comparisonOrder,
+    baselineTaskId: base.baselineTaskId,
+    comparisonTaskId: base.comparisonTaskId,
+    baselineSessionId: base.baselineSessionId,
+    comparisonSessionId: base.comparisonSessionId,
+    baselineDecisionTimeBucket: base.baselineDecisionTimeBucket,
+    comparisonDecisionTimeBucket: base.comparisonDecisionTimeBucket,
+    eligibleEvidenceCount: eligible.length,
+    recentWindowCount: recent.length,
+    correctCount: correct,
+    skillAtomId: records.lastOrNull?.skillAtomId ?? '',
+    confirmationLine: line,
+  );
 }

@@ -1,3 +1,5 @@
+// These fixtures test reducer/consumer arithmetic, not current authored proof.
+// Current-source admission is covered by act0_asm07_transfer_retention_boundary_falsifier_test.dart.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
@@ -256,7 +258,9 @@ void main() {
             ],
           ),
       transferMeasurement:
-          Act0LearningTransferMeasurementV1.fromLearningEvidence(history),
+          Act0LearningTransferMeasurementV1.fromUnverifiedEvidenceForTests(
+            history,
+          ),
     );
 
     await _pumpSummary(
@@ -753,7 +757,7 @@ void main() {
               ],
             ),
         transferMeasurement:
-            Act0LearningTransferMeasurementV1.fromLearningEvidence(
+            Act0LearningTransferMeasurementV1.fromUnverifiedEvidenceForTests(
               Act0LearningEvidenceHistoryV1(
                 records: <Act0LearningEvidenceRecordV1>[
                   _learningRecord(

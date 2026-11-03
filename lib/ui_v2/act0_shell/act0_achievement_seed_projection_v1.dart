@@ -331,6 +331,9 @@ Act0ReviewMistakeRecordV1? _oldestReviewRecord(
 Act0ProfileCapabilitySignalV1? _firstEligibleSignal(
   Act0ProfileEvidenceProjectionV1 projection,
 ) {
+  // Recent verification is a transient current observation, not a banked First
+  // achievement. There is no persisted FirstEvidenceSignal ledger to preserve.
+  if (projection.recentEvidence != null) return null;
   final signals =
       projection.signals.where((signal) => signal.isCapabilityEligible).toList()
         ..sort((a, b) => a.latestOrder.compareTo(b.latestOrder));

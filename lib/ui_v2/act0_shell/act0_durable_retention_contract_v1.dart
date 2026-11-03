@@ -1,3 +1,4 @@
+import 'act0_authored_source_proof_v1.dart';
 import 'dart:convert';
 
 import 'act0_durable_learning_time_contract_v1.dart';
@@ -29,6 +30,15 @@ class Act0DurableRetentionHistoryV1 {
     }
     return result;
   }
+
+  /// Current capability only. Historical scheduling/persistence uses the
+  /// unchanged fromLearningEvidence/applyEvidence reducers above and below.
+  factory Act0DurableRetentionHistoryV1.fromCurrentAuthoredEvidence(
+    Act0LearningEvidenceHistoryV1 history, {
+    required DateTime nowUtc,
+  }) => Act0DurableRetentionHistoryV1.fromLearningEvidence(
+    act0CompleteCurrentAuthoredEvidenceV1(history),
+  ).refreshedAt(nowUtc);
 
   Act0DurableRetentionHistoryV1 applyEvidence(
     Act0LearningEvidenceRecordV1 record,
