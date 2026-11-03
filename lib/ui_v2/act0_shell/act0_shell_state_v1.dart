@@ -956,12 +956,16 @@ class Act0TableStateV1 {
       highlightedSeatIds: highlightedSeatIds ?? this.highlightedSeatIds,
       // A changed card array cannot inherit focus on cards no longer present.
       // Explicit authored focus remains intact so source guards catch errors.
-      highlightedCardIds: highlightedCardIds ?? this.highlightedCardIds.where((id) {
-        final match = RegExp(r'^(hero|board)_(\d+)$').firstMatch(id);
-        if (match == null) return true;
-        final changed = match[1] == 'hero' ? heroCards : boardCards;
-        return changed == null || int.parse(match[2]!) < changed.length;
-      }).toList(growable: false),
+      highlightedCardIds:
+          highlightedCardIds ??
+          this.highlightedCardIds
+              .where((id) {
+                final match = RegExp(r'^(hero|board)_(\d+)$').firstMatch(id);
+                if (match == null) return true;
+                final changed = match[1] == 'hero' ? heroCards : boardCards;
+                return changed == null || int.parse(match[2]!) < changed.length;
+              })
+              .toList(growable: false),
       selectableSeatIds: selectableSeatIds ?? this.selectableSeatIds,
       selectedSeatId: selectedSeatId ?? this.selectedSeatId,
       instructionAnchor: instructionAnchor ?? this.instructionAnchor,
@@ -1193,6 +1197,19 @@ Act0TableStateV1 _act0ReassignHeroSeatV1(
     seats: seats,
     heroSeatId: heroSeatId,
     activeSeatId: resolvedActiveSeatId,
+    // A reassigned Hero turn must not retain the previous Hero's terminal
+    // marker. Prior actions and independently authored opponent turns stay.
+    actionTrail: [
+      for (var i = 0; i < table.actionTrail.length; i++)
+        if (i == table.actionTrail.length - 1 &&
+            !table.actionTrail[i].isNote &&
+            resolvedActiveSeatId == heroSeatId &&
+            table.actionTrail[i].label == '${table.heroSeat.seatLabel} acts')
+          Act0ActionTrailItemV1(
+            label: '${seats.firstWhere((seat) => seat.isHero).seatLabel} acts',
+          )
+        else table.actionTrail[i],
+    ],
   );
 }
 
@@ -13906,16 +13923,17 @@ final _w3LateInfoEdgeRunner = _latePositionRunner.copyWith(
     ),
   ],
   table: _act0ExplicitFoldsV1(
-_latePositionRunner.table.copyWith(
-    scope: Act0TableScopeV1.playedHand,
-    highlightedSeatIds: const <String>['co', 'btn', 'sb', 'bb'],
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'UTG folds'),
-      Act0ActionTrailItemV1(label: 'HJ folds'),
-      Act0ActionTrailItemV1(label: 'CO acts'),
-    ],
-    centerLabel: 'CO after two folds',
-  ),
+    _latePositionRunner.table.copyWith(
+      scope: Act0TableScopeV1.playedHand,
+      highlightedSeatIds: const <String>['co', 'btn', 'sb', 'bb'],
+      actionTrail: const <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ folds'),
+        Act0ActionTrailItemV1(label: 'CO acts'),
+      ],
+      centerLabel: 'CO after two folds',
+      activeSeatId: 'co',
+    ),
     const {'utg', 'hj'},
   ),
   teachingSteps: const <Act0TeachingStepV1>[
@@ -22151,21 +22169,25 @@ final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
   hint: 'Real play means combining cues, not naming one concept.',
   question: 'What is the cleaner response?',
   table: _act0CurrentStreetTableV1(
-_world3PlayableCallRunner.table.copyWith(
-    heroCards: _heroQJsCards,
-    boardCards: _boardJ74FlopCards,
-    streetLabel: 'Flop',
-    potLabel: 'Pot 8 BB',
-    toCallLabel: 'To call 2 BB',
-    centerLabel: 'BTN, top pair, small price',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
-      Act0ActionTrailItemV1(label: 'BTN calls'),
-      Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
-    ],
-  ),
+    _world3PlayableCallRunner.table.copyWith(
+      heroCards: _heroQJsCards,
+      boardCards: _boardJ74FlopCards,
+      streetLabel: 'Flop',
+      potLabel: 'Pot 8 BB',
+      toCallLabel: 'To call 2 BB',
+      centerLabel: 'BTN, top pair, small price',
+      actionTrail: const <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
+        Act0ActionTrailItemV1(label: 'BTN calls'),
+        Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
+      ],
+    ),
     bets: const {
-      'co': Act0SeatBetStateV1(kind: Act0SeatBetKindV1.bet, label: 'CO', amountLabel: '2 BB'),
+      'co': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.bet,
+        label: 'CO',
+        amountLabel: '2 BB',
+      ),
     },
   ),
   options: const <Act0RunnerOptionV1>[
@@ -22221,23 +22243,27 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
       'Combine a large second-barrel price with this opponent\'s unusually value-heavy betting range.',
   question: 'What is the cleaner response now?',
   table: _act0CurrentStreetTableV1(
-_world3PlayableCallRunner.table.copyWith(
-    heroCards: _heroQJsCards,
-    boardCards: _boardJ742TurnCards,
-    streetLabel: 'Turn',
-    potLabel: 'Pot 12 BB',
-    toCallLabel: 'To call 12 BB',
-    centerLabel: 'BTN top pair, tight CO barrel',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
-      Act0ActionTrailItemV1(label: 'BTN calls'),
-      Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
-      Act0ActionTrailItemV1(label: 'BTN calls 2 BB'),
-      Act0ActionTrailItemV1(label: 'Turn: CO bets 12 BB'),
-    ],
-  ),
+    _world3PlayableCallRunner.table.copyWith(
+      heroCards: _heroQJsCards,
+      boardCards: _boardJ742TurnCards,
+      streetLabel: 'Turn',
+      potLabel: 'Pot 12 BB',
+      toCallLabel: 'To call 12 BB',
+      centerLabel: 'BTN top pair, tight CO barrel',
+      actionTrail: const <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
+        Act0ActionTrailItemV1(label: 'BTN calls'),
+        Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
+        Act0ActionTrailItemV1(label: 'BTN calls 2 BB'),
+        Act0ActionTrailItemV1(label: 'Turn: CO bets 12 BB'),
+      ],
+    ),
     bets: const {
-      'co': Act0SeatBetStateV1(kind: Act0SeatBetKindV1.bet, label: 'CO', amountLabel: '12 BB'),
+      'co': Act0SeatBetStateV1(
+        kind: Act0SeatBetKindV1.bet,
+        label: 'CO',
+        amountLabel: '12 BB',
+      ),
     },
   ),
   options: const <Act0RunnerOptionV1>[

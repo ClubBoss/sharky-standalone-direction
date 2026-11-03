@@ -24,6 +24,8 @@ void main() {
       }],
     }};
     File('${out.path}/learning-contract.json').writeAsStringSync(jsonEncode(contract));
+    expect(contract, jsonDecode(File('test/ui_v2/fixtures/table_truth_learning_contract_v1.json').readAsStringSync()),
+      reason: 'Baseline source IDs, XP, family, correctness and repair identities must remain unchanged');
     final snapshot = {for (final t in tasks) t.taskId: {
       'caption': t.runner.caption, 'hint': t.runner.hint,
       'question': t.runner.question, 'table': _table(t.runner.table),

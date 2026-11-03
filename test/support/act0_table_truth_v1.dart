@@ -120,6 +120,12 @@ List<TableTruthRow> auditTableTruth() {
                   .where((c) => c.suit.isNotEmpty && c.rank != '?')
                   .map(cardIdentity)
                   .toList();
+          if (t.heroCards.length == 2 && t.heroCards.every((c) => c.suit.isNotEmpty)) {
+            final primary = t.heroCards.map(cardIdentity).toList()..sort();
+            final seatCards = t.heroSeat.holeCards.map(cardIdentity).toList()..sort();
+            check('D5.hero_representation', primary.join(',') == seatCards.join(','),
+              'table=${primary.join(',')} seat=${seatCards.join(',')}');
+          }
           check(
             'D5.deck_unique',
             physical.toSet().length == physical.length,
@@ -144,10 +150,7 @@ List<TableTruthRow> auditTableTruth() {
               .toList();
           check(
             'D1.actor_consistency',
-            (t.activeSeatId ?? '').isEmpty ||
-                activeFlags.isEmpty ||
-                (activeFlags.length == 1 &&
-                    activeFlags.single == t.activeSeatId),
+            actorFlagsConsistent(t),
             'explicit=${t.activeSeatId} flags=${activeFlags.join(',')}',
           );
           final seatIds = t.seats.map((s) => s.seatId).toSet();
@@ -419,3 +422,10 @@ bool madeHandClaimMatches(Act0TableStateV1 table, String claim) {
   return candidate;
 }
 
+
+bool actorFlagsConsistent(Act0TableStateV1 table) {
+  final flags = table.seats.where((s) => s.isActive).toList();
+  final explicit = table.activeSeatId?.trim() ?? '';
+  return flags.length <= 1 &&
+      (explicit.isEmpty || flags.isEmpty || flags.single.seatId == explicit);
+}

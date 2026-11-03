@@ -227,7 +227,8 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
     }
 
     final actorSeat = item.actorSeat;
-    if (actorSeat == null || !actorSeat.isOccupied ||
+    if (actorSeat == null ||
+        !actorSeat.isOccupied ||
         foldedActors.contains(actorSeat.seatId)) {
       return null;
     }
@@ -378,7 +379,8 @@ Act0TableStateV1 act0TableForChoreographyFrameV1(
   final seats = source.seats
       .map((seat) {
         final sourceActor = frame.sourceActorSeatIds.contains(seat.seatId);
-        final folded = frame.foldedSeatIds.contains(seat.seatId) ||
+        final folded =
+            frame.foldedSeatIds.contains(seat.seatId) ||
             (seat.isFolded && !sourceActor);
         return Act0SeatStateV1(
           seatId: seat.seatId,

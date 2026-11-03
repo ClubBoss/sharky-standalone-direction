@@ -201,9 +201,18 @@ void main() {
     expect(played, 317); // Authored hand contexts, NOT 317 certified histories.
     expect(
       historyConsumers,
-      <String>{...w4NumericHistoryIds, ...w11ExplicitStreetHistoryIds},
+      <String>{
+        ...w4NumericHistoryIds,
+        ...w11ExplicitStreetHistoryIds,
+        // Existing approved first-hand and no-ante bubble source histories.
+        'your_first_hand_flop',
+        'your_first_hand_turn',
+        'your_first_hand_river',
+        'your_first_hand_action_trail',
+        'w9_bubble_table_risk_transfer',
+      },
       reason:
-          'only the exact W4 histories and two reviewed W11 street trails are consumer-safe',
+          'only explicitly enumerated source histories are consumer-safe; no whole-pot certification',
     );
   });
 
