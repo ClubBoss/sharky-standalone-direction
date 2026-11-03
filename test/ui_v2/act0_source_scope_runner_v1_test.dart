@@ -203,9 +203,15 @@ void main() {
         );
       } else if (invalid == 'hero-mismatch') {
         table = table.copyWith(
-          heroCards: const [
-            Act0CardStateV1(rank: '3', suit: 's'),
-            Act0CardStateV1(rank: '5', suit: 'h'),
+          // copyWith(heroCards:) now owns both Hero representations. Build
+          // a genuinely malformed disclosure explicitly, rather than relying
+          // on that former accidental divergence to manufacture the fixture.
+          seats: [
+            for (final seat in table.seats)
+              seat.isHero ? _fixtureSeat(seat, cards: const [
+                Act0CardStateV1(rank: '3', suit: 's'),
+                Act0CardStateV1(rank: '5', suit: 'h'),
+              ]) : seat,
           ],
         );
       } else if (invalid == 'hero-seat-duplicate') {

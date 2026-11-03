@@ -13915,7 +13915,7 @@ _latePositionRunner.table.copyWith(
       Act0ActionTrailItemV1(label: 'CO acts'),
     ],
     centerLabel: 'CO after two folds',
-  )
+  ),
     const {'utg', 'hj'},
   ),
   teachingSteps: const <Act0TeachingStepV1>[
@@ -22163,7 +22163,7 @@ _world3PlayableCallRunner.table.copyWith(
       Act0ActionTrailItemV1(label: 'BTN calls'),
       Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
     ],
-  )
+  ),
     bets: const {
       'co': Act0SeatBetStateV1(kind: Act0SeatBetKindV1.bet, label: 'CO', amountLabel: '2 BB'),
     },
@@ -22235,7 +22235,7 @@ _world3PlayableCallRunner.table.copyWith(
       Act0ActionTrailItemV1(label: 'BTN calls 2 BB'),
       Act0ActionTrailItemV1(label: 'Turn: CO bets 12 BB'),
     ],
-  )
+  ),
     bets: const {
       'co': Act0SeatBetStateV1(kind: Act0SeatBetKindV1.bet, label: 'CO', amountLabel: '12 BB'),
     },
