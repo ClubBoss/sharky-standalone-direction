@@ -11271,7 +11271,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
           sourceTaskId: intent.sourceTaskId,
           repairTaskId: intent.targetTaskId,
-          repairFocusKey: repairQueueIdentityKeyForAct0RepairIntentV1(intent),
+          repairFocusKey: intent.missedSignalId,
           queueItemId: queueItemIdForAct0RepairIntentV1(intent),
           repairOccurrenceId: intent.repairOccurrenceId,
         );
