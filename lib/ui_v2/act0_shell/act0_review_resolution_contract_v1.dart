@@ -213,7 +213,7 @@ class Act0ReviewResolutionReceiptHistoryV1 {
     ]..sort(_receiptSort);
     return Act0ReviewResolutionReceiptHistoryV1(
       receipts: List<Act0ReviewResolutionReceiptV1>.unmodifiable(
-        next.take(maxReceipts),
+        next.reversed.take(maxReceipts).toList().reversed,
       ),
     );
   }
@@ -260,7 +260,7 @@ class Act0ReviewResolutionReceiptHistoryV1 {
       ..sort(_receiptSort);
     return Act0ReviewResolutionReceiptHistoryV1(
       receipts: List<Act0ReviewResolutionReceiptV1>.unmodifiable(
-        receipts.take(maxReceipts),
+        receipts.reversed.take(maxReceipts).toList().reversed,
       ),
     );
   }

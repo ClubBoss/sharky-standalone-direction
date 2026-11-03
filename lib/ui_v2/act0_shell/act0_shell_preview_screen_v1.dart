@@ -2655,7 +2655,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _teachingStepIndex = 0;
     _blockCompletionSummary = null;
     _activePracticeGroupId = null;
-    _activeRepairTaskId = null;
+    _clearActiveRepairLaunchV1();
     _activeRepairSourceTaskId = null;
     _activePracticeRepairQueueRequestV1 = null;
     _activeRepairResultReceiptLine = null;
@@ -4218,8 +4218,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       }
       return Act0ReviewKindV1.alternateSameSignal;
     }
-    final request = _activePracticeRepairQueueRequestV1;
-    if (request != null && request.repairTaskId == taskId) {
+    final request = _practiceQueueRepairRequestForTaskV1(taskId);
+    if (request != null) {
       return request.sourceTaskId == request.repairTaskId
           ? Act0ReviewKindV1.exactReplay
           : Act0ReviewKindV1.alternateSameSignal;
@@ -4854,7 +4854,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _retentionSequence = 0;
       _retentionMemoryByTaskId.clear();
       _activePracticeGroupId = null;
-      _activeRepairTaskId = null;
+      _clearActiveRepairLaunchV1();
       _activeRepairSourceTaskId = null;
       _activeRepairResultReceiptLine = null;
       _activeRepairSessionSummaryLines = const <String>[];
@@ -4936,7 +4936,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _showPlayHub = true;
       _returnToPlayHubOnBack = false;
       _activePracticeGroupId = null;
-      _activeRepairTaskId = null;
+      _clearActiveRepairLaunchV1();
       _activeRepairSourceTaskId = null;
       _activeRepairResultReceiptLine = null;
       _activeRepairSessionSummaryLines = const <String>[];
@@ -4964,7 +4964,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _showPlayHub = tab == Act0ShellTabV1.play ? showPlayHub : true;
       _returnToPlayHubOnBack = false;
       _blockCompletionSummary = null;
-      _activeRepairTaskId = null;
+      _clearActiveRepairLaunchV1();
       _activeRepairSourceTaskId = null;
       _activeRepairResultReceiptLine = null;
       _activeRepairSessionSummaryLines = const <String>[];
@@ -5938,6 +5938,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             _teachingStepIndex = 0;
                             _resetLessonRunMetrics();
                             _activePracticeGroupId = null;
+                            _clearActiveRepairLaunchV1();
                             _learnDetailLessonId = null;
                             _learnPopupTaskId = null;
                             _learnDetailWorldId = null;
@@ -6265,7 +6266,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _tab = Act0ShellTabV1.review;
                                     _showPlayHub = true;
                                     _returnToPlayHubOnBack = false;
-                                    _activeRepairTaskId = null;
+                                    _clearActiveRepairLaunchV1();
                                     _activeRepairSourceTaskId = null;
                                     _activeRepairResultReceiptLine = null;
                                     _activeRepairSessionSummaryLines =
@@ -6620,7 +6621,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                             selectedWorld: selectedWorld,
                                             sourceTaskId: repairSourceTaskId,
                                           )) {
-                                        _activeRepairTaskId = null;
+                                        _clearActiveRepairLaunchV1();
                                         _activeRepairSourceTaskId = null;
                                         _activeSameSignalFeedbackRepairV1 =
                                             false;
@@ -6640,7 +6641,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _tab = Act0ShellTabV1.review;
                                     _showPlayHub = true;
                                     _returnToPlayHubOnBack = false;
-                                    _activeRepairTaskId = null;
+                                    _clearActiveRepairLaunchV1();
                                     _activeRepairSourceTaskId = null;
                                     _activeSameSignalFeedbackRepairV1 = false;
                                     _pendingFeedbackRepairSourceTaskIdV1 = null;
@@ -6933,7 +6934,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                   _teachingStepIndex = 0;
                   _blockCompletionSummary = null;
                   _showPlayHub = true;
-                  _activeRepairTaskId = null;
+                  _clearActiveRepairLaunchV1();
                   _activeRepairSourceTaskId = null;
                   _activeRepairResultReceiptLine = null;
                   _activeRepairSessionSummaryLines = const <String>[];
@@ -10820,9 +10821,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _showPlayHub = false;
     _returnToPlayHubOnBack = true;
     _activePracticeGroupId = null;
-    _activeRepairSourceTaskId = null;
-    _activePracticeRepairQueueRequestV1 = null;
-    _activeRepairObligationV1 = null;
+    _clearActiveRepairLaunchV1();
     _rapidPracticeLoop = rapidPracticeLoop;
     _phase = task.entryPhase;
     _selectedOptionId = null;
@@ -10960,7 +10959,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       // it cannot earn the learner an independent clean-pass claim.
       _lessonRunAssistedTaskIds.add(selectedTask.taskId);
     }
-    final practiceQueueRepairRequest = _activePracticeRepairQueueRequestV1;
+    final practiceQueueRepairRequest = _practiceQueueRepairRequestForTaskV1(
+      selectedTask.taskId,
+    );
     final recordingPracticeQueueRepair =
         practiceQueueRepairRequest != null &&
         practiceQueueRepairRequest.repairTaskId == selectedTask.taskId;
@@ -11246,8 +11247,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
 
     Act0PracticeRepairQueueLaunchRequestV1? request;
-    if (_activePracticeRepairQueueRequestV1?.repairTaskId == decision.taskId) {
-      request = _activePracticeRepairQueueRequestV1;
+    final queueRequest = _practiceQueueRepairRequestForTaskV1(decision.taskId);
+    if (queueRequest != null) {
+      request = queueRequest;
     } else {
       final launched = _activeRepairTaskId == decision.taskId
           ? _activeRepairObligationV1
@@ -11440,9 +11442,27 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
   }
 
-  bool _isPracticeQueueRepairAnswerV1(Act0LessonTaskV1 selectedTask) {
+  void _clearActiveRepairLaunchV1() {
+    _activeRepairTaskId = null;
+    _activeRepairSourceTaskId = null;
+    _activePracticeRepairQueueRequestV1 = null;
+    _activeRepairObligationV1 = null;
+  }
+
+  Act0PracticeRepairQueueLaunchRequestV1? _practiceQueueRepairRequestForTaskV1(
+    String taskId,
+  ) {
     final request = _activePracticeRepairQueueRequestV1;
-    return request != null && request.repairTaskId == selectedTask.taskId;
+    return request != null &&
+            request.repairTaskId == taskId &&
+            _activeRepairTaskId == taskId &&
+            _activeRepairSourceTaskId == request.sourceTaskId
+        ? request
+        : null;
+  }
+
+  bool _isPracticeQueueRepairAnswerV1(Act0LessonTaskV1 selectedTask) {
+    return _practiceQueueRepairRequestForTaskV1(selectedTask.taskId) != null;
   }
 
   Act0RepairIntentV1 _specializedFamilyCompatibilityIntentV1(

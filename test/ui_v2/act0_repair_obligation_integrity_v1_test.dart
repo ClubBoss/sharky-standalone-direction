@@ -364,6 +364,105 @@ void main() {
     },
   );
 
+  testWidgets(
+    'D same mounted Learn start cannot reuse a completed queue request',
+    (tester) async {
+      await _setup(tester, _rankLesson, _rankTask);
+      final rootState = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      tester
+          .widget<Act0LearnPathShellV1>(find.byType(Act0LearnPathShellV1))
+          .onStartTask(_rankLesson, _rankTask);
+      await tester.pumpAndSettle();
+      await _answer(tester, 'king');
+      final firstMiss = await _saved(tester);
+      final firstOccurrence = _debt(
+        firstMiss,
+        _rankTask,
+      ).single['repairOccurrenceId'];
+      await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(const Key('act0_shell_bottom_nav')),
+          matching: find.text('Practice'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final play = tester.widget<Act0PlayShellV1>(find.byType(Act0PlayShellV1));
+      final request = play.repairQueueConsumer.items
+          .map((item) => item.launchRequest)
+          .where((r) => r?.sourceTaskId == _rankTask)
+          .single!;
+      expect(request.repairTaskId, _rankTask);
+      play.onLaunchRepairQueueTarget!(request);
+      await tester.pumpAndSettle();
+      await _answer(tester, 'ace');
+      final fixed = await _saved(tester);
+      expect(_debt(fixed, _rankTask), isEmpty);
+      await _continue(tester);
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(const Key('act0_shell_bottom_nav')),
+          matching: find.text('Learn'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        tester.state(find.byType(Act0ShellPreviewScreenV1)),
+        same(rootState),
+        reason: 'no remount may erase the stale queue launch context',
+      );
+      tester
+          .widget<Act0LearnPathShellV1>(find.byType(Act0LearnPathShellV1))
+          .onStartTask(_rankLesson, _rankTask);
+      await tester.pumpAndSettle();
+      await _answer(tester, 'king');
+      final repeated = await _saved(tester);
+      final latestWrong = _rows(
+        repeated,
+        'learningEvidenceHistory',
+      ).lastWhere((r) => r['taskId'] == _rankTask && r['isCorrect'] == false);
+      expect(latestWrong['recordId'], isNot(firstOccurrence));
+      expect(
+        _debt(repeated, _rankTask),
+        hasLength(1),
+        reason:
+            'same-mounted Learn source miss must create fresh actionable debt',
+      );
+      expect(
+        _debt(repeated, _rankTask).single['repairOccurrenceId'],
+        latestWrong['recordId'],
+      );
+      expect(
+        _rows(repeated, 'repairOutcomeProjection'),
+        _rows(fixed, 'repairOutcomeProjection'),
+        reason: 'new Learn source answer is not another old queue repair',
+      );
+      await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(const Key('act0_shell_bottom_nav')),
+          matching: find.text('Practice'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final nextPlay = tester.widget<Act0PlayShellV1>(
+        find.byType(Act0PlayShellV1),
+      );
+      expect(
+        nextPlay.repairQueueConsumer.items.where(
+          (i) => i.launchRequest?.sourceTaskId == _rankTask && i.isLaunchable,
+        ),
+        hasLength(1),
+      );
+      expect(
+        tester.state(find.byType(Act0ShellPreviewScreenV1)),
+        same(rootState),
+      );
+    },
+  );
+
   for (final outcome in ['correct', 'wrong', 'assisted']) {
     testWidgets('C $outcome repair has truthful durable Review receipt', (
       tester,

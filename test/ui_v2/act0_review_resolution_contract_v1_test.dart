@@ -11,6 +11,53 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
+  test('bounded receipts retain the newest occurrence after cold parsing', () {
+    var receipts = const Act0ReviewResolutionReceiptHistoryV1();
+    for (var n = 1; n <= 201; n++) {
+      receipts = receipts.appendFromResolution(
+        Act0ReviewItemResolutionV1(
+          reviewItemId: _reviewItemId,
+          learningEvidenceId: 'source_miss_$n',
+          conceptFamilyId: 'no_bet_yet',
+          reviewState: act0ReviewResolutionStateResolvedV1,
+          resolutionReason: act0ReviewResolutionReasonRepairSucceededV1,
+          repairOutcomeId: 'repair_outcome_$n',
+          resolvedAtOrder: n,
+        ),
+      );
+    }
+    final restored = Act0ReviewResolutionReceiptHistoryV1.tryParse(
+      receipts.toPayload(),
+    );
+    expect(restored.receipts, hasLength(200));
+    expect(
+      restored.receiptForReviewItemId(
+        _reviewItemId,
+        learningEvidenceId: 'source_miss_201',
+      ),
+      isNotNull,
+    );
+    final raw = _history().toPayload().single;
+    final latest = Act0ReviewMistakeHistoryV1.tryParse([
+      {
+        ...raw,
+        'sourceDecisionId': 'source_miss_201',
+        'attemptRecordIds': [
+          ...(raw['attemptRecordIds'] as List),
+          'source_miss_201',
+        ],
+      },
+    ])!;
+    final state = Act0ReviewResolutionStateV1.fromSources(
+      reviewMistakeHistory: latest,
+      receiptHistory: restored,
+    );
+    expect(
+      state.resolutions.single.reviewState,
+      act0ReviewResolutionStateResolvedV1,
+    );
+  });
+
   test('prior receipt cannot resolve a new miss of the same family', () {
     final old = reviewResolutionReceiptHistoryFromSourcesV1(
       reviewMistakeHistory: _history(),
