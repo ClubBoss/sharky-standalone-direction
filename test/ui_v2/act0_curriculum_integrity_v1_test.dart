@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
@@ -10,6 +11,145 @@ void main() {
       .firstWhere((task) => task.taskId == taskId);
 
   group('Act0 curriculum integrity', () {
+    test('W4 sizing-family histories reconcile to the graded 6 BB pot', () {
+      const expectedAnswers = <String, List<String>>{
+        'w4_bad_bluff': <String>['check'],
+        'w4_bluff_intro': <String>[],
+        'w4_bluff_pressure': <String>['bet_small'],
+        'w4_bluff_purpose': <String>['bluff'],
+        'w4_bluff_recap': <String>[],
+        'w4_checkpoint_intro': <String>[],
+        'w4_checkpoint_review': <String>['purpose_price'],
+        'w4_checkpoint_value': <String>['value'],
+        'w4_half_pot_bet': <String>['three'],
+        'w4_pot_bet': <String>['six'],
+        'w4_protection_bet': <String>['bet_half'],
+        'w4_protection_check': <String>['free_card'],
+        'w4_protection_intro': <String>[],
+        'w4_protection_recap': <String>[],
+        'w4_purpose_intro': <String>[],
+        'w4_purpose_recap': <String>[],
+        'w4_sizing_intro': <String>[],
+        'w4_sizing_recap': <String>[],
+        'w4_small_bet': <String>['two'],
+        'w4_value_bet': <String>['bet_half'],
+        'w4_value_intro': <String>[],
+        'w4_value_missed': <String>['bet_half'],
+        'w4_value_purpose': <String>['value'],
+        'w4_value_recap': <String>[],
+      };
+      const expectedTrail = <String>[
+        'SB blind 0.5 BB',
+        'BB blind 1 BB',
+        'UTG folds',
+        'HJ folds',
+        'CO folds',
+        'BTN raises 2.75 BB',
+        'SB folds',
+        'BB calls 2.75 BB',
+        'Flop: BB checks',
+      ];
+      const priorThreeBbHistory = <String>[
+        'SB blind 0.5 BB',
+        'BB blind 1 BB',
+        'UTG folds',
+        'HJ folds',
+        'CO folds',
+        'BTN raises 3 BB',
+        'SB folds',
+        'BB calls 3 BB',
+        'Flop: BB checks',
+      ];
+      expect(
+        act0CalcTrailPotV1(priorThreeBbHistory, 8).potBb,
+        closeTo(6.5, 0.001),
+        reason: 'the previously authored 3 BB open/call plus dead SB is 6.5',
+      );
+      final world = Act0ShellStateV1.sample.worldById('world_4');
+      final tasks = <String, Act0LessonTaskV1>{
+        for (final task in world.lessons.expand((lesson) => lesson.taskList))
+          task.taskId: task,
+      };
+
+      expect(
+        tasks.keys.toSet().intersection(expectedAnswers.keys.toSet()),
+        expectedAnswers.keys.toSet(),
+      );
+      for (final entry in expectedAnswers.entries) {
+        final task = tasks[entry.key]!;
+        final correctIds = task.runner.options
+            .where((option) => option.isCorrect)
+            .map((option) => option.id)
+            .toList();
+        expect(correctIds, entry.value, reason: entry.key);
+        final table = task.runner.table;
+        expect(table.potLabel, 'Pot 6 BB', reason: entry.key);
+        final decisionIndex = table.actionTrail.length - 1;
+        final potAtDecision = act0CalcTableTrailPotV1(table, decisionIndex);
+        expect(potAtDecision.potBb, closeTo(6, 0.001), reason: entry.key);
+        expect(potAtDecision.street, 'Flop', reason: entry.key);
+        expect(
+          act0CalcTableTrailPotV1(table, 7).potBb,
+          closeTo(6, 0.001),
+          reason: '${entry.key}: BB call amount is total, not incremental',
+        );
+        expect(
+          act0CalcTableTrailPotV1(table, decisionIndex - 1).potBb,
+          closeTo(6, 0.001),
+          reason: '${entry.key}: pot stays 6 at the source decision prefix',
+        );
+        final tableWithTypedNote = table.copyWith(
+          actionTrail: <Act0ActionTrailItemV1>[
+            table.actionTrail.first,
+            const Act0ActionTrailItemV1.note(label: 'Context only'),
+            ...table.actionTrail.skip(1),
+          ],
+        );
+        expect(
+          act0CalcTableTrailPotV1(
+            tableWithTypedNote,
+            tableWithTypedNote.actionTrail.length - 1,
+          ).potBb,
+          closeTo(6, 0.001),
+          reason: '${entry.key}: typed notes do not add chips',
+        );
+        expect(
+          table.actionTrail.where((item) => item.label == 'BB blind 1 BB'),
+          hasLength(1),
+          reason: entry.key,
+        );
+        final expectedTaskTrail = <String>[
+          ...expectedTrail,
+          if (entry.key == 'w4_protection_check') 'BTN checks',
+        ];
+        expect(
+          table.actionTrail.map((item) => item.label).toList(),
+          expectedTaskTrail,
+          reason: entry.key,
+        );
+        final seats = <String, Act0SeatStateV1>{
+          for (final seat in table.seats) seat.seatId: seat,
+        };
+        for (final seatId in <String>['utg', 'hj', 'co', 'sb']) {
+          expect(seats[seatId]?.isFolded, isTrue, reason: entry.key);
+          expect(seats[seatId]?.isInHand, isFalse, reason: entry.key);
+        }
+        expect(seats['bb']?.isFolded, isFalse, reason: entry.key);
+        expect(seats['bb']?.hasActed, isTrue, reason: entry.key);
+        expect(table.activeSeatId, 'btn', reason: entry.key);
+      }
+
+      final missingSmallBlind = expectedTrail.skip(1).toList();
+      expect(
+        act0CalcTrailPotV1(
+          missingSmallBlind,
+          missingSmallBlind.length - 1,
+        ).potBb,
+        -1,
+        reason: 'history without the required first SB blind fails closed',
+      );
+    });
+
     test('W4 price decisions show the opponent source of Hero call price', () {
       final expectedPrices = <String, String>{
         'w4_good_price_call': '1 BB',

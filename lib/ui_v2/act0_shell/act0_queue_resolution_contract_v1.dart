@@ -206,7 +206,11 @@ Act0QueueItemResolutionV1? _resolutionForIntent(
   }
   final matchingOutcomes =
       repairOutcomeProjection.outcomes
-          .where((outcome) => outcome.queueItemId.trim() == queueItemId)
+          .where(
+            (outcome) =>
+                outcome.queueItemId.trim() == queueItemId &&
+                outcome.repairOccurrenceId == intent.repairOccurrenceId,
+          )
           .toList(growable: false)
         ..sort((a, b) {
           final sequence = a.sequence.compareTo(b.sequence);

@@ -140,10 +140,10 @@ void main() {
     });
     final repairSnapshot = snapshot['repair']! as Map<String, Object?>;
     expect(repairSnapshot['incorrectOptions'], 462);
-    expect(repairSnapshot['exactReplayCovered'], 14);
-    expect(repairSnapshot['sameSignalMapped'], 277);
-    expect(repairSnapshot['fallbackOnly'], 14);
-    expect(repairSnapshot['intentionalExactReplay'], 14);
+    expect(repairSnapshot['exactReplayCovered'], 15);
+    expect(repairSnapshot['sameSignalMapped'], 276);
+    expect(repairSnapshot['fallbackOnly'], 15);
+    expect(repairSnapshot['intentionalExactReplay'], 15);
     expect(repairSnapshot['unresolvedProductGap'], 0);
     expect(repairSnapshot['unrecordedFallback'], 0);
     expect(repairSnapshot['unmapped'], 0);
@@ -170,7 +170,30 @@ void main() {
       'misread_tournament_pressure': 32,
     });
     expect(act0ConceptErrorDefinitionsV1, hasLength(20));
-    expect(act0RepairGapAdjudicationsV1, hasLength(34));
+    expect(act0RepairGapAdjudicationsV1, hasLength(36));
+    final fallbackInventory = (repairSnapshot['fallbackInventory'] as List)
+        .cast<Map<String, Object?>>();
+    final coPlayersBehindFallback = fallbackInventory.singleWhere(
+      (row) =>
+          row['task'] == 'position_checkpoint_position_checkpoint_table_notice',
+    );
+    expect(coPlayersBehindFallback['lesson'], 'position_checkpoint');
+    expect(coPlayersBehindFallback['currentFallback'], 'intentional_exact');
+    expect(
+      (coPlayersBehindFallback['incorrectOptions'] as List)
+          .cast<Map<String, Object?>>()
+          .map((row) => row['optionId']),
+      <String>['acts_last', 'late_free_pass'],
+    );
+    for (final option
+        in (coPlayersBehindFallback['incorrectOptions'] as List)
+            .cast<Map<String, Object?>>()) {
+      expect(option['errorType'], 'misread_position_action_order');
+      expect(option['skillAtomId'], 'table_position_read');
+      expect(option['missedSignalId'], 'players_behind');
+      expect(option['missedSignalId'], isNot('hero_button'));
+      expect(option['missedSignalId'], isNot('pot_to_call'));
+    }
 
     final w7 = Act0ShellStateV1.sample.worldById('world_7');
     final w7Surface = w7.lessons

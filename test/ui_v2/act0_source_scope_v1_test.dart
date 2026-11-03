@@ -94,6 +94,38 @@ void main() {
       'same_hand_different_seat_position_repair_same_hand_different_seat',
       'what_poker_is_side_pot_intro',
     };
+    const w4NumericHistoryIds = <String>{
+      'w4_bad_bluff',
+      'w4_bluff_intro',
+      'w4_bluff_pressure',
+      'w4_bluff_purpose',
+      'w4_bluff_recap',
+      'w4_checkpoint_intro',
+      'w4_checkpoint_review',
+      'w4_checkpoint_value',
+      'w4_half_pot_bet',
+      'w4_pot_bet',
+      'w4_protection_bet',
+      'w4_protection_check',
+      'w4_protection_intro',
+      'w4_protection_recap',
+      'w4_purpose_intro',
+      'w4_purpose_recap',
+      'w4_sizing_intro',
+      'w4_sizing_recap',
+      'w4_small_bet',
+      'w4_value_bet',
+      'w4_value_intro',
+      'w4_value_missed',
+      'w4_value_purpose',
+      'w4_value_recap',
+    };
+    // The reviewed W11 projection repair explicitly separates these authored
+    // trails into preflop/flop/turn actions; no other history is newly admitted.
+    const w11ExplicitStreetHistoryIds = <String>{
+      'w11_trigger_small_price_continue',
+      'w11_trigger_bad_price_fold',
+    };
     final tasks = [
       for (final w in Act0ShellStateV1.sample.worlds)
         for (final l in w.lessons) ...l.taskList,
@@ -102,7 +134,7 @@ void main() {
     expect(orientationIds, hasLength(46));
     expect(explanationIds, hasLength(4));
     var played = 0;
-    var historyConsumers = 0;
+    final historyConsumers = <String>{};
     for (final task in tasks) {
       final table = task.runner.table;
       final expected = orientationIds.contains(task.taskId)
@@ -114,8 +146,32 @@ void main() {
       expect(table.copyWith(centerLabel: 'A different cue').scope, expected);
       if (expected == Act0TableScopeV1.playedHand) {
         played++;
-        if (act0StreetReplayFromTableV1(table)?.isConsumerSafe == true)
-          historyConsumers++;
+        final replay = act0StreetReplayFromTableV1(table);
+        if (replay?.isConsumerSafe == true) historyConsumers.add(task.taskId);
+        if (w4NumericHistoryIds.contains(task.taskId)) {
+          expect(replay?.isConsumerSafe, isTrue, reason: task.taskId);
+          expect(
+            replay?.currentStreet,
+            Act0StreetReplayStreetV1.flop,
+            reason: task.taskId,
+          );
+          expect(
+            replay?.steps.map((step) => step.actorLabel).toList(),
+            <String>[
+              'SB',
+              'BB',
+              'UTG',
+              'HJ',
+              'CO',
+              'BTN',
+              'SB',
+              'BB',
+              'BB',
+              if (task.taskId == 'w4_protection_check') 'BTN',
+            ],
+            reason: task.taskId,
+          );
+        }
       } else {
         expect(act0StreetReplayFromTableV1(table), isNull, reason: task.taskId);
         expect(
@@ -143,7 +199,12 @@ void main() {
       }
     }
     expect(played, 317); // Authored hand contexts, NOT 317 certified histories.
-    expect(historyConsumers, 2); // Prior 22 minus 20 misclassified seat maps.
+    expect(
+      historyConsumers,
+      <String>{...w4NumericHistoryIds, ...w11ExplicitStreetHistoryIds},
+      reason:
+          'only the exact W4 histories and two reviewed W11 street trails are consumer-safe',
+    );
   });
 
   test(

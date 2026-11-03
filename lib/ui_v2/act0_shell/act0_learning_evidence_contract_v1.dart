@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:crypto/crypto.dart';
+
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_family_repair_memory_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_candidate_practice_mapper_v1.dart';
@@ -21,6 +23,7 @@ const String act0SessionSummaryRepairLifecycleQuietAfterCorrectV1 =
 Act0LearningEvidenceRecordV1? act0LearningEvidenceRecordFromCompletedDecisionV1(
   Act0CompletedDecisionV1 decision, {
   required int createdOrder,
+  String authoredSourceFingerprint = '',
   Act0EvidenceRunKeyV1? runKey,
   String sessionId = '',
   DateTime? recordedAtUtc,
@@ -77,6 +80,7 @@ Act0LearningEvidenceRecordV1? act0LearningEvidenceRecordFromCompletedDecisionV1(
     recordedAtUtc: recordedAtUtc?.toUtc(),
     reviewKind: reviewKind,
     assistanceKind: decision.assistanceKind,
+    authoredSourceFingerprint: authoredSourceFingerprint,
   );
 }
 
@@ -198,6 +202,7 @@ class Act0LearningEvidenceRecordV1 {
     this.recordedAtUtc,
     this.reviewKind = Act0ReviewKindV1.legacyUnspaced,
     this.assistanceKind = Act0DecisionAssistanceV1.legacyUnknown,
+    this.authoredSourceFingerprint = '',
   });
 
   final int schemaVersion;
@@ -226,6 +231,7 @@ class Act0LearningEvidenceRecordV1 {
   final DateTime? recordedAtUtc;
   final Act0ReviewKindV1 reviewKind;
   final Act0DecisionAssistanceV1 assistanceKind;
+  final String authoredSourceFingerprint;
 
   /// Placement diagnostic answers are authentic assessment evidence with their
   /// own run kind. They are never earlier lesson learning, unseen transfer,
@@ -233,10 +239,14 @@ class Act0LearningEvidenceRecordV1 {
   bool get isPlacementAssessment =>
       runKind.trim() == act0PlacementAssessmentRunKindV1;
 
-  bool get isAssistedCorrect =>
-      isCorrect &&
-      (assistanceKind == Act0DecisionAssistanceV1.quickHint ||
-          assistanceKind == Act0DecisionAssistanceV1.theoryRecall);
+  bool get isAssistedCorrect => isCorrect && hasKnownAssistance;
+
+  bool get hasKnownAssistance =>
+      assistanceKind == Act0DecisionAssistanceV1.quickHint ||
+      assistanceKind == Act0DecisionAssistanceV1.theoryRecall;
+
+  bool get isIndependentCorrect =>
+      isCorrect && assistanceKind == Act0DecisionAssistanceV1.none;
 
   Map<String, Object?> toPayload() {
     final payload = <String, Object?>{
@@ -256,6 +266,8 @@ class Act0LearningEvidenceRecordV1 {
       'skillAtomId': skillAtomId,
       'decisionTimeBucket': decisionTimeBucket,
       'resultKind': resultKind,
+      if (authoredSourceFingerprint.isNotEmpty)
+        'authoredSourceFingerprint': authoredSourceFingerprint,
       if (assistanceKind != Act0DecisionAssistanceV1.legacyUnknown)
         'assistanceKind': assistanceKind.name,
     };
@@ -317,6 +329,9 @@ class Act0LearningEvidenceRecordV1 {
     final sourceLessonId = _optionalString(map['sourceLessonId']);
     final startedBy = _optionalString(map['startedBy']);
     final sessionId = _optionalString(map['sessionId']);
+    final authoredSourceFingerprint = _optionalString(
+      map['authoredSourceFingerprint'],
+    );
     final recordedAtUtc = act0TryParseUtcV1(map['recordedAtUtc']);
     final assistanceKind = map.containsKey('assistanceKind')
         ? act0EnumByNameV1(
@@ -337,6 +352,7 @@ class Act0LearningEvidenceRecordV1 {
         expectedChoiceId == null ||
         errorType == null ||
         skillAtomId == null ||
+        authoredSourceFingerprint == null ||
         decisionTimeBucket == null ||
         resultKind == null ||
         isCorrect is! bool ||
@@ -377,6 +393,7 @@ class Act0LearningEvidenceRecordV1 {
       recordedAtUtc: recordedAtUtc,
       reviewKind: reviewKind,
       assistanceKind: assistanceKind,
+      authoredSourceFingerprint: authoredSourceFingerprint,
     );
   }
 
@@ -408,7 +425,8 @@ class Act0LearningEvidenceRecordV1 {
       other.sessionId == sessionId &&
       other.recordedAtUtc == recordedAtUtc &&
       other.reviewKind == reviewKind &&
-      other.assistanceKind == assistanceKind;
+      other.assistanceKind == assistanceKind &&
+      other.authoredSourceFingerprint == authoredSourceFingerprint;
 
   @override
   int get hashCode => Object.hashAll(<Object?>[
@@ -438,6 +456,7 @@ class Act0LearningEvidenceRecordV1 {
     recordedAtUtc,
     reviewKind,
     assistanceKind,
+    authoredSourceFingerprint,
   ]);
 }
 
@@ -697,16 +716,165 @@ const Map<String, String> _sessionSummaryRepairFocusLabelsV1 = <String, String>{
 class Act0LearningEvidenceHistoryV1 {
   const Act0LearningEvidenceHistoryV1({
     this.records = const <Act0LearningEvidenceRecordV1>[],
+    this.sourceAnchors = const <Act0LearningEvidenceRecordV1>[],
+    this.hasCompleteLineage = true,
   });
 
   static const int maxRecords = 200;
 
   final List<Act0LearningEvidenceRecordV1> records;
+  // Compact first-fact anchors per source task (Placement separate). Retain
+  // actual records only: observation, mistake, known help, and independent
+  // correct. Missing legacy facts remain missing rather than reconstructed.
+  final List<Act0LearningEvidenceRecordV1> sourceAnchors;
+  final bool hasCompleteLineage;
+
+  List<Act0LearningEvidenceRecordV1> get provenanceRecords {
+    final byId = <String, Act0LearningEvidenceRecordV1>{};
+    for (final record in [...sourceAnchors, ...records])
+      byId.putIfAbsent(record.recordId, () => record);
+    return byId.values.toList()
+      ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));
+  }
+
+  static List<Act0LearningEvidenceRecordV1> _anchors(
+    Iterable<Act0LearningEvidenceRecordV1> source,
+  ) {
+    final sorted = source.toList()
+      ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));
+    final first = <String, Act0LearningEvidenceRecordV1>{};
+    for (final record in sorted) {
+      final key = jsonEncode([
+        record.worldId,
+        record.lessonId,
+        record.taskId,
+        record.isPlacementAssessment,
+      ]);
+      first.putIfAbsent('$key|first', () => record);
+      if (!record.isCorrect) first.putIfAbsent('$key|wrong', () => record);
+      if (record.hasKnownAssistance) {
+        first.putIfAbsent('$key|assisted', () => record);
+      }
+      if (record.isIndependentCorrect) {
+        first.putIfAbsent('$key|independentCorrect', () => record);
+      }
+    }
+    return first.values.toSet().toList()
+      ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));
+  }
+
+  static String _lineageMetadataDigestV1({
+    required bool complete,
+    required int anchorCount,
+    required String anchorSha256,
+  }) => sha256
+      .convert(
+        utf8.encode(
+          jsonEncode(<Object?>[
+            'act0_lineage_metadata_v1',
+            complete,
+            anchorCount,
+            anchorSha256,
+          ]),
+        ),
+      )
+      .toString();
+
+  Map<String, Object?> lineagePayload() {
+    final anchors = _anchors(
+      provenanceRecords,
+    ).map((record) => record.toPayload()).toList(growable: false);
+    final anchorSha = sha256
+        .convert(utf8.encode(jsonEncode(anchors)))
+        .toString();
+    return <String, Object?>{
+      'format': 1,
+      'complete': hasCompleteLineage,
+      'anchors': anchors,
+      // The anchor digest detects changed/removed source facts, while the
+      // metadata digest binds the completeness claim to those exact facts.
+      // Neither digest can reconstruct history lost before this snapshot.
+      'anchorCount': anchors.length,
+      'anchorSha256': anchorSha,
+      'lineageSha256': _lineageMetadataDigestV1(
+        complete: hasCompleteLineage,
+        anchorCount: anchors.length,
+        anchorSha256: anchorSha,
+      ),
+    };
+  }
+
+  /// A snapshot-list alone cannot attest that earlier evidence never existed.
+  /// Versioned metadata preserves only actual source anchors plus recent data.
+  static Act0LearningEvidenceHistoryV1? restore(
+    Object? recent,
+    Object? lineage,
+  ) {
+    final legacy = tryParse(recent);
+    if (lineage == null) return legacy;
+    // A v19 snapshot is written whole; a dropped recent record is corruption.
+    if (legacy == null ||
+        recent is! List ||
+        legacy.records.length != recent.length ||
+        lineage is! Map ||
+        lineage['format'] != 1 ||
+        lineage['complete'] is! bool ||
+        lineage['anchors'] is! List)
+      return null;
+    final rawAnchors = lineage['anchors'] as List;
+    final anchors = rawAnchors
+        .map(Act0LearningEvidenceRecordV1.tryParse)
+        .whereType<Act0LearningEvidenceRecordV1>()
+        .toList();
+    if (anchors.length != rawAnchors.length) return null;
+    final count = lineage['anchorCount'];
+    final digest = lineage['anchorSha256'];
+    final metaDigest = lineage['lineageSha256'];
+    final hasAnchorSeal = count is int && digest is String;
+    if (!hasAnchorSeal && (count != null || digest != null)) return null;
+    if (hasAnchorSeal &&
+        (count != rawAnchors.length ||
+            digest !=
+                sha256
+                    .convert(utf8.encode(jsonEncode(rawAnchors)))
+                    .toString())) {
+      return null; // Corrupt or truncated authoritative anchor projection.
+    }
+    final hasFullSeal = hasAnchorSeal && metaDigest is String;
+    if (metaDigest != null && !hasFullSeal) return null;
+    if (hasFullSeal &&
+        metaDigest !=
+            _lineageMetadataDigestV1(
+              complete: lineage['complete'] as bool,
+              anchorCount: count,
+              anchorSha256: digest,
+            )) {
+      return null; // A changed completeness flag cannot become source proof.
+    }
+    final identities = <String, Act0LearningEvidenceRecordV1>{};
+    for (final record in [...anchors, ...legacy.records]) {
+      final prior = identities[record.recordId];
+      if (prior != null && prior != record) return null;
+      identities[record.recordId] = record;
+    }
+    return Act0LearningEvidenceHistoryV1(
+      records: legacy.records,
+      sourceAnchors: _anchors(identities.values),
+      // Old v19 copies without both seals retain real facts but cannot
+      // assert original completeness; a hash is not an external origin proof.
+      hasCompleteLineage: (lineage['complete'] as bool) && hasFullSeal,
+    );
+  }
 
   Act0LearningEvidenceHistoryV1 append(Act0LearningEvidenceRecordV1 record) {
+    if (provenanceRecords.any((r) => r.recordId == record.recordId))
+      return this;
+    final anchors = _anchors([...provenanceRecords, record]);
     final next = <Act0LearningEvidenceRecordV1>[...records, record]
       ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));
     return Act0LearningEvidenceHistoryV1(
+      sourceAnchors: List.unmodifiable(anchors),
+      hasCompleteLineage: hasCompleteLineage,
       records: next.length <= maxRecords
           ? List<Act0LearningEvidenceRecordV1>.unmodifiable(next)
           : List<Act0LearningEvidenceRecordV1>.unmodifiable(
@@ -721,16 +889,19 @@ class Act0LearningEvidenceHistoryV1 {
   /// from presentation state.
   Act0LearningEvidenceHistoryV1 appendCompletedDecision(
     Act0CompletedDecisionV1 decision, {
+    String authoredSourceFingerprint = '',
     Act0EvidenceRunKeyV1? runKey,
     String sessionId = '',
     DateTime? recordedAtUtc,
     Act0ReviewKindV1 reviewKind = Act0ReviewKindV1.legacyUnspaced,
   }) {
-    if (records.any((record) => record.recordId == decision.attemptKey)) {
+    if (provenanceRecords.any(
+      (record) => record.recordId == decision.attemptKey,
+    )) {
       return this;
     }
     final createdOrder =
-        records.fold<int>(
+        provenanceRecords.fold<int>(
           0,
           (maxOrder, record) =>
               record.createdOrder > maxOrder ? record.createdOrder : maxOrder,
@@ -739,6 +910,7 @@ class Act0LearningEvidenceHistoryV1 {
     final record = act0LearningEvidenceRecordFromCompletedDecisionV1(
       decision,
       createdOrder: createdOrder,
+      authoredSourceFingerprint: authoredSourceFingerprint,
       runKey: runKey,
       sessionId: sessionId,
       recordedAtUtc: recordedAtUtc,
@@ -799,9 +971,15 @@ class Act0LearningEvidenceHistoryV1 {
   List<Map<String, Object?>> toPayload() =>
       records.map((record) => record.toPayload()).toList(growable: false);
 
-  String toStorageString() => jsonEncode(toPayload());
+  String toStorageString() => jsonEncode({
+    'format': 2,
+    'records': toPayload(),
+    'lineage': lineagePayload(),
+  });
 
   static Act0LearningEvidenceHistoryV1? tryParse(Object? raw) {
+    if (raw is Map && raw['format'] == 2)
+      return restore(raw['records'], raw['lineage']);
     if (raw is! List) {
       return null;
     }
@@ -812,6 +990,8 @@ class Act0LearningEvidenceHistoryV1 {
             .toList(growable: false)
           ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));
     return Act0LearningEvidenceHistoryV1(
+      sourceAnchors: List.unmodifiable(_anchors(records)),
+      hasCompleteLineage: false,
       records: List<Act0LearningEvidenceRecordV1>.unmodifiable(
         records.length <= maxRecords
             ? records

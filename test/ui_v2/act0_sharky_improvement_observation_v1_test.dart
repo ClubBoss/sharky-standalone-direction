@@ -1,3 +1,5 @@
+// These fixtures test reducer/consumer arithmetic, not current authored proof.
+// Current-source admission is covered by act0_asm07_transfer_retention_boundary_falsifier_test.dart.
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -266,9 +268,10 @@ Act0FixProofProjectionV1 _fixProofFromHistory({
         _receipt(resolvedAtOrder: repairOrder),
       ],
     ),
-    transferMeasurement: Act0LearningTransferMeasurementV1.fromLearningEvidence(
-      history,
-    ),
+    transferMeasurement:
+        Act0LearningTransferMeasurementV1.fromUnverifiedEvidenceForTests(
+          history,
+        ),
   );
 }
 

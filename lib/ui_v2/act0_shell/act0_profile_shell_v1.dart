@@ -1111,12 +1111,12 @@ class _ProfileRecentProofV1 extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 5),
             child: Text(
-              item.isReinforced
+              item.currentVerificationLine.isNotEmpty
+                  ? 'Repair saved. ${item.currentVerificationLine}'
+                  : item.isReinforced
                   ? 'Later evidence supported this repair'
                   : 'You repaired this table-reading clue',
               key: Key('act0_shell_profile_recent_proof_item_${item.proofId}'),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
               style: Act0AcademyReadingStyleV1.muted.copyWith(
                 color: Act0AcademyReadingStyleV1.textMuted,
                 height: 1.25,

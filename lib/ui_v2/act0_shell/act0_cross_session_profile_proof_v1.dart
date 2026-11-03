@@ -115,6 +115,8 @@ class Act0CrossSessionProfileProofItemV1 {
     required this.bankedOrder,
     required this.conceptLabelKey,
     required this.messageKey,
+    this.currentVerificationState = '',
+    this.currentVerificationLine = '',
   });
 
   final int schemaVersion;
@@ -126,6 +128,8 @@ class Act0CrossSessionProfileProofItemV1 {
   final int bankedOrder;
   final String conceptLabelKey;
   final String messageKey;
+  final String currentVerificationState;
+  final String currentVerificationLine;
 
   bool get isReinforced =>
       proofState == act0FixProofStateReinforcedByLaterEvidenceV1;
@@ -140,6 +144,8 @@ class Act0CrossSessionProfileProofItemV1 {
         : '';
     return Act0CrossSessionProfileProofItemV1(
       proofId: proof.fixProofId.trim(),
+      currentVerificationState: proof.currentVerificationState,
+      currentVerificationLine: proof.currentVerificationLine,
       conceptFamilyId: proof.conceptFamilyId.trim(),
       proofState: proof.proofState,
       sourceRepairReference: proof.repairOutcomeRef.trim(),
@@ -163,6 +169,10 @@ class Act0CrossSessionProfileProofItemV1 {
     'bankedOrder': bankedOrder,
     'conceptLabelKey': conceptLabelKey,
     'messageKey': messageKey,
+    if (currentVerificationState.isNotEmpty)
+      'currentVerificationState': currentVerificationState,
+    if (currentVerificationLine.isNotEmpty)
+      'currentVerificationLine': currentVerificationLine,
   };
 }
 

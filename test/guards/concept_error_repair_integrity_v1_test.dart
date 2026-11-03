@@ -55,8 +55,10 @@ void main() {
     expect(used, definitions.map((entry) => entry.id).toSet());
   });
 
-  test('all 34 prior exact fallbacks have one explicit safe disposition', () {
+  test('all adjudicated routes have one explicit truthful disposition', () {
     const expectedSources = <String>[
+      'world_1/what_poker_is/what_poker_is_find_hero',
+      'world_3/position_checkpoint/position_checkpoint_position_checkpoint_table_notice',
       'world_1/what_poker_is/what_poker_is_table_read_recheck',
       'world_1/what_poker_is_content/what_poker_is_pot_stack',
       'world_1/what_poker_is_content/what_poker_is_win_ways',
@@ -93,7 +95,7 @@ void main() {
       'world_8/spr_and_commitment/what_poker_is_side_pot_intro',
     ];
     final rows = act0RepairGapAdjudicationsV1;
-    expect(rows, hasLength(34));
+    expect(rows, hasLength(36));
     expect(
       rows
           .map(
@@ -103,12 +105,19 @@ void main() {
           .toList(),
       expectedSources,
     );
-    expect(rows.map((row) => row.sourceTaskId).toSet(), hasLength(34));
+    expect(rows.map((row) => row.sourceTaskId).toSet(), hasLength(36));
 
     final counts = <Act0RepairGapOutcomeV1, int>{};
     for (final row in rows) {
       counts.update(row.outcome, (value) => value + 1, ifAbsent: () => 1);
-      expect(row.priorFallback, 'unrecorded_exact_source_fallback');
+      expect(
+        row.priorFallback,
+        row.sourceTaskId == 'what_poker_is_find_hero'
+            ? 'mapped_wrong_signal:world_3/position_checkpoint/'
+                  'position_checkpoint_position_checkpoint_table_notice:'
+                  'players_behind'
+            : 'unrecorded_exact_source_fallback',
+      );
       expect(row.leaksOriginalAnswer, isFalse);
       expect(row.requiresFutureKnowledge, isFalse);
       expect(
@@ -146,17 +155,32 @@ void main() {
         expect(target!.phase, Act0LessonPhaseV1.drill);
         expect(target.taskId, isNot(source.taskId));
         expect(target.runner.question, isNot(source.runner.question));
-        expect(
-          int.parse(row.targetWorldId!.substring('world_'.length)),
-          lessThanOrEqualTo(
-            int.parse(row.sourceWorldId.substring('world_'.length)),
-          ),
-        );
+        if (row.sourceTaskId == 'what_poker_is_find_hero') {
+          // This cross-world target is a narrowly pinned seat-identity drill:
+          // W1 already introduces BTN and preflop order; the W3 repair asks
+          // only to locate the dealer-marked BTN seat.
+          expect(row.sourceWorldId, 'world_1');
+          expect(row.sourceLessonId, 'what_poker_is');
+          expect(row.targetWorldId, 'world_3');
+          expect(row.targetLessonId, 'position_six_seats');
+          expect(
+            row.targetTaskId,
+            'position_six_seats_position_repair_seat_id_btn',
+          );
+          expect(row.requiresFutureKnowledge, isFalse);
+        } else {
+          expect(
+            int.parse(row.targetWorldId!.substring('world_'.length)),
+            lessThanOrEqualTo(
+              int.parse(row.sourceWorldId.substring('world_'.length)),
+            ),
+          );
+        }
       }
     }
     expect(counts, <Act0RepairGapOutcomeV1, int>{
-      Act0RepairGapOutcomeV1.alternateSameSignalTarget: 20,
-      Act0RepairGapOutcomeV1.intentionalExactReplay: 14,
+      Act0RepairGapOutcomeV1.alternateSameSignalTarget: 21,
+      Act0RepairGapOutcomeV1.intentionalExactReplay: 15,
     });
     expect(
       rows.where(
@@ -169,6 +193,31 @@ void main() {
     );
     expect(blindsReview.outcome, Act0RepairGapOutcomeV1.intentionalExactReplay);
     expect(blindsReview.targetTaskId, isNull);
+    final w1HeroButton = rows.singleWhere(
+      (row) => row.sourceTaskId == 'what_poker_is_find_hero',
+    );
+    expect(w1HeroButton.priorFallback, contains('players_behind'));
+    expect(
+      w1HeroButton.outcome,
+      Act0RepairGapOutcomeV1.alternateSameSignalTarget,
+    );
+    expect(
+      w1HeroButton.targetTaskId,
+      'position_six_seats_position_repair_seat_id_btn',
+    );
+    final coPlayersBehind = rows.singleWhere(
+      (row) =>
+          row.sourceTaskId ==
+          'position_checkpoint_position_checkpoint_table_notice',
+    );
+    expect(
+      coPlayersBehind.outcome,
+      Act0RepairGapOutcomeV1.intentionalExactReplay,
+    );
+    expect(coPlayersBehind.priorFallback, 'unrecorded_exact_source_fallback');
+    expect(coPlayersBehind.targetWorldId, isNull);
+    expect(coPlayersBehind.targetLessonId, isNull);
+    expect(coPlayersBehind.targetTaskId, isNull);
   });
 }
 

@@ -573,6 +573,7 @@ class Act0RunnerStateV1 {
     this.sizingConfig = const Act0SizingConfigV1.disabled(),
     this.selectedPresetId,
     this.sharky = Act0SharkyCueV1.beginner,
+    this.feedbackSignalId,
   });
 
   final String lessonId;
@@ -598,6 +599,7 @@ class Act0RunnerStateV1 {
   final Act0SizingConfigV1 sizingConfig;
   final String? selectedPresetId;
   final Act0SharkyCueV1 sharky;
+  final String? feedbackSignalId;
 
   Act0TeachingStepV1? get activeTeachingStep {
     if (teachingStepIndex < 0 || teachingStepIndex >= teachingSteps.length) {
@@ -630,6 +632,7 @@ class Act0RunnerStateV1 {
     Act0SizingConfigV1? sizingConfig,
     String? selectedPresetId,
     Act0SharkyCueV1? sharky,
+    String? feedbackSignalId,
   }) {
     return Act0RunnerStateV1(
       lessonId: lessonId ?? this.lessonId,
@@ -655,6 +658,7 @@ class Act0RunnerStateV1 {
       sizingConfig: sizingConfig ?? this.sizingConfig,
       selectedPresetId: selectedPresetId ?? this.selectedPresetId,
       sharky: sharky ?? this.sharky,
+      feedbackSignalId: feedbackSignalId ?? this.feedbackSignalId,
     );
   }
 
@@ -838,6 +842,10 @@ class Act0RunnerOptionV1 {
   final List<String> repairFocusCardIds;
   final List<String> repairFocusLabels;
 }
+
+/// Source grading predicate shared by runtime proof and content guards.
+bool act0RunnerOptionIsAuthoredCorrectV1(Act0RunnerOptionV1 option) =>
+    option.isCorrect && option.quality == Act0FeedbackQualityV1.correct;
 
 /// Authored instructional intent, never a certificate of hand legality.
 /// Unclassified tables fail closed at hand-history consumers.
@@ -1572,6 +1580,30 @@ class Act0PlacementSkillStatV1 {
   static int _xpNeededForNextLevel(int level) => 12 + (level * 8);
 }
 
+// Used only by adjudicated seat-recognition tasks. Their assessment
+// stays neutral while authored teaching keeps its original table and focus.
+Act0RunnerStateV1 _act0NeutralSeatAssessmentPreservingTeachingV1(
+  Act0RunnerStateV1 source,
+) => source.copyWith(
+  table: source.table.copyWith(
+    highlightedSeatIds: const <String>[],
+    activeSeatId: '',
+  ),
+  teachingSteps: [
+    for (final step in source.teachingSteps)
+      Act0TeachingStepV1(
+        title: step.title,
+        body: step.body,
+        table: step.table ?? source.table,
+        focusSeatIds: step.focusSeatIds,
+        focusCardIds: step.focusCardIds,
+        focusLabels: step.focusLabels,
+        identityTeachingSemantics: step.identityTeachingSemantics,
+        ctaLabel: step.ctaLabel,
+      ),
+  ],
+);
+
 final _pokerFromZeroLessons = <Act0LessonCardV1>[
   Act0LessonCardV1(
     lessonId: 'what_poker_is',
@@ -2130,7 +2162,9 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'blinds_first_actor',
         title: 'First preflop actor',
         phase: Act0LessonPhaseV1.drill,
-        runner: _firstPreflopActorRunner,
+        runner: _act0NeutralSeatAssessmentPreservingTeachingV1(
+          _firstPreflopActorRunner,
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2139,6 +2173,11 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         title: 'Last preflop actor',
         phase: Act0LessonPhaseV1.drill,
         runner: _lastPreflopActorRunner.copyWith(
+          // Recognition choices stay neutral; authored teaching keeps its focus.
+          table: _lastPreflopActorRunner.table.copyWith(
+            highlightedSeatIds: const <String>[],
+            activeSeatId: '',
+          ),
           options: _act0AuthoredCorrectOptionAtV1(
             _lastPreflopActorRunner.options,
             correctOptionId: 'bb',
@@ -2245,6 +2284,11 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         title: 'Tap UTG',
         phase: Act0LessonPhaseV1.drill,
         runner: _utgSeatRunner.copyWith(
+          // Recognition choices stay neutral; authored teaching keeps its focus.
+          table: _utgSeatRunner.table.copyWith(
+            highlightedSeatIds: const <String>[],
+            activeSeatId: '',
+          ),
           options: _act0AuthoredCorrectOptionAtV1(
             _utgSeatRunner.options,
             correctOptionId: 'utg',
@@ -2258,7 +2302,9 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'positions_cutoff',
         title: 'Tap the cutoff',
         phase: Act0LessonPhaseV1.drill,
-        runner: _cutoffSeatRunner,
+        runner: _act0NeutralSeatAssessmentPreservingTeachingV1(
+          _cutoffSeatRunner,
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2280,7 +2326,9 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'positions_early_late',
         title: 'Early vs late',
         phase: Act0LessonPhaseV1.drill,
-        runner: _earlyLatePositionRunner,
+        runner: _act0NeutralSeatAssessmentPreservingTeachingV1(
+          _earlyLatePositionRunner,
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -2891,7 +2939,9 @@ final _handValuePositionLessons = <Act0LessonCardV1>[
         taskId: 'w2_early_position',
         title: 'Early seat',
         phase: Act0LessonPhaseV1.drill,
-        runner: _earlyLatePositionRunner,
+        runner: _act0NeutralSeatAssessmentPreservingTeachingV1(
+          _earlyLatePositionRunner,
+        ),
         rewardXp: 8,
         stepKind: Act0LessonStepKindV1.practice,
       ),
@@ -13887,6 +13937,7 @@ final _world3PositionRecapRunner = _world3LateOpenRunner.copyWith(
 final _w3TablePositionNoticeRunner = _world3LateOpenRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w3_table_position_notice',
+  feedbackSignalId: 'players_behind',
   caption: 'Real table. Hero is CO with QJs and three seats still act after.',
   hint: 'Before choosing an action, notice what the seat order gives you.',
   question: 'What is the clean seat read here?',
@@ -14870,6 +14921,49 @@ final _w3PositionApplyIntroRunner = _world3PositionIntroRunner.copyWith(
   ],
 );
 
+const _w4BtnBbSixBbFlopTrailV1 = <Act0ActionTrailItemV1>[
+  Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+  Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+  Act0ActionTrailItemV1(label: 'UTG folds'),
+  Act0ActionTrailItemV1(label: 'HJ folds'),
+  Act0ActionTrailItemV1(label: 'CO folds'),
+  Act0ActionTrailItemV1(label: 'BTN raises 2.75 BB'),
+  Act0ActionTrailItemV1(label: 'SB folds'),
+  Act0ActionTrailItemV1(label: 'BB calls 2.75 BB'),
+  Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+];
+
+// The W4 BTN-vs-BB sizing family shares one legal history. Calls are total
+// street commitments, so the calculator takes BB's 2.75 maximum rather than
+// adding it to the posted 1 BB again; the folded SB's 0.5 post remains in pot.
+Act0TableStateV1 _act0W4BtnBbSixBbFlopV1(
+  Act0TableStateV1 table, {
+  bool btnCheckedBehind = false,
+}) {
+  final seats =
+      _act0WithAuthoredPreActionSeatsV1(
+            table,
+            foldedSeatIds: const <String>{'utg', 'hj', 'co', 'sb'},
+          ).seats
+          .map(
+            (seat) => seat.seatId == 'bb'
+                ? _act0CopySeatStateV1(seat, hasActed: true)
+                : seat,
+          )
+          .toList(growable: false);
+  return table.copyWith(
+    potLabel: 'Pot 6 BB',
+    toCallLabel: '',
+    actionTrail: <Act0ActionTrailItemV1>[
+      ..._w4BtnBbSixBbFlopTrailV1,
+      if (btnCheckedBehind) Act0ActionTrailItemV1(label: 'BTN checks'),
+    ],
+    activeSeatId: 'btn',
+    seats: seats,
+    highlightedSeatIds: const <String>['btn', 'bb'],
+  );
+}
+
 final _world4PurposeIntroRunner = _readBoardRunner.copyWith(
   phase: Act0LessonPhaseV1.theory,
   lessonId: 'w4_purpose_intro',
@@ -14881,19 +14975,12 @@ final _world4PurposeIntroRunner = _readBoardRunner.copyWith(
   hint: 'Start with purpose: value, bluff, or protection.',
   question: 'What should you name before sizing a bet?',
   options: const <Act0RunnerOptionV1>[],
-  table: _readBoardRunner.table.copyWith(
-    streetLabel: 'Flop',
-    potLabel: 'Pot 6 BB',
-    toCallLabel: '',
-    centerLabel: 'Name purpose',
-    boardCards: _flopA72Cards,
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'BTN raises 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB calls 3 BB'),
-      Act0ActionTrailItemV1(label: 'Flop dealt'),
-    ],
-    activeSeatId: 'btn',
-    highlightedSeatIds: const <String>['btn', 'bb'],
+  table: _act0W4BtnBbSixBbFlopV1(
+    _readBoardRunner.table.copyWith(
+      streetLabel: 'Flop',
+      centerLabel: 'Name purpose',
+      boardCards: _flopA72Cards,
+    ),
   ),
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
@@ -15061,14 +15148,8 @@ final _world4ValueBetRunner = _world4ValuePurposeRunner.copyWith(
       feedbackReason: 'Checking can miss value when worse hands can call.',
     ),
   ],
-  table: _world4ValuePurposeRunner.table.copyWith(
-    potLabel: 'Pot 6 BB',
-    centerLabel: 'Value spot',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'BTN raises 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB calls 3 BB'),
-      Act0ActionTrailItemV1(label: 'BTN acts'),
-    ],
+  table: _act0W4BtnBbSixBbFlopV1(
+    _world4ValuePurposeRunner.table.copyWith(centerLabel: 'Value spot'),
   ),
 );
 
@@ -15168,13 +15249,8 @@ final _world4BluffPressureRunner = _world4BluffPurposeRunner.copyWith(
           'Checking is legal and not a disaster, but a small bet creates fold pressure at low cost.',
     ),
   ],
-  table: _world4BluffPurposeRunner.table.copyWith(
-    centerLabel: 'Fold pressure',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'BTN raises 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB calls 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB checks'),
-    ],
+  table: _act0W4BtnBbSixBbFlopV1(
+    _world4BluffPurposeRunner.table.copyWith(centerLabel: 'Fold pressure'),
   ),
 );
 
@@ -15207,13 +15283,8 @@ final _world4BadBluffRunner = _world4BluffPressureRunner.copyWith(
           'A pot-size bluff is too ambitious when fold pressure is unclear.',
     ),
   ],
-  table: _world4BluffPressureRunner.table.copyWith(
-    centerLabel: 'Low fold pressure',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'BTN raises 3 BB'),
-      Act0ActionTrailItemV1(label: 'BB calls 3 BB'),
-      Act0ActionTrailItemV1(label: 'Flop: BB calls 3 BB'),
-    ],
+  table: _act0W4BtnBbSixBbFlopV1(
+    _world4BluffPressureRunner.table.copyWith(centerLabel: 'Low fold pressure'),
   ),
 );
 
@@ -15323,6 +15394,10 @@ final _world4ProtectionCheckRunner = _world4ProtectionBetRunner.copyWith(
       feedbackReason: 'Villain pays only when Hero bets.',
     ),
   ],
+  table: _act0W4BtnBbSixBbFlopV1(
+    _world4ProtectionBetRunner.table,
+    btnCheckedBehind: true,
+  ),
 );
 
 final _world4ProtectionRecapRunner = _world4ProtectionIntroRunner.copyWith(
@@ -21799,9 +21874,9 @@ final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
     toCallLabel: 'To call 2 BB',
     centerLabel: 'BTN, top pair, small price',
     actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
+      Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
       Act0ActionTrailItemV1(label: 'BTN calls'),
-      Act0ActionTrailItemV1(label: 'CO bets 2 BB'),
+      Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
     ],
   ),
   options: const <Act0RunnerOptionV1>[
@@ -21864,10 +21939,11 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
     toCallLabel: 'To call 12 BB',
     centerLabel: 'BTN top pair, tight CO barrel',
     actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'CO opens 2.5; BTN calls'),
-      Act0ActionTrailItemV1(label: 'Flop pot 8 BB; CO bets 2'),
-      Act0ActionTrailItemV1(label: 'BTN calls 2; turn pot 12'),
-      Act0ActionTrailItemV1(label: 'Tight CO bets 12 on turn'),
+      Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
+      Act0ActionTrailItemV1(label: 'BTN calls'),
+      Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
+      Act0ActionTrailItemV1(label: 'BTN calls 2 BB'),
+      Act0ActionTrailItemV1(label: 'Turn: CO bets 12 BB'),
     ],
   ),
   options: const <Act0RunnerOptionV1>[

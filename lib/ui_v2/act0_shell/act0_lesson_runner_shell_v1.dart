@@ -925,11 +925,22 @@ String? _act0TrailActor(String stripped) {
 ///   \u2013 On street transition the per-street map is flushed into [runningPot].
 ({double potBb, String street}) act0CalcTrailPotV1(
   List<String> labels,
-  int upToIndex,
-) {
+  int upToIndex, {
+  Set<int> noteIndexes = const {},
+}) {
   if (labels.isEmpty) return (potBb: -1.0, street: '');
 
-  final firstLower = labels[0].toLowerCase();
+  // Preserve the source-index cutoff while ignoring only explicitly typed
+  // notes. Any untyped blank in the requested prefix is malformed history.
+  String? firstAction;
+  for (var i = 0; i <= upToIndex && i < labels.length; i++) {
+    if (noteIndexes.contains(i)) continue;
+    final label = labels[i];
+    if (label.trim().isEmpty) return (potBb: -1.0, street: '');
+    firstAction ??= label;
+  }
+  if (firstAction == null) return (potBb: -1.0, street: '');
+  final firstLower = firstAction.toLowerCase();
   // In a valid cash-game trail the *first* entry must be the small blind post.
   // A trail starting with BB only (or any other action) is incomplete \u2014 fall
   // back to the static potLabel so we never display a wrong pot.
@@ -942,6 +953,7 @@ String? _act0TrailActor(String stripped) {
   String currentStreet = 'Preflop';
 
   for (int i = 0; i <= upToIndex && i < labels.length; i++) {
+    if (noteIndexes.contains(i)) continue;
     final raw = labels[i];
 
     // Detect street transition: both "Flop: action" and bare "Flop dealt" forms.
@@ -974,6 +986,22 @@ String? _act0TrailActor(String stripped) {
   final totalPot =
       runningPot + streetContribs.values.fold(0.0, (acc, v) => acc + v);
   return (potBb: totalPot, street: currentStreet);
+}
+
+/// Calculates the pot from typed source trail items while preserving source
+/// indexes. Notes occupy an empty label slot and are never parsed as actions.
+({double potBb, String street}) act0CalcTableTrailPotV1(
+  Act0TableStateV1 table,
+  int upToIndex,
+) {
+  final notes = <int>{};
+  final labels = <String>[];
+  for (var i = 0; i < table.actionTrail.length; i++) {
+    final item = table.actionTrail[i];
+    labels.add(item.label);
+    if (item.isNote) notes.add(i);
+  }
+  return act0CalcTrailPotV1(labels, upToIndex, noteIndexes: notes);
 }
 
 /// Formats a pot double as a readable label: 6.5 \u2192 "Pot 6.5 BB", 7.0 \u2192 "Pot 7 BB".
@@ -1159,6 +1187,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.completionSummary,
     this.isAssistedDecision = false,
     this.localizeW1Ctas = false,
+    this.preserveSourceOwnedQuestion = false,
     this.firstValueReceiptLine,
     this.repairReasonLine,
     this.repairResultReceiptLine,
@@ -1211,6 +1240,8 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final bool isAssistedDecision;
   final bool localizeW1Ctas;
+  // Placement quick-check reuses one task ID for three authored questions.
+  final bool preserveSourceOwnedQuestion;
   final String? firstValueReceiptLine;
   final String? repairReasonLine;
   final String? repairResultReceiptLine;
@@ -2387,6 +2418,17 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }
 
   void _onBoardTappedForShowdown(Act0TableStateV1 table) {
+    // Solver-derived best-five cues are help, not unassisted assessment input.
+    // Keep explanation/review and explicitly assisted decisions available.
+    if (_decisionAssistanceKindV1 == Act0DecisionAssistanceV1.none &&
+        _isActiveAssessmentStateV1(
+          isTeaching: _isTeaching,
+          isTheory: _isTheory,
+          isReview: _isReview,
+          runner: widget.runner,
+        )) {
+      return;
+    }
     if (!_allowsInteractiveShowdown(widget.runner)) {
       return;
     }
@@ -2531,10 +2573,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     Act0TableStateV1 table,
     int upToIndex,
   ) {
-    final labels = table.actionTrail
-        .map((item) => item.isNote ? '' : item.label)
-        .toList(growable: false);
-    return act0CalcTrailPotV1(labels, upToIndex);
+    return act0CalcTableTrailPotV1(table, upToIndex);
   }
 
   /// Delegates to top-level [act0FormatPotLabelV1].
@@ -2957,7 +2996,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             fallback: shouldShowRunnerHint ? runner.hint : '',
             languageCode: act0AcademyLanguageV1(context),
           );
-    final question = act0AcademyW1InstructionTaskV1(widget.selectedTaskId)
+    final question = widget.preserveSourceOwnedQuestion
+        ? runner.question
+        : act0AcademyW1InstructionTaskV1(widget.selectedTaskId)
         ? act0AcademyW1InstructionV1(
             context,
             widget.selectedTaskId,
@@ -3506,7 +3547,11 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       onContinue: widget.onContinueReview,
     );
     Widget buildRunnerActionDock({bool sceneAttachedShelf = false}) {
-      final actionDockQuestion = _usesCanonicalIntegratedLearningSceneV1
+      // The integrated scene owns its standard question chrome, but the
+      // Placement quick-check must expose each distinct source-owned prompt.
+      final actionDockQuestion =
+          _usesCanonicalIntegratedLearningSceneV1 &&
+              !widget.preserveSourceOwnedQuestion
           ? ''
           : question;
       return _RunnerActionDockV1(
@@ -3668,7 +3713,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                           ? theoryRecallPeek
                           : _SizingConfirmPanelV1(
                               selectedPreset: runner.selectedPreset,
-                              onConfirm: _handleConfirmSizingPreset,
+                              onConfirm: _heroDecisionReady
+                                  ? _handleConfirmSizingPreset
+                                  : null,
                             ),
                     )
                   : _ActionPromptPanelV1(
@@ -6669,6 +6716,36 @@ Act0FeedbackSignalProofV1? _feedbackSignalProofForRunnerV1({
   final targetOption = selectedOption?.isCorrect == true
       ? selectedOption
       : correctOption;
+  // This authored transfer teaches the CO seat order. It inherits repair
+  // labels and a price label from its source runner, but those fields are not
+  // evidence that the learner answered a price question.
+  if (runner.feedbackSignalId == 'players_behind') {
+    final heroSeatId = (table.heroSeatId ?? '').trim();
+    final seatsBehind = <String>[];
+    if (heroSeatId.isNotEmpty) {
+      final seatOrder = table.canonicalSeatOrder;
+      final heroIndex = seatOrder.indexWhere(
+        (seatId) => seatId.toLowerCase() == heroSeatId.toLowerCase(),
+      );
+      if (heroIndex >= 0) {
+        for (var offset = 1; offset < seatOrder.length; offset++) {
+          final seatId = seatOrder[(heroIndex + offset) % seatOrder.length]
+              .toLowerCase();
+          if (table.seats.any(
+            (seat) => seat.seatId == seatId && seat.isOccupied && seat.isInHand,
+          )) {
+            seatsBehind.add(seatId);
+          }
+        }
+      }
+    }
+    return _feedbackSignalProofV1(
+      signalId: 'players_behind',
+      label: 'Players behind',
+      seatIds: seatsBehind,
+    );
+  }
+
   if (selectedOption != null) {
     final repairSeatIds = _trimmedUniqueStringsV1(
       selectedOption.repairFocusSeatIds,
@@ -6799,6 +6876,12 @@ Act0SkillReceiptV1? act0FirstValueSkillReceiptForRunnerV1({
 _skillReceiptSpecForSignalIdV1(String signalId) {
   return switch (signalId.trim()) {
     'hero_button' => (
+      skillAtomId: 'table_position_read',
+      skillLabel: 'Table position read',
+      nextRepId: 'repeat_table_position_read',
+      nextRepLabel: 'use the same position read once more',
+    ),
+    'players_behind' => (
       skillAtomId: 'table_position_read',
       skillLabel: 'Table position read',
       nextRepId: 'repeat_table_position_read',
@@ -12152,15 +12235,19 @@ class _Act0TableV1 extends StatelessWidget {
             right: rules.horizontalInsetFor(stageSize.width),
             top: rules.topInsetFor(stageSize.height),
             bottom: rules.bottomInsetFor(stageSize.height),
-            child: Act0SceneRecedeMotionV1(
-              motion: sceneMotion,
-              plane: Act0SceneRecedePlaneV1.player,
-              child: Act0SceneTieredOpponentLayerV1(
-                key: key,
-                slots: sceneSeatSlots,
-                plane: plane,
-                foldedSeatIds: inactiveSeatIds,
-                rules: rules,
+            // Opponent art is decorative. Its contact paint can sit above a
+            // selectable seat, but must never intercept that seat's pointer.
+            child: IgnorePointer(
+              child: Act0SceneRecedeMotionV1(
+                motion: sceneMotion,
+                plane: Act0SceneRecedePlaneV1.player,
+                child: Act0SceneTieredOpponentLayerV1(
+                  key: key,
+                  slots: sceneSeatSlots,
+                  plane: plane,
+                  foldedSeatIds: inactiveSeatIds,
+                  rules: rules,
+                ),
               ),
             ),
           );

@@ -19,6 +19,7 @@ fi
 echo "canonical test authority: structural manifest validation"
 ./tools/test_authority_validate_v1.sh
 python3 tools/test_authority/validate_manifest_v1_fixtures_test.py
+python3 tools/test_authority/run_lane_diagnostics_fixtures_test.py
 
 echo "canonical test authority: positive Tier A"
 ./tools/test_authority_tier_a_v1.sh

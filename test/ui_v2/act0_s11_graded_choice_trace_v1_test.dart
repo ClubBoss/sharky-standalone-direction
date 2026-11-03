@@ -11,12 +11,14 @@ void main() {
       testWidgets(
         '$kind ${correct ? "correct" : "wrong"}: one joined trace despite double submit',
         (tester) async {
-          tester.view.physicalSize = const Size(1200, 1800);
+          final sizing = kind == Act0CompletedDecisionKindV1.sizing;
+          final seat = kind == Act0CompletedDecisionKindV1.seat;
+          tester.view.physicalSize = sizing
+              ? const Size(393, 852)
+              : const Size(1200, 1800);
           tester.view.devicePixelRatio = 1;
           addTearDown(tester.view.resetPhysicalSize);
           addTearDown(tester.view.resetDevicePixelRatio);
-          final sizing = kind == Act0CompletedDecisionKindV1.sizing;
-          final seat = kind == Act0CompletedDecisionKindV1.seat;
           final world = Act0ShellStateV1.sample.worldById(
             sizing ? 'world_4' : 'world_1',
           );
@@ -79,6 +81,21 @@ void main() {
             ),
           );
           await tester.pumpAndSettle();
+          if (sizing) {
+            final decisionReadySignal = find.byKey(
+              const Key('act0_shell_street_replay_inline'),
+            );
+            final readinessPumpLimit = task.runner.table.actionTrail.length * 2;
+            for (
+              var pumpIndex = 0;
+              pumpIndex < readinessPumpLimit &&
+                  decisionReadySignal.evaluate().isEmpty;
+              pumpIndex++
+            ) {
+              await tester.pump(const Duration(milliseconds: 500));
+            }
+            expect(decisionReadySignal, findsOneWidget);
+          }
           final target = find.byKey(
             Key(
               sizing

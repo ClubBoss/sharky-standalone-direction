@@ -290,6 +290,7 @@ class Act0PracticeRepairQueueLaunchTargetV1 {
 
 class Act0PracticeRepairQueueLaunchRequestV1 {
   const Act0PracticeRepairQueueLaunchRequestV1({
+    this.repairOccurrenceId = '',
     required this.targetWorldId,
     required this.targetLessonId,
     required this.targetTaskId,
@@ -310,6 +311,7 @@ class Act0PracticeRepairQueueLaunchRequestV1 {
   final String repairTaskId;
   final String repairFocusKey;
   final String queueItemId;
+  final String repairOccurrenceId;
 
   bool get isLaunchable =>
       targetType == act0PracticeRepairQueueTargetTypeActiveRepairV1 &&
@@ -332,6 +334,8 @@ class Act0PracticeRepairQueueLaunchRequestV1 {
       'repairTaskId': repairTaskId,
       'repairFocusKey': repairFocusKey,
       'queueItemId': queueItemId,
+      if (repairOccurrenceId.isNotEmpty)
+        'repairOccurrenceId': repairOccurrenceId,
     };
   }
 }
@@ -393,6 +397,7 @@ Act0PracticeRepairQueueLaunchRequestV1? _activeRepairLaunchRequest({
     return null;
   }
   return Act0PracticeRepairQueueLaunchRequestV1(
+    repairOccurrenceId: intent.repairOccurrenceId,
     targetWorldId: launchTarget.worldId,
     targetLessonId: launchTarget.lessonId,
     targetTaskId: launchTarget.taskId,

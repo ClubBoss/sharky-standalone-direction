@@ -80,8 +80,20 @@ class Act0FixProofProjectionV1 {
         proofState: act0FixProofStateRepairCompletedV1,
         bankedAtOrder: bankedAtOrder,
         messageKey: _messageRepairCompletedV1,
+        currentVerificationState: transferMeasurement?.isRecentEvidence == true
+            ? transferMeasurement!.signalForConcept(conceptFamilyId).verdict
+            : '',
+        currentVerificationLine: transferMeasurement?.isRecentEvidence == true
+            ? transferMeasurement!
+                  .signalForConcept(conceptFamilyId)
+                  .confirmationLine
+            : '',
       );
-      final proof = _reinforcedIfEligible(base, transferMeasurement);
+      // Real historical repair remains banked; recent responses are separate,
+      // never a retroactive certificate of past reinforcement/improvement.
+      final proof = transferMeasurement?.isRecentEvidence == true
+          ? base
+          : _reinforcedIfEligible(base, transferMeasurement);
       final existing = byQueueItemId[queueItemId];
       if (existing == null || _proofOrder(proof, existing) < 0) {
         byQueueItemId[queueItemId] = proof;
@@ -152,6 +164,8 @@ class Act0FixProofItemV1 {
     this.laterEvidenceTaskId = '',
     this.laterEvidenceOrder,
     this.transferVerdict = '',
+    this.currentVerificationState = '',
+    this.currentVerificationLine = '',
     required this.bankedAtOrder,
     required this.messageKey,
   });
@@ -169,6 +183,8 @@ class Act0FixProofItemV1 {
   final String laterEvidenceTaskId;
   final int? laterEvidenceOrder;
   final String transferVerdict;
+  final String currentVerificationState;
+  final String currentVerificationLine;
   final int bankedAtOrder;
   final String messageKey;
 
@@ -179,7 +195,9 @@ class Act0FixProofItemV1 {
     if (isReinforced) {
       return 'You later handled this clue correctly on another hand.';
     }
-    return '1 repair completed';
+    return currentVerificationLine.isEmpty
+        ? '1 repair completed'
+        : 'Repair saved. $currentVerificationLine';
   }
 
   Map<String, Object?> toPayload() => <String, Object?>{
@@ -198,6 +216,10 @@ class Act0FixProofItemV1 {
       'laterEvidenceTaskId': laterEvidenceTaskId,
     if (laterEvidenceOrder != null) 'laterEvidenceOrder': laterEvidenceOrder,
     if (transferVerdict.isNotEmpty) 'transferVerdict': transferVerdict,
+    if (currentVerificationState.isNotEmpty)
+      'currentVerificationState': currentVerificationState,
+    if (currentVerificationLine.isNotEmpty)
+      'currentVerificationLine': currentVerificationLine,
     'bankedAtOrder': bankedAtOrder,
     'messageKey': messageKey,
   };
@@ -242,6 +264,9 @@ class Act0FixProofItemV1 {
       laterEvidenceTaskId: map['laterEvidenceTaskId']?.toString().trim() ?? '',
       laterEvidenceOrder: _nonNegativeInt(map['laterEvidenceOrder']),
       transferVerdict: map['transferVerdict']?.toString().trim() ?? '',
+      currentVerificationState:
+          map['currentVerificationState']?.toString() ?? '',
+      currentVerificationLine: map['currentVerificationLine']?.toString() ?? '',
       bankedAtOrder: bankedAtOrder,
       messageKey: messageKey,
     );
@@ -271,6 +296,11 @@ class Act0FixProofAggregateV1 {
       completedFixCount == 1
           ? '1 repair completed'
           : '$completedFixCount fixes banked across your recent sessions',
+      ...{
+        for (final proof in recentProofItems)
+          if (proof.currentVerificationLine.isNotEmpty)
+            proof.currentVerificationLine,
+      },
       if (reinforcedFixCount == 1)
         '1 completed repair now has later supporting evidence'
       else if (reinforcedFixCount > 1)

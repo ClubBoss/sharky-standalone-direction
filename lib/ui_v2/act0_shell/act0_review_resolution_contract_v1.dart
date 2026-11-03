@@ -52,7 +52,10 @@ class Act0ReviewResolutionStateV1 {
             return updated != 0 ? updated : a.recordId.compareTo(b.recordId);
           });
     for (final record in sortedRecords) {
-      final receipt = receiptHistory.receiptForReviewItemId(record.recordId);
+      final receipt = receiptHistory.receiptForReviewItemId(
+        record.recordId,
+        learningEvidenceId: record.sourceDecisionId,
+      );
       final resolution =
           receipt?._toResolution(record) ??
           _resolutionForRecord(
@@ -203,23 +206,30 @@ class Act0ReviewResolutionReceiptHistoryV1 {
     }
     final next = <Act0ReviewResolutionReceiptV1>[
       for (final current in receipts)
-        if (current.reviewItemId != receipt.reviewItemId) current,
+        if (current.reviewItemId != receipt.reviewItemId ||
+            current.learningEvidenceId != receipt.learningEvidenceId)
+          current,
       receipt,
     ]..sort(_receiptSort);
     return Act0ReviewResolutionReceiptHistoryV1(
       receipts: List<Act0ReviewResolutionReceiptV1>.unmodifiable(
-        next.take(maxReceipts),
+        next.reversed.take(maxReceipts).toList().reversed,
       ),
     );
   }
 
-  Act0ReviewResolutionReceiptV1? receiptForReviewItemId(String reviewItemId) {
+  Act0ReviewResolutionReceiptV1? receiptForReviewItemId(
+    String reviewItemId, {
+    String? learningEvidenceId,
+  }) {
     final id = reviewItemId.trim();
     if (id.isEmpty) {
       return null;
     }
     for (final receipt in receipts) {
-      if (receipt.reviewItemId == id) {
+      if (receipt.reviewItemId == id &&
+          (learningEvidenceId == null ||
+              receipt.learningEvidenceId == learningEvidenceId)) {
         return receipt;
       }
     }
@@ -239,16 +249,18 @@ class Act0ReviewResolutionReceiptHistoryV1 {
       if (receipt == null) {
         continue;
       }
-      final existing = byReviewItemId[receipt.reviewItemId];
+      final identity =
+          '${receipt.reviewItemId}|${receipt.learningEvidenceId ?? ''}';
+      final existing = byReviewItemId[identity];
       if (existing == null || _receiptSort(receipt, existing) < 0) {
-        byReviewItemId[receipt.reviewItemId] = receipt;
+        byReviewItemId[identity] = receipt;
       }
     }
     final receipts = byReviewItemId.values.toList(growable: false)
       ..sort(_receiptSort);
     return Act0ReviewResolutionReceiptHistoryV1(
       receipts: List<Act0ReviewResolutionReceiptV1>.unmodifiable(
-        receipts.take(maxReceipts),
+        receipts.reversed.take(maxReceipts).toList().reversed,
       ),
     );
   }
@@ -419,6 +431,9 @@ Act0ReviewItemResolutionV1? _resolutionForRecord({
           .where(
             (outcome) =>
                 outcome.queueItemId.trim() == queueItemId &&
+                outcome.repairOccurrenceId == intent.repairOccurrenceId &&
+                (intent.repairOccurrenceId.isEmpty ||
+                    intent.repairOccurrenceId == record.sourceDecisionId) &&
                 outcome.sourceType ==
                     act0PracticeRepairQueueSourceActiveRepairV1,
           )
