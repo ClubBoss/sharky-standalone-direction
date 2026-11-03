@@ -6235,7 +6235,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     : const <String>[],
                                 feedbackForwardCtaLabel:
                                     placementForwardCtaLabel ??
-                                    (_activeRepairTaskId == playSelectedTask?.taskId && !_activeSameSignalFeedbackRepairV1
+                                    (_activeRepairTaskId == playSelectedTask?.taskId &&
+                                      (!_activeSameSignalFeedbackRepairV1 || !act0IndependentRepairProofV1(isCorrect: playRunner.selectedOption?.isCorrect ?? false, assistanceKind: _choiceAssistanceV1))
                                         ? 'Continue to Review'
                                         : null),
                                 suppressFeedbackRepairFocus:
@@ -8483,7 +8484,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     // Daily goal complete — highest priority
     if (_dailyCompletedRepCount >= 3) {
       return const Act0SharkyCueV1(
-        preSessionLine: 'Good work. This table clue is warmer now.',
+        preSessionLine: 'Good work completing today\'s practice. Review an open mistake or try one fresh hand.',
         correctReaction: 'Sharp read.',
         wrongReaction: 'Good spot to fix.',
         repairLine: 'Take one breath. I will point at the clue.',
@@ -12054,9 +12055,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ru: 'Дневная серия закрыта',
       );
       _practiceCompletionBody = _copyV1(
-        en: cleanRepCount != null && completedRepCount != null && cleanRepCount == completedRepCount && cleanRepCount > 0
-            ? 'Session complete. You made $cleanRepCount independent correct reads. Try one fresh route spot next.'
-            : 'Session complete. Good work practicing. Review one missed clue, then try it independently.',
+        en: 'Session complete. Good work practicing. Review an open mistake or try one fresh route spot next.',
         ru: 'Три коротких повтора готовы. Сегодняшние чтения остаются в тонусе. Можешь взять ещё одну дорожку или вернуться домой.',
       );
     } else if (completedLessonId != null) {
