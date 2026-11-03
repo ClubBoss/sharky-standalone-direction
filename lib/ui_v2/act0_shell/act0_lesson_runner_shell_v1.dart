@@ -4141,7 +4141,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
               widget.selectedTaskId,
               causalFeedback.whyChosen,
             )
-          : runner.lessonId == 'w10_vs_nit_open_wider'
+          : (runner.lessonId == 'w10_vs_nit_open_wider' || runner.lessonId == 'w10_overbluff_punish')
           ? runner.caption
           : hasSeatTargets
           ? (isRu
@@ -4164,8 +4164,6 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                 : (isRu
                       ? '\u0421\u043c\u043e\u0442\u0440\u0438\u0442\u0435: ${teachingFocusLabel == 'Read' ? '\u0447\u0442\u0435\u043d\u0438\u0435 \u0441\u0442\u043e\u043b\u0430' : teachingFocusLabel}'
                       : 'Look at: $teachingFocusLabel')
-          : runner.lessonId == 'w10_vs_nit_open_wider'
-          ? runner.caption
           : hasSeatTargets
           ? (isRu
                 ? '\u041C\u043E\u0436\u043D\u043E \u043D\u0430\u0436\u0438\u043C\u0430\u0442\u044C \u043F\u043E\u0434\u0441\u0432\u0435\u0447\u0435\u043D\u043D\u044B\u0435 \u043C\u0435\u0441\u0442\u0430'

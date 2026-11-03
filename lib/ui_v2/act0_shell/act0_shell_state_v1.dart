@@ -21483,6 +21483,18 @@ final _w10OverbluffPunishRunner = _w10ExploitGuardrailsIntroRunner.copyWith(
   caption: 'Villain barrels many missed draws in obvious spots.',
   hint: 'Overbluffing can be punished by wider bluff-catch windows.',
   question: 'What is the cleaner exploit response?',
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'A blocker removes possible opponent hands.',
+      body: 'An opponent cannot hold a card you hold. A card that removes some of their strong value hands can make a close call more reasonable. Removing their missed draws instead can make a call worse.',
+      focusLabels: <String>[],
+    ),
+    Act0TeachingStepV1(
+      title: 'One repeated read, one measured adjustment.',
+      body: 'A bluff-catcher beats bluffs but loses to value bets. Repeated overbluffing can justify defending a little more selectively. This is not a reason to call every river: keep the observed tendency and which hands your cards remove in view.',
+      focusLabels: <String>[],
+    ),
+  ],
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'fold_everything',

@@ -20,7 +20,7 @@ void main() {
     expect(summary.masteryStatus, Act0MasteryStatusV1.needsReview);
   });
 
-  for (final id in ['straight_draws_w5_gutshot_draw', 'w10_vs_nit_open_wider']) {
+  for (final id in ['straight_draws_w5_gutshot_draw', 'w10_vs_nit_open_wider', 'w10_overbluff_punish']) {
     testWidgets('prerequisite and independent decision $id', (t) async {
       t.view.physicalSize = const Size(393, 852);
       t.view.devicePixelRatio = 1;
@@ -40,6 +40,11 @@ void main() {
         ))));
         await t.pumpAndSettle();
       }
+      if (id == 'w10_overbluff_punish') {
+        await mount(true);
+        expect(find.text('A blocker removes possible opponent hands.'), findsWidgets);
+        expect(find.byKey(const Key('act0_shell_option_bluffcatch_more')), findsNothing);
+      }
       if (id.startsWith('straight')) {
         await mount(true);
         expect(find.text('Gutshot means one middle card is missing.'), findsWidgets);
@@ -48,7 +53,8 @@ void main() {
       await mount(false);
       expect(find.text(task.runner.question), findsWidgets);
       if (id.startsWith('w10')) {
-        expect(find.text('Blinds fold too much to late-position steals.'), findsWidgets);
+        expect(find.text(task.runner.caption), findsWidgets);
+        expect(find.text('A blocker removes possible opponent hands.'), findsNothing);
         expect(find.text(task.runner.hint), findsNothing);
       } else {
         expect(find.text('Gutshot means one middle card is missing.'), findsNothing);
