@@ -21,9 +21,14 @@ class Act0RepairOutcomeProjectionV1 {
     required bool? isCorrect,
     required int sequence,
     String sessionId = '',
+    String repairAttemptId = '',
   }) {
     final request = launchRequest;
     if (request == null || !request.isLaunchable) {
+      return this;
+    }
+    if (repairAttemptId.isNotEmpty &&
+        outcomes.any((outcome) => outcome.repairAttemptId == repairAttemptId)) {
       return this;
     }
     if (request.sourceType != act0PracticeRepairQueueSourceActiveRepairV1 ||
@@ -45,6 +50,8 @@ class Act0RepairOutcomeProjectionV1 {
       return this;
     }
     final outcome = Act0RepairOutcomeV1(
+      repairOccurrenceId: request.repairOccurrenceId,
+      repairAttemptId: repairAttemptId,
       sourceTaskId: sourceTaskId,
       repairTaskId: repairTaskId,
       repairFocusKey: request.repairFocusKey.trim(),
@@ -86,7 +93,10 @@ class Act0RepairOutcomeProjectionV1 {
       if (outcome == null) {
         continue;
       }
-      byIdentity['${outcome.sequence}|${outcome.queueItemId}'] = outcome;
+      final identity = outcome.repairAttemptId.isNotEmpty
+          ? 'attempt|${outcome.repairAttemptId}'
+          : '${outcome.sequence}|${outcome.queueItemId}';
+      byIdentity[identity] = outcome;
     }
     final outcomes = byIdentity.values.toList(growable: false)
       ..sort((a, b) {
@@ -104,6 +114,8 @@ class Act0RepairOutcomeProjectionV1 {
 class Act0RepairOutcomeV1 {
   const Act0RepairOutcomeV1({
     this.schemaVersion = 1,
+    this.repairOccurrenceId = '',
+    this.repairAttemptId = '',
     required this.sourceTaskId,
     required this.repairTaskId,
     required this.repairFocusKey,
@@ -121,6 +133,8 @@ class Act0RepairOutcomeV1 {
   });
 
   final int schemaVersion;
+  final String repairOccurrenceId;
+  final String repairAttemptId;
   final String sourceTaskId;
   final String repairTaskId;
   final String repairFocusKey;
@@ -138,6 +152,8 @@ class Act0RepairOutcomeV1 {
 
   Map<String, Object?> toPayload() => <String, Object?>{
     'schemaVersion': schemaVersion,
+    if (repairOccurrenceId.isNotEmpty) 'repairOccurrenceId': repairOccurrenceId,
+    if (repairAttemptId.isNotEmpty) 'repairAttemptId': repairAttemptId,
     'sourceTaskId': sourceTaskId,
     'repairTaskId': repairTaskId,
     'repairFocusKey': repairFocusKey,
@@ -185,6 +201,8 @@ class Act0RepairOutcomeV1 {
       return null;
     }
     return Act0RepairOutcomeV1(
+      repairOccurrenceId: map['repairOccurrenceId']?.toString().trim() ?? '',
+      repairAttemptId: map['repairAttemptId']?.toString().trim() ?? '',
       sourceTaskId: sourceTaskId,
       repairTaskId: repairTaskId,
       repairFocusKey: map['repairFocusKey']?.toString().trim() ?? '',
