@@ -7,7 +7,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_evidence_projection
 void main() {
   test('projection groups evidence by skill atom and computes counts', () {
     final projection =
-        Act0ProfileEvidenceProjectionV1.fromLearningEvidenceHistory(
+        Act0ProfileEvidenceProjectionV1.fromUnverifiedEvidenceForTests(
           Act0LearningEvidenceHistoryV1(
             records: <Act0LearningEvidenceRecordV1>[
               _record(order: 1, skillAtomId: 'position_read', isCorrect: true),
@@ -34,7 +34,7 @@ void main() {
 
   test('minimum attempt threshold blocks eligibility', () {
     final projection =
-        Act0ProfileEvidenceProjectionV1.fromLearningEvidenceHistory(
+        Act0ProfileEvidenceProjectionV1.fromUnverifiedEvidenceForTests(
           Act0LearningEvidenceHistoryV1(
             records: <Act0LearningEvidenceRecordV1>[
               _record(order: 1, isCorrect: true),
@@ -59,7 +59,7 @@ void main() {
     'eligible signal appears only after threshold and minimum correct count',
     () {
       final projection =
-          Act0ProfileEvidenceProjectionV1.fromLearningEvidenceHistory(
+          Act0ProfileEvidenceProjectionV1.fromUnverifiedEvidenceForTests(
             Act0LearningEvidenceHistoryV1(
               records: <Act0LearningEvidenceRecordV1>[
                 _record(order: 1, isCorrect: true),
@@ -85,7 +85,7 @@ void main() {
     'needs more practice state requires sample but not positive threshold',
     () {
       final projection =
-          Act0ProfileEvidenceProjectionV1.fromLearningEvidenceHistory(
+          Act0ProfileEvidenceProjectionV1.fromUnverifiedEvidenceForTests(
             Act0LearningEvidenceHistoryV1(
               records: <Act0LearningEvidenceRecordV1>[
                 _record(order: 1, isCorrect: true),
@@ -123,7 +123,7 @@ void main() {
 
   test('signals expose no mastery leak AI GTO solver fields or copy', () {
     final projection =
-        Act0ProfileEvidenceProjectionV1.fromLearningEvidenceHistory(
+        Act0ProfileEvidenceProjectionV1.fromUnverifiedEvidenceForTests(
           Act0LearningEvidenceHistoryV1(
             records: <Act0LearningEvidenceRecordV1>[
               _record(order: 1, isCorrect: true),
@@ -147,7 +147,7 @@ void main() {
 
   test('projection ordering is deterministic and not accuracy ranked', () {
     final projection =
-        Act0ProfileEvidenceProjectionV1.fromLearningEvidenceHistory(
+        Act0ProfileEvidenceProjectionV1.fromUnverifiedEvidenceForTests(
           Act0LearningEvidenceHistoryV1(
             records: <Act0LearningEvidenceRecordV1>[
               _record(order: 1, skillAtomId: 'position_read', isCorrect: true),
@@ -174,7 +174,7 @@ void main() {
 
   test('serializer and parser roundtrip projection payload', () {
     final projection =
-        Act0ProfileEvidenceProjectionV1.fromLearningEvidenceHistory(
+        Act0ProfileEvidenceProjectionV1.fromUnverifiedEvidenceForTests(
           Act0LearningEvidenceHistoryV1(
             records: <Act0LearningEvidenceRecordV1>[
               _record(order: 1, isCorrect: true),

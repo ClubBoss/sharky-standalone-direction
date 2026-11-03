@@ -35,7 +35,7 @@ Future<void> _pump(
   SharedPreferences.setMockInitialValues(<String, Object>{
     for (final e in raw.entries) e.key: e.value as Object,
   });
-  tester.view.physicalSize = const Size(390, 844);
+  tester.view.physicalSize = const Size(393, 852);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
@@ -105,7 +105,7 @@ void main() {
         await tester.pumpAndSettle();
         expect(
           _runner(tester).selectedTaskId,
-          'position_checkpoint_position_checkpoint_table_notice',
+          'position_six_seats_position_repair_seat_id_btn',
         );
       },
     );

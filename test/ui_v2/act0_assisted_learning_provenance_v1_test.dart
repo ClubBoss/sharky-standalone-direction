@@ -1,3 +1,5 @@
+// These fixtures test reducer/consumer arithmetic, not current authored proof.
+// Current-source admission is covered by act0_asm07_transfer_retention_boundary_falsifier_test.dart.
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart';
@@ -164,13 +166,13 @@ void main() {
         ),
     ];
     final history = Act0LearningEvidenceHistoryV1(records: records);
-    final signal = Act0LearningTransferMeasurementV1.fromLearningEvidence(
-      history,
-    ).signalForConcept('no_bet_yet');
+    final signal =
+        Act0LearningTransferMeasurementV1.fromUnverifiedEvidenceForTests(
+          history,
+        ).signalForConcept('no_bet_yet');
     expect(signal.verdict, act0LearningTransferInsufficientEvidenceV1);
-    final profile = Act0ProfileEvidenceProjectionV1.fromLearningEvidenceHistory(
-      history,
-    );
+    final profile =
+        Act0ProfileEvidenceProjectionV1.fromUnverifiedEvidenceForTests(history);
     final entry = profile.signals.single;
     expect(entry.attemptCount, 1);
     expect(entry.isCapabilityEligible, false);

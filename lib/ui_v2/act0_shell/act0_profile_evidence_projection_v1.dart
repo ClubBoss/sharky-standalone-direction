@@ -1,4 +1,5 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
+import 'act0_learning_transfer_measurement_v1.dart';
 
 const int act0ProfileEvidenceMinimumAttemptsV1 = 5;
 const int act0ProfileEvidenceMinimumCorrectForPositiveSignalV1 = 3;
@@ -12,9 +13,11 @@ const String act0ProfileEvidenceStateNeedsMorePracticeV1 =
 class Act0ProfileEvidenceProjectionV1 {
   const Act0ProfileEvidenceProjectionV1({
     this.signals = const <Act0ProfileCapabilitySignalV1>[],
+    this.recentEvidence,
   });
 
   final List<Act0ProfileCapabilitySignalV1> signals;
+  final Act0LearningTransferMeasurementV1? recentEvidence;
 
   bool get hasSignals => signals.isNotEmpty;
 
@@ -26,6 +29,87 @@ class Act0ProfileEvidenceProjectionV1 {
     int sampleThreshold = act0ProfileEvidenceMinimumAttemptsV1,
     int minimumCorrectForPositiveSignal =
         act0ProfileEvidenceMinimumCorrectForPositiveSignalV1,
+    DateTime? nowUtc,
+  }) {
+    return fromCurrentAuthoredEvidenceHistory(
+      history,
+      nowUtc: nowUtc,
+      sampleThreshold: sampleThreshold,
+      minimumCorrectForPositiveSignal: minimumCorrectForPositiveSignal,
+    );
+  }
+
+  /// Test-only arithmetic projection for fixtures that do not model an
+  /// authored source. Learner-facing consumers must use the validated default.
+  static Act0ProfileEvidenceProjectionV1 fromUnverifiedEvidenceForTests(
+    Act0LearningEvidenceHistoryV1 history, {
+    int sampleThreshold = act0ProfileEvidenceMinimumAttemptsV1,
+    int minimumCorrectForPositiveSignal =
+        act0ProfileEvidenceMinimumCorrectForPositiveSignalV1,
+  }) {
+    return _fromEvidenceFacts(
+      <(Act0LearningEvidenceRecordV1, String, bool, bool)>[
+        for (final record in history.records)
+          (
+            record,
+            record.skillAtomId,
+            record.isCorrect,
+            record.isAssistedCorrect,
+          ),
+      ],
+      sampleThreshold: sampleThreshold,
+      minimumCorrectForPositiveSignal: minimumCorrectForPositiveSignal,
+    );
+  }
+
+  /// Projects only evidence whose stored authored-source fingerprint still
+  /// matches the current task and whose current answer/skill are source-derived.
+  /// Legacy threshold arguments remain source-compatible; the current claim uses
+  /// the fixed shared recent-verification contract, not caller-specific gates.
+  static Act0ProfileEvidenceProjectionV1 fromCurrentAuthoredEvidenceHistory(
+    Act0LearningEvidenceHistoryV1 history, {
+    int sampleThreshold = act0ProfileEvidenceMinimumAttemptsV1,
+    int minimumCorrectForPositiveSignal =
+        act0ProfileEvidenceMinimumCorrectForPositiveSignalV1,
+    DateTime? nowUtc,
+  }) {
+    final recent = Act0LearningTransferMeasurementV1.fromLearningEvidence(
+      history,
+      nowUtc: nowUtc,
+    );
+    return Act0ProfileEvidenceProjectionV1(
+      recentEvidence: recent,
+      signals: [
+        for (final signal in recent.signals)
+          if (signal.eligibleEvidenceCount > 0)
+            Act0ProfileCapabilitySignalV1(
+              signalId: 'profile_recent_v1|${signal.conceptFamilyId}',
+              skillAtomId: signal.skillAtomId,
+              attemptCount: signal.eligibleEvidenceCount,
+              correctCount: signal.correctCount,
+              incorrectCount:
+                  signal.eligibleEvidenceCount - signal.correctCount,
+              accuracyPercent:
+                  (100 * signal.correctCount / signal.eligibleEvidenceCount)
+                      .round(),
+              sampleThreshold: 5,
+              sampleThresholdMet: signal.eligibleEvidenceCount >= 5,
+              positiveSignalThresholdMet: signal.correctCount >= 3,
+              worldIds: const [],
+              lessonIds: const [],
+              latestOrder: signal.comparisonOrder ?? 0,
+              eligibilityState: signal.verdict == act0RecentEvidenceVerifiedV1
+                  ? act0ProfileEvidenceStateEligibleSignalV1
+                  : act0ProfileEvidenceStateInsufficientSampleV1,
+            ),
+      ],
+    );
+  }
+
+  static Act0ProfileEvidenceProjectionV1 _fromEvidenceFacts(
+    List<(Act0LearningEvidenceRecordV1, String, bool, bool)> facts, {
+    required int sampleThreshold,
+    required int minimumCorrectForPositiveSignal,
   }) {
     final safeSampleThreshold = sampleThreshold < 1
         ? act0ProfileEvidenceMinimumAttemptsV1
@@ -33,22 +117,26 @@ class Act0ProfileEvidenceProjectionV1 {
     final safeMinimumCorrect = minimumCorrectForPositiveSignal < 1
         ? act0ProfileEvidenceMinimumCorrectForPositiveSignalV1
         : minimumCorrectForPositiveSignal;
-    final groups = <String, List<Act0LearningEvidenceRecordV1>>{};
-    for (final record in history.records) {
-      if (record.isAssistedCorrect) continue;
-      final skillAtomId = record.skillAtomId.trim();
-      if (skillAtomId.isEmpty) {
+    final groups = <String, List<(Act0LearningEvidenceRecordV1, bool)>>{};
+    for (final (record, skillAtomId, isCurrentlyCorrect, excludeFromAttempts)
+        in facts) {
+      if (excludeFromAttempts) continue;
+      final currentSkillAtomId = skillAtomId.trim();
+      if (currentSkillAtomId.isEmpty) {
         continue;
       }
-      groups.putIfAbsent(skillAtomId, () => <Act0LearningEvidenceRecordV1>[]);
-      groups[skillAtomId]!.add(record);
+      groups.putIfAbsent(
+        currentSkillAtomId,
+        () => <(Act0LearningEvidenceRecordV1, bool)>[],
+      );
+      groups[currentSkillAtomId]!.add((record, isCurrentlyCorrect));
     }
     final signals = <Act0ProfileCapabilitySignalV1>[];
     for (final entry in groups.entries) {
       final records = entry.value
-        ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));
+        ..sort((a, b) => a.$1.createdOrder.compareTo(b.$1.createdOrder));
       final attemptCount = records.length;
-      final correctCount = records.where((record) => record.isCorrect).length;
+      final correctCount = records.where((fact) => fact.$2).length;
       final incorrectCount = attemptCount - correctCount;
       final sampleThresholdMet = attemptCount >= safeSampleThreshold;
       final positiveSignalThresholdMet = correctCount >= safeMinimumCorrect;
@@ -68,9 +156,9 @@ class Act0ProfileEvidenceProjectionV1 {
           sampleThreshold: safeSampleThreshold,
           sampleThresholdMet: sampleThresholdMet,
           positiveSignalThresholdMet: positiveSignalThresholdMet,
-          worldIds: _sortedUnique(records.map((record) => record.worldId)),
-          lessonIds: _sortedUnique(records.map((record) => record.lessonId)),
-          latestOrder: records.last.createdOrder,
+          worldIds: _sortedUnique(records.map((fact) => fact.$1.worldId)),
+          lessonIds: _sortedUnique(records.map((fact) => fact.$1.lessonId)),
+          latestOrder: records.last.$1.createdOrder,
           eligibilityState: eligibilityState,
         ),
       );

@@ -41,6 +41,7 @@ class Act0PersonalizedReturnReasonV1 {
     this.sourceSessionId = '',
     required this.evidenceKind,
     required this.messageKey,
+    this.currentConfirmationLine = '',
     required this.priorityClass,
     this.recommendedDestination = 'learn',
     this.recommendedAction = 'continue',
@@ -77,6 +78,20 @@ class Act0PersonalizedReturnReasonV1 {
     if (recent != null) {
       return recent;
     }
+    if (transferMeasurement.isRecentEvidence &&
+        transferMeasurement.signals.isNotEmpty) {
+      final signal = transferMeasurement.signals.first;
+      return Act0PersonalizedReturnReasonV1(
+        reasonType: signal.verdict,
+        conceptFamilyId: signal.conceptFamilyId,
+        sourceTaskId: signal.comparisonTaskId,
+        sourceSessionId: signal.comparisonSessionId,
+        evidenceKind: act0ReturnReasonEvidenceTransferMeasurementV1,
+        messageKey: signal.verdict,
+        currentConfirmationLine: signal.confirmationLine,
+        priorityClass: 3,
+      );
+    }
     return const Act0PersonalizedReturnReasonV1(
       reasonType: act0ReturnReasonNoPersonalReasonAvailableV1,
       conceptFamilyId: '',
@@ -96,6 +111,8 @@ class Act0PersonalizedReturnReasonV1 {
   final String sourceSessionId;
   final String evidenceKind;
   final String messageKey;
+  // UI-only copy; stable messageKey remains safe for projections/telemetry.
+  final String currentConfirmationLine;
   final int priorityClass;
   final String recommendedDestination;
   final String recommendedAction;
@@ -104,6 +121,9 @@ class Act0PersonalizedReturnReasonV1 {
   final String rawEvidenceRef;
 
   String? get copyLine {
+    if (reasonType == act0RecentEvidenceVerifiedV1 ||
+        reasonType == act0RecentEvidenceConfirmationNeededV1)
+      return currentConfirmationLine;
     return switch (messageKey) {
       act0ReturnReasonMessageContinueRepairV1 =>
         'You missed this clue last time. One more clean rep will keep it visible.',

@@ -41,7 +41,11 @@ List<Act0SeatStateV1> _twoLiveSeats(Act0TableStateV1 table) => [
     _fixtureSeat(seat, folded: !seat.isHero && seat.seatId != 'co'),
 ];
 
-Future<void> _pump(WidgetTester tester, Act0RunnerStateV1 runner) async {
+Future<void> _pump(
+  WidgetTester tester,
+  Act0RunnerStateV1 runner, {
+  bool explanation = false,
+}) async {
   tester.view.physicalSize = const Size(393, 852);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
@@ -52,7 +56,12 @@ Future<void> _pump(WidgetTester tester, Act0RunnerStateV1 runner) async {
         body: Act0LessonRunnerShellV1(
           // Widget-only consumer harness; omit teaching pagination, retain all
           // authored hand/choice facts. This is not native route or Human proof.
-          runner: runner.copyWith(teachingSteps: const []),
+          runner: runner.copyWith(
+            teachingSteps: const [],
+            // Synthetic disclosure checks exercise explanation, not an
+            // unassisted graded answer. Keep their solver validation live.
+            phase: explanation ? Act0LessonPhaseV1.theory : runner.phase,
+          ),
           onBack: () {},
           onContinueTheory: () {},
           onChooseOption: (_) {},
@@ -73,7 +82,7 @@ void main() {
       source.table.seats.where((s) => s.isInHand && !s.isFolded),
       hasLength(6),
     );
-    await _pump(tester, source);
+    await _pump(tester, source, explanation: true);
     final board = find.byKey(const Key('act0_shell_card_board_0'));
     expect(board, findsOneWidget);
     await tester.ensureVisible(board);
@@ -127,7 +136,7 @@ void main() {
       final source = _task('showdown_best_hand_drill').runner;
       final twoSeats = _twoLiveSeats(source.table);
       final table = source.table.copyWith(seats: twoSeats);
-      await _pump(tester, source.copyWith(table: table));
+      await _pump(tester, source.copyWith(table: table), explanation: true);
       await tester.tap(find.byKey(const Key('act0_shell_card_board_0')));
       await tester.pumpAndSettle();
       expect(find.textContaining('Best shown hand: You'), findsOneWidget);
@@ -151,7 +160,7 @@ void main() {
               : seat,
       ],
     );
-    await _pump(tester, source.copyWith(table: table));
+    await _pump(tester, source.copyWith(table: table), explanation: true);
     await tester.tap(find.byKey(const Key('act0_shell_card_board_0')));
     await tester.pumpAndSettle();
     expect(find.textContaining('Best shown hand: You'), findsOneWidget);
@@ -234,7 +243,7 @@ void main() {
           ],
         );
       }
-      await _pump(tester, source.copyWith(table: table));
+      await _pump(tester, source.copyWith(table: table), explanation: true);
       final board = find.byKey(const Key('act0_shell_card_board_0'));
       await tester.ensureVisible(board);
       await tester.tap(board);
@@ -271,7 +280,7 @@ void main() {
             .map((c) => Act0CardStateV1(rank: c.rank, suit: 'd'))
             .toList(),
       );
-      await _pump(tester, source.copyWith(table: physical));
+      await _pump(tester, source.copyWith(table: physical), explanation: true);
       await tester.tap(find.byKey(const Key('act0_shell_card_board_0')));
       await tester.pumpAndSettle();
       expect(find.textContaining('Tied best hands:'), findsOneWidget);

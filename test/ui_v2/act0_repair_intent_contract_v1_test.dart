@@ -37,6 +37,52 @@ void main() {
     expect(intent?.reasonCode, 'same_signal_action_read_no_bet_yet');
   });
 
+  test('W1 hero-button miss maps to the authored BTN seat repair', () {
+    final task = Act0ShellStateV1.sample
+        .worldById('world_1')
+        .lessons
+        .expand((lesson) => lesson.taskList)
+        .firstWhere((task) => task.taskId == 'what_poker_is_find_hero');
+    final wrongOption = task.runner.options.firstWhere(
+      (option) => !option.isCorrect,
+    );
+
+    final intent = buildAct0RepairIntentV1(
+      sourceWorldId: 'world_1',
+      sourceLessonId: 'what_poker_is',
+      sourceTaskId: task.taskId,
+      runner: task.runner,
+      selectedOption: wrongOption,
+      mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+    );
+
+    expect(intent, isNotNull);
+    expect(intent?.sourceTaskId, 'what_poker_is_find_hero');
+    expect(intent?.choiceId, wrongOption.id);
+    expect(intent?.missedSignalId, 'hero_button');
+    expect(intent?.skillAtomId, 'table_position_read');
+    expect(intent?.targetWorldId, 'world_3');
+    expect(intent?.targetLessonId, 'position_six_seats');
+    expect(
+      intent?.targetTaskId,
+      'position_six_seats_position_repair_seat_id_btn',
+    );
+    expect(intent?.mappingType, 'repair');
+    expect(intent?.reasonCode, 'same_signal_table_position_read_hero_button');
+
+    final unchangedCorrectRoute = act0FirstValueSameSignalRepMappingV1(
+      nextRepId: 'repeat_table_position_read',
+      skillAtomId: 'table_position_read',
+      sourceSignalId: 'hero_button',
+      sourceTaskId: task.taskId,
+      receiptOutcome: 'learned',
+    );
+    expect(
+      unchangedCorrectRoute?.taskId,
+      'position_checkpoint_position_checkpoint_table_notice',
+    );
+  });
+
   test('same input creates same target and reason code', () {
     final runner = _runnerForNoBetActionRead();
     final wrongOption = runner.options.firstWhere(

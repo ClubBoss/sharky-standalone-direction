@@ -154,7 +154,12 @@ void main() {
     await _openPractice(tester);
     final queue = find.byKey(const Key('act0_shell_play_repair_queue'));
     expect(
-      find.descendant(of: queue, matching: find.text('Practice this')),
+      find.descendant(
+        of: queue,
+        matching: find.byKey(
+          const Key('act0_shell_play_repair_queue_item_cta'),
+        ),
+      ),
       findsNothing,
     );
   });
@@ -318,6 +323,28 @@ void main() {
       );
     },
   );
+
+  testWidgets('placement quick-check renders source-owned second question', (
+    tester,
+  ) async {
+    final sink = Act0InMemoryTelemetrySinkV1();
+    await _pumpPlacementDiagnosticHost(tester, telemetrySink: sink);
+    await _answerPlacementQuestion(tester, 'friends');
+    await _answerPlacementQuestion(tester, 'rules');
+    await tester.tap(
+      find.byKey(const Key('act0_shell_placement_start_diagnostic')),
+    );
+    await tester.pumpAndSettle();
+    await _answerPlacementCorrectly(tester);
+    await tester.tap(find.byKey(const Key('act0_shell_feedback_continue_cta')));
+    await tester.pumpAndSettle();
+
+    final runner = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(runner.runner.question, 'Which cards can everyone use?');
+    expect(find.text(runner.runner.question), findsOneWidget);
+  });
 
   testWidgets(
     'placement board-card miss preserves the repair intent and finishes the quick check',
@@ -710,10 +737,15 @@ Future<void> _launchPracticeQueueRepair(WidgetTester tester) async {
   final queue = find.byKey(const Key('act0_shell_play_repair_queue'));
   expect(queue, findsOneWidget);
   expect(
-    find.descendant(of: queue, matching: find.text('Practice this')),
+    find.descendant(
+      of: queue,
+      matching: find.byKey(const Key('act0_shell_play_repair_queue_item_cta')),
+    ),
     findsOneWidget,
   );
-  await tester.tap(find.text('Practice this'));
+  await tester.tap(
+    find.byKey(const Key('act0_shell_play_repair_queue_item_cta')),
+  );
   await tester.pumpAndSettle();
 }
 

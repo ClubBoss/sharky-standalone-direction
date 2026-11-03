@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_evidence_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
@@ -50,6 +51,32 @@ void main() {
     expect(seed.sourceOwner, 'Act0LearningEvidenceHistoryV1');
     expect(seed.earnedSequence, 2);
     expect(seed.sourceSummary['completedCorrectDecisions'], 1);
+  });
+
+  test('assisted or unknown correct evidence earns no first-correct seed', () {
+    for (final assistanceKind in <Act0DecisionAssistanceV1>[
+      Act0DecisionAssistanceV1.quickHint,
+      Act0DecisionAssistanceV1.theoryRecall,
+      Act0DecisionAssistanceV1.legacyUnknown,
+    ]) {
+      final projection = Act0AchievementSeedProjectionV1.fromSources(
+        learningEvidenceHistory: Act0LearningEvidenceHistoryV1(
+          records: <Act0LearningEvidenceRecordV1>[
+            _evidenceRecord(
+              order: 1,
+              isCorrect: true,
+              assistanceKind: assistanceKind,
+            ),
+          ],
+        ),
+      );
+
+      expect(
+        projection.seedForId(act0AchievementSeedFirstCorrectReadV1).earned,
+        isFalse,
+        reason: assistanceKind.name,
+      );
+    }
   });
 
   test('first repair note is earned from a real repair or mistake source', () {
@@ -306,6 +333,7 @@ Act0LearningEvidenceRecordV1 _evidenceRecord({
   String runId = '',
   String runKind = '',
   int? runOrdinal,
+  Act0DecisionAssistanceV1 assistanceKind = Act0DecisionAssistanceV1.none,
 }) {
   return Act0LearningEvidenceRecordV1(
     recordId: '$order:world_1:fold_check_call_raise:action_read',
@@ -324,6 +352,7 @@ Act0LearningEvidenceRecordV1 _evidenceRecord({
     runId: runId,
     runKind: runKind,
     runOrdinal: runOrdinal,
+    assistanceKind: assistanceKind,
   );
 }
 

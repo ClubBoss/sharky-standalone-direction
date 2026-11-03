@@ -1,3 +1,5 @@
+// These fixtures test reducer/consumer arithmetic, not current authored proof.
+// Current-source admission is covered by act0_asm07_transfer_retention_boundary_falsifier_test.dart.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_fix_proof_projection_v1.dart';
@@ -389,46 +391,47 @@ Act0FixProofProjectionV1 _bankedFixProof(
 }) {
   Act0LearningTransferMeasurementV1? transferMeasurement;
   if (reinforced) {
-    transferMeasurement = Act0LearningTransferMeasurementV1.fromLearningEvidence(
-      Act0LearningEvidenceHistoryV1(
-        records: <Act0LearningEvidenceRecordV1>[
-          Act0LearningEvidenceRecordV1(
-            recordId: 'record_1',
-            createdOrder: 1,
-            worldId: 'world_1',
-            lessonId: 'fold_check_call_raise',
-            taskId: 'actions_legal_context',
-            choiceId: 'fold',
-            expectedChoiceId: 'check',
-            isCorrect: false,
-            errorType: 'missed_action_read',
-            conceptFamilyId: 'no_bet_yet',
-            repairFocusId: 'no_bet_yet',
-            skillAtomId: 'action_read',
-            decisionTimeBucket: 'under_3s',
-            resultKind: 'incorrect',
-            sessionId: 'session_1',
+    transferMeasurement =
+        Act0LearningTransferMeasurementV1.fromUnverifiedEvidenceForTests(
+          Act0LearningEvidenceHistoryV1(
+            records: <Act0LearningEvidenceRecordV1>[
+              Act0LearningEvidenceRecordV1(
+                recordId: 'record_1',
+                createdOrder: 1,
+                worldId: 'world_1',
+                lessonId: 'fold_check_call_raise',
+                taskId: 'actions_legal_context',
+                choiceId: 'fold',
+                expectedChoiceId: 'check',
+                isCorrect: false,
+                errorType: 'missed_action_read',
+                conceptFamilyId: 'no_bet_yet',
+                repairFocusId: 'no_bet_yet',
+                skillAtomId: 'action_read',
+                decisionTimeBucket: 'under_3s',
+                resultKind: 'incorrect',
+                sessionId: 'session_1',
+              ),
+              Act0LearningEvidenceRecordV1(
+                recordId: 'record_2',
+                createdOrder: 5,
+                worldId: 'world_1',
+                lessonId: 'fold_check_call_raise',
+                taskId: 'actions_check_drill',
+                choiceId: 'check',
+                expectedChoiceId: 'check',
+                isCorrect: true,
+                errorType: 'none',
+                conceptFamilyId: 'no_bet_yet',
+                repairFocusId: 'no_bet_yet',
+                skillAtomId: 'action_read',
+                decisionTimeBucket: 'under_3s',
+                resultKind: 'correct',
+                sessionId: 'session_3',
+              ),
+            ],
           ),
-          Act0LearningEvidenceRecordV1(
-            recordId: 'record_2',
-            createdOrder: 5,
-            worldId: 'world_1',
-            lessonId: 'fold_check_call_raise',
-            taskId: 'actions_check_drill',
-            choiceId: 'check',
-            expectedChoiceId: 'check',
-            isCorrect: true,
-            errorType: 'none',
-            conceptFamilyId: 'no_bet_yet',
-            repairFocusId: 'no_bet_yet',
-            skillAtomId: 'action_read',
-            decisionTimeBucket: 'under_3s',
-            resultKind: 'correct',
-            sessionId: 'session_3',
-          ),
-        ],
-      ),
-    );
+        );
   }
   return Act0FixProofProjectionV1.fromSources(
     repairOutcomeProjection: outcomes,

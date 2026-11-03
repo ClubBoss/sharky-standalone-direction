@@ -7,6 +7,8 @@ import sys
 import time
 from pathlib import Path
 
+from run_lane_diagnostics_v1 import append_job_summary, failure_log_lines, tail
+
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST_DIR = Path(
     os.environ.get(
@@ -95,6 +97,22 @@ TIER_A_COMMANDS = [
         ],
     },
     {
+        "name": "durable learner truth and assessment interaction (LDR-01)",
+        "cmd": [
+            "flutter",
+            "test",
+            "test/ui_v2/act0_ldr01_durable_truth_v1_test.dart",
+            "test/ui_v2/act0_repair_obligation_integrity_v1_test.dart",
+            "test/ui_v2/act0_qa_independent_rep05_replay_20261103_test.dart",
+            "test/ui_v2/act0_obs04_persist_diagnostics_v1_test.dart",
+            "test/ui_v2/act0_default_answer_exposure_14pro_v1_test.dart",
+            "test/ui_v2/act0_asm04_seat_focus_counterexample_v1_test.dart",
+            "test/ui_v2/act0_asm04_remaining_seat_inventory_v1_test.dart",
+            "-r",
+            "compact",
+        ],
+    },
+    {
         "name": "repair outcome + queue",
         "cmd": [
             "flutter",
@@ -119,11 +137,14 @@ TIER_A_COMMANDS = [
         ],
     },
     {
-        "name": "source task and choice identity (ASM-01)",
+        "name": "source task/choice identity and historical fingerprint (ASM-01/ASM-07)",
         "cmd": [
             "flutter",
             "test",
             "test/ui_v2/act0_assessment_identity_census_v1_test.dart",
+            "test/ui_v2/act0_asm07_historical_fingerprint_falsifier_v1_test.dart",
+            "test/ui_v2/act0_asm07_transfer_retention_boundary_falsifier_test.dart",
+            "test/ui_v2/act0_asm07_recent_epoch_semantics_test.dart",
             "-r",
             "compact",
         ],
@@ -166,25 +187,54 @@ def _run_command(name: str, cmd: list[str], timeout: int) -> dict[str, object]:
             timeout=timeout,
         )
         status = "pass" if completed.returncode == 0 else "fail"
+        output_tail, output_truncated, output_chars = tail(completed.stdout or "")
         return {
             "name": name,
             "cmd": cmd,
             "status": status,
             "exit_code": completed.returncode,
             "duration_seconds": round(time.monotonic() - started, 3),
-            "output_tail": completed.stdout[-4000:],
+            "output_tail": output_tail,
+            "output_truncated": output_truncated,
+            "output_chars": output_chars,
         }
     except subprocess.TimeoutExpired as error:
         output = error.stdout or ""
         if isinstance(output, bytes):
             output = output.decode(errors="replace")
+        output_tail, output_truncated, output_chars = tail(output)
         return {
             "name": name,
             "cmd": cmd,
             "status": "timeout",
             "exit_code": None,
             "duration_seconds": round(time.monotonic() - started, 3),
-            "output_tail": output[-4000:],
+            "output_tail": output_tail,
+            "output_truncated": output_truncated,
+            "output_chars": output_chars,
+        }
+    except OSError as error:
+        output_tail, output_truncated, output_chars = tail(str(error))
+        return {
+            "name": name,
+            "cmd": cmd,
+            "status": "error",
+            "exit_code": None,
+            "duration_seconds": round(time.monotonic() - started, 3),
+            "output_tail": output_tail,
+            "output_truncated": output_truncated,
+            "output_chars": output_chars,
+        }
+    except KeyboardInterrupt:
+        return {
+            "name": name,
+            "cmd": cmd,
+            "status": "cancelled",
+            "exit_code": None,
+            "duration_seconds": round(time.monotonic() - started, 3),
+            "output_tail": "",
+            "output_truncated": False,
+            "output_chars": 0,
         }
 
 
@@ -192,10 +242,13 @@ def _run_tier_a(timeout: int, smoke: bool) -> list[dict[str, object]]:
     commands = TIER_A_COMMANDS
     if smoke:
         commands = TIER_A_COMMANDS[:1]
-    return [
-        _run_command(command["name"], command["cmd"], timeout)
-        for command in commands
-    ]
+    results = []
+    for command in commands:
+        result = _run_command(command["name"], command["cmd"], timeout)
+        results.append(result)
+        if result["status"] == "cancelled":
+            break
+    return results
 
 
 def _run_manifest_lane(lane: str, timeout: int, smoke: bool) -> list[dict[str, object]]:
@@ -219,6 +272,8 @@ def _run_manifest_lane(lane: str, timeout: int, smoke: bool) -> list[dict[str, o
                 timeout,
             )
         )
+        if results[-1]["status"] == "cancelled":
+            break
     return results
 
 
@@ -271,6 +326,8 @@ def _print_summary(summary: dict[str, object]) -> None:
     print(f"final blocking verdict: {summary['blocking_verdict']}")
     for result in summary["results"]:
         print(f"- {result['status']}: {result['name']} ({result['duration_seconds']}s)")
+        for line in failure_log_lines(result):
+            print(line)
 
 
 def main() -> int:
@@ -289,6 +346,17 @@ def main() -> int:
     else:
         _print_summary(summary)
         print(f"summary: {summary_path.relative_to(ROOT)}")
+    try:
+        append_job_summary(summary)
+    except Exception:
+        # Optional diagnostics must never replace the lane's original verdict.
+        # Do not echo exception text: it may contain paths or other free text.
+        print("Job Summary unavailable; lane verdict unchanged.", file=sys.stderr)
+    if any(result["status"] == "cancelled" for result in summary["results"]):
+        return 130
+    # Infrastructure errors are fatal even in nonblocking test lanes.
+    if any(result["status"] == "error" for result in summary["results"]):
+        return 1
     if args.lane == "tier-c":
         return 0
     if summary["blocking_verdict"] == "BLOCK":

@@ -8,12 +8,44 @@ generated_by: "docs_frontmatter_v1"
 # Concept Error & Repair Integrity v1
 
 Status: PUBLISHED CONTRACT; the bounded Blinds Action-Order Truth Repair closes
-the final source-authored contradiction and repair-coverage gap.
+the final source-authored contradiction and repair-coverage gap at the
+published snapshot identified below. The candidate reconciliation dated
+2026-11-02 is under review and does not add acceptance or closure credit.
 
 Starting baseline: `e5a83a78864741f1671c05b15ef86bd9824768ef`.
 Product contract commit: `d7a8f8d870b5859f07cabacec914f51b711bf0da`.
 Publication parity is recorded by the final push verification; a tracked file
 cannot contain the object id of the commit that contains that file.
+
+## Current candidate reconciliation (2026-11-02; review pending)
+
+This section records the current isolated candidate's source adjudications and
+deterministic census for review. It is not a new acceptance result, publication
+claim, or closure of any additional contract item.
+
+- Adjudication registry: 36 rows, comprising 21 alternate targets and 15
+  intentional exact replays.
+- Census: 291 assessed tasks and 462 incorrect options; 276 mapped options and
+  15 intentional exact replays (15 fallback-only by route shape), with zero
+  unrecorded, unresolved, or unmapped fallbacks.
+- Candidate per-world mapping coverage: W1 57/70, W2 29/29, W3 40/42,
+  W4 20/20, W5 23/23, W6 26/26, W7 5/5, W8 18/18, W9 16/16,
+  W10 15/15, W11 14/14, W12 13/13. W1-W6 aggregate: 195/210;
+  W7-W12 aggregate: 81/81. Checkpoints: 48/49; authored repair-target
+  tasks: 27/27.
+- W1 `what_poker_is_find_hero` now routes its Hero-seat identity repair to the
+  authored BTN seat drill. The previous candidate route was the W3 CO
+  `players_behind` notice, a wrong-signal mapping; the W1 source identity and
+  original-source recheck remain intact.
+- W3 CO `position_checkpoint_position_checkpoint_table_notice` is an
+  intentional exact replay with no alternate target. Existing BTN and UTG
+  drills do not preserve the CO seat plus three players-behind signal, so this
+  row does not claim same-signal transfer or price/BTN/UTG repair credit.
+
+The following adjudication table, before/after census, validation record,
+per-world coverage, and terminal ledger are the historical published snapshot
+at the product contract commit above. Their counts and closure labels are
+retained as historical evidence and are not the current candidate totals.
 
 ## Owner and compatibility contract
 
@@ -58,7 +90,7 @@ while active route decision evidence emits the concept-specific id.
 | `misread_real_play_process` | session focus, trigger, review, or transfer process | W11 transfer | real-play process transfer |
 | `misread_mindset_discipline` | outcome bias, reset, or discipline process | W12 mindset | mindset/process discipline |
 
-## Complete 34-row adjudication
+## Historical published 34-row adjudication
 
 Every row below retains original-source recheck. All alternate targets use
 introduced knowledge from the same or an earlier world, have a different
@@ -104,14 +136,14 @@ recheck, and compatibility fields are machine-owned in
 | 33 | W3/same_hand_different_seat/`same_hand_different_seat_position_repair_same_hand_different_seat` | ALTERNATE_SAME_SIGNAL_TARGET | `same_hand_different_seat_same_hand_early_fold` |
 | 34 | W8/spr_and_commitment/`what_poker_is_side_pot_intro` | ALTERNATE_SAME_SIGNAL_TARGET | W1/what_poker_is_content/`what_poker_is_matched_chips_transfer` |
 
-Disposition totals: 20 alternate targets, 14 intentional exact replays, zero
+Historical published disposition totals: 20 alternate targets, 14 intentional exact replays, zero
 new bounded repair items, and zero unresolved product gaps. Intentional exact
 replay is an explicit allowlist and may launch an assessed theory/review source;
 ordinary alternate repairs remain drill-only. `blinds_review` is now launchable
 because its question, UTG option, hint, and feedback all teach the same
 first-preflop-actor truth.
 
-## Before/after deterministic census
+## Historical published before/after deterministic census
 
 | Measure | Before | After |
 | --- | ---: | ---: |
@@ -125,7 +157,7 @@ first-preflop-actor truth.
 | new bounded repair items | 0 | 0 |
 | unresolved product gaps | 0 recorded | 0 |
 
-Post-change mapping coverage is W1 57/70, W2 29/29, W3 41/42, W4 20/20,
+Historical published mapping coverage was W1 57/70, W2 29/29, W3 41/42, W4 20/20,
 W5 23/23, W6 26/26, W7 5/5, W8 18/18, W9 16/16, W10 15/15,
 W11 14/14, and W12 13/13. W1-W6 aggregate is 196/210; W7-W12 is
 81/81. Checkpoints are 49/49 and authored repair-target tasks are 24/24.
@@ -167,7 +199,7 @@ fingerprint is `1f11f46f766ede8a967a1044a9a8ac280a29e681c066d2a6d5b277ab1b767d91
 
 ## Finding dispositions and remaining boundary
 
-## Validation record
+## Historical published validation record
 
 - Consolidated focused suite: PASS (110 tests), including exact
   taxonomy/34-row/census guards.
@@ -186,9 +218,9 @@ fingerprint is `1f11f46f766ede8a967a1044a9a8ac280a29e681c066d2a6d5b277ab1b767d91
 - `git diff --check`: PASS.
 - Generated/plugin drift: PASS; no generated or plugin owner changed.
 
-- CL-LRN-F03: `CLOSED_FIXED`. Every incorrect option on the canonical 291-task
+- Historical published disposition — CL-LRN-F03: `CLOSED_FIXED`. Every incorrect option on the canonical 291-task
   route now resolves to one of 20 stable misconception ids; legacy values load.
-- CL-LRN-F05: `CLOSED_FIXED`. All 34 prior fallbacks now have a launchable,
+- Historical published disposition — CL-LRN-F05: `CLOSED_FIXED`. All 34 prior fallbacks now have a launchable,
   explicit disposition; `blinds_review` is the fourteenth intentional exact
   replay after its UTG source correction.
 - CL-LRN-F01/F02/F06/F08/F11 remain open and unchanged.
@@ -217,7 +249,7 @@ fingerprint is `1f11f46f766ede8a967a1044a9a8ac280a29e681c066d2a6d5b277ab1b767d91
 | CERI-06 Legacy compatibility | CLOSED_VERIFIED_PASS |
 | CERI-07 Telemetry compatibility | CLOSED_VERIFIED_PASS |
 | CERI-08 Persistence compatibility | CLOSED_VERIFIED_PASS |
-| CERI-09 34-row inventory | CLOSED_VERIFIED_PASS |
+| CERI-09 34-row inventory (historical published snapshot) | CLOSED_VERIFIED_PASS |
 | CERI-10 Alternate-target adjudication | CLOSED_FIXED |
 | CERI-11 Intentional-replay adjudication | CLOSED_INTENTIONAL |
 | CERI-12 New repair-item adjudication | CLOSED_NOT_APPLICABLE |

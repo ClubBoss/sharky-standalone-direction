@@ -10,6 +10,26 @@ class Act0ProfileEvidenceConsumerV1 {
   static Act0ProfileEvidenceConsumerV1 fromProjection(
     Act0ProfileEvidenceProjectionV1 projection,
   ) {
+    final recent = projection.recentEvidence;
+    if (recent != null) {
+      final signal = recent.signals.firstOrNull ?? recent.signalForConcept('');
+      final label =
+          act0ProfileEvidenceSkillLabelV1(signal.skillAtomId) ??
+          'Recent evidence';
+      return Act0ProfileEvidenceConsumerV1(
+        signal: Act0ProfileEvidenceSignalViewModelV1(
+          signalId: 'profile_recent_v1|${signal.conceptFamilyId}',
+          skillAtomId: signal.skillAtomId,
+          skillLabel: label,
+          correctCount: signal.correctCount,
+          attemptCount: signal.eligibleEvidenceCount,
+          proofLine:
+              '${signal.eligibleEvidenceCount > 0 ? '${signal.correctCount}/${signal.eligibleEvidenceCount} correct in latest responses. ' : ''}${signal.confirmationLine}',
+          confirmationState: signal.verdict,
+          conceptFamilyId: signal.conceptFamilyId,
+        ),
+      );
+    }
     for (final signal in projection.signals) {
       if (!signal.isCapabilityEligible) {
         continue;
@@ -42,6 +62,8 @@ class Act0ProfileEvidenceSignalViewModelV1 {
     required this.correctCount,
     required this.attemptCount,
     required this.proofLine,
+    this.confirmationState = '',
+    this.conceptFamilyId = '',
   });
 
   final String signalId;
@@ -50,6 +72,8 @@ class Act0ProfileEvidenceSignalViewModelV1 {
   final int correctCount;
   final int attemptCount;
   final String proofLine;
+  final String confirmationState;
+  final String conceptFamilyId;
 }
 
 String? act0ProfileEvidenceSkillLabelV1(String skillAtomId) {
