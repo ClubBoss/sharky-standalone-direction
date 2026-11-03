@@ -13,7 +13,6 @@ void main() {
     expect(rows.map((r) => r.taskId).toSet(), tasks.map((t) => t.taskId).toSet());
     final out = Directory(Platform.environment['TABLE_TRUTH_OUTPUT'] ?? 'output/table_truth');
     out.createSync(recursive: true);
-    out.uri.resolve('ledger.json').toFilePath();
     File('${out.path}/ledger.json').writeAsStringSync(jsonEncode(rows.map((r) => r.toJson()).toList()));
     final contract = {for (final t in tasks) t.taskId: {
       'rewardXp': t.rewardXp,
@@ -25,6 +24,20 @@ void main() {
       }],
     }};
     File('${out.path}/learning-contract.json').writeAsStringSync(jsonEncode(contract));
+    final snapshot = {for (final t in tasks) t.taskId: {
+      'caption': t.runner.caption, 'hint': t.runner.hint,
+      'question': t.runner.question, 'table': _table(t.runner.table),
+      'teaching': [for (final step in t.runner.teachingSteps) {
+        'title': step.title, 'body': step.body,
+        'table': step.table == null ? null : _table(step.table!),
+        'seats': step.focusSeatIds, 'cards': step.focusCardIds,
+      }],
+      'options': [for (final o in t.runner.options) {
+        'id': o.id, 'label': o.label, 'amount': o.amountLabel,
+        'reason': o.feedbackReason, 'preferred': o.preferredLabel,
+      }],
+    }};
+    File('${out.path}/runtime-inputs.json').writeAsStringSync(jsonEncode(snapshot));
     final failures = rows.where((r) => r.result == 'FAIL').toList();
     final byInvariant = <String, Set<String>>{};
     for (final r in failures) {
@@ -37,3 +50,22 @@ void main() {
     }
   });
 }
+
+Map<String, Object?> _table(Act0TableStateV1 t) => {
+  'scope': t.scope.name, 'hero': t.heroCards.map(cardIdentity).toList(),
+  'board': t.boardCards.map(cardIdentity).toList(), 'street': t.streetLabel,
+  'pot': t.potLabel, 'call': t.toCallLabel, 'center': t.centerLabel,
+  'actor': t.activeSeatId, 'heroSeat': t.heroSeatId,
+  'focusSeats': t.highlightedSeatIds, 'focusCards': t.highlightedCardIds,
+  'trail': [for (final a in t.actionTrail) {'kind': a.kind.name, 'label': a.label}],
+  'seats': [for (final s in t.seats) {
+    'id': s.seatId, 'hero': s.isHero, 'active': s.isActive,
+    'inHand': s.isInHand, 'folded': s.isFolded, 'occupied': s.isOccupied,
+    'acted': s.hasActed, 'mode': s.cardsVisibleMode.name,
+    'cards': s.holeCards.map(cardIdentity).toList(),
+    'blind': s.blindAmountLabel, 'currentBet': s.currentBetLabel,
+    'bet': s.bet == null ? null : {
+      'kind': s.bet!.kind.name, 'label': s.bet!.label, 'amount': s.bet!.amountLabel,
+    },
+  }],
+};

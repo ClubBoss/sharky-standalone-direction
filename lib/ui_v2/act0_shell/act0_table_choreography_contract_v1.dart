@@ -75,6 +75,7 @@ class Act0TableChoreographyFrameV1 {
     required this.commitments,
     required this.foldedSeatIds,
     required this.heroDecisionReady,
+    this.sourceActorSeatIds = const <String>{},
     this.focusSeatId,
     this.latestCommitmentSeatId,
   });
@@ -83,6 +84,10 @@ class Act0TableChoreographyFrameV1 {
   final int visibleBoardCardCount;
   final Map<String, Act0SeatBetStateV1> commitments;
   final Set<String> foldedSeatIds;
+
+  // Only seats evidenced acting in this authored history can be restored
+  // before their explicit fold. Final source flags are not initial flags.
+  final Set<String> sourceActorSeatIds;
   final bool heroDecisionReady;
   final String? focusSeatId;
   final String? latestCommitmentSeatId;
@@ -171,6 +176,7 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
   final beats = <Act0TableChoreographyBeatV1>[];
   final transientCommitments = <String>{};
   var terminalSeen = false;
+  final foldedActors = <String>{};
 
   for (final item in parsed) {
     if (terminalSeen) {
@@ -221,8 +227,12 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
     }
 
     final actorSeat = item.actorSeat;
-    if (actorSeat == null) {
+    if (actorSeat == null || !actorSeat.isOccupied ||
+        foldedActors.contains(actorSeat.seatId)) {
       return null;
+    }
+    if (item.action == _TrailActionV1.folds) {
+      foldedActors.add(actorSeat.seatId);
     }
 
     if (item.action == _TrailActionV1.acts) {
@@ -321,7 +331,7 @@ Act0TableChoreographyFrameV1 act0TableChoreographyFrameAfterBeatV1(
         final actorSeatId = beat.actorSeatId;
         if (actorSeatId != null) {
           foldedSeatIds.add(actorSeatId);
-          focusSeatId = actorSeatId;
+          focusSeatId = null;
         }
       case Act0TableChoreographyBeatKindV1.commitmentsCollect:
         commitments.clear();
@@ -349,6 +359,9 @@ Act0TableChoreographyFrameV1 act0TableChoreographyFrameAfterBeatV1(
     commitments: Map<String, Act0SeatBetStateV1>.unmodifiable(commitments),
     foldedSeatIds: Set<String>.unmodifiable(foldedSeatIds),
     heroDecisionReady: heroDecisionReady,
+    sourceActorSeatIds: Set<String>.unmodifiable(
+      plan.beats.map((beat) => beat.actorSeatId).whereType<String>(),
+    ),
     focusSeatId: focusSeatId,
     latestCommitmentSeatId: latestCommitmentSeatId,
   );
@@ -364,8 +377,9 @@ Act0TableStateV1 act0TableForChoreographyFrameV1(
 
   final seats = source.seats
       .map((seat) {
-        final folded =
-            seat.isFolded || frame.foldedSeatIds.contains(seat.seatId);
+        final sourceActor = frame.sourceActorSeatIds.contains(seat.seatId);
+        final folded = frame.foldedSeatIds.contains(seat.seatId) ||
+            (seat.isFolded && !sourceActor);
         return Act0SeatStateV1(
           seatId: seat.seatId,
           seatLabel: seat.seatLabel,
@@ -377,7 +391,7 @@ Act0TableStateV1 act0TableForChoreographyFrameV1(
           blindAmountLabel: seat.blindAmountLabel,
           isActive: seat.seatId == frame.focusSeatId,
           isTarget: seat.isTarget,
-          isInHand: folded ? false : seat.isInHand,
+          isInHand: !folded && (sourceActor || seat.isInHand),
           isFolded: folded,
           hasActed: seat.hasActed,
           isLastAggressor: seat.isLastAggressor,
