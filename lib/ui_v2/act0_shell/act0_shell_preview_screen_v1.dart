@@ -6235,8 +6235,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     : const <String>[],
                                 feedbackForwardCtaLabel:
                                     placementForwardCtaLabel ??
-                                    (_activeRepairTaskId == playSelectedTask?.taskId &&
-                                      (!_activeSameSignalFeedbackRepairV1 || !act0IndependentRepairProofV1(isCorrect: playRunner?.selectedOption?.isCorrect ?? false, assistanceKind: _choiceAssistanceV1))
+                                    (_activeRepairTaskId ==
+                                                playSelectedTask?.taskId &&
+                                            (!_activeSameSignalFeedbackRepairV1 ||
+                                                !act0IndependentRepairProofV1(
+                                                  isCorrect:
+                                                      playRunner
+                                                          ?.selectedOption
+                                                          ?.isCorrect ??
+                                                      false,
+                                                  assistanceKind:
+                                                      _choiceAssistanceV1,
+                                                ))
                                         ? 'Continue to Review'
                                         : null),
                                 suppressFeedbackRepairFocus:
@@ -6706,7 +6716,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   if (_rapidPracticeLoop) {
                                     _completeCurrentTask(playSelectedTask);
                                     final singleCleanRep =
-                                        (playRunner.selectedOption?.isCorrect ?? false) && !_choiceWasAssistedV1;
+                                        (playRunner.selectedOption?.isCorrect ??
+                                            false) &&
+                                        !_choiceWasAssistedV1;
                                     _finishRapidPracticeLoopToHub(
                                       completedLessonId:
                                           selectedLesson.lessonId,
@@ -7887,6 +7899,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (truthful.reasonType != act0ReturnReasonNoPersonalReasonAvailableV1) {
       _recordPersonalizedNextStepOpenedV1(truthful, surface);
     }
+    if (surface == 'home') {
+      _startHomeNextAction(selectedWorld);
+      return;
+    }
     _tab = Act0ShellTabV1.learn;
   }
 
@@ -8484,7 +8500,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     // Daily goal complete — highest priority
     if (_dailyCompletedRepCount >= 3) {
       return const Act0SharkyCueV1(
-        preSessionLine: 'Good work completing today\'s practice. Review an open mistake or try one fresh hand.',
+        preSessionLine:
+            'Good work completing today\'s practice. Review an open mistake or try one fresh hand.',
         correctReaction: 'Sharp read.',
         wrongReaction: 'Good spot to fix.',
         repairLine: 'Take one breath. I will point at the clue.',
@@ -8574,7 +8591,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     _placementHandoffActive = false;
-    final lesson = _lessonById(selectedWorld.lessons, _selectedLessonId);
+    final lesson = _firstPlayableLesson(selectedWorld);
     _startRecommendation(
       _homePrimaryRecommendation(
         selectedWorld: selectedWorld,
@@ -12065,7 +12082,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ru: 'Повтор готов',
       );
       _practiceCompletionBody = _copyV1(
-        en: cleanRepCount != null && completedRepCount != null && cleanRepCount == completedRepCount && cleanRepCount > 0
+        en:
+            cleanRepCount != null &&
+                completedRepCount != null &&
+                cleanRepCount == completedRepCount &&
+                cleanRepCount > 0
             ? '$family: independent correct practice complete. Try one fresh route spot next.'
             : '$family: practice complete. Review one missed clue, then try it independently.',
         ru: '$family остаются в тонусе. Возьми другой пак, когда захочешь ещё один чистый повтор.',

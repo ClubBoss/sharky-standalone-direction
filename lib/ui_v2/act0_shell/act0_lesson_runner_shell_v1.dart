@@ -326,7 +326,9 @@ class Act0BlockCompletionSummaryV1 {
       taskCount <= 0 ? 100 : ((correctCount * 100) / taskCount).round();
 
   bool get qualifiesForNextLesson =>
-      curriculumCompleted || !hasNextLesson || accuracyPercent >= unlockAccuracyPercent;
+      curriculumCompleted ||
+      !hasNextLesson ||
+      accuracyPercent >= unlockAccuracyPercent;
 
   Act0MasteryStatusV1 get masteryStatus {
     if (errorCount == 0 &&
@@ -335,7 +337,8 @@ class Act0BlockCompletionSummaryV1 {
         independentProvenanceKnown) {
       return Act0MasteryStatusV1.cleanPass;
     }
-    if (deepLeakCount > 0 || (taskCount > 0 && accuracyPercent < unlockAccuracyPercent)) {
+    if (deepLeakCount > 0 ||
+        (taskCount > 0 && accuracyPercent < unlockAccuracyPercent)) {
       return Act0MasteryStatusV1.needsReview;
     }
     if (assistedCount > 0 || !independentProvenanceKnown) {
@@ -4141,7 +4144,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
               widget.selectedTaskId,
               causalFeedback.whyChosen,
             )
-          : (runner.lessonId == 'w10_vs_nit_open_wider' || runner.lessonId == 'w10_overbluff_punish')
+          : (runner.lessonId == 'w10_vs_nit_open_wider' ||
+                runner.lessonId == 'w10_overbluff_punish')
           ? runner.caption
           : hasSeatTargets
           ? (isRu
@@ -14388,6 +14392,9 @@ String _resolveTableCueDisplayV1({
     runner: runner,
   )) {
     return rawCue;
+  }
+  if (runner.lessonId == 'w5_gutshot_draw') {
+    return '';
   }
   if (_looksLikeTrailHistoryQuestionV1(runner, table)) {
     return '';

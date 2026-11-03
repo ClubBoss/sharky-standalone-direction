@@ -68,8 +68,10 @@ Future<List<String>> _answerGuideToSummary(WidgetTester tester) async {
     final runners = find.byType(Act0LessonRunnerShellV1);
     if (runners.evaluate().isNotEmpty) {
       final runner = tester.widget<Act0LessonRunnerShellV1>(runners);
-      final correct = runner.runner.options.where((o) => answered.isEmpty ? !o.isCorrect : o.isCorrect);
-      if (correct.isNotEmpty) {
+      final correct = runner.runner.options.where(
+        (o) => answered.isEmpty ? !o.isCorrect : o.isCorrect,
+      );
+      if (correct.isNotEmpty && runner.runner.phase == Act0LessonPhaseV1.drill && runner.runner.selectedOptionId == null) {
         final choice = correct.first;
         final seat = find.byKey(Key('act0_shell_seat_tap_${choice.seatId}'));
         final option = find.byKey(Key('act0_shell_option_${choice.id}'));
@@ -93,7 +95,8 @@ Future<List<String>> _answerGuideToSummary(WidgetTester tester) async {
     await tester.tap(forward.first.first);
     await tester.pumpAndSettle();
   }
-  fail('Session Summary not reached');
+  final runner = tester.widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1));
+  fail('Session Summary not reached: ${runner.selectedTaskId} ${runner.runner.phase} selected=${runner.runner.selectedOptionId} answered=$answered');
 }
 
 String _text(WidgetTester tester, String key) =>
@@ -129,21 +132,27 @@ Future<void> _leaveSummary(WidgetTester tester) async {
 }
 
 void main() {
-  testWidgets('real miss and independent repair earn completion without rewriting first assessment', (t) async {
-    await _pumpGuide(t);
-    await _answerGuideToSummary(t);
-    expect(_text(t, 'act0_shell_block_summary_title'), 'Lesson complete');
-    expect(_text(t, 'act0_shell_block_summary_accuracy'), contains('75%'));
-    expect(find.text('Clean pass'), findsNothing);
-    expect(find.text('Replay before next lesson'), findsNothing);
-    final saved = await _persisted();
-    expect(saved['completedTaskIds'], containsAll(_guideLesson.taskList.map((task) => task.taskId)));
-    expect(saved['completedLessonIds'], contains(_guideLessonId));
-    final earnedXp = saved['earnedXp'];
-    await _leaveSummary(t);
-    await _openTab(t, 'Home');
-    final home = t.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
-    expect(home.currentLesson!.lessonId, isNot(_guideLessonId));
-    expect((await _persisted())['earnedXp'], earnedXp);
-  });
+  testWidgets(
+    'real miss and independent repair earn completion without rewriting first assessment',
+    (t) async {
+      await _pumpGuide(t);
+      await _answerGuideToSummary(t);
+      expect(_text(t, 'act0_shell_block_summary_title'), 'Lesson complete');
+      expect(_text(t, 'act0_shell_block_summary_accuracy'), contains('75%'));
+      expect(find.text('Clean pass'), findsNothing);
+      expect(find.text('Replay before next lesson'), findsNothing);
+      final saved = await _persisted();
+      expect(
+        saved['completedTaskIds'],
+        containsAll(_guideLesson.taskList.map((task) => task.taskId)),
+      );
+      expect(saved['completedLessonIds'], contains(_guideLessonId));
+      final earnedXp = saved['earnedXp'];
+      await _leaveSummary(t);
+      await _openTab(t, 'Home');
+      final home = t.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
+      expect(home.currentLesson!.lessonId, isNot(_guideLessonId));
+      expect((await _persisted())['earnedXp'], earnedXp);
+    },
+  );
 }
