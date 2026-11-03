@@ -21,6 +21,9 @@ jobs:
           mkdir -p output/learner_trust
           git rev-parse HEAD HEAD^{tree} > output/learner_trust/source.txt
           flutter test test/ui_v2/act0_learner_trust_recap_v1_test.dart --reporter expanded > output/learner_trust/recaps.log 2>&1
+      - name: Publish bounded test log
+        if: always()
+        run: cat output/learner_trust/recaps.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
