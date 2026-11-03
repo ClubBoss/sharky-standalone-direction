@@ -41,119 +41,115 @@ void main() {
     );
   });
   for (final entry in _cases.entries) {
-    testWidgets(
-      'no correct-exclusive target styling before choice: ${entry.key}',
-      (tester) async {
-        final row = [
-          for (final world in Act0ShellStateV1.sample.worlds)
-            for (final lesson in world.lessons)
-              for (final task in lesson.taskList)
-                if (task.taskId == entry.key)
-                  (world: world, lesson: lesson, task: task),
-        ].single;
-        final task = row.task;
-        final correct = task.runner.options.singleWhere((o) => o.isCorrect);
-        final wrong = task.runner.options.firstWhere((o) => !o.isCorrect);
-        final assistance = <Act0DecisionAssistanceV1>[];
-        final decisions = <Act0CompletedDecisionV1>[];
-        tester.view.physicalSize = const Size(393, 852);
-        tester.view.devicePixelRatio = 1;
-        addTearDown(tester.view.resetPhysicalSize);
-        addTearDown(tester.view.resetDevicePixelRatio);
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: Act0LessonRunnerShellV1(
-                runner: task.runner.copyWith(
-                  phase: task.entryPhase,
-                  teachingStepIndex: task.runner.teachingSteps.length,
-                ),
-                worldNumber: row.world.worldNumber,
-                selectedWorldId: row.world.worldId,
-                selectedLessonId: row.lesson.lessonId,
-                selectedTaskId: task.taskId,
-                selectedTaskTitle: task.title,
-                selectedTaskFamily: task.resolvedTaskFamily,
-                compositionFamily: task.resolvedCompositionFamily,
-                tablePresentation: task.tablePresentation,
-                onBack: () {},
-                onContinueTheory: () {},
-                onChooseOption: (_) {},
-                onCompletedDecision: decisions.add,
-                onContinueReview: () {},
-                onChoiceAssistance: assistance.add,
+    testWidgets('no correct-exclusive target styling before choice: ${entry.key}', (
+      tester,
+    ) async {
+      final row = [
+        for (final world in Act0ShellStateV1.sample.worlds)
+          for (final lesson in world.lessons)
+            for (final task in lesson.taskList)
+              if (task.taskId == entry.key)
+                (world: world, lesson: lesson, task: task),
+      ].single;
+      final task = row.task;
+      final correct = task.runner.options.singleWhere((o) => o.isCorrect);
+      final wrong = task.runner.options.firstWhere((o) => !o.isCorrect);
+      final assistance = <Act0DecisionAssistanceV1>[];
+      final decisions = <Act0CompletedDecisionV1>[];
+      tester.view.physicalSize = const Size(393, 852);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: task.runner.copyWith(
+                phase: task.entryPhase,
+                teachingStepIndex: task.runner.teachingSteps.length,
               ),
+              worldNumber: row.world.worldNumber,
+              selectedWorldId: row.world.worldId,
+              selectedLessonId: row.lesson.lessonId,
+              selectedTaskId: task.taskId,
+              selectedTaskTitle: task.title,
+              selectedTaskFamily: task.resolvedTaskFamily,
+              compositionFamily: task.resolvedCompositionFamily,
+              tablePresentation: task.tablePresentation,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onCompletedDecision: decisions.add,
+              onContinueReview: () {},
+              onChoiceAssistance: assistance.add,
             ),
           ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      Map<String, Object?> styleFor(String id) {
+        final node = find.byWidgetPredicate(
+          (w) =>
+              w.runtimeType.toString() == '_SeatNodeV1' &&
+              (w as dynamic).seat.seatId == id,
         );
-        await tester.pumpAndSettle();
-        Map<String, Object?> styleFor(String id) {
-          final node = find.byWidgetPredicate(
-            (w) =>
-                w.runtimeType.toString() == '_SeatNodeV1' &&
-                (w as dynamic).seat.seatId == id,
-          );
-          expect(node, findsOneWidget);
-          final dynamic widget = tester.widget(node);
-          final ring = find.descendant(
-            of: node,
-            matching: find.byKey(const Key('act0_shell_active_seat_ring')),
-          );
-          final decoration =
-              tester.widget<DecoratedBox>(ring).decoration as BoxDecoration;
-          return {
-            'seatId': id,
-            'hero': widget.hero as bool,
-            'selectable': widget.selectable as bool,
-            'state': (widget.visualState as Enum).name,
-            'ringColor': (decoration.border! as Border).top.color.toARGB32(),
-            'ringWidth': (decoration.border! as Border).top.width,
-          };
-        }
+        expect(node, findsOneWidget);
+        final dynamic widget = tester.widget(node);
+        final ring = find.descendant(
+          of: node,
+          matching: find.byKey(const Key('act0_shell_active_seat_ring')),
+        );
+        final decoration =
+            tester.widget<DecoratedBox>(ring).decoration as BoxDecoration;
+        return {
+          'seatId': id,
+          'hero': widget.hero as bool,
+          'selectable': widget.selectable as bool,
+          'state': (widget.visualState as Enum).name,
+          'ringColor': (decoration.border! as Border).top.color.toARGB32(),
+          'ringWidth': (decoration.border! as Border).top.width,
+        };
+      }
 
-        final correctStyle = styleFor(correct.seatId!);
-        final wrongStyle = styleFor(wrong.seatId!);
-        final correctTap = find.byKey(
-          Key('act0_shell_seat_tap_${correct.seatId}'),
-        );
-        await tester.ensureVisible(correctTap);
-        await tester.tap(correctTap);
-        await tester.pump();
-        observations.add({
-          'taskId': task.taskId,
-          'family': entry.value,
-          'question': task.runner.question,
-          'sourceCorrectChoiceId': correct.id,
-          'correctStyle': correctStyle,
-          'wrongStyle': wrongStyle,
-          'assistance': assistance.map((a) => a.name).toList(),
-          'chosenId': decisions.single.selectedId,
-        });
-        print(
-          'ASM04-SEAT ${task.taskId} family=${entry.value} correct=$correctStyle wrong=$wrongStyle assistance=$assistance',
-        );
-        expect(decisions.single.selectedId, correct.id);
-        expect(decisions.single.isCorrect, isTrue);
-        expect(decisions.single.assistanceKind, Act0DecisionAssistanceV1.none);
-        expect(assistance, [Act0DecisionAssistanceV1.none]);
-        // Do not conflate ordinary Hero identity with a correctness spotlight.
+      final correctStyle = styleFor(correct.seatId!);
+      final wrongStyle = styleFor(wrong.seatId!);
+      final correctTap = find.byKey(
+        Key('act0_shell_seat_tap_${correct.seatId}'),
+      );
+      await tester.ensureVisible(correctTap);
+      await tester.tap(correctTap);
+      await tester.pump();
+      observations.add({
+        'taskId': task.taskId,
+        'family': entry.value,
+        'question': task.runner.question,
+        'sourceCorrectChoiceId': correct.id,
+        'correctStyle': correctStyle,
+        'wrongStyle': wrongStyle,
+        'assistance': assistance.map((a) => a.name).toList(),
+        'chosenId': decisions.single.selectedId,
+      });
+      print(
+        'ASM04-SEAT ${task.taskId} family=${entry.value} correct=$correctStyle wrong=$wrongStyle assistance=$assistance',
+      );
+      expect(decisions.single.selectedId, correct.id);
+      expect(decisions.single.isCorrect, isTrue);
+      expect(decisions.single.assistanceKind, Act0DecisionAssistanceV1.none);
+      expect(assistance, [Act0DecisionAssistanceV1.none]);
+      // Do not conflate ordinary Hero identity with a correctness spotlight.
+      expect(
+        correctStyle['state'],
+        isNot('targetFocus'),
+        reason: 'Unassisted correct control is pre-marked as the unique target',
+      );
+      if (correctStyle['hero'] == wrongStyle['hero']) {
         expect(
-          correctStyle['state'],
-          isNot('targetFocus'),
+          correctStyle['ringColor'],
+          wrongStyle['ringColor'],
           reason:
-              'Unassisted correct control is pre-marked as the unique target',
+              'Equivalent eligible controls must not encode correctness in their ring color',
         );
-        if (correctStyle['hero'] == wrongStyle['hero']) {
-          expect(
-            correctStyle['ringColor'],
-            wrongStyle['ringColor'],
-            reason:
-                'Equivalent eligible controls must not encode correctness in their ring color',
-          );
-        }
-      },
-      // Held CO393: preserve source inventory, do not investigate its tap route.
-      skip: entry.key == 'positions_cutoff',
-    );
+      }
+    });
   }
 }

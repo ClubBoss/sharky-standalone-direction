@@ -1580,7 +1580,7 @@ class Act0PlacementSkillStatV1 {
   static int _xpNeededForNextLevel(int level) => 12 + (level * 8);
 }
 
-// Used only by the three adjudicated UTG recognition tasks. Their assessment
+// Used only by adjudicated seat-recognition tasks. Their assessment
 // stays neutral while authored teaching keeps its original table and focus.
 Act0RunnerStateV1 _act0NeutralSeatAssessmentPreservingTeachingV1(
   Act0RunnerStateV1 source,
@@ -2302,7 +2302,9 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'positions_cutoff',
         title: 'Tap the cutoff',
         phase: Act0LessonPhaseV1.drill,
-        runner: _cutoffSeatRunner,
+        runner: _act0NeutralSeatAssessmentPreservingTeachingV1(
+          _cutoffSeatRunner,
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
       ),

@@ -12235,15 +12235,19 @@ class _Act0TableV1 extends StatelessWidget {
             right: rules.horizontalInsetFor(stageSize.width),
             top: rules.topInsetFor(stageSize.height),
             bottom: rules.bottomInsetFor(stageSize.height),
-            child: Act0SceneRecedeMotionV1(
-              motion: sceneMotion,
-              plane: Act0SceneRecedePlaneV1.player,
-              child: Act0SceneTieredOpponentLayerV1(
-                key: key,
-                slots: sceneSeatSlots,
-                plane: plane,
-                foldedSeatIds: inactiveSeatIds,
-                rules: rules,
+            // Opponent art is decorative. Its contact paint can sit above a
+            // selectable seat, but must never intercept that seat's pointer.
+            child: IgnorePointer(
+              child: Act0SceneRecedeMotionV1(
+                motion: sceneMotion,
+                plane: Act0SceneRecedePlaneV1.player,
+                child: Act0SceneTieredOpponentLayerV1(
+                  key: key,
+                  slots: sceneSeatSlots,
+                  plane: plane,
+                  foldedSeatIds: inactiveSeatIds,
+                  rules: rules,
+                ),
               ),
             ),
           );
