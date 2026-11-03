@@ -6,7 +6,10 @@ status=PASS
 pub=FAIL
 l2=FAIL
 l3=FAIL
-[[ ${PUB_OUTCOME:-} != success ]] || pub=PASS
+case ${PUB_OUTCOME:-} in
+  success) pub=PASS ;;
+  skipped) pub=SKIP ;;
+esac
 if [[ ${L2_OUTCOME:-} == success && -s build/reports/l2_report.md ]]; then
   l2=PASS
 elif [[ ${L2_OUTCOME:-} == skipped ]]; then

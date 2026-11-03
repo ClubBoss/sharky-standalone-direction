@@ -51,8 +51,9 @@ class CoverageTruthTest(unittest.TestCase):
 
     def test_setup_failure_or_cancellation_never_passes(self):
         for status in ('failure', 'cancelled'):
-            self.check_result(pub='skipped', l2='skipped', l3='skipped',
-                              job=status, files=(), expected='FAIL')
+            text = self.check_result(pub='skipped', l2='skipped', l3='skipped',
+                                     job=status, files=(), expected='FAIL')
+            self.assertIn('Dependency resolution: SKIP', text)
 
 
 if __name__ == '__main__':
