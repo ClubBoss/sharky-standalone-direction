@@ -24,7 +24,8 @@ class TableTruthRow {
     'reason': detail,
     'rendered_meaning': detail,
     'expectation_or_exception': detail,
-    'source': 'lib/ui_v2/act0_shell/act0_shell_state_v1.dart:Act0ShellStateV1.sample:$taskId',
+    'source':
+        'lib/ui_v2/act0_shell/act0_shell_state_v1.dart:Act0ShellStateV1.sample:$taskId',
     'rendered_ownership':
         variant.endsWith('/raw') || variant.startsWith('authored/')
         ? 'raw authored source'
@@ -78,13 +79,24 @@ List<TableTruthRow> auditTableTruth() {
               ),
               taskFamily: task.resolvedTaskFamily,
             ),
-          'review': act0FeedbackTableForRunnerV1(runner: r.copyWith(phase: Act0LessonPhaseV1.review), taskFamily: task.resolvedTaskFamily),
+          'review': act0FeedbackTableForRunnerV1(
+            runner: r.copyWith(phase: Act0LessonPhaseV1.review),
+            taskFamily: task.resolvedTaskFamily,
+          ),
         };
         final plan = act0TableChoreographyPlanForTableV1(r.table);
         if (plan == null) {
-          rows.add(TableTruthRow(task.taskId, 'choreography/applicability', 'D6.history_support',
-            r.table.scope == Act0TableScopeV1.playedHand ? 'NEEDS_SOURCE_CONTEXT' : 'EXPLICIT_EXCEPTION',
-            'No supported choreography plan; partial/unsupported histories are not certified complete'));
+          rows.add(
+            TableTruthRow(
+              task.taskId,
+              'choreography/applicability',
+              'D6.history_support',
+              r.table.scope == Act0TableScopeV1.playedHand
+                  ? 'NEEDS_SOURCE_CONTEXT'
+                  : 'EXPLICIT_EXCEPTION',
+              'No supported choreography plan; partial/unsupported histories are not certified complete',
+            ),
+          );
         }
         if (plan != null)
           for (var i = 0; i < plan.beats.length; i++) {
@@ -98,8 +110,17 @@ List<TableTruthRow> auditTableTruth() {
           final t = e.value;
           final v = e.key;
           if (t.scope != Act0TableScopeV1.playedHand) {
-            rows.add(TableTruthRow(task.taskId, v, 'scope.applicability',
-              t.scope == Act0TableScopeV1.unclassified ? 'NEEDS_SOURCE_CONTEXT' : 'EXPLICIT_EXCEPTION', '${t.scope.name}: source scope must identify physical applicability'));
+            rows.add(
+              TableTruthRow(
+                task.taskId,
+                v,
+                'scope.applicability',
+                t.scope == Act0TableScopeV1.unclassified
+                    ? 'NEEDS_SOURCE_CONTEXT'
+                    : 'EXPLICIT_EXCEPTION',
+                '${t.scope.name}: source scope must identify physical applicability',
+              ),
+            );
             continue;
           }
           void check(String id, bool ok, String detail) => rows.add(
@@ -120,11 +141,16 @@ List<TableTruthRow> auditTableTruth() {
                   .where((c) => c.suit.isNotEmpty && c.rank != '?')
                   .map(cardIdentity)
                   .toList();
-          if (t.heroCards.length == 2 && t.heroCards.every((c) => c.suit.isNotEmpty)) {
+          if (t.heroCards.length == 2 &&
+              t.heroCards.every((c) => c.suit.isNotEmpty)) {
             final primary = t.heroCards.map(cardIdentity).toList()..sort();
-            final seatCards = t.heroSeat.holeCards.map(cardIdentity).toList()..sort();
-            check('D5.hero_representation', primary.join(',') == seatCards.join(','),
-              'table=${primary.join(',')} seat=${seatCards.join(',')}');
+            final seatCards = t.heroSeat.holeCards.map(cardIdentity).toList()
+              ..sort();
+            check(
+              'D5.hero_representation',
+              primary.join(',') == seatCards.join(','),
+              'table=${primary.join(',')} seat=${seatCards.join(',')}',
+            );
           }
           check(
             'D5.deck_unique',
@@ -166,24 +192,49 @@ List<TableTruthRow> auditTableTruth() {
                     !actorSeat.isFolded),
             'actor=$actor',
           );
-          final actionLabels = t.actionTrail.where((a) => !a.isNote).map((a) => a.label).toList();
-          final nextActor = actionLabels.isEmpty ? null : RegExp(
-            r'^(?:Preflop: |Flop: |Turn: |River: )?(UTG|HJ|CO|BTN|SB|BB) acts$',
-            caseSensitive: false,
-          ).firstMatch(actionLabels.last)?.group(1)?.toLowerCase();
+          final actionLabels = t.actionTrail
+              .where((a) => !a.isNote)
+              .map((a) => a.label)
+              .toList();
+          final nextActor = actionLabels.isEmpty
+              ? null
+              : RegExp(
+                  r'^(?:Preflop: |Flop: |Turn: |River: )?(UTG|HJ|CO|BTN|SB|BB) acts$',
+                  caseSensitive: false,
+                ).firstMatch(actionLabels.last)?.group(1)?.toLowerCase();
           if (!v.startsWith('choreography/')) {
             if (nextActor != null) {
-              check('D1.explicit_next_actor', actor == nextActor,
-                'declared=$nextActor rendered=$actor');
+              check(
+                'D1.explicit_next_actor',
+                actor == nextActor,
+                'declared=$nextActor rendered=$actor',
+              );
             } else if (r.options.any((o) => o.seatId != null)) {
-              rows.add(TableTruthRow(task.taskId, v, 'D1.decision_actor',
-                'EXPLICIT_EXCEPTION', 'Source-owned seat-recognition question can observe a non-Hero turn'));
+              rows.add(
+                TableTruthRow(
+                  task.taskId,
+                  v,
+                  'D1.decision_actor',
+                  'EXPLICIT_EXCEPTION',
+                  'Source-owned seat-recognition question can observe a non-Hero turn',
+                ),
+              );
             } else if ((t.activeSeatId ?? '').isEmpty) {
-              check('D1.inherited_actor', actor.isEmpty || actor == t.heroSeat.seatId,
-                'unsourced fallback actor=$actor hero=${t.heroSeat.seatId}');
+              check(
+                'D1.inherited_actor',
+                actor.isEmpty || actor == t.heroSeat.seatId,
+                'unsourced fallback actor=$actor hero=${t.heroSeat.seatId}',
+              );
             } else if (actor != t.heroSeat.seatId) {
-              rows.add(TableTruthRow(task.taskId, v, 'D1.decision_actor',
-                'NEEDS_SOURCE_CONTEXT', 'Explicit non-Hero turn; no declared next-actor fact to certify decision ownership'));
+              rows.add(
+                TableTruthRow(
+                  task.taskId,
+                  v,
+                  'D1.decision_actor',
+                  'NEEDS_SOURCE_CONTEXT',
+                  'Explicit non-Hero turn; no declared next-actor fact to certify decision ownership',
+                ),
+              );
             }
           }
           for (final s in t.seats) {
@@ -210,7 +261,10 @@ List<TableTruthRow> auditTableTruth() {
             );
           }
           if (!v.startsWith('choreography/')) {
-            final trail = t.actionTrail.where((a) => !a.isNote).map((a) => a.label).join(' | ');
+            final trail = t.actionTrail
+                .where((a) => !a.isNote)
+                .map((a) => a.label)
+                .join(' | ');
             for (final m in RegExp(
               r'\b(UTG|HJ|CO|BTN|SB|BB) folds\b',
               caseSensitive: false,
@@ -421,7 +475,6 @@ bool madeHandClaimMatches(Act0TableStateV1 table, String claim) {
   }
   return candidate;
 }
-
 
 bool actorFlagsConsistent(Act0TableStateV1 table) {
   final flags = table.seats.where((s) => s.isActive).toList();

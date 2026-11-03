@@ -14,6 +14,8 @@ def summarize(path, expected, code):
             event = json.loads(line)
         except json.JSONDecodeError:
             continue
+        if not isinstance(event, dict):
+            continue
         if event.get('type') == 'testStart':
             starts[event['test']['id']] = event['test']
         elif event.get('type') == 'testDone':
@@ -29,7 +31,7 @@ def summarize(path, expected, code):
     print(json.dumps({k: result[k] for k in ['counts', 'case_count', 'exit_code', 'expected']}))
     compile_error = any('Compilation failed' in e.get('error', '') or 'Failed to load' in e.get('error', '') for e in errors)
     valid = bool(cases) and not counts['skipped'] and not compile_error
-    valid &= (code != 0 and counts['error'] > 0) if expected == 'red' else (code == 0 and counts['error'] == 0 and counts['failure'] == 0)
+    valid &= (code != 0 and (counts['error'] + counts['failure']) > 0) if expected == 'red' else (code == 0 and counts['error'] == 0 and counts['failure'] == 0)
     if not valid:
         for e in errors[-8:]:
             print(e.get('error', ''))

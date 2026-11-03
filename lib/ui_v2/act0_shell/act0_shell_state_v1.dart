@@ -1208,7 +1208,8 @@ Act0TableStateV1 _act0ReassignHeroSeatV1(
           Act0ActionTrailItemV1(
             label: '${seats.firstWhere((seat) => seat.isHero).seatLabel} acts',
           )
-        else table.actionTrail[i],
+        else
+          table.actionTrail[i],
     ],
   );
 }

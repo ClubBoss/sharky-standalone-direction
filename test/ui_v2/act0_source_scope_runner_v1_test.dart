@@ -208,10 +208,15 @@ void main() {
           // on that former accidental divergence to manufacture the fixture.
           seats: [
             for (final seat in table.seats)
-              seat.isHero ? _fixtureSeat(seat, cards: const [
-                Act0CardStateV1(rank: '3', suit: 's'),
-                Act0CardStateV1(rank: '5', suit: 'h'),
-              ]) : seat,
+              seat.isHero
+                  ? _fixtureSeat(
+                      seat,
+                      cards: const [
+                        Act0CardStateV1(rank: '3', suit: 's'),
+                        Act0CardStateV1(rank: '5', suit: 'h'),
+                      ],
+                    )
+                  : seat,
           ],
         );
       } else if (invalid == 'hero-seat-duplicate') {
