@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,10 +30,10 @@ void main() {
       final world = Act0ShellStateV1.sample.worlds.firstWhere((w) => w.lessons.any((l) => l.taskList.any((task) => task.taskId == id)));
       final lesson = world.lessons.firstWhere((l) => l.taskList.any((task) => task.taskId == id));
       final task = lesson.taskList.singleWhere((task) => task.taskId == id);
-      Future<void> mount(bool teaching) async {
+      Future<void> mount(bool teaching, {int teachingIndex = 0}) async {
         await t.pumpWidget(MaterialApp(home: Scaffold(body: Act0LessonRunnerShellV1(
           key: ValueKey(teaching),
-          runner: task.runner.copyWith(phase: Act0LessonPhaseV1.drill, teachingStepIndex: teaching ? 0 : task.runner.teachingSteps.length),
+          runner: task.runner.copyWith(phase: Act0LessonPhaseV1.drill, teachingStepIndex: teaching ? teachingIndex : task.runner.teachingSteps.length),
           selectedWorldId: world.worldId, selectedLessonId: lesson.lessonId,
           selectedTaskId: id, selectedTaskFamily: task.resolvedTaskFamily,
           tableVisualVariant: Act0ShellTableVisualVariantV1.refinedDev2,
@@ -43,6 +44,9 @@ void main() {
       if (id == 'w10_overbluff_punish') {
         await mount(true);
         expect(find.text('A blocker removes possible opponent hands.'), findsWidgets);
+        expect(find.byKey(const Key('act0_shell_option_bluffcatch_more')), findsNothing);
+        await mount(true, teachingIndex: 1);
+        expect(find.text('One repeated read, one measured adjustment.'), findsWidgets);
         expect(find.byKey(const Key('act0_shell_option_bluffcatch_more')), findsNothing);
       }
       if (id.startsWith('straight')) {
@@ -112,9 +116,16 @@ void main() {
     await t.pumpAndSettle();
     final home = t.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
     final expectedLessonId = home.currentLesson!.lessonId;
+    final prefs = await SharedPreferences.getInstance();
+    final before = jsonDecode(prefs.getString('act0_shell_progress_v1')!) as Map<String, dynamic>;
     await tap('act0_shell_main_cta');
     final launched = t.widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1));
     expect(launched.selectedLessonId, expectedLessonId);
+    expect(launched.selectedTaskId, home.currentLesson!.taskList.first.taskId);
+    final after = jsonDecode(prefs.getString('act0_shell_progress_v1')!) as Map<String, dynamic>;
+    expect(after['completedTaskIds'], before['completedTaskIds']);
+    expect(after['earnedXp'], before['earnedXp']);
+    expect(after['learningEvidenceHistory'], before['learningEvidenceHistory']);
     expect(launched.selectedLessonId, 'what_poker_is');
   });
 }

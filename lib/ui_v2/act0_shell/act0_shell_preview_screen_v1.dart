@@ -6236,7 +6236,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 feedbackForwardCtaLabel:
                                     placementForwardCtaLabel ??
                                     (_activeRepairTaskId == playSelectedTask?.taskId &&
-                                      (!_activeSameSignalFeedbackRepairV1 || !act0IndependentRepairProofV1(isCorrect: playRunner.selectedOption?.isCorrect ?? false, assistanceKind: _choiceAssistanceV1))
+                                      (!_activeSameSignalFeedbackRepairV1 || !act0IndependentRepairProofV1(isCorrect: playRunner?.selectedOption?.isCorrect ?? false, assistanceKind: _choiceAssistanceV1))
                                         ? 'Continue to Review'
                                         : null),
                                 suppressFeedbackRepairFocus:
