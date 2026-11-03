@@ -11,6 +11,35 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_resolution_contract_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
+  test('prior receipt cannot resolve a new miss of the same family', () {
+    final old = reviewResolutionReceiptHistoryFromSourcesV1(
+      reviewMistakeHistory: _history(),
+      activeRepairIntents: const [_activeRepairIntent],
+      repairOutcomeProjection: Act0RepairOutcomeProjectionV1(
+        outcomes: [_outcome()],
+      ),
+      existingReceiptHistory: const Act0ReviewResolutionReceiptHistoryV1(),
+    );
+    expect(old.receipts, hasLength(1));
+    final raw = _history().toPayload().single;
+    final history = Act0ReviewMistakeHistoryV1.tryParse([
+      {
+        ...raw,
+        'sourceDecisionId': 'new_source_miss',
+        'attemptRecordIds': [
+          ...raw['attemptRecordIds'] as List,
+          'new_source_miss',
+        ],
+      },
+    ]);
+    final state = Act0ReviewResolutionStateV1.fromSources(
+      reviewMistakeHistory: history!,
+      receiptHistory: old,
+    );
+    expect(state.resolutions.single.isVisibleInActiveReview, isTrue);
+    expect(old.receipts.single.learningEvidenceId, isNot('new_source_miss'));
+  });
+
   test('valid mistake with no repair is unresolved', () {
     final state = Act0ReviewResolutionStateV1.fromSources(
       reviewMistakeHistory: _history(),

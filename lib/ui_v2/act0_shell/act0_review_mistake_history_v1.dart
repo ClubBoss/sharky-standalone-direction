@@ -221,12 +221,33 @@ class Act0ReviewMistakeHistoryV1 {
     String runId = '',
     String runKind = '',
     int? runOrdinal,
+    String repairOccurrenceId = '',
   }) {
     if (!_isCompleteMistakeDecision(decision) ||
         records.any(
           (record) => record.attemptRecordIds.contains(decision.attemptKey),
         )) {
       return this;
+    }
+    // A retry belongs to the original obligation. Keep its original wrong
+    // decision intact while retaining the additional canonical attempt link.
+    if (repairOccurrenceId.isNotEmpty) {
+      final source = records.cast<Act0ReviewMistakeRecordV1?>().firstWhere(
+        (record) => record?.sourceDecisionId == repairOccurrenceId,
+        orElse: () => null,
+      );
+      if (source != null) {
+        final updated = Act0ReviewMistakeRecordV1.tryParse({
+          ...source.toPayload(),
+          'attemptRecordIds': [...source.attemptRecordIds, decision.attemptKey],
+        })!;
+        return Act0ReviewMistakeHistoryV1(
+          records: List.unmodifiable([
+            for (final record in records)
+              record.recordId == source.recordId ? updated : record,
+          ]),
+        );
+      }
     }
     final sourceTaskId = decision.sourceTaskId.trim().isEmpty
         ? decision.taskId.trim()

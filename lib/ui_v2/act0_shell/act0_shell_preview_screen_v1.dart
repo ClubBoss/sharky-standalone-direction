@@ -1267,6 +1267,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       Act0ActionSequencePersonalizationPolicyV1.initialState();
   String? _activeRepairSourceTaskId;
   Act0PracticeRepairQueueLaunchRequestV1? _activePracticeRepairQueueRequestV1;
+  Act0RepairIntentV1? _activeRepairObligationV1;
   Act0RepairOutcomeProjectionV1 _repairOutcomeProjectionV1 =
       const Act0RepairOutcomeProjectionV1();
   int _repairOutcomeSequenceV1 = 0;
@@ -4105,7 +4106,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     });
   }
 
-  void _appendLearningEvidenceV1(Act0CompletedDecisionV1 decision) {
+  void _appendLearningEvidenceV1(
+    Act0CompletedDecisionV1 decision, {
+    String repairOccurrenceId = '',
+  }) {
     final recordedAtUtc = widget.clock.nowUtc();
     final reviewKind = _reviewKindForDecisionV1(decision);
     final wasAlreadyRecorded = _learningEvidenceHistoryV1.records.any(
@@ -4128,6 +4132,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         );
     _reviewMistakeHistoryV1 = _reviewMistakeHistoryV1.appendCompletedDecision(
       decision,
+      repairOccurrenceId: repairOccurrenceId,
       runId: _activeLearningEvidenceRunKeyV1?.runId ?? '',
       runKind: _activeLearningEvidenceRunKeyV1?.runKind ?? '',
       runOrdinal: _activeLearningEvidenceRunKeyV1?.runOrdinal,
@@ -6409,7 +6414,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 onCompletedDecision: (decision) {
                                   setState(() {
                                     _latestCompletedDecisionV1 = decision;
-                                    _appendLearningEvidenceV1(decision);
+                                    _recordCanonicalRepairDecisionV1(
+                                      decision,
+                                      selectedTask: playSelectedTask,
+                                    );
                                     _deriveActionPersonalizationV1(decision);
                                     _recordLearningRunDecisionV1(decision);
                                   });
@@ -8606,6 +8614,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (carry.isRepair) {
       _activeRepairTaskId = launchTask.taskId;
       _activeRepairSourceTaskId = carry.sourceTaskId;
+      _activeRepairObligationV1 =
+          _openRepairIntentBySourceTaskId[carry.sourceTaskId];
       _activeRepairResultReceiptLine = null;
       _activeRepairSessionSummaryLines = const <String>[];
     }
@@ -9267,6 +9277,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _activeRepairTaskId = request.repairTaskId;
     _activeRepairSourceTaskId = request.sourceTaskId;
     _activePracticeRepairQueueRequestV1 = request;
+    _activeRepairObligationV1 =
+        _openRepairIntentBySourceTaskId[request.sourceTaskId];
     _emitRepairStartedTelemetryV1(
       sourceTaskId: request.sourceTaskId,
       repairTaskId: request.repairTaskId,
@@ -9385,6 +9397,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     _activeRepairTaskId = repairTaskId;
     _activeRepairSourceTaskId = isRetentionReplay ? null : sourceTaskId;
+    _activeRepairObligationV1 = isRetentionReplay
+        ? null
+        : _openRepairIntentBySourceTaskId[sourceTaskId];
     if (skipTeaching && launchTask.phase == Act0LessonPhaseV1.drill) {
       _teachingStepIndex = _repairRunnerForTask(
         launchTask,
@@ -10807,6 +10822,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _activePracticeGroupId = null;
     _activeRepairSourceTaskId = null;
     _activePracticeRepairQueueRequestV1 = null;
+    _activeRepairObligationV1 = null;
     _rapidPracticeLoop = rapidPracticeLoop;
     _phase = task.entryPhase;
     _selectedOptionId = null;
@@ -10948,12 +10964,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final recordingPracticeQueueRepair =
         practiceQueueRepairRequest != null &&
         practiceQueueRepairRequest.repairTaskId == selectedTask.taskId;
-    if (recordingPracticeQueueRepair && !_choiceWasAssistedV1) {
-      _appendPracticeQueueRepairOutcomeV1(
-        request: practiceQueueRepairRequest,
-        selectedTask: selectedTask,
-        option: option,
-      );
+    if (recordingPracticeQueueRepair) {
+      // The canonical completed decision owns the durable occurrence/attempt
+      // join. onChooseOption runs before that decision is emitted.
       return;
     }
     if (_activeSameSignalRecheckTaskId == selectedTask.taskId &&
@@ -11223,11 +11236,95 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
   }
 
+  void _recordCanonicalRepairDecisionV1(
+    Act0CompletedDecisionV1 decision, {
+    required Act0LessonTaskV1 selectedTask,
+  }) {
+    if (_learningEvidenceHistoryV1.records.any(
+      (record) => record.recordId == decision.attemptKey,
+    ))
+      return;
+
+    Act0PracticeRepairQueueLaunchRequestV1? request;
+    if (_activePracticeRepairQueueRequestV1?.repairTaskId == decision.taskId) {
+      request = _activePracticeRepairQueueRequestV1;
+    } else {
+      final launched = _activeRepairTaskId == decision.taskId
+          ? _activeRepairObligationV1
+          : null;
+      final exactRetry = _openRepairIntentBySourceTaskId[decision.taskId];
+      final intent =
+          launched ??
+          (decision.isCorrect &&
+                  exactRetry != null &&
+                  act0IsExactRepairMappingTypeV1(exactRetry.mappingType)
+              ? exactRetry
+              : null);
+      if (intent != null && intent.targetTaskId == decision.taskId) {
+        request = Act0PracticeRepairQueueLaunchRequestV1(
+          targetWorldId: intent.targetWorldId,
+          targetLessonId: intent.targetLessonId,
+          targetTaskId: intent.targetTaskId,
+          targetType: act0PracticeRepairQueueTargetTypeActiveRepairV1,
+          sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
+          sourceTaskId: intent.sourceTaskId,
+          repairTaskId: intent.targetTaskId,
+          repairFocusKey: repairQueueIdentityKeyForAct0RepairIntentV1(intent),
+          queueItemId: queueItemIdForAct0RepairIntentV1(intent),
+          repairOccurrenceId: intent.repairOccurrenceId,
+        );
+      }
+    }
+    if (!decision.isCorrect && request == null) {
+      // onChooseOption already created the family. Bind its actual canonical
+      // miss now; unrelated queue/outcome counters cannot identify this event.
+      _multiRepairQueueV1 = Act0MultiRepairQueueV1(
+        entries: List.unmodifiable([
+          for (final entry in _multiRepairQueueV1.entries)
+            if (entry.repairIntent.sourceTaskId == decision.sourceTaskId &&
+                entry.repairIntent.choiceId == decision.selectedId)
+              entry.copyWith(
+                repairIntent: Act0RepairIntentV1.tryParse({
+                  ...entry.repairIntent.toPayload(),
+                  'repairOccurrenceId': decision.attemptKey,
+                })!,
+              )
+            else
+              entry,
+        ]),
+      );
+      _syncOpenRepairIntentIndexFromQueueV1();
+    }
+    _appendLearningEvidenceV1(
+      decision,
+      repairOccurrenceId: request?.repairOccurrenceId ?? '',
+    );
+    if (request == null ||
+        decision.assistanceKind != Act0DecisionAssistanceV1.none)
+      return;
+    final option = selectedTask.runner.options
+        .cast<Act0RunnerOptionV1?>()
+        .firstWhere((o) => o?.id == decision.selectedId, orElse: () => null);
+    if (option == null || selectedTask.taskId != decision.taskId) return;
+    _appendPracticeQueueRepairOutcomeV1(
+      request: request,
+      selectedTask: selectedTask,
+      option: option,
+      repairAttemptId: decision.attemptKey,
+    );
+  }
+
   void _appendPracticeQueueRepairOutcomeV1({
     required Act0PracticeRepairQueueLaunchRequestV1 request,
     required Act0LessonTaskV1 selectedTask,
     required Act0RunnerOptionV1 option,
+    required String repairAttemptId,
   }) {
+    if (_repairOutcomeProjectionV1.outcomes.any(
+      (outcome) => outcome.repairAttemptId == repairAttemptId,
+    ))
+      return;
+    final intentsBeforeOutcome = _activeRepairIntentsV1();
     if (_sessionIdentityStateV1.currentActiveSessionId.isEmpty) {
       final startResult = _ensureActiveSessionIdentityV1(
         worldId: request.targetWorldId,
@@ -11254,16 +11351,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       isCorrect: option.isCorrect,
       sequence: _repairOutcomeSequenceV1,
       sessionId: _sessionIdentityStateV1.currentActiveSessionId,
+      repairAttemptId: repairAttemptId,
     );
-    _emitRepairCompletedTelemetryV1(
-      sourceTaskId: request.sourceTaskId,
-      repairTaskId: request.repairTaskId,
-      repaired: option.isCorrect,
-    );
+    if (_activePracticeRepairQueueRequestV1?.repairTaskId ==
+        selectedTask.taskId) {
+      _emitRepairCompletedTelemetryV1(
+        sourceTaskId: request.sourceTaskId,
+        repairTaskId: request.repairTaskId,
+        repaired: option.isCorrect,
+      );
+    }
     _reviewResolutionReceiptHistoryV1 =
         reviewResolutionReceiptHistoryFromSourcesV1(
           reviewMistakeHistory: _reviewMistakeHistoryV1,
-          activeRepairIntents: _activeRepairIntentsV1(),
+          activeRepairIntents: intentsBeforeOutcome,
           repairOutcomeProjection: _repairOutcomeProjectionV1,
           existingReceiptHistory: _reviewResolutionReceiptHistoryV1,
         );
@@ -11396,6 +11497,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     required Act0RunnerStateV1 runner,
     required Act0RunnerOptionV1 option,
   }) {
+    // A failed directed repair is another attempt at the launched obligation,
+    // not a newly invented source miss from the target runner's metadata.
+    if (_activeRepairTaskId == _selectedTaskId &&
+        _activeRepairObligationV1 != null)
+      return;
     final intent = buildAct0RepairIntentV1(
       sourceWorldId: sourceWorldId,
       sourceLessonId: sourceLessonId,
@@ -11497,6 +11603,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }) {
     final intent = _openRepairIntentBySourceTaskId[sourceTaskId];
     if (intent == null) {
+      return;
+    }
+    final resolution = Act0QueueResolutionStateV1.fromSources(
+      activeRepairIntents: [intent],
+      repairOutcomeProjection: _repairOutcomeProjectionV1,
+    ).resolutionForQueueItemId(queueItemIdForAct0RepairIntentV1(intent));
+    if (resolution?.resolutionState != act0QueueResolutionStateResolvedV1) {
       return;
     }
     final completedExactReplay =
@@ -13163,11 +13276,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   void _completeCurrentTask(Act0LessonTaskV1 selectedTask) {
     final alreadyCompleted = _completedTaskIds.contains(_selectedTaskId);
-    if (!_choiceWasAssistedV1) {
-      _clearOpenRepairIntentsForCompletedTaskV1(
-        completedTaskId: _selectedTaskId,
-      );
-    }
     _skippedTaskIds.remove(_selectedTaskId);
     _visibleSkippedTaskIds.remove(_selectedTaskId);
     _completedTaskIds.add(_selectedTaskId);

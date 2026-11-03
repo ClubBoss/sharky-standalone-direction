@@ -16,6 +16,7 @@ typedef Act0RepairIntentTargetMapperV1 =
 class Act0RepairIntentV1 {
   const Act0RepairIntentV1({
     this.schemaVersion = 1,
+    this.repairOccurrenceId = '',
     required this.sourceWorldId,
     required this.sourceLessonId,
     required this.sourceTaskId,
@@ -34,6 +35,9 @@ class Act0RepairIntentV1 {
   });
 
   final int schemaVersion;
+
+  /// Canonical source-miss attempt ID. Empty means legacy/unknown provenance.
+  final String repairOccurrenceId;
   final String sourceWorldId;
   final String sourceLessonId;
   final String sourceTaskId;
@@ -53,6 +57,8 @@ class Act0RepairIntentV1 {
   Map<String, Object> toPayload() {
     return <String, Object>{
       'schemaVersion': schemaVersion,
+      if (repairOccurrenceId.isNotEmpty)
+        'repairOccurrenceId': repairOccurrenceId,
       'sourceWorldId': sourceWorldId,
       'sourceLessonId': sourceLessonId,
       'sourceTaskId': sourceTaskId,
@@ -114,6 +120,7 @@ class Act0RepairIntentV1 {
     }
     return Act0RepairIntentV1(
       schemaVersion: schemaVersion,
+      repairOccurrenceId: map['repairOccurrenceId']?.toString().trim() ?? '',
       sourceWorldId: sourceWorldId,
       sourceLessonId: sourceLessonId,
       sourceTaskId: sourceTaskId,

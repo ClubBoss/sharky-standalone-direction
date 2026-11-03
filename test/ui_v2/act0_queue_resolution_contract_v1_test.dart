@@ -7,6 +7,28 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.d
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
 
 void main() {
+  test('prior occurrence or unknown success cannot discharge a new miss', () {
+    final intent = Act0RepairIntentV1.tryParse({
+      ..._activeRepairIntent.toPayload(),
+      'repairOccurrenceId': 'source_miss_B',
+    })!;
+    final oldSuccess = Act0RepairOutcomeV1.tryParse({
+      ..._outcome().toPayload(),
+      'repairOccurrenceId': 'source_miss_A',
+    })!;
+    for (final outcome in [oldSuccess, _outcome()]) {
+      final state = Act0QueueResolutionStateV1.fromSources(
+        activeRepairIntents: [intent],
+        repairOutcomeProjection: Act0RepairOutcomeProjectionV1(
+          outcomes: [outcome],
+        ),
+      );
+      expect(state.resolutions.single.isActionable, isTrue);
+    }
+    expect(queueItemIdForAct0RepairIntentV1(intent), _activeQueueItemId);
+    expect(intent.toPayload()['repairOccurrenceId'], 'source_miss_B');
+  });
+
   test('valid intent with no outcome is unresolved', () {
     final state = Act0QueueResolutionStateV1.fromSources(
       activeRepairIntents: const <Act0RepairIntentV1>[_activeRepairIntent],
@@ -20,6 +42,47 @@ void main() {
     expect(item.repairIntentId, _activeRepairIntent.reasonCode);
     expect(item.conceptFamilyId, 'no_bet_yet');
   });
+
+  test(
+    'launch captures occurrence and duplicate answer preserves one outcome',
+    () {
+      final intent = Act0RepairIntentV1.tryParse({
+        ..._activeRepairIntent.toPayload(),
+        'repairOccurrenceId': 'source_miss_B',
+      })!;
+      final queue = Act0PracticeRepairQueueProjectionV1.fromSources(
+        activeRepairIntents: [intent],
+      );
+      final request = queue.items.single.launchRequest!;
+      expect(request.toPayload()['repairOccurrenceId'], 'source_miss_B');
+      final first = const Act0RepairOutcomeProjectionV1().appendAnsweredTask(
+        launchRequest: request,
+        selectedChoiceId: 'check',
+        correctChoiceId: 'check',
+        isCorrect: true,
+        sequence: 1,
+        repairAttemptId: 'repair_answer_B',
+      );
+      final duplicate = first.appendAnsweredTask(
+        launchRequest: request,
+        selectedChoiceId: 'check',
+        correctChoiceId: 'check',
+        isCorrect: true,
+        sequence: 100,
+        repairAttemptId: 'repair_answer_B',
+      );
+      expect(duplicate.toPayload(), first.toPayload());
+      final restored = Act0RepairOutcomeProjectionV1.tryParse(
+        first.toPayload(),
+      );
+      expect(restored.toPayload(), first.toPayload());
+      final resolved = Act0QueueResolutionStateV1.fromSources(
+        activeRepairIntents: [intent],
+        repairOutcomeProjection: restored,
+      );
+      expect(resolved.resolutions.single.isActionable, isFalse);
+    },
+  );
 
   test('successful matching repair resolves the item', () {
     final state = Act0QueueResolutionStateV1.fromSources(
