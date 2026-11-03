@@ -362,7 +362,7 @@ List<TableTruthRow> auditTableTruth() {
             }
             if (t.boardCards.isNotEmpty) {
               final claim = RegExp(
-                r'\b(one|two) overcards\b',
+                r'\b(one|two) overcards?\b',
                 caseSensitive: false,
               ).firstMatch('${r.caption} ${r.hint}');
               if (claim != null) {
