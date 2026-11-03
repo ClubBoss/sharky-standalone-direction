@@ -154,3 +154,26 @@ Rollback of this compatibility delta: revert only its recovery commit if the
 candidate fails validation; retain the earlier unmerged Draft and all evidence.
 Rollback of the complete wave remains closing the unmerged Draft. No schema or
 learner-data change needs reversal. No merge or score acceptance is implied.
+
+## Native-discovered history dock correction
+
+The first isolated EN iPhone 14 Pro run of the compatibility candidate exposed
+an additional blocker in `your_first_hand_action_trail`: the top scene rendered
+the question, but the bottom history context and both answer controls were
+absent. This was visible in the actual native screenshot and reproduced on
+frozen production HEAD `62e5c6de19843aa8d1671b5f1a47ce85b5ecaf11` by adding this
+task to the existing 393x852 default-answer exposure gate. The executed widget
+case failed its assertion because `act0_shell_option_sb_post` was not mounted;
+this was not a compile/load failure or a passing harness invocation.
+
+The shared prompt dock allowed embedded answers only when it also owned a
+nonempty local question. The canonical scene deliberately passes an empty dock
+question, so the history embedding flag suppressed both rendering branches.
+The minimal fix keeps existing context and answer children mounted when the
+question is owned above the dock. It changes no task data, identity, grading,
+source fingerprints, XP, assistance or persistence owners. The same exposure
+case is now GREEN and also checks that the existing street-replay context
+contains the BB check. All four exposure cases pass. This is the second bounded
+product correction; final exact-HEAD validation and native completion are
+recorded in the final PR receipt and evidence packet. Earlier native artifacts
+retain their original source identity and failed harness dispositions.

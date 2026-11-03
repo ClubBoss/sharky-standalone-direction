@@ -17142,7 +17142,9 @@ class _ActionPromptPanelV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
         ],
-        if (!embedChildInSurface &&
+        // The canonical scene can own the question above this dock.
+        // Without a local prompt surface, keep its context and answers mounted.
+        if ((!embedChildInSurface || question.isEmpty) &&
             !(question.isNotEmpty && effectiveCompactDecision)) ...[
           if (trailingContext != null) ...[
             trailingContext!,

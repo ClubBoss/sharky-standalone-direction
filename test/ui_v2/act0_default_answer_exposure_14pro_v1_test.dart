@@ -97,6 +97,7 @@ void main() {
   });
   for (final taskId in [
     'your_first_hand_private_cards_recheck',
+    'your_first_hand_action_trail',
     'what_poker_is_table_read_recheck',
   ]) {
     testWidgets('all initial answer meanings are exposed at EN14Pro: $taskId', (
@@ -182,6 +183,19 @@ void main() {
         );
         expect(controlRect.height, greaterThanOrEqualTo(44));
         expect(control.hitTestable(), findsOneWidget);
+      }
+      if (taskId == 'your_first_hand_action_trail') {
+        final history = find.byKey(
+          const Key('act0_shell_street_replay_inline'),
+        );
+        expect(history, findsOneWidget);
+        expect(
+          find.descendant(
+            of: history,
+            matching: find.textContaining('BB checks'),
+          ),
+          findsWidgets,
+        );
       }
       expect(tester.takeException(), isNull);
     });
