@@ -11,7 +11,8 @@ Runtime changes belong only to `act0_shell_state_v1.dart`,
 `act0_lesson_runner_shell_v1.dart` and `act0_shell_preview_screen_v1.dart`.
 Three `act0_learner_trust_*_v1_test.dart` files and the Learner Trust workflow
 own bounded regression evidence. Existing authority, historical fingerprint,
-queue, Summary and Table Truth tests remain unchanged. Historical Draft #347
+Summary and Table Truth tests remain unchanged. Existing assisted-route and
+repair-obligation tests gain CTA/navigation and wrong-Daily copy assertions. Historical Draft #347
 was inspected as a donor: its curriculum-completion/coaching separation and
 real Guide traversal helper were reused narrowly; no cherry-pick.
 
@@ -81,3 +82,26 @@ Rollback: close the unmerged Draft or revert its bounded commit range as one
 unit. No persisted-state migration is required; original learner records remain.
 Protected art/F7/#341/#224, poker states/choreography/#369, W13–36, payments,
 entitlements, store/release infrastructure and canonical persistence are unchanged.
+
+## Mandatory correction-budget HOLD
+
+Product source frozen at `815d3eff281441b33733e531763ed9235afea73d` (later changes
+are formatting and regression/evidence packaging only). Hosted
+[41740367948](https://github.com/ClubBoss/sharky-standalone-direction/actions/runs/41740367948)
+executed 57 tests: **56 PASS, 1 FAIL, 0 skips/load errors**; scoped Flutter
+analyze PASS. The failing test is `prerequisite and independent decision
+straight_draws_w5_gutshot_draw`: assessment still renders **Only a 6 helps**.
+Two bounded W5 corrections are exhausted. No third source repair, test
+suppression, expectation relaxation or fingerprint rewrite is authorized.
+
+Home Placement → Welcome → pre-assessment remount → Home Continue now passes
+with exact eligible task, unchanged completion/XP and original evidence.
+The real Guide miss → independent repair → Summary parent test passes with
+75% first accuracy, all source-owned tasks complete, no Clean pass/replay lock,
+forward Home availability and stable XP. W10 teaching and neutral-premise
+render controls pass. Final broader gate results remain in the PR body.
+
+Terminal verdict: **PARTIAL_SOURCE_PASS_WITH_EXACT_HOLD**. Native is unexecuted
+by instruction. Director acceptance/merge and the original SHARKY_100 criteria
+are unchanged. Resume W5 only under a new bounded compatibility/source-owner
+admission; this candidate must not merge while the assessment leakage remains.

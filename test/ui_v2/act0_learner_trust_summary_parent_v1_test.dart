@@ -71,7 +71,9 @@ Future<List<String>> _answerGuideToSummary(WidgetTester tester) async {
       final correct = runner.runner.options.where(
         (o) => answered.isEmpty ? !o.isCorrect : o.isCorrect,
       );
-      if (correct.isNotEmpty && runner.runner.phase == Act0LessonPhaseV1.drill && runner.runner.selectedOptionId == null) {
+      if (correct.isNotEmpty &&
+          runner.runner.phase == Act0LessonPhaseV1.drill &&
+          runner.runner.selectedOptionId == null) {
         final choice = correct.first;
         final seat = find.byKey(Key('act0_shell_seat_tap_${choice.seatId}'));
         final option = find.byKey(Key('act0_shell_option_${choice.id}'));
@@ -95,8 +97,12 @@ Future<List<String>> _answerGuideToSummary(WidgetTester tester) async {
     await tester.tap(forward.first.first);
     await tester.pumpAndSettle();
   }
-  final runner = tester.widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1));
-  fail('Session Summary not reached: ${runner.selectedTaskId} ${runner.runner.phase} selected=${runner.runner.selectedOptionId} answered=$answered');
+  final runner = tester.widget<Act0LessonRunnerShellV1>(
+    find.byType(Act0LessonRunnerShellV1),
+  );
+  fail(
+    'Session Summary not reached: ${runner.selectedTaskId} ${runner.runner.phase} selected=${runner.runner.selectedOptionId} answered=$answered',
+  );
 }
 
 String _text(WidgetTester tester, String key) =>
