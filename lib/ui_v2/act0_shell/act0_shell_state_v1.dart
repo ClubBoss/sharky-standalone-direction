@@ -11632,7 +11632,7 @@ final _cardsRecapRunner = _bestFiveCardsRunner.copyWith(
   lessonId: 'cards_recap',
   caption: 'Lesson learned: cards have a job.',
   hint: 'Ranks compare strength, suits make flushes, board cards are shared.',
-  question: 'What do board cards mean?',
+  question: 'How many cards make your final hand?',
   feedbackTitle: 'Card takeaway.',
   feedbackReason:
       'You hold two private cards, share the board, and make the best five-card hand.',
@@ -13676,7 +13676,7 @@ final _world3FacingOpenRecapRunner = _world3PlayableCallRunner.copyWith(
   lessonId: 'w3_facing_open_recap',
   caption: 'Lesson learned: facing an open creates a price.',
   hint: 'Playable hands can call; weak hands can still fold.',
-  question: 'What did the opener create?',
+  question: 'What is the cleaner continue with this playable hand facing an open?',
   feedbackTitle: 'Facing-open takeaway.',
   feedbackReason:
       'Once someone opens, your first preflop read changes from open-or-fold to continue-or-fold.',
@@ -14375,7 +14375,7 @@ final _world3DominatedRecapRunner = _world3DominatedFoldRunner.copyWith(
   lessonId: 'w3_dominated_recap',
   caption: 'Lesson learned: familiar cards still need context.',
   hint: 'Do not continue just because one card looks high.',
-  question: 'What should weak familiar hands avoid?',
+  question: 'What is the disciplined action with this weak ace facing an open?',
   feedbackTitle: 'Discipline takeaway.',
   feedbackReason:
       'Some hands look playable but are often behind stronger versions after an open.',

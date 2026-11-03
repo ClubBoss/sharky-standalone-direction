@@ -4051,7 +4051,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     Widget buildIntegratedPrompt() {
       // Academy scene copy only; legacy table locale helpers remain frozen.
       final isRu = act0AcademyLanguageV1(context) == 'ru';
-      final phase = isTheory
+      final phase = isTheory || isTeaching
           ? Act0LearningScenePhaseV3.theory
           : isReview && runner.reviewQuality == Act0FeedbackQualityV1.wrong
           ? Act0LearningScenePhaseV3.feedbackWrong
@@ -4060,7 +4060,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           : isReview
           ? Act0LearningScenePhaseV3.feedbackCorrect
           : Act0LearningScenePhaseV3.tableTask;
-      final purpose = isTheory
+      final purpose = isTheory || isTeaching
           ? (isRu
                 ? '\u041E\u0414\u041D\u0410 \u0418\u0414\u0415\u042F'
                 : 'ONE TABLE IDEA')
@@ -4094,7 +4094,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           feedbackAction.endsWith('!') ||
           feedbackAction.endsWith('?');
       final repairReceipt = widget.repairResultReceiptLine?.trim() ?? '';
-      final headline = isTheory
+      final headline = isTheory || isTeaching
           ? prompt
           : isReview &&
                 isRu &&
@@ -4130,7 +4130,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                       : '$feedbackAction was right with help.')
                 : '$feedbackAction was right.'
           : question;
-      final support = isTheory
+      final support = isTheory || isTeaching
           ? hint
           : isReview
           ? act0AcademyW1InstructionV1(
@@ -4138,6 +4138,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
               widget.selectedTaskId,
               causalFeedback.whyChosen,
             )
+          : runner.lessonId == 'w10_vs_nit_open_wider'
+          ? runner.caption
           : hasSeatTargets
           ? (isRu
                 ? '\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043D\u0430 \u043E\u0434\u043D\u043E \u0438\u0437 \u043E\u0434\u0438\u043D\u0430\u043A\u043E\u0432\u043E \u043F\u043E\u0434\u0441\u0432\u0435\u0447\u0435\u043D\u043D\u044B\u0445 \u043C\u0435\u0441\u0442.'
@@ -4159,6 +4161,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                 : (isRu
                       ? '\u0421\u043c\u043e\u0442\u0440\u0438\u0442\u0435: ${teachingFocusLabel == 'Read' ? '\u0447\u0442\u0435\u043d\u0438\u0435 \u0441\u0442\u043e\u043b\u0430' : teachingFocusLabel}'
                       : 'Look at: $teachingFocusLabel')
+          : runner.lessonId == 'w10_vs_nit_open_wider'
+          ? runner.caption
           : hasSeatTargets
           ? (isRu
                 ? '\u041C\u043E\u0436\u043D\u043E \u043D\u0430\u0436\u0438\u043C\u0430\u0442\u044C \u043F\u043E\u0434\u0441\u0432\u0435\u0447\u0435\u043D\u043D\u044B\u0435 \u043C\u0435\u0441\u0442\u0430'
