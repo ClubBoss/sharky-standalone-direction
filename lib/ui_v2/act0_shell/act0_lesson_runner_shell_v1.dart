@@ -3062,8 +3062,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       (option) => option.seatId != null,
     );
     final baseTable = isReview
-        ? _repairTable(runner.table, runner.selectedOption)
-        : _teachingTable(runner.table, teachingStep);
+        ? act0RepairTableForRunnerV1(runner.table, runner.selectedOption)
+        : act0TeachingTableForRunnerV1(runner.table, teachingStep);
     final feedbackSignalProof = isReview
         ? _feedbackSignalProofForRunnerV1(
             runner: runner,
@@ -3072,9 +3072,12 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             hasSeatTargets: hasSeatTargets,
           )
         : null;
-    final table = feedbackSignalProof == null
-        ? baseTable
-        : _tableWithFeedbackSignalProofV1(baseTable, feedbackSignalProof);
+    final table = isReview
+        ? act0FeedbackTableForRunnerV1(
+            runner: runner,
+            taskFamily: widget.selectedTaskFamily,
+          )
+        : baseTable;
     final choreographyFrame = _tableChoreographyFrame;
     final activeChoreographyFrame =
         isDrill && !isTeaching && !_heroDecisionReady
@@ -6624,7 +6627,7 @@ class _RunnerTableStageV1 extends StatelessWidget {
   }
 }
 
-Act0TableStateV1 _teachingTable(
+Act0TableStateV1 act0TeachingTableForRunnerV1(
   Act0TableStateV1 base,
   Act0TeachingStepV1? step,
 ) {
@@ -6684,7 +6687,7 @@ List<String> _instructionAnchorCardIds(Act0TableStateV1 table) {
   }
 }
 
-Act0TableStateV1 _repairTable(
+Act0TableStateV1 act0RepairTableForRunnerV1(
   Act0TableStateV1 base,
   Act0RunnerOptionV1? option,
 ) {
@@ -6699,6 +6702,21 @@ Act0TableStateV1 _repairTable(
         ? base.highlightedCardIds
         : option.repairFocusCardIds,
   );
+}
+
+// Share the final rendered projection with source guards. No grading is derived.
+Act0TableStateV1 act0FeedbackTableForRunnerV1({
+  required Act0RunnerStateV1 runner,
+  required Act0TaskFamilyV1? taskFamily,
+}) {
+  final base = act0RepairTableForRunnerV1(runner.table, runner.selectedOption);
+  final proof = _feedbackSignalProofForRunnerV1(
+    runner: runner,
+    option: runner.selectedOption,
+    taskFamily: taskFamily,
+    hasSeatTargets: runner.options.any((o) => o.seatId != null),
+  );
+  return proof == null ? base : _tableWithFeedbackSignalProofV1(base, proof);
 }
 
 Act0FeedbackSignalProofV1? _feedbackSignalProofForRunnerV1({
