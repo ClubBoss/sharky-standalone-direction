@@ -97,6 +97,21 @@ TIER_A_COMMANDS = [
         ],
     },
     {
+        "name": "durable learner truth and assessment interaction (LDR-01)",
+        "cmd": [
+            "flutter",
+            "test",
+            "test/ui_v2/act0_ldr01_durable_truth_v1_test.dart",
+            "test/ui_v2/act0_qa_independent_rep05_replay_20261103_test.dart",
+            "test/ui_v2/act0_obs04_persist_diagnostics_v1_test.dart",
+            "test/ui_v2/act0_default_answer_exposure_14pro_v1_test.dart",
+            "test/ui_v2/act0_asm04_seat_focus_counterexample_v1_test.dart",
+            "test/ui_v2/act0_asm04_remaining_seat_inventory_v1_test.dart",
+            "-r",
+            "compact",
+        ],
+    },
+    {
         "name": "repair outcome + queue",
         "cmd": [
             "flutter",

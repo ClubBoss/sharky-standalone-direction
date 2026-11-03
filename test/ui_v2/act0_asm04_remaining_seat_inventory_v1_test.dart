@@ -216,8 +216,6 @@ void main() {
             );
           }
         },
-        // Held CO393: preserve source inventory, do not investigate its tap route.
-        skip: entry.key == 'positions_cutoff',
       );
     }
   }
