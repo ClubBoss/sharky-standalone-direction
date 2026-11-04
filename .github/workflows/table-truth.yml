@@ -31,6 +31,8 @@ jobs:
           dart format --output=none --set-exit-if-changed $FILES
           mkdir -p output/table_truth/formatted
           cp --parents $FILES output/table_truth/formatted
+      - name: Check baseline dependency adapter controls
+        run: python3 test/tools/table_truth_baseline_dependencies_v1_test.py
       - name: Genuine RED on unchanged merged-main source
         env:
           BASE_SHA: fa079b6c5880814e231981a7bd5ed97df192d215
@@ -48,6 +50,9 @@ jobs:
           cp test/ui_v2/act0_table_truth_catalog_v1_test.dart test/ui_v2/act0_first_hand_truth_v1_test.dart test/ui_v2/act0_table_truth_falsifiers_v1_test.dart test/ui_v2/act0_table_truth_render_v1_test.dart "$BASE/test/ui_v2/"
           cp test/ui_v2/fixtures/table_truth_learning_contract_v1.json "$BASE/test/ui_v2/fixtures/"
           cp pubspec.lock "$BASE/pubspec.lock"
+          # Keep historical dependencies intact; complete only missing imports,
+          # including transitive dependencies of the visibility adapter.
+          python3 tools/table_truth_baseline_dependencies_v1.py --baseline "$BASE" --expected-head "$BASE_SHA" --output "$OUT/baseline-dependencies.json"
           sha256sum lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart > "$OUT/baseline-visibility-adapter.txt"
           cd "$BASE"
           flutter pub get --offline
