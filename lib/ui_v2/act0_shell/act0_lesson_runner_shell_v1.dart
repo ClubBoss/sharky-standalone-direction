@@ -3131,6 +3131,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         isRefinedDev2 && table.density == Act0TableDensityV1.compactLesson;
     final centerLabelOverride = _resolveTableCueDisplayV1(
       context: context,
+      selectedTaskId: widget.selectedTaskId,
       runner: runner,
       table: table,
       isTeaching: isTeaching,
@@ -4036,6 +4037,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           onBack: _handleRunnerBackV1,
           onChooseOption: _handleChooseOptionTelemetry,
           onContinueReview: widget.onContinueReview,
+          forwardCtaLabel: widget.feedbackForwardCtaLabel,
           recallLabel: decisionHint != null && widget.theoryRecallStep != null
               ? act0AcademyW1InstructionTaskV1(widget.selectedTaskId)
                     ? act0AcademyW1CtaV1(context, 'Need a hint?')
@@ -4408,6 +4410,7 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
     required this.onBack,
     required this.onChooseOption,
     required this.onContinueReview,
+    this.forwardCtaLabel,
     this.recallLabel,
     this.onRecall,
     this.hintPeek,
@@ -4425,6 +4428,7 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
   final VoidCallback onBack;
   final ValueChanged<Act0RunnerOptionV1> onChooseOption;
   final VoidCallback onContinueReview;
+  final String? forwardCtaLabel;
   final String? recallLabel;
   final VoidCallback? onRecall;
   final Widget? hintPeek;
@@ -4534,7 +4538,8 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
                                     ),
                                     onPressed: onContinueReview,
                                     child: Text(
-                                      actionPayoff?.primaryActionLabel ??
+                                      forwardCtaLabel ??
+                                          actionPayoff?.primaryActionLabel ??
                                           'Continue',
                                     ),
                                   ),
@@ -14373,6 +14378,7 @@ String _neutralizeAnswerBearingCueV1({
 
 String _resolveTableCueDisplayV1({
   required BuildContext context,
+  required String? selectedTaskId,
   required Act0RunnerStateV1 runner,
   required Act0TableStateV1 table,
   required bool isTeaching,
@@ -14393,7 +14399,7 @@ String _resolveTableCueDisplayV1({
   )) {
     return rawCue;
   }
-  if (runner.lessonId == 'w5_gutshot_draw') {
+  if (selectedTaskId == 'straight_draws_w5_gutshot_draw') {
     return '';
   }
   if (_looksLikeTrailHistoryQuestionV1(runner, table)) {
