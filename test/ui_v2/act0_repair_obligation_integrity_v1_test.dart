@@ -8,6 +8,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_play_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
@@ -208,7 +209,245 @@ List<Map> _debt(Map<String, dynamic> data, String task) => _rows(
   'openRepairIntents',
 ).where((intent) => intent['sourceTaskId'] == task).toList();
 
+Future<void> _tab(WidgetTester tester, String label) async {
+  await tester.tap(
+    find.descendant(
+      of: find.byKey(const Key('act0_shell_bottom_nav')),
+      matching: find.text(label),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
+Future<void> _back(WidgetTester tester) async {
+  await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+  await tester.pumpAndSettle();
+}
+
+Future<void> _startWithoutRemount(WidgetTester tester, String task) async {
+  await _tab(tester, 'Learn');
+  tester
+      .widget<Act0LearnPathShellV1>(find.byType(Act0LearnPathShellV1))
+      .onStartTask(_actionLesson, task);
+  await tester.pumpAndSettle();
+}
+
+Act0ReviewShellV1 _review(WidgetTester tester) =>
+    tester.widget<Act0ReviewShellV1>(find.byType(Act0ReviewShellV1));
+
 void main() {
+  testWidgets(
+    'G0 live Review discharges only the independently repaired occurrence',
+    (tester) async {
+      await _setup(tester, _actionLesson, _actionRepair);
+      final root = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      await _startWithoutRemount(tester, _actionRepair);
+      await _answer(tester, 'fold');
+      final firstMiss = await _saved(tester);
+      final firstOccurrence = _debt(firstMiss, _actionRepair).single;
+      await _back(tester);
+      await _startWithoutRemount(tester, _actionSource);
+      await _answer(tester, 'fold');
+      final twoMisses = await _saved(tester);
+      final pending = _debt(twoMisses, _actionSource).single;
+      expect(_rows(twoMisses, 'openRepairIntents'), hasLength(2));
+      await _back(tester);
+      await _tab(tester, 'Practice');
+      final play = tester.widget<Act0PlayShellV1>(find.byType(Act0PlayShellV1));
+      final request = play.repairQueueConsumer.items
+          .map((item) => item.launchRequest)
+          .singleWhere((request) => request?.sourceTaskId == _actionRepair)!;
+      expect(request.repairTaskId, _actionSource);
+      play.onLaunchRepairQueueTarget!(request);
+      await tester.pumpAndSettle();
+      await _answer(tester, 'check');
+      final repaired = await _saved(tester);
+      expect(_debt(repaired, _actionRepair), isEmpty);
+      expect(_debt(repaired, _actionSource).single, pending);
+      final receipt = _rows(repaired, 'reviewResolutionReceipts').single;
+      expect(receipt['resolutionReason'], 'repair_succeeded');
+      expect(
+        receipt['learningEvidenceId'],
+        firstOccurrence['repairOccurrenceId'],
+      );
+      final outcome = _rows(repaired, 'repairOutcomeProjection').single;
+      expect(
+        outcome['repairOccurrenceId'],
+        firstOccurrence['repairOccurrenceId'],
+      );
+      final evidence = _rows(repaired, 'learningEvidenceHistory').last;
+      expect(evidence['assistanceKind'], 'none');
+      expect(evidence['startedBy'], 'practice_repair_queue');
+      final runner = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      runner.onCompletedDecision!(
+        _decisionForRunner(runner, 'check', evidence['recordId'] as String),
+      );
+      await tester.pumpAndSettle();
+      final duplicate = await _saved(tester);
+      for (final key in [
+        'learningEvidenceHistory',
+        'repairOutcomeProjection',
+        'reviewResolutionReceipts',
+        'multiRepairQueue',
+        'earnedXp',
+      ]) {
+        expect(
+          duplicate[key],
+          repaired[key],
+          reason: 'duplicate delivery: $key',
+        );
+      }
+      await _continue(tester);
+      expect(tester.state(find.byType(Act0ShellPreviewScreenV1)), same(root));
+      expect(
+        _review(tester).review.mistakes.map((mistake) => mistake.taskId),
+        [_actionSource],
+        reason: 'resolved Check must disappear immediately, without a remount',
+      );
+      expect(find.text('1 miss to fix'), findsOneWidget);
+      expect(_review(tester).onFixMistake, isNotNull);
+      final after = await _saved(tester);
+      final reward = Act0ShellStateV1.sample
+          .worldById('world_1')
+          .lessons
+          .singleWhere((lesson) => lesson.lessonId == _actionLesson)
+          .taskList
+          .singleWhere((task) => task.taskId == _actionSource)
+          .rewardXp;
+      expect(
+        after['earnedXp'],
+        (repaired['earnedXp'] as int) + reward,
+        reason: 'first target completion earns its authored reward on Continue',
+      );
+      for (final key in [
+        'learningEvidenceHistory',
+        'repairOutcomeProjection',
+        'reviewResolutionReceipts',
+        'openRepairIntents',
+      ]) {
+        expect(
+          after[key],
+          repaired[key],
+          reason: 'Review is a projection: $key',
+        );
+      }
+      await _mount(tester, Act0ShellTabV1.review);
+      expect(_review(tester).review.mistakes.map((mistake) => mistake.taskId), [
+        _actionSource,
+      ]);
+      final restored = await _saved(tester);
+      expect(restored['earnedXp'], after['earnedXp']);
+      expect(
+        restored['reviewResolutionReceipts'],
+        repaired['reviewResolutionReceipts'],
+      );
+      expect(_debt(restored, _actionSource).single, pending);
+
+      // A receipt for the old occurrence must not hide the next real miss.
+      await _startWithoutRemount(tester, _actionRepair);
+      await _answer(tester, 'fold');
+      final reopened = await _saved(tester);
+      final newOccurrence = _debt(reopened, _actionRepair).single;
+      expect(
+        newOccurrence['repairOccurrenceId'],
+        isNot(firstOccurrence['repairOccurrenceId']),
+      );
+      expect(
+        newOccurrence['repairOccurrenceId'],
+        _rows(reopened, 'learningEvidenceHistory').last['recordId'],
+      );
+      expect(_debt(reopened, _actionSource).single, pending);
+      expect(
+        reopened['reviewResolutionReceipts'],
+        repaired['reviewResolutionReceipts'],
+      );
+      expect(
+        reopened['repairOutcomeProjection'],
+        repaired['repairOutcomeProjection'],
+      );
+      await _back(tester);
+      await _tab(tester, 'Review');
+      expect(
+        _review(tester).review.mistakes.map((mistake) => mistake.taskId),
+        unorderedEquals([_actionRepair, _actionSource]),
+      );
+      expect(find.text('2 misses to fix'), findsOneWidget);
+    },
+  );
+
+  for (final kind in ['wrong', 'assisted', 'unverified']) {
+    testWidgets('G0 $kind cannot discharge live Review debt', (tester) async {
+      await _setup(tester, _actionLesson, _actionRepair);
+      final root = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      await _startWithoutRemount(tester, _actionRepair);
+      await _answer(tester, 'fold');
+      await _back(tester);
+      await _startWithoutRemount(tester, _actionSource);
+      await _answer(tester, 'fold');
+      final owed = await _saved(tester);
+      await _back(tester);
+      await _tab(tester, 'Practice');
+      final play = tester.widget<Act0PlayShellV1>(find.byType(Act0PlayShellV1));
+      final request = play.repairQueueConsumer.items
+          .map((item) => item.launchRequest)
+          .singleWhere((request) => request?.sourceTaskId == _actionRepair)!;
+      play.onLaunchRepairQueueTarget!(request);
+      await tester.pumpAndSettle();
+      await _ready(tester, 'check');
+      if (kind == 'unverified') {
+        // A UI choice without the owned completed-decision contract supplies
+        // no independently verified occurrence resolution.
+        final runner = tester.widget<Act0LessonRunnerShellV1>(
+          find.byType(Act0LessonRunnerShellV1),
+        );
+        runner.onChooseOption(
+          runner.runner.options.singleWhere((o) => o.id == 'check'),
+        );
+        await tester.pumpAndSettle();
+      } else {
+        if (kind == 'assisted') {
+          await tester.tap(
+            find.byKey(const Key('act0_shell_theory_recall_cta')),
+          );
+          await tester.pumpAndSettle();
+          await tester.tap(
+            find.byKey(const Key('act0_shell_theory_recall_close_cta')),
+          );
+          await tester.pumpAndSettle();
+        }
+        await _answer(tester, kind == 'wrong' ? 'fold' : 'check');
+      }
+      await _continue(tester);
+      expect(tester.state(find.byType(Act0ShellPreviewScreenV1)), same(root));
+      expect(
+        _review(tester).review.mistakes.map((mistake) => mistake.taskId),
+        unorderedEquals([_actionRepair, _actionSource]),
+      );
+      expect(find.text('2 misses to fix'), findsOneWidget);
+      final after = await _saved(tester);
+      expect(after['reviewResolutionReceipts'], isEmpty);
+      for (final task in [_actionRepair, _actionSource]) {
+        expect(_debt(after, task).single, _debt(owed, task).single);
+      }
+      final reward = Act0ShellStateV1.sample
+          .worldById('world_1')
+          .lessons
+          .singleWhere((lesson) => lesson.lessonId == _actionLesson)
+          .taskList
+          .singleWhere((task) => task.taskId == _actionSource)
+          .rewardXp;
+      expect(
+        after['earnedXp'],
+        (owed['earnedXp'] as int) + (kind == 'unverified' ? reward : 0),
+        reason: 'preserve the existing task award; it is not repair proof',
+      );
+      await _mount(tester, Act0ShellTabV1.review);
+      expect((await _saved(tester))['earnedXp'], after['earnedXp']);
+    });
+  }
+
   testWidgets('A new source miss after repair and remount remains owed', (
     tester,
   ) async {

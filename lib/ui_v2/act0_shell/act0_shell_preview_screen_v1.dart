@@ -12600,8 +12600,30 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   /// A source mistake is discharged only when it is resolved and no mapped
   /// repair remains owed.
-  bool _isMistakeDischargedV1(String taskId) =>
-      _resolvedMistakeTaskIds.contains(taskId) && !_owesMappedRepairV1(taskId);
+  bool _isMistakeDischargedV1(String taskId) {
+    if (_resolvedMistakeTaskIds.contains(taskId) &&
+        !_owesMappedRepairV1(taskId)) {
+      return true;
+    }
+    // Practice Queue resolves keyed occurrences without rewriting the live
+    // task-level cache. Consume the same validated resolution as Review history;
+    // never hide another pending signal or a newer occurrence on this task.
+    if (_activeRepairIntentsV1().any(
+      (intent) => intent.sourceTaskId == taskId,
+    )) {
+      return false;
+    }
+    final resolutions = _reviewResolutionStateV1().resolutions.where(
+      (resolution) => resolution.sourceTaskId == taskId,
+    );
+    return resolutions.isNotEmpty &&
+        resolutions.every(
+          (resolution) =>
+              resolution.reviewState == act0ReviewResolutionStateResolvedV1 &&
+              resolution.resolutionReason ==
+                  act0ReviewResolutionReasonRepairSucceededV1,
+        );
+  }
 
   Act0MistakeCardV1? _topOpenMistake() {
     final open = _openMistakes();
