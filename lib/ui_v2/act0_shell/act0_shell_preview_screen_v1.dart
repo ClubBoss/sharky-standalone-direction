@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart' show kReleaseMode, visibleForTesting;
+import 'package:flutter/foundation.dart'
+    show kDebugMode, kReleaseMode, visibleForTesting;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -1122,6 +1123,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
     this.debugHarnessEntry,
     this.telemetrySink,
     this.debugSessionDrillRecheckQueueItemsV1,
+    this.debugLoadSessionDrillRecheckQueueItemsV1,
     this.clock = const Act0SystemUtcClockV1(),
     // Dev2 is now the canonical detached Act0 shell. The classic variant stays
     // available for explicit fallback comparisons.
@@ -1136,6 +1138,8 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
   final Act0TelemetrySinkV1? telemetrySink;
   final List<SessionDrillRecheckLaunchQueueItemV1>?
   debugSessionDrillRecheckQueueItemsV1;
+  final Future<List<SessionDrillRecheckLaunchQueueItemV1>> Function()?
+  debugLoadSessionDrillRecheckQueueItemsV1;
   final Act0UtcClockV1 clock;
   final Act0ShellTableVisualVariantV1 tableVisualVariant;
 
@@ -1182,10 +1186,39 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool _debugReviewEmptyV1 = false;
   bool _debugFreshLearnerV1 = false;
   static const String _progressPrefsKey = 'act0_shell_progress_v1';
-  final _progressStore = Act0ProgressStoreV1(
+  Act0ProgressStoreV1 _progressStore = _makeProgressStoreV1();
+  int _recoveryEpochV1 = 0;
+  bool _recoveryBusyV1 = false;
+  // A canonical reset severs all legacy SessionDrill projections. Their raw
+  // preferences are retained; current Act0 repair/evidence remains supported.
+  bool _suppressLegacyRecheckAfterRecoveryV1 = false;
+  String? _recoveryMessageV1;
+
+  static Act0ProgressStoreV1 _makeProgressStoreV1() => Act0ProgressStoreV1(
     key: _progressPrefsKey,
     isValidPayload: (raw) => _Act0PersistedProgressV1.tryParse(raw) != null,
+    debugRecoveryBoundary:
+        kDebugMode &&
+            const bool.fromEnvironment('SHARKY_DAT06_PAUSE_AFTER_INTENT')
+        ? (stage) async {
+            if (stage == 'intent_verified') {
+              debugPrint('DAT06_NATIVE_BOUNDARY intent_verified');
+              await Future<void>.delayed(const Duration(minutes: 5));
+            }
+          }
+        : null,
   );
+
+  bool _acceptRecoveryCallbackV1(int epoch) =>
+      mounted &&
+      epoch == _recoveryEpochV1 &&
+      !_recoveryBusyV1 &&
+      (!_usesPersistedProgress || _progressStore.isWriteLeaseCurrent);
+
+  void _setStateForRecoveryV1(int epoch, VoidCallback callback) {
+    if (_acceptRecoveryCallbackV1(epoch)) setState(callback);
+  }
+
   bool _progressLoadFailed = false;
   // Set only after a successful load; until then in-memory state is defaults and
   // must never be written over acknowledged saved progress (e.g. from dispose).
@@ -1501,6 +1534,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _durableRetentionHistoryV1.refreshedAt(widget.clock.nowUtc()).toPayload(),
     );
   }
+
+  @visibleForTesting
+  Future<void> debugReloadProgressV1() => _bootstrapFirstStartRouteV1();
 
   @visibleForTesting
   void debugPersistProgressV1() => _persistProgress();
@@ -2469,7 +2505,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (debugRecheckItems != null) {
       _sessionDrillRecheckQueueItemsV1 = List.unmodifiable(debugRecheckItems);
     } else {
-      unawaited(_loadSessionDrillRecheckQueueItemsV1());
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) unawaited(_loadSessionDrillRecheckQueueItemsV1());
+      });
     }
     if (widget.debugHarnessEntry case final entry?) {
       _applyDebugHarnessEntry(entry, state);
@@ -2479,14 +2517,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Future<void> _loadSessionDrillRecheckQueueItemsV1() async {
+    final epoch = _recoveryEpochV1;
     final List<SessionDrillRecheckLaunchQueueItemV1> items;
     try {
-      items = await const SessionDrillRecheckLaunchQueueV1()
-          .loadSupportedLaunchQueueItems();
+      items = widget.debugLoadSessionDrillRecheckQueueItemsV1 == null
+          ? await const SessionDrillRecheckLaunchQueueV1()
+                .loadSupportedLaunchQueueItems()
+          : await widget.debugLoadSessionDrillRecheckQueueItemsV1!();
     } catch (_) {
       return;
     }
-    if (!mounted) {
+    if (!mounted ||
+        epoch != _recoveryEpochV1 ||
+        _suppressLegacyRecheckAfterRecoveryV1) {
       return;
     }
     setState(() {
@@ -2496,25 +2539,30 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   @override
   void dispose() {
+    _recoveryEpochV1++;
     _learnLessonOpenSequenceV1++;
     _persistProgress();
     super.dispose();
   }
 
   Future<void> _bootstrapFirstStartRouteV1() async {
+    final epoch = ++_recoveryEpochV1;
+    _progressRestoredV1 = false;
+    _progressStore = _makeProgressStoreV1();
     if (_usesPersistedProgress) {
       try {
         await _restorePersistedProgress();
       } catch (_) {
-        if (mounted)
+        if (mounted && epoch == _recoveryEpochV1)
           setState(() {
             _progressLoadFailed = true;
             _bootSurfaceReady = true;
           });
         return;
       }
-      if (!mounted) return;
+      if (!mounted || epoch != _recoveryEpochV1) return;
     }
+    if (!mounted || epoch != _recoveryEpochV1) return;
     _progressRestoredV1 = true;
     if (!widget.showPlacementOnStart) {
       if (!mounted) {
@@ -2530,7 +2578,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final intakeCompleted = await ProgressService.isIntakeCompleted();
     final welcomeCompleted =
         await Act0FirstStartPreferencesV1.hasCompletedWelcome();
-    if (!mounted) {
+    if (!mounted || epoch != _recoveryEpochV1) {
       return;
     }
     setState(() {
@@ -3509,7 +3557,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Future<void> _restorePersistedProgress() async {
-    final raw = await _progressStore.load();
+    final epoch = _recoveryEpochV1;
+    final store = _progressStore;
+    final loaded = await store.loadState();
+    if (!mounted || epoch != _recoveryEpochV1) return;
+    if (loaded.isReset) {
+      _restorePreviewToFreshStart(showPlacement: false);
+      _progressStore = _makeProgressStoreV1();
+      return;
+    }
+    if (!store.isWriteLeaseCurrent) throw const Act0RecoveryHoldV1();
+    final raw = loaded.payload;
     if (raw == null || raw.isEmpty || !mounted) {
       return;
     }
@@ -3765,6 +3823,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             (intent) => MapEntry(intent.sourceTaskId, intent),
           ),
         );
+      _suppressLegacyRecheckAfterRecoveryV1 =
+          parsed.suppressLegacyRecheckAfterRecovery;
+      if (_suppressLegacyRecheckAfterRecoveryV1)
+        _sessionDrillRecheckQueueItemsV1 = const [];
       _multiRepairQueueV1 = restoredRepairQueue;
       _multiRepairQueueOrderV1 = parsed.multiRepairQueueOrder;
       _restorePersistedOpenRepairRecordsV1(state);
@@ -4012,6 +4074,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   void _persistProgress() {
     if (!_usesPersistedProgress ||
+        _recoveryBusyV1 ||
         _progressLoadFailed ||
         !_progressRestoredV1) {
       return;
@@ -4023,6 +4086,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (dailyDone) _lastDailyDate = today;
     _persistedStreakDays = currentStreak;
     final snapshot = _Act0PersistedProgressV1(
+      suppressLegacyRecheckAfterRecovery: _suppressLegacyRecheckAfterRecoveryV1,
       completedTaskIds: _completedTaskIds,
       skippedTaskIds: _skippedTaskIds,
       completedLessonIds: _completedLessonIds,
@@ -4095,7 +4159,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     Map<String, Object?> diagnosticContext,
   ) async {
     await Future<void>.value();
-    if (generation != _progressPersistGeneration) {
+    if (generation != _progressPersistGeneration ||
+        _recoveryBusyV1 ||
+        _progressLoadFailed ||
+        !_progressRestoredV1) {
       return; // Coalesced requests were not attempted, not failed saves.
     }
     final acknowledged = await _progressStore.save(snapshot);
@@ -4770,10 +4837,124 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     return true;
   }
 
+  Future<void> _openRecoveryOptionsV1() async {
+    Act0RecoveryProposalV1? proposal;
+    Act0RecoveryCopyV1? copy;
+    try {
+      copy = await _progressStore.inspectRecoveryCopy();
+      if (_progressLoadFailed && !copy.pending)
+        proposal = await _progressStore.inspectRecovery();
+    } catch (_) {
+      /* no unsafe fallback */
+    }
+    if (!mounted) return;
+    final action = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Recovery options'),
+        content: Text(
+          _progressLoadFailed
+              ? 'Preserve a separate local copy, then start new learning progress. Current learning progress will be replaced. The copy may not be restorable. Settings and intro choices stay.'
+              : 'Recovery copies stay on this device and may not be restorable. Deleting a copy does not reset current learning progress.',
+        ),
+        actions: [
+          TextButton(
+            key: const Key('act0_recovery_cancel'),
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Cancel'),
+          ),
+          if (copy?.exists == true)
+            TextButton(
+              key: const Key('act0_recovery_delete_copy'),
+              onPressed: copy!.pending
+                  ? null
+                  : () => Navigator.of(dialogContext).pop('delete'),
+              child: const Text('Delete recovery copy'),
+            ),
+          if (_progressLoadFailed)
+            TextButton(
+              key: const Key('act0_recovery_confirm'),
+              onPressed: proposal == null
+                  ? null
+                  : () => Navigator.of(dialogContext).pop('reset'),
+              child: const Text('Preserve copy and start again'),
+            ),
+        ],
+      ),
+    );
+    if (!mounted) return;
+    if (action == 'delete' && copy != null) {
+      final consent = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('Delete recovery copy?'),
+          content: const Text(
+            'Only the separate local copy will be deleted. Current learning progress and settings stay.',
+          ),
+          actions: [
+            TextButton(
+              key: const Key('act0_recovery_delete_cancel'),
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Keep copy'),
+            ),
+            TextButton(
+              key: const Key('act0_recovery_delete_confirm'),
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: const Text('Delete copy'),
+            ),
+          ],
+        ),
+      );
+      if (consent != true || !mounted) return;
+      final removed = await _progressStore.deleteRecoveryCopy(copy);
+      if (mounted)
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              removed
+                  ? 'Recovery copy deleted.'
+                  : 'The copy could not be safely deleted. Try again.',
+            ),
+          ),
+        );
+      return;
+    }
+    if (action != 'reset' || proposal == null) return;
+    _recoveryEpochV1++;
+    _learnLessonOpenSequenceV1++;
+    _progressPersistGeneration++;
+    setState(() {
+      _recoveryBusyV1 = true;
+      _progressRestoredV1 = false;
+      _recoveryMessageV1 = null;
+    });
+    final complete = await _progressStore.confirmRecovery(proposal);
+    if (!mounted) return;
+    if (!complete) {
+      setState(() {
+        _recoveryBusyV1 = false;
+        _progressLoadFailed = true;
+        _recoveryMessageV1 =
+            'Recovery could not be completely verified. Any preserved copy is kept. Try again to resume safely.';
+      });
+      return;
+    }
+    _restorePreviewToFreshStart(showPlacement: false);
+    _progressStore = _makeProgressStoreV1();
+    setState(() {
+      _recoveryBusyV1 = false;
+      _progressLoadFailed = false;
+      _bootSurfaceReady = false;
+    });
+    await _bootstrapFirstStartRouteV1();
+  }
+
   Future<void> _invalidatePersistedProgressWrites() async {
     if (!_usesPersistedProgress) {
       return;
     }
+    _recoveryEpochV1++;
+    _learnLessonOpenSequenceV1++;
     _progressPersistGeneration += 1;
     if (await _progressStore.clear()) {
       return;
@@ -4827,6 +5008,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _lessonRunXp = 0;
       _showPlayHub = tab != Act0ShellTabV1.play;
       _returnToPlayHubOnBack = false;
+      _suppressLegacyRecheckAfterRecoveryV1 = true;
+      _sessionDrillRecheckQueueItemsV1 = const [];
+      _multiRepairQueueV1 = const Act0MultiRepairQueueV1();
+      _multiRepairQueueOrderV1 = 0;
+      _repairIntentAuditTrailV1.clear();
+      _latestCompletedDecisionV1 = null;
+      _choiceAssistanceV1 = Act0DecisionAssistanceV1.none;
+      _firstValueReceiptCarry = null;
+      _firstValueTodayShownTelemetryKey = '';
+      _learningRunV1 = null;
+      _pendingLearningRunPayoffV1 = null;
+      _learningRunOutcomeTelemetryKeysV1.clear();
       _mistakeRecords.clear();
       _openRepairIntentBySourceTaskId.clear();
       _resolvedMistakeTaskIds.clear();
@@ -5276,6 +5469,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   @override
   Widget build(BuildContext context) {
+    final callbackEpochV1 = _recoveryEpochV1;
     if (_progressLoadFailed) {
       return Scaffold(
         body: SafeArea(
@@ -5284,20 +5478,45 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Text('Your saved progress could not be read.'),
+                if (_recoveryMessageV1 != null)
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      _recoveryMessageV1!,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                if (_recoveryBusyV1) ...[
+                  const CircularProgressIndicator(),
+                  const Text('Recovery in progress. Keep this screen open.'),
+                ],
                 TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _progressLoadFailed = false;
-                      _bootSurfaceReady = false;
-                    });
-                    unawaited(_bootstrapFirstStartRouteV1());
-                  },
+                  key: const Key('act0_recovery_retry'),
+                  onPressed: _recoveryBusyV1
+                      ? null
+                      : () {
+                          setState(() {
+                            _progressLoadFailed = false;
+                            _bootSurfaceReady = false;
+                          });
+                          unawaited(_bootstrapFirstStartRouteV1());
+                        },
                   child: const Text('Try again'),
+                ),
+                TextButton(
+                  key: const Key('act0_recovery_options'),
+                  onPressed: _recoveryBusyV1 ? null : _openRecoveryOptionsV1,
+                  child: const Text('Recovery options'),
                 ),
               ],
             ),
           ),
         ),
+      );
+    }
+    if (!_bootSurfaceReady) {
+      return const Scaffold(
+        body: SafeArea(child: Center(child: CircularProgressIndicator())),
       );
     }
     final baseState = widget.state ?? Act0ShellStateV1.sample;
@@ -6181,6 +6400,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 accessibilityPrototypeStep:
                                     accessibilityPrototypeStep,
                                 onAccessibilityPrototypeStepChanged: (next) {
+                                  if (!_acceptRecoveryCallbackV1(
+                                    callbackEpochV1,
+                                  ))
+                                    return;
+
                                   setState(() {
                                     _accessibilityPrototypeTaskId =
                                         playSelectedTask.taskId;
@@ -6256,174 +6480,199 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 showLearningRailFocusLabels:
                                     _activeRepairTaskId ==
                                     playSelectedTask.taskId,
-                                onBack: () => setState(() {
-                                  _pendingReviewKindV1 = null;
-                                  if (_placementDiagnosticActive) {
-                                    _endPlacementAssessmentRunV1();
-                                    _placementDiagnosticActive = false;
-                                    _showPlacement = true;
-                                    _showPlayHub = true;
-                                    _placementDiagnosticIndex = 0;
-                                    _placementDiagnosticCorrect = 0;
-                                    _placementDiagnosticScore = 0;
-                                    _placementDiagnosticHitSignals.clear();
-                                    _placementDiagnosticMissSignals.clear();
-                                    _selectedOptionId = null;
-                                    _phase = Act0LessonPhaseV1.theory;
-                                    _teachingStepIndex = 0;
-                                    return;
-                                  }
-                                  if (_activeRepairTaskId != null) {
-                                    _tab = Act0ShellTabV1.review;
-                                    _showPlayHub = true;
-                                    _returnToPlayHubOnBack = false;
-                                    _clearActiveRepairLaunchV1();
-                                    _activeRepairSourceTaskId = null;
-                                    _activeRepairResultReceiptLine = null;
-                                    _activeRepairSessionSummaryLines =
-                                        const <String>[];
-                                    _selectedOptionId = null;
-                                    _phase = Act0LessonPhaseV1.theory;
-                                    _teachingStepIndex = 0;
-                                    return;
-                                  }
-                                  if (_returnToPlayHubOnBack) {
-                                    _showPlayHub = true;
-                                  } else {
-                                    _emitSessionExitedTelemetryV1(
-                                      sourceSurface: 'act0_runner_back',
-                                    );
-                                    _activateLearnVisitEligibilityV1();
-                                    _tab = Act0ShellTabV1.learn;
-                                  }
-                                }),
-                                onPreviousTheory: () => setState(() {
-                                  if (_teachingStepIndex > 0) {
-                                    _teachingStepIndex -= 1;
-                                  }
-                                }),
-                                onUndoInteraction: () => setState(() {
-                                  if (_phase == Act0LessonPhaseV1.review) {
-                                    _selectedOptionId = null;
-                                    _phase = Act0LessonPhaseV1.drill;
-                                    _teachingStepIndex =
-                                        activePlayRunner.teachingSteps.length;
-                                    return;
-                                  }
-                                  if (_phase == Act0LessonPhaseV1.drill &&
-                                      activePlayRunner
-                                          .teachingSteps
-                                          .isNotEmpty) {
-                                    _selectedOptionId = null;
-                                    _teachingStepIndex =
-                                        activePlayRunner.teachingSteps.length -
-                                        1;
-                                  }
-                                }),
-                                onContinueTheory: () => setState(() {
-                                  if (_advanceTeachingStep(playRunner!)) {
-                                    return;
-                                  }
-                                  if (playSelectedTask.phase !=
-                                      Act0LessonPhaseV1.theory) {
-                                    // Drill-phase teaching preamble (e.g. a
-                                    // theory recall ahead of the real drill
-                                    // options): exiting it only dismisses the
-                                    // preamble. The task itself is not done
-                                    // yet, so it must not run task-completion
-                                    // side effects.
-                                    return;
-                                  }
-                                  _emitActionTheoryCompletedTelemetryV1(
-                                    playSelectedTask,
-                                  );
-                                  _completeCurrentTask(playSelectedTask);
-                                  if (_maybeStartLessonWrapUpRetry(
-                                    selectedLesson,
-                                  )) {
-                                    return;
-                                  }
-                                  if (_maybeShowBlockCompletionSummary(
-                                    selectedWorld: selectedWorld,
-                                    selectedLesson: selectedLesson,
-                                    selectedTask: playSelectedTask,
-                                  )) {
-                                    return;
-                                  }
-                                  if (_advanceActionTheoryToDecisionV1(
-                                    selectedLesson: selectedLesson,
-                                    selectedTask: playSelectedTask,
-                                  )) {
-                                    return;
-                                  }
-                                  _advanceAfterTask(
-                                    selectedWorld,
-                                    selectedLesson,
-                                  );
-                                }),
-                                onChooseOption: (option) => setState(() {
-                                  _fireAnswerEffects(option);
-                                  if (_isPracticeQueueRepairAnswerV1(
-                                    playSelectedTask,
-                                  )) {
-                                    _activeRepairResultReceiptLine = null;
-                                    _activeRepairSessionSummaryLines =
-                                        const <String>[];
-                                  } else {
-                                    _activeRepairResultReceiptLine =
-                                        _repairResultReceiptLineForOptionV1(
-                                          selectedTask: playSelectedTask,
-                                          option: option,
+                                onBack: () =>
+                                    _setStateForRecoveryV1(callbackEpochV1, () {
+                                      _pendingReviewKindV1 = null;
+                                      if (_placementDiagnosticActive) {
+                                        _endPlacementAssessmentRunV1();
+                                        _placementDiagnosticActive = false;
+                                        _showPlacement = true;
+                                        _showPlayHub = true;
+                                        _placementDiagnosticIndex = 0;
+                                        _placementDiagnosticCorrect = 0;
+                                        _placementDiagnosticScore = 0;
+                                        _placementDiagnosticHitSignals.clear();
+                                        _placementDiagnosticMissSignals.clear();
+                                        _selectedOptionId = null;
+                                        _phase = Act0LessonPhaseV1.theory;
+                                        _teachingStepIndex = 0;
+                                        return;
+                                      }
+                                      if (_activeRepairTaskId != null) {
+                                        _tab = Act0ShellTabV1.review;
+                                        _showPlayHub = true;
+                                        _returnToPlayHubOnBack = false;
+                                        _clearActiveRepairLaunchV1();
+                                        _activeRepairSourceTaskId = null;
+                                        _activeRepairResultReceiptLine = null;
+                                        _activeRepairSessionSummaryLines =
+                                            const <String>[];
+                                        _selectedOptionId = null;
+                                        _phase = Act0LessonPhaseV1.theory;
+                                        _teachingStepIndex = 0;
+                                        return;
+                                      }
+                                      if (_returnToPlayHubOnBack) {
+                                        _showPlayHub = true;
+                                      } else {
+                                        _emitSessionExitedTelemetryV1(
+                                          sourceSurface: 'act0_runner_back',
                                         );
-                                    _activeRepairSessionSummaryLines =
-                                        _repairSessionSummaryLinesForOptionV1(
-                                          selectedTask: playSelectedTask,
-                                          option: option,
-                                        );
-                                  }
-                                  _captureFirstValueReceiptCarryV1(
-                                    runner: activePlayRunner,
-                                    sourceWorldId: selectedWorld.worldId,
-                                    sourceLessonId: selectedLesson.lessonId,
-                                    task: playSelectedTask,
-                                    option: option,
-                                  );
-                                  if (!_placementDiagnosticActive) {
-                                    _recordAnswer(
-                                      selectedLesson,
+                                        _activateLearnVisitEligibilityV1();
+                                        _tab = Act0ShellTabV1.learn;
+                                      }
+                                    }),
+                                onPreviousTheory: () =>
+                                    _setStateForRecoveryV1(callbackEpochV1, () {
+                                      if (_teachingStepIndex > 0) {
+                                        _teachingStepIndex -= 1;
+                                      }
+                                    }),
+                                onUndoInteraction: () => _setStateForRecoveryV1(
+                                  callbackEpochV1,
+                                  () {
+                                    if (_phase == Act0LessonPhaseV1.review) {
+                                      _selectedOptionId = null;
+                                      _phase = Act0LessonPhaseV1.drill;
+                                      _teachingStepIndex =
+                                          activePlayRunner.teachingSteps.length;
+                                      return;
+                                    }
+                                    if (_phase == Act0LessonPhaseV1.drill &&
+                                        activePlayRunner
+                                            .teachingSteps
+                                            .isNotEmpty) {
+                                      _selectedOptionId = null;
+                                      _teachingStepIndex =
+                                          activePlayRunner
+                                              .teachingSteps
+                                              .length -
+                                          1;
+                                    }
+                                  },
+                                ),
+                                onContinueTheory: () => _setStateForRecoveryV1(
+                                  callbackEpochV1,
+                                  () {
+                                    if (_advanceTeachingStep(playRunner!)) {
+                                      return;
+                                    }
+                                    if (playSelectedTask.phase !=
+                                        Act0LessonPhaseV1.theory) {
+                                      // Drill-phase teaching preamble (e.g. a
+                                      // theory recall ahead of the real drill
+                                      // options): exiting it only dismisses the
+                                      // preamble. The task itself is not done
+                                      // yet, so it must not run task-completion
+                                      // side effects.
+                                      return;
+                                    }
+                                    _emitActionTheoryCompletedTelemetryV1(
                                       playSelectedTask,
-                                      option,
                                     );
-                                  } else {
-                                    _recordPlacementDiagnosticMissForRepairV1(
+                                    _completeCurrentTask(playSelectedTask);
+                                    if (_maybeStartLessonWrapUpRetry(
+                                      selectedLesson,
+                                    )) {
+                                      return;
+                                    }
+                                    if (_maybeShowBlockCompletionSummary(
                                       selectedWorld: selectedWorld,
                                       selectedLesson: selectedLesson,
                                       selectedTask: playSelectedTask,
+                                    )) {
+                                      return;
+                                    }
+                                    if (_advanceActionTheoryToDecisionV1(
+                                      selectedLesson: selectedLesson,
+                                      selectedTask: playSelectedTask,
+                                    )) {
+                                      return;
+                                    }
+                                    _advanceAfterTask(
+                                      selectedWorld,
+                                      selectedLesson,
+                                    );
+                                  },
+                                ),
+                                onChooseOption: (option) => _setStateForRecoveryV1(
+                                  callbackEpochV1,
+                                  () {
+                                    _fireAnswerEffects(option);
+                                    if (_isPracticeQueueRepairAnswerV1(
+                                      playSelectedTask,
+                                    )) {
+                                      _activeRepairResultReceiptLine = null;
+                                      _activeRepairSessionSummaryLines =
+                                          const <String>[];
+                                    } else {
+                                      _activeRepairResultReceiptLine =
+                                          _repairResultReceiptLineForOptionV1(
+                                            selectedTask: playSelectedTask,
+                                            option: option,
+                                          );
+                                      _activeRepairSessionSummaryLines =
+                                          _repairSessionSummaryLinesForOptionV1(
+                                            selectedTask: playSelectedTask,
+                                            option: option,
+                                          );
+                                    }
+                                    _captureFirstValueReceiptCarryV1(
                                       runner: activePlayRunner,
+                                      sourceWorldId: selectedWorld.worldId,
+                                      sourceLessonId: selectedLesson.lessonId,
+                                      task: playSelectedTask,
                                       option: option,
                                     );
-                                  }
-                                  _selectedOptionId = option.id;
-                                  _selectedPresetId = null;
-                                  _selectedPresetTaskId = null;
-                                  _phase = Act0LessonPhaseV1.review;
-                                  _teachingStepIndex = 0;
-                                }),
-                                onSelectSizingPreset: (preset) => setState(() {
-                                  _selectedPresetId = preset.id;
-                                  _selectedPresetTaskId =
-                                      playSelectedTask.taskId;
-                                }),
-                                onConfirmSizingPreset: () => setState(() {
-                                  _confirmSizingPresetAnswerV1(
-                                    selectedLesson: selectedLesson,
-                                    selectedTask: playSelectedTask,
-                                  );
-                                }),
+                                    if (!_placementDiagnosticActive) {
+                                      _recordAnswer(
+                                        selectedLesson,
+                                        playSelectedTask,
+                                        option,
+                                      );
+                                    } else {
+                                      _recordPlacementDiagnosticMissForRepairV1(
+                                        selectedWorld: selectedWorld,
+                                        selectedLesson: selectedLesson,
+                                        selectedTask: playSelectedTask,
+                                        runner: activePlayRunner,
+                                        option: option,
+                                      );
+                                    }
+                                    _selectedOptionId = option.id;
+                                    _selectedPresetId = null;
+                                    _selectedPresetTaskId = null;
+                                    _phase = Act0LessonPhaseV1.review;
+                                    _teachingStepIndex = 0;
+                                  },
+                                ),
+                                onSelectSizingPreset: (preset) =>
+                                    _setStateForRecoveryV1(callbackEpochV1, () {
+                                      _selectedPresetId = preset.id;
+                                      _selectedPresetTaskId =
+                                          playSelectedTask.taskId;
+                                    }),
+                                onConfirmSizingPreset: () =>
+                                    _setStateForRecoveryV1(callbackEpochV1, () {
+                                      _confirmSizingPresetAnswerV1(
+                                        selectedLesson: selectedLesson,
+                                        selectedTask: playSelectedTask,
+                                      );
+                                    }),
                                 onChoiceAssistance: (value) {
+                                  if (!_acceptRecoveryCallbackV1(
+                                    callbackEpochV1,
+                                  ))
+                                    return;
+
                                   _choiceAssistanceV1 = value;
                                 },
                                 onCompletedDecision: (decision) {
+                                  if (!_acceptRecoveryCallbackV1(
+                                    callbackEpochV1,
+                                  ))
+                                    return;
+
                                   setState(() {
                                     _latestCompletedDecisionV1 = decision;
                                     _recordCanonicalRepairDecisionV1(
@@ -6435,376 +6684,394 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   });
                                   _persistProgress();
                                 },
-                                onChooseSeat: (seatId) => setState(() {
-                                  for (final option
-                                      in activePlayRunner.options) {
-                                    if (option.seatId == seatId) {
-                                      _fireAnswerEffects(option);
-                                      if (_isPracticeQueueRepairAnswerV1(
-                                        playSelectedTask,
-                                      )) {
-                                        _activeRepairResultReceiptLine = null;
-                                        _activeRepairSessionSummaryLines =
-                                            const <String>[];
-                                      } else {
-                                        _activeRepairResultReceiptLine =
-                                            _repairResultReceiptLineForOptionV1(
-                                              selectedTask: playSelectedTask,
-                                              option: option,
-                                            );
-                                        _activeRepairSessionSummaryLines =
-                                            _repairSessionSummaryLinesForOptionV1(
-                                              selectedTask: playSelectedTask,
-                                              option: option,
-                                            );
-                                      }
-                                      _captureFirstValueReceiptCarryV1(
-                                        runner: activePlayRunner,
-                                        sourceWorldId: selectedWorld.worldId,
-                                        sourceLessonId: selectedLesson.lessonId,
-                                        task: playSelectedTask,
-                                        option: option,
-                                      );
-                                      if (!_placementDiagnosticActive) {
-                                        _recordAnswer(
-                                          selectedLesson,
+                                onChooseSeat: (seatId) => _setStateForRecoveryV1(
+                                  callbackEpochV1,
+                                  () {
+                                    for (final option
+                                        in activePlayRunner.options) {
+                                      if (option.seatId == seatId) {
+                                        _fireAnswerEffects(option);
+                                        if (_isPracticeQueueRepairAnswerV1(
                                           playSelectedTask,
-                                          option,
-                                        );
-                                      } else {
-                                        _recordPlacementDiagnosticMissForRepairV1(
-                                          selectedWorld: selectedWorld,
-                                          selectedLesson: selectedLesson,
-                                          selectedTask: playSelectedTask,
+                                        )) {
+                                          _activeRepairResultReceiptLine = null;
+                                          _activeRepairSessionSummaryLines =
+                                              const <String>[];
+                                        } else {
+                                          _activeRepairResultReceiptLine =
+                                              _repairResultReceiptLineForOptionV1(
+                                                selectedTask: playSelectedTask,
+                                                option: option,
+                                              );
+                                          _activeRepairSessionSummaryLines =
+                                              _repairSessionSummaryLinesForOptionV1(
+                                                selectedTask: playSelectedTask,
+                                                option: option,
+                                              );
+                                        }
+                                        _captureFirstValueReceiptCarryV1(
                                           runner: activePlayRunner,
+                                          sourceWorldId: selectedWorld.worldId,
+                                          sourceLessonId:
+                                              selectedLesson.lessonId,
+                                          task: playSelectedTask,
                                           option: option,
                                         );
+                                        if (!_placementDiagnosticActive) {
+                                          _recordAnswer(
+                                            selectedLesson,
+                                            playSelectedTask,
+                                            option,
+                                          );
+                                        } else {
+                                          _recordPlacementDiagnosticMissForRepairV1(
+                                            selectedWorld: selectedWorld,
+                                            selectedLesson: selectedLesson,
+                                            selectedTask: playSelectedTask,
+                                            runner: activePlayRunner,
+                                            option: option,
+                                          );
+                                        }
+                                        _selectedOptionId = option.id;
+                                        _selectedPresetId = null;
+                                        _selectedPresetTaskId = null;
+                                        _phase = Act0LessonPhaseV1.review;
+                                        _teachingStepIndex = 0;
+                                        return;
                                       }
-                                      _selectedOptionId = option.id;
-                                      _selectedPresetId = null;
-                                      _selectedPresetTaskId = null;
-                                      _phase = Act0LessonPhaseV1.review;
-                                      _teachingStepIndex = 0;
-                                      return;
                                     }
-                                  }
-                                }),
+                                  },
+                                ),
                                 rapidReviewMode: _rapidPracticeLoop,
                                 actionRecommendation:
                                     _actionRecommendationForActiveSequenceV1(),
                                 actionPayoff:
                                     _actionPayoffForActiveSequenceV1(),
-                                onContinueReview: () => setState(() {
-                                  if (sameSessionLearningDelta != null) {
-                                    _emitSameSessionLearningDeltaCompletedV1(
-                                      sameSessionLearningDelta,
-                                    );
-                                  }
-                                  _recordActionRecommendationAcceptedV1();
-                                  if (_placementDiagnosticActive) {
-                                    final spot = _placementDiagnosticSpotsV1
-                                        .elementAt(_placementDiagnosticIndex);
-                                    if (activePlayRunner
-                                            .selectedOption
-                                            ?.isCorrect ??
-                                        false) {
-                                      _placementDiagnosticCorrect += 1;
-                                      _placementDiagnosticScore += 1;
-                                      _placementDiagnosticHitSignals.add(
-                                        spot.signalId,
-                                      );
-                                    } else {
-                                      _placementDiagnosticMissSignals.add(
-                                        spot.signalId,
+                                onContinueReview: () => _setStateForRecoveryV1(
+                                  callbackEpochV1,
+                                  () {
+                                    if (sameSessionLearningDelta != null) {
+                                      _emitSameSessionLearningDeltaCompletedV1(
+                                        sameSessionLearningDelta,
                                       );
                                     }
-                                    if (_startNextPlacementDiagnostic(
-                                      _progressWorlds(baseState),
+                                    _recordActionRecommendationAcceptedV1();
+                                    if (_placementDiagnosticActive) {
+                                      final spot = _placementDiagnosticSpotsV1
+                                          .elementAt(_placementDiagnosticIndex);
+                                      if (activePlayRunner
+                                              .selectedOption
+                                              ?.isCorrect ??
+                                          false) {
+                                        _placementDiagnosticCorrect += 1;
+                                        _placementDiagnosticScore += 1;
+                                        _placementDiagnosticHitSignals.add(
+                                          spot.signalId,
+                                        );
+                                      } else {
+                                        _placementDiagnosticMissSignals.add(
+                                          spot.signalId,
+                                        );
+                                      }
+                                      if (_startNextPlacementDiagnostic(
+                                        _progressWorlds(baseState),
+                                      )) {
+                                        return;
+                                      }
+                                      _placementResult =
+                                          _buildPlacementResult();
+                                      _seedProfileSkillStats(
+                                        _placementResult!.skillStats,
+                                      );
+                                      _endPlacementAssessmentRunV1();
+                                      _placementDiagnosticActive = false;
+                                      _showPlacement = true;
+                                      _showPlayHub = true;
+                                      _selectedOptionId = null;
+                                      _phase = Act0LessonPhaseV1.theory;
+                                      _teachingStepIndex = 0;
+                                      return;
+                                    }
+                                    if (_advanceActionSequenceReviewV1(
+                                      selectedTask: playSelectedTask,
+                                      runner: playRunner!,
                                     )) {
                                       return;
                                     }
-                                    _placementResult = _buildPlacementResult();
-                                    _seedProfileSkillStats(
-                                      _placementResult!.skillStats,
-                                    );
-                                    _endPlacementAssessmentRunV1();
-                                    _placementDiagnosticActive = false;
-                                    _showPlacement = true;
-                                    _showPlayHub = true;
-                                    _selectedOptionId = null;
-                                    _phase = Act0LessonPhaseV1.theory;
-                                    _teachingStepIndex = 0;
-                                    return;
-                                  }
-                                  if (_advanceActionSequenceReviewV1(
-                                    selectedTask: playSelectedTask,
-                                    runner: playRunner!,
-                                  )) {
-                                    return;
-                                  }
-                                  if (_completeSameSignalRecheckV1(
-                                    selectedWorld: selectedWorld,
-                                    selectedLesson: selectedLesson,
-                                    selectedTask: playSelectedTask,
-                                    runner: playRunner,
-                                  )) {
-                                    return;
-                                  }
-                                  if (_activeRepairTaskId ==
-                                      playSelectedTask.taskId) {
-                                    final repaired =
-                                        act0IndependentRepairProofV1(
-                                          isCorrect:
-                                              playRunner
-                                                  .selectedOption
-                                                  ?.isCorrect ??
-                                              false,
-                                          assistanceKind: _choiceAssistanceV1,
-                                        );
-                                    final repairSourceTaskId =
-                                        _activeRepairSourceTaskId ??
-                                        playSelectedTask.taskId;
-                                    final repairSourceRecord =
-                                        _mistakeRecords[repairSourceTaskId];
-                                    // Practice Queue owns independent
-                                    // answer telemetry at decision time.
-                                    // Assisted answers bypass that owner, so
-                                    // keep the truthful non-success event here.
-                                    if (!_isPracticeQueueRepairAnswerV1(
-                                          playSelectedTask,
-                                        ) ||
-                                        _choiceWasAssistedV1) {
-                                      _emitRepairCompletedTelemetryV1(
-                                        sourceTaskId: repairSourceTaskId,
-                                        repairTaskId: playSelectedTask.taskId,
-                                        repaired: repaired,
-                                      );
-                                    }
-                                    _emitRepairItemCompletedTelemetryV1(
-                                      sourceTaskId: repairSourceTaskId,
-                                      targetTaskId: playSelectedTask.taskId,
-                                      repaired: repaired,
-                                      record: repairSourceRecord,
-                                    );
-                                    // Practice Queue closure is owned by its
-                                    // exact queue outcome; inline recheck is
-                                    // reserved for the same-signal feedback path.
-                                    final startsSourceRecheck =
-                                        _activeSameSignalFeedbackRepairV1;
-                                    if (repaired) {
-                                      _clearMatchedOpenRepairIntentV1(
-                                        sourceTaskId: repairSourceTaskId,
-                                        completedTaskId:
-                                            playSelectedTask.taskId,
-                                      );
-                                      _clearOpenRepairIntentsForCompletedTaskV1(
-                                        completedTaskId:
-                                            playSelectedTask.taskId,
-                                      );
-                                      // A directed repair can rehearse a locked
-                                      // curriculum task. Its independent proof
-                                      // closes the repair, but cannot grant the
-                                      // future lesson's completion or normal XP.
-                                      final curriculumWorld = _worldById(
-                                        _progressedWorlds(
-                                          widget.state ??
-                                              Act0ShellStateV1.sample,
-                                        ),
-                                        _selectedWorldId,
-                                      );
-                                      final curriculumLesson = _lessonById(
-                                        curriculumWorld.lessons,
-                                        _selectedLessonId,
-                                      );
-                                      if (curriculumWorld.isSelectable &&
-                                          curriculumLesson.isSelectable &&
-                                          _taskAvailable(
-                                            curriculumLesson,
-                                            playSelectedTask.taskId,
-                                          )) {
-                                        _completeCurrentTask(playSelectedTask);
-                                      } else {
-                                        _refreshRetentionMemoryStatusesV1();
-                                        _persistProgress();
-                                      }
-                                      if (startsSourceRecheck &&
-                                          _startSameSignalRecheckV1(
-                                            selectedWorld: selectedWorld,
-                                            sourceTaskId: repairSourceTaskId,
-                                          )) {
-                                        _clearActiveRepairLaunchV1();
-                                        _activeRepairSourceTaskId = null;
-                                        _activeSameSignalFeedbackRepairV1 =
-                                            false;
-                                        _pendingFeedbackRepairSourceTaskIdV1 =
-                                            null;
-                                        _pendingFeedbackRepairTaskIdV1 = null;
-                                        _activeRepairResultReceiptLine = null;
-                                        _activeRepairSessionSummaryLines =
-                                            const <String>[];
-                                        _selectedOptionId = null;
-                                        _phase = Act0LessonPhaseV1.drill;
-                                        _teachingStepIndex = 0;
-                                        _rapidPracticeLoop = false;
-                                        return;
-                                      }
-                                    }
-                                    _tab = Act0ShellTabV1.review;
-                                    _showPlayHub = true;
-                                    _returnToPlayHubOnBack = false;
-                                    _clearActiveRepairLaunchV1();
-                                    _activeRepairSourceTaskId = null;
-                                    _activeSameSignalFeedbackRepairV1 = false;
-                                    _pendingFeedbackRepairSourceTaskIdV1 = null;
-                                    _pendingFeedbackRepairTaskIdV1 = null;
-                                    _activeRepairResultReceiptLine = null;
-                                    _activeRepairSessionSummaryLines =
-                                        const <String>[];
-                                    _selectedOptionId = null;
-                                    _phase = Act0LessonPhaseV1.theory;
-                                    _teachingStepIndex = 0;
-                                    _rapidPracticeLoop = false;
-                                    return;
-                                  }
-                                  if (_rapidPracticeLoop &&
-                                      _activePracticeGroupId == 'daily') {
-                                    _completeCurrentTask(playSelectedTask);
-                                    final nextDailyEntry = _nextDailyDeckEntry(
-                                      state:
-                                          widget.state ??
-                                          Act0ShellStateV1.sample,
-                                    );
-                                    if (_dailyCompletedRepCount < 3 &&
-                                        nextDailyEntry != null) {
-                                      final launchWorld = _worldById(
-                                        _progressedWorlds(
-                                          widget.state ??
-                                              Act0ShellStateV1.sample,
-                                        ),
-                                        nextDailyEntry.worldId,
-                                      );
-                                      _startTaskByIds(
-                                        launchWorld,
-                                        nextDailyEntry.lessonId,
-                                        nextDailyEntry.taskId,
-                                        skipTeaching: true,
-                                        allowDrillBypass: true,
-                                        rapidPracticeLoop: true,
-                                      );
-                                      _activePracticeGroupId = 'daily';
-                                      _showPlayHub = false;
-                                      _returnToPlayHubOnBack = true;
+                                    if (_completeSameSignalRecheckV1(
+                                      selectedWorld: selectedWorld,
+                                      selectedLesson: selectedLesson,
+                                      selectedTask: playSelectedTask,
+                                      runner: playRunner,
+                                    )) {
                                       return;
                                     }
-                                    _finishRapidPracticeLoopToHub(
-                                      completedLessonId:
-                                          selectedLesson.lessonId,
-                                      completedRepCount: _dailyCompletedRepCount
-                                          .clamp(0, 3),
-                                      cleanRepCount: _dailyCleanRepCountV1(),
-                                      resultSummary:
-                                          _dailyCleanRepCountV1() >=
-                                              _dailyCompletedRepCount.clamp(
-                                                0,
-                                                3,
-                                              )
-                                          ? 'daily_clean_set_complete'
-                                          : 'daily_set_complete',
-                                    );
-                                    return;
-                                  }
-                                  if (_rapidPracticeLoop) {
-                                    _completeCurrentTask(playSelectedTask);
-                                    final singleCleanRep =
-                                        (playRunner.selectedOption?.isCorrect ??
-                                            false) &&
-                                        !_choiceWasAssistedV1;
-                                    _finishRapidPracticeLoopToHub(
-                                      completedLessonId:
-                                          selectedLesson.lessonId,
-                                      completedRepCount: 1,
-                                      cleanRepCount: singleCleanRep ? 1 : 0,
-                                      resultSummary: singleCleanRep
-                                          ? 'single_clean_rep_complete'
-                                          : 'single_rep_complete',
-                                    );
-                                    return;
-                                  }
-                                  if (_activeLessonWrapUpTaskId ==
-                                      playSelectedTask.taskId) {
-                                    final wrappedCorrect =
-                                        playRunner.selectedOption?.isCorrect ??
-                                        false;
-                                    if (wrappedCorrect) {
-                                      _completeCurrentTask(playSelectedTask);
+                                    if (_activeRepairTaskId ==
+                                        playSelectedTask.taskId) {
+                                      final repaired =
+                                          act0IndependentRepairProofV1(
+                                            isCorrect:
+                                                playRunner
+                                                    .selectedOption
+                                                    ?.isCorrect ??
+                                                false,
+                                            assistanceKind: _choiceAssistanceV1,
+                                          );
+                                      final repairSourceTaskId =
+                                          _activeRepairSourceTaskId ??
+                                          playSelectedTask.taskId;
+                                      final repairSourceRecord =
+                                          _mistakeRecords[repairSourceTaskId];
+                                      // Practice Queue owns independent
+                                      // answer telemetry at decision time.
+                                      // Assisted answers bypass that owner, so
+                                      // keep the truthful non-success event here.
+                                      if (!_isPracticeQueueRepairAnswerV1(
+                                            playSelectedTask,
+                                          ) ||
+                                          _choiceWasAssistedV1) {
+                                        _emitRepairCompletedTelemetryV1(
+                                          sourceTaskId: repairSourceTaskId,
+                                          repairTaskId: playSelectedTask.taskId,
+                                          repaired: repaired,
+                                        );
+                                      }
+                                      _emitRepairItemCompletedTelemetryV1(
+                                        sourceTaskId: repairSourceTaskId,
+                                        targetTaskId: playSelectedTask.taskId,
+                                        repaired: repaired,
+                                        record: repairSourceRecord,
+                                      );
+                                      // Practice Queue closure is owned by its
+                                      // exact queue outcome; inline recheck is
+                                      // reserved for the same-signal feedback path.
+                                      final startsSourceRecheck =
+                                          _activeSameSignalFeedbackRepairV1;
+                                      if (repaired) {
+                                        _clearMatchedOpenRepairIntentV1(
+                                          sourceTaskId: repairSourceTaskId,
+                                          completedTaskId:
+                                              playSelectedTask.taskId,
+                                        );
+                                        _clearOpenRepairIntentsForCompletedTaskV1(
+                                          completedTaskId:
+                                              playSelectedTask.taskId,
+                                        );
+                                        // A directed repair can rehearse a locked
+                                        // curriculum task. Its independent proof
+                                        // closes the repair, but cannot grant the
+                                        // future lesson's completion or normal XP.
+                                        final curriculumWorld = _worldById(
+                                          _progressedWorlds(
+                                            widget.state ??
+                                                Act0ShellStateV1.sample,
+                                          ),
+                                          _selectedWorldId,
+                                        );
+                                        final curriculumLesson = _lessonById(
+                                          curriculumWorld.lessons,
+                                          _selectedLessonId,
+                                        );
+                                        if (curriculumWorld.isSelectable &&
+                                            curriculumLesson.isSelectable &&
+                                            _taskAvailable(
+                                              curriculumLesson,
+                                              playSelectedTask.taskId,
+                                            )) {
+                                          _completeCurrentTask(
+                                            playSelectedTask,
+                                          );
+                                        } else {
+                                          _refreshRetentionMemoryStatusesV1();
+                                          _persistProgress();
+                                        }
+                                        if (startsSourceRecheck &&
+                                            _startSameSignalRecheckV1(
+                                              selectedWorld: selectedWorld,
+                                              sourceTaskId: repairSourceTaskId,
+                                            )) {
+                                          _clearActiveRepairLaunchV1();
+                                          _activeRepairSourceTaskId = null;
+                                          _activeSameSignalFeedbackRepairV1 =
+                                              false;
+                                          _pendingFeedbackRepairSourceTaskIdV1 =
+                                              null;
+                                          _pendingFeedbackRepairTaskIdV1 = null;
+                                          _activeRepairResultReceiptLine = null;
+                                          _activeRepairSessionSummaryLines =
+                                              const <String>[];
+                                          _selectedOptionId = null;
+                                          _phase = Act0LessonPhaseV1.drill;
+                                          _teachingStepIndex = 0;
+                                          _rapidPracticeLoop = false;
+                                          return;
+                                        }
+                                      }
+                                      _tab = Act0ShellTabV1.review;
+                                      _showPlayHub = true;
+                                      _returnToPlayHubOnBack = false;
+                                      _clearActiveRepairLaunchV1();
+                                      _activeRepairSourceTaskId = null;
+                                      _activeSameSignalFeedbackRepairV1 = false;
+                                      _pendingFeedbackRepairSourceTaskIdV1 =
+                                          null;
+                                      _pendingFeedbackRepairTaskIdV1 = null;
+                                      _activeRepairResultReceiptLine = null;
+                                      _activeRepairSessionSummaryLines =
+                                          const <String>[];
+                                      _selectedOptionId = null;
+                                      _phase = Act0LessonPhaseV1.theory;
+                                      _teachingStepIndex = 0;
+                                      _rapidPracticeLoop = false;
+                                      return;
                                     }
-                                    _lessonRunWrapUpCompletedTaskIds.add(
-                                      playSelectedTask.taskId,
-                                    );
-                                    _activeLessonWrapUpTaskId = null;
-                                    _selectedOptionId = null;
-                                    _phase = Act0LessonPhaseV1.theory;
-                                    _teachingStepIndex = 0;
+                                    if (_rapidPracticeLoop &&
+                                        _activePracticeGroupId == 'daily') {
+                                      _completeCurrentTask(playSelectedTask);
+                                      final nextDailyEntry =
+                                          _nextDailyDeckEntry(
+                                            state:
+                                                widget.state ??
+                                                Act0ShellStateV1.sample,
+                                          );
+                                      if (_dailyCompletedRepCount < 3 &&
+                                          nextDailyEntry != null) {
+                                        final launchWorld = _worldById(
+                                          _progressedWorlds(
+                                            widget.state ??
+                                                Act0ShellStateV1.sample,
+                                          ),
+                                          nextDailyEntry.worldId,
+                                        );
+                                        _startTaskByIds(
+                                          launchWorld,
+                                          nextDailyEntry.lessonId,
+                                          nextDailyEntry.taskId,
+                                          skipTeaching: true,
+                                          allowDrillBypass: true,
+                                          rapidPracticeLoop: true,
+                                        );
+                                        _activePracticeGroupId = 'daily';
+                                        _showPlayHub = false;
+                                        _returnToPlayHubOnBack = true;
+                                        return;
+                                      }
+                                      _finishRapidPracticeLoopToHub(
+                                        completedLessonId:
+                                            selectedLesson.lessonId,
+                                        completedRepCount:
+                                            _dailyCompletedRepCount.clamp(0, 3),
+                                        cleanRepCount: _dailyCleanRepCountV1(),
+                                        resultSummary:
+                                            _dailyCleanRepCountV1() >=
+                                                _dailyCompletedRepCount.clamp(
+                                                  0,
+                                                  3,
+                                                )
+                                            ? 'daily_clean_set_complete'
+                                            : 'daily_set_complete',
+                                      );
+                                      return;
+                                    }
+                                    if (_rapidPracticeLoop) {
+                                      _completeCurrentTask(playSelectedTask);
+                                      final singleCleanRep =
+                                          (playRunner
+                                                  .selectedOption
+                                                  ?.isCorrect ??
+                                              false) &&
+                                          !_choiceWasAssistedV1;
+                                      _finishRapidPracticeLoopToHub(
+                                        completedLessonId:
+                                            selectedLesson.lessonId,
+                                        completedRepCount: 1,
+                                        cleanRepCount: singleCleanRep ? 1 : 0,
+                                        resultSummary: singleCleanRep
+                                            ? 'single_clean_rep_complete'
+                                            : 'single_rep_complete',
+                                      );
+                                      return;
+                                    }
+                                    if (_activeLessonWrapUpTaskId ==
+                                        playSelectedTask.taskId) {
+                                      final wrappedCorrect =
+                                          playRunner
+                                              .selectedOption
+                                              ?.isCorrect ??
+                                          false;
+                                      if (wrappedCorrect) {
+                                        _completeCurrentTask(playSelectedTask);
+                                      }
+                                      _lessonRunWrapUpCompletedTaskIds.add(
+                                        playSelectedTask.taskId,
+                                      );
+                                      _activeLessonWrapUpTaskId = null;
+                                      _selectedOptionId = null;
+                                      _phase = Act0LessonPhaseV1.theory;
+                                      _teachingStepIndex = 0;
+                                      if (_maybeStartLessonWrapUpRetry(
+                                        selectedLesson,
+                                      )) {
+                                        return;
+                                      }
+                                      _restoreWrapUpAnchorTaskId(
+                                        selectedLesson,
+                                      );
+                                      if (_maybeShowBlockCompletionSummary(
+                                        selectedWorld: selectedWorld,
+                                        selectedLesson: selectedLesson,
+                                        selectedTask: playSelectedTask,
+                                      )) {
+                                        return;
+                                      }
+                                      _advanceAfterTask(
+                                        selectedWorld,
+                                        selectedLesson,
+                                      );
+                                      return;
+                                    }
+                                    if (_startSameSignalRepairFromFeedbackV1(
+                                      selectedWorld: selectedWorld,
+                                      selectedTask: playSelectedTask,
+                                      runner: playRunner,
+                                    )) {
+                                      return;
+                                    }
+                                    if (_shouldRetryInsideLesson(
+                                      playSelectedTask,
+                                      playRunner,
+                                    )) {
+                                      _placementHandoffActive = false;
+                                      _startInsideLessonRetry(
+                                        playSelectedTask,
+                                        playRunner,
+                                      );
+                                      return;
+                                    }
+                                    _placementHandoffActive = false;
+                                    _completeCurrentTask(playSelectedTask);
                                     if (_maybeStartLessonWrapUpRetry(
                                       selectedLesson,
                                     )) {
                                       return;
                                     }
-                                    _restoreWrapUpAnchorTaskId(selectedLesson);
                                     if (_maybeShowBlockCompletionSummary(
                                       selectedWorld: selectedWorld,
                                       selectedLesson: selectedLesson,
                                       selectedTask: playSelectedTask,
                                     )) {
+                                      _selectedOptionId = null;
+                                      _teachingStepIndex = 0;
                                       return;
                                     }
                                     _advanceAfterTask(
                                       selectedWorld,
                                       selectedLesson,
                                     );
-                                    return;
-                                  }
-                                  if (_startSameSignalRepairFromFeedbackV1(
-                                    selectedWorld: selectedWorld,
-                                    selectedTask: playSelectedTask,
-                                    runner: playRunner,
-                                  )) {
-                                    return;
-                                  }
-                                  if (_shouldRetryInsideLesson(
-                                    playSelectedTask,
-                                    playRunner,
-                                  )) {
-                                    _placementHandoffActive = false;
-                                    _startInsideLessonRetry(
-                                      playSelectedTask,
-                                      playRunner,
-                                    );
-                                    return;
-                                  }
-                                  _placementHandoffActive = false;
-                                  _completeCurrentTask(playSelectedTask);
-                                  if (_maybeStartLessonWrapUpRetry(
-                                    selectedLesson,
-                                  )) {
-                                    return;
-                                  }
-                                  if (_maybeShowBlockCompletionSummary(
-                                    selectedWorld: selectedWorld,
-                                    selectedLesson: selectedLesson,
-                                    selectedTask: playSelectedTask,
-                                  )) {
                                     _selectedOptionId = null;
                                     _teachingStepIndex = 0;
-                                    return;
-                                  }
-                                  _advanceAfterTask(
-                                    selectedWorld,
-                                    selectedLesson,
-                                  );
-                                  _selectedOptionId = null;
-                                  _teachingStepIndex = 0;
-                                }),
+                                  },
+                                ),
                               ),
                       Act0ShellTabV1.review => Act0ReviewShellV1(
                         review: reviewState,
@@ -6828,7 +7095,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           );
                         }),
                         sessionDrillRecheckQueueItems:
-                            _sessionDrillRecheckQueueItemsV1,
+                            _suppressLegacyRecheckAfterRecoveryV1
+                            ? const []
+                            : _sessionDrillRecheckQueueItemsV1,
                         mistakeHistoryItems:
                             Act0ReviewMistakeHistoryConsumerV1.fromHistory(
                               _reviewMistakeHistoryV1,
@@ -6867,6 +7136,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           _startDueReviewItemV1(item);
                         }),
                         onStartSessionDrillRecheck: (item) {
+                          if (!_acceptRecoveryCallbackV1(callbackEpochV1))
+                            return;
+
+                          if (_suppressLegacyRecheckAfterRecoveryV1) return;
                           unawaited(
                             pushSessionDrillRecheckLaunchV1(context, item),
                           );
@@ -6897,6 +7170,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 profileStreakDays: profileState.streakDays,
                               ),
                             ),
+                        onRecoveryOptions: _usesPersistedProgress
+                            ? _openRecoveryOptionsV1
+                            : null,
                         onRetakePlacement: _openPlacementFlow,
                         onReplayWelcome: _openWelcomeReplayV1,
                         onGoToHome: () =>
@@ -9789,6 +10065,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   Future<void> _persistPlacementCompletionV1(
     Act0PlacementResultV1 result,
   ) async {
+    final epoch = _recoveryEpochV1;
+    final score = _placementDiagnosticScore;
     await ProgressService.saveIntakeProfile(<String, Object?>{
       'version': 'act0_placement_v1',
       'completedAt': DateTime.now().toUtc().toIso8601String(),
@@ -9799,7 +10077,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'recommendedTaskId': result.recommendedTaskId,
       'focusLabel': result.level.name,
     });
-    await ProgressService.setPlacementScoreV1(_placementDiagnosticScore);
+    if (!mounted || epoch != _recoveryEpochV1) return;
+    await ProgressService.setPlacementScoreV1(score);
   }
 
   String _firstValueReceiptLineV1(Act0LessonTaskV1? task) {
@@ -10059,8 +10338,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Future<void> _completeWelcomeV1() async {
+    final epoch = _recoveryEpochV1;
     await Act0FirstStartPreferencesV1.setWelcomeCompleted();
-    if (!mounted) {
+    if (!mounted || epoch != _recoveryEpochV1) {
       return;
     }
     final replayMode = _welcomeReturnTabV1 != null;
@@ -10133,9 +10413,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Future<void> _animatePlacementSkipReveal(List<String> orderedTaskIds) async {
+    final epoch = _recoveryEpochV1;
     for (final taskId in orderedTaskIds) {
       await Future<void>.delayed(const Duration(milliseconds: 140));
-      if (!mounted) {
+      if (!mounted || epoch != _recoveryEpochV1) {
         return;
       }
       if (!_skippedTaskIds.contains(taskId) ||
@@ -14851,6 +15132,7 @@ class _Act0PersistedProgressV1 {
     required this.selectedLessonId,
     required this.selectedTaskId,
     required this.earnedXp,
+    this.suppressLegacyRecheckAfterRecovery = false,
     this.profileSkillValues = const <String, int>{},
     this.recentSkillGains = const <Act0SkillGainV1>[],
     this.lastActiveDay = '',
@@ -14889,6 +15171,7 @@ class _Act0PersistedProgressV1 {
   final String selectedLessonId;
   final String selectedTaskId;
   final int earnedXp;
+  final bool suppressLegacyRecheckAfterRecovery;
   final Map<String, int> profileSkillValues;
   final List<Act0SkillGainV1> recentSkillGains;
   final String lastActiveDay;
@@ -14931,6 +15214,8 @@ class _Act0PersistedProgressV1 {
       ..sort((a, b) => a.sourceTaskId.compareTo(b.sourceTaskId));
     return jsonEncode(<String, Object>{
       'schemaVersion': 19,
+      if (suppressLegacyRecheckAfterRecovery)
+        'suppressLegacyRecheckAfterRecovery': true,
       'completedTaskIds': sortedTaskIds,
       'skippedTaskIds': sortedSkippedTaskIds,
       'completedLessonIds': sortedLessonIds,
@@ -14999,6 +15284,9 @@ class _Act0PersistedProgressV1 {
       return null;
     }
     final map = decoded.cast<String, Object?>();
+    if (map.containsKey('suppressLegacyRecheckAfterRecovery') &&
+        map['suppressLegacyRecheckAfterRecovery'] is! bool)
+      return null;
     final schemaVersion = map['schemaVersion'];
     // Accept v1-v17 as the shell snapshot evolves.
     if (schemaVersion != 1 &&
@@ -15149,6 +15437,8 @@ class _Act0PersistedProgressV1 {
       return null;
     }
     return _Act0PersistedProgressV1(
+      suppressLegacyRecheckAfterRecovery:
+          map['suppressLegacyRecheckAfterRecovery'] == true,
       completedTaskIds: completedTaskIds,
       skippedTaskIds: skippedTaskIds,
       completedLessonIds: completedLessonIds,

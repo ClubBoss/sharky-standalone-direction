@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,8 +21,42 @@ class _CheckpointHealFailure extends FormatException {
     : super('Progress checkpoints could not be healed');
 }
 
+/// Immutable inspection token. Inspection itself never heals or writes data.
+class Act0RecoveryProposalV1 {
+  const Act0RecoveryProposalV1._(this._snapshot);
+  final String _snapshot;
+}
+
+/// Opaque deletion consent token; it exposes no damaged learner values.
+class Act0RecoveryCopyV1 {
+  const Act0RecoveryCopyV1._(this.exists, this.pending, this._value);
+  final bool exists;
+  final bool pending;
+  final String _value;
+}
+
+class Act0RecoveryHoldV1 extends FormatException {
+  const Act0RecoveryHoldV1() : super('Recovery could not be safely verified');
+}
+
 class Act0ProgressStoreV1 {
-  Act0ProgressStoreV1({required this.key, required this.isValidPayload});
+  Act0ProgressStoreV1({
+    required this.key,
+    required this.isValidPayload,
+    this.debugRecoveryBoundary,
+  }) : _lease = _epochs[key] ?? 0;
+
+  // Optional observer for deterministic cuts and a separately flagged debug
+  // native capture. Never supplies progress or changes the protocol's writes.
+  final Future<void> Function(String)? debugRecoveryBoundary;
+  static final _epochs = <String, int>{};
+  final int _lease;
+  bool get isWriteLeaseCurrent => _lease == (_epochs[key] ?? 0);
+  static const _maxRevision = 9007199254740991;
+  static final Object _absent = Object();
+  String get damagedCopyKey => '${key}_damaged_copy_v1';
+  String get recoveryIntentKey => '${key}_recovery_intent_v1';
+  List<String> get _protectedKeys => [key, headKey, recoveryKey, backupKey];
 
   final String key;
   final bool Function(String) isValidPayload;
@@ -51,18 +86,30 @@ class Act0ProgressStoreV1 {
   /// Wait for all requests already issued against this storage key.
   Future<void> flush() => _queues[key] ?? Future<void>.value();
 
-  Future<String?> load() => _serial(() async {
+  Future<String?> load() async => (await loadState()).payload;
+
+  Future<({String? payload, bool isReset})> loadState() => _serial(() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.reload(); // Read durable platform data, not a write cache.
-    return (await _resolve(prefs)).payload;
+    await prefs.reload();
+    if (prefs.containsKey(recoveryIntentKey) && !await _resumeRecovery(prefs)) {
+      throw const Act0RecoveryHoldV1();
+    }
+    final state = await _resolve(prefs);
+    return (
+      payload: state.payload,
+      isReset: state.revision > 0 && state.payload == null,
+    );
   });
 
   Future<bool> save(String payload) => _serial(() async {
-    if (!isValidPayload(payload)) return false;
+    if (!isWriteLeaseCurrent || !isValidPayload(payload)) return false;
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.reload();
+      if (!isWriteLeaseCurrent || prefs.containsKey(recoveryIntentKey))
+        return false;
       final current = await _resolve(prefs);
+      if (current.revision >= _maxRevision) return false;
       return await _commit(
         prefs,
         current.revision + 1,
@@ -82,6 +129,8 @@ class Act0ProgressStoreV1 {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.reload();
+      if (!isWriteLeaseCurrent || prefs.containsKey(recoveryIntentKey))
+        return false;
       var revision = 0;
       String? previousRaw;
       try {
@@ -95,6 +144,7 @@ class Act0ProgressStoreV1 {
         // Explicit reset over unreadable/conflicting copies outranks them all.
         revision = _highestRevision(prefs);
       }
+      if (revision >= _maxRevision) return false;
       final committed = await _commit(
         prefs,
         revision + 1,
@@ -113,6 +163,341 @@ class Act0ProgressStoreV1 {
       return false;
     }
   });
+
+  /// No canonical writes, checkpoint healing, archive or intent creation.
+  Future<Act0RecoveryProposalV1> inspectRecovery() => _serial(() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.reload();
+    if (prefs.containsKey(recoveryIntentKey)) throw const Act0RecoveryHoldV1();
+    final snapshot = _snapshot(prefs);
+    _targetTombstone(snapshot); // Reject revision overflow before consent.
+    return Act0RecoveryProposalV1._(snapshot);
+  });
+
+  /// Only explicit confirmation calls this method. An existing different copy
+  /// is never evicted; deleting it requires a separate opaque consent token.
+  Future<bool> confirmRecovery(
+    Act0RecoveryProposalV1 proposal,
+  ) => _serial(() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.reload();
+      if (prefs.containsKey(recoveryIntentKey) ||
+          _snapshot(prefs) != proposal._snapshot)
+        return false;
+      final target = _targetTombstone(proposal._snapshot);
+      final archive = jsonEncode({
+        'format': 1,
+        'storeKey': key,
+        'snapshot': jsonDecode(proposal._snapshot),
+        'digest': _hash(jsonEncode([1, key, proposal._snapshot])),
+      });
+      if (prefs.containsKey(damagedCopyKey)) {
+        final existing = prefs.get(damagedCopyKey);
+        if (existing is! String ||
+            _archiveSnapshot(existing) != proposal._snapshot)
+          return false;
+      } else if (!await _write(prefs, damagedCopyKey, archive)) {
+        return false;
+      }
+      await prefs.reload();
+      final verifiedArchive = prefs.get(damagedCopyKey);
+      if (verifiedArchive is! String ||
+          _archiveSnapshot(verifiedArchive) != proposal._snapshot)
+        return false;
+      await _boundary('archive_verified');
+      await prefs.reload();
+      if (_snapshot(prefs) != proposal._snapshot ||
+          prefs.get(damagedCopyKey) != verifiedArchive)
+        return false;
+      final intentFields = [
+        1,
+        key,
+        _hash(verifiedArchive),
+        _hash(proposal._snapshot),
+        target,
+      ];
+      final intent = jsonEncode({
+        'format': 1,
+        'storeKey': key,
+        'archiveDigest': intentFields[2],
+        'snapshotDigest': intentFields[3],
+        'target': target,
+        'digest': _hash(jsonEncode(intentFields)),
+      });
+      // Fence old instances and queued saves even if the intent write's result
+      // becomes indeterminate. Canonical bytes are still untouched here.
+      _epochs[key] = (_epochs[key] ?? 0) + 1;
+      if (!await _write(prefs, recoveryIntentKey, intent)) return false;
+      await _boundary('intent_verified');
+      return await _resumeRecovery(prefs);
+    } catch (_) {
+      return false;
+    }
+  });
+
+  Future<Act0RecoveryCopyV1> inspectRecoveryCopy() => _serial(() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.reload();
+    return Act0RecoveryCopyV1._(
+      prefs.containsKey(damagedCopyKey),
+      prefs.containsKey(recoveryIntentKey),
+      jsonEncode(
+        _typed(
+          prefs.containsKey(damagedCopyKey)
+              ? prefs.get(damagedCopyKey)
+              : _absent,
+        ),
+      ),
+    );
+  });
+
+  Future<bool> deleteRecoveryCopy(Act0RecoveryCopyV1 consent) =>
+      _serial(() async {
+        try {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.reload();
+          if (!consent.exists || prefs.containsKey(recoveryIntentKey))
+            return false;
+          final current = jsonEncode(
+            _typed(
+              prefs.containsKey(damagedCopyKey)
+                  ? prefs.get(damagedCopyKey)
+                  : _absent,
+            ),
+          );
+          if (current != consent._value) return false;
+          return await _removeVerified(prefs, damagedCopyKey);
+        } catch (_) {
+          return false;
+        }
+      });
+
+  Future<bool> _resumeRecovery(SharedPreferences prefs) async {
+    try {
+      await prefs.reload();
+      final archive = prefs.get(damagedCopyKey);
+      final rawIntent = prefs.get(recoveryIntentKey);
+      if (archive is! String || rawIntent is! String) return false;
+      final snapshot = _archiveSnapshot(archive);
+      final intent = jsonDecode(rawIntent);
+      if (intent is! Map ||
+          intent.length != 6 ||
+          intent['format'] != 1 ||
+          intent['storeKey'] != key)
+        return false;
+      final target = _targetTombstone(snapshot);
+      final fields = [1, key, _hash(archive), _hash(snapshot), target];
+      if (intent['archiveDigest'] != fields[2] ||
+          intent['snapshotDigest'] != fields[3] ||
+          intent['target'] != target ||
+          intent['digest'] != _hash(jsonEncode(fields)))
+        return false;
+      _epochs[key] = (_epochs[key] ?? 0) + 1;
+      // Never take _commit's corrupt-head rollback path during recovery.
+      for (final entry in [
+        (headKey, 'head_verified'),
+        (recoveryKey, 'recovery_verified'),
+        (backupKey, 'backup_verified'),
+      ]) {
+        await prefs.reload();
+        if (prefs.get(damagedCopyKey) != archive ||
+            prefs.get(recoveryIntentKey) != rawIntent ||
+            !_validRecoveryPrefix(prefs, snapshot, target))
+          return false;
+        if (prefs.get(entry.$1) != target &&
+            !await _write(prefs, entry.$1, target))
+          return false;
+        await _boundary(entry.$2);
+      }
+      await prefs.reload();
+      if (prefs.get(damagedCopyKey) != archive ||
+          prefs.get(recoveryIntentKey) != rawIntent ||
+          !_validRecoveryPrefix(prefs, snapshot, target) ||
+          ![
+            headKey,
+            recoveryKey,
+            backupKey,
+          ].every((k) => prefs.get(k) == target))
+        return false;
+      if (!await _removeVerified(prefs, key)) return false;
+      await _boundary('legacy_removed');
+      await prefs.reload();
+      if (prefs.get(damagedCopyKey) != archive ||
+          prefs.get(recoveryIntentKey) != rawIntent ||
+          prefs.containsKey(key) ||
+          ![
+            headKey,
+            recoveryKey,
+            backupKey,
+          ].every((k) => prefs.get(k) == target))
+        return false;
+      if (!await _removeVerified(prefs, recoveryIntentKey)) return false;
+      await _boundary('intent_removed');
+      await prefs.reload();
+      return prefs.get(damagedCopyKey) == archive &&
+          !prefs.containsKey(recoveryIntentKey) &&
+          !prefs.containsKey(key) &&
+          [
+            headKey,
+            recoveryKey,
+            backupKey,
+          ].every((k) => prefs.get(k) == target);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool _validRecoveryPrefix(
+    SharedPreferences prefs,
+    String snapshot,
+    String target,
+  ) {
+    final original = _snapshotValues(snapshot);
+    var originalSeen = false;
+    for (final k in [headKey, recoveryKey, backupKey]) {
+      final value = prefs.containsKey(k) ? prefs.get(k) : _absent;
+      if (value == target) {
+        if (originalSeen)
+          return false; // A later stage cannot precede its fence.
+      } else {
+        originalSeen = true;
+        if (jsonEncode(_typed(value)) != jsonEncode(_typed(original[k])))
+          return false;
+      }
+    }
+    final legacy = prefs.containsKey(key) ? prefs.get(key) : _absent;
+    if (jsonEncode(_typed(legacy)) == jsonEncode(_typed(original[key])))
+      return true;
+    return identical(legacy, _absent) &&
+        [headKey, recoveryKey, backupKey].every((k) => prefs.get(k) == target);
+  }
+
+  Future<bool> _removeVerified(SharedPreferences prefs, String target) async {
+    for (var attempt = 0; attempt < 2; attempt++) {
+      try {
+        await prefs.remove(target);
+      } catch (_) {
+        /* readback decides */
+      }
+      try {
+        await prefs.reload();
+        if (!prefs.containsKey(target)) return true;
+      } catch (_) {
+        return false;
+      }
+    }
+    return false;
+  }
+
+  Future<void> _boundary(String stage) async {
+    await debugRecoveryBoundary?.call(stage);
+  }
+
+  static String _hash(String raw) =>
+      sha256.convert(utf8.encode(raw)).toString();
+
+  String _snapshot(SharedPreferences prefs) => jsonEncode([
+    for (final k in _protectedKeys)
+      [k, _typed(prefs.containsKey(k) ? prefs.get(k) : _absent)],
+  ]);
+
+  Map<String, Object?> _snapshotValues(String raw) {
+    final rows = jsonDecode(raw);
+    if (rows is! List || rows.length != _protectedKeys.length)
+      throw const Act0RecoveryHoldV1();
+    final result = <String, Object?>{};
+    for (var i = 0; i < rows.length; i++) {
+      final row = rows[i];
+      if (row is! List || row.length != 2 || row[0] != _protectedKeys[i])
+        throw const Act0RecoveryHoldV1();
+      result[row[0] as String] = _untyped(row[1]);
+    }
+    return result;
+  }
+
+  String _archiveSnapshot(String raw) {
+    final archive = jsonDecode(raw);
+    if (archive is! Map ||
+        archive.length != 4 ||
+        archive['format'] != 1 ||
+        archive['storeKey'] != key)
+      throw const Act0RecoveryHoldV1();
+    final snapshot = jsonEncode(archive['snapshot']);
+    final values = _snapshotValues(snapshot);
+    final canonical = jsonEncode([
+      for (final k in _protectedKeys) [k, _typed(values[k])],
+    ]);
+    if (canonical != snapshot ||
+        archive['digest'] != _hash(jsonEncode([1, key, canonical])))
+      throw const Act0RecoveryHoldV1();
+    return canonical;
+  }
+
+  String _targetTombstone(String snapshot) {
+    var highest = 0;
+    final values = _snapshotValues(snapshot);
+    for (final k in [headKey, recoveryKey, backupKey]) {
+      final value = values[k];
+      if (value is! String) continue;
+      Object? decoded;
+      try {
+        decoded = jsonDecode(value);
+      } catch (_) {
+        continue;
+      }
+      final revision = decoded is Map ? decoded['revision'] : null;
+      if (revision is num && revision >= _maxRevision)
+        throw const Act0RecoveryHoldV1();
+      if (revision is int && revision > highest) highest = revision;
+    }
+    return _envelope(highest + 1, null);
+  }
+
+  static Map<String, Object?> _typed(Object? value) {
+    if (identical(value, _absent)) return {'t': 'absent'};
+    if (value is String) return {'t': 'string', 'v': value};
+    if (value is bool) return {'t': 'bool', 'v': value};
+    if (value is int) return {'t': 'int', 'v': value.toString()};
+    if (value is double) {
+      final bytes = ByteData(8)..setFloat64(0, value, Endian.big);
+      return {
+        't': 'double',
+        'v': bytes.buffer
+            .asUint8List()
+            .map((b) => b.toRadixString(16).padLeft(2, '0'))
+            .join(),
+      };
+    }
+    if (value is List && value.every((v) => v is String))
+      return {'t': 'strings', 'v': List<String>.from(value)};
+    throw const Act0RecoveryHoldV1();
+  }
+
+  static Object? _untyped(Object? raw) {
+    if (raw is! Map) throw const Act0RecoveryHoldV1();
+    final type = raw['t'], v = raw['v'];
+    if (type == 'absent' && raw.length == 1) return _absent;
+    if (raw.length != 2) throw const Act0RecoveryHoldV1();
+    if (type == 'string' && v is String) return v;
+    if (type == 'bool' && v is bool) return v;
+    if (type == 'int' && v is String) {
+      final n = int.tryParse(v);
+      if (n != null && n.toString() == v) return n;
+    }
+    if (type == 'double' &&
+        v is String &&
+        RegExp(r'^[0-9a-f]{16}$').hasMatch(v)) {
+      final bytes = Uint8List.fromList([
+        for (var i = 0; i < 16; i += 2)
+          int.parse(v.substring(i, i + 2), radix: 16),
+      ]);
+      return ByteData.sublistView(bytes).getFloat64(0, Endian.big);
+    }
+    if (type == 'strings' && v is List && v.every((x) => x is String))
+      return List<String>.from(v);
+    throw const Act0RecoveryHoldV1();
+  }
 
   Future<bool> _commit(
     SharedPreferences prefs,
@@ -207,6 +592,7 @@ class Act0ProgressStoreV1 {
       final payload = map['payload'];
       if (revision is! int ||
           revision < 1 ||
+          revision > _maxRevision ||
           (payload != null && payload is! String) ||
           map['digest'] != _digest(revision, payload as String?) ||
           (payload != null && !isValidPayload(payload))) {
