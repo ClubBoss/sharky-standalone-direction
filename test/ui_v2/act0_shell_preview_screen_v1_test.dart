@@ -330,10 +330,7 @@ void main() {
       final momentum = tester.widget<Text>(
         find.byKey(const Key('act0_shell_home_proof_momentum_text')),
       );
-      expect(
-        momentum.data,
-        'Route proof is active. Next proof starts with one clean read.',
-      );
+      expect(momentum.data, 'Good progress. Keep reading the table.');
       expect(find.textContaining('mastery'), findsNothing);
       expect(find.textContaining('streak'), findsNothing);
     },
@@ -393,12 +390,7 @@ void main() {
 
     expect(find.text('What poker is'), findsOneWidget);
     expect(find.text('1 of 9 lessons complete'), findsOneWidget);
-    expect(
-      find.text(
-        'Route proof is active. Next proof starts with one clean read.',
-      ),
-      findsOneWidget,
-    );
+    expect(find.text('Good progress. Keep reading the table.'), findsOneWidget);
     expect(find.textContaining('1 lessons complete'), findsNothing);
     expect(
       find.byKey(const Key('act0_shell_home_daily_plan_card')),
