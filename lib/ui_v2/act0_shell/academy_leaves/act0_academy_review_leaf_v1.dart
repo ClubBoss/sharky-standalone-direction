@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_v1.dart'
     show Act0DueReviewItemV1;
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_personalized_return_reason_v1.dart'
+    show Act0PersonalizedReturnReasonV1;
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart'
     show Act0MistakeCardV1;
 
@@ -53,6 +55,8 @@ class Act0AcademyReviewSavedCheckV1 {
 /// - [dueItems]: genuinely due independent reviews from the durable retention
 ///   contract. Empty means nothing is due; the leaf never invents due work.
 /// - [savedChecks]: existing saved drill rechecks.
+/// - [nextStep]: the source-selected reinforce/resume focus target. The source
+///   owns eligibility and launch; this leaf only forwards its callback.
 class Act0AcademyReviewLeafInputV1 {
   const Act0AcademyReviewLeafInputV1({
     this.openMistakes = const <Act0MistakeCardV1>[],
@@ -64,6 +68,8 @@ class Act0AcademyReviewLeafInputV1 {
     this.onReplayPastRepair,
     this.onStartDueReview,
     this.onStartSavedCheck,
+    this.nextStep,
+    this.onOpenRecommendedAction,
     this.onOpenLearn,
     this.backdrop,
   });
@@ -77,6 +83,8 @@ class Act0AcademyReviewLeafInputV1 {
   final ValueChanged<Act0MistakeCardV1>? onReplayPastRepair;
   final ValueChanged<Act0DueReviewItemV1>? onStartDueReview;
   final ValueChanged<Act0AcademyReviewSavedCheckV1>? onStartSavedCheck;
+  final Act0PersonalizedReturnReasonV1? nextStep;
+  final VoidCallback? onOpenRecommendedAction;
   final VoidCallback? onOpenLearn;
   final ImageProvider? backdrop;
 }
@@ -99,15 +107,22 @@ class Act0AcademyReviewLeafV1 extends StatelessWidget {
     final due = input.dueItems;
     final dueFirst = due.firstOrNull;
     final pastRepair = input.pastRepairs.isNotEmpty;
+    final nextStep = input.nextStep;
+    final focusAction = nextStep?.recommendedAction;
+    final showFocus =
+        (focusAction == 'reinforce' || focusAction == 'resume_focus') &&
+        nextStep!.sourceTaskId.trim().isNotEmpty &&
+        input.onOpenRecommendedAction != null;
     final fresh =
         mistakes.isEmpty &&
         !pastRepair &&
         !input.hasHistory &&
+        !showFocus &&
         due.isEmpty &&
         input.savedChecks.isEmpty;
     final emptyTitle = fresh
         ? 'No saved mistakes yet'
-        : due.isNotEmpty || input.savedChecks.isNotEmpty
+        : due.isNotEmpty || input.savedChecks.isNotEmpty || showFocus
         ? '0 open mistakes'
         : pastRepair
         ? 'All caught up'
@@ -192,6 +207,18 @@ class Act0AcademyReviewLeafV1 extends StatelessWidget {
             const SizedBox(height: 10),
             for (var i = 1; i < mistakes.length; i++)
               _mistakeRow(mistakes[i], number: i + 1),
+          ],
+          if (showFocus) ...[
+            const SizedBox(height: 16),
+            _cta(
+              key: const Key('act0_academy_review_leaf_next_step_cta'),
+              label: focusAction == 'reinforce'
+                  ? 'Reinforce this read'
+                  : 'Resume this focus',
+              primary:
+                  featured == null && due.isEmpty && input.savedChecks.isEmpty,
+              onPressed: input.onOpenRecommendedAction,
+            ),
           ],
           if (dueFirst != null) ...[
             const SizedBox(height: 20),
@@ -303,7 +330,7 @@ class Act0AcademyReviewLeafV1 extends StatelessWidget {
             _cta(
               key: const Key('act0_academy_review_leaf_learn'),
               label: 'Continue learning',
-              primary: due.isEmpty && input.savedChecks.isEmpty,
+              primary: due.isEmpty && input.savedChecks.isEmpty && !showFocus,
               onPressed: input.onOpenLearn,
             ),
           ],
