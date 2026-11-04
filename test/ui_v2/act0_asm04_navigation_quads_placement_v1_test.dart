@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -18,6 +19,84 @@ void _phone(WidgetTester tester) {
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
+}
+
+const _neutralJ8oSupport =
+    'J8o from early position: look at the cards and choose a bucket yourself.';
+
+Widget _learnFixture({
+  required Act0WorldCardV1 world,
+  required Act0LessonCardV1 lesson,
+  required Act0LessonTaskV1 task,
+  bool taskList = false,
+  bool openTarget = false,
+  Locale locale = const Locale('en'),
+}) {
+  final opened = lesson.copyWith(
+    state: Act0LessonStateV1.current,
+    isSelectable: true,
+    isLocked: false,
+  );
+  final contextLesson = world.lessons
+      .firstWhere((l) => l.lessonId != lesson.lessonId)
+      .copyWith(
+        state: Act0LessonStateV1.current,
+        isSelectable: true,
+        isLocked: false,
+      );
+  final lessons = taskList
+      ? [contextLesson, if (openTarget) opened else lesson]
+      : [opened];
+  return MaterialApp(
+    locale: locale,
+    supportedLocales: const [Locale('en'), Locale('ru')],
+    localizationsDelegates: const [
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ],
+    home: Scaffold(
+      body: Act0LearnPathShellV1(
+        moduleTitle: world.title,
+        moduleProgressLabel: '0 earned',
+        worlds: [world.copyWith(lessons: lessons)],
+        selectedWorldId: world.worldId,
+        showWorldMenu: false,
+        worldDetailId: null,
+        lessons: lessons,
+        selectedLessonId: taskList ? contextLesson.lessonId : lesson.lessonId,
+        selectedTaskId: taskList
+            ? contextLesson.taskList.first.taskId
+            : task.taskId,
+        activePopupTaskId: task.taskId,
+        completedTaskIds: const {},
+        perfectTaskIds: const {},
+        skippedTaskIds: const {},
+        // Display focus only, never learner completion.
+        pathClosedTaskIds: taskList && !openTarget
+            ? const {}
+            : {
+                for (final t in lesson.taskList.takeWhile(
+                  (t) => t.taskId != task.taskId,
+                ))
+                  t.taskId,
+              },
+        detailLessonId: lesson.lessonId,
+        lessonOutcomeLabels: const {},
+        onSelectWorld: (_) {},
+        onOpenWorldMenu: () {},
+        onCloseWorldMenu: () {},
+        onDismissWorldDetail: () {},
+        onPreviewPremiumWorld: (_) {},
+        onSelectLesson: (_) => true,
+        onOpenLessonAfterScroll: (_) {},
+        onDismissDetail: () {},
+        onSelectTask: (_, _) {},
+        onDismissTaskPopup: () {},
+        onStartTask: (_, _) {},
+      ),
+    ),
+  );
 }
 
 void main() {
@@ -46,63 +125,203 @@ void main() {
       final source = row.task;
       print('J1 canonical=${source.taskId} source=${source.title}');
       await tester.pumpWidget(
+        _learnFixture(world: row.world, lesson: row.lesson, task: source),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      expect(find.text(entry.value), findsWidgets);
+      expect(find.text(source.title), findsNothing);
+      final support = tester
+          .widget<Text>(
+            find.byKey(const Key('act0_shell_current_mission_support')),
+          )
+          .data!;
+      print('J1_SUPPORT ${source.taskId}: $support');
+      expect(support, startsWith('Start here: ${entry.value}.'));
+      if (entry.key == 'hand_discipline_buckets_trash') {
+        // Positive source/choice controls make missing-content passes impossible.
+        expect(source.runner.question, 'Which bucket fits J8o early?');
+        expect(source.runner.options.map((o) => o.id).toSet(), {
+          'trash',
+          'strong',
+        });
+        expect(
+          source.runner.options.singleWhere((o) => o.isCorrect).id,
+          'trash',
+        );
+        expect(
+          source.runner.caption,
+          'J8o is a weak offsuit starter from early position.',
+        );
+        expect(support, 'Start here: ${entry.value}. $_neutralJ8oSupport');
+      } else {
+        // Preserve legitimate scenario facts, including the supplied red zone.
+        expect(support, contains(source.summary ?? source.runner.caption));
+      }
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpWidget(
+        _learnFixture(
+          world: row.world,
+          lesson: row.lesson,
+          task: source,
+          taskList: true,
+        ),
+      );
+      await tester.pumpAndSettle();
+      final title = find.byKey(
+        Key('act0_shell_lesson_step_title_${source.taskId}'),
+      );
+      await tester.ensureVisible(title);
+      expect(tester.widget<Text>(title).data, entry.value);
+      expect(find.text(source.title), findsNothing);
+      // Locked task-list secondary text retains its prerequisite, not the caption.
+      final detail = tester
+          .widget<Text>(
+            find.byKey(const Key('act0_shell_selected_lesson_task_detail')),
+          )
+          .data!;
+      expect(detail.toLowerCase(), isNot(contains('weak offsuit')));
+      expect(detail, isNot(contains(source.title)));
+      expect(row.task, same(source));
+    });
+  }
+
+  testWidgets('J1 available task detail uses neutral J8o support', (
+    tester,
+  ) async {
+    _phone(tester);
+    final row = _catalog.singleWhere(
+      (r) => r.task.taskId == 'hand_discipline_buckets_trash',
+    );
+    await tester.pumpWidget(
+      _learnFixture(
+        world: row.world,
+        lesson: row.lesson,
+        task: row.task,
+        taskList: true,
+        openTarget: true,
+      ),
+    );
+    await tester.pumpAndSettle();
+    final detail = find.byKey(
+      const Key('act0_shell_selected_lesson_task_detail'),
+    );
+    await tester.ensureVisible(detail);
+    expect(tester.widget<Text>(detail).data, _neutralJ8oSupport);
+    expect(
+      find.byKey(Key('act0_shell_lesson_step_title_${row.task.taskId}')),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('J1 RU support neutralizes only the unsolicited J8o caption', (
+    tester,
+  ) async {
+    _phone(tester);
+    final row = _catalog.singleWhere(
+      (r) => r.task.taskId == 'hand_discipline_buckets_trash',
+    );
+    await tester.pumpWidget(
+      _learnFixture(
+        world: row.world,
+        lesson: row.lesson,
+        task: row.task,
+        locale: const Locale('ru'),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final support = tester
+        .widget<Text>(
+          find.byKey(const Key('act0_shell_current_mission_support')),
+        )
+        .data!;
+    expect(
+      support,
+      contains(
+        'J8o с ранней позиции: посмотри на карты и самостоятельно выбери категорию.',
+      ),
+    );
+    expect(row.task.runner.options.singleWhere((o) => o.isCorrect).id, 'trash');
+  });
+
+  testWidgets('J1 J8o authored teaching help and feedback stay intact', (
+    tester,
+  ) async {
+    _phone(tester);
+    final task = _catalog
+        .singleWhere((r) => r.task.taskId == 'hand_discipline_buckets_trash')
+        .task;
+    final assistance = <String>[];
+    Future<void> mount(Act0RunnerStateV1 runner) async {
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: Act0LearnPathShellV1(
-              moduleTitle: row.world.title,
-              moduleProgressLabel: '0 completed',
-              worlds: [row.world],
-              selectedWorldId: row.world.worldId,
-              showWorldMenu: false,
-              worldDetailId: null,
-              lessons: [
-                row.lesson.copyWith(
-                  state: Act0LessonStateV1.current,
-                  isSelectable: true,
-                  isLocked: false,
-                ),
-              ],
-              selectedLessonId: row.lesson.lessonId,
-              selectedTaskId: source.taskId,
-              activePopupTaskId: source.taskId,
-              completedTaskIds: {
-                for (final t in row.lesson.taskList.takeWhile(
-                  (t) => t.taskId != source.taskId,
-                ))
-                  t.taskId,
-              },
-              perfectTaskIds: const {},
-              skippedTaskIds: const {},
-              pathClosedTaskIds: {
-                for (final t in row.lesson.taskList.takeWhile(
-                  (t) => t.taskId != source.taskId,
-                ))
-                  t.taskId,
-              },
-              detailLessonId: row.lesson.lessonId,
-              lessonOutcomeLabels: const {},
-              onSelectWorld: (_) {},
-              onOpenWorldMenu: () {},
-              onCloseWorldMenu: () {},
-              onDismissWorldDetail: () {},
-              onPreviewPremiumWorld: (_) {},
-              onSelectLesson: (_) => true,
-              onOpenLessonAfterScroll: (_) {},
-              onDismissDetail: () {},
-              onSelectTask: (_, _) {},
-              onDismissTaskPopup: () {},
-              onStartTask: (_, _) {},
+            body: Act0LessonRunnerShellV1(
+              runner: runner,
+              theoryRecallStep: task.runner.teachingSteps.first,
+              onChoiceAssistance: (a) => assistance.add(a.name),
+              selectedTaskId: task.taskId,
+              selectedTaskFamily: task.resolvedTaskFamily,
+              compositionFamily: task.resolvedCompositionFamily,
+              tablePresentation: task.tablePresentation,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
             ),
           ),
         ),
       );
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
-      expect(find.text(entry.value), findsWidgets);
-      expect(find.text(source.title), findsNothing);
-      expect(row.task, same(source));
-    });
-  }
+    }
+
+    await mount(
+      task.runner.copyWith(
+        phase: Act0LessonPhaseV1.theory,
+        teachingStepIndex: 0,
+      ),
+    );
+    expect(find.text(task.runner.teachingSteps.first.body), findsWidgets);
+    await mount(
+      task.runner.copyWith(
+        phase: Act0LessonPhaseV1.drill,
+        teachingStepIndex: task.runner.teachingSteps.length,
+      ),
+    );
+    for (final option in task.runner.options) {
+      expect(find.byKey(Key('act0_shell_option_${option.id}')), findsOneWidget);
+    }
+    final help = find.byKey(const Key('act0_shell_theory_recall_cta'));
+    await tester.ensureVisible(help);
+    await tester.tap(help);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('act0_shell_hint_body')), findsOneWidget);
+    final full = find.byKey(const Key('act0_shell_review_full_idea_cta'));
+    await tester.ensureVisible(full);
+    await tester.tap(full);
+    await tester.pumpAndSettle();
+    expect(find.text(task.runner.teachingSteps.first.body), findsWidgets);
+    await tester.tap(
+      find.byKey(const Key('act0_shell_theory_recall_close_cta')),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_option_trash')));
+    await tester.pumpAndSettle();
+    expect(assistance, contains('theoryRecall'));
+    final answer = task.runner.options.singleWhere((o) => o.isCorrect);
+    await mount(
+      task.runner.copyWith(
+        phase: Act0LessonPhaseV1.review,
+        selectedOptionId: answer.id,
+        feedbackTitle: answer.feedbackTitle,
+        feedbackReason: answer.feedbackReason,
+      ),
+    );
+    expect(find.text(answer.feedbackReason), findsWidgets);
+    expect(task.runner.table.heroCards.map((c) => c.rank), ['J', '8']);
+  });
 
   testWidgets('J2 quads pre-choice keeps cards but removes solution cues', (
     tester,
