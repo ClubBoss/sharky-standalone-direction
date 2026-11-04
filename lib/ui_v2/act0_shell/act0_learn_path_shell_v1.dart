@@ -5386,6 +5386,19 @@ String _selectedTaskDetail({
             ru: 'Уже чисто. Один спокойный повтор превратит это в идеал.',
           );
   }
+  return _preChoiceTaskSummaryV1(context, task);
+}
+
+// Unrequested Learn previews must not classify the hand before its bucket
+// decision. Keep the authored caption in the runner, teaching and feedback.
+String _preChoiceTaskSummaryV1(BuildContext context, Act0LessonTaskV1 task) {
+  if (task.taskId == 'hand_discipline_buckets_trash') {
+    return _learnCopyV1(
+      context,
+      en: 'J8o from early position: look at the cards and choose a bucket yourself.',
+      ru: 'Разномастные валет и восьмёрка с ранней позиции: посмотри на карты и самостоятельно выбери категорию.',
+    );
+  }
   return act0AcademyTaskSummaryV1(
     context,
     task,
@@ -5427,11 +5440,7 @@ String _selectedLessonGuidanceV1({
   required Act0LessonTaskV1 nextTask,
 }) {
   final nextTaskTitle = act0AcademyTaskTitleV1(context, nextTask).trim();
-  final nextTaskSummary = act0AcademyTaskSummaryV1(
-    context,
-    nextTask,
-    fallback: nextTask.summary ?? nextTask.runner.caption,
-  ).trim();
+  final nextTaskSummary = _preChoiceTaskSummaryV1(context, nextTask).trim();
   final safeSummary =
       nextTaskSummary.isEmpty || nextTaskSummary == nextTaskTitle
       ? null

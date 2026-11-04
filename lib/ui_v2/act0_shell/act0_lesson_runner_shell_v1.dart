@@ -3090,9 +3090,21 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         ? choreographyFrame
         : null;
     final choreographyActive = activeChoreographyFrame != null;
-    final presentationTable = activeChoreographyFrame == null
+    final choreographedTable = activeChoreographyFrame == null
         ? table
         : act0TableForChoreographyFrameV1(table, activeChoreographyFrame);
+    // Both board overlays and seat-card renderers consume this projection.
+    // Keep the source table intact for teaching, requested help and feedback.
+    final presentationTable =
+        widget.selectedTaskId == 'hand_rankings_quads_drill' &&
+            _isActiveAssessmentStateV1(
+              isTeaching: isTeaching,
+              isTheory: isTheory,
+              isReview: isReview,
+              runner: runner,
+            )
+        ? choreographedTable.copyWith(highlightedCardIds: const <String>[])
+        : choreographedTable;
     final sourceIdentityPolicy = act0TableIdentityPolicyForTeachingSemanticsV1(
       teachingStep?.identityTeachingSemantics ??
           Act0TableIdentityTeachingSemanticsV1.legacy,
@@ -3602,7 +3614,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         child: isAccessibilityDirectDecision
             ? _AccessibilityDirectDecisionV1(
                 question: question,
-                guidance: runner.hint,
+                guidance: act0RuntimeNeutralTableReadCueLabelV1(context),
                 options: runner.options,
                 onChoose: _handleChooseOptionTelemetry,
               )
@@ -14399,7 +14411,8 @@ String _resolveTableCueDisplayV1({
   )) {
     return rawCue;
   }
-  if (selectedTaskId == 'straight_draws_w5_gutshot_draw') {
+  if (selectedTaskId == 'straight_draws_w5_gutshot_draw' ||
+      selectedTaskId == 'hand_rankings_quads_drill') {
     return '';
   }
   if (_looksLikeTrailHistoryQuestionV1(runner, table)) {
