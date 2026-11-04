@@ -6311,7 +6311,8 @@ class _LearningRailV1 extends StatelessWidget {
                     const SizedBox(height: 3),
                     SizedBox(
                       key: const Key('act0_shell_learning_rail_fixed_footer'),
-                      height: 28,
+                      // Reserve target space instead of overlaying the copy.
+                      height: kMinInteractiveDimension,
                       child: Row(
                         children: [
                           _LearningRailNavButtonV1(
@@ -6453,70 +6454,78 @@ class _LearningRailNavButtonV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final hasLabel = (label ?? '').trim().isNotEmpty;
     final resolvedLabel = label?.trim() ?? '';
-    return Container(
-      width: hasLabel ? null : (compact ? 32 : 40),
-      height: compact ? 32 : 40,
-      constraints: BoxConstraints(
-        minWidth: hasLabel ? (compact ? 92 : 110) : (compact ? 32 : 40),
-      ),
-      decoration: BoxDecoration(
-        color: enabled
-            ? tone.withValues(alpha: 0.12)
-            : Act0ShellTokensV1.surface3.withValues(alpha: 0.7),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
-        border: Border.all(
-          color: enabled
-              ? tone.withValues(alpha: 0.30)
-              : Act0ShellTokensV1.border.withValues(alpha: 0.76),
+    final semanticLabel = hasLabel
+        ? act0RuntimeLocalizedGeneralLabelV1(context, resolvedLabel)
+        : MaterialLocalizations.of(context).backButtonTooltip;
+    // Keep the compact painted surface inside a full, non-overlapping target.
+    return TextButton(
+      key: buttonKey,
+      onPressed: enabled ? onPressed : null,
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.zero,
+        minimumSize: const Size(
+          kMinInteractiveDimension,
+          kMinInteractiveDimension,
+        ),
+        visualDensity: VisualDensity.standard,
+        tapTargetSize: MaterialTapTargetSize.padded,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
         ),
       ),
-      child: TextButton(
-        key: buttonKey,
-        onPressed: enabled ? onPressed : null,
-        style: TextButton.styleFrom(
-          padding: EdgeInsets.symmetric(
-            horizontal: hasLabel ? 10 : 0,
-            vertical: 0,
+      child: Semantics(
+        label: semanticLabel,
+        excludeSemantics: true,
+        child: Container(
+          width: hasLabel ? null : (compact ? 32 : 40),
+          height: compact ? 32 : 40,
+          alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(horizontal: hasLabel ? 10 : 0),
+          constraints: BoxConstraints(
+            minWidth: hasLabel ? (compact ? 92 : 110) : (compact ? 32 : 40),
           ),
-          minimumSize: Size(
-            hasLabel ? (compact ? 92 : 110) : (compact ? 32 : 40),
-            compact ? 32 : 40,
-          ),
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          shape: RoundedRectangleBorder(
+          decoration: BoxDecoration(
+            color: enabled
+                ? tone.withValues(alpha: 0.12)
+                : Act0ShellTokensV1.surface3.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
+            border: Border.all(
+              color: enabled
+                  ? tone.withValues(alpha: 0.30)
+                  : Act0ShellTokensV1.border.withValues(alpha: 0.76),
+            ),
           ),
-        ),
-        child: hasLabel
-            ? Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(
-                    child: Text(
-                      resolvedLabel,
-                      overflow: TextOverflow.fade,
-                      softWrap: false,
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: enabled ? tone : Act0ShellTokensV1.textDim,
-                        fontSize: compact ? 11.0 : 11.5,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0,
+          child: hasLabel
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        resolvedLabel,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: enabled ? tone : Act0ShellTokensV1.textDim,
+                          fontSize: compact ? 11.0 : 11.5,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  Icon(
-                    icon,
-                    size: compact ? 12 : 16,
-                    color: enabled ? tone : Act0ShellTokensV1.textDim,
-                  ),
-                ],
-              )
-            : Icon(
-                icon,
-                size: compact ? 12 : 16,
-                color: enabled ? tone : Act0ShellTokensV1.textDim,
-              ),
+                    const SizedBox(width: 4),
+                    Icon(
+                      icon,
+                      size: compact ? 12 : 16,
+                      color: enabled ? tone : Act0ShellTokensV1.textDim,
+                    ),
+                  ],
+                )
+              : Icon(
+                  icon,
+                  size: compact ? 12 : 16,
+                  color: enabled ? tone : Act0ShellTokensV1.textDim,
+                ),
+        ),
       ),
     );
   }
