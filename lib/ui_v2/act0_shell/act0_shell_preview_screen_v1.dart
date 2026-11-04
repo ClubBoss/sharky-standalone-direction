@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'act0_academy_runtime_adapter_v1.dart';
+import 'academy_leaves/act0_academy_home_leaf_v1.dart';
+import 'academy_leaves/act0_academy_leaf_style_v1.dart';
 
 import 'package:flutter/foundation.dart'
     show kDebugMode, kReleaseMode, visibleForTesting;
@@ -5718,7 +5721,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final theoryRecallStep = showTheoryRecallAffordance
         ? playRunner.teachingSteps.last
         : null;
+    final premiumAcademy =
+        !_showPlacement &&
+        !_showWelcome &&
+        !isPlayRunner &&
+        _blockCompletionSummary == null &&
+        act0AcademyRuntimeEnabledV1(context, _tab);
     final showTopBar =
+        !premiumAcademy &&
         _bootSurfaceReady &&
         !_showPlacement &&
         !_showWelcome &&
@@ -5742,7 +5752,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         !isPlayRunner;
     final shell = Scaffold(
       key: const Key('act0_shell_preview_screen'),
-      backgroundColor: academySurface
+      backgroundColor: premiumAcademy
+          ? Act0AcademyLeafPaletteV1.ink
+          : academySurface
           ? Act0AcademyDesignTokensV1.pageSurface
           : Act0ShellTokensV1.background,
       body: SafeArea(
@@ -5828,172 +5840,205 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                       tableVisualVariant: widget.tableVisualVariant,
                     )
                   : switch (_tab) {
-                      Act0ShellTabV1.home => Act0HomeShellV1(
-                        state: state,
-                        showChecklist: _showHomeChecklistV1(),
-                        currentLesson: _firstPlayableLesson(selectedWorld),
-                        pathProgressLabel: selectedWorld.progressLabel,
-                        nextActionLabel: homeDueReview != null
-                            ? _copyV1(en: 'Review', ru: 'Разбор')
-                            : _homeNextActionLabel(),
-                        nextActionTitle:
-                            homeDueReviewTitle ??
-                            _homeNextActionTitle(
+                      Act0ShellTabV1.home => act0AcademyHomeRuntimeV1(
+                        context,
+                        isCurrent: () =>
+                            _acceptRecoveryCallbackV1(callbackEpochV1),
+                        courseTitle: act0AcademyWorldTitleV1(
+                          context,
+                          selectedWorld,
+                        ),
+                        earnedLessons:
+                            selectedWorld.status == Act0WorldStateV1.locked
+                            ? 0
+                            : selectedWorld.lessons
+                                  .where(
+                                    (lesson) => _lessonCompleteWithTaskIds(
+                                      lesson,
+                                      _completedTaskIds,
+                                    ),
+                                  )
+                                  .length,
+                        totalLessons: selectedWorld.lessons.length,
+                        phase: homeDueReview != null
+                            ? Act0AcademyHomePhaseV1.recall
+                            : switch (personalizedNextStep.recommendedAction) {
+                                'repair' ||
+                                'retry_repair' ||
+                                'reinforce' => Act0AcademyHomePhaseV1.apply,
+                                _ => Act0AcademyHomePhaseV1.learn,
+                              },
+                        legacy: Act0HomeShellV1(
+                          state: state,
+                          showChecklist: _showHomeChecklistV1(),
+                          currentLesson: _firstPlayableLesson(selectedWorld),
+                          pathProgressLabel: selectedWorld.progressLabel,
+                          nextActionLabel: homeDueReview != null
+                              ? _copyV1(en: 'Review', ru: 'Разбор')
+                              : _homeNextActionLabel(),
+                          nextActionTitle:
+                              homeDueReviewTitle ??
+                              _homeNextActionTitle(
+                                _firstPlayableLesson(selectedWorld),
+                              ),
+                          nextActionSubtitle:
+                              homeDueReview != null &&
+                                  (personalizedNextStep.copyLine ?? '')
+                                      .trim()
+                                      .isNotEmpty
+                              ? personalizedNextStep.copyLine!
+                              : _homeNextActionSubtitle(
+                                  _firstPlayableLesson(selectedWorld),
+                                ),
+                          nextActionCtaLabel: homeDueReview != null
+                              ? _copyV1(
+                                  en: 'Review now',
+                                  ru: 'Повторить сейчас',
+                                )
+                              : _homeNextActionCtaLabel(),
+                          nextActionHint: homeDueReview != null
+                              ? null
+                              : _homeCtaHint(
+                                  selectedWorld,
+                                  _firstPlayableLesson(selectedWorld),
+                                ),
+                          repairLabel: _homeRepairLabel(
+                            selectedWorld,
+                            _firstPlayableLesson(selectedWorld),
+                          ),
+                          repairHeadline: _homeRepairHeadline(
+                            selectedWorld,
+                            _firstPlayableLesson(selectedWorld),
+                          ),
+                          repairDetail: _homeRepairDetail(
+                            selectedWorld,
+                            _firstPlayableLesson(selectedWorld),
+                          ),
+                          repairOutcome: _homeRepairOutcome(
+                            selectedWorld,
+                            _firstPlayableLesson(selectedWorld),
+                          ),
+                          repairCtaLabel: _homeRepairCtaLabel(
+                            selectedWorld,
+                            _firstPlayableLesson(selectedWorld),
+                          ),
+                          showRepairPanel: _showHomeRepairPanel(
+                            selectedWorld,
+                            _firstPlayableLesson(selectedWorld),
+                          ),
+                          onStartRepair: () => setState(() {
+                            _startHomeRepairAction(
+                              selectedWorld,
                               _firstPlayableLesson(selectedWorld),
-                            ),
-                        nextActionSubtitle:
-                            homeDueReview != null &&
-                                (personalizedNextStep.copyLine ?? '')
-                                    .trim()
-                                    .isNotEmpty
-                            ? personalizedNextStep.copyLine!
-                            : _homeNextActionSubtitle(
-                                _firstPlayableLesson(selectedWorld),
-                              ),
-                        nextActionCtaLabel: homeDueReview != null
-                            ? _copyV1(en: 'Review now', ru: 'Повторить сейчас')
-                            : _homeNextActionCtaLabel(),
-                        nextActionHint: homeDueReview != null
-                            ? null
-                            : _homeCtaHint(
+                            );
+                          }),
+                          dailyGoalValue: _dailyGoalValueLabel(),
+                          dailyGoalCtaLabel: _homeDailyGoalCtaLabel(
+                            selectedWorld,
+                            _firstPlayableLesson(selectedWorld),
+                          ),
+                          dailyPlanTitle: _homeDailyPlanTitle(
+                            selectedWorld,
+                            _firstPlayableLesson(selectedWorld),
+                          ),
+                          nextUsefulHandReasonLine:
+                              _homeNextUsefulHandReasonLine(
                                 selectedWorld,
                                 _firstPlayableLesson(selectedWorld),
                               ),
-                        repairLabel: _homeRepairLabel(
-                          selectedWorld,
-                          _firstPlayableLesson(selectedWorld),
-                        ),
-                        repairHeadline: _homeRepairHeadline(
-                          selectedWorld,
-                          _firstPlayableLesson(selectedWorld),
-                        ),
-                        repairDetail: _homeRepairDetail(
-                          selectedWorld,
-                          _firstPlayableLesson(selectedWorld),
-                        ),
-                        repairOutcome: _homeRepairOutcome(
-                          selectedWorld,
-                          _firstPlayableLesson(selectedWorld),
-                        ),
-                        repairCtaLabel: _homeRepairCtaLabel(
-                          selectedWorld,
-                          _firstPlayableLesson(selectedWorld),
-                        ),
-                        showRepairPanel: _showHomeRepairPanel(
-                          selectedWorld,
-                          _firstPlayableLesson(selectedWorld),
-                        ),
-                        onStartRepair: () => setState(() {
-                          _startHomeRepairAction(
+                          personalizedReturnReasonLine:
+                              personalizedNextStep.copyLine,
+                          weeklyFocus: _showHomeChecklistV1()
+                              ? _homeWeeklyFocus(
+                                  selectedWorld,
+                                  _firstPlayableLesson(selectedWorld),
+                                )
+                              : null,
+                          dailyPlanJobs: _homeDailyPlanJobs(
                             selectedWorld,
                             _firstPlayableLesson(selectedWorld),
-                          );
-                        }),
-                        dailyGoalValue: _dailyGoalValueLabel(),
-                        dailyGoalCtaLabel: _homeDailyGoalCtaLabel(
-                          selectedWorld,
-                          _firstPlayableLesson(selectedWorld),
+                          ),
+                          onOpenDailyPlanJob: (jobId) => setState(() {
+                            _startHomeDailyPlanJob(
+                              selectedWorld,
+                              _firstPlayableLesson(selectedWorld),
+                              jobId,
+                            );
+                          }),
+                          onOpenLearnContext: () => setState(() {
+                            final lesson = _firstPlayableLesson(selectedWorld);
+                            _activateLearnVisitEligibilityV1();
+                            _tab = Act0ShellTabV1.learn;
+                            _showPlayHub = true;
+                            _returnToPlayHubOnBack = false;
+                            _showWorldMenu = false;
+                            _blockCompletionSummary = null;
+                            _seedLearnRouteFocusV1(
+                              lessonId: lesson.lessonId,
+                              taskId: _firstIncompleteTask(lesson).taskId,
+                            );
+                          }),
+                          onOpenPracticeContext: () => setState(() {
+                            _tab = Act0ShellTabV1.play;
+                            _showPlayHub = true;
+                            _returnToPlayHubOnBack = false;
+                            _learnDetailLessonId = null;
+                            _learnDetailWorldId = null;
+                            _showWorldMenu = false;
+                            _blockCompletionSummary = null;
+                          }),
+                          onOpenReviewContext: () => setState(() {
+                            _tab = Act0ShellTabV1.review;
+                            _showPlayHub = true;
+                            _returnToPlayHubOnBack = false;
+                            _learnDetailLessonId = null;
+                            _learnDetailWorldId = null;
+                            _showWorldMenu = false;
+                            _blockCompletionSummary = null;
+                          }),
+                          sharkyOverride: _homeSharkyOverride(),
+                          onOpenDevMenu:
+                              act0DevMenuEnabledV1(isReleaseMode: kReleaseMode)
+                              ? _openDevMenu
+                              : null,
+                          completionEarnedStreak: _streakSaveEarned(),
+                          onStartDailyDrill: _dailyCompletedRepCount < 3
+                              ? () => setState(() {
+                                  final world = _worldById(
+                                    _progressedWorlds(
+                                      widget.state ?? Act0ShellStateV1.sample,
+                                    ),
+                                    _selectedWorldId,
+                                  );
+                                  final baseState =
+                                      widget.state ?? Act0ShellStateV1.sample;
+                                  final lesson = _lessonById(
+                                    world.lessons,
+                                    _selectedLessonId,
+                                  );
+                                  final groups = _practiceGroups(
+                                    state: baseState,
+                                    world: world,
+                                    selectedLesson: lesson,
+                                  );
+                                  final dailyGroup = groups.firstWhere(
+                                    (g) => g.groupId == 'daily',
+                                    orElse: () => groups.first,
+                                  );
+                                  _startPracticeGroup(dailyGroup, world);
+                                  _tab = Act0ShellTabV1.play;
+                                  _showPlayHub = false;
+                                })
+                              : null,
+                          onContinue: () => setState(() {
+                            _openPersonalizedNextStepV1(
+                              personalizedNextStep,
+                              surface: 'home',
+                              selectedWorld: selectedWorld,
+                              reviewState: reviewState,
+                            );
+                          }),
                         ),
-                        dailyPlanTitle: _homeDailyPlanTitle(
-                          selectedWorld,
-                          _firstPlayableLesson(selectedWorld),
-                        ),
-                        nextUsefulHandReasonLine: _homeNextUsefulHandReasonLine(
-                          selectedWorld,
-                          _firstPlayableLesson(selectedWorld),
-                        ),
-                        personalizedReturnReasonLine:
-                            personalizedNextStep.copyLine,
-                        weeklyFocus: _showHomeChecklistV1()
-                            ? _homeWeeklyFocus(
-                                selectedWorld,
-                                _firstPlayableLesson(selectedWorld),
-                              )
-                            : null,
-                        dailyPlanJobs: _homeDailyPlanJobs(
-                          selectedWorld,
-                          _firstPlayableLesson(selectedWorld),
-                        ),
-                        onOpenDailyPlanJob: (jobId) => setState(() {
-                          _startHomeDailyPlanJob(
-                            selectedWorld,
-                            _firstPlayableLesson(selectedWorld),
-                            jobId,
-                          );
-                        }),
-                        onOpenLearnContext: () => setState(() {
-                          final lesson = _firstPlayableLesson(selectedWorld);
-                          _activateLearnVisitEligibilityV1();
-                          _tab = Act0ShellTabV1.learn;
-                          _showPlayHub = true;
-                          _returnToPlayHubOnBack = false;
-                          _showWorldMenu = false;
-                          _blockCompletionSummary = null;
-                          _seedLearnRouteFocusV1(
-                            lessonId: lesson.lessonId,
-                            taskId: _firstIncompleteTask(lesson).taskId,
-                          );
-                        }),
-                        onOpenPracticeContext: () => setState(() {
-                          _tab = Act0ShellTabV1.play;
-                          _showPlayHub = true;
-                          _returnToPlayHubOnBack = false;
-                          _learnDetailLessonId = null;
-                          _learnDetailWorldId = null;
-                          _showWorldMenu = false;
-                          _blockCompletionSummary = null;
-                        }),
-                        onOpenReviewContext: () => setState(() {
-                          _tab = Act0ShellTabV1.review;
-                          _showPlayHub = true;
-                          _returnToPlayHubOnBack = false;
-                          _learnDetailLessonId = null;
-                          _learnDetailWorldId = null;
-                          _showWorldMenu = false;
-                          _blockCompletionSummary = null;
-                        }),
-                        sharkyOverride: _homeSharkyOverride(),
-                        onOpenDevMenu:
-                            act0DevMenuEnabledV1(isReleaseMode: kReleaseMode)
-                            ? _openDevMenu
-                            : null,
-                        completionEarnedStreak: _streakSaveEarned(),
-                        onStartDailyDrill: _dailyCompletedRepCount < 3
-                            ? () => setState(() {
-                                final world = _worldById(
-                                  _progressedWorlds(
-                                    widget.state ?? Act0ShellStateV1.sample,
-                                  ),
-                                  _selectedWorldId,
-                                );
-                                final baseState =
-                                    widget.state ?? Act0ShellStateV1.sample;
-                                final lesson = _lessonById(
-                                  world.lessons,
-                                  _selectedLessonId,
-                                );
-                                final groups = _practiceGroups(
-                                  state: baseState,
-                                  world: world,
-                                  selectedLesson: lesson,
-                                );
-                                final dailyGroup = groups.firstWhere(
-                                  (g) => g.groupId == 'daily',
-                                  orElse: () => groups.first,
-                                );
-                                _startPracticeGroup(dailyGroup, world);
-                                _tab = Act0ShellTabV1.play;
-                                _showPlayHub = false;
-                              })
-                            : null,
-                        onContinue: () => setState(() {
-                          _openPersonalizedNextStepV1(
-                            personalizedNextStep,
-                            surface: 'home',
-                            selectedWorld: selectedWorld,
-                            reviewState: reviewState,
-                          );
-                        }),
                       ),
                       Act0ShellTabV1.learn => Act0LearnPathShellV1(
                         moduleTitle: selectedWorld.title,
@@ -6166,50 +6211,55 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                       ),
                       Act0ShellTabV1.play =>
                         _showPlayHub && _blockCompletionSummary == null
-                            ? Act0PlayShellV1(
-                                groups: practiceGroups,
-                                recommendedGroupId:
-                                    practiceSurfaceRecommendation.groupId,
-                                recommendedTitle:
-                                    practiceSurfaceRecommendation.title,
-                                recommendedSubtitle:
-                                    practiceSurfaceRecommendation.subtitle,
-                                recommendedReasonLabel:
-                                    practiceSurfaceRecommendation.reasonLabel,
-                                recommendedOutcome:
-                                    practiceSurfaceRecommendation.outcome,
-                                recommendedOutcomeLead:
-                                    practiceSurfaceRecommendation.outcomeLead,
-                                masteryLabel:
-                                    practiceSurfaceRecommendation.masteryLabel,
-                                screenSubtitle: practiceSurfaceRecommendation
-                                    .screenSubtitle,
-                                repairQueueConsumer:
-                                    Act0PracticeRepairQueueConsumerV1.fromProjection(
-                                      Act0PracticeRepairQueueProjectionV1.fromSources(
-                                        activeRepairIntents:
-                                            _activeRepairIntentsV1(),
-                                        reviewMistakeHistory:
-                                            _reviewMistakeHistoryV1,
+                            ? act0AcademyPracticeRuntimeV1(
+                                context,
+                                isCurrent: () =>
+                                    _acceptRecoveryCallbackV1(callbackEpochV1),
+                                legacy: Act0PlayShellV1(
+                                  groups: practiceGroups,
+                                  recommendedGroupId:
+                                      practiceSurfaceRecommendation.groupId,
+                                  recommendedTitle:
+                                      practiceSurfaceRecommendation.title,
+                                  recommendedSubtitle:
+                                      practiceSurfaceRecommendation.subtitle,
+                                  recommendedReasonLabel:
+                                      practiceSurfaceRecommendation.reasonLabel,
+                                  recommendedOutcome:
+                                      practiceSurfaceRecommendation.outcome,
+                                  recommendedOutcomeLead:
+                                      practiceSurfaceRecommendation.outcomeLead,
+                                  masteryLabel: practiceSurfaceRecommendation
+                                      .masteryLabel,
+                                  screenSubtitle: practiceSurfaceRecommendation
+                                      .screenSubtitle,
+                                  repairQueueConsumer:
+                                      Act0PracticeRepairQueueConsumerV1.fromProjection(
+                                        Act0PracticeRepairQueueProjectionV1.fromSources(
+                                          activeRepairIntents:
+                                              _activeRepairIntentsV1(),
+                                          reviewMistakeHistory:
+                                              _reviewMistakeHistoryV1,
+                                        ),
                                       ),
-                                    ),
-                                completionTitle: _practiceCompletionTitle,
-                                completionBody: _practiceCompletionBody,
-                                onOpenPremiumPreview:
-                                    _practiceCompletionTitle ==
-                                        _copyV1(
-                                          en: 'Session complete',
-                                          ru: 'Дневная серия закрыта',
-                                        )
-                                    ? _openCompletedDailyPremiumPreviewSheet
-                                    : null,
-                                onStartGroup: (group) => setState(() {
-                                  _startPracticeGroup(group, selectedWorld);
-                                }),
-                                onLaunchRepairQueueTarget: (target) =>
-                                    setState(() {
-                                      _startPracticeRepairQueueTarget(target);
-                                    }),
+                                  completionTitle: _practiceCompletionTitle,
+                                  completionBody: _practiceCompletionBody,
+                                  onOpenPremiumPreview:
+                                      _practiceCompletionTitle ==
+                                          _copyV1(
+                                            en: 'Session complete',
+                                            ru: 'Дневная серия закрыта',
+                                          )
+                                      ? _openCompletedDailyPremiumPreviewSheet
+                                      : null,
+                                  onStartGroup: (group) => setState(() {
+                                    _startPracticeGroup(group, selectedWorld);
+                                  }),
+                                  onLaunchRepairQueueTarget: (target) =>
+                                      setState(() {
+                                        _startPracticeRepairQueueTarget(target);
+                                      }),
+                                ),
                               )
                             : _blockCompletionSummary != null
                             ? Act0BlockCompletionShellV1(
@@ -7073,110 +7123,140 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   },
                                 ),
                               ),
-                      Act0ShellTabV1.review => Act0ReviewShellV1(
-                        review: reviewState,
-                        selected: _reviewConfidence,
-                        onSelected: (value) => setState(() {
-                          _reviewConfidence = value;
-                        }),
-                        onFixMistake: (mistake) => setState(() {
-                          _startMistakeRepair(
-                            selectedWorld,
-                            mistake,
-                            returnToPlayHub: false,
-                          );
-                        }),
-                        onReplayFixedMistake: (mistake) => setState(() {
-                          _startMistakeRepair(
-                            selectedWorld,
-                            mistake,
-                            returnToPlayHub: false,
-                            practiceGroupId: 'weak_spots',
-                          );
-                        }),
-                        sessionDrillRecheckQueueItems:
-                            _suppressLegacyRecheckAfterRecoveryV1
-                            ? const []
-                            : _sessionDrillRecheckQueueItemsV1,
-                        mistakeHistoryItems:
-                            Act0ReviewMistakeHistoryConsumerV1.fromHistory(
-                              _reviewMistakeHistoryV1,
-                              sourceState: state,
-                              localeIsRu:
-                                  act0AcademyLanguageV1(context) == 'ru',
-                              localizeOptionLabel: (label) =>
-                                  act0AcademyW1OptionLabelV1(
-                                    context,
-                                    act0RuntimeLocalizedOptionLabelV1(
+                      Act0ShellTabV1.review => act0AcademyReviewRuntimeV1(
+                        context,
+                        isCurrent: () =>
+                            _acceptRecoveryCallbackV1(callbackEpochV1),
+                        legacy: Act0ReviewShellV1(
+                          review: reviewState,
+                          selected: _reviewConfidence,
+                          onSelected: (value) => setState(() {
+                            _reviewConfidence = value;
+                          }),
+                          onFixMistake: (mistake) => setState(() {
+                            _startMistakeRepair(
+                              selectedWorld,
+                              mistake,
+                              returnToPlayHub: false,
+                            );
+                          }),
+                          onReplayFixedMistake: (mistake) => setState(() {
+                            _startMistakeRepair(
+                              selectedWorld,
+                              mistake,
+                              returnToPlayHub: false,
+                              practiceGroupId: 'weak_spots',
+                            );
+                          }),
+                          sessionDrillRecheckQueueItems:
+                              _suppressLegacyRecheckAfterRecoveryV1
+                              ? const []
+                              : _sessionDrillRecheckQueueItemsV1,
+                          mistakeHistoryItems:
+                              Act0ReviewMistakeHistoryConsumerV1.fromHistory(
+                                _reviewMistakeHistoryV1,
+                                sourceState: state,
+                                localeIsRu:
+                                    act0AcademyLanguageV1(context) == 'ru',
+                                localizeOptionLabel: (label) =>
+                                    act0AcademyW1OptionLabelV1(
                                       context,
-                                      label,
+                                      act0RuntimeLocalizedOptionLabelV1(
+                                        context,
+                                        label,
+                                      ),
                                     ),
-                                  ),
-                              activeRepairSourceTaskIds: <String>{
-                                for (final mistake in reviewState.mistakes)
-                                  mistake.taskId,
-                              },
-                              reviewResolutionState: _reviewResolutionStateV1(),
-                              patternCoachingProjection:
-                                  _reviewPatternCoachingProjectionV1(),
-                            ).items,
-                        dueReviewItems: _durableRetentionHistoryV1.dueItemsAt(
-                          widget.clock.nowUtc(),
-                        ),
-                        nextStep: personalizedNextStep,
-                        onOpenRecommendedAction: () => setState(() {
-                          _openPersonalizedNextStepV1(
-                            personalizedNextStep,
-                            surface: 'review',
-                            selectedWorld: selectedWorld,
-                            reviewState: reviewState,
-                          );
-                        }),
-                        onStartDueReview: (item) => setState(() {
-                          _startDueReviewItemV1(item);
-                        }),
-                        onStartSessionDrillRecheck: (item) {
-                          if (!_acceptRecoveryCallbackV1(callbackEpochV1))
-                            return;
+                                activeRepairSourceTaskIds: <String>{
+                                  for (final mistake in reviewState.mistakes)
+                                    mistake.taskId,
+                                },
+                                reviewResolutionState:
+                                    _reviewResolutionStateV1(),
+                                patternCoachingProjection:
+                                    _reviewPatternCoachingProjectionV1(),
+                              ).items,
+                          dueReviewItems: _durableRetentionHistoryV1.dueItemsAt(
+                            widget.clock.nowUtc(),
+                          ),
+                          nextStep: personalizedNextStep,
+                          onOpenRecommendedAction: () => setState(() {
+                            _openPersonalizedNextStepV1(
+                              personalizedNextStep,
+                              surface: 'review',
+                              selectedWorld: selectedWorld,
+                              reviewState: reviewState,
+                            );
+                          }),
+                          onStartDueReview: (item) => setState(() {
+                            _startDueReviewItemV1(item);
+                          }),
+                          onStartSessionDrillRecheck: (item) {
+                            if (!_acceptRecoveryCallbackV1(callbackEpochV1))
+                              return;
 
-                          if (_suppressLegacyRecheckAfterRecoveryV1) return;
-                          unawaited(
-                            pushSessionDrillRecheckLaunchV1(context, item),
-                          );
-                        },
-                        onOpenLearn: () => setState(() {
-                          _tab = Act0ShellTabV1.learn;
-                        }),
+                            if (_suppressLegacyRecheckAfterRecoveryV1) return;
+                            unawaited(
+                              pushSessionDrillRecheckLaunchV1(context, item),
+                            );
+                          },
+                          onOpenLearn: () => setState(() {
+                            _tab = Act0ShellTabV1.learn;
+                          }),
+                        ),
                       ),
-                      Act0ShellTabV1.profile => Act0ProfileShellV1(
-                        profile: profileState,
-                        crossSessionProof:
-                            Act0CrossSessionProfileProofV1.fromFixProof(
-                              _fixProofProjectionV1(),
+                      Act0ShellTabV1.profile => act0AcademyYouRuntimeV1(
+                        context,
+                        isCurrent: () =>
+                            _acceptRecoveryCallbackV1(callbackEpochV1),
+                        completedTasks: _completedTaskIds.length,
+                        openRepairs: reviewState.mistakes.length,
+                        dueReviews: _durableRetentionHistoryV1
+                            .dueItemsAt(widget.clock.nowUtc())
+                            .length,
+                        earnedProjection:
+                            Act0AchievementSeedProjectionV1.fromSources(
+                              learningEvidenceHistory:
+                                  _learningEvidenceHistoryV1,
+                              repairIntents: _activeRepairIntentsV1(),
+                              reviewMistakeHistory: _reviewMistakeHistoryV1,
+                              profileEvidenceProjection:
+                                  currentProfileEvidenceProjection,
+                              profileStreakDays: profileState.streakDays,
                             ),
-                        evidenceSignal:
-                            Act0ProfileEvidenceConsumerV1.fromProjection(
-                              currentProfileEvidenceProjection,
-                            ).signal,
-                        achievementSeedConsumer:
-                            Act0AchievementSeedConsumerV1.fromProjection(
-                              Act0AchievementSeedProjectionV1.fromSources(
-                                learningEvidenceHistory:
-                                    _learningEvidenceHistoryV1,
-                                repairIntents: _activeRepairIntentsV1(),
-                                reviewMistakeHistory: _reviewMistakeHistoryV1,
-                                profileEvidenceProjection:
-                                    currentProfileEvidenceProjection,
-                                profileStreakDays: profileState.streakDays,
+                        onOpenReview: () =>
+                            setState(() => _tab = Act0ShellTabV1.review),
+                        onOpenLearn: () =>
+                            setState(() => _tab = Act0ShellTabV1.learn),
+                        legacy: Act0ProfileShellV1(
+                          profile: profileState,
+                          crossSessionProof:
+                              Act0CrossSessionProfileProofV1.fromFixProof(
+                                _fixProofProjectionV1(),
                               ),
-                            ),
-                        onRecoveryOptions: _usesPersistedProgress
-                            ? _openRecoveryOptionsV1
-                            : null,
-                        onRetakePlacement: _openPlacementFlow,
-                        onReplayWelcome: _openWelcomeReplayV1,
-                        onGoToHome: () =>
-                            setState(() => _tab = Act0ShellTabV1.home),
+                          evidenceSignal:
+                              Act0ProfileEvidenceConsumerV1.fromProjection(
+                                currentProfileEvidenceProjection,
+                              ).signal,
+                          achievementSeedConsumer:
+                              Act0AchievementSeedConsumerV1.fromProjection(
+                                Act0AchievementSeedProjectionV1.fromSources(
+                                  learningEvidenceHistory:
+                                      _learningEvidenceHistoryV1,
+                                  repairIntents: _activeRepairIntentsV1(),
+                                  reviewMistakeHistory: _reviewMistakeHistoryV1,
+                                  profileEvidenceProjection:
+                                      currentProfileEvidenceProjection,
+                                  profileStreakDays: profileState.streakDays,
+                                ),
+                              ),
+                          onRecoveryOptions: _usesPersistedProgress
+                              ? _openRecoveryOptionsV1
+                              : null,
+                          onRetakePlacement: _openPlacementFlow,
+                          onReplayWelcome: _openWelcomeReplayV1,
+                          onGoToHome: () =>
+                              setState(() => _tab = Act0ShellTabV1.home),
+                        ),
                       ),
                     },
             ),
@@ -7191,6 +7271,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           ? null
           : _BottomNavV1(
               current: _tab,
+              premium: premiumAcademy,
               academy: academySurface,
               reviewHasDot: reviewNavHasDot,
               onSelected: (tab) => setState(() {
@@ -7250,7 +7331,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     // Table and other deferred surfaces in their existing rendering context.
     if (academySurface) {
       return AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.dark,
+        value: premiumAcademy
+            ? SystemUiOverlayStyle.light
+            : SystemUiOverlayStyle.dark,
         child: shell,
       );
     }
@@ -15873,12 +15956,14 @@ class _BottomNavV1 extends StatelessWidget {
     required this.onSelected,
     this.reviewHasDot = false,
     this.academy = false,
+    this.premium = false,
   });
 
   final Act0ShellTabV1 current;
   final ValueChanged<Act0ShellTabV1> onSelected;
   final bool reviewHasDot;
   final bool academy;
+  final bool premium;
 
   @override
   Widget build(BuildContext context) {
@@ -15891,7 +15976,14 @@ class _BottomNavV1 extends StatelessWidget {
           height: academy ? null : Act0ShellTokensV1.bottomNavHeight,
 
           child: DecoratedBox(
-            decoration: academy
+            decoration: premium
+                ? const BoxDecoration(
+                    color: Act0AcademyLeafPaletteV1.ink,
+                    border: Border(
+                      top: BorderSide(color: Act0AcademyLeafPaletteV1.rule),
+                    ),
+                  )
+                : academy
                 ? const BoxDecoration(
                     color: Act0AcademyDesignTokensV1.pageSurface,
                     border: Border(
@@ -15910,6 +16002,7 @@ class _BottomNavV1 extends StatelessWidget {
                   icon: academy ? Icons.home_outlined : Icons.home_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.home),
                   academy: academy,
+                  premium: premium,
                   onSelected: onSelected,
                 ),
                 _NavItemV1(
@@ -15920,6 +16013,7 @@ class _BottomNavV1 extends StatelessWidget {
                       : Icons.menu_book_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.learn),
                   academy: academy,
+                  premium: premium,
                   onSelected: onSelected,
                 ),
                 _NavItemV1(
@@ -15928,6 +16022,7 @@ class _BottomNavV1 extends StatelessWidget {
                   icon: academy ? Icons.spa_outlined : Icons.spa_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.play),
                   academy: academy,
+                  premium: premium,
                   onSelected: onSelected,
                 ),
                 _NavItemV1(
@@ -15936,6 +16031,7 @@ class _BottomNavV1 extends StatelessWidget {
                   icon: Icons.refresh_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.review),
                   academy: academy,
+                  premium: premium,
                   showDot: reviewHasDot,
                   onSelected: onSelected,
                 ),
@@ -15945,6 +16041,7 @@ class _BottomNavV1 extends StatelessWidget {
                   icon: academy ? Icons.person_outline : Icons.person_rounded,
                   label: act0AcademyNavLabelV1(context, Act0ShellTabV1.profile),
                   academy: academy,
+                  premium: premium,
                   onSelected: onSelected,
                 ),
               ],
@@ -15965,6 +16062,7 @@ class _NavItemV1 extends StatelessWidget {
     required this.onSelected,
     this.showDot = false,
     this.academy = false,
+    this.premium = false,
   });
 
   final Act0ShellTabV1 tab;
@@ -15974,11 +16072,16 @@ class _NavItemV1 extends StatelessWidget {
   final ValueChanged<Act0ShellTabV1> onSelected;
   final bool showDot;
   final bool academy;
+  final bool premium;
 
   @override
   Widget build(BuildContext context) {
     final selected = tab == current;
-    final color = academy
+    final color = premium
+        ? (selected
+              ? Act0AcademyLeafPaletteV1.aqua
+              : Act0AcademyLeafPaletteV1.textMuted)
+        : academy
         ? (selected
               ? Act0AcademyDesignTokensV1.focus
               : Act0AcademyDesignTokensV1.inkMuted)

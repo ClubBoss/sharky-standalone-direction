@@ -118,6 +118,8 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/design/sharky/pw_c3/owner_clean_table_candidate_965x1629.png
+    - assets/design/sharky/home/poker_lounge_reference_v2.png
     - assets/act0_characters/
     - assets/act0_room/
     - assets/act0_render_class/
