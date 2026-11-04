@@ -8,7 +8,8 @@ presentation leaf code to current LDR/#372; old shared-shell callbacks unsafe;
 no new design exploration). This file is a traceability and adapter record, not
 a second SSOT.
 
-Baseline: `main` = `fee12ba70e2a8d70001b64ba7b1b0c5065636795` (merged #372).
+Dispatch baseline: `main` = `fee12ba70e2a8d70001b64ba7b1b0c5065636795` (merged #372).
+Rebased onto live `main` = `2a79ecf5daa3c0774ea639c61aea734229ed33b5` (merged #374 ASM-04) before PR; clean, leaves re-verified.
 
 ## 1. What exists
 
@@ -42,7 +43,7 @@ store access. Each takes one immutable `...InputV1` object and plain callbacks.
 | #322 | You earned-moment truth (consumer `excludedSeedIds`) | PORTABLE_WITH_LOCAL_ADAPTER | modifies accepted `act0_achievement_seed_consumer_v1.dart` | Not modified: `act0AcademyYouEarnedMomentsV1` pre-filters the projection, then reuses the accepted consumer (exclusion before the 3-moment cap) |
 | #315 | `act0_settings_quiet_control_v1.dart` | PORTABLE_WITH_LOCAL_ADAPTER | `AppSettingsService` direct, `Navigator` push, `lib/main.dart` boot load, `privacy_terms.dart` edits | Body leaf with injected values/callbacks; rows hidden unless wired (no fake toggles) |
 | #315 | `lib/main.dart` boot `AppSettingsService.load()` | SHARED_RUNTIME_DEPENDENCY | protected | Not touched |
-| #309 | `act0_learn_cinematic_path_a_v1.dart` (`part of act0_learn_path_shell_v1.dart`) | SHARED_RUNTIME_DEPENDENCY | private `_LearnMissionFirstBodyV5` model in ASM-04 file (#374) | Spec only (section 6) |
+| #309 | `act0_learn_cinematic_path_a_v1.dart` (`part of act0_learn_path_shell_v1.dart`) | SHARED_RUNTIME_DEPENDENCY | private `_LearnMissionFirstBodyV5` model in Runner A's shared Learn source (just changed by merged #374) | Spec only (section 6) |
 | #310 | `act0_worlds_b_v1.dart` (`part of act0_learn_path_shell_v1.dart`) | SHARED_RUNTIME_DEPENDENCY | same | Spec only |
 | #318/#320/#321 | `act0_pw_c3_facade_v1.dart`, placement/welcome shell edits, table PNG + pubspec | SHARED_RUNTIME_DEPENDENCY (shell edits) / PORTABLE_WITH_LOCAL_ADAPTER (facade) | placement/welcome runtime, pubspec | Spec only |
 | #327 | Placement repair-card persistence | SUPERSEDED_OR_UNSAFE for this lane | persistence / repair ledger (Runner A) | Not used |
@@ -72,7 +73,7 @@ store access. Each takes one immutable `...InputV1` object and plain callbacks.
   consumer/projection, review shell, Sharky presence: 83/83 pass.
 - NOT done: native iOS, real-device, screenshot, RU, compact-device runs. No claim of on-binary presence.
 
-## 5. Minimal integration adapters (owner: Runner A / integration lane, after #374)
+## 5. Minimal integration adapters (owner: Runner A / integration lane)
 
 All gated behind one new `bool.fromEnvironment` per surface AND
 `act0AcademyLeafSupportsLocaleV1(Localizations.localeOf(context))`, otherwise
@@ -112,9 +113,9 @@ stay on the legacy surfaces; flag-on tests must use the leaf keys.
 
 | Surface | Blocker | Smallest next step |
 |---|---|---|
-| Learn (#309) | `part of act0_learn_path_shell_v1.dart`, reads private `_LearnMissionFirstBodyV5`; that file is in active ASM-04 #374 | After #374 merges, Runner A exposes a public read-only Learn view model; then port `_CinematicLearnBodyV1` as a leaf over it |
+| Learn (#309) | `part of act0_learn_path_shell_v1.dart`, reads private `_LearnMissionFirstBodyV5`; that file is Runner A's shared Learn source (ASM-04 #374 just merged into it) | Runner A exposes a public read-only Learn view model; then port `_CinematicLearnBodyV1` as a leaf over it |
 | Worlds (#310) | same file/part; overlay state | Same public view model (world list, lock state, progress) |
-| Placement / Welcome (#318/#320/#321) | edits to placement/welcome shells; ASM-04 J3 Placement hint leak overlaps; #320 adds table PNG + pubspec | After #374, port `Act0PwC3PageV1/PanelV1/ChoiceV1` as leaves; keep canonical Runner; F7 table asset decision is Chat I's |
+| Placement / Welcome (#318/#320/#321) | edits to placement/welcome shells; ASM-04 J3 Placement hint leak overlaps; #320 adds table PNG + pubspec | With Runner A's go-ahead, port `Act0PwC3PageV1/PanelV1/ChoiceV1` as leaves; keep canonical Runner; F7 table asset decision is Chat I's |
 | You learning-details sheets | private `_show*Sheet` helpers in `act0_profile_shell_v1.dart` | Keep on legacy surface or expose as callbacks |
 
 ## 7. Runner A files untouched
