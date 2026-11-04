@@ -3262,7 +3262,17 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         !table.actionTrail[_actionTrailFocusedIndex!].isNote &&
         !isTeaching;
     final mergedHighlightIds = <String>{
-      ...presentationTable.highlightedCardIds,
+      // In this authored hand the emphasized four queens select the answer.
+      // Teaching and feedback keep that analysis; independent choice keeps
+      // the same cards without the unsolicited classification overlay.
+      if (!(widget.selectedTaskId == 'hand_rankings_quads_drill' &&
+          _isActiveAssessmentStateV1(
+            isTeaching: isTeaching,
+            isTheory: isTheory,
+            isReview: isReview,
+            runner: runner,
+          )))
+        ...presentationTable.highlightedCardIds,
       ..._interactiveHighlightedCardIds,
     }.toList(growable: false);
     final playbackActiveSeatId =
@@ -3602,7 +3612,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         child: isAccessibilityDirectDecision
             ? _AccessibilityDirectDecisionV1(
                 question: question,
-                guidance: runner.hint,
+                guidance: act0RuntimeNeutralTableReadCueLabelV1(context),
                 options: runner.options,
                 onChoose: _handleChooseOptionTelemetry,
               )
@@ -14399,7 +14409,8 @@ String _resolveTableCueDisplayV1({
   )) {
     return rawCue;
   }
-  if (selectedTaskId == 'straight_draws_w5_gutshot_draw') {
+  if (selectedTaskId == 'straight_draws_w5_gutshot_draw' ||
+      selectedTaskId == 'hand_rankings_quads_drill') {
     return '';
   }
   if (_looksLikeTrailHistoryQuestionV1(runner, table)) {

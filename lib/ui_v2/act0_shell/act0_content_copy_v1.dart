@@ -210,10 +210,30 @@ String act0LocalizedTaskTitleAtomByIdV1(
   String? languageCode,
   bool? isRu,
 }) {
+  // Navigation is visible before an independent answer. Keep authored task
+  // titles/IDs and feedback intact; only these confirmed English display
+  // labels must avoid disclosing the decision or hand classification.
+  final language = languageCode ?? ((isRu ?? false) ? 'ru' : '');
+  if (language.isEmpty || language == 'en') {
+    final neutralTitle = switch (taskId) {
+      'w4_good_price_call' => 'Price decision 1',
+      'w4_bad_price_fold' => 'Price decision 2',
+      'hand_discipline_buckets_premium' => 'Starting hand 1',
+      'hand_discipline_buckets_strong' => 'Starting hand 2',
+      'hand_discipline_buckets_medium' => 'Starting hand 3',
+      'hand_discipline_buckets_trash' => 'Starting hand 4',
+      'w6_missed_dry_board' => 'Dry-board decision',
+      'w11_trigger_bad_price_fold' => 'Price under pressure',
+      'w9_m_ratio_red_zone' => 'Stack-pressure decision',
+      'w12_revenge_raise_trap' => 'Next-hand decision',
+      _ => null,
+    };
+    if (neutralTitle != null) return neutralTitle;
+  }
   return act0LocalizedTaskTitleAtomByLanguageV1(
     taskId,
     fallback: fallback,
-    languageCode: languageCode ?? ((isRu ?? false) ? 'ru' : ''),
+    languageCode: language,
   );
 }
 
