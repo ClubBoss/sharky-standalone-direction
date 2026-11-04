@@ -3090,9 +3090,21 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         ? choreographyFrame
         : null;
     final choreographyActive = activeChoreographyFrame != null;
-    final presentationTable = activeChoreographyFrame == null
+    final choreographedTable = activeChoreographyFrame == null
         ? table
         : act0TableForChoreographyFrameV1(table, activeChoreographyFrame);
+    // Both board overlays and seat-card renderers consume this projection.
+    // Keep the source table intact for teaching, requested help and feedback.
+    final presentationTable =
+        widget.selectedTaskId == 'hand_rankings_quads_drill' &&
+            _isActiveAssessmentStateV1(
+              isTeaching: isTeaching,
+              isTheory: isTheory,
+              isReview: isReview,
+              runner: runner,
+            )
+        ? choreographedTable.copyWith(highlightedCardIds: const <String>[])
+        : choreographedTable;
     final sourceIdentityPolicy = act0TableIdentityPolicyForTeachingSemanticsV1(
       teachingStep?.identityTeachingSemantics ??
           Act0TableIdentityTeachingSemanticsV1.legacy,
@@ -3262,17 +3274,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         !table.actionTrail[_actionTrailFocusedIndex!].isNote &&
         !isTeaching;
     final mergedHighlightIds = <String>{
-      // In this authored hand the emphasized four queens select the answer.
-      // Teaching and feedback keep that analysis; independent choice keeps
-      // the same cards without the unsolicited classification overlay.
-      if (!(widget.selectedTaskId == 'hand_rankings_quads_drill' &&
-          _isActiveAssessmentStateV1(
-            isTeaching: isTeaching,
-            isTheory: isTheory,
-            isReview: isReview,
-            runner: runner,
-          )))
-        ...presentationTable.highlightedCardIds,
+      ...presentationTable.highlightedCardIds,
       ..._interactiveHighlightedCardIds,
     }.toList(growable: false);
     final playbackActiveSeatId =

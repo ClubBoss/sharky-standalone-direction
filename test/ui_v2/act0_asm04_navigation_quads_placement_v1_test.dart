@@ -149,6 +149,33 @@ void main() {
     );
     expect(table().centerLabelOverride, isNot(contains('Four queens')));
     expect(table().highlightedCardIds, isEmpty);
+    // Seat cards consume the projected table directly, while board cards
+    // consume the merged overlay. Both paths must be neutral before choice.
+    expect(table().table.highlightedCardIds, isEmpty);
+    final solutionCards = <String>{};
+    for (final widget in tester.widgetList(
+      find.byWidgetPredicate(
+        (w) => const [
+          '_CardV1',
+          '_BoardCardV1',
+        ].contains(w.runtimeType.toString()),
+      ),
+    )) {
+      final dynamic card = widget;
+      if (const [
+        'hero_0',
+        'hero_1',
+        'board_0',
+        'board_1',
+      ].contains(card.cardId)) {
+        solutionCards.add(card.cardId as String);
+        expect(card.highlighted, isFalse);
+      }
+    }
+    expect(
+      solutionCards,
+      containsAll(['hero_0', 'hero_1', 'board_0', 'board_1']),
+    );
     expect(table().table.heroCards, task.runner.table.heroCards);
     expect(table().table.boardCards, task.runner.table.boardCards);
     for (final option in task.runner.options) {
