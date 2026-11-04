@@ -80,10 +80,14 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
     final moments = input.earnedMoments
         .where((m) => !act0AcademyYouOpenMistakeSeedIdsV1.contains(m.seedId))
         .toList(growable: false);
+    // Fresh only on an explicit zero record (donor #322 used "0 of ..."). An
+    // unknown count never hides a supplied level or XP line.
     final fresh =
         moments.isEmpty &&
         input.streakDays == 0 &&
-        (input.completedTaskCount ?? 0) == 0;
+        input.completedTaskCount == 0 &&
+        input.openRepairCount == 0 &&
+        input.dueReviewCount == 0;
     final name = input.displayName?.trim() ?? '';
     final subtitleParts = [
       input.levelLabel.trim(),

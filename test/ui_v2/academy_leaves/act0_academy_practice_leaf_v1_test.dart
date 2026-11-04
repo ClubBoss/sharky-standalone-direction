@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart' show SemanticsAction;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_practice_leaf_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_consumer_v1.dart';
@@ -195,7 +196,7 @@ void main() {
       findsOneWidget,
     );
     await tester.tap(
-      find.byKey(const Key('act0_academy_practice_leaf_repair_cta')),
+      find.byKey(const Key('act0_academy_practice_leaf_repair_cta_q1')),
     );
     expect(launched, hasLength(1));
     expect(identical(launched.single, _launchRequest), isTrue);
@@ -223,10 +224,7 @@ void main() {
     expect(find.text('OPEN REPAIRS'), findsOneWidget);
     expect(find.text('Old miss'), findsOneWidget);
     expect(find.text('Mismatched target'), findsOneWidget);
-    expect(
-      find.byKey(const Key('act0_academy_practice_leaf_repair_cta')),
-      findsNothing,
-    );
+    expect(find.text('Practice repair'), findsNothing);
     expect(
       find.descendant(
         of: find.byKey(const Key('act0_academy_practice_leaf_recommendation')),
@@ -275,7 +273,25 @@ void main() {
         onStartGroup: started.add,
       ),
     );
-    expect(find.bySemanticsLabel('Postflop, locked'), findsOneWidget);
+    expect(
+      find.bySemanticsLabel(RegExp(r'Postflop[\s\S]*locked')),
+      findsOneWidget,
+    );
+    // Enabled topics keep the button's own tap action for screen readers.
+    final enabledNode = tester.getSemantics(
+      find.byKey(const Key('act0_academy_practice_leaf_topic_preflop')),
+    );
+    expect(
+      enabledNode.getSemanticsData().hasAction(SemanticsAction.tap),
+      isTrue,
+    );
+    final lockedNode = tester.getSemantics(
+      find.byKey(const Key('act0_academy_practice_leaf_topic_postflop')),
+    );
+    expect(
+      lockedNode.getSemanticsData().hasAction(SemanticsAction.tap),
+      isFalse,
+    );
     await tester.tap(
       find.byKey(const Key('act0_academy_practice_leaf_topic_postflop')),
       warnIfMissed: false,
@@ -286,6 +302,91 @@ void main() {
     );
     expect(started.single.groupId, 'preflop');
     handle.dispose();
+  });
+
+  testWidgets('enabled weak spots and daily stay reachable as quick reps', (
+    tester,
+  ) async {
+    final started = <String>[];
+    await _pump(
+      tester,
+      Act0AcademyPracticeLeafInputV1(
+        groups: [
+          _group('daily'),
+          _group('weak_spots', title: 'Weak spots'),
+          _group('preflop', title: 'Preflop'),
+        ],
+        recommendedGroupId: 'preflop',
+        recommendedTitle: 'Preflop reps',
+        recommendedSubtitle: 'Sub',
+        onStartGroup: (g) => started.add(g.groupId),
+      ),
+    );
+    final weak = find.byKey(
+      const Key('act0_academy_practice_leaf_topic_weak_spots'),
+    );
+    await tester.scrollUntilVisible(
+      weak,
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(weak);
+    await tester.pump();
+    await tester.tap(weak);
+    expect(started, ['weak_spots']);
+    expect(
+      find.byKey(const Key('act0_academy_practice_leaf_topic_daily')),
+      findsOneWidget,
+    );
+    // The recommended topic is featured once, not repeated in the shelf.
+    expect(
+      find.byKey(const Key('act0_academy_practice_leaf_topic_preflop')),
+      findsNothing,
+    );
+  });
+
+  testWidgets('locked weak-spots recommendation shows no repair reason', (
+    tester,
+  ) async {
+    await _pump(
+      tester,
+      Act0AcademyPracticeLeafInputV1(
+        groups: [_group('weak_spots', enabled: false)],
+        recommendedGroupId: 'weak_spots',
+        recommendedTitle: 'Fix a leak',
+        recommendedSubtitle: 'Sub',
+        recommendedReasonLabel: 'From your last miss',
+        onStartGroup: (_) {},
+        onOpenLearn: () {},
+      ),
+    );
+    expect(find.text('From your last miss'), findsNothing);
+    expect(find.text('Continue learning'), findsOneWidget);
+  });
+
+  testWidgets('enabled topics are listed before locked ones', (tester) async {
+    await _pump(
+      tester,
+      Act0AcademyPracticeLeafInputV1(
+        groups: [
+          _group('daily'),
+          _group('x', title: 'Locked X', enabled: false),
+          _group('y', title: 'Open Y'),
+        ],
+        recommendedGroupId: 'daily',
+        recommendedTitle: 'Daily reps',
+        recommendedSubtitle: 'Sub',
+        onStartGroup: (_) {},
+      ),
+    );
+    final y = find.byKey(const Key('act0_academy_practice_leaf_topic_y'));
+    final x = find.byKey(const Key('act0_academy_practice_leaf_topic_x'));
+    await tester.scrollUntilVisible(
+      x,
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(tester.getTopLeft(y).dy, lessThan(tester.getTopLeft(x).dy));
   });
 
   testWidgets('topic shelf expands only when more than two topics exist', (

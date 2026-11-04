@@ -217,6 +217,31 @@ void main() {
     });
   });
 
+  testWidgets('Review hero grows with large text instead of overflowing', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: const TextScaler.linear(1.6)),
+          child: child!,
+        ),
+        home: Scaffold(
+          body: Act0AcademyReviewLeafV1(
+            input: Act0AcademyReviewLeafInputV1(openMistakes: [_mistake('t1')]),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+  });
+
   group('You leaf', () {
     test('open-mistake seeds are excluded before the three-moment cap', () {
       final moments = act0AcademyYouEarnedMomentsV1(
@@ -299,12 +324,18 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('fresh learner gets no fabricated XP, tasks or debt', (
+    testWidgets('explicit zero record is fresh: no XP, tasks or debt', (
       tester,
     ) async {
       await _pump(
         tester,
-        const Act0AcademyYouLeafV1(input: Act0AcademyYouLeafInputV1()),
+        const Act0AcademyYouLeafV1(
+          input: Act0AcademyYouLeafInputV1(
+            levelLabel: 'Level 1',
+            xpLine: '0 XP',
+            completedTaskCount: 0,
+          ),
+        ),
       );
       expect(find.text('Your journey'), findsOneWidget);
       expect(
@@ -317,6 +348,37 @@ void main() {
       );
       expect(find.textContaining('XP'), findsNothing);
     });
+
+    testWidgets('unknown task count never hides a supplied level or XP', (
+      tester,
+    ) async {
+      await _pump(
+        tester,
+        const Act0AcademyYouLeafV1(
+          input: Act0AcademyYouLeafInputV1(
+            levelLabel: 'Level 3',
+            xpLine: '120 XP',
+          ),
+        ),
+      );
+      expect(find.text('Your journey'), findsNothing);
+      expect(find.text('Level 3 - 120 XP'), findsOneWidget);
+      expect(find.text('Your learning, saved'), findsOneWidget);
+    });
+
+    testWidgets('leaf never adds XP the source did not supply', (tester) async {
+      await _pump(
+        tester,
+        const Act0AcademyYouLeafV1(
+          input: Act0AcademyYouLeafInputV1(
+            levelLabel: 'Level 2',
+            completedTaskCount: 3,
+          ),
+        ),
+      );
+      expect(find.text('Level 2'), findsOneWidget);
+      expect(find.textContaining('XP'), findsNothing);
+    });
   });
 
   group('Settings leaf', () {
@@ -324,12 +386,14 @@ void main() {
       tester,
     ) async {
       final haptics = <bool>[];
+      final handle = tester.ensureSemantics();
       await _pump(
         tester,
         Act0AcademySettingsLeafV1(
           input: Act0AcademySettingsLeafInputV1(
             hapticsEnabled: true,
             onHapticsChanged: haptics.add,
+            onOpenTerms: () {},
           ),
         ),
       );
@@ -341,6 +405,13 @@ void main() {
         find.byKey(const Key('act0_academy_settings_leaf_haptics')),
       );
       expect(haptics, [false]);
+      // Label and switch are one control for screen readers: the node that
+      // carries the "Haptics" label is the toggled switch itself.
+      final node = tester.getSemantics(
+        find.bySemanticsLabel(RegExp('Haptics')),
+      );
+      expect(node.getSemanticsData().flagsCollection.isToggled, isTrue);
+      handle.dispose();
       // Sound is not wired: no fake toggle.
       expect(
         find.byKey(const Key('act0_academy_settings_leaf_sound')),

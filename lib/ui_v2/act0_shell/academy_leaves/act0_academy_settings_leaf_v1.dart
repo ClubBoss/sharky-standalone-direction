@@ -195,6 +195,24 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
       ),
     };
 
+    // Donor #315 switch styling (aqua/teal), scoped to this leaf.
+    final themed = Theme.of(context).copyWith(
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.all(Colors.white),
+        trackColor: WidgetStateProperty.resolveWith(
+          (s) => s.contains(WidgetState.selected)
+              ? const Color(0xFF1BBFB2)
+              : const Color(0xFF345354),
+        ),
+        trackOutlineColor: WidgetStateProperty.resolveWith(
+          (s) => s.contains(WidgetState.selected) ? _aqua : _rule,
+        ),
+      ),
+    );
+    return Theme(data: themed, child: _frame(body));
+  }
+
+  Widget _frame(Widget body) {
     return DecoratedBox(
       key: const Key('act0_academy_settings_leaf'),
       decoration: const BoxDecoration(
@@ -263,11 +281,13 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
     ),
   );
 
-  Widget _group(List<Widget> rows) => Container(
-    decoration: BoxDecoration(
-      color: const Color(0xCC0A2A2C),
+  Widget _group(List<Widget> rows) => Material(
+    // Material surface so row ink is painted above the group colour.
+    color: const Color(0xCC0A2A2C),
+    clipBehavior: Clip.antiAlias,
+    shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(18),
-      border: Border.all(color: _rule),
+      side: const BorderSide(color: _rule),
     ),
     child: Column(
       children: [
@@ -326,13 +346,20 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
         ],
       ),
     );
-    if (onTap == null) return content;
-    return InkWell(
-      key: key,
-      onTap: onTap,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 56),
-        child: content,
+    // Merge so a screen reader hears "Haptics ... switch" / "Privacy Policy
+    // ... button" as one control (donor #315 row semantics).
+    if (onTap == null) return MergeSemantics(child: content);
+    return MergeSemantics(
+      child: Semantics(
+        button: true,
+        child: InkWell(
+          key: key,
+          onTap: onTap,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 56),
+            child: content,
+          ),
+        ),
       ),
     );
   }

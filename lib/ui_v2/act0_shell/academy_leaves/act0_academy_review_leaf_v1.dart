@@ -500,15 +500,16 @@ class _ReviewHeroV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 152,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 152),
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
           Positioned(
             left: -18,
             right: -18,
             top: 0,
-            bottom: 0,
+            bottom: -48,
             child: Act0AcademyLeafBackdropV1(
               image: backdrop,
               alignment: Alignment.centerRight,
@@ -518,7 +519,7 @@ class _ReviewHeroV1 extends StatelessWidget {
             left: -18,
             right: -18,
             top: 0,
-            bottom: 0,
+            bottom: -48,
             child: IgnorePointer(
               child: DecoratedBox(
                 decoration: BoxDecoration(
@@ -537,7 +538,7 @@ class _ReviewHeroV1 extends StatelessWidget {
             ),
           ),
           const Padding(
-            padding: EdgeInsets.only(left: 6, top: 20),
+            padding: EdgeInsets.only(left: 6, top: 20, bottom: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

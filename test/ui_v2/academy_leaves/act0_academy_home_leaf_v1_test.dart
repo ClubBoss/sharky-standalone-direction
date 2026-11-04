@@ -94,6 +94,8 @@ void main() {
       find.byKey(const Key('act0_academy_home_leaf_progress_bar')),
     );
     expect(bar.value, closeTo(1 / 3, 1e-9));
+    expect(bar.semanticsValue, '33%');
+    expect(bar.semanticsLabel, 'Course progress');
   });
 
   for (final counts in const <(int?, int?)>[
@@ -106,6 +108,7 @@ void main() {
     testWidgets('missing or invalid counts $counts make no progress claim', (
       tester,
     ) async {
+      final handle = tester.ensureSemantics();
       await _pumpHome(tester, _input(earned: counts.$1, total: counts.$2));
       expect(
         find.byKey(const Key('act0_academy_home_leaf_percent')),
@@ -115,10 +118,10 @@ void main() {
         find.byKey(const Key('act0_academy_home_leaf_progress_label')),
         findsNothing,
       );
-      final bar = tester.widget<LinearProgressIndicator>(
-        find.byKey(const Key('act0_academy_home_leaf_progress_bar')),
-      );
-      expect(bar.value, 0);
+      // The empty decorative track must not announce a progress value.
+      expect(find.bySemanticsLabel('Course progress'), findsNothing);
+      expect(find.semantics.byValue('0%'), findsNothing);
+      handle.dispose();
     });
   }
 
@@ -206,6 +209,29 @@ void main() {
     );
     expect(tester.takeException(), isNull);
     expect(find.text('100%'), findsOneWidget);
+  });
+
+  testWidgets('large text scale grows the header instead of overflowing', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: const TextScaler.linear(1.6)),
+          child: child!,
+        ),
+        home: Scaffold(
+          body: Act0AcademyHomeLeafV1(input: _input(earned: 1, total: 9)),
+        ),
+      ),
+    );
+    await tester.pump();
+    expect(tester.takeException(), isNull);
   });
 
   test('locale gate keeps RU on the existing localized surface', () {

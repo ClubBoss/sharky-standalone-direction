@@ -106,11 +106,31 @@ class _Act0AcademyPracticeLeafV1State extends State<Act0AcademyPracticeLeafV1> {
         !input.repairQueue.hasItems &&
         repairGroup != null &&
         !repairGroup.isEnabled;
-    final topics = input.groups
+    // Enabled topics first; source order is otherwise kept (stable). The
+    // recommended group is already featured above and is not repeated.
+    final topicSource = input.groups
         .where(
-          (g) => !act0AcademyPracticeNonTopicGroupIdsV1.contains(g.groupId),
+          (g) =>
+              !act0AcademyPracticeNonTopicGroupIdsV1.contains(g.groupId) &&
+              g.groupId != input.recommendedGroupId,
         )
         .toList(growable: false);
+    final topics = [
+      ...topicSource.where((g) => g.isEnabled),
+      ...topicSource.where((g) => !g.isEnabled),
+    ];
+    // Quick reps mirror the accepted shell: Daily is always reachable and an
+    // enabled Weak spots group stays launchable even when it is not the
+    // recommendation.
+    final quickReps = [
+      for (final id in const ['daily', 'weak_spots'])
+        ...input.groups.where(
+          (g) =>
+              g.groupId == id &&
+              g.groupId != input.recommendedGroupId &&
+              (id == 'daily' || g.isEnabled),
+        ),
+    ];
     final visibleTopics = _expanded ? topics : topics.take(2).toList();
     final isEmpty = input.groups.isEmpty && !input.repairQueue.hasItems;
 
@@ -145,7 +165,8 @@ class _Act0AcademyPracticeLeafV1State extends State<Act0AcademyPracticeLeafV1> {
                 title: input.recommendedTitle,
                 subtitle: input.recommendedSubtitle,
                 reasonLabel:
-                    group?.groupId == 'weak_spots' &&
+                    canStart &&
+                        group.groupId == 'weak_spots' &&
                         input.recommendedReasonLabel.trim().isNotEmpty
                     ? input.recommendedReasonLabel.trim()
                     : null,
@@ -189,6 +210,41 @@ class _Act0AcademyPracticeLeafV1State extends State<Act0AcademyPracticeLeafV1> {
                 body: _copy(
                   'play_repair_empty_body',
                   'Miss a lesson spot and Practice brings back the same clue.',
+                ),
+              ),
+            ],
+            if (quickReps.isNotEmpty) ...[
+              const SizedBox(height: 14),
+              const Padding(
+                padding: EdgeInsets.only(left: 4, bottom: 8),
+                child: Text(
+                  'QUICK REPS',
+                  style: TextStyle(
+                    color: Act0AcademyLeafPaletteV1.textMuted,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.3,
+                  ),
+                ),
+              ),
+              Act0AcademyLeafSurfaceV1(
+                key: const Key('act0_academy_practice_leaf_quick_reps'),
+                child: Column(
+                  children: [
+                    for (var i = 0; i < quickReps.length; i++) ...[
+                      if (i > 0)
+                        const Divider(
+                          height: 1,
+                          indent: 16,
+                          endIndent: 16,
+                          color: Act0AcademyLeafPaletteV1.rule,
+                        ),
+                      _TopicRowV1(
+                        group: quickReps[i],
+                        onStartGroup: input.onStartGroup,
+                      ),
+                    ],
+                  ],
                 ),
               ),
             ],
@@ -261,8 +317,8 @@ class _PracticeHeroV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 204,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 204),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -270,7 +326,7 @@ class _PracticeHeroV1 extends StatelessWidget {
             left: -14,
             right: -14,
             top: 0,
-            bottom: 0,
+            bottom: -18,
             child: Act0AcademyLeafBackdropV1(
               image: backdrop,
               alignment: Alignment.centerRight,
@@ -280,7 +336,7 @@ class _PracticeHeroV1 extends StatelessWidget {
             left: -14,
             right: -14,
             top: 0,
-            bottom: 0,
+            bottom: -18,
             child: IgnorePointer(
               child: DecoratedBox(
                 decoration: BoxDecoration(
@@ -299,7 +355,7 @@ class _PracticeHeroV1 extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(8, 15, 0, 0),
+            padding: const EdgeInsets.fromLTRB(8, 15, 0, 18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -657,7 +713,7 @@ class _RepairRowV1 extends StatelessWidget {
           if (launchable) ...[
             const SizedBox(width: 8),
             FilledButton(
-              key: const Key('act0_academy_practice_leaf_repair_cta'),
+              key: Key('act0_academy_practice_leaf_repair_cta_${item.itemId}'),
               onPressed: () => launch(item.launchRequest!),
               style: FilledButton.styleFrom(
                 backgroundColor: Act0AcademyLeafPaletteV1.repair,
@@ -789,63 +845,62 @@ class _TopicRowV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final enabled = group.isEnabled;
-    return Semantics(
+    // The TextButton keeps its own button/tap semantics; a locked row adds a
+    // "locked" label to the merged node instead of replacing the action.
+    return TextButton(
       key: Key('act0_academy_practice_leaf_topic_${group.groupId}'),
-      button: true,
-      enabled: enabled,
-      label: enabled ? group.title : '${group.title}, locked',
-      excludeSemantics: true,
-      child: TextButton(
-        onPressed: enabled ? () => onStartGroup(group) : null,
-        style: TextButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-          minimumSize: const Size(0, 64),
-          foregroundColor: Act0AcademyLeafPaletteV1.text,
-          disabledForegroundColor: Act0AcademyLeafPaletteV1.textMuted,
-        ),
-        child: Row(
-          children: [
-            Act0AcademyLeafGlyphV1(
-              kind: Act0AcademyLeafGlyphKindV1.practice,
-              color: enabled
-                  ? Act0AcademyLeafPaletteV1.aquaSoft
-                  : Act0AcademyLeafPaletteV1.textMuted,
-              size: 25,
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    group.title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+      onPressed: enabled ? () => onStartGroup(group) : null,
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        minimumSize: const Size(0, 64),
+        foregroundColor: Act0AcademyLeafPaletteV1.text,
+        disabledForegroundColor: Act0AcademyLeafPaletteV1.textMuted,
+      ),
+      child: Row(
+        children: [
+          Act0AcademyLeafGlyphV1(
+            kind: Act0AcademyLeafGlyphKindV1.practice,
+            color: enabled
+                ? Act0AcademyLeafPaletteV1.aquaSoft
+                : Act0AcademyLeafPaletteV1.textMuted,
+            size: 25,
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  group.title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                   ),
-                  const SizedBox(height: 3),
-                  Text(
-                    group.subtitle,
-                    style: const TextStyle(
-                      color: Act0AcademyLeafPaletteV1.textMuted,
-                      fontSize: 12,
-                      height: 1.3,
-                    ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  group.subtitle,
+                  style: const TextStyle(
+                    color: Act0AcademyLeafPaletteV1.textMuted,
+                    fontSize: 12,
+                    height: 1.3,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const SizedBox(width: 8),
-            Act0AcademyLeafGlyphV1(
+          ),
+          const SizedBox(width: 8),
+          Semantics(
+            label: enabled ? null : 'locked',
+            child: Act0AcademyLeafGlyphV1(
               kind: enabled
                   ? Act0AcademyLeafGlyphKindV1.forward
                   : Act0AcademyLeafGlyphKindV1.lock,
               color: Act0AcademyLeafPaletteV1.textMuted,
               size: 18,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

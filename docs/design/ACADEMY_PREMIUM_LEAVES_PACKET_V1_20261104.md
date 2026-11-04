@@ -51,8 +51,13 @@ store access. Each takes one immutable `...InputV1` object and plain callbacks.
 ## 3. Truth rules enforced by the leaves (and tested)
 
 - Home: no CTA when `nextAction == null`; no stage highlighted when `phase == null`;
-  no percent or "x of y" unless `0 <= earned <= total, total > 0`; streak chip only for `streakDays > 0`.
+  no percent, "x of y" or announced progress value unless `0 <= earned <= total, total > 0` (an empty
+  decorative track is excluded from semantics); streak chip only for `streakDays > 0`.
 - Practice: start forwards the identical `Act0PracticeGroupV1` object (assistance flags untouched);
+  `daily` (always) and an enabled `weak_spots` stay reachable as Quick reps when they are not the
+  recommendation (shell parity; donor #311 hid them); topics list enabled first in stable source order
+  (the shell's private family ordering is NOT reproduced) and never repeat the recommended group;
+  the repair reason shows only on an enabled weak-spots recommendation;
   locked recommendation never launches (Learn or nothing); unresolved recommendation id launches nothing;
   launchable active repair leads and forwards the identical launch request; non-launchable debt stays visible without CTA;
   no "fixed"/"mastered" copy.
@@ -66,9 +71,16 @@ store access. Each takes one immutable `...InputV1` object and plain callbacks.
 ## 4. Validation (this branch, Linux cloud, Flutter 3.35.0 / Dart 3.9.0)
 
 - `dart format`: clean. `flutter analyze` (whole repo): no issues.
-- `flutter test test/ui_v2/academy_leaves`: 40/40 pass.
+- `flutter test test/ui_v2/academy_leaves`: 47/47 pass.
 - Negative controls (temporary mutations, reverted): progress guard, recommendation lock, repair target-type gate,
-  You open-seed filter (both sites), Review caught-up rule. Each mutation produced at least one failure.
+  You open-seed filter (both sites), Review caught-up rule, progress semantics, quick reps, locked reason,
+  You fresh rule. Each produced at least one failure. Settings toggle-row `MergeSemantics` removal is NOT
+  detectable in the widget-test tree (Flutter already merges there); the test asserts the property
+  (one labelled, toggled node) and the wrapper is kept for donor parity.
+- Independent non-author read-only review (corrective cycle 1 of 2): 4 P1 + 9 P2 reported, all addressed
+  (progress semantics, quick reps, topic tap semantics, Settings row semantics, locked reason, topic order,
+  Review/Practice hero clip and offsets restored to donor, You fresh rule, vacuous XP test, Settings
+  Material ink + donor switch theme, text-scale min heights, unique repair CTA keys, this doc).
 - Existing regression (unchanged source): achievement seed consumer/projection, play shell, practice repair queue
   consumer/projection, review shell, Sharky presence: 83/83 pass.
 - NOT done: native iOS, real-device, screenshot, RU, compact-device runs. No claim of on-binary presence.

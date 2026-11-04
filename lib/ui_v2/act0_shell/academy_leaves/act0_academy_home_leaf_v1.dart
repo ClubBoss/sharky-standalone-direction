@@ -161,11 +161,12 @@ class _HomeGreetingV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12),
-      child: SizedBox(
-        height: 204,
-        child: Column(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      // Min height keeps the donor rhythm; text scaling may grow it.
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 204),
+        child: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -668,14 +669,21 @@ class _CourseProgressStripV1 extends StatelessWidget {
                   ),
                 ],
                 const SizedBox(height: 10),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(7),
-                  child: LinearProgressIndicator(
-                    key: const Key('act0_academy_home_leaf_progress_bar'),
-                    minHeight: 12,
-                    value: p?.ratio ?? 0,
-                    backgroundColor: const Color(0xFF102A35),
-                    color: Act0AcademyLeafPaletteV1.aqua,
+                // A missing/invalid count draws an empty decorative track
+                // only; it must not announce "0%" to assistive tech.
+                ExcludeSemantics(
+                  excluding: p == null,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(7),
+                    child: LinearProgressIndicator(
+                      key: const Key('act0_academy_home_leaf_progress_bar'),
+                      minHeight: 12,
+                      value: p?.ratio ?? 0,
+                      semanticsLabel: p == null ? null : 'Course progress',
+                      semanticsValue: p == null ? null : '${p.percent}%',
+                      backgroundColor: const Color(0xFF102A35),
+                      color: Act0AcademyLeafPaletteV1.aqua,
+                    ),
                   ),
                 ),
               ],
