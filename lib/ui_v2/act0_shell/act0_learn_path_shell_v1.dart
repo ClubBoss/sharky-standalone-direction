@@ -5396,7 +5396,7 @@ String _preChoiceTaskSummaryV1(BuildContext context, Act0LessonTaskV1 task) {
     return _learnCopyV1(
       context,
       en: 'J8o from early position: look at the cards and choose a bucket yourself.',
-      ru: 'J8o с ранней позиции: посмотри на карты и самостоятельно выбери категорию.',
+      ru: 'Разномастные валет и восьмёрка с ранней позиции: посмотри на карты и самостоятельно выбери категорию.',
     );
   }
   return act0AcademyTaskSummaryV1(
