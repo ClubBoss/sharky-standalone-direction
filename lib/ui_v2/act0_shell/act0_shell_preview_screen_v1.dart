@@ -6224,10 +6224,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 repairContinuesToSourceRecheck:
                                     _activeRepairTaskId ==
                                         playSelectedTask?.taskId &&
-                                    (_activeSameSignalFeedbackRepairV1 ||
-                                        _isPracticeQueueRepairAnswerV1(
-                                          playSelectedTask!,
-                                        )),
+                                    _activeSameSignalFeedbackRepairV1,
                                 isSourceRecheckAttempt:
                                     _activeSameSignalRecheckTaskId ==
                                     playSelectedTask?.taskId,
@@ -6237,7 +6234,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     ? _activeRepairSessionSummaryLines
                                     : const <String>[],
                                 feedbackForwardCtaLabel:
-                                    placementForwardCtaLabel,
+                                    placementForwardCtaLabel ??
+                                    (_activeRepairTaskId ==
+                                                playSelectedTask?.taskId &&
+                                            (!_activeSameSignalFeedbackRepairV1 ||
+                                                !act0IndependentRepairProofV1(
+                                                  isCorrect:
+                                                      playRunner
+                                                          ?.selectedOption
+                                                          ?.isCorrect ??
+                                                      false,
+                                                  assistanceKind:
+                                                      _choiceAssistanceV1,
+                                                ))
+                                        ? 'Continue to Review'
+                                        : null),
                                 suppressFeedbackRepairFocus:
                                     _placementDiagnosticActive,
                                 relaxTheoryAdvanceLock: _completedTaskIds
@@ -6705,8 +6716,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   if (_rapidPracticeLoop) {
                                     _completeCurrentTask(playSelectedTask);
                                     final singleCleanRep =
-                                        playRunner.selectedOption?.isCorrect ??
-                                        false;
+                                        (playRunner.selectedOption?.isCorrect ??
+                                            false) &&
+                                        !_choiceWasAssistedV1;
                                     _finishRapidPracticeLoopToHub(
                                       completedLessonId:
                                           selectedLesson.lessonId,
@@ -7887,6 +7899,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (truthful.reasonType != act0ReturnReasonNoPersonalReasonAvailableV1) {
       _recordPersonalizedNextStepOpenedV1(truthful, surface);
     }
+    if (surface == 'home') {
+      _startHomeNextAction(selectedWorld);
+      return;
+    }
     _tab = Act0ShellTabV1.learn;
   }
 
@@ -8484,7 +8500,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     // Daily goal complete — highest priority
     if (_dailyCompletedRepCount >= 3) {
       return const Act0SharkyCueV1(
-        preSessionLine: 'Good work. This table clue is warmer now.',
+        preSessionLine:
+            'Good work completing today\'s practice. Review an open mistake or try one fresh hand.',
         correctReaction: 'Sharp read.',
         wrongReaction: 'Good spot to fix.',
         repairLine: 'Take one breath. I will point at the clue.',
@@ -8565,14 +8582,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     if (_placementHandoffActive) {
-      // Placement has already chosen this taught task. Home must not restart
-      // the assessment-only placement diagnostic behind a first-hand CTA.
-      _startTaskByIds(selectedWorld, _selectedLessonId, _selectedTaskId);
+      // Home promises the eligible route task, including an unfinished Guide.
+      // A Placement recommendation is not permission to bypass prerequisites.
+      final lesson = _firstPlayableLesson(selectedWorld);
+      final task = _firstIncompleteTask(lesson);
+      _startTaskByIds(selectedWorld, lesson.lessonId, task.taskId);
       _returnToPlayHubOnBack = false;
       return;
     }
     _placementHandoffActive = false;
-    final lesson = _lessonById(selectedWorld.lessons, _selectedLessonId);
+    final lesson = _firstPlayableLesson(selectedWorld);
     _startRecommendation(
       _homePrimaryRecommendation(
         selectedWorld: selectedWorld,
@@ -12053,7 +12072,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ru: 'Дневная серия закрыта',
       );
       _practiceCompletionBody = _copyV1(
-        en: 'Nice work — one table clue is warmer. Sharky has tomorrow\'s useful hand ready.',
+        en: 'Session complete. Good work practicing. Review an open mistake or try one fresh route spot next.',
         ru: 'Три коротких повтора готовы. Сегодняшние чтения остаются в тонусе. Можешь взять ещё одну дорожку или вернуться домой.',
       );
     } else if (completedLessonId != null) {
@@ -12063,7 +12082,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ru: 'Повтор готов',
       );
       _practiceCompletionBody = _copyV1(
-        en: '$family stayed sharp. Pick another pack when you want one more clean rep.',
+        en:
+            cleanRepCount != null &&
+                completedRepCount != null &&
+                cleanRepCount == completedRepCount &&
+                cleanRepCount > 0
+            ? '$family: independent correct practice complete. Try one fresh route spot next.'
+            : '$family: practice complete. Review one missed clue, then try it independently.',
         ru: '$family остаются в тонусе. Возьми другой пак, когда захочешь ещё один чистый повтор.',
       );
     }
@@ -12575,8 +12600,30 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   /// A source mistake is discharged only when it is resolved and no mapped
   /// repair remains owed.
-  bool _isMistakeDischargedV1(String taskId) =>
-      _resolvedMistakeTaskIds.contains(taskId) && !_owesMappedRepairV1(taskId);
+  bool _isMistakeDischargedV1(String taskId) {
+    if (_resolvedMistakeTaskIds.contains(taskId) &&
+        !_owesMappedRepairV1(taskId)) {
+      return true;
+    }
+    // Practice Queue resolves keyed occurrences without rewriting the live
+    // task-level cache. Consume the same validated resolution as Review history;
+    // never hide another pending signal or a newer occurrence on this task.
+    if (_activeRepairIntentsV1().any(
+      (intent) => intent.sourceTaskId == taskId,
+    )) {
+      return false;
+    }
+    final resolutions = _reviewResolutionStateV1().resolutions.where(
+      (resolution) => resolution.sourceTaskId == taskId,
+    );
+    return resolutions.isNotEmpty &&
+        resolutions.every(
+          (resolution) =>
+              resolution.reviewState == act0ReviewResolutionStateResolvedV1 &&
+              resolution.resolutionReason ==
+                  act0ReviewResolutionReasonRepairSucceededV1,
+        );
+  }
 
   Act0MistakeCardV1? _topOpenMistake() {
     final open = _openMistakes();
@@ -13670,6 +13717,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final lessonAssistedCount = assistedTaskIds.length;
     final worldOpenMistakeCount = _openMistakeCountForWorldV1(progressedWorld);
     _blockCompletionSummary = Act0BlockCompletionSummaryV1(
+      curriculumCompleted: _lessonComplete(selectedLesson),
       lessonTitle: _localizedLessonTitleV1(selectedLesson),
       xpEarned: _lessonRunXp,
       errorCount: assessedErrorCount,

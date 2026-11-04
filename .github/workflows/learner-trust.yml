@@ -1,0 +1,46 @@
+name: Learner Trust
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Format changed Dart owners
+        run: |
+          dart format lib/ui_v2/act0_shell/act0_shell_state_v1.dart lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart lib/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart test/ui_v2/act0_learner_trust_recap_v1_test.dart test/ui_v2/act0_learner_trust_continuation_v1_test.dart test/ui_v2/act0_learner_trust_summary_parent_v1_test.dart test/ui_v2/act0_assisted_repair_route_v1_test.dart test/ui_v2/act0_repair_obligation_integrity_v1_test.dart
+          git diff -- lib/ui_v2/act0_shell/act0_shell_state_v1.dart lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart lib/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart test/ui_v2/act0_learner_trust_recap_v1_test.dart test/ui_v2/act0_learner_trust_continuation_v1_test.dart test/ui_v2/act0_learner_trust_summary_parent_v1_test.dart test/ui_v2/act0_assisted_repair_route_v1_test.dart test/ui_v2/act0_repair_obligation_integrity_v1_test.dart > output-format.patch
+          echo FORMAT_PATCH_BASE64
+          base64 -w0 output-format.patch
+          echo
+          echo FORMAT_PATCH_END
+          test ! -s output-format.patch
+      - name: Bounded source and parent regression matrix
+        run: |
+          mkdir -p output/learner_trust
+          git rev-parse HEAD HEAD^{tree} > output/learner_trust/source.txt
+          flutter test test/ui_v2/act0_learner_trust_recap_v1_test.dart test/ui_v2/act0_learner_trust_continuation_v1_test.dart test/ui_v2/act0_learner_trust_summary_parent_v1_test.dart test/ui_v2/act0_assessment_identity_census_v1_test.dart test/ui_v2/act0_asm07_historical_fingerprint_falsifier_v1_test.dart test/ui_v2/s09_b2_summary_home_truth_core_v1_test.dart test/ui_v2/act0_practice_repair_queue_consumer_v1_test.dart test/ui_v2/act0_table_truth_render_v1_test.dart test/ui_v2/act0_assisted_repair_route_v1_test.dart test/ui_v2/act0_repair_obligation_integrity_v1_test.dart test/ui_v2/act0_practice_queue_telemetry_owner_v1_test.dart --reporter expanded > output/learner_trust/recaps.log 2>&1
+      - name: Analyze changed owners
+        if: always()
+        run: flutter analyze --no-pub lib/ui_v2/act0_shell/act0_shell_state_v1.dart lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart lib/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart test/ui_v2/act0_learner_trust_recap_v1_test.dart test/ui_v2/act0_learner_trust_continuation_v1_test.dart test/ui_v2/act0_learner_trust_summary_parent_v1_test.dart > output/learner_trust/analyze.log 2>&1
+      - name: Publish bounded test log
+        if: always()
+        run: |
+          cat output/learner_trust/recaps.log
+          cat output/learner_trust/analyze.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: learner-trust-evidence
+          path: output/learner_trust

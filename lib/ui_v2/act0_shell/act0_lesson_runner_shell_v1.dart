@@ -241,6 +241,7 @@ class Act0BlockCompletionSummaryV1 {
     required this.errorCount,
     this.assistedCount = 0,
     this.independentProvenanceKnown = true,
+    this.curriculumCompleted = false,
     required this.taskCount,
     required this.correctCount,
     required this.startLevel,
@@ -267,6 +268,8 @@ class Act0BlockCompletionSummaryV1 {
   });
 
   static const int unlockAccuracyPercent = 80;
+
+  final bool curriculumCompleted;
 
   final String lessonTitle;
   final int xpEarned;
@@ -323,7 +326,9 @@ class Act0BlockCompletionSummaryV1 {
       taskCount <= 0 ? 100 : ((correctCount * 100) / taskCount).round();
 
   bool get qualifiesForNextLesson =>
-      !hasNextLesson || accuracyPercent >= unlockAccuracyPercent;
+      curriculumCompleted ||
+      !hasNextLesson ||
+      accuracyPercent >= unlockAccuracyPercent;
 
   Act0MasteryStatusV1 get masteryStatus {
     if (errorCount == 0 &&
@@ -332,7 +337,8 @@ class Act0BlockCompletionSummaryV1 {
         independentProvenanceKnown) {
       return Act0MasteryStatusV1.cleanPass;
     }
-    if (deepLeakCount > 0 || !qualifiesForNextLesson) {
+    if (deepLeakCount > 0 ||
+        (taskCount > 0 && accuracyPercent < unlockAccuracyPercent)) {
       return Act0MasteryStatusV1.needsReview;
     }
     if (assistedCount > 0 || !independentProvenanceKnown) {
@@ -3125,6 +3131,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         isRefinedDev2 && table.density == Act0TableDensityV1.compactLesson;
     final centerLabelOverride = _resolveTableCueDisplayV1(
       context: context,
+      selectedTaskId: widget.selectedTaskId,
       runner: runner,
       table: table,
       isTeaching: isTeaching,
@@ -4030,6 +4037,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           onBack: _handleRunnerBackV1,
           onChooseOption: _handleChooseOptionTelemetry,
           onContinueReview: widget.onContinueReview,
+          forwardCtaLabel: widget.feedbackForwardCtaLabel,
           recallLabel: decisionHint != null && widget.theoryRecallStep != null
               ? act0AcademyW1InstructionTaskV1(widget.selectedTaskId)
                     ? act0AcademyW1CtaV1(context, 'Need a hint?')
@@ -4051,7 +4059,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     Widget buildIntegratedPrompt() {
       // Academy scene copy only; legacy table locale helpers remain frozen.
       final isRu = act0AcademyLanguageV1(context) == 'ru';
-      final phase = isTheory
+      final phase = isTheory || isTeaching
           ? Act0LearningScenePhaseV3.theory
           : isReview && runner.reviewQuality == Act0FeedbackQualityV1.wrong
           ? Act0LearningScenePhaseV3.feedbackWrong
@@ -4060,7 +4068,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           : isReview
           ? Act0LearningScenePhaseV3.feedbackCorrect
           : Act0LearningScenePhaseV3.tableTask;
-      final purpose = isTheory
+      final purpose = isTheory || isTeaching
           ? (isRu
                 ? '\u041E\u0414\u041D\u0410 \u0418\u0414\u0415\u042F'
                 : 'ONE TABLE IDEA')
@@ -4094,7 +4102,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           feedbackAction.endsWith('!') ||
           feedbackAction.endsWith('?');
       final repairReceipt = widget.repairResultReceiptLine?.trim() ?? '';
-      final headline = isTheory
+      final headline = isTheory || isTeaching
           ? prompt
           : isReview &&
                 isRu &&
@@ -4130,7 +4138,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                       : '$feedbackAction was right with help.')
                 : '$feedbackAction was right.'
           : question;
-      final support = isTheory
+      final support = isTheory || isTeaching
           ? hint
           : isReview
           ? act0AcademyW1InstructionV1(
@@ -4138,6 +4146,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
               widget.selectedTaskId,
               causalFeedback.whyChosen,
             )
+          : (runner.lessonId == 'w10_vs_nit_open_wider' ||
+                runner.lessonId == 'w10_overbluff_punish')
+          ? runner.caption
           : hasSeatTargets
           ? (isRu
                 ? '\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043D\u0430 \u043E\u0434\u043D\u043E \u0438\u0437 \u043E\u0434\u0438\u043D\u0430\u043A\u043E\u0432\u043E \u043F\u043E\u0434\u0441\u0432\u0435\u0447\u0435\u043D\u043D\u044B\u0445 \u043C\u0435\u0441\u0442.'
@@ -4399,6 +4410,7 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
     required this.onBack,
     required this.onChooseOption,
     required this.onContinueReview,
+    this.forwardCtaLabel,
     this.recallLabel,
     this.onRecall,
     this.hintPeek,
@@ -4416,6 +4428,7 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
   final VoidCallback onBack;
   final ValueChanged<Act0RunnerOptionV1> onChooseOption;
   final VoidCallback onContinueReview;
+  final String? forwardCtaLabel;
   final String? recallLabel;
   final VoidCallback? onRecall;
   final Widget? hintPeek;
@@ -4525,7 +4538,8 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
                                     ),
                                     onPressed: onContinueReview,
                                     child: Text(
-                                      actionPayoff?.primaryActionLabel ??
+                                      forwardCtaLabel ??
+                                          actionPayoff?.primaryActionLabel ??
                                           'Continue',
                                     ),
                                   ),
@@ -8074,7 +8088,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         ? 'Missed cue'
         : 'Correct read';
     if (sceneOwnsFeedbackExplanation) {
-      final nextActionLine = isWrong || isRepairFocusState
+      final nextActionLine = forwardCtaLabel == 'Continue to Review'
+          ? 'Return to Review to choose the next repair. Open mistakes stay available.'
+          : isWrong || isRepairFocusState
           ? 'Try the same table clue once more.'
           : repairContinuesToSourceRecheck
           ? 'Return to the original read and prove the repair.'
@@ -14362,6 +14378,7 @@ String _neutralizeAnswerBearingCueV1({
 
 String _resolveTableCueDisplayV1({
   required BuildContext context,
+  required String? selectedTaskId,
   required Act0RunnerStateV1 runner,
   required Act0TableStateV1 table,
   required bool isTeaching,
@@ -14381,6 +14398,9 @@ String _resolveTableCueDisplayV1({
     runner: runner,
   )) {
     return rawCue;
+  }
+  if (selectedTaskId == 'straight_draws_w5_gutshot_draw') {
+    return '';
   }
   if (_looksLikeTrailHistoryQuestionV1(runner, table)) {
     return '';

@@ -190,6 +190,7 @@ void main() {
             findsNothing,
             reason: 'Assisted correct is teaching, not proof of repair.',
           );
+          expect(find.text('Continue to Review'), findsWidgets);
           final originalChoice = sink.events
               .where((e) => e.name == 'user_choice')
               .single;
@@ -215,6 +216,11 @@ void main() {
           expect(
             sink.events.where((e) => e.name == 'repair_completed'),
             hasLength(1),
+          );
+
+          expect(
+            find.byKey(const Key('act0_shell_review_screen')),
+            findsOneWidget,
           );
 
           // Tear down the runner and reconstruct from persistent SharedPreferences.
