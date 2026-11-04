@@ -35,6 +35,7 @@ class Act0ProfileShellV1 extends StatelessWidget {
     required this.profile,
     required this.onRetakePlacement,
     this.onReplayWelcome,
+    this.onRecoveryOptions,
     this.onGoToHome,
     this.evidenceSignal,
     this.crossSessionProof,
@@ -45,6 +46,7 @@ class Act0ProfileShellV1 extends StatelessWidget {
   final VoidCallback onRetakePlacement;
   final VoidCallback? onReplayWelcome;
   final VoidCallback? onGoToHome;
+  final VoidCallback? onRecoveryOptions;
   final Act0ProfileEvidenceSignalViewModelV1? evidenceSignal;
   final Act0CrossSessionProfileProofV1? crossSessionProof;
   final Act0AchievementSeedConsumerV1 achievementSeedConsumer;
@@ -88,6 +90,13 @@ class Act0ProfileShellV1 extends StatelessWidget {
           _ProfileMilestonesCardV1(profile: profile),
         ],
         const SizedBox(height: Act0ShellTokensV1.gapMd),
+        if (onRecoveryOptions != null)
+          TextButton.icon(
+            key: const Key('act0_profile_recovery_options'),
+            onPressed: onRecoveryOptions,
+            icon: const Icon(Icons.restore),
+            label: const Text('Recovery options'),
+          ),
         _ProfileAccountSettingsRowV1(
           onRetakePlacement: onRetakePlacement,
           onReplayWelcome: onReplayWelcome,

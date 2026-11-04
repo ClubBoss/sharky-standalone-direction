@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
+import 'package:crypto/crypto.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -34,6 +36,10 @@ class _Disk extends SharedPreferencesStorePlatform {
   final Set<String> failWriteKeys = <String>{};
   final Set<String> failRemoveKeys = <String>{};
   final Set<String> falseButLandedKeys = <String>{};
+  final Set<String> throwButLandedKeys = <String>{};
+  final Set<String> trueButMissingKeys = <String>{};
+  final Set<String> falseButRemovedKeys = <String>{};
+  final Set<String> trueButNotRemovedKeys = <String>{};
   // key -> 1-based write ordinal from which setValue fails (0 = never).
   final Map<String, int> failWritesFrom = <String, int>{};
   final Map<String, int> writeCounts = <String, int>{};
@@ -50,6 +56,11 @@ class _Disk extends SharedPreferencesStorePlatform {
   @override
   Future<bool> setValue(String type, String key, Object value) async {
     if (failWriteKeys.contains(key)) return false;
+    if (throwButLandedKeys.contains(key)) {
+      values[key] = value;
+      throw StateError('synthetic landed write failure');
+    }
+    if (trueButMissingKeys.contains(key)) return true;
     if (falseButLandedKeys.contains(key)) {
       values[key] = value;
       return false;
@@ -69,6 +80,11 @@ class _Disk extends SharedPreferencesStorePlatform {
   @override
   Future<bool> remove(String key) async {
     if (failRemoveKeys.contains(key)) return false;
+    if (trueButNotRemovedKeys.contains(key)) return true;
+    if (falseButRemovedKeys.contains(key)) {
+      values.remove(key);
+      return false;
+    }
     values.remove(key);
     return true;
   }
@@ -217,6 +233,47 @@ Future<void> _flush(WidgetTester tester) async {
 Future<void> _drain() => _store.flush();
 Map<String, dynamic> _durable(_Disk disk) =>
     jsonDecode(disk.values['flutter.$_key']! as String) as Map<String, dynamic>;
+
+Future<({_Disk disk, Act0ProgressStoreV1 store})> _dat06Fixture(
+  String tag, {
+  Future<void> Function(String, _Disk, String)? boundary,
+}) async {
+  final key = 'dat06_$tag';
+  SharedPreferences.setMockInitialValues({});
+  final disk = _Disk({
+    key: 'synthetic damaged original',
+    '${key}_head': '{invalid',
+    '${key}_recovery': false,
+    '${key}_backup': 41,
+    'unrelated': 'keep',
+    'intake_completed_v1': true,
+  });
+  SharedPreferencesStorePlatform.instance = disk;
+  return (
+    disk: disk,
+    store: Act0ProgressStoreV1(
+      key: key,
+      isValidPayload: (_) => true,
+      debugRecoveryBoundary: boundary == null
+          ? null
+          : (stage) => boundary(stage, disk, key),
+    ),
+  );
+}
+
+Map<String, Object?> _dat06Canonical(_Disk disk, Act0ProgressStoreV1 store) => {
+  for (final k in [
+    store.key,
+    store.headKey,
+    store.recoveryKey,
+    store.backupKey,
+  ])
+    k: disk.values.containsKey('flutter.$k')
+        ? disk.values['flutter.$k']
+        : '<absent fixture key>',
+};
+Act0ProgressStoreV1 _dat06Restart(Act0ProgressStoreV1 store) =>
+    Act0ProgressStoreV1(key: store.key, isValidPayload: (_) => true);
 
 void main() {
   testWidgets('an older in-flight save cannot erase a later source decision', (
@@ -1219,6 +1276,683 @@ void main() {
           isEmpty,
         );
       }
+    },
+  );
+  for (final tamper in ['archive', 'intent']) {
+    test(
+      'DAT06 $tamper drift after backup must preserve original legacy',
+      () async {
+        final key = 'dat06_boundary_$tamper';
+        SharedPreferences.setMockInitialValues({});
+        final disk = _Disk({
+          key: 'synthetic damaged original',
+          '${key}_head': '{invalid',
+          '${key}_recovery': false,
+          '${key}_backup': 41,
+        });
+        SharedPreferencesStorePlatform.instance = disk;
+        final store = Act0ProgressStoreV1(
+          key: key,
+          isValidPayload: (_) => false,
+          debugRecoveryBoundary: (stage) async {
+            if (stage == 'backup_verified') {
+              disk.values['flutter.${key}_${tamper == 'archive' ? 'damaged_copy_v1' : 'recovery_intent_v1'}'] =
+                  'tampered';
+            }
+          },
+        );
+        final proposal = await store.inspectRecovery();
+        expect(await store.confirmRecovery(proposal), isFalse);
+        expect(disk.values['flutter.$key'], 'synthetic damaged original');
+      },
+    );
+  }
+  test(
+    'DAT06 inspection cancel and drift perform no canonical writes',
+    () async {
+      final f = await _dat06Fixture('inspect');
+      final before = Map.of(f.disk.values);
+      final proposal = await f.store.inspectRecovery();
+      expect(f.disk.values, before);
+      f.disk.values['flutter.${f.store.key}'] = 'newer synthetic value';
+      final drifted = Map.of(f.disk.values);
+      expect(await f.store.confirmRecovery(proposal), isFalse);
+      expect(f.disk.values, drifted);
+      expect(
+        f.disk.values.containsKey('flutter.${f.store.damagedCopyKey}'),
+        isFalse,
+      );
+    },
+  );
+
+  final typedCases = <Object>[
+    'string \u0000 \ud800',
+    false,
+    9223372036854775807,
+    -0.0,
+    double.nan,
+    <String>['x', '', '♠'],
+  ];
+  for (var i = 0; i < typedCases.length; i++) {
+    test('DAT06 lossless typed archive and absent keys case$i', () async {
+      final f = await _dat06Fixture('typed$i');
+      final k = f.store.key;
+      final v = typedCases[i];
+      f.disk.values['flutter.$k'] = v;
+      f.disk.values.remove('flutter.${f.store.backupKey}');
+      expect(
+        await f.store.confirmRecovery(await f.store.inspectRecovery()),
+        isTrue,
+      );
+      final archive =
+          jsonDecode(
+                f.disk.values['flutter.${f.store.damagedCopyKey}'] as String,
+              )
+              as Map;
+      final snapshot = archive['snapshot'] as List;
+      final entry = (snapshot.first as List)[1] as Map;
+      if (v is double) {
+        final bytes = ByteData(8)..setFloat64(0, v, Endian.big);
+        final bits = bytes.buffer
+            .asUint8List()
+            .map((b) => b.toRadixString(16).padLeft(2, '0'))
+            .join();
+        expect(entry, {'t': 'double', 'v': bits});
+      } else if (v is int) {
+        expect(entry, {'t': 'int', 'v': v.toString()});
+      } else {
+        expect(entry['v'], v);
+      }
+      expect((snapshot.last as List)[1], {'t': 'absent'});
+      expect(f.disk.values['flutter.unrelated'], 'keep');
+      expect(f.disk.values['flutter.intake_completed_v1'], true);
+      final state = await _dat06Restart(f.store).loadState();
+      expect(state.isReset, isTrue);
+      expect(state.payload, isNull);
+    });
+  }
+
+  for (final cut in [
+    'archive_verified',
+    'intent_verified',
+    'head_verified',
+    'recovery_verified',
+    'backup_verified',
+    'legacy_removed',
+    'intent_removed',
+  ]) {
+    test('DAT06 process cut at $cut resumes idempotently', () async {
+      final f = await _dat06Fixture(
+        'cut_$cut',
+        boundary: (stage, d, k) async {
+          if (stage == cut) throw StateError('synthetic process cut');
+        },
+      );
+      final proposal = await f.store.inspectRecovery();
+      expect(await f.store.confirmRecovery(proposal), isFalse);
+      final archive = f.disk.values['flutter.${f.store.damagedCopyKey}'];
+      final restart = _dat06Restart(f.store);
+      if (cut == 'archive_verified') {
+        expect(
+          f.disk.values['flutter.${f.store.key}'],
+          'synthetic damaged original',
+        );
+        await expectLater(restart.load(), throwsFormatException);
+        expect(
+          await restart.confirmRecovery(await restart.inspectRecovery()),
+          isTrue,
+        );
+      } else {
+        expect((await restart.loadState()).isReset, isTrue);
+      }
+      final after = Map.of(f.disk.values);
+      expect((await _dat06Restart(f.store).loadState()).isReset, isTrue);
+      expect(f.disk.values, after);
+      expect(f.disk.values['flutter.${f.store.damagedCopyKey}'], archive);
+      expect(
+        f.disk.values.containsKey('flutter.${f.store.recoveryIntentKey}'),
+        isFalse,
+      );
+      expect(f.disk.values['flutter.unrelated'], 'keep');
+    });
+  }
+
+  for (final behavior in ['false_landed', 'throw_landed', 'true_missing']) {
+    for (final target in ['copy', 'intent', 'head', 'recovery', 'backup']) {
+      test('DAT06 $behavior at $target uses durable readback', () async {
+        final f = await _dat06Fixture('${behavior}_$target');
+        final proposal = await f.store.inspectRecovery();
+        final key = switch (target) {
+          'copy' => f.store.damagedCopyKey,
+          'intent' => f.store.recoveryIntentKey,
+          'head' => f.store.headKey,
+          'recovery' => f.store.recoveryKey,
+          _ => f.store.backupKey,
+        };
+        final set = switch (behavior) {
+          'false_landed' => f.disk.falseButLandedKeys,
+          'throw_landed' => f.disk.throwButLandedKeys,
+          _ => f.disk.trueButMissingKeys,
+        };
+        set.add('flutter.$key');
+        expect(
+          await f.store.confirmRecovery(proposal),
+          behavior != 'true_missing',
+        );
+        set.clear();
+        if (behavior == 'true_missing') {
+          if (target == 'copy' || target == 'intent') {
+            expect(
+              f.disk.values['flutter.${f.store.key}'],
+              'synthetic damaged original',
+            );
+            final restart = _dat06Restart(f.store);
+            expect(
+              await restart.confirmRecovery(await restart.inspectRecovery()),
+              isTrue,
+            );
+          } else {
+            expect((await _dat06Restart(f.store).loadState()).isReset, isTrue);
+          }
+        }
+        expect((await _dat06Restart(f.store).loadState()).isReset, isTrue);
+      });
+    }
+  }
+
+  for (final target in ['copy', 'intent']) {
+    test(
+      'DAT06 invalid $target pending data holds without checkpoint mutation',
+      () async {
+        final f = await _dat06Fixture(
+          'tamper_$target',
+          boundary: (stage, d, k) async {
+            if (stage == 'intent_verified') throw StateError('cut');
+          },
+        );
+        expect(
+          await f.store.confirmRecovery(await f.store.inspectRecovery()),
+          isFalse,
+        );
+        final badKey = target == 'copy'
+            ? f.store.damagedCopyKey
+            : f.store.recoveryIntentKey;
+        f.disk.values['flutter.$badKey'] = 'invalid';
+        final before = Map.of(f.disk.values);
+        await expectLater(
+          _dat06Restart(f.store).load(),
+          throwsA(isA<Act0RecoveryHoldV1>()),
+        );
+        expect(f.disk.values, before);
+        final copy = await f.store.inspectRecoveryCopy();
+        expect(await f.store.deleteRecoveryCopy(copy), isFalse);
+        expect(f.disk.values, before);
+      },
+    );
+  }
+
+  test(
+    'DAT06 unexpected newer state under bound intent is preserved and held',
+    () async {
+      final f = await _dat06Fixture(
+        'newer',
+        boundary: (stage, d, k) async {
+          if (stage == 'intent_verified') {
+            for (final key in ['${k}_head', '${k}_recovery', '${k}_backup']) {
+              d.values['flutter.$key'] = Act0ProgressStoreV1.debugEnvelopeV1(
+                90,
+                'newer',
+              );
+            }
+            d.values['flutter.$k'] = 'newer';
+          }
+        },
+      );
+      expect(
+        await f.store.confirmRecovery(await f.store.inspectRecovery()),
+        isFalse,
+      );
+      final before = Map.of(f.disk.values);
+      await expectLater(
+        _dat06Restart(f.store).load(),
+        throwsA(isA<Act0RecoveryHoldV1>()),
+      );
+      expect(f.disk.values, before);
+      expect(f.disk.values['flutter.${f.store.key}'], 'newer');
+    },
+  );
+
+  test(
+    'DAT06 revision overflow and unsupported types hold before preservation',
+    () async {
+      final f = await _dat06Fixture('overflow');
+      f.disk.values['flutter.${f.store.headKey}'] = jsonEncode({
+        'revision': 9007199254740991,
+      });
+      final before = Map.of(f.disk.values);
+      await expectLater(
+        f.store.inspectRecovery(),
+        throwsA(isA<Act0RecoveryHoldV1>()),
+      );
+      expect(f.disk.values, before);
+      f.disk.values['flutter.${f.store.headKey}'] = <String, int>{
+        'unsupported': 1,
+      };
+      final unsupported = Map.of(f.disk.values);
+      await expectLater(
+        f.store.inspectRecovery(),
+        throwsA(isA<Act0RecoveryHoldV1>()),
+      );
+      expect(f.disk.values, unsupported);
+    },
+  );
+
+  test(
+    'DAT06 existing different copy never evicted; separate deletion is verified and drift-bound',
+    () async {
+      final f = await _dat06Fixture('delete');
+      expect(
+        await f.store.confirmRecovery(await f.store.inspectRecovery()),
+        isTrue,
+      );
+      final copy = await f.store.inspectRecoveryCopy();
+      final canonical = _dat06Canonical(f.disk, f.store);
+      f.disk.values['flutter.${f.store.damagedCopyKey}'] = 'changed copy';
+      expect(await f.store.deleteRecoveryCopy(copy), isFalse);
+      final changed = await f.store.inspectRecoveryCopy();
+      f.disk.trueButNotRemovedKeys.add('flutter.${f.store.damagedCopyKey}');
+      expect(await f.store.deleteRecoveryCopy(changed), isFalse);
+      f.disk.trueButNotRemovedKeys.clear();
+      f.disk.falseButRemovedKeys.add('flutter.${f.store.damagedCopyKey}');
+      expect(await f.store.deleteRecoveryCopy(changed), isTrue);
+      expect(_dat06Canonical(f.disk, f.store), canonical);
+      expect(f.disk.values['flutter.unrelated'], 'keep');
+      expect((await _dat06Restart(f.store).loadState()).isReset, isTrue);
+    },
+  );
+
+  test(
+    'DAT06 old instance and queued saves cannot restore state after reset',
+    () async {
+      final entered = Completer<void>(), release = Completer<void>();
+      final f = await _dat06Fixture(
+        'old_writer',
+        boundary: (stage, d, k) async {
+          if (stage == 'intent_verified') {
+            entered.complete();
+            await release.future;
+          }
+        },
+      );
+      final oldOther = _dat06Restart(f.store);
+      final recovery = f.store.confirmRecovery(await f.store.inspectRecovery());
+      await entered.future;
+      final queued = oldOther.save('stale');
+      release.complete();
+      expect(await recovery, isTrue);
+      expect(await queued, isFalse);
+      expect(await f.store.save('stale'), isFalse);
+      final fresh = _dat06Restart(f.store);
+      expect((await fresh.loadState()).isReset, isTrue);
+      expect(await fresh.save('fresh earned snapshot'), isTrue);
+      expect(await _dat06Restart(fresh).load(), 'fresh earned snapshot');
+    },
+  );
+  testWidgets(
+    'DAT06 recovery fences old runner callbacks dispose and cold sample seeds',
+    (tester) async {
+      final disk = await _mount(tester, _snapshot());
+      final oldRunner = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      final dynamic runtime = tester.state(
+        find.byType(Act0ShellPreviewScreenV1),
+      );
+      disk.values['flutter.$_key'] = 'damaged';
+      disk.values['flutter.${_key}_head'] = '{invalid';
+      disk.values['flutter.${_key}_recovery'] = false;
+      disk.values['flutter.${_key}_backup'] = 41;
+      await tester.runAsync(
+        () => runtime.debugReloadProgressV1() as Future<void>,
+      );
+      await tester.pumpAndSettle();
+      expect(
+        find.text('Your saved progress could not be read.'),
+        findsOneWidget,
+      );
+      await tester.tap(find.byKey(const Key('act0_recovery_options')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_recovery_confirm')));
+      await tester.pumpAndSettle();
+      expect(find.text('Your saved progress could not be read.'), findsNothing);
+      oldRunner.onChoiceAssistance?.call(Act0DecisionAssistanceV1.none);
+      oldRunner.onChooseOption(
+        oldRunner.runner.options.firstWhere((o) => o.isCorrect),
+      );
+      oldRunner.onCompletedDecision?.call(_decision(_target, 999));
+      await tester.pumpAndSettle();
+      runtime.debugPersistProgressV1();
+      await tester.pump(const Duration(milliseconds: 300));
+      await _drain();
+      final raw = await _store.load();
+      final saved = jsonDecode(raw!) as Map;
+      expect(saved['earnedXp'], 0);
+      expect(saved['completedTaskIds'], isEmpty);
+      expect(saved['completedLessonIds'], isEmpty);
+      expect(saved['openRepairIntents'], isEmpty);
+      expect(saved['learningEvidenceHistory'], isEmpty);
+      expect(saved['suppressLegacyRecheckAfterRecovery'], true);
+      expect(disk.values['flutter.intake_completed_v1'], true);
+      expect(disk.values['flutter.act0_welcome_completed_v1'], true);
+      final activeStore = Act0ProgressStoreV1(
+        key: _key,
+        isValidPayload: (_) => true,
+      );
+      expect(
+        await activeStore.deleteRecoveryCopy(
+          await activeStore.inspectRecoveryCopy(),
+        ),
+        isTrue,
+      );
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+      await _drain();
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Act0ShellPreviewScreenV1(showPlacementOnStart: false),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final dynamic fresh = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      fresh.debugPersistProgressV1();
+      await tester.pump(const Duration(milliseconds: 300));
+      await _drain();
+      final cold = jsonDecode((await _store.load())!) as Map;
+      expect(cold['earnedXp'], 0);
+      expect(cold['completedTaskIds'], isEmpty);
+      expect(cold['learningEvidenceHistory'], isEmpty);
+      expect(cold['openRepairIntents'], isEmpty);
+      expect(cold['suppressLegacyRecheckAfterRecovery'], true);
+    },
+  );
+  testWidgets(
+    'DAT06 a genuinely new first-world decision earns once across cold restart',
+    (tester) async {
+      final disk = await _mount(tester, _snapshot());
+      final dynamic runtime = tester.state(
+        find.byType(Act0ShellPreviewScreenV1),
+      );
+      disk.values['flutter.$_key'] = 'damaged';
+      disk.values['flutter.${_key}_head'] = '{invalid';
+      disk.values['flutter.${_key}_recovery'] = false;
+      disk.values['flutter.${_key}_backup'] = 41;
+      await tester.runAsync(
+        () => runtime.debugReloadProgressV1() as Future<void>,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_recovery_options')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_recovery_confirm')));
+      await tester.pumpAndSettle();
+      Future<Act0LessonRunnerShellV1> reachDecision() async {
+        for (var step = 0; step < 30; step++) {
+          if (find.byType(Act0LessonRunnerShellV1).evaluate().isNotEmpty) {
+            final runner = tester.widget<Act0LessonRunnerShellV1>(
+              find.byType(Act0LessonRunnerShellV1),
+            );
+            if (runner.runner.phase == Act0LessonPhaseV1.drill &&
+                runner.runner.selectedOptionId == null) {
+              final answer = runner.runner.options.firstWhere(
+                (o) => o.isCorrect,
+              );
+              final target = find.byKey(Key('act0_shell_option_${answer.id}'));
+              final seat = answer.seatId == null
+                  ? find.byKey(const Key('no-seat-choice'))
+                  : find.byKey(Key('act0_shell_seat_tap_${answer.seatId}'));
+              if (seat.evaluate().isNotEmpty) {
+                await tester.ensureVisible(seat);
+                if (seat.hitTestable().evaluate().isNotEmpty) return runner;
+              }
+              if (target.evaluate().isNotEmpty) {
+                await tester.ensureVisible(target);
+                if (target.hitTestable().evaluate().isNotEmpty) return runner;
+              } else {}
+            }
+            final candidates = [
+              find.byKey(const Key('act0_shell_theory_continue_cta')),
+              find.byKey(const Key('act0_shell_continue_cta')),
+              find.byKey(const Key('act0_shell_feedback_continue_cta')),
+            ];
+            final next = candidates.firstWhere((f) => f.evaluate().isNotEmpty);
+            await tester.ensureVisible(next);
+            await tester.tap(next);
+            await tester.pumpAndSettle();
+          } else if (find.byType(Act0LearnPathShellV1).evaluate().isNotEmpty) {
+            final start = find.byKey(
+              const Key('act0_shell_current_mission_cta'),
+            );
+            await tester.ensureVisible(start);
+            await tester.tap(start);
+            await tester.pumpAndSettle();
+          } else {
+            final nav = find.byKey(const Key('act0_shell_bottom_nav'));
+            await tester.tap(
+              find.descendant(of: nav, matching: find.text('Learn')),
+            );
+            await tester.pumpAndSettle();
+          }
+        }
+        throw StateError(
+          'First-world independent decision not reached through source controls',
+        );
+      }
+
+      final runner = await reachDecision();
+      final answer = runner.runner.options.firstWhere((o) => o.isCorrect);
+      final taskId = runner.selectedTaskId!;
+      print(
+        'DAT06_NEW_NATIVE_TARGET task=$taskId choice=${answer.id} label=${answer.label}',
+      );
+      await _flush(tester);
+      await _drain();
+      final beforeXp =
+          (jsonDecode((await _store.load())!) as Map)['earnedXp'] as int;
+      final sourceTask = Act0ShellStateV1.sample.worlds.first.lessons
+          .expand((l) => l.taskList)
+          .singleWhere((t) => t.taskId == taskId);
+      await tester.tap(
+        answer.seatId != null &&
+                find
+                    .byKey(Key('act0_shell_seat_tap_${answer.seatId}'))
+                    .evaluate()
+                    .isNotEmpty
+            ? find.byKey(Key('act0_shell_seat_tap_${answer.seatId}'))
+            : find.byKey(Key('act0_shell_option_${answer.id}')),
+      );
+      await tester.pumpAndSettle();
+      final finish = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+      await tester.ensureVisible(finish);
+      await tester.tap(finish);
+      await tester.pumpAndSettle();
+      await _flush(tester);
+      await _drain();
+      final earned = jsonDecode((await _store.load())!) as Map;
+      final xp = earned['earnedXp'] as int;
+      expect(xp, beforeXp + sourceTask.rewardXp);
+      expect(sourceTask.rewardXp, greaterThan(0));
+      expect(earned['completedTaskIds'], contains(taskId));
+      final history = Act0LearningEvidenceHistoryV1.tryParse(
+        earned['learningEvidenceHistory'],
+      );
+      expect(history, isNotNull);
+      expect(
+        history!.records.last.assistanceKind,
+        Act0DecisionAssistanceV1.none,
+      );
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+      await _drain();
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Act0ShellPreviewScreenV1(
+            showPlacementOnStart: false,
+            initialTab: Act0ShellTabV1.learn,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      if (find.byType(Act0LessonRunnerShellV1).evaluate().isNotEmpty) {
+        tester
+            .widget<Act0LessonRunnerShellV1>(
+              find.byType(Act0LessonRunnerShellV1),
+            )
+            .onBack();
+        await tester.pumpAndSettle();
+      }
+      final learn = tester.widget<Act0LearnPathShellV1>(
+        find.byType(Act0LearnPathShellV1),
+      );
+      final world = Act0ShellStateV1.sample.worlds.first;
+      final lesson = world.lessons.firstWhere(
+        (l) => l.taskList.any((t) => t.taskId == taskId),
+      );
+      learn.onStartTask(lesson.lessonId, taskId);
+      await tester.pumpAndSettle();
+      final replay = await reachDecision();
+      final replayAnswer = replay.runner.options.firstWhere((o) => o.isCorrect);
+      expect(replay.selectedTaskId, taskId);
+      await tester.tap(
+        replayAnswer.seatId != null &&
+                find
+                    .byKey(Key('act0_shell_seat_tap_${replayAnswer.seatId}'))
+                    .evaluate()
+                    .isNotEmpty
+            ? find.byKey(Key('act0_shell_seat_tap_${replayAnswer.seatId}'))
+            : find.byKey(Key('act0_shell_option_${replayAnswer.id}')),
+      );
+      await tester.pumpAndSettle();
+      final finishReplay = find.byKey(
+        const Key('act0_shell_feedback_continue_cta'),
+      );
+      await tester.ensureVisible(finishReplay);
+      await tester.tap(finishReplay);
+      await tester.pumpAndSettle();
+      await _flush(tester);
+      await _drain();
+      final cold = jsonDecode((await _store.load())!) as Map;
+      expect(cold['earnedXp'], xp);
+      expect(cold['suppressLegacyRecheckAfterRecovery'], true);
+    },
+  );
+  test(
+    'DAT06 an existing different archive is never evicted on another reset',
+    () async {
+      final f = await _dat06Fixture('copy_never_evict');
+      expect(
+        await f.store.confirmRecovery(await f.store.inspectRecovery()),
+        true,
+      );
+      final next = _dat06Restart(f.store);
+      final proposal = await next.inspectRecovery();
+      final before = Map.of(f.disk.values);
+      expect(await next.confirmRecovery(proposal), false);
+      expect(f.disk.values, before);
+    },
+  );
+  test(
+    'DAT06 a consistently hashed forged target still fails the original consent binding',
+    () async {
+      final f = await _dat06Fixture(
+        'forged_target',
+        boundary: (stage, d, k) async {
+          if (stage == 'intent_verified') throw StateError('cut');
+        },
+      );
+      expect(
+        await f.store.confirmRecovery(await f.store.inspectRecovery()),
+        false,
+      );
+      final intent =
+          jsonDecode(
+                f.disk.values['flutter.${f.store.recoveryIntentKey}'] as String,
+              )
+              as Map<String, dynamic>;
+      intent['target'] = Act0ProgressStoreV1.debugEnvelopeV1(90, null);
+      intent['digest'] = sha256
+          .convert(
+            utf8.encode(
+              jsonEncode([
+                1,
+                f.store.key,
+                intent['archiveDigest'],
+                intent['snapshotDigest'],
+                intent['target'],
+              ]),
+            ),
+          )
+          .toString();
+      f.disk.values['flutter.${f.store.recoveryIntentKey}'] = jsonEncode(
+        intent,
+      );
+      final before = Map.of(f.disk.values);
+      await expectLater(
+        _dat06Restart(f.store).load(),
+        throwsA(isA<Act0RecoveryHoldV1>()),
+      );
+      expect(f.disk.values, before);
+    },
+  );
+  testWidgets(
+    'DAT06 failed first fresh save and archive deletion cannot re-seed sample on cold boot',
+    (tester) async {
+      final disk = await _mount(tester, _snapshot());
+      final dynamic runtime = tester.state(
+        find.byType(Act0ShellPreviewScreenV1),
+      );
+      disk.values['flutter.$_key'] = 'damaged';
+      disk.values['flutter.${_key}_head'] = '{invalid';
+      disk.values['flutter.${_key}_recovery'] = false;
+      disk.values['flutter.${_key}_backup'] = 41;
+      await tester.runAsync(
+        () => runtime.debugReloadProgressV1() as Future<void>,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_recovery_options')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_recovery_confirm')));
+      await tester.pumpAndSettle();
+      disk.failWriteKeys.add('flutter.${_key}_head');
+      runtime.debugPersistProgressV1();
+      await tester.pump(const Duration(milliseconds: 300));
+      await _drain();
+      expect((await _store.loadState()).isReset, true);
+      final freshStore = _dat06Restart(_store);
+      expect(
+        await freshStore.deleteRecoveryCopy(
+          await freshStore.inspectRecoveryCopy(),
+        ),
+        true,
+      );
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+      await _drain();
+      disk.failWriteKeys.clear();
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Act0ShellPreviewScreenV1(showPlacementOnStart: false),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final dynamic cold = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      cold.debugPersistProgressV1();
+      await tester.pump(const Duration(milliseconds: 300));
+      await _drain();
+      final saved = jsonDecode((await _store.load())!) as Map;
+      expect(saved['earnedXp'], 0);
+      expect(saved['completedTaskIds'], isEmpty);
+      expect(saved['learningEvidenceHistory'], isEmpty);
+      expect(saved['suppressLegacyRecheckAfterRecovery'], true);
+      expect(disk.values.containsKey('flutter.${_key}_damaged_copy_v1'), false);
     },
   );
 }
