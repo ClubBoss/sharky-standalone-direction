@@ -81,7 +81,8 @@ class Act0ReviewShellV1 extends StatelessWidget {
     ];
     final selectedDueItem = dueReviewItems.isEmpty
         ? null
-        : _selectedDueItemV1(nextStep, dueReviewItems) ?? dueReviewItems.first;
+        : act0SelectedDueReviewItemV1(nextStep, dueReviewItems) ??
+              dueReviewItems.first;
     final dueTaskIsOpen =
         selectedDueItem != null &&
         review.mistakes.any(
@@ -370,7 +371,7 @@ bool _nextStepNeedsDedicatedCtaV1(Act0PersonalizedReturnReasonV1 nextStep) =>
     nextStep.recommendedAction == 'reinforce' ||
     nextStep.recommendedAction == 'resume_focus';
 
-Act0DueReviewItemV1? _selectedDueItemV1(
+Act0DueReviewItemV1? act0SelectedDueReviewItemV1(
   Act0PersonalizedReturnReasonV1? nextStep,
   List<Act0DueReviewItemV1> items,
 ) {

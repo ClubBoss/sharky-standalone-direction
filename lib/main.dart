@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:poker_analyzer/services/app_settings_service.dart';
 
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,14 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (const bool.fromEnvironment('SHARKY_ACADEMY_SETTINGS_PREVIEW')) {
+    try {
+      await AppSettingsService.instance.load();
+    } catch (error) {
+      // Boot remains usable; Settings offers its own explicit load retry.
+      debugPrint('Preferences unavailable at boot: $error');
+    }
+  }
   // await _initFirebaseIfAvailable();
   runApp(AppRoot());
 }
