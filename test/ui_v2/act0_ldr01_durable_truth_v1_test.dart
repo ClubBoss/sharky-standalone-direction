@@ -1955,4 +1955,71 @@ void main() {
       expect(disk.values.containsKey('flutter.${_key}_damaged_copy_v1'), false);
     },
   );
+  testWidgets(
+    'DAT06 active-runtime recovery clears an existing first-value carry',
+    (tester) async {
+      final snapshot = _snapshot()
+        ..['firstValueReturnCarry'] = <String, Object>{
+          'skillReceiptId': 'action_read_learned_no_bet_yet',
+          'skillAtomId': 'action_read',
+          'skillLabel': 'Action reading',
+          'sourceSignalId': 'no_bet_yet',
+          'sourceSignalLabel': 'No bet yet',
+          'outcomeId': 'learned',
+          'nextRepId': 'repeat_action_read',
+          'nextRepLabel': 'One more action-reading rep',
+          'sourceWorldId': 'world_1',
+          'sourceLessonId': _lesson,
+          'sourceTaskId': _target,
+        };
+      final disk = await _mount(tester, snapshot, tab: Act0ShellTabV1.home);
+      await _flush(tester);
+      await _drain();
+      expect(
+        _durable(disk)['firstValueReturnCarry'],
+        snapshot['firstValueReturnCarry'],
+        reason: 'Positive control: source restored a launchable old receipt',
+      );
+      final dynamic runtime = tester.state(
+        find.byType(Act0ShellPreviewScreenV1),
+      );
+      disk.values['flutter.$_key'] = 'damaged';
+      disk.values['flutter.${_key}_head'] = '{invalid';
+      disk.values['flutter.${_key}_recovery'] = false;
+      disk.values['flutter.${_key}_backup'] = 41;
+      await tester.runAsync(
+        () => runtime.debugReloadProgressV1() as Future<void>,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_recovery_options')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_recovery_confirm')));
+      await tester.pumpAndSettle();
+      await _flush(tester);
+      await _drain();
+      final fresh = _durable(disk);
+      expect(fresh['earnedXp'], 0);
+      expect(fresh['completedTaskIds'], isEmpty);
+      expect(
+        fresh['firstValueReturnCarry'],
+        isNull,
+        reason: 'Pre-reset receipt must not become fresh proof',
+      );
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+      await _drain();
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Act0ShellPreviewScreenV1(
+            showPlacementOnStart: false,
+            initialTab: Act0ShellTabV1.home,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await _flush(tester);
+      await _drain();
+      expect(_durable(disk)['firstValueReturnCarry'], isNull);
+    },
+  );
 }

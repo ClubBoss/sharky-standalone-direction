@@ -5015,6 +5015,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _repairIntentAuditTrailV1.clear();
       _latestCompletedDecisionV1 = null;
       _choiceAssistanceV1 = Act0DecisionAssistanceV1.none;
+      _firstValueReceiptCarry = null;
+      _firstValueTodayShownTelemetryKey = '';
       _learningRunV1 = null;
       _pendingLearningRunPayoffV1 = null;
       _learningRunOutcomeTelemetryKeysV1.clear();
