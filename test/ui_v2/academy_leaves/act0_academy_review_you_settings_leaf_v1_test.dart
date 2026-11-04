@@ -386,14 +386,12 @@ void main() {
       tester,
     ) async {
       final haptics = <bool>[];
-      final handle = tester.ensureSemantics();
       await _pump(
         tester,
         Act0AcademySettingsLeafV1(
           input: Act0AcademySettingsLeafInputV1(
             hapticsEnabled: true,
             onHapticsChanged: haptics.add,
-            onOpenTerms: () {},
           ),
         ),
       );
@@ -405,18 +403,41 @@ void main() {
         find.byKey(const Key('act0_academy_settings_leaf_haptics')),
       );
       expect(haptics, [false]);
-      // Label and switch are one control for screen readers: the node that
-      // carries the "Haptics" label is the toggled switch itself.
-      final node = tester.getSemantics(
-        find.bySemanticsLabel(RegExp('Haptics')),
-      );
-      expect(node.getSemanticsData().flagsCollection.isToggled, isTrue);
-      handle.dispose();
       // Sound is not wired: no fake toggle.
       expect(
         find.byKey(const Key('act0_academy_settings_leaf_sound')),
         findsNothing,
       );
+    });
+
+    testWidgets('each toggle label lands on its own switch node', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      await _pump(
+        tester,
+        Act0AcademySettingsLeafV1(
+          input: Act0AcademySettingsLeafInputV1(
+            soundEnabled: false,
+            hapticsEnabled: true,
+            onSoundChanged: (_) {},
+            onHapticsChanged: (_) {},
+          ),
+        ),
+      );
+      final haptics = tester.getSemantics(
+        find.byKey(const Key('act0_academy_settings_leaf_haptics')),
+      );
+      final sound = tester.getSemantics(
+        find.byKey(const Key('act0_academy_settings_leaf_sound')),
+      );
+      expect(haptics.label, contains('Haptics'));
+      expect(haptics.label, isNot(contains('Sound')));
+      expect(haptics.getSemanticsData().flagsCollection.isToggled, isTrue);
+      expect(sound.label, contains('Sound effects'));
+      expect(sound.label, isNot(contains('Haptics')));
+      expect(sound.getSemanticsData().flagsCollection.isToggled, isFalse);
+      handle.dispose();
     });
 
     testWidgets('no wired settings means no toggles and no saved claim', (

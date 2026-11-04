@@ -71,16 +71,18 @@ store access. Each takes one immutable `...InputV1` object and plain callbacks.
 ## 4. Validation (this branch, Linux cloud, Flutter 3.35.0 / Dart 3.9.0)
 
 - `dart format`: clean. `flutter analyze` (whole repo): no issues.
-- `flutter test test/ui_v2/academy_leaves`: 47/47 pass.
+- `flutter test test/ui_v2/academy_leaves`: 48/48 pass.
 - Negative controls (temporary mutations, reverted): progress guard, recommendation lock, repair target-type gate,
   You open-seed filter (both sites), Review caught-up rule, progress semantics, quick reps, locked reason,
-  You fresh rule. Each produced at least one failure. Settings toggle-row `MergeSemantics` removal is NOT
-  detectable in the widget-test tree (Flutter already merges there); the test asserts the property
-  (one labelled, toggled node) and the wrapper is kept for donor parity.
+  You fresh rule, Settings toggle-row `MergeSemantics` (two-toggle group: each label must land on its own
+  toggled node). Each produced at least one failure.
 - Independent non-author read-only review (corrective cycle 1 of 2): 4 P1 + 9 P2 reported, all addressed
   (progress semantics, quick reps, topic tap semantics, Settings row semantics, locked reason, topic order,
   Review/Practice hero clip and offsets restored to donor, You fresh rule, vacuous XP test, Settings
   Material ink + donor switch theme, text-scale min heights, unique repair CTA keys, this doc).
+  Delta re-review of the fix commit: APPROVE_NO_BLOCKERS; its P2s on the Settings test strength and
+  the empty You subtitle line were then fixed. Remaining accepted P2s: no 1.6x text-scale test for
+  Practice; explicit-zero You record hides a supplied XP line (donor parity, omission not fabrication).
 - Existing regression (unchanged source): achievement seed consumer/projection, play shell, practice repair queue
   consumer/projection, review shell, Sharky presence: 83/83 pass.
 - NOT done: native iOS, real-device, screenshot, RU, compact-device runs. No claim of on-binary presence.

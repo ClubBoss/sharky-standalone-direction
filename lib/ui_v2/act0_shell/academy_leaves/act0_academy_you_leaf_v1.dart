@@ -153,14 +153,16 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          fresh
-                              ? 'Build your first poker read'
-                              : subtitleParts.join(' - '),
-                          key: const Key('act0_academy_you_leaf_level'),
-                          style: const TextStyle(color: _muted, fontSize: 12),
-                        ),
+                        if (fresh || subtitleParts.isNotEmpty) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            fresh
+                                ? 'Build your first poker read'
+                                : subtitleParts.join(' - '),
+                            key: const Key('act0_academy_you_leaf_level'),
+                            style: const TextStyle(color: _muted, fontSize: 12),
+                          ),
+                        ],
                         if (input.streakDays > 0)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
