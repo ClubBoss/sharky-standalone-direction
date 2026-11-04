@@ -1,7 +1,14 @@
-# PR trigger removed; mono-ci is the single PR gate.
+# Informational content metrics only; required PR authority remains
+# Test Authority Lanes / Canonical authority (Tier A + terminal Tier B).
 name: Coverage Summary (informational)
 
 on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/coverage-informational.yml"
+      - "tools/coverage_informational_*"
+      - "tool/metrics/**"
   push:
     branches: [ main ]
     paths:
@@ -10,61 +17,79 @@ on:
       - "tool/**"
       - "pubspec.yaml"
       - "pubspec.lock"
+      - ".fvmrc"
+      - ".github/workflows/coverage-informational.yml"
+      - "tools/coverage_informational_*"
 
 permissions:
   contents: read
 
 jobs:
   coverage:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' || contains(join(github.event.pull_request.labels.*.name), 'run-content-ci') }}
     runs-on: ubuntu-latest
-    continue-on-error: true  # не блокирует merge
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
+
+      - name: Coverage reporting regression tests
+        run: python3 tools/coverage_informational_test.py
 
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          # Same repository pin as .fvmrc and canonical Test Authority.
+          flutter-version: '3.35.0'
           cache: true
 
       - name: Pub get
+        id: pub
         run: flutter pub get
 
       - name: Generate L2 report
+        id: l2
         run: |
           mkdir -p build/reports
+          rm -f build/reports/l2_report.md
           dart run tool/metrics/l2_metrics_report.dart \
             --packs assets/packs/l2 \
             --snippets assets/theory/l2/snippets.yaml \
             --out build/reports/l2_report.md
+          test -s build/reports/l2_report.md
 
       - name: Generate L3 report (if packrun data exists)
+        id: l3
         shell: bash
         run: |
           shopt -s nullglob
           FILES=(build/reports/l3_packrun_*.json)
+          rm -f build/reports/l3_report.md
           if [ ${#FILES[@]} -gt 0 ]; then
+            REPORTS=$(IFS=,; echo "${FILES[*]}")
             dart run tool/metrics/l3_packrun_report.dart \
-              --reports "${FILES[*]}" \
+              --reports "$REPORTS" \
               --out build/reports/l3_report.md
+            test -s build/reports/l3_report.md
+            echo "result=PASS" >> "$GITHUB_OUTPUT"
           else
-            echo "_No L3 packrun json present; skipping L3 report._" > build/reports/l3_report.md
+            echo "result=SKIP" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Job Summary (PASS / FAIL / SKIP)
+        if: always()
+        env:
+          COVERAGE_JOB_STATUS: ${{ job.status }}
+          PUB_OUTCOME: ${{ steps.pub.outcome }}
+          L2_OUTCOME: ${{ steps.l2.outcome }}
+          L3_OUTCOME: ${{ steps.l3.outcome }}
+          L3_RESULT: ${{ steps.l3.outputs.result }}
+        run: bash tools/coverage_informational_summary.sh
+
       - name: Upload reports (artifacts)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage_reports
+          if-no-files-found: error
           path: |
+            build/reports/coverage_status.md
             build/reports/l2_report.md
             build/reports/l3_report.md
-
-      - name: Job Summary
-        shell: bash
-        run: |
-          echo "## L2 Report" >> $GITHUB_STEP_SUMMARY
-          (cat build/reports/l2_report.md >> $GITHUB_STEP_SUMMARY) || echo "_l2_report.md not found_" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## L3 Report" >> $GITHUB_STEP_SUMMARY
-          (cat build/reports/l3_report.md >> $GITHUB_STEP_SUMMARY) || echo "_l3_report.md not found_" >> $GITHUB_STEP_SUMMARY
