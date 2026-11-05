@@ -124,6 +124,7 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
   var activeStreet = Act0StreetReplayStreetV1.preflop;
   var failedActionTruth = false;
   final foldedActors = <String>{};
+  String? previousVoluntaryActor;
   for (var index = 0; index < trailLabels.length; index++) {
     final rawLabel = trailLabels[index];
     final parsedStreet = _act0StreetReplayStreetFromTrailLabelV1(rawLabel);
@@ -135,6 +136,7 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
         failedActionTruth = true;
         break;
       }
+      if (parsedStreet != activeStreet) previousVoluntaryActor = null;
       activeStreet = parsedStreet;
     }
     final action = _act0StreetReplayActionLabelV1(rawLabel, parsedStreet);
@@ -147,6 +149,16 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
       break;
     }
     final actor = parsedAction.actorLabel.trim().toUpperCase();
+    final actionType = parsedAction.actionTypeLabel.toLowerCase();
+    // Forced posts are not turns. A voluntary action must pass to another
+    // actor before this seat can act again on the same street.
+    if (actionType != 'blind' && actionType != 'posts') {
+      if (previousVoluntaryActor == actor) {
+        failedActionTruth = true;
+        break;
+      }
+      previousVoluntaryActor = actor;
+    }
     // A folded seat cannot take another action in the same hand. The label
     // is a conservative source-owned seat token, not an invented action.
     if (foldedActors.contains(actor)) {

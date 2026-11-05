@@ -177,6 +177,7 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
   final transientCommitments = <String>{};
   var terminalSeen = false;
   final foldedActors = <String>{};
+  String? previousVoluntaryActor;
 
   for (final item in parsed) {
     if (terminalSeen) {
@@ -199,6 +200,7 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
         transientCommitments.clear();
       }
       currentStreet = nextStreet;
+      previousVoluntaryActor = null;
       final revealKind = switch (currentStreet) {
         Act0TableChoreographyStreetV1.preflop => null,
         Act0TableChoreographyStreetV1.flop =>
@@ -242,6 +244,13 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
       }
       terminalSeen = true;
       continue;
+    }
+
+    // Posts and the pending-decision marker do not consume a voluntary turn.
+    // Never animate the same seat acting twice without an intervening actor.
+    if (item.action != _TrailActionV1.blind) {
+      if (previousVoluntaryActor == actorSeat.seatId) return null;
+      previousVoluntaryActor = actorSeat.seatId;
     }
 
     beats.add(
