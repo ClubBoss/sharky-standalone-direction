@@ -65,6 +65,12 @@ void main() {
         'w6_board_pair_strength_compare':
             'a328c73b9c59e2f6213dc0cc64a1f5b91e9261c009675cf1385340c4a13af353',
       };
+      // The existing source mapper has no eligible signal for the W3 row.
+      const expectedEligibility = {
+        'w4_protection_check': true,
+        'early_vs_late_late_info_choice': false,
+        'w6_board_pair_strength_compare': true,
+      };
       for (final entry in oldFingerprints.entries) {
         final row = [
           for (final world in Act0ShellStateV1.sample.worlds)
@@ -80,11 +86,14 @@ void main() {
           lessonId: row.lesson.lessonId,
           task: task,
         )!;
-        final skill = act0FirstValueSkillReceiptForRunnerV1(
+        final receipt = act0FirstValueSkillReceiptForRunnerV1(
           runner: task.runner,
           option: option,
           taskFamily: task.resolvedTaskFamily,
-        )!.skillAtomId;
+        );
+        final eligible =
+            receipt != null && receipt.skillAtomId.trim().isNotEmpty;
+        expect(eligible, expectedEligibility[task.taskId], reason: task.taskId);
         Act0LearningEvidenceRecordV1 record(String fingerprint) =>
             Act0LearningEvidenceRecordV1(
               recordId: 'synthetic_poker_compat|${task.taskId}|1',
@@ -99,35 +108,41 @@ void main() {
               errorType: 'none',
               conceptFamilyId: row.lesson.lessonId,
               repairFocusId: '',
-              skillAtomId: skill,
+              skillAtomId: receipt?.skillAtomId ?? '',
               decisionTimeBucket: '3_to_10s',
               resultKind: 'correct',
               assistanceKind: Act0DecisionAssistanceV1.none,
               authoredSourceFingerprint: fingerprint,
             );
         final old = record(entry.value);
-        final restored = Act0LearningEvidenceHistoryV1.tryParse(
-          jsonDecode(
-            Act0LearningEvidenceHistoryV1(records: [old]).toStorageString(),
-          ),
-        )!;
-        expect(restored.records.single.toPayload(), old.toPayload());
         // ignore: avoid_print
         print(
           'POKER-SOURCE ${task.taskId} old=${entry.value} current=$current',
         );
         expect(current, isNot(entry.value), reason: task.taskId);
-        expect(
-          act0CurrentAuthoredSourceProofV1(restored.records.single),
-          isNull,
-        );
+        expect(act0CurrentAuthoredSourceProofV1(old), isNull);
         final fresh = act0CurrentAuthoredSourceProofV1(record(current));
-        expect(fresh, isNotNull, reason: task.taskId);
-        expect(fresh!.isCurrentlyCorrect, isTrue);
-        // ignore: avoid_print
-        print(
-          'POKER-SOURCE ${task.taskId} old=${entry.value} current=$current',
-        );
+        if (!expectedEligibility[task.taskId]!) {
+          // This empty-skill synthetic record is not persistable.
+          expect(
+            Act0LearningEvidenceRecordV1.tryParse(old.toPayload()),
+            isNull,
+          );
+          expect(fresh, isNull, reason: task.taskId);
+        } else {
+          final restored = Act0LearningEvidenceHistoryV1.tryParse(
+            jsonDecode(
+              Act0LearningEvidenceHistoryV1(records: [old]).toStorageString(),
+            ),
+          )!;
+          expect(restored.records.single.toPayload(), old.toPayload());
+          expect(
+            act0CurrentAuthoredSourceProofV1(restored.records.single),
+            isNull,
+          );
+          expect(fresh, isNotNull, reason: task.taskId);
+          expect(fresh!.isCurrentlyCorrect, isTrue);
+        }
       }
     },
   );
