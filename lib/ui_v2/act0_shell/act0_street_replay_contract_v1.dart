@@ -188,6 +188,13 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
     );
   }
 
+  // Final source flags and executed folds both constrain the pending actor.
+  // Historical folded opponents may still appear before their own fold.
+  if (activeSeat?.isFolded == true ||
+      foldedActors.contains(activeSeat?.seatLabel.trim().toUpperCase())) {
+    failedActionTruth = true;
+  }
+
   return Act0StreetReplayV1(
     steps: failedActionTruth
         ? const <Act0StreetReplayStepV1>[]
