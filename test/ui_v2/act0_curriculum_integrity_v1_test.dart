@@ -136,7 +136,16 @@ void main() {
         }
         expect(seats['bb']?.isFolded, isFalse, reason: entry.key);
         expect(seats['bb']?.hasActed, isTrue, reason: entry.key);
-        expect(table.activeSeatId, 'btn', reason: entry.key);
+        final closedRound = entry.key == 'w4_protection_check';
+        expect(table.activeSeatId, closedRound ? '' : 'btn', reason: entry.key);
+        expect(seats['btn']?.hasActed, closedRound, reason: entry.key);
+        if (closedRound) {
+          expect(
+            table.seats.where((seat) => seat.isActive),
+            isEmpty,
+            reason: entry.key,
+          );
+        }
       }
 
       final missingSmallBlind = expectedTrail.skip(1).toList();

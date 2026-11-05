@@ -93,6 +93,10 @@ void main() {
               : Act0CardsVisibleModeV1.faceDown,
         );
         if (isShowdown) {
+          if (task.taskId == 'your_first_hand_showdown') {
+            expect(t.highlightedSeatIds, ['bb']);
+            expect(t.highlightedSeatIds, isNot(contains('co')));
+          }
           expect(bb.holeCards.map(cardIdentity), ['Kh', 'Jh']);
           final hero = Hand.solveHand(
             [...t.heroCards, ...t.boardCards].map(cardIdentity).toList(),
