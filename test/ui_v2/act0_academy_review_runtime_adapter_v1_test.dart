@@ -116,21 +116,41 @@ void main() {
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     const mistake = Act0MistakeCardV1(
-      taskId: 'repair', lessonId: 'lesson', title: 'Spot',
-      weaknessLabel: 'Read', selectedOptionId: 'a', selectedLabel: 'A',
-      betterLabel: 'B', reason: 'Reason', attempts: 1,
+      taskId: 'repair',
+      lessonId: 'lesson',
+      title: 'Spot',
+      weaknessLabel: 'Read',
+      selectedOptionId: 'a',
+      selectedLabel: 'A',
+      betterLabel: 'B',
+      reason: 'Reason',
+      attempts: 1,
     );
     const saved = SessionDrillRecheckLaunchQueueItemV1(
-      queueKind: 'check', jobId: 'saved', launchSessionId: 'launch',
-      sourceWorldId: 'world', sourceSessionId: 'source', sourceDrillId: 'drill',
-      drillFamilyId: 'family', missedSignalId: 'signal', missedSignalLabel: 'Signal',
-      chosenActionId: 'a', expectedActionId: 'b', targetSessionId: 'target',
-      targetDrillId: 'target_drill', targetKind: 'drill', errorClass: 'error',
+      queueKind: 'check',
+      jobId: 'saved',
+      launchSessionId: 'launch',
+      sourceWorldId: 'world',
+      sourceSessionId: 'source',
+      sourceDrillId: 'drill',
+      drillFamilyId: 'family',
+      missedSignalId: 'signal',
+      missedSignalLabel: 'Signal',
+      chosenActionId: 'a',
+      expectedActionId: 'b',
+      targetSessionId: 'target',
+      targetDrillId: 'target_drill',
+      targetKind: 'drill',
+      errorClass: 'error',
     );
     final due = Act0DueReviewItemV1(
-      conceptFamilyId: 'due', worldId: 'world', lessonId: 'lesson',
-      taskId: 'due', nextDueAtUtc: DateTime.utc(2026),
-      repeatedMissCount: 0, lapseCount: 0,
+      conceptFamilyId: 'due',
+      worldId: 'world',
+      lessonId: 'lesson',
+      taskId: 'due',
+      nextDueAtUtc: DateTime.utc(2026),
+      repeatedMissCount: 0,
+      lapseCount: 0,
     );
     final calls = <String>[];
     var current = true;
@@ -180,7 +200,10 @@ void main() {
         .widget<Act0AcademyReviewLeafV1>(find.byType(Act0AcademyReviewLeafV1))
         .input;
     expect(input.nextStep, isNull);
-    expect(find.byKey(const Key('act0_academy_review_leaf_next_step_cta')), findsNothing);
+    expect(
+      find.byKey(const Key('act0_academy_review_leaf_next_step_cta')),
+      findsNothing,
+    );
   });
 
   testWidgets('missing source callback stays absent', (tester) async {
