@@ -153,6 +153,8 @@ Widget act0AcademyReviewRuntimeV1(
                 }
               }
             },
+      nextStep: legacy.nextStep,
+      onOpenRecommendedAction: _guard(isCurrent, legacy.onOpenRecommendedAction),
       onOpenLearn: _guard(isCurrent, legacy.onOpenLearn),
       backdrop: _backdrop,
     ),
