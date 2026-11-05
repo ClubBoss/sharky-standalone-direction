@@ -53,7 +53,9 @@ dynamic _host(WidgetTester tester) =>
 
 Map<String, Object?> _liveContracts(WidgetTester tester) => {
   // Existing observation-only APIs: never reload, persist or mutate state.
-  'intent': _host(tester).debugOpenRepairIntentPayloadForSourceTaskV1(_sourceTask),
+  'intent': _host(
+    tester,
+  ).debugOpenRepairIntentPayloadForSourceTaskV1(_sourceTask),
   'intentCount': _host(tester).debugOpenRepairIntentCountV1(),
   'outcomes': _host(tester).debugRepairOutcomeProjectionPayloadV1(),
   'retention': _host(tester).debugDurableRetentionPayloadV1(),
@@ -137,7 +139,9 @@ List<Act0MistakeCardV1> _reviewMistakes(WidgetTester tester) {
     return input.openMistakes;
   }
   expect(find.byType(Act0ReviewShellV1), findsOneWidget);
-  final review = tester.widget<Act0ReviewShellV1>(find.byType(Act0ReviewShellV1));
+  final review = tester.widget<Act0ReviewShellV1>(
+    find.byType(Act0ReviewShellV1),
+  );
   expect(review.dueReviewItems, isEmpty);
   return review.review.mistakes;
 }
@@ -259,7 +263,10 @@ void main() {
         );
         expect(occurrence['sourceTaskId'], _sourceTask);
         expect(intents.single['repairOccurrenceId'], isNotEmpty);
-        expect(occurrence['sourceDecisionId'], intents.single['repairOccurrenceId']);
+        expect(
+          occurrence['sourceDecisionId'],
+          intents.single['repairOccurrenceId'],
+        );
         expect(
           occurrence['expectedId'],
           miss == 'hero_private_cards' ? 'board_cards' : 'check',
@@ -269,7 +276,10 @@ void main() {
       expect(before['completedTaskIds'], isEmpty);
       expect(before['completedLessonIds'], isEmpty);
       expect(
-        _rows(before, 'retentionMemory').where((r) => r['taskId'] == _sourceTask),
+        _rows(
+          before,
+          'retentionMemory',
+        ).where((r) => r['taskId'] == _sourceTask),
         isEmpty,
         reason: 'Placement debt is valid without a retention-memory row.',
       );
