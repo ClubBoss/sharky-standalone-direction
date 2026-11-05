@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_runtime_adapter_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -23,6 +24,10 @@ import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_revi
 import 'package:shared_preferences/shared_preferences.dart';
 
 const _progressKey = 'act0_shell_progress_v1';
+final _store = Act0ProgressStoreV1(
+  key: _progressKey,
+  isValidPayload: (_) => true,
+);
 const _sourceTask = 'what_poker_is_table_read_transfer';
 const _preservedKeys = <String>[
   'openRepairIntents',
@@ -230,6 +235,11 @@ void main() {
       tester.view.padding = const FakeViewPadding(top: 59, bottom: 34);
       tester.view.viewPadding = const FakeViewPadding(top: 59, bottom: 34);
       addTearDown(tester.view.reset);
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pumpAndSettle();
+        await _store.flush();
+      });
       await _mount(tester);
       final choices = <String>[
         'two_three_six',
@@ -244,7 +254,19 @@ void main() {
       final diagnostic = _rows(before, 'learningEvidenceHistory')
           .where((record) => record['runKind'] == 'placement')
           .toList(growable: false);
-      expect(diagnostic, hasLength(3));
+      expect(
+        diagnostic.length,
+        3,
+        reason:
+            'Distinct record IDs: ${diagnostic.map((r) => r['recordId']).toSet().length}; distinct run IDs: ${diagnostic.map((r) => r['runId']).toSet().length}',
+      );
+      expect(
+        diagnostic.map((record) => record['taskId']),
+        everyElement(_sourceTask),
+      );
+      final recordIds = diagnostic.map((record) => record['recordId']).toList();
+      expect(recordIds, everyElement(isA<String>()));
+      expect(recordIds.toSet(), hasLength(3));
       expect(diagnostic.map((record) => record['choiceId']), choices);
       expect(
         diagnostic.where((record) => record['isCorrect'] == false),
