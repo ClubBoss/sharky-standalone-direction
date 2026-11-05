@@ -1,4 +1,3 @@
-// Evidence-only regression proposal; not installed into the repository.
 // The authored cards and grade key are preserved. No synthetic hand is added.
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -13,16 +12,12 @@ void main() {
     final task = Act0ShellStateV1.sample.worlds
         .expand((world) => world.lessons)
         .expand((lesson) => lesson.taskList)
-        .singleWhere(
-          (task) => task.taskId == 'w6_board_pair_strength_compare',
-        );
+        .singleWhere((task) => task.taskId == 'w6_board_pair_strength_compare');
     final runner = task.runner;
     final table = runner.table;
     expect(task.rewardXp, 10);
     expect(task.phase, Act0LessonPhaseV1.drill);
-    final villainSeat = table.seats.singleWhere(
-      (seat) => seat.seatId == 'co',
-    );
+    final villainSeat = table.seats.singleWhere((seat) => seat.seatId == 'co');
     final board = _cards(table.boardCards);
     final heroCards = _cards(table.heroCards);
     final villainCards = _cards(villainSeat.holeCards);
