@@ -8451,6 +8451,9 @@ Act0RunnerStateV1 _act0FirstHandAkRunnerV1(
     heroCards: _heroAkCards,
     boardCards: history ? _flopA72Cards : runner.table.boardCards,
     streetLabel: street,
+    highlightedSeatIds: showdown
+        ? const <String>['bb']
+        : runner.table.highlightedSeatIds,
     highlightedCardIds: history
         ? const ['board_0', 'board_1', 'board_2']
         : runner.table.highlightedCardIds,
