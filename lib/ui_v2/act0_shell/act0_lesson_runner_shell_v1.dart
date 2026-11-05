@@ -2236,7 +2236,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }
 
   void _handleChooseSeat(String seatId) {
-    if (!_heroDecisionReady || _decisionSubmittedForTaskV1) {
+    if (_isTheory ||
+        widget.selectedTaskFamily == Act0TaskFamilyV1.learn ||
+        !_heroDecisionReady ||
+        _decisionSubmittedForTaskV1) {
       return;
     }
     final option = widget.runner.options.cast<Act0RunnerOptionV1?>().firstWhere(
@@ -3832,7 +3835,12 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         highlightedCardIds: mergedHighlightIds,
         interactiveCalloutLabel: interactiveCallout,
         onBoardCardTap: _heroDecisionReady ? _onBoardTappedForShowdown : (_) {},
-        onChooseSeat: _heroDecisionReady ? _handleChooseSeat : null,
+        onChooseSeat:
+            _heroDecisionReady &&
+                !_isTheory &&
+                widget.selectedTaskFamily != Act0TaskFamilyV1.learn
+            ? _handleChooseSeat
+            : null,
         visualVariant: widget.tableVisualVariant,
         showFocusBadge: !_showBottomLearningRail,
         showRepairCallout: isTheory || (isDrill && hasSeatTargets),

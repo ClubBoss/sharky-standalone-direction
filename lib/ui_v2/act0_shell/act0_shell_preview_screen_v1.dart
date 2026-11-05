@@ -3919,9 +3919,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       // Placement owns genuine repair debt without retention. Restore its
       // diagnostic answer context only from the exact persisted occurrence;
       // the ordinary task can have different option IDs and answer meanings.
-      final runner = retention == null
-          ? _placementRepairRunnerForRestoreV1(intent, task)
-          : task.runner;
+      final placementRunner = _placementRepairRunnerForRestoreV1(intent, task);
+      final runner =
+          placementRunner ?? (retention == null ? null : task.runner);
       if (runner == null) {
         continue;
       }
@@ -8195,6 +8195,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               (record) =>
                   record.isCorrect &&
                   !record.isAssistedCorrect &&
+                  !act0RecordIsAuthoredTeachingV1(record) &&
                   !record.isPlacementAssessment,
             )
             .toList()

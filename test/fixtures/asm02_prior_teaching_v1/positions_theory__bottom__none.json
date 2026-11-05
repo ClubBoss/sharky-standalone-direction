@@ -1,0 +1,226 @@
+{
+  "provenance": {
+    "source_sha": "d0b202309c7906e4d1a67056cf22dcc1944f8646",
+    "test_sha256": "f1f01a8604314392406bd0c4598d52ed20a996a406ff6e014cc8e4c624927ac1"
+  },
+  "observation": {
+    "durableSnapshot": {
+      "headEnvelope": "{\"format\":1,\"revision\":4,\"payload\":\"{\\\"schemaVersion\\\":19,\\\"completedTaskIds\\\":[\\\"actions_call_drill\\\",\\\"actions_check_drill\\\",\\\"actions_fold_drill\\\",\\\"actions_legal_context\\\",\\\"actions_raise_drill\\\",\\\"actions_review\\\",\\\"actions_theory\\\",\\\"blinds_button_moves\\\",\\\"blinds_first_actor\\\",\\\"blinds_last_actor\\\",\\\"blinds_postflop_button\\\",\\\"blinds_posts_drill\\\",\\\"blinds_review\\\",\\\"blinds_theory\\\",\\\"cards_ranks_suits_best_five\\\",\\\"cards_ranks_suits_board_count\\\",\\\"cards_ranks_suits_private_board\\\",\\\"cards_ranks_suits_rank_drill\\\",\\\"cards_ranks_suits_recap\\\",\\\"cards_ranks_suits_suit_drill\\\",\\\"cards_ranks_suits_theory\\\",\\\"first_table_guide_one_clear_choice\\\",\\\"first_table_guide_route_roles\\\",\\\"positions_theory\\\",\\\"what_poker_is_all_in_meaning\\\",\\\"what_poker_is_find_hero\\\",\\\"what_poker_is_live_win_transfer\\\",\\\"what_poker_is_matched_chips_transfer\\\",\\\"what_poker_is_pot_stack\\\",\\\"what_poker_is_review\\\",\\\"what_poker_is_showdown_win\\\",\\\"what_poker_is_table_read_recheck\\\",\\\"what_poker_is_table_read_transfer\\\",\\\"what_poker_is_theory\\\",\\\"what_poker_is_win_ways\\\",\\\"your_first_hand_action_trail\\\",\\\"your_first_hand_flop\\\",\\\"your_first_hand_preflop\\\",\\\"your_first_hand_private_cards_recheck\\\",\\\"your_first_hand_recap\\\",\\\"your_first_hand_river\\\",\\\"your_first_hand_showdown\\\",\\\"your_first_hand_turn\\\"],\\\"skippedTaskIds\\\":[],\\\"completedLessonIds\\\":[\\\"blinds_action_order\\\",\\\"cards_ranks_suits\\\",\\\"fold_check_call_raise\\\",\\\"what_poker_is\\\",\\\"what_poker_is_content\\\",\\\"your_first_hand\\\"],\\\"selectedWorldId\\\":\\\"world_1\\\",\\\"selectedLessonId\\\":\\\"positions\\\",\\\"selectedTaskId\\\":\\\"positions_button\\\",\\\"earnedXp\\\":5,\\\"profileSkillValues\\\":{\\\"Betting decisions\\\":39,\\\"Blind play\\\":28,\\\"Board reading\\\":45,\\\"Hand reading\\\":17,\\\"Position play\\\":4,\\\"Table sense\\\":69},\\\"recentSkillGains\\\":[{\\\"label\\\":\\\"Table sense\\\",\\\"gain\\\":2,\\\"source\\\":\\\"Six seats\\\"},{\\\"label\\\":\\\"Position play\\\",\\\"gain\\\":4,\\\"source\\\":\\\"Six seats\\\"}],\\\"lastActiveDay\\\":\\\"2026-11-05\\\",\\\"lastEarnedDailyDay\\\":\\\"\\\",\\\"dailyCompletedRepCount\\\":0,\\\"persistedStreakDays\\\":0,\\\"retentionSequence\\\":43,\\\"retentionMemory\\\":[],\\\"openRepairIntents\\\":[],\\\"multiRepairQueue\\\":{\\\"schemaVersion\\\":1,\\\"maxActiveItems\\\":3,\\\"entries\\\":[]},\\\"multiRepairQueueOrder\\\":0,\\\"resumeInRunner\\\":false,\\\"resumePhase\\\":\\\"drill\\\",\\\"resumeTeachingStepIndex\\\":0,\\\"dismissedHomeHandoffKey\\\":\\\"\\\",\\\"dismissedHomeHandoffDay\\\":\\\"\\\",\\\"learningEvidenceHistory\\\":[{\\\"schemaVersion\\\":1,\\\"recordId\\\":\\\"v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|bottom|1\\\",\\\"createdOrder\\\":1,\\\"worldId\\\":\\\"world_1\\\",\\\"lessonId\\\":\\\"positions\\\",\\\"taskId\\\":\\\"positions_theory\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"choiceId\\\":\\\"bottom\\\",\\\"expectedChoiceId\\\":\\\"bottom\\\",\\\"isCorrect\\\":true,\\\"errorType\\\":\\\"none\\\",\\\"conceptFamilyId\\\":\\\"\\\",\\\"repairFocusId\\\":\\\"hero_button\\\",\\\"skillAtomId\\\":\\\"table_position_read\\\",\\\"decisionTimeBucket\\\":\\\"unknown\\\",\\\"resultKind\\\":\\\"correct\\\",\\\"authoredSourceFingerprint\\\":\\\"9d7cbd60701adfde1d728fd95293d9fccf2100297eed1e65e5417cd9455a0c1a\\\",\\\"assistanceKind\\\":\\\"none\\\",\\\"runId\\\":\\\"run_v1|world_1|positions|lesson|1\\\",\\\"runKind\\\":\\\"lesson\\\",\\\"runOrdinal\\\":1,\\\"sourceWorldId\\\":\\\"world_1\\\",\\\"sourceLessonId\\\":\\\"positions\\\",\\\"startedBy\\\":\\\"learn_route\\\",\\\"sessionId\\\":\\\"session_v1|2\\\",\\\"recordedAtUtc\\\":\\\"2026-11-05T13:17:46.697366Z\\\",\\\"reviewKind\\\":\\\"initialAssessment\\\"}],\\\"learningEvidenceLineage\\\":{\\\"format\\\":1,\\\"complete\\\":true,\\\"anchors\\\":[{\\\"schemaVersion\\\":1,\\\"recordId\\\":\\\"v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|bottom|1\\\",\\\"createdOrder\\\":1,\\\"worldId\\\":\\\"world_1\\\",\\\"lessonId\\\":\\\"positions\\\",\\\"taskId\\\":\\\"positions_theory\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"choiceId\\\":\\\"bottom\\\",\\\"expectedChoiceId\\\":\\\"bottom\\\",\\\"isCorrect\\\":true,\\\"errorType\\\":\\\"none\\\",\\\"conceptFamilyId\\\":\\\"\\\",\\\"repairFocusId\\\":\\\"hero_button\\\",\\\"skillAtomId\\\":\\\"table_position_read\\\",\\\"decisionTimeBucket\\\":\\\"unknown\\\",\\\"resultKind\\\":\\\"correct\\\",\\\"authoredSourceFingerprint\\\":\\\"9d7cbd60701adfde1d728fd95293d9fccf2100297eed1e65e5417cd9455a0c1a\\\",\\\"assistanceKind\\\":\\\"none\\\",\\\"runId\\\":\\\"run_v1|world_1|positions|lesson|1\\\",\\\"runKind\\\":\\\"lesson\\\",\\\"runOrdinal\\\":1,\\\"sourceWorldId\\\":\\\"world_1\\\",\\\"sourceLessonId\\\":\\\"positions\\\",\\\"startedBy\\\":\\\"learn_route\\\",\\\"sessionId\\\":\\\"session_v1|2\\\",\\\"recordedAtUtc\\\":\\\"2026-11-05T13:17:46.697366Z\\\",\\\"reviewKind\\\":\\\"initialAssessment\\\"}],\\\"anchorCount\\\":1,\\\"anchorSha256\\\":\\\"8c4f6f6d7dacaf142c66643c34a1d9ff1308cf7d87749ae71febc90ead8d4a06\\\",\\\"lineageSha256\\\":\\\"b3c31f8605920d2adf96c82dbcfaa1737eb998bb02845c5c04ef9e03cfc48779\\\"},\\\"lessonRunEvidenceBoundaries\\\":{\\\"positions\\\":0},\\\"durableRetentionHistory\\\":[{\\\"schemaVersion\\\":1,\\\"conceptFamilyId\\\":\\\"hero_button\\\",\\\"worldId\\\":\\\"world_1\\\",\\\"sourceLessonId\\\":\\\"positions\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"retentionState\\\":\\\"unseen\\\",\\\"spacedSuccessStage\\\":0,\\\"lapseCount\\\":0,\\\"incorrectCount\\\":0,\\\"correctCount\\\":1,\\\"lastRecordedAtUtc\\\":\\\"2026-11-05T13:17:46.697366Z\\\",\\\"lastCreatedOrder\\\":1,\\\"lastSessionId\\\":\\\"session_v1|2\\\",\\\"lastReviewKind\\\":\\\"initialAssessment\\\",\\\"hasLegacyUnspacedEvidence\\\":false}],\\\"reviewMistakeHistory\\\":[],\\\"reviewResolutionReceipts\\\":[],\\\"conceptFamilyStateHistory\\\":[],\\\"sessionIdentityState\\\":{\\\"schemaVersion\\\":1,\\\"nextSessionOrdinal\\\":3,\\\"currentSession\\\":{\\\"schemaVersion\\\":1,\\\"sessionId\\\":\\\"session_v1|2\\\",\\\"startedAtOrder\\\":1,\\\"startedWorldId\\\":\\\"world_1\\\",\\\"startedLessonId\\\":\\\"positions\\\",\\\"status\\\":\\\"active\\\"},\\\"latestSession\\\":{\\\"schemaVersion\\\":1,\\\"sessionId\\\":\\\"session_v1|2\\\",\\\"startedAtOrder\\\":1,\\\"startedWorldId\\\":\\\"world_1\\\",\\\"startedLessonId\\\":\\\"positions\\\",\\\"status\\\":\\\"active\\\"}},\\\"repairOutcomeProjection\\\":[]}\",\"digest\":\"5617185ccf9202cbb19de42f1711359f44b1395c699103648ff54ff97ddf1402\"}",
+      "recoveryEnvelope": "{\"format\":1,\"revision\":4,\"payload\":\"{\\\"schemaVersion\\\":19,\\\"completedTaskIds\\\":[\\\"actions_call_drill\\\",\\\"actions_check_drill\\\",\\\"actions_fold_drill\\\",\\\"actions_legal_context\\\",\\\"actions_raise_drill\\\",\\\"actions_review\\\",\\\"actions_theory\\\",\\\"blinds_button_moves\\\",\\\"blinds_first_actor\\\",\\\"blinds_last_actor\\\",\\\"blinds_postflop_button\\\",\\\"blinds_posts_drill\\\",\\\"blinds_review\\\",\\\"blinds_theory\\\",\\\"cards_ranks_suits_best_five\\\",\\\"cards_ranks_suits_board_count\\\",\\\"cards_ranks_suits_private_board\\\",\\\"cards_ranks_suits_rank_drill\\\",\\\"cards_ranks_suits_recap\\\",\\\"cards_ranks_suits_suit_drill\\\",\\\"cards_ranks_suits_theory\\\",\\\"first_table_guide_one_clear_choice\\\",\\\"first_table_guide_route_roles\\\",\\\"positions_theory\\\",\\\"what_poker_is_all_in_meaning\\\",\\\"what_poker_is_find_hero\\\",\\\"what_poker_is_live_win_transfer\\\",\\\"what_poker_is_matched_chips_transfer\\\",\\\"what_poker_is_pot_stack\\\",\\\"what_poker_is_review\\\",\\\"what_poker_is_showdown_win\\\",\\\"what_poker_is_table_read_recheck\\\",\\\"what_poker_is_table_read_transfer\\\",\\\"what_poker_is_theory\\\",\\\"what_poker_is_win_ways\\\",\\\"your_first_hand_action_trail\\\",\\\"your_first_hand_flop\\\",\\\"your_first_hand_preflop\\\",\\\"your_first_hand_private_cards_recheck\\\",\\\"your_first_hand_recap\\\",\\\"your_first_hand_river\\\",\\\"your_first_hand_showdown\\\",\\\"your_first_hand_turn\\\"],\\\"skippedTaskIds\\\":[],\\\"completedLessonIds\\\":[\\\"blinds_action_order\\\",\\\"cards_ranks_suits\\\",\\\"fold_check_call_raise\\\",\\\"what_poker_is\\\",\\\"what_poker_is_content\\\",\\\"your_first_hand\\\"],\\\"selectedWorldId\\\":\\\"world_1\\\",\\\"selectedLessonId\\\":\\\"positions\\\",\\\"selectedTaskId\\\":\\\"positions_button\\\",\\\"earnedXp\\\":5,\\\"profileSkillValues\\\":{\\\"Betting decisions\\\":39,\\\"Blind play\\\":28,\\\"Board reading\\\":45,\\\"Hand reading\\\":17,\\\"Position play\\\":4,\\\"Table sense\\\":69},\\\"recentSkillGains\\\":[{\\\"label\\\":\\\"Table sense\\\",\\\"gain\\\":2,\\\"source\\\":\\\"Six seats\\\"},{\\\"label\\\":\\\"Position play\\\",\\\"gain\\\":4,\\\"source\\\":\\\"Six seats\\\"}],\\\"lastActiveDay\\\":\\\"2026-11-05\\\",\\\"lastEarnedDailyDay\\\":\\\"\\\",\\\"dailyCompletedRepCount\\\":0,\\\"persistedStreakDays\\\":0,\\\"retentionSequence\\\":43,\\\"retentionMemory\\\":[],\\\"openRepairIntents\\\":[],\\\"multiRepairQueue\\\":{\\\"schemaVersion\\\":1,\\\"maxActiveItems\\\":3,\\\"entries\\\":[]},\\\"multiRepairQueueOrder\\\":0,\\\"resumeInRunner\\\":false,\\\"resumePhase\\\":\\\"drill\\\",\\\"resumeTeachingStepIndex\\\":0,\\\"dismissedHomeHandoffKey\\\":\\\"\\\",\\\"dismissedHomeHandoffDay\\\":\\\"\\\",\\\"learningEvidenceHistory\\\":[{\\\"schemaVersion\\\":1,\\\"recordId\\\":\\\"v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|bottom|1\\\",\\\"createdOrder\\\":1,\\\"worldId\\\":\\\"world_1\\\",\\\"lessonId\\\":\\\"positions\\\",\\\"taskId\\\":\\\"positions_theory\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"choiceId\\\":\\\"bottom\\\",\\\"expectedChoiceId\\\":\\\"bottom\\\",\\\"isCorrect\\\":true,\\\"errorType\\\":\\\"none\\\",\\\"conceptFamilyId\\\":\\\"\\\",\\\"repairFocusId\\\":\\\"hero_button\\\",\\\"skillAtomId\\\":\\\"table_position_read\\\",\\\"decisionTimeBucket\\\":\\\"unknown\\\",\\\"resultKind\\\":\\\"correct\\\",\\\"authoredSourceFingerprint\\\":\\\"9d7cbd60701adfde1d728fd95293d9fccf2100297eed1e65e5417cd9455a0c1a\\\",\\\"assistanceKind\\\":\\\"none\\\",\\\"runId\\\":\\\"run_v1|world_1|positions|lesson|1\\\",\\\"runKind\\\":\\\"lesson\\\",\\\"runOrdinal\\\":1,\\\"sourceWorldId\\\":\\\"world_1\\\",\\\"sourceLessonId\\\":\\\"positions\\\",\\\"startedBy\\\":\\\"learn_route\\\",\\\"sessionId\\\":\\\"session_v1|2\\\",\\\"recordedAtUtc\\\":\\\"2026-11-05T13:17:46.697366Z\\\",\\\"reviewKind\\\":\\\"initialAssessment\\\"}],\\\"learningEvidenceLineage\\\":{\\\"format\\\":1,\\\"complete\\\":true,\\\"anchors\\\":[{\\\"schemaVersion\\\":1,\\\"recordId\\\":\\\"v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|bottom|1\\\",\\\"createdOrder\\\":1,\\\"worldId\\\":\\\"world_1\\\",\\\"lessonId\\\":\\\"positions\\\",\\\"taskId\\\":\\\"positions_theory\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"choiceId\\\":\\\"bottom\\\",\\\"expectedChoiceId\\\":\\\"bottom\\\",\\\"isCorrect\\\":true,\\\"errorType\\\":\\\"none\\\",\\\"conceptFamilyId\\\":\\\"\\\",\\\"repairFocusId\\\":\\\"hero_button\\\",\\\"skillAtomId\\\":\\\"table_position_read\\\",\\\"decisionTimeBucket\\\":\\\"unknown\\\",\\\"resultKind\\\":\\\"correct\\\",\\\"authoredSourceFingerprint\\\":\\\"9d7cbd60701adfde1d728fd95293d9fccf2100297eed1e65e5417cd9455a0c1a\\\",\\\"assistanceKind\\\":\\\"none\\\",\\\"runId\\\":\\\"run_v1|world_1|positions|lesson|1\\\",\\\"runKind\\\":\\\"lesson\\\",\\\"runOrdinal\\\":1,\\\"sourceWorldId\\\":\\\"world_1\\\",\\\"sourceLessonId\\\":\\\"positions\\\",\\\"startedBy\\\":\\\"learn_route\\\",\\\"sessionId\\\":\\\"session_v1|2\\\",\\\"recordedAtUtc\\\":\\\"2026-11-05T13:17:46.697366Z\\\",\\\"reviewKind\\\":\\\"initialAssessment\\\"}],\\\"anchorCount\\\":1,\\\"anchorSha256\\\":\\\"8c4f6f6d7dacaf142c66643c34a1d9ff1308cf7d87749ae71febc90ead8d4a06\\\",\\\"lineageSha256\\\":\\\"b3c31f8605920d2adf96c82dbcfaa1737eb998bb02845c5c04ef9e03cfc48779\\\"},\\\"lessonRunEvidenceBoundaries\\\":{\\\"positions\\\":0},\\\"durableRetentionHistory\\\":[{\\\"schemaVersion\\\":1,\\\"conceptFamilyId\\\":\\\"hero_button\\\",\\\"worldId\\\":\\\"world_1\\\",\\\"sourceLessonId\\\":\\\"positions\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"retentionState\\\":\\\"unseen\\\",\\\"spacedSuccessStage\\\":0,\\\"lapseCount\\\":0,\\\"incorrectCount\\\":0,\\\"correctCount\\\":1,\\\"lastRecordedAtUtc\\\":\\\"2026-11-05T13:17:46.697366Z\\\",\\\"lastCreatedOrder\\\":1,\\\"lastSessionId\\\":\\\"session_v1|2\\\",\\\"lastReviewKind\\\":\\\"initialAssessment\\\",\\\"hasLegacyUnspacedEvidence\\\":false}],\\\"reviewMistakeHistory\\\":[],\\\"reviewResolutionReceipts\\\":[],\\\"conceptFamilyStateHistory\\\":[],\\\"sessionIdentityState\\\":{\\\"schemaVersion\\\":1,\\\"nextSessionOrdinal\\\":3,\\\"currentSession\\\":{\\\"schemaVersion\\\":1,\\\"sessionId\\\":\\\"session_v1|2\\\",\\\"startedAtOrder\\\":1,\\\"startedWorldId\\\":\\\"world_1\\\",\\\"startedLessonId\\\":\\\"positions\\\",\\\"status\\\":\\\"active\\\"},\\\"latestSession\\\":{\\\"schemaVersion\\\":1,\\\"sessionId\\\":\\\"session_v1|2\\\",\\\"startedAtOrder\\\":1,\\\"startedWorldId\\\":\\\"world_1\\\",\\\"startedLessonId\\\":\\\"positions\\\",\\\"status\\\":\\\"active\\\"}},\\\"repairOutcomeProjection\\\":[]}\",\"digest\":\"5617185ccf9202cbb19de42f1711359f44b1395c699103648ff54ff97ddf1402\"}",
+      "payload": {
+        "completedLessonIds": [
+          "blinds_action_order",
+          "cards_ranks_suits",
+          "fold_check_call_raise",
+          "what_poker_is",
+          "what_poker_is_content",
+          "your_first_hand"
+        ],
+        "completedTaskIds": [
+          "actions_call_drill",
+          "actions_check_drill",
+          "actions_fold_drill",
+          "actions_legal_context",
+          "actions_raise_drill",
+          "actions_review",
+          "actions_theory",
+          "blinds_button_moves",
+          "blinds_first_actor",
+          "blinds_last_actor",
+          "blinds_postflop_button",
+          "blinds_posts_drill",
+          "blinds_review",
+          "blinds_theory",
+          "cards_ranks_suits_best_five",
+          "cards_ranks_suits_board_count",
+          "cards_ranks_suits_private_board",
+          "cards_ranks_suits_rank_drill",
+          "cards_ranks_suits_recap",
+          "cards_ranks_suits_suit_drill",
+          "cards_ranks_suits_theory",
+          "first_table_guide_one_clear_choice",
+          "first_table_guide_route_roles",
+          "positions_theory",
+          "what_poker_is_all_in_meaning",
+          "what_poker_is_find_hero",
+          "what_poker_is_live_win_transfer",
+          "what_poker_is_matched_chips_transfer",
+          "what_poker_is_pot_stack",
+          "what_poker_is_review",
+          "what_poker_is_showdown_win",
+          "what_poker_is_table_read_recheck",
+          "what_poker_is_table_read_transfer",
+          "what_poker_is_theory",
+          "what_poker_is_win_ways",
+          "your_first_hand_action_trail",
+          "your_first_hand_flop",
+          "your_first_hand_preflop",
+          "your_first_hand_private_cards_recheck",
+          "your_first_hand_recap",
+          "your_first_hand_river",
+          "your_first_hand_showdown",
+          "your_first_hand_turn"
+        ],
+        "conceptFamilyStateHistory": [],
+        "dailyCompletedRepCount": 0,
+        "dismissedHomeHandoffDay": "",
+        "dismissedHomeHandoffKey": "",
+        "durableRetentionHistory": [
+          {
+            "conceptFamilyId": "hero_button",
+            "correctCount": 1,
+            "hasLegacyUnspacedEvidence": false,
+            "incorrectCount": 0,
+            "lapseCount": 0,
+            "lastCreatedOrder": 1,
+            "lastRecordedAtUtc": "2026-11-05T13:17:46.697366Z",
+            "lastReviewKind": "initialAssessment",
+            "lastSessionId": "session_v1|2",
+            "retentionState": "unseen",
+            "schemaVersion": 1,
+            "sourceLessonId": "positions",
+            "sourceTaskId": "positions_theory",
+            "spacedSuccessStage": 0,
+            "worldId": "world_1"
+          }
+        ],
+        "earnedXp": 5,
+        "lastActiveDay": "2026-11-05",
+        "lastEarnedDailyDay": "",
+        "learningEvidenceHistory": [
+          {
+            "assistanceKind": "none",
+            "authoredSourceFingerprint": "9d7cbd60701adfde1d728fd95293d9fccf2100297eed1e65e5417cd9455a0c1a",
+            "choiceId": "bottom",
+            "conceptFamilyId": "",
+            "createdOrder": 1,
+            "decisionTimeBucket": "unknown",
+            "errorType": "none",
+            "expectedChoiceId": "bottom",
+            "isCorrect": true,
+            "lessonId": "positions",
+            "recordId": "v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|bottom|1",
+            "recordedAtUtc": "2026-11-05T13:17:46.697366Z",
+            "repairFocusId": "hero_button",
+            "resultKind": "correct",
+            "reviewKind": "initialAssessment",
+            "runId": "run_v1|world_1|positions|lesson|1",
+            "runKind": "lesson",
+            "runOrdinal": 1,
+            "schemaVersion": 1,
+            "sessionId": "session_v1|2",
+            "skillAtomId": "table_position_read",
+            "sourceLessonId": "positions",
+            "sourceTaskId": "positions_theory",
+            "sourceWorldId": "world_1",
+            "startedBy": "learn_route",
+            "taskId": "positions_theory",
+            "worldId": "world_1"
+          }
+        ],
+        "learningEvidenceLineage": {
+          "anchorCount": 1,
+          "anchorSha256": "8c4f6f6d7dacaf142c66643c34a1d9ff1308cf7d87749ae71febc90ead8d4a06",
+          "anchors": [
+            {
+              "assistanceKind": "none",
+              "authoredSourceFingerprint": "9d7cbd60701adfde1d728fd95293d9fccf2100297eed1e65e5417cd9455a0c1a",
+              "choiceId": "bottom",
+              "conceptFamilyId": "",
+              "createdOrder": 1,
+              "decisionTimeBucket": "unknown",
+              "errorType": "none",
+              "expectedChoiceId": "bottom",
+              "isCorrect": true,
+              "lessonId": "positions",
+              "recordId": "v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|bottom|1",
+              "recordedAtUtc": "2026-11-05T13:17:46.697366Z",
+              "repairFocusId": "hero_button",
+              "resultKind": "correct",
+              "reviewKind": "initialAssessment",
+              "runId": "run_v1|world_1|positions|lesson|1",
+              "runKind": "lesson",
+              "runOrdinal": 1,
+              "schemaVersion": 1,
+              "sessionId": "session_v1|2",
+              "skillAtomId": "table_position_read",
+              "sourceLessonId": "positions",
+              "sourceTaskId": "positions_theory",
+              "sourceWorldId": "world_1",
+              "startedBy": "learn_route",
+              "taskId": "positions_theory",
+              "worldId": "world_1"
+            }
+          ],
+          "complete": true,
+          "format": 1,
+          "lineageSha256": "b3c31f8605920d2adf96c82dbcfaa1737eb998bb02845c5c04ef9e03cfc48779"
+        },
+        "lessonRunEvidenceBoundaries": {
+          "positions": 0
+        },
+        "multiRepairQueue": {
+          "entries": [],
+          "maxActiveItems": 3,
+          "schemaVersion": 1
+        },
+        "multiRepairQueueOrder": 0,
+        "openRepairIntents": [],
+        "persistedStreakDays": 0,
+        "profileSkillValues": {
+          "Betting decisions": 39,
+          "Blind play": 28,
+          "Board reading": 45,
+          "Hand reading": 17,
+          "Position play": 4,
+          "Table sense": 69
+        },
+        "recentSkillGains": [
+          {
+            "gain": 2,
+            "label": "Table sense",
+            "source": "Six seats"
+          },
+          {
+            "gain": 4,
+            "label": "Position play",
+            "source": "Six seats"
+          }
+        ],
+        "repairOutcomeProjection": [],
+        "resumeInRunner": false,
+        "resumePhase": "drill",
+        "resumeTeachingStepIndex": 0,
+        "retentionMemory": [],
+        "retentionSequence": 43,
+        "reviewMistakeHistory": [],
+        "reviewResolutionReceipts": [],
+        "schemaVersion": 19,
+        "selectedLessonId": "positions",
+        "selectedTaskId": "positions_button",
+        "selectedWorldId": "world_1",
+        "sessionIdentityState": {
+          "currentSession": {
+            "schemaVersion": 1,
+            "sessionId": "session_v1|2",
+            "startedAtOrder": 1,
+            "startedLessonId": "positions",
+            "startedWorldId": "world_1",
+            "status": "active"
+          },
+          "latestSession": {
+            "schemaVersion": 1,
+            "sessionId": "session_v1|2",
+            "startedAtOrder": 1,
+            "startedLessonId": "positions",
+            "startedWorldId": "world_1",
+            "status": "active"
+          },
+          "nextSessionOrdinal": 3,
+          "schemaVersion": 1
+        },
+        "skippedTaskIds": []
+      }
+    }
+  }
+}
