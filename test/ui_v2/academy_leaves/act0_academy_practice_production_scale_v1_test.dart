@@ -217,7 +217,11 @@ void main() {
     expect(history.actionLine, 'You chose call - better: fold');
 
     final launched = <Act0PracticeRepairQueueLaunchRequestV1>[];
-    final daily = _group('daily', 'Start a short rep', 'Short lesson practice.');
+    final daily = _group(
+      'daily',
+      'Start a short rep',
+      'Short lesson practice.',
+    );
     final started = <Act0PracticeGroupV1>[];
     await _pump(
       tester,
@@ -234,10 +238,13 @@ void main() {
     expect(find.text('No bet yet'), findsOneWidget);
     expect(find.text('You chose call - better: fold'), findsOneWidget);
     expect(
-      find.byKey(Key('act0_academy_practice_leaf_repair_cta_${history.itemId}')),
+      find.byKey(
+        Key('act0_academy_practice_leaf_repair_cta_${history.itemId}'),
+      ),
       findsNothing,
     );
     final semantics = tester.ensureSemantics();
+    addTearDown(semantics.dispose);
     await _tap(
       tester,
       Key('act0_academy_practice_leaf_repair_cta_${active.itemId}'),
@@ -255,6 +262,5 @@ void main() {
     scroll.position.jumpTo(scroll.position.maxScrollExtent);
     await tester.pumpAndSettle();
     _expectReadable(tester);
-    semantics.dispose();
   });
 }

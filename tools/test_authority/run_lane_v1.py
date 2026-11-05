@@ -161,6 +161,10 @@ TIER_A_COMMANDS = [
         "name": "World 1 release gate",
         "cmd": ["./tools/release_gate_world1.sh"],
     },
+    {
+        "name": "Academy Practice source-shaped text-scale controls",
+        "cmd": ["flutter","test","test/ui_v2/academy_leaves/act0_academy_practice_production_scale_v1_test.dart","test/ui_v2/academy_leaves/act0_academy_practice_text_scale_v1_test.dart","-r","compact"],
+    },
 ]
 
 
