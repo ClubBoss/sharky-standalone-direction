@@ -144,10 +144,7 @@ void main() {
         );
         await _advanceTeachingToDrill(tester);
         await _answerOption(tester, 'fold');
-        final before = _openRepairIntentPayload(
-          tester,
-          'actions_check_drill',
-        );
+        final before = _openRepairIntentPayload(tester, 'actions_check_drill');
         expect(before?['targetTaskId'], 'actions_legal_context');
         expect(_openRepairIntentCount(tester), 1);
 
@@ -170,10 +167,7 @@ void main() {
         await tester.tap(repair);
         await tester.pumpAndSettle();
         expect(_activeTaskId(tester), 'actions_legal_context');
-        expect(
-          _openRepairIntentPayload(tester, 'actions_check_drill'),
-          before,
-        );
+        expect(_openRepairIntentPayload(tester, 'actions_check_drill'), before);
 
         await _advanceTeachingToDrill(tester);
         if (correct) {
