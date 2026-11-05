@@ -131,84 +131,78 @@ void main() {
 
   if (const bool.fromEnvironment('SHARKY_ACADEMY_REVIEW_PREVIEW')) {
     for (final correct in [true, false]) {
-      testWidgets(
-        'Academy Review mapped repair returns with '
-        '${correct ? "cleared" : "retained"} source debt',
-        (tester) async {
-          await _pumpLifecycleHost(
-            tester,
-            viewport: const Size(393, 852),
-            state: _stateForFoldCheckCallRaiseTasks(const <String>[
-              'actions_legal_context',
-              'actions_check_drill',
-            ]),
-            taskId: 'actions_legal_context',
-          );
-          await _advanceTeachingToDrill(tester);
-          await _answerOption(tester, 'fold');
-          final before = _openRepairIntentPayload(
-            tester,
+      testWidgets('Academy Review mapped repair returns with '
+          '${correct ? "cleared" : "retained"} source debt', (tester) async {
+        await _pumpLifecycleHost(
+          tester,
+          viewport: const Size(393, 852),
+          state: _stateForFoldCheckCallRaiseTasks(const <String>[
             'actions_legal_context',
-          );
-          expect(before?['targetTaskId'], 'actions_check_drill');
+            'actions_check_drill',
+          ]),
+          taskId: 'actions_legal_context',
+        );
+        await _advanceTeachingToDrill(tester);
+        await _answerOption(tester, 'fold');
+        final before = _openRepairIntentPayload(
+          tester,
+          'actions_legal_context',
+        );
+        expect(before?['targetTaskId'], 'actions_check_drill');
+        expect(_openRepairIntentCount(tester), 1);
+
+        await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+        await tester.pumpAndSettle();
+        final reviewTab = find.descendant(
+          of: find.byKey(const Key('act0_shell_bottom_nav')),
+          matching: find.text('Review'),
+        );
+        await tester.tap(reviewTab);
+        await tester.pumpAndSettle();
+        expect(
+          find.byKey(const Key('act0_academy_review_leaf')),
+          findsOneWidget,
+        );
+        final repair = find.byKey(
+          const Key('act0_academy_review_leaf_repair_cta'),
+        );
+        await tester.scrollUntilVisible(repair, 200);
+        await tester.tap(repair);
+        await tester.pumpAndSettle();
+        expect(_activeTaskId(tester), 'actions_check_drill');
+        expect(
+          _openRepairIntentPayload(tester, 'actions_legal_context'),
+          before,
+        );
+
+        await _advanceTeachingToDrill(tester);
+        if (correct) {
+          await _answerCorrectly(tester);
+        } else {
+          await _answerWrongly(tester);
+        }
+        final result = find.byKey(
+          const Key('act0_shell_feedback_continue_cta'),
+        );
+        expect(result, findsOneWidget);
+        await tester.ensureVisible(result);
+        await tester.tap(result);
+        await tester.pumpAndSettle();
+
+        expect(
+          find.byKey(const Key('act0_academy_review_leaf')),
+          findsOneWidget,
+        );
+        final after = _openRepairIntentPayload(tester, 'actions_legal_context');
+        if (correct) {
+          expect(after, isNull);
+          expect(_openRepairIntentCount(tester), 0);
+        } else {
+          expect(after, isNotNull);
+          expect(after?['targetTaskId'], 'actions_check_drill');
           expect(_openRepairIntentCount(tester), 1);
-
-          await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
-          await tester.pumpAndSettle();
-          final reviewTab = find.descendant(
-            of: find.byKey(const Key('act0_shell_bottom_nav')),
-            matching: find.text('Review'),
-          );
-          await tester.tap(reviewTab);
-          await tester.pumpAndSettle();
-          expect(
-            find.byKey(const Key('act0_academy_review_leaf')),
-            findsOneWidget,
-          );
-          final repair = find.byKey(
-            const Key('act0_academy_review_leaf_repair_cta'),
-          );
-          await tester.scrollUntilVisible(repair, 200);
-          await tester.tap(repair);
-          await tester.pumpAndSettle();
-          expect(_activeTaskId(tester), 'actions_check_drill');
-          expect(
-            _openRepairIntentPayload(tester, 'actions_legal_context'),
-            before,
-          );
-
-          await _advanceTeachingToDrill(tester);
-          if (correct) {
-            await _answerCorrectly(tester);
-          } else {
-            await _answerWrongly(tester);
-          }
-          final result = find.byKey(
-            const Key('act0_shell_feedback_continue_cta'),
-          );
-          expect(result, findsOneWidget);
-          await tester.ensureVisible(result);
-          await tester.tap(result);
-          await tester.pumpAndSettle();
-
-          expect(
-            find.byKey(const Key('act0_academy_review_leaf')),
-            findsOneWidget,
-          );
-          final after = _openRepairIntentPayload(
-            tester,
-            'actions_legal_context',
-          );
-          if (correct) {
-            expect(after, isNull);
-            expect(_openRepairIntentCount(tester), 0);
-          } else {
-            expect(after, isNotNull);
-            expect(after?['targetTaskId'], 'actions_check_drill');
-            expect(_openRepairIntentCount(tester), 1);
-          }
-        },
-      );
+        }
+      });
     }
   }
 

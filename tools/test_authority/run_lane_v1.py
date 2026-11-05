@@ -179,6 +179,10 @@ TIER_A_COMMANDS = [
         "name": "World 1 release gate",
         "cmd": ["./tools/release_gate_world1.sh"],
     },
+    {
+        "name": "Academy Review mapped repair roundtrip",
+        "cmd": ["flutter","test","--dart-define=SHARKY_ACADEMY_REVIEW_PREVIEW=true","test/ui_v2/act0_repair_intent_lifecycle_v1_test.dart","--plain-name","Academy Review mapped repair","-r","expanded"],
+    },
 ]
 
 
