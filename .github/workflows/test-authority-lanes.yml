@@ -32,6 +32,8 @@ jobs:
     name: Canonical authority (Tier A + terminal Tier B)
     if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && (inputs.lane == 'tier-a' || inputs.lane == 'all-diagnostic')) }}
     runs-on: ubuntu-latest
+    env:
+      OBS04_RECEIPT_DIR: ${{ github.workspace }}/build/test_authority/obs04
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
@@ -40,7 +42,24 @@ jobs:
           flutter-version: '3.35.0'
           cache: true
       - run: flutter pub get
+      - name: Prepare OBS04 execution manifest
+        env:
+          OBS04_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python3 tools/test_authority/obs04_receipt_verify.py prepare --packet "$OBS04_RECEIPT_DIR" --source-root .
       - run: ./tools/test_authority_canonical_lane_v1.sh
+      - name: Seal OBS04 actual captures
+        if: always()
+        run: python3 tools/test_authority/obs04_receipt_verify.py seal --packet "$OBS04_RECEIPT_DIR" --source-root .
+      - name: Verify OBS04 machine witness and negatives
+        if: always()
+        run: python3 tools/test_authority/obs04_receipt_verify.py verify --packet "$OBS04_RECEIPT_DIR" --expected-execution "$OBS04_RECEIPT_DIR/ci_expected_execution.json" --source-root .
+      - name: Preserve OBS04 receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: obs04-${{ github.run_id }}-${{ github.run_attempt }}
+          path: build/test_authority/obs04/
+          if-no-files-found: error
 
   tier-b:
     name: Tier B maintained support
@@ -87,3 +106,4 @@ jobs:
       - run: flutter pub get
       - run: ./tools/test_authority_validate_v1.sh
       - run: ./tools/test_authority_tier_d_v1.sh
+
