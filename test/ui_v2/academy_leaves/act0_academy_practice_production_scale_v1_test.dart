@@ -244,23 +244,26 @@ void main() {
       findsNothing,
     );
     final semantics = tester.ensureSemantics();
-    addTearDown(semantics.dispose);
-    await _tap(
-      tester,
-      Key('act0_academy_practice_leaf_repair_cta_${active.itemId}'),
-    );
-    expect(launched.single, same(active.launchRequest));
-    expect(launched.single.targetTaskId, 'actions_check_drill');
-    await _tap(tester, const Key('act0_academy_practice_leaf_start'));
-    expect(started.single, same(daily));
-    final scroll = tester.state<ScrollableState>(
-      find.descendant(
-        of: find.byKey(_scrollKey),
-        matching: find.byType(Scrollable),
-      ),
-    );
-    scroll.position.jumpTo(scroll.position.maxScrollExtent);
-    await tester.pumpAndSettle();
-    _expectReadable(tester);
+    try {
+      await _tap(
+        tester,
+        Key('act0_academy_practice_leaf_repair_cta_${active.itemId}'),
+      );
+      expect(launched.single, same(active.launchRequest));
+      expect(launched.single.targetTaskId, 'actions_check_drill');
+      await _tap(tester, const Key('act0_academy_practice_leaf_start'));
+      expect(started.single, same(daily));
+      final scroll = tester.state<ScrollableState>(
+        find.descendant(
+          of: find.byKey(_scrollKey),
+          matching: find.byType(Scrollable),
+        ),
+      );
+      scroll.position.jumpTo(scroll.position.maxScrollExtent);
+      await tester.pumpAndSettle();
+      _expectReadable(tester);
+    } finally {
+      semantics.dispose();
+    }
   });
 }
