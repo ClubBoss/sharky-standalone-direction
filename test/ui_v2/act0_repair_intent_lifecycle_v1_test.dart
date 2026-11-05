@@ -137,18 +137,18 @@ void main() {
           tester,
           viewport: const Size(393, 852),
           state: _stateForFoldCheckCallRaiseTasks(const <String>[
-            'actions_legal_context',
             'actions_check_drill',
+            'actions_legal_context',
           ]),
-          taskId: 'actions_legal_context',
+          taskId: 'actions_check_drill',
         );
         await _advanceTeachingToDrill(tester);
         await _answerOption(tester, 'fold');
         final before = _openRepairIntentPayload(
           tester,
-          'actions_legal_context',
+          'actions_check_drill',
         );
-        expect(before?['targetTaskId'], 'actions_check_drill');
+        expect(before?['targetTaskId'], 'actions_legal_context');
         expect(_openRepairIntentCount(tester), 1);
 
         await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
@@ -169,9 +169,9 @@ void main() {
         await tester.scrollUntilVisible(repair, 200);
         await tester.tap(repair);
         await tester.pumpAndSettle();
-        expect(_activeTaskId(tester), 'actions_check_drill');
+        expect(_activeTaskId(tester), 'actions_legal_context');
         expect(
-          _openRepairIntentPayload(tester, 'actions_legal_context'),
+          _openRepairIntentPayload(tester, 'actions_check_drill'),
           before,
         );
 
@@ -193,13 +193,13 @@ void main() {
           find.byKey(const Key('act0_academy_review_leaf')),
           findsOneWidget,
         );
-        final after = _openRepairIntentPayload(tester, 'actions_legal_context');
+        final after = _openRepairIntentPayload(tester, 'actions_check_drill');
         if (correct) {
           expect(after, isNull);
           expect(_openRepairIntentCount(tester), 0);
         } else {
           expect(after, isNotNull);
-          expect(after?['targetTaskId'], 'actions_check_drill');
+          expect(after?['targetTaskId'], 'actions_legal_context');
           expect(_openRepairIntentCount(tester), 1);
         }
       });
