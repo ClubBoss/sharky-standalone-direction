@@ -141,6 +141,89 @@ void main() {
   });
 
   group('Act0SharkyCompanionAvatarV1', () {
+    for (final initiallyDisabled in [false, true]) {
+      testWidgets(
+        'dynamic reduced motion survives repeated toggles from $initiallyDisabled on one State',
+        (tester) async {
+          await tester.binding.setSurfaceSize(const Size(393, 852));
+          addTearDown(() => tester.binding.setSurfaceSize(null));
+          final disabled = ValueNotifier(initiallyDisabled);
+          addTearDown(disabled.dispose);
+          final mascotKey = GlobalKey();
+          const motionKey = Key('act0_shell_sharky_presence_motion');
+          const imageKey = Key('act0_shell_sharky_presence_mascot_happy');
+
+          await tester.pumpWidget(
+            MaterialApp(
+              home: ValueListenableBuilder<bool>(
+                valueListenable: disabled,
+                builder: (context, value, child) => MediaQuery(
+                  data: MediaQuery.of(
+                    context,
+                  ).copyWith(disableAnimations: value),
+                  child: Scaffold(
+                    body: Act0SharkyPresenceMascotV1(
+                      key: mascotKey,
+                      mood: Act0SharkyMoodV1.happy,
+                      tone: Colors.blue,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+          final originalState = mascotKey.currentState;
+          expect(originalState, isNotNull);
+
+          for (final value in [
+            initiallyDisabled,
+            !initiallyDisabled,
+            initiallyDisabled,
+            !initiallyDisabled,
+            initiallyDisabled,
+          ]) {
+            disabled.value = value;
+            await tester.pump();
+            expect(tester.takeException(), isNull);
+            expect(mascotKey.currentState, same(originalState));
+            expect(find.byKey(imageKey), findsOneWidget);
+            expect(tester.getSize(find.byKey(imageKey)).isEmpty, isFalse);
+
+            if (value) {
+              expect(find.byKey(motionKey), findsNothing);
+              await tester.pumpAndSettle();
+              expect(tester.binding.transientCallbackCount, 0);
+              await tester.pump(const Duration(seconds: 3));
+              expect(find.byKey(motionKey), findsNothing);
+              expect(tester.binding.transientCallbackCount, 0);
+            } else {
+              expect(find.byKey(motionKey), findsOneWidget);
+              List<List<double>> transforms() => tester
+                  .widgetList<Transform>(
+                    find.descendant(
+                      of: find.byKey(motionKey),
+                      matching: find.byType(Transform),
+                    ),
+                  )
+                  .map((widget) => widget.transform.storage.toList())
+                  .toList();
+              final before = transforms();
+              await tester.pump(const Duration(milliseconds: 600));
+              expect(transforms(), isNot(equals(before)));
+            }
+            expect(tester.takeException(), isNull);
+          }
+
+          // Dispose both a running controller and the static-only state.
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump(const Duration(seconds: 3));
+          expect(mascotKey.currentState, isNull);
+          expect(tester.binding.transientCallbackCount, 0);
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
+
     testWidgets('renders one keyed avatar per companion state, no exceptions', (
       tester,
     ) async {

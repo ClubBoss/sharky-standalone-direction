@@ -611,8 +611,9 @@ class Act0SharkyPresenceMascotV1 extends StatefulWidget {
       _Act0SharkyPresenceMascotV1State();
 }
 
+// Reduce Motion can dispose and recreate the controller on the same State.
 class _Act0SharkyPresenceMascotV1State extends State<Act0SharkyPresenceMascotV1>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   AnimationController? _controller;
 
   @override
