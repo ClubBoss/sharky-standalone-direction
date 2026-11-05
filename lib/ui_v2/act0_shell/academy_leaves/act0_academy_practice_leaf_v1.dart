@@ -699,8 +699,6 @@ class _RepairRowV1 extends StatelessWidget {
                 if (actionLine != null)
                   Text(
                     actionLine,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       color: Act0AcademyLeafPaletteV1.textMuted,
                       fontSize: 12,
