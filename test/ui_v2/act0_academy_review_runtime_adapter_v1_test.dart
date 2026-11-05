@@ -112,6 +112,9 @@ void main() {
   testWidgets('focus, repair, due and saved callbacks stay distinct', (
     tester,
   ) async {
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
     const mistake = Act0MistakeCardV1(
       taskId: 'repair', lessonId: 'lesson', title: 'Spot',
       weaknessLabel: 'Read', selectedOptionId: 'a', selectedLabel: 'A',
