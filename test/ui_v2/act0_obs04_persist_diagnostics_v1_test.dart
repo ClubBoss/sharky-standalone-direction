@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,11 +19,186 @@ const _task = 'actions_check_drill';
 const _lesson = 'fold_check_call_raise';
 final _store = Act0ProgressStoreV1(key: _key, isValidPayload: (_) => true);
 
+String _hash(String value) => sha256.convert(utf8.encode(value)).toString();
+
+// Test-owned capture of actual producer/backend arguments. No product state is
+// supplied by this observer, and no raw preference payload leaves the process.
+class _Capture {
+  final windows = <Map<String, Object?>>[];
+  List<Map<String, Object?>>? _entries;
+  Set<String> _baselineIds = {};
+
+  static const _recordFields = {
+    'schemaVersion',
+    'recordId',
+    'createdOrder',
+    'worldId',
+    'lessonId',
+    'taskId',
+    'sourceTaskId',
+    'choiceId',
+    'expectedChoiceId',
+    'isCorrect',
+    'errorType',
+    'resultKind',
+    'assistanceKind',
+    'runId',
+    'runKind',
+    'runOrdinal',
+    'sessionId',
+    'authoredSourceFingerprint',
+    'reviewKind',
+  };
+  static const _eventFields = {
+    'schemaVersion',
+    'world_id',
+    'lesson_id',
+    'task_id',
+    'session_id',
+    'choiceId',
+    'correct',
+    'is_correct',
+    'error_type',
+    'assistance_kind',
+    'attempt_id',
+    'review_kind',
+    'request_generation',
+    'operation',
+    'outcome',
+    'source_surface',
+  };
+
+  List<Map<String, Object?>> _records(String payload) {
+    final map = jsonDecode(payload) as Map;
+    final raw = map['learningEvidenceHistory'];
+    final records = raw is Map ? raw['records'] as List : raw as List;
+    return [
+      for (final record in records.cast<Map>())
+        {
+          for (final key in _recordFields)
+            if (record.containsKey(key)) key: record[key],
+        },
+    ];
+  }
+
+  int _add(Map<String, Object?> entry) {
+    final entries = _entries;
+    if (entries == null) return 0;
+    final seq = entries.length + 1;
+    entries.add({'seq': seq, ...entry});
+    return seq;
+  }
+
+  void begin(String name, String baseline) {
+    if (_entries != null) throw StateError('capture window already open');
+    _baselineIds = _records(
+      baseline,
+    ).map((record) => record['recordId']! as String).toSet();
+    _entries = <Map<String, Object?>>[];
+    windows.add({
+      'name': name,
+      'baseline_payload_sha256': _hash(baseline),
+      'baseline_record_ids': _baselineIds.toList()..sort(),
+      'entries': _entries,
+    });
+    _add({'kind': 'window_start', 'store_drained': true});
+  }
+
+  void event(Act0TelemetryEventV1 event) {
+    if (!const {
+      'decision_made',
+      'progress_persist_result',
+    }.contains(event.name))
+      return;
+    _add({
+      'kind': 'event',
+      'name': event.name,
+      'fields': {
+        for (final key in _eventFields)
+          if (event.fields.containsKey(key)) key: event.fields[key],
+      },
+    });
+  }
+
+  int write(String key, Object value, {required bool held}) {
+    if (_entries == null) return 0;
+    final aliases = {
+      'flutter.${_store.headKey}': 'head',
+      'flutter.${_store.recoveryKey}': 'recovery',
+      'flutter.${_store.backupKey}': 'backup',
+      'flutter.$_key': 'mirror',
+    };
+    final alias = aliases[key];
+    if (alias == null || value is! String)
+      throw StateError('unclassified write in OBS04 window');
+    final envelope = jsonDecode(value) as Map;
+    final payload = alias == 'mirror' ? value : envelope['payload'] as String;
+    final records = _records(payload);
+    return _add({
+      'kind': 'write_start',
+      'key': alias,
+      'held': held,
+      'value_sha256': _hash(value),
+      'payload_sha256': _hash(payload),
+      if (alias != 'mirror') ...{
+        'revision': envelope['revision'],
+        'digest': envelope['digest'],
+      },
+      'records': records,
+      'new_record_ids': [
+        for (final record in records)
+          if (!_baselineIds.contains(record['recordId'])) record['recordId'],
+      ],
+    });
+  }
+
+  void returned(int attempt, bool value) {
+    if (attempt != 0)
+      _add({'kind': 'write_result', 'attempt_seq': attempt, 'returned': value});
+  }
+
+  void coalescing(int previousGeneration) => _add({
+    'kind': 'coalescing_control',
+    'scheduled_requests': 2,
+    'previous_result_generation': previousGeneration,
+  });
+
+  void close(String persistedAfter) {
+    _add({
+      'kind': 'window_end',
+      'store_drained': true,
+      'persisted_payload_sha256': _hash(persistedAfter),
+    });
+    _entries = null;
+  }
+
+  void save(String caseId) {
+    final path = Platform.environment['OBS04_RECEIPT_DIR'];
+    if (path == null || path.isEmpty) return;
+    if (_entries != null) throw StateError('capture window not closed');
+    final directory = Directory(path)..createSync(recursive: true);
+    final file = File('${directory.path}/$caseId.json');
+    if (file.existsSync())
+      throw StateError('duplicate OBS04 execution capture');
+    file.writeAsStringSync(
+      '${jsonEncode({
+        'format': 1,
+        'case_id': caseId,
+        'test_data_only': true,
+        'unexercised': ['repair', 'transfer', 'elapsed_retention', 'native_restart'],
+        'windows': windows,
+      })}\n',
+      flush: true,
+    );
+  }
+}
+
 // Same durable/cache separation and deterministic fault seam as LDR01.
 class _Disk extends SharedPreferencesStorePlatform {
-  _Disk(Map<String, Object> initial)
+  _Disk(Map<String, Object> initial, this.capture)
     : values = {for (final e in initial.entries) 'flutter.${e.key}': e.value};
   final Map<String, Object> values;
+  final _Capture capture;
   bool failRecovery = false;
   bool holdNext = false;
   Completer<void>? held;
@@ -29,13 +206,18 @@ class _Disk extends SharedPreferencesStorePlatform {
   Future<Map<String, Object>> getAll() async => Map.of(values);
   @override
   Future<bool> setValue(String type, String key, Object value) async {
+    final attempt = capture.write(key, value, held: holdNext);
     if (holdNext) {
       holdNext = false;
       held = Completer<void>();
       await held!.future;
     }
-    if (failRecovery && key == 'flutter.${_key}_recovery') return false;
+    if (failRecovery && key == 'flutter.${_key}_recovery') {
+      capture.returned(attempt, false);
+      return false;
+    }
     values[key] = value;
+    capture.returned(attempt, true);
     return true;
   }
 
@@ -53,10 +235,12 @@ class _Disk extends SharedPreferencesStorePlatform {
 }
 
 class _Sink extends Act0InMemoryTelemetrySinkV1 {
+  final capture = _Capture();
   bool throwAfterRecord = false;
   @override
   void record(Act0TelemetryEventV1 event) {
     super.record(event);
+    capture.event(event);
     if (throwAfterRecord) throw StateError('synthetic sink unavailable');
   }
 }
@@ -131,7 +315,7 @@ Future<_Disk> _mount(WidgetTester tester, _Sink sink) async {
       'learningEvidenceHistory': <Object>[],
       'sessionIdentityState': session.toPayload(),
     }),
-  });
+  }, sink.capture);
   SharedPreferencesStorePlatform.instance = disk;
   await tester.pumpWidget(
     MaterialApp(
@@ -170,6 +354,7 @@ Future<_Disk> _mount(WidgetTester tester, _Sink sink) async {
   expect(find.byKey(const Key('act0_shell_option_check')), findsOneWidget);
   await _store.flush();
   sink.events.clear();
+  sink.capture.begin('diagnostic', (await _store.load())!);
   return disk;
 }
 
@@ -254,6 +439,10 @@ void main() {
       );
 
       // Two synchronous scheduled writes coalesce to one invoked save/result.
+      sink.capture.close((await _store.load())!);
+      final previousGeneration = saves.last.fields['request_generation'] as int;
+      sink.capture.begin('coalescing', (await _store.load())!);
+      sink.capture.coalescing(previousGeneration);
       sink.events.clear();
       final dynamic state = tester.state(find.byType(Act0ShellPreviewScreenV1));
       state.debugPersistProgressV1();
@@ -264,6 +453,12 @@ void main() {
         sink.events.where((e) => e.name == 'progress_persist_result'),
         hasLength(1),
       );
+      final generation = sink.events
+          .singleWhere((event) => event.name == 'progress_persist_result')
+          .fields['request_generation'];
+      expect(generation, previousGeneration + 2);
+      sink.capture.close((await _store.load())!);
+      sink.capture.save('wrong_acknowledged');
     },
   );
 
@@ -331,6 +526,8 @@ void main() {
       expect(result['outcome'], 'indeterminate');
       expect(result['request_generation'], isA<int>());
       expect(jsonEncode(result), isNot(contains('synthetic sink')));
+      sink.capture.close((await _store.load())!);
+      sink.capture.save('correct_indeterminate');
     },
   );
 }
