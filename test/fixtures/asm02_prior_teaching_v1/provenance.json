@@ -1,0 +1,56 @@
+{
+  "origin": "Prior real widget-test saves, not real-user/native histories. Only unrelated report/telemetry wrapper fields removed; protected envelope strings and decoded payload preserved exactly.",
+  "source_library_id": "libfile_0a95c12f257c8191b7f3991f1b2d132c",
+  "source_archive_sha256": "9c90d3bb96fbc4290844a309c4a7f5c6a2830e3ea07adbc3e69d60b2c2f530b3",
+  "files": [
+    {
+      "file": "positions_theory__bottom__none.json",
+      "original_capture_sha256": "c09adb452f9201e41fc0bc1418315f0b2c9b33d9e2f333b9360103f749eeb4b7",
+      "fixture_sha256": "7822e06575686fc134abad402914581cdb07a9293ed587781dcb8f17a350a5e6",
+      "protected_head_string_sha256": "a5623bac2a08a6cbb280e7cfdb64ed003095fa5b0552c92beaca7ef2c319cc4c",
+      "protected_recovery_string_sha256": "a5623bac2a08a6cbb280e7cfdb64ed003095fa5b0552c92beaca7ef2c319cc4c"
+    },
+    {
+      "file": "positions_theory__continue__no_assessment.json",
+      "original_capture_sha256": "78a9912596110d680788b6aac3e03251a2dd39b85bb8b5c9fb7e405b2b95a029",
+      "fixture_sha256": "1bae9cdb2b715fb5f4661ef91078de2f3dfb215ab51ff48573f0a6758a1217b8",
+      "protected_head_string_sha256": "4f6f6a0b0e051079effbdc9e8fed3bc73a8493a21ba70c737086cd853591a9a3",
+      "protected_recovery_string_sha256": "4f6f6a0b0e051079effbdc9e8fed3bc73a8493a21ba70c737086cd853591a9a3"
+    },
+    {
+      "file": "positions_theory__top__none.json",
+      "original_capture_sha256": "ee4d5975f38234116c233ab3aa72ccad36d8e1c290127b30bd2b8361070f35ef",
+      "fixture_sha256": "215facccd5ff0ca9f758194cae46680e17ca26e00bb7fd2abb9198d43ba31c37",
+      "protected_head_string_sha256": "cd2da4fae9c8df8adc8edaaba0f48c0b199f161563c3bc019159968970c8bd84",
+      "protected_recovery_string_sha256": "cd2da4fae9c8df8adc8edaaba0f48c0b199f161563c3bc019159968970c8bd84"
+    },
+    {
+      "file": "positions_utg__hj__none.json",
+      "original_capture_sha256": "cae939724a153754d9c33ba5b1107430556b1aadca62ada6387a37a6fb6688dc",
+      "fixture_sha256": "fc352cb58f773bc03b05662734b0bbc6980a1fd15aa6f0a7fa0cf5db7efe7d2a",
+      "protected_head_string_sha256": "81ac35530e559dfe65842dfabca0ec756027948e115abbad7512db70e5c6917c",
+      "protected_recovery_string_sha256": "81ac35530e559dfe65842dfabca0ec756027948e115abbad7512db70e5c6917c"
+    },
+    {
+      "file": "positions_utg__hj__theoryRecall.json",
+      "original_capture_sha256": "cc949c1f27a5c73e3fba54ef671ccd1882dfa60ba70b175d505f9f549ac4a42d",
+      "fixture_sha256": "9d180f01dd848eb969d04693003f1e769d470a9e5f9a27f0cc71c0620207d6a4",
+      "protected_head_string_sha256": "92b31405566fea65731a00b444050ab379ba8cd0d796838cd78a997e165a47b2",
+      "protected_recovery_string_sha256": "92b31405566fea65731a00b444050ab379ba8cd0d796838cd78a997e165a47b2"
+    },
+    {
+      "file": "positions_utg__utg__none.json",
+      "original_capture_sha256": "b5e91aae849ff10e4dc05cc253f3b9be835c379be3c12d918a2e152b3828872e",
+      "fixture_sha256": "461ee8d9f937814c9158e89d76b2958d30cfd0da277d5baa876d00ccb4ea3d09",
+      "protected_head_string_sha256": "3bd5ae5b35f43799c7a2a55c7b16581f5849878624be4625e7bb431707a9af85",
+      "protected_recovery_string_sha256": "3bd5ae5b35f43799c7a2a55c7b16581f5849878624be4625e7bb431707a9af85"
+    },
+    {
+      "file": "positions_utg__utg__theoryRecall.json",
+      "original_capture_sha256": "f23c0ce8a38d5aebdcbe2b056853e0ba5975fc283f1b2e8b6f206d53985f3aff",
+      "fixture_sha256": "d9591c4c1fa8333c56023438b9fab89ca6d2969a933e2f8eaac30b4ffececb30",
+      "protected_head_string_sha256": "e36bca43c4d2a4bba833695569362a55392350dc689f2a943e1996cb88ca4d17",
+      "protected_recovery_string_sha256": "e36bca43c4d2a4bba833695569362a55392350dc689f2a943e1996cb88ca4d17"
+    }
+  ]
+}

@@ -132,6 +132,17 @@ List<Object?> _cards(Iterable<Act0CardStateV1> cards) => [
   for (final card in cards) <Object?>[card.rank, card.suit],
 ];
 
+bool _isAuthoredTeachingTaskV1(Act0LessonTaskV1 task) =>
+    task.phase == Act0LessonPhaseV1.theory ||
+    task.resolvedTaskFamily == Act0TaskFamilyV1.learn;
+
+/// Classifies an old receipt without rewriting its grade, help or lineage.
+/// Teaching choices are observations, never independent assessment samples.
+bool act0RecordIsAuthoredTeachingV1(Act0LearningEvidenceRecordV1 record) {
+  final task = _resolveTask(record.worldId, record.lessonId, record.taskId);
+  return task != null && _isAuthoredTeachingTaskV1(task);
+}
+
 /// Resolves the record against today's authored source and recomputes its
 /// current answer/skill semantics. Stored grade and skill fields are ignored.
 Act0CurrentAuthoredSourceProofV1? act0CurrentAuthoredSourceProofV1(
@@ -153,7 +164,8 @@ Act0CurrentAuthoredSourceProofV1? act0CurrentAuthoredSourceProofForTaskV1({
   required String lessonId,
   required Act0LessonTaskV1 task,
 }) {
-  if (record.worldId != worldId ||
+  if (_isAuthoredTeachingTaskV1(task) ||
+      record.worldId != worldId ||
       record.lessonId != lessonId ||
       record.taskId != task.taskId ||
       (record.sourceTaskId.isNotEmpty && record.sourceTaskId != task.taskId)) {
@@ -240,7 +252,10 @@ Act0LearningEvidenceHistoryV1 act0CompleteCurrentAuthoredEvidenceV1(
   DateTime? previousTime;
   for (final record in ordered) {
     // Placement is assessment, not a retention/transfer learning witness.
-    if (record.isPlacementAssessment) continue;
+    if (record.isPlacementAssessment ||
+        act0RecordIsAuthoredTeachingV1(record)) {
+      continue;
+    }
     final rawFamily =
         [
               record.conceptFamilyId,
@@ -361,7 +376,9 @@ Act0RecentAuthoredEvidenceV1 act0RecentAuthoredEvidenceV1(
       reset(knownFamilies.isEmpty ? families.keys : knownFamilies);
       continue;
     }
-    if (r.isPlacementAssessment) continue;
+    if (r.isPlacementAssessment || act0RecordIsAuthoredTeachingV1(r)) {
+      continue;
+    }
     final proof = act0CurrentAuthoredSourceProofV1(r);
     final rawFamily =
         [r.conceptFamilyId, r.repairFocusId, r.skillAtomId, r.errorType]
