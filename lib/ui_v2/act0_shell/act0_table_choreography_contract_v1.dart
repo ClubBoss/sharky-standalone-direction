@@ -124,7 +124,8 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
   }
   final heroSeatId = heroSeat.seatId;
   final activeSeatId = table.activeSeatId?.trim();
-  if (activeSeatId == null ||
+  if (heroSeat.isFolded ||
+      activeSeatId == null ||
       activeSeatId.isEmpty ||
       activeSeatId != heroSeatId) {
     return null;
@@ -289,7 +290,9 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
     }
   }
 
-  if (currentStreet != finalStreet || beats.isEmpty) {
+  if (currentStreet != finalStreet ||
+      beats.isEmpty ||
+      foldedActors.contains(heroSeatId)) {
     return null;
   }
 
