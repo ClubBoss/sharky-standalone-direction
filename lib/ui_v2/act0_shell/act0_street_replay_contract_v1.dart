@@ -194,6 +194,9 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
       foldedActors.contains(activeSeat?.seatLabel.trim().toUpperCase())) {
     failedActionTruth = true;
   }
+  if (_act0StreetReplayHasSoleSurvivorV1(table, foldedActors, steps)) {
+    failedActionTruth = true;
+  }
 
   return Act0StreetReplayV1(
     steps: failedActionTruth
@@ -216,6 +219,36 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
     keyClue: table.focusCalloutLabel.trim(),
     decisionContext: _act0StreetReplayDecisionContextV1(table),
   );
+}
+
+bool _act0StreetReplayHasSoleSurvivorV1(
+  Act0TableStateV1 table,
+  Set<String> foldedActors,
+  List<Act0StreetReplayStepV1> steps,
+) {
+  // Only a complete, unambiguous source roster can prove every opponent out.
+  // Missing seats or isInHand=false alone must not invent an executed fold.
+  if (table.seats.length != table.playerCount) return false;
+  final occupied = table.seats.where((seat) => seat.isOccupied).toList();
+  final actors = occupied
+      .map((seat) => seat.seatLabel.trim().toUpperCase())
+      .toSet();
+  if (occupied.length < 2 ||
+      actors.length != occupied.length ||
+      actors.any((actor) => !_act0StreetReplayLooksLikeActorV1(actor)) ||
+      steps.any(
+        (step) => !actors.contains(step.actorLabel.trim().toUpperCase()),
+      )) {
+    return false;
+  }
+  return occupied
+          .where(
+            (seat) =>
+                !seat.isFolded &&
+                !foldedActors.contains(seat.seatLabel.trim().toUpperCase()),
+          )
+          .length ==
+      1;
 }
 
 Act0StreetReplayStreetV1? _act0StreetReplayStreetFromLabelV1(String label) {
