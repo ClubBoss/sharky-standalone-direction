@@ -16600,6 +16600,10 @@ String _genericDecisionHintV1({
           focus.contains('count'))) {
     return 'Track the community cards street by street, not chips in the pot.';
   }
+  if (taskFamily != Act0TaskFamilyV1.sizing &&
+      RegExp(r'\b(?:which|what)\s+action\b').hasMatch(focus)) {
+    return 'Name the action before choosing what it means.';
+  }
   if (focus.contains('position') ||
       focus.contains('seat') ||
       focus.contains('button') ||

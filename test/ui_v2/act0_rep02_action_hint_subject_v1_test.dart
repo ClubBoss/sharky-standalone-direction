@@ -48,20 +48,80 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  for (final control
+      in <
+        ({
+          String name,
+          String world,
+          String lesson,
+          String task,
+          String? question,
+          String hint,
+        })
+      >[
+        (
+          name: 'authored board count',
+          world: 'world_1',
+          lesson: 'cards_ranks_suits',
+          task: 'cards_ranks_suits_board_count',
+          question: null,
+          hint:
+              'Track the community cards street by street, not chips in the pot.',
+        ),
+        (
+          name: 'authored sizing',
+          world: 'world_4',
+          lesson: 'small_half_pot',
+          task: 'w4_half_pot_bet',
+          question: null,
+          hint: 'Count only chips that are actually in the pot or matched.',
+        ),
+        (
+          // A policy control, not a claim about an authored question: explicit
+          // action wording must not override a structured sizing family.
+          name: 'sizing family with synthetic action wording',
+          world: 'world_4',
+          lesson: 'small_half_pot',
+          task: 'w4_half_pot_bet',
+          question: 'Which action adds chips to the pot?',
+          hint: 'Count only chips that are actually in the pot or matched.',
+        ),
+      ]) {
+    testWidgets('Quick Hint preserves ${control.name}', (tester) async {
+      final probe = await _openRealHint(
+        tester,
+        worldId: control.world,
+        lessonId: control.lesson,
+        taskId: control.task,
+        questionOverride: control.question,
+      );
+      expect(
+        tester.widget<Text>(find.byKey(const Key('act0_shell_hint_body'))).data,
+        control.hint,
+      );
+      expect(probe.choices, isEmpty);
+      expect(probe.decisions, isEmpty);
+    });
+  }
 }
 
-Future<_Probe> _openRealHint(WidgetTester tester) async {
+Future<_Probe> _openRealHint(
+  WidgetTester tester, {
+  String worldId = 'world_1',
+  String lessonId = 'fold_check_call_raise',
+  String taskId = 'actions_legal_context',
+  String? questionOverride,
+}) async {
   tester.view.physicalSize = const Size(393, 852);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
-  final world = Act0ShellStateV1.sample.worldById('world_1');
+  final world = Act0ShellStateV1.sample.worldById(worldId);
   final lesson = world.lessons.firstWhere(
-    (value) => value.lessonId == 'fold_check_call_raise',
+    (value) => value.lessonId == lessonId,
   );
-  final task = lesson.taskList.firstWhere(
-    (value) => value.taskId == 'actions_legal_context',
-  );
+  final task = lesson.taskList.firstWhere((value) => value.taskId == taskId);
   final probe = _Probe(task);
   await tester.pumpWidget(
     MaterialApp(
@@ -69,6 +129,7 @@ Future<_Probe> _openRealHint(WidgetTester tester) async {
         body: Act0LessonRunnerShellV1(
           runner: task.runner.copyWith(
             phase: task.entryPhase,
+            question: questionOverride,
             teachingStepIndex: task.runner.teachingSteps.length,
           ),
           worldNumber: world.worldNumber,
