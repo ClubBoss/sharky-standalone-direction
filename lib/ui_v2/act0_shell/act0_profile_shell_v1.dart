@@ -581,18 +581,20 @@ String _profileIdentityConfidenceLineV1(
   BuildContext context,
   Act0ProfileStateV1 profile,
 ) {
+  // These legacy practice fields do not carry independent mastery, unseen
+  // transfer or elapsed-retention evidence. Describe only the observed read.
   final recentGains = _dedupedRecentSkillGainsV1(profile.recentSkillGains);
   if (recentGains.isNotEmpty) {
     return _profileCopyV1(
       context,
-      en: '${recentGains.first.label} is becoming more familiar.',
+      en: 'Recent practice: ${recentGains.first.label}.',
       ru: '${recentGains.first.label} становится привычнее.',
     );
   }
   if (profile.strongCategories.isNotEmpty) {
     return _profileCopyV1(
       context,
-      en: '${profile.strongCategories.first} is becoming a habit.',
+      en: 'Correct read: ${profile.strongCategories.first}.',
       ru: '${profile.strongCategories.first} становится привычкой.',
     );
   }
@@ -989,7 +991,7 @@ class _ProfileProgressProofCardV1 extends StatelessWidget {
                 value: recentGains.isNotEmpty
                     ? _profileCopyV1(
                         context,
-                        en: '${recentGains.length} growing',
+                        en: '${recentGains.length} practiced',
                         ru: '${recentGains.length} растут',
                       )
                     : _profileCopyV1(
@@ -1344,7 +1346,7 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
           Text(
             _profileCopyV1(
               context,
-              en: 'Proof in practice',
+              en: 'Practice topics',
               ru: 'Навыки в практике',
             ),
             style: Act0AcademyReadingStyleV1.label.copyWith(
@@ -1374,7 +1376,7 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
                 ),
               ),
               child: Text(
-                '${_profileCopyV1(context, en: 'Recent proof', ru: 'Практика')}: ${recentGains.take(2).map((gain) => gain.label).join('  ·  ')}',
+                '${_profileCopyV1(context, en: 'Recent practice', ru: 'Практика')}: ${recentGains.take(2).map((gain) => gain.label).join('  ·  ')}',
                 style: Act0AcademyReadingStyleV1.label.copyWith(
                   color: Act0AcademyReadingStyleV1.gold,
                   letterSpacing: 0,
@@ -2803,7 +2805,7 @@ class _ProfileSkillSummaryTileV1 extends StatelessWidget {
                           )
                         : _profileCopyV1(
                             context,
-                            en: 'Recent route proof',
+                            en: 'Recent practice',
                             ru: 'Практика',
                           ),
                     style: Act0AcademyReadingStyleV1.label.copyWith(
@@ -2842,7 +2844,7 @@ class _ProfileSkillSummaryTileV1 extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  _profileCopyV1(context, en: 'Route proof', ru: 'Практика'),
+                  _profileCopyV1(context, en: 'Practiced', ru: 'Практика'),
                   style: Act0AcademyReadingStyleV1.label.copyWith(
                     color: Act0AcademyReadingStyleV1.gold,
                   ),
