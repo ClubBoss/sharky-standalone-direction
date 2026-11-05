@@ -42,6 +42,8 @@ LANES = {
 }
 
 TIER_A_COMMANDS = [
+    {"name":"Academy Placement Review widget-host remount default OFF","cmd":["flutter","test","test/ui_v2/act0_jrn06_placement_review_restart_v1_test.dart","-r","expanded"]},
+    {"name":"Academy Placement Review widget-host remount preview ON","cmd":["flutter","test","--dart-define=SHARKY_ACADEMY_REVIEW_PREVIEW=true","test/ui_v2/act0_jrn06_placement_review_restart_v1_test.dart","-r","expanded"]},
     {
         "name": "flutter analyze",
         "cmd": ["flutter", "analyze"],
