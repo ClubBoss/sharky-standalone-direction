@@ -13891,6 +13891,15 @@ final _w3LateInfoEdgeRunner = _latePositionRunner.copyWith(
   table: _act0ExplicitFoldsV1(
     _latePositionRunner.table.copyWith(
       scope: Act0TableScopeV1.playedHand,
+      seats: [
+        for (final seat in _latePositionRunner.table.seats)
+          seat.seatId == 'btn'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceDown,
+                )
+              : seat,
+      ],
       highlightedSeatIds: const <String>['co', 'btn', 'sb', 'bb'],
       actionTrail: const <Act0ActionTrailItemV1>[
         Act0ActionTrailItemV1(label: 'UTG folds'),
@@ -15115,6 +15124,8 @@ Act0TableStateV1 _act0W4BtnBbSixBbFlopV1(
           .map(
             (seat) => seat.seatId == 'bb'
                 ? _act0CopySeatStateV1(seat, hasActed: true)
+                : seat.seatId == 'btn' && btnCheckedBehind
+                ? _act0CopySeatStateV1(seat, hasActed: true, isActive: false)
                 : seat,
           )
           .toList(growable: false);
@@ -15125,7 +15136,7 @@ Act0TableStateV1 _act0W4BtnBbSixBbFlopV1(
       ..._w4BtnBbSixBbFlopTrailV1,
       if (btnCheckedBehind) Act0ActionTrailItemV1(label: 'BTN checks'),
     ],
-    activeSeatId: 'btn',
+    activeSeatId: btnCheckedBehind ? '' : 'btn',
     seats: seats,
     highlightedSeatIds: const <String>['btn', 'bb'],
   );
@@ -19091,7 +19102,7 @@ final _w6BoardPairStrengthCompareRunner = _world6RangeCheckpointRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Tempting read.',
       feedbackReason:
-          'A-J makes two pair, jacks and eights, but K-8 uses the paired board to make trips. Trips beat two pair.',
+          'A-J makes two pair, jacks and eights, but K-8 makes a full house, eights full of twos. A full house beats two pair.',
     ),
     Act0RunnerOptionV1(
       id: 'villain_k8',
@@ -19101,7 +19112,7 @@ final _w6BoardPairStrengthCompareRunner = _world6RangeCheckpointRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean compare.',
       feedbackReason:
-          'Do not stop at top pair. The extra 8 turns Villain into trips, and trips outrank Hero two pair.',
+          'K-8 makes 8-8-8-2-2, a full house, eights full of twos. That outranks Hero two pair.',
     ),
     Act0RunnerOptionV1(
       id: 'tie',
@@ -19119,8 +19130,13 @@ final _w6BoardPairStrengthCompareRunner = _world6RangeCheckpointRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Board can help both players.',
       body:
-          'Do not stop at pair. Compare the full five-card hand after the board pairs, because one player may jump to trips while the other stays on two pair.',
-      focusLabels: <String>['Paired board', 'Trips', 'Two pair', 'Best five'],
+          'Compare all five cards: Hero has jacks and eights with an ace kicker. Villain has three eights and two twos for a full house.',
+      focusLabels: <String>[
+        'Paired board',
+        'Full house',
+        'Two pair',
+        'Best five',
+      ],
     ),
   ],
 );

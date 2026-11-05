@@ -3884,12 +3884,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _resolvedMistakeTaskIds.clear();
     for (final intent in _openRepairIntentBySourceTaskId.values) {
       final retention = _retentionMemoryByTaskId[intent.sourceTaskId];
-      if (retention == null) {
-        continue;
-      }
       // A source repaired by a correct retry stays resolved, but its different
       // mapped same-signal repair is still owed and must remain actionable.
       final sourceRepairedButMappedOwed =
+          retention != null &&
           retention.status != _Act0RetentionMemoryStatusV1.openRepair;
       if (sourceRepairedButMappedOwed &&
           (act0IsExactRepairMappingTypeV1(intent.mappingType) ||
@@ -3918,13 +3916,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       if (task == null) {
         continue;
       }
-      final selectedOption = task.runner.options
+      // Placement owns genuine repair debt without retention. Restore its
+      // diagnostic answer context only from the exact persisted occurrence;
+      // the ordinary task can have different option IDs and answer meanings.
+      final runner = retention == null
+          ? _placementRepairRunnerForRestoreV1(intent, task)
+          : task.runner;
+      if (runner == null) {
+        continue;
+      }
+      final selectedOption = runner.options
           .cast<Act0RunnerOptionV1?>()
           .firstWhere(
             (candidate) => candidate?.id == intent.choiceId,
             orElse: () => null,
           );
-      final correctOption = task.runner.options
+      final correctOption = runner.options
           .cast<Act0RunnerOptionV1?>()
           .firstWhere(
             (candidate) => candidate?.isCorrect == true,
@@ -3933,7 +3940,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       if (selectedOption == null || correctOption == null) {
         continue;
       }
-      final contextLabels = _repairContextLabels(task.runner, selectedOption);
+      final contextLabels = _repairContextLabels(runner, selectedOption);
       _mistakeRecords[intent.sourceTaskId] = _Act0MistakeRecordV1(
         taskId: intent.sourceTaskId,
         lessonId: lesson.lessonId,
@@ -3954,12 +3961,101 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ),
         contextLabels: contextLabels,
         repairActionLabel: _repairActionLabel(task),
-        attempts: retention.attempts.clamp(1, 99),
+        // The live Placement projection also starts this one occurrence at 1.
+        attempts: retention?.attempts.clamp(1, 99) ?? 1,
       );
       if (sourceRepairedButMappedOwed) {
         _resolvedMistakeTaskIds.add(intent.sourceTaskId);
       }
     }
+  }
+
+  Act0RunnerStateV1? _placementRepairRunnerForRestoreV1(
+    Act0RepairIntentV1 intent,
+    Act0LessonTaskV1 task,
+  ) {
+    final occurrenceId = intent.repairOccurrenceId;
+    if (occurrenceId.isEmpty) {
+      return null;
+    }
+    final history = _reviewMistakeHistoryV1.records
+        .where(
+          (record) =>
+              record.sourceDecisionId == occurrenceId &&
+              record.worldId == intent.sourceWorldId &&
+              record.lessonId == intent.sourceLessonId &&
+              record.decisionTaskId == intent.sourceTaskId &&
+              record.sourceTaskId == intent.sourceTaskId &&
+              record.selectedId == intent.choiceId &&
+              record.runKind == act0PlacementAssessmentRunKindV1 &&
+              record.attemptRecordIds.contains(occurrenceId),
+        )
+        .toList(growable: false);
+    final evidence = _learningEvidenceHistoryV1.records
+        .where(
+          (record) =>
+              record.recordId == occurrenceId &&
+              record.worldId == intent.sourceWorldId &&
+              record.lessonId == intent.sourceLessonId &&
+              record.taskId == intent.sourceTaskId &&
+              record.sourceTaskId == intent.sourceTaskId &&
+              record.choiceId == intent.choiceId &&
+              record.isPlacementAssessment &&
+              !record.isCorrect,
+        )
+        .toList(growable: false);
+    if (history.length != 1 || evidence.length != 1) {
+      return null;
+    }
+    final miss = history.single;
+    final decision = evidence.single;
+    if (decision.runId.isEmpty ||
+        (decision.runOrdinal ?? 0) <= 0 ||
+        decision.sessionId.isEmpty ||
+        miss.runId != decision.runId ||
+        miss.runOrdinal != decision.runOrdinal ||
+        miss.expectedId != decision.expectedChoiceId ||
+        miss.resultKind != decision.resultKind ||
+        decision.authoredSourceFingerprint.isEmpty ||
+        decision.authoredSourceFingerprint !=
+            act0CurrentAuthoredSourceFingerprintForIdentityV1(
+              worldId: intent.sourceWorldId,
+              lessonId: intent.sourceLessonId,
+              taskId: intent.sourceTaskId,
+            )) {
+      return null;
+    }
+    Act0RunnerStateV1? matched;
+    for (var index = 0; index < _placementDiagnosticSpotsV1.length; index++) {
+      final spot = _placementDiagnosticSpotsV1[index];
+      if (spot.worldId != intent.sourceWorldId ||
+          spot.lessonId != intent.sourceLessonId ||
+          spot.taskId != intent.sourceTaskId) {
+        continue;
+      }
+      final candidate = placementQuickCheckRunnerV1(
+        task.runner,
+        signalId: spot.signalId,
+        checkIndex: index + 1,
+        checkCount: _placementDiagnosticSpotsV1.length,
+        isRu: _isRuLocaleV1,
+      );
+      final selected = candidate.options.where(
+        (option) => option.id == decision.choiceId && !option.isCorrect,
+      );
+      final expected = candidate.options.where((option) => option.isCorrect);
+      if (selected.length == 1 &&
+          expected.length == 1 &&
+          expected.single.id == decision.expectedChoiceId) {
+        // Shared choices such as not_sure_yet cannot identify a diagnostic.
+        // Both source-owned choice and expected answer must match uniquely.
+        if (matched != null) {
+          return null;
+        }
+        matched = candidate;
+      }
+    }
+    return matched;
   }
 
   List<Act0RepairIntentV1> _activeRepairIntentsV1() {
