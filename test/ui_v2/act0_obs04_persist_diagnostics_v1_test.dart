@@ -157,6 +157,15 @@ class _Capture {
       _add({'kind': 'write_result', 'attempt_seq': attempt, 'returned': value});
   }
 
+  // Unexpected removals/clear must be visible and fail the bounded verifier,
+  // rather than silently looking like a complete setValue-only window.
+  void removal(String key) => _add({
+    'kind': 'backend_remove',
+    'key': key == 'flutter.${_store.headKey}' ? 'head' : 'other',
+  });
+
+  void clearing() => _add({'kind': 'backend_clear'});
+
   void coalescing(int previousGeneration) => _add({
     'kind': 'coalescing_control',
     'scheduled_requests': 2,
@@ -223,12 +232,14 @@ class _Disk extends SharedPreferencesStorePlatform {
 
   @override
   Future<bool> remove(String key) async {
+    capture.removal(key);
     values.remove(key);
     return true;
   }
 
   @override
   Future<bool> clear() async {
+    capture.clearing();
     values.clear();
     return true;
   }
@@ -336,6 +347,41 @@ Future<_Disk> _mount(WidgetTester tester, _Sink sink) async {
     await tester.pumpAndSettle();
     await _store.flush();
   });
+  await _advanceToCheck(tester);
+  // A legacy direct-play restore has no learning run. Launch the same task
+  // through the actual Learn CTA, which owns run/session creation.
+  await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+  await tester.pumpAndSettle();
+  final learn = find.descendant(
+    of: find.byKey(const Key('act0_shell_bottom_nav')),
+    matching: find.text('Learn'),
+  );
+  await tester.tap(learn);
+  await tester.pumpAndSettle();
+  final start = find.byKey(const Key('act0_shell_current_mission_cta'));
+  expect(start, findsOneWidget);
+  await tester.ensureVisible(start);
+  await tester.pumpAndSettle();
+  await tester.tap(start);
+  await tester.pumpAndSettle();
+  await _advanceToCheck(tester);
+  final runner = tester.widget<Act0LessonRunnerShellV1>(
+    find.byType(Act0LessonRunnerShellV1),
+  );
+  expect(runner.evidenceRunId, isNotEmpty);
+  final dynamic state = tester.state(find.byType(Act0ShellPreviewScreenV1));
+  expect(state.debugSelectedTaskIdV1(), _task);
+  // Establish a real protected checkpoint before the fault window. This calls
+  // the existing writer; it does not supply run IDs, records or save outcomes.
+  state.debugPersistProgressV1();
+  await tester.pumpAndSettle();
+  await _store.flush();
+  sink.events.clear();
+  sink.capture.begin('diagnostic', (await _store.load())!);
+  return disk;
+}
+
+Future<void> _advanceToCheck(WidgetTester tester) async {
   for (
     var i = 0;
     i < 12 &&
@@ -352,10 +398,6 @@ Future<_Disk> _mount(WidgetTester tester, _Sink sink) async {
     await tester.pumpAndSettle();
   }
   expect(find.byKey(const Key('act0_shell_option_check')), findsOneWidget);
-  await _store.flush();
-  sink.events.clear();
-  sink.capture.begin('diagnostic', (await _store.load())!);
-  return disk;
 }
 
 Future<void> _answer(WidgetTester tester, bool correct) async {

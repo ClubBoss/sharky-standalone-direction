@@ -45,7 +45,11 @@ jobs:
       - name: Prepare OBS04 execution manifest
         env:
           OBS04_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: python3 tools/test_authority/obs04_receipt_verify.py prepare --packet "$OBS04_RECEIPT_DIR" --source-root .
+        run: |
+          git rev-parse HEAD HEAD^{tree}
+          flutter --version --machine
+          sha256sum pubspec.lock
+          python3 tools/test_authority/obs04_receipt_verify.py prepare --packet "$OBS04_RECEIPT_DIR" --source-root .
       - run: ./tools/test_authority_canonical_lane_v1.sh
       - name: Seal OBS04 actual captures
         if: always()

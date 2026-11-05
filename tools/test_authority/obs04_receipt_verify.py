@@ -113,7 +113,9 @@ def prepare(root, packet):
                 "sources": physical_sources(root), "receipts": {}}
     write_json(packet / "manifest.json", manifest)
     # CI-local expected identity is a runtime cross-check, not independent QA.
-    write_json(packet / "ci_expected_execution.json", {**identity, "sources": manifest["sources"]})
+    write_json(packet / "ci_expected_execution.json", {
+        **identity, "sources": manifest["sources"], "sdk": manifest["sdk"], "command": COMMAND,
+    })
 
 
 def seal(root, packet):
@@ -141,11 +143,14 @@ def validate_manifest(manifest, expected):
     for key in ("checkout_sha", "source_tree", "event_sha", "head_sha", "workflow_sha"):
         require(sha(identity[key], 40), "invalid source identity: " + key)
     require(identity["checkout_sha"] == identity["event_sha"], "unexpected checkout")
-    require(manifest.get("command") == COMMAND, "wrong executed command")
+    require(expected.get("command") == manifest.get("command") == COMMAND,
+            "missing or wrong expected executed command")
     sdk = manifest.get("sdk", {})
     require(sdk.get("frameworkVersion") == "3.35.0" and
             nonempty(sdk.get("dartSdkVersion")) and sha(sdk.get("frameworkRevision"), 40),
             "missing or wrong SDK receipt")
+    require(set(sdk) == {"frameworkVersion", "frameworkRevision", "dartSdkVersion"} and
+            sdk == expected.get("sdk"), "independent SDK mismatch or missing expected SDK")
     sources = manifest.get("sources", {})
     require(set(sources) == set(SOURCE_PATHS), "partial physical source manifest")
     require(all(sha(item.get("sha256")) for item in sources.values()), "invalid source hash")
@@ -243,6 +248,41 @@ def validate_window(window, case_id):
     require(heads and len(heads) == len(results) and
             all(returned[entry["seq"]]["returned"] for entry in heads),
             "ambiguous invoked-save to result cardinality")
+    # The controlled backend has no head failures. Verify the complete actual
+    # _commit protocol, not just a head plus a self-reported final payload hash.
+    ordered = list(starts.values())
+    require(all(returned[left["seq"]]["seq"] < right["seq"]
+                for left, right in zip(ordered, ordered[1:])),
+            "overlapping or reordered backend operations")
+    groups = []
+    for entry in ordered:
+        if entry in heads:
+            groups.append([])
+        require(groups, "backend operation has no invoked head")
+        groups[-1].append(entry)
+    indeterminate = case_id == "correct_indeterminate" and window["name"] == "diagnostic"
+    for group in groups:
+        keys = [entry["key"] for entry in group]
+        require(keys == (["head", "recovery", "recovery", "head"] if indeterminate
+                         else ["head", "recovery", "backup", "mirror"]),
+                "partial backend commit/retry/rollback protocol")
+        require([returned[entry["seq"]]["returned"] for entry in group] ==
+                ([True, False, False, True] if indeterminate else [True] * 4),
+                "backend return protocol does not match controlled case")
+        head = group[0]
+        for checkpoint in group[1:3]:
+            require(all(checkpoint.get(field) == head.get(field) for field in
+                        ("revision", "digest", "value_sha256", "payload_sha256", "records",
+                         "new_record_ids")), "checkpoint retry/body mismatch")
+        last = group[-1]
+        if indeterminate:
+            require(last["payload_sha256"] == baseline_hash and
+                    last["revision"] == head["revision"] - 1 and
+                    last["new_record_ids"] == [], "missing actual previous-head rollback")
+        else:
+            require(last["payload_sha256"] == head["payload_sha256"] and
+                    last["value_sha256"] == head["payload_sha256"] and
+                    last["records"] == head["records"], "compatibility mirror mismatch")
     if window["name"] == "coalescing":
         controls = [entry for entry in entries if entry["kind"] == "coalescing_control"]
         require(not decisions and not records and len(results) == 1 and len(controls) == 1,
@@ -345,6 +385,12 @@ def negative_controls(manifest, expected, cases):
     wrong_source = copy.deepcopy(manifest)
     wrong_source["sources"][TEST]["sha256"] = "0" * 64
     rejected("wrong_physical_source", lambda: validate_manifest(wrong_source, expected))
+    wrong_sdk = copy.deepcopy(manifest)
+    wrong_sdk["sdk"]["frameworkRevision"] = "0" * 40
+    rejected("wrong_sdk_revision", lambda: validate_manifest(wrong_sdk, expected))
+    wrong_command = copy.deepcopy(manifest)
+    wrong_command["command"] = "echo success"
+    rejected("wrong_command", lambda: validate_manifest(wrong_command, expected))
     for field in ("runId", "recordId", "sessionId", "authoredSourceFingerprint"):
         altered = copy.deepcopy(cases["correct_indeterminate"])
         for entry in altered["windows"][0]["entries"]:
@@ -354,6 +400,27 @@ def negative_controls(manifest, expected, cases):
     partial = copy.deepcopy(cases["correct_indeterminate"])
     partial["windows"][0]["entries"].pop(-1)
     rejected("partial_window", lambda: validate_case(partial, "correct_indeterminate"))
+    def remove_pair(case, predicate):
+        entries = case["windows"][0]["entries"]
+        attempt = next(entry["seq"] for entry in entries if predicate(entry))
+        entries[:] = [entry for entry in entries if entry["seq"] != attempt and
+                      not (entry["kind"] == "write_result" and entry["attempt_seq"] == attempt)]
+        renumber = {entry["seq"]: index + 1 for index, entry in enumerate(entries)}
+        for entry in entries:
+            entry["seq"] = renumber[entry["seq"]]
+            if entry["kind"] == "write_result":
+                entry["attempt_seq"] = renumber[entry["attempt_seq"]]
+        return case
+    partial_ack = remove_pair(copy.deepcopy(cases["wrong_acknowledged"]),
+                              lambda entry: entry["kind"] == "write_start" and
+                              entry["key"] == "recovery")
+    rejected("middle_partial_ack_commit", lambda: validate_case(partial_ack, "wrong_acknowledged"))
+    partial_rollback = copy.deepcopy(cases["correct_indeterminate"])
+    baseline = partial_rollback["windows"][0]["baseline_payload_sha256"]
+    remove_pair(partial_rollback, lambda entry: entry["kind"] == "write_start" and
+                entry["key"] == "head" and entry["payload_sha256"] == baseline)
+    rejected("middle_partial_old_head_rollback",
+             lambda: validate_case(partial_rollback, "correct_indeterminate"))
     mixed = copy.deepcopy(cases["correct_indeterminate"])
     for entry in mixed["windows"][0]["entries"]:
         if entry.get("name") == "decision_made":
