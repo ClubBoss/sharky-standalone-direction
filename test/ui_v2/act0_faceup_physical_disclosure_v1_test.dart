@@ -1,4 +1,3 @@
-// Evidence-only proposed falsifier. Not installed into the repository.
 // Baseline source: 7babeea17626b2103b9da3b2ea4dfd3bffd20a73.
 // The 198fefc executed runtime snapshot is byte-identical for this corpus.
 // Authored corpus invariant, not a synthetic poker hand or native proof.
