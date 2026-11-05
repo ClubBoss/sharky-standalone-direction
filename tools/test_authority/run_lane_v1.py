@@ -154,6 +154,24 @@ TIER_A_COMMANDS = [
         "cmd": ["flutter", "test", "test/poker", "-r", "compact"],
     },
     {
+        "name": "Academy Review adapter default OFF",
+        "cmd": [
+            "flutter", "test",
+            "test/ui_v2/act0_academy_review_runtime_adapter_v1_test.dart",
+            "-r", "expanded",
+        ],
+    },
+    {
+        "name": "Academy Review adapter ON",
+        "cmd": [
+            "flutter", "test",
+            "--dart-define=SHARKY_ACADEMY_REVIEW_PREVIEW=true",
+            "test/ui_v2/act0_academy_review_runtime_adapter_v1_test.dart",
+            "test/ui_v2/academy_leaves/act0_academy_review_resume_focus_v1_test.dart",
+            "-r", "expanded",
+        ],
+    },
+    {
         "name": "fast loop",
         "cmd": ["./tools/fast_loop_world1_v1.sh", "--force-tests", "--all-selected-guards"],
     },
