@@ -931,6 +931,7 @@ String? _act0TrailActor(String stripped) {
 /// Algorithm (per street):
 ///   \u2013 Each player's contribution is the **maximum** amount they put in
 ///     during that street (raise or call to X BB).
+///   \u2013 An explicit "calls X BB more" adds X to the prior street commitment.
 ///   \u2013 On street transition the per-street map is flushed into [runningPot].
 ({double potBb, String street}) act0CalcTrailPotV1(
   List<String> labels,
@@ -989,7 +990,12 @@ String? _act0TrailActor(String stripped) {
     final amount = act0ParseBbAmountV1(stripped);
     if (amount <= 0) continue;
     final existing = streetContribs[actor] ?? 0.0;
-    if (amount > existing) streetContribs[actor] = amount;
+    final isAdditionalCall = RegExp(
+      r'^\w+\s+(?:calls?|called)\s+\d+(?:\.\d+)?\s*BB\s+more$',
+      caseSensitive: false,
+    ).hasMatch(stripped.trim());
+    final contribution = isAdditionalCall ? existing + amount : amount;
+    if (contribution > existing) streetContribs[actor] = contribution;
   }
 
   final totalPot =
