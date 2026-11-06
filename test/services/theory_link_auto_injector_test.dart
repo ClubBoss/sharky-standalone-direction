@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
@@ -16,6 +19,45 @@ import 'package:poker_analyzer/services/autogen_status_dashboard_service.dart';
 import 'package:poker_analyzer/core/training/library/training_pack_library_v2.dart';
 import 'package:poker_analyzer/services/theory_link_policy_engine.dart';
 import 'package:poker_analyzer/services/theory_link_config_service.dart';
+
+/// Controlled theory catalog for this unit test.
+///
+/// The shipped `assets/theory_index.json` has no `tags` on any of its 95
+/// entries, so [TheoryLibraryIndex] yields zero usable resources from it and
+/// none of the IDs below exist there. That reader/catalog mismatch is a
+/// separate product finding; this test exercises injector selection and
+/// novelty against an explicit catalog instead of depending on it.
+const _catalog = [
+  {
+    'id': 'th_bb_def',
+    'title': 'BB defense',
+    'uri': 'u/bb',
+    'tags': ['bb'],
+  },
+  {
+    'id': 'th_push',
+    'title': 'Push basics',
+    'uri': 'u/push',
+    'tags': ['push'],
+  },
+  {
+    'id': 'th_push_alt',
+    'title': 'Push alternative',
+    'uri': 'u/push_alt',
+    'tags': ['push'],
+  },
+];
+
+class _CatalogBundle extends CachingAssetBundle {
+  final String data;
+  _CatalogBundle(this.data);
+  @override
+  Future<ByteData> load(String key) async =>
+      ByteData.sublistView(Uint8List.fromList(utf8.encode(data)));
+
+  @override
+  Future<String> loadString(String key, {bool cache = true}) async => data;
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -68,9 +110,15 @@ void main() {
     );
     await registry.record('u1', ['push', 'bb'], ['th_bb_def', 'th_push']);
 
+    final libraryIndex = TheoryLibraryIndex(
+      assetPath: 'controlled_catalog',
+      bundle: _CatalogBundle(jsonEncode(_catalog)),
+    );
+    await libraryIndex.reload();
+
     final injector = TheoryLinkAutoInjector(
       store: store,
-      libraryIndex: TheoryLibraryIndex(),
+      libraryIndex: libraryIndex,
       telemetry: MistakeTelemetryStore(),
       noveltyRegistry: registry,
       dashboard: AutogenStatusDashboardService(),
