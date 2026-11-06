@@ -4970,7 +4970,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         title: const Text('Recovery options'),
         content: Text(
           _progressLoadFailed
-              ? 'Preserve a separate local copy, then start new learning progress. Current learning progress will be replaced. The copy may not be restorable. Settings and intro choices stay.'
+              ? proposal == null
+                    ? 'Replacement is unavailable because saved progress may be readable again or could not be safely verified. Cancel and choose Try again to load current progress.'
+                    : 'Preserve a separate local copy, then start new learning progress. Current learning progress will be replaced. The copy may not be restorable. Settings and intro choices stay.'
               : 'Recovery copies stay on this device and may not be restorable. Deleting a copy does not reset current learning progress.',
         ),
         actions: [

@@ -168,8 +168,11 @@ class Act0ProgressStoreV1 {
   Future<Act0RecoveryProposalV1> inspectRecovery() => _serial(() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.reload();
-    if (prefs.containsKey(recoveryIntentKey)) throw const Act0RecoveryHoldV1();
+    if (!isWriteLeaseCurrent || prefs.containsKey(recoveryIntentKey))
+      throw const Act0RecoveryHoldV1();
     final snapshot = _snapshot(prefs);
+    if (!await _recoveryEligible(prefs, snapshot))
+      throw const Act0RecoveryHoldV1();
     _targetTombstone(snapshot); // Reject revision overflow before consent.
     return Act0RecoveryProposalV1._(snapshot);
   });
@@ -182,8 +185,10 @@ class Act0ProgressStoreV1 {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.reload();
-      if (prefs.containsKey(recoveryIntentKey) ||
-          _snapshot(prefs) != proposal._snapshot)
+      if (!isWriteLeaseCurrent ||
+          prefs.containsKey(recoveryIntentKey) ||
+          _snapshot(prefs) != proposal._snapshot ||
+          !await _recoveryEligible(prefs, proposal._snapshot))
         return false;
       final target = _targetTombstone(proposal._snapshot);
       final archive = jsonEncode({
@@ -207,8 +212,11 @@ class Act0ProgressStoreV1 {
         return false;
       await _boundary('archive_verified');
       await prefs.reload();
-      if (_snapshot(prefs) != proposal._snapshot ||
-          prefs.get(damagedCopyKey) != verifiedArchive)
+      if (!isWriteLeaseCurrent ||
+          prefs.containsKey(recoveryIntentKey) ||
+          _snapshot(prefs) != proposal._snapshot ||
+          prefs.get(damagedCopyKey) != verifiedArchive ||
+          !await _recoveryEligible(prefs, proposal._snapshot))
         return false;
       final intentFields = [
         1,
@@ -235,6 +243,22 @@ class Act0ProgressStoreV1 {
       return false;
     }
   });
+
+  // A failed I/O operation is not evidence of damaged progress. Only the
+  // canonical resolver's format verdict on the exact snapshot permits reset.
+  // Recheck the original even after a partial tombstone so our own writes do
+  // not masquerade as newly readable progress on restart.
+  Future<bool> _recoveryEligible(
+    SharedPreferences prefs,
+    String snapshot,
+  ) async {
+    try {
+      await _resolve(prefs, inspection: _snapshotValues(snapshot));
+      return false;
+    } on FormatException {
+      return true;
+    }
+  }
 
   Future<Act0RecoveryCopyV1> inspectRecoveryCopy() => _serial(() async {
     final prefs = await SharedPreferences.getInstance();
@@ -291,7 +315,8 @@ class Act0ProgressStoreV1 {
       if (intent['archiveDigest'] != fields[2] ||
           intent['snapshotDigest'] != fields[3] ||
           intent['target'] != target ||
-          intent['digest'] != _hash(jsonEncode(fields)))
+          intent['digest'] != _hash(jsonEncode(fields)) ||
+          !await _recoveryEligible(prefs, snapshot))
         return false;
       _epochs[key] = (_epochs[key] ?? 0) + 1;
       // Never take _commit's corrupt-head rollback path during recovery.
@@ -303,7 +328,8 @@ class Act0ProgressStoreV1 {
         await prefs.reload();
         if (prefs.get(damagedCopyKey) != archive ||
             prefs.get(recoveryIntentKey) != rawIntent ||
-            !_validRecoveryPrefix(prefs, snapshot, target))
+            !_validRecoveryPrefix(prefs, snapshot, target) ||
+            !await _recoveryEligible(prefs, snapshot))
           return false;
         if (prefs.get(entry.$1) != target &&
             !await _write(prefs, entry.$1, target))
@@ -314,6 +340,7 @@ class Act0ProgressStoreV1 {
       if (prefs.get(damagedCopyKey) != archive ||
           prefs.get(recoveryIntentKey) != rawIntent ||
           !_validRecoveryPrefix(prefs, snapshot, target) ||
+          !await _recoveryEligible(prefs, snapshot) ||
           ![
             headKey,
             recoveryKey,
@@ -583,9 +610,12 @@ class Act0ProgressStoreV1 {
     SharedPreferences prefs,
     String target,
   ) {
+    return _parseValue(prefs.get(target));
+  }
+
+  ({int revision, String? payload, String raw})? _parseValue(Object? raw) {
     try {
-      final raw = prefs.getString(target);
-      if (raw == null) return null;
+      if (raw is! String) return null;
       final map = jsonDecode(raw);
       if (map is! Map || map['format'] != 1) return null;
       final revision = map['revision'];
@@ -619,13 +649,22 @@ class Act0ProgressStoreV1 {
   }
 
   /// Arbitrates the two copies and returns the state only once it is safe.
+  /// An immutable [inspection] uses the same selection rules without healing.
+  /// Readable survivors are protected even when a later retry needs to heal.
   Future<({int revision, String? payload})> _resolve(
-    SharedPreferences prefs,
-  ) async {
-    final head = _parse(prefs, headKey);
-    final rec = _parse(prefs, recoveryKey);
-    final bak = _parse(prefs, backupKey);
-    if (prefs.containsKey(headKey) && head == null) {
+    SharedPreferences prefs, {
+    Map<String, Object?>? inspection,
+  }) async {
+    final values =
+        inspection ??
+        {
+          for (final k in _protectedKeys)
+            k: prefs.containsKey(k) ? prefs.get(k) : _absent,
+        };
+    final head = _parseValue(values[headKey]);
+    final rec = _parseValue(values[recoveryKey]);
+    final bak = _parseValue(values[backupKey]);
+    if (!identical(values[headKey], _absent) && head == null) {
       throw const FormatException('Invalid progress checkpoint head');
     }
     if (head != null) {
@@ -639,6 +678,8 @@ class Act0ProgressStoreV1 {
       if (matching.isEmpty) {
         throw const FormatException('No checkpoint matches progress head');
       }
+      if (inspection != null)
+        return (revision: head.revision, payload: head.payload);
       for (final target in [recoveryKey, backupKey]) {
         if (_parse(prefs, target)?.raw != head.raw &&
             !await _write(prefs, target, head.raw)) {
@@ -662,6 +703,8 @@ class Act0ProgressStoreV1 {
       // Mandatory heal: the lower copy must never be exposed or survive.
       final high = rec.revision > bak.revision ? rec : bak;
       final lowKey = identical(high, rec) ? backupKey : recoveryKey;
+      if (inspection != null)
+        return (revision: high.revision, payload: high.payload);
       if (!await _write(prefs, lowKey, high.raw) ||
           _parse(prefs, recoveryKey)?.raw != high.raw ||
           _parse(prefs, backupKey)?.raw != high.raw) {
@@ -673,15 +716,17 @@ class Act0ProgressStoreV1 {
     if (only != null) {
       // Single valid copy: nothing older can resurrect. Heal the twin if we can.
       final twin = identical(only, rec) ? backupKey : recoveryKey;
-      await _write(prefs, twin, only.raw);
+      if (inspection == null) await _write(prefs, twin, only.raw);
       return (revision: only.revision, payload: only.payload);
     }
-    if (prefs.containsKey(recoveryKey) || prefs.containsKey(backupKey)) {
+    if (!identical(values[recoveryKey], _absent) ||
+        !identical(values[backupKey], _absent)) {
       throw const FormatException('No valid progress checkpoint');
     }
-    final legacy = prefs.getString(key);
-    if (legacy == null || legacy.isEmpty) return (revision: 0, payload: null);
-    if (!isValidPayload(legacy)) {
+    final legacy = values[key];
+    if (identical(legacy, _absent) || legacy == '')
+      return (revision: 0, payload: null);
+    if (legacy is! String || !isValidPayload(legacy)) {
       throw const FormatException('Invalid legacy progress');
     }
     return (revision: 0, payload: legacy);
