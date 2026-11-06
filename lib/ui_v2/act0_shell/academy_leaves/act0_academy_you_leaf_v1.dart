@@ -186,6 +186,16 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
               ),
             ),
           ),
+          if (!fresh && (subtitleParts.isNotEmpty || input.streakDays > 0))
+            const Padding(
+              padding: EdgeInsets.fromLTRB(4, 8, 4, 0),
+              child: Text(
+                'Level, XP and streaks track activity. Skill needs independent '
+                'checks across hands and time.',
+                key: Key('act0_academy_you_leaf_activity_boundary'),
+                style: TextStyle(color: _muted, fontSize: 12),
+              ),
+            ),
           if (input.onRecoveryOptions != null)
             TextButton.icon(
               key: const Key('act0_profile_recovery_options'),
