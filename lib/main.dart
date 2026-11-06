@@ -11,7 +11,10 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (const bool.fromEnvironment('SHARKY_ACADEMY_SETTINGS_PREVIEW')) {
+  if (const bool.fromEnvironment(
+    'SHARKY_ACADEMY_SETTINGS_PREVIEW',
+    defaultValue: true,
+  )) {
     try {
       await AppSettingsService.instance.load();
     } catch (error) {

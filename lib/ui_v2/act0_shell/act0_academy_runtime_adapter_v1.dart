@@ -14,22 +14,28 @@ import 'academy_leaves/act0_academy_review_leaf_v1.dart';
 import 'academy_leaves/act0_academy_settings_leaf_v1.dart';
 import 'academy_leaves/act0_academy_you_leaf_v1.dart';
 
-// Independent rollback switches. These adapt the current shell's resolved
+// Owner-restored green presentation; explicit false keeps independent rollback.
+// These adapt the current shell's resolved
 // inputs/callbacks, never the historical donor's runtime or persistence.
 const act0AcademyHomePreviewV1 = bool.fromEnvironment(
   'SHARKY_ACADEMY_HOME_PREVIEW',
+  defaultValue: true,
 );
 const act0AcademyPracticePreviewV1 = bool.fromEnvironment(
   'SHARKY_ACADEMY_PRACTICE_PREVIEW',
+  defaultValue: true,
 );
 const act0AcademyReviewPreviewV1 = bool.fromEnvironment(
   'SHARKY_ACADEMY_REVIEW_PREVIEW',
+  defaultValue: true,
 );
 const act0AcademyYouPreviewV1 = bool.fromEnvironment(
   'SHARKY_ACADEMY_YOU_PREVIEW',
+  defaultValue: true,
 );
 const act0AcademySettingsPreviewV1 = bool.fromEnvironment(
   'SHARKY_ACADEMY_SETTINGS_PREVIEW',
+  defaultValue: true,
 );
 
 bool act0AcademyRuntimeEnabledV1(BuildContext context, Act0ShellTabV1 tab) =>
