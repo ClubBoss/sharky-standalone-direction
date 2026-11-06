@@ -11703,7 +11703,7 @@ class _CompletionToastV1 extends StatelessWidget {
           ),
           SizedBox(height: onTableOverlay ? 2 : 3),
           Text(
-            summary.xpGain > 0 ? '+${summary.xpGain} XP' : 'No new XP',
+            'Keep practicing',
             key: const Key('act0_shell_completion_toast_total'),
             maxLines: 1,
             overflow: TextOverflow.fade,

@@ -102,8 +102,10 @@ void main() {
       );
       expect(find.textContaining('XP'), findsNothing);
       expect(find.textContaining('Level'), findsNothing);
-      expect(find.text('Read banked'), findsOneWidget);
-      expect(find.text('Table read improved'), findsOneWidget);
+      expect(find.text('Answer checked'), findsOneWidget);
+      expect(find.text('Keep practicing'), findsOneWidget);
+      expect(find.text('Read banked'), findsNothing);
+      expect(find.text('Table read improved'), findsNothing);
     },
   );
 
