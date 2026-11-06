@@ -19,7 +19,7 @@ void main() {
       '90',
       '--out',
       outDir,
-    ));
+    ]);
     expect(gen.exitCode, 0, reason: gen.stderr.toString());
 
     Future<Map<String, dynamic>> runPack(String out, [String? weights]) async {
@@ -36,7 +36,7 @@ void main() {
       }
       final res = await Process.run('dart', args);
       expect(res.exitCode, 0, reason: res.stderr.toString());
-      return json.decode[File(out].readAsStringSync()) as Map<String, dynamic>;
+      return json.decode[File(out).readAsStringSync()] as Map<String, dynamic>;
     }
 
     final defaultReport = await runPack(

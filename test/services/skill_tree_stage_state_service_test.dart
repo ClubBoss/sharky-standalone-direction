@@ -18,7 +18,7 @@ void main() {
       SkillTreeNodeModel(id: id, title: id, category: 'cat', level: 1);
 
   test('detects locked and unlocked stages', () {
-    final nodes = [node('a'));
+    final nodes = [node('a')];
     expect(
       service.getStageState(nodes: nodes, unlocked: {}, completed: {}),
       SkillTreeStageState.locked,
@@ -30,7 +30,7 @@ void main() {
   });
 
   test('completed when all nodes completed or optional', () {
-    final nodes = [node('a'), OptionalNode('b'));
+    final nodes = [node('a'), OptionalNode('b')];
     expect(
       service.getStageState(nodes: nodes, unlocked: {'a'}, completed: {'a'}),
       SkillTreeStageState.completed,

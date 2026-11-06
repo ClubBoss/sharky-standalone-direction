@@ -17,7 +17,7 @@ TrainingPackSpot spot(int bb) {
       heroIndex: 0,
       stacks: {'0': bb.toDouble()},
       actions: {
-        0: [ActionEntry(0, 0, 'push')),
+        0: [ActionEntry(0, 0, 'push')],
       },
     ),
     evalResult: EvaluationResult(
@@ -64,4 +64,3 @@ void main() {
     expect(res.keys, containsAll(['a', 'b']));
   });
 }
-

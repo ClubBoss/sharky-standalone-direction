@@ -76,72 +76,62 @@ void main() {
   }
 
   for (final size in [const Size(320, 760), const Size(375, 812)]) {
-    testWidgets(
-      'Learn uses the Academy light page/card tokens at '
-      '${size.width.toInt()}px',
-      (tester) async {
-        await pumpLearnV1(tester, size: size);
+    testWidgets('Learn uses the Academy light page/card tokens at '
+        '${size.width.toInt()}px', (tester) async {
+      await pumpLearnV1(tester, size: size);
 
-        final pageBackground = tester.widget<ColoredBox>(
-          find.byKey(const Key('act0_shell_learn_page_background')),
-        );
-        expect(pageBackground.color, Act0AcademyDesignTokensV1.pageSurface);
+      final pageBackground = tester.widget<ColoredBox>(
+        find.byKey(const Key('act0_shell_learn_page_background')),
+      );
+      expect(pageBackground.color, Act0AcademyDesignTokensV1.pageSurface);
 
-        final worldStrip = tester.widget<Ink>(
-          find.byKey(const Key('act0_shell_learn_v5_world_context')),
-        );
-        final worldStripDecoration = worldStrip.decoration as BoxDecoration;
-        expect(
-          worldStripDecoration.color,
-          Act0AcademyDesignTokensV1.cardSurface,
-        );
-        expect(worldStripDecoration.borderRadius, BorderRadius.circular(6));
+      final worldStrip = tester.widget<Ink>(
+        find.byKey(const Key('act0_shell_learn_v5_world_context')),
+      );
+      final worldStripDecoration = worldStrip.decoration as BoxDecoration;
+      expect(worldStripDecoration.color, Act0AcademyDesignTokensV1.cardSurface);
+      expect(worldStripDecoration.borderRadius, BorderRadius.circular(6));
 
-        final missionCard = tester.widget<Container>(
-          find.byKey(const Key('act0_shell_current_mission_card')),
-        );
-        final missionDecoration = missionCard.decoration as BoxDecoration;
-        expect(
-          missionDecoration.color,
-          Act0AcademyDesignTokensV1.cardSurface,
-        );
-        expect(missionDecoration.borderRadius, BorderRadius.circular(6));
+      final missionCard = tester.widget<Container>(
+        find.byKey(const Key('act0_shell_current_mission_card')),
+      );
+      final missionDecoration = missionCard.decoration as BoxDecoration;
+      expect(missionDecoration.color, Act0AcademyDesignTokensV1.cardSurface);
+      expect(missionDecoration.borderRadius, BorderRadius.circular(6));
 
-        expect(tester.takeException(), isNull);
-      },
-    );
+      expect(tester.takeException(), isNull);
+    });
   }
 
-  testWidgets(
-    'Learn keeps the current World, the dominant mission CTA and the '
-    'ordered Up next journey under RU locale and 1.4x text scale at 320px',
-    (tester) async {
-      await pumpLearnV1(
-        tester,
-        size: const Size(320, 760),
-        locale: const Locale('ru'),
-        textScale: 1.4,
-      );
+  testWidgets('Learn keeps the current World, the dominant mission CTA and the '
+      'ordered Up next journey under RU locale and 1.4x text scale at 320px', (
+    tester,
+  ) async {
+    await pumpLearnV1(
+      tester,
+      size: const Size(320, 760),
+      locale: const Locale('ru'),
+      textScale: 1.4,
+    );
 
-      // One clear dominant first-next action.
-      expect(
-        find.byKey(const Key('act0_shell_current_mission_cta')),
-        findsOneWidget,
-      );
+    // One clear dominant first-next action.
+    expect(
+      find.byKey(const Key('act0_shell_current_mission_cta')),
+      findsOneWidget,
+    );
 
-      // Truthful current World + ordered journey stay reachable.
-      expect(
-        find.byKey(const Key('act0_shell_learn_v5_world_context')),
-        findsOneWidget,
-      );
-      expect(
-        find.byKey(const Key('act0_shell_journey_path_header')),
-        findsOneWidget,
-      );
-      expect(find.text('Дальше'), findsWidgets);
+    // Truthful current World + ordered journey stay reachable.
+    expect(
+      find.byKey(const Key('act0_shell_learn_v5_world_context')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_journey_path_header')),
+      findsOneWidget,
+    );
+    expect(find.text('Дальше'), findsWidgets);
 
-      // No RenderFlex/overflow exception at compact width under RU + 1.4x.
-      expect(tester.takeException(), isNull);
-    },
-  );
+    // No RenderFlex/overflow exception at compact width under RU + 1.4x.
+    expect(tester.takeException(), isNull);
+  });
 }

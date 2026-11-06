@@ -1,4 +1,4 @@
- // fix: hide shim
+// fix: hide shim
 import 'package:test/test.dart';
 
 import 'package:poker_analyzer/models/training_pack_template_set.dart';

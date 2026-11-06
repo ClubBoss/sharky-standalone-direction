@@ -40,7 +40,7 @@ void main() {
   });
 
   test('returns decay booster reminder when queue not empty', () async {
-    await BoosterQueueService.instance.addSpots([TrainingPackSpot(id: 's1')));
+    await BoosterQueueService.instance.addSpots([TrainingPackSpot(id: 's1')]);
     final orch = DecayBoosterReminderOrchestrator(
       boosterEngine: _StubDecayEngine(false),
       streak: _FakeStreak([]),

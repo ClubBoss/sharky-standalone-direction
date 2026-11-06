@@ -19,7 +19,7 @@ class _DummyConverter implements ConverterPlugin {
   SavedHand? convertFrom(String externalData) => null;
 
   @override
-  String? validate[SavedHand hand] => null;
+  String? validate(SavedHand hand) => null;
 }
 
 void main() {
@@ -28,10 +28,10 @@ void main() {
       final registry = ServiceRegistry();
       final manager = PluginManager();
       manager.load(
-        ConverterDiscoveryPlugin(<ConverterPlugin>[_DummyConverter('a'))),
+        ConverterDiscoveryPlugin(<ConverterPlugin>[_DummyConverter('a')]),
       );
       manager.load(
-        ConverterDiscoveryPlugin(<ConverterPlugin>[_DummyConverter('b'))),
+        ConverterDiscoveryPlugin(<ConverterPlugin>[_DummyConverter('b')]),
       );
 
       manager.initializeAll(registry);

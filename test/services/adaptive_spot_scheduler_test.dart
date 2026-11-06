@@ -5,7 +5,7 @@ import 'package:poker_analyzer/services/user_error_rate_service.dart';
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
 import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models;
 
-TrainingPackSpot _spot[String id, String tag] =>
+TrainingPackSpot _spot(String id, String tag) =>
     TrainingPackSpot(id: id, tags: [tag], hand: v2models.HandData());
 
 void main() {
@@ -17,11 +17,11 @@ void main() {
   });
 
   test('deterministic with seed', () async {
-    final pool = [_spot['a', 'x'], _spot['b', 'y']];
+    final pool = [_spot('a', 'x'), _spot('b', 'y')];
     final s1 = AdaptiveSpotScheduler(seed: 42);
-    final p1 = await s1.next[packId: 'p', pool: pool, recentSpotIds: []];
+    final p1 = await s1.next(packId: 'p', pool: pool, recentSpotIds: []);
     final s2 = AdaptiveSpotScheduler(seed: 42);
-    final p2 = await s2.next[packId: 'p', pool: pool, recentSpotIds: []];
+    final p2 = await s2.next(packId: 'p', pool: pool, recentSpotIds: []);
     expect(p1.id, p2.id);
   });
 
@@ -42,19 +42,19 @@ void main() {
         ts: now,
       );
     }
-    final pool = [_spot['s1', 'hi'], _spot['s2', 'lo']];
+    final pool = [_spot('s1', 'hi'), _spot('s2', 'lo')];
     int hi = 0;
     const trials = 200;
     for (int i = 0; i < trials; i++) {
       final sched = AdaptiveSpotScheduler(seed: i);
-      final pick = await sched.next[packId: 'p', pool: pool, recentSpotIds: []];
+      final pick = await sched.next(packId: 'p', pool: pool, recentSpotIds: []);
       if (pick.id == 's1') hi++;
     }
     expect(hi, greaterThan(trials / 2));
   });
 
   test('respects no-repeat window', () async {
-    final pool = [_spot['a', 'x'], _spot['b', 'y'], _spot['c', 'z']];
+    final pool = [_spot('a', 'x'), _spot('b', 'y'), _spot('c', 'z')];
     final sched = AdaptiveSpotScheduler(seed: 1);
     final recent = <String>[];
     final first = await sched.next(
@@ -82,7 +82,7 @@ void main() {
         ts: now,
       );
     }
-    final pool = [_spot['a', 'x'], _spot['b', 'y']];
+    final pool = [_spot('a', 'x'), _spot('b', 'y')];
     int low = 0;
     const trials = 200;
     const eps = 0.5;

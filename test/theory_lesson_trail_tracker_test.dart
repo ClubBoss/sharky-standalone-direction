@@ -17,6 +17,6 @@ void main() {
     await tracker.recordVisit('l3');
 
     expect(tracker.getLastVisited(), 'l3');
-    expect(tracker.getTrail[limit: 3], ['l3', 'l2', 'l1']);
+    expect(tracker.getTrail(limit: 3), ['l3', 'l2', 'l1']);
   });
 }

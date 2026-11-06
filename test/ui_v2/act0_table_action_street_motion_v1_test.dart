@@ -15,11 +15,7 @@ void main() {
       final task = _task();
 
       await tester.pumpWidget(
-        _host(
-          task: task,
-          sink: sink,
-          onChoose: (_) => choices += 1,
-        ),
+        _host(task: task, sink: sink, onChoose: (_) => choices += 1),
       );
 
       expect(find.byKey(const Key('act0_shell_card_board_3')), findsNothing);
@@ -66,11 +62,7 @@ void main() {
     final task = _task();
 
     await tester.pumpWidget(
-      _host(
-        task: task,
-        disableAnimations: true,
-        onChoose: (_) => choices += 1,
-      ),
+      _host(task: task, disableAnimations: true, onChoose: (_) => choices += 1),
     );
 
     expect(find.byKey(const Key('act0_shell_card_board_3')), findsOneWidget);
@@ -90,10 +82,7 @@ void main() {
     final task = _task();
 
     await tester.pumpWidget(
-      _host(
-        task: task,
-        mode: Act0TableChoreographyModeV1.settled,
-      ),
+      _host(task: task, mode: Act0TableChoreographyModeV1.settled),
     );
 
     expect(find.byKey(const Key('act0_shell_card_board_0')), findsOneWidget);
@@ -137,10 +126,7 @@ void main() {
     await tester.pumpWidget(_host(task: source));
     await tester.pump(const Duration(milliseconds: 700));
     await tester.pumpWidget(
-      _host(
-        task: replacement,
-        onChoose: (_) => replacementChoices += 1,
-      ),
+      _host(task: replacement, onChoose: (_) => replacementChoices += 1),
     );
     await tester.pump(const Duration(seconds: 4));
 
@@ -159,9 +145,7 @@ Act0LessonTaskV1 _task() => Act0ShellStateV1.sample
     .lessons
     .firstWhere((lesson) => lesson.lessonId == 'range_pressure_lines')
     .taskList
-    .firstWhere(
-      (task) => task.taskId == 'w6_turn_pressure_shift_transfer',
-    );
+    .firstWhere((task) => task.taskId == 'w6_turn_pressure_shift_transfer');
 
 Widget _host({
   required Act0LessonTaskV1 task,

@@ -17,7 +17,7 @@ void main() {
     const builder = SkillTreeStageBlockBuilder();
     final widget = builder.build(
       level: 1,
-      nodes: [node('a')),
+      nodes: [node('a')],
       unlockedNodeIds: {},
       completedNodeIds: {},
       justUnlockedNodeIds: const {},
@@ -31,7 +31,7 @@ void main() {
     const builder = SkillTreeStageBlockBuilder();
     final widget = builder.build(
       level: 1,
-      nodes: [node('a')),
+      nodes: [node('a')],
       unlockedNodeIds: {'a'},
       completedNodeIds: {'a'},
       justUnlockedNodeIds: const {},

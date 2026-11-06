@@ -43,10 +43,10 @@ void main() {
   );
 
   test('mix mapping respects audience and format', () {
-    final m1 = AdaptiveTrainingPlanner.mixFor[2, 'novice', 'quick'];
+    final m1 = AdaptiveTrainingPlanner.mixFor(2, 'novice', 'quick');
     expect(m1['booster']! >= m1['assessment']!, true);
     expect(m1.values.reduce((a, b) => a + b), 2);
-    final m2 = AdaptiveTrainingPlanner.mixFor[3, 'advanced', 'deep'];
+    final m2 = AdaptiveTrainingPlanner.mixFor(3, 'advanced', 'deep');
     expect(m2['assessment']! >= m2['booster']!, true);
     expect(m2.values.reduce((a, b) => a + b), 3);
   });

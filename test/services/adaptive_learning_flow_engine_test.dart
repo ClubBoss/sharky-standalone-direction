@@ -29,7 +29,7 @@ TrainingPackSpot _spot(String id, String tag, double ev) {
     heroIndex: 0,
     playerCount: 2,
     actions: {
-      0: [ActionEntry(0, 0, 'push', ev: ev)),
+      0: [ActionEntry(0, 0, 'push', ev: ev)],
     },
   );
   return TrainingPackSpot(id: id, tags: [tag], hand: hand);
@@ -56,7 +56,7 @@ void main() {
     ];
     final mastery = {'cbet': 0.4};
     final packs = [
-      _pack('p', [_spot['s1', 'cbet', -0.5], _spot['s2', 'cbet', 0.2]]),
+      _pack('p', [_spot('s1', 'cbet', -0.5), _spot('s2', 'cbet', 0.2)]),
     ];
 
     final plan = engine.generate(

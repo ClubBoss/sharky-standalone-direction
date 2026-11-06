@@ -60,7 +60,7 @@ void main() {
   });
 
   testWidgets('does not repeat celebration', (tester) async {
-    final tree = builder.build([node('a']]).tree;
+    final tree = builder.build([node('a')]).tree;
     await tracker.markCompleted('a');
     SharedPreferences.setMockInitialValues({'celebration_done_PF': true});
     final overlay = _FakeOverlay();

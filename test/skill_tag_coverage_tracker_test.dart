@@ -48,7 +48,7 @@ void main() {
     final counts = tracker.computeTagCounts[packs];
     expect(counts['a'], 2);
     expect(counts['b'], 1);
-    final unused = tracker.findUnusedTags[packs, {'a', 'b', 'c'}];
+    final unused = tracker.findUnusedTags(packs, {'a', 'b', 'c'});
     expect(unused, ['c']);
   });
 }

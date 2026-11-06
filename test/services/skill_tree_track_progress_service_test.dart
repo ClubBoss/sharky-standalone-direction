@@ -49,8 +49,8 @@ void main() {
       node('b1', 'B'),
       node('b2', 'B', prereqs: ['b1']),
     ];
-    final treeA = builder.build(nodesA].tree;
-    final treeB = builder.build(nodesB].tree;
+    final treeA = builder.build(nodesA).tree;
+    final treeB = builder.build(nodesB).tree;
     final lib = _FakeLibraryService(
       {
         'A': SkillTreeBuildResult(tree: treeA),
@@ -81,9 +81,9 @@ void main() {
       node('a1', 'A'),
       node('a2', 'A', prereqs: ['a1']),
     ];
-    final nodesB = [node('b1', 'B'));
-    final treeA = builder.build(nodesA].tree;
-    final treeB = builder.build(nodesB].tree;
+    final nodesB = [node('b1', 'B')];
+    final treeA = builder.build(nodesA).tree;
+    final treeB = builder.build(nodesB).tree;
     final lib = _FakeLibraryService(
       {
         'A': SkillTreeBuildResult(tree: treeA),

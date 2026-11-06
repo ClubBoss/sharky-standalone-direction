@@ -7,7 +7,6 @@ import '../services/booster_thematic_descriptions.dart';
 import '../models/learning_path_template_v2.dart';
 import '../utils/responsive.dart';
 
-
 /// Visual map of thematic learning blocks.
 class PathMapScreen extends StatefulWidget {
   PathMapScreen({super.key});

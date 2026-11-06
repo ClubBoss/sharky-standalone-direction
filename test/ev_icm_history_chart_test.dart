@@ -41,9 +41,9 @@ void main() {
   testWidgets('chart shows 3 data series', (tester) async {
     SharedPreferences.setMockInitialValues({});
     final service = _FakeService(
-      [MapEntry(DateTime(2023, 1, 1), 1.0)),
-      [MapEntry(DateTime(2023, 1, 1), 2.0)),
-      [MapEntry(DateTime(2023, 1, 1), 0.5)),
+      [MapEntry(DateTime(2023, 1, 1), 1.0)],
+      [MapEntry(DateTime(2023, 1, 1), 2.0)],
+      [MapEntry(DateTime(2023, 1, 1), 0.5)],
     );
     await tester.pumpWidget(
       ChangeNotifierProvider<ProgressForecastService>.value(

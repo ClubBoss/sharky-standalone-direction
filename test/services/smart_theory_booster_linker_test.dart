@@ -36,11 +36,11 @@ void main() {
 
   test('linkForTags picks cluster with overlapping tags', () async {
     final c1 = TheoryLessonCluster(
-      lessons: [TheoryMiniLessonNode(id: 'l1', title: 'L1', content: '')),
+      lessons: [TheoryMiniLessonNode(id: 'l1', title: 'L1', content: '')],
       tags: {'push'},
     );
     final c2 = TheoryLessonCluster(
-      lessons: [TheoryMiniLessonNode(id: 'l2', title: 'L2', content: '')),
+      lessons: [TheoryMiniLessonNode(id: 'l2', title: 'L2', content: '')],
       tags: {'call'},
     );
 

@@ -33,7 +33,7 @@ void main() {
     ],
   );
 
-  Map<String, SessionLog> logs0[int c1, int m1, int c2, int m2] => {
+  Map<String, SessionLog> logs0(int c1, int m1, int c2, int m2) => {
     'pack1': SessionLog(
       tags: [],
       sessionId: 'l1',
@@ -56,21 +56,21 @@ void main() {
 
   test('isCompleted true when all stages meet requirements', () {
     final path = path0();
-    final logs = logs0[8, 2, 4, 1];
+    final logs = logs0(8, 2, 4, 1);
     final ok = engine.isCompleted(path, logs);
     expect(ok, isTrue);
   });
 
   test('isCompleted false when hands below requirement', () {
     final path = path0();
-    final logs = logs0[8, 2, 3, 1]; // second stage only 4 hands
+    final logs = logs0(8, 2, 3, 1); // second stage only 4 hands
     final ok = engine.isCompleted(path, logs);
     expect(ok, isFalse);
   });
 
   test('isCompleted false when accuracy below requirement', () {
     final path = path0();
-    final logs = logs0[5, 5, 4, 1]; // first stage accuracy 50%
+    final logs = logs0(5, 5, 4, 1); // first stage accuracy 50%
     final ok = engine.isCompleted(path, logs);
     expect(ok, isFalse);
   });

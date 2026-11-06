@@ -41,7 +41,7 @@ variations:
     final outPath = '${dir.path}/pack_library.g.dart';
 
     final generator = PackLibraryGeneratorService();
-    await generator.generate([fileA.path, fileB.path), outPath: outPath];
+    await generator.generate([fileA.path, fileB.path], outPath: outPath);
 
     final generated = await File(outPath).readAsString();
     expect(generated.contains('packLibrary'), isTrue);
@@ -61,7 +61,7 @@ void main() {
 }
 ''');
 
-    final result = await Process.run('dart', [entry.path)];
+    final result = await Process.run('dart', [entry.path]);
     expect(result.exitCode, 0);
     final lines = (result.stdout as String).trim().split('\n');
     expect(lines[0], '["a","b"]');

@@ -41,7 +41,7 @@ void main() {
       config: config,
       reader: TheoryYamlSafeReader(config: config),
     );
-    final report = await sweeper.run(dirs: [dir.path), dryRun: false];
+    final report = await sweeper.run(dirs: [dir.path], dryRun: false);
     final entry = report.entries.firstWhere((e) => e.file == file.path);
     expect(entry.action, 'upgraded');
     final firstLine = file.readAsLinesSync().first;
@@ -90,13 +90,13 @@ void main() {
       config: config,
       reader: TheoryYamlSafeReader(config: config),
     );
-    var report = await sweeper.run(dirs: [dir.path), dryRun: false];
+    var report = await sweeper.run(dirs: [dir.path], dryRun: false);
     final entry = report.entries.firstWhere((e) => e.file == file.path);
     expect(entry.action, 'healed');
     expect(file.readAsLinesSync()[1], 'name: good');
 
     // re-run should be no-op
-    report = await sweeper.run(dirs: [dir.path), dryRun: false];
+    report = await sweeper.run(dirs: [dir.path], dryRun: false);
     expect(report.entries.first.action, 'ok');
   });
 
@@ -117,7 +117,7 @@ void main() {
       config: config,
       reader: TheoryYamlSafeReader(config: config),
     );
-    final report = await sweeper.run(dirs: [dir.path), dryRun: true];
+    final report = await sweeper.run(dirs: [dir.path], dryRun: true);
     final entry = report.entries.firstWhere((e) => e.file == file.path);
     expect(entry.action, 'upgraded');
     final firstLine = file.readAsLinesSync().first;

@@ -22,7 +22,10 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('act0_shell_welcome_primary_cta')));
     await tester.pumpAndSettle();
-    expect(find.byKey(const Key('act0_shell_welcome_demo_spot')), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_welcome_demo_spot')),
+      findsOneWidget,
+    );
   }
 
   testWidgets(
@@ -31,17 +34,13 @@ void main() {
       await pumpWelcomeToDemoSpot(tester);
 
       final runner = tester
-          .widget<Act0LessonRunnerShellV1>(
-            find.byType(Act0LessonRunnerShellV1),
-          )
+          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
           .runner;
       final wrongOption = runner.options.firstWhere(
         (option) => !option.isCorrect,
       );
 
-      await tester.tap(
-        find.byKey(Key('act0_shell_option_${wrongOption.id}')),
-      );
+      await tester.tap(find.byKey(Key('act0_shell_option_${wrongOption.id}')));
       await tester.pumpAndSettle();
 
       // No fabricated graded feedback of any kind: no retry CTA promising a
@@ -70,9 +69,7 @@ void main() {
       await pumpWelcomeToDemoSpot(tester);
 
       final runner = tester
-          .widget<Act0LessonRunnerShellV1>(
-            find.byType(Act0LessonRunnerShellV1),
-          )
+          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
           .runner;
       final correctOption = runner.options.firstWhere(
         (option) => option.isCorrect,

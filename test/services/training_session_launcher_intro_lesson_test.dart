@@ -24,7 +24,7 @@ void main() {
       name: 'MVP',
       trainingType: TrainingType.pushFold,
       gameType: GameType.tournament,
-      spots: [TrainingPackSpot(id: 's1')),
+      spots: [TrainingPackSpot(id: 's1')],
       spotCount: 1,
     );
 

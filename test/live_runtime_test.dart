@@ -30,7 +30,7 @@ void main() {
       for (final id in ids) {
         expect(
           LiveRuntime.badgesForModule[id],
-          liveBadgesForModule[moduleId: id, mode: LiveRuntime.mode],
+          liveBadgesForModule(moduleId: id, mode: LiveRuntime.mode),
           reason: 'Mismatch for $id in online mode',
         );
       }
@@ -47,7 +47,7 @@ void main() {
       for (final id in ids) {
         expect(
           LiveRuntime.badgesForModule[id],
-          liveBadgesForModule[moduleId: id, mode: LiveRuntime.mode],
+          liveBadgesForModule(moduleId: id, mode: LiveRuntime.mode),
           reason: 'Mismatch for $id in live mode',
         );
       }

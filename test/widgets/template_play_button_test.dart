@@ -1,4 +1,4 @@
- // fix: hide shim
+// fix: hide shim
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -38,12 +38,12 @@ void main() {
       tags: const <String>[],
       positions: const <String>[],
       meta: const <String, Object?>{
-        'variants': [variant1.toJson(), variant2.toJson()),
+        'variants': [variant1.toJson(), variant2.toJson()],
       },
       created: DateTime.now(),
     ); // fix: v2 ctor/collections/types
     SharedPreferences.setMockInitialValues({
-      'training_pack_templates': jsonEncode([template.toJson())),
+      'training_pack_templates': jsonEncode([template.toJson()]),
     });
     await tester.pumpWidget(
       ChangeNotifierProvider(

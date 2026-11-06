@@ -41,9 +41,7 @@ class CardPickerWidget extends StatelessWidget {
           width: 36 * scale,
           height: 52 * scale,
           decoration: BoxDecoration(
-            color: Colors.grey[200]!.withValues(
-              alpha: card == null ? 0.3 : 1,
-            ),
+            color: Colors.grey[200]!.withValues(alpha: card == null ? 0.3 : 1),
             borderRadius: BorderRadius.circular(6),
             boxShadow: [
               BoxShadow(
@@ -58,9 +56,7 @@ class CardPickerWidget extends StatelessWidget {
               ? Text(
                   '${card.rank}${card.suit}',
                   style: TextStyle(
-                    color: isRed
-                        ? Colors.red
-                        : Colors.black,
+                    color: isRed ? Colors.red : Colors.black,
                     fontWeight: FontWeight.bold,
                     fontSize: 18 * scale,
                   ),

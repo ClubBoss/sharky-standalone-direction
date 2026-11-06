@@ -26,7 +26,7 @@ void main() {
     );
     const service = WeakTheoryZoneHighlighter();
 
-    final result = service.detectWeakTags[profile: profile, lessons: lessons];
+    final result = service.detectWeakTags(profile: profile, lessons: lessons);
 
     expect(result.first.tag, 'c');
     expect(result[1].tag, 'a');

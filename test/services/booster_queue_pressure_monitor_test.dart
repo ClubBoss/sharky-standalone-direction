@@ -11,7 +11,7 @@ class _FakeSkillGapEngine extends SmartSkillGapBoosterEngine {
   final int count;
   _FakeSkillGapEngine(this.count);
   @override
-  Future<List<TheoryMiniLessonNode>> recommend[{int max = 3}] async {
+  Future<List<TheoryMiniLessonNode>> recommend({int max = 3}) async {
     final c = count < max ? count : max;
     return [
       for (var i = 0; i < c; i++)

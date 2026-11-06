@@ -14,7 +14,9 @@ void main() {
       TrainingPackLibraryV2.instance.packs.first.id,
       TrainingPackLibraryV2.mvpPackId,
     );
-    final filtered = TrainingPackLibraryV2.instance.filterBy[tags: ['pushFold', 'btn', 'cash', 'beginner'],];
+    final filtered = TrainingPackLibraryV2.instance.filterBy(
+      tags: ['pushFold', 'btn', 'cash', 'beginner'],
+    );
     expect(filtered.map((p) => p.id), contains('push_fold_btn_cash'));
   });
 }

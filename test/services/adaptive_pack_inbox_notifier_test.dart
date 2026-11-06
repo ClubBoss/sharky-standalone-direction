@@ -50,7 +50,7 @@ void main() {
   );
 
   test('adds high score pack to inbox', () async {
-    final recs = [AdaptivePackRecommendation(pack: pack('p1'), score: 4.5));
+    final recs = [AdaptivePackRecommendation(pack: pack('p1'), score: 4.5)];
     final notifier = AdaptivePackInboxNotifier(
       recommender: _FakeRecommender(recs),
       orchestrator: _FakeOrchestrator([]),
@@ -63,7 +63,7 @@ void main() {
   });
 
   test('skips when memory reminders exist', () async {
-    final recs = [AdaptivePackRecommendation(pack: pack('p1'), score: 4.5));
+    final recs = [AdaptivePackRecommendation(pack: pack('p1'), score: 4.5)];
     final notifier = AdaptivePackInboxNotifier(
       recommender: _FakeRecommender(recs),
       orchestrator: _FakeOrchestrator([

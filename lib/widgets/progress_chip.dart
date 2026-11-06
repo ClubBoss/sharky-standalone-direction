@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class ProgressChip extends StatelessWidget {
   final double pct;
   const ProgressChip(this.pct, {super.key});
@@ -21,10 +20,7 @@ class ProgressChip extends StatelessWidget {
       ),
       child: Text(
         '${(pct * 100).round()}%',
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 12,
-        ),
+        style: const TextStyle(color: Colors.white, fontSize: 12),
       ),
     );
   }

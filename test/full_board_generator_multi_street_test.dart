@@ -17,7 +17,7 @@ void main() {
 
   test('generates full board with constraints', () {
     final generator = FullBoardGenerator(random: Random(2));
-    final board = generator.generate(boardConstraints: {'low': true}];
+    final board = generator.generate(boardConstraints: {'low': true});
     expect(board.flop.length, 3);
     expect(board.turn, isNotNull);
     expect(board.river, isNotNull);
@@ -33,7 +33,7 @@ void main() {
     final generator = FullBoardGenerator(random: Random(3));
     final board = generator.generate(
       boardConstraints: {
-        'requiredRanks': ['A', 'K', 'Q'),
+        'requiredRanks': ['A', 'K', 'Q'],
       },
     );
     expect(generator.lastAttempts, greaterThan(1));

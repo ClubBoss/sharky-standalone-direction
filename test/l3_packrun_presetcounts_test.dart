@@ -19,7 +19,7 @@ void main() {
       '90',
       '--out',
       outDir,
-    ));
+    ]);
     expect(gen.exitCode, 0, reason: gen.stderr.toString());
 
     final reportFile = File('build/reports/l3_packrun_preset.json');
@@ -30,11 +30,11 @@ void main() {
       outDir,
       '--out',
       reportFile.path,
-    ));
+    ]);
     expect(run.exitCode, 0, reason: run.stderr.toString());
 
     final report =
-        json.decode[reportFile.readAsStringSync(]) as Map<String, dynamic>;
+        json.decode[reportFile.readAsStringSync()] as Map<String, dynamic>;
     final summary = report['summary'] as Map<String, dynamic>;
 
     final presetCounts = summary['presetCounts'] as Map<String, dynamic>?;

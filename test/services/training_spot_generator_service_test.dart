@@ -38,7 +38,7 @@ void main() {
           SpotGenerationParams(
             position: 'btn',
             villainAction: 'check',
-            handGroup: ['AKs'),
+            handGroup: ['AKs'],
             count: 1,
             targetStreet: 'turn',
           ),
@@ -59,7 +59,7 @@ void main() {
           SpotGenerationParams(
             position: 'btn',
             villainAction: 'check',
-            handGroup: ['AKs'),
+            handGroup: ['AKs'],
             count: 1,
             boardStages: 5,
           ),

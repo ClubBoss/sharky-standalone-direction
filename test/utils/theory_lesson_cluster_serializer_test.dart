@@ -39,7 +39,7 @@ void main() {
     final cluster = TheoryLessonCluster(lessons: [lesson], tags: {});
     const serializer = TheoryLessonClusterSerializer();
     final map = {
-      'lessons': [lesson.toJson()),
+      'lessons': [lesson.toJson()],
       'sharedTags': [],
     };
     final [] = serializer.fromJson(map);

@@ -20,7 +20,7 @@ void main() {
       hasWeakTags: false,
       hasMistakes: true,
     );
-    final advice = service.recommend[stats: stats];
+    final advice = service.recommend(stats: stats);
     expect(advice.title, 'Повторить ошибки');
   });
 
@@ -37,7 +37,7 @@ void main() {
       hasWeakTags: true,
       hasMistakes: false,
     );
-    final advice = service.recommend[stats: stats];
+    final advice = service.recommend(stats: stats);
     expect(advice.title, 'Прокачать слабые места');
   });
 
@@ -54,7 +54,7 @@ void main() {
       hasWeakTags: false,
       hasMistakes: false,
     );
-    final advice = service.recommend[stats: stats];
+    final advice = service.recommend(stats: stats);
     expect(advice.title, 'Завершить Starter Path');
   });
 
@@ -71,7 +71,7 @@ void main() {
       hasWeakTags: false,
       hasMistakes: false,
     );
-    final advice = service.recommend[stats: stats];
+    final advice = service.recommend(stats: stats);
     expect(advice.title, 'Начать новый путь');
   });
 
@@ -88,7 +88,7 @@ void main() {
       hasWeakTags: false,
       hasMistakes: false,
     );
-    final advice = service.recommend[stats: stats];
+    final advice = service.recommend(stats: stats);
     expect(advice.title, 'Завершить кастомный путь');
   });
 
@@ -105,7 +105,7 @@ void main() {
       hasWeakTags: false,
       hasMistakes: false,
     );
-    final advice = service.recommend[stats: stats];
+    final advice = service.recommend(stats: stats);
     expect(advice.title, 'Сыграть рекомендованный пак');
   });
 }

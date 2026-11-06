@@ -9,7 +9,7 @@ class _StubSummarizer extends TheoryRecapAnalyticsSummarizer {
   _StubSummarizer(this._summary)
     : super(loader: ({int limit = 50}) async => []);
   @override
-  Future<RecapAnalyticsSummary> summarize[{int limit = 50}] async => _summary;
+  Future<RecapAnalyticsSummary> summarize({int limit = 50}) async => _summary;
 }
 
 void main() {

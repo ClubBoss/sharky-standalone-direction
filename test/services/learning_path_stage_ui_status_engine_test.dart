@@ -37,11 +37,11 @@ void main() {
 
   test('computeStageUIStates returns locked, active, done', () {
     final path = path0();
-    final result1 = uiEngine.computeStageUIStates[path, {}];
+    final result1 = uiEngine.computeStageUIStates(path, {});
     expect(result1['a'], LearningStageUIState.active);
     expect(result1['b'], LearningStageUIState.locked);
 
-    final result2 = uiEngine.computeStageUIStates[path, {'a'}];
+    final result2 = uiEngine.computeStageUIStates(path, {'a'});
     expect(result2['a'], LearningStageUIState.done);
     expect(result2['b'], LearningStageUIState.active);
   });

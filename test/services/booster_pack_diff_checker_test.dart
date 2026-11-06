@@ -16,14 +16,14 @@ void main() {
       heroCards: 'AhKh',
       position: HeroPosition.btn,
       actions: {
-        0: [ActionEntry(0, 0, 'push', ev: 1)),
+        0: [ActionEntry(0, 0, 'push', ev: 1)],
       },
     );
     final handB = v2models.HandData(
       heroCards: 'AsKs',
       position: HeroPosition.sb,
       actions: {
-        0: [ActionEntry(0, 0, 'call', ev: 2)),
+        0: [ActionEntry(0, 0, 'call', ev: 2)],
       },
     );
     final oldPack = v2.TrainingPackTemplateV2(
@@ -55,7 +55,7 @@ void main() {
       meta: {'type': 'booster'},
     );
 
-    final report = BoosterPackDiffChecker().diff[oldPack, newPack];
+    final report = BoosterPackDiffChecker().diff(oldPack, newPack);
 
     expect(report.added, ['s3']);
     expect(report.removed, ['s2']);
@@ -69,4 +69,3 @@ void main() {
     expect(mod.fields, contains('ev'));
   });
 }
-

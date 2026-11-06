@@ -21,7 +21,7 @@ TrainingPackTemplate _tpl(String id, String tag) => TrainingPackTemplate(
   name: id,
   trainingType: TrainingType.theory,
   tags: [tag],
-  spots: [TrainingPackSpot(id: 's', type: 'theory', hand: v2models.HandData())),
+  spots: [TrainingPackSpot(id: 's', type: 'theory', hand: v2models.HandData())],
   spotCount: 1,
 );
 

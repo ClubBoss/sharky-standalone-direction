@@ -28,7 +28,7 @@ void main() {
         metadata: {'b': 2},
       ),
     ];
-    final spots = engine.apply[base, sets];
+    final spots = engine.apply(base, sets);
     expect(spots, hasLength(1));
     final s = spots.first;
     expect(s.tags.toSet(), {'base', 'extra'});
@@ -51,7 +51,7 @@ void main() {
         theoryLink: InlineTheoryLink(title: 't2', onTap: () {}),
       ),
     ];
-    final spots = engine.apply[base, sets];
+    final spots = engine.apply(base, sets);
     expect(spots, hasLength(1));
     final s = spots.first;
     expect(s.tags, ['new']);

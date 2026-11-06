@@ -30,7 +30,7 @@ void main() {
     binding.defaultBinaryMessenger.setMockMessageHandler('flutter/assets', (
       message,
     ) async {
-      final key = utf8.decode[message.buffer.asUint8List(]);
+      final key = utf8.decode[message.buffer.asUint8List()];
       final data = bundle.data[key];
       if (data != null) {
         return ByteData.view(Uint8List.fromList(utf8.encode(data)).buffer);

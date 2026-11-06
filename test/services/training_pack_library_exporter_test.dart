@@ -11,7 +11,7 @@ void main() {
     return TrainingPackModel(
       id: id,
       title: title,
-      spots: [TrainingPackSpot(id: 's$id', hand: v2models.HandData())),
+      spots: [TrainingPackSpot(id: 's$id', hand: v2models.HandData())],
       tags: tags,
     );
   }

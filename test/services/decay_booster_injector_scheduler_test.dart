@@ -7,7 +7,7 @@ class _FakeInjector extends DecayBoosterSpotInjector {
   int calls = 0;
   _FakeInjector() : super();
   @override
-  Future<void> inject[{DateTime? now}] async {
+  Future<void> inject({DateTime? now}) async {
     calls++;
   }
 }

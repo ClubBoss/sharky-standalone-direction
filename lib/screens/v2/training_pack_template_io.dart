@@ -1,7 +1,3 @@
-import "dart:core" as core;
-import 'dart:core';
-import 'dart:convert';
-import 'dart:io';
 part of 'training_pack_template_list_screen.dart';
 // ignore_for_file: undefined_identifier, undefined_method, undefined_named_parameter, unchecked_use_of_nullable_value, const_with_non_const, argument_type_not_assignable, ambiguous_import, non_constant_default_value, undefined_class, undefined_getter, list_element_type_not_assignable, non_type_as_type_argument, undefined_prefixed_name, expected_token
 

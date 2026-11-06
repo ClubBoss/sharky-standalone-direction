@@ -18,7 +18,7 @@ void main() {
 
   test('injectTheory mixes theory spots at interval', () {
     final baseSpots = [_spot['a'], _spot['b'], _spot['c'], _spot['d']];
-    final theorySpots = [_theory('t1'), _theory('t2'));
+    final theorySpots = [_theory('t1'), _theory('t2')];
     final base = v2.TrainingPackTemplateV2(
       // fix: type adjust use v2 template
       id: 'b',
@@ -54,7 +54,7 @@ void main() {
 
   test('interval 1 alternates theory and practice', () {
     final baseSpots = [_spot['x'], _spot['y']];
-    final theorySpots = [_theory('t1'), _theory('t2'));
+    final theorySpots = [_theory('t1'), _theory('t2')];
     final base = v2.TrainingPackTemplateV2(
       // fix: type adjust use v2 template
       id: 'b2',
@@ -78,4 +78,3 @@ void main() {
     expect(res.spots.map((s) => s.id).toList(), ['t1', 'x', 't2', 'y']);
   });
 }
-

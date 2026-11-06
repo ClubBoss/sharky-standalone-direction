@@ -48,7 +48,7 @@ class _RecordingCelebrationService extends StageCompletionCelebrationService {
     final tree = library.getTrack(trackId)?.tree;
     if (tree == null) return;
     final completed = progress.completedNodeIds.value;
-    final completedStages = evaluator.getCompletedStages[tree, completed];
+    final completedStages = evaluator.getCompletedStages(tree, completed);
     final totalStages = tree.nodes.values.map((n) => n.level).toSet().length;
     if (completedStages.length < totalStages) return;
     trackCalls++;
@@ -113,7 +113,7 @@ void main() {
       level: 1,
     );
     const builder = SkillTreeBuilderService();
-    final build = builder.build([nodeA, nodeB)];
+    final build = builder.build([nodeA, nodeB]);
     final lib = _FakeLibraryService({'T': build}, [nodeA, nodeB]);
 
     final originalResolver = SkillTreeTrackResolver.instance;
@@ -151,7 +151,7 @@ void main() {
       level: 1,
     );
     const builder = SkillTreeBuilderService();
-    final build = builder.build([nodeA, nodeB)];
+    final build = builder.build([nodeA, nodeB]);
     final lib = _FakeLibraryService({'T': build}, [nodeA, nodeB]);
 
     final originalResolver = SkillTreeTrackResolver.instance;

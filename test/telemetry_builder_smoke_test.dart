@@ -4,7 +4,7 @@ import 'package:poker_analyzer/infra/telemetry_builder.dart';
 void main() {
   group('telemetry builders', () {
     test('buildTheoryViewed', () {
-      final m = buildTheoryViewed[moduleId: 'cash:l3:v1', theoryId: 't1'];
+      final m = buildTheoryViewed(moduleId: 'cash:l3:v1', theoryId: 't1');
       expect(m, isNotEmpty);
       expect(m['theoryId'], 't1');
     });
@@ -31,7 +31,7 @@ void main() {
     });
 
     test('buildModuleMastered', () {
-      final m = buildModuleMastered[moduleId: 'icm:l4:bb:v1'];
+      final m = buildModuleMastered(moduleId: 'icm:l4:bb:v1');
       expect(m, isNotEmpty);
       expect(m['moduleId'], 'icm:l4:bb:v1');
     });

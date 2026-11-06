@@ -33,7 +33,7 @@ void main() {
     final completed = {'n1', 'n2', 'n3'};
     expect(evaluator.isStageCompleted(tree, 0, completed), isTrue);
     expect(evaluator.isStageCompleted(tree, 1, completed), isFalse);
-    final stages = evaluator.getCompletedStages[tree, completed];
+    final stages = evaluator.getCompletedStages(tree, completed);
     expect(stages, [0]);
   });
 

@@ -30,13 +30,13 @@ void main() {
     final builder = LineGraphBuilderService();
     final engine = builder.build(
       lessons: lessons,
-      spots: [spot),
+      spots: [spot],
       lines: [
         ['flopCbet', 'turnCheck'],
       ],
     );
 
-    final line = engine.getLine['flopCbet', 2];
+    final line = engine.getLine('flopCbet', 2);
     expect(line.length, 2);
     final start = line.first;
     expect(engine.findLinkedLessons[start].map((l) => l.id), contains('l1'));

@@ -39,13 +39,13 @@ void main() {
 
   test('throws on unknown tag', () {
     expect(
-      () => BoardFilteringParamsBuilder.build(['unknown']],
+      () => BoardFilteringParamsBuilder.build(['unknown']),
       throwsArgumentError,
     );
   });
 
   test('highCard tag generates board with high card', () {
-    final params = BoardFilteringParamsBuilder.build(['highCard']];
+    final params = BoardFilteringParamsBuilder.build(['highCard']);
     final svc = FullBoardGeneratorService(random: Random(7));
     final board = svc.generateBoard(
       FullBoardRequest(stages: 3, boardFilterParams: params),

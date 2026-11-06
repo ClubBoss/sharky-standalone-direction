@@ -46,7 +46,7 @@ void main() {
       final pack = TrainingPackModel(id: 'p3', title: 'A', spots: []);
       const gatekeeper = PackQualityGatekeeperService();
       final issues = {
-        pack.id: [SeedIssue(code: 'bad', severity: 'error', message: 'oops')),
+        pack.id: [SeedIssue(code: 'bad', severity: 'error', message: 'oops')],
       };
       final result = gatekeeper.isQualityAcceptable(pack, seedIssues: issues);
       expect(result, isFalse);
@@ -56,7 +56,7 @@ void main() {
       final pack = TrainingPackModel(id: 'p4', title: 'B', spots: []);
       const gatekeeper = PackQualityGatekeeperService();
       final issues = {
-        pack.id: [SeedIssue(code: 'warn', severity: 'warn', message: 'meh')),
+        pack.id: [SeedIssue(code: 'warn', severity: 'warn', message: 'meh')],
       };
       final result = gatekeeper.isQualityAcceptable(pack, seedIssues: issues);
       expect(result, isTrue);
