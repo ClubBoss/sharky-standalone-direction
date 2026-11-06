@@ -111,12 +111,17 @@ class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
     final healthOnly = rows.length == 1 && !rows.single.containsKey('name');
     if (healthOnly ||
         capture is! Map ||
+        capture['schemaVersion'] is! int ||
         capture['schemaVersion'] != 1 ||
         capture['complete'] != true ||
+        capture['rejectedEventCount'] is! int ||
         capture['rejectedEventCount'] != 0 ||
+        capture['evictedEventCount'] is! int ||
         capture['evictedEventCount'] != 0 ||
+        capture['recordedEventCount'] is! int ||
         capture['recordedEventCount'] != rows.length ||
         capture['redactedFieldCount'] is! int ||
+        (capture['redactedFieldCount'] as int) < 0 ||
         rows.length > maxEvents) {
       _priorCapture = 'discarded';
       return;
@@ -126,7 +131,8 @@ class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
       final row = rows[i];
       final name = row['name'];
       final fields = row['fields'];
-      if (row['sequence'] != i + 1 ||
+      if (row['sequence'] is! int ||
+          row['sequence'] != i + 1 ||
           name is! String ||
           fields is! Map<String, dynamic>) {
         _priorCapture = 'discarded';
@@ -138,6 +144,7 @@ class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
         _priorCapture = 'discarded';
         return;
       }
+      final validatedFields = <String, Object?>{};
       for (final entry in fields.entries) {
         final filtered = _hnpFieldValueV1(entry.key, entry.value);
         if (filtered == null ||
@@ -145,9 +152,13 @@ class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
           _priorCapture = 'discarded';
           return;
         }
+        validatedFields[entry.key] = filtered;
       }
       events.add(
-        Act0TelemetryEventV1(name: name, fields: Map.unmodifiable(fields)),
+        Act0TelemetryEventV1(
+          name: name,
+          fields: Map.unmodifiable(validatedFields),
+        ),
       );
     }
     _retainedEvents.addAll(events);

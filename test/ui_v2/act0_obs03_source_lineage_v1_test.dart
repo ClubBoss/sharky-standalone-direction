@@ -801,4 +801,90 @@ void main() {
       }
     },
   );
+
+  test(
+    'OBS03 restart rejects malformed capture numbers without normalization',
+    () async {
+      final original = _RestartStore();
+      final first = Act0HnpTelemetrySinkV1(fileStore: original);
+      first.record(
+        const Act0TelemetryEventV1(
+          name: 'user_choice',
+          fields: {
+            'schemaVersion': 2,
+            'acceptable_action_ids': ['call', 'raise'],
+          },
+        ),
+      );
+      await first.flushExport();
+      final mutations = <String, void Function(Map<String, dynamic>)>{
+        'schema version': (row) =>
+            (row['capture'] as Map)['schemaVersion'] = 1.0,
+        'recorded count': (row) =>
+            (row['capture'] as Map)['recordedEventCount'] = 1.0,
+        'rejected count': (row) =>
+            (row['capture'] as Map)['rejectedEventCount'] = 0.0,
+        'evicted count': (row) =>
+            (row['capture'] as Map)['evictedEventCount'] = 0.0,
+        'negative redaction count': (row) =>
+            (row['capture'] as Map)['redactedFieldCount'] = -1,
+        'sequence': (row) => row['sequence'] = 1.0,
+      };
+      for (final mutation in mutations.entries) {
+        final row = jsonDecode(original.contents.trim()) as Map<String, dynamic>;
+        mutation.value(row);
+        final store = _RestartStore()..contents = '${jsonEncode(row)}\n';
+        final next = Act0HnpTelemetrySinkV1(fileStore: store);
+        next.record(
+          const Act0TelemetryEventV1(
+            name: 'progress_persist_result',
+            fields: {'schemaVersion': 1, 'outcome': 'acknowledged'},
+          ),
+        );
+        await next.flushExport();
+        final trace = jsonDecode(next.exportJson()) as Map;
+        expect(
+          (trace['capture'] as Map)['priorCapture'],
+          'discarded',
+          reason: mutation.key,
+        );
+        expect(
+          next.events.single.name,
+          'progress_persist_result',
+          reason: mutation.key,
+        );
+        expect(((trace['events'] as List).single as Map)['sequence'], 1);
+      }
+    },
+  );
+
+  test(
+    'OBS03 restored action lists preserve the immutable privacy snapshot',
+    () async {
+      final store = _RestartStore();
+      final first = Act0HnpTelemetrySinkV1(fileStore: store);
+      first.record(
+        const Act0TelemetryEventV1(
+          name: 'user_choice',
+          fields: {
+            'schemaVersion': 2,
+            'acceptable_action_ids': ['call', 'raise'],
+          },
+        ),
+      );
+      await first.flushExport();
+      final next = Act0HnpTelemetrySinkV1(fileStore: store);
+      await next.flushExport();
+      expect(
+        (jsonDecode(next.exportJson())['capture'] as Map)['priorCapture'],
+        'continued',
+      );
+      final snapshot = next.exportJson();
+      final actions =
+          next.events.single.fields['acceptable_action_ids'] as List;
+      expect(() => actions.add('private@example.com'), throwsUnsupportedError);
+      expect(next.exportJson(), snapshot);
+      expect(store.contents, isNot(contains('private@example.com')));
+    },
+  );
 }
