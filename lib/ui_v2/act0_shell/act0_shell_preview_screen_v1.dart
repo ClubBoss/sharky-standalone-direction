@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'act0_academy_runtime_adapter_v1.dart';
+import 'act0_observability_projection_v1.dart';
 import 'academy_leaves/act0_academy_home_leaf_v1.dart';
 import 'academy_leaves/act0_academy_leaf_style_v1.dart';
 
@@ -4315,6 +4316,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _durableRetentionHistoryV1 = _durableRetentionHistoryV1
           .applyEvidence(latestRecord)
           .refreshedAt(recordedAtUtc);
+      if (widget.telemetrySink != null) {
+        try {
+          for (final event in act0EvidenceTelemetryEventsV1(
+            record: latestRecord,
+            history: _learningEvidenceHistoryV1,
+            nowUtc: recordedAtUtc,
+            repairOccurrenceId: repairOccurrenceId,
+            actionState: _actionPersonalizationStateV1,
+            actionStage: _activeActionSequenceStageV1,
+          )) {
+            _recordTelemetryEventV1(event.name, event.fields);
+          }
+        } catch (_) {
+          // Diagnostics never interrupt accepted source evidence or progress.
+        }
+      }
     }
     _pendingReviewKindV1 = null;
   }
@@ -7576,7 +7593,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ru: 'Откроется после одного дрилла на маршруте.',
               )
             : _dailyCompletedRepCount >= 3
-            ? 'Table read improved. Come back tomorrow for the next useful hand, or practice extra reps.'
+            ? 'Daily spots complete. $_earnedXp total XP earned. Completion alone does not verify independent improvement.'
             : dailyDeckEntry.isSpaced
             ? 'Finish three spaced spots across completed worlds.'
             : 'Finish three short spots for today.',
@@ -11850,6 +11867,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           repairOutcomeProjection: _repairOutcomeProjectionV1,
           existingReceiptHistory: _reviewResolutionReceiptHistoryV1,
         );
+    if (widget.telemetrySink != null) {
+      try {
+        final outcome = _repairOutcomeProjectionV1.outcomes.singleWhere(
+          (outcome) => outcome.repairAttemptId == repairAttemptId,
+        );
+        final event = act0RepairOutcomeTelemetryEventV1(
+          outcome: outcome,
+          history: _learningEvidenceHistoryV1,
+        );
+        _recordTelemetryEventV1(event.name, event.fields);
+      } catch (_) {
+        // Outcome/receipt ownership remains independent of diagnostics.
+      }
+    }
     if (_repairOutcomeProjectionV1.outcomes.isNotEmpty) {
       _conceptFamilyStateHistoryV1 = _conceptFamilyStateHistoryV1
           .appendRepairOutcome(
@@ -15280,6 +15311,19 @@ class _Act0SessionTelemetrySinkV1 implements Act0TelemetrySinkV1 {
 
   @override
   void record(Act0TelemetryEventV1 event) {
+    if (event.fields.containsKey('review_kind')) {
+      final fields = Map<String, Object?>.from(event.fields)
+        ..remove('review_kind');
+      event = Act0TelemetryEventV1(
+        name: event.name,
+        fields: {
+          ...fields,
+          'schemaVersion': 2,
+          // Route intent is not the accepted completed-evidence classification.
+          'route_review_kind': event.fields['review_kind'],
+        },
+      );
+    }
     final id = sessionId().trim();
     if (id.isEmpty ||
         event.fields.containsKey('sessionId') ||

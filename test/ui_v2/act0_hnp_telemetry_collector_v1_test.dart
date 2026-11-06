@@ -46,19 +46,19 @@ void main() {
     sink.record(
       const Act0TelemetryEventV1(
         name: 'task_shown',
-        fields: <String, Object?>{},
+        fields: <String, Object?>{'schemaVersion': 1},
       ),
     );
     sink.record(
       const Act0TelemetryEventV1(
         name: 'user_choice',
-        fields: <String, Object?>{'choiceId': 'fold'},
+        fields: <String, Object?>{'schemaVersion': 1, 'choiceId': 'fold'},
       ),
     );
     sink.record(
       const Act0TelemetryEventV1(
         name: 'task_result',
-        fields: <String, Object?>{'result': 'incorrect'},
+        fields: <String, Object?>{'schemaVersion': 1, 'result': 'incorrect'},
       ),
     );
 
@@ -75,17 +75,23 @@ void main() {
     () async {
       final store = _MemoryFileStoreV1();
       final sink = Act0HnpTelemetrySinkV1(fileStore: store);
-      final oversized = List<String>.filled(2300, 'x').join();
+      final oversized = List<String>.generate(
+        64,
+        (i) => 'action_${i}_${List.filled(40, 'x').join()}',
+      );
       sink.record(
         Act0TelemetryEventV1(
           name: 'decision_made',
-          fields: <String, Object?>{'detail': oversized},
+          fields: <String, Object?>{
+            'schemaVersion': 1,
+            'acceptable_action_ids': oversized,
+          },
         ),
       );
       sink.record(
         const Act0TelemetryEventV1(
           name: 'task_result',
-          fields: <String, Object?>{'result': 'incorrect'},
+          fields: <String, Object?>{'schemaVersion': 1, 'result': 'incorrect'},
         ),
       );
 
@@ -94,7 +100,8 @@ void main() {
       final decoded = lines.map((line) => jsonDecode(line)).toList();
       expect(lines, hasLength(2));
       expect(decoded[0]['name'], 'decision_made');
-      expect((decoded[0]['fields']['detail'] as String).length, 2300);
+      expect(decoded[0]['fields']['acceptable_action_ids'], oversized);
+      expect(lines.first.length, greaterThan(2300));
       expect(decoded.map((event) => event['name']), <String>[
         'decision_made',
         'task_result',
@@ -113,6 +120,7 @@ void main() {
         const Act0TelemetryEventV1(
           name: 'task_result',
           fields: <String, Object?>{
+            'schemaVersion': 1,
             'taskId': 'actions_check_drill',
             'choiceId': 'fold',
             'result': 'incorrect',
@@ -144,8 +152,10 @@ void main() {
     () async {
       final store = _MemoryFileStoreV1();
       final sink = Act0HnpTelemetrySinkV1(maxEvents: 2, fileStore: store);
-      for (final name in <String>['one', 'two', 'three']) {
-        sink.record(Act0TelemetryEventV1(name: name, fields: const {}));
+      for (final name in <String>['task_shown', 'user_choice', 'task_result']) {
+        sink.record(
+          Act0TelemetryEventV1(name: name, fields: const {'schemaVersion': 1}),
+        );
       }
       await sink.flushExport();
       final retained = store.contents
@@ -153,7 +163,7 @@ void main() {
           .split('\n')
           .map((line) => (jsonDecode(line) as Map<String, dynamic>)['name'])
           .toList();
-      expect(retained, <String>['two', 'three']);
+      expect(retained, <String>['user_choice', 'task_result']);
       expect(sink.events.map((event) => event.name), retained);
 
       final replacement = Act0HnpTelemetrySinkV1(fileStore: store);
@@ -169,7 +179,7 @@ void main() {
     sink.record(
       const Act0TelemetryEventV1(
         name: 'task_shown',
-        fields: <String, Object?>{},
+        fields: <String, Object?>{'schemaVersion': 1},
       ),
     );
     await sink.flushExport();
