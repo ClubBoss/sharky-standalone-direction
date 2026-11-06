@@ -773,7 +773,7 @@ class Act0SharkyCueV1 {
     correctReaction: 'Sharp read.',
     wrongReaction: 'Good spot to fix.',
     repairLine: 'Take one breath. I will point at the clue.',
-    summaryLine: 'You are reading the table with more control.',
+    summaryLine: 'Keep this read for the next hand.',
   );
 }
 

@@ -9843,6 +9843,12 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
         ? (summary.assistedCount > 0
               ? '\u041f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u0430 \u043f\u043e\u043c\u043e\u0433\u043b\u0430 \u043f\u043e\u043d\u044f\u0442\u044c \u043e\u0448\u0438\u0431\u043a\u0443. \u041f\u0440\u043e\u0432\u0435\u0440\u044c \u044d\u0442\u043e\u0442 \u0441\u0438\u0433\u043d\u0430\u043b \u0441\u0430\u043c\u043e\u0441\u0442\u043e\u044f\u0442\u0435\u043b\u044c\u043d\u043e.'
               : '\u0417\u0430\u043f\u043e\u043c\u043d\u0438 \u044d\u0442\u0443 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u0443 \u0441\u0442\u043e\u043b\u0430 \u0438 \u043f\u0440\u043e\u0432\u0435\u0440\u044c \u0435\u0451 \u0432 \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0435\u0439 \u0440\u0430\u0437\u0434\u0430\u0447\u0435.')
+        // REP-06/07: a session with help or a miss must not end on an
+        // authored growth line; mirror the RU source-truth branches.
+        : summary.assistedCount > 0
+        ? 'Help showed the clue. Check it on your own next time.'
+        : summary.errorCount > 0
+        ? 'Keep this table clue and check it in the next hand.'
         : summary.sharkyLine.trim().isNotEmpty
         ? summary.sharkyLine.trim()
         : payoffHero != null
@@ -10420,7 +10426,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                             Text(
                               localeIsRu
                                   ? '\u0427\u0442\u043e \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u0430\u043b\u0438'
-                                  : 'What improved',
+                                  : 'What you practiced',
                               key: const Key(
                                 'act0_shell_block_summary_habit_reward_label',
                               ),
