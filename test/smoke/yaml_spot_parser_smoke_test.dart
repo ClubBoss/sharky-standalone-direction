@@ -1,10 +1,9 @@
 @TestOn('vm')
 import 'package:test/test.dart';
 
-import '../support/test_fakes.dart';
-// Замените на ваш YAML-парсер спотов в v2 (без UI)
+import 'package:yaml/yaml.dart';
 import 'package:poker_analyzer/models/v2/training_pack_template.dart';
-import 'package:poker_analyzer/utils/yaml_utils.dart'; // если у вас так называется
+import 'package:poker_analyzer/utils/yaml_utils.dart';
 
 const _yaml = '''
 id: t_pack_2
@@ -17,7 +16,7 @@ spots: []
 
 void main() {
   test('YAML → model → JSON (smoke)', () {
-    final map = parseYamlToMap[_yaml]; // функция парсинга YAML → Map
+    final map = Map<String, dynamic>.from(yamlToDart(loadYaml(_yaml)) as Map);
     final model = TrainingPackTemplate.fromJson(map);
     expect(model.id, 't_pack_2');
     expect(model.tags, contains('preflop'));

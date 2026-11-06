@@ -3,7 +3,6 @@ import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
 import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart';
 import 'package:poker_analyzer/services/canonical_training_session_launch_plan_v1.dart';
-import 'package:poker_analyzer/ui_v2/screens/world1_foundations_microtask_runner_screen.dart';
 
 void main() {
   TrainingPackTemplateV2 buildTemplate(
@@ -28,7 +27,7 @@ void main() {
       CanonicalTrainingSessionLaunchFamilyV1.canonicalWorld1Runner,
     );
     expect(plan.templateId, 'world1_spine_campaign_v1');
-    expect(plan.world1ModeV1, kWorld1RunnerModeCampaignSpine);
+    expect(plan.world1ModeV1, 'campaign_spine');
     expect(plan.world1ModuleTitleV1, isNotEmpty);
   });
 
@@ -44,7 +43,7 @@ void main() {
         plan.family,
         CanonicalTrainingSessionLaunchFamilyV1.canonicalWorld1Runner,
       );
-      expect(plan.world1ModeV1, kWorld1RunnerModeReviewQueue);
+      expect(plan.world1ModeV1, 'review_queue');
     },
   );
 

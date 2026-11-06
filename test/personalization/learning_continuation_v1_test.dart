@@ -59,7 +59,7 @@ void main() {
       expect(continuation, isNotNull);
       expect(
         continuation!.headline,
-        'What changes now: Read visible table truth',
+        'What changes now: Build Hand Discipline from position, price, and approved pressure cues',
       );
     },
   );
