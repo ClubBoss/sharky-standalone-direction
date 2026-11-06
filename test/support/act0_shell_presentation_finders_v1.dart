@@ -9,6 +9,7 @@ Finder act0ShellPresentationFinderV1(String legacyKey) {
   var key = legacyKey;
   if (act0AcademyHomePreviewV1) {
     key = switch (key) {
+      'act0_shell_home_screen' => 'act0_academy_home_leaf',
       'act0_shell_main_cta' => 'act0_academy_home_leaf_cta',
       'act0_shell_home_dev_menu_button' => 'act0_academy_home_leaf_dev_menu',
       _ => key,
@@ -57,6 +58,9 @@ Finder act0ShellPresentationFinderV1(String legacyKey) {
     }
     key = switch (key) {
       'act0_shell_review_screen' => 'act0_academy_review_leaf',
+      'act0_shell_review_due_spaced_item' => 'act0_academy_review_leaf_due',
+      'act0_shell_review_start_due_spaced_item' =>
+        'act0_academy_review_leaf_start_due',
       'act0_shell_review_practice_cta' => 'act0_academy_review_leaf_repair_cta',
       _ => key,
     };

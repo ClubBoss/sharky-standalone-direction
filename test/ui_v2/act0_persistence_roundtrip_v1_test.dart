@@ -1,3 +1,4 @@
+import '../support/act0_shell_presentation_finders_v1.dart';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -208,7 +209,10 @@ void main() {
     await tester.pumpWidget(host());
     await tester.pumpAndSettle();
     await tester.pump(const Duration(milliseconds: 100));
-    expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
+    expect(
+      act0ShellPresentationFinderV1('act0_shell_home_screen'),
+      findsOneWidget,
+    );
 
     final prefs = await SharedPreferences.getInstance();
     final firstLoad =
@@ -254,7 +258,10 @@ void main() {
         find.text('Your saved progress could not be read.'),
         findsOneWidget,
       );
-      expect(find.byKey(const Key('act0_shell_home_screen')), findsNothing);
+      expect(
+        act0ShellPresentationFinderV1('act0_shell_home_screen'),
+        findsNothing,
+      );
       final prefs = await SharedPreferences.getInstance();
       expect(
         prefs.getString(progressKey),

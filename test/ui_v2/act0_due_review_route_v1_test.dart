@@ -1,3 +1,4 @@
+import '../support/act0_shell_presentation_finders_v1.dart';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -121,11 +122,11 @@ void main() {
     await tester.pump(const Duration(milliseconds: 100));
 
     expect(
-      find.byKey(const Key('act0_shell_review_due_spaced_item')),
+      act0ShellPresentationFinderV1('act0_shell_review_due_spaced_item'),
       findsOneWidget,
     );
     await tester.tap(
-      find.byKey(const Key('act0_shell_review_start_due_spaced_item')),
+      act0ShellPresentationFinderV1('act0_shell_review_start_due_spaced_item'),
     );
     await tester.pumpAndSettle();
 
