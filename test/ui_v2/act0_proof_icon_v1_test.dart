@@ -14,11 +14,7 @@ void main() {
     return tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: Act0ProofIconV1(
-            role: role,
-            size: size,
-            emphasized: emphasized,
-          ),
+          body: Act0ProofIconV1(role: role, size: size, emphasized: emphasized),
         ),
       ),
     );
@@ -74,44 +70,41 @@ void main() {
     );
   });
 
-  testWidgets(
-    'emphasized milestone adds a reserved band-transition seal ring, '
-    'ordinary milestone does not',
-    (tester) async {
+  testWidgets('emphasized milestone adds a reserved band-transition seal ring, '
+      'ordinary milestone does not', (tester) async {
+    await pumpIcon(
+      tester,
+      Act0ProofIconRoleV1.milestone,
+      size: Act0ProofIconSizeV1.seal,
+      emphasized: true,
+    );
+
+    expect(
+      find.byKey(const Key('act0_proof_icon_v1_milestone_emphasis_ring')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('act0_proof_icon_v1_milestone')),
+      findsOneWidget,
+    );
+
+    // Emphasis is a no-op for every non-milestone role, even when passed.
+    for (final role in Act0ProofIconRoleV1.values) {
+      if (role == Act0ProofIconRoleV1.milestone) {
+        continue;
+      }
       await pumpIcon(
         tester,
-        Act0ProofIconRoleV1.milestone,
+        role,
         size: Act0ProofIconSizeV1.seal,
         emphasized: true,
       );
-
       expect(
         find.byKey(const Key('act0_proof_icon_v1_milestone_emphasis_ring')),
-        findsOneWidget,
+        findsNothing,
       );
-      expect(
-        find.byKey(const Key('act0_proof_icon_v1_milestone')),
-        findsOneWidget,
-      );
-
-      // Emphasis is a no-op for every non-milestone role, even when passed.
-      for (final role in Act0ProofIconRoleV1.values) {
-        if (role == Act0ProofIconRoleV1.milestone) {
-          continue;
-        }
-        await pumpIcon(
-          tester,
-          role,
-          size: Act0ProofIconSizeV1.seal,
-          emphasized: true,
-        );
-        expect(
-          find.byKey(const Key('act0_proof_icon_v1_milestone_emphasis_ring')),
-          findsNothing,
-        );
-      }
-    },
-  );
+    }
+  });
 
   testWidgets('sizes differ across inline, tile, and seal', (tester) async {
     for (final size in Act0ProofIconSizeV1.values) {
@@ -135,78 +128,74 @@ void main() {
     }
   });
 
-  test(
-    'milestone role is scoped only to the shared world-completion card',
-    () {
-      final profileSource = File(
-        'lib/ui_v2/act0_shell/act0_profile_shell_v1.dart',
-      ).readAsStringSync();
-      final consumerSource = File(
-        'lib/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart',
-      ).readAsStringSync();
-      final lessonRunnerSource = File(
-        'lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart',
-      ).readAsStringSync();
+  test('milestone role is scoped only to the shared world-completion card', () {
+    final profileSource = File(
+      'lib/ui_v2/act0_shell/act0_profile_shell_v1.dart',
+    ).readAsStringSync();
+    final consumerSource = File(
+      'lib/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart',
+    ).readAsStringSync();
+    final lessonRunnerSource = File(
+      'lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart',
+    ).readAsStringSync();
 
-      // Profile and the ordinary repair-outcome/session receipt contract must
-      // never emit a milestone icon; only true world completion may, and
-      // only through the one shared card both World 1 and World 2-6 delegate
-      // to (no per-world duplicate milestone usage).
-      expect(profileSource, isNot(contains('Act0ProofIconRoleV1.milestone')));
-      expect(consumerSource, isNot(contains('Act0ProofIconRoleV1.milestone')));
+    // Profile and the ordinary repair-outcome/session receipt contract must
+    // never emit a milestone icon; only true world completion may, and
+    // only through the one shared card both World 1 and World 2-6 delegate
+    // to (no per-world duplicate milestone usage).
+    expect(profileSource, isNot(contains('Act0ProofIconRoleV1.milestone')));
+    expect(consumerSource, isNot(contains('Act0ProofIconRoleV1.milestone')));
 
-      final classStart = lessonRunnerSource.indexOf(
-        'class _WorldMilestoneCardV1',
-      );
-      expect(
-        classStart,
-        greaterThan(-1),
-        reason: 'shared world-completion milestone card must exist',
-      );
-      final nextClassStart = lessonRunnerSource.indexOf(
-        '\nclass ',
-        classStart + 1,
-      );
-      final sharedCardBody = lessonRunnerSource.substring(
-        classStart,
-        nextClassStart == -1 ? lessonRunnerSource.length : nextClassStart,
-      );
-      final restOfFile =
-          lessonRunnerSource.substring(0, classStart) +
-          lessonRunnerSource.substring(
-            nextClassStart == -1 ? lessonRunnerSource.length : nextClassStart,
-          );
+    final classStart = lessonRunnerSource.indexOf(
+      'class _WorldMilestoneCardV1',
+    );
+    expect(
+      classStart,
+      greaterThan(-1),
+      reason: 'shared world-completion milestone card must exist',
+    );
+    final nextClassStart = lessonRunnerSource.indexOf(
+      '\nclass ',
+      classStart + 1,
+    );
+    final sharedCardBody = lessonRunnerSource.substring(
+      classStart,
+      nextClassStart == -1 ? lessonRunnerSource.length : nextClassStart,
+    );
+    final restOfFile =
+        lessonRunnerSource.substring(0, classStart) +
+        lessonRunnerSource.substring(
+          nextClassStart == -1 ? lessonRunnerSource.length : nextClassStart,
+        );
 
-      expect(
-        sharedCardBody,
-        contains('Act0ProofIconRoleV1.milestone'),
-        reason:
-            'world completion is the milestone role\'s only valid consumer',
-      );
-      expect(
-        restOfFile,
-        isNot(contains('Act0ProofIconRoleV1.milestone')),
-        reason:
-            'milestone must not leak into any other surface, including a '
-            'per-world duplicate usage outside the shared card',
-      );
-      expect(
-        lessonRunnerSource,
-        contains('class _WorldOneCompletionPayoffV1'),
-        reason: 'World 1 keeps its own dedicated wrapper',
-      );
-      expect(
-        lessonRunnerSource,
-        contains('class _WorldCompletionPayoffV1'),
-        reason: 'Worlds 2-6 share one ordinary wrapper, not five widgets',
-      );
-      expect(
-        lessonRunnerSource,
-        contains('class _BandTransitionPayoffV1'),
-        reason:
-            'the one W4->W5 band-transition moment gets its own dedicated '
-            'wrapper, mirroring World 1, not a generic multi-band engine',
-      );
-    },
-  );
+    expect(
+      sharedCardBody,
+      contains('Act0ProofIconRoleV1.milestone'),
+      reason: 'world completion is the milestone role\'s only valid consumer',
+    );
+    expect(
+      restOfFile,
+      isNot(contains('Act0ProofIconRoleV1.milestone')),
+      reason:
+          'milestone must not leak into any other surface, including a '
+          'per-world duplicate usage outside the shared card',
+    );
+    expect(
+      lessonRunnerSource,
+      contains('class _WorldOneCompletionPayoffV1'),
+      reason: 'World 1 keeps its own dedicated wrapper',
+    );
+    expect(
+      lessonRunnerSource,
+      contains('class _WorldCompletionPayoffV1'),
+      reason: 'Worlds 2-6 share one ordinary wrapper, not five widgets',
+    );
+    expect(
+      lessonRunnerSource,
+      contains('class _BandTransitionPayoffV1'),
+      reason:
+          'the one W4->W5 band-transition moment gets its own dedicated '
+          'wrapper, mirroring World 1, not a generic multi-band engine',
+    );
+  });
 }

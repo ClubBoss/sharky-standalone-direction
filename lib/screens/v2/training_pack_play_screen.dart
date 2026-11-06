@@ -490,7 +490,9 @@ class _TrainingPackPlayScreenState
             );
           }
           // Fallback: return empty container since this code path is not used in Act0
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         },
       ),
     );

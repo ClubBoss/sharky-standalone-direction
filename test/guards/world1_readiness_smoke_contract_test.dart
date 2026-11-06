@@ -191,12 +191,19 @@ Future<void> _advanceTablePracticeUntilResult(WidgetTester tester) async {
     }
     final tableCheck = find.byKey(const Key('table_practice_check_cta'));
     final microtaskCheck = find.byKey(const Key('microtask_check_cta'));
-    if (tableCheck.evaluate().isNotEmpty || microtaskCheck.evaluate().isNotEmpty) {
+    if (tableCheck.evaluate().isNotEmpty ||
+        microtaskCheck.evaluate().isNotEmpty) {
       reachedInteractiveRunner = true;
       break;
     }
-    if (find.byKey(const Key('spine_contract_expected_target')).evaluate().isNotEmpty ||
-        find.byKey(const Key('spine_contract_requires_continue')).evaluate().isNotEmpty) {
+    if (find
+            .byKey(const Key('spine_contract_expected_target'))
+            .evaluate()
+            .isNotEmpty ||
+        find
+            .byKey(const Key('spine_contract_requires_continue'))
+            .evaluate()
+            .isNotEmpty) {
       final contract = _readSpineContract(tester);
       if (contract.requiresContinue) {
         final continueTarget = find.byKey(
@@ -260,7 +267,9 @@ Future<void> _advanceTablePracticeUntilResult(WidgetTester tester) async {
     }
   }
 
-  fail('Table practice did not reach a stable end-state or return to map within step budget.');
+  fail(
+    'Table practice did not reach a stable end-state or return to map within step budget.',
+  );
 }
 
 Future<void> _launchTablePracticeAndReturnToMap(WidgetTester tester) async {
@@ -269,9 +278,15 @@ Future<void> _launchTablePracticeAndReturnToMap(WidgetTester tester) async {
     if (find.byType(UiV2ProgressMapScreenV2).evaluate().isNotEmpty) {
       return;
     }
-    if (find.byKey(const Key('table_practice_check_cta')).evaluate().isNotEmpty ||
+    if (find
+            .byKey(const Key('table_practice_check_cta'))
+            .evaluate()
+            .isNotEmpty ||
         find.byKey(const Key('microtask_check_cta')).evaluate().isNotEmpty ||
-        find.byKey(const Key('microtask_campaign_action_bar')).evaluate().isNotEmpty) {
+        find
+            .byKey(const Key('microtask_campaign_action_bar'))
+            .evaluate()
+            .isNotEmpty) {
       for (var popCount = 0; popCount < 4; popCount++) {
         if (find.byType(UiV2ProgressMapScreenV2).evaluate().isNotEmpty) {
           return;
@@ -283,7 +298,9 @@ Future<void> _launchTablePracticeAndReturnToMap(WidgetTester tester) async {
     }
     await tester.pump(const Duration(milliseconds: 80));
   }
-  fail('Table practice did not reach an interactive runner state within budget.');
+  fail(
+    'Table practice did not reach an interactive runner state within budget.',
+  );
 }
 
 Future<void> _driveSpineRunnerToResultDeterministically(

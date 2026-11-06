@@ -279,11 +279,7 @@ void main() {
     test('rejects an admitted task outside its authored route', () {
       final task = owner.taskSpecs.first;
       for (final route in <({String worldId, String lessonId, String taskId})>[
-        (
-          worldId: 'world_9',
-          lessonId: task.lessonId,
-          taskId: task.taskId,
-        ),
+        (worldId: 'world_9', lessonId: task.lessonId, taskId: task.taskId),
         (
           worldId: task.worldId,
           lessonId: 'wrong_w10_lesson',

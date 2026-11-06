@@ -10,9 +10,7 @@ void main() {
 
     expect(
       source,
-      contains(
-        'Review stays open. Later worlds stay locked for now.',
-      ),
+      contains('Review stays open. Later worlds stay locked for now.'),
     );
     expect(
       source,
