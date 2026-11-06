@@ -48,7 +48,7 @@ void main() {
     );
 
     const engine = BoosterSimilarityEngine();
-    final res = engine.analyzeSpots[[s1, s2, s3], threshold: 0.8];
+    final res = engine.analyzeSpots([s1, s2, s3], threshold: 0.8);
 
     expect(res.length, 1);
     expect(res.first.idA, 'a');

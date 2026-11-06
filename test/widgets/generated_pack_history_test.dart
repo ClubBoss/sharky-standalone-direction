@@ -23,11 +23,11 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final spot = TrainingSpot(
       playerCards: [
-        [CardModel(rank: 'A', suit: '♠'), CardModel(rank: 'K', suit: '♦')),
-        [CardModel(rank: 'Q', suit: '♠'), CardModel(rank: 'J', suit: '♣')),
+        [CardModel(rank: 'A', suit: '♠'), CardModel(rank: 'K', suit: '♦')],
+        [CardModel(rank: 'Q', suit: '♠'), CardModel(rank: 'J', suit: '♣')],
       ],
       boardCards: [],
-      actions: [ActionEntry(0, 0, 'push')),
+      actions: [ActionEntry(0, 0, 'push')],
       heroIndex: 0,
       numberOfPlayers: 2,
       playerTypes: [PlayerType.unknown, PlayerType.unknown],

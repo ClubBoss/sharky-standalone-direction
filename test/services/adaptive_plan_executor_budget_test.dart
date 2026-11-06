@@ -18,7 +18,7 @@ class _FakeBoosterEngine extends TargetedPackBoosterEngine {
     required List<SkillTagCluster> clusters,
     String triggerReason = 'cluster',
   }) async {
-    List<TrainingPackTemplate> build(String id, List<String> tags] => [
+    List<TrainingPackTemplate> build(String id, List<String> tags) => [
       TrainingPackTemplate(
         id: id,
         name: id,
@@ -32,9 +32,9 @@ class _FakeBoosterEngine extends TargetedPackBoosterEngine {
       ),
     ];
     return [
-      build('b1', ['a']].first,
-      build('b2', ['b']].first,
-      build('b3', ['a', 'b']].first,
+      build('b1', ['a']).first,
+      build('b2', ['b']).first,
+      build('b3', ['a', 'b']).first,
     ];
   }
 }
@@ -101,4 +101,3 @@ void main() {
     expect(m.itemsDurations?['assessmentMins'], 3);
   });
 }
-

@@ -2,7 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
-import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models; // fix: type adjust use v2
+import 'package:poker_analyzer/models/v2/hand_data.dart'
+    as v2models; // fix: type adjust use v2
 import 'package:poker_analyzer/services/auto_spot_theory_injector_service.dart';
 import 'package:poker_analyzer/services/inline_theory_linker.dart';
 import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
@@ -37,20 +38,20 @@ class _FakeLibrary implements MiniLessonLibraryService {
   Future<void> reload() async {} // fix: type adjust callback
 
   @override
-  List<String> linkedPacksFor[String lessonId] => const <String>[]; // fix: type adjust generics
+  List<String> linkedPacksFor(String lessonId) => const <String>[]; // fix: type adjust generics
 
   @override
   Future<bool> isLessonCompleted(String lessonId) async => false; // fix: type adjust callback
 
   @override
-  List<TheoryMiniLessonNode> findByTags[List<String> tags] => [
+  List<TheoryMiniLessonNode> findByTags(List<String> tags) => [
     // fix: type adjust generics
     for (final t in tags)
       if (byTag[t] != null) byTag[t]!,
   ];
 
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] => [
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) => [
     // fix: type adjust generics
     for (final t in tags)
       if (byTag[t] != null) byTag[t]!,
@@ -86,7 +87,11 @@ void main() {
       final nav = _FakeNavigator();
       final linker = InlineTheoryLinker(library: library, navigator: nav);
       final service = AutoSpotTheoryInjectorService(linker: linker);
-      final spot = TrainingPackSpot(id: 's1', hand: v2models.HandData(), tags: ['cbet']);
+      final spot = TrainingPackSpot(
+        id: 's1',
+        hand: v2models.HandData(),
+        tags: ['cbet'],
+      );
 
       service.inject[spot];
 
@@ -103,7 +108,11 @@ void main() {
           navigator: _FakeNavigator(),
         ),
       );
-      final spot = TrainingPackSpot(id: 's1', hand: v2models.HandData(), tags: ['cbet']);
+      final spot = TrainingPackSpot(
+        id: 's1',
+        hand: v2models.HandData(),
+        tags: ['cbet'],
+      );
 
       service.inject[spot];
 

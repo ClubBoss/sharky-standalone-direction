@@ -15,7 +15,7 @@ void main() {
       tagBreakdown: {'a': TagSummary(total: 10, correct: 8, accuracy: 80)},
     );
 
-    final updated = updater.updateMastery[current: current, summary: summary];
+    final updated = updater.updateMastery(current: current, summary: summary);
     // Expected new value = 0.4 + (0.8 - 0.4) * 0.15 = 0.46
     expect(updated['a']!, closeTo(0.46, 0.0001));
   });
@@ -28,7 +28,7 @@ void main() {
       mistakeCount: 5,
       tagBreakdown: {'b': TagSummary(total: 4, correct: 2, accuracy: 50)},
     );
-    final updated = updater.updateMastery[current: {}, summary: summary];
+    final updated = updater.updateMastery(current: {}, summary: summary);
     // old default 0.5 -> new = 0.5 + (0.5 - 0.5)*0.15 = 0.5
     expect(updated['b'], 0.5);
   });

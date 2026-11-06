@@ -15,7 +15,7 @@ class _FakeSummaryBuilder extends SkillTreeTrackSummaryBuilder {
   final SkillTreeTrackSummary summary;
   _FakeSummaryBuilder(this.summary);
   @override
-  Future<SkillTreeTrackSummary> build(tree] async => summary;
+  Future<SkillTreeTrackSummary> build(tree) async => summary;
 }
 
 class _FakeBannerService extends SkillTreeCategoryBannerService {
@@ -45,8 +45,8 @@ void main() {
   });
 
   test('composes completion banner', () async {
-    final tree = builder.build([node('a', 'A']]).tree;
-    final nextTree = builder.build([node('b', 'B']]).tree;
+    final tree = builder.build([node('a', 'A')]).tree;
+    final nextTree = builder.build([node('b', 'B')]).tree;
     const summary = SkillTreeTrackSummary(
       title: 'A',
       completedCount: 1,

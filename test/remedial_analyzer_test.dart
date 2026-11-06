@@ -1,9 +1,10 @@
- // fix: hide shim
+// fix: hide shim
 import 'package:test/test.dart';
 import 'package:poker_analyzer/services/remedial_analyzer.dart';
 import 'package:poker_analyzer/models/training_spot_attempt.dart';
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
-import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models; // fix: v2 hand
+import 'package:poker_analyzer/models/v2/hand_data.dart'
+    as v2models; // fix: v2 hand
 
 void main() {
   test('RemedialAnalyzer produces spec with top tags and textures', () {
@@ -43,7 +44,7 @@ void main() {
     ];
 
     final analyzer = RemedialAnalyzer();
-    final spec = analyzer.analyze[attempts, targetAccuracy: 0.8];
+    final spec = analyzer.analyze(attempts, targetAccuracy: 0.8);
 
     expect(spec.topTags.first, 'tagA');
     expect(spec.topTags.length, 3);

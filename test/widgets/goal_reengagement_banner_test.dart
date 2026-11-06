@@ -1,4 +1,4 @@
- // fix: hide shim
+// fix: hide shim
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,7 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/main.dart';
 import 'package:poker_analyzer/models/game_type.dart';
 import 'package:poker_analyzer/models/training_goal.dart';
-import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart' as v2; // fix: v2 alias
+import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart'
+    as v2; // fix: v2 alias
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
 import 'package:poker_analyzer/services/goal_reengagement_service.dart';
 import 'package:poker_analyzer/services/session_log_service.dart';
@@ -54,7 +55,7 @@ Future<void> _loadLibrary() async {
     created: DateTime.now(),
   ); // fix: v2 ctor/collections/types
   final bundle = _FakeBundle({
-    'assets/packs/v2/library_index.json': jsonEncode([pack.toJson())),
+    'assets/packs/v2/library_index.json': jsonEncode([pack.toJson()]),
   });
   await PackLibraryLoaderService.instance
       .loadLibrary(); // ensure static cache not null
@@ -84,7 +85,7 @@ void main() {
     final service = _FakeReengagementService();
     await tester.pumpWidget(
       MultiProvider(
-        providers: [Provider<GoalReengagementService>.value[value: service]],
+        providers: [Provider<GoalReengagementService>.value(value: service)],
         child: MaterialApp(
           navigatorKey: navigatorKey,
           home: GoalReengagementBannerWidget(),
@@ -102,7 +103,7 @@ void main() {
     );
     await tester.pumpWidget(
       MultiProvider(
-        providers: [Provider<GoalReengagementService>.value[value: service]],
+        providers: [Provider<GoalReengagementService>.value(value: service)],
         child: MaterialApp(
           navigatorKey: navigatorKey,
           home: GoalReengagementBannerWidget(),
@@ -119,7 +120,7 @@ void main() {
     );
     await tester.pumpWidget(
       MultiProvider(
-        providers: [Provider<GoalReengagementService>.value[value: service]],
+        providers: [Provider<GoalReengagementService>.value(value: service)],
         child: MaterialApp(
           navigatorKey: navigatorKey,
           home: GoalReengagementBannerWidget(),
@@ -139,7 +140,7 @@ void main() {
     );
     await tester.pumpWidget(
       MultiProvider(
-        providers: [Provider<GoalReengagementService>.value[value: service]],
+        providers: [Provider<GoalReengagementService>.value(value: service)],
         child: MaterialApp(
           navigatorKey: navigatorKey,
           home: GoalReengagementBannerWidget(),
@@ -154,4 +155,3 @@ void main() {
     expect(find.text('Скрыть'), findsNothing);
   });
 }
-

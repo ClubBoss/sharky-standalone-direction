@@ -39,7 +39,7 @@ class _MockConverter implements ConverterPlugin {
   String? convertTo(SavedHand hand) => exportResult;
 
   @override
-  String? validate[SavedHand hand] => validationResult;
+  String? validate(SavedHand hand) => validationResult;
 }
 
 SavedHand _dummyHand() {
@@ -57,7 +57,7 @@ SavedHand _dummyHand() {
     ],
     boardCards: <CardModel>[],
     boardStreet: 0,
-    actions: <ActionEntry>[ActionEntry(0, 0, 'call')),
+    actions: <ActionEntry>[ActionEntry(0, 0, 'call')],
     stackSizes: <int, int>{0: 100, 1: 100},
     playerPositions: <int, String>{0: 'BTN', 1: 'BB'},
     playerTypes: <int, PlayerType>{

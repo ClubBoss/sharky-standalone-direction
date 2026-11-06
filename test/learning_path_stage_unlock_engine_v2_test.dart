@@ -42,7 +42,7 @@ void main() {
     ],
   );
 
-  SessionLog log[String id, int correct, int mistakes] => SessionLog(
+  SessionLog log(String id, int correct, int mistakes) => SessionLog(
     tags: [],
     sessionId: '1',
     templateId: id,
@@ -54,8 +54,8 @@ void main() {
 
   test('only next stage active after completion', () {
     final path = path0();
-    final logs = {'pack1': log['pack1', 2, 0]};
-    final states = engine.computeStageUIStates[path, logs];
+    final logs = {'pack1': log('pack1', 2, 0)};
+    final states = engine.computeStageUIStates(path, logs);
     expect(states['s1'], LearningStageUIState.done);
     expect(states['s2'], LearningStageUIState.active);
     expect(states['s3'], LearningStageUIState.locked);
@@ -63,7 +63,7 @@ void main() {
 
   test('first stage active when none completed', () {
     final path = path0();
-    final states = engine.computeStageUIStates[path, {}];
+    final states = engine.computeStageUIStates(path, {});
     expect(states['s1'], LearningStageUIState.active);
     expect(states['s2'], LearningStageUIState.locked);
     expect(states['s3'], LearningStageUIState.locked);

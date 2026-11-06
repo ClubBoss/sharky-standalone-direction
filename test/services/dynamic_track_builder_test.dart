@@ -17,7 +17,7 @@ void main() {
       heroIndex: 0,
       playerCount: 2,
       actions: {
-        0: [ActionEntry(0, 0, 'push', ev: ev)),
+        0: [ActionEntry(0, 0, 'push', ev: ev)],
       },
     );
     return TrainingPackSpot(id: id, tags: [tag], hand: hand);
@@ -42,10 +42,10 @@ void main() {
       tag: 'cbet',
       priorityScore: 1,
     );
-    final p1 = pack('p1', [spot['s1', 'cbet', -0.5], spot['s2', 'cbet', 0.2]]);
-    final p2 = pack('p2', [spot['s3', 'cbet', -1.0]]);
+    final p1 = pack('p1', [spot('s1', 'cbet', -0.5), spot('s2', 'cbet', 0.2)]);
+    final p2 = pack('p2', [spot('s3', 'cbet', -1.0)]);
 
-    final tracks = builder.buildTracks[goals: [goal], sourcePacks: [p1, p2]];
+    final tracks = builder.buildTracks(goals: [goal], sourcePacks: [p1, p2]);
 
     expect(tracks.length, 1);
     final t = tracks.first;

@@ -47,7 +47,7 @@ spots:
       await File('${newDir.path}/c.yaml').writeAsString(packC);
 
       final differ = TrainingPackLibraryDiffer();
-      final result = await differ.diff[oldDir.path, newDir.path];
+      final result = await differ.diff(oldDir.path, newDir.path);
 
       expect(result.added, ['c']);
       expect(result.removed, ['b']);

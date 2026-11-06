@@ -23,7 +23,12 @@ TrainingPackTemplate _pack(
 }
 
 TrainingPackSpot _spot(String id, String tag, {String type = 'theory'}) {
-  return TrainingPackSpot(id: id, type: type, tags: [tag], hand: v2models.HandData());
+  return TrainingPackSpot(
+    id: id,
+    type: type,
+    tags: [tag],
+    hand: v2models.HandData(),
+  );
 }
 
 void main() {
@@ -34,10 +39,10 @@ void main() {
     try {
       final p1 = _pack(
         'p1',
-        [_spot['a', 'btnPush'], _spot['b', 'btnPush']],
+        [_spot('a', 'btnPush'), _spot('b', 'btnPush')],
         ['btnPush'],
       );
-      final p2 = _pack('p2', [_spot['c', 'limped']], ['limped']);
+      final p2 = _pack('p2', [_spot('c', 'limped')], ['limped']);
       await File(p.join(src.path, 'p1.yaml')).writeAsString(p1.toYamlString());
       await File(p.join(src.path, 'p2.yaml')).writeAsString(p2.toYamlString());
 

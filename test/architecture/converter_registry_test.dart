@@ -30,9 +30,9 @@ class _MockConverter implements ConverterPlugin {
   @override
   final ConverterFormatCapabilities capabilities;
 
-  final SavedHand? Function[String data]? onConvertFrom;
-  final String? Function[SavedHand hand]? onConvertTo;
-  final String? Function[SavedHand hand]? onValidate;
+  final SavedHand? Function(String data)? onConvertFrom;
+  final String? Function(SavedHand hand)? onConvertTo;
+  final String? Function(SavedHand hand)? onValidate;
 
   @override
   SavedHand? convertFrom(String externalData) =>
@@ -43,7 +43,7 @@ class _MockConverter implements ConverterPlugin {
       onConvertTo != null ? onConvertTo!(hand) : null;
 
   @override
-  String? validate[SavedHand hand] =>
+  String? validate(SavedHand hand) =>
       onValidate != null ? onValidate!(hand) : null;
 }
 
@@ -62,7 +62,7 @@ SavedHand _dummyHand() {
     ],
     boardCards: <CardModel>[],
     boardStreet: 0,
-    actions: <ActionEntry>[ActionEntry(0, 0, 'call')),
+    actions: <ActionEntry>[ActionEntry(0, 0, 'call')],
     stackSizes: <int, int>{0: 100, 1: 100},
     playerPositions: <int, String>{0: 'BTN', 1: 'BB'},
     playerTypes: <int, PlayerType>{

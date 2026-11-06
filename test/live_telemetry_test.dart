@@ -30,7 +30,7 @@ void main() {
 
   test('moduleId and code are preserved', () {
     const v = LiveViolation('string_bet_call_only', 'X');
-    final props = buildLiveViolationProps[moduleId: 'mod-123', violation: v];
+    final props = buildLiveViolationProps(moduleId: 'mod-123', violation: v);
     expect(props['moduleId'], equals('mod-123'));
     expect(props['code'], equals('string_bet_call_only'));
   });

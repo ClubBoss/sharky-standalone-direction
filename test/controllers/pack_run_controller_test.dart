@@ -22,7 +22,7 @@ void main() {
 
   test('tag cooldown is respected', () async {
     final service = _FakeTheoryIndexService({
-      't': [TheorySnippet(id: '1', title: 't', bullets: [])),
+      't': [TheorySnippet(id: '1', title: 't', bullets: [])],
     });
     final state = PackRunSessionState(scopeKey: 'k1');
     final controller = PackRunController(theoryIndex: service, state: state);
@@ -90,8 +90,8 @@ void main() {
 
   test('global cooldown prevents other tags', () async {
     final service = _FakeTheoryIndexService({
-      'a': [TheorySnippet(id: '1', title: 'a', bullets: [])),
-      'b': [TheorySnippet(id: '2', title: 'b', bullets: [])),
+      'a': [TheorySnippet(id: '1', title: 'a', bullets: [])],
+      'b': [TheorySnippet(id: '2', title: 'b', bullets: [])],
     });
     final state = PackRunSessionState(scopeKey: 'k4');
     final controller = PackRunController(theoryIndex: service, state: state);

@@ -10,13 +10,13 @@ void main() {
 
     for (final seed in seeds) {
       test('seed $seed deterministic and mix', () {
-        final spots = generateSpots[seed: seed, count: count, mix: mix];
+        final spots = generateSpots(seed: seed, count: count, mix: mix);
         expect(spots.length, inInclusiveRange(30, 50));
         expect(spots, isNotEmpty);
 
         final h1 = itemsHash(spots, 10);
         final h2 = itemsHash(
-          generateSpots[seed: seed, count: count, mix: mix],
+          generateSpots(seed: seed, count: count, mix: mix),
           10,
         );
         expect(h1, h2);

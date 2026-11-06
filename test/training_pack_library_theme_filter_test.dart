@@ -35,7 +35,7 @@ void main() {
       ),
     );
 
-    final res = lib.filterBy[themes: ['ICM']];
+    final res = lib.filterBy(themes: ['ICM']);
     expect(res.map((e) => e.id).toList(), ['b']);
   });
 }

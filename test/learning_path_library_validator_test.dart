@@ -41,7 +41,7 @@ void main() {
         id: 'a',
         title: 'A',
         description: '',
-        stages: [stage('s1', 'p1', tags: [])),
+        stages: [stage('s1', 'p1', tags: [])],
       ),
     );
     LearningPathLibrary.staging.add(
@@ -49,11 +49,13 @@ void main() {
         id: 'b',
         title: 'B',
         description: '',
-        stages: [stage('s1', 'p1')),
+        stages: [stage('s1', 'p1')],
       ),
     );
 
-    final issues = LearningPathLibraryValidator().validateAll[LearningPathLibrary.staging,];
+    final issues = LearningPathLibraryValidator().validateAll(
+      LearningPathLibrary.staging,
+    );
     expect(issues.length, 1);
     expect(issues.first.$1, 'a');
     expect(issues.first.$2, 'missing_tags:s1');

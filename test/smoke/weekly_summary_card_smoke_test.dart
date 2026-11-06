@@ -24,7 +24,7 @@ void main() {
     final mastery = _MockTagMasteryService();
 
     when(() => logs.load()).thenAnswer((_) async {});
-    when(() => logs.filter[range: any(named: 'range'])).thenReturn([
+    when(() => logs.filter(range: any(named: 'range'))).thenReturn([
       SessionLog(
         sessionId: 's1',
         templateId: 't1',
@@ -42,8 +42,8 @@ void main() {
     await tester.pumpWidget(
       MultiProvider(
         providers: [
-          Provider<SessionLogService>.value[value: logs],
-          Provider<TagMasteryService>.value[value: mastery],
+          Provider<SessionLogService>.value(value: logs),
+          Provider<TagMasteryService>.value(value: mastery),
         ],
         child: const MaterialApp(home: Scaffold(body: WeeklySummaryCard())),
       ),

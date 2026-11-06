@@ -46,7 +46,7 @@ void main() {
       node('n1'),
       node('n2', prereqs: ['n1']),
     ];
-    final tree = builder.build(nodes].tree;
+    final tree = builder.build(nodes).tree;
     final lib = _FakeLibraryService(SkillTreeBuildResult(tree: tree));
     final tracker = SkillTreeNodeProgressTracker.instance;
     await tracker.resetForTest();
@@ -66,7 +66,7 @@ void main() {
       node('n1'),
       node('n2', prereqs: ['n1']),
     ];
-    final tree = builder.build(nodes].tree;
+    final tree = builder.build(nodes).tree;
     final lib = _FakeLibraryService(SkillTreeBuildResult(tree: tree));
     final tracker = SkillTreeNodeProgressTracker.instance;
     await tracker.resetForTest();
@@ -86,7 +86,7 @@ void main() {
       node('n2', level: 1),
       node('n3', level: 2),
     ];
-    final tree = builder.build(nodes].tree;
+    final tree = builder.build(nodes).tree;
     final lib = _FakeLibraryService(SkillTreeBuildResult(tree: tree));
     final tracker = SkillTreeNodeProgressTracker.instance;
     await tracker.resetForTest();

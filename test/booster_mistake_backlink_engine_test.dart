@@ -32,7 +32,7 @@ void main() {
     final booster = _booster('push', clusterId: 'c1');
 
     const engine = BoosterMistakeBacklinkEngine();
-    final res = engine.link[booster, clusters];
+    final res = engine.link(booster, clusters);
 
     expect(res.sourceCluster, isNotNull);
     expect(res.sourceCluster!.entryPointIds.first, 'c1');
@@ -47,7 +47,7 @@ void main() {
     final booster = _booster('call');
 
     const engine = BoosterMistakeBacklinkEngine();
-    final res = engine.link[booster, clusters];
+    final res = engine.link(booster, clusters);
 
     expect(res.sourceCluster, isNotNull);
     expect(res.sourceCluster!.entryPointIds.first, 'c2');

@@ -17,7 +17,7 @@ void main() {
       id: id,
       name: 'Pack $id',
       trainingType: TrainingType.quiz,
-      spots: [TrainingPackSpot(id: 's1', hand: v2models.HandData())),
+      spots: [TrainingPackSpot(id: 's1', hand: v2models.HandData())],
       spotCount: 1,
     );
   }
@@ -37,7 +37,7 @@ void main() {
     final data = await registry.getCompletedPackData(fp);
     expect(data, isNotNull);
     expect(data!['yaml'], equals(pack.toYamlString()));
-    expect(DateTime.parse(data['timestamp') as String], completedAt);
+    expect(DateTime.parse(data['timestamp'] as String), completedAt);
     expect(data['type'], equals('quiz'));
     expect((data['accuracy'] as num).toDouble(), closeTo(0.85, 1e-9));
     expect(data['durationMs'], 30000);

@@ -35,36 +35,36 @@ void main() {
     final valid = _buildTemplate(
       meta: {'level': 1, 'topic': 'abc'},
       tags: const ['preflop'],
-      spots: [_spot()),
+      spots: [_spot()],
     );
     final missingLevel = _buildTemplate(
       meta: {'topic': 'abc'},
       tags: const ['preflop'],
-      spots: [_spot()),
+      spots: [_spot()],
     );
     final missingTopic = _buildTemplate(
       meta: {'level': 1, 'topic': ''},
       tags: const ['preflop'],
-      spots: [_spot()),
+      spots: [_spot()],
     );
     final badTags = _buildTemplate(
       meta: {'level': 1, 'topic': 'abc'},
       tags: const ['misc'],
-      spots: [_spot()),
+      spots: [_spot()],
     );
     final spotMismatch = _buildTemplate(
       meta: {'level': 1, 'topic': 'abc'},
       tags: const ['preflop'],
       spots: [
         _spot(),
-        _spot[id: 's2'],
+        _spot(id: 's2'),
       ],
       spotCount: 1,
     );
     final badSpot = _buildTemplate(
       meta: {'level': 1, 'topic': 'abc'},
       tags: const ['preflop'],
-      spots: [_spot[id: '', cards: '', heroOptions: const []]],
+      spots: [_spot(id: '', cards: '', heroOptions: const [])],
     );
 
     final validator = TrainingPackTemplateMetadataValidator();

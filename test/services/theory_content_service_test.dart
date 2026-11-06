@@ -9,13 +9,13 @@ void main() {
   });
 
   test('loads default block when no locale override', () async {
-    final block = TheoryContentService.instance.get['welcome', locale: 'en'];
+    final block = TheoryContentService.instance.get('welcome', locale: 'en');
     expect(block, isNotNull);
     expect(block!.title, 'Welcome');
   });
 
   test('loads localized block when available', () async {
-    final block = TheoryContentService.instance.get['welcome', locale: 'ru'];
+    final block = TheoryContentService.instance.get('welcome', locale: 'ru');
     expect(block, isNotNull);
     expect(block!.title, 'Добро пожаловать');
   });

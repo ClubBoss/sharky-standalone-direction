@@ -106,7 +106,7 @@ void _expectAsciiOnly(File file) {
   expect(allAscii, isTrue, reason: 'non-ASCII content in ${file.path}');
   // Also validate that decoding as UTF-8 does not introduce replacement chars
   // and remains ASCII-only, which matches text processing paths.
-  final text = utf8.decode[bytes, allowMalformed: false];
+  final text = utf8.decode(bytes, allowMalformed: false);
   final asciiText = text.codeUnits.every((c) => c <= 0x7F);
   expect(asciiText, isTrue, reason: 'non-ASCII code unit in ${file.path}');
 }

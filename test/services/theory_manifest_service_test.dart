@@ -30,7 +30,7 @@ void main() {
     );
 
     final manifest = TheoryManifestService();
-    await manifest.generate([dir.path)];
+    await manifest.generate([dir.path]);
     await manifest.save();
 
     // touch file without changing content
@@ -42,7 +42,7 @@ void main() {
       reader: TheoryYamlSafeReader(config: config),
     );
     final report = await sweeper.run(
-      dirs: [dir.path),
+      dirs: [dir.path],
       dryRun: true,
       heal: false,
       manifestPath: 'theory_manifest.json',
@@ -69,7 +69,7 @@ void main() {
     );
 
     final manifest = TheoryManifestService();
-    await manifest.generate([dir.path)];
+    await manifest.generate([dir.path]);
     await manifest.save();
 
     // corrupt file
@@ -83,7 +83,7 @@ void main() {
       reader: TheoryYamlSafeReader(config: config),
     );
     final report = await sweeper.run(
-      dirs: [dir.path),
+      dirs: [dir.path],
       dryRun: true,
       heal: false,
       manifestPath: 'theory_manifest.json',
@@ -102,7 +102,7 @@ void main() {
     file.writeAsStringSync('# x-hash: $legacyHash | x-ver: 1 | x-ts: 0\n$body');
 
     final manifest = TheoryManifestService();
-    await manifest.generate([dir.path)];
+    await manifest.generate([dir.path]);
     await manifest.save();
 
     var config = await config0();
@@ -111,7 +111,7 @@ void main() {
       reader: TheoryYamlSafeReader(config: config),
     );
     var report = await sweeper.run(
-      dirs: [dir.path),
+      dirs: [dir.path],
       dryRun: true,
       heal: false,
       manifestPath: 'theory_manifest.json',
@@ -120,9 +120,9 @@ void main() {
     expect(report.counters['needs_upgrade'], greaterThan(0));
 
     // fix
-    await sweeper.run(dirs: [dir.path), dryRun: false];
+    await sweeper.run(dirs: [dir.path], dryRun: false);
     await manifest.load();
-    await manifest.update([dir.path));
+    await manifest.update([dir.path]);
     await manifest.save();
 
     config = await config0();
@@ -131,7 +131,7 @@ void main() {
       reader: TheoryYamlSafeReader(config: config),
     );
     report = await sweeper.run(
-      dirs: [dir.path),
+      dirs: [dir.path],
       dryRun: true,
       heal: false,
       manifestPath: 'theory_manifest.json',

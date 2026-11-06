@@ -23,8 +23,8 @@ void main() {
       spotCount: baseSpots.length,
     );
     final theory1Spots = [
-      _spot['t1', type: 'theory'],
-      _spot['t2', type: 'theory'],
+      _spot('t1', type: 'theory'),
+      _spot('t2', type: 'theory'),
     ];
     final theory1 = v2.TrainingPackTemplateV2(
       id: 'th1',
@@ -39,7 +39,7 @@ void main() {
       name: 'Theory2',
       trainingType: TrainingType.pushFold,
       tags: const <String>['limped'],
-      spots: <TrainingPackSpot>[_spot['x', type: 'theory']],
+      spots: <TrainingPackSpot>[_spot('x', type: 'theory')],
       spotCount: 1,
     );
 
@@ -61,4 +61,3 @@ void main() {
     ]);
   });
 }
-

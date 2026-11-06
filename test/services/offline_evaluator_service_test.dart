@@ -54,7 +54,7 @@ class _MockRemoteEvService extends RemoteEvService {
   final double? ev;
   final double? icm;
   @override
-  Future<void> evaluate[TrainingPackSpot spot, {int anteBb = 0}] async {
+  Future<void> evaluate(TrainingPackSpot spot, {int anteBb = 0}) async {
     evalCalls++;
     _apply(spot, ev: ev);
   }
@@ -66,7 +66,7 @@ class _MockRemoteEvService extends RemoteEvService {
   }
 }
 
-TrainingPackSpot _spot[String id] => TrainingPackSpot(
+TrainingPackSpot _spot(String id) => TrainingPackSpot(
   id: id,
   hand: HandData.fromSimpleInput('AA', HeroPosition.sb, 10),
 );

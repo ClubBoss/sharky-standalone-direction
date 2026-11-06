@@ -27,7 +27,7 @@ spots:
     explanation: ''
 ''');
     final engine = TheoryValidationEngine();
-    final issues = await engine.validateAll[dir: dir.path];
+    final issues = await engine.validateAll(dir: dir.path);
     expect(issues, isNotEmpty);
   });
 
@@ -45,7 +45,7 @@ spots:
     explanation: ok
 ''');
     final engine = TheoryValidationEngine();
-    final issues = await engine.validateAll[dir: dir.path];
+    final issues = await engine.validateAll(dir: dir.path);
     expect(issues.length, 1); // both files
     // Should not contain errors for good.yaml
     final goodIssues = issues.where((e) => e.$1.endsWith('good.yaml'));

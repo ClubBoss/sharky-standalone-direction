@@ -22,7 +22,7 @@ void main() {
       ),
     };
 
-    linker.link[result, theoryMap];
+    linker.link(result, theoryMap);
 
     expect(node.theory, isNotNull);
     expect(node.theory!.htmlSnippet, contains('C-bet'));
@@ -50,7 +50,7 @@ void main() {
       ),
     };
 
-    linker.link[result, theoryMap];
+    linker.link(result, theoryMap);
 
     expect(node.theory, isNotNull);
     expect(node.theory!.htmlSnippet, contains('River theory'));

@@ -13,7 +13,8 @@ void main() {
 
   testWidgets('renders locked and unlocked stages', (tester) async {
     const builder = SkillTreeStageListBuilder();
-    final widget = builder.build(allNodes: [node('a', 0], node('b', 1)),
+    final widget = builder.build(
+      allNodes: [node('a', 0), node('b', 1)],
       unlockedNodeIds: {'a'},
       completedNodeIds: {},
       justUnlockedNodeIds: const {},
@@ -25,7 +26,8 @@ void main() {
 
   testWidgets('completed stage shows check icon', (tester) async {
     const builder = SkillTreeStageListBuilder();
-    final widget = builder.build(allNodes: [node('a', 0]],
+    final widget = builder.build(
+      allNodes: [node('a', 0)],
       unlockedNodeIds: {'a'},
       completedNodeIds: {'a'},
       justUnlockedNodeIds: const {},
@@ -36,7 +38,8 @@ void main() {
 
   testWidgets('just unlocked node gets highlight', (tester) async {
     const builder = SkillTreeStageListBuilder();
-    final widget = builder.build(allNodes: [node('a', 0]],
+    final widget = builder.build(
+      allNodes: [node('a', 0)],
       unlockedNodeIds: {'a'},
       completedNodeIds: const {},
       justUnlockedNodeIds: {'a'},

@@ -20,7 +20,7 @@ void main() {
   tearDown(() => packLibrary.clear());
 
   test('returns most popular tags', () {
-    final tags = service.getSuggestedTags[limit: 2];
+    final tags = service.getSuggestedTags(limit: 2);
     expect(tags.length, 2);
     expect(tags, containsAll(['starter', 'pushfold']));
   });

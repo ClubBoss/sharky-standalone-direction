@@ -176,7 +176,7 @@ void main() {
         await _writeReport(
           corpus,
           'spot_$i',
-          _spot[c[0] as String, c[1] as String, c[2] as double],
+          _spot(c[0] as String, c[1] as String, c[2] as double),
         );
       }
 
@@ -221,7 +221,7 @@ void main() {
       expect(reportJson['changed'], 0);
 
       // Невалидный одиночный отчёт (без jamFold)
-      await _writeReport(tmp, 'missing', _spot['7c 2d', '7c5s2h', 1.0]);
+      await _writeReport(tmp, 'missing', _spot('7c 2d', '7c5s2h', 1.0));
       final invalidFile = File(
         '${tmp.path}${Platform.pathSeparator}missing.json',
       );

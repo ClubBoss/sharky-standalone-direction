@@ -9,7 +9,7 @@ TrainingPackSpot _spot(String id, List<String> board, List<String> actions) {
   final hand = v2models.HandData(
     board: board,
     actions: {
-      0: [for (final a in actions) ActionEntry(0, 0, a)),
+      0: [for (final a in actions) ActionEntry(0, 0, a)],
     },
   );
   return TrainingPackSpot(id: id, hand: hand, board: board);
@@ -22,8 +22,8 @@ void main() {
       id: 'p1',
       title: 'A',
       spots: [
-        _spot['s1', ['Ah', 'Kd', 'Qc'], ['push', 'call']],
-        _spot['s2', ['2c', '3d', '4h'], ['bet', 'fold']],
+        _spot('s1', ['Ah', 'Kd', 'Qc'], ['push', 'call']),
+        _spot('s2', ['2c', '3d', '4h'], ['bet', 'fold']),
       ],
       tags: ['tag1'],
     );
@@ -31,8 +31,8 @@ void main() {
       id: 'p2',
       title: 'B',
       spots: [
-        _spot['s3', ['Ah', 'Kd', 'Qc'], ['push', 'call']],
-        _spot['s4', ['2c', '3d', '4h'], ['bet', 'fold']],
+        _spot('s3', ['Ah', 'Kd', 'Qc'], ['push', 'call']),
+        _spot('s4', ['2c', '3d', '4h'], ['bet', 'fold']),
       ],
       tags: ['tag1'],
     );
@@ -40,20 +40,20 @@ void main() {
       id: 'p3',
       title: 'C',
       spots: [
-        _spot['s5', ['5c', '6d', '7h'], ['raise', 'fold']],
+        _spot('s5', ['5c', '6d', '7h'], ['raise', 'fold']),
       ],
       tags: ['tag2'],
     );
 
-    final sim12 = service.compare[pack1, pack2];
-    final sim13 = service.compare[pack1, pack3];
+    final sim12 = service.compare(pack1, pack2);
+    final sim13 = service.compare(pack1, pack3);
 
     expect(sim12, greaterThanOrEqualTo(0.9));
     expect(sim13, lessThan(0.9));
     expect(service.areSimilar(pack1, pack2), isTrue);
     expect(service.areSimilar(pack1, pack3), isFalse);
 
-    final matches = service.findSimilarPacks[pack1, [pack1, pack2, pack3]];
+    final matches = service.findSimilarPacks(pack1, [pack1, pack2, pack3]);
     expect(matches.length, 1);
     expect(matches.first.pack.id, 'p2');
     expect(matches.first.similarity, sim12);
@@ -65,7 +65,7 @@ void main() {
       id: 'p1',
       title: 'A',
       spots: [
-        _spot['s1', ['Ah', 'Kd', 'Qc'], ['push', 'call']],
+        _spot('s1', ['Ah', 'Kd', 'Qc'], ['push', 'call']),
       ],
       tags: ['tag1'],
     );
@@ -73,7 +73,7 @@ void main() {
       id: 'p2',
       title: 'B',
       spots: [
-        _spot['s2', ['Ah', 'Kd', 'Qc'], ['push', 'call']],
+        _spot('s2', ['Ah', 'Kd', 'Qc'], ['push', 'call']),
       ],
       tags: ['tag1'],
     );
@@ -81,7 +81,7 @@ void main() {
       id: 'p3',
       title: 'C',
       spots: [
-        _spot['s3', ['2c', '3d', '4h'], ['bet', 'fold']],
+        _spot('s3', ['2c', '3d', '4h'], ['bet', 'fold']),
       ],
       tags: ['tag2'],
     );

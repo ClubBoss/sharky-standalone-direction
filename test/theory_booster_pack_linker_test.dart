@@ -6,7 +6,7 @@ TheoryPackModel _pack(String id, String title, String text) {
   return TheoryPackModel(
     id: id,
     title: title,
-    sections: [TheorySectionModel(title: 's', text: text, type: 'tip')),
+    sections: [TheorySectionModel(title: 's', text: text, type: 'tip')],
   );
 }
 
@@ -33,7 +33,7 @@ void main() {
     );
 
     const linker = TheoryBoosterPackLinker();
-    final result = linker.autoLinkBoosters[theory, [booster1, booster2]];
+    final result = linker.autoLinkBoosters(theory, [booster1, booster2]);
 
     expect(result.length, 1);
     expect(result.first, 'b1');

@@ -14,7 +14,7 @@ void main() {
     expect(await tracker.isCompleted('stage1'), isFalse);
     expect(await tracker.getMastery('stage1'), 0.0);
 
-    await tracker.updateMastery['stage1', 0.6];
+    await tracker.updateMastery('stage1', 0.6);
     await tracker.markCompleted('stage1');
 
     expect(await tracker.isCompleted('stage1'), isTrue);
@@ -23,8 +23,8 @@ void main() {
 
   test('getTheoryStageProgressList returns stored entries', () async {
     final tracker = TheoryStageProgressTracker.instance;
-    await tracker.updateMastery['s1', 0.7];
-    await tracker.updateMastery['s2', 0.4];
+    await tracker.updateMastery('s1', 0.7);
+    await tracker.updateMastery('s2', 0.4);
     final map = await tracker.getTheoryStageProgressList();
     expect(map['s1'], 0.7);
     expect(map['s2'], 0.4);

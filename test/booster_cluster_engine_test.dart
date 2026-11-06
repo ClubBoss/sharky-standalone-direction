@@ -14,12 +14,12 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test('clusters similar spots', () {
-    final s1 = _spot['a', 'AhKh', HeroPosition.btn];
-    final s2 = _spot['b', 'AhKh', HeroPosition.btn];
-    final s3 = _spot['c', '9c8c', HeroPosition.sb];
+    final s1 = _spot('a', 'AhKh', HeroPosition.btn);
+    final s2 = _spot('b', 'AhKh', HeroPosition.btn);
+    final s3 = _spot('c', '9c8c', HeroPosition.sb);
 
-    const engine = BoosterClusterEngine();
-    final clusters = engine.analyzeSpots[[s1, s2, s3], threshold: 0.8];
+    final engine = BoosterClusterEngine();
+    final clusters = engine.analyzeSpots([s1, s2, s3], threshold: 0.8);
 
     expect(clusters.length, 2);
     expect(clusters.first.spots.length, 2);

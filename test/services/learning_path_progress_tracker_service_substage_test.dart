@@ -62,7 +62,7 @@ void main() {
   ];
 
   test('computeProgressStrings aggregates subStages', () {
-    final progress = tracker.computeProgressStrings[template, logs];
+    final progress = tracker.computeProgressStrings(template, logs);
     expect(progress['s1'], '10 / 10 рук · 70%');
   });
 

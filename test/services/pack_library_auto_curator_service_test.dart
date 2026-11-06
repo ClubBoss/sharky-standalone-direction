@@ -11,7 +11,7 @@ class _NoopDedup extends AutoDeduplicationEngine {
   _NoopDedup() : super(log: IOSink(StreamController<List<int>>().sink));
 
   @override
-  List<TrainingPackModel> deduplicate[List<TrainingPackModel> input] => input;
+  List<TrainingPackModel> deduplicate(List<TrainingPackModel> input) => input;
 }
 
 void main() {
@@ -44,8 +44,8 @@ void main() {
     final p1 = pack(
       'p1',
       spots: [
-        spot['s1', meta: {'clusterId': 'c1'}],
-        spot['s2', meta: {'clusterId': 'c1'}],
+        spot('s1', meta: {'clusterId': 'c1'}),
+        spot('s2', meta: {'clusterId': 'c1'}),
       ],
       tags: ['a'],
     );
@@ -53,9 +53,9 @@ void main() {
     final p2 = pack(
       'p2',
       spots: [
-        spot['s3', meta: {'clusterId': 'c1'}],
-        spot['s4', meta: {'clusterId': 'c1'}],
-        spot['s5', meta: {'clusterId': 'c1'}],
+        spot('s3', meta: {'clusterId': 'c1'}),
+        spot('s4', meta: {'clusterId': 'c1'}),
+        spot('s5', meta: {'clusterId': 'c1'}),
       ],
       tags: ['a', 'b'],
     );
@@ -63,7 +63,7 @@ void main() {
     final p3 = pack(
       'p3',
       spots: [
-        spot['s6', meta: {'clusterId': 'c2'}],
+        spot('s6', meta: {'clusterId': 'c2'}),
       ],
       tags: ['c'],
     );
@@ -80,7 +80,7 @@ void main() {
       tags: ['x', 'y', 'z'],
     );
 
-    final result = curator.curate[[p1, p2, p3, p4, p5], limit: 4];
+    final result = curator.curate([p1, p2, p3, p4, p5], limit: 4);
 
     expect(result.map((p) => p.id).toList(), ['p4', 'p5', 'p2', 'p3']);
   });

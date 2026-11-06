@@ -48,8 +48,8 @@ void main() {
   });
 
   testWidgets('celebrates newly completed stage', (tester) async {
-    final nodes = [node('a', 0), node('b', 1));
-    final tree = builder.build(nodes].tree;
+    final nodes = [node('a', 0), node('b', 1)];
+    final tree = builder.build(nodes).tree;
     final lib = _FakeLibraryService({
       'T': SkillTreeBuildResult(tree: tree),
     }, nodes);
@@ -76,8 +76,8 @@ void main() {
   testWidgets('does not repeat celebration', (tester) async {
     SharedPreferences.setMockInitialValues({'stage_celebrated_T_0': true});
     await tracker.resetForTest();
-    final nodes = [node('a', 0));
-    final tree = builder.build(nodes].tree;
+    final nodes = [node('a', 0)];
+    final tree = builder.build(nodes).tree;
     final lib = _FakeLibraryService({
       'T': SkillTreeBuildResult(tree: tree),
     }, nodes);

@@ -23,7 +23,7 @@ void main() {
         TrainingPackSpot(id: '2', tags: ['b']),
         TrainingPackSpot(id: '3', tags: ['a']),
       ];
-      final coverage = tracker.getSkillTagCoverage[spots, minCount: 2];
+      final coverage = tracker.getSkillTagCoverage(spots, minCount: 2);
       expect(coverage, {'a': 2});
     });
 
@@ -42,7 +42,7 @@ void main() {
       expect(report.categoryCounts['B'], 1);
       expect(report.categoryCoverage['A'], closeTo(0.5, 0.001));
       expect(report.categoryCoverage['B'], closeTo(1.0, 0.001));
-      final under = tracker.underrepresentedCategories[threshold: 0.6];
+      final under = tracker.underrepresentedCategories(threshold: 0.6);
       expect(under, ['A']);
     });
   });
