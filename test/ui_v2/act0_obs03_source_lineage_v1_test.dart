@@ -2,6 +2,8 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_sequence_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hnp_trace_file_store_v1.dart';
@@ -24,11 +26,14 @@ Act0LearningEvidenceRecordV1 _record(
   int order,
   int hour, {
   String taskId = 'blinds_review',
+  String lessonId = 'blinds_action_order',
+  int schemaVersion = 1,
   bool correct = true,
   Act0ReviewKindV1 kind = Act0ReviewKindV1.spacedReview,
   Act0DecisionAssistanceV1 assistance = Act0DecisionAssistanceV1.none,
 }) {
-  final task = _lesson.taskList.firstWhere((t) => t.taskId == taskId);
+  final lesson = _world.lessons.firstWhere((l) => l.lessonId == lessonId);
+  final task = lesson.taskList.firstWhere((t) => t.taskId == taskId);
   final option = task.runner.options.firstWhere((o) => o.isCorrect == correct);
   final receipt = act0FirstValueSkillReceiptForRunnerV1(
     runner: task.runner,
@@ -36,10 +41,11 @@ Act0LearningEvidenceRecordV1 _record(
     taskFamily: task.resolvedTaskFamily,
   )!;
   return Act0LearningEvidenceRecordV1(
+    schemaVersion: schemaVersion,
     recordId: 'obs03_attempt_v1|$order',
     createdOrder: order,
     worldId: _world.worldId,
-    lessonId: _lesson.lessonId,
+    lessonId: lesson.lessonId,
     taskId: taskId,
     sourceTaskId: taskId,
     choiceId: option.id,
@@ -51,7 +57,7 @@ Act0LearningEvidenceRecordV1 _record(
     skillAtomId: receipt.skillAtomId,
     decisionTimeBucket: '3_to_10s',
     resultKind: correct ? 'correct' : 'incorrect',
-    runId: 'run_v1|world_1|blinds_action_order|lesson|$order',
+    runId: 'run_v1|world_1|${lesson.lessonId}|lesson|$order',
     runKind: 'lesson',
     runOrdinal: order,
     sessionId: 'session_v1|$order',
@@ -60,7 +66,7 @@ Act0LearningEvidenceRecordV1 _record(
     assistanceKind: assistance,
     authoredSourceFingerprint: act0AuthoredSourceFingerprintV1(
       worldId: _world.worldId,
-      lessonId: _lesson.lessonId,
+      lessonId: lesson.lessonId,
       task: task,
     )!,
   );
@@ -102,6 +108,91 @@ class _Store implements Act0HnpTraceFileStoreV1 {
 
 void main() {
   test(
+    'OBS03 an unknown source record version cannot masquerade as version-one evidence',
+    () {
+      final record = _record(1, 0, schemaVersion: 2);
+      final event = act0EvidenceTelemetryEventsV1(
+        record: record,
+        history: Act0LearningEvidenceHistoryV1(records: [record]),
+        nowUtc: _t0,
+      ).single;
+      expect(event.name, 'evidence_lineage_unavailable');
+      expect(event.fields['reason'], 'unknown_source_record_version');
+      expect(event.fields['evidence_status'], 'insufficient_evidence');
+    },
+  );
+  test(
+    'OBS03 Action repair observes the existing sequence owner independently of the Review queue',
+    () {
+      final source = _record(
+        1,
+        0,
+        lessonId: 'fold_check_call_raise',
+        taskId: 'actions_check_drill',
+        correct: false,
+        kind: Act0ReviewKindV1.initialAssessment,
+      );
+      final repair = _with(
+        _record(
+          2,
+          0,
+          lessonId: 'fold_check_call_raise',
+          taskId: 'actions_check_drill',
+          kind: Act0ReviewKindV1.exactReplay,
+        ),
+        {'sessionId': source.sessionId},
+      );
+      final state = Act0ActionSequencePersonalizationPolicyV1.initialState()
+          .append(
+            Act0ActionSequenceOutcomeV1(
+              attemptKey: source.recordId,
+              stage: Act0ActionSequenceStageV1.decision,
+              isCorrect: source.isCorrect,
+              errorType: source.errorType,
+              decisionTimeBucket: source.decisionTimeBucket,
+            ),
+          );
+      List<Act0TelemetryEventV1> project(
+        Act0ActionSequenceLearnerStateV1 prior,
+        Act0LearningEvidenceRecordV1 attempt,
+      ) => act0EvidenceTelemetryEventsV1(
+        record: attempt,
+        history: Act0LearningEvidenceHistoryV1(records: [source, attempt]),
+        nowUtc: attempt.recordedAtUtc!,
+        actionState: prior,
+        actionStage: Act0ActionSequenceStageV1.repair,
+      );
+      final observation = _fields(
+        project(state, repair),
+        'sequence_repair_observed',
+      );
+      expect(observation['sequence_source_attempt_id'], source.recordId);
+      expect(observation['sequence_stage'], 'repair');
+      expect(observation['review_kind'], 'exactReplay');
+      expect(observation['independent_repair'], true);
+      expect(state.outcomes, hasLength(1));
+      final missing = _fields(
+        project(
+          Act0ActionSequencePersonalizationPolicyV1.initialState(),
+          repair,
+        ),
+        'sequence_repair_observed',
+      );
+      expect(missing['evidence_status'], 'insufficient_evidence');
+      expect(missing['independent_repair'], false);
+      final helped = _fields(
+        project(state, _with(repair, {'assistanceKind': 'quickHint'})),
+        'sequence_repair_observed',
+      );
+      expect(helped['independent_repair'], false);
+      final anotherSession = _fields(
+        project(state, _with(repair, {'sessionId': 'different_session'})),
+        'sequence_repair_observed',
+      );
+      expect(anotherSession['evidence_status'], 'insufficient_evidence');
+    },
+  );
+  test(
     'OBS03 incident reconstruction fails closed for missing rows, wrong source and mismatched sessions',
     () async {
       final source = _record(
@@ -134,9 +225,33 @@ void main() {
           record: record,
           history: history,
           nowUtc: record.recordedAtUtc!,
+          repairOccurrenceId: record == repair ? source.recordId : '',
         ))
           sink.record(event);
       }
+      sink.record(
+        act0RepairOutcomeTelemetryEventV1(
+          outcome: Act0RepairOutcomeV1(
+            repairOccurrenceId: source.recordId,
+            repairAttemptId: repair.recordId,
+            sourceTaskId: source.taskId,
+            repairTaskId: repair.taskId,
+            repairFocusKey: source.conceptFamilyId,
+            queueItemId: 'queue_v1',
+            targetWorldId: repair.worldId,
+            targetLessonId: repair.lessonId,
+            targetTaskId: repair.taskId,
+            selectedChoiceId: repair.choiceId,
+            correctChoiceId: repair.expectedChoiceId,
+            isCorrect: repair.isCorrect,
+            outcomeState: act0RepairOutcomeStateCorrectV1,
+            sequence: repair.createdOrder,
+            sourceType: 'active_repair',
+            sessionId: repair.sessionId,
+          ),
+          history: Act0LearningEvidenceHistoryV1(records: [source, repair]),
+        ),
+      );
       await sink.flushExport();
       final snapshot = jsonDecode(sink.exportJson()) as Map;
       Map inspect(Map trace, {String? fingerprint}) => inspectAct0Obs03TraceV1(
@@ -155,6 +270,7 @@ void main() {
         'decision_evidence_recorded',
         'transfer_evaluated',
         'elapsed_learning_observed',
+        'repair_outcome_recorded',
       ]) {
         final damaged = jsonDecode(jsonEncode(snapshot)) as Map;
         (damaged['events'] as List).removeWhere(

@@ -1,4 +1,6 @@
 import 'act0_authored_source_proof_v1.dart';
+import 'act0_action_learning_sequence_v1.dart';
+import 'act0_action_sequence_personalization_v1.dart';
 import 'act0_completed_decision_contract_v1.dart';
 import 'act0_durable_learning_time_contract_v1.dart';
 import 'act0_durable_retention_contract_v1.dart';
@@ -15,7 +17,17 @@ List<Act0TelemetryEventV1> act0EvidenceTelemetryEventsV1({
   required Act0LearningEvidenceHistoryV1 history,
   required DateTime nowUtc,
   String repairOccurrenceId = '',
+  Act0ActionSequenceLearnerStateV1? actionState,
+  Act0ActionSequenceStageV1? actionStage,
 }) {
+  if (record.schemaVersion != 1) {
+    return [
+      _event('evidence_lineage_unavailable', {
+        'evidence_status': 'insufficient_evidence',
+        'reason': 'unknown_source_record_version',
+      }),
+    ];
+  }
   final matches = [
     ...history.sourceAnchors,
     ...history.records,
@@ -37,6 +49,28 @@ List<Act0TelemetryEventV1> act0EvidenceTelemetryEventsV1({
   final previous = index > 0 ? epoch[index - 1] : null;
   final linked =
       inEpoch && record.runId.isNotEmpty && record.sessionId.isNotEmpty;
+  final inActionSequence =
+      record.taskId == act0ActionLearningSequenceV1.practiceTaskId &&
+      actionStage != null;
+  final observingSequenceRepair =
+      inActionSequence &&
+      const {
+        Act0ActionSequenceStageV1.repair,
+        Act0ActionSequenceStageV1.recheck,
+      }.contains(actionStage);
+  final initialOutcome = actionState?.outcomes.firstOrNull;
+  final sequenceSource = initialOutcome == null
+      ? null
+      : _sourceRecord(history, initialOutcome.attemptKey);
+  final sequenceLinked =
+      linked &&
+      sequenceSource != null &&
+      initialOutcome?.isCorrect == false &&
+      !sequenceSource.isCorrect &&
+      sequenceSource.taskId == record.taskId &&
+      sequenceSource.sessionId == record.sessionId &&
+      sequenceSource.createdOrder < record.createdOrder &&
+      act0CurrentAuthoredSourceProofV1(sequenceSource) != null;
   final common = <String, Object?>{
     'attempt_id': record.recordId,
     'created_order': record.createdOrder,
@@ -55,6 +89,11 @@ List<Act0TelemetryEventV1> act0EvidenceTelemetryEventsV1({
     'history_lineage_complete': history.hasCompleteLineage,
     'evidence_status': linked ? 'source_linked' : 'insufficient_evidence',
     'source_surface': 'act0_completed_evidence',
+    if (inActionSequence) 'sequence_stage': actionStage.name,
+    if (inActionSequence && actionState != null)
+      'sequence_id': actionState.sequenceId,
+    if (observingSequenceRepair && initialOutcome != null)
+      'sequence_source_attempt_id': initialOutcome.attemptKey,
   };
   final signal = Act0LearningTransferMeasurementV1.fromLearningEvidence(
     history,
@@ -124,7 +163,37 @@ List<Act0TelemetryEventV1> act0EvidenceTelemetryEventsV1({
       if (previous != null) 'previous_session_id': previous.sessionId,
       'retention_state': retention?.retentionState.name ?? 'unseen',
     }),
+    if (observingSequenceRepair)
+      _event('sequence_repair_observed', {
+        ...common,
+        'evidence_status': sequenceLinked
+            ? 'source_linked'
+            : 'insufficient_evidence',
+        'correct': record.isCorrect,
+        'assistance_kind': record.assistanceKind.name,
+        'review_kind': record.reviewKind.name,
+        'independent_repair':
+            sequenceLinked &&
+            act0IndependentRepairProofV1(
+              isCorrect: record.isCorrect,
+              assistanceKind: record.assistanceKind,
+            ),
+        'source_surface': 'act0_action_sequence',
+      }),
   ]);
+}
+
+Act0LearningEvidenceRecordV1? _sourceRecord(
+  Act0LearningEvidenceHistoryV1 history,
+  String id,
+) {
+  final rows = [
+    ...history.sourceAnchors,
+    ...history.records,
+  ].where((r) => r.recordId == id).toList();
+  return id.isNotEmpty && rows.isNotEmpty && rows.every((r) => r == rows.first)
+      ? rows.first
+      : null;
 }
 
 /// Projects an already accepted occurrence-bound repair outcome. A correct

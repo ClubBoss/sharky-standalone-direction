@@ -18,6 +18,7 @@ Map<String, Object?> inspectAct0Obs03TraceV1(
   final capture = decoded['capture'];
   final raw = decoded['events'];
   if (capture is! Map ||
+      capture['schemaVersion'] is! int ||
       capture['schemaVersion'] != 1 ||
       capture['complete'] != true ||
       capture['rejectedEventCount'] != 0 ||
@@ -27,7 +28,10 @@ Map<String, Object?> inspectAct0Obs03TraceV1(
   final events = <Map>[];
   for (var i = 0; i < raw.length; i++) {
     final row = raw[i];
-    if (row is! Map || row['sequence'] != i + 1 || row['fields'] is! Map)
+    if (row is! Map ||
+        row['sequence'] is! int ||
+        row['sequence'] != i + 1 ||
+        row['fields'] is! Map)
       return insufficient('invalid_sequence');
     events.add(row);
   }
@@ -109,6 +113,19 @@ Map<String, Object?> inspectAct0Obs03TraceV1(
   }
   final occurrence = evidence['repair_occurrence_id'];
   Map? repair;
+  if (const {'repair', 'recheck'}.contains(evidence['sequence_stage'])) {
+    final sourceId = evidence['sequence_source_attempt_id'];
+    final sequence = one('sequence_repair_observed', attemptId);
+    if (sourceId is! String ||
+        one('decision_evidence_recorded', sourceId) == null ||
+        sequence == null ||
+        sequence['sequence_source_attempt_id'] != sourceId ||
+        sequence['sequence_stage'] != evidence['sequence_stage'] ||
+        sequence['session_id'] != evidence['session_id'] ||
+        sequence['evidence_status'] != 'source_linked') {
+      return insufficient('missing_or_mismatched_sequence_repair');
+    }
+  }
   if (occurrence != null && evidence['assistance_kind'] == 'none') {
     if (occurrence is! String ||
         one('decision_evidence_recorded', occurrence) == null)
