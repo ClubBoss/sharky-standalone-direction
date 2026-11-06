@@ -24,8 +24,8 @@ void main() {
       final idsA = [for (final s in a.spots) s.id];
       final idsB = [for (final s in b.spots) s.id];
       expect(idsA, idsB);
-      final jsonA = jsonEncode([for (final s in a.spots) s.toJson()));
-      final jsonB = jsonEncode([for (final s in b.spots) s.toJson()));
+      final jsonA = jsonEncode([for (final s in a.spots) s.toJson()]);
+      final jsonB = jsonEncode([for (final s in b.spots) s.toJson()]);
       final hashA = sha1.convert(utf8.encode(jsonA)).toString();
       final hashB = sha1.convert(utf8.encode(jsonB)).toString();
       expect(hashA, hashB);

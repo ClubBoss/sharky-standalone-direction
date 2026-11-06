@@ -17,7 +17,7 @@ void main() {
       return TrainingPackModel(
         id: id,
         title: 'Pack$id',
-        spots: [TrainingPackSpot(id: 's$id')),
+        spots: [TrainingPackSpot(id: 's$id')],
         tags: tags,
       );
     }

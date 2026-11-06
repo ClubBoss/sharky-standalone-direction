@@ -30,7 +30,7 @@ void main() {
 
   test('prioritizes mistake replay over tracks', () {
     final plan = AdaptiveLearningPlan(
-      recommendedTracks: [track('t1', 'g1'), track('t2', 'g2')),
+      recommendedTracks: [track('t1', 'g1'), track('t2', 'g2')],
       goals: const [],
       mistakeReplayPack: pack('m1'),
     );

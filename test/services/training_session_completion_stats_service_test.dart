@@ -17,7 +17,7 @@ void main() {
       id: id,
       name: 'Pack $id',
       trainingType: TrainingType.quiz,
-      spots: [TrainingPackSpot(id: 's1', hand: v2models.HandData())),
+      spots: [TrainingPackSpot(id: 's1', hand: v2models.HandData())],
       spotCount: 1,
     );
   }

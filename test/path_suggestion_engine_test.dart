@@ -23,7 +23,7 @@ void main() {
   const engine = PathSuggestionEngine();
 
   test('returns null when all paths completed', () async {
-    final paths = [_Path(id: 'a'), _Path(id: 'b'));
+    final paths = [_Path(id: 'a'), _Path(id: 'b')];
     final result = await engine.suggestNextPath(
       allPaths: paths,
       completedPathIds: {'a', 'b'},

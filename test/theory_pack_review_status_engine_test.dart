@@ -10,7 +10,7 @@ void main() {
     final pack = TheoryPackModel(
       id: 't1',
       title: 'Title',
-      sections: [TheorySectionModel(title: 's', text: text, type: 'info')),
+      sections: [TheorySectionModel(title: 's', text: text, type: 'info')],
     );
     expect(engine.getStatus(pack), ReviewStatus.approved);
   });
@@ -19,7 +19,7 @@ void main() {
     final pack = TheoryPackModel(
       id: 't2',
       title: '',
-      sections: [TheorySectionModel(title: 's', text: 'a b c', type: 'info')),
+      sections: [TheorySectionModel(title: 's', text: 'a b c', type: 'info')],
     );
     expect(engine.getStatus(pack), ReviewStatus.rewrite);
   });

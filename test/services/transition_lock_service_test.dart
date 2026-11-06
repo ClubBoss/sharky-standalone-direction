@@ -24,7 +24,7 @@ class _MockState extends State<_MockWidget> {
   }
 
   @override
-  Widget build(BuildContext context] => Container();
+  Widget build(BuildContext context) => Container();
 }
 
 void main() {

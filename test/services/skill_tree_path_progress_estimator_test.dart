@@ -51,7 +51,7 @@ void main() {
       node('b', prereqs: ['a']),
       node('c', prereqs: ['b']),
     ];
-    final tree = builder.build(nodes, category: 'T'];
+    final tree = builder.build(nodes, category: 'T');
     final lib = _FakeLibraryService({'T': tree}, nodes);
 
     final tracker = SkillTreeNodeProgressTracker.instance;

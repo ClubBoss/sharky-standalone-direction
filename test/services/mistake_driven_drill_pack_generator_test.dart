@@ -1,10 +1,11 @@
- // fix: hide shim
+// fix: hide shim
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/services/mistake_driven_drill_pack_generator.dart';
 import 'package:poker_analyzer/services/mistake_history_query_service.dart';
 import 'package:poker_analyzer/models/mistake_history_entry.dart';
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
-import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models; // fix: v2 hand
+import 'package:poker_analyzer/models/v2/hand_data.dart'
+    as v2models; // fix: v2 hand
 
 class _StubHistoryService extends MistakeHistoryQueryService {
   final List<MistakeHistoryEntry> entries;
@@ -22,7 +23,7 @@ class _StubHistoryService extends MistakeHistoryQueryService {
     int limit = 20,
   }) async {
     final list = List<MistakeHistoryEntry>.from(entries)
-      ..sort((a, b] => b.timestamp.compareTo(a.timestamp));
+      ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
     return list.take(limit).toList();
   }
 }

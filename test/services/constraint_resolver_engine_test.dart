@@ -9,7 +9,7 @@ void main() {
   TrainingSpot buildSpot({List<CardModel>? board, String heroPos = 'btn'}) {
     return TrainingSpot(
       playerCards: [
-        [CardModel(rank: 'A', suit: 's'), CardModel(rank: 'K', suit: 'd')),
+        [CardModel(rank: 'A', suit: 's'), CardModel(rank: 'K', suit: 'd')],
         for (int i = 0; i < 5; i++) <CardModel>[],
       ],
       boardCards:

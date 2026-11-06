@@ -23,7 +23,7 @@ void main() {
       name: 'BTN Cash',
       trainingType: TrainingType.pushFold,
       gameType: GameType.cash,
-      spots: [TrainingPackSpot(id: 's1')),
+      spots: [TrainingPackSpot(id: 's1')],
       spotCount: 1,
     );
 

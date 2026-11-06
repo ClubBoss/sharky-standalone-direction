@@ -1,11 +1,13 @@
- // fix: hide shim
+// fix: hide shim
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart' as v2; // fix: v2 alias
+import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart'
+    as v2; // fix: v2 alias
 import 'package:poker_analyzer/screens/v2/training_pack_template_editor_screen.dart';
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
-import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models; // fix: v2 hand
+import 'package:poker_analyzer/models/v2/hand_data.dart'
+    as v2models; // fix: v2 hand
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
 
@@ -36,7 +38,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     final state =
-        tester.state[find.byType(TrainingPackTemplateEditorScreen]) as dynamic;
+        tester.state[find.byType(TrainingPackTemplateEditorScreen)] as dynamic;
     await state._checkClipboard();
     await tester.pump();
     expect(find.text('Paste Hands'), findsOneWidget);

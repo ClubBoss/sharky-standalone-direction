@@ -78,7 +78,7 @@ void main() {
     final threeKey = DateTime(threeAgo.year, threeAgo.month, threeAgo.day);
     expect(map[todayKey], true);
     expect(map[threeKey], true);
-    expect(map[todayKey.subtract(Duration(days: 1))), false);
+    expect(map[todayKey.subtract(Duration(days: 1))], false);
   });
 
   testWidgets('missed day uses monthly freeze', (tester) async {
