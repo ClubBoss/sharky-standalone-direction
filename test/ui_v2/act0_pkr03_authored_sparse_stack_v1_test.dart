@@ -71,4 +71,47 @@ void main() {
     );
     expect(act0TableChoreographyPlanForTableV1(invalid), isNull);
   });
+
+  test(
+    'source-shaped folded UTG action cannot be revived by sparse stacks',
+    () {
+      final source = _w4('w4_protection_intro');
+      expect(
+        source.actionTrail.any((action) => action.label == 'UTG folds'),
+        isTrue,
+      );
+      final invalid = source.copyWith(
+        actionTrail: <Act0ActionTrailItemV1>[
+          ...source.actionTrail,
+          const Act0ActionTrailItemV1(label: 'UTG bets 1 BB'),
+        ],
+      );
+      expect(invalid.potLabel, 'Pot 6 BB');
+      expect(
+        act0BettingRoundOrderTruthForTableV1(invalid),
+        Act0BettingRoundOrderTruthV1.contradiction,
+      );
+      expect(
+        act0StreetReplayFromTableV1(invalid)?.isConsumerSafe ?? false,
+        isFalse,
+      );
+      expect(act0TableChoreographyPlanForTableV1(invalid), isNull);
+    },
+  );
+
+  test('source-shaped folded UTG cannot be the active betting actor', () {
+    final source = _w4('w4_protection_intro');
+    final utg = source.seats.singleWhere((seat) => seat.seatId == 'utg');
+    expect(utg.isFolded, isTrue);
+    final invalid = source.copyWith(activeSeatId: 'utg');
+    expect(
+      act0BettingRoundOrderTruthForTableV1(invalid),
+      Act0BettingRoundOrderTruthV1.contradiction,
+    );
+    expect(
+      act0StreetReplayFromTableV1(invalid)?.isConsumerSafe ?? false,
+      isFalse,
+    );
+    expect(act0TableChoreographyPlanForTableV1(invalid), isNull);
+  });
 }

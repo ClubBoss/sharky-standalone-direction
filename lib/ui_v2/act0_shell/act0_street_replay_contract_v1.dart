@@ -251,6 +251,9 @@ Act0BettingRoundOrderTruthV1 act0BettingRoundOrderTruthForTableV1(
       // restore a turn on the same street.
       return contradiction;
     }
+    // A recorded fold irrevocably ends this actor's participation. Unknown
+    // display stacks cannot make the already-folded player eligible again.
+    if (!live.contains(action.actor)) return contradiction;
     if (action.actor != nextActor()) {
       // The last actor cannot act twice without another player's reopening
       // action. This also rejects BTN acting first postflop in a live
@@ -298,6 +301,9 @@ Act0BettingRoundOrderTruthV1 act0BettingRoundOrderTruthForTableV1(
   final active = _act0StreetReplaySeatByIdV1(table, activeId);
   if (active == null) return unproved;
   if (pending.isEmpty || live.length < 2) return contradiction;
+  if (!live.contains(active.seatLabel.trim().toUpperCase())) {
+    return contradiction;
+  }
   if (active.seatLabel.trim().toUpperCase() != nextActor()) {
     if (active.seatLabel.trim().toUpperCase() == order[lastActorIndex]) {
       return contradiction;
