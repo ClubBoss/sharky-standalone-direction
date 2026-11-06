@@ -95,6 +95,7 @@ Act0BettingRoundOrderTruthV1 act0BettingRoundOrderTruthForTableV1(
   final order = table.canonicalSeatOrder;
   final seatByActor = <String, Act0SeatStateV1>{};
   final seatIds = <String>{};
+  var stacksUnproved = false;
   final stackPattern = RegExp(r'^(\d+(?:\.\d+)?)\s+BB$', caseSensitive: false);
   for (final seat in table.seats) {
     final actor = seat.seatLabel.trim().toUpperCase();
@@ -106,11 +107,13 @@ Act0BettingRoundOrderTruthV1 act0BettingRoundOrderTruthForTableV1(
         !order.contains(actor) ||
         seatByActor.containsKey(actor) ||
         !seatIds.add(seat.seatId) ||
-        remaining == null ||
-        !remaining.isFinite ||
-        remaining <= 0 ||
         seat.bet?.kind == Act0SeatBetKindV1.allIn) {
       return unproved;
+    }
+    // A missing display stack does not prove the player has chips; however
+    // it cannot erase a contradiction that holds regardless of stack size.
+    if (remaining == null || !remaining.isFinite || remaining <= 0) {
+      stacksUnproved = true;
     }
     seatByActor[actor] = seat;
   }
@@ -231,10 +234,10 @@ Act0BettingRoundOrderTruthV1 act0BettingRoundOrderTruthForTableV1(
 
   for (final action in actions.skip(2)) {
     if (action.street != street) {
-      if (action.street.index != street.index + 1 ||
-          pending.isNotEmpty ||
-          live.length < 2) {
-        return contradiction;
+      if (action.street.index != street.index + 1) return contradiction;
+      if (pending.isNotEmpty || live.length < 2) {
+        // Unknown all-in/stack states may explain a pending response.
+        return stacksUnproved ? unproved : contradiction;
       }
       street = action.street;
       pending = live.toSet();
@@ -243,8 +246,17 @@ Act0BettingRoundOrderTruthV1 act0BettingRoundOrderTruthForTableV1(
       lastActorIndex = order.indexOf('BTN');
     }
     if (action.verb.isEmpty) continue;
-    if (live.length < 2 || pending.isEmpty || action.actor != nextActor()) {
+    if (live.length < 2 || pending.isEmpty) {
+      // Once the betting round or hand ends, no stack interpretation can
+      // restore a turn on the same street.
       return contradiction;
+    }
+    if (action.actor != nextActor()) {
+      // The last actor cannot act twice without another player's reopening
+      // action. This also rejects BTN acting first postflop in a live
+      // two-player pot; unknown stacks cannot make such an action legal.
+      if (action.actor == order[lastActorIndex]) return contradiction;
+      return stacksUnproved ? unproved : contradiction;
     }
     switch (action.verb) {
       case 'fold':
@@ -280,15 +292,19 @@ Act0BettingRoundOrderTruthV1 act0BettingRoundOrderTruthForTableV1(
   }
 
   final activeId = table.activeSeatId?.trim() ?? '';
-  if (activeId.isEmpty) return pending.isEmpty ? consistent : unproved;
+  if (activeId.isEmpty) {
+    return pending.isEmpty && !stacksUnproved ? consistent : unproved;
+  }
   final active = _act0StreetReplaySeatByIdV1(table, activeId);
   if (active == null) return unproved;
-  if (pending.isEmpty ||
-      live.length < 2 ||
-      active.seatLabel.trim().toUpperCase() != nextActor()) {
-    return contradiction;
+  if (pending.isEmpty || live.length < 2) return contradiction;
+  if (active.seatLabel.trim().toUpperCase() != nextActor()) {
+    if (active.seatLabel.trim().toUpperCase() == order[lastActorIndex]) {
+      return contradiction;
+    }
+    return stacksUnproved ? unproved : contradiction;
   }
-  return consistent;
+  return stacksUnproved ? unproved : consistent;
 }
 
 Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
