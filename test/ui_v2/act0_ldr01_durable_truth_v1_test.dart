@@ -1,3 +1,4 @@
+import '../support/act0_shell_presentation_finders_v1.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
@@ -1248,7 +1249,7 @@ void main() {
         ..['durableRetentionHistory'] = retention.toPayload();
       final disk = await _mount(tester, snap, tab: Act0ShellTabV1.home);
       await tester.tap(
-        find.byKey(const Key('act0_shell_home_dev_menu_button')),
+        act0ShellPresentationFinderV1('act0_shell_home_dev_menu_button'),
       );
       await tester.pumpAndSettle();
       await tester.tap(

@@ -1,3 +1,5 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_runtime_adapter_v1.dart';
+import '../support/act0_shell_presentation_finders_v1.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -109,7 +111,7 @@ void main() {
         isEmpty,
       );
 
-      await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
+      await tester.tap(act0ShellPresentationFinderV1('act0_shell_main_cta'));
       await tester.pumpAndSettle();
       expect(
         sink.events.where(
@@ -327,7 +329,9 @@ void main() {
   }
 
   Future<void> startDailyPracticeFromHubV1(WidgetTester tester) async {
-    final dailyTile = find.byKey(const Key('act0_shell_practice_group_daily'));
+    final dailyTile = act0ShellPresentationFinderV1(
+      'act0_shell_practice_group_daily',
+    );
     if (dailyTile.evaluate().isNotEmpty) {
       await tester.ensureVisible(dailyTile);
       await tester.pumpAndSettle();
@@ -336,7 +340,9 @@ void main() {
       return;
     }
 
-    await tester.tap(find.byKey(const Key('act0_shell_play_featured_cta')));
+    await tester.tap(
+      act0ShellPresentationFinderV1('act0_shell_play_featured_cta'),
+    );
     await tester.pumpAndSettle();
   }
 
@@ -370,24 +376,31 @@ void main() {
     for (var round = 0; round < 3; round++) {
       await answerVisiblePromptCorrectlyV1(tester);
       await waitForRapidPracticeTransitionV1(tester);
-      if (find
-          .byKey(const Key('act0_shell_play_screen'))
-          .evaluate()
-          .isNotEmpty) {
+      if (act0ShellPresentationFinderV1(
+        'act0_shell_play_screen',
+      ).evaluate().isNotEmpty) {
         return;
       }
     }
-    expect(find.byKey(const Key('act0_shell_play_screen')), findsOneWidget);
+    expect(
+      act0ShellPresentationFinderV1('act0_shell_play_screen'),
+      findsOneWidget,
+    );
   }
 
   Future<void> createActionsMistakeFromPlayHubV1(WidgetTester tester) async {
     await openBottomTabV1(tester, 'Practice');
-    final dailyTile = find.byKey(const Key('act0_shell_practice_group_daily'));
+    final dailyTile = act0ShellPresentationFinderV1(
+      'act0_shell_practice_group_daily',
+    );
     if (dailyTile.evaluate().isNotEmpty) {
+      await tester.ensureVisible(dailyTile);
       await tester.tap(dailyTile);
       await tester.pumpAndSettle();
     } else {
-      await tester.tap(find.byKey(const Key('act0_shell_play_featured_cta')));
+      await tester.tap(
+        act0ShellPresentationFinderV1('act0_shell_play_featured_cta'),
+      );
       await tester.pumpAndSettle();
     }
     await advanceCurrentRunnerToDrillV1(tester);
@@ -423,11 +436,18 @@ void main() {
     await tester.pumpWidget(previewHost(telemetrySink: telemetrySink));
     await tester.pumpAndSettle();
     await openBottomTabV1(tester, 'Review');
-    final replayFinder = find.byKey(
-      const Key(
-        'act0_shell_fixed_mistake_replay_what_poker_is_table_read_transfer',
-      ),
+    final replayFinder = act0ShellPresentationFinderV1(
+      'act0_shell_fixed_mistake_replay_what_poker_is_table_read_transfer',
     );
+    if (act0AcademyReviewPreviewV1) {
+      final past = find.byKey(
+        const Key('act0_academy_review_leaf_past_repairs'),
+      );
+      expect(past, findsOneWidget);
+      await tester.ensureVisible(past);
+      await tester.tap(past);
+      await tester.pumpAndSettle();
+    }
     await tester.ensureVisible(replayFinder);
     await tester.pumpAndSettle();
     await tester.tap(replayFinder);
@@ -467,9 +487,18 @@ void main() {
     await tester.pumpWidget(previewHost(telemetrySink: telemetrySink));
     await tester.pumpAndSettle();
     await openBottomTabV1(tester, 'Review');
-    final replayFinder = find.byKey(
-      const Key('act0_shell_fixed_mistake_replay_actions_raise_drill'),
+    final replayFinder = act0ShellPresentationFinderV1(
+      'act0_shell_fixed_mistake_replay_actions_raise_drill',
     );
+    if (act0AcademyReviewPreviewV1) {
+      final past = find.byKey(
+        const Key('act0_academy_review_leaf_past_repairs'),
+      );
+      expect(past, findsOneWidget);
+      await tester.ensureVisible(past);
+      await tester.tap(past);
+      await tester.pumpAndSettle();
+    }
     await tester.ensureVisible(replayFinder);
     await tester.pumpAndSettle();
     await tester.tap(replayFinder);
@@ -1055,7 +1084,9 @@ void main() {
       await tester.pumpAndSettle();
 
       await openBottomTabV1(tester, 'Review');
-      final fixNext = find.byKey(const Key('act0_shell_review_practice_cta'));
+      final fixNext = act0ShellPresentationFinderV1(
+        'act0_shell_review_practice_cta',
+      );
       expect(fixNext, findsOneWidget);
       await tester.ensureVisible(fixNext);
       await tester.pumpAndSettle();
@@ -1069,7 +1100,10 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byKey(const Key('act0_shell_review_screen')), findsOneWidget);
+      expect(
+        act0ShellPresentationFinderV1('act0_shell_review_screen'),
+        findsOneWidget,
+      );
 
       final repairStartedEvents = sink.events
           .where((event) => event.name == 'repair_started')
@@ -1226,7 +1260,10 @@ void main() {
       await tester.pumpWidget(previewHost(telemetrySink: sink));
       await completeDailySetFromPlayV1(tester);
 
-      expect(find.byKey(const Key('act0_shell_play_screen')), findsOneWidget);
+      expect(
+        act0ShellPresentationFinderV1('act0_shell_play_screen'),
+        findsOneWidget,
+      );
 
       final practiceStartedEvents = sink.events
           .where((event) => event.name == 'practice_started')
@@ -1411,7 +1448,10 @@ void main() {
 
     await completeDailySetFromPlayV1(tester);
 
-    expect(find.byKey(const Key('act0_shell_play_screen')), findsOneWidget);
+    expect(
+      act0ShellPresentationFinderV1('act0_shell_play_screen'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('Act0 feedback telemetry stays non-blocking when sink throws', (
@@ -1733,7 +1773,10 @@ void main() {
       telemetrySink: _ThrowingTelemetrySinkV1(),
     );
 
-    expect(find.byKey(const Key('act0_shell_review_screen')), findsOneWidget);
+    expect(
+      act0ShellPresentationFinderV1('act0_shell_review_screen'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('Act0 prove telemetry stays non-blocking when sink throws', (
@@ -1746,7 +1789,10 @@ void main() {
       telemetrySink: _ThrowingTelemetrySinkV1(),
     );
 
-    expect(find.byKey(const Key('act0_shell_review_screen')), findsOneWidget);
+    expect(
+      act0ShellPresentationFinderV1('act0_shell_review_screen'),
+      findsOneWidget,
+    );
   });
 
   testWidgets(

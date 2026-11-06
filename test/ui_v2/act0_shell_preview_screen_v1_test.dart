@@ -5,6 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_canonical_path_root_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_runtime_adapter_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_home_leaf_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_you_leaf_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -204,10 +207,21 @@ void main() {
     );
     await pumpCompact(tester, host(overrideState: selectedState));
 
-    expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
-    expect(find.text(selectedLesson.subtitle), findsOneWidget);
-    // The learner has reached World 2: preserve a truthful current world.
-    expect(find.text('Current world: Hand Discipline'), findsOneWidget);
+    if (act0AcademyHomePreviewV1) {
+      expect(find.byType(Act0AcademyHomeLeafV1), findsOneWidget);
+      final input = tester
+          .widget<Act0AcademyHomeLeafV1>(find.byType(Act0AcademyHomeLeafV1))
+          .input;
+      expect(input.nextAction!.title, selectedLesson.title);
+      expect(input.nextAction!.subtitle, selectedLesson.subtitle);
+      expect(find.text('Hand Discipline'), findsOneWidget);
+      expect(find.text(selectedLesson.subtitle), findsOneWidget);
+    } else {
+      expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
+      expect(find.text(selectedLesson.subtitle), findsOneWidget);
+      // The learner has reached World 2: preserve a truthful current world.
+      expect(find.text('Current world: Hand Discipline'), findsOneWidget);
+    }
     expect(find.text('Week 1: train one table read'), findsNothing);
     expect(
       find.text(
@@ -223,15 +237,29 @@ void main() {
   ) async {
     await pumpCompact(tester, host());
 
-    expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
-    expect(find.byKey(const Key('act0_shell_learn_screen')), findsNothing);
-    expect(
-      find.text(
-        'Read the legal actions first so the first real hand is not a guess.',
-      ),
-      findsOneWidget,
-    );
-
+    if (act0AcademyHomePreviewV1) {
+      expect(find.byType(Act0AcademyHomeLeafV1), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_learn_screen')), findsNothing);
+      expect(
+        find.text(
+          'Read the legal actions first so the first real hand is not a guess.',
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_academy_home_leaf_cta')),
+        findsOneWidget,
+      );
+    } else {
+      expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
+      expect(find.byKey(const Key('act0_shell_learn_screen')), findsNothing);
+      expect(
+        find.text(
+          'Read the legal actions first so the first real hand is not a guess.',
+        ),
+        findsOneWidget,
+      );
+    }
     await tester.tap(
       find.descendant(
         of: find.byKey(const Key('act0_shell_bottom_nav')),
@@ -323,19 +351,35 @@ void main() {
     (tester) async {
       await pumpCompact(tester, host());
 
-      expect(
-        find.byKey(const Key('act0_shell_home_proof_momentum_line')),
-        findsOneWidget,
-      );
-      final momentum = tester.widget<Text>(
-        find.byKey(const Key('act0_shell_home_proof_momentum_text')),
-      );
-      expect(
-        momentum.data,
-        'Route proof is active. Next proof starts with one clean read.',
-      );
-      expect(find.textContaining('mastery'), findsNothing);
-      expect(find.textContaining('streak'), findsNothing);
+      if (act0AcademyHomePreviewV1) {
+        final input = tester
+            .widget<Act0AcademyHomeLeafV1>(find.byType(Act0AcademyHomeLeafV1))
+            .input;
+        expect(input.earnedLessonCount, 4);
+        expect(input.courseLessonCount, 9);
+        expect(find.text('4 of 9 lessons complete'), findsOneWidget);
+        expect(
+          find.text(
+            'Route proof is active. Next proof starts with one clean read.',
+          ),
+          findsNothing,
+        );
+        expect(find.textContaining('mastery'), findsNothing);
+      } else {
+        expect(
+          find.byKey(const Key('act0_shell_home_proof_momentum_line')),
+          findsOneWidget,
+        );
+        final momentum = tester.widget<Text>(
+          find.byKey(const Key('act0_shell_home_proof_momentum_text')),
+        );
+        expect(
+          momentum.data,
+          'Route proof is active. Next proof starts with one clean read.',
+        );
+        expect(find.textContaining('mastery'), findsNothing);
+        expect(find.textContaining('streak'), findsNothing);
+      }
     },
   );
 
@@ -371,18 +415,34 @@ void main() {
       wave2SurfaceHost(Act0ControlledDemoCaptureSurfaceV1.wave2HomeFresh),
     );
 
-    expect(find.text('First Table Guide'), findsOneWidget);
-    expect(find.text('0 of 9 lessons complete'), findsOneWidget);
-    expect(
-      find.byKey(const Key('act0_shell_home_daily_plan_card')),
-      findsOneWidget,
-    );
-    expect(find.text('Today\'s sequence'), findsOneWidget);
-    expect(find.text('Route proof is active.'), findsNothing);
-    expect(
-      tester.getBottomLeft(find.byKey(const Key('act0_shell_main_cta'))).dy,
-      lessThan(844),
-    );
+    if (act0AcademyHomePreviewV1) {
+      expect(find.text('First Table Guide'), findsOneWidget);
+      expect(find.text('0 of 9 lessons complete'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_academy_home_leaf_next_card')),
+        findsOneWidget,
+      );
+      expect(find.text('Recall'), findsOneWidget);
+      expect(find.text('Learn'), findsWidgets);
+      expect(find.text('Apply'), findsOneWidget);
+      expect(find.text('Route proof is active.'), findsNothing);
+      final cta = find.byKey(const Key('act0_academy_home_leaf_cta'));
+      expect(tester.getRect(cta).bottom, lessThan(844));
+      expect(cta.hitTestable(), findsOneWidget);
+    } else {
+      expect(find.text('First Table Guide'), findsOneWidget);
+      expect(find.text('0 of 9 lessons complete'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_home_daily_plan_card')),
+        findsOneWidget,
+      );
+      expect(find.text('Today\'s sequence'), findsOneWidget);
+      expect(find.text('Route proof is active.'), findsNothing);
+      expect(
+        tester.getBottomLeft(find.byKey(const Key('act0_shell_main_cta'))).dy,
+        lessThan(844),
+      );
+    }
   });
 
   testWidgets('Wave 2 Home progressed states completion once', (tester) async {
@@ -391,19 +451,43 @@ void main() {
       wave2SurfaceHost(Act0ControlledDemoCaptureSurfaceV1.wave2HomeProgressed),
     );
 
-    expect(find.text('What poker is'), findsOneWidget);
-    expect(find.text('1 of 9 lessons complete'), findsOneWidget);
-    expect(
-      find.text(
-        'Route proof is active. Next proof starts with one clean read.',
-      ),
-      findsOneWidget,
-    );
-    expect(find.textContaining('1 lessons complete'), findsNothing);
-    expect(
-      find.byKey(const Key('act0_shell_home_daily_plan_card')),
-      findsOneWidget,
-    );
+    if (act0AcademyHomePreviewV1) {
+      expect(find.text('What poker is'), findsOneWidget);
+      expect(find.text('1 of 9 lessons complete'), findsOneWidget);
+      expect(find.text('11%'), findsOneWidget);
+      expect(
+        tester
+            .widget<Act0AcademyHomeLeafV1>(find.byType(Act0AcademyHomeLeafV1))
+            .input
+            .earnedLessonCount,
+        1,
+      );
+      expect(find.textContaining('1 lessons complete'), findsNothing);
+      expect(
+        find.text(
+          'Route proof is active. Next proof starts with one clean read.',
+        ),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_academy_home_leaf_cta')),
+        findsOneWidget,
+      );
+    } else {
+      expect(find.text('What poker is'), findsOneWidget);
+      expect(find.text('1 of 9 lessons complete'), findsOneWidget);
+      expect(
+        find.text(
+          'Route proof is active. Next proof starts with one clean read.',
+        ),
+        findsOneWidget,
+      );
+      expect(find.textContaining('1 lessons complete'), findsNothing);
+      expect(
+        find.byKey(const Key('act0_shell_home_daily_plan_card')),
+        findsOneWidget,
+      );
+    }
   });
 
   testWidgets('Wave 2 Home repair return keeps its personalized reason', (
@@ -416,16 +500,42 @@ void main() {
       ),
     );
 
-    expect(find.text('Repair one weak spot'), findsOneWidget);
-    expect(find.text('Practice this spot'), findsOneWidget);
-    expect(
-      find.byKey(const Key('act0_shell_home_personalized_return_reason')),
-      findsOneWidget,
-    );
-    expect(
-      find.textContaining('You missed this clue last time.'),
-      findsOneWidget,
-    );
+    if (act0AcademyHomePreviewV1) {
+      expect(find.text('Repair one weak spot'), findsOneWidget);
+      expect(find.text('Practice this spot'), findsOneWidget);
+      expect(
+        find.textContaining('You missed this clue last time.'),
+        findsOneWidget,
+      );
+      final input = tester
+          .widget<Act0AcademyHomeLeafV1>(find.byType(Act0AcademyHomeLeafV1))
+          .input;
+      expect(
+        input.nextAction!.subtitle,
+        contains('You missed this clue last time.'),
+      );
+      await tester.tap(find.byKey(const Key('act0_academy_home_leaf_cta')));
+      await tester.pumpAndSettle();
+      expect(find.byType(Act0LessonRunnerShellV1), findsOneWidget);
+      final runner = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(runner.selectedWorldId, 'world_1');
+      expect(runner.selectedLessonId, 'fold_check_call_raise');
+      expect(runner.selectedTaskId, 'actions_check_drill');
+      expect(tester.takeException(), isNull);
+    } else {
+      expect(find.text('Repair one weak spot'), findsOneWidget);
+      expect(find.text('Practice this spot'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_home_personalized_return_reason')),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('You missed this clue last time.'),
+        findsOneWidget,
+      );
+    }
   });
 
   testWidgets('Wave 2 Profile fresh is claim-safe and owns each fact once', (
@@ -436,31 +546,64 @@ void main() {
       wave2SurfaceHost(Act0ControlledDemoCaptureSurfaceV1.wave2ProfileFresh),
     );
 
-    expect(find.text('Proof starts here'), findsOneWidget);
-    expect(
-      find.text('Your first clear read will appear here.'),
-      findsOneWidget,
-    );
-    expect(find.textContaining('Confirmation needed'), findsOneWidget);
-    expect(find.text('Recent route proof'), findsNothing);
-    expect(find.text('0 tasks complete'), findsOneWidget);
-    expect(find.text('Starting now'), findsNothing);
-    expect(find.text('Proof will appear as you learn'), findsOneWidget);
-    expect(find.textContaining('First Table Guide'), findsOneWidget);
-    expect(find.text('Clean progress started'), findsNothing);
-    expect(find.text('Clean reads are becoming a habit.'), findsNothing);
-    expect(
-      find.byKey(const Key('act0_shell_profile_hero_fact_tasks')),
-      findsNothing,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_profile_hero_fact_streak')),
-      findsNothing,
-    );
-    expect(
-      find.byKey(const Key('act0_shell_profile_evidence_signal')),
-      findsOneWidget,
-    );
+    if (act0AcademyYouPreviewV1) {
+      final input = tester
+          .widget<Act0AcademyYouLeafV1>(find.byType(Act0AcademyYouLeafV1))
+          .input;
+      expect(input.completedTaskCount, 0);
+      expect(input.streakDays, 0);
+      expect(input.earnedMoments, isEmpty);
+      expect(input.bankedRepairCount, 0);
+      expect(input.reinforcedRepairCount, 0);
+      expect(
+        find.byKey(const Key('act0_academy_you_leaf_not_earned')),
+        findsOneWidget,
+      );
+      expect(
+        find.text('Make your first independent correct decision.'),
+        findsOneWidget,
+      );
+      expect(find.text('Your record begins here'), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_academy_you_leaf_tasks')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_academy_you_leaf_streak')),
+        findsNothing,
+      );
+      expect(find.text('Recent route proof'), findsNothing);
+      expect(find.text('Recent independent responses verified.'), findsNothing);
+      expect(find.text('You are building this skill.'), findsNothing);
+      expect(find.text('Clean progress started'), findsNothing);
+      expect(find.text('Clean reads are becoming a habit.'), findsNothing);
+    } else {
+      expect(find.text('Proof starts here'), findsOneWidget);
+      expect(
+        find.text('Your first clear read will appear here.'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('Confirmation needed'), findsOneWidget);
+      expect(find.text('Recent route proof'), findsNothing);
+      expect(find.text('0 tasks complete'), findsOneWidget);
+      expect(find.text('Starting now'), findsNothing);
+      expect(find.text('Proof will appear as you learn'), findsOneWidget);
+      expect(find.textContaining('First Table Guide'), findsOneWidget);
+      expect(find.text('Clean progress started'), findsNothing);
+      expect(find.text('Clean reads are becoming a habit.'), findsNothing);
+      expect(
+        find.byKey(const Key('act0_shell_profile_hero_fact_tasks')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_profile_hero_fact_streak')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_profile_evidence_signal')),
+        findsOneWidget,
+      );
+    }
   });
 
   testWidgets(
@@ -473,26 +616,56 @@ void main() {
         ),
       );
 
-      expect(find.textContaining('Confirmation needed'), findsOneWidget);
-      expect(find.text('Recent route proof'), findsNothing);
-      expect(find.text('Recent practice; proof still pending'), findsOneWidget);
-      expect(find.text('What Sharky can prove'), findsNothing);
-      expect(find.text('7 tasks complete'), findsOneWidget);
-      expect(find.text('3d'), findsOneWidget);
-      expect(find.text('3 day streak'), findsNothing);
-      expect(find.textContaining('Fold, check, call, raise'), findsOneWidget);
-      expect(
-        find.byKey(const Key('act0_shell_profile_evidence_signal')),
-        findsOneWidget,
-      );
-      expect(
-        find.byKey(const Key('act0_shell_profile_hero_fact_tasks')),
-        findsNothing,
-      );
-      expect(
-        find.byKey(const Key('act0_shell_profile_hero_fact_streak')),
-        findsNothing,
-      );
+      if (act0AcademyYouPreviewV1) {
+        final input = tester
+            .widget<Act0AcademyYouLeafV1>(find.byType(Act0AcademyYouLeafV1))
+            .input;
+        expect(input.completedTaskCount, 7);
+        expect(input.streakDays, 3);
+        expect(input.bankedRepairCount, 0);
+        expect(input.reinforcedRepairCount, 0);
+        expect(find.text('7 tasks completed'), findsOneWidget);
+        expect(find.text('3 days - Learning streak'), findsOneWidget);
+        expect(
+          find.byKey(const Key('act0_academy_you_leaf_tasks')),
+          findsOneWidget,
+        );
+        expect(
+          find.byKey(const Key('act0_academy_you_leaf_streak')),
+          findsOneWidget,
+        );
+        expect(find.text('Recent route proof'), findsNothing);
+        expect(find.text('What Sharky can prove'), findsNothing);
+        expect(
+          find.text('Recent independent responses verified.'),
+          findsNothing,
+        );
+        expect(find.text('You are building this skill.'), findsNothing);
+      } else {
+        expect(find.textContaining('Confirmation needed'), findsOneWidget);
+        expect(find.text('Recent route proof'), findsNothing);
+        expect(
+          find.text('Recent practice; proof still pending'),
+          findsOneWidget,
+        );
+        expect(find.text('What Sharky can prove'), findsNothing);
+        expect(find.text('7 tasks complete'), findsOneWidget);
+        expect(find.text('3d'), findsOneWidget);
+        expect(find.text('3 day streak'), findsNothing);
+        expect(find.textContaining('Fold, check, call, raise'), findsOneWidget);
+        expect(
+          find.byKey(const Key('act0_shell_profile_evidence_signal')),
+          findsOneWidget,
+        );
+        expect(
+          find.byKey(const Key('act0_shell_profile_hero_fact_tasks')),
+          findsNothing,
+        );
+        expect(
+          find.byKey(const Key('act0_shell_profile_hero_fact_streak')),
+          findsNothing,
+        );
+      }
     },
   );
 
