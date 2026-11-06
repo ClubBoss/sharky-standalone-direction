@@ -1,0 +1,166 @@
+import 'dart:convert';
+import 'dart:io';
+
+/// Checks exported trace consistency only. It does not authenticate a binary,
+/// manufacture missing observations, grade answers or grant learner progress.
+Map<String, Object?> inspectAct0Obs03TraceV1(
+  Object? decoded, {
+  required String attemptId,
+  required String expectedSourceFingerprint,
+}) {
+  Map<String, Object?> insufficient(String reason) => {
+    'schemaVersion': 1,
+    'status': 'INSUFFICIENT',
+    'reason': reason,
+  };
+  if (decoded is! Map || decoded['schema'] != 'act0_hnp_local_trace_v1')
+    return insufficient('unknown_trace_schema');
+  final capture = decoded['capture'];
+  final raw = decoded['events'];
+  if (capture is! Map ||
+      capture['schemaVersion'] != 1 ||
+      capture['complete'] != true ||
+      capture['rejectedEventCount'] != 0 ||
+      capture['evictedEventCount'] != 0 ||
+      raw is! List)
+    return insufficient('incomplete_capture');
+  final events = <Map>[];
+  for (var i = 0; i < raw.length; i++) {
+    final row = raw[i];
+    if (row is! Map || row['sequence'] != i + 1 || row['fields'] is! Map)
+      return insufficient('invalid_sequence');
+    events.add(row);
+  }
+  Map? one(String name, String id) {
+    final rows = events
+        .where(
+          (e) => e['name'] == name && (e['fields'] as Map)['attempt_id'] == id,
+        )
+        .toList();
+    return rows.length == 1 ? rows.single['fields'] as Map : null;
+  }
+
+  final decision = one('decision_made', attemptId);
+  final evidence = one('decision_evidence_recorded', attemptId);
+  final transfer = one('transfer_evaluated', attemptId);
+  final elapsed = one('elapsed_learning_observed', attemptId);
+  if (decision == null ||
+      evidence == null ||
+      transfer == null ||
+      elapsed == null)
+    return insufficient('missing_decision_or_evaluation');
+  if (decision['schemaVersion'] != 2 ||
+      decision['schemaVersion'] is! int ||
+      decision.containsKey('review_kind') ||
+      evidence['schemaVersion'] != 1 ||
+      transfer['schemaVersion'] != 1 ||
+      elapsed['schemaVersion'] != 1)
+    return insufficient('unknown_event_semantics');
+  for (final row in [evidence, transfer, elapsed]) {
+    if (row['schemaVersion'] is! int)
+      return insufficient('unknown_event_semantics');
+  }
+  if (transfer['relationship'] is! String ||
+      transfer['transfer_verdict'] is! String ||
+      elapsed['elapsed_basis'] != 'recent_source_epoch' ||
+      !const {
+        'unknown',
+        'under_24h',
+        '24h_to_72h',
+        '72h_to_7d',
+        '7d_or_more',
+      }.contains(elapsed['elapsed_bucket'])) {
+    return insufficient('missing_evaluation_result');
+  }
+  if (expectedSourceFingerprint.isEmpty ||
+      evidence['source_fingerprint'] != expectedSourceFingerprint ||
+      evidence['source_current'] != true ||
+      evidence['evidence_status'] != 'source_linked')
+    return insufficient('source_not_established');
+  for (final key in [
+    'run_id',
+    'session_id',
+    'review_kind',
+    'assistance_kind',
+    'chosen_action',
+  ]) {
+    if (evidence[key] is! String || (evidence[key] as String).isEmpty)
+      return insufficient('missing_evidence_identity');
+  }
+  if (evidence['correct'] is! bool ||
+      decision['correct'] != evidence['correct'] ||
+      decision['chosen_action'] != evidence['chosen_action'] ||
+      decision['session_id'] != evidence['session_id'])
+    return insufficient('decision_evidence_mismatch');
+  for (final row in [transfer, elapsed]) {
+    for (final key in ['run_id', 'session_id', 'source_fingerprint']) {
+      if (row[key] != evidence[key])
+        return insufficient('evaluation_identity_mismatch');
+    }
+  }
+  for (final id in [
+    transfer['baseline_attempt_id'],
+    transfer['comparison_attempt_id'],
+    elapsed['previous_attempt_id'],
+  ]) {
+    if (id != null &&
+        (id is! String || one('decision_evidence_recorded', id) == null))
+      return insufficient('missing_source_reference');
+  }
+  final occurrence = evidence['repair_occurrence_id'];
+  Map? repair;
+  if (occurrence != null && evidence['assistance_kind'] == 'none') {
+    if (occurrence is! String ||
+        one('decision_evidence_recorded', occurrence) == null)
+      return insufficient('missing_repair_source');
+    repair = one('repair_outcome_recorded', attemptId);
+    if (repair == null ||
+        repair['repair_occurrence_id'] != occurrence ||
+        repair['session_id'] != evidence['session_id'] ||
+        repair['evidence_status'] != 'source_linked')
+      return insufficient('missing_or_mismatched_repair_outcome');
+  }
+  return {
+    'schemaVersion': 1,
+    'status': 'TRACE_RECONSTRUCTED',
+    'attempt_id': attemptId,
+    'run_id': evidence['run_id'],
+    'session_id': evidence['session_id'],
+    'source_fingerprint': expectedSourceFingerprint,
+    'correct': evidence['correct'],
+    'review_kind': evidence['review_kind'],
+    'assistance_kind': evidence['assistance_kind'],
+    'transfer_verdict': transfer['transfer_verdict'],
+    'elapsed_bucket': elapsed['elapsed_bucket'],
+    if (repair != null) 'repair_occurrence_id': occurrence,
+    if (repair != null) 'repair_state': repair['repair_state'],
+  };
+}
+
+void main(List<String> args) {
+  if (args.length != 3) {
+    stderr.writeln(
+      'Usage: dart run tools/act0_obs03_trace_inspector_v1.dart TRACE_JSON ATTEMPT_ID SOURCE_FINGERPRINT',
+    );
+    exitCode = 64;
+    return;
+  }
+  try {
+    final result = inspectAct0Obs03TraceV1(
+      jsonDecode(File(args[0]).readAsStringSync()),
+      attemptId: args[1],
+      expectedSourceFingerprint: args[2],
+    );
+    stdout.writeln(jsonEncode(result));
+    if (result['status'] != 'TRACE_RECONSTRUCTED') exitCode = 2;
+  } catch (_) {
+    stdout.writeln(
+      jsonEncode({
+        'schemaVersion': 1,
+        'status': 'INSUFFICIENT',
+        'reason': 'unreadable_trace',
+      }),
+    );
+    exitCode = 2;
+  }
+}

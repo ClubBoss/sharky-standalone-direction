@@ -62,8 +62,7 @@ class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
   void record(Act0TelemetryEventV1 event) {
     final sequence = ++_recorded;
     if (!_hnpEventNamesV1.contains(event.name) ||
-        event.fields['schemaVersion'] is! int ||
-        event.fields['schemaVersion'] != 1) {
+        !_hnpSupportedEventVersionV1(event)) {
       _rejected++;
       _scheduleExport();
       return;
@@ -186,7 +185,20 @@ bool _hnpSafeTokenV1(String token) =>
 
 final _hnpTokenV1 = RegExp(r'^[A-Za-z0-9_][A-Za-z0-9_:|.\-]{0,511}$');
 
+bool _hnpSupportedEventVersionV1(Act0TelemetryEventV1 event) {
+  final version = event.fields['schemaVersion'];
+  return version is int &&
+      (version == 1 ||
+          (version == 2 &&
+              const {'user_choice', 'decision_made'}.contains(event.name)));
+}
+
 const _hnpEventNamesV1 = <String>{
+  'decision_evidence_recorded',
+  'transfer_evaluated',
+  'elapsed_learning_observed',
+  'repair_outcome_recorded',
+  'evidence_lineage_unavailable',
   'action_payoff_generated',
   'action_payoff_primary_action_selected',
   'action_payoff_shown',
@@ -256,6 +268,9 @@ const _hnpEventNamesV1 = <String>{
 };
 
 const _hnpCountFieldsV1 = <String>{
+  'created_order',
+  'run_ordinal',
+  'eligible_evidence_count',
   'schemaVersion',
   'worldNumber',
   'attemptOrdinal',
@@ -283,6 +298,9 @@ const _hnpCountFieldsV1 = <String>{
 };
 
 const _hnpBooleanFieldsV1 = <String>{
+  'source_current',
+  'history_lineage_complete',
+  'independent_repair',
   'correct',
   'is_correct',
   'isCorrect',
@@ -296,6 +314,23 @@ const _hnpBooleanFieldsV1 = <String>{
 };
 
 const _hnpTokenFieldsV1 = <String>{
+  'run_kind',
+  'source_fingerprint',
+  'evidence_status',
+  'repair_occurrence_id',
+  'baseline_attempt_id',
+  'baseline_session_id',
+  'comparison_attempt_id',
+  'comparison_session_id',
+  'elapsed_basis',
+  'elapsed_bucket',
+  'previous_attempt_id',
+  'previous_session_id',
+  'retention_state',
+  'source_session_id',
+  'repair_state',
+  'transfer_verdict',
+  'route_review_kind',
   'worldId',
   'world_id',
   'lessonId',
