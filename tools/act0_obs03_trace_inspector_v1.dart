@@ -119,6 +119,8 @@ Map<String, Object?> inspectAct0Obs03TraceV1(
     if (sourceId is! String ||
         one('decision_evidence_recorded', sourceId) == null ||
         sequence == null ||
+        sequence['schemaVersion'] is! int ||
+        sequence['schemaVersion'] != 1 ||
         sequence['sequence_source_attempt_id'] != sourceId ||
         sequence['sequence_stage'] != evidence['sequence_stage'] ||
         sequence['session_id'] != evidence['session_id'] ||
@@ -132,6 +134,8 @@ Map<String, Object?> inspectAct0Obs03TraceV1(
       return insufficient('missing_repair_source');
     repair = one('repair_outcome_recorded', attemptId);
     if (repair == null ||
+        repair['schemaVersion'] is! int ||
+        repair['schemaVersion'] != 1 ||
         repair['repair_occurrence_id'] != occurrence ||
         repair['session_id'] != evidence['session_id'] ||
         repair['evidence_status'] != 'source_linked')

@@ -296,6 +296,11 @@ void main() {
           )['fields']
           .remove('transfer_verdict');
       expect(inspect(noVerdict)['status'], 'INSUFFICIENT');
+      final wrongRepairVersion = jsonDecode(jsonEncode(snapshot)) as Map;
+      (wrongRepairVersion['events'] as List).firstWhere(
+        (e) => e['name'] == 'repair_outcome_recorded',
+      )['fields']['schemaVersion'] = 999;
+      expect(inspect(wrongRepairVersion)['status'], 'INSUFFICIENT');
     },
   );
   test(
