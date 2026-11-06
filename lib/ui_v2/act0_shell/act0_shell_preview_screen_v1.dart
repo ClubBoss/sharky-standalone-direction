@@ -7593,7 +7593,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ru: 'Откроется после одного дрилла на маршруте.',
               )
             : _dailyCompletedRepCount >= 3
-            ? 'Table read improved. Come back tomorrow for the next useful hand, or practice extra reps.'
+            ? 'Daily spots complete. $_earnedXp total XP earned. Completion alone does not verify independent improvement.'
             : dailyDeckEntry.isSpaced
             ? 'Finish three spaced spots across completed worlds.'
             : 'Finish three short spots for today.',
