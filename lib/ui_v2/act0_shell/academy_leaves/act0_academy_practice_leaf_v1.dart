@@ -96,9 +96,9 @@ class _Act0AcademyPracticeLeafV1State extends State<Act0AcademyPracticeLeafV1> {
         .where((g) => g.groupId == input.recommendedGroupId)
         .firstOrNull;
     final canStart = group != null && group.isEnabled;
-    final launchableRepair = input.repairQueue.items.any(
-      act0AcademyPracticeRepairItemLaunchableV1,
-    );
+    final launchableRepair =
+        input.onLaunchRepair != null &&
+        input.repairQueue.items.any(act0AcademyPracticeRepairItemLaunchableV1);
     final repairGroup = input.groups
         .where((g) => g.groupId == 'weak_spots')
         .firstOrNull;
@@ -153,6 +153,9 @@ class _Act0AcademyPracticeLeafV1State extends State<Act0AcademyPracticeLeafV1> {
                 consumer: input.repairQueue,
                 onLaunch: input.onLaunchRepair,
                 primary: true,
+                supportingReason: group?.groupId == 'weak_spots'
+                    ? input.recommendedReasonLabel
+                    : null,
                 ctaLabel: _copy(
                   'play_action_practice_repair',
                   'Practice repair',
@@ -160,7 +163,10 @@ class _Act0AcademyPracticeLeafV1State extends State<Act0AcademyPracticeLeafV1> {
               ),
               const SizedBox(height: 12),
             ],
-            if (input.groups.isNotEmpty)
+            // The source-owned queue is already the actionable repair entry.
+            // Do not feature the same Weak spots target a second time.
+            if (input.groups.isNotEmpty &&
+                !(launchableRepair && group?.groupId == 'weak_spots'))
               _RecommendationCardV1(
                 title: input.recommendedTitle,
                 subtitle: input.recommendedSubtitle,
@@ -593,9 +599,11 @@ class _RepairQueueSectionV1 extends StatelessWidget {
     required this.onLaunch,
     required this.primary,
     required this.ctaLabel,
+    this.supportingReason,
   });
 
   final Act0PracticeRepairQueueConsumerV1 consumer;
+  final String? supportingReason;
   final ValueChanged<Act0PracticeRepairQueueLaunchRequestV1>? onLaunch;
   final bool primary;
   final String ctaLabel;
@@ -621,9 +629,11 @@ class _RepairQueueSectionV1 extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
-              'Unresolved until you answer it on your own.',
-              style: TextStyle(
+            Text(
+              supportingReason?.trim().isNotEmpty == true
+                  ? supportingReason!.trim()
+                  : 'Unresolved until you answer it on your own.',
+              style: const TextStyle(
                 color: Act0AcademyLeafPaletteV1.textMuted,
                 fontSize: 12,
               ),

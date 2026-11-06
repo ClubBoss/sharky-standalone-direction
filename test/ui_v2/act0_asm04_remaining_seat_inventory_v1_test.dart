@@ -1,3 +1,7 @@
+import 'dart:typed_data';
+import 'package:flutter/services.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_f7_scene_gate_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_profile_v1.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -31,6 +35,12 @@ const _cases = {
   'same_hand_different_seat_w3_same_hand_recap': 'transfer-recap',
 };
 
+class _SelectedPlateBytes extends CachingAssetBundle {
+  @override
+  Future<ByteData> load(String key) async =>
+      ByteData.sublistView(File(key).readAsBytesSync());
+}
+
 void main() {
   final observations = <Map<String, Object?>>[];
   tearDownAll(() {
@@ -61,6 +71,15 @@ void main() {
           tester.view.devicePixelRatio = 1;
           addTearDown(tester.view.resetPhysicalSize);
           addTearDown(tester.view.resetDevicePixelRatio);
+          // Compare source and neutral control in the same decoded renderer.
+          // Cold-decode/fallback behavior has its own dedicated F7 guards.
+          if (kAct0F7TableScenePreview) {
+            await tester.runAsync(
+              () => Act0F7SceneGateV1.premiumStore.warmUp(
+                bundle: _SelectedPlateBytes(),
+              ),
+            );
+          }
           await tester.pumpWidget(
             MaterialApp(
               home: Scaffold(

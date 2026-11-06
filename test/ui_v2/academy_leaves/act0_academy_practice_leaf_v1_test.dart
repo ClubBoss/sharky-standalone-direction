@@ -86,6 +86,59 @@ Future<void> _pump(
 }
 
 void main() {
+  for (final hasQueueCallback in [false, true]) {
+    testWidgets(
+      'Weak spots has exactly one actionable entry; queue callback=$hasQueueCallback',
+      (tester) async {
+        final weak = _group('weak_spots');
+        final started = <Act0PracticeGroupV1>[];
+        final launched = <Act0PracticeRepairQueueLaunchRequestV1>[];
+        await _pump(
+          tester,
+          Act0AcademyPracticeLeafInputV1(
+            groups: [_group('daily'), weak],
+            recommendedGroupId: 'weak_spots',
+            recommendedTitle: 'Practice the source clue',
+            recommendedSubtitle: 'One bounded source rep',
+            recommendedReasonLabel: 'Source clue still needs a rep.',
+            onStartGroup: started.add,
+            repairQueue: const Act0PracticeRepairQueueConsumerV1(
+              items: [_launchableRepair],
+            ),
+            onLaunchRepair: hasQueueCallback ? launched.add : null,
+          ),
+        );
+        expect(find.text('Source clue still needs a rep.'), findsOneWidget);
+        final recommendation = find.byKey(
+          const Key('act0_academy_practice_leaf_recommendation'),
+        );
+        final queueCta = find.byKey(
+          const Key('act0_academy_practice_leaf_repair_cta_q1'),
+        );
+        if (hasQueueCallback) {
+          expect(recommendation, findsNothing);
+          expect(queueCta, findsOneWidget);
+          await tester.ensureVisible(queueCta);
+          await tester.tap(queueCta);
+          expect(launched.single, same(_launchRequest));
+          expect(started, isEmpty);
+        } else {
+          expect(queueCta, findsNothing);
+          expect(recommendation, findsOneWidget);
+          final cta = find.byKey(const Key('act0_academy_practice_leaf_start'));
+          await tester.ensureVisible(cta);
+          await tester.tap(cta);
+          expect(started.single, same(weak));
+          expect(launched, isEmpty);
+        }
+        final daily = find.byKey(
+          const Key('act0_academy_practice_leaf_topic_daily'),
+        );
+        expect(daily, findsOneWidget);
+      },
+    );
+  }
+
   testWidgets('starts exactly the source-recommended group object', (
     tester,
   ) async {

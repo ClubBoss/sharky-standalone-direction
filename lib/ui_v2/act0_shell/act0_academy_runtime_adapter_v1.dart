@@ -86,7 +86,9 @@ Widget act0AcademyHomeRuntimeV1(
       phase: phase,
       nextAction: Act0AcademyHomeNextActionV1(
         title: legacy.nextActionTitle ?? lesson.title,
-        subtitle: legacy.nextActionSubtitle ?? lesson.subtitle,
+        subtitle: legacy.personalizedReturnReasonLine?.trim().isNotEmpty == true
+            ? legacy.personalizedReturnReasonLine!.trim()
+            : legacy.nextActionSubtitle ?? lesson.subtitle,
         ctaLabel: legacy.nextActionCtaLabel,
         onPressed: _guard(isCurrent, legacy.onContinue)!,
       ),

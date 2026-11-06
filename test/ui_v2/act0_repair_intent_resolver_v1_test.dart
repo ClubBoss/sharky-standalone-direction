@@ -1,3 +1,4 @@
+import '../support/act0_shell_presentation_finders_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -157,7 +158,7 @@ void main() {
 
     await _openPractice(tester);
 
-    final hero = find.byKey(const Key('act0_shell_play_daily_hero'));
+    final hero = act0ShellPresentationFinderV1('act0_shell_play_daily_hero');
     expect(hero, findsOneWidget);
     expect(
       find.descendant(
@@ -174,7 +175,7 @@ void main() {
       findsNothing,
     );
     expect(
-      find.byKey(const Key('act0_shell_practice_group_weak_spots')),
+      act0ShellPresentationFinderV1('act0_shell_practice_group_weak_spots'),
       findsOneWidget,
     );
     expect(
@@ -185,7 +186,10 @@ void main() {
     expect(find.text('Session proof'), findsNothing);
     expect(find.text('Review'), findsOneWidget);
     expect(find.text('Learn'), findsOneWidget);
-    expect(find.byKey(const Key('act0_shell_review_screen')), findsNothing);
+    expect(
+      act0ShellPresentationFinderV1('act0_shell_review_screen'),
+      findsNothing,
+    );
     expect(find.byKey(const Key('act0_shell_learn_screen')), findsNothing);
     expect(find.byKey(const Key('act0_shell_profile_screen')), findsNothing);
     expect(find.textContaining('leak'), findsNothing);
@@ -211,7 +215,7 @@ void main() {
 
     await _openPractice(tester);
 
-    final queue = find.byKey(const Key('act0_shell_play_repair_queue'));
+    final queue = act0ShellPresentationFinderV1('act0_shell_play_repair_queue');
     expect(queue, findsOneWidget);
     expect(
       find.descendant(of: queue, matching: find.text('Practice repair')),
@@ -231,7 +235,7 @@ void main() {
     }
 
     await tester.tap(
-      find.byKey(const Key('act0_shell_play_repair_queue_item_cta')),
+      act0ShellPresentationFinderV1('act0_shell_play_repair_queue_item_cta'),
     );
     await tester.pumpAndSettle();
 
@@ -263,7 +267,7 @@ void main() {
 
       await _openPractice(tester);
       await tester.tap(
-        find.byKey(const Key('act0_shell_play_repair_queue_item_cta')),
+        act0ShellPresentationFinderV1('act0_shell_play_repair_queue_item_cta'),
       );
       await tester.pumpAndSettle();
       await _advanceTeachingToDrill(tester);
@@ -304,7 +308,7 @@ void main() {
     );
     await _openPractice(tester);
     await tester.tap(
-      find.byKey(const Key('act0_shell_play_repair_queue_item_cta')),
+      act0ShellPresentationFinderV1('act0_shell_play_repair_queue_item_cta'),
     );
     await tester.pumpAndSettle();
     await _advanceTeachingToDrill(tester);
@@ -412,7 +416,7 @@ void main() {
 
     await _openPractice(tester);
 
-    final hero = find.byKey(const Key('act0_shell_play_daily_hero'));
+    final hero = act0ShellPresentationFinderV1('act0_shell_play_daily_hero');
     expect(hero, findsOneWidget);
     expect(
       find.descendant(of: hero, matching: find.text('Replay this spot')),
@@ -426,7 +430,7 @@ void main() {
       findsNothing,
     );
     expect(
-      find.byKey(const Key('act0_shell_practice_group_weak_spots')),
+      act0ShellPresentationFinderV1('act0_shell_practice_group_weak_spots'),
       findsOneWidget,
     );
     expect(
@@ -1038,7 +1042,9 @@ Future<void> _advanceTeachingToDrill(WidgetTester tester) async {
       await tester.pumpAndSettle();
       continue;
     }
-    final featuredCta = find.byKey(const Key('act0_shell_play_featured_cta'));
+    final featuredCta = act0ShellPresentationFinderV1(
+      'act0_shell_play_featured_cta',
+    );
     if (featuredCta.evaluate().isNotEmpty) {
       await tester.tap(featuredCta);
       await tester.pumpAndSettle();
@@ -1123,7 +1129,7 @@ Future<void> _launchHomeRepair(WidgetTester tester) async {
   await tester.ensureVisible(homeTab);
   await tester.tap(homeTab, warnIfMissed: false);
   await tester.pumpAndSettle();
-  await tester.tap(find.byKey(const Key('act0_shell_main_cta')));
+  await tester.tap(act0ShellPresentationFinderV1('act0_shell_main_cta'));
   await tester.pumpAndSettle();
 }
 

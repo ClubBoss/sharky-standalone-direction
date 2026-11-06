@@ -380,9 +380,11 @@ class Act0AcademyReviewLeafV1 extends StatelessWidget {
           const SizedBox(height: 12),
           const Divider(height: 1, color: _rule),
           const SizedBox(height: 12),
-          const Text(
-            'Revisit the clue and try again.',
-            style: TextStyle(color: _text, fontSize: 14),
+          Text(
+            mistake.repairActionLabel.trim().isNotEmpty
+                ? mistake.repairActionLabel.trim()
+                : 'Revisit the clue and try again.',
+            style: const TextStyle(color: _text, fontSize: 14),
           ),
           const SizedBox(height: 14),
           _cta(

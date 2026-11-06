@@ -1,3 +1,8 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_runtime_adapter_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_practice_leaf_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_review_leaf_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_consumer_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -145,7 +150,7 @@ Future<void> _continue(WidgetTester tester) async {
 
 Future<void> _launchRepair(WidgetTester tester, String sourceTask) async {
   await _mount(tester, Act0ShellTabV1.play);
-  final play = tester.widget<Act0PlayShellV1>(find.byType(Act0PlayShellV1));
+  final play = _practice(tester);
   final request = play.repairQueueConsumer.items
       .map((item) => item.launchRequest)
       .where((request) => request?.sourceTaskId == sourceTask)
@@ -232,8 +237,65 @@ Future<void> _startWithoutRemount(WidgetTester tester, String task) async {
   await tester.pumpAndSettle();
 }
 
-Act0ReviewShellV1 _review(WidgetTester tester) =>
-    tester.widget<Act0ReviewShellV1>(find.byType(Act0ReviewShellV1));
+({
+  List<Act0PracticeGroupV1> groups,
+  ValueChanged<Act0PracticeGroupV1> onStartGroup,
+  Act0PracticeRepairQueueConsumerV1 repairQueueConsumer,
+  ValueChanged<Act0PracticeRepairQueueLaunchRequestV1>?
+  onLaunchRepairQueueTarget,
+})
+_practice(WidgetTester tester) {
+  if (act0AcademyPracticePreviewV1) {
+    final input = tester
+        .widget<Act0AcademyPracticeLeafV1>(
+          find.byType(Act0AcademyPracticeLeafV1),
+        )
+        .input;
+    return (
+      groups: input.groups,
+      onStartGroup: input.onStartGroup,
+      repairQueueConsumer: input.repairQueue,
+      onLaunchRepairQueueTarget: input.onLaunchRepair,
+    );
+  }
+  final legacy = tester.widget<Act0PlayShellV1>(find.byType(Act0PlayShellV1));
+  return (
+    groups: legacy.groups,
+    onStartGroup: legacy.onStartGroup,
+    repairQueueConsumer: legacy.repairQueueConsumer,
+    onLaunchRepairQueueTarget: legacy.onLaunchRepairQueueTarget,
+  );
+}
+
+List<Act0MistakeCardV1> _openMistakes(WidgetTester tester) =>
+    act0AcademyReviewPreviewV1
+    ? tester
+          .widget<Act0AcademyReviewLeafV1>(find.byType(Act0AcademyReviewLeafV1))
+          .input
+          .openMistakes
+    : tester
+          .widget<Act0ReviewShellV1>(find.byType(Act0ReviewShellV1))
+          .review
+          .mistakes;
+
+ValueChanged<Act0MistakeCardV1>? _repairCallback(WidgetTester tester) =>
+    act0AcademyReviewPreviewV1
+    ? tester
+          .widget<Act0AcademyReviewLeafV1>(find.byType(Act0AcademyReviewLeafV1))
+          .input
+          .onRepairMistake
+    : tester
+          .widget<Act0ReviewShellV1>(find.byType(Act0ReviewShellV1))
+          .onFixMistake;
+
+Finder _openDebtCaption(int count) => act0AcademyReviewPreviewV1
+    ? find.byWidgetPredicate(
+        (w) =>
+            w is Text &&
+            w.key == const Key('act0_academy_review_leaf_open_count') &&
+            w.data == '$count',
+      )
+    : find.text('$count ${count == 1 ? 'miss' : 'misses'} to fix');
 
 void main() {
   testWidgets(
@@ -253,7 +315,7 @@ void main() {
       expect(_rows(twoMisses, 'openRepairIntents'), hasLength(2));
       await _back(tester);
       await _tab(tester, 'Practice');
-      final play = tester.widget<Act0PlayShellV1>(find.byType(Act0PlayShellV1));
+      final play = _practice(tester);
       final request = play.repairQueueConsumer.items
           .map((item) => item.launchRequest)
           .singleWhere((request) => request?.sourceTaskId == _actionRepair)!;
@@ -302,12 +364,12 @@ void main() {
       await _continue(tester);
       expect(tester.state(find.byType(Act0ShellPreviewScreenV1)), same(root));
       expect(
-        _review(tester).review.mistakes.map((mistake) => mistake.taskId),
+        _openMistakes(tester).map((mistake) => mistake.taskId),
         [_actionSource],
         reason: 'resolved Check must disappear immediately, without a remount',
       );
-      expect(find.text('1 miss to fix'), findsOneWidget);
-      expect(_review(tester).onFixMistake, isNotNull);
+      expect(_openDebtCaption(1), findsOneWidget);
+      expect(_repairCallback(tester), isNotNull);
       final after = await _saved(tester);
       final reward = Act0ShellStateV1.sample
           .worldById('world_1')
@@ -334,7 +396,7 @@ void main() {
         );
       }
       await _mount(tester, Act0ShellTabV1.review);
-      expect(_review(tester).review.mistakes.map((mistake) => mistake.taskId), [
+      expect(_openMistakes(tester).map((mistake) => mistake.taskId), [
         _actionSource,
       ]);
       final restored = await _saved(tester);
@@ -370,10 +432,10 @@ void main() {
       await _back(tester);
       await _tab(tester, 'Review');
       expect(
-        _review(tester).review.mistakes.map((mistake) => mistake.taskId),
+        _openMistakes(tester).map((mistake) => mistake.taskId),
         unorderedEquals([_actionRepair, _actionSource]),
       );
-      expect(find.text('2 misses to fix'), findsOneWidget);
+      expect(_openDebtCaption(2), findsOneWidget);
     },
   );
 
@@ -389,7 +451,7 @@ void main() {
       final owed = await _saved(tester);
       await _back(tester);
       await _tab(tester, 'Practice');
-      final play = tester.widget<Act0PlayShellV1>(find.byType(Act0PlayShellV1));
+      final play = _practice(tester);
       final request = play.repairQueueConsumer.items
           .map((item) => item.launchRequest)
           .singleWhere((request) => request?.sourceTaskId == _actionRepair)!;
@@ -422,10 +484,10 @@ void main() {
       await _continue(tester);
       expect(tester.state(find.byType(Act0ShellPreviewScreenV1)), same(root));
       expect(
-        _review(tester).review.mistakes.map((mistake) => mistake.taskId),
+        _openMistakes(tester).map((mistake) => mistake.taskId),
         unorderedEquals([_actionRepair, _actionSource]),
       );
-      expect(find.text('2 misses to fix'), findsOneWidget);
+      expect(_openDebtCaption(2), findsOneWidget);
       final after = await _saved(tester);
       expect(after['reviewResolutionReceipts'], isEmpty);
       for (final task in [_actionRepair, _actionSource]) {
@@ -477,7 +539,7 @@ void main() {
     await _mount(tester, Act0ShellTabV1.play);
     final restored = await _saved(tester);
     expect(_debt(restored, _actionSource), hasLength(1));
-    final play = tester.widget<Act0PlayShellV1>(find.byType(Act0PlayShellV1));
+    final play = _practice(tester);
     expect(
       play.repairQueueConsumer.items.where(
         (i) => i.launchRequest?.sourceTaskId == _actionSource,
@@ -527,7 +589,7 @@ void main() {
       final earned = completed['earnedXp'];
       expect(earned, greaterThan(0));
       await _mount(tester, Act0ShellTabV1.play);
-      final play = tester.widget<Act0PlayShellV1>(find.byType(Act0PlayShellV1));
+      final play = _practice(tester);
       final daily = play.groups.singleWhere((g) => g.groupId == 'daily');
       expect(daily.isEnabled, isTrue);
       expect(
@@ -627,7 +689,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      final play = tester.widget<Act0PlayShellV1>(find.byType(Act0PlayShellV1));
+      final play = _practice(tester);
       final request = play.repairQueueConsumer.items
           .map((item) => item.launchRequest)
           .where((r) => r?.sourceTaskId == _rankTask)
@@ -686,9 +748,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      final nextPlay = tester.widget<Act0PlayShellV1>(
-        find.byType(Act0PlayShellV1),
-      );
+      final nextPlay = _practice(tester);
       expect(
         nextPlay.repairQueueConsumer.items.where(
           (i) => i.launchRequest?.sourceTaskId == _rankTask && i.isLaunchable,
