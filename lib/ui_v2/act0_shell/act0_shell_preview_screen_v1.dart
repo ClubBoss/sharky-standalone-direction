@@ -12801,9 +12801,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           title: repairSourceTaskId == selectedTask.taskId
               ? 'Repair this spot'
               : 'Try a similar spot',
-          body: repairSourceTaskId == selectedTask.taskId
-              ? 'You chose ${record.selectedLabel}. Better: ${record.betterLabel}.'
-              : 'Same idea, new frame. You chose ${record.selectedLabel}. Better: ${record.betterLabel}.',
+          body: act0RepairPracticeIntroBodyV1(
+            selectedLabel: record.selectedLabel,
+            sameTask: repairSourceTaskId == selectedTask.taskId,
+          ),
           table: focusTable,
           focusSeatIds: option?.repairFocusSeatIds ?? const <String>[],
           focusCardIds: option?.repairFocusCardIds ?? const <String>[],
@@ -12839,8 +12840,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       highlightedCardIds: option.repairFocusCardIds.isEmpty
           ? table.highlightedCardIds
           : option.repairFocusCardIds,
-      focusCalloutLabel:
-          'Repair: ${record.selectedLabel} misses this. Better: ${record.betterLabel}.',
+      focusCalloutLabel: act0RepairFocusCalloutV1(
+        selectedLabel: record.selectedLabel,
+      ),
     );
   }
 
@@ -16595,3 +16597,18 @@ const _placementDiagnosticSpotsV1 = <_Act0PlacementDiagnosticSpotV1>[
 // fromBeatV1 later: map BeatV1.caption/hint/options/feedback/table adapter
 // into Act0RunnerStateV1, then replace Act0ShellStateV1.sample at the preview
 // boundary without changing production Today, Map, Runner, or Result routes.
+
+/// REP-02/REP-03: copy shown before and during an attempt that is recorded as
+/// unassisted. It may name the learner's own earlier choice and point at the
+/// table clue, but never the better action, or the recheck stops being the
+/// learner's own choice. (Native finding on 3c83f85d: "Better: Check" was
+/// shown and the following answer still closed the repair as independent.)
+String act0RepairPracticeIntroBodyV1({
+  required String selectedLabel,
+  required bool sameTask,
+}) => sameTask
+    ? 'You chose $selectedLabel. Find the table clue first, then choose again.'
+    : 'Same idea, new frame. You chose $selectedLabel. Find the table clue first, then choose.';
+
+String act0RepairFocusCalloutV1({required String selectedLabel}) =>
+    'Repair: $selectedLabel misses this clue.';
