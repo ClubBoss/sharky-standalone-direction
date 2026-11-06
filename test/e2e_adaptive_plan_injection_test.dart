@@ -57,6 +57,8 @@ class _PassGatekeeper extends PackQualityGatekeeperService {
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   setUp(() {
     SharedPreferences.setMockInitialValues({'planner.budgetPaddingMins': 0});
   });
