@@ -49,7 +49,7 @@ void main() {
       tags: ['test'],
     );
 
-    final result = service.filter[spots, set];
+    final result = service.filter(spots, set);
     expect(result.map((e) => e.id), ['a']);
   });
 
@@ -59,7 +59,7 @@ void main() {
       buildSpot(id: 'b', tags: ['discard']),
     ];
     const set = ConstraintSet(tags: ['keep']);
-    final result = service.filter[spots, set];
+    final result = service.filter(spots, set);
     expect(result.map((e) => e.id), ['a']);
   });
 }

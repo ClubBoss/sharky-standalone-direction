@@ -44,7 +44,7 @@ void main() {
 
     final engine = SmartReSuggestionEngine(
       logs: _FakeLogService([]),
-      library: [_tpl('a'), _tpl('b')),
+      library: [_tpl('a'), _tpl('b')],
     );
     final pack = await engine.suggestNext();
     expect(pack?.id, 'a');
@@ -63,10 +63,9 @@ void main() {
 
     final engine = SmartReSuggestionEngine(
       logs: _FakeLogService([]),
-      library: [_tpl('a')),
+      library: [_tpl('a')],
     );
     final pack = await engine.suggestNext();
     expect(pack, isNull);
   });
 }
-

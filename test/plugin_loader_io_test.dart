@@ -38,7 +38,7 @@ class _Response extends Stream<List<int>> implements HttpClientResponse {
   int get statusCode => HttpStatus.ok;
   @override
   StreamSubscription<List<int>> listen(
-    void Function[List<int>]? onData, {
+    void Function(List<int>)? onData, {
     Function? onError,
     void Function()? onDone,
     bool? cancelOnError,

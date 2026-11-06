@@ -45,7 +45,7 @@ void main() {
 
   test('wrong push', () {
     final m = Mistake(
-      spot: spot['call', pos: HeroPosition.utg],
+      spot: spot('call', pos: HeroPosition.utg),
       action: PlayerAction.push,
       handStrength: 0.5,
     );

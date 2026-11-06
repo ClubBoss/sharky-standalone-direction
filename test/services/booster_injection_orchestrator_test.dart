@@ -34,7 +34,7 @@ class _FakeInventory extends BoosterInventoryService {
   Future<void> loadAll({int limit = 500}) async {}
 
   @override
-  List<v2.TrainingPackTemplateV2> findByTag[String tag] => [
+  List<v2.TrainingPackTemplateV2> findByTag(String tag) => [
     for (final b in items)
       if (b.tags.contains(tag)) b,
   ];
@@ -100,7 +100,7 @@ void main() {
   test('returns boosters matching weak tags', () async {
     final orch = BoosterInjectionOrchestrator(
       mastery: _FakeMastery({'push': 0.4}),
-      inventory: _FakeInventory([_pack('b1', 'push'), _pack('b2', 'call'))),
+      inventory: _FakeInventory([_pack('b1', 'push'), _pack('b2', 'call')]),
       gaps: _FakeGapDetector([]),
       recall: _FakeRecall([]),
     );
@@ -114,7 +114,7 @@ void main() {
   test('prioritizes recallable types', () async {
     final orch = BoosterInjectionOrchestrator(
       mastery: _FakeMastery({'push': 0.8}),
-      inventory: _FakeInventory([_pack('b1', 'push'), _pack('b2', 'call'))),
+      inventory: _FakeInventory([_pack('b1', 'push'), _pack('b2', 'call')]),
       gaps: _FakeGapDetector([]),
       recall: _FakeRecall(['call']),
     );
@@ -128,7 +128,7 @@ void main() {
   test('avoids duplicates in same session', () async {
     final orch = BoosterInjectionOrchestrator(
       mastery: _FakeMastery({'push': 0.4}),
-      inventory: _FakeInventory([_pack('b1', 'push'))),
+      inventory: _FakeInventory([_pack('b1', 'push')]),
       gaps: _FakeGapDetector([]),
       recall: _FakeRecall([]),
     );
@@ -143,7 +143,7 @@ void main() {
   test('skips completed boosters', () async {
     final orch = BoosterInjectionOrchestrator(
       mastery: _FakeMastery({'push': 0.4}),
-      inventory: _FakeInventory([_pack('b1', 'push'))),
+      inventory: _FakeInventory([_pack('b1', 'push')]),
       gaps: _FakeGapDetector([]),
       recall: _FakeRecall([]),
     );
@@ -154,4 +154,3 @@ void main() {
     expect(blocks, isEmpty);
   });
 }
-

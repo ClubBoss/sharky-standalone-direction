@@ -24,16 +24,16 @@ void main() {
     final hand2 = hand1.copyWith(
       heroPosition: 'SB',
       boardStreet: 1,
-      boardCards: [CardModel(rank: 'A', suit: '♠')),
-      actions: [ActionEntry(1, 1, 'bet')),
+      boardCards: [CardModel(rank: 'A', suit: '♠')],
+      actions: [ActionEntry(1, 1, 'bet')],
     );
-    final diff = service.compute[hand1, hand2];
-    final forward = service.apply[hand1, diff.forward];
+    final diff = service.compute(hand1, hand2);
+    final forward = service.apply(hand1, diff.forward);
     expect(forward.heroPosition, 'SB');
     expect(forward.boardStreet, 1);
     expect(forward.boardCards.length, 1);
     expect(forward.actions.length, 1);
-    final back = service.apply[forward, diff.backward];
+    final back = service.apply(forward, diff.backward);
     expect(back.heroPosition, 'BTN');
     expect(back.boardStreet, 0);
     expect(back.boardCards, isEmpty);

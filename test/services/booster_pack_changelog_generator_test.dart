@@ -36,7 +36,7 @@ void main() {
         heroCards: 'AhKh',
         position: HeroPosition.btn,
         actions: {
-          0: [ActionEntry(0, 0, 'push', ev: 1)),
+          0: [ActionEntry(0, 0, 'push', ev: 1)],
         },
       ),
       explanation: 'A',
@@ -49,7 +49,7 @@ void main() {
         heroCards: 'AhKh',
         position: HeroPosition.sb,
         actions: {
-          0: [ActionEntry(0, 0, 'push', ev: 2)),
+          0: [ActionEntry(0, 0, 'push', ev: 2)],
         },
       ),
       explanation: 'B',
@@ -65,4 +65,3 @@ void main() {
     expect(md, contains('s1:')); // modified spot
   });
 }
-

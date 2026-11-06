@@ -13,7 +13,7 @@ void main() {
         moduleId: id,
         mode: TrainingMode.online,
       );
-      final inLive = liveBadgesForModule[moduleId: id, mode: TrainingMode.live];
+      final inLive = liveBadgesForModule(moduleId: id, mode: TrainingMode.live);
 
       expect(inOnline, isEmpty);
       expect(inLive, equals(<String>[kLiveBadgeText]));
@@ -25,7 +25,7 @@ void main() {
         moduleId: id,
         mode: TrainingMode.online,
       );
-      final inLive = liveBadgesForModule[moduleId: id, mode: TrainingMode.live];
+      final inLive = liveBadgesForModule(moduleId: id, mode: TrainingMode.live);
 
       expect(inOnline, isEmpty);
       expect(inLive, equals(<String>[kLiveBadgeText]));
@@ -37,7 +37,7 @@ void main() {
         moduleId: id,
         mode: TrainingMode.online,
       );
-      final inLive = liveBadgesForModule[moduleId: id, mode: TrainingMode.live];
+      final inLive = liveBadgesForModule(moduleId: id, mode: TrainingMode.live);
 
       expect(inOnline, isEmpty);
       expect(inLive, equals(<String>[kLiveBadgeText]));
@@ -49,7 +49,7 @@ void main() {
         moduleId: id,
         mode: TrainingMode.online,
       );
-      final inLive = liveBadgesForModule[moduleId: id, mode: TrainingMode.live];
+      final inLive = liveBadgesForModule(moduleId: id, mode: TrainingMode.live);
 
       expect(inOnline, isEmpty);
       expect(inLive, isEmpty);
@@ -58,7 +58,7 @@ void main() {
     test('no duplicates for overlapping conditions', () {
       // Starts with "live_" and also matches mode==live
       const id = 'live_mtt_short_stack';
-      final badges = liveBadgesForModule[moduleId: id, mode: TrainingMode.live];
+      final badges = liveBadgesForModule(moduleId: id, mode: TrainingMode.live);
 
       expect(badges, equals(<String>[kLiveBadgeText]));
       expect(badges.where((b) => b == kLiveBadgeText).length, 1);

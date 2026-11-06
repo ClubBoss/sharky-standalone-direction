@@ -1013,9 +1013,7 @@ class _Act0ScenePlayerHeroV1State extends State<Act0ScenePlayerHeroV1> {
             child: image == null
                 ? CustomPaint(
                     key: const Key('act0_scene_hero_procedural'),
-                    painter: _Act0ScenePlayerHeroPainterV1(
-                      light: widget.light,
-                    ),
+                    painter: _Act0ScenePlayerHeroPainterV1(light: widget.light),
                   )
                 : CustomPaint(
                     key: const Key('act0_scene_hero_authored'),

@@ -11,7 +11,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  SkillTreeProgressStats stats[{double rate = 1.0, int level = 1}] =>
+  SkillTreeProgressStats stats({double rate = 1.0, int level = 1}) =>
       SkillTreeProgressStats(
         totalNodes: 1,
         completedNodes: rate == 1.0 ? 1 : 0,
@@ -31,7 +31,7 @@ void main() {
   test('progress message triggered near completion', () async {
     final engine = SkillTreeMotivationalHintEngine(cooldown: Duration.zero);
     await engine.resetForTest();
-    final msg = await engine.getMotivationalMessage(stats[rate: 0.8]);
+    final msg = await engine.getMotivationalMessage(stats(rate: 0.8));
     expect(msg, 'Almost there!');
   });
 
@@ -40,9 +40,9 @@ void main() {
       cooldown: const Duration(seconds: 5),
     );
     await engine.resetForTest();
-    final first = await engine.getMotivationalMessage(stats[rate: 0.8]);
+    final first = await engine.getMotivationalMessage(stats(rate: 0.8));
     expect(first, isNotNull);
-    final second = await engine.getMotivationalMessage(stats[rate: 0.8]);
+    final second = await engine.getMotivationalMessage(stats(rate: 0.8));
     expect(second, isNull);
   });
 }

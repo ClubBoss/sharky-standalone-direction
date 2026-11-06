@@ -17,9 +17,9 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test('selectBest picks diverse spots', () {
-    final s1 = _spot['a', 'AhKh', HeroPosition.btn];
-    final s2 = _spot['b', 'AhKh', HeroPosition.btn];
-    final s3 = _spot['c', '9c8c', HeroPosition.sb];
+    final s1 = _spot('a', 'AhKh', HeroPosition.btn);
+    final s2 = _spot('b', 'AhKh', HeroPosition.btn);
+    final s3 = _spot('c', '9c8c', HeroPosition.sb);
 
     final pack = TrainingPackTemplate(
       id: 'p1',

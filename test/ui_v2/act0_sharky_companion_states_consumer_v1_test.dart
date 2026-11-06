@@ -16,9 +16,7 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        _host(
-          _summary(sharkyLine: 'Nice work today.', qualifies: true),
-        ),
+        _host(_summary(sharkyLine: 'Nice work today.', qualifies: true)),
       );
       await tester.pumpAndSettle();
 
@@ -33,9 +31,7 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        _host(
-          _summary(sharkyLine: 'Try that again.', qualifies: false),
-        ),
+        _host(_summary(sharkyLine: 'Try that again.', qualifies: false)),
       );
       await tester.pumpAndSettle();
 
@@ -47,7 +43,10 @@ void main() {
         act0SharkyToneForMoodV1(Act0SharkyMoodV1.repair),
         isNot(Colors.red),
       );
-      expect(act0SharkyToneForMoodV1(Act0SharkyMoodV1.repair), Act0ShellTokensV1.gold);
+      expect(
+        act0SharkyToneForMoodV1(Act0SharkyMoodV1.repair),
+        Act0ShellTokensV1.gold,
+      );
     });
 
     testWidgets('banked fix proof (no improvement) resolves confirm', (
@@ -203,9 +202,7 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('no XP/level/rank/mood-label language appears', (
-      tester,
-    ) async {
+    testWidgets('no XP/level/rank/mood-label language appears', (tester) async {
       const receipt = Act0RepairOutcomeSessionReceiptV1(
         title: "Fixes you've banked",
         lines: <String>['1 repair completed'],
@@ -275,7 +272,10 @@ void main() {
       await tester.tap(find.byKey(const Key('act0_shell_welcome_primary_cta')));
       await tester.pumpAndSettle();
 
-      expect(find.byKey(const Key('act0_shell_welcome_demo_spot')), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_shell_welcome_demo_spot')),
+        findsOneWidget,
+      );
     });
   });
 
@@ -323,7 +323,9 @@ Act0BlockCompletionSummaryV1 _summary({
         ? Act0ProgressMilestoneTierV1.world
         : Act0ProgressMilestoneTierV1.lesson,
     worldNumber: worldNumber,
-    worldTitle: worldNumber > 0 ? (worldTitle.isEmpty ? 'World' : worldTitle) : '',
+    worldTitle: worldNumber > 0
+        ? (worldTitle.isEmpty ? 'World' : worldTitle)
+        : '',
     nextWorldNumber: nextWorldNumber,
     nextWorldTitle: nextWorldTitle,
     perfectClearCount: worldNumber > 0 ? 9 : 0,

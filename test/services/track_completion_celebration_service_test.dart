@@ -92,8 +92,8 @@ void main() {
       level: 0,
     );
     const builder = SkillTreeBuilderService();
-    final tree1 = builder.build([node1]].tree;
-    final tree2 = builder.build([node2]].tree;
+    final tree1 = builder.build([node1]).tree;
+    final tree2 = builder.build([node2]).tree;
     final lib = _FakeLibraryService(
       {
         'T1': SkillTreeBuildResult(tree: tree1),
@@ -134,7 +134,7 @@ void main() {
 }
 
 class _RecordingSkillTreeNavigator extends SkillTreeNavigator {
-  final void Function[String] onOpen;
+  final void Function(String) onOpen;
   _RecordingSkillTreeNavigator(this.onOpen);
 
   @override

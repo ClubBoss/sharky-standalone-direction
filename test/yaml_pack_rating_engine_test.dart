@@ -1,8 +1,10 @@
 import 'package:test/test.dart';
 import 'package:poker_analyzer/services/yaml_pack_rating_engine.dart';
-import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart' as v2; // fix: v2 alias
+import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart'
+    as v2; // fix: v2 alias
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
-import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models; // fix: v2 hand
+import 'package:poker_analyzer/models/v2/hand_data.dart'
+    as v2models; // fix: v2 hand
 import 'package:poker_analyzer/models/v2/hero_position.dart';
 import 'package:poker_analyzer/models/action_entry.dart';
 import 'package:poker_analyzer/models/evaluation_result.dart';
@@ -17,7 +19,7 @@ void main() {
         heroIndex: 0,
         stacks: <String, double>{'0': bb.toDouble()},
         actions: <int, List<ActionEntry>>{
-          0: <ActionEntry>[ActionEntry(0, 0, 'push')),
+          0: <ActionEntry>[ActionEntry(0, 0, 'push')],
         },
       ),
       evalResult: EvaluationResult(
@@ -75,4 +77,3 @@ void main() {
     expect(res.keys, containsAll(['a', 'b']));
   });
 }
-

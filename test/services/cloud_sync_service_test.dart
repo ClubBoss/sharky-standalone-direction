@@ -69,7 +69,7 @@ void main() {
       action: 'fold',
     );
     final queue = {
-      'pending': [request.toJson()),
+      'pending': [request.toJson()],
       'failed': <dynamic>[],
       'completed': <dynamic>[],
     };

@@ -12,9 +12,9 @@ void main() {
     for (final owner in activeAct0LearnerCopyOwnersV1) {
       final source = File('$root/$owner').readAsStringSync();
       findings.addAll(
-        forbiddenValueBeforePaywallFindingsV1(source).map(
-          (phrase) => '$owner: $phrase',
-        ),
+        forbiddenValueBeforePaywallFindingsV1(
+          source,
+        ).map((phrase) => '$owner: $phrase'),
       );
     }
 

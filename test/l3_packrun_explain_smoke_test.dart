@@ -25,10 +25,10 @@ spots:
       '--out',
       outFile.path,
       '--explain',
-    ));
+    ]);
     expect(res.exitCode, 0, reason: res.stderr.toString());
     final report =
-        json.decode[outFile.readAsStringSync(]) as Map<String, dynamic>;
+        json.decode[outFile.readAsStringSync()] as Map<String, dynamic>;
     final spots = report['spots'] as List<dynamic>;
     expect(spots, hasLength(3));
     for (final spot in spots) {

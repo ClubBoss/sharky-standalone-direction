@@ -21,7 +21,7 @@ void main() {
       name: 'Booster',
       trainingType: TrainingType.pushFold,
       gameType: GameType.tournament,
-      spots: [TrainingPackSpot(id: 's')),
+      spots: [TrainingPackSpot(id: 's')],
       spotCount: 1,
       created: DateTime.now(),
       positions: [],

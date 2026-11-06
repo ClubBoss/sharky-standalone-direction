@@ -21,9 +21,9 @@ void main() {
       SkillTreeNodeModel(id: id, title: id, category: cat);
 
   test('aggregates overall path progress', () async {
-    final treeA = builder.build([node('a1', 'A']]).tree;
-    final treeB = builder.build([node('b1', 'B']]).tree;
-    final treeC = builder.build([node('c1', 'C']]).tree;
+    final treeA = builder.build([node('a1', 'A')]).tree;
+    final treeB = builder.build([node('b1', 'B')]).tree;
+    final treeC = builder.build([node('c1', 'C')]).tree;
 
     final svc = SkillTreePathProgressOverviewService(
       tracks: _FakeTrackProgressService([

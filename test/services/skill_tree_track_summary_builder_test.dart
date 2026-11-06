@@ -27,14 +27,14 @@ void main() {
   });
 
   test('builds summary with ev loss stats', () async {
-    final tree = builder.build([node('a'], node('b'))).tree;
+    final tree = builder.build([node('a'), node('b')]).tree;
     await tracker.markCompleted('a');
     final stats = TrainingStatsService();
     await stats.updateSkill('Push/Fold', -0.5, true);
     final summary = await SkillTreeTrackSummaryBuilder(
       progress: tracker,
       stats: stats,
-    ).build(tree];
+    ).build(tree);
     expect(summary.title, 'Push/Fold');
     expect(summary.completedCount, 1);
     expect(summary.avgEvLoss, closeTo(-0.5, 0.0001));
@@ -42,11 +42,11 @@ void main() {
   });
 
   test('generates completion message when all done', () async {
-    final tree = builder.build([node('c']]).tree;
+    final tree = builder.build([node('c')]).tree;
     await tracker.markCompleted('c');
     final summary = await SkillTreeTrackSummaryBuilder(
       progress: tracker,
-    ).build(tree];
+    ).build(tree);
     expect(summary.completedCount, 1);
     expect(summary.motivationalLine.toLowerCase(), contains('crushed'));
   });

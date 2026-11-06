@@ -26,7 +26,7 @@ void main() {
     );
 
     final engine = TagBalancerEngine(maxBoostCount: 3);
-    final boost = engine.balance[set, coverage];
+    final boost = engine.balance(set, coverage);
 
     expect(boost.length, 1);
     expect(boost.first.id, 'B1');

@@ -4,7 +4,8 @@ import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
 import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart'
     as v2; // fix: type adjust use v2
-import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models; // fix: type adjust use v2
+import 'package:poker_analyzer/models/v2/hand_data.dart'
+    as v2models; // fix: type adjust use v2
 import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
 import 'package:poker_analyzer/services/inline_theory_linking/postflop_jam_decision_theory_linker.dart';
 import 'package:poker_analyzer/services/mini_lesson_library_service.dart';
@@ -35,13 +36,13 @@ class _FakeLibrary implements MiniLessonLibraryService {
   Future<void> reload() async {} // fix: type adjust callback
 
   @override
-  List<TheoryMiniLessonNode> findByTags[List<String> tags] => lessons; // fix: type adjust interface
+  List<TheoryMiniLessonNode> findByTags(List<String> tags) => lessons; // fix: type adjust interface
 
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] => lessons; // fix: type adjust interface
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) => lessons; // fix: type adjust interface
 
   @override
-  List<String> linkedPacksFor[String lessonId] => const <String>[]; // fix: type adjust generics
+  List<String> linkedPacksFor(String lessonId) => const <String>[]; // fix: type adjust generics
 
   @override
   Future<bool> isLessonCompleted(String lessonId) async => false; // fix: type adjust callback
@@ -110,4 +111,3 @@ void main() {
     expect(pack.spots.first.meta.containsKey('theoryRef'), false);
   });
 }
-

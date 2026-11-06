@@ -16,8 +16,8 @@ void main() {
   test('evaluate returns push for strong hand', () {
     final spot = TrainingSpot(
       playerCards: [
-        [CardModel(rank: 'A', suit: '♠'), CardModel(rank: 'K', suit: '♠')),
-        [CardModel(rank: '2', suit: '♣'), CardModel(rank: '7', suit: '♦')),
+        [CardModel(rank: 'A', suit: '♠'), CardModel(rank: 'K', suit: '♠')],
+        [CardModel(rank: '2', suit: '♣'), CardModel(rank: '7', suit: '♦')],
       ],
       boardCards: [],
       actions: [],
@@ -37,8 +37,8 @@ void main() {
   test('evaluate returns fold for weak hand', () {
     final spot = TrainingSpot(
       playerCards: [
-        [CardModel(rank: '3', suit: '♠'), CardModel(rank: '8', suit: '♦')),
-        [CardModel(rank: '2', suit: '♣'), CardModel(rank: '7', suit: '♦')),
+        [CardModel(rank: '3', suit: '♠'), CardModel(rank: '8', suit: '♦')],
+        [CardModel(rank: '2', suit: '♣'), CardModel(rank: '7', suit: '♦')],
       ],
       boardCards: [],
       actions: [],
@@ -58,8 +58,8 @@ void main() {
   test('evaluate returns call when profitable', () {
     final spot = TrainingSpot(
       playerCards: [
-        [CardModel(rank: 'A', suit: '♠'), CardModel(rank: 'K', suit: '♠')),
-        [CardModel(rank: '2', suit: '♣'), CardModel(rank: '7', suit: '♦')),
+        [CardModel(rank: 'A', suit: '♠'), CardModel(rank: 'K', suit: '♠')],
+        [CardModel(rank: '2', suit: '♣'), CardModel(rank: '7', suit: '♦')],
       ],
       boardCards: [],
       actions: [
@@ -82,11 +82,11 @@ void main() {
   test('evaluate falls back to hero action when stack is deep', () {
     final spot = TrainingSpot(
       playerCards: [
-        [CardModel(rank: '5', suit: '♠'), CardModel(rank: '5', suit: '♦')),
-        [CardModel(rank: '2', suit: '♣'), CardModel(rank: '7', suit: '♦')),
+        [CardModel(rank: '5', suit: '♠'), CardModel(rank: '5', suit: '♦')],
+        [CardModel(rank: '2', suit: '♣'), CardModel(rank: '7', suit: '♦')],
       ],
       boardCards: [],
-      actions: [ActionEntry(0, 0, 'call')),
+      actions: [ActionEntry(0, 0, 'call')],
       heroIndex: 0,
       numberOfPlayers: 2,
       playerTypes: [],
@@ -103,8 +103,8 @@ void main() {
   test('async evaluate returns score', () async {
     final spot = TrainingSpot(
       playerCards: [
-        [CardModel(rank: 'A', suit: '♠'), CardModel(rank: 'K', suit: '♠')),
-        [CardModel(rank: '2', suit: '♣'), CardModel(rank: '7', suit: '♦')),
+        [CardModel(rank: 'A', suit: '♠'), CardModel(rank: 'K', suit: '♠')],
+        [CardModel(rank: '2', suit: '♣'), CardModel(rank: '7', suit: '♦')],
       ],
       boardCards: [],
       actions: [],
@@ -125,8 +125,8 @@ void main() {
   test('async evaluate returns score for call', () async {
     final spot = TrainingSpot(
       playerCards: [
-        [CardModel(rank: 'A', suit: '♠'), CardModel(rank: 'K', suit: '♠')),
-        [CardModel(rank: '2', suit: '♣'), CardModel(rank: '7', suit: '♦')),
+        [CardModel(rank: 'A', suit: '♠'), CardModel(rank: 'K', suit: '♠')],
+        [CardModel(rank: '2', suit: '♣'), CardModel(rank: '7', suit: '♦')],
       ],
       boardCards: [],
       actions: [

@@ -11,7 +11,7 @@ import 'package:poker_analyzer/services/theory_index_service.dart';
 class _FakeTheoryIndexService extends TheoryIndexService {
   @override
   Future<List<TheorySnippet>> snippetsForTag(String tag) async {
-    return [const TheorySnippet(id: 's1', title: 't', bullets: []));
+    return [const TheorySnippet(id: 's1', title: 't', bullets: [])];
   }
 }
 

@@ -5,7 +5,7 @@ import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
 void main() {
   test('missing hero cards reported', () {
     final spot = TrainingPackSpot(id: 's');
-    final issues = validateSpot[spot, 0];
+    final issues = validateSpot(spot, 0);
     expect(issues, isNotEmpty);
     expect(issues.first.message, contains('no hero cards'));
   });

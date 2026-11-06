@@ -1,9 +1,11 @@
- // fix: hide shim
+// fix: hide shim
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
-import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart' as v2; // fix: v2 alias
-import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models; // fix: v2 hand
+import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart'
+    as v2; // fix: v2 alias
+import 'package:poker_analyzer/models/v2/hand_data.dart'
+    as v2models; // fix: v2 hand
 import 'package:poker_analyzer/models/evaluation_result.dart';
 import 'package:poker_analyzer/services/evaluation_executor_service.dart';
 import 'package:poker_analyzer/screens/v2/training_pack_template_editor_screen.dart';
@@ -12,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class _MockEvaluationExecutorService implements EvaluationExecutorService {
   @override
-  Future<EvaluationResult> evaluate[TrainingPackSpot spot] async {
+  Future<EvaluationResult> evaluate(TrainingPackSpot spot) async {
     await Future.delayed(Duration(milliseconds: 50));
     return EvaluationResult(
       correct: true,
@@ -47,7 +49,8 @@ void main() {
     ); // fix: v2 ctor/collections/types
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(
-      Provider<EvaluationExecutorService>.value[value: _MockEvaluationExecutorService(],
+      Provider<EvaluationExecutorService>.value(
+        value: _MockEvaluationExecutorService(),
         child: MaterialApp(
           home: TrainingPackTemplateEditorScreen(
             template: tpl,

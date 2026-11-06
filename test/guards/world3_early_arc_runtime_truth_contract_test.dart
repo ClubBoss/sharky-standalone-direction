@@ -19,12 +19,10 @@ void main() {
     final indexText = File(
       'content/worlds/world3/v1/sessions/w3.s10/drills/index.md',
     ).readAsStringSync();
-    final indexDrillIds =
-        RegExp(
-          r'^- ([a-z0-9_]+):',
-          multiLine: true,
-        ).allMatches(indexText).map((match) => match.group(1)!).toList()
-          ..sort();
+    final indexDrillIds = RegExp(
+      r'^- ([a-z0-9_]+):',
+      multiLine: true,
+    ).allMatches(indexText).map((match) => match.group(1)!).toList()..sort();
     expect(indexDrillIds, activeW3S10Drills);
 
     final drillManifest =

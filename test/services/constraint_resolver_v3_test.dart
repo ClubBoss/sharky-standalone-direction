@@ -28,7 +28,7 @@ void main() {
     );
 
     final engine = ConstraintResolverV3();
-    final spots = engine.apply[base, [set]];
+    final spots = engine.apply(base, [set]);
     expect(spots, isNotEmpty);
     final spot = spots.first;
     expect(spot.templateSourceId, 'base');
@@ -51,7 +51,7 @@ void main() {
     );
 
     final engine = ConstraintResolverV3();
-    final spots = engine.apply[base, [set]];
+    final spots = engine.apply(base, [set]);
     expect(spots, isNotEmpty);
     const lowRanks = {'2', '3', '4', '5', '6', '7', '8'};
     for (final s in spots) {

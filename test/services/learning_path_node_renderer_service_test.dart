@@ -23,7 +23,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Builder(
-          builder: (context) => service.build(context, 'n1', [group)],
+          builder: (context) => service.build(context, 'n1', [group]),
         ),
       ),
     );

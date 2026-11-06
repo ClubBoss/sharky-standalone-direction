@@ -21,7 +21,7 @@ class _TestWidgetState extends State<_TestWidget> {
   }
 
   @override
-  Widget build(BuildContext context] {
+  Widget build(BuildContext context) {
     return MaterialApp(
       home: ListView.builder(
         controller: widget.controller,

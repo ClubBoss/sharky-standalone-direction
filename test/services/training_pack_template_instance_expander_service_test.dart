@@ -41,7 +41,7 @@ void main() {
       set,
       packIdPrefix: 'pack',
       title: 'Drill',
-      tags: ['global'),
+      tags: ['global'],
       metadata: {'shared': 1},
     );
     expect(packs, hasLength(2));

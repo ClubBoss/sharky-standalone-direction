@@ -12,7 +12,7 @@ void main() {
       SkillTreeNodeModel(id: id, title: id, category: 'PF');
 
   testWidgets('builds connector widgets for nodes', (tester) async {
-    final nodes = [node('a'), node('b'), node('c'));
+    final nodes = [node('a'), node('b'), node('c')];
     final bounds = {
       'a': Rect.fromLTWH(0, 0, 20, 20),
       'b': Rect.fromLTWH(40, 0, 20, 20),

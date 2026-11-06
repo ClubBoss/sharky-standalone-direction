@@ -45,11 +45,11 @@ class _FakeLibrary extends Fake implements MiniLessonLibraryService {
   }
 
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] =>
-      findByTags[tags.toList[]];
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) =>
+      findByTags(tags.toList());
 
   @override
-  List<String> linkedPacksFor[String lessonId] => [];
+  List<String> linkedPacksFor(String lessonId) => [];
 }
 
 class _FakeAnalytics extends TheoryEngagementAnalyticsService {
@@ -226,8 +226,18 @@ void main() {
         tags: ['cbet', 'turn'],
         street: 2,
       ),
-      TrainingPackSpot(id: 's2', hand: v2models.HandData(), tags: ['cbet'], street: 1),
-      TrainingPackSpot(id: 's3', hand: v2models.HandData(), tags: ['probe'], street: 1),
+      TrainingPackSpot(
+        id: 's2',
+        hand: v2models.HandData(),
+        tags: ['cbet'],
+        street: 1,
+      ),
+      TrainingPackSpot(
+        id: 's3',
+        hand: v2models.HandData(),
+        tags: ['probe'],
+        street: 1,
+      ),
     ];
 
     await service.injectInlineLessons(spots);

@@ -1,4 +1,4 @@
- // fix: shadowed type name
+// fix: shadowed type name
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/widgets/training_pack_history_list_widget.dart';

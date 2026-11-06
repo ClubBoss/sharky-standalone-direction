@@ -12,7 +12,7 @@ void main() {
       hand: HandData.fromSimpleInput('AhAs', HeroPosition.sb, 10),
     );
     final engine = SpotLineGraphEngine();
-    final graph = engine.build(spot];
+    final graph = engine.build(spot);
     final lines = graph.getAllLines();
     expect(lines.length, 1);
     expect(lines.first.actions.map((e) => e.action).toList(), ['push', 'fold']);
@@ -26,7 +26,7 @@ void main() {
       correctAction: 'call',
     );
     final engine = SpotLineGraphEngine();
-    final graph = engine.build(spot];
+    final graph = engine.build(spot);
     final lines = graph.getAllLines();
     expect(lines.length, 2);
     expect(

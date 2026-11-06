@@ -22,7 +22,7 @@ void main() {
   test('sample limits size and preserves metadata', () {
     final spots = <TrainingPackSpot>[];
     for (int i = 0; i < 30; i++) {
-      spots.add(_spot['s$i', HeroPosition.values[i % 6], 10 + i]);
+      spots.add(_spot('s$i', HeroPosition.values[i % 6], 10 + i));
     }
     final pack = TrainingPackTemplate(
       id: 'p',
@@ -45,8 +45,8 @@ void main() {
     final spots = <TrainingPackSpot>[];
     var idx = 0;
     for (final pos in kPositionOrder) {
-      spots.add(_spot['s${idx++}', pos, 10]);
-      spots.add(_spot['s${idx++}', pos, 20]);
+      spots.add(_spot('s${idx++}', pos, 10));
+      spots.add(_spot('s${idx++}', pos, 20));
     }
     final pack = TrainingPackTemplate(
       id: 'p2',

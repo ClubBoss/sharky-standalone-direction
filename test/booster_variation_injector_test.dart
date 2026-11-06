@@ -18,8 +18,8 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test('injectVariations adds variations', () {
-    final s1 = _spot['a', 'AhKh', HeroPosition.btn];
-    final s2 = _spot['b', 'QhJh', HeroPosition.btn];
+    final s1 = _spot('a', 'AhKh', HeroPosition.btn);
+    final s2 = _spot('b', 'QhJh', HeroPosition.btn);
     final cluster = SpotCluster(spots: [s1, s2], clusterId: 'c1');
 
     final pack = v2.TrainingPackTemplateV2(
@@ -39,9 +39,9 @@ void main() {
   });
 
   test('injectVariations can add multiple variations', () {
-    final s1 = _spot['a', 'AhKh', HeroPosition.btn];
-    final s2 = _spot['b', 'QhJh', HeroPosition.btn];
-    final s3 = _spot['c', '9d8d', HeroPosition.sb];
+    final s1 = _spot('a', 'AhKh', HeroPosition.btn);
+    final s2 = _spot('b', 'QhJh', HeroPosition.btn);
+    final s3 = _spot('c', '9d8d', HeroPosition.sb);
     final cluster = SpotCluster(spots: [s1, s2, s3], clusterId: 'c1');
 
     final pack = v2.TrainingPackTemplateV2(
@@ -59,4 +59,3 @@ void main() {
     expect(ids.where((id) => id.startsWith('a_var')).length, 2);
   });
 }
-

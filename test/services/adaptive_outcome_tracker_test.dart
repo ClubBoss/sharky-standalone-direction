@@ -31,7 +31,7 @@ void main() {
     expect((data['m1']['baselinePass'] as num).toDouble(), closeTo(0.5, 1e-6));
 
     await tracker.onModuleCompleted('u', m1, passRate: 0.7);
-    var stats = await tracker.getTagStats['u', 'A'];
+    var stats = await tracker.getTagStats('u', 'A');
     expect(stats.n, 1);
     expect(stats.meanDelta, closeTo(0.1, 1e-6));
     expect(stats.varDelta, closeTo(0.0, 1e-6));
@@ -43,7 +43,7 @@ void main() {
     expect((data2['m2']['baselinePass'] as num).toDouble(), closeTo(0.7, 1e-6));
 
     await tracker.onModuleCompleted('u', m2, passRate: 0.6);
-    stats = await tracker.getTagStats['u', 'A'];
+    stats = await tracker.getTagStats('u', 'A');
     expect(stats.n, 2);
     expect(stats.meanDelta, closeTo(0.0, 1e-6));
     expect(stats.varDelta, closeTo(0.02, 1e-6));

@@ -28,123 +28,136 @@ void main() {
     expect(Act0ShellTokensV1.sharkyTileRadiusRatio, 0.34);
   });
 
-  testWidgets('correct feedback Sharky mascot uses the rounded-square family, not a circle', (
-    tester,
-  ) async {
-    await pumpCompact(
-      tester,
-      MaterialApp(
-        home: Scaffold(
-          body: Act0FeedbackShellV1(
-            title: 'Correct.',
-            reason: 'Nobody had bet yet - that was the clue.',
-            quality: Act0FeedbackQualityV1.correct,
-            sharkyLine: 'Good read.',
-            sharkyMood: Act0SharkyMoodV1.happy,
-            selectedLabel: 'Check',
-            preferredLabel: 'Check',
-            betterLabel: 'Check',
-            signalProof: const Act0FeedbackSignalProofV1(
-              signalId: 'no_bet_yet',
-              label: 'No bet yet',
-              proofLine: 'Signal: No bet yet',
+  testWidgets(
+    'correct feedback Sharky mascot uses the rounded-square family, not a circle',
+    (tester) async {
+      await pumpCompact(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0FeedbackShellV1(
+              title: 'Correct.',
+              reason: 'Nobody had bet yet - that was the clue.',
+              quality: Act0FeedbackQualityV1.correct,
+              sharkyLine: 'Good read.',
+              sharkyMood: Act0SharkyMoodV1.happy,
+              selectedLabel: 'Check',
+              preferredLabel: 'Check',
+              betterLabel: 'Check',
+              signalProof: const Act0FeedbackSignalProofV1(
+                signalId: 'no_bet_yet',
+                label: 'No bet yet',
+                proofLine: 'Signal: No bet yet',
+              ),
+              contextLabels: const <String>['No bet yet'],
+              onContinue: () {},
             ),
-            contextLabels: const <String>['No bet yet'],
-            onContinue: () {},
           ),
         ),
-      ),
-    );
+      );
 
-    final mascot = find.byKey(const Key('act0_shell_sharky_mascot'));
-    expect(mascot, findsOneWidget);
+      final mascot = find.byKey(const Key('act0_shell_sharky_mascot'));
+      expect(mascot, findsOneWidget);
 
-    final decoration = tester
-        .widgetList<DecoratedBox>(
-          find.descendant(of: mascot, matching: find.byType(DecoratedBox)),
-        )
-        .first
-        .decoration as BoxDecoration;
-    expect(decoration.shape, BoxShape.rectangle);
-    expect(
-      decoration.borderRadius,
-      BorderRadius.circular(40 * Act0ShellTokensV1.sharkyTileRadiusRatio),
-    );
-  });
+      final decoration =
+          tester
+                  .widgetList<DecoratedBox>(
+                    find.descendant(
+                      of: mascot,
+                      matching: find.byType(DecoratedBox),
+                    ),
+                  )
+                  .first
+                  .decoration
+              as BoxDecoration;
+      expect(decoration.shape, BoxShape.rectangle);
+      expect(
+        decoration.borderRadius,
+        BorderRadius.circular(40 * Act0ShellTokensV1.sharkyTileRadiusRatio),
+      );
+    },
+  );
 
-  testWidgets('wrong repair feedback Sharky mascot uses the rounded-square family, not a circle', (
-    tester,
-  ) async {
-    await pumpCompact(
-      tester,
-      MaterialApp(
-        home: Scaffold(
-          body: Act0FeedbackShellV1(
-            title: 'Good spot to fix.',
-            reason: 'Checking is better because nobody has bet yet.',
-            quality: Act0FeedbackQualityV1.wrong,
-            sharkyLine: 'Good spot to fix.',
-            sharkyMood: Act0SharkyMoodV1.repair,
-            selectedLabel: 'Fold',
-            preferredLabel: 'Check',
-            betterLabel: 'Check',
-            signalProof: const Act0FeedbackSignalProofV1(
-              signalId: 'no_bet_yet',
-              label: 'No bet yet',
-              proofLine: 'Signal: No bet yet',
+  testWidgets(
+    'wrong repair feedback Sharky mascot uses the rounded-square family, not a circle',
+    (tester) async {
+      await pumpCompact(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0FeedbackShellV1(
+              title: 'Good spot to fix.',
+              reason: 'Checking is better because nobody has bet yet.',
+              quality: Act0FeedbackQualityV1.wrong,
+              sharkyLine: 'Good spot to fix.',
+              sharkyMood: Act0SharkyMoodV1.repair,
+              selectedLabel: 'Fold',
+              preferredLabel: 'Check',
+              betterLabel: 'Check',
+              signalProof: const Act0FeedbackSignalProofV1(
+                signalId: 'no_bet_yet',
+                label: 'No bet yet',
+                proofLine: 'Signal: No bet yet',
+              ),
+              contextLabels: const <String>['No bet yet'],
+              onContinue: () {},
             ),
-            contextLabels: const <String>['No bet yet'],
-            onContinue: () {},
           ),
         ),
-      ),
-    );
+      );
 
-    final mascot = find.byKey(const Key('act0_shell_sharky_mascot'));
-    expect(mascot, findsOneWidget);
+      final mascot = find.byKey(const Key('act0_shell_sharky_mascot'));
+      expect(mascot, findsOneWidget);
 
-    final decoration = tester
-        .widgetList<DecoratedBox>(
-          find.descendant(of: mascot, matching: find.byType(DecoratedBox)),
-        )
-        .first
-        .decoration as BoxDecoration;
-    expect(decoration.shape, BoxShape.rectangle);
-    expect(decoration.borderRadius, isNotNull);
-  });
+      final decoration =
+          tester
+                  .widgetList<DecoratedBox>(
+                    find.descendant(
+                      of: mascot,
+                      matching: find.byType(DecoratedBox),
+                    ),
+                  )
+                  .first
+                  .decoration
+              as BoxDecoration;
+      expect(decoration.shape, BoxShape.rectangle);
+      expect(decoration.borderRadius, isNotNull);
+    },
+  );
 
-  testWidgets('Home identity avatar uses the rounded-square family, not a circle', (
-    tester,
-  ) async {
-    await pumpTall(
-      tester,
-      MaterialApp(
-        home: Scaffold(
-          body: Act0HomeShellV1(
-            state: Act0ShellStateV1.sample,
-            showChecklist: true,
-            nextActionTitle: 'Your first hand, dealt',
-            nextActionSubtitle: 'Watch a hand from start to showdown.',
-            onContinue: () {},
-            onStartDailyDrill: () {},
+  testWidgets(
+    'Home identity avatar uses the rounded-square family, not a circle',
+    (tester) async {
+      await pumpTall(
+        tester,
+        MaterialApp(
+          home: Scaffold(
+            body: Act0HomeShellV1(
+              state: Act0ShellStateV1.sample,
+              showChecklist: true,
+              nextActionTitle: 'Your first hand, dealt',
+              nextActionSubtitle: 'Watch a hand from start to showdown.',
+              onContinue: () {},
+              onStartDailyDrill: () {},
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    final identity = find.byKey(const Key('act0_shell_home_identity_row'));
-    expect(identity, findsOneWidget);
+      final identity = find.byKey(const Key('act0_shell_home_identity_row'));
+      expect(identity, findsOneWidget);
 
-    final avatar = tester
-        .widgetList<Container>(
-          find.descendant(of: identity, matching: find.byType(Container)),
-        )
-        .first;
-    final decoration = avatar.decoration as BoxDecoration;
-    expect(decoration.shape, BoxShape.rectangle);
-    expect(
-      decoration.borderRadius,
-      BorderRadius.circular(38 * Act0ShellTokensV1.sharkyTileRadiusRatio),
-    );
-  });
+      final avatar = tester
+          .widgetList<Container>(
+            find.descendant(of: identity, matching: find.byType(Container)),
+          )
+          .first;
+      final decoration = avatar.decoration as BoxDecoration;
+      expect(decoration.shape, BoxShape.rectangle);
+      expect(
+        decoration.borderRadius,
+        BorderRadius.circular(38 * Act0ShellTokensV1.sharkyTileRadiusRatio),
+      );
+    },
+  );
 }

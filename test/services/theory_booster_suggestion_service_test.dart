@@ -26,10 +26,10 @@ class _FakeLibrary implements MiniLessonLibraryService {
       lessons.firstWhere((l) => l.id == id, orElse: () => null);
 
   @override
-  List<TheoryMiniLessonNode> findByTags[List<String> tags] => [];
+  List<TheoryMiniLessonNode> findByTags(List<String> tags) => [];
 
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] => [];
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) => [];
 }
 
 class _FakeLinker extends TheoryMiniLessonLinker {

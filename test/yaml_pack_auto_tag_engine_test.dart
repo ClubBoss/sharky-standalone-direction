@@ -22,7 +22,7 @@ void main() {
         heroIndex: 0,
         stacks: {'0': stack},
         actions: {
-          0: [ActionEntry(0, 0, heroOpts.first)),
+          0: [ActionEntry(0, 0, heroOpts.first)],
         },
       ),
       heroOptions: heroOpts,
@@ -36,8 +36,8 @@ void main() {
       trainingType: TrainingType.pushFold,
       gameType: GameType.tournament,
       spots: [
-        spot[pos: HeroPosition.btn, stack: 10],
-        spot[pos: HeroPosition.btn, stack: 12],
+        spot(pos: HeroPosition.btn, stack: 10),
+        spot(pos: HeroPosition.btn, stack: 12),
       ],
     );
     final tags = YamlPackAutoTagEngine().autoTag[tpl];
@@ -64,11 +64,10 @@ void main() {
       name: 'T',
       trainingType: TrainingType.pushFold,
       spots: [
-        spot[pos: HeroPosition.sb, stack: 20, heroOpts: ['3betPush', 'fold']],
+        spot(pos: HeroPosition.sb, stack: 20, heroOpts: ['3betPush', 'fold']),
       ],
     );
     final tags = YamlPackAutoTagEngine().autoTag[tpl];
     expect(tags, contains('3bet'));
   });
 }
-

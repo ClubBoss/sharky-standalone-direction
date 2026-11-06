@@ -17,7 +17,11 @@ TrainingPackSpot _spot({
     id: id,
     villainAction: villain,
     heroOptions: heroOpts,
-    hand: v2models.HandData(position: pos, playerCount: 2, stacks: {'0': 20, '1': 20}),
+    hand: v2models.HandData(
+      position: pos,
+      playerCount: 2,
+      stacks: {'0': 20, '1': 20},
+    ),
   );
 }
 
@@ -50,7 +54,7 @@ void main() {
       id: 'p2',
       name: 'Test',
       trainingType: TrainingType.pushFold,
-      spots: [_spot[id: 's1', pos: HeroPosition.bb]],
+      spots: [_spot(id: 's1', pos: HeroPosition.bb)],
       positions: ['sb', 'bb'],
       bb: 20,
     );
@@ -65,11 +69,10 @@ void main() {
       name: 'Test',
       trainingType: TrainingType.pushFold,
       spots: [
-        _spot[id: 's1', villain: 'limp', heroOpts: ['push', 'fold']],
+        _spot(id: 's1', villain: 'limp', heroOpts: ['push', 'fold']),
       ],
     );
     final tags = BoosterThematicTagger().suggestThematicTags[pack];
     expect(tags, contains('Limped Pot'));
   });
 }
-

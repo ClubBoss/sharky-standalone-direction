@@ -1,4 +1,4 @@
- // fix: hide shim
+// fix: hide shim
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart'
     as v2; // fix: v2 alias
@@ -22,7 +22,7 @@ void main() {
           playerCount: 2,
           stacks: <String, double>{'0': 10, '1': 10},
           actions: <int, List<ActionEntry>>{
-            0: <ActionEntry>[ActionEntry(0, 0, 'push', amount: 10, ev: 1.0)),
+            0: <ActionEntry>[ActionEntry(0, 0, 'push', amount: 10, ev: 1.0)],
           },
         ),
         priority: 2,
@@ -36,7 +36,7 @@ void main() {
           playerCount: 2,
           stacks: <String, double>{'0': 10, '1': 10},
           actions: <int, List<ActionEntry>>{
-            0: <ActionEntry>[ActionEntry(0, 0, 'push', amount: 10)),
+            0: <ActionEntry>[ActionEntry(0, 0, 'push', amount: 10)],
           },
         ),
         priority: 3,

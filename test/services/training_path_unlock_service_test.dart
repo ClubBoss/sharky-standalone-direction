@@ -31,31 +31,31 @@ void main() {
   const service = TrainingPathUnlockService();
 
   test('pack without rules is unlocked', () {
-    final packs = [tpl('a'));
-    final result = service.getUnlocked[packs, {}];
+    final packs = [tpl('a')];
+    final result = service.getUnlocked(packs, {});
     expect(result.map((e) => e.id), ['a']);
   });
 
   test('locked by accuracy requirement', () {
     final pack = tpl('b', rules: UnlockRules(minAccuracy: 80));
     final stats = {'b': stat(accuracy: 70)};
-    expect(service.getUnlocked[[pack], stats], isEmpty);
+    expect(service.getUnlocked([pack], stats), isEmpty);
     stats['b'] = stat(accuracy: 90);
-    expect(service.getUnlocked[[pack], stats].map((e) => e.id), ['b']);
+    expect(service.getUnlocked([pack], stats).map((e) => e.id), ['b']);
   });
 
   test('requires previous pack completed', () {
     final pack = tpl('c', rules: UnlockRules(requiredPacks: ['a']));
-    expect(service.getUnlocked[[pack], {}], isEmpty);
+    expect(service.getUnlocked([pack], {}), isEmpty);
     final stats = {'a': stat(accuracy: 100)};
-    expect(service.getUnlocked[[pack], stats].map((e) => e.id), ['c']);
+    expect(service.getUnlocked([pack], stats).map((e) => e.id), ['c']);
   });
 
   test('ev and icm thresholds', () {
     final pack = tpl('d', rules: UnlockRules(minEV: 0.5, minIcm: 0.4));
     final statsLow = {'d': stat(accuracy: 100, ev: 0.3, icm: 0.5)};
-    expect(service.getUnlocked[[pack], statsLow], isEmpty);
+    expect(service.getUnlocked([pack], statsLow), isEmpty);
     final statsOk = {'d': stat(accuracy: 100, ev: 0.6, icm: 0.5)};
-    expect(service.getUnlocked[[pack], statsOk].map((e) => e.id), ['d']);
+    expect(service.getUnlocked([pack], statsOk).map((e) => e.id), ['d']);
   });
 }

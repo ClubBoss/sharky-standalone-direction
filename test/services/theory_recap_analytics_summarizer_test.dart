@@ -24,7 +24,7 @@ void main() {
     await TheoryRecapTriggerLogger.logPrompt('l3', 'weakness', 'dismissed');
 
     final summarizer = TheoryRecapAnalyticsSummarizer();
-    final summary = await summarizer.summarize[limit: 10];
+    final summary = await summarizer.summarize(limit: 10);
 
     expect(summary.ignoredStreakCount, 2);
     expect(summary.acceptanceRatesByTrigger['weakness'], closeTo(33.3, 0.1));

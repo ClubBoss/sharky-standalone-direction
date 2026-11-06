@@ -6,7 +6,7 @@ import 'package:poker_analyzer/services/banner_queue_service.dart';
 MaterialBanner _banner(String text) {
   return MaterialBanner(
     content: Text(text),
-    actions: [TextButton(onPressed: () {}, child: const Text('OK'))),
+    actions: [TextButton(onPressed: () {}, child: const Text('OK'))],
   );
 }
 
@@ -21,9 +21,9 @@ void main() {
 
     final service = BannerQueueService.instance;
     service.navigatorKey = key;
-    service.queue[_banner('first']);
-    service.queue[_banner('second']);
-    service.queue[_banner('third']);
+    service.queue[_banner('first')];
+    service.queue[_banner('second')];
+    service.queue[_banner('third')];
 
     await tester.pump();
     expect(find.text('first'), findsOneWidget);
@@ -56,8 +56,8 @@ void main() {
 
     final service = BannerQueueService.instance;
     service.navigatorKey = key;
-    service.queue[_banner('one']);
-    service.queue[_banner('two']);
+    service.queue[_banner('one')];
+    service.queue[_banner('two')];
 
     await tester.pump();
     expect(find.text('one'), findsOneWidget);

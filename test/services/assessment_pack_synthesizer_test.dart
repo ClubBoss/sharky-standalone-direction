@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class _FakeGuard extends PackNoveltyGuardService {
   int calls = 0;
   @override
-  Future<PackNoveltyResult> evaluate[TrainingPackTemplate candidate] async {
+  Future<PackNoveltyResult> evaluate(TrainingPackTemplate candidate) async {
     calls++;
     return PackNoveltyResult(
       isDuplicate: calls == 1,
@@ -45,4 +45,3 @@ void main() {
     expect(pack.meta['themeName'], 'Theme');
   });
 }
-

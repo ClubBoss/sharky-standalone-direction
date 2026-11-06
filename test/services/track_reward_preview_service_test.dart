@@ -57,7 +57,7 @@ void main() {
       level: 0,
     );
     const builder = SkillTreeBuilderService();
-    final tree = builder.build([node]].tree;
+    final tree = builder.build([node]).tree;
     final lib = _FakeLibraryService(
       {'T': SkillTreeBuildResult(tree: tree)},
       [node],

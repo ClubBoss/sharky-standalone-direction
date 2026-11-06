@@ -14,13 +14,14 @@ void main() {
       SkillTreeNodeModel(id: id, title: 'Title', category: 'Push/Fold');
 
   testWidgets('builds header with progress', (WidgetTester tester) async {
-    final tree = builder.build([node('a']]).tree;
+    final tree = builder.build([node('a')]).tree;
     final progress = TrackProgressEntry(
       tree: tree,
       completionRate: 0.3,
       isCompleted: false,
     );
-    final header = SkillTreeTrackHeaderBuilder().build(root: node('a'],
+    final header = SkillTreeTrackHeaderBuilder().build(
+      root: node('a'),
       progress: progress,
     );
     await tester.pumpWidget(MaterialApp(home: header));
@@ -34,13 +35,14 @@ void main() {
   });
 
   testWidgets('shows completed status', (WidgetTester tester) async {
-    final tree = builder.build([node('b']]).tree;
+    final tree = builder.build([node('b')]).tree;
     final progress = TrackProgressEntry(
       tree: tree,
       completionRate: 1.0,
       isCompleted: true,
     );
-    final header = SkillTreeTrackHeaderBuilder().build(root: node('b'],
+    final header = SkillTreeTrackHeaderBuilder().build(
+      root: node('b'),
       progress: progress,
     );
     await tester.pumpWidget(MaterialApp(home: header));

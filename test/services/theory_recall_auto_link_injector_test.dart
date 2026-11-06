@@ -28,7 +28,7 @@ class _FakeUsageTracker implements TheoryMiniLessonUsageTracker {
   @override
   Future<void> logManualOpen(String lessonId, String source) async {}
   @override
-  Future<List<TheoryMiniLessonUsageEvent>> getRecent[{int limit = 50}] async =>
+  Future<List<TheoryMiniLessonUsageEvent>> getRecent({int limit = 50}) async =>
       events.take(limit).toList();
 }
 

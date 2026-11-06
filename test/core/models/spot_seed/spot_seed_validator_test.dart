@@ -18,7 +18,7 @@ void main() {
   );
 
   test('valid seed passes', () {
-    final issues = validator.validate[baseSeed(]);
+    final issues = validator.validate[baseSeed()];
     expect(issues, isEmpty);
   });
 

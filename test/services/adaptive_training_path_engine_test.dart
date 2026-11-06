@@ -90,7 +90,7 @@ void main() {
   );
 
   test('unlocks next stage when weakness detected and prereqs met', () {
-    final packs = [_pack('p1', 'a'), _pack('p2', 'b'));
+    final packs = [_pack('p1', 'a'), _pack('p2', 'b')];
     final stats = {'p1': TrainingPackStat(accuracy: 95, last: DateTime.now())};
     final attempts = [
       _attempt('p2', 's1', 0.5),
@@ -108,7 +108,7 @@ void main() {
   });
 
   test('stage locked when prereqs not complete', () {
-    final packs = [_pack('p1', 'a'), _pack('p2', 'b'));
+    final packs = [_pack('p1', 'a'), _pack('p2', 'b')];
     final stats = <String, TrainingPackStat>{};
     final attempts = [
       _attempt('p2', 's1', 0.5),
@@ -126,7 +126,7 @@ void main() {
   });
 
   test('stage locked when no weakness', () {
-    final packs = [_pack('p1', 'a'), _pack('p2', 'b'));
+    final packs = [_pack('p1', 'a'), _pack('p2', 'b')];
     final stats = {'p1': TrainingPackStat(accuracy: 95, last: DateTime.now())};
     final attempts = <TrainingAttempt>[];
     final ids = engine.getUnlockedStageIds(
@@ -139,4 +139,3 @@ void main() {
     expect(ids.contains('s2'), isFalse);
   });
 }
-

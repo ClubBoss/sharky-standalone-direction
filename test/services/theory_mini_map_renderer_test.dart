@@ -31,7 +31,7 @@ void main() {
     final cluster = TheoryLessonCluster(lessons: [a, b, c], tags: const {});
     final renderer = TheoryMiniMapRenderer(cluster);
 
-    final graph = renderer.build('b'];
+    final graph = renderer.build('b');
 
     expect(graph.nodes.length, 3);
     expect(graph.edges.length, 2);

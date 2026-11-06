@@ -19,4 +19,4 @@ void main() {
     expect(list.first['priority'], 1);
     expect(list[1]['priority'], 2);
   });
-});
+}

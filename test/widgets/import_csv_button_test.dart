@@ -13,7 +13,7 @@ class _FakeFilePicker extends FilePicker {
     String? initialDirectory,
     FileType type = FileType.any,
     List<String>? allowedExtensions,
-    Function[FilePickerStatus]? onFileLoading,
+    Function(FilePickerStatus)? onFileLoading,
     bool allowCompression = false,
     int compressionQuality = 0,
     bool allowMultiple = false,

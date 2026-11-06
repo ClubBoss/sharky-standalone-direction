@@ -18,7 +18,7 @@ void main() {
       CardModel(rank: '9', suit: 'd'),
       CardModel(rank: '4', suit: 'c'),
     ];
-    expect(BoardTexturePresetLibrary.matches[board, 'dryAceHigh'], isTrue);
+    expect(BoardTexturePresetLibrary.matches(board, 'dryAceHigh'), isTrue);
   });
 
   test('matches returns false for incompatible board', () {
@@ -27,6 +27,6 @@ void main() {
       CardModel(rank: '7', suit: 'd'),
       CardModel(rank: '2', suit: 'c'),
     ];
-    expect(BoardTexturePresetLibrary.matches[board, 'dryAceHigh'], isFalse);
+    expect(BoardTexturePresetLibrary.matches(board, 'dryAceHigh'), isFalse);
   });
 }

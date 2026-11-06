@@ -155,7 +155,9 @@ class Act0SceneTableMaterialPainterV1 extends CustomPainter {
         ..shader = RadialGradient(
           colors: <Color>[
             Act0SceneLightV1.specular.withValues(alpha: 0.16 * light.intensity),
-            Act0SceneLightV1.specular.withValues(alpha: 0.045 * light.intensity),
+            Act0SceneLightV1.specular.withValues(
+              alpha: 0.045 * light.intensity,
+            ),
             Colors.transparent,
           ],
           stops: const <double>[0, 0.60, 1],
@@ -273,11 +275,7 @@ class Act0SceneFeltMaterialPainterV1 extends CustomPainter {
         ..shader = RadialGradient(
           center: const Alignment(0, -0.20),
           radius: 0.92,
-          colors: <Color>[
-            _feltLit,
-            _feltMid,
-            _feltDeep,
-          ],
+          colors: <Color>[_feltLit, _feltMid, _feltDeep],
           stops: const <double>[0, 0.56, 1],
         ).createShader(basePool),
     );

@@ -1,4 +1,4 @@
- // fix: hide shim
+// fix: hide shim
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -24,7 +24,7 @@ void main() {
       id: 's1',
       hand: v2models.HandData(
         actions: <int, List<ActionEntry>>{
-          0: <ActionEntry>[ActionEntry(0, 0, 'fold')),
+          0: <ActionEntry>[ActionEntry(0, 0, 'fold')],
         },
       ),
     );
@@ -41,7 +41,7 @@ void main() {
       created: DateTime.now(),
     ); // fix: v2 ctor/collections/types
     SharedPreferences.setMockInitialValues({
-      'training_pack_templates': jsonEncode([tpl.toJson())),
+      'training_pack_templates': jsonEncode([tpl.toJson()]),
     });
     await tester.pumpWidget(
       ChangeNotifierProvider(

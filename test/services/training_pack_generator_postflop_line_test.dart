@@ -16,13 +16,13 @@ void main() {
         position: HeroPosition.btn,
         board: ['As', 'Kd', 'Qc', '2h'],
         actions: {
-          0: [ActionEntry(0, 0, 'raise'), ActionEntry(0, 1, 'call')),
+          0: [ActionEntry(0, 0, 'raise'), ActionEntry(0, 1, 'call')],
         },
       ),
     );
     final set = TrainingPackTemplateSet(
       baseSpot: base,
-      postflopLines: [const PostflopLine(line: 'cbet-check')),
+      postflopLines: [const PostflopLine(line: 'cbet-check')],
     );
 
     final engine = TrainingPackGeneratorEngineV2();
@@ -47,13 +47,13 @@ void main() {
         position: HeroPosition.btn,
         board: ['As', 'Kd', 'Qc'],
         actions: {
-          0: [ActionEntry(0, 0, 'raise'), ActionEntry(0, 1, 'call')),
+          0: [ActionEntry(0, 0, 'raise'), ActionEntry(0, 1, 'call')],
         },
       ),
     );
     final set = TrainingPackTemplateSet(
       baseSpot: base,
-      postflopLines: [const PostflopLine(line: 'cbet-check')),
+      postflopLines: [const PostflopLine(line: 'cbet-check')],
       boardTexturePreset: 'lowPaired',
     );
 
@@ -73,13 +73,13 @@ void main() {
         position: HeroPosition.btn,
         board: ['As', '9d', '4c'],
         actions: {
-          0: [ActionEntry(0, 0, 'raise'), ActionEntry(0, 1, 'call')),
+          0: [ActionEntry(0, 0, 'raise'), ActionEntry(0, 1, 'call')],
         },
       ),
     );
     final set = TrainingPackTemplateSet(
       baseSpot: base,
-      postflopLines: [const PostflopLine(line: 'cbet-check')),
+      postflopLines: [const PostflopLine(line: 'cbet-check')],
       boardTexturePreset: 'dryAceHigh',
     );
 
@@ -98,13 +98,13 @@ void main() {
         position: HeroPosition.btn,
         board: ['As', '9d', '4c'],
         actions: {
-          0: [ActionEntry(0, 0, 'raise'), ActionEntry(0, 1, 'call')),
+          0: [ActionEntry(0, 0, 'raise'), ActionEntry(0, 1, 'call')],
         },
       ),
     );
     final set = TrainingPackTemplateSet(
       baseSpot: base,
-      postflopLines: [const PostflopLine(line: 'cbet-check')),
+      postflopLines: [const PostflopLine(line: 'cbet-check')],
       excludeBoardTexturePresets: ['aceHigh'],
     );
 
@@ -124,13 +124,13 @@ void main() {
         position: HeroPosition.btn,
         board: ['As', '9d', '4c'],
         actions: {
-          0: [ActionEntry(0, 0, 'raise'), ActionEntry(0, 1, 'call')),
+          0: [ActionEntry(0, 0, 'raise'), ActionEntry(0, 1, 'call')],
         },
       ),
     );
     final set = TrainingPackTemplateSet(
       baseSpot: base,
-      postflopLines: [const PostflopLine(line: 'cbet-check')),
+      postflopLines: [const PostflopLine(line: 'cbet-check')],
       requiredBoardClusters: ['wet'],
     );
 
@@ -148,13 +148,13 @@ void main() {
         position: HeroPosition.btn,
         board: ['As', 'Kd', 'Qc'],
         actions: {
-          0: [ActionEntry(0, 0, 'raise'), ActionEntry(0, 1, 'call')),
+          0: [ActionEntry(0, 0, 'raise'), ActionEntry(0, 1, 'call')],
         },
       ),
     );
     final set = TrainingPackTemplateSet(
       baseSpot: base,
-      postflopLines: [const PostflopLine(line: 'cbet-check')),
+      postflopLines: [const PostflopLine(line: 'cbet-check')],
       requiredBoardClusters: ['wet'],
     );
 
@@ -172,13 +172,13 @@ void main() {
         position: HeroPosition.btn,
         board: ['As', 'Kd', 'Qc'],
         actions: {
-          0: [ActionEntry(0, 0, 'raise'), ActionEntry(0, 1, 'call')),
+          0: [ActionEntry(0, 0, 'raise'), ActionEntry(0, 1, 'call')],
         },
       ),
     );
     final set = TrainingPackTemplateSet(
       baseSpot: base,
-      postflopLines: [const PostflopLine(line: 'cbet-check')),
+      postflopLines: [const PostflopLine(line: 'cbet-check')],
       excludedBoardClusters: ['wet'],
     );
 
@@ -196,7 +196,7 @@ void main() {
         position: HeroPosition.btn,
         board: ['As', 'Kd', 'Qc', '2h'],
         actions: {
-          0: [ActionEntry(0, 0, 'raise'), ActionEntry(0, 1, 'call')),
+          0: [ActionEntry(0, 0, 'raise'), ActionEntry(0, 1, 'call')],
         },
       ),
     );
@@ -229,7 +229,7 @@ void main() {
         position: HeroPosition.btn,
         board: ['As', 'Kd', 'Qc', '2h'],
         actions: {
-          0: [ActionEntry(0, 0, 'raise'), ActionEntry(0, 1, 'call')),
+          0: [ActionEntry(0, 0, 'raise'), ActionEntry(0, 1, 'call')],
         },
       ),
     );

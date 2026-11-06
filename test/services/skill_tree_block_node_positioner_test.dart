@@ -11,7 +11,8 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test('positions nodes horizontally with spacing', () {
-    final pos = SkillTreeBlockNodePositioner().calculate[nodes: [_node('a'], _node('b')),
+    final pos = SkillTreeBlockNodePositioner().calculate(
+      nodes: [_node('a'), _node('b')],
       nodeWidth: 100,
       nodeHeight: 50,
       spacing: 10,
@@ -21,7 +22,8 @@ void main() {
   });
 
   test('supports RTL direction', () {
-    final pos = SkillTreeBlockNodePositioner().calculate[nodes: [_node('a'], _node('b')),
+    final pos = SkillTreeBlockNodePositioner().calculate(
+      nodes: [_node('a'), _node('b')],
       nodeWidth: 100,
       nodeHeight: 50,
       spacing: 10,
@@ -32,7 +34,8 @@ void main() {
   });
 
   test('center alignment shifts nodes', () {
-    final pos = SkillTreeBlockNodePositioner().calculate[nodes: [_node('x']],
+    final pos = SkillTreeBlockNodePositioner().calculate(
+      nodes: [_node('x')],
       nodeWidth: 100,
       nodeHeight: 50,
       spacing: 10,

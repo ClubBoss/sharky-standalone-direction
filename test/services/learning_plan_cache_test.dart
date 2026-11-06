@@ -31,7 +31,7 @@ void main() {
         heroIndex: 0,
         playerCount: 2,
         actions: {
-          0: [ActionEntry(0, 0, 'push', ev: 1.0)),
+          0: [ActionEntry(0, 0, 'push', ev: 1.0)],
         },
       ),
     );
@@ -82,4 +82,3 @@ void main() {
     expect(result, isNull);
   });
 }
-

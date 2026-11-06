@@ -15,8 +15,31 @@ class _FakeLibrary implements MiniLessonLibraryService {
   List<TheoryMiniLessonNode> get all => lessons;
 
   @override
-  TheoryMiniLessonNode? getById(String id) =>
-      lessons.firstWhere((e) => e.id == id, orElse: () => null);
+  TheoryMiniLessonNode? getById(String id) {
+    for (final lesson in lessons) {
+      if (lesson.id == id) return lesson;
+    }
+    return null;
+  }
+
+  @override
+  TheoryMiniLessonNode? findLessonByTag(String tag) {
+    for (final lesson in lessons) {
+      if (lesson.tags.contains(tag)) return lesson;
+    }
+    return null;
+  }
+
+  @override
+  Future<TheoryMiniLessonNode?> getNextLesson() async =>
+      lessons.isEmpty ? null : lessons.first;
+
+  @override
+  Future<bool> isLessonCompleted(String id) async => false;
+
+  @override
+  List<String> linkedPacksFor(String id) =>
+      getById(id)?.linkedPackIds ?? const [];
 
   @override
   Future<void> loadAll() async {}
@@ -25,24 +48,24 @@ class _FakeLibrary implements MiniLessonLibraryService {
   Future<void> reload() async {}
 
   @override
-  List<TheoryMiniLessonNode> findByTags[List<String> tags] => [
+  List<TheoryMiniLessonNode> findByTags(List<String> tags) => [
     for (final t in tags) ...lessons.where((l) => l.tags.contains(t)),
   ];
 
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] =>
-      findByTags[tags.toList[]];
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) =>
+      findByTags(tags.toList());
 }
 
 class _FakeLoader implements PackLibraryLoaderService {
-  final List<TrainingPackTemplate> packs;
+  final List<v2.TrainingPackTemplateV2> packs;
   _FakeLoader(this.packs);
 
   @override
-  Future<List<TrainingPackTemplate>> loadLibrary() async => packs;
+  Future<List<v2.TrainingPackTemplateV2>> loadLibrary() async => packs;
 
   @override
-  List<TrainingPackTemplate> get library => packs;
+  List<v2.TrainingPackTemplateV2> get library => packs;
 }
 
 void main() {
@@ -61,14 +84,14 @@ void main() {
       tags: ['level2', '3bet-push'],
     );
     final packs = [
-      TrainingPackTemplate(
+      v2.TrainingPackTemplateV2(
         id: 'p1',
         name: 'P1',
         trainingType: TrainingType.pushFold,
         tags: ['level2', '3bet-push'],
         meta: {'stage': 'level2'},
       ),
-      TrainingPackTemplate(
+      v2.TrainingPackTemplateV2(
         id: 'p2',
         name: 'P2',
         trainingType: TrainingType.pushFold,
@@ -80,7 +103,7 @@ void main() {
     final loader = _FakeLoader(packs);
     final linker = TheoryMiniLessonLinker(library: library, loader: loader);
 
-    await linker.link[force: true];
+    await linker.link(force: true);
 
     expect(lesson.linkedPackIds, equals(['p1']));
   });

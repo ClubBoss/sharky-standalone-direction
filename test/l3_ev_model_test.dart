@@ -10,8 +10,8 @@ void main() {
     final model = JamFoldModel();
     final board = FlopBoard.fromString('AsKdTh');
     const spr = 1.5;
-    final res1 = model.evaluate[board: board, spr: spr];
-    final res2 = model.evaluate[board: board, spr: spr];
+    final res1 = model.evaluate(board: board, spr: spr);
+    final res2 = model.evaluate(board: board, spr: spr);
     expect(res1['decision'], res2['decision']);
     expect(res1['jamEV'], res2['jamEV']);
     expect(res1['foldEV'], res2['foldEV']);
@@ -38,7 +38,7 @@ void main() {
       out1,
       '--weightsPreset',
       'default',
-    ));
+    ]);
     expect(res1.exitCode, 0, reason: res1.stderr);
     final report1 =
         jsonDecode(File(out1).readAsStringSync()) as Map<String, dynamic>;
@@ -56,7 +56,7 @@ void main() {
       out2,
       '--weights',
       weightsJson,
-    ));
+    ]);
     expect(res2.exitCode, 0, reason: res2.stderr);
     final report2 =
         jsonDecode(File(out2).readAsStringSync()) as Map<String, dynamic>;

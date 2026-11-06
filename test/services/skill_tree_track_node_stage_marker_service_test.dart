@@ -9,8 +9,8 @@ void main() {
       SkillTreeNodeModel(id: id, title: id, category: 'PF', level: level);
 
   test('groups nodes by level into stage blocks', () {
-    final nodes = [node('a', 0), node('b', 1), node('c', 1));
-    final blocks = svc.build(nodes];
+    final nodes = [node('a', 0), node('b', 1), node('c', 1)];
+    final blocks = svc.build(nodes);
     expect(blocks.length, 2);
     expect(blocks.first.stageIndex, 0);
     expect(blocks.first.nodes.map((n) => n.id), ['a']);

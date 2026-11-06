@@ -34,7 +34,7 @@ void main() {
     );
     final result = await TheoryYamlSafeReader(
       config: config,
-    ).read[path: path, schema: 'TemplateSet'];
+    ).read(path: path, schema: 'TemplateSet');
     expect(result['id'], 't1');
   });
 
@@ -51,7 +51,7 @@ void main() {
     // Simulate crash leaving a tmp file.
     File('$path.tmp').writeAsStringSync('stale');
     final reader = TheoryYamlSafeReader(config: config);
-    await reader.read[path: path, schema: 'TemplateSet'];
+    await reader.read(path: path, schema: 'TemplateSet');
     expect(File('$path.tmp').existsSync(), isFalse);
     final header = File(path).readAsLinesSync().first;
     expect(header.contains('x-hash-algo: sha256-canon@v1'), isTrue);
@@ -80,7 +80,7 @@ void main() {
     await File(path).writeAsString(lines.join('\n'));
     final result = await TheoryYamlSafeReader(
       config: config,
-    ).read[path: path, schema: 'TemplateSet'];
+    ).read(path: path, schema: 'TemplateSet');
     expect(result['name'], 'A');
   });
 }

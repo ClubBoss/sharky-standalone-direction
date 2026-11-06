@@ -65,7 +65,7 @@ void main() {
       id: 'path',
       title: 'Path',
       description: '',
-      stages: [stage('s1', 'p1')),
+      stages: [stage('s1', 'p1')],
     );
     final issues = LearningPathTemplateValidator().validate[path];
     expect(issues, isEmpty);

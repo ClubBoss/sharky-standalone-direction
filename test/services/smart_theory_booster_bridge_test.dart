@@ -37,7 +37,7 @@ class _FakeLibrary implements BoosterLibraryService {
   v2.TrainingPackTemplateV2? getById(String id) =>
       boosters.firstWhereOrNull((b) => b.id == id);
   @override
-  List<v2.TrainingPackTemplateV2> findByTag[String tag] => [];
+  List<v2.TrainingPackTemplateV2> findByTag(String tag) => [];
 }
 
 class _StubClusterer extends TheoryLessonTagClusterer {
@@ -58,7 +58,7 @@ void main() {
       tags: ['push'],
     );
     final cluster = TheoryLessonCluster(lessons: [lesson], tags: {'push'});
-    final library = _FakeLibrary([booster('b1', 'push')));
+    final library = _FakeLibrary([booster('b1', 'push')]);
     final bridge = SmartTheoryBoosterBridge(
       library: library,
       clusterer: _StubClusterer([cluster]),
@@ -80,7 +80,7 @@ void main() {
       tags: ['call'],
     );
     final cluster = TheoryLessonCluster(lessons: [l1, l2], tags: {'call'});
-    final library = _FakeLibrary([booster('b2', 'call')));
+    final library = _FakeLibrary([booster('b2', 'call')]);
     final bridge = SmartTheoryBoosterBridge(
       library: library,
       clusterer: _StubClusterer([cluster]),
@@ -92,4 +92,3 @@ void main() {
     expect(recs.first.boosterId, 'b2');
   });
 }
-

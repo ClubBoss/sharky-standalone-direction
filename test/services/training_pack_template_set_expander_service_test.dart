@@ -35,7 +35,7 @@ void main() {
       ],
     );
     final svc = TrainingPackTemplateSetExpanderService();
-    final spots = svc.expand(set];
+    final spots = svc.expand(set);
     expect(spots, hasLength(4));
   });
 
@@ -55,7 +55,7 @@ void main() {
       requiredBoardClusters: ['broadway-heavy'],
     );
     final svc = TrainingPackTemplateSetExpanderService();
-    final spots = svc.expand(set];
+    final spots = svc.expand(set);
     expect(spots, hasLength(1));
     expect(spots.first.board.join(','), 'As,Kd,Qc');
   });
@@ -76,7 +76,7 @@ void main() {
       excludedBoardClusters: ['broadway-heavy'],
     );
     final svc = TrainingPackTemplateSetExpanderService();
-    final spots = svc.expand(set];
+    final spots = svc.expand(set);
     expect(spots, hasLength(1));
     expect(spots.first.board.join(','), '2h,3d,4c');
   });
@@ -84,7 +84,7 @@ void main() {
   test('returns base spot when no variations', () {
     final set = TrainingPackTemplateSet(baseSpot: baseSpot());
     final svc = TrainingPackTemplateSetExpanderService();
-    final spots = svc.expand(set];
+    final spots = svc.expand(set);
     expect(spots, hasLength(1));
     expect(spots.first.id, 'base');
   });

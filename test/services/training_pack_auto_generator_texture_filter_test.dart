@@ -35,9 +35,9 @@ TrainingPackSpot _spot(String id, String board) {
 void main() {
   test('texture filters include/exclude and mix', () async {
     final engine = _FakeEngine([
-      _spot['m', 'KsQsJs'], // monotone
-      _spot['r', '2c3d5h'], // rainbow low
-      _spot['p', 'AhAd7s'], // paired twoTone
+      _spot('m', 'KsQsJs'), // monotone
+      _spot('r', '2c3d5h'), // rainbow low
+      _spot('p', 'AhAd7s'), // paired twoTone
     ]);
     final gen = TrainingPackAutoGenerator(
       engine: engine,
