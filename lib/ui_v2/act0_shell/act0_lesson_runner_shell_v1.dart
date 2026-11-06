@@ -210,10 +210,7 @@ class Act0SkillReceiptV1 {
 
   String get title {
     return switch (outcome) {
-      Act0SkillReceiptOutcomeV1.learned =>
-        skillAtomId == 'action_read'
-            ? 'Table read improved'
-            : '$skillLabel improved',
+      Act0SkillReceiptOutcomeV1.learned => 'Correct answer recorded',
       Act0SkillReceiptOutcomeV1.repairStarted => 'Good spot to repair',
       Act0SkillReceiptOutcomeV1.needsRep => 'One more read will help',
     };
@@ -221,7 +218,7 @@ class Act0SkillReceiptV1 {
 
   String get detail => switch (outcome) {
     Act0SkillReceiptOutcomeV1.learned =>
-      'You noticed $sourceSignalLabel before choosing an action.',
+      'Your answer matched the check for $sourceSignalLabel.',
     Act0SkillReceiptOutcomeV1.repairStarted =>
       'The missed table clue was $sourceSignalLabel.',
     Act0SkillReceiptOutcomeV1.needsRep =>
@@ -11691,7 +11688,7 @@ class _CompletionToastV1 extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'Read banked',
+                  'Answer checked',
                   key: const Key('act0_shell_completion_toast_reward_label'),
                   maxLines: 1,
                   overflow: TextOverflow.fade,
@@ -11706,7 +11703,7 @@ class _CompletionToastV1 extends StatelessWidget {
           ),
           SizedBox(height: onTableOverlay ? 2 : 3),
           Text(
-            'Table read improved',
+            summary.xpGain > 0 ? '+${summary.xpGain} XP' : 'No new XP',
             key: const Key('act0_shell_completion_toast_total'),
             maxLines: 1,
             overflow: TextOverflow.fade,
