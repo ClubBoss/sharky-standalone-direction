@@ -474,7 +474,9 @@ void main() {
       );
 
       expect(find.textContaining('Confirmation needed'), findsOneWidget);
-      expect(find.text('Recent route proof'), findsOneWidget);
+      expect(find.text('Recent route proof'), findsNothing);
+      expect(find.text('Recent practice; proof still pending'), findsOneWidget);
+      expect(find.text('What Sharky can prove'), findsNothing);
       expect(find.text('7 tasks complete'), findsOneWidget);
       expect(find.text('3d'), findsOneWidget);
       expect(find.text('3 day streak'), findsNothing);
