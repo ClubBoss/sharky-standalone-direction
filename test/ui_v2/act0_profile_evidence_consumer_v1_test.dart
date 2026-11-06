@@ -121,7 +121,9 @@ void main() {
       findsOne,
     );
     expect(find.text('Evidence signal'), findsOne);
-    expect(find.text('You are building this skill.'), findsOne);
+    expect(find.text('Independent confirmation is still needed.'), findsOne);
+    expect(find.text('You are building this skill.'), findsNothing);
+    expect(find.text('Recent independent responses verified.'), findsNothing);
     expect(find.text('3/5 correct in Action reading'), findsOne);
     expect(
       find.descendant(
