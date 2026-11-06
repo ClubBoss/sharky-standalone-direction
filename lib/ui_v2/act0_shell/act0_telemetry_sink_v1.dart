@@ -38,6 +38,25 @@ class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
     Act0HnpTraceFileStoreV1? fileStore,
   }) : _fileStore = fileStore ?? createAct0HnpTraceFileStoreV1() {
     if (maxEvents < 1) throw ArgumentError.value(maxEvents, 'maxEvents');
+    final store = _fileStore;
+    if (store is Act0HnpTraceHistoryReaderV1) {
+      // OBS-03: continue the previous process's verified trace instead of
+      // overwriting it, so a restart keeps the incident's source events.
+      _loadingPrior = true;
+      _pendingExport = (store as Act0HnpTraceHistoryReaderV1)
+          .readPrevious()
+          .then<String?>((value) => value, onError: (_) => null)
+          .then((prior) {
+            _adoptPriorTrace(prior);
+            _loadingPrior = false;
+            final buffered = List<Act0TelemetryEventV1>.of(_bufferedEvents);
+            _bufferedEvents.clear();
+            for (final event in buffered) {
+              _recordNow(event);
+            }
+          });
+      unawaited(_pendingExport);
+    }
     _scheduleExport();
   }
 
@@ -54,12 +73,91 @@ class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
   bool _exportPathReported = false;
   bool _exportScheduled = false;
   bool _exportRequested = false;
+  bool _loadingPrior = false;
+  String _priorCapture = 'none';
+  final List<Act0TelemetryEventV1> _bufferedEvents = [];
 
   @override
   List<Act0TelemetryEventV1> get events => List.unmodifiable(_retainedEvents);
 
   @override
   void record(Act0TelemetryEventV1 event) {
+    if (_loadingPrior) {
+      _bufferedEvents.add(event);
+      return;
+    }
+    _recordNow(event);
+  }
+
+  /// Adopts [jsonl] only if it is a complete, contiguous trace whose every
+  /// row still passes this collector's event and field policy. Anything else
+  /// is discarded (never merged) and the capture says so.
+  void _adoptPriorTrace(String? jsonl) {
+    if (jsonl == null || jsonl.trim().isEmpty) return;
+    final rows = <Map<String, dynamic>>[];
+    try {
+      for (final line in const LineSplitter().convert(jsonl)) {
+        if (line.trim().isEmpty) continue;
+        final row = jsonDecode(line);
+        if (row is! Map<String, dynamic>) throw const FormatException();
+        rows.add(row);
+      }
+    } on FormatException {
+      _priorCapture = 'discarded';
+      return;
+    }
+    if (rows.isEmpty) return;
+    final capture = rows.last['capture'];
+    final healthOnly = rows.length == 1 && !rows.single.containsKey('name');
+    if (healthOnly ||
+        capture is! Map ||
+        capture['schemaVersion'] != 1 ||
+        capture['complete'] != true ||
+        capture['rejectedEventCount'] != 0 ||
+        capture['evictedEventCount'] != 0 ||
+        capture['recordedEventCount'] != rows.length ||
+        capture['redactedFieldCount'] is! int ||
+        rows.length > maxEvents) {
+      _priorCapture = 'discarded';
+      return;
+    }
+    final events = <Act0TelemetryEventV1>[];
+    for (var i = 0; i < rows.length; i++) {
+      final row = rows[i];
+      final name = row['name'];
+      final fields = row['fields'];
+      if (row['sequence'] != i + 1 ||
+          name is! String ||
+          fields is! Map<String, dynamic>) {
+        _priorCapture = 'discarded';
+        return;
+      }
+      final event = Act0TelemetryEventV1(name: name, fields: fields);
+      if (!_hnpEventNamesV1.contains(name) ||
+          !_hnpSupportedEventVersionV1(event)) {
+        _priorCapture = 'discarded';
+        return;
+      }
+      for (final entry in fields.entries) {
+        final filtered = _hnpFieldValueV1(entry.key, entry.value);
+        if (filtered == null ||
+            jsonEncode(filtered) != jsonEncode(entry.value)) {
+          _priorCapture = 'discarded';
+          return;
+        }
+      }
+      events.add(
+        Act0TelemetryEventV1(name: name, fields: Map.unmodifiable(fields)),
+      );
+    }
+    _retainedEvents.addAll(events);
+    _sequences.addAll([for (var i = 1; i <= events.length; i++) i]);
+    _recorded = events.length;
+    _redacted = capture['redactedFieldCount'] as int;
+    _priorCapture = 'continued';
+  }
+
+  void _recordNow(Act0TelemetryEventV1 event) {
     final sequence = ++_recorded;
     if (!_hnpEventNamesV1.contains(event.name) ||
         !_hnpSupportedEventVersionV1(event)) {
@@ -101,6 +199,9 @@ class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
     // Transport completeness only. It is not proof of semantic lineage,
     // learner independence, unseen transfer or elapsed retention.
     'complete': _rejected == 0 && _evicted == 0,
+    // 'continued': this file carries a verified prior-process trace;
+    // 'discarded': a prior trace existed but failed verification.
+    'priorCapture': _priorCapture,
   };
 
   Map<String, Object?> _row(int index) => {

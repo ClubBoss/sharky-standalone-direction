@@ -106,6 +106,70 @@ class _Store implements Act0HnpTraceFileStoreV1 {
   }
 }
 
+class _RestartStore extends _Store implements Act0HnpTraceHistoryReaderV1 {
+  @override
+  Future<String?> readPrevious() async => contents;
+}
+
+void _emitAttempt(
+  Act0TelemetrySinkV1 sink,
+  Act0LearningEvidenceRecordV1 record,
+  List<Act0LearningEvidenceRecordV1> history, {
+  String repairOccurrenceId = '',
+}) {
+  sink.record(
+    Act0TelemetryEventV1(
+      name: 'decision_made',
+      fields: {
+        'schemaVersion': 2,
+        'attempt_id': record.recordId,
+        'session_id': record.sessionId,
+        'correct': record.isCorrect,
+        'chosen_action': record.choiceId,
+        'route_review_kind': 'initialAssessment',
+      },
+    ),
+  );
+  for (final event in act0EvidenceTelemetryEventsV1(
+    record: record,
+    history: Act0LearningEvidenceHistoryV1(records: history),
+    nowUtc: record.recordedAtUtc!,
+    repairOccurrenceId: repairOccurrenceId,
+  )) {
+    sink.record(event);
+  }
+}
+
+void _emitRepairOutcome(
+  Act0TelemetrySinkV1 sink,
+  Act0LearningEvidenceRecordV1 source,
+  Act0LearningEvidenceRecordV1 repair,
+) {
+  sink.record(
+    act0RepairOutcomeTelemetryEventV1(
+      outcome: Act0RepairOutcomeV1(
+        repairOccurrenceId: source.recordId,
+        repairAttemptId: repair.recordId,
+        sourceTaskId: source.taskId,
+        repairTaskId: repair.taskId,
+        repairFocusKey: source.conceptFamilyId,
+        queueItemId: 'queue_v1',
+        targetWorldId: repair.worldId,
+        targetLessonId: repair.lessonId,
+        targetTaskId: repair.taskId,
+        selectedChoiceId: repair.choiceId,
+        correctChoiceId: repair.expectedChoiceId,
+        isCorrect: repair.isCorrect,
+        outcomeState: act0RepairOutcomeStateCorrectV1,
+        sequence: repair.createdOrder,
+        sourceType: 'active_repair',
+        sessionId: repair.sessionId,
+      ),
+      history: Act0LearningEvidenceHistoryV1(records: [source, repair]),
+    ),
+  );
+}
+
 void main() {
   test(
     'OBS03 an unknown source record version cannot masquerade as version-one evidence',
@@ -614,6 +678,127 @@ void main() {
       expect(jsonDecode(sink.exportJson())['capture']['redactedFieldCount'], 0);
       expect(store.contents, isNot(contains('2026-01-')));
       expect(store.contents, isNot(contains('recordedAtUtc')));
+    },
+  );
+
+  test(
+    'OBS03 restart keeps the source incident and reconstructs the cross-process repair',
+    () async {
+      // Native finding (exact candidate 3c83f85d): a relaunch replaced the
+      // trace file, so the post-restart independent recheck could not find its
+      // source miss (missing_source_reference).
+      final source = _record(
+        1,
+        0,
+        correct: false,
+        kind: Act0ReviewKindV1.initialAssessment,
+      );
+      final repair = _record(2, 1, kind: Act0ReviewKindV1.exactReplay);
+      Map inspect(String jsonl) => inspectAct0Obs03TraceV1(
+        decodeAct0Obs03TraceV1(jsonl),
+        attemptId: repair.recordId,
+        expectedSourceFingerprint: repair.authoredSourceFingerprint,
+      );
+
+      final store = _RestartStore();
+      final first = Act0HnpTelemetrySinkV1(fileStore: store);
+      _emitAttempt(first, source, [source]);
+      await first.flushExport();
+      final firstRows = store.contents.trim().split('\n').length;
+
+      // A new process: events arriving while the prior trace is still being
+      // read are buffered and keep their order after the prior rows.
+      final second = Act0HnpTelemetrySinkV1(fileStore: store);
+      _emitAttempt(second, repair, [
+        source,
+        repair,
+      ], repairOccurrenceId: source.recordId);
+      _emitRepairOutcome(second, source, repair);
+      await second.flushExport();
+
+      final trace = decodeAct0Obs03TraceV1(store.contents) as Map;
+      final capture = trace['capture'] as Map;
+      final events = trace['events'] as List;
+      expect(capture['priorCapture'], 'continued');
+      expect(capture['complete'], isTrue);
+      expect(capture['recordedEventCount'], events.length);
+      expect(events.length, greaterThan(firstRows));
+      expect(
+        [for (final e in events) (e as Map)['sequence']],
+        [for (var i = 1; i <= events.length; i++) i],
+      );
+      expect(inspect(store.contents)['status'], 'TRACE_RECONSTRUCTED');
+      expect(inspect(store.contents)['session_id'], repair.sessionId);
+
+      // Old behaviour (no prior history): the same repair is not
+      // reconstructable, proving the prior rows are load-bearing.
+      final fresh = _Store();
+      final alone = Act0HnpTelemetrySinkV1(fileStore: fresh);
+      _emitAttempt(alone, repair, [
+        source,
+        repair,
+      ], repairOccurrenceId: source.recordId);
+      _emitRepairOutcome(alone, source, repair);
+      await alone.flushExport();
+      expect(inspect(fresh.contents)['status'], 'INSUFFICIENT');
+    },
+  );
+
+  test(
+    'OBS03 an incomplete, truncated or tampered prior trace is never merged',
+    () async {
+      final source = _record(
+        1,
+        0,
+        correct: false,
+        kind: Act0ReviewKindV1.initialAssessment,
+      );
+      final repair = _record(2, 1, kind: Act0ReviewKindV1.exactReplay);
+      final good = _RestartStore();
+      final first = Act0HnpTelemetrySinkV1(fileStore: good);
+      _emitAttempt(first, source, [source]);
+      first.record(
+        const Act0TelemetryEventV1(name: 'not_allowlisted', fields: {}),
+      );
+      await first.flushExport();
+      final rejectedPrior = good.contents;
+      expect(rejectedPrior, contains('"rejectedEventCount":1'));
+
+      final clean = _RestartStore();
+      final cleanFirst = Act0HnpTelemetrySinkV1(fileStore: clean);
+      _emitAttempt(cleanFirst, source, [source]);
+      await cleanFirst.flushExport();
+      final lines = clean.contents.trim().split('\n');
+      final truncated = '${lines.sublist(0, lines.length - 1).join('\n')}\n';
+      final tampered = clean.contents.replaceFirst(
+        '"session_id":"${source.sessionId}"',
+        '"session_id":"${source.sessionId}","learner_name":"Alex"',
+      );
+      expect(tampered, isNot(clean.contents));
+
+      for (final prior in [rejectedPrior, truncated, tampered, '{"broken":']) {
+        final store = _RestartStore()..contents = prior;
+        final next = Act0HnpTelemetrySinkV1(fileStore: store);
+        _emitAttempt(next, repair, [
+          source,
+          repair,
+        ], repairOccurrenceId: source.recordId);
+        _emitRepairOutcome(next, source, repair);
+        await next.flushExport();
+        final trace = decodeAct0Obs03TraceV1(store.contents) as Map;
+        expect((trace['capture'] as Map)['priorCapture'], 'discarded');
+        expect(((trace['events'] as List).first as Map)['sequence'], 1);
+        expect(store.contents, isNot(contains('learner_name')));
+        expect(store.contents, isNot(contains('Alex')));
+        expect(
+          inspectAct0Obs03TraceV1(
+            trace,
+            attemptId: repair.recordId,
+            expectedSourceFingerprint: repair.authoredSourceFingerprint,
+          )['status'],
+          'INSUFFICIENT',
+        );
+      }
     },
   );
 }
