@@ -252,6 +252,14 @@ void main() {
           history: Act0LearningEvidenceHistoryV1(records: [source, repair]),
         ),
       );
+      // A captured tail can be lost after every row needed for this incident.
+      // Capture health must describe all exported rows, not only useful ones.
+      sink.record(
+        Act0TelemetryEventV1(
+          name: 'progress_persist_result',
+          fields: {'schemaVersion': 1, 'outcome': 'acknowledged'},
+        ),
+      );
       await sink.flushExport();
       final snapshot = jsonDecode(sink.exportJson()) as Map;
       Map inspect(Map trace, {String? fingerprint}) => inspectAct0Obs03TraceV1(
@@ -265,6 +273,36 @@ void main() {
         inspect(decodeAct0Obs03TraceV1(store.contents) as Map)['status'],
         'TRACE_RECONSTRUCTED',
       );
+      final lostTail = jsonDecode(jsonEncode(snapshot)) as Map;
+      (lostTail['events'] as List).removeLast();
+      expect(inspect(lostTail), {
+        'schemaVersion': 1,
+        'status': 'INSUFFICIENT',
+        'reason': 'incomplete_capture',
+      });
+      final lostPhysicalTail = store.contents.trimRight().split('\n')
+        ..removeLast();
+      expect(
+        inspect(decodeAct0Obs03TraceV1(lostPhysicalTail.join('\n')) as Map),
+        inspect(lostTail),
+      );
+      final count = (snapshot['events'] as List).length;
+      for (final declared in [
+        null,
+        -1,
+        count - 1,
+        count + 1,
+        count.toDouble(),
+        '$count',
+        true,
+      ]) {
+        final damaged = jsonDecode(jsonEncode(snapshot)) as Map;
+        (damaged['capture'] as Map)['recordedEventCount'] = declared;
+        expect(inspect(damaged)['reason'], 'incomplete_capture');
+      }
+      final badTerminalSequence = jsonDecode(jsonEncode(snapshot)) as Map;
+      (badTerminalSequence['events'] as List).last['sequence'] = count + 1;
+      expect(inspect(badTerminalSequence)['reason'], 'invalid_sequence');
       expect(
         () => decodeAct0Obs03TraceV1('${store.contents}{"broken":'),
         throwsFormatException,

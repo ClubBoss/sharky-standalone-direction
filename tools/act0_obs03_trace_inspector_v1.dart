@@ -51,13 +51,17 @@ Map<String, Object?> inspectAct0Obs03TraceV1(
     return insufficient('unknown_trace_schema');
   final capture = decoded['capture'];
   final raw = decoded['events'];
+  // A contiguous prefix may contain all incident joins while losing its tail.
+  // Match the declared capture size before trusting the sequence below.
   if (capture is! Map ||
       capture['schemaVersion'] is! int ||
       capture['schemaVersion'] != 1 ||
       capture['complete'] != true ||
       capture['rejectedEventCount'] != 0 ||
       capture['evictedEventCount'] != 0 ||
-      raw is! List)
+      raw is! List ||
+      capture['recordedEventCount'] is! int ||
+      capture['recordedEventCount'] != raw.length)
     return insufficient('incomplete_capture');
   final events = <Map>[];
   for (var i = 0; i < raw.length; i++) {
