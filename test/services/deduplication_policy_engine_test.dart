@@ -20,7 +20,7 @@ TrainingPackTemplate _pack(String id, List<TrainingPackSpot> spots) =>
       spotCount: spots.length,
     );
 
-TrainingPackSpot _spot[String id, String cards] => TrainingPackSpot(
+TrainingPackSpot _spot(String id, String cards) => TrainingPackSpot(
   id: id,
   hand: HandData.fromSimpleInput(cards, HeroPosition.btn, 10),
 );
@@ -51,10 +51,10 @@ void main() {
       ),
     ]);
 
-    final existing = _pack('existing', [_spot['a', 'AhAs']]);
+    final existing = _pack('existing', [_spot('a', 'AhAs')]);
     final candidate = _pack('candidate', [
-      _spot['b', 'AhAs'],
-      _spot['c', 'KdQc'],
+      _spot('b', 'AhAs'),
+      _spot('c', 'KdQc'),
     ]);
     await File(
       '${dir.path}/existing.yaml',
@@ -94,8 +94,8 @@ void main() {
       ),
     ]);
 
-    final existing = _pack('existing', [_spot['a', 'AhAs']]);
-    final candidate = _pack('candidate', [_spot['b', 'KdQc']]);
+    final existing = _pack('existing', [_spot('a', 'AhAs')]);
+    final candidate = _pack('candidate', [_spot('b', 'KdQc')]);
     await File(
       '${dir.path}/existing.yaml',
     ).writeAsString(existing.toYamlString());
@@ -124,4 +124,3 @@ void main() {
     expect(info.existingId, 'existing');
   });
 }
-

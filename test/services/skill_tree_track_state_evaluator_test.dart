@@ -21,8 +21,8 @@ void main() {
       SkillTreeNodeModel(id: id, title: id, category: cat);
 
   test('computes locked state when prerequisites missing', () async {
-    final treeA = builder.build([node('a1', 'A']]).tree;
-    final treeB = builder.build([node('b1', 'B']]).tree;
+    final treeA = builder.build([node('a1', 'A')]).tree;
+    final treeB = builder.build([node('b1', 'B')]).tree;
 
     final svc = SkillTreeTrackStateEvaluator(
       progressService: _FakeProgressService([
@@ -52,9 +52,9 @@ void main() {
   });
 
   test('reports unlocked, inProgress and completed states', () async {
-    final treeA = builder.build([node('a1', 'A']]).tree;
-    final treeB = builder.build([node('b1', 'B']]).tree;
-    final treeC = builder.build([node('c1', 'C']]).tree;
+    final treeA = builder.build([node('a1', 'A')]).tree;
+    final treeB = builder.build([node('b1', 'B')]).tree;
+    final treeC = builder.build([node('c1', 'C')]).tree;
 
     final svc = SkillTreeTrackStateEvaluator(
       progressService: _FakeProgressService([

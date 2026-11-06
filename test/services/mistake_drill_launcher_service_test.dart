@@ -27,7 +27,7 @@ class _FakeGenerator extends MistakeDrivenDrillPackGenerator {
       );
 
   @override
-  Future<TrainingPackTemplate?> generate[{int limit = 10}] async {
+  Future<TrainingPackTemplate?> generate({int limit = 10}) async {
     count++;
     return result;
   }
@@ -148,4 +148,3 @@ void main() {
     });
   });
 }
-

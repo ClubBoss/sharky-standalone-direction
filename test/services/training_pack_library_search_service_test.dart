@@ -22,10 +22,10 @@ void main() {
   });
 
   test('filters by includeTags', () {
-    final match = service.search[includeTags: ['starter', 'pushfold']];
+    final match = service.search(includeTags: ['starter', 'pushfold']);
     expect(match.map((m) => m.id), ['starter_pushfold_10bb']);
 
-    final noMatch = service.search[includeTags: ['starter', 'missing']];
+    final noMatch = service.search(includeTags: ['starter', 'missing']);
     expect(noMatch, isEmpty);
   });
 
@@ -36,7 +36,7 @@ void main() {
     );
     expect(match.map((m) => m.id), ['starter_pushfold_10bb']);
 
-    expect(service.search[skillLevel: 'advanced'], isEmpty);
-    expect(service.search[trainingType: TrainingType.postflop], isEmpty);
+    expect(service.search(skillLevel: 'advanced'), isEmpty);
+    expect(service.search(trainingType: TrainingType.postflop), isEmpty);
   });
 }

@@ -6,11 +6,8 @@ import 'package:poker_analyzer/services/learning_path_promoter.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  LearningPathTemplateV2 tpl(String id) => LearningPathTemplateV2(
-        id: id,
-        title: id,
-        description: '',
-      );
+  LearningPathTemplateV2 tpl(String id) =>
+      LearningPathTemplateV2(id: id, title: id, description: '');
 
   test('promoteStaged overwrites matching ids only', () {
     final staging = LearningPathLibrary.staging;
@@ -18,8 +15,8 @@ void main() {
     staging.clear();
     target.clear();
 
-    staging.addAll([tpl('path_one'), tpl('path_two')));
-    target.addAll([tpl('path_one'), tpl('path_three')));
+    staging.addAll([tpl('path_one'), tpl('path_two')]);
+    target.addAll([tpl('path_one'), tpl('path_three')]);
 
     final count = LearningPathPromoter().promoteStaged(
       staged: staging,
@@ -33,4 +30,4 @@ void main() {
     expect(target.getById('path_three'), isNotNull);
     expect(identical(LearningPathLibrary.main, target), isTrue);
   });
-});
+}

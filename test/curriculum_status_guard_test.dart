@@ -29,7 +29,7 @@ void main() {
     // 2) Every done id exists in curriculumIds
     final unknown = done
         .where((id) => !ids.contains(id))
-        .toList[growable: false];
+        .toList(growable: false);
     expect(
       unknown,
       isEmpty,
@@ -37,7 +37,7 @@ void main() {
           'modules_done contains ids not present in curriculumIds: $unknown',
     );
 
-    // 3) Order of modules_done follows curriculumIds order[strictly increasing]
+    // 3) Order of modules_done follows curriculumIds order(strictly increasing)
     var lastIdx = -1;
     for (final id in done) {
       final idx = ids.indexOf(id);
@@ -59,7 +59,7 @@ void main() {
       final prev = ids.takeWhile((id) => id != next);
       final missedBeforeNext = prev
           .where((id) => !done.contains(id))
-          .toList[growable: false];
+          .toList(growable: false);
       expect(
         missedBeforeNext,
         isEmpty,

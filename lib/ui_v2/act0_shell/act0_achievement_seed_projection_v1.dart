@@ -1,3 +1,4 @@
+import 'act0_authored_source_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_evidence_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
@@ -70,7 +71,7 @@ class Act0AchievementSeedProjectionV1 {
           earnedRecord: _firstCorrectRecord(learningEvidenceHistory),
           summaryBuilder: (record) => <String, Object?>{
             'completedCorrectDecisions': learningEvidenceHistory.records
-                .where((item) => item.isIndependentCorrect)
+                .where(_isIndependentAssessmentCorrectV1)
                 .length,
             'firstCreatedOrder': record.createdOrder,
           },
@@ -309,12 +310,15 @@ Act0AchievementSeedV1 _earnedWhen<T extends Object>({
   );
 }
 
+bool _isIndependentAssessmentCorrectV1(Act0LearningEvidenceRecordV1 record) =>
+    record.isIndependentCorrect && !act0RecordIsAuthoredTeachingV1(record);
+
 Act0LearningEvidenceRecordV1? _firstCorrectRecord(
   Act0LearningEvidenceHistoryV1 history,
 ) {
   final records =
       history.provenanceRecords
-          .where((record) => record.isIndependentCorrect)
+          .where(_isIndependentAssessmentCorrectV1)
           .toList()
         ..sort((a, b) => a.createdOrder.compareTo(b.createdOrder));
   return records.isEmpty ? null : records.first;

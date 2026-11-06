@@ -15,7 +15,7 @@ void main() {
       id: 'p1',
       name: 'Pack',
       trainingType: TrainingType.pushFold,
-      spots: [_spot['a', 'quiz']],
+      spots: [_spot('a', 'quiz')],
       spotCount: 1,
     );
     const sampler = TheoryPackSampler();
@@ -25,9 +25,9 @@ void main() {
 
   test('sample extracts theory spots and updates metadata', () {
     final spots = [
-      _spot['a', 'quiz'],
-      _spot['b', 'theory'],
-      _spot['c', 'theory'],
+      _spot('a', 'quiz'),
+      _spot('b', 'theory'),
+      _spot('c', 'theory'),
     ];
     final pack = TrainingPackTemplate(
       id: 'p2',

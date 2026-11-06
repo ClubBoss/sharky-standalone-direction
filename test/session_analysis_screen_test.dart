@@ -68,11 +68,11 @@ void main() {
     await tester.pumpWidget(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider.value[value: templateService],
-          ChangeNotifierProvider.value[value: review],
-          ChangeNotifierProvider.value[value: training],
-          ChangeNotifierProvider.value[value: notes],
-          ChangeNotifierProvider.value[value: manager],
+          ChangeNotifierProvider.value(value: templateService),
+          ChangeNotifierProvider.value(value: review),
+          ChangeNotifierProvider.value(value: training),
+          ChangeNotifierProvider.value(value: notes),
+          ChangeNotifierProvider.value(value: manager),
           Provider<EvaluationExecutorService>(create: (_) => _FakeExecutor()),
         ],
         child: MaterialApp(home: SessionAnalysisScreen(hands: [hand])),

@@ -15,10 +15,15 @@ void main() {
   test('cooldown after dismissal streak', () async {
     final now = DateTime.now();
     for (var i = 0; i < 3; i++) {
-      await BoosterCooldownScheduler.instance
-          .recordDismissed('recap', timestamp: now.subtract(Duration(hours: i)));
+      await BoosterCooldownScheduler.instance.recordDismissed(
+        'recap',
+        timestamp: now.subtract(Duration(hours: i)),
+      );
     }
-    expect(await BoosterCooldownScheduler.instance.isCoolingDown('recap'), isTrue);
+    expect(
+      await BoosterCooldownScheduler.instance.isCoolingDown('recap'),
+      isTrue,
+    );
 
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getString('booster_cooldown_scheduler');
@@ -30,21 +35,32 @@ void main() {
     map['recap'] = list;
     await prefs.setString('booster_cooldown_scheduler', jsonEncode(map));
     BoosterCooldownScheduler.instance.resetForTest();
-    expect(await BoosterCooldownScheduler.instance.isCoolingDown('recap'), isFalse);
+    expect(
+      await BoosterCooldownScheduler.instance.isCoolingDown('recap'),
+      isFalse,
+    );
   });
 
   test('overuse triggers cooldown', () async {
     final now = DateTime.now();
     for (var i = 0; i < 5; i++) {
-      await BoosterCooldownScheduler.instance
-          .recordSuggested('skill', timestamp: now.subtract(Duration(hours: i)));
+      await BoosterCooldownScheduler.instance.recordSuggested(
+        'skill',
+        timestamp: now.subtract(Duration(hours: i)),
+      );
     }
-    expect(await BoosterCooldownScheduler.instance.isCoolingDown('skill'), isTrue);
+    expect(
+      await BoosterCooldownScheduler.instance.isCoolingDown('skill'),
+      isTrue,
+    );
   });
 
   test('acceptance clears recent dismissal cooldown', () async {
     await BoosterCooldownScheduler.instance.recordDismissed('goal');
     await BoosterCooldownScheduler.instance.recordAccepted('goal');
-    expect(await BoosterCooldownScheduler.instance.isCoolingDown('goal'), isFalse);
+    expect(
+      await BoosterCooldownScheduler.instance.isCoolingDown('goal'),
+      isFalse,
+    );
   });
-});
+}

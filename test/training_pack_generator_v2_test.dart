@@ -16,7 +16,7 @@ class _FakeRepo extends TrainingPackRepository {
       map[tag] ?? [];
 }
 
-TrainingPackSpot _spot[String id] => TrainingPackSpot(
+TrainingPackSpot _spot(String id) => TrainingPackSpot(
   id: id,
   hand: HandData.fromSimpleInput('AhAs', HeroPosition.sb, 10),
 );

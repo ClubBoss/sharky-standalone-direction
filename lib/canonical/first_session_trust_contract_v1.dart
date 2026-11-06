@@ -54,7 +54,7 @@ FirstSessionTrustPlanContractV1? resolveFirstSessionTrustPlanContractV1(
     launchSubtitleLine:
         'Start with the table map: dealer anchor first, then the blind pair.',
     sharkyLine:
-      'Sharky: Start with the seat map first. Every next decision gets clearer.',
+        'Sharky: Start with the seat map first. Every next decision gets clearer.',
   );
 }
 
@@ -68,6 +68,6 @@ FirstSessionAhaContractV1? resolveFirstSessionAhaContractV1(String moduleId) {
     continuationLine:
         'Next: use this same seat map to choose the first action before the flop.',
     sharkyLine:
-      'Sharky: Nice work. Keep seat map first and the next spot will read faster.',
+        'Sharky: Nice work. Keep seat map first and the next spot will read faster.',
   );
 }

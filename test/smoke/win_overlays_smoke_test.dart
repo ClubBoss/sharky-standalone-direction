@@ -21,7 +21,7 @@ class _FakeWinOverlay extends StatelessWidget {
   const _FakeWinOverlay();
 
   @override
-  Widget build(BuildContext context] {
+  Widget build(BuildContext context) {
     return Container(key: const ValueKey('win-overlay'));
   }
 }

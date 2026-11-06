@@ -22,7 +22,7 @@ void main() {
   );
 
   SkillTree buildTree(List<SkillTreeNodeModel> nodes) =>
-      builder.build(nodes].tree;
+      builder.build(nodes).tree;
 
   test('returns null for unlocked node', () {
     final n1 = node('n1', unlocks: ['n2']);

@@ -1,0 +1,321 @@
+{
+  "provenance": {
+    "source_sha": "d0b202309c7906e4d1a67056cf22dcc1944f8646",
+    "test_sha256": "f1f01a8604314392406bd0c4598d52ed20a996a406ff6e014cc8e4c624927ac1"
+  },
+  "observation": {
+    "durableSnapshot": {
+      "headEnvelope": "{\"format\":1,\"revision\":4,\"payload\":\"{\\\"schemaVersion\\\":19,\\\"completedTaskIds\\\":[\\\"actions_call_drill\\\",\\\"actions_check_drill\\\",\\\"actions_fold_drill\\\",\\\"actions_legal_context\\\",\\\"actions_raise_drill\\\",\\\"actions_review\\\",\\\"actions_theory\\\",\\\"blinds_button_moves\\\",\\\"blinds_first_actor\\\",\\\"blinds_last_actor\\\",\\\"blinds_postflop_button\\\",\\\"blinds_posts_drill\\\",\\\"blinds_review\\\",\\\"blinds_theory\\\",\\\"cards_ranks_suits_best_five\\\",\\\"cards_ranks_suits_board_count\\\",\\\"cards_ranks_suits_private_board\\\",\\\"cards_ranks_suits_rank_drill\\\",\\\"cards_ranks_suits_recap\\\",\\\"cards_ranks_suits_suit_drill\\\",\\\"cards_ranks_suits_theory\\\",\\\"first_table_guide_one_clear_choice\\\",\\\"first_table_guide_route_roles\\\",\\\"what_poker_is_all_in_meaning\\\",\\\"what_poker_is_find_hero\\\",\\\"what_poker_is_live_win_transfer\\\",\\\"what_poker_is_matched_chips_transfer\\\",\\\"what_poker_is_pot_stack\\\",\\\"what_poker_is_review\\\",\\\"what_poker_is_showdown_win\\\",\\\"what_poker_is_table_read_recheck\\\",\\\"what_poker_is_table_read_transfer\\\",\\\"what_poker_is_theory\\\",\\\"what_poker_is_win_ways\\\",\\\"your_first_hand_action_trail\\\",\\\"your_first_hand_flop\\\",\\\"your_first_hand_preflop\\\",\\\"your_first_hand_private_cards_recheck\\\",\\\"your_first_hand_recap\\\",\\\"your_first_hand_river\\\",\\\"your_first_hand_showdown\\\",\\\"your_first_hand_turn\\\"],\\\"skippedTaskIds\\\":[],\\\"completedLessonIds\\\":[\\\"blinds_action_order\\\",\\\"cards_ranks_suits\\\",\\\"fold_check_call_raise\\\",\\\"what_poker_is\\\",\\\"what_poker_is_content\\\",\\\"your_first_hand\\\"],\\\"selectedWorldId\\\":\\\"world_1\\\",\\\"selectedLessonId\\\":\\\"positions\\\",\\\"selectedTaskId\\\":\\\"positions_theory\\\",\\\"earnedXp\\\":0,\\\"profileSkillValues\\\":{\\\"Betting decisions\\\":39,\\\"Blind play\\\":28,\\\"Board reading\\\":45,\\\"Hand reading\\\":17,\\\"Table sense\\\":67},\\\"recentSkillGains\\\":[],\\\"lastActiveDay\\\":\\\"2026-11-05\\\",\\\"lastEarnedDailyDay\\\":\\\"\\\",\\\"dailyCompletedRepCount\\\":0,\\\"persistedStreakDays\\\":0,\\\"retentionSequence\\\":42,\\\"retentionMemory\\\":[{\\\"taskId\\\":\\\"positions_theory\\\",\\\"lessonId\\\":\\\"positions\\\",\\\"worldId\\\":\\\"world_1\\\",\\\"status\\\":\\\"openRepair\\\",\\\"attempts\\\":1,\\\"fixedAtSequence\\\":0,\\\"lastRecheckSequence\\\":0,\\\"successfulRecheckCount\\\":0}],\\\"openRepairIntents\\\":[{\\\"schemaVersion\\\":1,\\\"repairOccurrenceId\\\":\\\"v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|top|1\\\",\\\"sourceWorldId\\\":\\\"world_1\\\",\\\"sourceLessonId\\\":\\\"positions\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"choiceId\\\":\\\"top\\\",\\\"result\\\":\\\"incorrect\\\",\\\"errorType\\\":\\\"misread_table_position\\\",\\\"missedSignalId\\\":\\\"hero_button\\\",\\\"missedSignalLabel\\\":\\\"Hero on the Button\\\",\\\"skillAtomId\\\":\\\"table_position_read\\\",\\\"skillLabel\\\":\\\"Table position read\\\",\\\"targetWorldId\\\":\\\"world_3\\\",\\\"targetLessonId\\\":\\\"position_checkpoint\\\",\\\"targetTaskId\\\":\\\"position_checkpoint_position_checkpoint_table_notice\\\",\\\"mappingType\\\":\\\"repair\\\",\\\"reasonCode\\\":\\\"same_signal_table_position_read_hero_button\\\"}],\\\"multiRepairQueue\\\":{\\\"schemaVersion\\\":1,\\\"maxActiveItems\\\":3,\\\"entries\\\":[{\\\"schemaVersion\\\":1,\\\"queueItemId\\\":\\\"practice_repair_queue_v1|active|83:16:positions_theory|11:hero_button|19:table_position_read|22:misread_table_position\\\",\\\"sourceRepairIdentity\\\":\\\"16:positions_theory|11:hero_button|19:table_position_read|22:misread_table_position\\\",\\\"conceptFamilyId\\\":\\\"hero_button\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"createdAtOrder\\\":1,\\\"lastUpdatedAtOrder\\\":1,\\\"attemptCount\\\":1,\\\"resolutionState\\\":\\\"unresolved\\\",\\\"repairIntent\\\":{\\\"schemaVersion\\\":1,\\\"repairOccurrenceId\\\":\\\"v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|top|1\\\",\\\"sourceWorldId\\\":\\\"world_1\\\",\\\"sourceLessonId\\\":\\\"positions\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"choiceId\\\":\\\"top\\\",\\\"result\\\":\\\"incorrect\\\",\\\"errorType\\\":\\\"misread_table_position\\\",\\\"missedSignalId\\\":\\\"hero_button\\\",\\\"missedSignalLabel\\\":\\\"Hero on the Button\\\",\\\"skillAtomId\\\":\\\"table_position_read\\\",\\\"skillLabel\\\":\\\"Table position read\\\",\\\"targetWorldId\\\":\\\"world_3\\\",\\\"targetLessonId\\\":\\\"position_checkpoint\\\",\\\"targetTaskId\\\":\\\"position_checkpoint_position_checkpoint_table_notice\\\",\\\"mappingType\\\":\\\"repair\\\",\\\"reasonCode\\\":\\\"same_signal_table_position_read_hero_button\\\"}}]},\\\"multiRepairQueueOrder\\\":1,\\\"resumeInRunner\\\":false,\\\"resumePhase\\\":\\\"theory\\\",\\\"resumeTeachingStepIndex\\\":0,\\\"dismissedHomeHandoffKey\\\":\\\"\\\",\\\"dismissedHomeHandoffDay\\\":\\\"\\\",\\\"learningEvidenceHistory\\\":[{\\\"schemaVersion\\\":1,\\\"recordId\\\":\\\"v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|top|1\\\",\\\"createdOrder\\\":1,\\\"worldId\\\":\\\"world_1\\\",\\\"lessonId\\\":\\\"positions\\\",\\\"taskId\\\":\\\"positions_theory\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"choiceId\\\":\\\"top\\\",\\\"expectedChoiceId\\\":\\\"bottom\\\",\\\"isCorrect\\\":false,\\\"errorType\\\":\\\"misread_table_position\\\",\\\"conceptFamilyId\\\":\\\"\\\",\\\"repairFocusId\\\":\\\"hero_button\\\",\\\"skillAtomId\\\":\\\"table_position_read\\\",\\\"decisionTimeBucket\\\":\\\"unknown\\\",\\\"resultKind\\\":\\\"incorrect\\\",\\\"authoredSourceFingerprint\\\":\\\"9d7cbd60701adfde1d728fd95293d9fccf2100297eed1e65e5417cd9455a0c1a\\\",\\\"assistanceKind\\\":\\\"none\\\",\\\"runId\\\":\\\"run_v1|world_1|positions|lesson|1\\\",\\\"runKind\\\":\\\"lesson\\\",\\\"runOrdinal\\\":1,\\\"sourceWorldId\\\":\\\"world_1\\\",\\\"sourceLessonId\\\":\\\"positions\\\",\\\"startedBy\\\":\\\"learn_route\\\",\\\"sessionId\\\":\\\"session_v1|2\\\",\\\"recordedAtUtc\\\":\\\"2026-11-05T13:17:47.587045Z\\\",\\\"reviewKind\\\":\\\"initialAssessment\\\"}],\\\"learningEvidenceLineage\\\":{\\\"format\\\":1,\\\"complete\\\":true,\\\"anchors\\\":[{\\\"schemaVersion\\\":1,\\\"recordId\\\":\\\"v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|top|1\\\",\\\"createdOrder\\\":1,\\\"worldId\\\":\\\"world_1\\\",\\\"lessonId\\\":\\\"positions\\\",\\\"taskId\\\":\\\"positions_theory\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"choiceId\\\":\\\"top\\\",\\\"expectedChoiceId\\\":\\\"bottom\\\",\\\"isCorrect\\\":false,\\\"errorType\\\":\\\"misread_table_position\\\",\\\"conceptFamilyId\\\":\\\"\\\",\\\"repairFocusId\\\":\\\"hero_button\\\",\\\"skillAtomId\\\":\\\"table_position_read\\\",\\\"decisionTimeBucket\\\":\\\"unknown\\\",\\\"resultKind\\\":\\\"incorrect\\\",\\\"authoredSourceFingerprint\\\":\\\"9d7cbd60701adfde1d728fd95293d9fccf2100297eed1e65e5417cd9455a0c1a\\\",\\\"assistanceKind\\\":\\\"none\\\",\\\"runId\\\":\\\"run_v1|world_1|positions|lesson|1\\\",\\\"runKind\\\":\\\"lesson\\\",\\\"runOrdinal\\\":1,\\\"sourceWorldId\\\":\\\"world_1\\\",\\\"sourceLessonId\\\":\\\"positions\\\",\\\"startedBy\\\":\\\"learn_route\\\",\\\"sessionId\\\":\\\"session_v1|2\\\",\\\"recordedAtUtc\\\":\\\"2026-11-05T13:17:47.587045Z\\\",\\\"reviewKind\\\":\\\"initialAssessment\\\"}],\\\"anchorCount\\\":1,\\\"anchorSha256\\\":\\\"a3d42397322562d3c91fd161e8d3a9ba8dc16753342b21d6c12b9b032769dc03\\\",\\\"lineageSha256\\\":\\\"d937d154d88debca1450093998c348168d47c6eca380455d795941453ddab13a\\\"},\\\"lessonRunEvidenceBoundaries\\\":{\\\"positions\\\":0},\\\"durableRetentionHistory\\\":[{\\\"schemaVersion\\\":1,\\\"conceptFamilyId\\\":\\\"hero_button\\\",\\\"worldId\\\":\\\"world_1\\\",\\\"sourceLessonId\\\":\\\"positions\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"retentionState\\\":\\\"needsRepair\\\",\\\"spacedSuccessStage\\\":0,\\\"lapseCount\\\":0,\\\"incorrectCount\\\":1,\\\"correctCount\\\":0,\\\"lastRecordedAtUtc\\\":\\\"2026-11-05T13:17:47.587045Z\\\",\\\"lastCreatedOrder\\\":1,\\\"lastSessionId\\\":\\\"session_v1|2\\\",\\\"lastReviewKind\\\":\\\"initialAssessment\\\",\\\"hasLegacyUnspacedEvidence\\\":false}],\\\"reviewMistakeHistory\\\":[{\\\"schemaVersion\\\":1,\\\"recordId\\\":\\\"review_mistake_v1|16:positions_theory|11:hero_button|19:table_position_read|22:misread_table_position\\\",\\\"sourceDecisionId\\\":\\\"v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|top|1\\\",\\\"createdOrder\\\":1,\\\"updatedOrder\\\":1,\\\"worldId\\\":\\\"world_1\\\",\\\"lessonId\\\":\\\"positions\\\",\\\"decisionTaskId\\\":\\\"positions_theory\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"decisionKind\\\":\\\"seat\\\",\\\"selectedId\\\":\\\"top\\\",\\\"expectedId\\\":\\\"bottom\\\",\\\"resultKind\\\":\\\"incorrect\\\",\\\"errorType\\\":\\\"misread_table_position\\\",\\\"skillAtomId\\\":\\\"table_position_read\\\",\\\"repairFocusId\\\":\\\"hero_button\\\",\\\"runId\\\":\\\"run_v1|world_1|positions|lesson|1\\\",\\\"runKind\\\":\\\"lesson\\\",\\\"runOrdinal\\\":1,\\\"attemptRecordIds\\\":[\\\"v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|top|1\\\"],\\\"dedupUsesFallback\\\":false,\\\"state\\\":\\\"unresolved_only_v1\\\"}],\\\"reviewResolutionReceipts\\\":[],\\\"conceptFamilyStateHistory\\\":[{\\\"schemaVersion\\\":1,\\\"conceptFamilyId\\\":\\\"hero_button\\\",\\\"worldId\\\":\\\"world_1\\\",\\\"lastSeenAt\\\":1,\\\"missCount\\\":1,\\\"repairAttemptCount\\\":0,\\\"successfulRepairCount\\\":0,\\\"lastOutcome\\\":\\\"missed\\\",\\\"lastTaskId\\\":\\\"positions_theory\\\",\\\"lastSessionId\\\":\\\"session_v1|2\\\"}],\\\"sessionIdentityState\\\":{\\\"schemaVersion\\\":1,\\\"nextSessionOrdinal\\\":3,\\\"currentSession\\\":{\\\"schemaVersion\\\":1,\\\"sessionId\\\":\\\"session_v1|2\\\",\\\"startedAtOrder\\\":1,\\\"startedWorldId\\\":\\\"world_1\\\",\\\"startedLessonId\\\":\\\"positions\\\",\\\"status\\\":\\\"active\\\"},\\\"latestSession\\\":{\\\"schemaVersion\\\":1,\\\"sessionId\\\":\\\"session_v1|2\\\",\\\"startedAtOrder\\\":1,\\\"startedWorldId\\\":\\\"world_1\\\",\\\"startedLessonId\\\":\\\"positions\\\",\\\"status\\\":\\\"active\\\"}},\\\"repairOutcomeProjection\\\":[],\\\"lastSessionLearnerState\\\":{\\\"last_session_repair_focus_id\\\":\\\"hero_button\\\",\\\"last_session_proof_result\\\":\\\"not_yet\\\",\\\"last_session_date\\\":\\\"2026-11-05\\\",\\\"last_session_world_id\\\":\\\"world_1\\\"}}\",\"digest\":\"60bc952c102ebb57380f73ecf425e15526546d285e8384ac6a41c77376fa35f6\"}",
+      "recoveryEnvelope": "{\"format\":1,\"revision\":4,\"payload\":\"{\\\"schemaVersion\\\":19,\\\"completedTaskIds\\\":[\\\"actions_call_drill\\\",\\\"actions_check_drill\\\",\\\"actions_fold_drill\\\",\\\"actions_legal_context\\\",\\\"actions_raise_drill\\\",\\\"actions_review\\\",\\\"actions_theory\\\",\\\"blinds_button_moves\\\",\\\"blinds_first_actor\\\",\\\"blinds_last_actor\\\",\\\"blinds_postflop_button\\\",\\\"blinds_posts_drill\\\",\\\"blinds_review\\\",\\\"blinds_theory\\\",\\\"cards_ranks_suits_best_five\\\",\\\"cards_ranks_suits_board_count\\\",\\\"cards_ranks_suits_private_board\\\",\\\"cards_ranks_suits_rank_drill\\\",\\\"cards_ranks_suits_recap\\\",\\\"cards_ranks_suits_suit_drill\\\",\\\"cards_ranks_suits_theory\\\",\\\"first_table_guide_one_clear_choice\\\",\\\"first_table_guide_route_roles\\\",\\\"what_poker_is_all_in_meaning\\\",\\\"what_poker_is_find_hero\\\",\\\"what_poker_is_live_win_transfer\\\",\\\"what_poker_is_matched_chips_transfer\\\",\\\"what_poker_is_pot_stack\\\",\\\"what_poker_is_review\\\",\\\"what_poker_is_showdown_win\\\",\\\"what_poker_is_table_read_recheck\\\",\\\"what_poker_is_table_read_transfer\\\",\\\"what_poker_is_theory\\\",\\\"what_poker_is_win_ways\\\",\\\"your_first_hand_action_trail\\\",\\\"your_first_hand_flop\\\",\\\"your_first_hand_preflop\\\",\\\"your_first_hand_private_cards_recheck\\\",\\\"your_first_hand_recap\\\",\\\"your_first_hand_river\\\",\\\"your_first_hand_showdown\\\",\\\"your_first_hand_turn\\\"],\\\"skippedTaskIds\\\":[],\\\"completedLessonIds\\\":[\\\"blinds_action_order\\\",\\\"cards_ranks_suits\\\",\\\"fold_check_call_raise\\\",\\\"what_poker_is\\\",\\\"what_poker_is_content\\\",\\\"your_first_hand\\\"],\\\"selectedWorldId\\\":\\\"world_1\\\",\\\"selectedLessonId\\\":\\\"positions\\\",\\\"selectedTaskId\\\":\\\"positions_theory\\\",\\\"earnedXp\\\":0,\\\"profileSkillValues\\\":{\\\"Betting decisions\\\":39,\\\"Blind play\\\":28,\\\"Board reading\\\":45,\\\"Hand reading\\\":17,\\\"Table sense\\\":67},\\\"recentSkillGains\\\":[],\\\"lastActiveDay\\\":\\\"2026-11-05\\\",\\\"lastEarnedDailyDay\\\":\\\"\\\",\\\"dailyCompletedRepCount\\\":0,\\\"persistedStreakDays\\\":0,\\\"retentionSequence\\\":42,\\\"retentionMemory\\\":[{\\\"taskId\\\":\\\"positions_theory\\\",\\\"lessonId\\\":\\\"positions\\\",\\\"worldId\\\":\\\"world_1\\\",\\\"status\\\":\\\"openRepair\\\",\\\"attempts\\\":1,\\\"fixedAtSequence\\\":0,\\\"lastRecheckSequence\\\":0,\\\"successfulRecheckCount\\\":0}],\\\"openRepairIntents\\\":[{\\\"schemaVersion\\\":1,\\\"repairOccurrenceId\\\":\\\"v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|top|1\\\",\\\"sourceWorldId\\\":\\\"world_1\\\",\\\"sourceLessonId\\\":\\\"positions\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"choiceId\\\":\\\"top\\\",\\\"result\\\":\\\"incorrect\\\",\\\"errorType\\\":\\\"misread_table_position\\\",\\\"missedSignalId\\\":\\\"hero_button\\\",\\\"missedSignalLabel\\\":\\\"Hero on the Button\\\",\\\"skillAtomId\\\":\\\"table_position_read\\\",\\\"skillLabel\\\":\\\"Table position read\\\",\\\"targetWorldId\\\":\\\"world_3\\\",\\\"targetLessonId\\\":\\\"position_checkpoint\\\",\\\"targetTaskId\\\":\\\"position_checkpoint_position_checkpoint_table_notice\\\",\\\"mappingType\\\":\\\"repair\\\",\\\"reasonCode\\\":\\\"same_signal_table_position_read_hero_button\\\"}],\\\"multiRepairQueue\\\":{\\\"schemaVersion\\\":1,\\\"maxActiveItems\\\":3,\\\"entries\\\":[{\\\"schemaVersion\\\":1,\\\"queueItemId\\\":\\\"practice_repair_queue_v1|active|83:16:positions_theory|11:hero_button|19:table_position_read|22:misread_table_position\\\",\\\"sourceRepairIdentity\\\":\\\"16:positions_theory|11:hero_button|19:table_position_read|22:misread_table_position\\\",\\\"conceptFamilyId\\\":\\\"hero_button\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"createdAtOrder\\\":1,\\\"lastUpdatedAtOrder\\\":1,\\\"attemptCount\\\":1,\\\"resolutionState\\\":\\\"unresolved\\\",\\\"repairIntent\\\":{\\\"schemaVersion\\\":1,\\\"repairOccurrenceId\\\":\\\"v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|top|1\\\",\\\"sourceWorldId\\\":\\\"world_1\\\",\\\"sourceLessonId\\\":\\\"positions\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"choiceId\\\":\\\"top\\\",\\\"result\\\":\\\"incorrect\\\",\\\"errorType\\\":\\\"misread_table_position\\\",\\\"missedSignalId\\\":\\\"hero_button\\\",\\\"missedSignalLabel\\\":\\\"Hero on the Button\\\",\\\"skillAtomId\\\":\\\"table_position_read\\\",\\\"skillLabel\\\":\\\"Table position read\\\",\\\"targetWorldId\\\":\\\"world_3\\\",\\\"targetLessonId\\\":\\\"position_checkpoint\\\",\\\"targetTaskId\\\":\\\"position_checkpoint_position_checkpoint_table_notice\\\",\\\"mappingType\\\":\\\"repair\\\",\\\"reasonCode\\\":\\\"same_signal_table_position_read_hero_button\\\"}}]},\\\"multiRepairQueueOrder\\\":1,\\\"resumeInRunner\\\":false,\\\"resumePhase\\\":\\\"theory\\\",\\\"resumeTeachingStepIndex\\\":0,\\\"dismissedHomeHandoffKey\\\":\\\"\\\",\\\"dismissedHomeHandoffDay\\\":\\\"\\\",\\\"learningEvidenceHistory\\\":[{\\\"schemaVersion\\\":1,\\\"recordId\\\":\\\"v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|top|1\\\",\\\"createdOrder\\\":1,\\\"worldId\\\":\\\"world_1\\\",\\\"lessonId\\\":\\\"positions\\\",\\\"taskId\\\":\\\"positions_theory\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"choiceId\\\":\\\"top\\\",\\\"expectedChoiceId\\\":\\\"bottom\\\",\\\"isCorrect\\\":false,\\\"errorType\\\":\\\"misread_table_position\\\",\\\"conceptFamilyId\\\":\\\"\\\",\\\"repairFocusId\\\":\\\"hero_button\\\",\\\"skillAtomId\\\":\\\"table_position_read\\\",\\\"decisionTimeBucket\\\":\\\"unknown\\\",\\\"resultKind\\\":\\\"incorrect\\\",\\\"authoredSourceFingerprint\\\":\\\"9d7cbd60701adfde1d728fd95293d9fccf2100297eed1e65e5417cd9455a0c1a\\\",\\\"assistanceKind\\\":\\\"none\\\",\\\"runId\\\":\\\"run_v1|world_1|positions|lesson|1\\\",\\\"runKind\\\":\\\"lesson\\\",\\\"runOrdinal\\\":1,\\\"sourceWorldId\\\":\\\"world_1\\\",\\\"sourceLessonId\\\":\\\"positions\\\",\\\"startedBy\\\":\\\"learn_route\\\",\\\"sessionId\\\":\\\"session_v1|2\\\",\\\"recordedAtUtc\\\":\\\"2026-11-05T13:17:47.587045Z\\\",\\\"reviewKind\\\":\\\"initialAssessment\\\"}],\\\"learningEvidenceLineage\\\":{\\\"format\\\":1,\\\"complete\\\":true,\\\"anchors\\\":[{\\\"schemaVersion\\\":1,\\\"recordId\\\":\\\"v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|top|1\\\",\\\"createdOrder\\\":1,\\\"worldId\\\":\\\"world_1\\\",\\\"lessonId\\\":\\\"positions\\\",\\\"taskId\\\":\\\"positions_theory\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"choiceId\\\":\\\"top\\\",\\\"expectedChoiceId\\\":\\\"bottom\\\",\\\"isCorrect\\\":false,\\\"errorType\\\":\\\"misread_table_position\\\",\\\"conceptFamilyId\\\":\\\"\\\",\\\"repairFocusId\\\":\\\"hero_button\\\",\\\"skillAtomId\\\":\\\"table_position_read\\\",\\\"decisionTimeBucket\\\":\\\"unknown\\\",\\\"resultKind\\\":\\\"incorrect\\\",\\\"authoredSourceFingerprint\\\":\\\"9d7cbd60701adfde1d728fd95293d9fccf2100297eed1e65e5417cd9455a0c1a\\\",\\\"assistanceKind\\\":\\\"none\\\",\\\"runId\\\":\\\"run_v1|world_1|positions|lesson|1\\\",\\\"runKind\\\":\\\"lesson\\\",\\\"runOrdinal\\\":1,\\\"sourceWorldId\\\":\\\"world_1\\\",\\\"sourceLessonId\\\":\\\"positions\\\",\\\"startedBy\\\":\\\"learn_route\\\",\\\"sessionId\\\":\\\"session_v1|2\\\",\\\"recordedAtUtc\\\":\\\"2026-11-05T13:17:47.587045Z\\\",\\\"reviewKind\\\":\\\"initialAssessment\\\"}],\\\"anchorCount\\\":1,\\\"anchorSha256\\\":\\\"a3d42397322562d3c91fd161e8d3a9ba8dc16753342b21d6c12b9b032769dc03\\\",\\\"lineageSha256\\\":\\\"d937d154d88debca1450093998c348168d47c6eca380455d795941453ddab13a\\\"},\\\"lessonRunEvidenceBoundaries\\\":{\\\"positions\\\":0},\\\"durableRetentionHistory\\\":[{\\\"schemaVersion\\\":1,\\\"conceptFamilyId\\\":\\\"hero_button\\\",\\\"worldId\\\":\\\"world_1\\\",\\\"sourceLessonId\\\":\\\"positions\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"retentionState\\\":\\\"needsRepair\\\",\\\"spacedSuccessStage\\\":0,\\\"lapseCount\\\":0,\\\"incorrectCount\\\":1,\\\"correctCount\\\":0,\\\"lastRecordedAtUtc\\\":\\\"2026-11-05T13:17:47.587045Z\\\",\\\"lastCreatedOrder\\\":1,\\\"lastSessionId\\\":\\\"session_v1|2\\\",\\\"lastReviewKind\\\":\\\"initialAssessment\\\",\\\"hasLegacyUnspacedEvidence\\\":false}],\\\"reviewMistakeHistory\\\":[{\\\"schemaVersion\\\":1,\\\"recordId\\\":\\\"review_mistake_v1|16:positions_theory|11:hero_button|19:table_position_read|22:misread_table_position\\\",\\\"sourceDecisionId\\\":\\\"v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|top|1\\\",\\\"createdOrder\\\":1,\\\"updatedOrder\\\":1,\\\"worldId\\\":\\\"world_1\\\",\\\"lessonId\\\":\\\"positions\\\",\\\"decisionTaskId\\\":\\\"positions_theory\\\",\\\"sourceTaskId\\\":\\\"positions_theory\\\",\\\"decisionKind\\\":\\\"seat\\\",\\\"selectedId\\\":\\\"top\\\",\\\"expectedId\\\":\\\"bottom\\\",\\\"resultKind\\\":\\\"incorrect\\\",\\\"errorType\\\":\\\"misread_table_position\\\",\\\"skillAtomId\\\":\\\"table_position_read\\\",\\\"repairFocusId\\\":\\\"hero_button\\\",\\\"runId\\\":\\\"run_v1|world_1|positions|lesson|1\\\",\\\"runKind\\\":\\\"lesson\\\",\\\"runOrdinal\\\":1,\\\"attemptRecordIds\\\":[\\\"v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|top|1\\\"],\\\"dedupUsesFallback\\\":false,\\\"state\\\":\\\"unresolved_only_v1\\\"}],\\\"reviewResolutionReceipts\\\":[],\\\"conceptFamilyStateHistory\\\":[{\\\"schemaVersion\\\":1,\\\"conceptFamilyId\\\":\\\"hero_button\\\",\\\"worldId\\\":\\\"world_1\\\",\\\"lastSeenAt\\\":1,\\\"missCount\\\":1,\\\"repairAttemptCount\\\":0,\\\"successfulRepairCount\\\":0,\\\"lastOutcome\\\":\\\"missed\\\",\\\"lastTaskId\\\":\\\"positions_theory\\\",\\\"lastSessionId\\\":\\\"session_v1|2\\\"}],\\\"sessionIdentityState\\\":{\\\"schemaVersion\\\":1,\\\"nextSessionOrdinal\\\":3,\\\"currentSession\\\":{\\\"schemaVersion\\\":1,\\\"sessionId\\\":\\\"session_v1|2\\\",\\\"startedAtOrder\\\":1,\\\"startedWorldId\\\":\\\"world_1\\\",\\\"startedLessonId\\\":\\\"positions\\\",\\\"status\\\":\\\"active\\\"},\\\"latestSession\\\":{\\\"schemaVersion\\\":1,\\\"sessionId\\\":\\\"session_v1|2\\\",\\\"startedAtOrder\\\":1,\\\"startedWorldId\\\":\\\"world_1\\\",\\\"startedLessonId\\\":\\\"positions\\\",\\\"status\\\":\\\"active\\\"}},\\\"repairOutcomeProjection\\\":[],\\\"lastSessionLearnerState\\\":{\\\"last_session_repair_focus_id\\\":\\\"hero_button\\\",\\\"last_session_proof_result\\\":\\\"not_yet\\\",\\\"last_session_date\\\":\\\"2026-11-05\\\",\\\"last_session_world_id\\\":\\\"world_1\\\"}}\",\"digest\":\"60bc952c102ebb57380f73ecf425e15526546d285e8384ac6a41c77376fa35f6\"}",
+      "payload": {
+        "completedLessonIds": [
+          "blinds_action_order",
+          "cards_ranks_suits",
+          "fold_check_call_raise",
+          "what_poker_is",
+          "what_poker_is_content",
+          "your_first_hand"
+        ],
+        "completedTaskIds": [
+          "actions_call_drill",
+          "actions_check_drill",
+          "actions_fold_drill",
+          "actions_legal_context",
+          "actions_raise_drill",
+          "actions_review",
+          "actions_theory",
+          "blinds_button_moves",
+          "blinds_first_actor",
+          "blinds_last_actor",
+          "blinds_postflop_button",
+          "blinds_posts_drill",
+          "blinds_review",
+          "blinds_theory",
+          "cards_ranks_suits_best_five",
+          "cards_ranks_suits_board_count",
+          "cards_ranks_suits_private_board",
+          "cards_ranks_suits_rank_drill",
+          "cards_ranks_suits_recap",
+          "cards_ranks_suits_suit_drill",
+          "cards_ranks_suits_theory",
+          "first_table_guide_one_clear_choice",
+          "first_table_guide_route_roles",
+          "what_poker_is_all_in_meaning",
+          "what_poker_is_find_hero",
+          "what_poker_is_live_win_transfer",
+          "what_poker_is_matched_chips_transfer",
+          "what_poker_is_pot_stack",
+          "what_poker_is_review",
+          "what_poker_is_showdown_win",
+          "what_poker_is_table_read_recheck",
+          "what_poker_is_table_read_transfer",
+          "what_poker_is_theory",
+          "what_poker_is_win_ways",
+          "your_first_hand_action_trail",
+          "your_first_hand_flop",
+          "your_first_hand_preflop",
+          "your_first_hand_private_cards_recheck",
+          "your_first_hand_recap",
+          "your_first_hand_river",
+          "your_first_hand_showdown",
+          "your_first_hand_turn"
+        ],
+        "conceptFamilyStateHistory": [
+          {
+            "conceptFamilyId": "hero_button",
+            "lastOutcome": "missed",
+            "lastSeenAt": 1,
+            "lastSessionId": "session_v1|2",
+            "lastTaskId": "positions_theory",
+            "missCount": 1,
+            "repairAttemptCount": 0,
+            "schemaVersion": 1,
+            "successfulRepairCount": 0,
+            "worldId": "world_1"
+          }
+        ],
+        "dailyCompletedRepCount": 0,
+        "dismissedHomeHandoffDay": "",
+        "dismissedHomeHandoffKey": "",
+        "durableRetentionHistory": [
+          {
+            "conceptFamilyId": "hero_button",
+            "correctCount": 0,
+            "hasLegacyUnspacedEvidence": false,
+            "incorrectCount": 1,
+            "lapseCount": 0,
+            "lastCreatedOrder": 1,
+            "lastRecordedAtUtc": "2026-11-05T13:17:47.587045Z",
+            "lastReviewKind": "initialAssessment",
+            "lastSessionId": "session_v1|2",
+            "retentionState": "needsRepair",
+            "schemaVersion": 1,
+            "sourceLessonId": "positions",
+            "sourceTaskId": "positions_theory",
+            "spacedSuccessStage": 0,
+            "worldId": "world_1"
+          }
+        ],
+        "earnedXp": 0,
+        "lastActiveDay": "2026-11-05",
+        "lastEarnedDailyDay": "",
+        "lastSessionLearnerState": {
+          "last_session_date": "2026-11-05",
+          "last_session_proof_result": "not_yet",
+          "last_session_repair_focus_id": "hero_button",
+          "last_session_world_id": "world_1"
+        },
+        "learningEvidenceHistory": [
+          {
+            "assistanceKind": "none",
+            "authoredSourceFingerprint": "9d7cbd60701adfde1d728fd95293d9fccf2100297eed1e65e5417cd9455a0c1a",
+            "choiceId": "top",
+            "conceptFamilyId": "",
+            "createdOrder": 1,
+            "decisionTimeBucket": "unknown",
+            "errorType": "misread_table_position",
+            "expectedChoiceId": "bottom",
+            "isCorrect": false,
+            "lessonId": "positions",
+            "recordId": "v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|top|1",
+            "recordedAtUtc": "2026-11-05T13:17:47.587045Z",
+            "repairFocusId": "hero_button",
+            "resultKind": "incorrect",
+            "reviewKind": "initialAssessment",
+            "runId": "run_v1|world_1|positions|lesson|1",
+            "runKind": "lesson",
+            "runOrdinal": 1,
+            "schemaVersion": 1,
+            "sessionId": "session_v1|2",
+            "skillAtomId": "table_position_read",
+            "sourceLessonId": "positions",
+            "sourceTaskId": "positions_theory",
+            "sourceWorldId": "world_1",
+            "startedBy": "learn_route",
+            "taskId": "positions_theory",
+            "worldId": "world_1"
+          }
+        ],
+        "learningEvidenceLineage": {
+          "anchorCount": 1,
+          "anchorSha256": "a3d42397322562d3c91fd161e8d3a9ba8dc16753342b21d6c12b9b032769dc03",
+          "anchors": [
+            {
+              "assistanceKind": "none",
+              "authoredSourceFingerprint": "9d7cbd60701adfde1d728fd95293d9fccf2100297eed1e65e5417cd9455a0c1a",
+              "choiceId": "top",
+              "conceptFamilyId": "",
+              "createdOrder": 1,
+              "decisionTimeBucket": "unknown",
+              "errorType": "misread_table_position",
+              "expectedChoiceId": "bottom",
+              "isCorrect": false,
+              "lessonId": "positions",
+              "recordId": "v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|top|1",
+              "recordedAtUtc": "2026-11-05T13:17:47.587045Z",
+              "repairFocusId": "hero_button",
+              "resultKind": "incorrect",
+              "reviewKind": "initialAssessment",
+              "runId": "run_v1|world_1|positions|lesson|1",
+              "runKind": "lesson",
+              "runOrdinal": 1,
+              "schemaVersion": 1,
+              "sessionId": "session_v1|2",
+              "skillAtomId": "table_position_read",
+              "sourceLessonId": "positions",
+              "sourceTaskId": "positions_theory",
+              "sourceWorldId": "world_1",
+              "startedBy": "learn_route",
+              "taskId": "positions_theory",
+              "worldId": "world_1"
+            }
+          ],
+          "complete": true,
+          "format": 1,
+          "lineageSha256": "d937d154d88debca1450093998c348168d47c6eca380455d795941453ddab13a"
+        },
+        "lessonRunEvidenceBoundaries": {
+          "positions": 0
+        },
+        "multiRepairQueue": {
+          "entries": [
+            {
+              "attemptCount": 1,
+              "conceptFamilyId": "hero_button",
+              "createdAtOrder": 1,
+              "lastUpdatedAtOrder": 1,
+              "queueItemId": "practice_repair_queue_v1|active|83:16:positions_theory|11:hero_button|19:table_position_read|22:misread_table_position",
+              "repairIntent": {
+                "choiceId": "top",
+                "errorType": "misread_table_position",
+                "mappingType": "repair",
+                "missedSignalId": "hero_button",
+                "missedSignalLabel": "Hero on the Button",
+                "reasonCode": "same_signal_table_position_read_hero_button",
+                "repairOccurrenceId": "v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|top|1",
+                "result": "incorrect",
+                "schemaVersion": 1,
+                "skillAtomId": "table_position_read",
+                "skillLabel": "Table position read",
+                "sourceLessonId": "positions",
+                "sourceTaskId": "positions_theory",
+                "sourceWorldId": "world_1",
+                "targetLessonId": "position_checkpoint",
+                "targetTaskId": "position_checkpoint_position_checkpoint_table_notice",
+                "targetWorldId": "world_3"
+              },
+              "resolutionState": "unresolved",
+              "schemaVersion": 1,
+              "sourceRepairIdentity": "16:positions_theory|11:hero_button|19:table_position_read|22:misread_table_position",
+              "sourceTaskId": "positions_theory"
+            }
+          ],
+          "maxActiveItems": 3,
+          "schemaVersion": 1
+        },
+        "multiRepairQueueOrder": 1,
+        "openRepairIntents": [
+          {
+            "choiceId": "top",
+            "errorType": "misread_table_position",
+            "mappingType": "repair",
+            "missedSignalId": "hero_button",
+            "missedSignalLabel": "Hero on the Button",
+            "reasonCode": "same_signal_table_position_read_hero_button",
+            "repairOccurrenceId": "v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|top|1",
+            "result": "incorrect",
+            "schemaVersion": 1,
+            "skillAtomId": "table_position_read",
+            "skillLabel": "Table position read",
+            "sourceLessonId": "positions",
+            "sourceTaskId": "positions_theory",
+            "sourceWorldId": "world_1",
+            "targetLessonId": "position_checkpoint",
+            "targetTaskId": "position_checkpoint_position_checkpoint_table_notice",
+            "targetWorldId": "world_3"
+          }
+        ],
+        "persistedStreakDays": 0,
+        "profileSkillValues": {
+          "Betting decisions": 39,
+          "Blind play": 28,
+          "Board reading": 45,
+          "Hand reading": 17,
+          "Table sense": 67
+        },
+        "recentSkillGains": [],
+        "repairOutcomeProjection": [],
+        "resumeInRunner": false,
+        "resumePhase": "theory",
+        "resumeTeachingStepIndex": 0,
+        "retentionMemory": [
+          {
+            "attempts": 1,
+            "fixedAtSequence": 0,
+            "lastRecheckSequence": 0,
+            "lessonId": "positions",
+            "status": "openRepair",
+            "successfulRecheckCount": 0,
+            "taskId": "positions_theory",
+            "worldId": "world_1"
+          }
+        ],
+        "retentionSequence": 42,
+        "reviewMistakeHistory": [
+          {
+            "attemptRecordIds": [
+              "v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|top|1"
+            ],
+            "createdOrder": 1,
+            "decisionKind": "seat",
+            "decisionTaskId": "positions_theory",
+            "dedupUsesFallback": false,
+            "errorType": "misread_table_position",
+            "expectedId": "bottom",
+            "lessonId": "positions",
+            "recordId": "review_mistake_v1|16:positions_theory|11:hero_button|19:table_position_read|22:misread_table_position",
+            "repairFocusId": "hero_button",
+            "resultKind": "incorrect",
+            "runId": "run_v1|world_1|positions|lesson|1",
+            "runKind": "lesson",
+            "runOrdinal": 1,
+            "schemaVersion": 1,
+            "selectedId": "top",
+            "skillAtomId": "table_position_read",
+            "sourceDecisionId": "v3|run_v1|world_1|positions|lesson|1|1|world_1|positions|positions_theory|seat|top|1",
+            "sourceTaskId": "positions_theory",
+            "state": "unresolved_only_v1",
+            "updatedOrder": 1,
+            "worldId": "world_1"
+          }
+        ],
+        "reviewResolutionReceipts": [],
+        "schemaVersion": 19,
+        "selectedLessonId": "positions",
+        "selectedTaskId": "positions_theory",
+        "selectedWorldId": "world_1",
+        "sessionIdentityState": {
+          "currentSession": {
+            "schemaVersion": 1,
+            "sessionId": "session_v1|2",
+            "startedAtOrder": 1,
+            "startedLessonId": "positions",
+            "startedWorldId": "world_1",
+            "status": "active"
+          },
+          "latestSession": {
+            "schemaVersion": 1,
+            "sessionId": "session_v1|2",
+            "startedAtOrder": 1,
+            "startedLessonId": "positions",
+            "startedWorldId": "world_1",
+            "status": "active"
+          },
+          "nextSessionOrdinal": 3,
+          "schemaVersion": 1
+        },
+        "skippedTaskIds": []
+      }
+    }
+  }
+}

@@ -1136,12 +1136,12 @@ class _HomeCompletionSurfaceV1 extends StatelessWidget {
                           ? act0AcademySurfaceAtomV1(
                               context,
                               'home_daily_done_streak_label',
-                              fallback: 'Table read improved',
+                              fallback: 'Practice saved today',
                             )
                           : act0AcademySurfaceAtomV1(
                               context,
                               'home_daily_done_warm_label',
-                              fallback: 'Table read improved',
+                              fallback: 'Practice saved today',
                             ),
                       key: const Key('act0_shell_home_daily_done_badge'),
                       style: Act0AcademyDesignTokensV1.label.copyWith(

@@ -37,7 +37,7 @@ void main() {
       tags: ['a'],
       categories: [],
     );
-    final pack = TrainingPackTemplate(
+    final pack = v2.TrainingPackTemplateV2(
       id: 'p1',
       name: 'Pack',
       trainingType: TrainingType.pushFold,

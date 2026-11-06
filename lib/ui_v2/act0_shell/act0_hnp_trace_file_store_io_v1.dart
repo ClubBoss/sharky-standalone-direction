@@ -7,11 +7,18 @@ import 'act0_hnp_trace_file_store_v1.dart';
 Act0HnpTraceFileStoreV1 createAct0HnpTraceFileStoreV1() =>
     _Act0HnpTraceFileStoreV1();
 
-class _Act0HnpTraceFileStoreV1 implements Act0HnpTraceFileStoreV1 {
+class _Act0HnpTraceFileStoreV1
+    implements Act0HnpTraceFileStoreV1, Act0HnpTraceHistoryReaderV1 {
   late final Future<File> _file = _resolveFile();
 
   @override
   Future<String> getPath() async => (await _file).path;
+
+  @override
+  Future<String?> readPrevious() async {
+    final file = await _file;
+    return await file.exists() ? file.readAsString() : null;
+  }
 
   @override
   Future<void> replace(String jsonl) async {

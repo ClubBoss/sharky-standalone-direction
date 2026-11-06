@@ -124,6 +124,7 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
   var activeStreet = Act0StreetReplayStreetV1.preflop;
   var failedActionTruth = false;
   final foldedActors = <String>{};
+  String? previousVoluntaryActor;
   for (var index = 0; index < trailLabels.length; index++) {
     final rawLabel = trailLabels[index];
     final parsedStreet = _act0StreetReplayStreetFromTrailLabelV1(rawLabel);
@@ -135,6 +136,7 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
         failedActionTruth = true;
         break;
       }
+      if (parsedStreet != activeStreet) previousVoluntaryActor = null;
       activeStreet = parsedStreet;
     }
     final action = _act0StreetReplayActionLabelV1(rawLabel, parsedStreet);
@@ -147,6 +149,16 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
       break;
     }
     final actor = parsedAction.actorLabel.trim().toUpperCase();
+    final actionType = parsedAction.actionTypeLabel.toLowerCase();
+    // Forced posts are not turns. A voluntary action must pass to another
+    // actor before this seat can act again on the same street.
+    if (actionType != 'blind' && actionType != 'posts') {
+      if (previousVoluntaryActor == actor) {
+        failedActionTruth = true;
+        break;
+      }
+      previousVoluntaryActor = actor;
+    }
     // A folded seat cannot take another action in the same hand. The label
     // is a conservative source-owned seat token, not an invented action.
     if (foldedActors.contains(actor)) {
@@ -176,6 +188,16 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
     );
   }
 
+  // Final source flags and executed folds both constrain the pending actor.
+  // Historical folded opponents may still appear before their own fold.
+  if (activeSeat?.isFolded == true ||
+      foldedActors.contains(activeSeat?.seatLabel.trim().toUpperCase())) {
+    failedActionTruth = true;
+  }
+  if (_act0StreetReplayHasSoleSurvivorV1(table, foldedActors, steps)) {
+    failedActionTruth = true;
+  }
+
   return Act0StreetReplayV1(
     steps: failedActionTruth
         ? const <Act0StreetReplayStepV1>[]
@@ -197,6 +219,36 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
     keyClue: table.focusCalloutLabel.trim(),
     decisionContext: _act0StreetReplayDecisionContextV1(table),
   );
+}
+
+bool _act0StreetReplayHasSoleSurvivorV1(
+  Act0TableStateV1 table,
+  Set<String> foldedActors,
+  List<Act0StreetReplayStepV1> steps,
+) {
+  // Only a complete, unambiguous source roster can prove every opponent out.
+  // Missing seats or isInHand=false alone must not invent an executed fold.
+  if (table.seats.length != table.playerCount) return false;
+  final occupied = table.seats.where((seat) => seat.isOccupied).toList();
+  final actors = occupied
+      .map((seat) => seat.seatLabel.trim().toUpperCase())
+      .toSet();
+  if (occupied.length < 2 ||
+      actors.length != occupied.length ||
+      actors.any((actor) => !_act0StreetReplayLooksLikeActorV1(actor)) ||
+      steps.any(
+        (step) => !actors.contains(step.actorLabel.trim().toUpperCase()),
+      )) {
+    return false;
+  }
+  return occupied
+          .where(
+            (seat) =>
+                !seat.isFolded &&
+                !foldedActors.contains(seat.seatLabel.trim().toUpperCase()),
+          )
+          .length ==
+      1;
 }
 
 Act0StreetReplayStreetV1? _act0StreetReplayStreetFromLabelV1(String label) {

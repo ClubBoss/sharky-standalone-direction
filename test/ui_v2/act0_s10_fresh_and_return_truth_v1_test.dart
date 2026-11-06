@@ -126,7 +126,18 @@ void main() {
       expect(find.text('0 of 9 lessons complete'), findsOneWidget);
       await openYou(tester);
       expect(find.text('2 tasks complete'), findsOneWidget);
-      expect(find.text('1 growing'), findsOneWidget);
+      expect(find.text('1 practiced'), findsOneWidget);
+      expect(find.text('Recent practice: Table sense.'), findsOneWidget);
+      expect(find.textContaining('growing'), findsNothing);
+      await tester.scrollUntilVisible(
+        find.byKey(const Key('act0_shell_profile_skill_stats')),
+        180,
+        scrollable: find.descendant(
+          of: find.byKey(const Key('act0_shell_profile_screen')),
+          matching: find.byType(Scrollable),
+        ),
+      );
+      await tester.pumpAndSettle();
       expect(find.text('From Find the hero'), findsOneWidget);
       expect(find.textContaining('master'), findsNothing);
       await tester.pumpWidget(const SizedBox());

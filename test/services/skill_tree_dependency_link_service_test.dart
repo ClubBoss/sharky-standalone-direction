@@ -53,7 +53,7 @@ void main() {
       node('n2', prereqs: ['n1'], unlocks: ['n3']),
       node('n3', prereqs: ['n2']),
     ];
-    final tree = builder.build(nodes].tree;
+    final tree = builder.build(nodes).tree;
     final lib = _FakeLibraryService(SkillTreeBuildResult(tree: tree));
     final tracker = SkillTreeNodeProgressTracker.instance;
     await tracker.resetForTest();
@@ -79,7 +79,7 @@ void main() {
       node('n2', prereqs: ['n1'], unlocks: ['n3']),
       node('n3', prereqs: ['n2']),
     ];
-    final tree = builder.build(nodes].tree;
+    final tree = builder.build(nodes).tree;
     final lib = _FakeLibraryService(SkillTreeBuildResult(tree: tree));
     SkillTreeTrackResolver.instance = SkillTreeTrackResolver(library: lib);
     final tracker = SkillTreeNodeProgressTracker.instance;

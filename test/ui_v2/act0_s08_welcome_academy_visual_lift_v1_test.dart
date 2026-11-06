@@ -58,10 +58,7 @@ void main() {
           find.byKey(const Key('act0_shell_welcome_beat_frame')),
         );
         final frameDecoration = frame.decoration as BoxDecoration;
-        expect(
-          frameDecoration.color,
-          Act0AcademyDesignTokensV1.cardSurface,
-        );
+        expect(frameDecoration.color, Act0AcademyDesignTokensV1.cardSurface);
         expect(frameDecoration.borderRadius, BorderRadius.circular(6));
       },
     );
@@ -80,9 +77,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final runner = tester
-          .widget<Act0LessonRunnerShellV1>(
-            find.byType(Act0LessonRunnerShellV1),
-          )
+          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
           .runner;
       await tester.tap(
         find.byKey(Key('act0_shell_option_${runner.options.first.id}')),

@@ -3,7 +3,7 @@ import 'package:poker_analyzer/ui/session_player/models.dart';
 import 'package:poker_analyzer/services/spot_importer.dart';
 
 void main() {
-  SpotImportReport [...series][] =>
+  SpotImportReport parse(String s, {String? format, String? kind}) =>
       SpotImporter.parse(s, format: format, kind: kind);
 
   String dupJson({int count = 2}) =>
@@ -14,7 +14,7 @@ void main() {
 
   group('SpotImporter.parse', () {
     test('JSON happy path', () {
-      final rep = [...series][];
+      final rep = parse(dupJson(count: 1), format: 'json');
       expect(rep.added, 1);
       expect(rep.errors, isEmpty);
       final s = rep.spots.single;
@@ -28,7 +28,7 @@ void main() {
     test('CSV: BOM + ; separator + case-insensitive headers', () {
       const csv =
           '\uFEFFPos;Kind;Action;Stack;Hand\nBTN;callVsJam;push;10bb;AKo';
-      final rep = [...series][];
+      final rep = parse(csv, format: 'csv');
       expect(rep.added, 1);
       expect(rep.errors, isEmpty);
     });
@@ -36,7 +36,7 @@ void main() {
     test('CSV: quoted value with comma', () {
       const csv =
           'kind;hand;pos;stack;action;explain\ncallVsJam;AKo;BTN;10bb;push;"reason,detail"';
-      final rep = [...series][];
+      final rep = parse(csv, format: 'csv');
       expect(rep.added, 1);
       expect(rep.spots.single.explain, 'reason,detail');
     });
@@ -45,13 +45,13 @@ void main() {
       const csv =
           'kind,hand,pos,stack,action,explain\n'
           'callVsJam,AKo,BTN,10bb,push,"He said ""jam"""';
-      final rep = [...series][];
+      final rep = parse(csv, format: 'csv');
       expect(rep.added, 1);
       expect(rep.spots.single.explain, 'He said "jam"');
     });
 
     test('Duplicate detection: one message, full counter', () {
-      final rep = [...series][], format: 'json');
+      final rep = parse(dupJson(count: 3), format: 'json');
       expect(rep.added, 1);
       expect(rep.skippedDuplicates, 2);
       expect(
@@ -61,7 +61,7 @@ void main() {
     });
 
     test('Unsupported format surfaces clear error', () {
-      final rep = [...series][];
+      final rep = parse('[]', format: 'unsupported');
       expect(rep.added, 0);
       expect(rep.skipped, greaterThanOrEqualTo(1));
       expect(rep.errors.single.toLowerCase(), contains('unsupported format'));
@@ -72,7 +72,7 @@ void main() {
         7,
         (i) => '{"kind":"x","hand":"h","pos":"p","stack":"s","action":"a"}',
       );
-      final rep = [...series][]}]', format: 'json');
+      final rep = parse('[${items.join(',')}]', format: 'json');
       expect(rep.added, 0);
       expect(rep.skipped, 7);
       expect(rep.errors.length, 5);
@@ -80,14 +80,14 @@ void main() {
 
     test('Back-compat: legacy kind parameter still works', () {
       const csv = 'kind,hand,pos,stack,action\ncallVsJam,AKo,BTN,10bb,push';
-      final rep = [...series][];
+      final rep = parse(csv, kind: 'csv');
       expect(rep.added, 1);
       expect(rep.errors, isEmpty);
     });
 
     test('Precedence: format overrides kind when both provided', () {
       const csv = 'kind,hand,pos,stack,action\ncallVsJam,AKo,BTN,10bb,push';
-      final rep = [...series][];
+      final rep = parse(csv, format: 'csv', kind: 'json');
       expect(rep.added, 1);
       expect(rep.errors, isEmpty);
     });

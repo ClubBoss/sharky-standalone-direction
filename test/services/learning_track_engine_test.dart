@@ -40,7 +40,7 @@ void main() {
   });
 
   test('nextUpPack null when all completed', () {
-    final packs = [tpl('a'), tpl('b'));
+    final packs = [tpl('a'), tpl('b')];
     final stats = {'a': stat(0.95), 'b': stat(0.92)};
 
     final track = LearningTrackEngine().computeTrack(

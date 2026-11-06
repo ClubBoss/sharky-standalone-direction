@@ -11,15 +11,15 @@ void main() {
 
   test('actionsForStreet returns [] for OOR', () {
     final actions = {
-      0: [ActionEntry(0, 0, 'push'), ActionEntry(0, 1, 'fold')),
+      0: [ActionEntry(0, 0, 'push'), ActionEntry(0, 1, 'fold')],
     };
-    final res = actionsForStreet[actions, 5];
+    final res = actionsForStreet(actions, 5);
     expect(res, isEmpty);
   });
 
   test('isPushFoldSpot detects hero push and villain fold', () {
     final actions = {
-      0: [ActionEntry(0, 0, 'push'), ActionEntry(0, 1, 'fold')),
+      0: [ActionEntry(0, 0, 'push'), ActionEntry(0, 1, 'fold')],
     };
     expect(isPushFoldSpot(actions, 0, 0), isTrue);
   });

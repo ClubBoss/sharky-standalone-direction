@@ -36,7 +36,7 @@ void main() {
       ),
     ];
     const validator = LearningPathPackValidator();
-    final result = validator.validate[stages, dir];
+    final result = validator.validate(stages, dir);
     expect(result, isEmpty);
   });
 
@@ -49,7 +49,7 @@ void main() {
         packId: 'missing',
       ),
     ];
-    final result = validator.validate[stages, dir];
+    final result = validator.validate(stages, dir);
     expect(result, contains('Missing pack: missing'));
   });
 
@@ -71,7 +71,7 @@ void main() {
       ),
     ];
     const validator = LearningPathPackValidator();
-    final result = validator.validate[stages, dir];
+    final result = validator.validate(stages, dir);
     expect(result, contains('Missing subStage pack: other'));
   });
 }

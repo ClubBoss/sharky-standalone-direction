@@ -22,7 +22,7 @@ TrainingPackTemplate _theory(String id, String tag) => TrainingPackTemplate(
   name: id,
   trainingType: TrainingType.theory,
   tags: [tag],
-  spots: [TrainingPackSpot(id: 's', type: 'theory', hand: v2models.HandData())),
+  spots: [TrainingPackSpot(id: 's', type: 'theory', hand: v2models.HandData())],
   spotCount: 1,
 );
 
@@ -34,14 +34,14 @@ void main() {
       id: 'p',
       title: 'Path',
       description: '',
-      stages: [_stage('s1', 'push'), _stage('s2', 'call')),
+      stages: [_stage('s1', 'push'), _stage('s2', 'call')],
       sections: const [],
       tags: const [],
     );
 
-    final library = [_theory('t1', 'push'));
+    final library = [_theory('t1', 'push')];
 
-    final updated = BoosterTheoryPackLinker().link[template, library];
+    final updated = BoosterTheoryPackLinker().link(template, library);
 
     expect(updated.stages.first.theoryPackId, 't1');
     expect(updated.stages.last.theoryPackId, isNull);

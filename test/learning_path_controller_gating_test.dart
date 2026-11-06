@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/controllers/learning_path_controller.dart';
 import 'package:poker_analyzer/services/learning_path_loader.dart';
@@ -17,6 +18,13 @@ void main() {
 
   test('completion threshold is inclusive', () async {
     SharedPreferences.setMockInitialValues({});
+    PackageInfo.setMockInitialValues(
+      appName: 'Sharky',
+      packageName: 'com.example.sharky',
+      version: '1.0.0',
+      buildNumber: '1',
+      buildSignature: '',
+    );
     const stage = LearningPathStageModel(
       id: 's',
       title: 's',
@@ -37,9 +45,11 @@ void main() {
     await controller.load('path');
     for (var i = 0; i < 14; i++) {
       controller.recordHand(correct: true);
+      await Future<void>.delayed(const Duration(milliseconds: 110));
     }
     for (var i = 0; i < 6; i++) {
       controller.recordHand(correct: false);
+      await Future<void>.delayed(const Duration(milliseconds: 110));
     }
     expect(controller.stageProgress('s').completed, true);
   });

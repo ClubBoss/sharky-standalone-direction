@@ -102,30 +102,69 @@ void main() {
       expect(co.hasActed, isFalse, reason: suffix);
     }
   });
-  test('all actionable authored runners keep a live Hero before choice', () {
-    final mismatches = <String>[];
-    var count = 0;
-    for (final world in Act0ShellStateV1.sample.worlds) {
-      for (final lesson in world.lessons) {
-        for (final task in lesson.taskList) {
-          if (task.runner.options.length < 2) continue;
-          count++;
-          final hero = task.runner.table.heroSeat;
-          if (hero.isFolded ||
-              !hero.isInHand ||
-              hero.hasActed ||
-              !hero.isOccupied) {
-            mismatches.add('${world.worldId}/${task.taskId}: ${hero.seatId}');
+  test(
+    'authored choice runners keep a live Hero with truthful action timing',
+    () {
+      final mismatches = <String>[];
+      var count = 0;
+      var closedCheckCheckCount = 0;
+      for (final world in Act0ShellStateV1.sample.worlds) {
+        for (final lesson in world.lessons) {
+          for (final task in lesson.taskList) {
+            if (task.runner.options.length < 2) continue;
+            count++;
+            final table = task.runner.table;
+            final hero = table.heroSeat;
+            if (hero.isFolded || !hero.isInHand || !hero.isOccupied) {
+              mismatches.add('${world.worldId}/${task.taskId}: ${hero.seatId}');
+            }
+            if (task.taskId == 'w4_protection_check') {
+              closedCheckCheckCount++;
+              // This choice explains a completed check-check, not a pending action.
+              expect(table.streetLabel, 'Flop', reason: task.taskId);
+              expect(hero.seatId, 'btn', reason: task.taskId);
+              expect(hero.hasActed, isTrue, reason: task.taskId);
+              expect(
+                table.seats.firstWhere((seat) => seat.seatId == 'bb').hasActed,
+                isTrue,
+                reason: task.taskId,
+              );
+              expect(
+                table.actionTrail
+                    .map((item) => item.label)
+                    .toList()
+                    .reversed
+                    .take(2),
+                ['BTN checks', 'Flop: BB checks'],
+                reason: task.taskId,
+              );
+              expect(table.activeSeatId, isEmpty, reason: task.taskId);
+              expect(
+                table.seats.where((seat) => seat.isActive),
+                isEmpty,
+                reason: task.taskId,
+              );
+              expect(
+                task.runner.options
+                    .where((option) => option.isCorrect)
+                    .map((option) => option.id),
+                ['free_card'],
+                reason: task.taskId,
+              );
+            } else {
+              expect(hero.hasActed, isFalse, reason: task.taskId);
+            }
           }
         }
       }
-    }
-    expect(count, greaterThan(0));
-    expect(
-      mismatches,
-      isEmpty,
-      reason:
-          'An actionable Hero must not be folded, missing, or already acted',
-    );
-  });
+      expect(count, greaterThan(0));
+      expect(closedCheckCheckCount, 1);
+      expect(
+        mismatches,
+        isEmpty,
+        reason:
+            'A choice runner Hero must be occupied, in hand, and not folded',
+      );
+    },
+  );
 }

@@ -13,7 +13,7 @@ void main() {
     const builder = SkillTreeStageHeaderBuilder();
     final header = builder.buildHeader(
       level: 1,
-      nodes: [node('a')),
+      nodes: [node('a')],
       unlockedNodeIds: {'a'},
       completedNodeIds: {},
     );
@@ -25,7 +25,7 @@ void main() {
     const builder = SkillTreeStageHeaderBuilder();
     final header = builder.buildHeader(
       level: 1,
-      nodes: [node('a')),
+      nodes: [node('a')],
       unlockedNodeIds: {'a'},
       completedNodeIds: {'a'},
     );
@@ -38,7 +38,7 @@ void main() {
     const overlay = Positioned(right: 0, top: 0, child: Icon(Icons.lock));
     final header = builder.buildHeader(
       level: 1,
-      nodes: [node('a')),
+      nodes: [node('a')],
       unlockedNodeIds: {'a'},
       completedNodeIds: {},
       overlay: overlay,

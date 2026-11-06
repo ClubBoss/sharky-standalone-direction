@@ -15,7 +15,7 @@ void main() {
       id: 'p1',
       name: 'Push/Fold SB vs BB',
       trainingType: TrainingType.quiz,
-      spots: [TrainingPackSpot(id: 's1', hand: v2models.HandData())),
+      spots: [TrainingPackSpot(id: 's1', hand: v2models.HandData())],
       spotCount: 1,
     );
 

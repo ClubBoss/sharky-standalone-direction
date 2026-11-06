@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -18,6 +20,10 @@ import 'package:poker_analyzer/services/theory_link_config_service.dart';
 class _FakeBundle extends CachingAssetBundle {
   final String data;
   _FakeBundle(this.data);
+  @override
+  Future<ByteData> load(String key) async =>
+      ByteData.sublistView(Uint8List.fromList(utf8.encode(data)));
+
   @override
   Future<String> loadString(String key, {bool cache = true}) async => data;
 }

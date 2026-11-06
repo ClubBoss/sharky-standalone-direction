@@ -9,6 +9,7 @@ import 'package:poker_analyzer/services/user_skill_model_service.dart';
 import 'package:poker_analyzer/services/autogen_status_dashboard_service.dart';
 import 'package:poker_analyzer/services/adaptive_plan_executor.dart';
 import 'package:poker_analyzer/services/targeted_pack_booster_engine.dart';
+import 'package:poker_analyzer/services/auto_skill_gap_clusterer.dart';
 import 'package:poker_analyzer/services/auto_format_selector.dart';
 import 'package:poker_analyzer/services/pack_quality_gatekeeper_service.dart';
 import 'package:poker_analyzer/models/training_run_record.dart';
@@ -18,13 +19,13 @@ import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
 
 class _FakeBoosterEngine extends TargetedPackBoosterEngine {
   @override
-  Future<List<TrainingPackTemplate>> generateClusterBoosterPacks({
+  Future<List<v2.TrainingPackTemplateV2>> generateClusterBoosterPacks({
     required List<SkillTagCluster> clusters,
     String triggerReason = 'cluster',
   }) async {
     final c = clusters.first;
     return [
-      TrainingPackTemplate(
+      v2.TrainingPackTemplateV2(
         id: 'boost_${c.clusterId}',
         name: 'Boost',
         trainingType: TrainingType.booster,
@@ -48,11 +49,16 @@ class _FakeFormatSelector extends AutoFormatSelector {
 class _PassGatekeeper extends PackQualityGatekeeperService {
   _PassGatekeeper();
   @override
-  bool isQualityAcceptable(pack, {double minScore = 0.7, seedIssues = {}}) =>
-      true;
+  bool isQualityAcceptable(
+    pack, {
+    double minScore = 0.7,
+    seedIssues = const {},
+  }) => true;
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   setUp(() {
     SharedPreferences.setMockInitialValues({'planner.budgetPaddingMins': 0});
   });

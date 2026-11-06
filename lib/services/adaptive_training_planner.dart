@@ -180,7 +180,9 @@ class AdaptiveTrainingPlanner {
       'regular': const {'theory': 2, 'booster': 3, 'assessment': 1},
       'advanced': const {'theory': 1, 'booster': 2, 'assessment': 3},
     };
-    final ratios = Map<String, double>.from(base[audience] ?? base['regular']!);
+    final ratios = (base[audience] ?? base['regular']!).map(
+      (key, value) => MapEntry(key, value.toDouble()),
+    );
 
     if (format == 'quick') {
       ratios['booster'] = ratios['booster']! * 1.5;

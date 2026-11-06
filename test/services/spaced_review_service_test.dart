@@ -41,7 +41,7 @@ void main() {
     svc.debugEntry('b')!.due = svc.debugEpochDay(
       DateTime.now().subtract(const Duration(days: 1)),
     );
-    final dueToday = svc.dueSpotIds[DateTime.now(]);
+    final dueToday = svc.dueSpotIds[DateTime.now()];
     expect(dueToday, contains('b'));
     expect(dueToday, isNot(contains('a')));
   });

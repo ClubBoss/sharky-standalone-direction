@@ -17,7 +17,7 @@ void main() {
       ),
     ];
 
-    final result = service.buildTimeline[history: history, currentMastery: {}];
+    final result = service.buildTimeline(history: history, currentMastery: {});
 
     expect(result.length, 1);
     expect(result.first.type, LearningEventType.trackCompleted);
@@ -42,7 +42,7 @@ void main() {
       ),
     ];
 
-    final result = service.buildTimeline[history: history, currentMastery: {}];
+    final result = service.buildTimeline(history: history, currentMastery: {});
 
     final streaks = result
         .where((e) => e.type == LearningEventType.streak)

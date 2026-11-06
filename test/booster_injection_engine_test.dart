@@ -29,8 +29,8 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test('scheduleBoosters prioritizes repeating tags', () {
-    final clusters = [_cluster('a'), _cluster('a'), _cluster('b'));
-    final boosters = [_booster('b1', 'a'), _booster('b2', 'b'));
+    final clusters = [_cluster('a'), _cluster('a'), _cluster('b')];
+    final boosters = [_booster('b1', 'a'), _booster('b2', 'b')];
     final profile = PlayerProfile(
       xp: 150,
       tags: {'c'},
@@ -49,8 +49,8 @@ void main() {
   });
 
   test('scheduleBoosters skips mastered tags', () {
-    final clusters = [_cluster('a'));
-    final boosters = [_booster('b1', 'a'));
+    final clusters = [_cluster('a')];
+    final boosters = [_booster('b1', 'a')];
     final profile = PlayerProfile(xp: 0, tags: {'a'}, tagAccuracy: {'a': 0.9});
 
     const engine = BoosterInjectionEngine();
@@ -63,4 +63,3 @@ void main() {
     expect(result, isEmpty);
   });
 }
-

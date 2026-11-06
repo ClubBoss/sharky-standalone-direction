@@ -12,7 +12,7 @@ void main() {
       SkillTreeNodeModel(id: id, title: id, category: 'cat', level: 1);
 
   test('returns locked badge when stage locked', () {
-    final nodes = [node('a'));
+    final nodes = [node('a')];
     expect(
       service.getBadge(nodes: nodes, unlocked: {}, completed: {}),
       'locked',
@@ -20,7 +20,7 @@ void main() {
   });
 
   test('returns in_progress when stage unlocked but not completed', () {
-    final nodes = [node('a'));
+    final nodes = [node('a')];
     expect(
       service.getBadge(nodes: nodes, unlocked: {'a'}, completed: {}),
       'in_progress',
@@ -28,7 +28,7 @@ void main() {
   });
 
   test('returns perfect when all nodes completed', () {
-    final nodes = [node('a'), node('b'));
+    final nodes = [node('a'), node('b')];
     expect(
       service.getBadge(
         nodes: nodes,
@@ -40,7 +40,7 @@ void main() {
   });
 
   test('not perfect when optional nodes remain', () {
-    final nodes = [node('a'), TestOptionalNode('b'));
+    final nodes = [node('a'), TestOptionalNode('b')];
     expect(
       service.getBadge(nodes: nodes, unlocked: {'a'}, completed: {'a'}),
       'in_progress',

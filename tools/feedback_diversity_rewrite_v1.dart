@@ -2,27 +2,27 @@ import 'dart:io';
 import 'dart:math';
 
 /// Feedback Diversity Rewrite Tool V1
-/// 
+///
 /// Replaces generic feedback titles with more specific alternatives
 /// to reduce top-2 reuse from 56.8% to <25%.
-/// 
+///
 /// Strategy:
 /// - "Nice read." → rotated through positive-specific alternatives
 /// - "Almost there." → rotated through progress-specific alternatives
-/// 
+///
 /// This tool produces a more diverse feedback experience without
 /// changing pedagogical content.
 
 void main(List<String> args) {
   final stateFile = File('lib/ui_v2/act0_shell/act0_shell_state_v1.dart');
-  
+
   if (!stateFile.existsSync()) {
     stderr.writeln('State file not found');
     exit(1);
   }
 
   var source = stateFile.readAsStringSync();
-  
+
   // Replacement pools for diversity
   const niceReadAlternatives = <String>[
     'Good instinct.',
@@ -51,20 +51,22 @@ void main(List<String> args) {
   var almostThereIndex = 0;
 
   // Replace "Nice read." with rotated alternatives
-  source = source.replaceAllMapped(
-    RegExp(r"feedbackTitle:\s*'Nice read\.\'"),
-    (match) {
-      final alternative = niceReadAlternatives[niceReadIndex % niceReadAlternatives.length];
-      niceReadIndex++;
-      return "feedbackTitle: '$alternative'";
-    },
-  );
+  source = source.replaceAllMapped(RegExp(r"feedbackTitle:\s*'Nice read\.\'"), (
+    match,
+  ) {
+    final alternative =
+        niceReadAlternatives[niceReadIndex % niceReadAlternatives.length];
+    niceReadIndex++;
+    return "feedbackTitle: '$alternative'";
+  });
 
-  // Replace "Almost there." with rotated alternatives  
+  // Replace "Almost there." with rotated alternatives
   source = source.replaceAllMapped(
     RegExp(r"feedbackTitle:\s*'Almost there\.\'"),
     (match) {
-      final alternative = almostThereAlternatives[almostThereIndex % almostThereAlternatives.length];
+      final alternative =
+          almostThereAlternatives[almostThereIndex %
+              almostThereAlternatives.length];
       almostThereIndex++;
       return "feedbackTitle: '$alternative'";
     },

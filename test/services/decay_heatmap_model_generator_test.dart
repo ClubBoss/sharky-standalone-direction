@@ -7,7 +7,7 @@ void main() {
 
   test('generate maps decay scores to heatmap entries', () {
     final generator = DecayHeatmapModelGenerator();
-    final result = generator.generate({'a': 10, 'b': 40, 'c': 70}];
+    final result = generator.generate({'a': 10, 'b': 40, 'c': 70});
 
     expect(result.length, 3);
     final a = result.firstWhere((e) => e.tag == 'a');
@@ -22,7 +22,7 @@ void main() {
 
   test('generate handles empty input', () {
     final generator = DecayHeatmapModelGenerator();
-    final result = generator.generate({}];
+    final result = generator.generate({});
     expect(result, isEmpty);
   });
 }

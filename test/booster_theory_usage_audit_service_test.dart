@@ -29,7 +29,7 @@ void main() {
         id: 'path',
         title: 'Path',
         description: '',
-        stages: [_stage(theoryId: 't1')),
+        stages: [_stage(theoryId: 't1')],
       ),
     ];
     final issues = BoosterTheoryUsageAuditService().audit(
@@ -42,13 +42,13 @@ void main() {
   });
 
   test('detects missing theory pack referenced in path', () {
-    final packs = [TheoryPackModel(id: 't1', title: 'A', sections: const []));
+    final packs = [TheoryPackModel(id: 't1', title: 'A', sections: const [])];
     final paths = [
       LearningPathTemplateV2(
         id: 'path',
         title: 'Path',
         description: '',
-        stages: [_stage(theoryId: 't2')),
+        stages: [_stage(theoryId: 't2')],
       ),
     ];
     final issues = BoosterTheoryUsageAuditService().audit(

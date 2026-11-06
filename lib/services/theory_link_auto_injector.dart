@@ -42,9 +42,10 @@ class TheoryLinkAutoInjector {
              (config ?? TheoryLinkConfigService.instance).value.maxPerSpot,
        ) {
     _applyConfig(this.config.value);
-    this.config.notifier.addListener(() {
+    _configListener = () {
       _applyConfig(this.config.value);
-    });
+    };
+    this.config.notifier.addListener(_configListener);
   }
 
   final LearningPathStore store;
@@ -58,6 +59,8 @@ class TheoryLinkAutoInjector {
   final TrainingPackLibraryV2 packLibrary;
   final DecayTagRetentionTrackerService retention;
   final TheoryLinkSaveStrategy saveStrategy;
+  late final void Function() _configListener;
+  bool _disposed = false;
   late int maxPerModule;
   late int maxPerPack;
   late int maxPerSpot;
@@ -67,6 +70,13 @@ class TheoryLinkAutoInjector {
   late Duration noveltyRecent;
   late double noveltyMinOverlap;
   final Map<String, bool> _runningUsers = {};
+
+  /// Releases this injector's config subscription after its work is complete.
+  void dispose() {
+    if (_disposed) return;
+    _disposed = true;
+    config.notifier.removeListener(_configListener);
+  }
 
   void _applyConfig(TheoryLinkConfig cfg) {
     maxPerModule = cfg.maxPerModule;
@@ -84,6 +94,7 @@ class TheoryLinkAutoInjector {
   }
 
   Future<int> injectForUser(String userId) async {
+    if (_disposed) throw StateError('Theory injector has been disposed');
     if (_runningUsers[userId] == true) return 0;
     _runningUsers[userId] = true;
     try {

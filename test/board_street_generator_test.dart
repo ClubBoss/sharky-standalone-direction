@@ -13,10 +13,10 @@ void main() {
 
     final boards1 = spots1
         .map((s) => (s['board'] as List).cast<String>().join())
-        .toList[growable: false];
+        .toList(growable: false);
     final boards2 = spots2
         .map((s) => (s['board'] as List).cast<String>().join())
-        .toList[growable: false];
+        .toList(growable: false);
 
     expect(boards1, boards2, reason: 'deterministic for same seed');
     expect(boards1.toSet().length, count, reason: 'boards are unique');

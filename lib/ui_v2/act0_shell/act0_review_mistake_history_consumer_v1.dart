@@ -171,7 +171,14 @@ String _readableAction(
                 return '\u0423\u0436\u0435 \u043e\u0442\u043a\u0440\u044b\u0442\u043e 5 \u043e\u0431\u0449\u0438\u0445 \u043a\u0430\u0440\u0442';
               }
             }
-            if (localCopy.isNotEmpty) return localCopy;
+            if (localCopy.isNotEmpty) {
+              // The decision UI renders the authored wager beside its action.
+              // Keep that same amount in the English history receipt.
+              final amount = option.amountLabel.trim();
+              return !localeIsRu && amount.isNotEmpty
+                  ? '$localCopy $amount'
+                  : localCopy;
+            }
           }
         }
       }

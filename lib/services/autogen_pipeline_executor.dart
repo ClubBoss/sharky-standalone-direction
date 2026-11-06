@@ -621,7 +621,18 @@ class AutogenPipelineExecutor {
         }
         await txn.commit(userId, txId);
         await guard.recordInjected(userId, sig);
-        await TheoryInjectionSchedulerService.instance.runNow(force: true);
+        if (executor == null) {
+          await TheoryInjectionSchedulerService.instance.runNow(force: true);
+        } else {
+          final theoryScheduler = TheoryInjectionSchedulerService.forStore(
+            store: store,
+          );
+          try {
+            await theoryScheduler.runNow(force: true);
+          } finally {
+            await theoryScheduler.dispose();
+          }
+        }
         AutogenStatusDashboardService.instance.update(
           'PathHardening',
           AutogenStatus(

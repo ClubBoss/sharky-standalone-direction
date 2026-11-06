@@ -15,7 +15,7 @@ void main() {
     const builder = SkillTreeGridBlockBuilder();
     final widget = builder.build(
       level: 1,
-      nodes: [node('a'), node('b')),
+      nodes: [node('a'), node('b')],
       unlockedNodeIds: {'a', 'b'},
       completedNodeIds: {'a'},
     );

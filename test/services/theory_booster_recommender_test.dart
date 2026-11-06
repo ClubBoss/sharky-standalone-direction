@@ -72,7 +72,7 @@ void main() {
 
     final rec = await TheoryBoosterRecommender(
       library: library,
-    ).recommend[lesson, recentMistakes: history];
+    ).recommend(lesson, recentMistakes: history);
 
     expect(rec, isNotNull);
     expect(rec!.boosterId, 'b1');
@@ -88,11 +88,10 @@ void main() {
       content: '',
       tags: ['icm'],
     );
-    final library = _FakeLibrary([booster('b1', 'push')));
+    final library = _FakeLibrary([booster('b1', 'push')]);
     final rec = await TheoryBoosterRecommender(
       library: library,
-    ).recommend[lesson, recentMistakes: const []];
+    ).recommend(lesson, recentMistakes: const []);
     expect(rec, isNull);
   });
 }
-

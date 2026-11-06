@@ -19,7 +19,7 @@ void main() {
   group('TrainingPackLibraryGenerator', () {
     test('empty group list', () {
       final gen = TrainingPackLibraryGenerator();
-      final res = gen.generate([)];
+      final res = gen.generate([]);
       expect(res, isEmpty);
       expect(gen.errors, isEmpty);
     });
@@ -28,7 +28,7 @@ void main() {
       final valid = TrainingPackTemplateSetGroup(
         packId: 'p1',
         title: 'Valid',
-        sets: [_validSet()),
+        sets: [_validSet()],
       );
       final invalidSpot = TrainingPackSpot(
         id: 's2',
@@ -44,7 +44,7 @@ void main() {
         sets: [invalidSet],
       );
       final gen = TrainingPackLibraryGenerator();
-      final res = gen.generate([valid, invalid)];
+      final res = gen.generate([valid, invalid]);
       expect(res.length, 1);
       expect(res.first.id, 'p1');
       expect(gen.errors.length, 1);
@@ -54,15 +54,15 @@ void main() {
       final g1 = TrainingPackTemplateSetGroup(
         packId: 'a',
         title: 'A',
-        sets: [_validSet()),
+        sets: [_validSet()],
       );
       final g2 = TrainingPackTemplateSetGroup(
         packId: 'b',
         title: 'B',
-        sets: [_validSet()),
+        sets: [_validSet()],
       );
       final gen = TrainingPackLibraryGenerator();
-      final res = gen.generate([g1, g2)];
+      final res = gen.generate([g1, g2]);
       expect(res.length, 2);
       expect(res.map((p) => p.id), containsAll(['a', 'b']));
     });

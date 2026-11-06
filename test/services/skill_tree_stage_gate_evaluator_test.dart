@@ -30,7 +30,7 @@ void main() {
     final completed = {'n1'};
     expect(evaluator.isStageUnlocked(tree, 1, completed), isTrue);
     expect(evaluator.isStageUnlocked(tree, 2, completed), isFalse);
-    final stages = evaluator.getUnlockedStages[tree, completed];
+    final stages = evaluator.getUnlockedStages(tree, completed);
     expect(stages, [0, 1]);
   });
 
@@ -51,7 +51,7 @@ void main() {
       node('n3', 2),
     ]).tree;
     final completed = {'n1'};
-    final blocking = evaluator.getBlockingNodes[tree, 2, completed];
+    final blocking = evaluator.getBlockingNodes(tree, 2, completed);
     expect(blocking.map((n) => n.id), ['n2']);
   });
 }

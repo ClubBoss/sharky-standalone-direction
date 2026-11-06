@@ -1127,13 +1127,10 @@ List<MicroTaskStep> _volumeITerminalReviewPackV1() => <MicroTaskStep>[
   ),
   MicroTaskStep(
     prompt: 'Volume I complete',
-    hint:
-        'Review stays open. Tap Small Blind to keep this clue sharp.',
+    hint: 'Review stays open. Tap Small Blind to keep this clue sharp.',
     expectedSeatIds: <String>['sb'],
-    contextText:
-        'You can now slow down and read the table before choosing.',
-    tradeoffText:
-        'Review stays open. Later worlds stay locked for now.',
+    contextText: 'You can now slow down and read the table before choosing.',
+    tradeoffText: 'Review stays open. Later worlds stay locked for now.',
     consequenceText: 'Review close: +8 chips. Unlock assumption: -6 chips.',
     insightText: 'Keep the Volume I clues sharp in Review.',
   ),

@@ -146,7 +146,7 @@ void main() {
   });
 
   test('computeCategorySummary aggregates', () {
-    final summary = computeCategorySummary[stats, allTags, tagCategoryMap];
+    final summary = computeCategorySummary(stats, allTags, tagCategoryMap);
     final cat1 = summary['cat1']!;
     final cat2 = summary['cat2']!;
 

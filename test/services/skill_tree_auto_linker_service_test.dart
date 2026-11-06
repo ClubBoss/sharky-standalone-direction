@@ -48,7 +48,7 @@ void main() {
       ];
 
       final service = SkillTreeAutoLinkerService();
-      final res = service.link[nodes, packs, lessons];
+      final res = service.link(nodes, packs, lessons);
 
       expect(res['n1']!.packIds, ['p1']);
       expect(res['n1']!.lessonIds, ['l1']);

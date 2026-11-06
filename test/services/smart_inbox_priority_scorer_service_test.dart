@@ -32,7 +32,7 @@ void main() {
         action: 'decayBooster',
       ),
     ];
-    final result = await service.sort(input];
+    final result = await service.sort(input);
     expect(result.map((e) => e.blockId).toList(), ['3', '2', '1']);
   });
 
@@ -69,7 +69,7 @@ void main() {
         action: 'reviewTheory',
       ),
     ];
-    final result = await service.sort(input];
+    final result = await service.sort(input);
     expect(result.map((e) => e.blockId).toList(), ['3', '2', '1']);
   });
 }

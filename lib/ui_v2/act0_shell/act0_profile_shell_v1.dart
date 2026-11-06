@@ -5,6 +5,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_cross_session_profile_proof
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_evidence_consumer_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_transfer_measurement_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_proof_icon_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -53,6 +54,11 @@ class Act0ProfileShellV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Banked repairs are historical facts. Only the recent evidence consumer
+    // can authorize a current independent-confirmation headline.
+    final hasCurrentIndependentProof =
+        evidenceSignal?.confirmationState == act0RecentEvidenceVerifiedV1;
+    final hasSavedRepairEvidence = crossSessionProof?.hasProof == true;
     return ListView(
       key: const Key('act0_shell_profile_screen'),
       cacheExtent: 1200,
@@ -63,9 +69,17 @@ class Act0ProfileShellV1 extends StatelessWidget {
         Act0ShellTokensV1.bottomNavHeight + Act0ShellTokensV1.gapXl,
       ),
       children: [
-        _ProfileHeaderBandV1(profile: profile),
+        _ProfileHeaderBandV1(
+          profile: profile,
+          hasCurrentIndependentProof: hasCurrentIndependentProof,
+          hasSavedRepairEvidence: hasSavedRepairEvidence,
+        ),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
-        _ProfileHeroCardV1(profile: profile),
+        _ProfileHeroCardV1(
+          profile: profile,
+          hasCurrentIndependentProof: hasCurrentIndependentProof,
+          hasSavedRepairEvidence: hasSavedRepairEvidence,
+        ),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
         _ProfileNextMilestoneCardV1(profile: profile, onGoToHome: onGoToHome),
         const SizedBox(height: Act0ShellTokensV1.gapMd),
@@ -244,7 +258,15 @@ class _ProfileEvidenceSignalCardV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  _profileCopyV1(context, en: 'You are building this skill.'),
+                  _profileCopyV1(
+                    context,
+                    en: signal.confirmationState == act0RecentEvidenceVerifiedV1
+                        ? 'Recent independent responses verified.'
+                        : 'Independent confirmation is still needed.',
+                    ru: signal.confirmationState == act0RecentEvidenceVerifiedV1
+                        ? '\u041D\u0435\u0434\u0430\u0432\u043D\u0438\u0435 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u044B.'
+                        : '\u041F\u043E\u043A\u0430 \u043D\u0435\u0434\u043E\u0441\u0442\u0430\u0442\u043E\u0447\u043D\u043E \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0445 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0439.',
+                  ),
                   key: const Key('act0_shell_profile_evidence_signal_body'),
                   style: Act0AcademyReadingStyleV1.body.copyWith(
                     color: Act0AcademyReadingStyleV1.text,
@@ -316,9 +338,15 @@ class _ProfileStorySupportBandV1 extends StatelessWidget {
 }
 
 class _ProfileHeaderBandV1 extends StatelessWidget {
-  const _ProfileHeaderBandV1({required this.profile});
+  const _ProfileHeaderBandV1({
+    required this.profile,
+    required this.hasCurrentIndependentProof,
+    required this.hasSavedRepairEvidence,
+  });
 
   final Act0ProfileStateV1 profile;
+  final bool hasCurrentIndependentProof;
+  final bool hasSavedRepairEvidence;
 
   @override
   Widget build(BuildContext context) {
@@ -334,7 +362,12 @@ class _ProfileHeaderBandV1 extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            _profileHeaderSublineV1(context, profile),
+            _profileHeaderSublineV1(
+              context,
+              profile,
+              hasCurrentIndependentProof: hasCurrentIndependentProof,
+              hasSavedRepairEvidence: hasSavedRepairEvidence,
+            ),
             style: Act0AcademyReadingStyleV1.muted,
           ),
         ],
@@ -345,16 +378,28 @@ class _ProfileHeaderBandV1 extends StatelessWidget {
 
 String _profileHeaderSublineV1(
   BuildContext context,
-  Act0ProfileStateV1 profile,
-) {
-  final hasRouteProof = _profileHasRouteProofV1(profile);
+  Act0ProfileStateV1 profile, {
+  required bool hasCurrentIndependentProof,
+  required bool hasSavedRepairEvidence,
+}) {
+  if (hasSavedRepairEvidence && !hasCurrentIndependentProof) {
+    return _profileCopyV1(
+      context,
+      en: 'Repair history saved; current proof pending',
+    );
+  }
+  final hasRecordedActivity = _profileHasRecordedActivityV1(profile);
   return _profileCopyV1(
     context,
-    en: hasRouteProof
+    en: hasCurrentIndependentProof
         ? 'What Sharky can prove'
+        : hasRecordedActivity
+        ? 'Practice recorded; proof still pending'
         : 'Proof will appear as you learn',
-    ru: hasRouteProof
+    ru: hasCurrentIndependentProof
         ? 'Что Шарки может подтвердить'
+        : hasRecordedActivity
+        ? '\u041F\u0440\u0430\u043A\u0442\u0438\u043A\u0430 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u0430; \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435 \u0432\u043F\u0435\u0440\u0435\u0434\u0438'
         : 'Доказательства появятся по мере учёбы',
   );
 }
@@ -450,13 +495,19 @@ class _ProfileAccountSettingsRowV1 extends StatelessWidget {
 }
 
 class _ProfileHeroCardV1 extends StatelessWidget {
-  const _ProfileHeroCardV1({required this.profile});
+  const _ProfileHeroCardV1({
+    required this.profile,
+    required this.hasCurrentIndependentProof,
+    required this.hasSavedRepairEvidence,
+  });
 
   final Act0ProfileStateV1 profile;
+  final bool hasCurrentIndependentProof;
+  final bool hasSavedRepairEvidence;
 
   @override
   Widget build(BuildContext context) {
-    final hasRouteProof = _profileHasRouteProofV1(profile);
+    final hasRecordedActivity = _profileHasRecordedActivityV1(profile);
     final confidenceLine = _profileIdentityConfidenceLineV1(context, profile);
     return Container(
       key: const Key('act0_shell_profile_hero_card'),
@@ -549,13 +600,21 @@ class _ProfileHeroCardV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           Text(
-            _profileCopyV1(
-              context,
-              en: hasRouteProof ? 'Recent route proof' : 'Proof starts here',
-              ru: hasRouteProof
-                  ? 'Недавнее подтверждение маршрута'
-                  : 'Доказательство начинается здесь',
-            ),
+            hasSavedRepairEvidence && !hasCurrentIndependentProof
+                ? _profileCopyV1(context, en: 'Saved repair evidence')
+                : _profileCopyV1(
+                    context,
+                    en: hasCurrentIndependentProof
+                        ? 'Recent route proof'
+                        : hasRecordedActivity
+                        ? 'Recent practice; proof still pending'
+                        : 'Proof starts here',
+                    ru: hasCurrentIndependentProof
+                        ? 'Недавнее подтверждение маршрута'
+                        : hasRecordedActivity
+                        ? '\u041D\u0435\u0434\u0430\u0432\u043D\u044F\u044F \u043F\u0440\u0430\u043A\u0442\u0438\u043A\u0430; \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435 \u0432\u043F\u0435\u0440\u0435\u0434\u0438'
+                        : 'Доказательство начинается здесь',
+                  ),
             style: Act0AcademyReadingStyleV1.body.copyWith(
               color: Act0AcademyReadingStyleV1.text.withOpacity(0.92),
               fontWeight: FontWeight.w700,
@@ -581,19 +640,21 @@ String _profileIdentityConfidenceLineV1(
   BuildContext context,
   Act0ProfileStateV1 profile,
 ) {
+  // These legacy practice fields do not carry independent mastery, unseen
+  // transfer or elapsed-retention evidence. Describe only the observed read.
   final recentGains = _dedupedRecentSkillGainsV1(profile.recentSkillGains);
   if (recentGains.isNotEmpty) {
     return _profileCopyV1(
       context,
-      en: '${recentGains.first.label} is becoming more familiar.',
-      ru: '${recentGains.first.label} становится привычнее.',
+      en: 'Recent practice: ${recentGains.first.label}.',
+      ru: '\u041D\u0435\u0434\u0430\u0432\u043D\u044F\u044F \u043F\u0440\u0430\u043A\u0442\u0438\u043A\u0430: ${recentGains.first.label}.',
     );
   }
   if (profile.strongCategories.isNotEmpty) {
     return _profileCopyV1(
       context,
-      en: '${profile.strongCategories.first} is becoming a habit.',
-      ru: '${profile.strongCategories.first} становится привычкой.',
+      en: 'Correct read: ${profile.strongCategories.first}.',
+      ru: '\u041F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u044B\u0439 \u043E\u0442\u0432\u0435\u0442: ${profile.strongCategories.first}.',
     );
   }
   return _profileCopyV1(
@@ -603,7 +664,7 @@ String _profileIdentityConfidenceLineV1(
   );
 }
 
-bool _profileHasRouteProofV1(Act0ProfileStateV1 profile) {
+bool _profileHasRecordedActivityV1(Act0ProfileStateV1 profile) {
   final completedMatch = RegExp(
     r'^\s*(\d+)\s+of\s+\d+\s+tasks?\s+complete',
   ).firstMatch(profile.lessonsLine);
@@ -989,7 +1050,7 @@ class _ProfileProgressProofCardV1 extends StatelessWidget {
                 value: recentGains.isNotEmpty
                     ? _profileCopyV1(
                         context,
-                        en: '${recentGains.length} growing',
+                        en: '${recentGains.length} practiced',
                         ru: '${recentGains.length} растут',
                       )
                     : _profileCopyV1(
@@ -1012,7 +1073,15 @@ class _ProfileProgressProofCardV1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            _profileCopyV1(context, en: 'Progress proof', ru: 'Твой прогресс'),
+            _profileCopyV1(
+              context,
+              en: proof?.hasProof == true
+                  ? 'Repair evidence'
+                  : 'Practice record',
+              ru: proof?.hasProof == true
+                  ? '\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F'
+                  : '\u0418\u0441\u0442\u043E\u0440\u0438\u044F \u043F\u0440\u0430\u043A\u0442\u0438\u043A\u0438',
+            ),
             style: Act0AcademyReadingStyleV1.sectionTitle,
           ),
           const SizedBox(height: Act0ShellTokensV1.gapSm),
@@ -1344,7 +1413,7 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
           Text(
             _profileCopyV1(
               context,
-              en: 'Proof in practice',
+              en: 'Practice topics',
               ru: 'Навыки в практике',
             ),
             style: Act0AcademyReadingStyleV1.label.copyWith(
@@ -1356,7 +1425,7 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
             _profileCopyV1(
               context,
               en: 'What this route has put into practice.',
-              ru: 'Недавнее подтверждение из этого маршрута.',
+              ru: '\u0427\u0442\u043E \u0443\u0436\u0435 \u0431\u044B\u043B\u043E \u043E\u0442\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043E \u043D\u0430 \u043C\u0430\u0440\u0448\u0440\u0443\u0442\u0435.',
             ),
             style: Act0AcademyReadingStyleV1.muted,
           ),
@@ -1374,7 +1443,7 @@ class _ProfileSkillStatsStripV1 extends StatelessWidget {
                 ),
               ),
               child: Text(
-                '${_profileCopyV1(context, en: 'Recent proof', ru: 'Практика')}: ${recentGains.take(2).map((gain) => gain.label).join('  ·  ')}',
+                '${_profileCopyV1(context, en: 'Recent practice', ru: 'Практика')}: ${recentGains.take(2).map((gain) => gain.label).join('  ·  ')}',
                 style: Act0AcademyReadingStyleV1.label.copyWith(
                   color: Act0AcademyReadingStyleV1.gold,
                   letterSpacing: 0,
@@ -1647,6 +1716,22 @@ String _profileSurfaceAtomByIdV1(
   String fallback,
 ) => act0LocalizedSurfaceAtomV1(context, atomId, fallback: fallback);
 
+// Legacy milestones may be unlocked by task completion rather than an
+// independent correct read. Preserve the earned task fact, not the skill claim.
+String _profileAchievementSafeLabelV1(
+  BuildContext context,
+  Act0AchievementV1 achievement,
+) {
+  if (achievement.stableId == 'first_table_read') {
+    return _profileCopyV1(
+      context,
+      en: 'First task completed',
+      ru: '\u041F\u0435\u0440\u0432\u043E\u0435 \u0437\u0430\u0434\u0430\u043D\u0438\u0435 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043E',
+    );
+  }
+  return achievement.label;
+}
+
 class _ProfileMilestonesCardV1 extends StatelessWidget {
   const _ProfileMilestonesCardV1({required this.profile});
 
@@ -1677,7 +1762,7 @@ class _ProfileMilestonesCardV1 extends StatelessWidget {
               for (final achievement in featured)
                 _AchievementCardV1(
                   achievementId: achievement.stableId,
-                  label: achievement.label,
+                  label: _profileAchievementSafeLabelV1(context, achievement),
                   icon: _achievementIconForAchievement(achievement),
                   locked: achievement.locked,
                 ),
@@ -2737,20 +2822,6 @@ class _ProfileSkillCardV1 extends StatelessWidget {
                   ),
               ],
             ),
-            const SizedBox(height: 5),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radius2xs),
-              child: LinearProgressIndicator(
-                minHeight: 8,
-                value: stat.nextLevelProgress,
-                backgroundColor: Act0AcademyReadingStyleV1.surface,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  stat.locked
-                      ? Act0AcademyReadingStyleV1.textMuted.withOpacity(0.20)
-                      : tone,
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -2803,7 +2874,7 @@ class _ProfileSkillSummaryTileV1 extends StatelessWidget {
                           )
                         : _profileCopyV1(
                             context,
-                            en: 'Recent route proof',
+                            en: 'Recent practice',
                             ru: 'Практика',
                           ),
                     style: Act0AcademyReadingStyleV1.label.copyWith(
@@ -2842,7 +2913,7 @@ class _ProfileSkillSummaryTileV1 extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  _profileCopyV1(context, en: 'Route proof', ru: 'Практика'),
+                  _profileCopyV1(context, en: 'Practiced', ru: 'Практика'),
                   style: Act0AcademyReadingStyleV1.label.copyWith(
                     color: Act0AcademyReadingStyleV1.gold,
                   ),
@@ -2947,7 +3018,10 @@ void _showAchievementsSheet(BuildContext context, Act0ProfileStateV1 profile) {
                       for (final achievement in profile.achievements)
                         _AchievementCardV1(
                           achievementId: achievement.stableId,
-                          label: achievement.label,
+                          label: _profileAchievementSafeLabelV1(
+                            context,
+                            achievement,
+                          ),
                           icon: _achievementIconForAchievement(achievement),
                           locked: achievement.locked,
                         ),

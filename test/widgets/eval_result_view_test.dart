@@ -10,8 +10,8 @@ void main() {
   testWidgets('shows score from EvalResult', (WidgetTester tester) async {
     final spot = TrainingSpot(
       playerCards: [
-        [CardModel(rank: 'A', suit: '♠'), CardModel(rank: 'K', suit: '♠')),
-        [CardModel(rank: '2', suit: '♣'), CardModel(rank: '7', suit: '♦')),
+        [CardModel(rank: 'A', suit: '♠'), CardModel(rank: 'K', suit: '♠')],
+        [CardModel(rank: '2', suit: '♣'), CardModel(rank: '7', suit: '♦')],
       ],
       boardCards: const [],
       actions: const [],

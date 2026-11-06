@@ -339,10 +339,8 @@ void main() {
         expect(find.textContaining('100% accuracy'), findsNothing);
       } else if (mode == 'legacyUnknown' || mode == 'freshAfterOldHelp') {
         expect(find.text('Clean pass'), findsNothing);
-        expect(
-          find.textContaining('full-lesson proof unverified'),
-          findsOneWidget,
-        );
+        expect(find.textContaining('Assessment not verified'), findsWidgets);
+        expect(find.textContaining('assessed correct'), findsNothing);
         expect(find.textContaining('100% accuracy'), findsNothing);
       } else {
         expect(find.text('Clean pass'), findsNothing);

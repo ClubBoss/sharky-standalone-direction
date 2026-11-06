@@ -1,4 +1,4 @@
- // fix: hide shim
+// fix: hide shim
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';

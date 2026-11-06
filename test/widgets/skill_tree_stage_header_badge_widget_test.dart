@@ -11,7 +11,7 @@ void main() {
 
   testWidgets('shows lock icon when stage locked', (tester) async {
     final widget = SkillTreeStageHeaderBadgeWidget(
-      nodes: [node('a')),
+      nodes: [node('a')],
       unlocked: const {},
       completed: const {},
     );
@@ -21,7 +21,7 @@ void main() {
 
   testWidgets('shows hourglass when stage in progress', (tester) async {
     final widget = SkillTreeStageHeaderBadgeWidget(
-      nodes: [node('a')),
+      nodes: [node('a')],
       unlocked: const {'a'},
       completed: const {},
     );
@@ -31,7 +31,7 @@ void main() {
 
   testWidgets('shows check when stage perfect', (tester) async {
     final widget = SkillTreeStageHeaderBadgeWidget(
-      nodes: [node('a')),
+      nodes: [node('a')],
       unlocked: const {'a'},
       completed: const {'a'},
     );

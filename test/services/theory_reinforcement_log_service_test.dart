@@ -46,7 +46,8 @@ void main() {
         },
       ]),
     });
-    final list = await TheoryReinforcementLogService.instance.getRecent[within: const Duration(days: 2],
+    final list = await TheoryReinforcementLogService.instance.getRecent(
+      within: const Duration(days: 2),
     );
     expect(list.length, 1);
     expect(list.first.id, 'new');

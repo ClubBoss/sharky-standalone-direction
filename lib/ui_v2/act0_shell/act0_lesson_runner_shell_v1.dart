@@ -210,10 +210,7 @@ class Act0SkillReceiptV1 {
 
   String get title {
     return switch (outcome) {
-      Act0SkillReceiptOutcomeV1.learned =>
-        skillAtomId == 'action_read'
-            ? 'Table read improved'
-            : '$skillLabel improved',
+      Act0SkillReceiptOutcomeV1.learned => 'Correct answer recorded',
       Act0SkillReceiptOutcomeV1.repairStarted => 'Good spot to repair',
       Act0SkillReceiptOutcomeV1.needsRep => 'One more read will help',
     };
@@ -221,7 +218,7 @@ class Act0SkillReceiptV1 {
 
   String get detail => switch (outcome) {
     Act0SkillReceiptOutcomeV1.learned =>
-      'You noticed $sourceSignalLabel before choosing an action.',
+      'Your answer matched the check for $sourceSignalLabel.',
     Act0SkillReceiptOutcomeV1.repairStarted =>
       'The missed table clue was $sourceSignalLabel.',
     Act0SkillReceiptOutcomeV1.needsRep =>
@@ -325,26 +322,30 @@ class Act0BlockCompletionSummaryV1 {
 
   bool get leveledUp => endLevel > startLevel;
 
+  bool get hasVerifiedAssessment => independentProvenanceKnown && taskCount > 0;
+
   int get accuracyPercent =>
-      taskCount <= 0 ? 100 : ((correctCount * 100) / taskCount).round();
+      taskCount <= 0 ? 0 : ((correctCount * 100) / taskCount).round();
 
   bool get qualifiesForNextLesson =>
       curriculumCompleted ||
       !hasNextLesson ||
-      accuracyPercent >= unlockAccuracyPercent;
+      (hasVerifiedAssessment && accuracyPercent >= unlockAccuracyPercent);
 
   Act0MasteryStatusV1 get masteryStatus {
-    if (errorCount == 0 &&
-        taskCount > 0 &&
-        assistedCount == 0 &&
-        independentProvenanceKnown) {
-      return Act0MasteryStatusV1.cleanPass;
-    }
-    if (deepLeakCount > 0 ||
-        (taskCount > 0 && accuracyPercent < unlockAccuracyPercent)) {
+    if (deepLeakCount > 0) {
       return Act0MasteryStatusV1.needsReview;
     }
-    if (assistedCount > 0 || !independentProvenanceKnown) {
+    if (!hasVerifiedAssessment) {
+      return Act0MasteryStatusV1.learning;
+    }
+    if (errorCount == 0 && correctCount == taskCount && assistedCount == 0) {
+      return Act0MasteryStatusV1.cleanPass;
+    }
+    if (accuracyPercent < unlockAccuracyPercent) {
+      return Act0MasteryStatusV1.needsReview;
+    }
+    if (assistedCount > 0) {
       return Act0MasteryStatusV1.learning;
     }
     return Act0MasteryStatusV1.solid;
@@ -718,7 +719,10 @@ class Act0BlockCompletionSummaryV1 {
     if (!isWorldComplete && growthLabel.isNotEmpty) {
       return 'Skill moved';
     }
-    if (errorCount == 0 && taskCount > 0) {
+    if (errorCount == 0 &&
+        hasVerifiedAssessment &&
+        assistedCount == 0 &&
+        correctCount == taskCount) {
       return 'Clean read';
     }
     if (qualifiesForNextLesson) {
@@ -737,7 +741,10 @@ class Act0BlockCompletionSummaryV1 {
     if (!isWorldComplete && growthLabel.isNotEmpty) {
       return 'Practiced: $growthLabel. This read will help in the next spot.';
     }
-    if (errorCount == 0 && taskCount > 0) {
+    if (errorCount == 0 &&
+        hasVerifiedAssessment &&
+        assistedCount == 0 &&
+        correctCount == taskCount) {
       return 'Clean run. This read will help in the next spot.';
     }
     if (qualifiesForNextLesson) {
@@ -931,6 +938,7 @@ String? _act0TrailActor(String stripped) {
 /// Algorithm (per street):
 ///   \u2013 Each player's contribution is the **maximum** amount they put in
 ///     during that street (raise or call to X BB).
+///   \u2013 An explicit "calls X BB more" adds X to the prior street commitment.
 ///   \u2013 On street transition the per-street map is flushed into [runningPot].
 ({double potBb, String street}) act0CalcTrailPotV1(
   List<String> labels,
@@ -989,7 +997,12 @@ String? _act0TrailActor(String stripped) {
     final amount = act0ParseBbAmountV1(stripped);
     if (amount <= 0) continue;
     final existing = streetContribs[actor] ?? 0.0;
-    if (amount > existing) streetContribs[actor] = amount;
+    final isAdditionalCall = RegExp(
+      r'^\w+\s+(?:calls?|called)\s+\d+(?:\.\d+)?\s*BB\s+more$',
+      caseSensitive: false,
+    ).hasMatch(stripped.trim());
+    final contribution = isAdditionalCall ? existing + amount : amount;
+    if (contribution > existing) streetContribs[actor] = contribution;
   }
 
   final totalPot =
@@ -2236,7 +2249,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }
 
   void _handleChooseSeat(String seatId) {
-    if (!_heroDecisionReady || _decisionSubmittedForTaskV1) {
+    if (_isTheory ||
+        widget.selectedTaskFamily == Act0TaskFamilyV1.learn ||
+        !_heroDecisionReady ||
+        _decisionSubmittedForTaskV1) {
       return;
     }
     final option = widget.runner.options.cast<Act0RunnerOptionV1?>().firstWhere(
@@ -2886,8 +2902,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       return;
     }
     _decisionAssistanceKindV1 = Act0DecisionAssistanceV1.theoryRecall;
+    // Seat-choice drills use a modal rather than the ordinary inline peek.
+    // Apply the same pre-choice answer guard to both assistance routes.
+    final safeIdea = _preChoiceTheoryIdeaV1(
+      taskFamily: widget.selectedTaskFamily,
+      runner: widget.runner,
+      question: widget.runner.question,
+      fullIdeaStep: step,
+    );
     final bodyBlocks = act0BuildInstructionBlocksV1(
-      text: step.body,
+      text: safeIdea.body,
       compact: true,
     );
     await showModalBottomSheet<void>(
@@ -2896,7 +2920,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       isScrollControlled: false,
       builder: (context) => _TheoryRecallSheetV1(
         label: act0RuntimeTheoryRecallLabelV1(context),
-        title: step.title,
+        title: safeIdea.title,
         bodyBlocks: bodyBlocks,
       ),
     );
@@ -3832,7 +3856,12 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         highlightedCardIds: mergedHighlightIds,
         interactiveCalloutLabel: interactiveCallout,
         onBoardCardTap: _heroDecisionReady ? _onBoardTappedForShowdown : (_) {},
-        onChooseSeat: _heroDecisionReady ? _handleChooseSeat : null,
+        onChooseSeat:
+            _heroDecisionReady &&
+                !_isTheory &&
+                widget.selectedTaskFamily != Act0TaskFamilyV1.learn
+            ? _handleChooseSeat
+            : null,
         visualVariant: widget.tableVisualVariant,
         showFocusBadge: !_showBottomLearningRail,
         showRepairCallout: isTheory || (isDrill && hasSeatTargets),
@@ -9814,6 +9843,12 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
         ? (summary.assistedCount > 0
               ? '\u041f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u0430 \u043f\u043e\u043c\u043e\u0433\u043b\u0430 \u043f\u043e\u043d\u044f\u0442\u044c \u043e\u0448\u0438\u0431\u043a\u0443. \u041f\u0440\u043e\u0432\u0435\u0440\u044c \u044d\u0442\u043e\u0442 \u0441\u0438\u0433\u043d\u0430\u043b \u0441\u0430\u043c\u043e\u0441\u0442\u043e\u044f\u0442\u0435\u043b\u044c\u043d\u043e.'
               : '\u0417\u0430\u043f\u043e\u043c\u043d\u0438 \u044d\u0442\u0443 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u0443 \u0441\u0442\u043e\u043b\u0430 \u0438 \u043f\u0440\u043e\u0432\u0435\u0440\u044c \u0435\u0451 \u0432 \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0435\u0439 \u0440\u0430\u0437\u0434\u0430\u0447\u0435.')
+        // REP-06/07: a session with help or a miss must not end on an
+        // authored growth line; mirror the RU source-truth branches.
+        : summary.assistedCount > 0
+        ? 'Help showed the clue. Check it on your own next time.'
+        : summary.errorCount > 0
+        ? 'Keep this table clue and check it in the next hand.'
         : summary.sharkyLine.trim().isNotEmpty
         ? summary.sharkyLine.trim()
         : payoffHero != null
@@ -10391,7 +10426,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                             Text(
                               localeIsRu
                                   ? '\u0427\u0442\u043e \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u0430\u043b\u0438'
-                                  : 'What improved',
+                                  : 'What you practiced',
                               key: const Key(
                                 'act0_shell_block_summary_habit_reward_label',
                               ),
@@ -10510,8 +10545,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                     ? (summary.independentProvenanceKnown
                           ? '\u041e\u0446\u0435\u043d\u0435\u043d\u043e ${summary.taskCount} \u0437\u0430\u0434\u0430\u043d\u0438\u0439 · \u0432\u0435\u0440\u043d\u043e ${summary.correctCount} · \u043e\u0448\u0438\u0431\u043e\u043a ${summary.errorCount} · \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439 ${summary.assistedCount}'
                           : '\u0421\u0430\u043c\u043e\u0441\u0442\u043e\u044f\u0442\u0435\u043b\u044c\u043d\u044b\u0439 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442 \u043d\u0435 \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043d · \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439 ${summary.assistedCount}')
-                    : !summary.independentProvenanceKnown
-                    ? '${summary.correctCount}/${summary.taskCount} assessed correct \u00B7 full-lesson proof unverified \u00B7 ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}'
+                    : !summary.hasVerifiedAssessment
+                    ? 'Assessment not verified - independent result unknown'
                     : summary.assistedCount > 0
                     ? '${summary.correctCount}/${summary.taskCount} correct \u00B7 ${summary.assistedCount} with help \u00B7 ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}'
                     : '${summary.accuracyPercent}% accuracy (assessed) \u00B7 ${summary.correctCount}/${summary.taskCount} correct \u00B7 ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}',
@@ -11044,14 +11079,13 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
     // A saved/assisted/wrong run is not automatically an independent clean read.
     // The bar displays assessed correctness, not "all XP equals mastery".
     final cleanIndependentRead =
-        summary.independentProvenanceKnown &&
-        summary.taskCount > 0 &&
+        summary.hasVerifiedAssessment &&
         summary.errorCount == 0 &&
         summary.assistedCount == 0 &&
         summary.correctCount == summary.taskCount;
-    final assessedFraction = summary.taskCount <= 0
-        ? 0.0
-        : (summary.correctCount / summary.taskCount).clamp(0.0, 1.0);
+    final assessedFraction = summary.hasVerifiedAssessment
+        ? (summary.correctCount / summary.taskCount).clamp(0.0, 1.0)
+        : 0.0;
     return Container(
       decoration: BoxDecoration(
         color: Act0AcademyReadingStyleV1.surface2.withValues(alpha: 0.9),
@@ -11087,7 +11121,9 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
               const SizedBox(width: Act0ShellTokensV1.gapSm),
               Expanded(
                 child: Text(
-                  'Assessed accuracy',
+                  summary.hasVerifiedAssessment
+                      ? 'Assessed accuracy'
+                      : 'Assessment not verified',
                   key: const Key('act0_shell_block_summary_xp_total'),
                   maxLines: 1,
                   overflow: TextOverflow.fade,
@@ -11100,17 +11136,19 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-            child: LinearProgressIndicator(
-              key: const Key('act0_shell_block_summary_xp_progress'),
-              minHeight: 8,
-              value: assessedFraction,
-              backgroundColor: Act0AcademyReadingStyleV1.surface3,
-              color: tone,
+          if (summary.hasVerifiedAssessment) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+              child: LinearProgressIndicator(
+                key: const Key('act0_shell_block_summary_xp_progress'),
+                minHeight: 8,
+                value: assessedFraction,
+                backgroundColor: Act0AcademyReadingStyleV1.surface3,
+                color: tone,
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );
@@ -11656,7 +11694,7 @@ class _CompletionToastV1 extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'Read banked',
+                  'Answer checked',
                   key: const Key('act0_shell_completion_toast_reward_label'),
                   maxLines: 1,
                   overflow: TextOverflow.fade,
@@ -11671,7 +11709,7 @@ class _CompletionToastV1 extends StatelessWidget {
           ),
           SizedBox(height: onTableOverlay ? 2 : 3),
           Text(
-            'Table read improved',
+            'Keep practicing',
             key: const Key('act0_shell_completion_toast_total'),
             maxLines: 1,
             overflow: TextOverflow.fade,
@@ -16544,7 +16582,7 @@ _DecisionHintV1? _resolveDecisionHintV1({
   if (runner.phase != Act0LessonPhaseV1.drill || runner.options.isEmpty) {
     return null;
   }
-  final quickHint = _genericDecisionHintV1(
+  var quickHint = _genericDecisionHintV1(
     taskFamily: taskFamily,
     focusText: question.trim().isNotEmpty ? question : prompt,
     text:
@@ -16554,16 +16592,184 @@ _DecisionHintV1? _resolveDecisionHintV1({
   if (quickHint.isEmpty) {
     return null;
   }
+  // Even a short generic hint must not name the graded correct option.
+  final answers = runner.options.where((option) => option.isCorrect).toList();
+  if (answers.length != 1) {
+    quickHint = 'Use the visible facts to compare each option before deciding.';
+  } else {
+    final correct = answers.single;
+    final answerTerms = <String>[
+      correct.label,
+      correct.amountLabel,
+      if (correct.seatId != null) correct.seatId!,
+    ];
+    bool namesAnswer(String text) =>
+        answerTerms.any((term) => _preChoiceTextNamesOptionV1(text, term));
+    if (namesAnswer(quickHint)) {
+      quickHint = _answerNeutralReasoningGuideV1(
+        taskFamily: taskFamily,
+        question: question,
+      );
+      if (namesAnswer(quickHint)) {
+        quickHint =
+            'Use the visible facts to compare each option before deciding.';
+      }
+    }
+  }
+  final safeIdea = _preChoiceTheoryIdeaV1(
+    taskFamily: taskFamily,
+    runner: runner,
+    question: question.trim().isNotEmpty ? question : prompt,
+    fullIdeaStep: fullIdeaStep,
+  );
   return _DecisionHintV1(
     quickHint: quickHint,
-    fullIdeaTitle: fullIdeaStep?.title.trim() ?? '',
+    fullIdeaTitle: safeIdea.title,
     fullIdeaBlocks: fullIdeaStep == null
         ? const <String>[]
-        : act0BuildSupportingCopyBlocksV1(
-            text: fullIdeaStep.body,
-            compact: true,
-          ),
+        : act0BuildSupportingCopyBlocksV1(text: safeIdea.body, compact: true),
   );
+}
+
+// The authored theory step is still taught intact during Learn and after
+// grading. During an independent drill, however, that same text may name the
+// exact graded answer. Only substitute an answer-neutral *pre-choice* guide
+// when an authored correct option is present in the assistance copy.
+({String title, String body}) _preChoiceTheoryIdeaV1({
+  required Act0TaskFamilyV1? taskFamily,
+  required Act0RunnerStateV1 runner,
+  required String question,
+  required Act0TeachingStepV1? fullIdeaStep,
+}) {
+  if (fullIdeaStep == null) return (title: '', body: '');
+  if (runner.phase != Act0LessonPhaseV1.drill || runner.options.isEmpty) {
+    return (title: fullIdeaStep.title, body: fullIdeaStep.body);
+  }
+  final answers = runner.options.where((option) => option.isCorrect).toList();
+  // Without one verified source answer, don't pass potentially answer-bearing
+  // material through a graded assistance surface.
+  if (answers.length != 1) {
+    return (
+      title: 'Reasoning guide',
+      body: 'Use the visible facts to compare each option before deciding.',
+    );
+  }
+  final answer = answers.single;
+  final answerTerms = <String>[
+    answer.label,
+    answer.amountLabel,
+    if (answer.seatId != null) answer.seatId!,
+  ];
+  bool namesAnswer(String text) =>
+      answerTerms.any((term) => _preChoiceTextNamesOptionV1(text, term));
+  if (!namesAnswer(fullIdeaStep.title + ' ' + fullIdeaStep.body) ||
+      _isNeutralRangeTaxonomyV1(question: question, step: fullIdeaStep)) {
+    return (title: fullIdeaStep.title, body: fullIdeaStep.body);
+  }
+  var guide = _answerNeutralReasoningGuideV1(
+    taskFamily: taskFamily,
+    question: question,
+  );
+  if (namesAnswer(guide)) {
+    guide = 'Use the visible facts to compare each option before deciding.';
+  }
+  return (title: 'Reasoning guide', body: guide);
+}
+
+// A neutral taxonomy names *all* categories without grading the current hand.
+// Preserve that useful reference instead of treating every word match as a leak.
+bool _isNeutralRangeTaxonomyV1({
+  required String question,
+  required Act0TeachingStepV1 step,
+}) {
+  final reference = step.body.toLowerCase().trim();
+  return question.toLowerCase().contains('which range bucket') &&
+      reference.startsWith('after the flop, sort your hand into') &&
+      reference.contains('value (') &&
+      reference.contains('bluff candidate (') &&
+      reference.contains('missed (') &&
+      !reference.contains(' on this board') &&
+      !reference.contains(' on this flop');
+}
+
+bool _preChoiceTextNamesOptionV1(String text, String term) {
+  final answer = term.trim().replaceAll(RegExp(r'\s+'), ' ');
+  if (answer.isEmpty ||
+      (answer.length == 1 && !RegExp(r'^\d$').hasMatch(answer))) {
+    return false;
+  }
+  final escaped = RegExp.escape(answer).replaceAll(' ', r'\s+');
+  return RegExp(
+    '(^|[^a-z0-9])' + escaped + r'([^a-z0-9]|$)',
+    caseSensitive: false,
+  ).hasMatch(text);
+}
+
+String _answerNeutralReasoningGuideV1({
+  required Act0TaskFamilyV1? taskFamily,
+  required String question,
+}) {
+  final focus = question.toLowerCase();
+  if (focus.contains('everyone use') ||
+      (focus.contains('which cards') && focus.contains('everyone'))) {
+    return 'Separate cards held privately from cards available to all '
+        'players before choosing the matching description.';
+  }
+  if (focus.contains('suit') ||
+      RegExp(r'\b[akqjt2-9][shdc]\b').hasMatch(focus)) {
+    return 'Decode the rank and suit parts separately, then apply the '
+        'card notation from the lesson to this exact card.';
+  }
+  if (focus.contains('street') ||
+      (focus.contains('turn') && focus.contains('after'))) {
+    return 'Trace the order of betting streets from the named point, '
+        'then identify the next stage.';
+  }
+  if (focus.contains('blind') ||
+      focus.contains('seat') ||
+      focus.contains('button') ||
+      focus.contains('position') ||
+      focus.contains('utg') ||
+      focus.startsWith('tap ')) {
+    return 'Locate the relevant seat marker and compare its position '
+        'with the forced wagers and button before choosing.';
+  }
+  if ((focus.contains('hand') &&
+          (focus.contains('stronger') ||
+              focus.contains('rank') ||
+              focus.contains('hero have') ||
+              focus.contains('higher'))) ||
+      focus.contains('showdown')) {
+    return 'Build the best hand pattern from the private and shared cards. '
+        'Compare patterns using the hand hierarchy, not a single high card.';
+  }
+  if (taskFamily == Act0TaskFamilyV1.counting ||
+      focus.contains('how many') ||
+      focus.contains('combos') ||
+      focus.contains('effective stack')) {
+    return 'Identify exactly which items are being counted, then '
+        'work through the relevant combinations or quantities.';
+  }
+  if (focus.contains('price') ||
+      focus.contains('action') ||
+      focus.contains('play for free') ||
+      focus.contains('no bet') ||
+      taskFamily == Act0TaskFamilyV1.sizing) {
+    return 'Read the current amount required to continue and the '
+        'available actions; relate the cost to the situation.';
+  }
+  if (focus.contains('bucket') || focus.contains('range')) {
+    return 'Start with the hand or range category, then use the '
+        'visible position and board clues before committing to a category.';
+  }
+  if (focus.contains('board') ||
+      focus.contains('flop') ||
+      focus.contains('draw')) {
+    return 'Re-read the shared cards and compare the changed hand '
+        'signals before evaluating the options.';
+  }
+  return 'Find the relevant table clue, compare it with each option, '
+      'and make the decision yourself.';
 }
 
 String _genericDecisionHintV1({
@@ -16585,6 +16791,10 @@ String _genericDecisionHintV1({
           focus.contains('how many') ||
           focus.contains('count'))) {
     return 'Track the community cards street by street, not chips in the pot.';
+  }
+  if (taskFamily != Act0TaskFamilyV1.sizing &&
+      RegExp(r'\b(?:which|what)\s+action\b').hasMatch(focus)) {
+    return 'Name the action before choosing what it means.';
   }
   if (focus.contains('position') ||
       focus.contains('seat') ||

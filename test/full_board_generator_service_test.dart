@@ -7,7 +7,7 @@ import 'package:poker_analyzer/services/full_board_generator_service.dart';
 void main() {
   test('generates full board without excluded cards', () {
     final svc = FullBoardGeneratorService(random: Random(1));
-    final excluded = [CardModel(rank: 'A', suit: '♠'));
+    final excluded = [CardModel(rank: 'A', suit: '♠')];
     final board = svc.generateBoard(
       FullBoardRequest(stages: 5, excludedCards: excluded),
     );

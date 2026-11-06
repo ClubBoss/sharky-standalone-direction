@@ -154,17 +154,133 @@ void main() {
   });
 
   group('bounded existing Profile consumer', () {
-    testWidgets('no proof preserves the existing Profile fallback', (
+    for (final proof in <Act0CrossSessionProfileProofV1?>[
+      null,
+      const Act0CrossSessionProfileProofV1(),
+    ]) {
+      testWidgets(
+        '${proof == null ? 'no' : 'empty'} proof preserves the existing Profile fallback',
+        (tester) async {
+          _useReferencePhone(tester);
+          await _pumpProfile(tester, proof: proof);
+
+          final progress = find.byKey(
+            const Key('act0_shell_profile_progress_proof'),
+          );
+          expect(
+            find.descendant(of: progress, matching: find.text('Lessons')),
+            findsOneWidget,
+          );
+          expect(
+            find.descendant(
+              of: progress,
+              matching: find.text('3 lessons complete'),
+            ),
+            findsOneWidget,
+          );
+          expect(
+            find.descendant(of: progress, matching: find.text('Skills')),
+            findsOneWidget,
+          );
+          expect(
+            find.descendant(of: progress, matching: find.text('2 practiced')),
+            findsOneWidget,
+          );
+          _expectNoEarnedProof();
+
+          // Wave 2 removed the duplicate Rhythm proof tile (69df18b9).
+          // The source-backed week is still available through its actual CTA.
+          expect(
+            find.descendant(of: progress, matching: find.text('Rhythm')),
+            findsNothing,
+          );
+          final weekButton = find.byKey(
+            const Key('act0_shell_profile_rhythm_week_button'),
+          );
+          await tester.scrollUntilVisible(
+            weekButton,
+            160,
+            scrollable: find.descendant(
+              of: find.byKey(const Key('act0_shell_profile_screen')),
+              matching: find.byType(Scrollable),
+            ),
+          );
+          await tester.tap(weekButton);
+          await tester.pumpAndSettle();
+
+          expect(find.text('Weekly rhythm'), findsOneWidget);
+          final calendar = find.byKey(
+            const Key('act0_shell_profile_streak_calendar'),
+          );
+          expect(calendar, findsOneWidget);
+          for (var day = 0; day < 7; day++) {
+            expect(
+              find.descendant(
+                of: calendar,
+                matching: find.byKey(Key('act0_shell_profile_streak_day_$day')),
+              ),
+              findsOneWidget,
+            );
+          }
+          for (final label in <String>[
+            'Mon',
+            'Tue',
+            'Wed',
+            'Thu',
+            'Fri',
+            'Sat',
+            'Sun',
+          ]) {
+            expect(
+              find.descendant(of: calendar, matching: find.text(label)),
+              findsOneWidget,
+            );
+          }
+          _expectNoEarnedProof();
+
+          // This is a modal sheet, so dismiss through its scrim, not a page
+          // navigation Back button that the product does not expose here.
+          await tester.tapAt(const Offset(12, 12));
+          await tester.pumpAndSettle();
+          expect(calendar, findsNothing);
+          expect(progress, findsOneWidget);
+          _expectNoEarnedProof();
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
+
+    testWidgets('streak and XP cannot invent a missing week or repair proof', (
       tester,
     ) async {
-      await _pumpProfile(tester);
+      _useReferencePhone(tester);
+      await _pumpProfile(
+        tester,
+        proof: const Act0CrossSessionProfileProofV1(),
+        profile: const Act0ProfileStateV1(
+          playerName: 'New player',
+          level: 'Level 99',
+          xpLine: '99999 XP',
+          lessonsLine: '0 of 24 tasks complete',
+          accuracyLine: '',
+          consistencyActiveDays: 30,
+          streakDays: 30,
+          streakLine: '30 day streak',
+          achievements: <Act0AchievementV1>[],
+        ),
+      );
 
-      expect(find.text('Lessons'), findsOneWidget);
-      expect(find.text('Rhythm'), findsWidgets);
+      expect(find.text('0 tasks complete'), findsOneWidget);
       expect(
-        find.byKey(const Key('act0_shell_profile_recent_proof')),
+        find.byKey(const Key('act0_shell_profile_rhythm_week_button')),
         findsNothing,
       );
+      expect(
+        find.byKey(const Key('act0_shell_profile_streak_calendar')),
+        findsNothing,
+      );
+      _expectNoEarnedProof();
+      expect(tester.takeException(), isNull);
     });
 
     testWidgets(
@@ -342,16 +458,39 @@ void main() {
   });
 }
 
+void _useReferencePhone(WidgetTester tester) {
+  tester.view.physicalSize = const Size(393, 852);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
+}
+
+void _expectNoEarnedProof() {
+  expect(
+    find.byKey(const Key('act0_shell_profile_recent_proof')),
+    findsNothing,
+  );
+  expect(find.byType(Act0ProofIconV1), findsNothing);
+  final progress = find.byKey(const Key('act0_shell_profile_progress_proof'));
+  for (final label in <String>['Fixes', 'Reinforced', 'Concepts']) {
+    expect(
+      find.descendant(of: progress, matching: find.text(label)),
+      findsNothing,
+    );
+  }
+}
+
 Future<void> _pumpProfile(
   WidgetTester tester, {
   Act0CrossSessionProfileProofV1? proof,
+  Act0ProfileStateV1? profile,
   VoidCallback? onGoToHome,
 }) async {
   await tester.pumpWidget(
     MaterialApp(
       home: Scaffold(
         body: Act0ProfileShellV1(
-          profile: Act0ShellStateV1.sample.profile,
+          profile: profile ?? Act0ShellStateV1.sample.profile,
           crossSessionProof: proof,
           onRetakePlacement: () {},
           onGoToHome: onGoToHome,

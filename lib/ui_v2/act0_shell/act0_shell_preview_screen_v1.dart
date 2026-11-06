@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'act0_academy_runtime_adapter_v1.dart';
+import 'act0_observability_projection_v1.dart';
 import 'academy_leaves/act0_academy_home_leaf_v1.dart';
 import 'academy_leaves/act0_academy_leaf_style_v1.dart';
 
@@ -3884,12 +3885,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _resolvedMistakeTaskIds.clear();
     for (final intent in _openRepairIntentBySourceTaskId.values) {
       final retention = _retentionMemoryByTaskId[intent.sourceTaskId];
-      if (retention == null) {
-        continue;
-      }
       // A source repaired by a correct retry stays resolved, but its different
       // mapped same-signal repair is still owed and must remain actionable.
       final sourceRepairedButMappedOwed =
+          retention != null &&
           retention.status != _Act0RetentionMemoryStatusV1.openRepair;
       if (sourceRepairedButMappedOwed &&
           (act0IsExactRepairMappingTypeV1(intent.mappingType) ||
@@ -3918,13 +3917,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       if (task == null) {
         continue;
       }
-      final selectedOption = task.runner.options
+      // Placement owns genuine repair debt without retention. Restore its
+      // diagnostic answer context only from the exact persisted occurrence;
+      // the ordinary task can have different option IDs and answer meanings.
+      final placementRunner = _placementRepairRunnerForRestoreV1(intent, task);
+      final runner =
+          placementRunner ?? (retention == null ? null : task.runner);
+      if (runner == null) {
+        continue;
+      }
+      final selectedOption = runner.options
           .cast<Act0RunnerOptionV1?>()
           .firstWhere(
             (candidate) => candidate?.id == intent.choiceId,
             orElse: () => null,
           );
-      final correctOption = task.runner.options
+      final correctOption = runner.options
           .cast<Act0RunnerOptionV1?>()
           .firstWhere(
             (candidate) => candidate?.isCorrect == true,
@@ -3933,7 +3941,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       if (selectedOption == null || correctOption == null) {
         continue;
       }
-      final contextLabels = _repairContextLabels(task.runner, selectedOption);
+      final contextLabels = _repairContextLabels(runner, selectedOption);
       _mistakeRecords[intent.sourceTaskId] = _Act0MistakeRecordV1(
         taskId: intent.sourceTaskId,
         lessonId: lesson.lessonId,
@@ -3954,12 +3962,101 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ),
         contextLabels: contextLabels,
         repairActionLabel: _repairActionLabel(task),
-        attempts: retention.attempts.clamp(1, 99),
+        // The live Placement projection also starts this one occurrence at 1.
+        attempts: retention?.attempts.clamp(1, 99) ?? 1,
       );
       if (sourceRepairedButMappedOwed) {
         _resolvedMistakeTaskIds.add(intent.sourceTaskId);
       }
     }
+  }
+
+  Act0RunnerStateV1? _placementRepairRunnerForRestoreV1(
+    Act0RepairIntentV1 intent,
+    Act0LessonTaskV1 task,
+  ) {
+    final occurrenceId = intent.repairOccurrenceId;
+    if (occurrenceId.isEmpty) {
+      return null;
+    }
+    final history = _reviewMistakeHistoryV1.records
+        .where(
+          (record) =>
+              record.sourceDecisionId == occurrenceId &&
+              record.worldId == intent.sourceWorldId &&
+              record.lessonId == intent.sourceLessonId &&
+              record.decisionTaskId == intent.sourceTaskId &&
+              record.sourceTaskId == intent.sourceTaskId &&
+              record.selectedId == intent.choiceId &&
+              record.runKind == act0PlacementAssessmentRunKindV1 &&
+              record.attemptRecordIds.contains(occurrenceId),
+        )
+        .toList(growable: false);
+    final evidence = _learningEvidenceHistoryV1.records
+        .where(
+          (record) =>
+              record.recordId == occurrenceId &&
+              record.worldId == intent.sourceWorldId &&
+              record.lessonId == intent.sourceLessonId &&
+              record.taskId == intent.sourceTaskId &&
+              record.sourceTaskId == intent.sourceTaskId &&
+              record.choiceId == intent.choiceId &&
+              record.isPlacementAssessment &&
+              !record.isCorrect,
+        )
+        .toList(growable: false);
+    if (history.length != 1 || evidence.length != 1) {
+      return null;
+    }
+    final miss = history.single;
+    final decision = evidence.single;
+    if (decision.runId.isEmpty ||
+        (decision.runOrdinal ?? 0) <= 0 ||
+        decision.sessionId.isEmpty ||
+        miss.runId != decision.runId ||
+        miss.runOrdinal != decision.runOrdinal ||
+        miss.expectedId != decision.expectedChoiceId ||
+        miss.resultKind != decision.resultKind ||
+        decision.authoredSourceFingerprint.isEmpty ||
+        decision.authoredSourceFingerprint !=
+            act0CurrentAuthoredSourceFingerprintForIdentityV1(
+              worldId: intent.sourceWorldId,
+              lessonId: intent.sourceLessonId,
+              taskId: intent.sourceTaskId,
+            )) {
+      return null;
+    }
+    Act0RunnerStateV1? matched;
+    for (var index = 0; index < _placementDiagnosticSpotsV1.length; index++) {
+      final spot = _placementDiagnosticSpotsV1[index];
+      if (spot.worldId != intent.sourceWorldId ||
+          spot.lessonId != intent.sourceLessonId ||
+          spot.taskId != intent.sourceTaskId) {
+        continue;
+      }
+      final candidate = placementQuickCheckRunnerV1(
+        task.runner,
+        signalId: spot.signalId,
+        checkIndex: index + 1,
+        checkCount: _placementDiagnosticSpotsV1.length,
+        isRu: _isRuLocaleV1,
+      );
+      final selected = candidate.options.where(
+        (option) => option.id == decision.choiceId && !option.isCorrect,
+      );
+      final expected = candidate.options.where((option) => option.isCorrect);
+      if (selected.length == 1 &&
+          expected.length == 1 &&
+          expected.single.id == decision.expectedChoiceId) {
+        // Shared choices such as not_sure_yet cannot identify a diagnostic.
+        // Both source-owned choice and expected answer must match uniquely.
+        if (matched != null) {
+          return null;
+        }
+        matched = candidate;
+      }
+    }
+    return matched;
   }
 
   List<Act0RepairIntentV1> _activeRepairIntentsV1() {
@@ -4219,6 +4316,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _durableRetentionHistoryV1 = _durableRetentionHistoryV1
           .applyEvidence(latestRecord)
           .refreshedAt(recordedAtUtc);
+      if (widget.telemetrySink != null) {
+        try {
+          for (final event in act0EvidenceTelemetryEventsV1(
+            record: latestRecord,
+            history: _learningEvidenceHistoryV1,
+            nowUtc: recordedAtUtc,
+            repairOccurrenceId: repairOccurrenceId,
+            actionState: _actionPersonalizationStateV1,
+            actionStage: _activeActionSequenceStageV1,
+          )) {
+            _recordTelemetryEventV1(event.name, event.fields);
+          }
+        } catch (_) {
+          // Diagnostics never interrupt accepted source evidence or progress.
+        }
+      }
     }
     _pendingReviewKindV1 = null;
   }
@@ -7480,7 +7593,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ru: 'Откроется после одного дрилла на маршруте.',
               )
             : _dailyCompletedRepCount >= 3
-            ? 'Table read improved. Come back tomorrow for the next useful hand, or practice extra reps.'
+            ? 'Daily spots complete. $_earnedXp total XP earned. Completion alone does not verify independent improvement.'
             : dailyDeckEntry.isSpaced
             ? 'Finish three spaced spots across completed worlds.'
             : 'Finish three short spots for today.',
@@ -8099,6 +8212,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               (record) =>
                   record.isCorrect &&
                   !record.isAssistedCorrect &&
+                  !act0RecordIsAuthoredTeachingV1(record) &&
                   !record.isPlacementAssessment,
             )
             .toList()
@@ -8200,7 +8314,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       }
       _recordTelemetryEventV1(
         'personalized_next_step_selected',
-        <String, Object?>{'surface': surface, ...nextStep.toTelemetryPayload()},
+        <String, Object?>{
+          // OBS-03: the privacy sink rejects unversioned events, which made
+          // every real Home next-step route an incomplete incident trace.
+          'schemaVersion': 1,
+          'surface': surface,
+          ...nextStep.toTelemetryPayload(),
+        },
       );
     });
   }
@@ -8270,7 +8390,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     String surface,
   ) => _recordTelemetryEventV1(
     'personalized_next_step_opened',
-    <String, Object?>{'surface': surface, ...nextStep.toTelemetryPayload()},
+    <String, Object?>{
+      'schemaVersion': 1,
+      'surface': surface,
+      ...nextStep.toTelemetryPayload(),
+    },
   );
 
   String _homeRepairLabel(
@@ -11753,6 +11877,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           repairOutcomeProjection: _repairOutcomeProjectionV1,
           existingReceiptHistory: _reviewResolutionReceiptHistoryV1,
         );
+    if (widget.telemetrySink != null) {
+      try {
+        final outcome = _repairOutcomeProjectionV1.outcomes.singleWhere(
+          (outcome) => outcome.repairAttemptId == repairAttemptId,
+        );
+        final event = act0RepairOutcomeTelemetryEventV1(
+          outcome: outcome,
+          history: _learningEvidenceHistoryV1,
+        );
+        _recordTelemetryEventV1(event.name, event.fields);
+      } catch (_) {
+        // Outcome/receipt ownership remains independent of diagnostics.
+      }
+    }
     if (_repairOutcomeProjectionV1.outcomes.isNotEmpty) {
       _conceptFamilyStateHistoryV1 = _conceptFamilyStateHistoryV1
           .appendRepairOutcome(
@@ -12663,9 +12801,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           title: repairSourceTaskId == selectedTask.taskId
               ? 'Repair this spot'
               : 'Try a similar spot',
-          body: repairSourceTaskId == selectedTask.taskId
-              ? 'You chose ${record.selectedLabel}. Better: ${record.betterLabel}.'
-              : 'Same idea, new frame. You chose ${record.selectedLabel}. Better: ${record.betterLabel}.',
+          body: act0RepairPracticeIntroBodyV1(
+            selectedLabel: record.selectedLabel,
+            sameTask: repairSourceTaskId == selectedTask.taskId,
+          ),
           table: focusTable,
           focusSeatIds: option?.repairFocusSeatIds ?? const <String>[],
           focusCardIds: option?.repairFocusCardIds ?? const <String>[],
@@ -12701,8 +12840,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       highlightedCardIds: option.repairFocusCardIds.isEmpty
           ? table.highlightedCardIds
           : option.repairFocusCardIds,
-      focusCalloutLabel:
-          'Repair: ${record.selectedLabel} misses this. Better: ${record.betterLabel}.',
+      focusCalloutLabel: act0RepairFocusCalloutV1(
+        selectedLabel: record.selectedLabel,
+      ),
     );
   }
 
@@ -15183,6 +15323,19 @@ class _Act0SessionTelemetrySinkV1 implements Act0TelemetrySinkV1 {
 
   @override
   void record(Act0TelemetryEventV1 event) {
+    if (event.fields.containsKey('review_kind')) {
+      final fields = Map<String, Object?>.from(event.fields)
+        ..remove('review_kind');
+      event = Act0TelemetryEventV1(
+        name: event.name,
+        fields: {
+          ...fields,
+          'schemaVersion': 2,
+          // Route intent is not the accepted completed-evidence classification.
+          'route_review_kind': event.fields['review_kind'],
+        },
+      );
+    }
     final id = sessionId().trim();
     if (id.isEmpty ||
         event.fields.containsKey('sessionId') ||
@@ -16444,3 +16597,18 @@ const _placementDiagnosticSpotsV1 = <_Act0PlacementDiagnosticSpotV1>[
 // fromBeatV1 later: map BeatV1.caption/hint/options/feedback/table adapter
 // into Act0RunnerStateV1, then replace Act0ShellStateV1.sample at the preview
 // boundary without changing production Today, Map, Runner, or Result routes.
+
+/// REP-02/REP-03: copy shown before and during an attempt that is recorded as
+/// unassisted. It may name the learner's own earlier choice and point at the
+/// table clue, but never the better action, or the recheck stops being the
+/// learner's own choice. (Native finding on 3c83f85d: "Better: Check" was
+/// shown and the following answer still closed the repair as independent.)
+String act0RepairPracticeIntroBodyV1({
+  required String selectedLabel,
+  required bool sameTask,
+}) => sameTask
+    ? 'You chose $selectedLabel. Find the table clue first, then choose again.'
+    : 'Same idea, new frame. You chose $selectedLabel. Find the table clue first, then choose.';
+
+String act0RepairFocusCalloutV1({required String selectedLabel}) =>
+    'Repair: $selectedLabel misses this clue.';

@@ -148,7 +148,40 @@ void main() {
         played++;
         final replay = act0StreetReplayFromTableV1(table);
         if (replay?.isConsumerSafe == true) historyConsumers.add(task.taskId);
-        if (w4NumericHistoryIds.contains(task.taskId)) {
+        if (task.taskId == 'w4_protection_check') {
+          // The hand is a closed observational snapshot, not a current turn.
+          expect(table.activeSeatId, anyOf(isNull, isEmpty));
+          expect(
+            table.seats.singleWhere((s) => s.seatId == 'bb').hasActed,
+            isTrue,
+          );
+          expect(
+            table.seats.singleWhere((s) => s.seatId == 'btn').hasActed,
+            isTrue,
+          );
+          expect(table.potLabel, 'Pot 6 BB');
+          expect(table.actionTrail.map((a) => a.label), [
+            'SB blind 0.5 BB',
+            'BB blind 1 BB',
+            'UTG folds',
+            'HJ folds',
+            'CO folds',
+            'BTN raises 2.75 BB',
+            'SB folds',
+            'BB calls 2.75 BB',
+            'Flop: BB checks',
+            'BTN checks',
+          ]);
+          expect(replay?.currentStreet, Act0StreetReplayStreetV1.flop);
+          expect(replay?.currentDecisionActor, isEmpty);
+          expect(
+            replay?.completeness,
+            Act0StreetReplayCompletenessV1.insufficient,
+          );
+          expect(replay?.steps, isEmpty);
+          expect(replay?.isConsumerSafe, isFalse);
+          expect(act0TableChoreographyPlanForTableV1(table), isNull);
+        } else if (w4NumericHistoryIds.contains(task.taskId)) {
           expect(replay?.isConsumerSafe, isTrue, reason: task.taskId);
           expect(
             replay?.currentStreet,
@@ -157,18 +190,7 @@ void main() {
           );
           expect(
             replay?.steps.map((step) => step.actorLabel).toList(),
-            <String>[
-              'SB',
-              'BB',
-              'UTG',
-              'HJ',
-              'CO',
-              'BTN',
-              'SB',
-              'BB',
-              'BB',
-              if (task.taskId == 'w4_protection_check') 'BTN',
-            ],
+            <String>['SB', 'BB', 'UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB', 'BB'],
             reason: task.taskId,
           );
         }
@@ -198,11 +220,16 @@ void main() {
         }
       }
     }
+    expect(w4NumericHistoryIds, hasLength(24));
+    expect(
+      w4NumericHistoryIds.where((id) => id != 'w4_protection_check'),
+      hasLength(23),
+    );
     expect(played, 317); // Authored hand contexts, NOT 317 certified histories.
     expect(
       historyConsumers,
       <String>{
-        ...w4NumericHistoryIds,
+        ...w4NumericHistoryIds.where((id) => id != 'w4_protection_check'),
         ...w11ExplicitStreetHistoryIds,
         // Existing approved first-hand and no-ante bubble source histories.
         'your_first_hand_flop',

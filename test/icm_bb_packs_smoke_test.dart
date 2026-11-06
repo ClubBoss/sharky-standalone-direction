@@ -17,7 +17,7 @@ void main() {
 
   test('ICM BB pack has no duplicate jam keys', () {
     final spots = loadIcmL4BbV1();
-    final keys = spots.map(jamDedupKey].toList();
+    final keys = spots.map(jamDedupKey).toList();
     expect(keys.toSet().length, keys.length);
   });
 }

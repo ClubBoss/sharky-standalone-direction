@@ -30,7 +30,7 @@ void main() {
   });
 
   test('provides theory tags for overfold', () {
-    final tags = MistakeTagClassifier().classifyTheory[attempt(]);
+    final tags = MistakeTagClassifier().classifyTheory[attempt()];
     expect(tags, contains('pushRange'));
     expect(tags, contains('overfold'));
   });

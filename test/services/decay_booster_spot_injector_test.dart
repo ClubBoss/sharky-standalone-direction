@@ -39,14 +39,14 @@ class _FakeLessonLibrary implements MiniLessonLibraryService {
       lessons.firstWhereOrNull((l) => l.id == id);
 
   @override
-  List<TheoryMiniLessonNode> findByTags[List<String> tags] => [
+  List<TheoryMiniLessonNode> findByTags(List<String> tags) => [
     for (final l in lessons)
       if (l.tags.any(tags.contains)) l,
   ];
 
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] =>
-      findByTags[tags.toList[]];
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) =>
+      findByTags(tags.toList());
 }
 
 class _FakePackLibrary implements TrainingPackLibraryV2 {
@@ -124,7 +124,7 @@ void main() {
       decay: _FakeDecay({'push': 60}),
       lessons: _FakeLessonLibrary([]),
       library: _FakePackLibrary([pack]),
-      historyLoader: ({int limit = 20}) async => [_hist('p1')),
+      historyLoader: ({int limit = 20}) async => [_hist('p1')],
     );
 
     await injector.inject();

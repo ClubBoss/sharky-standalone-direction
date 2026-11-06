@@ -12,7 +12,7 @@ void main() {
       nextIds: [],
     );
     final assembler = InjectionBlockAssembler();
-    final block = assembler.build(lesson, 's1'];
+    final block = assembler.build(lesson, 's1');
     expect(block.header, 'Краткий разбор: Title');
     expect(block.content, 'Paragraph one.');
     expect(block.ctaLabel, 'Читать подробнее');

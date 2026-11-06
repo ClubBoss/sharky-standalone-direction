@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models; // fix: type adjust use v2 hand data
+import 'package:poker_analyzer/models/v2/hand_data.dart'
+    as v2models; // fix: type adjust use v2 hand data
 import 'package:poker_analyzer/models/skill_tag_coverage_report.dart';
 import 'package:poker_analyzer/models/theory_mini_lesson_node.dart';
 import 'package:poker_analyzer/models/training_pack_model.dart';
@@ -38,7 +39,7 @@ class _FakeLibrary implements MiniLessonLibraryService {
   Future<bool> isLessonCompleted(String lessonId) async => false; // fix: type adjust stub completion
 
   @override
-  List<String> linkedPacksFor[String lessonId] => const []; // fix: type adjust default links
+  List<String> linkedPacksFor(String lessonId) => const []; // fix: type adjust default links
 
   @override
   Future<void> loadAll() async {}
@@ -47,14 +48,14 @@ class _FakeLibrary implements MiniLessonLibraryService {
   Future<void> reload() async {}
 
   @override
-  List<TheoryMiniLessonNode> findByTags[List<String> tags] => [
+  List<TheoryMiniLessonNode> findByTags(List<String> tags) => [
     for (final t in tags)
       if (byTag[t] != null) byTag[t]!,
   ];
 
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] =>
-      findByTags[tags.toList[]];
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) =>
+      findByTags(tags.toList());
 }
 
 class _FakeNavigator extends TheoryMiniLessonNavigator {
@@ -82,10 +83,15 @@ void main() {
         library: library,
         navigator: navigator,
       );
-      final spot = TrainingPackSpot(id: 's1', hand: v2models.HandData(), tags: ['cbet']);
+      final spot = TrainingPackSpot(
+        id: 's1',
+        hand: v2models.HandData(),
+        tags: ['cbet'],
+      );
       final pack = TrainingPackModel(id: 'p1', title: 'Pack', spots: [spot]);
 
-      service.injectLinks[SkillTagCoverageReport(tagCounts: {}, underrepresentedTags: ['cbet']],
+      service.injectLinks(
+        SkillTagCoverageReport(tagCounts: {}, underrepresentedTags: ['cbet']),
         [pack],
       );
 
@@ -108,11 +114,15 @@ void main() {
         library: library,
         navigator: navigator,
       );
-      final spot = TrainingPackSpot(id: 's1', hand: v2models.HandData(), tags: ['cbet'])
-        ..theoryLink = InlineTheoryLink(title: 'Existing', onTap: () {});
+      final spot = TrainingPackSpot(
+        id: 's1',
+        hand: v2models.HandData(),
+        tags: ['cbet'],
+      )..theoryLink = InlineTheoryLink(title: 'Existing', onTap: () {});
       final pack = TrainingPackModel(id: 'p1', title: 'Pack', spots: [spot]);
 
-      service.injectLinks[SkillTagCoverageReport(tagCounts: {}, underrepresentedTags: ['cbet']],
+      service.injectLinks(
+        SkillTagCoverageReport(tagCounts: {}, underrepresentedTags: ['cbet']),
         [pack],
       );
 
@@ -127,10 +137,15 @@ void main() {
         library: library,
         navigator: navigator,
       );
-      final spot = TrainingPackSpot(id: 's1', hand: v2models.HandData(), tags: ['cbet']);
+      final spot = TrainingPackSpot(
+        id: 's1',
+        hand: v2models.HandData(),
+        tags: ['cbet'],
+      );
       final pack = TrainingPackModel(id: 'p1', title: 'Pack', spots: [spot]);
 
-      service.injectLinks[SkillTagCoverageReport(tagCounts: {}, underrepresentedTags: ['cbet']],
+      service.injectLinks(
+        SkillTagCoverageReport(tagCounts: {}, underrepresentedTags: ['cbet']),
         [pack],
       );
 
@@ -156,7 +171,11 @@ void main() {
       });
       final service = TheoryLinkAutoInjectorService(library: library);
       final spots = [
-        TrainingPackSpot(id: 's1', hand: v2models.HandData(), tags: ['cbet', 'turn']),
+        TrainingPackSpot(
+          id: 's1',
+          hand: v2models.HandData(),
+          tags: ['cbet', 'turn'],
+        ),
         TrainingPackSpot(id: 's2', hand: v2models.HandData(), tags: ['river']),
       ];
 
