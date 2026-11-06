@@ -1,3 +1,4 @@
+import '../support/act0_shell_presentation_finders_v1.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -126,7 +127,10 @@ void main() {
     (tester) async {
       await pumpHost(tester, host(showPlacementOnStart: true));
       await completeFreshBeginnerOnboarding(tester);
-      expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
+      expect(
+        act0ShellPresentationFinderV1('act0_shell_home_screen'),
+        findsOneWidget,
+      );
 
       await openLearn(tester);
       expect(find.textContaining('0 of 9 lessons'), findsOneWidget);
@@ -271,12 +275,18 @@ void main() {
         host(showPlacementOnStart: true, telemetrySink: telemetry),
       );
       await completeFreshBeginnerOnboarding(tester);
-      expect(find.byKey(const Key('act0_shell_home_screen')), findsOneWidget);
-      final continueCta = find.byKey(const Key('act0_shell_main_cta'));
+      expect(
+        act0ShellPresentationFinderV1('act0_shell_home_screen'),
+        findsOneWidget,
+      );
+      final continueCta = act0ShellPresentationFinderV1('act0_shell_main_cta');
       await tester.tap(continueCta);
       await tester.tap(continueCta);
       await tester.pumpAndSettle();
-      expect(find.byKey(const Key('act0_shell_home_screen')), findsNothing);
+      expect(
+        act0ShellPresentationFinderV1('act0_shell_home_screen'),
+        findsNothing,
+      );
       expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
       final runner = tester.widget<Act0LessonRunnerShellV1>(
         find.byType(Act0LessonRunnerShellV1),
