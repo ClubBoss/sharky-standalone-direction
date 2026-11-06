@@ -831,7 +831,8 @@ void main() {
         'sequence': (row) => row['sequence'] = 1.0,
       };
       for (final mutation in mutations.entries) {
-        final row = jsonDecode(original.contents.trim()) as Map<String, dynamic>;
+        final row =
+            jsonDecode(original.contents.trim()) as Map<String, dynamic>;
         mutation.value(row);
         final store = _RestartStore()..contents = '${jsonEncode(row)}\n';
         final next = Act0HnpTelemetrySinkV1(fileStore: store);
