@@ -1,6 +1,40 @@
 import 'dart:convert';
 import 'dart:io';
 
+/// Accepts the JSON snapshot and the collector's actual physical JSONL codec.
+/// Console prefixes and truncated/foreign rows are not repaired or guessed.
+Object? decodeAct0Obs03TraceV1(String content) {
+  Object? value;
+  try {
+    value = jsonDecode(content);
+  } on FormatException {
+    final lines = content.split('\n').where((line) => line.trim().isNotEmpty);
+    value = lines.map(jsonDecode).toList();
+  }
+  if (value is Map && value.containsKey('schema')) return value;
+  final rows = value is Map ? [value] : value;
+  if (rows is! List || rows.isEmpty || rows.any((r) => r is! Map)) return null;
+  final capture = (rows.last as Map)['capture'];
+  if (capture is! Map) return null;
+  final healthOnly =
+      rows.length == 1 &&
+      (rows.single as Map).keys.length == 1 &&
+      (rows.single as Map).containsKey('capture');
+  if (!healthOnly &&
+      rows.any(
+        (r) =>
+            (r as Map)['name'] is! String ||
+            r['fields'] is! Map ||
+            r['capture'] is! Map,
+      ))
+    return null;
+  return {
+    'schema': 'act0_hnp_local_trace_v1',
+    'capture': capture,
+    'events': healthOnly ? [] : rows,
+  };
+}
+
 /// Checks exported trace consistency only. It does not authenticate a binary,
 /// manufacture missing observations, grade answers or grant learner progress.
 Map<String, Object?> inspectAct0Obs03TraceV1(
@@ -168,7 +202,7 @@ void main(List<String> args) {
   }
   try {
     final result = inspectAct0Obs03TraceV1(
-      jsonDecode(File(args[0]).readAsStringSync()),
+      decodeAct0Obs03TraceV1(File(args[0]).readAsStringSync()),
       attemptId: args[1],
       expectedSourceFingerprint: args[2],
     );

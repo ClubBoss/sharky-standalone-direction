@@ -262,6 +262,14 @@ void main() {
       );
       expect(inspect(snapshot)['status'], 'TRACE_RECONSTRUCTED');
       expect(
+        inspect(decodeAct0Obs03TraceV1(store.contents) as Map)['status'],
+        'TRACE_RECONSTRUCTED',
+      );
+      expect(
+        () => decodeAct0Obs03TraceV1('${store.contents}{"broken":'),
+        throwsFormatException,
+      );
+      expect(
         inspect(snapshot, fingerprint: 'wrong_source')['status'],
         'INSUFFICIENT',
       );
@@ -483,24 +491,26 @@ void main() {
         _record(3, 0, correct: false),
         _record(4, 0),
       ];
-      Act0RepairOutcomeV1 outcome(String occurrence) => Act0RepairOutcomeV1(
-        repairOccurrenceId: occurrence,
-        repairAttemptId: rows.last.recordId,
-        sourceTaskId: rows.first.taskId,
-        repairTaskId: rows.last.taskId,
-        repairFocusKey: rows.first.conceptFamilyId,
-        queueItemId: 'queue_v1',
-        targetWorldId: _world.worldId,
-        targetLessonId: _lesson.lessonId,
-        targetTaskId: rows.last.taskId,
-        selectedChoiceId: rows.last.choiceId,
-        correctChoiceId: rows.last.expectedChoiceId,
-        isCorrect: true,
-        outcomeState: act0RepairOutcomeStateCorrectV1,
-        sequence: 4,
-        sourceType: 'active_repair',
-        sessionId: rows.last.sessionId,
-      );
+      Act0RepairOutcomeV1 outcome(String occurrence, {int schemaVersion = 1}) =>
+          Act0RepairOutcomeV1(
+            schemaVersion: schemaVersion,
+            repairOccurrenceId: occurrence,
+            repairAttemptId: rows.last.recordId,
+            sourceTaskId: rows.first.taskId,
+            repairTaskId: rows.last.taskId,
+            repairFocusKey: rows.first.conceptFamilyId,
+            queueItemId: 'queue_v1',
+            targetWorldId: _world.worldId,
+            targetLessonId: _lesson.lessonId,
+            targetTaskId: rows.last.taskId,
+            selectedChoiceId: rows.last.choiceId,
+            correctChoiceId: rows.last.expectedChoiceId,
+            isCorrect: true,
+            outcomeState: act0RepairOutcomeStateCorrectV1,
+            sequence: 4,
+            sourceType: 'active_repair',
+            sessionId: rows.last.sessionId,
+          );
       final history = Act0LearningEvidenceHistoryV1(records: rows);
       final a = act0RepairOutcomeTelemetryEventV1(
         outcome: outcome(rows.first.recordId),
@@ -515,6 +525,12 @@ void main() {
         isNot(b.fields['repair_occurrence_id']),
       );
       expect(b.fields['independent_repair'], true);
+      final unknownVersion = act0RepairOutcomeTelemetryEventV1(
+        outcome: outcome(rows[2].recordId, schemaVersion: 2),
+        history: history,
+      );
+      expect(unknownVersion.name, 'evidence_lineage_unavailable');
+      expect(unknownVersion.fields['reason'], 'unknown_repair_outcome_version');
       final absent = act0RepairOutcomeTelemetryEventV1(
         outcome: outcome('missing'),
         history: history,

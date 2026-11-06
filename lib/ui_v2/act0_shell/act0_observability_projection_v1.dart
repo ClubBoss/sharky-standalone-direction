@@ -202,6 +202,12 @@ Act0TelemetryEventV1 act0RepairOutcomeTelemetryEventV1({
   required Act0RepairOutcomeV1 outcome,
   required Act0LearningEvidenceHistoryV1 history,
 }) {
+  if (outcome.schemaVersion != 1) {
+    return _event('evidence_lineage_unavailable', {
+      'evidence_status': 'insufficient_evidence',
+      'reason': 'unknown_repair_outcome_version',
+    });
+  }
   Act0LearningEvidenceRecordV1? find(String id) {
     final rows = [
       ...history.sourceAnchors,

@@ -13,6 +13,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_transfer_measureme
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
+import '../../tools/act0_obs03_trace_inspector_v1.dart';
 
 class _Store implements Act0HnpTraceFileStoreV1 {
   _Store({this.fail = false});
@@ -351,11 +352,31 @@ void main() {
       final decision = full.events.firstWhere((e) => e.name == 'decision_made');
       expect(decision.fields['session_id'], isNotEmpty);
       final records = (without['decisions'] as List).cast<Map>();
+      final canonicalEvents = full.events
+          .where((e) => e.name == 'decision_evidence_recorded')
+          .toList();
+      expect(
+        canonicalEvents,
+        hasLength(3),
+        reason:
+            'every accepted source record needs its authoritative observation',
+      );
       final joins = <Map<String, Object?>>[];
       for (final event in full.events.where((e) => e.name == 'decision_made')) {
         final record = records.singleWhere(
           (r) => r['recordId'] == event.fields['attempt_id'],
         );
+        final canonical = canonicalEvents.singleWhere(
+          (e) => e.fields['attempt_id'] == record['recordId'],
+        );
+        expect(canonical.fields['review_kind'], record['reviewKind']);
+        expect(
+          canonical.fields['source_fingerprint'],
+          record['authoredSourceFingerprint'],
+        );
+        expect(canonical.fields['correct'], record['isCorrect']);
+        expect(event.fields['schemaVersion'], 2);
+        expect(event.fields, isNot(contains('review_kind')));
         expect(event.fields['session_id'], record['sessionId']);
         expect(
           event.fields['attempt_id'] as String,
@@ -366,7 +387,7 @@ void main() {
           'durableRunId': record['runId'],
           'sessionId': record['sessionId'],
           'sourceReviewKind': record['reviewKind'],
-          'telemetryReviewKind': event.fields['review_kind'],
+          'telemetryReviewKind': canonical.fields['review_kind'],
         });
       }
       final redactedKeys = <String, int>{};
@@ -381,8 +402,42 @@ void main() {
       // counters and outcome categories on this journey must survive capture.
       expect(redactedKeys.keys, unorderedEquals(['source_evidence_summary']));
       expect(tester.takeException(), isNull);
+      final reconstructed = [
+        for (final record in records)
+          inspectAct0Obs03TraceV1(
+            _export(full),
+            attemptId: record['recordId'] as String,
+            expectedSourceFingerprint:
+                record['authoredSourceFingerprint'] as String,
+          ),
+      ];
+      for (final result in reconstructed)
+        expect(result['status'], 'TRACE_RECONSTRUCTED');
+      final physicalIncident = inspectAct0Obs03TraceV1(
+        decodeAct0Obs03TraceV1(store.contents),
+        attemptId: records.last['recordId'] as String,
+        expectedSourceFingerprint:
+            records.last['authoredSourceFingerprint'] as String,
+      );
+      expect(physicalIncident['status'], 'TRACE_RECONSTRUCTED');
+      final incomplete = inspectAct0Obs03TraceV1(
+        _export(partial),
+        attemptId: records.last['recordId'] as String,
+        expectedSourceFingerprint:
+            records.last['authoredSourceFingerprint'] as String,
+      );
+      expect(incomplete['status'], 'INSUFFICIENT');
       _writeEvidence('canonical-journey', _export(full));
+      if (_evidenceDirectory.isNotEmpty) {
+        File(
+          '$_evidenceDirectory/canonical-journey.jsonl',
+        ).writeAsStringSync(store.contents);
+      }
       _writeEvidence('partial-journey', _export(partial));
+      _writeEvidence('incident-reconstruction', {
+        'complete': reconstructed,
+        'partial': incomplete,
+      });
       _writeEvidence('telemetry-parity', {
         'schemaVersion': 1,
         'execution': 'deterministic_widget_393x852_en',
