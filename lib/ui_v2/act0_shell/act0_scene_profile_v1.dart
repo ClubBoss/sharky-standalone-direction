@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'act0_shell_state_v1.dart';
 
-/// Presentation opt-in only. It never selects a task or changes learner state.
+/// Owner-restored presentation only; explicit false retains procedural rollback.
+/// It never selects a task or changes learner state.
 const kAct0F7TableScenePreview = bool.fromEnvironment(
   'SHARKY_F7_TABLE_SCENE_PREVIEW',
+  defaultValue: true,
 );
 
 enum Act0SceneActorOwnershipV1 { independentLayers, bakedIntoPlate }
