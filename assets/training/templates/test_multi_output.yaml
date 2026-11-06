@@ -17,9 +17,12 @@ outputVariants:
     targetStreet: flop
     seed: 1
     boardConstraints:
+      # Bounded fixture: an empty constraint enumerates all ~26M boards.
       - targetStreet: flop
+        excludedRanks: [A, J, T, '9', '8', '7', '6', '5', '4', '3', '2']
   turn:
     targetStreet: turn
     seed: 2
     boardConstraints:
       - targetStreet: turn
+        excludedRanks: [A, J, T, '9', '8', '7', '6', '5', '4', '3', '2']
