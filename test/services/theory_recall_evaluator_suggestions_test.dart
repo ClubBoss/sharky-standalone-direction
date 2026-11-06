@@ -36,8 +36,8 @@ class _FakeMiniLibrary implements MiniLessonLibraryService {
   }
 
   @override
-  List<TheoryMiniLessonNode> getByTags[Set<String> tags] =>
-      findByTags[tags.toList[]];
+  List<TheoryMiniLessonNode> getByTags(Set<String> tags) =>
+      findByTags(tags.toList());
 
   @override
   TheoryMiniLessonNode? getNextLesson(String id) => null;
@@ -46,7 +46,7 @@ class _FakeMiniLibrary implements MiniLessonLibraryService {
   bool isLessonCompleted(String id) => false;
 
   @override
-  List<String> linkedPacksFor[String id] => const <String>[];
+  List<String> linkedPacksFor(String id) => const <String>[];
 }
 
 v2.TrainingPackTemplateV2 _booster(String id, String tag) =>
@@ -80,7 +80,7 @@ void main() {
     });
     BoosterCompletionTracker.instance.resetForTest();
 
-    final boosters = [_booster('b1', 'push'));
+    final boosters = [_booster('b1', 'push')];
     final lessons = [
       TheoryMiniLessonNode(
         id: 'l1',
@@ -99,4 +99,3 @@ void main() {
     expect(result.map((e) => e.id), ['l1']);
   });
 }
-

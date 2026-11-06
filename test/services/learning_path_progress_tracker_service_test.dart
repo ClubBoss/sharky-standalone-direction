@@ -83,14 +83,14 @@ void main() {
   test('computeProgressStrings returns formatted strings', () {
     final path = path0();
     final logs = logs0();
-    final progress = tracker.computeProgressStrings[path, logs];
+    final progress = tracker.computeProgressStrings(path, logs);
     expect(progress['s1'], '10 / 10 рук · 80%');
     expect(progress['s2'], '5 / 5 рук · 80%');
   });
 
   test('isPathCompleted returns true when all stages passed', () {
     final path = path0();
-    final aggregated = tracker.aggregateLogsByPack[logs0[]];
+    final aggregated = tracker.aggregateLogsByPack(logs0());
     final ok = tracker.isPathCompleted(path, aggregated);
     expect(ok, isTrue);
   });

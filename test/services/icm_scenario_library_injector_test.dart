@@ -1,22 +1,27 @@
- // fix: hide shim
+// fix: hide shim
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:poker_analyzer/models/training_pack_model.dart';
-import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models; // fix: v2 hand
+import 'package:poker_analyzer/models/v2/hand_data.dart'
+    as v2models; // fix: v2 hand
 import 'package:poker_analyzer/models/v2/training_pack_spot.dart';
 import 'package:poker_analyzer/services/icm_scenario_library_injector.dart';
 import 'package:poker_analyzer/services/pack_novelty_guard_service.dart';
-import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart' as v2; // fix: v2 alias
+import 'package:poker_analyzer/models/v2/training_pack_template_v2.dart'
+    as v2; // fix: v2 alias
 
 class _FakeGuard extends PackNoveltyGuardService {
-  final bool Function[int] duplicateWhen;
+  final bool Function(int) duplicateWhen;
   int evaluateCalls = 0;
 
   _FakeGuard(this.duplicateWhen) : super();
 
   @override
-  Future<PackNoveltyResult> evaluate[v2.TrainingPackTemplateV2 candidate] async { // fix: v2 type
+  Future<PackNoveltyResult> evaluate(
+    v2.TrainingPackTemplateV2 candidate,
+  ) async {
+    // fix: v2 type
     evaluateCalls++;
     final dup = duplicateWhen(candidate.spots.length);
     return PackNoveltyResult(
@@ -107,10 +112,7 @@ void main() {
         id: 'p1',
         title: 'Pack',
         spots: [
-          TrainingPackSpot(
-            id: 's1',
-            hand: v2models.HandData(),
-          ),
+          TrainingPackSpot(id: 's1', hand: v2models.HandData()),
         ], // fix: v2 ctor/collections/types
         tags: const ['cash'],
         metadata: const <String, Object?>{}, // fix: v2 ctor/collections/types
@@ -169,4 +171,3 @@ void main() {
     );
   });
 }
-
