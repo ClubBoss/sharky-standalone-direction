@@ -7,6 +7,7 @@ import 'package:poker_analyzer/models/v2/hand_data.dart';
 
 TrainingPackSpot _spot(String id, String cards, HeroPosition pos) {
   final hand = HandData.fromSimpleInput(cards, pos, 10);
+  hand.board = ['2h', '3d', '4c'];
   return TrainingPackSpot(id: id, hand: hand);
 }
 
@@ -14,9 +15,9 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test('clusters similar spots', () {
-    final s1 = _spot('a', 'AhKh', HeroPosition.btn);
-    final s2 = _spot('b', 'AhKh', HeroPosition.btn);
-    final s3 = _spot('c', '9c8c', HeroPosition.sb);
+    final s1 = _spot('a', 'Ah Kh', HeroPosition.btn);
+    final s2 = _spot('b', 'Ah Kh', HeroPosition.btn);
+    final s3 = _spot('c', '9c 8c', HeroPosition.sb);
 
     final engine = BoosterClusterEngine();
     final clusters = engine.analyzeSpots([s1, s2, s3], threshold: 0.8);
