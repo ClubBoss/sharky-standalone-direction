@@ -40,51 +40,54 @@ void main() {
   });
 
   for (final gain in <int>[0, 12]) {
-    testWidgets('completion toast reports source XP ($gain), not improvement', (
-      tester,
-    ) async {
-      tester.view.physicalSize = const Size(393, 852);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-      await tester.pumpWidget(
-        MaterialApp(
-          home: MediaQuery(
-            data: const MediaQueryData(disableAnimations: true),
-            child: Scaffold(
-              body: Act0FeedbackShellV1(
-                title: 'Correct.',
-                reason: 'Nobody has bet yet.',
-                quality: Act0FeedbackQualityV1.correct,
-                sharkyLine: 'Check the table clue.',
-                sharkyMood: Act0SharkyMoodV1.happy,
-                selectedLabel: 'Check',
-                preferredLabel: 'Check',
-                betterLabel: 'Check',
-                completionSummary: Act0RunnerCompletionSummaryV1(
-                  xpGain: gain,
-                  startLevel: 1,
-                  endLevel: 1,
-                  startXp: 20,
-                  endXp: 20 + gain,
-                  xpTarget: 100,
+    testWidgets(
+      'completion toast keeps XP ($gain) internal without growth claims',
+      (tester) async {
+        tester.view.physicalSize = const Size(393, 852);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        await tester.pumpWidget(
+          MaterialApp(
+            home: MediaQuery(
+              data: const MediaQueryData(disableAnimations: true),
+              child: Scaffold(
+                body: Act0FeedbackShellV1(
+                  title: 'Correct.',
+                  reason: 'Nobody has bet yet.',
+                  quality: Act0FeedbackQualityV1.correct,
+                  sharkyLine: 'Check the table clue.',
+                  sharkyMood: Act0SharkyMoodV1.happy,
+                  selectedLabel: 'Check',
+                  preferredLabel: 'Check',
+                  betterLabel: 'Check',
+                  completionSummary: Act0RunnerCompletionSummaryV1(
+                    xpGain: gain,
+                    startLevel: 1,
+                    endLevel: 1,
+                    startXp: 20,
+                    endXp: 20 + gain,
+                    xpTarget: 100,
+                  ),
+                  onContinue: () {},
                 ),
-                onContinue: () {},
               ),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(
-        find.byKey(const Key('act0_shell_completion_toast')),
-        findsOneWidget,
-      );
-      expect(find.text('Answer checked'), findsOneWidget);
-      expect(find.text(gain > 0 ? '+$gain XP' : 'No new XP'), findsOneWidget);
-      expect(find.text('Table read improved'), findsNothing);
-      expect(find.text('Read banked'), findsNothing);
-      expect(tester.takeException(), isNull);
-    });
+        );
+        await tester.pumpAndSettle();
+        expect(
+          find.byKey(const Key('act0_shell_completion_toast')),
+          findsOneWidget,
+        );
+        expect(find.text('Answer checked'), findsOneWidget);
+        expect(find.text('Keep practicing'), findsOneWidget);
+        expect(find.textContaining('XP'), findsNothing);
+        expect(find.textContaining('Level'), findsNothing);
+        expect(find.text('Table read improved'), findsNothing);
+        expect(find.text('Read banked'), findsNothing);
+        expect(tester.takeException(), isNull);
+      },
+    );
   }
 }
