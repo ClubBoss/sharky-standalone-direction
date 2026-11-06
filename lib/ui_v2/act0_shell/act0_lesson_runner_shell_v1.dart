@@ -2895,8 +2895,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       return;
     }
     _decisionAssistanceKindV1 = Act0DecisionAssistanceV1.theoryRecall;
+    // Seat-choice drills use a modal rather than the ordinary inline peek.
+    // Apply the same pre-choice answer guard to both assistance routes.
+    final safeIdea = _preChoiceTheoryIdeaV1(
+      taskFamily: widget.selectedTaskFamily,
+      runner: widget.runner,
+      question: widget.runner.question,
+      fullIdeaStep: step,
+    );
     final bodyBlocks = act0BuildInstructionBlocksV1(
-      text: step.body,
+      text: safeIdea.body,
       compact: true,
     );
     await showModalBottomSheet<void>(
@@ -2905,7 +2913,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       isScrollControlled: false,
       builder: (context) => _TheoryRecallSheetV1(
         label: act0RuntimeTheoryRecallLabelV1(context),
-        title: step.title,
+        title: safeIdea.title,
         bodyBlocks: bodyBlocks,
       ),
     );
@@ -16558,7 +16566,7 @@ _DecisionHintV1? _resolveDecisionHintV1({
   if (runner.phase != Act0LessonPhaseV1.drill || runner.options.isEmpty) {
     return null;
   }
-  final quickHint = _genericDecisionHintV1(
+  var quickHint = _genericDecisionHintV1(
     taskFamily: taskFamily,
     focusText: question.trim().isNotEmpty ? question : prompt,
     text:
@@ -16568,16 +16576,184 @@ _DecisionHintV1? _resolveDecisionHintV1({
   if (quickHint.isEmpty) {
     return null;
   }
+  // Even a short generic hint must not name the graded correct option.
+  final answers = runner.options.where((option) => option.isCorrect).toList();
+  if (answers.length != 1) {
+    quickHint = 'Use the visible facts to compare each option before deciding.';
+  } else {
+    final correct = answers.single;
+    final answerTerms = <String>[
+      correct.label,
+      correct.amountLabel,
+      if (correct.seatId != null) correct.seatId!,
+    ];
+    bool namesAnswer(String text) =>
+        answerTerms.any((term) => _preChoiceTextNamesOptionV1(text, term));
+    if (namesAnswer(quickHint)) {
+      quickHint = _answerNeutralReasoningGuideV1(
+        taskFamily: taskFamily,
+        question: question,
+      );
+      if (namesAnswer(quickHint)) {
+        quickHint =
+            'Use the visible facts to compare each option before deciding.';
+      }
+    }
+  }
+  final safeIdea = _preChoiceTheoryIdeaV1(
+    taskFamily: taskFamily,
+    runner: runner,
+    question: question.trim().isNotEmpty ? question : prompt,
+    fullIdeaStep: fullIdeaStep,
+  );
   return _DecisionHintV1(
     quickHint: quickHint,
-    fullIdeaTitle: fullIdeaStep?.title.trim() ?? '',
+    fullIdeaTitle: safeIdea.title,
     fullIdeaBlocks: fullIdeaStep == null
         ? const <String>[]
-        : act0BuildSupportingCopyBlocksV1(
-            text: fullIdeaStep.body,
-            compact: true,
-          ),
+        : act0BuildSupportingCopyBlocksV1(text: safeIdea.body, compact: true),
   );
+}
+
+// The authored theory step is still taught intact during Learn and after
+// grading. During an independent drill, however, that same text may name the
+// exact graded answer. Only substitute an answer-neutral *pre-choice* guide
+// when an authored correct option is present in the assistance copy.
+({String title, String body}) _preChoiceTheoryIdeaV1({
+  required Act0TaskFamilyV1? taskFamily,
+  required Act0RunnerStateV1 runner,
+  required String question,
+  required Act0TeachingStepV1? fullIdeaStep,
+}) {
+  if (fullIdeaStep == null) return (title: '', body: '');
+  if (runner.phase != Act0LessonPhaseV1.drill || runner.options.isEmpty) {
+    return (title: fullIdeaStep.title, body: fullIdeaStep.body);
+  }
+  final answers = runner.options.where((option) => option.isCorrect).toList();
+  // Without one verified source answer, don't pass potentially answer-bearing
+  // material through a graded assistance surface.
+  if (answers.length != 1) {
+    return (
+      title: 'Reasoning guide',
+      body: 'Use the visible facts to compare each option before deciding.',
+    );
+  }
+  final answer = answers.single;
+  final answerTerms = <String>[
+    answer.label,
+    answer.amountLabel,
+    if (answer.seatId != null) answer.seatId!,
+  ];
+  bool namesAnswer(String text) =>
+      answerTerms.any((term) => _preChoiceTextNamesOptionV1(text, term));
+  if (!namesAnswer(fullIdeaStep.title + ' ' + fullIdeaStep.body) ||
+      _isNeutralRangeTaxonomyV1(question: question, step: fullIdeaStep)) {
+    return (title: fullIdeaStep.title, body: fullIdeaStep.body);
+  }
+  var guide = _answerNeutralReasoningGuideV1(
+    taskFamily: taskFamily,
+    question: question,
+  );
+  if (namesAnswer(guide)) {
+    guide = 'Use the visible facts to compare each option before deciding.';
+  }
+  return (title: 'Reasoning guide', body: guide);
+}
+
+// A neutral taxonomy names *all* categories without grading the current hand.
+// Preserve that useful reference instead of treating every word match as a leak.
+bool _isNeutralRangeTaxonomyV1({
+  required String question,
+  required Act0TeachingStepV1 step,
+}) {
+  final reference = step.body.toLowerCase().trim();
+  return question.toLowerCase().contains('which range bucket') &&
+      reference.startsWith('after the flop, sort your hand into') &&
+      reference.contains('value (') &&
+      reference.contains('bluff candidate (') &&
+      reference.contains('missed (') &&
+      !reference.contains(' on this board') &&
+      !reference.contains(' on this flop');
+}
+
+bool _preChoiceTextNamesOptionV1(String text, String term) {
+  final answer = term.trim().replaceAll(RegExp(r'\s+'), ' ');
+  if (answer.isEmpty ||
+      (answer.length == 1 && !RegExp(r'^\d$').hasMatch(answer))) {
+    return false;
+  }
+  final escaped = RegExp.escape(answer).replaceAll(' ', r'\s+');
+  return RegExp(
+    '(^|[^a-z0-9])' + escaped + r'([^a-z0-9]|$)',
+    caseSensitive: false,
+  ).hasMatch(text);
+}
+
+String _answerNeutralReasoningGuideV1({
+  required Act0TaskFamilyV1? taskFamily,
+  required String question,
+}) {
+  final focus = question.toLowerCase();
+  if (focus.contains('everyone use') ||
+      (focus.contains('which cards') && focus.contains('everyone'))) {
+    return 'Separate cards held privately from cards available to all '
+        'players before choosing the matching description.';
+  }
+  if (focus.contains('suit') ||
+      RegExp(r'\b[akqjt2-9][shdc]\b').hasMatch(focus)) {
+    return 'Decode the rank and suit parts separately, then apply the '
+        'card notation from the lesson to this exact card.';
+  }
+  if (focus.contains('street') ||
+      (focus.contains('turn') && focus.contains('after'))) {
+    return 'Trace the order of betting streets from the named point, '
+        'then identify the next stage.';
+  }
+  if (focus.contains('blind') ||
+      focus.contains('seat') ||
+      focus.contains('button') ||
+      focus.contains('position') ||
+      focus.contains('utg') ||
+      focus.startsWith('tap ')) {
+    return 'Locate the relevant seat marker and compare its position '
+        'with the forced wagers and button before choosing.';
+  }
+  if ((focus.contains('hand') &&
+          (focus.contains('stronger') ||
+              focus.contains('rank') ||
+              focus.contains('hero have') ||
+              focus.contains('higher'))) ||
+      focus.contains('showdown')) {
+    return 'Build the best hand pattern from the private and shared cards. '
+        'Compare patterns using the hand hierarchy, not a single high card.';
+  }
+  if (taskFamily == Act0TaskFamilyV1.counting ||
+      focus.contains('how many') ||
+      focus.contains('combos') ||
+      focus.contains('effective stack')) {
+    return 'Identify exactly which items are being counted, then '
+        'work through the relevant combinations or quantities.';
+  }
+  if (focus.contains('price') ||
+      focus.contains('action') ||
+      focus.contains('play for free') ||
+      focus.contains('no bet') ||
+      taskFamily == Act0TaskFamilyV1.sizing) {
+    return 'Read the current amount required to continue and the '
+        'available actions; relate the cost to the situation.';
+  }
+  if (focus.contains('bucket') || focus.contains('range')) {
+    return 'Start with the hand or range category, then use the '
+        'visible position and board clues before committing to a category.';
+  }
+  if (focus.contains('board') ||
+      focus.contains('flop') ||
+      focus.contains('draw')) {
+    return 'Re-read the shared cards and compare the changed hand '
+        'signals before evaluating the options.';
+  }
+  return 'Find the relevant table clue, compare it with each option, '
+      'and make the decision yourself.';
 }
 
 String _genericDecisionHintV1({
