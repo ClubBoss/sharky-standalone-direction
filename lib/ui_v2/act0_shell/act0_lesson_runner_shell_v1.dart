@@ -325,26 +325,30 @@ class Act0BlockCompletionSummaryV1 {
 
   bool get leveledUp => endLevel > startLevel;
 
+  bool get hasVerifiedAssessment => independentProvenanceKnown && taskCount > 0;
+
   int get accuracyPercent =>
-      taskCount <= 0 ? 100 : ((correctCount * 100) / taskCount).round();
+      taskCount <= 0 ? 0 : ((correctCount * 100) / taskCount).round();
 
   bool get qualifiesForNextLesson =>
       curriculumCompleted ||
       !hasNextLesson ||
-      accuracyPercent >= unlockAccuracyPercent;
+      (hasVerifiedAssessment && accuracyPercent >= unlockAccuracyPercent);
 
   Act0MasteryStatusV1 get masteryStatus {
-    if (errorCount == 0 &&
-        taskCount > 0 &&
-        assistedCount == 0 &&
-        independentProvenanceKnown) {
-      return Act0MasteryStatusV1.cleanPass;
-    }
-    if (deepLeakCount > 0 ||
-        (taskCount > 0 && accuracyPercent < unlockAccuracyPercent)) {
+    if (deepLeakCount > 0) {
       return Act0MasteryStatusV1.needsReview;
     }
-    if (assistedCount > 0 || !independentProvenanceKnown) {
+    if (!hasVerifiedAssessment) {
+      return Act0MasteryStatusV1.learning;
+    }
+    if (errorCount == 0 && correctCount == taskCount && assistedCount == 0) {
+      return Act0MasteryStatusV1.cleanPass;
+    }
+    if (accuracyPercent < unlockAccuracyPercent) {
+      return Act0MasteryStatusV1.needsReview;
+    }
+    if (assistedCount > 0) {
       return Act0MasteryStatusV1.learning;
     }
     return Act0MasteryStatusV1.solid;
@@ -718,7 +722,10 @@ class Act0BlockCompletionSummaryV1 {
     if (!isWorldComplete && growthLabel.isNotEmpty) {
       return 'Skill moved';
     }
-    if (errorCount == 0 && taskCount > 0) {
+    if (errorCount == 0 &&
+        hasVerifiedAssessment &&
+        assistedCount == 0 &&
+        correctCount == taskCount) {
       return 'Clean read';
     }
     if (qualifiesForNextLesson) {
@@ -737,7 +744,10 @@ class Act0BlockCompletionSummaryV1 {
     if (!isWorldComplete && growthLabel.isNotEmpty) {
       return 'Practiced: $growthLabel. This read will help in the next spot.';
     }
-    if (errorCount == 0 && taskCount > 0) {
+    if (errorCount == 0 &&
+        hasVerifiedAssessment &&
+        assistedCount == 0 &&
+        correctCount == taskCount) {
       return 'Clean run. This read will help in the next spot.';
     }
     if (qualifiesForNextLesson) {
@@ -10532,8 +10542,8 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                     ? (summary.independentProvenanceKnown
                           ? '\u041e\u0446\u0435\u043d\u0435\u043d\u043e ${summary.taskCount} \u0437\u0430\u0434\u0430\u043d\u0438\u0439 · \u0432\u0435\u0440\u043d\u043e ${summary.correctCount} · \u043e\u0448\u0438\u0431\u043e\u043a ${summary.errorCount} · \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439 ${summary.assistedCount}'
                           : '\u0421\u0430\u043c\u043e\u0441\u0442\u043e\u044f\u0442\u0435\u043b\u044c\u043d\u044b\u0439 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442 \u043d\u0435 \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043d · \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439 ${summary.assistedCount}')
-                    : !summary.independentProvenanceKnown
-                    ? '${summary.correctCount}/${summary.taskCount} assessed correct \u00B7 full-lesson proof unverified \u00B7 ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}'
+                    : !summary.hasVerifiedAssessment
+                    ? 'Assessment not verified - independent result unknown'
                     : summary.assistedCount > 0
                     ? '${summary.correctCount}/${summary.taskCount} correct \u00B7 ${summary.assistedCount} with help \u00B7 ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}'
                     : '${summary.accuracyPercent}% accuracy (assessed) \u00B7 ${summary.correctCount}/${summary.taskCount} correct \u00B7 ${summary.errorCount} ${summary.errorCount == 1 ? 'error' : 'errors'}',
@@ -11066,14 +11076,13 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
     // A saved/assisted/wrong run is not automatically an independent clean read.
     // The bar displays assessed correctness, not "all XP equals mastery".
     final cleanIndependentRead =
-        summary.independentProvenanceKnown &&
-        summary.taskCount > 0 &&
+        summary.hasVerifiedAssessment &&
         summary.errorCount == 0 &&
         summary.assistedCount == 0 &&
         summary.correctCount == summary.taskCount;
-    final assessedFraction = summary.taskCount <= 0
-        ? 0.0
-        : (summary.correctCount / summary.taskCount).clamp(0.0, 1.0);
+    final assessedFraction = summary.hasVerifiedAssessment
+        ? (summary.correctCount / summary.taskCount).clamp(0.0, 1.0)
+        : 0.0;
     return Container(
       decoration: BoxDecoration(
         color: Act0AcademyReadingStyleV1.surface2.withValues(alpha: 0.9),
@@ -11109,7 +11118,9 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
               const SizedBox(width: Act0ShellTokensV1.gapSm),
               Expanded(
                 child: Text(
-                  'Assessed accuracy',
+                  summary.hasVerifiedAssessment
+                      ? 'Assessed accuracy'
+                      : 'Assessment not verified',
                   key: const Key('act0_shell_block_summary_xp_total'),
                   maxLines: 1,
                   overflow: TextOverflow.fade,
@@ -11122,17 +11133,19 @@ class _BlockXpProgressCardV1 extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-            child: LinearProgressIndicator(
-              key: const Key('act0_shell_block_summary_xp_progress'),
-              minHeight: 8,
-              value: assessedFraction,
-              backgroundColor: Act0AcademyReadingStyleV1.surface3,
-              color: tone,
+          if (summary.hasVerifiedAssessment) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+              child: LinearProgressIndicator(
+                key: const Key('act0_shell_block_summary_xp_progress'),
+                minHeight: 8,
+                value: assessedFraction,
+                backgroundColor: Act0AcademyReadingStyleV1.surface3,
+                color: tone,
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );
