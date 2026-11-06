@@ -110,4 +110,3 @@ jobs:
       - run: flutter pub get
       - run: ./tools/test_authority_validate_v1.sh
       - run: ./tools/test_authority_tier_d_v1.sh
-
