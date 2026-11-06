@@ -73,6 +73,224 @@ class Act0StreetReplayStepV1 {
   String get youAreHereLabel => isCurrentStreet ? 'You are here' : '';
 }
 
+enum Act0BettingRoundOrderTruthV1 { unproved, consistent, contradiction }
+
+/// Checks turn order and round boundaries only for an ordinary, fully supplied
+/// blind-start history. This does not certify prices, minimum raises, pot
+/// accounting, all-in rules, catalog applicability, or a learner's answer.
+///
+/// Missing participation/stack facts or grammar outside the existing replay
+/// parser leave this proof unproved. They must not be relabeled as valid poker.
+Act0BettingRoundOrderTruthV1 act0BettingRoundOrderTruthForTableV1(
+  Act0TableStateV1 table,
+) {
+  const unproved = Act0BettingRoundOrderTruthV1.unproved;
+  const contradiction = Act0BettingRoundOrderTruthV1.contradiction;
+  const consistent = Act0BettingRoundOrderTruthV1.consistent;
+  if (table.scope != Act0TableScopeV1.playedHand ||
+      !table.usesCanonicalPlayerCount ||
+      table.seats.length != table.playerCount) {
+    return unproved;
+  }
+  final order = table.canonicalSeatOrder;
+  final seatByActor = <String, Act0SeatStateV1>{};
+  final seatIds = <String>{};
+  final stackPattern = RegExp(r'^(\d+(?:\.\d+)?)\s+BB$', caseSensitive: false);
+  for (final seat in table.seats) {
+    final actor = seat.seatLabel.trim().toUpperCase();
+    final stack = stackPattern.firstMatch(seat.stackLabel?.trim() ?? '');
+    final remaining = double.tryParse(stack?.group(1) ?? '');
+    // A positive remaining stack is supplied evidence that this participant
+    // is not already all-in. Missing/zero stacks do not invent an obligation.
+    if (!seat.isOccupied ||
+        !order.contains(actor) ||
+        seatByActor.containsKey(actor) ||
+        !seatIds.add(seat.seatId) ||
+        remaining == null ||
+        !remaining.isFinite ||
+        remaining <= 0 ||
+        seat.bet?.kind == Act0SeatBetKindV1.allIn) {
+      return unproved;
+    }
+    seatByActor[actor] = seat;
+  }
+
+  final actions =
+      <
+        ({
+          Act0StreetReplayStreetV1 street,
+          String actor,
+          String verb,
+          double? amount,
+        })
+      >[];
+  var parsedStreet = Act0StreetReplayStreetV1.preflop;
+  for (final item in table.actionTrail) {
+    if (item.isNote) continue;
+    final label = item.label.trim();
+    final prefix = _act0StreetReplayStreetFromTrailLabelV1(label);
+    if (prefix != null) parsedStreet = prefix;
+    final action = _act0StreetReplayActionLabelV1(label, prefix);
+    if (action.isEmpty) {
+      // A source street marker is still a round boundary even without an
+      // actor. Do not discard the obligation to finish the preceding round.
+      if (prefix != null &&
+          (parsedStreet != Act0StreetReplayStreetV1.preflop ||
+              actions.length >= 2)) {
+        actions.add((street: parsedStreet, actor: '', verb: '', amount: null));
+      }
+      continue;
+    }
+    final parsed = _act0StreetReplayParseActionV1(action);
+    if (parsed == null) return unproved;
+    final actor = parsed.actorLabel.trim().toUpperCase();
+    final verb = parsed.actionTypeLabel.toLowerCase();
+    final passive = const {'check', 'checks', 'fold', 'folds'}.contains(verb);
+    final numeric = const {
+      'blind',
+      'posts',
+      'call',
+      'calls',
+      'bet',
+      'bets',
+      'raise',
+      'raises',
+    }.contains(verb);
+    if (!seatByActor.containsKey(actor) || (!passive && !numeric)) {
+      return unproved;
+    }
+    // Reuse the replay parser, but do not borrow choreography's different
+    // suffix/deal/acts grammar or guess the meaning of an additional call.
+    final expected =
+        '${parsed.actorLabel} ${parsed.actionTypeLabel}'
+        '${numeric ? ' ${parsed.amountLabel}' : ''}';
+    if (action.split(RegExp(r'\s+')).join(' ').toUpperCase() !=
+        expected.toUpperCase()) {
+      return unproved;
+    }
+    final amount = numeric
+        ? double.tryParse(parsed.amountLabel.split(' ').first)
+        : null;
+    if (numeric && (amount == null || !amount.isFinite || amount <= 0)) {
+      return unproved;
+    }
+    actions.add((
+      street: parsedStreet,
+      actor: actor,
+      verb: verb,
+      amount: amount,
+    ));
+  }
+  bool isPost(String verb) => verb == 'blind' || verb == 'posts';
+  if (actions.length < 2 ||
+      actions[0].street != Act0StreetReplayStreetV1.preflop ||
+      actions[1].street != Act0StreetReplayStreetV1.preflop ||
+      actions[0].actor != 'SB' ||
+      actions[1].actor != 'BB' ||
+      !isPost(actions[0].verb) ||
+      !isPost(actions[1].verb) ||
+      actions[0].amount != 0.5 ||
+      actions[1].amount != 1 ||
+      actions.skip(2).any((action) => isPost(action.verb))) {
+    return unproved;
+  }
+  final executedFolds = actions
+      .where((action) => action.verb == 'fold' || action.verb == 'folds')
+      .map((action) => action.actor)
+      .toSet();
+  for (final entry in seatByActor.entries) {
+    // Snapshot flags cannot supply an omitted historical fold or establish
+    // the time at which a participant left the hand.
+    if ((!entry.value.isInHand || entry.value.isFolded) &&
+        !executedFolds.contains(entry.key)) {
+      return unproved;
+    }
+  }
+
+  final snapshotStreet = _act0StreetReplayStreetFromLabelV1(table.streetLabel);
+  if (snapshotStreet == null) return unproved;
+  // The final source street is itself a boundary even before its first action.
+  // It cannot erase a response still owed on the preceding street.
+  if (actions.last.street != snapshotStreet) {
+    actions.add((street: snapshotStreet, actor: '', verb: '', amount: null));
+  }
+
+  final live = order.toSet();
+  var pending = order.toSet();
+  final committed = <String, double>{'SB': 0.5, 'BB': 1};
+  var price = 1.0;
+  var street = Act0StreetReplayStreetV1.preflop;
+  var lastActorIndex = order.indexOf('BB');
+  String? nextActor() {
+    for (var offset = 1; offset <= order.length; offset++) {
+      final actor = order[(lastActorIndex + offset) % order.length];
+      if (pending.contains(actor)) return actor;
+    }
+    return null;
+  }
+
+  for (final action in actions.skip(2)) {
+    if (action.street != street) {
+      if (action.street.index != street.index + 1 ||
+          pending.isNotEmpty ||
+          live.length < 2) {
+        return contradiction;
+      }
+      street = action.street;
+      pending = live.toSet();
+      committed.clear();
+      price = 0;
+      lastActorIndex = order.indexOf('BTN');
+    }
+    if (action.verb.isEmpty) continue;
+    if (live.length < 2 || pending.isEmpty || action.actor != nextActor()) {
+      return contradiction;
+    }
+    switch (action.verb) {
+      case 'fold':
+      case 'folds':
+        live.remove(action.actor);
+        pending.remove(action.actor);
+      case 'check':
+      case 'checks':
+        if ((committed[action.actor] ?? 0) != price) return contradiction;
+        pending.remove(action.actor);
+      case 'call':
+      case 'calls':
+        // Only the already-supported ordinary total-to call is understood.
+        // An undercall/additional-call interpretation needs its own source
+        // proof; do not turn it into invented numerical equalization.
+        if (price <= 0 || action.amount != price) return unproved;
+        committed[action.actor] = price;
+        pending.remove(action.actor);
+      case 'bet':
+      case 'bets':
+      case 'raise':
+      case 'raises':
+        final isBet = action.verb == 'bet' || action.verb == 'bets';
+        if (action.amount! <= price || isBet != (price == 0)) return unproved;
+        price = action.amount!;
+        committed[action.actor] = price;
+        pending = live.where((actor) => actor != action.actor).toSet();
+      default:
+        return unproved;
+    }
+    lastActorIndex = order.indexOf(action.actor);
+    if (live.length < 2) pending.clear();
+  }
+
+  final activeId = table.activeSeatId?.trim() ?? '';
+  if (activeId.isEmpty) return pending.isEmpty ? consistent : unproved;
+  final active = _act0StreetReplaySeatByIdV1(table, activeId);
+  if (active == null) return unproved;
+  if (pending.isEmpty ||
+      live.length < 2 ||
+      active.seatLabel.trim().toUpperCase() != nextActor()) {
+    return contradiction;
+  }
+  return consistent;
+}
+
 Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
   // Scope is authored independently of parser success. A seat map or chip
   // diagram must never become a hand history merely because a label parses.
@@ -122,7 +340,9 @@ Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
 
   final steps = <Act0StreetReplayStepV1>[];
   var activeStreet = Act0StreetReplayStreetV1.preflop;
-  var failedActionTruth = false;
+  var failedActionTruth =
+      act0BettingRoundOrderTruthForTableV1(table) ==
+      Act0BettingRoundOrderTruthV1.contradiction;
   final foldedActors = <String>{};
   String? previousVoluntaryActor;
   for (var index = 0; index < trailLabels.length; index++) {
