@@ -1154,6 +1154,17 @@ void main() {
       expect(nextStep['priority_class'], isA<int>());
       expect(nextStep.keys, isNot(contains('conceptFamilyId')));
       expect(nextStep.keys, isNot(contains('sourceTaskId')));
+      // OBS-03: an unversioned next-step event is rejected by the private
+      // HNP collector, so every real Home/Review route exported an incomplete
+      // (non-reconstructable) incident trace on the exact native candidate.
+      expect(nextStep['schemaVersion'], 1);
+      final hnp = Act0HnpTelemetrySinkV1(fileStore: _NoFileStoreV1());
+      hnp.record(sink.events.last);
+      final capture =
+          (jsonDecode(hnp.exportJson()) as Map<String, dynamic>)['capture']
+              as Map<String, dynamic>;
+      expect(capture['rejectedEventCount'], 0);
+      expect(capture['complete'], isTrue);
 
       final repairItem = repairItemEvents.single.fields;
       expect(repairItem['schemaVersion'], 1);
@@ -1751,4 +1762,12 @@ void main() {
       expect(find.byKey(const Key('act0_shell_runner_screen')), findsOneWidget);
     },
   );
+}
+
+class _NoFileStoreV1 implements Act0HnpTraceFileStoreV1 {
+  @override
+  Future<String?> getPath() async => null;
+
+  @override
+  Future<void> replace(String jsonl) async {}
 }

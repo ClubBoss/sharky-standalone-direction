@@ -8314,7 +8314,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       }
       _recordTelemetryEventV1(
         'personalized_next_step_selected',
-        <String, Object?>{'surface': surface, ...nextStep.toTelemetryPayload()},
+        <String, Object?>{
+          // OBS-03: the privacy sink rejects unversioned events, which made
+          // every real Home next-step route an incomplete incident trace.
+          'schemaVersion': 1,
+          'surface': surface,
+          ...nextStep.toTelemetryPayload(),
+        },
       );
     });
   }
@@ -8384,7 +8390,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     String surface,
   ) => _recordTelemetryEventV1(
     'personalized_next_step_opened',
-    <String, Object?>{'surface': surface, ...nextStep.toTelemetryPayload()},
+    <String, Object?>{
+      'schemaVersion': 1,
+      'surface': surface,
+      ...nextStep.toTelemetryPayload(),
+    },
   );
 
   String _homeRepairLabel(
