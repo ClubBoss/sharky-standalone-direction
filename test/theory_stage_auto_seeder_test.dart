@@ -8,22 +8,25 @@ import 'package:poker_analyzer/models/v2/hand_data.dart' as v2models;
 import 'package:poker_analyzer/core/training/engine/training_type_engine.dart';
 
 class _FakeImporter extends TheoryYamlImporter {
-  final List<TrainingPackTemplate> list;
+  final List<v2.TrainingPackTemplateV2> list;
   _FakeImporter(this.list);
   @override
-  Future<List<TrainingPackTemplate>> importFromDirectory(
+  Future<List<v2.TrainingPackTemplateV2>> importFromDirectory(
     String dirPath,
   ) async => list;
 }
 
-TrainingPackTemplate _tpl(String id, String tag) => TrainingPackTemplate(
-  id: id,
-  name: id,
-  trainingType: TrainingType.theory,
-  tags: [tag],
-  spots: [TrainingPackSpot(id: 's', type: 'theory', hand: v2models.HandData())],
-  spotCount: 1,
-);
+v2.TrainingPackTemplateV2 _tpl(String id, String tag) =>
+    v2.TrainingPackTemplateV2(
+      id: id,
+      name: id,
+      trainingType: TrainingType.theory,
+      tags: [tag],
+      spots: [
+        TrainingPackSpot(id: 's', type: 'theory', hand: v2models.HandData()),
+      ],
+      spotCount: 1,
+    );
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
