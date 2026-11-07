@@ -74,6 +74,51 @@ Map _trace() {
   };
 }
 
+/// Positive transfer shaped like the producer: the comparison is the newest
+/// epoch record (the current attempt) and the baseline/previous are earlier
+/// source-linked records of the same concept family.
+Map _verifiedTrace({
+  Object? baseline = 'attempt_0',
+  Object? comparison = 'attempt_1',
+  Object? previous = 'attempt_0',
+  Map<String, Object?> earlier = const {},
+}) {
+  final trace = _trace();
+  final events = (trace['events'] as List).cast<Map>();
+  final current = _fields(trace, 'decision_evidence_recorded');
+  current
+    ..['concept_family_id'] = 'family_1'
+    ..['created_order'] = 2;
+  final earlierEvidence = {
+    ...current,
+    'attempt_id': 'attempt_0',
+    'run_id': 'run_0',
+    'session_id': 'session_0',
+    'task_id': 'task_0',
+    'source_fingerprint': 'earlier_fingerprint',
+    'created_order': 1,
+    'correct': true,
+    'chosen_action': 'call',
+    ...earlier,
+  };
+  _fields(trace, 'transfer_evaluated')
+    ..['relationship'] = 'same_family_transfer_v1'
+    ..['transfer_verdict'] = 'recent_verified_v1'
+    ..['eligible_evidence_count'] = 5
+    ..['baseline_attempt_id'] = baseline
+    ..['comparison_attempt_id'] = comparison;
+  _fields(trace, 'elapsed_learning_observed')['previous_attempt_id'] = previous;
+  final all = [
+    {'name': 'decision_evidence_recorded', 'fields': earlierEvidence},
+    for (final e in events) {'name': e['name'], 'fields': e['fields']},
+  ];
+  trace['events'] = [
+    for (var i = 0; i < all.length; i++) {...all[i], 'sequence': i + 1},
+  ];
+  (trace['capture'] as Map)['recordedEventCount'] = all.length;
+  return jsonDecode(jsonEncode(trace)) as Map;
+}
+
 Map _inspect(Map trace) => inspectAct0Obs03TraceV1(
   trace,
   attemptId: 'attempt_1',
@@ -138,4 +183,47 @@ void main() {
       }
     },
   );
+
+  test('OBS01 producer-shaped verified transfer still reconstructs', () {
+    final result = _inspect(_verifiedTrace());
+    expect(result['status'], 'TRACE_RECONSTRUCTED');
+    expect(result['transfer_verdict'], 'recent_verified_v1');
+  });
+
+  // Independent review 5811045902: these three synthetic traces were reported
+  // as TRACE_RECONSTRUCTED with a positive recent_verified_v1 verdict.
+  test('OBS01 foreign or invalid referenced source is never reconstructed', () {
+    for (final earlier in <Map<String, Object?>>[
+      {'source_current': false},
+      {'evidence_status': 'missing'},
+      {'evidence_status': 'insufficient_evidence'},
+      {'concept_family_id': 'other_family'},
+      {'concept_family_id': null},
+      {'created_order': 3},
+      {'created_order': null},
+    ]) {
+      final result = _inspect(_verifiedTrace(earlier: earlier));
+      expect(result['status'], 'INSUFFICIENT', reason: '$earlier');
+      expect(result['reason'], 'invalid_source_reference', reason: '$earlier');
+    }
+  });
+
+  test('OBS01 identical baseline and comparison are never reconstructed', () {
+    for (final id in ['attempt_0', 'attempt_1']) {
+      final result = _inspect(_verifiedTrace(baseline: id, comparison: id));
+      expect(result['status'], 'INSUFFICIENT', reason: id);
+    }
+  });
+
+  test('OBS01 baseline or previous naming the current attempt is rejected', () {
+    for (final trace in [
+      _verifiedTrace(baseline: 'attempt_1'),
+      _verifiedTrace(previous: 'attempt_1'),
+      _verifiedTrace(baseline: 'attempt_1', comparison: 'attempt_1'),
+    ]) {
+      final result = _inspect(trace);
+      expect(result['status'], 'INSUFFICIENT');
+      expect(result['reason'], 'invalid_source_reference');
+    }
+  });
 }

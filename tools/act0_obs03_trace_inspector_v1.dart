@@ -175,15 +175,43 @@ Map<String, Object?> inspectAct0Obs03TraceV1(
           transfer['comparison_attempt_id'] is! String)) {
     return insufficient('missing_verified_transfer_references');
   }
-  for (final id in [
-    transfer['baseline_attempt_id'],
-    transfer['comparison_attempt_id'],
-    elapsed['previous_attempt_id'],
-  ]) {
-    if (id != null &&
-        (id is! String || one('decision_evidence_recorded', id) == null))
-      return insufficient('missing_source_reference');
+  // A reference must name another source-current, source-linked record of the
+  // same concept epoch that was created before this attempt. Only the
+  // comparison may be this attempt: the producer compares against the newest
+  // epoch record, which is usually the attempt being observed.
+  final baselineId = transfer['baseline_attempt_id'];
+  final comparisonId = transfer['comparison_attempt_id'];
+  final previousId = elapsed['previous_attempt_id'];
+  final family = evidence['concept_family_id'];
+  final currentOrder = evidence['created_order'];
+  String? referenceProblem(Object? id, {required bool mayBeCurrent}) {
+    if (id == null) return null;
+    if (id is! String || id.isEmpty) return 'missing_source_reference';
+    if (id == attemptId)
+      return mayBeCurrent ? null : 'invalid_source_reference';
+    final source = one('decision_evidence_recorded', id);
+    if (source == null) return 'missing_source_reference';
+    final sourceOrder = source['created_order'];
+    if (source['source_current'] != true ||
+        source['evidence_status'] != 'source_linked' ||
+        family is! String ||
+        family.isEmpty ||
+        source['concept_family_id'] != family ||
+        currentOrder is! int ||
+        sourceOrder is! int ||
+        sourceOrder >= currentOrder)
+      return 'invalid_source_reference';
+    return null;
   }
+
+  final referenceFailure =
+      referenceProblem(baselineId, mayBeCurrent: false) ??
+      referenceProblem(comparisonId, mayBeCurrent: true) ??
+      referenceProblem(previousId, mayBeCurrent: false) ??
+      (baselineId != null && baselineId == comparisonId
+          ? 'invalid_source_reference'
+          : null);
+  if (referenceFailure != null) return insufficient(referenceFailure);
   final occurrence = evidence['repair_occurrence_id'];
   Map? repair;
   if (const {'repair', 'recheck'}.contains(evidence['sequence_stage'])) {
