@@ -22,8 +22,10 @@ void main() {
       'hand_rankings_royal_vs_flush_drill',
     };
     final assessed = tasks.where((task) => task.runner.options.isNotEmpty);
-    expect(assessed.map((task) => task.taskId).toSet(),
-        containsAll(knownLeadingIds));
+    expect(
+      assessed.map((task) => task.taskId).toSet(),
+      containsAll(knownLeadingIds),
+    );
 
     for (final task in assessed) {
       final original = task.summary ?? task.runner.caption;
