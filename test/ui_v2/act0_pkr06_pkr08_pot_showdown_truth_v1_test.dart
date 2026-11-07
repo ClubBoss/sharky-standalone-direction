@@ -127,16 +127,30 @@ void main() {
     final keys = pkr06FindingsV1('x', t).map((f) => f.rule).toSet();
     expect(keys, isNot(contains('side_pot_amounts')));
     expect(keys, isNot(contains('bet_exceeds_stack')));
-    // The same table with the source-derived folds is fully consistent.
-    final repaired = _foldOthers(t, {'btn', 'co', 'bb'});
-    expect(pkr06FindingsV1('x', repaired), isEmpty);
+    // Folding only the source-backed SB ("posts 0.5 BB, then folds") clears
+    // the SB findings; UTG and HJ still need an authored source decision.
+    final sbFolded = _foldOthers(t, {'utg', 'hj', 'co', 'btn', 'bb'});
+    expect(pkr06FindingsV1('x', sbFolded).map((f) => f.key).toSet(), {
+      'x|live_seat_neither_matched_nor_folded|UTG put=0.0',
+      'x|live_seat_neither_matched_nor_folded|HJ put=0.0',
+    });
   });
 
   test('PKR06 negative controls fail closed', () {
+    // Synthetic consistent control: UTG/HJ folds are added to the trail so the
+    // seat flags carry provenance. This is not a claim about the source hand.
+    final sidePot = _task('what_poker_is_side_pot_intro').runner.table;
     final base = _foldOthers(
-      _task('what_poker_is_side_pot_intro').runner.table,
+      sidePot.copyWith(
+        actionTrail: [
+          const Act0ActionTrailItemV1.note(label: 'UTG folds'),
+          const Act0ActionTrailItemV1.note(label: 'HJ folds'),
+          ...sidePot.actionTrail,
+        ],
+      ),
       {'btn', 'co', 'bb'},
     );
+    expect(pkr06FindingsV1('x', base), isEmpty);
     Set<String> rules(Act0TableStateV1 t) =>
         pkr06FindingsV1('x', t).map((f) => f.rule).toSet();
 
@@ -419,14 +433,26 @@ void main() {
     );
     expect(resolveShowdownTruthV1(swapped).winners, ['co']);
 
-    // The residual becomes source-determined once only the shown players are
-    // live (the proposed authored repair).
+    // Review 6714410161: fold flags without fold/showdown provenance must not
+    // turn hidden live opponents into proven losers.
     final residual = _task(
       'hand_rankings_full_house_vs_flush_drill',
     ).runner.table;
-    final headsUp = _foldOthers(residual, {'btn', 'co'});
-    final r = resolveShowdownTruthV1(headsUp);
-    expect(r.verdict, PotTruthVerdictV1.proved);
-    expect(r.winners, ['btn']);
+    final flagOnly = resolveShowdownTruthV1(
+      _foldOthers(residual, {'btn', 'co'}),
+    );
+    expect(flagOnly.verdict, PotTruthVerdictV1.unproved);
+    expect(flagOnly.reason, startsWith('fold_without_provenance'));
+    // The same folds with explicit trail provenance do resolve the hand.
+    final withProvenance = _foldOthers(
+      residual.copyWith(
+        actionTrail: [
+          for (final seat in ['UTG', 'HJ', 'SB', 'BB'])
+            Act0ActionTrailItemV1.note(label: '$seat folds'),
+        ],
+      ),
+      {'btn', 'co'},
+    );
+    expect(resolveShowdownTruthV1(withProvenance).winners, ['btn']);
   });
 }
