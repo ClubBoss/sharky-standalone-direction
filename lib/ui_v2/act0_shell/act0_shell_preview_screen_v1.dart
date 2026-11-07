@@ -191,6 +191,56 @@ act0FirstValueSameSignalRepMappingV1({
     };
   }
 
+  // Explicitly admitted concept pairs share their actual receipt semantics.
+  if (nextRepId == 'repeat_range_bucket_reasoning' &&
+      skillAtomId == 'range_bucket_reasoning' &&
+      sourceSignalId == 'range_bucket_shift') {
+    switch (sourceTask) {
+      case 'w6_turn_shift_bucket':
+        return target(
+          'world_6',
+          'range_pressure_lines',
+          'w6_turn_pressure_shift_transfer',
+        );
+      case 'w6_turn_pressure_shift_transfer':
+        return target('world_6', 'range_board_fit', 'w6_turn_shift_bucket');
+    }
+  }
+
+  if (nextRepId == 'repeat_board_texture_reasoning' &&
+      skillAtomId == 'board_texture_reasoning' &&
+      sourceSignalId == 'board_texture_change') {
+    switch (sourceTask) {
+      case 'w6_wet_board_repair':
+        return target(
+          'world_5',
+          'turn_river_changes',
+          'turn_river_changes_w5_turn_texture_shift_transfer',
+        );
+      case 'turn_river_changes_w5_turn_texture_shift_transfer':
+        return target('world_6', 'range_pressure_lines', 'w6_wet_board_repair');
+    }
+  }
+
+  if (nextRepId == 'repeat_mindset_process_discipline' &&
+      skillAtomId == 'mindset_process_discipline' &&
+      sourceSignalId == 'process_over_outcome') {
+    switch (sourceTask) {
+      case 'w12_bad_call_good_result':
+        return target(
+          'world_12',
+          'mindset_bridge_checkpoint',
+          'w12_checkpoint_process_line',
+        );
+      case 'w12_checkpoint_process_line':
+        return target(
+          'world_12',
+          'decision_over_outcome',
+          'w12_bad_call_good_result',
+        );
+    }
+  }
+
   if (sourceTask == Act0PositionPersonalizationV1.sourceTaskId &&
       nextRepId == 'repeat_table_position_read' &&
       skillAtomId == 'table_position_read' &&

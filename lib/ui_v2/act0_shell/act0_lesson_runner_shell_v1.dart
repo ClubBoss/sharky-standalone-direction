@@ -6931,6 +6931,49 @@ Act0FeedbackSignalProofV1? _feedbackSignalProofForRunnerV1({
   required bool hasSeatTargets,
 }) {
   final table = runner.table;
+  // An admitted conceptual answer uses its stated premise, never unrelated
+  // physical cards or a guessed pot. Unknown/mismatched explicit metadata must
+  // not fall back to table heuristics and acquire another kind of proof.
+  final explicitSignal = runner.feedbackSignalId?.trim() ?? '';
+  if (explicitSignal.isNotEmpty && explicitSignal != 'players_behind') {
+    switch (explicitSignal) {
+      case 'range_bucket_shift':
+        if (!const {
+          'w6_turn_shift_bucket',
+          'w6_turn_pressure_shift_transfer',
+        }.contains(runner.lessonId)) {
+          return null;
+        }
+        return _feedbackSignalProofV1(
+          signalId: explicitSignal,
+          label: 'Stated premise: changing fold pressure',
+        );
+      case 'board_texture_change':
+        if (!const {
+          'w6_wet_board_repair',
+          'w5_turn_texture_shift_transfer',
+        }.contains(runner.lessonId)) {
+          return null;
+        }
+        return _feedbackSignalProofV1(
+          signalId: explicitSignal,
+          label: 'Stated premise: a changed turn board',
+        );
+      case 'process_over_outcome':
+        if (!const {
+          'w12_bad_call_good_result',
+          'w12_checkpoint_process_line',
+        }.contains(runner.lessonId)) {
+          return null;
+        }
+        return _feedbackSignalProofV1(
+          signalId: explicitSignal,
+          label: 'Stated premise: decision process and result',
+        );
+      default:
+        return null;
+    }
+  }
   final selectedOption = option ?? runner.selectedOption;
   final correctOption = runner.options.cast<Act0RunnerOptionV1?>().firstWhere(
     (candidate) => candidate?.isCorrect == true,
@@ -7098,6 +7141,24 @@ Act0SkillReceiptV1? act0FirstValueSkillReceiptForRunnerV1({
 ({String skillAtomId, String skillLabel, String nextRepId, String nextRepLabel})
 _skillReceiptSpecForSignalIdV1(String signalId) {
   return switch (signalId.trim()) {
+    'range_bucket_shift' => (
+      skillAtomId: 'range_bucket_reasoning',
+      skillLabel: 'Range bucket reasoning',
+      nextRepId: 'repeat_range_bucket_reasoning',
+      nextRepLabel: 'use this reasoning in another example',
+    ),
+    'board_texture_change' => (
+      skillAtomId: 'board_texture_reasoning',
+      skillLabel: 'Board-change reasoning',
+      nextRepId: 'repeat_board_texture_reasoning',
+      nextRepLabel: 'use this reasoning in another example',
+    ),
+    'process_over_outcome' => (
+      skillAtomId: 'mindset_process_discipline',
+      skillLabel: 'Process over outcome',
+      nextRepId: 'repeat_mindset_process_discipline',
+      nextRepLabel: 'use this reasoning in another example',
+    ),
     'hero_button' => (
       skillAtomId: 'table_position_read',
       skillLabel: 'Table position read',
@@ -13460,17 +13521,19 @@ class _LateRouteCenterSignalV1 extends StatelessWidget {
         children: [
           Icon(signal.icon, size: 11, color: Act0ShellTokensV1.gold),
           const SizedBox(width: 4),
-          Text(
-            signal.label,
-            maxLines: 1,
-            overflow: TextOverflow.fade,
-            style: Act0ShellTokensV1.label.copyWith(
-              color: Act0ShellTokensV1.gold,
-              fontSize: 8.5,
-              height: 1,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 0,
-              fontFamily: 'Roboto',
+          Flexible(
+            child: Text(
+              signal.label,
+              maxLines: 1,
+              overflow: TextOverflow.fade,
+              style: Act0ShellTokensV1.label.copyWith(
+                color: Act0ShellTokensV1.gold,
+                fontSize: 8.5,
+                height: 1,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 0,
+                fontFamily: 'Roboto',
+              ),
             ),
           ),
         ],
