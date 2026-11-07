@@ -204,13 +204,36 @@ Map<String, Object?> inspectAct0Obs03TraceV1(
     return null;
   }
 
+  // The producer selects transfer baseline/comparison only from unassisted
+  // records outside exact replay, immediate repair and legacy unspaced review
+  // (act0_learning_transfer_measurement_v1 `_recentSignal`). The elapsed
+  // previous attempt is a different epoch reference and keeps its own rule.
+  String? transferEligibilityProblem(Object? id) {
+    if (id == null) return null;
+    final source = id == attemptId
+        ? evidence
+        : one('decision_evidence_recorded', id as String);
+    if (source == null) return 'missing_source_reference';
+    if (source['assistance_kind'] != 'none' ||
+        source['review_kind'] is! String ||
+        const {
+          'exactReplay',
+          'immediateRepair',
+          'legacyUnspaced',
+        }.contains(source['review_kind']))
+      return 'ineligible_transfer_reference';
+    return null;
+  }
+
   final referenceFailure =
       referenceProblem(baselineId, mayBeCurrent: false) ??
       referenceProblem(comparisonId, mayBeCurrent: true) ??
       referenceProblem(previousId, mayBeCurrent: false) ??
       (baselineId != null && baselineId == comparisonId
           ? 'invalid_source_reference'
-          : null);
+          : null) ??
+      transferEligibilityProblem(baselineId) ??
+      transferEligibilityProblem(comparisonId);
   if (referenceFailure != null) return insufficient(referenceFailure);
   final occurrence = evidence['repair_occurrence_id'];
   Map? repair;

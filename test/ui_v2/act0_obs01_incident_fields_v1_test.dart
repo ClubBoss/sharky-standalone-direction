@@ -226,4 +226,64 @@ void main() {
       expect(result['reason'], 'invalid_source_reference');
     }
   });
+
+  Map evidenceOf(Map trace, String attemptId) =>
+      (trace['events'] as List).singleWhere(
+            (e) =>
+                e['name'] == 'decision_evidence_recorded' &&
+                e['fields']['attempt_id'] == attemptId,
+          )['fields']
+          as Map;
+
+  // Independent review 5811442259: the producer never selects assisted or
+  // replay/immediate-repair/legacy records as a transfer baseline/comparison.
+  test('OBS01 ineligible transfer baseline is never reconstructed', () {
+    for (final earlier in <Map<String, Object?>>[
+      {'assistance_kind': 'quickHint'},
+      {'assistance_kind': 'theoryRecall'},
+      {'review_kind': 'exactReplay'},
+      {'review_kind': 'immediateRepair'},
+      {'review_kind': 'legacyUnspaced'},
+      {'review_kind': null},
+    ]) {
+      final result = _inspect(_verifiedTrace(earlier: earlier));
+      expect(result['status'], 'INSUFFICIENT', reason: '$earlier');
+      expect(
+        result['reason'],
+        'ineligible_transfer_reference',
+        reason: '$earlier',
+      );
+    }
+  });
+
+  test('OBS01 ineligible current attempt cannot be the comparison', () {
+    for (final delta in <Map<String, Object?>>[
+      {'assistance_kind': 'quickHint'},
+      {'review_kind': 'exactReplay'},
+    ]) {
+      final trace = _verifiedTrace();
+      evidenceOf(trace, 'attempt_1').addAll(delta);
+      final result = _inspect(trace);
+      expect(result['status'], 'INSUFFICIENT', reason: '$delta');
+      expect(result['reason'], 'ineligible_transfer_reference');
+    }
+  });
+
+  test('OBS01 elapsed previous keeps its own epoch rule', () {
+    // An assisted earlier record may still be the previous epoch attempt; the
+    // transfer reference rule must not be copied onto elapsed lineage.
+    final trace = _verifiedTrace(
+      baseline: null,
+      earlier: {'assistance_kind': 'quickHint'},
+    );
+    (trace['events'] as List).singleWhere(
+        (e) => e['name'] == 'transfer_evaluated',
+      )['fields']
+      ..['relationship'] = 'insufficient_evidence_v1'
+      ..['transfer_verdict'] = 'confirmation_needed_v1'
+      ..['eligible_evidence_count'] = 1;
+    final result = _inspect(trace);
+    expect(result['status'], 'TRACE_RECONSTRUCTED');
+    expect(result['transfer_verdict'], 'confirmation_needed_v1');
+  });
 }
