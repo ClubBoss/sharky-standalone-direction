@@ -102,8 +102,16 @@ Map<String, Object?> inspectAct0Obs03TraceV1(
     if (row['schemaVersion'] is! int)
       return insufficient('unknown_event_semantics');
   }
-  if (transfer['relationship'] is! String ||
-      transfer['transfer_verdict'] is! String ||
+  if (!const {
+        'insufficient_evidence_v1',
+        'same_task_repeat_v1',
+        'same_family_transfer_v1',
+      }.contains(transfer['relationship']) ||
+      !const {
+        'insufficient_evidence_v1',
+        'confirmation_needed_v1',
+        'recent_verified_v1',
+      }.contains(transfer['transfer_verdict']) ||
       elapsed['elapsed_basis'] != 'recent_source_epoch' ||
       !const {
         'unknown',
@@ -125,9 +133,22 @@ Map<String, Object?> inspectAct0Obs03TraceV1(
     'review_kind',
     'assistance_kind',
     'chosen_action',
+    'expected_action',
+    'world_id',
+    'lesson_id',
+    'task_id',
+    'error_type',
   ]) {
     if (evidence[key] is! String || (evidence[key] as String).isEmpty)
       return insufficient('missing_evidence_identity');
+  }
+  if (!const {
+    'unknown',
+    'under_3s',
+    '3_to_10s',
+    'over_10s',
+  }.contains(evidence['decisionTimeBucket'])) {
+    return insufficient('missing_or_unknown_decision_time');
   }
   if (evidence['correct'] is! bool ||
       decision['correct'] != evidence['correct'] ||
@@ -135,10 +156,24 @@ Map<String, Object?> inspectAct0Obs03TraceV1(
       decision['session_id'] != evidence['session_id'])
     return insufficient('decision_evidence_mismatch');
   for (final row in [transfer, elapsed]) {
-    for (final key in ['run_id', 'session_id', 'source_fingerprint']) {
+    for (final key in [
+      'run_id',
+      'session_id',
+      'source_fingerprint',
+      'world_id',
+      'lesson_id',
+      'task_id',
+    ]) {
       if (row[key] != evidence[key])
         return insufficient('evaluation_identity_mismatch');
     }
+  }
+  if (transfer['transfer_verdict'] == 'recent_verified_v1' &&
+      (transfer['eligible_evidence_count'] is! int ||
+          (transfer['eligible_evidence_count'] as int) < 5 ||
+          transfer['baseline_attempt_id'] is! String ||
+          transfer['comparison_attempt_id'] is! String)) {
+    return insufficient('missing_verified_transfer_references');
   }
   for (final id in [
     transfer['baseline_attempt_id'],
@@ -186,7 +221,14 @@ Map<String, Object?> inspectAct0Obs03TraceV1(
     'run_id': evidence['run_id'],
     'session_id': evidence['session_id'],
     'source_fingerprint': expectedSourceFingerprint,
+    'world_id': evidence['world_id'],
+    'lesson_id': evidence['lesson_id'],
+    'task_id': evidence['task_id'],
+    'chosen_action': evidence['chosen_action'],
+    'expected_action': evidence['expected_action'],
     'correct': evidence['correct'],
+    'error_type': evidence['error_type'],
+    'decisionTimeBucket': evidence['decisionTimeBucket'],
     'review_kind': evidence['review_kind'],
     'assistance_kind': evidence['assistance_kind'],
     'transfer_verdict': transfer['transfer_verdict'],
