@@ -107,6 +107,7 @@ TIER_A_COMMANDS = [
             "flutter",
             "test",
             "test/ui_v2/act0_ldr01_durable_truth_v1_test.dart",
+            "test/ui_v2/act0_dat04_atomic_persistence_v1_test.dart",
             "test/ui_v2/act0_repair_obligation_integrity_v1_test.dart",
             "test/ui_v2/act0_qa_independent_rep05_replay_20261103_test.dart",
             "test/ui_v2/act0_obs04_persist_diagnostics_v1_test.dart",

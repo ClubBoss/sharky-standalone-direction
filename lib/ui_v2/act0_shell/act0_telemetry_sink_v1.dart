@@ -49,11 +49,19 @@ class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
           .then((prior) {
             _adoptPriorTrace(prior);
             _loadingPrior = false;
-            final buffered = List<Act0TelemetryEventV1>.of(_bufferedEvents);
-            _bufferedEvents.clear();
-            for (final event in buffered) {
-              _recordNow(event);
+            final offset = _recorded;
+            _recorded += _bufferedRecorded;
+            _rejected += _bufferedRejected;
+            _evicted += _bufferedEvicted;
+            _redacted += _bufferedRedacted;
+            for (final (sequence, event) in _bufferedEvents) {
+              _retainSnapshot(event, offset + sequence);
             }
+            _bufferedEvents.clear();
+            _bufferedRecorded = 0;
+            _bufferedRejected = 0;
+            _bufferedEvicted = 0;
+            _bufferedRedacted = 0;
           });
       unawaited(_pendingExport);
     }
@@ -75,7 +83,11 @@ class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
   bool _exportRequested = false;
   bool _loadingPrior = false;
   String _priorCapture = 'none';
-  final List<Act0TelemetryEventV1> _bufferedEvents = [];
+  final List<(int, Act0TelemetryEventV1)> _bufferedEvents = [];
+  int _bufferedRecorded = 0;
+  int _bufferedRejected = 0;
+  int _bufferedEvicted = 0;
+  int _bufferedRedacted = 0;
 
   @override
   List<Act0TelemetryEventV1> get events => List.unmodifiable(_retainedEvents);
@@ -83,7 +95,20 @@ class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
   @override
   void record(Act0TelemetryEventV1 event) {
     if (_loadingPrior) {
-      _bufferedEvents.add(event);
+      // The previous process's I/O may stall. Apply the same privacy and
+      // capacity boundary before retaining anything during that wait.
+      final sequence = ++_bufferedRecorded;
+      final (snapshot, redacted) = _snapshotHnpEventV1(event);
+      _bufferedRedacted += redacted;
+      if (snapshot == null) {
+        _bufferedRejected++;
+      } else {
+        if (_bufferedEvents.length >= maxEvents) {
+          _bufferedEvents.removeAt(0);
+          _bufferedEvicted++;
+        }
+        _bufferedEvents.add((sequence, snapshot));
+      }
       return;
     }
     _recordNow(event);
@@ -170,25 +195,18 @@ class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
 
   void _recordNow(Act0TelemetryEventV1 event) {
     final sequence = ++_recorded;
-    if (!_hnpEventNamesV1.contains(event.name) ||
-        !_hnpSupportedEventVersionV1(event)) {
+    final (snapshot, redacted) = _snapshotHnpEventV1(event);
+    _redacted += redacted;
+    if (snapshot == null) {
       _rejected++;
       _scheduleExport();
       return;
     }
-    final fields = <String, Object?>{};
-    for (final entry in event.fields.entries) {
-      final value = _hnpFieldValueV1(entry.key, entry.value);
-      if (value == null) {
-        _redacted++;
-      } else {
-        fields[entry.key] = value;
-      }
-    }
-    final snapshot = Act0TelemetryEventV1(
-      name: event.name,
-      fields: Map.unmodifiable(fields),
-    );
+    _retainSnapshot(snapshot, sequence);
+    _scheduleExport();
+  }
+
+  void _retainSnapshot(Act0TelemetryEventV1 snapshot, int sequence) {
     if (_retainedEvents.length >= maxEvents) {
       _retainedEvents.removeAt(0);
       _sequences.removeAt(0);
@@ -198,7 +216,6 @@ class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
     _sequences.add(sequence);
     // The console is diagnostic, but must have the same privacy boundary.
     debugPrint('HNP_TRACE_V1 ${jsonEncode(_row(_retainedEvents.length - 1))}');
-    _scheduleExport();
   }
 
   Map<String, Object> get _capture => {
@@ -209,7 +226,8 @@ class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
     'redactedFieldCount': _redacted,
     // Transport completeness only. It is not proof of semantic lineage,
     // learner independence, unseen transfer or elapsed retention.
-    'complete': _rejected == 0 && _evicted == 0,
+    'complete': !_loadingPrior && _rejected == 0 && _evicted == 0,
+    'pendingEventCount': _bufferedEvents.length,
     // 'continued': this file carries a verified prior-process trace;
     // 'discarded': a prior trace existed but failed verification.
     'priorCapture': _priorCapture,
@@ -271,6 +289,29 @@ class Act0HnpTelemetrySinkV1 extends Act0InMemoryTelemetrySinkV1 {
     });
     unawaited(_pendingExport);
   }
+}
+
+// Shared by immediate and restore-pending capture. The returned payload owns
+// its immutable, privacy-filtered values rather than the producer's raw map.
+(Act0TelemetryEventV1?, int) _snapshotHnpEventV1(Act0TelemetryEventV1 event) {
+  if (!_hnpEventNamesV1.contains(event.name) ||
+      !_hnpSupportedEventVersionV1(event)) {
+    return (null, 0);
+  }
+  final fields = <String, Object?>{};
+  var redacted = 0;
+  for (final entry in event.fields.entries) {
+    final value = _hnpFieldValueV1(entry.key, entry.value);
+    if (value == null) {
+      redacted++;
+    } else {
+      fields[entry.key] = value;
+    }
+  }
+  return (
+    Act0TelemetryEventV1(name: event.name, fields: Map.unmodifiable(fields)),
+    redacted,
+  );
 }
 
 // Versioned local export policy, derived from ACT0_TELEMETRY_TRUTH_MAP_v1.

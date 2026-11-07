@@ -15,6 +15,10 @@ class Act0AchievementSeedConsumerV1 {
     final earned = projection.seeds
         .where((seed) => seed.earned)
         .where((seed) => seed.state == act0AchievementSeedStateEarnedV1)
+        // These legacy seeds identify unresolved debt, not a successful repair.
+        // Filter before the cap for every caller (Summary and both Profiles),
+        // without rewriting the evidence or hiding the actionable Review debt.
+        .where((seed) => !_openMistakeSeedIdsV1.contains(seed.id))
         .where((seed) => _labelForSeedIdV1(seed.id) != null)
         .toList(growable: false);
     final ordered = <Act0AchievementSeedV1>[...earned]..sort(_compareSeedsV1);
@@ -69,12 +73,19 @@ String? _labelForSeedIdV1(String seedId) {
     case act0AchievementSeedFirstEvidenceSignalV1:
       return 'First evidence signal';
     case act0AchievementSeedFirstSessionCompleteV1:
-      return 'First session complete';
+      // latestRunSummary proves recorded answers, not a completed session.
+      // Keep the persisted seed identity while limiting the visible claim.
+      return 'First practice recorded';
     case act0AchievementSeedThreeDayStreakV1:
       return 'Three-day rhythm';
   }
   return null;
 }
+
+const _openMistakeSeedIdsV1 = {
+  act0AchievementSeedFirstRepairNoteV1,
+  act0AchievementSeedFirstReviewHistoryItemV1,
+};
 
 int _contractOrderV1(String seedId) {
   final index = _contractOrder.indexOf(seedId);

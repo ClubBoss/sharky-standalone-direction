@@ -1,3 +1,5 @@
+import 'package:flutter/semantics.dart';
+import 'act0_accessibility_semantics_v1.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'act0_academy_runtime_adapter_v1.dart';
@@ -16243,69 +16245,78 @@ class _NavItemV1 extends StatelessWidget {
               : Act0ShellTokensV1.textMuted);
     final hasBadge = showDot;
     return Expanded(
-      child: InkWell(
+      child: Act0SemanticActionV1(
+        label: label,
+        selected: selected,
+        value: hasBadge ? 'Items to review' : null,
+        sortKey: OrdinalSortKey(tab.index.toDouble(), name: 'act0_navigation'),
         onTap: () => onSelected(tab),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusSm),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight: academy ? 60 : 0,
-            minWidth: 44,
-          ),
-          child: Container(
-            decoration: academy && selected
-                ? BoxDecoration(
-                    border: Border(bottom: BorderSide(color: color, width: 2)),
-                  )
-                : null,
-            padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 2),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Icon(icon, size: 21, color: color),
-                    if (hasBadge)
-                      Positioned(
-                        top: -3,
-                        right: -6,
-                        child: Container(
-                          key: Key(
-                            'act0_shell_nav_badge_${_navItemKeyLabelV1(tab)}',
-                          ),
-                          width: 9,
-                          height: 9,
-                          decoration: BoxDecoration(
-                            color: Act0ShellTokensV1.gold,
-                            borderRadius: BorderRadius.circular(
-                              Act0ShellTokensV1.radiusPill,
+        child: InkWell(
+          onTap: () => onSelected(tab),
+          borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusSm),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: academy ? 60 : 0,
+              minWidth: 44,
+            ),
+            child: Container(
+              decoration: academy && selected
+                  ? BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: color, width: 2),
+                      ),
+                    )
+                  : null,
+              padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Icon(icon, size: 21, color: color),
+                      if (hasBadge)
+                        Positioned(
+                          top: -3,
+                          right: -6,
+                          child: Container(
+                            key: Key(
+                              'act0_shell_nav_badge_${_navItemKeyLabelV1(tab)}',
                             ),
-                            border: Border.all(
-                              color: Act0ShellTokensV1.surface,
-                              width: 1.2,
+                            width: 9,
+                            height: 9,
+                            decoration: BoxDecoration(
+                              color: Act0ShellTokensV1.gold,
+                              borderRadius: BorderRadius.circular(
+                                Act0ShellTokensV1.radiusPill,
+                              ),
+                              border: Border.all(
+                                color: Act0ShellTokensV1.surface,
+                                width: 1.2,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                  ],
-                ),
-                SizedBox(height: academy ? 4 : 2),
-                Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style:
-                      (academy
-                              ? Act0AcademyDesignTokensV1.supporting
-                              : const TextStyle())
-                          .copyWith(
-                            color: color,
-                            fontSize: 10,
-                            fontWeight: selected
-                                ? FontWeight.w800
-                                : FontWeight.w600,
-                          ),
-                ),
-              ],
+                    ],
+                  ),
+                  SizedBox(height: academy ? 4 : 2),
+                  Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    style:
+                        (academy
+                                ? Act0AcademyDesignTokensV1.supporting
+                                : const TextStyle())
+                            .copyWith(
+                              color: color,
+                              fontSize: 10,
+                              fontWeight: selected
+                                  ? FontWeight.w800
+                                  : FontWeight.w600,
+                            ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

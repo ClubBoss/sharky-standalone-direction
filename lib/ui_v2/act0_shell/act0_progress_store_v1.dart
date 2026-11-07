@@ -671,9 +671,15 @@ class Act0ProgressStoreV1 {
     }
     final only = rec ?? bak;
     if (only != null) {
-      // Single valid copy: nothing older can resurrect. Heal the twin if we can.
+      // A surviving copy is not independently readable proof until its twin
+      // has landed and been reloaded. In particular, do not expose completion
+      // or XP after an interrupted legacy write if storage still refuses heal.
       final twin = identical(only, rec) ? backupKey : recoveryKey;
-      await _write(prefs, twin, only.raw);
+      if (!await _write(prefs, twin, only.raw) ||
+          _parse(prefs, recoveryKey)?.raw != only.raw ||
+          _parse(prefs, backupKey)?.raw != only.raw) {
+        throw const _CheckpointHealFailure();
+      }
       return (revision: only.revision, payload: only.payload);
     }
     if (prefs.containsKey(recoveryKey) || prefs.containsKey(backupKey)) {
