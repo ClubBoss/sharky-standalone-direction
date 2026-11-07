@@ -74,6 +74,7 @@ void main() {
       await fresh(tester);
       expect(find.byType(Act0AcademyOnboardingLeafV1), findsOneWidget);
       await tap(tester, 'act0_shell_placement_intro_cta');
+      expect(find.text('Starting point'), findsOneWidget);
       expect(
         tester
             .widget<FilledButton>(
@@ -347,6 +348,7 @@ void main() {
       ),
     );
     expect(find.text('Find your first hand'), findsOneWidget);
+    expect(find.text('Your starting point'), findsOneWidget);
     expect(find.text('1 of 3'), findsOneWidget);
     expect(find.byTooltip('Close welcome'), findsOneWidget);
     await tester.tap(find.byKey(_primaryKey));

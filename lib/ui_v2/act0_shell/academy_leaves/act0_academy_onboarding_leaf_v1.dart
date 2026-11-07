@@ -140,7 +140,7 @@ class Act0AcademyOnboardingLeafV1 extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(24, hero ? 40 : 18, 24, 24),
                   children: [
                     Text(
-                      eyebrow.toUpperCase(),
+                      eyebrow,
                       style: const TextStyle(
                         color: aqua,
                         fontSize: 10,
