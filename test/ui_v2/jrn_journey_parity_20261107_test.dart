@@ -117,8 +117,38 @@ Future<void> _openTab(WidgetTester tester, String label) async {
 }
 
 void main() {
+  testWidgets('JRN Review has no phantom focus CTA without source evidence', (
+    t,
+  ) async {
+    t.view.physicalSize = const Size(393, 852);
+    t.view.devicePixelRatio = 1;
+    addTearDown(t.view.reset);
+    addTearDown(() async {
+      await t.pumpWidget(const SizedBox.shrink());
+      await t.pumpAndSettle();
+      await _store.flush();
+    });
+    SharedPreferences.setMockInitialValues({
+      'act0_welcome_completed_v1': true,
+      'intake_completed_v1': true,
+    });
+    await _mount(t, tab: Act0ShellTabV1.review);
+    final focus = t
+        .widget<Act0AcademyReviewLeafV1>(find.byType(Act0AcademyReviewLeafV1))
+        .input
+        .nextStep;
+    expect(
+      focus?.recommendedAction,
+      isNot(isIn(['resume_focus', 'reinforce'])),
+    );
+    expect(
+      find.byKey(const Key('act0_academy_review_leaf_next_step_cta')),
+      findsNothing,
+    );
+  });
   for (final exit in [
     'Review',
+    'ReviewFocus',
     'You',
     'tab',
     'Home',
@@ -331,6 +361,17 @@ void main() {
         );
         expect(runner.selectedWorldId, 'world_1');
         return;
+      } else if (exit == 'ReviewFocus') {
+        final focus = t
+            .widget<Act0AcademyReviewLeafV1>(
+              find.byType(Act0AcademyReviewLeafV1),
+            )
+            .input
+            .nextStep;
+        expect(focus, isNotNull);
+        expect(focus!.recommendedAction, isIn(['resume_focus', 'reinforce']));
+        expect(focus.sourceTaskId, isNotEmpty);
+        await _tap(t, 'act0_academy_review_leaf_next_step_cta');
       } else if (exit == 'Review') {
         await _tap(t, 'act0_academy_review_leaf_learn');
       } else if (exit == 'You') {

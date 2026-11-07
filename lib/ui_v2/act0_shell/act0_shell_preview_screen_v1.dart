@@ -8426,6 +8426,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _startHomeNextAction(selectedWorld);
       return;
     }
+    _restoreSelectableLearnFocusV1();
     _tab = Act0ShellTabV1.learn;
   }
 
