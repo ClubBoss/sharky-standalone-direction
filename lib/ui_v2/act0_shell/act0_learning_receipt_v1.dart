@@ -105,9 +105,15 @@ class Act0LearningReceiptV1 {
                 (id) => id.isNotEmpty && id != 'none',
                 orElse: () => '',
               );
+    // The raw current outcome can arrive before its completed-decision record.
+    // Proof from before the newest matching miss belongs to an older attempt;
+    // it must not promote this fresh repair while that record is still pending.
+    final misses = evidence.where((record) => !record.isCorrect);
+    final latestMissOrder = misses.isEmpty ? null : misses.last.createdOrder;
     final successfulRepairEvidence = evidence.where(
       (record) =>
           record.isIndependentCorrect &&
+          (latestMissOrder == null || record.createdOrder > latestMissOrder) &&
           (record.reviewKind == Act0ReviewKindV1.alternateSameSignal ||
               record.reviewKind == Act0ReviewKindV1.immediateRepair),
     );
@@ -140,6 +146,8 @@ class Act0LearningReceiptV1 {
         transfer.baselineOrder != null &&
         transfer.comparisonOrder != null &&
         transfer.comparisonOrder! > transfer.baselineOrder! &&
+        (latestMissOrder == null ||
+            transfer.comparisonOrder! > latestMissOrder) &&
         (transfer.verdict == act0LearningTransferImprovingV1 ||
             transfer.verdict == act0LearningTransferStableV1);
     // The latest repair is current evidence and caps older proof when failed.
