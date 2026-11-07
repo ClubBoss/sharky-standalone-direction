@@ -32,6 +32,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_proof_icon_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_betting_price_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
@@ -2101,10 +2102,31 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     );
   }
 
+  bool _rejectInvalidAuthoredBettingPriceV1(Act0RunnerOptionV1 option) {
+    if (!act0BettingPriceBlocksAuthoredSuccessV1(widget.runner.table, option)) {
+      return false;
+    }
+    // This is a source error, not a learner mistake. Do not consume the
+    // attempt, emit a grade, or forward a progress/repair/XP callback.
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    messenger?.hideCurrentSnackBar();
+    messenger?.showSnackBar(
+      const SnackBar(
+        key: Key('act0_betting_price_unavailable'),
+        content: Text(
+          'This decision is temporarily unavailable. '
+          'Return to Learn and choose another task.',
+        ),
+      ),
+    );
+    return true;
+  }
+
   void _handleChooseOptionTelemetry(Act0RunnerOptionV1 option) {
     if (!_heroDecisionReady || _decisionSubmittedForTaskV1) {
       return;
     }
+    if (_rejectInvalidAuthoredBettingPriceV1(option)) return;
     _decisionSubmittedForTaskV1 = true;
     final telemetryDecisionTimeBucket = _decisionTimeBucketV1(
       _decisionTelemetryStopwatch.isRunning
@@ -2313,6 +2335,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             (candidate) => candidate?.id == presetId,
             orElse: () => null,
           );
+    if (option != null && _rejectInvalidAuthoredBettingPriceV1(option)) return;
     final decisionTimeBucket = _completedDecisionTimeBucket();
     if (option != null) {
       _decisionSubmittedForTaskV1 = true;
