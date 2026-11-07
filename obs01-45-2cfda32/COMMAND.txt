@@ -1,0 +1,3 @@
+flutter test --no-pub test/ui_v2/act0_obs01_incident_fields_v1_test.dart test/ui_v2/act0_obs01_pending_capture_v1_test.dart test/ui_v2/act0_obs03_privacy_lineage_v1_test.dart test/ui_v2/act0_obs03_source_lineage_v1_test.dart -r expanded 
+cwd=<CHECKOUT> started_utc=2026-11-07T19:11:02Z
+exit_code=0 finished_utc=2026-11-07T19:11:29Z
