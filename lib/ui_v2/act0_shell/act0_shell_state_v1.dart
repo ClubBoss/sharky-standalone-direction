@@ -11431,15 +11431,15 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'co_still_acting',
-      label: 'CO/cutoff already folded, so You at BTN act next',
+      label: 'CO/cutoff still acts before You at BTN',
       isCorrect: false,
       preferredLabel: 'You are BTN, blinds are posted, and no board is out yet',
       betterAnswerLabel:
           'You are BTN, blinds are posted, and no board is out yet',
       quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Close, but name the full setup.',
+      feedbackTitle: 'CO already folded.',
       feedbackReason:
-          'CO/cutoff already folded and action is on You now. The full clue also includes BTN, posted blinds, your cards, and no board yet.',
+          'CO/cutoff already folded, so it is not still acting. Action is on You at BTN, with blinds posted, K and T in your hand, and no board yet.',
       repairFocusSeatIds: <String>['btn', 'sb', 'bb'],
       repairFocusCardIds: <String>['hero_0', 'hero_1'],
       repairFocusLabels: <String>[
@@ -17083,7 +17083,8 @@ final _world5StraightOutRunner = _world5StraightDrawRunner.copyWith(
       preferredLabel: '9',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong choice.',
-      feedbackReason: 'With 5-6-7-8 on board, any 9 completes the straight.',
+      feedbackReason:
+          'The 5-6-7-8 run uses cards between your hand and the board. Any 9 completes the straight; a 4 does too.',
     ),
     Act0RunnerOptionV1(
       id: 'king',
@@ -17949,7 +17950,7 @@ final _w6MissedDryBoardRunner = _w6RangeIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Playable read.',
       feedbackReason:
-          'J-T can bluff sometimes, but on a dry board with no equity it is mostly missed '
+          'J-T can bluff sometimes, but with no pair or immediate draw it is mostly missed '
           'rather than a strong bluff candidate.',
     ),
     Act0RunnerOptionV1(
@@ -18507,7 +18508,7 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Wrong bucket now.',
       feedbackReason:
-          'A-Q still has no made hand on K-7-2-2. This is not a value line. The better read is that the bluff pressure cooled off.',
+          'A-Q has only the shared pair of twos on K-7-2-2; neither hole card paired. That shared pair alone does not justify a value bet. The better read is that the bluff pressure cooled off.',
     ),
   ],
   table: _w6BluffCandidateRunner.table.copyWith(
