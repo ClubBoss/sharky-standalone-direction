@@ -107,7 +107,7 @@ class Act0LearningReceiptV1 {
               );
     final successfulRepairEvidence = evidence.where(
       (record) =>
-          record.isCorrect &&
+          record.isIndependentCorrect &&
           (record.reviewKind == Act0ReviewKindV1.alternateSameSignal ||
               record.reviewKind == Act0ReviewKindV1.immediateRepair),
     );
@@ -119,7 +119,7 @@ class Act0LearningReceiptV1 {
         : evidence.cast<Act0LearningEvidenceRecordV1?>().lastWhere(
             (record) =>
                 record != null &&
-                record.isCorrect &&
+                record.isIndependentCorrect &&
                 record.reviewKind == Act0ReviewKindV1.originalSourceRecheck &&
                 record.createdOrder > repairEvidence.createdOrder &&
                 record.sessionId.trim().isNotEmpty &&

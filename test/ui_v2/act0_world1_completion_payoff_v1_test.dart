@@ -108,7 +108,7 @@ void main() {
     );
     expect(find.text('You banked the first table read.'), findsOneWidget);
     expect(
-      find.text('You learned how to read the table before acting.'),
+      find.text('You practiced reading the table before acting.'),
       findsOneWidget,
     );
     expect(find.text('Next: Hand Discipline'), findsOneWidget);

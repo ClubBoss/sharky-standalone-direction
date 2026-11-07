@@ -443,7 +443,7 @@ class Act0BlockCompletionSummaryV1 {
     final lines = <String>[];
     final focus = primarySkillFocusLabel;
     if (focus != null) {
-      lines.add('Skill in motion: $focus');
+      lines.add('Practice focus: $focus');
     }
     if (futureRecheckCount > 0) {
       final noun = futureRecheckCount == 1 ? 'spot' : 'spots';
@@ -463,8 +463,8 @@ class Act0BlockCompletionSummaryV1 {
   String get returnPlanLabel {
     final focus = primarySkillFocusLabel;
     final opener = focus == null
-        ? 'Tomorrow starts warmer because this world is already in motion.'
-        : 'Tomorrow starts warmer because $focus is already in motion.';
+        ? 'Plan another short practice in this world.'
+        : 'Plan another short practice: $focus.';
     if (futureRecheckCount > 0 && futureProveCount > 0) {
       final spotNoun = futureRecheckCount == 1 ? 'spot' : 'spots';
       final skillNoun = futureProveCount == 1 ? 'skill' : 'skills';
@@ -478,7 +478,7 @@ class Act0BlockCompletionSummaryV1 {
       final noun = futureProveCount == 1 ? 'skill' : 'skills';
       return '$opener Prove $futureProveCount $noun once.';
     }
-    return '$opener One short return keeps it sharp.';
+    return opener;
   }
 
   String? get nextUnlockReasonLabel {
@@ -487,11 +487,7 @@ class Act0BlockCompletionSummaryV1 {
         nextWorldTitle!.trim().isEmpty) {
       return null;
     }
-    final focus = primarySkillFocusLabel;
-    if (focus == null) {
-      return '$nextWorldTitle is next because this base is now in place.';
-    }
-    return '$nextWorldTitle is next because $focus is already in motion.';
+    return '$nextWorldTitle is the next curriculum step.';
   }
 
   bool get hasWorldOneCompletionPayoff =>
@@ -506,7 +502,7 @@ class Act0BlockCompletionSummaryV1 {
   );
 
   String get worldOneCompletionLearningLabel =>
-      'You learned how to read the table before acting.';
+      'You practiced reading the table before acting.';
 
   String get worldOneCompletionNextLabel =>
       'Next: ${nextWorldTitle?.trim() ?? 'Hand Discipline'}';
@@ -568,7 +564,7 @@ class Act0BlockCompletionSummaryV1 {
   ).replaceFirst(RegExp(r'\.$'), '');
 
   String get bandTransitionLearningLabel =>
-      'You can now read the table, hand, action, and position before '
+      'You practiced reading the table, hand, action, and position before '
       'deciding.';
 
   String get bandTransitionNextLabel => 'Next: Developing Player';
@@ -717,7 +713,7 @@ class Act0BlockCompletionSummaryV1 {
       return 'Miss recovered';
     }
     if (!isWorldComplete && growthLabel.isNotEmpty) {
-      return 'Skill moved';
+      return 'Practice recorded';
     }
     if (errorCount == 0 &&
         hasVerifiedAssessment &&
@@ -739,7 +735,7 @@ class Act0BlockCompletionSummaryV1 {
       return 'You fixed the miss inside the lesson.';
     }
     if (!isWorldComplete && growthLabel.isNotEmpty) {
-      return 'Practiced: $growthLabel. This read will help in the next spot.';
+      return 'Practiced: $growthLabel. Try this clue in another spot.';
     }
     if (errorCount == 0 &&
         hasVerifiedAssessment &&
@@ -794,94 +790,95 @@ class _WorldCompletionMetaV1 {
   final String previewLine;
 }
 
-const Map<int, _WorldCompletionMetaV1> _worldCompletionMetaByNumberV1 =
-    <int, _WorldCompletionMetaV1>{
-      2: _WorldCompletionMetaV1(
-        learningLabel:
-            'You learned how to separate playable hands from tempting ones.',
-        previewLine:
-            'World 3 starts with a simple question: does your seat change '
-            'what you should play?',
-      ),
-      3: _WorldCompletionMetaV1(
-        learningLabel: 'You learned how position changes what a hand can do.',
-        previewLine:
-            'World 4 starts with a simple question: why did that bet '
-            'happen, and what price did it create?',
-      ),
-      4: _WorldCompletionMetaV1(
-        learningLabel:
-            "You learned why a bet happens and what price it's asking you "
-            'to risk.',
-        previewLine:
-            'World 5 starts with a simple question: what does the board '
-            'let you keep doing?',
-      ),
-      5: _WorldCompletionMetaV1(
-        learningLabel:
-            'You learned how to read board texture and let streets change '
-            'your plan.',
-        previewLine:
-            'World 6 starts with a simple question: what could they still '
-            'be holding?',
-      ),
-      6: _WorldCompletionMetaV1(
-        learningLabel:
-            'You learned how to group hands into ranges and compare who '
-            'is ahead.',
-        previewLine:
-            'World 7 starts with a simple question: what do the visible '
-            'cards rule out?',
-      ),
-      7: _WorldCompletionMetaV1(
-        learningLabel:
-            'You learned how visible cards remove combinations and narrow '
-            'ranges.',
-        previewLine:
-            'World 8 starts with a simple question: how much risk can the '
-            'stack still create?',
-      ),
-      8: _WorldCompletionMetaV1(
-        learningLabel:
-            'You learned how effective stack depth changes commitment and '
-            'risk.',
-        previewLine:
-            'World 9 starts with a simple question: when does tournament '
-            'pressure change the risk bar?',
-      ),
-      9: _WorldCompletionMetaV1(
-        learningLabel:
-            'You learned how survival pressure and risk premium change '
-            'decisions.',
-        previewLine:
-            'World 10 starts with a simple question: which player tendency '
-            'changes the plan?',
-      ),
-      10: _WorldCompletionMetaV1(
-        learningLabel:
-            'You learned how to tag player tendencies, adjust one lever, and '
-            'keep adjustment guardrails.',
-        previewLine:
-            'World 11 starts with a simple question: how does one clear plan '
-            'transfer to real play?',
-      ),
-      11: _WorldCompletionMetaV1(
-        learningLabel:
-            'You learned how to plan a session, use table triggers, and close '
-            'the review loop.',
-        previewLine:
-            'World 12 starts with a simple question: how do you keep process '
-            'steady when outcomes get noisy?',
-      ),
-      12: _WorldCompletionMetaV1(
-        learningLabel:
-            'You learned how to judge process, reset tilt, and keep discipline '
-            'before deeper strategy.',
-        previewLine:
-            'Volume I review brings the route together while later worlds '
-            'stay locked.',
-      ),
-    };
+const Map<int, _WorldCompletionMetaV1>
+_worldCompletionMetaByNumberV1 = <int, _WorldCompletionMetaV1>{
+  2: _WorldCompletionMetaV1(
+    learningLabel:
+        'You practiced separating playable hands from tempting ones.',
+    previewLine:
+        'World 3 starts with a simple question: does your seat change '
+        'what you should play?',
+  ),
+  3: _WorldCompletionMetaV1(
+    learningLabel:
+        'You practiced reading how position changes what a hand can do.',
+    previewLine:
+        'World 4 starts with a simple question: why did that bet '
+        'happen, and what price did it create?',
+  ),
+  4: _WorldCompletionMetaV1(
+    learningLabel:
+        "You practiced reading why a bet happens and what price it's asking you "
+        'to risk.',
+    previewLine:
+        'World 5 starts with a simple question: what does the board '
+        'let you keep doing?',
+  ),
+  5: _WorldCompletionMetaV1(
+    learningLabel:
+        'You practiced reading board texture and letting streets change '
+        'your plan.',
+    previewLine:
+        'World 6 starts with a simple question: what could they still '
+        'be holding?',
+  ),
+  6: _WorldCompletionMetaV1(
+    learningLabel:
+        'You practiced grouping hands into ranges and comparing who '
+        'is ahead.',
+    previewLine:
+        'World 7 starts with a simple question: what do the visible '
+        'cards rule out?',
+  ),
+  7: _WorldCompletionMetaV1(
+    learningLabel:
+        'You practiced using visible cards to remove combinations and narrow '
+        'ranges.',
+    previewLine:
+        'World 8 starts with a simple question: how much risk can the '
+        'stack still create?',
+  ),
+  8: _WorldCompletionMetaV1(
+    learningLabel:
+        'You practiced reading how effective stack depth changes commitment and '
+        'risk.',
+    previewLine:
+        'World 9 starts with a simple question: when does tournament '
+        'pressure change the risk bar?',
+  ),
+  9: _WorldCompletionMetaV1(
+    learningLabel:
+        'You practiced reading how survival pressure and risk premium change '
+        'decisions.',
+    previewLine:
+        'World 10 starts with a simple question: which player tendency '
+        'changes the plan?',
+  ),
+  10: _WorldCompletionMetaV1(
+    learningLabel:
+        'You practiced tagging player tendencies, adjusting one lever, and '
+        'keeping adjustment guardrails.',
+    previewLine:
+        'World 11 starts with a simple question: how does one clear plan '
+        'transfer to real play?',
+  ),
+  11: _WorldCompletionMetaV1(
+    learningLabel:
+        'You practiced planning a session, using table triggers, and closing '
+        'the review loop.',
+    previewLine:
+        'World 12 starts with a simple question: how do you keep process '
+        'steady when outcomes get noisy?',
+  ),
+  12: _WorldCompletionMetaV1(
+    learningLabel:
+        'You practiced judging process, resetting tilt, and keeping discipline '
+        'before deeper strategy.',
+    previewLine:
+        'Volume I review brings the route together while later worlds '
+        'stay locked.',
+  ),
+};
 
 String _formatSkillGrowthLabelV1(List<Act0SkillGainV1> gains) {
   if (gains.isEmpty) {
@@ -10501,9 +10498,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
                 _GrowthHighlightV1(
                   key: const Key('act0_shell_block_summary_growth_highlight'),
-                  title: summary.isWorldComplete
-                      ? 'What improved'
-                      : 'What moved',
+                  title: 'Practice recap',
                   label: summary.growthLabel,
                   tone: celebrateTone,
                 ),
@@ -10512,7 +10507,7 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 const SizedBox(height: Act0ShellTokensV1.gapMd),
                 _BlockSummaryListCardV1(
                   cardKey: const Key('act0_shell_block_summary_ownership_card'),
-                  title: 'You can now',
+                  title: 'Practice topics',
                   lines: summary.ownershipHighlights,
                   icon: Icons.workspace_premium_rounded,
                 ),

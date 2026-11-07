@@ -60,7 +60,7 @@ void main() {
     );
     expect(
       find.text(
-        'You learned how to judge process, reset tilt, and keep discipline '
+        'You practiced judging process, resetting tilt, and keeping discipline '
         'before deeper strategy.',
       ),
       findsOneWidget,
