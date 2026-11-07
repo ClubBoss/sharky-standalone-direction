@@ -1,0 +1,1510 @@
+{
+  "schema": "visual_master_audit_manifest_v1",
+  "candidate_commit_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+  "artifact": {
+    "workflow_run_id": "30408676764",
+    "name": "sharky-native-visual-audit-repaired-bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+    "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381"
+  },
+  "rows": [
+    {
+      "visual_state_id": "placement.canonical.normal",
+      "state": "placement",
+      "semantic_phase": "placement",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=placement",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/placement.canonical.normal.png",
+      "png_sha256": "a47a82db992a76fb9dbfc81cc3540398c5ff6ebb8f3c3e1985c878eb90f40db5",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785277971.211179,
+        "readiness_seconds": 13.288,
+        "screenshot_seconds": 27.311,
+        "total_row_seconds": 47.498
+      }
+    },
+    {
+      "visual_state_id": "welcome.canonical.normal",
+      "state": "welcome",
+      "semantic_phase": "welcome",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=welcome",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/welcome.canonical.normal.png",
+      "png_sha256": "2e5502240e8a50ea14bdde500a7139e55970eed4d5b5e38d488786e6db9ddb3e",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785278018.731179,
+        "readiness_seconds": 26.743,
+        "screenshot_seconds": 29.882,
+        "total_row_seconds": 58.742
+      }
+    },
+    {
+      "visual_state_id": "home.canonical.normal",
+      "state": "home",
+      "semantic_phase": "home",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=home",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/home.canonical.normal.png",
+      "png_sha256": "e7b6ef353af482c5e1657257a48d529a23776c2187dee20986dd98f5116670f6",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279711.023249,
+        "readiness_seconds": 90.008,
+        "screenshot_seconds": 7.06,
+        "total_row_seconds": 109.465
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "learn.canonical.normal",
+      "state": "learn",
+      "semantic_phase": "learn",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=learn",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/learn.canonical.normal.png",
+      "png_sha256": "6399efe7207af951a801b4f3d51894aaedca6d54f0d47756c88fe49838a38148",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279820.554074,
+        "readiness_seconds": 6.187,
+        "screenshot_seconds": 5.657,
+        "total_row_seconds": 12.706
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "theory.canonical.normal",
+      "state": "theory",
+      "semantic_phase": "theory",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=runner_theory",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/theory.canonical.normal.png",
+      "png_sha256": "1e51a5bd4b729617e6956e4f4b509f1fbc3a81edca669b8501874943023ac6d4",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279833.2972028,
+        "readiness_seconds": 5.145,
+        "screenshot_seconds": 19.884,
+        "total_row_seconds": 26.259
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "table_read.canonical.normal",
+      "state": "table_read",
+      "semantic_phase": "table_read",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=runner_drill&world=world_1&lesson=what_poker_is&task=what_poker_is_table_read_transfer",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/table_read.canonical.normal.png",
+      "png_sha256": "b6f738a74e1720c797fca7a7d8e2298594cf9c80bdfa498129bbed50f33e349b",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279859.5757551,
+        "readiness_seconds": 5.038,
+        "screenshot_seconds": 7.728,
+        "total_row_seconds": 14.433
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "action_selection.canonical.normal",
+      "state": "action_selection",
+      "semantic_phase": "action_selection",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=runner_drill&world=world_1&lesson=fold_check_call_raise&task=actions_call_drill",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/action_selection.canonical.normal.png",
+      "png_sha256": "691435356ce82db56c6affdafa4d69309c099cc13aecca5ebf063df2eb39bbd5",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279874.020132,
+        "readiness_seconds": 3.074,
+        "screenshot_seconds": 6.388,
+        "total_row_seconds": 10.831
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "vrt02.canonical.normal",
+      "state": "vrt02",
+      "semantic_phase": "seat_selection",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=runner_drill&world=world_1&lesson=positions&task=positions_early_late",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/vrt02.canonical.normal.png",
+      "png_sha256": "46d5cea84813c12af8800598719a756c04cc5340184d3b870f855899bc5985cf",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279884.858654,
+        "readiness_seconds": 3.6,
+        "screenshot_seconds": 6.088,
+        "total_row_seconds": 10.156
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "vrt02_correct.canonical.normal",
+      "state": "vrt02_correct",
+      "semantic_phase": "correct_feedback",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=runner_feedback&feedback=correct&world=world_1&lesson=positions&task=positions_early_late",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/vrt02_correct.canonical.normal.png",
+      "png_sha256": "ad59ff3b53c76e579203f96f46a0de1b901fc4220135e6cf4c15cd71efbe055d",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279895.021791,
+        "readiness_seconds": 4.13,
+        "screenshot_seconds": 5.32,
+        "total_row_seconds": 9.949
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "vrt02_incorrect.canonical.normal",
+      "state": "vrt02_incorrect",
+      "semantic_phase": "incorrect_feedback",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=runner_feedback&world=world_1&lesson=positions&task=positions_early_late",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/vrt02_incorrect.canonical.normal.png",
+      "png_sha256": "09397527c78c39e63b5f703b41f097c2d2254acffd62173d77d4ccc51f845d68",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279904.978438,
+        "readiness_seconds": 3.845,
+        "screenshot_seconds": 6.098,
+        "total_row_seconds": 10.365
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "repair_focus.canonical.normal",
+      "state": "repair_focus",
+      "semantic_phase": "repair",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=repair_focus",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/repair_focus.canonical.normal.png",
+      "png_sha256": "ae900b636aabb3da1c132fb92a038ffba1d9f7453705a1d1e453a84e01346709",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279915.3509288,
+        "readiness_seconds": 3.222,
+        "screenshot_seconds": 6.092,
+        "total_row_seconds": 9.943
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "repair_recheck.canonical.normal",
+      "state": "repair_recheck",
+      "semantic_phase": "recheck",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=repair_result",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/repair_recheck.canonical.normal.png",
+      "png_sha256": "5b936ff2b5d783fd8c9051318436a2b736a5c299d3bf33ef7a234e37acbc2438",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279925.301077,
+        "readiness_seconds": 3.575,
+        "screenshot_seconds": 6.261,
+        "total_row_seconds": 10.241
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "review.canonical.normal",
+      "state": "review",
+      "semantic_phase": "review",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=review",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/review.canonical.normal.png",
+      "png_sha256": "4f7ed99eff8751aa761ae67730112a9e56629b3fa586fed742757fd7c303405d",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279935.5494988,
+        "readiness_seconds": 3.51,
+        "screenshot_seconds": 5.35,
+        "total_row_seconds": 9.448
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "profile_evidence.canonical.normal",
+      "state": "profile_evidence",
+      "semantic_phase": "profile_evidence",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=profile_evidence",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/profile_evidence.canonical.normal.png",
+      "png_sha256": "7deced3747e685df49589552b44f9cd0b57b9d4932614aab0227c845beec5d16",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279945.014567,
+        "readiness_seconds": 2.843,
+        "screenshot_seconds": 5.603,
+        "total_row_seconds": 9.467
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "session_summary.canonical.normal",
+      "state": "session_summary",
+      "semantic_phase": "session_summary",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=session_summary",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/session_summary.canonical.normal.png",
+      "png_sha256": "a90fd8c4d3da658481482afbbb45d62f5eb8d873b97e9ba5e9287e7d08fd83a5",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279954.488353,
+        "readiness_seconds": 3.828,
+        "screenshot_seconds": 5.644,
+        "total_row_seconds": 10.069
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "lesson_completion.canonical.normal",
+      "state": "lesson.completion",
+      "semantic_phase": "lesson_completion",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=runner_drill&world=world_1&lesson=positions&task=positions_review",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/lesson_completion.canonical.normal.png",
+      "png_sha256": "a6cf7a027cf37dfafc691751a444340f2c77eb716604ec4f5153abb758f5be8d",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279964.5684748,
+        "readiness_seconds": 3.323,
+        "screenshot_seconds": 5.095,
+        "total_row_seconds": 8.825
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "completion_world.canonical.normal",
+      "state": "completion.world",
+      "semantic_phase": "world_completion",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=world_completion",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/completion_world.canonical.normal.png",
+      "png_sha256": "836c86332e72a5cf47b64f00a9f6faf3854adcba14432476431a99683f58f9c6",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279973.399602,
+        "readiness_seconds": 3.453,
+        "screenshot_seconds": 5.51,
+        "total_row_seconds": 9.447
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "world3.canonical.normal",
+      "state": "world3",
+      "semantic_phase": "seat_selection_derivative",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=runner_drill&world=world_3&lesson=early_vs_late&task=early_pressure_choice",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/world3.canonical.normal.png",
+      "png_sha256": "a6cf7a027cf37dfafc691751a444340f2c77eb716604ec4f5153abb758f5be8d",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279982.8530262,
+        "readiness_seconds": 3.154,
+        "screenshot_seconds": 5.2,
+        "total_row_seconds": 8.765
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "hand_comparison.canonical.normal",
+      "state": "hand_comparison",
+      "semantic_phase": "hand_comparison",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=runner_drill&world=world_1&lesson=hand_rankings_table&task=hand_rankings_full_house_vs_flush_drill",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/hand_comparison.canonical.normal.png",
+      "png_sha256": "85659f9f1e320007fe7a1c236ab12e89f9f15e2d0b7e621a9a41ec16afb3f602",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279991.624682,
+        "readiness_seconds": 3.588,
+        "screenshot_seconds": 4.509,
+        "total_row_seconds": 8.496
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "showdown.canonical.normal",
+      "state": "showdown",
+      "semantic_phase": "showdown",
+      "device_profile": "canonical",
+      "modifier": "none",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=runner_drill&world=world_1&lesson=showdown_winning&task=showdown_best_hand_drill",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/showdown.canonical.normal.png",
+      "png_sha256": "7b941c6f25fab68791f13b26d4775f8b4615263a3ce9ca0198103f1acacb72d3",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785280000.127362,
+        "readiness_seconds": 3.289,
+        "screenshot_seconds": 4.495,
+        "total_row_seconds": 8.09
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "placement.compact.normal",
+      "state": "placement",
+      "semantic_phase": "placement",
+      "device_profile": "compact",
+      "modifier": "none",
+      "logical_viewport": "375x667",
+      "query": "act0_capture=placement",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/placement.compact.normal.png",
+      "png_sha256": "c1a6a4a33030644a95ebe8fe561fd8219594097605009b46f458941d0f14e068",
+      "device_model": "iPhone 16e",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "timing": {
+        "launch_started_epoch": 1785277884.330343,
+        "readiness_seconds": 7.495,
+        "screenshot_seconds": 14.402,
+        "total_row_seconds": 25.426
+      }
+    },
+    {
+      "visual_state_id": "welcome.compact.normal",
+      "state": "welcome",
+      "semantic_phase": "welcome",
+      "device_profile": "compact",
+      "modifier": "none",
+      "logical_viewport": "375x667",
+      "query": "act0_capture=welcome",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/welcome.compact.normal.png",
+      "png_sha256": "55984e0d4b9dd894ef5da1b10b4d9db6430def63998e04d11c47e47dbf628860",
+      "device_model": "iPhone 16e",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "timing": {
+        "launch_started_epoch": 1785277909.791805,
+        "readiness_seconds": 2.356,
+        "screenshot_seconds": 8.7,
+        "total_row_seconds": 15.052
+      }
+    },
+    {
+      "visual_state_id": "home.compact.normal",
+      "state": "home",
+      "semantic_phase": "home",
+      "device_profile": "compact",
+      "modifier": "none",
+      "logical_viewport": "375x667",
+      "query": "act0_capture=home",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/home.compact.normal.png",
+      "png_sha256": "e8f1734fd4ed925b7ed3c5382f9835367499783e6980939b85a9ad284f6a55f2",
+      "device_model": "iPhone 16e",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "timing": {
+        "launch_started_epoch": 1785277924.854259,
+        "readiness_seconds": 3.512,
+        "screenshot_seconds": 11.466,
+        "total_row_seconds": 16.039
+      }
+    },
+    {
+      "visual_state_id": "learn.compact.normal",
+      "state": "learn",
+      "semantic_phase": "learn",
+      "device_profile": "compact",
+      "modifier": "none",
+      "logical_viewport": "375x667",
+      "query": "act0_capture=learn",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/learn.compact.normal.png",
+      "png_sha256": "3d06964c86938221266022137f2d7da5e0ca81d75169c99f3b116fd563539709",
+      "device_model": "iPhone 16e",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "timing": {
+        "launch_started_epoch": 1785277940.90862,
+        "readiness_seconds": 3.872,
+        "screenshot_seconds": 6.524,
+        "total_row_seconds": 12.348
+      }
+    },
+    {
+      "visual_state_id": "vrt02.compact.normal",
+      "state": "vrt02",
+      "semantic_phase": "seat_selection",
+      "device_profile": "compact",
+      "modifier": "none",
+      "logical_viewport": "375x667",
+      "query": "act0_capture=runner_drill&world=world_1&lesson=positions&task=positions_early_late",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/vrt02.compact.normal.png",
+      "png_sha256": "43e763db8edf4c8ff7ba7b5a1101f388b0c70ae616e3e14626efff329841bbf7",
+      "device_model": "iPhone 16e",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "timing": {
+        "launch_started_epoch": 1785277953.294493,
+        "readiness_seconds": 6.165,
+        "screenshot_seconds": 5.983,
+        "total_row_seconds": 12.888
+      }
+    },
+    {
+      "visual_state_id": "vrt02_correct.compact.normal",
+      "state": "vrt02_correct",
+      "semantic_phase": "correct_feedback",
+      "device_profile": "compact",
+      "modifier": "none",
+      "logical_viewport": "375x667",
+      "query": "act0_capture=runner_feedback&feedback=correct&world=world_1&lesson=positions&task=positions_early_late",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/vrt02_correct.compact.normal.png",
+      "png_sha256": "84079513bc4cae3400b2f386aba5fdde3d40c7b5bc9d5bce1fefb5913f25d102",
+      "device_model": "iPhone 16e",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "timing": {
+        "launch_started_epoch": 1785277966.191353,
+        "readiness_seconds": 4.044,
+        "screenshot_seconds": 6.667,
+        "total_row_seconds": 11.174
+      }
+    },
+    {
+      "visual_state_id": "vrt02_incorrect.compact.normal",
+      "state": "vrt02_incorrect",
+      "semantic_phase": "incorrect_feedback",
+      "device_profile": "compact",
+      "modifier": "none",
+      "logical_viewport": "375x667",
+      "query": "act0_capture=runner_feedback&world=world_1&lesson=positions&task=positions_early_late",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/vrt02_incorrect.compact.normal.png",
+      "png_sha256": "d8398b2f5df1226e677c2f8912c1d1470ff35409235597b7de77e5cee59d23c7",
+      "device_model": "iPhone 16e",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "timing": {
+        "launch_started_epoch": 1785277977.374502,
+        "readiness_seconds": 4.545,
+        "screenshot_seconds": 7.684,
+        "total_row_seconds": 12.993
+      }
+    },
+    {
+      "visual_state_id": "review.compact.normal",
+      "state": "review",
+      "semantic_phase": "review",
+      "device_profile": "compact",
+      "modifier": "none",
+      "logical_viewport": "375x667",
+      "query": "act0_capture=review",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/review.compact.normal.png",
+      "png_sha256": "4ebfa96b18f00b67d8cc754b0267d48d36c8dfee403a01bb0a29f0888860f29b",
+      "device_model": "iPhone 16e",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "timing": {
+        "launch_started_epoch": 1785277990.3778298,
+        "readiness_seconds": 4.118,
+        "screenshot_seconds": 6.11,
+        "total_row_seconds": 10.638
+      }
+    },
+    {
+      "visual_state_id": "profile_evidence.compact.normal",
+      "state": "profile_evidence",
+      "semantic_phase": "profile_evidence",
+      "device_profile": "compact",
+      "modifier": "none",
+      "logical_viewport": "375x667",
+      "query": "act0_capture=profile_evidence",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/profile_evidence.compact.normal.png",
+      "png_sha256": "5e789b64b7b742df77416d827dbb98bf5bfd07be745bcf2ee316cffae987cdca",
+      "device_model": "iPhone 16e",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "timing": {
+        "launch_started_epoch": 1785278001.023365,
+        "readiness_seconds": 4.42,
+        "screenshot_seconds": 6.104,
+        "total_row_seconds": 11.043
+      }
+    },
+    {
+      "visual_state_id": "session_summary.compact.normal",
+      "state": "session_summary",
+      "semantic_phase": "session_summary",
+      "device_profile": "compact",
+      "modifier": "none",
+      "logical_viewport": "375x667",
+      "query": "act0_capture=session_summary",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/session_summary.compact.normal.png",
+      "png_sha256": "5b79eec419b9f313102d7572d295134d7379df551db3ac241ad37c11492e050a",
+      "device_model": "iPhone 16e",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "timing": {
+        "launch_started_epoch": 1785278012.0748742,
+        "readiness_seconds": 3.838,
+        "screenshot_seconds": 5.539,
+        "total_row_seconds": 10.05
+      }
+    },
+    {
+      "visual_state_id": "lesson_completion.compact.normal",
+      "state": "lesson.completion",
+      "semantic_phase": "lesson_completion",
+      "device_profile": "compact",
+      "modifier": "none",
+      "logical_viewport": "375x667",
+      "query": "act0_capture=runner_drill&world=world_1&lesson=positions&task=positions_review",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/lesson_completion.compact.normal.png",
+      "png_sha256": "936825580e2e3dad1d72bbfbf2837832a48977618f1f078ca14fe8c8e469fd86",
+      "device_model": "iPhone 16e",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "timing": {
+        "launch_started_epoch": 1785278022.1331909,
+        "readiness_seconds": 4.111,
+        "screenshot_seconds": 6.045,
+        "total_row_seconds": 11.222
+      }
+    },
+    {
+      "visual_state_id": "completion_world.compact.normal",
+      "state": "completion.world",
+      "semantic_phase": "world_completion",
+      "device_profile": "compact",
+      "modifier": "none",
+      "logical_viewport": "375x667",
+      "query": "act0_capture=world_completion",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/completion_world.compact.normal.png",
+      "png_sha256": "c1e11120b81f5fc3c1973a70981fdf8ce88b73a15d3167324c6cbda4f6c9a9f2",
+      "device_model": "iPhone 16e",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "timing": {
+        "launch_started_epoch": 1785278033.364446,
+        "readiness_seconds": 3.71,
+        "screenshot_seconds": 6.863,
+        "total_row_seconds": 11.367
+      }
+    },
+    {
+      "visual_state_id": "repair_recheck.compact.normal",
+      "state": "repair_recheck",
+      "semantic_phase": "recheck",
+      "device_profile": "compact",
+      "modifier": "none",
+      "logical_viewport": "375x667",
+      "query": "act0_capture=repair_result",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/repair_recheck.compact.normal.png",
+      "png_sha256": "8c9c830e58a4cf32a3fa9cb8200e84b92f20e1521e0c42b63438b9eacc3b7346",
+      "device_model": "iPhone 16e",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "timing": {
+        "launch_started_epoch": 1785278044.741272,
+        "readiness_seconds": 4.347,
+        "screenshot_seconds": 6.424,
+        "total_row_seconds": 11.553
+      }
+    },
+    {
+      "visual_state_id": "showdown.compact.normal",
+      "state": "showdown",
+      "semantic_phase": "showdown",
+      "device_profile": "compact",
+      "modifier": "none",
+      "logical_viewport": "375x667",
+      "query": "act0_capture=runner_drill&world=world_1&lesson=showdown_winning&task=showdown_best_hand_drill",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/showdown.compact.normal.png",
+      "png_sha256": "5a6ce6d5756f737298d28a09d269a311233e35a856520c581b8b70886a7a980b",
+      "device_model": "iPhone 16e",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "timing": {
+        "launch_started_epoch": 1785278056.304666,
+        "readiness_seconds": 4.154,
+        "screenshot_seconds": 5.091,
+        "total_row_seconds": 10.147
+      }
+    },
+    {
+      "visual_state_id": "home.large.normal",
+      "state": "home",
+      "semantic_phase": "home",
+      "device_profile": "large",
+      "modifier": "none",
+      "logical_viewport": "430x932",
+      "query": "act0_capture=home",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/home.large.normal.png",
+      "png_sha256": "a2bd37129bdb208e522209198af6abceb4204506a6ee45571747eca21d7b4366",
+      "device_model": "iPhone 17 Pro Max",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279853.88935,
+        "readiness_seconds": 44.079,
+        "screenshot_seconds": 26.927,
+        "total_row_seconds": 77.778
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "vrt02.large.normal",
+      "state": "vrt02",
+      "semantic_phase": "seat_selection",
+      "device_profile": "large",
+      "modifier": "none",
+      "logical_viewport": "430x932",
+      "query": "act0_capture=runner_drill&world=world_1&lesson=positions&task=positions_early_late",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/vrt02.large.normal.png",
+      "png_sha256": "be2b226b99ca4f665fcefbb6d750b8a4f9634365cf58d023920ff19f5a9717d1",
+      "device_model": "iPhone 17 Pro Max",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279932.171865,
+        "readiness_seconds": 19.745,
+        "screenshot_seconds": 10.728,
+        "total_row_seconds": 33.164
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "profile_evidence.large.normal",
+      "state": "profile_evidence",
+      "semantic_phase": "profile_evidence",
+      "device_profile": "large",
+      "modifier": "none",
+      "logical_viewport": "430x932",
+      "query": "act0_capture=profile_evidence",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/profile_evidence.large.normal.png",
+      "png_sha256": "56ecc3a9905fc1ba3dd09f395a2efb1fb0352c54d1a525e73c2c7326000bf002",
+      "device_model": "iPhone 17 Pro Max",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279965.360554,
+        "readiness_seconds": 7.272,
+        "screenshot_seconds": 10.97,
+        "total_row_seconds": 19.229
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "completion_world.large.normal",
+      "state": "completion.world",
+      "semantic_phase": "world_completion",
+      "device_profile": "large",
+      "modifier": "none",
+      "logical_viewport": "430x932",
+      "query": "act0_capture=world_completion",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/completion_world.large.normal.png",
+      "png_sha256": "ce5fe0c47b716f3dd9a5a78125bf066405d82de67b7cf9cd4d75d0a163918d98",
+      "device_model": "iPhone 17 Pro Max",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785279984.6528041,
+        "readiness_seconds": 11.701,
+        "screenshot_seconds": 11.666,
+        "total_row_seconds": 24.729
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted"
+        }
+      ]
+    },
+    {
+      "visual_state_id": "home.canonical.text_scale_1_4",
+      "state": "home",
+      "semantic_phase": "home",
+      "device_profile": "canonical",
+      "modifier": "text_scale_1_4",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=home&text_scale=1.4",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/home.canonical.text_scale_1_4.png",
+      "png_sha256": "cbd593ffe5851838c99b0071f2b53dd99b9303e495299a472f1d9a8db4e49204",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785277946.903151,
+        "readiness_seconds": 12.143,
+        "screenshot_seconds": 24.512,
+        "total_row_seconds": 42.359
+      }
+    },
+    {
+      "visual_state_id": "learn.canonical.text_scale_1_4",
+      "state": "learn",
+      "semantic_phase": "learn",
+      "device_profile": "canonical",
+      "modifier": "text_scale_1_4",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=learn&text_scale=1.4",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/learn.canonical.text_scale_1_4.png",
+      "png_sha256": "4eef45f6f99949a6eb3d6e5dff3ae0e2e20fab4e57ebaaf1f0450c740406b22e",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785277989.2935371,
+        "readiness_seconds": 6.269,
+        "screenshot_seconds": 63.093,
+        "total_row_seconds": 71.221
+      }
+    },
+    {
+      "visual_state_id": "vrt02.canonical.text_scale_1_4",
+      "state": "vrt02",
+      "semantic_phase": "seat_selection",
+      "device_profile": "canonical",
+      "modifier": "text_scale_1_4",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=runner_drill&world=world_1&lesson=positions&task=positions_early_late&text_scale=1.4",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/vrt02.canonical.text_scale_1_4.png",
+      "png_sha256": "69bae756378d84d24fcb8fd0720c26d3c7a048baab870fe18bcc689e97012481",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785278060.564346,
+        "readiness_seconds": 12.827,
+        "screenshot_seconds": 14.455,
+        "total_row_seconds": 31.726
+      }
+    },
+    {
+      "visual_state_id": "vrt02_incorrect.canonical.text_scale_1_4",
+      "state": "vrt02_incorrect",
+      "semantic_phase": "incorrect_feedback",
+      "device_profile": "canonical",
+      "modifier": "text_scale_1_4",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=runner_feedback&world=world_1&lesson=positions&task=positions_early_late&text_scale=1.4",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/vrt02_incorrect.canonical.text_scale_1_4.png",
+      "png_sha256": "145712891a05df8a5c1a7b7fe0ab4e6f2a51d46bb7ff0c3b0f8a9cfc49a4008e",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785278092.296192,
+        "readiness_seconds": 5.324,
+        "screenshot_seconds": 9.158,
+        "total_row_seconds": 17.253
+      }
+    },
+    {
+      "visual_state_id": "theory.canonical.text_scale_1_4",
+      "state": "theory",
+      "semantic_phase": "theory",
+      "device_profile": "canonical",
+      "modifier": "text_scale_1_4",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=runner_theory&text_scale=1.4",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/theory.canonical.text_scale_1_4.png",
+      "png_sha256": "3700c780051b6b3748942a823baa137b6e916cfc9c9c9bfebda82ce4cd17a852",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785278109.57886,
+        "readiness_seconds": 17.023,
+        "screenshot_seconds": 15.066,
+        "total_row_seconds": 32.923
+      }
+    },
+    {
+      "visual_state_id": "review.canonical.text_scale_1_4",
+      "state": "review",
+      "semantic_phase": "review",
+      "device_profile": "canonical",
+      "modifier": "text_scale_1_4",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=review&text_scale=1.4",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/review.canonical.text_scale_1_4.png",
+      "png_sha256": "9ca3b551a127681880bc59777206832208a4c22382d5ba42aafe3e963fa328b6",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785278142.5086248,
+        "readiness_seconds": 5.513,
+        "screenshot_seconds": 17.318,
+        "total_row_seconds": 24.715
+      }
+    },
+    {
+      "visual_state_id": "profile_evidence.canonical.text_scale_1_4",
+      "state": "profile_evidence",
+      "semantic_phase": "profile_evidence",
+      "device_profile": "canonical",
+      "modifier": "text_scale_1_4",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=profile_evidence&text_scale=1.4",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/profile_evidence.canonical.text_scale_1_4.png",
+      "png_sha256": "412a0a637e520504cae21db2e2f0326439d66252e80550aaa3026b11017df477",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785278167.233973,
+        "readiness_seconds": 10.516,
+        "screenshot_seconds": 16.457,
+        "total_row_seconds": 31.767
+      }
+    },
+    {
+      "visual_state_id": "session_summary.canonical.text_scale_1_4",
+      "state": "session_summary",
+      "semantic_phase": "session_summary",
+      "device_profile": "canonical",
+      "modifier": "text_scale_1_4",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=session_summary&text_scale=1.4",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/session_summary.canonical.text_scale_1_4.png",
+      "png_sha256": "bfd9100ab920d35a400cbb34a88d732de5b4975fb4aa7ca7317b8f5ffeef913e",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785278199.014004,
+        "readiness_seconds": 9.22,
+        "screenshot_seconds": 8.959,
+        "total_row_seconds": 19.284
+      }
+    },
+    {
+      "visual_state_id": "lesson_completion.canonical.text_scale_1_4",
+      "state": "lesson.completion",
+      "semantic_phase": "lesson_completion",
+      "device_profile": "canonical",
+      "modifier": "text_scale_1_4",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=runner_drill&world=world_1&lesson=positions&task=positions_review&text_scale=1.4",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/lesson_completion.canonical.text_scale_1_4.png",
+      "png_sha256": "bbe178842d486a3ce8746d0a613233a83910cd29bb02ab9dba0680783514f8cf",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785278218.312334,
+        "readiness_seconds": 8.174,
+        "screenshot_seconds": 6.991,
+        "total_row_seconds": 16.262
+      }
+    },
+    {
+      "visual_state_id": "completion_world.canonical.text_scale_1_4",
+      "state": "completion.world",
+      "semantic_phase": "world_completion",
+      "device_profile": "canonical",
+      "modifier": "text_scale_1_4",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=world_completion&text_scale=1.4",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/completion_world.canonical.text_scale_1_4.png",
+      "png_sha256": "2c3b8deb9044c609d8de9bba6330631b1b0cf5bec2d20a42d9e5234455c05e68",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785278234.578858,
+        "readiness_seconds": 5.77,
+        "screenshot_seconds": 6.118,
+        "total_row_seconds": 13.264
+      }
+    },
+    {
+      "visual_state_id": "home.canonical.reduced_motion",
+      "state": "home",
+      "semantic_phase": "home",
+      "device_profile": "canonical",
+      "modifier": "reduced_motion",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=home&reduced_motion=true",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/home.canonical.reduced_motion.png",
+      "png_sha256": "baf2b5b69f33f6f3e56f5a6fcb200c03947f4d9bd9eedd57035a0a4881b323e4",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785278247.849783,
+        "readiness_seconds": 4.22,
+        "screenshot_seconds": 5.838,
+        "total_row_seconds": 10.638
+      }
+    },
+    {
+      "visual_state_id": "vrt02.canonical.reduced_motion",
+      "state": "vrt02",
+      "semantic_phase": "seat_selection",
+      "device_profile": "canonical",
+      "modifier": "reduced_motion",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=runner_drill&world=world_1&lesson=positions&task=positions_early_late&reduced_motion=true",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/vrt02.canonical.reduced_motion.png",
+      "png_sha256": "ffb32c4d1af2da61add886ead4a9ef24ed92469171660c05cfa0a95410cfd2d7",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785282186.417135,
+        "readiness_seconds": 8.643,
+        "screenshot_seconds": 19.434,
+        "total_row_seconds": 35.302,
+        "relaunch_count": 0
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "result": "accepted",
+          "frame_metrics": {
+            "near_white_ratio": 0.008306,
+            "near_black_ratio": 0.002399,
+            "luminance_range": 255,
+            "luminance_variance": 1107.444404,
+            "sample_count": 356360
+          },
+          "frame_validity": "valid",
+          "attempt_seconds": 19.22
+        }
+      ],
+      "replaces_png_sha256": "db71f814ef957a3c4533331276f865763cc856d3805c679fe679312a7143c3da"
+    },
+    {
+      "visual_state_id": "vrt02_incorrect.canonical.reduced_motion",
+      "state": "vrt02_incorrect",
+      "semantic_phase": "incorrect_feedback",
+      "device_profile": "canonical",
+      "modifier": "reduced_motion",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=runner_feedback&world=world_1&lesson=positions&task=positions_early_late&reduced_motion=true",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/vrt02_incorrect.canonical.reduced_motion.png",
+      "png_sha256": "6a7dd6920f017a6662ec52d08778722f4611e03210edc41c9f859902a066e9a9",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785278266.896367,
+        "readiness_seconds": 1.469,
+        "screenshot_seconds": 6.218,
+        "total_row_seconds": 8.819
+      }
+    },
+    {
+      "visual_state_id": "session_summary.canonical.reduced_motion",
+      "state": "session_summary",
+      "semantic_phase": "session_summary",
+      "device_profile": "canonical",
+      "modifier": "reduced_motion",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=session_summary&reduced_motion=true",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/session_summary.canonical.reduced_motion.png",
+      "png_sha256": "6ded2d72b35cbc986df8696713af00359a813d7a6bd94d19b081ef663309dcce",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785278275.7191942,
+        "readiness_seconds": 3.718,
+        "screenshot_seconds": 6.463,
+        "total_row_seconds": 10.861
+      }
+    },
+    {
+      "visual_state_id": "completion_world.canonical.reduced_motion",
+      "state": "completion.world",
+      "semantic_phase": "world_completion",
+      "device_profile": "canonical",
+      "modifier": "reduced_motion",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=world_completion&reduced_motion=true",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/completion_world.canonical.reduced_motion.png",
+      "png_sha256": "109200b801a6163945634c9a6f68106c8cada88a67dd56f0c6da48d7bee5bb1c",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785278286.5825942,
+        "readiness_seconds": 3.588,
+        "screenshot_seconds": 6.14,
+        "total_row_seconds": 10.317
+      }
+    },
+    {
+      "visual_state_id": "repair_recheck.canonical.reduced_motion",
+      "state": "repair_recheck",
+      "semantic_phase": "recheck",
+      "device_profile": "canonical",
+      "modifier": "reduced_motion",
+      "logical_viewport": "402x874",
+      "query": "act0_capture=repair_result&reduced_motion=true",
+      "candidate_sha": "bc3214e5a31ac4d10dd1c17fbde0b4c3617b4381",
+      "capture_source": "NATIVE_IOS_SIMULATOR",
+      "injected_state_classification": "NATIVE_PRODUCTION_RENDERER_INJECTED_STATE",
+      "png": "raw/repair_recheck.canonical.reduced_motion.png",
+      "png_sha256": "604fdbf9a0ff194d172e7ef71eef5cdec4db29ccddf0aeb4fc6963ee1662d657",
+      "device_model": "iPhone 17 Pro",
+      "ios_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+      "timing": {
+        "launch_started_epoch": 1785278296.9030669,
+        "readiness_seconds": 4.129,
+        "screenshot_seconds": 6.551,
+        "total_row_seconds": 11.262
+      }
+    }
+  ],
+  "contact_sheets": [
+    {
+      "path": "contact_sheets/01_entry_and_handoff.webp",
+      "states": [
+        "placement.canonical.normal",
+        "welcome.canonical.normal",
+        "home.canonical.normal",
+        "learn.canonical.normal"
+      ]
+    },
+    {
+      "path": "contact_sheets/02_home_and_learn_geometry.webp",
+      "states": [
+        "home.compact.normal",
+        "home.canonical.normal",
+        "home.large.normal",
+        "learn.compact.normal",
+        "learn.canonical.normal"
+      ]
+    },
+    {
+      "path": "contact_sheets/03_theory_and_table_read.webp",
+      "states": [
+        "theory.canonical.normal",
+        "table_read.canonical.normal",
+        "showdown.canonical.normal",
+        "hand_comparison.canonical.normal"
+      ]
+    },
+    {
+      "path": "contact_sheets/04_decision_prompts.webp",
+      "states": [
+        "action_selection.canonical.normal",
+        "vrt02.canonical.normal",
+        "hand_comparison.canonical.normal",
+        "showdown.canonical.normal"
+      ]
+    },
+    {
+      "path": "contact_sheets/05_feedback_and_repair.webp",
+      "states": [
+        "vrt02_correct.canonical.normal",
+        "vrt02_incorrect.canonical.normal",
+        "repair_focus.canonical.normal",
+        "repair_recheck.canonical.normal"
+      ]
+    },
+    {
+      "path": "contact_sheets/06_review_profile_and_summary.webp",
+      "states": [
+        "review.canonical.normal",
+        "profile_evidence.canonical.normal",
+        "session_summary.canonical.normal",
+        "home.canonical.normal"
+      ]
+    },
+    {
+      "path": "contact_sheets/07_completion_and_progress.webp",
+      "states": [
+        "lesson_completion.canonical.normal",
+        "completion_world.canonical.normal",
+        "world3.canonical.normal",
+        "profile_evidence.canonical.normal"
+      ]
+    },
+    {
+      "path": "contact_sheets/08_compact_normal.webp",
+      "states": [
+        "placement.compact.normal",
+        "welcome.compact.normal",
+        "home.compact.normal",
+        "vrt02.compact.normal",
+        "vrt02_correct.compact.normal",
+        "vrt02_incorrect.compact.normal",
+        "completion_world.compact.normal"
+      ]
+    },
+    {
+      "path": "contact_sheets/09_compact_normal_continued.webp",
+      "states": [
+        "learn.compact.normal",
+        "review.compact.normal",
+        "profile_evidence.compact.normal",
+        "session_summary.compact.normal",
+        "lesson_completion.compact.normal",
+        "repair_recheck.compact.normal",
+        "showdown.compact.normal"
+      ]
+    },
+    {
+      "path": "contact_sheets/10_text_scale_1_4_core.webp",
+      "states": [
+        "home.canonical.text_scale_1_4",
+        "theory.canonical.text_scale_1_4",
+        "vrt02.canonical.text_scale_1_4",
+        "vrt02_incorrect.canonical.text_scale_1_4",
+        "lesson_completion.canonical.text_scale_1_4"
+      ]
+    },
+    {
+      "path": "contact_sheets/11_text_scale_1_4_support.webp",
+      "states": [
+        "learn.canonical.text_scale_1_4",
+        "review.canonical.text_scale_1_4",
+        "profile_evidence.canonical.text_scale_1_4",
+        "session_summary.canonical.text_scale_1_4",
+        "completion_world.canonical.text_scale_1_4"
+      ]
+    },
+    {
+      "path": "contact_sheets/12_reduced_motion.webp",
+      "states": [
+        "home.canonical.reduced_motion",
+        "vrt02.canonical.reduced_motion",
+        "vrt02_incorrect.canonical.reduced_motion",
+        "repair_recheck.canonical.reduced_motion",
+        "session_summary.canonical.reduced_motion",
+        "completion_world.canonical.reduced_motion"
+      ]
+    },
+    {
+      "path": "contact_sheets/13_large_normal.webp",
+      "states": [
+        "home.large.normal",
+        "vrt02.large.normal",
+        "profile_evidence.large.normal",
+        "completion_world.large.normal"
+      ]
+    },
+    {
+      "path": "contact_sheets/14_canonical_normal_baseline.webp",
+      "states": [
+        "placement.canonical.normal",
+        "welcome.canonical.normal",
+        "theory.canonical.normal",
+        "table_read.canonical.normal",
+        "vrt02.canonical.normal",
+        "lesson_completion.canonical.normal"
+      ]
+    },
+    {
+      "path": "contact_sheets/15_native_render_fidelity.webp",
+      "states": [
+        "vrt02.compact.normal",
+        "vrt02.canonical.normal",
+        "vrt02.large.normal",
+        "vrt02.canonical.text_scale_1_4",
+        "vrt02.canonical.reduced_motion"
+      ]
+    }
+  ],
+  "acceptance_gates": {
+    "exact_54_native_rows": true,
+    "distribution_20_14_10_6_4": true,
+    "unique_state_device_modifier": true,
+    "every_row_final_candidate_sha": true,
+    "native_ios_simulator_only": true,
+    "no_large_reduced_motion": true,
+    "lesson_completion_separate_from_completion_world": true,
+    "raw_pngs_remain_workflow_artifact_only": true
+  },
+  "truth_rule": "Every image is from the final native iOS Simulator artifact. Native state payload injection renders the production app; it is not a widget test or a Human Novice proof."
+}
