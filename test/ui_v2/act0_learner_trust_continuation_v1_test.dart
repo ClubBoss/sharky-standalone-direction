@@ -1,4 +1,7 @@
 import 'dart:convert';
+import '../support/act0_shell_presentation_finders_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_runtime_adapter_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_home_leaf_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -196,21 +199,37 @@ void main() {
       await t.pumpAndSettle();
       await t.pumpWidget(const MaterialApp(home: Act0ShellPreviewScreenV1()));
       await t.pumpAndSettle();
-      final home = t.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
-      final expectedLessonId = home.currentLesson!.lessonId;
+      final academy = act0AcademyRuntimeEnabledV1(
+        t.element(find.byType(Act0ShellPreviewScreenV1)),
+        Act0ShellTabV1.home,
+      );
+      final expectedLesson = academy
+          ? Act0ShellStateV1.sample
+                .worldById('world_1')
+                .lessons
+                .firstWhere((lesson) => lesson.lessonId == 'what_poker_is')
+          : t
+                .widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1))
+                .currentLesson!;
+      if (academy) {
+        final next = t
+            .widget<Act0AcademyHomeLeafV1>(find.byType(Act0AcademyHomeLeafV1))
+            .input
+            .nextAction!;
+        expect(find.text(next.title), findsOneWidget);
+      }
+      final expectedLessonId = expectedLesson.lessonId;
       final prefs = await SharedPreferences.getInstance();
       final before =
           jsonDecode(prefs.getString('act0_shell_progress_v1')!)
               as Map<String, dynamic>;
-      await tap('act0_shell_main_cta');
+      await t.tap(act0ShellPresentationFinderV1('act0_shell_main_cta'));
+      await t.pumpAndSettle();
       final launched = t.widget<Act0LessonRunnerShellV1>(
         find.byType(Act0LessonRunnerShellV1),
       );
       expect(launched.selectedLessonId, expectedLessonId);
-      expect(
-        launched.selectedTaskId,
-        home.currentLesson!.taskList.first.taskId,
-      );
+      expect(launched.selectedTaskId, expectedLesson.taskList.first.taskId);
       final after =
           jsonDecode(prefs.getString('act0_shell_progress_v1')!)
               as Map<String, dynamic>;

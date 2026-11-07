@@ -8,6 +8,25 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dar
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_runtime_adapter_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_review_leaf_v1.dart';
+
+List<String> _visibleSavedCheckIds(WidgetTester tester) {
+  final context = tester.element(find.byType(Act0ShellPreviewScreenV1));
+  if (act0AcademyRuntimeEnabledV1(context, Act0ShellTabV1.review)) {
+    return tester
+        .widget<Act0AcademyReviewLeafV1>(find.byType(Act0AcademyReviewLeafV1))
+        .input
+        .savedChecks
+        .map((item) => item.checkId)
+        .toList();
+  }
+  return tester
+      .widget<Act0ReviewShellV1>(find.byType(Act0ReviewShellV1))
+      .sessionDrillRecheckQueueItems
+      .map((item) => item.jobId)
+      .toList();
+}
 
 const _key = 'act0_shell_progress_v1';
 // Same supported queue fixture as the existing Review consumer controls.
@@ -72,14 +91,7 @@ void main() {
       });
       await tester.pumpWidget(_host(() async => [_item]));
       await tester.pumpAndSettle();
-      expect(
-        tester
-            .widget<Act0ReviewShellV1>(find.byType(Act0ReviewShellV1))
-            .sessionDrillRecheckQueueItems
-            .single
-            .jobId,
-        _item.jobId,
-      );
+      expect(_visibleSavedCheckIds(tester).single, _item.jobId);
     },
   );
   testWidgets(
@@ -107,12 +119,7 @@ void main() {
       final nav = find.byKey(const Key('act0_shell_bottom_nav'));
       await tester.tap(find.descendant(of: nav, matching: find.text('Review')));
       await tester.pumpAndSettle();
-      expect(
-        tester
-            .widget<Act0ReviewShellV1>(find.byType(Act0ReviewShellV1))
-            .sessionDrillRecheckQueueItems,
-        isEmpty,
-      );
+      expect(_visibleSavedCheckIds(tester), isEmpty);
       final dynamic runtime = tester.state(
         find.byType(Act0ShellPreviewScreenV1),
       );
@@ -131,10 +138,7 @@ void main() {
       await _store().flush();
       await tester.pumpWidget(_host(() async => [_item]));
       await tester.pumpAndSettle();
-      final review = tester.widget<Act0ReviewShellV1>(
-        find.byType(Act0ReviewShellV1),
-      );
-      expect(review.sessionDrillRecheckQueueItems, isEmpty);
+      expect(_visibleSavedCheckIds(tester), isEmpty);
       final cold = jsonDecode((await _store().load())!) as Map;
       expect(cold['suppressLegacyRecheckAfterRecovery'], true);
       expect(cold['completedTaskIds'], isEmpty);

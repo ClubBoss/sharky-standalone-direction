@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '../support/act0_shell_presentation_finders_v1.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -108,8 +109,8 @@ void main() {
           await tester.tap(find.text('Practice').last);
           await tester.pumpAndSettle();
 
-          final launch = find.byKey(
-            const Key('act0_shell_play_repair_queue_item_cta'),
+          final launch = act0ShellPresentationFinderV1(
+            'act0_shell_play_repair_queue_item_cta',
           );
           expect(launch, findsOneWidget);
           await tester.ensureVisible(launch);
@@ -219,7 +220,7 @@ void main() {
           );
 
           expect(
-            find.byKey(const Key('act0_shell_review_screen')),
+            act0ShellPresentationFinderV1('act0_shell_review_screen'),
             findsOneWidget,
           );
 
@@ -243,8 +244,8 @@ void main() {
           expect(sink.events.where((e) => e.name == 'fix_landed'), isEmpty);
           await tester.tap(find.text('Practice').last);
           await tester.pumpAndSettle();
-          final retry = find.byKey(
-            const Key('act0_shell_play_repair_queue_item_cta'),
+          final retry = act0ShellPresentationFinderV1(
+            'act0_shell_play_repair_queue_item_cta',
           );
           expect(retry, findsOneWidget);
           await tester.ensureVisible(retry);
