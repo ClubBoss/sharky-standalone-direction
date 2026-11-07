@@ -421,7 +421,11 @@ void main() {
     'placement board-card miss preserves the repair intent and finishes the quick check',
     (tester) async {
       final sink = Act0InMemoryTelemetrySinkV1();
-      await _pumpPlacementDiagnosticHost(tester, telemetrySink: sink);
+      await _pumpPlacementDiagnosticHost(
+        tester,
+        telemetrySink: sink,
+        viewport: const Size(393, 852),
+      );
 
       await _answerPlacementQuestion(tester, 'friends');
       await _answerPlacementQuestion(tester, 'rules');
@@ -431,23 +435,44 @@ void main() {
       await tester.pumpAndSettle();
 
       await _answerPlacementCorrectly(tester);
-      expect(find.text('Correct read'), findsOneWidget);
+      expect(find.text('CORRECT READ'), findsOneWidget);
       expect(find.text('Next check'), findsOneWidget);
       expect(find.text('Try same clue'), findsNothing);
       await tester.tap(
         find.byKey(const Key('act0_shell_feedback_continue_cta')),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Which cards can everyone use?'), findsOneWidget);
+      expect(
+        tester
+            .widget<Text>(find.byKey(const Key('act0_integrated_scene_prompt')))
+            .data,
+        'Which cards can everyone use?',
+      );
 
       await tester.tap(
         find.byKey(const Key('act0_shell_option_hero_private_cards')),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Missed clue'), findsOneWidget);
+      expect(find.text('MISSED CLUE'), findsOneWidget);
+      expect(
+        tester
+            .widget<Act0LessonRunnerShellV1>(
+              find.byType(Act0LessonRunnerShellV1),
+            )
+            .runner
+            .reviewQuality,
+        Act0FeedbackQualityV1.wrong,
+      );
       expect(find.text('Repair focus'), findsNothing);
       expect(find.text('Try same clue'), findsNothing);
       expect(find.text('Next check'), findsOneWidget);
+      expect(find.text('NEXT · CONTINUE CHECK'), findsOneWidget);
+      expect(
+        find.text('Continue to the next diagnostic question.'),
+        findsOneWidget,
+      );
+      expect(find.text('NEXT · REPAIR THE CLUE'), findsNothing);
+      expect(find.text('Try the same table clue once more.'), findsNothing);
       expect(
         _openRepairIntentPayload(tester, 'what_poker_is_table_read_transfer'),
         isNotNull,
@@ -466,8 +491,32 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.text('No bet faces Hero. Which action is free?'),
-        findsOneWidget,
+        tester
+            .widget<Text>(find.byKey(const Key('act0_integrated_scene_prompt')))
+            .data,
+        'No bet faces Hero. Which action is free?',
+      );
+      // Placement reuses one task ID: assert the actual next signal's
+      // question, options and framing, rather than task identity alone.
+      final nextRunner = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      final actionCheck = placementQuickCheckRunnerV1(
+        nextRunner.runner,
+        signalId: 'action_basics',
+        checkIndex: 3,
+        checkCount: 3,
+      );
+      expect(nextRunner.selectedTaskId, 'what_poker_is_table_read_transfer');
+      expect(nextRunner.runner.question, actionCheck.question);
+      expect(nextRunner.runner.caption, actionCheck.caption);
+      expect(
+        nextRunner.runner.options.map((option) => option.id),
+        actionCheck.options.map((option) => option.id),
+      );
+      expect(
+        nextRunner.framingProfile,
+        placementQuickCheckFramingProfileV1('action_basics'),
       );
       expect(
         sink.events.where((event) => event.name == 'repair_entered'),
@@ -487,8 +536,11 @@ void main() {
       );
 
       await _answerPlacementCorrectly(tester);
-      expect(find.text('Correct read'), findsOneWidget);
+      expect(find.text('CORRECT READ'), findsOneWidget);
       expect(find.text('See my start'), findsOneWidget);
+      expect(find.text('NEXT · YOUR START'), findsOneWidget);
+      expect(find.text('See your suggested starting point.'), findsOneWidget);
+      expect(find.text('Try the same table clue once more.'), findsNothing);
       expect(find.text('Try same clue'), findsNothing);
       await tester.tap(
         find.byKey(const Key('act0_shell_feedback_continue_cta')),
@@ -512,6 +564,52 @@ void main() {
       );
     },
   );
+
+  testWidgets('ordinary scene-owned wrong feedback keeps its repair promise '
+      'with and without assistance', (tester) async {
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    var continued = 0;
+    for (final assisted in [false, true]) {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0FeedbackShellV1(
+              key: ValueKey(assisted),
+              title: 'Missed clue',
+              reason: 'No bet faces Hero.',
+              quality: Act0FeedbackQualityV1.wrong,
+              sharkyLine: 'Check the table clue.',
+              sharkyMood: Act0SharkyMoodV1.repair,
+              selectedLabel: 'Fold',
+              preferredLabel: 'Check',
+              betterLabel: 'Check',
+              isAssistedDecision: assisted,
+              sceneOwnsFeedbackExplanation: true,
+              onContinue: () => continued += 1,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('NEXT · REPAIR THE CLUE'), findsOneWidget);
+      expect(find.text('Try the same table clue once more.'), findsOneWidget);
+      expect(find.text('Try same clue'), findsOneWidget);
+      expect(
+        find.text('Continue to the next diagnostic question.'),
+        findsNothing,
+      );
+      expect(find.text('Read banked'), findsNothing);
+      await tester.tap(
+        find.byKey(const Key('act0_shell_feedback_continue_cta')),
+      );
+      await tester.pumpAndSettle();
+      expect(continued, assisted ? 2 : 1);
+      expect(tester.takeException(), isNull);
+    }
+  });
 
   testWidgets('placement uncertainty uses the same forward receipt contract', (
     tester,
@@ -558,8 +656,9 @@ void main() {
 Future<void> _pumpPlacementDiagnosticHost(
   WidgetTester tester, {
   required Act0InMemoryTelemetrySinkV1 telemetrySink,
+  Size viewport = const Size(1200, 1600),
 }) async {
-  tester.view.physicalSize = const Size(1200, 1600);
+  tester.view.physicalSize = viewport;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
