@@ -1,3 +1,5 @@
+import 'package:flutter/semantics.dart';
+import 'act0_accessibility_semantics_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_reading_style_v1.dart';
 import 'dart:async';
 import 'act0_scene_profile_v1.dart';
@@ -3665,6 +3667,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                 supportSegments: effectiveLearningRailPages,
                 activeSupportSegmentIndex: cappedSupportSegmentIndex,
                 progressLabel: learningRailProgress,
+                backSemanticLabel:
+                    hasPreviousSupportSegment || runner.teachingStepIndex > 0
+                    ? 'Previous theory page'
+                    : 'Back to lesson',
                 canGoBack:
                     hasPreviousSupportSegment ||
                     runner.teachingStepIndex > 0 ||
@@ -5516,45 +5522,51 @@ class _SizingPresetButtonV1 extends StatelessWidget {
         ? Act0ShellTokensV1.primary.withValues(alpha: 0.92)
         : Act0ShellTokensV1.primary.withValues(alpha: 0.3);
 
-    return OutlinedButton(
-      key: Key('act0_shell_sizing_preset_${preset.id}'),
-      onPressed: onPressed,
-      style: Act0ShellTokensV1.quietButtonStyle(height: 40).copyWith(
-        backgroundColor: WidgetStatePropertyAll(backgroundColor),
-        side: WidgetStatePropertyAll(
-          BorderSide(color: borderColor, width: 1.5),
-        ),
-        foregroundColor: WidgetStatePropertyAll(
-          isSelected ? Act0ShellTokensV1.primary : Act0ShellTokensV1.text,
-        ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            preset.displayLabel ?? preset.label,
-            maxLines: 1,
-            overflow: TextOverflow.fade,
-            softWrap: false,
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+    return Act0SemanticActionV1(
+      label: preset.label,
+      value: preset.displayLabel == preset.label ? null : preset.displayLabel,
+      selected: isSelected,
+      onTap: onPressed,
+      child: OutlinedButton(
+        key: Key('act0_shell_sizing_preset_${preset.id}'),
+        onPressed: onPressed,
+        style: Act0ShellTokensV1.quietButtonStyle(height: 40).copyWith(
+          backgroundColor: WidgetStatePropertyAll(backgroundColor),
+          side: WidgetStatePropertyAll(
+            BorderSide(color: borderColor, width: 1.5),
           ),
-          if ((preset.detailLabel ?? '').isNotEmpty)
+          foregroundColor: WidgetStatePropertyAll(
+            isSelected ? Act0ShellTokensV1.primary : Act0ShellTokensV1.text,
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
             Text(
-              preset.detailLabel!,
+              preset.displayLabel ?? preset.label,
               maxLines: 1,
               overflow: TextOverflow.fade,
               softWrap: false,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color:
-                    (isSelected
-                            ? Act0ShellTokensV1.primary
-                            : Act0ShellTokensV1.textMuted)
-                        .withValues(alpha: isSelected ? 0.92 : 0.9),
-              ),
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
             ),
-        ],
+            if ((preset.detailLabel ?? '').isNotEmpty)
+              Text(
+                preset.detailLabel!,
+                maxLines: 1,
+                overflow: TextOverflow.fade,
+                softWrap: false,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color:
+                      (isSelected
+                              ? Act0ShellTokensV1.primary
+                              : Act0ShellTokensV1.textMuted)
+                          .withValues(alpha: isSelected ? 0.92 : 0.9),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -5965,9 +5977,12 @@ class _AccessibilityDirectDecisionV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 for (final option in options) ...[
-                  Semantics(
-                    button: true,
+                  Act0SemanticActionV1(
                     label: option.label,
+                    value: option.amountLabel.trim().isEmpty
+                        ? null
+                        : option.amountLabel,
+                    onTap: () => onChoose(option),
                     child: Material(
                       color: Act0ShellTokensV1.surface,
                       borderRadius: BorderRadius.circular(12),
@@ -6134,6 +6149,7 @@ class _LearningRailV1 extends StatelessWidget {
     required this.activeSupportSegmentIndex,
     required this.progressLabel,
     required this.canGoBack,
+    this.backSemanticLabel = 'Previous theory page',
     required this.onBack,
     required this.canAdvance,
     required this.onAdvance,
@@ -6152,6 +6168,7 @@ class _LearningRailV1 extends StatelessWidget {
   final int activeSupportSegmentIndex;
   final String? progressLabel;
   final bool canGoBack;
+  final String backSemanticLabel;
   final VoidCallback? onBack;
   final bool canAdvance;
   final VoidCallback onAdvance;
@@ -6189,6 +6206,7 @@ class _LearningRailV1 extends StatelessWidget {
               _LearningRailNavButtonV1(
                 icon: Icons.arrow_back_ios_new_rounded,
                 buttonKey: const Key('act0_shell_previous_cta'),
+                semanticLabel: backSemanticLabel,
                 enabled: canGoBack,
                 onPressed: onBack,
                 compact: true,
@@ -6343,6 +6361,7 @@ class _LearningRailV1 extends StatelessWidget {
                           _LearningRailNavButtonV1(
                             icon: Icons.arrow_back_ios_new_rounded,
                             buttonKey: const Key('act0_shell_previous_cta'),
+                            semanticLabel: backSemanticLabel,
                             enabled: canGoBack,
                             onPressed: onBack,
                             compact: compactRail,
@@ -6465,6 +6484,7 @@ class _LearningRailNavButtonV1 extends StatelessWidget {
     this.tone = Act0ShellTokensV1.text,
     this.compact = false,
     this.label,
+    this.semanticLabel,
   });
 
   final IconData icon;
@@ -6474,75 +6494,81 @@ class _LearningRailNavButtonV1 extends StatelessWidget {
   final Color tone;
   final bool compact;
   final String? label;
+  final String? semanticLabel;
 
   @override
   Widget build(BuildContext context) {
     final hasLabel = (label ?? '').trim().isNotEmpty;
     final resolvedLabel = label?.trim() ?? '';
-    return Container(
-      width: hasLabel ? null : (compact ? 32 : 40),
-      height: compact ? 32 : 40,
-      constraints: BoxConstraints(
-        minWidth: hasLabel ? (compact ? 92 : 110) : (compact ? 32 : 40),
-      ),
-      decoration: BoxDecoration(
-        color: enabled
-            ? tone.withValues(alpha: 0.12)
-            : Act0ShellTokensV1.surface3.withValues(alpha: 0.7),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
-        border: Border.all(
+    return Act0SemanticActionV1(
+      label:
+          semanticLabel ?? (hasLabel ? resolvedLabel : 'Previous theory page'),
+      onTap: enabled ? onPressed : null,
+      child: Container(
+        width: hasLabel ? null : (compact ? 32 : 40),
+        height: compact ? 32 : 40,
+        constraints: BoxConstraints(
+          minWidth: hasLabel ? (compact ? 92 : 110) : (compact ? 32 : 40),
+        ),
+        decoration: BoxDecoration(
           color: enabled
-              ? tone.withValues(alpha: 0.30)
-              : Act0ShellTokensV1.border.withValues(alpha: 0.76),
-        ),
-      ),
-      child: TextButton(
-        key: buttonKey,
-        onPressed: enabled ? onPressed : null,
-        style: TextButton.styleFrom(
-          padding: EdgeInsets.symmetric(
-            horizontal: hasLabel ? 10 : 0,
-            vertical: 0,
-          ),
-          minimumSize: Size(
-            hasLabel ? (compact ? 92 : 110) : (compact ? 32 : 40),
-            compact ? 32 : 40,
-          ),
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
+              ? tone.withValues(alpha: 0.12)
+              : Act0ShellTokensV1.surface3.withValues(alpha: 0.7),
+          borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
+          border: Border.all(
+            color: enabled
+                ? tone.withValues(alpha: 0.30)
+                : Act0ShellTokensV1.border.withValues(alpha: 0.76),
           ),
         ),
-        child: hasLabel
-            ? Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(
-                    child: Text(
-                      resolvedLabel,
-                      overflow: TextOverflow.fade,
-                      softWrap: false,
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: enabled ? tone : Act0ShellTokensV1.textDim,
-                        fontSize: compact ? 11.0 : 11.5,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0,
+        child: TextButton(
+          key: buttonKey,
+          onPressed: enabled ? onPressed : null,
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.symmetric(
+              horizontal: hasLabel ? 10 : 0,
+              vertical: 0,
+            ),
+            minimumSize: Size(
+              hasLabel ? (compact ? 92 : 110) : (compact ? 32 : 40),
+              compact ? 32 : 40,
+            ),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
+            ),
+          ),
+          child: hasLabel
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        resolvedLabel,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: enabled ? tone : Act0ShellTokensV1.textDim,
+                          fontSize: compact ? 11.0 : 11.5,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  Icon(
-                    icon,
-                    size: compact ? 12 : 16,
-                    color: enabled ? tone : Act0ShellTokensV1.textDim,
-                  ),
-                ],
-              )
-            : Icon(
-                icon,
-                size: compact ? 12 : 16,
-                color: enabled ? tone : Act0ShellTokensV1.textDim,
-              ),
+                    const SizedBox(width: 4),
+                    Icon(
+                      icon,
+                      size: compact ? 12 : 16,
+                      color: enabled ? tone : Act0ShellTokensV1.textDim,
+                    ),
+                  ],
+                )
+              : Icon(
+                  icon,
+                  size: compact ? 12 : 16,
+                  color: enabled ? tone : Act0ShellTokensV1.textDim,
+                ),
+        ),
       ),
     );
   }
@@ -7873,7 +7899,15 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final VoidCallback onContinue;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Act0ChoiceResultSemanticsV1(
+    title: title,
+    selectedLabel: selectedLabel,
+    reason: reason,
+    assisted: isAssistedDecision,
+    child: _buildFeedback(context),
+  );
+
+  Widget _buildFeedback(BuildContext context) {
     final isWrong = quality == Act0FeedbackQualityV1.wrong;
     final isSuboptimal = quality == Act0FeedbackQualityV1.suboptimal;
     final isRepairFocusState =
@@ -14259,9 +14293,16 @@ class _SeatNodeV1 extends StatelessWidget {
       return node;
     }
     return Semantics(
+      container: true,
+      explicitChildNodes: true,
       button: true,
-      label: 'Tap ${seat.seatLabel}',
+      selected:
+          seatVisualState == _SeatVisualStateV1.wrongSelected ||
+          seatVisualState == _SeatVisualStateV1.confirmedSelected,
+      label: 'Select ${seat.seatLabel}',
+      onTap: onTap,
       child: GestureDetector(
+        excludeFromSemantics: true,
         key: Key('act0_shell_seat_tap_${seat.seatId}'),
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
@@ -16251,67 +16292,74 @@ class _CardV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = _cardInkColor(card);
     final suit = _displaySuit(card.suit);
-    return Container(
-      key: cardId != null ? Key('act0_shell_card_$cardId') : null,
-      width: Act0ShellTokensV1.heroCardWidth,
-      height: Act0ShellTokensV1.heroCardHeight,
-      constraints: const BoxConstraints(
-        minWidth: Act0ShellTokensV1.heroCardWidth,
-      ),
-      decoration: _playingCardDecorationV1(highlighted: highlighted),
-      child: Stack(
-        children: [
-          if (highlighted)
+    return Act0CardSemanticsV1(
+      rank: card.rank,
+      suit: card.suit,
+      position: cardId?.startsWith('hero_') == true ? 'Your card' : null,
+      child: Container(
+        key: cardId != null ? Key('act0_shell_card_$cardId') : null,
+        width: Act0ShellTokensV1.heroCardWidth,
+        height: Act0ShellTokensV1.heroCardHeight,
+        constraints: const BoxConstraints(
+          minWidth: Act0ShellTokensV1.heroCardWidth,
+        ),
+        decoration: _playingCardDecorationV1(highlighted: highlighted),
+        child: Stack(
+          children: [
+            if (highlighted)
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: CustomPaint(
+                    key: const Key('act0_scene_clue_bracket'),
+                    painter: Act0SceneClueBracketPainterV1(
+                      tone: Act0ShellTokensV1.gold,
+                    ),
+                  ),
+                ),
+              ),
             Positioned.fill(
-              child: IgnorePointer(
-                child: CustomPaint(
-                  key: const Key('act0_scene_clue_bracket'),
-                  painter: Act0SceneClueBracketPainterV1(
-                    tone: Act0ShellTokensV1.gold,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                    Act0ShellTokensV1.radiusXs,
+                  ),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: <Color>[
+                      Colors.white.withValues(alpha: 0.8),
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.05),
+                    ],
+                    stops: const <double>[0, 0.4, 1],
                   ),
                 ),
               ),
             ),
-          Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusXs),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                    Colors.white.withValues(alpha: 0.8),
-                    Colors.transparent,
-                    Colors.black.withValues(alpha: 0.05),
-                  ],
-                  stops: const <double>[0, 0.4, 1],
+            Positioned(
+              left: 3,
+              top: 2,
+              child: Text(
+                card.rank,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 18,
+                  height: 1.0,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -0.5,
                 ),
               ),
             ),
-          ),
-          Positioned(
-            left: 3,
-            top: 2,
-            child: Text(
-              card.rank,
-              style: TextStyle(
-                color: color,
-                fontSize: 18,
-                height: 1.0,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -0.5,
+            Positioned(
+              right: 3,
+              bottom: 2,
+              child: Text(
+                suit.isEmpty ? '' : suit,
+                style: TextStyle(color: color, fontSize: 28, height: 1.0),
               ),
             ),
-          ),
-          Positioned(
-            right: 3,
-            bottom: 2,
-            child: Text(
-              suit.isEmpty ? '' : suit,
-              style: TextStyle(color: color, fontSize: 28, height: 1.0),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -16399,13 +16447,18 @@ class _BoardCardV1 extends StatelessWidget {
         ],
       ),
     );
-    if (onTap == null) {
-      return child;
-    }
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
+    return Act0CardSemanticsV1(
+      rank: card.rank,
+      suit: card.suit,
+      position: cardId?.startsWith('board_') == true
+          ? 'Board card ${int.tryParse(cardId!.substring(6)) != null ? int.parse(cardId!.substring(6)) + 1 : cardId!.substring(6)}'
+          : 'Board card',
       onTap: onTap,
-      child: child,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: child,
+      ),
     );
   }
 }
@@ -17285,123 +17338,130 @@ class _AnswerChoiceRowV1 extends StatelessWidget {
     final marker = option.id == 'not_sure_yet'
         ? '?'
         : String.fromCharCode(65 + optionIndex);
-    return KeyedSubtree(
-      key: actionVisual == null
-          ? null
-          : Key('act0_shell_poker_action_button_${actionVisual.id}'),
-      child: Material(
+    return Act0SemanticActionV1(
+      label: act0RuntimeLocalizedOptionLabelV1(context, option.label),
+      value: option.amountLabel.trim().isEmpty ? null : option.amountLabel,
+      selected: selected,
+      sortKey: OrdinalSortKey(optionIndex.toDouble(), name: 'act0_choices'),
+      onTap: () => onChoose(option),
+      child: KeyedSubtree(
         key: actionVisual == null
             ? null
-            : Key('act0_shell_poker_action_tactile_surface_${option.id}'),
-        elevation: actionVisual == null ? 0 : (selected ? 5 : 2),
-        shadowColor: markerTone.withValues(alpha: selected ? 0.34 : 0.18),
-        color: selected
-            ? tone.withValues(alpha: 0.16)
-            : actionVisual == null
-            ? Colors.transparent
-            : Act0ShellTokensV1.surface3.withValues(alpha: 0.76),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
-          side: BorderSide(
-            color: selected
-                ? tone.withValues(alpha: 0.52)
-                : actionVisual == null
-                ? Colors.transparent
-                : markerTone.withValues(alpha: 0.22),
-          ),
-        ),
-        child: InkWell(
-          key: Key('act0_shell_option_${option.id}'),
-          onTap: () => onChoose(option),
-          borderRadius: BorderRadius.circular(18),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: compact ? (readableCompactHeight ? 56 : 48) : 52,
+            : Key('act0_shell_poker_action_button_${actionVisual.id}'),
+        child: Material(
+          key: actionVisual == null
+              ? null
+              : Key('act0_shell_poker_action_tactile_surface_${option.id}'),
+          elevation: actionVisual == null ? 0 : (selected ? 5 : 2),
+          shadowColor: markerTone.withValues(alpha: selected ? 0.34 : 0.18),
+          color: selected
+              ? tone.withValues(alpha: 0.16)
+              : actionVisual == null
+              ? Colors.transparent
+              : Act0ShellTokensV1.surface3.withValues(alpha: 0.76),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+            side: BorderSide(
+              color: selected
+                  ? tone.withValues(alpha: 0.52)
+                  : actionVisual == null
+                  ? Colors.transparent
+                  : markerTone.withValues(alpha: 0.22),
             ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: compact ? 10 : 14,
-                vertical: compact ? 5 : 10,
+          ),
+          child: InkWell(
+            key: Key('act0_shell_option_${option.id}'),
+            onTap: () => onChoose(option),
+            borderRadius: BorderRadius.circular(18),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: compact ? (readableCompactHeight ? 56 : 48) : 52,
               ),
-              child: Row(
-                children: [
-                  Container(
-                    key: Key('act0_shell_option_marker_${option.id}'),
-                    width: compact ? 26 : 32,
-                    height: compact ? 26 : 32,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: selected
-                          ? tone.withValues(alpha: 0.18)
-                          : markerTone.withValues(
-                              alpha: actionVisual == null ? 0.10 : 0.13,
-                            ),
-                      borderRadius: BorderRadius.circular(
-                        Act0ShellTokensV1.radiusPill,
-                      ),
-                      border: Border.all(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: compact ? 10 : 14,
+                  vertical: compact ? 5 : 10,
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      key: Key('act0_shell_option_marker_${option.id}'),
+                      width: compact ? 26 : 32,
+                      height: compact ? 26 : 32,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
                         color: selected
-                            ? tone.withValues(alpha: 0.46)
+                            ? tone.withValues(alpha: 0.18)
                             : markerTone.withValues(
-                                alpha: actionVisual == null ? 0.24 : 0.34,
+                                alpha: actionVisual == null ? 0.10 : 0.13,
                               ),
-                      ),
-                    ),
-                    child: Text(
-                      marker,
-                      style: Act0ShellTokensV1.label.copyWith(
-                        color: selected
-                            ? tone
-                            : Act0ShellTokensV1.info.withValues(alpha: 0.92),
-                        fontSize: 11,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 0,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: compact ? 8 : 10),
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          act0AcademyW1OptionLabelV1(
-                            context,
-                            act0RuntimeLocalizedOptionLabelV1(
-                              context,
-                              option.label,
-                            ),
-                          ),
-                          textAlign: TextAlign.left,
-                          style: Act0ShellTokensV1.body.copyWith(
-                            color: tone,
-                            fontSize: compact ? 12.6 : 13.2,
-                            fontWeight: actionVisual == null
-                                ? FontWeight.w700
-                                : FontWeight.w900,
-                            height: compact ? 1.08 : 1.14,
-                          ),
+                        borderRadius: BorderRadius.circular(
+                          Act0ShellTokensV1.radiusPill,
                         ),
-                        if (option.amountLabel.isNotEmpty) ...[
-                          const SizedBox(height: 3),
+                        border: Border.all(
+                          color: selected
+                              ? tone.withValues(alpha: 0.46)
+                              : markerTone.withValues(
+                                  alpha: actionVisual == null ? 0.24 : 0.34,
+                                ),
+                        ),
+                      ),
+                      child: Text(
+                        marker,
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: selected
+                              ? tone
+                              : Act0ShellTokensV1.info.withValues(alpha: 0.92),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 0,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: compact ? 8 : 10),
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Text(
-                            option.amountLabel,
+                            act0AcademyW1OptionLabelV1(
+                              context,
+                              act0RuntimeLocalizedOptionLabelV1(
+                                context,
+                                option.label,
+                              ),
+                            ),
                             textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontSize: 9,
-                              height: 1.0,
-                              color: selected
-                                  ? tone.withValues(alpha: 0.9)
-                                  : Act0ShellTokensV1.textMuted,
-                              fontWeight: FontWeight.w700,
+                            style: Act0ShellTokensV1.body.copyWith(
+                              color: tone,
+                              fontSize: compact ? 12.6 : 13.2,
+                              fontWeight: actionVisual == null
+                                  ? FontWeight.w700
+                                  : FontWeight.w900,
+                              height: compact ? 1.08 : 1.14,
                             ),
                           ),
+                          if (option.amountLabel.isNotEmpty) ...[
+                            const SizedBox(height: 3),
+                            Text(
+                              option.amountLabel,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: 9,
+                                height: 1.0,
+                                color: selected
+                                    ? tone.withValues(alpha: 0.9)
+                                    : Act0ShellTokensV1.textMuted,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
