@@ -1,3 +1,5 @@
+import 'academy_leaves/act0_academy_onboarding_leaf_v1.dart';
+import 'academy_leaves/act0_academy_leaf_style_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_folio_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
@@ -271,6 +273,53 @@ class Act0PlacementShellV1 extends StatelessWidget {
       final allowNext =
           currentQuestion != null &&
           currentQuestionSelections.length >= minimumCount;
+      final flowActions = _PlacementFlowActionBarV1(
+        title: showIntro
+            ? (localeIsRu
+                  ? 'Около двух минут. Потом первый урок будет готов.'
+                  : 'About two minutes. Then your first lesson is ready.')
+            : explicitBeginnerStart
+            ? (localeIsRu
+                  ? 'Шарки начнёт просто.'
+                  : 'Sharky will start simple.')
+            : currentQuestionIndex >= questions.length
+            ? (localeIsRu
+                  ? 'Три короткие проверки — и первая раздача готова.'
+                  : 'Three short checks, then your first hand is ready.')
+            : currentQuestion?.allowsMultiple == true
+            ? (localeIsRu ? 'Выбери то, что подходит.' : 'Pick what fits.')
+            : currentQuestion?.questionId == 'experience'
+            ? (localeIsRu
+                  ? 'Если сомневаешься, выбери «Я новичок в покере».'
+                  : 'If unsure, choose “I’m new to poker.”')
+            : (localeIsRu
+                  ? 'Выбери то, что ближе всего.'
+                  : 'Choose what feels closest.'),
+        buttonKey: Key(
+          showIntro
+              ? 'act0_shell_placement_intro_cta'
+              : currentQuestionIndex >= questions.length
+              ? 'act0_shell_placement_start_diagnostic'
+              : 'act0_shell_placement_next_cta',
+        ),
+        buttonLabel: showIntro
+            ? (localeIsRu ? 'Найти мой старт' : 'Find my start')
+            : explicitBeginnerStart
+            ? (localeIsRu ? 'Начать с нуля' : 'Start from zero')
+            : currentQuestionIndex >= questions.length
+            ? (localeIsRu ? 'Начать проверку' : 'Start quick check')
+            : (localeIsRu ? 'Продолжить' : 'Continue'),
+        onPressed: showIntro
+            ? onStartPlacement
+            : explicitBeginnerStart
+            ? onStartFromZero
+            : currentQuestionIndex >= questions.length
+            ? onStartDiagnostic
+            : (allowNext ? onNext : null),
+      );
+      if (Localizations.localeOf(context).languageCode == 'en') {
+        return _greenFlow(context, flowActions);
+      }
       return ColoredBox(
         color: Act0AcademyDesignTokensV1.pageSurface,
         child: Column(
@@ -383,53 +432,50 @@ class Act0PlacementShellV1 extends StatelessWidget {
                 ),
               ),
             ),
-            _PlacementFlowActionBarV1(
-              title: showIntro
-                  ? (localeIsRu
-                        ? 'Около двух минут. Потом первый урок будет готов.'
-                        : 'About two minutes. Then your first lesson is ready.')
-                  : explicitBeginnerStart
-                  ? (localeIsRu
-                        ? 'Шарки начнёт просто.'
-                        : 'Sharky will start simple.')
-                  : currentQuestionIndex >= questions.length
-                  ? (localeIsRu
-                        ? 'Три короткие проверки — и первая раздача готова.'
-                        : 'Three short checks, then your first hand is ready.')
-                  : currentQuestion?.allowsMultiple == true
-                  ? (localeIsRu
-                        ? 'Выбери то, что подходит.'
-                        : 'Pick what fits.')
-                  : currentQuestion?.questionId == 'experience'
-                  ? (localeIsRu
-                        ? 'Если сомневаешься, выбери «Я новичок в покере».'
-                        : 'If unsure, choose “I’m new to poker.”')
-                  : (localeIsRu
-                        ? 'Выбери то, что ближе всего.'
-                        : 'Choose what feels closest.'),
-              buttonKey: Key(
-                showIntro
-                    ? 'act0_shell_placement_intro_cta'
-                    : currentQuestionIndex >= questions.length
-                    ? 'act0_shell_placement_start_diagnostic'
-                    : 'act0_shell_placement_next_cta',
-              ),
-              buttonLabel: showIntro
-                  ? (localeIsRu ? 'Найти мой старт' : 'Find my start')
-                  : explicitBeginnerStart
-                  ? (localeIsRu ? 'Начать с нуля' : 'Start from zero')
-                  : currentQuestionIndex >= questions.length
-                  ? (localeIsRu ? 'Начать проверку' : 'Start quick check')
-                  : (localeIsRu ? 'Продолжить' : 'Continue'),
-              onPressed: showIntro
-                  ? onStartPlacement
-                  : explicitBeginnerStart
-                  ? onStartFromZero
-                  : currentQuestionIndex >= questions.length
-                  ? onStartDiagnostic
-                  : (allowNext ? onNext : null),
-            ),
+            flowActions,
           ],
+        ),
+      );
+    }
+
+    if (Localizations.localeOf(context).languageCode == 'en') {
+      return KeyedSubtree(
+        key: const Key('act0_shell_placement_screen'),
+        child: Act0AcademyOnboardingLeafV1(
+          key: const Key('act0_shell_placement_hero'),
+          eyebrow: 'AT THE TABLE',
+          title: 'Find your start',
+          subtitle: 'Your first hand is ready.',
+          content: KeyedSubtree(
+            key: const Key('act0_shell_placement_result_scroll'),
+            child: KeyedSubtree(
+              key: ValueKey<String>(
+                'act0_shell_placement_result_${placementResult.level.name}',
+              ),
+              child: _PlacementResultViewV1(result: placementResult),
+            ),
+          ),
+          actions: Act0AcademyOnboardingActionsV1(
+            footer: _placementAtomV1(
+              context,
+              'placement_result_your_start_is_ready',
+              fallback: 'Sharky found your start.',
+            ),
+            primaryKey: const Key('act0_shell_placement_start_recommended'),
+            primaryLabel: _placementAtomV1(
+              context,
+              'placement_sheet_start_first_hand',
+              fallback: 'Start with the useful hand',
+            ),
+            onPrimary: onStartRecommended,
+            secondaryKey: const Key('act0_shell_placement_start_zero'),
+            secondaryLabel: _placementAtomV1(
+              context,
+              'placement_sheet_start_from_zero',
+              fallback: 'Start from the beginning',
+            ),
+            onSecondary: onStartFromZero,
+          ),
         ),
       );
     }
@@ -508,6 +554,206 @@ class Act0PlacementShellV1 extends StatelessWidget {
             onStartFromZero: onStartFromZero,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _greenFlow(BuildContext context, _PlacementFlowActionBarV1 actions) {
+    final question = currentQuestionIndex < questions.length
+        ? questions[currentQuestionIndex]
+        : null;
+    final selected = question == null
+        ? const <String>{}
+        : selectedOptionIds[question.questionId] ?? const <String>{};
+    final ready = question == null;
+    final support = question == null
+        ? false
+        : _placementKeepFullSupportCopyV1(question.questionId);
+    return KeyedSubtree(
+      key: const Key('act0_shell_placement_screen'),
+      child: Act0AcademyOnboardingLeafV1(
+        hero: showIntro,
+        eyebrow: showIntro
+            ? 'AT THE TABLE'
+            : question?.eyebrow ?? 'Placement profile',
+        title: showIntro
+            ? 'Look. Decide. Understand.'
+            : ready
+            ? _placementAtomV1(
+                context,
+                'placement_ready_skill_check',
+                fallback: 'Quick table check',
+              )
+            : _placementQuestionTitleV1(context, question),
+        subtitle: showIntro
+            ? 'Start with what you can see. Make a choice, then find out why it matters.'
+            : ready
+            ? 'Three short checks before your first hand.'
+            : _placementQuestionSubtitleV1(context, question),
+        stage: showIntro
+            ? null
+            : ready
+            ? '${questions.length + 1}/${questions.length + 1}'
+            : '${currentQuestionIndex + 1}/${questions.length}',
+        content: showIntro
+            ? const KeyedSubtree(
+                key: ValueKey<String>('act0_shell_placement_intro'),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Act0AcademyOnboardingPanelV1(
+                      key: Key('act0_shell_placement_brand_beat'),
+                      title: 'Sharky Poker',
+                      body: 'Read the table from your first hand.',
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'One clue. One decision. One proof.',
+                            style: TextStyle(
+                              color: Act0AcademyLeafPaletteV1.textMuted,
+                            ),
+                          ),
+                          Text(
+                            'Your table coach is ready.',
+                            style: TextStyle(
+                              color: Act0AcademyLeafPaletteV1.textMuted,
+                            ),
+                          ),
+                          KeyedSubtree(
+                            key: Key('act0_shell_placement_brand_sharky'),
+                            child: Act0SharkyPresenceMascotV1(
+                              mood: Act0SharkyMoodV1.happy,
+                              tone: Act0AcademyLeafPaletteV1.aqua,
+                              size: 58,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    KeyedSubtree(
+                      key: Key('act0_shell_placement_folio'),
+                      child: Act0AcademyOnboardingPanelV1(
+                        key: Key('act0_shell_placement_intro_card'),
+                        title: 'Find your start',
+                        body: '',
+                        child: Text(
+                          'No exam. Just your starting point.',
+                          key: Key('act0_shell_placement_intro_support'),
+                          style: TextStyle(
+                            color: Act0AcademyLeafPaletteV1.textMuted,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : KeyedSubtree(
+                key: ValueKey<String>(
+                  'act0_shell_placement_body_$currentQuestionIndex',
+                ),
+                child: Column(
+                  key: Key(
+                    ready
+                        ? 'act0_shell_placement_diagnostic_ready'
+                        : 'act0_shell_placement_question_${question.questionId}',
+                  ),
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        key: const Key('act0_shell_placement_back_arrow'),
+                        onPressed: !ready && currentQuestionIndex == 0
+                            ? null
+                            : onBack,
+                        tooltip: 'Back',
+                        color: Act0AcademyLeafPaletteV1.aqua,
+                        icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                      ),
+                    ),
+                    if (ready) ...[
+                      const Text(
+                        'No score. Just read what is visible.',
+                        style: TextStyle(
+                          color: Act0AcademyLeafPaletteV1.textMuted,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      const Act0AcademyOnboardingPanelV1(
+                        key: Key('act0_shell_placement_ready_preview'),
+                        title: 'What you’ll do',
+                        body: 'Read hand, board, and first actions.',
+                        child: Text(
+                          'Short checks · No score · Hand after',
+                          style: TextStyle(
+                            color: Act0AcademyLeafPaletteV1.textMuted,
+                          ),
+                        ),
+                      ),
+                    ] else ...[
+                      if (support &&
+                          _placementQuestionHelperV1(context, question) != null)
+                        Text(
+                          _placementQuestionHelperV1(context, question)!,
+                          style: const TextStyle(
+                            color: Act0AcademyLeafPaletteV1.textMuted,
+                          ),
+                        ),
+                      const SizedBox(height: 12),
+                      Text(
+                        question.allowsMultiple
+                            ? 'Choose what fits'
+                            : 'Choose one',
+                        style: const TextStyle(
+                          color: Act0AcademyLeafPaletteV1.aqua,
+                        ),
+                      ),
+                      if (question.allowsMultiple)
+                        Text(
+                          '${selected.length} selected',
+                          style: const TextStyle(
+                            color: Act0AcademyLeafPaletteV1.textMuted,
+                          ),
+                        ),
+                      const SizedBox(height: 12),
+                      for (final option in _placementVisibleOptionsV1(question))
+                        Act0AcademyOnboardingChoiceV1(
+                          key: Key(
+                            'act0_shell_placement_option_${option.optionId}',
+                          ),
+                          badge: question.questionId == 'experience'
+                              ? option.badge
+                              : null,
+                          label: _placementOptionLabelV1(
+                            context,
+                            question,
+                            option,
+                          ),
+                          subtitle: support
+                              ? _placementOptionSubtitleV1(
+                                  context,
+                                  question,
+                                  option,
+                                )
+                              : null,
+                          selected: selected.contains(option.optionId),
+                          onTap: () =>
+                              onSelectOption(question, option.optionId),
+                        ),
+                    ],
+                  ],
+                ),
+              ),
+        actions: Act0AcademyOnboardingActionsV1(
+          key: const Key('act0_shell_placement_flow_action_bar'),
+          footer: actions.title,
+          primaryKey: actions.buttonKey,
+          primaryLabel: actions.buttonLabel,
+          onPrimary: actions.onPressed,
+        ),
       ),
     );
   }
@@ -1261,6 +1507,62 @@ class _PlacementResultViewV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final focusChips = _placementFocusChipsV1(result);
+    if (Localizations.localeOf(context).languageCode == 'en') {
+      return KeyedSubtree(
+        key: const Key('act0_shell_placement_result'),
+        child: Act0AcademyOnboardingPanelV1(
+          key: const Key('act0_shell_placement_start_handoff'),
+          title: 'Sharky found your start',
+          body: '',
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                result.levelLabel,
+                key: const Key('act0_shell_placement_result_level'),
+                style: const TextStyle(
+                  color: Act0AcademyLeafPaletteV1.text,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                result.recommendedReason,
+                key: const Key('act0_shell_placement_recommended_reason'),
+                style: const TextStyle(color: Act0AcademyLeafPaletteV1.text),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                _placementRouteTrustLineV1(context, result),
+                key: const Key('act0_shell_placement_destination_trust_line'),
+                style: const TextStyle(
+                  color: Act0AcademyLeafPaletteV1.textMuted,
+                ),
+              ),
+              if (focusChips.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Wrap(
+                    key: const Key('act0_shell_placement_focus_chips'),
+                    spacing: 12,
+                    runSpacing: 8,
+                    children: [
+                      for (final chip in focusChips)
+                        Text(
+                          chip,
+                          style: const TextStyle(
+                            color: Act0AcademyLeafPaletteV1.aqua,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
+      );
+    }
     return Column(
       key: const Key('act0_shell_placement_result'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
