@@ -1,3 +1,5 @@
+import 'academy_leaves/act0_academy_onboarding_leaf_v1.dart';
+import 'academy_leaves/act0_academy_leaf_style_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_folio_v1.dart';
 import 'dart:math' as math;
 
@@ -276,6 +278,104 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final blocks = act0BuildInstructionBlocksV1(text: detail, compact: true);
     final centerContent = beatIndex == beatCount;
+    if (Localizations.localeOf(context).languageCode == 'en') {
+      return Act0AcademyOnboardingLeafV1(
+        hero: !centerContent,
+        eyebrow: eyebrow,
+        title: title,
+        subtitle: line,
+        onBack: replayMode ? onClose : null,
+        backKey: const Key('act0_shell_welcome_close'),
+        backLabel: 'Close',
+        content: Column(
+          key: Key(
+            centerContent
+                ? 'act0_shell_welcome_next_step_line'
+                : 'act0_shell_welcome_beat_frame',
+          ),
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                for (var index = 0; index < beatCount; index++)
+                  Expanded(
+                    child: Container(
+                      key: Key('act0_shell_welcome_progress_$index'),
+                      height: 6,
+                      margin: const EdgeInsets.only(right: 8),
+                      color: index < beatIndex
+                          ? Act0AcademyLeafPaletteV1.aqua
+                          : Act0AcademyLeafPaletteV1.rule,
+                    ),
+                  ),
+                Text(
+                  '$beatIndex/$beatCount',
+                  key: const Key('act0_shell_welcome_progress_label'),
+                  style: const TextStyle(
+                    color: Act0AcademyLeafPaletteV1.textMuted,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: Container(
+                key: const Key('act0_shell_welcome_presenter_tile'),
+                width: 64,
+                height: 64,
+                decoration: BoxDecoration(
+                  color: Act0AcademyLeafPaletteV1.inkRaised,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Image.asset(
+                  act0SharkyCompanionAssetForMoodV1(mood),
+                  key: Key('act0_shell_sharky_presence_mascot_${mood.name}'),
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              blocks.join(' '),
+              style: const TextStyle(color: Act0AcademyLeafPaletteV1.textMuted),
+            ),
+            if (subline?.trim().isNotEmpty == true) ...[
+              const SizedBox(height: 12),
+              Text(
+                subline!,
+                style: const TextStyle(
+                  color: Act0AcademyLeafPaletteV1.textMuted,
+                ),
+              ),
+            ],
+            if (visual != null) ...[const SizedBox(height: 16), visual!],
+          ],
+        ),
+        actions: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (ctaBridgeLine?.trim().isNotEmpty == true)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Text(
+                  ctaBridgeLine!,
+                  key: const Key('act0_shell_welcome_cta_bridge'),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Act0AcademyLeafPaletteV1.textMuted,
+                  ),
+                ),
+              ),
+            Act0AcademyOnboardingActionsV1(
+              primaryKey: const Key('act0_shell_welcome_primary_cta'),
+              primaryLabel: ctaLabel,
+              onPrimary: onNext,
+              footer: null,
+            ),
+          ],
+        ),
+      );
+    }
     return Container(
       color: Act0AcademyDesignTokensV1.pageSurface,
       child: SafeArea(
@@ -526,6 +626,26 @@ class _WelcomeVisualPreviewCardV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (Localizations.localeOf(context).languageCode == 'en') {
+      return Act0AcademyOnboardingPanelV1(
+        key: previewKey,
+        title: title,
+        body: line ?? '',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (child is! SizedBox) child,
+            if (detail?.trim().isNotEmpty == true)
+              Text(
+                detail!,
+                style: const TextStyle(
+                  color: Act0AcademyLeafPaletteV1.textMuted,
+                ),
+              ),
+          ],
+        ),
+      );
+    }
     return Container(
       key: previewKey,
       padding: const EdgeInsets.all(Act0AcademyDesignTokensV1.gapMd),
