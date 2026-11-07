@@ -140,7 +140,14 @@ List<PotTruthFindingV1> pkr06FindingsV1(String taskId, Act0TableStateV1 t) {
       final cap = stack + bet;
       for (final a in actions.where((a) => a.actor == actor)) {
         if (a.amount != null &&
-            const {'all_in', 'raise_to', 'total'}.contains(a.verb) &&
+            const {
+              'all_in',
+              'raise_to',
+              'total',
+              'call',
+              'bet',
+              'post',
+            }.contains(a.verb) &&
             a.amount! > cap + 1e-9) {
           bad('bet_exceeds_stack', '$actor ${a.raw} cap=$cap');
         }

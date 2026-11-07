@@ -152,6 +152,21 @@ void main() {
       ),
       contains('bet_exceeds_stack'),
     );
+    // Every attributed verb is capped, not only raises (review 5815162573).
+    for (final verb in ['calls', 'bets', 'posts']) {
+      expect(
+        rules(
+          base.copyWith(
+            actionTrail: [
+              ...base.actionTrail,
+              Act0ActionTrailItemV1.note(label: 'CO $verb 999 BB'),
+            ],
+          ),
+        ),
+        contains('bet_exceeds_stack'),
+        reason: verb,
+      );
+    }
     // An all-in player shown with chips behind.
     expect(
       rules(
