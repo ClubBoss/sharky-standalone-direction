@@ -114,5 +114,203 @@ class DependencyControls(unittest.TestCase):
                 self.assertNotEqual(check.returncode, 0)
 
 
+class ChoiceTransitionControls(unittest.TestCase):
+    """Synthetic comparator inputs; never substitute for real source evidence."""
+    TASK = 'first_table_guide_one_clear_choice'
+    OLD = 'CO/cutoff already folded, so You at BTN act next'
+    NEW = 'CO/cutoff still acts before You at BTN'
+    PREFERRED = 'You are BTN, blinds are posted, and no board is out yet'
+    OLD_FP = '0089e0394bdc30b3ce7d65dec1d098b8ae08a10b8eb2d504acf7456a7f14b4da'
+    NEW_FP = '68083c5acfb7594a176f7e2b6a2a966f0e2a921e32aa9be7a12c31b6ebfbf0f5'
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root = pathlib.Path(self.tmp.name)
+        self.before_choices = {self.TASK: [
+            ['co_still_acting', self.OLD, False, 'wrong', self.PREFERRED],
+            ['hero_btn_preflop_setup', self.PREFERRED, True, 'correct', self.PREFERRED],
+        ], 'other_task': [['other_choice', 'Original', True, 'correct', 'Original']]}
+        self.after_choices = json.loads(json.dumps(self.before_choices))
+        self.after_choices[self.TASK][0][1] = self.NEW
+        self.before_fp = {self.TASK: {'world_id': 'world_1', 'lesson_id': 'what_poker_is',
+                                     'fingerprint': self.OLD_FP},
+                          'other_task': {'world_id': 'world_1', 'lesson_id': 'other',
+                                         'fingerprint': 'unchanged-test-fixture'}}
+        self.after_fp = json.loads(json.dumps(self.before_fp))
+        self.after_fp[self.TASK]['fingerprint'] = self.NEW_FP
+        self.contract = {self.TASK: {'rewardXp': 5, 'family': 'decision',
+            'options': [{'id': 'co_still_acting', 'correct': False, 'quality': 'wrong',
+                         'repairSeats': ['btn'], 'repairCards': [], 'repairLabels': []}]}}
+        for phase, choices, fingerprints in [
+                ('baseline', self.before_choices, self.before_fp),
+                ('candidate', self.after_choices, self.after_fp)]:
+            self.put(phase, 'choice-identity', choices)
+            self.put(phase, 'source-fingerprints', fingerprints)
+            self.put(phase, 'learning-contract', self.contract)
+            self.put(phase, 'runtime-inputs', {t: {'options': rows} for t, rows in choices.items()})
+            self.put(phase, 'ledger', [{'task_id': self.TASK, 'phase': 'decision',
+                'invariant': 'synthetic-source-case', 'status': 'FAIL' if phase == 'baseline' else 'PASS'}])
+
+    def put(self, phase, name, value):
+        path = self.root / phase / (name + '.json')
+        path.parent.mkdir(exist_ok=True)
+        path.write_text(json.dumps(value))
+
+    def run_compare(self):
+        return subprocess.run([sys.executable, str(ROOT / 'tools/table_truth_evidence_v1.py'),
+                               'compare', str(self.root)], capture_output=True, text=True)
+
+    def reject(self):
+        result = self.run_compare()
+        self.assertNotEqual(result.returncode, 0, result.stdout)
+        self.assertFalse((self.root / 'comparison.json').exists())
+
+    def test_exact_authorized_transition_records_truthful_delta_without_rewriting_inputs(self):
+        originals = {str(p): p.read_bytes() for phase in ['baseline', 'candidate']
+                     for p in (self.root / phase).glob('*.json')}
+        result = self.run_compare()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        evidence = json.loads((self.root / 'comparison.json').read_text())
+        self.assertFalse(evidence['choice_identity_identical'])
+        self.assertTrue(evidence['choice_identity_compatible'])
+        delta = evidence['choice_identity_changes']
+        self.assertEqual(len(delta), 1)
+        self.assertEqual(delta[0]['task_id'], self.TASK)
+        self.assertEqual(delta[0]['choice_id'], 'co_still_acting')
+        self.assertEqual(delta[0]['index'], 0)
+        self.assertEqual(delta[0]['field'], 'label')
+        self.assertEqual(delta[0]['before'], self.before_choices[self.TASK][0])
+        self.assertEqual(delta[0]['after'], self.after_choices[self.TASK][0])
+        self.assertEqual(delta[0]['before_source_fingerprint'], self.OLD_FP)
+        self.assertEqual(delta[0]['after_source_fingerprint'], self.NEW_FP)
+        classification = json.loads((self.root / 'source-fingerprint-delta.json').read_text())[self.TASK]
+        self.assertEqual(classification['classification'], 'SOURCE_CONDITION_CHANGED')
+        self.assertEqual(classification['current_source_policy'], 'reject old fingerprint')
+        self.assertIn('retain original fingerprint', classification['historical_record_policy'])
+        self.assertEqual(originals, {p: pathlib.Path(p).read_bytes() for p in originals})
+
+    def test_unchanged_choice_contract_remains_accepted_without_migration(self):
+        self.put('candidate', 'choice-identity', self.before_choices)
+        result = self.run_compare()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        evidence = json.loads((self.root / 'comparison.json').read_text())
+        self.assertTrue(evidence['choice_identity_identical'])
+        self.assertEqual(evidence.get('choice_identity_changes', []), [])
+
+    def test_unapproved_new_text_is_rejected(self):
+        self.after_choices[self.TASK][0][1] = self.NEW + ' altered'
+        self.put('candidate', 'choice-identity', self.after_choices)
+        self.reject()
+
+    def test_unapproved_old_text_is_rejected(self):
+        self.before_choices[self.TASK][0][1] = 'Different historical meaning'
+        self.put('baseline', 'choice-identity', self.before_choices)
+        self.reject()
+
+    def test_transition_on_another_task_is_rejected(self):
+        for phase, choices, fingerprints in [('baseline', self.before_choices, self.before_fp),
+                                             ('candidate', self.after_choices, self.after_fp)]:
+            choices['renamed_task'] = choices.pop(self.TASK)
+            fingerprints['renamed_task'] = fingerprints.pop(self.TASK)
+            self.put(phase, 'choice-identity', choices)
+            self.put(phase, 'source-fingerprints', fingerprints)
+        self.reject()
+
+    def test_transition_on_another_choice_is_rejected(self):
+        for phase, choices in [('baseline', self.before_choices), ('candidate', self.after_choices)]:
+            choices[self.TASK][0][0] = 'different_choice'
+            self.put(phase, 'choice-identity', choices)
+        self.reject()
+
+    def test_second_label_change_is_rejected(self):
+        self.after_choices['other_task'][0][1] = 'Second changed label'
+        self.put('candidate', 'choice-identity', self.after_choices)
+        self.reject()
+
+    def test_order_change_is_rejected(self):
+        self.after_choices[self.TASK].reverse()
+        self.put('candidate', 'choice-identity', self.after_choices)
+        self.reject()
+
+    def test_transition_at_a_different_index_is_rejected(self):
+        for phase, choices in [('baseline', self.before_choices), ('candidate', self.after_choices)]:
+            choices[self.TASK].reverse()
+            self.put(phase, 'choice-identity', choices)
+        self.reject()
+
+    def test_correctness_quality_and_preferred_answer_changes_are_rejected(self):
+        for index, value in [(2, True), (3, 'suboptimal'), (4, 'Different preferred answer')]:
+            with self.subTest(field=index):
+                changed = json.loads(json.dumps(self.after_choices))
+                changed[self.TASK][0][index] = value
+                self.put('candidate', 'choice-identity', changed)
+                self.reject()
+
+    def test_wrong_full_historical_row_is_rejected_even_when_flags_agree(self):
+        for phase, choices in [('baseline', self.before_choices), ('candidate', self.after_choices)]:
+            choices[self.TASK][0][3] = 'suboptimal'
+            self.put(phase, 'choice-identity', choices)
+        self.reject()
+
+    def test_missing_task_or_added_choice_is_rejected(self):
+        for remove_task in [True, False]:
+            with self.subTest(remove_task=remove_task):
+                changed = json.loads(json.dumps(self.after_choices))
+                if remove_task:
+                    del changed['other_task']
+                else:
+                    changed[self.TASK].append(['new', 'Extra', False, 'wrong', self.PREFERRED])
+                self.put('candidate', 'choice-identity', changed)
+                self.reject()
+
+    def test_missing_or_unapproved_source_fingerprint_is_rejected(self):
+        for value in [self.OLD_FP, '', 'unapproved-new-source']:
+            with self.subTest(fingerprint=value):
+                changed = json.loads(json.dumps(self.after_fp))
+                changed[self.TASK]['fingerprint'] = value
+                self.put('candidate', 'source-fingerprints', changed)
+                self.reject()
+
+    def test_unapproved_historical_fingerprint_is_rejected(self):
+        self.before_fp[self.TASK]['fingerprint'] = 'unapproved-history'
+        self.put('baseline', 'source-fingerprints', self.before_fp)
+        self.reject()
+
+    def test_source_world_or_lesson_drift_is_rejected(self):
+        for field in ['world_id', 'lesson_id']:
+            with self.subTest(field=field):
+                changed = json.loads(json.dumps(self.after_fp))
+                changed[self.TASK][field] = 'different-owner'
+                self.put('candidate', 'source-fingerprints', changed)
+                self.reject()
+
+    def test_xp_repair_and_other_learning_contract_drift_is_rejected(self):
+        for field, value in [('rewardXp', 999), ('family', 'transfer'),
+                             ('assistance', 'changed'), ('persistence', 'changed')]:
+            with self.subTest(field=field):
+                changed = json.loads(json.dumps(self.contract))
+                changed[self.TASK][field] = value
+                self.put('candidate', 'learning-contract', changed)
+                self.reject()
+        for field, value in [('id', 'renamed'), ('correct', True), ('quality', 'correct'),
+                             ('repairSeats', ['bb']), ('repairCards', ['hero_0']),
+                             ('repairLabels', ['different'])]:
+            with self.subTest(option_field=field):
+                changed = json.loads(json.dumps(self.contract))
+                changed[self.TASK]['options'][0][field] = value
+                self.put('candidate', 'learning-contract', changed)
+                self.reject()
+
+    def test_required_genuine_baseline_red_and_candidate_green_remain_enforced(self):
+        for phase, status in [('baseline', 'PASS'), ('candidate', 'FAIL')]:
+            with self.subTest(phase=phase):
+                self.put(phase, 'ledger', [{'task_id': self.TASK, 'phase': 'decision',
+                    'invariant': 'synthetic-source-case', 'status': status}])
+                self.reject()
+                self.put(phase, 'ledger', [{'task_id': self.TASK, 'phase': 'decision',
+                    'invariant': 'synthetic-source-case', 'status': 'FAIL' if phase == 'baseline' else 'PASS'}])
+
+
 if __name__ == '__main__':
     unittest.main()
