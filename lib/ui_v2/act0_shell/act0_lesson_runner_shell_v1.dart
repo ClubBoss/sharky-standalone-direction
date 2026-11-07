@@ -665,7 +665,9 @@ class Act0BlockCompletionSummaryV1 {
       return 'Go to Review and fix the deep leak.';
     }
     if (masteryStatus == Act0MasteryStatusV1.needsReview) {
-      return 'Replay this block before moving on.';
+      return curriculumCompleted && hasForwardPath
+          ? 'A focused replay is optional. You can continue learning.'
+          : 'Replay this block before moving on.';
     }
     if (quickFixCount > 0) {
       return hasNextLesson

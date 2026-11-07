@@ -4905,6 +4905,28 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     });
   }
 
+  // A directed repair may rehearse a locked future-world task. Returning to
+  // Learn must restore an actionable curriculum focus, not that repair target.
+  void _restoreSelectableLearnFocusV1() {
+    final worlds = _progressedWorlds(widget.state ?? Act0ShellStateV1.sample);
+    final selected = _worldById(worlds, _selectedWorldId);
+    final world = selected.isSelectable
+        ? selected
+        : worlds.firstWhere(
+            (world) =>
+                world.status == Act0WorldStateV1.current && world.isSelectable,
+            orElse: () => worlds.firstWhere((world) => world.isSelectable),
+          );
+    _selectedWorldId = world.worldId;
+    final lesson = _firstPlayableLesson(world);
+    _seedLearnRouteFocusV1(
+      lessonId: lesson.lessonId,
+      taskId: _firstIncompleteTask(lesson).taskId,
+    );
+    _showWorldMenu = false;
+    _learnDetailWorldId = null;
+  }
+
   // A normal Learn entry may happen from Home or Runner Back. Eligibility is
   // lazy: the first eligible decision, not this navigation transition, creates
   // the run.
@@ -5854,7 +5876,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             !_showPlacement &&
             !_showWelcome &&
             _bootSurfaceReady
-        ? _firstValueReceiptCarry
+        ? _actionableFirstValueReceiptCarryV1
         : null;
     if (firstValueTodayCarry != null) {
       _emitFirstValueTodayShownTelemetryV1(firstValueTodayCarry);
@@ -7315,6 +7337,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             );
                           },
                           onOpenLearn: () => setState(() {
+                            _restoreSelectableLearnFocusV1();
                             _tab = Act0ShellTabV1.learn;
                           }),
                         ),
@@ -7340,8 +7363,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             ),
                         onOpenReview: () =>
                             setState(() => _tab = Act0ShellTabV1.review),
-                        onOpenLearn: () =>
-                            setState(() => _tab = Act0ShellTabV1.learn),
+                        onOpenLearn: () => setState(() {
+                          _restoreSelectableLearnFocusV1();
+                          _tab = Act0ShellTabV1.learn;
+                        }),
                         legacy: Act0ProfileShellV1(
                           profile: profileState,
                           crossSessionProof:
@@ -7428,11 +7453,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 }
                 if (tab == Act0ShellTabV1.learn) {
                   _activateLearnVisitEligibilityV1();
-                  final learnLesson = _firstPlayableLesson(selectedWorld);
-                  _seedLearnRouteFocusV1(
-                    lessonId: learnLesson.lessonId,
-                    taskId: _firstIncompleteTask(learnLesson).taskId,
-                  );
+                  _restoreSelectableLearnFocusV1();
+                }
+                if (tab == Act0ShellTabV1.home && !selectedWorld.isSelectable) {
+                  _restoreSelectableLearnFocusV1();
                 }
                 if (tab != Act0ShellTabV1.learn) {
                   _learnDetailLessonId = null;
@@ -8088,11 +8112,29 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     return hint.isEmpty ? null : hint;
   }
 
+  // A first-value repair cue is actionable only while the same source debt
+  // remains open. Review may resolve it without consuming the Home cue.
+  _Act0FirstValueReceiptCarryV1? get _actionableFirstValueReceiptCarryV1 {
+    final carry = _firstValueReceiptCarry;
+    if (carry != null && carry.isRepair) {
+      final intent = _openRepairIntentBySourceTaskId[carry.sourceTaskId];
+      if (intent == null ||
+          intent.missedSignalId != carry.sourceSignalId ||
+          intent.skillAtomId != carry.skillAtomId ||
+          !_openMistakes().any(
+            (mistake) => mistake.taskId == carry.sourceTaskId,
+          )) {
+        return null;
+      }
+    }
+    return carry;
+  }
+
   _Act0LearningRecommendationV1 _homePrimaryRecommendation({
     required Act0WorldCardV1 selectedWorld,
     required Act0LessonCardV1 selectedLesson,
   }) {
-    final firstValueCarry = _firstValueReceiptCarry;
+    final firstValueCarry = _actionableFirstValueReceiptCarryV1;
     if (firstValueCarry != null) {
       return _Act0LearningRecommendationV1(
         kind: _Act0LearningNextActionKindV1.continueLesson,
@@ -8455,7 +8497,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   bool _showHomeChecklistV1() {
-    return _firstValueReceiptCarry != null ||
+    return _actionableFirstValueReceiptCarryV1 != null ||
         _completedTaskIds.isNotEmpty ||
         _dailyCompletedRepCount > 0 ||
         _openMistakes().isNotEmpty ||
@@ -8466,7 +8508,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     Act0WorldCardV1 selectedWorld,
     Act0LessonCardV1 currentLesson,
   ) {
-    final carry = _firstValueReceiptCarry;
+    final carry = _actionableFirstValueReceiptCarryV1;
     if (carry != null) {
       return carry.focusTitle;
     }
@@ -9061,7 +9103,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   void _startHomeNextAction(Act0WorldCardV1 selectedWorld) {
-    final firstValueCarry = _firstValueReceiptCarry;
+    final firstValueCarry = _actionableFirstValueReceiptCarryV1;
     if (firstValueCarry != null &&
         _startFirstValueDailyRepLaunchV1(firstValueCarry)) {
       return;
