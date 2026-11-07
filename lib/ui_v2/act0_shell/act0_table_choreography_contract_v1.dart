@@ -1,4 +1,5 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 
 enum Act0TableChoreographyModeV1 { runtime, settled }
 
@@ -99,7 +100,9 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
 }) {
   if (!actorFocusSafe ||
       table.scope != Act0TableScopeV1.playedHand ||
-      table.actionTrail.isEmpty) {
+      table.actionTrail.isEmpty ||
+      act0BettingRoundOrderTruthForTableV1(table) ==
+          Act0BettingRoundOrderTruthV1.contradiction) {
     return null;
   }
 
