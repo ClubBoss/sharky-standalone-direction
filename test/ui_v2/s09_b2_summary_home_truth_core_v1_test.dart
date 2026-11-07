@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_runtime_adapter_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
@@ -269,9 +270,42 @@ Future<void> _triggerHomeRepairV1(WidgetTester tester) async {
   await tester.ensureVisible(homeTab);
   await tester.tap(homeTab);
   await tester.pumpAndSettle();
-  final home = tester.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
-  home.onStartRepair!();
+  await _launchVisibleHomeRepairV1(tester);
   await tester.pumpAndSettle();
+}
+
+Future<void> _launchVisibleHomeRepairV1(WidgetTester tester) async {
+  final context = tester.element(find.byType(Act0ShellPreviewScreenV1));
+  if (act0AcademyRuntimeEnabledV1(context, Act0ShellTabV1.home)) {
+    // The Academy Home has one source-resolved next action. Exercise its
+    // visible CTA; the caller still checks exact source/target and rewards.
+    final cta = find.descendant(
+      of: find.byKey(const Key('act0_academy_home_leaf')),
+      matching: find.byKey(const Key('act0_academy_home_leaf_cta')),
+    );
+    expect(cta, findsOneWidget);
+    await tester.ensureVisible(cta);
+    await tester.tap(cta);
+  } else {
+    final home = tester.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
+    home.onStartRepair!();
+  }
+}
+
+bool _academyYouActiveV1(WidgetTester tester) => act0AcademyRuntimeEnabledV1(
+  tester.element(find.byType(Act0ShellPreviewScreenV1)),
+  Act0ShellTabV1.profile,
+);
+
+Finder _persistedTaskCountFinderV1(WidgetTester tester, int count) {
+  if (_academyYouActiveV1(tester)) {
+    return find.descendant(
+      of: find.byKey(const Key('act0_academy_you_leaf_tasks')),
+      matching: find.text('$count ${count == 1 ? 'task' : 'tasks'} completed'),
+      matchRoot: true,
+    );
+  }
+  return find.text('$count tasks complete');
 }
 
 Future<void> _restartPersistedRootV1(WidgetTester tester) async {
@@ -297,7 +331,16 @@ Future<void> _openProfileTabV1(WidgetTester tester) async {
   await tester.ensureVisible(profileTab);
   await tester.tap(profileTab);
   await tester.pumpAndSettle();
-  expect(find.byKey(const Key('act0_shell_profile_screen')), findsOneWidget);
+  expect(
+    find.byKey(
+      Key(
+        _academyYouActiveV1(tester)
+            ? 'act0_academy_you_leaf'
+            : 'act0_shell_profile_screen',
+      ),
+    ),
+    findsOneWidget,
+  );
 }
 
 void main() {
@@ -420,8 +463,9 @@ void main() {
       );
       await _openProfileTabV1(tester);
       expect(
-        find.text(
-          '${(restored['completedTaskIds'] as List).length} tasks complete',
+        _persistedTaskCountFinderV1(
+          tester,
+          (restored['completedTaskIds'] as List).length,
         ),
         findsOneWidget,
         reason:
@@ -457,8 +501,9 @@ void main() {
     expect(restored['earnedXp'], (before['earnedXp'] as int) + task.rewardXp);
     await _openProfileTabV1(tester);
     expect(
-      find.text(
-        '${(restored['completedTaskIds'] as List).length} tasks complete',
+      _persistedTaskCountFinderV1(
+        tester,
+        (restored['completedTaskIds'] as List).length,
       ),
       findsOneWidget,
       reason:
@@ -575,10 +620,7 @@ void main() {
       await tester.ensureVisible(homeTab);
       await tester.tap(homeTab);
       await tester.pumpAndSettle();
-      final shell = tester.widget<Act0HomeShellV1>(
-        find.byType(Act0HomeShellV1),
-      );
-      shell.onStartRepair!();
+      await _launchVisibleHomeRepairV1(tester);
       await tester.pumpAndSettle();
       expect(root.debugSelectedWorldIdV1(), worldId);
       expect(root.debugSelectedLessonIdV1(), summary['targetLessonId']);
