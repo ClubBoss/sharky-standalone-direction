@@ -235,6 +235,50 @@ Map<String, Object?> inspectAct0Obs03TraceV1(
       transferEligibilityProblem(baselineId) ??
       transferEligibilityProblem(comparisonId);
   if (referenceFailure != null) return insufficient(referenceFailure);
+  // Receipt consistency with the producer (`_recentSignal`/`_signalFromPair`):
+  // comparison is the newest eligible record and `recent_verified_v1` needs it
+  // correct; relationship is same-task iff the baseline/comparison task ids
+  // match, and `insufficient_evidence_v1` only when there is no baseline.
+  // Emitted reference session ids must name the referenced record's session.
+  Map? referenced(Object? id) => id == attemptId
+      ? evidence
+      : id is String
+      ? one('decision_evidence_recorded', id)
+      : null;
+  final baselineRecord = referenced(baselineId);
+  final comparisonRecord = referenced(comparisonId);
+  if (transfer['transfer_verdict'] == 'recent_verified_v1' &&
+      comparisonRecord?['correct'] != true) {
+    return insufficient('verified_transfer_latest_incorrect');
+  }
+  for (final (record, key) in [
+    (baselineRecord, 'baseline_session_id'),
+    (comparisonRecord, 'comparison_session_id'),
+  ]) {
+    if (transfer.containsKey(key) &&
+        (record == null || transfer[key] != record['session_id'])) {
+      return insufficient('inconsistent_transfer_relationship');
+    }
+  }
+  if (baselineRecord != null &&
+      transfer['relationship'] == 'insufficient_evidence_v1') {
+    return insufficient('inconsistent_transfer_relationship');
+  }
+  if (baselineRecord != null && comparisonRecord != null) {
+    final baselineTask = baselineRecord['task_id'];
+    final comparisonTask = comparisonRecord['task_id'];
+    if (baselineTask is! String ||
+        baselineTask.isEmpty ||
+        comparisonTask is! String ||
+        comparisonTask.isEmpty) {
+      return insufficient('invalid_transfer_task_identity');
+    }
+    final sameTask = baselineTask == comparisonTask;
+    if ((transfer['relationship'] == 'same_family_transfer_v1' && sameTask) ||
+        (transfer['relationship'] == 'same_task_repeat_v1' && !sameTask)) {
+      return insufficient('inconsistent_transfer_relationship');
+    }
+  }
   final occurrence = evidence['repair_occurrence_id'];
   Map? repair;
   if (const {'repair', 'recheck'}.contains(evidence['sequence_stage'])) {
