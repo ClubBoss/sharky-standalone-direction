@@ -2701,7 +2701,16 @@ List<Act0LessonTaskV1> _retitledTasksV1(
         title: task.title,
         phase: task.phase,
         runner: task.runner.copyWith(
-          lessonId: lessonId,
+          // Keep this admitted leaf identity for its exact premise receipt.
+          // Canonical task ID and the route's selected lesson stay unchanged.
+          lessonId:
+              lessonId == 'turn_river_changes' &&
+                  taskPrefix == 'turn_river_changes' &&
+                  task.taskId == 'w5_turn_texture_shift_transfer' &&
+                  task.runner.lessonId == 'w5_turn_texture_shift_transfer' &&
+                  task.runner.feedbackSignalId == 'board_texture_change'
+              ? task.runner.lessonId
+              : lessonId,
           lessonTitle: lessonTitle,
           lessonSubtitle: lessonSubtitle,
         ),
@@ -8008,6 +8017,9 @@ const _whatYouCanDoRunner = Act0RunnerStateV1(
         seatId: 'hj',
         seatLabel: 'HJ',
         displayName: 'Seat',
+        isFolded: true,
+        isInHand: false,
+        hasActed: true,
         holeCards: _unknownHoleCards,
       ),
       Act0SeatStateV1(
@@ -10737,7 +10749,7 @@ final _showdownIntroRunner = _showdownRunner.copyWith(
   lessonId: 'showdown_intro',
   caption: 'A hand can end before or at showdown.',
   hint: 'Folds end it early. Showdown compares hands.',
-  question: 'What are the two broad ways to win?',
+  question: 'What happens if everyone folds to you?',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Two endings.',
@@ -12424,7 +12436,7 @@ final _world2PositionIntroRunner = _latePositionRunner.copyWith(
   lessonSubtitle: 'Hand Value And Position',
   caption: 'The same hand feels different from early and late seats.',
   hint: 'Late seats act after seeing more decisions.',
-  question: 'Why can late position help?',
+  question: 'Which seat usually has more information before acting?',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Position is information.',
@@ -15086,7 +15098,7 @@ final _w3PositionApplyIntroRunner = _world3PositionIntroRunner.copyWith(
   caption: 'Position tells you how comfortable a hand is before you act.',
   hint:
       'BTN is the best seat. UTG needs stronger hands to open. No charts needed yet.',
-  question: 'Why does position matter at the table?',
+  question: 'Which seat usually has more information before acting?',
   feedbackTitle: 'Position habit.',
   feedbackReason:
       'Seat changes when you act and how much information you have before the decision.',
@@ -17433,7 +17445,8 @@ final _world5TurnHitsRunner = _world5StreetChangeIntroRunner.copyWith(
 final _world5RiverMissesRunner = _world5StreetChangeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_river_misses',
-  caption: 'The river is a black 2. The same heart story now misses.',
+  caption:
+      'Different runout: the river is the 2 of diamonds. The heart draw misses.',
   hint: 'The river did not help the draw you were tracking.',
   question: 'What happened by the river?',
   options: const <Act0RunnerOptionV1>[
@@ -17535,11 +17548,12 @@ final _world5StreetRepairRunner = _world5StreetChangeIntroRunner.copyWith(
 final _world5TurnTextureShiftTransferRunner = _world5StreetChangeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_turn_texture_shift_transfer',
+  feedbackSignalId: 'board_texture_change',
   caption:
       'Real table. Flop K-9-2 looked calm, but the turn brings the T of hearts.',
   hint:
       'Do not replay the flop read. Ask what the new turn card changed first.',
-  question: 'What changed first on the turn?',
+  question: 'Flop K-9-2, then the T of hearts on the turn. What changed first?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'board_got_wetter',
@@ -17792,15 +17806,37 @@ final _world6RangeCheckpointRunner = _world5BoardCheckpointRunner.copyWith(
   ],
 );
 
+// These questions assess a supplied premise, not an observed hand history.
+// Do not inherit unrelated cards, street or pot as evidence for that premise.
+Act0TableStateV1 _act0HypotheticalConceptTableV1(Act0TableStateV1 base) =>
+    base.copyWith(
+      scope: Act0TableScopeV1.explanation,
+      heroCards: const <Act0CardStateV1>[],
+      boardCards: const <Act0CardStateV1>[],
+      streetLabel: '',
+      potLabel: '',
+      toCallLabel: '',
+      centerLabel: 'Hypothetical example',
+      focusCalloutLabel: '',
+      emptyBoardLabel: 'Use the stated premise',
+      actionTrail: const <Act0ActionTrailItemV1>[],
+      highlightedSeatIds: const <String>[],
+      highlightedCardIds: const <String>[],
+      instructionAnchor: '',
+    );
+
 final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
+  table: _act0HypotheticalConceptTableV1(_w6WrongBoardRunner.table),
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_wet_board_repair',
+  feedbackSignalId: 'board_texture_change',
   lessonTitle: 'Range meets board',
   lessonSubtitle: 'Range Thinking',
   caption:
-      'Turn card connected the board, but hero still treats one pair like the flop stayed dry.',
+      'Suppose a turn makes a dry board wetter, but Hero keeps the old one-pair plan.',
   hint: 'Repair the board read before forcing the same old action.',
-  question: 'What needs fixing first?',
+  question:
+      'Suppose a turn makes a dry board wetter. What needs fixing in the old one-pair plan?',
   feedbackTitle: 'Repair the board read.',
   feedbackReason:
       'When the board gets wetter, thin value and easy bets need more caution. Repair the texture read before repeating the flop plan.',
@@ -17847,7 +17883,7 @@ final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Repair story before line.',
       body:
-          'Board texture changed. Fix the story first, then decide whether the old value plan still belongs.',
+          'In this hypothetical example, the turn made the board wetter. Repair that board read before repeating the old one-pair plan.',
       focusLabels: <String>['Wet turn', 'Repair read', 'One pair caution'],
     ),
   ],
@@ -18165,11 +18201,22 @@ final _w6ValueWetBoardRunner = _w6BoardFitIntroRunner.copyWith(
 );
 
 final _w6TurnShiftBucketRunner = _w6BoardFitIntroRunner.copyWith(
+  table: _act0HypotheticalConceptTableV1(_w6BoardFitIntroRunner.table),
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_turn_shift_bucket',
-  caption: 'Flop gave you a bluff candidate. Turn bricks and pairs the board.',
+  feedbackSignalId: 'range_bucket_shift',
+  caption: 'Suppose a bluff candidate loses fold pressure on the turn.',
   hint: 'When pressure drops, the bucket can slide.',
-  question: 'What often happens to the hand now?',
+  question:
+      'Suppose a bluff candidate loses fold pressure on the turn. What can happen to its bucket?',
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'A bucket can change.',
+      body:
+          'Suppose a bluff candidate loses fold pressure on the turn. It can move toward missed; it does not become value automatically.',
+      focusLabels: <String>['Fold pressure', 'Missed'],
+    ),
+  ],
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'slide_missed',
@@ -18190,7 +18237,7 @@ final _w6TurnShiftBucketRunner = _w6BoardFitIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Almost got it.',
       feedbackReason:
-          'A brick turn does not create value. Often it removes pressure instead.',
+          'Losing fold pressure does not make the hand value automatically.',
     ),
     Act0RunnerOptionV1(
       id: 'never_changes',
@@ -18471,11 +18518,13 @@ final _w6TableValueLineTransferRunner = _w6ValueRangeActionRunner.copyWith(
 
 final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
   lessonId: 'w6_turn_pressure_shift_transfer',
+  feedbackSignalId: 'range_bucket_shift',
   caption:
       'Real table. Flop K-7-2 made A-Q a bluff candidate. BB called, and the turn pairs the 2.',
   hint:
       'When the board pairs and the first bluff gets called, some pressure lines cool off.',
-  question: 'What is the cleaner turn plan now?',
+  question:
+      'Suppose fold pressure has dropped on this turn. What is the cleaner plan?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'check_more',
@@ -18485,7 +18534,7 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Good pressure reset.',
       feedbackReason:
-          'The flop bluff candidate lost momentum. After the call and paired turn, the cleaner pressure line is check more often instead of forcing another barrel.',
+          'Under the stated drop in fold pressure, checking more often avoids forcing the earlier bluff plan. The paired card alone does not make this a universal betting rule.',
     ),
     Act0RunnerOptionV1(
       id: 'barrel_big',
@@ -18496,7 +18545,7 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Tempting, but noisy.',
       feedbackReason:
-          'Big pressure can happen sometimes, but the paired turn and called flop reduce the clean bluff story. Checking is the calmer transfer read here.',
+          'In this stated lower-pressure spot, a larger second barrel does not repair the reason for betting. Reassess before forcing the flop plan.',
     ),
     Act0RunnerOptionV1(
       id: 'bet_value',
@@ -18507,7 +18556,7 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Wrong bucket now.',
       feedbackReason:
-          'A-Q still has no made hand on K-7-2-2. This is not a value line. The better read is that the bluff pressure cooled off.',
+          'A-Q has not paired either hole card on K-7-2-2. Under this lower-pressure premise, treating it as automatic value misses the point.',
     ),
   ],
   table: _w6BluffCandidateRunner.table.copyWith(
@@ -18538,7 +18587,7 @@ final _w6TurnPressureShiftTransferRunner = _w6BluffCandidateRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Street changes can cool pressure.',
       body:
-          'A bluff candidate is not a forever-barrel pass. On a paired turn after a call, the cleaner transfer can be slow down and check more often.',
+          'Suppose fold pressure has dropped on this paired turn. A former bluff candidate is not a forever-barrel pass: reassess before forcing the same line.',
       focusLabels: <String>['Paired turn', 'Called flop', 'Check more often'],
     ),
   ],
@@ -22765,11 +22814,14 @@ final _w12GoodFoldBadResultRunner = _w12DecisionQualityIntroRunner.copyWith(
 );
 
 final _w12BadCallGoodResultRunner = _w12DecisionQualityIntroRunner.copyWith(
+  table: _act0HypotheticalConceptTableV1(_w12DecisionQualityIntroRunner.table),
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w12_bad_call_good_result',
-  caption: 'You made a loose call and got lucky on river.',
+  feedbackSignalId: 'process_over_outcome',
+  caption: 'Suppose a loose call wins after a lucky river.',
   hint: 'Winning the pot does not guarantee a good decision.',
-  question: 'What is the best mindset response?',
+  question:
+      'Suppose a loose call wins after a lucky river. What is the best mindset response?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'celebrate_only',
@@ -23206,9 +23258,11 @@ final _w12ConfidenceDisciplineRecapRunner = _w12ConfidenceDisciplineIntroRunner
 final _w12CheckpointProcessLineRunner = _w12ConfidenceDisciplineIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w12_checkpoint_process_line',
+  feedbackSignalId: 'process_over_outcome',
   caption: 'A correct line loses in a high-variance pot.',
   hint: 'Process verdict comes before emotional verdict.',
-  question: 'What is the best immediate checkpoint reaction?',
+  question:
+      'Suppose a sound decision loses a high-variance pot. What is the best immediate response?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'outcome_only',

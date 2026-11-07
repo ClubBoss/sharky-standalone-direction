@@ -93,6 +93,14 @@ void main() {
       'what_poker_is_matched_chips_transfer',
       'same_hand_different_seat_position_repair_same_hand_different_seat',
       'what_poker_is_side_pot_intro',
+      'w6_turn_shift_bucket',
+      'w6_wet_board_repair',
+      'w12_bad_call_good_result',
+    };
+    const conceptualSignals = <String, String>{
+      'w6_turn_shift_bucket': 'range_bucket_shift',
+      'w6_wet_board_repair': 'board_texture_change',
+      'w12_bad_call_good_result': 'process_over_outcome',
     };
     const w4NumericHistoryIds = <String>{
       'w4_bad_bluff',
@@ -132,7 +140,9 @@ void main() {
     ];
     expect(tasks, hasLength(367));
     expect(orientationIds, hasLength(46));
-    expect(explanationIds, hasLength(4));
+    expect(explanationIds, hasLength(7));
+    expect(conceptualSignals, hasLength(3));
+    expect(explanationIds, containsAll(conceptualSignals.keys));
     var played = 0;
     final historyConsumers = <String>{};
     for (final task in tasks) {
@@ -207,6 +217,26 @@ void main() {
             isTrue,
             reason: task.taskId,
           );
+          final conceptualSignal = conceptualSignals[task.taskId];
+          if (conceptualSignal != null) {
+            expect(
+              task.runner.feedbackSignalId,
+              conceptualSignal,
+              reason: task.taskId,
+            );
+            expect(table.heroCards, isEmpty, reason: task.taskId);
+            expect(table.boardCards, isEmpty, reason: task.taskId);
+            expect(table.actionTrail, isEmpty, reason: task.taskId);
+            expect(
+              table.activeSeatId,
+              anyOf(isNull, isEmpty),
+              reason: task.taskId,
+            );
+            expect(table.streetLabel, isEmpty, reason: task.taskId);
+            expect(table.potLabel, isEmpty, reason: task.taskId);
+            expect(table.toCallLabel, isEmpty, reason: task.taskId);
+            expect(table.seats.where((seat) => seat.isActive), isEmpty);
+          }
         } else {
           expect(table.boardCards, isEmpty, reason: task.taskId);
           expect(
@@ -225,7 +255,7 @@ void main() {
       w4NumericHistoryIds.where((id) => id != 'w4_protection_check'),
       hasLength(23),
     );
-    expect(played, 317); // Authored hand contexts, NOT 317 certified histories.
+    expect(played, 314); // Authored hand contexts, NOT 314 certified histories.
     expect(
       historyConsumers,
       <String>{
