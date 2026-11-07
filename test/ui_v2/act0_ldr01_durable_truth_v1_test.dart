@@ -2311,4 +2311,121 @@ void main() {
       expect(_durable(disk)['firstValueReturnCarry'], isNull);
     },
   );
+
+  // DAT06 x DAT04 (#380 + #417) on the combined bytes: a storage heal refusal
+  // over a readable survivor is a retryable HOLD, never reset eligibility,
+  // and a partially healed state is never exposed before every copy reloads.
+  for (final shape in ['single', 'unequal', 'head']) {
+    for (final fault in ['refused', 'true_but_missing']) {
+      test(
+        'DAT06 heal $fault on readable $shape survivor holds without reset',
+        () async {
+          final f = await _dat06Fixture('heal_${shape}_$fault');
+          final s = f.store;
+          for (final k in [s.key, s.headKey, s.recoveryKey, s.backupKey]) {
+            f.disk.values.remove('flutter.$k');
+          }
+          final raw = Act0ProgressStoreV1.debugEnvelopeV1(7, 'progress');
+          final older = Act0ProgressStoreV1.debugEnvelopeV1(6, 'older');
+          f.disk.values['flutter.${s.recoveryKey}'] = raw;
+          if (shape != 'single') {
+            f.disk.values['flutter.${s.backupKey}'] = older;
+          }
+          if (shape == 'head') f.disk.values['flutter.${s.headKey}'] = raw;
+          final twin = 'flutter.${s.backupKey}';
+          (fault == 'refused'
+                  ? f.disk.failWriteKeys
+                  : f.disk.trueButMissingKeys)
+              .add(twin);
+
+          for (var retry = 0; retry < 2; retry++) {
+            await expectLater(s.load(), throwsA(isA<FormatException>()));
+          }
+          expect(await s.save('newer'), isFalse);
+          expect(await s.clear(), isFalse);
+          await expectLater(
+            s.inspectRecovery(),
+            throwsA(isA<Act0RecoveryHoldV1>()),
+          );
+          // The readable survivor is intact; the lower copy was never exposed
+          // and no recovery archive or intent was written.
+          expect(f.disk.values['flutter.${s.recoveryKey}'], raw);
+          if (shape != 'single') expect(f.disk.values[twin], older);
+          expect(
+            f.disk.values.containsKey('flutter.${s.damagedCopyKey}'),
+            isFalse,
+          );
+          expect(
+            f.disk.values.containsKey('flutter.${s.recoveryIntentKey}'),
+            isFalse,
+          );
+
+          f.disk.failWriteKeys.clear();
+          f.disk.trueButMissingKeys.clear();
+          final restarted = _dat06Restart(s);
+          expect(await restarted.load(), 'progress');
+          for (final k in [s.recoveryKey, s.backupKey]) {
+            expect(f.disk.values['flutter.$k'], raw, reason: k);
+          }
+        },
+      );
+    }
+  }
+
+  // The DAT04 head-only crash cut (head landed, recovery not yet landed): the
+  // accepted HOLD must stay stable on retry and, only after explicit consent,
+  // reset over every revision on disk with an exact archive and no return of
+  // either the attempted or the stale snapshot after cold restart.
+  test(
+    'DAT06 whole new head over stale copies: stable hold, consented reset',
+    () async {
+      final f = await _dat06Fixture('head_only_cut');
+      final s = f.store;
+      final head = Act0ProgressStoreV1.debugEnvelopeV1(5, 'attempted');
+      final stale = Act0ProgressStoreV1.debugEnvelopeV1(4, 'acknowledged');
+      f.disk.values
+        ..['flutter.${s.key}'] = 'acknowledged'
+        ..['flutter.${s.headKey}'] = head
+        ..['flutter.${s.recoveryKey}'] = stale
+        ..['flutter.${s.backupKey}'] = stale;
+      final before = Map.of(f.disk.values);
+
+      for (var retry = 0; retry < 2; retry++) {
+        await expectLater(s.load(), throwsA(isA<FormatException>()));
+      }
+      expect(await s.save('learner write during hold'), isFalse);
+      expect(f.disk.values, before);
+      expect(f.disk.writeCounts, isEmpty);
+
+      final proposal = await s.inspectRecovery();
+      expect(f.disk.values, before);
+      expect(await s.confirmRecovery(proposal), isTrue);
+
+      final archive =
+          jsonDecode(f.disk.values['flutter.${s.damagedCopyKey}'] as String)
+              as Map;
+      final rows = {
+        for (final row in archive['snapshot'] as List)
+          (row as List)[0]: (row[1] as Map)['v'],
+      };
+      expect(rows[s.headKey], head);
+      expect(rows[s.recoveryKey], stale);
+      expect(rows[s.backupKey], stale);
+      expect(rows[s.key], 'acknowledged');
+
+      final restarted = _dat06Restart(s);
+      final state = await restarted.loadState();
+      expect(state.isReset, isTrue);
+      expect(state.payload, isNull);
+      for (final k in [s.headKey, s.recoveryKey, s.backupKey]) {
+        final copy = jsonDecode(f.disk.values['flutter.$k'] as String) as Map;
+        expect(copy['revision'], greaterThan(5), reason: k);
+        expect(copy['payload'], isNull, reason: k);
+      }
+      expect(f.disk.values.containsKey('flutter.${s.key}'), isFalse);
+      expect(f.disk.values['flutter.unrelated'], 'keep');
+      expect(await restarted.save('fresh'), isTrue);
+      expect(await _dat06Restart(s).load(), 'fresh');
+    },
+  );
 }
