@@ -2,6 +2,7 @@ import 'package:flutter/semantics.dart';
 import 'act0_accessibility_semantics_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_reading_style_v1.dart';
 import 'dart:async';
+import 'act0_predecision_card_focus_v1.dart';
 import 'act0_scene_profile_v1.dart';
 import 'act0_f7_scene_source_v1.dart';
 import 'act0_f7_scene_gate_v1.dart';
@@ -3130,16 +3131,15 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         : act0TableForChoreographyFrameV1(table, activeChoreographyFrame);
     // Both board overlays and seat-card renderers consume this projection.
     // Keep the source table intact for teaching, requested help and feedback.
-    final presentationTable =
-        widget.selectedTaskId == 'hand_rankings_quads_drill' &&
-            _isActiveAssessmentStateV1(
-              isTeaching: isTeaching,
-              isTheory: isTheory,
-              isReview: isReview,
-              runner: runner,
-            )
-        ? choreographedTable.copyWith(highlightedCardIds: const <String>[])
-        : choreographedTable;
+    final presentationTable = act0PredecisionCardFocusV1(
+      choreographedTable,
+      isActiveAssessment: _isActiveAssessmentStateV1(
+        isTeaching: isTeaching,
+        isTheory: isTheory,
+        isReview: isReview,
+        runner: runner,
+      ),
+    );
     final sourceIdentityPolicy = act0TableIdentityPolicyForTeachingSemanticsV1(
       teachingStep?.identityTeachingSemantics ??
           Act0TableIdentityTeachingSemanticsV1.legacy,
