@@ -74,6 +74,66 @@ Map _trace() {
   };
 }
 
+/// Positive transfer shaped like the producer: the comparison is the newest
+/// epoch record (the current attempt) and the baseline/previous are earlier
+/// source-linked records of the same concept family.
+Map _verifiedTrace({
+  Object? baseline = 'attempt_0',
+  Object? comparison = 'attempt_1',
+  Object? previous = 'attempt_0',
+  Map<String, Object?> earlier = const {},
+  bool sessionIds = false,
+}) {
+  final trace = _trace();
+  final events = (trace['events'] as List).cast<Map>();
+  final current = _fields(trace, 'decision_evidence_recorded');
+  // The producer only emits recent_verified_v1 when the newest eligible record
+  // (the comparison, here the current attempt) is correct (review 5812483899).
+  current
+    ..['concept_family_id'] = 'family_1'
+    ..['created_order'] = 2
+    ..['correct'] = true
+    ..['chosen_action'] = 'call'
+    ..['error_type'] = 'none';
+  _fields(trace, 'decision_made')
+    ..['correct'] = true
+    ..['chosen_action'] = 'call';
+  final earlierEvidence = {
+    ...current,
+    'attempt_id': 'attempt_0',
+    'run_id': 'run_0',
+    'session_id': 'session_0',
+    'task_id': 'task_0',
+    'source_fingerprint': 'earlier_fingerprint',
+    'created_order': 1,
+    'correct': true,
+    'chosen_action': 'call',
+    ...earlier,
+  };
+  _fields(trace, 'transfer_evaluated')
+    ..['relationship'] = 'same_family_transfer_v1'
+    ..['transfer_verdict'] = 'recent_verified_v1'
+    ..['eligible_evidence_count'] = 5
+    ..['baseline_attempt_id'] = baseline
+    ..['comparison_attempt_id'] = comparison;
+  if (sessionIds) {
+    final sessions = {'attempt_0': 'session_0', 'attempt_1': 'session_1'};
+    _fields(trace, 'transfer_evaluated')
+      ..['baseline_session_id'] = sessions[baseline]
+      ..['comparison_session_id'] = sessions[comparison];
+  }
+  _fields(trace, 'elapsed_learning_observed')['previous_attempt_id'] = previous;
+  final all = [
+    {'name': 'decision_evidence_recorded', 'fields': earlierEvidence},
+    for (final e in events) {'name': e['name'], 'fields': e['fields']},
+  ];
+  trace['events'] = [
+    for (var i = 0; i < all.length; i++) {...all[i], 'sequence': i + 1},
+  ];
+  (trace['capture'] as Map)['recordedEventCount'] = all.length;
+  return jsonDecode(jsonEncode(trace)) as Map;
+}
+
 Map _inspect(Map trace) => inspectAct0Obs03TraceV1(
   trace,
   attemptId: 'attempt_1',
@@ -138,4 +198,188 @@ void main() {
       }
     },
   );
+
+  test('OBS01 producer-shaped verified transfer still reconstructs', () {
+    final result = _inspect(_verifiedTrace());
+    expect(result['status'], 'TRACE_RECONSTRUCTED');
+    expect(result['transfer_verdict'], 'recent_verified_v1');
+  });
+
+  // Independent review 5811045902: these three synthetic traces were reported
+  // as TRACE_RECONSTRUCTED with a positive recent_verified_v1 verdict.
+  test('OBS01 foreign or invalid referenced source is never reconstructed', () {
+    for (final earlier in <Map<String, Object?>>[
+      {'source_current': false},
+      {'evidence_status': 'missing'},
+      {'evidence_status': 'insufficient_evidence'},
+      {'concept_family_id': 'other_family'},
+      {'concept_family_id': null},
+      {'created_order': 3},
+      {'created_order': null},
+    ]) {
+      final result = _inspect(_verifiedTrace(earlier: earlier));
+      expect(result['status'], 'INSUFFICIENT', reason: '$earlier');
+      expect(result['reason'], 'invalid_source_reference', reason: '$earlier');
+    }
+  });
+
+  test('OBS01 identical baseline and comparison are never reconstructed', () {
+    for (final id in ['attempt_0', 'attempt_1']) {
+      final result = _inspect(_verifiedTrace(baseline: id, comparison: id));
+      expect(result['status'], 'INSUFFICIENT', reason: id);
+    }
+  });
+
+  test('OBS01 baseline or previous naming the current attempt is rejected', () {
+    for (final trace in [
+      _verifiedTrace(baseline: 'attempt_1'),
+      _verifiedTrace(previous: 'attempt_1'),
+      _verifiedTrace(baseline: 'attempt_1', comparison: 'attempt_1'),
+    ]) {
+      final result = _inspect(trace);
+      expect(result['status'], 'INSUFFICIENT');
+      expect(result['reason'], 'invalid_source_reference');
+    }
+  });
+
+  Map evidenceOf(Map trace, String attemptId) =>
+      (trace['events'] as List).singleWhere(
+            (e) =>
+                e['name'] == 'decision_evidence_recorded' &&
+                e['fields']['attempt_id'] == attemptId,
+          )['fields']
+          as Map;
+
+  // Independent review 5811442259: the producer never selects assisted or
+  // replay/immediate-repair/legacy records as a transfer baseline/comparison.
+  test('OBS01 ineligible transfer baseline is never reconstructed', () {
+    for (final earlier in <Map<String, Object?>>[
+      {'assistance_kind': 'quickHint'},
+      {'assistance_kind': 'theoryRecall'},
+      {'review_kind': 'exactReplay'},
+      {'review_kind': 'immediateRepair'},
+      {'review_kind': 'legacyUnspaced'},
+      {'review_kind': null},
+    ]) {
+      final result = _inspect(_verifiedTrace(earlier: earlier));
+      expect(result['status'], 'INSUFFICIENT', reason: '$earlier');
+      expect(
+        result['reason'],
+        'ineligible_transfer_reference',
+        reason: '$earlier',
+      );
+    }
+  });
+
+  test('OBS01 ineligible current attempt cannot be the comparison', () {
+    for (final delta in <Map<String, Object?>>[
+      {'assistance_kind': 'quickHint'},
+      {'review_kind': 'exactReplay'},
+    ]) {
+      final trace = _verifiedTrace();
+      evidenceOf(trace, 'attempt_1').addAll(delta);
+      final result = _inspect(trace);
+      expect(result['status'], 'INSUFFICIENT', reason: '$delta');
+      expect(result['reason'], 'ineligible_transfer_reference');
+    }
+  });
+
+  test('OBS01 elapsed previous keeps its own epoch rule', () {
+    // An assisted earlier record may still be the previous epoch attempt; the
+    // transfer reference rule must not be copied onto elapsed lineage.
+    final trace = _verifiedTrace(
+      baseline: null,
+      earlier: {'assistance_kind': 'quickHint'},
+    );
+    (trace['events'] as List).singleWhere(
+        (e) => e['name'] == 'transfer_evaluated',
+      )['fields']
+      ..['relationship'] = 'insufficient_evidence_v1'
+      ..['transfer_verdict'] = 'confirmation_needed_v1'
+      ..['eligible_evidence_count'] = 1;
+    final result = _inspect(trace);
+    expect(result['status'], 'TRACE_RECONSTRUCTED');
+    expect(result['transfer_verdict'], 'confirmation_needed_v1');
+  });
+
+  // Independent review 5812483899: internally inconsistent positive receipts.
+  Map transferOf(Map trace) =>
+      (trace['events'] as List).singleWhere(
+            (e) => e['name'] == 'transfer_evaluated',
+          )['fields']
+          as Map;
+
+  test('OBS01 verified transfer requires a correct latest comparison', () {
+    final trace = _verifiedTrace();
+    evidenceOf(trace, 'attempt_1')
+      ..['correct'] = false
+      ..['chosen_action'] = 'fold';
+    _fields(trace, 'decision_made')
+      ..['correct'] = false
+      ..['chosen_action'] = 'fold';
+    final result = _inspect(trace);
+    expect(result['status'], 'INSUFFICIENT');
+    expect(result['reason'], 'verified_transfer_latest_incorrect');
+    expect(result.containsKey('transfer_verdict'), isFalse);
+  });
+
+  test('OBS01 a current miss stays legal as confirmation needed', () {
+    final trace = _verifiedTrace();
+    evidenceOf(trace, 'attempt_1')
+      ..['correct'] = false
+      ..['chosen_action'] = 'fold';
+    _fields(trace, 'decision_made')
+      ..['correct'] = false
+      ..['chosen_action'] = 'fold';
+    transferOf(trace)['transfer_verdict'] = 'confirmation_needed_v1';
+    final result = _inspect(trace);
+    expect(result['status'], 'TRACE_RECONSTRUCTED');
+    expect(result['transfer_verdict'], 'confirmation_needed_v1');
+  });
+
+  test('OBS01 relationship must match referenced task identities', () {
+    final sameTask = _verifiedTrace(earlier: {'task_id': 'task_1'});
+    var result = _inspect(sameTask);
+    expect(result['status'], 'INSUFFICIENT');
+    expect(result['reason'], 'inconsistent_transfer_relationship');
+
+    transferOf(sameTask)['relationship'] = 'same_task_repeat_v1';
+    result = _inspect(sameTask);
+    expect(result['status'], 'TRACE_RECONSTRUCTED');
+    expect(result['transfer_verdict'], 'recent_verified_v1');
+
+    final crossTask = _verifiedTrace();
+    transferOf(crossTask)['relationship'] = 'same_task_repeat_v1';
+    result = _inspect(crossTask);
+    expect(result['status'], 'INSUFFICIENT');
+    expect(result['reason'], 'inconsistent_transfer_relationship');
+
+    final noRelationship = _verifiedTrace();
+    transferOf(noRelationship)
+      ..['relationship'] = 'insufficient_evidence_v1'
+      ..['transfer_verdict'] = 'confirmation_needed_v1';
+    result = _inspect(noRelationship);
+    expect(result['status'], 'INSUFFICIENT');
+    expect(result['reason'], 'inconsistent_transfer_relationship');
+  });
+
+  test('OBS01 referenced transfer task identity must be present', () {
+    for (final task in <Object?>['', null]) {
+      final result = _inspect(_verifiedTrace(earlier: {'task_id': task}));
+      expect(result['status'], 'INSUFFICIENT', reason: '$task');
+      expect(result['reason'], 'invalid_transfer_task_identity');
+    }
+  });
+
+  test('OBS01 emitted reference sessions must match referenced records', () {
+    final consistent = _verifiedTrace(sessionIds: true);
+    expect(_inspect(consistent)['status'], 'TRACE_RECONSTRUCTED');
+    for (final key in ['baseline_session_id', 'comparison_session_id']) {
+      final trace = _verifiedTrace(sessionIds: true);
+      transferOf(trace)[key] = 'session_foreign';
+      final result = _inspect(trace);
+      expect(result['status'], 'INSUFFICIENT', reason: key);
+      expect(result['reason'], 'inconsistent_transfer_relationship');
+    }
+  });
 }
