@@ -10737,7 +10737,7 @@ final _showdownIntroRunner = _showdownRunner.copyWith(
   lessonId: 'showdown_intro',
   caption: 'A hand can end before or at showdown.',
   hint: 'Folds end it early. Showdown compares hands.',
-  question: 'What are the two broad ways to win?',
+  question: 'What happens if everyone folds to you?',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Two endings.',
@@ -12424,7 +12424,7 @@ final _world2PositionIntroRunner = _latePositionRunner.copyWith(
   lessonSubtitle: 'Hand Value And Position',
   caption: 'The same hand feels different from early and late seats.',
   hint: 'Late seats act after seeing more decisions.',
-  question: 'Why can late position help?',
+  question: 'Which seat usually has more information before acting?',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Position is information.',
@@ -15086,7 +15086,7 @@ final _w3PositionApplyIntroRunner = _world3PositionIntroRunner.copyWith(
   caption: 'Position tells you how comfortable a hand is before you act.',
   hint:
       'BTN is the best seat. UTG needs stronger hands to open. No charts needed yet.',
-  question: 'Why does position matter at the table?',
+  question: 'Which seat usually has more information before acting?',
   feedbackTitle: 'Position habit.',
   feedbackReason:
       'Seat changes when you act and how much information you have before the decision.',
@@ -17433,7 +17433,8 @@ final _world5TurnHitsRunner = _world5StreetChangeIntroRunner.copyWith(
 final _world5RiverMissesRunner = _world5StreetChangeIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_river_misses',
-  caption: 'The river is a black 2. The same heart story now misses.',
+  caption:
+      'Different runout: the river is the 2 of diamonds. The heart draw misses.',
   hint: 'The river did not help the draw you were tracking.',
   question: 'What happened by the river?',
   options: const <Act0RunnerOptionV1>[
@@ -17792,15 +17793,36 @@ final _world6RangeCheckpointRunner = _world5BoardCheckpointRunner.copyWith(
   ],
 );
 
+// These questions assess a supplied premise, not an observed hand history.
+// Do not inherit unrelated cards, street or pot as evidence for that premise.
+Act0TableStateV1 _act0HypotheticalConceptTableV1(Act0TableStateV1 base) =>
+    base.copyWith(
+      scope: Act0TableScopeV1.explanation,
+      heroCards: const <Act0CardStateV1>[],
+      boardCards: const <Act0CardStateV1>[],
+      streetLabel: '',
+      potLabel: '',
+      toCallLabel: '',
+      centerLabel: 'Hypothetical example',
+      focusCalloutLabel: '',
+      emptyBoardLabel: 'Use the stated premise',
+      actionTrail: const <Act0ActionTrailItemV1>[],
+      highlightedSeatIds: const <String>[],
+      highlightedCardIds: const <String>[],
+      instructionAnchor: '',
+    );
+
 final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
+  table: _act0HypotheticalConceptTableV1(_w6WrongBoardRunner.table),
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_wet_board_repair',
   lessonTitle: 'Range meets board',
   lessonSubtitle: 'Range Thinking',
   caption:
-      'Turn card connected the board, but hero still treats one pair like the flop stayed dry.',
+      'Suppose a turn makes a dry board wetter, but Hero keeps the old one-pair plan.',
   hint: 'Repair the board read before forcing the same old action.',
-  question: 'What needs fixing first?',
+  question:
+      'Suppose a turn makes a dry board wetter. What needs fixing in the old one-pair plan?',
   feedbackTitle: 'Repair the board read.',
   feedbackReason:
       'When the board gets wetter, thin value and easy bets need more caution. Repair the texture read before repeating the flop plan.',
@@ -17847,7 +17869,7 @@ final _w6WetBoardRepairRunner = _w6WrongBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Repair story before line.',
       body:
-          'Board texture changed. Fix the story first, then decide whether the old value plan still belongs.',
+          'In this hypothetical example, the turn made the board wetter. Repair that board read before repeating the old one-pair plan.',
       focusLabels: <String>['Wet turn', 'Repair read', 'One pair caution'],
     ),
   ],
@@ -18165,11 +18187,21 @@ final _w6ValueWetBoardRunner = _w6BoardFitIntroRunner.copyWith(
 );
 
 final _w6TurnShiftBucketRunner = _w6BoardFitIntroRunner.copyWith(
+  table: _act0HypotheticalConceptTableV1(_w6BoardFitIntroRunner.table),
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w6_turn_shift_bucket',
-  caption: 'Flop gave you a bluff candidate. Turn bricks and pairs the board.',
+  caption: 'Suppose a bluff candidate loses fold pressure on the turn.',
   hint: 'When pressure drops, the bucket can slide.',
-  question: 'What often happens to the hand now?',
+  question:
+      'Suppose a bluff candidate loses fold pressure on the turn. What can happen to its bucket?',
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'A bucket can change.',
+      body:
+          'Suppose a bluff candidate loses fold pressure on the turn. It can move toward missed; it does not become value automatically.',
+      focusLabels: <String>['Fold pressure', 'Missed'],
+    ),
+  ],
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'slide_missed',
@@ -18190,7 +18222,7 @@ final _w6TurnShiftBucketRunner = _w6BoardFitIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Almost got it.',
       feedbackReason:
-          'A brick turn does not create value. Often it removes pressure instead.',
+          'Losing fold pressure does not make the hand value automatically.',
     ),
     Act0RunnerOptionV1(
       id: 'never_changes',
@@ -22765,11 +22797,13 @@ final _w12GoodFoldBadResultRunner = _w12DecisionQualityIntroRunner.copyWith(
 );
 
 final _w12BadCallGoodResultRunner = _w12DecisionQualityIntroRunner.copyWith(
+  table: _act0HypotheticalConceptTableV1(_w12DecisionQualityIntroRunner.table),
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w12_bad_call_good_result',
-  caption: 'You made a loose call and got lucky on river.',
+  caption: 'Suppose a loose call wins after a lucky river.',
   hint: 'Winning the pot does not guarantee a good decision.',
-  question: 'What is the best mindset response?',
+  question:
+      'Suppose a loose call wins after a lucky river. What is the best mindset response?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'celebrate_only',
