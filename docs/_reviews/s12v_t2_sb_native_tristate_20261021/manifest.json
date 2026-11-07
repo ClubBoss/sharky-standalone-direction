@@ -1,0 +1,58 @@
+{
+  "base_head_git_sha": "fcd049b8d891633c2aa3a81c00b77e799c0a9c89",
+  "asset_source_empty_sha256": "0350aba1e04fdeecf102b286de1dd0355368d215bfafd4e9f150a33dd1ff29c4",
+  "exact_rebuilt_app_framework_sha256": "a7b9e600e762b4bedba0673ace7473f3afca8658d5edf4021f04e9a674e53fad",
+  "flag": "SHARKY_T2_SB_CANARY=true",
+  "tests": [
+    {
+      "name": "flutter test test/ui_v2/act0_scene_t2_canary_v1_test.dart",
+      "count": 5,
+      "verdict": "PASS"
+    },
+    {
+      "name": "flutter analyze + dart format targeted",
+      "verdict": "PASS"
+    },
+    {
+      "name": "flutter build ios --simulator --debug --no-codesign --dart-define=SHARKY_T2_SB_CANARY=true",
+      "verdict": "PASS"
+    }
+  ],
+  "native_first_table": [
+    {
+      "device": "standard",
+      "filename": "standard_FIRST_REAL_TABLE_genuine_XCTest.png",
+      "pixels": [
+        1206,
+        2622
+      ],
+      "sha256": "af98072e37849b033c2b45fc3606e375b8a05fe5f297132d419f5c4eb31cccef",
+      "source": "/Users/elmarsalimzade/sharky-wt/S12V_T2_STAGE_A_SB_OWNER_20261020/native_t2_receipts/tristate_standard/genuine.xcresult",
+      "test": "T2SBStageAOneSeatNativeUITests/test01AuthenticT2FirstTable",
+      "verdict": "PASS_1_OF_1",
+      "visualState": "Engaged at first real decision; not proof of Folded or Empty"
+    },
+    {
+      "device": "compact",
+      "filename": "compact_FIRST_REAL_TABLE_genuine_XCTest.png",
+      "pixels": [
+        750,
+        1334
+      ],
+      "sha256": "eeae4218255a4e2336951160dce45dee80706c905dbf22780bd126078dc8770b",
+      "source": "/Users/elmarsalimzade/sharky-wt/S12V_T2_STAGE_A_SB_OWNER_20261020/native_t2_receipts/tristate_compact/genuine.xcresult",
+      "test": "T2SBStageAOneSeatNativeUITests/test01AuthenticT2FirstTable",
+      "verdict": "PASS_1_OF_1",
+      "visualState": "Engaged at first real decision; not proof of Folded or Empty"
+    }
+  ],
+  "art_acceptance": "FAIL_MATERIAL_V2_RELAXED_IDENTITY",
+  "art_v3_exact_source_face_retouch": "REJECTED_VISUAL_ARTIFACTS_NOT_SHIPPED",
+  "native_folded": "NOT_TESTED",
+  "native_empty": "NOT_TESTED",
+  "full_river": "NOT_TESTED",
+  "human_p02": "NOT_ADMITTED",
+  "production_v4_default": "UNCHANGED",
+  "pr224": "PROTECTED",
+  "stage": "STAGE_A_HOLD"
+}
