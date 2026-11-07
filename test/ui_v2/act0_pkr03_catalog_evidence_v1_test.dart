@@ -19,6 +19,10 @@ void main() {
             final runner = task.runner;
             final states = <String, Act0TableStateV1>{
               'authored': runner.table,
+              'review/unselected': act0FeedbackTableForRunnerV1(
+                runner: runner.copyWith(phase: Act0LessonPhaseV1.review),
+                taskFamily: task.resolvedTaskFamily,
+              ),
               for (var i = 0; i < runner.teachingSteps.length; i++)
                 'teaching/$i/raw':
                     runner.teachingSteps[i].table ?? runner.table,
@@ -89,6 +93,18 @@ void main() {
               'task': task.taskId,
               'caption': runner.caption,
               'question': runner.question,
+              'source_seats': [
+                for (final seat in runner.table.seats)
+                  {
+                    'id': seat.seatId,
+                    'label': seat.seatLabel,
+                    'stack_label': seat.stackLabel,
+                    'bet_kind': seat.bet?.kind.name,
+                    'in_hand': seat.isInHand,
+                    'folded': seat.isFolded,
+                    'occupied': seat.isOccupied,
+                  },
+              ],
               'options': [
                 for (final o in runner.options)
                   {'id': o.id, 'label': o.label, 'correct': o.isCorrect},
