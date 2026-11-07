@@ -2144,10 +2144,142 @@ void main() {
       f.disk.values['flutter.${f.store.headKey}'] = '{new damage';
       final proposal = await next.inspectRecovery();
       final before = Map.of(f.disk.values);
+      expect(
+        await next.confirmRecoveryOutcome(proposal),
+        Act0RecoveryConfirmationOutcomeV1.existingCopyConflict,
+      );
+      expect(f.disk.values, before);
       expect(await next.confirmRecovery(proposal), false);
       expect(f.disk.values, before);
     },
   );
+  test(
+    'DAT06 outcome distinguishes same copy, drift and unverified I/O',
+    () async {
+      var cut = true;
+      final same = await _dat06Fixture(
+        'same_copy_outcome',
+        boundary: (stage, d, k) async {
+          if (stage == 'archive_verified' && cut)
+            throw StateError('cut before intent');
+        },
+      );
+      final proposal = await same.store.inspectRecovery();
+      expect(
+        await same.store.confirmRecoveryOutcome(proposal),
+        Act0RecoveryConfirmationOutcomeV1.notVerified,
+      );
+      final archive = same.disk.values['flutter.${same.store.damagedCopyKey}'];
+      cut = false;
+      expect(
+        await same.store.confirmRecoveryOutcome(proposal),
+        Act0RecoveryConfirmationOutcomeV1.completed,
+      );
+      expect(same.disk.values['flutter.${same.store.damagedCopyKey}'], archive);
+
+      final drift = await _dat06Fixture('drift_outcome');
+      final stale = await drift.store.inspectRecovery();
+      drift.disk.values['flutter.${drift.store.key}'] = 'later damage';
+      final drifted = Map.of(drift.disk.values);
+      expect(
+        await drift.store.confirmRecoveryOutcome(stale),
+        Act0RecoveryConfirmationOutcomeV1.notVerified,
+      );
+      expect(drift.disk.values, drifted);
+
+      final io = await _dat06Fixture('io_outcome');
+      final token = await io.store.inspectRecovery();
+      final before = Map.of(io.disk.values);
+      io.disk.failNextLoad = true;
+      expect(
+        await io.store.confirmRecoveryOutcome(token),
+        Act0RecoveryConfirmationOutcomeV1.notVerified,
+      );
+      expect(io.disk.values, before);
+      io.disk.values['flutter.${io.store.damagedCopyKey}'] = '{unreadable copy';
+      final invalid = Map.of(io.disk.values);
+      expect(
+        await io.store.confirmRecoveryOutcome(token),
+        Act0RecoveryConfirmationOutcomeV1.notVerified,
+      );
+      expect(io.disk.values, invalid);
+    },
+  );
+
+  testWidgets(
+    'DAT06 existing-copy refusal explains conflict and keeps consent separate',
+    (tester) async {
+      final disk = await _mount(tester, _snapshot());
+      final dynamic runtime = tester.state(
+        find.byType(Act0ShellPreviewScreenV1),
+      );
+      disk.values['flutter.${_key}_head'] = '{first damage';
+      disk.values['flutter.${_key}_recovery'] = false;
+      disk.values['flutter.${_key}_backup'] = 41;
+      await tester.runAsync(
+        () => runtime.debugReloadProgressV1() as Future<void>,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_recovery_options')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_recovery_confirm')));
+      await tester.pumpAndSettle();
+      await _drain();
+      final archive = disk.values['flutter.${_key}_damaged_copy_v1'];
+      expect(archive, isA<String>());
+
+      disk.values['flutter.${_key}_head'] = '{different later damage';
+      await tester.runAsync(
+        () => runtime.debugReloadProgressV1() as Future<void>,
+      );
+      await tester.pumpAndSettle();
+      final before = Map.of(disk.values);
+      await tester.tap(find.byKey(const Key('act0_recovery_options')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_recovery_confirm')));
+      await tester.pumpAndSettle();
+      expect(
+        find.text(
+          'A different recovery copy is already saved. It has been kept, and current progress was not replaced. Open recovery options to keep it, or delete the copy with separate confirmation before starting again.',
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.text(
+          'Recovery could not be completely verified. Any preserved copy is kept. Try again to resume safely.',
+        ),
+        findsNothing,
+      );
+      expect(disk.values, before);
+      await tester.tap(find.byKey(const Key('act0_recovery_retry')));
+      await tester.pumpAndSettle();
+      expect(disk.values, before);
+      await tester.tap(find.byKey(const Key('act0_recovery_options')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_recovery_cancel')));
+      await tester.pumpAndSettle();
+      expect(disk.values, before);
+      await tester.tap(find.byKey(const Key('act0_recovery_options')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_recovery_delete_copy')));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const Key('act0_recovery_delete_confirm')),
+        findsOneWidget,
+      );
+      expect(disk.values, before);
+      await tester.tap(find.byKey(const Key('act0_recovery_delete_cancel')));
+      await tester.pumpAndSettle();
+      expect(disk.values, before);
+      expect(disk.values['flutter.${_key}_damaged_copy_v1'], archive);
+      expect(
+        find.text('Your saved progress could not be read.'),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   test(
     'DAT06 a consistently hashed forged target still fails the original consent binding',
     () async {
