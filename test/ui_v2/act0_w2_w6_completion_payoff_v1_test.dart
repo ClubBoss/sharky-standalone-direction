@@ -44,14 +44,15 @@ const _worldCases = <_WorldCase>[
     nextWorldNumber: 3,
     nextWorldTitle: 'Position Thinking',
     learningLabel:
-        'You learned how to separate playable hands from tempting ones.',
+        'You practiced separating playable hands from tempting ones.',
   ),
   _WorldCase(
     worldNumber: 3,
     worldTitle: 'Position Thinking',
     nextWorldNumber: 4,
     nextWorldTitle: 'Bet Purpose / Price',
-    learningLabel: 'You learned how position changes what a hand can do.',
+    learningLabel:
+        'You practiced reading how position changes what a hand can do.',
   ),
   _WorldCase(
     worldNumber: 5,
@@ -59,7 +60,7 @@ const _worldCases = <_WorldCase>[
     nextWorldNumber: 6,
     nextWorldTitle: 'Range Thinking',
     learningLabel:
-        'You learned how to read board texture and let streets change '
+        'You practiced reading board texture and letting streets change '
         'your plan.',
   ),
   _WorldCase(
@@ -68,7 +69,7 @@ const _worldCases = <_WorldCase>[
     nextWorldNumber: 7,
     nextWorldTitle: 'Visible Cards Change Ranges',
     learningLabel:
-        'You learned how to group hands into ranges and compare who is '
+        'You practiced grouping hands into ranges and comparing who is '
         'ahead.',
   ),
   _WorldCase(
@@ -77,7 +78,7 @@ const _worldCases = <_WorldCase>[
     nextWorldNumber: 8,
     nextWorldTitle: 'Stack Depth And Risk',
     learningLabel:
-        'You learned how visible cards remove combinations and narrow '
+        'You practiced using visible cards to remove combinations and narrow '
         'ranges.',
   ),
   _WorldCase(
@@ -86,7 +87,7 @@ const _worldCases = <_WorldCase>[
     nextWorldNumber: 9,
     nextWorldTitle: 'Tournament Pressure',
     learningLabel:
-        'You learned how effective stack depth changes commitment and risk.',
+        'You practiced reading how effective stack depth changes commitment and risk.',
   ),
   _WorldCase(
     worldNumber: 9,
@@ -94,7 +95,7 @@ const _worldCases = <_WorldCase>[
     nextWorldNumber: 10,
     nextWorldTitle: 'Player Adjustment',
     learningLabel:
-        'You learned how survival pressure and risk premium change decisions.',
+        'You practiced reading how survival pressure and risk premium change decisions.',
   ),
   _WorldCase(
     worldNumber: 10,
@@ -102,8 +103,8 @@ const _worldCases = <_WorldCase>[
     nextWorldNumber: 11,
     nextWorldTitle: 'Real Play Transfer',
     learningLabel:
-        'You learned how to tag player tendencies, adjust one lever, and '
-        'keep adjustment guardrails.',
+        'You practiced tagging player tendencies, adjusting one lever, and '
+        'keeping adjustment guardrails.',
   ),
   _WorldCase(
     worldNumber: 11,
@@ -111,7 +112,7 @@ const _worldCases = <_WorldCase>[
     nextWorldNumber: 12,
     nextWorldTitle: 'Mindset Bridge',
     learningLabel:
-        'You learned how to plan a session, use table triggers, and close '
+        'You practiced planning a session, using table triggers, and closing '
         'the review loop.',
   ),
 ];
@@ -479,37 +480,34 @@ void main() {
     });
   }
 
-  testWidgets(
-    'World 4 no longer uses the ordinary card; it is now owned by the '
-    'dedicated W4->W5 band-transition milestone',
-    (tester) async {
-      const world4Case = _WorldCase(
-        worldNumber: 4,
-        worldTitle: 'Bet Purpose / Price',
-        nextWorldNumber: 5,
-        nextWorldTitle: 'Board Awareness',
-        learningLabel:
-            "You learned why a bet happens and what price it's asking you "
-            'to risk.',
-      );
+  testWidgets('World 4 no longer uses the ordinary card; it is now owned by the '
+      'dedicated W4->W5 band-transition milestone', (tester) async {
+    const world4Case = _WorldCase(
+      worldNumber: 4,
+      worldTitle: 'Bet Purpose / Price',
+      nextWorldNumber: 5,
+      nextWorldTitle: 'Board Awareness',
+      learningLabel:
+          "You practiced reading why a bet happens and what price it's asking you "
+          'to risk.',
+    );
 
-      await tester.pumpWidget(_host(_summaryFor(world4Case)));
-      await tester.pumpAndSettle();
+    await tester.pumpWidget(_host(_summaryFor(world4Case)));
+    await tester.pumpAndSettle();
 
-      // World 4 now renders the dedicated band-transition card, not the
-      // ordinary World 2-6 card. See
-      // test/ui_v2/act0_w4_w5_band_transition_milestone_v1_test.dart for the
-      // full band-transition contract.
-      expect(
-        find.byKey(const Key('act0_shell_world_completion_payoff')),
-        findsNothing,
-      );
-      expect(
-        find.byKey(const Key('act0_shell_band_transition_completion_payoff')),
-        findsOneWidget,
-      );
-    },
-  );
+    // World 4 now renders the dedicated band-transition card, not the
+    // ordinary World 2-6 card. See
+    // test/ui_v2/act0_w4_w5_band_transition_milestone_v1_test.dart for the
+    // full band-transition contract.
+    expect(
+      find.byKey(const Key('act0_shell_world_completion_payoff')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_band_transition_completion_payoff')),
+      findsOneWidget,
+    );
+  });
 
   testWidgets(
     'World 12 no longer uses the ordinary card; it is now owned by the '
@@ -521,7 +519,7 @@ void main() {
         nextWorldNumber: 0,
         nextWorldTitle: 'Volume I review',
         learningLabel:
-            'You learned how to judge process, reset tilt, and keep '
+            'You practiced judging process, resetting tilt, and keeping '
             'discipline before deeper strategy.',
       );
 
@@ -552,7 +550,7 @@ void main() {
       nextWorldNumber: 7,
       nextWorldTitle: 'Visible Cards Change Ranges',
       learningLabel:
-          'You learned how to group hands into ranges and compare who is '
+          'You practiced grouping hands into ranges and comparing who is '
           'ahead.',
     );
 

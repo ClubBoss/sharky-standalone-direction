@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_runtime_adapter_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_home_leaf_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -156,8 +159,39 @@ void main() {
       final earnedXp = saved['earnedXp'];
       await _leaveSummary(t);
       await _openTab(t, 'Home');
-      final home = t.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
-      expect(home.currentLesson!.lessonId, isNot(_guideLessonId));
+      if (act0AcademyRuntimeEnabledV1(
+        t.element(find.byType(Act0ShellPreviewScreenV1)),
+        Act0ShellTabV1.home,
+      )) {
+        final home = t.widget<Act0AcademyHomeLeafV1>(
+          find.byType(Act0AcademyHomeLeafV1),
+        );
+        final completed = (saved['completedLessonIds'] as List)
+            .cast<String>()
+            .toSet();
+        expect(
+          home.input.earnedLessonCount,
+          Act0ShellStateV1.sample
+              .worldById('world_1')
+              .lessons
+              .where((lesson) => completed.contains(lesson.lessonId))
+              .length,
+        );
+        // Home can prioritize an unresolved repair; the actual curriculum
+        // must still advance beyond the completed Guide.
+        await _openTab(t, 'Learn');
+        final learn = t.widget<Act0LearnPathShellV1>(
+          find.byType(Act0LearnPathShellV1),
+        );
+        final current = learn.lessons.firstWhere(
+          (lesson) =>
+              lesson.isSelectable && lesson.state == Act0LessonStateV1.current,
+        );
+        expect(current.lessonId, isNot(_guideLessonId));
+      } else {
+        final home = t.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
+        expect(home.currentLesson!.lessonId, isNot(_guideLessonId));
+      }
       expect((await _persisted())['earnedXp'], earnedXp);
     },
   );

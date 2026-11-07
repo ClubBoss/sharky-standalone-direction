@@ -282,8 +282,10 @@ const act0PremiumTableSceneProfileV1 = Act0SceneProfileV1(
   // board, never on the rail.
   betAnchorsFromHero: [
     Offset(0.615, 0.715),
-    Offset(0.33, 0.685),
-    Offset(0.358, 0.515),
+    // Keep blind labels clear of the adjacent informative nameplates,
+    // including their text-scaled bounds; card and seat anchors stay fixed.
+    Offset(0.37, 0.685),
+    Offset(0.358, 0.54),
     Offset(0.52, 0.442),
     Offset(0.682, 0.515),
     Offset(0.715, 0.685),

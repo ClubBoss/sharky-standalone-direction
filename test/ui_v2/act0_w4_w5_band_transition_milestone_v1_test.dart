@@ -67,7 +67,7 @@ void main() {
     );
     expect(
       find.text(
-        'You can now read the table, hand, action, and position before '
+        'You practiced reading the table, hand, action, and position before '
         'deciding.',
       ),
       findsOneWidget,

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '../support/act0_shell_presentation_finders_v1.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -99,8 +100,8 @@ void main() {
     await tester.tap(find.text('Practice').last);
     await tester.pumpAndSettle();
 
-    final launch = find.byKey(
-      const Key('act0_shell_play_repair_queue_item_cta'),
+    final launch = act0ShellPresentationFinderV1(
+      'act0_shell_play_repair_queue_item_cta',
     );
     expect(launch, findsOneWidget);
     await tester.ensureVisible(launch);
@@ -151,8 +152,8 @@ void main() {
     // A distinct independent repair attempt retains its own event pair.
     await tester.tap(find.text('Practice').last);
     await tester.pumpAndSettle();
-    final secondLaunch = find.byKey(
-      const Key('act0_shell_play_repair_queue_item_cta'),
+    final secondLaunch = act0ShellPresentationFinderV1(
+      'act0_shell_play_repair_queue_item_cta',
     );
     expect(secondLaunch, findsOneWidget);
     await tester.ensureVisible(secondLaunch);

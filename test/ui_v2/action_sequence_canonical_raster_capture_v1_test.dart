@@ -32,6 +32,7 @@ final _textScale =
     ) ??
     1;
 final _viewport = switch (_device) {
+  'iphone14_pro' => const Size(393, 852),
   'iphone17_class' => const Size(402, 874),
   'tall_phone' => const Size(390, 844),
   'large_phone' => const Size(430, 932),
@@ -267,7 +268,8 @@ void main() {
           informativeObjectCollisions.every((row) => row['overlap'] == false),
           isTrue,
           reason:
-              '$name must keep blind chips outside their informative seats.',
+              '$name must keep blind chips outside their informative seats. '
+              '${jsonEncode(informativeObjectCollisions)}',
         );
       }
       rows.add(<String, Object?>{
