@@ -265,6 +265,42 @@ void main() {
       ),
       contains('amount_unparsed'),
     );
+    // A malformed BB amount on any contribution is reported, never skipped
+    // (review 6717829622).
+    for (final clause in [
+      'bets several BB',
+      'calls several BB',
+      'raises to several BB',
+      'contributes several BB total',
+      'posts several BB',
+      'posts several BB, then folds',
+    ]) {
+      final label = 'CO $clause';
+      expect(
+        rules(
+          base.copyWith(
+            actionTrail: [
+              ...base.actionTrail,
+              Act0ActionTrailItemV1.note(label: label),
+            ],
+          ),
+        ),
+        contains('action_amount_unparsed'),
+        reason: label,
+      );
+    }
+    // An action without any amount is not a malformed amount.
+    expect(
+      rules(
+        base.copyWith(
+          actionTrail: [
+            ...base.actionTrail,
+            const Act0ActionTrailItemV1.note(label: 'CO calls'),
+          ],
+        ),
+      ),
+      isNot(contains('action_amount_unparsed')),
+    );
   });
 
   test('PKR08 every graded showdown outcome is resolved from source cards', () {

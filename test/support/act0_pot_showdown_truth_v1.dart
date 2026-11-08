@@ -145,6 +145,18 @@ List<PotTruthFindingV1> pkr06FindingsV1(String taskId, Act0TableStateV1 t) {
     }
   }
 
+  // A contribution that names a BB amount must carry a parseable number; a
+  // malformed amount is never silently skipped by the stack cap.
+  for (final a in actions) {
+    if (!potTruthContributionVerbsV1.contains(a.chipVerb) || a.amount != null) {
+      continue;
+    }
+    final clause = _actor.firstMatch(a.raw.trim())?.group(2) ?? '';
+    if (RegExp(r'\bBB\b', caseSensitive: false).hasMatch(clause)) {
+      bad('action_amount_unparsed', a.raw);
+    }
+  }
+
   // An explicit fold in the source cannot leave that player live, because a
   // live seat is eligible to win chips.
   for (final a in actions.where((a) => a.verb == 'fold')) {
