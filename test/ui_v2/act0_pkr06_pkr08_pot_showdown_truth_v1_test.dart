@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_solver/poker_solver.dart';
 
 import '../support/act0_pot_showdown_truth_v1.dart';
 
@@ -96,9 +97,7 @@ const _pkr08OutcomeClaims = <String, Set<String>>{
 
 /// Outcome claims whose winner is not yet determined by source cards (live
 /// opponents with hidden hands could beat or tie). Shrink-only, see above.
-const _pkr08AuthoredResidual = <String>{
-  'hand_rankings_full_house_vs_flush_drill',
-};
+const _pkr08AuthoredResidual = <String>{};
 
 /// Questions that ask the learner to name who wins the showdown pot.
 final _outcomeQuestion = RegExp(
@@ -436,6 +435,38 @@ void main() {
       expect(find.textContaining('Tied best hands:'), findsNothing);
     });
   }
+
+  // A comparison of the two shown hands: graded by their cards alone, while
+  // the whole-pot winner stays unproved because four live hands are hidden.
+  test('PKR08 two-hand comparison never names a whole-pot winner', () {
+    final task = _task('hand_rankings_full_house_vs_flush_drill');
+    final table = task.runner.table;
+    expect(_outcomeQuestion.hasMatch(task.runner.question), isFalse);
+    List<String> cards(Iterable<Act0CardStateV1> c) =>
+        c.map(potTruthSolverCardV1).cast<String>().toList();
+    final board = cards(table.boardCards);
+    final hero = Hand.solveHand([...board, ...cards(table.heroCards)]);
+    final co = table.seats.singleWhere((s) => s.seatId == 'co');
+    final villain = Hand.solveHand([...board, ...cards(co.holeCards)]);
+    expect(hero.compare(villain), lessThan(0), reason: 'Hero hand is stronger');
+    expect(task.runner.options.where((o) => o.isCorrect).map((o) => o.id), [
+      'hero_full_house',
+    ]);
+    final whole = resolveShowdownTruthV1(table);
+    expect(whole.verdict, PotTruthVerdictV1.unproved);
+    expect(whole.reason, startsWith('hidden_live_hand_can_win_or_tie'));
+  });
+
+  testWidgets('PKR08 Runner names no whole-pot winner on the comparison', (
+    tester,
+  ) async {
+    await pumpTheory(
+      tester,
+      _task('hand_rankings_full_house_vs_flush_drill').runner,
+    );
+    expect(find.textContaining('Best shown hand:'), findsNothing);
+    expect(find.textContaining('Tied best hands:'), findsNothing);
+  });
 
   test('PKR08 negative controls never invent a winner or payout', () {
     final base = _task('w6_kicker_showdown_compare').runner.table;

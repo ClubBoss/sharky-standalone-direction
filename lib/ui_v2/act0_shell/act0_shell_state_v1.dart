@@ -10422,8 +10422,10 @@ final _fullHouseVsFlushRunner = _riverBoardRunner.copyWith(
   lessonId: 'full_house_vs_flush',
   lessonTitle: 'Hand rankings, on the table',
   caption: 'At showdown, a full house beats a flush.',
-  hint: 'Build both best five hands before choosing the winner.',
-  question: 'Who wins at showdown?',
+  hint: 'Build both best five hands before choosing the stronger one.',
+  // Only BTN and CO are shown; four live seats stay hidden, so this compares
+  // the two shown hands and does not name a winner of the whole pot.
+  question: 'Which shown hand is stronger?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'hero_full_house',
@@ -10431,7 +10433,7 @@ final _fullHouseVsFlushRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Hero full house',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Correct winner.',
+      feedbackTitle: 'Correct comparison.',
       feedbackReason:
           'Hero makes A-A-A-7-7 for a full house. CO has a heart flush, but a full house ranks above a flush.',
     ),
@@ -10480,7 +10482,7 @@ final _fullHouseVsFlushRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Compare the full best five.',
       body:
-          'Hero uses A-A-A with 7-7 for a full house. CO uses five hearts for a flush, but the full house wins because it ranks higher.',
+          'Hero uses A-A-A with 7-7 for a full house. CO uses five hearts for a flush, but the full house is stronger because it ranks higher.',
       focusCardIds: <String>[
         'hero_0',
         'hero_1',
@@ -10488,7 +10490,7 @@ final _fullHouseVsFlushRunner = _riverBoardRunner.copyWith(
         'board_1',
         'board_2',
       ],
-      focusLabels: <String>['A-A-A', '7-7', 'Full house wins'],
+      focusLabels: <String>['A-A-A', '7-7', 'Full house ranks higher'],
     ),
   ],
 );
