@@ -8371,7 +8371,12 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         ? 'Missed cue'
         : 'Correct read';
     if (sceneOwnsFeedbackExplanation) {
-      final nextActionLine = forwardCtaLabel == 'Continue to Review'
+      final nextActionLine =
+          suppressRepairFocus && forwardCtaLabel == 'Next check'
+          ? 'Continue to the next diagnostic question.'
+          : suppressRepairFocus && forwardCtaLabel == 'See my start'
+          ? 'See your suggested starting point.'
+          : forwardCtaLabel == 'Continue to Review'
           ? 'Return to Review to choose the next repair. Open mistakes stay available.'
           : isWrong || isRepairFocusState
           ? 'Try the same table clue once more.'
@@ -8421,7 +8426,12 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                     ),
                   ] else ...[
                     Text(
-                      isWrong || isRepairFocusState
+                      suppressRepairFocus && forwardCtaLabel == 'Next check'
+                          ? 'NEXT \u00B7 CONTINUE CHECK'
+                          : suppressRepairFocus &&
+                                forwardCtaLabel == 'See my start'
+                          ? 'NEXT \u00B7 YOUR START'
+                          : isWrong || isRepairFocusState
                           ? 'NEXT \u00B7 REPAIR THE CLUE'
                           : 'NEXT \u00B7 KEEP THE READ',
                       key: const Key(

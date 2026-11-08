@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_runtime_adapter_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -57,22 +58,36 @@ void main() {
 
     await tester.tap(find.text('You'));
     await tester.pumpAndSettle();
-    final tools = find.byKey(
-      const Key('act0_shell_profile_first_start_tools_button'),
-      skipOffstage: false,
-    );
-    await tester.scrollUntilVisible(
-      tools,
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.ensureVisible(tools);
-    await tester.pumpAndSettle();
-    await tester.tap(tools);
-    await tester.pumpAndSettle();
-    await tester.tap(
-      find.byKey(const Key('act0_shell_profile_retake_placement')),
-    );
+    // Use the presentation actually mounted: on the default Academy You
+    // surface, Retake Placement lives in Settings; the legacy Profile keeps it
+    // under first-start tools.
+    if (act0AcademyYouPreviewV1) {
+      await tester.tap(find.byKey(const Key('act0_academy_you_leaf_settings')));
+      await tester.pumpAndSettle();
+      final retake = find.byKey(
+        const Key('act0_academy_settings_leaf_placement'),
+      );
+      await tester.ensureVisible(retake);
+      await tester.pumpAndSettle();
+      await tester.tap(retake);
+    } else {
+      final tools = find.byKey(
+        const Key('act0_shell_profile_first_start_tools_button'),
+        skipOffstage: false,
+      );
+      await tester.scrollUntilVisible(
+        tools,
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.ensureVisible(tools);
+      await tester.pumpAndSettle();
+      await tester.tap(tools);
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const Key('act0_shell_profile_retake_placement')),
+      );
+    }
     await tester.pumpAndSettle();
 
     final dynamic state = tester.state(find.byType(Act0ShellPreviewScreenV1));

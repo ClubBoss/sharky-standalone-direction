@@ -387,9 +387,13 @@ Act0BettingPriceResultV1 act0BettingPriceForOptionV1(
     }
   }
   // Display is a claim to verify, not the authority used to derive the price.
-  final displayed = table.toCallLabel.trim().isEmpty
+  final displayLabel = table.toCallLabel.trim();
+  if (displayLabel.isEmpty && due > 0) {
+    return result(_unknown, 'missing_display_price');
+  }
+  final displayed = displayLabel.isEmpty
       ? 0
-      : _bb(table.toCallLabel, prefix: 'To call ');
+      : _bb(displayLabel, prefix: 'To call ');
   if (displayed == null) return result(_unknown, 'unsupported_display_price');
   // With an all-in cap, displays may expose either the outstanding price or
   // the actual chips the short stack can call. Neither changes the ledger.

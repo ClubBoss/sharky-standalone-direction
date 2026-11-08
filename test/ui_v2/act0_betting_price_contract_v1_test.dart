@@ -100,6 +100,82 @@ void main() {
   Act0BettingPriceResultV1 run(Act0TableStateV1 t, String a, String n) =>
       act0BettingPriceForOptionV1(t, pkrPriceOptionV1(a, n));
 
+  test(
+    'explicit call display remains verified and wrong display contradicted',
+    () {
+      final table = pkrPriceTableV1();
+      expect(run(table, 'Call', '1').truth, good);
+      expect(
+        act0BettingPriceBlocksAuthoredSuccessV1(
+          table,
+          pkrPriceOptionV1('Call', '1'),
+        ),
+        isFalse,
+      );
+      final mismatch = run(
+        table.copyWith(toCallLabel: 'To call 2 BB'),
+        'Call',
+        '1',
+      );
+      expect(mismatch.truth, bad);
+      expect(mismatch.reason, 'display_price_mismatch');
+    },
+  );
+
+  test('missing positive display is unproved without denying a legal call', () {
+    for (final display in ['', '   ']) {
+      final table = pkrPriceTableV1().copyWith(toCallLabel: display);
+      final result = run(table, 'Call', '1');
+      expect(result.truth, unknown);
+      expect(result.reason, 'missing_display_price');
+      expect(result.amountToMatchBb, 1);
+      expect(result.callCostBb, 1);
+      expect(
+        act0BettingPriceBlocksAuthoredSuccessV1(
+          table,
+          pkrPriceOptionV1('Call', '1'),
+        ),
+        isFalse,
+      );
+      final wrong = run(table, 'Call', '1.5');
+      expect(wrong.truth, bad);
+      expect(wrong.reason, 'call_cost_mismatch');
+      expect(
+        act0BettingPriceBlocksAuthoredSuccessV1(
+          table,
+          pkrPriceOptionV1('Call', '1.5'),
+        ),
+        isTrue,
+      );
+      expect(
+        act0BettingPriceBlocksAuthoredSuccessV1(
+          table,
+          pkrPriceOptionV1('Call', '1.5', correct: false),
+        ),
+        isFalse,
+      );
+    }
+  });
+
+  test('empty display at zero due keeps the ordinary legal bet', () {
+    final table = pkrPriceTableV1(
+      trail: [...pkrFlopV1, 'Flop: BB checks'],
+      street: 'Flop',
+      due: '',
+    );
+    final empty = run(table, 'Bet', '1');
+    final explicitZero = run(
+      table.copyWith(toCallLabel: 'To call 0 BB'),
+      'Bet',
+      '1',
+    );
+    expect(empty.truth, good);
+    expect(explicitZero.truth, good);
+    expect(empty.reason, explicitZero.reason);
+    expect(empty.amountToMatchBb, 0);
+    expect(empty.reason, isNot('missing_display_price'));
+  });
+
   test('missing earlier streets cannot prove a source contradiction', () {
     for (final probe in <(List<String>, String)>[
       (['Flop: BB checks'], 'Flop'),

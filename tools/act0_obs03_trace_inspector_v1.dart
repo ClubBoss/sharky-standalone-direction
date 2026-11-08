@@ -175,14 +175,109 @@ Map<String, Object?> inspectAct0Obs03TraceV1(
           transfer['comparison_attempt_id'] is! String)) {
     return insufficient('missing_verified_transfer_references');
   }
-  for (final id in [
-    transfer['baseline_attempt_id'],
-    transfer['comparison_attempt_id'],
-    elapsed['previous_attempt_id'],
+  // A reference must name another source-current, source-linked record of the
+  // same concept epoch that was created before this attempt. Only the
+  // comparison may be this attempt: the producer compares against the newest
+  // epoch record, which is usually the attempt being observed.
+  final baselineId = transfer['baseline_attempt_id'];
+  final comparisonId = transfer['comparison_attempt_id'];
+  final previousId = elapsed['previous_attempt_id'];
+  final family = evidence['concept_family_id'];
+  final currentOrder = evidence['created_order'];
+  String? referenceProblem(Object? id, {required bool mayBeCurrent}) {
+    if (id == null) return null;
+    if (id is! String || id.isEmpty) return 'missing_source_reference';
+    if (id == attemptId)
+      return mayBeCurrent ? null : 'invalid_source_reference';
+    final source = one('decision_evidence_recorded', id);
+    if (source == null) return 'missing_source_reference';
+    final sourceOrder = source['created_order'];
+    if (source['source_current'] != true ||
+        source['evidence_status'] != 'source_linked' ||
+        family is! String ||
+        family.isEmpty ||
+        source['concept_family_id'] != family ||
+        currentOrder is! int ||
+        sourceOrder is! int ||
+        sourceOrder >= currentOrder)
+      return 'invalid_source_reference';
+    return null;
+  }
+
+  // The producer selects transfer baseline/comparison only from unassisted
+  // records outside exact replay, immediate repair and legacy unspaced review
+  // (act0_learning_transfer_measurement_v1 `_recentSignal`). The elapsed
+  // previous attempt is a different epoch reference and keeps its own rule.
+  String? transferEligibilityProblem(Object? id) {
+    if (id == null) return null;
+    final source = id == attemptId
+        ? evidence
+        : one('decision_evidence_recorded', id as String);
+    if (source == null) return 'missing_source_reference';
+    if (source['assistance_kind'] != 'none' ||
+        source['review_kind'] is! String ||
+        const {
+          'exactReplay',
+          'immediateRepair',
+          'legacyUnspaced',
+        }.contains(source['review_kind']))
+      return 'ineligible_transfer_reference';
+    return null;
+  }
+
+  final referenceFailure =
+      referenceProblem(baselineId, mayBeCurrent: false) ??
+      referenceProblem(comparisonId, mayBeCurrent: true) ??
+      referenceProblem(previousId, mayBeCurrent: false) ??
+      (baselineId != null && baselineId == comparisonId
+          ? 'invalid_source_reference'
+          : null) ??
+      transferEligibilityProblem(baselineId) ??
+      transferEligibilityProblem(comparisonId);
+  if (referenceFailure != null) return insufficient(referenceFailure);
+  // Receipt consistency with the producer (`_recentSignal`/`_signalFromPair`):
+  // comparison is the newest eligible record and `recent_verified_v1` needs it
+  // correct; relationship is same-task iff the baseline/comparison task ids
+  // match, and `insufficient_evidence_v1` only when there is no baseline.
+  // Emitted reference session ids must name the referenced record's session.
+  Map? referenced(Object? id) => id == attemptId
+      ? evidence
+      : id is String
+      ? one('decision_evidence_recorded', id)
+      : null;
+  final baselineRecord = referenced(baselineId);
+  final comparisonRecord = referenced(comparisonId);
+  if (transfer['transfer_verdict'] == 'recent_verified_v1' &&
+      comparisonRecord?['correct'] != true) {
+    return insufficient('verified_transfer_latest_incorrect');
+  }
+  for (final (record, key) in [
+    (baselineRecord, 'baseline_session_id'),
+    (comparisonRecord, 'comparison_session_id'),
   ]) {
-    if (id != null &&
-        (id is! String || one('decision_evidence_recorded', id) == null))
-      return insufficient('missing_source_reference');
+    if (transfer.containsKey(key) &&
+        (record == null || transfer[key] != record['session_id'])) {
+      return insufficient('inconsistent_transfer_relationship');
+    }
+  }
+  if (baselineRecord != null &&
+      transfer['relationship'] == 'insufficient_evidence_v1') {
+    return insufficient('inconsistent_transfer_relationship');
+  }
+  if (baselineRecord != null && comparisonRecord != null) {
+    final baselineTask = baselineRecord['task_id'];
+    final comparisonTask = comparisonRecord['task_id'];
+    if (baselineTask is! String ||
+        baselineTask.isEmpty ||
+        comparisonTask is! String ||
+        comparisonTask.isEmpty) {
+      return insufficient('invalid_transfer_task_identity');
+    }
+    final sameTask = baselineTask == comparisonTask;
+    if ((transfer['relationship'] == 'same_family_transfer_v1' && sameTask) ||
+        (transfer['relationship'] == 'same_task_repeat_v1' && !sameTask)) {
+      return insufficient('inconsistent_transfer_relationship');
+    }
   }
   final occurrence = evidence['repair_occurrence_id'];
   Map? repair;

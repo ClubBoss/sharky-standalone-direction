@@ -233,6 +233,8 @@ Future<_Observed> _submit(
   final observed = _Observed();
   await tester.pumpWidget(
     MaterialApp(
+      locale: const Locale('en'),
+      supportedLocales: const <Locale>[Locale('en')],
       home: Scaffold(
         body: Act0LessonRunnerShellV1(
           key: ValueKey<String>(runner.lessonId),
@@ -291,13 +293,7 @@ Future<_Observed> _submit(
   return observed;
 }
 
-void _setTestViewport(WidgetTester tester) {
-  // Owner-authorized EN 393x852 reference viewport; still widget, not native.
-  tester.view.physicalSize = const Size(393, 852);
-  tester.view.devicePixelRatio = 1;
-  addTearDown(tester.view.resetPhysicalSize);
-  addTearDown(tester.view.resetDevicePixelRatio);
-}
+void _setTestViewport(WidgetTester tester) => _setPkrEnReferenceV1(tester);
 
 void main() {
   testWidgets('SYNTHETIC missing prefix does not block an unproved source', (
@@ -429,5 +425,153 @@ void main() {
       'completed_decision_correct': 1,
       'telemetry_correct': 3,
     });
+  });
+  testWidgets(
+    'SYNTHETIC missing call display keeps real submission and attempt scope',
+    (tester) async {
+      _setTestViewport(tester);
+      const runId = 'synthetic_pkr_missing_display_evidence';
+      const worldId = 'synthetic_pkr_oracle';
+      const lessonId = 'synthetic_pkr_missing_display_call';
+      const valid = Act0RunnerOptionV1(
+        id: 'call',
+        label: 'Call',
+        amountLabel: '1 BB',
+        isCorrect: true,
+        preferredLabel: 'Call 1 BB',
+        quality: Act0FeedbackQualityV1.correct,
+        feedbackTitle: 'Synthetic legal call',
+        feedbackReason: 'Explicit ordinary 0.5/1 BB source.',
+      );
+      const malformed = Act0RunnerOptionV1(
+        id: 'call_bad',
+        label: 'Call',
+        amountLabel: '1.5 BB',
+        isCorrect: true,
+        preferredLabel: 'Call 1.5 BB',
+        quality: Act0FeedbackQualityV1.correct,
+        feedbackTitle: 'Synthetic malformed authored success',
+        feedbackReason:
+            'Numeric contradiction must be withheld before grading.',
+      );
+      final runner = _runner(_Spot.preflopOpen, '1').copyWith(
+        lessonId: lessonId,
+        question: 'Call the full amount due.',
+        options: const [valid, malformed],
+        table: _table(_Spot.preflopOpen).copyWith(toCallLabel: ''),
+      );
+      final observed = _Observed();
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: const Locale('en'),
+          supportedLocales: const <Locale>[Locale('en')],
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              key: const ValueKey('synthetic_missing_display_same_runner'),
+              runner: runner,
+              selectedWorldId: worldId,
+              selectedLessonId: lessonId,
+              selectedTaskId: lessonId,
+              selectedTaskFamily: Act0TaskFamilyV1.decision,
+              evidenceRunId: runId,
+              telemetrySink: observed.sink,
+              onBack: () {
+                observed.backCalls++;
+              },
+              onContinueTheory: () {},
+              onChooseOption: observed.forwarded.add,
+              onCompletedDecision: observed.decisions.add,
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      // Wait for normal production choreography; never force readiness.
+      final beats =
+          act0TableChoreographyPlanForTableV1(runner.table)?.beats.length ?? 0;
+      for (var beat = 0; beat <= beats; beat++) {
+        await tester.pump(const Duration(seconds: 1));
+      }
+      await tester.pumpAndSettle();
+      final mountedRunner = tester.state(find.byType(Act0LessonRunnerShellV1));
+      final badButton = find.byKey(const Key('act0_shell_option_call_bad'));
+      final validButton = find.byKey(const Key('act0_shell_option_call'));
+      expect(badButton, findsOneWidget);
+      expect(validButton, findsOneWidget);
+      await tester.ensureVisible(badButton);
+      await tester.tap(badButton);
+      await tester.pumpAndSettle();
+      expect(observed.decisions, isEmpty);
+      expect(observed.forwarded, isEmpty);
+      expect(observed.correctCredits, {
+        'completed_decision_correct': 0,
+        'telemetry_correct': 0,
+      });
+      expect(
+        find.byKey(const Key('act0_betting_price_unavailable')),
+        findsOneWidget,
+      );
+      expect(
+        identical(
+          tester.state(find.byType(Act0LessonRunnerShellV1)),
+          mountedRunner,
+        ),
+        isTrue,
+      );
+      // The rejected tap must not consume attempt 1 in this same mounted scope.
+      // Let the production feedback expire before tapping the covered option.
+      final feedback = tester.widget<SnackBar>(find.byType(SnackBar));
+      await tester.pump(feedback.duration);
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const Key('act0_betting_price_unavailable')),
+        findsNothing,
+      );
+      await tester.ensureVisible(validButton);
+      await tester.tap(validButton);
+      await tester.pumpAndSettle();
+      expect(observed.forwarded, hasLength(1));
+      expect(observed.decisions, hasLength(1));
+      final decision = observed.decisions.single;
+      expect(decision.selectedId, 'call');
+      expect(decision.expectedId, 'call');
+      expect(decision.isCorrect, isTrue);
+      expect(decision.decisionKind, Act0CompletedDecisionKindV1.actionList);
+      expect(decision.assistanceKind.name, 'none');
+      expect(
+        decision.attemptKey,
+        'v2|$runId|$worldId|$lessonId|$lessonId|actionList|call|1',
+      );
+      expect(observed.correctCredits, {
+        'completed_decision_correct': 1,
+        'telemetry_correct': 3,
+      });
+      await tester.tap(validButton);
+      await tester.pumpAndSettle();
+      expect(
+        observed.decisions,
+        hasLength(1),
+        reason: 'Submitted attempt must not complete twice.',
+      );
+      expect(observed.forwarded, hasLength(1));
+      expect(tester.takeException(), isNull);
+    },
+  );
+}
+
+// Only the admitted EN widget reference; no production MediaQuery override.
+void _setPkrEnReferenceV1(WidgetTester tester) {
+  tester.view.physicalSize = const Size(393, 852);
+  tester.view.devicePixelRatio = 1;
+  tester.platformDispatcher.localeTestValue = const Locale('en');
+  tester.platformDispatcher.localesTestValue = const <Locale>[Locale('en')];
+  tester.platformDispatcher.textScaleFactorTestValue = 1;
+  addTearDown(() {
+    tester.view.resetPhysicalSize();
+    tester.view.resetDevicePixelRatio();
+    tester.platformDispatcher.clearLocaleTestValue();
+    tester.platformDispatcher.clearLocalesTestValue();
+    tester.platformDispatcher.clearTextScaleFactorTestValue();
   });
 }

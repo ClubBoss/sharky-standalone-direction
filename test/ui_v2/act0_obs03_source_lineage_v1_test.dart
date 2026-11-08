@@ -531,6 +531,144 @@ void main() {
     },
   );
 
+  // Review 5812483899: the inspector's receipt-consistency checks must accept
+  // every producer-emitted transfer shape and keep it reconstructable.
+  test(
+    'OBS01 producer-emitted transfer receipts reconstruct through the sink',
+    () async {
+      for (final (lastTasks, lastCorrect, relationship, verdict) in [
+        (
+          ['blinds_review'],
+          true,
+          'same_family_transfer_v1',
+          act0RecentEvidenceVerifiedV1,
+        ),
+        (
+          ['blinds_first_actor', 'blinds_first_actor'],
+          true,
+          'same_task_repeat_v1',
+          act0RecentEvidenceVerifiedV1,
+        ),
+        (
+          ['blinds_review'],
+          false,
+          'same_family_transfer_v1',
+          act0RecentEvidenceConfirmationNeededV1,
+        ),
+      ]) {
+        final head = 5 - lastTasks.length;
+        final rows = [
+          for (var i = 1; i <= 5; i++)
+            _record(
+              i,
+              (i - 1) * 24,
+              taskId: i <= head
+                  ? (i.isEven ? 'blinds_first_actor' : 'blinds_review')
+                  : lastTasks[i - head - 1],
+              correct: i < 5 || lastCorrect,
+            ),
+        ];
+        final store = _Store();
+        final sink = Act0HnpTelemetrySinkV1(fileStore: store);
+        for (var i = 0; i < rows.length; i++) {
+          _emitAttempt(sink, rows[i], rows.sublist(0, i + 1));
+        }
+        await sink.flushExport();
+        final trace = decodeAct0Obs03TraceV1(store.contents) as Map;
+        final transfer = (trace['events'] as List).lastWhere(
+          (e) => e['name'] == 'transfer_evaluated',
+        )['fields'];
+        final label = '$lastTasks/$lastCorrect';
+        expect(transfer['relationship'], relationship, reason: label);
+        expect(transfer['transfer_verdict'], verdict, reason: label);
+        expect(transfer['baseline_session_id'], isA<String>(), reason: label);
+        final result = inspectAct0Obs03TraceV1(
+          trace,
+          attemptId: rows.last.recordId,
+          expectedSourceFingerprint: rows.last.authoredSourceFingerprint,
+        );
+        expect(result['status'], 'TRACE_RECONSTRUCTED', reason: '$result');
+        expect(result['transfer_verdict'], verdict, reason: label);
+      }
+    },
+  );
+
+  // The trace carries no timestamps (privacy). A record without recordedAtUtc
+  // is never in the recent epoch, so the producer emits it as
+  // insufficient_evidence and the inspector rejects any reference to it.
+  test(
+    'OBS01 a record without recordedAtUtc cannot become a transfer reference',
+    () async {
+      final rows = [
+        for (var i = 1; i <= 5; i++)
+          _record(
+            i,
+            (i - 1) * 24,
+            taskId: i.isEven ? 'blinds_first_actor' : 'blinds_review',
+          ),
+      ];
+      rows[3] = _with(rows[3], {'recordedAtUtc': null});
+      final store = _Store();
+      final sink = Act0HnpTelemetrySinkV1(fileStore: store);
+      for (var i = 0; i < rows.length; i++) {
+        if (rows[i].recordedAtUtc != null) {
+          _emitAttempt(sink, rows[i], rows.sublist(0, i + 1));
+          continue;
+        }
+        for (final event in act0EvidenceTelemetryEventsV1(
+          record: rows[i],
+          history: Act0LearningEvidenceHistoryV1(
+            records: rows.sublist(0, i + 1),
+          ),
+          nowUtc: rows[i - 1].recordedAtUtc!.add(const Duration(hours: 1)),
+        )) {
+          sink.record(event);
+        }
+      }
+      await sink.flushExport();
+      final trace = decodeAct0Obs03TraceV1(store.contents) as Map;
+      final events = (trace['events'] as List).cast<Map>();
+      final untimed = rows[3].recordId;
+      final untimedEvidence = events.singleWhere(
+        (e) =>
+            e['name'] == 'decision_evidence_recorded' &&
+            e['fields']['attempt_id'] == untimed,
+      )['fields'];
+      expect(untimedEvidence['evidence_status'], 'insufficient_evidence');
+      final transfer = events.lastWhere(
+        (e) => e['name'] == 'transfer_evaluated',
+      )['fields'];
+      final elapsed = events.lastWhere(
+        (e) => e['name'] == 'elapsed_learning_observed',
+      )['fields'];
+      expect(transfer['transfer_verdict'], isNot(act0RecentEvidenceVerifiedV1));
+      for (final id in [
+        transfer['baseline_attempt_id'],
+        transfer['comparison_attempt_id'],
+        elapsed['previous_attempt_id'],
+      ]) {
+        expect(id, isNot(untimed));
+      }
+      Map inspect(Map t) => inspectAct0Obs03TraceV1(
+        t,
+        attemptId: rows.last.recordId,
+        expectedSourceFingerprint: rows.last.authoredSourceFingerprint,
+      );
+      expect(inspect(trace)['status'], 'TRACE_RECONSTRUCTED');
+      for (final (event, key) in [
+        ('transfer_evaluated', 'baseline_attempt_id'),
+        ('elapsed_learning_observed', 'previous_attempt_id'),
+      ]) {
+        final forged = jsonDecode(jsonEncode(trace)) as Map;
+        (forged['events'] as List).lastWhere(
+          (e) => e['name'] == event,
+        )['fields'][key] = untimed;
+        expect(inspect(forged), containsPair('status', 'INSUFFICIENT'));
+        expect(inspect(forged)['reason'], 'invalid_source_reference');
+      }
+    },
+  );
+
   test(
     'OBS03 assistance, changed source and missing source chronology do not create transfer',
     () {
