@@ -87,8 +87,11 @@ void main() {
     // Fingerprint covers task identity, authored lesson ownership, source
     // choice text, correct/quality semantics, and option order. Changing any
     // of these requires an explicit learner-record compatibility disposition.
+    // ASM03 repairs one factually true wrong distractor without changing IDs,
+    // correct flags or quality. Old source receipts remain readable but the
+    // changed explanation fingerprint cannot certify current-source proof.
     const acceptedMainFingerprint =
-        '26c8c2d76a89ba00adfb482b2130e758f7b8e32699ef85f75e15abf189e57bb4';
+        '91f40a7bd37abc9461d13f7e037c28f89595176507a7bf1566c342d857badcb6';
     print('ASM01_SOURCE_FINGERPRINT=$fingerprint');
     expect(fingerprint, acceptedMainFingerprint);
     final tampered = jsonDecode(encoded) as List<dynamic>;
