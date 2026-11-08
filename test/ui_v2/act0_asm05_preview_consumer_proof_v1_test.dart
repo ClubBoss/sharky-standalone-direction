@@ -30,6 +30,7 @@ void main() {
         semantics.dispose();
         semanticsDisposed = true;
       }
+
       addTearDown(disposeSemantics);
       await tester.pumpWidget(
         MaterialApp(
