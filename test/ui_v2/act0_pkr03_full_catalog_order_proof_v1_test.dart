@@ -350,4 +350,109 @@ void main() {
       );
     });
   });
+
+  group('independent review follow-ups', () {
+    final flop = _authored('your_first_hand_flop');
+    final preflop = _trail(flop).sublist(0, 9);
+
+    test('consumers refuse a contradicting mutation of a replay-safe base', () {
+      // The authored flop table is shown as a replay and choreographed.
+      expect(act0StreetReplayFromTableV1(flop)?.isConsumerSafe, isTrue);
+      final skipped = [..._trail(flop)]..remove('BB calls 2 BB more');
+      _contradicts(_withTrail(flop, skipped), 'out_of_turn_actor');
+      _contradicts(
+        _withTrail(flop, [...preflop, 'Flop: CO checks']),
+        'folded_actor_acts',
+      );
+    });
+
+    test('a checked-to decision needs an opponent who can still act', () {
+      // Reviewer counterexample: BTN may have called all-in for 3 BB, so BB
+      // could have no flop decision at all.
+      final bbToAct = _stack(
+        _withTrail(flop, [...preflop, 'Flop: BB acts']),
+        'bb',
+        '97 BB',
+      ).copyWith(activeSeatId: 'bb');
+      _proof(
+        bbToAct,
+        Act0BettingRoundOrderTruthV1.unproved,
+        'opponents_may_be_all_in',
+      );
+      _proof(
+        _stack(bbToAct, 'btn', '97 BB'),
+        Act0BettingRoundOrderTruthV1.consistent,
+        'consistent_current_decision',
+      );
+    });
+
+    test('a marker naming a folded seat contradicts', () {
+      _contradicts(
+        _withTrail(flop, [
+          ...preflop,
+          'Flop: BB checks',
+          'CO acts',
+        ]).copyWith(activeSeatId: ''),
+        'active_actor_folded',
+      );
+    });
+
+    test('a marker on another street than the snapshot contradicts', () {
+      _contradicts(
+        _withTrail(flop, [...preflop, 'Flop: BB checks', 'Turn: BTN acts']),
+        'decision_marker_wrong_street',
+      );
+    });
+
+    test('an open after a limp is not a first-in raise', () {
+      final allLive = flop.copyWith(
+        seats: [
+          for (final s in flop.seats)
+            Act0SeatStateV1(
+              seatId: s.seatId,
+              seatLabel: s.seatLabel,
+              displayName: s.displayName,
+              isHero: s.isHero,
+              isDealerButton: s.isDealerButton,
+              isSmallBlind: s.isSmallBlind,
+              isBigBlind: s.isBigBlind,
+              isOccupied: s.isOccupied,
+              isInHand: true,
+              isFolded: false,
+              stackLabel: '97 BB',
+              holeCards: s.holeCards,
+              cardsVisibleMode: s.cardsVisibleMode,
+            ),
+        ],
+      );
+      _proof(
+        _withTrail(allLive, [
+          'SB blind 0.5 BB',
+          'BB blind 1 BB',
+          'UTG calls 1 BB',
+          'HJ opens 3 BB',
+        ]).copyWith(streetLabel: 'Preflop', boardCards: const []),
+        Act0BettingRoundOrderTruthV1.unproved,
+        'open_not_first_in_preflop',
+      );
+    });
+
+    test('one label on an empty and an occupied seat is ambiguous', () {
+      final utg = flop.seats.singleWhere((s) => s.seatLabel == 'UTG');
+      final duplicated = flop.copyWith(
+        seats: [
+          ...flop.seats,
+          Act0SeatStateV1(
+            seatId: 'utg_empty',
+            seatLabel: utg.seatLabel,
+            displayName: utg.displayName,
+            isOccupied: false,
+          ),
+        ],
+      );
+      final proof = act0BettingRoundOrderProofForTableV1(duplicated);
+      expect(proof.truth, isNot(Act0BettingRoundOrderTruthV1.consistent));
+      expect(proof.reason, isNot('empty_seat_acts'));
+    });
+  });
 }

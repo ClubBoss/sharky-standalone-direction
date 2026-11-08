@@ -173,6 +173,10 @@ act0BettingRoundOrderProofForTableV1(Act0TableStateV1 table) {
     }
     seatByActor[actor] = seat;
   }
+  // One label on both an empty and an occupied seat is an ambiguous roster.
+  if (emptySeats.any(seatByActor.containsKey)) {
+    return (unproved, 'roster_incomplete_or_marked_all_in');
+  }
   // A dead button or an empty blind is outside the ordinary blind-start proof.
   if (const {'BTN', 'SB', 'BB'}.any(emptySeats.contains)) {
     return (unproved, 'dead_button_or_empty_blind');
@@ -223,13 +227,29 @@ act0BettingRoundOrderProofForTableV1(Act0TableStateV1 table) {
         })
       >[];
   var parsedStreet = Act0StreetReplayStreetV1.preflop;
+  var streetKnown = false;
   for (final item in table.actionTrail) {
     if (item.isNote) continue;
     final label = item.label.trim();
     final prefix = _act0StreetReplayStreetFromTrailLabelV1(label);
     if (prefix != null) parsedStreet = prefix;
+    // A trail that starts with the blinds, or any street prefix, fixes the
+    // street; a bare mid-street fragment does not.
+    if (prefix != null ||
+        RegExp(
+          r'^SB\s+(blind|posts)\b',
+          caseSensitive: false,
+        ).hasMatch(label)) {
+      streetKnown = true;
+    }
     final action = _act0StreetReplayActionLabelV1(label, prefix);
     if (markedActor != null && markerPattern.hasMatch(action)) {
+      // The decision belongs to the street the snapshot shows.
+      if (streetKnown &&
+          parsedStreet !=
+              _act0StreetReplayStreetFromLabelV1(table.streetLabel)) {
+        return (contradiction, 'decision_marker_wrong_street');
+      }
       if (prefix != null &&
           (parsedStreet != Act0StreetReplayStreetV1.preflop ||
               actions.length >= 2)) {
@@ -382,6 +402,8 @@ act0BettingRoundOrderProofForTableV1(Act0TableStateV1 table) {
   var price = 1.0;
   var street = Act0StreetReplayStreetV1.preflop;
   var lastActorIndex = order.indexOf('BB');
+  var preflopVoluntaryCommit = false;
+  final lastVerb = <String, String>{};
   String? nextActor() {
     for (var offset = 1; offset <= order.length; offset++) {
       final actor = order[(lastActorIndex + offset) % order.length];
@@ -454,7 +476,10 @@ act0BettingRoundOrderProofForTableV1(Act0TableStateV1 table) {
         pending.remove(action.actor);
       case 'opens':
         // An open is the first voluntary preflop raise; it cannot follow one.
-        if (street != Act0StreetReplayStreetV1.preflop || price != 1) {
+        // Limpers count: an open after any voluntary commitment is not first-in.
+        if (street != Act0StreetReplayStreetV1.preflop ||
+            price != 1 ||
+            preflopVoluntaryCommit) {
           return (unproved, 'open_not_first_in_preflop');
         }
         if (action.amount! <= price) return (unproved, 'unsupported_amount');
@@ -474,6 +499,14 @@ act0BettingRoundOrderProofForTableV1(Act0TableStateV1 table) {
       default:
         return (unproved, 'unsupported_grammar');
     }
+    if (street == Act0StreetReplayStreetV1.preflop &&
+        action.verb != 'fold' &&
+        action.verb != 'folds' &&
+        action.verb != 'check' &&
+        action.verb != 'checks') {
+      preflopVoluntaryCommit = true;
+    }
+    lastVerb[action.actor] = action.verb;
     lastActorIndex = order.indexOf(action.actor);
     if (live.length < 2) pending.clear();
   }
@@ -485,21 +518,42 @@ act0BettingRoundOrderProofForTableV1(Act0TableStateV1 table) {
   // An explicit zero stack is outside the ordinary-action proof. A decision
   // that has not happened yet needs a positive authored stack for its actor;
   // the source's own recorded actions are not extended to future turns.
-  bool canDecide(String actor) => positiveStack.contains(actor);
+  // Facing no bet, a decision also needs an opponent who can still act: a
+  // positive authored stack, or a check as the last recorded action (a check
+  // commits nothing, so the chips that allowed it remain).
+  bool opponentCanAct(String actor) => live.any(
+    (p) =>
+        p != actor &&
+        (positiveStack.contains(p) ||
+            lastVerb[p] == 'check' ||
+            lastVerb[p] == 'checks'),
+  );
+  (Act0BettingRoundOrderTruthV1, String) decision(String actor) {
+    if (!positiveStack.contains(actor)) {
+      return (unproved, 'current_actor_stack_unknown');
+    }
+    final facingBet = (committed[actor] ?? 0) < price;
+    if (!facingBet && !opponentCanAct(actor)) {
+      return (unproved, 'opponents_may_be_all_in');
+    }
+    return (consistent, 'consistent_current_decision');
+  }
+
   final activeId = table.activeSeatId?.trim() ?? '';
   if (activeId.isEmpty) {
     if (markedActor != null) {
       if (pending.isEmpty || live.length < 2)
         return (contradiction, 'decision_after_round_or_hand_closed');
+      if (!live.contains(markedActor)) {
+        return (contradiction, 'active_actor_folded');
+      }
       if (markedActor != nextActor()) {
         return stacksUnproved
             ? (unproved, 'current_actor_may_skip_all_in')
             : (contradiction, 'current_actor_out_of_turn');
       }
       if (zeroStackSeen) return (unproved, 'zero_stack_outside_proof');
-      return canDecide(markedActor)
-          ? (consistent, 'consistent_current_decision')
-          : (unproved, 'current_actor_stack_unknown');
+      return decision(markedActor);
     }
     if (zeroStackSeen) return (unproved, 'zero_stack_outside_proof');
     return pending.isEmpty
@@ -522,9 +576,7 @@ act0BettingRoundOrderProofForTableV1(Act0TableStateV1 table) {
         : (contradiction, 'current_actor_out_of_turn');
   }
   if (zeroStackSeen) return (unproved, 'zero_stack_outside_proof');
-  return canDecide(active.seatLabel.trim().toUpperCase())
-      ? (consistent, 'consistent_current_decision')
-      : (unproved, 'current_actor_stack_unknown');
+  return decision(active.seatLabel.trim().toUpperCase());
 }
 
 Act0StreetReplayV1? act0StreetReplayFromTableV1(Act0TableStateV1 table) {
