@@ -31,6 +31,12 @@ const act0PotTruthPreflopOrderV1 = <String>[
 ];
 
 final _amount = RegExp(r'^(\d+(?:\.\d+)?)\s*BB$', caseSensitive: false);
+// "SB posts 0.5 BB, then folds": a contribution followed by a fold. The
+// action stays a fold (for liveness) but its amount is still capped.
+final _contributionThenFold = RegExp(
+  r'\b(?:posts|bets|calls)\s+\d+(?:\.\d+)?\s*BB\b.*\bfolds?\b',
+  caseSensitive: false,
+);
 final _trailAmount = RegExp(r'(\d+(?:\.\d+)?)\s*BB', caseSensitive: false);
 final _actor = RegExp(
   r'^(?:(?:Preflop|Flop|Turn|River):\s*)?(UTG|HJ|CO|BTN|SB|BB|Hero)\b\s*(.*)$',
@@ -139,7 +145,7 @@ List<PotTruthFindingV1> pkr06FindingsV1(String taskId, Act0TableStateV1 t) {
     if (stack != null) {
       final cap = stack + bet;
       for (final a in actions.where((a) => a.actor == actor)) {
-        if (a.amount != null &&
+        final contribution =
             const {
               'all_in',
               'raise_to',
@@ -147,8 +153,9 @@ List<PotTruthFindingV1> pkr06FindingsV1(String taskId, Act0TableStateV1 t) {
               'call',
               'bet',
               'post',
-            }.contains(a.verb) &&
-            a.amount! > cap + 1e-9) {
+            }.contains(a.verb) ||
+            (a.verb == 'fold' && _contributionThenFold.hasMatch(a.raw));
+        if (a.amount != null && contribution && a.amount! > cap + 1e-9) {
           bad('bet_exceeds_stack', '$actor ${a.raw} cap=$cap');
         }
       }

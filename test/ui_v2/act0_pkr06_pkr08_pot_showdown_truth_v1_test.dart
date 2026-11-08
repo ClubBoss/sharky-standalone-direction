@@ -181,6 +181,21 @@ void main() {
         reason: verb,
       );
     }
+    // A compound "posts N BB, then folds" stays a fold for liveness but its
+    // contribution is still capped (review 6715993358).
+    const compound = 'CO posts 999 BB, then folds';
+    expect(potTruthParseActionV1(base, compound)?.verb, 'fold');
+    expect(
+      rules(
+        base.copyWith(
+          actionTrail: [
+            ...base.actionTrail,
+            const Act0ActionTrailItemV1.note(label: compound),
+          ],
+        ),
+      ),
+      containsAll(['bet_exceeds_stack', 'folded_seat_live']),
+    );
     // An all-in player shown with chips behind.
     expect(
       rules(
