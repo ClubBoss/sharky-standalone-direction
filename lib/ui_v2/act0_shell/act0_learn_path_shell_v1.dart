@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_prechoice_answer_cue_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
@@ -2850,7 +2851,7 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
                     en: 'Finish ${act0AcademyWorldTitleV1(context, currentWorld)} to open this world.',
                     ru: '\u0417\u0430\u0432\u0435\u0440\u0448\u0438 ${act0AcademyWorldTitleV1(context, currentWorld)}, \u0447\u0442\u043e\u0431\u044b \u043e\u0442\u043a\u0440\u044b\u0442\u044c \u044d\u0442\u043e\u0442 \u043c\u0438\u0440.',
                   )
-                : world.unlockLabel,
+                : act0DisplayWorldNameCopyV1(world.unlockLabel),
             key: const Key('act0_shell_world_unlock_label'),
             style: Act0AcademyDesignTokensV1.body.copyWith(
               color: Act0AcademyDesignTokensV1.ink,
@@ -5399,10 +5400,15 @@ String _preChoiceTaskSummaryV1(BuildContext context, Act0LessonTaskV1 task) {
       ru: 'Разномастные валет и восьмёрка с ранней позиции: посмотри на карты и самостоятельно выбери категорию.',
     );
   }
-  return act0AcademyTaskSummaryV1(
-    context,
-    task,
-    fallback: task.summary ?? task.runner.caption,
+  return act0PrechoiceDisplaySummaryV1(
+    taskId: task.taskId,
+    authoredSummary: act0AcademyTaskSummaryV1(
+      context,
+      task,
+      fallback: task.summary ?? task.runner.caption,
+    ),
+    isAssessment: act0IsPrechoiceAssessmentTaskV1(task),
+    hasSubmittedCurrentDecision: false,
   );
 }
 

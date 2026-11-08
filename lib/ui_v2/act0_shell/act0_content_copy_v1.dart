@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_prechoice_answer_cue_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 part 'l10n/act0_copy_ru_v1.dart';
@@ -226,7 +227,7 @@ String act0LocalizedTaskTitleAtomByIdV1(
       'w11_trigger_bad_price_fold' => 'Price under pressure',
       'w9_m_ratio_red_zone' => 'Stack-pressure decision',
       'w12_revenge_raise_trap' => 'Next-hand decision',
-      _ => null,
+      _ => act0PrechoiceNeutralTitleByTaskIdV1[taskId],
     };
     if (neutralTitle != null) return neutralTitle;
   }
@@ -351,7 +352,9 @@ String act0LocalizedWorldTitleAtomByLanguageV1(
   required String languageCode,
 }) {
   final bundle = act0CopyBundleForLanguageCodeV1(languageCode);
-  return bundle?.worlds[worldId]?.title ?? fallback;
+  final localized = bundle?.worlds[worldId]?.title;
+  if (localized != null) return localized;
+  return act0NeutralWorldTitleByIdV1[worldId] ?? fallback;
 }
 
 String act0LocalizedWorldSubtitleAtomByLanguageV1(
@@ -369,7 +372,12 @@ String act0LocalizedLessonTitleAtomByLanguageV1(
   required String languageCode,
 }) {
   final bundle = act0CopyBundleForLanguageCodeV1(languageCode);
-  return bundle?.lessons[lessonId]?.title ?? fallback;
+  final localized = bundle?.lessons[lessonId]?.title;
+  if (localized != null) return localized;
+  if (languageCode.isEmpty || languageCode == 'en') {
+    return act0PrechoiceNeutralLessonTitleByIdV1[lessonId] ?? fallback;
+  }
+  return fallback;
 }
 
 String act0LocalizedLessonSubtitleAtomByLanguageV1(
@@ -449,7 +457,12 @@ String act0LocalizedRunnerQuestionAtomByLanguageV1(
     return fallback;
   }
   final bundle = act0CopyBundleForLanguageCodeV1(languageCode);
-  return bundle?.tasks[taskId]?.runnerQuestion ?? fallback;
+  final localized = bundle?.tasks[taskId]?.runnerQuestion;
+  if (localized != null) return localized;
+  if (languageCode.isEmpty || languageCode == 'en') {
+    return act0PrechoiceNeutralQuestionByTaskIdV1[taskId] ?? fallback;
+  }
+  return fallback;
 }
 
 String act0LocalizedTeachingStepTitleAtomByLanguageV1(

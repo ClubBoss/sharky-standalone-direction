@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'act0_predecision_card_focus_v1.dart';
+import 'act0_prechoice_answer_cue_policy_v1.dart';
 
 import 'act0_completed_decision_contract_v1.dart';
 
@@ -39,8 +41,15 @@ String? act0AuthoredSourceFingerprintV1({
           )
           .toList()
         ..sort((a, b) => (a[0] as String).compareTo(b[0] as String));
+  final cardFocusRevision = act0PredecisionCardFocusSourceRevisionV1(task);
+  final answerCueRevision = act0PrechoiceAnswerCueSourceRevisionV1(
+    task,
+    lessonId: lessonId,
+  );
   final payload = <Object?>[
     'act0_authored_source_v1',
+    if (cardFocusRevision != null) cardFocusRevision,
+    if (answerCueRevision != null) answerCueRevision,
     worldId,
     lessonId,
     task.taskId,
