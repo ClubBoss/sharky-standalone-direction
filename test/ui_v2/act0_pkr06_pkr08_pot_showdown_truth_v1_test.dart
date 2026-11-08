@@ -181,21 +181,36 @@ void main() {
         reason: verb,
       );
     }
-    // A compound "posts N BB, then folds" stays a fold for liveness but its
-    // contribution is still capped (review 6715993358).
-    const compound = 'CO posts 999 BB, then folds';
-    expect(potTruthParseActionV1(base, compound)?.verb, 'fold');
-    expect(
-      rules(
-        base.copyWith(
-          actionTrail: [
-            ...base.actionTrail,
-            const Act0ActionTrailItemV1.note(label: compound),
-          ],
+    // Every contribution verb before a fold stays capped while the action
+    // stays a fold (reviews 6715993358, 6716215513).
+    for (final clause in [
+      'posts 999 BB',
+      'blind 999 BB',
+      'calls 999 BB',
+      'bets 999 BB',
+      'raises to 999 BB',
+      'contributes 999 BB total',
+      'shoves 999 BB',
+    ]) {
+      final label = 'CO $clause, then folds';
+      final parsed = potTruthParseActionV1(base, label);
+      expect(parsed?.verb, 'fold', reason: label);
+      expect(parsed?.chipVerb, isNotNull, reason: label);
+      expect(
+        rules(
+          base.copyWith(
+            actionTrail: [
+              ...base.actionTrail,
+              Act0ActionTrailItemV1.note(label: label),
+            ],
+          ),
         ),
-      ),
-      containsAll(['bet_exceeds_stack', 'folded_seat_live']),
-    );
+        containsAll(['bet_exceeds_stack', 'folded_seat_live']),
+        reason: label,
+      );
+    }
+    // A plain fold carries no contribution.
+    expect(potTruthParseActionV1(base, 'CO folds')?.chipVerb, isNull);
     // An all-in player shown with chips behind.
     expect(
       rules(

@@ -31,12 +31,6 @@ const act0PotTruthPreflopOrderV1 = <String>[
 ];
 
 final _amount = RegExp(r'^(\d+(?:\.\d+)?)\s*BB$', caseSensitive: false);
-// "SB posts 0.5 BB, then folds": a contribution followed by a fold. The
-// action stays a fold (for liveness) but its amount is still capped.
-final _contributionThenFold = RegExp(
-  r'\b(?:posts|bets|calls)\s+\d+(?:\.\d+)?\s*BB\b.*\bfolds?\b',
-  caseSensitive: false,
-);
 final _trailAmount = RegExp(r'(\d+(?:\.\d+)?)\s*BB', caseSensitive: false);
 final _actor = RegExp(
   r'^(?:(?:Preflop|Flop|Turn|River):\s*)?(UTG|HJ|CO|BTN|SB|BB|Hero)\b\s*(.*)$',
@@ -49,11 +43,46 @@ double? potTruthBbV1(String? label) {
 }
 
 class PotTruthActionV1 {
-  const PotTruthActionV1(this.actor, this.verb, this.amount, this.raw);
+  const PotTruthActionV1(
+    this.actor,
+    this.verb,
+    this.amount,
+    this.raw, {
+    this.contributionVerb,
+  });
   final String actor; // seat label in upper case
   final String verb; // fold | all_in | call | raise_to | bet | total | post
   final double? amount;
   final String raw;
+
+  /// For a compound "<contribution>, then folds" label: the verb of the
+  /// contribution before the fold. The action itself stays a fold.
+  final String? contributionVerb;
+
+  /// The verb whose amount is a chip contribution, if any.
+  String? get chipVerb => verb == 'fold' ? contributionVerb : verb;
+}
+
+/// Contribution verbs; their amounts are capped by the seat's chips.
+const potTruthContributionVerbsV1 = <String>{
+  'all_in',
+  'raise_to',
+  'total',
+  'call',
+  'bet',
+  'post',
+};
+
+String? _contributionVerb(String clause) {
+  if (clause.contains('shove') || clause.contains('all-in')) return 'all_in';
+  if (clause.contains('contributes') && clause.contains('total')) {
+    return 'total';
+  }
+  if (clause.startsWith('raises to')) return 'raise_to';
+  if (clause.startsWith('calls')) return 'call';
+  if (clause.startsWith('bets')) return 'bet';
+  if (clause.startsWith('blind') || clause.startsWith('posts')) return 'post';
+  return null;
 }
 
 String _heroActor(Act0TableStateV1 table) {
@@ -73,24 +102,21 @@ PotTruthActionV1? potTruthParseActionV1(Act0TableStateV1 table, String label) {
   final rest = m.group(2)!.toLowerCase();
   if (rest.startsWith('and ')) return null;
   final amount = double.tryParse(_trailAmount.firstMatch(rest)?.group(1) ?? '');
-  final String verb;
-  if (rest.contains('fold')) {
-    verb = 'fold';
-  } else if (rest.contains('shove') || rest.contains('all-in')) {
-    verb = 'all_in';
-  } else if (rest.contains('contributes') && rest.contains('total')) {
-    verb = 'total';
-  } else if (rest.startsWith('raises to')) {
-    verb = 'raise_to';
-  } else if (rest.startsWith('calls')) {
-    verb = 'call';
-  } else if (rest.startsWith('bets')) {
-    verb = 'bet';
-  } else if (rest.startsWith('blind') || rest.startsWith('posts')) {
-    verb = 'post';
-  } else {
-    return null;
+  final foldAt = rest.indexOf('fold');
+  if (foldAt >= 0) {
+    // The clause before the fold keeps its own meaning, e.g. a posted blind
+    // or a raise, so its amount is still subject to the stack cap.
+    final before = _contributionVerb(rest.substring(0, foldAt).trim());
+    return PotTruthActionV1(
+      actor,
+      'fold',
+      amount,
+      label,
+      contributionVerb: before,
+    );
   }
+  final verb = _contributionVerb(rest);
+  if (verb == null) return null;
   return PotTruthActionV1(actor, verb, amount, label);
 }
 
@@ -145,16 +171,7 @@ List<PotTruthFindingV1> pkr06FindingsV1(String taskId, Act0TableStateV1 t) {
     if (stack != null) {
       final cap = stack + bet;
       for (final a in actions.where((a) => a.actor == actor)) {
-        final contribution =
-            const {
-              'all_in',
-              'raise_to',
-              'total',
-              'call',
-              'bet',
-              'post',
-            }.contains(a.verb) ||
-            (a.verb == 'fold' && _contributionThenFold.hasMatch(a.raw));
+        final contribution = potTruthContributionVerbsV1.contains(a.chipVerb);
         if (a.amount != null && contribution && a.amount! > cap + 1e-9) {
           bad('bet_exceeds_stack', '$actor ${a.raw} cap=$cap');
         }
