@@ -14181,6 +14181,9 @@ final _w3TablePositionNoticeRunner = _world3LateOpenRunner.copyWith(
             final folded = seat.seatId == 'utg' || seat.seatId == 'hj';
             return _act0CopySeatStateV1(
               seat,
+              // The trail records 'UTG folds': UTG is a player in this hand,
+              // not the empty seat inherited from the 5-handed base scene.
+              isOccupied: seat.seatId == 'utg' ? true : null,
               isInHand: !folded,
               isFolded: folded,
               hasActed: folded,

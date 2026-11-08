@@ -100,12 +100,11 @@ const _consistent = <String>{
 const _reasonCounts = <String, int>{
   'no_recorded_history': 193,
   'current_actor_stack_unknown': 35,
-  'history_starts_after_blinds': 35,
+  'history_starts_after_blinds': 36,
   'out_of_hand_without_recorded_fold': 27,
   'unsupported_grammar': 15,
   'consistent_closed_history': 5,
   'dead_button_or_empty_blind': 3,
-  'empty_seat_acts': 1,
 };
 
 // What the learner actually sees of the order. Replay: the Runner's inline
@@ -183,11 +182,10 @@ const _conditionalContradictions = <String, Set<String>>{
     'w11_trigger_bad_price_fold',
     'w11_trigger_small_price_continue',
   },
-  'empty_seat_acts': {'position_checkpoint_position_checkpoint_table_notice'},
 };
 const _conditionalReasonCounts = <String, int>{
   'no_recorded_history': 193,
-  'consistent_if_assumptions_hold': 66,
+  'consistent_if_assumptions_hold': 67,
   'contradiction_if_assumptions_hold:open_with_seats_still_in_hand_before': 19,
   'contradiction_if_assumptions_hold:current_actor_out_of_turn': 11,
   'unsupported_grammar': 11,
@@ -195,7 +193,6 @@ const _conditionalReasonCounts = <String, int>{
   'dead_button_or_empty_blind': 3,
   'open_not_first_in_preflop': 2,
   'contradiction_if_assumptions_hold:round_not_closed_or_hand_over': 2,
-  'empty_seat_acts': 1,
   'fragment_start_unknown': 1,
 };
 
@@ -217,11 +214,8 @@ void main() {
       }
       expect(counts, _reasonCounts);
       expect(byTruth[Act0BettingRoundOrderTruthV1.consistent], _consistent);
-      // The only authored contradiction is a real source defect: the trail
-      // records 'UTG folds' while the UTG seat is empty.
-      expect(byTruth[Act0BettingRoundOrderTruthV1.contradiction], {
-        'position_checkpoint_position_checkpoint_table_notice',
-      });
+      // No authored table contradicts the strict order proof.
+      expect(byTruth[Act0BettingRoundOrderTruthV1.contradiction], isNull);
     });
 
     test(
@@ -251,16 +245,31 @@ void main() {
       },
     );
 
-    test('the empty-seat contradiction is fail-closed for consumers', () {
+    test('an empty seat that acts is fail-closed for consumers', () {
       final table = _authored(
         'position_checkpoint_position_checkpoint_table_notice',
       );
       expect(_trail(table), ['UTG folds', 'HJ folds', 'CO acts']);
+      // Repaired source: UTG is an occupied seat that folded.
       expect(
         table.seats.singleWhere((s) => s.seatLabel == 'UTG').isOccupied,
-        isFalse,
+        isTrue,
       );
-      _contradicts(table, 'empty_seat_acts');
+      final emptyUtg = table.copyWith(
+        seats: [
+          for (final s in table.seats)
+            s.seatLabel == 'UTG'
+                ? Act0SeatStateV1(
+                    seatId: s.seatId,
+                    seatLabel: s.seatLabel,
+                    displayName: s.displayName,
+                    isOccupied: false,
+                    stackLabel: s.stackLabel,
+                  )
+                : s,
+        ],
+      );
+      _contradicts(emptyUtg, 'empty_seat_acts');
     });
   });
 
