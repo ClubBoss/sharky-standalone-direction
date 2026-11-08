@@ -79,8 +79,6 @@ const _pkr06AuthoredResidual = <String>{
   'what_poker_is_matched_chips_transfer|live_seat_neither_matched_nor_folded|BB put=1.0',
   'what_poker_is_matched_chips_transfer|live_seat_neither_matched_nor_folded|UTG put=0.0',
   'what_poker_is_matched_chips_transfer|live_seat_neither_matched_nor_folded|HJ put=0.0',
-  'what_poker_is_side_pot_intro|folded_seat_live|SB',
-  'what_poker_is_side_pot_intro|live_seat_neither_matched_nor_folded|SB put=0.5',
   'what_poker_is_side_pot_intro|live_seat_neither_matched_nor_folded|UTG put=0.0',
   'what_poker_is_side_pot_intro|live_seat_neither_matched_nor_folded|HJ put=0.0',
 };

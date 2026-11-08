@@ -8983,6 +8983,15 @@ final _sidePotIntroRunner = _matchedChipsTransferRunner.copyWith(
                     amountLabel: '50 BB',
                   ),
                 )
+              // Source-backed SB fold: blind remains dead money in main pot.
+              : seat.seatId == 'sb'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  isInHand: false,
+                  isFolded: true,
+                  hasActed: true,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.none,
+                )
               : seat,
         )
         .toList(growable: false),
