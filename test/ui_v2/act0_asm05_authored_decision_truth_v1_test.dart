@@ -254,6 +254,11 @@ void main() {
         expect(task.runner.phase, Act0LessonPhaseV1.drill);
         expect(task.runner.selectedOptionId, isNull);
         expect(task.runner.options.map((o) => o.id), ['fold', 'call']);
+        expect(task.runner.options.map((o) => o.label), ['Fold', 'Call']);
+        expect(task.runner.options.map((o) => o.amountLabel), [
+          '',
+          '${source.additionalCallBb} BB',
+        ]);
         for (final option in task.runner.options) {
           final correct = source.turnBetBb == 10
               ? option.id == 'call'
@@ -267,8 +272,13 @@ void main() {
           );
           expect(
             option.preferredLabel,
-            source.turnBetBb == 10 ? 'Call 10 BB' : 'Fold',
+            source.turnBetBb == 10 ? 'Call' : 'Fold',
           );
+          final preferredOption = task.runner.options.singleWhere(
+            (candidate) => candidate.label == option.preferredLabel,
+          );
+          expect(preferredOption.isCorrect, isTrue);
+          expect(preferredOption.quality, Act0FeedbackQualityV1.correct);
         }
         expect(() => task.runner.options.clear(), throwsUnsupportedError);
       }

@@ -5,7 +5,14 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
-/// Assessment identity and grading consistency for all 367 W1-W12 tasks.
+const _asm05NewTaskIds = <String>{
+  'asm05_new_known_holes_turn_call_10',
+  'asm05_new_known_holes_turn_call_40',
+};
+
+/// Assessment identity and grading consistency for all 369 W1-W12 tasks.
+/// The 367 legacy rows retain their frozen contract; exactly two named
+/// NEW_AUTHORING ASM-05 rows extend it without replacing historical meaning.
 ///
 /// Stable task ids and choice ids are what saved receipts, repair debt and
 /// XP refer to; grading flags, answer quality, preferred answers and feedback
@@ -17,8 +24,8 @@ void main() {
   ];
 
   test('task ids and choice ids are unique and stable in shape', () {
-    expect(tasks, hasLength(367));
-    expect(tasks.map((t) => t.taskId).toSet(), hasLength(367));
+    expect(tasks, hasLength(369));
+    expect(tasks.map((t) => t.taskId).toSet(), hasLength(369));
     final problems = <String>[];
     for (final t in tasks) {
       final ids = t.runner.options.map((o) => o.id).toList();
@@ -81,12 +88,45 @@ void main() {
               ],
             ],
     ]..sort((a, b) => (a[2] as String).compareTo(b[2] as String));
-    expect(entries, hasLength(367));
-    final encoded = jsonEncode(entries);
+    expect(entries, hasLength(369));
+    final newEntries = entries
+        .where((row) => _asm05NewTaskIds.contains(row[2]))
+        .toList(growable: false);
+    expect(newEntries, <List<Object?>>[
+      <Object?>[
+        'world_12',
+        'decision_over_outcome',
+        'asm05_new_known_holes_turn_call_10',
+        'drill',
+        'practice',
+        <List<Object?>>[
+          <Object?>['fold', 'Fold', false, 'wrong', 'Call'],
+          <Object?>['call', 'Call', true, 'correct', 'Call'],
+        ],
+      ],
+      <Object?>[
+        'world_12',
+        'decision_over_outcome',
+        'asm05_new_known_holes_turn_call_40',
+        'drill',
+        'practice',
+        <List<Object?>>[
+          <Object?>['fold', 'Fold', true, 'correct', 'Fold'],
+          <Object?>['call', 'Call', false, 'wrong', 'Fold'],
+        ],
+      ],
+    ]);
+    final legacyEntries = entries
+        .where((row) => !_asm05NewTaskIds.contains(row[2]))
+        .toList(growable: false);
+    expect(legacyEntries, hasLength(367));
+    final encoded = jsonEncode(legacyEntries);
     final fingerprint = sha256.convert(utf8.encode(encoded)).toString();
-    // Fingerprint covers task identity, authored lesson ownership, source
-    // choice text, correct/quality semantics, and option order. Changing any
-    // of these requires an explicit learner-record compatibility disposition.
+    // Retain the accepted fingerprint over all 367 legacy rows unchanged.
+    // The two exact rows above freeze the entire extension, including order,
+    // choice text, correctness, quality, and preferred labels. Neither an
+    // extra new row nor a changed legacy row is silently admitted.
+    // Changes require an explicit learner-record compatibility disposition.
     const acceptedMainFingerprint =
         '26c8c2d76a89ba00adfb482b2130e758f7b8e32699ef85f75e15abf189e57bb4';
     print('ASM01_SOURCE_FINGERPRINT=$fingerprint');
@@ -111,7 +151,7 @@ void main() {
           for (final task in lesson.taskList)
             task.taskId: (world.worldId, lesson.lessonId, task),
     };
-    expect(taskIndex, hasLength(367));
+    expect(taskIndex, hasLength(369));
     var validated = 0;
     for (final entry in taskIndex.entries) {
       final (worldId, lessonId, task) = entry.value;

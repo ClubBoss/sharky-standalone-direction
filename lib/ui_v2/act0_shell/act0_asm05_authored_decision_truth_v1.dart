@@ -454,9 +454,12 @@ Act0LessonTaskV1 act0Asm05AuthoredDecisionTaskV1({
 }) {
   final source = exercise.preDecision;
   final truth = exercise.decisionTruth;
-  final expected = truth.accepts(Act0Asm05ActionV1.call)
-      ? 'Call ${source.additionalCallBb} BB'
+  final preferredActionLabel = truth.accepts(Act0Asm05ActionV1.call)
+      ? 'Call'
       : 'Fold';
+  final expected = preferredActionLabel == 'Call'
+      ? 'Call ${source.additionalCallBb} BB'
+      : preferredActionLabel;
   final ev = truth.callIncrementalEvBb.toStringAsFixed(2);
   final options = List<Act0RunnerOptionV1>.unmodifiable([
     for (final action in source.availableActions)
@@ -470,7 +473,7 @@ Act0LessonTaskV1 act0Asm05AuthoredDecisionTaskV1({
         quality: truth.accepts(action)
             ? Act0FeedbackQualityV1.correct
             : Act0FeedbackQualityV1.wrong,
-        preferredLabel: expected,
+        preferredLabel: preferredActionLabel,
         feedbackTitle: truth.accepts(action)
             ? 'Correct decision. Judge the choice, not the result.'
             : '$expected has the higher expected value.',
