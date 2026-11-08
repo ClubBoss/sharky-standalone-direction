@@ -1,14 +1,15 @@
 ---
-status: "CURRENT_AND_VALID after Learning Content Integrity v1A (published-head"
+status: "CURRENT_AND_VALID"
 status_source: "derived"
-baseline: "7f77def08b35"
+baseline: "efd3d2f8ed182"
 generated_by: "docs_frontmatter_v1"
 ---
 
 # W1-W12 Assessment Fingerprint Adjudication v1
 
-Status: CURRENT_AND_VALID after Learning Content Integrity v1A (published-head
-field is updated only by the publication commit).
+Status: CURRENT_AND_VALID for the bounded 2026-11-08 shown-hand comparison
+wave after independent source adjudication and the unchanged canonical guard.
+Earlier adjudications below retain their historical source identities.
 
 ## Authority and method
 
@@ -146,3 +147,89 @@ reconcile independent audit packets beyond their source-ID crosswalk, prove
 Human learning effect, or authorize Final Deep Independent Audit, Human Novice
 Proof, or AI Personalization. The candidate is permitted to freeze for the
 downstream gates named in the active plan.
+
+
+## 2026-11-08 bounded showdown comparison adjudication
+
+The independent verdict `ACCEPT_B_AND_BOUNDED_W1_W12_REPIN_PROPOSAL` accepts
+B-only source semantics and the full 291-row historical/current/proposed
+comparison. Its exact local evidence is `CHECKED_REPIN_PROPOSAL.json`
+(SHA-256 `273867b82fd9d037f9af8d4c4645ec79ece44ee3ad104f325ef1c56796ca1b5f`)
+and `W1_W12_INDEPENDENT_ADJUDICATION.json`
+(SHA-256 `2a30f663a7f6ae98be7024549f99c9626c5b90915f49a9cf83e1872733033d77`).
+They are in the integration packet's `w1-w12-independent-adjudication/` directory.
+
+The immutable source commit `efd3d2f8ed182d8cf4fea6092306673f162be3d6`
+contains B plus four teaching-string corrections. It is the new contract
+`baselineHead`; oracle-only main `0d0259a48a59b533b7ac620271d8ca0ede6e3e93`
+is not misidentified as containing B. The final State blob is
+`2e38f685fd3ea92cab741aedecf9a5f12c14d2f8`, SHA-256
+`4850b3940dd7e8970412248a6a9c7f20d4af358b87e9969eb7a2a8abfc3f174b`.
+This whole-file input hash replaces the B-only `7f0fae80...` hash: the four
+additional teaching strings are outside the canonical payload, but inside the
+declared State input. Bounded final-State/input-hash review and final canonical
+guard verification remain pending at this source-freeze checkpoint.
+
+| Source | Rows | Canonical SHA-256, no trailing LF |
+| --- | ---: | --- |
+| Previous valid `bdf560f0d90d9659335f6492149c373842f655b1` | 291 | `9f93879965bcd7f6322d2e7a8e34c4dea0a89a6adcc3f76606409994bf9fedb1` |
+| Pre-wave State on main `1a4316da` / `0d0259a4` | 291 | `0a1514b5aeaa3a35b6380064c2b1f796831f38b5cbe66adad0e08c0b836cbdc9` |
+| Adjudicated B payload, retained by teaching-only composition | 291 | `599ecadb0180eb48e8de72520645c29750941cba4cdd000f5acdda834a30f7e1` |
+
+The contract preserves the actually reproduced previous valid baseline, with
+State input SHA-256
+`2ac48047eff3d21ac9cb743e07e85e75fb161cd81b333ee9fcb43c3b773beac2`.
+The old already-RED main fingerprint is historical drift, not a previous valid
+baseline and not evidence by itself for accepting new content.
+
+Historical baseline-to-main drift comprises 53 canonical row changes plus two
+additional teaching-only changes (55 ordered snapshots). The independent review
+explicitly adjudicated the pot-definition answer replacement, six seat-binding
+corrections, and the learner-identity repair mapping exception. These are not B
+side effects. All 291 row identities/order, correct indexes, XP, phase, step kind
+and family remain stable; historical option-ID/quality and repair exceptions are
+retained explicitly in the evidence rather than called unchanged.
+
+B changes exactly one assessed row,
+`world_1/hand_rankings_table/hand_rankings_full_house_vs_flush_drill`:
+its hint, question and correct-option feedback title. It asks which shown hand
+is stronger. Teaching body/focus wording is reviewed separately because teaching
+is outside the canonical digest. B preserves all option IDs/order, correctness,
+quality and repair mappings. Four additional strings in `_showdownBestHandRunner`
+and `_tiePotRunner` likewise distinguish shown-hand comparisons from whole-pot
+claims without changing cards, participants, history, task/option identities,
+grading, XP or repair mappings.
+
+Three ACTIVE tasks inherit the corrected teaching:
+`what_poker_is_showdown_win`, `showdown_best_hand_drill`, `showdown_tie_drill`.
+The three additional `w2_*` callsites are compatibility-only source inheritance,
+not active `sample.worlds` Runner evidence. The focused test retains teaching;
+it does not fold hidden participants or substitute heads-up fixtures.
+
+The exports used one explicitly common current Flutter/package harness and exact
+per-ref repository dependency graphs. Historical baseline has no tracked
+`pubspec.lock`; the common current lock is not claimed as a historical lock.
+The unchanged canonical helper bytes reproduce the previous valid digest exactly.
+All position/diversity thresholds, negative freshness controls, row count,
+generator, input path, terminal-pack and no-W13 rules remain unchanged. The guard
+`test/guards/w1_w12_answer_position_distribution_contract_test.dart` receives
+zero edits. No live workflow, validator or test selection is weakened.
+
+This record is bounded source adjudication and provenance, not full PKR-08 or
+PKR-06 acceptance, payout evidence, native/Human proof or a scorecard award.
+Final scoped machine evidence and independent poker review are separate receipts.
+
+
+### Final bounded validation receipt — 2026-11-08
+
+Independent final source/contract review accepted source HEAD `6815b9c8`
+(TREE `030144b929c105f369ef7ff84a63f8f9bfc35eeb`). The final State and
+contract bytes stayed unchanged through scoped formatting and analysis.
+Formatting changed only whitespace/layout in the new teaching test.
+The existing pot/showdown/B file (13 cases), active teaching file (6 cases)
+and unchanged W1-W12 guard (3 cases) passed together: 22/22, exit 0;
+scoped analyze also exited 0. Raw test SHA-256:
+`d99b1a590e01e700422c7082b8d238eefbf7a4ca4bdb3429c2e78e30ee82d8d6`.
+The guard now reports the admitted fingerprint and exact final input as valid;
+none of its assertions or thresholds changed. This machine receipt does not
+itself award points or replace final independent original-DoD poker acceptance.

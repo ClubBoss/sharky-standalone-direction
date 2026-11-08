@@ -1,19 +1,19 @@
 {
   "schemaVersion": 1,
   "generator": "test/guards/w1_w12_answer_position_distribution_contract_test.dart::_contentFingerprint",
-  "baselineHead": "bdf560f0d90d9659335f6492149c373842f655b1",
+  "baselineHead": "efd3d2f8ed182d8cf4fea6092306673f162be3d6",
   "rowCount": 291,
-  "fingerprint": "9f93879965bcd7f6322d2e7a8e34c4dea0a89a6adcc3f76606409994bf9fedb1",
+  "fingerprint": "599ecadb0180eb48e8de72520645c29750941cba4cdd000f5acdda834a30f7e1",
   "inputs": [
     {
       "path": "lib/ui_v2/act0_shell/act0_shell_state_v1.dart",
-      "sha256": "2ac48047eff3d21ac9cb743e07e85e75fb161cd81b333ee9fcb43c3b773beac2"
+      "sha256": "4850b3940dd7e8970412248a6a9c7f20d4af358b87e9969eb7a2a8abfc3f174b"
     }
   ],
   "previousValidBaseline": {
-    "head": "ff5914fd02eeb13acd19bdb85c7e9bfe8f97e5ce",
+    "head": "bdf560f0d90d9659335f6492149c373842f655b1",
     "rowCount": 291,
-    "fingerprint": "1318f99a5430f45fe18c9cf64dd3f583dc21a49b7dc98482ae167031d139e959",
+    "fingerprint": "9f93879965bcd7f6322d2e7a8e34c4dea0a89a6adcc3f76606409994bf9fedb1",
     "inputSha256": "2ac48047eff3d21ac9cb743e07e85e75fb161cd81b333ee9fcb43c3b773beac2"
   }
 }
