@@ -13,9 +13,7 @@ const _bestHandTaskXp = <String, int>{
   'what_poker_is_showdown_win': 4,
   'showdown_best_hand_drill': 7,
 };
-const _tieTaskXp = <String, int>{
-  'showdown_tie_drill': 7,
-};
+const _tieTaskXp = <String, int>{'showdown_tie_drill': 7};
 const _bestHandBody =
     'Of the two shown hands, Hero Q-Q-A-J-7 beats CO J-J-A-K-7. Other live hands are hidden, so this comparison does not establish the pot winner.';
 const _tieBody =
@@ -59,18 +57,24 @@ void main() {
       );
       expect(shown.map((seat) => seat.seatId).toSet(), {'btn', 'co'});
       expect(
-        live.where((seat) => !shown.contains(seat)).map((s) => s.seatId).toSet(),
+        live
+            .where((seat) => !shown.contains(seat))
+            .map((s) => s.seatId)
+            .toSet(),
         {'utg', 'hj', 'sb', 'bb'},
       );
 
       // Rank only the two shown hands. This is deliberately not a pot oracle.
-      final board = runner.table.boardCards.map((c) => potTruthSolverCardV1(c)!);
+      final board = runner.table.boardCards.map(
+        (c) => potTruthSolverCardV1(c)!,
+      );
       final hands = {
         for (final seat in shown)
           seat.seatId: Hand.solveHand([
             ...board,
-            ...(seat.isHero ? runner.table.heroCards : seat.holeCards)
-                .map((c) => potTruthSolverCardV1(c)!),
+            ...(seat.isHero ? runner.table.heroCards : seat.holeCards).map(
+              (c) => potTruthSolverCardV1(c)!,
+            ),
           ]),
       };
       final bestShown = Hand.winners(hands.values.toList());
@@ -114,7 +118,10 @@ void main() {
         find.textContaining(expectedBody, findRichText: true),
         findsWidgets,
       );
-      expect(find.textContaining('Hero wins', findRichText: true), findsNothing);
+      expect(
+        find.textContaining('Hero wins', findRichText: true),
+        findsNothing,
+      );
       expect(
         find.textContaining('so they split the pot', findRichText: true),
         findsNothing,

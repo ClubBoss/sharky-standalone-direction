@@ -1,5 +1,5 @@
 ---
-status: "SOURCE_ADJUDICATED_PENDING_FINAL_GUARD"
+status: "CURRENT_AND_VALID"
 status_source: "derived"
 baseline: "efd3d2f8ed182"
 generated_by: "docs_frontmatter_v1"
@@ -7,9 +7,9 @@ generated_by: "docs_frontmatter_v1"
 
 # W1-W12 Assessment Fingerprint Adjudication v1
 
-Status: SOURCE_ADJUDICATED_PENDING_FINAL_GUARD for the bounded 2026-11-08
-shown-hand comparison wave. Earlier adjudications below retain their historical
-source identities; final candidate machine verification is not yet claimed.
+Status: CURRENT_AND_VALID for the bounded 2026-11-08 shown-hand comparison
+wave after independent source adjudication and the unchanged canonical guard.
+Earlier adjudications below retain their historical source identities.
 
 ## Authority and method
 
@@ -218,3 +218,18 @@ zero edits. No live workflow, validator or test selection is weakened.
 This record is bounded source adjudication and provenance, not full PKR-08 or
 PKR-06 acceptance, payout evidence, native/Human proof or a scorecard award.
 Final scoped machine evidence and independent poker review are separate receipts.
+
+
+### Final bounded validation receipt — 2026-11-08
+
+Independent final source/contract review accepted source HEAD `6815b9c8`
+(TREE `030144b929c105f369ef7ff84a63f8f9bfc35eeb`). The final State and
+contract bytes stayed unchanged through scoped formatting and analysis.
+Formatting changed only whitespace/layout in the new teaching test.
+The existing pot/showdown/B file (13 cases), active teaching file (6 cases)
+and unchanged W1-W12 guard (3 cases) passed together: 22/22, exit 0;
+scoped analyze also exited 0. Raw test SHA-256:
+`d99b1a590e01e700422c7082b8d238eefbf7a4ca4bdb3429c2e78e30ee82d8d6`.
+The guard now reports the admitted fingerprint and exact final input as valid;
+none of its assertions or thresholds changed. This machine receipt does not
+itself award points or replace final independent original-DoD poker acceptance.
