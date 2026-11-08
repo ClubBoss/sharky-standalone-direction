@@ -308,3 +308,29 @@ This is a bounded source, machine, and input-provenance adjudication proposal.
 It does not claim native or Human evidence, full ASM-05/PKR-03/PKR-06 DoD,
 external release readiness, or a scorecard award. Applying these protected
 bytes requires a separate independent scoped review.
+
+## ASM-05 final corrective regeneration — 2026-11-08
+
+The exact final formatted source is commit
+`5fcf1e046c83b7893855c5fc7721f1cdc3f64ce5`, tree
+`627c77e9450531bf067a72c72679c9f11f6ec1ef`. The canonical generator ran
+against that source with the installed local SDK and reproduced 293 assessed
+rows. Its content fingerprint is
+`cb14248b1bb0e599715940ab4ac986756ddf2f13a6837b1493dd277958356d33`.
+
+Removing only `asm05_new_known_holes_turn_call_10` and
+`asm05_new_known_holes_turn_call_40` reproduces the historical 291-row digest
+`599ecadb0180eb48e8de72520645c29750941cba4cdd000f5acdda834a30f7e1`.
+The actual W10-W12 distribution is `{0: 15, 1: 15, 2: 14}` across 44 rows,
+with longest run two; the two additions retain option order `[fold, call]` and
+correct indexes 1 and 0. The State input remains
+`d9a78d57817c8eaef7dc1a376f53ade7774229be4a34063d5dc0cf152bb67221`;
+the final factory input is
+`74dfdaabdbebf337e4308dc98e4a512b007ce45474381b76c7ccf37e2691206d`.
+
+The output-only probe passed without skips or failures. Its terminal receipt
+SHA-256 is `654ef74367ce6d76f3677cb05787ddb8379b88559abea3075d86860148ecb73a`
+and raw machine log SHA-256 is
+`7968f6d0d3cf98385fb0cde5d21ca1459e2cd0328f96e624dce6f408b3a15b95`.
+This corrective repin changes no guard, generator, selection, threshold,
+historical row, score, native claim, or Human claim.
