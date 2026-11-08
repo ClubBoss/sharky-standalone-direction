@@ -60,8 +60,10 @@ void main() {
     }
     expect(_catalog, hasLength(367));
     expect(assessed, 275);
-    expect(suppressed, 221);
-    expect(revised, 220);
+    // Re-pinned on main 1a4316d: PKR03 work (ab3350c/7d6b4f5) cleared
+    // authored card focus on assessed tasks after this donor's base f727375.
+    expect(suppressed, 218);
+    expect(revised, 217);
   });
 
   test(
