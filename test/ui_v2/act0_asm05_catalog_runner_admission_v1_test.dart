@@ -12,14 +12,19 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 // This harness does not certify canonical Preview entry, native clipping,
 // accessibility non-disclosure, or durable restart behavior.
 void main() {
-  final lesson = Act0ShellStateV1.sample.worldById('world_12').lessons
+  final lesson = Act0ShellStateV1.sample
+      .worldById('world_12')
+      .lessons
       .singleWhere((l) => l.lessonId == 'decision_over_outcome');
 
   test('two new cases occupy their exact existing lesson slots', () {
     expect(lesson.taskList.map((t) => t.taskId), [
-      'w12_decision_quality_intro', 'w12_good_fold_bad_result',
-      'w12_bad_call_good_result', 'asm05_new_known_holes_turn_call_10',
-      'asm05_new_known_holes_turn_call_40', 'w12_decision_quality_recap',
+      'w12_decision_quality_intro',
+      'w12_good_fold_bad_result',
+      'w12_bad_call_good_result',
+      'asm05_new_known_holes_turn_call_10',
+      'asm05_new_known_holes_turn_call_40',
+      'w12_decision_quality_recap',
     ]);
     expect(lesson.rewardXp, 45);
     for (final task in lesson.taskList.skip(3).take(2)) {
@@ -30,22 +35,30 @@ void main() {
       expect(task.runner.beatCount, 6);
       for (final option in task.runner.options) {
         final receipt = act0FirstValueSkillReceiptForRunnerV1(
-          runner: task.runner, option: option, taskFamily: task.resolvedTaskFamily,
+          runner: task.runner,
+          option: option,
+          taskFamily: task.resolvedTaskFamily,
         );
         expect(receipt, isNotNull);
         expect(receipt!.sourceSignalId, 'process_over_outcome');
         expect(receipt.skillAtomId, 'mindset_process_discipline');
-        expect(act0FirstValueSkillReceiptForRunnerV1(
-          runner: task.runner.copyWith(lessonId: 'unadmitted_lesson'),
-          option: option, taskFamily: task.resolvedTaskFamily,
-        ), isNull);
+        expect(
+          act0FirstValueSkillReceiptForRunnerV1(
+            runner: task.runner.copyWith(lessonId: 'unadmitted_lesson'),
+            option: option,
+            taskFamily: task.resolvedTaskFamily,
+          ),
+          isNull,
+        );
       }
     }
   });
 
   for (final price in [10, 40]) {
     for (final choice in ['call_Td', 'call_5h', 'fold_5h']) {
-      testWidgets('actual callback $price $choice preserves decision truth', (tester) async {
+      testWidgets('actual callback $price $choice preserves decision truth', (
+        tester,
+      ) async {
         tester.view.physicalSize = const Size(393, 852);
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.resetPhysicalSize);
@@ -58,37 +71,56 @@ void main() {
         final isCanonicalRunout = price == 10 ? river == 'Td' : river == '5h';
         // Counterfactuals use the SAME real source factory and actual poker
         // evaluator. They do not flip captions or mutate grades.
-        final task = isCanonicalRunout ? canonical : act0Asm05AuthoredDecisionTaskV1(
-          exercise: Act0Asm05AuthoredExerciseV1(
-            preDecision: price == 10 ? const Act0Asm05TurnSnapshotV1.call10()
-                : const Act0Asm05TurnSnapshotV1.call40(),
-            realizedRiver: river,
-          ),
-          lessonId: lesson.lessonId, lessonTitle: lesson.title,
-          beatIndex: price == 10 ? 4 : 5, beatCount: 6, rewardXp: 0,
-          returnTarget: 'learn', nextLessonId: 'tilt_reset_protocol',
-        );
+        final task = isCanonicalRunout
+            ? canonical
+            : act0Asm05AuthoredDecisionTaskV1(
+                exercise: Act0Asm05AuthoredExerciseV1(
+                  preDecision: price == 10
+                      ? const Act0Asm05TurnSnapshotV1.call10()
+                      : const Act0Asm05TurnSnapshotV1.call40(),
+                  realizedRiver: river,
+                ),
+                lessonId: lesson.lessonId,
+                lessonTitle: lesson.title,
+                beatIndex: price == 10 ? 4 : 5,
+                beatCount: 6,
+                rewardXp: 0,
+                returnTarget: 'learn',
+                nextLessonId: 'tilt_reset_protocol',
+              );
         var runner = task.runner;
         final completions = <Act0CompletedDecisionV1>[];
         var choices = 0;
-        await tester.pumpWidget(MaterialApp(home: StatefulBuilder(
-          builder: (context, setState) => Act0LessonRunnerShellV1(
-            runner: runner, worldNumber: 12, selectedWorldId: 'world_12',
-            selectedLessonId: lesson.lessonId, selectedTaskId: task.taskId,
-            selectedTaskFamily: task.resolvedTaskFamily,
-            tablePresentation: task.tablePresentation,
-            evidenceRunId: 'asm05_machine_${price}_$choice',
-            onBack: () {}, onContinueTheory: () {}, onContinueReview: () {},
-            onChooseOption: (option) {
-              choices++;
-              // Public user-choice callback drives feedback, as Preview does.
-              setState(() => runner = runner.copyWith(
-                phase: Act0LessonPhaseV1.review, selectedOptionId: option.id,
-              ));
-            },
-            onCompletedDecision: completions.add,
+        await tester.pumpWidget(
+          MaterialApp(
+            home: StatefulBuilder(
+              builder: (context, setState) => Act0LessonRunnerShellV1(
+                runner: runner,
+                worldNumber: 12,
+                selectedWorldId: 'world_12',
+                selectedLessonId: lesson.lessonId,
+                selectedTaskId: task.taskId,
+                selectedTaskFamily: task.resolvedTaskFamily,
+                tablePresentation: task.tablePresentation,
+                evidenceRunId: 'asm05_machine_${price}_$choice',
+                onBack: () {},
+                onContinueTheory: () {},
+                onContinueReview: () {},
+                onChooseOption: (option) {
+                  choices++;
+                  // Public user-choice callback drives feedback, as Preview does.
+                  setState(
+                    () => runner = runner.copyWith(
+                      phase: Act0LessonPhaseV1.review,
+                      selectedOptionId: option.id,
+                    ),
+                  );
+                },
+                onCompletedDecision: completions.add,
+              ),
+            ),
           ),
-        )));
+        );
         // Advance genuine choreography timers, never force readiness/state.
         for (var i = 0; i < 80; i++) {
           await tester.pump(const Duration(milliseconds: 250));
@@ -111,27 +143,35 @@ void main() {
         expect(completed.resultKind, correct ? 'correct' : 'incorrect');
         expect(completed.skillAtomId, 'mindset_process_discipline');
         expect(completed.sourceTaskId, task.taskId);
-        final prefix = action == 'fold' ? 'Fold: SB gets $price BB back'
+        final prefix = action == 'fold'
+            ? 'Fold: SB gets $price BB back'
             : 'River $river: ${river == '5h' ? 'You receive' : 'SB receives'} '
-                '${price == 10 ? 60 : 120} BB.';
+                  '${price == 10 ? 60 : 120} BB.';
         expect(find.textContaining(prefix), findsWidgets);
         if (action == 'fold') {
           expect(find.textContaining('River 5h:'), findsNothing);
           expect(runner.reviewReason, contains('No river is played.'));
         }
         final fingerprint = act0AuthoredSourceFingerprintV1(
-          worldId: 'world_12', lessonId: lesson.lessonId, task: task,
+          worldId: 'world_12',
+          lessonId: lesson.lessonId,
+          task: task,
         )!;
-        final history = const Act0LearningEvidenceHistoryV1().appendCompletedDecision(
-          completed, authoredSourceFingerprint: fingerprint,
-          sessionId: 'asm05_machine_callback',
-          recordedAtUtc: DateTime.utc(2026, 11, 8),
-          reviewKind: Act0ReviewKindV1.initialAssessment,
-        );
+        final history = const Act0LearningEvidenceHistoryV1()
+            .appendCompletedDecision(
+              completed,
+              authoredSourceFingerprint: fingerprint,
+              sessionId: 'asm05_machine_callback',
+              recordedAtUtc: DateTime.utc(2026, 11, 8),
+              reviewKind: Act0ReviewKindV1.initialAssessment,
+            );
         expect(history.records, hasLength(1));
         final record = history.records.single;
         final proof = act0CurrentAuthoredSourceProofForTaskV1(
-          record: record, worldId: 'world_12', lessonId: lesson.lessonId, task: task,
+          record: record,
+          worldId: 'world_12',
+          lessonId: lesson.lessonId,
+          task: task,
         );
         expect(proof, isNotNull);
         expect(proof!.isCurrentlyCorrect, correct);
