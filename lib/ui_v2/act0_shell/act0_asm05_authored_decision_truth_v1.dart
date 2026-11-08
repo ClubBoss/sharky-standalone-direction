@@ -359,11 +359,6 @@ Act0TableStateV1 _decisionTable(Act0Asm05TurnSnapshotV1 source) =>
             isBigBlind: seat == 'bb',
             isSmallBlind: seat == 'sb',
             isDealerButton: seat == 'btn',
-            blindAmountLabel: seat == 'sb'
-                ? '0.5 BB'
-                : seat == 'bb'
-                ? '1 BB'
-                : null,
             isFolded: source.foldedSeatIds.contains(seat),
             isInHand: !source.foldedSeatIds.contains(seat),
             hasActed: seat != 'bb',

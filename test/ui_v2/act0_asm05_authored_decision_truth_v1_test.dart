@@ -41,6 +41,30 @@ void main() {
 
   for (final source in [cheap, expensive]) {
     final price = source.turnBetBb;
+    test(
+      'call $price: turn projection keeps positions without stale blind labels',
+      () {
+        final table = _task(
+          Act0Asm05AuthoredExerciseV1(
+            preDecision: source,
+            realizedRiver: 'Td',
+          ),
+        ).runner.table;
+        final sb = table.seats.singleWhere((seat) => seat.seatId == 'sb');
+        final bb = table.seats.singleWhere((seat) => seat.seatId == 'bb');
+        expect(sb.isSmallBlind, isTrue);
+        expect(bb.isBigBlind, isTrue);
+        expect(sb.blindAmountLabel, isNull);
+        expect(bb.blindAmountLabel, isNull);
+        expect(sb.currentBetLabel, '$price BB');
+        expect(bb.currentBetLabel, '0 BB');
+        expect(
+          table.actionTrail.map((event) => event.label),
+          containsAll(['Preflop: SB posts 0.5 BB', 'Preflop: BB posts 1 BB']),
+        );
+      },
+    );
+
     test('call $price: all ledger prefixes conserve six starting budgets', () {
       final committed = {for (final seat in source.seatIds) seat: 0};
       var pot = 0;
