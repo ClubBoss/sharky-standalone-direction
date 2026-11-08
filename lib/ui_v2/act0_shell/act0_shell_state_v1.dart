@@ -1089,6 +1089,7 @@ Act0SeatStateV1 _act0CopySeatStateV1(
   Act0SeatBetStateV1? bet,
   List<Act0CardStateV1>? holeCards,
   Act0CardsVisibleModeV1? cardsVisibleMode,
+  String? stackLabel,
 }) {
   return Act0SeatStateV1(
     seatId: seat.seatId,
@@ -1106,7 +1107,7 @@ Act0SeatStateV1 _act0CopySeatStateV1(
     hasActed: hasActed ?? seat.hasActed,
     isLastAggressor: seat.isLastAggressor,
     isOccupied: isOccupied ?? seat.isOccupied,
-    stackLabel: seat.stackLabel,
+    stackLabel: stackLabel ?? seat.stackLabel,
     holeCards: holeCards ?? seat.holeCards,
     cardsVisibleMode: cardsVisibleMode ?? seat.cardsVisibleMode,
     currentBetLabel: clearCommitment ? bet?.amountLabel : seat.currentBetLabel,
@@ -22250,6 +22251,50 @@ final _w11TriggerOvercallFlopRunner = _w11TriggerReadIntroRunner.copyWith(
   ],
 );
 
+// PKR-03 option B: the full W11 trigger hand up to Hero's decision.
+// Authored before: the trail items 'CO raises 2.5 BB', 'BTN calls' (now sized
+// to its 2.5 BB price), 'Flop: CO bets 2 BB', 'BTN calls 2 BB',
+// 'Turn: CO bets 12 BB'; in the captions the 0.25 BB ante each, CO opening
+// first in, 8 BB before the flop bet, 35/33 BB behind. New authored items
+// forced by those facts: the ante note, both blind posts and four folds.
+const _w11TriggerHandToFlopBetTrailV1 = <Act0ActionTrailItemV1>[
+  Act0ActionTrailItemV1.note(label: 'Antes 0.25 BB x 6 players'),
+  Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+  Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+  Act0ActionTrailItemV1(label: 'UTG folds'),
+  Act0ActionTrailItemV1(label: 'HJ folds'),
+  Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
+  Act0ActionTrailItemV1(label: 'BTN calls 2.5 BB'),
+  Act0ActionTrailItemV1(label: 'SB folds'),
+  Act0ActionTrailItemV1(label: 'BB folds'),
+  Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
+];
+const _w11TriggerHandToTurnBetTrailV1 = <Act0ActionTrailItemV1>[
+  ..._w11TriggerHandToFlopBetTrailV1,
+  Act0ActionTrailItemV1(label: 'BTN calls 2 BB'),
+  Act0ActionTrailItemV1(label: 'Turn: CO bets 12 BB'),
+];
+
+// Seats of the W11 trigger hand: the four recorded folds are out of the hand.
+// Only CO/BTN stacks are authored (captions); folded players' stacks are not.
+Act0TableStateV1 _w11TriggerHandSeatsV1(
+  Act0TableStateV1 table,
+  Map<String, String> stacks,
+) => table.copyWith(
+  seats: [
+    for (final seat in table.seats)
+      const {'utg', 'hj', 'sb', 'bb'}.contains(seat.seatId)
+          ? _act0CopySeatStateV1(
+              seat,
+              isInHand: false,
+              isFolded: true,
+              hasActed: true,
+              cardsVisibleMode: Act0CardsVisibleModeV1.none,
+            )
+          : _act0CopySeatStateV1(seat, stackLabel: stacks[seat.seatId]),
+  ],
+);
+
 final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w11_trigger_small_price_continue',
@@ -22257,27 +22302,26 @@ final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
       'Six-handed, 0.25 BB ante each. CO opens to 2.5 BB, BTN calls with QJs. Flop J-7-4 rainbow: CO bets 2 BB into 8 BB, with 35 BB behind each.',
   hint: 'Real play means combining cues, not naming one concept.',
   question: 'What is the cleaner response?',
-  table: _act0CurrentStreetTableV1(
-    _world3PlayableCallRunner.table.copyWith(
-      heroCards: _heroQJsCards,
-      boardCards: _boardJ74FlopCards,
-      streetLabel: 'Flop',
-      potLabel: 'Pot 8 BB',
-      toCallLabel: 'To call 2 BB',
-      centerLabel: 'BTN, top pair, small price',
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls'),
-        Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
-      ],
-    ),
-    bets: const {
-      'co': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'CO',
-        amountLabel: '2 BB',
+  table: _w11TriggerHandSeatsV1(
+    _act0CurrentStreetTableV1(
+      _world3PlayableCallRunner.table.copyWith(
+        heroCards: _heroQJsCards,
+        boardCards: _boardJ74FlopCards,
+        streetLabel: 'Flop',
+        potLabel: 'Pot 8 BB',
+        toCallLabel: 'To call 2 BB',
+        centerLabel: 'BTN, top pair, small price',
+        actionTrail: _w11TriggerHandToFlopBetTrailV1,
       ),
-    },
+      bets: const {
+        'co': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'CO',
+          amountLabel: '2 BB',
+        ),
+      },
+    ),
+    const {'co': '33 BB', 'btn': '35 BB'},
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
@@ -22331,29 +22375,26 @@ final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
   hint:
       'Combine a large second-barrel price with this opponent\'s unusually value-heavy betting range.',
   question: 'What is the cleaner response now?',
-  table: _act0CurrentStreetTableV1(
-    _world3PlayableCallRunner.table.copyWith(
-      heroCards: _heroQJsCards,
-      boardCards: _boardJ742TurnCards,
-      streetLabel: 'Turn',
-      potLabel: 'Pot 12 BB',
-      toCallLabel: 'To call 12 BB',
-      centerLabel: 'BTN top pair, tight CO barrel',
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls'),
-        Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls 2 BB'),
-        Act0ActionTrailItemV1(label: 'Turn: CO bets 12 BB'),
-      ],
-    ),
-    bets: const {
-      'co': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'CO',
-        amountLabel: '12 BB',
+  table: _w11TriggerHandSeatsV1(
+    _act0CurrentStreetTableV1(
+      _world3PlayableCallRunner.table.copyWith(
+        heroCards: _heroQJsCards,
+        boardCards: _boardJ742TurnCards,
+        streetLabel: 'Turn',
+        potLabel: 'Pot 12 BB',
+        toCallLabel: 'To call 12 BB',
+        centerLabel: 'BTN top pair, tight CO barrel',
+        actionTrail: _w11TriggerHandToTurnBetTrailV1,
       ),
-    },
+      bets: const {
+        'co': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'CO',
+          amountLabel: '12 BB',
+        ),
+      },
+    ),
+    const {'co': '21 BB', 'btn': '33 BB'},
   ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
