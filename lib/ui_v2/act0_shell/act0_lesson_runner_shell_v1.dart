@@ -3,6 +3,7 @@ import 'act0_accessibility_semantics_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_reading_style_v1.dart';
 import 'dart:async';
 import 'act0_predecision_card_focus_v1.dart';
+import 'act0_prechoice_answer_cue_policy_v1.dart';
 import 'act0_scene_profile_v1.dart';
 import 'act0_f7_scene_source_v1.dart';
 import 'act0_f7_scene_gate_v1.dart';
@@ -3230,7 +3231,22 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     // The original source task is intentionally replayed after a mapped
     // repair. Keep that identity visible so it cannot read as another
     // authored hand before its result finalizes.
-    final selectedTaskTitle = widget.selectedTaskTitle?.trim() ?? '';
+    final authoredTaskTitle = widget.selectedTaskTitle?.trim() ?? '';
+    // ASM-04: a pending assessment must not name its answer in the task rail;
+    // the authored title returns once the current decision is submitted.
+    final selectedTaskTitle = authoredTaskTitle.isEmpty
+        ? authoredTaskTitle
+        : act0PrechoiceDisplayTitleV1(
+            taskId: widget.selectedTaskId ?? '',
+            authoredTitle: authoredTaskTitle,
+            isAssessment: runner.options.isNotEmpty && !isTheory,
+            hasSubmittedCurrentDecision: !_isActiveAssessmentStateV1(
+              isTeaching: isTeaching,
+              isTheory: isTheory,
+              isReview: isReview,
+              runner: runner,
+            ),
+          );
     final taskRailLabel = widget.isSourceRecheckAttempt
         ? 'Original read recheck'
         : selectedTaskTitle.isNotEmpty
@@ -15031,6 +15047,15 @@ String _resolveTableCueDisplayV1({
   if (selectedTaskId == 'straight_draws_w5_gutshot_draw' ||
       selectedTaskId == 'hand_rankings_quads_drill') {
     return '';
+  }
+  // ASM-04 catalog closure: these authored cues state, verdict or entail the
+  // answer before choice. Keep the cue slot, but only with a neutral read.
+  if (act0PrechoiceAnswerBearingTableCueTaskIdsV1.contains(selectedTaskId)) {
+    return _neutralizeLeadingTableCueV1(
+      context,
+      table: table,
+      taskFamily: taskFamily,
+    );
   }
   if (_looksLikeTrailHistoryQuestionV1(runner, table)) {
     return '';

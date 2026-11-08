@@ -68,6 +68,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_board_texture_personalizati
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_position_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_starting_hand_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_improvement_observation_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_prechoice_answer_cue_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
@@ -7592,7 +7593,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         groupId: 'continue',
         title: _copyV1(en: 'Continue lesson', ru: 'Продолжить урок'),
         subtitle:
-            '${_localizedLessonTitleV1(selectedLesson)}: ${_localizedTaskTitleV1(currentTask)}',
+            '${_localizedLessonTitleV1(selectedLesson)}: ${act0PrechoiceDisplayTitleV1(taskId: currentTask.taskId, authoredTitle: _localizedTaskTitleV1(currentTask), isAssessment: act0IsPrechoiceAssessmentTaskV1(currentTask), hasSubmittedCurrentDecision: false)}',
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.continueLesson,
         ),

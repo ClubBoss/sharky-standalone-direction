@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_prechoice_answer_cue_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
@@ -5399,10 +5400,15 @@ String _preChoiceTaskSummaryV1(BuildContext context, Act0LessonTaskV1 task) {
       ru: 'Разномастные валет и восьмёрка с ранней позиции: посмотри на карты и самостоятельно выбери категорию.',
     );
   }
-  return act0AcademyTaskSummaryV1(
-    context,
-    task,
-    fallback: task.summary ?? task.runner.caption,
+  return act0PrechoiceDisplaySummaryV1(
+    taskId: task.taskId,
+    authoredSummary: act0AcademyTaskSummaryV1(
+      context,
+      task,
+      fallback: task.summary ?? task.runner.caption,
+    ),
+    isAssessment: act0IsPrechoiceAssessmentTaskV1(task),
+    hasSubmittedCurrentDecision: false,
   );
 }
 
