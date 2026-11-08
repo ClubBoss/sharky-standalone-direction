@@ -10422,8 +10422,10 @@ final _fullHouseVsFlushRunner = _riverBoardRunner.copyWith(
   lessonId: 'full_house_vs_flush',
   lessonTitle: 'Hand rankings, on the table',
   caption: 'At showdown, a full house beats a flush.',
-  hint: 'Build both best five hands before choosing the winner.',
-  question: 'Who wins at showdown?',
+  hint: 'Build both best five hands before choosing the stronger one.',
+  // Only BTN and CO are shown; four live seats stay hidden, so this compares
+  // the two shown hands and does not name a winner of the whole pot.
+  question: 'Which shown hand is stronger?',
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'hero_full_house',
@@ -10431,7 +10433,7 @@ final _fullHouseVsFlushRunner = _riverBoardRunner.copyWith(
       isCorrect: true,
       preferredLabel: 'Hero full house',
       quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Correct winner.',
+      feedbackTitle: 'Correct comparison.',
       feedbackReason:
           'Hero makes A-A-A-7-7 for a full house. CO has a heart flush, but a full house ranks above a flush.',
     ),
@@ -10480,7 +10482,7 @@ final _fullHouseVsFlushRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Compare the full best five.',
       body:
-          'Hero uses A-A-A with 7-7 for a full house. CO uses five hearts for a flush, but the full house wins because it ranks higher.',
+          'Hero uses A-A-A with 7-7 for a full house. CO uses five hearts for a flush, but the full house is stronger because it ranks higher.',
       focusCardIds: <String>[
         'hero_0',
         'hero_1',
@@ -10488,7 +10490,7 @@ final _fullHouseVsFlushRunner = _riverBoardRunner.copyWith(
         'board_1',
         'board_2',
       ],
-      focusLabels: <String>['A-A-A', '7-7', 'Full house wins'],
+      focusLabels: <String>['A-A-A', '7-7', 'Full house ranks higher'],
     ),
   ],
 );
@@ -10830,7 +10832,7 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Showdown compares hands.',
       body:
-          'Hero best five are Q-Q-A-J-7, while CO best five are J-J-A-K-7. The bigger pair wins before the kicker matters.',
+          'Of the two shown hands, Hero Q-Q-A-J-7 beats CO J-J-A-K-7. Other live hands are hidden, so this comparison does not establish the pot winner.',
       focusCardIds: <String>[
         'hero_0',
         'hero_1',
@@ -10838,7 +10840,7 @@ final _showdownBestHandRunner = _riverBoardRunner.copyWith(
         'board_1',
         'board_3',
       ],
-      focusLabels: <String>['Q-Q-A-J-7', 'Hero wins'],
+      focusLabels: <String>['Q-Q-A-J-7', 'Hero beats CO'],
     ),
   ],
 );
@@ -12253,8 +12255,8 @@ final _tiePotRunner = _boardPlaysRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Split means share.',
       body:
-          'Hero and CO share the same best five-card straight from the board, so they split the pot.',
-      focusLabels: <String>['Split pot'],
+          'Hero and CO share the same A-K-Q-J-T straight from the board, so the two shown hands tie. That alone does not establish who shares the pot.',
+      focusLabels: <String>['Shown hands tie'],
     ),
   ],
 );
