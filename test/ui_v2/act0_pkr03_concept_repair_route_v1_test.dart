@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
@@ -23,6 +24,28 @@ final _store = Act0ProgressStoreV1(
 
 void main() {
   for (final route in const [
+    (
+      world: 'world_12',
+      lesson: 'decision_over_outcome',
+      source: 'asm05_new_known_holes_turn_call_10',
+      wrong: 'fold',
+      signal: 'process_over_outcome',
+      skill: 'mindset_process_discipline',
+      targetWorld: 'world_12',
+      targetLesson: 'decision_over_outcome',
+      target: 'asm05_new_known_holes_turn_call_40',
+    ),
+    (
+      world: 'world_12',
+      lesson: 'decision_over_outcome',
+      source: 'asm05_new_known_holes_turn_call_40',
+      wrong: 'call',
+      signal: 'process_over_outcome',
+      skill: 'mindset_process_discipline',
+      targetWorld: 'world_12',
+      targetLesson: 'decision_over_outcome',
+      target: 'asm05_new_known_holes_turn_call_10',
+    ),
     (
       world: 'world_6',
       lesson: 'range_board_fit',
@@ -104,6 +127,27 @@ void main() {
         final sink = Act0InMemoryTelemetrySinkV1();
         final source = _task(route.source);
         final target = _task(route.target);
+        final isAsm05 = route.source.startsWith(
+          'asm05_new_known_holes_turn_call_',
+        );
+        final sourceFingerprint = isAsm05
+            ? act0CurrentAuthoredSourceFingerprintForIdentityV1(
+                worldId: route.world,
+                lessonId: route.lesson,
+                taskId: route.source,
+              )
+            : null;
+        final targetFingerprint = isAsm05
+            ? act0CurrentAuthoredSourceFingerprintForIdentityV1(
+                worldId: route.targetWorld,
+                lessonId: route.targetLesson,
+                taskId: route.target,
+              )
+            : null;
+        if (isAsm05) {
+          expect(sourceFingerprint, isNotNull);
+          expect(targetFingerprint, isNotNull);
+        }
         SharedPreferences.setMockInitialValues({
           'act0_welcome_completed_v1': true,
           'intake_completed_v1': true,
@@ -144,6 +188,9 @@ void main() {
         expect(original['choiceId'], route.wrong);
         expect(original['isCorrect'], false);
         expect(original['authoredSourceFingerprint'], isNotEmpty);
+        if (isAsm05) {
+          expect(original['authoredSourceFingerprint'], sourceFingerprint);
+        }
 
         // The actual feedback CTA, not a direct mapped-state injection.
         await _tap(tester, 'act0_shell_feedback_continue_cta');
@@ -172,6 +219,9 @@ void main() {
         expect(repairRecord['isCorrect'], true);
         expect(repairRecord['assistanceKind'], 'none');
         expect(repairRecord['authoredSourceFingerprint'], isNotEmpty);
+        if (isAsm05) {
+          expect(repairRecord['authoredSourceFingerprint'], targetFingerprint);
+        }
         await _tap(tester, 'act0_shell_feedback_continue_cta');
         expect(_host(tester).debugOpenRepairIntentCountV1(), 0);
         expect(
@@ -252,6 +302,16 @@ void main() {
           expect(restored[key], after[key], reason: 'remount preserves $key');
         }
         expect(_host(tester).debugOpenRepairIntentCountV1(), 0);
+        if (isAsm05) {
+          expect(
+            _records(restored, route.source).first['authoredSourceFingerprint'],
+            sourceFingerprint,
+          );
+          expect(
+            _records(restored, route.target).single['authoredSourceFingerprint'],
+            targetFingerprint,
+          );
+        }
 
         // Replaying the real source correctly must not pay its XP twice.
         await _startActualLearnTask(tester, route.lesson, route.source);

@@ -227,6 +227,22 @@ act0FirstValueSameSignalRepMappingV1({
       skillAtomId == 'mindset_process_discipline' &&
       sourceSignalId == 'process_over_outcome') {
     switch (sourceTask) {
+      // These fixed-price authored cases share the same process skill.
+      // Admit only repair; preserve existing learned-reinforcement behavior.
+      case 'asm05_new_known_holes_turn_call_10':
+        if (!isRepair) return null;
+        return target(
+          'world_12',
+          'decision_over_outcome',
+          'asm05_new_known_holes_turn_call_40',
+        );
+      case 'asm05_new_known_holes_turn_call_40':
+        if (!isRepair) return null;
+        return target(
+          'world_12',
+          'decision_over_outcome',
+          'asm05_new_known_holes_turn_call_10',
+        );
       case 'w12_bad_call_good_result':
         return target(
           'world_12',

@@ -255,6 +255,37 @@ void main() {
         expect(task.runner.selectedOptionId, isNull);
         expect(task.runner.options.map((o) => o.id), ['fold', 'call']);
         expect(task.runner.options.map((o) => o.label), ['Fold', 'Call']);
+        final table = task.runner.table;
+        expect(table.heroCards.map((card) => card.label), ['Kh', 'Qh']);
+        expect(table.heroSeat.holeCards.map((card) => card.label), ['Kh', 'Qh']);
+        expect(
+          table.seats
+              .singleWhere((seat) => seat.seatId == 'sb')
+              .holeCards
+              .map((card) => card.label),
+          ['As', 'Ad'],
+        );
+        expect(table.boardCards.map((card) => card.label), [
+          '2h',
+          '7h',
+          '9s',
+          '3c',
+        ]);
+        final physicalCards = <Act0CardStateV1>[
+          ...table.boardCards,
+          for (final seat in table.seats) ...seat.holeCards,
+        ];
+        expect(physicalCards, hasLength(8));
+        expect(physicalCards.map((card) => card.label).toSet(), hasLength(8));
+        for (final card in physicalCards) {
+          expect(card.label, matches(r'^[23456789TJQKA][shdc]$'));
+          expect(
+            card.tone,
+            card.suit == 'h' || card.suit == 'd'
+                ? Act0CardToneV1.red
+                : Act0CardToneV1.dark,
+          );
+        }
         expect(task.runner.options.map((o) => o.amountLabel), [
           '',
           '${source.additionalCallBb} BB',
@@ -319,17 +350,17 @@ void main() {
         expect(before, isNot(contains('5h')));
         expect(before, isNot(contains('Call EV')));
         expect(loss.runner.table.boardCards.map((c) => c.label), [
-          '2♥',
-          '7♥',
-          '9♠',
-          '3♣',
+          '2h',
+          '7h',
+          '9s',
+          '3c',
         ]);
         expect(
           loss.runner.table.seats
               .firstWhere((s) => s.seatId == 'sb')
               .holeCards
               .map((c) => c.label),
-          ['A♠', 'A♦'],
+          ['As', 'Ad'],
         );
         expect(
           loss.runner.table.seats

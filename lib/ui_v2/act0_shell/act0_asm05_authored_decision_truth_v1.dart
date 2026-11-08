@@ -332,7 +332,7 @@ final class Act0Asm05AuthoredExerciseV1 {
 
 Act0CardStateV1 _visibleCard(String id) => Act0CardStateV1(
   rank: id[0],
-  suit: const {'c': '♣', 'd': '♦', 'h': '♥', 's': '♠'}[id[1]]!,
+  suit: id[1],
   tone: id[1] == 'h' || id[1] == 'd' ? Act0CardToneV1.red : Act0CardToneV1.dark,
 );
 
