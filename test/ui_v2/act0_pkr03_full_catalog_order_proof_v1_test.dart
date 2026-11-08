@@ -94,17 +94,109 @@ const _consistent = <String>{
   'w4_protection_check',
 };
 
-// Exact reason partition of the authored playedHand catalog (314 tables).
+// Exact PRIMARY reason partition of the authored playedHand catalog (314).
+// Reasons are exclusive (the first failing check); deficiencies overlap, e.g.
+// most 'history_starts_after_blinds' tables also lack the actor's stack.
 const _reasonCounts = <String, int>{
   'no_recorded_history': 193,
+  'current_actor_stack_unknown': 35,
   'history_starts_after_blinds': 35,
-  'current_actor_stack_unknown': 34,
   'out_of_hand_without_recorded_fold': 27,
   'unsupported_grammar': 15,
   'consistent_closed_history': 5,
   'dead_button_or_empty_blind': 3,
   'empty_seat_acts': 1,
-  'roster_incomplete_or_marked_all_in': 1,
+};
+
+// What the learner actually sees of the order. Replay: the Runner's inline
+// street replay (consumer-safe). Animation: the table choreography plan.
+// Everything else is a static situation (no history shown).
+const _replayShown = <String>{
+  'w11_trigger_bad_price_fold',
+  'w11_trigger_small_price_continue',
+  'w4_bad_bluff',
+  'w4_bluff_intro',
+  'w4_bluff_pressure',
+  'w4_bluff_purpose',
+  'w4_bluff_recap',
+  'w4_checkpoint_intro',
+  'w4_checkpoint_review',
+  'w4_checkpoint_value',
+  'w4_half_pot_bet',
+  'w4_pot_bet',
+  'w4_protection_bet',
+  'w4_protection_intro',
+  'w4_protection_recap',
+  'w4_purpose_intro',
+  'w4_purpose_recap',
+  'w4_sizing_intro',
+  'w4_sizing_recap',
+  'w4_small_bet',
+  'w4_value_bet',
+  'w4_value_intro',
+  'w4_value_missed',
+  'w4_value_purpose',
+  'w4_value_recap',
+  'w9_bubble_table_risk_transfer',
+  'your_first_hand_action_trail',
+  'your_first_hand_flop',
+  'your_first_hand_river',
+  'your_first_hand_turn',
+};
+const _animationShown = <String>{'w6_turn_pressure_shift_transfer'};
+const _conditionalContradictions = <String, Set<String>>{
+  'contradiction_if_assumptions_hold:current_actor_out_of_turn': {
+    'actions_call_drill',
+    'actions_fold_drill',
+    'fold_discipline_discipline_intro',
+    'w4_bad_price_fold',
+    'w4_big_price_marginal_fold',
+    'w4_cheap_price_marginal_call',
+    'w4_checkpoint_price',
+    'w4_checkpoint_table_price',
+    'w4_good_price_call',
+    'w4_price_intro',
+    'w4_price_recap',
+  },
+  'contradiction_if_assumptions_hold:open_with_seats_still_in_hand_before': {
+    'apply_recap',
+    'continue_or_let_go_continue_recap',
+    'continue_or_let_go_medium_call_or_fold',
+    'continue_or_let_go_weak_let_go',
+    'discipline_checkpoint_checkpoint_borderline_continue',
+    'discipline_checkpoint_checkpoint_fold',
+    'discipline_checkpoint_checkpoint_review',
+    'fold_discipline_discipline_stack_protect',
+    'fold_discipline_facing_fold',
+    'fold_discipline_fold_recap',
+    'position_checkpoint_position_checkpoint_btn_call',
+    'same_hand_different_seat_w3_same_hand_call',
+    'w7_ajs_btn_100bb_transfer',
+    'w7_ajs_btn_25bb_transfer',
+    'weak_ace_warning_w3_dominated_fold',
+    'weak_ace_warning_w3_dominated_recap',
+    'weak_ace_warning_w3_strong_continue',
+    'weak_ace_warning_weak_ace_kicker_compare',
+    'weak_ace_warning_weak_ace_pressure_fold',
+  },
+  'contradiction_if_assumptions_hold:round_not_closed_or_hand_over': {
+    'w11_trigger_bad_price_fold',
+    'w11_trigger_small_price_continue',
+  },
+  'empty_seat_acts': {'position_checkpoint_position_checkpoint_table_notice'},
+};
+const _conditionalReasonCounts = <String, int>{
+  'no_recorded_history': 193,
+  'consistent_if_assumptions_hold': 66,
+  'contradiction_if_assumptions_hold:open_with_seats_still_in_hand_before': 19,
+  'contradiction_if_assumptions_hold:current_actor_out_of_turn': 11,
+  'unsupported_grammar': 11,
+  'consistent_closed_history': 5,
+  'dead_button_or_empty_blind': 3,
+  'open_not_first_in_preflop': 2,
+  'contradiction_if_assumptions_hold:round_not_closed_or_hand_over': 2,
+  'empty_seat_acts': 1,
+  'fragment_start_unknown': 1,
 };
 
 void main() {
@@ -286,12 +378,12 @@ void main() {
       );
     });
 
-    test('an explicit zero stack stays outside the proof', () {
-      _proof(
-        _stack(flop, 'btn', '0 BB'),
-        Act0BettingRoundOrderTruthV1.unproved,
-        'zero_stack_outside_proof',
-      );
+    test('the same actor with an explicit zero stack cannot hold the turn', () {
+      final broke = _stack(flop, 'btn', '0 BB');
+      _contradicts(broke, 'current_actor_has_no_chips');
+      final c = act0BettingRoundOrderConditionalProofForTableV1(broke);
+      expect(c.truth, Act0BettingRoundOrderTruthV1.contradiction);
+      expect(c.assumptions, isEmpty);
     });
 
     test('the last actor cannot also hold the decision', () {
@@ -453,6 +545,136 @@ void main() {
       final proof = act0BettingRoundOrderProofForTableV1(duplicated);
       expect(proof.truth, isNot(Act0BettingRoundOrderTruthV1.consistent));
       expect(proof.reason, isNot('empty_seat_acts'));
+    });
+  });
+
+  group('what the learner sees', () {
+    final played = [
+      for (final t in _tasks)
+        if (t.runner.table.scope == Act0TableScopeV1.playedHand) t,
+    ];
+    String view(Act0TableStateV1 t) =>
+        (act0StreetReplayFromTableV1(t)?.isConsumerSafe ?? false)
+        ? 'replay'
+        : act0TableChoreographyPlanForTableV1(t) != null
+        ? 'animation'
+        : 'static';
+
+    test('replay, animation and static sets are exact', () {
+      final byView = <String, Set<String>>{};
+      for (final t in played) {
+        byView.putIfAbsent(view(t.runner.table), () => {}).add(t.taskId);
+      }
+      expect(byView['replay'], _replayShown);
+      expect(byView['animation'], _animationShown);
+      expect(byView['static'], hasLength(314 - 30 - 1));
+    });
+
+    test('every shown replay history is proven up to the current decision', () {
+      for (final id in _replayShown) {
+        final table = _authored(id);
+        final strict = act0BettingRoundOrderProofForTableV1(table);
+        final conditional = act0BettingRoundOrderConditionalProofForTableV1(
+          table,
+        );
+        if (id.startsWith('w11_')) {
+          // Shown as CO raise, BTN call, flop, while UTG, HJ, SB and BB stay
+          // in the hand: the replay skips their replies.
+          expect(strict.reason, 'unsupported_grammar', reason: id);
+          expect(
+            conditional.reason,
+            'contradiction_if_assumptions_hold:round_not_closed_or_hand_over',
+            reason: id,
+          );
+          continue;
+        }
+        // Strict: every shown action is in order; only the authored current
+        // decision lacks its actor's stack (the marker is not that evidence).
+        expect(
+          (strict.truth, strict.reason),
+          (
+            Act0BettingRoundOrderTruthV1.unproved,
+            'current_actor_stack_unknown',
+          ),
+          reason: id,
+        );
+        // Conditional, reported apart from the proof: one named assumption.
+        expect(conditional.truth, Act0BettingRoundOrderTruthV1.consistent);
+        expect(conditional.assumptions, [
+          'current_actor_has_chips',
+        ], reason: id);
+      }
+    });
+
+    test('the animated history is not proven and names why', () {
+      final table = _authored('w6_turn_pressure_shift_transfer');
+      expect(_trail(table), [
+        'BTN bets flop',
+        'BB calls',
+        'BB checks turn',
+        'BTN acts',
+      ]);
+      _proof(
+        table,
+        Act0BettingRoundOrderTruthV1.unproved,
+        'unsupported_grammar',
+      );
+    });
+
+    test('conditional reading is exact and kept apart from the proof', () {
+      final counts = <String, int>{};
+      final contradictions = <String, Set<String>>{};
+      for (final t in played) {
+        final c = act0BettingRoundOrderConditionalProofForTableV1(
+          t.runner.table,
+        );
+        counts[c.reason] = (counts[c.reason] ?? 0) + 1;
+        if (c.truth == Act0BettingRoundOrderTruthV1.contradiction) {
+          contradictions.putIfAbsent(c.reason, () => {}).add(t.taskId);
+        }
+        final strict = act0BettingRoundOrderProofForTableV1(t.runner.table);
+        // A conditional result never upgrades the proof itself.
+        if (c.assumptions.isNotEmpty) {
+          expect(strict.truth, isNot(Act0BettingRoundOrderTruthV1.consistent));
+        }
+      }
+      expect(counts, _conditionalReasonCounts);
+      expect(contradictions, _conditionalContradictions);
+    });
+  });
+
+  group('all-in and markers', () {
+    test('a recorded shove is ordered and leaves the responder to act', () {
+      final bubble = _authored('w9_bubble_table_risk_transfer');
+      expect(_trail(bubble).last, 'BB shoves to 18 BB');
+      _proof(
+        bubble,
+        Act0BettingRoundOrderTruthV1.unproved,
+        'current_actor_stack_unknown',
+      );
+      _proof(
+        _stack(bubble, 'btn', '40 BB'),
+        Act0BettingRoundOrderTruthV1.consistent,
+        'consistent_current_decision',
+      );
+    });
+
+    test('a decision marker never proves the actor has chips', () {
+      final utg = _authored('hand_discipline_buckets_trash');
+      expect(_trail(utg).last, 'UTG acts');
+      _proof(
+        utg,
+        Act0BettingRoundOrderTruthV1.unproved,
+        'current_actor_stack_unknown',
+      );
+      final c = act0BettingRoundOrderConditionalProofForTableV1(utg);
+      expect(c.reason, 'consistent_if_assumptions_hold');
+      expect(c.assumptions, contains('current_actor_has_chips'));
+      final utgSeat = utg.seats.singleWhere((s) => s.seatLabel == 'UTG');
+      _contradicts(
+        _stack(utg, utgSeat.seatId, '0 BB'),
+        'current_actor_has_no_chips',
+      );
     });
   });
 }
