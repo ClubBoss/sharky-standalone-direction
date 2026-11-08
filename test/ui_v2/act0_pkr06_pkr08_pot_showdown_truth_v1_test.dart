@@ -159,6 +159,72 @@ void main() {
     }
   });
 
+  // Eligibility for each pot, recomputed from contributions and liveness, must
+  // match the graded side-pot statement (Hero: main only).
+  test('PKR06 each pot is contested only by the seats that matched it', () {
+    final task = _task('what_poker_is_side_pot_intro');
+    final t = task.runner.table;
+    final put = {
+      for (final s in t.seats) s.seatId: potTruthBbV1(s.currentBetLabel) ?? 0,
+    };
+    final live = {
+      for (final s in t.seats)
+        if (s.isInHand && !s.isFolded) s.seatId,
+    };
+    final level = put['btn']!; // Hero's all-in sets the main-pot level.
+    final main = {
+      for (final id in live)
+        if (put[id]! >= level) id,
+    };
+    final side = {
+      for (final id in live)
+        if (put[id]! > level) id,
+    };
+    expect(main, {'btn', 'co', 'bb'});
+    expect(side, {'co', 'bb'});
+    expect(
+      task.runner.options.singleWhere((o) => o.isCorrect).id,
+      'hero_main_only',
+    );
+  });
+
+  // Fail-closed inventory: where the source omits stacks, the cap cannot be
+  // proved and is reported here instead of being assumed. Shrink-only.
+  test('PKR06 contributions without an authored stack are explicit', () {
+    final allInWithoutStack = <String>{};
+    final otherWithoutStack = <String>{};
+    for (final task in _tasks()) {
+      final t = task.runner.table;
+      if (!pkr06ApplicableV1(t)) continue;
+      final seats = {for (final s in t.seats) s.seatLabel.toUpperCase(): s};
+      for (final item in t.actionTrail) {
+        final a = potTruthParseActionV1(t, item.label);
+        if (a == null || !potTruthContributionVerbsV1.contains(a.chipVerb)) {
+          continue;
+        }
+        if (seats[a.actor]?.stackLabel != null) continue;
+        (a.chipVerb == 'all_in' ? allInWithoutStack : otherWithoutStack).add(
+          '${task.taskId}:${a.actor}',
+        );
+      }
+      for (final s in t.seats) {
+        if (s.stackLabel == null && potTruthBbV1(s.currentBetLabel) != null) {
+          final actor = s.seatLabel.toUpperCase();
+          if (!{'SB', 'BB'}.contains(actor)) {
+            otherWithoutStack.add('${task.taskId}:$actor');
+          }
+        }
+      }
+    }
+    expect(allInWithoutStack, {'w9_bubble_table_risk_transfer:BB'});
+    // Besides blind posts (0.5/1 BB, never stacked in the catalog), only the
+    // bubble spot's BTN raise lacks a stack.
+    expect(
+      otherWithoutStack.where((k) => !k.endsWith(':SB') && !k.endsWith(':BB')),
+      {'w9_bubble_table_risk_transfer:BTN'},
+    );
+  });
+
   test('PKR06 negative controls fail closed', () {
     // Synthetic consistent control: UTG/HJ folds are added to the trail so the
     // seat flags carry provenance. This is not a claim about the source hand.
