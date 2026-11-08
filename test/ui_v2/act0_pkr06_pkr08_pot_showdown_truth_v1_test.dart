@@ -71,20 +71,7 @@ Act0TableStateV1 _foldOthers(Act0TableStateV1 t, Set<String> keep) => _mapSeats(
 /// Contradictions found on main 2cfda326 in authored explanation tables.
 /// Only the single integrator may remove entries, together with the authored
 /// catalog repair; the list may shrink, never grow.
-const _pkr06AuthoredResidual = <String>{
-  'what_poker_is_all_in_meaning|live_seat_neither_matched_nor_folded|SB put=0.5',
-  'what_poker_is_all_in_meaning|live_seat_neither_matched_nor_folded|BB put=1.0',
-  'what_poker_is_all_in_meaning|live_seat_neither_matched_nor_folded|UTG put=0.0',
-  'what_poker_is_all_in_meaning|live_seat_neither_matched_nor_folded|HJ put=0.0',
-  'what_poker_is_matched_chips_transfer|live_seat_neither_matched_nor_folded|SB put=0.5',
-  'what_poker_is_matched_chips_transfer|live_seat_neither_matched_nor_folded|BB put=1.0',
-  'what_poker_is_matched_chips_transfer|live_seat_neither_matched_nor_folded|UTG put=0.0',
-  'what_poker_is_matched_chips_transfer|live_seat_neither_matched_nor_folded|HJ put=0.0',
-  'what_poker_is_side_pot_intro|folded_seat_live|SB',
-  'what_poker_is_side_pot_intro|live_seat_neither_matched_nor_folded|SB put=0.5',
-  'what_poker_is_side_pot_intro|live_seat_neither_matched_nor_folded|UTG put=0.0',
-  'what_poker_is_side_pot_intro|live_seat_neither_matched_nor_folded|HJ put=0.0',
-};
+const _pkr06AuthoredResidual = <String>{};
 
 /// Graded answers that name a showdown outcome, with the source-determined
 /// winning seats. A pot is shared equally between tied winners.
@@ -126,13 +113,9 @@ void main() {
     final keys = pkr06FindingsV1('x', t).map((f) => f.rule).toSet();
     expect(keys, isNot(contains('side_pot_amounts')));
     expect(keys, isNot(contains('bet_exceeds_stack')));
-    // Folding only the source-backed SB ("posts 0.5 BB, then folds") clears
-    // the SB findings; UTG and HJ still need an authored source decision.
+    // The source now carries the SB, UTG, and HJ fold provenance explicitly.
     final sbFolded = _foldOthers(t, {'utg', 'hj', 'co', 'btn', 'bb'});
-    expect(pkr06FindingsV1('x', sbFolded).map((f) => f.key).toSet(), {
-      'x|live_seat_neither_matched_nor_folded|UTG put=0.0',
-      'x|live_seat_neither_matched_nor_folded|HJ put=0.0',
-    });
+    expect(pkr06FindingsV1('x', sbFolded), isEmpty);
   });
 
   test('PKR06 negative controls fail closed', () {
