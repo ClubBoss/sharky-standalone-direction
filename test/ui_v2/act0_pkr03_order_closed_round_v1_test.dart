@@ -344,15 +344,38 @@ void main() {
       );
     });
 
-    test('an explicit all-in hand is not certified by the ordinary guard', () {
-      _expectUnproved(
-        _table(
+    test(
+      'an explicit all-in bet is ordered and leaves the responder to act',
+      () {
+        // The guard now reads a recorded shove (the all-in player is done and
+        // owes nothing); sizing and reopening rules remain PKR-06.
+        final table = _table(
           <String>[..._preflop, 'Flop: BB shoves 2 BB'],
           pot: 'Pot 8.5 BB',
           stackLabels: const <String, String?>{'bb': '0 BB'},
-        ),
-      );
-    });
+        );
+        expect(
+          act0BettingRoundOrderTruthForTableV1(table),
+          Act0BettingRoundOrderTruthV1.consistent,
+        );
+        expect(
+          act0BettingRoundOrderTruthForTableV1(
+            _table(
+              <String>[
+                ..._preflop,
+                'Flop: BB shoves 2 BB',
+                'BTN calls 2 BB',
+                'Turn: BB checks',
+              ],
+              street: 'Turn',
+              pot: 'Pot 10.5 BB',
+              stackLabels: const <String, String?>{'bb': '0 BB'},
+            ),
+          ),
+          Act0BettingRoundOrderTruthV1.contradiction,
+        );
+      },
+    );
 
     test('additional-call wording is not silently treated as call-to', () {
       expect(

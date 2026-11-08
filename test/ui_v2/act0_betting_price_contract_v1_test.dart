@@ -361,9 +361,10 @@ void main() {
     );
     expect(run(table, 'Raise to', '6').reason, 'raise_not_reopened');
     expect(run(table, 'Raise to', '6').truth, bad);
-    // Existing PKR-03 order verifier does not certify all-in history, so a
-    // price-consistent call stays UNPROVED, never a new full-hand PASS.
-    expect(run(table, 'Call', '1').truth, unknown);
+    // The PKR-03 order proof now reads recorded shoves (the all-in player
+    // owes nothing further), so this price-consistent call of the remaining
+    // 1 BB by the reopened-but-not-re-raisable UTG is proven in order.
+    expect(run(table, 'Call', '1').truth, good);
   });
   test('cumulative short all-ins reopen per player at a full increment', () {
     final table = pkrPriceTableV1(
