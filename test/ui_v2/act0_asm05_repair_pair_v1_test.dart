@@ -24,7 +24,9 @@ void main() {
     test('${pair.source}: actual receipt maps to the other authored price', () {
       final source = _task(pair.source);
       final target = _task(pair.target);
-      final wrong = source.runner.options.singleWhere((o) => o.id == pair.wrong);
+      final wrong = source.runner.options.singleWhere(
+        (o) => o.id == pair.wrong,
+      );
       final receipt = act0FirstValueSkillReceiptForRunnerV1(
         runner: source.runner,
         option: wrong,
@@ -59,7 +61,10 @@ void main() {
       expect(source.rewardXp, 0);
       expect(source.runner.feedbackSignalId, 'asm05_known_holes_ev');
       expect(target.runner.feedbackSignalId, source.runner.feedbackSignalId);
-      expect(target.runner.table.toCallLabel, isNot(source.runner.table.toCallLabel));
+      expect(
+        target.runner.table.toCallLabel,
+        isNot(source.runner.table.toCallLabel),
+      );
       expect(
         target.runner.options.singleWhere((o) => o.isCorrect).id,
         pair.wrong,
@@ -68,10 +73,14 @@ void main() {
         source.runner.options.singleWhere((o) => o.isCorrect).id,
         pair.correct,
       );
-      expect(target.runner.table.heroCards.map((c) => c.label),
-          source.runner.table.heroCards.map((c) => c.label));
-      expect(target.runner.table.boardCards.map((c) => c.label),
-          source.runner.table.boardCards.map((c) => c.label));
+      expect(
+        target.runner.table.heroCards.map((c) => c.label),
+        source.runner.table.heroCards.map((c) => c.label),
+      );
+      expect(
+        target.runner.table.boardCards.map((c) => c.label),
+        source.runner.table.boardCards.map((c) => c.label),
+      );
     });
 
     test('${pair.source}: correct answer creates no repair obligation', () {
@@ -89,49 +98,85 @@ void main() {
       );
     });
 
-    test('${pair.source}: mapping requires the exact admitted repair tuple', () {
-      for (final outcome in ['repair_started', 'needs_rep']) {
-        final mapping = act0FirstValueSameSignalRepMappingV1(
-          nextRepId: 'repeat_mindset_process_discipline',
-          skillAtomId: 'mindset_process_discipline',
-          sourceSignalId: 'process_over_outcome',
-          sourceTaskId: pair.source,
-          receiptOutcome: outcome,
-        );
-        expect(mapping?.taskId, pair.target);
-        expect(mapping?.mappingType, 'repair');
-      }
-      for (final bad in ['next', 'skill', 'signal', 'source', 'learned', 'outcome']) {
-        final mapping = act0FirstValueSameSignalRepMappingV1(
-          nextRepId: bad == 'next' ? 'repeat_price_read' : 'repeat_mindset_process_discipline',
-          skillAtomId: bad == 'skill' ? 'price_read' : 'mindset_process_discipline',
-          sourceSignalId: bad == 'signal' ? 'pot_to_call' : 'process_over_outcome',
-          sourceTaskId: bad == 'source' ? 'asm05_new_known_holes_turn_call_999' : pair.source,
-          receiptOutcome: bad == 'learned' ? 'learned' : bad == 'outcome' ? 'unknown' : 'repair_started',
-        );
-        expect(mapping, isNull, reason: '${pair.source}/$bad');
-      }
-    });
+    test(
+      '${pair.source}: mapping requires the exact admitted repair tuple',
+      () {
+        for (final outcome in ['repair_started', 'needs_rep']) {
+          final mapping = act0FirstValueSameSignalRepMappingV1(
+            nextRepId: 'repeat_mindset_process_discipline',
+            skillAtomId: 'mindset_process_discipline',
+            sourceSignalId: 'process_over_outcome',
+            sourceTaskId: pair.source,
+            receiptOutcome: outcome,
+          );
+          expect(mapping?.taskId, pair.target);
+          expect(mapping?.mappingType, 'repair');
+        }
+        for (final bad in [
+          'next',
+          'skill',
+          'signal',
+          'source',
+          'learned',
+          'outcome',
+        ]) {
+          final mapping = act0FirstValueSameSignalRepMappingV1(
+            nextRepId: bad == 'next'
+                ? 'repeat_price_read'
+                : 'repeat_mindset_process_discipline',
+            skillAtomId: bad == 'skill'
+                ? 'price_read'
+                : 'mindset_process_discipline',
+            sourceSignalId: bad == 'signal'
+                ? 'pot_to_call'
+                : 'process_over_outcome',
+            sourceTaskId: bad == 'source'
+                ? 'asm05_new_known_holes_turn_call_999'
+                : pair.source,
+            receiptOutcome: bad == 'learned'
+                ? 'learned'
+                : bad == 'outcome'
+                ? 'unknown'
+                : 'repair_started',
+          );
+          expect(mapping, isNull, reason: '${pair.source}/$bad');
+        }
+      },
+    );
   }
 
-  test('existing W12 process pair retains repair and reinforcement targets', () {
-    for (final pair in const [
-      (source: 'w12_bad_call_good_result', lesson: 'mindset_bridge_checkpoint', target: 'w12_checkpoint_process_line'),
-      (source: 'w12_checkpoint_process_line', lesson: 'decision_over_outcome', target: 'w12_bad_call_good_result'),
-    ]) {
-      for (final outcome in ['repair_started', 'needs_rep', 'learned']) {
-        final mapping = act0FirstValueSameSignalRepMappingV1(
-          nextRepId: 'repeat_mindset_process_discipline',
-          skillAtomId: 'mindset_process_discipline',
-          sourceSignalId: 'process_over_outcome',
-          sourceTaskId: pair.source,
-          receiptOutcome: outcome,
-        );
-        expect(mapping?.worldId, 'world_12');
-        expect(mapping?.lessonId, pair.lesson);
-        expect(mapping?.taskId, pair.target);
-        expect(mapping?.mappingType, outcome == 'learned' ? 'reinforcement' : 'repair');
+  test(
+    'existing W12 process pair retains repair and reinforcement targets',
+    () {
+      for (final pair in const [
+        (
+          source: 'w12_bad_call_good_result',
+          lesson: 'mindset_bridge_checkpoint',
+          target: 'w12_checkpoint_process_line',
+        ),
+        (
+          source: 'w12_checkpoint_process_line',
+          lesson: 'decision_over_outcome',
+          target: 'w12_bad_call_good_result',
+        ),
+      ]) {
+        for (final outcome in ['repair_started', 'needs_rep', 'learned']) {
+          final mapping = act0FirstValueSameSignalRepMappingV1(
+            nextRepId: 'repeat_mindset_process_discipline',
+            skillAtomId: 'mindset_process_discipline',
+            sourceSignalId: 'process_over_outcome',
+            sourceTaskId: pair.source,
+            receiptOutcome: outcome,
+          );
+          expect(mapping?.worldId, 'world_12');
+          expect(mapping?.lessonId, pair.lesson);
+          expect(mapping?.taskId, pair.target);
+          expect(
+            mapping?.mappingType,
+            outcome == 'learned' ? 'reinforcement' : 'repair',
+          );
+        }
       }
-    }
-  });
+    },
+  );
 }

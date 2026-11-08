@@ -257,7 +257,10 @@ void main() {
         expect(task.runner.options.map((o) => o.label), ['Fold', 'Call']);
         final table = task.runner.table;
         expect(table.heroCards.map((card) => card.label), ['Kh', 'Qh']);
-        expect(table.heroSeat.holeCards.map((card) => card.label), ['Kh', 'Qh']);
+        expect(table.heroSeat.holeCards.map((card) => card.label), [
+          'Kh',
+          'Qh',
+        ]);
         expect(
           table.seats
               .singleWhere((seat) => seat.seatId == 'sb')

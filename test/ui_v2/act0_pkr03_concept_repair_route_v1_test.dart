@@ -308,7 +308,10 @@ void main() {
             sourceFingerprint,
           );
           expect(
-            _records(restored, route.target).single['authoredSourceFingerprint'],
+            _records(
+              restored,
+              route.target,
+            ).single['authoredSourceFingerprint'],
             targetFingerprint,
           );
         }

@@ -287,7 +287,10 @@ void main() {
       expect(row.isRepairTarget, isFalse);
       expect(row.optionCount, 2);
       expect(row.correctIndex, price == 10 ? 1 : 0);
-      expect(row.task.runner.options.map((option) => option.id), ['fold', 'call']);
+      expect(row.task.runner.options.map((option) => option.id), [
+        'fold',
+        'call',
+      ]);
       expect(row.task.runner.options.map((option) => option.label), [
         'Fold',
         'Call',
@@ -354,40 +357,53 @@ void main() {
     expect(allRepair.where((row) => row.fallbackOnly), hasLength(15));
     expect(allRepair.where((row) => row.exactReplay), hasLength(15));
     expect(
-      incorrect.where((row) => row.currentErrorType == 'misread_mindset_discipline'),
+      incorrect.where(
+        (row) => row.currentErrorType == 'misread_mindset_discipline',
+      ),
       hasLength(28),
     );
     // Preserve actual route output for a bounded probe before the admission
     // assertion. A raw 'exact' fallback is not an accepted repair disposition.
-    print(const JsonEncoder.withIndent('  ').convert(<String, Object?>{
-      'cohort': 'ASM05_EXTENSION_2_WITH_AGGREGATE_293',
-      'sameSignalMapped': allRepair.where((row) => row.sameSignalMapped).length,
-      'fallbackOnly': allRepair.where((row) => row.fallbackOnly).length,
-      'intentionalExactReplay': allRepair.where((row) => row.exactReplay).length,
-      'unrecordedFallback': allRepair.where((row) => row.mappingType == 'exact').length,
-      'newRows': <Map<String, Object?>>[
-        for (final repair in extensionRepair)
-          <String, Object?>{
-            ...repair.toInventoryPayload(),
-            'targetWorld': repair.intents.single.targetWorldId,
-            'targetLesson': repair.intents.single.targetLessonId,
-            'targetTask': repair.intents.single.targetTaskId,
-          },
-      ],
-    }));
+    print(
+      const JsonEncoder.withIndent('  ').convert(<String, Object?>{
+        'cohort': 'ASM05_EXTENSION_2_WITH_AGGREGATE_293',
+        'sameSignalMapped': allRepair
+            .where((row) => row.sameSignalMapped)
+            .length,
+        'fallbackOnly': allRepair.where((row) => row.fallbackOnly).length,
+        'intentionalExactReplay': allRepair
+            .where((row) => row.exactReplay)
+            .length,
+        'unrecordedFallback': allRepair
+            .where((row) => row.mappingType == 'exact')
+            .length,
+        'newRows': <Map<String, Object?>>[
+          for (final repair in extensionRepair)
+            <String, Object?>{
+              ...repair.toInventoryPayload(),
+              'targetWorld': repair.intents.single.targetWorldId,
+              'targetLesson': repair.intents.single.targetLessonId,
+              'targetTask': repair.intents.single.targetTaskId,
+            },
+        ],
+      }),
+    );
     expect(
       allRepair.where((row) => row.mappingType == 'exact'),
       isEmpty,
-      reason: 'Both new ASM05 rows require explicit repair admission; '
+      reason:
+          'Both new ASM05 rows require explicit repair admission; '
           'do not accept two new unrecorded exact fallbacks.',
     );
-    expect(allRepair.where((row) => row.mappingType == 'unresolved_product_gap'), isEmpty);
+    expect(
+      allRepair.where((row) => row.mappingType == 'unresolved_product_gap'),
+      isEmpty,
+    );
     expect(allRepair.where((row) => !row.intentAvailable), isEmpty);
     for (final repair in extensionRepair) {
       expect(repair.sameSignalMapped || repair.exactReplay, isTrue);
     }
   });
-
 }
 
 List<_Row> _assessedRows() => <_Row>[

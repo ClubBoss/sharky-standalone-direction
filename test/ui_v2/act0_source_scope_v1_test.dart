@@ -156,7 +156,10 @@ void main() {
     for (final task in newTasks) {
       expect(task.phase, Act0LessonPhaseV1.drill);
       expect(task.resolvedTaskFamily, Act0TaskFamilyV1.decision);
-      expect(task.tablePresentation, Act0TaskTablePresentationV1.stablePractice);
+      expect(
+        task.tablePresentation,
+        Act0TaskTablePresentationV1.stablePractice,
+      );
       expect(task.runner.lessonId, 'decision_over_outcome');
       final table = task.runner.table;
       expect(table.scope, Act0TableScopeV1.playedHand);
