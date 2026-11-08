@@ -3,6 +3,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
 
 const _flopTrail = <Act0ActionTrailItemV1>[
   Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
@@ -15,7 +16,68 @@ const _turnTrail = <Act0ActionTrailItemV1>[
   Act0ActionTrailItemV1(label: 'Turn: CO bets 12 BB'),
 ];
 
+// PKR-03 option B: the full authored hand from the antes and blinds.
 void _expectProjection(Act0TableStateV1 table, bool turn) {
+  final replay = act0StreetReplayFromTableV1(table)!;
+  expect(replay.isConsumerSafe, isTrue);
+  expect(replay.completeness, Act0StreetReplayCompletenessV1.complete);
+  expect(
+    replay.currentStreet,
+    turn ? Act0StreetReplayStreetV1.turn : Act0StreetReplayStreetV1.flop,
+  );
+  expect(replay.steps.map((s) => s.actorLabel), [
+    'SB',
+    'BB',
+    'UTG',
+    'HJ',
+    'CO',
+    'BTN',
+    'SB',
+    'BB',
+    'CO',
+    if (turn) ...['BTN', 'CO'],
+  ]);
+  expect(replay.steps.map((s) => s.actionTypeLabel), [
+    'blind',
+    'blind',
+    'folds',
+    'folds',
+    'raises',
+    'calls',
+    'folds',
+    'folds',
+    'bets',
+    if (turn) ...['calls', 'bets'],
+  ]);
+  expect(replay.steps.map((s) => s.amountLabel), [
+    '0.5 BB',
+    '1 BB',
+    '',
+    '',
+    '2.5 BB',
+    '2.5 BB',
+    '',
+    '',
+    '2 BB',
+    if (turn) ...['2 BB', '12 BB'],
+  ]);
+  expect(replay.steps.map((s) => s.boardCardsAtStreet.length), [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    3,
+    if (turn) ...[3, 4],
+  ]);
+  expect(replay.steps.last.potAtStreet, turn ? 'Pot 12 BB' : 'Pot 8 BB');
+  expect(replay.steps.last.isCurrentStreet, isTrue);
+}
+
+void _expectPreOptionBProjection(Act0TableStateV1 table, bool turn) {
   final replay = act0StreetReplayFromTableV1(table)!;
   expect(replay.isConsumerSafe, isTrue);
   expect(
@@ -88,6 +150,7 @@ void main() {
               onContinueTheory: () {},
               onChooseOption: (_) {},
               onContinueReview: () {},
+              tableChoreographyMode: Act0TableChoreographyModeV1.settled,
             ),
           ),
         ),
@@ -113,19 +176,22 @@ void main() {
       expect(text, isNot(contains('?')));
       expect(tester.takeException(), isNull);
     });
-    test('$id incomplete trail retains source pot fallback at every index', () {
-      final labels = task.runner.table.actionTrail.map((a) => a.label).toList();
-      for (var index = 0; index < labels.length; index++) {
-        expect(act0CalcTrailPotV1(labels, index), (potBb: -1.0, street: ''));
+    test('$id full trail computes the playback pot at every index', () {
+      // Option B starts from the ante note and SB blind, so playback no longer
+      // falls back to the static label; the exact values are pinned in
+      // act0_pkr03_w11_option_b_history_v1_test.dart against a ledger.
+      final table = task.runner.table;
+      for (var index = 0; index < table.actionTrail.length; index++) {
+        expect(act0CalcTableTrailPotV1(table, index).potBb, greaterThan(0));
       }
+      expect(act0TableChoreographyPlanForTableV1(table), isNotNull);
     });
     test('$id authored source exposes correct street projection', () {
       _expectProjection(task.runner.table, turn);
     });
-    test('$id source-preserving trail feasibility without parser changes', () {
-      // Only explicit authored actions: no forced folds/checks, terminal result,
-      // missing cards or opponent hand are supplied to make the parser pass.
-      _expectProjection(
+    test('$id pre-option-B authored trail still projects safely', () {
+      // The earlier authored trail alone (no antes, blinds or folds).
+      _expectPreOptionBProjection(
         task.runner.table.copyWith(actionTrail: turn ? _turnTrail : _flopTrail),
         turn,
       );
