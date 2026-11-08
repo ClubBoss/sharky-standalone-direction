@@ -70,18 +70,7 @@ Act0TableStateV1 _foldOthers(Act0TableStateV1 t, Set<String> keep) => _mapSeats(
 /// Contradictions found on main 2cfda326 in authored explanation tables.
 /// Only the single integrator may remove entries, together with the authored
 /// catalog repair; the list may shrink, never grow.
-const _pkr06AuthoredResidual = <String>{
-  'what_poker_is_all_in_meaning|live_seat_neither_matched_nor_folded|SB put=0.5',
-  'what_poker_is_all_in_meaning|live_seat_neither_matched_nor_folded|BB put=1.0',
-  'what_poker_is_all_in_meaning|live_seat_neither_matched_nor_folded|UTG put=0.0',
-  'what_poker_is_all_in_meaning|live_seat_neither_matched_nor_folded|HJ put=0.0',
-  'what_poker_is_matched_chips_transfer|live_seat_neither_matched_nor_folded|SB put=0.5',
-  'what_poker_is_matched_chips_transfer|live_seat_neither_matched_nor_folded|BB put=1.0',
-  'what_poker_is_matched_chips_transfer|live_seat_neither_matched_nor_folded|UTG put=0.0',
-  'what_poker_is_matched_chips_transfer|live_seat_neither_matched_nor_folded|HJ put=0.0',
-  'what_poker_is_side_pot_intro|live_seat_neither_matched_nor_folded|UTG put=0.0',
-  'what_poker_is_side_pot_intro|live_seat_neither_matched_nor_folded|HJ put=0.0',
-};
+const _pkr06AuthoredResidual = <String>{};
 
 /// Graded answers that name a showdown outcome, with the source-determined
 /// winning seats. A pot is shared equally between tied winners.
@@ -125,13 +114,50 @@ void main() {
     final keys = pkr06FindingsV1('x', t).map((f) => f.rule).toSet();
     expect(keys, isNot(contains('side_pot_amounts')));
     expect(keys, isNot(contains('bet_exceeds_stack')));
-    // Folding only the source-backed SB ("posts 0.5 BB, then folds") clears
-    // the SB findings; UTG and HJ still need an authored source decision.
-    final sbFolded = _foldOthers(t, {'utg', 'hj', 'co', 'btn', 'bb'});
-    expect(pkr06FindingsV1('x', sbFolded).map((f) => f.key).toSet(), {
-      'x|live_seat_neither_matched_nor_folded|UTG put=0.0',
-      'x|live_seat_neither_matched_nor_folded|HJ put=0.0',
-    });
+    // UTG/HJ folds are authored in the side-pot trail and SB's fold is in its
+    // own trail note, so the shipped table is fully consistent.
+    expect(pkr06FindingsV1('x', t), isEmpty);
+    for (final id in ['utg', 'hj', 'sb']) {
+      final seat = t.seats.singleWhere((s) => s.seatId == id);
+      expect(seat.isFolded && !seat.isInHand, isTrue, reason: id);
+    }
+    final bb = t.seats.singleWhere((s) => s.seatId == 'bb');
+    expect(bb.isInHand && !bb.isFolded, isTrue, reason: 'BB contributes');
+  });
+
+  // Added authored all-in history (content decision): every action parses,
+  // CO's limp counts as a 1 BB contribution, and the folded seats carry their
+  // folds in the trail, so the scenes are consistent without inferred facts.
+  test('PKR06 added all-in history is parsed and consistent', () {
+    for (final id in [
+      'what_poker_is_all_in_meaning',
+      'what_poker_is_matched_chips_transfer',
+    ]) {
+      final t = _task(id).runner.table;
+      expect(pkr06FindingsV1(id, t), isEmpty, reason: id);
+      expect(t.potLabel, 'Pot 41.5 BB');
+      final co = [
+        for (final item in t.actionTrail)
+          if (potTruthParseActionV1(t, item.label) case final a?
+              when a.actor == 'CO')
+            (a.chipVerb, a.amount),
+      ];
+      expect(co, [('call', 1.0), ('call', 20.0)], reason: id);
+      for (final seat in t.seats.where(
+        (s) => !{'btn', 'co'}.contains(s.seatId),
+      )) {
+        expect(seat.isFolded && !seat.isInHand, isTrue, reason: seat.seatId);
+        final actor = seat.seatLabel.toUpperCase();
+        expect(
+          t.actionTrail.any((item) {
+            final a = potTruthParseActionV1(t, item.label);
+            return a?.verb == 'fold' && a?.actor == actor;
+          }),
+          isTrue,
+          reason: '$id $actor fold provenance',
+        );
+      }
+    }
   });
 
   test('PKR06 negative controls fail closed', () {

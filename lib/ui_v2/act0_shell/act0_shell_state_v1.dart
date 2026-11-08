@@ -8718,10 +8718,19 @@ final _allInMeaningRunner = _potStackRunner.copyWith(
     centerLabel: 'All-in is all remaining chips',
     potLabel: 'Pot 41.5 BB',
     toCallLabel: '',
+    // Added authored hand history (PKR-06 content decision, 2026-11-08); these
+    // actions were not in the earlier source. UTG/HJ fold, CO limps for 1 BB,
+    // both blinds fold to Hero's all-in, then CO calls to 20 BB total, so
+    // pot 41.5 BB = 0.5 + 1 + 20 + 20 is unchanged.
     actionTrail: const <Act0ActionTrailItemV1>[
       Act0ActionTrailItemV1.note(label: 'Blinds: 1.5 BB'),
+      Act0ActionTrailItemV1.note(label: 'UTG folds'),
+      Act0ActionTrailItemV1.note(label: 'HJ folds'),
+      Act0ActionTrailItemV1.note(label: 'CO calls 1 BB (limps)'),
       Act0ActionTrailItemV1.note(label: 'Hero shoves 20 BB'),
-      Act0ActionTrailItemV1.note(label: 'CO calls 20 BB'),
+      Act0ActionTrailItemV1.note(label: 'SB folds'),
+      Act0ActionTrailItemV1.note(label: 'BB folds'),
+      Act0ActionTrailItemV1.note(label: 'CO calls, 20 BB total'),
     ],
     highlightedSeatIds: const <String>['btn', 'co'],
     seats: _potStackRunner.table.seats
@@ -8780,7 +8789,14 @@ final _allInMeaningRunner = _potStackRunner.copyWith(
                     amountLabel: '20 BB',
                   ),
                 )
-              : seat,
+              // Out of this pot by the folds added to the trail above.
+              : _act0CopySeatStateV1(
+                  seat,
+                  isInHand: false,
+                  isFolded: true,
+                  hasActed: true,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.none,
+                ),
         )
         .toList(growable: false),
   ),
@@ -8891,7 +8907,11 @@ final _sidePotIntroRunner = _matchedChipsTransferRunner.copyWith(
     scope: Act0TableScopeV1.explanation,
     centerLabel: 'Hero cannot win side pot',
     potLabel: 'Main 60.5 BB; side 60 BB',
+    // Added authored hand history (PKR-06 content decision, 2026-11-08); not in
+    // the earlier source. UTG and HJ put no chips in and are out of both pots.
     actionTrail: const <Act0ActionTrailItemV1>[
+      Act0ActionTrailItemV1.note(label: 'UTG folds'),
+      Act0ActionTrailItemV1.note(label: 'HJ folds'),
       Act0ActionTrailItemV1.note(label: 'SB posts 0.5 BB, then folds'),
       Act0ActionTrailItemV1.note(label: 'BB post is included in BB total'),
       Act0ActionTrailItemV1.note(label: 'Hero all-in 20 BB'),
@@ -8956,6 +8976,14 @@ final _sidePotIntroRunner = _matchedChipsTransferRunner.copyWith(
                     amountLabel: '50 BB',
                   ),
                 )
+              : seat.seatId == 'utg' || seat.seatId == 'hj'
+              ? _act0CopySeatStateV1(
+                  seat,
+                  isInHand: false,
+                  isFolded: true,
+                  hasActed: true,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.none,
+                )
               : seat.seatId == 'bb'
               ? Act0SeatStateV1(
                   seatId: seat.seatId,
@@ -8968,14 +8996,16 @@ final _sidePotIntroRunner = _matchedChipsTransferRunner.copyWith(
                   blindAmountLabel: seat.blindAmountLabel,
                   isActive: false,
                   isTarget: seat.isTarget,
-                  isInHand: seat.isInHand,
-                  isFolded: seat.isFolded,
+                  // BB contributes 50 BB here (existing source fact), so it stays
+                  // live even though the all-in scene it inherits folds BB.
+                  isInHand: true,
+                  isFolded: false,
                   hasActed: seat.hasActed,
                   isLastAggressor: seat.isLastAggressor,
                   isOccupied: seat.isOccupied,
                   stackLabel: '50 BB',
                   holeCards: seat.holeCards,
-                  cardsVisibleMode: seat.cardsVisibleMode,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceDown,
                   currentBetLabel: '50 BB',
                   bet: const Act0SeatBetStateV1(
                     kind: Act0SeatBetKindV1.call,
