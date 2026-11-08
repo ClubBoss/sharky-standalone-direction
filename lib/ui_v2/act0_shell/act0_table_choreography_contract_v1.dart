@@ -413,7 +413,10 @@ Act0TableStateV1 act0TableForChoreographyFrameV1(
           hasActed: seat.hasActed,
           isLastAggressor: seat.isLastAggressor,
           isOccupied: seat.isOccupied,
-          stackLabel: seat.stackLabel,
+          // Authored stacks are decision-time values (the decision frame
+          // returns the source table above). Earlier frames have no per-beat
+          // stack, so none is shown rather than a later number as history.
+          stackLabel: null,
           holeCards: seat.holeCards,
           cardsVisibleMode: seat.cardsVisibleMode,
           currentBetLabel: null,
