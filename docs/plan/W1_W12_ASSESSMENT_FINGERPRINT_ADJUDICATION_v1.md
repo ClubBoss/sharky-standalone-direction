@@ -1,15 +1,15 @@
 ---
 status: "CURRENT_AND_VALID"
 status_source: "derived"
-baseline: "efd3d2f8ed182"
+baseline: "c76bed82277e"
 generated_by: "docs_frontmatter_v1"
 ---
 
 # W1-W12 Assessment Fingerprint Adjudication v1
 
-Status: CURRENT_AND_VALID for the bounded 2026-11-08 shown-hand comparison
-wave after independent source adjudication and the unchanged canonical guard.
-Earlier adjudications below retain their historical source identities.
+Status: CURRENT_AND_VALID for the bounded 2026-11-08 PKR-06 input-provenance
+wave after independent exact-candidate adjudication and the unchanged canonical
+guard. Earlier adjudications below retain their historical source identities.
 
 ## Authority and method
 
@@ -233,3 +233,33 @@ scoped analyze also exited 0. Raw test SHA-256:
 The guard now reports the admitted fingerprint and exact final input as valid;
 none of its assertions or thresholds changed. This machine receipt does not
 itself award points or replace final independent original-DoD poker acceptance.
+
+## PKR-06 input-only NEW_AUTHORING provenance — 2026-11-08
+
+Independent exact-candidate review returned
+`ACCEPT_W1_INPUT_PROVENANCE_FOR_EXACT_CANDIDATE` for source commit
+`c76bed82277e986706d4217dab293c51dab901f7`, tree
+`9ad3c937047866a7df797ab0e80e2a4a1c57ef55`, parent
+`35517332b7d2ae6a246bfdfd1f81fd5a0d1b2f9d`.
+
+The sole declared input changed from State SHA-256
+`4850b3940dd7e8970412248a6a9c7f20d4af358b87e9969eb7a2a8abfc3f174b`
+to
+`bec585f9fdb11903c5be507e0c2a90522597d0e90c736c3ac8c1e90c0b113b3d`.
+The new bytes add bounded, explicitly NEW_AUTHORING contribution provenance:
+CO limps for 1 BB and then calls to 20 BB total in the W1 all-in explanation;
+the side-pot explanation records the source-owned folded seats and contribution
+summary. They do not recover an earlier historical hand.
+
+The canonical 291 serialized payload rows are byte-identical. The fingerprint
+remains
+`599ecadb0180eb48e8de72520645c29750941cba4cdd000f5acdda834a30f7e1`;
+`schemaVersion: 1`, row count, generator, input path, guard semantics,
+validators, and all thresholds remain unchanged. The immediately previous valid
+baseline is `efd3d2f8ed182d8cf4fea6092306673f162be3d6`, with the same
+fingerprint and the prior State input SHA above.
+
+All earlier `bdf560` and PKR-08 adjudication history, including the final
+22/22 machine receipt, remains historical evidence for its exact source. This
+metadata repin is input-provenance only: it is not runtime acceptance, full
+PKR-06 acceptance, native/Human proof, or a scorecard award.
