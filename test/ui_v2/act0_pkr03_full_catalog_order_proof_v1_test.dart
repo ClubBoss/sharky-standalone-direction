@@ -677,4 +677,89 @@ void main() {
       );
     });
   });
+
+  group('raises after all-ins (review S1/S2)', () {
+    final flop = _authored('your_first_hand_flop');
+    final allLive = flop.copyWith(
+      streetLabel: 'Preflop',
+      boardCards: const [],
+      activeSeatId: '',
+      seats: [
+        for (final s in flop.seats)
+          Act0SeatStateV1(
+            seatId: s.seatId,
+            seatLabel: s.seatLabel,
+            displayName: s.displayName,
+            isHero: s.isHero,
+            isDealerButton: s.isDealerButton,
+            isSmallBlind: s.isSmallBlind,
+            isBigBlind: s.isBigBlind,
+            isOccupied: s.isOccupied,
+            isInHand: true,
+            isFolded: false,
+            stackLabel: '97 BB',
+            holeCards: s.holeCards,
+            cardsVisibleMode: s.cardsVisibleMode,
+          ),
+      ],
+    );
+    List<String> upToShove(String shove) => [
+      'SB blind 0.5 BB',
+      'BB blind 1 BB',
+      'UTG raises to 3 BB',
+      shove,
+      'CO folds',
+      'BTN folds',
+      'SB folds',
+      'BB folds',
+    ];
+
+    test('S1: a raise nobody can answer contradicts', () {
+      _contradicts(
+        _withTrail(allLive, [
+          ...upToShove('HJ shoves to 20 BB'),
+          'UTG raises to 60 BB',
+        ]),
+        'aggression_without_responder',
+      );
+    });
+
+    test('S2: a raise after an incomplete all-in is never consistent', () {
+      // Reviewer's S2: nobody is left to answer UTG, so it contradicts.
+      _contradicts(
+        _withTrail(allLive, [
+          ...upToShove('HJ shoves to 4 BB'),
+          'UTG raises to 12 BB',
+        ]),
+        'aggression_without_responder',
+      );
+      // With CO still able to answer, the reopen rule decides (PKR-06).
+      _proof(
+        _withTrail(allLive, [
+          'SB blind 0.5 BB',
+          'BB blind 1 BB',
+          'UTG raises to 3 BB',
+          'HJ shoves to 4 BB',
+          'CO calls 4 BB',
+          'BTN folds',
+          'SB folds',
+          'BB folds',
+          'UTG raises to 12 BB',
+        ]),
+        Act0BettingRoundOrderTruthV1.unproved,
+        'raise_after_incomplete_all_in',
+      );
+    });
+
+    test('calling the incomplete all-in closes the round', () {
+      _proof(
+        _withTrail(allLive, [
+          ...upToShove('HJ shoves to 4 BB'),
+          'UTG calls 4 BB',
+        ]),
+        Act0BettingRoundOrderTruthV1.consistent,
+        'consistent_closed_history',
+      );
+    });
+  });
 }

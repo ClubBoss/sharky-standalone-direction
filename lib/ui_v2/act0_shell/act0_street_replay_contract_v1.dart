@@ -556,6 +556,8 @@ const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams'};
   var street = Act0StreetReplayStreetV1.preflop;
   var lastActorIndex = order.indexOf('BB');
   var preflopVoluntaryCommit = false;
+  var lastFullIncrement = 1.0;
+  var incompleteAllInOnStreet = false;
   final lastVerb = <String, String>{};
   var startIndex = 2;
   if (prefixUnknownActor != null) {
@@ -645,6 +647,8 @@ const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams'};
       if (pending.length < 2) pending.clear();
       committed.clear();
       price = 0;
+      lastFullIncrement = 1;
+      incompleteAllInOnStreet = false;
       lastActorIndex = order.indexOf('BTN');
     }
     if (action.verb.isEmpty) continue;
@@ -681,6 +685,16 @@ const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams'};
     }
     Set<String> reopened() =>
         live.where((a) => a != action.actor && !allIn.contains(a)).toSet();
+    // Aggression needs someone who can still answer it, and a raise after an
+    // incomplete all-in raise depends on the reopen rule (PKR-06 sizing).
+    if (isAggressive(action.verb) && (action.amount ?? 0) > price) {
+      if (reopened().isEmpty && !_act0AllInVerbsV1.contains(action.verb)) {
+        return (contradiction, 'aggression_without_responder');
+      }
+      if (incompleteAllInOnStreet) {
+        return (unproved, 'raise_after_incomplete_all_in');
+      }
+    }
     switch (action.verb) {
       case 'fold':
       case 'folds':
@@ -713,6 +727,7 @@ const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams'};
           return (unproved, 'open_not_first_in_preflop');
         }
         if (action.amount! <= price) return (unproved, 'unsupported_amount');
+        lastFullIncrement = action.amount! - price;
         price = action.amount!;
         committed[action.actor] = price;
         pending = reopened();
@@ -724,6 +739,7 @@ const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams'};
         if (action.amount! <= price || isBet != (price == 0)) {
           return (unproved, 'unsupported_amount');
         }
+        lastFullIncrement = action.amount! - price;
         price = action.amount!;
         committed[action.actor] = price;
         pending = reopened();
@@ -735,6 +751,11 @@ const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams'};
         // at or below it, it is an all-in call. Either way the actor is done.
         allIn.add(action.actor);
         if (action.amount! > price) {
+          if (action.amount! - price < lastFullIncrement) {
+            incompleteAllInOnStreet = true;
+          } else {
+            lastFullIncrement = action.amount! - price;
+          }
           price = action.amount!;
           committed[action.actor] = price;
           pending = reopened();
