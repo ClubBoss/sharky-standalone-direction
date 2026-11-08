@@ -1,0 +1,559 @@
+// PKR-06 (stacks, all-in, eligibility, side pots) and PKR-08 (showdown,
+// winner/tie, payout) over every authored table of the shipped catalog.
+// MACHINE source oracle only: no Human, native or Runner-render claim.
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+
+import '../support/act0_pot_showdown_truth_v1.dart';
+
+Iterable<Act0LessonTaskV1> _tasks() sync* {
+  for (final world in Act0ShellStateV1.sample.worlds) {
+    for (final lesson in world.lessons) {
+      yield* lesson.taskList;
+    }
+  }
+}
+
+Act0LessonTaskV1 _task(String id) =>
+    _tasks().singleWhere((t) => t.taskId == id);
+
+Act0SeatStateV1 _seat(
+  Act0SeatStateV1 s, {
+  bool? isInHand,
+  bool? isFolded,
+  String? stackLabel,
+  String? currentBetLabel,
+  List<Act0CardStateV1>? holeCards,
+  Act0CardsVisibleModeV1? cardsVisibleMode,
+}) => Act0SeatStateV1(
+  seatId: s.seatId,
+  seatLabel: s.seatLabel,
+  displayName: s.displayName,
+  isHero: s.isHero,
+  isDealerButton: s.isDealerButton,
+  isSmallBlind: s.isSmallBlind,
+  isBigBlind: s.isBigBlind,
+  blindAmountLabel: s.blindAmountLabel,
+  isActive: s.isActive,
+  isTarget: s.isTarget,
+  isInHand: isInHand ?? s.isInHand,
+  isFolded: isFolded ?? s.isFolded,
+  hasActed: s.hasActed,
+  isLastAggressor: s.isLastAggressor,
+  isOccupied: s.isOccupied,
+  stackLabel: stackLabel ?? s.stackLabel,
+  holeCards: holeCards ?? s.holeCards,
+  cardsVisibleMode: cardsVisibleMode ?? s.cardsVisibleMode,
+  currentBetLabel: currentBetLabel ?? s.currentBetLabel,
+  bet: s.bet,
+);
+
+Act0TableStateV1 _mapSeats(
+  Act0TableStateV1 t,
+  Act0SeatStateV1 Function(Act0SeatStateV1) f,
+) => t.copyWith(seats: t.seats.map(f).toList());
+
+Act0TableStateV1 _foldOthers(Act0TableStateV1 t, Set<String> keep) => _mapSeats(
+  t,
+  (s) => keep.contains(s.seatId)
+      ? s
+      : _seat(
+          s,
+          isInHand: false,
+          isFolded: true,
+          cardsVisibleMode: Act0CardsVisibleModeV1.none,
+        ),
+);
+
+/// Contradictions found on main 2cfda326 in authored explanation tables.
+/// Only the single integrator may remove entries, together with the authored
+/// catalog repair; the list may shrink, never grow.
+const _pkr06AuthoredResidual = <String>{
+  'what_poker_is_all_in_meaning|live_seat_neither_matched_nor_folded|SB put=0.5',
+  'what_poker_is_all_in_meaning|live_seat_neither_matched_nor_folded|BB put=1.0',
+  'what_poker_is_all_in_meaning|live_seat_neither_matched_nor_folded|UTG put=0.0',
+  'what_poker_is_all_in_meaning|live_seat_neither_matched_nor_folded|HJ put=0.0',
+  'what_poker_is_matched_chips_transfer|live_seat_neither_matched_nor_folded|SB put=0.5',
+  'what_poker_is_matched_chips_transfer|live_seat_neither_matched_nor_folded|BB put=1.0',
+  'what_poker_is_matched_chips_transfer|live_seat_neither_matched_nor_folded|UTG put=0.0',
+  'what_poker_is_matched_chips_transfer|live_seat_neither_matched_nor_folded|HJ put=0.0',
+  'what_poker_is_side_pot_intro|folded_seat_live|SB',
+  'what_poker_is_side_pot_intro|live_seat_neither_matched_nor_folded|SB put=0.5',
+  'what_poker_is_side_pot_intro|live_seat_neither_matched_nor_folded|UTG put=0.0',
+  'what_poker_is_side_pot_intro|live_seat_neither_matched_nor_folded|HJ put=0.0',
+};
+
+/// Graded answers that name a showdown outcome, with the source-determined
+/// winning seats. A pot is shared equally between tied winners.
+const _pkr08OutcomeClaims = <String, Set<String>>{
+  'w6_kicker_showdown_compare': {'btn'},
+  'w6_board_pair_strength_compare': {'co'},
+  'w6_checkpoint_table_best_five': {'btn', 'co'},
+  'hand_rankings_quads_vs_full_house_drill': {'btn'},
+};
+
+/// Outcome claims whose winner is not yet determined by source cards (live
+/// opponents with hidden hands could beat or tie). Shrink-only, see above.
+const _pkr08AuthoredResidual = <String>{
+  'hand_rankings_full_house_vs_flush_drill',
+};
+
+/// Questions that ask the learner to name who wins the showdown pot.
+final _outcomeQuestion = RegExp(
+  r'who wins|stronger at showdown|before the pot is pushed',
+  caseSensitive: false,
+);
+
+void main() {
+  test('PKR06 every stack, all-in and side-pot table matches its own data', () {
+    final findings = <String>{};
+    var applicable = 0;
+    for (final t in _tasks()) {
+      if (!pkr06ApplicableV1(t.runner.table)) continue;
+      applicable++;
+      findings.addAll(
+        pkr06FindingsV1(t.taskId, t.runner.table).map((f) => f.key),
+      );
+    }
+    expect(applicable, greaterThan(80), reason: 'oracle must see the catalog');
+    expect(findings, _pkr06AuthoredResidual);
+  });
+
+  test('PKR06 declared side pot is recomputed from contributions', () {
+    final t = _task('what_poker_is_side_pot_intro').runner.table;
+    expect(t.potLabel, 'Main 60.5 BB; side 60 BB');
+    final keys = pkr06FindingsV1('x', t).map((f) => f.rule).toSet();
+    expect(keys, isNot(contains('side_pot_amounts')));
+    expect(keys, isNot(contains('bet_exceeds_stack')));
+    // Folding only the source-backed SB ("posts 0.5 BB, then folds") clears
+    // the SB findings; UTG and HJ still need an authored source decision.
+    final sbFolded = _foldOthers(t, {'utg', 'hj', 'co', 'btn', 'bb'});
+    expect(pkr06FindingsV1('x', sbFolded).map((f) => f.key).toSet(), {
+      'x|live_seat_neither_matched_nor_folded|UTG put=0.0',
+      'x|live_seat_neither_matched_nor_folded|HJ put=0.0',
+    });
+  });
+
+  test('PKR06 negative controls fail closed', () {
+    // Synthetic consistent control: UTG/HJ folds are added to the trail so the
+    // seat flags carry provenance. This is not a claim about the source hand.
+    final sidePot = _task('what_poker_is_side_pot_intro').runner.table;
+    final base = _foldOthers(
+      sidePot.copyWith(
+        actionTrail: [
+          const Act0ActionTrailItemV1.note(label: 'UTG folds'),
+          const Act0ActionTrailItemV1.note(label: 'HJ folds'),
+          ...sidePot.actionTrail,
+        ],
+      ),
+      {'btn', 'co', 'bb'},
+    );
+    expect(pkr06FindingsV1('x', base), isEmpty);
+    Set<String> rules(Act0TableStateV1 t) =>
+        pkr06FindingsV1('x', t).map((f) => f.rule).toSet();
+
+    // A bet larger than the chips a seat owns.
+    expect(
+      rules(
+        base.copyWith(
+          actionTrail: [
+            ...base.actionTrail,
+            const Act0ActionTrailItemV1.note(label: 'CO raises to 140 BB'),
+          ],
+        ),
+      ),
+      contains('bet_exceeds_stack'),
+    );
+    // Every attributed verb is capped, not only raises (review 5815162573).
+    for (final verb in ['calls', 'bets', 'posts']) {
+      expect(
+        rules(
+          base.copyWith(
+            actionTrail: [
+              ...base.actionTrail,
+              Act0ActionTrailItemV1.note(label: 'CO $verb 999 BB'),
+            ],
+          ),
+        ),
+        contains('bet_exceeds_stack'),
+        reason: verb,
+      );
+    }
+    // Every contribution verb before a fold stays capped while the action
+    // stays a fold (reviews 6715993358, 6716215513).
+    for (final clause in [
+      'posts 999 BB',
+      'blind 999 BB',
+      'calls 999 BB',
+      'bets 999 BB',
+      'raises to 999 BB',
+      'contributes 999 BB total',
+      'shoves 999 BB',
+    ]) {
+      final label = 'CO $clause, then folds';
+      final parsed = potTruthParseActionV1(base, label);
+      expect(parsed?.verb, 'fold', reason: label);
+      expect(parsed?.chipVerb, isNotNull, reason: label);
+      expect(
+        rules(
+          base.copyWith(
+            actionTrail: [
+              ...base.actionTrail,
+              Act0ActionTrailItemV1.note(label: label),
+            ],
+          ),
+        ),
+        containsAll(['bet_exceeds_stack', 'folded_seat_live']),
+        reason: label,
+      );
+    }
+    // A plain fold carries no contribution.
+    expect(potTruthParseActionV1(base, 'CO folds')?.chipVerb, isNull);
+    // An all-in player shown with chips behind.
+    expect(
+      rules(
+        _mapSeats(base, (s) => s.isHero ? _seat(s, stackLabel: '5 BB') : s),
+      ),
+      contains('all_in_with_chips_behind'),
+    );
+    // Zero behind but no all-in in the source.
+    expect(
+      rules(
+        _mapSeats(
+          base,
+          (s) => s.seatId == 'co' ? _seat(s, stackLabel: '0 BB') : s,
+        ),
+      ),
+      contains('zero_stack_without_all_in'),
+    );
+    // Wrong side-pot amount.
+    expect(
+      rules(base.copyWith(potLabel: 'Main 60.5 BB; side 40 BB')),
+      contains('side_pot_amounts'),
+    );
+    // A folded player shown live (eligible for chips).
+    expect(
+      rules(
+        _mapSeats(
+          base,
+          (s) =>
+              s.seatId == 'sb' ? _seat(s, isInHand: true, isFolded: false) : s,
+        ),
+      ),
+      contains('folded_seat_live'),
+    );
+    // A live player who neither matched the all-in nor folded.
+    expect(
+      rules(
+        _mapSeats(
+          base,
+          (s) =>
+              s.seatId == 'utg' ? _seat(s, isInHand: true, isFolded: false) : s,
+        ),
+      ),
+      contains('live_seat_neither_matched_nor_folded'),
+    );
+    // Unparseable amounts are never treated as zero.
+    expect(
+      rules(
+        _mapSeats(
+          base,
+          (s) => s.seatId == 'co' ? _seat(s, currentBetLabel: 'lots') : s,
+        ),
+      ),
+      contains('amount_unparsed'),
+    );
+    // A malformed BB amount on any contribution is reported, never skipped
+    // (review 6717829622).
+    for (final clause in [
+      'bets several BB',
+      'calls several BB',
+      'raises to several BB',
+      'contributes several BB total',
+      'posts several BB',
+      'posts several BB, then folds',
+    ]) {
+      final label = 'CO $clause';
+      expect(
+        rules(
+          base.copyWith(
+            actionTrail: [
+              ...base.actionTrail,
+              Act0ActionTrailItemV1.note(label: label),
+            ],
+          ),
+        ),
+        contains('action_amount_unparsed'),
+        reason: label,
+      );
+    }
+    // An action without any amount is not a malformed amount.
+    expect(
+      rules(
+        base.copyWith(
+          actionTrail: [
+            ...base.actionTrail,
+            const Act0ActionTrailItemV1.note(label: 'CO calls'),
+          ],
+        ),
+      ),
+      isNot(contains('action_amount_unparsed')),
+    );
+  });
+
+  test('PKR08 every graded showdown outcome is resolved from source cards', () {
+    final classified = {..._pkr08OutcomeClaims.keys, ..._pkr08AuthoredResidual};
+    for (final t in _tasks()) {
+      final asksOutcome = _outcomeQuestion.hasMatch(t.runner.question);
+      if (asksOutcome) {
+        expect(classified, contains(t.taskId), reason: t.runner.question);
+      }
+    }
+    for (final entry in _pkr08OutcomeClaims.entries) {
+      final r = resolveShowdownTruthV1(_task(entry.key).runner.table);
+      expect(
+        r.verdict,
+        PotTruthVerdictV1.proved,
+        reason: '${entry.key} ${r.reason}',
+      );
+      expect(r.winners.toSet(), entry.value, reason: entry.key);
+      // Payout: the whole pot, shared equally by the tied winners only.
+      final share = r.potBb! / r.winners.length;
+      expect(share * r.winners.length, r.potBb);
+      final table = _task(entry.key).runner.table;
+      for (final id in r.winners) {
+        final seat = table.seats.singleWhere((s) => s.seatId == id);
+        expect(seat.isInHand && !seat.isFolded, isTrue, reason: '$id eligible');
+      }
+    }
+    for (final id in _pkr08AuthoredResidual) {
+      final r = resolveShowdownTruthV1(_task(id).runner.table);
+      expect(r.verdict, PotTruthVerdictV1.unproved, reason: id);
+      expect(r.reason, startsWith('hidden_live_hand_can_win_or_tie'));
+    }
+  });
+
+  test('PKR08 graded winner matches the authored correct option', () {
+    // The graded label must name exactly the oracle winner(s).
+    const labels = <String, String>{
+      'w6_kicker_showdown_compare': 'Hero A-K',
+      'w6_board_pair_strength_compare': 'Villain K-8',
+      'w6_checkpoint_table_best_five': 'Split the pot',
+      'hand_rankings_quads_vs_full_house_drill': 'Hero four of a kind',
+    };
+    for (final e in labels.entries) {
+      final correct = _task(e.key).runner.options.where((o) => o.isCorrect);
+      expect(correct.map((o) => o.label), [e.value], reason: e.key);
+    }
+  });
+
+  // Playable consumer parity: the real Runner's showdown read must name the
+  // same winner(s) as the oracle, and must stay silent where the oracle cannot
+  // determine the winner from source cards.
+  Future<void> pumpTheory(WidgetTester tester, Act0RunnerStateV1 runner) async {
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0LessonRunnerShellV1(
+            runner: runner.copyWith(
+              teachingSteps: const [],
+              phase: Act0LessonPhaseV1.theory,
+            ),
+            onBack: () {},
+            onContinueTheory: () {},
+            onChooseOption: (_) {},
+            onContinueReview: () {},
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('act0_shell_card_board_0')));
+    await tester.pumpAndSettle();
+  }
+
+  String? shownRead(WidgetTester tester) {
+    for (final w in tester.widgetList<Text>(find.byType(Text))) {
+      final s = w.data ?? w.textSpan?.toPlainText() ?? '';
+      if (s.startsWith('Best shown hand:') ||
+          s.startsWith('Tied best hands:')) {
+        return s;
+      }
+    }
+    return null;
+  }
+
+  // Lessons whose Runner offers the interactive showdown read; this anchor
+  // keeps the parity check from passing vacuously.
+  const runnerShowsRead = {
+    'w6_kicker_showdown_compare',
+    'w6_checkpoint_table_best_five',
+  };
+  for (final id in _pkr08OutcomeClaims.keys) {
+    testWidgets(
+      'PKR08 Runner showdown read never contradicts the oracle: $id',
+      (tester) async {
+        final runner = _task(id).runner;
+        final r = resolveShowdownTruthV1(runner.table);
+        await pumpTheory(tester, runner);
+        final read = shownRead(tester);
+        if (runnerShowsRead.contains(id)) expect(read, isNotNull, reason: id);
+        if (read == null) return; // the Runner may stay silent, never disagree
+        expect(read, isNot(contains('You win with')));
+        if (r.winners.length > 1) {
+          expect(read, startsWith('Tied best hands:'));
+          for (final w in r.winners) {
+            final seat = runner.table.seats.singleWhere((s) => s.seatId == w);
+            expect(read, contains(seat.isHero ? 'You' : seat.seatLabel));
+          }
+        } else {
+          final seat = runner.table.seats.singleWhere(
+            (s) => s.seatId == r.winners.single,
+          );
+          expect(
+            read,
+            startsWith(
+              'Best shown hand: ${seat.isHero ? 'You' : seat.seatLabel} ',
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  for (final id in _pkr08AuthoredResidual) {
+    testWidgets('PKR08 Runner names no winner while hands are hidden: $id', (
+      tester,
+    ) async {
+      await pumpTheory(tester, _task(id).runner);
+      expect(find.textContaining('Best shown hand:'), findsNothing);
+      expect(find.textContaining('Tied best hands:'), findsNothing);
+    });
+  }
+
+  test('PKR08 negative controls never invent a winner or payout', () {
+    final base = _task('w6_kicker_showdown_compare').runner.table;
+    expect(resolveShowdownTruthV1(base).winners, ['btn']);
+
+    // A live opponent with hidden cards blocks the verdict.
+    final hiddenOpponent = _mapSeats(
+      base,
+      (s) => s.seatId == 'co'
+          ? _seat(s, cardsVisibleMode: Act0CardsVisibleModeV1.faceDown)
+          : s,
+    );
+    expect(
+      resolveShowdownTruthV1(hiddenOpponent).verdict,
+      PotTruthVerdictV1.unproved,
+    );
+
+    // A source trail fold contradicting a live seat must not prove a winner
+    // (review 6717471702).
+    final trailFoldLive = base.copyWith(
+      actionTrail: [
+        ...base.actionTrail,
+        const Act0ActionTrailItemV1.note(label: 'BTN folds'),
+      ],
+    );
+    final trailFoldVerdict = resolveShowdownTruthV1(trailFoldLive);
+    expect(trailFoldVerdict.verdict, PotTruthVerdictV1.unproved);
+    expect(trailFoldVerdict.reason, 'folded_seat_live:btn');
+
+    // A folded player is never paid even with the best cards.
+    final foldedWinner = _mapSeats(
+      base,
+      (s) => s.isHero ? _seat(s, isInHand: false, isFolded: true) : s,
+    );
+    expect(
+      resolveShowdownTruthV1(foldedWinner).verdict,
+      PotTruthVerdictV1.unproved,
+    );
+
+    // Duplicate physical card.
+    final dup = base.copyWith(
+      boardCards: [...base.boardCards.take(4), base.heroCards.first],
+    );
+    expect(resolveShowdownTruthV1(dup).reason, 'duplicate_card');
+
+    // Incomplete board.
+    final turn = base.copyWith(boardCards: base.boardCards.take(4).toList());
+    expect(resolveShowdownTruthV1(turn).reason, 'board_incomplete');
+
+    // A side pot needs per-pot eligibility the catalog does not author.
+    final sidePot = base.copyWith(potLabel: 'Main 6 BB; side 5 BB');
+    expect(
+      resolveShowdownTruthV1(sidePot).reason,
+      'side_pot_showdown_not_supported',
+    );
+
+    // Changing the real cards changes the winner: no fixed answer survives.
+    final swapped = _mapSeats(
+      base,
+      (s) => s.seatId == 'co'
+          ? _seat(
+              s,
+              holeCards: const [
+                Act0CardStateV1(
+                  rank: 'K',
+                  suit: 's',
+                  tone: Act0CardToneV1.dark,
+                ),
+                Act0CardStateV1(rank: '9', suit: 'd', tone: Act0CardToneV1.red),
+              ],
+            )
+          : s,
+    );
+    expect(resolveShowdownTruthV1(swapped).winners, ['co']);
+
+    // Review 6714410161: fold flags without fold/showdown provenance must not
+    // turn hidden live opponents into proven losers.
+    final residual = _task(
+      'hand_rankings_full_house_vs_flush_drill',
+    ).runner.table;
+    final flagOnly = resolveShowdownTruthV1(
+      _foldOthers(residual, {'btn', 'co'}),
+    );
+    expect(flagOnly.verdict, PotTruthVerdictV1.unproved);
+    expect(flagOnly.reason, startsWith('fold_without_provenance'));
+    // The same folds with explicit trail provenance do resolve the hand.
+    final withProvenance = _foldOthers(
+      residual.copyWith(
+        actionTrail: [
+          for (final seat in ['UTG', 'HJ', 'SB', 'BB'])
+            Act0ActionTrailItemV1.note(label: '$seat folds'),
+        ],
+      ),
+      {'btn', 'co'},
+    );
+    expect(resolveShowdownTruthV1(withProvenance).winners, ['btn']);
+  });
+
+  test('PKR08 hidden opponents after a Hero fold remain UNPROVED', () {
+    final t = _task('w6_kicker_showdown_compare').runner.table;
+    final hero = t.seats.singleWhere((s) => s.isHero);
+    final hidden =
+        _mapSeats(
+          t,
+          (s) => s.isHero
+              ? _seat(s, isInHand: false, isFolded: true)
+              : _seat(
+                  s,
+                  isInHand: true,
+                  isFolded: false,
+                  cardsVisibleMode: Act0CardsVisibleModeV1.faceDown,
+                ),
+        ).copyWith(
+          actionTrail: [
+            Act0ActionTrailItemV1.note(label: '${hero.seatLabel} folds'),
+          ],
+        );
+    final result = resolveShowdownTruthV1(hidden);
+    expect(result.verdict, PotTruthVerdictV1.unproved);
+  });
+}
