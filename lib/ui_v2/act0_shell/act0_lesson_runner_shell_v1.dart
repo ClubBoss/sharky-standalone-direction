@@ -6998,6 +6998,13 @@ Act0FeedbackSignalProofV1? _feedbackSignalProofForRunnerV1({
           signalId: explicitSignal,
           label: 'Stated premise: a changed turn board',
         );
+      case 'asm05_known_holes_ev':
+        // Preview uses the parent lesson id, not the individual task id.
+        if (runner.lessonId != 'decision_over_outcome') return null;
+        return _feedbackSignalProofV1(
+          signalId: 'process_over_outcome',
+          label: 'Known cards and price; process over outcome',
+        );
       case 'process_over_outcome':
         if (!const {
           'w12_bad_call_good_result',
