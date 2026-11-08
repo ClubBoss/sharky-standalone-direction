@@ -1,5 +1,8 @@
 """Controls for historical-source preservation and strict gate error rejection."""
 import importlib.util
+import os
+import re
+import textwrap
 import json
 import pathlib
 import subprocess
@@ -82,6 +85,139 @@ class DependencyControls(unittest.TestCase):
                      'tests', str(log), expected, '1'], capture_output=True, text=True)
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn('does not establish', result.stderr)
+
+
+    def test_legacy_compile_only_shim_rejects_mismatched_provenance(self):
+        key = ADAPTER.PRICE_DEPENDENCY
+        self.put(self.baseline, key, 'source')
+        self.put(
+            self.baseline, 'lib/ui_v2/act0_shell/act0_street_replay_contract_v1.dart',
+            'historical')
+        with self.assertRaisesRegex(RuntimeError, 'Historical street contract changed'):
+            ADAPTER.add_legacy_compile_only_shim(
+                self.baseline, ADAPTER.LEGACY_HEAD, {
+                    'copied_missing': {key: 'source'}})
+
+    def test_legacy_compile_only_shim_never_modifies_other_head(self):
+        key = ADAPTER.PRICE_DEPENDENCY
+        self.put(self.baseline, key, 'source')
+        before = (self.baseline / key).read_bytes()
+        result = ADAPTER.add_legacy_compile_only_shim(
+            self.baseline, 'nonlegacy-baseline', {'copied_missing': {key: 'source'}})
+        self.assertIsNone(result)
+        self.assertEqual((self.baseline / key).read_bytes(), before)
+
+    def test_legacy_shim_has_failure_sentinel_not_simulated_order(self):
+        self.assertIn("throw StateError", ADAPTER.ORDER_COMPILE_SHIM)
+        self.assertIn(ADAPTER.ORDER_SENTINEL, ADAPTER.ORDER_COMPILE_SHIM)
+        self.assertNotIn('return Act0BettingRoundOrderTruthV1', ADAPTER.ORDER_COMPILE_SHIM)
+
+
+    def prepare_synthetic_legacy_copy(self):
+        # Synthetic adapter controls only; this is not historical RED proof.
+        source = ROOT / ADAPTER.PRICE_DEPENDENCY
+        self.put(self.baseline, ADAPTER.PRICE_DEPENDENCY, source.read_text())
+        street = 'lib/ui_v2/act0_shell/act0_street_replay_contract_v1.dart'
+        self.put(self.baseline, street, '// SYNTHETIC historical dependency\n')
+        return {'copied_missing': {
+            ADAPTER.PRICE_DEPENDENCY:
+                ADAPTER.digest(self.baseline / ADAPTER.PRICE_DEPENDENCY)},
+            'preserved_existing': {street: ADAPTER.digest(self.baseline / street)}}
+
+    def call_synthetic_legacy_copy(self, dependencies):
+        # Only the synthetic street fixture digest is substituted. The price
+        # bytes and final-candidate digest check remain real and unmocked.
+        street = self.baseline / 'lib/ui_v2/act0_shell/act0_street_replay_contract_v1.dart'
+        with mock.patch.object(ADAPTER, 'LEGACY_STREET_SHA256', ADAPTER.digest(street)):
+            return ADAPTER.add_legacy_compile_only_shim(
+                self.baseline, ADAPTER.LEGACY_HEAD, dependencies)
+
+    def test_legacy_price_pin_is_the_exact_reviewed_final_source(self):
+        self.assertEqual(ADAPTER.PRICE_CANDIDATE_SHA256,
+                         'cf82f4c1daef79d0f4fe0bfd29d29b22bfa7bf840e7aadae22b87381d857b91e')
+        self.assertEqual(ADAPTER.digest(ROOT / ADAPTER.PRICE_DEPENDENCY),
+                         ADAPTER.PRICE_CANDIDATE_SHA256)
+        self.assertEqual(ADAPTER.LEGACY_HEAD,
+                         'fa079b6c5880814e231981a7bd5ed97df192d215')
+        self.assertEqual(ADAPTER.LEGACY_STREET_SHA256,
+                         'a0ea1b4adff04704bc83feee9397fea1c3abc03523539bd5805db3200ba7c7be')
+
+    def test_legacy_changed_candidate_is_rejected_without_writing(self):
+        dependencies = self.prepare_synthetic_legacy_copy()
+        price = self.baseline / ADAPTER.PRICE_DEPENDENCY
+        price.write_text(price.read_text() + '\n// SYNTHETIC candidate drift\n')
+        dependencies['copied_missing'][ADAPTER.PRICE_DEPENDENCY] = ADAPTER.digest(price)
+        before = price.read_bytes()
+        with self.assertRaisesRegex(RuntimeError, 'Candidate price contract changed'):
+            self.call_synthetic_legacy_copy(dependencies)
+        self.assertEqual(price.read_bytes(), before)
+
+    def test_legacy_existing_dependency_is_not_eligible_for_injection(self):
+        self.prepare_synthetic_legacy_copy()
+        self.put(self.baseline, 'lib/runner.dart',
+                 "import 'ui_v2/act0_shell/act0_betting_price_contract_v1.dart';")
+        self.put(self.baseline, ADAPTER.PRICE_DEPENDENCY,
+                 '// SYNTHETIC pre-existing historical dependency\n')
+        self.put(self.candidate, ADAPTER.PRICE_DEPENDENCY,
+                 '// SYNTHETIC newer candidate must not replace history\n')
+        dependencies = ADAPTER.complete_dependencies(
+            self.candidate, self.baseline, ['lib/runner.dart'])
+        self.assertNotIn(ADAPTER.PRICE_DEPENDENCY, dependencies['copied_missing'])
+        self.assertIn(ADAPTER.PRICE_DEPENDENCY, dependencies['preserved_existing'])
+        before = {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()}
+        with self.assertRaisesRegex(RuntimeError, 'Expected missing candidate price dependency'):
+            self.call_synthetic_legacy_copy(dependencies)
+        self.assertEqual(before,
+                         {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()})
+
+    def test_legacy_duplicate_injection_is_rejected_without_second_append(self):
+        dependencies = self.prepare_synthetic_legacy_copy()
+        price = self.baseline / ADAPTER.PRICE_DEPENDENCY
+        street = self.baseline / 'lib/ui_v2/act0_shell/act0_street_replay_contract_v1.dart'
+        historical_before = street.read_bytes()
+        result = self.call_synthetic_legacy_copy(dependencies)
+        once = price.read_bytes()
+        self.assertEqual(result['prior_sha256'], ADAPTER.PRICE_CANDIDATE_SHA256)
+        self.assertEqual(result['after_sha256'], ADAPTER.digest(price))
+        self.assertEqual(price.read_text().count(ADAPTER.ORDER_SENTINEL), 1)
+        self.assertEqual(street.read_bytes(), historical_before)
+        # A second call may reject on changed digest before the sentinel check.
+        # Either way it must refuse and leave the once-adapted bytes intact.
+        with self.assertRaises(RuntimeError):
+            self.call_synthetic_legacy_copy(dependencies)
+        self.assertEqual(price.read_bytes(), once)
+        self.assertEqual(street.read_bytes(), historical_before)
+
+    def test_workflow_rejects_runtime_sentinel_before_existing_red_validator(self):
+        workflow = (ROOT / '.github/workflows/table-truth.yml').read_text()
+        matches = re.findall(
+            r'(?ms)^          if grep -q SHARKY_BASELINE_PRICE_ORDER_SHIM_EXECUTED '
+            r'"\$OUT/baseline-tests\.jsonl"; then\n.*?^          fi\n', workflow)
+        self.assertEqual(len(matches), 1, 'Use the actual sole workflow sentinel guard')
+        guard = matches[0]
+        self.assertLess(workflow.index(guard), workflow.index(
+            'python3 tools/table_truth_evidence_v1.py tests "$OUT/baseline-tests.jsonl" red "$code"'))
+        log = pathlib.Path(self.tmp.name) / 'baseline-tests.jsonl'
+        for invoked in [False, True]:
+            with self.subTest(invoked=invoked):
+                events = [{'type': 'testStart', 'test': {'id': 1, 'name': 'SYNTHETIC RED'}},
+                          {'type': 'testDone', 'testID': 1, 'result': 'failure'}]
+                if invoked:
+                    events.insert(1, {'type': 'error', 'error': ADAPTER.ORDER_SENTINEL})
+                log.write_text('\n'.join(map(json.dumps, events)) + '\n')
+                # The existing validator is unchanged and accepts this RED.
+                validator = subprocess.run(
+                    [sys.executable, str(ROOT / 'tools/table_truth_evidence_v1.py'),
+                     'tests', str(log), 'red', '1'], capture_output=True, text=True)
+                self.assertEqual(validator.returncode, 0, validator.stderr)
+                env = os.environ.copy()
+                env['OUT'] = self.tmp.name
+                checked = subprocess.run(
+                    ['bash', '-c', textwrap.dedent(guard) +
+                     "printf 'RED_VALIDATOR_REACHED\\n'\n"],
+                    env=env, capture_output=True, text=True)
+                self.assertEqual(checked.returncode, 1 if invoked else 0, checked.stderr)
+                self.assertEqual('RED_VALIDATOR_REACHED' in checked.stdout, not invoked)
 
     def test_wrong_baseline_head_fails_before_copy_or_output(self):
         output = pathlib.Path(self.tmp.name) / 'manifest.json'

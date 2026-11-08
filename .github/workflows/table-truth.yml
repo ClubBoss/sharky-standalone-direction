@@ -61,6 +61,12 @@ jobs:
           code=$?
           set -e
           cd "$GITHUB_WORKSPACE"
+          # A compile-only historical adapter must NEVER execute at runtime.
+          # It is not a waiver and must not manufacture a synthetic RED.
+          if grep -q SHARKY_BASELINE_PRICE_ORDER_SHIM_EXECUTED "$OUT/baseline-tests.jsonl"; then
+            echo "::error::Historical compatibility shim was executed; RED evidence invalid"
+            exit 1
+          fi
           python3 tools/table_truth_evidence_v1.py tests "$OUT/baseline-tests.jsonl" red "$code"
       - name: GREEN catalog, falsifiers and affected source/render contracts
         run: |

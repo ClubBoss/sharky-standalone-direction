@@ -82,6 +82,57 @@ def complete_dependencies(candidate, baseline, roots=ROOTS):
             'policy': 'missing-only; existing baseline dependencies retained'}
 
 
+
+# A known historical RED source (fa079b6c) predates the price/order API.
+# Candidate Runner needs the price import to compile even when the four
+# Table Truth tests never exercise it. Preserve every original historical
+# file; adapt ONLY the candidate-sourced, missing dependency in the private
+# baseline worktree. This sentinel makes any runtime invocation an explicit
+# invalid RED, not a surrogate proof.
+LEGACY_HEAD = 'fa079b6c5880814e231981a7bd5ed97df192d215'
+LEGACY_STREET_SHA256 = 'a0ea1b4adff04704bc83feee9397fea1c3abc03523539bd5805db3200ba7c7be'
+PRICE_DEPENDENCY = 'lib/ui_v2/act0_shell/act0_betting_price_contract_v1.dart'
+PRICE_CANDIDATE_SHA256 = 'cf82f4c1daef79d0f4fe0bfd29d29b22bfa7bf840e7aadae22b87381d857b91e'
+ORDER_SENTINEL = 'SHARKY_BASELINE_PRICE_ORDER_SHIM_EXECUTED'
+ORDER_COMPILE_SHIM = (
+    '\n// PRIVATE historical compile-only adapter. NOT production source.\n'
+    'enum Act0BettingRoundOrderTruthV1 { contradiction, consistent, unproved }\n'
+    'Act0BettingRoundOrderTruthV1 act0BettingRoundOrderTruthForTableV1(\n'
+    '    Act0TableStateV1 table) {\n'
+    "  throw StateError('SHARKY_BASELINE_PRICE_ORDER_SHIM_EXECUTED');\n"
+    '}\n'
+)
+
+
+def add_legacy_compile_only_shim(baseline, head, dependency_result):
+    baseline = baseline.resolve()
+    # Do not generalize to a newer baseline or changed candidate without
+    # new exact-source proof and a fresh RED/GREEN run.
+    if head != LEGACY_HEAD:
+        return None
+    relative = pathlib.Path(PRICE_DEPENDENCY)
+    copied = dependency_result['copied_missing']
+    if PRICE_DEPENDENCY not in copied:
+        raise RuntimeError('Expected missing candidate price dependency')
+    old_street = inside(
+        baseline, pathlib.Path('lib/ui_v2/act0_shell/act0_street_replay_contract_v1.dart'))
+    price = inside(baseline, relative)
+    if digest(old_street) != LEGACY_STREET_SHA256:
+        raise RuntimeError('Historical street contract changed')
+    if digest(price) != PRICE_CANDIDATE_SHA256:
+        raise RuntimeError('Candidate price contract changed; revalidate shim')
+    # This path is absent historically and is already recorded as copied.
+    if ORDER_SENTINEL in price.read_text():
+        raise RuntimeError('Historical compatibility already injected')
+    price.write_text(price.read_text() + ORDER_COMPILE_SHIM)
+    return {'path': PRICE_DEPENDENCY,
+            'prior_sha256': PRICE_CANDIDATE_SHA256,
+            'after_sha256': digest(price),
+            'historical_street_sha256': LEGACY_STREET_SHA256,
+            'runtime_sentinel': ORDER_SENTINEL,
+            'scope': 'historical copied dependency only; fail on invocation'}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--baseline', type=pathlib.Path, required=True)
@@ -94,6 +145,8 @@ def main():
         raise SystemExit(f'Baseline HEAD mismatch: {head} != {args.expected_head}')
     candidate = pathlib.Path(__file__).resolve().parent.parent
     result = complete_dependencies(candidate, args.baseline)
+    result['legacy_compile_adapter'] = add_legacy_compile_only_shim(
+        args.baseline, head, result)
     result['baseline_head'] = head
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2) + '\n')
