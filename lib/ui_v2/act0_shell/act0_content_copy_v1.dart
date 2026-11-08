@@ -352,7 +352,9 @@ String act0LocalizedWorldTitleAtomByLanguageV1(
   required String languageCode,
 }) {
   final bundle = act0CopyBundleForLanguageCodeV1(languageCode);
-  return bundle?.worlds[worldId]?.title ?? fallback;
+  final localized = bundle?.worlds[worldId]?.title;
+  if (localized != null) return localized;
+  return act0NeutralWorldTitleByIdV1[worldId] ?? fallback;
 }
 
 String act0LocalizedWorldSubtitleAtomByLanguageV1(

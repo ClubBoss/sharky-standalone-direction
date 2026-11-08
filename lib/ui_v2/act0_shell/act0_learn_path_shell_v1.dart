@@ -2851,7 +2851,7 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
                     en: 'Finish ${act0AcademyWorldTitleV1(context, currentWorld)} to open this world.',
                     ru: '\u0417\u0430\u0432\u0435\u0440\u0448\u0438 ${act0AcademyWorldTitleV1(context, currentWorld)}, \u0447\u0442\u043e\u0431\u044b \u043e\u0442\u043a\u0440\u044b\u0442\u044c \u044d\u0442\u043e\u0442 \u043c\u0438\u0440.',
                   )
-                : world.unlockLabel,
+                : act0DisplayWorldNameCopyV1(world.unlockLabel),
             key: const Key('act0_shell_world_unlock_label'),
             style: Act0AcademyDesignTokensV1.body.copyWith(
               color: Act0AcademyDesignTokensV1.ink,

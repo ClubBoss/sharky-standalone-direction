@@ -5634,7 +5634,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             '$worldSubtitle Premium stays optional and adds extra practice after this world opens naturally.',
         valuePoints: valuePoints,
         trustLine:
-            '${world.unlockLabel} The first useful hand stays free, and the route still opens in order.',
+            '${act0DisplayWorldNameCopyV1(world.unlockLabel)} The first useful hand stays free, and the route still opens in order.',
         footerLine:
             'This is a preview, not a gate. Stay on the free route until you want more practice.',
       ),
@@ -6233,7 +6233,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         ),
                       ),
                       Act0ShellTabV1.learn => Act0LearnPathShellV1(
-                        moduleTitle: selectedWorld.title,
+                        moduleTitle: act0DisplayWorldNameCopyV1(
+                          selectedWorld.title,
+                        ),
                         moduleProgressLabel: selectedWorld.progressLabel,
                         sharkyGuideTitle: _learnGuideTitle(
                           selectedWorld,
@@ -13910,7 +13912,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           : allComplete
           ? 'Replay lessons'
           : 'Open lessons',
-      unlockLabel: available ? 'Available now' : world.unlockLabel,
+      unlockLabel: available
+          ? 'Available now'
+          : act0DisplayWorldNameCopyV1(world.unlockLabel),
       isSelectable: available,
       isLocked: !available,
       lessons: lessons,

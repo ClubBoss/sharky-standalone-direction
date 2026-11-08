@@ -145,6 +145,22 @@ act0PrechoiceNeutralQuestionByTaskIdV1 = <String, String>{
       'What is the cleaner response with this playable hand facing an open?',
 };
 
+/// Owner decision (2026-11-08): World 4's authored name 'Bet Purpose / Price'
+/// equals the World 4 recap answer 'Purpose and price'. Learners see the
+/// neutral display name below; the authored source name, IDs and contracts
+/// stay unchanged.
+const String act0World4AuthoredTitleV1 = 'Bet Purpose / Price';
+const Map<String, String> act0NeutralWorldTitleByIdV1 = <String, String>{
+  'world_4': 'Betting Decisions',
+};
+
+/// Display copy that embeds the authored World 4 name (unlock labels, module
+/// title) shows the neutral name instead.
+String act0DisplayWorldNameCopyV1(String text) => text.replaceAll(
+  act0World4AuthoredTitleV1,
+  act0NeutralWorldTitleByIdV1['world_4']!,
+);
+
 /// Known limitation, not a choice-discrimination proof: every assessed answer
 /// in these lessons is the same action (all Fold). Kept as authored; it shows
 /// recall of discipline, not choosing between different actions.

@@ -401,13 +401,10 @@ const _allowedLearnReasons = <String, String>{
   'w7_effective_stack_100bb': 'Both stack sizes are the question input',
 };
 
-/// Known limitation (honestly not a discrimination proof): the World 4
-/// recap answer restates the world's own theme name, which stays as the
-/// curriculum identity. Display cannot neutralize it without renaming World 4.
+/// No open residuals: World 4 is displayed as 'Betting Decisions' (owner
+/// decision), so its recap answer is no longer named by the world title.
 const _openRunnerResiduals = <String, List<String>>{};
-const _openLearnResiduals = <String, List<String>>{
-  'w4_checkpoint_review': ['Bet Purpose / Price'],
-};
+const _openLearnResiduals = <String, List<String>>{};
 
 Widget _runnerFixture(
   ({dynamic world, dynamic lesson, Act0LessonTaskV1 task}) r,
@@ -461,7 +458,8 @@ Widget _learnFixture(
     ],
     home: Scaffold(
       body: Act0LearnPathShellV1(
-        moduleTitle: world.title,
+        // The production feed (preview screen moduleTitle).
+        moduleTitle: act0DisplayWorldNameCopyV1(world.title),
         moduleProgressLabel: '0 earned',
         worlds: [
           world.copyWith(lessons: [opened]),
@@ -651,6 +649,13 @@ void main() {
           reason: row.task.taskId,
         );
       }
+      expect(
+        _visibleTexts(
+          tester,
+        ).where((t) => t.contains(act0World4AuthoredTitleV1)),
+        isEmpty,
+        reason: row.task.taskId,
+      );
       final hits = _answerCues([
         ..._visibleTexts(tester),
         ...cues,
@@ -709,6 +714,11 @@ void main() {
           reason: id,
         );
       }
+      expect(
+        visible.where((t) => t.contains(act0World4AuthoredTitleV1)),
+        isEmpty,
+        reason: id,
+      );
       final hits = _answerCues(visible, row.task.runner);
       if (hits.isNotEmpty) found[row.task.taskId] = hits.toSet().toList();
     }
@@ -958,5 +968,50 @@ void main() {
       // ignore: avoid_print
       print('ASM04_REVISED ${revised.length} of ${_assessed.length}');
     });
+  });
+
+  testWidgets('World 4 shows Betting Decisions before the recap answer', (
+    tester,
+  ) async {
+    _phone(tester);
+    final sample = Act0ShellStateV1.sample;
+    final world4 = sample.worldById('world_4');
+    // Source identity, recap question, choices, order, grade and XP unchanged.
+    expect(world4.title, act0World4AuthoredTitleV1);
+    final recap = _row('w4_checkpoint_review').task;
+    expect(recap.runner.question, 'What makes a bet easier to understand?');
+    expect(recap.runner.options.map((o) => o.label).toList(), [
+      'Purpose and price',
+      'Random size',
+    ]);
+    expect(
+      recap.runner.options.singleWhere((o) => o.isCorrect).label,
+      'Purpose and price',
+    );
+    expect(recap.runner.options.map((o) => o.id).toList(), [
+      'purpose_price',
+      'random_size',
+    ]);
+    expect(recap.rewardXp, 15);
+    expect(
+      act0LocalizedWorldTitleAtomV1('world_4', fallback: world4.title),
+      'Betting Decisions',
+    );
+    // The next world's unlock label embeds the World 4 name.
+    final world5 = sample.worldById('world_5');
+    expect(world5.unlockLabel, contains(act0World4AuthoredTitleV1));
+    expect(
+      act0DisplayWorldNameCopyV1(world5.unlockLabel),
+      'Finish Betting Decisions to open this world.',
+    );
+    // Real Learn consumer with the whole world list, recap pending.
+    final lesson = world4.lessons.singleWhere(
+      (l) => l.taskList.any((t) => t.taskId == 'w4_checkpoint_review'),
+    );
+    await tester.pumpWidget(_learnFixture(world4, lesson, recap));
+    await tester.pumpAndSettle();
+    final visible = _visibleTexts(tester);
+    expect(visible.where((t) => t.contains('Bet Purpose')), isEmpty);
+    expect(visible, contains('Betting Decisions'));
   });
 }
