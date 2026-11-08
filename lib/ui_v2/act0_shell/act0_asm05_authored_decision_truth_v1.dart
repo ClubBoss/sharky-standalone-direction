@@ -449,13 +449,13 @@ Act0LessonTaskV1 act0Asm05AuthoredDecisionTaskV1({
       caption: 'SB holds As Ad. If you call, both players must check the '
           'river. Raises are excluded. No ante or rake.',
       hint: 'All seats started with 100 BB. Uniform deck; prior actions '
-          'were prescribed independently of unknown cards.',
+          'and this bet were prescribed independently of unknown cards. '
+          'The other four players folded without adding chips; their cards '
+          'and burns are unknown and give no information. The earlier '
+          '20 BB is already spent in either case.',
       hintPolicy: Act0HintPolicyV1.always,
-      question: 'SB holds As Ad; both players must check the river. '
-          'Raises are excluded. No ante or rake. All seats started with 100 BB. '
-          'Uniform deck; prior actions were prescribed independently of unknown '
-          'cards. Call ${source.additionalCallBb} BB or fold: which has higher '
-          'incremental expected value now?',
+      question: 'Call ${source.additionalCallBb} BB or fold: '
+          'which has higher incremental expected value now?',
       options: options,
       // Neutral fallbacks: selected option supplies result only in review.
       feedbackTitle: 'Review the decision',

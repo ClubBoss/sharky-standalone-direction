@@ -62,6 +62,22 @@ void main() {
           'prescribed independently of unknown cards']) {
         expect(before, contains(fact), reason: 'Model assumption must be available in UI: $fact');
       }
+      expect(find.textContaining('Call $price BB or fold'), findsOneWidget);
+      final modelSupport = find.byKey(
+        const Key('act0_learning_scene_v3_model_support_scroll'),
+      );
+      expect(modelSupport, findsOneWidget);
+      final supportScrollable = find.descendant(
+        of: modelSupport,
+        matching: find.byType(Scrollable),
+      );
+      expect(supportScrollable, findsOneWidget);
+      final supportPosition =
+          tester.state<ScrollableState>(supportScrollable).position;
+      expect(supportPosition.maxScrollExtent, greaterThan(0));
+      await tester.drag(modelSupport, const Offset(0, -80));
+      await tester.pumpAndSettle();
+      expect(supportPosition.pixels, greaterThan(0));
       final future = RegExp(r'River (Td|5h):|Call EV |SB receives 60 BB|You receive 120 BB|Correct decision|has the higher expected value');
       expect(future.hasMatch(before), isFalse);
       expect(find.bySemanticsLabel(future), findsNothing);
