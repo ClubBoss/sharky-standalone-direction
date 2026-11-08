@@ -417,6 +417,18 @@ void main() {
       PotTruthVerdictV1.unproved,
     );
 
+    // A source trail fold contradicting a live seat must not prove a winner
+    // (review 6717471702).
+    final trailFoldLive = base.copyWith(
+      actionTrail: [
+        ...base.actionTrail,
+        const Act0ActionTrailItemV1.note(label: 'BTN folds'),
+      ],
+    );
+    final trailFoldVerdict = resolveShowdownTruthV1(trailFoldLive);
+    expect(trailFoldVerdict.verdict, PotTruthVerdictV1.unproved);
+    expect(trailFoldVerdict.reason, 'folded_seat_live:btn');
+
     // A folded player is never paid even with the best cards.
     final foldedWinner = _mapSeats(
       base,

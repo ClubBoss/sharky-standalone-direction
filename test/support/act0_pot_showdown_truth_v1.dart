@@ -286,13 +286,17 @@ ShowdownTruthV1 resolveShowdownTruthV1(Act0TableStateV1 t) {
   // A seat counts as out of the showdown only on source evidence: either it
   // was never in the hand, or its fold is in the trail. A fold flag without
   // that provenance must not turn a possible winner into a proven loser.
-  for (final s in t.seats.where((s) => s.isFolded)) {
+  for (final s in t.seats) {
     final actor = s.seatLabel.trim().toUpperCase();
     final folded = t.actionTrail.any((item) {
       final a = potTruthParseActionV1(t, item.label);
       return a != null && a.verb == 'fold' && a.actor == actor;
     });
-    if (!folded) return no('fold_without_provenance:${s.seatId}');
+    if (s.isFolded && !folded) {
+      return no('fold_without_provenance:${s.seatId}');
+    }
+    // A real fold in the trail must not leave that seat live and eligible.
+    if (_live(s) && folded) return no('folded_seat_live:${s.seatId}');
   }
   final live = t.seats.where(_live).toList();
   if (live.length < 2) return no('fewer_than_two_live');
