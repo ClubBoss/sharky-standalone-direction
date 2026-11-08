@@ -1,0 +1,132 @@
+# Sharky Competitive Intelligence — Evidence Ledger v1
+
+Date: 2026-10-08
+Status: STAGE_1_PUBLIC_SURFACE_PASS / NOT_IN_APP_VALIDATED
+Task: owner-authorized Competitive North Star Gauntlet, documentary research only.
+Base repo: `ClubBoss/sharky-standalone-direction`, canonical main `bdf560f0d90d9659335f6492149c373842f655b1`.
+Target segment: adult mobile poker learners, from novice to improving recreational player; serious GTO and course platforms are adjacent benchmarks, not equivalent replacement products.
+
+## Method, confidence, evidence limits
+
+This **first pass** inspects current public official product pages, third-party store descriptions and selected review excerpts. No competitor app was installed or operated, no purchase was executed, and no user retention cohort or own Sharky learner study was run.
+- **A — observed runtime**: independent fixed-scenario in-app walkthrough, recorded build/device/timestamp; NONE YET.
+- **B — store listing / dated release history**: features published for a named build/region; still does not prove experience quality.
+- **C — first-party website**: claims about product, capability or usage; cannot certify realized benefits or penetration.
+- **D — user reviews / community**: qualitative discovery of repeatable hypotheses, no denominator/representativeness.
+- **E — inference**: manager interpretation; must be explicitly challenged and NEVER treated as observed competitor reality.
+
+Do not assign 10-point competitive quality ratings until A-level parity walkthrough or a carefully defined narrower evidence class exists. Ratings and prices vary by country/time. All feature statements below carry references and their evidence tier.
+
+## Direct competitor evidence
+
+### Poker Skill (Funco) — coach-first daily learning
+
+Primary: https://www.pokerskill.com/features/ ; https://www.pokerskill.com/pricing/
+Store: https://apps.apple.com/us/app/poker-skill-learn-holdem/id6748104711
+- **C/B**: short guided lessons with explanations, Coach Max, daily puzzle, Practice vs AI in HU and 3-handed variants, XP/streak, lesson energy. Free baseline: every lesson (energy-limited), daily puzzle, one AI game/day. Plus: unlimited AI games, no energy waits, archives/collections; displayed US pricing $9.99/month or $64.99/year.
+- **D**: App Store reviews praise short sessions/clear coaching; one reviewer says guidance exposed the correct choice before thinking and first sections felt shallow for an experienced player, another reports frustration with energy/cancellation/account access. Anecdotes only, not proven active defects.
+- **Candidate Sharky challenge (E)**: preserve the feeling of a 2–5-minute successful rep without leaking the answer in pre-choice hints; demonstrate stronger transfer and proof, with nonpunitive free access. Do not copy energy gate automatically.
+- **Need A-proof**: fresh-start friction; hint leakage under novice/expert paths; session novelty after 2 and 7 days; Plus entitlement accuracy.
+
+### WSOP Academy (Bracelet IP Limited) — celebrity + IQ + aspirational progression
+
+Official https://www.wsopacademy.com/
+Store https://apps.apple.com/us/app/wsop-academy/id6762133819 ; Google Play https://play.google.com/store/apps/details?id=com.wsop.academy
+- **B/C**: short lessons, Poker IQ test (adaptive/time/speed messaging on site), Daniel Negreanu coaching presentation, pro Challenger mode, XP, leaderboard, practice tables. Store says full Learning Path / IQ / ranks / XP and one Challenger per unit free; paid extra challengers and High Roller hands.
+- **D LOW SAMPLE**: US App Store had very few ratings in retrieved view; reviewer complains that quizzes sometimes precede instruction. Do not generalize.
+- **Candidate Sharky challenge (E)**: serious learner identity, approachable aspiration, teach-before-test, visible skill identity without prestige theater or fake IQ claims.
+- **Need A-proof**: whether coach is genuinely interactive, adaptivity details, quiz quality, source-owned correctness and monetization timing; check country-specific in-app SKU before any price comparison.
+
+### PokerArena by GTO Wizard — live competition plus postmatch analysis
+
+Official https://gtowizard.com/pokerarena
+Store https://apps.apple.com/hu/app/pokerarena-play-learn-poker/id6742486598
+- **B/C**: free ranked/casual heads-up play, skill-based matchmaking, rating/divisions, match history, free GTO Wizard hand analysis after matches; browser/iOS, friend tables via browser. Official site advertises current Season 10. App Store change history documents daily quests/streaks/trophies and marking spots for later review.
+- **D**: GTO Wizard team explicitly describes seasonal ranks and instant analysis in the Reddit launch thread https://www.reddit.com/r/poker/comments/1n89liz/ ; developer statement, not independent learner proof.
+- **Candidate Sharky challenge (E)**: challenge anticipation, meaningful skill/rank progression, replay of tough decisions. Competitive PVP may require network/community ops and is NOT automatically a v1 prerequisite.
+- **Need A-proof**: match wait time, novice inclusion, connection between review and improvement, player safety, true daily reengagement, regional feature availability.
+
+### Runout Poker Trainer GTO Coach — adaptive reps and leak identity
+
+Official https://runoutpoker.com/ ; https://runoutpoker.com/about
+Store https://apps.apple.com/us/app/runout-poker-trainer-gto-coach/id6760210288
+- **C**: markets offline pre/postflop, preflop charts, adaptive weakness targeting, GTO-like hand quizzes, leak analytics, 12 skill tiers, micro-learning.
+- **B**: iOS listing shows in-app purchase options, multiple different prices/billing SKUs; these are **not proof of the actual paywall offered to a given user**. Site claims 40K+ players and high satisfaction are vendor claims, not audited active usage.
+- **D**: split reviews: meaningful explanations and weakness-focused repetitions vs paywall-before-try complaints, possible preference mixing (cash vs MTT), content inaccuracies alleged by reviewers; vendor says corrections made. No judgment of current exact build without hands-on proof.
+- **Candidate Sharky challenge (E)**: high-efficiency personalized practice with demonstrable corrections, user-controlled format focus, free evidence before payment, rigorously verified poker answers.
+- **Need A-proof**: trial/paywall sequence; actual deterministic hand results and explanation quality; preference fidelity; repeated weakness loop; claimed skill-tier criteria; any unsupported solver-equivalence claim.
+
+## Secondary and adjacent benchmarks
+
+| Product | Evidence and verified public proposition | What to compare | Parity caveat |
+| --- | --- | --- | --- |
+| Stoa Poker | Official https://stoapoker.com/ and https://stoapoker.com/download/ : 12 ordered skills, one-action immediate reason, spaced review/offline, attention to accessibility; **site pages disagree about App Store/Android release state**, so platform availability is unverified. | structured progression, low-friction review, honest feedback | unstable beta/platform claims; not a full competitor runtime inspection |
+| PokerCoaching / Jonathan Little | Official https://pokercoaching.com/welcome/ offers 19-lesson free basics + interactive quizzes, charts and classes; https://pokercoaching.com/become-my-student/ markets courses/live coaching/community with subscription. | theory depth, expert credibility, transfer homework, subscription depth | video/community-led platform, different business and time budget |
+| GTO Wizard | Official https://gtowizard.com/ and https://gtowizard.com/pokerarena : solver study, daily quiz, coaching/content and PokerArena bridge. | advanced decision correctness, feedback depth, real poker realism | solver expert toolkit, not novice-first course equivalent |
+| PokerTrainer | Mentioned in vendor comparisons https://www.pokerskill.com/blog/best-app-to-get-better-at-poker/ . | weakness targeting and drill diversity | competitor-authored comparisons are not independent feature verification; PRIMARY SITE/APP CHECK PENDING |
+| DTO Poker / Postflop+ | Mentioned in Poker Skill comparison https://www.pokerskill.com/blog/best-poker-training-apps/ . | solver-graded decisions and spot library | SOURCE/APP VALIDATION PENDING |
+| Upswing Poker / courses | Category existence, not fully audited in this pass. | structured expert guidance, paid depth | do not compare raw content volume with five-minute training |
+
+## Review and community signals (qualitative, not prevalence)
+
+- https://www.reddit.com/r/poker/comments/1w4lyje/poker_learning_apps/ : user calls Runout 'like a Duolingo for poker' and asks for inexpensive postflop training. **One anecdote**, not retention evidence.
+- https://www.reddit.com/r/poker/comments/1wlr8d0/best_way_for_a_beginner_to_learn_poker_in_2026/ : discussion splits solver-led advanced study vs stepwise beginner concept instruction; at least one Poker Skill developer disclosure is present, so do not mistake the whole thread for independent endorsement.
+- https://apps.apple.com/us/app/runout-poker-trainer-gto-coach/id6760210288 : reviewer examples emphasize explanation quality, targeted leaks, and distrust of paywall-before-value / possible inaccuracies.
+- https://apps.apple.com/us/app/poker-skill-learn-holdem/id6748104711 : reviews emphasize short sessions and daily puzzle but note potentially answer-leaking hints and energy friction.
+
+These are **research hypotheses** to falsify with future blinded user walkthroughs, not validated cohort findings.
+
+## Contrast, without cherry-picking
+
+Distinct engagement archetypes observed through public packaging:
+1. **Daily micro-lesson and puzzle** — Poker Skill, partially Runout/Stoa.
+2. **Rank / identity / celebrity challenge** — WSOP Academy.
+3. **Real opponent / ranked matchmaking / season** — PokerArena.
+4. **Adaptive leak remediation and improvement tracking** — Runout.
+5. **Long-form structured authority and community** — PokerCoaching.
+6. **Expert mathematical answer reference** — GTO Wizard.
+
+There is no confirmed all-around winner: each archetype targets a different learner job. Sharky opportunity, NOT YET PROVEN: integrate self-efficacy, excitement and lasting corrected decisions in a single short mobile learner loop.
+
+## Unanswered questions / next highest-value research
+
+P0 evidence needs before ranking products by quality:
+1. Standardized actual first-run 0–10 minute competitor walkthrough (same novice knowledge, OS/region/version, free account, first feedback, continuation, paywall timing).
+2. Day 2 and day 7 in-app session variation/repetition, **no fabricated observation**.
+3. One normal wrong answer + same-signal repair + different unseen transfer attempt; record if each product even offers it.
+4. Poker-accuracy sample with separately independently resolved solution assumptions; never grade competitors by a single contested hand without its complete context.
+5. Exact subscription offers on same locale, cancellation/restore, real value available free and after payment.
+6. Independent novice observers, not only analyst preference.
+
+Stop rule: if source is marketing or anecdotal, label it so. A novel flashy competitor feature is a **deferred opportunity** until measured incremental EV against Sharky's active stage.
+
+## Deepened source and existing Runout snapshot reconciliation
+
+Sharky **already has** a dedicated Runout research folder: `docs/_competitive/runout/README.md` and `runout_vs_sharky_contentgraph_gap_analysis_v1.md`, from static APK/XAPK and user-supplied screenshots, plus manual validation. June 2026 snapshot: 7 curriculum categories, 31 visible skills and 280 chapter rows, with 33 screenshot-confirmed rows at that time. This is *structural breadth evidence*, not proof of actual lessons' quality, solver correctness, runtime paywall or current feature set. Avoid re-extracting it or copy-pasting competitor content.
+
+New official source checks:
+- Poker Skill US App Store release history https://apps.apple.com/us/app/poker-skill-learn-holdem/id6748104711 : v2.1.40 (Aug 27) five-hand AI sessions + graded XP/replay `Run It Back`; v2.1.41 (Sep 2) review/daily improvements; v2.1.42 (Sep 11) mission celebration, graded 1–3-star replay and restoral fixes. Prior v2.1.39 is NOT the latest documented release in our research.
+- WSOP/WSOP+ official https://www.wsop.com/plus/ : Free $0 gives full Academy curriculum, free Poker IQ, first Challenger Finn per level and 10 daily practice hands. Basic $9.99/month includes named-pro challengers and 50 hands; Premium $49.99/month adds unlimited hands and an Academy challenger also called `Sharky`. These are cross-product bundle prices, NOT pure Academy lesson prices. **Brand/discoverability caution** for Sharky Poker, not a legal infringement verdict.
+- Runout official https://runoutpoker.com/compare/runout-poker-vs-gto-wizard claims a limited free daily/preflop tier and Pro $19.99/month / $89.99/year. Store user reviews on iOS https://apps.apple.com/us/app/runout-poker-trainer-gto-coach/id6760210288?see-all=reviews and Android https://play.google.com/store/apps/details?id=com.gramercy.runout report paywall-before-try. This discrepancy needs same-build, same-region **actual runtime** checks. Do not falsely certify absence/presence of a free trial universally.
+- PokerArena https://gtowizard.com/pokerarena remains a different first job (real HU competition) and its free-solver-entitlement language remains internally inconsistent.
+
+A ranked attack hypothesis is now documented in `docs/_reviews/2026_10_competitive_engagement_attack_wave_bundle_v1.md`; no numeric competitor 10/10 score is admitted.
+
+## October 8 first-ten-minute source addendum
+
+Research evidence updated for onboarding and the latest known **dated** official release history; do not mix stale crawl-relative time descriptions with release dates.
+
+- **Poker Skill:** official pricing https://www.pokerskill.com/pricing/ confirms daily puzzle + short lessons + one free coached AI game/day, with optional Plus and energy-gated lesson pacing. App Store version history https://apps.apple.com/gb/app/poker-skill-learn-holdem/id6748104711 shows **2.1.39 released Aug 21, 2026**, adding star-based Daily Missions, music continuity and two tailored onboarding puzzles per play-frequency path. Do not call these new *today*. One user review https://apps.apple.com/us/app/poker-skill-learn-holdem/id6748104711?see-all=reviews complains of answer-leaking hints and another of energy/curriculum friction; developer responds about guidance and test-forward. Evidence B/D only; fix may already exist in the current release.
+- **WSOP Academy:** official https://www.wsopacademy.com/ and Apple https://apps.apple.com/us/app/wsop-academy/id6762133819 market Poker IQ, Daniel Negreanu, challenger modes and ladders, plus a limited free unit Challenger tier. Its App Store 1.8.1 history says Sep 5, 2026. A user says test felt like a quiz before lesson; anecdote, not independently reproduced.
+- **PokerArena:** official https://gtowizard.com/pokerarena documents ranked and casual HU with solver-linked review and requires account to begin. Its OWN page has conflicting language: it claims free GTO analysis after every match in FAQ/hero, but another page segment refers to solver review being available via GTO Wizard subscription. No entitlement certainty until a real logged-in free scenario. The same public site markets Season 10, not a confirmed same-device first-ten-minute experience.
+- **Runout:** Apple https://apps.apple.com/us/app/runout-poker-trainer-gto-coach/id6760210288?see-all=reviews contains an Aug 17 anecdote about extended onboarding and an immediate paywall, alongside other users praising the explanations of *why*. Hypothesis: pressure before delivered value may reduce trust, but app-version/locale and universal rollout remain unverified.
+
+**Implication:** the competitive acquisition battle is increasingly about fast player-specific onboarding, meaningful first decision, controlled educational excitement and accessible replay—not simply XP/streak feature parity. For proper evidence collection and score definitions, see `docs/_reviews/2026_10_first_ten_minutes_competitive_gauntlet_v1.md`.
+
+## Evidence-state verdict
+
+`PUBLIC_COMPETITOR_DISCOVERY = COMPLETE_FIRST_PASS`
+`DIRECT_RUNTIME_PARITY = NOT_STARTED`
+`COMPETITOR_QUALITY_SCORE_10 = NOT_ADMISSIBLE_YET`
+`MARKET_RETENTION_OR_CONVERSION_PROOF = NOT_AVAILABLE`
+`NEXT = EVIDENCE_GAP_CLOSE_THEN_BOUNDED_RUBRIC_SCORE`
