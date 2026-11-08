@@ -47,6 +47,8 @@ void main() {
     final checkpointByWorld = <String, List<int>>{};
     final repairTargetByWorld = <String, List<int>>{};
     final w10W12Indexes = <int>[];
+    final legacyW10W12Indexes = <int>[];
+    final asm05Rows = <String, _AssessedRow>{};
 
     for (final row in rows) {
       final options = row.task.runner.options;
@@ -69,6 +71,11 @@ void main() {
       }
       if (_w10W12.contains(row.worldId)) {
         w10W12Indexes.add(correctIndex);
+        if (_asm05NewTaskIds.contains(row.task.taskId)) {
+          asm05Rows[row.task.taskId] = row;
+        } else {
+          legacyW10W12Indexes.add(correctIndex);
+        }
       }
     }
 
@@ -123,7 +130,44 @@ void main() {
       }
     }
 
-    expect(_distribution(w10W12Indexes), <int, int>{0: 14, 1: 14, 2: 14});
+    final historicRows = rows
+        .where((row) => !_asm05NewTaskIds.contains(row.task.taskId))
+        .toList(growable: false);
+    expect(historicRows, hasLength(291));
+    expect(
+      _contentFingerprint(historicRows),
+      '599ecadb0180eb48e8de72520645c29750941cba4cdd000f5acdda834a30f7e1',
+      reason: 'The two NEW_AUTHORING rows must be the only payload extension.',
+    );
+
+    expect(asm05Rows.keys, _asm05NewTaskIds);
+    const expectedAsm05 = <String, int>{
+      'asm05_new_known_holes_turn_call_10': 1,
+      'asm05_new_known_holes_turn_call_40': 0,
+    };
+    for (final entry in expectedAsm05.entries) {
+      final row = asm05Rows[entry.key]!;
+      expect(row.worldId, 'world_12', reason: entry.key);
+      expect(row.lessonId, 'decision_over_outcome', reason: entry.key);
+      expect(row.task.runner.options.map((option) => option.id), <String>[
+        'fold',
+        'call',
+      ], reason: entry.key);
+      expect(
+        row.task.runner.options.indexWhere((option) => option.isCorrect),
+        entry.value,
+        reason: entry.key,
+      );
+    }
+
+    expect(legacyW10W12Indexes, hasLength(42));
+    expect(
+      _distribution(legacyW10W12Indexes),
+      <int, int>{0: 14, 1: 14, 2: 14},
+    );
+    expect(_longestRun(legacyW10W12Indexes), lessThanOrEqualTo(2));
+    expect(w10W12Indexes, hasLength(44));
+    expect(_distribution(w10W12Indexes), <int, int>{0: 15, 1: 15, 2: 14});
     expect(_longestRun(w10W12Indexes), lessThanOrEqualTo(2));
 
     expect(
@@ -201,6 +245,11 @@ const _affectedWorldIds = <String>{
 };
 
 const _w10W12 = <String>{'world_10', 'world_11', 'world_12'};
+
+const _asm05NewTaskIds = <String>{
+  'asm05_new_known_holes_turn_call_10',
+  'asm05_new_known_holes_turn_call_40',
+};
 
 List<_AssessedRow> _assessedRows() {
   final rows = <_AssessedRow>[];

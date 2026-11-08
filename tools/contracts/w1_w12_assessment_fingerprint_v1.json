@@ -1,19 +1,23 @@
 {
   "schemaVersion": 1,
   "generator": "test/guards/w1_w12_answer_position_distribution_contract_test.dart::_contentFingerprint",
-  "baselineHead": "c76bed82277e986706d4217dab293c51dab901f7",
-  "rowCount": 291,
-  "fingerprint": "599ecadb0180eb48e8de72520645c29750941cba4cdd000f5acdda834a30f7e1",
+  "baselineHead": "0d55596e813b693e1410158c848f0ecab489591d",
+  "rowCount": 293,
+  "fingerprint": "cfd87092834008015405dd292a8d9d1326c04607d2d16761b96188c511808f84",
   "inputs": [
     {
       "path": "lib/ui_v2/act0_shell/act0_shell_state_v1.dart",
-      "sha256": "bec585f9fdb11903c5be507e0c2a90522597d0e90c736c3ac8c1e90c0b113b3d"
+      "sha256": "d9a78d57817c8eaef7dc1a376f53ade7774229be4a34063d5dc0cf152bb67221"
+    },
+    {
+      "path": "lib/ui_v2/act0_shell/act0_asm05_authored_decision_truth_v1.dart",
+      "sha256": "4eb69f1a36cccf0e17f025d595c1d92444dee02a49936ecaa298be5ad3612226"
     }
   ],
   "previousValidBaseline": {
-    "head": "efd3d2f8ed182d8cf4fea6092306673f162be3d6",
+    "head": "c76bed82277e986706d4217dab293c51dab901f7",
     "rowCount": 291,
     "fingerprint": "599ecadb0180eb48e8de72520645c29750941cba4cdd000f5acdda834a30f7e1",
-    "inputSha256": "4850b3940dd7e8970412248a6a9c7f20d4af358b87e9969eb7a2a8abfc3f174b"
+    "inputSha256": "bec585f9fdb11903c5be507e0c2a90522597d0e90c736c3ac8c1e90c0b113b3d"
   }
 }
