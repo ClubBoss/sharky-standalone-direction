@@ -92,6 +92,8 @@ const _consistent = <String>{
   'your_first_hand_showdown',
   'your_first_hand_recap',
   'w4_protection_check',
+  'w11_trigger_small_price_continue',
+  'w11_trigger_bad_price_fold',
 };
 
 // Exact PRIMARY reason partition of the authored playedHand catalog (314).
@@ -102,10 +104,12 @@ const _reasonCounts = <String, int>{
   'current_actor_stack_unknown': 35,
   'history_starts_after_blinds': 35,
   'out_of_hand_without_recorded_fold': 27,
-  'unsupported_grammar': 15,
+  'unsupported_grammar': 13,
   'consistent_closed_history': 5,
   'dead_button_or_empty_blind': 3,
   'empty_seat_acts': 1,
+  // PKR-03 option B: the two W11 trigger hands, from antes to the decision.
+  'consistent_current_decision': 2,
 };
 
 // What the learner actually sees of the order. Replay: the Runner's inline
@@ -179,10 +183,6 @@ const _conditionalContradictions = <String, Set<String>>{
     'weak_ace_warning_weak_ace_kicker_compare',
     'weak_ace_warning_weak_ace_pressure_fold',
   },
-  'contradiction_if_assumptions_hold:round_not_closed_or_hand_over': {
-    'w11_trigger_bad_price_fold',
-    'w11_trigger_small_price_continue',
-  },
   'empty_seat_acts': {'position_checkpoint_position_checkpoint_table_notice'},
 };
 const _conditionalReasonCounts = <String, int>{
@@ -194,9 +194,9 @@ const _conditionalReasonCounts = <String, int>{
   'consistent_closed_history': 5,
   'dead_button_or_empty_blind': 3,
   'open_not_first_in_preflop': 2,
-  'contradiction_if_assumptions_hold:round_not_closed_or_hand_over': 2,
   'empty_seat_acts': 1,
   'fragment_start_unknown': 1,
+  'consistent_current_decision': 2,
 };
 
 void main() {
@@ -578,14 +578,10 @@ void main() {
           table,
         );
         if (id.startsWith('w11_')) {
-          // Shown as CO raise, BTN call, flop, while UTG, HJ, SB and BB stay
-          // in the hand: the replay skips their replies.
-          expect(strict.reason, 'unsupported_grammar', reason: id);
-          expect(
-            conditional.reason,
-            'contradiction_if_assumptions_hold:round_not_closed_or_hand_over',
-            reason: id,
-          );
+          // Option B: the whole hand is authored, from the antes and blinds
+          // to the decision, with the actor's stack: proven, no assumption.
+          expect(strict.reason, 'consistent_current_decision', reason: id);
+          expect(conditional.assumptions, isEmpty, reason: id);
           continue;
         }
         // Strict: every shown action is in order; only the authored current
