@@ -960,7 +960,36 @@ String? _act0TrailActor(String stripped) {
     if (label.trim().isEmpty) return (potBb: -1.0, street: '');
     firstAction ??= label;
   }
-  if (firstAction == null) return (potBb: -1.0, street: '');
+  // Antes are dead money from one typed note before the first action
+  // ("Antes 0.25 BB x 6 players"). They are added to the pot once and never
+  // become a player's street commitment, so a blind or call is not reduced or
+  // doubled by them. A second ante note or one after an action is malformed.
+  var antesBb = 0.0;
+  var anteNotes = 0;
+  var seenAction = false;
+  for (var i = 0; i <= upToIndex && i < labels.length; i++) {
+    if (!noteIndexes.contains(i)) {
+      seenAction = true;
+      continue;
+    }
+    final ante = _act0AnteNoteTotalBbV1(labels[i]);
+    if (ante == null) continue;
+    if (seenAction || ++anteNotes > 1) return (potBb: -1.0, street: '');
+    antesBb = ante;
+  }
+  if (firstAction == null) {
+    // Only the ante note so far: the pot is the antes when the hand then
+    // starts from the SB blind; otherwise keep the static source label.
+    final firstOverall = [
+      for (var i = 0; i < labels.length; i++)
+        if (!noteIndexes.contains(i)) labels[i],
+    ].firstOrNull;
+    if (anteNotes == 1 &&
+        (firstOverall?.toLowerCase().contains('sb blind') ?? false)) {
+      return (potBb: antesBb, street: 'Preflop');
+    }
+    return (potBb: -1.0, street: '');
+  }
   final firstLower = firstAction.toLowerCase();
   // In a valid cash-game trail the *first* entry must be the small blind post.
   // A trail starting with BB only (or any other action) is incomplete \u2014 fall
@@ -969,7 +998,7 @@ String? _act0TrailActor(String stripped) {
     return (potBb: -1.0, street: '');
   }
 
-  double runningPot = 0.0;
+  double runningPot = antesBb;
   final streetContribs = <String, double>{};
   String currentStreet = 'Preflop';
 
@@ -1012,6 +1041,19 @@ String? _act0TrailActor(String stripped) {
   final totalPot =
       runningPot + streetContribs.values.fold(0.0, (acc, v) => acc + v);
   return (potBb: totalPot, street: currentStreet);
+}
+
+/// Total ante in BB from a typed note "Antes <a> BB x <n> players", else null.
+double? _act0AnteNoteTotalBbV1(String label) {
+  final m = RegExp(
+    r'^Antes (\d+(?:\.\d+)?) BB x (\d+) players$',
+    caseSensitive: false,
+  ).firstMatch(label.trim());
+  if (m == null) return null;
+  final each = double.parse(m.group(1)!);
+  final players = int.parse(m.group(2)!);
+  if (each <= 0 || players < 2) return null;
+  return each * players;
 }
 
 /// Calculates the pot from typed source trail items while preserving source
