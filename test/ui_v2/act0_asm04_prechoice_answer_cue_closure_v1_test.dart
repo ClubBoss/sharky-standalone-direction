@@ -299,6 +299,7 @@ const _pinnedSummaryLeaks = <String, String>{
   'your_first_hand_river': 'The river is the fifth board card.',
   'your_first_hand_showdown': 'At showdown, the best hand wins the pot.',
   'your_first_hand_turn': 'The turn is the fourth board card.',
+  'w4_checkpoint_review': 'Lesson learned: betting is purpose plus price.',
 };
 const _pinnedCueLeaks = <String, String>{
   'apply_btn_open': 'Strong late',
@@ -1013,5 +1014,34 @@ void main() {
     final visible = _visibleTexts(tester);
     expect(visible.where((t) => t.contains('Bet Purpose')), isEmpty);
     expect(visible, contains('Betting Decisions'));
+  });
+
+  testWidgets('World 4 recap caption is not shown before the answer', (
+    tester,
+  ) async {
+    _phone(tester);
+    final row = _row('w4_checkpoint_review');
+    // Authored caption, question, choices and grade stay as they are.
+    expect(
+      row.task.runner.caption,
+      'Lesson learned: betting is purpose plus price.',
+    );
+    expect(
+      row.task.runner.options.singleWhere((o) => o.isCorrect).label,
+      'Purpose and price',
+    );
+    bool leaks(String t) => t.toLowerCase().contains('purpose plus price');
+    // Academy (Learn) before the answer.
+    await tester.pumpWidget(_learnFixture(row.world, row.lesson, row.task));
+    await tester.pumpAndSettle();
+    final learn = _visibleTexts(tester);
+    // ignore: avoid_print
+    print('W4_LEARN_HITS ${learn.where(leaks).toList()}');
+    expect(learn.where(leaks), isEmpty);
+    // Runner before the answer.
+    final runner = await _pumpRunner(tester, row, decided: false);
+    // ignore: avoid_print
+    print('W4_RUNNER_HITS ${runner.texts.where(leaks).toList()}');
+    expect(runner.texts.where(leaks), isEmpty);
   });
 }

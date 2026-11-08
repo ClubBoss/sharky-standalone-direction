@@ -172,6 +172,8 @@ const Set<String> act0PrechoiceSingleAnswerLessonIdsV1 = <String>{
 const Set<String> act0PrechoiceAnswerBearingSummaryTaskIdsV1 = <String>{
   'what_poker_is_win_ways',
   'cards_ranks_suits_recap',
+  // "purpose plus price" restates the recap answer "Purpose and price".
+  'w4_checkpoint_review',
   'what_poker_is_showdown_win',
   'your_first_hand_showdown',
   'showdown_best_hand_drill',
