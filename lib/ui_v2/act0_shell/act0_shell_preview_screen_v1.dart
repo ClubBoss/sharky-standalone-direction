@@ -5120,14 +5120,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _progressRestoredV1 = false;
       _recoveryMessageV1 = null;
     });
-    final complete = await _progressStore.confirmRecovery(proposal);
+    final outcome = await _progressStore.confirmRecoveryOutcome(proposal);
     if (!mounted) return;
-    if (!complete) {
+    if (outcome != Act0RecoveryConfirmationOutcomeV1.completed) {
       setState(() {
         _recoveryBusyV1 = false;
         _progressLoadFailed = true;
         _recoveryMessageV1 =
-            'Recovery could not be completely verified. Any preserved copy is kept. Try again to resume safely.';
+            outcome == Act0RecoveryConfirmationOutcomeV1.existingCopyConflict
+            ? 'A different recovery copy is already saved. It has been kept, and current progress was not replaced. Open recovery options to keep it, or delete the copy with separate confirmation before starting again.'
+            : 'Recovery could not be completely verified. Any preserved copy is kept. Try again to resume safely.';
       });
       return;
     }

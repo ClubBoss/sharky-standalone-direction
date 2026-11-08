@@ -35,6 +35,12 @@ class Act0RecoveryCopyV1 {
   final String _value;
 }
 
+enum Act0RecoveryConfirmationOutcomeV1 {
+  completed,
+  existingCopyConflict,
+  notVerified,
+}
+
 class Act0RecoveryHoldV1 extends FormatException {
   const Act0RecoveryHoldV1() : super('Recovery could not be safely verified');
 }
@@ -179,7 +185,13 @@ class Act0ProgressStoreV1 {
 
   /// Only explicit confirmation calls this method. An existing different copy
   /// is never evicted; deleting it requires a separate opaque consent token.
-  Future<bool> confirmRecovery(
+  Future<bool> confirmRecovery(Act0RecoveryProposalV1 proposal) async =>
+      await confirmRecoveryOutcome(proposal) ==
+      Act0RecoveryConfirmationOutcomeV1.completed;
+
+  /// The refusal reason is classified within the same serialized confirmation.
+  /// Unreadable copy data and I/O failures never imply a proven copy conflict.
+  Future<Act0RecoveryConfirmationOutcomeV1> confirmRecoveryOutcome(
     Act0RecoveryProposalV1 proposal,
   ) => _serial(() async {
     try {
@@ -189,7 +201,7 @@ class Act0ProgressStoreV1 {
           prefs.containsKey(recoveryIntentKey) ||
           _snapshot(prefs) != proposal._snapshot ||
           !await _recoveryEligible(prefs, proposal._snapshot))
-        return false;
+        return Act0RecoveryConfirmationOutcomeV1.notVerified;
       final target = _targetTombstone(proposal._snapshot);
       final archive = jsonEncode({
         'format': 1,
@@ -199,17 +211,18 @@ class Act0ProgressStoreV1 {
       });
       if (prefs.containsKey(damagedCopyKey)) {
         final existing = prefs.get(damagedCopyKey);
-        if (existing is! String ||
-            _archiveSnapshot(existing) != proposal._snapshot)
-          return false;
+        if (existing is! String)
+          return Act0RecoveryConfirmationOutcomeV1.notVerified;
+        if (_archiveSnapshot(existing) != proposal._snapshot)
+          return Act0RecoveryConfirmationOutcomeV1.existingCopyConflict;
       } else if (!await _write(prefs, damagedCopyKey, archive)) {
-        return false;
+        return Act0RecoveryConfirmationOutcomeV1.notVerified;
       }
       await prefs.reload();
       final verifiedArchive = prefs.get(damagedCopyKey);
       if (verifiedArchive is! String ||
           _archiveSnapshot(verifiedArchive) != proposal._snapshot)
-        return false;
+        return Act0RecoveryConfirmationOutcomeV1.notVerified;
       await _boundary('archive_verified');
       await prefs.reload();
       if (!isWriteLeaseCurrent ||
@@ -217,7 +230,7 @@ class Act0ProgressStoreV1 {
           _snapshot(prefs) != proposal._snapshot ||
           prefs.get(damagedCopyKey) != verifiedArchive ||
           !await _recoveryEligible(prefs, proposal._snapshot))
-        return false;
+        return Act0RecoveryConfirmationOutcomeV1.notVerified;
       final intentFields = [
         1,
         key,
@@ -236,11 +249,14 @@ class Act0ProgressStoreV1 {
       // Fence old instances and queued saves even if the intent write's result
       // becomes indeterminate. Canonical bytes are still untouched here.
       _epochs[key] = (_epochs[key] ?? 0) + 1;
-      if (!await _write(prefs, recoveryIntentKey, intent)) return false;
+      if (!await _write(prefs, recoveryIntentKey, intent))
+        return Act0RecoveryConfirmationOutcomeV1.notVerified;
       await _boundary('intent_verified');
-      return await _resumeRecovery(prefs);
+      return await _resumeRecovery(prefs)
+          ? Act0RecoveryConfirmationOutcomeV1.completed
+          : Act0RecoveryConfirmationOutcomeV1.notVerified;
     } catch (_) {
-      return false;
+      return Act0RecoveryConfirmationOutcomeV1.notVerified;
     }
   });
 
