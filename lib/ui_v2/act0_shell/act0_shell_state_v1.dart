@@ -9294,206 +9294,212 @@ final _checkActionRunner = _firstHandRunner.copyWith(
   ],
 );
 
-final _foldActionRunner = _readBoardRunner.copyWith(
-  lessonId: 'actions_fold',
-  lessonTitle: 'Fold, check, call, raise',
-  lessonSubtitle: 'Facing a bet with a weak hand can be a fold.',
-  caption: 'HJ bets and your hand is weak.',
-  hint: 'Folding saves chips when continuing is not worth it.',
-  question: 'Which action gives up the hand?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'fold',
-      label: 'Fold',
-      isCorrect: true,
-      preferredLabel: 'Fold',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Fold gives up this hand.',
-      feedbackReason: 'Fold gives up the hand and saves the call.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'call',
-      label: 'Call',
-      amountLabel: '2 BB',
-      isCorrect: false,
-      preferredLabel: 'Fold',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Getting warmer.',
-      feedbackReason: 'Calling spends chips to continue with a weak hand.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'raise',
-      label: 'Raise',
-      amountLabel: '6 BB',
-      isCorrect: false,
-      preferredLabel: 'Fold',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'On the right track.',
-      feedbackReason: 'Raising adds more chips with a weak hand.',
-    ),
-  ],
-  table: _readBoardRunner.table.copyWith(
-    streetLabel: 'Flop',
-    potLabel: 'Pot 7 BB',
-    toCallLabel: 'To call 2 BB',
-    centerLabel: 'Facing a bet',
-    seats: <Act0SeatStateV1>[
-      Act0SeatStateV1(
-        seatId: 'utg',
-        seatLabel: 'UTG',
-        displayName: 'Seat',
-        holeCards: _unknownHoleCards,
+final _foldActionRunner = _act0FoldSeatsBeforeShownActionV1(
+  _readBoardRunner.copyWith(
+    lessonId: 'actions_fold',
+    lessonTitle: 'Fold, check, call, raise',
+    lessonSubtitle: 'Facing a bet with a weak hand can be a fold.',
+    caption: 'HJ bets and your hand is weak.',
+    hint: 'Folding saves chips when continuing is not worth it.',
+    question: 'Which action gives up the hand?',
+    options: const <Act0RunnerOptionV1>[
+      Act0RunnerOptionV1(
+        id: 'fold',
+        label: 'Fold',
+        isCorrect: true,
+        preferredLabel: 'Fold',
+        quality: Act0FeedbackQualityV1.correct,
+        feedbackTitle: 'Fold gives up this hand.',
+        feedbackReason: 'Fold gives up the hand and saves the call.',
       ),
-      Act0SeatStateV1(
-        seatId: 'hj',
-        seatLabel: 'HJ',
-        displayName: 'Seat',
-        bet: _hjBet2Bb,
-        holeCards: _unknownHoleCards,
+      Act0RunnerOptionV1(
+        id: 'call',
+        label: 'Call',
+        amountLabel: '2 BB',
+        isCorrect: false,
+        preferredLabel: 'Fold',
+        quality: Act0FeedbackQualityV1.wrong,
+        feedbackTitle: 'Getting warmer.',
+        feedbackReason: 'Calling spends chips to continue with a weak hand.',
       ),
-      Act0SeatStateV1(
-        seatId: 'co',
-        seatLabel: 'CO',
-        displayName: 'Cutoff',
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'btn',
-        seatLabel: 'BTN',
-        displayName: 'Hero',
-        isHero: true,
-        isDealerButton: true,
-        holeCards: _heroQqCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'sb',
-        seatLabel: 'SB',
-        displayName: 'Small blind',
-        isSmallBlind: true,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'bb',
-        seatLabel: 'BB',
-        displayName: 'Big blind',
-        isBigBlind: true,
-        holeCards: _unknownHoleCards,
+      Act0RunnerOptionV1(
+        id: 'raise',
+        label: 'Raise',
+        amountLabel: '6 BB',
+        isCorrect: false,
+        preferredLabel: 'Fold',
+        quality: Act0FeedbackQualityV1.wrong,
+        feedbackTitle: 'On the right track.',
+        feedbackReason: 'Raising adds more chips with a weak hand.',
       ),
     ],
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'HJ bets 2 BB'),
-      Act0ActionTrailItemV1(label: 'Hero acts'),
+    table: _readBoardRunner.table.copyWith(
+      streetLabel: 'Flop',
+      potLabel: 'Pot 7 BB',
+      toCallLabel: 'To call 2 BB',
+      centerLabel: 'Facing a bet',
+      seats: <Act0SeatStateV1>[
+        Act0SeatStateV1(
+          seatId: 'utg',
+          seatLabel: 'UTG',
+          displayName: 'Seat',
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'hj',
+          seatLabel: 'HJ',
+          displayName: 'Seat',
+          bet: _hjBet2Bb,
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'co',
+          seatLabel: 'CO',
+          displayName: 'Cutoff',
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'btn',
+          seatLabel: 'BTN',
+          displayName: 'Hero',
+          isHero: true,
+          isDealerButton: true,
+          holeCards: _heroQqCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'sb',
+          seatLabel: 'SB',
+          displayName: 'Small blind',
+          isSmallBlind: true,
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'bb',
+          seatLabel: 'BB',
+          displayName: 'Big blind',
+          isBigBlind: true,
+          holeCards: _unknownHoleCards,
+        ),
+      ],
+      actionTrail: const <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: 'HJ bets 2 BB'),
+        Act0ActionTrailItemV1(label: 'Hero acts'),
+      ],
+    ),
+    teachingSteps: const <Act0TeachingStepV1>[
+      Act0TeachingStepV1(
+        title: 'A bet creates a price.',
+        body: 'If your hand is not worth the price, folding saves chips.',
+        focusSeatIds: <String>['btn', 'hj'],
+        focusLabels: <String>['Facing bet', 'Fold saves'],
+      ),
     ],
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'A bet creates a price.',
-      body: 'If your hand is not worth the price, folding saves chips.',
-      focusSeatIds: <String>['btn', 'hj'],
-      focusLabels: <String>['Facing bet', 'Fold saves'],
-    ),
-  ],
+  const {'co'},
 );
 
-final _callActionRunner = _readBoardRunner.copyWith(
-  lessonId: 'actions_call',
-  lessonTitle: 'Fold, check, call, raise',
-  lessonSubtitle: 'Calling matches the current price.',
-  caption: 'You face a small bet and want the cheapest continue.',
-  hint: 'Call means match the bet.',
-  question: 'Which action matches the 1 BB price?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'fold',
-      label: 'Fold',
-      isCorrect: false,
-      preferredLabel: 'Call',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Good direction.',
-      feedbackReason: 'Folding gives up instead of continuing.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'call',
-      label: 'Call',
-      amountLabel: '1 BB',
-      isCorrect: true,
-      preferredLabel: 'Call',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Call matches the current bet.',
-      feedbackReason: 'Calling matches the current price.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'raise',
-      label: 'Raise',
-      amountLabel: '4 BB',
-      isCorrect: false,
-      preferredLabel: 'Call',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost got it.',
-      feedbackReason: 'Raising adds more chips than the call price.',
-    ),
-  ],
-  table: _readBoardRunner.table.copyWith(
-    streetLabel: 'Flop',
-    potLabel: 'Pot 5 BB',
-    toCallLabel: 'To call 1 BB',
-    centerLabel: 'Facing a price',
-    seats: <Act0SeatStateV1>[
-      Act0SeatStateV1(
-        seatId: 'utg',
-        seatLabel: 'UTG',
-        displayName: 'Seat',
-        holeCards: _unknownHoleCards,
+final _callActionRunner = _act0FoldSeatsBeforeShownActionV1(
+  _readBoardRunner.copyWith(
+    lessonId: 'actions_call',
+    lessonTitle: 'Fold, check, call, raise',
+    lessonSubtitle: 'Calling matches the current price.',
+    caption: 'You face a small bet and want the cheapest continue.',
+    hint: 'Call means match the bet.',
+    question: 'Which action matches the 1 BB price?',
+    options: const <Act0RunnerOptionV1>[
+      Act0RunnerOptionV1(
+        id: 'fold',
+        label: 'Fold',
+        isCorrect: false,
+        preferredLabel: 'Call',
+        quality: Act0FeedbackQualityV1.wrong,
+        feedbackTitle: 'Good direction.',
+        feedbackReason: 'Folding gives up instead of continuing.',
       ),
-      Act0SeatStateV1(
-        seatId: 'hj',
-        seatLabel: 'HJ',
-        displayName: 'Seat',
-        bet: _hjBet1Bb,
-        holeCards: _unknownHoleCards,
+      Act0RunnerOptionV1(
+        id: 'call',
+        label: 'Call',
+        amountLabel: '1 BB',
+        isCorrect: true,
+        preferredLabel: 'Call',
+        quality: Act0FeedbackQualityV1.correct,
+        feedbackTitle: 'Call matches the current bet.',
+        feedbackReason: 'Calling matches the current price.',
       ),
-      Act0SeatStateV1(
-        seatId: 'co',
-        seatLabel: 'CO',
-        displayName: 'Cutoff',
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'btn',
-        seatLabel: 'BTN',
-        displayName: 'Hero',
-        isHero: true,
-        isDealerButton: true,
-        holeCards: _heroQqCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'sb',
-        seatLabel: 'SB',
-        displayName: 'Small blind',
-        isSmallBlind: true,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'bb',
-        seatLabel: 'BB',
-        displayName: 'Big blind',
-        isBigBlind: true,
-        holeCards: _unknownHoleCards,
+      Act0RunnerOptionV1(
+        id: 'raise',
+        label: 'Raise',
+        amountLabel: '4 BB',
+        isCorrect: false,
+        preferredLabel: 'Call',
+        quality: Act0FeedbackQualityV1.wrong,
+        feedbackTitle: 'Almost got it.',
+        feedbackReason: 'Raising adds more chips than the call price.',
       ),
     ],
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'HJ bets 1 BB'),
-      Act0ActionTrailItemV1(label: 'Hero acts'),
+    table: _readBoardRunner.table.copyWith(
+      streetLabel: 'Flop',
+      potLabel: 'Pot 5 BB',
+      toCallLabel: 'To call 1 BB',
+      centerLabel: 'Facing a price',
+      seats: <Act0SeatStateV1>[
+        Act0SeatStateV1(
+          seatId: 'utg',
+          seatLabel: 'UTG',
+          displayName: 'Seat',
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'hj',
+          seatLabel: 'HJ',
+          displayName: 'Seat',
+          bet: _hjBet1Bb,
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'co',
+          seatLabel: 'CO',
+          displayName: 'Cutoff',
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'btn',
+          seatLabel: 'BTN',
+          displayName: 'Hero',
+          isHero: true,
+          isDealerButton: true,
+          holeCards: _heroQqCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'sb',
+          seatLabel: 'SB',
+          displayName: 'Small blind',
+          isSmallBlind: true,
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'bb',
+          seatLabel: 'BB',
+          displayName: 'Big blind',
+          isBigBlind: true,
+          holeCards: _unknownHoleCards,
+        ),
+      ],
+      actionTrail: const <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: 'HJ bets 1 BB'),
+        Act0ActionTrailItemV1(label: 'Hero acts'),
+      ],
+    ),
+    teachingSteps: const <Act0TeachingStepV1>[
+      Act0TeachingStepV1(
+        title: 'Calling matches the price.',
+        body: 'Call means put in exactly enough chips to continue.',
+        focusSeatIds: <String>['btn'],
+        focusLabels: <String>['To call 1 BB'],
+      ),
     ],
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Calling matches the price.',
-      body: 'Call means put in exactly enough chips to continue.',
-      focusSeatIds: <String>['btn'],
-      focusLabels: <String>['To call 1 BB'],
-    ),
-  ],
+  const {'co'},
 );
 
 final _blindsOrderRunner = _meetTableRunner.copyWith(
@@ -13085,200 +13091,212 @@ final _world3FacingOpenIntroRunner = _world3FirstInIntroRunner.copyWith(
   ],
 );
 
-final _world3PlayableCallRunner = _callActionRunner.copyWith(
-  lessonId: 'w3_playable_call',
-  lessonTitle: 'Facing an open',
-  lessonSubtitle: 'Preflop Basics',
-  caption: 'CO opened. Hero is BTN with KQo.',
-  hint: 'Playable hand in position: call keeps the hand in.',
-  question: 'What is the simple response?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'call',
-      label: 'Call',
-      amountLabel: '2.5 BB',
-      isCorrect: true,
-      preferredLabel: 'Call',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Clean execution.',
-      feedbackReason:
-          'BTN versus a CO open, KQo can continue in position. For this beginner baseline, call is the simple continue.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'fold',
-      label: 'Fold',
-      isCorrect: false,
-      preferredLabel: 'Call',
-      betterAnswerLabel: 'Call',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost got it.',
-      feedbackReason:
-          'Folding is too tight here. BTN versus a CO open, KQo can continue in position.',
-    ),
-  ],
-  table: _callActionRunner.table.copyWith(
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'K', suit: 'd'),
-      Act0CardStateV1(rank: 'Q', suit: 'c'),
+final _world3PlayableCallRunner = _act0FoldSeatsBeforeShownActionV1(
+  _callActionRunner.copyWith(
+    lessonId: 'w3_playable_call',
+    lessonTitle: 'Facing an open',
+    lessonSubtitle: 'Preflop Basics',
+    caption: 'CO opened. Hero is BTN with KQo.',
+    hint: 'Playable hand in position: call keeps the hand in.',
+    question: 'What is the simple response?',
+    options: const <Act0RunnerOptionV1>[
+      Act0RunnerOptionV1(
+        id: 'call',
+        label: 'Call',
+        amountLabel: '2.5 BB',
+        isCorrect: true,
+        preferredLabel: 'Call',
+        quality: Act0FeedbackQualityV1.correct,
+        feedbackTitle: 'Clean execution.',
+        feedbackReason:
+            'BTN versus a CO open, KQo can continue in position. For this beginner baseline, call is the simple continue.',
+      ),
+      Act0RunnerOptionV1(
+        id: 'fold',
+        label: 'Fold',
+        isCorrect: false,
+        preferredLabel: 'Call',
+        betterAnswerLabel: 'Call',
+        quality: Act0FeedbackQualityV1.wrong,
+        feedbackTitle: 'Almost got it.',
+        feedbackReason:
+            'Folding is too tight here. BTN versus a CO open, KQo can continue in position.',
+      ),
     ],
-    boardCards: const <Act0CardStateV1>[],
-    highlightedCardIds: const ['hero_0', 'hero_1'],
-    streetLabel: 'Preflop',
-    potLabel: 'Pot 4 BB',
-    toCallLabel: 'To call 2.5 BB',
-    centerLabel: 'CO opened',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
-      Act0ActionTrailItemV1(label: 'BTN acts'),
-    ],
-    activeSeatId: 'btn',
-    highlightedSeatIds: const <String>['co', 'btn'],
-    seats: <Act0SeatStateV1>[
-      Act0SeatStateV1(
-        seatId: 'utg',
-        seatLabel: 'UTG',
-        displayName: 'Seat',
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'hj',
-        seatLabel: 'HJ',
-        displayName: 'Seat',
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'co',
-        seatLabel: 'CO',
-        displayName: 'Cutoff',
-        bet: _coOpen25Bb,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'btn',
-        seatLabel: 'BTN',
-        displayName: 'Hero',
-        isHero: true,
-        isDealerButton: true,
-        holeCards: _heroKqCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'sb',
-        seatLabel: 'SB',
-        displayName: 'Small blind',
-        isSmallBlind: true,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'bb',
-        seatLabel: 'BB',
-        displayName: 'Big blind',
-        isBigBlind: true,
-        holeCards: _unknownHoleCards,
+    table: _callActionRunner.table.copyWith(
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'K', suit: 'd'),
+        Act0CardStateV1(rank: 'Q', suit: 'c'),
+      ],
+      boardCards: const <Act0CardStateV1>[],
+      highlightedCardIds: const ['hero_0', 'hero_1'],
+      streetLabel: 'Preflop',
+      potLabel: 'Pot 4 BB',
+      toCallLabel: 'To call 2.5 BB',
+      centerLabel: 'CO opened',
+      actionTrail: const <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: 'CO opens 2.5 BB'),
+        Act0ActionTrailItemV1(label: 'BTN acts'),
+      ],
+      activeSeatId: 'btn',
+      highlightedSeatIds: const <String>['co', 'btn'],
+      seats: <Act0SeatStateV1>[
+        Act0SeatStateV1(
+          seatId: 'utg',
+          seatLabel: 'UTG',
+          displayName: 'Seat',
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'hj',
+          seatLabel: 'HJ',
+          displayName: 'Seat',
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'co',
+          seatLabel: 'CO',
+          displayName: 'Cutoff',
+          bet: _coOpen25Bb,
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'btn',
+          seatLabel: 'BTN',
+          displayName: 'Hero',
+          isHero: true,
+          isDealerButton: true,
+          holeCards: _heroKqCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'sb',
+          seatLabel: 'SB',
+          displayName: 'Small blind',
+          isSmallBlind: true,
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'bb',
+          seatLabel: 'BB',
+          displayName: 'Big blind',
+          isBigBlind: true,
+          holeCards: _unknownHoleCards,
+        ),
+      ],
+    ),
+    teachingSteps: const <Act0TeachingStepV1>[
+      Act0TeachingStepV1(
+        title: 'Playable and in position.',
+        body: 'KQo can call a simple open when hero acts after CO.',
+        focusSeatIds: <String>['co', 'btn'],
+        focusCardIds: <String>['hero_0', 'hero_1'],
+        focusLabels: <String>['CO opens', 'BTN calls'],
       ),
     ],
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Playable and in position.',
-      body: 'KQo can call a simple open when hero acts after CO.',
-      focusSeatIds: <String>['co', 'btn'],
-      focusCardIds: <String>['hero_0', 'hero_1'],
-      focusLabels: <String>['CO opens', 'BTN calls'],
-    ),
-  ],
+  const {'utg', 'hj'},
 );
 
-final _world2StrongContinueRunner = _world3PlayableCallRunner.copyWith(
-  lessonId: 'w2_strong_continue_kqo',
-  caption: 'HJ opened. Hero is BTN with KQo.',
-  hint:
-      'Broadway cards are T, J, Q, K, and A. One seat earlier from the opener still leaves hero in position with a playable broadway.',
-  question: 'What is the simple continue?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'call',
-      label: 'Call',
-      amountLabel: '2.5 BB',
-      isCorrect: true,
-      preferredLabel: 'Call',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Clean execution.',
-      feedbackReason:
-          'BTN versus an HJ open, KQo can still continue in position. For this beginner baseline, call is the simple continue.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'fold',
-      label: 'Fold',
-      isCorrect: false,
-      preferredLabel: 'Call',
-      betterAnswerLabel: 'Call',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Almost got it.',
-      feedbackReason:
-          'Folding is still too tight. KQo keeps enough strength and position against an HJ open.',
-    ),
-  ],
-  table: _world3PlayableCallRunner.table.copyWith(
-    centerLabel: 'HJ opened',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'HJ opens 2.5 BB'),
-      Act0ActionTrailItemV1(label: 'BTN acts'),
+final _world2StrongContinueSourceRunner = _act0FoldSeatsBeforeShownActionV1(
+  _world3PlayableCallRunner.copyWith(
+    lessonId: 'w2_strong_continue_kqo',
+    caption: 'HJ opened. Hero is BTN with KQo.',
+    hint:
+        'Broadway cards are T, J, Q, K, and A. One seat earlier from the opener still leaves hero in position with a playable broadway.',
+    question: 'What is the simple continue?',
+    options: const <Act0RunnerOptionV1>[
+      Act0RunnerOptionV1(
+        id: 'call',
+        label: 'Call',
+        amountLabel: '2.5 BB',
+        isCorrect: true,
+        preferredLabel: 'Call',
+        quality: Act0FeedbackQualityV1.correct,
+        feedbackTitle: 'Clean execution.',
+        feedbackReason:
+            'BTN versus an HJ open, KQo can still continue in position. For this beginner baseline, call is the simple continue.',
+      ),
+      Act0RunnerOptionV1(
+        id: 'fold',
+        label: 'Fold',
+        isCorrect: false,
+        preferredLabel: 'Call',
+        betterAnswerLabel: 'Call',
+        quality: Act0FeedbackQualityV1.wrong,
+        feedbackTitle: 'Almost got it.',
+        feedbackReason:
+            'Folding is still too tight. KQo keeps enough strength and position against an HJ open.',
+      ),
     ],
-    highlightedSeatIds: const <String>['hj', 'btn'],
-    seats: <Act0SeatStateV1>[
-      Act0SeatStateV1(
-        seatId: 'utg',
-        seatLabel: 'UTG',
-        displayName: 'Seat',
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'hj',
-        seatLabel: 'HJ',
-        displayName: 'Hijack',
-        bet: _hjOpen25Bb,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'co',
-        seatLabel: 'CO',
-        displayName: 'Cutoff',
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'btn',
-        seatLabel: 'BTN',
-        displayName: 'Hero',
-        isHero: true,
-        isDealerButton: true,
-        holeCards: _heroKqCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'sb',
-        seatLabel: 'SB',
-        displayName: 'Small blind',
-        isSmallBlind: true,
-        holeCards: _unknownHoleCards,
-      ),
-      Act0SeatStateV1(
-        seatId: 'bb',
-        seatLabel: 'BB',
-        displayName: 'Big blind',
-        isBigBlind: true,
-        holeCards: _unknownHoleCards,
+    table: _world3PlayableCallRunner.table.copyWith(
+      centerLabel: 'HJ opened',
+      actionTrail: const <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: 'HJ opens 2.5 BB'),
+        Act0ActionTrailItemV1(label: 'BTN acts'),
+      ],
+      highlightedSeatIds: const <String>['hj', 'btn'],
+      seats: <Act0SeatStateV1>[
+        Act0SeatStateV1(
+          seatId: 'utg',
+          seatLabel: 'UTG',
+          displayName: 'Seat',
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'hj',
+          seatLabel: 'HJ',
+          displayName: 'Hijack',
+          bet: _hjOpen25Bb,
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'co',
+          seatLabel: 'CO',
+          displayName: 'Cutoff',
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'btn',
+          seatLabel: 'BTN',
+          displayName: 'Hero',
+          isHero: true,
+          isDealerButton: true,
+          holeCards: _heroKqCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'sb',
+          seatLabel: 'SB',
+          displayName: 'Small blind',
+          isSmallBlind: true,
+          holeCards: _unknownHoleCards,
+        ),
+        Act0SeatStateV1(
+          seatId: 'bb',
+          seatLabel: 'BB',
+          displayName: 'Big blind',
+          isBigBlind: true,
+          holeCards: _unknownHoleCards,
+        ),
+      ],
+    ),
+    teachingSteps: const <Act0TeachingStepV1>[
+      Act0TeachingStepV1(
+        title: 'Playable broadway, tighter opener.',
+        body:
+            'KQo is a broadway hand because both cards are broadway ranks. It still continues in position, but the opener seat is one step tighter now.',
+        focusSeatIds: <String>['hj', 'btn'],
+        focusCardIds: <String>['hero_0', 'hero_1'],
+        focusLabels: <String>['Broadway = T J Q K A', 'HJ opens', 'BTN calls'],
       ),
     ],
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Playable broadway, tighter opener.',
-      body:
-          'KQo is a broadway hand because both cards are broadway ranks. It still continues in position, but the opener seat is one step tighter now.',
-      focusSeatIds: <String>['hj', 'btn'],
-      focusCardIds: <String>['hero_0', 'hero_1'],
-      focusLabels: <String>['Broadway = T J Q K A', 'HJ opens', 'BTN calls'],
-    ),
-  ],
+  const {'utg'},
+);
+
+// BTN decides after the HJ open, so CO has already folded in this scene.
+final _world2StrongContinueRunner = _act0FoldSeatsBeforeShownActionV1(
+  _world2StrongContinueSourceRunner,
+  const {'co'},
 );
 
 final _world2KqoContrastRunner = _world3PlayableCallRunner.copyWith(
@@ -13383,62 +13401,65 @@ final _world2BorderlineContinueRunner = _world3PlayableCallRunner.copyWith(
   ],
 );
 
-final _world3CutoffCallRunner = _world3PlayableCallRunner.copyWith(
-  lessonId: 'w3_cutoff_call_kqo',
-  caption: 'HJ opened. Hero is CO with KQo.',
-  hint: 'Same hand, one seat earlier, still facing an opener.',
-  question: 'What is the cleaner response from CO?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'call',
-      label: 'Call',
-      amountLabel: '2.5 BB',
-      isCorrect: true,
-      preferredLabel: 'Call',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong frame read.',
-      feedbackReason:
-          'KQo can still continue from CO, but the seat is less comfortable than BTN because one more strong seat stays behind.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'fold',
-      label: 'Fold',
-      isCorrect: false,
-      preferredLabel: 'Call',
-      betterAnswerLabel: 'Call',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'A bit too cautious.',
-      feedbackReason:
-          'The seat is tighter than BTN, but KQo still has enough strength to continue facing one HJ open.',
-    ),
-  ],
-  table: _act0ReassignHeroSeatV1(
-    _world2StrongContinueRunner.table.copyWith(
-      heroCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'K', suit: 'd'),
-        Act0CardStateV1(rank: 'Q', suit: 'c'),
-      ],
+final _world3CutoffCallRunner = _act0FoldSeatsBeforeShownActionV1(
+  _world3PlayableCallRunner.copyWith(
+    lessonId: 'w3_cutoff_call_kqo',
+    caption: 'HJ opened. Hero is CO with KQo.',
+    hint: 'Same hand, one seat earlier, still facing an opener.',
+    question: 'What is the cleaner response from CO?',
+    options: const <Act0RunnerOptionV1>[
+      Act0RunnerOptionV1(
+        id: 'call',
+        label: 'Call',
+        amountLabel: '2.5 BB',
+        isCorrect: true,
+        preferredLabel: 'Call',
+        quality: Act0FeedbackQualityV1.correct,
+        feedbackTitle: 'Strong frame read.',
+        feedbackReason:
+            'KQo can still continue from CO, but the seat is less comfortable than BTN because one more strong seat stays behind.',
+      ),
+      Act0RunnerOptionV1(
+        id: 'fold',
+        label: 'Fold',
+        isCorrect: false,
+        preferredLabel: 'Call',
+        betterAnswerLabel: 'Call',
+        quality: Act0FeedbackQualityV1.wrong,
+        feedbackTitle: 'A bit too cautious.',
+        feedbackReason:
+            'The seat is tighter than BTN, but KQo still has enough strength to continue facing one HJ open.',
+      ),
+    ],
+    table: _act0ReassignHeroSeatV1(
+      _world2StrongContinueSourceRunner.table.copyWith(
+        heroCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'K', suit: 'd'),
+          Act0CardStateV1(rank: 'Q', suit: 'c'),
+        ],
+        activeSeatId: 'co',
+        highlightedSeatIds: const <String>['hj', 'co'],
+        centerLabel: 'HJ opened',
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'HJ opens 2.5 BB'),
+          Act0ActionTrailItemV1(label: 'CO acts'),
+        ],
+      ),
+      heroSeatId: 'co',
       activeSeatId: 'co',
-      highlightedSeatIds: const <String>['hj', 'co'],
-      centerLabel: 'HJ opened',
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'HJ opens 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'CO acts'),
-      ],
     ),
-    heroSeatId: 'co',
-    activeSeatId: 'co',
+    teachingSteps: const <Act0TeachingStepV1>[
+      Act0TeachingStepV1(
+        title: 'Same hand, tighter seat.',
+        body:
+            'KQo still continues here, but one earlier seat makes the call a little less comfortable.',
+        focusSeatIds: <String>['hj', 'co'],
+        focusCardIds: <String>['hero_0', 'hero_1'],
+        focusLabels: <String>['CO', 'KQo', 'Call'],
+      ),
+    ],
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Same hand, tighter seat.',
-      body:
-          'KQo still continues here, but one earlier seat makes the call a little less comfortable.',
-      focusSeatIds: <String>['hj', 'co'],
-      focusCardIds: <String>['hero_0', 'hero_1'],
-      focusLabels: <String>['CO', 'KQo', 'Call'],
-    ),
-  ],
+  const {'utg'},
 );
 
 final _world3WeakFacingFoldPressureRunner = _world3WeakFacingFoldRunner
@@ -15025,73 +15046,80 @@ final _world3CheckpointRunner = _world3SameHandIntroRunner.copyWith(
   ],
 );
 
-final _w4TableFrameNoticeRunner = _world3FacingOpenIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w4_table_frame_notice',
-  lessonTitle: 'Preflop checkpoint',
-  lessonSubtitle: 'Bet Purpose / Price',
-  caption: 'Real table. HJ opens 2.5 BB and hero is CO with AJo.',
-  hint: 'Before deciding call, fold, or raise, name the frame cleanly.',
-  question: 'What frame are you in?',
-  feedbackTitle: 'Frame first.',
-  feedbackReason: 'Name the frame before choosing the action.',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'facing_open',
-      label: 'Facing an open',
-      isCorrect: true,
-      preferredLabel: 'Facing an open',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong choice.',
-      feedbackReason:
-          'That is the live-table transfer. Name the frame before choosing the action.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'unopened',
-      label: 'Unopened pot',
-      isCorrect: false,
-      preferredLabel: 'Facing an open',
-      betterAnswerLabel: 'Facing an open',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Nearly there.',
-      feedbackReason:
-          'The open already happened, so the clean frame is no longer unopened.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'call_first',
-      label: 'Playable hand, so call first',
-      isCorrect: false,
-      preferredLabel: 'Facing an open',
-      betterAnswerLabel: 'Facing an open',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable thought.',
-      feedbackReason:
-          'AJo may continue sometimes, but frame comes before action. Name facing open first.',
-    ),
-  ],
-  table: _world3PlayableCallRunner.table.copyWith(
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'A', suit: 'h'),
-      Act0CardStateV1(rank: 'J', suit: 'c'),
+final _w4TableFrameNoticeRunner = _act0FoldSeatsBeforeShownActionV1(
+  _world3FacingOpenIntroRunner.copyWith(
+    phase: Act0LessonPhaseV1.drill,
+    lessonId: 'w4_table_frame_notice',
+    lessonTitle: 'Preflop checkpoint',
+    lessonSubtitle: 'Bet Purpose / Price',
+    caption: 'Real table. HJ opens 2.5 BB and hero is CO with AJo.',
+    hint: 'Before deciding call, fold, or raise, name the frame cleanly.',
+    question: 'What frame are you in?',
+    feedbackTitle: 'Frame first.',
+    feedbackReason: 'Name the frame before choosing the action.',
+    options: const <Act0RunnerOptionV1>[
+      Act0RunnerOptionV1(
+        id: 'facing_open',
+        label: 'Facing an open',
+        isCorrect: true,
+        preferredLabel: 'Facing an open',
+        quality: Act0FeedbackQualityV1.correct,
+        feedbackTitle: 'Strong choice.',
+        feedbackReason:
+            'That is the live-table transfer. Name the frame before choosing the action.',
+      ),
+      Act0RunnerOptionV1(
+        id: 'unopened',
+        label: 'Unopened pot',
+        isCorrect: false,
+        preferredLabel: 'Facing an open',
+        betterAnswerLabel: 'Facing an open',
+        quality: Act0FeedbackQualityV1.wrong,
+        feedbackTitle: 'Nearly there.',
+        feedbackReason:
+            'The open already happened, so the clean frame is no longer unopened.',
+      ),
+      Act0RunnerOptionV1(
+        id: 'call_first',
+        label: 'Playable hand, so call first',
+        isCorrect: false,
+        preferredLabel: 'Facing an open',
+        betterAnswerLabel: 'Facing an open',
+        quality: Act0FeedbackQualityV1.suboptimal,
+        feedbackTitle: 'Playable thought.',
+        feedbackReason:
+            'AJo may continue sometimes, but frame comes before action. Name facing open first.',
+      ),
     ],
-    activeSeatId: 'co',
-    highlightedSeatIds: const <String>['hj', 'co'],
-    centerLabel: 'HJ opens 2.5 BB',
-    actionTrail: const <Act0ActionTrailItemV1>[
-      Act0ActionTrailItemV1(label: 'UTG folds'),
-      Act0ActionTrailItemV1(label: 'HJ opens 2.5 BB'),
-      Act0ActionTrailItemV1(label: 'CO acts'),
+    table: _world3PlayableCallRunner.table.copyWith(
+      heroCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'A', suit: 'h'),
+        Act0CardStateV1(rank: 'J', suit: 'c'),
+      ],
+      activeSeatId: 'co',
+      highlightedSeatIds: const <String>['hj', 'co'],
+      centerLabel: 'HJ opens 2.5 BB',
+      actionTrail: const <Act0ActionTrailItemV1>[
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ opens 2.5 BB'),
+        Act0ActionTrailItemV1(label: 'CO acts'),
+      ],
+    ),
+    teachingSteps: const <Act0TeachingStepV1>[
+      Act0TeachingStepV1(
+        title: 'Frame before action.',
+        body:
+            'Real tables get simpler when you first ask whether the pot is unopened or facing an open.',
+        focusSeatIds: <String>['hj', 'co'],
+        focusLabels: <String>[
+          'Facing open',
+          'Price exists',
+          'Action comes next',
+        ],
+      ),
     ],
   ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Frame before action.',
-      body:
-          'Real tables get simpler when you first ask whether the pot is unopened or facing an open.',
-      focusSeatIds: <String>['hj', 'co'],
-      focusLabels: <String>['Facing open', 'Price exists', 'Action comes next'],
-    ),
-  ],
+  const {'utg'},
 );
 
 // W3 position apply intro — used in the W3 apply lesson below.
@@ -15617,37 +15645,40 @@ final _world4ProtectionRecapRunner = _world4ProtectionIntroRunner.copyWith(
   ],
 );
 
-final _world4PriceIntroRunner = _callActionRunner.copyWith(
-  phase: Act0LessonPhaseV1.theory,
-  lessonId: 'w4_price_intro',
-  lessonTitle: 'Call price',
-  lessonSubtitle: 'Bet Purpose / Price',
-  caption: 'When someone bets, they set your price to continue.',
-  hint:
-      'Price is what you must pay to continue. Read pot, to call, and hand strength together.',
-  question: 'What does a bet give the caller?',
-  options: const <Act0RunnerOptionV1>[],
-  table: _callActionRunner.table.copyWith(
-    streetLabel: 'Turn',
-    potLabel: 'Pot 8 BB',
-    toCallLabel: 'To call 2 BB',
-    centerLabel: 'Facing price',
-    seats: _world4PriceSeatsV1('2 BB'),
-    boardCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'T', suit: 'h'),
-      Act0CardStateV1(rank: '8', suit: 'c'),
-      Act0CardStateV1(rank: '3', suit: 'd'),
-      Act0CardStateV1(rank: '2', suit: 's'),
-    ],
-    actionTrail: _world4PriceActionTrailV1('2 BB'),
-  ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Price to continue.',
-      body: 'Pot = what you can win. To call = what you risk.',
-      focusLabels: <String>['Pot', 'To call', 'Price'],
+final _world4PriceIntroRunner = _act0FoldSeatsBeforeShownActionV1(
+  _callActionRunner.copyWith(
+    phase: Act0LessonPhaseV1.theory,
+    lessonId: 'w4_price_intro',
+    lessonTitle: 'Call price',
+    lessonSubtitle: 'Bet Purpose / Price',
+    caption: 'When someone bets, they set your price to continue.',
+    hint:
+        'Price is what you must pay to continue. Read pot, to call, and hand strength together.',
+    question: 'What does a bet give the caller?',
+    options: const <Act0RunnerOptionV1>[],
+    table: _callActionRunner.table.copyWith(
+      streetLabel: 'Turn',
+      potLabel: 'Pot 8 BB',
+      toCallLabel: 'To call 2 BB',
+      centerLabel: 'Facing price',
+      seats: _world4PriceSeatsV1('2 BB'),
+      boardCards: const <Act0CardStateV1>[
+        Act0CardStateV1(rank: 'T', suit: 'h'),
+        Act0CardStateV1(rank: '8', suit: 'c'),
+        Act0CardStateV1(rank: '3', suit: 'd'),
+        Act0CardStateV1(rank: '2', suit: 's'),
+      ],
+      actionTrail: _world4PriceActionTrailV1('2 BB'),
     ),
-  ],
+    teachingSteps: const <Act0TeachingStepV1>[
+      Act0TeachingStepV1(
+        title: 'Price to continue.',
+        body: 'Pot = what you can win. To call = what you risk.',
+        focusLabels: <String>['Pot', 'To call', 'Price'],
+      ),
+    ],
+  ),
+  const {'co'},
 );
 
 List<Act0SeatStateV1> _world4PriceSeatsV1(String amountLabel) =>
@@ -16103,88 +16134,91 @@ final _world4CheckpointIntroRunner = _world4PurposeIntroRunner.copyWith(
   ],
 );
 
-final _world4PriceTableTransferRunner = _world4GoodPriceCallRunner.copyWith(
-  lessonId: 'w4_price_table_transfer',
-  caption: 'Real table. Pot is 7 BB. To call is 2 BB. Hero has second pair.',
-  hint:
-      'Do not look only at your hand. Compare hand strength with the price before reacting.',
-  question: 'What is the clean turn action?',
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'call',
-      label: 'Call',
-      amountLabel: '2 BB',
-      isCorrect: true,
-      preferredLabel: 'Call',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Clean table read.',
-      feedbackReason:
-          'Pot 7 BB is worth contesting, To call is only 2 BB, and second pair is enough to continue once.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'fold',
-      label: 'Fold',
-      isCorrect: false,
-      preferredLabel: 'Call',
-      betterAnswerLabel: 'Call',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too cautious here.',
-      feedbackReason:
-          'Folding ignores the price. The pot is 7 BB, the call costs only 2 BB, and the hand still has enough value.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'raise',
-      label: 'Raise',
-      amountLabel: '6 BB',
-      isCorrect: false,
-      preferredLabel: 'Call',
-      betterAnswerLabel: 'Call',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable thought.',
-      feedbackReason:
-          'Raising spends more than this price read needs. The clean transfer is call the small price with second pair.',
-    ),
-  ],
-  table: _act0CurrentStreetTableV1(
-    _world4GoodPriceCallRunner.table.copyWith(
-      streetLabel: 'Turn',
-      potLabel: 'Pot 7 BB',
-      toCallLabel: 'To call 2 BB',
-      centerLabel: 'Second pair, live table',
-      heroCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'A', suit: 'c'),
-        Act0CardStateV1(rank: '9', suit: 'd'),
-      ],
-      boardCards: const <Act0CardStateV1>[
-        Act0CardStateV1(rank: 'K', suit: 'h', tone: Act0CardToneV1.red),
-        Act0CardStateV1(rank: '9', suit: 's'),
-        Act0CardStateV1(rank: '4', suit: 'c'),
-        Act0CardStateV1(rank: '2', suit: 'd'),
-      ],
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'BB bets 2 BB'),
-        Act0ActionTrailItemV1(label: 'BTN acts'),
-      ],
-      activeSeatId: 'btn',
-      highlightedSeatIds: const <String>['btn', 'bb'],
-      highlightedCardIds: const <String>['hero_1', 'board_1'],
-    ),
-    bets: {
-      'bb': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'BB',
+final _world4PriceTableTransferRunner = _act0FoldSeatsBeforeShownActionV1(
+  _world4GoodPriceCallRunner.copyWith(
+    lessonId: 'w4_price_table_transfer',
+    caption: 'Real table. Pot is 7 BB. To call is 2 BB. Hero has second pair.',
+    hint:
+        'Do not look only at your hand. Compare hand strength with the price before reacting.',
+    question: 'What is the clean turn action?',
+    options: const <Act0RunnerOptionV1>[
+      Act0RunnerOptionV1(
+        id: 'call',
+        label: 'Call',
         amountLabel: '2 BB',
+        isCorrect: true,
+        preferredLabel: 'Call',
+        quality: Act0FeedbackQualityV1.correct,
+        feedbackTitle: 'Clean table read.',
+        feedbackReason:
+            'Pot 7 BB is worth contesting, To call is only 2 BB, and second pair is enough to continue once.',
       ),
-    },
-  ),
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Live table price read.',
-      body:
-          'Pot tells what you can win. To call tells what you must risk. Compare both with second pair before choosing.',
-      focusLabels: <String>['Pot 7 BB', 'To call 2 BB', 'Second pair'],
+      Act0RunnerOptionV1(
+        id: 'fold',
+        label: 'Fold',
+        isCorrect: false,
+        preferredLabel: 'Call',
+        betterAnswerLabel: 'Call',
+        quality: Act0FeedbackQualityV1.wrong,
+        feedbackTitle: 'Too cautious here.',
+        feedbackReason:
+            'Folding ignores the price. The pot is 7 BB, the call costs only 2 BB, and the hand still has enough value.',
+      ),
+      Act0RunnerOptionV1(
+        id: 'raise',
+        label: 'Raise',
+        amountLabel: '6 BB',
+        isCorrect: false,
+        preferredLabel: 'Call',
+        betterAnswerLabel: 'Call',
+        quality: Act0FeedbackQualityV1.suboptimal,
+        feedbackTitle: 'Playable thought.',
+        feedbackReason:
+            'Raising spends more than this price read needs. The clean transfer is call the small price with second pair.',
+      ),
+    ],
+    table: _act0CurrentStreetTableV1(
+      _world4GoodPriceCallRunner.table.copyWith(
+        streetLabel: 'Turn',
+        potLabel: 'Pot 7 BB',
+        toCallLabel: 'To call 2 BB',
+        centerLabel: 'Second pair, live table',
+        heroCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'A', suit: 'c'),
+          Act0CardStateV1(rank: '9', suit: 'd'),
+        ],
+        boardCards: const <Act0CardStateV1>[
+          Act0CardStateV1(rank: 'K', suit: 'h', tone: Act0CardToneV1.red),
+          Act0CardStateV1(rank: '9', suit: 's'),
+          Act0CardStateV1(rank: '4', suit: 'c'),
+          Act0CardStateV1(rank: '2', suit: 'd'),
+        ],
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'BB bets 2 BB'),
+          Act0ActionTrailItemV1(label: 'BTN acts'),
+        ],
+        activeSeatId: 'btn',
+        highlightedSeatIds: const <String>['btn', 'bb'],
+        highlightedCardIds: const <String>['hero_1', 'board_1'],
+      ),
+      bets: {
+        'bb': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'BB',
+          amountLabel: '2 BB',
+        ),
+      },
     ),
-  ],
+    teachingSteps: const <Act0TeachingStepV1>[
+      Act0TeachingStepV1(
+        title: 'Live table price read.',
+        body:
+            'Pot tells what you can win. To call tells what you must risk. Compare both with second pair before choosing.',
+        focusLabels: <String>['Pot 7 BB', 'To call 2 BB', 'Second pair'],
+      ),
+    ],
+  ),
+  const {'utg', 'hj', 'co'},
 );
 
 final _world4PurposePriceTableTransferRunner = _world4ValueBetRunner.copyWith(
@@ -22214,158 +22248,169 @@ final _w11TriggerOvercallFlopRunner = _w11TriggerReadIntroRunner.copyWith(
   ],
 );
 
-final _w11TriggerSmallPriceContinueRunner = _w11TriggerReadIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w11_trigger_small_price_continue',
-  caption:
-      'Six-handed, 0.25 BB ante each. CO opens to 2.5 BB, BTN calls with QJs. Flop J-7-4 rainbow: CO bets 2 BB into 8 BB, with 35 BB behind each.',
-  hint: 'Real play means combining cues, not naming one concept.',
-  question: 'What is the cleaner response?',
-  table: _act0CurrentStreetTableV1(
-    _world3PlayableCallRunner.table.copyWith(
-      heroCards: _heroQJsCards,
-      boardCards: _boardJ74FlopCards,
-      streetLabel: 'Flop',
-      potLabel: 'Pot 8 BB',
-      toCallLabel: 'To call 2 BB',
-      centerLabel: 'BTN, top pair, small price',
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls'),
-        Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
-      ],
-    ),
-    bets: const {
-      'co': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'CO',
-        amountLabel: '2 BB',
+final _w11TriggerSmallPriceContinueRunner = _act0FoldSeatsBeforeShownActionV1(
+  _w11TriggerReadIntroRunner.copyWith(
+    phase: Act0LessonPhaseV1.drill,
+    lessonId: 'w11_trigger_small_price_continue',
+    caption:
+        'Six-handed, 0.25 BB ante each. CO opens to 2.5 BB, BTN calls with QJs. Flop J-7-4 rainbow: CO bets 2 BB into 8 BB, with 35 BB behind each.',
+    hint: 'Real play means combining cues, not naming one concept.',
+    question: 'What is the cleaner response?',
+    table: _act0CurrentStreetTableV1(
+      _world3PlayableCallRunner.table.copyWith(
+        heroCards: _heroQJsCards,
+        boardCards: _boardJ74FlopCards,
+        streetLabel: 'Flop',
+        potLabel: 'Pot 8 BB',
+        toCallLabel: 'To call 2 BB',
+        centerLabel: 'BTN, top pair, small price',
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
+          Act0ActionTrailItemV1(label: 'BTN calls'),
+          Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
+        ],
       ),
-    },
+      bets: const {
+        'co': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'CO',
+          amountLabel: '2 BB',
+        ),
+      },
+    ),
+    options: const <Act0RunnerOptionV1>[
+      Act0RunnerOptionV1(
+        id: 'call_once',
+        label: 'Call once in position',
+        isCorrect: true,
+        preferredLabel: 'Call once in position',
+        quality: Act0FeedbackQualityV1.correct,
+        feedbackTitle: 'Clean table read.',
+        feedbackReason:
+            'Position, top pair, and a cheap price all support a continue once. The clean action comes from the whole table, not just the hand label.',
+      ),
+      Act0RunnerOptionV1(
+        id: 'fold_now',
+        label: 'Fold now',
+        isCorrect: false,
+        preferredLabel: 'Call once in position',
+        betterAnswerLabel: 'Call once in position',
+        quality: Act0FeedbackQualityV1.wrong,
+        feedbackTitle: 'Too tight.',
+        feedbackReason:
+            'Folding is tempting if you fear later streets, but the price is kind, the board is dry, and position keeps the continue clean for now.',
+      ),
+      Act0RunnerOptionV1(
+        id: 'raise_now',
+        label: 'Raise for protection now',
+        isCorrect: false,
+        preferredLabel: 'Call once in position',
+        betterAnswerLabel: 'Call once in position',
+        quality: Act0FeedbackQualityV1.suboptimal,
+        feedbackTitle: 'Playable but noisy.',
+        feedbackReason:
+            'Raising can feel proactive, but it bloats the pot too early. The sharper transfer line is use position and the cheap price first.',
+      ),
+    ],
+    teachingSteps: const <Act0TeachingStepV1>[
+      Act0TeachingStepV1(
+        title: 'Price plus position can support a continue.',
+        body:
+            'Read seat, hand, board, and price together. A marginal made hand can continue when the price is small and position keeps control.',
+        focusLabels: <String>[
+          'Position',
+          'Top pair',
+          'Small price',
+          'Dry board',
+        ],
+      ),
+    ],
   ),
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'call_once',
-      label: 'Call once in position',
-      isCorrect: true,
-      preferredLabel: 'Call once in position',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Clean table read.',
-      feedbackReason:
-          'Position, top pair, and a cheap price all support a continue once. The clean action comes from the whole table, not just the hand label.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'fold_now',
-      label: 'Fold now',
-      isCorrect: false,
-      preferredLabel: 'Call once in position',
-      betterAnswerLabel: 'Call once in position',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too tight.',
-      feedbackReason:
-          'Folding is tempting if you fear later streets, but the price is kind, the board is dry, and position keeps the continue clean for now.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'raise_now',
-      label: 'Raise for protection now',
-      isCorrect: false,
-      preferredLabel: 'Call once in position',
-      betterAnswerLabel: 'Call once in position',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Playable but noisy.',
-      feedbackReason:
-          'Raising can feel proactive, but it bloats the pot too early. The sharper transfer line is use position and the cheap price first.',
-    ),
-  ],
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Price plus position can support a continue.',
-      body:
-          'Read seat, hand, board, and price together. A marginal made hand can continue when the price is small and position keeps control.',
-      focusLabels: <String>['Position', 'Top pair', 'Small price', 'Dry board'],
-    ),
-  ],
+  const {'utg', 'hj', 'sb', 'bb'},
 );
 
-final _w11TriggerBadPriceFoldRunner = _w11TriggerReadIntroRunner.copyWith(
-  phase: Act0LessonPhaseV1.drill,
-  lessonId: 'w11_trigger_bad_price_fold',
-  caption:
-      'Same hand again. BTN called 2 BB on J-7-4. Turn 2 is a brick; pot is 12 BB and both started this street with 33 BB behind. Tight CO rarely bluffs big turn bets and now bets 12 BB.',
-  hint:
-      'Combine a large second-barrel price with this opponent\'s unusually value-heavy betting range.',
-  question: 'What is the cleaner response now?',
-  table: _act0CurrentStreetTableV1(
-    _world3PlayableCallRunner.table.copyWith(
-      heroCards: _heroQJsCards,
-      boardCards: _boardJ742TurnCards,
-      streetLabel: 'Turn',
-      potLabel: 'Pot 12 BB',
-      toCallLabel: 'To call 12 BB',
-      centerLabel: 'BTN top pair, tight CO barrel',
-      actionTrail: const <Act0ActionTrailItemV1>[
-        Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls'),
-        Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
-        Act0ActionTrailItemV1(label: 'BTN calls 2 BB'),
-        Act0ActionTrailItemV1(label: 'Turn: CO bets 12 BB'),
-      ],
-    ),
-    bets: const {
-      'co': Act0SeatBetStateV1(
-        kind: Act0SeatBetKindV1.bet,
-        label: 'CO',
-        amountLabel: '12 BB',
+final _w11TriggerBadPriceFoldRunner = _act0FoldSeatsBeforeShownActionV1(
+  _w11TriggerReadIntroRunner.copyWith(
+    phase: Act0LessonPhaseV1.drill,
+    lessonId: 'w11_trigger_bad_price_fold',
+    caption:
+        'Same hand again. BTN called 2 BB on J-7-4. Turn 2 is a brick; pot is 12 BB and both started this street with 33 BB behind. Tight CO rarely bluffs big turn bets and now bets 12 BB.',
+    hint:
+        'Combine a large second-barrel price with this opponent\'s unusually value-heavy betting range.',
+    question: 'What is the cleaner response now?',
+    table: _act0CurrentStreetTableV1(
+      _world3PlayableCallRunner.table.copyWith(
+        heroCards: _heroQJsCards,
+        boardCards: _boardJ742TurnCards,
+        streetLabel: 'Turn',
+        potLabel: 'Pot 12 BB',
+        toCallLabel: 'To call 12 BB',
+        centerLabel: 'BTN top pair, tight CO barrel',
+        actionTrail: const <Act0ActionTrailItemV1>[
+          Act0ActionTrailItemV1(label: 'CO raises 2.5 BB'),
+          Act0ActionTrailItemV1(label: 'BTN calls'),
+          Act0ActionTrailItemV1(label: 'Flop: CO bets 2 BB'),
+          Act0ActionTrailItemV1(label: 'BTN calls 2 BB'),
+          Act0ActionTrailItemV1(label: 'Turn: CO bets 12 BB'),
+        ],
       ),
-    },
+      bets: const {
+        'co': Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.bet,
+          label: 'CO',
+          amountLabel: '12 BB',
+        ),
+      },
+    ),
+    options: const <Act0RunnerOptionV1>[
+      Act0RunnerOptionV1(
+        id: 'call_top_pair',
+        label: 'Call the top pair',
+        isCorrect: false,
+        preferredLabel: 'Fold the turn',
+        betterAnswerLabel: 'Fold the turn',
+        quality: Act0FeedbackQualityV1.suboptimal,
+        feedbackTitle: 'Tempting hand-label trap.',
+        feedbackReason:
+            'Top pair makes calling tempting, but this tight CO rarely bluffs a full-pot second barrel. Calling 12 BB into 12 BB needs about 33% equity against the betting range, not just a pair label.',
+      ),
+      Act0RunnerOptionV1(
+        id: 'fold_turn',
+        label: 'Fold the turn',
+        isCorrect: true,
+        preferredLabel: 'Fold the turn',
+        quality: Act0FeedbackQualityV1.correct,
+        feedbackTitle: 'Strong contrast read.',
+        feedbackReason:
+            'The 12 BB call into a 12 BB turn pot needs about 33% equity. This tight CO rarely bluffs this size and usually has a stronger jack or better; folding QJs is a disciplined exploit, not an automatic rule against every opponent.',
+      ),
+      Act0RunnerOptionV1(
+        id: 'jam_turn',
+        label: 'Jam to deny equity',
+        isCorrect: false,
+        preferredLabel: 'Fold the turn',
+        betterAnswerLabel: 'Fold the turn',
+        quality: Act0FeedbackQualityV1.wrong,
+        feedbackTitle: 'Too much pressure back.',
+        feedbackReason:
+            'Jamming a single pair into a tight CO\'s value-heavy barrel magnifies risk without a credible reason to expect enough folds.',
+      ),
+    ],
+    teachingSteps: const <Act0TeachingStepV1>[
+      Act0TeachingStepV1(
+        title: 'Same hand, worse continue.',
+        body:
+            'A small flop bet can justify a call, yet a pot-sized turn barrel from an opponent who rarely bluffs can make the same top pair a fold. The range read matters as much as the price.',
+        focusLabels: <String>[
+          'Same hand',
+          'Pot-size bet',
+          'Tight CO read',
+          'River risk',
+        ],
+      ),
+    ],
   ),
-  options: const <Act0RunnerOptionV1>[
-    Act0RunnerOptionV1(
-      id: 'call_top_pair',
-      label: 'Call the top pair',
-      isCorrect: false,
-      preferredLabel: 'Fold the turn',
-      betterAnswerLabel: 'Fold the turn',
-      quality: Act0FeedbackQualityV1.suboptimal,
-      feedbackTitle: 'Tempting hand-label trap.',
-      feedbackReason:
-          'Top pair makes calling tempting, but this tight CO rarely bluffs a full-pot second barrel. Calling 12 BB into 12 BB needs about 33% equity against the betting range, not just a pair label.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'fold_turn',
-      label: 'Fold the turn',
-      isCorrect: true,
-      preferredLabel: 'Fold the turn',
-      quality: Act0FeedbackQualityV1.correct,
-      feedbackTitle: 'Strong contrast read.',
-      feedbackReason:
-          'The 12 BB call into a 12 BB turn pot needs about 33% equity. This tight CO rarely bluffs this size and usually has a stronger jack or better; folding QJs is a disciplined exploit, not an automatic rule against every opponent.',
-    ),
-    Act0RunnerOptionV1(
-      id: 'jam_turn',
-      label: 'Jam to deny equity',
-      isCorrect: false,
-      preferredLabel: 'Fold the turn',
-      betterAnswerLabel: 'Fold the turn',
-      quality: Act0FeedbackQualityV1.wrong,
-      feedbackTitle: 'Too much pressure back.',
-      feedbackReason:
-          'Jamming a single pair into a tight CO\'s value-heavy barrel magnifies risk without a credible reason to expect enough folds.',
-    ),
-  ],
-  teachingSteps: const <Act0TeachingStepV1>[
-    Act0TeachingStepV1(
-      title: 'Same hand, worse continue.',
-      body:
-          'A small flop bet can justify a call, yet a pot-sized turn barrel from an opponent who rarely bluffs can make the same top pair a fold. The range read matters as much as the price.',
-      focusLabels: <String>[
-        'Same hand',
-        'Pot-size bet',
-        'Tight CO read',
-        'River risk',
-      ],
-    ),
-  ],
+  const {'utg', 'hj', 'sb', 'bb'},
 );
 
 final _w11TriggerReadRecapRunner = _w11TriggerReadIntroRunner.copyWith(
@@ -23526,4 +23571,28 @@ final _world12MindsetCheckpointRunner = _w12ConfidenceDisciplineIntroRunner.copy
           'Initial tools help, but mindset edge stays strong only through repeated daily use.',
     ),
   ],
+);
+
+/// PKR-03 seat-flag proposal: seats that the shown order forces out of the
+/// hand before the shown action (earlier seats before a first-in open, seats
+/// between a bettor and the deciding seat) are shown folded. Nothing is added
+/// to the action trail.
+Act0RunnerStateV1 _act0FoldSeatsBeforeShownActionV1(
+  Act0RunnerStateV1 runner,
+  Set<String> seatIds,
+) => runner.copyWith(
+  table: runner.table.copyWith(
+    seats: [
+      for (final seat in runner.table.seats)
+        seatIds.contains(seat.seatId) && seat.isInHand && !seat.isHero
+            ? _act0CopySeatStateV1(
+                seat,
+                isInHand: false,
+                isFolded: true,
+                hasActed: true,
+                cardsVisibleMode: Act0CardsVisibleModeV1.none,
+              )
+            : seat,
+    ],
+  ),
 );

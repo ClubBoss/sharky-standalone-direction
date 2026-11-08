@@ -143,56 +143,16 @@ const _replayShown = <String>{
   'your_first_hand_turn',
 };
 const _animationShown = <String>{'w6_turn_pressure_shift_transfer'};
-const _conditionalContradictions = <String, Set<String>>{
-  'contradiction_if_assumptions_hold:current_actor_out_of_turn': {
-    'actions_call_drill',
-    'actions_fold_drill',
-    'fold_discipline_discipline_intro',
-    'w4_bad_price_fold',
-    'w4_big_price_marginal_fold',
-    'w4_cheap_price_marginal_call',
-    'w4_checkpoint_price',
-    'w4_checkpoint_table_price',
-    'w4_good_price_call',
-    'w4_price_intro',
-    'w4_price_recap',
-  },
-  'contradiction_if_assumptions_hold:open_with_seats_still_in_hand_before': {
-    'apply_recap',
-    'continue_or_let_go_continue_recap',
-    'continue_or_let_go_medium_call_or_fold',
-    'continue_or_let_go_weak_let_go',
-    'discipline_checkpoint_checkpoint_borderline_continue',
-    'discipline_checkpoint_checkpoint_fold',
-    'discipline_checkpoint_checkpoint_review',
-    'fold_discipline_discipline_stack_protect',
-    'fold_discipline_facing_fold',
-    'fold_discipline_fold_recap',
-    'position_checkpoint_position_checkpoint_btn_call',
-    'same_hand_different_seat_w3_same_hand_call',
-    'w7_ajs_btn_100bb_transfer',
-    'w7_ajs_btn_25bb_transfer',
-    'weak_ace_warning_w3_dominated_fold',
-    'weak_ace_warning_w3_dominated_recap',
-    'weak_ace_warning_w3_strong_continue',
-    'weak_ace_warning_weak_ace_kicker_compare',
-    'weak_ace_warning_weak_ace_pressure_fold',
-  },
-  'contradiction_if_assumptions_hold:round_not_closed_or_hand_over': {
-    'w11_trigger_bad_price_fold',
-    'w11_trigger_small_price_continue',
-  },
-};
+// With the scene seat flags agreeing with each shown trail, no authored table
+// contradicts even under the conditional reading.
+const _conditionalContradictions = <String, Set<String>>{};
 const _conditionalReasonCounts = <String, int>{
   'no_recorded_history': 193,
-  'consistent_if_assumptions_hold': 67,
-  'contradiction_if_assumptions_hold:open_with_seats_still_in_hand_before': 19,
-  'contradiction_if_assumptions_hold:current_actor_out_of_turn': 11,
+  'consistent_if_assumptions_hold': 99,
   'unsupported_grammar': 11,
   'consistent_closed_history': 5,
   'dead_button_or_empty_blind': 3,
   'open_not_first_in_preflop': 2,
-  'contradiction_if_assumptions_hold:round_not_closed_or_hand_over': 2,
   'fragment_start_unknown': 1,
 };
 
@@ -587,12 +547,12 @@ void main() {
           table,
         );
         if (id.startsWith('w11_')) {
-          // Shown as CO raise, BTN call, flop, while UTG, HJ, SB and BB stay
-          // in the hand: the replay skips their replies.
+          // Shown as CO raise, BTN call, flop. UTG, HJ, SB and BB are seated
+          // out of the hand, so only their unrecorded folds are assumed.
           expect(strict.reason, 'unsupported_grammar', reason: id);
           expect(
             conditional.reason,
-            'contradiction_if_assumptions_hold:round_not_closed_or_hand_over',
+            'consistent_if_assumptions_hold',
             reason: id,
           );
           continue;
