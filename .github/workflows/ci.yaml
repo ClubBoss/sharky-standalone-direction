@@ -32,7 +32,7 @@ jobs:
             echo "l2=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          git fetch --no-tags --prune --depth=1 origin "$BASE_REF"
+          git fetch --no-tags --prune --unshallow origin "$BASE_REF"
           CHANGED=$(git diff --name-only "origin/$BASE_REF...HEAD")
           if echo "$CHANGED" | grep -Eq '^(assets/packs/l2/|assets/packs/l3/|assets/packs/l3/demo/|assets/theory/|tool/l3/|tool/config/weights/|tool/validators/|tool/validators/l3_demo_validator.dart|tool/metrics/|tool/autogen/|tool/autogen/l3_demo_sampler.dart|test/l2_.*\.dart|test/l3_.*\.dart|test/l3_demo_.*\.dart|pubspec\.)'; then
             echo "l2=true" >> "$GITHUB_OUTPUT"
