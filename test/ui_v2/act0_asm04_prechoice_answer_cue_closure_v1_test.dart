@@ -118,6 +118,237 @@ List<String> _answerCues(Iterable<String> visible, Act0RunnerStateV1 runner) {
   return hits;
 }
 
+// Adjudicated pre-choice leaks, pinned here with the exact authored text
+// (independent of the production policy sets): removing a policy entry, or
+// an authored text drifting, fails this test instead of passing silently.
+const _pinnedTitleLeaks = <String, String>{
+  'actions_call_drill': 'Call a price',
+  'actions_check_drill': 'Check when no bet',
+  'actions_fold_drill': 'Fold weak hands',
+  'actions_raise_drill': 'Raise on the Button',
+  'apply_btn_open': 'BTN, strong hand',
+  'apply_hj_decision': 'HJ, medium hand',
+  'apply_utg_fold': 'UTG, trash hand',
+  'board_texture_basics_w5_dry_board': 'Dry board',
+  'board_texture_basics_w5_wet_board': 'Wet board',
+  'button_advantage_button_open': 'BTN first-in open',
+  'button_advantage_button_vs_cutoff': 'BTN vs CO',
+  'button_advantage_position_repair_btn_last_postflop':
+      'Repair BTN last postflop',
+  'cards_ranks_suits_best_five': 'Best five idea',
+  'connected_boards_w5_connected_board': 'Connected board',
+  'connected_boards_w5_disconnected_board': 'Disconnected board',
+  'continue_or_let_go_continue_recap': 'Continue recap',
+  'continue_or_let_go_medium_open': 'Medium hand opens',
+  'continue_or_let_go_premium_continue': 'Premium continue',
+  'continue_or_let_go_weak_let_go': 'Weak let go',
+  'discipline_checkpoint_checkpoint_borderline_continue': 'Borderline continue',
+  'discipline_checkpoint_checkpoint_fold': 'Disciplined fold',
+  'discipline_checkpoint_checkpoint_premium': 'Premium hand',
+  'flush_draws_w5_flush_draw_find': 'Find flush draw',
+  'flush_draws_w5_no_flush_draw': 'No flush draw',
+  'fold_discipline_discipline_stack_protect': 'Protect stack',
+  'fold_discipline_early_fold': 'Early weak hand',
+  'outs_improvement_w5_table_outs_flush_transfer': 'Live heart outs',
+  'outs_improvement_w5_table_outs_straight_transfer': 'Live straight outs',
+  'position_apply_btn_open': 'BTN: open strong hand',
+  'position_apply_early_fold': 'Early: same hand folds',
+  'position_apply_hj_fold': 'HJ: discipline hold',
+  'position_checkpoint_position_checkpoint_btn_call': 'BTN: callable spot',
+  'position_checkpoint_position_checkpoint_early_fold':
+      'Early: same hand folds',
+  'range_checkpoint_pressure': 'Bluff candidate',
+  'range_checkpoint_value': 'Value on dry board',
+  'same_hand_different_seat_same_hand_early_fold': 'Early seat fold',
+  'same_hand_different_seat_same_hand_late_open': 'Late seat open',
+  'same_hand_different_seat_w3_same_hand_call': 'Call frame',
+  'same_hand_different_seat_w3_same_hand_open': 'Open frame',
+  'showdown_best_hand_drill': 'Best hand at showdown',
+  'showdown_kicker_drill': 'Same pair, better kicker',
+  'straight_draws_w5_gap_board': 'Gap board',
+  'straight_draws_w5_gutshot_draw': 'Gutshot draw',
+  'straight_draws_w5_straight_draw_find': 'Find straight draw',
+  'turn_river_changes_w5_river_draw_story_transfer':
+      'River keeps the draw story honest',
+  'turn_river_changes_w5_river_misses': 'River misses',
+  'turn_river_changes_w5_turn_hits': 'Turn hits',
+  'turn_river_changes_w5_turn_texture_shift_transfer':
+      'Turn changes the texture',
+  'w10_checkpoint_lever_line': 'One-lever exploit line',
+  'w10_checkpoint_tag_line': 'Tag then act',
+  'w10_guardrail_sample_size': 'Respect sample size',
+  'w10_loose_passive_tag': 'Loose-passive profile',
+  'w10_nit_tag': 'Nit profile',
+  'w10_overaggressive_tag': 'Over-aggressive profile',
+  'w10_overbluff_punish': 'Punish overbluffs',
+  'w10_table_value_vs_caller_transfer': 'Value shift at the table',
+  'w10_underbluff_fold_more': 'Fold more vs underbluffs',
+  'w10_vs_caller_value_heavier': 'Value heavier vs callers',
+  'w10_vs_nit_open_wider': 'Steal more vs tight folds',
+  'w10_vs_sticky_defender_tighten_steals': 'Tighten steals vs sticky defenders',
+  'w11_checkpoint_review_line': 'Review line',
+  'w11_plan_avoid_overload': 'Avoid overload plan',
+  'w11_plan_focus_choice': 'Choose one focus',
+  'w11_review_pick_leak': 'Pick priority leak',
+  'w11_trigger_small_price_continue': 'Small-price continue',
+  'w12_assertive_not_ego': 'Assertive, not ego',
+  'w12_bad_call_good_result': 'Bad call, lucky win',
+  'w12_checkpoint_process_line': 'Process line',
+  'w12_checkpoint_reset_line': 'Reset line',
+  'w12_good_fold_bad_result': 'Good fold, bad result',
+  'w12_pretty_hand_bad_price_fold': 'Pretty hand, bad price',
+  'w4_bad_bluff': 'Bad pressure',
+  'w4_big_price_marginal_fold': 'Big price, thinner hand',
+  'w4_bluff_pressure': 'Apply pressure',
+  'w4_bluff_purpose': 'Bluff reason',
+  'w4_cheap_price_marginal_call': 'Cheap call with middle pair',
+  'w4_checkpoint_review': 'Price recap',
+  'w4_protection_check': 'Free card risk',
+  'w4_value_bet': 'Bet top pair',
+  'w4_value_missed': 'Do not hide value',
+  'w4_value_purpose': 'Value reason',
+  'w6_bluff_candidate': 'Bluff candidate',
+  'w6_board_pair_strength_compare': 'Paired board changes the winner',
+  'w6_kicker_showdown_compare': 'Same pair, better kicker',
+  'w6_table_value_line_transfer': 'Live-table value line',
+  'w6_value_dry_board': 'Value on dry board',
+  'w6_value_range_action': 'Value bets',
+  'w6_value_wet_board': 'Value on wet board',
+  'w6_wrong_board': 'Missed on wet board',
+  'w7_20bb_wider': '20 BB decision',
+  'w7_6max_wider': '6-max opens wider',
+  'w7_format_table_notice': 'Count players behind',
+  'w7_fullring_tighter': 'Full ring tightens',
+  'w9_big_stack_leverage': 'Big stack leverage',
+  'w9_bubble_short_stack': 'Short stack urgency',
+  'w9_checkpoint_bubble_line': 'Bubble risk premium line',
+  'w9_checkpoint_zone_line': 'Urgency by zone',
+  'w9_m_ratio_green_zone': 'Green zone patience',
+  'w9_m_ratio_yellow_zone': 'Yellow zone planning',
+  'w9_medium_stack_tighten': 'Medium stack discipline',
+  'weak_ace_warning_w3_dominated_fold': 'Fold trouble',
+  'weak_ace_warning_w3_strong_continue': 'Strong continue',
+  'weak_ace_warning_weak_ace_pressure_fold': 'Pressure fold',
+};
+const _pinnedSummaryLeaks = <String, String>{
+  'actions_call_drill': 'You face a small bet and want the cheapest continue.',
+  'blinds_postflop_button': 'After the flop, Button often acts last.',
+  'blinds_posts_drill': 'BB sets the 1 BB baseline for the hand.',
+  'board_texture_basics_w5_dry_board':
+      'K-7-2 rainbow is spread out and different suits.',
+  'board_texture_basics_w5_wet_board':
+      'T-9-8 with two hearts can change quickly.',
+  'button_advantage_button_last': 'After the flop, Button often acts last.',
+  'button_advantage_button_vs_cutoff':
+      'CO is late, but BTN still acts after CO.',
+  'button_advantage_position_repair_btn_last_postflop':
+      'Repair: BTN acts last after the flop.',
+  'cards_ranks_suits_best_five':
+      'A poker hand uses the best five cards available.',
+  'cards_ranks_suits_board_count': 'A full board has five shared cards.',
+  'cards_ranks_suits_private_board':
+      'Private cards belong to you. Board cards are shared.',
+  'cards_ranks_suits_recap': 'Lesson learned: cards have a job.',
+  'cards_ranks_suits_suit_drill':
+      'Each card has a rank and a suit. Ah means ace of hearts.',
+  'connected_boards_w5_connected_board': '9-8-7 is connected.',
+  'connected_boards_w5_disconnected_board':
+      'A-K-4 is high-card heavy but not connected.',
+  'early_vs_late_early_pressure_choice':
+      'UTG must act before HJ, CO, BTN, SB, and BB.',
+  'early_vs_late_position_repair_utg_players_behind':
+      'Repair: UTG has five players behind.',
+  'flush_draws_w5_no_flush_draw':
+      'Hero has mixed suits and the board is rainbow.',
+  'outs_improvement_w5_flush_out': 'Hero needs one more heart.',
+  'outs_improvement_w5_straight_out': 'With 6-5 on 8-7-2, a 4 or 9 helps.',
+  'position_checkpoint_position_checkpoint_table_notice':
+      'Real table. Hero is CO with QJs and three seats still act after.',
+  'showdown_best_hand_drill': 'At showdown, the best hand wins the pot.',
+  'showdown_board_plays_drill':
+      'Sometimes the best five cards are all on the board.',
+  'showdown_kicker_drill':
+      'If both players share a pair, the side card can matter.',
+  'showdown_tie_drill': 'A tie means the pot is split.',
+  'straight_draws_w5_gap_board': 'A-Q-4 has large rank gaps.',
+  'turn_river_changes_w5_river_draw_story_transfer':
+      'Real table. The flop and turn showed a heart draw, but the river bricks with the black 3.',
+  'turn_river_changes_w5_river_misses':
+      'Different runout: the river is the 2 of diamonds. The heart draw misses.',
+  'turn_river_changes_w5_street_repair':
+      'The turn connected the board, but hero still treats one pair like the flop stayed easy.',
+  'turn_river_changes_w5_turn_hits':
+      'The turn brings a heart. The same flush story now completes.',
+  'w4_bad_bluff': 'Villain called big already. Fold pressure is low.',
+  'w4_bluff_pressure': 'Hero missed, but BB checked and can fold.',
+  'w4_protection_bet':
+      'Hero has top pair. Checking gives villain a free next card.',
+  'w4_value_bet': 'Top pair on a safe flop. BB can call worse.',
+  'w4_value_missed': 'Hero has top pair and worse hands can still call a bet.',
+  'w6_value_range_action':
+      'K-7-2 rainbow. Hero holds K-Q. You are in the value range.',
+  'w6_wet_board_repair':
+      'Suppose a turn makes a dry board wetter, but Hero keeps the old one-pair plan.',
+  'w7_20bb_wider': 'You hold A-J suited with 20 BB effective.',
+  'w9_survival_stack_tradeoff':
+      'Cash table can reload. Tournament table cannot.',
+  'what_poker_is_showdown_win': 'At showdown, the best hand wins the pot.',
+  'what_poker_is_win_ways':
+      'You win when others fold or when your hand wins showdown.',
+  'your_first_hand_flop': 'The flop puts three shared cards in the middle.',
+  'your_first_hand_river': 'The river is the fifth board card.',
+  'your_first_hand_showdown': 'At showdown, the best hand wins the pot.',
+  'your_first_hand_turn': 'The turn is the fourth board card.',
+};
+const _pinnedCueLeaks = <String, String>{
+  'apply_btn_open': 'Strong late',
+  'apply_recap': 'Weak ace',
+  'apply_utg_fold': 'Trash early',
+  'continue_or_let_go_medium_open': 'Medium, good seat',
+  'discipline_checkpoint_checkpoint_borderline_continue': 'Playable broadway',
+  'discipline_checkpoint_checkpoint_fold': 'Weak ace',
+  'flush_draws_w5_flush_draw_recheck_transfer': 'Four hearts, not home yet',
+  'flush_draws_w5_no_flush_draw': 'Rainbow flop',
+  'fold_discipline_discipline_stack_protect': 'Weak ace',
+  'fold_discipline_fold_recap': 'Weak ace',
+  'hand_rankings_full_house_drill': 'A-A-A with 7-7',
+  'hand_rankings_royal_flush_drill': 'A-K-Q-J-T hearts',
+  'outs_improvement_w5_table_outs_flush_transfer': 'Live heart outs',
+  'outs_improvement_w5_table_outs_straight_transfer': 'Live straight outs',
+  'position_checkpoint_position_checkpoint_early_fold': 'UTG discipline',
+  'position_checkpoint_position_checkpoint_table_notice':
+      'CO with three seats behind',
+  'showdown_best_hand_drill': 'Hero pair of queens beats CO pair of jacks',
+  'showdown_review': 'Hero pair of queens beats CO pair of jacks',
+  'straight_draws_w5_gap_board': 'Big gaps',
+  'straight_draws_w5_gutshot_contrast_transfer': 'Only a 6 fits',
+  'straight_draws_w5_straight_draw_find': '4 or 9 helps',
+  'w11_trigger_small_price_continue': 'BTN, top pair, small price',
+  'w12_checkpoint_full_loop_line': 'After mistake, stay clean',
+  'w12_pretty_hand_bad_price_fold': 'Top pair, bad river price',
+  'w12_revenge_raise_trap': 'Top pair, ego trap',
+  'w4_bad_price_fold': 'High price',
+  'w4_big_price_marginal_fold': 'Top pair, big price',
+  'w4_cheap_price_marginal_call': 'Cheap price, middle pair',
+  'w4_checkpoint_price': 'High price',
+  'w4_good_price_call': 'Small price',
+  'weak_ace_warning_w3_dominated_fold': 'Weak ace',
+  'weak_ace_warning_w3_dominated_recap': 'Weak ace',
+  'what_poker_is_all_in_meaning': 'All-in is all remaining chips',
+  'what_poker_is_matched_chips_transfer': 'Matched chips set the contest',
+  'what_poker_is_showdown_win': 'Hero pair of queens beats CO pair of jacks',
+  'what_poker_is_side_pot_intro': 'Hero cannot win side pot',
+  'your_first_hand_showdown': 'Hero pair of aces beats BB pair of jacks',
+};
+const _pinnedQuestionLeaks = <String, String>{
+  'continue_or_let_go_continue_recap':
+      'What is the cleaner continue with this playable hand facing an open?',
+  'discipline_checkpoint_checkpoint_borderline_continue':
+      'What is the simple continue?',
+  'weak_ace_warning_w3_strong_continue': 'What is the simple continue?',
+  'your_first_hand_recap': 'Which street comes after the turn?',
+};
+
 const _priceChip = 'Price chip: the same to-call fact shows for call and fold';
 
 /// Exact remaining detector hits that are table facts the question needs.
@@ -361,6 +592,37 @@ void main() {
     }
   });
 
+  test('policy covers exactly the pinned leaks, with drift detection', () {
+    expect(
+      act0PrechoiceNeutralTitleByTaskIdV1.keys.toSet(),
+      _pinnedTitleLeaks.keys.toSet(),
+    );
+    expect(
+      act0PrechoiceAnswerBearingSummaryTaskIdsV1,
+      _pinnedSummaryLeaks.keys.toSet(),
+    );
+    expect(
+      act0PrechoiceAnswerBearingTableCueTaskIdsV1,
+      _pinnedCueLeaks.keys.toSet(),
+    );
+    expect(
+      act0PrechoiceNeutralQuestionByTaskIdV1.keys.toSet(),
+      _pinnedQuestionLeaks.keys.toSet(),
+    );
+    for (final e in _pinnedTitleLeaks.entries) {
+      final shown = act0LocalizedTaskTitleAtomByIdV1(e.key, fallback: e.value);
+      expect(shown, isNot(e.value), reason: e.key);
+      expect(shown, isNot(contains(e.value)), reason: e.key);
+    }
+    for (final e in _pinnedQuestionLeaks.entries) {
+      expect(
+        act0LocalizedRunnerQuestionAtomByTaskIdV1(e.key, fallback: e.value),
+        isNot(e.value),
+        reason: e.key,
+      );
+    }
+  });
+
   testWidgets('Runner shows no answer cue before choice across the catalog', (
     tester,
   ) async {
@@ -375,12 +637,19 @@ void main() {
       while (tester.takeException() != null) {}
       final cues = _tableCues(tester);
       final authoredCue = row.task.runner.table.centerLabel.trim();
-      if (act0PrechoiceAnswerBearingTableCueTaskIdsV1.contains(
-        row.task.taskId,
-      )) {
+      final pinnedCue = _pinnedCueLeaks[row.task.taskId];
+      if (pinnedCue != null) {
         // Adjudicated answer-bearing cue: never shown before the choice.
-        expect(authoredCue, isNotEmpty, reason: row.task.taskId);
-        expect(cues, isNot(contains(authoredCue)), reason: row.task.taskId);
+        expect(authoredCue, pinnedCue, reason: row.task.taskId);
+        expect(cues, isNot(contains(pinnedCue)), reason: row.task.taskId);
+      }
+      final pinnedQuestion = _pinnedQuestionLeaks[row.task.taskId];
+      if (pinnedQuestion != null) {
+        expect(
+          _visibleTexts(tester).where((t) => t.contains(pinnedQuestion)),
+          isEmpty,
+          reason: row.task.taskId,
+        );
       }
       final hits = _answerCues([
         ..._visibleTexts(tester),
@@ -417,7 +686,9 @@ void main() {
       while (tester.takeException() != null) {}
       final visible = _visibleTexts(tester);
       final id = row.task.taskId;
-      if (act0PrechoiceNeutralTitleByTaskIdV1.containsKey(id)) {
+      final pinnedTitle = _pinnedTitleLeaks[id];
+      if (pinnedTitle != null) {
+        expect(row.task.title, pinnedTitle, reason: id);
         expect(visible, contains(act0PrechoiceNeutralTitleByTaskIdV1[id]));
         expect(
           visible.where(
@@ -429,9 +700,11 @@ void main() {
           reason: id,
         );
       }
-      if (act0PrechoiceAnswerBearingSummaryTaskIdsV1.contains(id)) {
+      final pinnedSummary = _pinnedSummaryLeaks[id];
+      if (pinnedSummary != null) {
+        expect(row.task.runner.caption, pinnedSummary, reason: id);
         expect(
-          visible.where((t) => t.contains(row.task.runner.caption)),
+          visible.where((t) => t.contains(pinnedSummary)),
           isEmpty,
           reason: id,
         );
@@ -670,10 +943,10 @@ void main() {
             r.task.taskId,
       };
       final changed = {
-        ...act0PrechoiceNeutralTitleByTaskIdV1.keys,
-        ...act0PrechoiceAnswerBearingSummaryTaskIdsV1,
-        ...act0PrechoiceAnswerBearingTableCueTaskIdsV1,
-        ...act0PrechoiceNeutralQuestionByTaskIdV1.keys,
+        ..._pinnedTitleLeaks.keys,
+        ..._pinnedSummaryLeaks.keys,
+        ..._pinnedCueLeaks.keys,
+        ..._pinnedQuestionLeaks.keys,
         for (final r in _assessed)
           if (r.task.taskId.startsWith('hand_rankings_') ||
               act0PrechoiceNeutralLessonTitleByIdV1.containsKey(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
@@ -67,7 +68,17 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.text(entry.value.$1), findsWidgets);
+      // ASM-04 displays a neutral English question where the authored stem
+      // names the answer; the source question above stays authored.
+      expect(
+        find.text(
+          act0LocalizedRunnerQuestionAtomByTaskIdV1(
+            entry.key,
+            fallback: entry.value.$1,
+          ),
+        ),
+        findsWidgets,
+      );
       for (final option in task.runner.options) {
         expect(
           find.byKey(Key('act0_shell_option_${option.id}')),

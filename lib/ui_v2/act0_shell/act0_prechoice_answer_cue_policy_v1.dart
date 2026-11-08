@@ -44,6 +44,8 @@ const Map<String, String> act0PrechoiceNeutralTitleByTaskIdV1 =
           'Checkpoint hand 3',
       'button_advantage_button_open': 'Button spot',
       'button_advantage_button_vs_cutoff': 'Seat order question',
+      'button_advantage_position_repair_btn_last_postflop': 'Seat order repair',
+      'continue_or_let_go_continue_recap': 'Hand decision recap',
       'same_hand_different_seat_w3_same_hand_open': 'Seat frame 1',
       'same_hand_different_seat_w3_same_hand_call': 'Seat frame 2',
       'same_hand_different_seat_same_hand_early_fold': 'Seat frame 3',
@@ -129,13 +131,19 @@ const Map<String, String> act0PrechoiceNeutralTitleByTaskIdV1 =
 const Map<String, String> act0PrechoiceNeutralLessonTitleByIdV1 =
     <String, String>{'fold_discipline': 'Discipline spots'};
 
-/// Neutral English question wording where the authored question asks for a
-/// fact the unchanged scene already shows. The river scene stays; the step
-/// becomes an honest table read instead of a street-order recall.
-const Map<String, String> act0PrechoiceNeutralQuestionByTaskIdV1 =
-    <String, String>{
-      'your_first_hand_recap': 'Which street is on the table now?',
-    };
+/// Neutral English question wording where the authored question gives the
+/// answer away. The recap river scene stays and its step becomes an honest
+/// table read; "continue" stems no longer name Call against Fold.
+const Map<String, String>
+act0PrechoiceNeutralQuestionByTaskIdV1 = <String, String>{
+  'your_first_hand_recap': 'Which street is on the table now?',
+  // "continue" names Call against Fold before the choice.
+  'weak_ace_warning_w3_strong_continue': 'What is the simple response?',
+  'discipline_checkpoint_checkpoint_borderline_continue':
+      'What is the simple response?',
+  'continue_or_let_go_continue_recap':
+      'What is the cleaner response with this playable hand facing an open?',
+};
 
 /// Known limitation, not a choice-discrimination proof: every assessed answer
 /// in these lessons is the same action (all Fold). Kept as authored; it shows
