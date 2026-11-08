@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_prechoice_answer_cue_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_phrase_registry_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_presentation_config_v1.dart';
@@ -1091,11 +1092,17 @@ String act0AcademyLessonSubtitleV1(
   );
 }
 
+// Academy navigation precedes every attempt, so no current decision exists.
 String act0AcademyTaskTitleV1(BuildContext context, Act0LessonTaskV1 task) =>
-    act0LocalizedTaskTitleAtomByIdV1(
-      task.taskId,
-      fallback: task.title,
-      languageCode: act0AcademyLanguageV1(context),
+    act0PrechoiceDisplayTitleV1(
+      taskId: task.taskId,
+      authoredTitle: act0LocalizedTaskTitleAtomByIdV1(
+        task.taskId,
+        fallback: task.title,
+        languageCode: act0AcademyLanguageV1(context),
+      ),
+      isAssessment: act0IsPrechoiceAssessmentTaskV1(task),
+      hasSubmittedCurrentDecision: false,
     );
 String act0AcademyTaskSummaryV1(
   BuildContext context,

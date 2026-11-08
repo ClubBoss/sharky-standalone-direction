@@ -68,6 +68,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_board_texture_personalizati
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_position_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_starting_hand_personalization_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_improvement_observation_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_prechoice_answer_cue_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
@@ -5633,7 +5634,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             '$worldSubtitle Premium stays optional and adds extra practice after this world opens naturally.',
         valuePoints: valuePoints,
         trustLine:
-            '${world.unlockLabel} The first useful hand stays free, and the route still opens in order.',
+            '${act0DisplayWorldNameCopyV1(world.unlockLabel)} The first useful hand stays free, and the route still opens in order.',
         footerLine:
             'This is a preview, not a gate. Stay on the free route until you want more practice.',
       ),
@@ -6232,7 +6233,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         ),
                       ),
                       Act0ShellTabV1.learn => Act0LearnPathShellV1(
-                        moduleTitle: selectedWorld.title,
+                        moduleTitle: act0DisplayWorldNameCopyV1(
+                          selectedWorld.title,
+                        ),
                         moduleProgressLabel: selectedWorld.progressLabel,
                         sharkyGuideTitle: _learnGuideTitle(
                           selectedWorld,
@@ -7592,7 +7595,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         groupId: 'continue',
         title: _copyV1(en: 'Continue lesson', ru: 'Продолжить урок'),
         subtitle:
-            '${_localizedLessonTitleV1(selectedLesson)}: ${_localizedTaskTitleV1(currentTask)}',
+            '${_localizedLessonTitleV1(selectedLesson)}: ${act0PrechoiceDisplayTitleV1(taskId: currentTask.taskId, authoredTitle: _localizedTaskTitleV1(currentTask), isAssessment: act0IsPrechoiceAssessmentTaskV1(currentTask), hasSubmittedCurrentDecision: false)}',
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.continueLesson,
         ),
@@ -13909,7 +13912,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           : allComplete
           ? 'Replay lessons'
           : 'Open lessons',
-      unlockLabel: available ? 'Available now' : world.unlockLabel,
+      unlockLabel: available
+          ? 'Available now'
+          : act0DisplayWorldNameCopyV1(world.unlockLabel),
       isSelectable: available,
       isLocked: !available,
       lessons: lessons,
