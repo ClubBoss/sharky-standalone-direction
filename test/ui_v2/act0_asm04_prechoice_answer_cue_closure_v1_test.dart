@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_predecision_card_focus_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_prechoice_answer_cue_policy_v1.dart';
@@ -128,11 +134,13 @@ const _allowedRunnerHits = <String, List<String>>{
   'w4_cheap_price_marginal_call': ['To call 1 BB'],
   'w4_checkpoint_table_price': ['To call 2 BB'],
   'w6_kicker_showdown_compare': ['K'],
+  'your_first_hand_recap': ['RIVER'],
 };
 const _allowedRunnerReasons = <String, String>{
   'your_first_hand_private_cards_recheck':
       'Hero card face the question asks to read',
   'w6_kicker_showdown_compare': 'Rank shared by both shown hands',
+  'your_first_hand_recap': 'Table-read step: the shown river is the asked fact',
 };
 
 const _allowedLearnHits = <String, List<String>>{
@@ -162,20 +170,11 @@ const _allowedLearnReasons = <String, String>{
   'w7_effective_stack_100bb': 'Both stack sizes are the question input',
 };
 
-/// Open content residuals: display projection cannot remove these honestly;
-/// they need an authored curriculum decision by the content owner.
-const _openRunnerResiduals = <String, List<String>>{
-  // Scene is the finished river hand while asking which street follows the
-  // turn; five board cards reveal it even without the street badge.
-  'your_first_hand_recap': ['RIVER'],
-};
+/// Known limitation (honestly not a discrimination proof): the World 4
+/// recap answer restates the world's own theme name, which stays as the
+/// curriculum identity. Display cannot neutralize it without renaming World 4.
+const _openRunnerResiduals = <String, List<String>>{};
 const _openLearnResiduals = <String, List<String>>{
-  // Every assessed answer in this lesson is Fold, and the lesson is named so.
-  'fold_discipline_early_fold': ['Fold discipline'],
-  'fold_discipline_facing_fold': ['Fold discipline'],
-  'fold_discipline_discipline_stack_protect': ['Fold discipline'],
-  'fold_discipline_fold_recap': ['Fold discipline'],
-  // Recap answer equals the checkpoint lesson's own title.
   'w4_checkpoint_review': ['Bet Purpose / Price'],
 };
 
@@ -499,5 +498,192 @@ void main() {
       ),
       act0PrechoiceNeutralSummaryV1,
     );
+  });
+
+  test(
+    'single-answer lesson stays a declared limitation, not a choice proof',
+    () {
+      for (final lessonId in act0PrechoiceSingleAnswerLessonIdsV1) {
+        final rows = _assessed.where((r) => r.lesson.lessonId == lessonId);
+        expect(rows, isNotEmpty, reason: lessonId);
+        final answers = {
+          for (final r in rows)
+            r.task.runner.options.singleWhere((o) => o.isCorrect).label,
+        };
+        // Authored Fold answers are kept; the lesson cannot evidence choosing
+        // between different actions, so it is only claimed as recall.
+        expect(answers, {'Fold'}, reason: lessonId);
+        expect(
+          act0LocalizedLessonTitleAtomByIdV1(
+            lessonId,
+            fallback: rows.first.lesson.title,
+          ),
+          isNot(contains('Fold')),
+        );
+      }
+      // No other lesson repeats one answer across three or more assessments.
+      final byLesson = <String, Set<String>>{};
+      final counts = <String, int>{};
+      for (final r in _assessed) {
+        final id = r.lesson.lessonId;
+        byLesson
+            .putIfAbsent(id, () => {})
+            .add(r.task.runner.options.singleWhere((o) => o.isCorrect).label);
+        counts[id] = (counts[id] ?? 0) + 1;
+      }
+      expect({
+        for (final e in byLesson.entries)
+          if (e.value.length == 1 && counts[e.key]! >= 3) e.key,
+      }, act0PrechoiceSingleAnswerLessonIdsV1);
+    },
+  );
+
+  test('recap keeps the real river and asks an honest table read', () {
+    final r = _row('your_first_hand_recap').task;
+    expect(r.runner.table.boardCards, hasLength(5));
+    expect(r.runner.question, 'Which street comes after the turn?');
+    expect(
+      act0LocalizedRunnerQuestionAtomByTaskIdV1(
+        r.taskId,
+        fallback: r.runner.question,
+      ),
+      'Which street is on the table now?',
+    );
+    expect(r.runner.options.singleWhere((o) => o.isCorrect).label, 'River');
+  });
+
+  group('saved answers and history', () {
+    // Fingerprints on main 1a4316d, before this package (no #418 either).
+    const mainFingerprints = <String, String>{
+      'actions_check_drill':
+          'f83ccdabce1c8c216939274080ba10409b49285f7adcece8b42face691e42d6b',
+      'actions_raise_drill':
+          'c105d1969e7b9a7886def4fed1b93aaee5404f7d0603e771be44ea3a76d06971',
+      'actions_legal_context':
+          'd889c669abcb49a96b62c12447888f10e8e262e3a2f663b8d2e700010686cad4',
+    };
+    String fingerprint(String taskId) {
+      final r = _row(taskId);
+      return act0AuthoredSourceFingerprintV1(
+        worldId: r.world.worldId,
+        lessonId: r.lesson.lessonId,
+        task: r.task,
+      )!;
+    }
+
+    Act0LearningEvidenceRecordV1 record(String taskId, String fp) {
+      final r = _row(taskId);
+      final correct = r.task.runner.options.singleWhere((o) => o.isCorrect);
+      return Act0LearningEvidenceRecordV1(
+        recordId: 'synthetic_asm04_answer_cue|$taskId',
+        createdOrder: 1,
+        worldId: r.world.worldId,
+        lessonId: r.lesson.lessonId,
+        taskId: taskId,
+        sourceTaskId: taskId,
+        choiceId: correct.id,
+        expectedChoiceId: correct.id,
+        isCorrect: true,
+        errorType: 'none',
+        conceptFamilyId: r.lesson.lessonId,
+        repairFocusId: '',
+        skillAtomId:
+            act0FirstValueSkillReceiptForRunnerV1(
+              runner: r.task.runner,
+              option: correct,
+              taskFamily: r.task.resolvedTaskFamily,
+            )?.skillAtomId ??
+            '',
+        decisionTimeBucket: '3_to_10s',
+        resultKind: 'correct',
+        assistanceKind: Act0DecisionAssistanceV1.none,
+        authoredSourceFingerprint: fp,
+      );
+    }
+
+    test('an answer saved under a cue stays history, not current proof', () {
+      for (final taskId in ['actions_check_drill', 'actions_raise_drill']) {
+        final task = _row(taskId).task;
+        // Not covered by the #418 card-focus revision; only this package.
+        expect(act0PredecisionCardFocusSourceRevisionV1(task), isNull);
+        expect(
+          act0PrechoiceAnswerCueSourceRevisionV1(
+            task,
+            lessonId: _row(taskId).lesson.lessonId,
+          ),
+          act0PrechoiceAnswerCueRevisionV1,
+        );
+        final current = fingerprint(taskId);
+        expect(current, isNot(mainFingerprints[taskId]));
+        final old = record(taskId, mainFingerprints[taskId]!);
+        final restored = Act0LearningEvidenceHistoryV1.tryParse(
+          jsonDecode(
+            Act0LearningEvidenceHistoryV1(records: [old]).toStorageString(),
+          ),
+        )!;
+        expect(restored.records.single.toPayload(), old.toPayload());
+        expect(restored.records.single.isCorrect, isTrue);
+        expect(
+          act0CurrentAuthoredSourceProofV1(restored.records.single),
+          isNull,
+          reason: taskId,
+        );
+        expect(
+          act0CurrentAuthoredSourceProofV1(
+            record(taskId, current),
+          )!.isCurrentlyCorrect,
+          isTrue,
+        );
+      }
+    });
+
+    test('untouched tasks keep their fingerprint and current proof', () {
+      final task = _row('actions_legal_context').task;
+      expect(act0PredecisionCardFocusSourceRevisionV1(task), isNull);
+      expect(
+        act0PrechoiceAnswerCueSourceRevisionV1(task, lessonId: 'x'),
+        isNull,
+      );
+      expect(
+        fingerprint('actions_legal_context'),
+        mainFingerprints['actions_legal_context'],
+      );
+      expect(
+        act0CurrentAuthoredSourceProofV1(
+          record(
+            'actions_legal_context',
+            mainFingerprints['actions_legal_context']!,
+          ),
+        )!.isCurrentlyCorrect,
+        isTrue,
+      );
+    });
+
+    test('revision covers exactly the tasks whose pre-choice view changed', () {
+      final revised = {
+        for (final r in _assessed)
+          if (act0PrechoiceAnswerCueSourceRevisionV1(
+                r.task,
+                lessonId: r.lesson.lessonId,
+              ) !=
+              null)
+            r.task.taskId,
+      };
+      final changed = {
+        ...act0PrechoiceNeutralTitleByTaskIdV1.keys,
+        ...act0PrechoiceAnswerBearingSummaryTaskIdsV1,
+        ...act0PrechoiceAnswerBearingTableCueTaskIdsV1,
+        ...act0PrechoiceNeutralQuestionByTaskIdV1.keys,
+        for (final r in _assessed)
+          if (r.task.taskId.startsWith('hand_rankings_') ||
+              act0PrechoiceNeutralLessonTitleByIdV1.containsKey(
+                r.lesson.lessonId,
+              ))
+            r.task.taskId,
+      };
+      expect(revised, changed);
+      // ignore: avoid_print
+      print('ASM04_REVISED ${revised.length} of ${_assessed.length}');
+    });
   });
 }

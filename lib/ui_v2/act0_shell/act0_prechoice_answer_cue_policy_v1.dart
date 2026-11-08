@@ -124,6 +124,26 @@ const Map<String, String> act0PrechoiceNeutralTitleByTaskIdV1 =
       'w12_checkpoint_reset_line': 'Bridge checkpoint 2',
     };
 
+/// Neutral English lesson titles where the authored lesson name states the
+/// answer of every assessed step it holds.
+const Map<String, String> act0PrechoiceNeutralLessonTitleByIdV1 =
+    <String, String>{'fold_discipline': 'Discipline spots'};
+
+/// Neutral English question wording where the authored question asks for a
+/// fact the unchanged scene already shows. The river scene stays; the step
+/// becomes an honest table read instead of a street-order recall.
+const Map<String, String> act0PrechoiceNeutralQuestionByTaskIdV1 =
+    <String, String>{
+      'your_first_hand_recap': 'Which street is on the table now?',
+    };
+
+/// Known limitation, not a choice-discrimination proof: every assessed answer
+/// in these lessons is the same action (all Fold). Kept as authored; it shows
+/// recall of discipline, not choosing between different actions.
+const Set<String> act0PrechoiceSingleAnswerLessonIdsV1 = <String>{
+  'fold_discipline',
+};
+
 /// Academy pre-choice summaries whose authored caption states the answer.
 const Set<String> act0PrechoiceAnswerBearingSummaryTaskIdsV1 = <String>{
   'what_poker_is_win_ways',
@@ -253,4 +273,25 @@ String act0PrechoiceDisplaySummaryV1({
     return act0PrechoiceNeutralSummaryV1;
   }
   return authoredSummary;
+}
+
+/// Current-proof lineage for a changed pre-choice presentation (same rule as
+/// the #418 card-focus revision): answers saved while an answer cue was on
+/// screen stay historical facts but cannot prove today's neutral read.
+const String act0PrechoiceAnswerCueRevisionV1 = 'act0_prechoice_answer_cue_v1';
+
+String? act0PrechoiceAnswerCueSourceRevisionV1(
+  Act0LessonTaskV1 task, {
+  String? lessonId,
+}) {
+  if (!act0IsPrechoiceAssessmentTaskV1(task)) return null;
+  final id = task.taskId;
+  final changed =
+      id.startsWith('hand_rankings_') ||
+      act0PrechoiceNeutralTitleByTaskIdV1.containsKey(id) ||
+      act0PrechoiceAnswerBearingSummaryTaskIdsV1.contains(id) ||
+      act0PrechoiceAnswerBearingTableCueTaskIdsV1.contains(id) ||
+      act0PrechoiceNeutralQuestionByTaskIdV1.containsKey(id) ||
+      act0PrechoiceNeutralLessonTitleByIdV1.containsKey(lessonId);
+  return changed ? act0PrechoiceAnswerCueRevisionV1 : null;
 }

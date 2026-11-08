@@ -370,7 +370,12 @@ String act0LocalizedLessonTitleAtomByLanguageV1(
   required String languageCode,
 }) {
   final bundle = act0CopyBundleForLanguageCodeV1(languageCode);
-  return bundle?.lessons[lessonId]?.title ?? fallback;
+  final localized = bundle?.lessons[lessonId]?.title;
+  if (localized != null) return localized;
+  if (languageCode.isEmpty || languageCode == 'en') {
+    return act0PrechoiceNeutralLessonTitleByIdV1[lessonId] ?? fallback;
+  }
+  return fallback;
 }
 
 String act0LocalizedLessonSubtitleAtomByLanguageV1(
@@ -450,7 +455,12 @@ String act0LocalizedRunnerQuestionAtomByLanguageV1(
     return fallback;
   }
   final bundle = act0CopyBundleForLanguageCodeV1(languageCode);
-  return bundle?.tasks[taskId]?.runnerQuestion ?? fallback;
+  final localized = bundle?.tasks[taskId]?.runnerQuestion;
+  if (localized != null) return localized;
+  if (languageCode.isEmpty || languageCode == 'en') {
+    return act0PrechoiceNeutralQuestionByTaskIdV1[taskId] ?? fallback;
+  }
+  return fallback;
 }
 
 String act0LocalizedTeachingStepTitleAtomByLanguageV1(

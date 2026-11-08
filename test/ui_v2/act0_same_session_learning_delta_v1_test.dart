@@ -643,7 +643,10 @@ Future<void> _openCompletedW2SourceReplay(WidgetTester tester) async {
   await tester.ensureVisible(lesson);
   await tester.tap(lesson);
   await tester.pumpAndSettle();
-  final sourceTask = find.text('HJ, medium hand');
+  // Navigate by the stable step key: ASM-04 shows a neutral pre-choice title.
+  final sourceTask = find.byKey(
+    const Key('act0_shell_lesson_step_title_apply_hj_decision'),
+  );
   final learnScroll = find.descendant(
     of: find.byKey(const Key('act0_shell_learn_screen')),
     matching: find.byType(Scrollable),
