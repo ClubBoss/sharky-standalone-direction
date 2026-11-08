@@ -545,6 +545,42 @@ void main() {
     final whole = resolveShowdownTruthV1(table);
     expect(whole.verdict, PotTruthVerdictV1.unproved);
     expect(whole.reason, startsWith('hidden_live_hand_can_win_or_tie'));
+
+    // Every learner-visible string stays a two-hand comparison: no winner,
+    // pot award or split wording anywhere in the task (independent review
+    // gap: question-only matching let 'Which hand wins the pot?' or
+    // 'Correct winner.' regress silently).
+    final runner = task.runner;
+    final visible = <String>[
+      runner.caption,
+      runner.hint,
+      runner.question,
+      runner.feedbackTitle,
+      runner.feedbackReason,
+      table.centerLabel,
+      for (final o in runner.options) ...[
+        o.label,
+        o.preferredLabel,
+        o.betterAnswerLabel,
+        o.feedbackTitle,
+        o.feedbackReason,
+        ...o.repairFocusLabels,
+      ],
+      for (final s in runner.teachingSteps) ...[
+        s.title,
+        s.body,
+        ...s.focusLabels,
+      ],
+    ];
+    final wholePotClaim = RegExp(
+      r'\bwin|\bwon\b|\bpot\b|scoop|\bchop|\bsplit',
+      caseSensitive: false,
+    );
+    expect(
+      visible.where(wholePotClaim.hasMatch).toList(),
+      isEmpty,
+      reason: 'two-hand comparison must not claim the whole pot',
+    );
   });
 
   testWidgets('PKR08 Runner names no whole-pot winner on the comparison', (
