@@ -14,11 +14,13 @@ void main() {
       (t) => t.taskId == 'w11_trigger_bad_price_fold',
     );
 
-    expect(flop.runner.table.potLabel, 'Pot 8 BB');
+    // Table pot labels count the faced bet, like the rest of the catalog;
+    // the captions keep the 'into 8 BB' / 'pot is 12 BB' pre-bet wording.
+    expect(flop.runner.table.potLabel, 'Pot 10 BB');
     expect(flop.runner.table.toCallLabel, 'To call 2 BB');
     expect(flop.runner.caption, contains('0.25 BB ante each'));
     expect(flop.runner.caption, contains('35 BB behind'));
-    expect(turn.runner.table.potLabel, 'Pot 12 BB');
+    expect(turn.runner.table.potLabel, 'Pot 24 BB');
     expect(turn.runner.table.toCallLabel, 'To call 12 BB');
     expect(turn.runner.caption.toLowerCase(), contains('same hand again'));
     expect(turn.runner.caption, contains('33 BB behind'));
@@ -28,6 +30,9 @@ void main() {
     expect(2 * 2.5 + 1.5 + 6 * .25, 8);
     // Flop: a 2 BB bet/call brings the 8 BB pot to 12; both lose 2 BB.
     expect(8 + 2 + 2, 12);
+    // Labels: 8 + the faced 2 BB bet = 10; 12 + the faced 12 BB bet = 24.
+    expect(8 + 2, 10);
+    expect(12 + 12, 24);
     expect(35 - 2, 33);
     expect(flop.runner.table.boardCards.map((c) => c.rank).toList(), <String>[
       'J',

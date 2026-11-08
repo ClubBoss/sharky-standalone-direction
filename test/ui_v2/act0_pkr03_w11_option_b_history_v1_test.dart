@@ -298,7 +298,7 @@ void main() {
   });
 
   group('order, closure, stacks and end (ledger)', () {
-    test('both decisions: BTN next, heads-up, labels = pot before the bet', () {
+    test('both decisions: BTN next, heads-up, label = pot with the bet', () {
       for (final (runner, steps, street) in [
         (small, w11HonestSmallPriceV1, 'Flop'),
         (bad, w11HonestBadPriceV1, 'Turn'),
@@ -307,7 +307,13 @@ void main() {
         expect(l.street, street);
         expect(l.next(), 'BTN');
         expect(l.live, {'CO', 'BTN'});
-        expect(l.potBeforeStreet, _bb(runner.table.potLabel));
+        // Catalog convention: the table pot counts the faced bet. The
+        // captions keep the pre-bet wording ('into 8 BB', 'pot is 12 BB').
+        expect(l.pot, _bb(runner.table.potLabel));
+        final preBet = RegExp(
+          r'(?:into|pot is) (\d+) BB',
+        ).firstMatch(runner.caption)!.group(1)!;
+        expect(l.potBeforeStreet, double.parse(preBet));
         expect(l.price - l.c('BTN'), _bb(runner.table.toCallLabel));
       }
     });
@@ -353,7 +359,11 @@ void main() {
         btn('Flop', W11VerbV1.call, 2),
       ]);
       expect(call.next(), isNull);
-      expect(call.pot, _bb(bad.table.potLabel), reason: 'turn scene starts');
+      expect(
+        call.pot,
+        _Ledger.run(w11HonestBadPriceV1).potBeforeStreet,
+        reason: 'turn scene starts',
+      );
       expect(
         _Ledger.run([
           ...w11HonestSmallPriceV1,
@@ -429,9 +439,10 @@ void main() {
       ];
       expect(computed, ledger);
       expect(computed, [8, 10, 12, 24, 36]);
-      // The authored labels keep the "pot before the bet" reading.
-      expect(computed[0], _bb(small.table.potLabel));
-      expect(computed[2], _bb(bad.table.potLabel));
+      // The decision-step playback pot equals the static table label, so
+      // one moment never shows two pot numbers.
+      expect(computed[1], _bb(small.table.potLabel));
+      expect(computed[3], _bb(bad.table.potLabel));
     });
 
     test('double counting fails closed or is impossible', () {
@@ -517,6 +528,30 @@ void main() {
                   .join(','),
         ]);
         expect(shown, ledger, reason: runner.lessonId);
+      }
+    });
+  });
+
+  group('animation never shows a decision-time stack as history', () {
+    test('earlier frames carry no stack; the decision frame does', () {
+      for (final runner in [small, bad]) {
+        final plan = act0TableChoreographyPlanForTableV1(runner.table)!;
+        for (var i = 0; i < plan.beats.length; i++) {
+          final frame = act0TableChoreographyFrameAfterBeatV1(plan, i);
+          final shown = act0TableForChoreographyFrameV1(runner.table, frame);
+          final stacks = {
+            for (final s in shown.seats)
+              if (s.stackLabel != null) s.seatLabel: s.stackLabel,
+          };
+          if (frame.heroDecisionReady) {
+            expect(stacks, {
+              for (final s in runner.table.seats)
+                if (s.stackLabel != null) s.seatLabel: s.stackLabel,
+            });
+          } else {
+            expect(stacks, isEmpty, reason: '${runner.lessonId} beat $i');
+          }
+        }
       }
     });
   });

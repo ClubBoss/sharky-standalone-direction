@@ -73,7 +73,7 @@ void _expectProjection(Act0TableStateV1 table, bool turn) {
     3,
     if (turn) ...[3, 4],
   ]);
-  expect(replay.steps.last.potAtStreet, turn ? 'Pot 12 BB' : 'Pot 8 BB');
+  expect(replay.steps.last.potAtStreet, turn ? 'Pot 24 BB' : 'Pot 10 BB');
   expect(replay.steps.last.isCurrentStreet, isTrue);
 }
 
@@ -109,7 +109,7 @@ void _expectPreOptionBProjection(Act0TableStateV1 table, bool turn) {
     replay.steps.map((s) => s.boardCardsAtStreet.length),
     turn ? [0, 0, 3, 3, 4] : [0, 0, 3],
   );
-  expect(replay.steps.last.potAtStreet, turn ? 'Pot 12 BB' : 'Pot 8 BB');
+  expect(replay.steps.last.potAtStreet, turn ? 'Pot 24 BB' : 'Pot 10 BB');
   expect(replay.steps.last.isCurrentStreet, isTrue);
 }
 
@@ -166,7 +166,7 @@ void main() {
           .toList();
       expect(texts, contains(turn ? 'CO bets 12 BB' : 'CO bets 2 BB'));
       expect(texts, contains(turn ? 'Turn - Jh 7c 4d 2s' : 'Flop - Jh 7c 4d'));
-      expect(texts, contains(turn ? 'Pot 12 BB' : 'Pot 8 BB'));
+      expect(texts, contains(turn ? 'Pot 24 BB' : 'Pot 10 BB'));
       expect(texts, contains('You are here'));
       final text = texts.join(' ');
       expect(text, isNot(contains('UTG')));
