@@ -757,6 +757,16 @@ void main() {
       expect(act0TableChoreographyPlanForTableV1(table), isNull);
     });
 
+    test('S1: an ordinary raise nobody can answer still contradicts', () {
+      _contradicts(
+        _withTrail(allLive, [
+          ...upToShove('HJ shoves to 20 BB'),
+          'UTG raises to 60 BB',
+        ]),
+        'aggression_without_responder',
+      );
+    });
+
     test('S2: a raise after an incomplete all-in is never consistent', () {
       // Reviewer's S2: nobody is left to answer UTG, so it contradicts.
       _contradicts(
