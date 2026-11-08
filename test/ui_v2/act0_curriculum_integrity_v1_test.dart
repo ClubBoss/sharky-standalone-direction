@@ -252,6 +252,8 @@ void main() {
       expect(seats['bb']?.bet?.label, 'Total in');
       expect(seats['bb']?.bet?.amountLabel, '50 BB');
       expect(runner.table.actionTrail.map((item) => item.label), <String>[
+        'UTG folds',
+        'HJ folds',
         'SB posts 0.5 BB, then folds',
         'BB post is included in BB total',
         'Hero all-in 20 BB',
