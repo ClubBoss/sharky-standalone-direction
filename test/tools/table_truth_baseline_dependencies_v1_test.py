@@ -188,22 +188,106 @@ class DependencyControls(unittest.TestCase):
         self.assertEqual(price.read_bytes(), once)
         self.assertEqual(street.read_bytes(), historical_before)
 
+
+    def prepare_synthetic_legacy_guide(self):
+        # Synthetic constructor envelope only, never historical RED evidence.
+        source = '// SYNTHETIC prefix\n' + ADAPTER.GUIDE_CONSTRUCTOR + '// unchanged body\n'
+        self.put(self.baseline, ADAPTER.GUIDE_DEPENDENCY, source)
+        self.put(self.baseline, ADAPTER.GUIDE_RUNNER,
+                 (ROOT / ADAPTER.GUIDE_RUNNER).read_text())
+        return {'copied_missing': {}, 'preserved_existing': {
+            p: ADAPTER.digest(self.baseline / p)
+            for p in (ADAPTER.GUIDE_DEPENDENCY, ADAPTER.GUIDE_RUNNER)}}
+
+    def call_synthetic_legacy_guide(self, dependencies):
+        # Only the synthetic Guide fixture pin is substituted. Runner bytes and
+        # its reviewed pin remain real and unmocked, as with the price controls.
+        guide_pin = dependencies['preserved_existing'][ADAPTER.GUIDE_DEPENDENCY]
+        with mock.patch.object(ADAPTER, 'GUIDE_LEGACY_SHA256', guide_pin):
+            return ADAPTER.add_legacy_guide_constructor_shim(
+                self.baseline, ADAPTER.LEGACY_HEAD, dependencies)
+
+    def test_legacy_guide_inputs_are_exact_reviewed_sources(self):
+        self.assertEqual(ADAPTER.GUIDE_LEGACY_SHA256,
+                         'e57900a6057525572045246ddd5d2a1630d3c15290c9e1b50cb056ab75419a63')
+        self.assertEqual(ADAPTER.GUIDE_RUNNER_SHA256,
+                         'd8d1190ae4861763b0568c5e5576a1d334c5f09f39900926546212614389d0ca')
+        self.assertEqual(ADAPTER.digest(ROOT / ADAPTER.GUIDE_RUNNER),
+                         ADAPTER.GUIDE_RUNNER_SHA256)
+
+    def test_legacy_guide_only_changes_constructor_and_records_exception(self):
+        dependencies = self.prepare_synthetic_legacy_guide()
+        guide = self.baseline / ADAPTER.GUIDE_DEPENDENCY
+        before = guide.read_text()
+        result = self.call_synthetic_legacy_guide(dependencies)
+        self.assertEqual(guide.read_text().replace(
+            ADAPTER.GUIDE_COMPATIBLE_CONSTRUCTOR, ADAPTER.GUIDE_CONSTRUCTOR), before)
+        self.assertIn('bool scrollSupport = false,', ADAPTER.GUIDE_COMPATIBLE_CONSTRUCTOR)
+        self.assertIn(f"assert(!scrollSupport, '{ADAPTER.GUIDE_SENTINEL}')",
+                      ADAPTER.GUIDE_COMPATIBLE_CONSTRUCTOR)
+        self.assertEqual(guide.read_text().count(ADAPTER.GUIDE_SENTINEL), 1)
+        self.assertEqual(result['after_sha256'], ADAPTER.digest(guide))
+        self.assertNotIn(ADAPTER.GUIDE_DEPENDENCY, dependencies['preserved_existing'])
+        self.assertEqual(ADAPTER.digest(self.baseline / ADAPTER.GUIDE_RUNNER),
+                         ADAPTER.GUIDE_RUNNER_SHA256)
+
+    def test_legacy_guide_input_drift_is_rejected_without_writing(self):
+        for relative in (ADAPTER.GUIDE_DEPENDENCY, ADAPTER.GUIDE_RUNNER):
+            with self.subTest(relative=relative):
+                dependencies = self.prepare_synthetic_legacy_guide()
+                path = self.baseline / relative
+                path.write_text(path.read_text() + '// SYNTHETIC drift\n')
+                before = {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()}
+                with self.assertRaisesRegex(RuntimeError, 'compatibility input changed'):
+                    self.call_synthetic_legacy_guide(dependencies)
+                self.assertEqual(before,
+                                 {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()})
+
+    def test_legacy_guide_must_be_preserved_not_copied(self):
+        dependencies = self.prepare_synthetic_legacy_guide()
+        dependencies['copied_missing'][ADAPTER.GUIDE_DEPENDENCY] = 'ineligible'
+        guide = self.baseline / ADAPTER.GUIDE_DEPENDENCY
+        before = guide.read_bytes()
+        with self.assertRaisesRegex(RuntimeError, 'compatibility input changed'):
+            self.call_synthetic_legacy_guide(dependencies)
+        self.assertEqual(guide.read_bytes(), before)
+
+    def test_legacy_guide_duplicate_injection_is_rejected_without_writing(self):
+        dependencies = self.prepare_synthetic_legacy_guide()
+        self.call_synthetic_legacy_guide(dependencies)
+        guide = self.baseline / ADAPTER.GUIDE_DEPENDENCY
+        once = guide.read_bytes()
+        with self.assertRaisesRegex(RuntimeError, 'compatibility input changed'):
+            ADAPTER.add_legacy_guide_constructor_shim(
+                self.baseline, ADAPTER.LEGACY_HEAD, dependencies)
+        self.assertEqual(guide.read_bytes(), once)
+
+    def test_legacy_guide_never_modifies_other_head(self):
+        dependencies = self.prepare_synthetic_legacy_guide()
+        before = {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()}
+        self.assertIsNone(ADAPTER.add_legacy_guide_constructor_shim(
+            self.baseline, 'nonlegacy-baseline', dependencies))
+        self.assertEqual(before,
+                         {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()})
+
     def test_workflow_rejects_runtime_sentinel_before_existing_red_validator(self):
         workflow = (ROOT / '.github/workflows/table-truth.yml').read_text()
         matches = re.findall(
-            r'(?ms)^          if grep -q SHARKY_BASELINE_PRICE_ORDER_SHIM_EXECUTED '
+            r'(?ms)^          if grep -q -e SHARKY_BASELINE_PRICE_ORDER_SHIM_EXECUTED '
+            r'-e SHARKY_BASELINE_GUIDE_SCROLL_SHIM_EXECUTED '
             r'"\$OUT/baseline-tests\.jsonl"; then\n.*?^          fi\n', workflow)
         self.assertEqual(len(matches), 1, 'Use the actual sole workflow sentinel guard')
         guard = matches[0]
         self.assertLess(workflow.index(guard), workflow.index(
             'python3 tools/table_truth_evidence_v1.py tests "$OUT/baseline-tests.jsonl" red "$code"'))
         log = pathlib.Path(self.tmp.name) / 'baseline-tests.jsonl'
-        for invoked in [False, True]:
-            with self.subTest(invoked=invoked):
+        for sentinel in [None, ADAPTER.ORDER_SENTINEL, ADAPTER.GUIDE_SENTINEL]:
+            invoked = sentinel is not None
+            with self.subTest(sentinel=sentinel):
                 events = [{'type': 'testStart', 'test': {'id': 1, 'name': 'SYNTHETIC RED'}},
                           {'type': 'testDone', 'testID': 1, 'result': 'failure'}]
                 if invoked:
-                    events.insert(1, {'type': 'error', 'error': ADAPTER.ORDER_SENTINEL})
+                    events.insert(1, {'type': 'error', 'error': sentinel})
                 log.write_text('\n'.join(map(json.dumps, events)) + '\n')
                 # The existing validator is unchanged and accepts this RED.
                 validator = subprocess.run(
