@@ -216,9 +216,8 @@ void main() {
       'lib/ui_v2/act0_shell/act0_asm05_authored_decision_truth_v1.dart',
     );
     final producerReceipt = {
-      'head':
-          (Process.runSync('git', ['rev-parse', 'HEAD']).stdout as String)
-              .trim(),
+      'head': (Process.runSync('git', ['rev-parse', 'HEAD']).stdout as String)
+          .trim(),
       'state_sha256': sha256
           .convert(
             File(
@@ -259,9 +258,7 @@ void main() {
                     'provenance': 'NEW_AUTHORING_ASM05',
                     'artifact_sha256': sha256
                         .convert(
-                          utf8.encode(
-                            jsonEncode(artifactRecords[task.taskId]),
-                          ),
+                          utf8.encode(jsonEncode(artifactRecords[task.taskId])),
                         )
                         .toString(),
                     'source_binding_sha256': sha256
