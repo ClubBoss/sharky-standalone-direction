@@ -5,32 +5,38 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_dat07_transfer_v1.dart';
 
 class _MemoryPort implements Act0Dat07ProgressPortV1 {
-  _MemoryPort([this.current]);
+  _MemoryPort([this.current]) : revision = current == null ? 0 : 1;
 
   String? current;
+  int revision;
   bool interruptNextWrite = false;
   bool loseAckAfterLanding = false;
   bool changeAtWrite = false;
   int writes = 0;
 
   @override
-  Future<String?> readDurablePayload() async => current;
+  Future<Act0Dat07DurableStateV1> readDurableSnapshot() async =>
+      (revision: revision, payload: current);
 
   @override
   Future<Act0Dat07WriteResultV1> restoreIfUnchanged({
-    required String? expectedPayload,
+    required Act0Dat07DurableStateV1 expected,
     required String incomingPayload,
   }) async {
     if (changeAtWrite) {
       changeAtWrite = false;
       current = _progress(xp: 3, task: 'concurrent');
+      revision++;
     }
-    if (current != expectedPayload) return Act0Dat07WriteResultV1.changed;
+    if (current != expected.payload || revision != expected.revision) {
+      return Act0Dat07WriteResultV1.changed;
+    }
     if (interruptNextWrite) {
       interruptNextWrite = false;
       return Act0Dat07WriteResultV1.unverified;
     }
     current = incomingPayload;
+    revision++;
     writes++;
     if (loseAckAfterLanding) {
       loseAckAfterLanding = false;
@@ -237,6 +243,20 @@ void main() {
       Act0Dat07RestoreOutcomeV1.conflict,
     );
     expect(destination.current, contains('concurrent'));
+    expect(destination.writes, 0);
+  });
+
+  test('DAT07 preview is fenced after reset even if it is empty again', () async {
+    final destination = _MemoryPort();
+    final transfer = Act0Dat07TransferV1(codec: _codec, port: destination);
+    final preview = await transfer.inspect(_file(_progress()));
+    expect(preview.mayRestore, true);
+    destination.revision++; // A different confirmed empty tombstone arrived.
+    expect(destination.current, isNull);
+    expect(
+      await transfer.confirm(preview),
+      Act0Dat07RestoreOutcomeV1.conflict,
+    );
     expect(destination.writes, 0);
   });
 
