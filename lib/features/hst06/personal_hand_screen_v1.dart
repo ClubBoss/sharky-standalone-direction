@@ -266,6 +266,18 @@ class _Hst06PersonalHandScreenState extends State<Hst06PersonalHandScreen> {
 
   Widget _inspection(Hst06Preview preview, int index) {
     final hand = preview.hand;
+    Hst06Hand? previous;
+    if (hand != null) {
+      for (final saved in _saved) {
+        if (saved.identity == hand.identity ||
+            saved.contentDigest == hand.contentDigest) {
+          previous = saved;
+          break;
+        }
+      }
+    }
+    final isDuplicate = previous != null &&
+        previous.contentDigest == hand?.contentDigest;
     String actor(int seat) {
       if (hand == null) return 'unknown';
       for (final p in hand.players) {
@@ -306,6 +318,10 @@ class _Hst06PersonalHandScreenState extends State<Hst06PersonalHandScreen> {
             for (final error in preview.errors)
               Text('ERROR: ' + error, style: const TextStyle(color: Colors.red)),
             for (final warning in preview.warnings) Text('NOTE: ' + warning),
+            if (previous != null)
+              Text(isDuplicate
+                  ? 'Already saved: this identical hand will not be added again.'
+                  : 'Conflict: a saved hand has this ID with different facts.'),
             Row(children: [
               TextButton(
                 key: ValueKey('hst06-cancel-' + index.toString()),
@@ -315,7 +331,8 @@ class _Hst06PersonalHandScreenState extends State<Hst06PersonalHandScreen> {
               const Spacer(),
               ElevatedButton(
                 key: ValueKey('hst06-confirm-' + index.toString()),
-                onPressed: preview.canSave && !_saving && _storageError == null
+                onPressed: preview.canSave && previous == null &&
+                    !_saving && _storageError == null
                   ? () => _confirm(preview) : null,
                 child: const Text('Confirm personal save'),
               ),
