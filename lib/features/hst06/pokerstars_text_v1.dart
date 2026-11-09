@@ -51,7 +51,7 @@ class Hst06PokerStarsPreview {
     final players = <Hst06Player>[];
     final seatPattern = RegExp(r'^Seat ([0-9]+):\s*(.+?)\s+\(([^)]*)\)$');
     final stackPattern =
-        RegExp(r'^([$€£]?)([0-9,.]+) in chips$', caseSensitive: false);
+        RegExp(r'^([$\u20AC\u00A3]?)([0-9,.]+) in chips$', caseSensitive: false);
     for (final line in lines) {
       final match = seatPattern.firstMatch(line);
       if (match == null) continue;
@@ -163,7 +163,7 @@ class Hst06PokerStarsPreview {
         }
       }
       final potMatch = RegExp(
-        r'^Total pot ([$€£]?)([0-9,.]+)', caseSensitive: false,
+        r'^Total pot ([$\u20AC\u00A3]?)([0-9,.]+)', caseSensitive: false,
       ).firstMatch(line);
       if (potMatch != null) {
         _checkSymbol(potMatch.group(1)!, currency, errors);
@@ -174,7 +174,7 @@ class Hst06PokerStarsPreview {
         }
       }
       final collectMatch = RegExp(
-        r'^(?:Seat [0-9]+:\s*)?(.+?) collected [$€£]?[0-9,.]+',
+        r'^(?:Seat [0-9]+:\s*)?(.+?) collected [$\u20AC\u00A3]?[0-9,.]+',
         caseSensitive: false,
       ).firstMatch(line);
       if (collectMatch != null) {
@@ -208,8 +208,9 @@ class Hst06PokerStarsPreview {
       }[action.group(2)!.toLowerCase()]!;
       String? wager, meaning;
       final rest = action.group(3)!;
+      _checkSymbol(rest, currency, errors);
       if (kind == 'call' || kind == 'bet') {
-        final m = RegExp(r'^\s*([$€£]?)([0-9,.]+)').firstMatch(rest);
+        final m = RegExp(r'^\s*([$\u20AC\u00A3]?)([0-9,.]+)').firstMatch(rest);
         if (m != null) {
           _checkSymbol(m.group(1)!, currency, errors);
           try {
@@ -222,7 +223,7 @@ class Hst06PokerStarsPreview {
       }
       if (kind == 'raise') {
         final m = RegExp(
-          r'^\s*[$€£]?[0-9,.]+\s+to\s+([$€£]?)([0-9,.]+)',
+          r'^\s*[$\u20AC\u00A3]?[0-9,.]+\s+to\s+([$\u20AC\u00A3]?)([0-9,.]+)',
         ).firstMatch(rest);
         if (m != null) {
           _checkSymbol(m.group(1)!, currency, errors);
@@ -278,8 +279,8 @@ class Hst06PokerStarsPreview {
     String raw, String? currency, List<String> errors,
   ) {
     if (currency == null) return;
-    final expected = const {'USD': r'$', 'EUR': '€', 'GBP': '£'}[currency];
-    for (final symbol in const [r'$', '€', '£']) {
+    final expected = const {'USD': r'$', 'EUR': '\u20AC', 'GBP': '\u00A3'}[currency];
+    for (final symbol in const [r'$', '\u20AC', '\u00A3']) {
       if (raw.contains(symbol) && symbol != expected) {
         errors.add('Currency symbol conflicts with header unit.');
       }
