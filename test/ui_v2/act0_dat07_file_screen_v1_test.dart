@@ -80,8 +80,8 @@ void main() {
     expect(files.pickerCalls, 1);
     expect(find.byKey(const Key('dat07_preview_title')), findsOneWidget);
     expect(find.text('Earned XP: 7'), findsOneWidget);
-    expect(find.byKey(const Key('dat07_confirm')), findsOneWidget);
     await tester.scrollUntilVisible(find.byKey(const Key('dat07_cancel')), 120);
+    expect(find.byKey(const Key('dat07_confirm')), findsOneWidget);
     await tester.tap(find.byKey(const Key('dat07_cancel')));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('dat07_preview_title')), findsNothing);
@@ -113,6 +113,7 @@ void main() {
     await tester.pumpWidget(screen(port, files));
     await tester.tap(find.byKey(const Key('dat07_select_file')));
     await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.byKey(const Key('dat07_conflict')), 120);
     expect(find.byKey(const Key('dat07_conflict')), findsOneWidget);
     final button = tester.widget<FilledButton>(
       find.byKey(const Key('dat07_confirm')),
