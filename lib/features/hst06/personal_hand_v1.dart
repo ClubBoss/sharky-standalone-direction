@@ -124,7 +124,8 @@ class Hst06Hand {
 
   Hst06Hand persisted(String id, int rev) => Hst06Hand(
     localId: id, revision: rev, origin: origin, roomHandId: roomHandId,
-    sourceDigest: sourceDigest, title: title, unit: unit, players: players,
+    sourceDigest: sourceDigest.isEmpty ? contentDigest : sourceDigest,
+    title: title, unit: unit, players: players,
     heroSeat: heroSeat, buttonSeat: buttonSeat, heroCards: heroCards,
     boardCards: boardCards, actions: actions, totalPot: totalPot,
     collectors: collectors, notes: notes,
@@ -165,6 +166,10 @@ Hst06Preview hst06Inspect(Hst06Hand hand, [List<String> parsingErrors = const []
   final errors = <String>[...parsingErrors];
   final warnings = <String>[...hand.notes];
   if (hand.title.trim().isEmpty) errors.add('Hand title is required.');
+  if (hand.unit != null &&
+      !const ['USD', 'EUR', 'GBP', 'chips'].contains(hand.unit)) {
+    errors.add('Unsupported amount unit.');
+  }
   if (hand.players.length < 2 || hand.players.length > 10) {
     errors.add('Need 2-10 named players.');
   }
