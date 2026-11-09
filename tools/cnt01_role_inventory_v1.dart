@@ -65,6 +65,9 @@ class Cnt01RoleInventoryV1 {
             'worldId': world.worldId,
             'lessonId': lesson.lessonId,
             'taskId': task.taskId,
+            'taskIdentity': lesson.tasks.isEmpty
+                ? 'DERIVED_LESSON_SINGLE'
+                : 'EXPLICIT_TASK',
             'sourceRole': sourceRole(task),
             'roleBasis': roleBasis(task),
             'sourcePhase': task.phase.name,
@@ -131,6 +134,9 @@ class Cnt01RoleInventoryV1 {
         add('ERROR', 'MISSING_TASK_ID', id);
       } else if (!usedIds.add(id)) {
         add('ERROR', 'DUPLICATE_TASK_ID', id);
+      }
+      if (string('taskIdentity') == 'DERIVED_LESSON_SINGLE') {
+        add('GAP', 'DERIVED_ID_NOT_EXPLICITLY_AUTHORED', id);
       }
       if (string('worldId').isEmpty || string('lessonId').isEmpty ||
           string('catalogSourcePath').isEmpty ||
