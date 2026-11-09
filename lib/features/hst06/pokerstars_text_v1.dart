@@ -49,6 +49,12 @@ class Hst06PokerStarsPreview {
         'Unsupported format. Use PokerStars English No-Limit Holdem or manual entry.',
       ], []);
     }
+    if (RegExp(r'\bTournament\s*#', caseSensitive: false)
+        .hasMatch(lines.first)) {
+      return const Hst06Preview(null, [
+        'Tournament PokerStars histories are not admitted by this format.',
+      ], []);
+    }
     final errors = <String>[], notes = <String>[];
     final handId = header.group(1)!;
     final currency = RegExp(r'\b(USD|EUR|GBP)\b', caseSensitive: false)
@@ -68,9 +74,14 @@ class Hst06PokerStarsPreview {
         continue;
       }
       String? stack;
-      final stackMatch = stackPattern.firstMatch(match.group(3) ?? '');
+      final rawStack = match.group(3) ?? '';
+      final stackMatch = stackPattern.firstMatch(rawStack);
       if (stackMatch == null) {
-        notes.add('Stack unknown at seat ' + match.group(1)!);
+        if (RegExp(r'[0-9-]').hasMatch(rawStack)) {
+          errors.add('Invalid stack at seat ' + match.group(1)!);
+        } else {
+          notes.add('Stack unknown at seat ' + match.group(1)!);
+        }
       } else {
         _checkSymbol(stackMatch.group(1)!, currency, errors);
         try {
@@ -155,6 +166,14 @@ class Hst06PokerStarsPreview {
         }
         continue;
       }
+      if (line.startsWith('***') &&
+          !line.startsWith('*** SUMMARY') &&
+          !line.startsWith('*** SHOW')) {
+        errors.add('Unsupported or damaged street section.');
+        street = null;
+        inActions = false;
+        continue;
+      }
       if (line.startsWith('*** SUMMARY') || line.startsWith('*** SHOW')) {
         inActions = false;
       }
@@ -175,8 +194,12 @@ class Hst06PokerStarsPreview {
         }
       }
       final potMatch = RegExp(
-        r'^Total pot ([$\u20AC\u00A3]?)([0-9,.]+)', caseSensitive: false,
+        r'^Total pot ([$\u20AC\u00A3]?)([0-9,.]+)(?=\s|$)', caseSensitive: false,
       ).firstMatch(line);
+      if (potMatch == null &&
+          line.toLowerCase().startsWith('total pot ')) {
+        errors.add('Invalid total pot amount.');
+      }
       if (potMatch != null) {
         _checkSymbol(potMatch.group(1)!, currency, errors);
         try {

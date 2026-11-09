@@ -124,6 +124,35 @@ void main() {
     expect(malformed.errors.join(' '), contains('Invalid amount'));
   });
 
+  test('negative source stack and pot fail closed', () {
+    final negativeStack = importer.parse(source900.replaceFirst(
+      r'($0.80 in chips)', r'($-1.00 in chips)',
+    )).single;
+    expect(negativeStack.canSave, isFalse);
+    expect(negativeStack.errors.join(' '), contains('Invalid stack'));
+
+    final negativePot = importer.parse(source900.replaceFirst(
+      r'Total pot $0.20', r'Total pot $-0.20',
+    )).single;
+    expect(negativePot.canSave, isFalse);
+    expect(negativePot.errors.join(' '), contains('Invalid total pot'));
+  });
+
+  test('tournament source and damaged street header never guess a street', () {
+    final tournament = importer.parse(source900.replaceFirst(
+      "PokerStars Hand #900: Hold'em No Limit",
+      "PokerStars Hand #900: Tournament #42, Hold'em No Limit",
+    )).single;
+    expect(tournament.canSave, isFalse);
+    expect(tournament.errors.join(' '), contains('Tournament'));
+
+    final damaged = importer.parse(source900.replaceFirst(
+      '*** FLOP ***', '*** FLOP **',
+    )).single;
+    expect(damaged.canSave, isFalse);
+    expect(damaged.errors.join(' '), contains('damaged street'));
+  });
+
   test('unsupported room and damaged text emit visible errors', () {
     for (final text in [
       'GGPoker Hand #123: anything',

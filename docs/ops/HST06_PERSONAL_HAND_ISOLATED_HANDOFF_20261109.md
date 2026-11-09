@@ -37,6 +37,10 @@ LLM tools. Synthetic fixtures only.
    Manual records may explicitly use chips or BB without conversion.
    Multiple PokerStars headers can be previewed separately.
 
+Malformed street boundaries, negative explicit stacks/pots and PokerStars
+Tournament headers are blocked before persistence, not treated as guessed
+cash-hand facts.
+
 NOT supported by this HST-06 route: GGPoker, Winamax, the legacy four-line
 simple converter, Omaha, tournaments with unverified field semantics, mixed
 currency, JSON, CSV, damaged/exotic hand text. Legacy RoomHandHistoryImporter
