@@ -166,6 +166,7 @@ class _Hst06PersonalHandScreenState extends State<Hst06PersonalHandScreen> {
         initialValue: _unit,
         decoration: const InputDecoration(labelText: 'Explicit amount unit'),
         items: const [
+          DropdownMenuItem<String>(value: null, child: Text('Unknown')),
           DropdownMenuItem(value: 'USD', child: Text('USD')),
           DropdownMenuItem(value: 'EUR', child: Text('EUR')),
           DropdownMenuItem(value: 'GBP', child: Text('GBP')),
