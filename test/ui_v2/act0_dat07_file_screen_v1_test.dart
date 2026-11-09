@@ -41,6 +41,13 @@ class _FakeFiles implements Act0Dat07FileBridgeV1 {
   Future<void> shareBackup(Uint8List bytes) async => shared = bytes;
 }
 
+void _phone(WidgetTester tester) {
+  tester.view.physicalSize = const Size(393, 852);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
+}
+
 void main() {
   const saved = '{"schemaVersion":19,"earnedXp":7,'
       '"completedTaskIds":["task-1"],'
@@ -64,6 +71,7 @@ void main() {
   );
 
   testWidgets('DAT07 selection -> visible preview -> cancel -> no write', (tester) async {
+    _phone(tester);
     final port = _FixturePort();
     final files = _FakeFiles(file());
     await tester.pumpWidget(screen(port, files));
@@ -73,7 +81,7 @@ void main() {
     expect(find.byKey(const Key('dat07_preview_title')), findsOneWidget);
     expect(find.text('Earned XP: 7'), findsOneWidget);
     expect(find.byKey(const Key('dat07_confirm')), findsOneWidget);
-    await tester.ensureVisible(find.byKey(const Key('dat07_cancel')));
+    await tester.scrollUntilVisible(find.byKey(const Key('dat07_cancel')), 120);
     await tester.tap(find.byKey(const Key('dat07_cancel')));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('dat07_preview_title')), findsNothing);
@@ -82,6 +90,7 @@ void main() {
   });
 
   testWidgets('DAT07 selected file is confirmed only after preview', (tester) async {
+    _phone(tester);
     final port = _FixturePort();
     final files = _FakeFiles(file());
     await tester.pumpWidget(screen(port, files));
@@ -89,7 +98,7 @@ void main() {
     await tester.tap(find.byKey(const Key('dat07_select_file')));
     await tester.pumpAndSettle();
     expect(port.writes, 0);
-    await tester.ensureVisible(find.byKey(const Key('dat07_confirm')));
+    await tester.scrollUntilVisible(find.byKey(const Key('dat07_confirm')), 120);
     await tester.tap(find.byKey(const Key('dat07_confirm')));
     await tester.pumpAndSettle();
     expect(port.value, saved);
@@ -98,6 +107,7 @@ void main() {
   });
 
   testWidgets('DAT07 conflicting local state disables confirmation', (tester) async {
+    _phone(tester);
     final port = _FixturePort('different-local-state');
     final files = _FakeFiles(file());
     await tester.pumpWidget(screen(port, files));
@@ -112,6 +122,7 @@ void main() {
   });
 
   testWidgets('DAT07 backup uses share action, never overwrites progress', (tester) async {
+    _phone(tester);
     final port = _FixturePort(saved);
     final files = _FakeFiles(null);
     await tester.pumpWidget(screen(port, files));
@@ -123,6 +134,7 @@ void main() {
   });
 
   testWidgets('DAT07 OS picker cancel yields no import or misleading success', (tester) async {
+    _phone(tester);
     final port = _FixturePort();
     final files = _FakeFiles(null);
     await tester.pumpWidget(screen(port, files));
