@@ -263,3 +263,106 @@ All earlier `bdf560` and PKR-08 adjudication history, including the final
 22/22 machine receipt, remains historical evidence for its exact source. This
 metadata repin is input-provenance only: it is not runtime acceptance, full
 PKR-06 acceptance, native/Human proof, or a scorecard award.
+
+## ASM-05 bounded NEW_AUTHORING extension — 2026-11-08
+
+The exact source candidate is commit
+`0d55596e813b693e1410158c848f0ecab489591d`, tree
+`0f29bfe367095f728dc439aca7212670074e8d07`. It adds exactly two assessed
+NEW_AUTHORING rows in `world_12/decision_over_outcome`:
+`asm05_new_known_holes_turn_call_10` and
+`asm05_new_known_holes_turn_call_40`. Their option order is `[fold, call]` and
+their correct indexes are respectively `1` and `0`.
+
+The canonical assessment now contains 293 rows and has fingerprint
+`cfd87092834008015405dd292a8d9d1326c04607d2d16761b96188c511808f84`.
+Removing only the two named ASM-05 rows reproduces all 291 previous serialized
+payloads and the prior valid fingerprint
+`599ecadb0180eb48e8de72520645c29750941cba4cdd000f5acdda834a30f7e1`.
+The prior valid baseline remains source commit
+`c76bed82277e986706d4217dab293c51dab901f7`, row count 291, with State
+SHA-256 `bec585f9fdb11903c5be507e0c2a90522597d0e90c736c3ac8c1e90c0b113b3d`.
+
+The bounded generator inputs are the final State SHA-256
+`d9a78d57817c8eaef7dc1a376f53ade7774229be4a34063d5dc0cf152bb67221`
+and the ASM-05 factory SHA-256
+`4eb69f1a36cccf0e17f025d595c1d92444dee02a49936ecaa298be5ad3612226`.
+The unchanged generator still fingerprints every assessed row, including both
+new rows. The guard separately preserves the original 42-row W10-W12
+distribution `{0: 14, 1: 14, 2: 14}`, proves the two new identities and
+indexes, and checks the 44-row aggregate `{0: 15, 1: 15, 2: 14}`. The existing
+longest-run limit remains two. Selection, comparator, thresholds, freshness
+negative controls, terminal-pack rule, and no-W13 rule are unchanged.
+
+The first focused runtime reached every ASM-05 behavioral assertion but ended
+with two Preview harness lifecycle errors because the explicit semantics handle
+was still active. The repair disposed that test-owned handle without weakening
+a product assertion. The bounded rerun then passed both real Preview cases and
+11 selected PKR-03 compatibility controls. Formatting and scoped analysis
+passed, and the tested tree equals the exact source tree above. Raw runtime
+receipts and hashes are recorded in the accompanying ASM-05 final evidence
+bundle; the independent fingerprint probe reproduced the 293/291 digests and
+both position distributions.
+
+This is a bounded source, machine, and input-provenance adjudication proposal.
+It does not claim native or Human evidence, full ASM-05/PKR-03/PKR-06 DoD,
+external release readiness, or a scorecard award. Applying these protected
+bytes requires a separate independent scoped review.
+
+## ASM-05 final corrective regeneration — 2026-11-08
+
+The exact final formatted source is commit
+`5fcf1e046c83b7893855c5fc7721f1cdc3f64ce5`, tree
+`627c77e9450531bf067a72c72679c9f11f6ec1ef`. The canonical generator ran
+against that source with the installed local SDK and reproduced 293 assessed
+rows. Its content fingerprint is
+`cb14248b1bb0e599715940ab4ac986756ddf2f13a6837b1493dd277958356d33`.
+
+Removing only `asm05_new_known_holes_turn_call_10` and
+`asm05_new_known_holes_turn_call_40` reproduces the historical 291-row digest
+`599ecadb0180eb48e8de72520645c29750941cba4cdd000f5acdda834a30f7e1`.
+The actual W10-W12 distribution is `{0: 15, 1: 15, 2: 14}` across 44 rows,
+with longest run two; the two additions retain option order `[fold, call]` and
+correct indexes 1 and 0. The State input remains
+`d9a78d57817c8eaef7dc1a376f53ade7774229be4a34063d5dc0cf152bb67221`;
+the final factory input is
+`74dfdaabdbebf337e4308dc98e4a512b007ce45474381b76c7ccf37e2691206d`.
+
+The output-only probe passed without skips or failures. Its terminal receipt
+SHA-256 is `654ef74367ce6d76f3677cb05787ddb8379b88559abea3075d86860148ecb73a`
+and raw machine log SHA-256 is
+`7968f6d0d3cf98385fb0cde5d21ca1459e2cd0328f96e624dce6f408b3a15b95`.
+This corrective repin changes no guard, generator, selection, threshold,
+historical row, score, native claim, or Human claim.
+
+## ASM-05 post-fix input freshness proposal — 2026-11-09
+
+The bounded post-fix source is commit
+`5b0dd2e300053e52b323e54df6c759ddb5f04b48`, tree
+`0969c4d19489b5d8c78d21b5bea662c79cb4add6`. It removes only the stale
+numeric `blindAmountLabel` values from the two ASM-05 Turn projections while
+preserving blind positions, authored preflop posts, Turn bets, cards, pots,
+options, grades and XP. The State input remains
+`d9a78d57817c8eaef7dc1a376f53ade7774229be4a34063d5dc0cf152bb67221`;
+the post-fix factory input is
+`c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b`.
+
+The unchanged W1-W12 generator payload contains task identity, authored copy,
+option text, correctness, feedback and repair focus. It does not serialize
+table `blindAmountLabel`, so the admitted 293-row content fingerprint remains
+`cb14248b1bb0e599715940ab4ac986756ddf2f13a6837b1493dd277958356d33`.
+The historical 291-row fingerprint remains
+`599ecadb0180eb48e8de72520645c29750941cba4cdd000f5acdda834a30f7e1`.
+Row counts, option order, correct indexes, distributions, generator, guard,
+selection, thresholds and freshness negative controls are unchanged.
+
+The exact post-fix canonical capture independently records source fingerprints
+`dc7f1fe213d526a36bf6ad0b5748a9244d96686124616d92a4db40e5d9222184`
+and `ad6d1a9044df2efcc2f806633b055052c22449605ef9347b38823c82e42fc9c7`
+for the Call10 and Call40 tasks, with zero remaining `D3.no_old_blind`
+failures. Those full authored-source fingerprints are distinct from the
+bounded W1 answer-position payload and do not change its digest.
+
+This is an output-only freshness proposal. It has not been applied to the live
+protected contract and does not claim a guard run, independent admission,
+native/Human evidence, merge, release or score change.

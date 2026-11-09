@@ -68,12 +68,34 @@ void main() {
     },
   );
 
-  test('unchanged source remains unproved rather than inventing stacks', () {
+  test('unchanged source invents no stacks: closed histories are proven, '
+      'decisions without an authored actor stack stay unproved', () {
     for (final task
         in Act0ShellStateV1.sample.lessonById('your_first_hand').taskList) {
+      final table = task.runner.table;
+      // No stack is authored for any live seat in this lesson.
       expect(
-        act0BettingRoundOrderTruthForTableV1(task.runner.table),
-        Act0BettingRoundOrderTruthV1.unproved,
+        table.seats
+            .where((s) => s.isInHand && !s.isFolded)
+            .every((s) => s.stackLabel == null),
+        isTrue,
+        reason: task.taskId,
+      );
+      final proof = act0BettingRoundOrderProofForTableV1(table);
+      // A fully recorded closed history needs no stack: recorded actions are
+      // the source's own evidence. A pending decision needs the actor's stack.
+      final hasDecision = (table.activeSeatId ?? '').trim().isNotEmpty;
+      expect(
+        (proof.truth, proof.reason),
+        hasDecision
+            ? (
+                Act0BettingRoundOrderTruthV1.unproved,
+                'current_actor_stack_unknown',
+              )
+            : (
+                Act0BettingRoundOrderTruthV1.consistent,
+                'consistent_closed_history',
+              ),
         reason: task.taskId,
       );
     }

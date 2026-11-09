@@ -4237,7 +4237,21 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                       : '$feedbackAction was right with help.')
                 : '$feedbackAction was right.'
           : question;
-      final support = isTheory || isTeaching
+      // This authored model's premises are task information, not answer help.
+      // Keep the disclosure scoped to the two admitted, unsubmitted ASM05 tasks.
+      final showAsm05ModelAssumptions =
+          isDrill &&
+          !isTeaching &&
+          runner.selectedOptionId == null &&
+          runner.lessonId == 'decision_over_outcome' &&
+          runner.feedbackSignalId == 'asm05_known_holes_ev' &&
+          const {
+            'asm05_new_known_holes_turn_call_10',
+            'asm05_new_known_holes_turn_call_40',
+          }.contains(widget.selectedTaskId);
+      final support = showAsm05ModelAssumptions
+          ? '${runner.caption} ${runner.hint}'
+          : isTheory || isTeaching
           ? hint
           : isReview
           ? act0AcademyW1InstructionV1(
@@ -4298,6 +4312,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         eyebrow: purpose,
         headline: headline,
         support: support,
+        scrollSupport: showAsm05ModelAssumptions,
         focusLabel: focusLabel,
         progressLabel: progressLabel,
       );
@@ -6997,6 +7012,13 @@ Act0FeedbackSignalProofV1? _feedbackSignalProofForRunnerV1({
         return _feedbackSignalProofV1(
           signalId: explicitSignal,
           label: 'Stated premise: a changed turn board',
+        );
+      case 'asm05_known_holes_ev':
+        // Preview uses the parent lesson id, not the individual task id.
+        if (runner.lessonId != 'decision_over_outcome') return null;
+        return _feedbackSignalProofV1(
+          signalId: 'process_over_outcome',
+          label: 'Known cards and price; process over outcome',
         );
       case 'process_over_outcome':
         if (!const {

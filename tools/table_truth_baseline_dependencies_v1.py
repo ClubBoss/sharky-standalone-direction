@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Complete only missing Dart dependencies of the existing RED visibility adapter.
 
-Existing baseline files remain authoritative and byte-identical. This does not
+Existing baseline files remain authoritative. The pinned Guide constructor is
+the sole historical-file exception; its rendering body stays byte-identical.
+This does not
 copy the candidate state/model over the historical RED source, enable F7, or
 decide whether RED/GREEN passed; the existing evidence validator owns that.
 """
@@ -133,6 +135,62 @@ def add_legacy_compile_only_shim(baseline, head, dependency_result):
             'scope': 'historical copied dependency only; fail on invocation'}
 
 
+
+# The same pinned historical Guide predates Runner's optional scrollSupport API.
+# Its rendering body must remain historical. Only false is supported: flutter
+# test enables assertions, and the workflow rejects this sentinel before RED.
+GUIDE_DEPENDENCY = 'lib/ui_v2/act0_shell/act0_learning_scene_v3.dart'
+GUIDE_LEGACY_SHA256 = 'e57900a6057525572045246ddd5d2a1630d3c15290c9e1b50cb056ab75419a63'
+GUIDE_RUNNER = ROOTS[0]
+GUIDE_RUNNER_SHA256 = 'd8d1190ae4861763b0568c5e5576a1d334c5f09f39900926546212614389d0ca'
+GUIDE_SENTINEL = 'SHARKY_BASELINE_GUIDE_SCROLL_SHIM_EXECUTED'
+GUIDE_CONSTRUCTOR = (
+    '  const Act0LearningSceneGuideV3({\n'
+    '    super.key,\n'
+    '    required this.phase,\n'
+    '    required this.attentionPhase,\n'
+    '    required this.sharkyState,\n'
+    '    this.growthStage = Act0SharkyGrowthStageV1.foundation,\n'
+    '    required this.eyebrow,\n'
+    '    required this.headline,\n'
+    '    required this.support,\n'
+    '    this.focusLabel,\n'
+    '    this.progressLabel,\n'
+    '  });\n'
+)
+GUIDE_COMPATIBLE_CONSTRUCTOR = GUIDE_CONSTRUCTOR.replace(
+    '    required this.support,\n',
+    '    required this.support,\n    bool scrollSupport = false,\n',
+).replace('  });\n', f"  }}) : assert(!scrollSupport, '{GUIDE_SENTINEL}');\n")
+
+
+def add_legacy_guide_constructor_shim(baseline, head, dependency_result):
+    baseline = baseline.resolve()
+    if head != LEGACY_HEAD:
+        return None
+    kept = dependency_result['preserved_existing']
+    copied = dependency_result['copied_missing']
+    for relative, expected in ((GUIDE_DEPENDENCY, GUIDE_LEGACY_SHA256),
+                               (GUIDE_RUNNER, GUIDE_RUNNER_SHA256)):
+        if (relative in copied or kept.get(relative) != expected or
+                digest(inside(baseline, pathlib.Path(relative))) != expected):
+            raise RuntimeError(f'Historical Guide compatibility input changed: {relative}')
+    guide = inside(baseline, pathlib.Path(GUIDE_DEPENDENCY))
+    source = guide.read_text()
+    if GUIDE_SENTINEL in source or source.count(GUIDE_CONSTRUCTOR) != 1:
+        raise RuntimeError('Historical Guide constructor changed or already injected')
+    guide.write_text(source.replace(GUIDE_CONSTRUCTOR, GUIDE_COMPATIBLE_CONSTRUCTOR, 1))
+    # This explicit constructor exception is no longer byte-preserved. Do not
+    # leave its old digest in the preserved-existing manifest.
+    del kept[GUIDE_DEPENDENCY]
+    return {'path': GUIDE_DEPENDENCY,
+            'prior_sha256': GUIDE_LEGACY_SHA256,
+            'after_sha256': digest(guide),
+            'runner_sha256': GUIDE_RUNNER_SHA256,
+            'runtime_sentinel': GUIDE_SENTINEL,
+            'scope': 'historical constructor only; false preserves body; true invalid in flutter test'}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--baseline', type=pathlib.Path, required=True)
@@ -147,6 +205,10 @@ def main():
     result = complete_dependencies(candidate, args.baseline)
     result['legacy_compile_adapter'] = add_legacy_compile_only_shim(
         args.baseline, head, result)
+    result['legacy_guide_compile_adapter'] = add_legacy_guide_constructor_shim(
+        args.baseline, head, result)
+    if result['legacy_guide_compile_adapter'] is not None:
+        result['policy'] += '; exact-pinned Guide constructor exception recorded separately'
     result['baseline_head'] = head
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2) + '\n')

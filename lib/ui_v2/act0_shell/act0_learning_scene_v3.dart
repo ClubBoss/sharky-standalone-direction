@@ -201,6 +201,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
     required this.eyebrow,
     required this.headline,
     required this.support,
+    this.scrollSupport = false,
     this.focusLabel,
     this.progressLabel,
   });
@@ -227,6 +228,8 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
   final String eyebrow;
   final String headline;
   final String support;
+  // Opt in only for complete source-owned model premises, never answer hints.
+  final bool scrollSupport;
   final String? focusLabel;
   final String? progressLabel;
 
@@ -324,15 +327,17 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
           // Preserve the existing compact overlay footprint while letting
           // learners read the complete authored theory rather than ellipsizing
           // source teaching facts. The physical table remains unchanged.
-          if (phase == Act0LearningScenePhaseV3.theory)
+          if (phase == Act0LearningScenePhaseV3.theory || scrollSupport)
             SizedBox(
               height: (enlarged ? 3 : 2) * (enlarged ? 12.2 : 11.4) * 1.16,
               child: Row(
                 children: [
                   Expanded(
                     child: SingleChildScrollView(
-                      key: const Key(
-                        'act0_learning_scene_v3_theory_support_scroll',
+                      key: Key(
+                        scrollSupport
+                            ? 'act0_learning_scene_v3_model_support_scroll'
+                            : 'act0_learning_scene_v3_theory_support_scroll',
                       ),
                       physics: const ClampingScrollPhysics(),
                       child: Text(

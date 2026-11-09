@@ -7,12 +7,29 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.d
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+const _asm05NewTaskIds = <String>{
+  'asm05_new_known_holes_turn_call_10',
+  'asm05_new_known_holes_turn_call_40',
+};
+
 /// A deterministic, route-owned inventory. It deliberately distinguishes an
 /// exact replay (available for every assessed row) from a mapped same-signal
 /// target (available only when the canonical mapper returns another task).
 void main() {
   test('canonical W1-W12 learning-content census remains adjudicated', () {
-    final rows = _assessedRows();
+    final allRows = _assessedRows();
+    expect(allRows, hasLength(293));
+    expect(
+      allRows
+          .where((row) => _asm05NewTaskIds.contains(row.task.taskId))
+          .map((row) => row.task.taskId),
+      _asm05NewTaskIds,
+    );
+    // Preserve every historical cohort assertion below. The separate ASM05
+    // test covers the entire extension and retains the zero-gap repair gate.
+    final rows = allRows
+        .where((row) => !_asm05NewTaskIds.contains(row.task.taskId))
+        .toList(growable: false);
     expect(rows, hasLength(291));
 
     final repairRows = rows.where((row) => row.incorrectOptions.isNotEmpty);
@@ -125,6 +142,7 @@ void main() {
     // Kept in test output so the companion adjudication can record the full
     // machine-derived snapshot without maintaining a second source of truth.
     // ignore: avoid_print
+    print('LEGACY_291_CENSUS');
     print(const JsonEncoder.withIndent('  ').convert(snapshot));
 
     expect(snapshot['optionCounts'], <String, int>{'2': 121, '3': 169, '4': 1});
@@ -229,6 +247,162 @@ void main() {
       value.task.runner.options.singleWhere((option) => option.isCorrect).id,
       'bet_half',
     );
+  });
+
+  test('two ASM05 rows retain full census and require admitted repair', () {
+    final rows = _assessedRows();
+    final additions = rows
+        .where((row) => _asm05NewTaskIds.contains(row.task.taskId))
+        .toList(growable: false);
+    expect(rows, hasLength(293));
+    expect(additions.map((row) => row.task.taskId), _asm05NewTaskIds);
+    expect(rows.map((row) => row.task.taskId).toSet(), hasLength(293));
+    expect(_countBy(rows, (row) => '${row.optionCount}'), <String, int>{
+      '2': 123,
+      '3': 169,
+      '4': 1,
+    });
+    expect(_countBy(rows, (row) => '${row.correctIndex}'), <String, int>{
+      '0': 113,
+      '1': 117,
+      '2': 63,
+    });
+    expect(_longestRun(rows.map((row) => row.correctIndex).toList()), 4);
+    final late = rows.where((row) => row.worldNumber >= 9).map(_lateWorldRow);
+    expect(_countBy(late, (row) => row.category), <String, int>{
+      'TABLE_ACTION_DECISION': 31,
+      'TABLE_CLUE_OR_RANGE_INFERENCE': 29,
+    });
+
+    final extensionRepair = <_RepairRow>[];
+    for (final row in additions) {
+      final price = row.task.taskId.endsWith('_10') ? 10 : 40;
+      expect(row.worldId, 'world_12');
+      expect(row.lessonId, 'decision_over_outcome');
+      expect(row.task.phase, Act0LessonPhaseV1.drill);
+      expect(row.task.stepKind, Act0LessonStepKindV1.practice);
+      expect(row.task.resolvedTaskFamily, Act0TaskFamilyV1.decision);
+      expect(row.task.rewardXp, 0);
+      expect(row.isCheckpoint, isFalse);
+      expect(row.isRepairTarget, isFalse);
+      expect(row.optionCount, 2);
+      expect(row.correctIndex, price == 10 ? 1 : 0);
+      expect(row.task.runner.options.map((option) => option.id), [
+        'fold',
+        'call',
+      ]);
+      expect(row.task.runner.options.map((option) => option.label), [
+        'Fold',
+        'Call',
+      ]);
+      expect(row.task.runner.options.map((option) => option.amountLabel), [
+        '',
+        '$price BB',
+      ]);
+      for (final option in row.task.runner.options) {
+        expect(option.isCorrect, option.id == (price == 10 ? 'call' : 'fold'));
+        expect(
+          option.quality,
+          option.isCorrect
+              ? Act0FeedbackQualityV1.correct
+              : Act0FeedbackQualityV1.wrong,
+        );
+        expect(option.preferredLabel, price == 10 ? 'Call' : 'Fold');
+      }
+      final authenticity = _lateWorldRow(row);
+      expect(authenticity.category, 'TABLE_ACTION_DECISION');
+      expect(authenticity.tableRequired, isTrue);
+      expect(authenticity.actionConsequence, isTrue);
+      expect(authenticity.terminologyOnly, isFalse);
+      expect(row.incorrectOptions, hasLength(1));
+      final wrong = row.incorrectOptions.single;
+      expect(wrong.id, price == 10 ? 'fold' : 'call');
+      final incorrect = _incorrectOptionRow(row, wrong);
+      expect(incorrect.currentErrorType, 'misread_mindset_discipline');
+      final repair = _repairRow(row);
+      expect(repair.intentAvailable, isTrue);
+      expect(repair.intents, hasLength(1));
+      final intent = repair.intents.single;
+      expect(intent.sourceWorldId, 'world_12');
+      expect(intent.sourceLessonId, 'decision_over_outcome');
+      expect(intent.sourceTaskId, row.task.taskId);
+      expect(intent.choiceId, wrong.id);
+      expect(intent.result, 'incorrect');
+      expect(intent.errorType, 'misread_mindset_discipline');
+      expect(intent.skillAtomId, 'mindset_process_discipline');
+      expect(intent.missedSignalId, 'process_over_outcome');
+      expect(intent.mappingType, 'repair');
+      expect(intent.targetWorldId, 'world_12');
+      expect(intent.targetLessonId, 'decision_over_outcome');
+      expect(
+        intent.targetTaskId,
+        price == 10
+            ? 'asm05_new_known_holes_turn_call_40'
+            : 'asm05_new_known_holes_turn_call_10',
+      );
+      expect(repair.sameSignalMapped, isTrue);
+      expect(repair.fallbackOnly, isFalse);
+      expect(repair.exactReplay, isFalse);
+      extensionRepair.add(repair);
+    }
+
+    final allRepair = rows.map(_repairRow).toList(growable: false);
+    final incorrect = <_IncorrectOptionRow>[
+      for (final row in rows)
+        for (final option in row.incorrectOptions)
+          _incorrectOptionRow(row, option),
+    ];
+    expect(incorrect, hasLength(464));
+    expect(allRepair.where((row) => row.sameSignalMapped), hasLength(278));
+    expect(allRepair.where((row) => row.fallbackOnly), hasLength(15));
+    expect(allRepair.where((row) => row.exactReplay), hasLength(15));
+    expect(
+      incorrect.where(
+        (row) => row.currentErrorType == 'misread_mindset_discipline',
+      ),
+      hasLength(28),
+    );
+    // Preserve actual route output for a bounded probe before the admission
+    // assertion. A raw 'exact' fallback is not an accepted repair disposition.
+    print(
+      const JsonEncoder.withIndent('  ').convert(<String, Object?>{
+        'cohort': 'ASM05_EXTENSION_2_WITH_AGGREGATE_293',
+        'sameSignalMapped': allRepair
+            .where((row) => row.sameSignalMapped)
+            .length,
+        'fallbackOnly': allRepair.where((row) => row.fallbackOnly).length,
+        'intentionalExactReplay': allRepair
+            .where((row) => row.exactReplay)
+            .length,
+        'unrecordedFallback': allRepair
+            .where((row) => row.mappingType == 'exact')
+            .length,
+        'newRows': <Map<String, Object?>>[
+          for (final repair in extensionRepair)
+            <String, Object?>{
+              ...repair.toInventoryPayload(),
+              'targetWorld': repair.intents.single.targetWorldId,
+              'targetLesson': repair.intents.single.targetLessonId,
+              'targetTask': repair.intents.single.targetTaskId,
+            },
+        ],
+      }),
+    );
+    expect(
+      allRepair.where((row) => row.mappingType == 'exact'),
+      isEmpty,
+      reason:
+          'Both new ASM05 rows require explicit repair admission; '
+          'do not accept two new unrecorded exact fallbacks.',
+    );
+    expect(
+      allRepair.where((row) => row.mappingType == 'unresolved_product_gap'),
+      isEmpty,
+    );
+    expect(allRepair.where((row) => !row.intentAvailable), isEmpty);
+    for (final repair in extensionRepair) {
+      expect(repair.sameSignalMapped || repair.exactReplay, isTrue);
+    }
   });
 }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'act0_asm05_authored_decision_truth_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w7_visible_ace_hidden_runtime_session_owner_v1.dart';
 
 enum Act0ShellTabV1 { home, learn, play, review, profile }
@@ -7073,6 +7074,26 @@ final _mindsetBridgeLessons = <Act0LessonCardV1>[
         rewardXp: 10,
         stepKind: Act0LessonStepKindV1.practice,
         taskFamily: Act0TaskFamilyV1.transfer,
+      ),
+      act0Asm05AuthoredDecisionTaskV1(
+        exercise: Act0Asm05AuthoredExerciseV1.goodCallLoses(),
+        lessonId: 'decision_over_outcome',
+        lessonTitle: 'Decision quality over outcome',
+        beatIndex: 4,
+        beatCount: 6,
+        rewardXp: 0,
+        returnTarget: 'learn',
+        nextLessonId: 'tilt_reset_protocol',
+      ),
+      act0Asm05AuthoredDecisionTaskV1(
+        exercise: Act0Asm05AuthoredExerciseV1.badCallWins(),
+        lessonId: 'decision_over_outcome',
+        lessonTitle: 'Decision quality over outcome',
+        beatIndex: 5,
+        beatCount: 6,
+        rewardXp: 0,
+        returnTarget: 'learn',
+        nextLessonId: 'tilt_reset_protocol',
       ),
       Act0LessonTaskV1(
         taskId: 'w12_decision_quality_recap',
@@ -14220,6 +14241,9 @@ final _w3TablePositionNoticeRunner = _world3LateOpenRunner.copyWith(
             final folded = seat.seatId == 'utg' || seat.seatId == 'hj';
             return _act0CopySeatStateV1(
               seat,
+              // The trail records 'UTG folds': UTG is a player in this hand,
+              // not the empty seat inherited from the 5-handed base scene.
+              isOccupied: seat.seatId == 'utg' ? true : null,
               isInHand: !folded,
               isFolded: folded,
               hasActed: folded,

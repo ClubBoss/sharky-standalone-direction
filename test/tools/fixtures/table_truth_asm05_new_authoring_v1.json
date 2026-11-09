@@ -1,0 +1,498 @@
+{
+  "schema": 1,
+  "admitted_source_reference": "5b0dd2e300053e52b323e54df6c759ddb5f04b48",
+  "capture_artifacts": {
+    "learning-contract.json": "1cf59348b0296053cf73b97201879b033479c83347a759b9be16bf87ea907d25",
+    "source-fingerprints.json": "6b848f76f99825b968eef9072b00e707a7ee5a9da278aaf3db3674c6cab1b786",
+    "choice-identity.json": "c36878c369d880bcefc4c5f53b0f3247725e1c2439956619e511a77ccd06fd8d",
+    "runtime-inputs.json": "886e8e2bf0a90dbb7a37b58858502782d940fba4f82cc414b877a9f4ebda9c9f",
+    "ledger.json": "382960a25750f83cb26d33a5b6d8e80cdcf3a77f98f420bedc2b3030d33c368f"
+  },
+  "d3_no_old_blind_fail_count": 0,
+  "historical_repair_control": {
+    "task_id": "what_poker_is_table_read_transfer",
+    "baseline_artifacts": {
+      "runtime-inputs.json": "bb39c880ed33c3351fb84ea17d664e00cfe5e3a56c7b053482de95d640ebbdad",
+      "source-fingerprints.json": "4b6de478b0d7cbef3dc2adea872ed5dc5e8cc7028603388a44c542ed7029accf"
+    },
+    "candidate_artifacts": {
+      "runtime-inputs.json": "886e8e2bf0a90dbb7a37b58858502782d940fba4f82cc414b877a9f4ebda9c9f",
+      "source-fingerprints.json": "6b848f76f99825b968eef9072b00e707a7ee5a9da278aaf3db3674c6cab1b786"
+    },
+    "baseline_fingerprint": "6b5d24adfb4049a8ae4e322c808b5a989a022efda0ea6776e20177385b8dc30f",
+    "candidate_fingerprint": "f73abdd14b378f859d4f987389bfb0c2eee284c6e75c29a1dcea4ecfd9155760",
+    "baseline_btn_cards": ["Qh", "Qs"],
+    "candidate_btn_cards": ["As", "Kd"],
+    "baseline_hj_active": true,
+    "candidate_hj_active": false,
+    "classification": "SOURCE_CONDITION_CHANGED",
+    "historical_record_policy": "retain original fingerprint, grade, assistance, XP and repair lineage",
+    "current_source_policy": "reject old fingerprint"
+  },
+  "tasks": {
+    "asm05_new_known_holes_turn_call_10": {
+      "learning_contract": {
+        "rewardXp": 0,
+        "family": "decision",
+        "options": [
+          {
+            "id": "fold",
+            "correct": false,
+            "quality": "wrong",
+            "seat": null,
+            "repairSeats": [],
+            "repairCards": [],
+            "repairLabels": []
+          },
+          {
+            "id": "call",
+            "correct": true,
+            "quality": "correct",
+            "seat": null,
+            "repairSeats": [],
+            "repairCards": [],
+            "repairLabels": []
+          }
+        ]
+      },
+      "source_fingerprint": {
+        "world_id": "world_12",
+        "lesson_id": "decision_over_outcome",
+        "fingerprint": "dc7f1fe213d526a36bf6ad0b5748a9244d96686124616d92a4db40e5d9222184"
+      },
+      "choice_identity": [
+        [
+          "fold",
+          "Fold",
+          false,
+          "wrong",
+          "Call"
+        ],
+        [
+          "call",
+          "Call",
+          true,
+          "correct",
+          "Call"
+        ]
+      ],
+      "runtime_input": {
+        "caption": "SB holds As Ad. If you call, both players must check the river. Raises are excluded. No ante or rake.",
+        "hint": "All seats started with 100 BB. Uniform deck; prior actions and this bet were prescribed independently of unknown cards. The other four players folded without adding chips; their cards and burns are unknown and give no information. The earlier 20 BB is already spent in either case.",
+        "question": "Call 10 BB or fold: which has higher incremental expected value now?",
+        "table": {
+          "scope": "playedHand",
+          "hero": [
+            "Kh",
+            "Qh"
+          ],
+          "board": [
+            "2h",
+            "7h",
+            "9s",
+            "3c"
+          ],
+          "street": "Turn",
+          "pot": "Pot 50 BB",
+          "call": "To call 10 BB",
+          "center": "Turn decision snapshot",
+          "actor": "bb",
+          "heroSeat": "bb",
+          "focusSeats": [],
+          "focusCards": [],
+          "trail": [
+            {
+              "kind": "action",
+              "label": "Preflop: SB posts 0.5 BB"
+            },
+            {
+              "kind": "action",
+              "label": "Preflop: BB posts 1 BB"
+            },
+            {
+              "kind": "action",
+              "label": "Preflop: UTG folds"
+            },
+            {
+              "kind": "action",
+              "label": "Preflop: HJ folds"
+            },
+            {
+              "kind": "action",
+              "label": "Preflop: CO folds"
+            },
+            {
+              "kind": "action",
+              "label": "Preflop: BTN folds"
+            },
+            {
+              "kind": "action",
+              "label": "Preflop: SB raises to 20 BB"
+            },
+            {
+              "kind": "action",
+              "label": "Preflop: BB calls 20 BB"
+            },
+            {
+              "kind": "action",
+              "label": "Flop: SB checks"
+            },
+            {
+              "kind": "action",
+              "label": "Flop: BB checks"
+            },
+            {
+              "kind": "action",
+              "label": "Turn: SB bets 10 BB"
+            }
+          ],
+          "seats": [
+            {
+              "id": "utg",
+              "hero": false,
+              "active": false,
+              "inHand": false,
+              "folded": true,
+              "occupied": true,
+              "acted": true,
+              "mode": "none",
+              "cards": [],
+              "blind": null,
+              "currentBet": "0 BB",
+              "bet": null
+            },
+            {
+              "id": "hj",
+              "hero": false,
+              "active": false,
+              "inHand": false,
+              "folded": true,
+              "occupied": true,
+              "acted": true,
+              "mode": "none",
+              "cards": [],
+              "blind": null,
+              "currentBet": "0 BB",
+              "bet": null
+            },
+            {
+              "id": "co",
+              "hero": false,
+              "active": false,
+              "inHand": false,
+              "folded": true,
+              "occupied": true,
+              "acted": true,
+              "mode": "none",
+              "cards": [],
+              "blind": null,
+              "currentBet": "0 BB",
+              "bet": null
+            },
+            {
+              "id": "btn",
+              "hero": false,
+              "active": false,
+              "inHand": false,
+              "folded": true,
+              "occupied": true,
+              "acted": true,
+              "mode": "none",
+              "cards": [],
+              "blind": null,
+              "currentBet": "0 BB",
+              "bet": null
+            },
+            {
+              "id": "sb",
+              "hero": false,
+              "active": false,
+              "inHand": true,
+              "folded": false,
+              "occupied": true,
+              "acted": true,
+              "mode": "faceUp",
+              "cards": [
+                "As",
+                "Ad"
+              ],
+              "blind": null,
+              "currentBet": "10 BB",
+              "bet": {
+                "kind": "bet",
+                "label": "SB",
+                "amount": "10 BB"
+              }
+            },
+            {
+              "id": "bb",
+              "hero": true,
+              "active": true,
+              "inHand": true,
+              "folded": false,
+              "occupied": true,
+              "acted": false,
+              "mode": "faceUp",
+              "cards": [
+                "Kh",
+                "Qh"
+              ],
+              "blind": null,
+              "currentBet": "0 BB",
+              "bet": null
+            }
+          ]
+        },
+        "teaching": [],
+        "options": [
+          {
+            "id": "fold",
+            "label": "Fold",
+            "amount": "",
+            "reason": "Fold: SB gets 10 BB back and takes 40 BB. No river is played. Stacks You 80, SB 120. Call EV 2.27 BB; Fold 0. The earlier 20 BB is sunk.",
+            "preferred": "Call"
+          },
+          {
+            "id": "call",
+            "label": "Call",
+            "amount": "10 BB",
+            "reason": "River Td: SB receives 60 BB. Stacks You 70, SB 130. Call EV 2.27 BB; Fold 0. The earlier 20 BB is sunk.",
+            "preferred": "Call"
+          }
+        ]
+      }
+    },
+    "asm05_new_known_holes_turn_call_40": {
+      "learning_contract": {
+        "rewardXp": 0,
+        "family": "decision",
+        "options": [
+          {
+            "id": "fold",
+            "correct": true,
+            "quality": "correct",
+            "seat": null,
+            "repairSeats": [],
+            "repairCards": [],
+            "repairLabels": []
+          },
+          {
+            "id": "call",
+            "correct": false,
+            "quality": "wrong",
+            "seat": null,
+            "repairSeats": [],
+            "repairCards": [],
+            "repairLabels": []
+          }
+        ]
+      },
+      "source_fingerprint": {
+        "world_id": "world_12",
+        "lesson_id": "decision_over_outcome",
+        "fingerprint": "ad6d1a9044df2efcc2f806633b055052c22449605ef9347b38823c82e42fc9c7"
+      },
+      "choice_identity": [
+        [
+          "fold",
+          "Fold",
+          true,
+          "correct",
+          "Fold"
+        ],
+        [
+          "call",
+          "Call",
+          false,
+          "wrong",
+          "Fold"
+        ]
+      ],
+      "runtime_input": {
+        "caption": "SB holds As Ad. If you call, both players must check the river. Raises are excluded. No ante or rake.",
+        "hint": "All seats started with 100 BB. Uniform deck; prior actions and this bet were prescribed independently of unknown cards. The other four players folded without adding chips; their cards and burns are unknown and give no information. The earlier 20 BB is already spent in either case.",
+        "question": "Call 40 BB or fold: which has higher incremental expected value now?",
+        "table": {
+          "scope": "playedHand",
+          "hero": [
+            "Kh",
+            "Qh"
+          ],
+          "board": [
+            "2h",
+            "7h",
+            "9s",
+            "3c"
+          ],
+          "street": "Turn",
+          "pot": "Pot 80 BB",
+          "call": "To call 40 BB",
+          "center": "Turn decision snapshot",
+          "actor": "bb",
+          "heroSeat": "bb",
+          "focusSeats": [],
+          "focusCards": [],
+          "trail": [
+            {
+              "kind": "action",
+              "label": "Preflop: SB posts 0.5 BB"
+            },
+            {
+              "kind": "action",
+              "label": "Preflop: BB posts 1 BB"
+            },
+            {
+              "kind": "action",
+              "label": "Preflop: UTG folds"
+            },
+            {
+              "kind": "action",
+              "label": "Preflop: HJ folds"
+            },
+            {
+              "kind": "action",
+              "label": "Preflop: CO folds"
+            },
+            {
+              "kind": "action",
+              "label": "Preflop: BTN folds"
+            },
+            {
+              "kind": "action",
+              "label": "Preflop: SB raises to 20 BB"
+            },
+            {
+              "kind": "action",
+              "label": "Preflop: BB calls 20 BB"
+            },
+            {
+              "kind": "action",
+              "label": "Flop: SB checks"
+            },
+            {
+              "kind": "action",
+              "label": "Flop: BB checks"
+            },
+            {
+              "kind": "action",
+              "label": "Turn: SB bets 40 BB"
+            }
+          ],
+          "seats": [
+            {
+              "id": "utg",
+              "hero": false,
+              "active": false,
+              "inHand": false,
+              "folded": true,
+              "occupied": true,
+              "acted": true,
+              "mode": "none",
+              "cards": [],
+              "blind": null,
+              "currentBet": "0 BB",
+              "bet": null
+            },
+            {
+              "id": "hj",
+              "hero": false,
+              "active": false,
+              "inHand": false,
+              "folded": true,
+              "occupied": true,
+              "acted": true,
+              "mode": "none",
+              "cards": [],
+              "blind": null,
+              "currentBet": "0 BB",
+              "bet": null
+            },
+            {
+              "id": "co",
+              "hero": false,
+              "active": false,
+              "inHand": false,
+              "folded": true,
+              "occupied": true,
+              "acted": true,
+              "mode": "none",
+              "cards": [],
+              "blind": null,
+              "currentBet": "0 BB",
+              "bet": null
+            },
+            {
+              "id": "btn",
+              "hero": false,
+              "active": false,
+              "inHand": false,
+              "folded": true,
+              "occupied": true,
+              "acted": true,
+              "mode": "none",
+              "cards": [],
+              "blind": null,
+              "currentBet": "0 BB",
+              "bet": null
+            },
+            {
+              "id": "sb",
+              "hero": false,
+              "active": false,
+              "inHand": true,
+              "folded": false,
+              "occupied": true,
+              "acted": true,
+              "mode": "faceUp",
+              "cards": [
+                "As",
+                "Ad"
+              ],
+              "blind": null,
+              "currentBet": "40 BB",
+              "bet": {
+                "kind": "bet",
+                "label": "SB",
+                "amount": "40 BB"
+              }
+            },
+            {
+              "id": "bb",
+              "hero": true,
+              "active": true,
+              "inHand": true,
+              "folded": false,
+              "occupied": true,
+              "acted": false,
+              "mode": "faceUp",
+              "cards": [
+                "Kh",
+                "Qh"
+              ],
+              "blind": null,
+              "currentBet": "0 BB",
+              "bet": null
+            }
+          ]
+        },
+        "teaching": [],
+        "options": [
+          {
+            "id": "fold",
+            "label": "Fold",
+            "amount": "",
+            "reason": "Fold: SB gets 40 BB back and takes 40 BB. No river is played. Stacks You 80, SB 120. Call EV -15.45 BB; Fold 0. The earlier 20 BB is sunk.",
+            "preferred": "Fold"
+          },
+          {
+            "id": "call",
+            "label": "Call",
+            "amount": "40 BB",
+            "reason": "River 5h: You receive 120 BB. Stacks You 160, SB 40. Call EV -15.45 BB; Fold 0. The earlier 20 BB is sunk.",
+            "preferred": "Fold"
+          }
+        ]
+      }
+    }
+  }
+}

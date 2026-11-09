@@ -263,6 +263,180 @@ bool pkr06ApplicableV1(Act0TableStateV1 t) =>
     ) ||
     t.potLabel.toLowerCase().contains('side');
 
+/// Source scope, independent of whether a stack or action happened to parse.
+/// Historical missing caps are not executable-wager blockers.
+enum Pkr06CapApplicabilityV1 { playedHand, historical, unknown }
+
+class Pkr06CapComparisonV1 {
+  const Pkr06CapComparisonV1(this.sourceLabel, this.verdict, this.reason);
+  final String sourceLabel;
+  final PotTruthVerdictV1 verdict;
+  final String reason;
+}
+
+/// Evidence for individual preflop amount <= behind + preflop commitment.
+/// A later snapshot or unsupported time/budget semantics stays UNPROVED.
+/// `proved` proves ONLY those comparisons, not a legal hand, cumulative chip
+/// accounting, a proposed next call, eligibility, actor order, pot or payouts.
+/// In particular, this object must never be used as production admission by
+/// itself. A missing/unsupported comparison is UNPROVED, not an empty PASS.
+class Pkr06CapEvidenceV1 {
+  const Pkr06CapEvidenceV1._(
+    this.applicability,
+    this.verdict,
+    this.comparisons,
+    this.findings,
+  );
+  final Pkr06CapApplicabilityV1 applicability;
+  final PotTruthVerdictV1 verdict;
+  final List<Pkr06CapComparisonV1> comparisons;
+  // Raw legacy diagnostics; budget-dependent entries may be unproved here.
+  final List<PotTruthFindingV1> findings;
+}
+
+// A preflop snapshot has no earlier street's chips to omit from the budget.
+// Only a fully recognized preflop-only trail can establish that time basis.
+// Returns/awards/street transitions/unsupported prose invalidate it. No starting
+// stack is invented: remaining + this preflop commitment is the supplied budget.
+bool _pkr06HasPreflopCapBudgetV1(Act0TableStateV1 t) {
+  if (t.scope == Act0TableScopeV1.unclassified ||
+      t.streetLabel.trim().toLowerCase() != 'preflop' ||
+      t.boardCards.isNotEmpty ||
+      t.actionTrail.isEmpty)
+    return false;
+  final action = RegExp(
+    r'^(?:Preflop:\s*)?(?:UTG|HJ|CO|BTN|SB|BB|Hero)\s+'
+    r'(?:folds|(?:blind|posts|bets|calls,?|raises to|shoves(?: to)?|all-in|contributes)'
+    r'\s+\d+(?:\.\d+)?\s+BB(?: total| \(limps\))?(?:, then folds)?)$',
+    caseSensitive: false,
+  );
+  final blindSummary = RegExp(
+    r'^Blinds:\s*\d+(?:\.\d+)?\s+BB$',
+    caseSensitive: false,
+  );
+  return t.actionTrail.every(
+    (item) =>
+        action.hasMatch(item.label.trim()) ||
+        blindSummary.hasMatch(item.label.trim()),
+  );
+}
+
+Pkr06CapEvidenceV1 pkr06CapEvidenceV1(String taskId, Act0TableStateV1 t) {
+  final applicability = switch (t.scope) {
+    Act0TableScopeV1.playedHand => Pkr06CapApplicabilityV1.playedHand,
+    Act0TableScopeV1.orientation ||
+    Act0TableScopeV1.explanation => Pkr06CapApplicabilityV1.historical,
+    Act0TableScopeV1.unclassified => Pkr06CapApplicabilityV1.unknown,
+  };
+  final findings = pkr06FindingsV1(taskId, t);
+  final hasBudget = _pkr06HasPreflopCapBudgetV1(t);
+  final rows = <Pkr06CapComparisonV1>[];
+  var capComparisons = 0;
+  void record(String label, PotTruthVerdictV1 verdict, String reason) =>
+      rows.add(Pkr06CapComparisonV1(label, verdict, reason));
+  void unknown(String label, String reason) =>
+      record(label, PotTruthVerdictV1.unproved, reason);
+
+  // Do not coerce absent commitments or stacks to zero. Even a folded blind
+  // needs evidence to prove its historical cap; the applicability above keeps
+  // this separate from an executable wager. Preserve notes as evidence, since
+  // authored explanation contributions are notes, not playable actions.
+  for (final item in t.actionTrail) {
+    final a = potTruthParseActionV1(t, item.label);
+    if (a == null) {
+      unknown(item.label, 'unsupported_trail_label');
+      continue;
+    }
+    final matches = t.seats
+        .where((s) => s.seatLabel.trim().toUpperCase() == a.actor)
+        .toList();
+    if (matches.length != 1) {
+      unknown(a.raw, 'actor_not_unique_in_source');
+      continue;
+    }
+    if (!potTruthContributionVerbsV1.contains(a.chipVerb)) {
+      // A fold has no cap obligation. This does not prove the fold legal.
+      continue;
+    }
+    capComparisons++;
+    final seat = matches.single;
+    final stack = potTruthBbV1(seat.stackLabel);
+    final committed = potTruthBbV1(seat.currentBetLabel);
+    if (!hasBudget) {
+      unknown(a.raw, 'source_time_budget_unproved');
+    } else if (a.amount == null || !a.amount!.isFinite) {
+      unknown(a.raw, 'contribution_amount_missing');
+    } else if (stack == null || !stack.isFinite) {
+      unknown(a.raw, 'stack_missing:${seat.seatId}');
+    } else if (committed == null || !committed.isFinite) {
+      unknown(a.raw, 'commitment_missing:${seat.seatId}');
+    } else if (a.amount! > stack + committed + 1e-9) {
+      record(
+        a.raw,
+        PotTruthVerdictV1.contradiction,
+        'amount_exceeds_preflop_budget',
+      );
+    } else {
+      record(
+        a.raw,
+        PotTruthVerdictV1.proved,
+        'source_amount_within_preflop_budget',
+      );
+    }
+  }
+  // A displayed contribution without an attributed amount remains incomplete.
+  // This also retains historical dead-blind unknowns without inventing stacks.
+  for (final seat in t.seats) {
+    final committed = potTruthBbV1(seat.currentBetLabel);
+    if (committed == null || committed <= 0) continue;
+    final label = 'seats.${seat.seatId}.currentBetLabel';
+    if (potTruthBbV1(seat.stackLabel) == null) {
+      unknown(label, 'stack_missing:${seat.seatId}');
+    } else if (!t.actionTrail.any((item) {
+      final a = potTruthParseActionV1(t, item.label);
+      return a != null &&
+          a.actor == seat.seatLabel.trim().toUpperCase() &&
+          potTruthContributionVerbsV1.contains(a.chipVerb) &&
+          a.amount != null;
+    })) {
+      unknown(label, 'contribution_without_attributed_amount');
+    }
+  }
+  if (capComparisons == 0) unknown('actionTrail', 'no_cap_comparisons');
+  if (applicability == Pkr06CapApplicabilityV1.unknown) {
+    unknown('scope', 'scope_unclassified');
+  }
+  // The legacy diagnostic API is unchanged. Its snapshot-cap diagnostics
+  // cannot become decisive historical contradictions without a time basis.
+  // Keep them visible in findings for compatibility, not as certified proof.
+  const budgetDependent = {
+    'bet_exceeds_stack',
+    'all_in_with_chips_behind',
+    'zero_stack_without_all_in',
+  };
+  if (!hasBudget) unknown('budget', 'source_time_budget_unproved');
+  // Only the new per-row check can prove an over-cap amount: the legacy
+  // helper coerces an absent commitment to zero, even on a preflop snapshot.
+  final decisiveFindings = findings.where(
+    (f) =>
+        f.rule != 'bet_exceeds_stack' &&
+        (hasBudget || !budgetDependent.contains(f.rule)),
+  );
+  final verdict =
+      decisiveFindings.isNotEmpty ||
+          rows.any((r) => r.verdict == PotTruthVerdictV1.contradiction)
+      ? PotTruthVerdictV1.contradiction
+      : rows.any((r) => r.verdict == PotTruthVerdictV1.unproved)
+      ? PotTruthVerdictV1.unproved
+      : PotTruthVerdictV1.proved;
+  return Pkr06CapEvidenceV1._(
+    applicability,
+    verdict,
+    List.unmodifiable(rows),
+    List.unmodifiable(findings),
+  );
+}
+
 String? potTruthSolverCardV1(Act0CardStateV1 c) {
   var r = c.rank.trim().toUpperCase();
   if (r == '10') r = 'T';

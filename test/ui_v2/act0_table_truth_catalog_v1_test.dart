@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
@@ -46,16 +47,89 @@ void main() {
     File(
       '${out.path}/learning-contract.json',
     ).writeAsStringSync(jsonEncode(contract));
-    expect(
-      contract,
+    const admittedAdditions = {
+      'asm05_new_known_holes_turn_call_10',
+      'asm05_new_known_holes_turn_call_40',
+    };
+    final baselineContract = Map<String, Object?>.from(
       jsonDecode(
-        File(
-          'test/ui_v2/fixtures/table_truth_learning_contract_v1.json',
-        ).readAsStringSync(),
-      ),
+            File(
+              'test/ui_v2/fixtures/table_truth_learning_contract_v1.json',
+            ).readAsStringSync(),
+          )
+          as Map,
+    );
+    final presentAdditions = contract.keys.toSet().intersection(
+      admittedAdditions,
+    );
+    final historicalContract = Map<String, Object?>.from(contract)
+      ..removeWhere((id, _) => admittedAdditions.contains(id));
+    expect(
+      historicalContract,
+      baselineContract,
       reason:
           'Baseline source IDs, XP, family, correctness and repair identities must remain unchanged',
     );
+    const expectedAsmContracts = {
+      'asm05_new_known_holes_turn_call_10': {
+        'rewardXp': 0,
+        'family': 'decision',
+        'options': [
+          {
+            'id': 'fold',
+            'correct': false,
+            'quality': 'wrong',
+            'seat': null,
+            'repairSeats': [],
+            'repairCards': [],
+            'repairLabels': [],
+          },
+          {
+            'id': 'call',
+            'correct': true,
+            'quality': 'correct',
+            'seat': null,
+            'repairSeats': [],
+            'repairCards': [],
+            'repairLabels': [],
+          },
+        ],
+      },
+      'asm05_new_known_holes_turn_call_40': {
+        'rewardXp': 0,
+        'family': 'decision',
+        'options': [
+          {
+            'id': 'fold',
+            'correct': true,
+            'quality': 'correct',
+            'seat': null,
+            'repairSeats': [],
+            'repairCards': [],
+            'repairLabels': [],
+          },
+          {
+            'id': 'call',
+            'correct': false,
+            'quality': 'wrong',
+            'seat': null,
+            'repairSeats': [],
+            'repairCards': [],
+            'repairLabels': [],
+          },
+        ],
+      },
+    };
+    if (presentAdditions.isNotEmpty) {
+      expect(
+        presentAdditions,
+        admittedAdditions,
+        reason: 'The candidate must contain both exact ASM05 additions',
+      );
+      for (final id in admittedAdditions) {
+        expect(contract[id], expectedAsmContracts[id], reason: id);
+      }
+    }
     final fingerprints = <String, Object?>{};
     final choiceIdentity = <String, Object?>{};
     for (final world in Act0ShellStateV1.sample.worlds) {
@@ -123,6 +197,85 @@ void main() {
     File(
       '${out.path}/runtime-inputs.json',
     ).writeAsStringSync(jsonEncode(snapshot));
+    final isCandidate = presentAdditions.isNotEmpty;
+    final sourceReference = isCandidate
+        ? const {
+            'commit': '5b0dd2e300053e52b323e54df6c759ddb5f04b48',
+            'state_sha256':
+                'd9a78d57817c8eaef7dc1a376f53ade7774229be4a34063d5dc0cf152bb67221',
+            'factory_sha256':
+                'c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b',
+          }
+        : const {
+            'commit': 'fa079b6c5880814e231981a7bd5ed97df192d215',
+            'state_sha256':
+                'e9f87d4bf73b75d77bd7b04ddf111cbf6b64e796259ffe42adadea9bbb3270e2',
+            'factory_sha256': null,
+          };
+    final factory = File(
+      'lib/ui_v2/act0_shell/act0_asm05_authored_decision_truth_v1.dart',
+    );
+    final producerReceipt = {
+      'head': (Process.runSync('git', ['rev-parse', 'HEAD']).stdout as String)
+          .trim(),
+      'state_sha256': sha256
+          .convert(
+            File(
+              'lib/ui_v2/act0_shell/act0_shell_state_v1.dart',
+            ).readAsBytesSync(),
+          )
+          .toString(),
+      'factory_sha256': isCandidate && factory.existsSync()
+          ? sha256.convert(factory.readAsBytesSync()).toString()
+          : null,
+    };
+    final artifactRecords = {
+      for (final id in admittedAdditions)
+        if (presentAdditions.contains(id))
+          id: [
+            contract[id],
+            fingerprints[id],
+            choiceIdentity[id],
+            snapshot[id],
+          ],
+    };
+    File('${out.path}/typed-cohort-v2.json').writeAsStringSync(
+      jsonEncode({
+        'schema': 2,
+        'role': isCandidate ? 'candidate' : 'historical_baseline',
+        'admitted_source_reference': sourceReference,
+        'producer_receipt': producerReceipt,
+        'historical_ids': baselineContract.keys.toList()..sort(),
+        'new_authoring': [
+          for (final world in Act0ShellStateV1.sample.worlds)
+            for (final lesson in world.lessons)
+              for (final task in lesson.taskList)
+                if (presentAdditions.contains(task.taskId))
+                  {
+                    'task_id': task.taskId,
+                    'world_id': world.worldId,
+                    'lesson_id': lesson.lessonId,
+                    'provenance': 'NEW_AUTHORING_ASM05',
+                    'artifact_sha256': sha256
+                        .convert(
+                          utf8.encode(jsonEncode(artifactRecords[task.taskId])),
+                        )
+                        .toString(),
+                    'source_binding_sha256': sha256
+                        .convert(
+                          utf8.encode(
+                            jsonEncode([
+                              sourceReference,
+                              task.taskId,
+                              artifactRecords[task.taskId],
+                            ]),
+                          ),
+                        )
+                        .toString(),
+                  },
+        ],
+      }),
+    );
     final failures = rows.where((r) => r.result == 'FAIL').toList();
     final byInvariant = <String, Set<String>>{};
     for (final r in failures) {

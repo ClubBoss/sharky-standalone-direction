@@ -8,6 +8,11 @@ Act0LessonTaskV1 _task(String id) => [
     for (final lesson in world.lessons) ...lesson.taskList,
 ].singleWhere((task) => task.taskId == id);
 
+const _asm05NewTaskIds = <String>{
+  'asm05_new_known_holes_turn_call_10',
+  'asm05_new_known_holes_turn_call_40',
+};
+
 void main() {
   test('orientation cannot become a played replay from an active seat', () {
     // Real accepted-main negative: these posted blinds were consumerSafe even
@@ -39,7 +44,7 @@ void main() {
     },
   );
 
-  test('367 authored contexts keep the exact source-owned scope partition', () {
+  test('369 authored contexts preserve legacy scopes and two ASM05 snapshots', () {
     const orientationIds = <String>{
       'what_poker_is_theory',
       'what_poker_is_find_hero',
@@ -138,12 +143,47 @@ void main() {
       for (final w in Act0ShellStateV1.sample.worlds)
         for (final l in w.lessons) ...l.taskList,
     ];
-    expect(tasks, hasLength(367));
+    expect(tasks, hasLength(369));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(369));
+    final newTasks = tasks
+        .where((task) => _asm05NewTaskIds.contains(task.taskId))
+        .toList(growable: false);
+    expect(newTasks.map((task) => task.taskId), _asm05NewTaskIds);
+    expect(
+      tasks.where((task) => !_asm05NewTaskIds.contains(task.taskId)),
+      hasLength(367),
+    );
+    for (final task in newTasks) {
+      expect(task.phase, Act0LessonPhaseV1.drill);
+      expect(task.resolvedTaskFamily, Act0TaskFamilyV1.decision);
+      expect(
+        task.tablePresentation,
+        Act0TaskTablePresentationV1.stablePractice,
+      );
+      expect(task.runner.lessonId, 'decision_over_outcome');
+      final table = task.runner.table;
+      expect(table.scope, Act0TableScopeV1.playedHand);
+      expect(table.streetLabel, 'Turn');
+      expect(table.activeSeatId, 'bb');
+      expect(table.heroSeatId, 'bb');
+      expect(table.actionTrail.first.label, 'Preflop: SB posts 0.5 BB');
+      // The current replay and choreography parsers do not admit this
+      // preflop-prefixed authored ledger. Test their real disposition rather
+      // than excluding these played-hand contexts from consumer coverage.
+      final replay = act0StreetReplayFromTableV1(table);
+      expect(replay, isNotNull, reason: task.taskId);
+      expect(replay!.currentStreet, Act0StreetReplayStreetV1.turn);
+      expect(replay.completeness, Act0StreetReplayCompletenessV1.insufficient);
+      expect(replay.steps, isEmpty);
+      expect(replay.isConsumerSafe, isFalse);
+      expect(act0TableChoreographyPlanForTableV1(table), isNull);
+    }
     expect(orientationIds, hasLength(46));
     expect(explanationIds, hasLength(7));
     expect(conceptualSignals, hasLength(3));
     expect(explanationIds, containsAll(conceptualSignals.keys));
     var played = 0;
+    var legacyPlayed = 0;
     final historyConsumers = <String>{};
     for (final task in tasks) {
       final table = task.runner.table;
@@ -156,6 +196,7 @@ void main() {
       expect(table.copyWith(centerLabel: 'A different cue').scope, expected);
       if (expected == Act0TableScopeV1.playedHand) {
         played++;
+        if (!_asm05NewTaskIds.contains(task.taskId)) legacyPlayed++;
         final replay = act0StreetReplayFromTableV1(table);
         if (replay?.isConsumerSafe == true) historyConsumers.add(task.taskId);
         if (task.taskId == 'w4_protection_check') {
@@ -255,7 +296,8 @@ void main() {
       w4NumericHistoryIds.where((id) => id != 'w4_protection_check'),
       hasLength(23),
     );
-    expect(played, 314); // Authored hand contexts, NOT 314 certified histories.
+    expect(legacyPlayed, 314);
+    expect(played, 316); // Authored contexts, not certified replay histories.
     expect(
       historyConsumers,
       <String>{
