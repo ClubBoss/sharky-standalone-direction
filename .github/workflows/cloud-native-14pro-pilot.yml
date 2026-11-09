@@ -1,0 +1,214 @@
+name: Cloud native iPhone 14 Pro pilot
+
+on:
+  push:
+    branches: [qa/cloud-native-14pro-pilot-20261110]
+    paths: [.github/workflows/cloud-native-14pro-pilot.yml]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloud-native-14pro-pilot-20261110
+  cancel-in-progress: false
+
+jobs:
+  native-smoke:
+    runs-on: macos-26
+    timeout-minutes: 65
+    env:
+      PRODUCT_SHA: 3784d421beb5ae7cb8cfaacd10b1083855148850
+      PRODUCT_TREE: eb088750944257db10fc3bd851ebc49000cf255a
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+      COCOAPODS_DISABLE_STATS: 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: pilot
+          persist-credentials: false
+          sparse-checkout: .github/workflows/cloud-native-14pro-pilot.yml
+          sparse-checkout-cone-mode: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 3784d421beb5ae7cb8cfaacd10b1083855148850
+          path: product
+          persist-credentials: false
+      - name: Verify source and exact simulator availability
+        run: |
+          set -euo pipefail
+          mkdir -p evidence
+          test "$(git -C product rev-parse HEAD)" = "$PRODUCT_SHA"
+          test "$(git -C product rev-parse HEAD^{tree})" = "$PRODUCT_TREE"
+          git -C product rev-parse HEAD HEAD^{tree} > evidence/product-identity.txt
+          test "$(git -C pilot rev-parse HEAD)" = "$GITHUB_SHA"
+          printf '%s\n' "$GITHUB_SHA" > evidence/workflow-sha.txt
+          sw_vers > evidence/macos.txt
+          xcodebuild -version > evidence/xcode.txt
+          xcrun simctl list -j > evidence/simulator-inventory.json
+          ruby -e 'require "xcodeproj"; puts Xcodeproj::VERSION' > evidence/xcodeproj-version.txt
+          python3 - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          inv = json.loads(Path('evidence/simulator-inventory.json').read_text())
+          types = [d for d in inv['devicetypes'] if d['name'] == 'iPhone 14 Pro']
+          runtimes = [r for r in inv['runtimes'] if r.get('isAvailable') and r.get('version') == '26.2' and r['identifier'].startswith('com.apple.CoreSimulator.SimRuntime.iOS-')]
+          assert len(types) == 1, 'EXACT_IPHONE14PRO_DEVICE_TYPE_UNAVAILABLE'
+          assert len(runtimes) == 1, 'EXACT_IOS26_2_RUNTIME_UNAVAILABLE'
+          udid = subprocess.check_output(['xcrun', 'simctl', 'create', 'Sharky-Cloud-14Pro-Pilot', types[0]['identifier'], runtimes[0]['identifier']], text=True).strip()
+          Path('evidence/sim-id.txt').write_text(udid)
+          Path('evidence/device.json').write_text(json.dumps({'udid': udid, 'model': types[0]['name'], 'device_type': types[0]['identifier'], 'runtime': runtimes[0], 'expected_logical_points': [393, 852], 'language': 'en', 'fallback_allowed': False}, indent=2))
+          PY
+          SIM_ID="$(cat evidence/sim-id.txt)"
+          xcrun simctl boot "$SIM_ID"
+          xcrun simctl bootstatus "$SIM_ID" -b
+          xcrun simctl list devices -j > evidence/booted-devices.json
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: false
+      - name: Build ordinary current-main simulator app
+        working-directory: product
+        run: |
+          set -euo pipefail
+          flutter --version --machine > ../evidence/flutter.json
+          flutter pub get > ../evidence/pub-get.log 2>&1
+          flutter build ios --simulator --debug > ../evidence/build.log 2>&1
+          APP=build/ios/iphonesimulator/Runner.app
+          test -d "$APP"
+          test "$(/usr/libexec/PlistBuddy -c 'Print CFBundleIdentifier' "$APP/Info.plist")" = com.example.pokerAnalyzer
+          cp pubspec.lock ../evidence/pubspec.lock
+          cp ios/Podfile.lock ../evidence/Podfile.lock
+          git diff -- pubspec.lock ios/Podfile.lock > ../evidence/dependency-lock-diff.patch
+          shasum -a 256 "$APP/Frameworks/App.framework/flutter_assets/kernel_blob.bin" > ../evidence/kernel.sha256
+          find "$APP" -type f -print0 | xargs -0 shasum -a 256 > ../evidence/app-files.sha256
+          printf '%s\n' 'ordinary Flutter debug simulator build; all product feature flags at source defaults; no audit/telemetry flag; no injected app state' > ../evidence/build-mode.txt
+          xcrun simctl install "$(cat ../evidence/sim-id.txt)" "$APP"
+      - name: Generate isolated native smoke harness
+        run: |
+          set -euo pipefail
+          mkdir -p harness
+          cat > harness/CloudNativePilot.swift <<'SWIFT'
+          import XCTest
+          import Foundation
+          import Darwin
+
+          final class CloudNativePilot: XCTestCase {
+              private let app = XCUIApplication(bundleIdentifier: "com.example.pokerAnalyzer")
+              override func setUpWithError() throws { continueAfterFailure = false }
+              private func checkpoint(_ name: String) {
+                  print("PILOT_NATIVE_TREE " + name + "\n" + app.debugDescription)
+                  print("PILOT_CAPTURE " + name)
+                  fflush(stdout)
+                  RunLoop.current.run(until: Date().addingTimeInterval(20))
+              }
+              private func labelExists(_ label: String, timeout: TimeInterval = 30) -> Bool {
+                  return app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", label)).firstMatch.waitForExistence(timeout: timeout)
+              }
+              func testOrdinaryEnglishLaunchPlacementAndRelaunch() {
+                  app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+                  app.launch()
+                  XCTAssertTrue(app.wait(for: .runningForeground, timeout: 30))
+                  XCTAssertTrue(labelExists("Find my start"), "EXPECTED_ENGLISH_FIRST_USE_INTRO")
+                  XCTAssertEqual(app.frame.width, 393, accuracy: 0.5, "EXACT_14PRO_LOGICAL_WIDTH")
+                  XCTAssertEqual(app.frame.height, 852, accuracy: 0.5, "EXACT_14PRO_LOGICAL_HEIGHT")
+                  print("PILOT_LOGICAL_GEOMETRY \(app.frame.width)x\(app.frame.height)")
+                  checkpoint("01_english_intro")
+                  let start = app.buttons.matching(identifier: "Find my start").firstMatch
+                  XCTAssertTrue(start.isEnabled && start.isHittable)
+                  start.tap()
+                  XCTAssertTrue(labelExists("Where are you starting from?"), "REAL_PLACEMENT_TRANSITION")
+                  checkpoint("02_placement")
+                  app.terminate()
+                  XCTAssertTrue(app.wait(for: .notRunning, timeout: 15))
+                  app.launch()
+                  XCTAssertTrue(app.wait(for: .runningForeground, timeout: 30))
+                  let restored = labelExists("Find my start", timeout: 20) || labelExists("Where are you starting from?", timeout: 20)
+                  XCTAssertTrue(restored, "ENGLISH_APP_VISIBLE_AFTER_ORDINARY_RELAUNCH")
+                  checkpoint("03_relaunched")
+                  print("PILOT_NATIVE_SMOKE_PASS")
+                  fflush(stdout)
+              }
+          }
+          SWIFT
+          ruby - <<'RUBY'
+          require 'xcodeproj'
+          project = Xcodeproj::Project.new('harness/CloudNativePilot.xcodeproj')
+          target = project.new_target(:ui_test_bundle, 'CloudNativePilot', :ios, '15.0')
+          target.build_configurations.each do |config|
+            config.build_settings.merge!({'SWIFT_VERSION' => '5.0', 'PRODUCT_BUNDLE_IDENTIFIER' => 'org.sharky.cloudnativepilot.uitests', 'IPHONEOS_DEPLOYMENT_TARGET' => '15.0', 'TARGETED_DEVICE_FAMILY' => '1', 'GENERATE_INFOPLIST_FILE' => 'YES', 'CODE_SIGNING_ALLOWED' => 'NO', 'ENABLE_TESTABILITY' => 'YES'})
+          end
+          file = project.main_group.new_file(File.expand_path('harness/CloudNativePilot.swift'))
+          target.source_build_phase.add_file_reference(file)
+          project.save
+          scheme = Xcodeproj::XCScheme.new
+          scheme.add_build_target(target)
+          scheme.add_test_target(target)
+          scheme.save_as('harness/CloudNativePilot.xcodeproj', 'CloudNativePilot', true)
+          RUBY
+          cat > harness/capture.py <<'PY'
+          import pathlib, re, subprocess, time
+          log = pathlib.Path('evidence/native.log')
+          root = pathlib.Path('evidence/screenshots'); root.mkdir()
+          udid = pathlib.Path('evidence/sim-id.txt').read_text().strip()
+          seen = set()
+          deadline = time.monotonic() + 1200
+          while time.monotonic() < deadline:
+              text = log.read_text(errors='replace') if log.exists() else ''
+              for name in re.findall(r'PILOT_CAPTURE (0[123]_[a-z_]+)', text):
+                  if name not in seen:
+                      subprocess.run(['xcrun', 'simctl', 'io', udid, 'screenshot', str(root / (name + '.png'))], check=True, timeout=30)
+                      seen.add(name)
+              if len(seen) == 3:
+                  break
+              time.sleep(0.2)
+          assert len(seen) == 3, 'THREE_NATIVE_CHECKPOINTS_NOT_CAPTURED'
+          PY
+      - name: Run real native UI smoke with independent screenshot collector
+        timeout-minutes: 20
+        run: |
+          set -euo pipefail
+          SIM_ID="$(cat evidence/sim-id.txt)"
+          open -a Simulator --args -CurrentDeviceUDID "$SIM_ID"
+          python3 -u harness/capture.py > evidence/capture.log 2>&1 &
+          CAPTURE_PID=$!
+          trap 'kill "$CAPTURE_PID" 2>/dev/null || true' EXIT
+          NSUnbufferedIO=YES xcodebuild test -project harness/CloudNativePilot.xcodeproj -scheme CloudNativePilot -destination "platform=iOS Simulator,id=$SIM_ID" -parallel-testing-enabled NO -resultBundlePath "$PWD/evidence/native.xcresult" CODE_SIGNING_ALLOWED=NO > evidence/native.log 2>&1
+          wait "$CAPTURE_PID"
+          grep -q PILOT_NATIVE_SMOKE_PASS evidence/native.log
+          python3 - <<'PY'
+          import hashlib, json, pathlib, struct
+          root = pathlib.Path('evidence')
+          rows = []
+          for name in ('01_english_intro', '02_placement', '03_relaunched'):
+              path = root / 'screenshots' / (name + '.png')
+              b = path.read_bytes()
+              assert b[:8] == b'\x89PNG\r\n\x1a\n'
+              width, height = struct.unpack('>II', b[16:24])
+              assert 1178 <= width <= 1179 and height == 2556, (name, width, height)
+              rows.append({'file': str(path.relative_to(root)), 'width': width, 'height': height, 'sha256': hashlib.sha256(b).hexdigest()})
+          (root / 'screenshots.json').write_text(json.dumps(rows, indent=2))
+          (root / 'verdict.json').write_text(json.dumps({'status': 'PASS_SCOPED_CLOUD_NATIVE_SMOKE', 'product_sha': '3784d421beb5ae7cb8cfaacd10b1083855148850', 'device': 'iPhone 14 Pro', 'language': 'en', 'scope': ['ordinary launch', 'real Placement navigation', 'ordinary kill and relaunch', 'exact logical geometry', 'three native screenshots'], 'not_proven': ['full learner route', 'visual acceptance', 'VoiceOver', 'physical device', 'Human learning', 'release readiness']}, indent=2))
+          PY
+      - name: Preserve bounded evidence and host outcome
+        if: always()
+        run: |
+          mkdir -p evidence
+          cp pilot/.github/workflows/cloud-native-14pro-pilot.yml evidence/workflow.yml
+          cp -R harness evidence/harness 2>/dev/null || true
+          if test -d evidence/native.xcresult; then
+            xcrun xcresulttool get test-results summary --path evidence/native.xcresult > evidence/xcresult-summary.json || true
+          fi
+          if test -f evidence/sim-id.txt; then
+            xcrun simctl shutdown "$(cat evidence/sim-id.txt)" || true
+          fi
+          (cd evidence && find . -type f ! -name evidence.sha256 -print0 | xargs -0 shasum -a 256 > evidence.sha256)
+          echo 'Cloud native pilot only. Does not change product or release/Human gates.' >> "$GITHUB_STEP_SUMMARY"
+          if test -f evidence/verdict.json; then cat evidence/verdict.json >> "$GITHUB_STEP_SUMMARY"; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cloud-native-14pro-pilot-${{ github.run_id }}
+          path: evidence/
+          if-no-files-found: error
+          retention-days: 3
