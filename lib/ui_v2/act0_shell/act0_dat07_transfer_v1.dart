@@ -223,11 +223,18 @@ class Act0Dat07CodecV1 {
 /// The existing canonical store must implement compare-and-swap under its ONE
 /// serialization queue, with its current atomic checkpoint/verification path.
 /// In particular, a read-then-save pair is NOT a safe implementation.
-abstract class Act0Dat07ProgressPortV1 {
-  Future<String?> readDurablePayload();
+/// Revision is a destination-local checkpoint generation, not a source
+/// progress schema or a timestamp. Revision must come from the canonical
+/// store's resolver; never synthesize it from XP or the current payload.
+typedef Act0Dat07DurableStateV1 = ({int revision, String? payload});
 
+abstract class Act0Dat07ProgressPortV1 {
+  Future<Act0Dat07DurableStateV1> readDurableSnapshot();
+
+  /// Compare the exact revision AND payload inside the current store queue.
+  /// Even A -> B -> A or reset -> empty must invalidate an old preview.
   Future<Act0Dat07WriteResultV1> restoreIfUnchanged({
-    required String? expectedPayload,
+    required Act0Dat07DurableStateV1 expected,
     required String incomingPayload,
   });
 }
@@ -242,13 +249,13 @@ enum Act0Dat07RestoreOutcomeV1 {
 }
 
 class Act0Dat07PreviewV1 {
-  const Act0Dat07PreviewV1._(this.backup, this._originalPayload);
+  const Act0Dat07PreviewV1._(this.backup, this._originalState);
   final Act0Dat07BackupV1 backup;
-  final String? _originalPayload;
+  final Act0Dat07DurableStateV1 _originalState;
 
-  bool get alreadyPresent => _originalPayload == backup.payload;
-  bool get conflict => _originalPayload != null && !alreadyPresent;
-  bool get mayRestore => _originalPayload == null && !alreadyPresent;
+  bool get alreadyPresent => _originalState.payload == backup.payload;
+  bool get conflict => _originalState.payload != null && !alreadyPresent;
+  bool get mayRestore => _originalState.payload == null && !alreadyPresent;
 }
 
 /// Import is replacement of one opaque, validated source snapshot, never a
@@ -263,16 +270,19 @@ class Act0Dat07TransferV1 {
   final Act0Dat07ProgressPortV1 port;
 
   Future<Uint8List> export({required DateTime exportedAtUtc}) async {
-    final current = await port.readDurablePayload();
-    if (current == null) {
+    final current = await port.readDurableSnapshot();
+    if (current.payload == null) {
       throw const Act0Dat07ErrorV1(Act0Dat07ErrorCodeV1.noProgress);
     }
-    return codec.exportPayload(current, exportedAtUtc: exportedAtUtc);
+    return codec.exportPayload(
+      current.payload!,
+      exportedAtUtc: exportedAtUtc,
+    );
   }
 
   Future<Act0Dat07PreviewV1> inspect(Uint8List file) async {
     final backup = codec.inspectBytes(file);
-    final current = await port.readDurablePayload();
+    final current = await port.readDurableSnapshot();
     return Act0Dat07PreviewV1._(backup, current);
   }
 
@@ -281,18 +291,18 @@ class Act0Dat07TransferV1 {
   ) async {
     // The port must enforce this once more AT THE DURABLE WRITE, not merely
     // here. An old progress state cannot be overwritten by a stale preview.
-    final current = await port.readDurablePayload();
-    if (current != preview._originalPayload) {
+    final current = await port.readDurableSnapshot();
+    if (current != preview._originalState) {
       return Act0Dat07RestoreOutcomeV1.conflict;
     }
-    if (current == preview.backup.payload) {
+    if (current.payload == preview.backup.payload) {
       return Act0Dat07RestoreOutcomeV1.alreadyPresent;
     }
-    if (current != null) {
+    if (current.payload != null) {
       return Act0Dat07RestoreOutcomeV1.conflict;
     }
     final written = await port.restoreIfUnchanged(
-      expectedPayload: current,
+      expected: current,
       incomingPayload: preview.backup.payload,
     );
     if (written == Act0Dat07WriteResultV1.changed) {
@@ -304,8 +314,9 @@ class Act0Dat07TransferV1 {
       return Act0Dat07RestoreOutcomeV1.notVerified;
     }
     try {
-      final durable = await port.readDurablePayload();
-      return durable == preview.backup.payload
+      final durable = await port.readDurableSnapshot();
+      return durable.revision > current.revision &&
+              durable.payload == preview.backup.payload
           ? Act0Dat07RestoreOutcomeV1.restored
           : Act0Dat07RestoreOutcomeV1.notVerified;
     } catch (_) {
