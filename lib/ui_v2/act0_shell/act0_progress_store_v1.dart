@@ -109,7 +109,6 @@ class Act0ProgressStoreV1 {
     );
   });
 
-
   /// Revision-aware snapshot from the canonical resolver, not a second reader.
   /// Recovery completion follows loadState; tombstone revisions are retained.
   Future<({int revision, String? payload})> readDurableSnapshot() =>
@@ -152,8 +151,7 @@ class Act0ProgressStoreV1 {
         }
         final current = await _resolve(prefs);
         if (current != expected ||
-            (current.payload != null &&
-                current.payload != incomingPayload)) {
+            (current.payload != null && current.payload != incomingPayload)) {
           return Act0ProgressRestoreResultV1.changed;
         }
         // The controller handles alreadyPresent without a write. Do not claim

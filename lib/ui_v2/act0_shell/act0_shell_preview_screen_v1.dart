@@ -1251,7 +1251,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   void _resumeAfterDat07V1() {
-    if (!mounted || !_progressRestoredV1 || _progressLoadFailed ||
+    if (!mounted ||
+        !_progressRestoredV1 ||
+        _progressLoadFailed ||
         !_progressStore.isWriteLeaseCurrent) {
       throw const Act0RecoveryHoldV1();
     }
@@ -2682,7 +2684,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     try {
       await _bootstrapFirstStartRouteBodyV1();
       if (!mounted) return;
-      final ok = _progressRestoredV1 && !_progressLoadFailed && _bootSurfaceReady;
+      final ok =
+          _progressRestoredV1 && !_progressLoadFailed && _bootSurfaceReady;
       // The replacement is readable but remains unable to save while the
       // transfer screen owns the lifetime. It is thawed only on a safe exit.
       if (_act0Dat07BarrierV1 != null) _dat07SuspendedV1 = true;
@@ -2743,8 +2746,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       // install placement after transfer. This routes only; it awards nothing
       // and does not manufacture intake or welcome completion preferences.
       _showPlacement = !intakeCompleted && !_hasRestoredLearningPathV1;
-      _showWelcome = intakeCompleted && !welcomeCompleted &&
-          !_hasRestoredLearningPathV1;
+      _showWelcome =
+          intakeCompleted && !welcomeCompleted && !_hasRestoredLearningPathV1;
       _bootSurfaceReady = true;
       if (_showWelcome) {
         _tab = Act0ShellTabV1.home;
@@ -3759,11 +3762,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final completedLessonIds = parsed.completedLessonIds
         .where(validLessonIds.contains)
         .toSet();
-    _hasRestoredLearningPathV1 = completedTaskIds.isNotEmpty ||
-        completedLessonIds.isNotEmpty || skippedTaskIds.isNotEmpty ||
-        parsed.learningEvidenceHistory.provenanceRecords.any((record) =>
-            !record.isPlacementAssessment &&
-            validTaskIds.contains(record.taskId));
+    _hasRestoredLearningPathV1 =
+        completedTaskIds.isNotEmpty ||
+        completedLessonIds.isNotEmpty ||
+        skippedTaskIds.isNotEmpty ||
+        parsed.learningEvidenceHistory.provenanceRecords.any(
+          (record) =>
+              !record.isPlacementAssessment &&
+              validTaskIds.contains(record.taskId),
+        );
     final compatLessonIds = _legacyCompatAutoCompletedLessonIdsV1(
       parsed: parsed,
       state: state,
@@ -5051,8 +5058,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'run_id': closed.runId,
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || _dat07SuspendedV1 ||
-          _act0Dat07BarrierV1 != null || _pendingLearningRunPayoffV1 == null) {
+      if (!mounted ||
+          _dat07SuspendedV1 ||
+          _act0Dat07BarrierV1 != null ||
+          _pendingLearningRunPayoffV1 == null) {
         return;
       }
       showDialog<void>(
@@ -5144,8 +5153,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   Future<void> _openRecoveryOptionsV1() async {
     if (_dat07SuspendedV1 || _act0Dat07BarrierV1 != null) return;
     final entryEpoch = _recoveryEpochV1;
-    bool current() => mounted && !_dat07SuspendedV1 &&
-        _act0Dat07BarrierV1 == null && entryEpoch == _recoveryEpochV1;
+    bool current() =>
+        mounted &&
+        !_dat07SuspendedV1 &&
+        _act0Dat07BarrierV1 == null &&
+        entryEpoch == _recoveryEpochV1;
     Act0RecoveryProposalV1? proposal;
     Act0RecoveryCopyV1? copy;
     try {
@@ -5488,8 +5500,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Future<void> _handleResetAppProgress() async {
-    if (_dat07SuspendedV1 || _act0Dat07BarrierV1 != null ||
-        _act0Dat07ResetInFlightV1 != null) return;
+    if (_dat07SuspendedV1 ||
+        _act0Dat07BarrierV1 != null ||
+        _act0Dat07ResetInFlightV1 != null)
+      return;
     final shouldReset = await showDialog<bool>(
       context: context,
       builder: (context) {
@@ -5513,8 +5527,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         );
       },
     );
-    if (shouldReset != true || !mounted || _dat07SuspendedV1 ||
-        _act0Dat07BarrierV1 != null || _act0Dat07ResetInFlightV1 != null) {
+    if (shouldReset != true ||
+        !mounted ||
+        _dat07SuspendedV1 ||
+        _act0Dat07BarrierV1 != null ||
+        _act0Dat07ResetInFlightV1 != null) {
       return;
     }
     // Acquire synchronously before the first destructive await. A transfer
@@ -5806,8 +5823,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (_dat07SuspendedV1) {
       return const Scaffold(
         body: SafeArea(
-          child: Center(child: Text('Progress is locked for safe reload. '
-              'Restart Sharky if this operation was interrupted.')),
+          child: Center(
+            child: Text(
+              'Progress is locked for safe reload. '
+              'Restart Sharky if this operation was interrupted.',
+            ),
+          ),
         ),
       );
     }
