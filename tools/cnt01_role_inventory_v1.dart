@@ -233,6 +233,22 @@ void main(List<String> args) {
   final checkoutHead = headResult.exitCode == 0
       ? (headResult.stdout as String).trim()
       : cnt01UnknownV1;
+  // Refuse to label a changed Act0 source as the pinned main snapshot.
+  // This is a local, read-only Git check; it does not invoke Flutter or CI.
+  final sourceDiff = Process.runSync('git', <String>[
+    'diff',
+    '--quiet',
+    baseline,
+    '--',
+    'lib/ui_v2/act0_shell',
+  ]);
+  if (headResult.exitCode != 0 || sourceDiff.exitCode != 0) {
+    stderr.writeln(
+      'Cannot attest this Act0 checkout against the supplied main SHA.',
+    );
+    exitCode = 65;
+    return;
+  }
   final rows = Cnt01RoleInventoryV1.fromAct0(
     baselineMainSha: baseline,
   );
