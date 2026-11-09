@@ -99,11 +99,17 @@ void main() {
     await tester.pumpAndSettle();
     // Title, seat 1, name 1, stack 1, seat 2, name 2, stack 2.
     final textFields = find.byType(TextField);
-    await tester.enterText(textFields.at(0), 'Synthetic manual');
-    await tester.enterText(textFields.at(1), '1');
-    await tester.enterText(textFields.at(2), 'Alice');
-    await tester.enterText(textFields.at(4), '2');
-    await tester.enterText(textFields.at(5), 'Bob');
+    Future<void> fill(int index, String value) async {
+      await tester.ensureVisible(textFields.at(index));
+      await tester.pumpAndSettle();
+      await tester.enterText(textFields.at(index), value);
+      await tester.pump();
+    }
+    await fill(0, 'Synthetic manual');
+    await fill(1, '1');
+    await fill(2, 'Alice');
+    await fill(4, '2');
+    await fill(5, 'Bob');
     final previewButton = find.byKey(const Key('hst06-preview-button'));
     await tester.ensureVisible(previewButton);
     await tester.tap(previewButton);
