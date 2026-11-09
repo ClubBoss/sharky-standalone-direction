@@ -67,15 +67,21 @@ void main() {
 
   test('unreadable stack stays null, distinguish true zero', () {
     final partial = importer.parse(source900.replaceFirst(
-      '($0.80 in chips)', '(unknown in chips)',
+      r'($0.80 in chips)', '(unknown in chips)',
     )).single;
     expect(partial.canSave, isTrue);
     expect(partial.hand!.players.last.stack, isNull);
     final zero = importer.parse(source900.replaceFirst(
-      '($0.80 in chips)', '($0.00 in chips)',
+      r'($0.80 in chips)', r'($0.00 in chips)',
     )).single;
     expect(zero.hand!.players.last.stack, '0');
     expect(zero.hand!.players.last.stack, isNotNull);
+    final omitted = importer.parse(source900.replaceFirst(
+      r'Seat 2: Beta ($0.80 in chips)', 'Seat 2: Beta',
+    )).single;
+    expect(omitted.canSave, isTrue);
+    expect(omitted.hand!.players, hasLength(2));
+    expect(omitted.hand!.players.last.stack, isNull);
   });
 
   test('duplicate physical cards are rejected before confirmation', () {
@@ -102,12 +108,12 @@ void main() {
 
   test('currency mismatch and malformed amounts are not silently converted', () {
     final mixed = importer.parse(source900.replaceFirst(
-      'Alpha: calls $0.02', 'Alpha: calls €0.02',
+      r'Alpha: calls $0.02', 'Alpha: calls \u20AC0.02',
     )).single;
     expect(mixed.canSave, isFalse);
     expect(mixed.errors.join(' '), contains('Currency symbol'));
     final malformed = importer.parse(source900.replaceFirst(
-      'Alpha: calls $0.02', 'Alpha: calls $0,02',
+      r'Alpha: calls $0.02', r'Alpha: calls $0,02',
     )).single;
     expect(malformed.canSave, isFalse);
     expect(malformed.errors.join(' '), contains('Invalid amount'));
@@ -186,7 +192,7 @@ void main() {
     final store = Hst06PersonalStore();
     await store.confirm(good());
     final changed = importer.parse(source900.replaceFirst(
-      'Total pot $0.20', 'Total pot $0.22',
+      r'Total pot $0.20', r'Total pot $0.22',
     )).single;
     final conflict = await store.confirm(changed);
     expect(conflict.kind, Hst06SaveKind.conflict);
@@ -197,7 +203,7 @@ void main() {
     final store = Hst06PersonalStore();
     final first = await store.confirm(good());
     final changed = importer.parse(source900.replaceFirst(
-      'Total pot $0.20', 'Total pot $0.22',
+      r'Total pot $0.20', r'Total pot $0.22',
     )).single;
     final changedResult = await store.revise(
       changed, first.stored!.localId, 1,
