@@ -61,6 +61,30 @@ void main() {
     expect(find.text('Saved personal hands: 1'), findsOneWidget);
   });
 
+  testWidgets('repeat import shows duplicate before confirmation',
+      (tester) async {
+    final store = Hst06PersonalStore();
+    await openScreen(tester, store);
+    await tester.enterText(find.byType(TextField).first, synthetic);
+    final previewButton = find.byKey(const Key('hst06-preview-button'));
+    await tester.tap(previewButton);
+    await tester.pumpAndSettle();
+    final confirm = find.byKey(const Key('hst06-confirm-0'));
+    await tester.ensureVisible(confirm);
+    await tester.tap(confirm);
+    await tester.pumpAndSettle();
+    expect(await store.load(), hasLength(1));
+
+    await tester.ensureVisible(previewButton);
+    await tester.tap(previewButton);
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Already saved:'), findsOneWidget);
+    expect(tester.widget<ElevatedButton>(
+      find.byKey(const Key('hst06-confirm-0')),
+    ).onPressed, isNull);
+    expect(await store.load(), hasLength(1));
+  });
+
   testWidgets('changing source invalidates review and prevents stale save',
       (tester) async {
     final store = Hst06PersonalStore();
