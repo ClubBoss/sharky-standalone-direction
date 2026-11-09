@@ -161,10 +161,7 @@ void main() {
     }
 
     expect(legacyW10W12Indexes, hasLength(42));
-    expect(
-      _distribution(legacyW10W12Indexes),
-      <int, int>{0: 14, 1: 14, 2: 14},
-    );
+    expect(_distribution(legacyW10W12Indexes), <int, int>{0: 14, 1: 14, 2: 14});
     expect(_longestRun(legacyW10W12Indexes), lessThanOrEqualTo(2));
     expect(w10W12Indexes, hasLength(44));
     expect(_distribution(w10W12Indexes), <int, int>{0: 15, 1: 15, 2: 14});
