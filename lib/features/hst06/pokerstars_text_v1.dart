@@ -34,6 +34,12 @@ class Hst06PokerStarsPreview {
 
   Hst06Preview _parseOne(String source) {
     final lines = source.split('\n').map((line) => line.trim()).toList();
+    if (RegExp(r'\bTournament\s*#', caseSensitive: false)
+        .hasMatch(lines.first)) {
+      return const Hst06Preview(null, [
+        'Tournament hand histories are not supported by this import.',
+      ], []);
+    }
     final header = RegExp(
       r"^PokerStars Hand #([0-9]+):.*(?:Hold'em No Limit|No Limit Hold'em)",
       caseSensitive: false,
