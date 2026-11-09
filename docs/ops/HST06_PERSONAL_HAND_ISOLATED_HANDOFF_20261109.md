@@ -34,6 +34,7 @@ LLM tools. Synthetic fixtures only.
    Supported action verbs: folds, checks, calls, bets, raises-to. Amounts are
    exact validated decimal strings in explicitly known source currency units
    (USD/EUR/GBP when header provides code); no implicit chip/BB conversion.
+   Manual records may explicitly use chips or BB without conversion.
    Multiple PokerStars headers can be previewed separately.
 
 NOT supported by this HST-06 route: GGPoker, Winamax, the legacy four-line
@@ -84,6 +85,8 @@ test/features/hst06/personal_hand_v1_test.dart:
   - missing Hero, missing vs explicit-zero stack, duplicate cards,
     illegal street boards, mismatched currency, damaged amount,
     unsupported formats, multi-hand separation, manual fields
+  - source-unit BB, unparseable seat line, duplicate player identities,
+    fresh store instance after save,
   - dedupe, collision conflict, revision CAS, corrupt-store nonoverwrite,
     preview/cancel has zero persistence
 

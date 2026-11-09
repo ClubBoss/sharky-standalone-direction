@@ -76,6 +76,11 @@ void main() {
     )).single;
     expect(zero.hand!.players.last.stack, '0');
     expect(zero.hand!.players.last.stack, isNotNull);
+    final unreadableSeat = importer.parse(source900.replaceFirst(
+      r'Seat 2: Beta ($0.80 in chips)', 'Seat 2:',
+    )).single;
+    expect(unreadableSeat.canSave, isFalse);
+    expect(unreadableSeat.errors.join(' '), contains('Unreadable player seat'));
     final omitted = importer.parse(source900.replaceFirst(
       r'Seat 2: Beta ($0.80 in chips)', 'Seat 2: Beta',
     )).single;
@@ -159,6 +164,35 @@ void main() {
     expect(p.warnings, contains('Hero unknown.'));
   });
 
+  test('explicit BB is a source unit, not a conversion', () {
+    final p = hst06Manual(
+      title: 'BB-labelled note',
+      unit: 'BB',
+      players: const [
+        Hst06Player(1, 'First', '100'),
+        Hst06Player(2, 'Second', '0'),
+      ],
+      pot: '2.5',
+    );
+    expect(p.canSave, isTrue);
+    expect(p.hand!.unit, 'BB');
+    expect(p.hand!.totalPot, '2.5');
+    expect(p.hand!.players.last.stack, '0');
+  });
+
+  test('manual duplicate seats and missing names cannot save', () {
+    final p = hst06Manual(
+      title: 'Broken seats',
+      players: const [
+        Hst06Player(2, 'Player', '50'),
+        Hst06Player(2, 'Player', null),
+      ],
+    );
+    expect(p.canSave, isFalse);
+    expect(p.errors.join(' '), contains('Repeated or invalid seat'));
+    expect(p.errors.join(' '), contains('Repeated or missing player name'));
+  });
+
   test('manual illegal actors, cards, units and wagers fail closed', () {
     final p = hst06Manual(
       title: 'Bad action', players: const [
@@ -184,6 +218,9 @@ void main() {
     expect(saved.stored!.localId, isNotEmpty);
     expect(saved.stored!.sourceDigest, isNotEmpty);
     expect((await store.load()).single.roomHandId, '900');
+    // A fresh store instance reads the same local hand, without an XP ledger.
+    expect((await Hst06PersonalStore().load()).single.localId,
+        saved.stored!.localId);
     final duplicate = await store.confirm(original);
     expect(duplicate.kind, Hst06SaveKind.duplicate);
     expect(await store.load(), hasLength(1));

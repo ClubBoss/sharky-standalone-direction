@@ -50,7 +50,10 @@ void main() {
     await tester.tap(find.byKey(const Key('hst06-preview-button')));
     await tester.pumpAndSettle();
     final confirm = find.byKey(const Key('hst06-confirm-0'));
-    await tester.ensureVisible(confirm);
+    await tester.scrollUntilVisible(
+      confirm, 250,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.tap(confirm);
     await tester.pumpAndSettle();
     final hands = await store.load();
@@ -70,12 +73,18 @@ void main() {
     await tester.tap(previewButton);
     await tester.pumpAndSettle();
     final confirm = find.byKey(const Key('hst06-confirm-0'));
-    await tester.ensureVisible(confirm);
+    await tester.scrollUntilVisible(
+      confirm, 250,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.tap(confirm);
     await tester.pumpAndSettle();
     expect(await store.load(), hasLength(1));
 
-    await tester.ensureVisible(previewButton);
+    await tester.scrollUntilVisible(
+      previewButton, 250,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.tap(previewButton);
     await tester.pumpAndSettle();
     expect(find.textContaining('Already saved:'), findsOneWidget);
@@ -135,11 +144,17 @@ void main() {
     await fill(4, '2');
     await fill(5, 'Bob');
     final previewButton = find.byKey(const Key('hst06-preview-button'));
-    await tester.ensureVisible(previewButton);
+    await tester.scrollUntilVisible(
+      previewButton, 250,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.tap(previewButton);
     await tester.pumpAndSettle();
     final confirm = find.byKey(const Key('hst06-confirm-0'));
-    await tester.ensureVisible(confirm);
+    await tester.scrollUntilVisible(
+      confirm, 250,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.tap(confirm);
     await tester.pumpAndSettle();
     final hands = await store.load();

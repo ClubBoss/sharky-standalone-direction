@@ -167,7 +167,7 @@ Hst06Preview hst06Inspect(Hst06Hand hand, [List<String> parsingErrors = const []
   final warnings = <String>[...hand.notes];
   if (hand.title.trim().isEmpty) errors.add('Hand title is required.');
   if (hand.unit != null &&
-      !const ['USD', 'EUR', 'GBP', 'chips'].contains(hand.unit)) {
+      !const ['USD', 'EUR', 'GBP', 'chips', 'BB'].contains(hand.unit)) {
     errors.add('Unsupported amount unit.');
   }
   if (hand.players.length < 2 || hand.players.length > 10) {

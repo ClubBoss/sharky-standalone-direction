@@ -61,7 +61,12 @@ class Hst06PokerStarsPreview {
     for (final line in lines) {
       if (line.startsWith('***')) break;
       final match = seatPattern.firstMatch(line);
-      if (match == null) continue;
+      if (match == null) {
+        if (RegExp(r'^Seat [0-9]+:').hasMatch(line)) {
+          errors.add('Unreadable player seat record.');
+        }
+        continue;
+      }
       String? stack;
       final stackMatch = stackPattern.firstMatch(match.group(3) ?? '');
       if (stackMatch == null) {

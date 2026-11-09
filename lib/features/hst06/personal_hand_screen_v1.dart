@@ -171,6 +171,7 @@ class _Hst06PersonalHandScreenState extends State<Hst06PersonalHandScreen> {
           DropdownMenuItem(value: 'EUR', child: Text('EUR')),
           DropdownMenuItem(value: 'GBP', child: Text('GBP')),
           DropdownMenuItem(value: 'chips', child: Text('chips')),
+          DropdownMenuItem(value: 'BB', child: Text('BB (already in big blinds)')),
         ],
         onChanged: (v) => setState(() { _unit = v; _previews = []; }),
       ),
