@@ -334,3 +334,35 @@ and raw machine log SHA-256 is
 `7968f6d0d3cf98385fb0cde5d21ca1459e2cd0328f96e624dce6f408b3a15b95`.
 This corrective repin changes no guard, generator, selection, threshold,
 historical row, score, native claim, or Human claim.
+
+## ASM-05 post-fix input freshness proposal — 2026-11-09
+
+The bounded post-fix source is commit
+`5b0dd2e300053e52b323e54df6c759ddb5f04b48`, tree
+`0969c4d19489b5d8c78d21b5bea662c79cb4add6`. It removes only the stale
+numeric `blindAmountLabel` values from the two ASM-05 Turn projections while
+preserving blind positions, authored preflop posts, Turn bets, cards, pots,
+options, grades and XP. The State input remains
+`d9a78d57817c8eaef7dc1a376f53ade7774229be4a34063d5dc0cf152bb67221`;
+the post-fix factory input is
+`c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b`.
+
+The unchanged W1-W12 generator payload contains task identity, authored copy,
+option text, correctness, feedback and repair focus. It does not serialize
+table `blindAmountLabel`, so the admitted 293-row content fingerprint remains
+`cb14248b1bb0e599715940ab4ac986756ddf2f13a6837b1493dd277958356d33`.
+The historical 291-row fingerprint remains
+`599ecadb0180eb48e8de72520645c29750941cba4cdd000f5acdda834a30f7e1`.
+Row counts, option order, correct indexes, distributions, generator, guard,
+selection, thresholds and freshness negative controls are unchanged.
+
+The exact post-fix canonical capture independently records source fingerprints
+`dc7f1fe213d526a36bf6ad0b5748a9244d96686124616d92a4db40e5d9222184`
+and `ad6d1a9044df2efcc2f806633b055052c22449605ef9347b38823c82e42fc9c7`
+for the Call10 and Call40 tasks, with zero remaining `D3.no_old_blind`
+failures. Those full authored-source fingerprints are distinct from the
+bounded W1 answer-position payload and do not change its digest.
+
+This is an output-only freshness proposal. It has not been applied to the live
+protected contract and does not claim a guard run, independent admission,
+native/Human evidence, merge, release or score change.

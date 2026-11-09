@@ -4,7 +4,36 @@ import collections
 import hashlib
 import json
 import pathlib
+import re
 import sys
+
+
+NEW_AUTHORING_IDS = {
+    'asm05_new_known_holes_turn_call_10',
+    'asm05_new_known_holes_turn_call_40',
+}
+SOURCE_REFERENCES = {
+    'historical_baseline': {
+        'commit': 'fa079b6c5880814e231981a7bd5ed97df192d215',
+        'state_sha256': 'e9f87d4bf73b75d77bd7b04ddf111cbf6b64e796259ffe42adadea9bbb3270e2',
+        'factory_sha256': None,
+    },
+    'candidate': {
+        'commit': '5b0dd2e300053e52b323e54df6c759ddb5f04b48',
+        'state_sha256': 'd9a78d57817c8eaef7dc1a376f53ade7774229be4a34063d5dc0cf152bb67221',
+        'factory_sha256': 'c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b',
+    },
+}
+CANONICAL_NEW_AUTHORING = pathlib.Path(__file__).resolve().parents[1] / (
+    'test/tools/fixtures/table_truth_asm05_new_authoring_v1.json'
+)
+EXPECTED_CAPTURE_ARTIFACTS = {
+    'choice-identity.json': 'c36878c369d880bcefc4c5f53b0f3247725e1c2439956619e511a77ccd06fd8d',
+    'learning-contract.json': '1cf59348b0296053cf73b97201879b033479c83347a759b9be16bf87ea907d25',
+    'ledger.json': '382960a25750f83cb26d33a5b6d8e80cdcf3a77f98f420bedc2b3030d33c368f',
+    'runtime-inputs.json': '886e8e2bf0a90dbb7a37b58858502782d940fba4f82cc414b877a9f4ebda9c9f',
+    'source-fingerprints.json': '6b848f76f99825b968eef9072b00e707a7ee5a9da278aaf3db3674c6cab1b786',
+}
 
 
 def summarize(path, expected, code):
@@ -38,26 +67,157 @@ def summarize(path, expected, code):
         raise SystemExit('TABLE.TRUTH execution does not establish the expected result')
 
 
-def compare(root):
+def _digest(value):
+    encoded = json.dumps(value, separators=(',', ':'), ensure_ascii=False).encode()
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def validate_typed_cohort(root):
     root = pathlib.Path(root)
     base = json.loads((root / 'baseline' / 'learning-contract.json').read_text())
     final = json.loads((root / 'candidate' / 'learning-contract.json').read_text())
-    if base != final:
+    base_cohort = json.loads((root / 'baseline' / 'typed-cohort-v2.json').read_text())
+    final_cohort = json.loads((root / 'candidate' / 'typed-cohort-v2.json').read_text())
+    canonical = json.loads(CANONICAL_NEW_AUTHORING.read_text())
+    if (
+        canonical.get('schema') != 1
+        or canonical.get('admitted_source_reference')
+        != SOURCE_REFERENCES['candidate']['commit']
+        or canonical.get('capture_artifacts') != EXPECTED_CAPTURE_ARTIFACTS
+        or canonical.get('d3_no_old_blind_fail_count') != 0
+        or set(canonical.get('tasks', {})) != NEW_AUTHORING_IDS
+    ):
+        raise SystemExit('Pinned ASM05 canonical record fixture is malformed')
+    for role, cohort in (
+        ('historical_baseline', base_cohort),
+        ('candidate', final_cohort),
+    ):
+        if cohort.get('schema') != 2 or cohort.get('role') != role:
+            raise SystemExit('Unknown or mismatched typed cohort role')
+        reference = cohort.get('admitted_source_reference')
+        if reference != SOURCE_REFERENCES[role]:
+            raise SystemExit('Admitted source reference changed')
+        receipt = cohort.get('producer_receipt')
+        if not isinstance(receipt, dict) or not re.fullmatch(
+            r'[0-9a-f]{40}', receipt.get('head', '')
+        ):
+            raise SystemExit('Producing HEAD receipt is missing or malformed')
+        expected_receipt = {
+            'state_sha256': reference['state_sha256'],
+            'factory_sha256': reference['factory_sha256'],
+        }
+        if {key: receipt.get(key) for key in expected_receipt} != expected_receipt:
+            raise SystemExit('Producing source receipt does not match admitted bytes')
+    if base_cohort.get('new_authoring'):
+        raise SystemExit('Historical baseline contains NEW_AUTHORING additions')
+    addition_rows = final_cohort.get('new_authoring', [])
+    additions = {row.get('task_id'): row for row in addition_rows}
+    if len(addition_rows) != len(NEW_AUTHORING_IDS) or set(additions) != NEW_AUTHORING_IDS:
+        raise SystemExit('NEW_AUTHORING cohort is missing or contains unknown tasks')
+    historical_ids = set(base_cohort.get('historical_ids', []))
+    if (
+        historical_ids != set(final_cohort.get('historical_ids', []))
+        or len(historical_ids) != 367
+    ):
+        raise SystemExit('Historical cohort identity changed')
+    if set(base) != historical_ids or set(final) != historical_ids | NEW_AUTHORING_IDS:
+        raise SystemExit('Learning contract cohort key set is inconsistent')
+    if {key: final[key] for key in historical_ids} != base:
         raise SystemExit('Learning identity, XP, correctness or repair contract changed')
     before = json.loads((root / 'baseline' / 'runtime-inputs.json').read_text())
     after = json.loads((root / 'candidate' / 'runtime-inputs.json').read_text())
-    delta = {key: {'before': before[key], 'after': after[key]} for key in before if before[key] != after[key]}
-    (root / 'runtime-input-delta.json').write_text(json.dumps(delta, indent=2))
-    before_fingerprints = json.loads((root / 'baseline' / 'source-fingerprints.json').read_text())
-    after_fingerprints = json.loads((root / 'candidate' / 'source-fingerprints.json').read_text())
-    if before_fingerprints.keys() != after_fingerprints.keys():
-        raise SystemExit('Canonical fingerprint task identity changed')
+    before_fingerprints = json.loads(
+        (root / 'baseline' / 'source-fingerprints.json').read_text()
+    )
+    after_fingerprints = json.loads(
+        (root / 'candidate' / 'source-fingerprints.json').read_text()
+    )
     before_choices = json.loads((root / 'baseline' / 'choice-identity.json').read_text())
     after_choices = json.loads((root / 'candidate' / 'choice-identity.json').read_text())
-    if before_choices != after_choices:
-        raise SystemExit('Accepted choice text, ordering or preferred answer changed')
+    for label, historical, candidate in (
+        ('runtime input', before, after),
+        ('source fingerprint', before_fingerprints, after_fingerprints),
+        ('choice identity', before_choices, after_choices),
+    ):
+        if set(historical) != historical_ids or set(candidate) != (
+            historical_ids | NEW_AUTHORING_IDS
+        ):
+            raise SystemExit(f'{label} cohort key set is inconsistent')
+    if any(before_choices[key] != after_choices[key] for key in historical_ids):
+        raise SystemExit('Historical choice identity changed')
+    for task_id in NEW_AUTHORING_IDS:
+        expected = canonical['tasks'][task_id]
+        actual_bundle = [
+            final[task_id],
+            after_fingerprints[task_id],
+            after_choices[task_id],
+            after[task_id],
+        ]
+        expected_bundle = [
+            expected['learning_contract'],
+            expected['source_fingerprint'],
+            expected['choice_identity'],
+            expected['runtime_input'],
+        ]
+        if actual_bundle != expected_bundle:
+            raise SystemExit(f'NEW_AUTHORING canonical record mismatch: {task_id}')
+        row = additions[task_id]
+        identity = {
+            key: value
+            for key, value in row.items()
+            if key not in {'artifact_sha256', 'source_binding_sha256'}
+        }
+        if identity != {
+            'task_id': task_id,
+            'world_id': 'world_12',
+            'lesson_id': 'decision_over_outcome',
+            'provenance': 'NEW_AUTHORING_ASM05',
+        }:
+            raise SystemExit(f'NEW_AUTHORING identity is malformed: {task_id}')
+        if row.get('artifact_sha256') != _digest(actual_bundle):
+            raise SystemExit(f'NEW_AUTHORING artifact digest mismatch: {task_id}')
+        source_binding = [
+            final_cohort['admitted_source_reference'],
+            task_id,
+            actual_bundle,
+        ]
+        if row.get('source_binding_sha256') != _digest(source_binding):
+            raise SystemExit(f'NEW_AUTHORING source binding mismatch: {task_id}')
+    return {
+        'root': root,
+        'base': base,
+        'final': final,
+        'historical_ids': historical_ids,
+        'before': before,
+        'after': after,
+        'before_fingerprints': before_fingerprints,
+        'after_fingerprints': after_fingerprints,
+        'before_choices': before_choices,
+        'after_choices': after_choices,
+        'additions': additions,
+        'final_cohort': final_cohort,
+    }
+
+
+def compare(root):
+    identity = validate_typed_cohort(root)
+    root = identity['root']
+    historical_ids = identity['historical_ids']
+    before = identity['before']
+    after = identity['after']
+    before_fingerprints = identity['before_fingerprints']
+    after_fingerprints = identity['after_fingerprints']
+    before_choices = identity['before_choices']
+    after_choices = identity['after_choices']
+    delta = {
+        key: {'before': before[key], 'after': after[key]}
+        for key in historical_ids
+        if before[key] != after[key]
+    }
+    (root / 'runtime-input-delta.json').write_text(json.dumps(delta, indent=2))
     fingerprint_delta = {}
-    for task_id, old in before_fingerprints.items():
+    for task_id in sorted(historical_ids):
+        old = before_fingerprints[task_id]
         new = after_fingerprints[task_id]
         changed = old['fingerprint'] != new['fingerprint']
         classification = ('SOURCE_CONDITION_CHANGED' if changed else
@@ -85,8 +245,21 @@ def compare(root):
         raise SystemExit('Baseline contains no genuine RED source counterexamples')
     if ledgers['candidate']['statuses'].get('FAIL', 0):
         raise SystemExit('Candidate retains invariant failures: ' + str(ledgers['candidate']['failed_ids']))
+    new_authoring = {
+        task_id: {
+            'cohort': identity['additions'][task_id],
+            'learning_contract': identity['final'][task_id],
+            'source_fingerprint': after_fingerprints[task_id],
+            'choice_identity': after_choices[task_id],
+            'runtime_input': after[task_id],
+        }
+        for task_id in sorted(NEW_AUTHORING_IDS)
+    }
     result = {'ledgers': ledgers, 'runtime_changed_task_count': len(delta), 'runtime_changed_task_ids': sorted(delta),
-              'learning_contract_identical': True, 'choice_identity_identical': True,
+              'historical_learning_contract_identical': True,
+              'historical_choice_identity_identical': True,
+              'historical_cohort_count': len(historical_ids),
+              'new_authoring': new_authoring,
               'canonical_source_fingerprints': fingerprint_counts, 'native': 'PENDING'}
     (root / 'comparison.json').write_text(json.dumps(result, indent=2))
     hashes = {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(root.rglob('*')) if p.is_file()}
