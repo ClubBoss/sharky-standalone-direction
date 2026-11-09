@@ -63,7 +63,9 @@ Act0TableStateV1 pkrPriceTableV1({
     heroCards: const [],
     boardCards: const [],
     streetLabel: street,
-    potLabel: 'Pot 8.5 BB',
+    // These price vectors do not assert a displayed bank. The complete trail
+    // supplies it; explicit correct/incorrect bank claims have separate tests.
+    potLabel: '',
     toCallLabel: due.isEmpty ? '' : 'To call $due BB',
     centerLabel: 'Synthetic complete source price fixture',
     actionTrail: [
@@ -193,7 +195,7 @@ void main() {
           table,
           pkrPriceOptionV1('Bet', '1'),
         ),
-        isFalse,
+        isTrue,
       );
     }
     // A supplied backwards street is a contradiction, not a missing prefix.
@@ -373,7 +375,8 @@ void main() {
         'UTG raises 3 BB',
         'HJ shoves to 4 BB',
         'CO shoves to 5 BB',
-        'BTN folds',
+        // Reopening is meaningful with another player able to contest a raise.
+        'BTN calls 5 BB',
         'SB folds',
         'BB folds',
       ],
@@ -381,7 +384,7 @@ void main() {
       due: '2',
       stacks: {'HJ': '0 BB', 'CO': '0 BB'},
     );
-    expect(run(table, 'Raise to', '7').isContradiction, isFalse);
+    expect(run(table, 'Raise to', '7').truth, good);
     expect(run(table, 'Raise to', '6').reason, 'wager_below_minimum');
     expect(run(table, 'Raise to', '7').minimumRaiseToBb, 7);
   });
@@ -413,26 +416,29 @@ void main() {
     expect(run(table, 'Raise to', '6').isContradiction, isFalse);
     expect(run(table, 'Raise to', '5').truth, bad);
   });
-  test('short opening completion and unsupported grammar stay unproved', () {
-    final short = pkrPriceTableV1(
-      trail: [...pkrFlopV1, 'Flop: BB shoves to 0.5 BB'],
-      street: 'Flop',
-      due: '0.5',
-      stacks: {'BB': '0 BB'},
-    );
-    expect(run(short, 'Raise to', '1').truth, unknown);
-    expect(run(short, 'Raise to', '1').minimumRaiseToBb, isNull);
-    final partial = pkrPriceTableV1(trail: ['CO raises 2 BB']);
-    expect(run(partial, 'Raise to', '3').truth, unknown);
-    expect(
-      run(
-        pkrPriceTableV1(trail: [...pkrButtonOpenV1, 'Unknown source']),
-        'Raise to',
-        '2',
-      ).truth,
-      unknown,
-    );
-  });
+  test(
+    'no-limit has no short-opening completion; unknown grammar stays unproved',
+    () {
+      final short = pkrPriceTableV1(
+        trail: [...pkrFlopV1, 'Flop: BB shoves to 0.5 BB'],
+        street: 'Flop',
+        due: '0.5',
+        stacks: {'BB': '0 BB'},
+      );
+      expect(run(short, 'Raise to', '1').truth, bad);
+      expect(run(short, 'Raise to', '1').minimumRaiseToBb, 1.5);
+      final partial = pkrPriceTableV1(trail: ['CO raises 2 BB']);
+      expect(run(partial, 'Raise to', '3').truth, unknown);
+      expect(
+        run(
+          pkrPriceTableV1(trail: [...pkrButtonOpenV1, 'Unknown source']),
+          'Raise to',
+          '2',
+        ).truth,
+        unknown,
+      );
+    },
+  );
   test(
     'sparse stacks cannot turn a legal short all-in into an illegal wager',
     () {
@@ -473,7 +479,7 @@ void main() {
         run(pkrPriceTableV1(), 'Which player raises?', '1').truth,
         unknown,
       );
-      expect(run(pkrPriceTableV1(), 'Raise by', '2').truth, unknown);
+      expect(run(pkrPriceTableV1(), 'Raise by', '2').truth, good);
       expect(run(pkrPriceTableV1(), 'Raise to', '').truth, unknown);
       expect(
         run(
@@ -545,7 +551,8 @@ void main() {
           }
         }
       }
-      expect(tasks, 367);
+      // The two separately admitted ASM05 tasks are now canonical source.
+      expect(tasks, 369);
       expect(rows, isNotEmpty);
       final output = File(
         'output/pkr02-05-price-truth-20261107/catalog-price-applicability.json',
