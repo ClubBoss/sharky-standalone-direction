@@ -7,20 +7,25 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_dat07_file_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_dat07_transfer_v1.dart';
 
 class _FixturePort implements Act0Dat07ProgressPortV1 {
-  _FixturePort([this.value]);
+  _FixturePort([this.value]) : revision = value == null ? 0 : 1;
   String? value;
+  int revision;
   int writes = 0;
 
   @override
-  Future<String?> readDurablePayload() async => value;
+  Future<Act0Dat07DurableStateV1> readDurableSnapshot() async =>
+      (revision: revision, payload: value);
 
   @override
   Future<Act0Dat07WriteResultV1> restoreIfUnchanged({
-    required String? expectedPayload,
+    required Act0Dat07DurableStateV1 expected,
     required String incomingPayload,
   }) async {
-    if (value != expectedPayload) return Act0Dat07WriteResultV1.changed;
+    if (value != expected.payload || revision != expected.revision) {
+      return Act0Dat07WriteResultV1.changed;
+    }
     value = incomingPayload;
+    revision++;
     writes++;
     return Act0Dat07WriteResultV1.committed;
   }
