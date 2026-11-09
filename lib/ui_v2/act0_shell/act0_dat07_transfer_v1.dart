@@ -52,6 +52,7 @@ class Act0Dat07BackupV1 {
     required this.payload,
     required this.sha256,
     required this.schemaVersion,
+    this.exportedAtUtc,
     required this.earnedXp,
     required this.completedTasks,
     required this.completedLessons,
@@ -63,6 +64,7 @@ class Act0Dat07BackupV1 {
   final String payload;
   final String sha256;
   final int schemaVersion;
+  final DateTime? exportedAtUtc;
   final int earnedXp;
   final int completedTasks;
   final int completedLessons;
@@ -82,7 +84,10 @@ class Act0Dat07CodecV1 {
   static String digest(String source) =>
       sha256.convert(utf8.encode(source)).toString();
 
-  Act0Dat07BackupV1 _validatePayload(String payload) {
+  Act0Dat07BackupV1 _validatePayload(
+    String payload, {
+    DateTime? exportedAtUtc,
+  }) {
     Map<String, dynamic> value;
     try {
       final parsed = jsonDecode(payload);
@@ -130,6 +135,7 @@ class Act0Dat07CodecV1 {
       payload: payload,
       sha256: digest(payload),
       schemaVersion: supportedProgressSchema,
+      exportedAtUtc: exportedAtUtc,
       earnedXp: xp,
       completedTasks: (tasks as List).length,
       completedLessons: (lessons as List).length,
@@ -194,6 +200,10 @@ class Act0Dat07CodecV1 {
         envelope['payload'] is! String) {
       throw const Act0Dat07ErrorV1(Act0Dat07ErrorCodeV1.invalidFile);
     }
+    final createdAt = DateTime.tryParse(envelope['createdAtUtc'] as String);
+    if (createdAt == null || !createdAt.isUtc) {
+      throw const Act0Dat07ErrorV1(Act0Dat07ErrorCodeV1.invalidFile);
+    }
     final raw = envelope['payload'] as String;
     if (utf8.encode(raw).length != envelope['payloadLength'] ||
         digest(raw) != envelope['payloadSha256']) {
@@ -202,7 +212,7 @@ class Act0Dat07CodecV1 {
     if (envelope['progressSchemaVersion'] != supportedProgressSchema) {
       throw const Act0Dat07ErrorV1(Act0Dat07ErrorCodeV1.unsupportedSchema);
     }
-    final backup = _validatePayload(raw);
+    final backup = _validatePayload(raw, exportedAtUtc: createdAt);
     if (backup.schemaVersion != envelope['progressSchemaVersion']) {
       throw const Act0Dat07ErrorV1(Act0Dat07ErrorCodeV1.invalidProgress);
     }
