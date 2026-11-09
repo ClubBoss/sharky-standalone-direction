@@ -82,13 +82,15 @@ class Act0Dat07TransferScreenV1 extends StatefulWidget {
     required this.controller,
     required this.fileBridge,
     this.onBack,
-    this.onRestored,
+    required this.onRestored,
   });
 
   final Act0Dat07TransferV1 controller;
   final Act0Dat07FileBridgeV1 fileBridge;
   final VoidCallback? onBack;
-  final VoidCallback? onRestored;
+  /// This callback must complete a canonical durable remount/fence.
+  /// A fire-and-forget restart would leave the old shell able to write.
+  final Future<void> Function() onRestored;
 
   @override
   State<Act0Dat07TransferScreenV1> createState() =>
@@ -158,16 +160,19 @@ class _Act0Dat07TransferScreenV1State
       _busy = true;
       _message = null;
     });
+    var committed = false;
     try {
       final outcome = await widget.controller.confirm(proposal);
       if (!mounted) return;
       switch (outcome) {
         case Act0Dat07RestoreOutcomeV1.restored:
+          committed = true;
+          await widget.onRestored();
+          if (!mounted) return;
           setState(() {
             _preview = null;
-            _message = 'Progress restored. Reloading saved learning state.';
+            _message = 'Saved progress restored and reloaded.';
           });
-          widget.onRestored?.call();
         case Act0Dat07RestoreOutcomeV1.alreadyPresent:
           setState(() {
             _preview = null;
@@ -190,7 +195,11 @@ class _Act0Dat07TransferScreenV1State
       if (mounted) {
         setState(() {
           _preview = null;
-          _message = 'Restore could not be verified. Nothing is claimed saved.';
+          _message = committed
+              ? 'Progress was saved but could not reload. '
+                  'Restart Sharky before practicing.'
+              : 'Restore could not be verified. '
+                  'Restart Sharky before retrying.';
         });
       }
     } finally {
@@ -208,7 +217,7 @@ class _Act0Dat07TransferScreenV1State
             ? null
             : IconButton(
                 key: const Key('dat07_back'),
-                onPressed: widget.onBack,
+                onPressed: _busy ? null : widget.onBack,
                 icon: const Icon(Icons.arrow_back),
               ),
       ),
@@ -254,7 +263,10 @@ class _Act0Dat07TransferScreenV1State
               style: TextStyle(fontSize: 19, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
+            const Text('File format: v1'),
             Text('Data schema: ${proposal.backup.schemaVersion}'),
+            Text('Backup created (UTC): '
+                '${proposal.backup.exportedAtUtc?.toIso8601String() ?? 'unknown'}'),
             Text('Earned XP: ${proposal.backup.earnedXp}'),
             Text('Completed tasks: ${proposal.backup.completedTasks}'),
             Text('Completed lessons: ${proposal.backup.completedLessons}'),
@@ -279,7 +291,8 @@ class _Act0Dat07TransferScreenV1State
             else
               const Text(
                 'Restore this snapshot? This will use the existing '
-                'atomic progress store. No attempts or XP are added.',
+                'atomic progress store. No attempts or XP are added. '
+                'After confirming, restore cannot be cancelled.',
                 key: Key('dat07_confirm_warning'),
               ),
             const SizedBox(height: 12),
