@@ -9,6 +9,8 @@ class _MemoryPort implements Act0Dat07ProgressPortV1 {
 
   String? current;
   bool interruptNextWrite = false;
+  bool loseAckAfterLanding = false;
+  bool changeAtWrite = false;
   int writes = 0;
 
   @override
@@ -19,6 +21,10 @@ class _MemoryPort implements Act0Dat07ProgressPortV1 {
     required String? expectedPayload,
     required String incomingPayload,
   }) async {
+    if (changeAtWrite) {
+      changeAtWrite = false;
+      current = _progress(xp: 3, task: 'concurrent');
+    }
     if (current != expectedPayload) return Act0Dat07WriteResultV1.changed;
     if (interruptNextWrite) {
       interruptNextWrite = false;
@@ -26,6 +32,10 @@ class _MemoryPort implements Act0Dat07ProgressPortV1 {
     }
     current = incomingPayload;
     writes++;
+    if (loseAckAfterLanding) {
+      loseAckAfterLanding = false;
+      return Act0Dat07WriteResultV1.unverified;
+    }
     return Act0Dat07WriteResultV1.committed;
   }
 }
@@ -216,6 +226,67 @@ void main() {
     );
     expect(destination.current, isNull);
     expect(destination.writes, 0);
+  });
+
+  test('DAT07 CAS race during commit does not overwrite a new decision', () async {
+    final destination = _MemoryPort()..changeAtWrite = true;
+    final transfer = Act0Dat07TransferV1(codec: _codec, port: destination);
+    final preview = await transfer.inspect(_file(_progress()));
+    expect(
+      await transfer.confirm(preview),
+      Act0Dat07RestoreOutcomeV1.conflict,
+    );
+    expect(destination.current, contains('concurrent'));
+    expect(destination.writes, 0);
+  });
+
+  test('DAT07 indeterminate ACK cannot award twice on retry', () async {
+    final original = _progress();
+    final destination = _MemoryPort()..loseAckAfterLanding = true;
+    final transfer = Act0Dat07TransferV1(codec: _codec, port: destination);
+    expect(
+      await transfer.confirm(await transfer.inspect(_file(original))),
+      Act0Dat07RestoreOutcomeV1.notVerified,
+    );
+    expect(destination.current, original);
+    expect(destination.writes, 1);
+    final retry = await transfer.inspect(_file(original));
+    expect(retry.alreadyPresent, true);
+    expect(
+      await transfer.confirm(retry),
+      Act0Dat07RestoreOutcomeV1.alreadyPresent,
+    );
+    expect(destination.writes, 1);
+  });
+
+  test('DAT07 rejects invalid timestamp, truncation, and oversized files', () {
+    final source = _file(_progress());
+    final dateDamaged = _rewrite(
+      source,
+      (m) => m['createdAtUtc'] = 'not-a-date',
+    );
+    expect(
+      () => _codec.inspectBytes(dateDamaged),
+      throwsA(isA<Act0Dat07ErrorV1>().having(
+        (e) => e.code,
+        'code',
+        Act0Dat07ErrorCodeV1.invalidFile,
+      )),
+    );
+    expect(
+      () => _codec.inspectBytes(Uint8List.fromList(
+        source.sublist(0, source.length ~/ 2),
+      )),
+      throwsA(isA<Act0Dat07ErrorV1>()),
+    );
+    expect(
+      () => _codec.inspectBytes(Uint8List(act0Dat07MaxFileBytesV1 + 1)),
+      throwsA(isA<Act0Dat07ErrorV1>().having(
+        (e) => e.code,
+        'code',
+        Act0Dat07ErrorCodeV1.tooLarge,
+      )),
+    );
   });
 
   test('DAT07 preview cancellation and changed-local race never write', () async {
