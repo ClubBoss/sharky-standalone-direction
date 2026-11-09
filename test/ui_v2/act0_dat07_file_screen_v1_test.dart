@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -63,10 +64,15 @@ void main() {
     exportedAtUtc: DateTime.utc(2026, 11, 9),
   );
 
-  Widget screen(_FixturePort port, _FakeFiles files) => MaterialApp(
+  Widget screen(
+    _FixturePort port,
+    _FakeFiles files, {
+    Future<void> Function()? reload,
+  }) => MaterialApp(
     home: Act0Dat07TransferScreenV1(
       controller: Act0Dat07TransferV1(codec: codec, port: port),
       fileBridge: files,
+      onRestored: reload ?? () async {},
     ),
   );
 
@@ -113,8 +119,15 @@ void main() {
     await tester.pumpWidget(screen(port, files));
     await tester.tap(find.byKey(const Key('dat07_select_file')));
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.byKey(const Key('dat07_conflict')), 120);
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('dat07_conflict')),
+      120,
+    );
     expect(find.byKey(const Key('dat07_conflict')), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('dat07_confirm')),
+      120,
+    );
     final button = tester.widget<FilledButton>(
       find.byKey(const Key('dat07_confirm')),
     );
@@ -132,6 +145,41 @@ void main() {
     expect(files.shared, isNotNull);
     expect(codec.inspectBytes(files.shared!).earnedXp, 7);
     expect(port.writes, 0);
+  });
+
+  testWidgets('DAT07 successful restore waits for shell remount', (tester) async {
+    _phone(tester);
+    final port = _FixturePort();
+    final files = _FakeFiles(file());
+    final restart = Completer<void>();
+    var callbackStarted = false;
+    await tester.pumpWidget(screen(
+      port,
+      files,
+      reload: () {
+        callbackStarted = true;
+        return restart.future;
+      },
+    ));
+    await tester.tap(find.byKey(const Key('dat07_select_file')));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('dat07_confirm')),
+      120,
+    );
+    await tester.tap(find.byKey(const Key('dat07_confirm')));
+    await tester.pump();
+    expect(callbackStarted, true);
+    expect(port.writes, 1);
+    expect(
+      tester.widget<FilledButton>(
+        find.byKey(const Key('dat07_confirm')),
+      ).onPressed,
+      isNull,
+    );
+    restart.complete();
+    await tester.pumpAndSettle();
+    expect(find.text('Saved progress restored and reloaded.'), findsOneWidget);
   });
 
   testWidgets('DAT07 OS picker cancel yields no import or misleading success', (tester) async {
