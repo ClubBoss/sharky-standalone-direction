@@ -14720,7 +14720,7 @@ final _w2BorderlineBucketRunner = _world3BucketsIntroRunner.copyWith(
   lessonId: 'w2_borderline_bucket_qjs',
   lessonTitle: 'Hand buckets',
   lessonSubtitle: 'Hand Discipline',
-  caption: 'Hero holds Q♥ J♠ before the flop.',
+  caption: 'Hero holds Q\u2665 J\u2665 before the flop.',
   hint: 'Connected high cards can play, but they need position and frame.',
   question: 'Which bucket is QJs before context helps?',
   options: const <Act0RunnerOptionV1>[
@@ -14760,7 +14760,7 @@ final _w2BorderlineBucketRunner = _world3BucketsIntroRunner.copyWith(
   table: _whatYouCanDoRunner.table.copyWith(
     heroCards: const <Act0CardStateV1>[
       Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: 'J', suit: 's'),
+      Act0CardStateV1(rank: 'J', suit: 'h', tone: Act0CardToneV1.red),
     ],
     centerLabel: 'QJs preflop',
     highlightedCardIds: const <String>['hero_0', 'hero_1'],
