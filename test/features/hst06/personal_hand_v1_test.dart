@@ -122,6 +122,7 @@ void main() {
   test('unsupported room and damaged text emit visible errors', () {
     for (final text in [
       'GGPoker Hand #123: anything',
+      r"PokerStars Hand #123: Tournament #77, Hold'em No Limit",
       'Winamax Poker - Game #123',
       'Hand #123: generic room',
       'garbled hand history',
