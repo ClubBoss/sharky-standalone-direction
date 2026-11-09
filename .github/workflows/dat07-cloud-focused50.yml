@@ -1,0 +1,397 @@
+name: DAT-07 focused Linux proof
+
+on:
+  push:
+    branches: [qa/dat07-cloud-focused50-20261110]
+    paths: [.github/workflows/dat07-cloud-focused50.yml]
+
+permissions:
+  contents: read
+concurrency:
+  group: dat07-cloud-focused50-20261110
+  cancel-in-progress: false
+
+jobs:
+  dat07-focused-linux:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    env:
+      PRODUCT_SHA: e0638a64be0489c6d3481935c5e3501576ece15d
+      PRODUCT_TREE: 7fe7c225065addfe5642279be3bc4f2978cff77e
+      BASE_SHA: 3784d421beb5ae7cb8cfaacd10b1083855148850
+      CI: 'true'
+      FLUTTER_SUPPRESS_ANALYTICS: 'true'
+      DART_SUPPRESS_ANALYTICS: 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: workflow
+          persist-credentials: false
+          sparse-checkout: .github/workflows/dat07-cloud-focused50.yml
+          sparse-checkout-cone-mode: false
+      - uses: actions/checkout@v4
+        with:
+          ref: e0638a64be0489c6d3481935c5e3501576ece15d
+          fetch-depth: 3
+          path: product
+          persist-credentials: false
+      - name: Prepare bounded evidence tools
+        run: |
+          mkdir -p gate evidence
+          cat > gate/run_logged.py <<'GATE_EOF'
+          #!/usr/bin/env python3
+          """Stream one bounded CI command to its raw log and write an exit receipt."""
+          import argparse
+          import datetime
+          import json
+          import os
+          from pathlib import Path
+          import selectors
+          import signal
+          import subprocess
+          import sys
+          import time
+
+
+          class SignalTermination(BaseException):
+              def __init__(self, signum):
+                  self.signum = signum
+                  super().__init__(f"signal {signum}")
+
+
+          def main():
+              parser = argparse.ArgumentParser()
+              parser.add_argument("--name", required=True)
+              parser.add_argument("--log", required=True)
+              parser.add_argument("--receipt", required=True)
+              parser.add_argument("--follow-log")
+              parser.add_argument("--timeout-seconds", required=True, type=float)
+              parser.add_argument("--heartbeat-seconds", default=60, type=float)
+              parser.add_argument("command", nargs=argparse.REMAINDER)
+              args = parser.parse_args()
+              command = args.command[1:] if args.command[:1] == ["--"] else args.command
+              if not command or args.timeout_seconds <= 0 or args.heartbeat_seconds <= 0:
+                  parser.error("command and positive timeout/heartbeat values are required")
+              log_path, receipt_path = Path(args.log), Path(args.receipt)
+              log_path.parent.mkdir(parents=True, exist_ok=True)
+              receipt_path.parent.mkdir(parents=True, exist_ok=True)
+              started_at = datetime.datetime.now(datetime.timezone.utc).isoformat()
+              started = time.monotonic()
+              deadline = started + args.timeout_seconds
+              next_heartbeat = started + args.heartbeat_seconds
+              last_output = started
+              follow_offset = 0
+              timed_out = False
+              kill_deadline = None
+              process = None
+              error = None
+              exit_code = 1
+              def interrupt(signum, _frame):
+                  raise SignalTermination(signum)
+              previous_handlers = {s: signal.signal(s, interrupt) for s in (signal.SIGTERM, signal.SIGINT)}
+              def follow_raw(limit=4):
+                  nonlocal follow_offset, last_output
+                  if not args.follow_log or not Path(args.follow_log).exists():
+                      return False
+                  got_data = False
+                  with Path(args.follow_log).open("rb") as source:
+                      source.seek(follow_offset)
+                      for _ in range(limit):
+                          chunk = source.read(65536)
+                          if not chunk:
+                              break
+                          sys.stdout.buffer.write(chunk)
+                          sys.stdout.buffer.flush()
+                          follow_offset += len(chunk)
+                          last_output = time.monotonic()
+                          got_data = True
+                  return got_data
+              print(f"BEGIN {args.name} timeout={args.timeout_seconds:g}s", flush=True)
+              try:
+                  with log_path.open("wb") as log, selectors.DefaultSelector() as selector:
+                      process = subprocess.Popen(command, stdout=subprocess.PIPE,
+                                                 stderr=subprocess.STDOUT,
+                                                 start_new_session=True, bufsize=0)
+                      selector.register(process.stdout, selectors.EVENT_READ)
+                      while selector.get_map() or process.poll() is None:
+                          follow_raw()
+                          now = time.monotonic()
+                          if now >= deadline and not timed_out:
+                              timed_out = True
+                              print(f"\nTIMEOUT {args.name}; terminating command group", flush=True)
+                              kill_deadline = now + 5
+                              try:
+                                  os.killpg(process.pid, signal.SIGTERM)
+                              except ProcessLookupError:
+                                  pass
+                          if kill_deadline is not None and now >= kill_deadline:
+                              try:
+                                  os.killpg(process.pid, signal.SIGKILL)
+                              except ProcessLookupError:
+                                  pass
+                              kill_deadline = None
+                          if now >= next_heartbeat:
+                              print(f"\nHEARTBEAT {args.name} elapsed={now-started:.0f}s "
+                                    f"last_output_age={now-last_output:.0f}s "
+                                    f"process_running={process.poll() is None}", flush=True)
+                              next_heartbeat = now + args.heartbeat_seconds
+                          for key, _ in selector.select(timeout=0.2):
+                              chunk = os.read(key.fd, 65536)
+                              if not chunk:
+                                  selector.unregister(key.fileobj)
+                                  continue
+                              log.write(chunk)
+                              log.flush()
+                              sys.stdout.buffer.write(chunk)
+                              sys.stdout.buffer.flush()
+                              last_output = time.monotonic()
+                      result = process.wait()
+                      while follow_raw():
+                          pass
+                      exit_code = 124 if timed_out else (result if result >= 0 else 128 - result)
+              except BaseException as exc:
+                  error = f"{type(exc).__name__}: {exc}"
+                  exit_code = (128 + exc.signum if isinstance(exc, SignalTermination)
+                               else 130 if isinstance(exc, KeyboardInterrupt) else 1)
+              finally:
+                  for sig in previous_handlers:
+                      signal.signal(sig, signal.SIG_IGN)
+                  if process is not None:
+                      try:
+                          os.killpg(process.pid, signal.SIGKILL)
+                      except ProcessLookupError:
+                          pass
+                      try:
+                          process.wait(timeout=5)
+                      except subprocess.TimeoutExpired:
+                          error = (error or "") + "; command group did not exit after SIGKILL"
+                          exit_code = exit_code or 1
+                  receipt = {
+                      "name": args.name,
+                      "started_at": started_at,
+                      "finished_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                      "elapsed_seconds": round(time.monotonic() - started, 3),
+                      "timeout_seconds": args.timeout_seconds,
+                      "timed_out": timed_out,
+                      "exit_code": exit_code,
+                      "error": error,
+                  }
+                  receipt_path.write_text(json.dumps(receipt, indent=2) + "\n")
+                  print(f"\nEND {args.name} exit={exit_code} elapsed={receipt['elapsed_seconds']}s", flush=True)
+                  for sig, previous in previous_handlers.items():
+                      signal.signal(sig, previous)
+              return exit_code
+
+
+          if __name__ == "__main__":
+              sys.exit(main())
+          GATE_EOF
+          cat > gate/assert_events.py <<'GATE_EOF'
+          #!/usr/bin/env python3
+          """Adjudicate Dart machine events without counting loaders or hidden hooks."""
+          import collections
+          import json
+          from pathlib import Path
+          import sys
+
+
+          def adjudicate(path):
+              expected = {
+                  "test/ui_v2/act0_dat07_transfer_v1_test.dart": 12,
+                  "test/ui_v2/act0_dat07_canonical_store_port_v1_test.dart": 8,
+                  "test/ui_v2/act0_dat07_file_screen_v1_test.dart": 9,
+                  "test/ui_v2/act0_dat07_restore_faults_v1_test.dart": 13,
+                  "test/ui_v2/act0_dat07_shell_integration_v1_test.dart": 8,
+              }
+              suites, tests, dones = {}, {}, {}
+              final, errors, non_json = [], [], []
+              for number, line in enumerate(Path(path).read_text().splitlines(), 1):
+                  if not line.strip():
+                      continue
+                  try:
+                      event = json.loads(line)
+                  except json.JSONDecodeError:
+                      non_json.append(number)
+                      continue
+                  kind = event.get("type")
+                  if kind == "suite":
+                      suites[event["suite"]["id"]] = event["suite"]["path"]
+                  elif kind == "testStart":
+                      test = event["test"]
+                      assert test["id"] not in tests, "DUPLICATE_TEST_START"
+                      tests[test["id"]] = test
+                  elif kind == "testDone":
+                      assert event["testID"] not in dones, "DUPLICATE_TEST_DONE"
+                      dones[event["testID"]] = event
+                  elif kind == "done":
+                      final.append(event)
+                  elif kind == "error":
+                      errors.append(event)
+              rows, excluded, unfinished = [], [], []
+              for test_id, test in tests.items():
+                  done = dones.get(test_id)
+                  name = test["name"]
+                  if done is None:
+                      unfinished.append({"id": test_id, "name": name})
+                      continue
+                  if name.startswith("loading ") or done.get("hidden"):
+                      excluded.append({"id": test_id, "name": name, "result": done.get("result")})
+                      continue
+                  suite = suites.get(test["suiteID"], "UNKNOWN")
+                  if "/test/" in suite:
+                      suite = "test/" + suite.split("/test/", 1)[1]
+                  rows.append({"id": test_id, "suite": suite, "name": name,
+                               "result": done.get("result"),
+                               "skipped": bool(done.get("skipped") or test.get("metadata", {}).get("skip"))})
+              actual = collections.Counter(row["suite"] for row in rows)
+              success = (
+                  len(final) == 1 and final[0].get("success") is True
+                  and not errors and not non_json and not unfinished
+                  and not (set(dones) - set(tests))
+                  and dict(actual) == expected
+                  and len(rows) == 50
+                  and all(row["result"] == "success" and not row["skipped"] for row in rows)
+                  and all(row["result"] == "success" for row in excluded)
+              )
+              return {
+                  "status": "PASS_DAT07_FOCUSED50" if success else "FAIL_DAT07_FOCUSED50",
+                  "expected_suite_counts": expected,
+                  "actual_suite_counts": dict(actual),
+                  "authored_total": len(rows),
+                  "authored_passed": sum(r["result"] == "success" and not r["skipped"] for r in rows),
+                  "authored_failed": sum(r["result"] != "success" and not r["skipped"] for r in rows),
+                  "authored_skipped": sum(r["skipped"] for r in rows),
+                  "excluded_loading_or_hidden": excluded,
+                  "unfinished": unfinished,
+                  "errors": errors,
+                  "non_json_line_numbers": non_json,
+                  "final_events": final,
+                  "tests": rows,
+                  "scope": "Five focused DAT-07 suites only; not native, full DoD, or score acceptance.",
+              }
+
+
+          if __name__ == "__main__":
+              result = adjudicate(sys.argv[1])
+              Path(sys.argv[2]).write_text(json.dumps(result, indent=2) + "\n")
+              print(json.dumps({k: v for k, v in result.items() if k not in ("tests", "errors", "excluded_loading_or_hidden")}, indent=2))
+              sys.exit(0 if result["status"] == "PASS_DAT07_FOCUSED50" else 1)
+          GATE_EOF
+          cat > gate/expected-paths.txt <<'GATE_EOF'
+          lib/ui_v2/act0_shell/academy_leaves/act0_academy_settings_leaf_v1.dart
+          lib/ui_v2/act0_shell/act0_academy_runtime_adapter_v1.dart
+          lib/ui_v2/act0_shell/act0_canonical_path_root_v1.dart
+          lib/ui_v2/act0_shell/act0_dat07_canonical_store_port_v1.dart
+          lib/ui_v2/act0_shell/act0_dat07_file_screen_v1.dart
+          lib/ui_v2/act0_shell/act0_dat07_shell_host_v1.dart
+          lib/ui_v2/act0_shell/act0_dat07_transfer_v1.dart
+          lib/ui_v2/act0_shell/act0_progress_store_v1.dart
+          lib/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart
+          lib/ui_v2/app_root.dart
+          test/ui_v2/act0_dat07_canonical_store_port_v1_test.dart
+          test/ui_v2/act0_dat07_file_screen_v1_test.dart
+          test/ui_v2/act0_dat07_restore_faults_v1_test.dart
+          test/ui_v2/act0_dat07_shell_integration_v1_test.dart
+          test/ui_v2/act0_dat07_transfer_v1_test.dart
+          test/ui_v2/act0_shell_preview_screen_v1_test.dart
+          GATE_EOF
+      - name: Verify frozen source and all 16 paths
+        run: |
+          set -euo pipefail
+          test "$(git -C product rev-parse HEAD)" = "$PRODUCT_SHA"
+          test "$(git -C product rev-parse HEAD^{tree})" = "$PRODUCT_TREE"
+          test -z "$(git -C product status --porcelain)"
+          git -C product rev-parse HEAD HEAD^{tree} > evidence/product-identity.txt
+          git -C product diff --name-only "$BASE_SHA" "$PRODUCT_SHA" -- '*.dart' | LC_ALL=C sort > evidence/actual-paths.txt
+          LC_ALL=C sort gate/expected-paths.txt > evidence/expected-paths.txt
+          test "$(wc -l < evidence/actual-paths.txt)" -eq 16
+          diff -u evidence/expected-paths.txt evidence/actual-paths.txt
+          printf '%s\n' "$GITHUB_SHA" > evidence/workflow-sha.txt
+          cp workflow/.github/workflows/dat07-cloud-focused50.yml evidence/workflow.yml
+          (cd product && sha256sum pubspec.lock ios/Podfile.lock) > evidence/locks-before.sha256
+          (cd product && xargs sha256sum < ../evidence/actual-paths.txt) > evidence/source-files.sha256
+          (cd product && bash tools/sharky_context_capsule_v2.sh) > evidence/context-capsule.txt 2>&1
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: false
+      - name: Prepare official hosted dependencies and verify lock identity
+        id: setup
+        timeout-minutes: 12
+        working-directory: product
+        run: |
+          set -euo pipefail
+          python3 ../gate/run_logged.py --name flutter-version --log ../evidence/flutter-version-console.log --receipt ../evidence/flutter-version-receipt.json --follow-log ../evidence/dat07-flutter-version.raw.log --timeout-seconds 90 -- bash tools/sharky_compact_evidence_v1.sh --id dat07-flutter-version --dir ../evidence -- flutter --version --machine
+          cp ../evidence/dat07-flutter-version.raw.log ../evidence/flutter.json
+          python3 ../gate/run_logged.py --name dart-version --log ../evidence/dart-version-console.log --receipt ../evidence/dart-version-receipt.json --follow-log ../evidence/dat07-dart-version.raw.log --timeout-seconds 60 -- bash tools/sharky_compact_evidence_v1.sh --id dat07-dart-version --dir ../evidence -- dart --version
+          cp ../evidence/dat07-dart-version.raw.log ../evidence/dart-version.txt
+          python3 ../gate/run_logged.py --name pub-get --log ../evidence/pub-get-console.log --receipt ../evidence/pub-get-receipt.json --follow-log ../evidence/dat07-pub-get.raw.log --timeout-seconds 480 -- bash tools/sharky_compact_evidence_v1.sh --id dat07-pub-get --dir ../evidence -- flutter pub get
+          (sha256sum pubspec.lock ios/Podfile.lock) > ../evidence/locks-after.sha256
+          diff -u ../evidence/locks-before.sha256 ../evidence/locks-after.sha256
+          git diff --exit-code
+          test -z "$(git status --porcelain --untracked-files=no)"
+      - name: Check format on exact 16 DAT Dart paths without changes
+        id: format
+        timeout-minutes: 4
+        working-directory: product
+        run: |
+          set -euo pipefail
+          mapfile -t PATHS < ../evidence/actual-paths.txt
+          python3 ../gate/run_logged.py --name format16 --log ../evidence/format-console.log --receipt ../evidence/format-receipt.json --follow-log ../evidence/dat07-format16.raw.log --timeout-seconds 180 -- bash tools/sharky_compact_evidence_v1.sh --id dat07-format16 --dir ../evidence -- dart format --output=none --set-exit-if-changed "${PATHS[@]}"
+      - name: Analyze exact 16 DAT Dart paths
+        id: analyze
+        timeout-minutes: 10
+        working-directory: product
+        run: |
+          set -euo pipefail
+          mapfile -t PATHS < ../evidence/actual-paths.txt
+          python3 ../gate/run_logged.py --name analyze16 --log ../evidence/analyze-console.log --receipt ../evidence/analyze-receipt.json --follow-log ../evidence/dat07-analyze16.raw.log --timeout-seconds 540 -- bash tools/sharky_compact_evidence_v1.sh --id dat07-analyze16 --dir ../evidence -- dart analyze "${PATHS[@]}"
+      - name: Run five DAT suites once with machine events
+        id: tests
+        timeout-minutes: 12
+        working-directory: product
+        run: |
+          set -euo pipefail
+          python3 ../gate/run_logged.py --name dat50 --log ../evidence/tests-console.log --receipt ../evidence/tests-receipt.json --follow-log ../evidence/dat07-focused50.raw.log --timeout-seconds 600 -- bash tools/sharky_compact_evidence_v1.sh --id dat07-focused50 --dir ../evidence -- flutter test --no-pub test/ui_v2/act0_dat07_transfer_v1_test.dart test/ui_v2/act0_dat07_canonical_store_port_v1_test.dart test/ui_v2/act0_dat07_file_screen_v1_test.dart test/ui_v2/act0_dat07_restore_faults_v1_test.dart test/ui_v2/act0_dat07_shell_integration_v1_test.dart -r json
+      - name: Adjudicate real test events without loading or skipped counts
+        if: ${{ always() && steps.tests.outcome != 'skipped' }}
+        run: |
+          set -euo pipefail
+          python3 gate/assert_events.py evidence/dat07-focused50.raw.log evidence/dat07-focused50-results.json
+      - name: Seal raw evidence and unchanged source
+        if: always()
+        env:
+          SETUP_OUTCOME: ${{ steps.setup.outcome }}
+          FORMAT_OUTCOME: ${{ steps.format.outcome }}
+          ANALYZE_OUTCOME: ${{ steps.analyze.outcome }}
+          TESTS_OUTCOME: ${{ steps.tests.outcome }}
+        run: |
+          set -euo pipefail
+          mkdir -p evidence
+          cp -R gate evidence/gate
+          git -C product diff --binary > evidence/source-drift.patch
+          git -C product status --porcelain --untracked-files=no > evidence/final-status.txt
+          python3 - <<'RECEIPT'
+          import json, os
+          from pathlib import Path
+          p=Path('evidence')
+          result=json.loads((p/'dat07-focused50-results.json').read_text()) if (p/'dat07-focused50-results.json').exists() else None
+          outcomes={k:os.environ.get(k,'') for k in ('SETUP_OUTCOME','FORMAT_OUTCOME','ANALYZE_OUTCOME','TESTS_OUTCOME')}
+          clean=not (p/'source-drift.patch').read_bytes() and not (p/'final-status.txt').read_text().strip()
+          passed=all(v=='success' for v in outcomes.values()) and clean and result is not None and result.get('status')=='PASS_DAT07_FOCUSED50'
+          receipt={'status':'PASS_SCOPED_DAT07_LINUX' if passed else 'NOT_PASS_DAT07_LINUX','product_sha':os.environ['PRODUCT_SHA'],'product_tree':os.environ['PRODUCT_TREE'],'outcomes':outcomes,'source_unchanged':clean,'not_proven':['native Files/share','native restore','true process restart','full DAT-07 DoD','score acceptance']}
+          (p/'verdict.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          print(json.dumps(receipt,indent=2))
+          RECEIPT
+          (cd evidence && find . -type f ! -name evidence.sha256 -print0 | sort -z | xargs -0 sha256sum > evidence.sha256)
+          cat evidence/verdict.json >> "$GITHUB_STEP_SUMMARY"
+          test ! -s evidence/source-drift.patch
+          test ! -s evidence/final-status.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dat07-focused50-${{ github.run_id }}
+          path: evidence/
+          if-no-files-found: error
+          retention-days: 3
