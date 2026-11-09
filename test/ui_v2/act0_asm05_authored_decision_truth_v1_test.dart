@@ -45,10 +45,7 @@ void main() {
       'call $price: turn projection keeps positions without stale blind labels',
       () {
         final table = _task(
-          Act0Asm05AuthoredExerciseV1(
-            preDecision: source,
-            realizedRiver: 'Td',
-          ),
+          Act0Asm05AuthoredExerciseV1(preDecision: source, realizedRiver: 'Td'),
         ).runner.table;
         final sb = table.seats.singleWhere((seat) => seat.seatId == 'sb');
         final bb = table.seats.singleWhere((seat) => seat.seatId == 'bb');
