@@ -4,7 +4,8 @@
 /// BB is a number of big blinds, not the big-blind seat or a currency.
 ///
 /// These functions use unrounded IEEE 754 doubles (about 15-17 significant
-/// decimal digits). The caller owns display rounding. This is not a settlement,
+/// decimal digits). Integers outside the exact double range are rejected.
+/// The caller owns display rounding. This is not a settlement,
 /// legal-action, rake, side-pot, or source-history authority. Do not use the
 /// output to grade poker decisions or to assert a hand's equity.
 
@@ -55,7 +56,7 @@ double hlp02ChipsToBbV1({
 /// total). It must already be derived and, where needed, stack-capped by the
 /// existing poker-state owner. Unqualified side pots must not be included.
 ///
-/// Assumptions: no rake, future betting, refunds, or implied odds.
+/// Assumptions: no rake, ties/split pots, future betting, refunds, or implied odds.
 /// Required win-rate threshold = call / (pot before call + call).
 /// This threshold is NOT the hero hand's actual equity.
 final class Hlp02CallPriceV1 {
@@ -108,7 +109,7 @@ Hlp02CallPriceV1? hlp02CallPriceV1({
 }
 
 double _finiteNonnegative(num value, String name) {
-  final number = value.toDouble();
+  final number = _checkedDouble(value, name);
   if (!number.isFinite || number < 0) {
     throw ArgumentError.value(value, name, 'must be finite and >= 0');
   }
@@ -116,9 +117,24 @@ double _finiteNonnegative(num value, String name) {
 }
 
 double _finitePositive(num value, String name) {
-  final number = value.toDouble();
+  final number = _checkedDouble(value, name);
   if (!number.isFinite || number <= 0) {
     throw ArgumentError.value(value, name, 'must be finite and > 0');
   }
   return number;
+}
+
+double _checkedDouble(num value, String name) {
+  // An int beyond this bound can silently change when converted to double.
+  const maxExactDoubleInteger = 9007199254740991;
+  if (value is int &&
+      (value > maxExactDoubleInteger ||
+          value < -maxExactDoubleInteger)) {
+    throw ArgumentError.value(
+      value,
+      name,
+      'integer is outside exact double range',
+    );
+  }
+  return value.toDouble();
 }

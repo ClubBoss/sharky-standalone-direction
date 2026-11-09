@@ -78,6 +78,31 @@ void main() {
       }
     });
 
+    test('rejects integer chips beyond exact floating-point range', () {
+      const beyondExactDouble = 9007199254740993;
+      expect(
+        () => hlp02ChipsToBbV1(
+          amountChips: beyondExactDouble,
+          bigBlindChips: 10,
+        ),
+        throwsArgumentError,
+      );
+      expect(
+        () => hlp02BbToChipsV1(
+          amountBb: 1,
+          bigBlindChips: beyondExactDouble,
+        ),
+        throwsArgumentError,
+      );
+      expect(
+        () => hlp02CallPriceV1(
+          potBeforeCallChips: beyondExactDouble,
+          additionalCallChips: 1,
+        ),
+        throwsArgumentError,
+      );
+    });
+
     test('fails closed on overflow and underflow', () {
       expect(
         () => hlp02BbToChipsV1(
