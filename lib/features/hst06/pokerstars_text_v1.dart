@@ -49,12 +49,6 @@ class Hst06PokerStarsPreview {
         'Unsupported format. Use PokerStars English No-Limit Holdem or manual entry.',
       ], []);
     }
-    if (RegExp(r'\bTournament\s*#', caseSensitive: false)
-        .hasMatch(lines.first)) {
-      return const Hst06Preview(null, [
-        'Tournament PokerStars histories are not admitted by this format.',
-      ], []);
-    }
     final errors = <String>[], notes = <String>[];
     final handId = header.group(1)!;
     final currency = RegExp(r'\b(USD|EUR|GBP)\b', caseSensitive: false)
