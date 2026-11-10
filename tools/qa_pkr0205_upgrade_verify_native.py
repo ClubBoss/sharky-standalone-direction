@@ -13,6 +13,40 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def assert_install_continuity(before, after, before_folder, after_folder, *,
+                              simulator, before_kernel, after_kernel):
+    """Same installed app and real learner bytes; OS container UUIDs may move.
+
+    Apple TN2285 documents changing absolute container paths during updates:
+    https://developer.apple.com/library/archive/technotes/tn2285/
+    """
+    bundle = 'com.example.pokerAnalyzer'
+    assert before['simulator'] == after['simulator'] == simulator, 'WRONG_UPGRADE_SIMULATOR'
+    for snapshot, folder in ((before, before_folder), (after, after_folder)):
+        assert snapshot['container_resolution'] == {
+            'simulator': simulator, 'bundle_identifier': bundle,
+            'data': snapshot['data_container'], 'app': snapshot['app_container']
+        }, 'CONTAINER_RESOLUTION_IDENTITY_MISMATCH'
+        assert Path(snapshot['data_container']).is_absolute() and Path(snapshot['app_container']).is_absolute()
+        info = folder / 'installed-Info.plist'
+        assert sha(info) == snapshot['installed_info_plist_sha256'], 'INSTALLED_INFO_RECEIPT_CHANGED'
+        assert plistlib.loads(info.read_bytes())['CFBundleIdentifier'] == bundle, 'WRONG_INSTALLED_BUNDLE'
+        assert snapshot['installed_bundle_identifier'] == bundle, 'WRONG_RECORDED_BUNDLE'
+        assert snapshot['running_product_pids'] == [], 'PRODUCT_RAN_DURING_INSTALL_BOUNDARY'
+        assert sha(folder / 'learner.plist') == snapshot['plist_sha256'], 'RAW_LEARNER_RECEIPT_CHANGED'
+        assert snapshot['preference_files_sha256'][bundle + '.plist'] == snapshot['plist_sha256'], 'LEARNER_PREFERENCE_DOMAIN_MISMATCH'
+    assert (before_folder / 'learner.plist').read_bytes() == (after_folder / 'learner.plist').read_bytes(), 'RAW_LEARNER_STATE_CHANGED_DURING_INSTALL'
+    assert before['preference_files_sha256'] == after['preference_files_sha256'], 'PREFERENCE_DOMAIN_CHANGED_DURING_INSTALL'
+    assert before['installed_kernel_sha256'] == before_kernel, 'INSTALLED_MAIN_BINARY_MISMATCH'
+    assert after['installed_kernel_sha256'] == after_kernel, 'INSTALLED_FINAL_BINARY_MISMATCH'
+    assert before['observed_epoch'] < after['observed_epoch'], 'INSTALL_RECEIPT_TIME_ORDER_MISMATCH'
+    return {'same_simulator_and_bundle': True, 'identical_actual_learner_preferences': True,
+            'data_container_before': before['data_container'], 'data_container_after': after['data_container'],
+            'app_container_before': before['app_container'], 'app_container_after': after['app_container'],
+            'data_container_relocated': before['data_container'] != after['data_container'],
+            'app_container_relocated': before['app_container'] != after['app_container']}
+
+
 def canonical_raw(path):
     plist = plistlib.loads(path.read_bytes())
     values = []
@@ -138,7 +172,11 @@ def verify():
     after_folder = root / 'after-install-before-launch'
     before = json.loads((before_folder / 'snapshot.json').read_text())
     after = json.loads((after_folder / 'snapshot.json').read_text())
-    assert before['data_container'] == after['data_container'] and before['simulator'] == after['simulator'] == device['udid']
+    assert (root / 'sim-id.txt').read_text().strip() == device['udid'], 'SELECTED_SIMULATOR_IDENTITY_MISMATCH'
+    continuity = assert_install_continuity(
+        before, after, before_folder, after_folder, simulator=device['udid'],
+        before_kernel=trusted_main['PKR_MAIN_KERNEL_SHA256'],
+        after_kernel=trusted['PKR_FINAL_KERNEL_SHA256'])
     assert before['running_product_pids'] == after['running_product_pids'] == [], 'PRODUCT_RAN_DURING_INSTALL_BOUNDARY'
     assert (before_folder / 'learner.plist').read_bytes() == (after_folder / 'learner.plist').read_bytes(), 'RAW_LEARNER_STATE_CHANGED_DURING_INSTALL'
     assert before['preference_files_sha256'] == after['preference_files_sha256'], 'PREFERENCE_DOMAIN_CHANGED_DURING_INSTALL'
@@ -227,7 +265,7 @@ def verify():
     observed['upgrade_binding'] = {'main_sha': MAIN, 'final_sha': PRODUCT,
                                    'main_sealed_artifact_id': main_artifact['id'],
                                    'sealed_artifact_id': artifact['id'], 'kernel_sha256': after['installed_kernel_sha256'],
-                                   'same_actual_container': True, 'raw_preferences_unchanged_by_install': True}
+                                   'continuity': continuity, 'raw_preferences_unchanged_by_install': True}
     return {'status': 'PASS_BOUNDED_GENUINE_UPGRADE_EARLYFOLD', 'product_sha': PRODUCT,
             'historical_main_scope': 'REAL_UI_NAVIGATION_PROVENANCE_ONLY_NOT_FINAL_NUMERIC_RECERTIFICATION',
             'early_fold_native': 'fold_discipline_early_fold wrongRaise and ordinary correctFold retry, feedback and actual restart',
@@ -236,7 +274,7 @@ def verify():
             'mastery_retention': 'NOT_CLAIMED', 'observed': observed}
 
 
-root = Path(sys.argv[1])
+root = Path(sys.argv[1]) if len(sys.argv) > 1 else Path('.')
 checkpoints = root / 'checkpoints'
 observed = {}
 MAIN = '3784d421beb5ae7cb8cfaacd10b1083855148850'
@@ -267,12 +305,13 @@ PREFIX_CHOICES = {'hand_discipline_buckets_premium': 'premium', 'hand_discipline
 PLACEMENT_SKIPS = ['what_poker_is_pot_stack', 'what_poker_is_win_ways', 'what_poker_is_showdown_win', 'what_poker_is_all_in_meaning', 'what_poker_is_matched_chips_transfer', 'what_poker_is_live_win_transfer', 'what_poker_is_review', 'cards_ranks_suits_theory', 'cards_ranks_suits_rank_drill', 'cards_ranks_suits_suit_drill', 'cards_ranks_suits_private_board', 'cards_ranks_suits_board_count', 'cards_ranks_suits_best_five', 'cards_ranks_suits_recap', 'your_first_hand_preflop', 'your_first_hand_private_cards_recheck', 'your_first_hand_flop', 'your_first_hand_turn', 'your_first_hand_river', 'your_first_hand_showdown', 'your_first_hand_action_trail', 'your_first_hand_recap', 'actions_theory']
 FINAL_FINGERPRINTS = {'hand_discipline_buckets_intro': '483dd47f9ad37bdc95db449095285e9cc5787adfdb2abfd100c8d42389daf304', 'hand_discipline_buckets_premium': '42ada0b5698d0215f0211ed107b5c5e2e25781383a4d302bfa38b520a951c4fc', 'hand_discipline_buckets_strong': '696451cf963e5639f895bc3f068166045a25cada1572b358321adfcc561ddd1d', 'hand_discipline_buckets_medium': '5d3baf2bdc82468aad8ace7f861fad9f32cd08bafb0c44ce8dc83fb141c5cd32', 'hand_discipline_buckets_trash': '610558c2eec2926c785ba47842d17ba1807569dec034db1be2583f5eac52f3fe', 'hand_discipline_buckets_borderline': 'f528fbd3c9dfdcb4692167d5e0d722cd4d1d107688f631d0f6038a534f8ee4d5', 'hand_discipline_buckets_recap': 'b4f886542d0cd2ff1f95fcdd07b8e34675f2a0a324eabc697d0c8edc52ace285', 'fold_discipline_discipline_intro': '88f0a5ba62417ec84711977e8475723594861c903bdd8de50fbcd37cd23aa722', 'fold_discipline_early_fold': '654db3e84bb298bca713a6b859977e23ee96e53754ca902c747344545b9918db'}
 
-try:
-    verdict = verify()
-except (AssertionError, KeyError, OSError, ValueError, TypeError, plistlib.InvalidFileException) as exc:
-    verdict = {'status': 'FAIL_GENUINE_UPGRADE_NATIVE_ACCEPTANCE', 'error': repr(exc),
-               'product_sha': PRODUCT, 'observed': observed}
-root.mkdir(parents=True, exist_ok=True)
-(root / 'upgrade-native-verdict.json').write_text(json.dumps(verdict, indent=2))
-print(verdict['status'], verdict.get('error', ''))
-sys.exit(0 if verdict['status'].startswith('PASS_') else 1)
+if __name__ == '__main__':
+    try:
+        verdict = verify()
+    except (AssertionError, KeyError, OSError, ValueError, TypeError, plistlib.InvalidFileException) as exc:
+        verdict = {'status': 'FAIL_GENUINE_UPGRADE_NATIVE_ACCEPTANCE', 'error': repr(exc),
+                   'product_sha': PRODUCT, 'observed': observed}
+    root.mkdir(parents=True, exist_ok=True)
+    (root / 'upgrade-native-verdict.json').write_text(json.dumps(verdict, indent=2))
+    print(verdict['status'], verdict.get('error', ''))
+    sys.exit(0 if verdict['status'].startswith('PASS_') else 1)

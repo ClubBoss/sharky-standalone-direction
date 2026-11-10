@@ -200,7 +200,7 @@ jobs:
           xcrun simctl install "$PKR_SIM_ID" output/pkr0205-upgrade/final/Runner.app
           python3 qa-infra/tools/qa_pkr0205_upgrade_watch_checkpoints.py --sim "$PKR_SIM_ID" --snapshot-dir output/pkr0205-upgrade/after-install-before-launch
           python3 - <<'PY'
-          import json, os
+          import json, os, runpy
           from pathlib import Path
           root = Path('output/pkr0205-upgrade')
           before = root / 'before-install'
@@ -208,11 +208,16 @@ jobs:
           a = json.loads((before / 'snapshot.json').read_text())
           b = json.loads((after / 'snapshot.json').read_text())
           assert (before / 'learner.plist').read_bytes() == (after / 'learner.plist').read_bytes(), 'UPGRADE_MUTATED_EXISTING_RAW_PREFERENCES'
-          assert a['data_container'] == b['data_container'] and a['simulator'] == b['simulator'], 'NOT_SAME_ACTUAL_LEARNER_CONTAINER'
+          device = json.loads((root / 'selected-device.json').read_text())
+          assert (root / 'sim-id.txt').read_text().strip() == device['udid'], 'SELECTED_SIMULATOR_IDENTITY_MISMATCH'
+          check = runpy.run_path('qa-infra/tools/qa_pkr0205_upgrade_verify_native.py')['assert_install_continuity']
+          continuity = check(a, b, before, after, simulator=device['udid'],
+                             before_kernel=os.environ['PKR_MAIN_KERNEL_SHA256'],
+                             after_kernel=os.environ['PKR_FINAL_KERNEL_SHA256'])
           assert a['preference_files_sha256'] == b['preference_files_sha256'], 'UPGRADE_CHANGED_PREFERENCE_DOMAIN'
           assert a['installed_kernel_sha256'] == (root / 'main/kernel.sha256').read_text().split()[0]
           assert b['installed_kernel_sha256'] == os.environ['PKR_FINAL_KERNEL_SHA256']
-          (root / 'ordinary-install-verdict.json').write_text(json.dumps({'status': 'PASS_BYTE_IDENTICAL_EXISTING_PREFERENCES_BEFORE_FIRST_FINAL_LAUNCH', 'before': a, 'after': b}, indent=2))
+          (root / 'ordinary-install-verdict.json').write_text(json.dumps({'status': 'PASS_BYTE_IDENTICAL_EXISTING_PREFERENCES_BEFORE_FIRST_FINAL_LAUNCH', 'continuity': continuity, 'before': a, 'after': b}, indent=2))
           PY
       - name: Actual final early-fold wrong answer held repair ordinary retry and restart
         timeout-minutes: 35

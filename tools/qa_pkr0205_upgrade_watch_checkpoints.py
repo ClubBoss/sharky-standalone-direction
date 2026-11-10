@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import plistlib
 import re
 import struct
 import subprocess
@@ -38,6 +39,10 @@ def raw_snapshot(target):
     app_container = subprocess.check_output(
         ['xcrun', 'simctl', 'get_app_container', args.sim,
          'com.example.pokerAnalyzer', 'app'], text=True).strip()
+    info_bytes = (Path(app_container) / 'Info.plist').read_bytes()
+    bundle_identifier = plistlib.loads(info_bytes)['CFBundleIdentifier']
+    assert bundle_identifier == 'com.example.pokerAnalyzer', 'INSTALLED_BUNDLE_IDENTITY_MISMATCH'
+    (target / 'installed-Info.plist').write_bytes(info_bytes)
     kernel = Path(app_container) / 'Frameworks/App.framework/flutter_assets/kernel_blob.bin'
     preference_files = {
         p.name: hashlib.sha256(p.read_bytes()).hexdigest()
@@ -45,6 +50,11 @@ def raw_snapshot(target):
     (target / 'snapshot.json').write_text(json.dumps({
         'simulator': args.sim, 'data_container': container,
         'app_container': app_container, 'observed_epoch': time.time(),
+        'installed_bundle_identifier': bundle_identifier,
+        'installed_info_plist_sha256': hashlib.sha256(info_bytes).hexdigest(),
+        'container_resolution': {'simulator': args.sim,
+                                 'bundle_identifier': 'com.example.pokerAnalyzer',
+                                 'data': container, 'app': app_container},
         'running_product_pids': running,
         'plist_sha256': hashlib.sha256((target / 'learner.plist').read_bytes()).hexdigest(),
         'preference_files_sha256': preference_files,
