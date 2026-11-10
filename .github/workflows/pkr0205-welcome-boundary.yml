@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 8ae1b7d4d1a9d8b1d5401c560c1094e669ebd4b1
+          ref: 9a553673d6c91200f4a136ac3193b7b24c71fc11
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.0'
@@ -20,8 +20,8 @@ jobs:
       - name: Freeze exact product identity and locked dependencies
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = 8ae1b7d4d1a9d8b1d5401c560c1094e669ebd4b1
-          test "$(git rev-parse HEAD^{tree})" = 62f8dc0b1c42c787a38b1bf2604ec19175512d48
+          test "$(git rev-parse HEAD)" = 9a553673d6c91200f4a136ac3193b7b24c71fc11
+          test "$(git rev-parse HEAD^{tree})" = e126830c830f1292e63c35e518a6ba6cde8ed0de
           mkdir -p output/pkr0205-welcome
           git rev-parse HEAD HEAD^{tree} > output/pkr0205-welcome/identity.txt
           sha256sum pubspec.lock > output/pkr0205-welcome/lock-before.txt
@@ -31,7 +31,7 @@ jobs:
       - name: Focused exact-source format and analysis
         run: |
           set -euo pipefail
-          dart format lib/ui_v2/act0_shell/act0_welcome_shell_v1.dart test/ui_v2/act0_welcome_price_source_v1_test.dart | tee output/pkr0205-welcome/format.txt
+          dart format --output=none --set-exit-if-changed lib/ui_v2/act0_shell/act0_welcome_shell_v1.dart test/ui_v2/act0_welcome_price_source_v1_test.dart | tee output/pkr0205-welcome/format.txt
           git diff -- lib/ui_v2/act0_shell/act0_welcome_shell_v1.dart test/ui_v2/act0_welcome_price_source_v1_test.dart > output/pkr0205-welcome/format.diff
           dart analyze lib/ui_v2/act0_shell/act0_welcome_shell_v1.dart test/ui_v2/act0_welcome_price_source_v1_test.dart
       - name: Ungraded Welcome all three choices and actual first-user path
