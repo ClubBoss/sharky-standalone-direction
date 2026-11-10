@@ -252,10 +252,9 @@ Future<_Observed> _submit(
           selectedWorldId: 'synthetic_pkr_oracle',
           selectedLessonId: runner.lessonId,
           selectedTaskId: sourceTaskId ?? runner.lessonId,
-          selectedTaskFamily: sourceTaskFamily ??
-              (sizing
-                  ? Act0TaskFamilyV1.sizing
-                  : Act0TaskFamilyV1.decision),
+          selectedTaskFamily:
+              sourceTaskFamily ??
+              (sizing ? Act0TaskFamilyV1.sizing : Act0TaskFamilyV1.decision),
           telemetrySink: observed.sink,
           evidenceRunId: 'synthetic_pkr_runtime_evidence',
           // Production settled-mode seam isolates grading from animation time.
