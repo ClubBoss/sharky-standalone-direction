@@ -954,8 +954,9 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
               currentMissionTask.stepKind == Act0LessonStepKindV1.learn,
           isSelectable: currentMissionLesson.isSelectable,
           isEnglish: Localizations.localeOf(context).languageCode == 'en',
-          hasActiveScoredChoice:
-              act0IsPrechoiceAssessmentTaskV1(currentMissionTask),
+          hasActiveScoredChoice: act0IsPrechoiceAssessmentTaskV1(
+            currentMissionTask,
+          ),
         )) ...<Widget>[
           const SizedBox(height: 6),
           Act0Hlp02ReferenceButtonV1(
@@ -966,8 +967,9 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
                 currentMissionTask.stepKind == Act0LessonStepKindV1.learn,
             isSelectable: currentMissionLesson.isSelectable,
             isEnglish: Localizations.localeOf(context).languageCode == 'en',
-            hasActiveScoredChoice:
-                act0IsPrechoiceAssessmentTaskV1(currentMissionTask),
+            hasActiveScoredChoice: act0IsPrechoiceAssessmentTaskV1(
+              currentMissionTask,
+            ),
           ),
         ],
         const SizedBox(height: 12),
