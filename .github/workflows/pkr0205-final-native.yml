@@ -1,0 +1,121 @@
+name: PKR02-05 final exact-head EN14Pro learner truth
+on:
+  push:
+    branches: [qa/pkr0205-final-native-20261110]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pkr0205-independent-native-single-writer
+  cancel-in-progress: false
+jobs:
+  native:
+    runs-on: macos-26
+    timeout-minutes: 70
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+      COCOAPODS_DISABLE_STATS: 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: qa-infra
+          ref: acbce293cf1a5a8a20af4ff7441c716c678229ec
+      - uses: actions/checkout@v4
+        with:
+          path: product
+          ref: dc479114063519597e99bc08b69c1ef1eebcfdf5
+      - name: Freeze exact product and host identities
+        run: |
+          set -euo pipefail
+          mkdir -p output/pkr0205-native
+          test "$(git -C product rev-parse HEAD)" = dc479114063519597e99bc08b69c1ef1eebcfdf5
+          test "$(git -C product rev-parse HEAD^{tree})" = da99ca17795eddf6dedb199d9a0363968367da43
+          git -C product rev-parse HEAD HEAD^{tree} > output/pkr0205-native/product-identity.txt
+          git -C qa-infra rev-parse HEAD HEAD^{tree} > output/pkr0205-native/qa-identity.txt
+          sw_vers > output/pkr0205-native/macos.txt
+          xcodebuild -version > output/pkr0205-native/xcode.txt
+          test "$(head -n 1 output/pkr0205-native/xcode.txt)" = 'Xcode 26.2'
+          xcrun simctl list -j > output/pkr0205-native/simulator-inventory.json
+          ruby -e 'require "xcodeproj"; puts Xcodeproj::VERSION' > output/pkr0205-native/xcodeproj-version.txt
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: false
+      - name: Build and seal ordinary product with observer-only telemetry
+        working-directory: product
+        run: |
+          set -euo pipefail
+          flutter --version > ../output/pkr0205-native/flutter.txt
+          shasum -a 256 pubspec.lock > ../output/pkr0205-native/lock-before.txt
+          flutter pub get > ../output/pkr0205-native/pub-get.log 2>&1
+          shasum -a 256 pubspec.lock > ../output/pkr0205-native/lock-resolved.txt
+          cmp ../output/pkr0205-native/lock-before.txt ../output/pkr0205-native/lock-resolved.txt
+          flutter build ios --simulator --debug --dart-define=HNP_TELEMETRY=true > ../output/pkr0205-native/build.log 2>&1
+          git diff --exit-code -- lib pubspec.lock
+          ditto build/ios/iphonesimulator/Runner.app ../output/pkr0205-native/Runner.app
+          cp pubspec.lock ../output/pkr0205-native/pubspec.lock
+          cp ios/Podfile.lock ../output/pkr0205-native/Podfile.lock
+          echo 'HNP_TELEMETRY=true; ordinary fresh UI; no app state, route or progress injection' > ../output/pkr0205-native/build-mode.txt
+          cd ../output/pkr0205-native
+          find Runner.app -type f -print0 | xargs -0 shasum -a 256 > runner-files.sha256
+          shasum -a 256 Runner.app/Frameworks/App.framework/flutter_assets/kernel_blob.bin > kernel.sha256
+          ditto -c -k --sequesterRsrc --keepParent Runner.app Runner.zip
+          shasum -a 256 Runner.zip > runner-archive.sha256
+      - name: Create only fresh iPhone 14 Pro with iOS 26.2
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          root = Path('output/pkr0205-native')
+          inventory = json.loads((root / 'simulator-inventory.json').read_text())
+          types = [t for t in inventory['devicetypes'] if t['name'] == 'iPhone 14 Pro']
+          runtimes = [r for r in inventory['runtimes'] if r.get('isAvailable') and r['version'] == '26.2' and 'iOS' in r['identifier']]
+          assert len(types) == 1 and len(runtimes) == 1, 'EXACT_EN14PRO_RUNTIME_NOT_AVAILABLE_NO_FALLBACK'
+          device_type, runtime = types[0], runtimes[0]
+          sim = subprocess.check_output(['xcrun', 'simctl', 'create', 'PKR0205-EN14Pro-Fresh', device_type['identifier'], runtime['identifier']], text=True).strip()
+          (root / 'sim-id.txt').write_text(sim)
+          (root / 'selected-device.json').write_text(json.dumps({'udid': sim, 'model': device_type['name'], 'device_type': device_type['identifier'], 'runtime': runtime['identifier'], 'runtime_version': runtime['version'], 'language': 'en', 'logical_size': [393, 852]}, indent=2))
+          PY
+          PKR_SIM_ID="$(cat output/pkr0205-native/sim-id.txt)"
+          xcrun simctl boot "$PKR_SIM_ID"
+          xcrun simctl bootstatus "$PKR_SIM_ID" -b
+          xcrun simctl install "$PKR_SIM_ID" output/pkr0205-native/Runner.app
+          open -a Simulator --args -CurrentDeviceUDID "$PKR_SIM_ID"
+          xcrun simctl launch "$PKR_SIM_ID" com.example.pokerAnalyzer -AppleLanguages '(en)' -AppleLocale en_US > output/pkr0205-native/prewarm-launch.txt
+          # Optional prewarm screenshot was a 55s macOS-26 simulator timeout;
+          # native screen receipts in the real learner flow stay mandatory.
+          echo 'Prewarm launch only; no pre-choice native PASS claimed' > output/pkr0205-native/prewarm-scope.txt
+          xcrun simctl terminate "$PKR_SIM_ID" com.example.pokerAnalyzer
+          ruby qa-infra/tools/qa_pkr0205_create_xcodeproj.rb
+      - name: One ordinary learner UI route and read-only receipts
+        run: |
+          set -euo pipefail
+          PKR_SIM_ID="$(cat output/pkr0205-native/sim-id.txt)"
+          python3 -u qa-infra/tools/qa_pkr0205_watch_checkpoints.py --log output/pkr0205-native/native-tests.log --sim "$PKR_SIM_ID" --output output/pkr0205-native/checkpoints > output/pkr0205-native/collector.log 2>&1 &
+          PKR_COLLECTOR_PID=$!
+          trap 'kill "$PKR_COLLECTOR_PID" 2>/dev/null || true' EXIT
+          NSUnbufferedIO=YES xcodebuild test -project qa-infra/qa/pkr0205_hosted/PKR0205Native.xcodeproj -scheme PKR0205NativeUITests -destination "platform=iOS Simulator,id=$PKR_SIM_ID" -parallel-testing-enabled NO -maximum-concurrent-test-simulator-destinations 1 -only-testing:PKR0205NativeUITests/PKR0205NativeUITests/testDefinitionsFeedbackRestartAndUnprovedBlock -resultBundlePath "$PWD/output/pkr0205-native/native-tests.xcresult" CODE_SIGNING_ALLOWED=NO > output/pkr0205-native/native-tests.log 2>&1
+      - name: Verify canonical source-owned receipts and real process restart
+        if: always()
+        run: python3 qa-infra/tools/qa_pkr0205_verify_native.py output/pkr0205-native
+      - name: Seal actual evidence including preserved installed binary
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p output/pkr0205-native
+          if test -d output/pkr0205-native/native-tests.xcresult; then
+            xcrun xcresulttool export attachments --path output/pkr0205-native/native-tests.xcresult --output-path output/pkr0205-native/attachments || true
+          fi
+          cd output/pkr0205-native
+          find . -type f ! -path './Runner.app/*' ! -name evidence.sha256 -print0 | xargs -0 shasum -a 256 > evidence.sha256
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pkr0205-independent-native-${{ github.run_id }}
+          path: |
+            output/pkr0205-native/
+            !output/pkr0205-native/Runner.app/**
+          if-no-files-found: error
+          retention-days: 30
