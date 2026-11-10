@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: bdddc9b2f250a4bfcb07d76096e5c856c7bd9475
+          ref: 9ac5cb04081085ffadf57b40b8cde4b3239ba186
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.0'
@@ -84,7 +84,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: table-truth-bdddc9b2f250a4bfcb07d76096e5c856c7bd9475
+          name: table-truth-9ac5cb04081085ffadf57b40b8cde4b3239ba186
           path: output/table_truth
   pkr-source:
     runs-on: ubuntu-latest
@@ -92,7 +92,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: bdddc9b2f250a4bfcb07d76096e5c856c7bd9475
+          ref: 9ac5cb04081085ffadf57b40b8cde4b3239ba186
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.0'
@@ -101,8 +101,8 @@ jobs:
       - name: Freeze exact product and locked dependency graph
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = bdddc9b2f250a4bfcb07d76096e5c856c7bd9475
-          test "$(git rev-parse HEAD^{tree})" = 9edc912c4cddd7f01e37283ef094c13e60ea4b49
+          test "$(git rev-parse HEAD)" = 9ac5cb04081085ffadf57b40b8cde4b3239ba186
+          test "$(git rev-parse HEAD^{tree})" = 8092cae60499eaa412a163849835f33acc90acdd
           mkdir -p output/pkr0205-independent
           git rev-parse HEAD HEAD^{tree} > output/pkr0205-independent/product.txt
           sha256sum pubspec.lock > output/pkr0205-independent/lock-before.txt
