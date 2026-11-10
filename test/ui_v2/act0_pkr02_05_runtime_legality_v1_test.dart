@@ -311,6 +311,64 @@ void _setTestViewport(WidgetTester tester) => _setPkrEnReferenceV1(tester);
 
 void main() {
   testWidgets(
+    'real W1 check-definition question is not blocked by missing hand ledger',
+    (tester) async {
+      _setTestViewport(tester);
+      final task = Act0ShellStateV1.sample.worlds
+          .expand((w) => w.lessons)
+          .expand((l) => l.taskList)
+          .singleWhere((t) => t.taskId == 'actions_legal_context');
+      final result = await _submit(
+        tester,
+        _Spot.flopBet,
+        '',
+        sourceRunner: task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingSteps: const [],
+        ),
+        sourceTaskId: task.taskId,
+        sourceOptionId: 'check',
+      );
+      expect(result.optionWasOffered, isTrue);
+      expect(result.forwarded.single.id, 'check');
+      expect(result.decisions.single.isCorrect, isTrue);
+      expect(
+        find.byKey(const Key('act0_betting_price_unavailable')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'real W1 wrong fold-definition answer still teaches without fake source',
+    (tester) async {
+      _setTestViewport(tester);
+      final task = Act0ShellStateV1.sample.worlds
+          .expand((w) => w.lessons)
+          .expand((l) => l.taskList)
+          .singleWhere((t) => t.taskId == 'actions_check_drill');
+      final result = await _submit(
+        tester,
+        _Spot.flopBet,
+        '',
+        sourceRunner: task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingSteps: const [],
+        ),
+        sourceTaskId: task.taskId,
+        sourceOptionId: 'fold',
+      );
+      expect(result.optionWasOffered, isTrue);
+      expect(result.forwarded.single.id, 'fold');
+      expect(result.decisions.single.isCorrect, isFalse);
+      expect(
+        find.byKey(const Key('act0_betting_price_unavailable')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
     'real W4 half-pot arithmetic answer remains accessible without stack fiction',
     (tester) async {
       _setTestViewport(tester);
