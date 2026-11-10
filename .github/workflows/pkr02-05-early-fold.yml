@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ccd020d2074e0c98d1546551b15ca8a799956405
+          ref: 727d07ad4dd19bd39da3aedac098baa0361f485b
           persist-credentials: false
       - uses: subosito/flutter-action@v2
         with:
@@ -27,8 +27,8 @@ jobs:
           set -euo pipefail
           mkdir -p output/pkr0205/early-fold-qa
           D=output/pkr0205/early-fold-qa
-          test "$(git rev-parse HEAD)" = ccd020d2074e0c98d1546551b15ca8a799956405
-          test "$(git rev-parse HEAD^{tree})" = 0a051975325e957f34107a3fa35a991b31d2af94
+          test "$(git rev-parse HEAD)" = 727d07ad4dd19bd39da3aedac098baa0361f485b
+          test "$(git rev-parse HEAD^{tree})" = 5cac08e692416d4c831ea88ce668674931e2bbbb
           git rev-parse HEAD HEAD^{tree} > "$D/source.txt"
           sha256sum pubspec.lock > "$D/lock-before"
           flutter pub get
