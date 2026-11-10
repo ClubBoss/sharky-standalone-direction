@@ -1,0 +1,553 @@
+{
+  "schema_version": "hlp02.fixtures.en.v1",
+  "card_notation": "Rank 2-9,T,J,Q,K,A followed by suit c,d,h,s; e.g. Ah = ace of hearts.",
+  "semantics": "Expected results are manually authored golden assertions for a pre-existing evaluator, not an executable poker engine. Invalid and incomplete inputs must not yield guessed winners.",
+  "five_card_cases": [
+    {
+      "id": "five.wheel",
+      "cards": [
+        "As",
+        "2d",
+        "3h",
+        "4c",
+        "5s"
+      ],
+      "expected_rank_id": "rank.straight",
+      "expected_straight_high": "5",
+      "note": "Ace is low only for the wheel."
+    },
+    {
+      "id": "five.wrap_forbidden",
+      "cards": [
+        "Qh",
+        "Ks",
+        "Ac",
+        "2d",
+        "3c"
+      ],
+      "expected_rank_id": "rank.high_card",
+      "prohibited_claim": "straight",
+      "note": "There is no K-A-2 sequence in a straight."
+    },
+    {
+      "id": "five.royal_subtype",
+      "cards": [
+        "Ah",
+        "Kh",
+        "Qh",
+        "Jh",
+        "Th"
+      ],
+      "expected_rank_id": "rank.straight_flush",
+      "named_variant": "rank_variant.royal_flush",
+      "note": "Not a tenth category."
+    },
+    {
+      "id": "five.low_straight_flush",
+      "cards": [
+        "Ah",
+        "2h",
+        "3h",
+        "4h",
+        "5h"
+      ],
+      "expected_rank_id": "rank.straight_flush",
+      "expected_straight_high": "5",
+      "note": "Wheel straight flush is below any six-high straight flush."
+    },
+    {
+      "id": "five.no_flush_four_suited",
+      "cards": [
+        "Ah",
+        "Kh",
+        "9h",
+        "2h",
+        "7c"
+      ],
+      "expected_rank_id": "rank.high_card",
+      "note": "Four hearts are not five."
+    }
+  ],
+  "showdown_cases": [
+    {
+      "id": "showdown.wheel_beats_two_pair",
+      "board": [
+        "2h",
+        "3s",
+        "4d",
+        "Kc",
+        "Qc"
+      ],
+      "hero_hole": [
+        "As",
+        "5h"
+      ],
+      "villain_hole": [
+        "Kh",
+        "Qs"
+      ],
+      "input_status": "complete_valid",
+      "expected": {
+        "winner": "hero",
+        "board_plays": false,
+        "hero_best_category": "rank.straight",
+        "villain_best_category": "rank.two_pair"
+      },
+      "world2_bounded_validator_expected": "requires_owner_comparison",
+      "oracle_policy": "Existing source-owned evaluator/solver only; this fixture has no independent runtime evaluator.",
+      "note": "A-2-3-4-5 is a legal five-high straight and outranks two pair."
+    },
+    {
+      "id": "showdown.invalid_wrap_not_straight",
+      "board": [
+        "Qh",
+        "Ks",
+        "Ac",
+        "2d",
+        "3c"
+      ],
+      "hero_hole": [
+        "7s",
+        "8d"
+      ],
+      "villain_hole": [
+        "Jc",
+        "9h"
+      ],
+      "input_status": "complete_valid",
+      "expected": {
+        "winner": "villain",
+        "board_plays": false,
+        "hero_best_category": "rank.high_card",
+        "villain_best_category": "rank.high_card"
+      },
+      "world2_bounded_validator_expected": "requires_owner_comparison",
+      "oracle_policy": "Existing source-owned evaluator/solver only; this fixture has no independent runtime evaluator.",
+      "note": "Both are high-card hands; villain wins on J vs 8 after A-K-Q."
+    },
+    {
+      "id": "showdown.royal_board_plays",
+      "board": [
+        "Ah",
+        "Kh",
+        "Qh",
+        "Jh",
+        "Th"
+      ],
+      "hero_hole": [
+        "2c",
+        "3d"
+      ],
+      "villain_hole": [
+        "4c",
+        "5d"
+      ],
+      "input_status": "complete_valid",
+      "expected": {
+        "winner": "tie",
+        "board_plays": true,
+        "hero_best_category": "rank.straight_flush",
+        "villain_best_category": "rank.straight_flush"
+      },
+      "world2_bounded_validator_expected": "requires_owner_comparison",
+      "oracle_policy": "Existing source-owned evaluator/solver only; this fixture has no independent runtime evaluator.",
+      "note": "Both play the board royal flush; no separate royal category."
+    },
+    {
+      "id": "showdown.straight_board_plays",
+      "board": [
+        "9c",
+        "8d",
+        "7h",
+        "6s",
+        "5c"
+      ],
+      "hero_hole": [
+        "2d",
+        "3d"
+      ],
+      "villain_hole": [
+        "Ah",
+        "Kd"
+      ],
+      "input_status": "complete_valid",
+      "expected": {
+        "winner": "tie",
+        "board_plays": true,
+        "hero_best_category": "rank.straight",
+        "villain_best_category": "rank.straight"
+      },
+      "world2_bounded_validator_expected": "requires_owner_comparison",
+      "oracle_policy": "Existing source-owned evaluator/solver only; this fixture has no independent runtime evaluator.",
+      "note": "Both use all five board cards, despite different hole cards."
+    },
+    {
+      "id": "showdown.pair_kicker",
+      "board": [
+        "Ah",
+        "7d",
+        "4c",
+        "2s",
+        "9c"
+      ],
+      "hero_hole": [
+        "Ac",
+        "Kd"
+      ],
+      "villain_hole": [
+        "Ad",
+        "Qd"
+      ],
+      "input_status": "complete_valid",
+      "expected": {
+        "winner": "hero",
+        "board_plays": false,
+        "hero_best_category": "rank.one_pair",
+        "villain_best_category": "rank.one_pair"
+      },
+      "world2_bounded_validator_expected": "requires_owner_comparison",
+      "oracle_policy": "Existing source-owned evaluator/solver only; this fixture has no independent runtime evaluator.",
+      "note": "Both have a pair of aces; hero king kicker beats queen."
+    },
+    {
+      "id": "showdown.same_rank_different_suit",
+      "board": [
+        "As",
+        "Kd",
+        "9h",
+        "7s",
+        "2c"
+      ],
+      "hero_hole": [
+        "Ah",
+        "Qc"
+      ],
+      "villain_hole": [
+        "Ad",
+        "Qh"
+      ],
+      "input_status": "complete_valid",
+      "expected": {
+        "winner": "tie",
+        "board_plays": false,
+        "hero_best_category": "rank.one_pair",
+        "villain_best_category": "rank.one_pair"
+      },
+      "world2_bounded_validator_expected": "unsupportedTie",
+      "oracle_policy": "Existing source-owned evaluator/solver only; this fixture has no independent runtime evaluator.",
+      "note": "Equal A-A-K-Q-9 strength; private cards differ in suit and no suit wins."
+    },
+    {
+      "id": "showdown.private_straight_split",
+      "board": [
+        "Ac",
+        "Kd",
+        "Qh",
+        "Js",
+        "2c"
+      ],
+      "hero_hole": [
+        "Tc",
+        "3d"
+      ],
+      "villain_hole": [
+        "Td",
+        "4d"
+      ],
+      "input_status": "complete_valid",
+      "expected": {
+        "winner": "tie",
+        "board_plays": false,
+        "hero_best_category": "rank.straight",
+        "villain_best_category": "rank.straight"
+      },
+      "world2_bounded_validator_expected": "unsupportedTie",
+      "oracle_policy": "Existing source-owned evaluator/solver only; this fixture has no independent runtime evaluator.",
+      "note": "Both make an A-high straight using different tens; non-board tie is outside bounded World2 validator support."
+    },
+    {
+      "id": "showdown.two_pair_kicker",
+      "board": [
+        "Kh",
+        "Kc",
+        "7h",
+        "7c",
+        "2s"
+      ],
+      "hero_hole": [
+        "Ad",
+        "3d"
+      ],
+      "villain_hole": [
+        "Qd",
+        "4d"
+      ],
+      "input_status": "complete_valid",
+      "expected": {
+        "winner": "hero",
+        "board_plays": false,
+        "hero_best_category": "rank.two_pair",
+        "villain_best_category": "rank.two_pair"
+      },
+      "world2_bounded_validator_expected": "requires_owner_comparison",
+      "oracle_policy": "Existing source-owned evaluator/solver only; this fixture has no independent runtime evaluator.",
+      "note": "Both have kings and sevens; A kicker beats Q kicker."
+    },
+    {
+      "id": "showdown.full_house_over_flush",
+      "board": [
+        "Ah",
+        "As",
+        "Ad",
+        "7h",
+        "2h"
+      ],
+      "hero_hole": [
+        "7c",
+        "9s"
+      ],
+      "villain_hole": [
+        "Kh",
+        "Jh"
+      ],
+      "input_status": "complete_valid",
+      "expected": {
+        "winner": "hero",
+        "board_plays": false,
+        "hero_best_category": "rank.full_house",
+        "villain_best_category": "rank.flush"
+      },
+      "world2_bounded_validator_expected": "requires_owner_comparison",
+      "oracle_policy": "Existing source-owned evaluator/solver only; this fixture has no independent runtime evaluator.",
+      "note": "Full house aces full of sevens outranks an A-high heart flush."
+    },
+    {
+      "id": "showdown.straight_flush_over_quads",
+      "board": [
+        "9h",
+        "8h",
+        "7h",
+        "9s",
+        "9d"
+      ],
+      "hero_hole": [
+        "6h",
+        "5h"
+      ],
+      "villain_hole": [
+        "9c",
+        "2c"
+      ],
+      "input_status": "complete_valid",
+      "expected": {
+        "winner": "hero",
+        "board_plays": false,
+        "hero_best_category": "rank.straight_flush",
+        "villain_best_category": "rank.four_of_a_kind"
+      },
+      "world2_bounded_validator_expected": "requires_owner_comparison",
+      "oracle_policy": "Existing source-owned evaluator/solver only; this fixture has no independent runtime evaluator.",
+      "note": "Nine-high heart straight flush outranks four nines."
+    },
+    {
+      "id": "showdown.flush_high_cards",
+      "board": [
+        "2h",
+        "6h",
+        "Jh",
+        "9s",
+        "Qc"
+      ],
+      "hero_hole": [
+        "Ah",
+        "Kh"
+      ],
+      "villain_hole": [
+        "Th",
+        "8h"
+      ],
+      "input_status": "complete_valid",
+      "expected": {
+        "winner": "hero",
+        "board_plays": false,
+        "hero_best_category": "rank.flush",
+        "villain_best_category": "rank.flush"
+      },
+      "world2_bounded_validator_expected": "requires_owner_comparison",
+      "oracle_policy": "Existing source-owned evaluator/solver only; this fixture has no independent runtime evaluator.",
+      "note": "A-high heart flush wins over J-high heart flush."
+    },
+    {
+      "id": "showdown.quads_over_full_house",
+      "legacy_fixture_id": "SD_QUADS_OVER_FULL_HOUSE_V1",
+      "board": [
+        "9h",
+        "9d",
+        "9c",
+        "7s",
+        "7c"
+      ],
+      "hero_hole": [
+        "9s",
+        "2d"
+      ],
+      "villain_hole": [
+        "7h",
+        "As"
+      ],
+      "input_status": "complete_valid",
+      "expected": {
+        "winner": "hero",
+        "board_plays": false,
+        "hero_best_category": "rank.four_of_a_kind",
+        "villain_best_category": "rank.full_house"
+      },
+      "expected_hero_best_five": [
+        "9h",
+        "9d",
+        "9c",
+        "9s",
+        "7s"
+      ],
+      "expected_villain_best_five": [
+        "9h",
+        "9d",
+        "9c",
+        "7s",
+        "7c"
+      ],
+      "expected_villain_full_house": "nines full of sevens",
+      "world2_bounded_validator_expected": "requires_owner_comparison",
+      "display_phase": "post_choice_only",
+      "oracle_policy": "Compare with already accepted local-path poker_solver from PR #349; no new evaluator.",
+      "note": "Four nines outrank nines full of sevens. Although Villain also has three sevens, the three nines make the stronger full house; the board alone is Villain best five, but not a tie."
+    }
+  ],
+  "invalid_or_incomplete_cases": [
+    {
+      "id": "invalid.duplicate_across_board_hero",
+      "board": [
+        "As",
+        "4c",
+        "5d",
+        "6h",
+        "7s"
+      ],
+      "hero_hole": [
+        "As",
+        "Kd"
+      ],
+      "villain_hole": [
+        "Qs",
+        "Jh"
+      ],
+      "expected": {
+        "input_status": "invalid_duplicate_card",
+        "winner": null
+      },
+      "note": "Same physical As appears in Hero and board; reject before evaluation."
+    },
+    {
+      "id": "invalid.duplicate_across_players",
+      "board": [
+        "2c",
+        "4d",
+        "6h",
+        "8s",
+        "Td"
+      ],
+      "hero_hole": [
+        "Ah",
+        "Kd"
+      ],
+      "villain_hole": [
+        "Ah",
+        "Qc"
+      ],
+      "expected": {
+        "input_status": "invalid_duplicate_card",
+        "winner": null
+      },
+      "note": "Same physical Ah assigned to both players."
+    },
+    {
+      "id": "invalid.missing_hero_hole",
+      "board": [
+        "2c",
+        "3d",
+        "4h"
+      ],
+      "hero_hole": [
+        "As",
+        null
+      ],
+      "villain_hole": [
+        "Kd",
+        "Qd"
+      ],
+      "expected": {
+        "input_status": "insufficient_data",
+        "winner": null
+      },
+      "note": "Partial hole card and flop only; do not guess missing source."
+    },
+    {
+      "id": "invalid.missing_villain",
+      "board": [
+        "Ah",
+        "3d",
+        "4c",
+        "8s",
+        "2d"
+      ],
+      "hero_hole": [
+        "As",
+        "Ks"
+      ],
+      "villain_hole": null,
+      "expected": {
+        "input_status": "insufficient_data",
+        "winner": null
+      },
+      "note": "River is visible but opponent hole cards are missing; do not guess winner or equity."
+    },
+    {
+      "id": "invalid.river_not_dealt",
+      "board": [
+        "8h",
+        "9d",
+        "Tc",
+        "Jc"
+      ],
+      "hero_hole": [
+        "As",
+        "Kd"
+      ],
+      "villain_hole": [
+        "Qc",
+        "3d"
+      ],
+      "expected": {
+        "input_status": "insufficient_data",
+        "winner": null
+      },
+      "note": "Only four community cards; cannot state final showdown winner."
+    }
+  ],
+  "test_hook": "Parameterize the existing owned hand-ranking/showdown comparison path. If a fixture is beyond World2ShowdownTruthValidatorV1 bounded coverage, mark unsupported or use an already-authorized existing solver; never add another evaluator.",
+  "legacy_schema_fixtures_mapping": {
+    "source_schema": "sharky.hlp02.showdown-fixtures.v1",
+    "source_file": "showdown_fixtures.json (independently retrieved, not copied into final bundle)",
+    "target_schema": "hlp02.fixtures.en.v1",
+    "mappings": [
+      {
+        "from_id": "SD_QUADS_OVER_FULL_HOUSE_V1",
+        "to_id": "showdown.quads_over_full_house",
+        "changed_field": "why_en/note",
+        "canonical_explanation_en": "Four nines outrank nines full of sevens.",
+        "source_cards_preserved": true
+      }
+    ],
+    "rule": "Do not concatenate fixtures from distinct schemas; other 18 source cases were inspected as a separate reference, but not imported or certified by this handoff."
+  }
+}

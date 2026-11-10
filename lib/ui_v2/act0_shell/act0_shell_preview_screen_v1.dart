@@ -34,6 +34,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_home_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
+import 'act0_content_exposure_v1.dart';
+import 'act0_content_presentation_gate_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_run_payoff_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_receipt_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_transfer_measurement_v1.dart';
@@ -1274,6 +1276,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool get _choiceWasAssistedV1 =>
       _choiceAssistanceV1 == Act0DecisionAssistanceV1.quickHint ||
       _choiceAssistanceV1 == Act0DecisionAssistanceV1.theoryRecall;
+  Act0ContentExposureV1 _contentExposureHistoryV1 =
+      const Act0ContentExposureV1();
+  _Act0ContentReservationV1? _contentReservationV1;
+
   Act0LearningEvidenceHistoryV1 _learningEvidenceHistoryV1 =
       const Act0LearningEvidenceHistoryV1();
   Act0DurableRetentionHistoryV1 _durableRetentionHistoryV1 =
@@ -1654,6 +1660,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   @visibleForTesting
   Future<void> debugReloadProgressV1() => _bootstrapFirstStartRouteV1();
+
+  @visibleForTesting
+  Map<String, Object> debugContentExposurePayloadV1() =>
+      _contentExposureHistoryV1.toPayload();
+
+  @visibleForTesting
+  Map<String, Object?> debugContentReservationV1() => {
+    'taskId': _contentReservationV1?.taskId,
+    'acknowledged': _contentReservationV1?.acknowledged,
+    'wasPreviouslyPresented': _contentReservationV1?.wasPreviouslyPresented,
+    'priorCompleteLineage': _contentReservationV1?.priorCompleteLineage,
+  };
+
+  @visibleForTesting
+  List<String> debugUnshownTaskIdsV1() =>
+      _unshownTaskPoolV1(widget.state ?? Act0ShellStateV1.sample).taskIds;
 
   @visibleForTesting
   void debugPersistProgressV1() => _persistProgress();
@@ -3885,6 +3907,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _recentSkillGains
         ..clear()
         ..addAll(parsed.recentSkillGains.take(6));
+      // Keep stable exposure IDs even when the current catalog no longer has
+      // them. Content revisions must never make a familiar task new again.
+      _contentExposureHistoryV1 = parsed.contentExposureHistory;
+      _contentReservationV1 = null;
       _learningEvidenceHistoryV1 = parsed.learningEvidenceHistory;
       _durableRetentionHistoryV1 = restoredDurableRetention.refreshedAt(
         widget.clock.nowUtc(),
@@ -4343,12 +4369,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   void _persistProgress() {
+    unawaited(_persistProgressAcknowledgedV1());
+  }
+
+  Future<bool> _persistProgressAcknowledgedV1() {
     if (!_usesPersistedProgress ||
         _dat07SuspendedV1 ||
         _recoveryBusyV1 ||
         _progressLoadFailed ||
         !_progressRestoredV1) {
-      return;
+      return Future<bool>.value(false);
     }
     _ensureDailyCountDayV1();
     final today = _todayDateString();
@@ -4387,6 +4417,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       dismissedHomeHandoffKey: _dismissedHomeHandoffKey,
       dismissedHomeHandoffDay: _dismissedHomeHandoffDay,
       firstValueReturnCarry: _firstValueReceiptCarry,
+      contentExposureHistory: _contentExposureHistoryV1,
       learningEvidenceHistory: _learningEvidenceHistoryV1,
       lessonRunEvidenceBoundaries: Map<String, int?>.from(
         _lessonRunEvidenceBoundariesV1,
@@ -4415,19 +4446,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'source_surface': 'act0_progress_store',
     });
     // Capture bytes before yielding: the snapshot holds mutable source sets.
-    unawaited(
-      _writePersistedProgress(
-        snapshot.toStorageString(),
-        generation,
-        diagnosticContext,
-      ),
+    return _writePersistedProgress(
+      snapshot.toStorageString(),
+      generation,
+      diagnosticContext,
+      _progressStore,
     );
   }
 
-  Future<void> _writePersistedProgress(
+  Future<bool> _writePersistedProgress(
     String snapshot,
     int generation,
     Map<String, Object?> diagnosticContext,
+    Act0ProgressStoreV1 store,
   ) async {
     await Future<void>.value();
     if (generation != _progressPersistGeneration ||
@@ -4435,14 +4466,128 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _recoveryBusyV1 ||
         _progressLoadFailed ||
         !_progressRestoredV1) {
-      return; // Coalesced requests were not attempted, not failed saves.
+      return false; // Coalesced requests did not acknowledge these bytes.
     }
-    final acknowledged = await _progressStore.save(snapshot);
+    if (!identical(store, _progressStore)) return false;
+    final acknowledged = await store.save(snapshot);
     // False is indeterminate, never proof of data loss or an OS-level cause.
     _recordTelemetryEventV1('progress_persist_result', <String, Object?>{
       ...diagnosticContext,
       'outcome': acknowledged ? 'acknowledged' : 'indeterminate',
     });
+    return acknowledged;
+  }
+
+  Widget _gateContentPresentationV1(
+    String worldId,
+    String lessonId,
+    String taskId,
+    Act0LessonRunnerShellV1 child,
+  ) {
+    final key = jsonEncode([
+      _recoveryEpochV1,
+      _activeLearningEvidenceRunKeyV1?.runId,
+      worldId,
+      lessonId,
+      taskId,
+    ]);
+    var reservation = _contentReservationV1;
+    if (reservation == null || reservation.key != key) {
+      reservation = _Act0ContentReservationV1(
+        key: key,
+        taskId: taskId,
+        epoch: _recoveryEpochV1,
+        store: _progressStore,
+      );
+      _contentReservationV1 = reservation;
+    }
+    final current = reservation;
+    return Act0ContentPresentationGateV1(
+      presentationKey: current.key,
+      reserveExposure: () => _reserveContentPresentationV1(current),
+      onExit: () {
+        if (!_acceptRecoveryCallbackV1(current.epoch)) return;
+        _contentReservationV1 = null;
+        // Reuse the source-owned Placement/repair/lesson exit, including its
+        // session finalization and return route, before any late ACK arrives.
+        child.onBack();
+      },
+      child: child,
+    );
+  }
+
+  bool _isCurrentContentReservationV1(_Act0ContentReservationV1 value) =>
+      identical(value, _contentReservationV1) &&
+      identical(value.store, _progressStore) &&
+      _acceptRecoveryCallbackV1(value.epoch) &&
+      (!_usesPersistedProgress ||
+          (_progressRestoredV1 && !_progressLoadFailed));
+
+  Future<bool> _reserveContentPresentationV1(
+    _Act0ContentReservationV1 reservation,
+  ) async {
+    if (!_isCurrentContentReservationV1(reservation)) return false;
+    // Snapshot prior exposure once per mounted presentation. Retry must not
+    // recapture our own pending insertion as a prior learner encounter.
+    reservation.wasPreviouslyPresented ??=
+        _contentExposureHistoryV1.wasPresented(reservation.taskId) ||
+        _completedTaskIds.contains(reservation.taskId) ||
+        _learningEvidenceHistoryV1.provenanceRecords.any(
+          (record) => record.taskId == reservation.taskId,
+        );
+    reservation.priorCompleteLineage ??=
+        _contentExposureHistoryV1.hasCompleteLineage;
+    _contentExposureHistoryV1 =
+        _contentExposureHistoryV1.present(reservation.taskId);
+    // Explicit injected preview fixtures have no durable store. Production
+    // always takes the canonical full snapshot + actual save ACK path.
+    final acknowledged = !_usesPersistedProgress ||
+        await _persistProgressAcknowledgedV1();
+    if (!_isCurrentContentReservationV1(reservation)) return false;
+    reservation.acknowledged = acknowledged;
+    return acknowledged;
+  }
+
+  Act0UnshownTaskPoolV1 _unshownTaskPoolV1(Act0ShellStateV1 state) =>
+      Act0UnshownTaskPoolV1.resolve(
+        availableAssessmentTaskIds: [
+          for (final world in _progressedWorlds(state))
+            if (world.isSelectable && !world.isLocked)
+              for (final lesson in world.lessons)
+                if (lesson.isSelectable && !lesson.isLocked &&
+                    lesson.state != Act0LessonStateV1.locked)
+                  for (final task in lesson.taskList)
+                    if (_taskAvailable(lesson, task.taskId) &&
+                        task.runner.options.isNotEmpty &&
+                        task.phase != Act0LessonPhaseV1.theory &&
+                        task.resolvedTaskFamily != Act0TaskFamilyV1.learn &&
+                        task.resolvedTaskFamily != Act0TaskFamilyV1.repair &&
+                        task.stepKind != Act0LessonStepKindV1.fixMistakes)
+                      task.taskId,
+        ],
+        exposure: _contentExposureHistoryV1,
+        decisionTaskIds: {
+          ..._completedTaskIds,
+          for (final record in _learningEvidenceHistoryV1.provenanceRecords)
+            record.taskId,
+        },
+        hasCompleteDecisionLineage:
+            _learningEvidenceHistoryV1.hasCompleteLineage,
+      );
+
+  Widget _withContentAvailabilityV1(Act0ShellStateV1 state, Widget child) {
+    final pool = _unshownTaskPoolV1(state);
+    if (pool.status == Act0UnshownAvailabilityV1.available) return child;
+    return Column(
+      children: [
+        Padding(
+          key: const Key('act0_content_availability_notice'),
+          padding: const EdgeInsets.all(12),
+          child: Text('${pool.title}. ${pool.explanation}'),
+        ),
+        Expanded(child: child),
+      ],
+    );
   }
 
   void _appendLearningEvidenceV1(
@@ -4526,8 +4671,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         prior.any((r) => r.taskId == decision.taskId)) {
       return Act0ReviewKindV1.exactReplay;
     }
-    if (!_learningEvidenceHistoryV1.hasCompleteLineage)
+    final reservation = _contentReservationV1;
+    if (reservation == null ||
+        reservation.taskId != decision.taskId ||
+        !reservation.acknowledged ||
+        reservation.priorCompleteLineage != true ||
+        !_learningEvidenceHistoryV1.hasCompleteLineage) {
       return Act0ReviewKindV1.legacyUnspaced;
+    }
+    if (reservation.wasPreviouslyPresented == true) {
+      return Act0ReviewKindV1.exactReplay;
+    }
     if (routed == Act0ReviewKindV1.unseenTransfer) return routed;
     final conceptFamilyId =
         <String?>[
@@ -5362,6 +5516,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _rapidPracticeLoop = false;
       _activeLearningEvidenceRunKeyV1 = null;
       _learningEvidenceRunOrdinalV1 = 0;
+      _contentExposureHistoryV1 = const Act0ContentExposureV1();
+      _contentReservationV1 = null;
       _learningEvidenceHistoryV1 = const Act0LearningEvidenceHistoryV1();
       _durableRetentionHistoryV1 = const Act0DurableRetentionHistoryV1();
       _reviewMistakeHistoryV1 = const Act0ReviewMistakeHistoryV1();
@@ -5945,6 +6101,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final isPlayTab = _tab == Act0ShellTabV1.play;
     final isPlayRunner =
         isPlayTab && !_showPlayHub && _blockCompletionSummary == null;
+    if (!isPlayRunner || _showWelcome ||
+        (_showPlacement && !_placementDiagnosticActive)) {
+      _contentReservationV1 = null;
+    }
     final playSelectedTask = isPlayTab
         ? _taskById(selectedLesson, _selectedTaskId)
         : null;
@@ -6781,7 +6941,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   _resetLessonRunMetrics();
                                 }),
                               )
-                            : Act0LessonRunnerShellV1(
+                            : _gateContentPresentationV1(
+                                selectedWorld.worldId,
+                                selectedLesson.lessonId,
+                                playSelectedTask!.taskId,
+                                Act0LessonRunnerShellV1(
                                 // B5 view metadata. `_activeActionSequenceStageV1`
                                 // is the existing typed owner of the canonical
                                 // wrong-feedback -> repair -> recheck transition
@@ -7484,7 +7648,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   },
                                 ),
                               ),
-                      Act0ShellTabV1.review => act0AcademyReviewRuntimeV1(
+                              ),
+                      Act0ShellTabV1.review => _withContentAvailabilityV1(
+                        state,
+                        act0AcademyReviewRuntimeV1(
                         context,
                         isCurrent: () =>
                             _acceptRecoveryCallbackV1(callbackEpochV1),
@@ -7565,6 +7732,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             _tab = Act0ShellTabV1.learn;
                           }),
                         ),
+                      ),
                       ),
                       Act0ShellTabV1.profile => act0AcademyYouRuntimeV1(
                         context,
@@ -15633,6 +15801,25 @@ class _Act0SessionTelemetrySinkV1 implements Act0TelemetrySinkV1 {
 
 const Set<String> _runnerSessionTelemetryEventsV1 = <String>{'decision_made'};
 
+/// Ephemeral entitlement for one presentation, never restored or serialized.
+/// A durable reservation survives a restart, its prior-unshown entitlement does
+/// not. This object neither identifies nor creates a learner attempt/run.
+class _Act0ContentReservationV1 {
+  _Act0ContentReservationV1({
+    required this.key,
+    required this.taskId,
+    required this.epoch,
+    required this.store,
+  });
+  final String key;
+  final String taskId;
+  final int epoch;
+  final Act0ProgressStoreV1 store;
+  bool? wasPreviouslyPresented;
+  bool? priorCompleteLineage;
+  bool acknowledged = false;
+}
+
 class _Act0PersistedProgressV1 {
   const _Act0PersistedProgressV1({
     required this.completedTaskIds,
@@ -15662,6 +15849,8 @@ class _Act0PersistedProgressV1 {
     this.dismissedHomeHandoffKey = '',
     this.dismissedHomeHandoffDay = '',
     this.firstValueReturnCarry,
+    this.contentExposureHistory =
+        const Act0ContentExposureV1(hasCompleteLineage: false),
     this.learningEvidenceHistory = const Act0LearningEvidenceHistoryV1(),
     this.lessonRunEvidenceBoundaries = const <String, int?>{},
     this.durableRetentionHistory = const Act0DurableRetentionHistoryV1(),
@@ -15702,6 +15891,7 @@ class _Act0PersistedProgressV1 {
   final String dismissedHomeHandoffKey;
   final String dismissedHomeHandoffDay;
   final _Act0FirstValueReceiptCarryV1? firstValueReturnCarry;
+  final Act0ContentExposureV1 contentExposureHistory;
   final Act0LearningEvidenceHistoryV1 learningEvidenceHistory;
   final Map<String, int?> lessonRunEvidenceBoundaries;
   final Act0DurableRetentionHistoryV1 durableRetentionHistory;
@@ -15762,6 +15952,7 @@ class _Act0PersistedProgressV1 {
       'resumeTeachingStepIndex': resumeTeachingStepIndex,
       'dismissedHomeHandoffKey': dismissedHomeHandoffKey,
       'dismissedHomeHandoffDay': dismissedHomeHandoffDay,
+      'contentExposureHistory': contentExposureHistory.toPayload(),
       'learningEvidenceHistory': learningEvidenceHistory.toPayload(),
       'learningEvidenceLineage': learningEvidenceHistory.lineagePayload(),
       'lessonRunEvidenceBoundaries': <String, int?>{
@@ -15979,6 +16170,9 @@ class _Act0PersistedProgressV1 {
       dismissedHomeHandoffKey: dismissedHomeHandoffKey,
       dismissedHomeHandoffDay: dismissedHomeHandoffDay,
       firstValueReturnCarry: firstValueReturnCarry,
+      contentExposureHistory: Act0ContentExposureV1.restore(
+        map['contentExposureHistory'],
+      ),
       learningEvidenceHistory: learningEvidenceHistory,
       lessonRunEvidenceBoundaries: lessonRunEvidenceBoundaries,
       durableRetentionHistory: durableRetentionHistory,
