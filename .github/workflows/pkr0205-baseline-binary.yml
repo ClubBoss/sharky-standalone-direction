@@ -1,0 +1,79 @@
+name: PKR02-05 accepted-main binary for genuine learner upgrade
+on:
+  push:
+    branches: [qa/pkr0205-baseline-binary-20261110]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pkr0205-baseline-binary-single-build
+  cancel-in-progress: false
+jobs:
+  baseline:
+    runs-on: macos-26
+    timeout-minutes: 80
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+      COCOAPODS_DISABLE_STATS: 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: qa-infra
+      - uses: actions/checkout@v4
+        with:
+          path: product
+          ref: 3784d421beb5ae7cb8cfaacd10b1083855148850
+      - name: Pin accepted main and actual build host
+        run: |
+          set -euo pipefail
+          mkdir -p output/pkr0205-baseline
+          test "$(git -C product rev-parse HEAD)" = 3784d421beb5ae7cb8cfaacd10b1083855148850
+          test "$(git -C product rev-parse HEAD^{tree})" = eb088750944257db10fc3bd851ebc49000cf255a
+          git -C product rev-parse HEAD HEAD^{tree} > output/pkr0205-baseline/product-identity.txt
+          git -C qa-infra rev-parse HEAD HEAD^{tree} > output/pkr0205-baseline/qa-identity.txt
+          sw_vers > output/pkr0205-baseline/macos.txt
+          xcodebuild -version > output/pkr0205-baseline/xcode.txt
+          test "$(head -n 1 output/pkr0205-baseline/xcode.txt)" = 'Xcode 26.2'
+          echo 'BUILD_ONLY_ACCEPTED_MAIN; no learner actions, no device/locale qualification' > output/pkr0205-baseline/scope.txt
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: false
+      - name: Build and seal accepted-main binary exactly once
+        timeout-minutes: 65
+        working-directory: product
+        run: |
+          set -euo pipefail
+          flutter --version > ../output/pkr0205-baseline/flutter.txt
+          shasum -a 256 pubspec.lock > ../output/pkr0205-baseline/lock-before.txt
+          flutter pub get > ../output/pkr0205-baseline/pub-get.log 2>&1
+          shasum -a 256 pubspec.lock > ../output/pkr0205-baseline/lock-resolved.txt
+          cmp ../output/pkr0205-baseline/lock-before.txt ../output/pkr0205-baseline/lock-resolved.txt
+          flutter build ios --simulator --debug --dart-define=HNP_TELEMETRY=true > ../output/pkr0205-baseline/build.log 2>&1
+          git diff --exit-code -- lib pubspec.lock
+          ditto build/ios/iphonesimulator/Runner.app ../output/pkr0205-baseline/Runner.app
+          cp pubspec.lock ../output/pkr0205-baseline/pubspec.lock
+          cp ios/Podfile.lock ../output/pkr0205-baseline/Podfile.lock
+          echo 'HNP_TELEMETRY=true; observer only; ordinary accepted-main binary; no state or route seeds' > ../output/pkr0205-baseline/build-mode.txt
+          cd ../output/pkr0205-baseline
+          find Runner.app -type f -print0 | xargs -0 shasum -a 256 > runner-files.sha256
+          shasum -a 256 Runner.app/Frameworks/App.framework/flutter_assets/kernel_blob.bin > kernel.sha256
+          ditto -c -k --sequesterRsrc --keepParent Runner.app Runner.zip
+          shasum -a 256 Runner.zip > runner-archive.sha256
+      - name: Preserve build diagnostics and sealed binary before any future UI
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p output/pkr0205-baseline
+          cd output/pkr0205-baseline
+          find . -type f ! -path './Runner.app/*' ! -name evidence.sha256 -print0 | xargs -0 shasum -a 256 > evidence.sha256
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pkr0205-baseline-binary-${{ github.run_id }}
+          path: |
+            output/pkr0205-baseline/
+            !output/pkr0205-baseline/Runner.app/**
+          if-no-files-found: error
+          retention-days: 30
