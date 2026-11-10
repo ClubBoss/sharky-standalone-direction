@@ -1,0 +1,39 @@
+name: PKR0205 scoped native diagnostic reader
+on:
+  push:
+    branches: [qa/pkr0205-diagnostic-20261110]
+    paths: [.github/workflows/pkr0205-read-native-diagnostics.yml]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: pkr0205-independent-native-42800701365
+          run-id: 42800701365
+          github-token: ${{ github.token }}
+          path: output/pkr0205-diagnostic
+      - name: Display precise native XCTest error, without inventing product verdict
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root = Path('output/pkr0205-diagnostic')
+          hits=list(root.rglob('native-tests.log'))
+          assert len(hits)==1, ('MISSING_NATIVE_TEST_LOG', [str(x) for x in root.rglob('*.log')])
+          lines=hits[0].read_text(errors='replace').splitlines()
+          print('EXACT_TEST_LOG_PATH',hits[0])
+          print('EXACT_TEST_LOG_LINES',len(lines))
+          rx=re.compile(r'(error:|error \(|fatal|failed|FAIL|Test Suite|Test Case|xcodebuild:|^\*\* TEST|PKR0205_|SwiftCompile|CompileSwift|XCTAssert|Build Failure|Testing failed)',re.I)
+          matches=[(i,l) for i,l in enumerate(lines) if rx.search(l)]
+          print('MATCHES',len(matches))
+          for i,line in matches[-105:]:
+              print(f'NATIVE_DIAGNOSTIC_LINE_{i+1}: {line[:700]}')
+          print('NATIVE_TEST_LOG_LAST_65:')
+          for i,line in enumerate(lines[-65:],len(lines)-64):
+              print(f'NATIVE_TEST_LOG_{i}: {line[:700]}')
+          PY
