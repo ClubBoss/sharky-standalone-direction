@@ -32,9 +32,23 @@ class ExactCandidatePreflightTests(unittest.TestCase):
         (self.repo / "tools" / "sharky_compact_evidence_v1.sh").write_text(
             '#!/usr/bin/env bash\n'
             'set -euo pipefail\n'
-            'while [[ "$1" != "--" ]]; do shift; done\n'
+            'id=""\n'
+            'dir=""\n'
+            'while [[ "$1" != "--" ]]; do\n'
+            '  case "$1" in\n'
+            '    --id) id="$2"; shift 2 ;;\n'
+            '    --dir) dir="$2"; shift 2 ;;\n'
+            '    *) exit 2 ;;\n'
+            '  esac\n'
+            'done\n'
             'shift\n'
-            '"$@"\n',
+            'mkdir -p "$dir"\n'
+            'set +e\n'
+            '"$@" > "$dir/$id.raw.log" 2>&1\n'
+            'status=$?\n'
+            'set -e\n'
+            'printf "exit=%s\\n" "$status" > "$dir/$id.summary.log"\n'
+            'exit "$status"\n',
             encoding="utf-8",
         )
         (self.repo / "lib" / "example.dart").write_text("void main() {}\n")
@@ -137,7 +151,8 @@ class ExactCandidatePreflightTests(unittest.TestCase):
         self.head_sha = self.git("rev-parse", "HEAD").stdout.strip()
         result = self.run_preflight("--run-static")
         self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
-        self.assertIn("FORMAT=SKIPPED_NO_DART_CHANGES", result.stdout)
+        self.assertIn("FORMAT=SKIPPED_NO_EXISTING_DART_FILES", result.stdout)
+        self.assertIn("ANALYZE=SKIPPED_NO_DART_CHANGES", result.stdout)
         self.assertFalse(self.trace.exists())
 
     def test_sparse_checkout_discloses_missing_files_and_stops(self):
@@ -159,6 +174,49 @@ class ExactCandidatePreflightTests(unittest.TestCase):
         self.assertIn("ANALYZE=RUNNING", result.stdout)
         self.assertNotIn("STATIC_PREFLIGHT=PASS_SCOPED", result.stdout)
 
+
+    def test_deletion_only_runs_analyzer_and_cannot_hide_red(self):
+        self.git("rm", "lib/example.dart")
+        self.git("commit", "-qm", "delete only dart source")
+        self.base_sha = self.head_sha
+        self.head_sha = self.git("rev-parse", "HEAD").stdout.strip()
+        plan = self.run_preflight()
+        self.assertEqual(plan.returncode, 0, plan.stderr)
+        self.assertIn("CHANGED_DART_COUNT=1", plan.stdout)
+        self.assertIn("DELETED_DART_COUNT=1", plan.stdout)
+        self.assertIn("CHECKOUT_COVERAGE=COMPLETE_FOR_CHANGED_DART", plan.stdout)
+        result = self.run_preflight("--run-static", fail="flutter")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("FORMAT=SKIPPED_NO_EXISTING_DART_FILES", result.stdout)
+        self.assertIn("ANALYZE=RUNNING", result.stdout)
+        self.assertNotIn("STATIC_PREFLIGHT=PASS_SCOPED", result.stdout)
+        self.assertEqual(self.trace.read_text().splitlines(), ["flutter analyze"])
+
+    def test_two_attempts_preserve_first_failure_evidence(self):
+        first = self.run_preflight("--run-static", fail="dart")
+        self.assertNotEqual(first.returncode, 0)
+        self.assertIn("FORMAT=RUNNING", first.stdout)
+        second = self.run_preflight("--run-static")
+        self.assertEqual(second.returncode, 0, second.stderr)
+        self.assertIn("STATIC_PREFLIGHT=PASS_SCOPED", second.stdout)
+        evidence_root = self.repo / "output" / "context-economy"
+        attempts = sorted(evidence_root.glob("preflight-" + self.head_sha[:12] + "-*"))
+        self.assertEqual(len(attempts), 2)
+        self.assertNotEqual(attempts[0], attempts[1])
+        statuses = sorted((folder / "format.summary.log").read_text().strip()
+                          for folder in attempts)
+        self.assertEqual(statuses, ["exit=0", "exit=17"])
+        for folder in attempts:
+            identity = (folder / "identity.txt").read_text()
+            self.assertIn("HEAD=" + self.head_sha, identity)
+            self.assertIn("BASE=" + self.base_sha, identity)
+            self.assertIn("STARTED_UTC=", identity)
+            self.assertTrue((folder / "diff-check.raw.log").exists())
+            self.assertTrue((folder / "format.raw.log").exists())
+        self.assertTrue(any((folder / "analyze.raw.log").exists()
+                            for folder in attempts))
+        self.assertTrue(any(not (folder / "analyze.raw.log").exists()
+                            for folder in attempts))
 
 if __name__ == "__main__":
     unittest.main()

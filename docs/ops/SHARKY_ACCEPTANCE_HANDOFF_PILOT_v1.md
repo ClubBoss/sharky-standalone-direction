@@ -48,14 +48,22 @@ bash tools/sharky_candidate_preflight_v1.sh --base "$BASE_SHA" --head "$HEAD_SHA
 
 --run-static fails closed on wrong SHA, non-ancestor base, dirty checkout,
 main/detached branch, incomplete sparse checkout or missing existing evidence
-wrapper. PLAN_ONLY reports missing changed Dart files without calling SDK. It runs:
+wrapper. PLAN_ONLY reports missing changed Dart files without calling SDK.
+Deleted Dart paths count as changes requiring analysis, but are excluded from
+the formatter's existing-file list. The opt-in run performs:
 1. git diff --check BASE HEAD
-2. dart format --output=none --set-exit-if-changed on changed Dart paths
-3. flutter analyze when changed Dart paths exist
+2. dart format --output=none --set-exit-if-changed on existing changed Dart paths
+3. flutter analyze whenever any Dart path changed, INCLUDING deletion-only changes
 
-The wrapper preserves raw/compact logs at output/context-economy with a
-candidate-derived ID. An earlier local SDK version does not prove a hosted
-formatter pass on another version. "No Dart changes" means SKIPPED, not PASS.
+Every opt-in run receives a unique attempt directory under
+output/context-economy/preflight-<HEAD12>-<unique-id>/.
+The existing wrapper writes each command's .raw.log and .summary.log there.
+The identity.txt inside the same directory records full HEAD, TREE, BASE,
+branch and UTC start time. An earlier failure is never overwritten by a
+subsequent attempt on the same HEAD. Keep the directory and raw logs alongside
+the acceptance receipt when required; do not count a later PASS as erasing RED.
+An earlier local SDK version does not prove a hosted formatter pass on another
+version. "No Dart changes" means SKIPPED, not PASS.
 It is valid to use the helper PLAN_ONLY without executing any SDK.
 
 Once static checks pass, the authorized writer selects the actual affected

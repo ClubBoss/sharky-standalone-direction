@@ -52,16 +52,31 @@ echo "NATIVE=NOT_VERIFIED"
 echo "INDEPENDENT_DOD=NOT_INFERRED"
 echo "SCORECARD=UNTOUCHED"
 
-DART_FILES=()
+ALL_DART_FILES=()
+FORMAT_DART_FILES=()
+DELETED_DART_FILES=()
 MISSING_DART_FILES=()
 while IFS= read -r -d '' path; do
-  DART_FILES+=("$path")
-  [[ -f "$path" ]] || MISSING_DART_FILES+=("$path")
-done < <(git diff --name-only --diff-filter=ACMRT -z "$BASE_ARG" "$HEAD_ARG" -- '*.dart')
-echo "CHANGED_DART_COUNT=${#DART_FILES[@]}"
+  ALL_DART_FILES+=("$path")
+  if git cat-file -e "$HEAD_ARG:$path" 2>/dev/null; then
+    if [[ -f "$path" ]]; then
+      FORMAT_DART_FILES+=("$path")
+    else
+      MISSING_DART_FILES+=("$path")
+    fi
+  else
+    DELETED_DART_FILES+=("$path")
+  fi
+done < <(git diff --name-only --diff-filter=ACMRTD -z "$BASE_ARG" "$HEAD_ARG" -- '*.dart')
+echo "CHANGED_DART_COUNT=${#ALL_DART_FILES[@]}"
 echo "CHANGED_DART_BEGIN"
-if (( ${#DART_FILES[@]} )); then printf '%s\n' "${DART_FILES[@]}"; else echo "NONE"; fi
+if (( ${#ALL_DART_FILES[@]} )); then printf '%s\n' "${ALL_DART_FILES[@]}"; else echo "NONE"; fi
 echo "CHANGED_DART_END"
+echo "FORMAT_DART_COUNT=${#FORMAT_DART_FILES[@]}"
+echo "DELETED_DART_COUNT=${#DELETED_DART_FILES[@]}"
+if (( ${#DELETED_DART_FILES[@]} )); then
+  printf 'DELETED_DART=%s\n' "${DELETED_DART_FILES[@]}"
+fi
 if (( ${#MISSING_DART_FILES[@]} )); then
   echo "CHECKOUT_COVERAGE=INCOMPLETE"
   echo "MISSING_DART_COUNT=${#MISSING_DART_FILES[@]}"
@@ -93,18 +108,35 @@ fi
   echo "ERROR=EXISTING_EVIDENCE_WRAPPER_MISSING" >&2; exit 4;
 }
 echo "MODE=RUN_STATIC_ONLY"
+EVIDENCE_ROOT="${SHARKY_EVIDENCE_DIR:-output/context-economy}"
+mkdir -p "$EVIDENCE_ROOT"
+ATTEMPT_DIR="$(mktemp -d "${EVIDENCE_ROOT%/}/preflight-${HEAD_ARG:0:12}-XXXXXXXX")"
+STARTED_UTC="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+{
+  printf '%s\n' "SCHEMA=SHARKY_PREFLIGHT_ATTEMPT_V1" \
+    "HEAD=$HEAD_ARG" "TREE=$TREE" "BASE=$BASE_ARG" \
+    "BRANCH=$BRANCH" "STARTED_UTC=$STARTED_UTC" \
+    "DOD=NOT_INFERRED" "SCORECARD=UNTOUCHED"
+} > "$ATTEMPT_DIR/identity.txt"
+echo "EVIDENCE_DIR=$ATTEMPT_DIR"
+echo "ATTEMPT_STARTED_UTC=$STARTED_UTC"
 echo "DIFF_CHECK=RUNNING"
-git diff --check "$BASE_ARG" "$HEAD_ARG"
+bash tools/sharky_compact_evidence_v1.sh --dir "$ATTEMPT_DIR" --id diff-check -- \
+  git diff --check "$BASE_ARG" "$HEAD_ARG"
 echo "DIFF_CHECK=PASS"
-if (( ${#DART_FILES[@]} )); then
+if (( ${#FORMAT_DART_FILES[@]} )); then
   echo "FORMAT=RUNNING"
-  bash tools/sharky_compact_evidence_v1.sh --id "preflight-${HEAD_ARG:0:12}-format" --     dart format --output=none --set-exit-if-changed "${DART_FILES[@]}"
+  bash tools/sharky_compact_evidence_v1.sh --dir "$ATTEMPT_DIR" --id format -- \
+    dart format --output=none --set-exit-if-changed "${FORMAT_DART_FILES[@]}"
   echo "FORMAT=PASS"
+else
+  echo "FORMAT=SKIPPED_NO_EXISTING_DART_FILES"
+fi
+if (( ${#ALL_DART_FILES[@]} )); then
   echo "ANALYZE=RUNNING"
-  bash tools/sharky_compact_evidence_v1.sh --id "preflight-${HEAD_ARG:0:12}-analyze" -- flutter analyze
+  bash tools/sharky_compact_evidence_v1.sh --dir "$ATTEMPT_DIR" --id analyze -- flutter analyze
   echo "ANALYZE=PASS"
 else
-  echo "FORMAT=SKIPPED_NO_DART_CHANGES"
   echo "ANALYZE=SKIPPED_NO_DART_CHANGES"
 fi
 echo "STATIC_PREFLIGHT=PASS_SCOPED"
