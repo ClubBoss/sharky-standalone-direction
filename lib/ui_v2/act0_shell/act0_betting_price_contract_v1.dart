@@ -225,6 +225,79 @@ bool _exactEarlyFoldStrategicReadV1(
   return true;
 }
 
+// Placement's third check reuses the W1 table-read task identity, but asks
+// for an action DEFINITION rather than a chip commitment. The real EN14Pro
+// first-use route was blocked by the numeric wager guard on the authored
+// correct Check answer. Never exempt an altered amount, grade, question or
+// table; the other two answers remain wrong teaching distractors.
+const _placementActionLabelsV1 = <String, String>{
+  'check': 'Check',
+  'call': 'Call',
+  'raise': 'Raise',
+};
+
+bool _exactPlacementActionDefinitionV1(
+  Act0TableStateV1 table,
+  Act0RunnerOptionV1 option, {
+  required bool sizingBet,
+  required String? question,
+}) {
+  if (sizingBet ||
+      question != 'No bet faces Hero. Which action is free?' ||
+      option.amountLabel.trim().isNotEmpty ||
+      _placementActionLabelsV1[option.id] != option.label ||
+      option.isCorrect != (option.id == 'check') ||
+      option.quality !=
+          (option.id == 'check'
+              ? Act0FeedbackQualityV1.correct
+              : Act0FeedbackQualityV1.wrong) ||
+      table.scope != Act0TableScopeV1.playedHand ||
+      table.tableFormat != Act0TableFormatV1.sixMax ||
+      table.playerCount != 6 ||
+      table.seats.length != 6 ||
+      table.streetLabel != 'Flop' ||
+      table.potLabel != 'Pot 6 BB' ||
+      table.toCallLabel.trim().isNotEmpty ||
+      (table.activeSeatId?.trim().isNotEmpty ?? false) ||
+      (table.heroSeatId?.trim().isNotEmpty ?? false) ||
+      table.actionTrail.isNotEmpty ||
+      table.heroCards.length != 2 ||
+      table.boardCards.length != 3) {
+    return false;
+  }
+  const cards = <String>['As', 'Kd', 'Ah', '7c', '2d'];
+  final shown = <String>[
+    for (final card in table.heroCards) '${card.rank}${card.suit}',
+    for (final card in table.boardCards) '${card.rank}${card.suit}',
+  ];
+  for (var i = 0; i < cards.length; i++) {
+    if (shown[i] != cards[i]) return false;
+  }
+  const ids = <String>['utg', 'hj', 'co', 'btn', 'sb', 'bb'];
+  for (var i = 0; i < ids.length; i++) {
+    final seat = table.seats[i];
+    final id = ids[i];
+    if (seat.seatId != id ||
+        seat.seatLabel != id.toUpperCase() ||
+        seat.isHero != (id == 'btn') ||
+        seat.isDealerButton != (id == 'btn') ||
+        seat.isSmallBlind != (id == 'sb') ||
+        seat.isBigBlind != (id == 'bb') ||
+        seat.isActive ||
+        !seat.isOccupied ||
+        !seat.isInHand ||
+        seat.isFolded ||
+        seat.hasActed ||
+        seat.stackLabel != null ||
+        seat.currentBetLabel != null ||
+        seat.blindAmountLabel != null ||
+        seat.bet != null) {
+      return false;
+    }
+  }
+  return true;
+}
+
 // Decimal BB units avoid binary floating-point errors at exact minimum raises.
 // Other units, rounding, symbolic sizes, negative or extravagant inputs are not
 // silently reinterpreted. The normalizer is deliberately bounded.
@@ -304,6 +377,28 @@ Act0BettingPriceResultV1 act0BettingPriceForOptionV1(
     return const Act0BettingPriceResultV1(
       _unknown,
       'changed_early_fold_source',
+    );
+  }
+  // This reused source task has a real first-use definition question.
+  // Exact scene/choice identity is required; otherwise fail closed rather
+  // than treating an unproved numeric wager as a learner mistake.
+  if (taskId == 'what_poker_is_table_read_transfer' &&
+      _placementActionLabelsV1.containsKey(option.id)) {
+    if (_exactPlacementActionDefinitionV1(
+      table,
+      option,
+      sizingBet: sizingBet,
+      question: question,
+    )) {
+      return const Act0BettingPriceResultV1(
+        _unknown,
+        'source_placement_action_definition',
+        appliesToWager: false,
+      );
+    }
+    return const Act0BettingPriceResultV1(
+      _unknown,
+      'changed_placement_action_source',
     );
   }
   if (table.scope == Act0TableScopeV1.orientation ||
