@@ -3,7 +3,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_betting_price_contract_v1.d
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
-Act0RunnerStateV1 _realPlacementActionRunnerV1() {
+Act0RunnerStateV1 _realPlacementActionRunnerV1({bool isRu = false}) {
   final task = Act0ShellStateV1.sample.worlds
       .expand((world) => world.lessons)
       .expand((lesson) => lesson.taskList)
@@ -17,6 +17,7 @@ Act0RunnerStateV1 _realPlacementActionRunnerV1() {
     signalId: 'action_basics',
     checkIndex: 3,
     checkCount: 3,
+    isRu: isRu,
   );
 }
 
@@ -210,6 +211,82 @@ void main() {
       }
     },
   );
+
+  test('existing RU Placement projection preserves its authored action grades', () {
+    final runner = _realPlacementActionRunnerV1(isRu: true);
+    expect(runner.question, '\u041f\u0435\u0440\u0435\u0434 Hero \u043d\u0435\u0442 \u0441\u0442\u0430\u0432\u043a\u0438. \u041a\u0430\u043a\u043e\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e?');
+    const labels = <String, String>{
+      'check': '\u0427\u0435\u043a',
+      'call': '\u041a\u043e\u043b\u043b',
+      'raise': '\u0420\u0435\u0439\u0437',
+    };
+    for (final option in runner.options.where((o) => labels.containsKey(o.id))) {
+      expect(option.label, labels[option.id]);
+      expect(option.isCorrect, option.id == 'check');
+      expect(
+        option.quality,
+        option.id == 'check'
+            ? Act0FeedbackQualityV1.correct
+            : Act0FeedbackQualityV1.wrong,
+      );
+      final result = act0BettingPriceForOptionV1(
+        runner.table,
+        option,
+        taskId: 'what_poker_is_table_read_transfer',
+        question: runner.question,
+      );
+      expect(result.reason, 'source_placement_action_definition');
+      expect(result.appliesToWager, isFalse);
+      expect(result.sourceReady, isFalse);
+      expect(
+        act0BettingPriceBlocksAuthoredSuccessV1(
+          runner.table,
+          option,
+          taskId: 'what_poker_is_table_read_transfer',
+          question: runner.question,
+        ),
+        isFalse,
+      );
+    }
+  });
+
+  test('locale pairings and mutated RU Placement never bypass wager guard', () {
+    final ru = _realPlacementActionRunnerV1(isRu: true);
+    final en = _realPlacementActionRunnerV1();
+    final ruCheck = ru.options.singleWhere((o) => o.id == 'check');
+    final enCheck = en.options.singleWhere((o) => o.id == 'check');
+    final scenarios = [
+      (name: 'ru_question_en_label', table: ru.table, option: enCheck, question: ru.question, sizingBet: false),
+      (name: 'en_question_ru_label', table: en.table, option: ruCheck, question: en.question, sizingBet: false),
+      (name: 'mutated_ru_question', table: ru.table, option: ruCheck, question: '${ru.question}!', sizingBet: false),
+      (name: 'mutated_ru_label', table: ru.table, option: _alterOptionV1(ruCheck, label: 'Check'), question: ru.question, sizingBet: false),
+      (name: 'changed_ru_grade', table: ru.table, option: _alterOptionV1(ruCheck, correct: false, quality: Act0FeedbackQualityV1.wrong), question: ru.question, sizingBet: false),
+      (name: 'changed_ru_pot', table: ru.table.copyWith(potLabel: 'Pot 7 BB'), option: ruCheck, question: ru.question, sizingBet: false),
+      (name: 'ru_sizing_bet', table: ru.table, option: ruCheck, question: ru.question, sizingBet: true),
+    ];
+    for (final scenario in scenarios) {
+      final result = act0BettingPriceForOptionV1(
+        scenario.table,
+        scenario.option,
+        taskId: 'what_poker_is_table_read_transfer',
+        question: scenario.question,
+        sizingBet: scenario.sizingBet,
+      );
+      expect(result.reason, 'changed_placement_action_source', reason: scenario.name);
+      expect(result.appliesToWager, isTrue, reason: scenario.name);
+      expect(
+        act0BettingPriceBlocksAuthoredSuccessV1(
+          scenario.table,
+          scenario.option,
+          taskId: 'what_poker_is_table_read_transfer',
+          question: scenario.question,
+          sizingBet: scenario.sizingBet,
+        ),
+        isTrue,
+        reason: scenario.name,
+      );
+    }
+  });
 
   test('numeric hand bets and disputed Fold grades remain source-blocked', () {
     final runner = _realPlacementActionRunnerV1();
