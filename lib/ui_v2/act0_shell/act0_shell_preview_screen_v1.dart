@@ -6969,8 +6969,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   ),
                                   selectedTaskFamily:
                                       playSelectedTask.resolvedTaskFamily,
-                                  compositionFamily:
-                                      playSelectedTask.resolvedCompositionFamily,
+                                  compositionFamily: playSelectedTask
+                                      .resolvedCompositionFamily,
                                   tablePresentation:
                                       playSelectedTask.tablePresentation,
                                   accessibilityPrototypeStep:
