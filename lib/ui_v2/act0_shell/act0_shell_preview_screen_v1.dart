@@ -6963,20 +6963,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   worldNumber: selectedWorld.worldNumber,
                                   selectedWorldId: selectedWorld.worldId,
                                   selectedLessonId: selectedLesson.lessonId,
-                                  selectedTaskId: playSelectedTask?.taskId,
+                                  selectedTaskId: playSelectedTask.taskId,
                                   selectedTaskTitle: _localizedTaskTitleV1(
                                     playSelectedTask,
                                   ),
                                   selectedTaskFamily:
-                                      playSelectedTask?.resolvedTaskFamily,
+                                      playSelectedTask.resolvedTaskFamily,
                                   compositionFamily:
-                                      playSelectedTask
-                                          ?.resolvedCompositionFamily ??
-                                      Act0RunnerCompositionFamilyV1
-                                          .f2AnswerList,
+                                      playSelectedTask.resolvedCompositionFamily,
                                   tablePresentation:
-                                      playSelectedTask?.tablePresentation ??
-                                      Act0TaskTablePresentationV1.legacy,
+                                      playSelectedTask.tablePresentation,
                                   accessibilityPrototypeStep:
                                       accessibilityPrototypeStep,
                                   onAccessibilityPrototypeStepChanged: (next) {
@@ -6998,7 +6994,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   evidenceNextOrder:
                                       _latestEvidenceOrderV1() + 1,
                                   reviewKindId: _routeReviewKindForTaskIdV1(
-                                    playSelectedTask?.taskId ?? '',
+                                    playSelectedTask.taskId,
                                   ).name,
                                   theoryRecallStep: theoryRecallStep,
                                   framingProfile: runnerFramingProfile,
@@ -7018,32 +7014,32 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       ),
                                   repairResultReceiptLine:
                                       _activeRepairTaskId ==
-                                          playSelectedTask?.taskId
+                                          playSelectedTask.taskId
                                       ? _activeRepairResultReceiptLine
                                       : null,
                                   repairOutcomeProofLine:
                                       _activeRepairTaskId ==
-                                          playSelectedTask?.taskId
+                                          playSelectedTask.taskId
                                       ? _repairOutcomeProofLineV1()
                                       : sameSessionLearningDelta?.line,
                                   forceShowRepairOutcomeProof:
                                       sameSessionLearningDelta != null,
                                   repairContinuesToSourceRecheck:
                                       _activeRepairTaskId ==
-                                          playSelectedTask?.taskId &&
+                                          playSelectedTask.taskId &&
                                       _activeSameSignalFeedbackRepairV1,
                                   isSourceRecheckAttempt:
                                       _activeSameSignalRecheckTaskId ==
-                                      playSelectedTask?.taskId,
+                                      playSelectedTask.taskId,
                                   repairSessionSummaryLines:
                                       _activeRepairTaskId ==
-                                          playSelectedTask?.taskId
+                                          playSelectedTask.taskId
                                       ? _activeRepairSessionSummaryLines
                                       : const <String>[],
                                   feedbackForwardCtaLabel:
                                       placementForwardCtaLabel ??
                                       (_activeRepairTaskId ==
-                                                  playSelectedTask?.taskId &&
+                                                  playSelectedTask.taskId &&
                                               (!_activeSameSignalFeedbackRepairV1 ||
                                                   !act0IndependentRepairProofV1(
                                                     isCorrect:
@@ -7059,7 +7055,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   suppressFeedbackRepairFocus:
                                       _placementDiagnosticActive,
                                   relaxTheoryAdvanceLock: _completedTaskIds
-                                      .contains(playSelectedTask!.taskId),
+                                      .contains(playSelectedTask.taskId),
                                   showLearningRailFocusLabels:
                                       _activeRepairTaskId ==
                                       playSelectedTask.taskId,
