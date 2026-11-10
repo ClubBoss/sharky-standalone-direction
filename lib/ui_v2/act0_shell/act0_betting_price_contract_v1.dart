@@ -519,7 +519,9 @@ Act0BettingPriceResultV1 act0BettingPriceForOptionV1(
     );
   }
   final order = act0BettingRoundOrderTruthForTableV1(
-    inferredHeroId == null ? table : table.copyWith(activeSeatId: inferredHeroId),
+    inferredHeroId == null
+        ? table
+        : table.copyWith(activeSeatId: inferredHeroId),
   );
   if (order == Act0BettingRoundOrderTruthV1.contradiction) {
     return const Act0BettingPriceResultV1(
