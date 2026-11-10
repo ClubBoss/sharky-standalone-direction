@@ -3,9 +3,21 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_betting_price_contract_v1.d
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 const _definitions = <(String, String, String)>[
-  ('actions_theory', 'Which action increases what opponents must match?', 'raise'),
-  ('actions_fold_drill', 'Which action ends your participation in the hand?', 'fold'),
-  ('actions_call_drill', 'Which action matches a wager without increasing it?', 'call'),
+  (
+    'actions_theory',
+    'Which action increases what opponents must match?',
+    'raise',
+  ),
+  (
+    'actions_fold_drill',
+    'Which action ends your participation in the hand?',
+    'fold',
+  ),
+  (
+    'actions_call_drill',
+    'Which action matches a wager without increasing it?',
+    'call',
+  ),
   ('actions_raise_drill', 'Which action increases the current wager?', 'raise'),
   ('actions_review', 'Which action adds more than a call?', 'raise'),
 ];
@@ -98,7 +110,7 @@ void main() {
     for (final (taskId, _, correctId) in _definitions) {
       final runner = tasks.singleWhere((task) => task.taskId == taskId).runner;
       final correct = runner.options.singleWhere((o) => o.id == correctId);
-      final wrong = runner.options.singleWhere((o) => o.id != correctId);
+      final wrong = runner.options.firstWhere((o) => o.id != correctId);
       final altered = [
         (
           label: 'numeric_wager',
@@ -196,7 +208,11 @@ void main() {
           'changed_w1_action_word_source',
           reason: '$taskId/${changed.label}',
         );
-        expect(result.appliesToWager, isTrue, reason: '$taskId/${changed.label}');
+        expect(
+          result.appliesToWager,
+          isTrue,
+          reason: '$taskId/${changed.label}',
+        );
         expect(
           act0BettingPriceBlocksAuthoredSuccessV1(
             changed.table,
