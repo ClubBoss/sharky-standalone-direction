@@ -111,17 +111,14 @@ const _actionDefinitionChoices = <(String, String), String>{
 // Exact authored early-position discipline questions are strategic reads,
 // not requests to execute or size a wager. Preserve all source-owned grades,
 // but never turn these into a legal-bet or stack-capacity certificate.
+// ATo UTG and KTo HJ are deliberately NOT covered: common 100 BB 6-max
+// opening baselines include them, contradicting the strict authored fold grade.
+// Source/strategy owner must resolve those original tasks separately.
 // This exception expires if the question, choice, hero cards, active seat,
 // blind-start history, or price projection changes.
 const _earlyFoldSourceQuestionsV1 = <String, (String, String, String, String)>{
   'fold_discipline_early_fold': ('What is the clean action?', 'utg', 'Js', '8d'),
   'apply_utg_fold': ('What is the clean action?', 'utg', '8s', '4d'),
-  'same_hand_different_seat_same_hand_early_fold':
-      ('What is the disciplined action?', 'utg', 'Ad', 'Tc'),
-  'position_apply_early_fold':
-      ('What is the disciplined action?', 'utg', 'Ad', 'Tc'),
-  'position_apply_hj_fold':
-      ('What is the disciplined action?', 'hj', 'Kd', 'Tc'),
   'position_checkpoint_position_checkpoint_early_fold':
       ('What is the disciplined action?', 'utg', 'Ac', '9d'),
 };
