@@ -474,9 +474,10 @@ void main() {
         ),
         isTrue,
       );
-      expect(task.runner.options.singleWhere((o) => o.id == 'check').isCorrect,
-          isTrue);
+      expect(
+        task.runner.options.singleWhere((o) => o.id == 'check').isCorrect,
+        isTrue,
+      );
     }
-  );
-
+  });
 }
