@@ -75,98 +75,169 @@ void main() {
     }
   });
 
-  test('placement definition never licenses altered table, amount or grade', () {
-    final runner = _realPlacementActionRunnerV1();
-    final check = runner.options.singleWhere((option) => option.id == 'check');
-    final call = runner.options.singleWhere((option) => option.id == 'call');
-    final mutations = <String, ({Act0TableStateV1 table, Act0RunnerOptionV1 option, String question})>{
-      'pot': (table: runner.table.copyWith(potLabel: 'Pot 7 BB'), option: check, question: runner.question),
-      'price': (table: runner.table.copyWith(toCallLabel: 'To call 2 BB'), option: check, question: runner.question),
-      'street': (table: runner.table.copyWith(streetLabel: 'Turn'), option: check, question: runner.question),
-      'scope': (table: runner.table.copyWith(scope: Act0TableScopeV1.orientation), option: check, question: runner.question),
-      'actor': (table: runner.table.copyWith(activeSeatId: 'btn'), option: check, question: runner.question),
-      'board': (
-        table: runner.table.copyWith(boardCards: const <Act0CardStateV1>[
-          Act0CardStateV1(rank: 'Q', suit: 'h'),
-          Act0CardStateV1(rank: '7', suit: 'c'),
-          Act0CardStateV1(rank: '2', suit: 'd'),
-        ]),
-        option: check,
-        question: runner.question,
-      ),
-      'hero': (
-        table: runner.table.copyWith(heroCards: const <Act0CardStateV1>[
-          Act0CardStateV1(rank: 'Q', suit: 's'),
-          Act0CardStateV1(rank: 'K', suit: 'd'),
-        ]),
-        option: check,
-        question: runner.question,
-      ),
-      'stack': (
-        table: runner.table.copyWith(seats: <Act0SeatStateV1>[
-          for (final seat in runner.table.seats)
-            if (seat.isHero)
-              Act0SeatStateV1(
-                seatId: seat.seatId,
-                seatLabel: seat.seatLabel,
-                displayName: seat.displayName,
-                isHero: true,
-                isDealerButton: seat.isDealerButton,
-                stackLabel: '1 BB',
-                holeCards: seat.holeCards,
-              )
-            else
-              seat,
-        ]),
-        option: check,
-        question: runner.question,
-      ),
-      'question': (table: runner.table, option: check, question: 'What should Hero do?'),
-      'number': (table: runner.table, option: _alterOptionV1(call, amount: '2 BB'), question: runner.question),
-      'sizing': (table: runner.table, option: _alterOptionV1(check, label: 'Check 2 BB'), question: runner.question),
-      'changed_grade': (table: runner.table, option: _alterOptionV1(check, correct: false, quality: Act0FeedbackQualityV1.wrong), question: runner.question),
-    };
-    for (final entry in mutations.entries) {
-      final result = act0BettingPriceForOptionV1(
-        entry.value.table,
-        entry.value.option,
-        taskId: 'what_poker_is_table_read_transfer',
-        question: entry.value.question,
+  test(
+    'placement definition never licenses altered table, amount or grade',
+    () {
+      final runner = _realPlacementActionRunnerV1();
+      final check = runner.options.singleWhere(
+        (option) => option.id == 'check',
       );
-      expect(result.reason, 'changed_placement_action_source', reason: entry.key);
-      expect(result.appliesToWager, isTrue, reason: entry.key);
-      expect(
-        act0BettingPriceBlocksAuthoredSuccessV1(
+      final call = runner.options.singleWhere((option) => option.id == 'call');
+      final mutations =
+          <
+            String,
+            ({
+              Act0TableStateV1 table,
+              Act0RunnerOptionV1 option,
+              String question,
+            })
+          >{
+            'pot': (
+              table: runner.table.copyWith(potLabel: 'Pot 7 BB'),
+              option: check,
+              question: runner.question,
+            ),
+            'price': (
+              table: runner.table.copyWith(toCallLabel: 'To call 2 BB'),
+              option: check,
+              question: runner.question,
+            ),
+            'street': (
+              table: runner.table.copyWith(streetLabel: 'Turn'),
+              option: check,
+              question: runner.question,
+            ),
+            'scope': (
+              table: runner.table.copyWith(scope: Act0TableScopeV1.orientation),
+              option: check,
+              question: runner.question,
+            ),
+            'actor': (
+              table: runner.table.copyWith(activeSeatId: 'btn'),
+              option: check,
+              question: runner.question,
+            ),
+            'board': (
+              table: runner.table.copyWith(
+                boardCards: const <Act0CardStateV1>[
+                  Act0CardStateV1(rank: 'Q', suit: 'h'),
+                  Act0CardStateV1(rank: '7', suit: 'c'),
+                  Act0CardStateV1(rank: '2', suit: 'd'),
+                ],
+              ),
+              option: check,
+              question: runner.question,
+            ),
+            'hero': (
+              table: runner.table.copyWith(
+                heroCards: const <Act0CardStateV1>[
+                  Act0CardStateV1(rank: 'Q', suit: 's'),
+                  Act0CardStateV1(rank: 'K', suit: 'd'),
+                ],
+              ),
+              option: check,
+              question: runner.question,
+            ),
+            'stack': (
+              table: runner.table.copyWith(
+                seats: <Act0SeatStateV1>[
+                  for (final seat in runner.table.seats)
+                    if (seat.isHero)
+                      Act0SeatStateV1(
+                        seatId: seat.seatId,
+                        seatLabel: seat.seatLabel,
+                        displayName: seat.displayName,
+                        isHero: true,
+                        isDealerButton: seat.isDealerButton,
+                        stackLabel: '1 BB',
+                        holeCards: seat.holeCards,
+                      )
+                    else
+                      seat,
+                ],
+              ),
+              option: check,
+              question: runner.question,
+            ),
+            'question': (
+              table: runner.table,
+              option: check,
+              question: 'What should Hero do?',
+            ),
+            'number': (
+              table: runner.table,
+              option: _alterOptionV1(call, amount: '2 BB'),
+              question: runner.question,
+            ),
+            'sizing': (
+              table: runner.table,
+              option: _alterOptionV1(check, label: 'Check 2 BB'),
+              question: runner.question,
+            ),
+            'changed_grade': (
+              table: runner.table,
+              option: _alterOptionV1(
+                check,
+                correct: false,
+                quality: Act0FeedbackQualityV1.wrong,
+              ),
+              question: runner.question,
+            ),
+          };
+      for (final entry in mutations.entries) {
+        final result = act0BettingPriceForOptionV1(
           entry.value.table,
           entry.value.option,
           taskId: 'what_poker_is_table_read_transfer',
           question: entry.value.question,
-        ),
-        isTrue,
-        reason: 'Original Check proof cannot transfer: ${entry.key}',
-      );
-    }
-  });
+        );
+        expect(
+          result.reason,
+          'changed_placement_action_source',
+          reason: entry.key,
+        );
+        expect(result.appliesToWager, isTrue, reason: entry.key);
+        expect(
+          act0BettingPriceBlocksAuthoredSuccessV1(
+            entry.value.table,
+            entry.value.option,
+            taskId: 'what_poker_is_table_read_transfer',
+            question: entry.value.question,
+          ),
+          isTrue,
+          reason: 'Original Check proof cannot transfer: ${entry.key}',
+        );
+      }
+    },
+  );
 
   test('numeric hand bets and disputed Fold grades remain source-blocked', () {
     final runner = _realPlacementActionRunnerV1();
     final check = runner.options.singleWhere((option) => option.id == 'check');
-    expect(act0BettingPriceBlocksAuthoredSuccessV1(
-      runner.table,
-      check,
-      taskId: 'what_poker_is_table_read_transfer',
-      question: runner.question,
-      sizingBet: true,
-    ), isTrue);
+    expect(
+      act0BettingPriceBlocksAuthoredSuccessV1(
+        runner.table,
+        check,
+        taskId: 'what_poker_is_table_read_transfer',
+        question: runner.question,
+        sizingBet: true,
+      ),
+      isTrue,
+    );
     final ordinaryTableReadOption = Act0ShellStateV1.sample.worlds
         .expand((world) => world.lessons)
         .expand((lesson) => lesson.taskList)
-        .singleWhere((task) => task.taskId == 'what_poker_is_table_read_transfer')
-        .runner.options.singleWhere((option) => option.id == 'two_three_six');
+        .singleWhere(
+          (task) => task.taskId == 'what_poker_is_table_read_transfer',
+        )
+        .runner
+        .options
+        .singleWhere((option) => option.id == 'two_three_six');
     expect(ordinaryTableReadOption.isCorrect, isTrue);
     expect(
       act0BettingPriceForOptionV1(
-        runner.table, ordinaryTableReadOption,
+        runner.table,
+        ordinaryTableReadOption,
         taskId: 'what_poker_is_table_read_transfer',
         question: 'What is the clean first table read?',
       ).reason,
