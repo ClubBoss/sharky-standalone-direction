@@ -67,7 +67,9 @@ class _Act0ContentPresentationGateV1State
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (_pending) const CircularProgressIndicator(),
+            // A durable write can remain pending indefinitely. Keep the wait
+            // quiet and navigable without exposing the task before its ACK.
+            if (_pending) const Icon(Icons.hourglass_empty),
             const SizedBox(height: 16),
             Text(
               _pending
@@ -85,18 +87,23 @@ class _Act0ContentPresentationGateV1State
                 },
                 child: const Text('Try again'),
               ),
-            TextButton(
-              key: const Key('act0_content_presentation_exit'),
-              onPressed: () {
-                // Invalidate the pending callback even if navigation is delayed
-                // or a parent route guard declines the exit.
-                _generation++;
-                setState(() {
-                  _pending = false;
-                });
-                widget.onExit();
-              },
-              child: const Text('Back'),
+            KeyedSubtree(
+              // Preserve the source runner's Back route while its content is
+              // hidden. This wraps one real control, not a second runner.
+              key: const Key('act0_shell_runner_back'),
+              child: TextButton(
+                key: const Key('act0_content_presentation_exit'),
+                onPressed: () {
+                  // Invalidate the pending callback even if navigation is delayed
+                  // or a parent route guard declines the exit.
+                  _generation++;
+                  setState(() {
+                    _pending = false;
+                  });
+                  widget.onExit();
+                },
+                child: const Text('Back'),
+              ),
             ),
           ],
         ),

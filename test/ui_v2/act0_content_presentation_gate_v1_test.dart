@@ -31,6 +31,26 @@ void main() {
     },
   );
 
+  testWidgets('pending save stays hidden and permits the source Back route', (
+    tester,
+  ) async {
+    final pending = Completer<bool>();
+    var exits = 0;
+    await tester.pumpWidget(
+      host('a', () => pending.future, exit: () => exits++),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Private task content'), findsNothing);
+    expect(find.byKey(const Key('act0_shell_runner_back')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+    expect(exits, 1);
+    pending.complete(true);
+    await tester.pumpAndSettle();
+    expect(find.text('Private task content'), findsNothing);
+    await tester.pumpWidget(const SizedBox());
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets(
     'failed and thrown persistence keep content hidden and allow safe retry',
     (tester) async {
