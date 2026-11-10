@@ -1,0 +1,108 @@
+name: PKR02-05 terminal Hero source exact-host QA
+on:
+  push:
+    branches: [qa/pkr02-05-terminal-hero-20261110]
+    paths:
+      - .github/workflows/pkr02-05-terminal-hero.yml
+permissions:
+  contents: read
+concurrency:
+  group: pkr0205-terminal-hero-qa
+  cancel-in-progress: true
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 267fadbc20b468a778be2b179b70381969a2a838
+          persist-credentials: false
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+      - name: Exact product SHA/tree, lock, format and analyze
+        run: |
+          set -euo pipefail
+          mkdir -p output/pkr0205/hero-qa
+          D=output/pkr0205/hero-qa
+          test "$(git rev-parse HEAD)" = 267fadbc20b468a778be2b179b70381969a2a838
+          test "$(git rev-parse HEAD^{tree})" = 87c02bffc8765e70ac4c4c256d8f98fbc6a91a96
+          git rev-parse HEAD HEAD^{tree} > "$D/source.txt"
+          sha256sum pubspec.lock > "$D/lock-before"
+          flutter pub get
+          sha256sum pubspec.lock > "$D/lock-after"
+          cmp "$D/lock-before" "$D/lock-after"
+          FILES="lib/ui_v2/act0_shell/act0_betting_price_contract_v1.dart test/ui_v2/act0_pkr02_05_source_closure_v1_test.dart test/ui_v2/act0_pkr02_05_catalog_coverage_v1_test.dart test/ui_v2/act0_pkr02_05_runtime_legality_v1_test.dart"
+          dart format --output=none --set-exit-if-changed $FILES || {
+            dart format $FILES
+            git diff -- $FILES
+            exit 1
+          }
+          dart analyze $FILES
+      - name: Actual price, source, catalog and Runner widget cases
+        run: |
+          set +e
+          flutter test test/ui_v2/act0_betting_price_contract_v1_test.dart test/ui_v2/act0_pkr02_05_source_closure_v1_test.dart test/ui_v2/act0_pkr02_05_catalog_coverage_v1_test.dart test/ui_v2/act0_pkr02_05_runtime_legality_v1_test.dart --machine > output/pkr0205/hero-qa/focused.jsonl 2>&1
+          code=$?
+          set -e
+          python3 - "$code" <<'PY'
+          import collections,json,pathlib,sys
+          log=pathlib.Path('output/pkr0205/hero-qa/focused.jsonl')
+          starts={};count=collections.Counter();errors=[]
+          for line in log.read_text(errors='replace').splitlines():
+              try: x=json.loads(line)
+              except json.JSONDecodeError: continue
+              if not isinstance(x,dict): continue
+              if x.get('type')=='testStart': starts[x['test']['id']]=x['test'].get('name','')
+              if x.get('type')=='testDone' and not x.get('hidden'):
+                  name=starts.get(x.get('testID'),'')
+                  if name.startswith('loading '): continue
+                  count['skipped' if x.get('skipped') else x.get('result','unknown')]+=1
+              if x.get('type')=='error': errors.append(x.get('error','')[:800])
+          print('FOCUSED',dict(count),'CODE',sys.argv[1],'ERRORS',errors[-4:],flush=True)
+          assert int(sys.argv[1])==0 and count['success']>=61 and sum(v for k,v in count.items() if k!='success')==0
+          PY
+      - name: Exact affected Table Truth candidate contract
+        run: |
+          set +e
+          TABLE_TRUTH_OUTPUT="$PWD/output/pkr0205/hero-qa/candidate" flutter test test/ui_v2/act0_table_truth_catalog_v1_test.dart test/ui_v2/act0_first_hand_truth_v1_test.dart test/ui_v2/act0_table_truth_mutation_v1_test.dart test/ui_v2/act0_table_truth_render_v1_test.dart test/ui_v2/act0_table_truth_falsifiers_v1_test.dart test/ui_v2/act0_w11_poker_source_truth_v1_test.dart test/ui_v2/act0_source_scope_v1_test.dart test/ui_v2/act0_source_scope_runner_v1_test.dart test/ui_v2/act0_table_choreography_contract_v1_test.dart test/ui_v2/act0_street_replay_contract_v1_test.dart --machine > output/pkr0205/hero-qa/table-green.jsonl 2>&1
+          code=$?
+          set -e
+          python3 tools/table_truth_evidence_v1.py tests output/pkr0205/hero-qa/table-green.jsonl green "$code"
+      - name: Adjacent PKR03 unchanged three-case failing identity
+        run: |
+          set +e
+          flutter test test/ui_v2/act0_pkr03_full_catalog_order_proof_v1_test.dart --machine > output/pkr0205/hero-qa/pkr03-candidate.jsonl 2>&1
+          code=$?
+          set -e
+          python3 - "$code" <<'PY'
+          import collections,json,pathlib,sys
+          src=pathlib.Path('output/pkr0205/hero-qa/pkr03-candidate.jsonl')
+          starts={};failed=[];counts=collections.Counter()
+          for line in src.read_text(errors='replace').splitlines():
+              try: x=json.loads(line)
+              except json.JSONDecodeError: continue
+              if not isinstance(x,dict): continue
+              if x.get('type')=='testStart': starts[x['test']['id']]=x['test'].get('name','')
+              if x.get('type')=='testDone' and not x.get('hidden'):
+                  name=starts.get(x.get('testID'),'')
+                  if name.startswith('loading '): continue
+                  result='skipped' if x.get('skipped') else x.get('result','unknown')
+                  counts[result]+=1
+                  if result!='success': failed.append((name,result))
+          expected={
+           'full authored catalog every playedHand table has an exact verdict and reason',
+           'what the learner sees conditional reading is exact and kept apart from the proof',
+           'what the learner sees replay, animation and static sets are exact',
+          }
+          print('PKR03_UNCHANGED',dict(counts),'FAILED',failed,'EXIT',sys.argv[1],flush=True)
+          assert counts['success']==34 and counts['failure']==3 and {x[0] for x in failed}==expected and int(sys.argv[1])!=0
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pkr0205-terminal-hero-exact-evidence
+          path: output/pkr0205/hero-qa/
+          retention-days: 3
