@@ -31,7 +31,8 @@ jobs:
       - name: Focused exact-source format and analysis
         run: |
           set -euo pipefail
-          dart format --output=none --set-exit-if-changed lib/ui_v2/act0_shell/act0_welcome_shell_v1.dart test/ui_v2/act0_welcome_price_source_v1_test.dart
+          dart format lib/ui_v2/act0_shell/act0_welcome_shell_v1.dart test/ui_v2/act0_welcome_price_source_v1_test.dart | tee output/pkr0205-welcome/format.txt
+          git diff -- lib/ui_v2/act0_shell/act0_welcome_shell_v1.dart test/ui_v2/act0_welcome_price_source_v1_test.dart > output/pkr0205-welcome/format.diff
           dart analyze lib/ui_v2/act0_shell/act0_welcome_shell_v1.dart test/ui_v2/act0_welcome_price_source_v1_test.dart
       - name: Ungraded Welcome all three choices and actual first-user path
         run: |
