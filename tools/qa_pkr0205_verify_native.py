@@ -11,8 +11,8 @@ import sys
 root = Path(sys.argv[1])
 checkpoints = root / 'checkpoints'
 observed = {}
-PRODUCT = 'fdff8a471817f9063b15e1a6a43c92eb4e2204a7'
-TREE = '12ada8e1839e16dfe1651d2c94511c4085c17e4e'
+PRODUCT = 'dc479114063519597e99bc08b69c1ef1eebcfdf5'
+TREE = 'da99ca17795eddf6dedb199d9a0363968367da43'
 TAGS = ['P1_before_prerequisites', 'P2_guide_completed', 'P4_wrong_fold',
         'P5_correct_repair', 'P6_original_recheck', 'P7_before_unproved',
         'P8_unproved_refused', 'P8b_source_completion_refused', 'P9_after_restart']
