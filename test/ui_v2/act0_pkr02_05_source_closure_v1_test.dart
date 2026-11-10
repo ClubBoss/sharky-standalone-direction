@@ -477,4 +477,84 @@ void main() {
       }
     },
   );
+  test(
+    'terminal Hero acts identifies a unique pending actor only when no projection is present',
+    () {
+      final complete = pkrPriceTableV1(
+        trail: [...pkrButtonOpenV1, 'Hero acts'],
+      );
+      final missingProjection = complete.copyWith(activeSeatId: '');
+      final legal = act0BettingPriceForOptionV1(
+        missingProjection,
+        pkrPriceOptionV1('Raise to', '3'),
+      );
+      expect(legal.truth, Act0BettingPriceTruthV1.consistent);
+      expect(legal.reason, 'numeric_action_consistent');
+      expect(legal.potBeforeActionBb, 1.5);
+      expect(legal.minimumRaiseToBb, 2);
+      expect(
+        act0BettingPriceBlocksAuthoredSuccessV1(
+          missingProjection,
+          pkrPriceOptionV1('Raise to', '3'),
+        ),
+        isFalse,
+      );
+      final illegal = act0BettingPriceForOptionV1(
+        missingProjection,
+        pkrPriceOptionV1('Raise to', '1.5'),
+      );
+      expect(illegal.truth, Act0BettingPriceTruthV1.contradiction);
+      expect(illegal.reason, 'wager_below_minimum');
+
+      // A missing, nonterminal, or conflicting actor is never supplied by
+      // merely selecting the unique hero seat in the table.
+      for (final withoutMarker in [
+        pkrPriceTableV1().copyWith(activeSeatId: ''),
+        pkrPriceTableV1(
+          trail: [...pkrButtonOpenV1, 'Hero checks'],
+        ).copyWith(activeSeatId: ''),
+      ]) {
+        expect(
+          act0BettingPriceForOptionV1(
+            withoutMarker,
+            pkrPriceOptionV1('Raise to', '3'),
+          ).reason,
+          'missing_active_actor',
+        );
+      }
+      expect(
+        act0BettingPriceForOptionV1(
+          missingProjection.copyWith(heroSeatId: 'bb'),
+          pkrPriceOptionV1('Raise to', '3'),
+        ).reason,
+        'missing_active_actor',
+      );
+      expect(
+        act0BettingPriceForOptionV1(
+          missingProjection.copyWith(activeSeatId: 'co'),
+          pkrPriceOptionV1('Raise to', '3'),
+        ).reason,
+        'not_hero_action',
+      );
+    },
+  );
+
+  test('W4 explicit terminal hero is recovered but missing history stays held', () {
+    final task = Act0ShellStateV1.sample.worlds
+        .expand((world) => world.lessons)
+        .expand((lesson) => lesson.taskList)
+        .singleWhere((item) => item.taskId == 'w4_good_price_call');
+    final call = task.runner.options.singleWhere((option) => option.id == 'call');
+    expect(task.runner.table.activeSeatId, isNull);
+    expect(task.runner.table.actionTrail.last.label, 'Hero acts');
+    final result = act0BettingPriceForOptionV1(task.runner.table, call);
+    expect(result.truth, Act0BettingPriceTruthV1.unproved);
+    expect(result.reason, 'missing_blind_start');
+    expect(result.sourceReady, isFalse);
+    expect(
+      act0BettingPriceBlocksAuthoredSuccessV1(task.runner.table, call),
+      isTrue,
+    );
+  });
+
 }
