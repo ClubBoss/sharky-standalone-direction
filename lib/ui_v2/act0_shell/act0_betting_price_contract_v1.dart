@@ -89,6 +89,25 @@ const _conceptualAnswers = <(String, String), String>{
   ('w12_checkpoint_discipline_line', 'fear_line'): 'Fold every close spot now',
 };
 
+// These two W1 questions explicitly test universal action DEFINITIONS,
+// not execution of a hand. Their source has no action history or amount; a
+// learner should not lose the first lesson for lack of invented historical
+// chips. Exact task, question, option id, label, and untouched conceptual
+// table profile must all match. A changed source fails closed again.
+const _actionDefinitionQuestions = <String, String>{
+  'actions_legal_context':
+      'No bet faces you. Which action keeps you in the hand without adding chips?',
+  'actions_check_drill': 'What action keeps playing for free?',
+};
+const _actionDefinitionChoices = <(String, String), String>{
+  ('actions_legal_context', 'fold'): 'Fold',
+  ('actions_legal_context', 'check'): 'Check',
+  ('actions_legal_context', 'call'): 'Call',
+  ('actions_check_drill', 'fold'): 'Fold',
+  ('actions_check_drill', 'check'): 'Check',
+  ('actions_check_drill', 'call'): 'Call',
+};
+
 // Decimal BB units avoid binary floating-point errors at exact minimum raises.
 // Other units, rounding, symbolic sizes, negative or extravagant inputs are not
 // silently reinterpreted. The normalizer is deliberately bounded.
@@ -146,6 +165,7 @@ Act0BettingPriceResultV1 act0BettingPriceForOptionV1(
   Act0RunnerOptionV1 option, {
   bool sizingBet = false,
   String? taskId,
+  String? question,
 }) {
   if (table.scope == Act0TableScopeV1.orientation ||
       table.scope == Act0TableScopeV1.explanation) {
@@ -161,6 +181,21 @@ Act0BettingPriceResultV1 act0BettingPriceForOptionV1(
     return const Act0BettingPriceResultV1(
       _unknown,
       'source_conceptual_answer',
+      appliesToWager: false,
+    );
+  }
+  if (!sizingBet &&
+      option.amountLabel.trim().isEmpty &&
+      _actionDefinitionQuestions[taskId] == question &&
+      _actionDefinitionChoices[(taskId, option.id)] == option.label &&
+      table.scope == Act0TableScopeV1.playedHand &&
+      table.streetLabel == 'Flop' &&
+      table.potLabel == 'Pot 3 BB' &&
+      table.toCallLabel.trim().isEmpty &&
+      table.actionTrail.every((item) => item.isNote)) {
+    return const Act0BettingPriceResultV1(
+      _unknown,
+      'source_action_definition',
       appliesToWager: false,
     );
   }
@@ -631,12 +666,14 @@ bool act0BettingPriceBlocksAuthoredSuccessV1(
   Act0RunnerOptionV1 option, {
   bool sizingBet = false,
   String? taskId,
+  String? question,
 }) {
   final result = act0BettingPriceForOptionV1(
     table,
     option,
     sizingBet: sizingBet,
     taskId: taskId,
+    question: question,
   );
   if (!result.appliesToWager) return false;
   if (!result.sourceReady) return true;
