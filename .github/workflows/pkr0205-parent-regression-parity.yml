@@ -1,0 +1,76 @@
+name: PKR0205 main-vs-PR learner regression parity (diagnostic only)
+on:
+  push:
+    branches: [qa/pkr0205-parent-regression-parity-20261110]
+permissions:
+  contents: read
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: accepted-main
+          ref: 3784d421beb5ae7cb8cfaacd10b1083855148850
+      - uses: actions/checkout@v4
+        with:
+          path: integration
+          ref: 7f800bf433cfaedd19c6e12cf0860c9d0374551d
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+      - name: Independently capture exact same existing Learner Trust cases at both HEADs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p output/learner-parity
+          TESTS="test/ui_v2/act0_ldr01_durable_truth_v1_test.dart test/ui_v2/act0_learner_trust_continuation_v1_test.dart test/ui_v2/s09_b2_summary_home_truth_core_v1_test.dart"
+          for pair in accepted-main integration; do
+            git -C "$pair" rev-parse HEAD HEAD^{tree} > "output/learner-parity/$pair-source.txt"
+            before="$(sha256sum "$pair/pubspec.lock" | cut -d ' ' -f 1)"
+            (cd "$pair" && flutter pub get > "../output/learner-parity/$pair-pub-get.log" 2>&1)
+            after="$(sha256sum "$pair/pubspec.lock" | cut -d ' ' -f 1)"
+            test "$before" = "$after"
+            set +e
+            (cd "$pair" && flutter test $TESTS --machine > "../output/learner-parity/$pair-tests.jsonl" 2>&1)
+            code=$?
+            set -e
+            echo "$code" > "output/learner-parity/$pair-exit.txt"
+          done
+      - name: Publish genuine machine-test verdicts without waiving required PR gates
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json,collections,pathlib
+          root=pathlib.Path('output/learner-parity')
+          verdicts={}
+          for tag in ('accepted-main','integration'):
+              f=root / (tag + '-tests.jsonl')
+              if not f.exists():
+                  print('NO_RESULTS', tag)
+                  raise SystemExit(1)
+              events=[]
+              for line in f.read_text().splitlines():
+                  try: event=json.loads(line)
+                  except json.JSONDecodeError: continue
+                  if isinstance(event, dict): events.append(event)
+              names={e['test']['id']:e['test']['name'] for e in events if e.get('type')=='testStart'}
+              done=[e for e in events if e.get('type')=='testDone' and not e.get('hidden') and not names.get(e.get('testID'),'').startswith('loading ')]
+              counts=collections.Counter('skipped' if e.get('skipped') else e.get('result') for e in done)
+              failed=[names.get(e.get('testID'),'unknown') for e in done if e.get('result') in ('failure','error')]
+              result={'commit':(root/(tag+'-source.txt')).read_text().splitlines()[0], 'exit_code':int((root/(tag+'-exit.txt')).read_text()), 'counts':dict(counts), 'failed_case_names':failed, 'errors':[e.get('error','')[:400] for e in events if e.get('type')=='error'][:10]}
+              print('LEARNER_PARITY',tag,json.dumps(result))
+              verdicts[tag]=result
+          (root/'verdict.json').write_text(json.dumps(verdicts,indent=2)+'\n')
+          assert all(v['counts'].get('success',0)>0 for v in verdicts.values()),'no real tests executed'
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pkr0205-learner-parity-${{ github.run_id }}
+          path: output/learner-parity/
+          retention-days: 30
