@@ -241,11 +241,12 @@ const _placementActionLabelsV1 = <String, String>{
 // bypass a numeric bet. Mixed languages or altered phrasing fail closed.
 const _placementActionDefinitionSourcesV1 = <String, Map<String, String>>{
   'No bet faces Hero. Which action is free?': _placementActionLabelsV1,
-  '\u041f\u0435\u0440\u0435\u0434 Hero \u043d\u0435\u0442 \u0441\u0442\u0430\u0432\u043a\u0438. \u041a\u0430\u043a\u043e\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e?': <String, String>{
-    'check': '\u0427\u0435\u043a',
-    'call': '\u041a\u043e\u043b\u043b',
-    'raise': '\u0420\u0435\u0439\u0437',
-  },
+  '\u041f\u0435\u0440\u0435\u0434 Hero \u043d\u0435\u0442 \u0441\u0442\u0430\u0432\u043a\u0438. \u041a\u0430\u043a\u043e\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e?':
+      <String, String>{
+        'check': '\u0427\u0435\u043a',
+        'call': '\u041a\u043e\u043b\u043b',
+        'raise': '\u0420\u0435\u0439\u0437',
+      },
 };
 
 bool _exactPlacementActionDefinitionV1(
