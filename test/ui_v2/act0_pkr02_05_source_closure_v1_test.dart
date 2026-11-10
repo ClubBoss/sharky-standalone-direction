@@ -575,10 +575,14 @@ void main() {
       final task = tasks.singleWhere((item) => item.taskId == taskId);
       final table = task.runner.table;
       expect(task.runner.options.map((o) => o.id).toSet(), {'fold', 'raise'});
-      expect(task.runner.options.singleWhere((o) => o.id == 'fold').isCorrect,
-          isTrue);
-      expect(task.runner.options.singleWhere((o) => o.id == 'raise').isCorrect,
-          isFalse);
+      expect(
+        task.runner.options.singleWhere((o) => o.id == 'fold').isCorrect,
+        isTrue,
+      );
+      expect(
+        task.runner.options.singleWhere((o) => o.id == 'raise').isCorrect,
+        isFalse,
+      );
       for (final option in task.runner.options) {
         final proof = act0BettingPriceForOptionV1(
           table,
@@ -683,5 +687,4 @@ void main() {
       }
     }
   });
-
 }
