@@ -14,6 +14,8 @@ from pathlib import Path
 SCHEMA = "SHARKY_EVIDENCE_V1"
 VALIDATION_SCHEMA = "SHARKY_EVIDENCE_VALIDATION_V1"
 SOURCE_SCHEMA = "sharky_phone_lab_browser_proof_v1"
+DEVELOPMENT_SCOPE = "development_en14pro_v1"
+HISTORICAL_SCOPE = "historical_multi_device_v1"
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 
 
@@ -28,6 +30,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--tooling-sha", required=True)
     parser.add_argument("--evidence-kind", default="phone_lab_browser")
+    parser.add_argument(
+        "--capture-scope",
+        choices=(DEVELOPMENT_SCOPE, HISTORICAL_SCOPE),
+        default=DEVELOPMENT_SCOPE,
+        help="Historical scope repackages old proof only; it authorizes no capture.",
+    )
     return parser.parse_args()
 
 
@@ -64,26 +72,46 @@ def file_entry(root: Path, path: Path, kind: str) -> dict[str, object]:
     }
 
 
-def source_hashes_match(proof_dir: Path, proof: dict[str, object]) -> bool:
+def expected_profiles(capture_scope: str) -> dict[str, list[int]]:
+    if capture_scope == DEVELOPMENT_SCOPE:
+        return {"iphone14_pro": [393, 852]}
+    if capture_scope == HISTORICAL_SCOPE:
+        return {"compact": [375, 812], "tall": [402, 874]}
+    raise ValueError(f"Unknown capture scope: {capture_scope!r}")
+
+
+def source_hashes_match(
+    proof_dir: Path, proof: dict[str, object], capture_scope: str
+) -> bool:
     expected: list[tuple[str, str]] = []
     profiles = proof.get("profiles") or {}
-    for profile in profiles.values():
-        if profile.get("screenshot") and profile.get("screenshot_sha256"):
-            expected.append((profile["screenshot"], profile["screenshot_sha256"]))
+    required = expected_profiles(capture_scope)
+    for name in required:
+        profile = profiles.get(name) or {}
+        filename = f"{name}-home-fit.png"
+        if profile.get("screenshot") != filename or not profile.get("screenshot_sha256"):
+            return False
+        expected.append((filename, profile["screenshot_sha256"]))
 
     overflow = proof.get("console_overflow_signals") or {}
-    for signal in overflow.values():
-        if signal.get("screenshot") and signal.get("screenshot_sha256"):
-            expected.append((signal["screenshot"], signal["screenshot_sha256"]))
+    if not overflow or not set(overflow).issubset(required):
+        return False
+    for name, signal in overflow.items():
+        filename = f"{name}-runner-theory.png"
+        if signal.get("screenshot") != filename or not signal.get("screenshot_sha256"):
+            return False
+        expected.append((filename, signal["screenshot_sha256"]))
 
     interaction = proof.get("interaction_details") or {}
+    interaction_profile = next(iter(required))
     for name, key in (
-        ("compact-live-before.png", "before_sha256"),
-        ("compact-live-after.png", "after_sha256"),
-        ("compact-live-stable.png", "stable_sha256"),
+        (f"{interaction_profile}-live-before.png", "before_sha256"),
+        (f"{interaction_profile}-live-after.png", "after_sha256"),
+        (f"{interaction_profile}-live-stable.png", "stable_sha256"),
     ):
-        if interaction.get(key):
-            expected.append((name, interaction[key]))
+        if not interaction.get(key):
+            return False
+        expected.append((name, interaction[key]))
 
     if not expected:
         return False
@@ -92,6 +120,39 @@ def source_hashes_match(proof_dir: Path, proof: dict[str, object]) -> bool:
         if not path.is_file() or sha256_file(path) != digest:
             return False
     return True
+
+
+def validate_proof(
+    proof_dir: Path, proof: dict[str, object], candidate_sha: str, capture_scope: str
+) -> dict[str, bool]:
+    required = expected_profiles(capture_scope)
+    profiles = proof.get("profiles") or {}
+    development = capture_scope == DEVELOPMENT_SCOPE
+    checks = {
+        "source_schema": proof.get("schema") == SOURCE_SCHEMA,
+        "capture_scope": proof.get("capture_scope") == DEVELOPMENT_SCOPE
+        if development else proof.get("capture_scope") in (None, HISTORICAL_SCOPE),
+        "english_development": (
+            proof.get("language") == "en"
+            and re.fullmatch(r"en(?:-[A-Za-z]+)*", proof.get("browser_language", "")) is not None
+        ) if development else True,
+        "profile_set": set(profiles) == set(required),
+        "candidate_sha_matches_proof": proof.get("target_sha") == candidate_sha,
+        "source_hashes_match": source_hashes_match(proof_dir, proof, capture_scope),
+        "terminal_pass": proof.get("terminal_classification") == "PASS",
+        "exact_sha_identity": proof.get("exact_sha_identity") == "PASS",
+        "fit_mode": proof.get("fit_mode") == "PASS",
+        "interaction": proof.get("interaction") == "PASS",
+        "web_native_truth_boundary": True,
+    }
+    for name, dimensions in required.items():
+        profile = profiles.get(name) or {}
+        checks[f"{name}_{dimensions[0]}x{dimensions[1]}"] = (
+            profile.get("measured_inner") == dimensions
+            and profile.get("expected") == dimensions
+            and profile.get("product_sha") == candidate_sha
+        )
+    return checks
 
 
 def main() -> int:
@@ -134,21 +195,7 @@ def main() -> int:
         shutil.copy2(proof_md_path, copied_proof_md)
 
     profiles = proof.get("profiles") or {}
-    compact = profiles.get("compact") or {}
-    tall = profiles.get("tall") or {}
-    checks = {
-        "source_schema": proof.get("schema") == SOURCE_SCHEMA,
-        "candidate_sha_matches_proof": proof.get("target_sha") == candidate_sha,
-        "source_hashes_match": source_hashes_match(proof_dir, proof),
-        "exact_sha_identity": proof.get("exact_sha_identity") == "PASS",
-        "compact_375x812": compact.get("measured_inner") == [375, 812]
-        and compact.get("product_sha") == candidate_sha,
-        "tall_402x874": tall.get("measured_inner") == [402, 874]
-        and tall.get("product_sha") == candidate_sha,
-        "fit_mode": proof.get("fit_mode") == "PASS",
-        "interaction": proof.get("interaction") == "PASS",
-        "web_native_truth_boundary": True,
-    }
+    checks = validate_proof(proof_dir, proof, candidate_sha, args.capture_scope)
     status = "PASS" if all(checks.values()) else "FAIL"
     validation = {
         "schema": VALIDATION_SCHEMA,
@@ -171,6 +218,8 @@ def main() -> int:
         f"- Workflow run ID: `{run_id}`",
         f"- Artifact name: `{artifact_name}`",
         f"- Evidence kind: `{args.evidence_kind}`",
+        f"- Capture scope: `{args.capture_scope}`",
+        "- Other-device release qualification: `HOLD / not claimed by this package`",
         "- Capture authority: `web_qa`",
         "- Native acceptance claimed: `false`",
         f"- Validation: `{status}`",
@@ -198,7 +247,7 @@ def main() -> int:
     payload_files.sort(key=lambda item: str(item["path"]))
 
     capture_profiles = []
-    for name, expected in (("compact", [375, 812]), ("tall", [402, 874])):
+    for name, expected in expected_profiles(args.capture_scope).items():
         profile = profiles.get(name) or {}
         capture_profiles.append(
             {
@@ -229,6 +278,8 @@ def main() -> int:
         "artifact_name": artifact_name,
         "evidence_kind": args.evidence_kind,
         "capture_profiles": capture_profiles,
+        "capture_scope": args.capture_scope,
+        "other_device_release_qualification": "HOLD",
         "capture_authority": "web_qa",
         "native_acceptance_claimed": False,
         "preview_url": proof.get("base_url"),

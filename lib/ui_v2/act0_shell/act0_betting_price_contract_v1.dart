@@ -114,8 +114,9 @@ const _actionDefinitionChoices = <(String, String), String>{
 // ATo UTG and KTo HJ are deliberately NOT covered: common 100 BB 6-max
 // opening baselines include them, contradicting the strict authored fold grade.
 // Source/strategy owner must resolve those original tasks separately.
-// This exception expires if the question, choice, hero cards, active seat,
-// blind-start history, or price projection changes.
+// This exception expires if the question, choice, cards, six-seat roster,
+// authored stack/commitment profile, blind-start history, or price changes.
+// It preserves the authored discipline lesson, not a stack-independent optimum.
 const _earlyFoldSourceQuestionsV1 = <String, (String, String, String, String)>{
   'fold_discipline_early_fold': (
     'What is the clean action?',
@@ -147,8 +148,10 @@ bool _exactEarlyFoldStrategicReadV1(
       !((option.id == 'fold' && option.label == 'Fold') ||
           (option.id == 'raise' && option.label == 'Raise')) ||
       table.scope != Act0TableScopeV1.playedHand ||
-      !table.usesCanonicalPlayerCount ||
-      table.seats.length != table.playerCount ||
+      table.tableFormat != Act0TableFormatV1.sixMax ||
+      table.playerCount != 6 ||
+      table.seats.length != 6 ||
+      table.boardCards.isNotEmpty ||
       table.streetLabel != 'Preflop' ||
       table.activeSeatId != source.$2 ||
       table.heroSeatId != source.$2 ||
@@ -156,6 +159,45 @@ bool _exactEarlyFoldStrategicReadV1(
       table.toCallLabel != 'To call 1 BB' ||
       table.heroCards.length != 2) {
     return false;
+  }
+  // Pin only the original poker facts; do not derive an unknown Hero stack
+  // from the BTN's independently authored 100 BB label.
+  const seatIds = <String>['utg', 'hj', 'co', 'btn', 'sb', 'bb'];
+  for (var i = 0; i < seatIds.length; i++) {
+    final seat = table.seats[i];
+    final id = seatIds[i];
+    final blind = id == 'sb' ? '0.5 BB' : (id == 'bb' ? '1 BB' : null);
+    if (seat.seatId != id ||
+        seat.seatLabel != id.toUpperCase() ||
+        !seat.isOccupied ||
+        !seat.isInHand ||
+        seat.isFolded ||
+        seat.hasActed ||
+        seat.isLastAggressor ||
+        seat.isHero != (id == source.$2) ||
+        seat.isActive != (id == source.$2) ||
+        seat.isDealerButton != (id == 'btn') ||
+        seat.isSmallBlind != (id == 'sb') ||
+        seat.isBigBlind != (id == 'bb') ||
+        seat.stackLabel != (id == 'btn' ? '100 BB' : null) ||
+        seat.blindAmountLabel != blind ||
+        seat.currentBetLabel != blind) {
+      return false;
+    }
+    if (blind == null) {
+      if (seat.bet != null) return false;
+    } else if (seat.bet?.kind != Act0SeatBetKindV1.post ||
+        seat.bet?.label != id.toUpperCase() ||
+        seat.bet?.amountLabel != blind) {
+      return false;
+    }
+    final expectedCards = id == source.$2
+        ? <String>[source.$3, source.$4]
+        : const <String>['?', '?'];
+    if (seat.holeCards.length != 2) return false;
+    for (var card = 0; card < expectedCards.length; card++) {
+      if (seat.holeCards[card].label != expectedCards[card]) return false;
+    }
   }
   final hero = table.seats.where((s) => s.isHero && s.isOccupied).toList();
   if (hero.length != 1 ||
@@ -242,6 +284,28 @@ Act0BettingPriceResultV1 act0BettingPriceForOptionV1(
   String? taskId,
   String? question,
 }) {
+  if (_earlyFoldSourceQuestionsV1.containsKey(taskId)) {
+    if (_exactEarlyFoldStrategicReadV1(
+      table,
+      option,
+      sizingBet: sizingBet,
+      taskId: taskId,
+      question: question,
+    )) {
+      return const Act0BettingPriceResultV1(
+        _unknown,
+        'source_early_fold_strategic_read',
+        appliesToWager: false,
+      );
+    }
+    // These grades were admitted only for the exact lesson scene. A changed
+    // scope, stack or other fact cannot inherit its old strategic grade via
+    // another conceptual exception or the general legality parser.
+    return const Act0BettingPriceResultV1(
+      _unknown,
+      'changed_early_fold_source',
+    );
+  }
   if (table.scope == Act0TableScopeV1.orientation ||
       table.scope == Act0TableScopeV1.explanation) {
     return const Act0BettingPriceResultV1(
@@ -273,19 +337,6 @@ Act0BettingPriceResultV1 act0BettingPriceForOptionV1(
     return const Act0BettingPriceResultV1(
       _unknown,
       'source_action_definition',
-      appliesToWager: false,
-    );
-  }
-  if (_exactEarlyFoldStrategicReadV1(
-    table,
-    option,
-    sizingBet: sizingBet,
-    taskId: taskId,
-    question: question,
-  )) {
-    return const Act0BettingPriceResultV1(
-      _unknown,
-      'source_early_fold_strategic_read',
       appliesToWager: false,
     );
   }

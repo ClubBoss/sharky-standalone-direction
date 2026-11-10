@@ -10,6 +10,10 @@ for (let i = 2; i < process.argv.length; i += 2) args.set(process.argv[i], proce
 const baseUrl = (args.get('--base-url') || '').replace(/\/$/, '');
 const targetSha = args.get('--target-sha') || '';
 const outDir = args.get('--out') || 'output/phone_lab_browser';
+const captureScope = args.get('--capture-scope') || 'development_en14pro_v1';
+// A fixed owner-admitted scope, not caller-selected arbitrary dimensions.
+if (captureScope !== 'development_en14pro_v1') throw new Error('Unsupported development capture scope');
+const reference = { name:'iphone14_pro', width:393, height:852 };
 const chromeBin = process.env.CHROME_BIN || '';
 if (!baseUrl || !targetSha || !chromeBin) throw new Error('Missing --base-url, --target-sha, --out or CHROME_BIN');
 if (typeof WebSocket !== 'function') throw new Error(`Node ${process.version} has no WebSocket client`);
@@ -133,7 +137,7 @@ async function screenshot(cdp, name) {
 
 const startupStartedAt = Date.now();
 const chrome = spawn(chromeBin, [
-  '--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage',
+  '--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--lang=en-US',
   '--remote-debugging-port=9222','--remote-allow-origins=*',
   '--user-data-dir=/tmp/sharky-phone-lab-chrome','--hide-scrollbars','about:blank'
 ], { stdio: ['ignore','ignore','pipe'] });
@@ -168,6 +172,7 @@ let cdp;
 let terminalExitCode = 0;
 const report = {
   schema:'sharky_phone_lab_browser_proof_v1', target_sha:targetSha, base_url:baseUrl,
+  capture_scope:captureScope, language:'en', other_device_release_qualification:'HOLD',
   terminal_classification:'INFRASTRUCTURE_FAILURE', stage:'CHROME_STARTING',
   cdp_ready:false, candidate_surface_evaluable:false, candidate_identity_evaluable:false,
   outer_viewport:null, profiles:{}, fit_mode:'FAIL', interaction:'FAIL', exact_sha_identity:'FAIL',
@@ -219,8 +224,9 @@ function browserProofMarkdown() {
   if (report.terminal_classification === 'PASS') {
     lines.push(
       `- OUTER VIEWPORT: ${report.outer_viewport.join(' x ')} CSS`,
-      `- COMPACT INNER: ${report.profiles.compact.measured_inner.join(' x ')} CSS - PASS`,
-      `- TALL INNER: ${report.profiles.tall.measured_inner.join(' x ')} CSS - PASS`,
+      `- IPHONE 14 PRO INNER: ${report.profiles.iphone14_pro.measured_inner.join(' x ')} CSS - PASS`,
+      `- CAPTURE SCOPE: ${captureScope} / English`,
+      '- OTHER-DEVICE RELEASE QUALIFICATION: HOLD',
       `- FIT MODE: ${report.fit_mode}`,
       `- INTERACTION: ${report.interaction}`,
       `- EXACT SHA IDENTITY: ${report.exact_sha_identity}`,
@@ -242,6 +248,9 @@ try {
   report.cdp_ready = true;
   report.stage = 'CDP_READY';
   await cdp.send('Page.enable'); await cdp.send('Runtime.enable'); await cdp.send('Log.enable'); await cdp.send('Network.enable');
+  await cdp.send('Emulation.setLocaleOverride', { locale:'en-US' });
+  report.browser_language = await evaluate(cdp, 'navigator.language');
+  if (!/^en(?:-|$)/i.test(report.browser_language)) throw new AssertionFailure('Browser is not using English');
   await cdp.send('Emulation.setDeviceMetricsOverride', { width:1280, height:720, deviceScaleFactor:1, mobile:false });
 
   async function profile(name, w, h) {
@@ -259,25 +268,24 @@ try {
     return report.profiles[name];
   }
 
-  const compact=await profile('compact',375,812);
-  const tall=await profile('tall',402,874);
-  report.fit_mode = compact.display_scale>0 && compact.display_scale<1 && tall.display_scale>0 && tall.display_scale<1 ? 'PASS':'FAIL';
-  report.exact_sha_identity = compact.product_sha===targetSha && tall.product_sha===targetSha ? 'PASS':'FAIL';
+  const phone=await profile(reference.name,reference.width,reference.height);
+  report.fit_mode = phone.display_scale>0 && phone.display_scale<1 ? 'PASS':'FAIL';
+  report.exact_sha_identity = phone.product_sha===targetSha ? 'PASS':'FAIL';
   if (report.fit_mode!=='PASS' || report.exact_sha_identity!=='PASS') {
     throw new AssertionFailure(`Truth gate failed: ${JSON.stringify(report)}`);
   }
 
   cdp.events.length=0;
-  await navigate(cdp, `${baseUrl}/phone?profile=compact&surface=live&presentation=fit`);
+  await navigate(cdp, `${baseUrl}/phone?profile=${reference.name}&surface=live&presentation=fit`);
   await waitForEvaluablePhone(cdp);
   report.stage = 'ASSERTING_BROWSER_EVIDENCE';
-  const live=await waitPhone(cdp,375,812,true,35000);
-  const before=await screenshot(cdp,'compact-live-before.png');
+  const live=await waitPhone(cdp,reference.width,reference.height,true,35000);
+  const before=await screenshot(cdp,`${reference.name}-live-before.png`);
   const r=live.frame.rect; const x=r[0]+r[2]*0.5; const y=r[1]+r[3]*0.965;
   await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',x,y});
   await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',x,y,button:'left',buttons:1,clickCount:1});
   await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',x,y,button:'left',buttons:0,clickCount:1});
-  await sleep(1500); const after=await screenshot(cdp,'compact-live-after.png'); await sleep(900); const stable=await screenshot(cdp,'compact-live-stable.png');
+  await sleep(1500); const after=await screenshot(cdp,`${reference.name}-live-after.png`); await sleep(900); const stable=await screenshot(cdp,`${reference.name}-live-stable.png`);
   report.interaction_details={rendered_pointer:[Number(x.toFixed(1)),Number(y.toFixed(1))],before_sha256:before.sha256,after_sha256:after.sha256,stable_sha256:stable.sha256};
   if (before.sha256!==after.sha256 && after.sha256===stable.sha256) report.interaction='PASS';
   else throw new AssertionFailure(`Interaction did not reach stable transition: ${JSON.stringify(report.interaction_details)}`);
@@ -294,7 +302,7 @@ try {
     report.console_overflow_signals[profileName]={exact_3px:exact,generic_overflow:generic,screenshot:shot.name,screenshot_sha256:shot.sha256};
     return exact||generic;
   }
-  report.retained_3px_overflow = (await overflow('compact',375,812)) || (await overflow('tall',402,874)) ? 'REPRODUCED_MOBILE':'NOT_REACHED';
+  report.retained_3px_overflow = (await overflow(reference.name,reference.width,reference.height)) ? 'REPRODUCED_MOBILE':'NOT_REACHED';
   report.terminal_classification = 'PASS';
   report.stage = 'PASS';
 } catch(error) {

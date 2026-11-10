@@ -23,6 +23,9 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       WRANGLER_VERSION: 4.121.0
+      # Owner's current development reference. Other-device release
+      # qualification remains HOLD; this is not a release matrix waiver.
+      CAPTURE_SCOPE: development_en14pro_v1
     steps:
       - name: Checkout exact target SHA
         uses: actions/checkout@v4
@@ -76,6 +79,9 @@ jobs:
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Validate scoped browser evidence controls
+        run: python3 test/tools/sharky_en14pro_ci_route_v1_test.py
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -104,29 +110,9 @@ jobs:
           mkdir -p "$ROOT/candidate" "$ROOT/baseline"
 
           flutter test \
-            --dart-define=ACTION_EVIDENCE_DEVICE=iphone17_class \
-            --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/iphone17_class" \
-            test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
-            --plain-name 'captures canonical W1 Action production states'
-          flutter test \
-            --dart-define=ACTION_EVIDENCE_DEVICE=compact \
-            --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/compact" \
-            test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
-            --plain-name 'captures canonical W1 Action production states'
-          flutter test \
-            --dart-define=ACTION_EVIDENCE_DEVICE=tall_phone \
-            --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/tall_phone" \
-            test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
-            --plain-name 'captures canonical W1 Action production states'
-          flutter test \
-            --dart-define=ACTION_EVIDENCE_DEVICE=large_phone \
-            --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/large_phone" \
-            test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
-            --plain-name 'captures canonical W1 Action production states'
-          flutter test \
-            --dart-define=ACTION_EVIDENCE_DEVICE=iphone17_class \
-            --dart-define=ACTION_EVIDENCE_TEXT_SCALE=1.4 \
-            --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/iphone17_class_text_1_4" \
+            --dart-define=ACTION_EVIDENCE_DEVICE=iphone14_pro \
+            --dart-define=ACTION_EVIDENCE_TEXT_SCALE=1.0 \
+            --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/iphone14_pro" \
             test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
             --plain-name 'captures canonical W1 Action production states'
 
@@ -138,9 +124,10 @@ jobs:
             cd _wave_a_baseline
             flutter pub get
             flutter test \
-              --dart-define=ACTION_EVIDENCE_DEVICE=iphone17_class \
+              --dart-define=ACTION_EVIDENCE_DEVICE=iphone14_pro \
+              --dart-define=ACTION_EVIDENCE_TEXT_SCALE=1.0 \
               --dart-define=ACTION_EVIDENCE_EXPECT_WAVE_A=false \
-              --dart-define=ACTION_EVIDENCE_OUTPUT="../$ROOT/baseline/iphone17_class" \
+              --dart-define=ACTION_EVIDENCE_OUTPUT="../$ROOT/baseline/iphone14_pro" \
               test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
               --plain-name 'captures canonical W1 Action production states'
           )
@@ -148,6 +135,9 @@ jobs:
           printf '%s\n' \
             "candidate_sha=$SHARKY_PR_HEAD_SHA" \
             "baseline_sha=$SHARKY_PR_BASE_SHA" \
+            "capture_scope=$CAPTURE_SCOPE" \
+            'reference=English iPhone14Pro portrait 393x852; text scale 1.0' \
+            'other_device_release_qualification=HOLD' \
             'capture_owner=test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart' \
             'evidence_class=deterministic rendered widget evidence; not Human proof' \
             > "$ROOT/provenance.txt"
@@ -227,7 +217,7 @@ jobs:
           fi
           HOME_HTTP="$(retry_get "${DEPLOYMENT_URL}/?act0_capture=home" /tmp/sharky-home.html)"
           LEARN_HTTP="$(retry_get "${DEPLOYMENT_URL}/?act0_capture=learn" /tmp/sharky-learn.html)"
-          PHONE_HTTP="$(retry_get "${DEPLOYMENT_URL}/phone.html?profile=compact&surface=home" /tmp/sharky-phone.html)"
+          PHONE_HTTP="$(retry_get "${DEPLOYMENT_URL}/phone.html?profile=iphone14_pro&surface=home" /tmp/sharky-phone.html)"
 
           {
             echo "## Exact-SHA remote smoke"
@@ -271,12 +261,14 @@ jobs:
             node tools/sharky_phone_lab_browser_probe_v1.mjs \
               --base-url "$DEPLOYMENT_URL" \
               --target-sha "$TARGET_SHA" \
+              --capture-scope "$CAPTURE_SCOPE" \
               --out output/phone_lab_browser
             PROBE_EXIT=$?
           else
             node --experimental-websocket tools/sharky_phone_lab_browser_probe_v1.mjs \
               --base-url "$DEPLOYMENT_URL" \
               --target-sha "$TARGET_SHA" \
+              --capture-scope "$CAPTURE_SCOPE" \
               --out output/phone_lab_browser
             PROBE_EXIT=$?
           fi
@@ -319,6 +311,7 @@ jobs:
           fi
           python3 tools/package_sharky_evidence_v1.py \
             --proof-dir output/phone_lab_browser \
+            --capture-scope "$CAPTURE_SCOPE" \
             --out-dir output/sharky_evidence \
             --repository "$GITHUB_REPOSITORY" \
             --candidate-sha "$TARGET_SHA" \
@@ -450,8 +443,9 @@ jobs:
               echo "- Full evidence: enabled for this run"
             fi
             echo "- [Preview root](${DEPLOYMENT_URL}/)"
-            echo "- [Phone Lab - Compact](${DEPLOYMENT_URL}/phone.html?profile=compact&surface=live)"
-            echo "- [Phone Lab - Tall](${DEPLOYMENT_URL}/phone.html?profile=tall&surface=live)"
+            echo "- Capture scope: English iPhone 14 Pro / 393x852 only"
+            echo "- Other-device release qualification: HOLD"
+            echo "- [Phone Lab - iPhone 14 Pro](${DEPLOYMENT_URL}/phone.html?profile=iphone14_pro&surface=live)"
             echo "- [Home](${DEPLOYMENT_URL}/?act0_capture=home)"
             echo "- [Learn](${DEPLOYMENT_URL}/?act0_capture=learn)"
             echo "- [Runner drill](${DEPLOYMENT_URL}/?act0_capture=runner_drill)"

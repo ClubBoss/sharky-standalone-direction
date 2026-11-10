@@ -36,7 +36,7 @@
       <div class="title">Sharky Phone Lab <span style="font-weight:500;color:#7f8da4">development QA only</span></div>
       <div class="truth">
         <span>INNER VIEWPORT: <strong id="innerViewport">measuring…</strong></span>
-        <span>PROFILE: <strong id="profileTruth">COMPACT</strong></span>
+        <span>PROFILE: <strong id="profileTruth">IPHONE 14 PRO</strong></span>
         <span>DISPLAY SCALE: <strong id="scaleTruth">—</strong></span>
         <span>OUTER VIEWPORT: <strong id="outerViewport">—</strong></span>
         <span>PRODUCT SHA: <strong id="shaTruth">loading…</strong></span>
@@ -47,6 +47,7 @@
     <div class="controls">
       <label>Profile
         <select id="profileSelect">
+          <option value="iphone14_pro">iPhone 14 Pro - 393x852</option>
           <option value="compact">Compact · 375×812</option>
           <option value="tall">Tall · 402×874</option>
         </select>
@@ -89,14 +90,14 @@
   <script>
     (() => {
       'use strict';
-      const PROFILES = { compact:{w:375,h:812,label:'COMPACT'}, tall:{w:402,h:874,label:'TALL'} };
+      const PROFILES = { iphone14_pro:{w:393,h:852,label:'IPHONE 14 PRO'}, compact:{w:375,h:812,label:'COMPACT'}, tall:{w:402,h:874,label:'TALL'} };
       const SURFACES = new Set([
         'live','home','learn','runner_theory','runner_drill','runner_feedback',
         'runner_first_correct_feedback','runner_first_wrong_feedback','repair_focus',
         'repair_result','session_repair','practice','review','profile','world_completion','session_summary'
       ]);
       const q = new URLSearchParams(location.search);
-      let profile = PROFILES[q.get('profile')] ? q.get('profile') : 'compact';
+      let profile = PROFILES[q.get('profile')] ? q.get('profile') : 'iphone14_pro';
       let surface = SURFACES.has(q.get('surface')) ? q.get('surface') : 'live';
       let presentation = q.get('presentation') === '1to1' ? '1to1' : 'fit';
 
@@ -118,7 +119,7 @@
 
       function appUrl() {
         const url = new URL('./', location.href);
-        url.search = surface === 'live' ? '' : new URLSearchParams({act0_capture:surface}).toString();
+        url.search = surface === 'live' ? '' : new URLSearchParams({act0_capture:surface,locale:'en'}).toString();
         return url.href;
       }
 
