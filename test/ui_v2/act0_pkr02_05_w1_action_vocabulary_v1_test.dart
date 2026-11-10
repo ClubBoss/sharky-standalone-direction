@@ -58,7 +58,7 @@ void main() {
         'call',
         'raise',
       });
-      expect(runner.table.scope, Act0TableScopeV1.explanation);
+      expect(runner.table.scope, Act0TableScopeV1.playedHand);
       expect(runner.table.potLabel, isEmpty);
       expect(runner.table.toCallLabel, isEmpty);
       expect(runner.table.actionTrail, isEmpty);
@@ -82,6 +82,8 @@ void main() {
           option.quality,
           option.id == correctId
               ? Act0FeedbackQualityV1.correct
+              : option.id == 'call' && correctId == 'raise'
+              ? Act0FeedbackQualityV1.suboptimal
               : Act0FeedbackQualityV1.wrong,
         );
         final result = act0BettingPriceForOptionV1(
@@ -170,8 +172,8 @@ void main() {
           sizingBet: false,
         ),
         (
-          label: 'played_hand',
-          table: runner.table.copyWith(scope: Act0TableScopeV1.playedHand),
+          label: 'changed_scope',
+          table: runner.table.copyWith(scope: Act0TableScopeV1.explanation),
           option: correct,
           question: runner.question,
           sizingBet: false,
