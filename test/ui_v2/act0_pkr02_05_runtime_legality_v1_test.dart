@@ -346,7 +346,7 @@ void main() {
       final task = Act0ShellStateV1.sample.worlds
           .expand((w) => w.lessons)
           .expand((l) => l.taskList)
-          .singleWhere((t) => t.taskId == 'position_apply_hj_fold');
+          .singleWhere((t) => t.taskId == 'apply_utg_fold');
       final observed = await _submit(
         tester,
         _Spot.preflopOpen,
