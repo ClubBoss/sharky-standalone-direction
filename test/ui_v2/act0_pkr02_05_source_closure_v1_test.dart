@@ -450,6 +450,20 @@ void main() {
           isTrue,
         );
       }
+      // If the task becomes an actual actor-bound scene, missing history
+      // cannot be ignored even if the old question/choice copy remains.
+      expect(
+        act0BettingPriceBlocksAuthoredSuccessV1(
+          task.runner.table.copyWith(
+            activeSeatId: 'btn',
+            heroSeatId: 'btn',
+          ),
+          task.runner.options.singleWhere((o) => o.id == 'check'),
+          taskId: taskId,
+          question: task.runner.question,
+        ),
+        isTrue,
+      );
       // Numeric execution must not opt out of source price/stack proof.
       expect(
         act0BettingPriceBlocksAuthoredSuccessV1(
