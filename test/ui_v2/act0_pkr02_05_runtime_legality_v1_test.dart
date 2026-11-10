@@ -310,6 +310,66 @@ void _setTestViewport(WidgetTester tester) => _setPkrEnReferenceV1(tester);
 
 void main() {
   testWidgets(
+    'canonical early fold offers genuine correct feedback without a stack guess',
+    (tester) async {
+      _setTestViewport(tester);
+      final task = Act0ShellStateV1.sample.worlds
+          .expand((w) => w.lessons)
+          .expand((l) => l.taskList)
+          .singleWhere((t) => t.taskId == 'fold_discipline_early_fold');
+      final observed = await _submit(
+        tester,
+        _Spot.preflopOpen,
+        '',
+        sourceRunner: task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingSteps: const [],
+        ),
+        sourceOptionId: 'fold',
+        sourceTaskId: task.taskId,
+        sourceTaskFamily: task.resolvedTaskFamily,
+      );
+      expect(observed.optionWasOffered, isTrue);
+      expect(observed.forwarded.single.id, 'fold');
+      expect(observed.decisions.single.isCorrect, isTrue);
+      expect(
+        find.byKey(const Key('act0_betting_price_unavailable')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'canonical early raise distractor keeps wrong teaching, not a legal bet',
+    (tester) async {
+      _setTestViewport(tester);
+      final task = Act0ShellStateV1.sample.worlds
+          .expand((w) => w.lessons)
+          .expand((l) => l.taskList)
+          .singleWhere((t) => t.taskId == 'position_apply_hj_fold');
+      final observed = await _submit(
+        tester,
+        _Spot.preflopOpen,
+        '',
+        sourceRunner: task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingSteps: const [],
+        ),
+        sourceOptionId: 'raise',
+        sourceTaskId: task.taskId,
+        sourceTaskFamily: task.resolvedTaskFamily,
+      );
+      expect(observed.optionWasOffered, isTrue);
+      expect(observed.forwarded.single.id, 'raise');
+      expect(observed.decisions.single.isCorrect, isFalse);
+      expect(
+        find.byKey(const Key('act0_betting_price_unavailable')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
     'real W1 check-definition question is not blocked by missing hand ledger',
     (tester) async {
       _setTestViewport(tester);
