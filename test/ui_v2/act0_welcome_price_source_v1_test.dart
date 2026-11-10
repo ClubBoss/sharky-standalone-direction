@@ -71,8 +71,9 @@ void main() {
         );
         expect(completionCallbacks, 0);
         expect(
-          (await SharedPreferences.getInstance())
-              .getString('act0_shell_progress_v1'),
+          (await SharedPreferences.getInstance()).getString(
+            'act0_shell_progress_v1',
+          ),
           isNull,
         );
         await tester.tap(
