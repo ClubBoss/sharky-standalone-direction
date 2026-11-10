@@ -1,4 +1,4 @@
-name: DAT-07 focused Linux proof
+name: DAT-07 formatter artifact preparation
 
 on:
   push:
@@ -12,9 +12,9 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  dat07-focused-linux:
+  dat07-format-artifact:
     runs-on: ubuntu-24.04
-    timeout-minutes: 50
+    timeout-minutes: 30
     env:
       PRODUCT_SHA: 2e0eb78d6571f5855a3f99a69cce17cdec3de2cd
       PRODUCT_TREE: 80740e7ba0a137cd2a157c15536ff4994403f3a8
@@ -188,97 +188,6 @@ jobs:
           if __name__ == "__main__":
               sys.exit(main())
           GATE_EOF
-          cat > gate/assert_events.py <<'GATE_EOF'
-          #!/usr/bin/env python3
-          """Adjudicate Dart machine events without counting loaders or hidden hooks."""
-          import collections
-          import json
-          from pathlib import Path
-          import sys
-
-
-          def adjudicate(path):
-              expected = {
-                  "test/ui_v2/act0_dat07_transfer_v1_test.dart": 12,
-                  "test/ui_v2/act0_dat07_canonical_store_port_v1_test.dart": 8,
-                  "test/ui_v2/act0_dat07_file_screen_v1_test.dart": 9,
-                  "test/ui_v2/act0_dat07_restore_faults_v1_test.dart": 13,
-                  "test/ui_v2/act0_dat07_shell_integration_v1_test.dart": 8,
-              }
-              suites, tests, dones = {}, {}, {}
-              final, errors, non_json = [], [], []
-              for number, line in enumerate(Path(path).read_text().splitlines(), 1):
-                  if not line.strip():
-                      continue
-                  try:
-                      event = json.loads(line)
-                  except json.JSONDecodeError:
-                      non_json.append(number)
-                      continue
-                  kind = event.get("type")
-                  if kind == "suite":
-                      suites[event["suite"]["id"]] = event["suite"]["path"]
-                  elif kind == "testStart":
-                      test = event["test"]
-                      assert test["id"] not in tests, "DUPLICATE_TEST_START"
-                      tests[test["id"]] = test
-                  elif kind == "testDone":
-                      assert event["testID"] not in dones, "DUPLICATE_TEST_DONE"
-                      dones[event["testID"]] = event
-                  elif kind == "done":
-                      final.append(event)
-                  elif kind == "error":
-                      errors.append(event)
-              rows, excluded, unfinished = [], [], []
-              for test_id, test in tests.items():
-                  done = dones.get(test_id)
-                  name = test["name"]
-                  if done is None:
-                      unfinished.append({"id": test_id, "name": name})
-                      continue
-                  if name.startswith("loading ") or done.get("hidden"):
-                      excluded.append({"id": test_id, "name": name, "result": done.get("result")})
-                      continue
-                  suite = suites.get(test["suiteID"], "UNKNOWN")
-                  if "/test/" in suite:
-                      suite = "test/" + suite.split("/test/", 1)[1]
-                  rows.append({"id": test_id, "suite": suite, "name": name,
-                               "result": done.get("result"),
-                               "skipped": bool(done.get("skipped") or test.get("metadata", {}).get("skip"))})
-              actual = collections.Counter(row["suite"] for row in rows)
-              success = (
-                  len(final) == 1 and final[0].get("success") is True
-                  and not errors and not non_json and not unfinished
-                  and not (set(dones) - set(tests))
-                  and dict(actual) == expected
-                  and len(rows) == 50
-                  and all(row["result"] == "success" and not row["skipped"] for row in rows)
-                  and all(row["result"] == "success" for row in excluded)
-              )
-              return {
-                  "status": "PASS_DAT07_FOCUSED50" if success else "FAIL_DAT07_FOCUSED50",
-                  "expected_suite_counts": expected,
-                  "actual_suite_counts": dict(actual),
-                  "authored_total": len(rows),
-                  "authored_passed": sum(r["result"] == "success" and not r["skipped"] for r in rows),
-                  "authored_failed": sum(r["result"] != "success" and not r["skipped"] for r in rows),
-                  "authored_skipped": sum(r["skipped"] for r in rows),
-                  "excluded_loading_or_hidden": excluded,
-                  "unfinished": unfinished,
-                  "errors": errors,
-                  "non_json_line_numbers": non_json,
-                  "final_events": final,
-                  "tests": rows,
-                  "scope": "Five focused DAT-07 suites only; not native, full DoD, or score acceptance.",
-              }
-
-
-          if __name__ == "__main__":
-              result = adjudicate(sys.argv[1])
-              Path(sys.argv[2]).write_text(json.dumps(result, indent=2) + "\n")
-              print(json.dumps({k: v for k, v in result.items() if k not in ("tests", "errors", "excluded_loading_or_hidden")}, indent=2))
-              sys.exit(0 if result["status"] == "PASS_DAT07_FOCUSED50" else 1)
-          GATE_EOF
           cat > gate/orientation_scope.py <<'GATE_EOF'
           #!/usr/bin/env python3
           """Record a known orientation conflict without converting it to authority PASS."""
@@ -309,11 +218,11 @@ jobs:
               'parent_product_sha': os.environ['PARENT_PRODUCT_SHA'],
               'registrant_post_sha256': os.environ['REGISTRANT_POST_SHA256'],
               'product_pr': 'https://github.com/ClubBoss/sharky-standalone-direction/pull/443',
-              'scope': ['exact 17-path source admission with reviewed two-line generated registrant repair', 'exact 16-path read-only format', 'exact 16-path analysis', 'five DAT suites with 50 actual authored cases'],
-              'product_ownership': 'frozen DAT-07 candidate; no product edits in this workflow',
-              'workflow_scope': 'isolated Linux proof only',
-              'strict_checks_retained': ['source SHA/tree', 'clean source', 'exact 17 changed paths', 'exact 16 Dart paths', 'dependency lock identity', 'format', 'analysis', '50 actual case results'],
-              'not_admitted': ['native build in this workflow', 'source repair', 'protected-gate changes', 'full DoD acceptance', 'score award'],
+              'scope': ['exact 17-path source admission with reviewed two-line generated registrant repair', 'official Dart3.9 write formatter on exact eight paths in disposable checkout', 'preimage and postimage hashes plus complete patch', 'read-only idempotence on original 16 Dart paths'],
+              'product_ownership': 'frozen input; eight local formatter outputs only; no product publication',
+              'workflow_scope': 'isolated formatter artifact preparation, not validation acceptance',
+              'strict_checks_retained': ['source SHA/tree', 'clean source', 'exact 17 changed paths', 'exact 16 Dart paths', 'dependency lock identity', 'exact eight changed paths', 'formatter-only custody', 'idempotence16'],
+              'not_admitted': ['native build in this workflow', 'product publication', 'tests or analysis in this preparation', 'protected-gate changes', 'full DoD acceptance', 'score award'],
           }, indent=2) + '\n')
           print(json.dumps(receipt, indent=2))
           if code != 0 and not known:
@@ -355,6 +264,16 @@ jobs:
           test/ui_v2/act0_dat07_shell_integration_v1_test.dart
           test/ui_v2/act0_dat07_transfer_v1_test.dart
           test/ui_v2/act0_shell_preview_screen_v1_test.dart
+          GATE_EOF
+          cat > gate/format8-paths.txt <<'GATE_EOF'
+          lib/ui_v2/act0_shell/act0_dat07_file_screen_v1.dart
+          lib/ui_v2/act0_shell/act0_dat07_shell_host_v1.dart
+          lib/ui_v2/act0_shell/act0_dat07_transfer_v1.dart
+          test/ui_v2/act0_dat07_canonical_store_port_v1_test.dart
+          test/ui_v2/act0_dat07_file_screen_v1_test.dart
+          test/ui_v2/act0_dat07_restore_faults_v1_test.dart
+          test/ui_v2/act0_dat07_shell_integration_v1_test.dart
+          test/ui_v2/act0_dat07_transfer_v1_test.dart
           GATE_EOF
       - name: Verify frozen source, exact repair, 17 changed paths and 16 Dart paths
         run: |
@@ -408,67 +327,107 @@ jobs:
           diff -u ../evidence/locks-before.sha256 ../evidence/locks-after.sha256
           git diff --exit-code
           test -z "$(git status --porcelain --untracked-files=no)"
-      - name: Check format on exact 16 DAT Dart paths without changes
-        id: format
+      - name: Produce official formatter output for exact eight owned files
+        id: formatter
         timeout-minutes: 4
         working-directory: product
         run: |
           set -euo pipefail
-          mapfile -t PATHS < ../evidence/actual-paths.txt
-          python3 ../gate/run_logged.py --name format16 --log ../evidence/format-console.log --receipt ../evidence/format-receipt.json --follow-log ../evidence/dat07-format16.raw.log --timeout-seconds 180 -- bash tools/sharky_compact_evidence_v1.sh --id dat07-format16 --dir ../evidence -- dart format --output=none --set-exit-if-changed "${PATHS[@]}"
-      - name: Analyze exact 16 DAT Dart paths
-        id: analyze
-        timeout-minutes: 10
+          python3 - <<'VERSION'
+          import json
+          from pathlib import Path
+          v=json.loads(Path('../evidence/flutter.json').read_text())
+          assert v['frameworkVersion']=='3.35.0', v
+          assert v['dartSdkVersion']=='3.9.0', v
+          VERSION
+          test -z "$(git status --porcelain --untracked-files=no)"
+          mapfile -t PATHS < ../gate/format8-paths.txt
+          test "${#PATHS[@]}" -eq 8
+          python3 - <<'PRE'
+          from pathlib import Path
+          import subprocess
+          for name in Path('../gate/format8-paths.txt').read_text().splitlines():
+              src=Path(name)
+              assert src.is_file() and not src.is_symlink(), name
+              data=subprocess.check_output(['git','show','HEAD:'+name])
+              assert src.read_bytes()==data, name
+              dst=Path('../evidence/formatter/preimages')/name
+              dst.parent.mkdir(parents=True,exist_ok=True)
+              dst.write_bytes(data)
+          PRE
+          python3 ../gate/run_logged.py --name format8-write --log ../evidence/formatter-console.log --receipt ../evidence/formatter-receipt.json --follow-log ../evidence/dat07-format8-write.raw.log --timeout-seconds 180 -- bash tools/sharky_compact_evidence_v1.sh --id dat07-format8-write --dir ../evidence -- dart format --output=write "${PATHS[@]}"
+      - name: Verify bounded formatter delta and preserve exact postimages
+        id: custody
+        run: |
+          set -euo pipefail
+          git -C product diff --name-only | LC_ALL=C sort > evidence/formatter-actual-paths.txt
+          LC_ALL=C sort gate/format8-paths.txt > evidence/formatter-expected-paths.txt
+          diff -u evidence/formatter-expected-paths.txt evidence/formatter-actual-paths.txt
+          test "$(git -C product diff --name-status | awk '$1 != "M" { print }')" = ''
+          git -C product diff --check
+          (cd product && sha256sum pubspec.lock ios/Podfile.lock) > evidence/locks-postformat.sha256
+          diff -u evidence/locks-before.sha256 evidence/locks-postformat.sha256
+          python3 - <<'POST'
+          from pathlib import Path
+          import hashlib,json,subprocess,os
+          p=Path('evidence/formatter'); rows=[]
+          for name in Path('gate/format8-paths.txt').read_text().splitlines():
+              src=Path('product')/name
+              assert src.is_file() and not src.is_symlink(), name
+              after=src.read_bytes(); before=(p/'preimages'/name).read_bytes()
+              assert before != after, name
+              dst=p/'postimages'/name
+              dst.parent.mkdir(parents=True,exist_ok=True); dst.write_bytes(after)
+              blob=lambda b:hashlib.sha1(('blob '+str(len(b))+'\0').encode()+b).hexdigest()
+              rows.append({'path':name,'before_sha256':hashlib.sha256(before).hexdigest(),'after_sha256':hashlib.sha256(after).hexdigest(),'before_blob':blob(before),'after_blob':blob(after),'before_bytes':len(before),'after_bytes':len(after)})
+          patch=subprocess.check_output(['git','-C','product','diff','--binary','--no-ext-diff'])
+          (p/'format8.patch').write_bytes(patch)
+          receipt={'status':'OFFICIAL_FORMATTER_OUTPUT_FOR_REVIEW','product_sha':os.environ['PRODUCT_SHA'],'product_tree':os.environ['PRODUCT_TREE'],'formatter':'Dart3.9.0 via Flutter3.35.0','patch_sha256':hashlib.sha256(patch).hexdigest(),'files':rows,'semantic_equivalence':'PENDING_INDEPENDENT_REVIEW','test_cases_executed':0}
+          (p/'manifest.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          POST
+      - name: Verify formatter idempotence on all original sixteen paths
+        id: idempotence
+        timeout-minutes: 4
         working-directory: product
         run: |
           set -euo pipefail
-          mapfile -t PATHS < ../evidence/actual-paths.txt
-          python3 ../gate/run_logged.py --name analyze16 --log ../evidence/analyze-console.log --receipt ../evidence/analyze-receipt.json --follow-log ../evidence/dat07-analyze16.raw.log --timeout-seconds 540 -- bash tools/sharky_compact_evidence_v1.sh --id dat07-analyze16 --dir ../evidence -- dart analyze "${PATHS[@]}"
-      - name: Run five DAT suites once with machine events
-        id: tests
-        timeout-minutes: 12
-        working-directory: product
-        run: |
-          set -euo pipefail
-          python3 ../gate/run_logged.py --name dat50 --log ../evidence/tests-console.log --receipt ../evidence/tests-receipt.json --follow-log ../evidence/dat07-focused50.raw.log --timeout-seconds 600 -- bash tools/sharky_compact_evidence_v1.sh --id dat07-focused50 --dir ../evidence -- flutter test --no-pub test/ui_v2/act0_dat07_transfer_v1_test.dart test/ui_v2/act0_dat07_canonical_store_port_v1_test.dart test/ui_v2/act0_dat07_file_screen_v1_test.dart test/ui_v2/act0_dat07_restore_faults_v1_test.dart test/ui_v2/act0_dat07_shell_integration_v1_test.dart -r json
-      - name: Adjudicate real test events without loading or skipped counts
-        if: ${{ always() && steps.tests.outcome != 'skipped' }}
-        run: |
-          set -euo pipefail
-          python3 gate/assert_events.py evidence/dat07-focused50.raw.log evidence/dat07-focused50-results.json
-      - name: Seal raw evidence and unchanged source
+          mapfile -t PATHS < ../gate/expected-paths.txt
+          python3 ../gate/run_logged.py --name format16-idempotence --log ../evidence/idempotence-console.log --receipt ../evidence/idempotence-receipt.json --follow-log ../evidence/dat07-format16-idempotence.raw.log --timeout-seconds 180 -- bash tools/sharky_compact_evidence_v1.sh --id dat07-format16-idempotence --dir ../evidence -- dart format --output=none --set-exit-if-changed "${PATHS[@]}"
+      - name: Seal all preparation evidence without claiming test acceptance
         if: always()
         env:
           SETUP_OUTCOME: ${{ steps.setup.outcome }}
-          FORMAT_OUTCOME: ${{ steps.format.outcome }}
-          ANALYZE_OUTCOME: ${{ steps.analyze.outcome }}
-          TESTS_OUTCOME: ${{ steps.tests.outcome }}
+          FORMATTER_OUTCOME: ${{ steps.formatter.outcome }}
+          CUSTODY_OUTCOME: ${{ steps.custody.outcome }}
+          IDEMPOTENCE_OUTCOME: ${{ steps.idempotence.outcome }}
         run: |
           set -euo pipefail
           mkdir -p evidence
           cp -R gate evidence/gate
-          git -C product diff --binary > evidence/source-drift.patch
+          git -C product diff --binary --no-ext-diff > evidence/final-full-source.patch
           git -C product status --porcelain --untracked-files=no > evidence/final-status.txt
           python3 - <<'RECEIPT'
-          import json, os
+          import json, os, subprocess
           from pathlib import Path
           p=Path('evidence')
-          result=json.loads((p/'dat07-focused50-results.json').read_text()) if (p/'dat07-focused50-results.json').exists() else None
-          outcomes={k:os.environ.get(k,'') for k in ('SETUP_OUTCOME','FORMAT_OUTCOME','ANALYZE_OUTCOME','TESTS_OUTCOME')}
-          clean=not (p/'source-drift.patch').read_bytes() and not (p/'final-status.txt').read_text().strip()
-          passed=all(v=='success' for v in outcomes.values()) and clean and result is not None and result.get('status')=='PASS_DAT07_FOCUSED50'
-          receipt={'status':'PASS_SCOPED_DAT07_LINUX' if passed else 'NOT_PASS_DAT07_LINUX','product_sha':os.environ['PRODUCT_SHA'],'product_tree':os.environ['PRODUCT_TREE'],'outcomes':outcomes,'source_unchanged':clean,'orientation_diagnostic':json.loads((p/'orientation-diagnostic.json').read_text()) if (p/'orientation-diagnostic.json').exists() else None,'not_proven':['native Files/share','native restore','true process restart','full DAT-07 DoD','score acceptance']}
+          outcomes={k:os.environ.get(k,'') for k in ('SETUP_OUTCOME','FORMATTER_OUTCOME','CUSTODY_OUTCOME','IDEMPOTENCE_OUTCOME')}
+          actual=subprocess.check_output(['git','-C','product','diff','--name-only'],text=True).splitlines()
+          expected=Path('gate/format8-paths.txt').read_text().splitlines()
+          scope_ok=sorted(actual)==sorted(expected)
+          patch=p/'formatter/format8.patch'
+          custody_ok=patch.exists() and patch.read_bytes()==(p/'final-full-source.patch').read_bytes()
+          prepared=all(v=='success' for v in outcomes.values()) and scope_ok and custody_ok
+          receipt={'status':'FORMATTER_ARTIFACT_PREPARED_NOT_TESTED' if prepared else 'FORMATTER_PREPARATION_FAILED','product_sha':os.environ['PRODUCT_SHA'],'product_tree':os.environ['PRODUCT_TREE'],'outcomes':outcomes,'exact_eight_path_scope':scope_ok,'final_patch_matches_custody':custody_ok,'test_cases_executed':0,'orientation_diagnostic':json.loads((p/'orientation-diagnostic.json').read_text()) if (p/'orientation-diagnostic.json').exists() else None,'not_proven':['semantic equivalence pending independent review','analyzer','DAT50','native Files/share','native restore','true process restart','full DAT-07 DoD','score acceptance']}
           (p/'verdict.json').write_text(json.dumps(receipt,indent=2)+'\n')
           print(json.dumps(receipt,indent=2))
           RECEIPT
           (cd evidence && find . -type f ! -name evidence.sha256 -print0 | sort -z | xargs -0 sha256sum > evidence.sha256)
           cat evidence/verdict.json >> "$GITHUB_STEP_SUMMARY"
-          test ! -s evidence/source-drift.patch
-          test ! -s evidence/final-status.txt
+          python3 -c 'import json; assert json.load(open("evidence/verdict.json"))["status"] == "FORMATTER_ARTIFACT_PREPARED_NOT_TESTED"'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: dat07-focused50-${{ github.run_id }}
+          name: dat07-format8-artifact-${{ github.run_id }}
           path: evidence/
           if-no-files-found: error
           retention-days: 3
