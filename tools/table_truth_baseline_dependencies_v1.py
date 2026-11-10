@@ -94,7 +94,7 @@ def complete_dependencies(candidate, baseline, roots=ROOTS):
 LEGACY_HEAD = 'fa079b6c5880814e231981a7bd5ed97df192d215'
 LEGACY_STREET_SHA256 = 'a0ea1b4adff04704bc83feee9397fea1c3abc03523539bd5805db3200ba7c7be'
 PRICE_DEPENDENCY = 'lib/ui_v2/act0_shell/act0_betting_price_contract_v1.dart'
-PRICE_CANDIDATE_SHA256 = '6c60a5e6adb5c060936e4de7543866b3471410d44249e0d133f4cbff658c8336'
+PRICE_CANDIDATE_SHA256 = '58c21cb461213942c71c2d94cdb36e3332eb0fd6c6b07d986916b93157544831'
 ORDER_SENTINEL = 'SHARKY_BASELINE_PRICE_ORDER_SHIM_EXECUTED'
 ORDER_COMPILE_SHIM = (
     '\n// PRIVATE historical compile-only adapter. NOT production source.\n'
