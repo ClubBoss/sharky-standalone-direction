@@ -6,6 +6,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hlp02_reference_v1.dart';
 
+// Asset I/O must run outside the widget test's fake clock. This loads the
+// real registered production asset through its parser; no fake catalog or
+// replacement bundle is injected. UI assertions still require the real panel.
+Future<void> _loadRealReferenceAsset(WidgetTester tester) async {
+  await tester.runAsync(() async {
+    final catalog = await Act0Hlp02ReferenceCatalogV1.load(rootBundle);
+    expect(catalog.rankings, hasLength(9));
+  });
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -93,6 +103,7 @@ void main() {
 
 
   testWidgets('button cannot be invoked inside an assessment', (tester) async {
+    await _loadRealReferenceAsset(tester);
     await tester.pumpWidget(const MaterialApp(
       home: Scaffold(
         body: Act0Hlp02ReferenceButtonV1(
@@ -110,8 +121,41 @@ void main() {
         findsNothing);
   });
 
+  testWidgets('cold production asset opens the reference without a fixture bundle',
+      (tester) async {
+    rootBundle.evict(Act0Hlp02ReferenceCatalogV1.assetPath);
+    await tester.pumpWidget(const MaterialApp(
+      home: Scaffold(
+        body: Act0Hlp02ReferenceButtonV1(
+          lessonId: 'hand_rankings_table',
+          taskId: 'hand_rankings_theory',
+          isTheory: true,
+          isLearnStep: true,
+          isSelectable: true,
+          isEnglish: true,
+          hasActiveScoredChoice: false,
+        ),
+      ),
+    ));
+    await tester.tap(find.byKey(const Key('act0_hlp02_open_theory_reference')));
+    // Build the panel first so it initiates the cold production asset load.
+    await tester.pump();
+    await tester.runAsync(() async {
+      // Await the same rootBundle load outside the fake clock, not fake data.
+      final catalog = await Act0Hlp02ReferenceCatalogV1.load(rootBundle);
+      expect(catalog.rankings, hasLength(9));
+    });
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('act0_hlp02_theory_reference_panel')),
+        findsOneWidget);
+    expect(find.text('Hand rankings - lowest to highest'), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.text('Reference unavailable'), findsNothing);
+  });
+
   testWidgets('rank theory reference opens inline and exposes card-name semantics',
       (tester) async {
+    await _loadRealReferenceAsset(tester);
     await tester.pumpWidget(const MaterialApp(
       home: Scaffold(
         body: Act0Hlp02ReferenceButtonV1(
@@ -151,6 +195,7 @@ void main() {
 
   testWidgets('showdown theory shows contextual definitions without ranks',
       (tester) async {
+    await _loadRealReferenceAsset(tester);
     await tester.pumpWidget(const MaterialApp(
       home: Scaffold(
         body: Act0Hlp02ReferenceButtonV1(
@@ -171,6 +216,7 @@ void main() {
   });
   testWidgets('an opened panel closes when its source task/lesson changes',
       (tester) async {
+    await _loadRealReferenceAsset(tester);
     String lesson = 'hand_rankings_table';
     String task = 'hand_rankings_theory';
     bool english = true;

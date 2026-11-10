@@ -2,7 +2,6 @@
 // Source: Act0ShellStateV1.sample; fingerprint owner stays in Act0.
 import 'dart:convert';
 import 'dart:io';
-import 'dart:isolate';
 import 'package:crypto/crypto.dart';
 
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
@@ -303,7 +302,9 @@ class Cnt01RoleInventoryV1 {
 }
 
 /// Flutter-hosted only: Act0's source fingerprint transitively needs dart:ui.
-/// Run from the same clean, frozen checkout that Flutter compiles:
+/// Run from the same clean, frozen checkout that Flutter compiles.
+/// The host working directory and poker_analyzer package configuration must
+/// both identify that checkout. This is NOT compiled-binary attestation:
 /// CNT01_ROOT=/absolute/checkout CNT01_ATTESTATION=/absolute/attestation.json \
 /// CNT01_OUTPUT=/absolute/inventory.json flutter test \
 /// test/ui_v2/cnt01_role_inventory_v1_test.dart --plain-name "CNT-01 export"
@@ -328,12 +329,35 @@ Future<Map<String, Object?>> cnt01ExportV1({
     throw ArgumentError('Absolute root and attestation paths are required.');
   }
   final root = Directory(repositoryRoot).resolveSymbolicLinksSync();
-  final compiledSource = await Isolate.resolvePackageUri(Uri.parse(
-    'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart',
-  ));
-  if (compiledSource == null || compiledSource.scheme != 'file' ||
-      File.fromUri(compiledSource).resolveSymbolicLinksSync() !=
-          '$root/$cnt01CatalogSourceV1') {
+  // flutter_tester does not implement Isolate.resolvePackageUri. Bind to
+  // the host checkout and its package configuration instead; neither check
+  // claims to attest compiled kernel bytes (that remains external evidence).
+  if (root != Directory.current.resolveSymbolicLinksSync()) {
+    throw StateError('Root does not match the Flutter host working directory.');
+  }
+  final configFile = File('$root/.dart_tool/package_config.json');
+  final config = jsonDecode(configFile.readAsStringSync());
+  if (config is! Map || config['configVersion'] != 2 ||
+      config['packages'] is! List) {
+    throw StateError('Invalid Flutter host package configuration.');
+  }
+  final packages = (config['packages'] as List).where(
+    (entry) => entry is Map && entry['name'] == 'poker_analyzer',
+  ).toList();
+  if (packages.length != 1) {
+    throw StateError('Expected exactly one poker_analyzer host package.');
+  }
+  final package = packages.single as Map;
+  if (package['rootUri'] is! String || package['packageUri'] is! String) {
+    throw StateError('Missing Flutter host package root or library URI.');
+  }
+  final packageRoot = configFile.uri.resolve(package['rootUri'] as String);
+  final libraryRoot = packageRoot.resolve(package['packageUri'] as String);
+  if (packageRoot.scheme != 'file' || libraryRoot.scheme != 'file' ||
+      packageRoot.hasQuery || packageRoot.hasFragment ||
+      libraryRoot.hasQuery || libraryRoot.hasFragment ||
+      Directory.fromUri(packageRoot).resolveSymbolicLinksSync() != root ||
+      Directory.fromUri(libraryRoot).resolveSymbolicLinksSync() != '$root/lib') {
     throw StateError('Root does not match the Flutter host package source.');
   }
   final raw = jsonDecode(File(attestationPath).readAsStringSync());

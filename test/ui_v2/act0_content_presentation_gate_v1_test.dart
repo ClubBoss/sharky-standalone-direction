@@ -86,10 +86,10 @@ void main() {
     await tester.pumpWidget(host('a', () => first.future));
     await tester.pumpWidget(host('b', () => second.future));
     first.complete(true);
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.text('Private task content'), findsNothing);
     second.complete(true);
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.text('Private task content'), findsOneWidget);
   });
 
@@ -130,7 +130,7 @@ void main() {
     await tester.pumpWidget(host('b', () => next.future));
     expect(find.text('Private task content'), findsNothing);
     next.complete(true);
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.text('Private task content'), findsOneWidget);
   });
 }

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:isolate';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:crypto/crypto.dart';
 import '../../tools/cnt01_role_inventory_v1.dart';
@@ -197,12 +196,9 @@ void main() {
     });
 
     test('export rejects absent receipt revision and incomplete manifest', () async {
-      final uri = await Isolate.resolvePackageUri(Uri.parse(
-        'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart',
-      ));
-      expect(uri, isNotNull);
-      final source = File.fromUri(uri!).resolveSymbolicLinksSync();
-      final root = source.substring(0, source.length - cnt01CatalogSourceV1.length - 1);
+      // flutter_tester has no Isolate.resolvePackageUri implementation.
+      // Export independently validates this host root against package_config.
+      final root = Directory.current.resolveSymbolicLinksSync();
       final dir = Directory.systemTemp.createTempSync('cnt01-receipt-');
       final receipt = File('${dir.path}/receipt.json');
       try {

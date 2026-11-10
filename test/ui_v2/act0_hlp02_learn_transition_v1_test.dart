@@ -2,7 +2,9 @@
 // authored task objects, and the production Runner, not a duplicate scoring
 // engine or a fabricated answer oracle. Full persisted app E2E remains a gate.
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_hlp02_reference_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -113,9 +115,20 @@ class _LearnRunnerRouteProbeState extends State<_LearnRunnerRouteProbe> {
   }
 }
 
+// Asset I/O must run outside the widget test's fake clock. This loads the
+// real registered production asset through its parser; no fake catalog or
+// replacement bundle is injected. UI assertions still require the real panel.
+Future<void> _loadRealReferenceAsset(WidgetTester tester) async {
+  await tester.runAsync(() async {
+    final catalog = await Act0Hlp02ReferenceCatalogV1.load(rootBundle);
+    expect(catalog.rankings, hasLength(9));
+  });
+}
+
 void main() {
   testWidgets('real Learn -> theory Runner -> Back -> re-entry has no leaked reference',
       (tester) async {
+    await _loadRealReferenceAsset(tester);
     final key = GlobalKey<_LearnRunnerRouteProbeState>();
     await tester.pumpWidget(MaterialApp(
       home: _LearnRunnerRouteProbe(key: key),
@@ -153,6 +166,7 @@ void main() {
 
   testWidgets('actual Act0 task object advances theory -> scored drill, reference disappears',
       (tester) async {
+    await _loadRealReferenceAsset(tester);
     final key = GlobalKey<_LearnRunnerRouteProbeState>();
     await tester.pumpWidget(MaterialApp(
       home: _LearnRunnerRouteProbe(key: key),

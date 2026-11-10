@@ -11,6 +11,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_dat07_canonical_store_port_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_dat07_file_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_dat07_transfer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_placement_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
@@ -169,8 +170,11 @@ Future<Act0LessonRunnerShellV1> _reachAssessment(WidgetTester tester) async {
           ).evaluate().isNotEmpty)) return runner;
     }
     final theory = find.byKey(const Key('act0_shell_theory_continue_cta'));
+    final feedback = find.byKey(const Key('act0_shell_feedback_continue_cta'));
     final next = theory.evaluate().isNotEmpty
         ? theory
+        : feedback.evaluate().isNotEmpty
+        ? feedback
         : find.byKey(const Key('act0_shell_continue_cta'));
     expect(next, findsOneWidget);
     await tester.pump(const Duration(milliseconds: 900));
@@ -334,10 +338,30 @@ void main() {
     expect(available, hasLength(1),
         reason: 'The real first-incomplete route currently unlocks one check');
     final taskId = available.single;
-    expect(_state(tester).debugSelectedTaskIdV1(), taskId);
     expect(_state(tester).debugContentExposurePayloadV1()['presentedTaskIds'],
         isNot(contains(taskId)));
 
+    // The Action journey deliberately selects its same-signal decision rather
+    // than the generic first-incomplete node. Open the captured available node
+    // through Learn's actual guarded callback instead of assuming both match.
+    await tester.pumpAndSettle();
+    final activeRunner = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    activeRunner.onBack();
+    await tester.pumpAndSettle();
+    await _tab(tester, 'Learn');
+    final learn = tester.widget<Act0LearnPathShellV1>(
+      find.byType(Act0LearnPathShellV1),
+    );
+    final lesson = learn.lessons.singleWhere(
+      (lesson) => lesson.taskList.any((task) => task.taskId == taskId),
+    );
+    expect(_state(tester).debugUnshownTaskIdsV1(), available);
+    expect(_state(tester).debugContentExposurePayloadV1()['presentedTaskIds'],
+        isNot(contains(taskId)));
+    final beforePresentation = await _saved();
+    learn.onStartTask(lesson.lessonId, taskId);
     await tester.pumpAndSettle();
     final runner = await _reachAssessment(tester);
     expect(_state(tester).debugSelectedTaskIdV1(), taskId);
@@ -346,6 +370,10 @@ void main() {
         isFalse);
     expect(_state(tester).debugUnshownTaskIdsV1(), isEmpty);
     final presented = await _saved();
+    expect(presented['earnedXp'], beforePresentation['earnedXp']);
+    expect(presented['completedTaskIds'], beforePresentation['completedTaskIds']);
+    expect(presented['learningEvidenceHistory'],
+        beforePresentation['learningEvidenceHistory']);
     expect(presented['contentExposureHistory']['presentedTaskIds'],
         contains(taskId));
     expect(presented['completedTaskIds'], isNot(contains(taskId)));
@@ -392,7 +420,10 @@ void main() {
         contains(taskId));
 
     // An explicit familiar revisit must not replenish the exhausted pool.
-    await _startLesson(tester);
+    await _tab(tester, 'Learn');
+    tester.widget<Act0LearnPathShellV1>(find.byType(Act0LearnPathShellV1))
+        .onStartTask(lesson.lessonId, taskId);
+    await tester.pumpAndSettle();
     await _reachAssessment(tester);
     expect(_state(tester).debugSelectedTaskIdV1(), taskId);
     expect(_state(tester).debugContentReservationV1()['wasPreviouslyPresented'],
@@ -679,7 +710,13 @@ void main() {
     await tester.pumpWidget(_app(firstStart: true));
     await tester.pumpAndSettle();
     await _tap(tester, 'act0_shell_placement_intro_cta');
-    await _tap(tester, 'act0_shell_placement_option_online');
+    final online = find.byKey(const Key('act0_shell_placement_option_online'));
+    expect(online, findsOneWidget);
+    await Scrollable.ensureVisible(tester.element(online), alignment: 0.5);
+    await tester.pumpAndSettle();
+    expect(online.hitTestable(), findsOneWidget);
+    await tester.tap(online);
+    await tester.pumpAndSettle();
     await _tap(tester, 'act0_shell_placement_next_cta');
     await _tap(tester, 'act0_shell_placement_option_decisions');
     await _tap(tester, 'act0_shell_placement_next_cta');
@@ -754,6 +791,9 @@ void main() {
       find.byType(Act0AcademySettingsLeafV1),
     );
     final openTransfer = settings.input.onBackupRestore!;
+    expect(settings.input.onBack, isNotNull);
+    settings.input.onBack!();
+    await tester.pumpAndSettle();
     disk.pause();
     await _startLesson(tester, settle: false);
     await tester.pump();

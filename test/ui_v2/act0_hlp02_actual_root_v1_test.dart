@@ -6,7 +6,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_hlp02_reference_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/ui_v2/app_root.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
@@ -90,6 +92,7 @@ void _expectNoReference() {
 }
 
 Future<void> _mountFreshFixture(WidgetTester tester) async {
+  await _loadRealReferenceAsset(tester);
   tester.view.physicalSize = const Size(393, 852);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
@@ -111,7 +114,7 @@ Future<void> _mountFreshFixture(WidgetTester tester) async {
       'completedTaskIds': <String>[
         for (final lesson in priorLessons)
           for (final task in lesson.taskList) task.taskId,
-      ],
+      ]..sort(),
       'completedLessonIds': <String>[
         for (final lesson in priorLessons) lesson.lessonId,
       ],
@@ -121,6 +124,7 @@ Future<void> _mountFreshFixture(WidgetTester tester) async {
       'selectedTaskId': _theoryId,
       'earnedXp': 0,
       'learningEvidenceHistory': <Object>[],
+      'openRepairIntents': <Object>[],
     }),
   });
   addTearDown(() async {
@@ -208,6 +212,16 @@ Future<void> _replayFromLearn(WidgetTester tester, String taskId) async {
   await _tap(tester, const Key('act0_shell_selected_lesson_cta'));
   expect(_runner(tester).selectedTaskId, taskId);
   _expectNoReference();
+}
+
+// Asset I/O must run outside the widget test's fake clock. This loads the
+// real registered production asset through its parser; no fake catalog or
+// replacement bundle is injected. UI assertions still require the real panel.
+Future<void> _loadRealReferenceAsset(WidgetTester tester) async {
+  await tester.runAsync(() async {
+    final catalog = await Act0Hlp02ReferenceCatalogV1.load(rootBundle);
+    expect(catalog.rankings, hasLength(9));
+  });
 }
 
 void main() {
