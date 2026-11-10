@@ -1,0 +1,250 @@
+name: PKR02-05 genuine returning learner EN14Pro
+on:
+  push:
+    branches: [qa/pkr0205-upgrade-native-20261110]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: pkr0205-upgrade-native-single-writer
+  cancel-in-progress: false
+jobs:
+  upgrade:
+    runs-on: macos-26
+    timeout-minutes: 100
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+      COCOAPODS_DISABLE_STATS: 'true'
+      PKR_MAIN_RUN_ID: '42792067776'
+      PKR_MAIN_WRAPPER_SHA: fdf502472783eec01bcea1e6e8a7fa6f6ce8eea3
+      PKR_MAIN_ARTIFACT_ID: '13754351754'
+      PKR_MAIN_ARTIFACT_SHA256: a819b1f4d1c5b19d5f7388c0c3d674111879704c1090b0e751fc1be1a92e5058
+      PKR_MAIN_ARCHIVE_SHA256: c61d9d59c71f857216df77de949c63561cc87a0eef653a8651475f2eec82a517
+      PKR_MAIN_KERNEL_SHA256: b62962c287108ad41292415e9198ff49965cdf4ae31c849cbab967de969bee94
+      PKR_FINAL_ARTIFACT_ID: '13752117630'
+      PKR_FINAL_ARTIFACT_SHA256: 46e1f5c7c235077288d8adab3fd5a3be9cb3da856781696ee63f46000b36db55
+      PKR_FINAL_ARCHIVE_SHA256: 80047a8c511da21bd768cd9625b9696de5d3cf77afbcddbee8dc69771aa7d71a
+      PKR_FINAL_KERNEL_SHA256: 784f692d1480d921e5cfef2d512f62a1889770f7b08edde2cb1a0508e8427cad
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: qa-infra
+      - name: Verify immutable sealed-final artifact binding before any native UI
+        env:
+          PKR_ARTIFACT_READ_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p output/pkr0205-upgrade
+          python3 - <<'PY'
+          import json, os, re, urllib.request
+          from pathlib import Path
+          artifact_id = os.environ['PKR_FINAL_ARTIFACT_ID']
+          assert artifact_id.isdigit(), 'ROOT_MUST_PIN_PUBLISHED_ARTIFACT_ID'
+          for key in ('PKR_FINAL_ARTIFACT_SHA256', 'PKR_FINAL_ARCHIVE_SHA256', 'PKR_FINAL_KERNEL_SHA256'):
+              assert re.fullmatch('[0-9a-f]{64}', os.environ[key]), 'ROOT_MUST_PIN_RECEIPT:' + key
+          url = 'https://api.github.com/repos/ClubBoss/sharky-standalone-direction/actions/artifacts/' + artifact_id
+          request = urllib.request.Request(url, headers={'Authorization': 'Bearer ' + os.environ['PKR_ARTIFACT_READ_TOKEN'], 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28'})
+          with urllib.request.urlopen(request, timeout=30) as response:
+              artifact = json.load(response)
+          assert artifact['id'] == int(artifact_id) and not artifact['expired']
+          assert artifact['workflow_run']['id'] == 42788406050
+          assert artifact['workflow_run']['head_sha'] == '55a48c16f44d624ca7a8715d7f170c4fb4d43bba'
+          assert artifact['name'] == 'pkr0205-independent-native-42788406050'
+          assert artifact['digest'] == 'sha256:' + os.environ['PKR_FINAL_ARTIFACT_SHA256']
+          root = Path('output/pkr0205-upgrade')
+          (root / 'sealed-final-artifact-metadata.json').write_text(json.dumps(artifact, indent=2))
+          (root / 'trusted-final-receipt.json').write_text(json.dumps({key: os.environ[key] for key in ('PKR_FINAL_ARTIFACT_ID', 'PKR_FINAL_ARTIFACT_SHA256', 'PKR_FINAL_ARCHIVE_SHA256', 'PKR_FINAL_KERNEL_SHA256')}, indent=2))
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ env.PKR_FINAL_ARTIFACT_ID }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: 42788406050
+          repository: ClubBoss/sharky-standalone-direction
+          path: sealed-final
+          merge-multiple: true
+      - name: Verify and extract the exact final binary without rebuilding it
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          source = Path('sealed-final')
+          assert (source / 'product-identity.txt').read_text().splitlines() == ['fdff8a471817f9063b15e1a6a43c92eb4e2204a7', '12ada8e1839e16dfe1651d2c94511c4085c17e4e']
+          assert (source / 'qa-identity.txt').read_text().splitlines()[0] == '55a48c16f44d624ca7a8715d7f170c4fb4d43bba'
+          assert hashlib.sha256((source / 'Runner.zip').read_bytes()).hexdigest() == os.environ['PKR_FINAL_ARCHIVE_SHA256']
+          assert (source / 'kernel.sha256').read_text().split()[0] == os.environ['PKR_FINAL_KERNEL_SHA256']
+          PY
+          mkdir -p output/pkr0205-upgrade/final
+          cp sealed-final/Runner.zip output/pkr0205-upgrade/final/Runner.zip
+          cp sealed-final/product-identity.txt output/pkr0205-upgrade/final/product-identity.txt
+          cp sealed-final/kernel.sha256 output/pkr0205-upgrade/final/kernel.sha256
+          cp sealed-final/runner-archive.sha256 output/pkr0205-upgrade/final/runner-archive.sha256
+          if test -f sealed-final/native-verdict.json; then
+            cp sealed-final/native-verdict.json output/pkr0205-upgrade/fresh-lane-actual-verdict.json
+          fi
+          ditto -x -k sealed-final/Runner.zip output/pkr0205-upgrade/final
+          python3 - <<'PY'
+          import hashlib, os
+          from pathlib import Path
+          kernel = Path('output/pkr0205-upgrade/final/Runner.app/Frameworks/App.framework/flutter_assets/kernel_blob.bin')
+          assert hashlib.sha256(kernel.read_bytes()).hexdigest() == os.environ['PKR_FINAL_KERNEL_SHA256']
+          PY
+      - name: Verify immutable historical-main artifact binding
+        env:
+          PKR_ARTIFACT_READ_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, re, urllib.request
+          from pathlib import Path
+          artifact_id = os.environ['PKR_MAIN_ARTIFACT_ID']
+          run_id = os.environ['PKR_MAIN_RUN_ID']
+          assert artifact_id.isdigit() and run_id.isdigit(), 'ROOT_MUST_PIN_PUBLISHED_MAIN_ARTIFACT'
+          assert re.fullmatch('[0-9a-f]{40}', os.environ['PKR_MAIN_WRAPPER_SHA'])
+          for key in ('PKR_MAIN_ARTIFACT_SHA256', 'PKR_MAIN_ARCHIVE_SHA256', 'PKR_MAIN_KERNEL_SHA256'):
+              assert re.fullmatch('[0-9a-f]{64}', os.environ[key]), 'ROOT_MUST_PIN_MAIN_RECEIPT:' + key
+          url = 'https://api.github.com/repos/ClubBoss/sharky-standalone-direction/actions/artifacts/' + artifact_id
+          request = urllib.request.Request(url, headers={'Authorization': 'Bearer ' + os.environ['PKR_ARTIFACT_READ_TOKEN'], 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28'})
+          with urllib.request.urlopen(request, timeout=30) as response:
+              artifact = json.load(response)
+          assert artifact['id'] == int(artifact_id) and not artifact['expired']
+          assert artifact['workflow_run']['id'] == int(run_id)
+          assert artifact['workflow_run']['head_sha'] == os.environ['PKR_MAIN_WRAPPER_SHA']
+          assert artifact['name'] == 'pkr0205-baseline-binary-' + run_id
+          assert artifact['digest'] == 'sha256:' + os.environ['PKR_MAIN_ARTIFACT_SHA256']
+          root = Path('output/pkr0205-upgrade')
+          (root / 'sealed-main-artifact-metadata.json').write_text(json.dumps(artifact, indent=2))
+          (root / 'trusted-main-receipt.json').write_text(json.dumps({key: os.environ[key] for key in ('PKR_MAIN_RUN_ID', 'PKR_MAIN_WRAPPER_SHA', 'PKR_MAIN_ARTIFACT_ID', 'PKR_MAIN_ARTIFACT_SHA256', 'PKR_MAIN_ARCHIVE_SHA256', 'PKR_MAIN_KERNEL_SHA256')}, indent=2))
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ env.PKR_MAIN_ARTIFACT_ID }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ env.PKR_MAIN_RUN_ID }}
+          repository: ClubBoss/sharky-standalone-direction
+          path: sealed-main
+          merge-multiple: true
+      - name: Extract sealed historical main without rebuilding or restoring learner data
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, os
+          from pathlib import Path
+          source = Path('sealed-main')
+          assert (source / 'product-identity.txt').read_text().splitlines() == ['3784d421beb5ae7cb8cfaacd10b1083855148850', 'eb088750944257db10fc3bd851ebc49000cf255a']
+          assert (source / 'qa-identity.txt').read_text().splitlines()[0] == os.environ['PKR_MAIN_WRAPPER_SHA']
+          assert hashlib.sha256((source / 'Runner.zip').read_bytes()).hexdigest() == os.environ['PKR_MAIN_ARCHIVE_SHA256']
+          assert (source / 'kernel.sha256').read_text().split()[0] == os.environ['PKR_MAIN_KERNEL_SHA256']
+          PY
+          mkdir -p output/pkr0205-upgrade/main
+          cp -R sealed-main/. output/pkr0205-upgrade/main/
+          ditto -x -k sealed-main/Runner.zip output/pkr0205-upgrade/main
+          python3 - <<'PY'
+          import hashlib, os
+          from pathlib import Path
+          kernel = Path('output/pkr0205-upgrade/main/Runner.app/Frameworks/App.framework/flutter_assets/kernel_blob.bin')
+          assert hashlib.sha256(kernel.read_bytes()).hexdigest() == os.environ['PKR_MAIN_KERNEL_SHA256']
+          PY
+      - name: Record the single native QA host
+        run: |
+          set -euo pipefail
+          git -C qa-infra rev-parse HEAD HEAD^{tree} > output/pkr0205-upgrade/qa-identity.txt
+          sw_vers > output/pkr0205-upgrade/macos.txt
+          xcodebuild -version > output/pkr0205-upgrade/xcode.txt
+          test "$(head -n 1 output/pkr0205-upgrade/xcode.txt)" = 'Xcode 26.2'
+          xcrun simctl list -j > output/pkr0205-upgrade/simulator-inventory.json
+          ruby -e 'require "xcodeproj"; puts Xcodeproj::VERSION' > output/pkr0205-upgrade/xcodeproj-version.txt
+      - name: Create one fresh English iPhone 14 Pro on iOS 26.2
+        timeout-minutes: 8
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          root = Path('output/pkr0205-upgrade')
+          inventory = json.loads((root / 'simulator-inventory.json').read_text())
+          types = [t for t in inventory['devicetypes'] if t['name'] == 'iPhone 14 Pro']
+          runtimes = [r for r in inventory['runtimes'] if r.get('isAvailable') and r['version'] == '26.2' and 'iOS' in r['identifier']]
+          assert len(types) == 1 and len(runtimes) == 1, 'EXACT_EN14PRO_RUNTIME_UNAVAILABLE_NO_FALLBACK'
+          device_type, runtime = types[0], runtimes[0]
+          sim = subprocess.check_output(['xcrun', 'simctl', 'create', 'PKR0205-Upgrade-EN14Pro', device_type['identifier'], runtime['identifier']], text=True).strip()
+          (root / 'sim-id.txt').write_text(sim)
+          (root / 'selected-device.json').write_text(json.dumps({'udid': sim, 'model': device_type['name'], 'device_type': device_type['identifier'], 'runtime': runtime['identifier'], 'runtime_version': runtime['version'], 'language': 'en', 'logical_size': [393, 852]}, indent=2))
+          PY
+          PKR_SIM_ID="$(cat output/pkr0205-upgrade/sim-id.txt)"
+          xcrun simctl boot "$PKR_SIM_ID"
+          xcrun simctl bootstatus "$PKR_SIM_ID" -b
+          xcrun simctl install "$PKR_SIM_ID" output/pkr0205-upgrade/main/Runner.app
+          open -a Simulator --args -CurrentDeviceUDID "$PKR_SIM_ID"
+          # First capture follows XCTest's actual hittable onboarding UI, not
+          # immediate process launch. Fresh run42788406050 timed out in that
+          # redundant prewarm capture before any XCTest ran. All real learner
+          # screen, geometry, timing and persistence gates remain mandatory.
+          ruby qa-infra/tools/qa_pkr0205_upgrade_create_xcodeproj.rb
+      - name: Earn historical World 1 through actual UI on the fresh simulator
+        timeout-minutes: 45
+        run: |
+          set -euo pipefail
+          PKR_SIM_ID="$(cat output/pkr0205-upgrade/sim-id.txt)"
+          python3 -u qa-infra/tools/qa_pkr0205_upgrade_watch_checkpoints.py --log output/pkr0205-upgrade/main-tests.log --sim "$PKR_SIM_ID" --output output/pkr0205-upgrade/checkpoints > output/pkr0205-upgrade/main-collector.log 2>&1 &
+          PKR_COLLECTOR_PID=$!
+          trap 'kill "$PKR_COLLECTOR_PID" 2>/dev/null || true' EXIT
+          NSUnbufferedIO=YES xcodebuild test -project qa-infra/qa/pkr0205_upgrade_hosted/PKR0205UpgradeNative.xcodeproj -scheme PKR0205UpgradeNativeUITests -destination "platform=iOS Simulator,id=$PKR_SIM_ID" -parallel-testing-enabled NO -maximum-concurrent-test-simulator-destinations 1 -only-testing:PKR0205UpgradeNativeUITests/PKR0205UpgradeNativeUITests/test01EarnHistoricalWorldOne -resultBundlePath "$PWD/output/pkr0205-upgrade/main-tests.xcresult" CODE_SIGNING_ALLOWED=NO > output/pkr0205-upgrade/main-tests.log 2>&1
+      - name: Ordinary upgrade preserving actual existing app data byte for byte
+        run: |
+          set -euo pipefail
+          PKR_SIM_ID="$(cat output/pkr0205-upgrade/sim-id.txt)"
+          python3 qa-infra/tools/qa_pkr0205_upgrade_watch_checkpoints.py --sim "$PKR_SIM_ID" --snapshot-dir output/pkr0205-upgrade/before-install
+          xcrun simctl install "$PKR_SIM_ID" output/pkr0205-upgrade/final/Runner.app
+          python3 qa-infra/tools/qa_pkr0205_upgrade_watch_checkpoints.py --sim "$PKR_SIM_ID" --snapshot-dir output/pkr0205-upgrade/after-install-before-launch
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          root = Path('output/pkr0205-upgrade')
+          before = root / 'before-install'
+          after = root / 'after-install-before-launch'
+          a = json.loads((before / 'snapshot.json').read_text())
+          b = json.loads((after / 'snapshot.json').read_text())
+          assert (before / 'learner.plist').read_bytes() == (after / 'learner.plist').read_bytes(), 'UPGRADE_MUTATED_EXISTING_RAW_PREFERENCES'
+          assert a['data_container'] == b['data_container'] and a['simulator'] == b['simulator'], 'NOT_SAME_ACTUAL_LEARNER_CONTAINER'
+          assert a['preference_files_sha256'] == b['preference_files_sha256'], 'UPGRADE_CHANGED_PREFERENCE_DOMAIN'
+          assert a['installed_kernel_sha256'] == (root / 'main/kernel.sha256').read_text().split()[0]
+          assert b['installed_kernel_sha256'] == os.environ['PKR_FINAL_KERNEL_SHA256']
+          (root / 'ordinary-install-verdict.json').write_text(json.dumps({'status': 'PASS_BYTE_IDENTICAL_EXISTING_PREFERENCES_BEFORE_FIRST_FINAL_LAUNCH', 'before': a, 'after': b}, indent=2))
+          PY
+      - name: Actual final early-fold wrong answer held repair ordinary retry and restart
+        timeout-minutes: 35
+        run: |
+          set -euo pipefail
+          PKR_SIM_ID="$(cat output/pkr0205-upgrade/sim-id.txt)"
+          python3 -u qa-infra/tools/qa_pkr0205_upgrade_watch_checkpoints.py --log output/pkr0205-upgrade/final-tests.log --sim "$PKR_SIM_ID" --output output/pkr0205-upgrade/checkpoints > output/pkr0205-upgrade/final-collector.log 2>&1 &
+          PKR_COLLECTOR_PID=$!
+          trap 'kill "$PKR_COLLECTOR_PID" 2>/dev/null || true' EXIT
+          NSUnbufferedIO=YES xcodebuild test -project qa-infra/qa/pkr0205_upgrade_hosted/PKR0205UpgradeNative.xcodeproj -scheme PKR0205UpgradeNativeUITests -destination "platform=iOS Simulator,id=$PKR_SIM_ID" -parallel-testing-enabled NO -maximum-concurrent-test-simulator-destinations 1 -only-testing:PKR0205UpgradeNativeUITests/PKR0205UpgradeNativeUITests/test02FinalEarlyFoldAndRestart -resultBundlePath "$PWD/output/pkr0205-upgrade/final-tests.xcresult" CODE_SIGNING_ALLOWED=NO > output/pkr0205-upgrade/final-tests.log 2>&1
+      - name: Verify historical provenance upgrade continuity and bounded final receipts
+        if: always()
+        run: python3 qa-infra/tools/qa_pkr0205_upgrade_verify_native.py output/pkr0205-upgrade
+      - name: Preserve both sealed binaries and actual evidence even on HOLD
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p output/pkr0205-upgrade
+          for PKR_PHASE in main final; do
+            if test -d "output/pkr0205-upgrade/$PKR_PHASE-tests.xcresult"; then
+              xcrun xcresulttool export attachments --path "output/pkr0205-upgrade/$PKR_PHASE-tests.xcresult" --output-path "output/pkr0205-upgrade/$PKR_PHASE-attachments" || true
+            fi
+          done
+          cd output/pkr0205-upgrade
+          find . -type f ! -path '*/Runner.app/*' ! -name evidence.sha256 -print0 | xargs -0 shasum -a 256 > evidence.sha256
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pkr0205-upgrade-native-${{ github.run_id }}
+          path: |
+            output/pkr0205-upgrade/
+            !output/pkr0205-upgrade/main/Runner.app/**
+            !output/pkr0205-upgrade/final/Runner.app/**
+          if-no-files-found: error
+          retention-days: 30
