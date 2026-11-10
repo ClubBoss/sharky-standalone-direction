@@ -282,17 +282,19 @@ bool _exactW1ActionWordV1(
   required String? question,
 }) {
   final source = _w1ActionWordSourcesV1[taskId];
+  final expectedQuality = option.id == source?.$2
+      ? Act0FeedbackQualityV1.correct
+      : option.id == 'call' && source?.$2 == 'raise'
+      ? Act0FeedbackQualityV1.suboptimal
+      : Act0FeedbackQualityV1.wrong;
   if (source == null ||
       sizingBet ||
       question != source.$1 ||
       option.amountLabel.trim().isNotEmpty ||
       _w1ActionWordLabelsV1[option.id] != option.label ||
       option.isCorrect != (option.id == source.$2) ||
-      option.quality !=
-          (option.id == source.$2
-              ? Act0FeedbackQualityV1.correct
-              : Act0FeedbackQualityV1.wrong) ||
-      table.scope != Act0TableScopeV1.explanation ||
+      option.quality != expectedQuality ||
+      table.scope != Act0TableScopeV1.playedHand ||
       table.tableFormat != Act0TableFormatV1.sixMax ||
       table.playerCount != 6 ||
       table.seats.length != 6 ||
