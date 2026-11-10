@@ -2174,7 +2174,8 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
-        summary: 'Identify the action that matches without increasing the wager.',
+        summary:
+            'Identify the action that matches without increasing the wager.',
         lockedSummary:
             'This opens after Action words, once the basic verbs are stable.',
       ),
