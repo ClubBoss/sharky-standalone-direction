@@ -7,7 +7,7 @@ permissions:
   contents: read
 concurrency:
   group: pkr0205-14pro-20261110
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   source:
     runs-on: ubuntu-latest
@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ab721098a615acd3bfaed4e49bd0ea0526325a03
+          ref: 160c2a0f0436775aacb305134bcdb3f8309d3494
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.0'
@@ -23,8 +23,8 @@ jobs:
       - name: Source identity, format, analyze
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = ab721098a615acd3bfaed4e49bd0ea0526325a03
-          test "$(git rev-parse HEAD^{tree})" = 46345b0999104a29df69e4945d471a9a043997e3
+          test "$(git rev-parse HEAD)" = 160c2a0f0436775aacb305134bcdb3f8309d3494
+          test "$(git rev-parse HEAD^{tree})" = 39fb6d8e3f0088fa7a429f1b3077502c75d267d9
           mkdir -p output/pkr0205/cloud
           sha256sum pubspec.lock > output/pkr0205/cloud/lock-before
           flutter pub get
@@ -129,7 +129,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ab721098a615acd3bfaed4e49bd0ea0526325a03
+          ref: 160c2a0f0436775aacb305134bcdb3f8309d3494
       - name: Strict historical adapter negatives (expected to expose drift)
         run: python3 test/tools/table_truth_baseline_dependencies_v1_test.py -v
   native:
@@ -142,7 +142,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ab721098a615acd3bfaed4e49bd0ea0526325a03
+          ref: 160c2a0f0436775aacb305134bcdb3f8309d3494
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.0'
@@ -153,8 +153,8 @@ jobs:
           set -euo pipefail
           mkdir -p output/pkr0205/cloud-native
           D=output/pkr0205/cloud-native
-          test "$(git rev-parse HEAD)" = ab721098a615acd3bfaed4e49bd0ea0526325a03
-          test "$(git rev-parse HEAD^{tree})" = 46345b0999104a29df69e4945d471a9a043997e3
+          test "$(git rev-parse HEAD)" = 160c2a0f0436775aacb305134bcdb3f8309d3494
+          test "$(git rev-parse HEAD^{tree})" = 39fb6d8e3f0088fa7a429f1b3077502c75d267d9
           git rev-parse HEAD HEAD^{tree} > "$D/source"
           xcodebuild -version > "$D/xcode"
           xcrun simctl list -j > "$D/sims.json"
