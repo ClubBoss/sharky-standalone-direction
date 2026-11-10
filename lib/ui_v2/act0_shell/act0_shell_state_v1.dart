@@ -2106,12 +2106,15 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'actions_theory',
         title: 'Action words',
         phase: Act0LessonPhaseV1.theory,
-        runner: _actionWordsRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _actionWordsRunner.options,
-            correctOptionId: 'raise',
-            correctIndex: 0,
+        runner: _w1ActionVocabularyRunnerV1(
+          _actionWordsRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _actionWordsRunner.options,
+              correctOptionId: 'raise',
+              correctIndex: 0,
+            ),
           ),
+          question: 'Which action increases what opponents must match?',
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.learn,
@@ -2143,41 +2146,50 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'actions_fold_drill',
-        title: 'Fold weak hands',
+        title: 'What Fold means',
         phase: Act0LessonPhaseV1.drill,
-        runner: _foldActionRunner,
+        runner: _w1ActionVocabularyRunnerV1(
+          _foldActionRunner,
+          question: 'Which action ends your participation in the hand?',
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.fixMistakes,
-        summary: 'Train the clean exit when continuing would only burn chips.',
+        summary: 'Identify the action that ends participation in a hand.',
         lockedSummary:
             'Finish the opener first, then come back to this repair node.',
       ),
       Act0LessonTaskV1(
         taskId: 'actions_call_drill',
-        title: 'Call a price',
+        title: 'What Call means',
         phase: Act0LessonPhaseV1.drill,
-        runner: _callActionRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _callActionRunner.options,
-            correctOptionId: 'call',
-            correctIndex: 2,
+        runner: _w1ActionVocabularyRunnerV1(
+          _callActionRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _callActionRunner.options,
+              correctOptionId: 'call',
+              correctIndex: 2,
+            ),
           ),
+          question: 'Which action matches a wager without increasing it?',
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
-        summary: 'Read when matching the bet is the cheapest correct continue.',
+        summary: 'Identify the action that matches without increasing the wager.',
         lockedSummary:
             'This opens after Action words, once the basic verbs are stable.',
       ),
       Act0LessonTaskV1(
         taskId: 'actions_raise_drill',
-        title: 'Raise on the Button',
+        title: 'What Raise means',
         phase: Act0LessonPhaseV1.drill,
-        runner: _whatYouCanDoRunner,
+        runner: _w1ActionVocabularyRunnerV1(
+          _whatYouCanDoRunner,
+          question: 'Which action increases the current wager?',
+        ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.practice,
         summary:
-            'Use raise in the cleanest beginner spot: unopened action on the Button.',
+            'Identify the action that increases a wager without guessing its size.',
         lockedSummary:
             'First learn the action menu, then unlock the aggressive option.',
       ),
@@ -2185,12 +2197,15 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'actions_review',
         title: 'Action recap',
         phase: Act0LessonPhaseV1.review,
-        runner: _actionRecapRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _actionRecapRunner.options,
-            correctOptionId: 'raise',
-            correctIndex: 0,
+        runner: _w1ActionVocabularyRunnerV1(
+          _actionRecapRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _actionRecapRunner.options,
+              correctOptionId: 'raise',
+              correctIndex: 0,
+            ),
           ),
+          question: 'Which action adds more than a call?',
         ),
         rewardXp: 5,
         stepKind: Act0LessonStepKindV1.proveIt,
@@ -9352,6 +9367,66 @@ final _checkActionRunner = _firstHandRunner.copyWith(
       focusLabels: <String>['No bet', 'Check is free'],
     ),
   ],
+);
+
+// These W1 questions test action meanings, not live wager legality.
+// Preserve source-owned task/choice IDs and once-only XP. Unproved amounts,
+// pot claims and commitments are absent from this instructional illustration.
+Act0RunnerStateV1 _w1ActionVocabularyRunnerV1(
+  Act0RunnerStateV1 source, {
+  required String question,
+}) => source.copyWith(
+  lessonSubtitle: 'Name the action before deciding a real chip amount.',
+  caption: 'Action-word question, not a live wager.',
+  hint: 'Identify what the action does, not a chip amount.',
+  question: question,
+  options: <Act0RunnerOptionV1>[
+    for (final option in source.options)
+      Act0RunnerOptionV1(
+        id: option.id,
+        label: option.label,
+        seatId: option.seatId,
+        isCorrect: option.isCorrect,
+        preferredLabel: option.preferredLabel,
+        betterAnswerLabel: option.betterAnswerLabel,
+        quality: option.isCorrect
+            ? Act0FeedbackQualityV1.correct
+            : Act0FeedbackQualityV1.wrong,
+        feedbackTitle: option.isCorrect
+            ? 'Correct action meaning.'
+            : 'Read the action meaning.',
+        feedbackReason: switch (option.id) {
+          'fold' => 'Fold ends your participation in the hand.',
+          'check' => 'Check passes the action for free if no bet faces you.',
+          'call' => 'Call matches the current wager without increasing it.',
+          'raise' => 'Raise increases the wager above its current level.',
+          _ => 'This question tests action words, not a chip commitment.',
+        },
+      ),
+  ],
+  feedbackTitle: 'Action meaning recognized.',
+  feedbackReason:
+      'This checks what an action means, not whether a sized wager is legal.',
+  table: source.table.copyWith(
+    scope: Act0TableScopeV1.explanation,
+    potLabel: '',
+    toCallLabel: '',
+    centerLabel: 'Action meanings',
+    actionTrail: const <Act0ActionTrailItemV1>[],
+    seats: <Act0SeatStateV1>[
+      for (final seat in source.table.seats)
+        _act0CopySeatStateV1(seat, clearCommitment: true),
+    ],
+  ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'The action changes what you do.',
+      body:
+          'Fold exits, check passes when free, call matches and raise increases. '
+          'Read the action first; actual price decisions require a real hand.',
+    ),
+  ],
+  teachingStepIndex: 0,
 );
 
 final _foldActionRunner = _readBoardRunner.copyWith(
