@@ -300,12 +300,34 @@ Act0BettingPriceResultV1 act0BettingPriceForOptionV1(
     if (!seat.isOccupied) continue;
     seats[actor] = seat;
   }
-  final matching = table.seats.where((s) => s.seatId == table.activeSeatId);
+  final history = table.actionTrail.where((item) => !item.isNote).toList();
+  final heroes = table.seats.where((s) => s.isHero && s.isOccupied).toList();
+  final explicitActorId = table.activeSeatId?.trim();
+  // A terminal "Hero acts" is source-owned actor identity even where the
+  // redundant activeSeatId projection is absent. Never infer from a label,
+  // question, pot or option, and never override a conflicting explicit actor.
+  final terminalHeroMarker =
+      history.isNotEmpty &&
+      RegExp(
+        r'^Hero acts$',
+        caseSensitive: false,
+      ).hasMatch(history.last.label.trim());
+  final inferredHeroId =
+      (explicitActorId?.isEmpty ?? true) &&
+          terminalHeroMarker &&
+          heroes.length == 1 &&
+          ((table.heroSeatId?.trim().isEmpty ?? true) ||
+              table.heroSeatId == heroes.single.seatId)
+      ? heroes.single.seatId
+      : null;
+  final actorId = (explicitActorId?.isNotEmpty ?? false)
+      ? explicitActorId
+      : inferredHeroId;
+  final matching = table.seats.where((s) => s.seatId == actorId);
   if (matching.length != 1) {
     return const Act0BettingPriceResultV1(_unknown, 'missing_active_actor');
   }
   final hero = matching.single;
-  final heroes = table.seats.where((s) => s.isHero && s.isOccupied).toList();
   if (!hero.isOccupied ||
       heroes.length != 1 ||
       !hero.isHero ||
@@ -319,7 +341,6 @@ Act0BettingPriceResultV1 act0BettingPriceForOptionV1(
   final actor = hero.seatLabel.trim().toUpperCase();
   final ledger = _PriceLedger();
   var actionCount = 0;
-  final history = table.actionTrail.where((item) => !item.isNote).toList();
   for (var historyIndex = 0; historyIndex < history.length; historyIndex++) {
     final item = history[historyIndex];
     var label = item.label.trim();
@@ -497,7 +518,9 @@ Act0BettingPriceResultV1 act0BettingPriceForOptionV1(
       'unrecorded_current_street',
     );
   }
-  final order = act0BettingRoundOrderTruthForTableV1(table);
+  final order = act0BettingRoundOrderTruthForTableV1(
+    inferredHeroId == null ? table : table.copyWith(activeSeatId: inferredHeroId),
+  );
   if (order == Act0BettingRoundOrderTruthV1.contradiction) {
     return const Act0BettingPriceResultV1(
       _contradiction,
