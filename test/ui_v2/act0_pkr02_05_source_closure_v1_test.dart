@@ -561,4 +561,96 @@ void main() {
       );
     },
   );
+  test('authored first-in discipline is strategic, not an unpriced raise', () {
+    final tasks = Act0ShellStateV1.sample.worlds
+        .expand((world) => world.lessons)
+        .expand((lesson) => lesson.taskList)
+        .toList();
+    const ids = <String>{
+      'fold_discipline_early_fold',
+      'apply_utg_fold',
+      'same_hand_different_seat_same_hand_early_fold',
+      'position_apply_early_fold',
+      'position_apply_hj_fold',
+      'position_checkpoint_position_checkpoint_early_fold',
+    };
+    for (final taskId in ids) {
+      final task = tasks.singleWhere((item) => item.taskId == taskId);
+      final table = task.runner.table;
+      expect(task.runner.options.map((o) => o.id).toSet(), {'fold', 'raise'});
+      expect(task.runner.options.singleWhere((o) => o.id == 'fold').isCorrect,
+          isTrue);
+      expect(task.runner.options.singleWhere((o) => o.id == 'raise').isCorrect,
+          isFalse);
+      for (final option in task.runner.options) {
+        final proof = act0BettingPriceForOptionV1(
+          table,
+          option,
+          taskId: taskId,
+          question: task.runner.question,
+        );
+        expect(proof.reason, 'source_early_fold_strategic_read');
+        expect(proof.appliesToWager, isFalse);
+        expect(proof.sourceReady, isFalse);
+        expect(
+          act0BettingPriceBlocksAuthoredSuccessV1(
+            table,
+            option,
+            taskId: taskId,
+            question: task.runner.question,
+          ),
+          isFalse,
+        );
+
+        // A changed source never inherits the conceptual exemption.
+        for (final changed in <Act0TableStateV1>[
+          table.copyWith(heroCards: const <Act0CardStateV1>[]),
+          table.copyWith(activeSeatId: 'btn'),
+          table.copyWith(potLabel: 'Pot 99 BB'),
+          table.copyWith(actionTrail: const <Act0ActionTrailItemV1>[]),
+        ]) {
+          expect(
+            act0BettingPriceBlocksAuthoredSuccessV1(
+              changed,
+              option,
+              taskId: taskId,
+              question: task.runner.question,
+            ),
+            isTrue,
+            reason: taskId,
+          );
+        }
+        expect(
+          act0BettingPriceBlocksAuthoredSuccessV1(
+            table,
+            option,
+            taskId: taskId,
+            question: 'Raise to 3 BB against a bet.',
+          ),
+          isTrue,
+        );
+        expect(
+          act0BettingPriceBlocksAuthoredSuccessV1(
+            table,
+            option,
+            taskId: taskId,
+            question: task.runner.question,
+            sizingBet: true,
+          ),
+          isTrue,
+        );
+      }
+      // A real wager with chips can never use this unpriced strategy escape.
+      expect(
+        act0BettingPriceBlocksAuthoredSuccessV1(
+          table,
+          pkrPriceOptionV1('Raise', '3'),
+          taskId: taskId,
+          question: task.runner.question,
+        ),
+        isTrue,
+      );
+    }
+  );
+
 }
