@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: e341cbdc636e8ff3ec0b13611064f4f2ad19c957
+          ref: ab721098a615acd3bfaed4e49bd0ea0526325a03
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.0'
@@ -23,8 +23,8 @@ jobs:
       - name: Source identity, format, analyze
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = e341cbdc636e8ff3ec0b13611064f4f2ad19c957
-          test "$(git rev-parse HEAD^{tree})" = d3d66dc9b6e576810a4163842513deeabc7ee68d
+          test "$(git rev-parse HEAD)" = ab721098a615acd3bfaed4e49bd0ea0526325a03
+          test "$(git rev-parse HEAD^{tree})" = 46345b0999104a29df69e4945d471a9a043997e3
           mkdir -p output/pkr0205/cloud
           sha256sum pubspec.lock > output/pkr0205/cloud/lock-before
           flutter pub get
@@ -76,6 +76,47 @@ jobs:
           code=$?
           set -e
           python3 tools/table_truth_evidence_v1.py tests output/pkr0205/cloud/table-green.jsonl green "$code"
+      - name: Preserve inherited PKR03 baseline versus candidate exact case IDs
+        run: |
+          set -euo pipefail
+          OUT="$PWD/output/pkr0205/cloud"
+          set +e
+          flutter test test/ui_v2/act0_pkr03_full_catalog_order_proof_v1_test.dart --machine > "$OUT/pkr03-candidate.jsonl" 2>&1
+          candidate_code=$?
+          set -e
+          git fetch --no-tags --depth=1 origin 3784d421beb5ae7cb8cfaacd10b1083855148850
+          git worktree add --detach "$RUNNER_TEMP/pkr03-base" 3784d421beb5ae7cb8cfaacd10b1083855148850
+          cd "$RUNNER_TEMP/pkr03-base"
+          flutter pub get >/dev/null
+          set +e
+          flutter test test/ui_v2/act0_pkr03_full_catalog_order_proof_v1_test.dart --machine > "$OUT/pkr03-baseline.jsonl" 2>&1
+          baseline_code=$?
+          set -e
+          cd "$GITHUB_WORKSPACE"
+          python3 - "$baseline_code" "$candidate_code" <<'PY'
+          import json,sys,pathlib,collections
+          def cases(name):
+              starts={};counts=collections.Counter();fails=[];errors=[]
+              for line in pathlib.Path('output/pkr0205/cloud/'+name).read_text(errors='replace').splitlines():
+                  try:e=json.loads(line)
+                  except json.JSONDecodeError:continue
+                  if not isinstance(e,dict):continue
+                  if e.get('type')=='testStart':starts[e['test']['id']]=e['test'].get('name','')
+                  if e.get('type')=='testDone' and not e.get('hidden'):
+                      n=starts.get(e.get('testID'),'')
+                      if n.startswith('loading '):continue
+                      v='skipped' if e.get('skipped') else e.get('result','unknown')
+                      counts[v]+=1
+                      if v!='success':fails.append((n,v))
+                  if e.get('type')=='error':errors.append(e.get('error','')[:300])
+              return counts,sorted(fails),errors
+          base=cases('pkr03-baseline.jsonl')
+          cand=cases('pkr03-candidate.jsonl')
+          print('PKR03_BASE',base[0],'FAIL_CASES',base[1],'ERRORS',base[2][-3:],flush=True)
+          print('PKR03_CAND',cand[0],'FAIL_CASES',cand[1],'ERRORS',cand[2][-3:],flush=True)
+          assert base[1] and base[:2]==cand[:2] and int(sys.argv[1])==int(sys.argv[2])
+          print('PKR03_INHERITED_RED_PARITY; NOT PASS',flush=True)
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -88,7 +129,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: e341cbdc636e8ff3ec0b13611064f4f2ad19c957
+          ref: ab721098a615acd3bfaed4e49bd0ea0526325a03
       - name: Strict historical adapter negatives (expected to expose drift)
         run: python3 test/tools/table_truth_baseline_dependencies_v1_test.py -v
   native:
@@ -101,7 +142,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: e341cbdc636e8ff3ec0b13611064f4f2ad19c957
+          ref: ab721098a615acd3bfaed4e49bd0ea0526325a03
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.0'
@@ -112,8 +153,8 @@ jobs:
           set -euo pipefail
           mkdir -p output/pkr0205/cloud-native
           D=output/pkr0205/cloud-native
-          test "$(git rev-parse HEAD)" = e341cbdc636e8ff3ec0b13611064f4f2ad19c957
-          test "$(git rev-parse HEAD^{tree})" = d3d66dc9b6e576810a4163842513deeabc7ee68d
+          test "$(git rev-parse HEAD)" = ab721098a615acd3bfaed4e49bd0ea0526325a03
+          test "$(git rev-parse HEAD^{tree})" = 46345b0999104a29df69e4945d471a9a043997e3
           git rev-parse HEAD HEAD^{tree} > "$D/source"
           xcodebuild -version > "$D/xcode"
           xcrun simctl list -j > "$D/sims.json"
