@@ -67,7 +67,7 @@ final class PKR0205UpgradeNativeUITests: XCTestCase {
             }
         }
         let ordinary = app.buttons.matching(NSPredicate(format: "label == %@ OR label BEGINSWITH %@", text, text + "\n"))
-            .allElementsBoundByIndex.filter { $0.exists && $0.isHittable && $0.frame.midY < app.frame.height * 0.85 }
+            .allElementsBoundByIndex.filter { $0.exists && $0.isHittable }
         if !ordinary.isEmpty { return ordinary }
         // Physical seat controls expose the source-owned "Select <seat>"
         // accessibility action, distinct from passive seat labels.
