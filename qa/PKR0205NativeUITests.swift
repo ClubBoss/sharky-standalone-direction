@@ -19,10 +19,14 @@ final class PKR0205NativeUITests: XCTestCase {
     }
 
     private func capture(_ tag: String) {
+        // Querying XCTest accessibility can itself block while the simulator
+        // is busy. Capture the tree BEFORE arming the 45-second native-screen
+        // hold: the external simctl collector must capture within the hold.
+        let tree = app.debugDescription
         print("PKR0205_GATE_STATE " + tag)
-        print("PKR0205_SCREEN_CHECKPOINT " + tag + " epoch=" + String(Date().timeIntervalSince1970))
+        print("PKR0205_NATIVE_TREE_BEGIN " + tag + "\n" + tree + "\nPKR0205_NATIVE_TREE_END " + tag)
         fflush(stdout)
-        print("PKR0205_NATIVE_TREE_BEGIN " + tag + "\n" + app.debugDescription + "\nPKR0205_NATIVE_TREE_END " + tag)
+        print("PKR0205_SCREEN_CHECKPOINT " + tag + " epoch=" + String(Date().timeIntervalSince1970))
         fflush(stdout)
         RunLoop.current.run(until: Date().addingTimeInterval(45))
         print("PKR0205_SCREEN_RELEASE " + tag + " epoch=" + String(Date().timeIntervalSince1970))
