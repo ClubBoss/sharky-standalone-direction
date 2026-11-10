@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: a34fece7406f67f7fedb2732ba175b1d6250d06f
+          ref: 121b1c50be14ef496685a093fd8e582e389957f4
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.0'
@@ -23,8 +23,8 @@ jobs:
       - name: Source identity, format, analyze
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = a34fece7406f67f7fedb2732ba175b1d6250d06f
-          test "$(git rev-parse HEAD^{tree})" = d29dbd5b372c904a7b7f0b75c560a54855d6f6f7
+          test "$(git rev-parse HEAD)" = 121b1c50be14ef496685a093fd8e582e389957f4
+          test "$(git rev-parse HEAD^{tree})" = 6c0f81675d3fbffc72ee9612c1e4556c59eec178
           mkdir -p output/pkr0205/cloud
           sha256sum pubspec.lock > output/pkr0205/cloud/lock-before
           flutter pub get
@@ -129,7 +129,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: a34fece7406f67f7fedb2732ba175b1d6250d06f
+          ref: 121b1c50be14ef496685a093fd8e582e389957f4
       - name: Strict historical adapter negatives (expected to expose drift)
         run: python3 test/tools/table_truth_baseline_dependencies_v1_test.py -v
   native:
@@ -142,7 +142,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: a34fece7406f67f7fedb2732ba175b1d6250d06f
+          ref: 121b1c50be14ef496685a093fd8e582e389957f4
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.0'
@@ -153,8 +153,8 @@ jobs:
           set -euo pipefail
           mkdir -p output/pkr0205/cloud-native
           D=output/pkr0205/cloud-native
-          test "$(git rev-parse HEAD)" = a34fece7406f67f7fedb2732ba175b1d6250d06f
-          test "$(git rev-parse HEAD^{tree})" = d29dbd5b372c904a7b7f0b75c560a54855d6f6f7
+          test "$(git rev-parse HEAD)" = 121b1c50be14ef496685a093fd8e582e389957f4
+          test "$(git rev-parse HEAD^{tree})" = 6c0f81675d3fbffc72ee9612c1e4556c59eec178
           git rev-parse HEAD HEAD^{tree} > "$D/source"
           xcodebuild -version > "$D/xcode"
           xcrun simctl list -j > "$D/sims.json"
