@@ -301,6 +301,106 @@ void main() {
     await _unmount(tester);
   });
 
+  testWidgets(
+      'CNT presented available pool stays exhausted after durable restart',
+      (tester) async {
+    _phone(tester);
+    await tester.pumpWidget(_app());
+    await tester.pumpAndSettle();
+    await _startLesson(tester);
+
+    List<String>? availableBeforePresentation;
+    // Advance actual teaching CTAs, observing the synchronous unlock BEFORE
+    // the next frame reserves the newly available assessment's exposure.
+    for (var step = 0; step < 24; step++) {
+      final theory = find.byKey(const Key('act0_shell_theory_continue_cta'));
+      final next = theory.evaluate().isNotEmpty
+          ? theory
+          : find.byKey(const Key('act0_shell_continue_cta'));
+      expect(next, findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 900));
+      await tester.ensureVisible(next);
+      await tester.tap(next); // Deliberately no pump before the pool read.
+      final ids = List<String>.from(_state(tester).debugUnshownTaskIdsV1());
+      if (ids.isNotEmpty) {
+        availableBeforePresentation = ids;
+        break;
+      }
+      await tester.pumpAndSettle();
+    }
+    expect(availableBeforePresentation, isNotNull,
+        reason: 'Must consume a genuinely nonempty pool, not a locked catalog');
+    final available = availableBeforePresentation!;
+    expect(available, hasLength(1),
+        reason: 'The real first-incomplete route currently unlocks one check');
+    final taskId = available.single;
+    expect(_state(tester).debugSelectedTaskIdV1(), taskId);
+    expect(_state(tester).debugContentExposurePayloadV1()['presentedTaskIds'],
+        isNot(contains(taskId)));
+
+    await tester.pumpAndSettle();
+    final runner = await _reachAssessment(tester);
+    expect(_state(tester).debugSelectedTaskIdV1(), taskId);
+    expect(_state(tester).debugContentReservationV1()['acknowledged'], isTrue);
+    expect(_state(tester).debugContentReservationV1()['wasPreviouslyPresented'],
+        isFalse);
+    expect(_state(tester).debugUnshownTaskIdsV1(), isEmpty);
+    final presented = await _saved();
+    expect(presented['contentExposureHistory']['presentedTaskIds'],
+        contains(taskId));
+    expect(presented['completedTaskIds'], isNot(contains(taskId)));
+    expect(
+        (presented['learningEvidenceHistory'] as List)
+            .whereType<Map>()
+            .where((record) => record['taskId'] == taskId),
+        isEmpty,
+        reason: 'Presentation consumes novelty without completing an answer');
+
+    // Leave the unanswered assessment using its real source-owned callback.
+    runner.onBack();
+    await tester.pumpAndSettle();
+    await _tab(tester, 'Review');
+    expect(find.byKey(const Key('act0_content_availability_notice')),
+        findsOneWidget);
+    expect(find.textContaining('No new checks available'), findsOneWidget);
+    expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
+    final beforeRestart = await _saved();
+    await _unmount(tester);
+
+    // Preserve canonical durable storage; no progress/catalog injection.
+    await tester.pumpWidget(_app());
+    await tester.pumpAndSettle();
+    final restoredRunner = find.byType(Act0LessonRunnerShellV1);
+    if (restoredRunner.evaluate().isNotEmpty) {
+      tester.widget<Act0LessonRunnerShellV1>(restoredRunner).onBack();
+      await tester.pumpAndSettle();
+    }
+    expect(_state(tester).debugUnshownTaskIdsV1(), isEmpty);
+    await _tab(tester, 'Review');
+    expect(find.byKey(const Key('act0_content_availability_notice')),
+        findsOneWidget);
+    expect(find.textContaining('No new checks available'), findsOneWidget);
+    expect(find.textContaining('will not count as an unseen check'),
+        findsOneWidget);
+    expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
+    final afterRestart = await _saved();
+    expect(afterRestart['earnedXp'], beforeRestart['earnedXp']);
+    expect(afterRestart['completedTaskIds'], beforeRestart['completedTaskIds']);
+    expect(afterRestart['learningEvidenceHistory'],
+        beforeRestart['learningEvidenceHistory']);
+    expect(afterRestart['contentExposureHistory']['presentedTaskIds'],
+        contains(taskId));
+
+    // An explicit familiar revisit must not replenish the exhausted pool.
+    await _startLesson(tester);
+    await _reachAssessment(tester);
+    expect(_state(tester).debugSelectedTaskIdV1(), taskId);
+    expect(_state(tester).debugContentReservationV1()['wasPreviouslyPresented'],
+        isTrue);
+    expect(_state(tester).debugUnshownTaskIdsV1(), isEmpty);
+    await _unmount(tester);
+  });
+
   testWidgets('CNT abandoned pending presentation cannot reopen on late ACK',
       (tester) async {
     _phone(tester);

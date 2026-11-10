@@ -6964,8 +6964,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   selectedWorldId: selectedWorld.worldId,
                                   selectedLessonId: selectedLesson.lessonId,
                                   selectedTaskId: playSelectedTask?.taskId,
-                                  selectedTaskTitle:
-                                      _localizedTaskTitleV1(playSelectedTask),
+                                  selectedTaskTitle: _localizedTaskTitleV1(
+                                    playSelectedTask,
+                                  ),
                                   selectedTaskFamily:
                                       playSelectedTask?.resolvedTaskFamily,
                                   compositionFamily:
