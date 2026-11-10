@@ -1,0 +1,73 @@
+name: PKR0205 original inherited repair-widget RED parity
+on:
+  push:
+    branches: [qa/pkr0205-render-parity-20261110]
+    paths: [.github/workflows/pkr0205-render-parity.yml]
+permissions:
+  contents: read
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: dc479114063519597e99bc08b69c1ef1eebcfdf5
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+      - name: Exact candidate and unchanged old baseline
+        run: |
+          set -euo pipefail
+          mkdir -p output/pkr0205-render-parity
+          test "$(git rev-parse HEAD)" = dc479114063519597e99bc08b69c1ef1eebcfdf5
+          test "$(git rev-parse HEAD^{tree})" = da99ca17795eddf6dedb199d9a0363968367da43
+          git fetch --no-tags --depth=1 origin fdff8a471817f9063b15e1a6a43c92eb4e2204a7
+          git worktree add --detach "$RUNNER_TEMP/pkr0205-render-base" fdff8a471817f9063b15e1a6a43c92eb4e2204a7
+          git rev-parse HEAD HEAD^{tree} > output/pkr0205-render-parity/candidate-source.txt
+          git -C "$RUNNER_TEMP/pkr0205-render-base" rev-parse HEAD HEAD^{tree} > output/pkr0205-render-parity/baseline-source.txt
+          flutter pub get >/dev/null
+          cp pubspec.lock "$RUNNER_TEMP/pkr0205-render-base/pubspec.lock"
+      - name: Both runs may be historically red, but failures must be identical
+        run: |
+          set -euo pipefail
+          OUT="$GITHUB_WORKSPACE/output/pkr0205-render-parity"
+          set +e
+          flutter test test/ui_v2/act0_repair_intent_lifecycle_v1_test.dart --machine > "$OUT/candidate.jsonl" 2>&1
+          cand=$?
+          (cd "$RUNNER_TEMP/pkr0205-render-base" && flutter pub get --offline >/dev/null && flutter test test/ui_v2/act0_repair_intent_lifecycle_v1_test.dart --machine > "$OUT/base.jsonl" 2>&1)
+          base=$?
+          set -e
+          python3 - "$base" "$cand" <<'PY'
+          import collections,json,sys,pathlib
+          out=pathlib.Path('output/pkr0205-render-parity')
+          def receipts(name):
+              start={};events=collections.Counter();fails=[];errors=[]
+              for line in (out/name).read_text(errors='replace').splitlines():
+                  try: e=json.loads(line)
+                  except json.JSONDecodeError: continue
+                  if not isinstance(e,dict): continue
+                  if e.get('type')=='testStart':start[e['test']['id']]=e['test'].get('name','')
+                  elif e.get('type')=='testDone' and not e.get('hidden'):
+                      task=start.get(e.get('testID'),'')
+                      if task.startswith('loading '): continue
+                      result='skipped' if e.get('skipped') else e.get('result','missing')
+                      events[result]+=1
+                      if result!='success': fails.append((task,result))
+                  elif e.get('type')=='error': errors.append(e.get('error','')[:180])
+              return events,sorted(fails),errors
+          base=receipts('base.jsonl');cand=receipts('candidate.jsonl')
+          summary={'baseline':{'counts':dict(base[0]),'failures':base[1],'last_errors':base[2][-5:]},'candidate':{'counts':dict(cand[0]),'failures':cand[1],'last_errors':cand[2][-5:]},'exits':list(sys.argv[1:]),'parity':base[0]==cand[0] and base[1]==cand[1]}
+          (out/'parity.json').write_text(json.dumps(summary,indent=2))
+          print('REPAIR_WIDGET_BASE',dict(base[0]),base[1],'EXIT',sys.argv[1])
+          print('REPAIR_WIDGET_CANDIDATE',dict(cand[0]),cand[1],'EXIT',sys.argv[2])
+          assert base[1] and summary['parity'] and sys.argv[1]==sys.argv[2]
+          print('INHERITED_REPAIR_WIDGET_RED_PARITY; NOT CLAIMED PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pkr0205-render-parity-${{ github.run_id }}
+          path: output/pkr0205-render-parity
+          retention-days: 30
