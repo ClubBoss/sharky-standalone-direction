@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 267fadbc20b468a778be2b179b70381969a2a838
+          ref: 2cafb082818fb50c94cf5cbd5666517c89185202
           persist-credentials: false
       - uses: subosito/flutter-action@v2
         with:
@@ -27,8 +27,8 @@ jobs:
           set -euo pipefail
           mkdir -p output/pkr0205/hero-qa
           D=output/pkr0205/hero-qa
-          test "$(git rev-parse HEAD)" = 267fadbc20b468a778be2b179b70381969a2a838
-          test "$(git rev-parse HEAD^{tree})" = 87c02bffc8765e70ac4c4c256d8f98fbc6a91a96
+          test "$(git rev-parse HEAD)" = 2cafb082818fb50c94cf5cbd5666517c89185202
+          test "$(git rev-parse HEAD^{tree})" = 0e37e8e44b2cc1c39d60740d3f70a901e74ba8bc
           git rev-parse HEAD HEAD^{tree} > "$D/source.txt"
           sha256sum pubspec.lock > "$D/lock-before"
           flutter pub get
