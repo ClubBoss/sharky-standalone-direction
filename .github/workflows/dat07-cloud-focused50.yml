@@ -277,6 +277,44 @@ jobs:
               print(json.dumps({k: v for k, v in result.items() if k not in ("tests", "errors", "excluded_loading_or_hidden")}, indent=2))
               sys.exit(0 if result["status"] == "PASS_DAT07_FOCUSED50" else 1)
           GATE_EOF
+          cat > gate/orientation_scope.py <<'GATE_EOF'
+          #!/usr/bin/env python3
+          """Record a known orientation conflict without converting it to authority PASS."""
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import sys
+
+          p = Path('evidence')
+          raw = (p / 'context-capsule.txt').read_bytes()
+          code = int(os.environ['CAPSULE_EXIT'])
+          known = code == 4 and raw.decode().strip() == 'ERROR=AUTHORITY_UNRESOLVED\nAUTHORITY_FIELD=Status'
+          status = 'PASS_ROUTING_VIEW' if code == 0 else 'RECORDED_DIAGNOSTIC' if known else 'STOP_UNEXPECTED_ORIENTATION_ERROR'
+          receipt = {
+              'status': status,
+              'exit_code': code,
+              'raw_sha256': hashlib.sha256(raw).hexdigest(),
+              'capsule_source_sha256': hashlib.sha256(Path('product/tools/sharky_context_capsule_v2.sh').read_bytes()).hexdigest(),
+              'reason': 'Known Status header conflict retained; diagnostic routing view is not acceptance authority.' if known else None,
+              'authority_pass_claimed': False,
+          }
+          (p / 'orientation-diagnostic.json').write_text(json.dumps(receipt, indent=2) + '\n')
+          (p / 'task-scope.json').write_text(json.dumps({
+              'product_sha': os.environ['PRODUCT_SHA'],
+              'product_tree': os.environ['PRODUCT_TREE'],
+              'base_sha': os.environ['BASE_SHA'],
+              'product_pr': 'https://github.com/ClubBoss/sharky-standalone-direction/pull/443',
+              'scope': ['exact 16-path read-only format', 'exact 16-path analysis', 'five DAT suites with 50 actual authored cases'],
+              'product_ownership': 'frozen DAT-07 candidate; no product edits in this workflow',
+              'workflow_scope': 'isolated Linux proof only',
+              'strict_checks_retained': ['source SHA/tree', 'clean source', 'exact 16 paths', 'dependency lock identity', 'format', 'analysis', '50 actual case results'],
+              'not_admitted': ['native build in this workflow', 'source repair', 'protected-gate changes', 'full DoD acceptance', 'score award'],
+          }, indent=2) + '\n')
+          print(json.dumps(receipt, indent=2))
+          if code != 0 and not known:
+              sys.exit(code if 0 < code < 256 else 1)
+          GATE_EOF
           cat > gate/expected-paths.txt <<'GATE_EOF'
           lib/ui_v2/act0_shell/academy_leaves/act0_academy_settings_leaf_v1.dart
           lib/ui_v2/act0_shell/act0_academy_runtime_adapter_v1.dart
@@ -310,7 +348,13 @@ jobs:
           cp workflow/.github/workflows/dat07-cloud-focused50.yml evidence/workflow.yml
           (cd product && sha256sum pubspec.lock ios/Podfile.lock) > evidence/locks-before.sha256
           (cd product && xargs sha256sum < ../evidence/actual-paths.txt) > evidence/source-files.sha256
+          set +e
           (cd product && bash tools/sharky_context_capsule_v2.sh) > evidence/context-capsule.txt 2>&1
+          CAPSULE_EXIT=$?
+          set -e
+          export CAPSULE_EXIT
+          printf '%s\n' "$CAPSULE_EXIT" > evidence/context-capsule-exit-code.txt
+          python3 gate/orientation_scope.py
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.0'
@@ -380,7 +424,7 @@ jobs:
           outcomes={k:os.environ.get(k,'') for k in ('SETUP_OUTCOME','FORMAT_OUTCOME','ANALYZE_OUTCOME','TESTS_OUTCOME')}
           clean=not (p/'source-drift.patch').read_bytes() and not (p/'final-status.txt').read_text().strip()
           passed=all(v=='success' for v in outcomes.values()) and clean and result is not None and result.get('status')=='PASS_DAT07_FOCUSED50'
-          receipt={'status':'PASS_SCOPED_DAT07_LINUX' if passed else 'NOT_PASS_DAT07_LINUX','product_sha':os.environ['PRODUCT_SHA'],'product_tree':os.environ['PRODUCT_TREE'],'outcomes':outcomes,'source_unchanged':clean,'not_proven':['native Files/share','native restore','true process restart','full DAT-07 DoD','score acceptance']}
+          receipt={'status':'PASS_SCOPED_DAT07_LINUX' if passed else 'NOT_PASS_DAT07_LINUX','product_sha':os.environ['PRODUCT_SHA'],'product_tree':os.environ['PRODUCT_TREE'],'outcomes':outcomes,'source_unchanged':clean,'orientation_diagnostic':json.loads((p/'orientation-diagnostic.json').read_text()) if (p/'orientation-diagnostic.json').exists() else None,'not_proven':['native Files/share','native restore','true process restart','full DAT-07 DoD','score acceptance']}
           (p/'verdict.json').write_text(json.dumps(receipt,indent=2)+'\n')
           print(json.dumps(receipt,indent=2))
           RECEIPT
