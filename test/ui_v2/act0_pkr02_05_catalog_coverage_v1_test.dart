@@ -39,9 +39,6 @@ const _w4SixBbTrail = <String>[
 const _earlyFoldConceptIds = <String>{
   'fold_discipline_early_fold',
   'apply_utg_fold',
-  'same_hand_different_seat_same_hand_early_fold',
-  'position_apply_early_fold',
-  'position_apply_hj_fold',
   'position_checkpoint_position_checkpoint_early_fold',
 };
 
@@ -273,7 +270,7 @@ void main() {
       expect(arithmeticSizingChoices, 7);
       expect(conceptualAdmissions, 19);
       expect(actionDefinitionChoices, 6);
-      expect(earlyFoldConceptChoices, 12);
+      expect(earlyFoldConceptChoices, 6);
       expect(provedNumericTasks, _knownNumericCalls.keys.toSet());
       final out = File('output/pkr0205/catalog-coverage.json');
       out.parent.createSync(recursive: true);
