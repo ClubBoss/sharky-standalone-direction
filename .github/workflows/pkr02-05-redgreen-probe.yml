@@ -1,0 +1,124 @@
+name: PKR02-05 historical RED/GREEN diagnostic; protected pins untouched
+on:
+  push:
+    branches: [qa/pkr02-05-redgreen-probe-20261110]
+    paths: [.github/workflows/pkr02-05-redgreen-probe.yml]
+permissions:
+  contents: read
+concurrency:
+  group: pkr0205-redgreen-probe-20261110
+  cancel-in-progress: true
+jobs:
+  historical-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      PRODUCT_SHA: 727d07ad4dd19bd39da3aedac098baa0361f485b
+      PRODUCT_TREE: 5cac08e692416d4c831ea88ce668674931e2bbbb
+      BASE_SHA: fa079b6c5880814e231981a7bd5ed97df192d215
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 727d07ad4dd19bd39da3aedac098baa0361f485b
+          persist-credentials: false
+          fetch-depth: 2
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+      - name: Exact source/lock and candidate graph
+        run: |
+          set -euo pipefail
+          OUT="$PWD/output/pkr0205/compat"
+          mkdir -p "$OUT"
+          test "$(git rev-parse HEAD)" = "$PRODUCT_SHA"
+          test "$(git rev-parse HEAD^{tree})" = "$PRODUCT_TREE"
+          git rev-parse HEAD HEAD^{tree} > "$OUT/product-source.txt"
+          sha256sum pubspec.lock > "$OUT/lock-before"
+          flutter pub get
+          sha256sum pubspec.lock > "$OUT/lock-after"
+          cmp "$OUT/lock-before" "$OUT/lock-after"
+          printf '%s\n' 'PROBE ONLY: no protected pin, hash, oracle or official gate was changed.' > "$OUT/scope.txt"
+      - name: Isolated actual historical source and private strict compile-only compatibility adapter
+        run: |
+          set -euo pipefail
+          OUT="$PWD/output/pkr0205/compat"
+          BASE="$RUNNER_TEMP/pkr0205-historical-red"
+          git fetch --no-tags --depth=1 origin "$BASE_SHA"
+          git worktree add --detach "$BASE" "$BASE_SHA"
+          git -C "$BASE" rev-parse HEAD HEAD^{tree} > "$OUT/historical-source.txt"
+          test "$(git -C "$BASE" rev-parse HEAD)" = "$BASE_SHA"
+          cp lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart "$BASE/lib/ui_v2/act0_shell/"
+          cp test/support/act0_table_truth_v1.dart "$BASE/test/support/"
+          cp test/ui_v2/act0_table_truth_catalog_v1_test.dart test/ui_v2/act0_first_hand_truth_v1_test.dart test/ui_v2/act0_table_truth_falsifiers_v1_test.dart test/ui_v2/act0_table_truth_render_v1_test.dart "$BASE/test/ui_v2/"
+          cp test/ui_v2/fixtures/table_truth_learning_contract_v1.json "$BASE/test/ui_v2/fixtures/"
+          cp pubspec.lock "$BASE/pubspec.lock"
+          python3 - <<'PY'
+          import importlib.util, json, os, pathlib
+          root=pathlib.Path(os.environ['GITHUB_WORKSPACE'])
+          base=pathlib.Path(os.environ['RUNNER_TEMP'])/'pkr0205-historical-red'
+          out=root/'output/pkr0205/compat'
+          spec=importlib.util.spec_from_file_location('protected_adapter',root/'tools/table_truth_baseline_dependencies_v1.py')
+          mod=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(mod)
+          manifest=mod.complete_dependencies(root,base)
+          # Provenance-limited *private* compatibility probe. Original source
+          # files, legacy historic hashes and protected test pins stay intact.
+          price=mod.digest(root/mod.PRICE_DEPENDENCY)
+          runner=mod.digest(root/mod.GUIDE_RUNNER)
+          prior_price=mod.PRICE_CANDIDATE_SHA256
+          prior_runner=mod.GUIDE_RUNNER_SHA256
+          mod.PRICE_CANDIDATE_SHA256=price
+          mod.GUIDE_RUNNER_SHA256=runner
+          manifest['private_price_adapter']=mod.add_legacy_compile_only_shim(base,mod.LEGACY_HEAD,manifest)
+          manifest['private_guide_adapter']=mod.add_legacy_guide_constructor_shim(base,mod.LEGACY_HEAD,manifest)
+          manifest['source_commit']=os.environ['PRODUCT_SHA']
+          manifest['baseline_commit']=os.environ['BASE_SHA']
+          manifest['protected_price_expected_unchanged']=prior_price
+          manifest['private_price_actual']=price
+          manifest['protected_runner_expected_unchanged']=prior_runner
+          manifest['private_runner_actual']=runner
+          manifest['gate_status']='NOT_ACCEPTED_PROBE_ONLY'
+          manifest['source_modified']=False
+          (out/'private-compatibility-manifest.json').write_text(json.dumps(manifest,indent=2))
+          print('PRIVATE_PROBE_PRICE_SHA',price,'RUNNER_SHA',runner,'ORIGINAL_PINS',prior_price,prior_runner,flush=True)
+          PY
+          sha256sum tools/table_truth_baseline_dependencies_v1.py test/tools/table_truth_baseline_dependencies_v1_test.py > "$OUT/protected-adapter-source-sha.txt"
+          git diff --exit-code -- tools/table_truth_baseline_dependencies_v1.py test/tools/table_truth_baseline_dependencies_v1_test.py
+      - name: Genuine historical RED on old baseline (runtime shims never execute)
+        run: |
+          set -euo pipefail
+          OUT="$GITHUB_WORKSPACE/output/pkr0205/compat"
+          BASE="$RUNNER_TEMP/pkr0205-historical-red"
+          cd "$BASE"
+          flutter pub get --offline
+          set +e
+          TABLE_TRUTH_OUTPUT="$OUT/baseline" flutter test test/ui_v2/act0_table_truth_catalog_v1_test.dart test/ui_v2/act0_first_hand_truth_v1_test.dart test/ui_v2/act0_table_truth_falsifiers_v1_test.dart test/ui_v2/act0_table_truth_render_v1_test.dart --machine > "$OUT/baseline-tests.jsonl" 2>&1
+          code=$?
+          set -e
+          cd "$GITHUB_WORKSPACE"
+          if grep -q -e SHARKY_BASELINE_PRICE_ORDER_SHIM_EXECUTED -e SHARKY_BASELINE_GUIDE_SCROLL_SHIM_EXECUTED "$OUT/baseline-tests.jsonl"; then
+            echo "::error::Private compile-only shim executed: historical RED invalid"
+            exit 1
+          fi
+          python3 tools/table_truth_evidence_v1.py tests "$OUT/baseline-tests.jsonl" red "$code"
+      - name: Current candidate GREEN, unmodified validator and compare
+        run: |
+          set -euo pipefail
+          OUT="$PWD/output/pkr0205/compat"
+          set +e
+          TABLE_TRUTH_OUTPUT="$OUT/candidate" flutter test test/ui_v2/act0_table_truth_catalog_v1_test.dart test/ui_v2/act0_first_hand_truth_v1_test.dart test/ui_v2/act0_table_truth_mutation_v1_test.dart test/ui_v2/act0_table_truth_render_v1_test.dart test/ui_v2/act0_table_truth_falsifiers_v1_test.dart test/ui_v2/act0_w11_poker_source_truth_v1_test.dart test/ui_v2/act0_source_scope_v1_test.dart test/ui_v2/act0_source_scope_runner_v1_test.dart test/ui_v2/act0_table_choreography_contract_v1_test.dart test/ui_v2/act0_street_replay_contract_v1_test.dart --machine > "$OUT/candidate-tests.jsonl" 2>&1
+          code=$?
+          set -e
+          python3 tools/table_truth_evidence_v1.py tests "$OUT/candidate-tests.jsonl" green "$code"
+          python3 tools/table_truth_evidence_v1.py compare "$OUT"
+      - name: Retain exact source and full unmodified gate diagnostics
+        if: always()
+        run: |
+          echo 'Private probe only; historical candidate digest pins and formal Table Truth gate still require independent custodian approval.' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pkr0205-historical-redgreen-probe
+          path: output/pkr0205/compat/
+          retention-days: 5
