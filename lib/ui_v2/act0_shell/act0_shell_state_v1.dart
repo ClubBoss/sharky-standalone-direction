@@ -9390,9 +9390,7 @@ Act0RunnerStateV1 _w1ActionVocabularyRunnerV1(
         isCorrect: option.isCorrect,
         preferredLabel: option.preferredLabel,
         betterAnswerLabel: option.betterAnswerLabel,
-        quality: option.isCorrect
-            ? Act0FeedbackQualityV1.correct
-            : Act0FeedbackQualityV1.wrong,
+        quality: option.quality,
         feedbackTitle: option.isCorrect
             ? 'Correct action meaning.'
             : 'Read the action meaning.',
@@ -9403,13 +9401,18 @@ Act0RunnerStateV1 _w1ActionVocabularyRunnerV1(
           'raise' => 'Raise increases the wager above its current level.',
           _ => 'This question tests action words, not a chip commitment.',
         },
+        repairFocusSeatIds: option.repairFocusSeatIds,
+        repairFocusCardIds: option.repairFocusCardIds,
+        repairFocusLabels: option.repairFocusLabels,
       ),
   ],
   feedbackTitle: 'Action meaning recognized.',
   feedbackReason:
       'This checks what an action means, not whether a sized wager is legal.',
   table: source.table.copyWith(
-    scope: Act0TableScopeV1.explanation,
+    // Existing Table Truth classifies these as a played-hand illustration.
+    // Empty price/pot/history is deliberately UNPROVED, never a legal wager.
+    scope: Act0TableScopeV1.playedHand,
     potLabel: '',
     toCallLabel: '',
     centerLabel: 'Action meanings',
