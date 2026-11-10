@@ -250,8 +250,8 @@ const _placementActionDefinitionSourcesV1 = <String, Map<String, String>>{
 };
 
 // The five legacy World 1 word-definition tasks no longer display or grade
-// unverified chip amounts. A frozen task/question/choice/grade and explicitly
-// non-played table are required; the rule never certifies bet legality.
+// unverified chip amounts. A frozen task/question/choice/grade and an
+// unpriced played-hand illustration are required; no legal wager is certified.
 const _w1ActionWordSourcesV1 = <String, (String, String)>{
   'actions_theory': (
     'Which action increases what opponents must match?',
