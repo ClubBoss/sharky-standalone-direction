@@ -117,10 +117,19 @@ const _actionDefinitionChoices = <(String, String), String>{
 // This exception expires if the question, choice, hero cards, active seat,
 // blind-start history, or price projection changes.
 const _earlyFoldSourceQuestionsV1 = <String, (String, String, String, String)>{
-  'fold_discipline_early_fold': ('What is the clean action?', 'utg', 'Js', '8d'),
+  'fold_discipline_early_fold': (
+    'What is the clean action?',
+    'utg',
+    'Js',
+    '8d',
+  ),
   'apply_utg_fold': ('What is the clean action?', 'utg', '8s', '4d'),
-  'position_checkpoint_position_checkpoint_early_fold':
-      ('What is the disciplined action?', 'utg', 'Ac', '9d'),
+  'position_checkpoint_position_checkpoint_early_fold': (
+    'What is the disciplined action?',
+    'utg',
+    'Ac',
+    '9d',
+  ),
 };
 
 bool _exactEarlyFoldStrategicReadV1(
@@ -167,8 +176,7 @@ bool _exactEarlyFoldStrategicReadV1(
   ];
   if (table.actionTrail.length != trail.length) return false;
   for (var i = 0; i < trail.length; i++) {
-    if (table.actionTrail[i].isNote ||
-        table.actionTrail[i].label != trail[i]) {
+    if (table.actionTrail[i].isNote || table.actionTrail[i].label != trail[i]) {
       return false;
     }
   }
