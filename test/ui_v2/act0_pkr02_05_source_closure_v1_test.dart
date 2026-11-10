@@ -569,9 +569,6 @@ void main() {
     const ids = <String>{
       'fold_discipline_early_fold',
       'apply_utg_fold',
-      'same_hand_different_seat_same_hand_early_fold',
-      'position_apply_early_fold',
-      'position_apply_hj_fold',
       'position_checkpoint_position_checkpoint_early_fold',
     };
     for (final taskId in ids) {
@@ -652,5 +649,39 @@ void main() {
       );
     }
   );
+
+  test('disputed ATo UTG and KTo HJ strategic grades remain source held', () {
+    final tasks = Act0ShellStateV1.sample.worlds
+        .expand((world) => world.lessons)
+        .expand((lesson) => lesson.taskList)
+        .toList();
+    for (final taskId in <String>{
+      'same_hand_different_seat_same_hand_early_fold',
+      'position_apply_early_fold',
+      'position_apply_hj_fold',
+    }) {
+      final task = tasks.singleWhere((item) => item.taskId == taskId);
+      for (final option in task.runner.options) {
+        final result = act0BettingPriceForOptionV1(
+          task.runner.table,
+          option,
+          taskId: taskId,
+          question: task.runner.question,
+        );
+        expect(result.appliesToWager, isTrue, reason: taskId);
+        expect(result.sourceReady, isFalse, reason: taskId);
+        expect(
+          act0BettingPriceBlocksAuthoredSuccessV1(
+            task.runner.table,
+            option,
+            taskId: taskId,
+            question: task.runner.question,
+          ),
+          isTrue,
+          reason: taskId,
+        );
+      }
+    }
+  });
 
 }
