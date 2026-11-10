@@ -1,0 +1,64 @@
+name: PKR0205 ungraded Welcome exact source proof
+on:
+  push:
+    branches: [qa/pkr0205-welcome-en14pro-20261110]
+permissions:
+  contents: read
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 8ae1b7d4d1a9d8b1d5401c560c1094e669ebd4b1
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+      - name: Freeze exact product identity and locked dependencies
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 8ae1b7d4d1a9d8b1d5401c560c1094e669ebd4b1
+          test "$(git rev-parse HEAD^{tree})" = 62f8dc0b1c42c787a38b1bf2604ec19175512d48
+          mkdir -p output/pkr0205-welcome
+          git rev-parse HEAD HEAD^{tree} > output/pkr0205-welcome/identity.txt
+          sha256sum pubspec.lock > output/pkr0205-welcome/lock-before.txt
+          flutter pub get > output/pkr0205-welcome/pub-get.log 2>&1
+          sha256sum pubspec.lock > output/pkr0205-welcome/lock-after.txt
+          cmp output/pkr0205-welcome/lock-before.txt output/pkr0205-welcome/lock-after.txt
+      - name: Focused exact-source format and analysis
+        run: |
+          set -euo pipefail
+          dart format --output=none --set-exit-if-changed lib/ui_v2/act0_shell/act0_welcome_shell_v1.dart test/ui_v2/act0_welcome_price_source_v1_test.dart
+          dart analyze lib/ui_v2/act0_shell/act0_welcome_shell_v1.dart test/ui_v2/act0_welcome_price_source_v1_test.dart
+      - name: Ungraded Welcome all three choices and actual first-user path
+        run: |
+          set -euo pipefail
+          set +e
+          flutter test test/ui_v2/act0_welcome_price_source_v1_test.dart test/ui_v2/act0_learner_trust_continuation_v1_test.dart --machine > output/pkr0205-welcome/green.jsonl 2>&1
+          code=$?
+          set -e
+          python3 - "$code" <<'PY'
+          import sys,json,collections,pathlib
+          events=[]
+          for line in pathlib.Path('output/pkr0205-welcome/green.jsonl').read_text().splitlines():
+              try:e=json.loads(line)
+              except json.JSONDecodeError:continue
+              if isinstance(e,dict):events.append(e)
+          starts={e['test']['id']:e['test']['name'] for e in events if e.get('type')=='testStart'}
+          done=[e for e in events if e.get('type')=='testDone' and not e.get('hidden') and not starts.get(e.get('testID'),'').startswith('loading ')]
+          counts=collections.Counter(e.get('result') for e in done)
+          failures=[starts.get(e.get('testID')) for e in done if e.get('result')!='success']
+          wanted=('Welcome fold only acknowledges', 'Welcome check only acknowledges', 'Welcome call only acknowledges', 'Placement Welcome restart Home launches')
+          passed=[starts.get(e.get('testID'),'') for e in done if e.get('result')=='success']
+          print('WELCOME_SOURCE_PROOF',dict(counts),'failures',failures,'named_pass',[x for x in wanted if any(p.startswith(x) for p in passed)],'exit',sys.argv[1])
+          assert int(sys.argv[1])==0 and not failures and all(any(p.startswith(x) for p in passed) for x in wanted)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pkr0205-welcome-source-${{ github.run_id }}
+          path: output/pkr0205-welcome/
+          retention-days: 30
