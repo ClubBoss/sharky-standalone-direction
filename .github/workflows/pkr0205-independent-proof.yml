@@ -1,7 +1,7 @@
 name: PKR0205 independent exact source and Table Truth
 on:
   push:
-    branches: [qa/pkr0205-independent-proof-20261110]
+    branches: [qa/pkr0205-integration-proof-20261110]
     paths: [.github/workflows/pkr0205-independent-proof.yml]
 permissions:
   contents: read
@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: dc479114063519597e99bc08b69c1ef1eebcfdf5
+          ref: f49777aa3793d43a9015a77fb85f14cfa689f7bd
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.0'
@@ -84,7 +84,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: table-truth-dc479114063519597e99bc08b69c1ef1eebcfdf5
+          name: table-truth-f49777aa3793d43a9015a77fb85f14cfa689f7bd
           path: output/table_truth
   pkr-source:
     runs-on: ubuntu-latest
@@ -92,7 +92,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: dc479114063519597e99bc08b69c1ef1eebcfdf5
+          ref: f49777aa3793d43a9015a77fb85f14cfa689f7bd
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.0'
@@ -101,8 +101,8 @@ jobs:
       - name: Freeze exact product and locked dependency graph
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = dc479114063519597e99bc08b69c1ef1eebcfdf5
-          test "$(git rev-parse HEAD^{tree})" = da99ca17795eddf6dedb199d9a0363968367da43
+          test "$(git rev-parse HEAD)" = f49777aa3793d43a9015a77fb85f14cfa689f7bd
+          test "$(git rev-parse HEAD^{tree})" = c67718a7a53c50298901a0e36a21419e4b41eb77
           mkdir -p output/pkr0205-independent
           git rev-parse HEAD HEAD^{tree} > output/pkr0205-independent/product.txt
           sha256sum pubspec.lock > output/pkr0205-independent/lock-before.txt
@@ -115,6 +115,12 @@ jobs:
           FILES="lib/ui_v2/act0_shell/act0_betting_price_contract_v1.dart lib/ui_v2/act0_shell/act0_street_replay_contract_v1.dart lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart test/ui_v2/act0_betting_price_contract_v1_test.dart test/ui_v2/act0_pkr02_05_runtime_legality_v1_test.dart test/ui_v2/act0_pkr02_05_source_closure_v1_test.dart test/ui_v2/act0_pkr02_05_catalog_coverage_v1_test.dart test/ui_v2/act0_pkr02_05_early_fold_profile_v1_test.dart test/ui_v2/act0_pkr02_05_placement_definition_v1_test.dart"
           dart format --output=none --set-exit-if-changed $FILES | tee output/pkr0205-independent/format.txt
           dart analyze $FILES | tee output/pkr0205-independent/analyze.txt
+      - name: Save canonical format for failed exact-source gate
+        if: failure()
+        run: |
+          mkdir -p output/pkr0205-independent/canonical
+          dart format lib/ui_v2/act0_shell/act0_betting_price_contract_v1.dart test/ui_v2/act0_pkr02_05_placement_definition_v1_test.dart || true
+          cp --parents lib/ui_v2/act0_shell/act0_betting_price_contract_v1.dart test/ui_v2/act0_pkr02_05_placement_definition_v1_test.dart output/pkr0205-independent/canonical/
       - name: Unchanged original candidate reproduces independent scene falsifier
         run: |
           set -euo pipefail
@@ -166,7 +172,7 @@ jobs:
           mutations=[json.loads(e['message'][9:]) for e in events if e.get('type')=='print' and e.get('message','').startswith('MUTATION ')]
           errors=[e.get('error','') for e in events if e.get('type')=='error']
           print('EXACT_PRODUCT_GREEN',dict(counts),'EXIT',sys.argv[1],'MUTATIONS',len(mutations),'ERRORS',errors[-5:])
-          assert int(sys.argv[1])==0 and counts=={'success':69} and not errors,counts
+          assert int(sys.argv[1])==0 and counts=={'success':71} and not errors,counts
           assert len(mutations)==36 and all(m['blocked'] for m in mutations)
           PY
       - name: Accepted EN14Pro tooling controls
@@ -178,7 +184,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: pkr0205-independent-source-dc479114
+          name: pkr0205-integration-source-f49777aa
           path: |
             output/pkr0205-independent/
             output/pkr0205/catalog-coverage.json
