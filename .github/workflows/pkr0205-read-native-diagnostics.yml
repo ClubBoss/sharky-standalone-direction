@@ -33,6 +33,10 @@ jobs:
           print('MATCHES',len(matches))
           for i,line in matches[-105:]:
               print(f'NATIVE_DIAGNOSTIC_LINE_{i+1}: {line[:700]}')
+          print('UI_AFTER_LAST_PLACEMENT_CHOICE_START:')
+          for i in range(590,min(716,len(lines))):
+              print(f'PLACEMENT_CONTEXT_{i+1}: {lines[i][:1400]}')
+          print('UI_AFTER_LAST_PLACEMENT_CHOICE_END')
           print('NATIVE_TEST_LOG_LAST_65:')
           for i,line in enumerate(lines[-65:],len(lines)-64):
               print(f'NATIVE_TEST_LOG_{i}: {line[:700]}')
