@@ -58,12 +58,13 @@ jobs:
                   elif e.get('type')=='error': errors.append(e.get('error','')[:180])
               return events,sorted(fails),errors
           base=receipts('base.jsonl');cand=receipts('candidate.jsonl')
-          summary={'baseline':{'counts':dict(base[0]),'failures':base[1],'last_errors':base[2][-5:]},'candidate':{'counts':dict(cand[0]),'failures':cand[1],'last_errors':cand[2][-5:]},'exits':list(sys.argv[1:]),'parity':base[0]==cand[0] and base[1]==cand[1]}
+          summary={'baseline':{'counts':dict(base[0]),'failures':base[1],'last_errors':base[2][-5:]},'candidate':{'counts':dict(cand[0]),'failures':cand[1],'last_errors':cand[2][-5:]},'exits':list(sys.argv[1:]),'no_new_red':set(cand[1]).issubset(set(base[1])) and cand[0].get('success',0)>=base[0].get('success',0),'resolved':sorted(set(base[1])-set(cand[1]))}
           (out/'parity.json').write_text(json.dumps(summary,indent=2))
           print('REPAIR_WIDGET_BASE',dict(base[0]),base[1],'EXIT',sys.argv[1])
           print('REPAIR_WIDGET_CANDIDATE',dict(cand[0]),cand[1],'EXIT',sys.argv[2])
-          assert base[1] and summary['parity'] and sys.argv[1]==sys.argv[2]
-          print('INHERITED_REPAIR_WIDGET_RED_PARITY; NOT CLAIMED PASS')
+          assert base[1] and summary['no_new_red'] and sys.argv[1]==sys.argv[2]
+          assert sum(base[0].values())==sum(cand[0].values()),'TEST_SET_CHANGED'
+          print('INHERITED_REPAIR_WIDGET_NO_NEW_RED; RESOLVED=',summary['resolved'],'STILL_NOT_FULL_PASS')
           PY
       - uses: actions/upload-artifact@v4
         if: always()
