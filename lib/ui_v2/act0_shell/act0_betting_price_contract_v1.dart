@@ -253,9 +253,18 @@ const _placementActionDefinitionSourcesV1 = <String, Map<String, String>>{
 // unverified chip amounts. A frozen task/question/choice/grade and explicitly
 // non-played table are required; the rule never certifies bet legality.
 const _w1ActionWordSourcesV1 = <String, (String, String)>{
-  'actions_theory': ('Which action increases what opponents must match?', 'raise'),
-  'actions_fold_drill': ('Which action ends your participation in the hand?', 'fold'),
-  'actions_call_drill': ('Which action matches a wager without increasing it?', 'call'),
+  'actions_theory': (
+    'Which action increases what opponents must match?',
+    'raise',
+  ),
+  'actions_fold_drill': (
+    'Which action ends your participation in the hand?',
+    'fold',
+  ),
+  'actions_call_drill': (
+    'Which action matches a wager without increasing it?',
+    'call',
+  ),
   'actions_raise_drill': ('Which action increases the current wager?', 'raise'),
   'actions_review': ('Which action adds more than a call?', 'raise'),
 };
