@@ -71,7 +71,7 @@ final class PKR0205NativeUITests: XCTestCase {
             }
         }
         return app.buttons.matching(NSPredicate(format: "label == %@ OR label BEGINSWITH %@", text, text + "\n"))
-            .allElementsBoundByIndex.filter { $0.exists && $0.isHittable && $0.frame.midY < app.frame.height * 0.85 }
+            .allElementsBoundByIndex.filter { $0.exists && $0.isEnabled && $0.isHittable }
     }
 
     private func select(_ text: String) {
