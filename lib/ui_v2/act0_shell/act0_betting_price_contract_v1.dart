@@ -189,6 +189,8 @@ Act0BettingPriceResultV1 act0BettingPriceForOptionV1(
       _actionDefinitionQuestions[taskId] == question &&
       _actionDefinitionChoices[(taskId, option.id)] == option.label &&
       table.scope == Act0TableScopeV1.playedHand &&
+      (table.activeSeatId?.trim().isEmpty ?? true) &&
+      (table.heroSeatId?.trim().isEmpty ?? true) &&
       table.streetLabel == 'Flop' &&
       table.potLabel == 'Pot 3 BB' &&
       table.toCallLabel.trim().isEmpty &&
