@@ -183,7 +183,7 @@ void main() {
                 }
               }
               if (typedSizing) {
-                // All seven canonical presets lack actor stack capacity today.
+                // A newly enabled sizing control must have real stack evidence.
                 expect(result.appliesToWager, isTrue);
                 expect(result.sourceReady, isFalse);
                 expect(blocked, isTrue);
@@ -196,6 +196,7 @@ void main() {
                 'source_quality': option.quality.name,
                 'source_rationale': option.feedbackReason,
                 'typed_sizing': typedSizing,
+                'arithmetic_sizing': arithmeticSizing,
                 'numeric_wager': numeric,
                 'parser_applicable': result.appliesToWager,
                 'truth': result.truth.name,
@@ -250,7 +251,8 @@ void main() {
       }
       expect(numericChoices, 65);
       expect(correctNumericChoices, 29);
-      expect(sizingChoices, 7);
+      expect(sizingChoices, 0);
+      expect(arithmeticSizingChoices, 7);
       expect(conceptualAdmissions, 19);
       expect(actionDefinitionChoices, 6);
       expect(provedNumericTasks, _knownNumericCalls.keys.toSet());
@@ -265,11 +267,12 @@ void main() {
           'numeric_choices': numericChoices,
           'numeric_correct': correctNumericChoices,
           'sizing_choices': sizingChoices,
+          'arithmetic_sizing_choices': arithmeticSizingChoices,
           'conceptual_answer_admissions': conceptualAdmissions,
           'action_definition_admissions': actionDefinitionChoices,
           'independent_numeric_receipts': _knownNumericCalls.keys.toList(),
           'limits':
-              'Non-numeric directions need explicit author intent. No absent stack/history/pot is fabricated. Strategic grades are not legality oracles.',
+              'The seven W4 pot-fraction choices are arithmetic, not an executable sizing lane. Other numeric wagers still need complete source stacks/order/pot. No facts or strategic grades are inferred.',
           'rows': rows,
         }),
       );
