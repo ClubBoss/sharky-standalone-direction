@@ -249,6 +249,57 @@ const _placementActionDefinitionSourcesV1 = <String, Map<String, String>>{
       },
 };
 
+// The five legacy World 1 word-definition tasks no longer display or grade
+// unverified chip amounts. A frozen task/question/choice/grade and explicitly
+// non-played table are required; the rule never certifies bet legality.
+const _w1ActionWordSourcesV1 = <String, (String, String)>{
+  'actions_theory': ('Which action increases what opponents must match?', 'raise'),
+  'actions_fold_drill': ('Which action ends your participation in the hand?', 'fold'),
+  'actions_call_drill': ('Which action matches a wager without increasing it?', 'call'),
+  'actions_raise_drill': ('Which action increases the current wager?', 'raise'),
+  'actions_review': ('Which action adds more than a call?', 'raise'),
+};
+const _w1ActionWordLabelsV1 = <String, String>{
+  'fold': 'Fold',
+  'call': 'Call',
+  'raise': 'Raise',
+};
+
+bool _exactW1ActionWordV1(
+  Act0TableStateV1 table,
+  Act0RunnerOptionV1 option, {
+  required bool sizingBet,
+  required String? taskId,
+  required String? question,
+}) {
+  final source = _w1ActionWordSourcesV1[taskId];
+  if (source == null ||
+      sizingBet ||
+      question != source.$1 ||
+      option.amountLabel.trim().isNotEmpty ||
+      _w1ActionWordLabelsV1[option.id] != option.label ||
+      option.isCorrect != (option.id == source.$2) ||
+      option.quality !=
+          (option.id == source.$2
+              ? Act0FeedbackQualityV1.correct
+              : Act0FeedbackQualityV1.wrong) ||
+      table.scope != Act0TableScopeV1.explanation ||
+      table.tableFormat != Act0TableFormatV1.sixMax ||
+      table.playerCount != 6 ||
+      table.seats.length != 6 ||
+      table.potLabel.trim().isNotEmpty ||
+      table.toCallLabel.trim().isNotEmpty ||
+      table.actionTrail.isNotEmpty) {
+    return false;
+  }
+  return table.seats.every(
+    (seat) =>
+        seat.bet == null &&
+        seat.currentBetLabel == null &&
+        seat.blindAmountLabel == null,
+  );
+}
+
 bool _exactPlacementActionDefinitionV1(
   Act0TableStateV1 table,
   Act0RunnerOptionV1 option, {
@@ -413,6 +464,25 @@ Act0BettingPriceResultV1 act0BettingPriceForOptionV1(
     return const Act0BettingPriceResultV1(
       _unknown,
       'changed_placement_action_source',
+    );
+  }
+  if (_w1ActionWordSourcesV1.containsKey(taskId)) {
+    if (_exactW1ActionWordV1(
+      table,
+      option,
+      sizingBet: sizingBet,
+      taskId: taskId,
+      question: question,
+    )) {
+      return const Act0BettingPriceResultV1(
+        _unknown,
+        'source_w1_action_word',
+        appliesToWager: false,
+      );
+    }
+    return const Act0BettingPriceResultV1(
+      _unknown,
+      'changed_w1_action_word_source',
     );
   }
   if (table.scope == Act0TableScopeV1.orientation ||
