@@ -1,0 +1,185 @@
+name: PKR0205 independent exact source and Table Truth
+on:
+  push:
+    branches: [qa/pkr0205-independent-proof-20261110]
+    paths: [.github/workflows/pkr0205-independent-proof.yml]
+permissions:
+  contents: read
+concurrency:
+  group: pkr0205-independent-proof-20261110
+  cancel-in-progress: false
+jobs:
+  catalog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fdff8a471817f9063b15e1a6a43c92eb4e2204a7
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+      - name: Resolve locked candidate graph and record source identity
+        run: |
+          mkdir -p output/table_truth
+          git rev-parse HEAD HEAD^{tree} > output/table_truth/candidate-source.txt
+          sha256sum pubspec.lock > output/table_truth/lock-before.txt
+          flutter pub get
+          sha256sum pubspec.lock > output/table_truth/lock-resolved.txt
+      - name: Check exact-source formatting
+        run: |
+          FILES="lib/ui_v2/act0_shell/act0_shell_state_v1.dart lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart lib/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart test/support/act0_table_truth_v1.dart test/ui_v2/act0_table_truth_catalog_v1_test.dart test/ui_v2/act0_table_truth_falsifiers_v1_test.dart test/ui_v2/act0_source_scope_runner_v1_test.dart test/ui_v2/act0_source_scope_v1_test.dart test/ui_v2/act0_first_hand_truth_v1_test.dart test/ui_v2/act0_table_truth_mutation_v1_test.dart test/ui_v2/act0_table_truth_render_v1_test.dart"
+          dart format --output=none --set-exit-if-changed $FILES
+          mkdir -p output/table_truth/formatted
+          cp --parents $FILES output/table_truth/formatted
+      - name: Check baseline dependency adapter controls
+        run: python3 test/tools/table_truth_baseline_dependencies_v1_test.py
+      - name: Genuine RED on unchanged merged-main source
+        env:
+          BASE_SHA: fa079b6c5880814e231981a7bd5ed97df192d215
+        run: |
+          set -euo pipefail
+          BASE="$RUNNER_TEMP/table-truth-baseline"
+          OUT="$GITHUB_WORKSPACE/output/table_truth"
+          git fetch --no-tags --depth=1 origin "$BASE_SHA"
+          git worktree add --detach "$BASE" "$BASE_SHA"
+          git -C "$BASE" rev-parse HEAD HEAD^{tree} > "$OUT/baseline-source.txt"
+          # Visibility-only adapter: identical baseline renderer behavior, with
+          # its final private projections exposed to the same catalog guard.
+          cp lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart "$BASE/lib/ui_v2/act0_shell/"
+          cp test/support/act0_table_truth_v1.dart "$BASE/test/support/"
+          cp test/ui_v2/act0_table_truth_catalog_v1_test.dart test/ui_v2/act0_first_hand_truth_v1_test.dart test/ui_v2/act0_table_truth_falsifiers_v1_test.dart test/ui_v2/act0_table_truth_render_v1_test.dart "$BASE/test/ui_v2/"
+          cp test/ui_v2/fixtures/table_truth_learning_contract_v1.json "$BASE/test/ui_v2/fixtures/"
+          cp pubspec.lock "$BASE/pubspec.lock"
+          # Complete only missing imports, plus the exact-pinned historical
+          # Guide constructor shim; preserve all historical rendering bodies.
+          python3 tools/table_truth_baseline_dependencies_v1.py --baseline "$BASE" --expected-head "$BASE_SHA" --output "$OUT/baseline-dependencies.json"
+          sha256sum lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart > "$OUT/baseline-visibility-adapter.txt"
+          cd "$BASE"
+          flutter pub get --offline
+          set +e
+          TABLE_TRUTH_OUTPUT="$OUT/baseline" flutter test test/ui_v2/act0_table_truth_catalog_v1_test.dart test/ui_v2/act0_first_hand_truth_v1_test.dart test/ui_v2/act0_table_truth_falsifiers_v1_test.dart test/ui_v2/act0_table_truth_render_v1_test.dart --machine > "$OUT/baseline-tests.jsonl" 2>&1
+          code=$?
+          set -e
+          cd "$GITHUB_WORKSPACE"
+          # Reject price-shim invocation or unsupported Guide scroll opt-in.
+          # It is not a waiver and must not manufacture a synthetic RED.
+          if grep -q -e SHARKY_BASELINE_PRICE_ORDER_SHIM_EXECUTED -e SHARKY_BASELINE_GUIDE_SCROLL_SHIM_EXECUTED "$OUT/baseline-tests.jsonl"; then
+            echo "::error::Historical compatibility shim was executed; RED evidence invalid"
+            exit 1
+          fi
+          python3 tools/table_truth_evidence_v1.py tests "$OUT/baseline-tests.jsonl" red "$code"
+      - name: GREEN catalog, falsifiers and affected source/render contracts
+        run: |
+          set -euo pipefail
+          OUT="$GITHUB_WORKSPACE/output/table_truth"
+          set +e
+          TABLE_TRUTH_OUTPUT="$OUT/candidate" flutter test test/ui_v2/act0_table_truth_catalog_v1_test.dart test/ui_v2/act0_first_hand_truth_v1_test.dart test/ui_v2/act0_table_truth_mutation_v1_test.dart test/ui_v2/act0_table_truth_render_v1_test.dart test/ui_v2/act0_table_truth_falsifiers_v1_test.dart test/ui_v2/act0_w11_poker_source_truth_v1_test.dart test/ui_v2/act0_source_scope_v1_test.dart test/ui_v2/act0_source_scope_runner_v1_test.dart test/ui_v2/act0_table_choreography_contract_v1_test.dart test/ui_v2/act0_street_replay_contract_v1_test.dart --machine > "$OUT/candidate-tests.jsonl" 2>&1
+          code=$?
+          set -e
+          python3 tools/table_truth_evidence_v1.py tests "$OUT/candidate-tests.jsonl" green "$code"
+          python3 tools/table_truth_evidence_v1.py compare "$OUT"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: table-truth-fdff8a471817f9063b15e1a6a43c92eb4e2204a7
+          path: output/table_truth
+  pkr-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fdff8a471817f9063b15e1a6a43c92eb4e2204a7
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: true
+      - name: Freeze exact product and locked dependency graph
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = fdff8a471817f9063b15e1a6a43c92eb4e2204a7
+          test "$(git rev-parse HEAD^{tree})" = 12ada8e1839e16dfe1651d2c94511c4085c17e4e
+          mkdir -p output/pkr0205-independent
+          git rev-parse HEAD HEAD^{tree} > output/pkr0205-independent/product.txt
+          sha256sum pubspec.lock > output/pkr0205-independent/lock-before.txt
+          flutter pub get
+          sha256sum pubspec.lock > output/pkr0205-independent/lock-after.txt
+          cmp output/pkr0205-independent/lock-before.txt output/pkr0205-independent/lock-after.txt
+      - name: Exact scoped format and analyze
+        run: |
+          set -euo pipefail
+          FILES="lib/ui_v2/act0_shell/act0_betting_price_contract_v1.dart lib/ui_v2/act0_shell/act0_street_replay_contract_v1.dart lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart test/ui_v2/act0_betting_price_contract_v1_test.dart test/ui_v2/act0_pkr02_05_runtime_legality_v1_test.dart test/ui_v2/act0_pkr02_05_source_closure_v1_test.dart test/ui_v2/act0_pkr02_05_catalog_coverage_v1_test.dart test/ui_v2/act0_pkr02_05_early_fold_profile_v1_test.dart"
+          dart format --output=none --set-exit-if-changed $FILES | tee output/pkr0205-independent/format.txt
+          dart analyze $FILES | tee output/pkr0205-independent/analyze.txt
+      - name: Unchanged original candidate reproduces independent scene falsifier
+        run: |
+          set -euo pipefail
+          OUT="$GITHUB_WORKSPACE/output/pkr0205-independent"
+          BASE="$RUNNER_TEMP/pkr0205-pre-repair"
+          git fetch --no-tags --depth=1 origin 727d07ad4dd19bd39da3aedac098baa0361f485b
+          git worktree add --detach "$BASE" 727d07ad4dd19bd39da3aedac098baa0361f485b
+          cp test/ui_v2/act0_pkr02_05_early_fold_profile_v1_test.dart "$BASE/test/ui_v2/"
+          cd "$BASE"
+          git rev-parse HEAD HEAD^{tree} > "$OUT/scene-red-source.txt"
+          flutter pub get --offline
+          set +e
+          flutter test test/ui_v2/act0_pkr02_05_early_fold_profile_v1_test.dart --machine > "$OUT/scene-red.jsonl" 2>&1
+          result=$?
+          set -e
+          python3 - "$OUT/scene-red.jsonl" "$result" <<'PY'
+          import json,pathlib,collections,sys
+          events=[]
+          for line in pathlib.Path(sys.argv[1]).read_text().splitlines():
+              try: e=json.loads(line)
+              except json.JSONDecodeError: continue
+              if isinstance(e,dict): events.append(e)
+          starts={e['test']['id']:e['test']['name'] for e in events if e.get('type')=='testStart'}
+          counts=collections.Counter(e.get('result') for e in events if e.get('type')=='testDone' and not e.get('hidden') and not starts.get(e.get('testID'),'').startswith('loading '))
+          errors=[e.get('error','') for e in events if e.get('type')=='error']
+          mutations=[json.loads(e['message'][9:]) for e in events if e.get('type')=='print' and e.get('message','').startswith('MUTATION ')]
+          print('SCENE_RED',dict(counts),'EXIT',sys.argv[2],'UNSAFE_MUTATIONS',sum(not m['blocked'] for m in mutations))
+          assert int(sys.argv[2])!=0 and counts=={'failure':1},counts
+          assert len(mutations)==36 and all(not m['blocked'] for m in mutations),mutations
+          assert any('Material scene changes' in e for e in errors),errors
+          assert not any('Failed to load' in e or 'Compilation failed' in e for e in errors),errors
+          PY
+      - name: Corrected source and real Runner regressions
+        run: |
+          set -euo pipefail
+          set +e
+          flutter test test/ui_v2/act0_betting_price_contract_v1_test.dart test/ui_v2/act0_pkr02_05_runtime_legality_v1_test.dart test/ui_v2/act0_pkr02_05_source_closure_v1_test.dart test/ui_v2/act0_pkr02_05_catalog_coverage_v1_test.dart test/ui_v2/act0_pkr02_05_early_fold_profile_v1_test.dart --machine > output/pkr0205-independent/green.jsonl 2>&1
+          result=$?
+          set -e
+          python3 - "$result" <<'PY'
+          import json,pathlib,collections,sys
+          events=[]
+          for line in pathlib.Path('output/pkr0205-independent/green.jsonl').read_text().splitlines():
+              try:e=json.loads(line)
+              except json.JSONDecodeError:continue
+              if isinstance(e,dict):events.append(e)
+          starts={e['test']['id']:e['test']['name'] for e in events if e.get('type')=='testStart'}
+          counts=collections.Counter(('skipped' if e.get('skipped') else e.get('result')) for e in events if e.get('type')=='testDone' and not e.get('hidden') and not starts.get(e.get('testID'),'').startswith('loading '))
+          mutations=[json.loads(e['message'][9:]) for e in events if e.get('type')=='print' and e.get('message','').startswith('MUTATION ')]
+          errors=[e.get('error','') for e in events if e.get('type')=='error']
+          print('EXACT_PRODUCT_GREEN',dict(counts),'EXIT',sys.argv[1],'MUTATIONS',len(mutations),'ERRORS',errors[-5:])
+          assert int(sys.argv[1])==0 and counts=={'success':66} and not errors,counts
+          assert len(mutations)==36 and all(m['blocked'] for m in mutations)
+          PY
+      - name: Accepted EN14Pro tooling controls
+        run: |
+          set -euo pipefail
+          python3 test/tools/sharky_en14pro_ci_route_v1_test.py -v 2>&1 | tee output/pkr0205-independent/ci-route-controls.txt
+          node --check tools/sharky_phone_lab_browser_probe_v1.mjs
+          git diff --exit-code -- lib test tools .github pubspec.lock
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pkr0205-independent-source-fdff8a47
+          path: |
+            output/pkr0205-independent/
+            output/pkr0205/catalog-coverage.json
+          retention-days: 30
