@@ -69,6 +69,7 @@ void main() {
       var sizingChoices = 0;
       var arithmeticSizingChoices = 0;
       var conceptualAdmissions = 0;
+      var actionDefinitionChoices = 0;
       final provedNumericTasks = <String>{};
       for (final world in Act0ShellStateV1.sample.worlds) {
         for (final lesson in world.lessons) {
@@ -114,13 +115,25 @@ void main() {
                 option,
                 sizingBet: typedSizing,
                 taskId: task.taskId,
+                question: runner.question,
               );
               final blocked = act0BettingPriceBlocksAuthoredSuccessV1(
                 runner.table,
                 option,
                 sizingBet: typedSizing,
                 taskId: task.taskId,
+                question: runner.question,
               );
+              if (result.reason == 'source_action_definition') {
+                actionDefinitionChoices++;
+                expect(
+                  task.taskId,
+                  isIn(const ['actions_legal_context', 'actions_check_drill']),
+                );
+                expect(option.amountLabel, isEmpty);
+                expect(typedSizing, isFalse);
+                expect(blocked, isFalse);
+              }
               if (result.reason == 'source_conceptual_answer') {
                 conceptualAdmissions++;
                 expect(option.amountLabel, isEmpty);
@@ -239,6 +252,7 @@ void main() {
       expect(correctNumericChoices, 29);
       expect(sizingChoices, 7);
       expect(conceptualAdmissions, 19);
+      expect(actionDefinitionChoices, 6);
       expect(provedNumericTasks, _knownNumericCalls.keys.toSet());
       final out = File('output/pkr0205/catalog-coverage.json');
       out.parent.createSync(recursive: true);
@@ -252,6 +266,7 @@ void main() {
           'numeric_correct': correctNumericChoices,
           'sizing_choices': sizingChoices,
           'conceptual_answer_admissions': conceptualAdmissions,
+          'action_definition_admissions': actionDefinitionChoices,
           'independent_numeric_receipts': _knownNumericCalls.keys.toList(),
           'limits':
               'Non-numeric directions need explicit author intent. No absent stack/history/pot is fabricated. Strategic grades are not legality oracles.',
