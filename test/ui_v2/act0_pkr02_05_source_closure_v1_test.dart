@@ -648,7 +648,7 @@ void main() {
         isTrue,
       );
     }
-  );
+  });
 
   test('disputed ATo UTG and KTo HJ strategic grades remain source held', () {
     final tasks = Act0ShellStateV1.sample.worlds
