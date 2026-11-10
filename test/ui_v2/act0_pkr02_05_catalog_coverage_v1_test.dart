@@ -36,6 +36,15 @@ const _w4SixBbTrail = <String>[
   'Flop: BB checks',
 ];
 
+const _earlyFoldConceptIds = <String>{
+  'fold_discipline_early_fold',
+  'apply_utg_fold',
+  'same_hand_different_seat_same_hand_early_fold',
+  'position_apply_early_fold',
+  'position_apply_hj_fold',
+  'position_checkpoint_position_checkpoint_early_fold',
+};
+
 void main() {
   test(
     'full source denominator and every option remain explicit, including held scenes',
@@ -70,6 +79,7 @@ void main() {
       var arithmeticSizingChoices = 0;
       var conceptualAdmissions = 0;
       var actionDefinitionChoices = 0;
+      var earlyFoldConceptChoices = 0;
       final provedNumericTasks = <String>{};
       for (final world in Act0ShellStateV1.sample.worlds) {
         for (final lesson in world.lessons) {
@@ -124,6 +134,14 @@ void main() {
                 taskId: task.taskId,
                 question: runner.question,
               );
+              if (result.reason == 'source_early_fold_strategic_read') {
+                earlyFoldConceptChoices++;
+                expect(_earlyFoldConceptIds.contains(task.taskId), isTrue);
+                expect(option.id, isIn(const ['fold', 'raise']));
+                expect(option.amountLabel, isEmpty);
+                expect(result.appliesToWager, isFalse);
+                expect(blocked, isFalse);
+              }
               if (result.reason == 'source_action_definition') {
                 actionDefinitionChoices++;
                 expect(
@@ -255,6 +273,7 @@ void main() {
       expect(arithmeticSizingChoices, 7);
       expect(conceptualAdmissions, 19);
       expect(actionDefinitionChoices, 6);
+      expect(earlyFoldConceptChoices, 12);
       expect(provedNumericTasks, _knownNumericCalls.keys.toSet());
       final out = File('output/pkr0205/catalog-coverage.json');
       out.parent.createSync(recursive: true);
@@ -270,6 +289,7 @@ void main() {
           'arithmetic_sizing_choices': arithmeticSizingChoices,
           'conceptual_answer_admissions': conceptualAdmissions,
           'action_definition_admissions': actionDefinitionChoices,
+          'early_fold_concept_admissions': earlyFoldConceptChoices,
           'independent_numeric_receipts': _knownNumericCalls.keys.toList(),
           'limits':
               'The seven W4 pot-fraction choices are arithmetic, not an executable sizing lane. Other numeric wagers still need complete source stacks/order/pot. No facts or strategic grades are inferred.',
