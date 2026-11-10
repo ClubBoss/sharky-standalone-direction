@@ -44,6 +44,7 @@ jobs:
           for ln in pathlib.Path('output/pkr0205/cloud/pkr-tests.jsonl').read_text(errors='replace').splitlines():
               try: z=json.loads(ln)
               except json.JSONDecodeError: continue
+              if not isinstance(z,dict): continue
               if z.get('type')=='testStart':s[z['test']['id']]=z['test'].get('name','')
               if z.get('type')=='testDone' and not z.get('hidden') and not s.get(z.get('testID'),'').startswith('loading '):c['skipped' if z.get('skipped') else z.get('result')]+=1
               if z.get('type')=='error':e.append(z.get('error','')[:300])
@@ -89,7 +90,7 @@ jobs:
         with:
           ref: e341cbdc636e8ff3ec0b13611064f4f2ad19c957
       - name: Strict historical adapter negatives (expected to expose drift)
-        run: python3 -m unittest -v test/tools/table_truth_baseline_dependencies_v1_test.py
+        run: python3 test/tools/table_truth_baseline_dependencies_v1_test.py -v
   native:
     needs: [source]
     runs-on: macos-26
