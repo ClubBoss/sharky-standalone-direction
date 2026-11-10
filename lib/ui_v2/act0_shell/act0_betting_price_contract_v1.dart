@@ -108,6 +108,76 @@ const _actionDefinitionChoices = <(String, String), String>{
   ('actions_check_drill', 'call'): 'Call',
 };
 
+// Exact authored early-position discipline questions are strategic reads,
+// not requests to execute or size a wager. Preserve all source-owned grades,
+// but never turn these into a legal-bet or stack-capacity certificate.
+// This exception expires if the question, choice, hero cards, active seat,
+// blind-start history, or price projection changes.
+const _earlyFoldSourceQuestionsV1 = <String, (String, String, String, String)>{
+  'fold_discipline_early_fold': ('What is the clean action?', 'utg', 'Js', '8d'),
+  'apply_utg_fold': ('What is the clean action?', 'utg', '8s', '4d'),
+  'same_hand_different_seat_same_hand_early_fold':
+      ('What is the disciplined action?', 'utg', 'Ad', 'Tc'),
+  'position_apply_early_fold':
+      ('What is the disciplined action?', 'utg', 'Ad', 'Tc'),
+  'position_apply_hj_fold':
+      ('What is the disciplined action?', 'hj', 'Kd', 'Tc'),
+  'position_checkpoint_position_checkpoint_early_fold':
+      ('What is the disciplined action?', 'utg', 'Ac', '9d'),
+};
+
+bool _exactEarlyFoldStrategicReadV1(
+  Act0TableStateV1 table,
+  Act0RunnerOptionV1 option, {
+  required bool sizingBet,
+  required String? taskId,
+  required String? question,
+}) {
+  final source = _earlyFoldSourceQuestionsV1[taskId];
+  if (source == null ||
+      sizingBet ||
+      question != source.$1 ||
+      option.amountLabel.trim().isNotEmpty ||
+      !((option.id == 'fold' && option.label == 'Fold') ||
+          (option.id == 'raise' && option.label == 'Raise')) ||
+      table.scope != Act0TableScopeV1.playedHand ||
+      !table.usesCanonicalPlayerCount ||
+      table.seats.length != table.playerCount ||
+      table.streetLabel != 'Preflop' ||
+      table.activeSeatId != source.$2 ||
+      table.heroSeatId != source.$2 ||
+      table.potLabel != 'Pot 1.5 BB' ||
+      table.toCallLabel != 'To call 1 BB' ||
+      table.heroCards.length != 2) {
+    return false;
+  }
+  final hero = table.seats.where((s) => s.isHero && s.isOccupied).toList();
+  if (hero.length != 1 ||
+      hero.single.seatId != source.$2 ||
+      !hero.single.isInHand ||
+      hero.single.isFolded) {
+    return false;
+  }
+  final cards = [
+    for (final card in table.heroCards) '${card.rank}${card.suit}',
+  ];
+  if (cards[0] != source.$3 || cards[1] != source.$4) return false;
+  const blindStart = <String>['SB blind 0.5 BB', 'BB blind 1 BB'];
+  final trail = <String>[
+    ...blindStart,
+    if (source.$2 == 'hj') 'UTG folds',
+    '${source.$2.toUpperCase()} acts',
+  ];
+  if (table.actionTrail.length != trail.length) return false;
+  for (var i = 0; i < trail.length; i++) {
+    if (table.actionTrail[i].isNote ||
+        table.actionTrail[i].label != trail[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
 // Decimal BB units avoid binary floating-point errors at exact minimum raises.
 // Other units, rounding, symbolic sizes, negative or extravagant inputs are not
 // silently reinterpreted. The normalizer is deliberately bounded.
@@ -198,6 +268,19 @@ Act0BettingPriceResultV1 act0BettingPriceForOptionV1(
     return const Act0BettingPriceResultV1(
       _unknown,
       'source_action_definition',
+      appliesToWager: false,
+    );
+  }
+  if (_exactEarlyFoldStrategicReadV1(
+    table,
+    option,
+    sizingBet: sizingBet,
+    taskId: taskId,
+    question: question,
+  )) {
+    return const Act0BettingPriceResultV1(
+      _unknown,
+      'source_early_fold_strategic_read',
       appliesToWager: false,
     );
   }
