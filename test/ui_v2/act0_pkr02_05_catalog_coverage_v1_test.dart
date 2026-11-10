@@ -56,7 +56,7 @@ void main() {
         tasks
             .where((t) => t.runner.table.scope == Act0TableScopeV1.playedHand)
             .length,
-        311,
+        316,
       );
       final explicitTeaching = tasks
           .expand((t) => t.runner.teachingSteps)
@@ -153,7 +153,7 @@ void main() {
                   ]),
                 );
                 expect(option.amountLabel, isEmpty);
-                expect(runner.table.scope, Act0TableScopeV1.explanation);
+                expect(runner.table.scope, Act0TableScopeV1.playedHand);
                 expect(runner.table.potLabel, isEmpty);
                 expect(runner.table.toCallLabel, isEmpty);
                 expect(runner.table.actionTrail, isEmpty);
