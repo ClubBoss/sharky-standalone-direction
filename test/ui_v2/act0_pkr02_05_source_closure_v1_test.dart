@@ -400,4 +400,69 @@ void main() {
       );
     },
   );
+  test('two exact W1 action definitions teach without imaginary bet history', () {
+    final tasks = Act0ShellStateV1.sample.worlds
+        .expand((world) => world.lessons)
+        .expand((lesson) => lesson.taskList)
+        .toList();
+    for (final taskId in [
+      'actions_legal_context',
+      'actions_check_drill',
+    ]) {
+      final task = tasks.singleWhere((item) => item.taskId == taskId);
+      expect(task.runner.table.scope, Act0TableScopeV1.playedHand);
+      expect(task.runner.table.actionTrail, isEmpty);
+      expect(task.runner.table.toCallLabel, isEmpty);
+      expect(task.runner.table.potLabel, 'Pot 3 BB');
+      expect(task.runner.options.map((option) => option.id).toSet(), {
+        'fold',
+        'check',
+        'call',
+      });
+      for (final option in task.runner.options) {
+        expect(option.amountLabel, isEmpty);
+        final safe = act0BettingPriceForOptionV1(
+          task.runner.table,
+          option,
+          taskId: taskId,
+          question: task.runner.question,
+        );
+        expect(safe.reason, 'source_action_definition');
+        expect(safe.appliesToWager, isFalse);
+        expect(
+          act0BettingPriceBlocksAuthoredSuccessV1(
+            task.runner.table,
+            option,
+            taskId: taskId,
+            question: task.runner.question,
+          ),
+          isFalse,
+        );
+        // An edited or contradictory question is not grandfathered into the
+        // source-only exemption merely because its task ID stays the same.
+        expect(
+          act0BettingPriceBlocksAuthoredSuccessV1(
+            task.runner.table,
+            option,
+            taskId: taskId,
+            question: 'Now face a real 2 BB bet.',
+          ),
+          isTrue,
+        );
+      }
+      // Numeric execution must not opt out of source price/stack proof.
+      expect(
+        act0BettingPriceBlocksAuthoredSuccessV1(
+          task.runner.table,
+          pkrPriceOptionV1('Call', '2'),
+          taskId: taskId,
+          question: task.runner.question,
+        ),
+        isTrue,
+      );
+      expect(task.runner.options.singleWhere((o) => o.id == 'check').isCorrect,
+          isTrue);
+    }
+  );
+
 }
