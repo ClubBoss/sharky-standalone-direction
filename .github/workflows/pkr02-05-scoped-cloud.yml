@@ -1,0 +1,177 @@
+name: PKR02-05 exact source EN14Pro cloud
+on:
+  push:
+    branches: [qa/pkr02-05-14pro-e341-20261110]
+    paths: [.github/workflows/pkr02-05-scoped-cloud.yml]
+permissions:
+  contents: read
+concurrency:
+  group: pkr0205-14pro-20261110
+  cancel-in-progress: false
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: e341cbdc636e8ff3ec0b13611064f4f2ad19c957
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+      - name: Source identity, format, analyze
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = e341cbdc636e8ff3ec0b13611064f4f2ad19c957
+          test "$(git rev-parse HEAD^{tree})" = d3d66dc9b6e576810a4163842513deeabc7ee68d
+          mkdir -p output/pkr0205/cloud
+          sha256sum pubspec.lock > output/pkr0205/cloud/lock-before
+          flutter pub get
+          sha256sum pubspec.lock > output/pkr0205/cloud/lock-after
+          cmp output/pkr0205/cloud/lock-before output/pkr0205/cloud/lock-after
+          dart format --output=none --set-exit-if-changed lib/ui_v2/act0_shell/act0_betting_price_contract_v1.dart lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart lib/ui_v2/act0_shell/act0_street_replay_contract_v1.dart test/ui_v2/act0_betting_price_contract_v1_test.dart test/ui_v2/act0_pkr02_05_runtime_legality_v1_test.dart test/ui_v2/act0_pkr02_05_source_closure_v1_test.dart test/ui_v2/act0_pkr02_05_catalog_coverage_v1_test.dart
+          dart analyze lib/ui_v2/act0_shell/act0_betting_price_contract_v1.dart lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart lib/ui_v2/act0_shell/act0_street_replay_contract_v1.dart test/ui_v2/act0_betting_price_contract_v1_test.dart test/ui_v2/act0_pkr02_05_runtime_legality_v1_test.dart test/ui_v2/act0_pkr02_05_source_closure_v1_test.dart test/ui_v2/act0_pkr02_05_catalog_coverage_v1_test.dart
+      - name: Actual source and Runner tests
+        run: |
+          set +e
+          flutter test test/ui_v2/act0_betting_price_contract_v1_test.dart test/ui_v2/act0_pkr02_05_runtime_legality_v1_test.dart test/ui_v2/act0_pkr02_05_source_closure_v1_test.dart test/ui_v2/act0_pkr02_05_catalog_coverage_v1_test.dart --machine > output/pkr0205/cloud/pkr-tests.jsonl 2>&1
+          code=$?
+          set -e
+          python3 - "$code" <<'PY'
+          import collections,json,pathlib,sys
+          s={};c=collections.Counter();e=[]
+          for ln in pathlib.Path('output/pkr0205/cloud/pkr-tests.jsonl').read_text(errors='replace').splitlines():
+              try: z=json.loads(ln)
+              except json.JSONDecodeError: continue
+              if z.get('type')=='testStart':s[z['test']['id']]=z['test'].get('name','')
+              if z.get('type')=='testDone' and not z.get('hidden') and not s.get(z.get('testID'),'').startswith('loading '):c['skipped' if z.get('skipped') else z.get('result')]+=1
+              if z.get('type')=='error':e.append(z.get('error','')[:300])
+          print('EXACT_SHA_PKRS',dict(c),'EXIT',sys.argv[1],'ERRORS',e[-3:],flush=True)
+          assert c['success']>0 and sum(v for k,v in c.items() if k!='success')==0 and int(sys.argv[1])==0
+          PY
+      - name: Source census with every numeric and sizing obligation
+        run: |
+          python3 - <<'PY'
+          import json,pathlib,collections
+          s=json.loads(pathlib.Path('output/pkr0205/catalog-coverage.json').read_text())
+          rows=[]; reasons=collections.Counter(); blocked=collections.Counter()
+          for r in s['rows']:
+              for o in r['options']:
+                  if o['parser_applicable']:
+                      reasons[o['reason']]+=1
+                      if o['grading_withheld']:blocked[o['reason']]+=1
+                  if o['numeric_wager'] or o['typed_sizing']:
+                      b=r['table']
+                      rows.append({'task':r['task'],'id':o['id'],'label':o['label'],'amount':o['amount'],'correct':o['source_correct'],'reason':o['reason'],'truth':o['truth'],'street':b['street'],'actor':b['actor'],'pot':b['pot_claim'],'call':b['call_claim'],'trail':[v['label'] for v in b['trail']],'stacks':{p['position']:p['stack'] for p in b['seats']}})
+          pathlib.Path('output/pkr0205/cloud/source-obligations.json').write_text(json.dumps({'rows':rows,'reasons':reasons,'blocked':blocked},indent=2))
+          print('OBLIGATIONS',len(rows),'REASONS',dict(reasons),'BLOCKED',dict(blocked),flush=True)
+          for x in rows:print('SOURCE_ROW',json.dumps(x),flush=True)
+          PY
+      - name: Existing candidate Table Truth tests without history-pin changes
+        run: |
+          set +e
+          TABLE_TRUTH_OUTPUT="$PWD/output/pkr0205/cloud/candidate" flutter test test/ui_v2/act0_table_truth_catalog_v1_test.dart test/ui_v2/act0_first_hand_truth_v1_test.dart test/ui_v2/act0_table_truth_mutation_v1_test.dart test/ui_v2/act0_table_truth_render_v1_test.dart test/ui_v2/act0_table_truth_falsifiers_v1_test.dart test/ui_v2/act0_w11_poker_source_truth_v1_test.dart test/ui_v2/act0_source_scope_v1_test.dart test/ui_v2/act0_source_scope_runner_v1_test.dart test/ui_v2/act0_table_choreography_contract_v1_test.dart test/ui_v2/act0_street_replay_contract_v1_test.dart --machine > output/pkr0205/cloud/table-green.jsonl 2>&1
+          code=$?
+          set -e
+          python3 tools/table_truth_evidence_v1.py tests output/pkr0205/cloud/table-green.jsonl green "$code"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pkr0205-source-obligations
+          path: output/pkr0205/
+          retention-days: 3
+  pinned-compat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: e341cbdc636e8ff3ec0b13611064f4f2ad19c957
+      - name: Strict historical adapter negatives (expected to expose drift)
+        run: python3 -m unittest -v test/tools/table_truth_baseline_dependencies_v1_test.py
+  native:
+    needs: [source]
+    runs-on: macos-26
+    timeout-minutes: 65
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+      COCOAPODS_DISABLE_STATS: 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: e341cbdc636e8ff3ec0b13611064f4f2ad19c957
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.0'
+          channel: stable
+          cache: false
+      - name: Exact EN iPhone14Pro source and simulator only
+        run: |
+          set -euo pipefail
+          mkdir -p output/pkr0205/cloud-native
+          D=output/pkr0205/cloud-native
+          test "$(git rev-parse HEAD)" = e341cbdc636e8ff3ec0b13611064f4f2ad19c957
+          test "$(git rev-parse HEAD^{tree})" = d3d66dc9b6e576810a4163842513deeabc7ee68d
+          git rev-parse HEAD HEAD^{tree} > "$D/source"
+          xcodebuild -version > "$D/xcode"
+          xcrun simctl list -j > "$D/sims.json"
+          python3 - <<'PY'
+          import json,subprocess,pathlib
+          p=pathlib.Path('output/pkr0205/cloud-native')
+          a=json.loads((p/'sims.json').read_text())
+          d=[x for x in a['devicetypes'] if x['name']=='iPhone 14 Pro']
+          r=[x for x in a['runtimes'] if x.get('isAvailable') and x.get('version')=='26.2' and x['identifier'].startswith('com.apple.CoreSimulator.SimRuntime.iOS-')]
+          assert len(d)==1 and len(r)==1,'NO_EXACT_14PRO_IOS26_2: no fallback'
+          u=subprocess.check_output(['xcrun','simctl','create','Sharky-PKR0205-14Pro',d[0]['identifier'],r[0]['identifier']],text=True).strip()
+          (p/'udid').write_text(u)
+          PY
+          xcrun simctl boot "$(cat "$D/udid")"
+          xcrun simctl bootstatus "$(cat "$D/udid")" -b
+      - name: Build ordinary Flutter iOS simulator app from exact source
+        run: |
+          set -euo pipefail
+          D=output/pkr0205/cloud-native
+          flutter --version --machine > "$D/flutter.json"
+          shasum -a 256 pubspec.lock > "$D/lock-before"
+          flutter pub get > "$D/pub-get.log" 2>&1
+          shasum -a 256 pubspec.lock > "$D/lock-after"
+          cmp "$D/lock-before" "$D/lock-after"
+          flutter build ios --simulator --debug > "$D/build.log" 2>&1
+          APP=build/ios/iphonesimulator/Runner.app
+          test -d "$APP"
+          xcrun simctl install "$(cat "$D/udid")" "$APP"
+          shasum -a 256 "$APP/Frameworks/App.framework/flutter_assets/kernel_blob.bin" > "$D/kernel-sha256"
+      - name: Real EN process launch, kill, relaunch (not PKR native E2E)
+        run: |
+          set -euo pipefail
+          D=output/pkr0205/cloud-native
+          ID="$(cat "$D/udid")"
+          xcrun simctl launch "$ID" com.example.pokerAnalyzer -AppleLanguages '(en)' -AppleLocale en_US > "$D/launch.log"
+          sleep 10
+          xcrun simctl io "$ID" screenshot "$D/first.png"
+          xcrun simctl terminate "$ID" com.example.pokerAnalyzer
+          xcrun simctl launch "$ID" com.example.pokerAnalyzer -AppleLanguages '(en)' -AppleLocale en_US > "$D/relaunch.log"
+          sleep 6
+          xcrun simctl io "$ID" screenshot "$D/second.png"
+          python3 - <<'PY'
+          import pathlib,struct
+          for name in ['first.png','second.png']:
+              b=(pathlib.Path('output/pkr0205/cloud-native')/name).read_bytes()
+              assert b[:8]==b'\x89PNG\r\n\x1a\n'
+              w,h=struct.unpack('>II',b[16:24])
+              assert 1178<=w<=1179 and h==2556,(w,h)
+              print('NATIVE_14PRO_EN',name,w,h,flush=True)
+          PY
+      - name: Preserve exact scope and shut down isolated simulator
+        if: always()
+        run: |
+          D=output/pkr0205/cloud-native
+          if test -f "$D/udid"; then xcrun simctl shutdown "$(cat "$D/udid")" || true; fi
+          echo 'Only real iPhone14Pro EN launch/relaunch + build. No graded PKR native or Human proof.' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pkr0205-cloud-native-14pro
+          path: output/pkr0205/cloud-native/
+          retention-days: 3
