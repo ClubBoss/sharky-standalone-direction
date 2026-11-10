@@ -2109,6 +2109,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       widget.runner.table,
       option,
       taskId: widget.selectedTaskId,
+      question: widget.runner.question,
       sizingBet:
           widget.selectedTaskFamily == Act0TaskFamilyV1.sizing &&
           widget.runner.sizingConfig.isEnabled,
