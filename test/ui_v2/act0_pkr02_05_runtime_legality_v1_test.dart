@@ -209,6 +209,7 @@ Future<_Observed> _submit(
   Act0RunnerStateV1? sourceRunner,
   String? sourceOptionId,
   String? sourceTaskId,
+  Act0TaskFamilyV1? sourceTaskFamily,
 }) async {
   final base = sourceRunner ?? _runner(spot, amount, heroStack: heroStack);
   final original = trailOverride == null
@@ -251,9 +252,10 @@ Future<_Observed> _submit(
           selectedWorldId: 'synthetic_pkr_oracle',
           selectedLessonId: runner.lessonId,
           selectedTaskId: sourceTaskId ?? runner.lessonId,
-          selectedTaskFamily: sizing
-              ? Act0TaskFamilyV1.sizing
-              : Act0TaskFamilyV1.decision,
+          selectedTaskFamily: sourceTaskFamily ??
+              (sizing
+                  ? Act0TaskFamilyV1.sizing
+                  : Act0TaskFamilyV1.decision),
           telemetrySink: observed.sink,
           evidenceRunId: 'synthetic_pkr_runtime_evidence',
           // Production settled-mode seam isolates grading from animation time.
@@ -308,6 +310,68 @@ Future<_Observed> _submit(
 void _setTestViewport(WidgetTester tester) => _setPkrEnReferenceV1(tester);
 
 void main() {
+  testWidgets(
+    'real W4 half-pot arithmetic answer remains accessible without stack fiction',
+    (tester) async {
+      _setTestViewport(tester);
+      final task = Act0ShellStateV1.sample.worlds
+          .expand((w) => w.lessons)
+          .expand((l) => l.taskList)
+          .singleWhere((t) => t.taskId == 'w4_half_pot_bet');
+      expect(task.runner.sizingConfig.isEnabled, isFalse);
+      expect(task.runner.table.potLabel, 'Pot 6 BB');
+      final observed = await _submit(
+        tester,
+        _Spot.flopBet,
+        '',
+        sourceRunner: task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingSteps: const [],
+        ),
+        sourceTaskId: task.taskId,
+        sourceTaskFamily: Act0TaskFamilyV1.sizing,
+        sourceOptionId: 'three',
+      );
+      expect(observed.optionWasOffered, isTrue);
+      expect(observed.forwarded.single.id, 'three');
+      expect(observed.decisions.single.isCorrect, isTrue);
+      expect(
+        find.byKey(const Key('act0_betting_price_unavailable')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'real W4 incorrect pot fraction still teaches rather than blocking',
+    (tester) async {
+      _setTestViewport(tester);
+      final task = Act0ShellStateV1.sample.worlds
+          .expand((w) => w.lessons)
+          .expand((l) => l.taskList)
+          .singleWhere((t) => t.taskId == 'w4_pot_bet');
+      final observed = await _submit(
+        tester,
+        _Spot.flopBet,
+        '',
+        sourceRunner: task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingSteps: const [],
+        ),
+        sourceTaskId: task.taskId,
+        sourceTaskFamily: Act0TaskFamilyV1.sizing,
+        sourceOptionId: 'two',
+      );
+      expect(observed.optionWasOffered, isTrue);
+      expect(observed.forwarded.single.id, 'two');
+      expect(observed.decisions.single.isCorrect, isFalse);
+      expect(
+        find.byKey(const Key('act0_betting_price_unavailable')),
+        findsNothing,
+      );
+    },
+  );
+
   testWidgets(
     'SYNTHETIC typed sizing with unknown or conflicting units is withheld',
     (tester) async {
