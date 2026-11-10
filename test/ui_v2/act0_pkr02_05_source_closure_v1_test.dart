@@ -539,22 +539,26 @@ void main() {
     },
   );
 
-  test('W4 explicit terminal hero is recovered but missing history stays held', () {
-    final task = Act0ShellStateV1.sample.worlds
-        .expand((world) => world.lessons)
-        .expand((lesson) => lesson.taskList)
-        .singleWhere((item) => item.taskId == 'w4_good_price_call');
-    final call = task.runner.options.singleWhere((option) => option.id == 'call');
-    expect(task.runner.table.activeSeatId, isNull);
-    expect(task.runner.table.actionTrail.last.label, 'Hero acts');
-    final result = act0BettingPriceForOptionV1(task.runner.table, call);
-    expect(result.truth, Act0BettingPriceTruthV1.unproved);
-    expect(result.reason, 'missing_blind_start');
-    expect(result.sourceReady, isFalse);
-    expect(
-      act0BettingPriceBlocksAuthoredSuccessV1(task.runner.table, call),
-      isTrue,
-    );
-  });
-
+  test(
+    'W4 explicit terminal hero is recovered but missing history stays held',
+    () {
+      final task = Act0ShellStateV1.sample.worlds
+          .expand((world) => world.lessons)
+          .expand((lesson) => lesson.taskList)
+          .singleWhere((item) => item.taskId == 'w4_good_price_call');
+      final call = task.runner.options.singleWhere(
+        (option) => option.id == 'call',
+      );
+      expect(task.runner.table.activeSeatId, isNull);
+      expect(task.runner.table.actionTrail.last.label, 'Hero acts');
+      final result = act0BettingPriceForOptionV1(task.runner.table, call);
+      expect(result.truth, Act0BettingPriceTruthV1.unproved);
+      expect(result.reason, 'missing_blind_start');
+      expect(result.sourceReady, isFalse);
+      expect(
+        act0BettingPriceBlocksAuthoredSuccessV1(task.runner.table, call),
+        isTrue,
+      );
+    },
+  );
 }
