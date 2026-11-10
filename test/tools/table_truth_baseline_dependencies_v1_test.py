@@ -134,7 +134,7 @@ class DependencyControls(unittest.TestCase):
 
     def test_legacy_price_pin_is_the_exact_reviewed_final_source(self):
         self.assertEqual(ADAPTER.PRICE_CANDIDATE_SHA256,
-                         '6c60a5e6adb5c060936e4de7543866b3471410d44249e0d133f4cbff658c8336')
+                         '58c21cb461213942c71c2d94cdb36e3332eb0fd6c6b07d986916b93157544831')
         self.assertEqual(ADAPTER.digest(ROOT / ADAPTER.PRICE_DEPENDENCY),
                          ADAPTER.PRICE_CANDIDATE_SHA256)
         self.assertEqual(ADAPTER.LEGACY_HEAD,
