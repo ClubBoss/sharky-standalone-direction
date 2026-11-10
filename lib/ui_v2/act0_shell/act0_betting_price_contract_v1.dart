@@ -236,16 +236,29 @@ const _placementActionLabelsV1 = <String, String>{
   'raise': 'Raise',
 };
 
+// Accept the exact two existing source-owned Placement projections. This is
+// compatibility with an existing locale, not permission to invent grades or
+// bypass a numeric bet. Mixed languages or altered phrasing fail closed.
+const _placementActionDefinitionSourcesV1 = <String, Map<String, String>>{
+  'No bet faces Hero. Which action is free?': _placementActionLabelsV1,
+  '\u041f\u0435\u0440\u0435\u0434 Hero \u043d\u0435\u0442 \u0441\u0442\u0430\u0432\u043a\u0438. \u041a\u0430\u043a\u043e\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e?': <String, String>{
+    'check': '\u0427\u0435\u043a',
+    'call': '\u041a\u043e\u043b\u043b',
+    'raise': '\u0420\u0435\u0439\u0437',
+  },
+};
+
 bool _exactPlacementActionDefinitionV1(
   Act0TableStateV1 table,
   Act0RunnerOptionV1 option, {
   required bool sizingBet,
   required String? question,
 }) {
+  final sourceLabels = _placementActionDefinitionSourcesV1[question];
   if (sizingBet ||
-      question != 'No bet faces Hero. Which action is free?' ||
+      sourceLabels == null ||
       option.amountLabel.trim().isNotEmpty ||
-      _placementActionLabelsV1[option.id] != option.label ||
+      sourceLabels[option.id] != option.label ||
       option.isCorrect != (option.id == 'check') ||
       option.quality !=
           (option.id == 'check'
