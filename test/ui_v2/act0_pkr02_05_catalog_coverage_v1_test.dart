@@ -56,7 +56,7 @@ void main() {
         tasks
             .where((t) => t.runner.table.scope == Act0TableScopeV1.playedHand)
             .length,
-        316,
+        311,
       );
       final explicitTeaching = tasks
           .expand((t) => t.runner.teachingSteps)
@@ -76,6 +76,7 @@ void main() {
       var arithmeticSizingChoices = 0;
       var conceptualAdmissions = 0;
       var actionDefinitionChoices = 0;
+      var w1ActionVocabularyChoices = 0;
       var earlyFoldConceptChoices = 0;
       final provedNumericTasks = <String>{};
       for (final world in Act0ShellStateV1.sample.worlds) {
@@ -137,6 +138,27 @@ void main() {
                 expect(option.id, isIn(const ['fold', 'raise']));
                 expect(option.amountLabel, isEmpty);
                 expect(result.appliesToWager, isFalse);
+                expect(blocked, isFalse);
+              }
+              if (result.reason == 'source_w1_action_word') {
+                w1ActionVocabularyChoices++;
+                expect(
+                  task.taskId,
+                  isIn(const [
+                    'actions_theory',
+                    'actions_fold_drill',
+                    'actions_call_drill',
+                    'actions_raise_drill',
+                    'actions_review',
+                  ]),
+                );
+                expect(option.amountLabel, isEmpty);
+                expect(runner.table.scope, Act0TableScopeV1.explanation);
+                expect(runner.table.potLabel, isEmpty);
+                expect(runner.table.toCallLabel, isEmpty);
+                expect(runner.table.actionTrail, isEmpty);
+                expect(result.appliesToWager, isFalse);
+                expect(result.sourceReady, isFalse);
                 expect(blocked, isFalse);
               }
               if (result.reason == 'source_action_definition') {
@@ -264,12 +286,13 @@ void main() {
           }
         }
       }
-      expect(numericChoices, 65);
-      expect(correctNumericChoices, 29);
+      expect(numericChoices, 55);
+      expect(correctNumericChoices, 25);
       expect(sizingChoices, 0);
       expect(arithmeticSizingChoices, 7);
       expect(conceptualAdmissions, 19);
       expect(actionDefinitionChoices, 6);
+      expect(w1ActionVocabularyChoices, 15);
       expect(earlyFoldConceptChoices, 6);
       expect(provedNumericTasks, _knownNumericCalls.keys.toSet());
       final out = File('output/pkr0205/catalog-coverage.json');
@@ -286,10 +309,11 @@ void main() {
           'arithmetic_sizing_choices': arithmeticSizingChoices,
           'conceptual_answer_admissions': conceptualAdmissions,
           'action_definition_admissions': actionDefinitionChoices,
+          'w1_action_vocabulary_admissions': w1ActionVocabularyChoices,
           'early_fold_concept_admissions': earlyFoldConceptChoices,
           'independent_numeric_receipts': _knownNumericCalls.keys.toList(),
           'limits':
-              'The seven W4 pot-fraction choices are arithmetic, not an executable sizing lane. Other numeric wagers still need complete source stacks/order/pot. No facts or strategic grades are inferred.',
+              'W1 now teaches five bounded action-word definitions with no price claims; seven W4 pot-fractions are arithmetic rather than betting. Remaining 53 numeric wagers need complete source stacks/order/pot and independent oracle. No facts or grades are inferred.',
           'rows': rows,
         }),
       );
