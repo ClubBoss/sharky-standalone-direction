@@ -149,3 +149,146 @@ a mandatory new scorecard metric or a second tracking board.
 Rollback: stop calling the optional helper and revert this doc/helper/test
 files in a normal reviewed PR. No workflow, branch protection, shared
 configuration, product code, schemas or automatic score handling is changed.
+
+
+## 6. Single explicit custody handoff (existing PR / Issue #364)
+
+This is a procedure, NOT a new task tracker, owner registry or automatic
+transfer. Use the existing [#364 coordination decision](https://github.com/ClubBoss/sharky-standalone-direction/issues/364#issuecomment-6781439170)
+and the [infra-only coordination notice](https://github.com/ClubBoss/sharky-standalone-direction/issues/364#issuecomment-6785857623).
+Issue #364 remains a research issue: comments coordinate existing owners only.
+
+For any owner-admitted handoff, record ONE compact entry in the relevant PR:
+- PREDECESSOR: actual writer/task/job identity; affirmative STOP/RELEASE or
+  RETAIN; exact branch, HEAD/TREE, pending dirty patch and test/native artifacts.
+- SOURCE CUSTODY: exact file allowlist, exclusions and overlapping live PRs.
+  Shared ClubBoss login, inactive branch, silence or disconnected bot is NOT
+  a source release or actual writer identity.
+- ENVIRONMENT CUSTODY: independent current owner of SDK, CI run, Mac, simulator,
+  app/binary, test worktree and native evidence. Source release never frees
+  runtime, and an idle runner never transfers source rights.
+- SUCCESSOR: one actual acknowledged writer/task ID, new base+HEAD, allowed
+  paths and next bounded step; independent reviewer and stop/acceptance criteria.
+- BLOCKER: original author/job unknown or not demonstrably stopped means
+  NO_TRANSFER; coordinator recovers/halts original job or obtains explicit
+  separate arbitration. Never silently assume free.
+
+#442 State, #443 Store/Settings/Preview, #444 PKR Runner/Street, and stacked
+#445 retain their own ownership. None was transferred in this process wave.
+Batch related owner decisions into one exact request with source refs, the
+conflicting file, preserved patches, current task, proposed single recipient
+and yes/no decision. A failed hypothesis triggers source-based method change;
+no mechanical two-attempt stop when corrective work is demonstrably progressing.
+
+## 7. CI comparison of existing proof, not a new CI authority
+
+Added stdlib-only helper: tools/test_authority/compare_existing_ci_v1.py.
+Its inputs are two previously captured JSON CI snapshots. It does not call
+GitHub, run tests, trigger workflows, waive checks, merge or update scores.
+
+Example command (already obtained JSON files, never an unowned live checkout):
+
+    python3 tools/test_authority/compare_existing_ci_v1.py \
+      --base path/to/base.json --candidate path/to/candidate.json \
+      --out-root output/ci-comparisons
+
+Test command:
+
+    python3 -m unittest discover -s test/tools \
+      -p test_compare_existing_ci_v1.py -v
+
+The schema SHARKY_EXISTING_CI_SNAPSHOT_V1 contains:
+- repo, source.role = pr_head | synthetic_merge | merged_main,
+  source.sha (full 40-digit) and source.tree if independently known;
+- gates with exact gate key, explicitly selected [run_id, run_attempt], and
+  EVERY historical attempt (including RED/SKIP/cancel/rerun);
+- per attempt: run URL, source SHA, actual checkout SHA+TREE from a genuine
+  job/OBS04 receipt (Actions head_sha alone is NOT checkout proof), workflow
+  fingerprint, environment/SDK, command/test-manifest fingerprints, actual
+  event/log completeness, conclusion, and optional existing Test Authority
+  tier-a/tier-b machine summary from build/test_authority.
+  The result list uses the original run_lane_v1.py name/cmd/status fields.
+
+Only if source/checkout and environments, versions, command inventories,
+complete logs and matched original machine results are proven does the tool
+classify command-level NEW, PERSISTENT or RESOLVED non-green outcomes.
+Identical command failure is not necessarily identical CAUSE.
+Otherwise the case-lineage verdict is UNVERIFIED. Skipped is not success.
+It never permits merge, original DoD acceptance or scorecard mutation.
+Output creates a unique directory for each run, preserving attempts; command
+argument vectors are hashed rather than copied to the output.
+
+## 8. Three real read-only candidate observations
+
+These exact HEADs and GitHub runs were read on 2026-11-11. Times measure only
+the earliest observed CI trigger to latest checked workflow conclusion,
+NOT code-ready/freeze to independent original DoD acceptance.
+
+| Existing PR | Exact HEAD | Observed hosted CI window (UTC) | Proof / blocker |
+| --- | --- | --- | --- |
+| DAT #443 | 2e0eb78d6571f5855a3f99a69cce17cdec3de2cd | Nov 10 03:22:09-03:29:05 = 6m56s | 7 executing PR workflows GREEN, conditional L2 SKIP; P1 risk/runtime+custody unresolved |
+| PKR #444 | 9a553673d6c91200f4a136ac3193b7b24c71fc11 | Nov 10 13:20:44-13:28:00 = 7m16s | Canonical, Learner Trust, Web QA RED; no proven inherited/new failure classification |
+| CNT #445 | 3aa7e00a9f85de08c459c1a7c33f2871112f84c5 | Nov 11 02:51:38-03:00:58 = 9m20s | 7 PR workflows GREEN, L2 SKIP; stacked on unmerged #443 |
+
+Original runs: [#443 canonical](https://github.com/ClubBoss/sharky-standalone-direction/actions/runs/42748977239),
+[#444 canonical](https://github.com/ClubBoss/sharky-standalone-direction/actions/runs/42823669248),
+[#445 canonical](https://github.com/ClubBoss/sharky-standalone-direction/actions/runs/42948855653).
+
+Actual previously published GitHub-run metadata compared against former
+main with the helper yielded UNVERIFIED at command/cause level: exact
+checkout SHA/TREE, machine case inventories and SDK/version provenance were
+not fully available from run-list summaries. No inherited failure was
+invented. All selected L2 cases were correctly recorded SKIPPED.
+
+IMPORTANT measurement gaps: authorized writers have NOT confirmed use of
+#446 preflight on these exact HEADs; do not label it APPLIED. Candidate
+freeze-to-independent-DoD elapsed, pre-CI defects prevented, repeated-run
+root causes, source/environment lease wait and real throughput uplift remain
+UNKNOWN. No extra CI, native, full test, SDK or author action was launched
+merely to collect pilot statistics. The NEXT authorized handoff should append
+freeze timestamp, preflight attempt/identity, final review timestamp and any
+repeat-reason to the existing PR receipt. Evaluate a few comparable complete
+candidates before claiming a gain.
+
+## 9. Risk-based extra depth without weakening mandatory gates
+
+HIGH: poker rules, grading/EV, source fingerprints, persistence, XP, due,
+repair and stacked cross-owner PRs. Require matched source negative controls,
+stable IDs, actual persisted restart/native proof when the original DoD
+requires it; freeze a parent SHA before child integration.
+MEDIUM: presentation within an explicitly admitted EN iPhone 14 Pro scope.
+LOW: standalone docs/stdlib diagnosis with source tests and independent
+review. All still require applicable existing Test Authority/CI gates.
+Never allow score, Human, native, original-DoD or merge permission from green
+CI alone. Risk changes ADDITIONAL evidence, not deletion of protected tests.
+
+## 10. Deferred original improvement ideas; triggers and small pilots
+
+All are optional hypotheses, not roadmap changes. KEEP/DO NOTHING valid.
+
+| Deferred opportunity | Problem | Reason to wait; admission trigger | Reversible falsifier |
+| --- | --- | --- | --- |
+| WIP cap / integration factory | Draft queue stalls | Dot already directs critical path; avoid dual director | One bounded serialized handoff with actual wait measurement |
+| Cloud macOS runner | Local Mac native shortage | $0, privacy, machine/native rights not confirmed | One admitted native 14 Pro binary parity |
+| Protect main / merge queue | Unreviewed integrations | Security owner gate and repo type | Owner-reviewed settings plan with full revert |
+| Golden learner journey | Fragmented end-to-end proof | Native and P02 gate HOLD | One admitted first-use to persisted recheck |
+| Poker invariant guards | Wrong state/grade classes | Existing guards; no duplicate solver | One real RED/green counterexample |
+| Stable native selectors | Brittle harness | No authorized new native writer | One real flaky selector before/after |
+| Visual North Star | Fragmented aesthetic | S12.V owner gate pending | One accepted Home to Learn slice |
+| Expert poker source oracle | Numeric-context unknowns | Source provenance missing | 5-10 true authored histories reviewed |
+| PR dependency graph | Stacked-PR mistakes | Risk of stale topology | Read-only graph of 10 live PR parent edges |
+| W1-W4 alpha trial | Breadth hides novice friction | Cannot replace W1-W12/Human requirements | Owner-admitted novice pilot at proper gate |
+| DoD acceptance mapping | Evidence recollection | Existing receipts mostly sufficient | One real source/native/CI/reviewer mapping |
+| Cost-aware model tiers | Model quota waste | AGENTS routing already exists | Bounded equal-quality cheaper-tier comparison |
+| CI optimization | Duplicated expensive jobs | Existing gates protected | Read-only per accepted-DoD cost census |
+| Property/metamorphic poker tests | Rule regressions | Missing real falsifier | One existing-owner legal-hand invariant |
+| Human novice observation | Assumed comprehension | P02/Human not admitted | One consented first-session study |
+| Monetization evidence | Premium without demand | Market gate not admitted | Bounded willingness-to-pay probe |
+| Maestro | External black-box smoke | XCTest currently owner; no dependency proof | One optional smoke versus existing XCTest |
+| Patrol | Native integration tests | No proven existing stack failure | One small route case and independent parity |
+| Codemagic/Xcode Cloud | Fallback build capacity | Cost/credentials/provenance require owner | One zero-spend exact-build reproduction |
+| Small modularization | Shared Act0 file conflicts | Refactor risk, lease conflicts | One narrow stable seam with observed benefit |
+
+Explicit NON-OPTIMIZATIONS, not deferred backlogs: uncoordinated extra writers,
+new Flutter/poker-engine rewrite, moving to an org solely for Merge Queue,
+auto-merging green CI, weakening mandatory checks or bypassing security.
