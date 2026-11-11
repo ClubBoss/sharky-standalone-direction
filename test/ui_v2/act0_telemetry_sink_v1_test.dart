@@ -1291,6 +1291,11 @@ void main() {
         await tester.pumpAndSettle();
       }
       expect(earnedRouteRep, isTrue);
+      // Close the prerequisite learning session through its ordinary Back UI.
+      final routeBack = find.byKey(const Key('act0_shell_runner_back'));
+      expect(routeBack, findsOneWidget);
+      await tester.tap(routeBack);
+      await tester.pumpAndSettle();
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pumpAndSettle();
       await tester.pumpWidget(previewHost(telemetrySink: sink));
@@ -1512,6 +1517,11 @@ void main() {
       await tester.pumpAndSettle();
     }
     expect(earnedRouteRep, isTrue);
+    // Close the prerequisite learning session through its ordinary Back UI.
+    final routeBack = find.byKey(const Key('act0_shell_runner_back'));
+    expect(routeBack, findsOneWidget);
+    await tester.tap(routeBack);
+    await tester.pumpAndSettle();
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pumpAndSettle();
     await tester.pumpWidget(
