@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 50
     env:
-      PRODUCT_SHA: 4318dfd9772ce4d81975705fa80410797b653cf7
-      PRODUCT_TREE: 98dca08a021bbf74656d686640056197497a17e0
+      PRODUCT_SHA: 0d2d2a259f2f1d2547d777471746629f554fecf0
+      PRODUCT_TREE: 7c030448d0a57514ad0b4533ac960ca4e411cb4b
       BASE_SHA: 3784d421beb5ae7cb8cfaacd10b1083855148850
       CI: 'true'
       FLUTTER_SUPPRESS_ANALYTICS: 'true'
@@ -31,7 +31,7 @@ jobs:
           sparse-checkout-cone-mode: false
       - uses: actions/checkout@v4
         with:
-          ref: 4318dfd9772ce4d81975705fa80410797b653cf7
+          ref: 0d2d2a259f2f1d2547d777471746629f554fecf0
           fetch-depth: 0
           path: product
           persist-credentials: false
