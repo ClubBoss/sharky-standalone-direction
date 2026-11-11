@@ -27,9 +27,9 @@ def snapshot(sha=A, role="pr_head", tree=B, data=None, run_id=1):
                        "attempts": [{"run_id": run_id, "run_attempt": 1, "status": "completed",
                                      "conclusion": "failure", "url": "https://github.com/ClubBoss/sharky-standalone-direction/actions/runs/"+str(run_id),
                                      "source_sha": sha, "checkout_sha": sha, "checkout_tree": tree,
-                                     "workflow_sha": E, "environment": "ubuntu+flutter-3.35.0",
-                                     "sdk": "dart-3.9.0", "test_manifest_sha": F,
-                                     "commands_sha": D, "log_complete": True,
+                                     "workflow_sha": E, "environment": E + "e"*24,
+                                     "sdk": C + "c"*24, "test_manifest_sha": F + "f"*24,
+                                     "commands_sha": D + "d"*24, "log_complete": True,
                                      "test_authority": data}]}]}
 
 
@@ -68,6 +68,12 @@ class ComparisonTests(unittest.TestCase):
         g = mod.compare(b, c)["comparison"]["Test Authority / Tier A"]
         self.assertEqual(g["status"], "UNVERIFIED")
         self.assertEqual(g["new_failures"], [])
+
+    def test_unknown_equal_fingerprints_are_not_comparable(self):
+        b, c = snapshot(), snapshot(sha=C, run_id=2)
+        b["gates"][0]["attempts"][0]["environment"] = "unknown"
+        c["gates"][0]["attempts"][0]["environment"] = "unknown"
+        self.assertEqual(mod.compare(b, c)["comparison"]["Test Authority / Tier A"]["status"], "UNVERIFIED")
 
     def test_truncated_log_cannot_establish_failure_lineage(self):
         b, c = snapshot(), snapshot(sha=C, run_id=2)
