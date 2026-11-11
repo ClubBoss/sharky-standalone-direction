@@ -203,8 +203,9 @@ The schema SHARKY_EXISTING_CI_SNAPSHOT_V1 contains:
 - gates with exact gate key, explicitly selected [run_id, run_attempt], and
   EVERY historical attempt (including RED/SKIP/cancel/rerun);
 - per attempt: run URL, source SHA, actual checkout SHA+TREE from a genuine
-  job/OBS04 receipt (Actions head_sha alone is NOT checkout proof), workflow
-  fingerprint, environment/SDK, command/test-manifest fingerprints, actual
+  job/OBS04 receipt (Actions head_sha alone is NOT checkout proof), exact
+  workflow Git blob SHA40, independently verified environment/SDK SHA256 and
+  command/test-manifest SHA256 fingerprints, plus actual
   event/log completeness, conclusion, and optional existing Test Authority
   tier-a/tier-b machine summary from build/test_authority.
   The result list uses the original run_lane_v1.py name/cmd/status fields.
