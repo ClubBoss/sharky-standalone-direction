@@ -180,44 +180,84 @@ conflicting file, preserved patches, current task, proposed single recipient
 and yes/no decision. A failed hypothesis triggers source-based method change;
 no mechanical two-attempt stop when corrective work is demonstrably progressing.
 
-## 7. CI comparison of existing proof, not a new CI authority
+## 7. Existing CI comparison: full provenance or UNVERIFIED
 
-Added stdlib-only helper: tools/test_authority/compare_existing_ci_v1.py.
-Its inputs are two previously captured JSON CI snapshots. It does not call
-GitHub, run tests, trigger workflows, waive checks, merge or update scores.
+The opt-in stdlib helper tools/test_authority/compare_existing_ci_v1.py
+reads already captured CI metadata and Test Authority machine receipts. It
+never launches tests, queries GitHub, changes gates or authorizes a merge.
+Every historical run/attempt remains visible. Source pr_head, GitHub
+synthetic_merge and actual merged_main are distinct. The Actions head_sha
+alone is NOT evidence of actual job checkout SHA/TREE.
 
-Example command (already obtained JSON files, never an unowned live checkout):
+With only current genuine CI run-list / OBS04 evidence:
 
-    python3 tools/test_authority/compare_existing_ci_v1.py \
-      --base path/to/base.json --candidate path/to/candidate.json \
-      --out-root output/ci-comparisons
+    python3 tools/test_authority/compare_existing_ci_v1.py       --base path/to/base.json --candidate path/to/candidate.json       --out-root output/ci-comparisons
 
-Test command:
+This MUST report UNVERIFIED for per-command NEW/PERSISTENT/RESOLVED because
+the original producer has not supplied an independently witnessed complete
+effective-test inventory. Workflow PASS/FAIL/SKIPPED and previous attempts
+remain visible but do not prove candidate-only defects or repairs.
 
-    python3 -m unittest discover -s test/tools \
-      -p test_compare_existing_ci_v1.py -v
+### Required sources for a trustworthy command comparison
 
-The schema SHARKY_EXISTING_CI_SNAPSHOT_V1 contains:
-- repo, source.role = pr_head | synthetic_merge | merged_main,
-  source.sha (full 40-digit) and source.tree if independently known;
-- gates with exact gate key, explicitly selected [run_id, run_attempt], and
-  EVERY historical attempt (including RED/SKIP/cancel/rerun);
-- per attempt: run URL, source SHA, actual checkout SHA+TREE from a genuine
-  job/OBS04 receipt (Actions head_sha alone is NOT checkout proof), exact
-  workflow Git blob SHA40, independently verified environment/SDK SHA256 and
-  command/test-manifest SHA256 fingerprints, plus actual
-  event/log completeness, conclusion, and optional existing Test Authority
-  tier-a/tier-b machine summary from build/test_authority.
-  The result list uses the original run_lane_v1.py name/cmd/status fields.
+1. Exact original run ID/attempt/job, source/event SHA, actual checkout SHA
+   and TREE, workflow Git blob and runner Git blob, independently checked
+   against immutable job/repository evidence. GITHUB_WORKFLOW_SHA is not
+   automatically the workflow-file Git blob.
+2. Original run_lane_v1.py produces lane, blocking, smoke, files_attempted
+   and ordered name/cmd/status results. It does NOT produce complete,
+   commands_sha, test_manifest_sha, or independently certified effective
+   test coverage. Never inject complete=True from files_attempted=count.
+3. Independently frozen original ordered command inventory: 24 Tier-A
+   outer commands are source-defined; B/C/D use manifests and may have
+   overrides. Equal truncated subsets never prove the full expected set.
+4. Separately verified expanded effective test/harness inventory including
+   test/poker directories, fast-loop/release nested selectors, manifest
+   overrides, feature flags and source blobs. OBS04 captures a smaller
+   diagnostics subset and is NOT a full Test Authority witness.
+5. Independent provenance of the frozen inventory (obtained outside
+   untrusted run summaries), captured *before* results, an externally
+   verified digest, source/runner/workflow blobs, selector inputs and
+   full original selected job artifact. The offline helper checks
+   consistency, NOT who originally issued the external hash.
 
-Only if source/checkout and environments, versions, command inventories,
-complete logs and matched original machine results are proven does the tool
-classify command-level NEW, PERSISTENT or RESOLVED non-green outcomes.
-Identical command failure is not necessarily identical CAUSE.
-Otherwise the case-lineage verdict is UNVERIFIED. Skipped is not success.
-It never permits merge, original DoD acceptance or scorecard mutation.
-Output creates a unique directory for each run, preserving attempts; command
-argument vectors are hashed rather than copied to the output.
+The original producer and current CI artifacts do not establish that
+independent source now. The production CLI therefore deliberately DOES NOT
+accept a witness override; it always withholds per-command failure-lineage
+claims (UNVERIFIED), even when a caller can fabricate matching digest strings.
+A test-only synthetic witness exercises the comparison algorithm without
+granting production evidence authority.
+
+The SHARKY_FROZEN_EFFECTIVE_COMMAND_WITNESS_V1 contract carries exact
+run/attempt/job, source SHA/TREE, runner/workflow Git blob references,
+complete ordered name+argv, effective tests with file blob IDs, and
+all selection inputs. A newly defined sorted compact JSON SHA-256 is
+used for this proposed adapter; it is NOT a hash that today's lane runner
+already emits. A witness built from a shortened report is invalid, even
+if its digest matches itself. Reviewer must authenticate original
+provenance; this standalone offline tool cannot do so.
+
+Until an owner-admitted original producer + independent reviewer can
+authenticate that entire witness, the production CLI always returns
+UNVERIFIED with empty NEW/PERSISTENT/RESOLVED arrays. This is intentionally
+more conservative than treating a self-signed JSON digest as proof. SKIP is
+never PASS. When valid, a comparison is still command-level diagnostic:
+identical non-green status does not prove identical failure cause.
+No scorecard, original DoD, Human/native or merge authority is inferred.
+
+Offline contract tests (no Flutter/native):
+
+    python3 -m unittest discover -s test/tools       -p test_compare_existing_ci_v1.py -v
+
+### Current producer gap / next minimal trigger
+
+The actual canonical lane runs Tier A then Tier B under set-e, so
+failure in A may prevent execution of B. Current workflow uploads OBS04,
+not full certified command/nested-test lists. No shared run_lane producer,
+CI workflow, gate or security setting is changed by #447. If owner
+authorizes a later limited test, capture and independently verify one
+full effective inventory for ONE accepted existing CI attempt, with
+no new test suite or automatic acceptance action.
 
 ## 8. Three real read-only candidate observations
 
@@ -250,6 +290,33 @@ merely to collect pilot statistics. The NEXT authorized handoff should append
 freeze timestamp, preflight attempt/identity, final review timestamp and any
 repeat-reason to the existing PR receipt. Evaluate a few comparable complete
 candidates before claiming a gain.
+
+### Actual GitHub evidence falsifier: source HEAD is not checked-out merge
+
+Read-only validation of two existing canonical Test Authority runs confirmed
+the difference between the displayed PR HEAD and the actual checkout:
+- Existing merged main canonical run 42916277101: source/checkout
+  a883d1db8abe4de671bd315feaecebf510b262fe, TREE
+  4d408770e30c4d5798ac1ca5a864b5e0560340bf,
+  GitHub conclusion SUCCESS. OBS04 ZIP artifact 13809852763 SHA256
+  7c18ca6667e008bae13ca2a5009f76d78e6613793d4c682b13b818a9c59e18ae.
+- Existing #444 canonical run 42823669248: PR source HEAD
+  9a553673d6c91200f4a136ac3193b7b24c71fc11, but the
+  GitHub pull_request merge checkout/event SHA is
+  8ddf3b767ef6bfc6b341fd8fbc991b9c043a88ae with TREE
+  e126830c830f1292e63c35e518a6ba6cde8ed0de;
+  conclusion FAILURE. OBS04 ZIP artifact 13768446393 SHA256
+  706f2491dd35760a310169f8729d365495d904a861f6a9a4066e4026437eb97b.
+
+Both ZIP hashes matched actual GitHub artifact digests; both identities
+matched git commit TREE readback and original OBS04 job manifests. Those
+receipts prove execution ID and two OBS04 diagnostic windows, NOT the
+complete Test Authority command or nested test inventory. Comparing
+these two genuine selected attempts with the updated tool returned:
+UNVERIFIED / 0 NEW / 0 PERSISTENT / 0 RESOLVED. This is the correct
+result; success versus failure at workflow level is observable, but
+case-level attribution is unsupported. No new test run was triggered,
+no inherited-failure label was issued and no score was changed.
 
 ## 9. Risk-based extra depth without weakening mandatory gates
 
