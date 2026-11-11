@@ -232,6 +232,10 @@ class Act0ProgressStoreV1 {
         revision = _highestRevision(prefs);
       }
       if (revision >= _maxRevision) return false;
+      // Once destructive I/O starts, every captured writer is obsolete even
+      // if its acknowledgement is uncertain. A caller must reload with a new
+      // Store before saving again; unlock must never revive an old snapshot.
+      _epochs[key] = (_epochs[key] ?? 0) + 1;
       final committed = await _commit(
         prefs,
         revision + 1,
