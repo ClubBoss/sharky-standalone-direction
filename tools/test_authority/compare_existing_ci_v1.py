@@ -125,14 +125,21 @@ def _compare_gate(base: dict | None, candidate: dict | None, sb: dict, sc: dict)
     output["base_conclusion"] = b["conclusion"]
     output["candidate_conclusion"] = c["conclusion"]
     for label, a in (("base", b), ("candidate", c)):
+        source = sb if label == "base" else sc
         if a["conclusion"] == "skipped":
             output["skipped"].append(label)
         if a["status"] != "completed":
             output["missing_evidence"].append(label + ": run not terminal")
-        if a.get("source_sha") != (sb if label == "base" else sc)["sha"]:
+        if a.get("source_sha") != source["sha"]:
             output["missing_evidence"].append(label + ": unverified selected source SHA")
         if not _sha(a.get("checkout_sha")) or not _sha(a.get("checkout_tree")):
             output["missing_evidence"].append(label + ": exact checkout SHA/TREE missing")
+        elif a["checkout_sha"] != source["sha"]:
+            output["missing_evidence"].append(label + ": checkout commit differs from selected source")
+        if not _sha(source.get("tree")):
+            output["missing_evidence"].append(label + ": source TREE not independently known")
+        elif _sha(a.get("checkout_tree")) and a["checkout_tree"] != source["tree"]:
+            output["missing_evidence"].append(label + ": checkout TREE differs from selected source")
         if not a.get("url"):
             output["missing_evidence"].append(label + ": original run URL missing")
     if output["skipped"]:
