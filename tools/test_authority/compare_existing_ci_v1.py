@@ -16,6 +16,7 @@ from pathlib import Path
 SCHEMA = "SHARKY_EXISTING_CI_SNAPSHOT_V1"
 OUTPUT_SCHEMA = "SHARKY_EXISTING_CI_DIFF_V1"
 SHA = re.compile(r"^[0-9a-f]{40}$")
+SHA256 = re.compile(r"^[0-9a-f]{64}$")
 ROLES = {"pr_head", "synthetic_merge", "merged_main"}
 TERMINAL = {"success", "failure", "cancelled", "skipped", "timed_out", "action_required", "neutral", "stale"}
 BAD = {"fail", "error", "timeout", "cancelled"}
@@ -54,7 +55,7 @@ def validate(snapshot: dict) -> None:
             _require(type(ident[0]) is int and ident[0] > 0 and type(ident[1]) is int and ident[1] > 0, "invalid run identity")
             _require(ident not in ids, "duplicate attempt")
             ids.add(ident)
-            _require(a.get("status") in {"queued", "in_progress", "completed"}, "invalid run status")
+            _require(a.get("status") in {"queued", "waiting", "requested", "pending", "in_progress", "completed"}, "invalid run status")
             _require(a.get("conclusion") in TERMINAL | {None}, "invalid conclusion")
             _require(a.get("status") == "completed" or a.get("conclusion") is None, "premature conclusion")
             _require(a.get("status") != "completed" or a.get("conclusion") is not None, "missing terminal conclusion")
@@ -142,7 +143,9 @@ def _compare_gate(base: dict | None, candidate: dict | None, sb: dict, sc: dict)
         return output
     b_meta = [b.get(k) for k in ("workflow_sha", "environment", "sdk", "test_manifest_sha", "commands_sha")]
     c_meta = [c.get(k) for k in ("workflow_sha", "environment", "sdk", "test_manifest_sha", "commands_sha")]
-    if any(not isinstance(x, str) or not x.strip() for x in b_meta+c_meta) or b_meta != c_meta:
+    if any(not isinstance(x, str) or not x.strip() for x in b_meta+c_meta) or b_meta != c_meta or \
+       any(not bool(SHA256.fullmatch(x)) for x in b_meta[1:] + c_meta[1:]) or \
+       any(not bool(SHA.fullmatch(x)) for x in (b_meta[0], c_meta[0])):
         output["reasons"].append("workflow/test version/commands/environment not proved identical")
         return output
     if b.get("log_complete") is not True or c.get("log_complete") is not True:
