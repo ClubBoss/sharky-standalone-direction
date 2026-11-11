@@ -644,6 +644,14 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                   )
                   .length /
               widget.lessons.length;
+    // Keep the default journey free of a duplicate current mission. In the
+    // explicitly expanded path, expose its earned earlier steps for replay.
+    // Placement-closed steps alone must not create earned replay history.
+    final showCurrentLessonHistory =
+        _showFullJourneyPathV5 &&
+        currentMissionLesson.taskList
+            .take(currentMissionStepIndex - 1)
+            .any((task) => widget.completedTaskIds.contains(task.taskId));
     final journeyLessonIndexes =
         _missionFirstJourneyPreviewIndexesV5(
               widget.lessons,
@@ -652,7 +660,8 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
             .where(
               (index) =>
                   widget.lessons[index].lessonId !=
-                  currentMissionLesson.lessonId,
+                      currentMissionLesson.lessonId ||
+                  showCurrentLessonHistory,
             )
             .toList();
     final deferredLockedCount = _hiddenLockedLessonCountV5(

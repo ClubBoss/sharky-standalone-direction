@@ -204,7 +204,14 @@ Future<void> _reachOptions(WidgetTester tester, String taskId) async {
 
 Future<void> _replayFromLearn(WidgetTester tester, String taskId) async {
   await _learnTab(tester);
+  final currentLessonRow = find.byKey(
+    Key('act0_shell_lesson_${_lesson.title}'),
+  );
+  // The collapsed path still has one current mission, not a duplicate row.
+  expect(currentLessonRow, findsNothing);
   await _tap(tester, const Key('act0_shell_learn_v5_view_full_path'));
+  // Actual completed earlier steps now have a real UI replay route.
+  expect(currentLessonRow, findsOneWidget);
   await _tap(tester, Key('act0_shell_lesson_${_lesson.title}'));
   await _tap(tester, Key('act0_shell_lesson_step_$taskId'));
   await _tap(tester, const Key('act0_shell_selected_lesson_cta'));
@@ -243,6 +250,14 @@ void main() {
   ) async {
     await _mountFreshFixture(tester);
     final before = _gradedFields(await _progress());
+    final currentLessonRow = find.byKey(
+      Key('act0_shell_lesson_${_lesson.title}'),
+    );
+    expect(currentLessonRow, findsNothing);
+    await _tap(tester, const Key('act0_shell_learn_v5_view_full_path'));
+    // Prior lessons are completed, but this lesson has no earned history yet.
+    expect(currentLessonRow, findsNothing);
+    await _tap(tester, const Key('act0_shell_learn_v5_view_full_path'));
     await _openRealReference(tester);
     await _settle(tester);
     await _tap(tester, _rankPair);
