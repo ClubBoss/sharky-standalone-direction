@@ -1257,6 +1257,42 @@ void main() {
 
       await tester.binding.setSurfaceSize(const Size(430, 932));
       addTearDown(() => tester.binding.setSurfaceSize(null));
+      // Earn the daily prerequisite through the real fresh-install route, not
+      // sample progress. Remount before attaching the sink under test so route
+      // events are not confused with the daily session assertions below.
+      await tester.pumpWidget(previewHost());
+      await tester.pumpAndSettle();
+      await openBottomTabV1(tester, 'Learn');
+      await tester.tap(find.byKey(const Key('act0_shell_current_mission_cta')));
+      await tester.pumpAndSettle();
+      var earnedRouteRep = false;
+      for (var step = 0; step < 24; step++) {
+        final runnerFinder = find.byType(Act0LessonRunnerShellV1);
+        if (runnerFinder.evaluate().isNotEmpty) {
+          final runner = tester.widget<Act0LessonRunnerShellV1>(runnerFinder);
+          final visibleAnswer = runner.runner.options.any((option) =>
+            option.isCorrect && find.byKey(Key(option.seatId == null
+              ? 'act0_shell_option_${option.id}'
+              : 'act0_shell_seat_tap_${option.seatId}')).evaluate().isNotEmpty);
+          if (visibleAnswer) {
+            await answerVisiblePromptCorrectlyV1(tester);
+            await continueVisibleFeedbackV1(tester);
+            earnedRouteRep = true;
+            break;
+          }
+        }
+        final theory = find.byKey(const Key('act0_shell_theory_continue_cta'));
+        final next = theory.evaluate().isNotEmpty
+            ? theory : find.byKey(const Key('act0_shell_continue_cta'));
+        expect(next, findsOneWidget);
+        await tester.pump(const Duration(milliseconds: 900));
+        await tester.ensureVisible(next);
+        await tester.tap(next);
+        await tester.pumpAndSettle();
+      }
+      expect(earnedRouteRep, isTrue);
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
       await tester.pumpWidget(previewHost(telemetrySink: sink));
       await completeDailySetFromPlayV1(tester);
 
@@ -1442,6 +1478,42 @@ void main() {
   ) async {
     await tester.binding.setSurfaceSize(const Size(430, 932));
     addTearDown(() => tester.binding.setSurfaceSize(null));
+    // Earn the daily prerequisite through the real fresh-install route, not
+    // sample progress. Remount before attaching the sink under test so route
+    // events are not confused with the daily session assertions below.
+    await tester.pumpWidget(previewHost());
+    await tester.pumpAndSettle();
+    await openBottomTabV1(tester, 'Learn');
+    await tester.tap(find.byKey(const Key('act0_shell_current_mission_cta')));
+    await tester.pumpAndSettle();
+    var earnedRouteRep = false;
+    for (var step = 0; step < 24; step++) {
+      final runnerFinder = find.byType(Act0LessonRunnerShellV1);
+      if (runnerFinder.evaluate().isNotEmpty) {
+        final runner = tester.widget<Act0LessonRunnerShellV1>(runnerFinder);
+        final visibleAnswer = runner.runner.options.any((option) =>
+          option.isCorrect && find.byKey(Key(option.seatId == null
+            ? 'act0_shell_option_${option.id}'
+            : 'act0_shell_seat_tap_${option.seatId}')).evaluate().isNotEmpty);
+        if (visibleAnswer) {
+          await answerVisiblePromptCorrectlyV1(tester);
+          await continueVisibleFeedbackV1(tester);
+          earnedRouteRep = true;
+          break;
+        }
+      }
+      final theory = find.byKey(const Key('act0_shell_theory_continue_cta'));
+      final next = theory.evaluate().isNotEmpty
+          ? theory : find.byKey(const Key('act0_shell_continue_cta'));
+      expect(next, findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 900));
+      await tester.ensureVisible(next);
+      await tester.tap(next);
+      await tester.pumpAndSettle();
+    }
+    expect(earnedRouteRep, isTrue);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
     await tester.pumpWidget(
       previewHost(telemetrySink: _ThrowingTelemetrySinkV1()),
     );
