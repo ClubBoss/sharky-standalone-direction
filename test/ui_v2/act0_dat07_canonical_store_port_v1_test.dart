@@ -56,6 +56,17 @@ void main() {
   test('empty-reset-empty invalidates the pre-reset preview', () async {
     final expected = await port.readDurableSnapshot();
     expect(await store.clear(), isTrue);
+    expect(store.isWriteLeaseCurrent, isFalse);
+    expect(await port.restoreIfUnchanged(
+      expected: (revision: 0, payload: null), incomingPayload: a,
+    ), Act0Dat07WriteResultV1.unverified,
+        reason: 'A pre-reset Store never regains its write lease');
+    store = Act0ProgressStoreV1(
+      key: store.key, isValidPayload: (raw) => raw == a || raw == b,
+    );
+    port = Act0Dat07CanonicalStorePortV1(
+      store: store, supportedProgressSchema: 19,
+    );
     expect(await port.restoreIfUnchanged(
       expected: expected, incomingPayload: a,
     ), Act0Dat07WriteResultV1.changed);
@@ -110,6 +121,17 @@ void main() {
 
   test('fresh tombstone consent increments destination revision', () async {
     expect(await store.clear(), isTrue);
+    expect(store.isWriteLeaseCurrent, isFalse);
+    expect(await port.restoreIfUnchanged(
+      expected: (revision: 0, payload: null), incomingPayload: a,
+    ), Act0Dat07WriteResultV1.unverified,
+        reason: 'A pre-reset Store never regains its write lease');
+    store = Act0ProgressStoreV1(
+      key: store.key, isValidPayload: (raw) => raw == a || raw == b,
+    );
+    port = Act0Dat07CanonicalStorePortV1(
+      store: store, supportedProgressSchema: 19,
+    );
     final expected = await port.readDurableSnapshot();
     expect(await port.restoreIfUnchanged(
       expected: expected, incomingPayload: a,
