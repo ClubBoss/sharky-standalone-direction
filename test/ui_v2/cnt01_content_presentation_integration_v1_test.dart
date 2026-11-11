@@ -12,6 +12,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_dat07_file_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_dat07_transfer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_action_learning_sequence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_placement_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
@@ -592,14 +593,34 @@ void main() {
     await tester.pumpWidget(_app());
     await tester.pumpAndSettle();
     await _startLesson(tester);
-    await _reachAssessment(tester);
+    final firstRunner = await _reachAssessment(tester);
+    final lessonId = firstRunner.selectedLessonId!;
     final taskId = _state(tester).debugSelectedTaskIdV1();
     await _unmount(tester);
     await tester.pumpWidget(_app());
     await tester.pumpAndSettle();
-    if (find.byType(Act0LessonRunnerShellV1).evaluate().isEmpty) {
-      await _startLesson(tester);
+    // Restore can select the earlier generic first-incomplete node. Replay
+    // the actual source-owned theory-to-decision sequence, not a bypass of
+    // Learn's availability guard for the unanswered decision itself.
+    expect(_state(tester).debugContentExposurePayloadV1()['presentedTaskIds'],
+        contains(taskId));
+    final restored = find.byType(Act0LessonRunnerShellV1);
+    if (restored.evaluate().isNotEmpty) {
+      tester.widget<Act0LessonRunnerShellV1>(restored).onBack();
+      await tester.pumpAndSettle();
     }
+    await _tab(tester, 'Learn');
+    final learn = tester.widget<Act0LearnPathShellV1>(
+      find.byType(Act0LearnPathShellV1),
+    );
+    final sequence = act0ActionLearningSequenceForTaskV1(taskId as String);
+    expect(sequence, isNotNull,
+        reason: 'This case follows the real initial Action sequence');
+    expect(sequence!.practiceTaskId, taskId);
+    expect(learn.completedTaskIds, contains(sequence.theoryTaskId));
+    learn.onStartTask(lessonId, sequence.theoryTaskId);
+    await tester.pumpAndSettle();
+    expect(_state(tester).debugSelectedTaskIdV1(), sequence.theoryTaskId);
     final runner = await _reachAssessment(tester);
     expect(_state(tester).debugSelectedTaskIdV1(), taskId);
     expect(_state(tester).debugContentReservationV1()['wasPreviouslyPresented'], isTrue);
@@ -785,21 +806,44 @@ void main() {
     addTearDown(disk.resume);
     await tester.pumpWidget(_app());
     await tester.pumpAndSettle();
+    // Establish a genuinely launchable task using the normal mission route.
+    await _startLesson(tester);
+    final initialRunner = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    final lessonId = initialRunner.selectedLessonId!;
+    final taskId = initialRunner.selectedTaskId!;
+    final old = _state(tester);
+    initialRunner.onBack();
+    await tester.pumpAndSettle();
+    await _tab(tester, 'Learn');
+    final learn = tester.widget<Act0LearnPathShellV1>(
+      find.byType(Act0LearnPathShellV1),
+    );
+    final delayedStart = learn.onStartTask;
+    expect(learn.selectedTaskId, taskId);
     await _tab(tester, 'You');
     await _tap(tester, 'act0_academy_you_leaf_settings');
-    final settings = tester.widget<Act0AcademySettingsLeafV1>(
-      find.byType(Act0AcademySettingsLeafV1),
-    );
-    final openTransfer = settings.input.onBackupRestore!;
-    expect(settings.input.onBack, isNotNull);
-    settings.input.onBack!();
-    await tester.pumpAndSettle();
+    await _store().flush();
+
+    // Delayed shell-owned callback while Settings is still mounted. This is
+    // an overlap/lifetime test, not a tap through an obscuring settings route.
+    // The shell remains mounted beneath Navigator; no stale Settings closure
+    // or private route mutation is used to enter DAT.
     disk.pause();
-    await _startLesson(tester, settle: false);
+    delayedStart(lessonId, taskId);
+    await tester.pump();
     await tester.pump();
     expect(disk.started!.isCompleted, isTrue);
-    final old = _state(tester);
-    openTransfer(); // Source-owned callback, same host, while disk is pending.
+    expect(old.debugSelectedTaskIdV1(), taskId);
+    expect(old.debugContentReservationV1()['acknowledged'], isFalse);
+    expect(find.byType(Act0ContentPresentationGateV1, skipOffstage: false),
+        findsOneWidget);
+    final liveSettings = tester.widget<Act0AcademySettingsLeafV1>(
+      find.byType(Act0AcademySettingsLeafV1),
+    );
+    expect(liveSettings.input.onBackupRestore, isNotNull);
+    liveSettings.input.onBackupRestore!();
     await tester.pump();
     disk.resume();
     await tester.pumpAndSettle();

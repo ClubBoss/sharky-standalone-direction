@@ -6,7 +6,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hlp02_reference_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -92,7 +91,6 @@ void _expectNoReference() {
 }
 
 Future<void> _mountFreshFixture(WidgetTester tester) async {
-  await _loadRealReferenceAsset(tester);
   tester.view.physicalSize = const Size(393, 852);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
@@ -214,14 +212,29 @@ Future<void> _replayFromLearn(WidgetTester tester, String taskId) async {
   _expectNoReference();
 }
 
-// Asset I/O must run outside the widget test's fake clock. This loads the
-// real registered production asset through its parser; no fake catalog or
-// replacement bundle is injected. UI assertions still require the real panel.
-Future<void> _loadRealReferenceAsset(WidgetTester tester) async {
+// Await the Future owned by the rendered panel, not a separate prefetch.
+// Start its asset read in the real async zone; keep every UI assertion below.
+Future<void> _openRealReference(WidgetTester tester) async {
+  final open = find.byKey(const Key('act0_hlp02_open_theory_reference'));
+  expect(open, findsOneWidget);
+  await tester.ensureVisible(open);
+  await tester.pumpAndSettle();
   await tester.runAsync(() async {
-    final catalog = await Act0Hlp02ReferenceCatalogV1.load(rootBundle);
+    await tester.tap(open);
+    await tester.pump();
+    final loader = find.descendant(
+      of: find.byKey(const Key('act0_hlp02_inline_reference_region')),
+      matching: find.byType(FutureBuilder<Act0Hlp02ReferenceCatalogV1>),
+    );
+    expect(loader, findsOneWidget);
+    final future = tester
+        .widget<FutureBuilder<Act0Hlp02ReferenceCatalogV1>>(loader)
+        .future;
+    expect(future, isNotNull);
+    final catalog = await future!;
     expect(catalog.rankings, hasLength(9));
   });
+  await tester.pumpAndSettle();
 }
 
 void main() {
@@ -230,7 +243,8 @@ void main() {
   ) async {
     await _mountFreshFixture(tester);
     final before = _gradedFields(await _progress());
-    await _tap(tester, _openReference);
+    await _openRealReference(tester);
+    await _settle(tester);
     await _tap(tester, _rankPair);
     expect(find.byKey(_referenceRegion), findsOneWidget);
     expect(_gradedFields(await _progress()), before);
@@ -267,7 +281,8 @@ void main() {
     tester,
   ) async {
     await _mountFreshFixture(tester);
-    await _tap(tester, _openReference);
+    await _openRealReference(tester);
+    await _settle(tester);
     await _tap(tester, _rankPair);
     await _startMission(tester, _theoryId);
     await _completeTheory(tester);
@@ -331,7 +346,8 @@ void main() {
     tester,
   ) async {
     await _mountFreshFixture(tester);
-    await _tap(tester, _openReference);
+    await _openRealReference(tester);
+    await _settle(tester);
     await _tap(tester, _rankPair);
     await _startMission(tester, _theoryId);
     await _completeTheory(tester);
@@ -365,7 +381,8 @@ void main() {
     await _learnTab(tester);
     expect(find.byKey(_openReference), findsOneWidget);
     expect(find.byKey(_referenceRegion), findsNothing);
-    await _tap(tester, _openReference);
+    await _openRealReference(tester);
+    await _settle(tester);
     expect(find.byKey(_referenceRegion), findsOneWidget);
     expect(find.byKey(_rankPair), findsNothing);
     expect(find.byKey(const Key('act0_hlp02_term_term.equity')), findsNothing);

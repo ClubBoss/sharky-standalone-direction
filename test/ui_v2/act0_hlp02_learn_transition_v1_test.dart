@@ -2,7 +2,6 @@
 // authored task objects, and the production Runner, not a duplicate scoring
 // engine or a fabricated answer oracle. Full persisted app E2E remains a gate.
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hlp02_reference_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
@@ -115,20 +114,34 @@ class _LearnRunnerRouteProbeState extends State<_LearnRunnerRouteProbe> {
   }
 }
 
-// Asset I/O must run outside the widget test's fake clock. This loads the
-// real registered production asset through its parser; no fake catalog or
-// replacement bundle is injected. UI assertions still require the real panel.
-Future<void> _loadRealReferenceAsset(WidgetTester tester) async {
+// Await the Future owned by the rendered panel, not a separate prefetch.
+// Start its asset read in the real async zone; keep every UI assertion below.
+Future<void> _openRealReference(WidgetTester tester) async {
+  final open = find.byKey(const Key('act0_hlp02_open_theory_reference'));
+  expect(open, findsOneWidget);
+  await tester.ensureVisible(open);
+  await tester.pumpAndSettle();
   await tester.runAsync(() async {
-    final catalog = await Act0Hlp02ReferenceCatalogV1.load(rootBundle);
+    await tester.tap(open);
+    await tester.pump();
+    final loader = find.descendant(
+      of: find.byKey(const Key('act0_hlp02_inline_reference_region')),
+      matching: find.byType(FutureBuilder<Act0Hlp02ReferenceCatalogV1>),
+    );
+    expect(loader, findsOneWidget);
+    final future = tester
+        .widget<FutureBuilder<Act0Hlp02ReferenceCatalogV1>>(loader)
+        .future;
+    expect(future, isNotNull);
+    final catalog = await future!;
     expect(catalog.rankings, hasLength(9));
   });
+  await tester.pumpAndSettle();
 }
 
 void main() {
   testWidgets('real Learn -> theory Runner -> Back -> re-entry has no leaked reference',
       (tester) async {
-    await _loadRealReferenceAsset(tester);
     final key = GlobalKey<_LearnRunnerRouteProbeState>();
     await tester.pumpWidget(MaterialApp(
       home: _LearnRunnerRouteProbe(key: key),
@@ -138,9 +151,7 @@ void main() {
     const openKey = Key('act0_hlp02_open_theory_reference');
     const panelKey = Key('act0_hlp02_theory_reference_panel');
     expect(find.byKey(openKey), findsOneWidget);
-    await tester.ensureVisible(find.byKey(openKey));
-    await tester.tap(find.byKey(openKey));
-    await tester.pumpAndSettle();
+    await _openRealReference(tester);
     expect(find.byKey(panelKey), findsOneWidget);
     expect(key.currentState!.assistanceCallbacks, 0);
     expect(key.currentState!.choiceCallbacks, 0);
@@ -166,7 +177,6 @@ void main() {
 
   testWidgets('actual Act0 task object advances theory -> scored drill, reference disappears',
       (tester) async {
-    await _loadRealReferenceAsset(tester);
     final key = GlobalKey<_LearnRunnerRouteProbeState>();
     await tester.pumpWidget(MaterialApp(
       home: _LearnRunnerRouteProbe(key: key),
@@ -174,9 +184,7 @@ void main() {
     await tester.pumpAndSettle();
     const openKey = Key('act0_hlp02_open_theory_reference');
     const panelKey = Key('act0_hlp02_theory_reference_panel');
-    await tester.ensureVisible(find.byKey(openKey));
-    await tester.tap(find.byKey(openKey));
-    await tester.pumpAndSettle();
+    await _openRealReference(tester);
     expect(find.byKey(panelKey), findsOneWidget);
 
     key.currentState!.sourceTheoryContinued();

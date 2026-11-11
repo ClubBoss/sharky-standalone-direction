@@ -11,6 +11,9 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_hlp02_reference_v1.dart';
 // replacement bundle is injected. UI assertions still require the real panel.
 Future<void> _loadRealReferenceAsset(WidgetTester tester) async {
   await tester.runAsync(() async {
+    // Do not await a cached Future created by a previous FakeAsync zone.
+    // Start this real asset I/O and its continuations in the same real zone.
+    rootBundle.evict(Act0Hlp02ReferenceCatalogV1.assetPath);
     final catalog = await Act0Hlp02ReferenceCatalogV1.load(rootBundle);
     expect(catalog.rankings, hasLength(9));
   });
@@ -138,10 +141,12 @@ void main() {
       ),
     ));
     await tester.tap(find.byKey(const Key('act0_hlp02_open_theory_reference')));
-    // Build the panel first so it initiates the cold production asset load.
-    await tester.pump();
     await tester.runAsync(() async {
-      // Await the same rootBundle load outside the fake clock, not fake data.
+      // Build the panel in the real async zone: its initState starts the cold
+      // rootBundle request here. Awaiting a Future first created in FakeAsync
+      // would deadlock because runAsync cannot flush that zone's continuations.
+      await tester.pump();
+      // Await the same production request in the zone that initiated it.
       final catalog = await Act0Hlp02ReferenceCatalogV1.load(rootBundle);
       expect(catalog.rankings, hasLength(9));
     });
