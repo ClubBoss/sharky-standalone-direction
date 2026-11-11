@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 50
     env:
-      PRODUCT_SHA: 0d2d2a259f2f1d2547d777471746629f554fecf0
-      PRODUCT_TREE: 7c030448d0a57514ad0b4533ac960ca4e411cb4b
+      PRODUCT_SHA: a4ec7bfc8b775a981104c458d0d0dc4a87d34cb7
+      PRODUCT_TREE: 2de444f0b61197b657da7d7b12beec2368b6b771
       BASE_SHA: 3784d421beb5ae7cb8cfaacd10b1083855148850
       CI: 'true'
       FLUTTER_SUPPRESS_ANALYTICS: 'true'
@@ -31,7 +31,7 @@ jobs:
           sparse-checkout-cone-mode: false
       - uses: actions/checkout@v4
         with:
-          ref: 0d2d2a259f2f1d2547d777471746629f554fecf0
+          ref: a4ec7bfc8b775a981104c458d0d0dc4a87d34cb7
           fetch-depth: 0
           path: product
           persist-credentials: false
@@ -204,14 +204,18 @@ jobs:
                   "test/ui_v2/act0_dat07_shell_integration_v1_test.dart": 11,
               }
               suites, tests, dones = {}, {}, {}
-              final, errors, non_json = [], [], []
+              final, errors, non_json, warnings = [], [], [], []
+              known_diagnostics = {'Ask the maintainers of file_picker to either avoid referencing a default implementation via `platforms: linux: default_package: file_picker` or add an inline implementation to file_picker via `platforms: linux:` `pluginClass` or `dartPluginClass`.', 'Package file_picker:linux references file_picker:linux as the default plugin, but it does not provide an inline implementation.', 'Ask the maintainers of file_picker to either avoid referencing a default implementation via `platforms: macos: default_package: file_picker` or add an inline implementation to file_picker via `platforms: macos:` `pluginClass` or `dartPluginClass`.', 'Package file_picker:windows references file_picker:windows as the default plugin, but it does not provide an inline implementation.', 'Package file_picker:macos references file_picker:macos as the default plugin, but it does not provide an inline implementation.', 'Ask the maintainers of file_picker to either avoid referencing a default implementation via `platforms: windows: default_package: file_picker` or add an inline implementation to file_picker via `platforms: windows:` `pluginClass` or `dartPluginClass`.'}
               for number, line in enumerate(Path(path).read_text().splitlines(), 1):
                   if not line.strip():
                       continue
                   try:
                       event = json.loads(line)
                   except json.JSONDecodeError:
-                      non_json.append(number)
+                      if line in known_diagnostics:
+                          warnings.append({"line": number, "message": line})
+                      else:
+                          non_json.append({"line": number, "message": line})
                       continue
                   kind = event.get("type")
                   if kind == "suite":
@@ -254,7 +258,7 @@ jobs:
                   and all(row["result"] == "success" for row in excluded)
               )
               return {
-                  "status": "PASS_DAT07_FOCUSED53" if success else "FAIL_DAT07_FOCUSED53",
+                  "status": ("PASS_DAT07_FOCUSED53_WITH_WARNINGS" if warnings else "PASS_DAT07_FOCUSED53") if success else "FAIL_DAT07_FOCUSED53",
                   "expected_suite_counts": expected,
                   "actual_suite_counts": dict(actual),
                   "authored_total": len(rows),
@@ -264,7 +268,8 @@ jobs:
                   "excluded_loading_or_hidden": excluded,
                   "unfinished": unfinished,
                   "errors": errors,
-                  "non_json_line_numbers": non_json,
+                  "unrecognized_non_json": non_json,
+                  "recognized_platform_warnings": warnings,
                   "final_events": final,
                   "tests": rows,
                   "scope": "Five focused DAT-07 suites only; not native, full DoD, or score acceptance.",
@@ -275,7 +280,7 @@ jobs:
               result = adjudicate(sys.argv[1])
               Path(sys.argv[2]).write_text(json.dumps(result, indent=2) + "\n")
               print(json.dumps({k: v for k, v in result.items() if k not in ("tests", "errors", "excluded_loading_or_hidden")}, indent=2))
-              sys.exit(0 if result["status"] == "PASS_DAT07_FOCUSED53" else 1)
+              sys.exit(0 if result["status"] in ("PASS_DAT07_FOCUSED53", "PASS_DAT07_FOCUSED53_WITH_WARNINGS") else 1)
           GATE_EOF
           cat > gate/orientation_scope.py <<'GATE_EOF'
           #!/usr/bin/env python3
@@ -305,10 +310,10 @@ jobs:
               'product_tree': os.environ['PRODUCT_TREE'],
               'base_sha': os.environ['BASE_SHA'],
               'product_pr': 'https://github.com/ClubBoss/sharky-standalone-direction/pull/448',
-              'scope': ['exact 16-path read-only format', 'exact 16-path analysis', 'five DAT suites with 53 actual authored cases'],
+              'scope': ['exact 17-path read-only format', 'exact 17-path analysis', 'five DAT suites with 53 actual authored cases'],
               'product_ownership': 'frozen DAT-07 candidate; no product edits in this workflow',
               'workflow_scope': 'isolated Linux proof only',
-              'strict_checks_retained': ['source SHA/tree', 'clean source', 'exact 16 paths', 'dependency lock identity', 'format', 'analysis', '53 actual case results'],
+              'strict_checks_retained': ['source SHA/tree', 'clean source', 'exact 17 paths', 'dependency lock identity', 'format', 'analysis', '53 actual case results'],
               'not_admitted': ['native build in this workflow', 'source repair', 'protected-gate changes', 'full DoD acceptance', 'score award'],
           }, indent=2) + '\n')
           print(json.dumps(receipt, indent=2))
@@ -332,8 +337,9 @@ jobs:
           test/ui_v2/act0_dat07_shell_integration_v1_test.dart
           test/ui_v2/act0_dat07_transfer_v1_test.dart
           test/ui_v2/act0_shell_preview_screen_v1_test.dart
+          test/ui_v2/act0_telemetry_sink_v1_test.dart
           GATE_EOF
-      - name: Verify frozen source and all 16 paths
+      - name: Verify frozen source and all 17 paths
         run: |
           set -euo pipefail
           test "$(git -C product rev-parse HEAD)" = "$PRODUCT_SHA"
@@ -342,7 +348,7 @@ jobs:
           git -C product rev-parse HEAD HEAD^{tree} > evidence/product-identity.txt
           git -C product diff --name-only "$BASE_SHA" "$PRODUCT_SHA" -- '*.dart' | LC_ALL=C sort > evidence/actual-paths.txt
           LC_ALL=C sort gate/expected-paths.txt > evidence/expected-paths.txt
-          test "$(wc -l < evidence/actual-paths.txt)" -eq 16
+          test "$(wc -l < evidence/actual-paths.txt)" -eq 17
           diff -u evidence/expected-paths.txt evidence/actual-paths.txt
           { cat gate/expected-paths.txt; echo macos/Flutter/GeneratedPluginRegistrant.swift; } | LC_ALL=C sort > evidence/expected-all-paths.txt
           git -C product diff --name-only "$BASE_SHA" "$PRODUCT_SHA" | LC_ALL=C sort > evidence/actual-all-paths.txt
@@ -386,15 +392,15 @@ jobs:
           diff -u ../evidence/locks-before.sha256 ../evidence/locks-after.sha256
           git diff --exit-code
           test -z "$(git status --porcelain --untracked-files=no)"
-      - name: Check format on exact 16 DAT Dart paths without changes
+      - name: Check format on exact 17 DAT Dart paths without changes
         id: format
         timeout-minutes: 4
         working-directory: product
         run: |
           set -euo pipefail
           mapfile -t PATHS < ../evidence/actual-paths.txt
-          python3 ../gate/run_logged.py --name format16 --log ../evidence/format-console.log --receipt ../evidence/format-receipt.json --follow-log ../evidence/dat07-format16.raw.log --timeout-seconds 180 -- bash tools/sharky_compact_evidence_v1.sh --id dat07-format16 --dir ../evidence -- dart format --output=none --set-exit-if-changed "${PATHS[@]}"
-      - name: Analyze exact 16 DAT Dart paths
+          python3 ../gate/run_logged.py --name format17 --log ../evidence/format-console.log --receipt ../evidence/format-receipt.json --follow-log ../evidence/dat07-format17.raw.log --timeout-seconds 180 -- bash tools/sharky_compact_evidence_v1.sh --id dat07-format17 --dir ../evidence -- dart format --output=none --set-exit-if-changed "${PATHS[@]}"
+      - name: Analyze exact 17 DAT Dart paths
         id: analyze
         if: ${{ always() && steps.setup.outcome == 'success' }}
         timeout-minutes: 10
@@ -402,7 +408,7 @@ jobs:
         run: |
           set -euo pipefail
           mapfile -t PATHS < ../evidence/actual-paths.txt
-          python3 ../gate/run_logged.py --name analyze16 --log ../evidence/analyze-console.log --receipt ../evidence/analyze-receipt.json --follow-log ../evidence/dat07-analyze16.raw.log --timeout-seconds 540 -- bash tools/sharky_compact_evidence_v1.sh --id dat07-analyze16 --dir ../evidence -- dart analyze "${PATHS[@]}"
+          python3 ../gate/run_logged.py --name analyze17 --log ../evidence/analyze-console.log --receipt ../evidence/analyze-receipt.json --follow-log ../evidence/dat07-analyze17.raw.log --timeout-seconds 540 -- bash tools/sharky_compact_evidence_v1.sh --id dat07-analyze17 --dir ../evidence -- dart analyze "${PATHS[@]}"
       - name: Run five DAT suites once with machine events
         id: tests
         if: ${{ always() && steps.setup.outcome == 'success' }}
@@ -445,8 +451,9 @@ jobs:
           result=json.loads((p/'dat07-focused53-results.json').read_text()) if (p/'dat07-focused53-results.json').exists() else None
           outcomes={k:os.environ.get(k,'') for k in ('SETUP_OUTCOME','FORMAT_OUTCOME','ANALYZE_OUTCOME','TESTS_OUTCOME','TELEMETRY_OUTCOME')}
           clean=not (p/'source-drift.patch').read_bytes() and not (p/'final-status.txt').read_text().strip()
-          passed=all(v=='success' for v in outcomes.values()) and clean and result is not None and result.get('status')=='PASS_DAT07_FOCUSED53'
-          receipt={'status':'PASS_SCOPED_DAT07_LINUX' if passed else 'NOT_PASS_DAT07_LINUX','product_sha':os.environ['PRODUCT_SHA'],'product_tree':os.environ['PRODUCT_TREE'],'outcomes':outcomes,'source_unchanged':clean,'orientation_diagnostic':json.loads((p/'orientation-diagnostic.json').read_text()) if (p/'orientation-diagnostic.json').exists() else None,'not_proven':['native Files/share','native restore','true process restart','full DAT-07 DoD','score acceptance']}
+          passed=all(v=='success' for v in outcomes.values()) and clean and result is not None and result.get('status') in ('PASS_DAT07_FOCUSED53','PASS_DAT07_FOCUSED53_WITH_WARNINGS')
+          warnings=result.get('recognized_platform_warnings',[]) if result else []
+          receipt={'status':('PASS_SCOPED_DAT07_LINUX_WITH_WARNINGS' if warnings else 'PASS_SCOPED_DAT07_LINUX') if passed else 'NOT_PASS_DAT07_LINUX','recognized_platform_warnings':warnings,'product_sha':os.environ['PRODUCT_SHA'],'product_tree':os.environ['PRODUCT_TREE'],'outcomes':outcomes,'source_unchanged':clean,'orientation_diagnostic':json.loads((p/'orientation-diagnostic.json').read_text()) if (p/'orientation-diagnostic.json').exists() else None,'not_proven':['native Files/share','native restore','true process restart','full DAT-07 DoD','score acceptance']}
           (p/'verdict.json').write_text(json.dumps(receipt,indent=2)+'\n')
           print(json.dumps(receipt,indent=2))
           RECEIPT
