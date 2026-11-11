@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_hlp02_reference_v1.dart';
 import 'package:flutter/rendering.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
@@ -643,6 +644,14 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                   )
                   .length /
               widget.lessons.length;
+    // Keep the default journey free of a duplicate current mission. In the
+    // explicitly expanded path, expose its earned earlier steps for replay.
+    // Placement-closed steps alone must not create earned replay history.
+    final showCurrentLessonHistory =
+        _showFullJourneyPathV5 &&
+        currentMissionLesson.taskList
+            .take(currentMissionStepIndex - 1)
+            .any((task) => widget.completedTaskIds.contains(task.taskId));
     final journeyLessonIndexes =
         _missionFirstJourneyPreviewIndexesV5(
               widget.lessons,
@@ -651,7 +660,8 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
             .where(
               (index) =>
                   widget.lessons[index].lessonId !=
-                  currentMissionLesson.lessonId,
+                      currentMissionLesson.lessonId ||
+                  showCurrentLessonHistory,
             )
             .toList();
     final deferredLockedCount = _hiddenLockedLessonCountV5(
@@ -945,6 +955,32 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
           firstLessonLanding: firstLessonLanding,
           onStart: onStartMission,
         ),
+        if (Act0Hlp02ReferencePolicyV1.canOpen(
+          lessonId: currentMissionLesson.lessonId,
+          taskId: currentMissionTask.taskId,
+          isTheory: currentMissionTask.phase == Act0LessonPhaseV1.theory,
+          isLearnStep:
+              currentMissionTask.stepKind == Act0LessonStepKindV1.learn,
+          isSelectable: currentMissionLesson.isSelectable,
+          isEnglish: Localizations.localeOf(context).languageCode == 'en',
+          hasActiveScoredChoice: act0IsPrechoiceAssessmentTaskV1(
+            currentMissionTask,
+          ),
+        )) ...<Widget>[
+          const SizedBox(height: 6),
+          Act0Hlp02ReferenceButtonV1(
+            lessonId: currentMissionLesson.lessonId,
+            taskId: currentMissionTask.taskId,
+            isTheory: currentMissionTask.phase == Act0LessonPhaseV1.theory,
+            isLearnStep:
+                currentMissionTask.stepKind == Act0LessonStepKindV1.learn,
+            isSelectable: currentMissionLesson.isSelectable,
+            isEnglish: Localizations.localeOf(context).languageCode == 'en',
+            hasActiveScoredChoice: act0IsPrechoiceAssessmentTaskV1(
+              currentMissionTask,
+            ),
+          ),
+        ],
         const SizedBox(height: 12),
         _JourneyPreviewV5(
           lessons: lessons,
