@@ -191,15 +191,18 @@ void main() {
         findsOneWidget);
     expect(find.text('Hand rankings - lowest to highest'), findsOneWidget);
     final semanticsHandle = tester.ensureSemantics();
-    addTearDown(semanticsHandle.dispose);
-    const highCard = Key('act0_hlp02_rank_rank.high_card');
-    await tester.ensureVisible(find.byKey(highCard));
-    await tester.tap(find.byKey(highCard));
-    await tester.pumpAndSettle();
-    expect(
-      find.bySemanticsLabel(RegExp(r'Example: .* of .*')),
-      findsWidgets,
-    );
+    try {
+      const highCard = Key('act0_hlp02_rank_rank.high_card');
+      await tester.ensureVisible(find.byKey(highCard));
+      await tester.tap(find.byKey(highCard));
+      await tester.pumpAndSettle();
+      expect(
+        find.bySemanticsLabel(RegExp(r'Example: .* of .*')),
+        findsWidgets,
+      );
+    } finally {
+      semanticsHandle.dispose();
+    }
 
     // There is no Equity term in this lesson's source-owned allowlist.
     final catalog = Act0Hlp02ReferenceCatalogV1.fromJson(rawData);
