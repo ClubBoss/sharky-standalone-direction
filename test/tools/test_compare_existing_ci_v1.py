@@ -62,6 +62,35 @@ class ComparisonTests(unittest.TestCase):
         self.assertIn("candidate: exact checkout SHA/TREE missing", g["missing_evidence"])
         self.assertEqual(g["persistent_failures"], [])
 
+    def test_checkout_commit_must_equal_selected_source_even_if_all_shas_look_valid(self):
+        b, c = snapshot(), snapshot(sha=C, run_id=2)
+        c["gates"][0]["attempts"][0]["checkout_sha"] = F
+        g = mod.compare(b, c)["comparison"]["Test Authority / Tier A"]
+        self.assertEqual(g["status"], "UNVERIFIED")
+        self.assertIn("candidate: checkout commit differs from selected source", g["missing_evidence"])
+        self.assertEqual(g["persistent_failures"], [])
+
+    def test_checkout_tree_must_match_independent_source_tree(self):
+        b, c = snapshot(), snapshot(sha=C, run_id=2)
+        c["gates"][0]["attempts"][0]["checkout_tree"] = A
+        g = mod.compare(b, c)["comparison"]["Test Authority / Tier A"]
+        self.assertEqual(g["status"], "UNVERIFIED")
+        self.assertIn("candidate: checkout TREE differs from selected source", g["missing_evidence"])
+
+    def test_missing_source_tree_cannot_claim_comparable(self):
+        b, c = snapshot(), snapshot(sha=C, run_id=2)
+        c["source"]["tree"] = None
+        g = mod.compare(b, c)["comparison"]["Test Authority / Tier A"]
+        self.assertEqual(g["status"], "UNVERIFIED")
+        self.assertIn("candidate: source TREE not independently known", g["missing_evidence"])
+
+    def test_synthetic_merge_must_use_its_actual_tested_commit(self):
+        b, c = snapshot(), snapshot(sha=C, role="synthetic_merge", run_id=2)
+        c["gates"][0]["attempts"][0]["checkout_sha"] = F
+        g = mod.compare(b, c)["comparison"]["Test Authority / Tier A"]
+        self.assertEqual(g["status"], "UNVERIFIED")
+        self.assertNotIn("identical", repr(g.get("new_failures", [])))
+
     def test_different_versions_or_sdk_incomparable(self):
         b, c = snapshot(), snapshot(sha=C, run_id=2)
         c["gates"][0]["attempts"][0]["sdk"] = "different-dart"
