@@ -3736,10 +3736,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (raw == null) {
       // Persisted production bootstrap must not inherit sample completions,
       // but preserve the caller's initial route (for example a Learn deep link).
-      _restorePreviewToFreshStart(
-        showPlacement: false,
-        tab: widget.initialTab,
-      );
+      _restorePreviewToFreshStart(showPlacement: false, tab: widget.initialTab);
       return;
     }
     if (raw.isEmpty || !mounted) return;
