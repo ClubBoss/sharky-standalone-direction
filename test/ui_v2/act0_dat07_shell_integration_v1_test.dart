@@ -117,9 +117,16 @@ Widget _app(_Files files, {bool firstStart = false}) => MaterialApp(
 
 Future<void> _tap(WidgetTester tester, String key) async {
   final target = find.byKey(Key(key));
+  if (target.evaluate().isEmpty) {
+    final transfer = find.byType(Act0Dat07TransferScreenV1);
+    expect(transfer, findsOneWidget);
+    await tester.scrollUntilVisible(target, 120, scrollable: find.descendant(
+      of: transfer, matching: find.byType(Scrollable)).first);
+  }
   expect(target, findsOneWidget);
-  await tester.ensureVisible(target);
+  await Scrollable.ensureVisible(tester.element(target), alignment: 0.5);
   await tester.pumpAndSettle();
+  expect(target.hitTestable(), findsOneWidget);
   await tester.tap(target);
   await tester.pumpAndSettle();
 }
@@ -266,7 +273,7 @@ void main() {
     expect(before['earnedXp'], greaterThan(0));
     final aFiles = _Files();
     final bFiles = _Files();
-    Widget hosts({required bool includeB}) => Stack(children: [
+    Widget hosts({required bool includeB}) => Stack(alignment: Alignment.topLeft, children: [
       KeyedSubtree(key: const ValueKey('reset-host-A'), child: _app(aFiles)),
       if (includeB)
         Offstage(offstage: true, child: TickerMode(enabled: false,
@@ -440,6 +447,7 @@ void main() {
     final dynamic old = tester.state(find.byType(Act0ShellPreviewScreenV1));
     await _tap(tester, 'dat07_first_start_restore');
     await _tap(tester, 'dat07_select_file');
+    expect(find.byKey(const Key('dat07_preview_title')), findsOneWidget);
     expect(await _store().readDurableSnapshot(), empty);
     await _tap(tester, 'dat07_confirm');
     expect(find.text('Saved progress restored and reloaded.'), findsOneWidget);

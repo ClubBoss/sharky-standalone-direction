@@ -98,6 +98,10 @@ void main() {
     expect(find.text('Earned XP: 7'), findsOneWidget);
     await tester.scrollUntilVisible(find.byKey(const Key('dat07_cancel')), 120);
     expect(find.byKey(const Key('dat07_confirm')), findsOneWidget);
+    await Scrollable.ensureVisible(
+      tester.element(find.byKey(const Key('dat07_cancel'))), alignment: 0.5);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('dat07_cancel')).hitTestable(), findsOneWidget);
     await tester.tap(find.byKey(const Key('dat07_cancel')));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('dat07_preview_title')), findsNothing);
