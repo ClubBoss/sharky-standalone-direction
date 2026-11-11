@@ -3733,9 +3733,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (!store.isWriteLeaseCurrent) throw const Act0RecoveryHoldV1();
     final raw = loaded.payload;
     _dat07LoadedEmptyV1 = raw == null;
-    if (raw == null || raw.isEmpty || !mounted) {
+    if (raw == null) {
+      // Persisted production bootstrap must not inherit sample completions,
+      // but preserve the caller's initial route (for example a Learn deep link).
+      _restorePreviewToFreshStart(
+        showPlacement: false,
+        tab: widget.initialTab,
+      );
       return;
     }
+    if (raw.isEmpty || !mounted) return;
     final parsed = _Act0PersistedProgressV1.tryParse(raw);
     if (parsed == null) {
       return;
@@ -5278,14 +5285,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       throw const Act0RecoveryHoldV1();
     }
     if (!_usesPersistedProgress) {
-      return;
+      // Dev reset also calls global prefs.clear(); a debug shell must fence
+      // canonical writers too, despite not persisting its own sample state.
+      _progressStore = _makeProgressStoreV1();
     }
     _recoveryEpochV1++;
     _learnLessonOpenSequenceV1++;
     _progressPersistGeneration += 1;
-    if (await _progressStore.clear()) {
-      return;
-    }
+    final cleared = await _progressStore.clear();
+    // clear permanently fences the old lease, including uncertain commits.
+    _progressStore = _makeProgressStoreV1();
+    if (cleared) return;
     // false is indeterminate: the durable state, not the result, decides.
     String? durable;
     try {
@@ -5299,6 +5309,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (durable != null) {
       throw StateError('Progress reset was not saved');
     }
+    _progressStore = _makeProgressStoreV1();
   }
 
   void _restorePreviewToFreshStart({
@@ -5538,6 +5549,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     // cannot enter, and new shell bootstraps cannot read half-reset truth.
     final reset = Completer<void>();
     _act0Dat07ResetInFlightV1 = reset;
+    // Other mounted shells cannot persist, dispose-save or act on their old
+    // snapshots after this reset. Releasing the reset gate never thaws them.
+    for (final session in _act0Dat07SessionsV1.toList(growable: false)) {
+      if (!identical(session, this) && session._usesPersistedProgress) {
+        session._freezeForDat07V1();
+      }
+    }
+    _progressRestoredV1 = false;
     try {
       await _invalidatePersistedProgressWrites();
       if (!mounted || _dat07SuspendedV1 || _act0Dat07BarrierV1 != null) return;
@@ -5548,7 +5567,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       await Act0FirstStartPreferencesV1.resetWelcome();
       if (!mounted || _dat07SuspendedV1 || _act0Dat07BarrierV1 != null) return;
       _restorePreviewToFreshStart(showPlacement: true);
+      _progressLoadFailed = false;
+      _progressRestoredV1 = true;
       _persistProgress();
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _progressLoadFailed = true;
+          _progressRestoredV1 = false;
+        });
+      }
+      // Keep old shells frozen; restart/reload must resolve durable truth.
     } finally {
       // Remains held even if the initiating host is disposed while clear is
       // pending. Only settled destructive I/O can release the next bootstrap.

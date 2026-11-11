@@ -203,6 +203,107 @@ Future<void> _openSettingsBackup(WidgetTester tester) async {
 }
 
 void main() {
+  // Regression evidence remains NOT RUN until the authorized runtime pass.
+  // Reuses its real-lesson fixture and canonical Store; no invented learner JSON.
+  testWidgets('DAT07 reset fences a pre-reset Store and queued stale save',
+      (tester) async {
+    _phone(tester);
+    await _earnAndSerialize(tester, _Files());
+    await _unmount(tester);
+    final resetter = _store();
+    final oldWriter = _store();
+    final oldPayload = (await oldWriter.readDurableSnapshot()).payload!;
+    final clear = resetter.clear();
+    final staleSave = oldWriter.save(oldPayload);
+    expect(await clear, isTrue);
+    expect(await staleSave, isFalse,
+        reason: 'A queued pre-reset writer must lose its lease');
+    await _store().flush();
+    expect((await _store().readDurableSnapshot()).payload, isNull);
+    expect(await oldWriter.save(oldPayload), isFalse,
+        reason: 'Releasing the reset lock must not revive an old writer');
+    expect(resetter.isWriteLeaseCurrent, isFalse);
+    final freshWriter = _store();
+    expect(freshWriter.isWriteLeaseCurrent, isTrue);
+    expect(await freshWriter.save(oldPayload), isTrue,
+        reason: 'A newly acquired Store must still be able to commit');
+    expect(await _store().load(), oldPayload);
+  });
+
+  testWidgets('DAT07 uncertain reset still fences pre-reset writers',
+      (tester) async {
+    _phone(tester);
+    final disk = _FaultDisk();
+    SharedPreferencesStorePlatform.instance = disk;
+    addTearDown(() {
+      disk.readsUnavailable = false;
+      disk.failAfterBackup = false;
+      SharedPreferences.setMockInitialValues(<String, Object>{});
+    });
+    await _earnAndSerialize(tester, _Files());
+    await _unmount(tester);
+    final resetter = _store();
+    final stale = _store();
+    final oldPayload = (await stale.load())!;
+    disk.failAfterBackup = true;
+    expect(await resetter.clear(), isFalse);
+    expect(disk.uncertainBackups, 1);
+    expect(resetter.isWriteLeaseCurrent, isFalse);
+    expect(stale.isWriteLeaseCurrent, isFalse);
+    disk.readsUnavailable = false;
+    expect(await stale.save(oldPayload), isFalse);
+    expect(await _store().load(), isNull,
+        reason: 'The landed reset tombstone survives an uncertain ACK');
+  });
+
+  testWidgets('DAT07 reset A cannot be undone by mounted host B disposal',
+      (tester) async {
+    _phone(tester);
+    await _earnAndSerialize(tester, _Files());
+    await _unmount(tester);
+    final before = jsonDecode((await _store().readDurableSnapshot()).payload!)
+        as Map<String, dynamic>;
+    expect(before['earnedXp'], greaterThan(0));
+    final aFiles = _Files();
+    final bFiles = _Files();
+    Widget hosts({required bool includeB}) => Stack(children: [
+      KeyedSubtree(key: const ValueKey('reset-host-A'), child: _app(aFiles)),
+      if (includeB)
+        Offstage(offstage: true, child: TickerMode(enabled: false,
+          child: KeyedSubtree(key: const ValueKey('reset-host-B'),
+            child: _app(bFiles)))),
+    ]);
+    await tester.pumpWidget(hosts(includeB: true));
+    await tester.pumpAndSettle();
+    expect(find.byType(Act0ShellPreviewScreenV1, skipOffstage: false),
+        findsNWidgets(2));
+    await _tab(tester, 'Home');
+    await _tap(tester, 'act0_academy_home_leaf_dev_menu');
+    await _tap(tester, 'act0_shell_dev_menu_reset_progress');
+    await _tap(tester, 'act0_shell_dev_menu_reset_confirm');
+    await _store().flush();
+    // Dispose only B after A has finished reset; A's keyed element is retained.
+    await tester.pumpWidget(hosts(includeB: false));
+    await tester.pumpAndSettle();
+    await _store().flush();
+    final dynamic initiator =
+        tester.state(find.byType(Act0ShellPreviewScreenV1));
+    initiator.debugPersistProgressV1();
+    await tester.pumpAndSettle();
+    await _store().flush();
+    final payload = (await _store().readDurableSnapshot()).payload;
+    expect(payload, isNotNull,
+        reason: 'The reset initiator must retain a working fresh Store');
+    if (payload != null) {
+      final after = jsonDecode(payload) as Map<String, dynamic>;
+      expect(after['earnedXp'], 0, reason: 'No pre-reset XP resurrection');
+      expect(after['completedTaskIds'], isEmpty);
+      expect(after['completedLessonIds'], isEmpty);
+      expect(after['learningEvidenceHistory'], isEmpty);
+    }
+    await _unmount(tester);
+  });
+
   setUp(() {
     SharedPreferences.setMockInitialValues(<String, Object>{});
   });
