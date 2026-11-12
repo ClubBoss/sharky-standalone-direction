@@ -2703,8 +2703,10 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
                   child: Row(
                     children: [
                       Container(
-                        width: 44,
-                        height: 44,
+                        constraints: const BoxConstraints(
+                          minWidth: 44,
+                          minHeight: 44,
+                        ),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: completed
