@@ -1,3 +1,5 @@
+import 'package:crypto/crypto.dart';
+import 'act0_placement_questionnaire_checkpoint_v1.dart';
 import 'act0_w4_authored_binding_v1.dart';
 import 'package:flutter/semantics.dart';
 import 'act0_accessibility_semantics_v1.dart';
@@ -2149,6 +2151,79 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool _placementDiagnosticActive = false;
   bool _placementIntroVisible = true;
   int _placementQuestionIndex = 0;
+  Act0PlacementQuestionnaireStoreV1? _questionnaireStoreV1;
+  bool _questionnaireBusyV1 = false;
+  bool _questionnaireLoadFailedV1 = false;
+  String? _questionnaireCanonicalIdentityV1;
+  String? _questionnaireErrorV1;
+
+  Act0PlacementQuestionnaireStoreV1 _newQuestionnaireStoreV1() =>
+      Act0PlacementQuestionnaireStoreV1(
+        _placementQuestionsV1,
+        canonicalIdentity: _questionnaireCanonicalIdentityV1 ?? 'reset-only',
+      );
+
+  Act0PlacementQuestionnaireCheckpointV1 _questionnaireSnapshotV1() =>
+      Act0PlacementQuestionnaireCheckpointV1(
+        showIntro: _placementIntroVisible,
+        questionIndex: _placementQuestionIndex,
+        answers: {
+          for (final e in _placementAnswerIds.entries) e.key: {...e.value},
+        },
+      );
+
+  void _restoreQuestionnaireV1(Act0PlacementQuestionnaireCheckpointV1 value) {
+    _placementIntroVisible = value.showIntro;
+    _placementQuestionIndex = value.questionIndex;
+    _placementAnswerIds
+      ..clear()
+      ..addAll(value.answers);
+  }
+
+  Future<void> _changeQuestionnaireV1(VoidCallback change) async {
+    if (_questionnaireBusyV1 ||
+        _dat07SuspendedV1 ||
+        _act0Dat07BarrierV1 != null ||
+        _act0Dat07ResetInFlightV1 != null)
+      return;
+    if (_placementRetakeV1) {
+      setState(change);
+      return;
+    }
+    final epoch = _recoveryEpochV1;
+    final before = _questionnaireSnapshotV1();
+    setState(() {
+      _questionnaireBusyV1 = true;
+      _questionnaireErrorV1 = null;
+      change();
+    });
+    var saved = false;
+    try {
+      final store = _questionnaireStoreV1 ??= _newQuestionnaireStoreV1();
+      saved = await store.save(_questionnaireSnapshotV1());
+    } catch (_) {
+      saved = false;
+    }
+    if (!mounted || epoch != _recoveryEpochV1) return;
+    setState(() {
+      _questionnaireBusyV1 = false;
+      if (!saved) {
+        _restoreQuestionnaireV1(before);
+        _questionnaireErrorV1 =
+            'Your last change could not be saved. Try again.';
+      }
+    });
+  }
+
+  Future<void> _clearQuestionnaireV1() async {
+    // Always reacquire: an uncertain previous clear has retired its old lease.
+    final store = _newQuestionnaireStoreV1();
+    if (!await store.clearAfterExplicitCompletionOrReset()) {
+      throw StateError('Questionnaire reset could not be verified');
+    }
+    _questionnaireStoreV1 = _newQuestionnaireStoreV1();
+  }
+
   int _placementDiagnosticIndex = 0;
   int _placementDiagnosticCorrect = 0;
   int _placementDiagnosticScore = 0;
@@ -2727,6 +2802,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Future<void> _bootstrapFirstStartRouteBodyV1() async {
+    _questionnaireBusyV1 = false;
+    _questionnaireLoadFailedV1 = false;
     _hasRestoredLearningPathV1 = false;
     final epoch = ++_recoveryEpochV1;
     _progressRestoredV1 = false;
@@ -2763,8 +2840,28 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (!mounted || epoch != _recoveryEpochV1) {
       return;
     }
+    Act0PlacementQuestionnaireCheckpointV1? draft;
+    if (!intakeCompleted && !_hasRestoredLearningPathV1) {
+      final canonical = await _progressStore.readDurableSnapshot();
+      if (!mounted || epoch != _recoveryEpochV1) return;
+      _questionnaireCanonicalIdentityV1 =
+          '${canonical.revision}:${sha256.convert(utf8.encode(jsonEncode(canonical.payload)))}';
+      _questionnaireStoreV1 = _newQuestionnaireStoreV1();
+      try {
+        draft = await _questionnaireStoreV1!.load();
+      } catch (_) {
+        if (mounted && epoch == _recoveryEpochV1)
+          setState(() {
+            _questionnaireLoadFailedV1 = true;
+            _bootSurfaceReady = true;
+          });
+        return;
+      }
+      if (!mounted || epoch != _recoveryEpochV1) return;
+    }
     setState(() {
       _welcomeCompletedV1 = welcomeCompleted;
+      if (draft != null) _restoreQuestionnaireV1(draft);
       // Device-local onboarding preferences are not in a progress backup.
       // Canonical existing learning must never re-enter destructive first-
       // install placement after transfer. This routes only; it awards nothing
@@ -4407,6 +4504,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Future<bool> _persistProgressAcknowledgedV1() {
+    // An unfinished first-start questionnaire is not canonical learning.
+    // Dispose must not manufacture a canonical snapshot and retire its draft.
+    if (_questionnaireCanonicalIdentityV1 != null &&
+        _showPlacement &&
+        !_placementRetakeV1 &&
+        !_hasRestoredLearningPathV1) {
+      return Future<bool>.value(false);
+    }
     if (!_usesPersistedProgress ||
         _dat07SuspendedV1 ||
         _recoveryBusyV1 ||
@@ -5437,35 +5542,64 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         );
       return;
     }
-    if (action != 'reset' || proposal == null) return;
-    _recoveryEpochV1++;
-    _learnLessonOpenSequenceV1++;
-    _progressPersistGeneration++;
-    setState(() {
-      _recoveryBusyV1 = true;
-      _progressRestoredV1 = false;
-      _recoveryMessageV1 = null;
-    });
-    final outcome = await _progressStore.confirmRecoveryOutcome(proposal);
-    if (!mounted || _dat07SuspendedV1 || _act0Dat07BarrierV1 != null) return;
-    if (outcome != Act0RecoveryConfirmationOutcomeV1.completed) {
+    if (action != 'reset' ||
+        proposal == null ||
+        _act0Dat07ResetInFlightV1 != null)
+      return;
+    final reset = Completer<void>();
+    _act0Dat07ResetInFlightV1 = reset;
+    for (final session in _act0Dat07SessionsV1.toList(growable: false)) {
+      if (!identical(session, this) && session._usesPersistedProgress)
+        session._freezeForDat07V1();
+    }
+    try {
+      _recoveryEpochV1++;
+      _learnLessonOpenSequenceV1++;
+      _progressPersistGeneration++;
+      setState(() {
+        _recoveryBusyV1 = true;
+        _progressRestoredV1 = false;
+        _recoveryMessageV1 = null;
+      });
+      try {
+        await _clearQuestionnaireV1();
+      } catch (_) {
+        if (mounted)
+          setState(() {
+            _recoveryBusyV1 = false;
+            _progressLoadFailed = true;
+            _recoveryMessageV1 =
+                'Questionnaire reset could not be verified. Progress was not reset. Try again.';
+          });
+        return;
+      }
+      if (!mounted || _dat07SuspendedV1 || _act0Dat07BarrierV1 != null) return;
+      final outcome = await _progressStore.confirmRecoveryOutcome(proposal);
+      if (!mounted || _dat07SuspendedV1 || _act0Dat07BarrierV1 != null) return;
+      if (outcome != Act0RecoveryConfirmationOutcomeV1.completed) {
+        setState(() {
+          _recoveryBusyV1 = false;
+          _progressLoadFailed = true;
+          _recoveryMessageV1 =
+              outcome == Act0RecoveryConfirmationOutcomeV1.existingCopyConflict
+              ? 'A different recovery copy is already saved. It has been kept, and current progress was not replaced. Open recovery options to keep it, or delete the copy with separate confirmation before starting again.'
+              : 'Recovery could not be completely verified. Any preserved copy is kept. Try again to resume safely.';
+        });
+        return;
+      }
+      _restorePreviewToFreshStart(showPlacement: false);
+      _progressStore = _makeProgressStoreV1();
       setState(() {
         _recoveryBusyV1 = false;
-        _progressLoadFailed = true;
-        _recoveryMessageV1 =
-            outcome == Act0RecoveryConfirmationOutcomeV1.existingCopyConflict
-            ? 'A different recovery copy is already saved. It has been kept, and current progress was not replaced. Open recovery options to keep it, or delete the copy with separate confirmation before starting again.'
-            : 'Recovery could not be completely verified. Any preserved copy is kept. Try again to resume safely.';
+        _progressLoadFailed = false;
+        _bootSurfaceReady = false;
       });
-      return;
+    } finally {
+      if (identical(_act0Dat07ResetInFlightV1, reset))
+        _act0Dat07ResetInFlightV1 = null;
+      reset.complete();
     }
-    _restorePreviewToFreshStart(showPlacement: false);
-    _progressStore = _makeProgressStoreV1();
-    setState(() {
-      _recoveryBusyV1 = false;
-      _progressLoadFailed = false;
-      _bootSurfaceReady = false;
-    });
+    // Bootstrap only after the destructive lifetime gate has been released.
     await _bootstrapFirstStartRouteV1();
   }
 
@@ -5481,6 +5615,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _recoveryEpochV1++;
     _learnLessonOpenSequenceV1++;
     _progressPersistGeneration += 1;
+    await _clearQuestionnaireV1();
     final cleared = await _progressStore.clear();
     // clear permanently fences the old lease, including uncertain commits.
     _progressStore = _makeProgressStoreV1();
@@ -5505,6 +5640,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     bool showPlacement = true,
     Act0ShellTabV1 tab = Act0ShellTabV1.home,
   }) {
+    _questionnaireCanonicalIdentityV1 = null;
+    _questionnaireStoreV1 = null;
     final state = widget.state ?? Act0ShellStateV1.sample;
     final zeroProgressWorlds = _progressWorldsWithTaskIds(state, <String>{});
     final zeroWorld = zeroProgressWorlds.firstWhere(
@@ -5595,6 +5732,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _placementDiagnosticActive = false;
       _placementIntroVisible = true;
       _placementQuestionIndex = 0;
+      _questionnaireBusyV1 = false;
       _placementDiagnosticIndex = 0;
       _placementDiagnosticCorrect = 0;
       _placementDiagnosticScore = 0;
@@ -5642,6 +5780,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _placementDiagnosticActive = false;
       _placementIntroVisible = true;
       _placementQuestionIndex = 0;
+      _questionnaireBusyV1 = false;
       _placementDiagnosticIndex = 0;
       _placementDiagnosticCorrect = 0;
       _placementDiagnosticScore = 0;
@@ -6355,60 +6494,104 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             Expanded(
               child: !_bootSurfaceReady
                   ? const Center(child: CircularProgressIndicator())
+                  : _questionnaireLoadFailedV1
+                  ? Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            'Your saved questionnaire could not be read. It has not been changed.',
+                          ),
+                          TextButton(
+                            onPressed: () =>
+                                unawaited(_bootstrapFirstStartRouteV1()),
+                            child: const Text('Retry questionnaire'),
+                          ),
+                        ],
+                      ),
+                    )
                   : _showPlacement && !_placementDiagnosticActive
-                  ? Act0PlacementShellV1(
-                      questions: _localizedPlacementQuestionsV1(),
-                      showIntro: _placementIntroVisible,
-                      currentQuestionIndex: _placementQuestionIndex,
-                      selectedOptionIds: _placementAnswerIds,
-                      result: _placementResult == null
-                          ? null
-                          : _localizedPlacementResultV1(_placementResult!),
-                      onSelectOption: (question, optionId) => setState(() {
-                        _togglePlacementOption(question, optionId);
-                      }),
-                      onStartPlacement: () => setState(() {
-                        _placementIntroVisible = false;
-                        _placementQuestionIndex = 0;
-                      }),
-                      onBack: () => setState(() {
-                        if (_placementQuestionIndex > 0) {
-                          _placementQuestionIndex -= 1;
-                        } else {
-                          _placementIntroVisible = true;
-                        }
-                      }),
-                      onNext: () => setState(() {
-                        _placementIntroVisible = false;
-                        if (_placementQuestionIndex <
-                            _placementQuestionsV1.length) {
-                          _placementQuestionIndex += 1;
-                        }
-                      }),
-                      onStartDiagnostic: () => setState(() {
-                        _startPlacementDiagnostic(_progressWorlds(baseState));
-                      }),
-                      onStartRecommended: () {
-                        setState(() {
-                          unawaited(
-                            _startPlacementRecommendation(
-                              _progressWorlds(baseState),
-                              fromZero: false,
-                              directRunner: true,
+                  ? Column(
+                      children: [
+                        if (_questionnaireErrorV1 != null)
+                          Text(
+                            _questionnaireErrorV1!,
+                            key: const Key('onb01_checkpoint_error'),
+                          ),
+                        if (_questionnaireBusyV1)
+                          const LinearProgressIndicator(),
+                        Expanded(
+                          child: AbsorbPointer(
+                            absorbing: _questionnaireBusyV1,
+                            child: Act0PlacementShellV1(
+                              questions: _localizedPlacementQuestionsV1(),
+                              showIntro: _placementIntroVisible,
+                              currentQuestionIndex: _placementQuestionIndex,
+                              selectedOptionIds: _placementAnswerIds,
+                              result: _placementResult == null
+                                  ? null
+                                  : _localizedPlacementResultV1(
+                                      _placementResult!,
+                                    ),
+                              onSelectOption: (question, optionId) => unawaited(
+                                _changeQuestionnaireV1(() {
+                                  _togglePlacementOption(question, optionId);
+                                }),
+                              ),
+                              onStartPlacement: () => unawaited(
+                                _changeQuestionnaireV1(() {
+                                  _placementIntroVisible = false;
+                                  _placementQuestionIndex = 0;
+                                }),
+                              ),
+                              onBack: () => unawaited(
+                                _changeQuestionnaireV1(() {
+                                  if (_placementQuestionIndex > 0) {
+                                    _placementQuestionIndex -= 1;
+                                  } else {
+                                    _placementIntroVisible = true;
+                                  }
+                                }),
+                              ),
+                              onNext: () => unawaited(
+                                _changeQuestionnaireV1(() {
+                                  _placementIntroVisible = false;
+                                  if (_placementQuestionIndex <
+                                      _placementQuestionsV1.length) {
+                                    _placementQuestionIndex += 1;
+                                  }
+                                }),
+                              ),
+                              onStartDiagnostic: () => setState(() {
+                                _startPlacementDiagnostic(
+                                  _progressWorlds(baseState),
+                                );
+                              }),
+                              onStartRecommended: () {
+                                setState(() {
+                                  unawaited(
+                                    _startPlacementRecommendation(
+                                      _progressWorlds(baseState),
+                                      fromZero: false,
+                                      directRunner: true,
+                                    ),
+                                  );
+                                });
+                              },
+                              onStartFromZero: () {
+                                setState(() {
+                                  unawaited(
+                                    _startPlacementRecommendation(
+                                      _progressWorlds(baseState),
+                                      fromZero: true,
+                                    ),
+                                  );
+                                });
+                              },
                             ),
-                          );
-                        });
-                      },
-                      onStartFromZero: () {
-                        setState(() {
-                          unawaited(
-                            _startPlacementRecommendation(
-                              _progressWorlds(baseState),
-                              fromZero: true,
-                            ),
-                          );
-                        });
-                      },
+                          ),
+                        ),
+                      ],
                     )
                   : _showWelcome
                   ? Act0WelcomeShellV1(
@@ -10913,6 +11096,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     });
     if (!mounted || epoch != _recoveryEpochV1) return;
     await ProgressService.setPlacementScoreV1(score);
+    if (!mounted ||
+        epoch != _recoveryEpochV1 ||
+        _dat07SuspendedV1 ||
+        _act0Dat07BarrierV1 != null ||
+        _act0Dat07ResetInFlightV1 != null)
+      return;
+    try {
+      await _clearQuestionnaireV1();
+    } catch (_) {
+      // Durable intake completion dominates stale draft on bootstrap.
+    }
   }
 
   String _firstValueReceiptLineV1(Act0LessonTaskV1? task) {
