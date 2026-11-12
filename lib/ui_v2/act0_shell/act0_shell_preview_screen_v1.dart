@@ -5561,18 +5561,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _progressRestoredV1 = false;
         _recoveryMessageV1 = null;
       });
-      try {
-        await _clearQuestionnaireV1();
-      } catch (_) {
-        if (mounted)
-          setState(() {
-            _recoveryBusyV1 = false;
-            _progressLoadFailed = true;
-            _recoveryMessageV1 =
-                'Questionnaire reset could not be verified. Progress was not reset. Try again.';
-          });
-        return;
-      }
+      // Early stale-consent/existing-copy refusal must not write sidecar keys.
+      // A successful canonical reset advances its durable revision; the
+      // questionnaire's canonical binding then retires the old draft at boot.
+      // Keep the sidecar unchanged until that authoritative decision exists.
       if (!mounted || _dat07SuspendedV1 || _act0Dat07BarrierV1 != null) return;
       final outcome = await _progressStore.confirmRecoveryOutcome(proposal);
       if (!mounted || _dat07SuspendedV1 || _act0Dat07BarrierV1 != null) return;
