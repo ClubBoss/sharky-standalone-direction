@@ -2561,6 +2561,7 @@ class _WorldNodeV1 extends StatefulWidget {
 class _WorldNodeV1State extends State<_WorldNodeV1>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  bool _disableMotion = false;
 
   @override
   void initState() {
@@ -2569,7 +2570,18 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
       duration: const Duration(milliseconds: 250),
       vsync: this,
     );
-    _controller.forward();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _disableMotion = MediaQuery.of(context).disableAnimations;
+    if (_disableMotion) {
+      _controller.stop();
+      _controller.value = 1;
+    } else if (_controller.isDismissed) {
+      _controller.forward();
+    }
   }
 
   @override
@@ -2577,7 +2589,12 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
     super.didUpdateWidget(oldWidget);
     if (oldWidget.selected != widget.selected ||
         oldWidget.world.status != widget.world.status) {
-      _controller.forward(from: 0.0);
+      if (_disableMotion) {
+        _controller.stop();
+        _controller.value = 1;
+      } else {
+        _controller.forward(from: 0.0);
+      }
     }
   }
 
