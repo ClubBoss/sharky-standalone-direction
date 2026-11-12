@@ -206,7 +206,8 @@ Act0PersonalizedReturnReasonV1? _retryRepairReason(
             family.lastOutcome ==
                 act0ConceptFamilyOutcomeRepairNotYetSucceededV1 ||
             (family.repairAttemptCount > family.successfulRepairCount &&
-                family.lastAttemptAt != null),
+                family.lastAttemptAt != null &&
+                !_latestRepairLanded(family)),
       )
       .toList(growable: false);
   final family = _latestFamily(candidates, order: _repairOrder);
@@ -226,6 +227,20 @@ Act0PersonalizedReturnReasonV1? _retryRepairReason(
     whyNowMessageKey: 'repair_not_landed',
     rawEvidenceRef: 'concept_family:${family.conceptFamilyId}',
   );
+}
+
+// RET-01: a failed attempt followed by a landed one still leaves more attempts
+// than successes. The counts alone must not claim the latest repair failed.
+// Known limit: Preview feeds learning-evidence and repair-outcome orders from
+// two counters, so the proof/attempt comparison can hide a genuine retry; the
+// learner then sees the neutral recent-focus line, never a false claim.
+bool _latestRepairLanded(Act0ConceptFamilyStateV1 family) {
+  if (family.lastOutcome == act0ConceptFamilyOutcomeRepairSucceededV1) {
+    return true;
+  }
+  final attemptAt = family.lastAttemptAt;
+  final proofAt = family.lastProofAt;
+  return attemptAt != null && proofAt != null && proofAt >= attemptAt;
 }
 
 Act0PersonalizedReturnReasonV1? _dueReviewReason(
