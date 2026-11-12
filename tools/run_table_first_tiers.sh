@@ -152,7 +152,6 @@ case "${tier}" in
     cmds=(
       "dart format --set-exit-if-changed ."
       "dart analyze"
-      "./run_flutter_tests.sh"
       "flutter test"
       "dart run tools/validate_training_content.dart --ci"
     )
