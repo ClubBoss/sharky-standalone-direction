@@ -9,7 +9,7 @@ import 'package:poker_analyzer/features/hst06/personal_hand_screen_v1.dart';
 import 'package:poker_analyzer/features/hst06/personal_hand_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_you_leaf_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
-import 'hst06_review_route_proposal_test.dart' as fixture;
+import '../ui_v2/hst06_review_route_proposal_test.dart' as fixture;
 
 Map<String, Object?> evidenceSnapshot(WidgetTester tester) {
   final dynamic state = tester.state(find.byType(Act0ShellPreviewScreenV1));

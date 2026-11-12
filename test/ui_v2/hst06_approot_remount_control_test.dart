@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/features/hst06/personal_hand_v1.dart';
-import 'hst06_approot_journey_test.dart' as journey;
+import '../support/hst06_approot_journey_helpers.dart' as journey;
 import 'hst06_review_route_proposal_test.dart' as fixture;
 
 const progressKeys = [
