@@ -619,12 +619,11 @@ void main() {
 
   group('RET-01 inputs are never mutated', () {
     test('selection reads unmodifiable inputs and leaves them unchanged', () {
-      final intents = List<Act0RepairIntentV1>.unmodifiable(
-        <Act0RepairIntentV1>[
-          _intent(sourceTaskId: 'task_b', missedSignalId: 'signal_b'),
-          _intent(sourceTaskId: 'task_a', missedSignalId: 'signal_a'),
-        ],
-      );
+      final intents =
+          List<Act0RepairIntentV1>.unmodifiable(<Act0RepairIntentV1>[
+            _intent(sourceTaskId: 'task_b', missedSignalId: 'signal_b'),
+            _intent(sourceTaskId: 'task_a', missedSignalId: 'signal_a'),
+          ]);
       final families = List<Act0ConceptFamilyStateV1>.unmodifiable(
         <Act0ConceptFamilyStateV1>[
           _retryFamily('retry_b', lastAttemptAt: 2),
@@ -632,12 +631,11 @@ void main() {
           _retryFamily('retry_a', lastAttemptAt: 6),
         ],
       );
-      final dueItems = List<Act0DueReviewItemV1>.unmodifiable(
-        <Act0DueReviewItemV1>[
-          _dueItem('due_b', DateTime.utc(2026, 11, 3), taskId: 'due_b_task'),
-          _dueItem('due_a', DateTime.utc(2026, 11, 2), taskId: 'due_a_task'),
-        ],
-      );
+      final dueItems =
+          List<Act0DueReviewItemV1>.unmodifiable(<Act0DueReviewItemV1>[
+            _dueItem('due_b', DateTime.utc(2026, 11, 3), taskId: 'due_b_task'),
+            _dueItem('due_a', DateTime.utc(2026, 11, 2), taskId: 'due_a_task'),
+          ]);
       final signals = List<Act0LearningTransferSignalV1>.unmodifiable(
         <Act0LearningTransferSignalV1>[
           _signal('transfer_c', act0LearningTransferImprovedV1, order: 3),
@@ -741,14 +739,16 @@ Act0ConceptFamilyStateV1 _family(
   lastSessionId: 'ret01_session',
 );
 
-Act0ConceptFamilyStateV1 _retryFamily(String id, {required int lastAttemptAt}) =>
-    _family(
-      id,
-      lastSeenAt: lastAttemptAt,
-      lastAttemptAt: lastAttemptAt,
-      attempts: 1,
-      lastOutcome: act0ConceptFamilyOutcomeRepairNotYetSucceededV1,
-    );
+Act0ConceptFamilyStateV1 _retryFamily(
+  String id, {
+  required int lastAttemptAt,
+}) => _family(
+  id,
+  lastSeenAt: lastAttemptAt,
+  lastAttemptAt: lastAttemptAt,
+  attempts: 1,
+  lastOutcome: act0ConceptFamilyOutcomeRepairNotYetSucceededV1,
+);
 
 Act0DueReviewItemV1 _dueItem(
   String family,

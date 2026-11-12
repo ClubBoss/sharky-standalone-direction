@@ -261,14 +261,25 @@ void main() {
       RegExp(r'\bwon\b', caseSensitive: false),
       RegExp(r'profit|money|bankroll|\$|cash|earn', caseSensitive: false),
       RegExp(r'guarantee|always|never miss|sure thing', caseSensitive: false),
-      RegExp(r'win (it )?back|get (it|them) back|recover|make up for|'
-          r'chase|revenge|tilt', caseSensitive: false),
-      RegExp(r'hurry|immediately|right now|last chance|before it|'
-          r'expire|deadline|urgent|don.t miss|or else', caseSensitive: false),
-      RegExp(r'lose|losing|lost|penalt|punish|streak|reset|fall behind|'
-          r'fail(ed|ure)?\b', caseSensitive: false),
-      RegExp(r'master(ed|y)?|perfect|forever|solved|gto|solver',
-          caseSensitive: false),
+      RegExp(
+        r'win (it )?back|get (it|them) back|recover|make up for|'
+        r'chase|revenge|tilt',
+        caseSensitive: false,
+      ),
+      RegExp(
+        r'hurry|immediately|right now|last chance|before it|'
+        r'expire|deadline|urgent|don.t miss|or else',
+        caseSensitive: false,
+      ),
+      RegExp(
+        r'lose|losing|lost|penalt|punish|streak|reset|fall behind|'
+        r'fail(ed|ure)?\b',
+        caseSensitive: false,
+      ),
+      RegExp(
+        r'master(ed|y)?|perfect|forever|solved|gto|solver',
+        caseSensitive: false,
+      ),
       RegExp(r'\bmust\b|\bhave to\b|\bshould have\b', caseSensitive: false),
     ];
     for (final row in rows) {
@@ -316,7 +327,11 @@ void main() {
 
   test('assistance cannot pad the verified line', () {
     var history = _chain(4);
-    history = _append(history, 5, assistance: Act0DecisionAssistanceV1.quickHint);
+    history = _append(
+      history,
+      5,
+      assistance: Act0DecisionAssistanceV1.quickHint,
+    );
     final assisted = _fromRecentHistory(history);
     expect(assisted.reasonType, act0RecentEvidenceConfirmationNeededV1);
     expect(assisted.copyLine, isNot(contains('verified')));
@@ -326,10 +341,7 @@ void main() {
       6,
       assistance: Act0DecisionAssistanceV1.theoryRecall,
     );
-    expect(
-      _fromRecentHistory(history).copyLine,
-      isNot(contains('verified')),
-    );
+    expect(_fromRecentHistory(history).copyLine, isNot(contains('verified')));
   });
 
   test('a stale historical arithmetic verdict is never shown as recent '
@@ -342,10 +354,10 @@ void main() {
       nowUtc: _now,
     );
     for (final signal in measurement.signals) {
-      expect(
-        <String>{act0RecentEvidenceVerifiedV1, act0RecentEvidenceConfirmationNeededV1},
-        contains(signal.verdict),
-      );
+      expect(<String>{
+        act0RecentEvidenceVerifiedV1,
+        act0RecentEvidenceConfirmationNeededV1,
+      }, contains(signal.verdict));
     }
   });
 
