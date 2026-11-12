@@ -747,12 +747,14 @@ class _EntryGateState extends State<_EntryGate> {
     if (!_entryReady) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-    final shell = Act0ShellPreviewScreenV1(
-      debugHarnessEntry: _debugHarnessEntry,
-      showPlacementOnStart: _showPlacementOnStart,
-      telemetrySink: act0CanonicalTelemetrySinkV1(
-        hnpEnabled: _hnpTelemetryEnabled,
-        isReleaseMode: kReleaseMode,
+    final shell = Act0Dat07ShellHostV1(
+      shell: Act0ShellPreviewScreenV1(
+        debugHarnessEntry: _debugHarnessEntry,
+        showPlacementOnStart: _showPlacementOnStart,
+        telemetrySink: act0CanonicalTelemetrySinkV1(
+          hnpEnabled: _hnpTelemetryEnabled,
+          isReleaseMode: kReleaseMode,
+        ),
       ),
     );
     if (!_sharkyVisualAuditEnabled || _debugHarnessEntry == null) return shell;

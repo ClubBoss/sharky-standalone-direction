@@ -1,0 +1,362 @@
+{
+  "schema_version": 1,
+  "record_id": "w4_new_price_theory_v1",
+  "record_version": "1.0.0-proposal.2",
+  "hand_id": "new_hand_w4_theory_price_001",
+  "demo_point_id": "new_hand_w4_theory_price_001:turn_price_before_hero",
+  "provenance": {
+    "kind": "new_authored_private_unscored_theory",
+    "authored_on_local": "2026-11-12",
+    "timezone": "Asia/Tbilisi",
+    "recovered_old_history": false,
+    "derived_from_or_shared_with_graded_six_records": false,
+    "source_original_sha256": "24198fb55003f646d58c14ee9f20dbe3d7244b71b8ec77913652ee5a64464313",
+    "production_admitted": false
+  },
+  "game": {
+    "variant": "NLHE",
+    "table_format": "sixMax",
+    "small_blind_bb": "0.5",
+    "big_blind_bb": "1",
+    "ante_bb": "0",
+    "rake_bb": "0",
+    "chip_unit_bb": "0.5",
+    "uncalled_return_bb": "0",
+    "side_pot": false,
+    "raise_semantics": "street_total_raise_to"
+  },
+  "participants": [
+    {
+      "seat_id": "utg",
+      "clockwise_index": 0,
+      "position": "UTG",
+      "is_button": false,
+      "is_small_blind": false,
+      "is_big_blind": false,
+      "is_hero": false,
+      "initial_stack_bb": "100",
+      "remaining_stack_bb": "100",
+      "lifetime_contribution_bb": "0",
+      "current_street_contribution_bb": "0",
+      "status": "folded",
+      "all_in": false,
+      "hole_cards_source": "unknown_not_authored"
+    },
+    {
+      "seat_id": "hj",
+      "clockwise_index": 1,
+      "position": "HJ",
+      "is_button": false,
+      "is_small_blind": false,
+      "is_big_blind": false,
+      "is_hero": false,
+      "initial_stack_bb": "100",
+      "remaining_stack_bb": "100",
+      "lifetime_contribution_bb": "0",
+      "current_street_contribution_bb": "0",
+      "status": "folded",
+      "all_in": false,
+      "hole_cards_source": "unknown_not_authored"
+    },
+    {
+      "seat_id": "co",
+      "clockwise_index": 2,
+      "position": "CO",
+      "is_button": false,
+      "is_small_blind": false,
+      "is_big_blind": false,
+      "is_hero": false,
+      "initial_stack_bb": "100",
+      "remaining_stack_bb": "100",
+      "lifetime_contribution_bb": "0",
+      "current_street_contribution_bb": "0",
+      "status": "folded",
+      "all_in": false,
+      "hole_cards_source": "unknown_not_authored"
+    },
+    {
+      "seat_id": "btn",
+      "clockwise_index": 3,
+      "position": "BTN",
+      "is_button": true,
+      "is_small_blind": false,
+      "is_big_blind": false,
+      "is_hero": true,
+      "initial_stack_bb": "100",
+      "remaining_stack_bb": "97.5",
+      "lifetime_contribution_bb": "2.5",
+      "current_street_contribution_bb": "0",
+      "status": "live",
+      "all_in": false,
+      "hole_cards_source": "cards.hero_hole"
+    },
+    {
+      "seat_id": "sb",
+      "clockwise_index": 4,
+      "position": "SB",
+      "is_button": false,
+      "is_small_blind": true,
+      "is_big_blind": false,
+      "is_hero": false,
+      "initial_stack_bb": "100",
+      "remaining_stack_bb": "95.5",
+      "lifetime_contribution_bb": "4.5",
+      "current_street_contribution_bb": "2",
+      "status": "live",
+      "all_in": false,
+      "hole_cards_source": "unknown_not_authored"
+    },
+    {
+      "seat_id": "bb",
+      "clockwise_index": 5,
+      "position": "BB",
+      "is_button": false,
+      "is_small_blind": false,
+      "is_big_blind": true,
+      "is_hero": false,
+      "initial_stack_bb": "100",
+      "remaining_stack_bb": "99",
+      "lifetime_contribution_bb": "1",
+      "current_street_contribution_bb": "0",
+      "status": "folded",
+      "all_in": false,
+      "hole_cards_source": "unknown_not_authored"
+    }
+  ],
+  "cards": {
+    "hero_seat": "btn",
+    "hero_hole": [
+      "As",
+      "Jc"
+    ],
+    "opponent_holes": null,
+    "opponent_cards_status": "unknown_not_authored",
+    "flop": [
+      "Qd",
+      "8h",
+      "3c"
+    ],
+    "turn": "6s",
+    "river": null,
+    "folded_hole_cards": "unknown_not_authored"
+  },
+  "events": [
+    {
+      "seq": 1,
+      "street": "preflop",
+      "actor": "sb",
+      "action": "post_small_blind",
+      "additional_bb": "0.5",
+      "street_total_bb": "0.5"
+    },
+    {
+      "seq": 2,
+      "street": "preflop",
+      "actor": "bb",
+      "action": "post_big_blind",
+      "additional_bb": "1",
+      "street_total_bb": "1"
+    },
+    {
+      "seq": 3,
+      "street": "preflop",
+      "actor": "utg",
+      "action": "fold",
+      "additional_bb": "0"
+    },
+    {
+      "seq": 4,
+      "street": "preflop",
+      "actor": "hj",
+      "action": "fold",
+      "additional_bb": "0"
+    },
+    {
+      "seq": 5,
+      "street": "preflop",
+      "actor": "co",
+      "action": "fold",
+      "additional_bb": "0"
+    },
+    {
+      "seq": 6,
+      "street": "preflop",
+      "actor": "btn",
+      "action": "raise_to",
+      "additional_bb": "2.5",
+      "street_total_bb": "2.5"
+    },
+    {
+      "seq": 7,
+      "street": "preflop",
+      "actor": "sb",
+      "action": "call_to",
+      "additional_bb": "2",
+      "street_total_bb": "2.5"
+    },
+    {
+      "seq": 8,
+      "street": "preflop",
+      "actor": "bb",
+      "action": "fold",
+      "additional_bb": "0"
+    },
+    {
+      "seq": 9,
+      "street": "flop",
+      "actor": null,
+      "action": "deal_flop",
+      "additional_bb": "0",
+      "cards": [
+        "Qd",
+        "8h",
+        "3c"
+      ]
+    },
+    {
+      "seq": 10,
+      "street": "flop",
+      "actor": "sb",
+      "action": "check",
+      "additional_bb": "0"
+    },
+    {
+      "seq": 11,
+      "street": "flop",
+      "actor": "btn",
+      "action": "check",
+      "additional_bb": "0"
+    },
+    {
+      "seq": 12,
+      "street": "turn",
+      "actor": null,
+      "action": "deal_turn",
+      "additional_bb": "0",
+      "cards": [
+        "6s"
+      ]
+    },
+    {
+      "seq": 13,
+      "street": "turn",
+      "actor": "sb",
+      "action": "bet_to",
+      "additional_bb": "2",
+      "street_total_bb": "2"
+    }
+  ],
+  "source_point": {
+    "street": "turn",
+    "active_actor": "btn",
+    "hero_seat": "btn",
+    "live_seats": [
+      "btn",
+      "sb"
+    ],
+    "folded_seats": [
+      "utg",
+      "hj",
+      "co",
+      "bb"
+    ],
+    "all_in_seats": [],
+    "actual_action": null,
+    "actual_winner": null,
+    "actual_payout": null
+  },
+  "price_expectations": {
+    "origin": "independent_literal_arithmetic_not_canonical_engine_result",
+    "pot_before_displayed_bet_bb": "6",
+    "displayed_opponent_bet_bb": "2",
+    "pot_after_displayed_bet_before_hero_bb": "8",
+    "actor_street_committed_bb": "0",
+    "additional_call_cost_bb": "2",
+    "amount_to_match_bb": "2",
+    "minimum_full_raise_to_bb": "4",
+    "maximum_raise_to_bb": "97.5",
+    "hypothetical_called_pot_bb": "10",
+    "call_share_exact": "1/5",
+    "call_share_percent": "20",
+    "P_includes_opponent_bet": true,
+    "hypothetical_call_is_not_a_recorded_action": true,
+    "actual_hand_equity": null,
+    "recommended_action": null
+  },
+  "canonical_projection_literals": {
+    "scope": "playedHand",
+    "tableFormat": "sixMax",
+    "heroSeatId": "btn",
+    "activeSeatId": "btn",
+    "streetLabel": "Turn",
+    "potLabel": "Pot 8 BB",
+    "toCallLabel": "To call 2 BB",
+    "actionTrail": [
+      "SB blind 0.5 BB",
+      "BB blind 1 BB",
+      "UTG folds",
+      "HJ folds",
+      "CO folds",
+      "BTN raises to 2.5 BB",
+      "SB calls to 2.5 BB",
+      "BB folds",
+      "Flop: SB checks",
+      "Flop: BTN checks",
+      "Turn: SB bets 2 BB"
+    ],
+    "projection_runtime_verified": false
+  },
+  "theory": {
+    "locale": "en",
+    "role": "unscored_demonstration",
+    "title": "Read the price",
+    "options": [],
+    "steps": [
+      {
+        "title": "What is already in the pot?",
+        "body": "The pot shows 8 BB. That already includes the opponent's 2 BB bet. Your additional call cost is 2 BB."
+      },
+      {
+        "title": "Add only your own call",
+        "body": "If 2 BB were added, the called pot would be 10 BB: 8 + 2. This is a calculation, not an action taken in this example."
+      },
+      {
+        "title": "Read the share of the called pot",
+        "body": "The price share is 2 / 10 = 20%. It is the fraction of the called pot your call would cost. It is not your hand's chance of winning."
+      },
+      {
+        "title": "Price is one part of a decision",
+        "body": "In a no-more-betting, zero-rake comparison, this share is the break-even equity requirement. The opponent's hand and your actual equity are not supplied here. This example does not tell you to Call, Fold or Raise."
+      }
+    ],
+    "equity_or_outs_estimation_required": false,
+    "no_actual_win_probability_claim": true
+  },
+  "example_effects": {
+    "emits_user_choice": false,
+    "emits_decision_made": false,
+    "emits_task_result": false,
+    "emits_completed_decision": false,
+    "appends_graded_learning_evidence": false,
+    "creates_attempt_key": false,
+    "xp_delta": "0",
+    "changes_task_completion": false,
+    "creates_or_closes_repair": false
+  },
+  "future_owner_contract": {
+    "status": "PRIVATE_PROPOSAL_ONLY",
+    "canonical_authority": "existing act0_betting_price_contract_v1.dart ledger",
+    "existing_validation_APIs_read_only_references": [
+      "act0BettingPriceForOptionV1",
+      "act0BettingPriceBlocksAuthoredSuccessV1"
+    ],
+    "theory_has_no_option_and_must_not_create_fake_call": true,
+    "table_only_extraction_entrypoint": "Selected/confirmed by existing HLP/source owner; no new or existing accessor signature asserted here.",
+    "second_engine_or_grammar_adapter_allowed": false,
+    "source_or_HLP_or_progress_code_modified": false,
+    "SDK": "NOT_RUN_NO_SLOT_USED",
+    "existing_task_reward_xp_observed": 5,
+    "existing_task_reward_policy_modified": false,
+    "reward_boundary": "The new example is inert: viewing/showing/replaying its calculation awards 0 and creates no completion. Existing task Continue lifecycle/reward is separate and unchanged, not claimed zero by this proposal."
+  }
+}
