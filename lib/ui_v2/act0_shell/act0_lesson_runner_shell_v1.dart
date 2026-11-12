@@ -1187,10 +1187,51 @@ enum _RunnerViewportFamilyV1 {
   tableTapSeatFocus,
 }
 
+// Display-only private W4 opt-in. Metadata is NOT source/fingerprint proof.
+// Callers must supply independently reviewed premises; no default caller opts in.
+class Act0W4ModelPremisesV1 {
+  const Act0W4ModelPremisesV1({
+    required this.recordId,
+    required this.version,
+    required this.text,
+  });
+  final String recordId, version, text;
+  bool matches(String? world, String? lesson, String? task) =>
+      world == 'world_4' &&
+      switch (recordId) {
+        'w4_new_good_v1' =>
+          version == '1.0.0-proposal.5' &&
+              lesson == 'call_price' &&
+              task == 'w4_good_price_call',
+        'w4_new_bad_v1' =>
+          version == '1.0.0-proposal.5' &&
+              lesson == 'call_price' &&
+              task == 'w4_bad_price_fold',
+        'w4_new_cheap_v1' =>
+          version == '1.0.0-proposal.4' &&
+              lesson == 'call_price' &&
+              task == 'w4_cheap_price_marginal_call',
+        'w4_new_big_v1' =>
+          version == '1.0.0-proposal.4' &&
+              lesson == 'call_price' &&
+              task == 'w4_big_price_marginal_fold',
+        'w4_new_checkpoint_v1' =>
+          version == '1.0.0-proposal.3' &&
+              lesson == 'price_checkpoint' &&
+              task == 'w4_checkpoint_price',
+        'w4_new_table_v1' =>
+          version == '1.0.0-proposal.3' &&
+              lesson == 'price_checkpoint' &&
+              task == 'w4_checkpoint_table_price',
+        _ => false,
+      };
+}
+
 class Act0LessonRunnerShellV1 extends StatefulWidget {
   const Act0LessonRunnerShellV1({
     super.key,
     required this.runner,
+    this.w4ModelPremises,
     this.worldNumber = 0,
     this.selectedWorldId,
     this.selectedLessonId,
@@ -1244,6 +1285,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   });
 
   final Act0RunnerStateV1 runner;
+  final Act0W4ModelPremisesV1? w4ModelPremises;
   final int worldNumber;
   final String? selectedWorldId;
   final String? selectedLessonId;
@@ -2105,7 +2147,15 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }
 
   bool _rejectInvalidAuthoredBettingPriceV1(Act0RunnerOptionV1 option) {
-    if (!act0BettingPriceBlocksAuthoredSuccessV1(widget.runner.table, option)) {
+    if (!act0BettingPriceBlocksAuthoredSuccessV1(
+      widget.runner.table,
+      option,
+      taskId: widget.selectedTaskId,
+      question: widget.runner.question,
+      sizingBet:
+          widget.selectedTaskFamily == Act0TaskFamilyV1.sizing &&
+          widget.runner.sizingConfig.isEnabled,
+    )) {
       return false;
     }
     // This is a source error, not a learner mistake. Do not consume the
@@ -4249,7 +4299,19 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             'asm05_new_known_holes_turn_call_10',
             'asm05_new_known_holes_turn_call_40',
           }.contains(widget.selectedTaskId);
-      final support = showAsm05ModelAssumptions
+      final showW4ModelPremises =
+          isDrill &&
+          !isTeaching &&
+          runner.selectedOptionId == null &&
+          widget.w4ModelPremises?.matches(
+                widget.selectedWorldId,
+                widget.selectedLessonId,
+                widget.selectedTaskId,
+              ) ==
+              true;
+      final support = showW4ModelPremises
+          ? widget.w4ModelPremises!.text
+          : showAsm05ModelAssumptions
           ? '${runner.caption} ${runner.hint}'
           : isTheory || isTeaching
           ? hint
@@ -4312,7 +4374,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         eyebrow: purpose,
         headline: headline,
         support: support,
-        scrollSupport: showAsm05ModelAssumptions,
+        scrollSupport: showAsm05ModelAssumptions || showW4ModelPremises,
         focusLabel: focusLabel,
         progressLabel: progressLabel,
       );

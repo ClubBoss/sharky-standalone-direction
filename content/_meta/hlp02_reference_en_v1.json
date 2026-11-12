@@ -1,0 +1,589 @@
+{
+  "schema_version": "hlp02.act0-reference.en.v1",
+  "content_origin": "SHARKY_HLP02_REFERENCE_FINAL_v2_20261109; generated read-only projection",
+  "repository_main_sha": "3784d421beb5ae7cb8cfaacd10b1083855148850",
+  "policy": "English-only; exact source-owned theory/learn tasks; never on independent assessment or before assessed choice; not a replacement for glossary_service",
+  "rankings": [
+    {
+      "id": "rank.high_card",
+      "order_low_to_high": 1,
+      "name_en": "High card",
+      "definition_en": "No pair, straight, flush, or higher hand; the five ranks are compared in order.",
+      "example_five_cards": [
+        "As",
+        "Jd",
+        "9h",
+        "6c",
+        "3s"
+      ],
+      "compare_en": "Compare highest card, then each remaining card from high to low.",
+      "common_mistake_en": "Q-K-A-2-3 is not a straight; ace cannot wrap through king to two."
+    },
+    {
+      "id": "rank.one_pair",
+      "order_low_to_high": 2,
+      "name_en": "One pair",
+      "definition_en": "Exactly two cards of the same rank, with three other ranks.",
+      "example_five_cards": [
+        "Ks",
+        "Kd",
+        "Qh",
+        "8c",
+        "3s"
+      ],
+      "compare_en": "Compare pair ranks first; then the three kickers, highest first.",
+      "common_mistake_en": "A pocket pair is not always the final best-five category after community cards appear."
+    },
+    {
+      "id": "rank.two_pair",
+      "order_low_to_high": 3,
+      "name_en": "Two pair",
+      "definition_en": "Two cards of one rank and two of another rank, plus one kicker.",
+      "example_five_cards": [
+        "Qs",
+        "Qd",
+        "8h",
+        "8s",
+        "2c"
+      ],
+      "compare_en": "Compare higher pair, lower pair, then the fifth-card kicker.",
+      "common_mistake_en": "Two different pair ranks are needed; three separate pairs still use only the highest two pairs and best kicker."
+    },
+    {
+      "id": "rank.three_of_a_kind",
+      "order_low_to_high": 4,
+      "name_en": "Three of a kind",
+      "definition_en": "Three cards of one rank and two side cards of different ranks.",
+      "example_five_cards": [
+        "Jc",
+        "Jh",
+        "Js",
+        "7d",
+        "2s"
+      ],
+      "compare_en": "Compare triple rank, then each of the two kickers in descending order.",
+      "common_mistake_en": "A set and trips both belong to this single hand-rank category; neither outranks the other by name."
+    },
+    {
+      "id": "rank.straight",
+      "order_low_to_high": 5,
+      "name_en": "Straight",
+      "definition_en": "Five consecutive card ranks, not necessarily the same suit.",
+      "example_five_cards": [
+        "9s",
+        "8d",
+        "7h",
+        "6c",
+        "5s"
+      ],
+      "compare_en": "Compare the highest card of the straight; A-2-3-4-5 is five-high.",
+      "common_mistake_en": "Ace is high in T-J-Q-K-A or low in A-2-3-4-5, never circular in Q-K-A-2-3."
+    },
+    {
+      "id": "rank.flush",
+      "order_low_to_high": 6,
+      "name_en": "Flush",
+      "definition_en": "Five cards of one suit, not necessarily consecutive.",
+      "example_five_cards": [
+        "Ah",
+        "Jh",
+        "8h",
+        "5h",
+        "2h"
+      ],
+      "compare_en": "Compare the five card ranks from highest to lowest; suits do not break ties.",
+      "common_mistake_en": "Four matching suits are only a draw, not a made flush."
+    },
+    {
+      "id": "rank.full_house",
+      "order_low_to_high": 7,
+      "name_en": "Full house",
+      "definition_en": "Three cards of one rank and two of another rank.",
+      "example_five_cards": [
+        "Tc",
+        "Td",
+        "Th",
+        "4s",
+        "4d"
+      ],
+      "compare_en": "Compare the triple rank first; if equal, compare the pair rank.",
+      "common_mistake_en": "A full house outranks a flush; two separate pairs without trips are not a full house."
+    },
+    {
+      "id": "rank.four_of_a_kind",
+      "order_low_to_high": 8,
+      "name_en": "Four of a kind",
+      "definition_en": "Four cards of the same rank plus one kicker.",
+      "example_five_cards": [
+        "9h",
+        "9d",
+        "9s",
+        "9c",
+        "2h"
+      ],
+      "compare_en": "Compare the four-of-a-kind rank, then the remaining kicker.",
+      "common_mistake_en": "Board quads can tie or be decided by kicker; they do not guarantee a unique winner."
+    },
+    {
+      "id": "rank.straight_flush",
+      "order_low_to_high": 9,
+      "name_en": "Straight flush",
+      "definition_en": "Five consecutive ranks all in the same suit.",
+      "example_five_cards": [
+        "9h",
+        "8h",
+        "7h",
+        "6h",
+        "5h"
+      ],
+      "compare_en": "Compare highest straight card; an ace-high straight flush is the maximum. Suits never break ties.",
+      "common_mistake_en": "Royal flush is not a tenth rank category; it is an ace-high straight flush."
+    }
+  ],
+  "named_variant": {
+    "id": "rank_variant.royal_flush",
+    "parent_rank_id": "rank.straight_flush",
+    "name_en": "Royal flush",
+    "definition_en": "An ace-high straight flush: T-J-Q-K-A, all in one suit. It is the highest possible five-card hand, not a separate tenth category.",
+    "example_five_cards": [
+      "Ah",
+      "Kh",
+      "Qh",
+      "Jh",
+      "Th"
+    ],
+    "compare_en": "Ties with another ace-high straight flush; suit has no ranking. In one standard deck at a common board, both players can share the same royal flush.",
+    "common_mistake_en": "Treating a royal flush as a tenth category or assuming hearts outrank other suits."
+  },
+  "terms": [
+    {
+      "id": "term.hero",
+      "name_en": "Hero",
+      "definition_en": "You, the player whose decision is being trained.",
+      "existing_contract_key": "HERO",
+      "source_path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+      "source_blob_sha": "c7448bc9f0bf449f38c535a77b0b37b67498b5fb",
+      "owner_status": "act0_vocab_or_seat_code_present",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.villain",
+      "name_en": "Villain",
+      "definition_en": "The opponent named in a training spot.",
+      "existing_contract_key": "VILLAIN",
+      "source_path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+      "source_blob_sha": "c7448bc9f0bf449f38c535a77b0b37b67498b5fb",
+      "owner_status": "act0_vocab_or_seat_code_present",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.button",
+      "name_en": "Button / BTN",
+      "definition_en": "The dealer-button seat; ordinarily last to act after the flop if still in the hand.",
+      "existing_contract_key": "BUTTON",
+      "source_path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+      "source_blob_sha": "c7448bc9f0bf449f38c535a77b0b37b67498b5fb",
+      "owner_status": "act0_vocab_or_seat_code_present",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.cutoff",
+      "name_en": "Cutoff / CO",
+      "definition_en": "The seat immediately before the button in the preflop order.",
+      "existing_contract_key": "CUTOFF",
+      "source_path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+      "source_blob_sha": "c7448bc9f0bf449f38c535a77b0b37b67498b5fb",
+      "owner_status": "act0_vocab_or_seat_code_present",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.small_blind",
+      "name_en": "Small blind / SB",
+      "definition_en": "The forced-bet seat directly left of the button in a standard multiway deal.",
+      "existing_contract_key": "SMALL_BLIND",
+      "source_path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+      "source_blob_sha": "c7448bc9f0bf449f38c535a77b0b37b67498b5fb",
+      "owner_status": "act0_vocab_or_seat_code_present",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.big_blind",
+      "name_en": "Big blind / BB",
+      "definition_en": "The larger forced bet and its seat, one seat after the small blind.",
+      "existing_contract_key": "BIG_BLIND",
+      "source_path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+      "source_blob_sha": "c7448bc9f0bf449f38c535a77b0b37b67498b5fb",
+      "owner_status": "act0_vocab_or_seat_code_present",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.blinds",
+      "name_en": "Blinds",
+      "definition_en": "Forced opening bets posted before normal preflop action.",
+      "existing_contract_key": "BLINDS",
+      "source_path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+      "source_blob_sha": "c7448bc9f0bf449f38c535a77b0b37b67498b5fb",
+      "owner_status": "act0_vocab_or_seat_code_present",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.preflop",
+      "name_en": "Preflop",
+      "definition_en": "The betting round before any community cards appear.",
+      "existing_contract_key": "PREFLOP",
+      "source_path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+      "source_blob_sha": "c7448bc9f0bf449f38c535a77b0b37b67498b5fb",
+      "owner_status": "act0_vocab_or_seat_code_present",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.postflop",
+      "name_en": "Postflop",
+      "definition_en": "Play after community cards start to appear, beginning on the flop.",
+      "existing_contract_key": "POSTFLOP",
+      "source_path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+      "source_blob_sha": "c7448bc9f0bf449f38c535a77b0b37b67498b5fb",
+      "owner_status": "act0_vocab_or_seat_code_present",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.board",
+      "name_en": "Board",
+      "definition_en": "The shared community cards, up to five by the river.",
+      "existing_contract_key": "BOARD",
+      "source_path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+      "source_blob_sha": "c7448bc9f0bf449f38c535a77b0b37b67498b5fb",
+      "owner_status": "act0_vocab_or_seat_code_present",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.pot",
+      "name_en": "Pot",
+      "definition_en": "The chips being contested in the hand; do not confuse the bank before a call with the pot after that call.",
+      "existing_contract_key": "POT",
+      "source_path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+      "source_blob_sha": "c7448bc9f0bf449f38c535a77b0b37b67498b5fb",
+      "owner_status": "act0_vocab_or_seat_code_present",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.sizing",
+      "name_en": "Sizing",
+      "definition_en": "How large a bet or raise is, with a named unit such as chips or BB.",
+      "existing_contract_key": "SIZING",
+      "source_path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+      "source_blob_sha": "c7448bc9f0bf449f38c535a77b0b37b67498b5fb",
+      "owner_status": "act0_vocab_or_seat_code_present",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.range",
+      "name_en": "Range",
+      "definition_en": "The set of possible hole-card holdings assigned to a player in a given spot; it is not one exact hand.",
+      "existing_contract_key": "RANGE",
+      "source_path": "content/worlds/world1/v1/sessions/w1.s01/session.md",
+      "source_blob_sha": "c7448bc9f0bf449f38c535a77b0b37b67498b5fb",
+      "owner_status": "act0_vocab_or_seat_code_present",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.equity",
+      "name_en": "Equity",
+      "definition_en": "Equity is the expected share of the eligible pot at showdown, averaged over a stated opponent hand/range model and the remaining possible board runouts. Ties contribute their fractional pot share; equity is not just the probability of winning outright. No universal equity percentage exists without these assumptions.",
+      "existing_contract_key": "EQUITY",
+      "source_path": "content/worlds/world1/v1/sessions/w1.s05/session.md",
+      "source_blob_sha": "6c99c6e1b6b818b195acaf2cf4240e2550616094",
+      "owner_status": "act0_lexical",
+      "source_copy_alignment": "SOURCE_TEXT_NARROWER_THAN_THIS_REFERENCE; any canonical first-use correction requires source owner approval"
+    },
+    {
+      "id": "term.probe",
+      "name_en": "Probe",
+      "definition_en": "In this curriculum, a smaller turn bet after the opponent checks back the flop. It is a situation label, not an always-correct action.",
+      "existing_contract_key": "PROBE",
+      "source_path": "content/worlds/world4/v1/sessions/w4.s02/session.md",
+      "source_blob_sha": "ad9a33fa38d02f6bd7aa51be6d751d13a6a21f8a",
+      "owner_status": "act0_related_word_only",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.blockers",
+      "name_en": "Blockers",
+      "definition_en": "Known cards that reduce the number of possible opposing card combinations. They do not prove what the opponent holds.",
+      "existing_contract_key": "BLOCKERS",
+      "source_path": "content/worlds/world4/v1/sessions/w4.s03/session.md",
+      "source_blob_sha": "c90567f995c8d9860de20fbbe2ad50f6f919a941",
+      "owner_status": "act0_lexical",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.outs",
+      "name_en": "Outs",
+      "definition_en": "Unseen cards that could improve your hand. A card that improves it is not automatically a winning out against every opponent range.",
+      "existing_contract_key": "OUTS",
+      "source_path": "content/worlds/world2/v1/sessions/w2.s06/session.md",
+      "source_blob_sha": "04462544bdbe9dd3465a771709af0a674c5de12b",
+      "owner_status": "act0_wired_lesson",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.oop",
+      "name_en": "Out of position / OOP",
+      "definition_en": "Acting before the relevant opponent on later streets; this affects the information available when deciding.",
+      "existing_contract_key": "OOP",
+      "source_path": "content/worlds/world2/v1/sessions/w2.s03/session.md",
+      "source_blob_sha": "6544fc39acb70b8f2edc4e9cc78340ac92b0ed6b",
+      "owner_status": "session_only_no_act0_token",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.paired",
+      "name_en": "Paired board",
+      "definition_en": "A community-card board containing at least two cards of the same rank.",
+      "existing_contract_key": "PAIRED",
+      "source_path": "content/worlds/world2/v1/sessions/w2.s04/session.md",
+      "source_blob_sha": "7c86eb6524ebb2ae546bcaff9f83d326fd5b5a84",
+      "owner_status": "act0_lexical",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.spr",
+      "name_en": "SPR",
+      "definition_en": "Stack-to-pot ratio: the relevant remaining effective stack divided by the pot, with both measured in the same unit.",
+      "existing_contract_key": "SPR",
+      "source_path": "content/worlds/world7/v1/sessions/w7.s02/session.md",
+      "source_blob_sha": "3dc71cf551be3387cefba3890a40962278df2d4b",
+      "owner_status": "act0_wired_lesson",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.icm",
+      "name_en": "ICM",
+      "definition_en": "Independent Chip Model: a tournament payout model translating chip stacks to estimated prize equity under stated entrants and prizes.",
+      "existing_contract_key": "ICM",
+      "source_path": "content/worlds/world8/v1/sessions/w8.s01/session.md",
+      "source_blob_sha": "3b739c483249e5c8e793d40e7c3bc66157401d2c",
+      "owner_status": "session_only_no_act0_token",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.ev",
+      "name_en": "EV",
+      "definition_en": "Expected value: the average gain or loss of a decision under an explicit outcome and cost model, not a guaranteed result.",
+      "existing_contract_key": "EV",
+      "source_path": "content/worlds/world8/v1/sessions/w8.s02/session.md",
+      "source_blob_sha": "aa382f709a62cd8b6b491e82338e709a218761e7",
+      "owner_status": "act0_lexical",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.exploit",
+      "name_en": "Exploit",
+      "definition_en": "A justified adjustment based on a reliably observed opponent tendency; not a guaranteed win.",
+      "existing_contract_key": "EXPLOIT",
+      "source_path": "content/worlds/world9/v1/sessions/w9.s01/session.md",
+      "source_blob_sha": "da3b331aecb9bf30050dd99d21246c004876c435",
+      "owner_status": "act0_wired_lesson",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.combo",
+      "name_en": "Combo",
+      "definition_en": "One specific unordered two-card hole-card combination, unlike a range of many combos.",
+      "existing_contract_key": "COMBO",
+      "source_path": "content/worlds/world6/v1/sessions/w6.s01/session.md",
+      "source_blob_sha": "eea7327aa52017fa74a280e5257ca38f9a726faa",
+      "owner_status": "act0_wired_lesson",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.best_five",
+      "name_en": "Best five",
+      "definition_en": "Choose the strongest five cards from the available seven; zero, one, or two hole cards may play.",
+      "existing_contract_key": null,
+      "source_path": "content/worlds/world1/v1/source_repairs/showdown_basics_v1/source.md",
+      "source_blob_sha": "77ad01ea3aa8421f90474fa29adef3b4ec120b6e",
+      "owner_status": "act0_wired_task:hand_rankings_best_five_drill",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.kicker",
+      "name_en": "Kicker",
+      "definition_en": "A remaining card among the best five that can break a tie after the relevant made-hand ranks match.",
+      "existing_contract_key": null,
+      "source_path": "content/worlds/world1/v1/source_repairs/showdown_basics_v1/source.md",
+      "source_blob_sha": "77ad01ea3aa8421f90474fa29adef3b4ec120b6e",
+      "owner_status": "act0_wired_task:showdown_kicker_drill",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.board_plays",
+      "name_en": "Board plays",
+      "definition_en": "Both players use the board as their best five cards; neither hole-card hand improves it. The outcome is a tie.",
+      "existing_contract_key": null,
+      "source_path": "docs/plan/POKER_SEMANTICS_TRUTH_v1.md",
+      "source_blob_sha": "9129cf2eff6b70ad7aad6b2453751dc9a0e202e3",
+      "owner_status": "act0_wired_task:showdown_board_plays_drill",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.split_pot",
+      "name_en": "Split pot",
+      "definition_en": "An equal-ranking showdown result shares the contested pot among tied winners, subject to the game and room rules. A tie need not be board plays.",
+      "existing_contract_key": null,
+      "source_path": "content/worlds/world1/v1/source_repairs/showdown_basics_v1/source.md",
+      "source_blob_sha": "77ad01ea3aa8421f90474fa29adef3b4ec120b6e",
+      "owner_status": "act0_wired_task:showdown_tie_drill",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.set",
+      "name_en": "Set",
+      "definition_en": "Three of a kind made from a pocket pair plus one matching community card. Same hand-rank category as trips.",
+      "existing_contract_key": null,
+      "source_path": "docs/plan/POKER_SEMANTICS_TRUTH_v1.md",
+      "source_blob_sha": "9129cf2eff6b70ad7aad6b2453751dc9a0e202e3",
+      "owner_status": "act0_wired_task:hand_rankings_trips_drill",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.trips",
+      "name_en": "Trips",
+      "definition_en": "Three of a kind made from one hole card and a paired board; often also used loosely for any three of a kind.",
+      "existing_contract_key": null,
+      "source_path": "docs/plan/POKER_SEMANTICS_TRUTH_v1.md",
+      "source_blob_sha": "9129cf2eff6b70ad7aad6b2453751dc9a0e202e3",
+      "owner_status": "act0_wired_task:hand_rankings_trips_drill",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.top_pair",
+      "name_en": "Top pair",
+      "definition_en": "One pair formed by matching the highest unpaired board rank with a hole card, when the best five remain exactly one pair.",
+      "existing_contract_key": null,
+      "source_path": "docs/plan/POKER_SEMANTICS_TRUTH_v1.md",
+      "source_blob_sha": "9129cf2eff6b70ad7aad6b2453751dc9a0e202e3",
+      "owner_status": "act0_wired_task:w4_value_bet",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    },
+    {
+      "id": "term.call_price",
+      "name_en": "Call price",
+      "definition_en": "The additional chips needed to match the current wager and continue; show units and the pot before this call.",
+      "existing_contract_key": null,
+      "source_path": "lib/ui_v2/act0_shell/act0_shell_state_v1.dart",
+      "source_blob_sha": "c22b20b0ddac5a52094d9313b7e670ea331c9807",
+      "owner_status": "act0_wired_task:call_price",
+      "source_copy_alignment": "not_a_new_source_copy_change"
+    }
+  ],
+  "context_by_lesson": {
+    "what_poker_is": {
+      "task_id": "what_poker_is_theory",
+      "term_ids": [
+        "term.hero",
+        "term.villain",
+        "term.board",
+        "term.pot"
+      ],
+      "show_ranks": false
+    },
+    "cards_ranks_suits": {
+      "task_id": "cards_ranks_suits_theory",
+      "term_ids": [
+        "term.board",
+        "term.best_five"
+      ],
+      "show_ranks": false
+    },
+    "blinds_action_order": {
+      "task_id": "blinds_theory",
+      "term_ids": [
+        "term.button",
+        "term.small_blind",
+        "term.big_blind",
+        "term.blinds",
+        "term.preflop",
+        "term.postflop"
+      ],
+      "show_ranks": false
+    },
+    "positions": {
+      "task_id": "positions_theory",
+      "term_ids": [
+        "term.button",
+        "term.cutoff",
+        "term.small_blind",
+        "term.big_blind"
+      ],
+      "show_ranks": false
+    },
+    "hand_rankings_table": {
+      "task_id": "hand_rankings_theory",
+      "term_ids": [
+        "term.best_five",
+        "term.trips",
+        "term.set"
+      ],
+      "show_ranks": true
+    },
+    "showdown_winning": {
+      "task_id": "showdown_theory",
+      "term_ids": [
+        "term.best_five",
+        "term.kicker",
+        "term.board_plays",
+        "term.split_pot"
+      ],
+      "show_ranks": false
+    },
+    "call_price": {
+      "task_id": "w4_price_intro",
+      "term_ids": [
+        "term.call_price",
+        "term.pot"
+      ],
+      "show_ranks": false
+    },
+    "outs_improvement": {
+      "task_id": "outs_improvement_w5_outs_intro",
+      "term_ids": [
+        "term.outs"
+      ],
+      "show_ranks": false
+    },
+    "range_combo_counts": {
+      "task_id": "w6_combo_counts_intro",
+      "term_ids": [
+        "term.combo",
+        "term.range",
+        "term.blockers"
+      ],
+      "show_ranks": false
+    },
+    "spr_and_commitment": {
+      "task_id": "w7_spr_intro",
+      "term_ids": [
+        "term.spr"
+      ],
+      "show_ranks": false
+    },
+    "exploit_guardrails": {
+      "task_id": "w10_guardrails_intro",
+      "term_ids": [
+        "term.exploit"
+      ],
+      "show_ranks": false
+    }
+  },
+  "not_activated": [
+    "term.sizing",
+    "term.equity",
+    "term.probe",
+    "term.oop",
+    "term.paired",
+    "term.icm",
+    "term.ev",
+    "term.top_pair"
+  ]
+}

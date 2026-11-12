@@ -27,6 +27,7 @@ class Act0AcademySettingsLeafInputV1 {
     this.onOpenTerms,
     this.onBack,
     this.onRecoveryOptions,
+    this.onBackupRestore,
   });
 
   final Act0AcademySettingsLoadStateV1 loadState;
@@ -42,6 +43,7 @@ class Act0AcademySettingsLeafInputV1 {
   final VoidCallback? onOpenTerms;
   final VoidCallback? onBack;
   final VoidCallback? onRecoveryOptions;
+  final VoidCallback? onBackupRestore;
 }
 
 /// Premium Academy Settings leaf ("Quiet Control", Draft PR #315), as a body
@@ -86,6 +88,14 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
         ),
     ];
     final learning = <Widget>[
+      if (input.onBackupRestore != null)
+        _row(
+          'Backup and restore',
+          'Save to Files or restore a private backup',
+          Act0AcademyLeafGlyphKindV1.recall,
+          key: const Key('act0_academy_settings_leaf_backup'),
+          onTap: input.onBackupRestore,
+        ),
       if (input.onRecoveryOptions != null)
         _row(
           'Recovery options',

@@ -45,6 +45,8 @@ class Act0RecoveryHoldV1 extends FormatException {
   const Act0RecoveryHoldV1() : super('Recovery could not be safely verified');
 }
 
+enum Act0ProgressRestoreResultV1 { committed, changed, unverified }
+
 class Act0ProgressStoreV1 {
   Act0ProgressStoreV1({
     required this.key,
@@ -107,6 +109,85 @@ class Act0ProgressStoreV1 {
     );
   });
 
+  /// Revision-aware snapshot from the canonical resolver, not a second reader.
+  /// Recovery completion follows loadState; tombstone revisions are retained.
+  Future<({int revision, String? payload})> readDurableSnapshot() =>
+      _serial(() async {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.reload();
+        if (prefs.containsKey(recoveryIntentKey) &&
+            !await _resumeRecovery(prefs)) {
+          throw const Act0RecoveryHoldV1();
+        }
+        return _resolve(prefs);
+      });
+
+  /// Explicit restore only. [supportedProgressSchema] and [isValidPayload]
+  /// must come from the active shell contract, never from the imported file.
+  /// A commit attempt fences ALL previously constructed writers, including
+  /// this instance. The route must dispose old state and construct a new store
+  /// before resuming saves, also after an indeterminate result.
+  Future<Act0ProgressRestoreResultV1> restoreIfUnchanged({
+    required ({int revision, String? payload}) expected,
+    required String incomingPayload,
+    required int supportedProgressSchema,
+  }) {
+    try {
+      final value = jsonDecode(incomingPayload);
+      if (value is! Map ||
+          value['schemaVersion'] != supportedProgressSchema ||
+          !isValidPayload(incomingPayload)) {
+        return Future.value(Act0ProgressRestoreResultV1.unverified);
+      }
+    } catch (_) {
+      return Future.value(Act0ProgressRestoreResultV1.unverified);
+    }
+    return _serial(() async {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.reload();
+        if (!isWriteLeaseCurrent || prefs.containsKey(recoveryIntentKey)) {
+          return Act0ProgressRestoreResultV1.unverified;
+        }
+        final current = await _resolve(prefs);
+        if (current != expected ||
+            (current.payload != null && current.payload != incomingPayload)) {
+          return Act0ProgressRestoreResultV1.changed;
+        }
+        // The controller handles alreadyPresent without a write. Do not claim
+        // a new committed revision when a direct caller repeats identical data.
+        if (current.payload != null) {
+          return Act0ProgressRestoreResultV1.changed;
+        }
+        if (current.revision >= _maxRevision) {
+          return Act0ProgressRestoreResultV1.unverified;
+        }
+        _epochs[key] = (_epochs[key] ?? 0) + 1;
+        final committed = await _commit(
+          prefs,
+          current.revision + 1,
+          incomingPayload,
+          previousRaw: current.revision == 0
+              ? null
+              : _envelope(current.revision, current.payload),
+        );
+        // false/throw remains indeterminate, even if a later load can recover.
+        if (!committed) return Act0ProgressRestoreResultV1.unverified;
+        await prefs.reload();
+        if (prefs.containsKey(recoveryIntentKey)) {
+          return Act0ProgressRestoreResultV1.unverified;
+        }
+        final durable = await _resolve(prefs);
+        return durable.revision > expected.revision &&
+                durable.payload == incomingPayload
+            ? Act0ProgressRestoreResultV1.committed
+            : Act0ProgressRestoreResultV1.unverified;
+      } catch (_) {
+        return Act0ProgressRestoreResultV1.unverified;
+      }
+    });
+  }
+
   Future<bool> save(String payload) => _serial(() async {
     if (!isWriteLeaseCurrent || !isValidPayload(payload)) return false;
     try {
@@ -151,6 +232,10 @@ class Act0ProgressStoreV1 {
         revision = _highestRevision(prefs);
       }
       if (revision >= _maxRevision) return false;
+      // Once destructive I/O starts, every captured writer is obsolete even
+      // if its acknowledgement is uncertain. A caller must reload with a new
+      // Store before saving again; unlock must never revive an old snapshot.
+      _epochs[key] = (_epochs[key] ?? 0) + 1;
       final committed = await _commit(
         prefs,
         revision + 1,
