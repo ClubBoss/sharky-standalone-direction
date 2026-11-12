@@ -173,7 +173,7 @@ Act0CurrentAuthoredSourceProofV1? act0CurrentAuthoredSourceProofForTaskV1({
   required String lessonId,
   required Act0LessonTaskV1 task,
 }) {
-  if (act0IsW1ActionVocabularyTaskV1(task.taskId) ||
+  if (act0IsUnresolvedHistoricalW1TaskV1(task.taskId) ||
       _isAuthoredTeachingTaskV1(task) ||
       record.worldId != worldId ||
       record.lessonId != lessonId ||

@@ -1616,6 +1616,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   int debugOpenRepairIntentCountV1() => _openRepairIntentBySourceTaskId.length;
 
   @visibleForTesting
+  Map<String, Object?> debugQuarantineProgressPayloadV1() => {
+    'earnedXp': _earnedXp,
+    'lessonRunXp': _lessonRunXp,
+    'completedTaskIds': _completedTaskIds.toList()..sort(),
+    'completedLessonIds': _completedLessonIds.toList()..sort(),
+    'skippedTaskIds': _skippedTaskIds.toList()..sort(),
+    'evidence': _learningEvidenceHistoryV1.toPayload(),
+  };
+
+  @visibleForTesting
+  Future<void> debugFlushQuarantineProgressV1() => _progressStore.flush();
+
+  @visibleForTesting
   String debugSelectedTaskIdV1() => _selectedTaskId;
 
   @visibleForTesting
@@ -4216,7 +4229,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       if (task == null) {
         continue;
       }
-      if (act0IsW1ActionVocabularyTaskV1(intent.sourceTaskId)) {
+      if (act0IsUnresolvedHistoricalW1TaskV1(intent.sourceTaskId)) {
         // Display the stored hand obligation, never today's vocabulary answer.
         // No current grade or fingerprint may be inferred on cold restore.
         final original = _reviewMistakeHistoryV1.records
@@ -4757,7 +4770,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         );
     // Keep the original evidence ledger and its grades. Vocabulary is a new
     // observation, not a hand-error replacement or a retention/repair result.
-    if (act0IsW1ActionVocabularyTaskV1(decision.taskId)) {
+    if (act0IsUnresolvedHistoricalW1TaskV1(decision.taskId)) {
       _pendingReviewKindV1 = null;
       return;
     }
@@ -7400,6 +7413,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   onContinueTheory: () => _setStateForRecoveryV1(
                                     callbackEpochV1,
                                     () {
+                                      if (_blockUnresolvedHistoricalW1V1(
+                                        playSelectedTask,
+                                      ))
+                                        return;
                                       if (_advanceTeachingStep(playRunner!)) {
                                         return;
                                       }
@@ -7444,6 +7461,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   onChooseOption: (option) => _setStateForRecoveryV1(
                                     callbackEpochV1,
                                     () {
+                                      if (_blockUnresolvedHistoricalW1V1(
+                                        playSelectedTask,
+                                      ))
+                                        return;
                                       _fireAnswerEffects(option);
                                       if (_isPracticeQueueRepairAnswerV1(
                                         playSelectedTask,
@@ -7606,6 +7627,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   onContinueReview: () => _setStateForRecoveryV1(
                                     callbackEpochV1,
                                     () {
+                                      if (_blockUnresolvedHistoricalW1V1(
+                                        playSelectedTask,
+                                      ))
+                                        return;
                                       if (sameSessionLearningDelta != null) {
                                         _emitSameSessionLearningDeltaCompletedV1(
                                           sameSessionLearningDelta,
@@ -10492,7 +10517,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           request.sourceTaskId,
           targetTaskId: request.targetTaskId,
         ) ||
-        act0IsW1ActionVocabularyTaskV1(request.repairTaskId)) {
+        act0IsUnresolvedHistoricalW1TaskV1(request.repairTaskId)) {
       _showW1HistoricalRepairUnavailableV1();
       return;
     }
@@ -10542,8 +10567,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     String sourceTaskId, {
     String targetTaskId = '',
   }) =>
-      act0IsW1ActionVocabularyTaskV1(sourceTaskId) ||
-      act0IsW1ActionVocabularyTaskV1(targetTaskId);
+      act0IsUnresolvedHistoricalW1TaskV1(sourceTaskId) ||
+      act0IsUnresolvedHistoricalW1TaskV1(targetTaskId);
 
   void _showW1HistoricalRepairUnavailableV1() {
     if (!mounted) return;
@@ -12315,21 +12340,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     Act0LessonTaskV1 selectedTask,
     Act0RunnerOptionV1 option,
   ) {
-    if (act0IsW1ActionVocabularyTaskV1(selectedTask.taskId)) {
-      // Local feedback/retry counts only. Stable IDs still own once-only XP,
-      // but must not overwrite a historical hand mistake, grade or repair.
-      if (_choiceWasAssistedV1) {
-        _lessonRunAssistedTaskIds.add(selectedTask.taskId);
-      }
-      if (option.isCorrect) {
-        _lessonRunPendingRetryTaskIds.remove(selectedTask.taskId);
-      } else {
-        _lessonRunMistakeTaskIds.add(selectedTask.taskId);
-        _lessonRunPendingRetryTaskIds.add(selectedTask.taskId);
-      }
-      _persistProgress();
-      return;
-    }
+    if (act0IsUnresolvedHistoricalW1TaskV1(selectedTask.taskId))
+      return; // Quarantine: no state or persistence.
     if (_choiceWasAssistedV1) {
       // Record help in this lesson separately from correctness/mistake counts;
       // it cannot earn the learner an independent clean-pass claim.
@@ -12622,10 +12634,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     ))
       return;
 
-    if (act0IsW1ActionVocabularyTaskV1(selectedTask.taskId)) {
-      _appendLearningEvidenceV1(decision);
-      return;
-    }
+    if (act0IsUnresolvedHistoricalW1TaskV1(selectedTask.taskId))
+      return; // No proof from unresolved source.
     Act0PracticeRepairQueueLaunchRequestV1? request;
     final queueRequest = _practiceQueueRepairRequestForTaskV1(decision.taskId);
     if (queueRequest != null) {
@@ -13015,7 +13025,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     required String sourceTaskId,
     required String completedTaskId,
   }) {
-    if (act0IsW1ActionVocabularyTaskV1(completedTaskId)) return;
+    if (act0IsUnresolvedHistoricalW1TaskV1(completedTaskId)) return;
     final intent = _openRepairIntentBySourceTaskId[sourceTaskId];
     if (intent == null) {
       return;
@@ -13407,6 +13417,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     required Act0LessonCardV1 selectedLesson,
     required Act0LessonTaskV1 selectedTask,
   }) {
+    if (_blockUnresolvedHistoricalW1V1(selectedTask)) return;
     final presetId = _activeSelectedPresetIdV1(selectedTask);
     if (presetId == null) {
       return;
@@ -14750,7 +14761,24 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
   }
 
+  bool _blockUnresolvedHistoricalW1V1(Act0LessonTaskV1 task) {
+    if (_selectedWorldId != 'world_1' ||
+        _selectedLessonId != 'fold_check_call_raise' ||
+        !act0IsUnresolvedHistoricalW1TaskV1(task.taskId))
+      return false;
+    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+      const SnackBar(
+        content: Text(
+          'This historical exercise is unavailable while its source is reviewed. Your saved progress is unchanged.',
+          key: Key('act0_historical_w1_unavailable'),
+        ),
+      ),
+    );
+    return true;
+  }
+
   void _completeCurrentTask(Act0LessonTaskV1 selectedTask) {
+    if (_blockUnresolvedHistoricalW1V1(selectedTask)) return;
     final alreadyCompleted = _completedTaskIds.contains(_selectedTaskId);
     _skippedTaskIds.remove(_selectedTaskId);
     _visibleSkippedTaskIds.remove(_selectedTaskId);

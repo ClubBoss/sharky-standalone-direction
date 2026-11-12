@@ -10,9 +10,13 @@ void main() {
   final lesson = world.lessons.singleWhere(
     (lesson) => lesson.lessonId == 'fold_check_call_raise',
   );
-  for (final task in lesson.taskList.where(
-    (task) => act0IsW1ActionVocabularyTaskV1(task.taskId),
-  )) {
+  final cohort = lesson.taskList
+      .where((task) => act0IsUnresolvedHistoricalW1TaskV1(task.taskId))
+      .toList();
+  test('quarantined historical cohort has five tasks', () {
+    expect(cohort, hasLength(5));
+  });
+  for (final task in cohort) {
     for (final choice in task.runner.options) {
       for (final resultKind in ['incorrect', 'suboptimal', 'correct']) {
         final correct = resultKind == 'correct';
@@ -52,31 +56,34 @@ void main() {
         );
       }
     }
-    test('${task.taskId}: current vocabulary is not poker skill proof', () {
-      final correct = task.runner.options.singleWhere((o) => o.isCorrect);
-      final record = Act0LearningEvidenceRecordV1(
-        recordId: 'synthetic-current-${task.taskId}',
-        createdOrder: 1,
-        worldId: world.worldId,
-        lessonId: lesson.lessonId,
-        taskId: task.taskId,
-        sourceTaskId: task.taskId,
-        choiceId: correct.id,
-        expectedChoiceId: correct.id,
-        isCorrect: true,
-        errorType: 'none',
-        repairFocusId: 'action_word',
-        skillAtomId: 'action_word',
-        decisionTimeBucket: 'under_3s',
-        resultKind: 'correct',
-        assistanceKind: Act0DecisionAssistanceV1.none,
-        authoredSourceFingerprint: act0AuthoredSourceFingerprintV1(
+    test(
+      '${task.taskId}: quarantined historical task is not current poker proof',
+      () {
+        final correct = task.runner.options.singleWhere((o) => o.isCorrect);
+        final record = Act0LearningEvidenceRecordV1(
+          recordId: 'synthetic-current-${task.taskId}',
+          createdOrder: 1,
           worldId: world.worldId,
           lessonId: lesson.lessonId,
-          task: task,
-        )!,
-      );
-      expect(act0CurrentAuthoredSourceProofV1(record), isNull);
-    });
+          taskId: task.taskId,
+          sourceTaskId: task.taskId,
+          choiceId: correct.id,
+          expectedChoiceId: correct.id,
+          isCorrect: true,
+          errorType: 'none',
+          repairFocusId: 'action_word',
+          skillAtomId: 'action_word',
+          decisionTimeBucket: 'under_3s',
+          resultKind: 'correct',
+          assistanceKind: Act0DecisionAssistanceV1.none,
+          authoredSourceFingerprint: act0AuthoredSourceFingerprintV1(
+            worldId: world.worldId,
+            lessonId: lesson.lessonId,
+            task: task,
+          )!,
+        );
+        expect(act0CurrentAuthoredSourceProofV1(record), isNull);
+      },
+    );
   }
 }
