@@ -3,6 +3,20 @@ import 'package:flutter/material.dart';
 import 'personal_hand_v1.dart';
 import 'pokerstars_text_v1.dart';
 
+/// An existing authored repair chosen by the learner, never inferred from a hand.
+class Hst06LearningTarget {
+  final String taskId;
+  final String lessonId;
+  final String worldId;
+  final String title;
+  const Hst06LearningTarget({
+    required this.taskId,
+    required this.lessonId,
+    required this.worldId,
+    required this.title,
+  });
+}
+
 class _SeatInput {
   final seat = TextEditingController();
   final name = TextEditingController();
@@ -28,7 +42,12 @@ class _ActionInput {
 /// Isolated personal workflow; an integrator must admit its app navigation.
 class Hst06PersonalHandScreen extends StatefulWidget {
   final Hst06PersonalStore? store;
-  const Hst06PersonalHandScreen({super.key, this.store});
+  final List<Hst06LearningTarget> learningTargets;
+  const Hst06PersonalHandScreen({
+    super.key,
+    this.store,
+    this.learningTargets = const [],
+  });
   @override
   State<Hst06PersonalHandScreen> createState() =>
       _Hst06PersonalHandScreenState();
@@ -52,6 +71,43 @@ class _Hst06PersonalHandScreenState extends State<Hst06PersonalHandScreen> {
   List<Hst06Hand> _saved = [];
   String? _storageError;
   bool _saving = false;
+  bool _choosingLearning = false;
+
+  Future<void> _chooseLearning() async {
+    if (_choosingLearning || widget.learningTargets.isEmpty) return;
+    setState(() => _choosingLearning = true);
+    try {
+      final selected = await showDialog<Hst06LearningTarget>(
+        context: context,
+        builder: (dialogContext) => SimpleDialog(
+          title: const Text('Choose a learning repair'),
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text(
+                'Your choice, not an assessment of this hand. '
+                'Opens an existing learning task; this hand earns no XP.',
+              ),
+            ),
+            for (final target in widget.learningTargets)
+              SimpleDialogOption(
+                onPressed: () => Navigator.of(dialogContext).pop(target),
+                child: Text(target.title),
+              ),
+            SimpleDialogOption(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('Cancel'),
+            ),
+          ],
+        ),
+      );
+      if (!mounted || selected == null) return;
+      // Close the private route before the adapter opens authored learning.
+      Navigator.of(context).pop<Hst06LearningTarget>(selected);
+    } finally {
+      if (mounted) setState(() => _choosingLearning = false);
+    }
+  }
 
   @override
   void initState() {
@@ -527,12 +583,24 @@ class _Hst06PersonalHandScreenState extends State<Hst06PersonalHandScreen> {
         for (final h in _saved)
           ListTile(
             title: Text(h.title),
-            subtitle: Text(
-              h.origin +
-                  ' / revision ' +
-                  h.revision.toString() +
-                  ' / Hero seat ' +
-                  (h.heroSeat?.toString() ?? 'unknown'),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  h.origin +
+                      ' / revision ' +
+                      h.revision.toString() +
+                      ' / Hero seat ' +
+                      (h.heroSeat?.toString() ?? 'unknown'),
+                ),
+                widget.learningTargets.isEmpty
+                    ? const Text('No learning repair available')
+                    : TextButton(
+                        key: Key('hst06-learning-' + h.localId),
+                        onPressed: _choosingLearning ? null : _chooseLearning,
+                        child: const Text('Choose learning repair'),
+                      ),
+              ],
             ),
           ),
       ],
