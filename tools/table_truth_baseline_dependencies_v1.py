@@ -94,7 +94,9 @@ def complete_dependencies(candidate, baseline, roots=ROOTS):
 LEGACY_HEAD = 'fa079b6c5880814e231981a7bd5ed97df192d215'
 LEGACY_STREET_SHA256 = 'a0ea1b4adff04704bc83feee9397fea1c3abc03523539bd5805db3200ba7c7be'
 PRICE_DEPENDENCY = 'lib/ui_v2/act0_shell/act0_betting_price_contract_v1.dart'
-PRICE_CANDIDATE_SHA256 = 'cf82f4c1daef79d0f4fe0bfd29d29b22bfa7bf840e7aadae22b87381d857b91e'
+# Reviewed technical candidate: added price semantics are NOT baseline proof.
+# Keep fail-on-invocation shim and require a fresh genuine RED/GREEN run.
+PRICE_CANDIDATE_SHA256 = '2edefb35d18d5253334836113ef7a269a71d660910df0922da8da9683476c528'
 ORDER_SENTINEL = 'SHARKY_BASELINE_PRICE_ORDER_SHIM_EXECUTED'
 ORDER_COMPILE_SHIM = (
     '\n// PRIVATE historical compile-only adapter. NOT production source.\n'
@@ -142,7 +144,7 @@ def add_legacy_compile_only_shim(baseline, head, dependency_result):
 GUIDE_DEPENDENCY = 'lib/ui_v2/act0_shell/act0_learning_scene_v3.dart'
 GUIDE_LEGACY_SHA256 = 'e57900a6057525572045246ddd5d2a1630d3c15290c9e1b50cb056ab75419a63'
 GUIDE_RUNNER = ROOTS[0]
-GUIDE_RUNNER_SHA256 = 'd8d1190ae4861763b0568c5e5576a1d334c5f09f39900926546212614389d0ca'
+GUIDE_RUNNER_SHA256 = '515b3225736d5c2f460606a66dd1f4dabd066af2c598279bceeafc9b5352846a'
 GUIDE_SENTINEL = 'SHARKY_BASELINE_GUIDE_SCROLL_SHIM_EXECUTED'
 GUIDE_CONSTRUCTOR = (
     '  const Act0LearningSceneGuideV3({\n'
