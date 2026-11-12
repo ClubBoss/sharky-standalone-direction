@@ -10031,6 +10031,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (intent == null) {
       return null;
     }
+    if (act0RepairSourceExplicitlyUnavailableV1(
+      worldId: intent.sourceWorldId,
+      lessonId: intent.sourceLessonId,
+      taskId: intent.sourceTaskId,
+    ))
+      return null; // Hide unsafe stale target; retain stored intent/debt.
     if (intent.mappingType == 'unresolved_product_gap') {
       return null;
     }
@@ -10561,6 +10567,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
   }
 
+  void _showExplicitRepairUnavailableV1() {
+    if (!mounted) return;
+    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+      const SnackBar(
+        content: Text(
+          'A safe repair is not available for this lesson yet. '
+          'Your answer and unresolved mistake are unchanged.',
+          key: Key('act0_explicit_repair_unavailable'),
+        ),
+      ),
+    );
+  }
+
   void _startMistakeRepair(
     Act0WorldCardV1 selectedWorld,
     Act0MistakeCardV1 mistake, {
@@ -10571,6 +10590,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     bool rapidPracticeLoop = false,
   }) {
     final sourceTaskId = mistake.taskId;
+    if (act0RepairSourceExplicitlyUnavailableV1(
+      worldId: mistake.worldId,
+      lessonId: mistake.lessonId,
+      taskId: sourceTaskId,
+    )) {
+      _showExplicitRepairUnavailableV1();
+      return;
+    }
     if (_w1HistoricalRepairUnavailableV1(sourceTaskId)) {
       _showW1HistoricalRepairUnavailableV1();
       return;
@@ -10726,12 +10753,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     required Act0LessonTaskV1 selectedTask,
     required Act0RunnerStateV1 runner,
   }) {
+    final sourceTaskId = selectedTask.taskId;
+    if (!(runner.selectedOption?.isCorrect ?? true) &&
+        act0RepairSourceExplicitlyUnavailableV1(
+          worldId: selectedWorld.worldId,
+          lessonId: _selectedLessonId,
+          taskId: sourceTaskId,
+        )) {
+      _showExplicitRepairUnavailableV1();
+      // Consume the missed-answer CTA without retry/completion/XP/advance.
+      return true;
+    }
     if ((runner.selectedOption?.isCorrect ?? true) ||
         _activeRepairTaskId != null ||
         _activeSameSignalRecheckTaskId != null) {
       return false;
     }
-    final sourceTaskId = selectedTask.taskId;
     final intended = _openRepairIntentTargetForSourceTaskV1(sourceTaskId);
     if (_w1HistoricalRepairUnavailableV1(
       sourceTaskId,

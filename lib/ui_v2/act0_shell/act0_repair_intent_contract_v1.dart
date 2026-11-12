@@ -2,6 +2,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_error_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_position_personalization_ids_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_w7_visible_ace_hidden_runtime_session_owner_v1.dart';
 
 typedef Act0RepairIntentTargetMapperV1 =
     ({String worldId, String lessonId, String taskId, String mappingType})?
@@ -154,6 +155,19 @@ bool act0IsExactRepairMappingTypeV1(String mappingType) {
   return mappingType == 'exact' || mappingType == 'intentional_exact';
 }
 
+// Exact owner identity only; no route is admitted by this predicate.
+bool act0RepairSourceExplicitlyUnavailableV1({
+  required String worldId,
+  required String lessonId,
+  required String taskId,
+}) => act0W7VisibleAceHiddenTaskSpecsV1.any(
+  (spec) =>
+      worldId == spec.worldId &&
+      lessonId == spec.lessonId &&
+      taskId == spec.taskId &&
+      !spec.practiceCtaAllowed,
+);
+
 Act0RepairIntentV1? buildAct0RepairIntentV1({
   required String sourceWorldId,
   required String sourceLessonId,
@@ -166,6 +180,13 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
       selectedOption.quality == Act0FeedbackQualityV1.correct) {
     return null;
   }
+
+  if (act0RepairSourceExplicitlyUnavailableV1(
+    worldId: sourceWorldId,
+    lessonId: sourceLessonId,
+    taskId: sourceTaskId,
+  ))
+    return null;
 
   final receipt = act0FirstValueSkillReceiptForRunnerV1(
     runner: runner,
