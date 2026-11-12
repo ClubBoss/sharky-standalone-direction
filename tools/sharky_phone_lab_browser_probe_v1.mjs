@@ -219,8 +219,7 @@ function browserProofMarkdown() {
   if (report.terminal_classification === 'PASS') {
     lines.push(
       `- OUTER VIEWPORT: ${report.outer_viewport.join(' x ')} CSS`,
-      `- COMPACT INNER: ${report.profiles.compact.measured_inner.join(' x ')} CSS - PASS`,
-      `- TALL INNER: ${report.profiles.tall.measured_inner.join(' x ')} CSS - PASS`,
+      `- IPHONE 14 PRO INNER: ${report.profiles.iphone14_pro.measured_inner.join(' x ')} CSS - PASS`,
       `- FIT MODE: ${report.fit_mode}`,
       `- INTERACTION: ${report.interaction}`,
       `- EXACT SHA IDENTITY: ${report.exact_sha_identity}`,
@@ -259,25 +258,24 @@ try {
     return report.profiles[name];
   }
 
-  const compact=await profile('compact',375,812);
-  const tall=await profile('tall',402,874);
-  report.fit_mode = compact.display_scale>0 && compact.display_scale<1 && tall.display_scale>0 && tall.display_scale<1 ? 'PASS':'FAIL';
-  report.exact_sha_identity = compact.product_sha===targetSha && tall.product_sha===targetSha ? 'PASS':'FAIL';
+  const reference=await profile('iphone14_pro',393,852);
+  report.fit_mode = reference.display_scale>0 && reference.display_scale<1 ? 'PASS':'FAIL';
+  report.exact_sha_identity = reference.product_sha===targetSha ? 'PASS':'FAIL';
   if (report.fit_mode!=='PASS' || report.exact_sha_identity!=='PASS') {
     throw new AssertionFailure(`Truth gate failed: ${JSON.stringify(report)}`);
   }
 
   cdp.events.length=0;
-  await navigate(cdp, `${baseUrl}/phone?profile=compact&surface=live&presentation=fit`);
+  await navigate(cdp, `${baseUrl}/phone?profile=iphone14_pro&surface=live&presentation=fit`);
   await waitForEvaluablePhone(cdp);
   report.stage = 'ASSERTING_BROWSER_EVIDENCE';
-  const live=await waitPhone(cdp,375,812,true,35000);
-  const before=await screenshot(cdp,'compact-live-before.png');
+  const live=await waitPhone(cdp,393,852,true,35000);
+  const before=await screenshot(cdp,'iphone14_pro-live-before.png');
   const r=live.frame.rect; const x=r[0]+r[2]*0.5; const y=r[1]+r[3]*0.965;
   await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',x,y});
   await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',x,y,button:'left',buttons:1,clickCount:1});
   await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',x,y,button:'left',buttons:0,clickCount:1});
-  await sleep(1500); const after=await screenshot(cdp,'compact-live-after.png'); await sleep(900); const stable=await screenshot(cdp,'compact-live-stable.png');
+  await sleep(1500); const after=await screenshot(cdp,'iphone14_pro-live-after.png'); await sleep(900); const stable=await screenshot(cdp,'iphone14_pro-live-stable.png');
   report.interaction_details={rendered_pointer:[Number(x.toFixed(1)),Number(y.toFixed(1))],before_sha256:before.sha256,after_sha256:after.sha256,stable_sha256:stable.sha256};
   if (before.sha256!==after.sha256 && after.sha256===stable.sha256) report.interaction='PASS';
   else throw new AssertionFailure(`Interaction did not reach stable transition: ${JSON.stringify(report.interaction_details)}`);
@@ -294,7 +292,7 @@ try {
     report.console_overflow_signals[profileName]={exact_3px:exact,generic_overflow:generic,screenshot:shot.name,screenshot_sha256:shot.sha256};
     return exact||generic;
   }
-  report.retained_3px_overflow = (await overflow('compact',375,812)) || (await overflow('tall',402,874)) ? 'REPRODUCED_MOBILE':'NOT_REACHED';
+  report.retained_3px_overflow = (await overflow('iphone14_pro',393,852)) ? 'REPRODUCED_MOBILE':'NOT_REACHED';
   report.terminal_classification = 'PASS';
   report.stage = 'PASS';
 } catch(error) {

@@ -47,8 +47,7 @@
     <div class="controls">
       <label>Profile
         <select id="profileSelect">
-          <option value="compact">Compact · 375×812</option>
-          <option value="tall">Tall · 402×874</option>
+          <option value="iphone14_pro">iPhone 14 Pro · 393×852</option>
         </select>
       </label>
       <label>Surface
@@ -89,14 +88,14 @@
   <script>
     (() => {
       'use strict';
-      const PROFILES = { compact:{w:375,h:812,label:'COMPACT'}, tall:{w:402,h:874,label:'TALL'} };
+      const PROFILES = { iphone14_pro:{w:393,h:852,label:'IPHONE 14 PRO'} };
       const SURFACES = new Set([
         'live','home','learn','runner_theory','runner_drill','runner_feedback',
         'runner_first_correct_feedback','runner_first_wrong_feedback','repair_focus',
         'repair_result','session_repair','practice','review','profile','world_completion','session_summary'
       ]);
       const q = new URLSearchParams(location.search);
-      let profile = PROFILES[q.get('profile')] ? q.get('profile') : 'compact';
+      let profile = PROFILES[q.get('profile')] ? q.get('profile') : 'iphone14_pro';
       let surface = SURFACES.has(q.get('surface')) ? q.get('surface') : 'live';
       let presentation = q.get('presentation') === '1to1' ? '1to1' : 'fit';
 
