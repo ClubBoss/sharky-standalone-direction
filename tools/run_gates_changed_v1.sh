@@ -141,10 +141,9 @@ print_summary() {
 
   if [[ "$has_content_changes" == "true" ]]; then
     run_cmd "dart run tools/validate_training_content.dart"
-    run_cmd "flutter test test/tools/content_quality_validator_v1_test.dart"
   fi
 
-  if [[ "$has_tools_changes" == "true" ]]; then
+  if [[ "$has_content_changes" == "true" || "$has_tools_changes" == "true" ]]; then
     run_cmd "flutter test test/tools/content_quality_validator_v1_test.dart"
   fi
 
