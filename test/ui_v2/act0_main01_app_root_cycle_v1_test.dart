@@ -120,6 +120,23 @@ void main() {
       expect(ordinaryFour['earnedXp'], 20);
       expect(ordinaryFour['completedTaskIds'], contains(_mappedRepair));
 
+      final skillsBeforeFour = Map<String, dynamic>.from(
+        sourceCompleted['profileSkillValues'] as Map,
+      );
+      final skillsAfterFour = Map<String, dynamic>.from(
+        ordinaryFour['profileSkillValues'] as Map,
+      );
+      int skillDelta(String label) =>
+          (skillsAfterFour[label] as num? ?? 0).toInt() -
+          (skillsBeforeFour[label] as num? ?? 0).toInt();
+      expect(skillDelta('Table sense'), 4);
+      expect(skillDelta('Board reading'), 1);
+      expect(
+        skillDelta('Betting decisions'),
+        0,
+        reason: 'A table-read recheck is not a betting action Check.',
+      );
+
       expect(_runner(tester).selectedTaskId, _nextTask);
       expect(_nextTask, isNot(anyOf(_source, _mappedRepair)));
       await _advanceToPrompt(tester);
