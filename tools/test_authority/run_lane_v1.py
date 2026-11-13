@@ -7,7 +7,7 @@ import sys
 import time
 from pathlib import Path
 
-from run_lane_diagnostics_v1 import append_job_summary, failure_log_lines, tail
+from run_lane_diagnostics_v1 import append_job_summary, failure_log_lines, flutter_failure_case_index, tail
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST_DIR = Path(
@@ -233,6 +233,7 @@ def _run_command(name: str, cmd: list[str], timeout: int) -> dict[str, object]:
             "output_tail": output_tail,
             "output_truncated": output_truncated,
             "output_chars": output_chars,
+            "flutter_failure_cases": flutter_failure_case_index(completed.stdout or "") if completed.returncode != 0 else [],
         }
     except subprocess.TimeoutExpired as error:
         output = error.stdout or ""
@@ -248,6 +249,7 @@ def _run_command(name: str, cmd: list[str], timeout: int) -> dict[str, object]:
             "output_tail": output_tail,
             "output_truncated": output_truncated,
             "output_chars": output_chars,
+            "flutter_failure_cases": flutter_failure_case_index(output),
         }
     except OSError as error:
         output_tail, output_truncated, output_chars = tail(str(error))

@@ -69,7 +69,29 @@ fi
 
 if [[ "$TEST_POLICY_FULL_SUITE_V1" == "1" ]]; then
   echo "[gate] checkpoint full-suite -> flutter test -r expanded"
-  flutter test -r expanded
+  # A SIGINT can make Flutter's test runner exit 0 after failed tests without
+  # the terminal success marker. Never count an incomplete run as checkpoint PASS.
+  mkdir -p build/test_authority
+  full_suite_log="$(mktemp "$ROOT/build/test_authority/world1_full_suite.XXXXXXXX")"
+  if flutter test -r expanded 2>&1 | tee "$full_suite_log"; then
+    full_suite_exit=0
+  else
+    full_suite_exit=$?
+  fi
+
+  if [[ "$full_suite_exit" -ne 0 ]]; then
+    echo "[gate] FAIL full-suite command exit=$full_suite_exit; log=$full_suite_log" >&2
+    exit "$full_suite_exit"
+  fi
+  if ! tail -n 1 "$full_suite_log" | grep -Eq '^[0-9]{2}:[0-9]{2} \+[0-9]+( ~[0-9]+)?: All tests passed!$'; then
+    echo "[gate] FAIL full-suite terminal PASS receipt missing (possibly interrupted); log=$full_suite_log" >&2
+    exit 1
+  fi
+  if grep -Eq '\[E\]|^[0-9]{2}:[0-9]{2} \+[0-9]+( ~[0-9]+)? -[1-9][0-9]*:' "$full_suite_log"; then
+    echo "[gate] FAIL full-suite failures present despite command exit 0; log=$full_suite_log" >&2
+    exit 1
+  fi
+  echo "[gate] checkpoint full-suite verified COMPLETE; raw_log=$full_suite_log"
 fi
 
 echo "[gate] World1 release gate passed."
