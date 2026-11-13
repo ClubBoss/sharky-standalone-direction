@@ -212,8 +212,12 @@ class DependencyControls(unittest.TestCase):
                          'e57900a6057525572045246ddd5d2a1630d3c15290c9e1b50cb056ab75419a63')
         self.assertEqual(ADAPTER.GUIDE_RUNNER_SHA256,
                          'd8d1190ae4861763b0568c5e5576a1d334c5f09f39900926546212614389d0ca')
-        self.assertEqual(ADAPTER.digest(ROOT / ADAPTER.GUIDE_RUNNER),
-                         ADAPTER.GUIDE_RUNNER_SHA256)
+        self.assertEqual(ADAPTER.GUIDE_REVIEWED_RUNNER_SHA256S, frozenset({
+            ADAPTER.GUIDE_RUNNER_SHA256,
+            '452826ea65dff12c1ae5ee8d9e0e52aa5925762ab0145b1a2bc409c85780ff6c',
+        }))
+        self.assertIn(ADAPTER.digest(ROOT / ADAPTER.GUIDE_RUNNER),
+                      ADAPTER.GUIDE_REVIEWED_RUNNER_SHA256S)
 
     def test_legacy_guide_only_changes_constructor_and_records_exception(self):
         dependencies = self.prepare_synthetic_legacy_guide()
@@ -229,7 +233,54 @@ class DependencyControls(unittest.TestCase):
         self.assertEqual(result['after_sha256'], ADAPTER.digest(guide))
         self.assertNotIn(ADAPTER.GUIDE_DEPENDENCY, dependencies['preserved_existing'])
         self.assertEqual(ADAPTER.digest(self.baseline / ADAPTER.GUIDE_RUNNER),
-                         ADAPTER.GUIDE_RUNNER_SHA256)
+                         ADAPTER.digest(ROOT / ADAPTER.GUIDE_RUNNER))
+        self.assertEqual(result['runner_sha256'],
+                         ADAPTER.digest(self.baseline / ADAPTER.GUIDE_RUNNER))
+
+    def test_back_only_runner_reverses_to_original_reviewed_input(self):
+        dependencies = self.prepare_synthetic_legacy_guide()
+        runner = self.baseline / ADAPTER.GUIDE_RUNNER
+        current = runner.read_text()
+        self.assertEqual(ADAPTER.digest(runner), ADAPTER.GUIDE_BACK_RUNNER_SHA256)
+        new_back = r"""          width: 48,
+          height: 48,
+          child: IconButton(
+            key: const Key('act0_shell_runner_back'),
+            tooltip: act0AcademyLanguageV1(context) == 'ru'
+                ? '\u041d\u0430\u0437\u0430\u0434'
+                : 'Back',
+"""
+        old_back = """          width: 34,
+          height: 34,
+          child: IconButton(
+            key: const Key('act0_shell_runner_back'),
+"""
+        self.assertEqual(current.count(new_back), 1)
+        runner.write_text(current.replace(new_back, old_back, 1))
+        self.assertEqual(ADAPTER.digest(runner), ADAPTER.GUIDE_RUNNER_SHA256)
+        dependencies['preserved_existing'][ADAPTER.GUIDE_RUNNER] = ADAPTER.digest(runner)
+        result = self.call_synthetic_legacy_guide(dependencies)
+        self.assertEqual(result['runner_sha256'], ADAPTER.GUIDE_RUNNER_SHA256)
+
+    def test_unknown_runner_is_rejected_even_with_matching_manifest(self):
+        dependencies = self.prepare_synthetic_legacy_guide()
+        runner = self.baseline / ADAPTER.GUIDE_RUNNER
+        runner.write_text(runner.read_text() + '// SYNTHETIC arbitrary drift\n')
+        dependencies['preserved_existing'][ADAPTER.GUIDE_RUNNER] = ADAPTER.digest(runner)
+        before = {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()}
+        with self.assertRaisesRegex(RuntimeError, 'compatibility input changed'):
+            self.call_synthetic_legacy_guide(dependencies)
+        self.assertEqual(before, {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()})
+
+    def test_reviewed_runner_rejects_wrong_manifest_without_writing(self):
+        dependencies = self.prepare_synthetic_legacy_guide()
+        runner = self.baseline / ADAPTER.GUIDE_RUNNER
+        self.assertEqual(ADAPTER.digest(runner), ADAPTER.GUIDE_BACK_RUNNER_SHA256)
+        dependencies['preserved_existing'][ADAPTER.GUIDE_RUNNER] = ADAPTER.GUIDE_RUNNER_SHA256
+        before = {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()}
+        with self.assertRaisesRegex(RuntimeError, 'compatibility input changed'):
+            self.call_synthetic_legacy_guide(dependencies)
+        self.assertEqual(before, {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()})
 
     def test_legacy_guide_input_drift_is_rejected_without_writing(self):
         for relative in (ADAPTER.GUIDE_DEPENDENCY, ADAPTER.GUIDE_RUNNER):

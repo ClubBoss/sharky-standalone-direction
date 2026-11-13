@@ -143,6 +143,12 @@ GUIDE_DEPENDENCY = 'lib/ui_v2/act0_shell/act0_learning_scene_v3.dart'
 GUIDE_LEGACY_SHA256 = 'e57900a6057525572045246ddd5d2a1630d3c15290c9e1b50cb056ab75419a63'
 GUIDE_RUNNER = ROOTS[0]
 GUIDE_RUNNER_SHA256 = 'd8d1190ae4861763b0568c5e5576a1d334c5f09f39900926546212614389d0ca'
+# Exact independently reviewed Back-only UI delta. Keep the old input valid;
+# neither a changed manifest nor an arbitrary current Runner grants admission.
+GUIDE_BACK_RUNNER_SHA256 = '452826ea65dff12c1ae5ee8d9e0e52aa5925762ab0145b1a2bc409c85780ff6c'
+GUIDE_REVIEWED_RUNNER_SHA256S = frozenset((
+    GUIDE_RUNNER_SHA256, GUIDE_BACK_RUNNER_SHA256,
+))
 GUIDE_SENTINEL = 'SHARKY_BASELINE_GUIDE_SCROLL_SHIM_EXECUTED'
 GUIDE_CONSTRUCTOR = (
     '  const Act0LearningSceneGuideV3({\n'
@@ -170,10 +176,10 @@ def add_legacy_guide_constructor_shim(baseline, head, dependency_result):
         return None
     kept = dependency_result['preserved_existing']
     copied = dependency_result['copied_missing']
-    for relative, expected in ((GUIDE_DEPENDENCY, GUIDE_LEGACY_SHA256),
-                               (GUIDE_RUNNER, GUIDE_RUNNER_SHA256)):
-        if (relative in copied or kept.get(relative) != expected or
-                digest(inside(baseline, pathlib.Path(relative))) != expected):
+    for relative, accepted in ((GUIDE_DEPENDENCY, {GUIDE_LEGACY_SHA256}),
+                               (GUIDE_RUNNER, GUIDE_REVIEWED_RUNNER_SHA256S)):
+        actual = digest(inside(baseline, pathlib.Path(relative)))
+        if relative in copied or kept.get(relative) != actual or actual not in accepted:
             raise RuntimeError(f'Historical Guide compatibility input changed: {relative}')
     guide = inside(baseline, pathlib.Path(GUIDE_DEPENDENCY))
     source = guide.read_text()
@@ -186,7 +192,7 @@ def add_legacy_guide_constructor_shim(baseline, head, dependency_result):
     return {'path': GUIDE_DEPENDENCY,
             'prior_sha256': GUIDE_LEGACY_SHA256,
             'after_sha256': digest(guide),
-            'runner_sha256': GUIDE_RUNNER_SHA256,
+            'runner_sha256': kept[GUIDE_RUNNER],
             'runtime_sentinel': GUIDE_SENTINEL,
             'scope': 'historical constructor only; false preserves body; true invalid in flutter test'}
 
