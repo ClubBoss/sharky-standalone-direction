@@ -59,7 +59,8 @@ class ReleaseGateFullSuiteCompletionFixtures(unittest.TestCase):
             (base / "tools").mkdir()
             (base / "mockbin").mkdir()
             (base / "pubspec.yaml").write_text("name: synthetic_only\n")
-            for name in ("release_gate_world1.sh", "_test_policy_v1.sh"):
+            for name in ("release_gate_world1.sh", "_test_policy_v1.sh",
+                         "_fast_loop_test_tiers_v1.sh", "collect_changeset_v1.py"):
                 shutil.copy2(ROOT / "tools" / name, base / "tools" / name)
             stub = base / "tools" / "fast_loop_world1_v1.sh"
             stub.write_text("#!/usr/bin/env bash\nexit 0\n")
@@ -76,8 +77,15 @@ class ReleaseGateFullSuiteCompletionFixtures(unittest.TestCase):
                  "--allow-empty", "-m", "synthetic root"],
                 cwd=base, check=True, capture_output=True
             )
+            head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=base, text=True).strip()
+            # The synthetic repo owns its event context; ambient CI must not select a real PR.
+            clean = {k: v for k, v in os.environ.items() if not k.startswith(
+                ("GITHUB_", "SHARKY_", "FAST_LOOP_", "TEST_POLICY_", "GIT_"))}
             env = {
-                **os.environ,
+                **clean,
+                "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_NOSYSTEM": "1",
+                "SHARKY_CHANGE_MODE": "pr", "SHARKY_CHANGE_BASE": head,
+                "SHARKY_CHANGE_HEAD": head, "SHARKY_CHANGE_CANDIDATE": head,
                 "PATH": str(base / "mockbin") + os.pathsep + os.environ["PATH"],
                 "MOCK_FULL_SUITE": mode,
                 "CHECKPOINT": "1",
