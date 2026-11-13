@@ -71,6 +71,7 @@ class Act0AcademyReviewLeafInputV1 {
     this.nextStep,
     this.onOpenRecommendedAction,
     this.onOpenLearn,
+    this.onOpenPersonalHands,
     this.backdrop,
   });
 
@@ -86,6 +87,7 @@ class Act0AcademyReviewLeafInputV1 {
   final Act0PersonalizedReturnReasonV1? nextStep;
   final VoidCallback? onOpenRecommendedAction;
   final VoidCallback? onOpenLearn;
+  final VoidCallback? onOpenPersonalHands;
   final ImageProvider? backdrop;
 }
 
@@ -323,6 +325,20 @@ class Act0AcademyReviewLeafV1 extends StatelessWidget {
                     _mistakeRow(mistake, replay: true),
                 ],
               ),
+            ),
+          ],
+          if (input.onOpenPersonalHands != null) ...[
+            const SizedBox(height: 16),
+            _cta(
+              key: const Key('act0_academy_review_leaf_personal_hands'),
+              label: 'My hands - private import',
+              primary: false,
+              onPressed: input.onOpenPersonalHands,
+            ),
+            const SizedBox(height: 6),
+            const Text(
+              'Saved locally in this app. No XP or lesson credit.',
+              style: TextStyle(color: _muted, fontSize: 13),
             ),
           ],
           if (featured == null && input.onOpenLearn != null) ...[

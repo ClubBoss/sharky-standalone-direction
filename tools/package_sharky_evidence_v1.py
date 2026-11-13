@@ -78,9 +78,9 @@ def source_hashes_match(proof_dir: Path, proof: dict[str, object]) -> bool:
 
     interaction = proof.get("interaction_details") or {}
     for name, key in (
-        ("compact-live-before.png", "before_sha256"),
-        ("compact-live-after.png", "after_sha256"),
-        ("compact-live-stable.png", "stable_sha256"),
+        ("iphone14_pro-live-before.png", "before_sha256"),
+        ("iphone14_pro-live-after.png", "after_sha256"),
+        ("iphone14_pro-live-stable.png", "stable_sha256"),
     ):
         if interaction.get(key):
             expected.append((name, interaction[key]))
@@ -134,17 +134,15 @@ def main() -> int:
         shutil.copy2(proof_md_path, copied_proof_md)
 
     profiles = proof.get("profiles") or {}
-    compact = profiles.get("compact") or {}
-    tall = profiles.get("tall") or {}
+    reference = profiles.get("iphone14_pro") or {}
     checks = {
         "source_schema": proof.get("schema") == SOURCE_SCHEMA,
         "candidate_sha_matches_proof": proof.get("target_sha") == candidate_sha,
         "source_hashes_match": source_hashes_match(proof_dir, proof),
         "exact_sha_identity": proof.get("exact_sha_identity") == "PASS",
-        "compact_375x812": compact.get("measured_inner") == [375, 812]
-        and compact.get("product_sha") == candidate_sha,
-        "tall_402x874": tall.get("measured_inner") == [402, 874]
-        and tall.get("product_sha") == candidate_sha,
+        "single_reference_profile": set(profiles) == {"iphone14_pro"},
+        "iphone14_pro_393x852": reference.get("measured_inner") == [393, 852]
+        and reference.get("product_sha") == candidate_sha,
         "fit_mode": proof.get("fit_mode") == "PASS",
         "interaction": proof.get("interaction") == "PASS",
         "web_native_truth_boundary": True,
@@ -198,7 +196,7 @@ def main() -> int:
     payload_files.sort(key=lambda item: str(item["path"]))
 
     capture_profiles = []
-    for name, expected in (("compact", [375, 812]), ("tall", [402, 874])):
+    for name, expected in (("iphone14_pro", [393, 852]),):
         profile = profiles.get(name) or {}
         capture_profiles.append(
             {

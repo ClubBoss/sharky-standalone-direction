@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poker_analyzer/features/hst06/personal_hand_screen_v1.dart';
 import 'package:poker_analyzer/services/app_settings_service.dart';
 import 'package:poker_analyzer/ui/settings/privacy_terms.dart';
 import 'act0_achievement_seed_projection_v1.dart';
@@ -121,6 +122,13 @@ Widget act0AcademyPracticeRuntimeV1(
   );
 }
 
+// One personal-hands route per navigator across adapter rebuilds.
+// Weak keys do not retain a disposed navigation tree.
+final _personalHandsRoutes = Expando<Object>('personalHandsRoutes');
+final _personalHandsReviewVersions = Expando<Object>(
+  'personalHandsReviewVersions',
+);
+
 Widget act0AcademyReviewRuntimeV1(
   BuildContext context, {
   required Act0ReviewShellV1 legacy,
@@ -128,6 +136,9 @@ Widget act0AcademyReviewRuntimeV1(
 }) {
   if (!act0AcademyRuntimeEnabledV1(context, Act0ShellTabV1.review))
     return legacy;
+  final reviewNavigator = Navigator.of(context);
+  final reviewVersion = Object();
+  _personalHandsReviewVersions[reviewNavigator] = reviewVersion;
   // Preserve the accepted recommendation selector; chronological list order
   // alone can point at a different source task.
   final selected = act0SelectedDueReviewItemV1(
@@ -167,6 +178,63 @@ Widget act0AcademyReviewRuntimeV1(
         legacy.onOpenRecommendedAction,
       ),
       onOpenLearn: _guard(isCurrent, legacy.onOpenLearn),
+      onOpenPersonalHands: _guard(isCurrent, () async {
+        if (!context.mounted) return;
+        final navigator = Navigator.of(context);
+        if (!navigator.mounted || _personalHandsRoutes[navigator] != null)
+          return;
+        final token = Object();
+        _personalHandsRoutes[navigator] = token;
+        try {
+          final targets = legacy.onFixMistake == null
+              ? const <Hst06LearningTarget>[]
+              : [
+                  for (final mistake in legacy.review.mistakes)
+                    if (!mistake.resolved)
+                      Hst06LearningTarget(
+                        taskId: mistake.taskId,
+                        lessonId: mistake.lessonId,
+                        worldId: mistake.worldId,
+                        title: mistake.title,
+                      ),
+                ];
+          final selected = await navigator.push<Hst06LearningTarget>(
+            MaterialPageRoute<Hst06LearningTarget>(
+              settings: const RouteSettings(name: '/personal-hands'),
+              builder: (_) => Hst06PersonalHandScreen(learningTargets: targets),
+            ),
+          );
+          if (selected != null && context.mounted && isCurrent()) {
+            if (!identical(
+              _personalHandsReviewVersions[navigator],
+              reviewVersion,
+            )) {
+              ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    'Learning repairs changed. Choose again from Review.',
+                  ),
+                ),
+              );
+              return;
+            }
+            final matches = legacy.review.mistakes
+                .where(
+                  (mistake) =>
+                      !mistake.resolved &&
+                      mistake.taskId == selected.taskId &&
+                      mistake.lessonId == selected.lessonId &&
+                      mistake.worldId == selected.worldId,
+                )
+                .toList();
+            if (matches.length == 1) legacy.onFixMistake?.call(matches.single);
+          }
+        } finally {
+          if (identical(_personalHandsRoutes[navigator], token)) {
+            _personalHandsRoutes[navigator] = null;
+          }
+        }
+      }),
       backdrop: _backdrop,
     ),
   );

@@ -104,29 +104,14 @@ jobs:
           mkdir -p "$ROOT/candidate" "$ROOT/baseline"
 
           flutter test \
-            --dart-define=ACTION_EVIDENCE_DEVICE=iphone17_class \
-            --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/iphone17_class" \
+            --dart-define=ACTION_EVIDENCE_DEVICE=iphone14_pro \
+            --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/iphone14_pro" \
             test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
             --plain-name 'captures canonical W1 Action production states'
           flutter test \
-            --dart-define=ACTION_EVIDENCE_DEVICE=compact \
-            --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/compact" \
-            test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
-            --plain-name 'captures canonical W1 Action production states'
-          flutter test \
-            --dart-define=ACTION_EVIDENCE_DEVICE=tall_phone \
-            --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/tall_phone" \
-            test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
-            --plain-name 'captures canonical W1 Action production states'
-          flutter test \
-            --dart-define=ACTION_EVIDENCE_DEVICE=large_phone \
-            --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/large_phone" \
-            test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
-            --plain-name 'captures canonical W1 Action production states'
-          flutter test \
-            --dart-define=ACTION_EVIDENCE_DEVICE=iphone17_class \
+            --dart-define=ACTION_EVIDENCE_DEVICE=iphone14_pro \
             --dart-define=ACTION_EVIDENCE_TEXT_SCALE=1.4 \
-            --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/iphone17_class_text_1_4" \
+            --dart-define=ACTION_EVIDENCE_OUTPUT="$ROOT/candidate/iphone14_pro_text_1_4" \
             test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
             --plain-name 'captures canonical W1 Action production states'
 
@@ -138,9 +123,9 @@ jobs:
             cd _wave_a_baseline
             flutter pub get
             flutter test \
-              --dart-define=ACTION_EVIDENCE_DEVICE=iphone17_class \
+              --dart-define=ACTION_EVIDENCE_DEVICE=iphone14_pro \
               --dart-define=ACTION_EVIDENCE_EXPECT_WAVE_A=false \
-              --dart-define=ACTION_EVIDENCE_OUTPUT="../$ROOT/baseline/iphone17_class" \
+              --dart-define=ACTION_EVIDENCE_OUTPUT="../$ROOT/baseline/iphone14_pro" \
               test/ui_v2/action_sequence_canonical_raster_capture_v1_test.dart \
               --plain-name 'captures canonical W1 Action production states'
           )
@@ -227,7 +212,7 @@ jobs:
           fi
           HOME_HTTP="$(retry_get "${DEPLOYMENT_URL}/?act0_capture=home" /tmp/sharky-home.html)"
           LEARN_HTTP="$(retry_get "${DEPLOYMENT_URL}/?act0_capture=learn" /tmp/sharky-learn.html)"
-          PHONE_HTTP="$(retry_get "${DEPLOYMENT_URL}/phone.html?profile=compact&surface=home" /tmp/sharky-phone.html)"
+          PHONE_HTTP="$(retry_get "${DEPLOYMENT_URL}/phone.html?profile=iphone14_pro&surface=home" /tmp/sharky-phone.html)"
 
           {
             echo "## Exact-SHA remote smoke"
@@ -450,8 +435,7 @@ jobs:
               echo "- Full evidence: enabled for this run"
             fi
             echo "- [Preview root](${DEPLOYMENT_URL}/)"
-            echo "- [Phone Lab - Compact](${DEPLOYMENT_URL}/phone.html?profile=compact&surface=live)"
-            echo "- [Phone Lab - Tall](${DEPLOYMENT_URL}/phone.html?profile=tall&surface=live)"
+            echo "- [Phone Lab - iPhone 14 Pro](${DEPLOYMENT_URL}/phone.html?profile=iphone14_pro&surface=live)"
             echo "- [Home](${DEPLOYMENT_URL}/?act0_capture=home)"
             echo "- [Learn](${DEPLOYMENT_URL}/?act0_capture=learn)"
             echo "- [Runner drill](${DEPLOYMENT_URL}/?act0_capture=runner_drill)"
