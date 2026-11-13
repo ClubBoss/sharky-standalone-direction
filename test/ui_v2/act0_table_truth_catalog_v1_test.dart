@@ -64,11 +64,35 @@ void main() {
     );
     final historicalContract = Map<String, Object?>.from(contract)
       ..removeWhere((id, _) => admittedAdditions.contains(id));
+    // Keep the historical fixture immutable. PR460 admits only the two
+    // independently checked MAIN01 quality cells, with historical records
+    // preserved by the authored-fingerprint compatibility regression.
+    final historicalComparison =
+        jsonDecode(jsonEncode(historicalContract)) as Map<String, dynamic>;
+    if (presentAdditions.isNotEmpty) {
+      final setup =
+          historicalComparison['first_table_guide_one_clear_choice']
+              as Map<String, dynamic>;
+      final options = (setup['options'] as List<dynamic>)
+          .cast<Map<String, dynamic>>();
+      for (final (id, current, prior) in <(String, String, String)>[
+        ('co_still_acting', 'suboptimal', 'wrong'),
+        ('hero_has_no_cards', 'wrong', 'suboptimal'),
+      ]) {
+        final option = options.singleWhere((option) => option['id'] == id);
+        expect(
+          option['quality'],
+          current,
+          reason: 'Exact reviewed MAIN01 grade: $id',
+        );
+        option['quality'] = prior;
+      }
+    }
     expect(
-      historicalContract,
+      historicalComparison,
       baselineContract,
       reason:
-          'Baseline source IDs, XP, family, correctness and repair identities must remain unchanged',
+          'Only the two reviewed MAIN01 quality cells may differ from the frozen baseline; IDs, XP, family, correctness and repair identities remain unchanged',
     );
     const expectedAsmContracts = {
       'asm05_new_known_holes_turn_call_10': {

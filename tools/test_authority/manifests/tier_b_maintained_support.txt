@@ -9,7 +9,9 @@ test/tools/world_route_ownership_inventory_v1_test.dart
 test/tools/world_screenshot_evidence_audit_v1_test.dart
 test/tools/world_visual_instrumentation_audit_v1_test.dart
 test/ui_v2/act0_completed_decision_callback_contract_v1_test.dart
+test/ui_v2/act0_first_table_setup_grading_v1_test.dart
 test/ui_v2/act0_instruction_content_policy_v1_test.dart
+test/ui_v2/act0_main01_app_root_cycle_v1_test.dart
 test/ui_v2/act0_w4_w7_owner_contract_decomposition_v1_test.dart
 test/ui_v2/session_result_world1_onboarding_payoff_test.dart
 test/ui_v2/session_summary_gold_containment_v1_test.dart

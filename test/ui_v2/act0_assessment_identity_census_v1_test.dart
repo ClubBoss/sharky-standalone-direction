@@ -13,6 +13,8 @@ const _asm05NewTaskIds = <String>{
 /// Assessment identity and grading consistency for all 369 W1-W12 tasks.
 /// The 367 legacy rows retain their frozen contract; exactly two named
 /// NEW_AUTHORING ASM-05 rows extend it without replacing historical meaning.
+/// The reviewed MAIN01 two-quality correction has an exact current freeze and
+/// reconstructs only its prior comparison cells; persisted records stay intact.
 ///
 /// Stable task ids and choice ids are what saved receipts, repair debt and
 /// XP refer to; grading flags, answer quality, preferred answers and feedback
@@ -122,16 +124,36 @@ void main() {
     expect(legacyEntries, hasLength(367));
     final encoded = jsonEncode(legacyEntries);
     final fingerprint = sha256.convert(utf8.encode(encoded)).toString();
-    // Retain the accepted fingerprint over all 367 legacy rows unchanged.
-    // The two exact rows above freeze the entire extension, including order,
-    // choice text, correctness, quality, and preferred labels. Neither an
-    // extra new row nor a changed legacy row is silently admitted.
-    // Changes require an explicit learner-record compatibility disposition.
+    // PR460 admits only the factual MAIN01 quality pair. Its compatibility
+    // regression preserves old record bytes and rejects the old fingerprint
+    // as current proof. Freeze actual current semantics before restoring the
+    // two prior comparison cells; never rewrite learner evidence.
+    const acceptedCurrentFingerprint =
+        'e06d7556a9dde9fd1197f7b9584233f1e583ddf08e4bca81ddaac9551783615f';
     const acceptedMainFingerprint =
         '26c8c2d76a89ba00adfb482b2130e758f7b8e32699ef85f75e15abf189e57bb4';
     print('ASM01_SOURCE_FINGERPRINT=$fingerprint');
-    expect(fingerprint, acceptedMainFingerprint);
-    final tampered = jsonDecode(encoded) as List<dynamic>;
+    expect(fingerprint, acceptedCurrentFingerprint);
+    final historicalComparison = jsonDecode(encoded) as List<dynamic>;
+    final setup = historicalComparison.cast<List<dynamic>>().singleWhere(
+      (row) => row[2] == 'first_table_guide_one_clear_choice',
+    );
+    final setupOptions = (setup[5] as List<dynamic>).cast<List<dynamic>>();
+    for (final (id, current, prior) in <(String, String, String)>[
+      ('co_still_acting', 'suboptimal', 'wrong'),
+      ('hero_has_no_cards', 'wrong', 'suboptimal'),
+    ]) {
+      final option = setupOptions.singleWhere((option) => option[0] == id);
+      expect(option[3], current, reason: 'Exact reviewed MAIN01 grade: $id');
+      option[3] = prior;
+    }
+    final historicalEncoded = jsonEncode(historicalComparison);
+    expect(
+      sha256.convert(utf8.encode(historicalEncoded)).toString(),
+      acceptedMainFingerprint,
+      reason: 'Every other legacy identity and grading field stays frozen.',
+    );
+    final tampered = jsonDecode(historicalEncoded) as List<dynamic>;
     final withChoice = tampered.cast<List<dynamic>>().firstWhere(
       (row) => (row[5] as List<dynamic>).isNotEmpty,
     );
