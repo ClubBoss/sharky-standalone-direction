@@ -1,5 +1,56 @@
 # Pre-Human Campaign State v1
 
+Status: `ACTIVE_PROCESS_COMPLETION_THEN_INTERNAL_0_1`
+Freshness date: 2026-11-13
+Current dispatch section: ## November 2026 exact current dispatch - process completion then internal 0.1
+
+## November 2026 exact current dispatch - process completion then internal 0.1
+
+`PRINCIPAL_PLAN = docs/plan/MASTER_PLAN_v5.0_TOP1_BULLDOZER_SSOT.md`
+`CURRENT_STAGE = PROCESS_COMPLETION_THEN_INTERNAL_SHARKY_0_1`
+`CURRENT_ACTIVE_IMPLEMENTATION_FAMILY = OWNER_DIRECTED_SEQUENTIAL_DELIVERY`
+`EXACT_NEXT_ACTION = FINISH_CONFIRMED_PROCESS_FIXES_THEN_COMPLETE_EXISTING_0_1_CANDIDATE`
+
+The owner's 2026-11-13 instruction admits sequential delivery: complete confirmed
+process repairs, then resume internal 0.1 without another routine permission
+request. This current overlay supersedes historical dispatches below for task
+selection; it does not replace Master Plan v5, original DoD, or release gates.
+Use existing Issue #364 and its working register; do not create another queue.
+
+Verified baseline: #455 merged as `b1ef9cde7afc8c2f6f169fb2aa43064cd78651ef`,
+tree `058145090995bbb8fcd5819ebd49cee63c68cedd`. Its default checkpoint uses
+canonical Tier A plus terminal Tier B; explicit historical full-suite diagnostics
+remain available and RED/INCOMPLETE. No product points follow from this change.
+Resolve later main/PR identities live; this baseline is not a future HEAD pin.
+
+Process scope: finish #454's reviewed one-line Tier 2 duplication repair and the
+applicable frozen `a109d6cc...` changeset/orchestration proposal after exact-delta
+review and mandatory checks. Reuse completed #455 work. The Mac disk guard now
+uses 5,000,000,000 bytes plus explicit operation peak and positive margin;
+source, SDK and device custody remain separate requirements.
+
+Product scope after process disposition: one finite source-owned initial module,
+entry -> task -> answer -> explanation/repair -> distinct next task -> saved
+progress, on English iPhone 14 Pro 393x852. Reuse #451 and the preserved local
+alpha package; reconcile their exact composition before publication. An open
+chat/PR or old receipt is not an active writer or a source lease. Existing shared
+State/Runner/Store/Preview ownership requires actual current custody evidence;
+this overlay does not assign a second writer.
+
+Acceptance remains exact-source and independent. Preserve original score weights,
+accepted evidence and unfinished work. AI-simulated evidence is labeled SIMULATED;
+widget remount/plugin stubs do not prove native process persistence or Human
+learning. No partial original-DoD credit, external pilot, Human admission, public
+release, protected #224 merge, or retry/bypass of denied credential/metadata,
+socket or app-container operations is authorized by this overlay. When one
+specific proof is blocked, continue an independent admitted task and name that
+operation/evidence gap; do not apply a blanket Flutter prohibition.
+
+All dated sections below are preserved historical provenance. Their former
+"latest/current" labels do not override this explicit current dispatch.
+
+---
+
 ## 2026-10-25 LATEST owner visual dispatch — DESIGN NORTH STAR FIRST / PRODUCTION STOP
 
 ACTIVE_VISUAL_FAMILY = S12.V_OWNER_VISUAL_NORTH_STAR_RESET. ACTIVE_GATE = CONCEPT_OWNER_SELECTION_PENDING. One bottleneck: evaluate A Night Felt / B Deep Current / C Signal Sport as integrated premium EN-only 393x852 iPhone14Pro design systems across 14 honest screen/alternate-state samples; do not accept B merely as art-director recommendation. See docs/design/S12V_NORTH_STAR_RESET_OWNER_EXPLORATION_20261025.md and docs/ops/S12V_VISUAL_RESET_PRECODE_GATE_20261025.md.
