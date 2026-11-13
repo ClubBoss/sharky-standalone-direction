@@ -15337,6 +15337,10 @@ const _taskSkillDeltasV1 = <String, Map<String, int>>{
     'Table sense': 4,
     'Board reading': 1,
   },
+  'what_poker_is_table_read_recheck': <String, int>{
+    'Table sense': 4,
+    'Board reading': 1,
+  },
   'cards_ranks_suits_private_board': <String, int>{
     'Board reading': 3,
     'Hand reading': 2,
