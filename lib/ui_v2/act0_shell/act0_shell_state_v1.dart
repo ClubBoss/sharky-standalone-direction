@@ -11510,7 +11510,7 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
       preferredLabel: 'You are BTN, blinds are posted, and no board is out yet',
       betterAnswerLabel:
           'You are BTN, blinds are posted, and no board is out yet',
-      quality: Act0FeedbackQualityV1.wrong,
+      quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Close, but name the full setup.',
       feedbackReason:
           'CO/cutoff already folded and action is on You now. The full clue also includes BTN, posted blinds, your cards, and no board yet.',
@@ -11529,7 +11529,7 @@ final _firstTableGuideActionRunner = _whatYouCanDoRunner.copyWith(
       preferredLabel: 'You are BTN, blinds are posted, and no board is out yet',
       betterAnswerLabel:
           'You are BTN, blinds are posted, and no board is out yet',
-      quality: Act0FeedbackQualityV1.suboptimal,
+      quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Use the visible cards too.',
       feedbackReason:
           'The blinds are posted and no board is out, but You have K and T showing at BTN. The setup is preflop with You acting next.',
