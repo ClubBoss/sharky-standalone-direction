@@ -246,6 +246,8 @@ if [[ "$print_plan" == "true" ]]; then
     echo "FAIL: tier0_only=true is inconsistent with world1_contracts_checkpoint=enabled"
     exit 2
   fi
+  # Planning is observational: do not run checks or update the success cache.
+  exit 0
 fi
 
 ./tools/lint_tools_v1.sh

@@ -60,7 +60,12 @@ run_cmd() {
   local cmd="$1"
   executed_commands+=("$cmd")
   echo "[run] $cmd"
-  eval "$cmd"
+  eval "$cmd" || {
+    local rc=$?
+    status="FAIL"
+    failure_message="A gate command failed (exit=$rc): $cmd"
+    exit "$rc"
+  }
 }
 
 collect_changed_files

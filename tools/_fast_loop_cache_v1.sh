@@ -30,13 +30,15 @@ fast_loop_compute_cache_key_v1() {
   printf '%s\n%s\n%s\n%s\n%s\n' "$head" "$dirty" "$lib_mtime" "$test_mtime" "$tools_mtime"
 }
 
+# Analyzer reuse is disabled until a reviewed content/dependency/SDK/command
+# fingerprint and atomic successful-analysis receipt replace the legacy key.
+# Preserve legacy files as history, but never treat them as analysis evidence.
 fast_loop_cache_matches_v1() {
-  local key="$1"
-  [[ -f "$FAST_LOOP_CACHE_FILE_V1" ]] && [[ "$(cat "$FAST_LOOP_CACHE_FILE_V1")" == "$key" ]]
+  return 1
 }
 
 fast_loop_write_cache_v1() {
-  local key="$1"
-  mkdir -p .dart_tool
-  printf '%s' "$key" > "$FAST_LOOP_CACHE_FILE_V1"
+  # A skipped or failed analysis must never mint a reusable PASS receipt.
+  # This conservative fallback writes no receipts, including after success.
+  return 0
 }

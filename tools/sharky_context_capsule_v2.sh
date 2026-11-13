@@ -20,15 +20,34 @@ if [ ! -f "$STATE" ]; then
   exit 3
 fi
 
-# The dated current-dispatch section owns live assignments. Historical
-# dispatches below the next H2 heading must never supply missing values.
-CURRENT_DISPATCH="$(
-  awk '
+# Prefer an explicit exact H2 pointer from the header. Legacy files without
+# one retain the unique dated-section contract; never select the latest heading.
+STATE_HEADER="$(awk '/^## / { exit } { print }' "$STATE")"
+pointer_count="$(printf '%s\n' "$STATE_HEADER" | grep -Ec '^Current dispatch section:' || true)"
+if [ "$pointer_count" -gt 1 ]; then
+  printf 'ERROR=AUTHORITY_UNRESOLVED\nAUTHORITY_FIELD=CURRENT_DISPATCH_POINTER\n' >&2
+  exit 4
+fi
+DISPATCH_SECTION="$(printf '%s\n' "$STATE_HEADER" | sed -n 's/^Current dispatch section: //p')"
+if [ "$pointer_count" -eq 1 ]; then
+  case "$DISPATCH_SECTION" in
+    '## '*) ;;
+    *) printf 'ERROR=AUTHORITY_UNRESOLVED\nAUTHORITY_FIELD=CURRENT_DISPATCH_POINTER\n' >&2; exit 4 ;;
+  esac
+  dispatch_count="$(awk -v heading="$DISPATCH_SECTION" '$0 == heading { n++ } END { print n+0 }' "$STATE")"
+  CURRENT_DISPATCH="$(awk -v heading="$DISPATCH_SECTION" '
+    $0 == heading { active=1; next }
+    active && /^## / { exit }
+    active { print }
+  ' "$STATE")"
+else
+  dispatch_count="$(grep -Ec '^## [[:alpha:]]+ 20[0-9][0-9] exact current dispatch([[:space:]]|$)' "$STATE" || true)"
+  CURRENT_DISPATCH="$(awk '
     /^## [[:alpha:]]+ 20[0-9][0-9] exact current dispatch([[:space:]]|$)/ { active=1; next }
     active && /^## / { exit }
     active { print }
-  ' "$STATE"
-)"
+  ' "$STATE")"
+fi
 
 extract_assignment() {
   local key="$1"
@@ -73,10 +92,8 @@ authority_unresolved() {
   esac
 }
 
-dispatch_count="$(grep -Ec '^## [[:alpha:]]+ 20[0-9][0-9] exact current dispatch([[:space:]]|$)' "$STATE" || true)"
 [ "$dispatch_count" -eq 1 ] && [ -n "$CURRENT_DISPATCH" ] || authority_error CURRENT_DISPATCH
 
-STATE_HEADER="$(awk '/^## / { exit } { print }' "$STATE")"
 for field in Status 'Freshness date'; do
   count="$(printf '%s\n' "$STATE_HEADER" | grep -Ec "^$field:" || true)"
   [ "$count" -eq 1 ] || authority_error "$field"
