@@ -13,7 +13,7 @@ SOURCE_MANIFESTS = ROOT / "tools" / "test_authority" / "manifests"
 VALIDATOR = ROOT / "tools" / "test_authority" / "validate_manifest_v1.py"
 
 
-def _run(mutator) -> None:
+def _run(mutator, expected_error: str | None = None) -> None:
     with tempfile.TemporaryDirectory() as directory:
         manifests = Path(directory) / "manifests"
         shutil.copytree(SOURCE_MANIFESTS, manifests)
@@ -30,6 +30,8 @@ def _run(mutator) -> None:
             check=False,
         )
         assert result.returncode == 1, result.stdout + result.stderr
+        if expected_error is not None:
+            assert expected_error in result.stdout + result.stderr, result.stdout + result.stderr
 
 
 def test_generic_owner_placeholder() -> None:
@@ -74,6 +76,22 @@ def test_tier_c_tier_b_overlap() -> None:
         with (manifests / "tier_b_maintained_support.txt").open("a") as stream:
             stream.write(path + "\n")
     _run(mutate)
+
+
+def test_required_main01_path_missing() -> None:
+    def mutate(_, manifests):
+        path = manifests / "tier_b_maintained_support.txt"
+        path.write_text(path.read_text().replace(
+            "test/ui_v2/act0_main01_app_root_cycle_v1_test.dart\n", ""
+        ))
+    _run(mutate, "missing_main01=['test/ui_v2/act0_main01_app_root_cycle_v1_test.dart']")
+
+
+def test_unregistered_tier_b_addition() -> None:
+    def mutate(_, manifests):
+        with (manifests / "tier_b_maintained_support.txt").open("a") as stream:
+            stream.write("test/ui_v2/main01_unregistered_future_test.dart\n")
+    _run(mutate, "unexpected_extra=['test/ui_v2/main01_unregistered_future_test.dart']")
 
 
 if __name__ == "__main__":
