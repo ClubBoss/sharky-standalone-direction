@@ -82,11 +82,14 @@ binpath=root/'mockbin';binpath.mkdir();(binpath/'bash').symlink_to(BASH)
 for exe in ['dart','flutter']:
  put('mockbin/'+exe,'#!/bin/sh\nprintf "%s\\n" "'+exe+' $*" >> "$TRACE"\n')
  (binpath/exe).chmod(0o755)
+put('mockbin/rg', '#!/bin/sh\nprintf \"UNEXPECTED_RG_DEPENDENCY\\n\" >> \"$TRACE\"\nexit 127\n')
+(binpath/'rg').chmod(0o755)
 trace=root/'trace'
 e={**env,'PATH':str(binpath)+':'+os.environ['PATH'],'TRACE':str(trace)}
 q=subprocess.run([BASH,'tools/release_gate_world1.sh'],cwd=root,env=e,capture_output=True,text=True)
 assert q.returncode==0,(q.stdout,q.stderr)
 lines=trace.read_text();assert 'dart run tools/validate_training_content.dart\n' in lines
+assert 'UNEXPECTED_RG_DEPENDENCY' not in lines
 assert '--staged-only' not in lines
 assert 'flutter gen-l10n' in lines
 assert 'lib/committed.dart' in lines and 'lib/delete.dart' not in lines and 'lib/old.dart' not in lines

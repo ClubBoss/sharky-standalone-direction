@@ -51,7 +51,7 @@ echo "[gate] pre-clean unit test assets"
 rm -rf build/unit_test_assets || true
 mkdir -p build || true
 
-if [[ "$SHARKY_CHANGE_SCOPE_V1" == "full-scope" ]] || rg -q '^content/' <<< "$changed_files"; then
+if [[ "$SHARKY_CHANGE_SCOPE_V1" == "full-scope" ]] || grep -Eq '^content/' <<< "$changed_files"; then
   echo "[gate] content changed -> validate training content"
   dart run tools/validate_training_content.dart
 else
@@ -106,7 +106,7 @@ fi
 
 
 
-if [[ "$SHARKY_CHANGE_SCOPE_V1" == "full-scope" ]] || rg -q '^(l10n\.yaml|lib/l10n/.*\.arb)$' <<< "$changed_files"; then
+if [[ "$SHARKY_CHANGE_SCOPE_V1" == "full-scope" ]] || grep -Eq '^(l10n\.yaml|lib/l10n/.*\.arb)$' <<< "$changed_files"; then
   echo "[gate] 5/5 l10n changed -> flutter gen-l10n"
   flutter gen-l10n
 else

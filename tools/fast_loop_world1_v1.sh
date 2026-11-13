@@ -31,7 +31,7 @@ readonly WORLD1_CAMPAIGN_GUARD_REGEX_V1='^(lib/campaign/|assets/packs/|content/|
 
 should_run_world1_contracts_checkpoint_v1() {
   local changed_files="$1"
-  [[ -n "$changed_files" ]] && rg -q "$WORLD1_CONTRACTS_HIGH_RISK_REGEX_V1" <<< "$changed_files"
+  [[ -n "$changed_files" ]] && grep -Eq "$WORLD1_CONTRACTS_HIGH_RISK_REGEX_V1" <<< "$changed_files"
 }
 
 selected_tests=("${WORLD1_SELECTED_TESTS_STATE_V1[@]}")
@@ -154,7 +154,7 @@ fi
 content_validation_status="disabled"
 
 
-  if [[ "$SHARKY_CHANGE_SCOPE_V1" == "full-scope" ]] || { [[ -n "$changed_files" ]] && rg -q '^content/' <<< "$changed_files"; }; then
+  if [[ "$SHARKY_CHANGE_SCOPE_V1" == "full-scope" ]] || { [[ -n "$changed_files" ]] && grep -Eq '^content/' <<< "$changed_files"; }; then
     if [[ "${SHARKY_CONTENT_OWNER_V1:-}" == "release-gate-full-validation-complete" ]]; then
       content_validation_status="DELEGATED_TO_RELEASE_GATE (not a PASS claim)"
     else
@@ -174,31 +174,31 @@ elif [[ "$run_tests" == "true" && "$run_full" == "false" && "$force_tests" == "f
     run_tests=false
     tests_status="skipped (no changed files)"
     run_reason="NOOP: no relevant changes"
-  elif ! rg -q '^(lib/|test/|pubspec\.yaml|pubspec\.lock)' <<< "$changed_files"; then
+  elif ! grep -Eq '^(lib/|test/|pubspec\.yaml|pubspec\.lock)' <<< "$changed_files"; then
     run_tests=false
     tests_status="skipped (changes outside lib/test/pubspec)"
     run_reason="NOOP: no relevant changes"
   else
-    if rg -q "$WORLD1_SURFACE_PATH_REGEX_V1" <<< "$changed_files"; then
+    if grep -Eq "$WORLD1_SURFACE_PATH_REGEX_V1" <<< "$changed_files"; then
       fast_loop_append_unique_tests_v1 selected_tests "${WORLD1_SELECTED_TESTS_SURFACE_V1[@]}"
     fi
-    if rg -q "$WORLD1_EN_COPY_GUARD_REGEX_V1" <<< "$changed_files"; then
+    if grep -Eq "$WORLD1_EN_COPY_GUARD_REGEX_V1" <<< "$changed_files"; then
       fast_loop_append_unique_tests_v1 selected_tests "${WORLD1_SELECTED_TESTS_COPY_GUARDS_V1[0]}"
     fi
-    if rg -q "$WORLD1_RU_COPY_GUARD_REGEX_V1" <<< "$changed_files"; then
+    if grep -Eq "$WORLD1_RU_COPY_GUARD_REGEX_V1" <<< "$changed_files"; then
       fast_loop_append_unique_tests_v1 selected_tests "${WORLD1_SELECTED_TESTS_COPY_GUARDS_V1[1]}"
     fi
-    if rg -q "$WORLD1_FEEDBACK_GUARD_REGEX_V1" <<< "$changed_files"; then
+    if grep -Eq "$WORLD1_FEEDBACK_GUARD_REGEX_V1" <<< "$changed_files"; then
       fast_loop_append_unique_tests_v1 selected_tests "${WORLD1_SELECTED_TESTS_COPY_GUARDS_V1[2]}"
     fi
-    if rg -q "$WORLD1_CAMPAIGN_GUARD_REGEX_V1" <<< "$changed_files"; then
+    if grep -Eq "$WORLD1_CAMPAIGN_GUARD_REGEX_V1" <<< "$changed_files"; then
       fast_loop_append_unique_tests_v1 selected_tests "${WORLD1_SELECTED_TESTS_CAMPAIGN_GUARDS_V1[@]}"
     fi
-    if rg -q '^(lib/ui_v2/|test/ui_v2/)' <<< "$changed_files"; then
+    if grep -Eq '^(lib/ui_v2/|test/ui_v2/)' <<< "$changed_files"; then
       run_reason="state-first fast loop + touched ui_v2 guards"
       tier_label="Tier0(state)+ui_v2"
     fi
-    if rg -q '^(lib/services/|test/services/)' <<< "$changed_files"; then
+    if grep -Eq '^(lib/services/|test/services/)' <<< "$changed_files"; then
       fast_loop_append_unique_tests_v1 selected_tests "${FAST_LOOP_TIER1_SERVICES_TESTS_V1[@]}"
       run_reason="state-first fast loop + touched services guards"
       tier_label="Tier0(state)+services"
