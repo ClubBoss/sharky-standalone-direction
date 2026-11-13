@@ -1,5 +1,5 @@
 from pathlib import Path
-import subprocess,tempfile,os,json,shutil,atexit
+import subprocess,tempfile,os,json,shutil,atexit,shlex
 # Isolate synthetic children from CI, policy/receipt controls and Git overrides.
 # Evidence destination is captured separately and never passed as execution authority.
 EVIDENCE_DESTINATION = os.environ.get("SHARKY_FIXTURE_EVIDENCE_DIR")
@@ -124,7 +124,7 @@ for label,args,override,expect in [
 
 # Composition: real gate -> real fast-loop with mock SDK only.
 put('tools/fast_loop_actual.sh',(p/'tools/fast_loop_world1_v1.sh').read_text())
-put('tools/fast_loop_world1_v1.sh','#!/bin/sh\nprintf "nested\\n" >> "$TRACE"\nexec /opt/homebrew/bin/bash tools/fast_loop_actual.sh "$@"\n')
+put('tools/fast_loop_world1_v1.sh','#!/bin/sh\nprintf "nested\\n" >> "$TRACE"\nexec '+shlex.quote(BASH)+' tools/fast_loop_actual.sh "$@"\n')
 (root/'tools/fast_loop_world1_v1.sh').chmod(0o755)
 put('mockbin/dart','#!/bin/sh\nprintf "dart %s\\n" "$*" >> "$TRACE"\nif [ "$1" = run ] && [ "$2" = tools/validate_training_content.dart ]; then exit "${MOCK_VALIDATOR_RC:-0}"; fi\n')
 for label,target,args,override,code,nested in [
