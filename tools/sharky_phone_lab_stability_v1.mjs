@@ -1,4 +1,13 @@
 // Keep exact full-frame equality: tolerate delayed rendering, never mask it.
+import { copyFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+export function writeStableFramePairV1(outDir, transition) {
+  if (!transition.matched) throw new Error('No stable changed frame pair');
+  copyFileSync(join(outDir, transition.after.name), join(outDir, 'compact-live-after.png'));
+  copyFileSync(join(outDir, transition.stable.name), join(outDir, 'compact-live-stable.png'));
+}
+
 export async function stableChangedFrameV1(before, initial, capture, maxAttempts = 6) {
   if (!Number.isInteger(maxAttempts) || maxAttempts < 1 || maxAttempts > 6) {
     throw new RangeError('Expected one to six stability samples');
