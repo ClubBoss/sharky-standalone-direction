@@ -234,6 +234,7 @@ class Act0PlacementShellV1 extends StatelessWidget {
     required this.onStartDiagnostic,
     required this.onStartRecommended,
     required this.onStartFromZero,
+    this.onSkipIntroduction,
   });
 
   final List<Act0PlacementQuestionV1> questions;
@@ -249,6 +250,7 @@ class Act0PlacementShellV1 extends StatelessWidget {
   final VoidCallback onStartDiagnostic;
   final VoidCallback onStartRecommended;
   final VoidCallback onStartFromZero;
+  final VoidCallback? onSkipIntroduction;
 
   @override
   Widget build(BuildContext context) {
@@ -433,6 +435,16 @@ class Act0PlacementShellV1 extends StatelessWidget {
               ),
             ),
             flowActions,
+            if (showIntro && onSkipIntroduction != null)
+              TextButton(
+                key: const Key('act0_shell_placement_skip_intro'),
+                onPressed: onSkipIntroduction,
+                child: Text(
+                  localeIsRu
+                      ? '\u041f\u0440\u043e\u043f\u0443\u0441\u0442\u0438\u0442\u044c \u0437\u043d\u0430\u043a\u043e\u043c\u0441\u0442\u0432\u043e'
+                      : 'Skip introduction',
+                ),
+              ),
           ],
         ),
       );
@@ -753,6 +765,15 @@ class Act0PlacementShellV1 extends StatelessWidget {
           primaryKey: actions.buttonKey,
           primaryLabel: actions.buttonLabel,
           onPrimary: actions.onPressed,
+          secondaryKey: showIntro && onSkipIntroduction != null
+              ? const Key('act0_shell_placement_skip_intro')
+              : null,
+          secondaryLabel: showIntro && onSkipIntroduction != null
+              ? (_isRuLocaleV1(context)
+                    ? '\u041f\u0440\u043e\u043f\u0443\u0441\u0442\u0438\u0442\u044c \u0437\u043d\u0430\u043a\u043e\u043c\u0441\u0442\u0432\u043e'
+                    : 'Skip introduction')
+              : null,
+          onSecondary: showIntro ? onSkipIntroduction : null,
         ),
       ),
     );

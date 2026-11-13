@@ -4,6 +4,7 @@ import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { stableChangedFrameV1, writeStableFramePairV1 } from './sharky_phone_lab_stability_v1.mjs';
 
 const args = new Map();
 for (let i = 2; i < process.argv.length; i += 2) args.set(process.argv[i], process.argv[i + 1]);
@@ -277,9 +278,17 @@ try {
   await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',x,y});
   await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',x,y,button:'left',buttons:1,clickCount:1});
   await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',x,y,button:'left',buttons:0,clickCount:1});
-  await sleep(1500); const after=await screenshot(cdp,'compact-live-after.png'); await sleep(900); const stable=await screenshot(cdp,'compact-live-stable.png');
-  report.interaction_details={rendered_pointer:[Number(x.toFixed(1)),Number(y.toFixed(1))],before_sha256:before.sha256,after_sha256:after.sha256,stable_sha256:stable.sha256};
-  if (before.sha256!==after.sha256 && after.sha256===stable.sha256) report.interaction='PASS';
+  await sleep(1500);
+  const initialAfter=await screenshot(cdp,'compact-live-first-after.png');
+  const transition=await stableChangedFrameV1(before,initialAfter,async attempt=>{
+    await sleep(900);
+    return screenshot(cdp,`compact-live-stable-${attempt}.png`);
+  });
+  report.interaction_details={rendered_pointer:[Number(x.toFixed(1)),Number(y.toFixed(1))],before_sha256:before.sha256,after_sha256:transition.after.sha256,stable_sha256:transition.stable.sha256,stability_samples:transition.samples};
+  if (transition.matched) {
+    writeStableFramePairV1(outDir,transition);
+    report.interaction='PASS';
+  }
   else throw new AssertionFailure(`Interaction did not reach stable transition: ${JSON.stringify(report.interaction_details)}`);
 
   async function overflow(profileName,w,h) {

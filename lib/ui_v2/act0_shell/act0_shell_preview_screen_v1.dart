@@ -2534,6 +2534,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool _showWelcome = false;
   bool _bootSurfaceReady = true;
   bool _welcomeCompletedV1 = false;
+  bool _introductionSkippedV1 = false;
+  bool _skipIntroductionSavingV1 = false;
   bool _welcomeHandoffStartsRecommendedTaskV1 = false;
   Act0ShellTabV1? _welcomeReturnTabV1;
 
@@ -2651,13 +2653,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final intakeCompleted = await ProgressService.isIntakeCompleted();
     final welcomeCompleted =
         await Act0FirstStartPreferencesV1.hasCompletedWelcome();
+    final introductionSkipped =
+        await Act0FirstStartPreferencesV1.hasSkippedIntroduction();
     if (!mounted || epoch != _recoveryEpochV1) {
       return;
     }
     setState(() {
       _welcomeCompletedV1 = welcomeCompleted;
-      _showPlacement = !intakeCompleted;
-      _showWelcome = intakeCompleted && !welcomeCompleted;
+      _introductionSkippedV1 = introductionSkipped;
+      _showPlacement = !intakeCompleted && !introductionSkipped;
+      _showWelcome =
+          intakeCompleted && !welcomeCompleted && !introductionSkipped;
       _bootSurfaceReady = true;
       if (_showWelcome) {
         _tab = Act0ShellTabV1.home;
@@ -3642,6 +3648,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (!store.isWriteLeaseCurrent) throw const Act0RecoveryHoldV1();
     final raw = loaded.payload;
     if (raw == null || raw.isEmpty || !mounted) {
+      // First-start with no saved payload must not inherit sample/demo work.
+      // Hosts that bypass first-start retain their established empty policy.
+      if (widget.showPlacementOnStart) {
+        _restorePreviewToFreshStart(showPlacement: false);
+      }
       return;
     }
     final parsed = _Act0PersistedProgressV1.tryParse(raw);
@@ -5272,6 +5283,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _showPlacement = showPlacement;
       _showWelcome = false;
       _welcomeCompletedV1 = false;
+      _introductionSkippedV1 = false;
       _welcomeHandoffStartsRecommendedTaskV1 = false;
       _welcomeReturnTabV1 = null;
       _placementDiagnosticActive = false;
@@ -5991,10 +6003,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                       onSelectOption: (question, optionId) => setState(() {
                         _togglePlacementOption(question, optionId);
                       }),
-                      onStartPlacement: () => setState(() {
-                        _placementIntroVisible = false;
-                        _placementQuestionIndex = 0;
-                      }),
+                      onStartPlacement: () {
+                        if (_skipIntroductionSavingV1) return;
+                        setState(() {
+                          _placementIntroVisible = false;
+                          _placementQuestionIndex = 0;
+                        });
+                      },
                       onBack: () => setState(() {
                         if (_placementQuestionIndex > 0) {
                           _placementQuestionIndex -= 1;
@@ -6023,6 +6038,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           );
                         });
                       },
+                      onSkipIntroduction:
+                          _placementRetakeV1 || _skipIntroductionSavingV1
+                          ? null
+                          : () => unawaited(_skipIntroductionV1()),
                       onStartFromZero: () {
                         setState(() {
                           unawaited(
@@ -10605,7 +10624,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _selectedWorldId = world.worldId;
     _selectedLessonId = focusLesson.lessonId;
     _selectedTaskId = focusTask.taskId;
-    final showWelcome = !_welcomeCompletedV1;
+    final showWelcome = !_welcomeCompletedV1 && !_introductionSkippedV1;
     _showPlacement = false;
     _showWelcome = showWelcome;
     _welcomeHandoffStartsRecommendedTaskV1 = directRunner;
@@ -10635,6 +10654,40 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     _persistProgress();
     await _persistPlacementCompletionV1(result ?? _buildPlacementResult());
+  }
+
+  Future<void> _skipIntroductionV1() async {
+    if (_skipIntroductionSavingV1) return;
+    final epoch = _recoveryEpochV1;
+    setState(() => _skipIntroductionSavingV1 = true);
+    try {
+      await Act0FirstStartPreferencesV1.setIntroductionSkipped();
+      if (!mounted || epoch != _recoveryEpochV1) return;
+      setState(() {
+        _introductionSkippedV1 = true;
+        _showPlacement = false;
+        _showWelcome = false;
+        _tab = Act0ShellTabV1.home;
+        // Home reuses the saved mission without grading or resetting work.
+      });
+      _persistProgress();
+    } catch (_) {
+      if (mounted && epoch == _recoveryEpochV1) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              Localizations.localeOf(context).languageCode == 'ru'
+                  ? '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0441\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c. \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439 \u0435\u0449\u0451 \u0440\u0430\u0437.'
+                  : 'Could not save. Please try again.',
+            ),
+          ),
+        );
+      }
+    } finally {
+      if (mounted && epoch == _recoveryEpochV1) {
+        setState(() => _skipIntroductionSavingV1 = false);
+      }
+    }
   }
 
   void _openWelcomeReplayV1() {
