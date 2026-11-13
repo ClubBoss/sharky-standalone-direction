@@ -293,6 +293,122 @@ class TypedCohortV2Controls(unittest.TestCase):
         self.write(root / 'candidate/typed-cohort-v2.json', cohort)
         self.rejects(root, 'identity is malformed')
 
+    def reviewed_cells(self):
+        return {
+            TRUTH.MAIN01_TASK_ID: {
+                'rewardXp': 5,
+                'options': [
+                    {'id': 'co_still_acting', 'correct': False, 'quality': 'suboptimal'},
+                    {'id': 'hero_btn_preflop_setup', 'correct': True, 'quality': 'correct'},
+                    {'id': 'hero_has_no_cards', 'correct': False, 'quality': 'wrong'},
+                ],
+            },
+            'unchanged_control': {'rewardXp': 7},
+        }
+
+    def reviewed_producer(self):
+        cohort = {'admitted_source_reference': copy.deepcopy(TRUTH.SOURCE_REFERENCES['candidate']),
+                  'producer_receipt': {'head': 'd' * 40, **{
+                      key: TRUTH.MAIN01_PRODUCER_REVISION[key]
+                      for key in ('state_sha256', 'factory_sha256')}}}
+        return cohort
+
+    def test_reviewed_exact_producer_bytes_are_separate_from_authoring_origin(self):
+        cohort = self.reviewed_producer()
+        self.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), 'MAIN01_REVIEWED_SETUP_QUALITIES')
+        self.assertEqual(cohort['admitted_source_reference']['commit'], CANONICAL['admitted_source_reference'])
+        cohort['producer_receipt']['head'] = 'e' * 40
+        self.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), 'MAIN01_REVIEWED_SETUP_QUALITIES')
+
+    def test_reviewed_unknown_state_factory_origin_and_head_are_rejected(self):
+        for field, replacement in [('state_sha256', '0' * 64), ('factory_sha256', '1' * 64), ('head', 'not-a-sha')]:
+            with self.subTest(field=field):
+                cohort = self.reviewed_producer()
+                cohort['producer_receipt'][field] = replacement
+                with self.assertRaises(SystemExit):
+                    TRUTH.producer_revision(cohort, 'candidate')
+        cohort = self.reviewed_producer()
+        cohort['admitted_source_reference']['commit'] = TRUTH.MAIN01_PRODUCER_REVISION['source_revision']
+        with self.assertRaisesRegex(SystemExit, 'Admitted source reference'):
+            TRUTH.producer_revision(cohort, 'candidate')
+
+    def test_reviewed_quality_normalization_changes_only_exact_two_cells_in_memory(self):
+        captured = self.reviewed_cells()
+        frozen = copy.deepcopy(captured)
+        origin = TRUTH.main01_origin_capture('learning-contract.json', captured)
+        self.assertEqual(captured, frozen)
+        expected = copy.deepcopy(frozen)
+        expected[TRUTH.MAIN01_TASK_ID]['options'][0]['quality'] = 'wrong'
+        expected[TRUTH.MAIN01_TASK_ID]['options'][2]['quality'] = 'suboptimal'
+        self.assertEqual(origin, expected)
+        choices = {TRUTH.MAIN01_TASK_ID: [
+            ['co_still_acting', 'partial', False, 'suboptimal', 'full'],
+            ['hero_btn_preflop_setup', 'full', True, 'correct', 'full'],
+            ['hero_has_no_cards', 'false', False, 'wrong', 'full'],
+        ]}
+        before = copy.deepcopy(choices)
+        normalized = TRUTH.main01_origin_capture('choice-identity.json', choices)
+        self.assertEqual(choices, before)
+        before[TRUTH.MAIN01_TASK_ID][0][3] = 'wrong'
+        before[TRUTH.MAIN01_TASK_ID][2][3] = 'suboptimal'
+        self.assertEqual(normalized, before)
+
+    def test_reviewed_quality_cells_cannot_be_missing_reversed_or_correct(self):
+        for mutation in ('missing', 'old_quality', 'correctness', 'duplicate'):
+            with self.subTest(mutation=mutation):
+                captured = self.reviewed_cells()
+                options = captured[TRUTH.MAIN01_TASK_ID]['options']
+                if mutation == 'missing': options.pop()
+                elif mutation == 'old_quality': options[0]['quality'] = 'wrong'
+                elif mutation == 'correctness': options[2]['correct'] = True
+                else: options.append(copy.deepcopy(options[0]))
+                with self.assertRaisesRegex(SystemExit, 'MAIN01 exact quality'):
+                    TRUTH.main01_origin_capture('learning-contract.json', captured)
+
+    def test_reviewed_fingerprint_is_exact_and_only_that_leaf_is_normalized(self):
+        captured = {TRUTH.MAIN01_TASK_ID: {'world_id': 'world_1', 'lesson_id': 'what_poker_is',
+                    'fingerprint': TRUTH.MAIN01_CURRENT_FINGERPRINT}, 'other': {'fingerprint': 'retained'}}
+        frozen = copy.deepcopy(captured)
+        origin = TRUTH.main01_origin_capture('source-fingerprints.json', captured)
+        self.assertEqual(captured, frozen)
+        frozen[TRUTH.MAIN01_TASK_ID]['fingerprint'] = TRUTH.MAIN01_PRIOR_FINGERPRINT
+        self.assertEqual(origin, frozen)
+        for field, value in [('fingerprint', 'f' * 64), ('world_id', 'unknown'), ('lesson_id', 'unknown')]:
+            invalid = copy.deepcopy(captured)
+            invalid[TRUTH.MAIN01_TASK_ID][field] = value
+            with self.assertRaisesRegex(SystemExit, 'exact setup fingerprint'):
+                TRUTH.main01_origin_capture('source-fingerprints.json', invalid)
+
+    def test_capture_hash_guard_rejects_other_changes_and_old_receipt_new_grades(self):
+        root = pathlib.Path(tempfile.mkdtemp())
+        captured = self.reviewed_cells()
+        path = root / 'learning-contract.json'
+        self.write(path, captured)
+        origin = TRUTH.main01_origin_capture(path.name, captured)
+        pin = {path.name: TRUTH._digest(origin)}
+        TRUTH.validate_capture_artifacts(root, 'MAIN01_REVIEWED_SETUP_QUALITIES', pin)
+        with self.assertRaisesRegex(SystemExit, 'Captured source artifact drift'):
+            TRUTH.validate_capture_artifacts(root, 'ORIGINAL_AUTHORING_BYTES', pin)
+        for mutate in ('xp', 'other_task'):
+            changed = copy.deepcopy(captured)
+            if mutate == 'xp': changed[TRUTH.MAIN01_TASK_ID]['rewardXp'] = 50
+            else: changed['unchanged_control']['rewardXp'] = 8
+            self.write(path, changed)
+            with self.assertRaisesRegex(SystemExit, 'Captured source artifact drift'):
+                TRUTH.validate_capture_artifacts(root, 'MAIN01_REVIEWED_SETUP_QUALITIES', pin)
+
+    def test_reviewed_capture_encoding_and_duplicate_keys_cannot_be_normalized_away(self):
+        root = pathlib.Path(tempfile.mkdtemp())
+        captured = self.reviewed_cells()
+        path = root / 'learning-contract.json'
+        pin = {path.name: TRUTH._digest(TRUTH.main01_origin_capture(path.name, captured))}
+        for raw in [json.dumps(captured, indent=2),
+                    json.dumps(captured, separators=(',', ':')).replace('"rewardXp":5', '"rewardXp":6,"rewardXp":5')]:
+            with self.subTest(raw=raw[:40]):
+                path.write_text(raw)
+                with self.assertRaisesRegex(SystemExit, 'Captured JSON byte encoding drift'):
+                    TRUTH.validate_capture_artifacts(root, 'MAIN01_REVIEWED_SETUP_QUALITIES', pin)
+
     def recompute(self, root, task_id):
         contract = self.read(root / 'candidate/learning-contract.json')
         fingerprints = self.read(root / 'candidate/source-fingerprints.json')
@@ -337,17 +453,23 @@ if __name__ == '__main__':
             out.mkdir()
             for name in names:
                 shutil.copyfile(source / name, out / name)
+            # Preserve real producer/source receipts when supplied. Never turn a
+            # reviewed new producer into a synthetic original-byte receipt.
+            cohort_path = source / 'typed-cohort-v2.json'
+            if cohort_path.is_file():
+                shutil.copyfile(cohort_path, out / cohort_path.name)
         repair = CANONICAL['historical_repair_control']
         for phase, source in (('baseline', baseline), ('candidate', candidate)):
-            expected = repair[f'{phase}_artifacts']
-            observed = {
-                name: hashlib.sha256((source / name).read_bytes()).hexdigest()
-                for name in expected
-            }
-            if observed != expected:
-                raise SystemExit(
-                    f'Historical repair control artifact drift: {phase}'
-                )
+            role = 'historical_baseline' if phase == 'baseline' else 'candidate'
+            cohort_path = source / 'typed-cohort-v2.json'
+            revision = (TRUTH.producer_revision(json.loads(cohort_path.read_text()), role)
+                        if cohort_path.is_file() else 'ORIGINAL_AUTHORING_BYTES')
+            try:
+                TRUTH.validate_capture_artifacts(source, revision, repair[f'{phase}_artifacts'])
+                if phase == 'candidate':
+                    TRUTH.validate_capture_artifacts(source, revision)
+            except SystemExit as error:
+                raise SystemExit(f'Historical repair control artifact drift: {phase}: {error}')
         contracts = {
             phase: json.loads((root / phase / 'learning-contract.json').read_text())
             for phase in ('baseline', 'candidate')
@@ -367,6 +489,8 @@ if __name__ == '__main__':
         historical = set(contracts['baseline'])
         helper = TypedCohortV2Controls()
         for phase in ('baseline', 'candidate'):
+            if (root / phase / 'typed-cohort-v2.json').is_file():
+                continue
             helper.write(
                 root / phase / 'typed-cohort-v2.json',
                 helper.cohort(
@@ -419,6 +543,11 @@ if __name__ == '__main__':
             'candidate_fail_count': comparison['ledgers']['candidate'][
                 'statuses'
             ].get('FAIL', 0),
+            'candidate_producer_revision': comparison['candidate_producer_revision'],
+            'producer_receipt': comparison['producer_receipt'],
+            'historical_learning_contract_identical': comparison['historical_learning_contract_identical'],
+            'historical_choice_identity_identical': comparison['historical_choice_identity_identical'],
+            'reviewed_quality_changes': comparison['reviewed_quality_changes'],
             'historical_repair_exemplar': {
                 'task_id': task_id,
                 'classification': exemplar['classification'],

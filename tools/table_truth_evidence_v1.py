@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Summarize real Flutter cases and preserve paired TABLE.TRUTH provenance."""
 import collections
+import copy
 import hashlib
 import json
 import pathlib
@@ -23,6 +24,21 @@ SOURCE_REFERENCES = {
         'state_sha256': 'd9a78d57817c8eaef7dc1a376f53ade7774229be4a34063d5dc0cf152bb67221',
         'factory_sha256': 'c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b',
     },
+}
+# Authoring origin above is immutable. This separately admitted source revision
+# changes only two grading qualities in one existing task; producer HEAD remains
+# an execution receipt (a later tooling-only commit can have identical bytes).
+MAIN01_PRODUCER_REVISION = {
+    'source_revision': 'fe6dd994774b3da2524e39ff322cad109687a9b5',
+    'state_sha256': 'ee5fe77ef24b5541a35e6e58823497f7ca47560714de6366f96f3632cfd00c61',
+    'factory_sha256': 'c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b',
+}
+MAIN01_TASK_ID = 'first_table_guide_one_clear_choice'
+MAIN01_PRIOR_FINGERPRINT = '2c7cc8212fe8a0fe211c79b4be08391f4262c8a7ef1abfb170de27bbd41ce278'
+MAIN01_CURRENT_FINGERPRINT = '2573cfd7f0d3d18a5680b1a744a6dde0c95714a4bd655cd14a9478a4fd139500'
+MAIN01_QUALITY_REVISION = {
+    'co_still_acting': ('wrong', 'suboptimal'),
+    'hero_has_no_cards': ('suboptimal', 'wrong'),
 }
 CANONICAL_NEW_AUTHORING = pathlib.Path(__file__).resolve().parents[1] / (
     'test/tools/fixtures/table_truth_asm05_new_authoring_v1.json'
@@ -72,6 +88,83 @@ def _digest(value):
     return hashlib.sha256(encoded).hexdigest()
 
 
+def producer_revision(cohort, role):
+    reference = cohort.get('admitted_source_reference')
+    if reference != SOURCE_REFERENCES[role]:
+        raise SystemExit('Admitted source reference changed')
+    receipt = cohort.get('producer_receipt')
+    if not isinstance(receipt, dict) or not re.fullmatch(
+        r'[0-9a-f]{40}', receipt.get('head', '')
+    ):
+        raise SystemExit('Producing HEAD receipt is missing or malformed')
+    source_bytes = {
+        key: receipt.get(key) for key in ('state_sha256', 'factory_sha256')
+    }
+    origin_bytes = {key: reference[key] for key in source_bytes}
+    if source_bytes == origin_bytes:
+        return 'ORIGINAL_AUTHORING_BYTES'
+    admitted_bytes = {key: MAIN01_PRODUCER_REVISION[key] for key in source_bytes}
+    if role == 'candidate' and source_bytes == admitted_bytes:
+        return 'MAIN01_REVIEWED_SETUP_QUALITIES'
+    raise SystemExit('Producing source receipt does not match admitted bytes')
+
+
+def main01_origin_capture(name, value):
+    """Return an in-memory origin comparison; never rewrite captured artifacts."""
+    result = copy.deepcopy(value)
+    if name in ('learning-contract.json', 'choice-identity.json'):
+        try:
+            options = (result[MAIN01_TASK_ID]['options']
+                       if name == 'learning-contract.json' else result[MAIN01_TASK_ID])
+            by_id = {(row['id'] if isinstance(row, dict) else row[0]): row
+                     for row in options}
+            if len(options) != 3 or set(by_id) != {
+                'hero_btn_preflop_setup', *MAIN01_QUALITY_REVISION
+            }:
+                raise ValueError('unexpected choice identities')
+            for choice, (prior, current) in MAIN01_QUALITY_REVISION.items():
+                row = by_id[choice]
+                if name == 'learning-contract.json':
+                    if row['quality'] != current or row['correct'] is not False:
+                        raise ValueError('unexpected current grading cell')
+                    row['quality'] = prior
+                else:
+                    if len(row) != 5 or row[3] != current or row[2] is not False:
+                        raise ValueError('unexpected current choice cell')
+                    row[3] = prior
+        except (KeyError, TypeError, IndexError, ValueError) as error:
+            raise SystemExit(f'MAIN01 exact quality revision mismatch: {name}') from error
+    elif name == 'source-fingerprints.json':
+        if result.get(MAIN01_TASK_ID) != {
+            'world_id': 'world_1', 'lesson_id': 'what_poker_is',
+            'fingerprint': MAIN01_CURRENT_FINGERPRINT,
+        }:
+            raise SystemExit('MAIN01 exact setup fingerprint mismatch')
+        result[MAIN01_TASK_ID]['fingerprint'] = MAIN01_PRIOR_FINGERPRINT
+    return result
+
+
+def validate_capture_artifacts(source, revision, names=None):
+    """Pin every field of the reviewed capture to the unchanged original capture.
+
+    Original artifacts retain exact raw-byte checks. The reviewed revision uses
+    compact canonical JSON after reversing only its two known qualities and one
+    resulting task fingerprint; all remaining bytes/fields keep original pins.
+    """
+    names = EXPECTED_CAPTURE_ARTIFACTS if names is None else names
+    for name, expected in names.items():
+        raw = (pathlib.Path(source) / name).read_bytes()
+        observed = hashlib.sha256(raw).hexdigest()
+        if revision == 'MAIN01_REVIEWED_SETUP_QUALITIES':
+            captured = json.loads(raw)
+            compact = json.dumps(captured, separators=(',', ':'), ensure_ascii=False).encode()
+            if raw != compact:
+                raise SystemExit(f'Captured JSON byte encoding drift: {name}')
+            observed = _digest(main01_origin_capture(name, captured))
+        if observed != expected:
+            raise SystemExit(f'Captured source artifact drift: {name}')
+
+
 def validate_typed_cohort(root):
     root = pathlib.Path(root)
     base = json.loads((root / 'baseline' / 'learning-contract.json').read_text())
@@ -94,20 +187,9 @@ def validate_typed_cohort(root):
     ):
         if cohort.get('schema') != 2 or cohort.get('role') != role:
             raise SystemExit('Unknown or mismatched typed cohort role')
-        reference = cohort.get('admitted_source_reference')
-        if reference != SOURCE_REFERENCES[role]:
-            raise SystemExit('Admitted source reference changed')
-        receipt = cohort.get('producer_receipt')
-        if not isinstance(receipt, dict) or not re.fullmatch(
-            r'[0-9a-f]{40}', receipt.get('head', '')
-        ):
-            raise SystemExit('Producing HEAD receipt is missing or malformed')
-        expected_receipt = {
-            'state_sha256': reference['state_sha256'],
-            'factory_sha256': reference['factory_sha256'],
-        }
-        if {key: receipt.get(key) for key in expected_receipt} != expected_receipt:
-            raise SystemExit('Producing source receipt does not match admitted bytes')
+        revision = producer_revision(cohort, role)
+        if role == 'candidate':
+            candidate_revision = revision
     if base_cohort.get('new_authoring'):
         raise SystemExit('Historical baseline contains NEW_AUTHORING additions')
     addition_rows = final_cohort.get('new_authoring', [])
@@ -122,7 +204,11 @@ def validate_typed_cohort(root):
         raise SystemExit('Historical cohort identity changed')
     if set(base) != historical_ids or set(final) != historical_ids | NEW_AUTHORING_IDS:
         raise SystemExit('Learning contract cohort key set is inconsistent')
-    if {key: final[key] for key in historical_ids} != base:
+    comparison_contract = final
+    if candidate_revision == 'MAIN01_REVIEWED_SETUP_QUALITIES':
+        validate_capture_artifacts(root / 'candidate', candidate_revision)
+        comparison_contract = main01_origin_capture('learning-contract.json', final)
+    if {key: comparison_contract[key] for key in historical_ids} != base:
         raise SystemExit('Learning identity, XP, correctness or repair contract changed')
     before = json.loads((root / 'baseline' / 'runtime-inputs.json').read_text())
     after = json.loads((root / 'candidate' / 'runtime-inputs.json').read_text())
@@ -143,7 +229,11 @@ def validate_typed_cohort(root):
             historical_ids | NEW_AUTHORING_IDS
         ):
             raise SystemExit(f'{label} cohort key set is inconsistent')
-    if any(before_choices[key] != after_choices[key] for key in historical_ids):
+    comparison_choices = (
+        main01_origin_capture('choice-identity.json', after_choices)
+        if candidate_revision == 'MAIN01_REVIEWED_SETUP_QUALITIES' else after_choices
+    )
+    if any(before_choices[key] != comparison_choices[key] for key in historical_ids):
         raise SystemExit('Historical choice identity changed')
     for task_id in NEW_AUTHORING_IDS:
         expected = canonical['tasks'][task_id]
@@ -196,6 +286,9 @@ def validate_typed_cohort(root):
         'after_choices': after_choices,
         'additions': additions,
         'final_cohort': final_cohort,
+        'candidate_revision': candidate_revision,
+        'historical_learning_contract_identical': {key: final[key] for key in historical_ids} == base,
+        'historical_choice_identity_identical': all(before_choices[key] == after_choices[key] for key in historical_ids),
     }
 
 
@@ -256,8 +349,17 @@ def compare(root):
         for task_id in sorted(NEW_AUTHORING_IDS)
     }
     result = {'ledgers': ledgers, 'runtime_changed_task_count': len(delta), 'runtime_changed_task_ids': sorted(delta),
-              'historical_learning_contract_identical': True,
-              'historical_choice_identity_identical': True,
+              'historical_learning_contract_identical': identity['historical_learning_contract_identical'],
+              'historical_choice_identity_identical': identity['historical_choice_identity_identical'],
+              'historical_contracts_identical_except_reviewed_setup_qualities': True,
+              'candidate_producer_revision': identity['candidate_revision'],
+              'producer_receipt': identity['final_cohort']['producer_receipt'],
+              'reviewed_producer_source_revision': (MAIN01_PRODUCER_REVISION['source_revision']
+                  if identity['candidate_revision'] == 'MAIN01_REVIEWED_SETUP_QUALITIES' else None),
+              'reviewed_quality_changes': ([
+                  {'task_id': MAIN01_TASK_ID, 'choice_id': choice, 'before': prior, 'after': current}
+                  for choice, (prior, current) in MAIN01_QUALITY_REVISION.items()
+              ] if identity['candidate_revision'] == 'MAIN01_REVIEWED_SETUP_QUALITIES' else []),
               'historical_cohort_count': len(historical_ids),
               'new_authoring': new_authoring,
               'canonical_source_fingerprints': fingerprint_counts, 'native': 'PENDING'}
