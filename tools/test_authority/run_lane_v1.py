@@ -5,6 +5,8 @@ import os
 import subprocess
 import sys
 import time
+import tempfile
+import uuid
 from pathlib import Path
 
 from run_lane_diagnostics_v1 import append_job_summary, failure_log_lines, flutter_failure_case_index, tail
@@ -178,10 +180,6 @@ TIER_A_COMMANDS = [
         ],
     },
     {
-        "name": "fast loop",
-        "cmd": ["./tools/fast_loop_world1_v1.sh", "--force-tests", "--all-selected-guards"],
-    },
-    {
         "name": "World 1 release gate",
         "cmd": ["./tools/release_gate_world1.sh"],
     },
@@ -211,7 +209,7 @@ def _read_manifest(path: Path) -> list[str]:
     return entries
 
 
-def _run_command(name: str, cmd: list[str], timeout: int) -> dict[str, object]:
+def _run_command(name: str, cmd: list[str], timeout: int, env: dict[str, str] | None = None) -> dict[str, object]:
     started = time.monotonic()
     try:
         completed = subprocess.run(
@@ -221,6 +219,7 @@ def _run_command(name: str, cmd: list[str], timeout: int) -> dict[str, object]:
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             timeout=timeout,
+            env=env,
         )
         status = "pass" if completed.returncode == 0 else "fail"
         output_tail, output_truncated, output_chars = tail(completed.stdout or "")
@@ -276,13 +275,55 @@ def _run_command(name: str, cmd: list[str], timeout: int) -> dict[str, object]:
         }
 
 
+FAST_LOOP_ARGV = ["./tools/fast_loop_world1_v1.sh", "--force-tests", "--all-selected-guards"]
+
+
+def _run_world1_gate(name: str, cmd: list[str], timeout: int) -> dict[str, object]:
+    # One private receipt for this invocation only. This records execution,
+    # not independent DoD acceptance or a reusable test result.
+    with tempfile.TemporaryDirectory(prefix="world1-nested-") as directory:
+        path = Path(directory) / "receipt.json"
+        token = uuid.uuid4().hex
+        receipt = {"schema": 1, "token": token, "cmd": FAST_LOOP_ARGV,
+                   "state": "NOT_EXECUTED", "exit_code": None}
+        path.write_text(json.dumps(receipt))
+        env = dict(os.environ, SHARKY_WORLD1_STEP_RECEIPT=str(path),
+                   SHARKY_WORLD1_STEP_TOKEN=token)
+        result = _run_command(name, cmd, timeout, env=env)
+        try:
+            receipt = json.loads(path.read_text())
+            if (receipt.get("schema") != 1 or receipt.get("token") != token
+                    or receipt.get("cmd") != FAST_LOOP_ARGV):
+                raise ValueError("receipt identity mismatch")
+            state, code = receipt.get("state"), receipt.get("exit_code")
+            valid = ((state in ("NOT_EXECUTED", "STARTED") and code is None)
+                     or (state in ("PASS", "SKIPPED") and type(code) is int and code == 0)
+                     or (state == "FAIL" and type(code) is int and 1 <= code <= 255))
+            if not valid:
+                raise ValueError("invalid nested terminal state")
+        except (OSError, ValueError, TypeError, AttributeError):
+            state, code = "UNVERIFIED", None
+        result["nested_steps"] = [{"name": "fast loop", "cmd": FAST_LOOP_ARGV,
+                                   "execution_state": state, "exit_code": code}]
+        # The shell's success cannot satisfy the logical requirement without
+        # a matching terminal PASS. Preserve the actual shell outcome too.
+        if result["status"] == "pass" and state != "PASS":
+            result["process_status"] = result["status"]
+            result["status"] = "error"
+            result["evidence_error"] = "fast loop has no valid execution PASS"
+        return result
+
+
 def _run_tier_a(timeout: int, smoke: bool) -> list[dict[str, object]]:
     commands = TIER_A_COMMANDS
     if smoke:
         commands = TIER_A_COMMANDS[:1]
     results = []
     for command in commands:
-        result = _run_command(command["name"], command["cmd"], timeout)
+        if command["cmd"] == ["./tools/release_gate_world1.sh"]:
+            result = _run_world1_gate(command["name"], command["cmd"], timeout)
+        else:
+            result = _run_command(command["name"], command["cmd"], timeout)
         results.append(result)
         if result["status"] == "cancelled":
             break

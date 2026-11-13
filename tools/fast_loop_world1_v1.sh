@@ -31,7 +31,7 @@ readonly WORLD1_CAMPAIGN_GUARD_REGEX_V1='^(lib/campaign/|assets/packs/|content/|
 
 should_run_world1_contracts_checkpoint_v1() {
   local changed_files="$1"
-  [[ -n "$changed_files" ]] && echo "$changed_files" | rg -q "$WORLD1_CONTRACTS_HIGH_RISK_REGEX_V1"
+  [[ -n "$changed_files" ]] && rg -q "$WORLD1_CONTRACTS_HIGH_RISK_REGEX_V1" <<< "$changed_files"
 }
 
 selected_tests=("${WORLD1_SELECTED_TESTS_STATE_V1[@]}")
@@ -105,6 +105,21 @@ else
 fi
 test_policy_require_full_suite_enabled_v1
 
+# Unknown change authority must stop before any NOOP/cache/test-selection claim.
+fast_loop_read_changeset_v1 "$ROOT" || exit $?
+changed_files="$SHARKY_CHANGED_FILES_V1"
+if [[ "$SHARKY_CHANGE_SCOPE_V1" == "full-scope" ]]; then
+  include_all_selected_guards=true
+  force_tests=true
+  echo "CHANGESET_FULL_SCOPE: baseline unknown; all declared selected guards, not full-suite admission."
+fi
+
+# Internal caller coordination only, never evidence of validation or an admission.
+case "${SHARKY_CONTENT_OWNER_V1:-}" in
+  ""|release-gate-full-validation-complete) ;;
+  *) echo "CHANGESET_UNKNOWN: unrecognized content owner"; exit 75 ;;
+esac
+
 if [[ "${FAST_LOOP_ALREADY_RAN:-0}" == "1" && "$force" == "false" ]]; then
   echo "Plan:"
   echo "- lint_tools: skipped (nested invocation guard)"
@@ -138,47 +153,52 @@ fi
 
 content_validation_status="disabled"
 
+
+  if [[ "$SHARKY_CHANGE_SCOPE_V1" == "full-scope" ]] || { [[ -n "$changed_files" ]] && rg -q '^content/' <<< "$changed_files"; }; then
+    if [[ "${SHARKY_CONTENT_OWNER_V1:-}" == "release-gate-full-validation-complete" ]]; then
+      content_validation_status="DELEGATED_TO_RELEASE_GATE (not a PASS claim)"
+    else
+      run_content_validation=true
+      content_validation_status="enabled"
+    fi
+  else
+    content_validation_status="skipped (content unchanged)"
+  fi
+
 if [[ "$run_tests" == "true" && "$run_full" == "true" ]]; then
   tests_status="skipped (covered by --full)"
   run_reason="tier-2 full suite requested"
   tier_label="Tier2"
 elif [[ "$run_tests" == "true" && "$run_full" == "false" && "$force_tests" == "false" ]]; then
-  changed_files="$(fast_loop_collect_changed_files_v1 "$ROOT")"
-  if [[ -n "$changed_files" ]] && echo "$changed_files" | rg -q '^content/'; then
-    run_content_validation=true
-    content_validation_status="enabled"
-  else
-    content_validation_status="skipped (content unchanged)"
-  fi
   if [[ -z "$changed_files" ]]; then
     run_tests=false
     tests_status="skipped (no changed files)"
     run_reason="NOOP: no relevant changes"
-  elif ! echo "$changed_files" | rg -q '^(lib/|test/|pubspec\.yaml|pubspec\.lock)'; then
+  elif ! rg -q '^(lib/|test/|pubspec\.yaml|pubspec\.lock)' <<< "$changed_files"; then
     run_tests=false
     tests_status="skipped (changes outside lib/test/pubspec)"
     run_reason="NOOP: no relevant changes"
   else
-    if echo "$changed_files" | rg -q "$WORLD1_SURFACE_PATH_REGEX_V1"; then
+    if rg -q "$WORLD1_SURFACE_PATH_REGEX_V1" <<< "$changed_files"; then
       fast_loop_append_unique_tests_v1 selected_tests "${WORLD1_SELECTED_TESTS_SURFACE_V1[@]}"
     fi
-    if echo "$changed_files" | rg -q "$WORLD1_EN_COPY_GUARD_REGEX_V1"; then
+    if rg -q "$WORLD1_EN_COPY_GUARD_REGEX_V1" <<< "$changed_files"; then
       fast_loop_append_unique_tests_v1 selected_tests "${WORLD1_SELECTED_TESTS_COPY_GUARDS_V1[0]}"
     fi
-    if echo "$changed_files" | rg -q "$WORLD1_RU_COPY_GUARD_REGEX_V1"; then
+    if rg -q "$WORLD1_RU_COPY_GUARD_REGEX_V1" <<< "$changed_files"; then
       fast_loop_append_unique_tests_v1 selected_tests "${WORLD1_SELECTED_TESTS_COPY_GUARDS_V1[1]}"
     fi
-    if echo "$changed_files" | rg -q "$WORLD1_FEEDBACK_GUARD_REGEX_V1"; then
+    if rg -q "$WORLD1_FEEDBACK_GUARD_REGEX_V1" <<< "$changed_files"; then
       fast_loop_append_unique_tests_v1 selected_tests "${WORLD1_SELECTED_TESTS_COPY_GUARDS_V1[2]}"
     fi
-    if echo "$changed_files" | rg -q "$WORLD1_CAMPAIGN_GUARD_REGEX_V1"; then
+    if rg -q "$WORLD1_CAMPAIGN_GUARD_REGEX_V1" <<< "$changed_files"; then
       fast_loop_append_unique_tests_v1 selected_tests "${WORLD1_SELECTED_TESTS_CAMPAIGN_GUARDS_V1[@]}"
     fi
-    if echo "$changed_files" | rg -q '^(lib/ui_v2/|test/ui_v2/)'; then
+    if rg -q '^(lib/ui_v2/|test/ui_v2/)' <<< "$changed_files"; then
       run_reason="state-first fast loop + touched ui_v2 guards"
       tier_label="Tier0(state)+ui_v2"
     fi
-    if echo "$changed_files" | rg -q '^(lib/services/|test/services/)'; then
+    if rg -q '^(lib/services/|test/services/)' <<< "$changed_files"; then
       fast_loop_append_unique_tests_v1 selected_tests "${FAST_LOOP_TIER1_SERVICES_TESTS_V1[@]}"
       run_reason="state-first fast loop + touched services guards"
       tier_label="Tier0(state)+services"
@@ -193,6 +213,11 @@ if [[ "$run_tests" == "true" && "$include_all_selected_guards" == "true" ]]; the
   fast_loop_append_unique_tests_v1 selected_tests "${WORLD1_SELECTED_TESTS_V1[@]}"
   run_reason="${run_reason}; all selected guards enabled"
   tier_label="${tier_label}+all-guards"
+fi
+
+if [[ "$SHARKY_CHANGE_SCOPE_V1" == "full-scope" && "$run_tests" == "true" ]]; then
+  fast_loop_append_unique_tests_v1 selected_tests "${FAST_LOOP_TIER1_UI_V2_TESTS_V1[@]}"
+  fast_loop_append_unique_tests_v1 selected_tests "${FAST_LOOP_TIER1_SERVICES_TESTS_V1[@]}"
 fi
 
 full_status="disabled"
@@ -212,7 +237,7 @@ elif [[ "${FAST_LOOP_RUN_WORLD1_CONTRACTS_V1:-0}" == "1" ]]; then
   run_world1_contracts_checkpoint=true
   world1_contracts_reason="env FAST_LOOP_RUN_WORLD1_CONTRACTS_V1=1"
 elif [[ "$run_tests" == "true" && "$force_tests" == "false" ]]; then
-  changed_files_for_checkpoint="$(fast_loop_collect_changed_files_v1 "$ROOT")"
+  changed_files_for_checkpoint="$changed_files"
   if should_run_world1_contracts_checkpoint_v1 "$changed_files_for_checkpoint"; then
     world1_contracts_reason="high-risk files detected but rerun stays opt-in"
   fi
@@ -257,7 +282,7 @@ if [[ "$run_analyze" == "true" ]]; then
 fi
 
 if [[ "$run_content_validation" == "true" ]]; then
-  dart run tools/validate_training_content.dart --staged-only
+  dart run tools/validate_training_content.dart
 fi
 
 if [[ "$run_tests" == "true" && "$run_full" == "false" ]]; then
@@ -277,4 +302,8 @@ if [[ "$run_world1_contracts_checkpoint" == "true" ]]; then
 fi
 
 fast_loop_write_cache_v1 "$cache_key"
-echo "FAST LOOP PASS"
+if [[ "$SHARKY_CHANGE_SCOPE_V1" == "full-scope" ]]; then
+  echo "FAST LOOP REQUESTED CHECKS PASS: full-scope selection, not release acceptance; explicit diagnostic omissions/policy remain."
+else
+  echo "FAST LOOP PASS"
+fi

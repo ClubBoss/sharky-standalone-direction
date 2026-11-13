@@ -36,6 +36,8 @@ jobs:
       OBS04_RECEIPT_DIR: ${{ github.workspace }}/build/test_authority/obs04
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
