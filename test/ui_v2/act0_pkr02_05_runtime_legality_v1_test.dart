@@ -1,4 +1,5 @@
-// Independent SYNTHETIC runtime fault-injection evidence. Not production.
+// Runtime fault-injection controls and explicitly named canonical-source cases.
+// Widget evidence only; this is not a native-device or Human acceptance receipt.
 // Original fixture baseline: 198fefc7. Runtime repair base: 724d569e.
 // Exact composition/run receipt must be supplied by the sole Runner integrator.
 //
@@ -6,7 +7,8 @@
 // Act0CompletedDecisionV1 and its user_choice/decision_made/task_result events.
 // It does not call the authored-correctness predicate as a legality oracle.
 //
-// Every table and option here is synthetic. In the negative cases the option
+// Synthetic tables and options are labeled SYNTHETIC. In those negative cases
+// the option
 // deliberately contains a false author claim: isCorrect=true / quality=correct
 // despite an impossible numeric amount. A failure proves that this runtime
 // boundary trusts that malformed claim. It does NOT establish that an actual
@@ -178,6 +180,7 @@ class _Observed {
   int sizingConfirms = 0;
   final decisions = <Act0CompletedDecisionV1>[];
   final forwarded = <Act0RunnerOptionV1>[];
+  final assistance = <String>[];
   final sink = Act0InMemoryTelemetrySinkV1();
   bool optionWasOffered = false;
 
@@ -203,8 +206,12 @@ Future<_Observed> _submit(
   String? heroStack,
   bool sizing = false,
   List<String>? trailOverride,
+  Act0RunnerStateV1? sourceRunner,
+  String? sourceOptionId,
+  String? sourceTaskId,
+  Act0TaskFamilyV1? sourceTaskFamily,
 }) async {
-  final base = _runner(spot, amount, heroStack: heroStack);
+  final base = sourceRunner ?? _runner(spot, amount, heroStack: heroStack);
   final original = trailOverride == null
       ? base
       : base.copyWith(
@@ -215,19 +222,22 @@ Future<_Observed> _submit(
             ],
           ),
         );
+  final chosen = sourceOptionId == null
+      ? original.options.single
+      : original.options.singleWhere((o) => o.id == sourceOptionId);
   final runner = sizing
       ? original.copyWith(
           sizingConfig: Act0SizingConfigV1(
             mode: Act0SizingUiModeV1.presetsOnly,
             presets: [
               Act0SizingPresetV1(
-                id: original.options.single.id,
+                id: chosen.id,
                 label: 'Bet $amount BB',
                 potFraction: double.parse(amount) / 6.5,
               ),
             ],
           ),
-          selectedPresetId: original.options.single.id,
+          selectedPresetId: chosen.id,
         )
       : original;
   final observed = _Observed();
@@ -241,8 +251,10 @@ Future<_Observed> _submit(
           runner: runner,
           selectedWorldId: 'synthetic_pkr_oracle',
           selectedLessonId: runner.lessonId,
-          selectedTaskId: runner.lessonId,
-          selectedTaskFamily: Act0TaskFamilyV1.decision,
+          selectedTaskId: sourceTaskId ?? runner.lessonId,
+          selectedTaskFamily:
+              sourceTaskFamily ??
+              (sizing ? Act0TaskFamilyV1.sizing : Act0TaskFamilyV1.decision),
           telemetrySink: observed.sink,
           evidenceRunId: 'synthetic_pkr_runtime_evidence',
           // Production settled-mode seam isolates grading from animation time.
@@ -253,6 +265,7 @@ Future<_Observed> _submit(
           },
           onContinueTheory: () {},
           onChooseOption: observed.forwarded.add,
+          onChoiceAssistance: (value) => observed.assistance.add(value.name),
           onSelectSizingPreset: (_) {},
           onConfirmSizingPreset: () {
             observed.sizingConfirms++;
@@ -269,14 +282,14 @@ Future<_Observed> _submit(
     Key(
       sizing
           ? 'act0_shell_sizing_confirm_cta'
-          : 'act0_shell_option_${runner.options.single.id}',
+          : 'act0_shell_option_${chosen.id}',
     ),
   );
   observed.optionWasOffered = target.evaluate().isNotEmpty;
   if (observed.optionWasOffered) {
     expect(target, findsOneWidget);
     // This is an actual offered choice amount, not a toCallLabel mutation.
-    if (!sizing) {
+    if (!sizing && chosen.amountLabel.isNotEmpty) {
       expect(
         find.descendant(of: target, matching: find.text('$amount BB')),
         findsOneWidget,
@@ -288,7 +301,7 @@ Future<_Observed> _submit(
     expect(tester.takeException(), isNull);
   }
   print(
-    'SYNTHETIC_PKR0205_RUNTIME ${jsonEncode(<String, Object?>{'fixture': runner.lessonId, 'amount': runner.options.single.amountLabel, 'pot': runner.table.potLabel, 'to_call': runner.table.toCallLabel, 'offered': observed.optionWasOffered, 'forwarded': observed.forwarded.length, ...observed.correctCredits})}',
+    'PKR0205_RUNNER ${jsonEncode(<String, Object?>{'source': sourceRunner == null ? 'synthetic' : 'canonical_task', 'fixture': runner.lessonId, 'option': chosen.id, 'amount': chosen.amountLabel, 'pot': runner.table.potLabel, 'to_call': runner.table.toCallLabel, 'offered': observed.optionWasOffered, 'forwarded': observed.forwarded.length, ...observed.correctCredits})}',
   );
   return observed;
 }
@@ -296,28 +309,400 @@ Future<_Observed> _submit(
 void _setTestViewport(WidgetTester tester) => _setPkrEnReferenceV1(tester);
 
 void main() {
-  testWidgets('SYNTHETIC missing prefix does not block an unproved source', (
-    tester,
-  ) async {
-    _setTestViewport(tester);
-    final observed = await _submit(
-      tester,
-      _Spot.flopBet,
-      '1',
-      trailOverride: const ['Flop: BB checks'],
-    );
-    expect(observed.optionWasOffered, isTrue);
-    expect(observed.forwarded, hasLength(1));
-    expect(observed.decisions, hasLength(1));
-    expect(observed.correctCredits, <String, int>{
-      'completed_decision_correct': 1,
-      'telemetry_correct': 3,
-    });
-    expect(
-      find.byKey(const Key('act0_betting_price_unavailable')),
-      findsNothing,
-    );
-  });
+  testWidgets(
+    'canonical early fold offers genuine correct feedback without a stack guess',
+    (tester) async {
+      _setTestViewport(tester);
+      final task = Act0ShellStateV1.sample.worlds
+          .expand((w) => w.lessons)
+          .expand((l) => l.taskList)
+          .singleWhere((t) => t.taskId == 'fold_discipline_early_fold');
+      final observed = await _submit(
+        tester,
+        _Spot.preflopOpen,
+        '',
+        sourceRunner: task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingSteps: const [],
+        ),
+        sourceOptionId: 'fold',
+        sourceTaskId: task.taskId,
+        sourceTaskFamily: task.resolvedTaskFamily,
+      );
+      expect(observed.optionWasOffered, isTrue);
+      expect(observed.forwarded.single.id, 'fold');
+      expect(observed.decisions.single.isCorrect, isTrue);
+      expect(
+        find.byKey(const Key('act0_betting_price_unavailable')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'canonical early raise distractor keeps wrong teaching, not a legal bet',
+    (tester) async {
+      _setTestViewport(tester);
+      final task = Act0ShellStateV1.sample.worlds
+          .expand((w) => w.lessons)
+          .expand((l) => l.taskList)
+          .singleWhere((t) => t.taskId == 'apply_utg_fold');
+      final observed = await _submit(
+        tester,
+        _Spot.preflopOpen,
+        '',
+        sourceRunner: task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingSteps: const [],
+        ),
+        sourceOptionId: 'raise',
+        sourceTaskId: task.taskId,
+        sourceTaskFamily: task.resolvedTaskFamily,
+      );
+      expect(observed.optionWasOffered, isTrue);
+      expect(observed.forwarded.single.id, 'raise');
+      expect(observed.decisions.single.isCorrect, isFalse);
+      expect(
+        find.byKey(const Key('act0_betting_price_unavailable')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'real W1 check-definition question is not blocked by missing hand ledger',
+    (tester) async {
+      _setTestViewport(tester);
+      final task = Act0ShellStateV1.sample.worlds
+          .expand((w) => w.lessons)
+          .expand((l) => l.taskList)
+          .singleWhere((t) => t.taskId == 'actions_legal_context');
+      final result = await _submit(
+        tester,
+        _Spot.flopBet,
+        '',
+        sourceRunner: task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingSteps: const [],
+        ),
+        sourceTaskId: task.taskId,
+        sourceOptionId: 'check',
+      );
+      expect(result.optionWasOffered, isTrue);
+      expect(result.forwarded.single.id, 'check');
+      expect(result.decisions.single.isCorrect, isTrue);
+      expect(
+        find.byKey(const Key('act0_betting_price_unavailable')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'real W1 wrong fold-definition answer still teaches without fake source',
+    (tester) async {
+      _setTestViewport(tester);
+      final task = Act0ShellStateV1.sample.worlds
+          .expand((w) => w.lessons)
+          .expand((l) => l.taskList)
+          .singleWhere((t) => t.taskId == 'actions_check_drill');
+      final result = await _submit(
+        tester,
+        _Spot.flopBet,
+        '',
+        sourceRunner: task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingSteps: const [],
+        ),
+        sourceTaskId: task.taskId,
+        sourceOptionId: 'fold',
+      );
+      expect(result.optionWasOffered, isTrue);
+      expect(result.forwarded.single.id, 'fold');
+      expect(result.decisions.single.isCorrect, isFalse);
+      expect(
+        find.byKey(const Key('act0_betting_price_unavailable')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'real W4 half-pot arithmetic answer remains accessible without stack fiction',
+    (tester) async {
+      _setTestViewport(tester);
+      final task = Act0ShellStateV1.sample.worlds
+          .expand((w) => w.lessons)
+          .expand((l) => l.taskList)
+          .singleWhere((t) => t.taskId == 'w4_half_pot_bet');
+      expect(task.runner.sizingConfig.isEnabled, isFalse);
+      expect(task.runner.table.potLabel, 'Pot 6 BB');
+      final observed = await _submit(
+        tester,
+        _Spot.flopBet,
+        '',
+        sourceRunner: task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingSteps: const [],
+        ),
+        sourceTaskId: task.taskId,
+        sourceTaskFamily: Act0TaskFamilyV1.sizing,
+        sourceOptionId: 'three',
+      );
+      expect(observed.optionWasOffered, isTrue);
+      expect(observed.forwarded.single.id, 'three');
+      expect(observed.decisions.single.isCorrect, isTrue);
+      expect(
+        find.byKey(const Key('act0_betting_price_unavailable')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'real W4 incorrect pot fraction still teaches rather than blocking',
+    (tester) async {
+      _setTestViewport(tester);
+      final task = Act0ShellStateV1.sample.worlds
+          .expand((w) => w.lessons)
+          .expand((l) => l.taskList)
+          .singleWhere((t) => t.taskId == 'w4_pot_bet');
+      final observed = await _submit(
+        tester,
+        _Spot.flopBet,
+        '',
+        sourceRunner: task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingSteps: const [],
+        ),
+        sourceTaskId: task.taskId,
+        sourceTaskFamily: Act0TaskFamilyV1.sizing,
+        sourceOptionId: 'two',
+      );
+      expect(observed.optionWasOffered, isTrue);
+      expect(observed.forwarded.single.id, 'two');
+      expect(observed.decisions.single.isCorrect, isFalse);
+      expect(
+        find.byKey(const Key('act0_betting_price_unavailable')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'SYNTHETIC typed sizing with unknown or conflicting units is withheld',
+    (tester) async {
+      _setTestViewport(tester);
+      for (final claim in [('0.5BB', ''), ('1 BB', '0.5 BB')]) {
+        final runner = _runner(_Spot.flopBet, '0.5').copyWith(
+          options: [
+            Act0RunnerOptionV1(
+              id: 'bet',
+              label: claim.$1,
+              amountLabel: claim.$2,
+              isCorrect: true,
+              preferredLabel: '1 BB',
+              quality: Act0FeedbackQualityV1.correct,
+              feedbackTitle: 'Synthetic malformed sizing success',
+              feedbackReason:
+                  'Unknown or conflicting units cannot establish a wager.',
+            ),
+          ],
+        );
+        final observed = await _submit(
+          tester,
+          _Spot.flopBet,
+          '0.5',
+          sizing: true,
+          sourceRunner: runner,
+        );
+        expect(observed.optionWasOffered, isTrue);
+        expect(observed.sizingConfirms, 0);
+        expect(observed.decisions, isEmpty);
+        expect(
+          find.byKey(const Key('act0_betting_price_unavailable')),
+          findsOneWidget,
+        );
+        await tester.pump(const Duration(seconds: 5));
+        await tester.pumpAndSettle();
+      }
+    },
+  );
+
+  testWidgets(
+    'canonical conceptual distractor keeps its authored feedback route',
+    (tester) async {
+      _setTestViewport(tester);
+      final task = Act0ShellStateV1.sample.worlds
+          .expand((w) => w.lessons)
+          .expand((l) => l.taskList)
+          .singleWhere(
+            (t) => t.taskId == 'turn_river_changes_w5_street_repair',
+          );
+      final observed = await _submit(
+        tester,
+        _Spot.flopBet,
+        '',
+        sourceRunner: task.runner.copyWith(
+          phase: Act0LessonPhaseV1.drill,
+          teachingSteps: const [],
+        ),
+        sourceTaskId: task.taskId,
+        sourceOptionId: 'small_same_story',
+      );
+      expect(observed.optionWasOffered, isTrue);
+      expect(observed.forwarded.single.id, 'small_same_story');
+      expect(observed.decisions.single.isCorrect, isFalse);
+      expect(
+        find.byKey(const Key('act0_betting_price_unavailable')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'SYNTHETIC illegal wrong distractor retains teaching on valid source',
+    (tester) async {
+      _setTestViewport(tester);
+      final runner = _runner(_Spot.preflopOpen, '1.5').copyWith(
+        options: const [
+          Act0RunnerOptionV1(
+            id: 'raise',
+            label: 'Raise to',
+            amountLabel: '1.5 BB',
+            isCorrect: false,
+            preferredLabel: 'Raise to 2 BB',
+            quality: Act0FeedbackQualityV1.wrong,
+            feedbackTitle: 'Minimum full raise',
+            feedbackReason:
+                'With chips behind, the full opening raise is at least 2 BB.',
+          ),
+        ],
+      );
+      final observed = await _submit(
+        tester,
+        _Spot.preflopOpen,
+        '1.5',
+        sourceRunner: runner,
+      );
+      expect(observed.optionWasOffered, isTrue);
+      expect(observed.forwarded, hasLength(1));
+      expect(observed.decisions.single.isCorrect, isFalse);
+      expect(observed.correctCredits, {
+        'completed_decision_correct': 0,
+        'telemetry_correct': 0,
+      });
+      expect(
+        find.byKey(const Key('act0_betting_price_unavailable')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'real authored calls retain their different strategic grades and once-only callbacks',
+    (tester) async {
+      _setTestViewport(tester);
+      final tasks = Act0ShellStateV1.sample.worlds
+          .expand((w) => w.lessons)
+          .expand((l) => l.taskList);
+      for (final amount in [10, 40]) {
+        final task = tasks.singleWhere(
+          (t) => t.taskId == 'asm05_new_known_holes_turn_call_$amount',
+        );
+        final call = task.runner.options.singleWhere((o) => o.label == 'Call');
+        final observed = await _submit(
+          tester,
+          _Spot.flopCall,
+          '$amount',
+          sourceRunner: task.runner.copyWith(
+            phase: Act0LessonPhaseV1.drill,
+            teachingSteps: const [],
+          ),
+          sourceOptionId: call.id,
+        );
+        expect(observed.forwarded.single.id, call.id);
+        expect(observed.decisions.single.isCorrect, amount == 10);
+        expect(observed.assistance, ['none']);
+        await tester.tap(find.byKey(Key('act0_shell_option_${call.id}')));
+        await tester.pumpAndSettle();
+        expect(observed.decisions, hasLength(1));
+        expect(observed.forwarded, hasLength(1));
+      }
+    },
+  );
+
+  testWidgets(
+    'real incomplete W4 source withholds both correct and wrong answers without error debt',
+    (tester) async {
+      _setTestViewport(tester);
+      final task = Act0ShellStateV1.sample.worlds
+          .expand((w) => w.lessons)
+          .expand((l) => l.taskList)
+          .singleWhere((t) => t.taskId == 'w4_big_price_marginal_fold');
+      for (final option in task.runner.options) {
+        final amount = option.amountLabel.split(' ').first;
+        final observed = await _submit(
+          tester,
+          _Spot.flopCall,
+          amount,
+          sourceRunner: task.runner.copyWith(
+            phase: Act0LessonPhaseV1.drill,
+            teachingSteps: const [],
+          ),
+          sourceOptionId: option.id,
+        );
+        expect(observed.optionWasOffered, isTrue);
+        expect(observed.forwarded, isEmpty);
+        expect(observed.decisions, isEmpty);
+        expect(observed.assistance, isEmpty);
+        expect(
+          observed.sink.events.where(
+            (e) => [
+              'user_choice',
+              'decision_made',
+              'task_result',
+            ].contains(e.name),
+          ),
+          isEmpty,
+        );
+        expect(
+          find.byKey(const Key('act0_betting_price_unavailable')),
+          findsOneWidget,
+        );
+        // The previous notice must expire before the next genuine pointer tap.
+        await tester.pump(const Duration(seconds: 5));
+        await tester.pumpAndSettle();
+      }
+    },
+  );
+
+  testWidgets(
+    'SYNTHETIC missing prefix withholds grading without consuming the attempt',
+    (tester) async {
+      _setTestViewport(tester);
+      final observed = await _submit(
+        tester,
+        _Spot.flopBet,
+        '1',
+        trailOverride: const ['Flop: BB checks'],
+      );
+      expect(observed.optionWasOffered, isTrue);
+      expect(observed.forwarded, isEmpty);
+      expect(observed.decisions, isEmpty);
+      expect(observed.correctCredits, <String, int>{
+        'completed_decision_correct': 0,
+        'telemetry_correct': 0,
+      });
+      expect(
+        find.byKey(const Key('act0_betting_price_unavailable')),
+        findsOneWidget,
+      );
+      await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+      await tester.pumpAndSettle();
+      expect(observed.backCalls, 1);
+    },
+  );
 
   testWidgets('SYNTHETIC controls: legal bet 1, open 2 and full call 2', (
     tester,

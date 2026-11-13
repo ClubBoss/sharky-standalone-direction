@@ -2105,7 +2105,15 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }
 
   bool _rejectInvalidAuthoredBettingPriceV1(Act0RunnerOptionV1 option) {
-    if (!act0BettingPriceBlocksAuthoredSuccessV1(widget.runner.table, option)) {
+    if (!act0BettingPriceBlocksAuthoredSuccessV1(
+      widget.runner.table,
+      option,
+      taskId: widget.selectedTaskId,
+      question: widget.runner.question,
+      sizingBet:
+          widget.selectedTaskFamily == Act0TaskFamilyV1.sizing &&
+          widget.runner.sizingConfig.isEnabled,
+    )) {
       return false;
     }
     // This is a source error, not a learner mistake. Do not consume the

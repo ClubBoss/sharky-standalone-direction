@@ -151,7 +151,10 @@ const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams'};
   for (final item in table.actionTrail) {
     if (item.isNote) continue;
     final label = item.label.trim();
-    final prefix = _act0StreetReplayStreetFromTrailLabelV1(label);
+    final prefix = _act0StreetReplayStreetFromTrailLabelV1(
+      label,
+      forBettingOrder: true,
+    );
     final parsed = _act0StreetReplayParseActionV1(
       _act0StreetReplayActionLabelV1(label, prefix),
     );
@@ -240,7 +243,10 @@ const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams'};
     final marker = markerPattern.firstMatch(
       _act0StreetReplayActionLabelV1(
         recorded[i],
-        _act0StreetReplayStreetFromTrailLabelV1(recorded[i]),
+        _act0StreetReplayStreetFromTrailLabelV1(
+          recorded[i],
+          forBettingOrder: true,
+        ),
       ),
     );
     if (marker == null) continue;
@@ -275,7 +281,10 @@ const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams'};
   for (final item in table.actionTrail) {
     if (item.isNote) continue;
     final label = item.label.trim();
-    final prefix = _act0StreetReplayStreetFromTrailLabelV1(label);
+    final prefix = _act0StreetReplayStreetFromTrailLabelV1(
+      label,
+      forBettingOrder: true,
+    );
     if (prefix != null) {
       parsedStreet = prefix;
       prefixSeen = true;
@@ -558,6 +567,7 @@ const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams'};
   var preflopVoluntaryCommit = false;
   var lastFullIncrement = 1.0;
   var incompleteAllInOnStreet = false;
+  final actedOnStreet = <String>{};
   final lastVerb = <String, String>{};
   var startIndex = 2;
   if (prefixUnknownActor != null) {
@@ -649,6 +659,7 @@ const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams'};
       price = 0;
       lastFullIncrement = 1;
       incompleteAllInOnStreet = false;
+      actedOnStreet.clear();
       lastActorIndex = order.indexOf('BTN');
     }
     if (action.verb.isEmpty) continue;
@@ -697,7 +708,9 @@ const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams'};
         }
         return (contradiction, 'aggression_without_responder');
       }
-      if (incompleteAllInOnStreet) {
+      // An unacted player does not need betting to be reopened. Returning
+      // actors still require the price owner's per-player raise proof.
+      if (incompleteAllInOnStreet && actedOnStreet.contains(action.actor)) {
         return (unproved, 'raise_after_incomplete_all_in');
       }
     }
@@ -780,6 +793,7 @@ const _act0AllInVerbsV1 = <String>{'shove', 'shoves', 'jam', 'jams'};
       preflopVoluntaryCommit = true;
     }
     lastVerb[action.actor] = action.verb;
+    actedOnStreet.add(action.actor);
     lastActorIndex = order.indexOf(action.actor);
     if (live.length < 2) pending.clear();
   }
@@ -1084,16 +1098,22 @@ Act0StreetReplayStreetV1? _act0StreetReplayStreetFromLabelV1(String label) {
 }
 
 Act0StreetReplayStreetV1? _act0StreetReplayStreetFromTrailLabelV1(
-  String label,
-) {
+  String label, {
+  bool forBettingOrder = false,
+}) {
   final match = RegExp(
-    r'^(flop|turn|river)(?::|\s)',
+    r'^(preflop|flop|turn|river)(?::|\s)',
     caseSensitive: false,
   ).firstMatch(label.trim());
   if (match == null) {
     return null;
   }
-  return _act0StreetReplayStreetFromLabelV1(match.group(1) ?? '');
+  final street = _act0StreetReplayStreetFromLabelV1(match.group(1) ?? '');
+  // The monetary proof may read explicit Preflop facts. This does not admit
+  // new animation/replay consumers; their existing source scope stays intact.
+  if (street == Act0StreetReplayStreetV1.preflop && !forBettingOrder)
+    return null;
+  return street;
 }
 
 String _act0StreetReplayActionLabelV1(

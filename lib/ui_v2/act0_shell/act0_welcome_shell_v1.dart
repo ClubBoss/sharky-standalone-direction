@@ -131,6 +131,11 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         child: Act0LessonRunnerShellV1(
           key: const Key('act0_shell_welcome_demo_spot'),
           runner: microWinRunner,
+          // The reused task is a source-owned Check *definition*, not a
+          // numbered wager. Supply its identity to the shared price guard.
+          // Welcome still has no progress/completion callback or telemetry
+          // sink: its pick only advances this ungraded orientation preview.
+          selectedTaskId: 'actions_check_drill',
           accessibilityPrototypeStep: accessibilityPrototypeStep,
           onAccessibilityPrototypeStepChanged: (next) {
             setState(() => _accessibilityPrototypeStep = next);
