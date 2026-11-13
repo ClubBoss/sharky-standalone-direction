@@ -177,6 +177,7 @@ Widget act0AcademyYouRuntimeV1(
   required Act0ProfileShellV1 legacy,
   required bool Function() isCurrent,
   required Act0AchievementSeedProjectionV1 earnedProjection,
+  VoidCallback? onBackupRestore,
   required int completedTasks,
   required int openRepairs,
   required int dueReviews,
@@ -206,6 +207,7 @@ Widget act0AcademyYouRuntimeV1(
               () => Navigator.of(context).push<void>(
                 MaterialPageRoute(
                   builder: (_) => _AcademySettingsRouteV1(
+                    onBackupRestore: _guard(isCurrent, onBackupRestore),
                     onReplayWelcome: _guard(isCurrent, legacy.onReplayWelcome),
                     onRetakePlacement: _guard(
                       isCurrent,
@@ -229,7 +231,9 @@ class _AcademySettingsRouteV1 extends StatefulWidget {
     this.onReplayWelcome,
     required this.onRetakePlacement,
     this.onRecoveryOptions,
+    this.onBackupRestore,
   });
+  final VoidCallback? onBackupRestore;
   final VoidCallback? onReplayWelcome;
   final VoidCallback onRetakePlacement;
   final VoidCallback? onRecoveryOptions;
@@ -283,6 +287,9 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1> {
                 ? null
                 : () => _returnToShell(widget.onReplayWelcome!),
             onRetakePlacement: () => _returnToShell(widget.onRetakePlacement),
+            onBackupRestore: widget.onBackupRestore == null
+                ? null
+                : () => _returnToShell(widget.onBackupRestore!),
             onRecoveryOptions: widget.onRecoveryOptions == null
                 ? null
                 : () => _returnToShell(widget.onRecoveryOptions!),

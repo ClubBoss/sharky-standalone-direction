@@ -140,8 +140,10 @@ void main() {
   test('Canonical path root remains Act0 preview shell', () {
     final root = buildCanonicalPathRootV1();
 
-    expect(root, isA<Act0ShellPreviewScreenV1>());
-    expect((root as Act0ShellPreviewScreenV1).showPlacementOnStart, isTrue);
+    expect(root, isA<Act0Dat07ShellHostV1>());
+    final shell = (root as Act0Dat07ShellHostV1).shell;
+    expect(shell, isA<Act0ShellPreviewScreenV1>());
+    expect(shell.showPlacementOnStart, isTrue);
   });
 
   test('Act0 sample state keeps canonical W1-W12 runtime identity', () {

@@ -1,5 +1,8 @@
 import 'package:flutter/semantics.dart';
 import 'act0_accessibility_semantics_v1.dart';
+import 'act0_dat07_canonical_store_port_v1.dart';
+import 'act0_dat07_file_screen_v1.dart';
+import 'act0_dat07_transfer_v1.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'act0_academy_runtime_adapter_v1.dart';
@@ -79,6 +82,15 @@ import 'package:poker_analyzer/ui_v2/visual/ui_haptics_v1.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
 import 'package:poker_analyzer/services/session_drill_recheck_launch_queue_v1.dart';
 import 'package:poker_analyzer/services/session_drill_recheck_user_launch_consumer_v1.dart';
+
+part 'act0_dat07_shell_host_v1.dart';
+
+/// Source-owned version used by persistence and the backup envelope alike.
+const act0CanonicalProgressSchemaV1 = 19;
+
+/// The same compatibility parser used by ordinary persisted progress.
+bool act0CanonicalProgressIsValidV1(String raw) =>
+    _Act0PersistedProgressV1.tryParse(raw) != null;
 
 @visibleForTesting
 bool act0DevMenuEnabledV1({required bool isReleaseMode}) => !isReleaseMode;
@@ -1222,6 +1234,37 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
 }
 
 class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
+  bool _dat07SuspendedV1 = false;
+  bool _dat07LoadedEmptyV1 = false;
+  bool _hasRestoredLearningPathV1 = false;
+  final _dat07BootV1 = Completer<bool>();
+  _Act0Dat07ShellHostV1State? get _dat07HostV1 =>
+      context.findAncestorStateOfType<_Act0Dat07ShellHostV1State>();
+
+  void _freezeForDat07V1() {
+    _dat07SuspendedV1 = true;
+    _progressRestoredV1 = false;
+    _recoveryEpochV1++;
+    _learnLessonOpenSequenceV1++;
+    _progressPersistGeneration++;
+    if (mounted) setState(() {});
+  }
+
+  void _resumeAfterDat07V1() {
+    if (!mounted ||
+        !_progressRestoredV1 ||
+        _progressLoadFailed ||
+        !_progressStore.isWriteLeaseCurrent) {
+      throw const Act0RecoveryHoldV1();
+    }
+    setState(() => _dat07SuspendedV1 = false);
+  }
+
+  void _completeDat07BootV1(bool ok) {
+    if (!_dat07BootV1.isCompleted) _dat07BootV1.complete(ok);
+    _dat07HostV1?._sessionReady(this);
+  }
+
   String? _accessibilityPrototypeTaskId;
   Act0AccessibilityPrototypeStepV1? _accessibilityPrototypeStep;
   Act0CompletedDecisionV1? _latestCompletedDecisionV1;
@@ -1269,7 +1312,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   static Act0ProgressStoreV1 _makeProgressStoreV1() => Act0ProgressStoreV1(
     key: _progressPrefsKey,
-    isValidPayload: (raw) => _Act0PersistedProgressV1.tryParse(raw) != null,
+    isValidPayload: act0CanonicalProgressIsValidV1,
     debugRecoveryBoundary:
         kDebugMode &&
             const bool.fromEnvironment('SHARKY_DAT06_PAUSE_AFTER_INTENT')
@@ -1286,6 +1329,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       mounted &&
       epoch == _recoveryEpochV1 &&
       !_recoveryBusyV1 &&
+      !_dat07SuspendedV1 &&
       (!_usesPersistedProgress || _progressStore.isWriteLeaseCurrent);
 
   void _setStateForRecoveryV1(int epoch, VoidCallback callback) {
@@ -2548,6 +2592,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   @override
   void initState() {
     super.initState();
+    _act0Dat07SessionsV1.add(this);
     _tab = widget.initialTab;
     _learningRunLearnVisitActiveV1 = widget.initialTab == Act0ShellTabV1.learn;
     _phase = widget.initialPhase;
@@ -2612,6 +2657,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   @override
   void dispose() {
+    _act0Dat07SessionsV1.remove(this);
+    if (!_dat07BootV1.isCompleted) _dat07BootV1.complete(false);
     _recoveryEpochV1++;
     _learnLessonOpenSequenceV1++;
     _persistProgress();
@@ -2619,6 +2666,44 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Future<void> _bootstrapFirstStartRouteV1() async {
+    if (_dat07SuspendedV1) return;
+    // Recheck after every wake: another host may acquire the next lifetime
+    // gate before this waiting session is scheduled again.
+    while (true) {
+      final reset = _act0Dat07ResetInFlightV1;
+      if (reset != null) {
+        await reset.future;
+        if (!mounted || _dat07SuspendedV1) return;
+        continue;
+      }
+      final barrier = _act0Dat07BarrierV1;
+      if (barrier == null || barrier.owner._admitsBoot(this)) break;
+      await barrier.released.future;
+      if (!mounted || _dat07SuspendedV1) return;
+    }
+    try {
+      await _bootstrapFirstStartRouteBodyV1();
+      if (!mounted) return;
+      final ok =
+          _progressRestoredV1 && !_progressLoadFailed && _bootSurfaceReady;
+      // The replacement is readable but remains unable to save while the
+      // transfer screen owns the lifetime. It is thawed only on a safe exit.
+      if (_act0Dat07BarrierV1 != null) _dat07SuspendedV1 = true;
+      _completeDat07BootV1(ok);
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _progressLoadFailed = true;
+          _progressRestoredV1 = false;
+          _bootSurfaceReady = true;
+        });
+        _completeDat07BootV1(false);
+      }
+    }
+  }
+
+  Future<void> _bootstrapFirstStartRouteBodyV1() async {
+    _hasRestoredLearningPathV1 = false;
     final epoch = ++_recoveryEpochV1;
     _progressRestoredV1 = false;
     _progressStore = _makeProgressStoreV1();
@@ -2656,8 +2741,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     setState(() {
       _welcomeCompletedV1 = welcomeCompleted;
-      _showPlacement = !intakeCompleted;
-      _showWelcome = intakeCompleted && !welcomeCompleted;
+      // Device-local onboarding preferences are not in a progress backup.
+      // Canonical existing learning must never re-enter destructive first-
+      // install placement after transfer. This routes only; it awards nothing
+      // and does not manufacture intake or welcome completion preferences.
+      _showPlacement = !intakeCompleted && !_hasRestoredLearningPathV1;
+      _showWelcome =
+          intakeCompleted && !welcomeCompleted && !_hasRestoredLearningPathV1;
       _bootSurfaceReady = true;
       if (_showWelcome) {
         _tab = Act0ShellTabV1.home;
@@ -3635,12 +3725,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final loaded = await store.loadState();
     if (!mounted || epoch != _recoveryEpochV1) return;
     if (loaded.isReset) {
+      _dat07LoadedEmptyV1 = true;
       _restorePreviewToFreshStart(showPlacement: false);
       _progressStore = _makeProgressStoreV1();
       return;
     }
     if (!store.isWriteLeaseCurrent) throw const Act0RecoveryHoldV1();
     final raw = loaded.payload;
+    _dat07LoadedEmptyV1 = raw == null;
     if (raw == null || raw.isEmpty || !mounted) {
       return;
     }
@@ -3670,6 +3762,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final completedLessonIds = parsed.completedLessonIds
         .where(validLessonIds.contains)
         .toSet();
+    _hasRestoredLearningPathV1 =
+        completedTaskIds.isNotEmpty ||
+        completedLessonIds.isNotEmpty ||
+        skippedTaskIds.isNotEmpty ||
+        parsed.learningEvidenceHistory.provenanceRecords.any(
+          (record) =>
+              !record.isPlacementAssessment &&
+              validTaskIds.contains(record.taskId),
+        );
     final compatLessonIds = _legacyCompatAutoCompletedLessonIdsV1(
       parsed: parsed,
       state: state,
@@ -4243,6 +4344,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   void _persistProgress() {
     if (!_usesPersistedProgress ||
+        _dat07SuspendedV1 ||
         _recoveryBusyV1 ||
         _progressLoadFailed ||
         !_progressRestoredV1) {
@@ -4329,6 +4431,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   ) async {
     await Future<void>.value();
     if (generation != _progressPersistGeneration ||
+        _dat07SuspendedV1 ||
         _recoveryBusyV1 ||
         _progressLoadFailed ||
         !_progressRestoredV1) {
@@ -4955,7 +5058,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'run_id': closed.runId,
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || _pendingLearningRunPayoffV1 == null) {
+      if (!mounted ||
+          _dat07SuspendedV1 ||
+          _act0Dat07BarrierV1 != null ||
+          _pendingLearningRunPayoffV1 == null) {
         return;
       }
       showDialog<void>(
@@ -5045,6 +5151,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Future<void> _openRecoveryOptionsV1() async {
+    if (_dat07SuspendedV1 || _act0Dat07BarrierV1 != null) return;
+    final entryEpoch = _recoveryEpochV1;
+    bool current() =>
+        mounted &&
+        !_dat07SuspendedV1 &&
+        _act0Dat07BarrierV1 == null &&
+        entryEpoch == _recoveryEpochV1;
     Act0RecoveryProposalV1? proposal;
     Act0RecoveryCopyV1? copy;
     try {
@@ -5054,7 +5167,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     } catch (_) {
       /* no unsafe fallback */
     }
-    if (!mounted) return;
+    if (!current()) return;
     final action = await showDialog<String>(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -5091,7 +5204,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ],
       ),
     );
-    if (!mounted) return;
+    if (!current()) return;
     if (action == 'delete' && copy != null) {
       final consent = await showDialog<bool>(
         context: context,
@@ -5114,7 +5227,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           ],
         ),
       );
-      if (consent != true || !mounted) return;
+      if (consent != true || !current()) return;
       final removed = await _progressStore.deleteRecoveryCopy(copy);
       if (mounted)
         ScaffoldMessenger.of(context).showSnackBar(
@@ -5138,7 +5251,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _recoveryMessageV1 = null;
     });
     final outcome = await _progressStore.confirmRecoveryOutcome(proposal);
-    if (!mounted) return;
+    if (!mounted || _dat07SuspendedV1 || _act0Dat07BarrierV1 != null) return;
     if (outcome != Act0RecoveryConfirmationOutcomeV1.completed) {
       setState(() {
         _recoveryBusyV1 = false;
@@ -5161,6 +5274,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Future<void> _invalidatePersistedProgressWrites() async {
+    if (_dat07SuspendedV1 || _act0Dat07BarrierV1 != null) {
+      throw const Act0RecoveryHoldV1();
+    }
     if (!_usesPersistedProgress) {
       return;
     }
@@ -5384,6 +5500,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Future<void> _handleResetAppProgress() async {
+    if (_dat07SuspendedV1 ||
+        _act0Dat07BarrierV1 != null ||
+        _act0Dat07ResetInFlightV1 != null)
+      return;
     final shouldReset = await showDialog<bool>(
       context: context,
       builder: (context) {
@@ -5407,21 +5527,40 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         );
       },
     );
-    if (shouldReset != true || !mounted) {
+    if (shouldReset != true ||
+        !mounted ||
+        _dat07SuspendedV1 ||
+        _act0Dat07BarrierV1 != null ||
+        _act0Dat07ResetInFlightV1 != null) {
       return;
     }
-    await _invalidatePersistedProgressWrites();
-    await ProgressService.debugReset();
-    await OnboardingPreferencesService.resetOnboarding();
-    await Act0FirstStartPreferencesV1.resetWelcome();
-    if (!mounted) {
-      return;
+    // Acquire synchronously before the first destructive await. A transfer
+    // cannot enter, and new shell bootstraps cannot read half-reset truth.
+    final reset = Completer<void>();
+    _act0Dat07ResetInFlightV1 = reset;
+    try {
+      await _invalidatePersistedProgressWrites();
+      if (!mounted || _dat07SuspendedV1 || _act0Dat07BarrierV1 != null) return;
+      await ProgressService.debugReset();
+      if (!mounted || _dat07SuspendedV1 || _act0Dat07BarrierV1 != null) return;
+      await OnboardingPreferencesService.resetOnboarding();
+      if (!mounted || _dat07SuspendedV1 || _act0Dat07BarrierV1 != null) return;
+      await Act0FirstStartPreferencesV1.resetWelcome();
+      if (!mounted || _dat07SuspendedV1 || _act0Dat07BarrierV1 != null) return;
+      _restorePreviewToFreshStart(showPlacement: true);
+      _persistProgress();
+    } finally {
+      // Remains held even if the initiating host is disposed while clear is
+      // pending. Only settled destructive I/O can release the next bootstrap.
+      if (identical(_act0Dat07ResetInFlightV1, reset)) {
+        _act0Dat07ResetInFlightV1 = null;
+      }
+      reset.complete();
     }
-    _restorePreviewToFreshStart(showPlacement: true);
-    _persistProgress();
   }
 
   Future<void> _openDevMenu() async {
+    if (_dat07SuspendedV1 || _act0Dat07BarrierV1 != null) return;
     await showModalBottomSheet<void>(
       context: context,
       backgroundColor: Act0ShellTokensV1.surface,
@@ -5681,6 +5820,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   @override
   Widget build(BuildContext context) {
     final callbackEpochV1 = _recoveryEpochV1;
+    if (_dat07SuspendedV1) {
+      return const Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: Text(
+              'Progress is locked for safe reload. '
+              'Restart Sharky if this operation was interrupted.',
+            ),
+          ),
+        ),
+      );
+    }
     if (_progressLoadFailed) {
       return Scaffold(
         body: SafeArea(
@@ -7419,6 +7570,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         context,
                         isCurrent: () =>
                             _acceptRecoveryCallbackV1(callbackEpochV1),
+                        onBackupRestore: _usesPersistedProgress
+                            ? _dat07HostV1?._open
+                            : null,
                         completedTasks: _completedTaskIds.length,
                         openRepairs: reviewState.mistakes.length,
                         dueReviews: _durableRetentionHistoryV1
@@ -15569,7 +15723,7 @@ class _Act0PersistedProgressV1 {
     final sortedOpenRepairIntents = openRepairIntents.toList(growable: false)
       ..sort((a, b) => a.sourceTaskId.compareTo(b.sourceTaskId));
     return jsonEncode(<String, Object>{
-      'schemaVersion': 19,
+      'schemaVersion': act0CanonicalProgressSchemaV1,
       if (suppressLegacyRecheckAfterRecovery)
         'suppressLegacyRecheckAfterRecovery': true,
       'completedTaskIds': sortedTaskIds,
