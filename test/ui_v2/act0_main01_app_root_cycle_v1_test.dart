@@ -22,6 +22,64 @@ const _nextTask = 'first_table_guide_one_clear_choice';
 
 void main() {
   testWidgets(
+    'SIMULATED main AppRoot Back: pending choice and saved miss remain intact',
+    (tester) async {
+      SharedPreferences.setMockInitialValues(<String, Object>{});
+      tester.view.physicalSize = const Size(393, 852);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pumpAndSettle();
+        await tester.runAsync(() async {
+          await _pendingWrites().flush().timeout(const Duration(seconds: 2));
+        });
+      });
+      await tester.pumpWidget(const AppRoot());
+      await tester.pumpAndSettle();
+      await _tap(tester, 'act0_shell_placement_skip_intro');
+      await tester.tap(find.text('Learn').last);
+      await tester.pumpAndSettle();
+      await _tap(tester, 'act0_shell_current_mission_cta');
+      await _advanceToTask(tester, _source);
+      await _advanceToPrompt(tester);
+      final back = find.byKey(const Key('act0_shell_runner_back'));
+      expect(tester.getSemantics(back).getSemanticsData().tooltip, 'Back');
+      expect(tester.getSize(back).width, greaterThanOrEqualTo(44));
+      expect(tester.getSize(back).height, greaterThanOrEqualTo(44));
+      final pending = await _saved(tester);
+      await _tap(tester, 'act0_shell_runner_back');
+      await tester.tap(find.text('Home').last);
+      await tester.pumpAndSettle();
+      await _tap(tester, 'act0_academy_home_leaf_cta');
+      expect(_runner(tester).selectedTaskId, _source);
+      expect(_runner(tester).runner.phase, Act0LessonPhaseV1.drill);
+      expect(_stableProgress(await _saved(tester)), _stableProgress(pending));
+      await _advanceToPrompt(tester);
+      await _choose(tester, 'five_board_now');
+      final missed = await _saved(tester);
+      expect(_runner(tester).runner.selectedOptionId, 'five_board_now');
+      expect(_runner(tester).runner.phase, Act0LessonPhaseV1.review);
+      await _tap(tester, 'act0_shell_runner_back');
+      expect(_stableProgress(await _saved(tester)), _stableProgress(missed));
+      await tester.tap(find.text('Home').last);
+      await tester.pumpAndSettle();
+      // Home deliberately offers the mapped repair after a miss. It is not a
+      // request to restart the old answer or proof of independent correction.
+      await _tap(tester, 'act0_academy_home_leaf_cta');
+      expect(_runner(tester).selectedTaskId, _mappedRepair);
+      final repairOpened = await _saved(tester);
+      expect(repairOpened['earnedXp'], missed['earnedXp']);
+      expect(
+        repairOpened['learningEvidenceHistory'],
+        missed['learningEvidenceHistory'],
+      );
+      expect(repairOpened['completedTaskIds'], missed['completedTaskIds']);
+      expect(repairOpened['openRepairIntents'], missed['openRepairIntents']);
+    },
+  );
+  testWidgets(
     'SIMULATED main AppRoot: entry, repair, distinct task, saved remount',
     (tester) async {
       SharedPreferences.setMockInitialValues(<String, Object>{});

@@ -7472,10 +7472,13 @@ class _RunnerProgressV1 extends StatelessWidget {
     return Row(
       children: [
         SizedBox(
-          width: 34,
-          height: 34,
+          width: 48,
+          height: 48,
           child: IconButton(
             key: const Key('act0_shell_runner_back'),
+            tooltip: act0AcademyLanguageV1(context) == 'ru'
+                ? '\u041d\u0430\u0437\u0430\u0434'
+                : 'Back',
             onPressed: onBack,
             padding: EdgeInsets.zero,
             icon: const Icon(Icons.arrow_back_rounded),
