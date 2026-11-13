@@ -76,7 +76,9 @@ if [[ "$quick_mode" == "1" ]]; then
 fi
 
 echo "check_repo_ready_r5_v1: RUN ./tools/run_release_gate_r5_v1.sh"
-if ! ./tools/run_release_gate_r5_v1.sh; then
+if ./tools/run_release_gate_r5_v1.sh; then
+  :
+else
   rc=$?
   echo "check_repo_ready_r5_v1: FAIL release gate exit=$rc" >&2
   echo "next: inspect output above and fix the first failing gate step" >&2
