@@ -6000,10 +6000,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                       onSelectOption: (question, optionId) => setState(() {
                         _togglePlacementOption(question, optionId);
                       }),
-                      onStartPlacement: () => setState(() {
-                        _placementIntroVisible = false;
-                        _placementQuestionIndex = 0;
-                      }),
+                      onStartPlacement: () {
+                        if (_skipIntroductionSavingV1) return;
+                        setState(() {
+                          _placementIntroVisible = false;
+                          _placementQuestionIndex = 0;
+                        });
+                      },
                       onBack: () => setState(() {
                         if (_placementQuestionIndex > 0) {
                           _placementQuestionIndex -= 1;
