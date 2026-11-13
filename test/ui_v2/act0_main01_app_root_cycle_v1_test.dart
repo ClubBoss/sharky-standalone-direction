@@ -7,6 +7,8 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/app_root.dart';
+import 'package:poker_analyzer/services/progress_service.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_first_start_preferences_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
@@ -229,6 +231,94 @@ void main() {
       }
     },
   );
+  testWidgets(
+    'SIMULATED Skip: zero earned progress, remount and existing work preserved',
+    (tester) async {
+      SharedPreferences.setMockInitialValues(<String, Object>{});
+      tester.view.physicalSize = const Size(393, 852);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pumpAndSettle();
+        await tester.runAsync(() async {
+          await _pendingWrites().flush().timeout(const Duration(seconds: 2));
+        });
+      });
+      await tester.pumpWidget(const AppRoot());
+      await tester.pumpAndSettle();
+      await _tap(tester, 'act0_shell_placement_skip_intro');
+      expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
+      final fresh = await _saved(tester);
+      expect(fresh['selectedTaskId'], 'what_poker_is_theory');
+      expect(fresh['earnedXp'], 0);
+      expect(fresh['completedTaskIds'], isEmpty);
+      expect(fresh['completedLessonIds'], isEmpty);
+      expect(_rows(fresh, 'learningEvidenceHistory'), isEmpty);
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getBool('act0_introduction_skipped_v1'), isTrue);
+      expect(await ProgressService.isIntakeCompleted(), isFalse);
+      expect(await ProgressService.getIntakeProfile(), isNull);
+      expect(await Act0FirstStartPreferencesV1.hasCompletedWelcome(), isFalse);
+
+      // No preference reseeding: a fresh process/root must keep the zero path.
+      await _remount(tester);
+      expect(
+        find.byKey(const Key('act0_shell_placement_intro_cta')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_welcome_primary_cta')),
+        findsNothing,
+      );
+      expect(_stableProgress(await _saved(tester)), _stableProgress(fresh));
+      await tester.tap(find.text('Learn').last);
+      await tester.pumpAndSettle();
+      await _tap(tester, 'act0_shell_current_mission_cta');
+      expect(_runner(tester).selectedTaskId, 'what_poker_is_theory');
+      await _advanceToTask(tester, 'what_poker_is_find_hero');
+      await _advanceToPrompt(tester);
+      await _choose(tester, 'top');
+      final earned = await _saved(tester);
+      expect(earned['earnedXp'], 5);
+      expect(_rows(earned, 'learningEvidenceHistory'), isNotEmpty);
+
+      // Existing progress without an intake disposition must not be reset by
+      // Skip. Only remove the route flag, leaving real production data intact.
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+      await tester.runAsync(() async {
+        await _pendingWrites().flush().timeout(const Duration(seconds: 2));
+        await prefs.remove('act0_introduction_skipped_v1');
+      });
+      await tester.pumpWidget(const AppRoot());
+      await tester.pumpAndSettle();
+      await _tap(tester, 'act0_shell_placement_skip_intro');
+      expect(_stableProgress(await _saved(tester)), _stableProgress(earned));
+      await _remount(tester);
+      expect(_stableProgress(await _saved(tester)), _stableProgress(earned));
+      expect(await ProgressService.isIntakeCompleted(), isFalse);
+      expect(await Act0FirstStartPreferencesV1.hasCompletedWelcome(), isFalse);
+      await Act0FirstStartPreferencesV1.resetWelcome();
+      expect(
+        await Act0FirstStartPreferencesV1.hasSkippedIntroduction(),
+        isFalse,
+      );
+      expect(_stableProgress(await _saved(tester)), _stableProgress(earned));
+      expect(tester.takeException(), isNull);
+    },
+  );
+}
+
+Future<void> _remount(WidgetTester tester) async {
+  await tester.pumpWidget(const SizedBox.shrink());
+  await tester.pumpAndSettle();
+  await tester.runAsync(() async {
+    await _pendingWrites().flush().timeout(const Duration(seconds: 2));
+  });
+  await tester.pumpWidget(const AppRoot());
+  await tester.pumpAndSettle();
 }
 
 Act0LessonRunnerShellV1 _runner(WidgetTester tester) => tester
