@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/app_root.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
@@ -25,6 +26,128 @@ const _mappedRepair = 'what_poker_is_table_read_recheck';
 const _nextTask = 'first_table_guide_one_clear_choice';
 
 void main() {
+  for (final reducedMotion in [false, true]) {
+    testWidgets(
+      'SIMULATED semantic help lifecycle preserves truth with reducedMotion=$reducedMotion',
+      (tester) async {
+        tester.platformDispatcher.accessibilityFeaturesTestValue =
+            FakeAccessibilityFeatures(
+              accessibleNavigation: true,
+              disableAnimations: reducedMotion,
+              reduceMotion: reducedMotion,
+            );
+        addTearDown(
+          tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+        );
+        await _openPendingHelpDecision(tester);
+        final runnerContext = tester.element(
+          find.byType(Act0LessonRunnerShellV1),
+        );
+        expect(MediaQuery.accessibleNavigationOf(runnerContext), isTrue);
+        expect(MediaQuery.disableAnimationsOf(runnerContext), reducedMotion);
+        final untouched = await _saved(tester);
+        final options = _runner(tester).runner.options;
+
+        Future<void> activate(String key, String label) async {
+          final target = find.byKey(Key(key));
+          await tester.ensureVisible(target);
+          await tester.pumpAndSettle();
+          final node = tester.getSemantics(target);
+          final data = node.getSemanticsData();
+          expect(
+            data.label.trim().isNotEmpty ? data.label : data.tooltip,
+            label,
+          );
+          expect(data.hasFlag(SemanticsFlag.isButton), isTrue);
+          expect(data.hasFlag(SemanticsFlag.isEnabled), isTrue);
+          expect(data.hasAction(SemanticsAction.tap), isTrue);
+          node.owner!.performAction(node.id, SemanticsAction.tap);
+          await tester.pumpAndSettle();
+        }
+
+        await activate('act0_shell_theory_recall_cta', 'Need a hint?');
+        final hint = tester
+            .widget<Text>(find.byKey(const Key('act0_shell_hint_body')))
+            .data!;
+        expect(hint.trim(), isNotEmpty);
+        expect(find.bySemanticsLabel(hint), findsOneWidget);
+        for (final option in options) {
+          expect(
+            find.byKey(Key('act0_shell_option_${option.id}')),
+            findsNothing,
+            reason: 'Hidden choices must not remain actionable through help.',
+          );
+        }
+        await activate('act0_shell_review_full_idea_cta', 'Review full idea');
+        for (final option in options) {
+          expect(
+            find.byKey(Key('act0_shell_option_${option.id}')),
+            findsNothing,
+            reason: 'Full Idea must not expose hidden answer actions.',
+          );
+        }
+        final helpSurface = find.byKey(
+          const Key('act0_shell_theory_recall_sheet'),
+        );
+        final helpTexts = find.descendant(
+          of: helpSurface,
+          matching: find.byType(Text),
+        );
+        final readableTexts = tester
+            .widgetList<Text>(helpTexts)
+            .where((text) => text.data?.trim().isNotEmpty == true)
+            .map((text) => text.data!)
+            .toList();
+        expect(readableTexts, isNotEmpty);
+        for (final text in readableTexts) {
+          final rendered = find.descendant(
+            of: helpSurface,
+            matching: find.text(text),
+          );
+          await tester.ensureVisible(rendered);
+          await tester.pumpAndSettle();
+          expect(
+            find.bySemanticsLabel(text),
+            findsOneWidget,
+            reason:
+                'Every current full-idea paragraph/control needs readable semantics.',
+          );
+        }
+        await activate('act0_shell_theory_recall_close_cta', 'Back to choices');
+        expect(find.byKey(const Key('act0_shell_hint_body')), findsNothing);
+        final closed = await _saved(tester);
+        expect(
+          _stableProgress(closed),
+          _stableProgress(untouched),
+          reason:
+              'Help must preserve source/task, debt, completion, XP and evidence.',
+        );
+        for (final option in options) {
+          final choice = find.byKey(Key('act0_shell_option_${option.id}'));
+          await tester.ensureVisible(choice);
+          await tester.pumpAndSettle();
+          final data = tester.getSemantics(choice).getSemanticsData();
+          expect(data.label, option.label);
+          expect(data.hasAction(SemanticsAction.tap), isTrue);
+        }
+        final correct = options.singleWhere((option) => option.isCorrect);
+        await activate('act0_shell_option_${correct.id}', correct.label);
+        final rows = _rows(
+          await _saved(tester),
+          'learningEvidenceHistory',
+        ).where((row) => row['taskId'] == _source).toList();
+        expect(rows, hasLength(1));
+        expect(rows.single['choiceId'], correct.id);
+        expect(rows.single['assistanceKind'], 'theoryRecall');
+        expect(
+          _runner(tester).runner.reviewQuality,
+          Act0FeedbackQualityV1.correct,
+        );
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
   for (final feedbackCase in ['assisted', 'wrong', 'correct']) {
     testWidgets(
       'SIMULATED feedback clears visible source seats and keeps continuation usable - $feedbackCase',
