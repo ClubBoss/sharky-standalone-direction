@@ -1,8 +1,8 @@
-# Foundation W1-W4 source map v1
+# Foundation W1-W4 source map v1 - revision 2
 
-Status: PREPARATORY SOURCE TRACE ONLY. Parent CUR-01, 0.3, runtime and Human acceptance are not granted.
+Status: PREPARED UTC CANDIDATE SOURCE TRACE ONLY; NOT PUBLISHED OR ACCEPTED. Parent CUR-01, 0.3, runtime and Human acceptance are not granted.
 
-Base: `ccd263c4ed9c03f0a09751b19048dc6030ffbbcf`. The JSON companion lists exact source Git blobs, canonical task IDs, source declarations and unresolved fields.
+Base: `ccd263c4ed9c03f0a09751b19048dc6030ffbbcf`. The JSON companion lists exact source Git blobs, canonical task IDs, source declarations and unresolved fields. Content-source links retain the unchanged historical base. Composition base: 6e848de8c11caa312af37347550ebde714d4b47c. Preview is an unpublished UTC delta, not a blob in either base commit. Exact UTC patch SHA256: ef9686afe5b9ef5d1e6e0501192098050ef2bf9f73de11173a62f1a81de82e07. Revision 1 remains historical; its acceptance does not transfer. Route gates and content are unchanged by this delta.
 
 This inventory follows current Act0 world names and actual helper-retitled task IDs. Lesson goals quote authored subtitles. Earlier lessons/tasks describe source order; they are not new pedagogical prerequisites or evidence of learning.
 

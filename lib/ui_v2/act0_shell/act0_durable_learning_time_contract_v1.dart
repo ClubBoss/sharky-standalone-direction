@@ -65,12 +65,52 @@ String act0UtcStorageStringV1(DateTime value) =>
     value.toUtc().toIso8601String();
 
 DateTime? act0TryParseUtcV1(Object? raw) {
-  final value = raw?.toString().trim() ?? '';
-  if (value.isEmpty) {
+  if (raw is! String) return null;
+  final match = RegExp(
+    r'^([+-]?\d{4,6})-(\d{2})-(\d{2})[Tt](\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,6}))?(?:[Zz]|([+-])(\d{2}):?(\d{2}))$',
+  ).firstMatch(raw.trim());
+  if (match == null) return null;
+  final year = int.parse(match[1]!);
+  final month = int.parse(match[2]!);
+  final day = int.parse(match[3]!);
+  final hour = int.parse(match[4]!);
+  final minute = int.parse(match[5]!);
+  final second = int.parse(match[6]!);
+  final offsetHours = int.parse(match[9] ?? '0');
+  final offsetMinutes = int.parse(match[10] ?? '0');
+  if (month < 1 ||
+      month > 12 ||
+      day < 1 ||
+      hour > 23 ||
+      minute > 59 ||
+      second > 59 ||
+      offsetHours > 23 ||
+      offsetMinutes > 59) {
     return null;
   }
-  final parsed = DateTime.tryParse(value);
-  return parsed?.toUtc();
+  try {
+    // DateTime.tryParse normalizes invalid civil values (Feb 31, hour 25).
+    // Validate the original local date before applying a legitimate offset.
+    const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    final leap = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+    final days = month == 2 && leap ? 29 : monthDays[month - 1];
+    if (day > days) return null;
+    final micros = int.parse((match[7] ?? '').padRight(6, '0'));
+    final local = DateTime.utc(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      micros ~/ 1000,
+      micros % 1000,
+    );
+    final offset = Duration(minutes: offsetHours * 60 + offsetMinutes);
+    return match[8] == '-' ? local.add(offset) : local.subtract(offset);
+  } on ArgumentError {
+    return null;
+  }
 }
 
 T? act0EnumByNameV1<T extends Enum>(Iterable<T> values, Object? raw) {

@@ -16099,9 +16099,11 @@ class _Act0PersistedProgressV1 {
     final learningEvidenceHistory =
         restoredEvidence ??
         const Act0LearningEvidenceHistoryV1(hasCompleteLineage: false);
-    final durableRetentionHistory = Act0DurableRetentionHistoryV1.tryParse(
-      map['durableRetentionHistory'],
-    );
+    final durableRetentionHistory =
+        Act0DurableRetentionHistoryV1.tryParseStrict(
+          map['durableRetentionHistory'],
+        );
+    if (durableRetentionHistory == null) return null;
     final reviewMistakeHistory =
         Act0ReviewMistakeHistoryV1.tryParse(map['reviewMistakeHistory']) ??
         const Act0ReviewMistakeHistoryV1();

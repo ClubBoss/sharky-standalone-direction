@@ -282,6 +282,106 @@ Act0ProgressStoreV1 _dat06Restart(Act0ProgressStoreV1 store) =>
     Act0ProgressStoreV1(key: store.key, isValidPayload: (_) => true);
 
 void main() {
+  for (final malformed in [false, true]) {
+    testWidgets(
+      'current schema 20 retention admission ${malformed ? "holds malformed time" : "preserves valid cache"}',
+      (tester) async {
+        // Obtain current lineage/pending-collection shape from the actual
+        // serializer, then vary only the cached timestamp machine fixture.
+        final firstDisk = await _mount(
+          tester,
+          _snapshot(),
+          tab: Act0ShellTabV1.home,
+        );
+        await _flush(tester);
+        await _drain();
+        final current = _durable(firstDisk);
+        expect(current['schemaVersion'], 20);
+        expect(current['learningEvidenceLineage'], isA<Map>());
+        expect(current['pendingDecisionAssistance'], isA<List>());
+        final legacy = Act0DurableRetentionHistoryV1.fromLearningEvidence(
+          Act0LearningEvidenceHistoryV1(records: [_record(_target, 1)]),
+        ).toPayload().single;
+        current['durableRetentionHistory'] = [
+          legacy,
+          if (malformed)
+            {
+              ...legacy,
+              'conceptFamilyId': 'other_family',
+              'lastRecordedAtUtc': '2026-02-31T00:00:00Z',
+            },
+        ];
+        final original = jsonEncode(current);
+        final disk = await _mount(tester, current, tab: Act0ShellTabV1.home);
+        expect(
+          find.text('Your saved progress could not be read.'),
+          malformed ? findsOneWidget : findsNothing,
+        );
+        if (malformed) {
+          expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
+          await _flush(tester);
+          await _drain();
+          expect(disk.values['flutter.$_key'], original);
+        } else {
+          await _flush(tester);
+          await _drain();
+          final restored = _durable(disk)['durableRetentionHistory'] as List;
+          expect(
+            restored.any(
+              (value) =>
+                  (value as Map)['conceptFamilyId'] ==
+                  legacy['conceptFamilyId'],
+            ),
+            isTrue,
+          );
+        }
+      },
+    );
+  }
+  testWidgets(
+    'malformed mixed retention timestamps hold without overwriting the original snapshot',
+    (tester) async {
+      final legacy = Act0DurableRetentionHistoryV1.fromLearningEvidence(
+        Act0LearningEvidenceHistoryV1(records: [_record(_target, 1)]),
+      ).toPayload().single;
+      final snap = _snapshot()
+        ..['durableRetentionHistory'] = [
+          legacy,
+          {
+            ...legacy,
+            'conceptFamilyId': 'other_family',
+            'lastRecordedAtUtc': '2026-02-31T00:00:00Z',
+          },
+        ];
+      final original = jsonEncode(snap);
+      final disk = await _mount(tester, snap, tab: Act0ShellTabV1.home);
+      expect(
+        find.text('Your saved progress could not be read.'),
+        findsOneWidget,
+      );
+      expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
+      await _flush(tester);
+      await _drain();
+      expect(disk.values['flutter.$_key'], original);
+    },
+  );
+  testWidgets(
+    'legacy retention with missing timestamps stays restorable without inventing due',
+    (tester) async {
+      final legacy = Act0DurableRetentionHistoryV1.fromLearningEvidence(
+        Act0LearningEvidenceHistoryV1(records: [_record(_target, 1)]),
+      ).toPayload();
+      final snap = _snapshot()..['durableRetentionHistory'] = legacy;
+      await _mount(tester, snap, tab: Act0ShellTabV1.home);
+      expect(find.text('Your saved progress could not be read.'), findsNothing);
+      expect(
+        Act0DurableRetentionHistoryV1.tryParseStrict(
+          legacy,
+        )!.dueItemsAt(DateTime.utc(2026, 11, 14)),
+        isEmpty,
+      );
+    },
+  );
   test(
     'DAT378 transient read failure cannot authorize resetting readable progress',
     () async {

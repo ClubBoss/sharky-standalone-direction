@@ -107,6 +107,17 @@ class Act0DurableRetentionHistoryV1 {
 
   String toStorageString() => jsonEncode(toPayload());
 
+  /// Persistence admission must not silently filter a malformed family while
+  /// retaining other families. Missing legacy/unseen timestamps remain valid.
+  static Act0DurableRetentionHistoryV1? tryParseStrict(Object? raw) {
+    if (raw == null) return const Act0DurableRetentionHistoryV1();
+    if (raw is! List) return null;
+    for (final value in raw) {
+      if (Act0DurableRetentionFamilyV1.tryParse(value) == null) return null;
+    }
+    return tryParse(raw);
+  }
+
   static Act0DurableRetentionHistoryV1 tryParse(Object? raw) {
     if (raw is! List) {
       return const Act0DurableRetentionHistoryV1();
@@ -341,6 +352,13 @@ class Act0DurableRetentionFamilyV1 {
       return null;
     }
     final map = raw.cast<Object?, Object?>();
+    for (final key in const [
+      'nextDueAtUtc',
+      'lastSpacedReviewAtUtc',
+      'lastRecordedAtUtc',
+    ]) {
+      if (map[key] != null && act0TryParseUtcV1(map[key]) == null) return null;
+    }
     final schemaVersion = _int(map['schemaVersion']);
     final conceptFamilyId = _string(map['conceptFamilyId']);
     final retentionState = act0EnumByNameV1(
