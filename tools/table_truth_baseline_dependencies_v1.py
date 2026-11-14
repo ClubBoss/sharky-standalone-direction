@@ -146,8 +146,11 @@ GUIDE_RUNNER_SHA256 = 'd8d1190ae4861763b0568c5e5576a1d334c5f09f39900926546212614
 # Exact independently reviewed Back-only UI delta. Keep the old input valid;
 # neither a changed manifest nor an arbitrary current Runner grants admission.
 GUIDE_BACK_RUNNER_SHA256 = '452826ea65dff12c1ae5ee8d9e0e52aa5925762ab0145b1a2bc409c85780ff6c'
+# Exact pending-assistance ownership/barrier candidate, separately reviewed.
+GUIDE_PENDING_ASSISTANCE_RUNNER_SHA256 = '876dec37155bdde9aa4883c99f4bc7d9c8170405794bfc2e7cc1f99ecfc07e12'
 GUIDE_REVIEWED_RUNNER_SHA256S = frozenset((
     GUIDE_RUNNER_SHA256, GUIDE_BACK_RUNNER_SHA256,
+    GUIDE_PENDING_ASSISTANCE_RUNNER_SHA256,
 ))
 GUIDE_SENTINEL = 'SHARKY_BASELINE_GUIDE_SCROLL_SHIM_EXECUTED'
 GUIDE_CONSTRUCTOR = (

@@ -1187,6 +1187,20 @@ enum _RunnerViewportFamilyV1 {
   tableTapSeatFocus,
 }
 
+/// Exposure is monotonic until that source decision is actually recorded.
+Act0DecisionAssistanceV1 act0MergeDecisionAssistanceV1(
+  Act0DecisionAssistanceV1 retained,
+  Act0DecisionAssistanceV1 next,
+) {
+  int rank(Act0DecisionAssistanceV1 value) => switch (value) {
+    Act0DecisionAssistanceV1.none => 0,
+    Act0DecisionAssistanceV1.legacyUnknown => 1,
+    Act0DecisionAssistanceV1.quickHint => 2,
+    Act0DecisionAssistanceV1.theoryRecall => 3,
+  };
+  return rank(next) > rank(retained) ? next : retained;
+}
+
 class Act0LessonRunnerShellV1 extends StatefulWidget {
   const Act0LessonRunnerShellV1({
     super.key,
@@ -1209,6 +1223,8 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.onChooseSeat,
     this.onCompletedDecision,
     this.onChoiceAssistance,
+    this.onAssistanceExposureRequested,
+    this.initialChoiceAssistance = Act0DecisionAssistanceV1.none,
     required this.onContinueReview,
     this.completionSummary,
     this.isAssistedDecision = false,
@@ -1262,6 +1278,9 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final ValueChanged<String>? onChooseSeat;
   final ValueChanged<Act0CompletedDecisionV1>? onCompletedDecision;
   final ValueChanged<Act0DecisionAssistanceV1>? onChoiceAssistance;
+  final Future<bool> Function(Act0DecisionAssistanceV1)?
+  onAssistanceExposureRequested;
+  final Act0DecisionAssistanceV1 initialChoiceAssistance;
   final VoidCallback onContinueReview;
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final bool isAssistedDecision;
@@ -1343,6 +1362,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   int _learningRailSupportSegmentIndex = 0;
   String _learningRailSupportStepKey = '';
   bool _showTheoryPeek = false;
+  bool _assistanceExposurePendingV1 = false;
+  int _assistanceExposureEpochV1 = 0;
   Act0DecisionAssistanceV1 _decisionAssistanceKindV1 =
       Act0DecisionAssistanceV1.none;
   bool _showFullIdeaInTheoryPeek = false;
@@ -1382,6 +1403,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     _sceneAttentionProgress = _sceneAttentionController.drive(
       CurveTween(curve: Act0MotionTokensV1.enter),
     );
+    _decisionAssistanceKindV1 = widget.initialChoiceAssistance;
     _syncTheoryAdvanceLock(initial: true);
     _syncRapidReviewAdvance();
     _maybeEmitTaskShownTelemetry();
@@ -1510,19 +1532,27 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     _syncTableChoreographyV1();
     _maybeEmitFeedbackViewedTelemetry();
     final nextCompositionTaskKey = _compositionTaskIdentity(widget);
-    if (nextCompositionTaskKey != _compositionTaskKey) {
+    final sourceTaskChanged = nextCompositionTaskKey != _compositionTaskKey;
+    if (sourceTaskChanged) {
       _compositionTaskKey = nextCompositionTaskKey;
       _compositionFamily = widget.compositionFamily;
     }
     final nextKey = _interactionKey(widget.runner);
-    if (_showdownInteractionKey != nextKey) {
+    if (sourceTaskChanged || _showdownInteractionKey != nextKey) {
+      _assistanceExposureEpochV1 += 1;
+      _assistanceExposurePendingV1 = false;
       _actionTrailFocusedIndex = null;
       _showdownInteractionKey = nextKey;
       _interactiveHighlightedCardIds = const <String>[];
       _interactiveShowdownLine = '';
       _showTheoryPeek = false;
       _showFullIdeaInTheoryPeek = false;
-      _decisionAssistanceKindV1 = Act0DecisionAssistanceV1.none;
+      _decisionAssistanceKindV1 = widget.initialChoiceAssistance;
+    } else {
+      _decisionAssistanceKindV1 = act0MergeDecisionAssistanceV1(
+        _decisionAssistanceKindV1,
+        widget.initialChoiceAssistance,
+      );
     }
   }
 
@@ -2125,7 +2155,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }
 
   void _handleChooseOptionTelemetry(Act0RunnerOptionV1 option) {
-    if (!_heroDecisionReady || _decisionSubmittedForTaskV1) {
+    if (_assistanceExposurePendingV1 ||
+        !_heroDecisionReady ||
+        _decisionSubmittedForTaskV1) {
       return;
     }
     if (_rejectInvalidAuthoredBettingPriceV1(option)) return;
@@ -2274,7 +2306,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }
 
   void _handleChooseSeat(String seatId) {
-    if (_isTheory ||
+    if (_assistanceExposurePendingV1 ||
+        _isTheory ||
         widget.selectedTaskFamily == Act0TaskFamilyV1.learn ||
         !_heroDecisionReady ||
         _decisionSubmittedForTaskV1) {
@@ -2327,7 +2360,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
   }
 
   void _handleConfirmSizingPreset() {
-    if (!_heroDecisionReady || _decisionSubmittedForTaskV1) {
+    if (_assistanceExposurePendingV1 ||
+        !_heroDecisionReady ||
+        _decisionSubmittedForTaskV1) {
       return;
     }
     final presetId = widget.runner.selectedPresetId;
@@ -2927,7 +2962,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     if (step == null) {
       return;
     }
-    _decisionAssistanceKindV1 = Act0DecisionAssistanceV1.theoryRecall;
+    if (!await _exposeDecisionAssistanceV1(
+      Act0DecisionAssistanceV1.theoryRecall,
+    ))
+      return;
     // Seat-choice drills use a modal rather than the ordinary inline peek.
     // Apply the same pre-choice answer guard to both assistance routes.
     final safeIdea = _preChoiceTheoryIdeaV1(
@@ -2952,12 +2990,62 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     );
   }
 
-  void _openTheoryRecallPeek() {
-    if (widget.theoryRecallStep == null || _showTheoryPeek) {
-      return;
+  Future<bool> _exposeDecisionAssistanceV1(
+    Act0DecisionAssistanceV1 kind,
+  ) async {
+    if (_assistanceExposurePendingV1 || _decisionSubmittedForTaskV1)
+      return false;
+    final epoch = ++_assistanceExposureEpochV1;
+    final source = _compositionTaskIdentity(widget);
+    final interaction = _interactionKey(widget.runner);
+    final request = widget.onAssistanceExposureRequested;
+    if (request != null) {
+      // Before showing any assistance, commit an uncertainty marker. If the
+      // process dies before the known-kind upgrade, it cannot resume as unaided.
+      _decisionAssistanceKindV1 = act0MergeDecisionAssistanceV1(
+        _decisionAssistanceKindV1,
+        Act0DecisionAssistanceV1.legacyUnknown,
+      );
+      setState(() => _assistanceExposurePendingV1 = true);
+      var acknowledged = false;
+      try {
+        acknowledged = await request(kind).timeout(const Duration(seconds: 10));
+      } catch (_) {
+        // An indeterminate save never licenses exposing unrecorded assistance.
+      }
+      if (!mounted || epoch != _assistanceExposureEpochV1) return false;
+      setState(() => _assistanceExposurePendingV1 = false);
+      if (!acknowledged) {
+        ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+          SnackBar(
+            content: Text(
+              act0AcademyLanguageV1(context) == 'ru'
+                  ? '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0441\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435 \u043f\u043e\u043c\u043e\u0449\u0438. \u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435 \u043f\u043e\u043f\u044b\u0442\u043a\u0443.'
+                  : 'Help could not be saved. Please try again.',
+            ),
+          ),
+        );
+        return false;
+      }
     }
-    _decisionAssistanceKindV1 = Act0DecisionAssistanceV1.quickHint;
-    setState(() => _showTheoryPeek = true);
+    if (!mounted ||
+        epoch != _assistanceExposureEpochV1 ||
+        source != _compositionTaskIdentity(widget) ||
+        interaction != _interactionKey(widget.runner))
+      return false;
+    _decisionAssistanceKindV1 = act0MergeDecisionAssistanceV1(
+      _decisionAssistanceKindV1,
+      kind,
+    );
+    widget.onChoiceAssistance?.call(_decisionAssistanceKindV1);
+    return true;
+  }
+
+  Future<void> _openTheoryRecallPeek() async {
+    if (widget.theoryRecallStep == null || _showTheoryPeek) return;
+    if (!await _exposeDecisionAssistanceV1(Act0DecisionAssistanceV1.quickHint))
+      return;
+    if (mounted) setState(() => _showTheoryPeek = true);
   }
 
   void _closeTheoryRecallPeek() {
@@ -2965,6 +3053,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       return;
     }
     setState(() {
+      _assistanceExposureEpochV1 += 1;
+      _assistanceExposurePendingV1 = false;
       _showTheoryPeek = false;
       _showFullIdeaInTheoryPeek = false;
     });
@@ -3315,11 +3405,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             fullIdeaBlocks: decisionHint.fullIdeaBlocks,
             showFullIdea: _showFullIdeaInTheoryPeek,
             onShowFullIdea: decisionHint.hasFullIdea
-                ? () => setState(() {
-                    _showFullIdeaInTheoryPeek = true;
-                    _decisionAssistanceKindV1 =
-                        Act0DecisionAssistanceV1.theoryRecall;
-                  })
+                ? () async {
+                    if (!await _exposeDecisionAssistanceV1(
+                      Act0DecisionAssistanceV1.theoryRecall,
+                    ))
+                      return;
+                    if (mounted)
+                      setState(() {
+                        _showFullIdeaInTheoryPeek = true;
+                      });
+                  }
                 : null,
             onClose: _closeTheoryRecallPeek,
           );

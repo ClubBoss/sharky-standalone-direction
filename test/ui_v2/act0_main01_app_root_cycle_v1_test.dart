@@ -1,3 +1,4 @@
+import 'dart:async';
 // SIMULATED normal production AppRoot journey on English iPhone 14 Pro.
 // Uses current-main tasks only. Empty fake preferences are seeded once at boot.
 // Widget remount/fake preferences do not prove native restart or Human learning.
@@ -7,6 +8,8 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/app_root.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_first_start_preferences_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -14,6 +17,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 
 const _progressKey = 'act0_shell_progress_v1';
 const _source = 'what_poker_is_table_read_transfer';
@@ -21,6 +25,356 @@ const _mappedRepair = 'what_poker_is_table_read_recheck';
 const _nextTask = 'first_table_guide_one_clear_choice';
 
 void main() {
+  for (final mode in ['ack', 'failure', 'navigation', 'reset']) {
+    testWidgets('SIMULATED help waits for durable marker: $mode', (
+      tester,
+    ) async {
+      await _openPendingHelpDecision(tester);
+      final original = SharedPreferencesStorePlatform.instance;
+      final disk = _HelpWriteGate(original);
+      SharedPreferencesStorePlatform.instance = disk;
+      addTearDown(() async {
+        disk.failWrites = false;
+        disk.release();
+        await tester.runAsync(() async {
+          await _pendingWrites().flush().timeout(const Duration(seconds: 2));
+        });
+        SharedPreferencesStorePlatform.instance = original;
+      });
+      final untouched = await _saved(tester);
+      if (mode == 'failure') {
+        disk.failWrites = true;
+      } else {
+        disk.holdNext = true;
+      }
+      await tester.tap(find.byKey(const Key('act0_shell_theory_recall_cta')));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const Key('act0_shell_hint_body')),
+        findsNothing,
+        reason: 'Unacknowledged help must not be exposed.',
+      );
+      if (mode == 'failure') {
+        expect(
+          find.text('Help could not be saved. Please try again.'),
+          findsOneWidget,
+        );
+        disk.failWrites = false;
+        final answer = _runner(
+          tester,
+        ).runner.options.singleWhere((o) => o.isCorrect);
+        await _choose(tester, answer.id);
+        final record = _rows(
+          await _saved(tester),
+          'learningEvidenceHistory',
+        ).lastWhere((entry) => entry['taskId'] == _source);
+        expect(
+          Act0LearningEvidenceRecordV1.tryParse(record)!.assistanceKind,
+          Act0DecisionAssistanceV1.legacyUnknown,
+        );
+        return;
+      }
+      expect(
+        disk.held,
+        isNotNull,
+        reason: 'The real production writer must reach the blocked backend.',
+      );
+      if (mode == 'ack') {
+        final answer = _runner(
+          tester,
+        ).runner.options.singleWhere((o) => o.isCorrect);
+        await _choose(tester, answer.id);
+        expect(
+          _runner(tester).runner.selectedOptionId,
+          isNull,
+          reason: 'Grading is blocked while the help transaction is pending.',
+        );
+        disk.release();
+        await tester.runAsync(() async {
+          await _pendingWrites().flush();
+        });
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('act0_shell_hint_body')), findsOneWidget);
+        final saved = await _saved(tester);
+        expect(
+          saved['learningEvidenceHistory'],
+          untouched['learningEvidenceHistory'],
+        );
+        expect(saved['earnedXp'], untouched['earnedXp']);
+        expect(
+          _rows(saved, 'pendingDecisionAssistance').single['assistanceKind'],
+          'quickHint',
+        );
+      } else {
+        await _tap(tester, 'act0_shell_runner_back');
+        await tester.tap(find.text('Home').last);
+        await tester.pumpAndSettle();
+        if (mode == 'reset') {
+          await tester.tap(find.byTooltip('Dev menu'));
+          await tester.pumpAndSettle();
+          await _tap(tester, 'act0_shell_dev_menu_reset_progress');
+          await tester.tap(
+            find.byKey(const Key('act0_shell_dev_menu_reset_confirm')),
+          );
+          await tester.pumpAndSettle();
+        }
+        disk.release();
+        await tester.runAsync(() async {
+          await _pendingWrites().flush();
+        });
+        await tester.pumpAndSettle();
+        expect(
+          find.byKey(const Key('act0_shell_hint_body')),
+          findsNothing,
+          reason: 'A late acknowledgement cannot reopen help after leaving.',
+        );
+        if (mode == 'reset') {
+          expect(find.text('Find my start'), findsOneWidget);
+          await _tap(tester, 'act0_shell_placement_skip_intro');
+          final zero = await _saved(tester);
+          expect(zero['earnedXp'], 0);
+          expect(zero['learningEvidenceHistory'], isEmpty);
+          expect(zero['pendingDecisionAssistance'], isEmpty);
+        } else {
+          await _tap(tester, 'act0_academy_home_leaf_cta');
+          await _advanceToPrompt(tester);
+          final answer = _runner(
+            tester,
+          ).runner.options.singleWhere((o) => o.isCorrect);
+          await _choose(tester, answer.id);
+          final record = _rows(
+            await _saved(tester),
+            'learningEvidenceHistory',
+          ).lastWhere((entry) => entry['taskId'] == _source);
+          expect(
+            Act0LearningEvidenceRecordV1.tryParse(record)!.assistanceKind,
+            Act0DecisionAssistanceV1.legacyUnknown,
+          );
+        }
+      }
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  testWidgets('SIMULATED source identity change cannot carry old local help', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final task = Act0ShellStateV1.sample
+        .worldById('world_1')
+        .lessons
+        .firstWhere((l) => l.lessonId == 'what_poker_is')
+        .taskList
+        .firstWhere((t) => t.taskId == _source);
+    final decisions = <Act0CompletedDecisionV1>[];
+    // Deliberately collide all runner metadata; this tests identity isolation,
+    // not the authored grading of the synthetic second source.
+    Widget host(String sourceId) => MaterialApp(
+      home: Scaffold(
+        body: Act0LessonRunnerShellV1(
+          key: const ValueKey('same-runner-state'),
+          runner: task.runner.copyWith(
+            phase: Act0LessonPhaseV1.drill,
+            teachingStepIndex: task.runner.teachingSteps.length,
+          ),
+          selectedWorldId: 'world_1',
+          selectedLessonId: 'what_poker_is',
+          selectedTaskId: sourceId,
+          selectedTaskFamily: task.resolvedTaskFamily,
+          compositionFamily: task.resolvedCompositionFamily,
+          theoryRecallStep: task.runner.teachingSteps.last,
+          onBack: () {},
+          onContinueTheory: () {},
+          onChooseOption: (_) {},
+          onCompletedDecision: decisions.add,
+          onContinueReview: () {},
+        ),
+      ),
+    );
+    await tester.pumpWidget(host(_source));
+    await tester.pumpAndSettle();
+    await _tap(tester, 'act0_shell_theory_recall_cta');
+    await _tap(tester, 'act0_shell_theory_recall_close_cta');
+    await tester.pumpWidget(host('policy_new_source'));
+    await tester.pumpAndSettle();
+    final answer = _runner(
+      tester,
+    ).runner.options.singleWhere((o) => o.isCorrect);
+    await _choose(tester, answer.id);
+    expect(decisions, hasLength(1));
+    expect(decisions.single.taskId, 'policy_new_source');
+    expect(decisions.single.assistanceKind, Act0DecisionAssistanceV1.none);
+    expect(tester.takeException(), isNull);
+  });
+
+  for (final scenario in const [
+    (route: 'back', exposure: 'quickHint'),
+    (route: 'remount', exposure: 'quickHint'),
+    (route: 'back', exposure: 'theoryRecall'),
+    (route: 'remount', exposure: 'theoryRecall'),
+    (route: 'remount', exposure: 'fullThenQuick'),
+    (route: 'remount', exposure: 'none'),
+  ]) {
+    testWidgets(
+      'SIMULATED pending help ${scenario.exposure} survives ${scenario.route} before answer',
+      (tester) async {
+        await _openPendingHelpDecision(tester);
+        final untouched = await _saved(tester);
+        if (scenario.exposure != 'none') {
+          await _tap(tester, 'act0_shell_theory_recall_cta');
+          if (scenario.exposure != 'quickHint') {
+            await _tap(tester, 'act0_shell_review_full_idea_cta');
+          }
+          await _tap(tester, 'act0_shell_theory_recall_close_cta');
+          if (scenario.exposure == 'fullThenQuick') {
+            await _tap(tester, 'act0_shell_theory_recall_cta');
+            await _tap(tester, 'act0_shell_theory_recall_close_cta');
+          }
+        }
+        final exposed = await _saved(tester);
+        for (final field in [
+          'earnedXp',
+          'completedTaskIds',
+          'learningEvidenceHistory',
+        ]) {
+          expect(
+            exposed[field],
+            untouched[field],
+            reason: 'Opening assistance is not a completed decision.',
+          );
+        }
+        if (scenario.route == 'back') {
+          await _tap(tester, 'act0_shell_runner_back');
+          await tester.tap(find.text('Home').last);
+          await tester.pumpAndSettle();
+        } else {
+          await _remount(tester);
+        }
+        await _tap(tester, 'act0_academy_home_leaf_cta');
+        await _advanceToPrompt(tester);
+        expect(_runner(tester).selectedTaskId, _source);
+        final answer = _runner(
+          tester,
+        ).runner.options.singleWhere((o) => o.isCorrect);
+        await _choose(tester, answer.id);
+        final answered = await _saved(tester);
+        final record = _rows(
+          answered,
+          'learningEvidenceHistory',
+        ).lastWhere((entry) => entry['taskId'] == _source);
+        final expected = scenario.exposure == 'fullThenQuick'
+            ? 'theoryRecall'
+            : scenario.exposure;
+        expect(record['choiceId'], answer.id);
+        expect(record['assistanceKind'], expected);
+        expect(
+          _rows(
+            answered,
+            'pendingDecisionAssistance',
+          ).where((entry) => entry['taskId'] == _source),
+          isEmpty,
+          reason: 'Only the recorded decision consumes its pending help.',
+        );
+        await _tap(tester, 'act0_shell_feedback_continue_cta');
+        await _advanceToTask(tester, _nextTask);
+        await _advanceToPrompt(tester);
+        final nextAnswer = _runner(
+          tester,
+        ).runner.options.singleWhere((o) => o.isCorrect);
+        await _choose(tester, nextAnswer.id);
+        final next = _rows(
+          await _saved(tester),
+          'learningEvidenceHistory',
+        ).lastWhere((entry) => entry['taskId'] == _nextTask);
+        expect(
+          next['assistanceKind'],
+          'none',
+          reason: 'Prior task help must not taint a distinct new decision.',
+        );
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
+  for (final variant in ['legacy19', 'sourceMismatch', 'boundaryMismatch']) {
+    testWidgets('SIMULATED pending help $variant is not independent', (
+      tester,
+    ) async {
+      await _openPendingHelpDecision(tester);
+      await _tap(tester, 'act0_shell_theory_recall_cta');
+      await _tap(tester, 'act0_shell_theory_recall_close_cta');
+      final payload = await _saved(tester);
+      if (variant == 'legacy19') {
+        payload['schemaVersion'] = 19;
+        payload.remove('pendingDecisionAssistance');
+      } else {
+        final pending = _rows(payload, 'pendingDecisionAssistance');
+        expect(pending, hasLength(1));
+        if (variant == 'sourceMismatch') {
+          pending.single['fingerprint'] = 'obsolete-source';
+        } else {
+          pending.single['afterSourceOrder'] =
+              (pending.single['afterSourceOrder'] as int) + 1;
+        }
+        payload['pendingDecisionAssistance'] = pending;
+      }
+      await _replaceCheckpointFixture(tester, payload);
+      await _tap(tester, 'act0_academy_home_leaf_cta');
+      await _advanceToPrompt(tester);
+      expect(_runner(tester).selectedTaskId, _source);
+      final answer = _runner(
+        tester,
+      ).runner.options.singleWhere((o) => o.isCorrect);
+      await _choose(tester, answer.id);
+      final record = _rows(
+        await _saved(tester),
+        'learningEvidenceHistory',
+      ).lastWhere((entry) => entry['taskId'] == _source);
+      expect(
+        Act0LearningEvidenceRecordV1.tryParse(record)!.assistanceKind,
+        Act0DecisionAssistanceV1.legacyUnknown,
+      );
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  for (final variant in ['missing', 'null', 'duplicate', 'unknownKind']) {
+    testWidgets('SIMULATED malformed pending help $variant fails closed', (
+      tester,
+    ) async {
+      await _openPendingHelpDecision(tester);
+      await _tap(tester, 'act0_shell_theory_recall_cta');
+      await _tap(tester, 'act0_shell_theory_recall_close_cta');
+      final payload = await _saved(tester);
+      final pending = _rows(payload, 'pendingDecisionAssistance');
+      expect(pending, hasLength(1));
+      switch (variant) {
+        case 'missing':
+          payload.remove('pendingDecisionAssistance');
+        case 'null':
+          payload['pendingDecisionAssistance'] = null;
+        case 'duplicate':
+          payload['pendingDecisionAssistance'] = [
+            pending.single,
+            pending.single,
+          ];
+        case 'unknownKind':
+          pending.single['assistanceKind'] = 'invented';
+          payload['pendingDecisionAssistance'] = pending;
+      }
+      await _replaceCheckpointFixture(tester, payload);
+      expect(find.byKey(const Key('act0_recovery_options')), findsOneWidget);
+      expect(
+        find.byType(Act0LessonRunnerShellV1),
+        findsNothing,
+        reason: 'Malformed provenance cannot silently become unassisted.',
+      );
+    });
+  }
+
   testWidgets(
     'SIMULATED main AppRoot Back: pending choice and saved miss remain intact',
     (tester) async {
@@ -519,3 +873,90 @@ Map<String, Object?> _stableProgress(Map<String, dynamic> payload) =>
       ])
         key: payload[key],
     };
+
+Future<void> _openPendingHelpDecision(WidgetTester tester) async {
+  SharedPreferences.setMockInitialValues(<String, Object>{});
+  tester.view.physicalSize = const Size(393, 852);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
+  addTearDown(() async {
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+    await tester.runAsync(() async {
+      await _pendingWrites().flush().timeout(const Duration(seconds: 2));
+    });
+  });
+  await tester.pumpWidget(const AppRoot());
+  await tester.pumpAndSettle();
+  await _tap(tester, 'act0_shell_placement_skip_intro');
+  await tester.tap(find.text('Learn').last);
+  await tester.pumpAndSettle();
+  await _tap(tester, 'act0_shell_current_mission_cta');
+  await _advanceToTask(tester, _source);
+  await _advanceToPrompt(tester);
+  expect(_runner(tester).selectedTaskId, _source);
+}
+
+// Explicit in-memory legacy/corruption controls, NEVER native execution proof.
+// Rebuild the real envelope only to exercise AppRoot's production parser/recovery.
+Future<void> _replaceCheckpointFixture(
+  WidgetTester tester,
+  Map<String, dynamic> payload,
+) async {
+  await tester.pumpWidget(const SizedBox.shrink());
+  await tester.pumpAndSettle();
+  await tester.runAsync(() async {
+    await _pendingWrites().flush().timeout(const Duration(seconds: 2));
+    final prefs = await SharedPreferences.getInstance();
+    final previous =
+        jsonDecode(prefs.getString('${_progressKey}_head')!) as Map;
+    final revision = (previous['revision'] as int) + 1;
+    final raw = jsonEncode(payload);
+    final envelope = jsonEncode({
+      'format': 1,
+      'revision': revision,
+      'payload': raw,
+      'digest': sha256
+          .convert(utf8.encode(jsonEncode([1, revision, raw])))
+          .toString(),
+    });
+    await prefs.setString('${_progressKey}_head', envelope);
+    await prefs.setString('${_progressKey}_recovery', envelope);
+    await prefs.setString('${_progressKey}_backup', envelope);
+    await prefs.setString(_progressKey, raw);
+  });
+  await tester.pumpWidget(const AppRoot());
+  await tester.pumpAndSettle();
+}
+
+class _HelpWriteGate extends SharedPreferencesStorePlatform {
+  _HelpWriteGate(this.delegate);
+  final SharedPreferencesStorePlatform delegate;
+  bool holdNext = false;
+  bool failWrites = false;
+  Completer<void>? held;
+  void release() {
+    if (held != null && !held!.isCompleted) held!.complete();
+  }
+
+  @override
+  Future<Map<String, Object>> getAll() => delegate.getAll();
+  @override
+  Future<bool> setValue(String type, String key, Object value) async {
+    if (key.startsWith('flutter.act0_shell_progress_v1')) {
+      if (holdNext) {
+        holdNext = false;
+        held = Completer<void>();
+        await held!.future;
+      }
+      if (failWrites) return false;
+    }
+    return delegate.setValue(type, key, value);
+  }
+
+  @override
+  Future<bool> remove(String key) => delegate.remove(key);
+  @override
+  Future<bool> clear() => delegate.clear();
+}
