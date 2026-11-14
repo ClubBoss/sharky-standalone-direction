@@ -1228,6 +1228,85 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   // The runner sends this synchronously BEFORE onChooseOption/onChooseSeat.
   // Those callbacks own repair receipts and run before onCompletedDecision.
   Act0DecisionAssistanceV1 _choiceAssistanceV1 = Act0DecisionAssistanceV1.none;
+  final Map<String, _Act0PendingDecisionAssistanceV1>
+  _pendingDecisionAssistanceV1 = {};
+  int _sourceEvidenceBoundaryV1(
+    String worldId,
+    String lessonId,
+    String taskId,
+  ) => _learningEvidenceHistoryV1.provenanceRecords
+      .where(
+        (r) =>
+            r.worldId == worldId &&
+            r.lessonId == lessonId &&
+            r.taskId == taskId,
+      )
+      .fold<int>(
+        0,
+        (latest, r) => r.createdOrder > latest ? r.createdOrder : latest,
+      );
+
+  Act0DecisionAssistanceV1 _pendingAssistanceForV1(
+    String worldId,
+    String lessonId,
+    String taskId,
+  ) {
+    final pending =
+        _pendingDecisionAssistanceV1[jsonEncode([worldId, lessonId, taskId])];
+    if (pending == null) return Act0DecisionAssistanceV1.none;
+    final fingerprint = act0CurrentAuthoredSourceFingerprintForIdentityV1(
+      worldId: worldId,
+      lessonId: lessonId,
+      taskId: taskId,
+    );
+    if (fingerprint == null ||
+        fingerprint.isEmpty ||
+        pending.fingerprint != fingerprint ||
+        pending.afterSourceOrder !=
+            _sourceEvidenceBoundaryV1(worldId, lessonId, taskId)) {
+      return Act0DecisionAssistanceV1.legacyUnknown;
+    }
+    return pending.kind;
+  }
+
+  void _retainChoiceAssistanceV1(
+    Act0DecisionAssistanceV1 value, {
+    required String worldId,
+    required String lessonId,
+    required String taskId,
+    Completer<bool>? acknowledgement,
+  }) {
+    final kind = act0MergeDecisionAssistanceV1(
+      _pendingAssistanceForV1(worldId, lessonId, taskId),
+      value,
+    );
+    _choiceAssistanceV1 = kind;
+    if (kind == Act0DecisionAssistanceV1.none ||
+        _phase != Act0LessonPhaseV1.drill ||
+        _selectedOptionId != null) {
+      acknowledgement?.complete(false);
+      return;
+    }
+    final receipt = _Act0PendingDecisionAssistanceV1(
+      worldId: worldId,
+      lessonId: lessonId,
+      taskId: taskId,
+      fingerprint:
+          act0CurrentAuthoredSourceFingerprintForIdentityV1(
+            worldId: worldId,
+            lessonId: lessonId,
+            taskId: taskId,
+          ) ??
+          '',
+      afterSourceOrder: _sourceEvidenceBoundaryV1(worldId, lessonId, taskId),
+      kind: kind,
+    );
+    _pendingDecisionAssistanceV1[receipt.key] = receipt;
+    _persistProgress(acknowledgement: acknowledgement);
+  }
+
+  bool get _choiceHasIndependentProvenanceV1 =>
+      _choiceAssistanceV1 == Act0DecisionAssistanceV1.none;
   bool get _choiceWasAssistedV1 =>
       _choiceAssistanceV1 == Act0DecisionAssistanceV1.quickHint ||
       _choiceAssistanceV1 == Act0DecisionAssistanceV1.theoryRecall;
@@ -3812,6 +3891,39 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _selectedWorldId = selectedWorld.worldId;
       _selectedLessonId = selectedLesson.lessonId;
       _selectedTaskId = selectedTask.taskId;
+      _pendingDecisionAssistanceV1
+        ..clear()
+        ..addEntries(
+          parsed.pendingDecisionAssistance.map(
+            (receipt) => MapEntry(receipt.key, receipt),
+          ),
+        );
+      if (!parsed.hasPendingAssistanceProvenance &&
+          parsed.resumePhase == 'drill' &&
+          parsed.resumeSelectedOptionId == null &&
+          selectedTask.taskId == parsed.selectedTaskId &&
+          !closedTaskIds.contains(selectedTask.taskId)) {
+        // Pre-fix snapshots cannot prove that this unfinished drill was unaided.
+        final receipt = _Act0PendingDecisionAssistanceV1(
+          worldId: selectedWorld.worldId,
+          lessonId: selectedLesson.lessonId,
+          taskId: selectedTask.taskId,
+          fingerprint:
+              act0CurrentAuthoredSourceFingerprintForIdentityV1(
+                worldId: selectedWorld.worldId,
+                lessonId: selectedLesson.lessonId,
+                taskId: selectedTask.taskId,
+              ) ??
+              '',
+          afterSourceOrder: _sourceEvidenceBoundaryV1(
+            selectedWorld.worldId,
+            selectedLesson.lessonId,
+            selectedTask.taskId,
+          ),
+          kind: Act0DecisionAssistanceV1.legacyUnknown,
+        );
+        _pendingDecisionAssistanceV1[receipt.key] = receipt;
+      }
       final hasPriorLessonProgress = selectedLesson.taskList.any(
         (task) => completedTaskIds.contains(task.taskId),
       );
@@ -4252,11 +4364,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     return earnedToday || earnedYesterday ? _persistedStreakDays : 0;
   }
 
-  void _persistProgress() {
+  void _persistProgress({Completer<bool>? acknowledgement}) {
     if (!_usesPersistedProgress ||
         _recoveryBusyV1 ||
         _progressLoadFailed ||
         !_progressRestoredV1) {
+      acknowledgement?.complete(false);
       return;
     }
     _ensureDailyCountDayV1();
@@ -4297,6 +4410,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       dismissedHomeHandoffDay: _dismissedHomeHandoffDay,
       firstValueReturnCarry: _firstValueReceiptCarry,
       learningEvidenceHistory: _learningEvidenceHistoryV1,
+      pendingDecisionAssistance: List.unmodifiable(
+        _pendingDecisionAssistanceV1.values,
+      ),
       lessonRunEvidenceBoundaries: Map<String, int?>.from(
         _lessonRunEvidenceBoundariesV1,
       ),
@@ -4329,11 +4445,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         snapshot.toStorageString(),
         generation,
         diagnosticContext,
+      ).then<void>(
+        (saved) {
+          acknowledgement?.complete(saved);
+        },
+        onError: (Object _, StackTrace __) {
+          acknowledgement?.complete(false);
+        },
       ),
     );
   }
 
-  Future<void> _writePersistedProgress(
+  Future<bool> _writePersistedProgress(
     String snapshot,
     int generation,
     Map<String, Object?> diagnosticContext,
@@ -4343,7 +4466,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _recoveryBusyV1 ||
         _progressLoadFailed ||
         !_progressRestoredV1) {
-      return; // Coalesced requests were not attempted, not failed saves.
+      return false; // Coalesced requests have no durable acknowledgement.
     }
     final acknowledged = await _progressStore.save(snapshot);
     // False is indeterminate, never proof of data loss or an OS-level cause.
@@ -4351,6 +4474,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       ...diagnosticContext,
       'outcome': acknowledged ? 'acknowledged' : 'indeterminate',
     });
+    return acknowledged;
   }
 
   void _appendLearningEvidenceV1(
@@ -4359,6 +4483,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }) {
     final recordedAtUtc = widget.clock.nowUtc();
     final reviewKind = _reviewKindForDecisionV1(decision);
+    final hadCanonicalRecord = _learningEvidenceHistoryV1.provenanceRecords.any(
+      (record) => record.recordId == decision.attemptKey,
+    );
     final wasAlreadyRecorded = _learningEvidenceHistoryV1.records.any(
       (record) => record.recordId == decision.attemptKey,
     );
@@ -4377,6 +4504,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           recordedAtUtc: recordedAtUtc,
           reviewKind: reviewKind,
         );
+    if (!hadCanonicalRecord &&
+        _learningEvidenceHistoryV1.provenanceRecords.any(
+          (record) => record.recordId == decision.attemptKey,
+        )) {
+      // Consume with the appended decision in the SAME durable snapshot.
+      // A rejected/duplicate append must not erase ungraded assistance.
+      _pendingDecisionAssistanceV1.remove(
+        jsonEncode([
+          decision.worldId ?? '',
+          decision.lessonId,
+          decision.taskId,
+        ]),
+      );
+    }
     _reviewMistakeHistoryV1 = _reviewMistakeHistoryV1.appendCompletedDecision(
       decision,
       repairOccurrenceId: repairOccurrenceId,
@@ -5237,6 +5378,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _repairIntentAuditTrailV1.clear();
       _latestCompletedDecisionV1 = null;
       _choiceAssistanceV1 = Act0DecisionAssistanceV1.none;
+      _pendingDecisionAssistanceV1.clear();
       _firstValueReceiptCarry = null;
       _firstValueTodayShownTelemetryKey = '';
       _learningRunV1 = null;
@@ -5908,7 +6050,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 Act0ShellTableVisualVariantV1.refinedDev2 &&
             playTaskAwardXp > 0 &&
             _cleanTaskIds.contains(playSelectedTask?.taskId) &&
-            !_choiceWasAssistedV1 &&
+            _choiceHasIndependentProvenanceV1 &&
             !suppressTaskCompletionToast
         ? Act0RunnerCompletionSummaryV1(
             xpGain: playTaskAwardXp,
@@ -6938,13 +7080,65 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         selectedTask: playSelectedTask,
                                       );
                                     }),
+                                initialChoiceAssistance:
+                                    _pendingAssistanceForV1(
+                                      selectedWorld.worldId,
+                                      selectedLesson.lessonId,
+                                      playSelectedTask.taskId,
+                                    ),
+                                onAssistanceExposureRequested: (_) async {
+                                  if (!_acceptRecoveryCallbackV1(
+                                    callbackEpochV1,
+                                  ))
+                                    return false;
+                                  final ack = Completer<bool>();
+                                  _retainChoiceAssistanceV1(
+                                    Act0DecisionAssistanceV1.legacyUnknown,
+                                    worldId: selectedWorld.worldId,
+                                    lessonId: selectedLesson.lessonId,
+                                    taskId: playSelectedTask.taskId,
+                                    acknowledgement: ack,
+                                  );
+                                  final key = jsonEncode([
+                                    selectedWorld.worldId,
+                                    selectedLesson.lessonId,
+                                    playSelectedTask.taskId,
+                                  ]);
+                                  final receipt =
+                                      _pendingDecisionAssistanceV1[key];
+                                  final saved = await ack.future;
+                                  return saved &&
+                                      _acceptRecoveryCallbackV1(
+                                        callbackEpochV1,
+                                      ) &&
+                                      _tab == Act0ShellTabV1.play &&
+                                      !_showPlayHub &&
+                                      _phase == Act0LessonPhaseV1.drill &&
+                                      _selectedOptionId == null &&
+                                      _selectedWorldId ==
+                                          selectedWorld.worldId &&
+                                      _selectedLessonId ==
+                                          selectedLesson.lessonId &&
+                                      _selectedTaskId ==
+                                          playSelectedTask.taskId &&
+                                      receipt != null &&
+                                      identical(
+                                        _pendingDecisionAssistanceV1[key],
+                                        receipt,
+                                      );
+                                },
                                 onChoiceAssistance: (value) {
                                   if (!_acceptRecoveryCallbackV1(
                                     callbackEpochV1,
                                   ))
                                     return;
 
-                                  _choiceAssistanceV1 = value;
+                                  _retainChoiceAssistanceV1(
+                                    value,
+                                    worldId: selectedWorld.worldId,
+                                    lessonId: selectedLesson.lessonId,
+                                    taskId: playSelectedTask.taskId,
+                                  );
                                 },
                                 onCompletedDecision: (decision) {
                                   if (!_acceptRecoveryCallbackV1(
@@ -7259,7 +7453,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                                   .selectedOption
                                                   ?.isCorrect ??
                                               false) &&
-                                          !_choiceWasAssistedV1;
+                                          _choiceHasIndependentProvenanceV1;
                                       _finishRapidPracticeLoopToHub(
                                         completedLessonId:
                                             selectedLesson.lessonId,
@@ -10209,9 +10403,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'source_task_id': sourceTaskId,
       'recheck_task_id': selectedTask.taskId,
       'result': correct ? 'correct' : 'incorrect',
-      'proof_status': _choiceWasAssistedV1
-          ? 'assisted_not_proven'
-          : 'unassisted',
+      'proof_status':
+          _choiceAssistanceV1 == Act0DecisionAssistanceV1.legacyUnknown
+          ? 'not_verified'
+          : (_choiceWasAssistedV1 ? 'assisted_not_proven' : 'unassisted'),
       'source_surface': 'act0_feedback_cta',
     });
     _emitRecheckCompletedTelemetryV1(
@@ -10467,7 +10662,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }) {
     // The base feedback can still teach the correct action, but a
     // hint-assisted answer must not generate an independent repair receipt.
-    if (_activeRepairTaskId != selectedTask.taskId || _choiceWasAssistedV1) {
+    if (_activeRepairTaskId != selectedTask.taskId ||
+        !_choiceHasIndependentProvenanceV1) {
       return null;
     }
     final sourceTaskId = _activeRepairSourceTaskId ?? selectedTask.taskId;
@@ -11649,7 +11845,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     if (_activeSameSignalRecheckTaskId == selectedTask.taskId &&
-        !_choiceWasAssistedV1) {
+        _choiceHasIndependentProvenanceV1) {
       final finalized = _recordLearningRunSourceRecheckV1(
         sourceTaskId:
             _activeSameSignalRecheckSourceTaskId ?? selectedTask.taskId,
@@ -11673,7 +11869,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _dailyCompletedTaskIds.add(selectedTask.taskId);
       _dailyCompletedRepCount = (_dailyCompletedRepCount + 1).clamp(0, 3);
     }
-    if (option.isCorrect && _choiceWasAssistedV1) {
+    if (option.isCorrect && !_choiceHasIndependentProvenanceV1) {
       // Real learning attempt, not independent repair, transfer or retention.
       // Preserve any existing repair intent; subsequent ordinary task
       // completion may still unlock the next teaching step.
@@ -14514,6 +14710,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   );
 
   void _resetLessonRunMetrics({bool forceFreshProvenance = false}) {
+    if (forceFreshProvenance) {
+      _pendingDecisionAssistanceV1.clear();
+    }
     // Selection of a different lesson must not destroy an unfinished lesson's
     // durable run boundary. Replays of completed lessons start a new run.
     if (forceFreshProvenance) {
@@ -15536,6 +15735,62 @@ class _Act0SessionTelemetrySinkV1 implements Act0TelemetrySinkV1 {
 
 const Set<String> _runnerSessionTelemetryEventsV1 = <String>{'decision_made'};
 
+class _Act0PendingDecisionAssistanceV1 {
+  const _Act0PendingDecisionAssistanceV1({
+    required this.worldId,
+    required this.lessonId,
+    required this.taskId,
+    required this.fingerprint,
+    required this.afterSourceOrder,
+    required this.kind,
+  });
+  final String worldId;
+  final String lessonId;
+  final String taskId;
+  final String fingerprint;
+  final int afterSourceOrder;
+  final Act0DecisionAssistanceV1 kind;
+  String get key => jsonEncode([worldId, lessonId, taskId]);
+  Map<String, Object> toJson() => {
+    'schemaVersion': 1,
+    'worldId': worldId,
+    'lessonId': lessonId,
+    'taskId': taskId,
+    'fingerprint': fingerprint,
+    'afterSourceOrder': afterSourceOrder,
+    'assistanceKind': kind.name,
+  };
+  static _Act0PendingDecisionAssistanceV1? tryParse(Object? raw) {
+    if (raw is! Map ||
+        raw['schemaVersion'] != 1 ||
+        raw['worldId'] is! String ||
+        (raw['worldId'] as String).isEmpty ||
+        raw['lessonId'] is! String ||
+        (raw['lessonId'] as String).isEmpty ||
+        raw['taskId'] is! String ||
+        (raw['taskId'] as String).isEmpty ||
+        raw['fingerprint'] is! String ||
+        raw['afterSourceOrder'] is! int ||
+        (raw['afterSourceOrder'] as int) < 0)
+      return null;
+    final kind = switch (raw['assistanceKind']) {
+      'quickHint' => Act0DecisionAssistanceV1.quickHint,
+      'theoryRecall' => Act0DecisionAssistanceV1.theoryRecall,
+      'legacyUnknown' => Act0DecisionAssistanceV1.legacyUnknown,
+      _ => null,
+    };
+    if (kind == null) return null;
+    return _Act0PendingDecisionAssistanceV1(
+      worldId: raw['worldId'] as String,
+      lessonId: raw['lessonId'] as String,
+      taskId: raw['taskId'] as String,
+      fingerprint: raw['fingerprint'] as String,
+      afterSourceOrder: raw['afterSourceOrder'] as int,
+      kind: kind,
+    );
+  }
+}
+
 class _Act0PersistedProgressV1 {
   const _Act0PersistedProgressV1({
     required this.completedTaskIds,
@@ -15566,6 +15821,8 @@ class _Act0PersistedProgressV1 {
     this.dismissedHomeHandoffDay = '',
     this.firstValueReturnCarry,
     this.learningEvidenceHistory = const Act0LearningEvidenceHistoryV1(),
+    this.pendingDecisionAssistance = const [],
+    this.hasPendingAssistanceProvenance = true,
     this.lessonRunEvidenceBoundaries = const <String, int?>{},
     this.durableRetentionHistory = const Act0DurableRetentionHistoryV1(),
     this.reviewMistakeHistory = const Act0ReviewMistakeHistoryV1(),
@@ -15606,6 +15863,8 @@ class _Act0PersistedProgressV1 {
   final String dismissedHomeHandoffDay;
   final _Act0FirstValueReceiptCarryV1? firstValueReturnCarry;
   final Act0LearningEvidenceHistoryV1 learningEvidenceHistory;
+  final List<_Act0PendingDecisionAssistanceV1> pendingDecisionAssistance;
+  final bool hasPendingAssistanceProvenance;
   final Map<String, int?> lessonRunEvidenceBoundaries;
   final Act0DurableRetentionHistoryV1 durableRetentionHistory;
   final Act0ReviewMistakeHistoryV1 reviewMistakeHistory;
@@ -15626,7 +15885,7 @@ class _Act0PersistedProgressV1 {
     final sortedOpenRepairIntents = openRepairIntents.toList(growable: false)
       ..sort((a, b) => a.sourceTaskId.compareTo(b.sourceTaskId));
     return jsonEncode(<String, Object>{
-      'schemaVersion': 19,
+      'schemaVersion': 20,
       if (suppressLegacyRecheckAfterRecovery)
         'suppressLegacyRecheckAfterRecovery': true,
       'completedTaskIds': sortedTaskIds,
@@ -15665,6 +15924,12 @@ class _Act0PersistedProgressV1 {
       'resumeTeachingStepIndex': resumeTeachingStepIndex,
       'dismissedHomeHandoffKey': dismissedHomeHandoffKey,
       'dismissedHomeHandoffDay': dismissedHomeHandoffDay,
+      'pendingDecisionAssistance': [
+        for (final receipt
+            in (pendingDecisionAssistance.toList()
+              ..sort((a, b) => a.key.compareTo(b.key))))
+          receipt.toJson(),
+      ],
       'learningEvidenceHistory': learningEvidenceHistory.toPayload(),
       'learningEvidenceLineage': learningEvidenceHistory.lineagePayload(),
       'lessonRunEvidenceBoundaries': <String, int?>{
@@ -15720,8 +15985,20 @@ class _Act0PersistedProgressV1 {
         schemaVersion != 16 &&
         schemaVersion != 17 &&
         schemaVersion != 18 &&
-        schemaVersion != 19) {
+        schemaVersion != 19 &&
+        schemaVersion != 20) {
       return null;
+    }
+    final pendingRaw = map['pendingDecisionAssistance'];
+    final pendingDecisionAssistance = <_Act0PendingDecisionAssistanceV1>[];
+    final pendingKeys = <String>{};
+    if (schemaVersion == 20 || map.containsKey('pendingDecisionAssistance')) {
+      if (pendingRaw is! List) return null;
+      for (final value in pendingRaw) {
+        final receipt = _Act0PendingDecisionAssistanceV1.tryParse(value);
+        if (receipt == null || !pendingKeys.add(receipt.key)) return null;
+        pendingDecisionAssistance.add(receipt);
+      }
     }
     final completedTaskIds = _stringSet(map['completedTaskIds']);
     final skippedTaskIds = _stringSet(map['skippedTaskIds']);
@@ -15813,7 +16090,7 @@ class _Act0PersistedProgressV1 {
       map['learningEvidenceHistory'],
       map['learningEvidenceLineage'],
     );
-    if (schemaVersion == 19 &&
+    if ((schemaVersion == 19 || schemaVersion == 20) &&
         (restoredEvidence == null ||
             map['learningEvidenceLineage'] is! Map ||
             map['earnedXp'] is! int ||
@@ -15883,6 +16160,10 @@ class _Act0PersistedProgressV1 {
       dismissedHomeHandoffDay: dismissedHomeHandoffDay,
       firstValueReturnCarry: firstValueReturnCarry,
       learningEvidenceHistory: learningEvidenceHistory,
+      pendingDecisionAssistance: pendingDecisionAssistance,
+      hasPendingAssistanceProvenance: map.containsKey(
+        'pendingDecisionAssistance',
+      ),
       lessonRunEvidenceBoundaries: lessonRunEvidenceBoundaries,
       durableRetentionHistory: durableRetentionHistory,
       reviewMistakeHistory: reviewMistakeHistory,

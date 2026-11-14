@@ -684,7 +684,7 @@ void main() {
     expect(await store.load(), isNull);
   });
 
-  testWidgets('a saved schema 19 decision survives a cold remount', (
+  testWidgets('a saved schema 20 decision survives a cold remount', (
     tester,
   ) async {
     final disk = await _mount(tester, _snapshot());
@@ -695,7 +695,8 @@ void main() {
     await tester.pumpAndSettle();
     await _flush(tester);
     await _drain();
-    expect(_durable(disk)['schemaVersion'], 19);
+    expect(_durable(disk)['schemaVersion'], 20);
+    expect(_durable(disk)['pendingDecisionAssistance'], isEmpty);
     expect(_durable(disk)['learningEvidenceLineage'], isA<Map>());
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pumpAndSettle();
@@ -1146,7 +1147,8 @@ void main() {
       await tester.pumpAndSettle();
       await _flush(tester);
       await _drain();
-      expect(_durable(disk)['schemaVersion'], 19);
+      expect(_durable(disk)['schemaVersion'], 20);
+      expect(_durable(disk)['pendingDecisionAssistance'], isEmpty);
     });
   });
 

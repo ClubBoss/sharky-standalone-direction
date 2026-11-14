@@ -215,6 +215,7 @@ class DependencyControls(unittest.TestCase):
         self.assertEqual(ADAPTER.GUIDE_REVIEWED_RUNNER_SHA256S, frozenset({
             ADAPTER.GUIDE_RUNNER_SHA256,
             '452826ea65dff12c1ae5ee8d9e0e52aa5925762ab0145b1a2bc409c85780ff6c',
+            '876dec37155bdde9aa4883c99f4bc7d9c8170405794bfc2e7cc1f99ecfc07e12',
         }))
         self.assertIn(ADAPTER.digest(ROOT / ADAPTER.GUIDE_RUNNER),
                       ADAPTER.GUIDE_REVIEWED_RUNNER_SHA256S)
@@ -237,9 +238,41 @@ class DependencyControls(unittest.TestCase):
         self.assertEqual(result['runner_sha256'],
                          ADAPTER.digest(self.baseline / ADAPTER.GUIDE_RUNNER))
 
-    def test_back_only_runner_reverses_to_original_reviewed_input(self):
+    def restore_reviewed_back_runner(self, dependencies):
+        # Test provenance only: the production adapter never reads this delta.
+        # Reconstruct the actual preceding reviewed bytes; no digest mocking.
+        runner = self.baseline / ADAPTER.GUIDE_RUNNER
+        self.assertEqual(ADAPTER.digest(runner),
+                         ADAPTER.GUIDE_PENDING_ASSISTANCE_RUNNER_SHA256)
+        delta = ROOT / 'test/fixtures/table_truth/pending_assistance_runner_delta_v1.patch'
+        check = subprocess.run(['git', 'apply', '--reverse', '--check', str(delta)],
+                               cwd=self.baseline, capture_output=True, text=True)
+        self.assertEqual(check.returncode, 0, check.stderr)
+        applied = subprocess.run(['git', 'apply', '--reverse', str(delta)],
+                                 cwd=self.baseline, capture_output=True, text=True)
+        self.assertEqual(applied.returncode, 0, applied.stderr)
+        self.assertEqual(ADAPTER.digest(runner), ADAPTER.GUIDE_BACK_RUNNER_SHA256)
+        dependencies['preserved_existing'][ADAPTER.GUIDE_RUNNER] = ADAPTER.digest(runner)
+        return runner
+
+    def test_pending_runner_reverses_to_exact_preceding_reviewed_input(self):
+        dependencies = self.prepare_synthetic_legacy_guide()
+        self.restore_reviewed_back_runner(dependencies)
+        result = self.call_synthetic_legacy_guide(dependencies)
+        self.assertEqual(result['runner_sha256'], ADAPTER.GUIDE_BACK_RUNNER_SHA256)
+
+    def test_reversible_delta_rejects_unknown_renderer_without_writing(self):
         dependencies = self.prepare_synthetic_legacy_guide()
         runner = self.baseline / ADAPTER.GUIDE_RUNNER
+        runner.write_text(runner.read_text() + '// SYNTHETIC unreviewed drift\n')
+        before = runner.read_bytes()
+        with self.assertRaises(AssertionError):
+            self.restore_reviewed_back_runner(dependencies)
+        self.assertEqual(runner.read_bytes(), before)
+
+    def test_back_only_runner_reverses_to_original_reviewed_input(self):
+        dependencies = self.prepare_synthetic_legacy_guide()
+        runner = self.restore_reviewed_back_runner(dependencies)
         current = runner.read_text()
         self.assertEqual(ADAPTER.digest(runner), ADAPTER.GUIDE_BACK_RUNNER_SHA256)
         new_back = r"""          width: 48,
@@ -273,14 +306,21 @@ class DependencyControls(unittest.TestCase):
         self.assertEqual(before, {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()})
 
     def test_reviewed_runner_rejects_wrong_manifest_without_writing(self):
-        dependencies = self.prepare_synthetic_legacy_guide()
-        runner = self.baseline / ADAPTER.GUIDE_RUNNER
-        self.assertEqual(ADAPTER.digest(runner), ADAPTER.GUIDE_BACK_RUNNER_SHA256)
-        dependencies['preserved_existing'][ADAPTER.GUIDE_RUNNER] = ADAPTER.GUIDE_RUNNER_SHA256
-        before = {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()}
-        with self.assertRaisesRegex(RuntimeError, 'compatibility input changed'):
-            self.call_synthetic_legacy_guide(dependencies)
-        self.assertEqual(before, {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()})
+        for preceding_back in (False, True):
+            with self.subTest(preceding_back=preceding_back):
+                dependencies = self.prepare_synthetic_legacy_guide()
+                runner = self.baseline / ADAPTER.GUIDE_RUNNER
+                if preceding_back:
+                    self.restore_reviewed_back_runner(dependencies)
+                self.assertIn(ADAPTER.digest(runner), {
+                    ADAPTER.GUIDE_BACK_RUNNER_SHA256,
+                    ADAPTER.GUIDE_PENDING_ASSISTANCE_RUNNER_SHA256,
+                })
+                dependencies['preserved_existing'][ADAPTER.GUIDE_RUNNER] = ADAPTER.GUIDE_RUNNER_SHA256
+                before = {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()}
+                with self.assertRaisesRegex(RuntimeError, 'compatibility input changed'):
+                    self.call_synthetic_legacy_guide(dependencies)
+                self.assertEqual(before, {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()})
 
     def test_legacy_guide_input_drift_is_rejected_without_writing(self):
         for relative in (ADAPTER.GUIDE_DEPENDENCY, ADAPTER.GUIDE_RUNNER):

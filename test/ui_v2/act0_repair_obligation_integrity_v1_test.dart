@@ -4,6 +4,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_revi
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
 import 'dart:convert';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_error_contract_v1.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -171,15 +172,57 @@ Future<void> _assistedAnswer(WidgetTester tester, String choice) async {
   final option = runner.runner.options.singleWhere((o) => o.id == choice);
   runner.onChoiceAssistance!(Act0DecisionAssistanceV1.quickHint);
   runner.onChooseOption(option);
+  final attempt =
+      'machine_assisted|${runner.evidenceRunId}|${runner.evidenceNextOrder}';
+  // A rejected completion must not consume exposed help.
   runner.onCompletedDecision!(
     _decisionForRunner(
       runner,
       choice,
-      'machine_assisted|${runner.evidenceRunId}|${runner.evidenceNextOrder}',
+      '$attempt|rejected',
+      assistance: Act0DecisionAssistanceV1.quickHint,
+      includeSkill: false,
+    ),
+  );
+  await tester.pumpAndSettle();
+  final rejected = await _saved(tester);
+  expect(
+    _rows(
+      rejected,
+      'learningEvidenceHistory',
+    ).where((r) => r['recordId'] == '$attempt|rejected'),
+    isEmpty,
+  );
+  expect(
+    _rows(
+      rejected,
+      'pendingDecisionAssistance',
+    ).where((r) => r['taskId'] == runner.selectedTaskId),
+    hasLength(1),
+  );
+  runner.onCompletedDecision!(
+    _decisionForRunner(
+      runner,
+      choice,
+      attempt,
       assistance: Act0DecisionAssistanceV1.quickHint,
     ),
   );
   await tester.pumpAndSettle();
+  final accepted = await _saved(tester);
+  final canonical = _rows(
+    accepted,
+    'learningEvidenceHistory',
+  ).singleWhere((r) => r['recordId'] == attempt);
+  expect(canonical['assistanceKind'], 'quickHint');
+  expect(canonical['skillAtomId'], isNotEmpty);
+  expect(
+    _rows(
+      accepted,
+      'pendingDecisionAssistance',
+    ).where((r) => r['taskId'] == runner.selectedTaskId),
+    isEmpty,
+  );
 }
 
 Act0CompletedDecisionV1 _decisionForRunner(
@@ -187,8 +230,19 @@ Act0CompletedDecisionV1 _decisionForRunner(
   String choice,
   String attempt, {
   Act0DecisionAssistanceV1 assistance = Act0DecisionAssistanceV1.none,
+  bool includeSkill = true,
 }) {
   final option = runner.runner.options.singleWhere((o) => o.id == choice);
+  final receipt = act0FirstValueSkillReceiptForRunnerV1(
+    runner: runner.runner,
+    option: option,
+    taskFamily: runner.selectedTaskFamily,
+  );
+  final concept = act0ConceptErrorDefinitionForTaskV1(
+    worldId: runner.selectedWorldId ?? '',
+    lessonId: runner.selectedLessonId!,
+    taskId: runner.selectedTaskId!,
+  );
   return Act0CompletedDecisionV1(
     attemptKey: attempt,
     worldId: runner.selectedWorldId,
@@ -204,6 +258,11 @@ Act0CompletedDecisionV1 _decisionForRunner(
     resultKind: option.isCorrect ? 'correct' : 'incorrect',
     errorType: option.isCorrect ? 'none' : null,
     assistanceKind: assistance,
+    skillAtomId: includeSkill
+        ? receipt?.skillAtomId ?? concept?.eligibleRepairFamily
+        : null,
+    repairFocusId: receipt?.sourceSignalId ?? concept?.id,
+    missedSignalId: receipt?.sourceSignalId ?? concept?.id,
   );
 }
 
