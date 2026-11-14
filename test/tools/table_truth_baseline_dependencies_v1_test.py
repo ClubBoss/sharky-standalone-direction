@@ -217,6 +217,7 @@ class DependencyControls(unittest.TestCase):
             '452826ea65dff12c1ae5ee8d9e0e52aa5925762ab0145b1a2bc409c85780ff6c',
             '876dec37155bdde9aa4883c99f4bc7d9c8170405794bfc2e7cc1f99ecfc07e12',
             '1b4d3efd6cae8b5eabe38aa52f345959b405ee881a8c5c746d5e543997480bb2',
+            'ad14bd86c7770e1810b2f5d3149c5a4fb7a470b5dbcdeb793c248aa5cc30e118',
         }))
         self.assertIn(ADAPTER.digest(ROOT / ADAPTER.GUIDE_RUNNER),
                       ADAPTER.GUIDE_REVIEWED_RUNNER_SHA256S)
@@ -229,7 +230,8 @@ class DependencyControls(unittest.TestCase):
         self.assertEqual(guide.read_text().replace(
             ADAPTER.GUIDE_COMPATIBLE_CONSTRUCTOR, ADAPTER.GUIDE_CONSTRUCTOR), before)
         self.assertIn('bool scrollSupport = false,', ADAPTER.GUIDE_COMPATIBLE_CONSTRUCTOR)
-        self.assertIn(f"assert(!scrollSupport, '{ADAPTER.GUIDE_SENTINEL}')",
+        self.assertIn('bool focusPointsUp = false,', ADAPTER.GUIDE_COMPATIBLE_CONSTRUCTOR)
+        self.assertIn(f"assert(!scrollSupport && !focusPointsUp, '{ADAPTER.GUIDE_SENTINEL}')",
                       ADAPTER.GUIDE_COMPATIBLE_CONSTRUCTOR)
         self.assertEqual(guide.read_text().count(ADAPTER.GUIDE_SENTINEL), 1)
         self.assertEqual(result['after_sha256'], ADAPTER.digest(guide))
@@ -239,9 +241,33 @@ class DependencyControls(unittest.TestCase):
         self.assertEqual(result['runner_sha256'],
                          ADAPTER.digest(self.baseline / ADAPTER.GUIDE_RUNNER))
 
+    def restore_reviewed_full_idea_runner(self, dependencies):
+        # Reconstruct the exact preceding source; admission never trusts a delta.
+        runner = self.baseline / ADAPTER.GUIDE_RUNNER
+        self.assertEqual(ADAPTER.digest(runner),
+                         ADAPTER.GUIDE_FEEDBACK_CLEARANCE_RUNNER_SHA256)
+        delta = ROOT / 'test/fixtures/table_truth/feedback_clearance_runner_delta_v1.patch'
+        check = subprocess.run(['git', 'apply', '--reverse', '--check', str(delta)],
+                               cwd=self.baseline, capture_output=True, text=True)
+        self.assertEqual(check.returncode, 0, check.stderr)
+        applied = subprocess.run(['git', 'apply', '--reverse', str(delta)],
+                                 cwd=self.baseline, capture_output=True, text=True)
+        self.assertEqual(applied.returncode, 0, applied.stderr)
+        self.assertEqual(ADAPTER.digest(runner),
+                         ADAPTER.GUIDE_FULL_IDEA_TARGET_RUNNER_SHA256)
+        dependencies['preserved_existing'][ADAPTER.GUIDE_RUNNER] = ADAPTER.digest(runner)
+        return runner
+
+    def test_feedback_clearance_reverses_to_exact_preceding_reviewed_input(self):
+        dependencies = self.prepare_synthetic_legacy_guide()
+        self.restore_reviewed_full_idea_runner(dependencies)
+        result = self.call_synthetic_legacy_guide(dependencies)
+        self.assertEqual(result['runner_sha256'],
+                         ADAPTER.GUIDE_FULL_IDEA_TARGET_RUNNER_SHA256)
+
     def restore_reviewed_pending_runner(self, dependencies):
         # Test-only reconstruction. Production admission remains exact-hash-only.
-        runner = self.baseline / ADAPTER.GUIDE_RUNNER
+        runner = self.restore_reviewed_full_idea_runner(dependencies)
         self.assertEqual(ADAPTER.digest(runner),
                          ADAPTER.GUIDE_FULL_IDEA_TARGET_RUNNER_SHA256)
         delta = ROOT / 'test/fixtures/table_truth/full_idea_target_runner_delta_v1.patch'
@@ -331,7 +357,7 @@ class DependencyControls(unittest.TestCase):
         self.assertEqual(before, {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()})
 
     def test_reviewed_runner_rejects_wrong_manifest_without_writing(self):
-        for revision in ('current_target', 'pending_assistance', 'preceding_back'):
+        for revision in ('current_clearance', 'current_target', 'pending_assistance', 'preceding_back'):
             with self.subTest(revision=revision):
                 dependencies = self.prepare_synthetic_legacy_guide()
                 runner = self.baseline / ADAPTER.GUIDE_RUNNER
@@ -339,10 +365,13 @@ class DependencyControls(unittest.TestCase):
                     self.restore_reviewed_back_runner(dependencies)
                 elif revision == 'pending_assistance':
                     self.restore_reviewed_pending_runner(dependencies)
+                elif revision == 'current_target':
+                    self.restore_reviewed_full_idea_runner(dependencies)
                 self.assertIn(ADAPTER.digest(runner), {
                     ADAPTER.GUIDE_BACK_RUNNER_SHA256,
                     ADAPTER.GUIDE_PENDING_ASSISTANCE_RUNNER_SHA256,
                     ADAPTER.GUIDE_FULL_IDEA_TARGET_RUNNER_SHA256,
+                    ADAPTER.GUIDE_FEEDBACK_CLEARANCE_RUNNER_SHA256,
                 })
                 dependencies['preserved_existing'][ADAPTER.GUIDE_RUNNER] = ADAPTER.GUIDE_RUNNER_SHA256
                 before = {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()}

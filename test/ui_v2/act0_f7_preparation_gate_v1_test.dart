@@ -62,6 +62,7 @@ void main() {
     AssetBundle? bundle,
     bool enabled = true,
     VoidCallback? choose,
+    Widget Function(BuildContext, bool)? foreground,
   }) async {
     t.view.physicalSize = const Size(393, 852);
     t.view.devicePixelRatio = 1;
@@ -75,6 +76,7 @@ void main() {
               Expanded(
                 child: Act0F7SceneGateV1(
                   source: input,
+                  foregroundBuilder: foreground,
                   store: images,
                   assetBundle: bundle,
                   enabled: enabled,
@@ -106,6 +108,96 @@ void main() {
     );
     await t.pump();
   }
+
+  testWidgets(
+    'foreground follows actual scene mode without losing control state',
+    (t) async {
+      final images = store();
+      addTearDown(images.clear);
+      final delayed = _Deferred();
+      Widget foreground(BuildContext context, bool registered) =>
+          _ForegroundProbe(registered: registered);
+      await mount(
+        t,
+        input: source('pending-foreground'),
+        images: images,
+        bundle: delayed,
+        foreground: foreground,
+      );
+      final probe = t.state<_ForegroundProbeState>(
+        find.byType(_ForegroundProbe),
+      );
+      expect(find.text('mode:false count:0'), findsOneWidget);
+      await t.tap(find.byKey(const Key('foreground-action')));
+      await t.pump();
+      expect(find.text('mode:false count:1'), findsOneWidget);
+      await t.runAsync(() async {
+        delayed.done.complete(
+          ByteData.sublistView(File(profile.assetPath).readAsBytesSync()),
+        );
+        await images.warmUp();
+      });
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('registered')), findsOneWidget);
+      expect(find.text('mode:true count:1'), findsOneWidget);
+      expect(
+        t.state<_ForegroundProbeState>(find.byType(_ForegroundProbe)),
+        same(probe),
+      );
+      await mount(
+        t,
+        input: source('pending-foreground', empty: true),
+        images: images,
+        foreground: foreground,
+      );
+      expect(find.text('mode:false count:1'), findsOneWidget);
+      await mount(
+        t,
+        input: source('pending-foreground'),
+        images: images,
+        foreground: foreground,
+      );
+      expect(find.text('mode:false count:1'), findsOneWidget);
+      await mount(
+        t,
+        input: source('new-foreground'),
+        images: images,
+        foreground: foreground,
+      );
+      expect(find.text('mode:true count:1'), findsOneWidget);
+      await mount(
+        t,
+        input: source('disabled-foreground'),
+        images: images,
+        enabled: false,
+        foreground: foreground,
+      );
+      expect(find.text('mode:false count:1'), findsOneWidget);
+      final missing = store();
+      addTearDown(missing.clear);
+      await t.runAsync(() => missing.warmUp(bundle: _Missing()));
+      await mount(
+        t,
+        input: source('missing-foreground'),
+        images: missing,
+        foreground: foreground,
+      );
+      expect(find.text('mode:false count:1'), findsOneWidget);
+      expect(
+        t.state<_ForegroundProbeState>(find.byType(_ForegroundProbe)),
+        same(probe),
+      );
+      expect(
+        find.byKey(const Key('foreground-action')).hitTestable(),
+        findsOneWidget,
+      );
+      expect(
+        t.getSize(find.byKey(const Key('foreground-action'))).height,
+        greaterThanOrEqualTo(48),
+      );
+      expect(t.takeException(), isNull);
+    },
+  );
 
   testWidgets(
     'decoded PNG selects one scenery branch and keeps answer callback',
@@ -254,5 +346,28 @@ void main() {
       expect(find.byKey(const Key('registered')), findsNothing);
       expect(t.takeException(), isNull);
     },
+  );
+}
+
+class _ForegroundProbe extends StatefulWidget {
+  const _ForegroundProbe({required this.registered});
+  final bool registered;
+  @override
+  State<_ForegroundProbe> createState() => _ForegroundProbeState();
+}
+
+class _ForegroundProbeState extends State<_ForegroundProbe> {
+  int count = 0;
+  @override
+  Widget build(BuildContext context) => Align(
+    alignment: Alignment.topRight,
+    child: SizedBox(
+      height: 48,
+      child: TextButton(
+        key: const Key('foreground-action'),
+        onPressed: () => setState(() => count++),
+        child: Text('mode:${widget.registered} count:$count'),
+      ),
+    ),
   );
 }

@@ -12,7 +12,8 @@ import 'act0_scene_profile_v1.dart';
 typedef Act0F7RegisteredSceneBuilderV1 =
     Widget Function(BuildContext, ui.Image, Act0SceneProfileV1);
 
-/// Scene-only selection. Keep the Runner's controls/feedback outside this gate.
+/// Source-owned scene selection. An optional foreground can follow the actual
+/// rendered mode without reimplementing image readiness or compatibility.
 /// The complete task inventory is preflighted before decoding. A fallback is
 /// latched until a new task/attempt key, even if a later frame becomes suitable.
 class Act0F7SceneGateV1 extends StatefulWidget {
@@ -21,6 +22,7 @@ class Act0F7SceneGateV1 extends StatefulWidget {
     required this.source,
     required this.originalBuilder,
     required this.registeredBuilder,
+    this.foregroundBuilder,
     this.enabled = kAct0F7TableScenePreview,
     this.profile = act0PremiumTableSceneProfileV1,
     this.store,
@@ -30,6 +32,7 @@ class Act0F7SceneGateV1 extends StatefulWidget {
   final Act0F7SceneSourceV1 source;
   final WidgetBuilder originalBuilder;
   final Act0F7RegisteredSceneBuilderV1 registeredBuilder;
+  final Widget Function(BuildContext, bool registered)? foregroundBuilder;
   final bool enabled;
   final Act0SceneProfileV1 profile;
   final Act0SceneSinglePlateImageStoreV1? store;
@@ -120,18 +123,25 @@ class _Act0F7SceneGateStateV1 extends State<Act0F7SceneGateV1> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_resolved) {
-      // Seats can be answer controls too. Keep the accepted procedural scene
-      // usable while decoding, just as for a missing/incompatible plate.
-      return KeyedSubtree(
-        key: const Key('act0_f7_scene_loading'),
-        child: widget.originalBuilder(context),
-      );
-    }
     final image = _image;
-    return image == null
-        ? widget.originalBuilder(context)
-        : widget.registeredBuilder(context, image, _profile);
+    final registered = _resolved && image != null;
+    final scene = !_resolved
+        ? KeyedSubtree(
+            key: const Key('act0_f7_scene_loading'),
+            child: widget.originalBuilder(context),
+          )
+        : registered
+        ? widget.registeredBuilder(context, image, _profile)
+        : widget.originalBuilder(context);
+    final foreground = widget.foregroundBuilder;
+    if (foreground == null) return scene;
+    // Keep the foreground in one slot while the scene resolves. Its state and
+    // source-owned callbacks remain owned by the caller, never by image decode.
+    return Stack(
+      fit: StackFit.expand,
+      clipBehavior: Clip.none,
+      children: [scene, foreground(context, registered)],
+    );
   }
 }
 

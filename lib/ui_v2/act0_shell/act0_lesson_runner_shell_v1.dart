@@ -4250,7 +4250,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       );
     }
 
-    Widget buildIntegratedPrompt() {
+    Widget buildIntegratedPrompt({bool focusPointsUp = false}) {
       // Academy scene copy only; legacy table locale helpers remain frozen.
       final isRu = act0AcademyLanguageV1(context) == 'ru';
       final phase = isTheory || isTeaching
@@ -4408,166 +4408,214 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         headline: headline,
         support: support,
         scrollSupport: showAsm05ModelAssumptions,
+        focusPointsUp: focusPointsUp,
         focusLabel: focusLabel,
         progressLabel: progressLabel,
       );
     }
 
-    final runnerScreen = Column(
-      key: const Key('act0_shell_runner_screen'),
-      children: [
-        SizedBox.shrink(
-          key: Key('act0_shell_runner_interaction_${interactionMode.name}'),
-        ),
-        SizedBox.shrink(
-          key: Key('act0_shell_runner_composition_${_compositionFamily.name}'),
-        ),
-        SizedBox.shrink(
-          key: Key('act0_shell_runner_framing_${framingProfile.name}'),
-        ),
-        SizedBox.shrink(
-          key: Key('act0_shell_runner_viewport_${viewportFamily.name}'),
-        ),
-        SizedBox.shrink(
-          key: Key(
-            'act0_shell_runner_envelope_${taskCycleEnvelope.familyName}',
-          ),
-        ),
-        SizedBox.shrink(
-          key: Key('act0_shell_runner_pressure_$viewportPressureReason'),
-        ),
-        SizedBox.shrink(
-          key: Key(
-            'act0_shell_runner_action_dock_compact_$compactAnswerListDecision',
-          ),
-        ),
-        SizedBox.shrink(
-          key: Key(
-            'act0_shell_runner_prompt_panel_compact_$compactAnswerListDecision',
-          ),
-        ),
-        SizedBox.shrink(
-          key: Key('act0_shell_runner_hint_compact_$hintCompact'),
-        ),
-        if (compactAnswerListDecision)
-          const SizedBox.shrink(
-            key: Key('act0_shell_compact_answer_list_branch'),
-          ),
-        if (_usesCanonicalIntegratedLearningSceneV1 &&
-            (isTheory || isDrill || isReview))
-          _RunnerProgressV1(runner: runner, onBack: _handleRunnerBackV1),
-        if (_usesCanonicalIntegratedLearningSceneV1 &&
-            usesSharedActiveRunnerAllocation &&
-            (isTheory || isDrill || isReview)) ...[
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          buildIntegratedPrompt(),
-        ],
-        if (taskCycleEnvelope.usesFixedLowerSlot &&
-            !usesSharedActiveRunnerAllocation)
-          Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final lowerSlotHeight = taskCycleEnvelope.lowerSlotHeightFor(
-                  constraints.maxHeight,
-                );
-                final upperSlotHeight = math.max(
-                  0.0,
-                  constraints.maxHeight - lowerSlotHeight,
-                );
-                final tableMaxHeight = math.max(
-                  0.0,
-                  upperSlotHeight -
-                      _runnerUpperStageChromeHeightV1(
-                        showTopInstructionCard: showTopInstructionCard,
-                        isRefinedDev2: isRefinedDev2,
-                        compactTableStageTopInset: compactTableStageTopInset,
-                      ),
-                );
-                return Column(
-                  children: [
-                    SizedBox(
-                      height: upperSlotHeight,
-                      child: buildRunnerStage(maxTableHeight: tableMaxHeight),
+    Widget buildRunnerScreen({bool registeredScene = false}) {
+      final dockIntegratedFeedbackGuide =
+          _usesCanonicalIntegratedLearningSceneV1 &&
+          usesSharedActiveRunnerAllocation &&
+          isReview &&
+          registeredScene;
+
+      Widget buildIntegratedLowerSurface() {
+        final actionDock = buildRunnerActionDock(
+          sceneAttachedShelf: usesSceneAttachedShelfV1,
+        );
+        if (!dockIntegratedFeedbackGuide) return actionDock;
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              key: const Key('act0_shell_feedback_guide_viewport'),
+              // Reserve the live Hero label even when the repair action wraps.
+              height: 88,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      key: const Key('act0_shell_feedback_guide_scroll'),
+                      primary: false,
+                      physics: const ClampingScrollPhysics(),
+                      child: buildIntegratedPrompt(focusPointsUp: true),
                     ),
-                    SizedBox(
-                      height: lowerSlotHeight,
-                      child: buildRunnerActionDock(),
-                    ),
-                  ],
-                );
-              },
+                  ),
+                  const Icon(Icons.unfold_more_rounded, size: 14),
+                ],
+              ),
             ),
-          )
-        else if (usesSharedActiveRunnerAllocation) ...[
-          // B7 canonical scene composition.
-          //
-          // The runner column no longer allocates the table any height at all.
-          // It reserves a transparent window onto the world plane, which is
-          // painted behind this column and owned solely by
-          // `Act0SceneCameraV1`. That is what closes
-          // `TABLE_GEOMETRY_INVARIANT_V1`: review states can still claim a
-          // different amount of vertical space, but there is no longer a path
-          // by which that claim can reach the physical table.
-          const Expanded(
-            child: SizedBox.expand(key: Key('act0_shell_scene_window')),
+            actionDock,
+          ],
+        );
+      }
+
+      return Column(
+        key: const Key('act0_shell_runner_screen'),
+        children: [
+          SizedBox.shrink(
+            key: Key('act0_shell_runner_interaction_${interactionMode.name}'),
           ),
-          KeyedSubtree(
-            key: const Key('act0_shell_shared_runner_cycle_envelope'),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Positioned(
-                  top: -14,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: IgnorePointer(
-                    child: Container(
-                      key: const Key('act0_integrated_scene_action_foreground'),
-                      decoration: BoxDecoration(
-                        // Scene-attached control shelf: one top boundary, no
-                        // all-around card, and the room stays visible through
-                        // the top of the shelf so the scene reads as
-                        // continuing behind the controls.
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: <Color>[
-                            Act0ShellTokensV1.surface2.withValues(alpha: 0.62),
-                            Act0ShellTokensV1.surface2.withValues(alpha: 0.95),
-                            Act0ShellTokensV1.surface,
-                          ],
-                          stops: const <double>[0, 0.34, 1],
+          SizedBox.shrink(
+            key: Key(
+              'act0_shell_runner_composition_${_compositionFamily.name}',
+            ),
+          ),
+          SizedBox.shrink(
+            key: Key('act0_shell_runner_framing_${framingProfile.name}'),
+          ),
+          SizedBox.shrink(
+            key: Key('act0_shell_runner_viewport_${viewportFamily.name}'),
+          ),
+          SizedBox.shrink(
+            key: Key(
+              'act0_shell_runner_envelope_${taskCycleEnvelope.familyName}',
+            ),
+          ),
+          SizedBox.shrink(
+            key: Key('act0_shell_runner_pressure_$viewportPressureReason'),
+          ),
+          SizedBox.shrink(
+            key: Key(
+              'act0_shell_runner_action_dock_compact_$compactAnswerListDecision',
+            ),
+          ),
+          SizedBox.shrink(
+            key: Key(
+              'act0_shell_runner_prompt_panel_compact_$compactAnswerListDecision',
+            ),
+          ),
+          SizedBox.shrink(
+            key: Key('act0_shell_runner_hint_compact_$hintCompact'),
+          ),
+          if (compactAnswerListDecision)
+            const SizedBox.shrink(
+              key: Key('act0_shell_compact_answer_list_branch'),
+            ),
+          if (_usesCanonicalIntegratedLearningSceneV1 &&
+              (isTheory || isDrill || isReview))
+            _RunnerProgressV1(runner: runner, onBack: _handleRunnerBackV1),
+          if (_usesCanonicalIntegratedLearningSceneV1 &&
+              usesSharedActiveRunnerAllocation &&
+              !dockIntegratedFeedbackGuide &&
+              (isTheory || isDrill || isReview)) ...[
+            const SizedBox(height: Act0ShellTokensV1.gapXs),
+            buildIntegratedPrompt(),
+          ],
+          if (taskCycleEnvelope.usesFixedLowerSlot &&
+              !usesSharedActiveRunnerAllocation)
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final lowerSlotHeight = taskCycleEnvelope.lowerSlotHeightFor(
+                    constraints.maxHeight,
+                  );
+                  final upperSlotHeight = math.max(
+                    0.0,
+                    constraints.maxHeight - lowerSlotHeight,
+                  );
+                  final tableMaxHeight = math.max(
+                    0.0,
+                    upperSlotHeight -
+                        _runnerUpperStageChromeHeightV1(
+                          showTopInstructionCard: showTopInstructionCard,
+                          isRefinedDev2: isRefinedDev2,
+                          compactTableStageTopInset: compactTableStageTopInset,
                         ),
-                        border: Border(
-                          top: BorderSide(
-                            color: Act0ShellTokensV1.primary.withValues(
-                              alpha: 0.34,
+                  );
+                  return Column(
+                    children: [
+                      SizedBox(
+                        height: upperSlotHeight,
+                        child: buildRunnerStage(maxTableHeight: tableMaxHeight),
+                      ),
+                      SizedBox(
+                        height: lowerSlotHeight,
+                        child: buildRunnerActionDock(),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            )
+          else if (usesSharedActiveRunnerAllocation) ...[
+            // B7 canonical scene composition.
+            //
+            // The runner column no longer allocates the table any height at all.
+            // It reserves a transparent window onto the world plane, which is
+            // painted behind this column and owned solely by
+            // `Act0SceneCameraV1`. That is what closes
+            // `TABLE_GEOMETRY_INVARIANT_V1`: review states can still claim a
+            // different amount of vertical space, but there is no longer a path
+            // by which that claim can reach the physical table.
+            const Expanded(
+              child: SizedBox.expand(key: Key('act0_shell_scene_window')),
+            ),
+            KeyedSubtree(
+              key: const Key('act0_shell_shared_runner_cycle_envelope'),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Positioned(
+                    top: -14,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: IgnorePointer(
+                      child: Container(
+                        key: const Key(
+                          'act0_integrated_scene_action_foreground',
+                        ),
+                        decoration: BoxDecoration(
+                          // Scene-attached control shelf: one top boundary, no
+                          // all-around card, and the room stays visible through
+                          // the top of the shelf so the scene reads as
+                          // continuing behind the controls.
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: <Color>[
+                              Act0ShellTokensV1.surface2.withValues(
+                                alpha: 0.62,
+                              ),
+                              Act0ShellTokensV1.surface2.withValues(
+                                alpha: 0.95,
+                              ),
+                              Act0ShellTokensV1.surface,
+                            ],
+                            stops: const <double>[0, 0.34, 1],
+                          ),
+                          border: Border(
+                            top: BorderSide(
+                              color: Act0ShellTokensV1.primary.withValues(
+                                alpha: 0.34,
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                KeyedSubtree(
-                  key: const Key('act0_shell_shared_runner_lower_surface'),
-                  child: buildRunnerActionDock(
-                    sceneAttachedShelf: usesSceneAttachedShelfV1,
+                  KeyedSubtree(
+                    key: const Key('act0_shell_shared_runner_lower_surface'),
+                    child: buildIntegratedLowerSurface(),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ] else ...[
-          Expanded(child: buildRunnerStage()),
-          buildRunnerActionDock(),
+          ] else ...[
+            Expanded(child: buildRunnerStage()),
+            buildRunnerActionDock(),
+          ],
         ],
-      ],
-    );
+      );
+    }
+
     if (!_usesCanonicalIntegratedLearningSceneV1 ||
         !usesSharedActiveRunnerAllocation) {
-      return runnerScreen;
+      return buildRunnerScreen();
     }
     // B7: world plane first, interaction plane on top.
     //
@@ -4624,90 +4672,81 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           ),
       },
     );
-    return Stack(
-      fit: StackFit.expand,
-      clipBehavior: Clip.none,
-      children: [
-        Act0F7SceneGateV1(
-          source: source,
-          enabled:
-              kAct0F7TableScenePreview &&
-              Localizations.localeOf(context).languageCode == 'en',
-          originalBuilder: originalScene,
-          registeredBuilder: (context, image, profile) => LayoutBuilder(
-            key: const Key('act0_f7_registered_scene'),
-            builder: (context, constraints) {
-              final registration = profile.register(constraints.biggest);
-              final scrimBottom = profile.headerScrimBottom;
-              final shelfTop = profile.controlShelfTop;
-              return Stack(
-                fit: StackFit.expand,
-                children: [
-                  IgnorePointer(
-                    child: CustomPaint(
-                      key: const Key('act0_f7_baked_room_cast_hero'),
-                      painter: Act0F7RegisteredScenePainterV1(
-                        image: image,
-                        registration: registration,
-                      ),
-                    ),
+    return Act0F7SceneGateV1(
+      source: source,
+      enabled:
+          kAct0F7TableScenePreview &&
+          Localizations.localeOf(context).languageCode == 'en',
+      originalBuilder: originalScene,
+      registeredBuilder: (context, image, profile) => LayoutBuilder(
+        key: const Key('act0_f7_registered_scene'),
+        builder: (context, constraints) {
+          final registration = profile.register(constraints.biggest);
+          final scrimBottom = profile.headerScrimBottom;
+          final shelfTop = profile.controlShelfTop;
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              IgnorePointer(
+                child: CustomPaint(
+                  key: const Key('act0_f7_baked_room_cast_hero'),
+                  painter: Act0F7RegisteredScenePainterV1(
+                    image: image,
+                    registration: registration,
                   ),
-                  if (scrimBottom != null)
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      top: 0,
-                      height: registration.map(Offset(0, scrimBottom)).dy,
-                      child: IgnorePointer(
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Act0ShellTokensV1.surface.withValues(
-                                  alpha: .86,
-                                ),
-                                Act0ShellTokensV1.surface.withValues(alpha: 0),
-                              ],
-                            ),
-                          ),
+                ),
+              ),
+              if (scrimBottom != null)
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  height: registration.map(Offset(0, scrimBottom)).dy,
+                  child: IgnorePointer(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Act0ShellTokensV1.surface.withValues(alpha: .86),
+                            Act0ShellTokensV1.surface.withValues(alpha: 0),
+                          ],
                         ),
                       ),
                     ),
-                  if (shelfTop != null)
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      top: registration.map(Offset(0, shelfTop)).dy,
-                      bottom: 0,
-                      child: const IgnorePointer(
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Color(0x00000000),
-                                Act0ShellTokensV1.surface,
-                              ],
-                            ),
-                          ),
+                  ),
+                ),
+              if (shelfTop != null)
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  top: registration.map(Offset(0, shelfTop)).dy,
+                  bottom: 0,
+                  child: const IgnorePointer(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Color(0x00000000),
+                            Act0ShellTokensV1.surface,
+                          ],
                         ),
                       ),
                     ),
-                  Positioned.fill(
-                    child: buildPhysicalTableV1(
-                      sceneRegistration: registration,
-                    ),
                   ),
-                ],
-              );
-            },
-          ),
-        ),
-        runnerScreen,
-      ],
+                ),
+              Positioned.fill(
+                child: buildPhysicalTableV1(sceneRegistration: registration),
+              ),
+            ],
+          );
+        },
+      ),
+      foregroundBuilder: (context, registered) =>
+          buildRunnerScreen(registeredScene: registered),
     );
   }
 }

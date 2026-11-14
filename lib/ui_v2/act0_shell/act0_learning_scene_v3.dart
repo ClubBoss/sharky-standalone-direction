@@ -202,6 +202,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
     required this.headline,
     required this.support,
     this.scrollSupport = false,
+    this.focusPointsUp = false,
     this.focusLabel,
     this.progressLabel,
   });
@@ -230,6 +231,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
   final String support;
   // Opt in only for complete source-owned model premises, never answer hints.
   final bool scrollSupport;
+  final bool focusPointsUp;
   final String? focusLabel;
   final String? progressLabel;
 
@@ -311,8 +313,14 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
         Text(
           headline,
           key: const Key('act0_integrated_scene_prompt'),
-          maxLines: showSpokenSurface ? 3 : (enlarged ? 3 : 2),
-          overflow: TextOverflow.ellipsis,
+          maxLines: focusPointsUp
+              ? null
+              : showSpokenSurface
+              ? 3
+              : (enlarged ? 3 : 2),
+          overflow: focusPointsUp
+              ? TextOverflow.visible
+              : TextOverflow.ellipsis,
           style: Act0ShellTokensV1.body.copyWith(
             color: Act0ShellTokensV1.text,
             fontSize: showSpokenSurface
@@ -361,8 +369,14 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
             Text(
               support,
               key: const Key('act0_learning_scene_v3_support'),
-              maxLines: showSpokenSurface ? 3 : (enlarged ? 3 : 2),
-              overflow: TextOverflow.ellipsis,
+              maxLines: focusPointsUp
+                  ? null
+                  : showSpokenSurface
+                  ? 3
+                  : (enlarged ? 3 : 2),
+              overflow: focusPointsUp
+                  ? TextOverflow.visible
+                  : TextOverflow.ellipsis,
               style: Act0ShellTokensV1.muted.copyWith(
                 color: Act0ShellTokensV1.textMuted,
                 fontSize: showSpokenSurface
@@ -382,7 +396,7 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(top: showSpokenSurface ? 1 : 0),
                 child: Icon(
-                  Icons.south_rounded,
+                  focusPointsUp ? Icons.north_rounded : Icons.south_rounded,
                   size: showSpokenSurface ? 13 : 12,
                   color: tone,
                 ),
@@ -436,7 +450,8 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
 
     return Semantics(
       container: true,
-      label: '$eyebrow. $headline. $support',
+      explicitChildNodes: focusPointsUp,
+      label: focusPointsUp ? null : '$eyebrow. $headline. $support',
       child: Container(
         key: const Key('act0_wave_a_learning_context'),
         width: double.infinity,
