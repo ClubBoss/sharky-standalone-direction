@@ -25,6 +25,68 @@ const _mappedRepair = 'what_poker_is_table_read_recheck';
 const _nextTask = 'first_table_guide_one_clear_choice';
 
 void main() {
+  for (final feedbackCase in ['assisted', 'wrong', 'correct']) {
+    testWidgets(
+      'SIMULATED feedback clears visible source seats and keeps continuation usable - $feedbackCase',
+      (tester) async {
+        tester.view.padding = const FakeViewPadding(top: 59, bottom: 34);
+        tester.view.viewPadding = const FakeViewPadding(top: 59, bottom: 34);
+        addTearDown(tester.view.resetPadding);
+        addTearDown(tester.view.resetViewPadding);
+        await _openPendingHelpDecision(tester);
+        if (feedbackCase == 'assisted') {
+          await _tap(tester, 'act0_shell_theory_recall_cta');
+          await _tap(tester, 'act0_shell_review_full_idea_cta');
+          await _tap(tester, 'act0_shell_theory_recall_close_cta');
+        }
+        final options = _runner(tester).runner.options;
+        final answer = feedbackCase == 'wrong'
+            ? options.singleWhere((o) => o.id == 'five_board_now')
+            : options.singleWhere((o) => o.isCorrect);
+        await _choose(tester, answer.id);
+        await _expectFeedbackClearance(tester);
+        final record = _rows(
+          await _saved(tester),
+          'learningEvidenceHistory',
+        ).lastWhere((row) => row['taskId'] == _source);
+        expect(record['choiceId'], answer.id);
+        expect(
+          record['assistanceKind'],
+          feedbackCase == 'assisted' ? 'theoryRecall' : 'none',
+        );
+        if (feedbackCase == 'wrong') {
+          await _tap(tester, 'act0_shell_feedback_continue_cta');
+          expect(_runner(tester).selectedTaskId, _mappedRepair);
+          await _advanceToPrompt(tester);
+          await _choose(tester, 'two_three_four');
+          expect(_runner(tester).repairResultReceiptLine, isNotEmpty);
+          await _expectFeedbackClearance(tester);
+          await _tap(tester, 'act0_shell_feedback_continue_cta');
+          expect(_runner(tester).selectedTaskId, _source);
+          await _advanceToPrompt(tester);
+          await _choose(tester, 'two_three_six');
+          await _expectFeedbackClearance(tester);
+        } else if (feedbackCase == 'correct') {
+          await _tap(tester, 'act0_shell_feedback_continue_cta');
+          expect(_runner(tester).selectedTaskId, _mappedRepair);
+          await _advanceToPrompt(tester);
+          await _choose(tester, 'two_three_four');
+          await _expectFeedbackClearance(tester);
+          await _tap(tester, 'act0_shell_feedback_continue_cta');
+          expect(_runner(tester).selectedTaskId, _nextTask);
+          await _advanceToPrompt(tester);
+          await _choose(tester, 'co_still_acting');
+          expect(
+            _runner(tester).runner.reviewQuality,
+            Act0FeedbackQualityV1.suboptimal,
+          );
+          await _expectFeedbackClearance(tester, baked: false);
+        }
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
   testWidgets(
     'SIMULATED Full Idea has a reachable 48px target and restores choices',
     (tester) async {
@@ -1019,4 +1081,93 @@ class _HelpWriteGate extends SharedPreferencesStorePlatform {
   Future<bool> remove(String key) => delegate.remove(key);
   @override
   Future<bool> clear() => delegate.clear();
+}
+
+Future<void> _expectFeedbackClearance(
+  WidgetTester tester, {
+  bool baked = true,
+}) async {
+  final registered = find.byKey(const Key('act0_f7_registered_scene'));
+  for (var frame = 0; frame < 20 && registered.evaluate().isEmpty; frame++) {
+    await tester.runAsync(() async {
+      await Future<void>.delayed(const Duration(milliseconds: 25));
+    });
+    await tester.pump(const Duration(milliseconds: 25));
+  }
+  await tester.pumpAndSettle();
+  if (baked) {
+    expect(registered, findsOneWidget);
+  } else {
+    expect(registered, findsNothing);
+    expect(find.byKey(const Key('act0_shell_table_felt')), findsOneWidget);
+    expect(
+      find.byKey(const Key('act0_shell_feedback_guide_viewport')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const Key('act0_shell_feedback_guide_scroll')),
+      findsNothing,
+    );
+    expect(find.byIcon(Icons.south_rounded), findsOneWidget);
+    final next = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+    expect(next.hitTestable(), findsOneWidget);
+    expect(tester.getRect(next).height, greaterThanOrEqualTo(48));
+    expect(tester.takeException(), isNull);
+    return;
+  }
+  final guide = tester.getRect(
+    find.byKey(const Key('act0_wave_a_learning_context')),
+  );
+  for (final seat in _runner(
+    tester,
+  ).runner.table.seats.where((s) => s.isOccupied)) {
+    final node = find.byKey(Key('act0_shell_seat_node_${seat.seatId}'));
+    expect(node, findsOneWidget);
+    final bounds = tester.getRect(node);
+    // Seat labels are live source context on the baked image. Moving the
+    // explanation must not trade the upper seat for a hidden Hero label.
+    expect(
+      guide.overlaps(bounds),
+      isFalse,
+      reason: 'Feedback obscures ${seat.seatId}: guide=$guide seat=$bounds',
+    );
+  }
+  final next = find.byKey(const Key('act0_shell_feedback_continue_cta'));
+  final nextRect = tester.getRect(next);
+  expect(next.hitTestable(), findsOneWidget);
+  expect(nextRect.height, greaterThanOrEqualTo(48));
+  expect(const Rect.fromLTWH(0, 0, 393, 852).contains(nextRect.center), isTrue);
+  final guideScroll = find.byKey(const Key('act0_shell_feedback_guide_scroll'));
+  expect(guideScroll, findsOneWidget);
+  final scrollable = tester.state<ScrollableState>(
+    find.descendant(of: guideScroll, matching: find.byType(Scrollable)).first,
+  );
+  final support = find.byKey(const Key('act0_learning_scene_v3_support'));
+  expect(tester.widget<Text>(support).data, isNotEmpty);
+  expect(tester.widget<Text>(support).maxLines, isNull);
+  await tester.ensureVisible(support);
+  await tester.pumpAndSettle();
+  expect(support.hitTestable(), findsOneWidget);
+  expect(find.byIcon(Icons.north_rounded), findsOneWidget);
+  expect(scrollable.position.maxScrollExtent, greaterThan(0));
+  await tester.drag(guideScroll, const Offset(0, -250));
+  await tester.pumpAndSettle();
+  expect(scrollable.position.pixels, scrollable.position.maxScrollExtent);
+  final focus = find.byKey(const Key('act0_learning_scene_v3_focus'));
+  expect(focus.hitTestable(), findsOneWidget);
+  expect(
+    tester.getSemantics(focus).getSemanticsData().label,
+    tester.widget<Text>(focus).data,
+  );
+  final guideSemantics = tester.widget<Semantics>(
+    find
+        .ancestor(
+          of: find.byKey(const Key('act0_wave_a_learning_context')),
+          matching: find.byType(Semantics),
+        )
+        .first,
+  );
+  expect(guideSemantics.explicitChildNodes, isTrue);
+  expect(guideSemantics.properties.label, isNull);
+  expect(next.hitTestable(), findsOneWidget);
 }

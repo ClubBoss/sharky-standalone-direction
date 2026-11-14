@@ -137,7 +137,7 @@ def add_legacy_compile_only_shim(baseline, head, dependency_result):
 
 
 # The same pinned historical Guide predates Runner's optional scrollSupport API.
-# Its rendering body must remain historical. Only false is supported: flutter
+# Its rendering body must remain historical. Only false is supported for both optional presentation inputs: flutter
 # test enables assertions, and the workflow rejects this sentinel before RED.
 GUIDE_DEPENDENCY = 'lib/ui_v2/act0_shell/act0_learning_scene_v3.dart'
 GUIDE_LEGACY_SHA256 = 'e57900a6057525572045246ddd5d2a1630d3c15290c9e1b50cb056ab75419a63'
@@ -150,9 +150,12 @@ GUIDE_BACK_RUNNER_SHA256 = '452826ea65dff12c1ae5ee8d9e0e52aa5925762ab0145b1a2bc4
 GUIDE_PENDING_ASSISTANCE_RUNNER_SHA256 = '876dec37155bdde9aa4883c99f4bc7d9c8170405794bfc2e7cc1f99ecfc07e12'
 # Exact shared Full Idea hit-target delta; prior reviewed inputs remain valid.
 GUIDE_FULL_IDEA_TARGET_RUNNER_SHA256 = '1b4d3efd6cae8b5eabe38aa52f345959b405ee881a8c5c746d5e543997480bb2'
+# Exact registered-scene feedback-clearance candidate; prior inputs retained.
+GUIDE_FEEDBACK_CLEARANCE_RUNNER_SHA256 = 'ad14bd86c7770e1810b2f5d3149c5a4fb7a470b5dbcdeb793c248aa5cc30e118'
 GUIDE_REVIEWED_RUNNER_SHA256S = frozenset((
     GUIDE_RUNNER_SHA256, GUIDE_BACK_RUNNER_SHA256,
     GUIDE_PENDING_ASSISTANCE_RUNNER_SHA256, GUIDE_FULL_IDEA_TARGET_RUNNER_SHA256,
+    GUIDE_FEEDBACK_CLEARANCE_RUNNER_SHA256,
 ))
 GUIDE_SENTINEL = 'SHARKY_BASELINE_GUIDE_SCROLL_SHIM_EXECUTED'
 GUIDE_CONSTRUCTOR = (
@@ -171,8 +174,8 @@ GUIDE_CONSTRUCTOR = (
 )
 GUIDE_COMPATIBLE_CONSTRUCTOR = GUIDE_CONSTRUCTOR.replace(
     '    required this.support,\n',
-    '    required this.support,\n    bool scrollSupport = false,\n',
-).replace('  });\n', f"  }}) : assert(!scrollSupport, '{GUIDE_SENTINEL}');\n")
+    '    required this.support,\n    bool scrollSupport = false,\n    bool focusPointsUp = false,\n',
+).replace('  });\n', f"  }}) : assert(!scrollSupport && !focusPointsUp, '{GUIDE_SENTINEL}');\n")
 
 
 def add_legacy_guide_constructor_shim(baseline, head, dependency_result):
@@ -199,7 +202,7 @@ def add_legacy_guide_constructor_shim(baseline, head, dependency_result):
             'after_sha256': digest(guide),
             'runner_sha256': kept[GUIDE_RUNNER],
             'runtime_sentinel': GUIDE_SENTINEL,
-            'scope': 'historical constructor only; false preserves body; true invalid in flutter test'}
+            'scope': 'historical constructor only; both false preserve body; either true invalid in flutter test'}
 
 
 def main():
