@@ -63,6 +63,21 @@ class Act0TaskPack {
   final String? feedbackReason;
   final List<Act0TeachingStepPack> teachingSteps;
 
+  Act0TaskPack withTaskId(String value) => Act0TaskPack(
+    taskId: value,
+    title: title,
+    summary: summary,
+    lockedSummary: lockedSummary,
+    phase: phase,
+    stepKind: stepKind,
+    runnerName: runnerName,
+    caption: caption,
+    hint: hint,
+    question: question,
+    feedbackReason: feedbackReason,
+    teachingSteps: teachingSteps,
+  );
+
   bool get hasRunnerCopy =>
       (caption?.trim().isNotEmpty ?? false) ||
       (hint?.trim().isNotEmpty ?? false) ||
@@ -203,7 +218,11 @@ class Act0SourceParser {
 
     final sourceTasks = _extractSourceTasks(lessonBlock, runners, lessonLists);
     final extraDrills = _extractTasksField(lessonBlock, 'extraDrills', runners);
-    final tasks = _mergeHelperTasks(sourceTasks, extraDrills);
+    // Match State's _lessonFromTasksV1 -> _retitledTasksV1. These are
+    // canonical route task IDs, not the source lesson's unprefixed IDs.
+    final tasks = _mergeHelperTasks(sourceTasks, extraDrills)
+        .map((task) => task.withTaskId('${lessonId}_${task.taskId}'))
+        .toList(growable: false);
 
     return Act0LessonPack(
       lessonId: lessonId,
@@ -224,8 +243,8 @@ class Act0SourceParser {
     }
 
     final refMatch = RegExp(
-      r'sourceTasks:\s*(_\w+)\[(\d+)\]\.taskList',
-    ).firstMatch(lessonBlock);
+      r'^(_\w+)\[(\d+)\]\.taskList$',
+    ).firstMatch(extractFieldExpression(lessonBlock, 'sourceTasks') ?? '');
     if (refMatch == null) {
       return const <Act0TaskPack>[];
     }
@@ -266,16 +285,17 @@ class Act0SourceParser {
     String fieldName,
     Map<String, _RunnerSpec> runners,
   ) {
-    final tasksStart = block.indexOf('$fieldName:');
-    if (tasksStart == -1) {
+    final expression = extractFieldExpression(block, fieldName);
+    if (expression == null ||
+        !RegExp(r'^(?:const\s+)?(?:<[^>]+>\s*)?\[').hasMatch(expression)) {
       return const <Act0TaskPack>[];
     }
-    final openTaskBracket = block.indexOf('[', tasksStart);
-    if (openTaskBracket == -1) {
-      return const <Act0TaskPack>[];
-    }
-    final closeTaskBracket = findMatchingBracket(block, openTaskBracket);
-    final tasksBlock = block.substring(openTaskBracket + 1, closeTaskBracket);
+    final openTaskBracket = expression.indexOf('[');
+    final closeTaskBracket = findMatchingBracket(expression, openTaskBracket);
+    final tasksBlock = expression.substring(
+      openTaskBracket + 1,
+      closeTaskBracket,
+    );
     return _parseTaskBlocks(tasksBlock, runners);
   }
 
@@ -295,7 +315,23 @@ class Act0SourceParser {
       }
 
       final runnerName = extractIdentifierField(taskBlock, 'runner');
-      final runnerSpec = runnerName == null ? null : runners[runnerName];
+      var runnerSpec = runnerName == null ? null : runners[runnerName];
+      final rawRunnerExpression = extractFieldExpression(taskBlock, 'runner');
+      final runnerExpression = rawRunnerExpression == null
+          ? null
+          : _compactExpression(rawRunnerExpression);
+      if (runnerName != null &&
+          runnerExpression != null &&
+          runnerExpression.contains('.copyWith(')) {
+        final open = runnerExpression.indexOf('(');
+        runnerSpec = _copyRunnerSpec(
+          runnerExpression.substring(
+            open + 1,
+            findMatchingParen(runnerExpression, open),
+          ),
+          runnerSpec,
+        );
+      }
       tasks.add(
         Act0TaskPack(
           taskId: taskId,
@@ -346,21 +382,30 @@ class Act0SourceParser {
         final openParen = source.indexOf('(', assignmentStart);
         final closeParen = findMatchingParen(source, openParen);
         final block = source.substring(openParen + 1, closeParen);
-        final base = specs[baseName];
-        specs[name] = _RunnerSpec(
-          caption: extractStringField(block, 'caption') ?? base?.caption,
-          hint: extractStringField(block, 'hint') ?? base?.hint,
-          question: extractStringField(block, 'question') ?? base?.question,
-          feedbackReason:
-              extractStringField(block, 'feedbackReason') ??
-              base?.feedbackReason,
-          teachingSteps: _extractTeachingSteps(block) ?? base?.teachingSteps,
-        );
+        specs[name] = _copyRunnerSpec(block, specs[baseName]);
       }
     }
 
     return specs;
   }
+}
+
+// Absence inherits; a present expression we cannot resolve remains unknown.
+// Use this for both named and inline runner.copyWith expressions.
+_RunnerSpec _copyRunnerSpec(String block, _RunnerSpec? base) {
+  String? value(String name, String? inherited) =>
+      extractFieldExpression(block, name) == null
+      ? inherited
+      : extractStringField(block, name);
+  return _RunnerSpec(
+    caption: value('caption', base?.caption),
+    hint: value('hint', base?.hint),
+    question: value('question', base?.question),
+    feedbackReason: value('feedbackReason', base?.feedbackReason),
+    teachingSteps: extractFieldExpression(block, 'teachingSteps') == null
+        ? base?.teachingSteps
+        : _extractTeachingSteps(block),
+  );
 }
 
 class _RunnerSpec {
@@ -380,17 +425,14 @@ class _RunnerSpec {
 }
 
 List<Act0TeachingStepPack>? _extractTeachingSteps(String block) {
-  final marker = 'teachingSteps:';
-  final start = block.indexOf(marker);
-  if (start == -1) {
+  final expression = extractFieldExpression(block, 'teachingSteps');
+  if (expression == null ||
+      !RegExp(r'^(?:const\s+)?(?:<[^>]+>\s*)?\[').hasMatch(expression)) {
     return null;
   }
-  final openBracket = block.indexOf('[', start);
-  if (openBracket == -1) {
-    return null;
-  }
-  final closeBracket = findMatchingBracket(block, openBracket);
-  final teachingBlock = block.substring(openBracket + 1, closeBracket);
+  final openBracket = expression.indexOf('[');
+  final closeBracket = findMatchingBracket(expression, openBracket);
+  final teachingBlock = expression.substring(openBracket + 1, closeBracket);
   final steps = <Act0TeachingStepPack>[];
   for (final stepBlock in extractChildBlocks(
     teachingBlock,
@@ -423,29 +465,207 @@ List<String> extractChildBlocks(String block, String marker) {
 }
 
 String? extractStringField(String block, String fieldName) {
-  final match = RegExp(
-    "$fieldName:\\s*'((?:\\\\'|[^'])*)'",
-    dotAll: true,
-  ).firstMatch(block);
-  if (match == null) {
-    return null;
+  final value = extractFieldExpression(block, fieldName);
+  if (value == null) return null;
+  final parts = <String>[];
+  var index = 0;
+  while ((index = _skipTrivia(value, index)) < value.length) {
+    final raw = value[index] == 'r';
+    final quoteIndex = index + (raw ? 1 : 0);
+    if (quoteIndex >= value.length ||
+        (value[quoteIndex] != "'" && value[quoteIndex] != '"')) {
+      return null; // An expression is not a source-owned literal.
+    }
+    final quote = value[quoteIndex];
+    final triple = value.startsWith(quote * 3, quoteIndex);
+    final width = triple ? 3 : 1;
+    final end = _skipString(value, index);
+    final text = value.substring(quoteIndex + width, end - width);
+    if (!raw && _hasInterpolation(text)) return null;
+    parts.add(raw ? text : _decodeLiteral(text));
+    index = end;
   }
-  return match.group(1)!.replaceAll("\\'", "'");
+  return parts.isEmpty ? null : parts.join();
 }
 
 String? extractIdentifierField(String block, String fieldName) {
-  final match = RegExp('$fieldName:\\s*(_\\w+)').firstMatch(block);
+  final match = RegExp(r'^(_\w+)(?:\.copyWith\([\s\S]*\))?$').firstMatch(
+    _compactExpression(extractFieldExpression(block, fieldName) ?? ''),
+  );
   return match?.group(1);
 }
 
 String? extractEnumField(String block, String fieldName) {
-  final match = RegExp('$fieldName:\\s*\\w+\\.(\\w+)').firstMatch(block);
+  final match = RegExp(r'^\w+\.(\w+)$').firstMatch(
+    _compactExpression(extractFieldExpression(block, fieldName) ?? ''),
+  );
   return match?.group(1);
 }
 
 int? extractIntField(String block, String fieldName) {
-  final match = RegExp('$fieldName:\\s*(\\d+)').firstMatch(block);
+  final match = RegExp(r'^(\d+)$').firstMatch(
+    _compactExpression(extractFieldExpression(block, fieldName) ?? ''),
+  );
   return match == null ? null : int.tryParse(match.group(1)!);
+}
+
+/// Reads a named argument belonging to this block, never a nested object's.
+/// This is source inventory, not a Dart evaluator: unsupported values stay null
+/// in the typed readers rather than borrowing a nested field or partial value.
+String? extractFieldExpression(String block, String fieldName) {
+  var index = 0;
+  while ((index = _skipTrivia(block, index)) < block.length) {
+    final name = RegExp(r'[A-Za-z_$][\w$]*').matchAsPrefix(block, index);
+    if (name == null)
+      throw FormatException('Expected named source field', block, index);
+    index = _skipTrivia(block, name.end);
+    if (index >= block.length || block[index] != ':') {
+      throw FormatException('Expected source field colon', block, index);
+    }
+    final start = _skipTrivia(block, index + 1);
+    index = start;
+    final stack = <String>[];
+    while (index < block.length) {
+      final afterTrivia = _skipTrivia(block, index);
+      if (afterTrivia != index) {
+        index = afterTrivia;
+        continue;
+      }
+      final char = block[index];
+      // A type-argument comma is not an argument separator, e.g.
+      // const <String, int>{...}. Only skip syntactic type-argument forms.
+      if (char == '<') {
+        final type = RegExp(
+          r'<[\w.$?,<>\s]+>\s*(?=[\[({.])',
+        ).matchAsPrefix(block, index);
+        if (type != null) {
+          index = type.end;
+          continue;
+        }
+      }
+      if (char == "'" ||
+          char == '"' ||
+          (char == 'r' &&
+              index + 1 < block.length &&
+              (block[index + 1] == "'" || block[index + 1] == '"'))) {
+        index = _skipString(block, index);
+        continue;
+      }
+      if (char == ',' && stack.isEmpty) break;
+      if ('([{'.contains(char)) stack.add(char);
+      if (')]}'.contains(char)) {
+        final expected = {'(': ')', '[': ']', '{': '}'};
+        if (stack.isEmpty || expected[stack.removeLast()] != char) {
+          throw FormatException('Unbalanced source field', block, index);
+        }
+      }
+      index += 1;
+    }
+    if (stack.isNotEmpty)
+      throw FormatException('Unclosed source field', block, start);
+    if (name.group(0) == fieldName) return block.substring(start, index).trim();
+    index += index < block.length ? 1 : 0;
+  }
+  return null;
+}
+
+int _skipTrivia(String source, int index) {
+  while (index < source.length) {
+    if (RegExp(r'\s').hasMatch(source[index])) {
+      index += 1;
+    } else if (source.startsWith('//', index)) {
+      final end = source.indexOf('\n', index + 2);
+      index = end == -1 ? source.length : end + 1;
+    } else if (source.startsWith('/*', index)) {
+      var depth = 1;
+      index += 2;
+      while (index < source.length && depth > 0) {
+        if (source.startsWith('/*', index)) {
+          depth += 1;
+          index += 2;
+        } else if (source.startsWith('*/', index)) {
+          depth -= 1;
+          index += 2;
+        } else {
+          index += 1;
+        }
+      }
+      if (depth != 0) throw FormatException('Unclosed source comment');
+    } else {
+      break;
+    }
+  }
+  return index;
+}
+
+int _skipString(String source, int index) {
+  final raw = source[index] == 'r';
+  final quoteIndex = index + (raw ? 1 : 0);
+  final quote = source[quoteIndex];
+  final marker = source.startsWith(quote * 3, quoteIndex) ? quote * 3 : quote;
+  index = quoteIndex + marker.length;
+  while (index < source.length) {
+    if (!raw && source[index] == r'\') {
+      index += 2;
+      continue;
+    }
+    if (source.startsWith(marker, index)) return index + marker.length;
+    index += 1;
+  }
+  throw FormatException('Unclosed source string');
+}
+
+String _decodeLiteral(String value) => value.replaceAllMapped(
+  RegExp(r'''\\(?:u\{[0-9a-fA-F]+\}|u[0-9a-fA-F]{4}|x[0-9a-fA-F]{2}|.)'''),
+  (match) {
+    final escape = match.group(0)!.substring(1);
+    if (escape.startsWith('u{'))
+      return String.fromCharCode(
+        int.parse(escape.substring(2, escape.length - 1), radix: 16),
+      );
+    if (escape.startsWith('u') || escape.startsWith('x'))
+      return String.fromCharCode(int.parse(escape.substring(1), radix: 16));
+    return {
+          'n': '\n',
+          'r': '\r',
+          't': '\t',
+          'b': '\b',
+          'f': '\f',
+          'v': '\v',
+        }[escape] ??
+        escape;
+  },
+);
+
+bool _hasInterpolation(String value) {
+  for (var index = 0; index < value.length; index += 1) {
+    if (value[index] == r'\') {
+      index += 1;
+      continue;
+    }
+    if (value[index] == r'$') return true;
+  }
+  return false;
+}
+
+String _compactExpression(String value) {
+  final result = StringBuffer();
+  var index = 0;
+  while ((index = _skipTrivia(value, index)) < value.length) {
+    if (value[index] == "'" ||
+        value[index] == '"' ||
+        (value[index] == 'r' &&
+            index + 1 < value.length &&
+            (value[index + 1] == "'" || value[index + 1] == '"'))) {
+      final end = _skipString(value, index);
+      result.write(value.substring(index, end));
+      index = end;
+    } else {
+      result.write(value[index]);
+      index += 1;
+    }
+  }
+  return result.toString();
 }
 
 int findMatchingParen(String input, int openIndex) {
@@ -463,29 +683,19 @@ int findMatchingDelimiter(
   String close,
 ) {
   var depth = 0;
-  var inString = false;
-  var escapeNext = false;
-
   for (var index = openIndex; index < input.length; index += 1) {
-    final char = input[index];
-
-    if (inString) {
-      if (escapeNext) {
-        escapeNext = false;
-        continue;
-      }
-      if (char == r'\') {
-        escapeNext = true;
-        continue;
-      }
-      if (char == "'") {
-        inString = false;
-      }
+    final afterTrivia = _skipTrivia(input, index);
+    if (afterTrivia != index) {
+      index = afterTrivia - 1;
       continue;
     }
-
-    if (char == "'") {
-      inString = true;
+    final char = input[index];
+    if (char == "'" ||
+        char == '"' ||
+        (char == 'r' &&
+            index + 1 < input.length &&
+            (input[index + 1] == "'" || input[index + 1] == '"'))) {
+      index = _skipString(input, index) - 1;
       continue;
     }
     if (char == open) {

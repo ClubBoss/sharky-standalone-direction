@@ -1,0 +1,4057 @@
+{
+  "schema": "act0_foundation_source_map_v1",
+  "scope": "W1-W4 source traceability preparation; not course/runtime/Human acceptance",
+  "source_base_commit": "ccd263c4ed9c03f0a09751b19048dc6030ffbbcf",
+  "source_git_blobs": {
+    "lib/ui_v2/act0_shell/act0_shell_state_v1.dart": "3fcc919efb9cb0aa48940514c60d800c3362d038",
+    "lib/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart": "e4e977674457061c8345da2ffe94ad72a75209e9",
+    "tools/_lib/act0_content_copy_source_parser.dart": "ebc69be97b979a997c4446dee008ca037869051b"
+  },
+  "gate_semantics": {
+    "path_closed": "completed task IDs union Placement-skipped task IDs",
+    "world_gate": "previous world path closed; each lesson task path closed for propagation",
+    "lesson_gate": "world available and lesson completed or first incomplete lesson",
+    "task_gate": "completed or skipped replay, otherwise first path-incomplete task",
+    "earned_display": "completed task IDs only; skipped does not prove earned work",
+    "assessment": "route closure is not independent correctness, unseen transfer, elapsed retention or mastery",
+    "preview_source_lines": {
+      "_pathClosedTaskIds": 2621,
+      "_progressWorldsWithTaskIds": 7779,
+      "_progressWorld": 14106,
+      "_progressLesson": 14189,
+      "_taskAvailable": 14958
+    }
+  },
+  "counts": {
+    "worlds": 4,
+    "lessons": 28,
+    "tasks": 181,
+    "source_copy_gaps": 19
+  },
+  "worlds": [
+    {
+      "world_id": "world_1",
+      "world_number": 1,
+      "title": "Poker from Zero",
+      "authored_goal": "Table literacy: cards, seats, blinds, stack, and pot.",
+      "prior_world_id": null,
+      "lessons": [
+        {
+          "lesson_id": "what_poker_is",
+          "title": "First Table Guide",
+          "authored_goal": "Learn the table, answer once, and see why.",
+          "source_line": 1673,
+          "prior_lesson_ids_in_world": [],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "what_poker_is_theory",
+              "title": "Meet the table",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_firstTableGuideMeetTableRunner",
+              "runner_question_source": "UTG, HJ, and CO have acted. Which seat acts next before the blinds?",
+              "runner_feedback_source": "You identifies the learner; BTN is the seat role that acts after CO here.",
+              "source_task_id": "what_poker_is_theory",
+              "source_line": 1685,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "what_poker_is_find_hero",
+              "title": "Find your seat",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_firstTableGuideFindHeroRunner",
+              "runner_question_source": "Which label could change next hand while the player is still you?",
+              "runner_feedback_source": "You is the learner identity; BTN is the current table position.",
+              "source_task_id": "what_poker_is_find_hero",
+              "source_line": 1701,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "what_poker_is_theory"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "what_poker_is_table_read_transfer",
+              "title": "Read the table",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_firstTableGuideReadTableRunner",
+              "runner_question_source": "What is the clean first table read?",
+              "runner_feedback_source": "Start with the same three checks every time: your cards, the shared board, and chips in the pot.",
+              "source_task_id": "what_poker_is_table_read_transfer",
+              "source_line": 1710,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "what_poker_is_theory",
+                "what_poker_is_find_hero"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "what_poker_is_table_read_recheck",
+              "title": "Table read recheck",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_firstTableGuideReadTableRecheckRunner",
+              "runner_question_source": "What is the clean table read here?",
+              "runner_feedback_source": "You repeated the table scan: your cards, shared board, then pot.",
+              "source_task_id": "what_poker_is_table_read_recheck",
+              "source_line": 1727,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "what_poker_is_theory",
+                "what_poker_is_find_hero",
+                "what_poker_is_table_read_transfer"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "first_table_guide_one_clear_choice",
+              "title": "Read the preflop setup",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_firstTableGuideActionRunner",
+              "runner_question_source": "What is the clean preflop setup here?",
+              "runner_feedback_source": "You read one spot, named the setup, and got one clear why back. That foundation makes later lessons move faster because later lessons keep reusing the same table-first scan.",
+              "source_task_id": "first_table_guide_one_clear_choice",
+              "source_line": 1744,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "what_poker_is_theory",
+                "what_poker_is_find_hero",
+                "what_poker_is_table_read_transfer",
+                "what_poker_is_table_read_recheck"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "first_table_guide_route_roles",
+              "title": "Where to go next",
+              "authored_phase": "review",
+              "authored_step_kind": "proveIt",
+              "runner_reference": "_firstTableGuideRouteRunner",
+              "runner_question_source": "Where do you go to fix mistakes after a miss?",
+              "runner_feedback_source": "Home shows what to do now, Learn shows what to study next, Practice gives extra reps, Review fixes mistakes, and You shows progress.",
+              "source_task_id": "first_table_guide_route_roles",
+              "source_line": 1760,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "what_poker_is_theory",
+                "what_poker_is_find_hero",
+                "what_poker_is_table_read_transfer",
+                "what_poker_is_table_read_recheck",
+                "first_table_guide_one_clear_choice"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "what_poker_is_content",
+          "title": "What poker is",
+          "authored_goal": "How the pot, folds, and showdown decide the hand.",
+          "source_line": 1779,
+          "prior_lesson_ids_in_world": [
+            "what_poker_is"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "what_poker_is_pot_stack",
+              "title": "Pot and stack",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_potStackRunner",
+              "runner_question_source": "Which label shows the chips in the middle?",
+              "runner_feedback_source": "The pot is the chips in the middle. In Texas Hold'em, you build the best 5-card hand from 2 private cards and 5 community cards.",
+              "source_task_id": "what_poker_is_pot_stack",
+              "source_line": 1791,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "what_poker_is_win_ways",
+              "title": "How pots are won",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_winWaysRunner",
+              "runner_question_source": "Which is a way to win the pot before showdown?",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "what_poker_is_win_ways",
+              "source_line": 1801,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "what_poker_is_pot_stack"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "what_poker_is_showdown_win",
+              "title": "Win at showdown",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_showdownBestHandRunner",
+              "runner_question_source": "What decides a showdown?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "what_poker_is_showdown_win",
+              "source_line": 1816,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "what_poker_is_pot_stack",
+                "what_poker_is_win_ways"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "what_poker_is_all_in_meaning",
+              "title": "All-in meaning",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_allInMeaningRunner",
+              "runner_question_source": "What does all-in mean here?",
+              "runner_feedback_source": "The pot is the chips in the middle. In Texas Hold'em, you build the best 5-card hand from 2 private cards and 5 community cards.",
+              "source_task_id": "what_poker_is_all_in_meaning",
+              "source_line": 1831,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "what_poker_is_pot_stack",
+                "what_poker_is_win_ways",
+                "what_poker_is_showdown_win"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "what_poker_is_matched_chips_transfer",
+              "title": "Matched chips",
+              "authored_phase": "drill",
+              "authored_step_kind": "proveIt",
+              "runner_reference": "_matchedChipsTransferRunner",
+              "runner_question_source": "What can Hero win from CO first?",
+              "runner_feedback_source": "The pot is the chips in the middle. In Texas Hold'em, you build the best 5-card hand from 2 private cards and 5 community cards.",
+              "source_task_id": "what_poker_is_matched_chips_transfer",
+              "source_line": 1847,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "what_poker_is_pot_stack",
+                "what_poker_is_win_ways",
+                "what_poker_is_showdown_win",
+                "what_poker_is_all_in_meaning"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "what_poker_is_live_win_transfer",
+              "title": "Live win paths",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_w1LiveWinTransferRunner",
+              "runner_question_source": "In this live hand, what can still decide the pot?",
+              "runner_feedback_source": "A real hand still ends the same two clean ways: everyone folds, or players reach showdown and the best hand wins.",
+              "source_task_id": "what_poker_is_live_win_transfer",
+              "source_line": 1864,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "what_poker_is_pot_stack",
+                "what_poker_is_win_ways",
+                "what_poker_is_showdown_win",
+                "what_poker_is_all_in_meaning",
+                "what_poker_is_matched_chips_transfer"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "what_poker_is_review",
+              "title": "Poker recap",
+              "authored_phase": "review",
+              "authored_step_kind": "proveIt",
+              "runner_reference": "_tableRecapRunner",
+              "runner_question_source": "What is the pot?",
+              "runner_feedback_source": "The pot is the prize in the middle. Stacks belong to players until chips move in.",
+              "source_task_id": "what_poker_is_review",
+              "source_line": 1875,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "what_poker_is_pot_stack",
+                "what_poker_is_win_ways",
+                "what_poker_is_showdown_win",
+                "what_poker_is_all_in_meaning",
+                "what_poker_is_matched_chips_transfer",
+                "what_poker_is_live_win_transfer"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "cards_ranks_suits",
+          "title": "Cards, ranks & suits",
+          "authored_goal": "52 cards, 4 suits, 13 ranks.",
+          "source_line": 1893,
+          "prior_lesson_ids_in_world": [
+            "what_poker_is",
+            "what_poker_is_content"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "cards_ranks_suits_theory",
+              "title": "The deck",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_deckIntroRunner",
+              "runner_question_source": "What are the two parts of a card?",
+              "runner_feedback_source": "You start with two private cards. The board cards are shared by everyone.",
+              "source_task_id": "cards_ranks_suits_theory",
+              "source_line": 1905,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "cards_ranks_suits_rank_drill",
+              "title": "Higher card",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_cardsRanksRunner",
+              "runner_question_source": "Which rank is higher here?",
+              "runner_feedback_source": "You start with two private cards. The board cards are shared by everyone.",
+              "source_task_id": "cards_ranks_suits_rank_drill",
+              "source_line": 1913,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "cards_ranks_suits_theory"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "cards_ranks_suits_suit_drill",
+              "title": "Name a suit",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_suitsRunner",
+              "runner_question_source": "In Ah, what suit does h mean?",
+              "runner_feedback_source": "You start with two private cards. The board cards are shared by everyone.",
+              "source_task_id": "cards_ranks_suits_suit_drill",
+              "source_line": 1927,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "cards_ranks_suits_theory",
+                "cards_ranks_suits_rank_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "cards_ranks_suits_private_board",
+              "title": "Private vs board",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_privateBoardRunner",
+              "runner_question_source": "Which cards can everyone use?",
+              "runner_feedback_source": "You start with two private cards. The board cards are shared by everyone.",
+              "source_task_id": "cards_ranks_suits_private_board",
+              "source_line": 1936,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "cards_ranks_suits_theory",
+                "cards_ranks_suits_rank_drill",
+                "cards_ranks_suits_suit_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "cards_ranks_suits_board_count",
+              "title": "Board count",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_boardCountRunner",
+              "runner_question_source": "How many board cards can be visible by the river?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "cards_ranks_suits_board_count",
+              "source_line": 1950,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "cards_ranks_suits_theory",
+                "cards_ranks_suits_rank_drill",
+                "cards_ranks_suits_suit_drill",
+                "cards_ranks_suits_private_board"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "cards_ranks_suits_best_five",
+              "title": "Best five idea",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_bestFiveCardsRunner",
+              "runner_question_source": "How many cards make your final hand?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "cards_ranks_suits_best_five",
+              "source_line": 1959,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "cards_ranks_suits_theory",
+                "cards_ranks_suits_rank_drill",
+                "cards_ranks_suits_suit_drill",
+                "cards_ranks_suits_private_board",
+                "cards_ranks_suits_board_count"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "cards_ranks_suits_recap",
+              "title": "Cards recap",
+              "authored_phase": "review",
+              "authored_step_kind": "proveIt",
+              "runner_reference": "_cardsRecapRunner",
+              "runner_question_source": "How many cards make your final hand?",
+              "runner_feedback_source": "You hold two private cards, share the board, and make the best five-card hand.",
+              "source_task_id": "cards_ranks_suits_recap",
+              "source_line": 1967,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "cards_ranks_suits_theory",
+                "cards_ranks_suits_rank_drill",
+                "cards_ranks_suits_suit_drill",
+                "cards_ranks_suits_private_board",
+                "cards_ranks_suits_board_count",
+                "cards_ranks_suits_best_five"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "your_first_hand",
+          "title": "Your first hand, dealt",
+          "authored_goal": "Watch a hand from start to showdown.",
+          "source_line": 1985,
+          "prior_lesson_ids_in_world": [
+            "what_poker_is",
+            "what_poker_is_content",
+            "cards_ranks_suits"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "your_first_hand_preflop",
+              "title": "Preflop",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": null,
+              "runner_question_source": null,
+              "runner_feedback_source": null,
+              "source_task_id": "your_first_hand_preflop",
+              "source_line": 1997,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": [
+                "runner expression not resolved by source parser",
+                "runner question not resolved by source parser",
+                "runner feedback not resolved by source parser"
+              ]
+            },
+            {
+              "task_id": "your_first_hand_private_cards_recheck",
+              "title": "Private cards recheck",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": null,
+              "runner_question_source": null,
+              "runner_feedback_source": null,
+              "source_task_id": "your_first_hand_private_cards_recheck",
+              "source_line": 2011,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "your_first_hand_preflop"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": [
+                "runner expression not resolved by source parser",
+                "runner question not resolved by source parser",
+                "runner feedback not resolved by source parser"
+              ]
+            },
+            {
+              "task_id": "your_first_hand_flop",
+              "title": "Flop",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": null,
+              "runner_question_source": null,
+              "runner_feedback_source": null,
+              "source_task_id": "your_first_hand_flop",
+              "source_line": 2021,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "your_first_hand_preflop",
+                "your_first_hand_private_cards_recheck"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": [
+                "runner expression not resolved by source parser",
+                "runner question not resolved by source parser",
+                "runner feedback not resolved by source parser"
+              ]
+            },
+            {
+              "task_id": "your_first_hand_turn",
+              "title": "Turn card",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": null,
+              "runner_question_source": null,
+              "runner_feedback_source": null,
+              "source_task_id": "your_first_hand_turn",
+              "source_line": 2029,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "your_first_hand_preflop",
+                "your_first_hand_private_cards_recheck",
+                "your_first_hand_flop"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": [
+                "runner expression not resolved by source parser",
+                "runner question not resolved by source parser",
+                "runner feedback not resolved by source parser"
+              ]
+            },
+            {
+              "task_id": "your_first_hand_river",
+              "title": "River card",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": null,
+              "runner_question_source": null,
+              "runner_feedback_source": null,
+              "source_task_id": "your_first_hand_river",
+              "source_line": 2037,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "your_first_hand_preflop",
+                "your_first_hand_private_cards_recheck",
+                "your_first_hand_flop",
+                "your_first_hand_turn"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": [
+                "runner expression not resolved by source parser",
+                "runner question not resolved by source parser",
+                "runner feedback not resolved by source parser"
+              ]
+            },
+            {
+              "task_id": "your_first_hand_showdown",
+              "title": "Showdown read",
+              "authored_phase": "review",
+              "authored_step_kind": "review",
+              "runner_reference": null,
+              "runner_question_source": null,
+              "runner_feedback_source": null,
+              "source_task_id": "your_first_hand_showdown",
+              "source_line": 2051,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "your_first_hand_preflop",
+                "your_first_hand_private_cards_recheck",
+                "your_first_hand_flop",
+                "your_first_hand_turn",
+                "your_first_hand_river"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": [
+                "runner expression not resolved by source parser",
+                "runner question not resolved by source parser",
+                "runner feedback not resolved by source parser"
+              ]
+            },
+            {
+              "task_id": "your_first_hand_action_trail",
+              "title": "Action history",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": null,
+              "runner_question_source": null,
+              "runner_feedback_source": null,
+              "source_task_id": "your_first_hand_action_trail",
+              "source_line": 2069,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "your_first_hand_preflop",
+                "your_first_hand_private_cards_recheck",
+                "your_first_hand_flop",
+                "your_first_hand_turn",
+                "your_first_hand_river",
+                "your_first_hand_showdown"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": [
+                "runner expression not resolved by source parser",
+                "runner question not resolved by source parser",
+                "runner feedback not resolved by source parser"
+              ]
+            },
+            {
+              "task_id": "your_first_hand_recap",
+              "title": "Street recap",
+              "authored_phase": "review",
+              "authored_step_kind": "proveIt",
+              "runner_reference": null,
+              "runner_question_source": null,
+              "runner_feedback_source": null,
+              "source_task_id": "your_first_hand_recap",
+              "source_line": 2084,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "your_first_hand_preflop",
+                "your_first_hand_private_cards_recheck",
+                "your_first_hand_flop",
+                "your_first_hand_turn",
+                "your_first_hand_river",
+                "your_first_hand_showdown",
+                "your_first_hand_action_trail"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": [
+                "runner expression not resolved by source parser",
+                "runner question not resolved by source parser",
+                "runner feedback not resolved by source parser"
+              ]
+            }
+          ]
+        },
+        {
+          "lesson_id": "fold_check_call_raise",
+          "title": "Fold, check, call, raise",
+          "authored_goal": "Name each action before the table asks you.",
+          "source_line": 2094,
+          "prior_lesson_ids_in_world": [
+            "what_poker_is",
+            "what_poker_is_content",
+            "cards_ranks_suits",
+            "your_first_hand"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "actions_theory",
+              "title": "Action words",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_actionWordsRunner",
+              "runner_question_source": "Which action adds more chips first in?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "actions_theory",
+              "source_line": 2106,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "actions_legal_context",
+              "title": "Legal actions",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_legalActionRunner",
+              "runner_question_source": "No bet faces you. Which action keeps you in the hand without adding chips?",
+              "runner_feedback_source": "You start with two private cards. The board cards are shared by everyone.",
+              "source_task_id": "actions_legal_context",
+              "source_line": 2122,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "actions_theory"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "actions_check_drill",
+              "title": "Check when no bet",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_checkActionRunner",
+              "runner_question_source": "What action keeps playing for free?",
+              "runner_feedback_source": "You start with two private cards. The board cards are shared by everyone.",
+              "source_task_id": "actions_check_drill",
+              "source_line": 2134,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "actions_theory",
+                "actions_legal_context"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "actions_fold_drill",
+              "title": "Fold weak hands",
+              "authored_phase": "drill",
+              "authored_step_kind": "fixMistakes",
+              "runner_reference": "_foldActionRunner",
+              "runner_question_source": "Which action gives up the hand?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "actions_fold_drill",
+              "source_line": 2145,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "actions_theory",
+                "actions_legal_context",
+                "actions_check_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "actions_call_drill",
+              "title": "Call a price",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_callActionRunner",
+              "runner_question_source": "Which action matches the 1 BB price?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "actions_call_drill",
+              "source_line": 2156,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "actions_theory",
+                "actions_legal_context",
+                "actions_check_drill",
+                "actions_fold_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "actions_raise_drill",
+              "title": "Raise on the Button",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_whatYouCanDoRunner",
+              "runner_question_source": "Choose how to play your first action.",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "actions_raise_drill",
+              "source_line": 2173,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "actions_theory",
+                "actions_legal_context",
+                "actions_check_drill",
+                "actions_fold_drill",
+                "actions_call_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "actions_review",
+              "title": "Action recap",
+              "authored_phase": "review",
+              "authored_step_kind": "proveIt",
+              "runner_reference": "_actionRecapRunner",
+              "runner_question_source": "First in on the Button. What is cleaner than limping?",
+              "runner_feedback_source": "Check is free, fold exits, call matches the price, and raise adds more.",
+              "source_task_id": "actions_review",
+              "source_line": 2185,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "actions_theory",
+                "actions_legal_context",
+                "actions_check_drill",
+                "actions_fold_drill",
+                "actions_call_drill",
+                "actions_raise_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "blinds_action_order",
+          "title": "Blinds & action order",
+          "authored_goal": "Why someone always puts money in first.",
+          "source_line": 2203,
+          "prior_lesson_ids_in_world": [
+            "what_poker_is",
+            "what_poker_is_content",
+            "cards_ranks_suits",
+            "your_first_hand",
+            "fold_check_call_raise"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "blinds_theory",
+              "title": "Blinds post first",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_blindsOrderRunner",
+              "runner_question_source": "Which blind posts 1 BB?",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "blinds_theory",
+              "source_line": 2215,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "blinds_posts_drill",
+              "title": "1 BB baseline",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_bigBlindPostRunner",
+              "runner_question_source": "Tap the blind that sets the 1 BB baseline.",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "blinds_posts_drill",
+              "source_line": 2223,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "blinds_theory"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "blinds_first_actor",
+              "title": "First preflop actor",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": null,
+              "runner_question_source": null,
+              "runner_feedback_source": null,
+              "source_task_id": "blinds_first_actor",
+              "source_line": 2231,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "blinds_theory",
+                "blinds_posts_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": [
+                "runner expression not resolved by source parser",
+                "runner question not resolved by source parser",
+                "runner feedback not resolved by source parser"
+              ]
+            },
+            {
+              "task_id": "blinds_last_actor",
+              "title": "Last preflop actor",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_lastPreflopActorRunner",
+              "runner_question_source": "Tap BB.",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "blinds_last_actor",
+              "source_line": 2241,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "blinds_theory",
+                "blinds_posts_drill",
+                "blinds_first_actor"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "blinds_postflop_button",
+              "title": "Last postflop actor",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_postflopButtonActorRunner",
+              "runner_question_source": "Tap the last postflop actor.",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "blinds_postflop_button",
+              "source_line": 2260,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "blinds_theory",
+                "blinds_posts_drill",
+                "blinds_first_actor",
+                "blinds_last_actor"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "blinds_button_moves",
+              "title": "Button moves",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_buttonMovesRunner",
+              "runner_question_source": "Which marker shows the dealer button this hand?",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "blinds_button_moves",
+              "source_line": 2268,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "blinds_theory",
+                "blinds_posts_drill",
+                "blinds_first_actor",
+                "blinds_last_actor",
+                "blinds_postflop_button"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "blinds_review",
+              "title": "Order recap",
+              "authored_phase": "review",
+              "authored_step_kind": "proveIt",
+              "runner_reference": "_meetTableRunner",
+              "runner_question_source": "Who acts first preflop?",
+              "runner_feedback_source": "Preflop starts left of the big blind. After the flop, action starts left of the Button.",
+              "source_task_id": "blinds_review",
+              "source_line": 2282,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "blinds_theory",
+                "blinds_posts_drill",
+                "blinds_first_actor",
+                "blinds_last_actor",
+                "blinds_postflop_button",
+                "blinds_button_moves"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "positions",
+          "title": "The 6 positions",
+          "authored_goal": "Each seat has a name and a job.",
+          "source_line": 2318,
+          "prior_lesson_ids_in_world": [
+            "what_poker_is",
+            "what_poker_is_content",
+            "cards_ranks_suits",
+            "your_first_hand",
+            "fold_check_call_raise",
+            "blinds_action_order"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "positions_theory",
+              "title": "Six seats",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_positionsRunner",
+              "runner_question_source": "Which seat is the Button?",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "positions_theory",
+              "source_line": 2330,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "positions_button",
+              "title": "Tap the Button",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_buttonSeatRunner",
+              "runner_question_source": "Tap the Button.",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "positions_button",
+              "source_line": 2344,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "positions_theory"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "positions_utg",
+              "title": "Tap UTG",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_utgSeatRunner",
+              "runner_question_source": "Tap UTG.",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "positions_utg",
+              "source_line": 2352,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "positions_theory",
+                "positions_button"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "positions_cutoff",
+              "title": "Tap the cutoff",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": null,
+              "runner_question_source": null,
+              "runner_feedback_source": null,
+              "source_task_id": "positions_cutoff",
+              "source_line": 2371,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "positions_theory",
+                "positions_button",
+                "positions_utg"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": [
+                "runner expression not resolved by source parser",
+                "runner question not resolved by source parser",
+                "runner feedback not resolved by source parser"
+              ]
+            },
+            {
+              "task_id": "positions_late_seat",
+              "title": "Late seat meaning",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_latePositionRunner",
+              "runner_question_source": "Which seat acts latest after the flop?",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "positions_late_seat",
+              "source_line": 2381,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "positions_theory",
+                "positions_button",
+                "positions_utg",
+                "positions_cutoff"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "positions_early_late",
+              "title": "Early vs late",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": null,
+              "runner_question_source": null,
+              "runner_feedback_source": null,
+              "source_task_id": "positions_early_late",
+              "source_line": 2395,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "positions_theory",
+                "positions_button",
+                "positions_utg",
+                "positions_cutoff",
+                "positions_late_seat"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": [
+                "runner expression not resolved by source parser",
+                "runner question not resolved by source parser",
+                "runner feedback not resolved by source parser"
+              ]
+            },
+            {
+              "task_id": "positions_review",
+              "title": "Position recap",
+              "authored_phase": "review",
+              "authored_step_kind": "proveIt",
+              "runner_reference": "_positionsRecapRunner",
+              "runner_question_source": "Which seat is latest after the flop here?",
+              "runner_feedback_source": "The six names are UTG, HJ, CO, BTN, SB, and BB. BTN is the clearest late seat.",
+              "source_task_id": "positions_review",
+              "source_line": 2405,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "positions_theory",
+                "positions_button",
+                "positions_utg",
+                "positions_cutoff",
+                "positions_late_seat",
+                "positions_early_late"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "hand_rankings_table",
+          "title": "Hand rankings, on the table",
+          "authored_goal": "What beats what with real boards.",
+          "source_line": 2421,
+          "prior_lesson_ids_in_world": [
+            "what_poker_is",
+            "what_poker_is_content",
+            "cards_ranks_suits",
+            "your_first_hand",
+            "fold_check_call_raise",
+            "blinds_action_order",
+            "positions"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "hand_rankings_theory",
+              "title": "Hands use five cards",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_handRankingIntroRunner",
+              "runner_question_source": "What do hand rankings compare?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "hand_rankings_theory",
+              "source_line": 2433,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "hand_rankings_pair_drill",
+              "title": "Find the pair",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_handRankingsRunner",
+              "runner_question_source": "What does hero have here?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "hand_rankings_pair_drill",
+              "source_line": 2441,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "hand_rankings_theory"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "hand_rankings_two_pair_drill",
+              "title": "Two pair vs one pair",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_twoPairRunner",
+              "runner_question_source": "Which hand is stronger?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "hand_rankings_two_pair_drill",
+              "source_line": 2455,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "hand_rankings_theory",
+                "hand_rankings_pair_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "hand_rankings_trips_drill",
+              "title": "Trips or set",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_tripsRankRunner",
+              "runner_question_source": "Which hand ranks higher?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "hand_rankings_trips_drill",
+              "source_line": 2463,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "hand_rankings_theory",
+                "hand_rankings_pair_drill",
+                "hand_rankings_two_pair_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "hand_rankings_straight_drill",
+              "title": "Find the straight",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_straightRankRunner",
+              "runner_question_source": "What makes a straight?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "hand_rankings_straight_drill",
+              "source_line": 2477,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "hand_rankings_theory",
+                "hand_rankings_pair_drill",
+                "hand_rankings_two_pair_drill",
+                "hand_rankings_trips_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "hand_rankings_flush_drill",
+              "title": "Flush beats straight",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_flushRankRunner",
+              "runner_question_source": "Which hand ranks higher?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "hand_rankings_flush_drill",
+              "source_line": 2485,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "hand_rankings_theory",
+                "hand_rankings_pair_drill",
+                "hand_rankings_two_pair_drill",
+                "hand_rankings_trips_drill",
+                "hand_rankings_straight_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "hand_rankings_full_house_drill",
+              "title": "Full house shape",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_fullHouseRankRunner",
+              "runner_question_source": "What does hero have here?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "hand_rankings_full_house_drill",
+              "source_line": 2499,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "hand_rankings_theory",
+                "hand_rankings_pair_drill",
+                "hand_rankings_two_pair_drill",
+                "hand_rankings_trips_drill",
+                "hand_rankings_straight_drill",
+                "hand_rankings_flush_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "hand_rankings_quads_drill",
+              "title": "Four of a kind",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_quadsRankRunner",
+              "runner_question_source": "What does hero have here?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "hand_rankings_quads_drill",
+              "source_line": 2507,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "hand_rankings_theory",
+                "hand_rankings_pair_drill",
+                "hand_rankings_two_pair_drill",
+                "hand_rankings_trips_drill",
+                "hand_rankings_straight_drill",
+                "hand_rankings_flush_drill",
+                "hand_rankings_full_house_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "hand_rankings_royal_flush_drill",
+              "title": "Royal flush check",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_royalFlushRankRunner",
+              "runner_question_source": "What does hero have here?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "hand_rankings_royal_flush_drill",
+              "source_line": 2521,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "hand_rankings_theory",
+                "hand_rankings_pair_drill",
+                "hand_rankings_two_pair_drill",
+                "hand_rankings_trips_drill",
+                "hand_rankings_straight_drill",
+                "hand_rankings_flush_drill",
+                "hand_rankings_full_house_drill",
+                "hand_rankings_quads_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "hand_rankings_full_house_vs_flush_drill",
+              "title": "Full house beats flush",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_fullHouseVsFlushRunner",
+              "runner_question_source": "Which shown hand is stronger?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "hand_rankings_full_house_vs_flush_drill",
+              "source_line": 2529,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "hand_rankings_theory",
+                "hand_rankings_pair_drill",
+                "hand_rankings_two_pair_drill",
+                "hand_rankings_trips_drill",
+                "hand_rankings_straight_drill",
+                "hand_rankings_flush_drill",
+                "hand_rankings_full_house_drill",
+                "hand_rankings_quads_drill",
+                "hand_rankings_royal_flush_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "hand_rankings_quads_vs_full_house_drill",
+              "title": "Quads beat full house",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_quadsVsFullHouseRunner",
+              "runner_question_source": "Who wins at showdown?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "hand_rankings_quads_vs_full_house_drill",
+              "source_line": 2544,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "hand_rankings_theory",
+                "hand_rankings_pair_drill",
+                "hand_rankings_two_pair_drill",
+                "hand_rankings_trips_drill",
+                "hand_rankings_straight_drill",
+                "hand_rankings_flush_drill",
+                "hand_rankings_full_house_drill",
+                "hand_rankings_quads_drill",
+                "hand_rankings_royal_flush_drill",
+                "hand_rankings_full_house_vs_flush_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "hand_rankings_royal_vs_flush_drill",
+              "title": "Royal flush wins",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_royalFlushVsFlushRunner",
+              "runner_question_source": "Which hand ranks higher?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "hand_rankings_royal_vs_flush_drill",
+              "source_line": 2553,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "hand_rankings_theory",
+                "hand_rankings_pair_drill",
+                "hand_rankings_two_pair_drill",
+                "hand_rankings_trips_drill",
+                "hand_rankings_straight_drill",
+                "hand_rankings_flush_drill",
+                "hand_rankings_full_house_drill",
+                "hand_rankings_quads_drill",
+                "hand_rankings_royal_flush_drill",
+                "hand_rankings_full_house_vs_flush_drill",
+                "hand_rankings_quads_vs_full_house_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "hand_rankings_best_five_drill",
+              "title": "Choose best five",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_bestFiveShowdownRunner",
+              "runner_question_source": "How many cards count at showdown?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "hand_rankings_best_five_drill",
+              "source_line": 2568,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "hand_rankings_theory",
+                "hand_rankings_pair_drill",
+                "hand_rankings_two_pair_drill",
+                "hand_rankings_trips_drill",
+                "hand_rankings_straight_drill",
+                "hand_rankings_flush_drill",
+                "hand_rankings_full_house_drill",
+                "hand_rankings_quads_drill",
+                "hand_rankings_royal_flush_drill",
+                "hand_rankings_full_house_vs_flush_drill",
+                "hand_rankings_quads_vs_full_house_drill",
+                "hand_rankings_royal_vs_flush_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "hand_rankings_review",
+              "title": "Ranking recap",
+              "authored_phase": "review",
+              "authored_step_kind": "proveIt",
+              "runner_reference": "_rankingRecapRunner",
+              "runner_question_source": "Which ranks higher: flush or straight?",
+              "runner_feedback_source": "Only the best five cards count. A flush ranks above a straight.",
+              "source_task_id": "hand_rankings_review",
+              "source_line": 2576,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "hand_rankings_theory",
+                "hand_rankings_pair_drill",
+                "hand_rankings_two_pair_drill",
+                "hand_rankings_trips_drill",
+                "hand_rankings_straight_drill",
+                "hand_rankings_flush_drill",
+                "hand_rankings_full_house_drill",
+                "hand_rankings_quads_drill",
+                "hand_rankings_royal_flush_drill",
+                "hand_rankings_full_house_vs_flush_drill",
+                "hand_rankings_quads_vs_full_house_drill",
+                "hand_rankings_royal_vs_flush_drill",
+                "hand_rankings_best_five_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "showdown_winning",
+          "title": "Showdown & winning",
+          "authored_goal": "How a hand actually ends.",
+          "source_line": 2586,
+          "prior_lesson_ids_in_world": [
+            "what_poker_is",
+            "what_poker_is_content",
+            "cards_ranks_suits",
+            "your_first_hand",
+            "fold_check_call_raise",
+            "blinds_action_order",
+            "positions",
+            "hand_rankings_table"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "showdown_theory",
+              "title": "Two ways to win",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_showdownIntroRunner",
+              "runner_question_source": "What happens if everyone folds to you?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "showdown_theory",
+              "source_line": 2598,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "showdown_foldout_drill",
+              "title": "Everyone folds",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_showdownRunner",
+              "runner_question_source": "What happens if everyone folds to you?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "showdown_foldout_drill",
+              "source_line": 2612,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "showdown_theory"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "showdown_best_hand_drill",
+              "title": "Best hand at showdown",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_showdownBestHandRunner",
+              "runner_question_source": "What decides a showdown?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "showdown_best_hand_drill",
+              "source_line": 2626,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "showdown_theory",
+                "showdown_foldout_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "showdown_kicker_drill",
+              "title": "Same pair, better kicker",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_showdownKickerRunner",
+              "runner_question_source": "Same pair. What can break the tie?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "showdown_kicker_drill",
+              "source_line": 2641,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "showdown_theory",
+                "showdown_foldout_drill",
+                "showdown_best_hand_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "showdown_board_plays_drill",
+              "title": "Board plays",
+              "authored_phase": "drill",
+              "authored_step_kind": "fixMistakes",
+              "runner_reference": "_boardPlaysRunner",
+              "runner_question_source": "If both players use the same board, what can happen?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "showdown_board_plays_drill",
+              "source_line": 2650,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "showdown_theory",
+                "showdown_foldout_drill",
+                "showdown_best_hand_drill",
+                "showdown_kicker_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "showdown_tie_drill",
+              "title": "Tie the pot",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_tiePotRunner",
+              "runner_question_source": "What happens to the pot on a tie?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "showdown_tie_drill",
+              "source_line": 2665,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "showdown_theory",
+                "showdown_foldout_drill",
+                "showdown_best_hand_drill",
+                "showdown_kicker_drill",
+                "showdown_board_plays_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "showdown_review",
+              "title": "Win recap",
+              "authored_phase": "review",
+              "authored_step_kind": "proveIt",
+              "runner_reference": "_worldOneCheckpointRunner",
+              "runner_question_source": "What wins at showdown?",
+              "runner_feedback_source": "You can now read table flow and showdown. The next skill is preflop hand buckets: premium, strong, medium, and trash.",
+              "source_task_id": "showdown_review",
+              "source_line": 2680,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "showdown_theory",
+                "showdown_foldout_drill",
+                "showdown_best_hand_drill",
+                "showdown_kicker_drill",
+                "showdown_board_plays_drill",
+                "showdown_tie_drill"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "world_id": "world_2",
+      "world_number": 2,
+      "title": "Hand Discipline",
+      "authored_goal": "Choose which hands deserve chips, then use table clues.",
+      "prior_world_id": "world_1",
+      "lessons": [
+        {
+          "lesson_id": "hand_discipline_buckets",
+          "title": "Hand buckets",
+          "authored_goal": "Sort hands before putting chips in.",
+          "source_line": 3487,
+          "prior_lesson_ids_in_world": [],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "hand_discipline_buckets_intro",
+              "title": "Four buckets",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_world3BucketsIntroRunner",
+              "runner_question_source": "What should you name before the action?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "hand_discipline_buckets_intro",
+              "source_line": 3499,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "hand_discipline_buckets_premium",
+              "title": "Premium hand",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3PremiumBucketRunner",
+              "runner_question_source": "Which bucket is AA?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "hand_discipline_buckets_premium",
+              "source_line": 3507,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "hand_discipline_buckets_intro"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "hand_discipline_buckets_strong",
+              "title": "Strong hand",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_w1StrongBucketRunner",
+              "runner_question_source": "Which bucket is JJ?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "hand_discipline_buckets_strong",
+              "source_line": 3515,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "hand_discipline_buckets_intro",
+                "hand_discipline_buckets_premium"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "hand_discipline_buckets_medium",
+              "title": "Medium hand",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_w1MediumBucketRunner",
+              "runner_question_source": "Which bucket is KQo?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "hand_discipline_buckets_medium",
+              "source_line": 3529,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "hand_discipline_buckets_intro",
+                "hand_discipline_buckets_premium",
+                "hand_discipline_buckets_strong"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "hand_discipline_buckets_trash",
+              "title": "Trash hand",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3TrashBucketRunner",
+              "runner_question_source": "Which bucket fits J8o early?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "hand_discipline_buckets_trash",
+              "source_line": 3543,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "hand_discipline_buckets_intro",
+                "hand_discipline_buckets_premium",
+                "hand_discipline_buckets_strong",
+                "hand_discipline_buckets_medium"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "hand_discipline_buckets_borderline",
+              "title": "Borderline strong",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_w2BorderlineBucketRunner",
+              "runner_question_source": "Which bucket is QJs before context helps?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "hand_discipline_buckets_borderline",
+              "source_line": 3557,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "hand_discipline_buckets_intro",
+                "hand_discipline_buckets_premium",
+                "hand_discipline_buckets_strong",
+                "hand_discipline_buckets_medium",
+                "hand_discipline_buckets_trash"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "hand_discipline_buckets_recap",
+              "title": "Bucket recap",
+              "authored_phase": "review",
+              "authored_step_kind": "review",
+              "runner_reference": "_world3BucketsRecapRunner",
+              "runner_question_source": "What is the first preflop habit?",
+              "runner_feedback_source": "Preflop choices get calmer when you name the hand bucket before choosing open, call, or fold.",
+              "source_task_id": "hand_discipline_buckets_recap",
+              "source_line": 3571,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "hand_discipline_buckets_intro",
+                "hand_discipline_buckets_premium",
+                "hand_discipline_buckets_strong",
+                "hand_discipline_buckets_medium",
+                "hand_discipline_buckets_trash",
+                "hand_discipline_buckets_borderline"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "fold_discipline",
+          "title": "Fold discipline",
+          "authored_goal": "Learn that folding weak hands saves chips.",
+          "source_line": 3581,
+          "prior_lesson_ids_in_world": [
+            "hand_discipline_buckets"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "fold_discipline_discipline_intro",
+              "title": "Fold is a tool",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_foldActionRunner",
+              "runner_question_source": "Which action gives up the hand?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "discipline_intro",
+              "source_line": 3588,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "fold_discipline_early_fold",
+              "title": "Early weak hand",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3EarlyFoldRunner",
+              "runner_question_source": "What is the clean action?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "early_fold",
+              "source_line": 3596,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "fold_discipline_discipline_intro"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "fold_discipline_facing_fold",
+              "title": "Facing pressure",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3WeakFacingFoldRunner",
+              "runner_question_source": "What is the clean response?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "facing_fold",
+              "source_line": 3610,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "fold_discipline_discipline_intro",
+                "fold_discipline_early_fold"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "fold_discipline_discipline_stack_protect",
+              "title": "Protect stack",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3DominatedFoldRunner",
+              "runner_question_source": "What is the disciplined response?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "discipline_stack_protect",
+              "source_line": 3618,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "fold_discipline_discipline_intro",
+                "fold_discipline_early_fold",
+                "fold_discipline_facing_fold"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "fold_discipline_fold_recap",
+              "title": "Discipline recap",
+              "authored_phase": "review",
+              "authored_step_kind": "review",
+              "runner_reference": "_world3DominatedRecapRunner",
+              "runner_question_source": "What is the disciplined action with this weak ace facing an open?",
+              "runner_feedback_source": "Some hands look playable but are often behind stronger versions after an open.",
+              "source_task_id": "fold_recap",
+              "source_line": 3632,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "fold_discipline_discipline_intro",
+                "fold_discipline_early_fold",
+                "fold_discipline_facing_fold",
+                "fold_discipline_discipline_stack_protect"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "weak_ace_warning",
+          "title": "Weak ace warning",
+          "authored_goal": "Familiar hands can still be dominated.",
+          "source_line": 3642,
+          "prior_lesson_ids_in_world": [
+            "hand_discipline_buckets",
+            "fold_discipline"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "weak_ace_warning_w3_dominated_intro",
+              "title": "Trouble hands",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_world3DominatedIntroRunner",
+              "runner_question_source": "What kind of hand needs caution?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "w3_dominated_intro",
+              "source_line": 3392,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "weak_ace_warning_w3_dominated_fold",
+              "title": "Fold trouble",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3DominatedFoldRunner",
+              "runner_question_source": "What is the disciplined response?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w3_dominated_fold",
+              "source_line": 3400,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "weak_ace_warning_w3_dominated_intro"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "weak_ace_warning_w3_strong_continue",
+              "title": "Strong continue",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world2StrongContinueRunner",
+              "runner_question_source": "What is the simple continue?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w3_strong_continue",
+              "source_line": 3414,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "weak_ace_warning_w3_dominated_intro",
+                "weak_ace_warning_w3_dominated_fold"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "weak_ace_warning_weak_ace_pressure_fold",
+              "title": "Pressure fold",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3WeakFacingFoldPressureRunner",
+              "runner_question_source": null,
+              "runner_feedback_source": null,
+              "source_task_id": "weak_ace_pressure_fold",
+              "source_line": 3650,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "weak_ace_warning_w3_dominated_intro",
+                "weak_ace_warning_w3_dominated_fold",
+                "weak_ace_warning_w3_strong_continue"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": [
+                "runner question not resolved by source parser",
+                "runner feedback not resolved by source parser"
+              ]
+            },
+            {
+              "task_id": "weak_ace_warning_weak_ace_kicker_compare",
+              "title": "A7 vs KQ spot",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world2KqoContrastRunner",
+              "runner_question_source": "Why is KQo the cleaner continue?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "weak_ace_kicker_compare",
+              "source_line": 3658,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "weak_ace_warning_w3_dominated_intro",
+                "weak_ace_warning_w3_dominated_fold",
+                "weak_ace_warning_w3_strong_continue",
+                "weak_ace_warning_weak_ace_pressure_fold"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "weak_ace_warning_w3_dominated_recap",
+              "title": "Discipline recap",
+              "authored_phase": "review",
+              "authored_step_kind": "review",
+              "runner_reference": "_world3DominatedRecapRunner",
+              "runner_question_source": "What is the disciplined action with this weak ace facing an open?",
+              "runner_feedback_source": "Some hands look playable but are often behind stronger versions after an open.",
+              "source_task_id": "w3_dominated_recap",
+              "source_line": 3428,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "weak_ace_warning_w3_dominated_intro",
+                "weak_ace_warning_w3_dominated_fold",
+                "weak_ace_warning_w3_strong_continue",
+                "weak_ace_warning_weak_ace_pressure_fold",
+                "weak_ace_warning_weak_ace_kicker_compare"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "continue_or_let_go",
+          "title": "Continue or let go",
+          "authored_goal": "Separate strong continues from weak hopes.",
+          "source_line": 3674,
+          "prior_lesson_ids_in_world": [
+            "hand_discipline_buckets",
+            "fold_discipline",
+            "weak_ace_warning"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "continue_or_let_go_continue_intro",
+              "title": "Strong enough",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_world3BucketsIntroRunner",
+              "runner_question_source": "What should you name before the action?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "continue_intro",
+              "source_line": 3681,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "continue_or_let_go_premium_continue",
+              "title": "Premium continue",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3PremiumBucketRunner",
+              "runner_question_source": "Which bucket is AA?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "premium_continue",
+              "source_line": 3689,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "continue_or_let_go_continue_intro"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "continue_or_let_go_medium_open",
+              "title": "Medium hand opens",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_w1MediumOpenRunner",
+              "runner_question_source": "What is the best first-in action?",
+              "runner_feedback_source": "KQo on the Button can open cleanly when the pot is unopened.",
+              "source_task_id": "medium_open",
+              "source_line": 3697,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "continue_or_let_go_continue_intro",
+                "continue_or_let_go_premium_continue"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "continue_or_let_go_weak_let_go",
+              "title": "Weak let go",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3WeakFacingFoldRunner",
+              "runner_question_source": "What is the clean response?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "weak_let_go",
+              "source_line": 3711,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "continue_or_let_go_continue_intro",
+                "continue_or_let_go_premium_continue",
+                "continue_or_let_go_medium_open"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "continue_or_let_go_medium_call_or_fold",
+              "title": "Medium facing open",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3PlayableCallRunner",
+              "runner_question_source": "What is the simple response?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "medium_call_or_fold",
+              "source_line": 3719,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "continue_or_let_go_continue_intro",
+                "continue_or_let_go_premium_continue",
+                "continue_or_let_go_medium_open",
+                "continue_or_let_go_weak_let_go"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "continue_or_let_go_continue_recap",
+              "title": "Continue recap",
+              "authored_phase": "review",
+              "authored_step_kind": "review",
+              "runner_reference": "_world3FacingOpenRecapRunner",
+              "runner_question_source": "What is the cleaner continue with this playable hand facing an open?",
+              "runner_feedback_source": "Once someone opens, your first preflop read changes from open-or-fold to continue-or-fold.",
+              "source_task_id": "continue_recap",
+              "source_line": 3733,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "continue_or_let_go_continue_intro",
+                "continue_or_let_go_premium_continue",
+                "continue_or_let_go_medium_open",
+                "continue_or_let_go_weak_let_go",
+                "continue_or_let_go_medium_call_or_fold"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "hand_discipline_apply",
+          "title": "Discipline at the table",
+          "authored_goal": "Bucket, seat, and frame — then the action is simple.",
+          "source_line": 3750,
+          "prior_lesson_ids_in_world": [
+            "hand_discipline_buckets",
+            "fold_discipline",
+            "weak_ace_warning",
+            "continue_or_let_go"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "apply_intro",
+              "title": "Three-step habit",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_w1DisciplineApplyIntroRunner",
+              "runner_question_source": "What order helps most?",
+              "runner_feedback_source": "Bucket, seat, and frame together give the action a clear reason.",
+              "source_task_id": "apply_intro",
+              "source_line": 3762,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "apply_utg_fold",
+              "title": "UTG, trash hand",
+              "authored_phase": "drill",
+              "authored_step_kind": "fixMistakes",
+              "runner_reference": "_w1DisciplineApplyEarlyFoldRunner",
+              "runner_question_source": "What is the clean action?",
+              "runner_feedback_source": "Early position with a trash hand needs no extra thought. Fold and wait.",
+              "source_task_id": "apply_utg_fold",
+              "source_line": 3770,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "apply_intro"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "apply_btn_open",
+              "title": "BTN, strong hand",
+              "authored_phase": "drill",
+              "authored_step_kind": "fixMistakes",
+              "runner_reference": "_w1DisciplineApplyLateOpenRunner",
+              "runner_question_source": "What is the clean action?",
+              "runner_feedback_source": "AJo on the button is a strong late-position open when the pot is clean.",
+              "source_task_id": "apply_btn_open",
+              "source_line": 3778,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "apply_intro",
+                "apply_utg_fold"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "apply_hj_decision",
+              "title": "HJ, medium hand",
+              "authored_phase": "drill",
+              "authored_step_kind": "fixMistakes",
+              "runner_reference": "_w1DisciplineApplyHjMediumRunner",
+              "runner_question_source": "What is the clean action?",
+              "runner_feedback_source": "KQo is a medium hand, and HJ can open it when the pot is unopened.",
+              "source_task_id": "apply_hj_decision",
+              "source_line": 3786,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "apply_intro",
+                "apply_utg_fold",
+                "apply_btn_open"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "apply_recap",
+              "title": "Discipline holds",
+              "authored_phase": "review",
+              "authored_step_kind": "proveIt",
+              "runner_reference": "_world3DominatedRecapRunner",
+              "runner_question_source": "What is the disciplined action with this weak ace facing an open?",
+              "runner_feedback_source": "Some hands look playable but are often behind stronger versions after an open.",
+              "source_task_id": "apply_recap",
+              "source_line": 3794,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "apply_intro",
+                "apply_utg_fold",
+                "apply_btn_open",
+                "apply_hj_decision"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "discipline_checkpoint",
+          "title": "Hand discipline checkpoint",
+          "authored_goal": "Name the bucket, then protect your stack.",
+          "source_line": 3804,
+          "prior_lesson_ids_in_world": [
+            "hand_discipline_buckets",
+            "fold_discipline",
+            "weak_ace_warning",
+            "continue_or_let_go",
+            "hand_discipline_apply"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "discipline_checkpoint_checkpoint_intro",
+              "title": "Bucket first",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_world3BucketsRecapRunner",
+              "runner_question_source": "What is the first preflop habit?",
+              "runner_feedback_source": "Preflop choices get calmer when you name the hand bucket before choosing open, call, or fold.",
+              "source_task_id": "checkpoint_intro",
+              "source_line": 3811,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "discipline_checkpoint_checkpoint_premium",
+              "title": "Premium hand",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3PremiumBucketRunner",
+              "runner_question_source": "Which bucket is AA?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "checkpoint_premium",
+              "source_line": 3819,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "discipline_checkpoint_checkpoint_intro"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "discipline_checkpoint_checkpoint_fold",
+              "title": "Disciplined fold",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3DominatedFoldRunner",
+              "runner_question_source": "What is the disciplined response?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "checkpoint_fold",
+              "source_line": 3827,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "discipline_checkpoint_checkpoint_intro",
+                "discipline_checkpoint_checkpoint_premium"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "discipline_checkpoint_checkpoint_borderline_continue",
+              "title": "Borderline continue",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world2BorderlineContinueRunner",
+              "runner_question_source": "What is the simple continue?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "checkpoint_borderline_continue",
+              "source_line": 3841,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "discipline_checkpoint_checkpoint_intro",
+                "discipline_checkpoint_checkpoint_premium",
+                "discipline_checkpoint_checkpoint_fold"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "discipline_checkpoint_checkpoint_table_discipline",
+              "title": "Real-table discipline read",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_w2DisciplineTableNoticeRunner",
+              "runner_question_source": "What is the clean discipline read?",
+              "runner_feedback_source": "Real-table discipline starts by naming the bucket cleanly before inventing reasons to continue.",
+              "source_task_id": "checkpoint_table_discipline",
+              "source_line": 3849,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "discipline_checkpoint_checkpoint_intro",
+                "discipline_checkpoint_checkpoint_premium",
+                "discipline_checkpoint_checkpoint_fold",
+                "discipline_checkpoint_checkpoint_borderline_continue"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "discipline_checkpoint_checkpoint_review",
+              "title": "Discipline recap",
+              "authored_phase": "review",
+              "authored_step_kind": "proveIt",
+              "runner_reference": "_w1DisciplineCheckpointRunner",
+              "runner_question_source": "What comes right after naming the bucket?",
+              "runner_feedback_source": "You now protect your stack with buckets. Next, add position so the same hand can play differently by seat, without chart memorization.",
+              "source_task_id": "checkpoint_review",
+              "source_line": 3858,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "discipline_checkpoint_checkpoint_intro",
+                "discipline_checkpoint_checkpoint_premium",
+                "discipline_checkpoint_checkpoint_fold",
+                "discipline_checkpoint_checkpoint_borderline_continue",
+                "discipline_checkpoint_checkpoint_table_discipline"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "world_id": "world_3",
+      "world_number": 3,
+      "title": "Position Thinking",
+      "authored_goal": "Use position to choose the preflop open, call, or fold.",
+      "prior_world_id": "world_2",
+      "lessons": [
+        {
+          "lesson_id": "position_six_seats",
+          "title": "The 6 positions",
+          "authored_goal": "Recognize UTG, HJ, CO, BTN, SB, and BB.",
+          "source_line": 3877,
+          "prior_lesson_ids_in_world": [],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "position_six_seats_positions_theory",
+              "title": "Six seat labels",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_w3SixSeatsIntroRunner",
+              "runner_question_source": "What does this lesson train?",
+              "runner_feedback_source": "Recognize every seat label before using position to decide.",
+              "source_task_id": "position_six_seats_positions_theory",
+              "source_line": 3889,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "position_six_seats_positions_utg",
+              "title": "Find UTG",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_w3SeatIdUtgRunner",
+              "runner_question_source": null,
+              "runner_feedback_source": null,
+              "source_task_id": "position_six_seats_positions_utg",
+              "source_line": 3897,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "position_six_seats_positions_theory"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": [
+                "runner question not resolved by source parser",
+                "runner feedback not resolved by source parser"
+              ]
+            },
+            {
+              "task_id": "position_six_seats_hj_co_contrast",
+              "title": "HJ or CO",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_w3SeatIdHjRunner",
+              "runner_question_source": null,
+              "runner_feedback_source": null,
+              "source_task_id": "position_six_seats_hj_co_contrast",
+              "source_line": 3911,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "position_six_seats_positions_theory",
+                "position_six_seats_positions_utg"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": [
+                "runner question not resolved by source parser",
+                "runner feedback not resolved by source parser"
+              ]
+            },
+            {
+              "task_id": "position_six_seats_positions_cutoff",
+              "title": "Find CO",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_w3SeatIdCoRunner",
+              "runner_question_source": null,
+              "runner_feedback_source": null,
+              "source_task_id": "position_six_seats_positions_cutoff",
+              "source_line": 3925,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "position_six_seats_positions_theory",
+                "position_six_seats_positions_utg",
+                "position_six_seats_hj_co_contrast"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": [
+                "runner question not resolved by source parser",
+                "runner feedback not resolved by source parser"
+              ]
+            },
+            {
+              "task_id": "position_six_seats_positions_button",
+              "title": "Find BTN",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_w3SeatIdBtnRunner",
+              "runner_question_source": null,
+              "runner_feedback_source": null,
+              "source_task_id": "position_six_seats_positions_button",
+              "source_line": 3933,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "position_six_seats_positions_theory",
+                "position_six_seats_positions_utg",
+                "position_six_seats_hj_co_contrast",
+                "position_six_seats_positions_cutoff"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": [
+                "runner question not resolved by source parser",
+                "runner feedback not resolved by source parser"
+              ]
+            },
+            {
+              "task_id": "position_six_seats_sb_recognition",
+              "title": "Find SB",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_w3SeatIdSbRunner",
+              "runner_question_source": null,
+              "runner_feedback_source": null,
+              "source_task_id": "position_six_seats_sb_recognition",
+              "source_line": 3941,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "position_six_seats_positions_theory",
+                "position_six_seats_positions_utg",
+                "position_six_seats_hj_co_contrast",
+                "position_six_seats_positions_cutoff",
+                "position_six_seats_positions_button"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": [
+                "runner question not resolved by source parser",
+                "runner feedback not resolved by source parser"
+              ]
+            },
+            {
+              "task_id": "position_six_seats_bb_recognition",
+              "title": "Find BB",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_w3SeatIdBbRunner",
+              "runner_question_source": null,
+              "runner_feedback_source": null,
+              "source_task_id": "position_six_seats_bb_recognition",
+              "source_line": 3955,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "position_six_seats_positions_theory",
+                "position_six_seats_positions_utg",
+                "position_six_seats_hj_co_contrast",
+                "position_six_seats_positions_cutoff",
+                "position_six_seats_positions_button",
+                "position_six_seats_sb_recognition"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": [
+                "runner question not resolved by source parser",
+                "runner feedback not resolved by source parser"
+              ]
+            },
+            {
+              "task_id": "position_six_seats_position_repair_seat_id_btn",
+              "title": "Repair BTN seat",
+              "authored_phase": "drill",
+              "authored_step_kind": "fixMistakes",
+              "runner_reference": "_w3SeatIdBtnRepairRunner",
+              "runner_question_source": "Tap BTN again.",
+              "runner_feedback_source": "BTN is the Button seat and the late-position anchor.",
+              "source_task_id": "position_six_seats_position_repair_seat_id_btn",
+              "source_line": 3969,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "position_six_seats_positions_theory",
+                "position_six_seats_positions_utg",
+                "position_six_seats_hj_co_contrast",
+                "position_six_seats_positions_cutoff",
+                "position_six_seats_positions_button",
+                "position_six_seats_sb_recognition",
+                "position_six_seats_bb_recognition"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "position_six_seats_position_repair_seat_id_utg",
+              "title": "Repair UTG seat",
+              "authored_phase": "drill",
+              "authored_step_kind": "fixMistakes",
+              "runner_reference": "_w3SeatIdUtgRepairRunner",
+              "runner_question_source": "Tap UTG again.",
+              "runner_feedback_source": "UTG is the early seat that acts first before the rest of the table.",
+              "source_task_id": "position_six_seats_position_repair_seat_id_utg",
+              "source_line": 3977,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "position_six_seats_positions_theory",
+                "position_six_seats_positions_utg",
+                "position_six_seats_hj_co_contrast",
+                "position_six_seats_positions_cutoff",
+                "position_six_seats_positions_button",
+                "position_six_seats_sb_recognition",
+                "position_six_seats_bb_recognition",
+                "position_six_seats_position_repair_seat_id_btn"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "position_six_seats_positions_review",
+              "title": "Six-seat recap",
+              "authored_phase": "review",
+              "authored_step_kind": "review",
+              "runner_reference": "_w3SixSeatsRecapRunner",
+              "runner_question_source": "Which list names the six seats?",
+              "runner_feedback_source": "Recognize every seat label before using position to decide.",
+              "source_task_id": "position_six_seats_positions_review",
+              "source_line": 3991,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "position_six_seats_positions_theory",
+                "position_six_seats_positions_utg",
+                "position_six_seats_hj_co_contrast",
+                "position_six_seats_positions_cutoff",
+                "position_six_seats_positions_button",
+                "position_six_seats_sb_recognition",
+                "position_six_seats_bb_recognition",
+                "position_six_seats_position_repair_seat_id_btn",
+                "position_six_seats_position_repair_seat_id_utg"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "button_advantage",
+          "title": "Button advantage",
+          "authored_goal": "The Button often acts last and sees more.",
+          "source_line": 4007,
+          "prior_lesson_ids_in_world": [
+            "position_six_seats"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "button_advantage_button_intro",
+              "title": "Best seat",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_world2PositionIntroRunner",
+              "runner_question_source": "Which seat usually has more information before acting?",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "button_intro",
+              "source_line": 4014,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "button_advantage_find_button",
+              "title": "Tap BTN",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_buttonSeatRunner",
+              "runner_question_source": "Tap the Button.",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "find_button",
+              "source_line": 4022,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "button_advantage_button_intro"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "button_advantage_button_open",
+              "title": "BTN first-in open",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3ButtonOpenRunner",
+              "runner_question_source": "What is the simple first-in action?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "button_open",
+              "source_line": 4030,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "button_advantage_button_intro",
+                "button_advantage_find_button"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "button_advantage_button_last",
+              "title": "Acts last",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_postflopButtonActorRunner",
+              "runner_question_source": "Tap the last postflop actor.",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "button_last",
+              "source_line": 4038,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "button_advantage_button_intro",
+                "button_advantage_find_button",
+                "button_advantage_button_open"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "button_advantage_button_vs_cutoff",
+              "title": "BTN vs CO",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_w3LateSeatContrastRunner",
+              "runner_question_source": "Which seat is later than CO?",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "button_vs_cutoff",
+              "source_line": 4046,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "button_advantage_button_intro",
+                "button_advantage_find_button",
+                "button_advantage_button_open",
+                "button_advantage_button_last"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "button_advantage_position_repair_btn_last_postflop",
+              "title": "Repair BTN last postflop",
+              "authored_phase": "drill",
+              "authored_step_kind": "fixMistakes",
+              "runner_reference": "_w3BtnLastPostflopRepairRunner",
+              "runner_question_source": "Who acts last after the flop?",
+              "runner_feedback_source": "Button acts after the blinds postflop in this hand.",
+              "source_task_id": "position_repair_btn_last_postflop",
+              "source_line": 4070,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "button_advantage_button_intro",
+                "button_advantage_find_button",
+                "button_advantage_button_open",
+                "button_advantage_button_last",
+                "button_advantage_button_vs_cutoff"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "button_advantage_button_recap",
+              "title": "Button recap",
+              "authored_phase": "review",
+              "authored_step_kind": "review",
+              "runner_reference": "_world2PositionRecapRunner",
+              "runner_question_source": "Which seat usually sees more first?",
+              "runner_feedback_source": "Hand strength is not the whole decision. Seat position changes how much information you have.",
+              "source_task_id": "button_recap",
+              "source_line": 4060,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "button_advantage_button_intro",
+                "button_advantage_find_button",
+                "button_advantage_button_open",
+                "button_advantage_button_last",
+                "button_advantage_button_vs_cutoff",
+                "button_advantage_position_repair_btn_last_postflop"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "early_vs_late",
+          "title": "Early vs late",
+          "authored_goal": "Early seats decide with less information.",
+          "source_line": 4080,
+          "prior_lesson_ids_in_world": [
+            "position_six_seats",
+            "button_advantage"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "early_vs_late_w2_position_intro",
+              "title": "Info changes",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_world2PositionIntroRunner",
+              "runner_question_source": "Which seat usually has more information before acting?",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "w2_position_intro",
+              "source_line": 2995,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "early_vs_late_w2_late_position",
+              "title": "Late seat",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_latePositionRunner",
+              "runner_question_source": "Which seat acts latest after the flop?",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "w2_late_position",
+              "source_line": 3003,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "early_vs_late_w2_position_intro"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "early_vs_late_w2_early_position",
+              "title": "Early seat",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": null,
+              "runner_question_source": null,
+              "runner_feedback_source": null,
+              "source_task_id": "w2_early_position",
+              "source_line": 3017,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "early_vs_late_w2_position_intro",
+                "early_vs_late_w2_late_position"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": [
+                "runner expression not resolved by source parser",
+                "runner question not resolved by source parser",
+                "runner feedback not resolved by source parser"
+              ]
+            },
+            {
+              "task_id": "early_vs_late_early_pressure_choice",
+              "title": "Early pressure",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_w3EarlySeatPressureRunner",
+              "runner_question_source": "Why does UTG need more discipline here?",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "early_pressure_choice",
+              "source_line": 4088,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "early_vs_late_w2_position_intro",
+                "early_vs_late_w2_late_position",
+                "early_vs_late_w2_early_position"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "early_vs_late_position_repair_utg_players_behind",
+              "title": "Repair UTG pressure",
+              "authored_phase": "drill",
+              "authored_step_kind": "fixMistakes",
+              "runner_reference": "_w3UtgPlayersBehindRepairRunner",
+              "runner_question_source": "Why is UTG under pressure here?",
+              "runner_feedback_source": "Five players still act after UTG, so early seats need extra discipline.",
+              "source_task_id": "position_repair_utg_players_behind",
+              "source_line": 4102,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "early_vs_late_w2_position_intro",
+                "early_vs_late_w2_late_position",
+                "early_vs_late_w2_early_position",
+                "early_vs_late_early_pressure_choice"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "early_vs_late_late_info_choice",
+              "title": "Late info edge",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_w3LateInfoEdgeRunner",
+              "runner_question_source": "What gives CO more comfort than UTG here?",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "late_info_choice",
+              "source_line": 4116,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "early_vs_late_w2_position_intro",
+                "early_vs_late_w2_late_position",
+                "early_vs_late_w2_early_position",
+                "early_vs_late_early_pressure_choice",
+                "early_vs_late_position_repair_utg_players_behind"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "early_vs_late_w2_position_recap",
+              "title": "Position recap",
+              "authored_phase": "review",
+              "authored_step_kind": "review",
+              "runner_reference": "_world2PositionRecapRunner",
+              "runner_question_source": "Which seat usually sees more first?",
+              "runner_feedback_source": "Hand strength is not the whole decision. Seat position changes how much information you have.",
+              "source_task_id": "w2_position_recap",
+              "source_line": 3027,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "early_vs_late_w2_position_intro",
+                "early_vs_late_w2_late_position",
+                "early_vs_late_w2_early_position",
+                "early_vs_late_early_pressure_choice",
+                "early_vs_late_position_repair_utg_players_behind",
+                "early_vs_late_late_info_choice"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "same_hand_different_seat",
+          "title": "Same hand, different seat",
+          "authored_goal": "A seat can change how comfortable a hand is.",
+          "source_line": 4126,
+          "prior_lesson_ids_in_world": [
+            "position_six_seats",
+            "button_advantage",
+            "early_vs_late"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "same_hand_different_seat_w3_same_hand_intro",
+              "title": "Context first",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_world3SameHandIntroRunner",
+              "runner_question_source": "What should you re-check?",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "w3_same_hand_intro",
+              "source_line": 3328,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "same_hand_different_seat_w3_same_hand_open",
+              "title": "Open frame",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3CutoffOpenRunner",
+              "runner_question_source": "What is the cleaner first-in action from CO?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "w3_same_hand_open",
+              "source_line": 3342,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "same_hand_different_seat_w3_same_hand_intro"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "same_hand_different_seat_w3_same_hand_call",
+              "title": "Call frame",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3CutoffCallRunner",
+              "runner_question_source": "What is the cleaner response from CO?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w3_same_hand_call",
+              "source_line": 3350,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "same_hand_different_seat_w3_same_hand_intro",
+                "same_hand_different_seat_w3_same_hand_open"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "same_hand_different_seat_same_hand_early_fold",
+              "title": "Early seat fold",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3PositionDisciplineRunner",
+              "runner_question_source": "What is the disciplined action?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "same_hand_early_fold",
+              "source_line": 4134,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "same_hand_different_seat_w3_same_hand_intro",
+                "same_hand_different_seat_w3_same_hand_open",
+                "same_hand_different_seat_w3_same_hand_call"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "same_hand_different_seat_same_hand_late_open",
+              "title": "Late seat open",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3LateOpenRunner",
+              "runner_question_source": "What is the simple action?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "same_hand_late_open",
+              "source_line": 4142,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "same_hand_different_seat_w3_same_hand_intro",
+                "same_hand_different_seat_w3_same_hand_open",
+                "same_hand_different_seat_w3_same_hand_call",
+                "same_hand_different_seat_same_hand_early_fold"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "same_hand_different_seat_position_repair_same_hand_different_seat",
+              "title": "Repair same hand, different seat",
+              "authored_phase": "drill",
+              "authored_step_kind": "fixMistakes",
+              "runner_reference": "_w3SameHandDifferentSeatRepairRunner",
+              "runner_question_source": "What changed most between the two frames?",
+              "runner_feedback_source": "The cards stayed ATo. The seat changed who still acts after Hero, so the hand feels different.",
+              "source_task_id": "position_repair_same_hand_different_seat",
+              "source_line": 4156,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "same_hand_different_seat_w3_same_hand_intro",
+                "same_hand_different_seat_w3_same_hand_open",
+                "same_hand_different_seat_w3_same_hand_call",
+                "same_hand_different_seat_same_hand_early_fold",
+                "same_hand_different_seat_same_hand_late_open"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "same_hand_different_seat_w3_same_hand_recap",
+              "title": "Frame recap",
+              "authored_phase": "review",
+              "authored_step_kind": "review",
+              "runner_reference": "_world3SameHandRecapRunner",
+              "runner_question_source": "What prevents one-hand-one-answer thinking?",
+              "runner_feedback_source": "The reusable preflop read is hand bucket, position, and action frame before choosing.",
+              "source_task_id": "w3_same_hand_recap",
+              "source_line": 3364,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "same_hand_different_seat_w3_same_hand_intro",
+                "same_hand_different_seat_w3_same_hand_open",
+                "same_hand_different_seat_w3_same_hand_call",
+                "same_hand_different_seat_same_hand_early_fold",
+                "same_hand_different_seat_same_hand_late_open",
+                "same_hand_different_seat_position_repair_same_hand_different_seat"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "position_apply",
+          "title": "Position at the table",
+          "authored_goal": "Seat shapes the decision before anything else.",
+          "source_line": 4167,
+          "prior_lesson_ids_in_world": [
+            "position_six_seats",
+            "button_advantage",
+            "early_vs_late",
+            "same_hand_different_seat"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "position_apply_intro",
+              "title": "Position shapes action",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_w3PositionApplyIntroRunner",
+              "runner_question_source": "Which seat usually has more information before acting?",
+              "runner_feedback_source": "Seat changes when you act and how much information you have before the decision.",
+              "source_task_id": "position_apply_intro",
+              "source_line": 4179,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "position_apply_btn_open",
+              "title": "BTN: open strong hand",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3ButtonOpenQtsRunner",
+              "runner_question_source": "What is the simple first-in action?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "position_apply_btn_open",
+              "source_line": 4187,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "position_apply_intro"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "position_apply_late_open",
+              "title": "Late: open or limp?",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3LateOpenRunner",
+              "runner_question_source": "What is the simple action?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "position_apply_late_open",
+              "source_line": 4201,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "position_apply_intro",
+                "position_apply_btn_open"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "position_apply_early_fold",
+              "title": "Early: same hand folds",
+              "authored_phase": "drill",
+              "authored_step_kind": "fixMistakes",
+              "runner_reference": "_world3PositionDisciplineRunner",
+              "runner_question_source": "What is the disciplined action?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "position_apply_early_fold",
+              "source_line": 4215,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "position_apply_intro",
+                "position_apply_btn_open",
+                "position_apply_late_open"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "position_apply_hj_fold",
+              "title": "HJ: discipline hold",
+              "authored_phase": "drill",
+              "authored_step_kind": "fixMistakes",
+              "runner_reference": "_world3HijDisciplineRunner",
+              "runner_question_source": "What is the disciplined action?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "position_apply_hj_fold",
+              "source_line": 4223,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "position_apply_intro",
+                "position_apply_btn_open",
+                "position_apply_late_open",
+                "position_apply_early_fold"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "position_apply_recap",
+              "title": "Position apply recap",
+              "authored_phase": "review",
+              "authored_step_kind": "proveIt",
+              "runner_reference": "_world3PositionRecapRunner",
+              "runner_question_source": "What should you check after the bucket?",
+              "runner_feedback_source": "Preflop is not one-hand-one-answer. Position changes how confidently the hand can continue in first-in and facing-open frames.",
+              "source_task_id": "position_apply_recap",
+              "source_line": 4237,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "position_apply_intro",
+                "position_apply_btn_open",
+                "position_apply_late_open",
+                "position_apply_early_fold",
+                "position_apply_hj_fold"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "position_checkpoint",
+          "title": "Position checkpoint",
+          "authored_goal": "Use seat order before choosing an action.",
+          "source_line": 4247,
+          "prior_lesson_ids_in_world": [
+            "position_six_seats",
+            "button_advantage",
+            "early_vs_late",
+            "same_hand_different_seat",
+            "position_apply"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "position_checkpoint_position_checkpoint_intro",
+              "title": "Seat before action",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_world2PositionIntroRunner",
+              "runner_question_source": "Which seat usually has more information before acting?",
+              "runner_feedback_source": "The order around the table matters: BTN acts after CO and before the blinds preflop.",
+              "source_task_id": "position_checkpoint_intro",
+              "source_line": 4254,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "position_checkpoint_position_checkpoint_late_open",
+              "title": "Late: open or limp?",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3LateOpenRunner",
+              "runner_question_source": "What is the simple action?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "position_checkpoint_late_open",
+              "source_line": 4262,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "position_checkpoint_position_checkpoint_intro"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "position_checkpoint_position_checkpoint_early_fold",
+              "title": "Early: same hand folds",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3CheckpointEarlyFoldRunner",
+              "runner_question_source": "What is the disciplined action?",
+              "runner_feedback_source": "Raising is the clean first-in Button action; calling only matches the blind.",
+              "source_task_id": "position_checkpoint_early_fold",
+              "source_line": 4276,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "position_checkpoint_position_checkpoint_intro",
+                "position_checkpoint_position_checkpoint_late_open"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "position_checkpoint_position_checkpoint_btn_call",
+              "title": "BTN: callable spot",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world3PositionCheckpointCallRunner",
+              "runner_question_source": "What is the simple response?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "position_checkpoint_btn_call",
+              "source_line": 4290,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "position_checkpoint_position_checkpoint_intro",
+                "position_checkpoint_position_checkpoint_late_open",
+                "position_checkpoint_position_checkpoint_early_fold"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "position_checkpoint_position_checkpoint_table_notice",
+              "title": "Real-table seat read",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_w3TablePositionNoticeRunner",
+              "runner_question_source": "What is the clean seat read here?",
+              "runner_feedback_source": "Count the players behind before treating the seat as comfortable.",
+              "source_task_id": "position_checkpoint_table_notice",
+              "source_line": 4298,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "position_checkpoint_position_checkpoint_intro",
+                "position_checkpoint_position_checkpoint_late_open",
+                "position_checkpoint_position_checkpoint_early_fold",
+                "position_checkpoint_position_checkpoint_btn_call"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "position_checkpoint_position_checkpoint_review",
+              "title": "Position recap",
+              "authored_phase": "review",
+              "authored_step_kind": "proveIt",
+              "runner_reference": "_world3PositionRecapRunner",
+              "runner_question_source": "What should you check after the bucket?",
+              "runner_feedback_source": "Preflop is not one-hand-one-answer. Position changes how confidently the hand can continue in first-in and facing-open frames.",
+              "source_task_id": "position_checkpoint_review",
+              "source_line": 4313,
+              "source_helper_retitled": true,
+              "earlier_task_ids_in_lesson": [
+                "position_checkpoint_position_checkpoint_intro",
+                "position_checkpoint_position_checkpoint_late_open",
+                "position_checkpoint_position_checkpoint_early_fold",
+                "position_checkpoint_position_checkpoint_btn_call",
+                "position_checkpoint_position_checkpoint_table_notice"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "world_id": "world_4",
+      "world_number": 4,
+      "title": "Bet Purpose / Price",
+      "authored_goal": "Understand why bets happen and what price asks you to risk.",
+      "prior_world_id": "world_3",
+      "lessons": [
+        {
+          "lesson_id": "why_bets_happen",
+          "title": "Why bets happen",
+          "authored_goal": "Every bet should have a simple purpose.",
+          "source_line": 4413,
+          "prior_lesson_ids_in_world": [],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "w4_purpose_intro",
+              "title": "Bet purpose",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_world4PurposeIntroRunner",
+              "runner_question_source": "What should you name before sizing a bet?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_purpose_intro",
+              "source_line": 4425,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_value_purpose",
+              "title": "Value reason",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world4ValuePurposeRunner",
+              "runner_question_source": "What is the main purpose?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_value_purpose",
+              "source_line": 4433,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_purpose_intro"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_bluff_purpose",
+              "title": "Bluff reason",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world4BluffPurposeRunner",
+              "runner_question_source": "What is the main purpose?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_bluff_purpose",
+              "source_line": 4447,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_purpose_intro",
+                "w4_value_purpose"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_purpose_recap",
+              "title": "Purpose recap",
+              "authored_phase": "review",
+              "authored_step_kind": "review",
+              "runner_reference": "_world4PurposeRecapRunner",
+              "runner_question_source": "What comes before the bet size?",
+              "runner_feedback_source": "Betting gets clearer when every chip has a job: value, bluff, or protection.",
+              "source_task_id": "w4_purpose_recap",
+              "source_line": 4461,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_purpose_intro",
+                "w4_value_purpose",
+                "w4_bluff_purpose"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "value_bets",
+          "title": "Value bets",
+          "authored_goal": "Bet when worse hands can still call.",
+          "source_line": 4471,
+          "prior_lesson_ids_in_world": [
+            "why_bets_happen"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "w4_value_intro",
+              "title": "Worse calls",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_world4ValueIntroRunner",
+              "runner_question_source": "Who should a value bet get called by?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_value_intro",
+              "source_line": 4483,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_value_bet",
+              "title": "Bet top pair",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world4ValueBetRunner",
+              "runner_question_source": "What action fits the purpose?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_value_bet",
+              "source_line": 4491,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_value_intro"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_value_missed",
+              "title": "Do not hide value",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world4ValueCheckMissRunner",
+              "runner_question_source": "What action best collects value from worse hands here?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_value_missed",
+              "source_line": 4499,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_value_intro",
+                "w4_value_bet"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_value_recap",
+              "title": "Value recap",
+              "authored_phase": "review",
+              "authored_step_kind": "review",
+              "runner_reference": "_world4ValueRecapRunner",
+              "runner_question_source": "What makes a bet value?",
+              "runner_feedback_source": "A value bet is not just betting a strong hand. It needs weaker hands that can call.",
+              "source_task_id": "w4_value_recap",
+              "source_line": 4513,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_value_intro",
+                "w4_value_bet",
+                "w4_value_missed"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "bluff_pressure",
+          "title": "Bluff pressure",
+          "authored_goal": "A bluff tries to make better hands fold.",
+          "source_line": 4523,
+          "prior_lesson_ids_in_world": [
+            "why_bets_happen",
+            "value_bets"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "w4_bluff_intro",
+              "title": "Fold pressure",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_world4BluffIntroRunner",
+              "runner_question_source": "What does a bluff need?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_bluff_intro",
+              "source_line": 4535,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_bluff_pressure",
+              "title": "Apply pressure",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world4BluffPressureRunner",
+              "runner_question_source": "What action matches the bluff purpose?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_bluff_pressure",
+              "source_line": 4543,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_bluff_intro"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_bad_bluff",
+              "title": "Bad pressure",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world4BadBluffRunner",
+              "runner_question_source": "What is the safer beginner action?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_bad_bluff",
+              "source_line": 4551,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_bluff_intro",
+                "w4_bluff_pressure"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_bluff_recap",
+              "title": "Bluff recap",
+              "authored_phase": "review",
+              "authored_step_kind": "review",
+              "runner_reference": "_world4BluffRecapRunner",
+              "runner_question_source": "What does a bluff try to create?",
+              "runner_feedback_source": "Bluffing is pressure with a purpose: make better hands fold without risking chips blindly.",
+              "source_task_id": "w4_bluff_recap",
+              "source_line": 4565,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_bluff_intro",
+                "w4_bluff_pressure",
+                "w4_bad_bluff"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "protection_and_denial",
+          "title": "Protection and denial",
+          "authored_goal": "Bet so the next card is not free.",
+          "source_line": 4575,
+          "prior_lesson_ids_in_world": [
+            "why_bets_happen",
+            "value_bets",
+            "bluff_pressure"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "w4_protection_intro",
+              "title": "Deny free card",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_world4ProtectionIntroRunner",
+              "runner_question_source": "What does protection deny?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_protection_intro",
+              "source_line": 4587,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_protection_bet",
+              "title": "Protect pair",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world4ProtectionBetRunner",
+              "runner_question_source": "What action fits protection?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_protection_bet",
+              "source_line": 4595,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_protection_intro"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_protection_check",
+              "title": "Free card risk",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world4ProtectionCheckRunner",
+              "runner_question_source": "What did checking allow?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_protection_check",
+              "source_line": 4603,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_protection_intro",
+                "w4_protection_bet"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_protection_recap",
+              "title": "Protection recap",
+              "authored_phase": "review",
+              "authored_step_kind": "review",
+              "runner_reference": "_world4ProtectionRecapRunner",
+              "runner_question_source": "What does a protection bet deny?",
+              "runner_feedback_source": "Protection means the next card is not free for the player trying to continue.",
+              "source_task_id": "w4_protection_recap",
+              "source_line": 4617,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_protection_intro",
+                "w4_protection_bet",
+                "w4_protection_check"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "call_price",
+          "title": "Call price",
+          "authored_goal": "A bet gives you a price to continue.",
+          "source_line": 4627,
+          "prior_lesson_ids_in_world": [
+            "why_bets_happen",
+            "value_bets",
+            "bluff_pressure",
+            "protection_and_denial"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "w4_price_intro",
+              "title": "Facing a price",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_world4PriceIntroRunner",
+              "runner_question_source": "What does a bet give the caller?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_price_intro",
+              "source_line": 4639,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_good_price_call",
+              "title": "Call small price",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world4GoodPriceCallRunner",
+              "runner_question_source": "What action fits the price?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_good_price_call",
+              "source_line": 4647,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_price_intro"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_bad_price_fold",
+              "title": "Fold high price",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world4BadPriceFoldRunner",
+              "runner_question_source": "What action fits the price?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_bad_price_fold",
+              "source_line": 4655,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_price_intro",
+                "w4_good_price_call"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_cheap_price_marginal_call",
+              "title": "Cheap call with middle pair",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world4CheapPriceMarginalCallRunner",
+              "runner_question_source": "What action fits the price?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_cheap_price_marginal_call",
+              "source_line": 4669,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_price_intro",
+                "w4_good_price_call",
+                "w4_bad_price_fold"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_big_price_marginal_fold",
+              "title": "Big price, thinner hand",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world4BigPriceMarginalFoldRunner",
+              "runner_question_source": "What action fits the price?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_big_price_marginal_fold",
+              "source_line": 4683,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_price_intro",
+                "w4_good_price_call",
+                "w4_bad_price_fold",
+                "w4_cheap_price_marginal_call"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_price_recap",
+              "title": "Price recap",
+              "authored_phase": "review",
+              "authored_step_kind": "review",
+              "runner_reference": "_world4PriceRecapRunner",
+              "runner_question_source": "What should you read before calling?",
+              "runner_feedback_source": "A call is not just staying curious. Pot tells what you can win, To call tells what you must risk, and the hand must be strong enough for that trade.",
+              "source_task_id": "w4_price_recap",
+              "source_line": 4697,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_price_intro",
+                "w4_good_price_call",
+                "w4_bad_price_fold",
+                "w4_cheap_price_marginal_call",
+                "w4_big_price_marginal_fold"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "small_half_pot",
+          "title": "Small, half, pot",
+          "authored_goal": "Size says how much pressure you create.",
+          "source_line": 4707,
+          "prior_lesson_ids_in_world": [
+            "why_bets_happen",
+            "value_bets",
+            "bluff_pressure",
+            "protection_and_denial",
+            "call_price"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "w4_sizing_intro",
+              "title": "Size language",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_world4SizingIntroRunner",
+              "runner_question_source": "What does size change?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_sizing_intro",
+              "source_line": 4719,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_small_bet",
+              "title": "One-third bet",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world4SmallBetRunner",
+              "runner_question_source": "Which size is one-third pot?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_small_bet",
+              "source_line": 4727,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_sizing_intro"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_half_pot_bet",
+              "title": "Half-pot bet",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world4HalfPotRunner",
+              "runner_question_source": "Which size is half-pot?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_half_pot_bet",
+              "source_line": 4742,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_sizing_intro",
+                "w4_small_bet"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_pot_bet",
+              "title": "Pot-size bet",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world4PotBetRunner",
+              "runner_question_source": "Which size is pot-size?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_pot_bet",
+              "source_line": 4751,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_sizing_intro",
+                "w4_small_bet",
+                "w4_half_pot_bet"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_sizing_recap",
+              "title": "Sizing recap",
+              "authored_phase": "review",
+              "authored_step_kind": "review",
+              "runner_reference": "_world4SizingRecapRunner",
+              "runner_question_source": "What should size match?",
+              "runner_feedback_source": "Size is not decoration. It creates the price your opponent must face.",
+              "source_task_id": "w4_sizing_recap",
+              "source_line": 4760,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_sizing_intro",
+                "w4_small_bet",
+                "w4_half_pot_bet",
+                "w4_pot_bet"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        },
+        {
+          "lesson_id": "price_checkpoint",
+          "title": "Price checkpoint",
+          "authored_goal": "Read purpose, size, and price before action.",
+          "source_line": 4770,
+          "prior_lesson_ids_in_world": [
+            "why_bets_happen",
+            "value_bets",
+            "bluff_pressure",
+            "protection_and_denial",
+            "call_price",
+            "small_half_pot"
+          ],
+          "prerequisite_kind": "source-order path closure, not demonstrated mastery",
+          "profile_dependent_availability": "NOT_VERIFIED_BY_SOURCE_MAP",
+          "tasks": [
+            {
+              "task_id": "w4_checkpoint_intro",
+              "title": "Three reads",
+              "authored_phase": "theory",
+              "authored_step_kind": "learn",
+              "runner_reference": "_world4CheckpointIntroRunner",
+              "runner_question_source": "What are the three World 4 reads?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_checkpoint_intro",
+              "source_line": 4782,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_checkpoint_value",
+              "title": "Value or bluff",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world4ValuePurposeRunner",
+              "runner_question_source": "What is the main purpose?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_checkpoint_value",
+              "source_line": 4790,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_checkpoint_intro"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_checkpoint_price",
+              "title": "Call or fold",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world4BadPriceFoldRunner",
+              "runner_question_source": "What action fits the price?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_checkpoint_price",
+              "source_line": 4804,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_checkpoint_intro",
+                "w4_checkpoint_value"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_checkpoint_table_price",
+              "title": "Real-table price read",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world4PriceTableTransferRunner",
+              "runner_question_source": "What is the clean turn action?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_checkpoint_table_price",
+              "source_line": 4818,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_checkpoint_intro",
+                "w4_checkpoint_value",
+                "w4_checkpoint_price"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_checkpoint_table_purpose_price",
+              "title": "Live purpose and price",
+              "authored_phase": "drill",
+              "authored_step_kind": "practice",
+              "runner_reference": "_world4PurposePriceTableTransferRunner",
+              "runner_question_source": "What is the clean read?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_checkpoint_table_purpose_price",
+              "source_line": 4833,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_checkpoint_intro",
+                "w4_checkpoint_value",
+                "w4_checkpoint_price",
+                "w4_checkpoint_table_price"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            },
+            {
+              "task_id": "w4_checkpoint_review",
+              "title": "Price recap",
+              "authored_phase": "review",
+              "authored_step_kind": "proveIt",
+              "runner_reference": "_world4CheckpointRunner",
+              "runner_question_source": "What makes a bet easier to understand?",
+              "runner_feedback_source": "A flop has three board cards. Turn and river add one card each.",
+              "source_task_id": "w4_checkpoint_review",
+              "source_line": 4842,
+              "source_helper_retitled": false,
+              "earlier_task_ids_in_lesson": [
+                "w4_checkpoint_intro",
+                "w4_checkpoint_value",
+                "w4_checkpoint_price",
+                "w4_checkpoint_table_price",
+                "w4_checkpoint_table_purpose_price"
+              ],
+              "runtime_independence_unseen_and_human": "NOT_VERIFIED_BY_SOURCE_MAP",
+              "source_copy_gaps": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "source_copy_gaps": [
+    {
+      "task_id": "your_first_hand_preflop",
+      "gap": "runner expression not resolved by source parser; runner question not resolved by source parser; runner feedback not resolved by source parser"
+    },
+    {
+      "task_id": "your_first_hand_private_cards_recheck",
+      "gap": "runner expression not resolved by source parser; runner question not resolved by source parser; runner feedback not resolved by source parser"
+    },
+    {
+      "task_id": "your_first_hand_flop",
+      "gap": "runner expression not resolved by source parser; runner question not resolved by source parser; runner feedback not resolved by source parser"
+    },
+    {
+      "task_id": "your_first_hand_turn",
+      "gap": "runner expression not resolved by source parser; runner question not resolved by source parser; runner feedback not resolved by source parser"
+    },
+    {
+      "task_id": "your_first_hand_river",
+      "gap": "runner expression not resolved by source parser; runner question not resolved by source parser; runner feedback not resolved by source parser"
+    },
+    {
+      "task_id": "your_first_hand_showdown",
+      "gap": "runner expression not resolved by source parser; runner question not resolved by source parser; runner feedback not resolved by source parser"
+    },
+    {
+      "task_id": "your_first_hand_action_trail",
+      "gap": "runner expression not resolved by source parser; runner question not resolved by source parser; runner feedback not resolved by source parser"
+    },
+    {
+      "task_id": "your_first_hand_recap",
+      "gap": "runner expression not resolved by source parser; runner question not resolved by source parser; runner feedback not resolved by source parser"
+    },
+    {
+      "task_id": "blinds_first_actor",
+      "gap": "runner expression not resolved by source parser; runner question not resolved by source parser; runner feedback not resolved by source parser"
+    },
+    {
+      "task_id": "positions_cutoff",
+      "gap": "runner expression not resolved by source parser; runner question not resolved by source parser; runner feedback not resolved by source parser"
+    },
+    {
+      "task_id": "positions_early_late",
+      "gap": "runner expression not resolved by source parser; runner question not resolved by source parser; runner feedback not resolved by source parser"
+    },
+    {
+      "task_id": "weak_ace_warning_weak_ace_pressure_fold",
+      "gap": "runner question not resolved by source parser; runner feedback not resolved by source parser"
+    },
+    {
+      "task_id": "position_six_seats_positions_utg",
+      "gap": "runner question not resolved by source parser; runner feedback not resolved by source parser"
+    },
+    {
+      "task_id": "position_six_seats_hj_co_contrast",
+      "gap": "runner question not resolved by source parser; runner feedback not resolved by source parser"
+    },
+    {
+      "task_id": "position_six_seats_positions_cutoff",
+      "gap": "runner question not resolved by source parser; runner feedback not resolved by source parser"
+    },
+    {
+      "task_id": "position_six_seats_positions_button",
+      "gap": "runner question not resolved by source parser; runner feedback not resolved by source parser"
+    },
+    {
+      "task_id": "position_six_seats_sb_recognition",
+      "gap": "runner question not resolved by source parser; runner feedback not resolved by source parser"
+    },
+    {
+      "task_id": "position_six_seats_bb_recognition",
+      "gap": "runner question not resolved by source parser; runner feedback not resolved by source parser"
+    },
+    {
+      "task_id": "early_vs_late_w2_early_position",
+      "gap": "runner expression not resolved by source parser; runner question not resolved by source parser; runner feedback not resolved by source parser"
+    }
+  ],
+  "remaining": [
+    "Resolve any listed source-copy gaps before claiming complete copy coverage.",
+    "Verify genuine graded independent tasks, explanation and repair at the admitted runtime boundary.",
+    "Prove all claimed transitions/unlock negative cases with applicable checks; this is no source-only PASS for CUR-08.",
+    "Human understanding and efficacy remain separately gated; no points or full CUR/0.3 acceptance."
+  ]
+}
