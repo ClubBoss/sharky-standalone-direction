@@ -1,10 +1,20 @@
 {
   "schema": "act0_foundation_source_map_v1",
+  "map_revision": 2,
+  "source_status": "PREPARED_UTC_CANDIDATE_NOT_PUBLISHED_OR_ACCEPTED",
+  "source_delta": {
+    "composition_base_commit": "6e848de8c11caa312af37347550ebde714d4b47c",
+    "scope": "strict whole-cache retention admission only; route gates unchanged",
+    "preview_prior_git_blob": "e4e977674457061c8345da2ffe94ad72a75209e9",
+    "preview_candidate_git_blob": "e2f837841997402cbd4c08a6a308587c080ae480",
+    "utc_patch_sha256": "ef9686afe5b9ef5d1e6e0501192098050ef2bf9f73de11173a62f1a81de82e07",
+    "runtime_composition_and_human": "NOT_VERIFIED"
+  },
   "scope": "W1-W4 source traceability preparation; not course/runtime/Human acceptance",
   "source_base_commit": "ccd263c4ed9c03f0a09751b19048dc6030ffbbcf",
   "source_git_blobs": {
     "lib/ui_v2/act0_shell/act0_shell_state_v1.dart": "3fcc919efb9cb0aa48940514c60d800c3362d038",
-    "lib/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart": "e4e977674457061c8345da2ffe94ad72a75209e9",
+    "lib/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart": "e2f837841997402cbd4c08a6a308587c080ae480",
     "tools/_lib/act0_content_copy_source_parser.dart": "ebc69be97b979a997c4446dee008ca037869051b"
   },
   "gate_semantics": {

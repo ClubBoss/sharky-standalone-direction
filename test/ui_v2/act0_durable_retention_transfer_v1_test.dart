@@ -11,6 +11,75 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_spaced_repetition_engine_v1
 final DateTime _t0 = DateTime.utc(2026, 7, 18, 12);
 
 void main() {
+  group('strict serialized time admission (machine fixtures)', () {
+    test(
+      'nonlegacy record rejects malformed time; missing legacy remains unspaced',
+      () {
+        final valid = _record(order: 1, at: _t0).toPayload();
+        expect(Act0LearningEvidenceRecordV1.tryParse(valid), isNotNull);
+        for (final bad in <Object?>[
+          20261114,
+          '2026-02-31T00:00:00Z',
+          '2026-11-14T25:00:00Z',
+          '2026-11-14T00:00:00',
+        ]) {
+          expect(
+            Act0LearningEvidenceRecordV1.tryParse({
+              ...valid,
+              'recordedAtUtc': bad,
+            }),
+            isNull,
+            reason: '$bad',
+          );
+        }
+        final legacy = _legacyRecord(order: 1).toPayload()
+          ..remove('recordedAtUtc');
+        expect(
+          Act0LearningEvidenceRecordV1.tryParse(legacy)?.reviewKind,
+          Act0ReviewKindV1.legacyUnspaced,
+        );
+      },
+    );
+    test(
+      'strict retention restore rejects a bad family without retaining a partial cache',
+      () {
+        final valid = _durableHistory().toPayload().single;
+        expect(
+          Act0DurableRetentionHistoryV1.tryParseStrict([valid])!.toPayload(),
+          [valid],
+        );
+        for (final key in const [
+          'nextDueAtUtc',
+          'lastSpacedReviewAtUtc',
+          'lastRecordedAtUtc',
+        ]) {
+          final invalid = {
+            ...valid,
+            'conceptFamilyId': 'other_family',
+            key: '2026-02-31T00:00:00Z',
+          };
+          expect(Act0DurableRetentionFamilyV1.tryParse(invalid), isNull);
+          expect(
+            Act0DurableRetentionHistoryV1.tryParseStrict([valid, invalid]),
+            isNull,
+          );
+        }
+        final legacy = Act0DurableRetentionHistoryV1.fromLearningEvidence(
+          Act0LearningEvidenceHistoryV1(records: [_legacyRecord(order: 1)]),
+        );
+        expect(
+          Act0DurableRetentionHistoryV1.tryParseStrict(
+            legacy.toPayload(),
+          )!.toPayload(),
+          legacy.toPayload(),
+        );
+        expect(
+          Act0DurableRetentionHistoryV1.tryParseStrict(null)!.families,
+          isEmpty,
+        );
+      },
+    );
+  });
   group('durable retention state and schedule', () {
     test('1-2 miss then immediate repair is recovered but not durable', () {
       final history = _recoveredHistory();

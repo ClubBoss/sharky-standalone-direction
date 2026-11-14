@@ -18375,9 +18375,9 @@ class _DecisionHintPeekV1 extends StatelessWidget {
               onPressed: onShowFullIdea,
               style: TextButton.styleFrom(
                 foregroundColor: Act0ShellTokensV1.info,
-                minimumSize: const Size(0, 28),
+                minimumSize: const Size(48, 48),
                 padding: EdgeInsets.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                tapTargetSize: MaterialTapTargetSize.padded,
               ),
               icon: const Icon(Icons.auto_stories_rounded, size: 15),
               label: Text(

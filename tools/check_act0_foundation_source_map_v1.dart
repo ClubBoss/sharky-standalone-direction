@@ -59,12 +59,26 @@ void main() {
       (m) => m['worlds'][0]['lessons'][0]['tasks'][1]['task_id'] =
           m['worlds'][0]['lessons'][0]['tasks'][0]['task_id'],
     );
+    mutate('stale map revision rejected', (m) => m['map_revision'] = 1);
+    mutate(
+      'missing candidate provenance rejected',
+      (m) => m.remove('source_delta'),
+    );
+    mutate(
+      'false accepted status rejected',
+      (m) => m['source_status'] = 'ACCEPTED',
+    );
     mutate('unknown map version rejected', (m) => m['schema'] = 'unknown');
     mutate('stale source revision rejected', (m) => m['source_git_blobs'] = {});
     final markdown = File('${temp.path}/${paths[4]}');
     markdown.writeAsStringSync('stale summary');
     run('stale Markdown rejected', succeeds: false);
     markdown.writeAsBytesSync(File(paths[4]).readAsBytesSync());
+    final preview = File('${temp.path}/${paths[1]}');
+    final previewBytes = preview.readAsBytesSync();
+    preview.writeAsStringSync('// changed candidate Preview\n');
+    run('changed Preview rejected', succeeds: false);
+    preview.writeAsBytesSync(previewBytes);
     // Private source copy only; fail closed on any source revision drift.
     File('${temp.path}/${paths[0]}').writeAsStringSync('// changed source\n');
     run('changed source rejected', succeeds: false);

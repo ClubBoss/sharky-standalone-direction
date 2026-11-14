@@ -25,6 +25,66 @@ const _mappedRepair = 'what_poker_is_table_read_recheck';
 const _nextTask = 'first_table_guide_one_clear_choice';
 
 void main() {
+  testWidgets(
+    'SIMULATED Full Idea has a reachable 48px target and restores choices',
+    (tester) async {
+      await _openPendingHelpDecision(tester);
+      final untouched = await _saved(tester);
+      await _tap(tester, 'act0_shell_theory_recall_cta');
+      final full = find.byKey(const Key('act0_shell_review_full_idea_cta'));
+      await tester.ensureVisible(full);
+      await tester.pumpAndSettle();
+      final fullRect = tester.getRect(full);
+      const viewport = Rect.fromLTWH(0, 0, 393, 852);
+      expect(fullRect.width, greaterThanOrEqualTo(48));
+      expect(fullRect.height, greaterThanOrEqualTo(48));
+      expect(viewport.contains(fullRect.topLeft), isTrue);
+      expect(
+        viewport.contains(fullRect.bottomRight - const Offset(0.01, 0.01)),
+        isTrue,
+      );
+      expect(full.hitTestable(), findsOneWidget);
+      await tester.tapAt(Offset(fullRect.center.dx, fullRect.top + 3));
+      await tester.pumpAndSettle();
+      expect(full, findsNothing);
+      expect(
+        find.byKey(const Key('act0_shell_theory_recall_title')),
+        findsOneWidget,
+      );
+      final close = find.byKey(const Key('act0_shell_theory_recall_close_cta'));
+      await tester.ensureVisible(close);
+      await tester.pumpAndSettle();
+      final closeRect = tester.getRect(close);
+      expect(closeRect.height, greaterThanOrEqualTo(48));
+      await tester.tapAt(Offset(closeRect.center.dx, closeRect.bottom - 3));
+      await tester.pumpAndSettle();
+      final closed = await _saved(tester);
+      for (final field in [
+        'earnedXp',
+        'completedTaskIds',
+        'learningEvidenceHistory',
+      ]) {
+        expect(closed[field], untouched[field]);
+      }
+      final options = _runner(tester).runner.options;
+      for (final option in options) {
+        final choice = find.byKey(Key('act0_shell_option_${option.id}'));
+        await tester.ensureVisible(choice);
+        await tester.pumpAndSettle();
+        expect(choice.hitTestable(), findsOneWidget);
+      }
+      final answer = options.singleWhere((option) => option.isCorrect);
+      await _choose(tester, answer.id);
+      final record = _rows(
+        await _saved(tester),
+        'learningEvidenceHistory',
+      ).lastWhere((row) => row['taskId'] == _source);
+      expect(record['choiceId'], answer.id);
+      expect(record['assistanceKind'], 'theoryRecall');
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   for (final mode in ['ack', 'failure', 'navigation', 'reset']) {
     testWidgets('SIMULATED help waits for durable marker: $mode', (
       tester,
