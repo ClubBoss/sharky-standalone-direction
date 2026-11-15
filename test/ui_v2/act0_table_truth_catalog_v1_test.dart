@@ -175,15 +175,18 @@ void main() {
     };
     final expectedComparison =
         jsonDecode(jsonEncode(baselineContract)) as Map<String, dynamic>;
-    for (final entry in reviewedW01TheoryOptions.entries) {
-      final expectedTask =
-          expectedComparison[entry.key] as Map<String, dynamic>;
-      expect(
-        expectedTask['options'],
-        hasLength(entry.value.length),
-        reason: 'Reviewed theory option cardinality stays frozen: ${entry.key}',
-      );
-      expectedTask['options'] = entry.value;
+    if (presentAdditions.isNotEmpty) {
+      for (final entry in reviewedW01TheoryOptions.entries) {
+        final expectedTask =
+            expectedComparison[entry.key] as Map<String, dynamic>;
+        expect(
+          expectedTask['options'],
+          hasLength(entry.value.length),
+          reason:
+              'Reviewed theory option cardinality stays frozen: ${entry.key}',
+        );
+        expectedTask['options'] = entry.value;
+      }
     }
     expect(
       historicalComparison,

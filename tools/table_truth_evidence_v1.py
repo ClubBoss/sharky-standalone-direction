@@ -52,6 +52,412 @@ EXPECTED_CAPTURE_ARTIFACTS = {
 }
 
 
+# Exact independently reviewed PR475 source revision. The source authoring
+# origin and all five historical capture pins remain unchanged. A later
+# test/tool-only producer HEAD may have these identical production bytes.
+W01_PRODUCER_REVISION = {
+    'source_revision': 'ce54743ede6fbb7aa258b180467a42a0d2eb5fd5',
+    'state_sha256': '5c29f45055f0134fa506b0fd97d5265af6653f57ee6b86646784fb2c022ceaa9',
+    'factory_sha256': 'c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b',
+}
+W01_REVISION = 'W01_REVIEWED_THEORY_CONTRACTS'
+W01_CAPTURE_SHA256 = {'choice-identity.json': 'c8d63188ded16990ba2135ccd7952b9e98d3f7b7ae338891bab9a28705999564',
+ 'learning-contract.json': 'fb5f931f806fe80596b78f288b31b9f9241be5ad2e95619a49aba2381bef8b12',
+ 'ledger.json': '95fd32eff3116169d1fa888452ef40605567d3cf111248c07016cc1a5db03400',
+ 'runtime-inputs.json': 'a098e06199be210eb8ff90f9a1e3cd8fda21c0c61f90053323351992a4ef394a',
+ 'source-fingerprints.json': 'a1b19ba1b8eac40ab2641c7609a1308ca30f35c6b866e645d3bf116110457f1e'}
+W01_CAPTURE_OPTIONS = {'choice-identity.json': {'blinds_theory': {'current': [['button_is_not_a_blind',
+                                                         'BTN',
+                                                         False,
+                                                         'wrong',
+                                                         'BB'],
+                                                        ['bb', 'BB', True, 'correct', 'BB'],
+                                                        ['sb', 'SB', False, 'wrong', 'BB']],
+                                            'prior': [['top',
+                                                       'UTG',
+                                                       False,
+                                                       'wrong',
+                                                       'BTN (your seat)'],
+                                                      ['bottom',
+                                                       'BTN (your seat)',
+                                                       True,
+                                                       'correct',
+                                                       'BTN (your seat)'],
+                                                      ['random',
+                                                       'BB',
+                                                       False,
+                                                       'wrong',
+                                                       'BTN (your seat)']]},
+                          'cards_ranks_suits_theory': {'current': [['rank_only',
+                                                                    'Rank only',
+                                                                    False,
+                                                                    'wrong',
+                                                                    'Rank and suit'],
+                                                                   ['rank_and_suit',
+                                                                    'Rank and suit',
+                                                                    True,
+                                                                    'correct',
+                                                                    'Rank and suit'],
+                                                                   ['suit_only',
+                                                                    'Suit only',
+                                                                    False,
+                                                                    'wrong',
+                                                                    'Rank and suit']],
+                                                       'prior': [['king',
+                                                                  'King',
+                                                                  False,
+                                                                  'wrong',
+                                                                  'Ace'],
+                                                                 ['ace',
+                                                                  'Ace',
+                                                                  True,
+                                                                  'correct',
+                                                                  'Ace'],
+                                                                 ['suit',
+                                                                  'Suit decides',
+                                                                  False,
+                                                                  'wrong',
+                                                                  'Ace']]},
+                          'hand_rankings_theory': {'current': [['hand_strength',
+                                                                'Hand strength',
+                                                                True,
+                                                                'correct',
+                                                                'Hand strength'],
+                                                               ['seat_position',
+                                                                'Seat position',
+                                                                False,
+                                                                'wrong',
+                                                                'Hand strength']],
+                                                   'prior': [['pair',
+                                                              'Pair',
+                                                              True,
+                                                              'correct',
+                                                              'Pair'],
+                                                             ['high_card',
+                                                              'High card',
+                                                              False,
+                                                              'wrong',
+                                                              'Pair']]}},
+ 'learning-contract.json': {'blinds_theory': {'current': [{'id': 'button_is_not_a_blind',
+                                                           'correct': False,
+                                                           'quality': 'wrong',
+                                                           'seat': 'btn',
+                                                           'repairSeats': [],
+                                                           'repairCards': [],
+                                                           'repairLabels': []},
+                                                          {'id': 'bb',
+                                                           'correct': True,
+                                                           'quality': 'correct',
+                                                           'seat': 'bb',
+                                                           'repairSeats': [],
+                                                           'repairCards': [],
+                                                           'repairLabels': []},
+                                                          {'id': 'sb',
+                                                           'correct': False,
+                                                           'quality': 'wrong',
+                                                           'seat': 'sb',
+                                                           'repairSeats': [],
+                                                           'repairCards': [],
+                                                           'repairLabels': []}],
+                                              'prior': [{'id': 'top',
+                                                         'correct': False,
+                                                         'quality': 'wrong',
+                                                         'seat': 'utg',
+                                                         'repairSeats': [],
+                                                         'repairCards': [],
+                                                         'repairLabels': []},
+                                                        {'id': 'bottom',
+                                                         'correct': True,
+                                                         'quality': 'correct',
+                                                         'seat': 'btn',
+                                                         'repairSeats': [],
+                                                         'repairCards': [],
+                                                         'repairLabels': []},
+                                                        {'id': 'random',
+                                                         'correct': False,
+                                                         'quality': 'wrong',
+                                                         'seat': 'bb',
+                                                         'repairSeats': [],
+                                                         'repairCards': [],
+                                                         'repairLabels': []}]},
+                            'cards_ranks_suits_theory': {'current': [{'id': 'rank_only',
+                                                                      'correct': False,
+                                                                      'quality': 'wrong',
+                                                                      'seat': None,
+                                                                      'repairSeats': [],
+                                                                      'repairCards': [],
+                                                                      'repairLabels': []},
+                                                                     {'id': 'rank_and_suit',
+                                                                      'correct': True,
+                                                                      'quality': 'correct',
+                                                                      'seat': None,
+                                                                      'repairSeats': [],
+                                                                      'repairCards': [],
+                                                                      'repairLabels': []},
+                                                                     {'id': 'suit_only',
+                                                                      'correct': False,
+                                                                      'quality': 'wrong',
+                                                                      'seat': None,
+                                                                      'repairSeats': [],
+                                                                      'repairCards': [],
+                                                                      'repairLabels': []}],
+                                                         'prior': [{'id': 'king',
+                                                                    'correct': False,
+                                                                    'quality': 'wrong',
+                                                                    'seat': None,
+                                                                    'repairSeats': [],
+                                                                    'repairCards': [],
+                                                                    'repairLabels': []},
+                                                                   {'id': 'ace',
+                                                                    'correct': True,
+                                                                    'quality': 'correct',
+                                                                    'seat': None,
+                                                                    'repairSeats': [],
+                                                                    'repairCards': [],
+                                                                    'repairLabels': []},
+                                                                   {'id': 'suit',
+                                                                    'correct': False,
+                                                                    'quality': 'wrong',
+                                                                    'seat': None,
+                                                                    'repairSeats': [],
+                                                                    'repairCards': [],
+                                                                    'repairLabels': []}]},
+                            'hand_rankings_theory': {'current': [{'id': 'hand_strength',
+                                                                  'correct': True,
+                                                                  'quality': 'correct',
+                                                                  'seat': None,
+                                                                  'repairSeats': [],
+                                                                  'repairCards': [],
+                                                                  'repairLabels': []},
+                                                                 {'id': 'seat_position',
+                                                                  'correct': False,
+                                                                  'quality': 'wrong',
+                                                                  'seat': None,
+                                                                  'repairSeats': [],
+                                                                  'repairCards': [],
+                                                                  'repairLabels': []}],
+                                                     'prior': [{'id': 'pair',
+                                                                'correct': True,
+                                                                'quality': 'correct',
+                                                                'seat': None,
+                                                                'repairSeats': [],
+                                                                'repairCards': [],
+                                                                'repairLabels': []},
+                                                               {'id': 'high_card',
+                                                                'correct': False,
+                                                                'quality': 'wrong',
+                                                                'seat': None,
+                                                                'repairSeats': [],
+                                                                'repairCards': [],
+                                                                'repairLabels': []}]}},
+ 'runtime-inputs.json': {'blinds_theory': {'current': [{'id': 'button_is_not_a_blind',
+                                                        'label': 'BTN',
+                                                        'amount': '',
+                                                        'reason': 'BTN marks the dealer button. BB '
+                                                                  'posts the full 1 BB blind.',
+                                                        'preferred': 'BB'},
+                                                       {'id': 'bb',
+                                                        'label': 'BB',
+                                                        'amount': '',
+                                                        'reason': 'BB posts the full 1 BB blind, '
+                                                                  'so later prices count from that '
+                                                                  'baseline.',
+                                                        'preferred': 'BB'},
+                                                       {'id': 'sb',
+                                                        'label': 'SB',
+                                                        'amount': '',
+                                                        'reason': 'SB posts only 0.5 BB. BB is the '
+                                                                  'full 1 BB post players count '
+                                                                  'from.',
+                                                        'preferred': 'BB'}],
+                                           'prior': [{'id': 'top',
+                                                      'label': 'UTG',
+                                                      'amount': '',
+                                                      'reason': 'UTG acts before HJ, CO, and BTN '
+                                                                'in preflop order.',
+                                                      'preferred': 'BTN (your seat)'},
+                                                     {'id': 'bottom',
+                                                      'label': 'BTN (your seat)',
+                                                      'amount': '',
+                                                      'reason': 'After UTG, HJ, and CO, BTN acts '
+                                                                'before SB and BB.',
+                                                      'preferred': 'BTN (your seat)'},
+                                                     {'id': 'random',
+                                                      'label': 'BB',
+                                                      'amount': '',
+                                                      'reason': 'BB acts after BTN preflop, so it '
+                                                                'is not next here.',
+                                                      'preferred': 'BTN (your seat)'}]},
+                         'cards_ranks_suits_theory': {'current': [{'id': 'rank_only',
+                                                                   'label': 'Rank only',
+                                                                   'amount': '',
+                                                                   'reason': 'Rank names the '
+                                                                             'value, but a card '
+                                                                             'also has a suit.',
+                                                                   'preferred': 'Rank and suit'},
+                                                                  {'id': 'rank_and_suit',
+                                                                   'label': 'Rank and suit',
+                                                                   'amount': '',
+                                                                   'reason': 'Rank names the value '
+                                                                             'and suit names the '
+                                                                             'symbol family.',
+                                                                   'preferred': 'Rank and suit'},
+                                                                  {'id': 'suit_only',
+                                                                   'label': 'Suit only',
+                                                                   'amount': '',
+                                                                   'reason': 'Suit names the '
+                                                                             'symbol family, but a '
+                                                                             'card also has a '
+                                                                             'rank.',
+                                                                   'preferred': 'Rank and suit'}],
+                                                      'prior': [{'id': 'king',
+                                                                 'label': 'King',
+                                                                 'amount': '',
+                                                                 'reason': 'Ace is higher than '
+                                                                           'king in this beginner '
+                                                                           'drill.',
+                                                                 'preferred': 'Ace'},
+                                                                {'id': 'ace',
+                                                                 'label': 'Ace',
+                                                                 'amount': '',
+                                                                 'reason': 'Compare top card '
+                                                                           'first: ace outranks '
+                                                                           'king in this spot.',
+                                                                 'preferred': 'Ace'},
+                                                                {'id': 'suit',
+                                                                 'label': 'Suit decides',
+                                                                 'amount': '',
+                                                                 'reason': 'Suit does not make one '
+                                                                           'rank higher than '
+                                                                           'another.',
+                                                                 'preferred': 'Ace'}]},
+                         'hand_rankings_theory': {'current': [{'id': 'hand_strength',
+                                                               'label': 'Hand strength',
+                                                               'amount': '',
+                                                               'reason': 'Rankings tell which made '
+                                                                         'hand is stronger, such '
+                                                                         'as a flush over a '
+                                                                         'straight.',
+                                                               'preferred': 'Hand strength'},
+                                                              {'id': 'seat_position',
+                                                               'label': 'Seat position',
+                                                               'amount': '',
+                                                               'reason': 'Seat position affects '
+                                                                         'action order, not the '
+                                                                         'hand ranking.',
+                                                               'preferred': 'Hand strength'}],
+                                                  'prior': [{'id': 'pair',
+                                                             'label': 'Pair',
+                                                             'amount': '',
+                                                             'reason': 'Hero has a pair with the '
+                                                                       'board.',
+                                                             'preferred': 'Pair'},
+                                                            {'id': 'high_card',
+                                                             'label': 'High card',
+                                                             'amount': '',
+                                                             'reason': 'A matching rank makes a '
+                                                                       'pair.',
+                                                             'preferred': 'Pair'}]}},
+ 'source-fingerprints.json': {'blinds_theory': {'current': {'world_id': 'world_1',
+                                                            'lesson_id': 'blinds_action_order',
+                                                            'fingerprint': '89474286be5d6633993452fa57e7568d1e66f75b4c89748cf61a37f58b812ce0'},
+                                                'prior': {'world_id': 'world_1',
+                                                          'lesson_id': 'blinds_action_order',
+                                                          'fingerprint': 'b10ea2093f254cae6df8d3a8702aed685bfd49de9a65724f76342fd6cd9ad46f'}},
+                              'cards_ranks_suits_theory': {'current': {'world_id': 'world_1',
+                                                                       'lesson_id': 'cards_ranks_suits',
+                                                                       'fingerprint': '5d6e7323768eb9839cfa346e344225af733faefb72fc5cde47dc104c4f8eb7e8'},
+                                                           'prior': {'world_id': 'world_1',
+                                                                     'lesson_id': 'cards_ranks_suits',
+                                                                     'fingerprint': 'da18579f003d9a05d2feb9ba458ed793be8ab2fc5d98943e8daf13101533d6fd'}},
+                              'hand_rankings_theory': {'current': {'world_id': 'world_1',
+                                                                   'lesson_id': 'hand_rankings_table',
+                                                                   'fingerprint': 'e8a637f48694e11be593a92647711bd105b38afa4395361031cb2eb7473a4c02'},
+                                                       'prior': {'world_id': 'world_1',
+                                                                 'lesson_id': 'hand_rankings_table',
+                                                                 'fingerprint': '9211311af696efd47e86e41bf2a670711541def3254083aa1b134903129bf43c'}}}}
+W01_LEDGER_REVISIONS = [{'task_id': 'cards_ranks_suits_theory',
+  'current': 'feedback/rank_only',
+  'prior': 'feedback/king',
+  'indices': [1023]},
+ {'task_id': 'cards_ranks_suits_theory',
+  'current': 'feedback/rank_and_suit',
+  'prior': 'feedback/ace',
+  'indices': [1024]},
+ {'task_id': 'cards_ranks_suits_theory',
+  'current': 'feedback/suit_only',
+  'prior': 'feedback/suit',
+  'indices': [1025]},
+ {'task_id': 'blinds_theory',
+  'current': 'feedback/button_is_not_a_blind',
+  'prior': 'feedback/top',
+  'indices': [4932]},
+ {'task_id': 'blinds_theory',
+  'current': 'feedback/bb',
+  'prior': 'feedback/bottom',
+  'indices': [4933]},
+ {'task_id': 'blinds_theory',
+  'current': 'feedback/sb',
+  'prior': 'feedback/random',
+  'indices': [4934]},
+ {'task_id': 'hand_rankings_theory',
+  'current': 'feedback/hand_strength',
+  'prior': 'feedback/pair',
+  'indices': [5289,
+              5290,
+              5291,
+              5292,
+              5293,
+              5294,
+              5295,
+              5296,
+              5297,
+              5298,
+              5299,
+              5300,
+              5301,
+              5302,
+              5303,
+              5304,
+              5305,
+              5306,
+              5307,
+              5308,
+              5309,
+              5310,
+              5311,
+              5312,
+              5313]},
+ {'task_id': 'hand_rankings_theory',
+  'current': 'feedback/seat_position',
+  'prior': 'feedback/high_card',
+  'indices': [5314,
+              5315,
+              5316,
+              5317,
+              5318,
+              5319,
+              5320,
+              5321,
+              5322,
+              5323,
+              5324,
+              5325,
+              5326,
+              5327,
+              5328,
+              5329,
+              5330,
+              5331,
+              5332,
+              5333,
+              5334,
+              5335,
+              5336,
+              5337,
+              5338]}]
+
+
 def summarize(path, expected, code):
     starts, cases, errors = {}, [], []
     for line in pathlib.Path(path).read_text().splitlines():
@@ -93,9 +499,9 @@ def producer_revision(cohort, role):
     if reference != SOURCE_REFERENCES[role]:
         raise SystemExit('Admitted source reference changed')
     receipt = cohort.get('producer_receipt')
-    if not isinstance(receipt, dict) or not re.fullmatch(
-        r'[0-9a-f]{40}', receipt.get('head', '')
-    ):
+    if (not isinstance(receipt, dict)
+        or not isinstance(receipt.get('head'), str)
+        or not re.fullmatch(r'[0-9a-f]{40}', receipt['head'])):
         raise SystemExit('Producing HEAD receipt is missing or malformed')
     source_bytes = {
         key: receipt.get(key) for key in ('state_sha256', 'factory_sha256')
@@ -106,6 +512,9 @@ def producer_revision(cohort, role):
     admitted_bytes = {key: MAIN01_PRODUCER_REVISION[key] for key in source_bytes}
     if role == 'candidate' and source_bytes == admitted_bytes:
         return 'MAIN01_REVIEWED_SETUP_QUALITIES'
+    w01_bytes = {key: W01_PRODUCER_REVISION[key] for key in source_bytes}
+    if role == 'candidate' and source_bytes == w01_bytes:
+        return W01_REVISION
     raise SystemExit('Producing source receipt does not match admitted bytes')
 
 
@@ -144,23 +553,63 @@ def main01_origin_capture(name, value):
     return result
 
 
+def w01_origin_capture(name, value):
+    """Reverse only reviewed option fields/IDs on a copy of the exact capture."""
+    result = copy.deepcopy(value)
+    try:
+        if name == 'ledger.json':
+            if len(result) != 62712:
+                raise ValueError('ledger cardinality')
+            for revision in W01_LEDGER_REVISIONS:
+                for index in revision['indices']:
+                    row = result[index]
+                    if row['task_id'] != revision['task_id']:
+                        raise ValueError('ledger task/index')
+                    for field in ('phase', 'step_phase_variant'):
+                        if row[field] != revision['current']:
+                            raise ValueError('ledger phase')
+                        row[field] = revision['prior']
+        else:
+            for task_id, revision in W01_CAPTURE_OPTIONS[name].items():
+                if name in ('learning-contract.json', 'runtime-inputs.json'):
+                    if result[task_id]['options'] != revision['current']:
+                        raise ValueError('option fields/order')
+                    result[task_id]['options'] = copy.deepcopy(revision['prior'])
+                else:
+                    if result[task_id] != revision['current']:
+                        raise ValueError('choice/fingerprint fields')
+                    result[task_id] = copy.deepcopy(revision['prior'])
+    except (KeyError, TypeError, IndexError, ValueError) as error:
+        raise SystemExit(f'W01 exact theory revision mismatch: {name}') from error
+    return result
+
+
+def reviewed_origin_capture(name, value, revision):
+    if revision == W01_REVISION:
+        value = w01_origin_capture(name, value)
+    return main01_origin_capture(name, value)
+
+
 def validate_capture_artifacts(source, revision, names=None):
     """Pin every field of the reviewed capture to the unchanged original capture.
 
-    Original artifacts retain exact raw-byte checks. The reviewed revision uses
-    compact canonical JSON after reversing only its two known qualities and one
-    resulting task fingerprint; all remaining bytes/fields keep original pins.
+    Original artifacts retain exact raw-byte checks. Reviewed revisions use
+    canonical JSON, reversing only their literal reviewed changes. W01 also
+    requires the exact current whole-capture bytes before any reconstruction;
+    every reconstructed capture must reproduce its unchanged original pin.
     """
     names = EXPECTED_CAPTURE_ARTIFACTS if names is None else names
     for name, expected in names.items():
         raw = (pathlib.Path(source) / name).read_bytes()
         observed = hashlib.sha256(raw).hexdigest()
-        if revision == 'MAIN01_REVIEWED_SETUP_QUALITIES':
+        if revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION):
             captured = json.loads(raw)
             compact = json.dumps(captured, separators=(',', ':'), ensure_ascii=False).encode()
             if raw != compact:
                 raise SystemExit(f'Captured JSON byte encoding drift: {name}')
-            observed = _digest(main01_origin_capture(name, captured))
+            if revision == W01_REVISION and observed != W01_CAPTURE_SHA256.get(name):
+                raise SystemExit(f'W01 current capture artifact drift: {name}')
+            observed = _digest(reviewed_origin_capture(name, captured, revision))
         if observed != expected:
             raise SystemExit(f'Captured source artifact drift: {name}')
 
@@ -205,9 +654,10 @@ def validate_typed_cohort(root):
     if set(base) != historical_ids or set(final) != historical_ids | NEW_AUTHORING_IDS:
         raise SystemExit('Learning contract cohort key set is inconsistent')
     comparison_contract = final
-    if candidate_revision == 'MAIN01_REVIEWED_SETUP_QUALITIES':
+    if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION):
         validate_capture_artifacts(root / 'candidate', candidate_revision)
-        comparison_contract = main01_origin_capture('learning-contract.json', final)
+        comparison_contract = reviewed_origin_capture(
+            'learning-contract.json', final, candidate_revision)
     if {key: comparison_contract[key] for key in historical_ids} != base:
         raise SystemExit('Learning identity, XP, correctness or repair contract changed')
     before = json.loads((root / 'baseline' / 'runtime-inputs.json').read_text())
@@ -230,8 +680,8 @@ def validate_typed_cohort(root):
         ):
             raise SystemExit(f'{label} cohort key set is inconsistent')
     comparison_choices = (
-        main01_origin_capture('choice-identity.json', after_choices)
-        if candidate_revision == 'MAIN01_REVIEWED_SETUP_QUALITIES' else after_choices
+        reviewed_origin_capture('choice-identity.json', after_choices, candidate_revision)
+        if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION) else after_choices
     )
     if any(before_choices[key] != comparison_choices[key] for key in historical_ids):
         raise SystemExit('Historical choice identity changed')
@@ -351,15 +801,24 @@ def compare(root):
     result = {'ledgers': ledgers, 'runtime_changed_task_count': len(delta), 'runtime_changed_task_ids': sorted(delta),
               'historical_learning_contract_identical': identity['historical_learning_contract_identical'],
               'historical_choice_identity_identical': identity['historical_choice_identity_identical'],
-              'historical_contracts_identical_except_reviewed_setup_qualities': True,
+              'historical_contracts_identical_except_reviewed_setup_qualities': identity['candidate_revision'] != W01_REVISION,
+              'historical_contracts_identical_except_exact_reviewed_revisions': True,
+              'reviewed_theory_changes': ([
+                  {'task_id': task_id, 'changed_fields': ['options', 'source_fingerprint', 'feedback_phase_choice_ids'],
+                   'historical_record_policy': 'retain original fingerprint, grade, assistance, XP and repair lineage',
+                   'current_source_policy': 'reject old fingerprint'}
+                  for task_id in W01_CAPTURE_OPTIONS['learning-contract.json']
+              ] if identity['candidate_revision'] == W01_REVISION else []),
               'candidate_producer_revision': identity['candidate_revision'],
               'producer_receipt': identity['final_cohort']['producer_receipt'],
-              'reviewed_producer_source_revision': (MAIN01_PRODUCER_REVISION['source_revision']
+              'reviewed_producer_source_revision': (W01_PRODUCER_REVISION['source_revision']
+                  if identity['candidate_revision'] == W01_REVISION else
+                  MAIN01_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == 'MAIN01_REVIEWED_SETUP_QUALITIES' else None),
               'reviewed_quality_changes': ([
                   {'task_id': MAIN01_TASK_ID, 'choice_id': choice, 'before': prior, 'after': current}
                   for choice, (prior, current) in MAIN01_QUALITY_REVISION.items()
-              ] if identity['candidate_revision'] == 'MAIN01_REVIEWED_SETUP_QUALITIES' else []),
+              ] if identity['candidate_revision'] in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION) else []),
               'historical_cohort_count': len(historical_ids),
               'new_authoring': new_authoring,
               'canonical_source_fingerprints': fingerprint_counts, 'native': 'PENDING'}
