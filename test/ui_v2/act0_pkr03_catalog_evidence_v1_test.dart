@@ -3,10 +3,58 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
+
+// Direct typed source inputs, not inferred history or an independent oracle.
+Map<String, Object?> _tableSourceInputs(Act0TableStateV1 table) => {
+  'scope': table.scope.name,
+  'table_format': table.tableFormat.name,
+  'player_count': table.playerCount,
+  'canonical_player_count': table.usesCanonicalPlayerCount,
+  'canonical_seat_order': table.canonicalSeatOrder,
+  'street': table.streetLabel,
+  'pot_label': table.potLabel,
+  'to_call_label': table.toCallLabel,
+  'active_seat_id': table.activeSeatId,
+  'hero_seat_id': table.heroSeatId,
+  'seats': [
+    for (final seat in table.seats)
+      {
+        'id': seat.seatId,
+        'label': seat.seatLabel,
+        'hero': seat.isHero,
+        'dealer_button': seat.isDealerButton,
+        'small_blind': seat.isSmallBlind,
+        'big_blind': seat.isBigBlind,
+        'blind_amount_label': seat.blindAmountLabel,
+        'stack_label': seat.stackLabel,
+        'current_bet_label': seat.currentBetLabel,
+        'bet_kind': seat.bet?.kind.name,
+        'bet_amount_label': seat.bet?.amountLabel,
+        'in_hand': seat.isInHand,
+        'folded': seat.isFolded,
+        'occupied': seat.isOccupied,
+        'active': seat.isActive,
+        'has_acted': seat.hasActed,
+        'last_aggressor': seat.isLastAggressor,
+        'cards_mode': seat.cardsVisibleMode.name,
+        'cards': [
+          for (final card in seat.holeCards)
+            {'rank': card.rank, 'suit': card.suit},
+        ],
+      },
+  ],
+  'hero_cards': [
+    for (final card in table.heroCards) {'rank': card.rank, 'suit': card.suit},
+  ],
+  'board_cards': [
+    for (final card in table.boardCards) {'rank': card.rank, 'suit': card.suit},
+  ],
+};
 
 void main() {
   test(
@@ -58,7 +106,10 @@ void main() {
             final rows = <Map<String, Object?>>[];
             for (final entry in states.entries) {
               final table = entry.value;
-              final truth = act0BettingRoundOrderTruthForTableV1(table);
+              final proof = act0BettingRoundOrderProofForTableV1(table);
+              final truth = proof.truth;
+              final conditional =
+                  act0BettingRoundOrderConditionalProofForTableV1(table);
               final replay = act0StreetReplayFromTableV1(table);
               final choreography = act0TableChoreographyPlanForTableV1(table);
               if (truth == Act0BettingRoundOrderTruthV1.contradiction) {
@@ -77,6 +128,13 @@ void main() {
                 'variant': entry.key,
                 'scope': table.scope.name,
                 'order_proof': truth.name,
+                'order_reason': proof.reason,
+                'conditional_only_not_proof': {
+                  'truth': conditional.truth.name,
+                  'reason': conditional.reason,
+                  'assumptions': conditional.assumptions,
+                },
+                'source_inputs': _tableSourceInputs(table),
                 'replay_safe': replay?.isConsumerSafe ?? false,
                 'choreography_available': choreography != null,
                 'street': table.streetLabel,
@@ -91,8 +149,27 @@ void main() {
               'world': world.worldId,
               'lesson': lesson.lessonId,
               'task': task.taskId,
+              'source_fingerprint': act0AuthoredSourceFingerprintV1(
+                worldId: world.worldId,
+                lessonId: lesson.lessonId,
+                task: task,
+              ),
+              'source_phase': task.phase.name,
+              'source_step_kind': task.stepKind.name,
+              'source_family': task.resolvedTaskFamily.name,
+              'source_inputs': _tableSourceInputs(runner.table),
               'caption': runner.caption,
               'question': runner.question,
+              'hint': runner.hint,
+              'feedback_reason': runner.feedbackReason,
+              'teaching_source': [
+                for (var i = 0; i < runner.teachingSteps.length; i++)
+                  {
+                    'index': i,
+                    'title': runner.teachingSteps[i].title,
+                    'body': runner.teachingSteps[i].body,
+                  },
+              ],
               'source_seats': [
                 for (final seat in runner.table.seats)
                   {
@@ -107,7 +184,16 @@ void main() {
               ],
               'options': [
                 for (final o in runner.options)
-                  {'id': o.id, 'label': o.label, 'correct': o.isCorrect},
+                  {
+                    'id': o.id,
+                    'label': o.label,
+                    'correct': o.isCorrect,
+                    'source_authored_correct':
+                        act0RunnerOptionIsAuthoredCorrectV1(o),
+                    'quality': o.quality.name,
+                    'feedback_reason': o.feedbackReason,
+                    'seat_id': o.seatId,
+                  },
               ],
               'applicability': runner.table.scope == Act0TableScopeV1.playedHand
                   ? 'PLAYED_HAND_REQUIRES_SOURCE_POKER_REVIEW'
