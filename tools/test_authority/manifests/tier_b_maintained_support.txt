@@ -17,3 +17,4 @@ test/ui_v2/session_result_world1_onboarding_payoff_test.dart
 test/ui_v2/session_summary_gold_containment_v1_test.dart
 test/ui_v2/wave4_2_premium_identity_claim_cleanup_v1_test.dart
 test/ui_v2/act0_onb02_disposition_ack_v1_test.dart
+test/services/loc01_language_persistence_test.dart
