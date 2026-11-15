@@ -13,8 +13,9 @@ const _asm05NewTaskIds = <String>{
 /// Assessment identity and grading consistency for all 369 W1-W12 tasks.
 /// The 367 legacy rows retain their frozen contract; exactly two named
 /// NEW_AUTHORING ASM-05 rows extend it without replacing historical meaning.
-/// The reviewed MAIN01 two-quality correction has an exact current freeze and
-/// reconstructs only its prior comparison cells; persisted records stay intact.
+/// Reviewed MAIN01 quality cells and three W01 theory option contracts each
+/// have exact current freezes and reconstruct only their prior comparison cells.
+/// Both historical fingerprints and persisted records remain intact.
 ///
 /// Stable task ids and choice ids are what saved receipts, repair debt and
 /// XP refer to; grading flags, answer quality, preferred answers and feedback
@@ -124,17 +125,91 @@ void main() {
     expect(legacyEntries, hasLength(367));
     final encoded = jsonEncode(legacyEntries);
     final fingerprint = sha256.convert(utf8.encode(encoded)).toString();
-    // PR460 admits only the factual MAIN01 quality pair. Its compatibility
-    // regression preserves old record bytes and rejects the old fingerprint
-    // as current proof. Freeze actual current semantics before restoring the
-    // two prior comparison cells; never rewrite learner evidence.
+    // PR460 admits the MAIN01 quality pair; the owner-admitted PR475 correction
+    // adds exactly three theory option contracts. Freeze actual semantics, then
+    // reconstruct both historical comparison stages without rewriting evidence.
     const acceptedCurrentFingerprint =
+        '89c0097554f2fdb7d3054d551df7c71c65bf8fcd5d08fb77258f8e44cea8c4c0';
+    const acceptedMain01Fingerprint =
         'e06d7556a9dde9fd1197f7b9584233f1e583ddf08e4bca81ddaac9551783615f';
     const acceptedMainFingerprint =
         '26c8c2d76a89ba00adfb482b2130e758f7b8e32699ef85f75e15abf189e57bb4';
     print('ASM01_SOURCE_FINGERPRINT=$fingerprint');
     expect(fingerprint, acceptedCurrentFingerprint);
     final historicalComparison = jsonDecode(encoded) as List<dynamic>;
+    // Freeze the full current rows before reconstructing only the reviewed
+    // old comparison tuples. This does not migrate saved learner records.
+    const reviewedW01TheoryRows = {
+      'blinds_theory': [
+        'world_1',
+        'blinds_action_order',
+        'blinds_theory',
+        'theory',
+        'learn',
+        [
+          ['button_is_not_a_blind', 'BTN', false, 'wrong', 'BB'],
+          ['bb', 'BB', true, 'correct', 'BB'],
+          ['sb', 'SB', false, 'wrong', 'BB'],
+        ],
+      ],
+      'cards_ranks_suits_theory': [
+        'world_1',
+        'cards_ranks_suits',
+        'cards_ranks_suits_theory',
+        'theory',
+        'learn',
+        [
+          ['rank_only', 'Rank only', false, 'wrong', 'Rank and suit'],
+          ['rank_and_suit', 'Rank and suit', true, 'correct', 'Rank and suit'],
+          ['suit_only', 'Suit only', false, 'wrong', 'Rank and suit'],
+        ],
+      ],
+      'hand_rankings_theory': [
+        'world_1',
+        'hand_rankings_table',
+        'hand_rankings_theory',
+        'theory',
+        'learn',
+        [
+          ['hand_strength', 'Hand strength', true, 'correct', 'Hand strength'],
+          ['seat_position', 'Seat position', false, 'wrong', 'Hand strength'],
+        ],
+      ],
+    };
+    const historicalW01TheoryOptions = {
+      'blinds_theory': [
+        ['top', 'UTG', false, 'wrong', 'BTN (your seat)'],
+        ['bottom', 'BTN (your seat)', true, 'correct', 'BTN (your seat)'],
+        ['random', 'BB', false, 'wrong', 'BTN (your seat)'],
+      ],
+      'cards_ranks_suits_theory': [
+        ['king', 'King', false, 'wrong', 'Ace'],
+        ['ace', 'Ace', true, 'correct', 'Ace'],
+        ['suit', 'Suit decides', false, 'wrong', 'Ace'],
+      ],
+      'hand_rankings_theory': [
+        ['pair', 'Pair', true, 'correct', 'Pair'],
+        ['high_card', 'High card', false, 'wrong', 'Pair'],
+      ],
+    };
+    for (final entry in reviewedW01TheoryRows.entries) {
+      final row = historicalComparison.cast<List<dynamic>>().singleWhere(
+        (row) => row[2] == entry.key,
+      );
+      expect(
+        row,
+        entry.value,
+        reason: 'Exact reviewed W01 identity: ${entry.key}',
+      );
+      expect(row[5], hasLength(historicalW01TheoryOptions[entry.key]!.length));
+      row[5] = historicalW01TheoryOptions[entry.key];
+    }
+    expect(
+      sha256.convert(utf8.encode(jsonEncode(historicalComparison))).toString(),
+      acceptedMain01Fingerprint,
+      reason:
+          'Only the three reviewed theory option tuples differ from MAIN01.',
+    );
     final setup = historicalComparison.cast<List<dynamic>>().singleWhere(
       (row) => row[2] == 'first_table_guide_one_clear_choice',
     );

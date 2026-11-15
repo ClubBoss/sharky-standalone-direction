@@ -192,6 +192,14 @@ act0FirstValueSameSignalRepMappingV1({
     };
   }
 
+  // The corrected theory and the existing drill both teach the full 1 BB post.
+  if (sourceTask == 'blinds_theory' &&
+      nextRepId == 'repeat_table_read' &&
+      skillAtomId == 'table_read' &&
+      sourceSignalId == 'big_blind') {
+    return target('world_1', 'blinds_action_order', 'blinds_posts_drill');
+  }
+
   // Explicitly admitted concept pairs share their actual receipt semantics.
   if (nextRepId == 'repeat_range_bucket_reasoning' &&
       skillAtomId == 'range_bucket_reasoning' &&

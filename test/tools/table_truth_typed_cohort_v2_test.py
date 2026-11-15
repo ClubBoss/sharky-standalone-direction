@@ -409,6 +409,100 @@ class TypedCohortV2Controls(unittest.TestCase):
                 with self.assertRaisesRegex(SystemExit, 'Captured JSON byte encoding drift'):
                     TRUTH.validate_capture_artifacts(root, 'MAIN01_REVIEWED_SETUP_QUALITIES', pin)
 
+    def w01_producer(self):
+        cohort = self.reviewed_producer()
+        for key in ('state_sha256', 'factory_sha256'):
+            cohort['producer_receipt'][key] = TRUTH.W01_PRODUCER_REVISION[key]
+        return cohort
+
+    def test_w01_exact_source_bytes_keep_original_authoring_origin(self):
+        cohort = self.w01_producer()
+        self.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), TRUTH.W01_REVISION)
+        cohort['producer_receipt']['head'] = 'f' * 40
+        self.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), TRUTH.W01_REVISION)
+        self.assertEqual(cohort['admitted_source_reference'], TRUTH.SOURCE_REFERENCES['candidate'])
+
+    def test_w01_missing_wrong_source_factory_origin_role_and_head_rejected(self):
+        for field in ('state_sha256', 'factory_sha256', 'head'):
+            for replacement in (None, '0', '0' * 64):
+                with self.subTest(field=field, replacement=replacement):
+                    cohort = self.w01_producer()
+                    cohort['producer_receipt'][field] = replacement
+                    with self.assertRaises(SystemExit):
+                        TRUTH.producer_revision(cohort, 'candidate')
+        cohort = self.w01_producer()
+        cohort['admitted_source_reference']['commit'] = TRUTH.W01_PRODUCER_REVISION['source_revision']
+        with self.assertRaisesRegex(SystemExit, 'Admitted source reference'):
+            TRUTH.producer_revision(cohort, 'candidate')
+        cohort = self.w01_producer()
+        cohort['admitted_source_reference'] = copy.deepcopy(TRUTH.SOURCE_REFERENCES['historical_baseline'])
+        with self.assertRaisesRegex(SystemExit, 'Producing source receipt'):
+            TRUTH.producer_revision(cohort, 'historical_baseline')
+
+    def test_w01_literal_reconstruction_changes_only_reviewed_fields_on_copy(self):
+        for name, tasks in TRUTH.W01_CAPTURE_OPTIONS.items():
+            with self.subTest(capture=name):
+                is_options = name in ('learning-contract.json', 'runtime-inputs.json')
+                captured = {task: {'options': copy.deepcopy(row['current']), 'unchanged': 7}
+                            if is_options else copy.deepcopy(row['current'])
+                            for task, row in tasks.items()}
+                captured['other_task'] = {'sentinel': 'preserve every field'}
+                before = copy.deepcopy(captured)
+                expected = copy.deepcopy(captured)
+                for task, row in tasks.items():
+                    if is_options:
+                        expected[task]['options'] = copy.deepcopy(row['prior'])
+                    else:
+                        expected[task] = copy.deepcopy(row['prior'])
+                self.assertEqual(TRUTH.w01_origin_capture(name, captured), expected)
+                self.assertEqual(captured, before)
+                for task in tasks:
+                    invalid = copy.deepcopy(captured)
+                    del invalid[task]
+                    with self.assertRaisesRegex(SystemExit, 'W01 exact theory'):
+                        TRUTH.w01_origin_capture(name, invalid)
+
+    def test_w01_wrong_option_order_values_duplicate_or_old_rows_rejected(self):
+        for name in ('learning-contract.json', 'choice-identity.json', 'runtime-inputs.json'):
+            is_options = name != 'choice-identity.json'
+            tasks = TRUTH.W01_CAPTURE_OPTIONS[name]
+            for task in tasks:
+                for mutation in ('reverse', 'duplicate', 'old'):
+                    with self.subTest(capture=name, task=task, mutation=mutation):
+                        captured = {key: {'options': copy.deepcopy(row['current'])}
+                                    if is_options else copy.deepcopy(row['current'])
+                                    for key, row in tasks.items()}
+                        options = captured[task]['options'] if is_options else captured[task]
+                        if mutation == 'reverse': options.reverse()
+                        elif mutation == 'duplicate': options.append(copy.deepcopy(options[0]))
+                        elif is_options: captured[task]['options'] = copy.deepcopy(tasks[task]['prior'])
+                        else: captured[task] = copy.deepcopy(tasks[task]['prior'])
+                        with self.assertRaisesRegex(SystemExit, 'W01 exact theory'):
+                            TRUTH.w01_origin_capture(name, captured)
+
+    def test_w01_exact_ledger_indices_ids_and_two_phase_fields_only(self):
+        rows = [{'untouched': index} for index in range(62712)]
+        expected = copy.deepcopy(rows)
+        seen = set()
+        for revision in TRUTH.W01_LEDGER_REVISIONS:
+            for index in revision['indices']:
+                self.assertNotIn(index, seen)
+                seen.add(index)
+                rows[index] = {'task_id': revision['task_id'], 'phase': revision['current'],
+                               'step_phase_variant': revision['current'], 'status': 'PASS', 'reason': 'retained'}
+                expected[index] = {**rows[index], 'phase': revision['prior'], 'step_phase_variant': revision['prior']}
+        self.assertEqual(len(seen), 56)
+        frozen = copy.deepcopy(rows)
+        self.assertEqual(TRUTH.w01_origin_capture('ledger.json', rows), expected)
+        self.assertEqual(rows, frozen)
+        for field in ('task_id', 'phase', 'step_phase_variant'):
+            invalid = copy.deepcopy(rows)
+            invalid[min(seen)][field] = 'unauthorized'
+            with self.assertRaisesRegex(SystemExit, 'W01 exact theory'):
+                TRUTH.w01_origin_capture('ledger.json', invalid)
+        with self.assertRaisesRegex(SystemExit, 'W01 exact theory'):
+            TRUTH.w01_origin_capture('ledger.json', rows[:-1])
+
     def recompute(self, root, task_id):
         contract = self.read(root / 'candidate/learning-contract.json')
         fingerprints = self.read(root / 'candidate/source-fingerprints.json')
@@ -563,6 +657,92 @@ if __name__ == '__main__':
             'fingerprint_changed_task_count': 328,
             'candidate_fail_count': 0,
         }
+        if comparison['candidate_producer_revision'] == TRUTH.W01_REVISION:
+            # Count actual current-source changes, never normalize the public
+            # classification output back to an earlier source revision.
+            for name, captured, before in (
+                ('runtime-inputs.json', runtime['candidate'], runtime['baseline']),
+                ('source-fingerprints.json', fingerprints['candidate'], fingerprints['baseline']),
+            ):
+                old = TRUTH.w01_origin_capture(name, captured)
+                current_changed = {key for key in historical if captured[key] != before[key]}
+                prior_changed = {key for key in historical if old[key] != before[key]}
+                if current_changed - prior_changed != {'blinds_theory', 'cards_ranks_suits_theory'} or prior_changed - current_changed:
+                    raise SystemExit('Unexpected W01 newly changed task identities')
+                if len(prior_changed) != (309 if name == 'runtime-inputs.json' else 328):
+                    raise SystemExit('Prior revision delta count drift')
+            expected_counts.update(runtime_changed_task_count=311, fingerprint_changed_task_count=330)
+            if comparison['historical_contracts_identical_except_reviewed_setup_qualities']:
+                raise SystemExit('W01 source evolution falsely described as setup qualities only')
+            if set(row['task_id'] for row in comparison['reviewed_theory_changes']) != set(TRUTH.W01_CAPTURE_OPTIONS['learning-contract.json']):
+                raise SystemExit('Missing reviewed W01 source change explanation')
+
+            # Use the actual immutable producer captures. Recomputed cohort
+            # checksums cannot bless unauthorized model or capture edits.
+            frozen_files = {p.name: p.read_bytes() for p in (root / 'candidate').iterdir() if p.is_file()}
+            cases = [
+                ('learning-contract.json', ['blinds_theory', 'rewardXp'], 99),
+                ('learning-contract.json', ['cards_ranks_suits_theory', 'options', 1, 'correct'], False),
+                ('learning-contract.json', ['blinds_theory', 'options', 0, 'repairSeats'], ['unknown']),
+                ('choice-identity.json', ['blinds_theory', 0, 4], 'wrong preferred'),
+                ('choice-identity.json', ['cards_ranks_suits_theory', 0, 0], 'unknown_choice'),
+                ('runtime-inputs.json', ['blinds_theory', 'options', 0, 'amount'], None),
+                ('runtime-inputs.json', ['blinds_theory', 'options', 0, 'reason'], 'forged reason'),
+                ('runtime-inputs.json', ['blinds_theory', 'table', 'pot'], 'Pot 99 BB'),
+                ('runtime-inputs.json', ['asm05_new_known_holes_turn_call_10', 'table', 'hero'], ['Ah', 'Ad']),
+                ('source-fingerprints.json', ['hand_rankings_theory', 'fingerprint'], 'f' * 64),
+                ('ledger.json', [1023, 'phase'], 'feedback/unknown'),
+                ('ledger.json', [1023, 'task_id'], 'unknown_task'),
+                ('ledger.json', [1023, 'status'], 'FAIL'),
+                ('ledger.json', [1023, 'result'], 'FAIL'),
+                ('ledger.json', [1023, 'reason'], 'forged reason'),
+                ('ledger.json', [0, 'status'], 'FAIL'),
+            ]
+            other_task = next(key for key in contracts['candidate'] if key not in TRUTH.W01_CAPTURE_OPTIONS['learning-contract.json'] and key not in NEW)
+            cases.append(('learning-contract.json', [other_task, 'rewardXp'], 99))
+            for name, path, replacement in cases:
+                captured = json.loads(frozen_files[name])
+                node = captured
+                for key in path[:-1]: node = node[key]
+                node[path[-1]] = replacement
+                helper.write(root / 'candidate' / name, captured)
+                if path[0] in NEW:
+                    helper.recompute(root, path[0])
+                try:
+                    TRUTH.validate_typed_cohort(root)
+                except SystemExit:
+                    pass
+                else:
+                    raise SystemExit(f'W01 negative mutation unexpectedly accepted: {name} {path}')
+                for restore in (name, 'typed-cohort-v2.json'):
+                    (root / 'candidate' / restore).write_bytes(frozen_files[restore])
+            for name in ('learning-contract.json', 'choice-identity.json', 'runtime-inputs.json'):
+                captured = json.loads(frozen_files[name])
+                task = 'blinds_theory'
+                options = captured[task] if name == 'choice-identity.json' else captured[task]['options']
+                for mutation in ('reverse', 'duplicate'):
+                    altered = copy.deepcopy(captured)
+                    target = altered[task] if name == 'choice-identity.json' else altered[task]['options']
+                    if mutation == 'reverse': target.reverse()
+                    else: target.append(copy.deepcopy(target[0]))
+                    helper.write(root / 'candidate' / name, altered)
+                    with helper.assertRaises(SystemExit):
+                        TRUTH.validate_typed_cohort(root)
+                    (root / 'candidate' / name).write_bytes(frozen_files[name])
+            name = 'learning-contract.json'
+            raw = frozen_files[name].decode()
+            for malformed in (json.dumps(json.loads(raw), indent=2), raw.replace('"rewardXp":5', '"rewardXp":99,"rewardXp":5', 1)):
+                if malformed == raw:
+                    raise SystemExit('Malformed encoding negative control did not mutate input')
+                (root / 'candidate' / name).write_text(malformed)
+                with helper.assertRaisesRegex(SystemExit, 'byte encoding drift'):
+                    TRUTH.validate_typed_cohort(root)
+                (root / 'candidate' / name).write_bytes(frozen_files[name])
+            if any((root / 'candidate' / name).read_bytes() != raw for name, raw in frozen_files.items()):
+                raise SystemExit('Negative controls failed to restore owned captures')
+            TRUTH.validate_typed_cohort(root)
+            result['w01_actual_capture_negative_controls'] = len(cases) + 6 + 2
+            result['reviewed_theory_changes'] = comparison['reviewed_theory_changes']
         print(json.dumps(result, sort_keys=True))
         if {key: result[key] for key in expected_counts} != expected_counts:
             raise SystemExit('Unexpected real TABLE.TRUTH delta classification')

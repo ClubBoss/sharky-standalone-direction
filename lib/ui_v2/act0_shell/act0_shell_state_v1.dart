@@ -8606,6 +8606,38 @@ final _deckIntroRunner = _cardsRanksRunner.copyWith(
   caption: 'A deck has 52 cards.',
   hint: 'Each card combines one rank with one suit.',
   question: 'What are the two parts of a card?',
+  feedbackTitle: 'Rank and suit identify a card.',
+  feedbackReason: 'Each card has one rank and one suit.',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'rank_only',
+      label: 'Rank only',
+      isCorrect: false,
+      preferredLabel: 'Rank and suit',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Rank is one part.',
+      feedbackReason: 'Rank names the value, but a card also has a suit.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'rank_and_suit',
+      label: 'Rank and suit',
+      isCorrect: true,
+      preferredLabel: 'Rank and suit',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Both parts found.',
+      feedbackReason: 'Rank names the value and suit names the symbol family.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'suit_only',
+      label: 'Suit only',
+      isCorrect: false,
+      preferredLabel: 'Rank and suit',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Suit is one part.',
+      feedbackReason:
+          'Suit names the symbol family, but a card also has a rank.',
+    ),
+  ],
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Deck first.',
@@ -9563,6 +9595,23 @@ final _blindsOrderRunner = _meetTableRunner.copyWith(
   caption: 'SB and BB post before cards are played.',
   hint: 'The first decision comes after the big blind.',
   question: 'Which blind posts 1 BB?',
+  options: <Act0RunnerOptionV1>[
+    const Act0RunnerOptionV1(
+      id: 'button_is_not_a_blind',
+      label: 'BTN',
+      seatId: 'btn',
+      isCorrect: false,
+      preferredLabel: 'BB',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'The button is a position.',
+      feedbackReason:
+          'BTN marks the dealer button. BB posts the full 1 BB blind.',
+    ),
+    ..._bigBlindPostRunner.options,
+  ],
+  feedbackTitle: 'The big blind sets the baseline.',
+  feedbackReason:
+      'BB posts the full 1 BB blind. SB posts 0.5 BB in this lesson.',
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Blinds force a starting pot.',
@@ -10190,6 +10239,30 @@ final _handRankingIntroRunner = _handRankingsRunner.copyWith(
   hint:
       'Start with the ladder: pair, two pair, trips, straight, flush, full house, quads, straight flush.',
   question: 'What do hand rankings compare?',
+  feedbackTitle: 'Rankings compare hand strength.',
+  feedbackReason: 'Hand rankings tell which made hand is stronger.',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'hand_strength',
+      label: 'Hand strength',
+      isCorrect: true,
+      preferredLabel: 'Hand strength',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Hand strength is the comparison.',
+      feedbackReason:
+          'Rankings tell which made hand is stronger, such as a flush over a straight.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'seat_position',
+      label: 'Seat position',
+      isCorrect: false,
+      preferredLabel: 'Hand strength',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Position is a different concept.',
+      feedbackReason:
+          'Seat position affects action order, not the hand ranking.',
+    ),
+  ],
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Ranking ladder.',

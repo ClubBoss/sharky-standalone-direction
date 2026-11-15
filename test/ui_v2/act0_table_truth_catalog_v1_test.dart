@@ -51,22 +51,25 @@ void main() {
       'asm05_new_known_holes_turn_call_10',
       'asm05_new_known_holes_turn_call_40',
     };
+    final baselineBytes = File(
+      'test/ui_v2/fixtures/table_truth_learning_contract_v1.json',
+    ).readAsBytesSync();
+    expect(
+      sha256.convert(baselineBytes).toString(),
+      'da163eaa50ee1a19dcdceb09f3ac65af4be3b4c296c36c48ffa5ef7d6d77e7a4',
+      reason: 'The historical contract fixture remains byte-for-byte frozen.',
+    );
     final baselineContract = Map<String, Object?>.from(
-      jsonDecode(
-            File(
-              'test/ui_v2/fixtures/table_truth_learning_contract_v1.json',
-            ).readAsStringSync(),
-          )
-          as Map,
+      jsonDecode(utf8.decode(baselineBytes)) as Map,
     );
     final presentAdditions = contract.keys.toSet().intersection(
       admittedAdditions,
     );
     final historicalContract = Map<String, Object?>.from(contract)
       ..removeWhere((id, _) => admittedAdditions.contains(id));
-    // Keep the historical fixture immutable. PR460 admits only the two
-    // independently checked MAIN01 quality cells, with historical records
-    // preserved by the authored-fingerprint compatibility regression.
+    // Keep the historical fixture immutable. PR460 quality cells and the
+    // exact owner-admitted W01 theory option contracts are checked separately;
+    // persisted records are never rewritten by this comparison.
     final historicalComparison =
         jsonDecode(jsonEncode(historicalContract)) as Map<String, dynamic>;
     if (presentAdditions.isNotEmpty) {
@@ -88,11 +91,108 @@ void main() {
         option['quality'] = prior;
       }
     }
+    // Exact three-concept source correction admitted on Issue364 / PR475.
+    // Literal expected values, never copied from live production at runtime.
+    const reviewedW01TheoryOptions = {
+      'blinds_theory': [
+        {
+          'id': 'button_is_not_a_blind',
+          'correct': false,
+          'quality': 'wrong',
+          'seat': 'btn',
+          'repairSeats': [],
+          'repairCards': [],
+          'repairLabels': [],
+        },
+        {
+          'id': 'bb',
+          'correct': true,
+          'quality': 'correct',
+          'seat': 'bb',
+          'repairSeats': [],
+          'repairCards': [],
+          'repairLabels': [],
+        },
+        {
+          'id': 'sb',
+          'correct': false,
+          'quality': 'wrong',
+          'seat': 'sb',
+          'repairSeats': [],
+          'repairCards': [],
+          'repairLabels': [],
+        },
+      ],
+      'cards_ranks_suits_theory': [
+        {
+          'id': 'rank_only',
+          'correct': false,
+          'quality': 'wrong',
+          'seat': null,
+          'repairSeats': [],
+          'repairCards': [],
+          'repairLabels': [],
+        },
+        {
+          'id': 'rank_and_suit',
+          'correct': true,
+          'quality': 'correct',
+          'seat': null,
+          'repairSeats': [],
+          'repairCards': [],
+          'repairLabels': [],
+        },
+        {
+          'id': 'suit_only',
+          'correct': false,
+          'quality': 'wrong',
+          'seat': null,
+          'repairSeats': [],
+          'repairCards': [],
+          'repairLabels': [],
+        },
+      ],
+      'hand_rankings_theory': [
+        {
+          'id': 'hand_strength',
+          'correct': true,
+          'quality': 'correct',
+          'seat': null,
+          'repairSeats': [],
+          'repairCards': [],
+          'repairLabels': [],
+        },
+        {
+          'id': 'seat_position',
+          'correct': false,
+          'quality': 'wrong',
+          'seat': null,
+          'repairSeats': [],
+          'repairCards': [],
+          'repairLabels': [],
+        },
+      ],
+    };
+    final expectedComparison =
+        jsonDecode(jsonEncode(baselineContract)) as Map<String, dynamic>;
+    if (presentAdditions.isNotEmpty) {
+      for (final entry in reviewedW01TheoryOptions.entries) {
+        final expectedTask =
+            expectedComparison[entry.key] as Map<String, dynamic>;
+        expect(
+          expectedTask['options'],
+          hasLength(entry.value.length),
+          reason:
+              'Reviewed theory option cardinality stays frozen: ${entry.key}',
+        );
+        expectedTask['options'] = entry.value;
+      }
+    }
     expect(
       historicalComparison,
-      baselineContract,
+      expectedComparison,
       reason:
-          'Only the two reviewed MAIN01 quality cells may differ from the frozen baseline; IDs, XP, family, correctness and repair identities remain unchanged',
+          'Only reviewed MAIN01 quality cells and the exact three W01 theory option contracts may differ; every other identity, XP, family and repair field remains frozen',
     );
     const expectedAsmContracts = {
       'asm05_new_known_holes_turn_call_10': {
