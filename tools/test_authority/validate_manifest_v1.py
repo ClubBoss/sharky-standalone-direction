@@ -64,6 +64,7 @@ PHP3_F17_TIER_B_PATHS = {
 }
 # Reviewed current-route additions; the frozen historical inventory is unchanged.
 MAIN01_TIER_B_PATHS = {
+    "test/services/loc01_language_persistence_test.dart",
     "test/ui_v2/act0_onb02_disposition_ack_v1_test.dart",
     "test/ui_v2/act0_first_table_setup_grading_v1_test.dart",
     "test/ui_v2/act0_main01_app_root_cycle_v1_test.dart",
