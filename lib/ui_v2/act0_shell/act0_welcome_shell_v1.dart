@@ -28,7 +28,7 @@ class Act0WelcomeShellV1 extends StatefulWidget {
 
   final bool replayMode;
   final bool handoffStartsRecommendedTask;
-  final VoidCallback onCompleted;
+  final VoidCallback? onCompleted;
   final VoidCallback? onClose;
   final Act0ShellTableVisualVariantV1 tableVisualVariant;
 
@@ -267,7 +267,7 @@ class _WelcomeTextBeatV1 extends StatelessWidget {
   final String detail;
   final Act0SharkyMoodV1 mood;
   final bool replayMode;
-  final VoidCallback onNext;
+  final VoidCallback? onNext;
   final String ctaLabel;
   final Widget? visual;
   final VoidCallback? onClose;

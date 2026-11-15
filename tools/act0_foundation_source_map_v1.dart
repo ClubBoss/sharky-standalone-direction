@@ -29,7 +29,7 @@ Map<String, Object?> buildFoundationSourceMapV1() {
   final stateBlob = _blob(_state);
   final previewBlob = _blob(_preview);
   if (stateBlob != '3fcc919efb9cb0aa48940514c60d800c3362d038' ||
-      previewBlob != 'e2f837841997402cbd4c08a6a308587c080ae480') {
+      previewBlob != '8b5f358e2d24b897384fe244a6c5255fd1e8cc90') {
     throw StateError(
       'Source revision changed; review and version the source map.',
     );
@@ -132,17 +132,28 @@ Map<String, Object?> buildFoundationSourceMapV1() {
   }
   return {
     'schema': 'act0_foundation_source_map_v1',
-    'map_revision': 2,
-    'source_status': 'PREPARED_UTC_CANDIDATE_NOT_PUBLISHED_OR_ACCEPTED',
+    'map_revision': 3,
+    'source_status': 'PREPARED_ONB_ACK_CANDIDATE_NOT_PUBLISHED_OR_ACCEPTED',
     'source_delta': {
-      'composition_base_commit': '6e848de8c11caa312af37347550ebde714d4b47c',
+      'composition_base_commit': '86f9ffb294d3ed529edab01e9c1c6b381a284fa2',
       'scope':
-          'strict whole-cache retention admission only; route gates unchanged',
-      'preview_prior_git_blob': 'e4e977674457061c8345da2ffe94ad72a75209e9',
+          'first-start ACK/cache/retry lifecycle only; route gates unchanged',
+      'preview_prior_git_blob': 'e2f837841997402cbd4c08a6a308587c080ae480',
       'preview_candidate_git_blob': previewBlob,
-      'utc_patch_sha256':
+      'prior_utc_patch_sha256':
           'ef9686afe5b9ef5d1e6e0501192098050ef2bf9f73de11173a62f1a81de82e07',
       'runtime_composition_and_human': 'NOT_VERIFIED',
+      'prior_source_delta': {
+        'composition_base_commit': '6e848de8c11caa312af37347550ebde714d4b47c',
+        'scope':
+            'strict whole-cache retention admission only; route gates unchanged',
+        'preview_prior_git_blob': 'e4e977674457061c8345da2ffe94ad72a75209e9',
+        'preview_candidate_git_blob':
+            'e2f837841997402cbd4c08a6a308587c080ae480',
+        'utc_patch_sha256':
+            'ef9686afe5b9ef5d1e6e0501192098050ef2bf9f73de11173a62f1a81de82e07',
+        'runtime_composition_and_human': 'NOT_VERIFIED',
+      },
     },
     'scope':
         'W1-W4 source traceability preparation; not course/runtime/Human acceptance',
@@ -199,12 +210,12 @@ Map<String, Object?> buildFoundationSourceMapV1() {
 }
 
 String renderFoundationSourceMapV1(Map<String, Object?> map) {
-  final out = StringBuffer('# Foundation W1-W4 source map v1 - revision 2\n\n');
+  final out = StringBuffer('# Foundation W1-W4 source map v1 - revision 3\n\n');
   out.writeln(
-    'Status: PREPARED UTC CANDIDATE SOURCE TRACE ONLY; NOT PUBLISHED OR ACCEPTED. Parent CUR-01, 0.3, runtime and Human acceptance are not granted.',
+    'Status: PREPARED ONB ACK CANDIDATE SOURCE TRACE ONLY; NOT PUBLISHED OR ACCEPTED. Parent CUR-01, 0.3, runtime and Human acceptance are not granted.',
   );
   out.writeln(
-    '\nBase: `$_base`. The JSON companion lists exact source Git blobs, canonical task IDs, source declarations and unresolved fields. Content-source links retain the unchanged historical base. Composition base: 6e848de8c11caa312af37347550ebde714d4b47c. Preview is an unpublished UTC delta, not a blob in either base commit. Exact UTC patch SHA256: ef9686afe5b9ef5d1e6e0501192098050ef2bf9f73de11173a62f1a81de82e07. Revision 1 remains historical; its acceptance does not transfer. Route gates and content are unchanged by this delta.',
+    '\nBase: `$_base`. The JSON companion lists exact source Git blobs, canonical task IDs, source declarations and unresolved fields. Content-source links retain the unchanged historical base. Composition base: 86f9ffb294d3ed529edab01e9c1c6b381a284fa2. Preview is an unpublished ONB ACK/retry delta, not a blob in that base commit. Revision 2 UTC provenance is retained in the JSON source_delta.prior_source_delta; its patch SHA256 remains ef9686afe5b9ef5d1e6e0501192098050ef2bf9f73de11173a62f1a81de82e07. Prior revisions remain historical; their acceptance does not transfer. Route gates and content are unchanged by this delta.',
   );
   out.writeln(
     '\nThis inventory follows current Act0 world names and actual helper-retitled task IDs. Lesson goals quote authored subtitles. Earlier lessons/tasks describe source order; they are not new pedagogical prerequisites or evidence of learning.',

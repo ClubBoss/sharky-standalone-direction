@@ -2615,6 +2615,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool _welcomeCompletedV1 = false;
   bool _introductionSkippedV1 = false;
   bool _skipIntroductionSavingV1 = false;
+  bool _welcomeCompletionSavingV1 = false;
+  int _welcomeCompletionEpochV1 = 0;
   bool _welcomeHandoffStartsRecommendedTaskV1 = false;
   Act0ShellTabV1? _welcomeReturnTabV1;
 
@@ -5426,6 +5428,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _showWelcome = false;
       _welcomeCompletedV1 = false;
       _introductionSkippedV1 = false;
+      _skipIntroductionSavingV1 = false;
+      _welcomeCompletionSavingV1 = false;
+      _welcomeCompletionEpochV1 += 1;
       _welcomeHandoffStartsRecommendedTaskV1 = false;
       _welcomeReturnTabV1 = null;
       _placementDiagnosticActive = false;
@@ -6200,9 +6205,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                       replayMode: _welcomeReturnTabV1 != null,
                       handoffStartsRecommendedTask:
                           _welcomeHandoffStartsRecommendedTaskV1,
-                      onCompleted: () {
-                        unawaited(_completeWelcomeV1());
-                      },
+                      onCompleted: _welcomeCompletionSavingV1
+                          ? null
+                          : () {
+                              unawaited(_completeWelcomeV1());
+                            },
                       onClose: _welcomeReturnTabV1 != null
                           ? _closeWelcomeReplayV1
                           : null,
@@ -10869,15 +10876,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _persistProgress();
     } catch (_) {
       if (mounted && epoch == _recoveryEpochV1) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              Localizations.localeOf(context).languageCode == 'ru'
-                  ? '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0441\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c. \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439 \u0435\u0449\u0451 \u0440\u0430\u0437.'
-                  : 'Could not save. Please try again.',
-            ),
-          ),
-        );
+        _showFirstStartSaveFailureV1();
       }
     } finally {
       if (mounted && epoch == _recoveryEpochV1) {
@@ -10886,8 +10885,33 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
   }
 
+  void _showFirstStartSaveFailureV1({bool aboveWelcomeActions = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        // Keep the 52-point onboarding CTA and its 12/16-point footer padding
+        // reachable while the error is visible, with an 8-point gap.
+        behavior: aboveWelcomeActions ? SnackBarBehavior.floating : null,
+        margin: aboveWelcomeActions
+            ? EdgeInsets.fromLTRB(
+                16,
+                0,
+                16,
+                MediaQuery.paddingOf(context).bottom + 52 + 12 + 16 + 8,
+              )
+            : null,
+        content: Text(
+          Localizations.localeOf(context).languageCode == 'ru'
+              ? '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0441\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c. \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439 \u0435\u0449\u0451 \u0440\u0430\u0437.'
+              : 'Could not save. Please try again.',
+        ),
+      ),
+    );
+  }
+
   void _openWelcomeReplayV1() {
     setState(() {
+      _welcomeCompletionEpochV1 += 1;
+      _welcomeCompletionSavingV1 = false;
       _welcomeReturnTabV1 = _tab;
       _showWelcome = true;
       _showPlacement = false;
@@ -10905,6 +10929,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   void _closeWelcomeReplayV1() {
     final returnTab = _welcomeReturnTabV1 ?? Act0ShellTabV1.profile;
     setState(() {
+      _welcomeCompletionEpochV1 += 1;
+      _welcomeCompletionSavingV1 = false;
       _showWelcome = false;
       _welcomeReturnTabV1 = null;
       _tab = returnTab;
@@ -10912,35 +10938,55 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   }
 
   Future<void> _completeWelcomeV1() async {
+    if (_welcomeCompletionSavingV1 || !_showWelcome) return;
     final epoch = _recoveryEpochV1;
-    await Act0FirstStartPreferencesV1.setWelcomeCompleted();
-    if (!mounted || epoch != _recoveryEpochV1) {
-      return;
-    }
-    final replayMode = _welcomeReturnTabV1 != null;
-    setState(() {
-      _welcomeCompletedV1 = true;
-      _showWelcome = false;
-      if (replayMode) {
-        _tab = _welcomeReturnTabV1 ?? Act0ShellTabV1.profile;
-      } else if (_welcomeHandoffStartsRecommendedTaskV1) {
-        _tab = Act0ShellTabV1.play;
-        _showPlayHub = false;
-        _beginPlacementRecommendedLessonRunV1();
-      } else {
-        _tab = Act0ShellTabV1.home;
-        final baseState = widget.state ?? Act0ShellStateV1.sample;
-        final worlds = _progressWorlds(baseState);
-        final selectedWorld = _worldById(worlds, _selectedWorldId);
-        final firstLesson = _firstPlayableLesson(selectedWorld);
-        final firstTask = _firstIncompleteTask(firstLesson);
-        _seedLearnRouteFocusV1(
-          lessonId: firstLesson.lessonId,
-          taskId: firstTask.taskId,
-        );
+    final completionEpoch = ++_welcomeCompletionEpochV1;
+    final returnTab = _welcomeReturnTabV1;
+    setState(() => _welcomeCompletionSavingV1 = true);
+    bool isCurrent() =>
+        mounted &&
+        epoch == _recoveryEpochV1 &&
+        completionEpoch == _welcomeCompletionEpochV1 &&
+        _showWelcome &&
+        returnTab == _welcomeReturnTabV1;
+    try {
+      await Act0FirstStartPreferencesV1.setWelcomeCompleted();
+      if (!isCurrent()) return;
+      final replayMode = _welcomeReturnTabV1 != null;
+      setState(() {
+        _welcomeCompletedV1 = true;
+        _showWelcome = false;
+        if (replayMode) {
+          _tab = _welcomeReturnTabV1 ?? Act0ShellTabV1.profile;
+        } else if (_welcomeHandoffStartsRecommendedTaskV1) {
+          _tab = Act0ShellTabV1.play;
+          _showPlayHub = false;
+          _beginPlacementRecommendedLessonRunV1();
+        } else {
+          _tab = Act0ShellTabV1.home;
+          final baseState = widget.state ?? Act0ShellStateV1.sample;
+          final worlds = _progressWorlds(baseState);
+          final selectedWorld = _worldById(worlds, _selectedWorldId);
+          final firstLesson = _firstPlayableLesson(selectedWorld);
+          final firstTask = _firstIncompleteTask(firstLesson);
+          _seedLearnRouteFocusV1(
+            lessonId: firstLesson.lessonId,
+            taskId: firstTask.taskId,
+          );
+        }
+        _welcomeReturnTabV1 = null;
+      });
+    } catch (_) {
+      if (isCurrent()) {
+        _showFirstStartSaveFailureV1(aboveWelcomeActions: true);
       }
-      _welcomeReturnTabV1 = null;
-    });
+    } finally {
+      if (mounted &&
+          epoch == _recoveryEpochV1 &&
+          completionEpoch == _welcomeCompletionEpochV1) {
+        setState(() => _welcomeCompletionSavingV1 = false);
+      }
+    }
   }
 
   _Act0PlacementSkipPlanV1 _buildPlacementSkipPlan({

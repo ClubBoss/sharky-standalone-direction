@@ -60,6 +60,7 @@ void main() {
           m['worlds'][0]['lessons'][0]['tasks'][0]['task_id'],
     );
     mutate('stale map revision rejected', (m) => m['map_revision'] = 1);
+    mutate('prior ONB map revision rejected', (m) => m['map_revision'] = 2);
     mutate(
       'missing candidate provenance rejected',
       (m) => m.remove('source_delta'),
