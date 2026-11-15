@@ -621,6 +621,115 @@ void main() {
   }
 
   testWidgets(
+    'SIMULATED JRN-08 AppRoot retry preserves complete learning truth',
+    (tester) async {
+      await _openPendingHelpDecision(tester);
+      await _tap(tester, 'act0_shell_theory_recall_cta');
+      await _tap(tester, 'act0_shell_theory_recall_close_cta');
+      final correct = _runner(
+        tester,
+      ).runner.options.singleWhere((option) => option.isCorrect);
+      await _choose(tester, correct.id);
+      final earned = await _saved(tester);
+      expect(earned['earnedXp'], greaterThan(0));
+      expect(earned['learningEvidenceHistory'], isNotEmpty);
+      expect(earned['learningEvidenceLineage'], isNotEmpty);
+      final sourceRecord = _rows(
+        earned,
+        'learningEvidenceHistory',
+      ).lastWhere((row) => row['taskId'] == _source);
+      expect(sourceRecord['choiceId'], correct.id);
+      expect(sourceRecord['assistanceKind'], 'quickHint');
+
+      const unrelatedKey = 'jrn08_mock_unrelated_setting';
+      const checkpointKeys = <String>[
+        _progressKey,
+        '${_progressKey}_head',
+        '${_progressKey}_recovery',
+        '${_progressKey}_backup',
+      ];
+      Future<Map<String, Object>> mockValues() async {
+        late Map<String, Object> values;
+        await tester.runAsync(() async {
+          await _pendingWrites().flush().timeout(const Duration(seconds: 2));
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.reload();
+          values = {for (final key in prefs.getKeys()) key: prefs.get(key)!};
+        });
+        return values;
+      }
+
+      await tester.runAsync(() async {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(unrelatedKey, 'keep-existing-setting');
+      });
+      final validValues = await mockValues();
+      final validCheckpoint = {
+        for (final key in checkpointKeys) key: validValues[key]! as String,
+      };
+      final unrelatedValues = {
+        for (final entry in validValues.entries)
+          if (!entry.key.startsWith(_progressKey)) entry.key: entry.value,
+      };
+
+      // Existing in-memory corruption fixture; no native preferences or files.
+      final malformed = jsonDecode(jsonEncode(earned)) as Map<String, dynamic>;
+      malformed['pendingDecisionAssistance'] = null;
+      await _replaceCheckpointFixture(tester, malformed);
+      const unreadable = 'Your saved progress could not be read.';
+      expect(find.text(unreadable), findsOneWidget);
+      expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
+      final damagedValues = await mockValues();
+      await _tap(tester, 'act0_recovery_retry');
+      expect(find.text(unreadable), findsOneWidget);
+      expect(await mockValues(), damagedValues);
+      await _tap(tester, 'act0_recovery_options');
+      await _tap(tester, 'act0_recovery_cancel');
+      expect(await mockValues(), damagedValues);
+
+      // Restore only the captured fake checkpoint while AppRoot stays mounted.
+      // Actual Retry must reload it; remount is not a substitute for that action.
+      await tester.runAsync(() async {
+        final prefs = await SharedPreferences.getInstance();
+        for (final entry in validCheckpoint.entries) {
+          await prefs.setString(entry.key, entry.value);
+        }
+      });
+      await _tap(tester, 'act0_recovery_retry');
+      expect(find.text(unreadable), findsNothing);
+      final recovered = await _saved(tester);
+      expect(_stableProgress(recovered), _stableProgress(earned));
+      expect(
+        recovered['pendingDecisionAssistance'],
+        earned['pendingDecisionAssistance'],
+      );
+      expect(
+        find.byKey(const Key('act0_academy_home_leaf_cta')),
+        findsOneWidget,
+      );
+
+      await _remount(tester);
+      final remounted = await _saved(tester);
+      expect(_stableProgress(remounted), _stableProgress(earned));
+      expect(
+        remounted['pendingDecisionAssistance'],
+        earned['pendingDecisionAssistance'],
+      );
+      final finalValues = await mockValues();
+      expect({
+        for (final entry in finalValues.entries)
+          if (!entry.key.startsWith(_progressKey)) entry.key: entry.value,
+      }, unrelatedValues);
+      expect(find.text(unreadable), findsNothing);
+      expect(
+        find.byKey(const Key('act0_academy_home_leaf_cta')),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
     'SIMULATED main AppRoot Back: pending choice and saved miss remain intact',
     (tester) async {
       SharedPreferences.setMockInitialValues(<String, Object>{});
