@@ -68,6 +68,7 @@ MAIN01_TIER_B_PATHS = {
     "test/ui_v2/act0_onb02_disposition_ack_v1_test.dart",
     "test/ui_v2/act0_first_table_setup_grading_v1_test.dart",
     "test/ui_v2/act0_main01_app_root_cycle_v1_test.dart",
+    "test/ui_v2/cnt01_role_inventory_v1_test.dart",
 }
 TIER_C_OWNER_KINDS = {"current", "historical", "decision_authority"}
 TIER_C_REASON_CODES = {
