@@ -1,14 +1,35 @@
 // CNT-01 technical inventory only. Not a task selector, scheduler or proof engine.
 // Source: Act0ShellStateV1.sample; fingerprint owner stays in Act0.
-// Reused from Draft #439 (5aca1011). Host through existing Flutter tests:
-// production catalogue types depend on Flutter; this module is not a Dart CLI.
-// Authored catalogue includes locked and derived items, not runnable eligibility.
+// Reuses Draft #445 (3aa7e00a) source fidelity and Draft #439 collector.
+// Flutter-hosted catalogue check; includes locked rows, not runnable eligibility.
+import 'dart:convert';
+
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 const String cnt01UnknownV1 = 'UNKNOWN';
 const String cnt01CatalogSourceV1 =
     'lib/ui_v2/act0_shell/act0_shell_state_v1.dart';
+
+// Order is meaningful for choices, but not for JSON object keys.
+bool _sameInventoryValue(Object? actual, Object? expected) {
+  if (actual is List && expected is List) {
+    return actual.length == expected.length &&
+        List<int>.generate(
+          actual.length,
+          (index) => index,
+        ).every((index) => _sameInventoryValue(actual[index], expected[index]));
+  }
+  if (actual is Map && expected is Map) {
+    return actual.length == expected.length &&
+        expected.keys.every(
+          (key) =>
+              actual.containsKey(key) &&
+              _sameInventoryValue(actual[key], expected[key]),
+        );
+  }
+  return actual == expected;
+}
 
 class Cnt01RoleInventoryV1 {
   const Cnt01RoleInventoryV1._();
@@ -111,10 +132,36 @@ class Cnt01RoleInventoryV1 {
   /// proof of genuinely unseen transfer or naturally elapsed retention.
   static List<Map<String, String>> validateRows(
     List<Map<String, Object?>> rows, {
+    Act0ShellStateV1? catalog,
     Set<String> previouslyPresentedTaskIds = const <String>{},
     Set<String> assistanceExposedTaskIds = const <String>{},
   }) {
     final findings = <Map<String, String>>[];
+    final source = catalog ?? Act0ShellStateV1.sample;
+    final sourceTasks = <String, List<Act0LessonTaskV1>>{};
+    String key(String world, String lesson, String task) =>
+        jsonEncode(<String>[world, lesson, task]);
+    for (final world in source.worlds) {
+      for (final lesson in world.lessons) {
+        for (final task in lesson.taskList) {
+          sourceTasks
+              .putIfAbsent(
+                key(world.worldId, lesson.lessonId, task.taskId),
+                () => <Act0LessonTaskV1>[],
+              )
+              .add(task);
+        }
+      }
+    }
+    final expectedRows = <String, Map<String, Object?>>{
+      for (final row in fromAct0(baselineMainSha: '', catalog: source))
+        key(
+          row['worldId'] as String,
+          row['lessonId'] as String,
+          row['taskId'] as String,
+        ): row,
+    };
+    final suppliedKeys = <String>{};
     final usedIds = <String>{};
     final sha40 = RegExp(r'^[a-f0-9]{40}$');
     final sha64 = RegExp(r'^[a-f0-9]{64}$');
@@ -133,6 +180,50 @@ class Cnt01RoleInventoryV1 {
       final id = string('taskId');
       final role = string('sourceRole');
       final basis = string('roleBasis');
+      final rowKey = key(string('worldId'), string('lessonId'), id);
+      suppliedKeys.add(rowKey);
+      final matches = sourceTasks[rowKey];
+      if (matches == null || matches.length != 1) {
+        add('ERROR', 'SOURCE_TASK_NOT_UNIQUE', id);
+      } else {
+        final task = matches.single;
+        final expectedRow = expectedRows[rowKey]!;
+        // Derived provenance cannot be upgraded to invented editorial metadata.
+        // Also reject coherent fabricated answers with a copied real fingerprint.
+        for (final field in <String>[
+          'taskIdentity',
+          'choiceIds',
+          'authoredCorrectChoiceIds',
+          'authoredRationaleByChoiceId',
+          'hasAssessmentChoices',
+          'authoredSourcePath',
+          'authoredRevision',
+          'responsibleAuthor',
+        ]) {
+          if (!_sameInventoryValue(row[field], expectedRow[field])) {
+            add('ERROR', 'SOURCE_FIELD_MISMATCH_$field', id);
+          }
+        }
+        if (string('sourcePhase') != task.phase.name ||
+            string('sourceStepKind') != task.stepKind.name ||
+            string('sourceFamily') != task.resolvedTaskFamily.name) {
+          add('ERROR', 'SOURCE_INPUT_MISMATCH', id);
+        }
+        if (role != sourceRole(task) || basis != roleBasis(task)) {
+          add('ERROR', 'SOURCE_CLASSIFICATION_MISMATCH', id);
+        }
+        if (roleBasis(task) == 'CONFLICT') {
+          add('ERROR', 'ROLE_COLLISION', id);
+        }
+        if (string('semanticRevision') !=
+            act0AuthoredSourceFingerprintV1(
+              worldId: string('worldId'),
+              lessonId: string('lessonId'),
+              task: task,
+            )) {
+          add('ERROR', 'SOURCE_SEMANTIC_REVISION_MISMATCH', id);
+        }
+      }
 
       if (id.isEmpty) {
         add('ERROR', 'MISSING_TASK_ID', id);
@@ -144,7 +235,7 @@ class Cnt01RoleInventoryV1 {
       }
       if (string('worldId').isEmpty ||
           string('lessonId').isEmpty ||
-          string('catalogSourcePath').isEmpty ||
+          string('catalogSourcePath') != cnt01CatalogSourceV1 ||
           !sha40.hasMatch(string('catalogSourceMainSha'))) {
         add('ERROR', 'MISSING_ORIGIN', id);
       }
@@ -236,6 +327,14 @@ class Cnt01RoleInventoryV1 {
             text.trim() == cnt01UnknownV1) {
           add('GAP', 'AUTHORED_RATIONALE_UNKNOWN', id);
         }
+      }
+    }
+    for (final entry in sourceTasks.entries) {
+      if (!suppliedKeys.contains(entry.key)) {
+        add('ERROR', 'SOURCE_TASK_MISSING', entry.value.first.taskId);
+      }
+      if (entry.value.length != 1) {
+        add('ERROR', 'SOURCE_TASK_NOT_UNIQUE', entry.value.first.taskId);
       }
     }
     return List<Map<String, String>>.unmodifiable(findings);

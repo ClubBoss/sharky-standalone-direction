@@ -84,6 +84,111 @@ void main() {
       },
     );
 
+    List<Map<String, Object?>> sourceRows() => Cnt01RoleInventoryV1.fromAct0(
+      baselineMainSha: List<String>.filled(40, 'a').join(),
+    );
+
+    Map<String, Object?> teachingRow() => Map<String, Object?>.from(
+      sourceRows().singleWhere((r) => r['taskId'] == 'what_poker_is_theory'),
+    );
+
+    test('unaltered source has no classification mismatch', () {
+      final codes = _codes(sourceRows());
+      expect(codes, isNot(contains('SOURCE_CLASSIFICATION_MISMATCH')));
+      expect(codes, isNot(contains('SOURCE_INPUT_MISMATCH')));
+      expect(codes, isNot(contains('SOURCE_TASK_NOT_UNIQUE')));
+    });
+
+    test('complete JSON round trip preserves source validation', () {
+      final decoded = (jsonDecode(jsonEncode(sourceRows())) as List)
+          .map((row) => Map<String, Object?>.from(row as Map))
+          .toList();
+      final findings = Cnt01RoleInventoryV1.validateRows(decoded);
+      expect(findings, equals(Cnt01RoleInventoryV1.validateRows(sourceRows())));
+      expect(
+        findings.where(
+          (finding) =>
+              finding['code']!.startsWith('SOURCE_FIELD_MISMATCH_') ||
+              finding['code'] == 'SOURCE_TASK_MISSING',
+        ),
+        isEmpty,
+      );
+    });
+
+    test('empty or truncated inventory cannot claim full source coverage', () {
+      expect(_codes([]), contains('SOURCE_TASK_MISSING'));
+      expect(
+        _codes(sourceRows().skip(1).toList()),
+        contains('SOURCE_TASK_MISSING'),
+      );
+    });
+
+    test(
+      'copied fingerprint cannot validate fabricated content or provenance',
+      () {
+        final mutations = <String, Object?>{
+          'taskIdentity': 'FORGED',
+          'choiceIds': <String>['invented_choice'],
+          'authoredCorrectChoiceIds': <String>['invented_choice'],
+          'authoredRationaleByChoiceId': <String, String>{
+            'invented_choice': 'fake',
+          },
+          'hasAssessmentChoices': 'not_a_boolean',
+          'authoredSourcePath': 'invented/source',
+          'authoredRevision': 'invented_revision',
+          'responsibleAuthor': 'invented_author',
+        };
+        for (final mutation in mutations.entries) {
+          final row = teachingRow()..[mutation.key] = mutation.value;
+          expect(
+            _codes([row]),
+            contains('SOURCE_FIELD_MISMATCH_${mutation.key}'),
+            reason: mutation.key,
+          );
+        }
+      },
+    );
+
+    test('coherent forged role and basis cannot override source', () {
+      final row = teachingRow()
+        ..['sourceRole'] = 'REPAIR'
+        ..['roleBasis'] = 'stepKind.fixMistakes';
+      expect(_codes([row]), contains('SOURCE_CLASSIFICATION_MISMATCH'));
+    });
+
+    test('forged basis and each source input are independently rejected', () {
+      final basis = teachingRow()..['roleBasis'] = 'taskFamily.learn';
+      expect(_codes([basis]), contains('SOURCE_CLASSIFICATION_MISMATCH'));
+      for (final field in ['sourcePhase', 'sourceStepKind', 'sourceFamily']) {
+        final row = teachingRow()..[field] = 'forged';
+        expect(_codes([row]), contains('SOURCE_INPUT_MISMATCH'), reason: field);
+      }
+      final coherent = teachingRow()
+        ..['sourcePhase'] = 'drill'
+        ..['sourceStepKind'] = 'fixMistakes'
+        ..['sourceFamily'] = 'repair'
+        ..['sourceRole'] = 'REPAIR'
+        ..['roleBasis'] = 'stepKind.fixMistakes';
+      expect(
+        _codes([coherent]),
+        containsAll([
+          'SOURCE_INPUT_MISMATCH',
+          'SOURCE_CLASSIFICATION_MISMATCH',
+        ]),
+      );
+    });
+
+    test('unknown identity cannot borrow another task classification', () {
+      final row = teachingRow()..['taskId'] = 'not_an_authored_task';
+      expect(_codes([row]), contains('SOURCE_TASK_NOT_UNIQUE'));
+    });
+
+    test('well-formed copied semantic revision cannot hide changed source', () {
+      final row = teachingRow()
+        ..['semanticRevision'] = List<String>.filled(64, 'c').join();
+      expect(_codes([row]), contains('SOURCE_SEMANTIC_REVISION_MISMATCH'));
+    });
+
     test('global duplicate source task ID is an error', () {
       expect(
         _codes(<Map<String, Object?>>[_row(), _row()]),
