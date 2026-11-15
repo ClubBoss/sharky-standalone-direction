@@ -180,8 +180,26 @@ void main() {
 
       expect(contrastTask.taskId, 'position_six_seats_hj_co_contrast');
       expect(contrastTask.runner.table.selectableSeatIds, <String>['hj', 'co']);
-      expect(contrastTask.runner.table.highlightedSeatIds, contains('hj'));
-      expect(contrastTask.runner.table.highlightedSeatIds, contains('co'));
+      // Selectable answer controls are not predecision answer highlights.
+      expect(contrastTask.runner.table.highlightedSeatIds, isEmpty);
+      expect(contrastTask.runner.table.activeSeatId, isEmpty);
+      expect(
+        contrastTask.runner.table.seats.map((seat) => seat.seatId),
+        containsAll(<String>['hj', 'co']),
+      );
+      expect(correctOption(contrastTask).seatId, 'hj');
+      expect(
+        contrastTask.runner.options
+            .singleWhere((option) => option.seatId == 'co')
+            .isCorrect,
+        isFalse,
+      );
+      expect(
+        contrastTask.runner.teachingSteps
+            .expand((step) => step.focusSeatIds)
+            .toSet(),
+        <String>{'hj', 'co'},
+      );
     });
 
     test('W2 strong and borderline bucket tasks use distinct examples', () {
@@ -215,8 +233,15 @@ void main() {
       ]);
       expect(
         borderline.runner.table.heroCards.map((card) => card.label),
-        <String>['Qh', 'Js'],
+        <String>['Qh', 'Jh'],
       );
+
+      expect(
+        borderline.runner.table.heroCards.map((card) => card.suit).toSet(),
+        <String>{'h'},
+      );
+      expect(borderline.runner.question, contains('QJs'));
+      expect(borderline.runner.caption, contains('Q\u2665 J\u2665'));
 
       expect(correctOption(strong).id, 'strong');
       expect(correctOption(borderline).id, 'medium');
