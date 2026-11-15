@@ -8,6 +8,14 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.da
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 const String cnt01UnknownV1 = 'UNKNOWN';
+// Current source-curation adoption by the authorized technical maintainer.
+// This is not historic authorship, poker-truth review or learner qualification.
+const String cnt01CurationRevisionV1 = 'cnt01_foundation_curation_v1_20261115';
+const String cnt01CurationMaintainerV1 =
+    'Work/root (Foundation technical inventory maintainer)';
+const String cnt01FoundationScopeV1 = 'FOUNDATION_W1_W4';
+const String cnt01OutsideScopeV1 = 'OUTSIDE_FOUNDATION_CURATION';
+
 const String cnt01CatalogSourceV1 =
     'lib/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
@@ -65,6 +73,60 @@ class Cnt01RoleInventoryV1 {
     return cnt01UnknownV1;
   }
 
+  static bool isFoundationWorld(String worldId) => const <String>{
+    'world_1',
+    'world_2',
+    'world_3',
+    'world_4',
+  }.contains(worldId);
+
+  /// Declared use of current source, never learner-specific proof eligibility.
+  static String declaredPurpose(Act0LessonTaskV1 task) {
+    final role = sourceRole(task);
+    if (role == 'TEACHING' || role == 'REPAIR') return role;
+    final phase = task.phase;
+    final step = task.stepKind;
+    final family = task.resolvedTaskFamily;
+    if (phase == Act0LessonPhaseV1.drill &&
+        step == Act0LessonStepKindV1.fixMistakes &&
+        family == Act0TaskFamilyV1.compare) {
+      return 'CORRECTION_CANDIDATE';
+    }
+    if ((phase == Act0LessonPhaseV1.drill ||
+            phase == Act0LessonPhaseV1.review) &&
+        (step == Act0LessonStepKindV1.practice ||
+            step == Act0LessonStepKindV1.proveIt) &&
+        family == Act0TaskFamilyV1.transfer) {
+      return 'TRANSFER_CANDIDATE';
+    }
+    if (phase == Act0LessonPhaseV1.review &&
+        step == Act0LessonStepKindV1.review &&
+        family == Act0TaskFamilyV1.review) {
+      return 'REVIEW_CANDIDATE';
+    }
+    if (phase == Act0LessonPhaseV1.drill &&
+        step == Act0LessonStepKindV1.practice &&
+        const <Act0TaskFamilyV1>{
+          Act0TaskFamilyV1.compare,
+          Act0TaskFamilyV1.counting,
+          Act0TaskFamilyV1.decision,
+          Act0TaskFamilyV1.recognition,
+          Act0TaskFamilyV1.sizing,
+        }.contains(family)) {
+      return 'PRACTICE';
+    }
+    return cnt01UnknownV1;
+  }
+
+  static String eligibilityDisposition(String purpose) {
+    if (purpose == 'TEACHING') return 'TEACHING_OBSERVATION_ONLY';
+    if (purpose == 'REPAIR' || purpose == 'CORRECTION_CANDIDATE') {
+      return 'REPAIR_SOURCE_NO_UNSEEN_OR_ELAPSED_PROOF';
+    }
+    if (purpose == cnt01UnknownV1) return 'UNSUPPORTED_SOURCE_PURPOSE';
+    return 'SOURCE_CANDIDATE_REQUIRES_LEARNER_EVIDENCE';
+  }
+
   /// The registry is source-owned; per-task original author/revision is not.
   /// The existing semantic fingerprint is NOT an editorial revision number.
   static List<Map<String, Object?>> fromAct0({
@@ -76,6 +138,8 @@ class Cnt01RoleInventoryV1 {
     for (final world in source.worlds) {
       for (final lesson in world.lessons) {
         for (final task in lesson.taskList) {
+          final curated = isFoundationWorld(world.worldId);
+          final purpose = curated ? declaredPurpose(task) : cnt01UnknownV1;
           final options = task.runner.options;
           final correct = options
               .where(act0RunnerOptionIsAuthoredCorrectV1)
@@ -94,6 +158,25 @@ class Cnt01RoleInventoryV1 {
                 ? 'DERIVED_LESSON_SINGLE'
                 : 'EXPLICIT_TASK',
             'sourceRole': sourceRole(task),
+            'curationScope': curated
+                ? cnt01FoundationScopeV1
+                : cnt01OutsideScopeV1,
+            'declaredPurpose': purpose,
+            'purposeBasis': curated
+                ? '${task.phase.name}/${task.stepKind.name}/${task.resolvedTaskFamily.name}'
+                : cnt01UnknownV1,
+            'eligibilityDisposition': curated
+                ? eligibilityDisposition(purpose)
+                : cnt01OutsideScopeV1,
+            'inventoryEstablishesUnseen': false,
+            'inventoryEstablishesElapsed': false,
+            'currentSourceRevision': curated ? baselineMainSha : cnt01UnknownV1,
+            'curationRevision': curated
+                ? cnt01CurationRevisionV1
+                : cnt01UnknownV1,
+            'currentResponsibleMaintainer': curated
+                ? cnt01CurationMaintainerV1
+                : cnt01UnknownV1,
             'roleBasis': roleBasis(task),
             'sourcePhase': task.phase.name,
             'sourceStepKind': task.stepKind.name,
@@ -191,6 +274,14 @@ class Cnt01RoleInventoryV1 {
         // Derived provenance cannot be upgraded to invented editorial metadata.
         // Also reject coherent fabricated answers with a copied real fingerprint.
         for (final field in <String>[
+          'curationScope',
+          'declaredPurpose',
+          'purposeBasis',
+          'eligibilityDisposition',
+          'inventoryEstablishesUnseen',
+          'inventoryEstablishesElapsed',
+          'curationRevision',
+          'currentResponsibleMaintainer',
           'taskIdentity',
           'choiceIds',
           'authoredCorrectChoiceIds',
@@ -223,6 +314,32 @@ class Cnt01RoleInventoryV1 {
             )) {
           add('ERROR', 'SOURCE_SEMANTIC_REVISION_MISMATCH', id);
         }
+      }
+
+      if (isFoundationWorld(string('worldId'))) {
+        if (string('declaredPurpose').isEmpty ||
+            string('declaredPurpose') == cnt01UnknownV1) {
+          add('ERROR', 'MISSING_FOUNDATION_PURPOSE', id);
+        }
+        if (string('currentResponsibleMaintainer') !=
+            cnt01CurationMaintainerV1) {
+          add('ERROR', 'CURRENT_MAINTAINER_UNSUPPORTED', id);
+        }
+        if (string('curationRevision') != cnt01CurationRevisionV1) {
+          add('ERROR', 'CURATION_REVISION_MISMATCH', id);
+        }
+        final revision = string('currentSourceRevision');
+        if (!sha40.hasMatch(revision)) {
+          add('ERROR', 'MISSING_CURRENT_SOURCE_REVISION', id);
+        } else if (revision != string('catalogSourceMainSha')) {
+          add('ERROR', 'CURRENT_SOURCE_REVISION_MISMATCH', id);
+        }
+      } else if (string('currentSourceRevision') != cnt01UnknownV1) {
+        add('ERROR', 'OUTSIDE_SCOPE_CURATION_CLAIM', id);
+      }
+      if (row['inventoryEstablishesUnseen'] != false ||
+          row['inventoryEstablishesElapsed'] != false) {
+        add('ERROR', 'STATIC_INVENTORY_CANNOT_ESTABLISH_PROOF', id);
       }
 
       if (id.isEmpty) {
