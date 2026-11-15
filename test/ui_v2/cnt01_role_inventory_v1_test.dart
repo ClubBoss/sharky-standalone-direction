@@ -189,6 +189,146 @@ void main() {
       expect(_codes([row]), contains('SOURCE_SEMANTIC_REVISION_MISMATCH'));
     });
 
+    test(
+      'Foundation has explicit current purpose and accountable curation',
+      () {
+        final rows = sourceRows()
+            .where(
+              (r) => Cnt01RoleInventoryV1.isFoundationWorld(
+                r['worldId']! as String,
+              ),
+            )
+            .toList();
+        expect(rows, hasLength(181));
+        final counts = <String, int>{};
+        for (final row in rows) {
+          final purpose = row['declaredPurpose']! as String;
+          counts[purpose] = (counts[purpose] ?? 0) + 1;
+          expect(row['curationScope'], cnt01FoundationScopeV1);
+          expect(
+            row['currentResponsibleMaintainer'],
+            cnt01CurationMaintainerV1,
+          );
+          expect(row['curationRevision'], cnt01CurationRevisionV1);
+          expect(row['currentSourceRevision'], row['catalogSourceMainSha']);
+          expect(row['inventoryEstablishesUnseen'], false);
+          expect(row['inventoryEstablishesElapsed'], false);
+          // Historic individual author/editorial history is still unknown.
+          expect(row['responsibleAuthor'], cnt01UnknownV1);
+          expect(row['authoredRevision'], cnt01UnknownV1);
+        }
+        expect(counts, <String, int>{
+          'TEACHING': 28,
+          'REPAIR': 11,
+          'CORRECTION_CANDIDATE': 1,
+          'PRACTICE': 104,
+          'TRANSFER_CANDIDATE': 22,
+          'REVIEW_CANDIDATE': 15,
+        });
+      },
+    );
+
+    test(
+      'missing or forged Foundation purpose and maintainer are rejected',
+      () {
+        final mutations = <String, List<Object?>>{
+          'declaredPurpose': [null, cnt01UnknownV1, 'PRACTICE'],
+          'purposeBasis': ['forged'],
+          'curationScope': [cnt01OutsideScopeV1],
+          'currentResponsibleMaintainer': [
+            null,
+            cnt01UnknownV1,
+            'unadmitted_owner',
+          ],
+          'curationRevision': ['', 'unadmitted_revision'],
+          'eligibilityDisposition': ['INDEPENDENT_PROOF'],
+        };
+        for (final field in mutations.entries) {
+          for (final value in field.value) {
+            final row = teachingRow()..[field.key] = value;
+            expect(
+              _codes([row]),
+              contains('SOURCE_FIELD_MISMATCH_${field.key}'),
+              reason: '${field.key}: $value',
+            );
+          }
+        }
+        expect(
+          _codes([teachingRow()..['declaredPurpose'] = cnt01UnknownV1]),
+          contains('MISSING_FOUNDATION_PURPOSE'),
+        );
+        expect(
+          _codes([teachingRow()..['currentResponsibleMaintainer'] = '']),
+          contains('CURRENT_MAINTAINER_UNSUPPORTED'),
+        );
+      },
+    );
+
+    test(
+      'current source revision fails closed separately from semantic SHA',
+      () {
+        final missing = teachingRow()..['currentSourceRevision'] = '';
+        expect(_codes([missing]), contains('MISSING_CURRENT_SOURCE_REVISION'));
+        final stale = teachingRow()
+          ..['currentSourceRevision'] = List<String>.filled(40, 'c').join();
+        expect(_codes([stale]), contains('CURRENT_SOURCE_REVISION_MISMATCH'));
+        expect(stale['semanticRevision'], teachingRow()['semanticRevision']);
+      },
+    );
+
+    test(
+      'transfer and review source labels cannot establish learner proof',
+      () {
+        final rows = sourceRows();
+        for (final field in [
+          'inventoryEstablishesUnseen',
+          'inventoryEstablishesElapsed',
+        ]) {
+          final source = rows.firstWhere(
+            (r) =>
+                Cnt01RoleInventoryV1.isFoundationWorld(
+                  r['worldId']! as String,
+                ) &&
+                r['declaredPurpose'] ==
+                    (field == 'inventoryEstablishesUnseen'
+                        ? 'TRANSFER_CANDIDATE'
+                        : 'REVIEW_CANDIDATE'),
+          );
+          expect(source[field], false);
+          final forged = Map<String, Object?>.from(source)..[field] = true;
+          expect(
+            _codes([forged]),
+            contains('STATIC_INVENTORY_CANNOT_ESTABLISH_PROOF'),
+          );
+          expect(_codes([forged]), contains('SOURCE_FIELD_MISMATCH_$field'));
+        }
+      },
+    );
+
+    test('outside-stage curation remains unadmitted and cannot be forged', () {
+      final rows = sourceRows()
+          .where(
+            (r) => !Cnt01RoleInventoryV1.isFoundationWorld(
+              r['worldId']! as String,
+            ),
+          )
+          .toList();
+      expect(rows, hasLength(188));
+      for (final row in rows) {
+        expect(row['curationScope'], cnt01OutsideScopeV1);
+        expect(row['declaredPurpose'], cnt01UnknownV1);
+        expect(row['currentResponsibleMaintainer'], cnt01UnknownV1);
+        expect(row['curationRevision'], cnt01UnknownV1);
+        expect(row['currentSourceRevision'], cnt01UnknownV1);
+      }
+      final forged = Map<String, Object?>.from(rows.first)
+        ..['currentResponsibleMaintainer'] = cnt01CurationMaintainerV1;
+      expect(
+        _codes([forged]),
+        contains('SOURCE_FIELD_MISMATCH_currentResponsibleMaintainer'),
+      );
+    });
+
     test('global duplicate source task ID is an error', () {
       expect(
         _codes(<Map<String, Object?>>[_row(), _row()]),
@@ -380,8 +520,27 @@ void _exportInventoryIfRequested(List<Map<String, Object?>> rows) {
     final code = finding['code']!;
     findingCounts[code] = (findingCounts[code] ?? 0) + 1;
   }
+  final curatedRows = rows
+      .where((row) => row['curationScope'] == cnt01FoundationScopeV1)
+      .toList();
+  final purposeCounts = <String, int>{};
+  for (final row in curatedRows) {
+    final purpose = row['declaredPurpose']! as String;
+    purposeCounts[purpose] = (purposeCounts[purpose] ?? 0) + 1;
+  }
+  final curation = <String, Object?>{
+    'scope': cnt01FoundationScopeV1,
+    'revision': cnt01CurationRevisionV1,
+    'currentResponsibleMaintainer': cnt01CurationMaintainerV1,
+    'currentSourceRevision': baseline,
+    'count': curatedRows.length,
+    'declaredPurposeCounts': purposeCounts,
+    'inventoryEstablishesUnseen': false,
+    'inventoryEstablishesElapsed': false,
+    'outsideStageCuration': 'NOT_ADMITTED',
+  };
   file.writeAsStringSync(
     '${const JsonEncoder.withIndent('  ').convert({'schemaVersion': 'cnt01_role_inventory_v1', 'status': 'TECHNICAL_INVENTORY_ONLY_NOT_CNT01_ACCEPTANCE', 'scope': 'Compiled authored catalogue including locked/derived items; '
-        'not runnable inventory, eligibility, exhaustion or learner proof.', 'baselineMainSha': baseline, 'checkoutHeadSha': (head.stdout as String).trim(), 'source': cnt01CatalogSourceV1, 'count': rows.length, 'sourceRoleCounts': roleCounts, 'findingCounts': findingCounts, 'errors': findings.where((finding) => finding['level'] == 'ERROR').toList(), 'rows': rows})}\n',
+        'not runnable inventory, eligibility, exhaustion or learner proof.', 'baselineMainSha': baseline, 'checkoutHeadSha': (head.stdout as String).trim(), 'source': cnt01CatalogSourceV1, 'count': rows.length, 'sourceRoleCounts': roleCounts, 'foundationCuration': curation, 'findingCounts': findingCounts, 'errors': findings.where((finding) => finding['level'] == 'ERROR').toList(), 'rows': rows})}\n',
   );
 }
