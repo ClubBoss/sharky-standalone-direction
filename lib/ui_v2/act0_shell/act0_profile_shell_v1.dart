@@ -41,7 +41,7 @@ class Act0ProfileShellV1 extends StatelessWidget {
     this.onRecoveryOptions,
     this.onGoToHome,
     this.evidenceSignal,
-    this.learningRecord = const Act0ProfileEvidenceProjectionV1(),
+    this.learningRecord,
     this.crossSessionProof,
     this.achievementSeedConsumer = const Act0AchievementSeedConsumerV1(),
   });
@@ -52,7 +52,7 @@ class Act0ProfileShellV1 extends StatelessWidget {
   final VoidCallback? onGoToHome;
   final VoidCallback? onRecoveryOptions;
   final Act0ProfileEvidenceSignalViewModelV1? evidenceSignal;
-  final Act0ProfileEvidenceProjectionV1 learningRecord;
+  final Act0ProfileEvidenceProjectionV1? learningRecord;
   final Act0CrossSessionProfileProofV1? crossSessionProof;
   final Act0AchievementSeedConsumerV1 achievementSeedConsumer;
 
@@ -91,8 +91,10 @@ class Act0ProfileShellV1 extends StatelessWidget {
           profile: profile,
           crossSessionProof: crossSessionProof,
         ),
-        const SizedBox(height: Act0ShellTokensV1.gapMd),
-        Act0LearningRecordCardV1(projection: learningRecord),
+        if (learningRecord != null) ...[
+          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          Act0LearningRecordCardV1(projection: learningRecord!),
+        ],
         if (evidenceSignal != null) ...[
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           _ProfileEvidenceSignalCardV1(signal: evidenceSignal!),
