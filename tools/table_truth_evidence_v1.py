@@ -489,6 +489,183 @@ def summarize(path, expected, code):
         raise SystemExit('TABLE.TRUTH execution does not establish the expected result')
 
 
+# PKG1 uses actual typed captures; prior W01 and original pins stay immutable.
+PKG1_REVISION = "PKG1_REVIEWED_HAND_SEAT_FACTS"
+PKG1_PRODUCER_REVISION = {'source_revision': '504fce48eeba627af4d860b891d7b3ee456e913b',
+ 'state_sha256': '144558357cb8a237a607deb39d591450262c8146301f4c566fc09d7ce98b6644',
+ 'factory_sha256': 'c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b'}
+PKG1_CAPTURE_SHA256 = {'choice-identity.json': 'c8d63188ded16990ba2135ccd7952b9e98d3f7b7ae338891bab9a28705999564',
+ 'learning-contract.json': 'fb5f931f806fe80596b78f288b31b9f9241be5ad2e95619a49aba2381bef8b12',
+ 'ledger.json': 'f9a44a4c528ca0387658fd14a6d934f51e3105af457f572938c9a1e883023821',
+ 'runtime-inputs.json': '5afdbce17e46031d250851613d59bda3b16ee4ad91f107ab18b174ba4e014780',
+ 'source-fingerprints.json': '25c36eb744dfefc1ba69ab9d63d74f1b90bcd9505f68480e90b42b11aaf04040'}
+PKG1_CAPTURE_LEAVES = {'runtime-inputs.json': [(['hand_discipline_buckets_borderline', 'caption'],
+                          'Hero holds Q♥ J♠ before the flop.',
+                          'Hero holds Qs Js before the flop.'),
+                         (['hand_discipline_buckets_borderline', 'table', 'hero', 0], 'Qh', 'Qs'),
+                         (['hand_discipline_buckets_borderline', 'table', 'seats', 3, 'cards', 0],
+                          'Qh',
+                          'Qs'),
+                         (['apply_btn_open', 'teaching', 0, 'body'],
+                          'AJo is a strong bucket. BTN acts last. Pot is clean. Open.',
+                          'AJo is a strong bucket. BTN acts last after the flop. Pot is clean. Open.'),
+                         (['same_hand_different_seat_same_hand_early_fold', 'options', 0, 'reason'],
+                          'Weak offsuit hands from early position can simply fold.',
+                          'The course baseline folds ATo from UTG in this unopened pot.'),
+                         (['same_hand_different_seat_same_hand_early_fold', 'options', 1, 'reason'],
+                          'Position is early and the hand bucket is too weak.',
+                          'Read ATo and UTG together. The course baseline here is Fold, not an automatic '
+                          'open.'),
+                         (['position_apply_early_fold', 'options', 0, 'reason'],
+                          'Weak offsuit hands from early position can simply fold.',
+                          'The course baseline folds ATo from UTG in this unopened pot.'),
+                         (['position_apply_early_fold', 'options', 1, 'reason'],
+                          'Position is early and the hand bucket is too weak.',
+                          'Read ATo and UTG together. The course baseline here is Fold, not an automatic '
+                          'open.'),
+                         (['position_apply_hj_fold', 'options', 0, 'reason'],
+                          'Position is early and the hand bucket is too weak.',
+                          'Read KTo and HJ together. The course baseline here is Fold, not an automatic '
+                          'open.'),
+                         (['position_apply_hj_fold', 'options', 1, 'reason'],
+                          'Weak offsuit hands from early position can simply fold.',
+                          'The course baseline folds KTo from HJ in this unopened pot.'),
+                         (['position_checkpoint_position_checkpoint_early_fold', 'options', 0, 'reason'],
+                          'Position is early and the hand bucket is too weak.',
+                          'Read A9o and UTG together. The course baseline here is Fold, not an automatic '
+                          'open.'),
+                         (['position_checkpoint_position_checkpoint_early_fold', 'options', 1, 'reason'],
+                          'Weak offsuit hands from early position can simply fold.',
+                          'The course baseline folds A9o from UTG in this unopened pot.')],
+ 'source-fingerprints.json': [(['hand_discipline_buckets_borderline', 'fingerprint'],
+                               'f528fbd3c9dfdcb4692167d5e0d722cd4d1d107688f631d0f6038a534f8ee4d5',
+                               '45dbf4315b3fdeff5de099cf2db2935b8b029e4b1dd290f86e70a6159ca1c5ce'),
+                              (['same_hand_different_seat_same_hand_early_fold', 'fingerprint'],
+                               'a3398cf7828d26c701ff08663112b8ce67f6451374240933f3e5437734910757',
+                               '75accc138b72178108bc6e302fc05719d4e319a8721d0f9fee17ca99d1f26c6b'),
+                              (['position_apply_early_fold', 'fingerprint'],
+                               '2a06cf610f5e4126da08eb64635835bf914ba0062638747d7eafc505e3ea0bff',
+                               '94ad43b5d81cb888c32af9e312909b287bfd903caf7163a954ac324c7f24e85d'),
+                              (['position_apply_hj_fold', 'fingerprint'],
+                               '62a0220a4d6194d568df88e4c880965e513d21865c7b1745acb68715218a3369',
+                               '5ebeeb72c4f0c1cfb5f1f11f91e53dfcf88290a49d048e1e31e9a3de51729ded'),
+                              (['position_checkpoint_position_checkpoint_early_fold', 'fingerprint'],
+                               '5fb039d357fa09c136f72f3f614a8f7cdb49c93f187a5372fc7aed6263d26b61',
+                               'f0d88794d13f35c1584ee3e0c16ad5635ad7209527d1a811134619611bd7afde')],
+ 'ledger.json': [([9844, 'reason'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9844, 'rendered_meaning'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9844, 'expectation_or_exception'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9845, 'reason'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9845, 'rendered_meaning'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9845, 'expectation_or_exception'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9866, 'reason'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9866, 'rendered_meaning'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9866, 'expectation_or_exception'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9867, 'reason'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9867, 'rendered_meaning'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9867, 'expectation_or_exception'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9888, 'reason'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9888, 'rendered_meaning'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9888, 'expectation_or_exception'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9889, 'reason'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9889, 'rendered_meaning'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9889, 'expectation_or_exception'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9910, 'reason'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9910, 'rendered_meaning'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9910, 'expectation_or_exception'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9911, 'reason'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9911, 'rendered_meaning'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9911, 'expectation_or_exception'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9932, 'reason'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9932, 'rendered_meaning'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9932, 'expectation_or_exception'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9933, 'reason'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9933, 'rendered_meaning'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9933, 'expectation_or_exception'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9954, 'reason'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9954, 'rendered_meaning'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9954, 'expectation_or_exception'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9955, 'reason'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9955, 'rendered_meaning'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9955, 'expectation_or_exception'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9976, 'reason'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9976, 'rendered_meaning'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9976, 'expectation_or_exception'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9977, 'reason'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9977, 'rendered_meaning'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9977, 'expectation_or_exception'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9998, 'reason'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9998, 'rendered_meaning'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9998, 'expectation_or_exception'], 'table=Js,Qh seat=Js,Qh', 'table=Js,Qs seat=Js,Qs'),
+                 ([9999, 'reason'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9999, 'rendered_meaning'], 'physical deck Qh,Js', 'physical deck Qs,Js'),
+                 ([9999, 'expectation_or_exception'], 'physical deck Qh,Js', 'physical deck Qs,Js')]}
+PKG1_LEDGER_IDENTITIES = {9844: {'task_id': 'hand_discipline_buckets_borderline',
+        'phase': 'authored/drill',
+        'step_phase_variant': 'authored/drill',
+        'invariant': 'D5.hero_representation'},
+ 9845: {'task_id': 'hand_discipline_buckets_borderline',
+        'phase': 'authored/drill',
+        'step_phase_variant': 'authored/drill',
+        'invariant': 'D5.deck_unique'},
+ 9866: {'task_id': 'hand_discipline_buckets_borderline',
+        'phase': 'teaching/0/raw',
+        'step_phase_variant': 'teaching/0/raw',
+        'invariant': 'D5.hero_representation'},
+ 9867: {'task_id': 'hand_discipline_buckets_borderline',
+        'phase': 'teaching/0/raw',
+        'step_phase_variant': 'teaching/0/raw',
+        'invariant': 'D5.deck_unique'},
+ 9888: {'task_id': 'hand_discipline_buckets_borderline',
+        'phase': 'teaching/0/projected',
+        'step_phase_variant': 'teaching/0/projected',
+        'invariant': 'D5.hero_representation'},
+ 9889: {'task_id': 'hand_discipline_buckets_borderline',
+        'phase': 'teaching/0/projected',
+        'step_phase_variant': 'teaching/0/projected',
+        'invariant': 'D5.deck_unique'},
+ 9910: {'task_id': 'hand_discipline_buckets_borderline',
+        'phase': 'decision',
+        'step_phase_variant': 'decision',
+        'invariant': 'D5.hero_representation'},
+ 9911: {'task_id': 'hand_discipline_buckets_borderline',
+        'phase': 'decision',
+        'step_phase_variant': 'decision',
+        'invariant': 'D5.deck_unique'},
+ 9932: {'task_id': 'hand_discipline_buckets_borderline',
+        'phase': 'feedback/strong',
+        'step_phase_variant': 'feedback/strong',
+        'invariant': 'D5.hero_representation'},
+ 9933: {'task_id': 'hand_discipline_buckets_borderline',
+        'phase': 'feedback/strong',
+        'step_phase_variant': 'feedback/strong',
+        'invariant': 'D5.deck_unique'},
+ 9954: {'task_id': 'hand_discipline_buckets_borderline',
+        'phase': 'feedback/medium',
+        'step_phase_variant': 'feedback/medium',
+        'invariant': 'D5.hero_representation'},
+ 9955: {'task_id': 'hand_discipline_buckets_borderline',
+        'phase': 'feedback/medium',
+        'step_phase_variant': 'feedback/medium',
+        'invariant': 'D5.deck_unique'},
+ 9976: {'task_id': 'hand_discipline_buckets_borderline',
+        'phase': 'feedback/trash',
+        'step_phase_variant': 'feedback/trash',
+        'invariant': 'D5.hero_representation'},
+ 9977: {'task_id': 'hand_discipline_buckets_borderline',
+        'phase': 'feedback/trash',
+        'step_phase_variant': 'feedback/trash',
+        'invariant': 'D5.deck_unique'},
+ 9998: {'task_id': 'hand_discipline_buckets_borderline',
+        'phase': 'review',
+        'step_phase_variant': 'review',
+        'invariant': 'D5.hero_representation'},
+ 9999: {'task_id': 'hand_discipline_buckets_borderline',
+        'phase': 'review',
+        'step_phase_variant': 'review',
+        'invariant': 'D5.deck_unique'}}
+
+
 def _digest(value):
     encoded = json.dumps(value, separators=(',', ':'), ensure_ascii=False).encode()
     return hashlib.sha256(encoded).hexdigest()
@@ -515,6 +692,9 @@ def producer_revision(cohort, role):
     w01_bytes = {key: W01_PRODUCER_REVISION[key] for key in source_bytes}
     if role == 'candidate' and source_bytes == w01_bytes:
         return W01_REVISION
+    pkg1_bytes = {key: PKG1_PRODUCER_REVISION[key] for key in source_bytes}
+    if role == 'candidate' and source_bytes == pkg1_bytes:
+        return PKG1_REVISION
     raise SystemExit('Producing source receipt does not match admitted bytes')
 
 
@@ -584,8 +764,34 @@ def w01_origin_capture(name, value):
     return result
 
 
+def pkg1_w01_capture(name, value):
+    """Reverse literal PKG1 leaves on a copy; require the entire exact W01 capture."""
+    result = copy.deepcopy(value)
+    try:
+        if name == 'ledger.json':
+            if len(result) != 62712:
+                raise ValueError('ledger cardinality')
+            for index, identity in PKG1_LEDGER_IDENTITIES.items():
+                if any(result[index][key] != expected for key, expected in identity.items()):
+                    raise ValueError('ledger identity')
+        for path, prior, current in PKG1_CAPTURE_LEAVES.get(name, []):
+            node = result
+            for key in path[:-1]:
+                node = node[key]
+            if node[path[-1]] != current:
+                raise ValueError('literal current leaf')
+            node[path[-1]] = copy.deepcopy(prior)
+        if _digest(result) != W01_CAPTURE_SHA256[name]:
+            raise ValueError('whole reconstructed W01 capture')
+    except (KeyError, TypeError, IndexError, ValueError) as error:
+        raise SystemExit(f'PKG1 exact hand/seat revision mismatch: {name}') from error
+    return result
+
+
 def reviewed_origin_capture(name, value, revision):
-    if revision == W01_REVISION:
+    if revision == PKG1_REVISION:
+        value = pkg1_w01_capture(name, value)
+    if revision in (W01_REVISION, PKG1_REVISION):
         value = w01_origin_capture(name, value)
     return main01_origin_capture(name, value)
 
@@ -602,11 +808,13 @@ def validate_capture_artifacts(source, revision, names=None):
     for name, expected in names.items():
         raw = (pathlib.Path(source) / name).read_bytes()
         observed = hashlib.sha256(raw).hexdigest()
-        if revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION):
+        if revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION):
             captured = json.loads(raw)
             compact = json.dumps(captured, separators=(',', ':'), ensure_ascii=False).encode()
             if raw != compact:
                 raise SystemExit(f'Captured JSON byte encoding drift: {name}')
+            if revision == PKG1_REVISION and observed != PKG1_CAPTURE_SHA256.get(name):
+                raise SystemExit(f'PKG1 current capture artifact drift: {name}')
             if revision == W01_REVISION and observed != W01_CAPTURE_SHA256.get(name):
                 raise SystemExit(f'W01 current capture artifact drift: {name}')
             observed = _digest(reviewed_origin_capture(name, captured, revision))
@@ -654,7 +862,7 @@ def validate_typed_cohort(root):
     if set(base) != historical_ids or set(final) != historical_ids | NEW_AUTHORING_IDS:
         raise SystemExit('Learning contract cohort key set is inconsistent')
     comparison_contract = final
-    if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION):
+    if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION):
         validate_capture_artifacts(root / 'candidate', candidate_revision)
         comparison_contract = reviewed_origin_capture(
             'learning-contract.json', final, candidate_revision)
@@ -681,7 +889,7 @@ def validate_typed_cohort(root):
             raise SystemExit(f'{label} cohort key set is inconsistent')
     comparison_choices = (
         reviewed_origin_capture('choice-identity.json', after_choices, candidate_revision)
-        if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION) else after_choices
+        if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION) else after_choices
     )
     if any(before_choices[key] != comparison_choices[key] for key in historical_ids):
         raise SystemExit('Historical choice identity changed')
@@ -801,24 +1009,27 @@ def compare(root):
     result = {'ledgers': ledgers, 'runtime_changed_task_count': len(delta), 'runtime_changed_task_ids': sorted(delta),
               'historical_learning_contract_identical': identity['historical_learning_contract_identical'],
               'historical_choice_identity_identical': identity['historical_choice_identity_identical'],
-              'historical_contracts_identical_except_reviewed_setup_qualities': identity['candidate_revision'] != W01_REVISION,
+              'historical_contracts_identical_except_reviewed_setup_qualities': identity['candidate_revision'] not in (W01_REVISION, PKG1_REVISION),
               'historical_contracts_identical_except_exact_reviewed_revisions': True,
               'reviewed_theory_changes': ([
                   {'task_id': task_id, 'changed_fields': ['options', 'source_fingerprint', 'feedback_phase_choice_ids'],
                    'historical_record_policy': 'retain original fingerprint, grade, assistance, XP and repair lineage',
                    'current_source_policy': 'reject old fingerprint'}
                   for task_id in W01_CAPTURE_OPTIONS['learning-contract.json']
-              ] if identity['candidate_revision'] == W01_REVISION else []),
+              ] if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION) else []),
               'candidate_producer_revision': identity['candidate_revision'],
               'producer_receipt': identity['final_cohort']['producer_receipt'],
-              'reviewed_producer_source_revision': (W01_PRODUCER_REVISION['source_revision']
-                  if identity['candidate_revision'] == W01_REVISION else
+              'reviewed_hand_seat_changes': ({name: len(leaves) for name, leaves in PKG1_CAPTURE_LEAVES.items()}
+                  if identity['candidate_revision'] == PKG1_REVISION else {}),
+              'reviewed_producer_source_revision': (PKG1_PRODUCER_REVISION['source_revision']
+                  if identity['candidate_revision'] == PKG1_REVISION else W01_PRODUCER_REVISION['source_revision']
+                  if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION) else
                   MAIN01_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == 'MAIN01_REVIEWED_SETUP_QUALITIES' else None),
               'reviewed_quality_changes': ([
                   {'task_id': MAIN01_TASK_ID, 'choice_id': choice, 'before': prior, 'after': current}
                   for choice, (prior, current) in MAIN01_QUALITY_REVISION.items()
-              ] if identity['candidate_revision'] in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION) else []),
+              ] if identity['candidate_revision'] in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION) else []),
               'historical_cohort_count': len(historical_ids),
               'new_authoring': new_authoring,
               'canonical_source_fingerprints': fingerprint_counts, 'native': 'PENDING'}

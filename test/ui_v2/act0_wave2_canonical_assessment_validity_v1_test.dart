@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
@@ -180,8 +182,16 @@ void main() {
 
       expect(contrastTask.taskId, 'position_six_seats_hj_co_contrast');
       expect(contrastTask.runner.table.selectableSeatIds, <String>['hj', 'co']);
-      expect(contrastTask.runner.table.highlightedSeatIds, contains('hj'));
-      expect(contrastTask.runner.table.highlightedSeatIds, contains('co'));
+      expect(contrastTask.runner.table.highlightedSeatIds, isEmpty);
+      expect(contrastTask.runner.table.activeSeatId, isEmpty);
+      final teaching = contrastTask.runner.teachingSteps.single;
+      expect(teaching.focusSeatIds, <String>['hj', 'co']);
+      final teachingTable = act0TeachingTableForRunnerV1(
+        contrastTask.runner.table,
+        teaching,
+      );
+      expect(teachingTable.highlightedSeatIds, contains('hj'));
+      expect(teachingTable.highlightedSeatIds, contains('co'));
     });
 
     test('W2 strong and borderline bucket tasks use distinct examples', () {
@@ -215,7 +225,7 @@ void main() {
       ]);
       expect(
         borderline.runner.table.heroCards.map((card) => card.label),
-        <String>['Qh', 'Js'],
+        <String>['Qs', 'Js'],
       );
 
       expect(correctOption(strong).id, 'strong');
@@ -223,6 +233,141 @@ void main() {
       expect(
         correctOption(borderline).feedbackReason.toLowerCase(),
         contains('context'),
+      );
+    });
+
+    test('QJs facts agree with the hero projection and neutral task title', () {
+      final task = taskFor(
+        worldId: 'world_2',
+        lessonId: 'hand_discipline_buckets',
+        taskId: 'hand_discipline_buckets_borderline',
+      );
+      expect(task.title, 'Borderline hand');
+      expect(task.runner.caption, 'Hero holds Qs Js before the flop.');
+      expect(
+        task.runner.table.heroSeat.holeCards.map((card) => card.label),
+        <String>['Qs', 'Js'],
+      );
+      expect(task.runner.options.map((option) => option.id), <String>[
+        'strong',
+        'medium',
+        'trash',
+      ]);
+      expect(task.runner.options.indexWhere((option) => option.isCorrect), 1);
+      expect(correctOption(task).quality, Act0FeedbackQualityV1.correct);
+      expect(task.rewardXp, 7);
+    });
+
+    test(
+      'position fold feedback follows every authored hand and seat alias',
+      () {
+        const expected = <String, (String, String, int)>{
+          'same_hand_different_seat_same_hand_early_fold': ('ATo', 'UTG', 0),
+          'position_apply_early_fold': ('ATo', 'UTG', 0),
+          'position_apply_hj_fold': ('KTo', 'HJ', 1),
+          'position_checkpoint_position_checkpoint_early_fold': (
+            'A9o',
+            'UTG',
+            1,
+          ),
+        };
+        final tasks = Act0ShellStateV1.sample.worlds
+            .expand((world) => world.lessons)
+            .expand((lesson) => lesson.taskList)
+            .where((task) => expected.containsKey(task.taskId))
+            .toList();
+        expect(tasks.map((task) => task.taskId).toSet(), expected.keys.toSet());
+        for (final task in tasks) {
+          final (hand, seat, correctIndex) = expected[task.taskId]!;
+          expect(task.runner.table.heroSeatId, seat.toLowerCase());
+          expect(
+            task.runner.options.map((option) => option.id).toSet(),
+            <String>{'fold', 'raise'},
+          );
+          expect(
+            task.runner.options.indexWhere((option) => option.isCorrect),
+            correctIndex,
+          );
+          expect(correctOption(task).id, 'fold');
+          for (final option in task.runner.options) {
+            expect(option.feedbackReason, contains(hand), reason: task.taskId);
+            expect(option.feedbackReason, contains(seat), reason: task.taskId);
+            expect(option.feedbackReason, contains('course baseline'));
+            expect(option.feedbackReason, isNot(contains('J8o')));
+            expect(
+              option.feedbackReason,
+              isNot(contains('hand bucket is too weak')),
+            );
+            expect(option.preferredLabel, 'Fold');
+            expect(
+              option.quality,
+              option.isCorrect
+                  ? Act0FeedbackQualityV1.correct
+                  : Act0FeedbackQualityV1.wrong,
+            );
+            expect(option.repairFocusSeatIds, isEmpty);
+            expect(option.repairFocusCardIds, isEmpty);
+            expect(option.repairFocusLabels, isEmpty);
+          }
+        }
+      },
+    );
+
+    test(
+      'Button-last teaching names the postflop street in both languages',
+      () {
+        final task = taskFor(
+          worldId: 'world_2',
+          lessonId: 'hand_discipline_apply',
+          taskId: 'apply_btn_open',
+        );
+        expect(
+          task.runner.teachingSteps.single.body,
+          contains('BTN acts last after the flop.'),
+        );
+        expect(correctOption(task).id, 'raise');
+        expect(
+          act0LocalizedTeachingStepBodyAtomByTaskIdV1(
+            task.taskId,
+            0,
+            fallback: '',
+            languageCode: 'ru',
+          ),
+          contains('После флопа баттон действует последним.'),
+        );
+      },
+    );
+
+    test('related Russian task facts preserve QJs and the HJ KTo hand', () {
+      const id = 'hand_discipline_buckets_borderline';
+      expect(
+        act0LocalizedTaskTitleAtomByIdV1(id, fallback: '', languageCode: 'ru'),
+        'Пограничная рука',
+      );
+      expect(
+        act0LocalizedRunnerPromptAtomByTaskIdV1(
+          id,
+          fallback: '',
+          languageCode: 'ru',
+        ),
+        'У Hero Qs Js до флопа.',
+      );
+      expect(
+        act0LocalizedTeachingStepBodyAtomByTaskIdV1(
+          id,
+          0,
+          fallback: '',
+          languageCode: 'ru',
+        ),
+        contains('средняя'),
+      );
+      expect(
+        act0LocalizedRunnerPromptAtomByTaskIdV1(
+          'position_apply_hj_fold',
+          fallback: '',
+          languageCode: 'ru',
+        ),
+        'Банк не открыт. Ты в HJ с KTo.',
       );
     });
   });

@@ -503,6 +503,35 @@ class TypedCohortV2Controls(unittest.TestCase):
         with self.assertRaisesRegex(SystemExit, 'W01 exact theory'):
             TRUTH.w01_origin_capture('ledger.json', rows[:-1])
 
+    def pkg1_producer(self):
+        cohort = self.w01_producer()
+        for key in ('state_sha256', 'factory_sha256'):
+            cohort['producer_receipt'][key] = TRUTH.PKG1_PRODUCER_REVISION[key]
+        return cohort
+
+    def test_pkg1_exact_source_binding_preserves_authoring_origin(self):
+        cohort = self.pkg1_producer()
+        self.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), TRUTH.PKG1_REVISION)
+        cohort['producer_receipt']['head'] = 'f' * 40
+        self.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), TRUTH.PKG1_REVISION)
+        self.assertEqual(cohort['admitted_source_reference'], TRUTH.SOURCE_REFERENCES['candidate'])
+
+    def test_pkg1_unknown_missing_source_factory_origin_role_head_rejected(self):
+        for field in ('state_sha256', 'factory_sha256', 'head'):
+            for replacement in (None, '0', '0' * 64):
+                cohort = self.pkg1_producer()
+                cohort['producer_receipt'][field] = replacement
+                with self.assertRaises(SystemExit):
+                    TRUTH.producer_revision(cohort, 'candidate')
+        cohort = self.pkg1_producer()
+        cohort['admitted_source_reference']['commit'] = TRUTH.PKG1_PRODUCER_REVISION['source_revision']
+        with self.assertRaises(SystemExit):
+            TRUTH.producer_revision(cohort, 'candidate')
+        cohort = self.pkg1_producer()
+        cohort['admitted_source_reference'] = copy.deepcopy(TRUTH.SOURCE_REFERENCES['historical_baseline'])
+        with self.assertRaises(SystemExit):
+            TRUTH.producer_revision(cohort, 'historical_baseline')
+
     def recompute(self, root, task_id):
         contract = self.read(root / 'candidate/learning-contract.json')
         fingerprints = self.read(root / 'candidate/source-fingerprints.json')
@@ -657,21 +686,34 @@ if __name__ == '__main__':
             'fingerprint_changed_task_count': 328,
             'candidate_fail_count': 0,
         }
-        if comparison['candidate_producer_revision'] == TRUTH.W01_REVISION:
+        if comparison['candidate_producer_revision'] in (TRUTH.W01_REVISION, TRUTH.PKG1_REVISION):
             # Count actual current-source changes, never normalize the public
             # classification output back to an earlier source revision.
             for name, captured, before in (
                 ('runtime-inputs.json', runtime['candidate'], runtime['baseline']),
                 ('source-fingerprints.json', fingerprints['candidate'], fingerprints['baseline']),
             ):
-                old = TRUTH.w01_origin_capture(name, captured)
-                current_changed = {key for key in historical if captured[key] != before[key]}
+                w01_capture = (TRUTH.pkg1_w01_capture(name, captured)
+                               if comparison['candidate_producer_revision'] == TRUTH.PKG1_REVISION else captured)
+                old = TRUTH.w01_origin_capture(name, w01_capture)
+                current_changed = {key for key in historical if w01_capture[key] != before[key]}
                 prior_changed = {key for key in historical if old[key] != before[key]}
                 if current_changed - prior_changed != {'blinds_theory', 'cards_ranks_suits_theory'} or prior_changed - current_changed:
                     raise SystemExit('Unexpected W01 newly changed task identities')
                 if len(prior_changed) != (309 if name == 'runtime-inputs.json' else 328):
                     raise SystemExit('Prior revision delta count drift')
             expected_counts.update(runtime_changed_task_count=311, fingerprint_changed_task_count=330)
+            if comparison['candidate_producer_revision'] == TRUTH.PKG1_REVISION:
+                for name, captured in (('runtime-inputs.json', runtime['candidate']),
+                                       ('source-fingerprints.json', fingerprints['candidate'])):
+                    prior = TRUTH.pkg1_w01_capture(name, captured)
+                    changed = {key for key in historical if captured[key] != prior[key]}
+                    expected = {path[0] for path, _, _ in TRUTH.PKG1_CAPTURE_LEAVES[name]}
+                    if changed != expected:
+                        raise SystemExit('Unexpected PKG1 changed task identities')
+                # These are actual current-vs-original classifications. Reversal
+                # validates history; it never masks current-source changes.
+                expected_counts.update(runtime_changed_task_count=315, fingerprint_changed_task_count=330)
             if comparison['historical_contracts_identical_except_reviewed_setup_qualities']:
                 raise SystemExit('W01 source evolution falsely described as setup qualities only')
             if set(row['task_id'] for row in comparison['reviewed_theory_changes']) != set(TRUTH.W01_CAPTURE_OPTIONS['learning-contract.json']):
@@ -698,6 +740,29 @@ if __name__ == '__main__':
                 ('ledger.json', [1023, 'reason'], 'forged reason'),
                 ('ledger.json', [0, 'status'], 'FAIL'),
             ]
+            if comparison['candidate_producer_revision'] == TRUTH.PKG1_REVISION:
+                cases.extend([
+                    ('runtime-inputs.json', ['hand_discipline_buckets_borderline', 'table', 'hero', 0], 'Qh'),
+                    ('runtime-inputs.json', ['hand_discipline_buckets_borderline', 'table', 'seats', 3, 'cards', 0], 'Qh'),
+                    ('runtime-inputs.json', ['hand_discipline_buckets_borderline', 'caption'], 'forged caption'),
+                    ('runtime-inputs.json', ['apply_btn_open', 'teaching', 0, 'body'], 'BTN always acts last.'),
+                    ('runtime-inputs.json', ['position_apply_hj_fold', 'options', 0, 'reason'], 'forged HJ reason'),
+                    ('runtime-inputs.json', ['position_apply_early_fold', 'options', 0, 'reason'], 'forged UTG reason'),
+                    ('runtime-inputs.json', ['position_checkpoint_position_checkpoint_early_fold', 'options', 0, 'reason'], 'forged A9o reason'),
+                    ('runtime-inputs.json', ['same_hand_different_seat_same_hand_early_fold', 'options', 0, 'reason'], 'forged alias reason'),
+                    ('source-fingerprints.json', ['hand_discipline_buckets_borderline', 'fingerprint'], 'f' * 64),
+                    ('ledger.json', [9844, 'reason'], 'forged QJs reason'),
+                    ('ledger.json', [9844, 'task_id'], 'other_task'),
+                    ('ledger.json', [9844, 'phase'], 'other_phase'),
+                    ('ledger.json', [9844, 'invariant'], 'other_invariant'),
+                    ('ledger.json', [9844, 'status'], 'FAIL'),
+                ])
+                # Prove complete exact reversal without mutating actual captures.
+                for name in names:
+                    captured = json.loads(frozen_files[name])
+                    prior = TRUTH.pkg1_w01_capture(name, captured)
+                    if TRUTH._digest(prior) != TRUTH.W01_CAPTURE_SHA256[name] or captured != json.loads(frozen_files[name]):
+                        raise SystemExit('PKG1 exact reversal mutated current capture')
             other_task = next(key for key in contracts['candidate'] if key not in TRUTH.W01_CAPTURE_OPTIONS['learning-contract.json'] and key not in NEW)
             cases.append(('learning-contract.json', [other_task, 'rewardXp'], 99))
             for name, path, replacement in cases:
@@ -741,8 +806,11 @@ if __name__ == '__main__':
             if any((root / 'candidate' / name).read_bytes() != raw for name, raw in frozen_files.items()):
                 raise SystemExit('Negative controls failed to restore owned captures')
             TRUTH.validate_typed_cohort(root)
-            result['w01_actual_capture_negative_controls'] = len(cases) + 6 + 2
+            result['w01_actual_capture_negative_controls'] = len(cases) + 6 + 2 - (14 if comparison['candidate_producer_revision'] == TRUTH.PKG1_REVISION else 0)
             result['reviewed_theory_changes'] = comparison['reviewed_theory_changes']
+            if comparison['candidate_producer_revision'] == TRUTH.PKG1_REVISION:
+                result['pkg1_actual_capture_negative_controls'] = 14
+                result['reviewed_hand_seat_changes'] = comparison['reviewed_hand_seat_changes']
         print(json.dumps(result, sort_keys=True))
         if {key: result[key] for key in expected_counts} != expected_counts:
             raise SystemExit('Unexpected real TABLE.TRUTH delta classification')
