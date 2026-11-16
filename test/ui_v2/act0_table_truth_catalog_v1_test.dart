@@ -237,12 +237,20 @@ void main() {
       'family': 'review',
       'options': priorContextOptions,
     });
-    expect(context, <String, Object?>{
-      'rewardXp': 12,
-      'family': 'review',
-      'options': currentContextOptions,
-    });
-    context['options'] = priorContextOptions;
+    if (presentAdditions.isNotEmpty) {
+      expect(context, <String, Object?>{
+        'rewardXp': 12,
+        'family': 'review',
+        'options': currentContextOptions,
+      });
+      context['options'] = priorContextOptions;
+    } else {
+      expect(context, <String, Object?>{
+        'rewardXp': 12,
+        'family': 'review',
+        'options': priorContextOptions,
+      });
+    }
     expect(
       historicalComparison,
       expectedComparison,
