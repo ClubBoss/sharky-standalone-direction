@@ -891,8 +891,8 @@ def _require_w5_factual_admission():
 W24_CONTEXT_REVISION = 'W24_REVIEWED_CONTEXT_RECAP'
 W24_CONTEXT_TASK_ID = 'same_hand_different_seat_w3_same_hand_recap'
 W24_CONTEXT_PRODUCER_REVISION = {
-    'source_revision': '80d94b97bc27d02928839488d4787ed1cd50a9a8',
-    'state_sha256': '4896bb8b0f3b5644e28fd5d2a65c716da2bb9764a5dac9b0096bf0bf3657bf34',
+    'source_revision': '83450b0376135922ff32f4a2af8766bcf2820418',
+    'state_sha256': 'f0e0cdce91c4805c3b48691b6e5c8f020119cfe57abcc45aff24a472e496d36c',
     'factory_sha256': 'c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b',
     # Separate source-origin packet pin: typed producer receipt lacks Runner.
     'runner_sha256': 'ce7c84d43281783148ae81c9c50f628865ef3f35769461d21bf9bd3c83446fad',
@@ -902,7 +902,7 @@ W24_CONTEXT_CAPTURE_SHA256 = {
     'learning-contract.json': '37df4a54ea23a88ab9f567d6f863277e89df20be50dcad628ef4da88cdee5646',
     'ledger.json': 'c18b7fe1ca87e826908f703c4ce1f408bc62a8ce710183178ced8435585988d4',
     'runtime-inputs.json': '0f9978e7d7d6c4f81394bbd3b609ec2ef2f2f81e475f0b7db4cd221935cd63fc',
-    'source-fingerprints.json': '86b8dae665b9b372da7a9f23e1d1ff1f1e5dbbea15fd9d7cc4387e80ab5dc2d2',
+    'source-fingerprints.json': 'a1968092b92d488770fcee798569d87845f03cfd1c1041458b68ad100202bccf',
 }
 # Four reviewed scalar phase-ID renames; no status/witness/row allowance.
 W24_CONTEXT_LEDGER_REVIEW = 'EXACT_FOUR_PHASE_LEAVES_CONFIRMED'
@@ -963,7 +963,7 @@ W24_CONTEXT_CAPTURE_LEAVES = {'learning-contract.json': [(['same_hand_different_
                             'preferred': 'Bucket, seat, frame'}])],
  'source-fingerprints.json': [(['same_hand_different_seat_w3_same_hand_recap', 'fingerprint'],
                                '13dd28c27603ef3aed59e6dc814ca85952a7e61cec6bebfda26ba16c1e643404',
-                               '446f896fa4530c1a5d18a292b7f4879e3e5951806c7bba4f7995f2dcb1388aff')],
+                               '01dbd18c3bb86b31f053111959738cb6767a459b732438c7bf2bcf5ba0960c9c')],
  'ledger.json': [([15979, 'phase'], 'feedback/utg', 'feedback/one_answer'),
                  ([15979, 'step_phase_variant'], 'feedback/utg', 'feedback/one_answer'),
                  ([15980, 'phase'], 'feedback/btn', 'feedback/framework'),
