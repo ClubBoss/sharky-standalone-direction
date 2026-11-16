@@ -702,6 +702,54 @@ W01_POSITION_CAPTURE_LEAVES = {'runtime-inputs.json': [(['positions_theory', 'op
                                '5f82d32f64c23407a3685a0870d1c062ed6fcb0cc0ac4b79236840c268547877')]}
 
 
+# Exact context clarification for two existing W3 position recaps.
+W3_RECAP_REVISION = "W3_POSTFLOP_RECAP_CONTEXT"
+W3_RECAP_PRODUCER_REVISION = {'source_revision': '6afb991a0d1bb3141d98a1240d9f636f44254978',
+ 'state_sha256': '1d8a7c148b4bd320a8f9f2c7373135cfea8eaf9171ac272359dd007148626b34',
+ 'factory_sha256': 'c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b'}
+W3_RECAP_CAPTURE_SHA256 = {'choice-identity.json': 'c8d63188ded16990ba2135ccd7952b9e98d3f7b7ae338891bab9a28705999564',
+ 'learning-contract.json': 'fb5f931f806fe80596b78f288b31b9f9241be5ad2e95619a49aba2381bef8b12',
+ 'ledger.json': 'f9a44a4c528ca0387658fd14a6d934f51e3105af457f572938c9a1e883023821',
+ 'runtime-inputs.json': '46aa4511a4760592dc2dec0263d21c2fb20d451c332ed64e60dcbd638b984dda',
+ 'source-fingerprints.json': 'fd79ac0ac07e2c7ecb7cd2706a088d719faae8ab30d9bd0db803a471f59ff4d8'}
+W3_RECAP_CAPTURE_LEAVES = {'runtime-inputs.json': [(['button_advantage_button_recap', 'hint'],
+                          'A later seat usually has more information before choosing.',
+                          'Compare the live-seat order after the flop.'),
+                         (['button_advantage_button_recap', 'question'],
+                          'Which seat usually sees more first?',
+                          'Which seat acts last after the flop here?'),
+                         (['button_advantage_button_recap', 'options', 0, 'reason'],
+                          'UTG acts before HJ, CO, and BTN in preflop order.',
+                          'UTG acts before BTN after the flop on this six-seat table.'),
+                         (['button_advantage_button_recap', 'options', 1, 'reason'],
+                          'After UTG, HJ, and CO, BTN acts before SB and BB.',
+                          'BTN acts last after the flop on this six-seat table.'),
+                         (['button_advantage_button_recap', 'options', 2, 'reason'],
+                          'BB acts after BTN preflop, so it is not next here.',
+                          'BB acts before BTN after the flop on this six-seat table.'),
+                         (['early_vs_late_w2_position_recap', 'hint'],
+                          'A later seat usually has more information before choosing.',
+                          'Compare the live-seat order after the flop.'),
+                         (['early_vs_late_w2_position_recap', 'question'],
+                          'Which seat usually sees more first?',
+                          'Which seat acts last after the flop here?'),
+                         (['early_vs_late_w2_position_recap', 'options', 0, 'reason'],
+                          'UTG acts before HJ, CO, and BTN in preflop order.',
+                          'UTG acts before BTN after the flop on this six-seat table.'),
+                         (['early_vs_late_w2_position_recap', 'options', 1, 'reason'],
+                          'After UTG, HJ, and CO, BTN acts before SB and BB.',
+                          'BTN acts last after the flop on this six-seat table.'),
+                         (['early_vs_late_w2_position_recap', 'options', 2, 'reason'],
+                          'BB acts after BTN preflop, so it is not next here.',
+                          'BB acts before BTN after the flop on this six-seat table.')],
+ 'source-fingerprints.json': [(['button_advantage_button_recap', 'fingerprint'],
+                               '8eca9ad0f31b6d25e60de93e409ae422567a3c796f4d3e0e2a39e1ee9efe6d85',
+                               '7b99c3fecdd489d5554704e7b615f321c0fc901e0b66b74e76e182c842307188'),
+                              (['early_vs_late_w2_position_recap', 'fingerprint'],
+                               'bd53d2b91c108ef96d88f29ec636389c7dc8b5bc26dacb9dd253f3bccd29218c',
+                               '413056256132a36fd9a683665a7f6b79218d5df21b6dc9b2773f847bf5b3cf5b')]}
+
+
 def _digest(value):
     encoded = json.dumps(value, separators=(',', ':'), ensure_ascii=False).encode()
     return hashlib.sha256(encoded).hexdigest()
@@ -734,6 +782,9 @@ def producer_revision(cohort, role):
     position_bytes = {key: W01_POSITION_PRODUCER_REVISION[key] for key in source_bytes}
     if role == 'candidate' and source_bytes == position_bytes:
         return W01_POSITION_REVISION
+    w3_recap_bytes = {key: W3_RECAP_PRODUCER_REVISION[key] for key in source_bytes}
+    if role == 'candidate' and source_bytes == w3_recap_bytes:
+        return W3_RECAP_REVISION
     raise SystemExit('Producing source receipt does not match admitted bytes')
 
 
@@ -845,12 +896,32 @@ def w01_position_pkg1_capture(name, value):
     return result
 
 
+def w3_recap_position_capture(name, value):
+    """Reverse only the two reviewed recap contexts on an in-memory copy."""
+    result = copy.deepcopy(value)
+    try:
+        for path, prior, current in W3_RECAP_CAPTURE_LEAVES.get(name, []):
+            node = result
+            for key in path[:-1]:
+                node = node[key]
+            if node[path[-1]] != current:
+                raise ValueError('literal current leaf')
+            node[path[-1]] = copy.deepcopy(prior)
+        if _digest(result) != W01_POSITION_CAPTURE_SHA256[name]:
+            raise ValueError('whole reconstructed W01 position capture')
+    except (KeyError, TypeError, IndexError, ValueError) as error:
+        raise SystemExit(f'W3 recap exact revision mismatch: {name}') from error
+    return result
+
+
 def reviewed_origin_capture(name, value, revision):
-    if revision == W01_POSITION_REVISION:
+    if revision == W3_RECAP_REVISION:
+        value = w3_recap_position_capture(name, value)
+    if revision in (W01_POSITION_REVISION, W3_RECAP_REVISION):
         value = w01_position_pkg1_capture(name, value)
-    if revision in (PKG1_REVISION, W01_POSITION_REVISION):
+    if revision in (PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION):
         value = pkg1_w01_capture(name, value)
-    if revision in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION):
+    if revision in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION):
         value = w01_origin_capture(name, value)
     return main01_origin_capture(name, value)
 
@@ -867,11 +938,13 @@ def validate_capture_artifacts(source, revision, names=None):
     for name, expected in names.items():
         raw = (pathlib.Path(source) / name).read_bytes()
         observed = hashlib.sha256(raw).hexdigest()
-        if revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION):
+        if revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION):
             captured = json.loads(raw)
             compact = json.dumps(captured, separators=(',', ':'), ensure_ascii=False).encode()
             if raw != compact:
                 raise SystemExit(f'Captured JSON byte encoding drift: {name}')
+            if revision == W3_RECAP_REVISION and observed != W3_RECAP_CAPTURE_SHA256.get(name):
+                raise SystemExit(f'W3 recap current capture artifact drift: {name}')
             if revision == W01_POSITION_REVISION and observed != W01_POSITION_CAPTURE_SHA256.get(name):
                 raise SystemExit(f'W01 position current capture artifact drift: {name}')
             if revision == PKG1_REVISION and observed != PKG1_CAPTURE_SHA256.get(name):
@@ -923,7 +996,7 @@ def validate_typed_cohort(root):
     if set(base) != historical_ids or set(final) != historical_ids | NEW_AUTHORING_IDS:
         raise SystemExit('Learning contract cohort key set is inconsistent')
     comparison_contract = final
-    if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION):
+    if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION):
         validate_capture_artifacts(root / 'candidate', candidate_revision)
         comparison_contract = reviewed_origin_capture(
             'learning-contract.json', final, candidate_revision)
@@ -950,7 +1023,7 @@ def validate_typed_cohort(root):
             raise SystemExit(f'{label} cohort key set is inconsistent')
     comparison_choices = (
         reviewed_origin_capture('choice-identity.json', after_choices, candidate_revision)
-        if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION) else after_choices
+        if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION) else after_choices
     )
     if any(before_choices[key] != comparison_choices[key] for key in historical_ids):
         raise SystemExit('Historical choice identity changed')
@@ -1070,30 +1143,33 @@ def compare(root):
     result = {'ledgers': ledgers, 'runtime_changed_task_count': len(delta), 'runtime_changed_task_ids': sorted(delta),
               'historical_learning_contract_identical': identity['historical_learning_contract_identical'],
               'historical_choice_identity_identical': identity['historical_choice_identity_identical'],
-              'historical_contracts_identical_except_reviewed_setup_qualities': identity['candidate_revision'] not in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION),
+              'historical_contracts_identical_except_reviewed_setup_qualities': identity['candidate_revision'] not in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION),
               'historical_contracts_identical_except_exact_reviewed_revisions': True,
               'reviewed_theory_changes': ([
                   {'task_id': task_id, 'changed_fields': ['options', 'source_fingerprint', 'feedback_phase_choice_ids'],
                    'historical_record_policy': 'retain original fingerprint, grade, assistance, XP and repair lineage',
                    'current_source_policy': 'reject old fingerprint'}
                   for task_id in W01_CAPTURE_OPTIONS['learning-contract.json']
-              ] if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION) else []),
+              ] if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION) else []),
               'candidate_producer_revision': identity['candidate_revision'],
               'producer_receipt': identity['final_cohort']['producer_receipt'],
               'reviewed_hand_seat_changes': ({name: len(leaves) for name, leaves in PKG1_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] in (PKG1_REVISION, W01_POSITION_REVISION) else {}),
+                  if identity['candidate_revision'] in (PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION) else {}),
               'reviewed_position_feedback_changes': ({name: len(rows) for name, rows in W01_POSITION_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] == W01_POSITION_REVISION else {}),
-              'reviewed_producer_source_revision': (W01_POSITION_PRODUCER_REVISION['source_revision']
+                  if identity['candidate_revision'] in (W01_POSITION_REVISION, W3_RECAP_REVISION) else {}),
+              'reviewed_w3_recap_changes': ({name: len(rows) for name, rows in W3_RECAP_CAPTURE_LEAVES.items()}
+                  if identity['candidate_revision'] == W3_RECAP_REVISION else {}),
+              'reviewed_producer_source_revision': (W3_RECAP_PRODUCER_REVISION['source_revision']
+                  if identity['candidate_revision'] == W3_RECAP_REVISION else W01_POSITION_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == W01_POSITION_REVISION else PKG1_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == PKG1_REVISION else W01_PRODUCER_REVISION['source_revision']
-                  if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION) else
+                  if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION) else
                   MAIN01_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == 'MAIN01_REVIEWED_SETUP_QUALITIES' else None),
               'reviewed_quality_changes': ([
                   {'task_id': MAIN01_TASK_ID, 'choice_id': choice, 'before': prior, 'after': current}
                   for choice, (prior, current) in MAIN01_QUALITY_REVISION.items()
-              ] if identity['candidate_revision'] in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION) else []),
+              ] if identity['candidate_revision'] in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION) else []),
               'historical_cohort_count': len(historical_ids),
               'new_authoring': new_authoring,
               'canonical_source_fingerprints': fingerprint_counts, 'native': 'PENDING'}
