@@ -167,10 +167,19 @@ Act0RepairIntentV1? buildAct0RepairIntentV1({
     return null;
   }
 
+  // This canonical recap is authored review with drill entry. Preserve that
+  // source role when deriving its receipt; other repair callers keep their
+  // existing decision projection.
+  final contextReviewSource =
+      sourceWorldId == 'world_3' &&
+      sourceLessonId == 'same_hand_different_seat' &&
+      sourceTaskId == 'same_hand_different_seat_w3_same_hand_recap';
   final receipt = act0FirstValueSkillReceiptForRunnerV1(
     runner: runner,
     option: selectedOption,
-    taskFamily: Act0TaskFamilyV1.decision,
+    taskFamily: contextReviewSource
+        ? Act0TaskFamilyV1.review
+        : Act0TaskFamilyV1.decision,
   );
   final concept = act0ConceptErrorDefinitionForTaskV1(
     worldId: sourceWorldId,

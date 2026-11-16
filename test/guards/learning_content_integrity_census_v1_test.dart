@@ -158,10 +158,10 @@ void main() {
     });
     final repairSnapshot = snapshot['repair']! as Map<String, Object?>;
     expect(repairSnapshot['incorrectOptions'], 462);
-    expect(repairSnapshot['exactReplayCovered'], 15);
-    expect(repairSnapshot['sameSignalMapped'], 276);
-    expect(repairSnapshot['fallbackOnly'], 15);
-    expect(repairSnapshot['intentionalExactReplay'], 15);
+    expect(repairSnapshot['exactReplayCovered'], 15 + 1);
+    expect(repairSnapshot['sameSignalMapped'], 276 - 1);
+    expect(repairSnapshot['fallbackOnly'], 15 + 1);
+    expect(repairSnapshot['intentionalExactReplay'], 15 + 1);
     expect(repairSnapshot['unresolvedProductGap'], 0);
     expect(repairSnapshot['unrecordedFallback'], 0);
     expect(repairSnapshot['unmapped'], 0);
@@ -188,9 +188,26 @@ void main() {
       'misread_tournament_pressure': 32,
     });
     expect(act0ConceptErrorDefinitionsV1, hasLength(20));
-    expect(act0RepairGapAdjudicationsV1, hasLength(36));
+    expect(act0RepairGapAdjudicationsV1, hasLength(37));
     final fallbackInventory = (repairSnapshot['fallbackInventory'] as List)
         .cast<Map<String, Object?>>();
+    // One explicitly versioned context definition moves from an inherited
+    // seat target to intentional same-context replay. No other count moves.
+    final contextFallback = fallbackInventory.singleWhere(
+      (row) => row['task'] == 'same_hand_different_seat_w3_same_hand_recap',
+    );
+    expect(contextFallback['currentFallback'], 'intentional_exact');
+    final contextIncorrect = (contextFallback['incorrectOptions'] as List)
+        .cast<Map<String, Object?>>();
+    expect(contextIncorrect.map((row) => row['optionId']), <String>[
+      'one_answer',
+    ]);
+    expect(
+      contextIncorrect.single['errorType'],
+      'misread_position_action_order',
+    );
+    expect(contextIncorrect.single['skillAtomId'], 'position_action_order');
+    expect(contextIncorrect.single['missedSignalId'], 'position_action_order');
     final coPlayersBehindFallback = fallbackInventory.singleWhere(
       (row) =>
           row['task'] == 'position_checkpoint_position_checkpoint_table_notice',
@@ -353,9 +370,9 @@ void main() {
           _incorrectOptionRow(row, option),
     ];
     expect(incorrect, hasLength(464));
-    expect(allRepair.where((row) => row.sameSignalMapped), hasLength(278));
-    expect(allRepair.where((row) => row.fallbackOnly), hasLength(15));
-    expect(allRepair.where((row) => row.exactReplay), hasLength(15));
+    expect(allRepair.where((row) => row.sameSignalMapped), hasLength(278 - 1));
+    expect(allRepair.where((row) => row.fallbackOnly), hasLength(15 + 1));
+    expect(allRepair.where((row) => row.exactReplay), hasLength(15 + 1));
     expect(
       incorrect.where(
         (row) => row.currentErrorType == 'misread_mindset_discipline',

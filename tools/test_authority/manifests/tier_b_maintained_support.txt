@@ -23,3 +23,4 @@ test/ui_v2/act0_w01_theory_source_truth_v1_test.dart
 test/ui_v2/act0_skl01_evidence_state_v1_test.dart
 test/ui_v2/act0_positions_theory_persistence_truth_v1_test.dart
 test/ui_v2/act0_persistence_roundtrip_v1_test.dart
+test/ui_v2/act0_w24_context_recap_v1_test.dart

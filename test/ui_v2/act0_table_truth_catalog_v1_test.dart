@@ -188,11 +188,74 @@ void main() {
         expectedTask['options'] = entry.value;
       }
     }
+    // Exact active W24 context-answer revision. Keep the frozen fixture and
+    // verify both literal contracts before reversing only these two choices.
+    const contextTaskId = 'same_hand_different_seat_w3_same_hand_recap';
+    const priorContextOptions = <Map<String, Object?>>[
+      {
+        'id': 'utg',
+        'correct': false,
+        'quality': 'wrong',
+        'seat': 'utg',
+        'repairSeats': <String>[],
+        'repairCards': <String>[],
+        'repairLabels': <String>[],
+      },
+      {
+        'id': 'btn',
+        'correct': true,
+        'quality': 'correct',
+        'seat': 'btn',
+        'repairSeats': <String>[],
+        'repairCards': <String>[],
+        'repairLabels': <String>[],
+      },
+    ];
+    const currentContextOptions = <Map<String, Object?>>[
+      {
+        'id': 'one_answer',
+        'correct': false,
+        'quality': 'wrong',
+        'seat': null,
+        'repairSeats': <String>[],
+        'repairCards': <String>[],
+        'repairLabels': <String>[],
+      },
+      {
+        'id': 'framework',
+        'correct': true,
+        'quality': 'correct',
+        'seat': null,
+        'repairSeats': <String>[],
+        'repairCards': <String>[],
+        'repairLabels': <String>[],
+      },
+    ];
+    final context = historicalComparison[contextTaskId] as Map<String, dynamic>;
+    expect(expectedComparison[contextTaskId], <String, Object?>{
+      'rewardXp': 12,
+      'family': 'review',
+      'options': priorContextOptions,
+    });
+    if (presentAdditions.isNotEmpty) {
+      expect(context, <String, Object?>{
+        'rewardXp': 12,
+        'family': 'review',
+        'options': currentContextOptions,
+      });
+      context['options'] = priorContextOptions;
+    } else {
+      expect(context, <String, Object?>{
+        'rewardXp': 12,
+        'family': 'review',
+        'options': priorContextOptions,
+      });
+    }
     expect(
       historicalComparison,
       expectedComparison,
       reason:
-          'Only reviewed MAIN01 quality cells and the exact three W01 theory option contracts may differ; every other identity, XP, family and repair field remains frozen',
+          'Only reviewed MAIN01 quality cells, the exact three W01 theory option contracts and the exact active W24 context choices may differ; every other identity, XP, family and repair field remains frozen',
     );
     const expectedAsmContracts = {
       'asm05_new_known_holes_turn_call_10': {
