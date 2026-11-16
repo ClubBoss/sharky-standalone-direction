@@ -598,6 +598,17 @@ void main() {
       expect(repairRecord.errorType, 'none');
       expect(repairRecord.runKind, 'repair');
       expect(repairRecord.assistanceKind, Act0DecisionAssistanceV1.none);
+      final actualOutcomes =
+          (correctedBeforeAck['repairOutcomeProjection'] as List).cast<Map>();
+      final actualOutcome = actualOutcomes.singleWhere(
+        (outcome) => outcome['repairAttemptId'] == repairRecord.recordId,
+      );
+      final savedReturn = correctedBeforeAck['lastSessionLearnerState'] as Map;
+      expect(savedReturn['last_session_proof_result'], 'fix_landed');
+      expect(
+        savedReturn['last_session_repair_outcome_ref'],
+        'repair_outcome_v1|${actualOutcome['sequence']}|${actualOutcome['queueItemId']}',
+      );
       _w24ExpectCurrentEvidence(
         correctedBeforeAck,
         currentFingerprint,

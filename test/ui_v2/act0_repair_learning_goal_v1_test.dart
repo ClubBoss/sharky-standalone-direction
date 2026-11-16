@@ -227,7 +227,14 @@ Act0ReviewMistakeHistoryV1 _reviewHistory(
       lessonId: source.lessonId,
       decisionTaskId: source.taskId,
       sourceTaskId: source.taskId,
-      decisionKind: 'choice',
+      decisionKind:
+          _task(
+            source.worldId,
+            source.lessonId,
+            source.taskId,
+          ).runner.sizingConfig.isEnabled
+          ? 'sizing'
+          : 'actionList',
       selectedId: source.choiceId,
       expectedId: source.expectedChoiceId,
       resultKind: source.resultKind,

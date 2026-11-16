@@ -1640,9 +1640,69 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'world_id': lastSession.lastSessionWorldId,
       if (lastSession.lastSessionRepairFocusId.trim().isNotEmpty)
         'repair_focus_id': lastSession.lastSessionRepairFocusId,
-      'proof_result': lastSession.lastSessionProofResult,
+      'proof_result': _currentDay2ProofResultV1(lastSession),
       'source_surface': 'act0_home',
     });
+  }
+
+  String _currentDay2ProofResultV1(Act0LastSessionLearnerStateV1 lastSession) {
+    if (lastSession.lastSessionProofResult != act0LastSessionProofFixLandedV1) {
+      return lastSession.lastSessionProofResult;
+    }
+    // Keep the historical cache unchanged. A current positive event needs its
+    // exact recorded repair; matching a broad focus or old boolean is no proof.
+    final ref = lastSession.lastSessionRepairOutcomeRef;
+    if (ref.isEmpty) return act0LastSessionProofUnconfirmedV1;
+    final matches = _repairOutcomeProjectionV1.outcomes
+        .where(
+          (outcome) =>
+              'repair_outcome_v1|${outcome.sequence}|${outcome.queueItemId}' ==
+              ref,
+        )
+        .toList();
+    if (matches.length != 1) return act0LastSessionProofUnconfirmedV1;
+    final outcome = matches.single;
+    if (outcome.isCorrect != true ||
+        outcome.repairFocusKey != lastSession.lastSessionRepairFocusId ||
+        outcome.targetWorldId != lastSession.lastSessionWorldId ||
+        outcome.sessionId !=
+            _sessionIdentityStateV1.currentOrLatestSession?.sessionId ||
+        !_fixProofProjectionV1().proofs.any(
+          (proof) =>
+              proof.repairOutcomeRef == ref &&
+              proof.repairSessionId == outcome.sessionId,
+        )) {
+      return act0LastSessionProofUnconfirmedV1;
+    }
+    final intent = act0RepairIntentForRecordedOutcomeV1(
+      outcome: outcome,
+      learningEvidence: _learningEvidenceHistoryV1,
+      currentFingerprintForIdentity: _repairFingerprintForIdentityV1,
+      repairIntents: _activeRepairIntentsV1(),
+    );
+    if (intent == null ||
+        act0RepairCurrentViewHasUnconfirmedLaterSourceAttemptV1(
+          intent: intent,
+          outcome: outcome,
+          learningEvidence: _learningEvidenceHistoryV1,
+          currentFingerprintForIdentity: _repairFingerprintForIdentityV1,
+        ))
+      return act0LastSessionProofUnconfirmedV1;
+    final attempts = act0RepairEvidenceRecordsForIdV1(
+      _learningEvidenceHistoryV1,
+      outcome.repairAttemptId,
+    );
+    if (attempts.length != 1 || attempts.single.recordedAtUtc == null) {
+      return act0LastSessionProofUnconfirmedV1;
+    }
+    final local = attempts.single.recordedAtUtc!.toLocal();
+    final civilDate =
+        '${local.year.toString().padLeft(4, '0')}-'
+        '${local.month.toString().padLeft(2, '0')}-'
+        '${local.day.toString().padLeft(2, '0')}';
+    return civilDate == lastSession.lastSessionDate
+        ? act0LastSessionProofFixLandedV1
+        : act0LastSessionProofUnconfirmedV1;
   }
 
   @visibleForTesting
@@ -4317,13 +4377,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       act0QueueResolutionStateResolvedV1;
 
   void _showHeldRepairNoticeV1() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'This miss is saved. A matching repair has not been confirmed yet.',
+    // A restored entry may be checked during initState. Resolve inherited
+    // presentation only after the first frame, and never after disposal.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+        const SnackBar(
+          content: Text(
+            'This miss is saved. A matching repair has not been confirmed yet.',
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   List<Act0RepairIntentV1> _activeRepairIntentsV1() {
@@ -12596,6 +12661,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
           : act0LastSessionProofNotYetV1,
       lastSessionDate: _todayDateString(),
       lastSessionWorldId: request.targetWorldId.trim(),
+      lastSessionRepairOutcomeRef: eligible && option.isCorrect
+          ? 'repair_outcome_v1|${recordedOutcome.sequence}|${recordedOutcome.queueItemId}'
+          : '',
     );
     if (eligible && option.isCorrect) {
       _resolvedMistakeTaskIds.add(request.sourceTaskId);

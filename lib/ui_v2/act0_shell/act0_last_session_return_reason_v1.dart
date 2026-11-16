@@ -1,6 +1,7 @@
 const String act0LastSessionProofFixLandedV1 = 'fix_landed';
 const String act0LastSessionProofNotYetV1 = 'not_yet';
 const String act0LastSessionProofSkippedV1 = 'skipped';
+const String act0LastSessionProofUnconfirmedV1 = 'unconfirmed';
 
 class Act0LastSessionLearnerStateV1 {
   const Act0LastSessionLearnerStateV1({
@@ -8,12 +9,14 @@ class Act0LastSessionLearnerStateV1 {
     required this.lastSessionProofResult,
     required this.lastSessionDate,
     required this.lastSessionWorldId,
+    this.lastSessionRepairOutcomeRef = '',
   });
 
   final String lastSessionRepairFocusId;
   final String lastSessionProofResult;
   final String lastSessionDate;
   final String lastSessionWorldId;
+  final String lastSessionRepairOutcomeRef;
 
   bool get isUsable =>
       lastSessionProofResult.trim().isNotEmpty &&
@@ -25,6 +28,8 @@ class Act0LastSessionLearnerStateV1 {
     'last_session_proof_result': lastSessionProofResult,
     'last_session_date': lastSessionDate,
     'last_session_world_id': lastSessionWorldId,
+    if (lastSessionRepairOutcomeRef.isNotEmpty)
+      'last_session_repair_outcome_ref': lastSessionRepairOutcomeRef,
   };
 
   static Act0LastSessionLearnerStateV1? tryParse(Object? raw) {
@@ -41,7 +46,8 @@ class Act0LastSessionLearnerStateV1 {
     }
     if (proofResult != act0LastSessionProofFixLandedV1 &&
         proofResult != act0LastSessionProofNotYetV1 &&
-        proofResult != act0LastSessionProofSkippedV1) {
+        proofResult != act0LastSessionProofSkippedV1 &&
+        proofResult != act0LastSessionProofUnconfirmedV1) {
       return null;
     }
     return Act0LastSessionLearnerStateV1(
@@ -49,6 +55,10 @@ class Act0LastSessionLearnerStateV1 {
       lastSessionProofResult: proofResult,
       lastSessionDate: sessionDate,
       lastSessionWorldId: worldId,
+      lastSessionRepairOutcomeRef: _field(
+        map,
+        'last_session_repair_outcome_ref',
+      ),
     );
   }
 
@@ -63,7 +73,8 @@ class Act0LastSessionLearnerStateV1 {
           other.lastSessionRepairFocusId == lastSessionRepairFocusId &&
           other.lastSessionProofResult == lastSessionProofResult &&
           other.lastSessionDate == lastSessionDate &&
-          other.lastSessionWorldId == lastSessionWorldId;
+          other.lastSessionWorldId == lastSessionWorldId &&
+          other.lastSessionRepairOutcomeRef == lastSessionRepairOutcomeRef;
 
   @override
   int get hashCode => Object.hash(
@@ -71,6 +82,7 @@ class Act0LastSessionLearnerStateV1 {
     lastSessionProofResult,
     lastSessionDate,
     lastSessionWorldId,
+    lastSessionRepairOutcomeRef,
   );
 }
 
