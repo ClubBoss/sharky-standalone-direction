@@ -1,5 +1,6 @@
 """Controls for historical-source preservation and strict gate error rejection."""
 import importlib.util
+import hashlib
 import os
 import re
 import textwrap
@@ -17,6 +18,83 @@ SPEC = importlib.util.spec_from_file_location(
     'baseline_dependencies', ROOT / 'tools/table_truth_baseline_dependencies_v1.py')
 ADAPTER = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(ADAPTER)
+
+
+# Test-only exact W24 additions. Production adapter admission remains hash-only.
+# Removing these two literal blocks must reproduce the existing ad14 pin before
+# any test fixture is written; Guide bodies and historical RED are untouched.
+W24_CONTEXT_RUNNER_INSERTIONS = (
+    r"""      case 'position_action_order':
+        // One authored context recap. Never infer this concept from a seat,
+        // unrelated cards or a price, and never fall through on stale metadata.
+        final choices = <String, Act0RunnerOptionV1>{
+          for (final candidate in runner.options) candidate.id: candidate,
+        };
+        final framework = choices['framework'];
+        final oneAnswer = choices['one_answer'];
+        if (runner.lessonId != 'same_hand_different_seat' ||
+            taskFamily != Act0TaskFamilyV1.review ||
+            runner.phase == Act0LessonPhaseV1.theory ||
+            runner.question != 'What prevents one-hand-one-answer thinking?' ||
+            runner.options.length != 2 ||
+            choices.length != 2 ||
+            framework == null ||
+            oneAnswer == null ||
+            framework.label != 'Bucket, seat, frame' ||
+            !framework.isCorrect ||
+            framework.quality != Act0FeedbackQualityV1.correct ||
+            framework.preferredLabel != 'Bucket, seat, frame' ||
+            framework.betterAnswerLabel != 'Bucket, seat, frame' ||
+            framework.feedbackReason !=
+                'The reusable preflop read is hand bucket, position, and action frame before choosing.' ||
+            oneAnswer.label != 'One answer per hand' ||
+            oneAnswer.isCorrect ||
+            oneAnswer.quality != Act0FeedbackQualityV1.wrong ||
+            oneAnswer.preferredLabel != 'Bucket, seat, frame' ||
+            oneAnswer.betterAnswerLabel != 'Bucket, seat, frame' ||
+            oneAnswer.feedbackReason !=
+                'One hand can change action when position or action frame changes.' ||
+            runner.options.any(
+              (candidate) =>
+                  (candidate.seatId ?? '').trim().isNotEmpty ||
+                  candidate.amountLabel.isNotEmpty ||
+                  candidate.repairFocusSeatIds.isNotEmpty ||
+                  candidate.repairFocusCardIds.isNotEmpty ||
+                  candidate.repairFocusLabels.isNotEmpty,
+            )) {
+          return null;
+        }
+        // A valid runner cannot lend its proof to an old or forged external
+        // choice. Bind the actual selection to its current canonical option.
+        final selected = option == null ? null : choices[option.id];
+        if (option == null ||
+            selected == null ||
+            runner.selectedOptionId != selected.id ||
+            option.label != selected.label ||
+            option.isCorrect != selected.isCorrect ||
+            option.quality != selected.quality ||
+            option.preferredLabel != selected.preferredLabel ||
+            option.betterAnswerLabel != selected.betterAnswerLabel ||
+            option.feedbackTitle != selected.feedbackTitle ||
+            option.feedbackReason != selected.feedbackReason ||
+            option.amountLabel != selected.amountLabel ||
+            option.seatId != selected.seatId ||
+            option.repairFocusSeatIds.isNotEmpty ||
+            option.repairFocusCardIds.isNotEmpty ||
+            option.repairFocusLabels.isNotEmpty) {
+          return null;
+        }
+        return _feedbackSignalProofV1(
+          signalId: explicitSignal,
+          label: 'Bucket, seat, frame',
+        );""" "\n",
+    r"""    'position_action_order' => (
+      skillAtomId: 'position_action_order',
+      skillLabel: 'Preflop context read',
+      nextRepId: 'repeat_position_action_order',
+      nextRepLabel: 'recheck the same context framework',
+    ),""" "\n",
+)
 
 
 class DependencyControls(unittest.TestCase):
@@ -218,7 +296,10 @@ class DependencyControls(unittest.TestCase):
             '876dec37155bdde9aa4883c99f4bc7d9c8170405794bfc2e7cc1f99ecfc07e12',
             '1b4d3efd6cae8b5eabe38aa52f345959b405ee881a8c5c746d5e543997480bb2',
             'ad14bd86c7770e1810b2f5d3149c5a4fb7a470b5dbcdeb793c248aa5cc30e118',
+            'ce7c84d43281783148ae81c9c50f628865ef3f35769461d21bf9bd3c83446fad',
         }))
+        self.assertEqual(ADAPTER.GUIDE_W24_CONTEXT_RUNNER_SHA256,
+                         'ce7c84d43281783148ae81c9c50f628865ef3f35769461d21bf9bd3c83446fad')
         self.assertIn(ADAPTER.digest(ROOT / ADAPTER.GUIDE_RUNNER),
                       ADAPTER.GUIDE_REVIEWED_RUNNER_SHA256S)
 
@@ -241,9 +322,82 @@ class DependencyControls(unittest.TestCase):
         self.assertEqual(result['runner_sha256'],
                          ADAPTER.digest(self.baseline / ADAPTER.GUIDE_RUNNER))
 
+    def restore_reviewed_feedback_clearance_runner(self, dependencies):
+        # Test-only literal inverse; never normalize production/historical RED.
+        runner = self.baseline / ADAPTER.GUIDE_RUNNER
+        actual = ADAPTER.digest(runner)
+        self.assertEqual(actual, ADAPTER.GUIDE_W24_CONTEXT_RUNNER_SHA256)
+        self.assertEqual(dependencies['preserved_existing'].get(ADAPTER.GUIDE_RUNNER), actual)
+        preceding = runner.read_text()
+        for block in W24_CONTEXT_RUNNER_INSERTIONS:
+            self.assertEqual(preceding.count(block), 1)
+            preceding = preceding.replace(block, '', 1)
+        self.assertEqual(hashlib.sha256(preceding.encode()).hexdigest(),
+                         ADAPTER.GUIDE_FEEDBACK_CLEARANCE_RUNNER_SHA256)
+        # All current/manifest/literal/output checks precede the first write.
+        runner.write_text(preceding)
+        dependencies['preserved_existing'][ADAPTER.GUIDE_RUNNER] = ADAPTER.digest(runner)
+        return runner
+
+    def test_w24_context_inverse_reconstructs_exact_preceding_runner(self):
+        dependencies = self.prepare_synthetic_legacy_guide()
+        runner = self.baseline / ADAPTER.GUIDE_RUNNER
+        current = runner.read_text()
+        guide = self.baseline / ADAPTER.GUIDE_DEPENDENCY
+        guide_before = guide.read_bytes()
+        runner = self.restore_reviewed_feedback_clearance_runner(dependencies)
+        self.assertEqual(ADAPTER.digest(runner), ADAPTER.GUIDE_FEEDBACK_CLEARANCE_RUNNER_SHA256)
+        self.assertEqual(guide.read_bytes(), guide_before)
+        # Check the inverse in both directions using literal unique anchors.
+        restored = runner.read_text()
+        anchors = ("      case 'range_bucket_shift':\n", "    'range_bucket_shift' => (\n")
+        for block, anchor in zip(W24_CONTEXT_RUNNER_INSERTIONS, anchors):
+            self.assertEqual(restored.count(anchor), 1)
+            restored = restored.replace(anchor, block + anchor, 1)
+        self.assertEqual(restored, current)
+        self.assertEqual(hashlib.sha256(restored.encode()).hexdigest(),
+                         ADAPTER.GUIDE_W24_CONTEXT_RUNNER_SHA256)
+        result = self.call_synthetic_legacy_guide(dependencies)
+        self.assertEqual(result['runner_sha256'], ADAPTER.GUIDE_FEEDBACK_CLEARANCE_RUNNER_SHA256)
+        self.assertEqual(guide.read_text().replace(
+            ADAPTER.GUIDE_COMPATIBLE_CONSTRUCTOR, ADAPTER.GUIDE_CONSTRUCTOR).encode(), guide_before)
+
+    def test_w24_inverse_rejects_drift_or_wrong_manifest_without_writing(self):
+        for mutation in ('context_literal', 'extra_source', 'wrong_manifest'):
+            with self.subTest(mutation=mutation):
+                dependencies = self.prepare_synthetic_legacy_guide()
+                runner = self.baseline / ADAPTER.GUIDE_RUNNER
+                if mutation == 'context_literal':
+                    text = runner.read_text()
+                    self.assertEqual(text.count("      case 'position_action_order':"), 1)
+                    runner.write_text(text.replace("      case 'position_action_order':", "      case 'forged_context':", 1))
+                elif mutation == 'extra_source':
+                    runner.write_text(runner.read_text() + '// SYNTHETIC unknown W24 drift\n')
+                dependencies['preserved_existing'][ADAPTER.GUIDE_RUNNER] = (
+                    ADAPTER.GUIDE_FEEDBACK_CLEARANCE_RUNNER_SHA256
+                    if mutation == 'wrong_manifest' else ADAPTER.digest(runner))
+                before = {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()}
+                manifest_before = json.loads(json.dumps(dependencies))
+                with self.assertRaises(AssertionError):
+                    self.restore_reviewed_feedback_clearance_runner(dependencies)
+                self.assertEqual(before, {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()})
+                self.assertEqual(dependencies, manifest_before)
+
+    def test_w24_adapter_rejects_changed_context_even_with_matching_manifest(self):
+        dependencies = self.prepare_synthetic_legacy_guide()
+        runner = self.baseline / ADAPTER.GUIDE_RUNNER
+        current = runner.read_text()
+        self.assertEqual(current.count("      case 'position_action_order':"), 1)
+        runner.write_text(current.replace("      case 'position_action_order':", "      case 'forged_context':", 1))
+        dependencies['preserved_existing'][ADAPTER.GUIDE_RUNNER] = ADAPTER.digest(runner)
+        before = {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()}
+        with self.assertRaisesRegex(RuntimeError, 'compatibility input changed'):
+            self.call_synthetic_legacy_guide(dependencies)
+        self.assertEqual(before, {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()})
+
     def restore_reviewed_full_idea_runner(self, dependencies):
         # Reconstruct the exact preceding source; admission never trusts a delta.
-        runner = self.baseline / ADAPTER.GUIDE_RUNNER
+        runner = self.restore_reviewed_feedback_clearance_runner(dependencies)
         self.assertEqual(ADAPTER.digest(runner),
                          ADAPTER.GUIDE_FEEDBACK_CLEARANCE_RUNNER_SHA256)
         delta = ROOT / 'test/fixtures/table_truth/feedback_clearance_runner_delta_v1.patch'
@@ -357,7 +511,7 @@ class DependencyControls(unittest.TestCase):
         self.assertEqual(before, {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()})
 
     def test_reviewed_runner_rejects_wrong_manifest_without_writing(self):
-        for revision in ('current_clearance', 'current_target', 'pending_assistance', 'preceding_back'):
+        for revision in ('current_w24', 'current_clearance', 'current_target', 'pending_assistance', 'preceding_back'):
             with self.subTest(revision=revision):
                 dependencies = self.prepare_synthetic_legacy_guide()
                 runner = self.baseline / ADAPTER.GUIDE_RUNNER
@@ -367,11 +521,14 @@ class DependencyControls(unittest.TestCase):
                     self.restore_reviewed_pending_runner(dependencies)
                 elif revision == 'current_target':
                     self.restore_reviewed_full_idea_runner(dependencies)
+                elif revision == 'current_clearance':
+                    self.restore_reviewed_feedback_clearance_runner(dependencies)
                 self.assertIn(ADAPTER.digest(runner), {
                     ADAPTER.GUIDE_BACK_RUNNER_SHA256,
                     ADAPTER.GUIDE_PENDING_ASSISTANCE_RUNNER_SHA256,
                     ADAPTER.GUIDE_FULL_IDEA_TARGET_RUNNER_SHA256,
                     ADAPTER.GUIDE_FEEDBACK_CLEARANCE_RUNNER_SHA256,
+                    ADAPTER.GUIDE_W24_CONTEXT_RUNNER_SHA256,
                 })
                 dependencies['preserved_existing'][ADAPTER.GUIDE_RUNNER] = ADAPTER.GUIDE_RUNNER_SHA256
                 before = {str(p): p.read_bytes() for p in self.baseline.rglob('*') if p.is_file()}
