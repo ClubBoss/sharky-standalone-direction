@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_runtime_adapter_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_practice_leaf_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_review_leaf_v1.dart';
@@ -28,6 +30,63 @@ const _actionRepair = 'actions_check_drill';
 const _rankLesson = 'cards_ranks_suits';
 const _rankTask = 'cards_ranks_suits_rank_drill';
 final _store = Act0ProgressStoreV1(key: _key, isValidPayload: (_) => true);
+
+// Fault backend retains durable bytes separately from the plugin cache.
+// These widget/remount controls are SIMULATED, not native process proof.
+class _SaveDisk extends SharedPreferencesStorePlatform {
+  _SaveDisk(this.values);
+  final Map<String, Object> values;
+  String? refusedKey;
+  int writeCount = 0;
+  bool holdNextHead = false;
+  Completer<void>? held;
+
+  @override
+  Future<Map<String, Object>> getAll() async => Map.of(values);
+  @override
+  Future<bool> setValue(String type, String key, Object value) async {
+    writeCount++;
+    if (holdNextHead && key == 'flutter.${_store.headKey}') {
+      holdNextHead = false;
+      held = Completer<void>();
+      await held!.future;
+    }
+    if (key == refusedKey) return false;
+    values[key] = value;
+    return true;
+  }
+
+  @override
+  Future<bool> remove(String key) async {
+    values.remove(key);
+    return true;
+  }
+
+  @override
+  Future<bool> clear() async => throw StateError('No fixture reset allowed');
+}
+
+Future<_SaveDisk> _faultDisk(WidgetTester tester) async {
+  await _store.flush();
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.reload();
+  final disk = _SaveDisk({
+    for (final key in prefs.getKeys()) 'flutter.$key': prefs.get(key)!,
+  });
+  SharedPreferencesStorePlatform.instance = disk;
+  addTearDown(() {
+    disk.refusedKey = null;
+    disk.holdNextHead = false;
+    if (disk.held != null && !disk.held!.isCompleted) disk.held!.complete();
+  });
+  return disk;
+}
+
+Future<Map<String, dynamic>> _durable() async =>
+    jsonDecode((await _store.load())!) as Map<String, dynamic>;
+
+final _saveNotice = find.byKey(const Key('act0_progress_save_notice'));
+final _retrySave = find.byKey(const Key('act0_progress_save_retry'));
 
 Map<String, Object?> _fixture(String lessonId, String taskId) {
   final world = Act0ShellStateV1.sample.worldById('world_1');
@@ -357,6 +416,145 @@ Finder _openDebtCaption(int count) => act0AcademyReviewPreviewV1
     : find.text('$count ${count == 1 ? 'miss' : 'misses'} to fix');
 
 void main() {
+  for (final refusal in ['head', 'backup']) {
+    testWidgets(
+      'G05 $refusal refusal stays visible; retry saves current debt and route state once',
+      (tester) async {
+        await _setup(tester, _actionLesson, _actionSource);
+        await _startWithoutRemount(tester, _actionSource);
+        await _ready(tester, 'fold');
+        final baseline = await _saved(tester);
+        final disk = await _faultDisk(tester);
+        disk.refusedKey =
+            'flutter.${refusal == 'head' ? _store.headKey : _store.backupKey}';
+        await _answer(tester, 'fold');
+        await _store.flush();
+        await tester.pumpAndSettle();
+        expect(_saveNotice, findsOneWidget);
+        expect(
+          find.text('Progress save not confirmed. Keep Sharky open and retry.'),
+          findsOneWidget,
+        );
+        expect(
+          find.text('Your saved progress could not be read.'),
+          findsNothing,
+        );
+        expect(_retrySave.hitTestable(), findsOneWidget);
+        // Ordinary feedback remains usable and the notice follows live state.
+        await _continue(tester);
+        await _store.flush();
+        await tester.pumpAndSettle();
+        expect(_saveNotice, findsOneWidget);
+        if (refusal == 'head') {
+          expect(_debt(await _durable(), _actionSource), isEmpty);
+        } else {
+          // save=false can leave a forward-recoverable snapshot. Do not load
+          // while healing is still blocked, or classify it as proven loss.
+          expect(disk.values['flutter.${_store.headKey}'], isNotNull);
+        }
+        disk.refusedKey = null;
+        // Two queued presses must only save snapshots, never replay a decision.
+        final retry = tester.widget<TextButton>(_retrySave).onPressed!;
+        retry();
+        retry();
+        await tester.pumpAndSettle();
+        await _store.flush();
+        await tester.pumpAndSettle();
+        expect(_saveNotice, findsNothing);
+        final saved = await _durable();
+        expect(_debt(saved, _actionSource), hasLength(1));
+        expect(_rows(saved, 'learningEvidenceHistory'), hasLength(1));
+        expect(
+          _rows(saved, 'learningEvidenceHistory').single['choiceId'],
+          'fold',
+        );
+        // The first wrong-feedback Continue starts teaching/repair; it does
+        // not invent task completion or XP. Retry must preserve that boundary.
+        expect(saved['completedTaskIds'], baseline['completedTaskIds']);
+        expect(saved['earnedXp'], baseline['earnedXp']);
+        expect(saved['resumeSelectedOptionId'], isNull);
+        await _mount(tester, Act0ShellTabV1.review);
+        final restored = await _durable();
+        for (final key in [
+          'learningEvidenceHistory',
+          'openRepairIntents',
+          'completedTaskIds',
+          'earnedXp',
+        ]) {
+          expect(restored[key], saved[key], reason: 'remount preserves $key');
+        }
+        expect(_saveNotice, findsNothing);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
+  testWidgets(
+    'G05 older successful ACK cannot clear a newer pending snapshot',
+    (tester) async {
+      await _setup(tester, _actionLesson, _actionSource);
+      await _startWithoutRemount(tester, _actionSource);
+      await _ready(tester, 'fold');
+      await _saved(tester);
+      final disk = await _faultDisk(tester);
+      disk.holdNextHead = true;
+      final dynamic root = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      root.debugPersistProgressV1();
+      await tester.pumpAndSettle();
+      final older = disk.held!;
+      await _answer(tester, 'fold');
+      disk.holdNextHead = true;
+      older.complete();
+      for (var i = 0; i < 30 && identical(disk.held, older); i++) {
+        await tester.pump(const Duration(milliseconds: 10));
+      }
+      expect(disk.held, isNot(same(older)));
+      expect(_saveNotice, findsOneWidget);
+      expect(find.text('Saving progress. Keep Sharky open.'), findsOneWidget);
+      expect(_retrySave, findsNothing);
+      // Refuse only the newest head after the old complete write acknowledged.
+      disk.refusedKey = 'flutter.${_store.headKey}';
+      disk.held!.complete();
+      await tester.pumpAndSettle();
+      await _store.flush();
+      await tester.pumpAndSettle();
+      expect(_retrySave.hitTestable(), findsOneWidget);
+      expect(_debt(await _durable(), _actionSource), isEmpty);
+      disk.refusedKey = null;
+      await tester.tap(_retrySave);
+      await tester.pumpAndSettle();
+      await _store.flush();
+      expect(_debt(await _durable(), _actionSource), hasLength(1));
+      expect(_saveNotice, findsNothing);
+    },
+  );
+
+  testWidgets('G05 retry preserves newly unreadable protected bytes', (
+    tester,
+  ) async {
+    await _setup(tester, _actionLesson, _actionSource);
+    await _startWithoutRemount(tester, _actionSource);
+    await _ready(tester, 'fold');
+    await _saved(tester);
+    final disk = await _faultDisk(tester);
+    disk.refusedKey = 'flutter.${_store.headKey}';
+    await _answer(tester, 'fold');
+    await _store.flush();
+    await tester.pumpAndSettle();
+    disk.refusedKey = null;
+    for (final key in [_store.headKey, _store.recoveryKey, _store.backupKey]) {
+      disk.values['flutter.$key'] = 'unreadable protected progress';
+    }
+    final before = Map<String, Object>.of(disk.values);
+    await tester.tap(_retrySave);
+    await tester.pumpAndSettle();
+    await _store.flush();
+    await tester.pumpAndSettle();
+    expect(disk.values, before);
+    expect(_retrySave.hitTestable(), findsOneWidget);
+    expect(find.text('Your saved progress could not be read.'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
   testWidgets(
     'G0 live Review discharges only the independently repaired occurrence',
     (tester) async {
@@ -889,4 +1087,69 @@ void main() {
       expect(_rows(await _saved(tester), 'reviewResolutionReceipts'), receipts);
     });
   }
+
+  testWidgets('G05 captured retry cannot write after its screen is disposed', (
+    tester,
+  ) async {
+    await _setup(tester, _actionLesson, _actionSource);
+    await _startWithoutRemount(tester, _actionSource);
+    await _ready(tester, 'fold');
+    await _saved(tester);
+    final disk = await _faultDisk(tester);
+    disk.refusedKey = 'flutter.${_store.headKey}';
+    await _answer(tester, 'fold');
+    await _store.flush();
+    await tester.pumpAndSettle();
+    final oldRetry = tester.widget<TextButton>(_retrySave).onPressed!;
+    disk.refusedKey = null;
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+    await _store.flush(); // The ordinary final dispose save remains allowed.
+    final before = Map<String, Object>.of(disk.values);
+    final writes = disk.writeCount;
+    oldRetry();
+    await tester.pumpAndSettle();
+    await _store.flush();
+    expect(disk.writeCount, writes);
+    expect(disk.values, before);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('G05 stale screen retry cannot overwrite a confirmed recovery', (
+    tester,
+  ) async {
+    await _setup(tester, _actionLesson, _actionSource);
+    await _startWithoutRemount(tester, _actionSource);
+    await _ready(tester, 'fold');
+    await _saved(tester);
+    final disk = await _faultDisk(tester);
+    disk.refusedKey = 'flutter.${_store.headKey}';
+    await _answer(tester, 'fold');
+    await _store.flush();
+    await tester.pumpAndSettle();
+    disk.refusedKey = null;
+    for (final key in [_store.headKey, _store.recoveryKey, _store.backupKey]) {
+      disk.values['flutter.$key'] = 'unreadable protected progress';
+    }
+    // A separate real store performs the explicit recovery protocol. The old
+    // mounted screen's lease must stay fenced, including its visible Retry.
+    final recovery = Act0ProgressStoreV1(
+      key: _key,
+      isValidPayload: (_) => true,
+    );
+    final proposal = await recovery.inspectRecovery();
+    expect(await recovery.confirmRecovery(proposal), isTrue);
+    final recovered = Map<String, Object>.of(disk.values);
+    await tester.tap(_retrySave);
+    await tester.pumpAndSettle();
+    await recovery.flush();
+    await tester.pumpAndSettle();
+    expect(disk.values, recovered);
+    expect(_retrySave.hitTestable(), findsOneWidget);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+    await recovery.flush();
+    expect(disk.values, recovered, reason: 'dispose is fenced too');
+    expect(tester.takeException(), isNull);
+  });
 }
