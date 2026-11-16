@@ -1,4 +1,5 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_queue_resolution_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_outcome_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
@@ -34,6 +35,9 @@ class Act0PracticeRepairQueueProjectionV1 {
     Act0RepairOutcomeProjectionV1 repairOutcomeProjection =
         const Act0RepairOutcomeProjectionV1(),
     Act0QueueResolutionStateV1? queueResolutionState,
+    Act0LearningEvidenceHistoryV1 learningEvidenceHistory =
+        const Act0LearningEvidenceHistoryV1(),
+    Act0RepairFingerprintResolverV1? currentFingerprintForIdentity,
     int maxCandidates = maxCandidateCount,
   }) {
     final safeMax = maxCandidates < 1
@@ -44,6 +48,8 @@ class Act0PracticeRepairQueueProjectionV1 {
     final resolutionState =
         queueResolutionState ??
         Act0QueueResolutionStateV1.fromSources(
+          learningEvidenceHistory: learningEvidenceHistory,
+          currentFingerprintForIdentity: currentFingerprintForIdentity,
           activeRepairIntents: activeRepairIntents,
           repairOutcomeProjection: repairOutcomeProjection,
         );
@@ -63,7 +69,18 @@ class Act0PracticeRepairQueueProjectionV1 {
       if (resolution != null && !resolution.isActionable) {
         continue;
       }
-      final launchTarget = _activeRepairLaunchTarget(intent);
+      final goal = currentFingerprintForIdentity == null
+          ? null
+          : act0RepairGoalResolutionForIntentV1(
+              intent,
+              learningEvidence: learningEvidenceHistory,
+              currentFingerprintForIdentity: currentFingerprintForIdentity,
+            );
+      final launchTarget = goal?.canLaunch == true
+          ? _activeRepairLaunchTarget(intent)
+          : const Act0PracticeRepairQueueLaunchTargetV1.notLaunchable(
+              source: act0PracticeRepairQueueSourceActiveRepairV1,
+            );
       candidates.add(
         _QueueCandidateV1(
           sortBucket: 0,
@@ -74,11 +91,14 @@ class Act0PracticeRepairQueueProjectionV1 {
             sourceKey: key,
             sourceTaskId: intent.sourceTaskId.trim(),
             skillTag: intent.skillAtomId.trim(),
-            safeLabel: _safeLabel(intent.skillLabel, intent.skillAtomId),
+            safeLabel:
+                goal?.contract?.learnerGoalLabel ?? 'Repair not confirmed',
             errorDetail: intent.errorType.trim(),
             selectedId: intent.choiceId.trim(),
             betterId: '',
-            context: intent.missedSignalLabel.trim(),
+            context: goal?.isHeld == true
+                ? 'Matching repair not confirmed · miss saved'
+                : intent.missedSignalLabel.trim(),
             priority: 0,
             sourceType: act0PracticeRepairQueueSourceActiveRepairV1,
             state: act0PracticeRepairQueueStateQueuedUnresolvedV1,

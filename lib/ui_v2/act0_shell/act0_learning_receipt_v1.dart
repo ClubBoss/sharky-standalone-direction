@@ -1,3 +1,4 @@
+import 'act0_repair_intent_contract_v1.dart';
 import 'act0_durable_learning_time_contract_v1.dart';
 import 'act0_learning_evidence_contract_v1.dart';
 import 'act0_learning_transfer_measurement_v1.dart';
@@ -54,7 +55,7 @@ class Act0LearningReceiptV1 {
       Act0LearningReceiptLevelV1.attempted =>
         '$focusLabel was attempted and still needs a clean repair.',
       Act0LearningReceiptLevelV1.sameClueRepaired =>
-        'You corrected $focusLabel on the same clue. A later check will show whether it holds.',
+        'You corrected $focusLabel on the same clue. $nextEvidenceRequirement',
       Act0LearningReceiptLevelV1.laterRecheckHeld =>
         '$focusLabel held on a later check. A different spot is the next proof.',
       Act0LearningReceiptLevelV1.differentSpotImproved =>
@@ -64,9 +65,10 @@ class Act0LearningReceiptV1 {
     };
   }
 
-  List<String> get sessionSummaryLines => isExactReplay
-      ? const <String>['Continue with normal review evidence.']
-      : <String>[latestOutcome, nextEvidenceRequirement];
+  List<String> get sessionSummaryLines => <String>[
+    latestOutcome,
+    nextEvidenceRequirement,
+  ];
 
   factory Act0LearningReceiptV1.fromEvidence({
     required String focusLabel,
@@ -75,6 +77,8 @@ class Act0LearningReceiptV1 {
     required Act0LearningEvidenceHistoryV1 learningEvidence,
     String conceptFamilyId = '',
     bool isExactReplay = false,
+    Act0RepairFingerprintResolverV1? currentFingerprintForIdentity,
+    Iterable<Act0RepairIntentV1> repairIntents = const <Act0RepairIntentV1>[],
   }) {
     final source = sourceTaskId.trim();
     final repairs =
@@ -87,7 +91,52 @@ class Act0LearningReceiptV1 {
                 : a.queueItemId.compareTo(b.queueItemId),
           );
     final lastRepair = repairs.isEmpty ? null : repairs.last;
-    final repaired = lastRepair?.isCorrect == true;
+    final resolver = currentFingerprintForIdentity;
+    final intent = lastRepair == null || resolver == null
+        ? null
+        : act0RepairIntentForRecordedOutcomeV1(
+            outcome: lastRepair,
+            learningEvidence: learningEvidence,
+            currentFingerprintForIdentity: resolver,
+            repairIntents: repairIntents,
+          );
+    final hasCurrentRepairLink =
+        lastRepair != null &&
+        intent != null &&
+        resolver != null &&
+        act0RepairGoalOutcomeIsEligibleV1(
+          intent: intent,
+          outcome: lastRepair,
+          learningEvidence: learningEvidence,
+          currentFingerprintForIdentity: resolver,
+        );
+    final currentViewUnconfirmed =
+        hasCurrentRepairLink &&
+        act0RepairCurrentViewHasUnconfirmedLaterSourceAttemptV1(
+          intent: intent,
+          outcome: lastRepair,
+          learningEvidence: learningEvidence,
+          currentFingerprintForIdentity: resolver,
+        );
+    final repaired =
+        lastRepair?.isCorrect == true &&
+        hasCurrentRepairLink &&
+        !currentViewUnconfirmed;
+    final allowsApplicationClaim =
+        repaired &&
+        act0RepairGoalResolutionForIntentV1(
+          intent,
+          learningEvidence: learningEvidence,
+          currentFingerprintForIdentity: resolver,
+        ).canClaimIndependentApplication;
+    final familiarRepair = repaired && !allowsApplicationClaim;
+    final allowsMatchedRecheckClaim =
+        repaired &&
+        act0RepairGoalResolutionForIntentV1(
+          intent,
+          learningEvidence: learningEvidence,
+          currentFingerprintForIdentity: resolver,
+        ).canClaimMatchedRecheck;
     final evidence =
         learningEvidence.records
             .where(
@@ -137,6 +186,7 @@ class Act0LearningReceiptV1 {
       learningEvidence,
     ).signalForConcept(family);
     final hasCanonicalTransfer =
+        allowsApplicationClaim &&
         family.isNotEmpty &&
         transfer.conceptFamilyId == family &&
         transfer.relationship == act0LearningTransferSameFamilyTransferV1 &&
@@ -155,7 +205,7 @@ class Act0LearningReceiptV1 {
         ? Act0LearningReceiptLevelV1.attempted
         : hasCanonicalTransfer
         ? Act0LearningReceiptLevelV1.differentSpotImproved
-        : recheck != null
+        : allowsMatchedRecheckClaim && recheck != null
         ? Act0LearningReceiptLevelV1.laterRecheckHeld
         : Act0LearningReceiptLevelV1.sameClueRepaired;
     final label = focusLabel.trim().isEmpty ? 'This clue' : focusLabel.trim();
@@ -165,9 +215,16 @@ class Act0LearningReceiptV1 {
       level: level,
       previousIssue: '$label was missed earlier.',
       latestOutcome: switch (level) {
-        Act0LearningReceiptLevelV1.attempted => 'The repair did not land yet.',
+        Act0LearningReceiptLevelV1.attempted =>
+          currentViewUnconfirmed
+              ? 'A newer attempt still needs confirmation. The earlier repair remains in history.'
+              : lastRepair?.isCorrect == true && !hasCurrentRepairLink
+              ? 'That answer remains saved for its own task. This repair is not verified.'
+              : 'The repair did not land yet.',
         Act0LearningReceiptLevelV1.sameClueRepaired =>
-          'The same clue was repaired.',
+          familiarRepair
+              ? 'A familiar repair was answered correctly.'
+              : 'The same clue was repaired.',
         Act0LearningReceiptLevelV1.laterRecheckHeld =>
           'A later recheck was correct.',
         Act0LearningReceiptLevelV1.differentSpotImproved =>
@@ -177,15 +234,26 @@ class Act0LearningReceiptV1 {
       },
       remainingStatus: switch (level) {
         Act0LearningReceiptLevelV1.attempted => 'Repair remains unresolved.',
-        Act0LearningReceiptLevelV1.sameClueRepaired => 'Later proof remains.',
+        Act0LearningReceiptLevelV1.sameClueRepaired =>
+          familiarRepair
+              ? 'Separate application evidence remains.'
+              : 'Later proof remains.',
         Act0LearningReceiptLevelV1.laterRecheckHeld =>
           'Different-spot proof remains.',
         Act0LearningReceiptLevelV1.differentSpotImproved =>
           'No stronger claim is made.',
       },
       nextEvidenceRequirement: switch (level) {
-        Act0LearningReceiptLevelV1.attempted => 'Answer the repair correctly.',
-        Act0LearningReceiptLevelV1.sameClueRepaired => 'Pass a later recheck.',
+        Act0LearningReceiptLevelV1.attempted =>
+          currentViewUnconfirmed
+              ? 'Current confirmation is still needed for this learning goal.'
+              : hasCurrentRepairLink
+              ? 'Answer the repair correctly.'
+              : 'A matching repair on this learning goal is still needed.',
+        Act0LearningReceiptLevelV1.sameClueRepaired =>
+          familiarRepair
+              ? 'A separate application check on this learning goal is still needed.'
+              : 'Pass a later recheck.',
         Act0LearningReceiptLevelV1.laterRecheckHeld =>
           'Hold the clue on a different spot.',
         Act0LearningReceiptLevelV1.differentSpotImproved =>
@@ -194,7 +262,7 @@ class Act0LearningReceiptV1 {
       sourceReferences: List<String>.unmodifiable(<String>[
         if (source.isNotEmpty) source,
         if (lastRepair != null) lastRepair.repairTaskId,
-        if (recheck != null) recheck.taskId,
+        if (allowsMatchedRecheckClaim && recheck != null) recheck.taskId,
         if (hasCanonicalTransfer) transfer.comparisonTaskId,
       ]),
       transferVerdict: verdict,

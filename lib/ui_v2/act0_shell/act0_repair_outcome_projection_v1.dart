@@ -1,3 +1,6 @@
+import 'act0_authored_source_proof_v1.dart';
+import 'act0_learning_evidence_contract_v1.dart';
+import 'act0_repair_intent_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_projection_v1.dart';
 
 const String act0RepairOutcomeStateAttemptedV1 = 'repair_attempted_v1';
@@ -22,6 +25,7 @@ class Act0RepairOutcomeProjectionV1 {
     required int sequence,
     String sessionId = '',
     String repairAttemptId = '',
+    Act0RepairIntentV1? repairIntent,
   }) {
     final request = launchRequest;
     if (request == null || !request.isLaunchable) {
@@ -51,6 +55,7 @@ class Act0RepairOutcomeProjectionV1 {
     }
     final outcome = Act0RepairOutcomeV1(
       repairOccurrenceId: request.repairOccurrenceId,
+      repairIntent: repairIntent,
       repairAttemptId: repairAttemptId,
       sourceTaskId: sourceTaskId,
       repairTaskId: repairTaskId,
@@ -116,6 +121,10 @@ class Act0RepairOutcomeV1 {
     this.schemaVersion = 1,
     this.repairOccurrenceId = '',
     this.repairAttemptId = '',
+    this.repairIntent,
+    this.repairIntentIsUnconfirmed = false,
+    this.hasStoredRepairIntentPayload = false,
+    this.storedRepairIntentPayload,
     required this.sourceTaskId,
     required this.repairTaskId,
     required this.repairFocusKey,
@@ -135,6 +144,13 @@ class Act0RepairOutcomeV1 {
   final int schemaVersion;
   final String repairOccurrenceId;
   final String repairAttemptId;
+  // Immutable launched-link witness; never derived from the later grade.
+  final Act0RepairIntentV1? repairIntent;
+  // A declared corrupt witness stays on its original event. Dropping that
+  // latest event could otherwise revive an older successful repair card.
+  final bool repairIntentIsUnconfirmed;
+  final bool hasStoredRepairIntentPayload;
+  final Object? storedRepairIntentPayload;
   final String sourceTaskId;
   final String repairTaskId;
   final String repairFocusKey;
@@ -154,6 +170,10 @@ class Act0RepairOutcomeV1 {
     'schemaVersion': schemaVersion,
     if (repairOccurrenceId.isNotEmpty) 'repairOccurrenceId': repairOccurrenceId,
     if (repairAttemptId.isNotEmpty) 'repairAttemptId': repairAttemptId,
+    if (hasStoredRepairIntentPayload || repairIntentIsUnconfirmed)
+      'repairIntent': storedRepairIntentPayload
+    else if (repairIntent != null)
+      'repairIntent': repairIntent!.toPayload(),
     'sourceTaskId': sourceTaskId,
     'repairTaskId': repairTaskId,
     'repairFocusKey': repairFocusKey,
@@ -186,6 +206,10 @@ class Act0RepairOutcomeV1 {
     final sequence = _nonNegativeInt(map['sequence']);
     final sourceType = _requiredString(map, 'sourceType');
     final correctness = map['isCorrect'];
+    final rawRepairIntent = map['repairIntent'];
+    final repairIntent = rawRepairIntent == null
+        ? null
+        : Act0RepairIntentV1.tryParse(rawRepairIntent);
     if (schemaVersion != 1 ||
         sourceTaskId == null ||
         repairTaskId == null ||
@@ -203,6 +227,12 @@ class Act0RepairOutcomeV1 {
     return Act0RepairOutcomeV1(
       repairOccurrenceId: map['repairOccurrenceId']?.toString().trim() ?? '',
       repairAttemptId: map['repairAttemptId']?.toString().trim() ?? '',
+      repairIntent: repairIntent,
+      repairIntentIsUnconfirmed:
+          map.containsKey('repairIntent') &&
+          (repairIntent == null || repairIntent.relationRevision < 0),
+      hasStoredRepairIntentPayload: map.containsKey('repairIntent'),
+      storedRepairIntentPayload: rawRepairIntent,
       sourceTaskId: sourceTaskId,
       repairTaskId: repairTaskId,
       repairFocusKey: map['repairFocusKey']?.toString().trim() ?? '',
@@ -219,6 +249,81 @@ class Act0RepairOutcomeV1 {
       sessionId: map['sessionId']?.toString().trim() ?? '',
     );
   }
+}
+
+/// Current-card boundary only. It never removes historical banked repair proof.
+/// Only the source or a declared target's actual repair run can cap this view;
+/// ordinary practice on the target remains its own activity.
+bool act0RepairCurrentViewHasUnconfirmedLaterSourceAttemptV1({
+  required Act0RepairIntentV1 intent,
+  required Act0RepairOutcomeV1 outcome,
+  required Act0LearningEvidenceHistoryV1 learningEvidence,
+  required Act0RepairFingerprintResolverV1 currentFingerprintForIdentity,
+}) {
+  if (!act0RepairGoalOutcomeIsEligibleV1(
+    intent: intent,
+    outcome: outcome,
+    learningEvidence: learningEvidence,
+    currentFingerprintForIdentity: currentFingerprintForIdentity,
+  ))
+    return true;
+  final provenance = [
+    ...learningEvidence.sourceAnchors,
+    ...learningEvidence.records,
+  ];
+  final repairs = act0RepairEvidenceRecordsForIdV1(
+    learningEvidence,
+    outcome.repairAttemptId,
+  );
+  if (repairs.length != 1) return true;
+  final sourceFingerprint = currentFingerprintForIdentity(
+    worldId: intent.sourceWorldId,
+    lessonId: intent.sourceLessonId,
+    taskId: intent.sourceTaskId,
+  );
+  if (sourceFingerprint == null || sourceFingerprint.isEmpty) return true;
+  final targetFingerprint = currentFingerprintForIdentity(
+    worldId: intent.targetWorldId,
+    lessonId: intent.targetLessonId,
+    taskId: intent.targetTaskId,
+  );
+  for (final record in provenance) {
+    if (record.createdOrder <= repairs.single.createdOrder ||
+        record.isPlacementAssessment)
+      continue;
+    final isSource =
+        record.worldId == intent.sourceWorldId &&
+        record.lessonId == intent.sourceLessonId &&
+        record.taskId == intent.sourceTaskId &&
+        record.authoredSourceFingerprint == sourceFingerprint;
+    final isTargetRepair =
+        record.runKind == 'repair' &&
+        record.worldId == intent.targetWorldId &&
+        record.lessonId == intent.targetLessonId &&
+        record.taskId == intent.targetTaskId &&
+        record.authoredSourceFingerprint == targetFingerprint;
+    if (!isSource && !isTargetRepair) continue;
+    if (act0RepairEvidenceRecordsForIdV1(
+          learningEvidence,
+          record.recordId,
+        ).length !=
+        1) {
+      return true;
+    }
+    final proof = act0CurrentAuthoredSourceProofV1(record);
+    if (record.sourceTaskId != record.taskId ||
+        record.runId.isEmpty ||
+        record.sessionId.isEmpty ||
+        (record.runOrdinal ?? 0) <= 0 ||
+        proof == null ||
+        proof.fingerprint !=
+            (isSource ? sourceFingerprint : targetFingerprint) ||
+        record.assistanceKind.name != 'none' ||
+        record.isCorrect != proof.isCurrentlyCorrect ||
+        !proof.isCurrentlyCorrect)
+      return true;
+  }
+  return false;
 }
 
 String _outcomeStateForCorrectnessV1(bool? isCorrect) {

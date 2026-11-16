@@ -1,3 +1,5 @@
+import 'act0_learning_evidence_contract_v1.dart';
+import 'act0_repair_intent_contract_v1.dart';
 import 'act0_learning_transfer_measurement_v1.dart';
 import 'act0_repair_outcome_projection_v1.dart';
 import 'act0_review_resolution_contract_v1.dart';
@@ -35,16 +37,40 @@ class Act0FixProofProjectionV1 {
     reviewResolutionReceiptHistory,
     Act0LearningTransferMeasurementV1? transferMeasurement,
     int recentSessionLimit = 7,
+    Act0LearningEvidenceHistoryV1 learningEvidenceHistory =
+        const Act0LearningEvidenceHistoryV1(),
+    Act0RepairFingerprintResolverV1? currentFingerprintForIdentity,
+    Iterable<Act0RepairIntentV1> repairIntents = const <Act0RepairIntentV1>[],
   }) {
-    final successfulOutcomesByQueueItemId = <String, Act0RepairOutcomeV1>{};
+    final successfulOutcomesByRef = <String, Act0RepairOutcomeV1>{};
+    final eligibleIntentsByOutcome =
+        <Act0RepairOutcomeV1, Act0RepairIntentV1>{};
     for (final outcome in repairOutcomeProjection.outcomes) {
       final queueItemId = outcome.queueItemId.trim();
       if (queueItemId.isEmpty || outcome.isCorrect != true) {
         continue;
       }
-      final existing = successfulOutcomesByQueueItemId[queueItemId];
+      final resolver = currentFingerprintForIdentity;
+      if (resolver == null) continue;
+      final intent = act0RepairIntentForRecordedOutcomeV1(
+        outcome: outcome,
+        learningEvidence: learningEvidenceHistory,
+        currentFingerprintForIdentity: resolver,
+        repairIntents: repairIntents,
+      );
+      if (intent == null ||
+          !act0RepairGoalOutcomeIsEligibleV1(
+            intent: intent,
+            outcome: outcome,
+            learningEvidence: learningEvidenceHistory,
+            currentFingerprintForIdentity: resolver,
+          ))
+        continue;
+      eligibleIntentsByOutcome[outcome] = intent;
+      final outcomeRef = 'repair_outcome_v1|${outcome.sequence}|$queueItemId';
+      final existing = successfulOutcomesByRef[outcomeRef];
       if (existing == null || _outcomeOrder(outcome, existing) > 0) {
-        successfulOutcomesByQueueItemId[queueItemId] = outcome;
+        successfulOutcomesByRef[outcomeRef] = outcome;
       }
     }
 
@@ -56,11 +82,31 @@ class Act0FixProofProjectionV1 {
       if (queueItemId.isEmpty) {
         continue;
       }
-      final outcome = successfulOutcomesByQueueItemId[queueItemId];
+      final outcome = successfulOutcomesByRef[receipt.repairOutcomeId ?? ''];
       if (outcome == null) {
         continue;
       }
-      final bankedAtOrder = receipt.resolvedAtOrder ?? outcome.sequence;
+      final intent = eligibleIntentsByOutcome[outcome]!;
+      final expectedFamily =
+          <String>[intent.missedSignalId, intent.skillAtomId, intent.errorType]
+              .map((id) => id.trim())
+              .firstWhere((id) => id.isNotEmpty, orElse: () => '');
+      if (receipt.sourceTaskId != outcome.sourceTaskId ||
+          receipt.learningEvidenceId != outcome.repairOccurrenceId ||
+          receipt.reviewState != act0ReviewResolutionStateResolvedV1 ||
+          receipt.resolutionReason !=
+              act0ReviewResolutionReasonRepairSucceededV1 ||
+          receipt.resolvedAtOrder != outcome.sequence ||
+          expectedFamily.isEmpty ||
+          receipt.conceptFamilyId.trim() != expectedFamily)
+        continue;
+      final resolution = act0RepairGoalResolutionForIntentV1(
+        intent,
+        learningEvidence: learningEvidenceHistory,
+        currentFingerprintForIdentity: currentFingerprintForIdentity!,
+      );
+      final allowsApplicationClaim = resolution.canClaimIndependentApplication;
+      final bankedAtOrder = receipt.resolvedAtOrder!;
       final conceptFamilyId = receipt.conceptFamilyId.trim().isNotEmpty
           ? receipt.conceptFamilyId.trim()
           : outcome.repairFocusKey.trim();
@@ -80,10 +126,14 @@ class Act0FixProofProjectionV1 {
         proofState: act0FixProofStateRepairCompletedV1,
         bankedAtOrder: bankedAtOrder,
         messageKey: _messageRepairCompletedV1,
-        currentVerificationState: transferMeasurement?.isRecentEvidence == true
+        currentVerificationState:
+            allowsApplicationClaim &&
+                transferMeasurement?.isRecentEvidence == true
             ? transferMeasurement!.signalForConcept(conceptFamilyId).verdict
             : '',
-        currentVerificationLine: transferMeasurement?.isRecentEvidence == true
+        currentVerificationLine:
+            allowsApplicationClaim &&
+                transferMeasurement?.isRecentEvidence == true
             ? transferMeasurement!
                   .signalForConcept(conceptFamilyId)
                   .confirmationLine
@@ -91,7 +141,9 @@ class Act0FixProofProjectionV1 {
       );
       // Real historical repair remains banked; recent responses are separate,
       // never a retroactive certificate of past reinforcement/improvement.
-      final proof = transferMeasurement?.isRecentEvidence == true
+      final proof = !allowsApplicationClaim
+          ? base.withoutIndependentApplicationClaimV1()
+          : transferMeasurement?.isRecentEvidence == true
           ? base
           : _reinforcedIfEligible(base, transferMeasurement);
       final existing = byQueueItemId[queueItemId];
@@ -190,6 +242,23 @@ class Act0FixProofItemV1 {
 
   bool get isReinforced =>
       proofState == act0FixProofStateReinforcedByLaterEvidenceV1;
+
+  // The relation contract, not a familiar correct answer, owns this cap.
+  Act0FixProofItemV1
+  withoutIndependentApplicationClaimV1() => Act0FixProofItemV1(
+    fixProofId: fixProofId,
+    queueItemId: queueItemId,
+    conceptFamilyId: conceptFamilyId,
+    repairFocusId: repairFocusId,
+    sourceTaskId: sourceTaskId,
+    repairSessionId: repairSessionId,
+    repairOutcomeRef: repairOutcomeRef,
+    proofState: isReinforced ? act0FixProofStateRepairCompletedV1 : proofState,
+    bankedAtOrder: bankedAtOrder,
+    messageKey: _messageRepairCompletedV1,
+    currentVerificationLine:
+        'A separate application check on this learning goal is still needed.',
+  );
 
   String get copyLine {
     if (isReinforced) {
