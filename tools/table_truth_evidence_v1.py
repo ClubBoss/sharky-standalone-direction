@@ -666,6 +666,42 @@ PKG1_LEDGER_IDENTITIES = {9844: {'task_id': 'hand_discipline_buckets_borderline'
         'invariant': 'D5.deck_unique'}}
 
 
+# Exact task-local W01 Button and postflop option explanations.
+W01_POSITION_REVISION = "W01_POSITION_OPTION_FEEDBACK"
+W01_POSITION_PRODUCER_REVISION = {'source_revision': 'e1171c9d2c0142d7c281fab335d3c035cb210145',
+ 'state_sha256': 'a9e29e8c43cd7f446d24e94979698c07e4fe8533f77d8bb99973838092f46baa',
+ 'factory_sha256': 'c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b'}
+W01_POSITION_CAPTURE_SHA256 = {'choice-identity.json': 'c8d63188ded16990ba2135ccd7952b9e98d3f7b7ae338891bab9a28705999564',
+ 'learning-contract.json': 'fb5f931f806fe80596b78f288b31b9f9241be5ad2e95619a49aba2381bef8b12',
+ 'ledger.json': 'f9a44a4c528ca0387658fd14a6d934f51e3105af457f572938c9a1e883023821',
+ 'runtime-inputs.json': 'a8963ef7dc429e4acbca06b695d8621388d8e7b664e6a725e4742a647db6dac5',
+ 'source-fingerprints.json': '468e7edb9f3031263e2055b3946425e7d6bf1a87580272ece75d5efc80c26198'}
+W01_POSITION_CAPTURE_LEAVES = {'runtime-inputs.json': [(['positions_theory', 'options', 0, 'reason'],
+                          'UTG acts before HJ, CO, and BTN in preflop order.',
+                          'UTG is an early position, not the dealer button.'),
+                         (['positions_theory', 'options', 1, 'reason'],
+                          'BB acts after BTN preflop, so it is not next here.',
+                          'BB is the big blind, not the dealer button.'),
+                         (['positions_theory', 'options', 2, 'reason'],
+                          'After UTG, HJ, and CO, BTN acts before SB and BB.',
+                          'BTN marks the dealer button in this six-seat table.'),
+                         (['positions_review', 'options', 0, 'reason'],
+                          'UTG acts before HJ, CO, and BTN in preflop order.',
+                          'UTG acts before BTN after the flop in this six-seat hand.'),
+                         (['positions_review', 'options', 1, 'reason'],
+                          'BB acts after BTN preflop, so it is not next here.',
+                          'BB acts before BTN after the flop in this six-seat hand.'),
+                         (['positions_review', 'options', 2, 'reason'],
+                          'After UTG, HJ, and CO, BTN acts before SB and BB.',
+                          'BTN acts last after the flop in this six-seat hand.')],
+ 'source-fingerprints.json': [(['positions_theory', 'fingerprint'],
+                               '9d7cbd60701adfde1d728fd95293d9fccf2100297eed1e65e5417cd9455a0c1a',
+                               '491e226a7f75e24333de616beddb342b381ddb257e17f8aa46dd7d424095a11e'),
+                              (['positions_review', 'fingerprint'],
+                               '0b87ad231ce697c4aa3a27cf3ca2536d9bfc6173696aa058a908188b266d748f',
+                               '5f82d32f64c23407a3685a0870d1c062ed6fcb0cc0ac4b79236840c268547877')]}
+
+
 def _digest(value):
     encoded = json.dumps(value, separators=(',', ':'), ensure_ascii=False).encode()
     return hashlib.sha256(encoded).hexdigest()
@@ -695,6 +731,9 @@ def producer_revision(cohort, role):
     pkg1_bytes = {key: PKG1_PRODUCER_REVISION[key] for key in source_bytes}
     if role == 'candidate' and source_bytes == pkg1_bytes:
         return PKG1_REVISION
+    position_bytes = {key: W01_POSITION_PRODUCER_REVISION[key] for key in source_bytes}
+    if role == 'candidate' and source_bytes == position_bytes:
+        return W01_POSITION_REVISION
     raise SystemExit('Producing source receipt does not match admitted bytes')
 
 
@@ -788,10 +827,30 @@ def pkg1_w01_capture(name, value):
     return result
 
 
+def w01_position_pkg1_capture(name, value):
+    """Reverse only six option reasons and two fingerprints on a copy."""
+    result = copy.deepcopy(value)
+    try:
+        for path, prior, current in W01_POSITION_CAPTURE_LEAVES.get(name, []):
+            node = result
+            for key in path[:-1]:
+                node = node[key]
+            if node[path[-1]] != current:
+                raise ValueError('literal current leaf')
+            node[path[-1]] = copy.deepcopy(prior)
+        if _digest(result) != PKG1_CAPTURE_SHA256[name]:
+            raise ValueError('whole reconstructed PKG1 capture')
+    except (KeyError, TypeError, IndexError, ValueError) as error:
+        raise SystemExit(f'W01 position exact revision mismatch: {name}') from error
+    return result
+
+
 def reviewed_origin_capture(name, value, revision):
-    if revision == PKG1_REVISION:
+    if revision == W01_POSITION_REVISION:
+        value = w01_position_pkg1_capture(name, value)
+    if revision in (PKG1_REVISION, W01_POSITION_REVISION):
         value = pkg1_w01_capture(name, value)
-    if revision in (W01_REVISION, PKG1_REVISION):
+    if revision in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION):
         value = w01_origin_capture(name, value)
     return main01_origin_capture(name, value)
 
@@ -808,11 +867,13 @@ def validate_capture_artifacts(source, revision, names=None):
     for name, expected in names.items():
         raw = (pathlib.Path(source) / name).read_bytes()
         observed = hashlib.sha256(raw).hexdigest()
-        if revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION):
+        if revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION):
             captured = json.loads(raw)
             compact = json.dumps(captured, separators=(',', ':'), ensure_ascii=False).encode()
             if raw != compact:
                 raise SystemExit(f'Captured JSON byte encoding drift: {name}')
+            if revision == W01_POSITION_REVISION and observed != W01_POSITION_CAPTURE_SHA256.get(name):
+                raise SystemExit(f'W01 position current capture artifact drift: {name}')
             if revision == PKG1_REVISION and observed != PKG1_CAPTURE_SHA256.get(name):
                 raise SystemExit(f'PKG1 current capture artifact drift: {name}')
             if revision == W01_REVISION and observed != W01_CAPTURE_SHA256.get(name):
@@ -862,7 +923,7 @@ def validate_typed_cohort(root):
     if set(base) != historical_ids or set(final) != historical_ids | NEW_AUTHORING_IDS:
         raise SystemExit('Learning contract cohort key set is inconsistent')
     comparison_contract = final
-    if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION):
+    if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION):
         validate_capture_artifacts(root / 'candidate', candidate_revision)
         comparison_contract = reviewed_origin_capture(
             'learning-contract.json', final, candidate_revision)
@@ -889,7 +950,7 @@ def validate_typed_cohort(root):
             raise SystemExit(f'{label} cohort key set is inconsistent')
     comparison_choices = (
         reviewed_origin_capture('choice-identity.json', after_choices, candidate_revision)
-        if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION) else after_choices
+        if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION) else after_choices
     )
     if any(before_choices[key] != comparison_choices[key] for key in historical_ids):
         raise SystemExit('Historical choice identity changed')
@@ -1009,27 +1070,30 @@ def compare(root):
     result = {'ledgers': ledgers, 'runtime_changed_task_count': len(delta), 'runtime_changed_task_ids': sorted(delta),
               'historical_learning_contract_identical': identity['historical_learning_contract_identical'],
               'historical_choice_identity_identical': identity['historical_choice_identity_identical'],
-              'historical_contracts_identical_except_reviewed_setup_qualities': identity['candidate_revision'] not in (W01_REVISION, PKG1_REVISION),
+              'historical_contracts_identical_except_reviewed_setup_qualities': identity['candidate_revision'] not in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION),
               'historical_contracts_identical_except_exact_reviewed_revisions': True,
               'reviewed_theory_changes': ([
                   {'task_id': task_id, 'changed_fields': ['options', 'source_fingerprint', 'feedback_phase_choice_ids'],
                    'historical_record_policy': 'retain original fingerprint, grade, assistance, XP and repair lineage',
                    'current_source_policy': 'reject old fingerprint'}
                   for task_id in W01_CAPTURE_OPTIONS['learning-contract.json']
-              ] if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION) else []),
+              ] if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION) else []),
               'candidate_producer_revision': identity['candidate_revision'],
               'producer_receipt': identity['final_cohort']['producer_receipt'],
               'reviewed_hand_seat_changes': ({name: len(leaves) for name, leaves in PKG1_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] == PKG1_REVISION else {}),
-              'reviewed_producer_source_revision': (PKG1_PRODUCER_REVISION['source_revision']
+                  if identity['candidate_revision'] in (PKG1_REVISION, W01_POSITION_REVISION) else {}),
+              'reviewed_position_feedback_changes': ({name: len(rows) for name, rows in W01_POSITION_CAPTURE_LEAVES.items()}
+                  if identity['candidate_revision'] == W01_POSITION_REVISION else {}),
+              'reviewed_producer_source_revision': (W01_POSITION_PRODUCER_REVISION['source_revision']
+                  if identity['candidate_revision'] == W01_POSITION_REVISION else PKG1_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == PKG1_REVISION else W01_PRODUCER_REVISION['source_revision']
-                  if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION) else
+                  if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION) else
                   MAIN01_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == 'MAIN01_REVIEWED_SETUP_QUALITIES' else None),
               'reviewed_quality_changes': ([
                   {'task_id': MAIN01_TASK_ID, 'choice_id': choice, 'before': prior, 'after': current}
                   for choice, (prior, current) in MAIN01_QUALITY_REVISION.items()
-              ] if identity['candidate_revision'] in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION) else []),
+              ] if identity['candidate_revision'] in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION) else []),
               'historical_cohort_count': len(historical_ids),
               'new_authoring': new_authoring,
               'canonical_source_fingerprints': fingerprint_counts, 'native': 'PENDING'}

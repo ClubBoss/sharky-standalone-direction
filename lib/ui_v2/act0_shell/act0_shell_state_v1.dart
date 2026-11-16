@@ -2332,7 +2332,40 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         phase: Act0LessonPhaseV1.theory,
         runner: _positionsRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
-            _positionsRunner.options,
+            const <Act0RunnerOptionV1>[
+              Act0RunnerOptionV1(
+                id: 'top',
+                label: 'UTG',
+                seatId: 'utg',
+                isCorrect: false,
+                preferredLabel: 'BTN (your seat)',
+                quality: Act0FeedbackQualityV1.wrong,
+                feedbackTitle: 'Read the dealer marker.',
+                feedbackReason:
+                    'UTG is an early position, not the dealer button.',
+              ),
+              Act0RunnerOptionV1(
+                id: 'bottom',
+                label: 'BTN (your seat)',
+                seatId: 'btn',
+                isCorrect: true,
+                preferredLabel: 'BTN (your seat)',
+                quality: Act0FeedbackQualityV1.correct,
+                feedbackTitle: 'Button marker identified.',
+                feedbackReason:
+                    'BTN marks the dealer button in this six-seat table.',
+              ),
+              Act0RunnerOptionV1(
+                id: 'random',
+                label: 'BB',
+                seatId: 'bb',
+                isCorrect: false,
+                preferredLabel: 'BTN (your seat)',
+                quality: Act0FeedbackQualityV1.wrong,
+                feedbackTitle: 'Read the dealer marker.',
+                feedbackReason: 'BB is the big blind, not the dealer button.',
+              ),
+            ],
             correctOptionId: 'bottom',
             correctIndex: 2,
           ),
@@ -2407,7 +2440,41 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         phase: Act0LessonPhaseV1.review,
         runner: _positionsRecapRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
-            _positionsRecapRunner.options,
+            const <Act0RunnerOptionV1>[
+              Act0RunnerOptionV1(
+                id: 'top',
+                label: 'UTG',
+                seatId: 'utg',
+                isCorrect: false,
+                preferredLabel: 'BTN (your seat)',
+                quality: Act0FeedbackQualityV1.wrong,
+                feedbackTitle: 'Read the postflop order.',
+                feedbackReason:
+                    'UTG acts before BTN after the flop in this six-seat hand.',
+              ),
+              Act0RunnerOptionV1(
+                id: 'bottom',
+                label: 'BTN (your seat)',
+                seatId: 'btn',
+                isCorrect: true,
+                preferredLabel: 'BTN (your seat)',
+                quality: Act0FeedbackQualityV1.correct,
+                feedbackTitle: 'Postflop position read.',
+                feedbackReason:
+                    'BTN acts last after the flop in this six-seat hand.',
+              ),
+              Act0RunnerOptionV1(
+                id: 'random',
+                label: 'BB',
+                seatId: 'bb',
+                isCorrect: false,
+                preferredLabel: 'BTN (your seat)',
+                quality: Act0FeedbackQualityV1.wrong,
+                feedbackTitle: 'Read the postflop order.',
+                feedbackReason:
+                    'BB acts before BTN after the flop in this six-seat hand.',
+              ),
+            ],
             correctOptionId: 'bottom',
             correctIndex: 2,
           ),
