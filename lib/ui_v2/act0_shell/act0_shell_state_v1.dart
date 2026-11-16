@@ -14424,7 +14424,6 @@ final _world3PositionRecapRunner = _world3LateOpenRunner.copyWith(
   lessonId: 'w3_position_recap',
   caption: 'Lesson learned: position changes preflop comfort.',
   hint: 'Late helps. Early demands stronger buckets and cleaner frames.',
-  question: 'What should you check after the bucket?',
   feedbackTitle: 'Position-preflop takeaway.',
   feedbackReason:
       'Preflop is not one-hand-one-answer. Position changes how confidently the hand can continue in first-in and facing-open frames.',

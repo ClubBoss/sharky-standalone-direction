@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -600,6 +603,201 @@ void main() {
       expect(scrollState.position.pixels, greaterThan(0));
       expect(tester.takeException(), isNull);
     });
+
+    for (final control in const [
+      (
+        lesson: 'position_apply',
+        task: 'position_apply_recap',
+        oldFingerprint:
+            '1f82f0f3f797b73969cc3d9e6df57e43ee220e5df8d9217aac879f00429c045b',
+      ),
+      (
+        lesson: 'position_checkpoint',
+        task: 'position_checkpoint_position_checkpoint_review',
+        oldFingerprint:
+            '51efd5c94ce391121d3dc6c0a2fc3c2211da8d32c470ef20be484bafca8f7a5d',
+      ),
+    ]) {
+      test(
+        '${control.task} aligns its action question and retires only old proof',
+        () {
+          final task = taskFor(
+            worldId: 'world_3',
+            lessonId: control.lesson,
+            taskId: control.task,
+          );
+          final parent = taskFor(
+            worldId: 'world_3',
+            lessonId: 'position_apply',
+            taskId: 'position_apply_late_open',
+          );
+          expect(task.phase, Act0LessonPhaseV1.review);
+          expect(task.entryPhase, Act0LessonPhaseV1.drill);
+          expect(task.stepKind, Act0LessonStepKindV1.proveIt);
+          expect(task.resolvedTaskFamily, Act0TaskFamilyV1.transfer);
+          expect(task.runner.question, parent.runner.question);
+          expect(task.runner.question, 'What is the simple action?');
+          expect(task.runner.teachingSteps.single.title, 'Position checklist.');
+          final historicalTask = Act0LessonTaskV1(
+            taskId: task.taskId,
+            title: task.title,
+            phase: task.phase,
+            runner: task.runner.copyWith(
+              question: 'What should you check after the bucket?',
+            ),
+            rewardXp: task.rewardXp,
+            stepKind: task.stepKind,
+            taskFamily: task.taskFamily,
+            tablePresentation: task.tablePresentation,
+            summary: task.summary,
+            lockedSummary: task.lockedSummary,
+          );
+          String fingerprint(Act0LessonTaskV1 value) =>
+              act0AuthoredSourceFingerprintV1(
+                worldId: 'world_3',
+                lessonId: control.lesson,
+                task: value,
+              )!;
+          expect(fingerprint(historicalTask), control.oldFingerprint);
+          expect(fingerprint(task), isNot(control.oldFingerprint));
+          final raise = task.runner.options.singleWhere(
+            (option) => option.id == 'raise',
+          );
+          final receipt = act0FirstValueSkillReceiptForRunnerV1(
+            runner: task.runner,
+            option: raise,
+            taskFamily: task.resolvedTaskFamily,
+          )!;
+          final oldReceipt = act0FirstValueSkillReceiptForRunnerV1(
+            runner: historicalTask.runner,
+            option: raise,
+            taskFamily: historicalTask.resolvedTaskFamily,
+          )!;
+          expect(receipt.skillAtomId, oldReceipt.skillAtomId);
+          expect(receipt.sourceSignalId, oldReceipt.sourceSignalId);
+          Act0LearningEvidenceRecordV1 record(String source) =>
+              Act0LearningEvidenceRecordV1(
+                recordId: 'old-${task.taskId}',
+                createdOrder: 1,
+                worldId: 'world_3',
+                lessonId: control.lesson,
+                taskId: task.taskId,
+                sourceTaskId: task.taskId,
+                choiceId: 'raise',
+                expectedChoiceId: 'raise',
+                isCorrect: true,
+                errorType: 'none',
+                conceptFamilyId: receipt.sourceSignalId,
+                repairFocusId: receipt.sourceSignalId,
+                skillAtomId: receipt.skillAtomId,
+                decisionTimeBucket: '3_to_10s',
+                resultKind: 'correct',
+                assistanceKind: Act0DecisionAssistanceV1.quickHint,
+                authoredSourceFingerprint: source,
+                sessionId: 'historical-session',
+                recordedAtUtc: DateTime.utc(2026, 1, 1),
+              );
+          final oldRecord = record(control.oldFingerprint);
+          expect(
+            act0CurrentAuthoredSourceProofForTaskV1(
+              record: oldRecord,
+              worldId: 'world_3',
+              lessonId: control.lesson,
+              task: historicalTask,
+            ),
+            isNotNull,
+          );
+          expect(act0CurrentAuthoredSourceProofV1(oldRecord), isNull);
+          final newRecord = record(fingerprint(task));
+          expect(act0CurrentAuthoredSourceProofV1(newRecord), isNotNull);
+          expect(newRecord.isIndependentCorrect, isFalse);
+          final history = Act0LearningEvidenceHistoryV1(
+            records: [oldRecord],
+            sourceAnchors: [oldRecord],
+          );
+          final saved = history.toStorageString();
+          final restored = Act0LearningEvidenceHistoryV1.tryParse(
+            jsonDecode(saved),
+          )!;
+          expect(
+            act0CurrentAuthoredSourceProofV1(restored.records.single),
+            isNull,
+          );
+          expect(restored.records.single.toPayload(), oldRecord.toPayload());
+          expect(restored.toStorageString(), saved);
+        },
+      );
+
+      for (final choiceId in const ['raise', 'call']) {
+        testWidgets('${control.task} asks for an action and grades $choiceId', (
+          tester,
+        ) async {
+          final task = taskFor(
+            worldId: 'world_3',
+            lessonId: control.lesson,
+            taskId: control.task,
+          );
+          tester.view.physicalSize = const Size(393, 852);
+          tester.view.devicePixelRatio = 1;
+          addTearDown(tester.view.resetPhysicalSize);
+          addTearDown(tester.view.resetDevicePixelRatio);
+          var runner = task.runner.copyWith(
+            phase: task.entryPhase,
+            teachingStepIndex: task.runner.teachingSteps.length,
+          );
+          Act0CompletedDecisionV1? completed;
+          await tester.pumpWidget(
+            MaterialApp(
+              locale: const Locale('en'),
+              home: Scaffold(
+                body: StatefulBuilder(
+                  builder: (context, update) => Act0LessonRunnerShellV1(
+                    runner: runner,
+                    worldNumber: 3,
+                    selectedWorldId: 'world_3',
+                    selectedLessonId: control.lesson,
+                    selectedTaskId: task.taskId,
+                    selectedTaskTitle: task.title,
+                    selectedTaskFamily: task.resolvedTaskFamily,
+                    compositionFamily: task.resolvedCompositionFamily,
+                    tablePresentation: task.tablePresentation,
+                    onBack: () {},
+                    onContinueTheory: () {},
+                    onChooseOption: (option) => update(() {
+                      runner = runner.copyWith(
+                        selectedOptionId: option.id,
+                        phase: Act0LessonPhaseV1.review,
+                      );
+                    }),
+                    onChooseSeat: (_) {},
+                    onCompletedDecision: (value) => completed = value,
+                    onContinueReview: () {},
+                  ),
+                ),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+          final prompt = find.byKey(const Key('act0_integrated_scene_prompt'));
+          expect(
+            tester.widget<Text>(prompt).data,
+            'What is the simple action?',
+          );
+          final choice = find.byKey(Key('act0_shell_option_$choiceId'));
+          expect(choice, findsOneWidget);
+          await tester.ensureVisible(choice);
+          await tester.tap(choice);
+          await tester.pumpAndSettle();
+          expect(runner.selectedOptionId, choiceId);
+          expect(completed, isNotNull);
+          expect(completed!.selectedId, choiceId);
+          expect(completed!.expectedId, 'raise');
+          expect(completed!.isCorrect, choiceId == 'raise');
+          expect(completed!.taskId, task.taskId);
+          expect(tester.takeException(), isNull);
+        });
+      }
+    }
 
     test(
       'Button-last teaching names the postflop street in both languages',
