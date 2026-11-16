@@ -7,6 +7,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+// Historical 16 candidates; active seat-only inventory now contains 15.
+// The W24 context recap is guarded in act0_w24_context_recap_v1_test.dart.
 // Separate test-only family investigation; no authorial or renderer changes.
 // A named-seat question is a legitimate prompt, not itself a leakage finding.
 // Hero identity styling is also legitimate; targetFocus on the correct control
@@ -28,7 +30,6 @@ const _cases = {
       'repair-position-inference',
   'early_vs_late_w2_late_position': 'relative-position-inference',
   'early_vs_late_w2_early_position': 'relative-position-inference',
-  'same_hand_different_seat_w3_same_hand_recap': 'transfer-recap',
 };
 
 void main() {

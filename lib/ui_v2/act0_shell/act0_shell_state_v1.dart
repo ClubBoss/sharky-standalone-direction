@@ -14549,6 +14549,9 @@ final _world3SameHandRecapRunner = _world3SameHandIntroRunner.copyWith(
   question: 'What prevents one-hand-one-answer thinking?',
   // Current context-answer revision; old seat choices stay historical.
   feedbackSignalId: 'position_action_order',
+  table: _world3SameHandIntroRunner.table.copyWith(
+    selectableSeatIds: const <String>[],
+  ),
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'one_answer',

@@ -11,7 +11,9 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
-// Bounded follow-up inventory: original 16 candidates, CO393 remains held.
+// Bounded follow-up: 16 historical candidates, 15 active seat-only cases.
+// W24 now has context choices; its no-seat-action contract lives separately.
+// CO393 remains held.
 // A named-seat question is a legitimate prompt, not itself a leakage finding.
 // Hero identity styling is also legitimate; targetFocus on the correct control
 // is a different, answer-exclusive signal. Compare same-role controls separately.
@@ -32,7 +34,6 @@ const _cases = {
       'repair-position-inference',
   'early_vs_late_w2_late_position': 'relative-position-inference',
   'early_vs_late_w2_early_position': 'relative-position-inference',
-  'same_hand_different_seat_w3_same_hand_recap': 'transfer-recap',
 };
 
 class _SelectedPlateBytes extends CachingAssetBundle {

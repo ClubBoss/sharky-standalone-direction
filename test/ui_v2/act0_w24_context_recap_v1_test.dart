@@ -126,12 +126,36 @@ void main() {
         task.runner.options.singleWhere((option) => option.isCorrect).id,
         'framework',
       );
+      expect(task.runner.table.selectableSeatIds, isEmpty);
       final normalized = normalizeAct0SeatTapRunnerV1(task.runner);
       expect(normalized.options, hasLength(2));
+      expect(normalized.table.selectableSeatIds, isEmpty);
       expect(
         normalized.options.every((option) => option.seatId == null),
         isTrue,
       );
+      // The recap override must not clear the ancestor or real seat tasks.
+      const seatControls = <String, List<String>>{
+        'same_hand_different_seat_w3_same_hand_intro': <String>['btn', 'utg'],
+        'button_advantage_find_button': <String>['btn', 'co'],
+      };
+      for (final entry in seatControls.entries) {
+        final control = Act0ShellStateV1.sample.worlds
+            .expand((world) => world.lessons)
+            .expand((lesson) => lesson.taskList)
+            .singleWhere((task) => task.taskId == entry.key);
+        expect(
+          control.runner.table.selectableSeatIds,
+          entry.value,
+          reason: 'Keep the source-owned seat controls: ${entry.key}',
+        );
+        final normalizedControl = normalizeAct0SeatTapRunnerV1(control.runner);
+        expect(normalizedControl.table.selectableSeatIds, hasLength(6));
+        expect(
+          normalizedControl.table.selectableSeatIds,
+          containsAll(entry.value),
+        );
+      }
       for (final option in normalized.options) {
         final receipt = act0FirstValueSkillReceiptForRunnerV1(
           runner: normalized,
@@ -413,6 +437,8 @@ void main() {
   testWidgets(
     'SIMULATED normal AppRoot context repair, familiar replay and saved remount',
     (tester) async {
+      final semantics = tester.ensureSemantics();
+      addTearDown(semantics.dispose);
       tester.view.physicalSize = const Size(393, 852);
       tester.view.devicePixelRatio = 1;
       tester.view.padding = const FakeViewPadding(top: 59, bottom: 34);
@@ -497,14 +523,6 @@ void main() {
       // required durable boundary below is the actual completed decision.
       await _w24Ready(tester);
       _w24ExpectContextButtons(tester);
-      final decorativeSeat = find.byKey(const Key('act0_shell_seat_tap_btn'));
-      if (decorativeSeat.hitTestable().evaluate().isNotEmpty) {
-        await tester.tap(decorativeSeat);
-        await tester.pumpAndSettle();
-        expect(_w24Runner(tester).runner.selectedOptionId, isNull);
-        expect(_w24Runner(tester).runner.phase, Act0LessonPhaseV1.drill);
-        debugPrint('W24_DECORATIVE_SEAT_IGNORED');
-      }
       final currentFingerprint = act0AuthoredSourceFingerprintV1(
         worldId: _world,
         lessonId: _lesson,
@@ -669,10 +687,82 @@ void main() {
     },
   );
 
+  testWidgets('SIMULATED stale BTN/UTG flags expose forbidden seat actions', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    addTearDown(semantics.dispose);
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final task = _task();
+    final stale = normalizeAct0SeatTapRunnerV1(
+      task.runner.copyWith(
+        phase: task.entryPhase,
+        teachingStepIndex: task.runner.teachingSteps.length,
+        table: task.runner.table.copyWith(
+          selectableSeatIds: const <String>['btn', 'utg'],
+        ),
+      ),
+    );
+    final completed = <Act0CompletedDecisionV1>[];
+    await tester.pumpWidget(
+      MaterialApp(
+        locale: const Locale('en'),
+        home: Scaffold(
+          body: Act0LessonRunnerShellV1(
+            runner: stale,
+            selectedWorldId: _world,
+            selectedLessonId: _lesson,
+            selectedTaskId: _taskId,
+            selectedTaskTitle: task.title,
+            selectedTaskFamily: task.resolvedTaskFamily,
+            compositionFamily: task.resolvedCompositionFamily,
+            tablePresentation: task.tablePresentation,
+            worldNumber: 3,
+            onBack: () {},
+            onContinueTheory: () {},
+            onChooseOption: (_) {},
+            onChooseSeat: (_) {},
+            onContinueReview: () {},
+            onCompletedDecision: completed.add,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final exposed = <String>{};
+    for (final widget in tester.widgetList<Widget>(
+      find.byWidgetPredicate(
+        (widget) => widget.runtimeType.toString() == '_SeatNodeV1',
+      ),
+    )) {
+      final dynamic node = widget;
+      if (node.selectable as bool) {
+        exposed.add(node.seat.seatId as String);
+        expect(node.onTap, isNotNull);
+      }
+    }
+    // These are exactly the source/rendered/AX conditions rejected by the
+    // valid context contract above; do not silently ignore the stale actions.
+    expect(stale.table.selectableSeatIds, <String>['btn', 'utg']);
+    expect(exposed, <String>{'btn', 'utg'});
+    for (final id in <String>['btn', 'utg']) {
+      expect(find.byKey(Key('act0_shell_seat_tap_$id')), findsOneWidget);
+      final seat = stale.table.seats.singleWhere((seat) => seat.seatId == id);
+      expect(find.bySemanticsLabel('Select ${seat.seatLabel}'), findsOneWidget);
+    }
+    expect(completed, isEmpty);
+    expect(tester.takeException(), isNull);
+  });
+
   for (final selected in <String>['framework', 'one_answer']) {
     testWidgets(
       'SIMULATED context $selected uses real option controls and grade',
       (tester) async {
+        final semantics = tester.ensureSemantics();
+        addTearDown(semantics.dispose);
         tester.view.physicalSize = const Size(393, 852);
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.resetPhysicalSize);
@@ -722,12 +812,7 @@ void main() {
         );
         await tester.pumpAndSettle();
         await tester.pump(const Duration(seconds: 3));
-        for (final id in <String>['framework', 'one_answer']) {
-          expect(
-            find.byKey(Key('act0_shell_option_$id')).hitTestable(),
-            findsOneWidget,
-          );
-        }
+        _w24ExpectContextButtons(tester);
         expect(completed, isEmpty);
         expect(find.text('Correct answer recorded'), findsNothing);
         await tester.tap(find.byKey(Key('act0_shell_option_$selected')));
@@ -866,7 +951,40 @@ void _w24ExpectContextButtons(WidgetTester tester) {
   }
   expect(find.byKey(const Key('act0_shell_option_btn')), findsNothing);
   expect(find.byKey(const Key('act0_shell_option_utg')), findsNothing);
-  // Reference-table seats may remain decorative; only context options grade.
+  expect(runner.runner.table.selectableSeatIds, isEmpty);
+  expect(
+    normalizeAct0SeatTapRunnerV1(runner.runner).table.selectableSeatIds,
+    isEmpty,
+  );
+  final nodes = tester
+      .widgetList<Widget>(
+        find.byWidgetPredicate(
+          (widget) => widget.runtimeType.toString() == '_SeatNodeV1',
+        ),
+      )
+      .toList();
+  expect(
+    nodes,
+    isNotEmpty,
+    reason: 'Inspect real rendered seats, not a vacuous list.',
+  );
+  final renderedIds = <String>{};
+  for (final widget in nodes) {
+    final dynamic node = widget;
+    renderedIds.add(node.seat.seatId as String);
+    expect(node.selectable as bool, isFalse);
+    expect(node.onTap, isNull);
+  }
+  expect(renderedIds, containsAll(<String>['btn', 'utg']));
+  for (final seat in runner.runner.table.seats) {
+    expect(find.byKey(Key('act0_shell_seat_tap_${seat.seatId}')), findsNothing);
+    expect(
+      find.bySemanticsLabel('Select ${seat.seatLabel}'),
+      findsNothing,
+      reason: 'A decorative seat must not advertise a selection action.',
+    );
+  }
+  debugPrint('W24_NO_SEAT_ACTIONS ${runner.selectedTaskId}');
 }
 
 Future<Map<String, dynamic>> _w24Saved(
