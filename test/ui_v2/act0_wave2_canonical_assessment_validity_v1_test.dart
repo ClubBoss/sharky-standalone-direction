@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -32,6 +35,150 @@ void main() {
 
     String assessedPromptText(Act0LessonTaskV1 task) {
       return '${task.runner.caption}\n${task.runner.hint}'.toLowerCase();
+    }
+
+    for (final control in const [
+      (
+        lesson: 'button_advantage',
+        task: 'button_advantage_button_recap',
+        xp: 12,
+      ),
+      (
+        lesson: 'early_vs_late',
+        task: 'early_vs_late_w2_position_recap',
+        xp: 10,
+      ),
+    ]) {
+      test('${control.task} asks and explains the same postflop order', () {
+        final task = taskFor(
+          worldId: 'world_3',
+          lessonId: control.lesson,
+          taskId: control.task,
+        );
+        expect(task.phase, Act0LessonPhaseV1.review);
+        expect(task.entryPhase, Act0LessonPhaseV1.drill);
+        expect(
+          task.runner.question,
+          'Which seat acts last after the flop here?',
+        );
+        expect(task.runner.hint, 'Compare the live-seat order after the flop.');
+        expect(task.runner.options.map((option) => option.id), <String>[
+          'top',
+          'bottom',
+          'random',
+        ]);
+        expect(task.runner.options.map((option) => option.seatId), <String>[
+          'utg',
+          'btn',
+          'bb',
+        ]);
+        expect(task.runner.options.indexWhere((option) => option.isCorrect), 1);
+        expect(task.rewardXp, control.xp);
+        const reasons = {
+          'top': 'UTG acts before BTN after the flop on this six-seat table.',
+          'bottom': 'BTN acts last after the flop on this six-seat table.',
+          'random': 'BB acts before BTN after the flop on this six-seat table.',
+        };
+        for (final option in task.runner.options) {
+          expect(option.feedbackReason, reasons[option.id]);
+        }
+      });
+
+      testWidgets('${control.task} shows postflop feedback after BB tap', (
+        tester,
+      ) async {
+        final task = taskFor(
+          worldId: 'world_3',
+          lessonId: control.lesson,
+          taskId: control.task,
+        );
+        tester.view.physicalSize = const Size(393, 852);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        var runner = task.runner.copyWith(
+          phase: task.entryPhase,
+          teachingStepIndex: 0,
+        );
+        String? chosen;
+        await tester.pumpWidget(
+          MaterialApp(
+            locale: const Locale('en'),
+            home: Scaffold(
+              body: StatefulBuilder(
+                builder: (context, update) {
+                  void choose(Act0RunnerOptionV1 option) => update(() {
+                    chosen = option.id;
+                    runner = runner.copyWith(
+                      selectedOptionId: option.id,
+                      phase: Act0LessonPhaseV1.review,
+                    );
+                  });
+                  return Act0LessonRunnerShellV1(
+                    runner: runner,
+                    worldNumber: 3,
+                    selectedWorldId: 'world_3',
+                    selectedLessonId: control.lesson,
+                    selectedTaskId: task.taskId,
+                    selectedTaskTitle: task.title,
+                    selectedTaskFamily: task.resolvedTaskFamily,
+                    compositionFamily: task.resolvedCompositionFamily,
+                    tablePresentation: task.tablePresentation,
+                    onBack: () {},
+                    onContinueTheory: () => update(() {
+                      runner = runner.copyWith(
+                        teachingStepIndex: runner.teachingStepIndex + 1,
+                      );
+                    }),
+                    onChooseOption: choose,
+                    onChooseSeat: (seat) => choose(
+                      runner.options.singleWhere(
+                        (option) => option.seatId == seat,
+                      ),
+                    ),
+                    onContinueReview: () {},
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        // Follow each real task's teaching rail and seat control. This is a
+        // widget consumer witness, not native navigation or learner evidence.
+        for (
+          var step = 0;
+          step < 12 && runner.activeTeachingStep != null;
+          step++
+        ) {
+          await tester.pump(const Duration(milliseconds: 900));
+          final next = find.byKey(const Key('act0_shell_continue_cta'));
+          expect(next, findsOneWidget);
+          await tester.ensureVisible(next);
+          await tester.tap(next);
+          await tester.pumpAndSettle();
+        }
+        expect(runner.activeTeachingStep, isNull);
+        final bb = find.byKey(const Key('act0_shell_seat_tap_bb'));
+        expect(bb, findsOneWidget);
+        await tester.ensureVisible(bb);
+        await tester.tap(bb);
+        await tester.pumpAndSettle();
+        expect(chosen, 'random');
+        final text = tester
+            .widgetList<Text>(find.byType(Text))
+            .map((text) => text.data ?? text.textSpan?.toPlainText() ?? '')
+            .where((text) => text.isNotEmpty)
+            .toList();
+        print('W3_POSITION_RENDER_${control.task}=${jsonEncode(text)}');
+        expect(
+          find.text(
+            'BB acts before BTN after the flop on this six-seat table.',
+          ),
+          findsOneWidget,
+        );
+        expect(tester.takeException(), isNull);
+      });
     }
 
     test('confirmed leakage is removed from assessed runner prompts', () {
