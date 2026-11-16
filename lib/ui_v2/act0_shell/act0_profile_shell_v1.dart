@@ -1,3 +1,5 @@
+import 'act0_learning_record_card_v1.dart';
+import 'act0_profile_evidence_projection_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_reading_style_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
@@ -39,6 +41,7 @@ class Act0ProfileShellV1 extends StatelessWidget {
     this.onRecoveryOptions,
     this.onGoToHome,
     this.evidenceSignal,
+    this.learningRecord = const Act0ProfileEvidenceProjectionV1(),
     this.crossSessionProof,
     this.achievementSeedConsumer = const Act0AchievementSeedConsumerV1(),
   });
@@ -49,6 +52,7 @@ class Act0ProfileShellV1 extends StatelessWidget {
   final VoidCallback? onGoToHome;
   final VoidCallback? onRecoveryOptions;
   final Act0ProfileEvidenceSignalViewModelV1? evidenceSignal;
+  final Act0ProfileEvidenceProjectionV1 learningRecord;
   final Act0CrossSessionProfileProofV1? crossSessionProof;
   final Act0AchievementSeedConsumerV1 achievementSeedConsumer;
 
@@ -87,6 +91,8 @@ class Act0ProfileShellV1 extends StatelessWidget {
           profile: profile,
           crossSessionProof: crossSessionProof,
         ),
+        const SizedBox(height: Act0ShellTokensV1.gapMd),
+        Act0LearningRecordCardV1(projection: learningRecord),
         if (evidenceSignal != null) ...[
           const SizedBox(height: Act0ShellTokensV1.gapMd),
           _ProfileEvidenceSignalCardV1(signal: evidenceSignal!),

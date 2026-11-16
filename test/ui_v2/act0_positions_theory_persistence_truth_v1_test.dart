@@ -634,6 +634,29 @@ Future<_Snapshot> _restart(
   final legacy = find.byType(Act0ProfileShellV1);
   final academy = find.byType(Act0AcademyYouLeafV1);
   expect(legacy.evaluate().length + academy.evaluate().length, 1);
+  if (fixture.taskId == _drillTaskId) {
+    final record = after.recordsFor(fixture.taskId).single;
+    final projection = tester
+        .widget<Act0AcademyYouLeafV1>(academy)
+        .input
+        .learningRecord!;
+    final state = projection.practiceStates.singleWhere(
+      (state) => state.records.any((r) => r.recordId == record.recordId),
+    );
+    expect(
+      state.records
+          .singleWhere((r) => r.recordId == record.recordId)
+          .assistanceKind,
+      record.assistanceKind,
+    );
+    expect(state.hasRecentIndependentConfirmation, isFalse);
+    if (record.hasKnownAssistance) expect(state.assistedCount, greaterThan(0));
+    expect(
+      after.payload['studyObservations'] ?? [],
+      isEmpty,
+      reason: 'A drill teaching preamble is not an ordinary theory completion.',
+    );
+  }
   final moments = legacy.evaluate().isNotEmpty
       ? tester
             .widget<Act0ProfileShellV1>(legacy)
@@ -753,6 +776,13 @@ void main() {
     'ASM02 ordinary positions theory Continue saves completion without an assessment',
     (tester) async {
       final fixture = await _mount(tester, _theoryTaskId);
+      await _flush(tester, fixture);
+      VoidCallback? finalContinue;
+      expect(
+        (await _read(fixture)).payload['studyObservations'] ?? [],
+        isEmpty,
+        reason: 'Opening teaching is not a completed traversal.',
+      );
       for (
         var step = 0;
         step < 12 && _runner(tester).selectedTaskId == _theoryTaskId;
@@ -765,13 +795,29 @@ void main() {
             : find.byKey(const Key('act0_shell_continue_cta'));
         expect(next, findsOneWidget);
         await tester.ensureVisible(next);
+        finalContinue = _runner(tester).onContinueTheory;
         await tester.tap(next);
         await tester.pumpAndSettle();
+        if (_runner(tester).selectedTaskId == _theoryTaskId) {
+          await _flush(tester, fixture);
+          expect(
+            (await _read(fixture)).payload['studyObservations'] ?? [],
+            isEmpty,
+            reason: 'Earlier teaching steps do not establish completion.',
+          );
+        }
       }
       expect(_runner(tester).selectedTaskId, isNot(_theoryTaskId));
       await _flush(tester, fixture);
       final saved = await _read(fixture);
       _trace('after_ordinary_continue', fixture, saved);
+      final study = Act0StudyObservationV1.restore(
+        saved.payload['studyObservations'],
+      )!;
+      expect(study, hasLength(1));
+      expect(study.single.taskId, _theoryTaskId);
+      expect(study.single.sessionId, isNotEmpty);
+      expect(act0CurrentStudyTopicV1(study.single), _task(_theoryTaskId).title);
       expect(_decisions(fixture), isEmpty);
       expect(saved.history.records, isEmpty);
       expect(saved.payload['completedTaskIds'], contains(_theoryTaskId));
@@ -784,7 +830,35 @@ void main() {
         saves.map((event) => event.fields['outcome']),
         everyElement('acknowledged'),
       );
-      final restored = await _restart(tester, fixture, saved);
+      // Deliver the real widget's final callback again, as a queued duplicate.
+      // No source state is seeded or changed by the test.
+      finalContinue!();
+      await tester.pumpAndSettle();
+      await _flush(tester, fixture);
+      final duplicate = await _read(fixture);
+      expect(
+        duplicate.payload['studyObservations'],
+        saved.payload['studyObservations'],
+      );
+      expect(
+        duplicate.payload['completedTaskIds'],
+        saved.payload['completedTaskIds'],
+      );
+      expect(duplicate.payload['earnedXp'], saved.payload['earnedXp']);
+      expect(duplicate.history.toPayload(), saved.history.toPayload());
+      final restored = await _restart(tester, fixture, duplicate);
+      expect(
+        restored.payload['studyObservations'],
+        saved.payload['studyObservations'],
+      );
+      final academy = tester.widget<Act0AcademyYouLeafV1>(
+        find.byType(Act0AcademyYouLeafV1),
+      );
+      expect(
+        academy.input.learningRecord!.studiedTopics.single.title,
+        _task(_theoryTaskId).title,
+      );
+      expect(academy.input.learningRecord!.practiceStates, isEmpty);
       expect(restored.payload['completedTaskIds'], contains(_theoryTaskId));
       expect(restored.history.records, isEmpty);
       expect(restored.independentEligibleCount, 0);

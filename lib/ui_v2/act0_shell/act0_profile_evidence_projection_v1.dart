@@ -1,5 +1,6 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'act0_learning_transfer_measurement_v1.dart';
+import 'act0_authored_source_proof_v1.dart';
 
 const int act0ProfileEvidenceMinimumAttemptsV1 = 5;
 const int act0ProfileEvidenceMinimumCorrectForPositiveSignalV1 = 3;
@@ -14,10 +15,18 @@ class Act0ProfileEvidenceProjectionV1 {
   const Act0ProfileEvidenceProjectionV1({
     this.signals = const <Act0ProfileCapabilitySignalV1>[],
     this.recentEvidence,
+    this.studiedTopics = const [],
+    this.practiceStates = const [],
+    this.unverifiedStudyCount = 0,
+    this.hasUnverifiedPractice = false,
   });
 
   final List<Act0ProfileCapabilitySignalV1> signals;
   final Act0LearningTransferMeasurementV1? recentEvidence;
+  final List<Act0ProfileStudyTopicV1> studiedTopics;
+  final List<Act0ProfilePracticeStateV1> practiceStates;
+  final int unverifiedStudyCount;
+  final bool hasUnverifiedPractice;
 
   bool get hasSignals => signals.isNotEmpty;
 
@@ -30,12 +39,14 @@ class Act0ProfileEvidenceProjectionV1 {
     int minimumCorrectForPositiveSignal =
         act0ProfileEvidenceMinimumCorrectForPositiveSignalV1,
     DateTime? nowUtc,
+    List<Act0StudyObservationV1> studyObservations = const [],
   }) {
     return fromCurrentAuthoredEvidenceHistory(
       history,
       nowUtc: nowUtc,
       sampleThreshold: sampleThreshold,
       minimumCorrectForPositiveSignal: minimumCorrectForPositiveSignal,
+      studyObservations: studyObservations,
     );
   }
 
@@ -72,13 +83,51 @@ class Act0ProfileEvidenceProjectionV1 {
     int minimumCorrectForPositiveSignal =
         act0ProfileEvidenceMinimumCorrectForPositiveSignalV1,
     DateTime? nowUtc,
+    List<Act0StudyObservationV1> studyObservations = const [],
   }) {
+    final now = nowUtc ?? DateTime.now().toUtc();
     final recent = Act0LearningTransferMeasurementV1.fromLearningEvidence(
       history,
-      nowUtc: nowUtc,
+      nowUtc: now,
     );
+    final current = act0RecentAuthoredEvidenceV1(history, nowUtc: now);
+    final studied = <String, Act0ProfileStudyTopicV1>{};
+    var unverifiedStudyCount = 0;
+    final restoredStudy = Act0StudyObservationV1.restore([
+      for (final observation in studyObservations) observation.toPayload(),
+    ]);
+    if (restoredStudy == null) unverifiedStudyCount = studyObservations.length;
+    for (final observation in restoredStudy ?? <Act0StudyObservationV1>[]) {
+      final title = act0CurrentStudyTopicV1(observation);
+      if (title == null || observation.recordedAtUtc.isAfter(now)) {
+        unverifiedStudyCount++;
+        continue;
+      }
+      studied.putIfAbsent(
+        observation.observationId,
+        () => Act0ProfileStudyTopicV1(title: title, observation: observation),
+      );
+    }
     return Act0ProfileEvidenceProjectionV1(
       recentEvidence: recent,
+      studiedTopics: List.unmodifiable(studied.values),
+      unverifiedStudyCount: unverifiedStudyCount,
+      hasUnverifiedPractice: history.records.any(
+        (record) =>
+            !record.isPlacementAssessment &&
+            !act0RecordIsAuthoredTeachingV1(record) &&
+            !current.families.values.any(
+              (records) => records.any((r) => r.recordId == record.recordId),
+            ),
+      ),
+      practiceStates: List.unmodifiable([
+        for (final entry in current.families.entries)
+          if (entry.value.isNotEmpty)
+            Act0ProfilePracticeStateV1(
+              signal: recent.signalForConcept(entry.key),
+              records: entry.value,
+            ),
+      ]),
       signals: [
         for (final signal in recent.signals)
           if (signal.eligibleEvidenceCount > 0)
@@ -183,6 +232,37 @@ class Act0ProfileEvidenceProjectionV1 {
       signals: List<Act0ProfileCapabilitySignalV1>.unmodifiable(signals),
     );
   }
+}
+
+class Act0ProfileStudyTopicV1 {
+  const Act0ProfileStudyTopicV1({
+    required this.title,
+    required this.observation,
+  });
+  final String title;
+  final Act0StudyObservationV1 observation;
+}
+
+/// A view of canonical evidence, never an independently persisted status.
+class Act0ProfilePracticeStateV1 {
+  const Act0ProfilePracticeStateV1({
+    required this.signal,
+    required this.records,
+  });
+  final Act0LearningTransferSignalV1 signal;
+  final List<Act0LearningEvidenceRecordV1> records;
+
+  String get skillAtomId => records.first.skillAtomId;
+  int get assistedCount => records.where((r) => r.hasKnownAssistance).length;
+  bool get hasRecentIndependentConfirmation =>
+      signal.verdict == act0RecentEvidenceVerifiedV1;
+  String get stateLabel => hasRecentIndependentConfirmation
+      ? 'Recent verified responses'
+      : 'Practiced';
+  String get explanation =>
+      '${records.length} recorded ${records.length == 1 ? 'response' : 'responses'}'
+      '${assistedCount > 0 ? ', $assistedCount with help' : ''}. '
+      '${signal.confirmationLine}';
 }
 
 class Act0ProfileCapabilitySignalV1 {

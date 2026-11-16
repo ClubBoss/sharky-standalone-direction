@@ -192,6 +192,7 @@ Widget act0AcademyYouRuntimeV1(
       xpLine: legacy.profile.xpLine,
       streakDays: legacy.profile.streakDays,
       completedTaskCount: completedTasks,
+      learningRecord: legacy.learningRecord,
       earnedMoments: act0AcademyYouEarnedMomentsV1(earnedProjection),
       bankedRepairCount: legacy.crossSessionProof?.totalBankedFixCount ?? 0,
       reinforcedRepairCount: legacy.crossSessionProof?.reinforcedFixCount ?? 0,

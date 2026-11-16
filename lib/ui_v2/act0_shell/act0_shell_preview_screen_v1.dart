@@ -1318,6 +1318,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool get _choiceWasAssistedV1 =>
       _choiceAssistanceV1 == Act0DecisionAssistanceV1.quickHint ||
       _choiceAssistanceV1 == Act0DecisionAssistanceV1.theoryRecall;
+  List<Act0StudyObservationV1> _studyObservationsV1 = const [];
   Act0LearningEvidenceHistoryV1 _learningEvidenceHistoryV1 =
       const Act0LearningEvidenceHistoryV1();
   Act0DurableRetentionHistoryV1 _durableRetentionHistoryV1 =
@@ -2976,6 +2977,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _mistakeRecords.clear();
     _resolvedMistakeTaskIds.clear();
     _learningEvidenceHistoryV1 = const Act0LearningEvidenceHistoryV1();
+    _studyObservationsV1 = const [];
     _conceptFamilyStateHistoryV1 = const Act0ConceptFamilyStateHistoryV1();
     _reviewMistakeHistoryV1 = const Act0ReviewMistakeHistoryV1();
     _reviewResolutionReceiptHistoryV1 =
@@ -3885,6 +3887,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ..clear()
         ..addAll(parsed.recentSkillGains.take(6));
       _learningEvidenceHistoryV1 = parsed.learningEvidenceHistory;
+      _studyObservationsV1 = parsed.studyObservations;
       _durableRetentionHistoryV1 = restoredDurableRetention.refreshedAt(
         widget.clock.nowUtc(),
       );
@@ -4420,6 +4423,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       dismissedHomeHandoffDay: _dismissedHomeHandoffDay,
       firstValueReturnCarry: _firstValueReceiptCarry,
       learningEvidenceHistory: _learningEvidenceHistoryV1,
+      studyObservations: _studyObservationsV1,
       pendingDecisionAssistance: List.unmodifiable(
         _pendingDecisionAssistanceV1.values,
       ),
@@ -5410,6 +5414,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _activeLearningEvidenceRunKeyV1 = null;
       _learningEvidenceRunOrdinalV1 = 0;
       _learningEvidenceHistoryV1 = const Act0LearningEvidenceHistoryV1();
+      _studyObservationsV1 = const [];
       _durableRetentionHistoryV1 = const Act0DurableRetentionHistoryV1();
       _reviewMistakeHistoryV1 = const Act0ReviewMistakeHistoryV1();
       _reviewResolutionReceiptHistoryV1 =
@@ -5932,6 +5937,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ? Act0ProfileEvidenceProjectionV1.fromLearningEvidenceHistory(
             _learningEvidenceHistoryV1,
             nowUtc: widget.clock.nowUtc(),
+            studyObservations: _studyObservationsV1,
           )
         : const Act0ProfileEvidenceProjectionV1();
     if ((_tab == Act0ShellTabV1.home || _tab == Act0ShellTabV1.review) &&
@@ -6990,6 +6996,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 onContinueTheory: () => _setStateForRecoveryV1(
                                   callbackEpochV1,
                                   () {
+                                    // A queued Continue belongs to its original
+                                    // task, even if another tap already advanced.
+                                    if (_selectedWorldId !=
+                                            selectedWorld.worldId ||
+                                        _selectedLessonId !=
+                                            selectedLesson.lessonId ||
+                                        _selectedTaskId !=
+                                            playSelectedTask.taskId)
+                                      return;
                                     if (_advanceTeachingStep(playRunner!)) {
                                       return;
                                     }
@@ -7003,6 +7018,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       // side effects.
                                       return;
                                     }
+                                    _recordCompletedStudyV1(playSelectedTask);
                                     _emitActionTheoryCompletedTelemetryV1(
                                       playSelectedTask,
                                     );
@@ -7674,6 +7690,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                               Act0CrossSessionProfileProofV1.fromFixProof(
                                 _fixProofProjectionV1(),
                               ),
+                          learningRecord: currentProfileEvidenceProjection,
                           evidenceSignal:
                               Act0ProfileEvidenceConsumerV1.fromProjection(
                                 currentProfileEvidenceProjection,
@@ -14268,6 +14285,35 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     );
   }
 
+  void _recordCompletedStudyV1(Act0LessonTaskV1 task) {
+    final revision = act0AuthoredStudyRevisionV1(
+      worldId: _selectedWorldId,
+      lessonId: _selectedLessonId,
+      task: task,
+    );
+    if (revision == null) return;
+    _ensureActiveSessionIdentityV1(
+      worldId: _selectedWorldId,
+      lessonId: _selectedLessonId,
+    );
+    final observation = Act0StudyObservationV1(
+      worldId: _selectedWorldId,
+      lessonId: _selectedLessonId,
+      taskId: task.taskId,
+      sourceRevision: revision,
+      sessionId: _sessionIdentityStateV1.currentActiveSessionId,
+      recordedAtUtc: widget.clock.nowUtc().toUtc(),
+    );
+    if (_studyObservationsV1.any(
+      (r) => r.observationId == observation.observationId,
+    ))
+      return;
+    _studyObservationsV1 = List.unmodifiable([
+      ..._studyObservationsV1,
+      observation,
+    ]);
+  }
+
   void _completeCurrentTask(Act0LessonTaskV1 selectedTask) {
     final alreadyCompleted = _completedTaskIds.contains(_selectedTaskId);
     _skippedTaskIds.remove(_selectedTaskId);
@@ -15875,6 +15921,7 @@ class _Act0PersistedProgressV1 {
     this.dismissedHomeHandoffDay = '',
     this.firstValueReturnCarry,
     this.learningEvidenceHistory = const Act0LearningEvidenceHistoryV1(),
+    this.studyObservations = const [],
     this.pendingDecisionAssistance = const [],
     this.hasPendingAssistanceProvenance = true,
     this.lessonRunEvidenceBoundaries = const <String, int?>{},
@@ -15917,6 +15964,7 @@ class _Act0PersistedProgressV1 {
   final String dismissedHomeHandoffDay;
   final _Act0FirstValueReceiptCarryV1? firstValueReturnCarry;
   final Act0LearningEvidenceHistoryV1 learningEvidenceHistory;
+  final List<Act0StudyObservationV1> studyObservations;
   final List<_Act0PendingDecisionAssistanceV1> pendingDecisionAssistance;
   final bool hasPendingAssistanceProvenance;
   final Map<String, int?> lessonRunEvidenceBoundaries;
@@ -15985,6 +16033,9 @@ class _Act0PersistedProgressV1 {
           receipt.toJson(),
       ],
       'learningEvidenceHistory': learningEvidenceHistory.toPayload(),
+      'studyObservations': [
+        for (final observation in studyObservations) observation.toPayload(),
+      ],
       'learningEvidenceLineage': learningEvidenceHistory.lineagePayload(),
       'lessonRunEvidenceBoundaries': <String, int?>{
         for (final entry in lessonRunEvidenceBoundaries.entries)
@@ -16140,6 +16191,10 @@ class _Act0PersistedProgressV1 {
       lessonRunEvidenceBoundaries[lessonRunEvidenceLessonId] =
           lessonRunEvidenceStartOrder;
     }
+    final studyObservations = map.containsKey('studyObservations')
+        ? Act0StudyObservationV1.restore(map['studyObservations'])
+        : const <Act0StudyObservationV1>[];
+    if (studyObservations == null) return null;
     final restoredEvidence = Act0LearningEvidenceHistoryV1.restore(
       map['learningEvidenceHistory'],
       map['learningEvidenceLineage'],
@@ -16216,6 +16271,7 @@ class _Act0PersistedProgressV1 {
       dismissedHomeHandoffDay: dismissedHomeHandoffDay,
       firstValueReturnCarry: firstValueReturnCarry,
       learningEvidenceHistory: learningEvidenceHistory,
+      studyObservations: studyObservations,
       pendingDecisionAssistance: pendingDecisionAssistance,
       hasPendingAssistanceProvenance: map.containsKey(
         'pendingDecisionAssistance',

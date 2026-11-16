@@ -174,6 +174,96 @@ class Act0EvidenceRunKeyV1 {
   );
 }
 
+/// A completed teaching traversal, never a graded answer or skill proof.
+/// Kept beside graded evidence, without inventing a choice for Continue.
+class Act0StudyObservationV1 {
+  const Act0StudyObservationV1({
+    required this.worldId,
+    required this.lessonId,
+    required this.taskId,
+    required this.sourceRevision,
+    required this.sessionId,
+    required this.recordedAtUtc,
+  });
+
+  final String worldId;
+  final String lessonId;
+  final String taskId;
+  final String sourceRevision;
+  final String sessionId;
+  final DateTime recordedAtUtc;
+
+  String get observationId =>
+      jsonEncode(['study_v1', worldId, lessonId, taskId, sourceRevision]);
+
+  Map<String, Object?> toPayload() => {
+    'schemaVersion': 1,
+    'role': 'teaching',
+    'observationId': observationId,
+    'worldId': worldId,
+    'lessonId': lessonId,
+    'taskId': taskId,
+    'sourceRevision': sourceRevision,
+    'sessionId': sessionId,
+    'recordedAtUtc': recordedAtUtc.toUtc().toIso8601String(),
+  };
+
+  static Act0StudyObservationV1? tryParse(Object? raw) {
+    if (raw is! Map || raw['schemaVersion'] != 1 || raw['role'] != 'teaching') {
+      return null;
+    }
+    for (final key in [
+      'worldId',
+      'lessonId',
+      'taskId',
+      'sourceRevision',
+      'sessionId',
+      'recordedAtUtc',
+      'observationId',
+    ]) {
+      if (raw[key] is! String || (raw[key] as String).trim().isEmpty) {
+        return null;
+      }
+    }
+    final revision = raw['sourceRevision'] as String;
+    final time = DateTime.tryParse(raw['recordedAtUtc'] as String);
+    if (!RegExp(r'^[a-f0-9]{64}$').hasMatch(revision) ||
+        time == null ||
+        !time.isUtc)
+      return null;
+    final observation = Act0StudyObservationV1(
+      worldId: raw['worldId'] as String,
+      lessonId: raw['lessonId'] as String,
+      taskId: raw['taskId'] as String,
+      sourceRevision: revision,
+      sessionId: raw['sessionId'] as String,
+      recordedAtUtc: time,
+    );
+    return raw['observationId'] == observation.observationId
+        ? observation
+        : null;
+  }
+
+  /// Absent in old snapshots. A present malformed/future field uses the
+  /// existing preserved-byte recovery path; never silently drop its history.
+  static List<Act0StudyObservationV1>? restore(Object? raw) {
+    if (raw is! List) return null;
+    final byId = <String, Act0StudyObservationV1>{};
+    for (final value in raw) {
+      final observation = tryParse(value);
+      if (observation == null) return null;
+      final prior = byId[observation.observationId];
+      if (prior != null &&
+          jsonEncode(prior.toPayload()) !=
+              jsonEncode(observation.toPayload())) {
+        return null;
+      }
+      byId[observation.observationId] = observation;
+    }
+    return List.unmodifiable(byId.values);
+  }
+}
+
 class Act0LearningEvidenceRecordV1 {
   const Act0LearningEvidenceRecordV1({
     this.schemaVersion = 1,
