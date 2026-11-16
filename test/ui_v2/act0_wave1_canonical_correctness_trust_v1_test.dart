@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 
 void main() {
   group('Act0 Wave 1 canonical correctness and trust', () {
@@ -65,9 +66,32 @@ void main() {
       expect(correct.quality, Act0FeedbackQualityV1.correct);
       expect(
         correct.feedbackReason,
-        'Private 5-6, shared 7-8: any 9 completes the straight.',
+        'Private 5-6, shared board cards 7-8: any 9 completes the straight.',
       );
       expect(task.rewardXp, 9);
+      // Copy must preserve the actual feedback clue and receipt. A factual
+      // wording repair must not silently change the learner's skill signal.
+      final feedback = task.runner.copyWith(selectedOptionId: correct.id);
+      final table = act0FeedbackTableForRunnerV1(
+        runner: feedback,
+        taskFamily: task.resolvedTaskFamily,
+      );
+      expect(table.highlightedCardIds.toSet(), <String>{
+        'hero_0',
+        'hero_1',
+        'board_0',
+        'board_1',
+        'board_2',
+      });
+      final receipt = act0FirstValueSkillReceiptForRunnerV1(
+        runner: feedback,
+        option: correct,
+        taskFamily: task.resolvedTaskFamily,
+      );
+      expect(receipt, isNotNull);
+      expect(receipt!.sourceSignalId, 'hero_cards_board_pot');
+      expect(receipt.skillAtomId, 'table_read');
+      expect(receipt.nextRepId, 'repeat_table_read');
     });
 
     test('W5 factual repairs preserve parents and overriding descendants', () {

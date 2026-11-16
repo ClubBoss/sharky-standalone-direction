@@ -17410,7 +17410,8 @@ final _world5StraightOutRunner = _world5StraightDrawRunner.copyWith(
       preferredLabel: '9',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong choice.',
-      feedbackReason: 'Private 5-6, shared 7-8: any 9 completes the straight.',
+      feedbackReason:
+          'Private 5-6, shared board cards 7-8: any 9 completes the straight.',
     ),
     Act0RunnerOptionV1(
       id: 'king',
