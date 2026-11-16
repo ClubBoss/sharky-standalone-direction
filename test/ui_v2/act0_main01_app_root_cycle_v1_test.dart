@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart' show debugPrintSynchronously;
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -17,6 +18,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 
@@ -1075,6 +1078,330 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets('SIMULATED Foundation four-world route and saved ordinary boundaries', (
+    tester,
+  ) async {
+    // Source keys are scripted route inputs, not learner or poker-quality proof.
+    final worlds = Act0ShellStateV1.sample.worlds.take(4).toList();
+    expect(worlds.map((w) => w.worldId), [
+      'world_1',
+      'world_2',
+      'world_3',
+      'world_4',
+    ]);
+    final lessons = [for (final world in worlds) ...world.lessons];
+    final tasks = [for (final lesson in lessons) ...lesson.taskList];
+    expect(lessons, hasLength(28));
+    expect(tasks, hasLength(181));
+    expect(tasks.map((task) => task.taskId).toSet(), hasLength(181));
+    expect(
+      tasks.where(
+        (task) =>
+            task.entryPhase == Act0LessonPhaseV1.drill &&
+            task.runner.options.isNotEmpty,
+      ),
+      hasLength(146),
+    );
+    final first = lessons.first;
+    final required = tasks.map((task) => task.taskId).toSet();
+    final byId = {for (final task in tasks) task.taskId: task};
+    final requiredLessons = lessons.map((lesson) => lesson.lessonId).toSet();
+    final assessedIds = tasks
+        .where(
+          (task) =>
+              task.entryPhase == Act0LessonPhaseV1.drill &&
+              task.runner.options.isNotEmpty,
+        )
+        .map((task) => task.taskId)
+        .toSet();
+    final answeredIds = <String>{};
+    final remountedWorlds = <String>{};
+    final summaryVisits = <String, int>{};
+    var firstBoundaryChecked = false;
+    final visited = <String>{};
+    var pendingRemounted = false;
+    var feedbackRemounted = false;
+    var assessed = 0;
+
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(() async {
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+      await tester.runAsync(() async {
+        await _pendingWrites().flush().timeout(const Duration(seconds: 2));
+      });
+    });
+    await tester.pumpWidget(const AppRoot());
+    await tester.pumpAndSettle();
+    await _tap(tester, 'act0_shell_placement_skip_intro');
+    final zero = await _saved(tester);
+    expect(zero['earnedXp'], 0);
+    expect(zero['completedTaskIds'], isEmpty);
+    expect(zero['skippedTaskIds'], isEmpty);
+    await tester.tap(find.text('Learn').last);
+    await tester.pumpAndSettle();
+    await _tap(tester, 'act0_shell_current_mission_cta');
+
+    for (var step = 0; step < 1800; step++) {
+      final saved = await _saved(tester);
+      final completed = (saved['completedTaskIds'] as List)
+          .cast<String>()
+          .toSet();
+      if (completed.containsAll(required) &&
+          (saved['completedLessonIds'] as List)
+              .cast<String>()
+              .toSet()
+              .containsAll(requiredLessons)) {
+        break;
+      }
+      expect(completed.difference(required), isEmpty);
+      expect(
+        (saved['skippedTaskIds'] as List).cast<String>().toSet().intersection(
+          required,
+        ),
+        isEmpty,
+      );
+      expect(
+        saved['earnedXp'],
+        completed.fold<int>(0, (sum, id) => sum + byId[id]!.rewardXp),
+      );
+      var remountedBoundary = false;
+      for (var index = 0; index < 3; index++) {
+        final world = worlds[index];
+        final ids = {
+          for (final lesson in world.lessons)
+            for (final task in lesson.taskList) task.taskId,
+        };
+        if (!remountedWorlds.contains(world.worldId) &&
+            completed.containsAll(ids)) {
+          final before = _foundationLearningTruth(saved);
+          await _remount(tester);
+          final restored = await _saved(tester);
+          expect(_foundationLearningTruth(restored), before);
+          // Restore selects the next world in memory; it does not rewrite
+          // the old durable selection until a normal save-producing action.
+          await _tap(tester, 'act0_academy_home_leaf_cta');
+          expect(_runner(tester).selectedWorldId, worlds[index + 1].worldId);
+          expect(
+            worlds[index + 1].lessons.map((lesson) => lesson.lessonId),
+            contains(_runner(tester).selectedLessonId),
+          );
+          expect(required, contains(_runner(tester).selectedTaskId));
+          expect(completed, isNot(contains(_runner(tester).selectedTaskId)));
+          remountedWorlds.add(world.worldId);
+          debugPrintSynchronously(
+            'FOUNDATION_ROUTE_WORLD_BOUNDARY ${world.worldId} -> ${worlds[index + 1].worldId}',
+          );
+          remountedBoundary = true;
+          break;
+        }
+      }
+      if (remountedBoundary) continue;
+      final summaryFinder = find.byType(Act0BlockCompletionShellV1);
+      if (summaryFinder.evaluate().isNotEmpty) {
+        final summary = tester.widget<Act0BlockCompletionShellV1>(
+          summaryFinder,
+        );
+        final lesson = lessons.singleWhere(
+          (lesson) => lesson.lessonId == saved['selectedLessonId'],
+        );
+        final outstanding = lesson.taskList
+            .where((task) => !completed.contains(task.taskId))
+            .map((task) => task.taskId)
+            .toList();
+        summaryVisits.update(
+          lesson.lessonId,
+          (count) => count + 1,
+          ifAbsent: () => 1,
+        );
+        expect(summaryVisits[lesson.lessonId], lessThanOrEqualTo(4));
+        expect(summary.summary.errorCount, 0);
+        if (outstanding.isNotEmpty)
+          expect(saved['completedLessonIds'], isNot(contains(lesson.lessonId)));
+        debugPrintSynchronously(
+          'FOUNDATION_ROUTE_SUMMARY ${jsonEncode({'lesson': lesson.lessonId, 'outstanding': outstanding, 'target': summary.nextUsefulHand?.targetTaskId, 'kind': summary.summary.primaryCtaKind.name})}',
+        );
+        if (!firstBoundaryChecked &&
+            lesson.lessonId == first.lessonId &&
+            outstanding.isEmpty) {
+          expect(
+            saved['earnedXp'],
+            first.taskList.fold<int>(0, (sum, task) => sum + task.rewardXp),
+          );
+          expect(saved['studyObservations'], hasLength(1));
+          expect(summary.summary.assistedCount, 0);
+          final target = summary.nextUsefulHand?.targetTaskId;
+          await _tap(tester, 'act0_shell_block_summary_continue_cta');
+          expect(_runner(tester).selectedLessonId, lessons[1].lessonId);
+          if (target != null) expect(_runner(tester).selectedTaskId, target);
+          await _tap(tester, 'act0_shell_runner_back');
+          final beforeReplay = await _saved(tester);
+          await _foundationReplayTheory(tester, first);
+          final afterReplay = await _saved(tester);
+          expect(afterReplay['earnedXp'], beforeReplay['earnedXp']);
+          expect(
+            afterReplay['completedTaskIds'],
+            beforeReplay['completedTaskIds'],
+          );
+          expect(
+            afterReplay['studyObservations'],
+            beforeReplay['studyObservations'],
+          );
+          final before = _foundationLearningTruth(afterReplay);
+          await _remount(tester);
+          expect(_foundationLearningTruth(await _saved(tester)), before);
+          await tester.tap(find.text('Learn').last);
+          await tester.pumpAndSettle();
+          await _tap(tester, 'act0_shell_current_mission_cta');
+          expect(_runner(tester).selectedLessonId, lessons[1].lessonId);
+          firstBoundaryChecked = true;
+          continue;
+        }
+        final target = summary.nextUsefulHand?.targetTaskId;
+        if (outstanding.isEmpty &&
+            target != null &&
+            required.contains(target) &&
+            !completed.contains(target)) {
+          await _tap(tester, 'act0_shell_block_summary_continue_cta');
+          expect(_runner(tester).selectedTaskId, target);
+        } else {
+          // Temporary Action orchestration does not complete legal-context.
+          // Actual map navigation must retain access to outstanding tasks.
+          await _tap(tester, 'act0_shell_block_summary_map_cta');
+        }
+        continue;
+      }
+      if (find.byType(Act0LessonRunnerShellV1).evaluate().isEmpty) {
+        expect(
+          find.byKey(const Key('act0_shell_current_mission_cta')),
+          findsOneWidget,
+        );
+        await _tap(tester, 'act0_shell_current_mission_cta');
+        expect(required, contains(_runner(tester).selectedTaskId));
+        expect(completed, isNot(contains(_runner(tester).selectedTaskId)));
+        continue;
+      }
+      expect(find.byType(Act0LessonRunnerShellV1), findsOneWidget);
+      final active = _runner(tester);
+      expect(required, contains(active.selectedTaskId));
+      if (visited.add(active.selectedTaskId!)) {
+        debugPrintSynchronously(
+          'FOUNDATION_ROUTE_ENTER ${active.selectedWorldId}/${active.selectedLessonId}/${active.selectedTaskId}',
+        );
+      }
+      // Review owns the feedback CTA even when its retained runner metadata
+      // still includes a teaching step (for example the bucket recap).
+      if (active.runner.phase == Act0LessonPhaseV1.review) {
+        await _tap(tester, 'act0_shell_feedback_continue_cta');
+      } else if (active.runner.activeTeachingStep != null ||
+          active.runner.phase == Act0LessonPhaseV1.theory) {
+        await _continueTeaching(tester);
+      } else {
+        await _foundationAdvanceToPrompt(tester);
+        final taskId = _runner(tester).selectedTaskId;
+        final options = [
+          for (final option in _runner(tester).runner.options)
+            [option.id, option.label],
+        ];
+        if (!pendingRemounted) {
+          final before = _foundationStable(await _saved(tester));
+          await _remount(tester);
+          expect(_foundationStable(await _saved(tester)), before);
+          // The admitted boot policy is Home-first; resume through its real CTA.
+          await _tap(tester, 'act0_academy_home_leaf_cta');
+          expect(_runner(tester).selectedTaskId, taskId);
+          expect(_runner(tester).runner.phase, Act0LessonPhaseV1.drill);
+          expect(_runner(tester).runner.selectedOptionId, isNull);
+          expect([
+            for (final option in _runner(tester).runner.options)
+              [option.id, option.label],
+          ], options);
+          pendingRemounted = true;
+          await _foundationAdvanceToPrompt(tester);
+        }
+        final answer = _runner(
+          tester,
+        ).runner.options.firstWhere((o) => o.isCorrect);
+        await _choose(tester, answer.id);
+        expect(
+          find.byKey(const Key('act0_betting_price_unavailable')),
+          findsNothing,
+        );
+        assessed++;
+        answeredIds.add(taskId!);
+        expect(_runner(tester).selectedTaskId, taskId);
+        expect(_runner(tester).runner.selectedOptionId, answer.id);
+        expect(
+          _runner(tester).runner.reviewQuality,
+          Act0FeedbackQualityV1.correct,
+        );
+        final answered = await _saved(tester);
+        final record = _rows(
+          answered,
+          'learningEvidenceHistory',
+        ).lastWhere((row) => row['taskId'] == taskId);
+        expect(record['choiceId'], answer.id);
+        expect(Act0LearningEvidenceRecordV1.tryParse(record), isNotNull);
+        if (!feedbackRemounted) {
+          final before = _foundationLearningTruth(answered);
+          final completedIds = (answered['completedTaskIds'] as List)
+              .cast<String>()
+              .toSet();
+          final next = first.taskList.firstWhere(
+            (task) => !completedIds.contains(task.taskId),
+          );
+          await _remount(tester);
+          final restored = await _saved(tester);
+          expect(_foundationLearningTruth(restored), before);
+          expect(restored['selectedTaskId'], next.taskId);
+          // Answer history survives, while completion still awaits Continue.
+          // Home-first boot restarts this incomplete task. The next outer loop
+          // makes a fresh scripted attempt; it is not duplicate delivery.
+          await _tap(tester, 'act0_academy_home_leaf_cta');
+          expect(_runner(tester).selectedTaskId, next.taskId);
+          expect(_runner(tester).runner.selectedOptionId, isNull);
+          feedbackRemounted = true;
+          continue;
+        }
+        await _tap(tester, 'act0_shell_feedback_continue_cta');
+      }
+      expect(tester.takeException(), isNull);
+    }
+    final completed = await _saved(tester);
+    expect(
+      (completed['completedTaskIds'] as List).cast<String>().toSet(),
+      required,
+    );
+    expect(
+      (completed['completedLessonIds'] as List).cast<String>().toSet(),
+      requiredLessons,
+    );
+    expect(visited, required);
+    expect(answeredIds, assessedIds);
+    expect(
+      pendingRemounted && feedbackRemounted && firstBoundaryChecked,
+      isTrue,
+    );
+    expect(
+      remountedWorlds,
+      worlds.take(3).map((world) => world.worldId).toSet(),
+    );
+    expect(completed['skippedTaskIds'], isEmpty);
+    expect(
+      completed['earnedXp'],
+      tasks.fold<int>(0, (sum, task) => sum + task.rewardXp),
+    );
+    expect(completed['studyObservations'], hasLength(28));
+    debugPrintSynchronously(
+      'FOUNDATION_ROUTE_COMPLETE ${jsonEncode({'visited': visited.toList(), 'assessedIds': answeredIds.toList(), 'assessmentEvents': assessed, 'summaryVisits': summaryVisits, 'worldRemounts': remountedWorlds.toList(), 'completed': completed['completedTaskIds'], 'completedLessons': completed['completedLessonIds'], 'earnedXp': completed['earnedXp'], 'studyCount': (completed['studyObservations'] as List).length, 'historyCount': (completed['learningEvidenceHistory'] as List).length})}',
+    );
+    expect(tester.takeException(), isNull);
+  });
 }
 
 Future<void> _remount(WidgetTester tester) async {
@@ -1136,7 +1463,9 @@ Future<void> _advanceToPrompt(WidgetTester tester) async {
         active.phase == Act0LessonPhaseV1.drill) {
       expect(active.selectedOptionId, isNull);
       final option = active.options.first;
-      final key = option.seatId == null
+      final key = active.sizingConfig.isEnabled
+          ? 'act0_shell_sizing_preset_${option.id}'
+          : option.seatId == null
           ? 'act0_shell_option_${option.id}'
           : 'act0_shell_seat_tap_${option.seatId}';
       await tester.ensureVisible(find.byKey(Key(key)));
@@ -1402,4 +1731,70 @@ Future<void> _expectFeedbackClearance(
   expect(guideSemantics.explicitChildNodes, isTrue);
   expect(guideSemantics.properties.label, isNull);
   expect(next.hitTestable(), findsOneWidget);
+}
+
+Map<String, Object?> _foundationStable(Map<String, dynamic> payload) => {
+  ..._stableProgress(payload),
+  for (final key in [
+    'studyObservations',
+    'pendingDecisionAssistance',
+    'skippedTaskIds',
+    'perfectTaskIds',
+  ])
+    key: payload[key],
+};
+
+Map<String, Object?> _foundationLearningTruth(Map<String, dynamic> payload) => {
+  for (final entry in _foundationStable(payload).entries)
+    if (![
+      'selectedWorldId',
+      'selectedLessonId',
+      'selectedTaskId',
+    ].contains(entry.key))
+      entry.key: entry.value,
+};
+
+Future<void> _foundationReplayTheory(
+  WidgetTester tester,
+  Act0LessonCardV1 lesson,
+) async {
+  final all = find.text('All lessons');
+  if (all.evaluate().isNotEmpty) {
+    await tester.ensureVisible(all);
+    await tester.tap(all);
+    await tester.pumpAndSettle();
+  }
+  await _tap(tester, 'act0_shell_lesson_${lesson.title}');
+  final taskId = lesson.taskList.first.taskId;
+  await _tap(tester, 'act0_shell_lesson_step_$taskId');
+  await _tap(tester, 'act0_shell_selected_lesson_cta');
+  expect(_runner(tester).selectedTaskId, taskId);
+  for (var step = 0; step < 16; step++) {
+    if (_runner(tester).selectedTaskId != taskId) break;
+    await _continueTeaching(tester);
+  }
+  expect(_runner(tester).selectedTaskId, isNot(taskId));
+  await _tap(tester, 'act0_shell_runner_back');
+}
+
+Future<void> _foundationAdvanceToPrompt(WidgetTester tester) async {
+  await _advanceToPrompt(tester);
+  final source = _runner(tester).runner;
+  final plan = act0TableChoreographyPlanForTableV1(source.table);
+  final replay = act0StreetReplayFromTableV1(source.table);
+  if (plan == null || replay?.isConsumerSafe != true) return;
+  // This actual rendered affordance appears only once the source action
+  // choreography is decision-ready. Incremental pumps drain chained timers;
+  // one large time jump does not. The public plan bounds the finite wait.
+  final ready = find.byKey(const Key('act0_shell_street_replay_inline'));
+  for (
+    var tick = 0;
+    tick < plan.beats.length + 2 && ready.evaluate().isEmpty;
+    tick++
+  ) {
+    expect(_runner(tester).runner.selectedOptionId, isNull);
+    await tester.pump(const Duration(milliseconds: 500));
+  }
+  expect(ready, findsOneWidget);
+  expect(_runner(tester).runner.selectedOptionId, isNull);
 }
