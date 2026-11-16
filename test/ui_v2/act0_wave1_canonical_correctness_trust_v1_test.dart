@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 
 void main() {
   group('Act0 Wave 1 canonical correctness and trust', () {
@@ -19,6 +21,163 @@ void main() {
     Act0RunnerOptionV1 correctOption(Act0LessonTaskV1 task) {
       return task.runner.options.firstWhere((option) => option.isCorrect);
     }
+
+    test('W5 gap-board caption names the composed shared cards', () {
+      final task = taskFor(
+        worldId: 'world_5',
+        lessonId: 'straight_draws',
+        taskId: 'straight_draws_w5_gap_board',
+      );
+      expect(task.runner.table.boardCards.map((card) => card.label), <String>[
+        'As',
+        'Kd',
+        '4c',
+      ]);
+      expect(task.runner.caption, 'A-K-4 has large rank gaps.');
+      expect(task.runner.options.map((option) => option.id), <String>[
+        'yes',
+        'no',
+      ]);
+      expect(correctOption(task).id, 'no');
+      expect(task.rewardXp, 9);
+    });
+
+    test('W5 straight-out feedback separates private and shared ranks', () {
+      final task = taskFor(
+        worldId: 'world_5',
+        lessonId: 'outs_improvement',
+        taskId: 'outs_improvement_w5_straight_out',
+      );
+      expect(task.runner.table.heroCards.map((card) => card.label), <String>[
+        '6s',
+        '5d',
+      ]);
+      expect(task.runner.table.boardCards.map((card) => card.label), <String>[
+        '8c',
+        '7h',
+        '2s',
+      ]);
+      expect(task.runner.options.map((option) => option.id), <String>[
+        'nine',
+        'king',
+      ]);
+      final correct = correctOption(task);
+      expect(correct.id, 'nine');
+      expect(correct.quality, Act0FeedbackQualityV1.correct);
+      expect(
+        correct.feedbackReason,
+        'Private 5-6, shared board cards 7-8: any 9 completes the straight.',
+      );
+      expect(task.rewardXp, 9);
+      // Copy must preserve the actual feedback clue and receipt. A factual
+      // wording repair must not silently change the learner's skill signal.
+      final feedback = task.runner.copyWith(selectedOptionId: correct.id);
+      final table = act0FeedbackTableForRunnerV1(
+        runner: feedback,
+        taskFamily: task.resolvedTaskFamily,
+      );
+      expect(table.highlightedCardIds.toSet(), <String>{
+        'hero_0',
+        'hero_1',
+        'board_0',
+        'board_1',
+        'board_2',
+      });
+      final receipt = act0FirstValueSkillReceiptForRunnerV1(
+        runner: feedback,
+        option: correct,
+        taskFamily: task.resolvedTaskFamily,
+      );
+      expect(receipt, isNotNull);
+      expect(receipt!.sourceSignalId, 'hero_cards_board_pot');
+      expect(receipt.skillAtomId, 'table_read');
+      expect(receipt.nextRepId, 'repeat_table_read');
+    });
+
+    test('W5 factual repairs preserve parents and overriding descendants', () {
+      final disconnected = taskFor(
+        worldId: 'world_5',
+        lessonId: 'connected_boards',
+        taskId: 'connected_boards_w5_disconnected_board',
+      );
+      expect(
+        disconnected.runner.caption,
+        'A-K-4 is high-card heavy but not connected.',
+      );
+      expect(correctOption(disconnected).id, 'disconnected');
+      final draw = taskFor(
+        worldId: 'world_5',
+        lessonId: 'straight_draws',
+        taskId: 'straight_draws_w5_straight_draw_find',
+      );
+      expect(draw.runner.caption, 'Hero has 6-5 and the board shows 8-7-2.');
+      expect(correctOption(draw).id, 'straight_draw');
+      expect(
+        correctOption(draw).feedbackReason,
+        'Nearby ranks create straight outs.',
+      );
+      final transfer = taskFor(
+        worldId: 'world_5',
+        lessonId: 'outs_improvement',
+        taskId: 'outs_improvement_w5_table_outs_straight_transfer',
+      );
+      expect(transfer.runner.options.map((option) => option.id), <String>[
+        'king_pairs',
+        'blank_turn_killed',
+        'four_or_nine',
+      ]);
+      expect(
+        correctOption(transfer).feedbackReason,
+        'The same ladder still works on a real table. A 4 or 9 completes the straight, so those remain the live outs before you judge the 3 BB decision.',
+      );
+      final risky = taskFor(
+        worldId: 'world_5',
+        lessonId: 'outs_improvement',
+        taskId: 'outs_improvement_w5_clean_vs_risky_out_transfer',
+      );
+      expect(risky.runner.options.map((option) => option.id), <String>[
+        'five_hearts_riskier',
+        'neither_helps',
+        'five_clubs_cleaner',
+      ]);
+      expect(
+        correctOption(risky).feedbackReason,
+        'Both cards complete the straight, but 5-club is safer because it helps Hero without adding a third heart. The straight is real either way, but this river keeps the board calmer.',
+      );
+    });
+
+    test('W5 factual repairs preserve five accepted W3 assessment revisions', () {
+      const expected = <String, String>{
+        'same_hand_different_seat_same_hand_late_open':
+            '5731c58b4fbc4bce4a7ded4f9b130afb4e8f2b900c68ad52bc4ace914adc9805',
+        'position_apply_late_open':
+            '834529b14664a30cf01b7b00c50bb8e191762a9c73de066127c5e78aa7d92b9f',
+        'position_checkpoint_position_checkpoint_late_open':
+            '9652fa85867d717e25fbb5ea67dedace383f91698f93477bcb76a092706023ee',
+        'position_apply_recap':
+            '72242d32d6cc24415d687747308418c599efc5523363d0705c12ae192db9b012',
+        'position_checkpoint_position_checkpoint_review':
+            'a72741f70c4bd15cdfc8f257a3d35215f46fbc246e024d7cc565989d4787d92a',
+      };
+      final world = Act0ShellStateV1.sample.worldById('world_3');
+      final observed = <String>{};
+      for (final lesson in world.lessons) {
+        for (final task in lesson.taskList) {
+          if (!expected.containsKey(task.taskId)) continue;
+          observed.add(task.taskId);
+          expect(
+            act0AuthoredSourceFingerprintV1(
+              worldId: world.worldId,
+              lessonId: lesson.lessonId,
+              task: task,
+            ),
+            expected[task.taskId],
+            reason: task.taskId,
+          );
+        }
+      }
+      expect(observed, expected.keys.toSet());
+    });
 
     test('repaired correct options use semantic feedback titles', () {
       final cases = <({Act0LessonTaskV1 task, String title})>[
