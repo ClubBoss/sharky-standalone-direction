@@ -1,3 +1,5 @@
+import '../act0_learning_record_card_v1.dart';
+import '../act0_profile_evidence_projection_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
@@ -39,6 +41,7 @@ class Act0AcademyYouLeafInputV1 {
     this.streakDays = 0,
     this.earnedMoments = const <Act0AchievementMomentViewModelV1>[],
     this.completedTaskCount,
+    this.learningRecord,
     this.bankedRepairCount = 0,
     this.reinforcedRepairCount = 0,
     this.openRepairCount = 0,
@@ -55,6 +58,7 @@ class Act0AcademyYouLeafInputV1 {
   final int streakDays;
   final List<Act0AchievementMomentViewModelV1> earnedMoments;
   final int? completedTaskCount;
+  final Act0ProfileEvidenceProjectionV1? learningRecord;
   final int bankedRepairCount;
   final int reinforcedRepairCount;
   final int openRepairCount;
@@ -329,6 +333,10 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
               glyph: Act0AcademyLeafGlyphKindV1.learn,
               onTap: input.onOpenLearn,
             ),
+          ],
+          if (input.learningRecord != null) ...[
+            const SizedBox(height: 12),
+            Act0LearningRecordCardV1(projection: input.learningRecord!),
           ],
         ],
       ),

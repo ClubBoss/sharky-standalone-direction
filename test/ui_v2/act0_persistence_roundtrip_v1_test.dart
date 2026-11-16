@@ -1,3 +1,6 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import '../support/act0_shell_presentation_finders_v1.dart';
 import 'dart:convert';
 
@@ -247,6 +250,27 @@ void main() {
     for (final raw in <String>[
       '{bad',
       jsonEncode(<String, Object>{'schemaVersion': 999}),
+      for (final study in <Object?>[
+        null,
+        {},
+        [
+          <String, Object>{'schemaVersion': 99},
+        ],
+        [
+          <String, Object>{'schemaVersion': 1, 'role': 'teaching'},
+        ],
+      ])
+        jsonEncode(<String, Object?>{
+          'schemaVersion': 17,
+          'completedTaskIds': <String>[],
+          'skippedTaskIds': <String>[],
+          'completedLessonIds': <String>[],
+          'selectedWorldId': 'world_1',
+          'selectedLessonId': 'what_poker_is',
+          'selectedTaskId': 'what_poker_is_theory',
+          'earnedXp': 0,
+          'studyObservations': study,
+        }),
     ]) {
       SharedPreferences.setMockInitialValues(<String, Object>{
         progressKey: raw,
@@ -337,6 +361,143 @@ void main() {
     );
   });
 
+  testWidgets(
+    'study revisions and legacy completion survive without promoted status',
+    (tester) async {
+      final task = Act0ShellStateV1.sample
+          .lessonById('positions')
+          .taskList
+          .singleWhere((t) => t.taskId == 'positions_theory');
+      final observation = Act0StudyObservationV1(
+        worldId: 'world_1',
+        lessonId: 'positions',
+        taskId: task.taskId,
+        sourceRevision: act0AuthoredStudyRevisionV1(
+          worldId: 'world_1',
+          lessonId: 'positions',
+          task: task,
+        )!,
+        sessionId: 'preserved-study-session',
+        recordedAtUtc: DateTime.utc(2026, 1, 1),
+      );
+      for (final includeStudy in [false, true]) {
+        final snapshot = <String, Object?>{
+          'schemaVersion': 17,
+          'completedTaskIds': [task.taskId],
+          'skippedTaskIds': <String>[],
+          'completedLessonIds': <String>[],
+          'selectedWorldId': 'world_1',
+          'selectedLessonId': 'positions',
+          'selectedTaskId': 'positions_utg',
+          'earnedXp': 123,
+          if (includeStudy) 'studyObservations': [observation.toPayload()],
+        };
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pumpAndSettle();
+        SharedPreferences.setMockInitialValues({
+          progressKey: jsonEncode(snapshot),
+        });
+        await tester.pumpWidget(host());
+        await tester.pumpAndSettle();
+        final dynamic state = tester.state(
+          find.byType(Act0ShellPreviewScreenV1),
+        );
+        state.debugPersistProgressV1();
+        await tester.pump(const Duration(milliseconds: 100));
+        final prefs = await SharedPreferences.getInstance();
+        final restored = jsonDecode(prefs.getString(progressKey)!) as Map;
+        expect(restored['earnedXp'], 123);
+        expect(restored['completedTaskIds'], contains(task.taskId));
+        expect(restored['learningEvidenceHistory'], isEmpty);
+        expect(
+          restored['studyObservations'],
+          includeStudy ? [observation.toPayload()] : isEmpty,
+        );
+      }
+    },
+  );
+
+  testWidgets(
+    'current schema study corruption preserves graded history and original bytes',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      await tester.pumpWidget(host());
+      await tester.pumpAndSettle();
+      final dynamic initial = tester.state(
+        find.byType(Act0ShellPreviewScreenV1),
+      );
+      initial.debugPersistProgressV1();
+      await tester.pump(const Duration(milliseconds: 100));
+      final prefs = await SharedPreferences.getInstance();
+      final current = Map<String, Object?>.from(
+        jsonDecode(prefs.getString(progressKey)!) as Map,
+      );
+      expect(current['schemaVersion'], 20);
+      final history = Act0LearningEvidenceHistoryV1(
+        records: [
+          Act0LearningEvidenceRecordV1(
+            recordId: 'preserved-answer',
+            createdOrder: 1,
+            worldId: 'world_1',
+            lessonId: 'fold_check_call_raise',
+            taskId: 'actions_check_drill',
+            choiceId: 'check',
+            expectedChoiceId: 'check',
+            isCorrect: true,
+            errorType: 'none',
+            repairFocusId: 'no_bet_yet',
+            skillAtomId: 'action_read',
+            decisionTimeBucket: 'under_3s',
+            resultKind: 'correct',
+          ),
+        ],
+      );
+      current['learningEvidenceHistory'] = history.toPayload();
+      current['learningEvidenceLineage'] = history.lineagePayload();
+      current['earnedXp'] = 47;
+      current['studyObservations'] = <Object?>[];
+      final validRaw = jsonEncode(current);
+      Future<void> mountRaw(String raw) async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pumpAndSettle();
+        SharedPreferences.setMockInitialValues({progressKey: raw});
+        await tester.pumpWidget(host());
+        await tester.pumpAndSettle();
+      }
+
+      await mountRaw(validRaw);
+      expect(
+        act0ShellPresentationFinderV1('act0_shell_home_screen'),
+        findsOneWidget,
+      );
+      for (final bad in [
+        <Object?>[
+          {'schemaVersion': 99, 'role': 'teaching'},
+        ],
+        <Object?>[
+          {
+            'schemaVersion': 1,
+            'role': 'teaching',
+            'taskId': 'positions_theory',
+          },
+        ],
+      ]) {
+        final corrupt = jsonEncode({...current, 'studyObservations': bad});
+        await mountRaw(corrupt);
+        expect(
+          find.text('Your saved progress could not be read.'),
+          findsOneWidget,
+        );
+        final disk = await SharedPreferences.getInstance();
+        expect(disk.getString(progressKey), corrupt);
+        final preserved = jsonDecode(disk.getString(progressKey)!) as Map;
+        expect(preserved['learningEvidenceHistory'], history.toPayload());
+        expect(preserved['learningEvidenceLineage'], history.lineagePayload());
+        expect(preserved['earnedXp'], 47);
+      }
+    },
+  );
+
   testWidgets('clean install writes schema 20 with explicit defaults', (
     tester,
   ) async {
@@ -355,6 +516,7 @@ void main() {
     expect(stored['schemaVersion'], 20);
     expect(stored['pendingDecisionAssistance'], isEmpty);
     expect(stored['learningEvidenceHistory'], isEmpty);
+    expect(stored['studyObservations'], isEmpty);
     expect(stored['durableRetentionHistory'], isEmpty);
   });
 }

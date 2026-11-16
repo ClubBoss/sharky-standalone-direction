@@ -20,3 +20,6 @@ test/ui_v2/act0_onb02_disposition_ack_v1_test.dart
 test/services/loc01_language_persistence_test.dart
 test/ui_v2/cnt01_role_inventory_v1_test.dart
 test/ui_v2/act0_w01_theory_source_truth_v1_test.dart
+test/ui_v2/act0_skl01_evidence_state_v1_test.dart
+test/ui_v2/act0_positions_theory_persistence_truth_v1_test.dart
+test/ui_v2/act0_persistence_roundtrip_v1_test.dart

@@ -137,6 +137,77 @@ String? act0CurrentAuthoredSourceFingerprintForIdentityV1({
   );
 }
 
+/// Study has a separate revision because assessment fingerprints deliberately
+/// omit teaching rails. Reuse the same table fingerprint for each teaching scene.
+String? act0AuthoredStudyRevisionV1({
+  required String worldId,
+  required String lessonId,
+  required Act0LessonTaskV1 task,
+}) {
+  if (task.phase != Act0LessonPhaseV1.theory) return null;
+  final base = act0AuthoredSourceFingerprintV1(
+    worldId: worldId,
+    lessonId: lessonId,
+    task: task,
+  );
+  if (base == null) return null;
+  return sha256
+      .convert(
+        utf8.encode(
+          jsonEncode([
+            'act0_study_source_v1',
+            base,
+            task.title,
+            for (final step in task.runner.teachingSteps)
+              [
+                step.title,
+                step.body,
+                step.ctaLabel,
+                step.identityTeachingSemantics.name,
+                step.focusSeatIds,
+                step.focusCardIds,
+                step.focusLabels,
+                if (step.table != null)
+                  act0AuthoredSourceFingerprintV1(
+                    worldId: worldId,
+                    lessonId: lessonId,
+                    task: Act0LessonTaskV1(
+                      taskId: task.taskId,
+                      title: task.title,
+                      phase: task.phase,
+                      runner: task.runner.copyWith(table: step.table),
+                      rewardXp: task.rewardXp,
+                      stepKind: task.stepKind,
+                      taskFamily: task.taskFamily,
+                      tablePresentation: task.tablePresentation,
+                    ),
+                  ),
+              ],
+          ]),
+        ),
+      )
+      .toString();
+}
+
+/// Exact authored topic only. A study receipt does not establish a skill map,
+/// comprehension, current correctness, unseen transfer or retention.
+String? act0CurrentStudyTopicV1(Act0StudyObservationV1 observation) {
+  final task = _resolveTask(
+    observation.worldId,
+    observation.lessonId,
+    observation.taskId,
+  );
+  if (task == null ||
+      observation.sourceRevision !=
+          act0AuthoredStudyRevisionV1(
+            worldId: observation.worldId,
+            lessonId: observation.lessonId,
+            task: task,
+          ))
+    return null;
+  return task.title;
+}
+
 List<Object?> _cards(Iterable<Act0CardStateV1> cards) => [
   for (final card in cards) <Object?>[card.rank, card.suit],
 ];
