@@ -460,6 +460,147 @@ void main() {
       },
     );
 
+    const atoTeachingBody =
+        'ATo means ace-ten offsuit. The displayed cards are the ace of diamonds and ten of clubs. Read this hand with the Button seat and unopened-pot context.';
+    const atoTeachingAliases = [
+      (
+        lesson: 'same_hand_different_seat',
+        task: 'same_hand_different_seat_same_hand_late_open',
+      ),
+      (lesson: 'position_apply', task: 'position_apply_late_open'),
+      (
+        lesson: 'position_checkpoint',
+        task: 'position_checkpoint_position_checkpoint_late_open',
+      ),
+    ];
+    for (final control in atoTeachingAliases) {
+      test('${control.task} teaches its displayed ATo hand and BTN seat', () {
+        final task = taskFor(
+          worldId: 'world_3',
+          lessonId: control.lesson,
+          taskId: control.task,
+        );
+        final table = task.runner.table;
+        expect(table.heroCards.map((card) => card.label), ['Ad', 'Tc']);
+        expect(table.heroSeat.seatId, 'btn');
+        expect(table.centerLabel, 'Unopened pot');
+        final teaching = task.runner.teachingSteps.single;
+        expect(teaching.title, 'Read the displayed hand and seat.');
+        expect(teaching.body, atoTeachingBody);
+        expect(teaching.focusSeatIds, ['btn']);
+        expect(teaching.focusCardIds, ['hero_0', 'hero_1']);
+        expect(teaching.focusLabels, ['ATo', 'BTN', 'Unopened pot']);
+        final teachingTable = act0TeachingTableForRunnerV1(table, teaching);
+        expect(teachingTable.heroCards.map((card) => card.label), ['Ad', 'Tc']);
+        expect(teachingTable.highlightedSeatIds, contains('btn'));
+      });
+    }
+
+    test(
+      'ATo correction preserves independently authored neighbouring teaching',
+      () {
+        Act0TeachingStepV1 teachingFor(String taskId) => Act0ShellStateV1.sample
+            .worldById('world_3')
+            .lessons
+            .expand((lesson) => lesson.taskList)
+            .singleWhere((task) => task.taskId == taskId)
+            .runner
+            .teachingSteps
+            .single;
+        expect(
+          teachingFor('button_advantage_button_open').body,
+          'KTs on the Button is playable when nobody entered.',
+        );
+        expect(
+          teachingFor('position_apply_btn_open').body,
+          'QTs can still open first in from the Button.',
+        );
+        for (final id in [
+          'position_apply_recap',
+          'position_checkpoint_position_checkpoint_review',
+        ]) {
+          final teaching = teachingFor(id);
+          expect(teaching.title, 'Position checklist.');
+          expect(
+            teaching.body,
+            'Bucket the hand, then ask if the seat helps or hurts.',
+          );
+        }
+        expect(
+          teachingFor(
+            'position_checkpoint_position_checkpoint_table_notice',
+          ).title,
+          'Seat read before action.',
+        );
+      },
+    );
+
+    testWidgets('ATo teaching renders the actual composed source in English', (
+      tester,
+    ) async {
+      final control = atoTeachingAliases.first;
+      final task = taskFor(
+        worldId: 'world_3',
+        lessonId: control.lesson,
+        taskId: control.task,
+      );
+      tester.view.physicalSize = const Size(393, 852);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: const Locale('en'),
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: task.runner.copyWith(
+                phase: task.entryPhase,
+                teachingStepIndex: 0,
+              ),
+              worldNumber: 3,
+              selectedWorldId: 'world_3',
+              selectedLessonId: control.lesson,
+              selectedTaskId: task.taskId,
+              selectedTaskTitle: task.title,
+              selectedTaskFamily: task.resolvedTaskFamily,
+              compositionFamily: task.resolvedCompositionFamily,
+              tablePresentation: task.tablePresentation,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onChooseSeat: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final prompt = find.byKey(const Key('act0_integrated_scene_prompt'));
+      final support = find.byKey(const Key('act0_learning_scene_v3_support'));
+      expect(prompt, findsOneWidget);
+      expect(support, findsOneWidget);
+      expect(
+        tester.widget<Text>(prompt).data,
+        'Read the displayed hand and seat.',
+      );
+      expect(tester.widget<Text>(support).data, atoTeachingBody);
+      expect(find.textContaining('KTs on the Button'), findsNothing);
+      final supportScroll = find.byKey(
+        const Key('act0_learning_scene_v3_theory_support_scroll'),
+      );
+      expect(supportScroll, findsOneWidget);
+      final scrollable = find.descendant(
+        of: supportScroll,
+        matching: find.byType(Scrollable),
+      );
+      final scrollState = tester.state<ScrollableState>(scrollable);
+      expect(scrollState.position.maxScrollExtent, greaterThan(0));
+      await tester.drag(supportScroll, const Offset(0, -180));
+      await tester.pumpAndSettle();
+      expect(scrollState.position.pixels, greaterThan(0));
+      expect(tester.takeException(), isNull);
+    });
+
     test(
       'Button-last teaching names the postflop street in both languages',
       () {

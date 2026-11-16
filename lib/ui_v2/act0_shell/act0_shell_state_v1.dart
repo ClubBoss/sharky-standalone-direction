@@ -13997,6 +13997,16 @@ final _world3LateOpenRunner = _world3ButtonOpenRunner.copyWith(
     ],
     centerLabel: 'Unopened pot',
   ),
+  teachingSteps: const <Act0TeachingStepV1>[
+    Act0TeachingStepV1(
+      title: 'Read the displayed hand and seat.',
+      body:
+          'ATo means ace-ten offsuit. The displayed cards are the ace of diamonds and ten of clubs. Read this hand with the Button seat and unopened-pot context.',
+      focusSeatIds: <String>['btn'],
+      focusCardIds: <String>['hero_0', 'hero_1'],
+      focusLabels: <String>['ATo', 'BTN', 'Unopened pot'],
+    ),
+  ],
 );
 
 final _world3PositionDisciplineRunner = _world3EarlyFoldRunner.copyWith(
