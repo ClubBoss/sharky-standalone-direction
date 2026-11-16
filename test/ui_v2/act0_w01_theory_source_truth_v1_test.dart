@@ -53,6 +53,142 @@ Act0LessonTaskV1 _task(String lesson, String id) => Act0ShellStateV1.sample
     .singleWhere((task) => task.taskId == id);
 
 void main() {
+  test('W01 Button definition explains the marker for every choice', () {
+    final task = _task('positions', 'positions_theory');
+    expect(task.phase, Act0LessonPhaseV1.theory);
+    expect(task.runner.options.map((option) => option.id), <String>[
+      'top',
+      'random',
+      'bottom',
+    ]);
+    expect(
+      task.runner.options.where(act0RunnerOptionIsAuthoredCorrectV1).single.id,
+      'bottom',
+    );
+    final expected = <String, String>{
+      'top': 'UTG is an early position, not the dealer button.',
+      'bottom': 'BTN marks the dealer button in this six-seat table.',
+      'random': 'BB is the big blind, not the dealer button.',
+    };
+    for (final option in task.runner.options) {
+      expect(option.feedbackReason, expected[option.id]);
+    }
+  });
+
+  test('W01 position recap explains its stated postflop question', () {
+    final task = _task('positions', 'positions_review');
+    expect(task.phase, Act0LessonPhaseV1.review);
+    expect(task.entryPhase, Act0LessonPhaseV1.drill);
+    expect(task.runner.question, 'Which seat is latest after the flop here?');
+    expect(task.runner.options.map((option) => option.id), <String>[
+      'top',
+      'random',
+      'bottom',
+    ]);
+    expect(
+      task.runner.options.where(act0RunnerOptionIsAuthoredCorrectV1).single.id,
+      'bottom',
+    );
+    final expected = <String, String>{
+      'top': 'UTG acts before BTN after the flop in this six-seat hand.',
+      'bottom': 'BTN acts last after the flop in this six-seat hand.',
+      'random': 'BB acts before BTN after the flop in this six-seat hand.',
+    };
+    for (final option in task.runner.options) {
+      expect(option.feedbackReason, expected[option.id]);
+    }
+  });
+
+  testWidgets('W01 recap shows postflop feedback after the BB choice', (
+    tester,
+  ) async {
+    final task = _task('positions', 'positions_review');
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    var runner = task.runner.copyWith(
+      phase: task.entryPhase,
+      teachingStepIndex: 0,
+    );
+    String? chosen;
+    await tester.pumpWidget(
+      MaterialApp(
+        locale: const Locale('en'),
+        home: Scaffold(
+          body: StatefulBuilder(
+            builder: (context, update) {
+              return Act0LessonRunnerShellV1(
+                runner: runner,
+                worldNumber: 1,
+                selectedWorldId: 'world_1',
+                selectedLessonId: 'positions',
+                selectedTaskId: task.taskId,
+                selectedTaskTitle: task.title,
+                selectedTaskFamily: task.resolvedTaskFamily,
+                compositionFamily: task.resolvedCompositionFamily,
+                tablePresentation: task.tablePresentation,
+                onBack: () {},
+                onContinueTheory: () => update(() {
+                  runner = runner.copyWith(
+                    teachingStepIndex: runner.teachingStepIndex + 1,
+                  );
+                }),
+                onChooseOption: (option) => update(() {
+                  chosen = option.id;
+                  runner = runner.copyWith(
+                    selectedOptionId: option.id,
+                    phase: Act0LessonPhaseV1.review,
+                  );
+                }),
+                onChooseSeat: (seatId) => update(() {
+                  final option = runner.options.singleWhere(
+                    (option) => option.seatId == seatId,
+                  );
+                  chosen = option.id;
+                  runner = runner.copyWith(
+                    selectedOptionId: option.id,
+                    phase: Act0LessonPhaseV1.review,
+                  );
+                }),
+                onContinueReview: () {},
+              );
+            },
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final choice = find.byKey(const Key('act0_shell_seat_tap_bb'));
+    // Follow the real teaching rail; do not force a recap into a drill or
+    // bypass its authored explanation. This remains a widget consumer harness.
+    for (var step = 0; step < 12 && runner.activeTeachingStep != null; step++) {
+      await tester.pump(const Duration(milliseconds: 900));
+      final next = find.byKey(const Key('act0_shell_continue_cta'));
+      expect(next, findsOneWidget);
+      await tester.ensureVisible(next);
+      await tester.tap(next);
+      await tester.pumpAndSettle();
+    }
+    expect(runner.activeTeachingStep, isNull);
+    expect(choice, findsOneWidget);
+    await tester.ensureVisible(choice);
+    await tester.tap(choice);
+    await tester.pumpAndSettle();
+    expect(chosen, 'random');
+    final rendered = tester
+        .widgetList<Text>(find.byType(Text))
+        .map((text) => text.data ?? text.textSpan?.toPlainText() ?? '')
+        .where((text) => text.isNotEmpty)
+        .toList();
+    print('W01_POSITION_RENDER=${jsonEncode(rendered)}');
+    expect(
+      find.text('BB acts before BTN after the flop in this six-seat hand.'),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   test('blind concept repairs keep the one-BB signal and existing drill', () {
     const lesson = 'blinds_action_order';
     final source = _task(lesson, 'blinds_theory');
