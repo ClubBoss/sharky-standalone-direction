@@ -3555,7 +3555,7 @@ final _handDisciplineLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'hand_discipline_buckets_borderline',
-        title: 'Borderline strong',
+        title: 'Borderline hand',
         phase: Act0LessonPhaseV1.drill,
         runner: _w2BorderlineBucketRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
@@ -13904,6 +13904,29 @@ final _world3PositionDisciplineRunner = _world3EarlyFoldRunner.copyWith(
   caption: 'Unopened pot. Hero is early with ATo.',
   hint: 'The same hand is less comfortable from early position.',
   question: 'What is the disciplined action?',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'fold',
+      label: 'Fold',
+      isCorrect: true,
+      preferredLabel: 'Fold',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Early-seat baseline applied.',
+      feedbackReason:
+          'The course baseline folds ATo from UTG in this unopened pot.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'raise',
+      label: 'Raise',
+      isCorrect: false,
+      preferredLabel: 'Fold',
+      betterAnswerLabel: 'Fold',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Re-check ATo and UTG.',
+      feedbackReason:
+          'Read ATo and UTG together. The course baseline here is Fold, not an automatic open.',
+    ),
+  ],
   table: _act0ReassignHeroSeatV1(
     _world3EarlyFoldRunner.table.copyWith(
       seats: _act0WithAuthoredPreActionSeatsV1(
@@ -13934,6 +13957,29 @@ final _world3HijDisciplineRunner = _world3PositionDisciplineRunner.copyWith(
   caption: 'Unopened pot. Hero is HJ with KTo.',
   hint:
       'Middle position still needs discipline when the offsuit hand gets loose.',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'fold',
+      label: 'Fold',
+      isCorrect: true,
+      preferredLabel: 'Fold',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Middle-seat baseline applied.',
+      feedbackReason:
+          'The course baseline folds KTo from HJ in this unopened pot.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'raise',
+      label: 'Raise',
+      isCorrect: false,
+      preferredLabel: 'Fold',
+      betterAnswerLabel: 'Fold',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Re-check KTo and HJ.',
+      feedbackReason:
+          'Read KTo and HJ together. The course baseline here is Fold, not an automatic open.',
+    ),
+  ],
   table: _act0ReassignHeroSeatV1(
     _world3PositionDisciplineRunner.table.copyWith(
       seats: _act0WithAuthoredPreActionSeatsV1(
@@ -13971,6 +14017,29 @@ final _world3CheckpointEarlyFoldRunner = _world3PositionDisciplineRunner.copyWit
   lessonId: 'w3_checkpoint_early_fold_a9o',
   caption: 'Unopened pot. Hero is UTG with A9o.',
   hint: 'A tempting ace still needs an early-seat discipline check.',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'fold',
+      label: 'Fold',
+      isCorrect: true,
+      preferredLabel: 'Fold',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Ace discipline applied.',
+      feedbackReason:
+          'The course baseline folds A9o from UTG in this unopened pot.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'raise',
+      label: 'Raise',
+      isCorrect: false,
+      preferredLabel: 'Fold',
+      betterAnswerLabel: 'Fold',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Re-check A9o and UTG.',
+      feedbackReason:
+          'Read A9o and UTG together. The course baseline here is Fold, not an automatic open.',
+    ),
+  ],
   table: _act0ReassignHeroSeatV1(
     _world3PositionDisciplineRunner.table.copyWith(
       heroCards: const <Act0CardStateV1>[
@@ -14793,7 +14862,7 @@ final _w2BorderlineBucketRunner = _world3BucketsIntroRunner.copyWith(
   lessonId: 'w2_borderline_bucket_qjs',
   lessonTitle: 'Hand buckets',
   lessonSubtitle: 'Hand Discipline',
-  caption: 'Hero holds Q♥ J♠ before the flop.',
+  caption: 'Hero holds Qs Js before the flop.',
   hint: 'Connected high cards can play, but they need position and frame.',
   question: 'Which bucket is QJs before context helps?',
   options: const <Act0RunnerOptionV1>[
@@ -14831,10 +14900,7 @@ final _w2BorderlineBucketRunner = _world3BucketsIntroRunner.copyWith(
     ),
   ],
   table: _whatYouCanDoRunner.table.copyWith(
-    heroCards: const <Act0CardStateV1>[
-      Act0CardStateV1(rank: 'Q', suit: 'h', tone: Act0CardToneV1.red),
-      Act0CardStateV1(rank: 'J', suit: 's'),
-    ],
+    heroCards: _heroQJsCards,
     centerLabel: 'QJs preflop',
     highlightedCardIds: const <String>['hero_0', 'hero_1'],
   ),
@@ -15008,7 +15074,8 @@ final _w1DisciplineApplyLateOpenRunner = _world3ButtonOpenRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Strong hand, good seat.',
-      body: 'AJo is a strong bucket. BTN acts last. Pot is clean. Open.',
+      body:
+          'AJo is a strong bucket. BTN acts last after the flop. Pot is clean. Open.',
       focusSeatIds: <String>['btn'],
       focusCardIds: <String>['hero_0', 'hero_1'],
       focusLabels: <String>['AJo', 'BTN', 'Open'],
