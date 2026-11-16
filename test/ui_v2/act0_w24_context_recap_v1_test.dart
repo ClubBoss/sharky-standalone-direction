@@ -437,8 +437,7 @@ void main() {
   testWidgets(
     'SIMULATED normal AppRoot context repair, familiar replay and saved remount',
     (tester) async {
-      final semantics = tester.ensureSemantics();
-      addTearDown(semantics.dispose);
+      // testWidgets owns enabled semantics and its teardown.
       tester.view.physicalSize = const Size(393, 852);
       tester.view.devicePixelRatio = 1;
       tester.view.padding = const FakeViewPadding(top: 59, bottom: 34);
@@ -690,8 +689,7 @@ void main() {
   testWidgets('SIMULATED stale BTN/UTG flags expose forbidden seat actions', (
     tester,
   ) async {
-    final semantics = tester.ensureSemantics();
-    addTearDown(semantics.dispose);
+    // testWidgets owns enabled semantics and its teardown.
     tester.view.physicalSize = const Size(393, 852);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -761,8 +759,7 @@ void main() {
     testWidgets(
       'SIMULATED context $selected uses real option controls and grade',
       (tester) async {
-        final semantics = tester.ensureSemantics();
-        addTearDown(semantics.dispose);
+        // testWidgets owns enabled semantics and its teardown.
         tester.view.physicalSize = const Size(393, 852);
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.resetPhysicalSize);
