@@ -658,6 +658,24 @@ act0RepairGapAdjudicationsV1 = <Act0RepairGapAdjudicationV1>[
     recheckPath: _recheck,
     compatibilityImpact: _compat,
   ),
+  Act0RepairGapAdjudicationV1(
+    sourceWorldId: 'world_3',
+    sourceLessonId: 'same_hand_different_seat',
+    sourceTaskId: 'same_hand_different_seat_w3_same_hand_recap',
+    misconception:
+        'one fixed action per hand instead of bucket, seat and frame',
+    conceptErrorId: 'misread_position_action_order',
+    priorFallback:
+        'mapped_wrong_signal:world_3/position_checkpoint/position_checkpoint_position_checkpoint_table_notice:hero_button',
+    candidateTargetIds: <String>[],
+    outcome: Act0RepairGapOutcomeV1.intentionalExactReplay,
+    learnerEquivalenceRationale:
+        'This authored recap checks the bucket, seat and frame definition. No separate active equivalent is declared; repeat this definition without claiming unseen transfer.',
+    difficultyRelationship: _sameDifficulty,
+    recheckPath: 'context recap replay then original-source recheck',
+    compatibilityImpact:
+        'Historical seat-choice records remain intact; current context choices have a new source fingerprint.',
+  ),
 ];
 
 Act0RepairGapAdjudicationV1? act0RepairGapAdjudicationForSourceTaskV1(

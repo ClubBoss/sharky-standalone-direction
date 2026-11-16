@@ -3434,7 +3434,7 @@ final _preflopBasicsLessons = <Act0LessonCardV1>[
         runner: _world3SameHandRecapRunner.copyWith(
           options: _act0AuthoredCorrectOptionAtV1(
             _world3SameHandRecapRunner.options,
-            correctOptionId: 'btn',
+            correctOptionId: 'framework',
             correctIndex: 1,
           ),
         ),
@@ -14547,6 +14547,31 @@ final _world3SameHandRecapRunner = _world3SameHandIntroRunner.copyWith(
   hint:
       'A hand can open first in, call facing an open, or fold in a worse frame.',
   question: 'What prevents one-hand-one-answer thinking?',
+  // Current context-answer revision; old seat choices stay historical.
+  feedbackSignalId: 'position_action_order',
+  options: const <Act0RunnerOptionV1>[
+    Act0RunnerOptionV1(
+      id: 'one_answer',
+      label: 'One answer per hand',
+      isCorrect: false,
+      preferredLabel: 'Bucket, seat, frame',
+      betterAnswerLabel: 'Bucket, seat, frame',
+      quality: Act0FeedbackQualityV1.wrong,
+      feedbackTitle: 'Re-check the frame.',
+      feedbackReason:
+          'One hand can change action when position or action frame changes.',
+    ),
+    Act0RunnerOptionV1(
+      id: 'framework',
+      label: 'Bucket, seat, frame',
+      isCorrect: true,
+      preferredLabel: 'Bucket, seat, frame',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: 'Frame takeaway.',
+      feedbackReason:
+          'The reusable preflop read is hand bucket, position, and action frame before choosing.',
+    ),
+  ],
   feedbackTitle: 'Frame takeaway.',
   feedbackReason:
       'The reusable preflop read is hand bucket, position, and action frame before choosing.',

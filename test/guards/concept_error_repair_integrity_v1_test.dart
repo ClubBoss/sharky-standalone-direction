@@ -93,9 +93,10 @@ void main() {
       'world_3/early_vs_late/early_vs_late_late_info_choice',
       'world_3/same_hand_different_seat/same_hand_different_seat_position_repair_same_hand_different_seat',
       'world_8/spr_and_commitment/what_poker_is_side_pot_intro',
+      'world_3/same_hand_different_seat/same_hand_different_seat_w3_same_hand_recap',
     ];
     final rows = act0RepairGapAdjudicationsV1;
-    expect(rows, hasLength(36));
+    expect(rows, hasLength(37));
     expect(
       rows
           .map(
@@ -105,7 +106,7 @@ void main() {
           .toList(),
       expectedSources,
     );
-    expect(rows.map((row) => row.sourceTaskId).toSet(), hasLength(36));
+    expect(rows.map((row) => row.sourceTaskId).toSet(), hasLength(37));
 
     final counts = <Act0RepairGapOutcomeV1, int>{};
     for (final row in rows) {
@@ -116,6 +117,9 @@ void main() {
             ? 'mapped_wrong_signal:world_3/position_checkpoint/'
                   'position_checkpoint_position_checkpoint_table_notice:'
                   'players_behind'
+            : row.sourceTaskId == 'same_hand_different_seat_w3_same_hand_recap'
+            ? 'mapped_wrong_signal:world_3/position_checkpoint/'
+                  'position_checkpoint_position_checkpoint_table_notice:hero_button'
             : 'unrecorded_exact_source_fallback',
       );
       expect(row.leaksOriginalAnswer, isFalse);
@@ -180,7 +184,8 @@ void main() {
     }
     expect(counts, <Act0RepairGapOutcomeV1, int>{
       Act0RepairGapOutcomeV1.alternateSameSignalTarget: 21,
-      Act0RepairGapOutcomeV1.intentionalExactReplay: 15,
+      // The prior 15 dispositions remain; this one context definition adds one.
+      Act0RepairGapOutcomeV1.intentionalExactReplay: 15 + 1,
     });
     expect(
       rows.where(

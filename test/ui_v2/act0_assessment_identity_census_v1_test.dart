@@ -135,8 +135,47 @@ void main() {
     const acceptedMainFingerprint =
         '26c8c2d76a89ba00adfb482b2130e758f7b8e32699ef85f75e15abf189e57bb4';
     print('ASM01_SOURCE_FINGERPRINT=$fingerprint');
-    expect(fingerprint, acceptedCurrentFingerprint);
+    // Exact W24 context-answer evolution reproduced by the Dart census.
+    // Keep every prior whole-source pin in the historical reconstruction.
+    const currentW24ContextFingerprint =
+        'da8c4dc65ebc99979b01b3eb1c6e16d92626b95b4fbc4d4eb5df15d8585ff4c7';
+    expect(fingerprint, currentW24ContextFingerprint);
     final historicalComparison = jsonDecode(encoded) as List<dynamic>;
+    final context = historicalComparison.cast<List<dynamic>>().singleWhere(
+      (row) => row[2] == 'same_hand_different_seat_w3_same_hand_recap',
+    );
+    expect(context, <Object?>[
+      'world_3',
+      'same_hand_different_seat',
+      'same_hand_different_seat_w3_same_hand_recap',
+      'review',
+      'review',
+      <Object?>[
+        <Object?>[
+          'one_answer',
+          'One answer per hand',
+          false,
+          'wrong',
+          'Bucket, seat, frame',
+        ],
+        <Object?>[
+          'framework',
+          'Bucket, seat, frame',
+          true,
+          'correct',
+          'Bucket, seat, frame',
+        ],
+      ],
+    ]);
+    context[5] = <Object?>[
+      <Object?>['utg', 'UTG', false, 'wrong', 'BTN'],
+      <Object?>['btn', 'BTN', true, 'correct', 'BTN'],
+    ];
+    expect(
+      sha256.convert(utf8.encode(jsonEncode(historicalComparison))).toString(),
+      acceptedCurrentFingerprint,
+      reason: 'Only the exact reviewed W24 context choice tuple is reversed.',
+    );
     // Freeze the full current rows before reconstructing only the reviewed
     // old comparison tuples. This does not migrate saved learner records.
     const reviewedW01TheoryRows = {

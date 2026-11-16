@@ -7125,6 +7125,70 @@ Act0FeedbackSignalProofV1? _feedbackSignalProofForRunnerV1({
   final explicitSignal = runner.feedbackSignalId?.trim() ?? '';
   if (explicitSignal.isNotEmpty && explicitSignal != 'players_behind') {
     switch (explicitSignal) {
+      case 'position_action_order':
+        // One authored context recap. Never infer this concept from a seat,
+        // unrelated cards or a price, and never fall through on stale metadata.
+        final choices = <String, Act0RunnerOptionV1>{
+          for (final candidate in runner.options) candidate.id: candidate,
+        };
+        final framework = choices['framework'];
+        final oneAnswer = choices['one_answer'];
+        if (runner.lessonId != 'same_hand_different_seat' ||
+            taskFamily != Act0TaskFamilyV1.review ||
+            runner.phase == Act0LessonPhaseV1.theory ||
+            runner.question != 'What prevents one-hand-one-answer thinking?' ||
+            runner.options.length != 2 ||
+            choices.length != 2 ||
+            framework == null ||
+            oneAnswer == null ||
+            framework.label != 'Bucket, seat, frame' ||
+            !framework.isCorrect ||
+            framework.quality != Act0FeedbackQualityV1.correct ||
+            framework.preferredLabel != 'Bucket, seat, frame' ||
+            framework.betterAnswerLabel != 'Bucket, seat, frame' ||
+            framework.feedbackReason !=
+                'The reusable preflop read is hand bucket, position, and action frame before choosing.' ||
+            oneAnswer.label != 'One answer per hand' ||
+            oneAnswer.isCorrect ||
+            oneAnswer.quality != Act0FeedbackQualityV1.wrong ||
+            oneAnswer.preferredLabel != 'Bucket, seat, frame' ||
+            oneAnswer.betterAnswerLabel != 'Bucket, seat, frame' ||
+            oneAnswer.feedbackReason !=
+                'One hand can change action when position or action frame changes.' ||
+            runner.options.any(
+              (candidate) =>
+                  (candidate.seatId ?? '').trim().isNotEmpty ||
+                  candidate.amountLabel.isNotEmpty ||
+                  candidate.repairFocusSeatIds.isNotEmpty ||
+                  candidate.repairFocusCardIds.isNotEmpty ||
+                  candidate.repairFocusLabels.isNotEmpty,
+            )) {
+          return null;
+        }
+        // A valid runner cannot lend its proof to an old or forged external
+        // choice. Bind the actual selection to its current canonical option.
+        final selected = option == null ? null : choices[option.id];
+        if (option == null ||
+            selected == null ||
+            runner.selectedOptionId != selected.id ||
+            option.label != selected.label ||
+            option.isCorrect != selected.isCorrect ||
+            option.quality != selected.quality ||
+            option.preferredLabel != selected.preferredLabel ||
+            option.betterAnswerLabel != selected.betterAnswerLabel ||
+            option.feedbackTitle != selected.feedbackTitle ||
+            option.feedbackReason != selected.feedbackReason ||
+            option.amountLabel != selected.amountLabel ||
+            option.seatId != selected.seatId ||
+            option.repairFocusSeatIds.isNotEmpty ||
+            option.repairFocusCardIds.isNotEmpty ||
+            option.repairFocusLabels.isNotEmpty) {
+          return null;
+        }
+        return _feedbackSignalProofV1(
+          signalId: explicitSignal,
+          label: 'Bucket, seat, frame',
+        );
       case 'range_bucket_shift':
         if (!const {
           'w6_turn_shift_bucket',
@@ -7336,6 +7400,12 @@ Act0SkillReceiptV1? act0FirstValueSkillReceiptForRunnerV1({
 ({String skillAtomId, String skillLabel, String nextRepId, String nextRepLabel})
 _skillReceiptSpecForSignalIdV1(String signalId) {
   return switch (signalId.trim()) {
+    'position_action_order' => (
+      skillAtomId: 'position_action_order',
+      skillLabel: 'Preflop context read',
+      nextRepId: 'repeat_position_action_order',
+      nextRepLabel: 'recheck the same context framework',
+    ),
     'range_bucket_shift' => (
       skillAtomId: 'range_bucket_reasoning',
       skillLabel: 'Range bucket reasoning',
