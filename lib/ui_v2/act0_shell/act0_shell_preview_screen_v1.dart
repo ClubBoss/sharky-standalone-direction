@@ -1134,6 +1134,8 @@ enum Act0ControlledDemoCaptureModeV1 { walkthrough, directState }
 
 enum _Act0DebugRepairProofOutcomeV1 { correct, wrong }
 
+enum _Act0ProgressSaveStatusV1 { idle, saving, unconfirmed }
+
 enum Act0ControlledDemoCaptureSurfaceV1 {
   placement,
   welcome,
@@ -1348,6 +1350,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool _debugFreshLearnerV1 = false;
   static const String _progressPrefsKey = 'act0_shell_progress_v1';
   Act0ProgressStoreV1 _progressStore = _makeProgressStoreV1();
+  final _progressSaveStatusV1 = ValueNotifier(_Act0ProgressSaveStatusV1.idle);
+  bool _progressSaveStatusDisposedV1 = false;
   int _recoveryEpochV1 = 0;
   bool _recoveryBusyV1 = false;
   // A canonical reset severs all legacy SessionDrill projections. Their raw
@@ -2707,6 +2711,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _recoveryEpochV1++;
     _learnLessonOpenSequenceV1++;
     _persistProgress();
+    _progressSaveStatusDisposedV1 = true;
+    _progressSaveStatusV1.dispose();
     super.dispose();
   }
 
@@ -2714,6 +2720,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final epoch = ++_recoveryEpochV1;
     _progressRestoredV1 = false;
     _progressStore = _makeProgressStoreV1();
+    _progressSaveStatusV1.value = _Act0ProgressSaveStatusV1.idle;
     if (_usesPersistedProgress) {
       try {
         await _restorePersistedProgress();
@@ -4453,17 +4460,28 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       'session_id': _sessionIdentityStateV1.currentActiveSessionId,
       'source_surface': 'act0_progress_store',
     });
-    // Capture bytes before yielding: the snapshot holds mutable source sets.
+    // Capture bytes, store and recovery epoch before yielding. A late save may
+    // acknowledge its own bytes without acknowledging the latest live snapshot.
+    final store = _progressStore;
+    final epoch = _recoveryEpochV1;
     unawaited(
       _writePersistedProgress(
         snapshot.toStorageString(),
         generation,
         diagnosticContext,
+        store,
+        epoch,
       ).then<void>(
         (saved) {
           acknowledgement?.complete(saved);
         },
         onError: (Object _, StackTrace __) {
+          _setProgressSaveStatusV1(
+            _Act0ProgressSaveStatusV1.unconfirmed,
+            generation,
+            store,
+            epoch,
+          );
           acknowledgement?.complete(false);
         },
       ),
@@ -4474,21 +4492,109 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     String snapshot,
     int generation,
     Map<String, Object?> diagnosticContext,
+    Act0ProgressStoreV1 store,
+    int epoch,
   ) async {
     await Future<void>.value();
     if (generation != _progressPersistGeneration ||
+        epoch != _recoveryEpochV1 ||
+        !identical(store, _progressStore) ||
         _recoveryBusyV1 ||
         _progressLoadFailed ||
         !_progressRestoredV1) {
       return false; // Coalesced requests have no durable acknowledgement.
     }
-    final acknowledged = await _progressStore.save(snapshot);
+    _setProgressSaveStatusV1(
+      _Act0ProgressSaveStatusV1.saving,
+      generation,
+      store,
+      epoch,
+    );
+    final acknowledged = await store.save(snapshot);
     // False is indeterminate, never proof of data loss or an OS-level cause.
     _recordTelemetryEventV1('progress_persist_result', <String, Object?>{
       ...diagnosticContext,
       'outcome': acknowledged ? 'acknowledged' : 'indeterminate',
     });
-    return acknowledged;
+    final currentAcknowledgement = acknowledged && store.isWriteLeaseCurrent;
+    _setProgressSaveStatusV1(
+      currentAcknowledgement
+          ? _Act0ProgressSaveStatusV1.idle
+          : _Act0ProgressSaveStatusV1.unconfirmed,
+      generation,
+      store,
+      epoch,
+    );
+    return currentAcknowledgement &&
+        generation == _progressPersistGeneration &&
+        epoch == _recoveryEpochV1 &&
+        identical(store, _progressStore);
+  }
+
+  void _setProgressSaveStatusV1(
+    _Act0ProgressSaveStatusV1 status,
+    int generation,
+    Act0ProgressStoreV1 store,
+    int epoch,
+  ) {
+    if (!_progressSaveStatusDisposedV1 &&
+        mounted &&
+        generation == _progressPersistGeneration &&
+        epoch == _recoveryEpochV1 &&
+        identical(store, _progressStore) &&
+        !_recoveryBusyV1 &&
+        !_progressLoadFailed &&
+        _progressRestoredV1) {
+      _progressSaveStatusV1.value = status;
+    }
+  }
+
+  Widget _progressSaveNoticeV1() {
+    final epoch = _recoveryEpochV1;
+    final store = _progressStore;
+    return ValueListenableBuilder(
+      valueListenable: _progressSaveStatusV1,
+      builder: (context, status, _) {
+        if (status == _Act0ProgressSaveStatusV1.idle) {
+          return const SizedBox.shrink();
+        }
+        final saving = status == _Act0ProgressSaveStatusV1.saving;
+        return Material(
+          key: const Key('act0_progress_save_notice'),
+          color: Theme.of(context).colorScheme.surface,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Semantics(
+                    liveRegion: true,
+                    child: Text(
+                      saving
+                          ? 'Saving progress. Keep Sharky open.'
+                          : 'Progress save not confirmed. Keep Sharky open and retry.',
+                    ),
+                  ),
+                ),
+                if (!saving)
+                  TextButton(
+                    key: const Key('act0_progress_save_retry'),
+                    // Rebuild the full current snapshot. Never replay an old
+                    // answer, completion or cached failed payload.
+                    onPressed: () {
+                      if (_acceptRecoveryCallbackV1(epoch) &&
+                          identical(store, _progressStore)) {
+                        _persistProgress();
+                      }
+                    },
+                    child: const Text('Retry save'),
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void _appendLearningEvidenceV1(
@@ -6142,6 +6248,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         bottom: !isPlayRunner,
         child: Column(
           children: [
+            _progressSaveNoticeV1(),
             if (showTopBar)
               _TopBarV1(
                 academy: academySurface,
