@@ -887,6 +887,106 @@ def _require_w5_factual_admission():
         raise SystemExit('W5 factual admission is unfinalized or inconsistent')
 
 
+# Exact source/capture pins and four ledger labels admitted by root review.
+W24_CONTEXT_REVISION = 'W24_REVIEWED_CONTEXT_RECAP'
+W24_CONTEXT_TASK_ID = 'same_hand_different_seat_w3_same_hand_recap'
+W24_CONTEXT_PRODUCER_REVISION = {
+    'source_revision': '80d94b97bc27d02928839488d4787ed1cd50a9a8',
+    'state_sha256': '4896bb8b0f3b5644e28fd5d2a65c716da2bb9764a5dac9b0096bf0bf3657bf34',
+    'factory_sha256': 'c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b',
+    # Separate source-origin packet pin: typed producer receipt lacks Runner.
+    'runner_sha256': 'ce7c84d43281783148ae81c9c50f628865ef3f35769461d21bf9bd3c83446fad',
+}
+W24_CONTEXT_CAPTURE_SHA256 = {
+    'choice-identity.json': '9b48c0554054630384f4085bbb37b01f21b2ebb27fa8d90f18f13211f94ed998',
+    'learning-contract.json': '37df4a54ea23a88ab9f567d6f863277e89df20be50dcad628ef4da88cdee5646',
+    'ledger.json': 'c18b7fe1ca87e826908f703c4ce1f408bc62a8ce710183178ced8435585988d4',
+    'runtime-inputs.json': '0f9978e7d7d6c4f81394bbd3b609ec2ef2f2f81e475f0b7db4cd221935cd63fc',
+    'source-fingerprints.json': '86b8dae665b9b372da7a9f23e1d1ff1f1e5dbbea15fd9d7cc4387e80ab5dc2d2',
+}
+# Four reviewed scalar phase-ID renames; no status/witness/row allowance.
+W24_CONTEXT_LEDGER_REVIEW = 'EXACT_FOUR_PHASE_LEAVES_CONFIRMED'
+W24_CONTEXT_CAPTURE_LEAVES = {'learning-contract.json': [(['same_hand_different_seat_w3_same_hand_recap', 'options'],
+                             [{'id': 'utg',
+                               'correct': False,
+                               'quality': 'wrong',
+                               'seat': 'utg',
+                               'repairSeats': [],
+                               'repairCards': [],
+                               'repairLabels': []},
+                              {'id': 'btn',
+                               'correct': True,
+                               'quality': 'correct',
+                               'seat': 'btn',
+                               'repairSeats': [],
+                               'repairCards': [],
+                               'repairLabels': []}],
+                             [{'id': 'one_answer',
+                               'correct': False,
+                               'quality': 'wrong',
+                               'seat': None,
+                               'repairSeats': [],
+                               'repairCards': [],
+                               'repairLabels': []},
+                              {'id': 'framework',
+                               'correct': True,
+                               'quality': 'correct',
+                               'seat': None,
+                               'repairSeats': [],
+                               'repairCards': [],
+                               'repairLabels': []}])],
+ 'choice-identity.json': [(['same_hand_different_seat_w3_same_hand_recap'],
+                           [['utg', 'UTG', False, 'wrong', 'BTN'], ['btn', 'BTN', True, 'correct', 'BTN']],
+                           [['one_answer', 'One answer per hand', False, 'wrong', 'Bucket, seat, frame'],
+                            ['framework', 'Bucket, seat, frame', True, 'correct', 'Bucket, seat, frame']])],
+ 'runtime-inputs.json': [(['same_hand_different_seat_w3_same_hand_recap', 'options'],
+                          [{'id': 'utg',
+                            'label': 'UTG',
+                            'amount': '',
+                            'reason': 'UTG is early and has less information.',
+                            'preferred': 'BTN'},
+                           {'id': 'btn',
+                            'label': 'BTN',
+                            'amount': '',
+                            'reason': 'BTN is late and often acts last after the flop.',
+                            'preferred': 'BTN'}],
+                          [{'id': 'one_answer',
+                            'label': 'One answer per hand',
+                            'amount': '',
+                            'reason': 'One hand can change action when position or action frame changes.',
+                            'preferred': 'Bucket, seat, frame'},
+                           {'id': 'framework',
+                            'label': 'Bucket, seat, frame',
+                            'amount': '',
+                            'reason': 'The reusable preflop read is hand bucket, position, and action frame '
+                                      'before choosing.',
+                            'preferred': 'Bucket, seat, frame'}])],
+ 'source-fingerprints.json': [(['same_hand_different_seat_w3_same_hand_recap', 'fingerprint'],
+                               '13dd28c27603ef3aed59e6dc814ca85952a7e61cec6bebfda26ba16c1e643404',
+                               '446f896fa4530c1a5d18a292b7f4879e3e5951806c7bba4f7995f2dcb1388aff')],
+ 'ledger.json': [([15979, 'phase'], 'feedback/utg', 'feedback/one_answer'),
+                 ([15979, 'step_phase_variant'], 'feedback/utg', 'feedback/one_answer'),
+                 ([15980, 'phase'], 'feedback/btn', 'feedback/framework'),
+                 ([15980, 'step_phase_variant'], 'feedback/btn', 'feedback/framework')]}
+
+
+def _require_w24_context_admission():
+    source = W24_CONTEXT_PRODUCER_REVISION
+    if (not re.fullmatch(r'[0-9a-f]{40}', str(source.get('source_revision')))
+        or source.get('source_revision') == W5_FACTUAL_PRODUCER_REVISION['source_revision']
+        or any(not re.fullmatch(r'[0-9a-f]{64}', str(source.get(key))) for key in ('state_sha256', 'runner_sha256'))
+        or source.get('state_sha256') == W5_FACTUAL_PRODUCER_REVISION['state_sha256']
+        or source.get('runner_sha256') == 'ad14bd86c7770e1810b2f5d3149c5a4fb7a470b5dbcdeb793c248aa5cc30e118'
+        or source.get('factory_sha256') != W5_FACTUAL_PRODUCER_REVISION['factory_sha256']
+        or set(W24_CONTEXT_CAPTURE_SHA256) != set(W5_FACTUAL_CAPTURE_SHA256)
+        or any(not re.fullmatch(r'[0-9a-f]{64}', str(value)) or value == W5_FACTUAL_CAPTURE_SHA256[name]
+               for name, value in W24_CONTEXT_CAPTURE_SHA256.items())
+        or any(not re.fullmatch(r'[0-9a-f]{64}', str(current)) or current == prior
+               for _, prior, current in W24_CONTEXT_CAPTURE_LEAVES['source-fingerprints.json'])
+        or W24_CONTEXT_LEDGER_REVIEW != 'EXACT_FOUR_PHASE_LEAVES_CONFIRMED'):
+        raise SystemExit('W24 context admission is unfinalized or inconsistent')
+
+
 def _digest(value):
     encoded = json.dumps(value, separators=(',', ':'), ensure_ascii=False).encode()
     return hashlib.sha256(encoded).hexdigest()
@@ -932,6 +1032,10 @@ def producer_revision(cohort, role):
     if role == 'candidate' and source_bytes == w5_bytes:
         _require_w5_factual_admission()
         return W5_FACTUAL_REVISION
+    context_bytes = {key: W24_CONTEXT_PRODUCER_REVISION[key] for key in source_bytes}
+    if role == 'candidate' and source_bytes == context_bytes:
+        _require_w24_context_admission()
+        return W24_CONTEXT_REVISION
     raise SystemExit('Producing source receipt does not match admitted bytes')
 
 
@@ -1124,20 +1228,44 @@ def w5_factual_prompt_capture(name, value):
     return result
 
 
+def w24_context_w5_capture(name, value):
+    """Reverse one exact recap and four separately reviewed ledger phase leaves."""
+    _require_w24_context_admission()
+    result = copy.deepcopy(value)
+    try:
+        if name == 'runtime-inputs.json':
+            for task_id, expected in W5_FACTUAL_PROTECTED_RUNTIME_SHA256.items():
+                if _digest(result[task_id]) != expected: raise ValueError('protected runtime input')
+        if name == 'source-fingerprints.json':
+            for task_id, expected in W5_FACTUAL_PROTECTED_FINGERPRINTS.items():
+                if result[task_id]['fingerprint'] != expected: raise ValueError('protected source fingerprint')
+        for path, prior, current in W24_CONTEXT_CAPTURE_LEAVES.get(name, []):
+            node = result
+            for key in path[:-1]: node = node[key]
+            if node[path[-1]] != current: raise ValueError('literal current W24 context leaf')
+            if name == 'ledger.json' and node['task_id'] != W24_CONTEXT_TASK_ID: raise ValueError('ledger target identity')
+            node[path[-1]] = copy.deepcopy(prior)
+        if _digest(result) != W5_FACTUAL_CAPTURE_SHA256[name]: raise ValueError('whole reconstructed corrected W5 capture')
+    except (KeyError, TypeError, IndexError, ValueError) as error:
+        raise SystemExit(f'W24 context exact revision mismatch: {name}') from error
+    return result
+
+
 def reviewed_origin_capture(name, value, revision):
-    if revision == W5_FACTUAL_REVISION:
+    if revision == W24_CONTEXT_REVISION: value = w24_context_w5_capture(name, value)
+    if revision in (W5_FACTUAL_REVISION, W24_CONTEXT_REVISION):
         value = w5_factual_prompt_capture(name, value)
-    if revision in (W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION):
+    if revision in (W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION):
         value = w3_recap_prompt_ato_capture(name, value)
-    if revision in (W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION):
+    if revision in (W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION):
         value = w3_ato_teaching_recap_capture(name, value)
-    if revision in (W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION):
+    if revision in (W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION):
         value = w3_recap_position_capture(name, value)
-    if revision in (W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION):
+    if revision in (W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION):
         value = w01_position_pkg1_capture(name, value)
-    if revision in (PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION):
+    if revision in (PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION):
         value = pkg1_w01_capture(name, value)
-    if revision in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION):
+    if revision in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION):
         value = w01_origin_capture(name, value)
     return main01_origin_capture(name, value)
 
@@ -1150,17 +1278,20 @@ def validate_capture_artifacts(source, revision, names=None):
     requires the exact current whole-capture bytes before any reconstruction;
     every reconstructed capture must reproduce its unchanged original pin.
     """
+    if revision == W24_CONTEXT_REVISION: _require_w24_context_admission()
     if revision == W5_FACTUAL_REVISION:
         _require_w5_factual_admission()
     names = EXPECTED_CAPTURE_ARTIFACTS if names is None else names
     for name, expected in names.items():
         raw = (pathlib.Path(source) / name).read_bytes()
         observed = hashlib.sha256(raw).hexdigest()
-        if revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION):
+        if revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION):
             captured = json.loads(raw)
             compact = json.dumps(captured, separators=(',', ':'), ensure_ascii=False).encode()
             if raw != compact:
                 raise SystemExit(f'Captured JSON byte encoding drift: {name}')
+            if revision == W24_CONTEXT_REVISION and observed != W24_CONTEXT_CAPTURE_SHA256.get(name):
+                raise SystemExit(f'W24 context current capture artifact drift: {name}')
             if revision == W5_FACTUAL_REVISION and observed != W5_FACTUAL_CAPTURE_SHA256.get(name):
                 raise SystemExit(f'W5 factual current capture artifact drift: {name}')
             if revision == W3_RECAP_PROMPT_REVISION and observed != W3_RECAP_PROMPT_CAPTURE_SHA256.get(name):
@@ -1220,7 +1351,7 @@ def validate_typed_cohort(root):
     if set(base) != historical_ids or set(final) != historical_ids | NEW_AUTHORING_IDS:
         raise SystemExit('Learning contract cohort key set is inconsistent')
     comparison_contract = final
-    if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION):
+    if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION):
         validate_capture_artifacts(root / 'candidate', candidate_revision)
         comparison_contract = reviewed_origin_capture(
             'learning-contract.json', final, candidate_revision)
@@ -1247,7 +1378,7 @@ def validate_typed_cohort(root):
             raise SystemExit(f'{label} cohort key set is inconsistent')
     comparison_choices = (
         reviewed_origin_capture('choice-identity.json', after_choices, candidate_revision)
-        if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION) else after_choices
+        if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else after_choices
     )
     if any(before_choices[key] != comparison_choices[key] for key in historical_ids):
         raise SystemExit('Historical choice identity changed')
@@ -1367,44 +1498,51 @@ def compare(root):
     result = {'ledgers': ledgers, 'runtime_changed_task_count': len(delta), 'runtime_changed_task_ids': sorted(delta),
               'historical_learning_contract_identical': identity['historical_learning_contract_identical'],
               'historical_choice_identity_identical': identity['historical_choice_identity_identical'],
-              'historical_contracts_identical_except_reviewed_setup_qualities': identity['candidate_revision'] not in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION),
+              'historical_contracts_identical_except_reviewed_setup_qualities': identity['candidate_revision'] not in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION),
               'historical_contracts_identical_except_exact_reviewed_revisions': True,
               'reviewed_theory_changes': ([
                   {'task_id': task_id, 'changed_fields': ['options', 'source_fingerprint', 'feedback_phase_choice_ids'],
                    'historical_record_policy': 'retain original fingerprint, grade, assistance, XP and repair lineage',
                    'current_source_policy': 'reject old fingerprint'}
                   for task_id in W01_CAPTURE_OPTIONS['learning-contract.json']
-              ] if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION) else []),
+              ] if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else []),
               'candidate_producer_revision': identity['candidate_revision'],
               'producer_receipt': identity['final_cohort']['producer_receipt'],
               'reviewed_hand_seat_changes': ({name: len(leaves) for name, leaves in PKG1_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] in (PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION) else {}),
+                  if identity['candidate_revision'] in (PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else {}),
               'reviewed_position_feedback_changes': ({name: len(rows) for name, rows in W01_POSITION_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] in (W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION) else {}),
+                  if identity['candidate_revision'] in (W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else {}),
               'reviewed_w3_recap_changes': ({name: len(rows) for name, rows in W3_RECAP_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] in (W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION) else {}),
+                  if identity['candidate_revision'] in (W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else {}),
               'reviewed_ato_teaching_changes': ({name: len(rows) for name, rows in W3_ATO_TEACHING_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] in (W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION) else {}),
+                  if identity['candidate_revision'] in (W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else {}),
               'reviewed_recap_prompt_changes': ({name: len(rows) for name, rows in W3_RECAP_PROMPT_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] in (W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION) else {}),
+                  if identity['candidate_revision'] in (W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else {}),
               'reviewed_w5_factual_changes': ({name: len(rows) for name, rows in W5_FACTUAL_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] == W5_FACTUAL_REVISION else {}),
+                  if identity['candidate_revision'] in (W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else {}),
               'protected_w5_context_ids_unchanged': (sorted(W5_FACTUAL_PROTECTED_FINGERPRINTS)
-                  if identity['candidate_revision'] == W5_FACTUAL_REVISION else []),
-              'reviewed_producer_source_revision': (W5_FACTUAL_PRODUCER_REVISION['source_revision']
+                  if identity['candidate_revision'] in (W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else []),
+              'reviewed_w24_context_changes': ({name: len(rows) for name, rows in W24_CONTEXT_CAPTURE_LEAVES.items()}
+                  if identity['candidate_revision'] == W24_CONTEXT_REVISION else {}),
+              'reviewed_w24_source_files': (dict(W24_CONTEXT_PRODUCER_REVISION)
+                  if identity['candidate_revision'] == W24_CONTEXT_REVISION else {}),
+              'w24_runner_pin_provenance': ('reviewed source-origin packet; not the typed producer factory receipt'
+                  if identity['candidate_revision'] == W24_CONTEXT_REVISION else None),
+              'reviewed_producer_source_revision': (W24_CONTEXT_PRODUCER_REVISION['source_revision']
+                  if identity['candidate_revision'] == W24_CONTEXT_REVISION else W5_FACTUAL_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == W5_FACTUAL_REVISION else W3_RECAP_PROMPT_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == W3_RECAP_PROMPT_REVISION else W3_ATO_TEACHING_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == W3_ATO_TEACHING_REVISION else W3_RECAP_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == W3_RECAP_REVISION else W01_POSITION_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == W01_POSITION_REVISION else PKG1_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == PKG1_REVISION else W01_PRODUCER_REVISION['source_revision']
-                  if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION) else
+                  if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else
                   MAIN01_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == 'MAIN01_REVIEWED_SETUP_QUALITIES' else None),
               'reviewed_quality_changes': ([
                   {'task_id': MAIN01_TASK_ID, 'choice_id': choice, 'before': prior, 'after': current}
                   for choice, (prior, current) in MAIN01_QUALITY_REVISION.items()
-              ] if identity['candidate_revision'] in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION) else []),
+              ] if identity['candidate_revision'] in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else []),
               'historical_cohort_count': len(historical_ids),
               'new_authoring': new_authoring,
               'canonical_source_fingerprints': fingerprint_counts, 'native': 'PENDING'}

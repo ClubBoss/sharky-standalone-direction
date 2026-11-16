@@ -694,6 +694,47 @@ class TypedCohortV2Controls(unittest.TestCase):
             finally:
                 TRUTH.W5_FACTUAL_CAPTURE_SHA256[name] = original
 
+    def w24_context_producer(self):
+        cohort=self.position_producer()
+        for key in ('state_sha256','factory_sha256'): cohort['producer_receipt'][key]=TRUTH.W24_CONTEXT_PRODUCER_REVISION[key]
+        return cohort
+
+    def test_w24_context_exact_source_keeps_original_authoring_origin(self):
+        cohort=self.w24_context_producer()
+        self.assertEqual(TRUTH.producer_revision(cohort,'candidate'),TRUTH.W24_CONTEXT_REVISION)
+        cohort['producer_receipt']['head']='f'*40
+        self.assertEqual(TRUTH.producer_revision(cohort,'candidate'),TRUTH.W24_CONTEXT_REVISION)
+        self.assertEqual(cohort['admitted_source_reference'],TRUTH.SOURCE_REFERENCES['candidate'])
+
+    def test_w24_context_wrong_source_factory_origin_role_head_rejected(self):
+        for field in ('state_sha256','factory_sha256','head'):
+            for value in (None,'0','0'*64):
+                cohort=self.w24_context_producer();cohort['producer_receipt'][field]=value
+                with self.assertRaises(SystemExit): TRUTH.producer_revision(cohort,'candidate')
+        cohort=self.w24_context_producer();cohort['admitted_source_reference']['commit']=TRUTH.W24_CONTEXT_PRODUCER_REVISION['source_revision']
+        with self.assertRaises(SystemExit): TRUTH.producer_revision(cohort,'candidate')
+        cohort=self.w24_context_producer();cohort['admitted_source_reference']=copy.deepcopy(TRUTH.SOURCE_REFERENCES['historical_baseline'])
+        with self.assertRaises(SystemExit): TRUTH.producer_revision(cohort,'historical_baseline')
+
+    def test_w24_context_missing_source_pin_or_ledger_review_fails_closed(self):
+        for field in ('source_revision','state_sha256','runner_sha256'):
+            saved=TRUTH.W24_CONTEXT_PRODUCER_REVISION[field]
+            try:
+                TRUTH.W24_CONTEXT_PRODUCER_REVISION[field]=None
+                with self.assertRaises(SystemExit): TRUTH._require_w24_context_admission()
+            finally: TRUTH.W24_CONTEXT_PRODUCER_REVISION[field]=saved
+        for name in TRUTH.W24_CONTEXT_CAPTURE_SHA256:
+            saved=TRUTH.W24_CONTEXT_CAPTURE_SHA256[name]
+            try:
+                TRUTH.W24_CONTEXT_CAPTURE_SHA256[name]=None
+                with self.assertRaises(SystemExit): TRUTH._require_w24_context_admission()
+            finally: TRUTH.W24_CONTEXT_CAPTURE_SHA256[name]=saved
+        saved=TRUTH.W24_CONTEXT_LEDGER_REVIEW
+        try:
+            TRUTH.W24_CONTEXT_LEDGER_REVIEW='__UNREVIEWED__'
+            with self.assertRaises(SystemExit): TRUTH._require_w24_context_admission()
+        finally: TRUTH.W24_CONTEXT_LEDGER_REVIEW=saved
+
     def recompute(self, root, task_id):
         contract = self.read(root / 'candidate/learning-contract.json')
         fingerprints = self.read(root / 'candidate/source-fingerprints.json')
@@ -789,21 +830,25 @@ if __name__ == '__main__':
             )
         TRUTH.compare(root)
         comparison = helper.read(root / 'comparison.json')
+        def pre_w24_context_capture(name, captured):
+            return (TRUTH.w24_context_w5_capture(name, captured)
+                    if comparison['candidate_producer_revision'] == TRUTH.W24_CONTEXT_REVISION else captured)
+
         def pre_w5_factual_capture(name, captured):
-            return (TRUTH.w5_factual_prompt_capture(name, captured)
-                    if comparison['candidate_producer_revision'] == TRUTH.W5_FACTUAL_REVISION
-                    else captured)
+            prior = pre_w24_context_capture(name, captured)
+            return (TRUTH.w5_factual_prompt_capture(name, prior)
+                    if comparison['candidate_producer_revision'] in (TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION) else prior)
 
         def pre_recap_prompt_capture(name, captured):
             prior = pre_w5_factual_capture(name, captured)
             return (TRUTH.w3_recap_prompt_ato_capture(name, prior)
-                    if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION)
+                    if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION)
                     else prior)
 
         def pre_ato_capture(name, captured):
             prior = pre_recap_prompt_capture(name, captured)
             return (TRUTH.w3_ato_teaching_recap_capture(name, prior)
-                    if comparison['candidate_producer_revision'] in (TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION)
+                    if comparison['candidate_producer_revision'] in (TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION)
                     else prior)
 
         fingerprint_delta = helper.read(root / 'source-fingerprint-delta.json')
@@ -865,7 +910,7 @@ if __name__ == '__main__':
             'fingerprint_changed_task_count': 328,
             'candidate_fail_count': 0,
         }
-        if comparison['candidate_producer_revision'] in (TRUTH.W01_REVISION, TRUTH.PKG1_REVISION, TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION):
+        if comparison['candidate_producer_revision'] in (TRUTH.W01_REVISION, TRUTH.PKG1_REVISION, TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION):
             # Count actual current-source changes, never normalize the public
             # classification output back to an earlier source revision.
             for name, captured, before in (
@@ -873,11 +918,11 @@ if __name__ == '__main__':
                 ('source-fingerprints.json', fingerprints['candidate'], fingerprints['baseline']),
             ):
                 position_capture = (TRUTH.w3_recap_position_capture(name, pre_ato_capture(name, captured))
-                                    if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION) else captured)
+                                    if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION) else captured)
                 pkg1_capture = (TRUTH.w01_position_pkg1_capture(name, position_capture)
-                                if comparison['candidate_producer_revision'] in (TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION) else position_capture)
+                                if comparison['candidate_producer_revision'] in (TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION) else position_capture)
                 w01_capture = (TRUTH.pkg1_w01_capture(name, pkg1_capture)
-                               if comparison['candidate_producer_revision'] in (TRUTH.PKG1_REVISION, TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION) else pkg1_capture)
+                               if comparison['candidate_producer_revision'] in (TRUTH.PKG1_REVISION, TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION) else pkg1_capture)
                 old = TRUTH.w01_origin_capture(name, w01_capture)
                 current_changed = {key for key in historical if w01_capture[key] != before[key]}
                 prior_changed = {key for key in historical if old[key] != before[key]}
@@ -886,13 +931,13 @@ if __name__ == '__main__':
                 if len(prior_changed) != (309 if name == 'runtime-inputs.json' else 328):
                     raise SystemExit('Prior revision delta count drift')
             expected_counts.update(runtime_changed_task_count=311, fingerprint_changed_task_count=330)
-            if comparison['candidate_producer_revision'] in (TRUTH.PKG1_REVISION, TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION):
+            if comparison['candidate_producer_revision'] in (TRUTH.PKG1_REVISION, TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION):
                 for name, captured in (('runtime-inputs.json', runtime['candidate']),
                                        ('source-fingerprints.json', fingerprints['candidate'])):
                     position_capture = (TRUTH.w3_recap_position_capture(name, pre_ato_capture(name, captured))
-                                        if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION) else captured)
+                                        if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION) else captured)
                     pkg1_capture = (TRUTH.w01_position_pkg1_capture(name, position_capture)
-                                    if comparison['candidate_producer_revision'] in (TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION) else position_capture)
+                                    if comparison['candidate_producer_revision'] in (TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION) else position_capture)
                     prior = TRUTH.pkg1_w01_capture(name, pkg1_capture)
                     changed = {key for key in historical if pkg1_capture[key] != prior[key]}
                     expected = {path[0] for path, _, _ in TRUTH.PKG1_CAPTURE_LEAVES[name]}
@@ -901,17 +946,17 @@ if __name__ == '__main__':
                 # These are actual current-vs-original classifications. Reversal
                 # validates history; it never masks current-source changes.
                 expected_counts.update(runtime_changed_task_count=315, fingerprint_changed_task_count=330)
-            if comparison['candidate_producer_revision'] in (TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION):
+            if comparison['candidate_producer_revision'] in (TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION):
                 for name, captured in (('runtime-inputs.json', runtime['candidate']),
                                        ('source-fingerprints.json', fingerprints['candidate'])):
                     position_capture = (TRUTH.w3_recap_position_capture(name, pre_ato_capture(name, captured))
-                                        if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION) else captured)
+                                        if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION) else captured)
                     prior = TRUTH.w01_position_pkg1_capture(name, position_capture)
                     changed = {key for key in historical if position_capture[key] != prior[key]}
                     if changed != {'positions_theory', 'positions_review'}:
                         raise SystemExit('Unexpected position-feedback changed task identities')
                 expected_counts.update(runtime_changed_task_count=317, fingerprint_changed_task_count=332)
-            if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION):
+            if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION):
                 for name, captured in (('runtime-inputs.json', runtime['candidate']),
                                        ('source-fingerprints.json', fingerprints['candidate'])):
                     recap_capture = pre_ato_capture(name, captured)
@@ -920,7 +965,7 @@ if __name__ == '__main__':
                     if changed != {'button_advantage_button_recap', 'early_vs_late_w2_position_recap'}:
                         raise SystemExit('Unexpected W3 recap changed task identities')
                 expected_counts.update(runtime_changed_task_count=319, fingerprint_changed_task_count=334)
-            if comparison['candidate_producer_revision'] in (TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION):
+            if comparison['candidate_producer_revision'] in (TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION):
                 ato_ids = {path[0] for path, _, _ in TRUTH.W3_ATO_TEACHING_CAPTURE_LEAVES['runtime-inputs.json']}
                 for name in names:
                     current_capture = helper.read(root / 'candidate' / name)
@@ -937,7 +982,7 @@ if __name__ == '__main__':
                 # Actual compiled current-vs-original captures retain319/334:
                 # these three tasks were already changed by earlier source work.
                 expected_counts.update(runtime_changed_task_count=319, fingerprint_changed_task_count=334)
-            if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION):
+            if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION):
                 prompt_ids = {'position_apply_recap', 'position_checkpoint_position_checkpoint_review'}
                 for name in names:
                     current_capture = helper.read(root / 'candidate' / name)
@@ -950,12 +995,13 @@ if __name__ == '__main__':
                     elif captured != prior:
                         raise SystemExit('Recap prompt changed an unrelated capture')
                 expected_counts.update(runtime_changed_task_count=319, fingerprint_changed_task_count=334)
-            if comparison['candidate_producer_revision'] == TRUTH.W5_FACTUAL_REVISION:
+            if comparison['candidate_producer_revision'] in (TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION):
                 w5_ids = {path[0] for path, _, _ in TRUTH.W5_FACTUAL_CAPTURE_LEAVES['runtime-inputs.json']}
                 for name in names:
-                    captured = helper.read(root / 'candidate' / name)
-                    prior = pre_w5_factual_capture(name, captured)
-                    if captured != helper.read(root / 'candidate' / name):
+                    current_capture = helper.read(root / 'candidate' / name)
+                    captured = pre_w24_context_capture(name, current_capture)
+                    prior = pre_w5_factual_capture(name, current_capture)
+                    if current_capture != helper.read(root / 'candidate' / name):
                         raise SystemExit('W5 reversal mutated actual current capture')
                     if TRUTH._digest(prior) != TRUTH.W3_RECAP_PROMPT_CAPTURE_SHA256[name]:
                         raise SystemExit('W5 did not reconstruct the exact prior prompt capture')
@@ -976,6 +1022,35 @@ if __name__ == '__main__':
                                 raise SystemExit('W5 changed a protected context')
                     elif captured != prior:
                         raise SystemExit('W5 changed identity, learning contract or ledger')
+            if comparison['candidate_producer_revision'] == TRUTH.W24_CONTEXT_REVISION:
+                predecessor_expected = dict(expected_counts)
+                for name in names:
+                    captured = helper.read(root / 'candidate' / name)
+                    frozen_current = copy.deepcopy(captured)
+                    prior = pre_w24_context_capture(name, captured)
+                    if captured != frozen_current or TRUTH._digest(prior) != TRUTH.W5_FACTUAL_CAPTURE_SHA256[name]:
+                        raise SystemExit('W24 mutated input or failed exact W5 reconstruction')
+                    if name != 'ledger.json':
+                        if {key for key in captured if captured[key] != prior[key]} != {TRUTH.W24_CONTEXT_TASK_ID}:
+                            raise SystemExit('W24 changed an unrelated task')
+                        for protected_id in TRUTH.W5_FACTUAL_PROTECTED_FINGERPRINTS:
+                            if captured[protected_id] != prior[protected_id]: raise SystemExit('W24 changed a protected accepted context')
+                        if name in ('runtime-inputs.json', 'source-fingerprints.json'):
+                            before = runtime['baseline'] if name == 'runtime-inputs.json' else fingerprints['baseline']
+                            field = 'runtime_changed_task_count' if name == 'runtime-inputs.json' else 'fingerprint_changed_task_count'
+                            previous = {key for key in historical if prior[key] != before[key]}
+                            current = {key for key in historical if captured[key] != before[key]}
+                            if len(previous) != predecessor_expected[field] or current != previous | {TRUTH.W24_CONTEXT_TASK_ID}:
+                                raise SystemExit('W24 actual current classification drift')
+                            expected_counts[field] = len(previous | {TRUTH.W24_CONTEXT_TASK_ID})
+                    else:
+                        if len(captured) != len(prior) or len(captured) != 62712: raise SystemExit('W24 ledger row count changed')
+                        changed = {(i,key) for i,(now,old) in enumerate(zip(captured,prior)) for key in set(now)|set(old) if now.get(key)!=old.get(key)}
+                        expected = {(path[0],path[1]) for path,_,_ in TRUTH.W24_CONTEXT_CAPTURE_LEAVES[name]}
+                        if changed != expected: raise SystemExit('W24 changed an unlisted ledger witness/status/row')
+                target = TRUTH.W24_CONTEXT_TASK_ID
+                if contracts['candidate'][target]['rewardXp'] != 12 or contracts['candidate'][target]['family'] != 'review': raise SystemExit('W24 changed XP or authored role')
+                if len(choices['candidate'][target]) != 2: raise SystemExit('W24 raw option cardinality changed')
             if comparison['historical_contracts_identical_except_reviewed_setup_qualities']:
                 raise SystemExit('W01 source evolution falsely described as setup qualities only')
             if set(row['task_id'] for row in comparison['reviewed_theory_changes']) != set(TRUTH.W01_CAPTURE_OPTIONS['learning-contract.json']):
@@ -984,6 +1059,12 @@ if __name__ == '__main__':
             # Use the actual immutable producer captures. Recomputed cohort
             # checksums cannot bless unauthorized model or capture edits.
             frozen_files = {p.name: p.read_bytes() for p in (root / 'candidate').iterdir() if p.is_file()}
+            w5_pin_source = root / 'candidate'
+            if comparison['candidate_producer_revision'] == TRUTH.W24_CONTEXT_REVISION:
+                w5_pin_source = root / 'w24-reconstructed-w5-pin-controls'
+                w5_pin_source.mkdir()
+                for name in names: helper.write(w5_pin_source / name, pre_w24_context_capture(name, json.loads(frozen_files[name])))
+                TRUTH.validate_capture_artifacts(w5_pin_source, TRUTH.W5_FACTUAL_REVISION)
             missing_leaf = object()
             cases = [
                 ('learning-contract.json', ['blinds_theory', 'rewardXp'], 99),
@@ -1003,7 +1084,7 @@ if __name__ == '__main__':
                 ('ledger.json', [1023, 'reason'], 'forged reason'),
                 ('ledger.json', [0, 'status'], 'FAIL'),
             ]
-            if comparison['candidate_producer_revision'] in (TRUTH.PKG1_REVISION, TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION):
+            if comparison['candidate_producer_revision'] in (TRUTH.PKG1_REVISION, TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION):
                 cases.extend([
                     ('runtime-inputs.json', ['hand_discipline_buckets_borderline', 'table', 'hero', 0], 'Qh'),
                     ('runtime-inputs.json', ['hand_discipline_buckets_borderline', 'table', 'seats', 3, 'cards', 0], 'Qh'),
@@ -1024,13 +1105,13 @@ if __name__ == '__main__':
                 for name in names:
                     captured = json.loads(frozen_files[name])
                     position_capture = (TRUTH.w3_recap_position_capture(name, pre_ato_capture(name, captured))
-                                        if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION) else captured)
+                                        if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION) else captured)
                     pkg1_capture = (TRUTH.w01_position_pkg1_capture(name, position_capture)
-                                    if comparison['candidate_producer_revision'] in (TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION) else position_capture)
+                                    if comparison['candidate_producer_revision'] in (TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION) else position_capture)
                     prior = TRUTH.pkg1_w01_capture(name, pkg1_capture)
                     if TRUTH._digest(prior) != TRUTH.W01_CAPTURE_SHA256[name] or captured != json.loads(frozen_files[name]):
                         raise SystemExit('PKG1 exact reversal mutated current capture')
-            if comparison['candidate_producer_revision'] in (TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION):
+            if comparison['candidate_producer_revision'] in (TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION):
                 for task_id in ('positions_theory', 'positions_review'):
                     for index in range(3):
                         cases.append(('runtime-inputs.json', [task_id, 'options', index, 'reason'], 'forged position reason'))
@@ -1038,11 +1119,11 @@ if __name__ == '__main__':
                 for name in names:
                     captured = json.loads(frozen_files[name])
                     position_capture = (TRUTH.w3_recap_position_capture(name, pre_ato_capture(name, captured))
-                                        if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION) else captured)
+                                        if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION) else captured)
                     prior = TRUTH.w01_position_pkg1_capture(name, position_capture)
                     if TRUTH._digest(prior) != TRUTH.PKG1_CAPTURE_SHA256[name] or captured != json.loads(frozen_files[name]):
                         raise SystemExit('Position feedback reversal mutated current capture')
-            if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION):
+            if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION):
                 for task_id in ('button_advantage_button_recap', 'early_vs_late_w2_position_recap'):
                     for index in range(3):
                         cases.append(('runtime-inputs.json', [task_id, 'options', index, 'reason'], 'forged recap reason'))
@@ -1054,7 +1135,7 @@ if __name__ == '__main__':
                     prior = TRUTH.w3_recap_position_capture(name, pre_ato_capture(name, captured))
                     if TRUTH._digest(prior) != TRUTH.W01_POSITION_CAPTURE_SHA256[name] or captured != json.loads(frozen_files[name]):
                         raise SystemExit('W3 recap reversal mutated current capture')
-            if comparison['candidate_producer_revision'] in (TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION):
+            if comparison['candidate_producer_revision'] in (TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION):
                 for path, _, _ in TRUTH.W3_ATO_TEACHING_CAPTURE_LEAVES['runtime-inputs.json']:
                     cases.append(('runtime-inputs.json', path, 'forged ATo teaching leaf'))
                 first_task = sorted(ato_ids)[0]
@@ -1065,7 +1146,7 @@ if __name__ == '__main__':
                     prior = pre_ato_capture(name, captured)
                     if TRUTH._digest(prior) != TRUTH.W3_RECAP_CAPTURE_SHA256[name] or captured != json.loads(frozen_files[name]):
                         raise SystemExit('ATo teaching reversal mutated current capture')
-            if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION):
+            if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION):
                 for name, leaves in TRUTH.W3_RECAP_PROMPT_CAPTURE_LEAVES.items():
                     for path, _, _ in leaves:
                         cases.append((name, path, 'forged recap prompt leaf'))
@@ -1077,7 +1158,7 @@ if __name__ == '__main__':
                     prior = pre_recap_prompt_capture(name, captured)
                     if TRUTH._digest(prior) != TRUTH.W3_ATO_TEACHING_CAPTURE_SHA256[name] or captured != json.loads(frozen_files[name]):
                         raise SystemExit('Recap prompt reversal mutated current capture')
-            if comparison['candidate_producer_revision'] == TRUTH.W5_FACTUAL_REVISION:
+            if comparison['candidate_producer_revision'] in (TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION):
                 w5_cases = [(name, path, 'forged W5 factual leaf')
                             for name, leaves in TRUTH.W5_FACTUAL_CAPTURE_LEAVES.items()
                             for path, _, _ in leaves]
@@ -1088,7 +1169,7 @@ if __name__ == '__main__':
                     ('runtime-inputs.json', ['position_apply_recap', 'hint'], 'forged protected context'),
                 ]
                 for name, path, replacement in w5_cases:
-                    captured = json.loads(frozen_files[name])
+                    captured = pre_w24_context_capture(name, json.loads(frozen_files[name]))
                     node = captured
                     for key in path[:-1]: node = node[key]
                     if replacement is missing_leaf: del node[path[-1]]
@@ -1103,9 +1184,46 @@ if __name__ == '__main__':
                     try:
                         TRUTH.W5_FACTUAL_CAPTURE_SHA256[name] = '0' * 64
                         with helper.assertRaises(SystemExit):
-                            TRUTH.validate_capture_artifacts(root / 'candidate', TRUTH.W5_FACTUAL_REVISION)
+                            TRUTH.validate_capture_artifacts(w5_pin_source, TRUTH.W5_FACTUAL_REVISION)
                     finally:
                         TRUTH.W5_FACTUAL_CAPTURE_SHA256[name] = saved_pin
+            if comparison['candidate_producer_revision'] == TRUTH.W24_CONTEXT_REVISION:
+                target = TRUTH.W24_CONTEXT_TASK_ID
+                w24_cases = [(name,path,'forged W24 current leaf') for name,rows in TRUTH.W24_CONTEXT_CAPTURE_LEAVES.items() for path,_,_ in rows]
+                for field,value in [('id','utg'),('correct',True),('quality','correct'),('seat','utg'),('repairSeats',['btn']),('repairCards',['hero_0']),('repairLabels',['Hero'])]:
+                    w24_cases.append(('learning-contract.json',[target,'options',0,field],value))
+                w24_cases += [
+                    ('runtime-inputs.json',[target,'options',1,'id'],missing_leaf),
+                    ('learning-contract.json',[target,'options',0,'id'],missing_leaf),
+                    ('choice-identity.json',[target,1,0],'one_answer'),
+                    ('runtime-inputs.json',[target,'question'],'What position is best?'),
+                    ('runtime-inputs.json',[target,'options',0,'reason'],'UTG is early and has less information.'),
+                    ('runtime-inputs.json',[target,'hint'],'unlisted target change'),
+                    ('source-fingerprints.json',[target,'fingerprint'],'13dd28c27603ef3aed59e6dc814ca85952a7e61cec6bebfda26ba16c1e643404'),
+                    ('ledger.json',[15979,'status'],'PASS'),
+                    ('ledger.json',[15980,'rendered_meaning'],'forged conceptual witness'),
+                    ('ledger.json',[0,'status'],'FORGED'),
+                ]
+                for name in ('learning-contract.json','choice-identity.json','runtime-inputs.json'):
+                    current = json.loads(frozen_files[name])
+                    path = [target] if name == 'choice-identity.json' else [target,'options']
+                    options = current[target] if name == 'choice-identity.json' else current[target]['options']
+                    w24_cases.append((name,path,list(reversed(options))))
+                for protected_id in TRUTH.W5_FACTUAL_PROTECTED_FINGERPRINTS:
+                    w24_cases += [('runtime-inputs.json',[protected_id,'caption'],'forged protected runtime'),('source-fingerprints.json',[protected_id,'fingerprint'],'0'*64)]
+                for name,path,value in w24_cases:
+                    captured=json.loads(frozen_files[name]);node=captured
+                    for key in path[:-1]: node=node[key]
+                    if value is missing_leaf: del node[path[-1]]
+                    else: node[path[-1]]=value
+                    with helper.assertRaises(SystemExit): TRUTH.w24_context_w5_capture(name,captured)
+                cases.extend(w24_cases)
+                for name in names:
+                    saved_pin=TRUTH.W24_CONTEXT_CAPTURE_SHA256[name]
+                    try:
+                        TRUTH.W24_CONTEXT_CAPTURE_SHA256[name]='0'*64
+                        with helper.assertRaises(SystemExit): TRUTH.validate_capture_artifacts(root/'candidate',TRUTH.W24_CONTEXT_REVISION)
+                    finally: TRUTH.W24_CONTEXT_CAPTURE_SHA256[name]=saved_pin
             other_task = next(key for key in contracts['candidate'] if key not in TRUTH.W01_CAPTURE_OPTIONS['learning-contract.json'] and key not in NEW)
             cases.append(('learning-contract.json', [other_task, 'rewardXp'], 99))
             for name, path, replacement in cases:
@@ -1117,7 +1235,7 @@ if __name__ == '__main__':
                 else:
                     node[path[-1]] = replacement
                 helper.write(root / 'candidate' / name, captured)
-                if path[0] in NEW:
+                if name != 'ledger.json' and path[0] in NEW:
                     helper.recompute(root, path[0])
                 try:
                     TRUTH.validate_typed_cohort(root)
@@ -1152,27 +1270,32 @@ if __name__ == '__main__':
             if any((root / 'candidate' / name).read_bytes() != raw for name, raw in frozen_files.items()):
                 raise SystemExit('Negative controls failed to restore owned captures')
             TRUTH.validate_typed_cohort(root)
-            result['w01_actual_capture_negative_controls'] = len(cases) + 6 + 2 - (14 if comparison['candidate_producer_revision'] in (TRUTH.PKG1_REVISION, TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION) else 0) - (8 if comparison['candidate_producer_revision'] in (TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION) else 0) - (12 if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION) else 0) - (8 if comparison['candidate_producer_revision'] in (TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION) else 0) - (6 if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION) else 0) - (8 if comparison['candidate_producer_revision'] == TRUTH.W5_FACTUAL_REVISION else 0)
+            result['w01_actual_capture_negative_controls'] = len(cases) + 6 + 2 - (14 if comparison['candidate_producer_revision'] in (TRUTH.PKG1_REVISION, TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION) else 0) - (8 if comparison['candidate_producer_revision'] in (TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION) else 0) - (12 if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION) else 0) - (8 if comparison['candidate_producer_revision'] in (TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION) else 0) - (6 if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION) else 0) - (8 if comparison['candidate_producer_revision'] in (TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION) else 0) - (len(w24_cases) if comparison['candidate_producer_revision'] == TRUTH.W24_CONTEXT_REVISION else 0)
             result['reviewed_theory_changes'] = comparison['reviewed_theory_changes']
-            if comparison['candidate_producer_revision'] in (TRUTH.PKG1_REVISION, TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION):
+            if comparison['candidate_producer_revision'] in (TRUTH.PKG1_REVISION, TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION):
                 result['pkg1_actual_capture_negative_controls'] = 14
                 result['reviewed_hand_seat_changes'] = comparison['reviewed_hand_seat_changes']
-            if comparison['candidate_producer_revision'] in (TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION):
+            if comparison['candidate_producer_revision'] in (TRUTH.W01_POSITION_REVISION, TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION):
                 result['position_actual_capture_negative_controls'] = 8
                 result['reviewed_position_feedback_changes'] = comparison['reviewed_position_feedback_changes']
-            if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION):
+            if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_REVISION, TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION):
                 result['w3_recap_actual_capture_negative_controls'] = 12
                 result['reviewed_w3_recap_changes'] = comparison['reviewed_w3_recap_changes']
-            if comparison['candidate_producer_revision'] in (TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION):
+            if comparison['candidate_producer_revision'] in (TRUTH.W3_ATO_TEACHING_REVISION, TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION):
                 result['ato_teaching_actual_capture_negative_controls'] = 8
                 result['reviewed_ato_teaching_changes'] = comparison['reviewed_ato_teaching_changes']
-            if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION):
+            if comparison['candidate_producer_revision'] in (TRUTH.W3_RECAP_PROMPT_REVISION, TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION):
                 result['recap_prompt_actual_capture_negative_controls'] = 6
                 result['reviewed_recap_prompt_changes'] = comparison['reviewed_recap_prompt_changes']
-            if comparison['candidate_producer_revision'] == TRUTH.W5_FACTUAL_REVISION:
+            if comparison['candidate_producer_revision'] in (TRUTH.W5_FACTUAL_REVISION, TRUTH.W24_CONTEXT_REVISION):
                 result['w5_factual_actual_capture_negative_controls'] = 13
                 result['reviewed_w5_factual_changes'] = comparison['reviewed_w5_factual_changes']
                 result['protected_w5_context_ids_unchanged'] = comparison['protected_w5_context_ids_unchanged']
+            if comparison['candidate_producer_revision'] == TRUTH.W24_CONTEXT_REVISION:
+                result['w24_context_actual_capture_negative_controls']=len(w24_cases)+5
+                result['reviewed_w24_context_changes']=comparison['reviewed_w24_context_changes']
+                result['w24_raw_target_choice_count']=len(choices['candidate'][TRUTH.W24_CONTEXT_TASK_ID])
+                result['w24_count_scope']='raw producer choices; no normalized global wrong-alternative claim'
         print(json.dumps(result, sort_keys=True))
         if {key: result[key] for key in expected_counts} != expected_counts:
             raise SystemExit('Unexpected real TABLE.TRUTH delta classification')
