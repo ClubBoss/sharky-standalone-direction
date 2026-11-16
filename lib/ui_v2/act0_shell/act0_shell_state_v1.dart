@@ -17306,7 +17306,7 @@ final _world5GutshotContrastTransferRunner = _world5GutshotDrawRunner.copyWith(
 final _world5GapBoardRunner = _world5StraightIntroRunner.copyWith(
   phase: Act0LessonPhaseV1.drill,
   lessonId: 'w5_gap_board',
-  caption: 'A-Q-4 has large rank gaps.',
+  caption: 'A-K-4 has large rank gaps.',
   hint: 'Big gaps mean no obvious straight draw.',
   question: 'Is straight pressure obvious?',
   options: const <Act0RunnerOptionV1>[
@@ -17410,7 +17410,7 @@ final _world5StraightOutRunner = _world5StraightDrawRunner.copyWith(
       preferredLabel: '9',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Strong choice.',
-      feedbackReason: 'With 5-6-7-8 on board, any 9 completes the straight.',
+      feedbackReason: 'Private 5-6, shared 7-8: any 9 completes the straight.',
     ),
     Act0RunnerOptionV1(
       id: 'king',
