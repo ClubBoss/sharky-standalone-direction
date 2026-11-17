@@ -387,7 +387,10 @@ void main() {
     );
     await capture('feedback');
     expect(
-      find.byKey(const Key('act0_shell_feedback_hero_action')),
+      find.textContaining(
+        task.runner.options.first.feedbackReason,
+        findRichText: true,
+      ),
       findsWidgets,
     );
     expect(find.textContaining('Fold', findRichText: true), findsWidgets);
