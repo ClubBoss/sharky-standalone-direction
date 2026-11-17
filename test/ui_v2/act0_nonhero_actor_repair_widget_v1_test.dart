@@ -105,76 +105,104 @@ Future<String> _choice(WidgetTester t, String id, String taskId) async {
           )
           .hitTestable();
       final optionButton = find.byKey(Key(optionKey));
-      final guideShelf = find.byKey(
-        const Key('act0_shell_seat_decision_guide_viewport'),
-      );
-      expect(guideShelf, findsOneWidget);
-      expect(
-        t.getRect(guideShelf).overlaps(t.getRect(seat)),
-        isFalse,
-        reason: 'The source premise guide must not cover an answer seat.',
-      );
-      final guide = t.widget<Act0LearningSceneGuideV3>(
-        find.byType(Act0LearningSceneGuideV3),
-      );
-      expect(guide.support, _runner(t).runner.caption);
-      expect(guide.scrollSupport, isTrue);
-      final supportText = t.widget<Text>(
-        find.byKey(const Key('act0_learning_scene_v3_support')),
-      );
-      expect(supportText.data, _runner(t).runner.caption);
-      expect(supportText.maxLines, isNull);
-      final seatRectBeforeRead = t.getRect(seat);
-      final supportViewport = find.byKey(
-        const Key('act0_learning_scene_v3_model_support_scroll'),
-      );
-      await t.ensureVisible(supportViewport);
-      await t.pumpAndSettle();
-      final supportScroll = t.state<ScrollableState>(
-        find.descendant(of: supportViewport, matching: find.byType(Scrollable)),
-      );
-      expect(supportScroll.position.pixels, 0);
-      expect(supportScroll.position.maxScrollExtent, greaterThan(0));
-      await t.drag(supportViewport, const Offset(0, -800));
-      await t.pumpAndSettle();
-      final actualEnd = supportScroll.position.pixels;
-      expect(actualEnd, closeTo(supportScroll.position.maxScrollExtent, 0.1));
-      await t.drag(supportViewport, const Offset(0, 800));
-      await t.pumpAndSettle();
-      expect(supportScroll.position.pixels, 0);
-      await t.ensureVisible(
-        find.byKey(const Key('act0_integrated_scene_prompt')),
-      );
-      await t.pumpAndSettle();
-      expect(t.getRect(seat), seatRectBeforeRead);
-      final frameName =
-          '$taskId-$id-${_frameSequence++}-source-seat-decision.png';
-      _decisionGeometry['$taskId/$id'] = {
-        'seat_rect': seatRectBeforeRead.toString(),
-        'guide_rect': t.getRect(guideShelf).toString(),
-        'guide_overlaps_seat': false,
-        'full_source_caption': guide.support,
-        'support_scroll_observed_start': 0,
-        'support_scroll_observed_end': actualEnd,
-        'support_scroll_extent': supportScroll.position.maxScrollExtent,
-        'support_scroll_observed_return': supportScroll.position.pixels,
-        'table_seat_rect_unchanged_after_read': true,
-        'widget_frame': frameName,
-      };
-      final output = Platform.environment['PKR03_OUTPUT'];
-      if (output != null) {
-        await t.runAsync(() async {
-          final dir = Directory(output)..createSync(recursive: true);
-          final boundary = t.renderObject<RenderRepaintBoundary>(
-            find.byKey(const Key('nonhero-host-capture')),
-          );
-          final frame = await boundary.toImage(pixelRatio: 1);
-          final bytes = await frame.toByteData(format: ui.ImageByteFormat.png);
-          File(
-            '${dir.path}/$frameName',
-          ).writeAsBytesSync(bytes!.buffer.asUint8List());
-          frame.dispose();
-        });
+      final registeredScene = find.byKey(const Key('act0_f7_registered_scene'));
+      final isRegistered = registeredScene.evaluate().isNotEmpty;
+      if (taskId == 'blinds_review') {
+        expect(
+          isRegistered,
+          isTrue,
+          reason: 'The actual obstructed branch must be re-proved.',
+        );
+      }
+      if (isRegistered) {
+        final guideShelf = find.byKey(
+          const Key('act0_shell_seat_decision_guide_viewport'),
+        );
+        expect(guideShelf, findsOneWidget);
+        expect(
+          t.getRect(guideShelf).overlaps(t.getRect(seat)),
+          isFalse,
+          reason: 'The source premise guide must not cover an answer seat.',
+        );
+        final guide = t.widget<Act0LearningSceneGuideV3>(
+          find.byType(Act0LearningSceneGuideV3),
+        );
+        expect(guide.support, _runner(t).runner.caption);
+        expect(guide.scrollSupport, isTrue);
+        final supportText = t.widget<Text>(
+          find.byKey(const Key('act0_learning_scene_v3_support')),
+        );
+        expect(supportText.data, _runner(t).runner.caption);
+        expect(supportText.maxLines, isNull);
+        final seatRectBeforeRead = t.getRect(seat);
+        final supportViewport = find.byKey(
+          const Key('act0_learning_scene_v3_model_support_scroll'),
+        );
+        await t.ensureVisible(supportViewport);
+        await t.pumpAndSettle();
+        final supportScroll = t.state<ScrollableState>(
+          find.descendant(
+            of: supportViewport,
+            matching: find.byType(Scrollable),
+          ),
+        );
+        expect(supportScroll.position.pixels, 0);
+        expect(supportScroll.position.maxScrollExtent, greaterThan(0));
+        await t.drag(supportViewport, const Offset(0, -800));
+        await t.pumpAndSettle();
+        final actualEnd = supportScroll.position.pixels;
+        expect(actualEnd, closeTo(supportScroll.position.maxScrollExtent, 0.1));
+        await t.drag(supportViewport, const Offset(0, 800));
+        await t.pumpAndSettle();
+        expect(supportScroll.position.pixels, 0);
+        await t.ensureVisible(
+          find.byKey(const Key('act0_integrated_scene_prompt')),
+        );
+        await t.pumpAndSettle();
+        expect(t.getRect(seat), seatRectBeforeRead);
+        final frameName =
+            '$taskId-$id-${_frameSequence++}-source-seat-decision.png';
+        _decisionGeometry['$taskId/$id'] = {
+          'seat_rect': seatRectBeforeRead.toString(),
+          'guide_rect': t.getRect(guideShelf).toString(),
+          'guide_overlaps_seat': false,
+          'full_source_caption': guide.support,
+          'support_scroll_observed_start': 0,
+          'support_scroll_observed_end': actualEnd,
+          'support_scroll_extent': supportScroll.position.maxScrollExtent,
+          'support_scroll_observed_return': supportScroll.position.pixels,
+          'table_seat_rect_unchanged_after_read': true,
+          'widget_frame': frameName,
+        };
+        final output = Platform.environment['PKR03_OUTPUT'];
+        if (output != null) {
+          await t.runAsync(() async {
+            final dir = Directory(output)..createSync(recursive: true);
+            final boundary = t.renderObject<RenderRepaintBoundary>(
+              find.byKey(const Key('nonhero-host-capture')),
+            );
+            final frame = await boundary.toImage(pixelRatio: 1);
+            final bytes = await frame.toByteData(
+              format: ui.ImageByteFormat.png,
+            );
+            File(
+              '${dir.path}/$frameName',
+            ).writeAsBytesSync(bytes!.buffer.asUint8List());
+            frame.dispose();
+          });
+        }
+      } else {
+        expect(
+          find.byKey(const Key('act0_shell_seat_decision_guide_viewport')),
+          findsNothing,
+        );
+        _decisionGeometry['$taskId/$id'] = {
+          'layout':
+              'existing non-registered presentation; new shelf not applicable',
+          'seat_rect': t.getRect(seat).toString(),
+          'source_caption': _runner(t).runner.caption,
+          'new_registered_guide_scroll': 'NOT_APPLICABLE_NOT_CLAIMED',
+        };
       }
       expect(
         seat.hitTestable(),
