@@ -1,0 +1,415 @@
+{
+  "schema": 1,
+  "package": "WP03-W4-PURPOSE-INTRO-REPAIR-01",
+  "current_source_origin_packet": {
+    "source_revision": "19b1f23145a8cddf0a95ce87c6588fe1047cd0bd",
+    "state_sha256": "2872c28c67b536a7de6218e34f6365f30ecf8d970355e8b6ed5fd41297a41ae8",
+    "factory_sha256": "c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b",
+    "runner_sha256": "f691135ab617db9b3b806fc98d47fcf8f853fe97f9c5565d27092f704f4b4e5f",
+    "source_proof_sha256": "b0a3151d85d49149ca4f3beefe91d070c9d6c5e5b5d63c48020287bec2cf2b57",
+    "street_replay_sha256": "abe0a0754633390f99fe219b1e6213299878a3fb1a65aadac445840f4ced6bdf",
+    "repair_gap_sha256": "1e24cdbe4b4fbf1af9104d9949834a5acf65789247e6db31d31caeb825627a5a"
+  },
+  "predecessor_revision": "W01_REVIEWED_EXPLICIT_MECHANICAL_CONTEXTS_V2_15",
+  "predecessor_source_origin_packet": {
+    "source_revision": "16e42ac9c48727a73489dd3ad0326a417024498d",
+    "state_sha256": "8093daf2c0d9626e0b19e880fe09d45f0164d8e3082dee4e67c72ffdbffd0ae2",
+    "factory_sha256": "c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b",
+    "runner_sha256": "f691135ab617db9b3b806fc98d47fcf8f853fe97f9c5565d27092f704f4b4e5f",
+    "source_proof_sha256": "b0a3151d85d49149ca4f3beefe91d070c9d6c5e5b5d63c48020287bec2cf2b57",
+    "street_replay_sha256": "abe0a0754633390f99fe219b1e6213299878a3fb1a65aadac445840f4ced6bdf",
+    "repair_gap_sha256": "1e24cdbe4b4fbf1af9104d9949834a5acf65789247e6db31d31caeb825627a5a"
+  },
+  "predecessor_capture_sha256": {
+    "learning-contract.json": "37df4a54ea23a88ab9f567d6f863277e89df20be50dcad628ef4da88cdee5646",
+    "choice-identity.json": "3d04f53c19ccd152e8044938fc9912af27bac0bd4427e8044425b824110b0a5d",
+    "runtime-inputs.json": "c65325d08650cf8c267ae4ee4cc7cda521a35b98c256dcce20050175f1a7ca7c",
+    "source-fingerprints.json": "6288843805fee1529f89a6882046a79545695c77e70cd9a0defc1fe9ca9475f9",
+    "ledger.json": "b7ccf7b8304db06abe35b1a0192928e1ea8d1f7e4dd47d5288f9af85d7c65a27"
+  },
+  "capture_sha256": {
+    "learning-contract.json": "37df4a54ea23a88ab9f567d6f863277e89df20be50dcad628ef4da88cdee5646",
+    "choice-identity.json": "3d04f53c19ccd152e8044938fc9912af27bac0bd4427e8044425b824110b0a5d",
+    "runtime-inputs.json": "b29f9a9e3b83c75659d83110caa8b476d79c7d1e21a39e64573e45d72fa6bc81",
+    "source-fingerprints.json": "6288843805fee1529f89a6882046a79545695c77e70cd9a0defc1fe9ca9475f9",
+    "ledger.json": "b7ccf7b8304db06abe35b1a0192928e1ea8d1f7e4dd47d5288f9af85d7c65a27"
+  },
+  "task_id": "w4_purpose_intro",
+  "changed_capture": "runtime-inputs.json",
+  "changed_leaf": [
+    "teaching",
+    0,
+    "body"
+  ],
+  "prior_record": {
+    "caption": "A bet should have a reason before it has a size.",
+    "hint": "Start with purpose: value, bluff, or protection.",
+    "question": "What should you name before sizing a bet?",
+    "table": {
+      "scope": "playedHand",
+      "hero": [
+        "Qh",
+        "Qs"
+      ],
+      "board": [
+        "Ah",
+        "7c",
+        "2d"
+      ],
+      "street": "Flop",
+      "pot": "Pot 6 BB",
+      "call": "",
+      "center": "Name purpose",
+      "actor": "btn",
+      "heroSeat": null,
+      "focusSeats": [
+        "btn",
+        "bb"
+      ],
+      "focusCards": [
+        "board_0",
+        "board_1",
+        "board_2"
+      ],
+      "trail": [
+        {
+          "kind": "action",
+          "label": "SB blind 0.5 BB"
+        },
+        {
+          "kind": "action",
+          "label": "BB blind 1 BB"
+        },
+        {
+          "kind": "action",
+          "label": "UTG folds"
+        },
+        {
+          "kind": "action",
+          "label": "HJ folds"
+        },
+        {
+          "kind": "action",
+          "label": "CO folds"
+        },
+        {
+          "kind": "action",
+          "label": "BTN raises 2.75 BB"
+        },
+        {
+          "kind": "action",
+          "label": "SB folds"
+        },
+        {
+          "kind": "action",
+          "label": "BB calls 2.75 BB"
+        },
+        {
+          "kind": "action",
+          "label": "Flop: BB checks"
+        }
+      ],
+      "seats": [
+        {
+          "id": "utg",
+          "hero": false,
+          "active": false,
+          "inHand": false,
+          "folded": true,
+          "occupied": true,
+          "acted": true,
+          "mode": "faceDown",
+          "cards": [
+            "?",
+            "?"
+          ],
+          "blind": null,
+          "currentBet": null,
+          "bet": null
+        },
+        {
+          "id": "hj",
+          "hero": false,
+          "active": false,
+          "inHand": false,
+          "folded": true,
+          "occupied": true,
+          "acted": true,
+          "mode": "faceDown",
+          "cards": [
+            "?",
+            "?"
+          ],
+          "blind": null,
+          "currentBet": null,
+          "bet": null
+        },
+        {
+          "id": "co",
+          "hero": false,
+          "active": false,
+          "inHand": false,
+          "folded": true,
+          "occupied": true,
+          "acted": true,
+          "mode": "faceDown",
+          "cards": [
+            "?",
+            "?"
+          ],
+          "blind": null,
+          "currentBet": null,
+          "bet": null
+        },
+        {
+          "id": "btn",
+          "hero": true,
+          "active": false,
+          "inHand": true,
+          "folded": false,
+          "occupied": true,
+          "acted": false,
+          "mode": "faceDown",
+          "cards": [
+            "Qh",
+            "Qs"
+          ],
+          "blind": null,
+          "currentBet": null,
+          "bet": null
+        },
+        {
+          "id": "sb",
+          "hero": false,
+          "active": false,
+          "inHand": false,
+          "folded": true,
+          "occupied": true,
+          "acted": true,
+          "mode": "faceDown",
+          "cards": [
+            "?",
+            "?"
+          ],
+          "blind": null,
+          "currentBet": null,
+          "bet": null
+        },
+        {
+          "id": "bb",
+          "hero": false,
+          "active": false,
+          "inHand": true,
+          "folded": false,
+          "occupied": true,
+          "acted": true,
+          "mode": "faceDown",
+          "cards": [
+            "?",
+            "?"
+          ],
+          "blind": null,
+          "currentBet": null,
+          "bet": null
+        }
+      ]
+    },
+    "teaching": [
+      {
+        "title": "Purpose first.",
+        "body": "Name the bet purpose first. Value gets calls, bluff gets folds, protection makes the next card cost money.",
+        "table": null,
+        "seats": [],
+        "cards": []
+      }
+    ],
+    "options": []
+  },
+  "current_record": {
+    "caption": "A bet should have a reason before it has a size.",
+    "hint": "Start with purpose: value, bluff, or protection.",
+    "question": "What should you name before sizing a bet?",
+    "table": {
+      "scope": "playedHand",
+      "hero": [
+        "Qh",
+        "Qs"
+      ],
+      "board": [
+        "Ah",
+        "7c",
+        "2d"
+      ],
+      "street": "Flop",
+      "pot": "Pot 6 BB",
+      "call": "",
+      "center": "Name purpose",
+      "actor": "btn",
+      "heroSeat": null,
+      "focusSeats": [
+        "btn",
+        "bb"
+      ],
+      "focusCards": [
+        "board_0",
+        "board_1",
+        "board_2"
+      ],
+      "trail": [
+        {
+          "kind": "action",
+          "label": "SB blind 0.5 BB"
+        },
+        {
+          "kind": "action",
+          "label": "BB blind 1 BB"
+        },
+        {
+          "kind": "action",
+          "label": "UTG folds"
+        },
+        {
+          "kind": "action",
+          "label": "HJ folds"
+        },
+        {
+          "kind": "action",
+          "label": "CO folds"
+        },
+        {
+          "kind": "action",
+          "label": "BTN raises 2.75 BB"
+        },
+        {
+          "kind": "action",
+          "label": "SB folds"
+        },
+        {
+          "kind": "action",
+          "label": "BB calls 2.75 BB"
+        },
+        {
+          "kind": "action",
+          "label": "Flop: BB checks"
+        }
+      ],
+      "seats": [
+        {
+          "id": "utg",
+          "hero": false,
+          "active": false,
+          "inHand": false,
+          "folded": true,
+          "occupied": true,
+          "acted": true,
+          "mode": "faceDown",
+          "cards": [
+            "?",
+            "?"
+          ],
+          "blind": null,
+          "currentBet": null,
+          "bet": null
+        },
+        {
+          "id": "hj",
+          "hero": false,
+          "active": false,
+          "inHand": false,
+          "folded": true,
+          "occupied": true,
+          "acted": true,
+          "mode": "faceDown",
+          "cards": [
+            "?",
+            "?"
+          ],
+          "blind": null,
+          "currentBet": null,
+          "bet": null
+        },
+        {
+          "id": "co",
+          "hero": false,
+          "active": false,
+          "inHand": false,
+          "folded": true,
+          "occupied": true,
+          "acted": true,
+          "mode": "faceDown",
+          "cards": [
+            "?",
+            "?"
+          ],
+          "blind": null,
+          "currentBet": null,
+          "bet": null
+        },
+        {
+          "id": "btn",
+          "hero": true,
+          "active": false,
+          "inHand": true,
+          "folded": false,
+          "occupied": true,
+          "acted": false,
+          "mode": "faceDown",
+          "cards": [
+            "Qh",
+            "Qs"
+          ],
+          "blind": null,
+          "currentBet": null,
+          "bet": null
+        },
+        {
+          "id": "sb",
+          "hero": false,
+          "active": false,
+          "inHand": false,
+          "folded": true,
+          "occupied": true,
+          "acted": true,
+          "mode": "faceDown",
+          "cards": [
+            "?",
+            "?"
+          ],
+          "blind": null,
+          "currentBet": null,
+          "bet": null
+        },
+        {
+          "id": "bb",
+          "hero": false,
+          "active": false,
+          "inHand": true,
+          "folded": false,
+          "occupied": true,
+          "acted": true,
+          "mode": "faceDown",
+          "cards": [
+            "?",
+            "?"
+          ],
+          "blind": null,
+          "currentBet": null,
+          "bet": null
+        }
+      ]
+    },
+    "teaching": [
+      {
+        "title": "Purpose first.",
+        "body": "Name the bet purpose first. Value means worse hands can still call. A bluff tries to make better hands fold. Protection makes the next card cost money.",
+        "table": null,
+        "seats": [],
+        "cards": []
+      }
+    ],
+    "options": []
+  },
+  "source_task_before": "      Act0LessonTaskV1(\n        taskId: 'w4_purpose_intro',\n        title: 'Bet purpose',\n        phase: Act0LessonPhaseV1.theory,\n        runner: _world4PurposeIntroRunner,\n        rewardXp: 5,\n        stepKind: Act0LessonStepKindV1.learn,\n      ),\n",
+  "source_task_after": "      Act0LessonTaskV1(\n        taskId: 'w4_purpose_intro',\n        title: 'Bet purpose',\n        phase: Act0LessonPhaseV1.theory,\n        runner: _world4PurposeIntroRunner.copyWith(\n          teachingSteps: const <Act0TeachingStepV1>[\n            Act0TeachingStepV1(\n              title: 'Purpose first.',\n              body:\n                  'Name the bet purpose first. Value means worse hands can still call. A bluff tries to make better hands fold. Protection makes the next card cost money.',\n              focusLabels: <String>['Value', 'Bluff', 'Protection'],\n            ),\n          ],\n        ),\n        rewardXp: 5,\n        stepKind: Act0LessonStepKindV1.learn,\n      ),\n",
+  "acceptance_scope": "Strict teaching-only producer/admission overlay; original15 context fixtures/pins immutable. No grades/FP/ledger/routes/exposure/parent/native/Human/points change."
+}

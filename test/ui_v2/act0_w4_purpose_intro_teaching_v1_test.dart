@@ -9,10 +9,58 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
+  test('old study remains readable but cannot prove the revised explanation', () {
+    final task = Act0ShellStateV1.sample
+        .lessonById('why_bets_happen')
+        .taskList
+        .first;
+    // Exact prior D22 task/donor teaching data, not a claimed learner event.
+    final prior = Act0LessonTaskV1(
+      taskId: task.taskId,
+      title: task.title,
+      phase: task.phase,
+      rewardXp: task.rewardXp,
+      stepKind: task.stepKind,
+      runner: task.runner.copyWith(
+        teachingSteps: const [
+          Act0TeachingStepV1(
+            title: 'Purpose first.',
+            body:
+                'Name the bet purpose first. Value gets calls, bluff gets folds, '
+                'protection makes the next card cost money.',
+            focusLabels: ['Value', 'Bluff', 'Protection'],
+          ),
+        ],
+      ),
+    );
+    String revision(Act0LessonTaskV1 item) => act0AuthoredStudyRevisionV1(
+      worldId: 'world_4',
+      lessonId: 'why_bets_happen',
+      task: item,
+    )!;
+    final oldRevision = revision(prior);
+    final newRevision = revision(task);
+    expect(oldRevision, isNot(newRevision));
+    Act0StudyObservationV1 synthetic(String sourceRevision) =>
+        Act0StudyObservationV1(
+          worldId: 'world_4',
+          lessonId: 'why_bets_happen',
+          taskId: task.taskId,
+          sourceRevision: sourceRevision,
+          sessionId: 'SIMULATED-study-compatibility-only',
+          recordedAtUtc: DateTime.utc(2026, 1, 1),
+        );
+    final oldPayload = synthetic(oldRevision).toPayload();
+    final restored = Act0StudyObservationV1.tryParse(oldPayload)!;
+    expect(restored.toPayload(), oldPayload);
+    expect(act0CurrentStudyTopicV1(restored), isNull);
+    expect(act0CurrentStudyTopicV1(synthetic(newRevision)), 'Bet purpose');
+  });
   setUpAll(() async {
     // Same legible platform-font harness as existing W01 render evidence.
     final font = [
