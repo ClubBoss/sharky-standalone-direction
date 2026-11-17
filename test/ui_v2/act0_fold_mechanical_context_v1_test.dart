@@ -294,7 +294,7 @@ void main() {
       expect(tester.takeException(), isNull);
     }
 
-    Future<void> capture(String name) async {
+    Future<void> capture(String name) => tester.runAsync(() async {
       final out = Platform.environment['FOLD_CONTEXT_CAPTURE_DIR'];
       if (out == null) return;
       final boundary = tester.renderObject<RenderRepaintBoundary>(
@@ -307,7 +307,7 @@ void main() {
         '${dir.path}/$name.png',
       ).writeAsBytesSync(bytes!.buffer.asUint8List());
       image.dispose();
-    }
+    });
 
     final answerStage = task.runner.copyWith(
       phase: Act0LessonPhaseV1.drill,
