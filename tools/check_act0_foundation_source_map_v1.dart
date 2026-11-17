@@ -88,6 +88,24 @@ void main() {
       'changed current authorship rejected',
       (m) => callPrice(m)['current_curation']['source_commit'] = 'invented',
     );
+    Map purposeIntro(Map<String, dynamic> m) =>
+        (m['worlds'][3]['lessons'][0]['tasks'][0]) as Map;
+    mutate(
+      'missing W4 purpose curation rejected',
+      (m) => purposeIntro(m).remove('current_curation'),
+    );
+    mutate(
+      'changed W4 annotation provenance rejected',
+      (m) => purposeIntro(m)['current_curation']['source_commit'] = 'invented',
+    );
+    mutate(
+      'false W4 first-use closure rejected',
+      (m) =>
+          purposeIntro(
+                m,
+              )['current_curation']['post_authoring_source_qualification']['both_actual_prior_intro_gaps'] =
+              'ACCEPTED',
+    );
     final markdown = File('${temp.path}/${paths[4]}');
     markdown.writeAsStringSync('stale summary');
     run('stale Markdown rejected', succeeds: false);
