@@ -676,6 +676,63 @@ act0RepairGapAdjudicationsV1 = <Act0RepairGapAdjudicationV1>[
     compatibilityImpact:
         'Historical seat-choice records remain intact; current context choices have a new source fingerprint.',
   ),
+  // Explicit new F0 context: BTN is not Hero; no admitted alternate repair.
+  Act0RepairGapAdjudicationV1(
+    sourceWorldId: 'world_1',
+    sourceLessonId: 'blinds_action_order',
+    sourceTaskId: 'blinds_postflop_button',
+    misconception: 'last eligible BTN in the stated initial postflop pass',
+    conceptErrorId: 'misread_position_action_order',
+    priorFallback:
+        'new_context_revision: prior Hero-button receipt no longer applies',
+    candidateTargetIds: <String>[],
+    outcome: Act0RepairGapOutcomeV1.unresolvedProductGap,
+    learnerEquivalenceRationale:
+        'Hero is explicitly CO. A Hero-button identity receipt does not establish a same-skill repair for this action-order context. No replacement relation is admitted.',
+    difficultyRelationship: 'UNKNOWN: no alternate target admitted',
+    recheckPath:
+        'HOLD: retain the source occurrence until an independently reviewed relation is admitted',
+    compatibilityImpact:
+        'Raw history, source fingerprints and once-only XP retained; no new repair evidence or launch authority',
+  ),
+  // Explicit new F0 context: BTN is not Hero; no admitted alternate repair.
+  Act0RepairGapAdjudicationV1(
+    sourceWorldId: 'world_1',
+    sourceLessonId: 'positions',
+    sourceTaskId: 'positions_late_seat',
+    misconception: 'last eligible BTN in the stated initial postflop pass',
+    conceptErrorId: 'misread_table_position',
+    priorFallback:
+        'new_context_revision: prior Hero-button receipt no longer applies',
+    candidateTargetIds: <String>[],
+    outcome: Act0RepairGapOutcomeV1.unresolvedProductGap,
+    learnerEquivalenceRationale:
+        'Hero is explicitly CO. A Hero-button identity receipt does not establish a same-skill repair for this action-order context. No replacement relation is admitted.',
+    difficultyRelationship: 'UNKNOWN: no alternate target admitted',
+    recheckPath:
+        'HOLD: retain the source occurrence until an independently reviewed relation is admitted',
+    compatibilityImpact:
+        'Raw history, source fingerprints and once-only XP retained; no new repair evidence or launch authority',
+  ),
+  // Explicit new F0 context: BTN is not Hero; no admitted alternate repair.
+  Act0RepairGapAdjudicationV1(
+    sourceWorldId: 'world_1',
+    sourceLessonId: 'positions',
+    sourceTaskId: 'positions_review',
+    misconception: 'last eligible BTN in the stated initial postflop pass',
+    conceptErrorId: 'misread_table_position',
+    priorFallback:
+        'new_context_revision: prior Hero-button receipt no longer applies',
+    candidateTargetIds: <String>[],
+    outcome: Act0RepairGapOutcomeV1.unresolvedProductGap,
+    learnerEquivalenceRationale:
+        'Hero is explicitly CO. A Hero-button identity receipt does not establish a same-skill repair for this action-order context. No replacement relation is admitted.',
+    difficultyRelationship: 'UNKNOWN: no alternate target admitted',
+    recheckPath:
+        'HOLD: retain the source occurrence until an independently reviewed relation is admitted',
+    compatibilityImpact:
+        'Raw history, source fingerprints and once-only XP retained; no new repair evidence or launch authority',
+  ),
 ];
 
 Act0RepairGapAdjudicationV1? act0RepairGapAdjudicationForSourceTaskV1(

@@ -15,6 +15,14 @@ const _asm05NewTaskIds = <String>{
   'asm05_new_known_holes_turn_call_40',
 };
 
+// New F0 source meaning no longer identifies Hero as BTN. These four wrong
+// choices have explicit open dispositions, not replacement repair admission.
+const _newW01OrderGapIds = <String>{
+  'blinds_postflop_button',
+  'positions_late_seat',
+  'positions_review',
+};
+
 /// Source inventory and legacy DECLARED-mapper regression, not semantic repair
 /// admission or learner proof. Current typed eligibility is checked separately.
 /// Full original zero-gap semantic coverage remains HOLD until independently
@@ -171,12 +179,44 @@ void main() {
       });
       final repairSnapshot =
           snapshot['legacyDeclaredRepair']! as Map<String, Object?>;
+      final currentGaps = repair
+          .where((row) => _newW01OrderGapIds.contains(row.row.task.taskId))
+          .toList();
+      expect(
+        currentGaps.map((row) => row.row.task.taskId).toSet(),
+        _newW01OrderGapIds,
+      );
+      expect(
+        currentGaps.every(
+          (row) =>
+              row.mappingType == 'unresolved_product_gap' &&
+              row.fallbackOnly &&
+              !row.exactReplay,
+        ),
+        isTrue,
+      );
+      expect(repairSnapshot['sameSignalMapped'], 272);
+      expect(repairSnapshot['fallbackOnly'], 19);
+      expect(repairSnapshot['unresolvedProductGap'], 3);
+      expect(repairSnapshot['unrecordedFallback'], 0);
+      // This reconstructs only historical declaration counts. It never makes
+      // the current three unresolved contexts mapped or semantically admitted.
+      final historicalRepairComparison = <String, Object?>{
+        ...repairSnapshot,
+        'sameSignalMapped':
+            (repairSnapshot['sameSignalMapped'] as int) + currentGaps.length,
+        'fallbackOnly':
+            (repairSnapshot['fallbackOnly'] as int) - currentGaps.length,
+        'unresolvedProductGap':
+            (repairSnapshot['unresolvedProductGap'] as int) -
+            currentGaps.length,
+      };
       expect(repairSnapshot['incorrectOptions'], 462);
       expect(repairSnapshot['exactReplayCovered'], 15 + 1);
-      expect(repairSnapshot['sameSignalMapped'], 276 - 1);
-      expect(repairSnapshot['fallbackOnly'], 15 + 1);
+      expect(historicalRepairComparison['sameSignalMapped'], 276 - 1);
+      expect(historicalRepairComparison['fallbackOnly'], 15 + 1);
       expect(repairSnapshot['intentionalExactReplay'], 15 + 1);
-      expect(repairSnapshot['unresolvedProductGap'], 0);
+      expect(historicalRepairComparison['unresolvedProductGap'], 0);
       expect(repairSnapshot['unrecordedFallback'], 0);
       expect(repairSnapshot['unmapped'], 0);
       expect(repairSnapshot['currentErrorTypes'], <String, int>{
@@ -202,7 +242,8 @@ void main() {
         'misread_tournament_pressure': 32,
       });
       expect(act0ConceptErrorDefinitionsV1, hasLength(20));
-      expect(act0RepairGapAdjudicationsV1, hasLength(37));
+      expect(act0RepairGapAdjudicationsV1.take(37), hasLength(37));
+      expect(act0RepairGapAdjudicationsV1, hasLength(40));
       final fallbackInventory = (repairSnapshot['fallbackInventory'] as List)
           .cast<Map<String, Object?>>();
       // One explicitly versioned context definition moves from an inherited
@@ -417,8 +458,24 @@ void main() {
           _incorrectOptionRow(row, option),
     ];
     expect(incorrect, hasLength(464));
-    expect(allRepair.where((row) => row.sameSignalMapped), hasLength(278 - 1));
-    expect(allRepair.where((row) => row.fallbackOnly), hasLength(15 + 1));
+    final currentGaps = allRepair
+        .where((row) => _newW01OrderGapIds.contains(row.row.task.taskId))
+        .toList();
+    expect(
+      currentGaps.map((row) => row.row.task.taskId).toSet(),
+      _newW01OrderGapIds,
+    );
+    expect(allRepair.where((row) => row.sameSignalMapped), hasLength(274));
+    expect(allRepair.where((row) => row.fallbackOnly), hasLength(19));
+    expect(
+      allRepair.where((row) => row.sameSignalMapped).length +
+          currentGaps.length,
+      278 - 1,
+    );
+    expect(
+      allRepair.where((row) => row.fallbackOnly).length - currentGaps.length,
+      15 + 1,
+    );
     expect(allRepair.where((row) => row.exactReplay), hasLength(15 + 1));
     expect(
       incorrect.where(
@@ -461,14 +518,71 @@ void main() {
           'semantic admission of the ASM05 pair.',
     );
     expect(
-      allRepair.where((row) => row.mappingType == 'unresolved_product_gap'),
-      isEmpty,
+      allRepair
+          .where((row) => row.mappingType == 'unresolved_product_gap')
+          .map((row) => row.row.task.taskId)
+          .toSet(),
+      _newW01OrderGapIds,
     );
     expect(allRepair.where((row) => !row.intentAvailable), isEmpty);
     for (final repair in extensionRepair) {
       expect(repair.sameSignalMapped || repair.exactReplay, isTrue);
     }
   });
+  test(
+    'new non-Hero BTN contexts retain exactly four held wrong-choice cases',
+    () {
+      final rows = _assessedRows()
+          .where((row) => _newW01OrderGapIds.contains(row.task.taskId))
+          .toList();
+      expect(rows.map((row) => row.task.taskId).toSet(), _newW01OrderGapIds);
+      final choices = <String>{};
+      for (final row in rows) {
+        final gap = act0RepairGapAdjudicationForSourceTaskV1(row.task.taskId)!;
+        expect(gap.outcome, Act0RepairGapOutcomeV1.unresolvedProductGap);
+        expect(gap.candidateTargetIds, isEmpty);
+        expect(gap.targetWorldId, isNull);
+        expect(gap.targetLessonId, isNull);
+        expect(gap.targetTaskId, isNull);
+        expect(row.task.runner.table.heroSeatId, 'co');
+        for (final option in row.incorrectOptions) {
+          choices.add('${row.task.taskId}/${option.id}');
+          final intent = buildAct0RepairIntentV1(
+            sourceWorldId: row.worldId,
+            sourceLessonId: row.lessonId,
+            sourceTaskId: row.task.taskId,
+            runner: row.task.runner,
+            selectedOption: option,
+            mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+            currentFingerprintForIdentity:
+                act0CurrentAuthoredSourceFingerprintForIdentityV1,
+          )!;
+          expect(intent.skillAtomId, 'table_read');
+          expect(intent.missedSignalId, 'button');
+          expect(intent.missedSignalId, isNot('hero_button'));
+          expect(intent.mappingType, 'unresolved_product_gap');
+          expect(intent.targetTaskId, row.task.taskId);
+          final goal = act0RepairGoalResolutionForIntentV1(
+            intent,
+            learningEvidence: const Act0LearningEvidenceHistoryV1(),
+            currentFingerprintForIdentity:
+                act0CurrentAuthoredSourceFingerprintForIdentityV1,
+          );
+          expect(goal.isHeld, isTrue);
+          expect(goal.canLaunch, isFalse);
+          expect(goal.retainsObligation, isTrue);
+          expect(goal.canClaimIndependentApplication, isFalse);
+          expect(goal.reason, 'relation_unconfirmed');
+        }
+      }
+      expect(choices, <String>{
+        'blinds_postflop_button/utg',
+        'positions_late_seat/utg',
+        'positions_review/top',
+        'positions_review/random',
+      });
+    },
+  );
   test('every wrong choice has a deterministic current typed disposition', () {
     final rows = _assessedRows();
     final admitted = <String>{};

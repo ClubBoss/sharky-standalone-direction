@@ -3369,7 +3369,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         : (bottomContext.isTrailHistory ? null : promptCoachLine);
     final showStreetReplayInline =
         (table.decisionSeatId == null ||
-            _tableChoreographyActorFocusSafeV1()) &&
+            // A new priced source snapshot certifies its current pot, not
+            // per-action pots in the legacy compact street annotations.
+            (_tableChoreographyActorFocusSafeV1() &&
+                table.toCallLabel.trim().isEmpty)) &&
         _heroDecisionReady &&
         streetReplay?.isConsumerSafe == true &&
         isDrill &&

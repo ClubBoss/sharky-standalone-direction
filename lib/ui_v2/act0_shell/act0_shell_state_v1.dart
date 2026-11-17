@@ -2173,11 +2173,13 @@ final _pokerFromZeroLessons = <Act0LessonCardV1>[
         taskId: 'actions_call_drill',
         title: 'Call a price',
         phase: Act0LessonPhaseV1.drill,
-        runner: _callActionRunner.copyWith(
-          options: _act0AuthoredCorrectOptionAtV1(
-            _callActionRunner.options,
-            correctOptionId: 'call',
-            correctIndex: 2,
+        runner: _act0W01ExplicitCallPriceContextV1(
+          _callActionRunner.copyWith(
+            options: _act0AuthoredCorrectOptionAtV1(
+              _callActionRunner.options,
+              correctOptionId: 'call',
+              correctIndex: 2,
+            ),
           ),
         ),
         rewardXp: 5,
@@ -9734,6 +9736,75 @@ final _callActionRunner = _readBoardRunner.copyWith(
     ),
   ],
 );
+
+// Newly authored full price context for this one mechanical Call question.
+// Shared Call templates and their later-world descendants remain unchanged.
+Act0RunnerStateV1 _act0W01ExplicitCallPriceContextV1(Act0RunnerStateV1 source) {
+  const remaining = <String, String>{
+    'utg': '100 BB',
+    'hj': '98 BB',
+    'co': '100 BB',
+    'btn': '99 BB',
+    'sb': '99 BB',
+    'bb': '99 BB',
+  };
+  return source.copyWith(
+    caption:
+        'For this example, all six start with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. UTG and CO folded. HJ, BTN, SB and BB each put in 1 BB preflop, then BB checked. On the flop SB and BB checked; HJ bet 1 BB. Pot 5 BB includes that bet. Raise 4 BB means a total flop wager of 4 BB.',
+    table: source.table.copyWith(
+      decisionSeatId: 'btn',
+      activeSeatId: 'btn',
+      heroSeatId: 'btn',
+      highlightedSeatIds: const [],
+      highlightedCardIds: const [],
+      focusCalloutLabel: '',
+      selectedSeatId: '',
+      actionTrail: const [
+        Act0ActionTrailItemV1(label: 'SB blind 0.5 BB'),
+        Act0ActionTrailItemV1(label: 'BB blind 1 BB'),
+        Act0ActionTrailItemV1(label: 'UTG folds'),
+        Act0ActionTrailItemV1(label: 'HJ calls 1 BB'),
+        Act0ActionTrailItemV1(label: 'CO folds'),
+        Act0ActionTrailItemV1(label: 'BTN calls 1 BB'),
+        Act0ActionTrailItemV1(label: 'SB calls 0.5 BB more'),
+        Act0ActionTrailItemV1(label: 'BB checks'),
+        Act0ActionTrailItemV1(label: 'Flop: SB checks'),
+        Act0ActionTrailItemV1(label: 'Flop: BB checks'),
+        Act0ActionTrailItemV1(label: 'Flop: HJ bets 1 BB'),
+      ],
+      seats: [
+        for (final seat in source.table.seats)
+          Act0SeatStateV1(
+            seatId: seat.seatId,
+            seatLabel: seat.seatLabel,
+            displayName: seat.displayName,
+            isHero: seat.seatId == 'btn',
+            isDealerButton: seat.seatId == 'btn',
+            isSmallBlind: seat.seatId == 'sb',
+            isBigBlind: seat.seatId == 'bb',
+            isActive: seat.seatId == 'btn',
+            isInHand: seat.seatId != 'utg' && seat.seatId != 'co',
+            isFolded: seat.seatId == 'utg' || seat.seatId == 'co',
+            hasActed: seat.seatId != 'btn',
+            isLastAggressor: seat.seatId == 'hj',
+            stackLabel: remaining[seat.seatId],
+            holeCards: seat.seatId == 'btn' ? seat.holeCards : const [],
+            cardsVisibleMode: seat.seatId == 'btn'
+                ? seat.cardsVisibleMode
+                : Act0CardsVisibleModeV1.none,
+            currentBetLabel: seat.seatId == 'hj' ? '1 BB' : null,
+            bet: seat.seatId == 'hj'
+                ? const Act0SeatBetStateV1(
+                    kind: Act0SeatBetKindV1.bet,
+                    label: 'Bet',
+                    amountLabel: '1 BB',
+                  )
+                : null,
+          ),
+      ],
+    ),
+  );
+}
 
 final _blindsOrderRunner = _meetTableRunner.copyWith(
   lessonId: 'blinds_action_order',

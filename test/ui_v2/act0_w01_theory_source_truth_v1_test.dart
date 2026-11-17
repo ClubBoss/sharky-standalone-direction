@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_betting_price_contract_v1.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -321,6 +322,13 @@ void _contextPremisesWidgetTest(
     );
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
+    if (taskId == 'actions_call_drill') {
+      expect(
+        find.byKey(const Key('act0_shell_street_replay_here_marker')),
+        findsNothing,
+        reason: 'The current pot must not annotate earlier price snapshots.',
+      );
+    }
     final scenes = tester
         .widgetList<Act0TableSceneV1>(find.byType(Act0TableSceneV1))
         .toList();
@@ -506,6 +514,7 @@ void _newFirstHandStackTests() {
 }
 
 void main() {
+  _newCallPriceContextTests();
   _newFirstHandStackTests();
   setUpAll(() async {
     final font = [
@@ -931,3 +940,255 @@ void main() {
     });
   }
 }
+
+void _newCallPriceContextTests() {
+  _contextPremisesWidgetTest(
+    'fold_check_call_raise',
+    'actions_call_drill',
+    neutral: false,
+  );
+  test(
+    'new Call context preserves matching objective and complete source arithmetic',
+    () {
+      final task = _task('fold_check_call_raise', 'actions_call_drill');
+      final table = task.runner.table;
+      expect(task.runner.question, 'Which action matches the 1 BB price?');
+      expect(task.rewardXp, 5);
+      expect(task.runner.options.map((o) => o.id), ['fold', 'raise', 'call']);
+      expect(task.runner.options.singleWhere((o) => o.isCorrect).id, 'call');
+      expect(table.heroCards.map((c) => c.label), ['Qh', 'Qs']);
+      expect(table.boardCards.map((c) => c.label), ['Ah', '7c', '2d']);
+      expect(table.streetLabel, 'Flop');
+      expect(table.potLabel, 'Pot 5 BB');
+      expect(table.toCallLabel, 'To call 1 BB');
+      expect(table.decisionSeatId, 'btn');
+      expect(table.highlightedSeatIds, isEmpty);
+      expect(
+        table.seats.where((s) => s.isFolded).map((s) => s.seatId).toSet(),
+        {'utg', 'co'},
+      );
+      expect(
+        {for (final s in table.seats) s.seatId: s.stackLabel},
+        {
+          'utg': '100 BB',
+          'hj': '98 BB',
+          'co': '100 BB',
+          'btn': '99 BB',
+          'sb': '99 BB',
+          'bb': '99 BB',
+        },
+      );
+      expect(table.seats.every((s) => s.blindAmountLabel == null), isTrue);
+      expect(table.seats.where((s) => s.bet != null).map((s) => s.seatId), [
+        'hj',
+      ]);
+      expect(table.actionTrail.map((a) => a.label), [
+        'SB blind 0.5 BB',
+        'BB blind 1 BB',
+        'UTG folds',
+        'HJ calls 1 BB',
+        'CO folds',
+        'BTN calls 1 BB',
+        'SB calls 0.5 BB more',
+        'BB checks',
+        'Flop: SB checks',
+        'Flop: BB checks',
+        'Flop: HJ bets 1 BB',
+      ]);
+      expect(
+        table.seats.fold<double>(
+          5,
+          (sum, s) => sum + double.parse(s.stackLabel!.split(' ').first),
+        ),
+        600,
+      );
+      expect(
+        act0BettingRoundOrderProofForTableV1(table).truth,
+        Act0BettingRoundOrderTruthV1.consistent,
+      );
+      final call = task.runner.options.singleWhere((o) => o.id == 'call');
+      final raise = task.runner.options.singleWhere((o) => o.id == 'raise');
+      final feedback = act0FeedbackTableForRunnerV1(
+        runner: task.runner.copyWith(selectedOptionId: 'call'),
+        taskFamily: task.resolvedTaskFamily,
+      );
+      // Feedback explains the selected action on the source decision snapshot;
+      // it does not manufacture an executed Call or deal the next street.
+      expect(feedback.streetLabel, 'Flop');
+      expect(feedback.boardCards.length, 3);
+      expect(feedback.potLabel, 'Pot 5 BB');
+      expect(
+        feedback.actionTrail.map((a) => a.label),
+        table.actionTrail.map((a) => a.label),
+      );
+      final price = act0BettingPriceForOptionV1(table, call);
+      expect(price.truth, Act0BettingPriceTruthV1.consistent);
+      expect(price.callCostBb, 1);
+      expect(price.actorCommittedBb, 0);
+      expect(price.minimumRaiseToBb, 2);
+      expect(
+        act0BettingPriceForOptionV1(table, raise).truth,
+        Act0BettingPriceTruthV1.consistent,
+      );
+      expect(task.runner.caption, contains('total flop wager of 4 BB'));
+      for (final bad in [
+        table.copyWith(
+          actionTrail: table.actionTrail
+              .where((a) => a.label != 'BB checks')
+              .toList(),
+        ),
+        table.copyWith(
+          actionTrail: table.actionTrail
+              .where((a) => a.label != 'CO folds')
+              .toList(),
+        ),
+        table.copyWith(decisionSeatId: 'sb'),
+      ]) {
+        expect(
+          act0BettingRoundOrderProofForTableV1(bad).truth,
+          isNot(Act0BettingRoundOrderTruthV1.consistent),
+        );
+      }
+      expect(
+        act0BettingPriceForOptionV1(
+          table,
+          const Act0RunnerOptionV1(
+            id: 'zero_call',
+            label: 'Call',
+            amountLabel: '0 BB',
+            isCorrect: true,
+            preferredLabel: 'Call',
+            quality: Act0FeedbackQualityV1.correct,
+            feedbackTitle: 'Synthetic negative',
+            feedbackReason: 'A zero amount cannot match this one-BB price.',
+          ),
+        ).truth,
+        isNot(Act0BettingPriceTruthV1.consistent),
+      );
+      for (final stack in <String?>['0 BB', '0.5 BB', null]) {
+        final badStack = table.copyWith(
+          seats: [
+            for (final seat in table.seats)
+              seat.seatId == 'btn'
+                  ? _callSeatMutation(seat, stack: stack, afterCall: false)
+                  : seat,
+          ],
+        );
+        expect(
+          act0BettingPriceForOptionV1(badStack, call).truth,
+          isNot(Act0BettingPriceTruthV1.consistent),
+        );
+      }
+      final after = table.copyWith(
+        actionTrail: [
+          ...table.actionTrail,
+          const Act0ActionTrailItemV1(label: 'BTN calls 1 BB'),
+        ],
+        potLabel: 'Pot 6 BB',
+        activeSeatId: '',
+        decisionSeatId: 'sb',
+        seats: [
+          for (final seat in table.seats)
+            _callSeatMutation(
+              seat,
+              stack: seat.seatId == 'btn' ? '98 BB' : seat.stackLabel!,
+            ),
+        ],
+      );
+      expect(
+        after.seats.fold<double>(
+          6,
+          (sum, s) => sum + double.parse(s.stackLabel!.split(' ').first),
+        ),
+        600,
+      );
+      expect(
+        act0BettingRoundOrderProofForTableV1(after).truth,
+        Act0BettingRoundOrderTruthV1.consistent,
+      );
+      expect(
+        act0BettingRoundOrderProofForTableV1(
+          after.copyWith(decisionSeatId: 'btn'),
+        ).truth,
+        isNot(Act0BettingRoundOrderTruthV1.consistent),
+      );
+      expect(
+        act0BettingRoundOrderProofForTableV1(
+          after.copyWith(
+            streetLabel: 'Turn',
+            boardCards: [
+              ...after.boardCards,
+              const Act0CardStateV1(rank: 'J', suit: 'c'),
+            ],
+            actionTrail: [
+              ...after.actionTrail,
+              const Act0ActionTrailItemV1(label: 'Turn: SB checks'),
+            ],
+          ),
+        ).truth,
+        isNot(Act0BettingRoundOrderTruthV1.consistent),
+      );
+      final fp = act0CurrentAuthoredSourceFingerprintForIdentityV1(
+        worldId: 'world_1',
+        lessonId: 'fold_check_call_raise',
+        taskId: task.taskId,
+      )!;
+      const oldFp =
+          '4b9b2245ed4b0cae6eb9c6eb49164b3ef4011f6e1c3ceb0e4cbbbcc0fee88643';
+      expect(fp, isNot(oldFp));
+      final old = Act0LearningEvidenceRecordV1(
+        recordId: 'synthetic_old_call',
+        createdOrder: 1,
+        worldId: 'world_1',
+        lessonId: 'fold_check_call_raise',
+        taskId: task.taskId,
+        sourceTaskId: task.taskId,
+        choiceId: 'call',
+        expectedChoiceId: 'call',
+        isCorrect: true,
+        errorType: 'none',
+        conceptFamilyId: 'action_read',
+        repairFocusId: 'pot_to_call',
+        skillAtomId: 'action_read',
+        decisionTimeBucket: '3_to_10s',
+        resultKind: 'correct',
+        authoredSourceFingerprint: oldFp,
+      );
+      final bytes = jsonEncode(old.toPayload());
+      final restored = Act0LearningEvidenceRecordV1.tryParse(
+        jsonDecode(bytes),
+      )!;
+      expect(jsonEncode(restored.toPayload()), bytes);
+      expect(restored.authoredSourceFingerprint, oldFp);
+      expect(act0CurrentAuthoredSourceProofV1(restored), isNull);
+    },
+  );
+}
+
+Act0SeatStateV1 _callSeatMutation(
+  Act0SeatStateV1 s, {
+  required String? stack,
+  bool afterCall = true,
+}) => Act0SeatStateV1(
+  seatId: s.seatId,
+  seatLabel: s.seatLabel,
+  displayName: s.displayName,
+  isHero: s.isHero,
+  isDealerButton: s.isDealerButton,
+  isSmallBlind: s.isSmallBlind,
+  isBigBlind: s.isBigBlind,
+  isInHand: s.isInHand,
+  isFolded: s.isFolded,
+  isOccupied: s.isOccupied,
+  stackLabel: stack,
+  holeCards: s.holeCards,
+  cardsVisibleMode: s.cardsVisibleMode,
+  currentBetLabel: afterCall && s.seatId == 'btn' ? '1 BB' : s.currentBetLabel,
+  bet: afterCall && s.seatId == 'btn'
+      ? const Act0SeatBetStateV1(
+          kind: Act0SeatBetKindV1.call,
+          label: 'Call',
+          amountLabel: '1 BB',
+        )
+      : s.bet,
+);
