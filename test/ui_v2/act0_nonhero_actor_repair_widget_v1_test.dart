@@ -215,9 +215,11 @@ void main() {
         await _choice(t, correct.id, subject.task);
         await _tap(t, 'act0_shell_feedback_continue_cta');
         final finalSaved = await _saved(t);
-        final history = Act0LearningEvidenceHistoryV1.tryParse(
+        final parsedHistory = Act0LearningEvidenceHistoryV1.tryParse(
           finalSaved['learningEvidenceHistory'],
         );
+        expect(parsedHistory, isNotNull);
+        final history = parsedHistory!;
         final preserved = history.records.singleWhere(
           (r) => r.recordId == miss.recordId,
         );
