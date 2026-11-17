@@ -987,6 +987,109 @@ def _require_w24_context_admission():
         raise SystemExit('W24 context admission is unfinalized or inconsistent')
 
 
+# New explicit W01 contexts: exact independently reviewed source/capture delta.
+# Original authoring origin, all predecessor pins and raw captures stay intact.
+WP03_CONTEXT_REVISION = 'W01_REVIEWED_EXPLICIT_MECHANICAL_CONTEXTS'
+WP03_CONTEXT_PRODUCER_REVISION = {'source_revision': '9f8881125d7ec52972b632ed27c34dd909d9b071',
+ 'state_sha256': '8f21785640e1f9fbd29898877ba22401b835095dd498d5b173a44538ebf638dc',
+ 'factory_sha256': 'c9386ad268d84f7469727f6fb4dc4f6eb2e771fd8d3f91d4169d1d31f727016b',
+ 'runner_sha256': '5a8226c91f629f0f3249b0d769b6b3529ae1d44dea5847064d35c477da1d6799',
+ 'source_proof_sha256': 'b0a3151d85d49149ca4f3beefe91d070c9d6c5e5b5d63c48020287bec2cf2b57',
+ 'street_replay_sha256': 'abe0a0754633390f99fe219b1e6213299878a3fb1a65aadac445840f4ced6bdf'}
+WP03_CONTEXT_CAPTURE_SHA256 = {'learning-contract.json': '37df4a54ea23a88ab9f567d6f863277e89df20be50dcad628ef4da88cdee5646',
+ 'choice-identity.json': '3d04f53c19ccd152e8044938fc9912af27bac0bd4427e8044425b824110b0a5d',
+ 'runtime-inputs.json': '49044dd1f82c31b0f37e576d72dba675c91c888cd738738e051eae0835c1bf75',
+ 'source-fingerprints.json': '0b7d543a5a45b306ea9c0fe2380932d3a3b8bf3c9487fb160bbb56776e4dec9a',
+ 'ledger.json': '6b05c81821ef6893aaf83b0b4f6f265341243f32437d0df5360fca56dd9e35bf'}
+WP03_CONTEXT_FIXTURE = pathlib.Path(__file__).resolve().parents[1] / (
+    'test/tools/fixtures/table_truth_wp03_explicit_contexts_v1.json'
+)
+WP03_CONTEXT_FIXTURE_SHA256 = 'ebe32f2a26c9a60430e3bbee7defb8aa12bbdec61a72a5db3529ac14e5ba8a25'
+WP03_CONTEXT_LEDGER_REVIEW = 'EXACT_EIGHT_APPLICABILITY_GROUPS_CONFIRMED'
+
+
+def _require_wp03_context_admission():
+    source = WP03_CONTEXT_PRODUCER_REVISION
+    if (not re.fullmatch(r'[0-9a-f]{40}', str(source.get('source_revision')))
+        or any(not re.fullmatch(r'[0-9a-f]{64}', str(source.get(key)))
+               for key in ('state_sha256', 'runner_sha256', 'source_proof_sha256', 'street_replay_sha256'))
+        or source.get('factory_sha256') != W24_CONTEXT_PRODUCER_REVISION['factory_sha256']
+        or source.get('state_sha256') == W24_CONTEXT_PRODUCER_REVISION['state_sha256']
+        or set(WP03_CONTEXT_CAPTURE_SHA256) != set(W24_CONTEXT_CAPTURE_SHA256)
+        or any(not re.fullmatch(r'[0-9a-f]{64}', str(value))
+               for value in WP03_CONTEXT_CAPTURE_SHA256.values())
+        or WP03_CONTEXT_LEDGER_REVIEW != 'EXACT_EIGHT_APPLICABILITY_GROUPS_CONFIRMED'
+        or hashlib.sha256(WP03_CONTEXT_FIXTURE.read_bytes()).hexdigest() != WP03_CONTEXT_FIXTURE_SHA256):
+        raise SystemExit('WP03 explicit-context admission is unfinalized or inconsistent')
+    fixture = json.loads(WP03_CONTEXT_FIXTURE.read_text())
+    if (fixture.get('schema') != 1 or len(fixture.get('task_ids', [])) != 12
+        or fixture.get('capture_sha256') != WP03_CONTEXT_CAPTURE_SHA256
+        or len(fixture.get('ledger_groups', [])) != 8):
+        raise SystemExit('WP03 exact comparison fixture changed')
+    source_root = pathlib.Path(__file__).resolve().parents[1] / 'lib/ui_v2/act0_shell'
+    for key, filename in (
+        ('state_sha256', 'act0_shell_state_v1.dart'),
+        ('factory_sha256', 'act0_asm05_authored_decision_truth_v1.dart'),
+        ('runner_sha256', 'act0_lesson_runner_shell_v1.dart'),
+        ('source_proof_sha256', 'act0_authored_source_proof_v1.dart'),
+        ('street_replay_sha256', 'act0_street_replay_contract_v1.dart'),
+    ):
+        if hashlib.sha256((source_root / filename).read_bytes()).hexdigest() != source[key]:
+            raise SystemExit(f'WP03 source-origin packet bytes changed: {filename}')
+    return fixture
+
+
+def wp03_context_w24_capture(name, value):
+    """Reconstruct W24 in memory; never edit current or historical captures.
+
+    The existing TableTruth verifier owns applicability/statuses. This stage
+    pins its actual output, including unresolved context, rather than declaring
+    source-owned actor/stack operands certified by that older capture schema.
+    """
+    fixture = _require_wp03_context_admission()
+    result = copy.deepcopy(value)
+    try:
+        if _digest(result) != WP03_CONTEXT_CAPTURE_SHA256[name]:
+            raise ValueError('whole current WP03 capture')
+        if name == 'ledger.json':
+            groups = {row['task_id']: row for row in fixture['ledger_groups']}
+            rebuilt = []
+            seen = set()
+            index = 0
+            while index < len(result):
+                task_id = result[index]['task_id']
+                end = index + 1
+                while end < len(result) and result[end]['task_id'] == task_id:
+                    end += 1
+                if task_id in seen:
+                    raise ValueError('noncontiguous or duplicate task group')
+                seen.add(task_id)
+                rows = result[index:end]
+                if task_id in groups:
+                    admitted = groups[task_id]
+                    if (len(rows) != admitted['current_count']
+                        or _digest(rows) != admitted['current_sha256']
+                        or dict(collections.Counter(row['status'] for row in rows)) != admitted['current_statuses']
+                        or any(row['task_id'] != task_id for row in admitted['prior_rows'])):
+                        raise ValueError('exact ledger identity/status/witness group')
+                    rows = copy.deepcopy(admitted['prior_rows'])
+                rebuilt.extend(rows)
+                index = end
+            if not set(groups) <= seen:
+                raise ValueError('missing admitted ledger group')
+            result = rebuilt
+        else:
+            for task_id, change in fixture['task_changes'][name].items():
+                if result[task_id] != change['current']:
+                    raise ValueError('literal current WP03 task record')
+                result[task_id] = copy.deepcopy(change['prior'])
+        if _digest(result) != W24_CONTEXT_CAPTURE_SHA256[name]:
+            raise ValueError('whole reconstructed W24 capture')
+    except (KeyError, TypeError, IndexError, ValueError) as error:
+        raise SystemExit(f'WP03 explicit-context exact revision mismatch: {name}') from error
+    return result
+
+
 def _digest(value):
     encoded = json.dumps(value, separators=(',', ':'), ensure_ascii=False).encode()
     return hashlib.sha256(encoded).hexdigest()
@@ -1036,6 +1139,10 @@ def producer_revision(cohort, role):
     if role == 'candidate' and source_bytes == context_bytes:
         _require_w24_context_admission()
         return W24_CONTEXT_REVISION
+    wp03_bytes = {key: WP03_CONTEXT_PRODUCER_REVISION[key] for key in source_bytes}
+    if role == 'candidate' and source_bytes == wp03_bytes:
+        _require_wp03_context_admission()
+        return WP03_CONTEXT_REVISION
     raise SystemExit('Producing source receipt does not match admitted bytes')
 
 
@@ -1252,20 +1359,22 @@ def w24_context_w5_capture(name, value):
 
 
 def reviewed_origin_capture(name, value, revision):
+    if revision == WP03_CONTEXT_REVISION:
+        return reviewed_origin_capture(name, wp03_context_w24_capture(name, value), W24_CONTEXT_REVISION)
     if revision == W24_CONTEXT_REVISION: value = w24_context_w5_capture(name, value)
-    if revision in (W5_FACTUAL_REVISION, W24_CONTEXT_REVISION):
+    if revision in (W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION):
         value = w5_factual_prompt_capture(name, value)
-    if revision in (W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION):
+    if revision in (W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION):
         value = w3_recap_prompt_ato_capture(name, value)
-    if revision in (W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION):
+    if revision in (W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION):
         value = w3_ato_teaching_recap_capture(name, value)
-    if revision in (W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION):
+    if revision in (W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION):
         value = w3_recap_position_capture(name, value)
-    if revision in (W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION):
+    if revision in (W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION):
         value = w01_position_pkg1_capture(name, value)
-    if revision in (PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION):
+    if revision in (PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION):
         value = pkg1_w01_capture(name, value)
-    if revision in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION):
+    if revision in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION):
         value = w01_origin_capture(name, value)
     return main01_origin_capture(name, value)
 
@@ -1278,6 +1387,7 @@ def validate_capture_artifacts(source, revision, names=None):
     requires the exact current whole-capture bytes before any reconstruction;
     every reconstructed capture must reproduce its unchanged original pin.
     """
+    if revision == WP03_CONTEXT_REVISION: _require_wp03_context_admission()
     if revision == W24_CONTEXT_REVISION: _require_w24_context_admission()
     if revision == W5_FACTUAL_REVISION:
         _require_w5_factual_admission()
@@ -1285,11 +1395,13 @@ def validate_capture_artifacts(source, revision, names=None):
     for name, expected in names.items():
         raw = (pathlib.Path(source) / name).read_bytes()
         observed = hashlib.sha256(raw).hexdigest()
-        if revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION):
+        if revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION):
             captured = json.loads(raw)
             compact = json.dumps(captured, separators=(',', ':'), ensure_ascii=False).encode()
             if raw != compact:
                 raise SystemExit(f'Captured JSON byte encoding drift: {name}')
+            if revision == WP03_CONTEXT_REVISION and observed != WP03_CONTEXT_CAPTURE_SHA256.get(name):
+                raise SystemExit(f'WP03 context current capture artifact drift: {name}')
             if revision == W24_CONTEXT_REVISION and observed != W24_CONTEXT_CAPTURE_SHA256.get(name):
                 raise SystemExit(f'W24 context current capture artifact drift: {name}')
             if revision == W5_FACTUAL_REVISION and observed != W5_FACTUAL_CAPTURE_SHA256.get(name):
@@ -1351,7 +1463,7 @@ def validate_typed_cohort(root):
     if set(base) != historical_ids or set(final) != historical_ids | NEW_AUTHORING_IDS:
         raise SystemExit('Learning contract cohort key set is inconsistent')
     comparison_contract = final
-    if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION):
+    if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION):
         validate_capture_artifacts(root / 'candidate', candidate_revision)
         comparison_contract = reviewed_origin_capture(
             'learning-contract.json', final, candidate_revision)
@@ -1378,7 +1490,7 @@ def validate_typed_cohort(root):
             raise SystemExit(f'{label} cohort key set is inconsistent')
     comparison_choices = (
         reviewed_origin_capture('choice-identity.json', after_choices, candidate_revision)
-        if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else after_choices
+        if candidate_revision in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION) else after_choices
     )
     if any(before_choices[key] != comparison_choices[key] for key in historical_ids):
         raise SystemExit('Historical choice identity changed')
@@ -1498,37 +1610,44 @@ def compare(root):
     result = {'ledgers': ledgers, 'runtime_changed_task_count': len(delta), 'runtime_changed_task_ids': sorted(delta),
               'historical_learning_contract_identical': identity['historical_learning_contract_identical'],
               'historical_choice_identity_identical': identity['historical_choice_identity_identical'],
-              'historical_contracts_identical_except_reviewed_setup_qualities': identity['candidate_revision'] not in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION),
+              'historical_contracts_identical_except_reviewed_setup_qualities': identity['candidate_revision'] not in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION),
               'historical_contracts_identical_except_exact_reviewed_revisions': True,
               'reviewed_theory_changes': ([
                   {'task_id': task_id, 'changed_fields': ['options', 'source_fingerprint', 'feedback_phase_choice_ids'],
                    'historical_record_policy': 'retain original fingerprint, grade, assistance, XP and repair lineage',
                    'current_source_policy': 'reject old fingerprint'}
                   for task_id in W01_CAPTURE_OPTIONS['learning-contract.json']
-              ] if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else []),
+              ] if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION) else []),
+              'reviewed_wp03_context_changes': ({name: len(rows) for name, rows in _require_wp03_context_admission()['task_changes'].items()}
+                  if identity['candidate_revision'] == WP03_CONTEXT_REVISION else {}),
+              'reviewed_wp03_source_origin_packet': (dict(WP03_CONTEXT_PRODUCER_REVISION)
+                  if identity['candidate_revision'] == WP03_CONTEXT_REVISION else {}),
+              'wp03_scope': ('12 new authored source contexts; 8 existing-verifier applicability groups; actor/stack diagnostic and native acceptance remain separate'
+                  if identity['candidate_revision'] == WP03_CONTEXT_REVISION else None),
               'candidate_producer_revision': identity['candidate_revision'],
               'producer_receipt': identity['final_cohort']['producer_receipt'],
               'reviewed_hand_seat_changes': ({name: len(leaves) for name, leaves in PKG1_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] in (PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else {}),
+                  if identity['candidate_revision'] in (PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION) else {}),
               'reviewed_position_feedback_changes': ({name: len(rows) for name, rows in W01_POSITION_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] in (W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else {}),
+                  if identity['candidate_revision'] in (W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION) else {}),
               'reviewed_w3_recap_changes': ({name: len(rows) for name, rows in W3_RECAP_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] in (W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else {}),
+                  if identity['candidate_revision'] in (W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION) else {}),
               'reviewed_ato_teaching_changes': ({name: len(rows) for name, rows in W3_ATO_TEACHING_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] in (W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else {}),
+                  if identity['candidate_revision'] in (W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION) else {}),
               'reviewed_recap_prompt_changes': ({name: len(rows) for name, rows in W3_RECAP_PROMPT_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] in (W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else {}),
+                  if identity['candidate_revision'] in (W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION) else {}),
               'reviewed_w5_factual_changes': ({name: len(rows) for name, rows in W5_FACTUAL_CAPTURE_LEAVES.items()}
-                  if identity['candidate_revision'] in (W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else {}),
+                  if identity['candidate_revision'] in (W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION) else {}),
               'protected_w5_context_ids_unchanged': (sorted(W5_FACTUAL_PROTECTED_FINGERPRINTS)
-                  if identity['candidate_revision'] in (W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else []),
+                  if identity['candidate_revision'] in (W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION) else []),
               'reviewed_w24_context_changes': ({name: len(rows) for name, rows in W24_CONTEXT_CAPTURE_LEAVES.items()}
                   if identity['candidate_revision'] == W24_CONTEXT_REVISION else {}),
               'reviewed_w24_source_files': (dict(W24_CONTEXT_PRODUCER_REVISION)
                   if identity['candidate_revision'] == W24_CONTEXT_REVISION else {}),
               'w24_runner_pin_provenance': ('reviewed source-origin packet; not the typed producer factory receipt'
                   if identity['candidate_revision'] == W24_CONTEXT_REVISION else None),
-              'reviewed_producer_source_revision': (W24_CONTEXT_PRODUCER_REVISION['source_revision']
+              'reviewed_producer_source_revision': (WP03_CONTEXT_PRODUCER_REVISION['source_revision']
+                  if identity['candidate_revision'] == WP03_CONTEXT_REVISION else W24_CONTEXT_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == W24_CONTEXT_REVISION else W5_FACTUAL_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == W5_FACTUAL_REVISION else W3_RECAP_PROMPT_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == W3_RECAP_PROMPT_REVISION else W3_ATO_TEACHING_PRODUCER_REVISION['source_revision']
@@ -1536,13 +1655,13 @@ def compare(root):
                   if identity['candidate_revision'] == W3_RECAP_REVISION else W01_POSITION_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == W01_POSITION_REVISION else PKG1_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == PKG1_REVISION else W01_PRODUCER_REVISION['source_revision']
-                  if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else
+                  if identity['candidate_revision'] in (W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION) else
                   MAIN01_PRODUCER_REVISION['source_revision']
                   if identity['candidate_revision'] == 'MAIN01_REVIEWED_SETUP_QUALITIES' else None),
               'reviewed_quality_changes': ([
                   {'task_id': MAIN01_TASK_ID, 'choice_id': choice, 'before': prior, 'after': current}
                   for choice, (prior, current) in MAIN01_QUALITY_REVISION.items()
-              ] if identity['candidate_revision'] in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION) else []),
+              ] if identity['candidate_revision'] in ('MAIN01_REVIEWED_SETUP_QUALITIES', W01_REVISION, PKG1_REVISION, W01_POSITION_REVISION, W3_RECAP_REVISION, W3_ATO_TEACHING_REVISION, W3_RECAP_PROMPT_REVISION, W5_FACTUAL_REVISION, W24_CONTEXT_REVISION, WP03_CONTEXT_REVISION) else []),
               'historical_cohort_count': len(historical_ids),
               'new_authoring': new_authoring,
               'canonical_source_fingerprints': fingerprint_counts, 'native': 'PENDING'}

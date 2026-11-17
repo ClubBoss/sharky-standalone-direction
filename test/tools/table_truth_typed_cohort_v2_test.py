@@ -735,6 +735,57 @@ class TypedCohortV2Controls(unittest.TestCase):
             with self.assertRaises(SystemExit): TRUTH._require_w24_context_admission()
         finally: TRUTH.W24_CONTEXT_LEDGER_REVIEW=saved
 
+    def wp03_context_producer(self):
+        cohort = self.w24_context_producer()
+        for key in ('state_sha256', 'factory_sha256'):
+            cohort['producer_receipt'][key] = TRUTH.WP03_CONTEXT_PRODUCER_REVISION[key]
+        return cohort
+
+    def test_wp03_context_producer_preserves_origin_and_rejects_bad_receipts(self):
+        cohort = self.wp03_context_producer()
+        self.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), TRUTH.WP03_CONTEXT_REVISION)
+        for field in ('state_sha256', 'factory_sha256', 'head'):
+            for value in (None, '0', '0' * 64):
+                changed = copy.deepcopy(cohort)
+                changed['producer_receipt'][field] = value
+                with self.assertRaises(SystemExit): TRUTH.producer_revision(changed, 'candidate')
+        changed = copy.deepcopy(cohort)
+        changed['admitted_source_reference']['commit'] = TRUTH.WP03_CONTEXT_PRODUCER_REVISION['source_revision']
+        with self.assertRaises(SystemExit): TRUTH.producer_revision(changed, 'candidate')
+        changed = copy.deepcopy(cohort)
+        changed['admitted_source_reference'] = copy.deepcopy(TRUTH.SOURCE_REFERENCES['historical_baseline'])
+        with self.assertRaises(SystemExit): TRUTH.producer_revision(changed, 'historical_baseline')
+
+    def test_wp03_missing_source_fixture_capture_or_ledger_admission_fails_closed(self):
+        for field in TRUTH.WP03_CONTEXT_PRODUCER_REVISION:
+            saved = TRUTH.WP03_CONTEXT_PRODUCER_REVISION[field]
+            try:
+                TRUTH.WP03_CONTEXT_PRODUCER_REVISION[field] = None
+                with self.assertRaises(SystemExit): TRUTH._require_wp03_context_admission()
+            finally: TRUTH.WP03_CONTEXT_PRODUCER_REVISION[field] = saved
+        for field in ('state_sha256', 'runner_sha256', 'source_proof_sha256', 'street_replay_sha256'):
+            saved = TRUTH.WP03_CONTEXT_PRODUCER_REVISION[field]
+            try:
+                TRUTH.WP03_CONTEXT_PRODUCER_REVISION[field] = 'f' * 64
+                with self.assertRaises(SystemExit): TRUTH._require_wp03_context_admission()
+            finally: TRUTH.WP03_CONTEXT_PRODUCER_REVISION[field] = saved
+        for name in TRUTH.WP03_CONTEXT_CAPTURE_SHA256:
+            saved = TRUTH.WP03_CONTEXT_CAPTURE_SHA256[name]
+            try:
+                TRUTH.WP03_CONTEXT_CAPTURE_SHA256[name] = None
+                with self.assertRaises(SystemExit): TRUTH._require_wp03_context_admission()
+            finally: TRUTH.WP03_CONTEXT_CAPTURE_SHA256[name] = saved
+        saved = TRUTH.WP03_CONTEXT_FIXTURE_SHA256
+        try:
+            TRUTH.WP03_CONTEXT_FIXTURE_SHA256 = '0' * 64
+            with self.assertRaises(SystemExit): TRUTH._require_wp03_context_admission()
+        finally: TRUTH.WP03_CONTEXT_FIXTURE_SHA256 = saved
+        saved = TRUTH.WP03_CONTEXT_LEDGER_REVIEW
+        try:
+            TRUTH.WP03_CONTEXT_LEDGER_REVIEW = 'UNREVIEWED'
+            with self.assertRaises(SystemExit): TRUTH._require_wp03_context_admission()
+        finally: TRUTH.WP03_CONTEXT_LEDGER_REVIEW = saved
+
     def recompute(self, root, task_id):
         contract = self.read(root / 'candidate/learning-contract.json')
         fingerprints = self.read(root / 'candidate/source-fingerprints.json')
@@ -762,8 +813,106 @@ class TypedCohortV2Controls(unittest.TestCase):
         path.write_text(json.dumps(value, separators=(',', ':'), ensure_ascii=False))
 
 
+def check_wp03_real_artifacts(baseline, candidate):
+    """Check new captures, then reuse every unchanged predecessor control.
+
+    The temporary W24 capture must reproduce all five historical W24 pins and
+    uses its preserved actual predecessor cohort receipt from the pinned
+    fixture. Current captures/receipts are never overwritten or relabelled.
+    """
+    import contextlib
+    import io
+    import subprocess
+    helper = TypedCohortV2Controls()
+    fixture = TRUTH._require_wp03_context_admission()
+    names = tuple(TRUTH.EXPECTED_CAPTURE_ARTIFACTS)
+    current = {name: helper.read(candidate / name) for name in names}
+    cohort = helper.read(candidate / 'typed-cohort-v2.json')
+    helper.assertEqual(TRUTH.producer_revision(cohort, 'candidate'), TRUTH.WP03_CONTEXT_REVISION)
+    TRUTH.validate_capture_artifacts(candidate, TRUTH.WP03_CONTEXT_REVISION)
+    predecessor = {name: TRUTH.wp03_context_w24_capture(name, captured)
+                   for name, captured in current.items()}
+    ids = set(fixture['task_ids'])
+    for name in ('runtime-inputs.json', 'source-fingerprints.json'):
+        helper.assertEqual({key for key in current[name] if current[name][key] != predecessor[name][key]}, ids)
+        helper.assertEqual(len(current[name]), 369)
+    helper.assertEqual(current['learning-contract.json'], predecessor['learning-contract.json'])
+    helper.assertEqual({key for key in current['choice-identity.json']
+                        if current['choice-identity.json'][key] != predecessor['choice-identity.json'][key]}, {'positions_review'})
+    helper.assertFalse(any(row['status'] == 'FAIL' for row in current['ledger.json']))
+    negative_count = 0
+    for name in names:
+        changed = copy.deepcopy(current[name])
+        if name == 'ledger.json': changed[0]['status'] = 'forged'
+        else: changed.pop(next(iter(changed)))
+        with helper.assertRaises(SystemExit): TRUTH.wp03_context_w24_capture(name, changed)
+        negative_count += 1
+    # Every admitted task/ledger group is independently protected against edits,
+    # removal, status forgery and identity/order/cardinality changes.
+    for task_id in sorted(ids):
+        changed = copy.deepcopy(current['runtime-inputs.json'])
+        changed[task_id]['question'] = 'forged premise/question'
+        with helper.assertRaises(SystemExit): TRUTH.wp03_context_w24_capture('runtime-inputs.json', changed)
+        negative_count += 1
+    changed = copy.deepcopy(current['runtime-inputs.json'])
+    changed['positions_button']['caption'] = 'unauthorized thirteenth context'
+    with helper.assertRaises(SystemExit): TRUTH.wp03_context_w24_capture('runtime-inputs.json', changed)
+    negative_count += 1
+    for group in fixture['ledger_groups']:
+        index = next(i for i, row in enumerate(current['ledger.json']) if row['task_id'] == group['task_id'])
+        for mutation in ('status', 'reason', 'task_id', 'remove', 'reorder'):
+            changed = copy.deepcopy(current['ledger.json'])
+            if mutation == 'remove': changed.pop(index)
+            elif mutation == 'reorder': changed[index:index + 2] = changed[index:index + 2][::-1]
+            else: changed[index][mutation] = 'forged'
+            with helper.assertRaises(SystemExit): TRUTH.wp03_context_w24_capture('ledger.json', changed)
+            negative_count += 1
+    # Pin mutation and a recomputed ASM cohort digest cannot bless changed data.
+    with tempfile.TemporaryDirectory() as directory:
+        root = pathlib.Path(directory)
+        shutil.copytree(baseline, root / 'baseline')
+        shutil.copytree(candidate, root / 'candidate')
+        with contextlib.redirect_stdout(io.StringIO()): TRUTH.compare(root)
+        comparison = helper.read(root / 'comparison.json')
+        for name in names:
+            saved = TRUTH.WP03_CONTEXT_CAPTURE_SHA256[name]
+            try:
+                TRUTH.WP03_CONTEXT_CAPTURE_SHA256[name] = '0' * 64
+                with helper.assertRaises(SystemExit): TRUTH.validate_capture_artifacts(candidate, TRUTH.WP03_CONTEXT_REVISION)
+                negative_count += 1
+            finally: TRUTH.WP03_CONTEXT_CAPTURE_SHA256[name] = saved
+        changed = helper.read(root / 'candidate/runtime-inputs.json')
+        changed['blinds_last_actor']['table']['actor'] = 'btn'
+        helper.write(root / 'candidate/runtime-inputs.json', changed)
+        helper.recompute(root, next(iter(NEW)))
+        with helper.assertRaises(SystemExit): TRUTH.validate_typed_cohort(root)
+        negative_count += 1
+        # Restore immutable actual current captures before reconstructing.
+        for name, captured in predecessor.items(): helper.write(root / 'candidate' / name, captured)
+        helper.write(root / 'candidate/typed-cohort-v2.json', fixture['predecessor_cohort'])
+        TRUTH.validate_capture_artifacts(root / 'candidate', TRUTH.W24_CONTEXT_REVISION)
+        run = subprocess.run([sys.executable, __file__, '--real-artifacts', str(baseline.resolve()), str((root / 'candidate').resolve())], capture_output=True, text=True)
+        if run.returncode: raise SystemExit('Reconstructed exact-W24 predecessor controls failed: ' + run.stderr[-1800:] + run.stdout[-1800:])
+        prior_result = json.loads(run.stdout.splitlines()[-1])
+    result = {'candidate_producer_revision': TRUTH.WP03_CONTEXT_REVISION,
+              'runtime_changed_task_count': comparison['runtime_changed_task_count'],
+              'canonical_source_fingerprints': comparison['canonical_source_fingerprints'],
+              'wp03_changed_context_ids': sorted(ids), 'wp03_unchanged_context_count': 357,
+              'wp03_actual_capture_negative_controls': negative_count,
+              'ledger_rows': len(current['ledger.json']),
+              'ledger_statuses': dict(__import__('collections').Counter(row['status'] for row in current['ledger.json'])),
+              'predecessor_controls_on_exact_reconstructed_capture': prior_result,
+              'scope': 'source/typed captures only; native and independent full PKR acceptance remain separate'}
+    print(json.dumps(result, sort_keys=True))
+
+
 if __name__ == '__main__':
     if len(sys.argv) == 4 and sys.argv[1] == '--real-artifacts':
+        candidate_path = pathlib.Path(sys.argv[3])
+        actual_cohort = candidate_path / 'typed-cohort-v2.json'
+        if (actual_cohort.is_file() and TRUTH.producer_revision(json.loads(actual_cohort.read_text()), 'candidate') == TRUTH.WP03_CONTEXT_REVISION):
+            check_wp03_real_artifacts(pathlib.Path(sys.argv[2]), candidate_path)
+            sys.exit(0)
         baseline = pathlib.Path(sys.argv[2])
         candidate = pathlib.Path(sys.argv[3])
         root = pathlib.Path(tempfile.mkdtemp())

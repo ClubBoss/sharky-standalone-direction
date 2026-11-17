@@ -266,129 +266,138 @@ void _explicitOrderFrameTests() {
       },
     );
 
-    testWidgets('${entry.key} renders neutral semantic actor at EN14Pro', (
-      tester,
-    ) async {
-      tester.view.physicalSize = const Size(393, 852);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-      final task = _task(lesson, entry.key);
-      final assistance = <Act0DecisionAssistanceV1>[];
-      var decisions = 0;
-      await tester.pumpWidget(
-        MaterialApp(
-          locale: const Locale('en'),
-          home: Scaffold(
-            body: RepaintBoundary(
-              key: const Key('order-frame-capture'),
-              child: Act0LessonRunnerShellV1(
-                runner: task.runner.copyWith(
-                  phase: task.entryPhase,
-                  teachingStepIndex: task.runner.teachingSteps.length,
-                ),
-                worldNumber: 1,
-                selectedWorldId: 'world_1',
-                selectedLessonId: lesson,
-                selectedTaskId: task.taskId,
-                selectedTaskTitle: task.title,
-                selectedTaskFamily: task.resolvedTaskFamily,
-                compositionFamily: task.resolvedCompositionFamily,
-                tablePresentation: task.tablePresentation,
-                onBack: () {},
-                onContinueTheory: () {},
-                onChooseOption: (_) {
-                  decisions++;
-                },
-                onChooseSeat: (_) {
-                  decisions++;
-                },
-                onContinueReview: () {},
-                onChoiceAssistance: assistance.add,
+    _contextPremisesWidgetTest(lesson, entry.key, neutral: true);
+  }
+}
+
+void _contextPremisesWidgetTest(
+  String lesson,
+  String taskId, {
+  required bool neutral,
+}) {
+  testWidgets('$taskId exposes full source premises at EN14Pro', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final task = _task(lesson, taskId);
+    final assistance = <Act0DecisionAssistanceV1>[];
+    var decisions = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        locale: const Locale('en'),
+        home: Scaffold(
+          body: RepaintBoundary(
+            key: const Key('order-frame-capture'),
+            child: Act0LessonRunnerShellV1(
+              runner: task.runner.copyWith(
+                phase: task.entryPhase,
+                teachingStepIndex: task.runner.teachingSteps.length,
               ),
+              worldNumber: 1,
+              selectedWorldId: 'world_1',
+              selectedLessonId: lesson,
+              selectedTaskId: task.taskId,
+              selectedTaskTitle: task.title,
+              selectedTaskFamily: task.resolvedTaskFamily,
+              compositionFamily: task.resolvedCompositionFamily,
+              tablePresentation: task.tablePresentation,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {
+                decisions++;
+              },
+              onChooseSeat: (_) {
+                decisions++;
+              },
+              onContinueReview: () {},
+              onChoiceAssistance: assistance.add,
             ),
           ),
         ),
-      );
-      await tester.pumpAndSettle();
-      expect(tester.takeException(), isNull);
-      final scenes = tester
-          .widgetList<Act0TableSceneV1>(find.byType(Act0TableSceneV1))
-          .toList();
-      expect(scenes, isNotEmpty);
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    final scenes = tester
+        .widgetList<Act0TableSceneV1>(find.byType(Act0TableSceneV1))
+        .toList();
+    expect(scenes, isNotEmpty);
+    if (neutral)
       for (final scene in scenes) {
         expect(scene.table.activeSeatId, '');
         expect(scene.table.seats.any((s) => s.isActive || s.isTarget), isFalse);
         expect(scene.table.highlightedSeatIds, isEmpty);
       }
-      final texts = tester
-          .widgetList<Text>(find.byType(Text))
-          .map((t) => t.data ?? t.textSpan?.toPlainText() ?? '')
-          .where((t) => t.isNotEmpty)
-          .toList();
-      expect(
-        texts.any(
-          (t) =>
-              t.contains('UTG acts next') ||
-              t.contains('BB acts next') ||
-              t.contains('SB acts next'),
-        ),
-        isFalse,
-      );
-      expect(find.text(task.runner.question), findsOneWidget);
-      expect(
-        find.textContaining(task.runner.caption),
-        findsOneWidget,
-        reason: 'Full source premises must be available when answering.',
-      );
-      final support = find.byKey(
-        const Key('act0_learning_scene_v3_model_support_scroll'),
-      );
-      expect(support, findsOneWidget);
-      final scroll = tester.state<ScrollableState>(
-        find.descendant(of: support, matching: find.byType(Scrollable)),
-      );
-      expect(scroll.position.maxScrollExtent, greaterThan(0));
+    final texts = tester
+        .widgetList<Text>(find.byType(Text))
+        .map((t) => t.data ?? t.textSpan?.toPlainText() ?? '')
+        .where((t) => t.isNotEmpty)
+        .toList();
+    expect(
+      texts.any(
+        (t) =>
+            t.contains('UTG acts next') ||
+            t.contains('BB acts next') ||
+            t.contains('SB acts next'),
+      ),
+      isFalse,
+    );
+    expect(find.text(task.runner.question), findsOneWidget);
+    expect(
+      find.textContaining(task.runner.caption),
+      findsOneWidget,
+      reason: 'Full source premises must be available when answering.',
+    );
+    final support = find.byKey(
+      const Key('act0_learning_scene_v3_model_support_scroll'),
+    );
+    expect(support, findsOneWidget);
+    final scroll = tester.state<ScrollableState>(
+      find.descendant(of: support, matching: find.byType(Scrollable)),
+    );
+    if (neutral) expect(scroll.position.maxScrollExtent, greaterThan(0));
 
-      await tester.runAsync(() async {
-        final boundary = tester.renderObject<RenderRepaintBoundary>(
-          find.byKey(const Key('order-frame-capture')),
-        );
-        final png = await boundary.toImage(pixelRatio: 1);
-        final data = await png.toByteData(format: ui.ImageByteFormat.png);
-        final out = Directory(
-          'output/w01-explicit-order-frames-20261117/frames',
-        )..createSync(recursive: true);
-        File(
-          '${out.path}/${entry.key}.premises-start.png',
-        ).writeAsBytesSync(data!.buffer.asUint8List());
-        png.dispose();
-      });
+    await tester.runAsync(() async {
+      final boundary = tester.renderObject<RenderRepaintBoundary>(
+        find.byKey(const Key('order-frame-capture')),
+      );
+      final png = await boundary.toImage(pixelRatio: 1);
+      final data = await png.toByteData(format: ui.ImageByteFormat.png);
+      final out = Directory('output/w01-explicit-order-frames-20261117/frames')
+        ..createSync(recursive: true);
+      File(
+        '${out.path}/$taskId.premises-start.png',
+      ).writeAsBytesSync(data!.buffer.asUint8List());
+      png.dispose();
+    });
+    if (scroll.position.maxScrollExtent > 0) {
       await tester.drag(support, const Offset(0, -500));
       await tester.pumpAndSettle();
       expect(scroll.position.pixels, greaterThan(0));
-      expect(scroll.position.extentAfter, lessThan(1));
-      expect(decisions, 0);
-      expect(assistance, isEmpty);
-      await tester.runAsync(() async {
-        final boundary = tester.renderObject<RenderRepaintBoundary>(
-          find.byKey(const Key('order-frame-capture')),
-        );
-        final png = await boundary.toImage(pixelRatio: 1);
-        final bytes = await png.toByteData(format: ui.ImageByteFormat.png);
-        final out = Directory(
-          'output/w01-explicit-order-frames-20261117/frames',
-        )..createSync(recursive: true);
-        File(
-          '${out.path}/${entry.key}.png',
-        ).writeAsBytesSync(bytes!.buffer.asUint8List());
-        File(
-          '${out.path}/${entry.key}.texts.json',
-        ).writeAsStringSync(jsonEncode(texts));
-        png.dispose();
-      });
+    }
+    expect(scroll.position.extentAfter, lessThan(1));
+    expect(decisions, 0);
+    expect(assistance, isEmpty);
+    await tester.runAsync(() async {
+      final boundary = tester.renderObject<RenderRepaintBoundary>(
+        find.byKey(const Key('order-frame-capture')),
+      );
+      final png = await boundary.toImage(pixelRatio: 1);
+      final bytes = await png.toByteData(format: ui.ImageByteFormat.png);
+      final out = Directory('output/w01-explicit-order-frames-20261117/frames')
+        ..createSync(recursive: true);
+      File(
+        '${out.path}/$taskId.png',
+      ).writeAsBytesSync(bytes!.buffer.asUint8List());
+      File(
+        '${out.path}/$taskId.texts.json',
+      ).writeAsStringSync(jsonEncode(texts));
+      png.dispose();
     });
-  }
+  });
 }
 
 const _firstHandOldFingerprints = <String, String>{
@@ -404,6 +413,7 @@ const _firstHandOldFingerprints = <String, String>{
 
 void _newFirstHandStackTests() {
   for (final entry in _firstHandOldFingerprints.entries) {
+    _contextPremisesWidgetTest('your_first_hand', entry.key, neutral: false);
     test(
       '${entry.key} new complete stack context preserves the recorded hand',
       () {

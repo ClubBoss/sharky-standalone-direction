@@ -1,5 +1,6 @@
 """Controls for historical-source preservation and strict gate error rejection."""
 import importlib.util
+import functools
 import hashlib
 import os
 import re
@@ -95,6 +96,20 @@ W24_CONTEXT_RUNNER_INSERTIONS = (
       nextRepLabel: 'recheck the same context framework',
     ),""" "\n",
 )
+
+
+# The historical RED workflow reuses this exact already-admitted visibility
+# adapter; the actual candidate Runner is independently exercised by GREEN.
+REVIEWED_VISIBILITY_ADAPTER_HEAD = '455f240d2a4e8646725187536a77fb23a56eb1a6'
+
+
+@functools.lru_cache(maxsize=1)
+def reviewed_visibility_adapter_source():
+    raw = subprocess.check_output(['git', 'show',
+        f'{REVIEWED_VISIBILITY_ADAPTER_HEAD}:{ADAPTER.GUIDE_RUNNER}'], cwd=ROOT)
+    if hashlib.sha256(raw).hexdigest() != ADAPTER.GUIDE_W24_CONTEXT_RUNNER_SHA256:
+        raise AssertionError('Historical visibility adapter source changed')
+    return raw.decode()
 
 
 class DependencyControls(unittest.TestCase):
@@ -272,7 +287,7 @@ class DependencyControls(unittest.TestCase):
         source = '// SYNTHETIC prefix\n' + ADAPTER.GUIDE_CONSTRUCTOR + '// unchanged body\n'
         self.put(self.baseline, ADAPTER.GUIDE_DEPENDENCY, source)
         self.put(self.baseline, ADAPTER.GUIDE_RUNNER,
-                 (ROOT / ADAPTER.GUIDE_RUNNER).read_text())
+                 reviewed_visibility_adapter_source())
         return {'copied_missing': {}, 'preserved_existing': {
             p: ADAPTER.digest(self.baseline / p)
             for p in (ADAPTER.GUIDE_DEPENDENCY, ADAPTER.GUIDE_RUNNER)}}
@@ -300,8 +315,23 @@ class DependencyControls(unittest.TestCase):
         }))
         self.assertEqual(ADAPTER.GUIDE_W24_CONTEXT_RUNNER_SHA256,
                          'ce7c84d43281783148ae81c9c50f628865ef3f35769461d21bf9bd3c83446fad')
-        self.assertIn(ADAPTER.digest(ROOT / ADAPTER.GUIDE_RUNNER),
+        self.assertIn(hashlib.sha256(reviewed_visibility_adapter_source().encode()).hexdigest(),
                       ADAPTER.GUIDE_REVIEWED_RUNNER_SHA256S)
+
+    def test_workflow_reuses_exact_adapter_without_admitting_new_candidate_runner(self):
+        workflow = (ROOT / '.github/workflows/table-truth.yml').read_text()
+        self.assertIn(f'ADAPTER_SHA={REVIEWED_VISIBILITY_ADAPTER_HEAD}', workflow)
+        self.assertIn('git show "$ADAPTER_SHA:lib/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart"', workflow)
+        self.assertIn(ADAPTER.GUIDE_W24_CONTEXT_RUNNER_SHA256, workflow)
+        self.assertIn('"$OUT/candidate-runner-source.txt"', workflow)
+        current = ADAPTER.digest(ROOT / ADAPTER.GUIDE_RUNNER)
+        if current != ADAPTER.GUIDE_W24_CONTEXT_RUNNER_SHA256:
+            dependencies = self.prepare_synthetic_legacy_guide()
+            self.put(self.baseline, ADAPTER.GUIDE_RUNNER, (ROOT / ADAPTER.GUIDE_RUNNER).read_text())
+            dependencies['preserved_existing'][ADAPTER.GUIDE_RUNNER] = current
+            before = (self.baseline / ADAPTER.GUIDE_DEPENDENCY).read_bytes()
+            with self.assertRaises(RuntimeError): self.call_synthetic_legacy_guide(dependencies)
+            self.assertEqual((self.baseline / ADAPTER.GUIDE_DEPENDENCY).read_bytes(), before)
 
     def test_legacy_guide_only_changes_constructor_and_records_exception(self):
         dependencies = self.prepare_synthetic_legacy_guide()
@@ -318,7 +348,7 @@ class DependencyControls(unittest.TestCase):
         self.assertEqual(result['after_sha256'], ADAPTER.digest(guide))
         self.assertNotIn(ADAPTER.GUIDE_DEPENDENCY, dependencies['preserved_existing'])
         self.assertEqual(ADAPTER.digest(self.baseline / ADAPTER.GUIDE_RUNNER),
-                         ADAPTER.digest(ROOT / ADAPTER.GUIDE_RUNNER))
+                         hashlib.sha256(reviewed_visibility_adapter_source().encode()).hexdigest())
         self.assertEqual(result['runner_sha256'],
                          ADAPTER.digest(self.baseline / ADAPTER.GUIDE_RUNNER))
 
