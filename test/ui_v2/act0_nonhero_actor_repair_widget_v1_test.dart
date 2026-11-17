@@ -3,8 +3,10 @@
 // and repair; mock preferences and host remount are not native/restart/Human proof.
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_runtime_adapter_v1.dart';
@@ -54,10 +56,13 @@ Future<void> _mount(WidgetTester t) async {
   await t.pumpWidget(
     MaterialApp(
       locale: const Locale('en'),
-      home: Act0ShellPreviewScreenV1(
-        key: UniqueKey(),
-        initialTab: Act0ShellTabV1.home,
-        showPlacementOnStart: false,
+      home: RepaintBoundary(
+        key: const Key('nonhero-host-capture'),
+        child: Act0ShellPreviewScreenV1(
+          key: UniqueKey(),
+          initialTab: Act0ShellTabV1.home,
+          showPlacementOnStart: false,
+        ),
       ),
     ),
   );
@@ -88,14 +93,68 @@ Future<String> _choice(WidgetTester t, String id, String taskId) async {
       final optionKey = 'act0_shell_option_$id';
       // A mounted seat can have a covered centre. Use only a public affordance
       // that actually receives a pointer; never force a callback or readiness.
-      final seat = find.byKey(Key(seatKey)).hitTestable();
-      final optionButton = find.byKey(Key(optionKey)).hitTestable();
-      expect(
-        seat.evaluate().isNotEmpty || optionButton.evaluate().isNotEmpty,
-        isTrue,
-      );
-      final submittedKey = seat.evaluate().isNotEmpty ? seatKey : optionKey;
-      await _tap(t, submittedKey);
+      final seat = find.byKey(Key(seatKey));
+      final seatLabel = find
+          .descendant(
+            of: seat,
+            matching: find.text(option.seatId!.toUpperCase()),
+          )
+          .hitTestable();
+      final optionButton = find.byKey(Key(optionKey));
+      late final String submittedKey;
+      if (seat.hitTestable().evaluate().isNotEmpty) {
+        submittedKey = seatKey;
+        await _tap(t, seatKey);
+      } else if (seatLabel.evaluate().length == 1) {
+        // The visible seat name is inside the same public seat control. Its
+        // actual hit-test must succeed; no synthetic callback or hidden tap.
+        await t.ensureVisible(seatLabel);
+        await t.pumpAndSettle();
+        expect(seatLabel.hitTestable(), findsOneWidget);
+        await t.tap(seatLabel);
+        await t.pumpAndSettle();
+        submittedKey = '$seatKey/visible-seat-label';
+      } else if (optionButton.evaluate().isNotEmpty) {
+        await t.ensureVisible(optionButton);
+        await t.pumpAndSettle();
+        expect(optionButton.hitTestable(), findsOneWidget);
+        submittedKey = optionKey;
+        await _tap(t, optionKey);
+      } else {
+        final output = Platform.environment['PKR03_OUTPUT'];
+        if (output != null) {
+          await t.runAsync(() async {
+            final dir = Directory(output)..createSync(recursive: true);
+            final boundary = t.renderObject<RenderRepaintBoundary>(
+              find.byKey(const Key('nonhero-host-capture')),
+            );
+            final frame = await boundary.toImage(pixelRatio: 1);
+            final bytes = await frame.toByteData(
+              format: ui.ImageByteFormat.png,
+            );
+            File(
+              '${dir.path}/$taskId-$id-unhittable.png',
+            ).writeAsBytesSync(bytes!.buffer.asUint8List());
+            frame.dispose();
+            File('${dir.path}/$taskId-$id-unhittable.json').writeAsStringSync(
+              const JsonEncoder.withIndent('  ').convert({
+                'task_id': taskId,
+                'choice_id': id,
+                'seat_rect': seat.evaluate().isEmpty
+                    ? null
+                    : t.getRect(seat).toString(),
+                'seat_elements': seat.evaluate().length,
+                'public_option_elements': optionButton.evaluate().length,
+                'visible_text': [
+                  for (final widget in t.widgetList<Text>(find.byType(Text)))
+                    widget.data ?? widget.textSpan?.toPlainText(),
+                ],
+              }),
+            );
+          });
+        }
+        fail('No genuinely hittable public seat or option for $taskId/$id');
+      }
       expect(
         _runner(t).runner.selectedOptionId,
         id,
