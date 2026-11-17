@@ -9762,7 +9762,7 @@ Act0RunnerStateV1 _act0W01FoldedToBtnMechanicalContextV1(
   ];
   return source.copyWith(
     caption:
-        'For this new six-player example, each starts with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. SB posts 0.5 BB, BB posts 1 BB; UTG, HJ and CO fold. BTN holds KTs and acts next; SB and BB remain. Pot: 1.5 BB; BTN must add 1 BB to call. The 3 BB Raise option means raise to 3 BB total, not add 3 BB.',
+        'For this new six-player example, each starts with 100 BB before the 0.5/1 BB blinds; no ante, straddle or rake. SB posts 0.5 BB, BB posts 1 BB; UTG, HJ and CO fold. BTN holds KTs and acts next; SB and BB remain. Pot: 1.5 BB; BTN must add 1 BB to call. The 3 BB Raise option means 3 BB total, not an increase of 3 BB over the current 1 BB price.',
     table: source.table.copyWith(
       scope: Act0TableScopeV1.playedHand,
       tableFormat: Act0TableFormatV1.sixMax,

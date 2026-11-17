@@ -106,6 +106,11 @@ void main() {
         expect(price.actorCommittedBb, 0);
         expect(price.callCostBb, 1);
         expect(price.minimumRaiseToBb, 2);
+        expect(price.amountToMatchBb, 1);
+        final chosenTotal = double.parse(raise.amountLabel.split(' ').first);
+        // BTN contributes 3 chips; the outstanding price rises by only 2.
+        expect(chosenTotal - price.actorCommittedBb!, 3);
+        expect(chosenTotal - price.amountToMatchBb!, 2);
         expect(
           act0BettingPriceForOptionV1(table, raise).truth,
           Act0BettingPriceTruthV1.consistent,
