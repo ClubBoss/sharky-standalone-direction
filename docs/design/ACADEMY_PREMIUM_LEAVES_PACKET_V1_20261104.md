@@ -1,5 +1,31 @@
 # Academy Premium Leaves Packet V1 (2026-11-04)
 
+## Current integration clarification — 2026-11-17
+
+Verified source baseline: `main` commit `3985566cf9b052f0476ec18a5ef451dc29812608`.
+The five Home/Practice/Review/You/Settings leaves below are now present in main,
+integrated through `act0_academy_runtime_adapter_v1.dart` (integration commit
+`4e98a1c01ec6227e4fec542c9ff5d11832795b91`; later green-default repairs include
+merged PR #413). Their `SHARKY_ACADEMY_*_PREVIEW` flags currently default true;
+locale support and explicit false remain applicable. This is source integration
+evidence, not a claim about an unidentified screenshot or native build.
+
+Practice follows the later owner-selected hybrid (#311), not the earlier static
+C1 concept. Learn and Worlds were excluded from these leaves because they share
+the private Learn model; their donor-only status must be checked separately.
+Main's Learn still uses `Act0LearnPathShellV1` and the light Editorial Tide tokens.
+The accepted Learn direction is Cinematic Path A, recorded on #309 at comment
+6420732698; that PR remains Draft and unmerged at this verification.
+
+The original preparation, test and rollback sections below are dated history.
+In particular, section 9's deletion recipe predates integration and MUST NOT be
+applied to current main: live imports, assets and callbacks now depend on these
+files. Any future restoration or rollback belongs to the current shared-source
+owner and needs an exact dependency/delta review; never restore an old whole
+shell over current learning, save acknowledgement or recovery behavior.
+
+---
+
 Status: DRAFT / RUNNER B / PRESENTATION LEAVES ONLY / NOT INTEGRATED / SCORE DELTA 0.
 
 Authority: Master Plan v5, `PRE_HUMAN_CAMPAIGN_STATE_v1.md`, Issue #364 A-J
