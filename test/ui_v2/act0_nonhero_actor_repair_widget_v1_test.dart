@@ -66,14 +66,16 @@ Future<void> _mount(WidgetTester t) async {
 
 Future<Map<String, dynamic>> _saved(WidgetTester t) async {
   await t.pumpAndSettle();
-  await t.runAsync(
-    () => Act0ProgressStoreV1(key: _key, isValidPayload: (_) => true).flush(),
-  );
-  final prefs = await SharedPreferences.getInstance();
-  return jsonDecode(prefs.getString(_key)!) as Map<String, dynamic>;
+  final raw = await t.runAsync(() async {
+    final store = Act0ProgressStoreV1(key: _key, isValidPayload: (_) => true);
+    await store.flush();
+    return store.load();
+  });
+  expect(raw, isNotNull);
+  return jsonDecode(raw!) as Map<String, dynamic>;
 }
 
-Future<void> _choice(WidgetTester t, String id, String taskId) async {
+Future<String> _choice(WidgetTester t, String id, String taskId) async {
   for (var step = 0; step < 24; step++) {
     final r = _runner(t);
     expect(r.selectedTaskId, taskId);
@@ -82,19 +84,24 @@ Future<void> _choice(WidgetTester t, String id, String taskId) async {
       expect(r.runner.selectedOptionId, isNull);
       await pumpSourceChoreographyToDecisionV1(t, r.runner.table);
       final option = r.runner.options.singleWhere((o) => o.id == id);
-      final seat = find.byKey(Key('act0_shell_seat_tap_${option.seatId}'));
-      await _tap(
-        t,
-        seat.evaluate().isNotEmpty
-            ? 'act0_shell_seat_tap_${option.seatId}'
-            : 'act0_shell_option_$id',
+      final seatKey = 'act0_shell_seat_tap_${option.seatId}';
+      final optionKey = 'act0_shell_option_$id';
+      // A mounted seat can have a covered centre. Use only a public affordance
+      // that actually receives a pointer; never force a callback or readiness.
+      final seat = find.byKey(Key(seatKey)).hitTestable();
+      final optionButton = find.byKey(Key(optionKey)).hitTestable();
+      expect(
+        seat.evaluate().isNotEmpty || optionButton.evaluate().isNotEmpty,
+        isTrue,
       );
+      final submittedKey = seat.evaluate().isNotEmpty ? seatKey : optionKey;
+      await _tap(t, submittedKey);
       expect(
         _runner(t).runner.selectedOptionId,
         id,
         reason: 'One real submitted decision is required.',
       );
-      return;
+      return submittedKey;
     }
     await t.pump(const Duration(seconds: 1));
     await _tap(
@@ -156,7 +163,7 @@ void main() {
         await _mount(t);
         await _tab(t, 'Learn');
         await _tap(t, 'act0_shell_current_mission_cta');
-        await _choice(t, subject.wrong, subject.task);
+        final wrongAffordance = await _choice(t, subject.wrong, subject.task);
         final saved = await _saved(t);
         final records = (saved['learningEvidenceHistory'] as List)
             .map(Act0LearningEvidenceRecordV1.tryParse)
@@ -213,7 +220,7 @@ void main() {
           subject.lesson,
           subject.task,
         ).runner.options.singleWhere((o) => o.isCorrect);
-        await _choice(t, correct.id, subject.task);
+        final correctAffordance = await _choice(t, correct.id, subject.task);
         await _tap(t, 'act0_shell_feedback_continue_cta');
         final finalSaved = await _saved(t);
         final parsedHistory = Act0LearningEvidenceHistoryV1.tryParse(
@@ -262,6 +269,8 @@ void main() {
           'fixture':
               'prerequisite-only skipped, zero XP; no injected miss/history/repair',
           'actual_miss': miss.toPayload(),
+          'wrong_public_affordance': wrongAffordance,
+          'correct_public_affordance': correctAffordance,
           'actual_intent': intent.toPayload(),
           'host_remount_intent_equal': true,
           'actual_familiar_attempt': attempt.toPayload(),
@@ -357,10 +366,57 @@ void main() {
         () =>
             Act0ProgressStoreV1(key: _key, isValidPayload: (_) => true).flush(),
       );
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_key, jsonEncode(saved));
+      await t.runAsync(() async {
+        final store = Act0ProgressStoreV1(
+          key: _key,
+          isValidPayload: (_) => true,
+        );
+        expect(await store.save(jsonEncode(saved)), isTrue);
+        await store.flush();
+        final committed =
+            jsonDecode((await store.load())!) as Map<String, dynamic>;
+        expect(jsonEncode(committed['learningEvidenceHistory']), historyBytes);
+        final committedIntent = (committed['openRepairIntents'] as List)
+            .map(Act0RepairIntentV1.tryParse)
+            .whereType<Act0RepairIntentV1>()
+            .singleWhere((i) => i.sourceTaskId == subject.task);
+        expect(committedIntent.goalId, isEmpty);
+        expect(committedIntent.relationId, isEmpty);
+        expect(committedIntent.relationRevision, 0);
+        expect(committedIntent.sourceFingerprint, isEmpty);
+        expect(committedIntent.targetFingerprint, isEmpty);
+      });
       await _mount(t);
       await _tab(t, 'Review');
+      final diagnosticAfterMount = await _saved(t);
+      final diagnosticOutput = Platform.environment['PKR03_OUTPUT'];
+      if (diagnosticOutput != null) {
+        await t.runAsync(() async {
+          await Directory(diagnosticOutput).create(recursive: true);
+          await File(
+            '$diagnosticOutput/legacy-consumer-observation.json',
+          ).writeAsString(
+            const JsonEncoder.withIndent('  ').convert({
+              'fixture':
+                  'SIMULATED old format; actual fresh UI miss, then only five intent witnesses removed',
+              'stripped_intent_copies': copies,
+              'seeded_payload': saved,
+              'actual_after_review_mount': diagnosticAfterMount,
+              'actual_review_text': [
+                for (final widget in t.widgetList<Text>(find.byType(Text)))
+                  widget.data ?? widget.textSpan?.toPlainText(),
+              ],
+              'not_proved': [
+                'native_restart',
+                'old_real_user_data',
+                'Human',
+                'outcome_bank',
+              ],
+            }),
+            flush: true,
+          );
+        });
+      }
       expect(
         find.text('Matching repair not confirmed · miss saved'),
         findsWidgets,
